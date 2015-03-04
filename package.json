@@ -1,0 +1,25 @@
+{
+  "name": "charcoal",
+  "version": "0.0.1",
+  "description": "Charcoal is a Web Framework",
+  "homepage": "http://charcoal.locomotive.ca",
+  "author": "Mathieu Ducharme <mat@locomotive.ca>",
+  "contributors": [
+    "Benjamin Roch <benjamin@locomotive.ca>",
+    "Stephen Bégay <stephen@locomotive.ca>"
+  ],
+  "license": "LGPL-3.0",
+  "private": true,
+  "devDependencies": {
+    "grunt": "^0.4.4",
+    "grunt-jsonlint": "^1.0.4",
+    "grunt-phpunit": "^0.3.3",
+    "grunt-phplint": "0.0.5",
+    "grunt-contrib-jshint": "^0.9.2",
+    "grunt-phpcs": "^0.2.2",
+    "grunt-phpdocumentor": "^0.4.1",
+    "qunit": "^0.6.2",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-githooks": "^0.3.1"
+  }
+}

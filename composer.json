@@ -1,0 +1,24 @@
+{
+    "name": "locomotivemtl/charcoal",
+    "description": "Charcoal Web Framework",
+    "keywords":["charcoal", "locomotive", "framwork", "cms"],
+    "authors": [
+        {
+            "name": "Mathieu Ducharme",
+            "email": "mat@locomotive.ca"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "mustache/mustache": "~2.5"
+    },
+    "_require-dev":{
+        "phpunit/phpunit": "*",
+        "squizlabs/php_codesniffer": "2.*"
+    },
+    "autoload":{
+        "psr-4":{
+            "Charcoal\\": "src/Charcoal"
+        }
+    }
+}
