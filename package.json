@@ -20,6 +20,7 @@
     "grunt-phpdocumentor": "^0.4.1",
     "qunit": "^0.6.2",
     "grunt-contrib-watch": "^0.6.1",
-    "grunt-githooks": "^0.3.1"
+    "grunt-githooks": "^0.3.1",
+    "grunt-yaml-validate": "^0.1.1"
   }
 }

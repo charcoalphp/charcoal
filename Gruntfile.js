@@ -10,6 +10,12 @@ module.exports = function(grunt) {
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
 
+		"yaml-validate": {
+			options: {
+				glob: ".travis.yml"
+			}
+		},
+
 		jsonlint:{
 			meta:{
 				src:[
@@ -101,6 +107,7 @@ module.exports = function(grunt) {
 	});
 
 	// Load plugin(s)
+	grunt.loadNpmTasks('grunt-yaml-validate');
 	grunt.loadNpmTasks('grunt-jsonlint');
 	grunt.loadNpmTasks("grunt-phplint");
 	grunt.loadNpmTasks('grunt-phpunit');
