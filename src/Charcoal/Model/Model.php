@@ -17,6 +17,7 @@
 namespace Charcoal\Model;
 
 use \Charcoal\Charcoal as Charcoal;
+use \Charcoal\Loader\MetadataLoader as MetadataLoader;
 use \Charcoal\Model\Metadata as Metadata;
 
 /**
@@ -222,11 +223,12 @@ class Model
 	{
 		//pre($metadata_name);
 		if(!isset(static::$_metadata) || (static::$_metadata === null)) {
-			static::$_metadata = new Metadata();
-			static::$_metadata->load($metadata_name);
+			$metadata_loader = new MetadataLoader();
+			$metadata = $metadata_loader->load($metadata_name);
+			$this->set_metadata($metadata);
 			
 		}
-		return static::$_metadata;
+		return $metadata;
 	}
 
 	/**

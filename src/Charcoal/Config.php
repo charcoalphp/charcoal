@@ -11,4 +11,6 @@ class Config
 
 	public $databases;
 	public $default_database;
+
+	public $metadata_path;
 }

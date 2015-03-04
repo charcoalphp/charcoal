@@ -15,6 +15,19 @@ class MetadataLoader extends Loader
 	private $properties;
 	private $data;
 
+	private $_ident;
+
+	public function set_ident($ident)
+	{
+		$this->_ident = $ident;
+		return $this;
+	}
+
+	public function ident()
+	{
+		return $this->_ident;
+	}
+
 	/**
 	*
 	*/
@@ -45,7 +58,15 @@ class MetadataLoader extends Loader
 	*/
 	public function search_path()
 	{
-		return $this->search_path;
+		$cfg = Charcoal::$config;
+
+		$all_path = $this->search_path;
+
+		$global_path = isset($cfg['metadata_path']) ? $cfg['metadata_path'] : [];
+		if(!empty($global_path)) {
+			$all_path = Charcoal::merge($global_path, $all_path);
+		}
+		return $all_path;
 	}
 
 	/**
