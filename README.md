@@ -1,10 +1,13 @@
 Charcoal Core
 =============
 
-# Table of Contet
+[![Build Status](https://api.travis-ci.com/locomotivemtl/charcoal-core.svg?token=pGHp1Fn8uKqLp5exqFVS)](https://magnum.travis-ci.com/locomotivemtl/charcoal-core)
+
+# Table of Contents
 
 
 # The Charcoal Model
+
 - `Model\Model`
 - `Model\Metadata`
 - `Model\Property`
@@ -12,8 +15,8 @@ Charcoal Core
 
 
 ## Usage example
-``` php
 
+``` php
 $metadata = new \Charcoal\Model\Metadata();
 $metadata->set_data([
 	'properties'=>[
@@ -41,10 +44,10 @@ if($validations->is_valid()) {
 
 $id_property = $model->property('id');
 echo $id_property->view('input_base');
-
 ```
 
 # Core Services
+
 - `Service\Loader`
   - `Service\Loader\Model`
   - `Service\Loader\Metadata`
@@ -54,7 +57,9 @@ echo $id_property->view('input_base');
 
 
 # Authors
+
 - Mathieu Ducharme <mat@locomotive.ca>
 
 # TODOs
-- _2015-02-24:_ Rename ruleset.xml to phpcs.xml
+
+- _2015-02-24:_ Rename `ruleset.xml` to `phpcs.xml`
