@@ -30,6 +30,58 @@ class Filter
 	*/
 	private $_operand = self::DEFAULT_OPERAND;
 
+	private $_string;
+
+	private $_active;
+
+	/**
+	* @throws \InvalidArgumentException if parameter is not an array
+	* @return Filter (Chainable)
+	*/
+	public function set_data($data)
+	{
+		if(!is_array($data)) {
+			throw new \InvalidArgumentException('Data must be an array');
+		}
+		if(isset($data['property'])) {
+			$this->set_property($data['property']);
+		}
+		if(isset($data['val'])) {
+			$this->set_val($data['val']);
+		}
+		if(isset($data['operator'])) {
+			$this->set_operator($data['operator']);
+		}
+		if(isset($data['func'])) {
+			$this->set_func($data['func']);
+		}
+		if(isset($data['operand'])) {
+			$this->set_operand($data['operand']);
+		}
+		if(isset($data['string'])) {
+			$this->set_string($data['string']);
+		}
+		if(isset($data['active'])) {
+			$this->set_active($data['active']);
+		}
+		return $this;
+	}
+
+	/**
+	* @param boolean
+	* @return Filter (Chainable)
+	*/
+	public function set_active($active)
+	{
+		$this->_active = $active;
+		return $this;
+	}
+
+	public function active()
+	{
+		return !!$this->_active;
+	}
+
 	/**
 	* @param string $property
 	* @throws \InvalidArgumentException if the property argument is not a string
@@ -157,59 +209,102 @@ class Filter
 		return strtoupper($this->_operand);
 	}
 
-	public function sql()
+	/**
+	* @param string $operand
+	* @throws \InvalidArgumentException if the parameter is not a valid operand
+	* @return Filter (Chainable)
+	*/
+	public function set_string($sql)
+	{
+		if(!is_string($sql)) {
+			throw new \InvalidArgumentException('String should be a string.');
+		}
+
+		$this->_string = $sql;
+		return $this;
+	}
+
+	/**
+	* @return string
+	*/
+	public function string()
+	{
+		return $this->_string;
+	}
+
+	private function sql_fields()
 	{
 		$property = $this->property();
-		if(!$property) {
+		if($property) {
+			// @todo Load Property from associated model metadata.
+			return [$property];
+		}
+		/*$field = $this->field();
+		if($field) {
+			return [$field];
+		}*/
+		return [];
+	}
+
+	/**
+	* @return string
+	*/
+	public function sql()
+	{
+		if($this->_string) {
+			return $this->_string;
+		}
+		$fields = $this->sql_fields();
+		if(empty($fields)) {
 			return '';
 		}
-		$val = $this->val();
 
-		// Support custom "operator" for the filter
-		$operator = $this->operator();
+		$filter = '';
+		foreach($fields as $field) {
+			$val = $this->val();
 
-		// Support for custom function on column name
-		$function = $this->func();
+			// Support custom "operator" for the filter
+			$operator = $this->operator();
 
-		// Support for custom operand (@todo)
-		// @todo: Should this be in this function at all??
-		$operand = $this->operand();
+			// Support for custom function on column name
+			$function = $this->func();
 
-		if($function) {
-			$target = $function.'(`'.$property.'`)';
-		}
-		else {
-			$target = '`'.$property.'`';
-		}
+			if($function) {
+				$target = $function.'(`'.$field.'`)';
+			}
+			else {
+				$target = '`'.$field.'`';
+			}
 
-		switch($operator) {
-			/*case '=':
+			switch($operator) {
+				/*case '=':
 
-				if($this->multiple() && ($sql_val != "''")) {
-					$sep = isset($this->multiple_options['separator']) ? $this->multiple_options['separator'] : ',';
-					if($sep == ',') {
-						$filter = ' FIND_IN_SET('.$sql_val.', '.$filter_ident.')';
+					if($this->multiple() && ($sql_val != "''")) {
+						$sep = isset($this->multiple_options['separator']) ? $this->multiple_options['separator'] : ',';
+						if($sep == ',') {
+							$filter = ' FIND_IN_SET('.$sql_val.', '.$filter_ident.')';
+						}
+						else {
+							// The FIND_IN_SET function must work on a comma separated-value. So create temporary separators to use a comma...
+							$custom_separator = '}x5S_'; // With not much luck, this string should never be used in text
+							$filter = ' FIND_IN_SET(REPLACE('.$sql_val.', \',\', \''.$custom_separator.'\'), REPLACE(REPLACE('.$filter_ident.', \',\', \''.$custom_separator.'\'), \''.$sep.'\', \',\')';
+						}
 					}
 					else {
-						// The FIND_IN_SET function must work on a comma separated-value. So create temporary separators to use a comma...
-						$custom_separator = '}x5S_'; // With not much luck, this string should never be used in text
-						$filter = ' FIND_IN_SET(REPLACE('.$sql_val.', \',\', \''.$custom_separator.'\'), REPLACE(REPLACE('.$filter_ident.', \',\', \''.$custom_separator.'\'), \''.$sep.'\', \',\')';
+						$filter = '('.$filter_ident.' '.$operator.' '.$sql_val.')';
 					}
-				}
-				else {
-					$filter = '('.$filter_ident.' '.$operator.' '.$sql_val.')';
-				}
-			break;
-			*/
+				break;
+				*/
 
-			case 'IS NULL':
-			case 'IS NOT NULL':
-				$filter = '('.$target.' '.$operator.')';
-			break;
+				case 'IS NULL':
+				case 'IS NOT NULL':
+					$filter .= '('.$target.' '.$operator.')';
+				break;
 
-			default:
-				$filter = '('.$target.' '.$operator.' '.$val.')';
-			break;
+				default:
+					$filter .= '('.$target.' '.$operator.' '.$val.')';
+				break;
+			}
 		}
 
 		return $filter;
@@ -235,7 +330,22 @@ class Filter
 	}
 
 	/**
-	* Supported functions
+	* Supported operand types, uppercase
+	** @return array
+	*/
+	protected function _valid_operands()
+	{
+		$valid_operands = [
+			'AND', '&&',
+			'OR', '||',
+			'XOR'
+		];
+
+		return $valid_operands;
+	}
+
+	/**
+	* Supported functions, uppercase
 	* @return array
 	*/
 	protected function _valid_func()
@@ -269,18 +379,5 @@ class Filter
 		return $valid_functions;
 	}
 
-	/**
-	* Supported operand types
-	** @return array
-	*/
-	protected function _valid_operands()
-	{
-		$valid_operands = [
-			'AND', '&&',
-			'OR', '||',
-			'XOR'
-		];
 
-		return $valid_operands;
-	}
 }

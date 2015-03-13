@@ -101,9 +101,9 @@ class Encoder
 		if(!is_string($plain_string)) {
 			throw new \InvalidArgumentException('Plain string must be a string');
 		}
+		$encoded = '';
 		$key = $this->key($salt);
 		if($this->_type == self::TYPE_BASE64) {
-			$encoded = '';
 			$length = strlen($plain_string);
 			for($i=0; $i<$length; $i++) {
 				$char = substr($plain_string, $i, 1);
@@ -111,8 +111,9 @@ class Encoder
 				$char = chr(ord($char)+ord($keychar));
 				$encoded .= $char;
 			}
-			return base64_encode($encoded);
+			$encoded = base64_encode($encoded);
 		}
+		return $encoded;
 	}
 
 	/**
@@ -124,9 +125,9 @@ class Encoder
 		if(!is_string($encoded_string)) {
 			throw new \InvalidArgumentException('Plain string must be a string');
 		}
+		$decoded = '';
 		$key = $this->key($salt);
 		if($this->_type == self::TYPE_BASE64) {
-			$decoded = '';
 			$string = base64_decode($encoded_string);
 			$length = strlen($string);
 			for($i=0; $i<$length; $i++) {
@@ -135,8 +136,8 @@ class Encoder
 				$char = chr(ord($char)-ord($keychar));
 				$decoded .= $char;
 			}
-			return $decoded;
 		}
+		return $decoded;
 	}
 
 }

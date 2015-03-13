@@ -39,15 +39,12 @@ class MetadataTest extends \PHPUnit_Framework_TestCase
 	public function testArrayAccessUnset()
 	{
 		$obj = new Metadata();
-
 		$this->assertObjectNotHasAttribute('foo', $obj);
 
 		$obj['foo'] = 'bar';
-
 		$this->assertObjectHasAttribute('foo', $obj);
 
 		unset($obj['foo']);
-
 		$this->assertObjectNotHasAttribute('foo', $obj);
 
 	}
@@ -84,6 +81,8 @@ class MetadataTest extends \PHPUnit_Framework_TestCase
 		$obj = new Metadata();
 		$obj->set_data($invalid_data);
 	}
+
+
 
 	public function invalidDataProvider()
 	{

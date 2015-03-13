@@ -12,13 +12,19 @@ use \Charcoal\Charcoal as Charcoal;
 class MetadataLoader extends Loader
 {
 
-	private $properties;
-	private $data;
+	private $_ident = '';
+	private $_search_path = [];
 
-	private $_ident;
-
+	/**
+	* @param string $ident
+	* @throws \InvalidArgumentException if the ident is not a string
+	* @return MetadataLoader (Chainable)
+	*/
 	public function set_ident($ident)
 	{
+		if(!is_string($ident)) {
+			throw new \InvalidArgumentException(__CLASS__.'::'.__FUNCTION__.'() - Ident must be a string.');
+		}
 		$this->_ident = $ident;
 		return $this;
 	}
@@ -28,10 +34,7 @@ class MetadataLoader extends Loader
 		return $this->_ident;
 	}
 
-	/**
-	*
-	*/
-	private $search_path = [];
+	
 
 	/**
 	* @param string $path
@@ -41,6 +44,9 @@ class MetadataLoader extends Loader
 	*/
 	public function add_path($path)
 	{
+		if(!is_string($path)) {
+			throw new \InvalidArgumentException('Path should be a string.');
+		}
 		if(!file_exists($path)) {
 			throw new \InvalidArgumentException(sprintf('Path does not exist: %s', $path));
 		}
@@ -48,19 +54,20 @@ class MetadataLoader extends Loader
 			throw new \InvalidArgumentException(sprintf('Path is not a directory: %s', $path));
 		}
 
-		$this->search_path[] = $path;
+		$this->_search_path[] = $path;
 
 		return $this;
 	}
 
 	/**
+	* Get the object's search path, merged with global configuration path
 	* @return array
 	*/
 	public function search_path()
 	{
 		$cfg = Charcoal::$config;
 
-		$all_path = $this->search_path;
+		$all_path = $this->_search_path;
 
 		$global_path = isset($cfg['metadata_path']) ? $cfg['metadata_path'] : [];
 		if(!empty($global_path)) {
@@ -157,6 +164,9 @@ class MetadataLoader extends Loader
 		$data = [];
 		$filename = $this->_filename_from_ident($ident);
 		$search_path = $this->search_path();
+		if(empty($search_path)) {
+			return [];
+		}
 		foreach($search_path as $path) {
 			$f = $path.DIRECTORY_SEPARATOR.$filename;
 			if(!file_exists($f)) {

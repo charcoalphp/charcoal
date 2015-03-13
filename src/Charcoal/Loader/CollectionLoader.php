@@ -2,6 +2,7 @@
 
 namespace Charcoal\Loader;
 
+use \Charcoal\Model\Collection as Collection;
 use \Charcoal\Loader\CollectionLoader\Filter as Filter;
 use \Charcoal\Loader\CollectionLoader\Order as Order;
 use \Charcoal\Loader\CollectionLoader\Pagination as Pagination;
@@ -15,6 +16,26 @@ class CollectionLoader extends Loader
 	private $_filters = [];
 	private $_orders = [];
 	private $_pagination = null;
+
+	public function set_data($data)
+	{
+		if(!is_array($data)) {
+			throw new \InvalidArgumentException('Data must be an array');
+		}
+		if(isset($data['properties'])) {
+			$this->set_properties($data['properties']);
+		}
+		if(isset($data['filters'])) {
+			$this->set_filters($data['filters']);
+		}
+		if(isset($data['orders'])) {
+			$this->set_orders($data['orders']);
+		}
+		if(isset($data['pagination'])) {
+			$this->set_pagination($data['pagination']);
+		}
+		return $this;
+	}
 
 	public function set_properties($properties)
 	{
@@ -77,6 +98,11 @@ class CollectionLoader extends Loader
 		if($param instanceof Filter) {
 			$this->_filters[] = $param;
 		}
+		else if(is_array($param)) {
+			$filter = new Filter();
+			$filter->set_data($param);
+			$this->_filters[] = $filter;
+		}
 		else if(is_string($param) && $val !== null) {
 			$filter = new Filter();
 			$filter->set_property($param);
@@ -136,6 +162,11 @@ class CollectionLoader extends Loader
 		if($param instanceof Order) {
 			$this->_orders[] = $param;
 		}
+		else if(is_array($param)) {
+			$order = new Order();
+			$order->set_data($param);
+			$this->_orders[] = $order;
+		}
 		else if(is_string($param)) {
 			$order = new Order();
 			$order->set_property($param);
@@ -152,7 +183,18 @@ class CollectionLoader extends Loader
 		return $this;
 	}
 
-
+	public function set_pagination($param)
+	{
+		if($param instanceof Pagination) {
+			$this->_pagination = $param;
+		}
+		else if(is_array($param)) {
+			$pagination = new Pagination();
+			$pagination->set_data($param);
+			$this->_pagination = $pagination;
+		}
+		return $this;
+	}	
 
 	public function pagination()
 	{
@@ -195,12 +237,12 @@ class CollectionLoader extends Loader
 	/**
 	* Load a collection
 	* @throws \Exception if the database connection fails
+	* @return Collection
 	*/
 	public function load()
 	{
 		// Attempt loading from cache
 		$ret = $this->_load_from_cache();
-
 		if($ret !== false) {
 			return $ret;
 		}
@@ -213,7 +255,7 @@ class CollectionLoader extends Loader
 		// @todo Filters, pagination, select, etc
 		$q = $this->sql();
 
-		$collection = new \Charcoal\Model\Collection();
+		$collection = new Collection();
 
 		$db = $this->source()->db();
 
@@ -243,21 +285,21 @@ class CollectionLoader extends Loader
 			throw new \Exception('No table defined');
 		}
 
-		$selects = $this->_properties_sql();
+		$selects = $this->sql_select();
 		$tables = '`'.$this->source()->table().'` as obj_table';
-		$filters = $this->_filters_sql();
-		$orders = $this->_orders_sql();
-		$limits = $this->_pagination_sql();
+		$filters = $this->sql_filters();
+		$orders = $this->sql_orders();
+		$limits = $this->sql_pagination();
 
 		$q = 'select '.$selects.' from '.$tables.$filters.$orders.$limits;
-
+		//var_dump($q);
 		return $q;
 	}
 
 	/**
 	* @return string
 	*/
-	protected function _properties_sql()
+	protected function sql_select()
 	{
 		$properties = $this->properties();
 		if(empty($properties)) {
@@ -278,8 +320,10 @@ class CollectionLoader extends Loader
 
 	/**
 	* @return string
+	* @todo 2015-03-04 Use bindings for filters value
+	* @todo 2015-03-04 
 	*/
-	protected function _filters_sql()
+	protected function sql_filters()
 	{
 		$sql = '';
 
@@ -287,23 +331,28 @@ class CollectionLoader extends Loader
 		if(!empty($this->_filters)) {
 			$filters_sql = [];
 			foreach($this->_filters as $f) {
-				$filters_sql[] = $f->sql();
+				$f_sql = $f->sql();
+				if($f_sql) {
+					$filters_sql[] = [
+						'sql'		=> $f->sql(),
+						'operand'	=> $f->operand()
+					];
+				}
 			}
 			if(!empty($filters_sql)) {
-				$sql = ' WHERE '.implode(' AND ', $filters_sql);
+				$sql .= ' WHERE';
+				$i = 0;
+
+				foreach($filters_sql as $f) {
+					if($i > 0) {
+						$sql .= ' '.$f['operand'];
+					}
+					$sql .= ' '.$f['sql'];
+					$i++;
+				}
 			}
 
 		}
-
-		// Process hardcoded filters (filter_strings)
-		/*if(!empty($this->filter_strings)) {
-			if($filters == '') {
-				$sql = ' WHERE 1=1 ';
-			}
-			foreach($this->filter_strings as $f) {
-				$sql .= ' ' . $f['val'];
-			}
-		}*/
 
 		return $sql;
 	}
@@ -311,7 +360,7 @@ class CollectionLoader extends Loader
 	/**
 	* @return string
 	*/
-	protected function _orders_sql()
+	protected function sql_orders()
 	{
 		$sql = '';
 
@@ -331,7 +380,7 @@ class CollectionLoader extends Loader
 	/**
 	* @return string
 	*/
-	protected function _pagination_sql()
+	protected function sql_pagination()
 	{
 		return $this->pagination()->sql();
 	}

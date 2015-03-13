@@ -6,6 +6,7 @@
 namespace Charcoal\Model;
 
 use \Charcoal\Model\ViewController as ViewController;
+use \Charcoal\Loader\ViewLoader as ViewLoader;
 
 /**
 *
@@ -13,6 +14,7 @@ use \Charcoal\Model\ViewController as ViewController;
 class View
 {
 	const ENGINE_MUSTACHE = 'mustache';
+	const ENGINE_PHP_MUSTACHE = 'php_mustache';
 	
 	/**
 	* Unused, for now (always mustache)
@@ -25,6 +27,10 @@ class View
 	* @var string $template
 	*/
 	private $template;
+
+	private $template_ident;
+	private $template_type;
+
 	/**
 	* 
 	* @var mixed $controller
@@ -92,6 +98,15 @@ class View
 		return $this->template;
 	}
 
+	public function load_template($template_ident)
+	{
+		$template_loader = new ViewLoader();
+		$template = $template_loader->load($template_ident);
+		$this->set_template($template);
+
+		return $template;
+	}
+
 	/**
 	*
 	*/
@@ -131,11 +146,18 @@ class View
 			$this->set_controller($controller);
 		}
 
-		$m = new \Mustache_Engine([
+		$mustache = new \Mustache_Engine([
 			'logger' => new \Mustache_Logger_StreamLogger('php://stdout')
 		]);
 		$controller = $this->controller();
 		//var_dump($controller->length());
-		return $m->render($this->template(), $controller);
+		return $mustache->render($this->template(), $controller);
+	}
+
+	public function render_template($template_ident='', ViewController $controller=null)
+	{
+		// Load the View
+		$template = $this->load_template($template_ident);
+		return $this->render($template, $controller);
 	}
 }

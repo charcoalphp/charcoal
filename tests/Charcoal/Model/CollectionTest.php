@@ -56,6 +56,14 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame($this->obj, $collection[0]);
 	}
 
+	public function testArrayAccessGetWithInvalidOffsetThrowsException()
+	{
+		$this->setExpectedException('\InvalidArgumentException');
+
+		$collection =  new Collection();
+		$ret = $collection[null];
+	}
+
 	public function testArrayAccessExist()
 	{
 		$collection =  new Collection();

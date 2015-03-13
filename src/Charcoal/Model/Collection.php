@@ -48,8 +48,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable
 	* ArrayAccess > offsetExists
 	*
 	* @param mixed $offset
-	*
-	* @throws \InvalidArgumentException if the offset is not an integer or string
+	* @return boolean
 	*/
 	public function offsetExists($offset)
 	{
@@ -58,9 +57,6 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable
 		}
 		else if(is_string($offset)) {
 			return isset($this->_map[$offset]);
-		}
-		else {
-			throw new \InvalidArgumentException('Offset should be either an integer or a string');
 		}
 	}
 

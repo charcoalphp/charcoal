@@ -2,7 +2,7 @@
 
 namespace Charcoal\Tests\Loader;
 
-use \Charcoal\Loader\CollectionLoader;
+use \Charcoal\Loader\CollectionLoader as CollectionLoader;
 use \Charcoal\Charcoal as Charcoal;
 
 class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
@@ -13,14 +13,33 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
 		$this->assertInstanceOf('\Charcoal\Loader\CollectionLoader', $obj);
 	}
 
-	/*
+	public function setData()
+	{
+		$obj = new CollectionLoader();
+		$obj->set_data([
+			'properties'=>[
+				'id',
+				'test'
+			]
+		]);
+		$this->assertEquals(['id', 'test'], $obj->properties());
+	}
+
+	public function setDataIsChainable()
+	{
+		$obj = new CollectionLoader();
+		$ret = $obj->set_data([]);
+		$this->assertSame($ret, $obj);
+	}
+
+	
 	public function testAll()
 	{
-		Charcoal::$config['databases'] = [
+		/*Charcoal::$config['databases'] = [
 			'default'=>[
 				'database'=>'test',
 				'username'=>'root',
-				'password'=>'mat123'
+				'password'=>''
 			]
 		];
 		Charcoal::$config['default_database'] = 'default';
@@ -41,10 +60,11 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
 	
 		$collection = $loader->load();
 		
-		$this->assertEquals(1,1);
+		$this->assertEquals(1,1);*/
+		$this->assertTrue(true);
+
 		
 	}
-	*/
-
+	
 
 }

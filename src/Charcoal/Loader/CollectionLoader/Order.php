@@ -28,7 +28,38 @@ class Order
 	*/
 	private $_values;
 
-	public $active = true;
+	private $_active = true;
+
+	/**
+	* @throws \InvalidArgumentException if parameter is not an array
+	* @return Order (Chainable)
+	*/
+	public function set_data($data)
+	{
+		if(!is_array($data)) {
+			throw new \InvalidArgumentException('Data must be an array');
+		}
+		if(isset($data['property'])) {
+			$this->set_property($data['property']);
+		}
+		if(isset($data['mode'])) {
+			$this->set_mode($data['mode']);
+		}
+		if(isset($data['values'])) {
+			$this->set_operator($data['values']);
+		}
+		if(isset($data['operand'])) {
+			$this->set_operand($data['operand']);
+		}
+		if(isset($data['sql'])) {
+			$this->set_sql($data['sql']);
+		}
+		if(isset($data['active'])) {
+			$this->set_active($data['active']);
+		}
+		
+		return $this;
+	}
 
 	/**
 	* @param string $property

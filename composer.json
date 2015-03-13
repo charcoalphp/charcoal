@@ -10,7 +10,8 @@
     ],
     "require": {
         "php": ">=5.3.0",
-        "mustache/mustache": "~2.5"
+        "mustache/mustache": "~2.5",
+        "league/flysystem": "~1.0"
     },
     "_require-dev":{
         "phpunit/phpunit": "*",

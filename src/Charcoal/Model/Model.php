@@ -19,6 +19,7 @@ namespace Charcoal\Model;
 use \Charcoal\Charcoal as Charcoal;
 use \Charcoal\Loader\MetadataLoader as MetadataLoader;
 use \Charcoal\Model\Metadata as Metadata;
+use \Charcoal\Model\Property as Property;
 
 /**
 * Charcoal base model
@@ -89,7 +90,7 @@ class Model
 	private $_obj_type;
 
 	/**
-	 * Always store the array of propertis (in a static var) for all object types
+	 * Always store the array of properties (in a static var) for all object types
 	 *
 	 * @var array $_properties
 	 * @see self::property()
@@ -123,9 +124,7 @@ class Model
 	{
 		// Allow namespace. But the metadata_name is normalized to underscores (Should it also be lowercased?)
 		$metadata_name = ($metadata_name !== null) ? $metadata_name : str_replace('\\', '_', get_class($this));
-		$this->_obj_type = $metadata_name;
-
-		
+		$this->_obj_type = $metadata_name;		
 	}
 
 	/**
@@ -237,15 +236,13 @@ class Model
 	 * This function takes an array and fill the object with its value.
 	 *
 	 * @param array $data
-	 *
-	 * @todo 2012-06-28: DOC!
+	 * @throws \InvalidArgumentException if the data parameter is not an array
 	 * @return \Charcoal\Model\Base Returns self (Chainable)
 	 */
 	public function set_data($data)
 	{
 		if(!is_array($data)) {
-			// @todo Log Error
-			return $this;
+			throw new \InvalidArgumentException(__CLASS__.'::'.__FUNCTION__.'() - Data must be an array');
 		}
 
 		foreach($data as $prop => $val) {
@@ -262,8 +259,6 @@ class Model
 	 * This function takes an array and fill the object with its value.
 	 *
 	 * @param array $data
-	 *
-	 * @todo 2012-06-28: DOC!
 	 * @return \Charcoal\Model\Base Returns self (Chainable)
 	 */
 	public function set_flat_data($data)
@@ -423,7 +418,8 @@ class Model
 		}
 
 		$property_type = $property_metadata['type'];
-		$property = \Charcoal\Model\Property::get($property_type);
+		$property = Property::get($property_type);
+		$property->set_data($property_metadata);
 
 		$property_value = isset($this->{$property_ident}) ? $this->{$property_ident} : null;
 		if($property_value !== null) {
@@ -465,6 +461,27 @@ class Model
 		$view = new View();
 		$controller = ViewController::get($this);
 		return $view->render($template, $controller);
+	}
+
+	/**
+	*
+	*/
+	public function render_template($template_ident, $template_options=null)
+	{
+		$view = new View();
+		
+		$controller_name = '\Charcoal\Model\ViewController\\'.str_replace(['.', '_', '\\'], '', $template_ident);
+		if(class_exists($controller_name)) {
+			$controller = new $controller_name($this);
+		}
+		else {
+			$controller = new ViewController($this);
+		}
+		if(!empty($template_options)) {
+			$controller->set_data($template_options);
+		}
+
+		return $view->render_template($template_ident, $controller);
 	}
 
 }

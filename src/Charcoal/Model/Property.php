@@ -21,6 +21,9 @@
 
 namespace Charcoal\Model;
 
+use \Charcoal\Property\View as PropertyView;
+use \Charcoal\Property\ViewController as PropertyViewController;
+
 /**
 * Core (base) property class
 *
@@ -76,98 +79,6 @@ namespace Charcoal\Model;
 * **active**           | boolean       | true                    | Inactive properties are hidden everywhere / unused
 * ```
 *
-* # Available methods
-* The functions are grouped in a few concepts:
-*
-* ## Base functions (auto, getters, setters, etc.)
-* - __toString()
-* - get()
-* - config()
-* - set_config()
-* - val()
-* - set_val()
-* - obj()
-* - set_obj()
-* - lang()
-* - set_lang()
-* - label()
-* - icon()
-*
-* ## Display functions (text, display, input)
-* - input_types()
-* - display_types()
-* - text_types()
-* - input()
-* - input_name()
-* - input_id()
-* - input_class()
-* - display()
-* - text()
-* - render()
-*
-* ## Data & Validation functions
-* - from_raw_data()
-* - to_raw_data()
-* - validate()
-* - check_config()
-*
-* ## Database CRUD functions
-* Database CRUD operations are usually hidden from the public API as they are called automatically through the Charcoal_Object's
-* save(), update() and delete() functions. Charcoal_Object::save() and Charcoal_Object::update() always call the save() method
-* of all their properties before saving to validate and sanitize the saved value. Charcoal::
-*
-* For an example of properties that need to rewrite their save() or delete() methods, look at `Property\File, `Property\Image or
-* - **save()**
-* - **delete()**
-*
-* ## SQL functions
-* Although most interaction with the SQL driver are hidden from the public API, it is still possible to define how each
-* property is stored in the database and retrive through filters. The following methods can be reimplemented in each
-* property type if the default behavior is not desired:
-* - sql_columns()
-* - _sql_columns()
-* - sql_type
-* - sql_filter
-* - sql_values
-*
-* # Core Property Types
-* ```
-* Type        | Class                  | Module   | Description
-* boolean     | `Property\Boolean`     | core     | Simple true / false value
-* callback    | `Property\Callback`    | core     | The value returned from a callback function (object method)
-* choice      | `Property\Choice`      | core     | Choice within a list of options
-* date        | `Property\Date`        | core     | Only the "date" portion of a "datetime" (no time)
-* dateformat  | `Property\Dateformat`  | core     | Date format string (advanced)
-* datetime    | `Property\Datetime`    | core     | Date and time value
-* email       | `Property\Email`       | core     | Email address
-* file        | `Property\File`        | core     | File (upload)
-* float       | `Property\Float`       | core     | Float number
-* html        | `Property\Html`        | core     | HTML text
-* id          | `Property\Id`          | core     | Unique ID, Auto-incremental, UUID or uniq
-* image       | `Property\Image`       | core     | Image file
-* integer     | `Property\Integer`     | core     | Integer number
-* ip          | `Property\Ip`          | core     | IP address
-* json        | `Property\Json`        | core     | Complex data structure stored as JSON
-* lang        | `Property\Lang`        | core     | Language choice withing the available languages
-* month       | `Property\Month`       | core     | Month value
-* number      | `Property\Number`      | core     | Number
-* object      | `Property\Object`      | core     | Allows objects to be linked together
-* object_type | `Property\Objtype`     | core     | An existing object type. (Object that has a Charcoal definition as PHP and/or JSON)
-* password    | `Property\Password`    | core     | Encrypted (or not) password
-* phone       | `Property\Phone`       | core     | Phone number
-* string      | `Property\String`      | core     | Basic string of any type
-* text        | `Property\Text`        | core     | Longer string (text)
-* time        | `Property\Time`        | core     | Only the "time" portion of "datetime" (no date)
-* video       | `Property\Video`       | core     | Video file
-* widget      | `Property\Widget`      | core     | References an existing Charcoal Widget
-* year        | `Property\Year`        | core     | Year
-* youtube     | `Property\Youtube`     | core     | Youtube ID
-* ```
-* More property types are available in the various Charcoal modules. Read their respective documentation for more details.
-*
-* # Unit Tests
-* Unit tests can be found
-*
 * @category Charcoal
 * @package Charcoal.Core
 * @subpackage Properties
@@ -184,14 +95,91 @@ class Property extends \Charcoal\Model\Model
 	/**
 	* @var mixed Actual value of the
 	*/
-	private $_val;
+	private $val;
+
+	/**
+	* @var 
+	*/
+	private $label;
+
+	/**
+	* If true, the object is translatable and its value is an array of l10n'ed values
+	* @var boolean $l10n
+	*/
+	private $l10n;
+
+	/**
+	* Hidden properties should not be shown visually, but their data might be.
+	* @var boolean $hidden;
+	*/
+	private $hidden;
+
+	/**
+	* Multiple properties can hold more than one value
+	* @var boolean $multiple
+	*/
+	private $multiple;
+
+	/**
+	* Array of options for multiple properties
+	* - `separator` (default=",") How the values will be separated in the storage (sql)
+	* - `min` (default=null) The minimum number of values. If null, <0 or NaN, then this is not taken into consideration
+	* - `max` (default=null) The maximum number of values. If null, <0 or NaN, then there is not limit
+	* @var mixed $multiple_options
+	*/
+	private $multiple_options;
+
+	/**
+	* If true, this property *must* have a value
+	* @var boolean $required
+	* @see Property_Boolean
+	*/
+	private $required;
+
+	/**
+	* Unique properties should not share he same value across 2 objects
+	* @var boolean $unique
+	*/
+	private $unique;
+
+	/**
+	* Inactive properties should be hidden everywhere / unused
+	* @var boolean $active
+	*/
+	private $active;
+
+
+	/**
+	*
+	*/
+	public function __construct($metadata_name=null)
+	{
+		// Set default values
+		$this->set_l10n(false);
+		$this->set_hidden(false);
+		$this->set_multiple(false);
+		$this->set_required(false);
+		$this->set_unique(false);
+		$this->set_active(true);
+
+		// Model Constructor
+		parent::__construct($metadata_name);
+
+
+	}
 
 	/**
 	*
 	*/
 	public function __toString()
 	{
-		return $this->val();
+		$val = $this->val();
+		if(is_string($val)) {
+			return $val;
+		}
+		else {
+			return '';
+		}
 	}
 
 	/**
@@ -214,15 +202,288 @@ class Property extends \Charcoal\Model\Model
 
 	}
 
-	public function set_val($val)
+	/**
+	* @param array $data
+	* @throws \InvalidArgumentException if the data parameter is not an array
+	* @return Property Chainable
+	*/
+	public function set_data($data)
 	{
-		$this->_val = $val;
+		if(!is_array($data)) {
+			throw new \InvalidArgumentException('Data must be an array');
+		}
+
+		//parent::set_data($data);
+
+		if(isset($data['val'])) {
+			$this->set_val($data['val']);
+		}
+		if(isset($data['label'])) {
+			$this->set_label($data['label']);
+		}
+		if(isset($data['l10n'])) {
+			$this->set_l10n($data['l10n']);
+		}
+		if(isset($data['hidden'])) {
+			$this->set_hidden($data['hidden']);
+		}
+		if(isset($data['multiple'])) {
+			$this->set_multiple($data['multiple']);
+		}
+		if(isset($data['multiple_options'])) {
+			$this->set_multiple_options($data['multiple_options']);
+		}
+		if(isset($data['required'])) {
+			$this->set_required($data['required']);
+		}
+		if(isset($data['unique'])) {
+			$this->set_unique($data['unique']);
+		}
+		if(isset($data['active'])) {
+			$this->set_active($data['active']);
+		}
 
 		return $this;
 	}
 
+	/**
+	* @param mixed
+	* @return Property (Chainable)
+	*/
+	public function set_val($val)
+	{
+		$this->val = $val;
+
+		return $this;
+	}
+
+	/**
+	* @return mixed
+	*/
 	public function val()
 	{
-		return $this->_val;
+		return $this->val;
+	}
+
+	/**
+	* @param mixed $label
+	* @throws \InvalidArgumentException if the paramter is not a boolean
+	* @return Property (Chainable)
+	*/
+	public function set_label($label)
+	{
+
+		$this->label = $label;
+		return $this;
+	}
+
+	/**
+	* @return boolean
+	*/
+	public function label()
+	{
+		return $this->label;
+	}
+
+	/**
+	* @param boolean
+	* @throws \InvalidArgumentException if the paramter is not a boolean
+	* @return Property (Chainable)
+	*/
+	public function set_l10n($l10n)
+	{
+		if(!is_bool($l10n)) {
+			throw new \InvalidArgumentException('l10n must be a boolean');
+		}
+		$this->l10n = $l10n;
+		return $this;
+	}
+
+	/**
+	* @return boolean
+	*/
+	public function l10n()
+	{
+		return !!$this->l10n;
+	}
+
+	/**
+	* @param boolean
+	* @throws \InvalidArgumentException if the paramter is not a boolean
+	* @return Property (Chainable)
+	*/
+	public function set_hidden($hidden)
+	{
+		if(!is_bool($hidden)) {
+			throw new \InvalidArgumentException('hidden must be a boolean');
+		}
+		$this->hidden = $hidden;
+		return $this;
+	}
+
+	/**
+	* @return boolean
+	*/
+	public function hidden()
+	{
+		return !!$this->hidden;
+	}
+
+	/**
+	* @param boolean
+	* @throws \InvalidArgumentException if the paramter is not a boolean
+	* @return Property (Chainable)
+	*/
+	public function set_multiple($multiple)
+	{
+		if(!is_bool($multiple)) {
+			throw new \InvalidArgumentException('multiple must be a boolean');
+		}
+		$this->multiple = $multiple;
+		return $this;
+	}
+
+	/**
+	* @return boolean
+	*/
+	public function multiple()
+	{
+		return !!$this->multiple;
+	}
+
+	/**
+	* @param array
+	* @throws \InvalidArgumentException if the paramter is not an array
+	* @return Property (Chainable)
+	*/
+	public function set_multiple_options($multiple_options)
+	{
+		if(!is_array($multiple_options)) {
+			throw new \InvalidArgumentException('multiple options must be an array');
+		}
+		$default_options = [
+			'separator'	=> ',',
+			'min'		=> 0,
+			'max'		=> 0
+		];
+		$options = array_merge($default_options, $multiple_options);
+		$this->multiple_options = $options;
+		return $this;
+	}
+
+	/**
+	* @return array
+	*/
+	public function multiple_options()
+	{
+		return $this->multiple_options;
+	}
+	
+	/**
+	* @param boolean
+	* @throws \InvalidArgumentException if the paramter is not a boolean
+	* @return Property (Chainable)
+	*/
+	public function set_required($required)
+	{
+		if(!is_bool($required)) {
+			throw new \InvalidArgumentException('required must be a boolean');
+		}
+		$this->required = $required;
+		return $this;
+	}
+
+	/**
+	* @return boolean
+	*/
+	public function required()
+	{
+		return !!$this->required;
+	}
+
+	/**
+	* @param boolean
+	* @throws \InvalidArgumentException if the paramter is not a boolean
+	* @return Property (Chainable)
+	*/
+	public function set_unique($unique)
+	{
+		if(!is_bool($unique)) {
+			throw new \InvalidArgumentException('unique must be a boolean');
+		}
+		$this->unique = $unique;
+		return $this;
+	}
+
+	/**
+	* @return boolean
+	*/
+	public function unique()
+	{
+		return !!$this->unique;
+	}
+
+	/**
+	* @param boolean
+	* @throws \InvalidArgumentException if the paramter is not a boolean
+	* @return Property (Chainable)
+	*/
+	public function set_active($active)
+	{
+		if(!is_bool($active)) {
+			throw new \InvalidArgumentException('active must be a boolean');
+		}
+		$this->active = $active;
+		return $this;
+	}
+
+	/**
+	* @return boolean
+	*/
+	public function active()
+	{
+		return !!$this->active;
+	}
+
+	public function validate_required()
+	{
+
+	}
+
+	public function validate_unique()
+	{
+
+	}
+
+	/**
+	* @param string
+	* @return string
+	*/
+	public function render($template)
+	{
+		$view = new PropertyView();
+		$controller = PropertyViewController::get($this);
+		return $view->render($template, $controller);
+	}
+
+	/**
+	*
+	*/
+	public function render_template($template_ident, $template_options=null)
+	{
+		$view = new PropertyView();
+		$controller_name = '\Charcoal\Property\ViewController\\'.str_replace(['.', '_', '\\'], '', $template_ident);
+		if(class_exists($controller_name)) {
+			$controller = new $controller_name($this);
+		}
+		else {
+			$controller = new PropertyViewController($this);
+		}
+		
+		if(is_array($template_options)) {
+			$controller->set_data($template_options);
+		}
+
+		return $view->render_template($template_ident, $controller);
 	}
 }

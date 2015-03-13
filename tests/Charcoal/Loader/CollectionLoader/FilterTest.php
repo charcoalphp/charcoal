@@ -19,6 +19,41 @@ class FilterTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('', $obj->func());
 	}
 
+	public function testSetData()
+	{
+		$obj = new Filter();
+
+		$obj->set_data(['property'=>'foo']);
+		$this->assertEquals('foo', $obj->property());
+
+		$obj->set_data([
+			'property'=>'bar',
+			'val'=>42
+		]);
+		$this->assertEquals('bar', $obj->property());
+		$this->assertEquals(42, $obj->val());
+
+		// Full data et
+		$data = [
+			'property'=>'foo',
+			'val'=>42,
+			'operator'=>'=',
+			'func'=>'abs',
+			'operand'=>'and',
+			'string'=>'(1=1)',
+			'active'=>true
+		];
+		$obj->set_data($data);
+
+		$this->assertEquals('foo', $obj->property());
+		$this->assertEquals(42, $obj->val());
+		$this->assertEquals('=', $obj->operator());
+		$this->assertEquals('ABS', $obj->func());
+		$this->assertEquals('AND', $obj->operand());
+		$this->assertEquals('(1=1)', $obj->string());
+		$this->assertEquals(true, $obj->active());
+	}
+
 	public function testSetProperty()
 	{
 		$obj = new Filter();
@@ -156,6 +191,34 @@ class FilterTest extends \PHPUnit_Framework_TestCase
 		$obj->set_operand($op);
 	}
 
+	/**
+	* @dataProvider providerValidFuncs
+	*/ 
+	public function testSetString($func)
+	{
+		$obj = new Filter();
+		$obj->set_string($func);
+
+		$this->assertEquals($func, $obj->string());
+	}
+
+	public function testSetStringIsChainable()
+	{
+		$obj = new Filter();
+		$ret = $obj->set_string('and foo=1');
+
+		$this->assertSame($obj, $ret);
+	}
+
+
+	public function testSetInvalidStringThrowsException()
+	{
+		$this->setExpectedException('\InvalidArgumentException');
+
+		$obj = new Filter();
+		$obj->set_string([]);
+	}
+
 	public function testSQLNoPropertyIsEmpty()
 	{
 		$obj = new Filter();
@@ -205,6 +268,31 @@ class FilterTest extends \PHPUnit_Framework_TestCase
 
 		// @todo: Note that 'bar' is not quoted...
 		$this->assertEquals('(ABS(`foo`) = bar)', $sql);
+	}
+
+	public function testSQLWithString()
+	{
+		$obj = new Filter();
+		$obj->set_string('1=1');
+
+		$sql = $obj->sql();
+		$this->assertEquals('1=1', $sql);
+	}
+
+	public function testSQLWithStringTakesPrecedence()
+	{
+		$obj = new Filter();
+		
+		// Should be ignored:
+		$obj->set_property('foo');
+		$obj->set_operator('=');
+		$obj->set_val('bar');
+
+		// Should take precedence:
+		$obj->set_string('1=1');
+
+		$sql = $obj->sql();
+		$this->assertEquals('1=1', $sql);
 	}
 
 	public function providerValidOperators()
