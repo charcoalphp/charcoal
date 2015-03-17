@@ -76,8 +76,7 @@ class ViewController
 		if($model === null) {
 			return null;
 		}
-		var_dump($model);
-		var_dump($name);
+
 		if(is_callable([$model, $name])) {
 			return call_user_func_array([$model, $name], $arguments);
 		}

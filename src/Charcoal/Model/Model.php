@@ -90,12 +90,19 @@ class Model
 	private $_obj_type;
 
 	/**
-	 * Always store the array of properties (in a static var) for all object types
+	 * Always store the array of properties for all object types
 	 *
 	 * @var array $_properties
 	 * @see self::property()
 	 */
 	private $_properties = null;
+
+
+	/**
+	* @var Validator $_validator
+	* @see self::validator()
+	*/
+	protected $_validator = null;
 
 	/**
 	 * Store (in a static var) the class metadata
@@ -103,11 +110,11 @@ class Model
 	 * Until the code is ported to late-static-bindings, it is an
 	 * array that is share amongst all class (with the object type as key)
 	 *
-	 * @var \Charcoal\Model\Config $_metadata
+	 * @var Metadata $_metadata
 	 * @see self::metadata()
 	 * @see self::set_metadata()
 	 */
-	static protected $_metadata = null;
+	private $_metadata = null;
 
 	/**
 	 * Constructor for the base objects (models)
@@ -123,8 +130,8 @@ class Model
 	public function __construct($metadata_name=null)
 	{
 		// Allow namespace. But the metadata_name is normalized to underscores (Should it also be lowercased?)
-		$metadata_name = ($metadata_name !== null) ? $metadata_name : str_replace('\\', '_', get_class($this));
-		$this->_obj_type = $metadata_name;		
+		$metadata_name = ($metadata_name !== null) ? $metadata_name : '';
+		$this->_obj_type = $metadata_name;
 	}
 
 	/**
@@ -145,18 +152,18 @@ class Model
 		if(is_array($metadata)) {
 			$c = new Metadata();
 			$c->set_data($metadata);
-			static::$_metadata = $c;
+			$this->_metadata = $c;
 		}
 		else if($metadata instanceof Metadata)
 		{
-			static::$_metadata = $metadata;
+			$this->_metadata = $metadata;
 		}
 		else {
 			throw new \InvalidArgumentException('Metadata argument is invalid (must be array or Model\\Medatadata object)');
 		}
 
 		// If the metadata contains "data", then automatically set the initial data to the value
-		if(isset(static::$_metadata['data'])) {
+		if(isset($this->_metadata['data'])) {
 			$this->set_data($metadata['data']);
 		}
 
@@ -165,38 +172,37 @@ class Model
 	}
 
 	/**
-	 * Get the object's metadatauration object
-	 *
-	 * The object metadatauration should be stored as a \Charcoal\Model\Metadata object.
-	 * \Charcoal\Model\Config implements ArrayAccess so it can be used like an array too.
-	 *
-	 * @return \Charcoal\Model\Metadata
-	 *
-	 * @todo With PHP 5.3+ we could use the static keywords for Late-Static-Binding instead of an array
-	 */
+	* Get the object's metadatauration object
+	*
+	* The object metadatauration should be stored as a \Charcoal\Model\Metadata object.
+	* \Charcoal\Model\Config implements ArrayAccess so it can be used like an array too.
+	*
+	* @return \Charcoal\Model\Metadata
+	*
+	*/
 	public function metadata()
 	{
 		//pre($this->obj_type());
-		if(!isset(static::$_metadata)) {
+		if($this->_metadata === null) {
 			// @todo Log error, default metadata loaded
 			return $this->load_metadata($this->obj_type());
 		}
 
-		return static::$_metadata;
+		return $this->_metadata;
 	}
 
 
 
 	/**
-	 * Get the object type of the actual object
-	 *
-	 * In most cases, the "obj_type" is the name of the PHP class of the object.
-	 * It is possible, however, to have empty objects in Charcoal that are 100% defined with a JSON metadata.
-	 * (In this case, the obj_type would be `\Charcoal\Model\Base` or `Charcoal_Object`)
-	 *
-	 * @todo 2012-06-28: DOC!
-	 * @return string The object type (class name or metadata name)
-	 */
+	* Get the object type of the actual object
+	*
+	* In most cases, the "obj_type" is the name of the PHP class of the object.
+	* It is possible, however, to have empty objects in Charcoal that are 100% defined with a JSON metadata.
+	* (In this case, the obj_type would be `\Charcoal\Model\Base` or `Charcoal_Object`)
+	*
+	* @todo 2012-06-28: DOC!
+	* @return string The object type (class name or metadata name)
+	*/
 	public function obj_type()
 	{
 		if($this->_obj_type) {
@@ -213,32 +219,30 @@ class Model
 	 * @param string $metadata_name
 	 * @param array $hierarchy
 	 *
-	 * @return \Charcoal\Model\Config
-	 *
-	 * @todo 2012-06-28: DOC!
-	 * @todo 2014-04-01: Use late static binding instead of an array
+	 * @return Metadata
 	 */
-	public function load_metadata($metadata_name)
+	public function load_metadata($metadata_name=null)
 	{
-		//pre($metadata_name);
-		if(!isset(static::$_metadata) || (static::$_metadata === null)) {
+		if($metadata_name === null) {
+			return new Metadata();
+		}
+		else {
 			$metadata_loader = new MetadataLoader();
 			$metadata = $metadata_loader->load($metadata_name);
 			$this->set_metadata($metadata);
-			
 		}
 		return $metadata;
 	}
 
 	/**
-	 * Sets the data
-	 *
-	 * This function takes an array and fill the object with its value.
-	 *
-	 * @param array $data
-	 * @throws \InvalidArgumentException if the data parameter is not an array
-	 * @return \Charcoal\Model\Base Returns self (Chainable)
-	 */
+	* Sets the data
+	*
+	* This function takes an array and fill the object with its value.
+	*
+	* @param array $data
+	* @throws \InvalidArgumentException if the data parameter is not an array
+	* @return Model (Chainable)
+	*/
 	public function set_data($data)
 	{
 		if(!is_array($data)) {
@@ -308,56 +312,32 @@ class Model
 		return $data;
 	}
 
+
+
+	public function validator()
+	{
+		if($this->_validator === null) {
+			$this->_validator = new Validator($this);
+		}
+		return $this->_validator;
+	}
+
 	/**
-	 * Validate the object according to its properties' rules
+	 * Validate the Model data.
+	 * Note that 
 	 *
-	 * @param array $props
+	 * @param Validator $v
 	 *
-	 * @return array
-	 * @todo Return a Charcoal_Validation object
-	 *
-	 * @see \Charcoal\Model\Property::validate()
+	 * @return boolean
 	 *
 	 */
-	public function validate($props=null)
+	public function validate(Validator &$v=null)
 	{
-		$validations = [];
-		$response    = [];
-
-		if($props === null) {
-			$props = $this->metadata()->properties;
+		if($v === null) {
+			$v = $this->validator();
 		}
 
-		foreach($props as $property_ident => $property_options) {
-
-			$p = $this->p( $property_ident );
-
-			if(!$p || (isset($p->active) && $p->active === false)) {
-				// This property is invalid or deactivated. Do not check it.
-				continue;
-			}
-
-			// VALIDATE PROPERTY
-			$validations[$property_ident] = $p->validate();
-
-			// INVALID PROPERTIES
-			if($validations[$property_ident]['success'] === false) {
-				// ARRAY SOURCE
-				if(is_array($validations[$property_ident]['messages']) && $validations[$property_ident]['messages']) {
-					foreach($validations[$property_ident]['messages'] as $m) {
-						if($m) {
-							$response[$property_ident][] = $m;
-						}
-					}
-				}
-				// STRING SOURCE
-				else if(is_string($validations[$property_ident]['messages'] ) ) {
-					$response[$property_ident][] = $validations[$property_ident]['messages'];
-				}
-			}
-		}
-
-		return $response;
+		return true;
 	}
 
 	/**
@@ -419,6 +399,7 @@ class Model
 
 		$property_type = $property_metadata['type'];
 		$property = Property::get($property_type);
+		$property->set_ident($property_ident);
 		$property->set_data($property_metadata);
 
 		$property_value = isset($this->{$property_ident}) ? $this->{$property_ident} : null;

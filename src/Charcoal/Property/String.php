@@ -3,6 +3,7 @@
 namespace Charcoal\Property;
 
 use \Charcoal\Model\Property as Property;
+use \Charcoal\Model\Validator\Propertyalidator as Validator;
 
 class String extends Property
 {
@@ -14,9 +15,6 @@ class String extends Property
 	private $_max_length;
 	private $_regexp;
 
-
-
-
 	/**
 	* @param array $data
 	* @throws \InvalidArgumentException if the parameter is not an array
@@ -24,6 +22,7 @@ class String extends Property
 	*/
 	public function set_data($data)
 	{
+
 		if(!is_array($data)) {
 			throw new \InvalidArgumentException('Data must be an array');
 		}
@@ -141,46 +140,59 @@ class String extends Property
 	/**
 	* @return boolean
 	*/
-	public function validate_min_length($val=null)
+	public function validate_min_length()
 	{
-		if($val === null) {
-			$val = $this->val();
-		}
+		$val = $this->val();
 		$min_length = $this->min_length();
 		if($min_length == 0) {
 			return true;
 		}
 		
-		return (mb_strlen($val) >= $min_length);
+		$valid = (mb_strlen($val) >= $min_length);
+		if(!$valid) {
+			$this->validator()->error('Min length error');
+		}
+
+		return $valid;
 	}
 
 	/**
 	* @return boolean
 	*/
-	public function validate_max_length($val=null)
+	public function validate_max_length()
 	{
-		if($val === null) {
-			$val = $this->val();
-		}
+		$val = $this->val();
 		$max_length = $this->max_length();
 		if($max_length == 0) {
 			return true;
 		}
 		
-		return (mb_strlen($val) <= $max_length);
+		$valid = (mb_strlen($val) <= $max_length);
+		if(!$valid) {
+			$this->validator()->error('Max length error');
+		}
+
+		return $valid;
+
 	}
 
-	public function validate_regexp($val=null)
+	/**
+	* @return boolean
+	*/
+	public function validate_regexp()
 	{
-		if($val === null) {
-			$val = $this->val();
-		}
+		$val = $this->val();
 		$regexp = $this->regexp();
 		if($regexp == '') {
 			return true;
 		}
 
-		return !!preg_match($regexp, $val);
+		$valid = !!preg_match($regexp, $val);
+		if(!$valid) {
+			$this->validator()->error('Regexp error');
+		}
+
+		return $valid;
 	}
 
 	/**
@@ -192,14 +204,14 @@ class String extends Property
 	*/
 	public function sql_type()
 	{
-		// Multiple always TEXT because they can hold multiple values
+		// Multiple strings are always stored as TEXT because they can hold multiple values
 		if($this->multiple()) {
 			return 'TEXT';
 		}
 
 		$max_length = $this->max_length();
 		// VARCHAR or TEXT, depending on length
-		if($max_length <= 255 && $max_legnth != 0) {
+		if($max_length <= 255 && $max_length != 0) {
 			return 'VARCHAR('.$max_length.')';
 		}
 		else {

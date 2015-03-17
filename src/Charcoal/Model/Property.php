@@ -21,8 +21,11 @@
 
 namespace Charcoal\Model;
 
+use \Charcoal\Model\Validator\PropertyValidator as PropertyValidator;
+use \Charcoal\Model\Property\Field as Field;
 use \Charcoal\Property\View as PropertyView;
 use \Charcoal\Property\ViewController as PropertyViewController;
+
 
 /**
 * Core (base) property class
@@ -90,8 +93,9 @@ use \Charcoal\Property\ViewController as PropertyViewController;
 * @link http://charcoal.locomotive.ca
 * @since Version 2012-03-01
 */
-class Property extends \Charcoal\Model\Model
+class Property extends Model
 {
+	private $ident;
 	/**
 	* @var mixed Actual value of the
 	*/
@@ -155,6 +159,7 @@ class Property extends \Charcoal\Model\Model
 	public function __construct($metadata_name=null)
 	{
 		// Set default values
+		$this->set_ident('');
 		$this->set_l10n(false);
 		$this->set_hidden(false);
 		$this->set_multiple(false);
@@ -246,6 +251,17 @@ class Property extends \Charcoal\Model\Model
 		return $this;
 	}
 
+	public function set_ident($ident)
+	{
+		$this->_ident = $ident;
+		return $this;
+	}
+
+	public function ident()
+	{
+		return $this->_ident;
+	}
+
 	/**
 	* @param mixed
 	* @return Property (Chainable)
@@ -253,7 +269,6 @@ class Property extends \Charcoal\Model\Model
 	public function set_val($val)
 	{
 		$this->val = $val;
-
 		return $this;
 	}
 
@@ -263,6 +278,23 @@ class Property extends \Charcoal\Model\Model
 	public function val()
 	{
 		return $this->val;
+	}
+
+	public function field_val($field_ident)
+	{
+		$val = $this->val();
+		if($val === null) {
+			return null;
+		}
+		if(!is_array($val)) {
+			throw new Exception('Val is not an array');
+		}
+		if(isset($val[$field_ident])) {
+			return $val[$field_ident];
+		}
+		else {
+			return null;
+		}
 	}
 
 	/**
@@ -445,14 +477,33 @@ class Property extends \Charcoal\Model\Model
 		return !!$this->active;
 	}
 
-	public function validate_required()
+	public function validator()
+	{
+		if($this->_validator === null) {
+			$this->_validator = new PropertyValidator($this);
+		}
+		return $this->_validator;
+	}
+
+	public function validate()
 	{
 
+		$ret = true;
+		$ret = parent::validate($v) && $ret;
+		$ret = $this->validate_required() && $ret;
+		$ret = $this->validate_unique() && $ret;
+
+		return $ret;
+	}
+
+	public function validate_required()
+	{
+		return true;
 	}
 
 	public function validate_unique()
 	{
-
+		return true;
 	}
 
 	/**
@@ -485,5 +536,52 @@ class Property extends \Charcoal\Model\Model
 		}
 
 		return $view->render_template($template_ident, $controller);
+	}
+
+	/**
+	*
+	*/
+	public function fields()
+	{
+		$fields = [];
+		if($this->l10n()) {
+			$langs = ['fr', 'en'];
+			foreach($langs as $lang) {
+				$field = new Field();
+				$field->set_data([
+					'ident'=>$this->ident().'_'.$lang,
+					'sql_type'=>$this->sql_type(),
+					'val'=>$this->field_val($lang),
+					'default_val'=>null,
+					'allow_null'=>true,
+					'comment'=>$this->label()
+				]);
+				$fields[$lang] = $field;
+			}
+		}
+		else {
+			$field = new Field();
+			$field->set_data([
+				'ident'=>$this->ident(),
+				'sql_type'=>$this->sql_type(),
+				'val'=>$this->val(),
+				'default_val'=>null,
+				'allow_null'=>true,
+				'comment'=>$this->label()
+			]);
+			$fields[] = $field;
+		}
+		
+		return $fields;
+	}
+
+	public function sql_type()
+	{
+		if($this->multiple()) {
+			return 'TEXT';
+		}
+		else {
+			return 'VARCHAR(255)';
+		}
 	}
 }

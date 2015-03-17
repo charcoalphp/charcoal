@@ -95,7 +95,7 @@ class Metadata implements \ArrayAccess
 	 * Holds the properties of this configuration object
 	 * @var array $properties
 	 */
-	public $properties;
+	private $_properties = [];
 
 	/**
 	* The actual config data
@@ -120,6 +120,13 @@ class Metadata implements \ArrayAccess
 	 * @access private
 	 */
 	private static $_config_sources;
+
+	public function __construct($data=null)
+	{
+		if($data !== null) {
+			$this->set_data($data);
+		}
+	}
 
 	/**
 	 * ArrayAccess isset(config[a])
@@ -168,10 +175,28 @@ class Metadata implements \ArrayAccess
 			throw new \InvalidArgumentException('Data parameter must be an array');
 		}
 
+		if(isset($data['properties'])) {
+			$this->set_properties($data['properties']);
+		}
+
 		foreach($data as $k => $v) {
 			$this->{$k} = $v;
 		}
 
 		return $this;
+	}
+
+	public function set_properties($properties)
+	{
+		if(!is_array($properties)) {
+			throw new \InvalidArgumentException('Properties need to be an array');
+		}
+		$this->_properties = $properties;
+		return $this;
+	}
+
+	public function properties()
+	{
+		return $this->_properties;
 	}
 }

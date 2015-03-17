@@ -2,6 +2,8 @@
 
 namespace Charcoal\Loader;
 
+use \Charcoal\Model\Source as Source;
+
 abstract class Loader
 {
 	const DEFAULT_USE_CACHE = true;
@@ -31,7 +33,7 @@ abstract class Loader
 		return $this->_cache_key;	
 	}
 
-	public function set_source(\Charcoal\Model\Source $source)
+	public function set_source(Source $source)
 	{
 		$this->_source = $source;
 		return $this;
@@ -40,7 +42,7 @@ abstract class Loader
 	public function source()
 	{
 		if(!$this->_source) {
-			return new \Charcoal\Model\Source();
+			return new Source();
 		}
 		return $this->_source;
 	}
