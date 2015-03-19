@@ -50,46 +50,13 @@ use \Charcoal\Helper\Cache as Cache;
  */
 class Metadata implements \ArrayAccess
 {
-	/**
-	 * Can be object, property, template, email etc.
-	 * @var string $config_type
-	 */
-	public $config_type;
-	/**
-	 * Versioning will allow future backward-compatibility to be kept.
-	 * As of 2015-02-20 this is not yet used.
-	 * @var mixed $config_version
-	 */
-	public $config_version;
 
 	/**
-	 * @var string $ident
+	 * @var string $_ident
 	 */
-	public $ident;
+	private $_ident;
 
-	/**
-	 * The name of the configuration
-	 * - l10n array (strings with langs as keys)
-	 * @var array $name
-	 */
-	public $name;
-	/**
-	 * Description
-	 * - l10n array (strings with langs as keys)
-	 * @var array $description
-	 */
-	public $description;
-	/**
-	 * Longer description
-	 * - l10n array (strings with langs as keys)
-	 * @var array $long_description
-	 */
-	public $long_description;
-	/**
-	 * - l10n array (strings with langs as keys)
-	 * @var array $notes
-	 */
-	public $notes;
+
 
 	/**
 	 * Holds the properties of this configuration object
@@ -102,24 +69,6 @@ class Metadata implements \ArrayAccess
 	* @var array $data
 	*/
 	public $data;
-
-	public $actions;
-
-	public $source;
-
-	/**
-	 * Static "cache" of all loaded config (hierarchy result)
-	 *
-	 * @access private
-	 */
-	private static $_config;
-
-	/**
-	 * Static "cache" of all loaded raw config file
-	 *
-	 * @access private
-	 */
-	private static $_config_sources;
 
 	public function __construct($data=null)
 	{
@@ -135,6 +84,7 @@ class Metadata implements \ArrayAccess
 	{
 		return isset($this->{$offset});
 	}
+
 	/**
 	 * ArrayAccess config[a]
 	 */
@@ -154,6 +104,7 @@ class Metadata implements \ArrayAccess
 		}
 		$this->{$offset} = $value;
 	}
+
 	/**
 	 *  ArrayAcces unset(config[a])
 	 */
@@ -164,11 +115,11 @@ class Metadata implements \ArrayAccess
 	}
 
 	/**
-	 * @param array
-	 *
-	 * @throws \InvalidArgumentException if the data parameter is not an array
-	 * @return Metadata (Chainable)
-	 */
+	* @param array
+	*
+	* @throws \InvalidArgumentException if the data parameter is not an array
+	* @return Metadata (Chainable)
+	*/
 	public function set_data($data)
 	{
 		if(!is_array($data)) {
@@ -184,6 +135,21 @@ class Metadata implements \ArrayAccess
 		}
 
 		return $this;
+	}
+
+	public function set_ident($ident)
+	{
+		if(!is_string($ident)) {
+			throw new \InvalidArgumentException(__CLASS__.'::'.__FUNCTION__.'Ident must be a string');
+		}
+		$this->_ident = $ident;
+
+		return $this;
+	}
+
+	public function ident()
+	{
+		return $this->_ident;
 	}
 
 	public function set_properties($properties)

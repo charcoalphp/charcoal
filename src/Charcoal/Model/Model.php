@@ -105,10 +105,7 @@ class Model
 	protected $_validator = null;
 
 	/**
-	 * Store (in a static var) the class metadata
-	 *
-	 * Until the code is ported to late-static-bindings, it is an
-	 * array that is share amongst all class (with the object type as key)
+	 * Store the class metadata
 	 *
 	 * @var Metadata $_metadata
 	 * @see self::metadata()

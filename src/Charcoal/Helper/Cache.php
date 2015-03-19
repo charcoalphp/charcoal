@@ -205,14 +205,14 @@ class Cache
 	public function active()
 	{
 		$default_active = true;
-		if(!isset(Charcoal::$config['cache'])) {
+		if(!isset(Charcoal::config()['cache'])) {
 			return $default_active;
 		}
-		if(!isset(Charcoal::$config['cache']['active'])) {
+		if(!isset(Charcoal::config()['cache']['active'])) {
 			return $default_active;
 		}
 
-		return !!Charcoal::$config['cache']['active'];
+		return !!Charcoal::config()['cache']['active'];
 	}
 
 	/**
@@ -369,12 +369,12 @@ class Cache
 		if($type === null) {
 			$type = $this->type();
 		}
-		if(!isset(Charcoal::$config['cache']) || !isset(Charcoal::$config['cache'][$type])) {
+		if(!isset(Charcoal::config()['cache']) || !isset(Charcoal::config()['cache'][$type])) {
 			// Always return array
 			return [];
 		}
 		else {
-			return Charcoal::$config['cache'][$type];
+			return Charcoal::config()['cache'][$type];
 		}
 	}
 
@@ -451,7 +451,7 @@ class Cache
 	*/
 	public function prefix_from_config()
 	{
-		$cfg = Charcoal::$config;
+		$cfg = Charcoal::config();
 		$project_name = isset($cfg['project_name']) ? $cfg['project_name'] : '';
 		$project_db = isset($cfg['default_database']) ? $cfg['default_database'] : '';
 		$cache_prefix = isset($cfg['cache']['prefix']) ? $cfg['cache']['prefix'] : 'charcoal_';

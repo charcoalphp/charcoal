@@ -115,6 +115,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-phpdocumentor');
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-githooks');
+	grunt.loadNpmTasks('grunt-composer');	
 
 	// Register Task(s)
 	grunt.registerTask('default', [

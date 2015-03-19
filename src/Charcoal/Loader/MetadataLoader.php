@@ -9,11 +9,10 @@ use \Charcoal\Charcoal as Charcoal;
 /**
 *
 */
-class MetadataLoader extends Loader
+class MetadataLoader extends FileLoader
 {
 
 	private $_ident = '';
-	private $_search_path = [];
 
 	/**
 	* @param string $ident
@@ -34,40 +33,15 @@ class MetadataLoader extends Loader
 		return $this->_ident;
 	}
 
-	
-
-	/**
-	* @param string $path
-	*
-	* @throws \InvalidArgumentException if the path does not exist or is invalid
-	* @return \Charcoal\Service\Loader\Metadata (Chainable)
-	*/
-	public function add_path($path)
-	{
-		if(!is_string($path)) {
-			throw new \InvalidArgumentException('Path should be a string.');
-		}
-		if(!file_exists($path)) {
-			throw new \InvalidArgumentException(sprintf('Path does not exist: %s', $path));
-		}
-		if(!is_dir($path)) {
-			throw new \InvalidArgumentException(sprintf('Path is not a directory: %s', $path));
-		}
-
-		$this->_search_path[] = $path;
-
-		return $this;
-	}
-
 	/**
 	* Get the object's search path, merged with global configuration path
 	* @return array
 	*/
 	public function search_path()
 	{
-		$cfg = Charcoal::$config;
+		$cfg = Charcoal::config();
 
-		$all_path = $this->_search_path;
+		$all_path = parent::search_path();
 
 		$global_path = isset($cfg['metadata_path']) ? $cfg['metadata_path'] : [];
 		if(!empty($global_path)) {
@@ -87,7 +61,7 @@ class MetadataLoader extends Loader
 
 		// Attempt loading from cache
 		$ret = $this->_load_from_cache();
-		if($ret !== false) {
+		if($ret !== null) {
 			return $ret;
 		}
 
@@ -163,15 +137,8 @@ class MetadataLoader extends Loader
 	{
 		$data = [];
 		$filename = $this->_filename_from_ident($ident);
-		$search_path = $this->search_path();
-		if(empty($search_path)) {
-			return [];
-		}
-		foreach($search_path as $path) {
-			$f = $path.DIRECTORY_SEPARATOR.$filename;
-			if(!file_exists($f)) {
-				continue;
-			}
+		$files = $this->_all_matching_filenames($filename);
+		foreach($files as $f) {
 			$file_content = file_get_contents($f);
 			if($file_content === '') {
 				continue;
@@ -183,7 +150,6 @@ class MetadataLoader extends Loader
 				$data = Charcoal::merge($data, $file_data);
 			}
 		}
-
 		return $data;
 	}
 

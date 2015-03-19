@@ -86,7 +86,7 @@ class Encoder
 	*/
 	private function key($salt='')
 	{
-		$global_salt = isset(Charcoal::$config['salt']) ? Charcoal::$config['salt'] : '';
+		$global_salt = Charcoal::config()->salt();
 		return md5($global_salt.$salt);
 	}
 	

@@ -6,7 +6,7 @@
 namespace Charcoal\Model;
 
 use \Charcoal\Model\ViewController as ViewController;
-use \Charcoal\Loader\ViewLoader as ViewLoader;
+use \Charcoal\Loader\TemplateLoader as TemplateLoader;
 
 /**
 *
@@ -16,26 +16,48 @@ class View
 	const ENGINE_MUSTACHE = 'mustache';
 	const ENGINE_PHP_MUSTACHE = 'php_mustache';
 	
-	/**
-	* Unused, for now (always mustache)
-	* @var string $engine;
-	*/
-	public $engine = self::ENGINE_MUSTACHE;
+	private $_engine = self::ENGINE_PHP_MUSTACHE;
+	private $_template;
+	private $_ident;
 
-	/**
-	* The template (view), as a string
-	* @var string $template
-	*/
-	private $template;
-
-	private $template_ident;
-	private $template_type;
+	private function _ident_to_classname($ident)
+	{
+		$class = str_replace('/', '/Template/', $ident);
+		$class = str_replace(['/', '.'], '\\', $class);
+		$expl = explode('\\', $class);
+		array_walk($expl, function(&$i) { 
+			$i = ucfirst($i); 
+		});
+		$class = implode('\\', $expl);
+		return $class;
+	}
 
 	/**
 	* 
 	* @var mixed $controller
 	*/
 	private $controller;
+
+	public function from_ident($ident)
+	{
+		$template_loader = new TemplateLoader();
+		$template = $template_loader->load($ident);
+		$this->set_template($template);
+
+		$class_name = $this->_ident_to_classname($ident);
+		if(class_exists($class_name)) {
+			$model = new $class_name();
+		}
+		else {
+			$model = new Model();
+		}
+
+		$model = new \Boilerplate\Template\Home();
+		$controller = new ViewController($model);
+		$this->set_controller($controller);
+
+		return $this;
+	}
 
 	/**
 	* @param string $template
@@ -82,7 +104,7 @@ class View
 			throw new \InvalidArgumentException('Template must be a string');
 		}
 
-		$this->template = $template;
+		$this->_template = $template;
 		return $this;
 	}
 
@@ -91,16 +113,16 @@ class View
 	*/
 	public function template()
 	{
-		if($this->template === null) {
+		if($this->_template === null) {
 			return '';
 		}
 
-		return $this->template;
+		return $this->_template;
 	}
 
 	public function load_template($template_ident)
 	{
-		$template_loader = new ViewLoader();
+		$template_loader = new TemplateLoader();
 		$template = $template_loader->load($template_ident);
 		$this->set_template($template);
 
@@ -160,4 +182,5 @@ class View
 		$template = $this->load_template($template_ident);
 		return $this->render($template, $controller);
 	}
+
 }

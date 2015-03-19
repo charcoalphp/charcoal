@@ -106,4 +106,22 @@ class Field
 		return $this->_allow_null;
 	}
 
+	/**
+	* @return string
+	*/
+	public function sql()
+	{
+		$ident = $this->ident();
+		if(!$ident) {
+			return '';
+		}
+
+		$sql_type = $this->sql_type();
+		$null = ($this->allow_null() === false) ? ' NOT NULL ' : '';
+		$default = $this->default_val() ? ' DEFAULT \''.addslashes($this->default_val()).'\' ' : '';
+		$comment = $this->label() ? ' COMMENT \''.addslashes($this->label()).'\' ' : '';
+
+		return '`'.$ident.'` '.$sql_type.$null.$default.$comment;
+	}
+
 }

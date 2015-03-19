@@ -72,7 +72,7 @@ class MetadataLoaderTest extends \PHPUnit_Framework_TestCase
 
 	public function testSearchPathUsesGlobalConfig()
 	{
-		Charcoal::$config['metadata_path'] = ['/tmp'];
+		Charcoal::config()['metadata_path'] = ['/tmp'];
 
 		$obj = new MetadataLoader();
 		$this->assertEquals(['/tmp'], $obj->search_path());
@@ -80,12 +80,12 @@ class MetadataLoaderTest extends \PHPUnit_Framework_TestCase
 		$obj->add_path(__DIR__);
 		$this->assertEquals(['/tmp', __DIR__], $obj->search_path());
 
-		Charcoal::$config['metadata_path'] = [];
+		Charcoal::config()['metadata_path'] = [];
 	}
 
 	public function testLoadWithEmptySearchPathReturnsEmptyArray()
 	{
-		Charcoal::$config['metadata_path'] = [];
+		Charcoal::config()['metadata_path'] = [];
 
 		$obj = new MetadataLoader();
 		//$obj->add_path('metadata');

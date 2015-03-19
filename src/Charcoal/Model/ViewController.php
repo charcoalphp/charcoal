@@ -17,17 +17,22 @@ class ViewController
 	/**
 	*
 	*/
-	static public function get(Model $model)
+	static public function get(Model $model=null)
 	{
 		// Todo [Mat. 2015-02-27] Load custom controller for specific model if it exists. 
 		$model_controller = new ViewController($model);
 		return $model_controller;
 	}
 
+	static public function from_ident($ident)
+	{
+
+	}
+
 	/**
 	*
 	*/
-	public function __construct(Model $model)
+	public function __construct(Model $model=null)
 	{
 		$this->_model = $model;
 	}

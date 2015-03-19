@@ -72,9 +72,12 @@ abstract class Loader
 	protected function _load_from_cache()
 	{
 		if(!$this->use_cache()) {
-			return false;
+			return null;
 		}
 		$cache_key = $this->cache_key();
+		if(!$cache_key) {
+			return null;
+		}
 		return \Charcoal\Helper\Cache::get()->fetch($cache_key);
 	}
 

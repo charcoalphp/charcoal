@@ -1,7 +1,7 @@
 {
     "name": "locomotivemtl/charcoal-core",
     "description": "Charcoal Web Framework",
-    "keywords":["charcoal", "locomotive", "framwork", "cms"],
+    "keywords":["charcoal", "locomotive", "php", "framework", "cms"],
     "authors": [
         {
             "name": "Mathieu Ducharme",
@@ -11,7 +11,8 @@
     "require": {
         "php": ">=5.3.0",
         "mustache/mustache": "~2.5",
-        "league/flysystem": "~1.0"
+        "league/flysystem": "~1.0",
+        "slim/slim": "~2.6"
     },
     "_require-dev":{
         "phpunit/phpunit": "*",
