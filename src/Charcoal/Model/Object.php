@@ -20,19 +20,57 @@ class Object extends Model
 {
 	const DEFAULT_KEY = 'id';
 
-	public $id;
-	public $active = true;
 	private $_key;
+	private $_id;
+	private $_active = true;
+	
 
 	public function __construct($data=null)
 	{
 		// Use Model constructor...
 		parent::__construct();
 
+		if($data !== null) {
+			$this->set_data($data);
+		}
+
 		// ... and add one option to set the primary key and this object table
 		$metadata = $this->metadata();
 		$key = isset($metadata['key']) ? $metadata['key'] : self::DEFAULT_KEY;
 		$this->set_key($key);
+	}
+
+	public function set_data($data)
+	{
+		parent::set_data($data);
+
+		if(isset($data['key'])) {
+			$this->set_id($data['key']);
+		}
+		if(isset($data['id'])) {
+			$this->set_id($data['id']);
+		}
+		if(isset($data['active'])) {
+			$this->set_key($data['active']);
+		}
+
+		return $this;
+	}
+
+	public function set_key($key)
+	{
+		//pre($val);
+		if(!is_scalar($key)) {
+			throw new \InvalidArgumentException('Key argument must be scalar');
+		}
+		$this->_key = $key;
+
+		return $this;
+	}
+
+	public function key()
+	{
+		return $this->_key;
 	}
 	
 	public function set_id($val)
@@ -63,29 +101,15 @@ class Object extends Model
 	public function set_active($active)
 	{
 		if(!is_bool($active)) {
-			throw new \InvalidArgumentException('active paramter needs to be bool');
+			throw new \InvalidArgumentException('active parameter needs to be bool');
 		}
-		$this->active = $active;
+		$this->_active = $active;
 		return $this;
 	}
 	public function active()
 	{
-		return $this->active;
+		return $this->_active;
 	}
 
-	public function set_key($key)
-	{
-		//pre($val);
-		if(!is_scalar($key)) {
-			throw new \InvalidArgumentException('Key argument must be scalar');
-		}
-		$this->_key = $key;
 
-		return $this;
-	}
-
-	public function key()
-	{
-		return $this->_key;
-	}
 }

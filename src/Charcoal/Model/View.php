@@ -19,26 +19,11 @@ class View
 	private $_engine = self::ENGINE_PHP_MUSTACHE;
 	private $_template;
 	private $_ident;
+	private $_controller;
 
-	private function _ident_to_classname($ident)
-	{
-		var_dump($ident);
-		//$class = str_replace('/', '/Template/', $ident);
-		$class = str_replace(['/', '.'], '\\', $ident);
-		$expl = explode('\\', $class);
-		array_splice($expl, count($expl)-1, 0, ['Template']);
-		array_walk($expl, function(&$i) { 
-			$i = ucfirst($i); 
-		});
-		$class = '\\'.implode('\\', $expl);
-		return $class;
-	}
 
-	/**
-	* 
-	* @var mixed $controller
-	*/
-	private $controller;
+
+
 
 	public function from_ident($ident)
 	{
@@ -47,7 +32,6 @@ class View
 		$this->set_template($template);
 
 		$class_name = $this->_ident_to_classname($ident);
-		var_dump($class_name);
 		if(class_exists($class_name)) {
 			$model = new $class_name();
 		}
@@ -55,7 +39,6 @@ class View
 			$model = new Model();
 		}
 
-		$model = new \Boilerplate\Template\Home();
 		$controller = new ViewController($model);
 		$this->set_controller($controller);
 
@@ -138,7 +121,7 @@ class View
 	public function set_controller(ViewController $controller)
 	{
 
-		$this->controller = $controller;
+		$this->_controller = $controller;
 		return $this;
 	}
 
@@ -147,11 +130,10 @@ class View
 	*/
 	public function controller()
 	{
-		if($this->controller === null) {
+		if($this->_controller === null) {
 			return [];
 		}
-		//var_dump($this->controller);
-		return $this->controller;
+		return $this->_controller;
 	}
 
 	/**
@@ -184,6 +166,18 @@ class View
 		// Load the View
 		$template = $this->load_template($template_ident);
 		return $this->render($template, $controller);
+	}
+
+	private function _ident_to_classname($ident)
+	{
+		$class = str_replace(['/', '.'], '\\', $ident);
+		$expl = explode('\\', $class);
+		array_splice($expl, (count($expl)-1), 0, ['Template']);
+		array_walk($expl, function(&$i) { 
+			$i = ucfirst($i); 
+		});
+		$class = '\\'.implode('\\', $expl);
+		return $class;
 	}
 
 }

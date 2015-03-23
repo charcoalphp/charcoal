@@ -339,6 +339,7 @@ class Model
 			$v = $this->validator();
 		}
 
+		//$v->validate();
 		return true;
 	}
 

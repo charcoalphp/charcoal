@@ -54,6 +54,31 @@ class FilterTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(true, $obj->active());
 	}
 
+	public function testSetDataIsChainable()
+	{
+		$obj = new Filter();
+		$data = [
+			'property'=>'foo',
+			'val'=>42,
+			'operator'=>'=',
+			'func'=>'abs',
+			'operand'=>'and',
+			'string'=>'(1=1)',
+			'active'=>true
+		];
+		$ret = $obj->set_data($data);
+		$this->assertSame($obj, $ret);
+
+	}
+
+	public function testSetDataInvalidArgumentThrowsException()
+	{
+		$this->setExpectedException('\InvalidArgumentException');
+
+		$obj = new Filter();
+		$obj->set_data(null);
+	}
+
 	public function testSetProperty()
 	{
 		$obj = new Filter();

@@ -5,61 +5,38 @@ Charcoal Core
 
 # Table of Contents
 
-
 # The Charcoal Model
+...
 
-- `Model\Model`
-- `Model\Metadata`
-- `Model\Property`
-- `Model\Object`
+## HHMVC in Charcoal
+...
 
+## Model Properties
+...
 
-## Usage example
+## Model Validation
+...
 
-``` php
-$metadata = new \Charcoal\Model\Metadata();
-$metadata->set_data([
-	'properties'=>[
-		'id'=>[
-			'type'=>'id'
-		],
-		'test'=>[
-			'type'=>'string',
-			'min_length'=>3
-		]
-	]
-]);
+## Sources and loaders
+...
 
-$model = new \Charcoal\Model\Model();
-$model->set_metadata($metadata);
-$model->set_data([
-	'id'=>3,
-	'test'=>'Hello World!'
-]);
+# Helpers
+- `Cache`
+- `Encoder`
 
-$validations = $model->validate();
-if($validations->is_valid()) {
-	// Yay!
-}
-
-$id_property = $model->property('id');
-echo $id_property->view('input_base');
-```
-
-# Core Services
-
-- `Service\Loader`
-  - `Service\Loader\Model`
-  - `Service\Loader\Metadata`
-  - `Service\Loader\Object`
-- `Service\Validator`
-  - `Service\Validator\Model`
+# Available Loaders
+- `Loader`
+  - `FileLoader`
+    - `MetadataLoader`
+    - `TemplateLoader`
+  - `CollectionLoader`
 
 
 # Authors
-
 - Mathieu Ducharme <mat@locomotive.ca>
 
-# TODOs
+# Changelog
+- Unreleased.
 
-- _2015-02-24:_ Rename `ruleset.xml` to `phpcs.xml`
+# TODOs
+- Write TODOs

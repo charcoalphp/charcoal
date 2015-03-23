@@ -73,7 +73,7 @@ module.exports = function(grunt) {
 			},
 			options: {
 				//bin: '<%= directories.composerBin %>/phpcs',
-				standard: 'ruleset.xml',
+				standard: 'phpcs.xml',
 				//ignore: 'database',
 				extensions: 'php',
 				showSniffCodes: true
@@ -100,7 +100,7 @@ module.exports = function(grunt) {
 		},
 		githooks: {
 			all: {
-				'pre-commit': 'jsonlint phplint phpunit phpcs phpdocumentor',
+				'pre-commit': 'jsonlint phplint phpunit phpcs',
 			}
 		}
 		

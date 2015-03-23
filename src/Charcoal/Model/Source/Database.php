@@ -6,7 +6,6 @@ use \PDO as PDO;
 use \Charcoal\Charcoal as Charcoal;
 use \Charcoal\Model\Source as Source;
 use \Charcoal\Model\Model as Model;
-use \Charcoal\Model\Object as Object;
 
 class Database extends Source
 {
@@ -79,23 +78,6 @@ class Database extends Source
 		return $this->_table;
 	}
 
-	/**
-	* @var Model $models
-	* @return Source Chainable
-	*/
-	public function set_model(Object $model)
-	{
-		$this->_model = $model;
-		return $this;
-	}
-
-	public function model()
-	{
-		if($this->_model === null) {
-			throw new \Exception('No model set.');
-		}
-		return $this->_model;
-	}
 
 	public function create_table()
 	{

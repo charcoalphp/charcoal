@@ -19,6 +19,22 @@ class OrderTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('', $obj->mode());
 		$this->assertEquals('', $obj->values());
 	}
+	
+	public function testSetData()
+	{
+		$obj = new Order();
+
+		$obj->set_data(['property'=>'foo']);
+		$this->assertEquals('foo', $obj->property());
+
+		$obj->set_data([
+			'property'=>'bar',
+			'mode'=>'asc'
+		]);
+		$this->assertEquals('bar', $obj->property());
+		$this->assertEquals('asc', $obj->mode());
+
+	}
 
 	public function testDataIsChainable()
 	{
