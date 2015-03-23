@@ -1,128 +1,42 @@
 <?php
-/**
-* Core (base) property file
-*
-* This file should be auto-included thanks to __autoload(), defined in charcoal.php
-*
-* @category Charcoal
-* @package Core
-* @subpackage Properties
-*
-* @author Mathieu Ducharme <mat@locomotive.ca>
-* @copyright 2014 Locomotive
-* @license LGPL <https://www.gnu.org/licenses/lgpl.html>
-* @link http://charcoal.locomotive.ca
-* @version 2014-08-21
-* @since Version 2012-03-01
-*
-* Changelog:
-* - 2012-08-25: Clean up the save() and update() functions
-*/
 
 namespace Charcoal\Model;
 
 use \Charcoal\Model\Validator\PropertyValidator as PropertyValidator;
 use \Charcoal\Model\Property\Field as Field;
-use \Charcoal\Property\View as PropertyView;
-use \Charcoal\Property\ViewController as PropertyViewController;
+use \Charcoal\Model\View as View;
+use \Charcoal\Model\ViewController as ViewController;
 
-
-/**
-* Core (base) property class
-*
-* Properties are the building blocks to everything Charcoal.
-*
-* Objects define concepts. Such as "a store", "a user", "an article", "a comment", "an image gallery", etc.
-* Properties define the objects. Such as "a store's postal code", "a user's email", "an article date", etc.
-*
-* Each properties is defined with an ident (for example: "postal_code"), a type (for exemple: "string") and
-* attributes / options (for example: "max_length"). What options (attributes) are revelant to a property depend
-* on its type (for example, a property of type string have attributes about the string validation, possible
-* length etc. while a property of type image have options about the image size, ratio, path, etc.) Some options
-* are global (defined in Charcoal_Property) and thus available for all types of properties.
-*
-* Properties are used throughout Charcoal projects to define particular objects in a certain way.
-* It is used for the following operations:
-* - Loading an object from the database
-* - Loading an object from a request ($_POST, for example)
-* - Validating an object
-* - Saving or updating an object to the database
-* - Displaying the object property HTML
-* - Creating the object form (the property input)
-*
-* Most of the time, you don't need to use properties directly, as most of their useful functions are called
-* automatically from their parent objects. Therefore, as a charcoal developer, your interaction with properties
-* will mostly be through the objects JSON configuration files.
-*
-* # Properties
-* Because Charcoal_Property itself extends Charcoal_Base, each property has their own (meta-)property.
-* Those properties are available in ALL types of properties (although some properties might not be used in some types)
-* ```
-* Property             | Type          | Default value           | Description
-* -------------------- | ------------- | -------------           | -----------
-* **ident**            | string        |                         | The identifier (name) of this property
-* **type**             | string        |                         | The type of property (string, boolean, color, email, html, etc.)
-*
-* **input_type**       | string choice | Depends on type         | Determines how $this->input() will behave
-* **display_type**     | string choice | Depends on type         | Determines how $this->display() will behave
-* **text_type**        | string choice | Depends on type         | Determines how $this->text() will behave
-*
-* **input_options**    | array         | Depends on input_type   | The options (config) for all input types
-* **display_options**  | array         | Depends on display_type | The options (config) for all input types
-* **text_options**     | array         | Depends on input_type   | The options (config) for all input types
-*
-* **l10n**             | boolean       | false                   | If true, the object is translatable and its value is an array of l10n'ed values. Stored as multiple columns in the database.
-* **hidden**           | boolean       | false                   | Advanced option. Hide from form and list (but not disabled)
-* **multiple**         | boolean       | false                   | Multiple properties can hold more than one value.
-* **multiple_options** | array         | Read documentation      |
-*
-* **required**         | boolean       | false                   | If true, this property *must* have a value. (Validation will fail if empty/zero)
-* **read_only**        | boolean       | false                   | Read-only properties can never be edited
-* **unique**           | boolean       | false                   | Unique properties should not share the same value across 2 objects
-* **active**           | boolean       | true                    | Inactive properties are hidden everywhere / unused
-* ```
-*
-* @category Charcoal
-* @package Charcoal.Core
-* @subpackage Properties
-*
-* @author Mathieu Ducharme <mat@locomotive.ca>
-* @copyright 2014 Locomotive
-* @license LGPL <https://www.gnu.org/licenses/lgpl.html>
-* @version 2014-08-21
-* @link http://charcoal.locomotive.ca
-* @since Version 2012-03-01
-*/
 class Property extends Model
 {
-	private $ident;
 	/**
-	* @var mixed Actual value of the
+	* @var string $_ident
 	*/
-	private $val;
+	private $_ident;
+	/**
+	* @var mixed $_vap
+	*/
+	private $_val;
 
 	/**
 	* @var 
 	*/
-	private $label;
+	private $_label;
 
 	/**
-	* If true, the object is translatable and its value is an array of l10n'ed values
 	* @var boolean $l10n
 	*/
-	private $l10n;
+	private $_l10n = false;
 
 	/**
-	* Hidden properties should not be shown visually, but their data might be.
 	* @var boolean $hidden;
 	*/
-	private $hidden;
+	private $_hidden = false;
 
 	/**
-	* Multiple properties can hold more than one value
 	* @var boolean $multiple
 	*/
-	private $multiple;
+	private $_multiple = false;
 
 	/**
 	* Array of options for multiple properties
@@ -131,26 +45,25 @@ class Property extends Model
 	* - `max` (default=null) The maximum number of values. If null, <0 or NaN, then there is not limit
 	* @var mixed $multiple_options
 	*/
-	private $multiple_options;
+	private $_multiple_options;
 
 	/**
 	* If true, this property *must* have a value
 	* @var boolean $required
-	* @see Property_Boolean
 	*/
-	private $required;
+	private $_required = false;
 
 	/**
 	* Unique properties should not share he same value across 2 objects
 	* @var boolean $unique
 	*/
-	private $unique;
+	private $_unique = false;
 
 	/**
 	* Inactive properties should be hidden everywhere / unused
 	* @var boolean $active
 	*/
-	private $active;
+	private $_active = true;
 
 
 	/**
@@ -253,12 +166,18 @@ class Property extends Model
 
 	public function set_ident($ident)
 	{
+		if(!is_string($ident)) {
+			throw new \InvalidArgumentException('Ident needs to be string');
+		}
 		$this->_ident = $ident;
 		return $this;
 	}
 
 	public function ident()
 	{
+		if($this->_ident === null) {
+			throw new \Exception('Ident was never set');
+		}
 		return $this->_ident;
 	}
 
@@ -268,7 +187,7 @@ class Property extends Model
 	*/
 	public function set_val($val)
 	{
-		$this->val = $val;
+		$this->_val = $val;
 		return $this;
 	}
 
@@ -277,7 +196,7 @@ class Property extends Model
 	*/
 	public function val()
 	{
-		return $this->val;
+		return $this->_val;
 	}
 
 	public function field_val($field_ident)
@@ -304,8 +223,7 @@ class Property extends Model
 	*/
 	public function set_label($label)
 	{
-
-		$this->label = $label;
+		$this->_label = $label;
 		return $this;
 	}
 
@@ -314,7 +232,7 @@ class Property extends Model
 	*/
 	public function label()
 	{
-		return $this->label;
+		return $this->_label;
 	}
 
 	/**
@@ -327,7 +245,7 @@ class Property extends Model
 		if(!is_bool($l10n)) {
 			throw new \InvalidArgumentException('l10n must be a boolean');
 		}
-		$this->l10n = $l10n;
+		$this->_l10n = $l10n;
 		return $this;
 	}
 
@@ -336,7 +254,7 @@ class Property extends Model
 	*/
 	public function l10n()
 	{
-		return !!$this->l10n;
+		return $this->_l10n;
 	}
 
 	/**
@@ -421,7 +339,7 @@ class Property extends Model
 		if(!is_bool($required)) {
 			throw new \InvalidArgumentException('required must be a boolean');
 		}
-		$this->required = $required;
+		$this->_required = $required;
 		return $this;
 	}
 
@@ -430,7 +348,7 @@ class Property extends Model
 	*/
 	public function required()
 	{
-		return !!$this->required;
+		return !!$this->_required;
 	}
 
 	/**
@@ -485,8 +403,11 @@ class Property extends Model
 		return $this->_validator;
 	}
 
-	public function validate()
+	public function validate(Validator &$v=null)
 	{
+		if($v === null) {
+			$v = $this->validator();
+		}
 
 		$ret = true;
 		$ret = parent::validate($v) && $ret;
@@ -504,38 +425,6 @@ class Property extends Model
 	public function validate_unique()
 	{
 		return true;
-	}
-
-	/**
-	* @param string
-	* @return string
-	*/
-	public function render($template)
-	{
-		$view = new PropertyView();
-		$controller = PropertyViewController::get($this);
-		return $view->render($template, $controller);
-	}
-
-	/**
-	*
-	*/
-	public function render_template($template_ident, $template_options=null)
-	{
-		$view = new PropertyView();
-		$controller_name = '\Charcoal\Property\ViewController\\'.str_replace(['.', '_', '\\'], '', $template_ident);
-		if(class_exists($controller_name)) {
-			$controller = new $controller_name($this);
-		}
-		else {
-			$controller = new PropertyViewController($this);
-		}
-		
-		if(is_array($template_options)) {
-			$controller->set_data($template_options);
-		}
-
-		return $view->render_template($template_ident, $controller);
 	}
 
 	/**

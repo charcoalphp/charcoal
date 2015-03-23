@@ -15,7 +15,7 @@ class Database extends Source
 
 	private $_database_ident = null;
 	private $_database_config = null;
-	private $_model = null;
+
 	private $_table = null;
 
 	private static $_dbs = [];

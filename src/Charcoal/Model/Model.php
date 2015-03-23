@@ -179,10 +179,9 @@ class Model
 	*/
 	public function metadata()
 	{
-		//pre($this->obj_type());
 		if($this->_metadata === null) {
 			// @todo Log error, default metadata loaded
-			return $this->load_metadata($this->obj_type());
+			return $this->load_metadata();
 		}
 
 		return $this->_metadata;
@@ -206,8 +205,15 @@ class Model
 			return $this->_obj_type;
 		}
 		else {
-			return str_replace('\\', '_', get_class($this));
+			return get_class($this)	;
 		}
+	}
+
+	public function metadata_ident()
+	{
+		$obj_type = $this->obj_type();
+		$ident = str_replace(['\\', '.'], '/', strtolower($obj_type));
+		return $ident;
 	}
 
 	/**
@@ -221,13 +227,12 @@ class Model
 	public function load_metadata($metadata_name=null)
 	{
 		if($metadata_name === null) {
-			return new Metadata();
-		}
-		else {
-			$metadata_loader = new MetadataLoader();
-			$metadata = $metadata_loader->load($metadata_name);
-			$this->set_metadata($metadata);
-		}
+			$metadata_name = $this->metadata_ident();
+		}	
+		$metadata_loader = new MetadataLoader();
+		$metadata = $metadata_loader->load($metadata_name);	
+		$this->set_metadata($metadata);
+		
 		return $metadata;
 	}
 

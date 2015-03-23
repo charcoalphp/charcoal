@@ -22,13 +22,15 @@ class View
 
 	private function _ident_to_classname($ident)
 	{
-		$class = str_replace('/', '/Template/', $ident);
-		$class = str_replace(['/', '.'], '\\', $class);
+		var_dump($ident);
+		//$class = str_replace('/', '/Template/', $ident);
+		$class = str_replace(['/', '.'], '\\', $ident);
 		$expl = explode('\\', $class);
+		array_splice($expl, count($expl)-1, 0, ['Template']);
 		array_walk($expl, function(&$i) { 
 			$i = ucfirst($i); 
 		});
-		$class = implode('\\', $expl);
+		$class = '\\'.implode('\\', $expl);
 		return $class;
 	}
 
@@ -45,6 +47,7 @@ class View
 		$this->set_template($template);
 
 		$class_name = $this->_ident_to_classname($ident);
+		var_dump($class_name);
 		if(class_exists($class_name)) {
 			$model = new $class_name();
 		}

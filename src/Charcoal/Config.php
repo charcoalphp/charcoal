@@ -21,8 +21,8 @@ class Config implements \ArrayAccess
 	private $_databases;
 	private $_default_database;
 
-	public $metadata_path;
-	public $templates_path;
+	private $_metadata_path = [];
+	private $_templates_path = [];
 
 	public function __construct($config=null)
 	{
@@ -223,5 +223,31 @@ class Config implements \ArrayAccess
 			throw new \Exception('Default database is not set.');
 		}
 		return $this->_default_database;
+	}
+
+	public function set_metadata_path($metadata_path)
+	{
+		if(!is_array($metadata_path)) {
+			throw new \Exception('Metadata path needs to be an array');
+		}
+		$this->_metadata_path = $metadata_path;
+		return $this;
+	}
+
+	public function metadata_path()
+	{
+		return $this->_metadata_path;
+	}
+
+	public function add_metadata_path($path)
+	{
+		if(!is_string($path)) {
+			throw new \InvalidArgumentException('Path needs to be a string');
+		}
+		if($this->_metadata_path == null) {
+			$this->_metadata_path = [];
+		}
+		$this->_metadata_path[] = $path;
+		return $this;
 	}
 }
