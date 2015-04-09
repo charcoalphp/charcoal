@@ -4,3 +4,6 @@ vendor
 phpdoc
 composer.phar
 composer.lock
+tests/tmp
+mustache_cache
+

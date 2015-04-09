@@ -2,6 +2,13 @@
 <ruleset name="Charcoal">
 	<!-- PHP CodeSniffer ruleset -->
 	<description>Charcoal coding standard</description>
+	<arg name="tab-width" value="4" />
+
+	<!-- Include the whole PSR-1 standard -->
+ 	<!--<rule ref="PSR1"/>-->
+
+ 	<!-- Include the whole PSR-2 standard -->
+ 	<!--<rule ref="PSR2"/>-->
 
 <!-- Array Sniffs -->
 
@@ -115,7 +122,7 @@
 	<!-- A simple sniff for detecting BOMs that may corrupt application work -->
 	<rule ref="Generic.Files.ByteOrderMark" />
 	<!-- Ensures all files end with a newline character -->
-	<!--<rule ref="Generic.Files.EndFileNewline" />-->
+	<rule ref="Generic.Files.EndFileNewline" />
 	<!-- Ensures all files do NOT end with a newline character. This is incompatible with the previous rule. -->
 	<!--<rule ref="Generic.Files.EndFileNoNewline" />-->
 	<!-- Do not allow HTML in PHP files -->
@@ -128,9 +135,12 @@
 		</properties>
 	</rule>
 	<!-- Make sure all files are a certain max length -->
-	<!--Generic.Files_LineLengthSniff
-		lineLimit
-		absoluteLineLimit -->
+	<!--<rule ref="Generic.Files.LineLength">
+		<properties>
+			<property name="lineLimit" value="120"/>
+			<property name="absoluteLineLimit" value="0"/>
+		</properties>
+	 </rule>-->
 	<!-- Checks that all file names are lowercased -->
 	<!--<rule ref="Generic.Files.LowercasedFilename" />-->
 
@@ -229,7 +239,7 @@
 	<!-- TRUE, FALSE and NULL must be lowercase: true, false and null -->
 	<rule ref="Generic.PHP.LowerCaseConstant" />
 	<!-- Checks that all PHP keywords are lowercase. Disabled because of \List classes -->
-	<!--<rule ref="Generic.PHP.LowerCaseKeyword" />-->
+	<rule ref="Generic.PHP.LowerCaseKeyword" />
 	<!-- Don't allow code prefixed with an @ (error suppression) -->
 	<rule ref="Generic.PHP.NoSilencedErrors" />
 	<!-- Ensures the PHP_SAPI constant is used instead of php_sapi_name() -->
@@ -255,8 +265,8 @@
 		<severity>0</severity>
 	</rule>
 	<rule ref="Squiz.PHP.Eval" />
-	<!-- Disallow usage of functions that should be obsolete but kept for compatibility. ENABLE-ME: Fix all those is_null() --> 
-	<!--<rule ref="Squiz.PHP.ForbiddenFunctions" />-->
+	<!-- Disallow usage of functions that should be obsolete but kept for compatibility.  --> 
+	<rule ref="Squiz.PHP.ForbiddenFunctions" />
 	<rule ref="Squiz.PHP.GlobalKeyword" />
 	<rule ref="Squiz.PHP.Heredoc" />
 	<rule ref="Squiz.PHP.InnerFunctions" />
@@ -293,10 +303,25 @@
 <!-- White Space Sniffs -->
 
 	<!-- Throws errors if spaces are used for indentation -->
-	<rule ref="Generic.WhiteSpace.DisallowSpaceIndent" />
+	<!--<rule ref="Generic.WhiteSpace.DisallowSpaceIndent" />-->
 	<!-- Throws errors if tabs are used for indentation -->
-	<!-- <rule ref="Generic.WhiteSpace.DisallowTabIndent" />-->
+	<rule ref="Generic.WhiteSpace.DisallowTabIndent" />
 	<!-- Checks that control structures are structured correctly -->
-	<!-- <rule ref="Generic.Whitespace.ScopeIndent" />-->
+	<rule ref="Generic.Whitespace.ScopeIndent" />
+	 <!-- There MUST NOT be trailing whitespace at the end of non-blank lines. -->
+	<rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">
+		<properties>
+			<property name="ignoreBlankLines" value="true"/>
+		</properties>
+	</rule>
+	<rule ref="Squiz.WhiteSpace.SuperfluousWhitespace.StartFile">
+		<severity>0</severity>
+	</rule>
+	<rule ref="Squiz.WhiteSpace.SuperfluousWhitespace.EndFile">
+		<severity>0</severity>
+	</rule>
+	<rule ref="Squiz.WhiteSpace.SuperfluousWhitespace.EmptyLines">
+		<severity>0</severity>
+	</rule>
 
 </ruleset>

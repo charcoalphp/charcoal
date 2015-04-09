@@ -21,6 +21,12 @@ module.exports = function(grunt) {
 				src:[
 					'*.json'
 				]
+
+			},
+			config:{
+				src:[
+					'config/**/*.json'
+				]
 			}
 		},
 
@@ -49,11 +55,10 @@ module.exports = function(grunt) {
 
 			options: {
 				colors: true,
-				//coverageHtml:'tests/tmp/report/',
+				coverageHtml:'tests/tmp/report/',
 				//coverageText:'tests/tmp/report/',
 				testdoxHtml:'tests/tmp/testdox.html',
 				testdoxText:'tests/tmp/testdox.text',
-				strict:true,
 				verbose:true,
 				debug:false,
 				bootstrap:'tests/bootstrap.php'
@@ -62,21 +67,28 @@ module.exports = function(grunt) {
 
 		phpcs: {
 			src:{
-				dir:[
-					'src/**/*.php'
-				]
+				src:['src/**/*.php']
 			},
 			tests: {
-				dir:[
-					'tests/**/*.php'
-				]
+				src:['tests/**/*.php']
 			},
 			options: {
-				//bin: '<%= directories.composerBin %>/phpcs',
 				standard: 'phpcs.xml',
-				//ignore: 'database',
 				extensions: 'php',
 				showSniffCodes: true
+			}
+		},
+
+		phpcbf: {
+			src:{
+				src:['src/**/*.php']
+			},
+			tests: {
+				src:['tests/**/*.php']
+			},
+			options: {
+				standard: 'phpcs.xml',
+				noPatch: true
 			}
 		},
 
@@ -112,6 +124,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks("grunt-phplint");
 	grunt.loadNpmTasks('grunt-phpunit');
 	grunt.loadNpmTasks('grunt-phpcs');
+	grunt.loadNpmTasks('grunt-phpcbf');
 	grunt.loadNpmTasks('grunt-phpdocumentor');
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-githooks');

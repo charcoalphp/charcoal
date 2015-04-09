@@ -7,35 +7,35 @@ use \Charcoal\Charcoal as Charcoal;
 
 class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
 {
-	public function testContructor()
-	{
-		$obj = new CollectionLoader();
-		$this->assertInstanceOf('\Charcoal\Loader\CollectionLoader', $obj);
-	}
+    public function testContructor()
+    {
+        $obj = new CollectionLoader();
+        $this->assertInstanceOf('\Charcoal\Loader\CollectionLoader', $obj);
+    }
 
-	public function setData()
-	{
-		$obj = new CollectionLoader();
-		$obj->set_data([
-			'properties'=>[
-				'id',
-				'test'
-			]
-		]);
-		$this->assertEquals(['id', 'test'], $obj->properties());
-	}
+    public function setData()
+    {
+        $obj = new CollectionLoader();
+        $obj->set_data([
+            'properties'=>[
+                'id',
+                'test'
+            ]
+        ]);
+        $this->assertEquals(['id', 'test'], $obj->properties());
+    }
 
-	public function setDataIsChainable()
-	{
-		$obj = new CollectionLoader();
-		$ret = $obj->set_data([]);
-		$this->assertSame($ret, $obj);
-	}
+    public function setDataIsChainable()
+    {
+        $obj = new CollectionLoader();
+        $ret = $obj->set_data([]);
+        $this->assertSame($ret, $obj);
+    }
 
-	
-	public function testAll()
-	{
-		/*Charcoal::$config['databases'] = [
+    
+    public function testAll()
+    {
+        /*Charcoal::$config['databases'] = [
 			'default'=>[
 				'database'=>'test',
 				'username'=>'root',
@@ -61,10 +61,8 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
 		$collection = $loader->load();
 		
 		$this->assertEquals(1,1);*/
-		$this->assertTrue(true);
+        $this->assertTrue(true);
 
-		
-	}
-	
-
+        
+    }
 }
