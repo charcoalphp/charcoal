@@ -1,6 +1,6 @@
 <?php
 
-namespace \Charcoal\Cache;
+namespace Charcoal\Cache;
 
 use \Charcoal\Cache\CacheInterface as CacheInterface;
 
@@ -72,7 +72,7 @@ interface CacheableInterface
     * @param integer $ttl
     * @return boolean
     */
-    public function cache_store($ttl=0);
+    public function cache_store($data=null, $ttl=0);
 
     /**
     * @return mixed

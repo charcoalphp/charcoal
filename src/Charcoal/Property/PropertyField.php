@@ -1,8 +1,8 @@
 <?php
 
-namespace Charcoal\Model\Property;
+namespace Charcoal\Property;
 
-class Field
+class PropertyField
 {
     private $_ident;
     private $_label;

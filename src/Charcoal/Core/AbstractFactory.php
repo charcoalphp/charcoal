@@ -4,6 +4,7 @@ namespace Charcoal\Core;
 
 abstract class AbstractFactory implements FactoryInterface
 {
+    static protected $instance;
     /**
     * Keeps loaded instances in memory, in `[$type=>$instance]` format.
     * @var array $_instances
@@ -15,6 +16,28 @@ abstract class AbstractFactory implements FactoryInterface
     * @var array $_types
     */
     static protected $_types = [];
+
+    /**
+    * Constructor is protected. Singleton must be created with AbstractFactory::instance()
+    */
+    protected function __construct()
+    {
+        // Set as protected. This structure is a singleton.
+    }
+
+    /**
+    * Singleton instance
+    *
+    * @return FactoryInterface
+    */
+    static public function instance()
+    {
+        if(static::$instance !== null) {
+            return static::$instance;
+        }
+        $class = get_called_class();
+        return new $class;
+    }
 
     /**
     * Create a new instance of a class, by type.
@@ -58,8 +81,6 @@ abstract class AbstractFactory implements FactoryInterface
             $this->create($type);
         }
     }
-
-
 
     /**
     * Get all the currently available types
@@ -120,5 +141,22 @@ abstract class AbstractFactory implements FactoryInterface
     static public function types()
     {
         return static::$_types;
+    }
+
+    /**
+    * @param string $ident;
+    * @return string
+    */
+    protected function _ident_to_classname($ident)
+    {
+        $class = str_replace('/', '\\', $ident);
+        $expl = explode('\\', $class);
+        array_walk(
+            $expl, function(&$i) {
+                $i = ucfirst($i);
+            }
+        );
+        $class = '\\'.implode('\\', $expl);
+        return $class;
     }
 }

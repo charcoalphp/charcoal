@@ -1,60 +1,38 @@
 <?php
-/**
-*
-*/
 
 namespace Charcoal\View;
 
-use \Charcoal\Loader\FileLoader as FileLoader;
+
+use \Mustache_loader as Mustache_Loader;
 
 use \Charcoal\Charcoal as Charcoal;
+use \Charcoal\Loader\FileLoader as FileLoader;
 
 /**
-*
+* Mustache Template Loader
 */
-class TemplateLoader extends FileLoader
+class MustacheTemplateLoader extends FileLoader implements Mustache_Loader
 {
-    private $_ident;
-
+    
     /**
-    * @param string $ident
-    * @throws \InvalidArgumentException if the ident is not a string
-    * @return ViewLoader (Chainable)
-    */
-    public function set_ident($ident)
-    {
-        if(!is_string($ident)) {
-            throw new \InvalidArgumentException(__CLASS__.'::'.__FUNCTION__.'() - Ident must be a string.');
-        }
-        $this->_ident = $ident;
-        return $this;
-    }
-
-    /**
-    * @return string
-    */
-    public function ident()
-    {
-        return $this->_ident;
-    }
-
-
-    /**
+    * FileLoader > search_path()
+    *
     * @return array
     */
     public function search_path()
     {
-
         $all_path = parent::search_path();
 
         $global_path = Charcoal::config()->template_path();
         if(!empty($global_path)) {
-            $all_path = Charcoal::merge($global_path, $all_path);
+            $all_path = array_merge($global_path, $all_path);
         }
         return $all_path;
     }
 
     /**
+    * AbstractLoader > load()
+    *
     * @return string
     */
     public function load($ident=null)
@@ -64,8 +42,8 @@ class TemplateLoader extends FileLoader
         }
 
         // Attempt loading from cache
-        $ret = $this->_load_from_cache();
-        if($ret !== null) {
+        $ret = $this->cache_load();
+        if($ret !== false) {
             return $ret;
         }
 
@@ -84,15 +62,14 @@ class TemplateLoader extends FileLoader
                 break;
             }
         }
-        
-        $this->_cache($data);
+        $this->set_content($data);
+        $this->cache_store();
 
         return $data;
     }
 
     /**
     * @param string
-    *
     * @return string
     */
     private function _filename_from_ident($ident)
@@ -101,6 +78,5 @@ class TemplateLoader extends FileLoader
         $filename .= '.php';
 
         return $filename;
-
     }
 }

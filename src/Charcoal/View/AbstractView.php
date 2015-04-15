@@ -2,45 +2,33 @@
 
 namespace Charcoal\View;
 
+use \Mustache_Engine as Mustache_Engine;
+
 use \Charcoal\Charcoal as Charcoal;
 
-use \Charcoal\View\TemplateLoader as TemplateLoader;
+use \Charcoal\View\MustachePartialsLoader as MustachePartialsLoader;
 use \Charcoal\View\ViewInterface as ViewInterface;
 use \Charcoal\View\ViewControllerInterface as ViewControllerInterface;
 
 /**
-* An abstract class that fulfills the full ViewInterface
+* An abstract class that fulfills the full ViewInterface.
+*
+* There are 2 remaining abstract methods:
+* - `load_template()`
+* - `load_context()`
 */
 abstract class AbstractView implements ViewInterface
 {
     const ENGINE_MUSTACHE = 'mustache';
     const ENGINE_PHP_MUSTACHE = 'php_mustache';
+    const ENGINE_PHP = 'php';
     
     private $_engine = self::ENGINE_PHP_MUSTACHE;
+
     private $_template;
-    private $_ident;
-    protected $_controller;
     private $_context;
 
-    public function from_ident($ident)
-    {
-        //$template_loader = new TemplateLoader();
-        //$template = $template_loader->load($ident);
-        //$this->set_template($template);
-        $this->load_template($ident);
-
-        $class_name = $this->_ident_to_classname($ident);
-        if(class_exists($class_name)) {
-            $model = new $class_name();
-        }
-        else {
-            $model = [];
-        }
-
-        $this->set_context($model);
-
-        return $this;
-    }
+    protected $_controller;
 
     /**
     * @param string $template
@@ -98,7 +86,7 @@ abstract class AbstractView implements ViewInterface
     }
 
     /**
-    *
+    * @return string
     */
     public function template()
     {
@@ -111,21 +99,9 @@ abstract class AbstractView implements ViewInterface
 
     /**
     * @param string $template_ident
-    * @throws \InvalidArgumentException if template is not a string
     * @return string The template content
     */
-    public function load_template($template_ident)
-    {
-        if(!is_string($template_ident)) {
-            throw new \InvalidArgumentException('Template ident must be a string');
-        }
-
-        $template_loader = new TemplateLoader();
-        $template = $template_loader->load($template_ident);
-        $this->set_template($template);
-
-        return $template;
-    }
+    abstract public function load_template($template_ident);
 
     public function set_context($context)
     {
@@ -133,13 +109,22 @@ abstract class AbstractView implements ViewInterface
         return $this;
     }
 
+    /**
+    * @return mixed
+    */
     public function context()
     {
         return $this->_context;
     }
 
     /**
-    *
+    * @param string $context_ident
+    * @return mixed The context object / data
+    */
+    abstract public function load_context($context_ident);
+
+    /**
+    * @param
     */
     public function set_controller(ViewControllerInterface $controller)
     {
@@ -153,15 +138,15 @@ abstract class AbstractView implements ViewInterface
     public function controller()
     {
         if($this->_controller === null) {
-            if(is_array($this->_context)) {
-                return $this->context();
-            }
-            else {
-                return [];
-            }
+            $this->_controller = $this->create_controller();
         }
         return $this->_controller;
     }
+
+    /**
+    * @return ViewControllerInterface
+    */
+    abstract public function create_controller();
 
     /**
     *
@@ -169,7 +154,7 @@ abstract class AbstractView implements ViewInterface
     * @param string $template
     * @param mixed  $controller
     *
-    * @return string Rendered template
+    * @return string The rendered template
     */
     public function render($template=null, $context=null)
     {
@@ -180,11 +165,11 @@ abstract class AbstractView implements ViewInterface
             $this->set_context($context);
         }
 
-        $mustache = new \Mustache_Engine([
+        $mustache = new Mustache_Engine([
             'cache' => 'mustache_cache',
             
             //'loader' =>  null,
-            //'partials_loader' => null,
+            'partials_loader' => new MustacheTemplateLoader(),
 
             'logger' => Charcoal::logger(),
 
@@ -195,6 +180,11 @@ abstract class AbstractView implements ViewInterface
         return $mustache->render($this->template(), $controller);
     }
 
+    /**
+    * @param string $template_ident
+    * @param mixed $context
+    * @return string The rendered templated
+    */
     public function render_template($template_ident='', $context=null)
     {
         // Load the View
@@ -202,6 +192,22 @@ abstract class AbstractView implements ViewInterface
         return $this->render($template, $context);
     }
 
+    /**
+    * @param string $ident
+    * @return AbstractView Chainable
+    */
+    public function from_ident($ident)
+    {
+        $this->load_template($ident);
+        $this->load_context($ident);
+
+        return $this;
+    }
+
+    /**
+    * @param string @ident
+    * @return string
+    */
     protected function _ident_to_classname($ident)
     {
         $class = str_replace('/', '\\', $ident);
@@ -215,6 +221,10 @@ abstract class AbstractView implements ViewInterface
         return $class;
     }
 
+    /**
+    * @param string $classname
+    * @return string
+    */
     protected function _classname_to_ident($classname)
     {
         $ident = str_replace('\\', '/', strtolower($classname));

@@ -7,7 +7,7 @@ namespace Charcoal\Validator;
 *
 * @todo Change the visibility of the members to private. (Require custom encoder to output them)
 */
-class Result
+class ValidatorResult
 {
     /**
     * @var string $ident

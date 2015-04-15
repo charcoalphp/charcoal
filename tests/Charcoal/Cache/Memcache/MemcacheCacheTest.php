@@ -8,7 +8,7 @@ class MemcacheCacheTest extends \PHPUnit_Framework_TestCase
 {
     public function testContructor()
     {
-        $obj = new MemcacheCache();
+        $obj = MemcacheCache::instance();
         $this->assertInstanceOf('\Charcoal\Cache\Memcache\MemcacheCache', $obj);
     }
 }

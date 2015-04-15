@@ -10,7 +10,7 @@ use \Charcoal\View\ViewControllerInterface as ViewControllerInterface;
 abstract class AbstractViewController implements ViewControllerInterface
 {
     /**
-    * @var \Charcoal\Model\Model $context
+    * @var mixed $context
     */
     protected $_context;
 
@@ -19,7 +19,9 @@ abstract class AbstractViewController implements ViewControllerInterface
     */
     public function __construct($context=null)
     {
-        $this->_context = $context;
+        if($context !== null) {
+            $this->set_context($context);
+        }
     }
 
     /**
@@ -35,8 +37,7 @@ abstract class AbstractViewController implements ViewControllerInterface
     */
     public function __get($name)
     {
-
-        $context = $this->_context();
+        $context = $this->context();
         if($context === null) {
             return null;
         }
@@ -70,7 +71,7 @@ abstract class AbstractViewController implements ViewControllerInterface
     */
     public function __call($name, $arguments)
     {
-        $context = $this->_context();
+        $context = $this->context();
         if($context === null) {
             return null;
         }
@@ -96,12 +97,12 @@ abstract class AbstractViewController implements ViewControllerInterface
     */
     public function __isset($name)
     {
-        $context = $this->_context();
+        $context = $this->context();
         if($context === null) {
             return false;
         }
 
-        if(is_object($name)) {
+        if(is_object($context)) {
             // Try methods
             if(is_callable([$context, $name])) {
                 return true;
@@ -120,6 +121,9 @@ abstract class AbstractViewController implements ViewControllerInterface
         return false;
     }
 
+    /**
+    * @param mixed $context
+    */
     public function set_context($context)
     {
         $this->_context = $context;

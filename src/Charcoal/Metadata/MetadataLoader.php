@@ -63,8 +63,8 @@ class MetadataLoader extends FileLoader
         }
 
         // Attempt loading from cache
-        $ret = $this->_load_from_cache();
-        if($ret !== null) {
+        $ret = $this->cache_load();
+        if($ret !== false) {
             return $ret;
         }
 
@@ -78,7 +78,8 @@ class MetadataLoader extends FileLoader
             }
         }
 
-        $this->_cache($metadata);
+        $this->set_content($metadata);
+        $this->cache_store();
 
         return $metadata;
     }

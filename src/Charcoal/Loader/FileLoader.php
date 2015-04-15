@@ -7,7 +7,7 @@ use \Charcoal\Charcoal as Charcoal;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Adapter\Local as LocalAdapter;
 
-class FileLoader extends Loader
+class FileLoader extends AbstractLoader
 {
 
     private $_search_path = [];
@@ -15,6 +15,33 @@ class FileLoader extends Loader
     private $_filesystem;
 
     private $_path;
+
+    /**
+    * @var string $_ident
+    */
+    private $_ident;
+
+    /**
+    * @param string $ident
+    * @throws \InvalidArgumentException if the ident is not a string
+    * @return FileLoader Chainable
+    */
+    public function set_ident($ident)
+    {
+        if(!is_string($ident)) {
+            throw new \InvalidArgumentException(__CLASS__.'::'.__FUNCTION__.'() - Ident must be a string.');
+        }
+        $this->_ident = $ident;
+        return $this;
+    }
+
+    /**
+    * @return string
+    */
+    public function ident()
+    {
+        return $this->_ident;
+    }
 
 
     public function set_path($path)
@@ -50,22 +77,23 @@ class FileLoader extends Loader
     *
     * @return string File content
     */
-    public function load($filename=null)
+    public function load($ident=null)
     {
-        if($filename === null) {
+        if($ident === null) {
             return '';
         }
 
         // Attempt loading from cache
-        $ret = $this->_load_from_cache();
+        $ret = $this->cache_load();
         if($ret !== false) {
             return $ret;
         }
 
-        $filename = $this->_first_matching_filename($filename);
+        $filename = $this->_first_matching_filename($ident);
         if($filename) {
             $file_content = file_get_contents($filename);
-            $this->_cache($file_content);
+            $this->set_content($file_content);
+            $this->cache_store();
             return $file_content;
         }
 

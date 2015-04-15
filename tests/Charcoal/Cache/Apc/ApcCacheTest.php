@@ -8,7 +8,7 @@ class ApcCacheTest extends \PHPUnit_Framework_TestCase
 {
     public function testContructor()
     {
-        $obj = new ApcCache();
+        $obj = ApcCache::instance();
         $this->assertInstanceOf('\Charcoal\Cache\Apc\ApcCache', $obj);
     }
 }

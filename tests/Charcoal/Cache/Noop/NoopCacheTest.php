@@ -8,13 +8,13 @@ class NoopCacheTest extends \PHPUnit_Framework_TestCase
 {
     public function testContructor()
     {
-        $obj = new NoopCache();
+        $obj = NoopCache::instance();
         $this->assertInstanceOf('\Charcoal\Cache\Noop\NoopCache', $obj);
     }
 
     public function testAll()
     {
-        $obj = new NoopCache();
+        $obj = NoopCache::instance();
 
         $this->assertEquals(true, $obj->init());
         $this->assertEquals(false, $obj->exists('foo'));

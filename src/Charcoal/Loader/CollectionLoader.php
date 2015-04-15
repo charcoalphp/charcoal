@@ -10,7 +10,7 @@ use \Charcoal\Loader\CollectionLoader\Pagination as Pagination;
 /**
 * Collection Loader
 */
-class CollectionLoader extends Loader
+class CollectionLoader extends AbstractLoader
 {
     private $_properties = [];
     private $_filters = [];
@@ -238,8 +238,11 @@ class CollectionLoader extends Loader
     * @throws \Exception if the database connection fails
     * @return Collection
     */
-    public function load()
+    public function load($ident=null)
     {
+        // Unused.
+        unset($ident);
+
         // Attempt loading from cache
         $ret = $this->_load_from_cache();
         if($ret !== false) {

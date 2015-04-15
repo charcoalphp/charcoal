@@ -4,8 +4,14 @@ namespace Charcoal\Encoder;
 
 use \Charcoal\Encoder\EncoderInterface as EncoderInterface;
 
+/**
+* A default implementation, as abstract class, of `EncoderInterface`.
+*/
 abstract class AbstractEncoder implements EncoderInterface
 {
+    /**
+    * @var string $_salt
+    */
     private $_salt = '';
 
     public function set_salt($salt)

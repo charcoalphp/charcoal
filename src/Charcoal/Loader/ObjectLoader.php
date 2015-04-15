@@ -2,7 +2,7 @@
 
 namespace Charcoal\Loader;
 
-class ObjectLoader extends Loader
+class ObjectLoader extends AbstractLoader
 {
     private $_ident = '';
     private $_obj;

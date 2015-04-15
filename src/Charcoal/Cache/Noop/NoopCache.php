@@ -6,6 +6,10 @@ use \Charcoal\Cache\AbstractCache as AbstractCache;
 
 class NoopCache extends AbstractCache
 {
+
+    /**
+    *
+    */
     public function init()
     {
         return true;
@@ -43,12 +47,12 @@ class NoopCache extends AbstractCache
     */
     public function fetch($key)
     {
-        return null;
+        return false;
     }
 
     public function multifetch($keys)
     {
-        return null;
+        return false;
     }
 
     /**

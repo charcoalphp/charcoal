@@ -2,9 +2,10 @@
 
 namespace Charcoal\Validator;
 
-use Charcoal\Validator\ValidatorInterface as ValidatorInterface;
-use Charcoal\Validator\ValidatableInterface as ValidatableInterface;
-use Charcoal\Validator\Result as Result;
+use \Charcoal\Validator\ValidatabaleInterface as ValidatabaleInterface;
+use \Charcoal\Validator\ValidatorInterface as ValidatorInterface;
+use \Charcoal\Validator\ValidatableInterface as ValidatableInterface;
+use \Charcoal\Validator\ValidatorResult as ValidatorResult;
 
 /**
 * An abstract class that implements most of ValidatorInterface.
@@ -23,7 +24,7 @@ abstract class AbstractValidator implements ValidatorInterface
     protected $_model;
 
     /**
-    * @var array $_results array of Result
+    * @var array $_results array of ValidatorResult
     */
     private $_results;
 
@@ -62,17 +63,17 @@ abstract class AbstractValidator implements ValidatorInterface
     }
 
     /**
-    * @param array|Result $result
+    * @param array|ValidatorResult $result
     * @throws \InvalidArgumentException if result is not an array or object
     * @return AbstractValidator Chainable
     */
     public function add_result($result)
     {
         if(is_array($result)) {
-            $result = new Result($result);
+            $result = new ValidatorResult($result);
         }
-        else if(!($result instanceof Result)) {
-            throw new \InvalidArgumentException('Result must be an array or a Result object');
+        else if(!($result instanceof ValidatorResult)) {
+            throw new \InvalidArgumentException('ValidatorResult must be an array or a ValidatorResult object');
         }
         $level = $result->level();
         $this->results[$level][] = $result;

@@ -133,12 +133,10 @@ class Charcoal
             [
             'mode'    => self::config()->application_env(),
             'debug'    => self::config()->dev_mode(),
-            'log.writer' => self::logger()
+            //'log.writer' => self::logger()
             ]
         );
     }
-
-
 
     /**
     * Rewrite the "array_merge_recursive" function to behave more like standard "array_merge"

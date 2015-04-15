@@ -8,7 +8,7 @@ class CacheFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testConstructor()
     {
-        $obj = new CacheFactory();
+        $obj = CacheFactory::instance();
         $this->assertInstanceOf('\Charcoal\Cache\CacheFactory', $obj);
     }
 }

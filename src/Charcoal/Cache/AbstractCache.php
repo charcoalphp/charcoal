@@ -20,10 +20,26 @@ abstract class AbstractCache implements
 {
     use ConfigurableTrait;
 
+    static protected $_instance;
+
     /**
     * @var string
     */
     private $_prefix;
+
+    protected function __construct()
+    {
+        // Protected
+    }
+
+    static public function instance()
+    {
+        if(static::$_instance !== null) {
+            return static::$_instance;
+        }
+        $class = get_called_class();
+        return new $class;
+    }
 
     /**
     * Sets the global cache prefix.
@@ -136,14 +152,17 @@ abstract class AbstractCache implements
     }
 
     /**
-    * ConfigurableInterface > _config_from_array() implementation.
+    * ConfigurableInterface > create_config() implementation.
     *
     * @param array
     * @return ConfigInterface
     */
-    protected function _config_from_array($config)
+    protected function create_config($data=null)
     {
-        $config = new CacheConfig($config);
+        $config = new CacheConfig();
+        if($data !== null) {
+            $config->set_data($data);
+        }
         return $config;
     }
 }

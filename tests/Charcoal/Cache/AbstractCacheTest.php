@@ -11,12 +11,12 @@ class AbstractCacheTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->obj = new NoopCache();
+        $this->obj = NoopCache::instance();
     }
 
     public function testSetPrefix()
     {
-        $obj = new NoopCache();
+        $obj = $this->obj;
 
         $default = $obj->prefix();
         $expected_default = $obj->config()->prefix();

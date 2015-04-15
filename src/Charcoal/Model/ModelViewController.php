@@ -3,10 +3,10 @@
 namespace Charcoal\Model;
 
 use \Charcoal\View\AbstractViewController as AbstractViewController;
-use \Charcoal\Model\Model as Model;
+use \Charcoal\Model\ModelInterface as ModelInterface;
 
 /**
-* Model View\Controller
+* Model ViewController
 */
 class ModelViewController extends AbstractViewController
 {
@@ -86,17 +86,23 @@ class ModelViewController extends AbstractViewController
         return false;
     }
 
+    /**
+    *
+    */
     public function set_context($context)
     {
         $this->_context = $context;
     }
 
+    /**
+    * @throws \Exception if the context is not a model
+    */
     protected function _model()
     {
         if($this->_context === null) {
             return null;
         }
-        if(!($this->_context instanceof Model)) {
+        if(!($this->_context instanceof ModelInterface)) {
             throw new \Exception('Context neeeds to be a Model');
         }
         return $this->_context;

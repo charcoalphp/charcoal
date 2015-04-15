@@ -13,7 +13,7 @@ class AbstractFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->obj = new AbstractFactoryClass();
+        $this->obj = AbstractFactoryClass::instance();
     }
 
     public function testGetInvalidTypeThrowsException()

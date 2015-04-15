@@ -7,7 +7,11 @@ use \Charcoal\Source\StorableInterface as StorableInterface;
 
 trait StorableTrait
 {
+    /**
+    * @var SourceInterfae $_source
+    */
     private $_source;
+
     /**
     * Set the object's source.
     *
@@ -39,7 +43,7 @@ trait StorableTrait
     * @param mixed $id The i
     * @return boolean Success / Failure
     */
-    public function load($id)
+    public function load($id=null)
     {
         $ret = $this->source()->load_data($id);
         $this->set_flat_data($ret);

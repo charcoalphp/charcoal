@@ -6,10 +6,15 @@ use \Charcoal\Validator\ValidatorInterface as ValidatorInterface;
 
 /**
 * A full default implementation, as trait, of the ValidatableInterface.
+*
+* There is one additional abstract method: `create_validator()`
 */
 trait ValidatableTrait
 {
-    private $_validator;
+    /**
+    * @return string
+    */
+    protected $_validator;
 
     /**
     * @param ValidatorInterface
@@ -26,8 +31,16 @@ trait ValidatableTrait
     */
     public function validator()
     {
+        if($this->_validator === null) {
+            $this->_validator = $this->create_validator();
+        }
         return $this->_validator;
     }
+
+    /**
+    * @return ValidatorInterface
+    */
+    abstract protected function create_validator();
     
     /**
     * @param ValidatorInterface

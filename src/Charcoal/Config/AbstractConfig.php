@@ -7,7 +7,7 @@ use \ArrayAccess as ArrayAccess;
 use \Charcoal\Config\ConfigInterface as ConfigInterface;
 
 /**
-* An abstract class that fulfills the full ConfigInterface
+* An abstract class that fulfills the full ConfigInterface.
 *
 * This class also implements the `ArrayAccess` interface, so each member can be accessed with `[]`.
 */

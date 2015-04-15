@@ -2,6 +2,11 @@
 
 namespace Charcoal\Cache;
 
+/**
+* A default implementation, as trait, of `the CachableInterface`.
+*
+* There is one abstract method: `cache_data()`
+*/
 trait CacheableTrait
 {
     private $_cache;
@@ -28,7 +33,19 @@ trait CacheableTrait
     */
     public function cache()
     {
+        if($this->_cache === null) {
+            $this->_cache = $this->create_cache();
+        }
         return $this->_cache;
+    }
+
+    public function create_cache($data=null)
+    {
+        $cache = CacheFactory::instance()->get('memcache');
+        if($data !== null) {
+            $cache->set_data($data);
+        }
+        return $cache;
     }
 
     /**
@@ -54,7 +71,15 @@ trait CacheableTrait
     */
     public function cache_key()
     {
+        if($this->_cache_key === null) {
+            $this->_cache_key = $this->generate_cache_key();
+        }
         return $this->_cache_key;
+    }
+
+    protected function generate_cache_key()
+    {
+        return '';
     }
 
     /**
@@ -75,7 +100,7 @@ trait CacheableTrait
     public function cache_ttl()
     {
         if($this->_cache_ttl === null) {
-            return $this->cache()->default_ttl();
+            $this->_cache_ttl = $this->cache()->config()->default_ttl();
         }
         return $this->_cache_ttl;
     }
@@ -99,7 +124,7 @@ trait CacheableTrait
     */
     public function use_cache()
     {
-        return ($this->_use_cache && $this->cache()->enabled());
+        return ($this->_use_cache && $this->cache_key() && $this->cache()->enabled());
     }
 
     /**
@@ -108,13 +133,19 @@ trait CacheableTrait
     abstract public function cache_data();
 
     /**
+    * @param mixed $data
     * @param integer $ttl
     * @return boolean
     */
-    public function cache_store($ttl=0)
+    public function cache_store($data=null, $ttl=0)
     {
+        if($this->use_cache() === false) {
+            return false;
+        }
         $key = $this->cache_key();
-        $data = $this->cache_data();
+        if($data === null) {
+            $data = $this->cache_data();
+        }
         $ttl = ($ttl > 0) ? $ttl : $this->cache_ttl();
 
         return $this->cache()->store($key, $data, $ttl);
@@ -125,6 +156,9 @@ trait CacheableTrait
     */
     public function cache_load()
     {
+        if($this->use_cache() === false) {
+            return false;
+        }
         $key = $this->cache_key();
         return $this->cache()->fetch($key);
     }

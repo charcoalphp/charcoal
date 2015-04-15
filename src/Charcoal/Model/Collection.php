@@ -3,8 +3,7 @@
 namespace Charcoal\Model;
 
 use \Charcoal\Collection\AbstractCollection as AbstractCollection;
-use \Charcoal\Model\Object as Object;
-
+use \Charcoal\Model\IndexableInterface as IndexableInterface;
 
 /**
 * Model Collection
@@ -36,7 +35,7 @@ class Collection extends AbstractCollection
     */
     public function offsetSet($offset, $value)
     {
-        if(!($value instanceof Object)) {
+        if(!($value instanceof IndexableInterface)) {
             throw new \InvalidArgumentException('Collection value must be an Object');
         }
         if($offset === null) {
@@ -171,7 +170,7 @@ class Collection extends AbstractCollection
     }
 
     /**
-    * @param string|Object
+    * @param string|IndexableInterface
     *
     * @throws \InvalidArgumentException if the offset is not a string
     * @return int|false
@@ -182,11 +181,11 @@ class Collection extends AbstractCollection
         if(is_string($key)) {
             return array_search($key, array_keys($this->_map));
         }
-        else if($key instanceof Object) {
+        else if($key instanceof IndexableInterface) {
             return array_search($key->id(), array_keys($this->_map));
         }
         else {
-            throw new \InvalidArgumentException('Key must be a string or an Object');
+            throw new \InvalidArgumentException('Key must be a string or an IndexableInterface');
         }
         
     }

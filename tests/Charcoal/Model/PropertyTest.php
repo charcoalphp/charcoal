@@ -25,7 +25,7 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testStaticGetWithoutParameter()
     {
-        $obj = Property::get();
+        $obj = new Property();
         $this->assertInstanceOf('\Charcoal\Model\Property', $obj);
     }
 

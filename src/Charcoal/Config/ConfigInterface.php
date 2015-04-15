@@ -3,7 +3,7 @@
 namespace Charcoal\Config;
 
 /**
-*
+* Config Interface
 */
 interface ConfigInterface
 {

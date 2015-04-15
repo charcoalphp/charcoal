@@ -18,16 +18,17 @@ use \Charcoal\Charcoal as Charcoal;
 
 use \Charcoal\Model\Model as Model;
 use \Charcoal\Model\IndexableInterface as IndexableInterface;
+use \Charcoal\Model\IndexableTrait as IndexableTrait;
 use \Charcoal\Model\Source\Database as Database;
 
 use \Charcoal\Loader\ObjectLoader as ObjectLoader;
 
 class Object extends Model implements IndexableInterface
 {
+    use IndexableTrait;
+
     const DEFAULT_KEY = 'id';
 
-    private $_key;
-    private $_id;
     private $_active = true;
     
 
@@ -36,14 +37,12 @@ class Object extends Model implements IndexableInterface
         // Use Model constructor...
         parent::__construct();
 
-        if($data !== null) {
-            $this->set_data($data);
+        $metadata = $this->metadata();
+        if(!isset($data['key'])) {
+            $data['key'] = isset($metadata['key']) ? $metadata['key'] : self::DEFAULT_KEY;
         }
 
-        // ... and add one option to set the primary key and this object table
-        $metadata = $this->metadata();
-        $key = isset($metadata['key']) ? $metadata['key'] : self::DEFAULT_KEY;
-        $this->set_key($key);
+        $this->set_data($data);
     }
 
     public function set_data($data)
@@ -61,48 +60,6 @@ class Object extends Model implements IndexableInterface
         }
 
         return $this;
-    }
-
-    public function set_key($key)
-    {
-        //pre($val);
-        if(!is_scalar($key)) {
-            throw new \InvalidArgumentException('Key argument must be scalar');
-        }
-        $this->_key = $key;
-
-        return $this;
-    }
-
-    public function key()
-    {
-        return $this->_key;
-    }
-    
-    public function set_id($val)
-    {
-        if(!is_scalar($val)) {
-            throw new \InvalidArgumentException('Val argument must be scalar');
-        }
-        $this->{$this->_key} = $val;
-
-        // Chainable
-        return $this;
-    }
-
-    public function id()
-    {
-        $key = $this->key();
-        if($key == 'id') {
-            return $this->_id;
-        }
-        $func = [$this, $key];
-        if(is_callable($func)) {
-            return call_user_func($func);
-        }
-        else {
-            throw new \Exception('Invalid key');
-        }
     }
 
     public function set_active($active)
@@ -135,6 +92,9 @@ class Object extends Model implements IndexableInterface
 
     public function load($ident=null)
     {
+        if($ident === null) {
+            $ident = $this->id();
+        }
         $loader = $this->loader();
         $data = $loader->load_data($ident);
 

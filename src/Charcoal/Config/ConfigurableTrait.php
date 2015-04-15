@@ -3,7 +3,9 @@
 namespace Charcoal\Config;
 
 /**
-* An implementation, as Trait, of the `ConfigurableInterface`
+* An implementation, as Trait, of the `ConfigurableInterface`.
+*
+* This Trait contains one additional abstract function: `create_config()`
 */
 trait ConfigurableTrait
 {
@@ -40,5 +42,5 @@ trait ConfigurableTrait
         return $this->_config;
     }
 
-    abstract protected function _config_from_array($config);
+    abstract protected function create_config($config=null);
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Charccoal\Encoder;
+namespace Charcoal\Encoder;
 
 use \Charcoal\Core\AbstractFactory as AbstractFactory;
 

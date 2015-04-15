@@ -4,13 +4,19 @@ namespace Charcoal\Model;
 
 use Charcoal\Validator\AbstractValidator as AbstractValidator;
 
+/**
+*
+*/
 class ModelValidator extends AbstractValidator
 {
+    /**
+    * @return boolean
+    */
     public function validate()
     {
         $model = $this->_model;
 
-        $model->validate($this);
+        //$model->validate($this);
 
         $props = $model->properties();
 
@@ -20,8 +26,8 @@ class ModelValidator extends AbstractValidator
                 continue;
             }
 
-            $property_validator = $p->validator()->validate_model($p);
-            $this->merge($property_validator, $ident);
+            //$property_validator = $p->validator()->validate_model($p);
+            //$this->merge($property_validator, $ident);
         }
 
         return $this;

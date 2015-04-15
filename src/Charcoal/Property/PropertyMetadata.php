@@ -1,13 +1,13 @@
 <?php
 
-namespace Charcoal\Model;
+namespace Charcoal\Property;
 
 use \Charcoal\Metadata\AbstractMetadata as AbstractMetadata;
 
 use \Charcoal\Charcoal as Charcoal;
 use \Charcoal\Helper\Cache as Cache;
 
-class ModelMetadata extends AbstractMetadata implements \ArrayAccess
+class PropertyMetadata extends AbstractMetadata implements \ArrayAccess
 {
 
     /**
@@ -23,8 +23,8 @@ class ModelMetadata extends AbstractMetadata implements \ArrayAccess
 
     /**
     * @param string $ident
-    * @throws \InvalidArgumentException if ident is not a string
-    * @return ModelMetadata Chainable
+    * @throws \InvalidArgumentException if the ident is not a string
+    * @return PropertyMetadata Chainable
     */
     public function set_ident($ident)
     {
@@ -36,9 +36,6 @@ class ModelMetadata extends AbstractMetadata implements \ArrayAccess
         return $this;
     }
 
-    /**
-    * @return string
-    */
     public function ident()
     {
         return $this->_ident;
