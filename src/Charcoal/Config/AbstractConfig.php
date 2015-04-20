@@ -20,7 +20,7 @@ abstract class AbstractConfig implements
     * @param array $data Optional default data, as `[$key=>$val]` array
     * @throws \InvalidArgumentException if data is not an array
     */
-    final public function __construct($data=null)
+    final public function __construct($data = null)
     {
         if (is_array($data)) {
              $data = array_merge($this->default_data(), $data);

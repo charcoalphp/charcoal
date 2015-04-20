@@ -27,7 +27,7 @@ class ValidatorResult
     */
     public $ts;
 
-    public function __construct($data=null)
+    public function __construct($data = null)
     {
         $ts = new \DateTime();
         $this->set_ts($ts);

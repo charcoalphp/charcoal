@@ -9,7 +9,7 @@ use \Charcoal\Validator\ValidatorInterface as ValidatorInterface;
 class Property extends AbstractProperty
 {
 
-    public function validate(ValidatorInterface &$v=null)
+    public function validate(ValidatorInterface &$v = null)
     {
         if ($v === null) {
             $v = $this->validator();

@@ -97,7 +97,7 @@ abstract class AbstractCache implements
     * @param integer $ttl Time-to-live, in seconds
     * @return boolean If storage was sucessful or not
     */
-    abstract public function store($key, $data, $ttl=0);
+    abstract public function store($key, $data, $ttl = 0);
 
     /**
     * Verify if a key exists in the cache.
@@ -157,7 +157,7 @@ abstract class AbstractCache implements
     * @param array
     * @return ConfigInterface
     */
-    protected function create_config($data=null)
+    protected function create_config($data = null)
     {
         $config = new CacheConfig();
         if ($data !== null) {

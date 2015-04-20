@@ -35,7 +35,7 @@ class MustacheTemplateLoader extends FileLoader implements Mustache_Loader
     *
     * @return string
     */
-    public function load($ident=null)
+    public function load($ident = null)
     {
         if ($ident !== null) {
             $this->set_ident($ident);

@@ -46,5 +46,5 @@ interface ModelInterface
     * @param string $property_ident
     * @return mixed
     */
-    public function p($property_ident=null);
+    public function p($property_ident = null);
 }

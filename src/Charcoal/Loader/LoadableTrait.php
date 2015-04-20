@@ -33,7 +33,7 @@ trait LoadableTrait
     /**
     * @return LoaderInterface
     */
-    abstract protected function create_loader($data=null);
+    abstract protected function create_loader($data = null);
 
     /**
     *

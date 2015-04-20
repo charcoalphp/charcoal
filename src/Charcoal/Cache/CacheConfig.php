@@ -44,7 +44,7 @@ class CacheConfig extends AbstractConfig
     * @throws \InvalidArgumentException if data is not an array
     * @return CacheConfig Chainable
     */
-    public function set_data($data=nul)
+    public function set_data($data = nul)
     {
         //parent::set_data($data);
         if (!is_array($data)) {

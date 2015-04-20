@@ -93,7 +93,7 @@ class CollectionLoader extends AbstractLoader
     * @throws \InvalidArgumentException if property is not a string or empty
     * @return \Charcoal\Service\Loader\Collection (Chainable)
     */
-    public function add_filter($param, $val=null, $options=null)
+    public function add_filter($param, $val = null, $options = null)
     {
         if ($param instanceof Filter) {
             $this->_filters[] = $param;
@@ -153,7 +153,7 @@ class CollectionLoader extends AbstractLoader
         return $this->_orders;
     }
 
-    public function add_order($param, $mode='asc', $order_options=null)
+    public function add_order($param, $mode = 'asc', $order_options = null)
     {
         if ($param instanceof Order) {
             $this->_orders[] = $param;
@@ -231,7 +231,7 @@ class CollectionLoader extends AbstractLoader
     * @throws \Exception if the database connection fails
     * @return Collection
     */
-    public function load($ident=null)
+    public function load($ident = null)
     {
         // Unused.
         unset($ident);

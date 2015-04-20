@@ -46,7 +46,7 @@ trait ValidatableTrait
     * @param ValidatorInterface
     * @return bool
     */
-    public function validate(ValidatorInterface &$v=null)
+    public function validate(ValidatorInterface &$v = null)
     {
         if ($v !== null) {
             $this->set_validator($v);

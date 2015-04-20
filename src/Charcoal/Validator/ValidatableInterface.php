@@ -21,5 +21,5 @@ interface ValidatableInterface
     * @param ValidatorInterface
     * @return bool
     */
-    public function validate(ValidatorInterface &$v=null);
+    public function validate(ValidatorInterface &$v = null);
 }

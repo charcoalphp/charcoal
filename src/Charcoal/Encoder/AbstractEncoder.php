@@ -32,7 +32,7 @@ abstract class AbstractEncoder implements EncoderInterface
     * @param string $salt Optional salt.
     * @return string The encoded string.
     */
-    abstract public function encode($plain_string, $salt='');
+    abstract public function encode($plain_string, $salt = '');
 
     /**
     * Decode an encoded string.
@@ -41,7 +41,7 @@ abstract class AbstractEncoder implements EncoderInterface
     * @param string $salt Optional salt.
     * @return string The decoded (original) string.
     */
-    abstract public function decode($encoded_string, $salt='');
+    abstract public function decode($encoded_string, $salt = '');
 
     /**
     * Checks wether an encoded string hash matches a plain string.
@@ -54,7 +54,7 @@ abstract class AbstractEncoder implements EncoderInterface
     * @param string $salt Optional salt.
     * @return boolean True if strings match, false if not
     */
-    public function match($encoded_string, $plain_string, $salt='')
+    public function match($encoded_string, $plain_string, $salt = '')
     {
         return ($plain_string === $this->decode($encoded_string, $salt));
     }

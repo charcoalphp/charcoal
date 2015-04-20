@@ -88,7 +88,7 @@ abstract class AbstractProperty implements
     /**
     * @param array $data
     */
-    public function __construct($data=null)
+    public function __construct($data = null)
     {
         // Set default values
         $defaults = [
@@ -459,7 +459,7 @@ abstract class AbstractProperty implements
         return isset($this->{$property_ident}) ? $this->{$property_ident} : null;
     }
 
-    protected function create_metadata($data=null)
+    protected function create_metadata($data = null)
     {
         $metadata = new PropertyMetadata();
         if ($data !== null) {
@@ -484,7 +484,7 @@ abstract class AbstractProperty implements
     *
     * @return ViewInterface
     */
-    protected function create_view($data=null)
+    protected function create_view($data = null)
     {
         $view = new PropertyView();
         if ($data !== null) {

@@ -188,7 +188,7 @@ class DatabaseSource extends AbstractSource
     /**
     * @throws \Exception if the database is not set.
     */
-    public function db($database_ident=null)
+    public function db($database_ident = null)
     {
         // If no database ident was passed in parameter, use the class database or the config databases
         if ($database_ident === null) {

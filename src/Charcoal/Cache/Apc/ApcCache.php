@@ -34,7 +34,7 @@ class ApcCache extends AbstractCache
     * @param integer $ttl Time-to-live, in seconds
     * @return boolean If storage was sucessful or not
     */
-    public function store($key, $data, $ttl=0)
+    public function store($key, $data, $ttl = 0)
     {
         if (!$this->enabled()) {
             return false;

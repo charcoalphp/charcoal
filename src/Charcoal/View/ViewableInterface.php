@@ -20,13 +20,13 @@ interface ViewableInterface
     /**
     * @param string The template to parse and echo. If null, use the object's default.
     */
-    public function display($template=null);
+    public function display($template = null);
 
     /**
     * @param string The template to parse and render. If null, use the object's default.
     * @return string The rendered template.
     */
-    public function render($template=null);
+    public function render($template = null);
 
     /**
     * @param string $template_ident The template ident to load and render.

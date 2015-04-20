@@ -22,7 +22,7 @@ interface DescribableInterface
     /**
     * @param string $metadata_ident
     */
-    public function load_metadata($metadata_ident=null);
+    public function load_metadata($metadata_ident = null);
 
     /**
     * @param string $metadata_ident
@@ -37,5 +37,5 @@ interface DescribableInterface
 
     public function properties();
     public function property($property_ident);
-    public function p($property_ident=null);
+    public function p($property_ident = null);
 }

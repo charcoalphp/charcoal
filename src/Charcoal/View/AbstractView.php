@@ -34,7 +34,7 @@ abstract class AbstractView implements ViewInterface
     * @param string $template
     * @param mixed  $controller
     */
-    public function __construct($data=null)
+    public function __construct($data = null)
     {
         if ($data !== null) {
             $this->set_data($data);
@@ -156,7 +156,7 @@ abstract class AbstractView implements ViewInterface
     *
     * @return string The rendered template
     */
-    public function render($template=null, $context=null)
+    public function render($template = null, $context = null)
     {
         if ($template !== null) {
             $this->set_template($template);
@@ -185,7 +185,7 @@ abstract class AbstractView implements ViewInterface
     * @param mixed $context
     * @return string The rendered templated
     */
-    public function render_template($template_ident='', $context=null)
+    public function render_template($template_ident = '', $context = null)
     {
         // Load the View
         $template = $this->load_template($template_ident);

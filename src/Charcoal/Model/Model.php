@@ -72,7 +72,7 @@ class Model extends AbstractModel
     *
     * @return SourceInterface;
     */
-    public function source($source_ident=null)
+    public function source($source_ident = null)
     {
         $metadata = $this->metadata();
         //var_dump($metadata);

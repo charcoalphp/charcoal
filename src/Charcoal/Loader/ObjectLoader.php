@@ -37,7 +37,7 @@ class ObjectLoader extends AbstractLoader
         return $this->_obj;
     }
 
-    public function load($ident=null)
+    public function load($ident = null)
     {
         $data = $this->load_data($ident);
         if ($data !== false) {
@@ -46,7 +46,7 @@ class ObjectLoader extends AbstractLoader
         return $this->obj();
     }
 
-    public function load_data($ident=null)
+    public function load_data($ident = null)
     {
         // @todo: The query should call the object's properties to fetch any other needed data from other tables
         $q = '

@@ -20,7 +20,7 @@ class Base64Encoder extends AbstractEncoder
     * @throws \InvalidArgumentException If plain_string is not a string
     * @return string The encoded string.
     */
-    public function encode($plain_string, $salt='')
+    public function encode($plain_string, $salt = '')
     {
         if (!is_string($plain_string)) {
             throw new \InvalidArgumentException('Plain string must be a string');
@@ -46,7 +46,7 @@ class Base64Encoder extends AbstractEncoder
     * @throws \InvalidArgumentException If encoded_string is not a string
     * @return string The decoded (original) string.
     */
-    public function decode($encoded_string, $salt='')
+    public function decode($encoded_string, $salt = '')
     {
         if (!is_string($encoded_string)) {
             throw new \InvalidArgumentException('Encoded string must be a string');

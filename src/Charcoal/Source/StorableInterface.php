@@ -45,7 +45,7 @@ interface StorableInterface
     * @param array $properties If set, only update the properties specified in this array.
     * @return boolean
     */
-    public function update($properties=null);
+    public function update($properties = null);
 
     /**
     * Delete an object from storage.

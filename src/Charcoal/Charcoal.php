@@ -24,7 +24,7 @@ class Charcoal
     */
     static private $_app = null;
 
-    static public function init($data=null)
+    static public function init($data = null)
     {
         if (isset($data['config']) && $data['config'] !== null) {
             self::set_config($data['config']);

@@ -175,9 +175,14 @@
 	<!-- Opening braces should be on a new line for functions -->
 	<rule ref="Generic.Functions.OpeningFunctionBraceBsdAllman"/>
 	<!-- Opening braces should be on the same line for functions. Incompatible with previous rule -->
+
 	<!--<rule ref="Generic.Functions.OpeningFunctionBraceKernighanRitchie" />-->
 	<!-- Checks that arguments in function declarations are spaced correctly. -->
-	<rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing" />
+	<rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing">
+		<properties>
+			<property name="equalsSpacing" value="1"/>
+		</properties>
+	</rule>
 	<!-- @todo doc me -->
 	<rule ref="Squiz.Functions.FunctionDeclaration" />
 	<!-- @todo doc me -->
@@ -192,6 +197,7 @@
 		<!-- This check is disabled; it breaks lambda functions -->
 		<severity>0></severity>
 	</rule>
+	<rule ref="PEAR.Functions.ValidDefaultValue" />
 
 <!-- Metrics Sniffs -->
 
@@ -311,7 +317,7 @@
 	<!-- Throws errors if tabs are used for indentation -->
 	<rule ref="Generic.WhiteSpace.DisallowTabIndent" />
 	<!-- Checks that control structures are structured correctly -->
-	<rule ref="Generic.Whitespace.ScopeIndent" />
+	<!--<rule ref="Generic.Whitespace.ScopeIndent" />-->
 	 <!-- There MUST NOT be trailing whitespace at the end of non-blank lines. -->
 	<rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">
 		<properties>

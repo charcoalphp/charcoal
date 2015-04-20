@@ -81,7 +81,7 @@ trait DescribableTrait
     * @param string $metadata_ident Optional ident
     * @return MetadataInterface
     */
-    public function load_metadata($metadata_ident=null)
+    public function load_metadata($metadata_ident = null)
     {
         if ($metadata_ident === null) {
             $metadata_ident = $this->metadata_ident();
@@ -209,7 +209,7 @@ trait DescribableTrait
     * @param string  $property_ident   The property ident to return
     * @return array|PropertyInterface
     */
-    public function p($property_ident=null)
+    public function p($property_ident = null)
     {
         if ($property_ident === null) {
             return $this->properties();

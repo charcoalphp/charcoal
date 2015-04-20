@@ -39,7 +39,7 @@ trait CacheableTrait
         return $this->_cache;
     }
 
-    public function create_cache($data=null)
+    public function create_cache($data = null)
     {
         $cache = CacheFactory::instance()->get('memcache');
         if ($data !== null) {
@@ -137,7 +137,7 @@ trait CacheableTrait
     * @param integer $ttl
     * @return boolean
     */
-    public function cache_store($data=null, $ttl=0)
+    public function cache_store($data = null, $ttl = 0)
     {
         if ($this->use_cache() === false) {
             return false;

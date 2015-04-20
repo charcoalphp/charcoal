@@ -56,7 +56,7 @@ class MetadataLoader extends FileLoader
     /**
     *
     */
-    public function load($ident=null)
+    public function load($ident = null)
     {
         if ($ident !== null) {
             $this->set_ident($ident);

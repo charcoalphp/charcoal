@@ -40,12 +40,12 @@ trait ViewableTrait
     /**
     * @return ViewInterface
     */
-    abstract protected function create_view($data=null);
+    abstract protected function create_view($data = null);
 
     /**
     * @param string The template to parse and echo. If null, use the object's default.
     */
-    public function display($template=null)
+    public function display($template = null)
     {
         echo $this->render($template);
     }
@@ -54,7 +54,7 @@ trait ViewableTrait
     * @param string The template to parse and render. If null, use the object's default.
     * @return string The rendered template.
     */
-    public function render($template=null)
+    public function render($template = null)
     {
         $view_data = [
             'template'=>$template,

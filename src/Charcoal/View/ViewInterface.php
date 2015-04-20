@@ -60,10 +60,10 @@ interface ViewInterface
     /**
     *
     */
-    public function render($template=null, $context=null);
+    public function render($template = null, $context = null);
 
     /**
     *
     */
-    public function render_template($template_ident='', $context=null);
+    public function render_template($template_ident = '', $context = null);
 }

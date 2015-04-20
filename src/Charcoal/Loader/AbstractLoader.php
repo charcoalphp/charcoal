@@ -32,7 +32,7 @@ abstract class AbstractLoader implements
         return $this->_content;
     }
 
-    abstract public function load($ident=null);
+    abstract public function load($ident = null);
     
     /**
     * CacheableInterface > cache_data().

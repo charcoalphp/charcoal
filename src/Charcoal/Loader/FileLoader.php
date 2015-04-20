@@ -77,7 +77,7 @@ class FileLoader extends AbstractLoader
     *
     * @return string File content
     */
-    public function load($ident=null)
+    public function load($ident = null)
     {
         if ($ident === null) {
             return '';

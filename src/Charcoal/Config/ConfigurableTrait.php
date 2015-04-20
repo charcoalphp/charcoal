@@ -43,5 +43,5 @@ trait ConfigurableTrait
         return $this->_config;
     }
 
-    abstract protected function create_config($config=null);
+    abstract protected function create_config($config = null);
 }

@@ -33,7 +33,7 @@ class Object extends Model implements IndexableInterface
     private $_active = true;
     
 
-    public function __construct($data=null)
+    public function __construct($data = null)
     {
         // Use Model constructor...
         parent::__construct();
@@ -91,7 +91,7 @@ class Object extends Model implements IndexableInterface
         return $loader;
     }
 
-    public function load($ident=null)
+    public function load($ident = null)
     {
         if ($ident === null) {
             $ident = $this->id();

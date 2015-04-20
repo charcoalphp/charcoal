@@ -17,7 +17,7 @@ abstract class AbstractViewController implements ViewControllerInterface
     /**
     *
     */
-    public function __construct($context=null)
+    public function __construct($context = null)
     {
         if ($context !== null) {
             $this->set_context($context);

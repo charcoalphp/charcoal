@@ -43,7 +43,7 @@ trait StorableTrait
     * @param mixed $id The i
     * @return boolean Success / Failure
     */
-    public function load($id=null)
+    public function load($id = null)
     {
         $ret = $this->source()->load_data($id);
         $this->set_flat_data($ret);
@@ -69,7 +69,7 @@ trait StorableTrait
     * @param array $properties If set, only update the properties specified in this array.
     * @return boolean
     */
-    public function update($properties=null)
+    public function update($properties = null)
     {
         $this->pre_update($properties);
         $ret = $this->source()->update($properties);
@@ -92,8 +92,8 @@ trait StorableTrait
 
     abstract protected function pre_save();
     abstract protected function post_save();
-    abstract protected function pre_update($properties=null);
-    abstract protected function post_update($properties=null);
+    abstract protected function pre_update($properties = null);
+    abstract protected function post_update($properties = null);
     abstract protected function pre_delete();
     abstract protected function post_delete();
 }

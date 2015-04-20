@@ -24,7 +24,7 @@ class Config implements \ArrayAccess
     private $_metadata_path = [];
     private $_template_path = [];
 
-    public function __construct($config=null)
+    public function __construct($config = null)
     {
         $this->add_file(__DIR__.'/../../config/config.default.json');
 

@@ -42,7 +42,7 @@ abstract class AbstractModel implements
     /**
     * @param array $data
     */
-    public function __construct($data=null)
+    public function __construct($data = null)
     {
         if ($data !== null) {
             $this->set_data($data);
@@ -169,7 +169,7 @@ abstract class AbstractModel implements
     * @param array $properties
     * @return boolean
     */
-    public function pre_update($properties=null)
+    public function pre_update($properties = null)
     {
         return true;
     }
@@ -180,7 +180,7 @@ abstract class AbstractModel implements
     * @param array $properties
     * @return boolean
     */
-    public function post_update($properties=null)
+    public function post_update($properties = null)
     {
         return true;
     }
@@ -211,7 +211,7 @@ abstract class AbstractModel implements
     * @param array $data Optional data to intialize the Metadata object with.
     * @return MetadataInterface
     */
-    protected function create_metadata($data=null)
+    protected function create_metadata($data = null)
     {
         $metadata = new ModelMetadata();
         if ($data !== null) {
@@ -225,7 +225,7 @@ abstract class AbstractModel implements
     *
     * @return ValidatorInterface
     */
-    protected function create_validator($data=null)
+    protected function create_validator($data = null)
     {
         $validator = new ModelValidator($this);
         if ($data !== null) {
@@ -237,7 +237,7 @@ abstract class AbstractModel implements
     /**
     * @return ViewInterface
     */
-    protected function create_view($data=null)
+    protected function create_view($data = null)
     {
         $view = new ModelView();
         if ($data !== null) {

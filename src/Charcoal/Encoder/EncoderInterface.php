@@ -11,7 +11,7 @@ interface EncoderInterface
     * @param string $salt Optional salt.
     * @return string The encoded string hash.
     */
-    public function encode($plain_string, $salt='');
+    public function encode($plain_string, $salt = '');
 
     /**
     * Decode an encoded string.
@@ -20,7 +20,7 @@ interface EncoderInterface
     * @param string $salt Optional salt.
     * @return string The decoded (original) string.
     */
-    public function decode($encoded_string, $salt='');
+    public function decode($encoded_string, $salt = '');
 
     /**
     * Checks wether an encoded string hash matches a plain string.
@@ -30,5 +30,5 @@ interface EncoderInterface
     * @param string $salt Optional salt.
     * @return boolean True if strings match, false if not
     */
-    public function match($encoded_string, $plain_string, $salt='');
+    public function match($encoded_string, $plain_string, $salt = '');
 }
