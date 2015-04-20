@@ -1,6 +1,6 @@
 <?php
 
-namespace Charcoal\Model;
+namespace Charcoal\Core;
 
 /**
 * Indexable interace (object that holds a unique id, defined by a key).

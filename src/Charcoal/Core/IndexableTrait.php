@@ -1,6 +1,6 @@
 <?php
 
-namespace Charcoal\Model;
+namespace Charcoal\Core;
 
 /**
 * A default implementation, as trait, of the `IndexableInterface`.

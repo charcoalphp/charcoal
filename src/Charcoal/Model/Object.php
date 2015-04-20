@@ -16,9 +16,10 @@ namespace Charcoal\Model;
 
 use \Charcoal\Charcoal as Charcoal;
 
+use \Charcoal\Core\IndexableInterface as IndexableInterface;
+use \Charcoal\Core\IndexableTrait as IndexableTrait;
+
 use \Charcoal\Model\Model as Model;
-use \Charcoal\Model\IndexableInterface as IndexableInterface;
-use \Charcoal\Model\IndexableTrait as IndexableTrait;
 use \Charcoal\Model\Source\Database as Database;
 
 use \Charcoal\Loader\ObjectLoader as ObjectLoader;
