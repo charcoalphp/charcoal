@@ -35,14 +35,13 @@ class Collection extends AbstractCollection
     */
     public function offsetSet($offset, $value)
     {
-        if(!($value instanceof IndexableInterface)) {
+        if (!($value instanceof IndexableInterface)) {
             throw new \InvalidArgumentException('Collection value must be an Object');
         }
-        if($offset === null) {
+        if ($offset === null) {
             $this->_objects[] = $value;
             $this->_map[$value->id()] = $value;
-        }
-        else {
+        } else {
             throw new \InvalidArgumentException('Collection can set to an offset. Use [].');
         }
     }
@@ -55,10 +54,9 @@ class Collection extends AbstractCollection
     */
     public function offsetExists($offset)
     {
-        if(is_int($offset)) {
+        if (is_int($offset)) {
             return isset($this->_objects[$offset]);
-        }
-        else if(is_string($offset)) {
+        } else if (is_string($offset)) {
             return isset($this->_map[$offset]);
         }
     }
@@ -72,18 +70,16 @@ class Collection extends AbstractCollection
      */
     public function offsetUnset($offset)
     {
-        if(is_int($offset)) {
+        if (is_int($offset)) {
             $id = $this->_objects[$offset]->id();
             unset($this->_objects[$offset]);
             unset($this->_map[$id]);
 
-        }
-        else if(is_string($offset)) {
+        } else if (is_string($offset)) {
             $pos = $this->pos($offset);
             unset($this->_map[$offset]);
             unset($this->_objects[$pos]);
-        }
-        else {
+        } else {
             throw new \InvalidArgumentException('Offset should be either an integer or a string');
         }
     }
@@ -97,13 +93,11 @@ class Collection extends AbstractCollection
     */
     public function offsetGet($offset)
     {
-        if(is_int($offset)) {
+        if (is_int($offset)) {
             return isset($this->_objects[$offset]) ? $this->_objects[$offset] : null;
-        }
-        else if(is_string($offset)) {
+        } else if (is_string($offset)) {
             return isset($this->_map[$offset]) ? $this->_map[$offset] : null;
-        }
-        else {
+        } else {
             throw new \InvalidArgumentException('Offset should be either an integer or a string');
         }
     }
@@ -113,7 +107,7 @@ class Collection extends AbstractCollection
     */
     public function getIterator()
     {
-        if(empty($this->_map)) {
+        if (empty($this->_map)) {
             // Empty object
             return new \ArrayIterator();
         }
@@ -178,13 +172,11 @@ class Collection extends AbstractCollection
     public function pos($key)
     {
 
-        if(is_string($key)) {
+        if (is_string($key)) {
             return array_search($key, array_keys($this->_map));
-        }
-        else if($key instanceof IndexableInterface) {
+        } else if ($key instanceof IndexableInterface) {
             return array_search($key->id(), array_keys($this->_map));
-        }
-        else {
+        } else {
             throw new \InvalidArgumentException('Key must be a string or an IndexableInterface');
         }
         

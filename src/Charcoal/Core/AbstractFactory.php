@@ -32,7 +32,7 @@ abstract class AbstractFactory implements FactoryInterface
     */
     static public function instance()
     {
-        if(static::$instance !== null) {
+        if (static::$instance !== null) {
             return static::$instance;
         }
         $class = get_called_class();
@@ -48,10 +48,10 @@ abstract class AbstractFactory implements FactoryInterface
     */
     public function create($type)
     {
-        if(!is_string($type)) {
+        if (!is_string($type)) {
             throw new \InvalidArgumentException('Type must be a string');
         }
-        if(!$this->is_type_available($type)) {
+        if (!$this->is_type_available($type)) {
             throw new \InvalidArgumentException(sprintf('Type "%s" is not a valid type', $type));
         }
         $types = static::types();
@@ -71,13 +71,12 @@ abstract class AbstractFactory implements FactoryInterface
     */
     public function get($type)
     {
-        if(!is_string($type)) {
+        if (!is_string($type)) {
             throw new \InvalidArgumentException('Type must be a string');
         }
-        if(isset($this->_instances[$type]) && $this->_instances[$type] !== null) {
+        if (isset($this->_instances[$type]) && $this->_instances[$type] !== null) {
             return $this->_instances[$type];
-        }
-        else {
+        } else {
             $this->create($type);
         }
     }
@@ -101,15 +100,13 @@ abstract class AbstractFactory implements FactoryInterface
     public function is_type_available($type)
     {
         $types = static::types();
-        if(!in_array($type, array_keys($types))) {
+        if (!in_array($type, array_keys($types))) {
             return false;
-        }
-        else {
+        } else {
             $class = $types[$type];
-            if(!class_exists($class)) {
+            if (!class_exists($class)) {
                 return false;
-            }
-            else {
+            } else {
                 return true;
             }
         }
@@ -124,10 +121,9 @@ abstract class AbstractFactory implements FactoryInterface
     */
     static public function add_type($type, $class)
     {
-        if(!class_exists($class)) {
+        if (!class_exists($class)) {
             return false;
-        }
-        else {
+        } else {
             static::$_types[$type] = $class;
             return true;
         }

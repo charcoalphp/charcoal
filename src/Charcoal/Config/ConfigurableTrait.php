@@ -21,13 +21,11 @@ trait ConfigurableTrait
     */
     public function set_config($config)
     {
-        if(is_array($config)) {
+        if (is_array($config)) {
             $this->_config = $this->_config_from_array();
-        }
-        else if(($config instanceof ConfigInterface)) {
+        } else if (($config instanceof ConfigInterface)) {
             $this->_config = $config;
-        }
-        else {
+        } else {
             throw new \InvalidArgumentException('Invalid config Argument');
         }
         $this->_config = $config;
@@ -39,7 +37,7 @@ trait ConfigurableTrait
     */
     public function config()
     {
-        if($this->_config === null) {
+        if ($this->_config === null) {
             $this->_config = $this->create_config();
         }
         return $this->_config;

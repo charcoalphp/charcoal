@@ -34,7 +34,7 @@ class DatabaseSource extends AbstractSource
     */
     public function set_database_ident($database_ident)
     {
-        if(!is_string($database_ident)) {
+        if (!is_string($database_ident)) {
             throw new \InvalidArgumentException('set_database() expects a string as database ident');
         }
         $this->_database_ident = $database_ident;
@@ -46,7 +46,7 @@ class DatabaseSource extends AbstractSource
     */
     public function database_ident()
     {
-        if($this->_database_ident === null) {
+        if ($this->_database_ident === null) {
             return Charcoal::config()->default_database();
         }
         return $this->_database_ident;
@@ -54,7 +54,7 @@ class DatabaseSource extends AbstractSource
 
     public function set_database_config($database_config)
     {
-        if(!is_array($database_config)) {
+        if (!is_array($database_config)) {
             throw new \Exception('Database config needs to be an array.');
         }
         $this->_database_config = $database_config;
@@ -63,7 +63,7 @@ class DatabaseSource extends AbstractSource
 
     public function database_config()
     {
-        if($this->_database_config === null) {
+        if ($this->_database_config === null) {
             $ident = $this->database_ident();
             return Charcoal::config()->database_config($ident);
         }
@@ -75,7 +75,7 @@ class DatabaseSource extends AbstractSource
     */
     public function set_table($table)
     {
-        if(!is_string($table)) {
+        if (!is_string($table)) {
             throw new \InvalidArgumentException('set_table() expects a string as table');
         }
         $this->_table = $table;
@@ -88,7 +88,7 @@ class DatabaseSource extends AbstractSource
     */
     public function table()
     {
-        if($this->_table === null) {
+        if ($this->_table === null) {
             throw new \Exception('Table was not set.');
         }
         return $this->_table;
@@ -97,7 +97,7 @@ class DatabaseSource extends AbstractSource
 
     public function create_table()
     {
-        if($this->table_exists()) {
+        if ($this->table_exists()) {
             // Table already exists
             return true;
         }
@@ -106,7 +106,7 @@ class DatabaseSource extends AbstractSource
         $metadata = $model->metadata();
         $fields = $this->_get_model_fields($model);
         $fields__sql = [];
-        foreach($fields as $field) {
+        foreach ($fields as $field) {
             $fields_sql[] = $field->sql();
         }
 
@@ -115,7 +115,7 @@ class DatabaseSource extends AbstractSource
         $q = 'CREATE TABLE  `'.$this->table().'` ('."\n";
         $q .= implode(',', $fields_sql);
         $key = $model->key();
-        if($key) {
+        if ($key) {
             $q .= ', PRIMARY KEY (`'.$key.'`) '."\n";
         }
         // @todo add indexes for all defined list constraints (yea... tough job...)
@@ -127,7 +127,7 @@ class DatabaseSource extends AbstractSource
 
     public function alter_table()
     {
-        if(!$this->table_exists()) {
+        if (!$this->table_exists()) {
             return false;
         }
 
@@ -137,32 +137,31 @@ class DatabaseSource extends AbstractSource
         $res = $this->db()->query($q);
         $cols = $res->fetchAll((PDO::FETCH_GROUP|PDO::FETCH_UNIQUE|PDO::FETCH_ASSOC));
 
-        foreach($fields as $field) {
+        foreach ($fields as $field) {
             $ident = $field->ident();
 
-            if(!array_key_exists($ident, $cols)) {
+            if (!array_key_exists($ident, $cols)) {
                 // The key does not exist at all.
                 $q = 'ALTER TABLE `'.$this->table().'` ADD '.$field->sql();
                 $res = $this->db()->query($q);
-            }
-            else {
+            } else {
                 // The key exists. Validate.
                 $col = $cols[$ident];
                 $alter = false;
-                if(strtolower($col['Type']) != strtolower($field->sql_type())) {
+                if (strtolower($col['Type']) != strtolower($field->sql_type())) {
                     $alter = true;
                 }
-                if((strtolower($col['Null']) == 'no') && !$field->allow_null()) {
+                if ((strtolower($col['Null']) == 'no') && !$field->allow_null()) {
                     $alter = true;
                 }
-                if((strtolower($col['Null']) != 'no') && $field->allow_null()) {
+                if ((strtolower($col['Null']) != 'no') && $field->allow_null()) {
                     $alter = true;
                 }
-                if($col['Default'] != $field->default_val()) {
+                if ($col['Default'] != $field->default_val()) {
                     $alter = true;
                 }
 
-                if($alter === true) {
+                if ($alter === true) {
                     $q = 'ALTER TABLE `'.$this->table().'` CHANGE `'.$ident.'` '.$field->sql();
                     $res = $this->db()->query($q);
                 }
@@ -192,12 +191,12 @@ class DatabaseSource extends AbstractSource
     public function db($database_ident=null)
     {
         // If no database ident was passed in parameter, use the class database or the config databases
-        if($database_ident === null) {
+        if ($database_ident === null) {
             $database_ident = $this->database_ident();
         }
 
         // If the handle was already created, reuse from static $dbh variable
-        if(isset(self::$_dbs[$database_ident])) {
+        if (isset(self::$_dbs[$database_ident])) {
             return self::$_dbs[$database_ident];
         }
 
@@ -208,10 +207,9 @@ class DatabaseSource extends AbstractSource
         // ... The other parameters are required. @todo Really?
         
         try {
-            
             // Set UTf-8 compatibility by default. Disable it if it is set as such in config
             $extra_opts = [PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'];
-            if(isset($db_config['disable_utf8']) && $db_config['disable_utf8']) {
+            if (isset($db_config['disable_utf8']) && $db_config['disable_utf8']) {
                 $extra_opts = null;
             }
             // PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
@@ -223,12 +221,11 @@ class DatabaseSource extends AbstractSource
             
             // Set PDO options
             $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            if($db_type == 'mysql') {
+            if ($db_type == 'mysql') {
                 $db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
             }
             
-        }
-        catch (PDOException $e) {
+        } catch (PDOException $e) {
             throw new \Exception('Error setting up database');
         }
         
@@ -243,9 +240,9 @@ class DatabaseSource extends AbstractSource
         $properties = $metadata->properties();
 
         $fields = [];
-        foreach($properties as $property_ident => $property_options) {
+        foreach ($properties as $property_ident => $property_options) {
             $p = $model->p($property_ident);
-            if(!$p || !$p->active()) {
+            if (!$p || !$p->active()) {
                 continue;
             }
             $fields = array_merge($fields, $p->fields());

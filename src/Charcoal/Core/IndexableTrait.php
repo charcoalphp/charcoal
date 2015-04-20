@@ -25,20 +25,18 @@ trait IndexableTrait
     */
     public function set_id($id)
     {
-        if(!is_scalar($id)) {
+        if (!is_scalar($id)) {
             throw new \InvalidArgumentException('Id argument must be scalar');
         }
 
         $key = $this->key();
-        if($key == 'id') {
+        if ($key == 'id') {
             $this->_id = $id;
-        }
-        else {
+        } else {
             $func = [$this, 'set_'.$key];
-            if(is_callable($func)) {
+            if (is_callable($func)) {
                 call_user_func($func, $id);
-            }
-            else {
+            } else {
                 $this->{$key} = $id;
             }
         }
@@ -55,15 +53,14 @@ trait IndexableTrait
     public function id()
     {
         $key = $this->key();
-        if($key == 'id') {
+        if ($key == 'id') {
             return $this->_id;
         }
 
         $func = [$this, $key];
-        if(is_callable($func)) {
+        if (is_callable($func)) {
             return call_user_func($func);
-        }
-        else {
+        } else {
             throw new \Exception('Invalid key');
         }
     }
@@ -77,7 +74,7 @@ trait IndexableTrait
     */
     public function set_key($key)
     {
-        if(!is_scalar($key)) {
+        if (!is_scalar($key)) {
             throw new \InvalidArgumentException('Key argument must be scalar');
         }
         $this->_key = $key;
@@ -92,7 +89,7 @@ trait IndexableTrait
     */
     public function key()
     {
-        if($this->_key === null) {
+        if ($this->_key === null) {
             $this->_key = 'id';
         }
         return $this->_key;

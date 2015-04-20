@@ -101,10 +101,9 @@ abstract class AbstractProperty implements
             'active'=>true
         ];
 
-        if($data === null) {
+        if ($data === null) {
             $data = $defaults;
-        }
-        else if(is_array($data)) {
+        } else if (is_array($data)) {
             $data = array_merge($defaluts, $data);
         }
 
@@ -118,10 +117,9 @@ abstract class AbstractProperty implements
     public function __toString()
     {
         $val = $this->val();
-        if(is_string($val)) {
+        if (is_string($val)) {
             return $val;
-        }
-        else {
+        } else {
             return '';
         }
     }
@@ -133,35 +131,35 @@ abstract class AbstractProperty implements
     */
     public function set_data($data)
     {
-        if(!is_array($data)) {
+        if (!is_array($data)) {
             throw new \InvalidArgumentException('Data must be an array');
         }
 
-        if(isset($data['val'])) {
+        if (isset($data['val'])) {
             $this->set_val($data['val']);
         }
-        if(isset($data['label'])) {
+        if (isset($data['label'])) {
             $this->set_label($data['label']);
         }
-        if(isset($data['l10n'])) {
+        if (isset($data['l10n'])) {
             $this->set_l10n($data['l10n']);
         }
-        if(isset($data['hidden'])) {
+        if (isset($data['hidden'])) {
             $this->set_hidden($data['hidden']);
         }
-        if(isset($data['multiple'])) {
+        if (isset($data['multiple'])) {
             $this->set_multiple($data['multiple']);
         }
-        if(isset($data['multiple_options'])) {
+        if (isset($data['multiple_options'])) {
             $this->set_multiple_options($data['multiple_options']);
         }
-        if(isset($data['required'])) {
+        if (isset($data['required'])) {
             $this->set_required($data['required']);
         }
-        if(isset($data['unique'])) {
+        if (isset($data['unique'])) {
             $this->set_unique($data['unique']);
         }
-        if(isset($data['active'])) {
+        if (isset($data['active'])) {
             $this->set_active($data['active']);
         }
 
@@ -175,7 +173,7 @@ abstract class AbstractProperty implements
     */
     public function set_ident($ident)
     {
-        if(!is_string($ident)) {
+        if (!is_string($ident)) {
             throw new \InvalidArgumentException('Ident needs to be string');
         }
         $this->_ident = $ident;
@@ -188,7 +186,7 @@ abstract class AbstractProperty implements
     */
     public function ident()
     {
-        if($this->_ident === null) {
+        if ($this->_ident === null) {
             throw new \Exception('Ident was never set');
         }
         return $this->_ident;
@@ -220,16 +218,15 @@ abstract class AbstractProperty implements
     public function field_val($field_ident)
     {
         $val = $this->val();
-        if($val === null) {
+        if ($val === null) {
             return null;
         }
-        if(!is_array($val)) {
+        if (!is_array($val)) {
             throw new \Exception('Val is not an array');
         }
-        if(isset($val[$field_ident])) {
+        if (isset($val[$field_ident])) {
             return $val[$field_ident];
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -260,7 +257,7 @@ abstract class AbstractProperty implements
     */
     public function set_l10n($l10n)
     {
-        if(!is_bool($l10n)) {
+        if (!is_bool($l10n)) {
             throw new \InvalidArgumentException('l10n must be a boolean');
         }
         $this->_l10n = $l10n;
@@ -282,7 +279,7 @@ abstract class AbstractProperty implements
     */
     public function set_hidden($hidden)
     {
-        if(!is_bool($hidden)) {
+        if (!is_bool($hidden)) {
             throw new \InvalidArgumentException('hidden must be a boolean');
         }
         $this->hidden = $hidden;
@@ -304,7 +301,7 @@ abstract class AbstractProperty implements
     */
     public function set_multiple($multiple)
     {
-        if(!is_bool($multiple)) {
+        if (!is_bool($multiple)) {
             throw new \InvalidArgumentException('multiple must be a boolean');
         }
         $this->multiple = $multiple;
@@ -326,7 +323,7 @@ abstract class AbstractProperty implements
     */
     public function set_multiple_options($multiple_options)
     {
-        if(!is_array($multiple_options)) {
+        if (!is_array($multiple_options)) {
             throw new \InvalidArgumentException('multiple options must be an array');
         }
         $default_options = [
@@ -354,7 +351,7 @@ abstract class AbstractProperty implements
     */
     public function set_required($required)
     {
-        if(!is_bool($required)) {
+        if (!is_bool($required)) {
             throw new \InvalidArgumentException('required must be a boolean');
         }
         $this->_required = $required;
@@ -376,7 +373,7 @@ abstract class AbstractProperty implements
     */
     public function set_unique($unique)
     {
-        if(!is_bool($unique)) {
+        if (!is_bool($unique)) {
             throw new \InvalidArgumentException('unique must be a boolean');
         }
         $this->unique = $unique;
@@ -398,7 +395,7 @@ abstract class AbstractProperty implements
     */
     public function set_active($active)
     {
-        if(!is_bool($active)) {
+        if (!is_bool($active)) {
             throw new \InvalidArgumentException('active must be a boolean');
         }
         $this->active = $active;
@@ -419,9 +416,9 @@ abstract class AbstractProperty implements
     public function fields()
     {
         $fields = [];
-        if($this->l10n()) {
+        if ($this->l10n()) {
             $langs = ['fr', 'en']; // @todo
-            foreach($langs as $lang) {
+            foreach ($langs as $lang) {
                 $field = new PropertyField();
                 $field->set_data([
                     'ident'=>$this->ident().'_'.$lang,
@@ -433,8 +430,7 @@ abstract class AbstractProperty implements
                 ]);
                 $fields[$lang] = $field;
             }
-        }
-        else {
+        } else {
             $field = new PropertyField();
             $field->set_data([
                 'ident'=>$this->ident(),
@@ -466,7 +462,7 @@ abstract class AbstractProperty implements
     protected function create_metadata($data=null)
     {
         $metadata = new PropertyMetadata();
-        if($data !== null) {
+        if ($data !== null) {
             $metadata->set_data($data);
         }
         return $metadata;
@@ -491,7 +487,7 @@ abstract class AbstractProperty implements
     protected function create_view($data=null)
     {
         $view = new PropertyView();
-        if($data !== null) {
+        if ($data !== null) {
             $view->set_data($data);
         }
         return $view;

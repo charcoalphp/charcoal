@@ -11,7 +11,7 @@ class Property extends AbstractProperty
 
     public function validate(ValidatorInterface &$v=null)
     {
-        if($v === null) {
+        if ($v === null) {
             $v = $this->validator();
         }
 
@@ -35,10 +35,9 @@ class Property extends AbstractProperty
 
     public function sql_type()
     {
-        if($this->multiple()) {
+        if ($this->multiple()) {
             return 'TEXT';
-        }
-        else {
+        } else {
             return 'VARCHAR(255)';
         }
     }

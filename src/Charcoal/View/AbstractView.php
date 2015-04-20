@@ -36,7 +36,7 @@ abstract class AbstractView implements ViewInterface
     */
     public function __construct($data=null)
     {
-        if($data !== null) {
+        if ($data !== null) {
             $this->set_data($data);
         }
     }
@@ -56,14 +56,14 @@ abstract class AbstractView implements ViewInterface
     */
     public function set_data($data)
     {
-        if(!is_array($data)) {
+        if (!is_array($data)) {
             throw new \InvalidArgumentException('Data needs to be an array');
         }
 
-        if(isset($data['template']) && $data['template'] !== null) {
+        if (isset($data['template']) && $data['template'] !== null) {
             $this->set_template($data['template']);
         }
-        if(isset($data['context']) && $data['context'] !== null) {
+        if (isset($data['context']) && $data['context'] !== null) {
             $this->set_context($data['context']);
         }
 
@@ -77,7 +77,7 @@ abstract class AbstractView implements ViewInterface
     */
     public function set_template($template)
     {
-        if(!is_string($template)) {
+        if (!is_string($template)) {
             throw new \InvalidArgumentException('Template must be a string');
         }
 
@@ -90,7 +90,7 @@ abstract class AbstractView implements ViewInterface
     */
     public function template()
     {
-        if($this->_template === null) {
+        if ($this->_template === null) {
             return '';
         }
 
@@ -137,7 +137,7 @@ abstract class AbstractView implements ViewInterface
     */
     public function controller()
     {
-        if($this->_controller === null) {
+        if ($this->_controller === null) {
             $this->_controller = $this->create_controller();
         }
         return $this->_controller;
@@ -158,10 +158,10 @@ abstract class AbstractView implements ViewInterface
     */
     public function render($template=null, $context=null)
     {
-        if($template !== null) {
+        if ($template !== null) {
             $this->set_template($template);
         }
-        if($context !== null) {
+        if ($context !== null) {
             $this->set_context($context);
         }
 

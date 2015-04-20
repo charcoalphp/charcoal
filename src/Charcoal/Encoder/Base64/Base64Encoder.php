@@ -22,13 +22,13 @@ class Base64Encoder extends AbstractEncoder
     */
     public function encode($plain_string, $salt='')
     {
-        if(!is_string($plain_string)) {
+        if (!is_string($plain_string)) {
             throw new \InvalidArgumentException('Plain string must be a string');
         }
         $encoded = '';
         $key = $salt;
         $length = strlen($plain_string);
-        for($i=0; $i<$length; $i++) {
+        for ($i=0; $i<$length; $i++) {
             $char = substr($plain_string, $i, 1);
             $keychar = ($key) ? substr($key, (($i % strlen($key))-1), 1) : '';
             $char = chr(ord($char)+ord($keychar));
@@ -48,14 +48,14 @@ class Base64Encoder extends AbstractEncoder
     */
     public function decode($encoded_string, $salt='')
     {
-        if(!is_string($encoded_string)) {
+        if (!is_string($encoded_string)) {
             throw new \InvalidArgumentException('Encoded string must be a string');
         }
         $decoded = '';
         $key = $salt;
         $string = base64_decode($encoded_string);
         $length = strlen($string);
-        for($i=0; $i<$length; $i++) {
+        for ($i=0; $i<$length; $i++) {
             $char = substr($string, $i, 1);
             $keychar = ($key) ? substr($key, (($i % strlen($key))-1), 1) : '';
             $char = chr(ord($char)-ord($keychar));

@@ -51,7 +51,7 @@ abstract class AbstractValidator implements ValidatorInterface
 
     public function log($level, $msg)
     {
-        if(!isset($this->_results[$level])) {
+        if (!isset($this->_results[$level])) {
             $this->_results[$level] = [];
         }
         $this->add_result([
@@ -69,10 +69,9 @@ abstract class AbstractValidator implements ValidatorInterface
     */
     public function add_result($result)
     {
-        if(is_array($result)) {
+        if (is_array($result)) {
             $result = new ValidatorResult($result);
-        }
-        else if(!($result instanceof ValidatorResult)) {
+        } else if (!($result instanceof ValidatorResult)) {
             throw new \InvalidArgumentException('ValidatorResult must be an array or a ValidatorResult object');
         }
         $level = $result->level();
@@ -93,7 +92,7 @@ abstract class AbstractValidator implements ValidatorInterface
     */
     public function error_results()
     {
-        if(!isset($this_results[self::ERROR])) {
+        if (!isset($this_results[self::ERROR])) {
             return [];
         }
         return $this_results[self::ERROR];
@@ -104,7 +103,7 @@ abstract class AbstractValidator implements ValidatorInterface
     */
     public function warnig_results()
     {
-        if(!isset($this->_results[self::WARNING])) {
+        if (!isset($this->_results[self::WARNING])) {
             return [];
         }
         return $this->_results[self::WARNING];
@@ -115,7 +114,7 @@ abstract class AbstractValidator implements ValidatorInterface
     */
     public function notice_results()
     {
-        if(!isset($this->_results[self::NOTICE])) {
+        if (!isset($this->_results[self::NOTICE])) {
             return [];
         }
         return $this->_results[self::NOTICE];
@@ -124,8 +123,8 @@ abstract class AbstractValidator implements ValidatorInterface
     public function merge(ValidatorInterface $v, $ident)
     {
         $results = $v->results();
-        foreach($results as $level => $res) {
-            foreach($res as $r) {
+        foreach ($results as $level => $res) {
+            foreach ($res as $r) {
                 $r->ident = $ident;
                 $this->_results[$level][] = $r;
             }

@@ -47,20 +47,20 @@ class CacheConfig extends AbstractConfig
     public function set_data($data=nul)
     {
         //parent::set_data($data);
-        if(!is_array($data)) {
+        if (!is_array($data)) {
             throw new \InvalidArgumentException('Data must be an array');
         }
 
-        if(isset($data['active']) && $data['active'] !== null) {
+        if (isset($data['active']) && $data['active'] !== null) {
             $this->set_active($data['active']);
         }
-        if(isset($data['type']) && $data['type'] !== null) {
+        if (isset($data['type']) && $data['type'] !== null) {
             $this->set_type($data['type']);
         }
-        if(isset($data['default_ttl']) && $data['default_ttl'] !== null) {
+        if (isset($data['default_ttl']) && $data['default_ttl'] !== null) {
             $this->set_default_ttl($data['default_ttl']);
         }
-        if(isset($data['prefix']) && $data['prefix'] !== null) {
+        if (isset($data['prefix']) && $data['prefix'] !== null) {
             $this->set_prefix($data['prefix']);
         }
         return $this;
@@ -68,11 +68,11 @@ class CacheConfig extends AbstractConfig
 
     public function set_active($active)
     {
-        if(!is_bool($active)) {
+        if (!is_bool($active)) {
             throw new \InvalidArgumentException('Active must be boolean');
             
         }
-        $this->active = $active;
+        $this->_active = $active;
         return $this;
     }
 
@@ -83,7 +83,7 @@ class CacheConfig extends AbstractConfig
 
     public function set_type($type)
     {
-        if(!is_string($type)) {
+        if (!is_string($type)) {
             throw new \InvalidArgumentException('Active must be boolean');
         }
         $this->_type = $type;

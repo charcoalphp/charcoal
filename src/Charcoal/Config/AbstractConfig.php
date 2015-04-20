@@ -22,13 +22,11 @@ abstract class AbstractConfig implements
     */
     final public function __construct($data=null)
     {
-        if(is_array($data)) {
+        if (is_array($data)) {
              $data = array_merge($this->default_data(), $data);
-        }
-        else if($data === null) {
+        } else if ($data === null) {
             $data = $this->default_data();
-        }
-        else {
+        } else {
             throw new \InvalidArgumentException('Data must be an array');
         }
 
@@ -54,7 +52,7 @@ abstract class AbstractConfig implements
     */
     public function offsetExists($offset)
     {
-        if(is_numeric($offset)) {
+        if (is_numeric($offset)) {
             throw new \InvalidArgumentException('Config array access only supports non-numeric keys');
         }
         return isset($this->{$offset});
@@ -69,7 +67,7 @@ abstract class AbstractConfig implements
     */
     public function offsetGet($offset)
     {
-        if(is_numeric($offset)) {
+        if (is_numeric($offset)) {
             throw new \InvalidArgumentException('Config array access only supports non-numeric keys');
         }
         return isset($this->{$offset}) ? $this->{$offset} : null;
@@ -84,7 +82,7 @@ abstract class AbstractConfig implements
     */
     public function offsetSet($offset, $value)
     {
-        if(is_numeric($offset)) {
+        if (is_numeric($offset)) {
             throw new \InvalidArgumentException('Config array access only supports non-numeric keys');
         }
         $this->{$offset} = $value;
@@ -98,7 +96,7 @@ abstract class AbstractConfig implements
     */
     public function offsetUnset($offset)
     {
-        if(is_numeric($offset)) {
+        if (is_numeric($offset)) {
             throw new \InvalidArgumentException('Config array access only supports non-numeric keys');
         }
         $this->{$offset} = null;

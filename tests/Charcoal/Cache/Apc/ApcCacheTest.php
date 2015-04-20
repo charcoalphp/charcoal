@@ -11,4 +11,13 @@ class ApcCacheTest extends \PHPUnit_Framework_TestCase
         $obj = ApcCache::instance();
         $this->assertInstanceOf('\Charcoal\Cache\Apc\ApcCache', $obj);
     }
+
+    public function testEnabled()
+    {
+        $obj = ApcCache::instance();
+        $ret = $obj->enabled();
+
+        $ext_loaded = !!extension_loaded('apc');
+        $this->assertEquals($ext_loaded, $ret);
+    }
 }

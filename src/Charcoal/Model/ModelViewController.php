@@ -25,16 +25,16 @@ class ModelViewController extends AbstractViewController
     {
 
         $model = $this->_model();
-        if($model === null) {
+        if ($model === null) {
             return null;
         }
 
         // Try methods
-        if(is_callable([$model, $name])) {
+        if (is_callable([$model, $name])) {
             return call_user_func([$model, $name]);
         }
         // Try Properties
-        if(isset($model->{$name})) {
+        if (isset($model->{$name})) {
             return $model->{$name};
         }
         return null;
@@ -51,11 +51,11 @@ class ModelViewController extends AbstractViewController
     public function __call($name, $arguments)
     {
         $model = $this->_model();
-        if($model === null) {
+        if ($model === null) {
             return null;
         }
 
-        if(is_callable([$model, $name])) {
+        if (is_callable([$model, $name])) {
             return call_user_func_array([$model, $name], $arguments);
         }
 
@@ -70,17 +70,17 @@ class ModelViewController extends AbstractViewController
     public function __isset($name)
     {
         $model = $this->_model();
-        if($model === null) {
+        if ($model === null) {
             return false;
         }
 
         // Try methods
-        if(is_callable([$model, $name])) {
+        if (is_callable([$model, $name])) {
             return true;
         }
 
         // Try Properties
-        if(isset($model->{$name})) {
+        if (isset($model->{$name})) {
             return true;
         }
         return false;
@@ -99,10 +99,10 @@ class ModelViewController extends AbstractViewController
     */
     protected function _model()
     {
-        if($this->_context === null) {
+        if ($this->_context === null) {
             return null;
         }
-        if(!($this->_context instanceof ModelInterface)) {
+        if (!($this->_context instanceof ModelInterface)) {
             throw new \Exception('Context neeeds to be a Model');
         }
         return $this->_context;

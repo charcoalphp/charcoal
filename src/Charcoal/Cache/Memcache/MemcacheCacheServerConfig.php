@@ -26,16 +26,16 @@ class MemcacheCacheServerConfig extends AbstractConfig
 
     public function set_data($data)
     {
-        if(isset($data['host']) && $data['host'] !== null) {
+        if (isset($data['host']) && $data['host'] !== null) {
             $this->set_host($data['host']);
         }
-        if(isset($data['port']) && $data['port'] !== null) {
+        if (isset($data['port']) && $data['port'] !== null) {
             $this->set_port($data['port']);
         }
-        if(isset($data['persistent']) && $data['persistent'] !== null) {
+        if (isset($data['persistent']) && $data['persistent'] !== null) {
             $this->set_persistent($data['persistent']);
         }
-        if(isset($data['weight']) && $data['weight'] !== null) {
+        if (isset($data['weight']) && $data['weight'] !== null) {
             $this->set_weight($data['weight']);
         }
 

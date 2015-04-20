@@ -20,7 +20,7 @@ class ApcCache extends AbstractCache
     public function enabled()
     {
         $active = $this->config()->active();
-        if(!$active) {
+        if (!$active) {
             return false;
         }
         return !!extension_loaded('apc');
@@ -36,7 +36,7 @@ class ApcCache extends AbstractCache
     */
     public function store($key, $data, $ttl=0)
     {
-        if(!$this->enabled()) {
+        if (!$this->enabled()) {
             return false;
         }
         $prefix = $this->prefix();
@@ -53,7 +53,7 @@ class ApcCache extends AbstractCache
     */
     public function exists($key)
     {
-        if(!$this->enabled()) {
+        if (!$this->enabled()) {
             return false;
         }
         $prefix = $this->prefix();
@@ -71,7 +71,7 @@ class ApcCache extends AbstractCache
     */
     public function fetch($key)
     {
-        if(!$this->enabled()) {
+        if (!$this->enabled()) {
             return false;
         }
         $prefix = $this->prefix();
@@ -87,13 +87,13 @@ class ApcCache extends AbstractCache
     */
     public function multifetch($keys)
     {
-        if(!$this->enabled()) {
+        if (!$this->enabled()) {
             return false;
         }
         $prefix = $this->prefix();
 
         $pkeys = [];
-        foreach($keys as $k) {
+        foreach ($keys as $k) {
             $pkeys[] = $prefix.$k;
         }
 
@@ -108,7 +108,7 @@ class ApcCache extends AbstractCache
     */
     public function delete($key)
     {
-        if(!$this->enabled()) {
+        if (!$this->enabled()) {
             return false;
         }
         $prefix = $this->prefix();
@@ -123,7 +123,7 @@ class ApcCache extends AbstractCache
     */
     public function clear()
     {
-        if(!$this->enabled()) {
+        if (!$this->enabled()) {
             return false;
         }
         $prefix = $this->prefix();

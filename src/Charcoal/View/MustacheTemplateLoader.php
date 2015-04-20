@@ -24,7 +24,7 @@ class MustacheTemplateLoader extends FileLoader implements Mustache_Loader
         $all_path = parent::search_path();
 
         $global_path = Charcoal::config()->template_path();
-        if(!empty($global_path)) {
+        if (!empty($global_path)) {
             $all_path = array_merge($global_path, $all_path);
         }
         return $all_path;
@@ -37,13 +37,13 @@ class MustacheTemplateLoader extends FileLoader implements Mustache_Loader
     */
     public function load($ident=null)
     {
-        if($ident !== null) {
+        if ($ident !== null) {
             $this->set_ident($ident);
         }
 
         // Attempt loading from cache
         $ret = $this->cache_load();
-        if($ret !== false) {
+        if ($ret !== false) {
             return $ret;
         }
 
@@ -51,13 +51,13 @@ class MustacheTemplateLoader extends FileLoader implements Mustache_Loader
         $filename = $this->_filename_from_ident($ident);
 
         $search_path = $this->search_path();
-        foreach($search_path as $path) {
+        foreach ($search_path as $path) {
             $f = $path.'/'.$filename;
-            if(!file_exists($f)) {
+            if (!file_exists($f)) {
                 continue;
             }
             $file_content = file_get_contents($f);
-            if($file_content !== '') {
+            if ($file_content !== '') {
                 $data = $file_content;
                 break;
             }

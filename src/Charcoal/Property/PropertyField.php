@@ -13,22 +13,22 @@ class PropertyField
 
     public function set_data($data)
     {
-        if(isset($data['ident'])) {
+        if (isset($data['ident'])) {
             $this->set_ident($data['ident']);
         }
-        if(isset($data['label'])) {
+        if (isset($data['label'])) {
             $this->set_label($data['label']);
         }
-        if(isset($data['sql_type'])) {
+        if (isset($data['sql_type'])) {
             $this->set_sql_type($data['sql_type']);
         }
-        if(isset($data['val'])) {
+        if (isset($data['val'])) {
             $this->set_val($data['val']);
         }
-        if(isset($data['default_val'])) {
+        if (isset($data['default_val'])) {
             $this->set_default($data['default_val']);
         }
-        if(isset($data['allow_null'])) {
+        if (isset($data['allow_null'])) {
             $this->set_allow_null($data['allow_null']);
         }
         return $this;
@@ -69,7 +69,7 @@ class PropertyField
 
     public function set_val($val)
     {
-        if(!is_scalar($val)) {
+        if (!is_scalar($val)) {
             throw new \InvalidArgumentException('Val must be scalar');
         }
         $this->_val = $val;
@@ -94,7 +94,7 @@ class PropertyField
 
     public function set_allow_null($allow_null)
     {
-        if(!is_bool($allow_null)) {
+        if (!is_bool($allow_null)) {
             throw new \InvalidArgumentException('Allow null must be a boolean');
         }
         $this->_allow_null = $allow_null;
@@ -112,7 +112,7 @@ class PropertyField
     public function sql()
     {
         $ident = $this->ident();
-        if(!$ident) {
+        if (!$ident) {
             return '';
         }
 

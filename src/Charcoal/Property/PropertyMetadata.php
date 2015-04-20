@@ -28,7 +28,7 @@ class PropertyMetadata extends AbstractMetadata implements \ArrayAccess
     */
     public function set_ident($ident)
     {
-        if(!is_string($ident)) {
+        if (!is_string($ident)) {
             throw new \InvalidArgumentException(__CLASS__.'::'.__FUNCTION__.'Ident must be a string');
         }
         $this->_ident = $ident;

@@ -31,7 +31,7 @@ trait ViewableTrait
     */
     public function view()
     {
-        if($this->_view === null) {
+        if ($this->_view === null) {
             $this->_view = $this->create_view();
         }
         return $this->_view;

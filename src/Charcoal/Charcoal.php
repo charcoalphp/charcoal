@@ -26,24 +26,21 @@ class Charcoal
 
     static public function init($data=null)
     {
-        if(isset($data['config']) && $data['config'] !== null) {
+        if (isset($data['config']) && $data['config'] !== null) {
             self::set_config($data['config']);
-        }
-        else {
+        } else {
             self::$_config = new Config();
         }
 
-        if(isset($data['logger']) && $data['logger'] !== null) {
+        if (isset($data['logger']) && $data['logger'] !== null) {
             self::set_logger($data['logger']);
-        }
-        else {
+        } else {
             self::init_logger();
         }
 
-        if(isset($data['app']) && $data['app'] !== null) {
+        if (isset($data['app']) && $data['app'] !== null) {
             self::set_app($data['app']);
-        }
-        else {
+        } else {
             self::init_app();
         }
 
@@ -59,26 +56,23 @@ class Charcoal
     */
     static public function set_config($config)
     {
-        if(self::$_config === null) {
+        if (self::$_config === null) {
             self::$_config = new Config();
         }
-        if(is_string($config)) {
+        if (is_string($config)) {
             self::$_config->add_file($config);
-        }
-        else if(is_array($config)) {
+        } else if (is_array($config)) {
             self::$_config->set_data($config);
-        }
-        else if($config instanceof Config) {
+        } else if ($config instanceof Config) {
             self::$_config = $config;
-        }
-        else {
+        } else {
             throw new \InvalidArgumentException('Config must be a string (filename), array (config data) or Config object');
         }
     }
 
     static public function config()
     {
-        if(self::$_config === null) {
+        if (self::$_config === null) {
             throw new \Exception('Config has not been set. Call Charcoal::init() first.');
         }
         return self::$_config;
@@ -153,35 +147,32 @@ class Charcoal
     static public function merge()
     {
         $args = func_get_args();
-        if(func_num_args() < 2) {
+        if (func_num_args() < 2) {
             throw new \InvalidArgumentException('This function takes at least two parameters');
         }
 
         $array_list = func_get_args();
         $result = [];
 
-        while($array_list) {
-
+        while ($array_list) {
             $current = array_shift($array_list);
 
             // Make sure the argument is an array. @todo: Convert objects to array??
-            if(!is_array($current)) {
+            if (!is_array($current)) {
                 throw new \InvalidArgumentException('All parameters must be arrays');
             }
-            if(!$current) {
+            if (!$current) {
                 continue;
             }
 
-            foreach($current as $key => $value) {
-                if(is_string($key)) {
-                    if(is_array($value) && array_key_exists($key, $result) && is_array($result[$key])) {
+            foreach ($current as $key => $value) {
+                if (is_string($key)) {
+                    if (is_array($value) && array_key_exists($key, $result) && is_array($result[$key])) {
                         $result[$key] = call_user_func([__CLASS__, __FUNCTION__], $result[$key], $value);
-                    }
-                    else {
+                    } else {
                         $result[$key] = $value;
                     }
-                }
-                else {
+                } else {
                     $result[] = $value;
                 }
             }

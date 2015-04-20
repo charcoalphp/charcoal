@@ -28,7 +28,7 @@ class FileLoader extends AbstractLoader
     */
     public function set_ident($ident)
     {
-        if(!is_string($ident)) {
+        if (!is_string($ident)) {
             throw new \InvalidArgumentException(__CLASS__.'::'.__FUNCTION__.'() - Ident must be a string.');
         }
         $this->_ident = $ident;
@@ -46,7 +46,7 @@ class FileLoader extends AbstractLoader
 
     public function set_path($path)
     {
-        if(!is_string($path)) {
+        if (!is_string($path)) {
             throw new \InvalidArgumentException('set_path() expects a string');
         }
         $this->_path = $path;
@@ -55,7 +55,7 @@ class FileLoader extends AbstractLoader
 
     public function path()
     {
-        if(!$this->_path) {
+        if (!$this->_path) {
             return '';
         }
         return $this->_path;
@@ -66,7 +66,7 @@ class FileLoader extends AbstractLoader
     */
     public function filesystem()
     {
-        if($this->_filesystem === null) {
+        if ($this->_filesystem === null) {
             $adapter = new LocalAdapter($this->path());
             $this->_filesystem = new Filesystem($adapter);
         }
@@ -79,18 +79,18 @@ class FileLoader extends AbstractLoader
     */
     public function load($ident=null)
     {
-        if($ident === null) {
+        if ($ident === null) {
             return '';
         }
 
         // Attempt loading from cache
         $ret = $this->cache_load();
-        if($ret !== false) {
+        if ($ret !== false) {
             return $ret;
         }
 
         $filename = $this->_first_matching_filename($ident);
-        if($filename) {
+        if ($filename) {
             $file_content = file_get_contents($filename);
             $this->set_content($file_content);
             $this->cache_store();
@@ -103,12 +103,12 @@ class FileLoader extends AbstractLoader
     protected function _load_first_from_search_path($filename)
     {
         $search_path = $this->search_path();
-        if(empty($search_path)) {
+        if (empty($search_path)) {
             return '';
         }
-        foreach($search_path as $path) {
+        foreach ($search_path as $path) {
             $f = $path.DIRECTORY_SEPARATOR.$filename;
-            if(file_exists($f)) {
+            if (file_exists($f)) {
                 $file_content = file_get_contents($f);
                 return $file_content;
             }
@@ -119,16 +119,16 @@ class FileLoader extends AbstractLoader
 
     protected function _first_matching_filename($filename)
     {
-        if(file_exists($filename)) {
+        if (file_exists($filename)) {
             return $filename;
         }
         $search_path = $this->search_path();
-        if(empty($search_path)) {
+        if (empty($search_path)) {
             return null;
         }
-        foreach($search_path as $path) {
+        foreach ($search_path as $path) {
             $f = $path.DIRECTORY_SEPARATOR.$filename;
-            if(file_exists($f)) {
+            if (file_exists($f)) {
                 return $f;
             }
         }
@@ -142,17 +142,17 @@ class FileLoader extends AbstractLoader
     protected function _all_matching_filenames($filename)
     {
         $ret = [];
-        if(file_exists($filename)) {
+        if (file_exists($filename)) {
             $ret[] = $filename;
         }
 
         $search_path = $this->search_path();
-        if(empty($search_path)) {
+        if (empty($search_path)) {
             return $ret;
         }
-        foreach($search_path as $path) {
+        foreach ($search_path as $path) {
             $f = $path.DIRECTORY_SEPARATOR.$filename;
-            if(file_exists($f)) {
+            if (file_exists($f)) {
                 $ret[] = $f;
             }
         }
@@ -168,13 +168,13 @@ class FileLoader extends AbstractLoader
     */
     public function add_path($path)
     {
-        if(!is_string($path)) {
+        if (!is_string($path)) {
             throw new \InvalidArgumentException('Path should be a string.');
         }
-        if(!file_exists($path)) {
+        if (!file_exists($path)) {
             throw new \InvalidArgumentException(sprintf('Path does not exist: %s', $path));
         }
-        if(!is_dir($path)) {
+        if (!is_dir($path)) {
             throw new \InvalidArgumentException(sprintf('Path is not a directory: %s', $path));
         }
 

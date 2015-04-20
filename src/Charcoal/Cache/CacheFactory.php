@@ -21,20 +21,17 @@ class CacheFactory extends AbstractFactory
     */
     public function get($type)
     {
-        if(!is_string($type)) {
+        if (!is_string($type)) {
             throw new \InvalidArgumentException('Type (of cache) must be a string');
         }
         
-        if($type == 'apc') {
+        if ($type == 'apc') {
             $cache = ApcCache::instance();
-        }
-        else if($type == 'memcache') {
+        } else if ($type == 'memcache') {
             $cache = MemcacheCache::instance();
-        }
-        else if($type == 'noop') {
+        } else if ($type == 'noop') {
             $cache = NoopCache::instance();
-        }
-        else {
+        } else {
             throw new \InvalidArgumentException('Type is not a valid cache type');
         }
 

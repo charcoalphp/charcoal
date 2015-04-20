@@ -40,28 +40,28 @@ class Filter
     */
     public function set_data($data)
     {
-        if(!is_array($data)) {
+        if (!is_array($data)) {
             throw new \InvalidArgumentException('Data must be an array');
         }
-        if(isset($data['property'])) {
+        if (isset($data['property'])) {
             $this->set_property($data['property']);
         }
-        if(isset($data['val'])) {
+        if (isset($data['val'])) {
             $this->set_val($data['val']);
         }
-        if(isset($data['operator'])) {
+        if (isset($data['operator'])) {
             $this->set_operator($data['operator']);
         }
-        if(isset($data['func'])) {
+        if (isset($data['func'])) {
             $this->set_func($data['func']);
         }
-        if(isset($data['operand'])) {
+        if (isset($data['operand'])) {
             $this->set_operand($data['operand']);
         }
-        if(isset($data['string'])) {
+        if (isset($data['string'])) {
             $this->set_string($data['string']);
         }
-        if(isset($data['active'])) {
+        if (isset($data['active'])) {
             $this->set_active($data['active']);
         }
         return $this;
@@ -89,10 +89,10 @@ class Filter
     */
     public function set_property($property)
     {
-        if(!is_string($property)) {
+        if (!is_string($property)) {
             throw new \InvalidArgumentException('Property must be a string');
         }
-        if($property=='') {
+        if ($property=='') {
             throw new \InvalidArgumentException('Property can not be empty');
         }
 
@@ -133,12 +133,12 @@ class Filter
     */
     public function set_operator($operator)
     {
-        if(!is_string($operator)) {
+        if (!is_string($operator)) {
             throw new \InvalidArgumentException('Operator should be a string');
         }
 
         $operator = strtoupper($operator);
-        if(!in_array($operator, $this->_valid_operators())) {
+        if (!in_array($operator, $this->_valid_operators())) {
             throw new \InvalidArgumentException('This is not a valid operator.');
         }
 
@@ -161,12 +161,12 @@ class Filter
     */
     public function set_func($func)
     {
-        if(!is_string($func)) {
+        if (!is_string($func)) {
             throw new \InvalidArgumentException('Func should be astring');
         }
 
         $func = strtoupper($func);
-        if(!in_array($func, $this->_valid_func())) {
+        if (!in_array($func, $this->_valid_func())) {
             throw new \InvalidArgumentException('This is not a valid function.');
         }
         $this->_func = $func;
@@ -188,12 +188,12 @@ class Filter
     */
     public function set_operand($operand)
     {
-        if(!is_string($operand)) {
+        if (!is_string($operand)) {
             throw new \InvalidArgumentException('Operand should be a string.');
         }
 
         $operand = strtoupper($operand);
-        if(!in_array($operand, $this->_valid_operands())) {
+        if (!in_array($operand, $this->_valid_operands())) {
             throw new \InvalidArgumentException('This is not a valid operand.');
         }
 
@@ -216,7 +216,7 @@ class Filter
     */
     public function set_string($sql)
     {
-        if(!is_string($sql)) {
+        if (!is_string($sql)) {
             throw new \InvalidArgumentException('String should be a string.');
         }
 
@@ -235,7 +235,7 @@ class Filter
     private function sql_fields()
     {
         $property = $this->property();
-        if($property) {
+        if ($property) {
             // @todo Load Property from associated model metadata.
             return [$property];
         }
@@ -251,16 +251,16 @@ class Filter
     */
     public function sql()
     {
-        if($this->_string) {
+        if ($this->_string) {
             return $this->_string;
         }
         $fields = $this->sql_fields();
-        if(empty($fields)) {
+        if (empty($fields)) {
             return '';
         }
 
         $filter = '';
-        foreach($fields as $field) {
+        foreach ($fields as $field) {
             $val = $this->val();
 
             // Support custom "operator" for the filter
@@ -269,10 +269,9 @@ class Filter
             // Support for custom function on column name
             $function = $this->func();
 
-            if($function) {
+            if ($function) {
                 $target = $function.'(`'.$field.'`)';
-            }
-            else {
+            } else {
                 $target = '`'.$field.'`';
             }
 

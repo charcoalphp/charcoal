@@ -28,11 +28,10 @@ class Config implements \ArrayAccess
     {
         $this->add_file(__DIR__.'/../../config/config.default.json');
 
-        if($config !== null) {
-            if(is_string($config)) {
+        if ($config !== null) {
+            if (is_string($config)) {
                 $this->add_file($config);
-            }
-            else if(is_array($config)) {
+            } else if (is_array($config)) {
                 $this->set_data($config);
             }
         }
@@ -62,33 +61,33 @@ class Config implements \ArrayAccess
 
     public function set_data($data)
     {
-        if(isset($data['dev_mode'])) {
+        if (isset($data['dev_mode'])) {
             $this->set_dev_mode($data['dev_mode']);
             unset($data['dev_mode']);
         }
-        if(isset($data['timezone'])) {
+        if (isset($data['timezone'])) {
             $this->set_timezone($data['timezone']);
             unset($data['timezone']);
         }
 
-        if(isset($data['databases'])) {
+        if (isset($data['databases'])) {
             $this->set_databases($data['databases']);
             unset($data['databases']);
         }
-        if(isset($data['default_database'])) {
+        if (isset($data['default_database'])) {
             $this->set_default_database($data['default_database']);
             unset($data['default_database']);
         }
-        if(isset($data['metadata_path'])) {
+        if (isset($data['metadata_path'])) {
             $this->set_metadata_path($data['metadata_path']);
             unset($data['metadata_path']);
         }
-        if(isset($data['template_path'])) {
+        if (isset($data['template_path'])) {
             $this->set_metadata_path($data['template_path']);
             unset($data['template_path']);
         }
 
-        foreach($data as $k => $v) {
+        foreach ($data as $k => $v) {
             $this->{$k} = $v;
         }
 
@@ -103,21 +102,19 @@ class Config implements \ArrayAccess
     */
     public function add_file($filename)
     {
-        if(!is_string($filename)) {
+        if (!is_string($filename)) {
             throw new \InvalidArgumentException('');
         }
 
-        if(pathinfo($filename, PATHINFO_EXTENSION) == 'php') {
+        if (pathinfo($filename, PATHINFO_EXTENSION) == 'php') {
             include $filename;
-        }
-        else if(pathinfo($filename, PATHINFO_EXTENSION) == 'json') {
-            if(file_exists($filename)) {
+        } else if (pathinfo($filename, PATHINFO_EXTENSION) == 'json') {
+            if (file_exists($filename)) {
                 $file_content = file_get_contents($filename);
                 $config = json_decode($file_content, true);
                 $this->set_data($config);
             }
-        }
-        else {
+        } else {
             throw new \InvalidArgumentException('Only json and php files are accepted as config file.');
         }
 
@@ -137,7 +134,7 @@ class Config implements \ArrayAccess
     public function application_env()
     {
         $application_env = preg_replace('/!^[A-Za-z0-9_]+$/', '', getenv('APPLICATION_ENV'));
-        if(!$application_env) {
+        if (!$application_env) {
             $application_env = self::DEFAULT_APPLICATION_ENV;
         }
         return $application_env;
@@ -145,7 +142,7 @@ class Config implements \ArrayAccess
 
     public function set_dev_mode($dev_mode)
     {
-        if(!is_bool($dev_mode)) {
+        if (!is_bool($dev_mode)) {
             throw new \InvalidArgumentException('Dev mode must be a boolean.');
         }
         $this->_dev_mode = $dev_mode;
@@ -159,7 +156,7 @@ class Config implements \ArrayAccess
 
     public function set_timezone($timezone)
     {
-        if(!is_string($timezone)) {
+        if (!is_string($timezone)) {
             throw new \InvalidArgumentException('Timezone must be a string.');
         }
         $this->_timezone = $timezone;
@@ -173,7 +170,7 @@ class Config implements \ArrayAccess
 
     public function set_databases($databases)
     {
-        if(!is_array($databases)) {
+        if (!is_array($databases)) {
             throw new \InvalidArgumentException('Databases must be an array.');
         }
         $this->_databases = $databases;
@@ -182,7 +179,7 @@ class Config implements \ArrayAccess
     
     public function databases()
     {
-        if($this->_databases == null) {
+        if ($this->_databases == null) {
             throw new \Exception('Databases are not set');
         }
         return $this->_databases;
@@ -190,11 +187,11 @@ class Config implements \ArrayAccess
 
     public function database_config($ident)
     {
-        if(!is_string($ident)) {
+        if (!is_string($ident)) {
             throw new \InvalidArgumentException('Default database must be a string.');
         }
         $databases = $this->databases();
-        if(!isset($databases[$ident])) {
+        if (!isset($databases[$ident])) {
             throw new \Exception(sprintf('No database configuration matches "%s"', $ident));
         }
         return $databases[$ident];
@@ -202,7 +199,7 @@ class Config implements \ArrayAccess
 
     public function set_default_database($default_database)
     {
-        if(!is_string($default_database)) {
+        if (!is_string($default_database)) {
             throw new \InvalidArgumentException('Default database must be a string.');
         }
         $this->_default_database = $default_database;
@@ -210,14 +207,14 @@ class Config implements \ArrayAccess
 
     public function add_database($ident, $config)
     {
-        if(!is_string($ident)) {
+        if (!is_string($ident)) {
             throw new \InvalidArgumentException('Database ident must be a string.');
         }
-        if(!is_array($config)) {
+        if (!is_array($config)) {
             throw new \InvalidArgumentException('Database config must be an array.');
         }
 
-        if($this->_databases === null) {
+        if ($this->_databases === null) {
             $this->_databases = [];
         }
         $this->_databases[$ident] = $config;
@@ -226,7 +223,7 @@ class Config implements \ArrayAccess
 
     public function default_database()
     {
-        if($this->_default_database == null) {
+        if ($this->_default_database == null) {
             throw new \Exception('Default database is not set.');
         }
         return $this->_default_database;
@@ -234,7 +231,7 @@ class Config implements \ArrayAccess
 
     public function set_metadata_path($metadata_path)
     {
-        if(!is_array($metadata_path)) {
+        if (!is_array($metadata_path)) {
             throw new \Exception('Metadata path needs to be an array');
         }
         $this->_metadata_path = $metadata_path;
@@ -248,7 +245,7 @@ class Config implements \ArrayAccess
 
     public function add_metadata_path($path)
     {
-        if(!is_string($path)) {
+        if (!is_string($path)) {
             throw new \InvalidArgumentException('Path needs to be a string');
         }
 
@@ -258,7 +255,7 @@ class Config implements \ArrayAccess
 
     public function set_template_path($template_path)
     {
-        if(!is_array($template_path)) {
+        if (!is_array($template_path)) {
             throw new \Exception('Metadata path needs to be an array');
         }
         $this->_template_path = $template_path;
@@ -272,7 +269,7 @@ class Config implements \ArrayAccess
 
     public function add_template_path($path)
     {
-        if(!is_string($path)) {
+        if (!is_string($path)) {
             throw new \InvalidArgumentException('Path needs to be a string');
         }
 

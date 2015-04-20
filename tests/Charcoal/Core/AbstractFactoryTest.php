@@ -4,15 +4,14 @@ namespace Charcoal\Tests\Core;
 
 use \Charcoal\Core\AbstractFactory as AbstractFactory;
 
-include 'AbstractFactoryClass.php';
 use \Charcoal\Tests\Core\AbstractFactoryClass as AbstractFactoryClass;
-
 
 
 class AbstractFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
+        include 'AbstractFactoryClass.php';
         $this->obj = AbstractFactoryClass::instance();
     }
 

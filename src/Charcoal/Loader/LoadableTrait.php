@@ -24,7 +24,7 @@ trait LoadableTrait
     */
     public function loader()
     {
-        if($this->_loader === null) {
+        if ($this->_loader === null) {
             $this->_loader = $this->create_loader();
         }
         return $this->_loader;

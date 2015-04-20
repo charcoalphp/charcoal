@@ -27,7 +27,7 @@ class Source
     */
     public function model()
     {
-        if($this->_model === null) {
+        if ($this->_model === null) {
             throw new \Exception('No model set.');
         }
         return $this->_model;

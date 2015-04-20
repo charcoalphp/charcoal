@@ -35,15 +35,15 @@ abstract class AbstractMetadata implements
     */
     public function set_data($data)
     {
-        if(!is_array($data)) {
+        if (!is_array($data)) {
             throw new \InvalidArgumentException('Data parameter must be an array');
         }
 
-        if(isset($data['properties'])) {
+        if (isset($data['properties'])) {
             $this->set_properties($data['properties']);
         }
 
-        foreach($data as $k => $v) {
+        foreach ($data as $k => $v) {
             $this->{$k} = $v;
         }
 
@@ -57,7 +57,7 @@ abstract class AbstractMetadata implements
     */
     public function set_properties($properties)
     {
-        if(!is_array($properties)) {
+        if (!is_array($properties)) {
             throw new \InvalidArgumentException('Properties need to be an array');
         }
         $this->_properties = $properties;
@@ -94,7 +94,7 @@ abstract class AbstractMetadata implements
     */
     public function offsetSet($offset, $value)
     {
-        if(empty($offset)) {
+        if (empty($offset)) {
             throw new \InvalidArgumentException('Offset is required');
         }
         $this->{$offset} = $value;

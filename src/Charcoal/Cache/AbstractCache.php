@@ -34,7 +34,7 @@ abstract class AbstractCache implements
 
     static public function instance()
     {
-        if(static::$_instance !== null) {
+        if (static::$_instance !== null) {
             return static::$_instance;
         }
         $class = get_called_class();
@@ -52,7 +52,7 @@ abstract class AbstractCache implements
     */
     public function set_prefix($prefix)
     {
-        if(!is_string($prefix)) {
+        if (!is_string($prefix)) {
             throw new \InvalidArgumentException('Prefix must be a string');
         }
         $this->_prefix = $prefix;
@@ -66,7 +66,7 @@ abstract class AbstractCache implements
     */
     public function prefix()
     {
-        if($this->_prefix === null) {
+        if ($this->_prefix === null) {
             return $this->config()->prefix();
         }
         return $this->_prefix;
@@ -145,7 +145,7 @@ abstract class AbstractCache implements
     */
     public function config()
     {
-        if($this->_config === null) {
+        if ($this->_config === null) {
             $this->_config = new CacheConfig();
         }
         return $this->_config;
@@ -160,7 +160,7 @@ abstract class AbstractCache implements
     protected function create_config($data=null)
     {
         $config = new CacheConfig();
-        if($data !== null) {
+        if ($data !== null) {
             $config->set_data($data);
         }
         return $config;

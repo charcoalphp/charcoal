@@ -36,25 +36,25 @@ class Order
     */
     public function set_data($data)
     {
-        if(!is_array($data)) {
+        if (!is_array($data)) {
             throw new \InvalidArgumentException('Data must be an array');
         }
-        if(isset($data['property'])) {
+        if (isset($data['property'])) {
             $this->set_property($data['property']);
         }
-        if(isset($data['mode'])) {
+        if (isset($data['mode'])) {
             $this->set_mode($data['mode']);
         }
-        if(isset($data['values'])) {
+        if (isset($data['values'])) {
             $this->set_operator($data['values']);
         }
-        if(isset($data['operand'])) {
+        if (isset($data['operand'])) {
             $this->set_operand($data['operand']);
         }
-        if(isset($data['sql'])) {
+        if (isset($data['sql'])) {
             $this->set_sql($data['sql']);
         }
-        if(isset($data['active'])) {
+        if (isset($data['active'])) {
             $this->set_active($data['active']);
         }
         
@@ -68,10 +68,10 @@ class Order
     */
     public function set_property($property)
     {
-        if(!is_string($property)) {
+        if (!is_string($property)) {
             throw new \InvalidArgumentException('Property must be a string');
         }
-        if($property=='') {
+        if ($property=='') {
             throw new \InvalidArgumentException('Property can not be empty');
         }
 
@@ -86,12 +86,12 @@ class Order
 
     public function set_mode($mode)
     {
-        if(!is_string($mode)) {
+        if (!is_string($mode)) {
             throw new \InvalidArgumentException('Mode must be a string');
         }
 
         $mode = strtolower($mode);
-        if(!in_array($mode, $this->_valid_modes())) {
+        if (!in_array($mode, $this->_valid_modes())) {
             throw new \InvalidArgumentException('Invalid mode');
         }
         $this->_mode = $mode;
@@ -117,20 +117,18 @@ class Order
     */
     public function set_values($values)
     {
-        if(is_string($values)) {
-            if($values == '') {
+        if (is_string($values)) {
+            if ($values == '') {
                 throw new \InvalidArgumentException('String values can not be empty');
             }
             $values = array_map('trim', explode(',', $values));
             $this->_values = $values;
-        }
-        else if(is_array($values)) {
-            if(empty($values)) {
+        } else if (is_array($values)) {
+            if (empty($values)) {
                 throw new \InvalidArgumentException('Array values can not be empty');
             }
             $this->_values = $values;
-        }
-        else {
+        } else {
             throw new \InvalidArgumentException('Values must be an array, or a comma-delimited string');
         }
         return $this;
@@ -167,22 +165,21 @@ class Order
         $property = $this->property();
         $mode = $this->mode();
 
-        if($mode == 'rand') {
+        if ($mode == 'rand') {
             return 'RAND()';
         }
-        if($mode == 'values') {
+        if ($mode == 'values') {
             $values = $this->values();
-            if(empty($values)) {
+            if (empty($values)) {
                 throw new \DomainException('Values can not be empty');
             }
-            if($property == '') {
+            if ($property == '') {
                 throw new \DomainException('Property can not be empty');
             }
 
             return 'FIELD(`'.$property.'`, '.implode(',', $values).')';
-        }
-        else {
-            if($property == '') {
+        } else {
+            if ($property == '') {
                 throw new \DomainException('Property can not be empty');
             }
             return '`'.$property.'` '.$mode;

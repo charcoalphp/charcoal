@@ -42,20 +42,18 @@ trait DescribableTrait
     */
     public function set_metadata($metadata)
     {
-        if(is_array($metadata)) {
+        if (is_array($metadata)) {
             $meta = $this->create_metadata();
             $meta->set_data($metadata);
             $this->_metadata = $meta;
-        }
-        else if($metadata instanceof MetadataInterface) {
+        } else if ($metadata instanceof MetadataInterface) {
             $this->_metadata = $metadata;
-        }
-        else {
+        } else {
             throw new \InvalidArgumentException('Metadata argument is invalid (must be array or Medatadata object)');
         }
 
         // If the metadata contains "data", then automatically set the initial data to the value
-        if(isset($this->_metadata['data'])) {
+        if (isset($this->_metadata['data'])) {
             $this->set_data($metadata['data']);
         }
 
@@ -68,7 +66,7 @@ trait DescribableTrait
     */
     public function metadata()
     {
-        if($this->_metadata === null) {
+        if ($this->_metadata === null) {
             return $this->load_metadata();
         }
         return $this->_metadata;
@@ -85,7 +83,7 @@ trait DescribableTrait
     */
     public function load_metadata($metadata_ident=null)
     {
-        if($metadata_ident === null) {
+        if ($metadata_ident === null) {
             $metadata_ident = $this->metadata_ident();
         }
         $metadata_loader = new MetadataLoader();
@@ -117,7 +115,7 @@ trait DescribableTrait
     */
     public function metadata_ident()
     {
-        if($this->_metadata_ident === null) {
+        if ($this->_metadata_ident === null) {
             $this->_metadata_ident = $this->generate_metadata_ident();
         }
         return $this->_metadata_ident;
@@ -149,12 +147,12 @@ trait DescribableTrait
         $this->metadata();
         $props = $this->metadata()->properties();
 
-        if(empty($props)) {
+        if (empty($props)) {
             return [];
         }
 
         $properties = [];
-        foreach($props as $property_ident => $opts) {
+        foreach ($props as $property_ident => $opts) {
             // Get the property object of this definition
             $properties[$property_ident] = $this->property($property_ident);
         }
@@ -171,23 +169,23 @@ trait DescribableTrait
     */
     public function property($property_ident)
     {
-        if(!is_string($property_ident)) {
+        if (!is_string($property_ident)) {
             throw new \InvalidArgumentException('Invalid ident argument (must be scalar)');
         }
 
         $metadata = $this->metadata();
         $props = $this->metadata()->properties();
 
-        if(empty($props)) {
+        if (empty($props)) {
             throw new \Exception('Invalid model metadata - No properties defined');
         }
 
-        if(!isset($props[$property_ident])) {
+        if (!isset($props[$property_ident])) {
             throw new \Exception(sprintf('Invalid property: %s (not defined in metadata)', $property_ident));
         }
 
         $property_metadata = $props[$property_ident];
-        if(!isset($property_metadata['type'])) {
+        if (!isset($property_metadata['type'])) {
             throw new \Exception(sprintf('Invalid property: %s (type is undefined)', $property_ident));
         }
 
@@ -196,7 +194,7 @@ trait DescribableTrait
         $property->set_data($property_metadata);
 
         $property_value = $this->property_value($property_ident);
-        if($property_value !== null) {
+        if ($property_value !== null) {
             $property->set_val($property_value);
         }
 
@@ -213,7 +211,7 @@ trait DescribableTrait
     */
     public function p($property_ident=null)
     {
-        if($property_ident === null) {
+        if ($property_ident === null) {
             return $this->properties();
         }
         // Alias for property()

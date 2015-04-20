@@ -44,7 +44,7 @@ abstract class AbstractModel implements
     */
     public function __construct($data=null)
     {
-        if($data !== null) {
+        if ($data !== null) {
             $this->set_data($data);
         }
     }
@@ -60,11 +60,11 @@ abstract class AbstractModel implements
     */
     public function set_data($data)
     {
-        if(!is_array($data)) {
+        if (!is_array($data)) {
             throw new \InvalidArgumentException(__CLASS__.'::'.__FUNCTION__.'() - Data must be an array');
         }
 
-        foreach($data as $prop => $val) {
+        foreach ($data as $prop => $val) {
             $this->{$prop} = $val;
         }
 
@@ -85,16 +85,16 @@ abstract class AbstractModel implements
         $metadata = $this->metadata();
         $props = $metadata['properties'];
 
-        if(!is_array($props)) {
+        if (!is_array($props)) {
             // Error. Invalid object? @todo error report
             // @todo Throw exception here?
             return false;
         }
 
-        foreach($props as $property_ident => $property_options) {
+        foreach ($props as $property_ident => $property_options) {
             $p = $this->p($property_ident);
 
-            if(!$p instanceof PropertyInterface) {
+            if (!$p instanceof PropertyInterface) {
                 continue;
             }
             $data[$property_ident] = $this->p($property_ident)->val();
@@ -113,12 +113,12 @@ abstract class AbstractModel implements
     */
     public function set_flat_data($data)
     {
-        if(!is_array($data)) {
+        if (!is_array($data)) {
             // @todo Log Error
             return $this;
         }
 
-        foreach($data as $prop => $val) {
+        foreach ($data as $prop => $val) {
             $this->{$prop} = $val;
         }
 
@@ -214,7 +214,7 @@ abstract class AbstractModel implements
     protected function create_metadata($data=null)
     {
         $metadata = new ModelMetadata();
-        if($data !== null) {
+        if ($data !== null) {
             $metadata->set_data($data);
         }
         return $metadata;
@@ -228,7 +228,7 @@ abstract class AbstractModel implements
     protected function create_validator($data=null)
     {
         $validator = new ModelValidator($this);
-        if($data !== null) {
+        if ($data !== null) {
             $validator->set_data($data);
         }
         return $validator;
@@ -240,7 +240,7 @@ abstract class AbstractModel implements
     protected function create_view($data=null)
     {
         $view = new ModelView();
-        if($data !== null) {
+        if ($data !== null) {
             $view->set_data($data);
         }
         return $view;

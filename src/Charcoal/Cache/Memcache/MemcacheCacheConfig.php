@@ -30,7 +30,7 @@ class MemcacheCacheConfig extends CacheConfig
     {
         parent::set_data($data);
 
-        if(isset($data['servers']) && $data['servers'] !== null) {
+        if (isset($data['servers']) && $data['servers'] !== null) {
             $this->set_servers($data['servers']);
         }
 
@@ -44,11 +44,10 @@ class MemcacheCacheConfig extends CacheConfig
     */
     public function set_servers($servers)
     {
-        if(!is_array($servers)) {
+        if (!is_array($servers)) {
             throw new \InvalidArgumentException('Servers must be an array');
         }
-        foreach($servers as $server) {
-
+        foreach ($servers as $server) {
             $this->add_server($server);
         }
         return $this;
@@ -73,14 +72,12 @@ class MemcacheCacheConfig extends CacheConfig
     */
     public function add_server($server)
     {
-        if(is_array($server)) {
+        if (is_array($server)) {
             $server = new MemcacheCacheServerConfig($server);
             $this->_servers[] = $server;
-        }
-        else if(($server instanceof MemcacheCacheServerConfig)) {
+        } else if (($server instanceof MemcacheCacheServerConfig)) {
             $this->_servers[] = $server;
-        }
-        else {
+        } else {
             throw new \InvalidArgumentException('Server must be an array or an object');
         }
         return $this;

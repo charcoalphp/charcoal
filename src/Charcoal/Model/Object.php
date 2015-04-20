@@ -39,7 +39,7 @@ class Object extends Model implements IndexableInterface
         parent::__construct();
 
         $metadata = $this->metadata();
-        if(!isset($data['key'])) {
+        if (!isset($data['key'])) {
             $data['key'] = isset($metadata['key']) ? $metadata['key'] : self::DEFAULT_KEY;
         }
 
@@ -50,13 +50,13 @@ class Object extends Model implements IndexableInterface
     {
         parent::set_data($data);
 
-        if(isset($data['key'])) {
+        if (isset($data['key'])) {
             $this->set_id($data['key']);
         }
-        if(isset($data['id'])) {
+        if (isset($data['id'])) {
             $this->set_id($data['id']);
         }
-        if(isset($data['active'])) {
+        if (isset($data['active'])) {
             $this->set_key($data['active']);
         }
 
@@ -65,7 +65,7 @@ class Object extends Model implements IndexableInterface
 
     public function set_active($active)
     {
-        if(!is_bool($active)) {
+        if (!is_bool($active)) {
             throw new \InvalidArgumentException('Active parameter needs to be bool');
         }
         $this->_active = $active;
@@ -93,7 +93,7 @@ class Object extends Model implements IndexableInterface
 
     public function load($ident=null)
     {
-        if($ident === null) {
+        if ($ident === null) {
             $ident = $this->id();
         }
         $loader = $this->loader();

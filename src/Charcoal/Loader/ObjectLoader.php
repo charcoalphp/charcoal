@@ -14,7 +14,7 @@ class ObjectLoader extends AbstractLoader
     */
     public function set_ident($ident)
     {
-        if(!is_string($ident)) {
+        if (!is_string($ident)) {
             throw new \InvalidArgumentException(__CLASS__.'::'.__FUNCTION__.'() - Ident must be a string.');
         }
         $this->_ident = $ident;
@@ -40,7 +40,7 @@ class ObjectLoader extends AbstractLoader
     public function load($ident=null)
     {
         $data = $this->load_data($ident);
-        if($data !== false) {
+        if ($data !== false) {
             $this->obj()->set_flat_data($data);
         }
         return $this->obj();

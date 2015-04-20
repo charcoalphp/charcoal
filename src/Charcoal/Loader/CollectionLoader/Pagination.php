@@ -26,13 +26,13 @@ class Pagination
     */
     public function set_data($data)
     {
-        if(!is_array($data)) {
+        if (!is_array($data)) {
             throw new \InvalidArgumentException('Data needs to be an array');
         }
-        if(isset($data['page'])) {
+        if (isset($data['page'])) {
             $this->set_page($data['page']);
         }
-        if(isset($data['num_per_page'])) {
+        if (isset($data['num_per_page'])) {
             $this->set_num_per_page($data['num_per_page']);
         }
         return $this;
@@ -45,11 +45,11 @@ class Pagination
     */
     public function set_page($page)
     {
-        if(!is_numeric($page)) {
+        if (!is_numeric($page)) {
             throw new \InvalidArgumentException('Page number needs to be numeric');
         }
         $page = (int)$page;
-        if($page < 0) {
+        if ($page < 0) {
             throw new \InvalidArgumentException('Page number needs to be >= 0');
         }
         $this->_page = $page;
@@ -71,11 +71,11 @@ class Pagination
     */
     public function set_num_per_page($num)
     {
-        if(!is_numeric($num)) {
+        if (!is_numeric($num)) {
             throw new \InvalidArgumentException('Num-per-page needs to be numeric');
         }
         $num = (int)$num;
-        if($num < 0) {
+        if ($num < 0) {
             throw new \InvalidArgumentException('Num-per-page needs to be >= 0');
         }
 
@@ -118,7 +118,7 @@ class Pagination
         $page = $this->page();
         $num_per_page = $this->num_per_page();
 
-        if($page && $num_per_page) {
+        if ($page && $num_per_page) {
             $first_page = max(0, (($page-1)*$num_per_page));
             $sql = ' LIMIT '.$first_page.', '.$num_per_page;
         }

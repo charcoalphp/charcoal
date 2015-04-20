@@ -31,7 +31,7 @@ trait ValidatableTrait
     */
     public function validator()
     {
-        if($this->_validator === null) {
+        if ($this->_validator === null) {
             $this->_validator = $this->create_validator();
         }
         return $this->_validator;
@@ -48,7 +48,7 @@ trait ValidatableTrait
     */
     public function validate(ValidatorInterface &$v=null)
     {
-        if($v !== null) {
+        if ($v !== null) {
             $this->set_validator($v);
         }
 

@@ -19,7 +19,7 @@ abstract class AbstractViewController implements ViewControllerInterface
     */
     public function __construct($context=null)
     {
-        if($context !== null) {
+        if ($context !== null) {
             $this->set_context($context);
         }
     }
@@ -38,22 +38,21 @@ abstract class AbstractViewController implements ViewControllerInterface
     public function __get($name)
     {
         $context = $this->context();
-        if($context === null) {
+        if ($context === null) {
             return null;
         }
 
-        if(is_object($context)) {
+        if (is_object($context)) {
             // Try methods
-            if(is_callable([$context, $name])) {
+            if (is_callable([$context, $name])) {
                 return call_user_func([$context, $name]);
             }
             // Try Properties
-            if(isset($context->{$name})) {
+            if (isset($context->{$name})) {
                 return $context->{$name};
             }
-        }
-        else if(is_array($context)) {
-            if(isset($context[$name])) {
+        } else if (is_array($context)) {
+            if (isset($context[$name])) {
                 return $mode[$name];
             }
         }
@@ -72,17 +71,16 @@ abstract class AbstractViewController implements ViewControllerInterface
     public function __call($name, $arguments)
     {
         $context = $this->context();
-        if($context === null) {
+        if ($context === null) {
             return null;
         }
 
-        if(is_object($context)) {
-            if(is_callable([$context, $name])) {
+        if (is_object($context)) {
+            if (is_callable([$context, $name])) {
                 return call_user_func_array([$context, $name], $arguments);
             }
-        }
-        else if(is_array($context)) {
-            if(isset($context[$name])) {
+        } else if (is_array($context)) {
+            if (isset($context[$name])) {
                 return $context[$name];
             }
         }
@@ -98,23 +96,22 @@ abstract class AbstractViewController implements ViewControllerInterface
     public function __isset($name)
     {
         $context = $this->context();
-        if($context === null) {
+        if ($context === null) {
             return false;
         }
 
-        if(is_object($context)) {
+        if (is_object($context)) {
             // Try methods
-            if(is_callable([$context, $name])) {
+            if (is_callable([$context, $name])) {
                 return true;
             }
 
             // Try Properties
-            if(isset($context->{$name})) {
+            if (isset($context->{$name})) {
                 return true;
             }
-        }
-        else if(is_array($context)) {
-            if(isset($context[$name])) {
+        } else if (is_array($context)) {
+            if (isset($context[$name])) {
                 return $context[$name];
             }
         }

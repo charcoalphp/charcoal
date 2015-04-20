@@ -19,7 +19,7 @@ class MemcacheCache extends AbstractCache
 
     public function init()
     {
-        if(!$this->enabled()) {
+        if (!$this->enabled()) {
             return false;
         }
         
@@ -27,10 +27,10 @@ class MemcacheCache extends AbstractCache
 
         $this->_memcache = new Memcache();
         $servers = $cfg->servers;
-        if(count($servers) == 0) {
+        if (count($servers) == 0) {
             throw new \Exception('Memcache: no server(s) defined');
         }
-        foreach($cfg->servers() as $s) {
+        foreach ($cfg->servers() as $s) {
             $this->_add_server($s);
         }
         return $this;
@@ -43,11 +43,11 @@ class MemcacheCache extends AbstractCache
     */
     public function enabled()
     {
-        if($this->_enabled !== null) {
+        if ($this->_enabled !== null) {
             return $this->_enabled;
         }
         $active = $this->config()->active();
-        if(!$active) {
+        if (!$active) {
             $this->_enabled = false;
             return true;
         }
@@ -65,7 +65,7 @@ class MemcacheCache extends AbstractCache
     */
     public function store($key, $data, $ttl=0)
     {
-        if(!$this->enabled()) {
+        if (!$this->enabled()) {
             return false;
         }
 
@@ -84,7 +84,7 @@ class MemcacheCache extends AbstractCache
     */
     public function exists($key)
     {
-        if(!$this->enabled()) {
+        if (!$this->enabled()) {
             return false;
         }
         $prefix = $this->prefix();
@@ -100,7 +100,7 @@ class MemcacheCache extends AbstractCache
     */
     public function fetch($key)
     {
-        if(!$this->enabled()) {
+        if (!$this->enabled()) {
             return false;
         }
         $prefix = $this->prefix();
@@ -116,13 +116,13 @@ class MemcacheCache extends AbstractCache
     */
     public function multifetch($keys)
     {
-        if(!$this->enabled()) {
+        if (!$this->enabled()) {
             return false;
         }
         $prefix = $this->prefix();
 
         $pkeys = [];
-        foreach($keys as $k) {
+        foreach ($keys as $k) {
             $pkeys[] = $prefix.$k;
         }
         return $this->_memcache->getMulti($pkeys);
@@ -137,7 +137,7 @@ class MemcacheCache extends AbstractCache
     */
     public function delete($key)
     {
-        if(!$this->enabled()) {
+        if (!$this->enabled()) {
             return false;
         }
         $prefix = $this->prefix();
@@ -152,7 +152,7 @@ class MemcacheCache extends AbstractCache
     */
     public function clear()
     {
-        if(!$this->enabled()) {
+        if (!$this->enabled()) {
             return false;
         }
 
@@ -170,10 +170,10 @@ class MemcacheCache extends AbstractCache
     */
     public function add_server($server)
     {
-        if(is_array($server)) {
+        if (is_array($server)) {
             $server = new MemCacheCacheServerConfig($server);
         }
-        if(!($server instanceof MemCacheCacheServerConfig)) {
+        if (!($server instanceof MemCacheCacheServerConfig)) {
             throw new \InvalidArgumentException('Invalid server');
         }
         $hostname = $server->hostname();
@@ -189,7 +189,7 @@ class MemcacheCache extends AbstractCache
     */
     public function config()
     {
-        if($this->_config === null) {
+        if ($this->_config === null) {
             $this->_config = new MemcacheCacheConfig();
         }
         return $this->_config;

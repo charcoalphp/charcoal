@@ -33,7 +33,7 @@ trait CacheableTrait
     */
     public function cache()
     {
-        if($this->_cache === null) {
+        if ($this->_cache === null) {
             $this->_cache = $this->create_cache();
         }
         return $this->_cache;
@@ -42,7 +42,7 @@ trait CacheableTrait
     public function create_cache($data=null)
     {
         $cache = CacheFactory::instance()->get('memcache');
-        if($data !== null) {
+        if ($data !== null) {
             $cache->set_data($data);
         }
         return $cache;
@@ -57,7 +57,7 @@ trait CacheableTrait
     */
     public function set_cache_key($cache_key)
     {
-        if(!is_string($cache_key)) {
+        if (!is_string($cache_key)) {
             throw new \InvalidArgumentException('Cache key must be a string');
         }
         $this->_cache_key = $cache_key;
@@ -71,7 +71,7 @@ trait CacheableTrait
     */
     public function cache_key()
     {
-        if($this->_cache_key === null) {
+        if ($this->_cache_key === null) {
             $this->_cache_key = $this->generate_cache_key();
         }
         return $this->_cache_key;
@@ -99,7 +99,7 @@ trait CacheableTrait
     */
     public function cache_ttl()
     {
-        if($this->_cache_ttl === null) {
+        if ($this->_cache_ttl === null) {
             $this->_cache_ttl = $this->cache()->config()->default_ttl();
         }
         return $this->_cache_ttl;
@@ -112,7 +112,7 @@ trait CacheableTrait
     */
     public function set_use_cache($use_cache)
     {
-        if(!is_bool($use_cache)) {
+        if (!is_bool($use_cache)) {
             throw new \InvalidArgumentException('Use cache must be a boolean');
         }
         $this->_use_cache = $use_cache;
@@ -139,11 +139,11 @@ trait CacheableTrait
     */
     public function cache_store($data=null, $ttl=0)
     {
-        if($this->use_cache() === false) {
+        if ($this->use_cache() === false) {
             return false;
         }
         $key = $this->cache_key();
-        if($data === null) {
+        if ($data === null) {
             $data = $this->cache_data();
         }
         $ttl = ($ttl > 0) ? $ttl : $this->cache_ttl();
@@ -156,7 +156,7 @@ trait CacheableTrait
     */
     public function cache_load()
     {
-        if($this->use_cache() === false) {
+        if ($this->use_cache() === false) {
             return false;
         }
         $key = $this->cache_key();

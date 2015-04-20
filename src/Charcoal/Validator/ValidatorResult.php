@@ -32,7 +32,7 @@ class ValidatorResult
         $ts = new \DateTime();
         $this->set_ts($ts);
 
-        if($data !== null) {
+        if ($data !== null) {
             $this->set_data($data);
         }
     }
@@ -44,20 +44,20 @@ class ValidatorResult
     */
     public function set_data($data)
     {
-        if(!is_array($data)) {
+        if (!is_array($data)) {
             throw new \InvalidArgumentException('Data must be an array.');
         }
 
-        if(isset($data['ident'])) {
+        if (isset($data['ident'])) {
             $this->set_ident($data['ident']);
         }
-        if(isset($data['level']) && $data['message'] !== null) {
+        if (isset($data['level']) && $data['message'] !== null) {
             $this->set_level($data['level']);
         }
-        if(isset($data['message']) && $data['message'] !== null) {
+        if (isset($data['message']) && $data['message'] !== null) {
             $this->set_message($data['message']);
         }
-        if(isset($data['ts']) && $data['ts'] !== null) {
+        if (isset($data['ts']) && $data['ts'] !== null) {
             $this->set_ts($data['ts']);
         }
         return $this;
@@ -98,10 +98,10 @@ class ValidatorResult
 
     public function set_ts($ts)
     {
-        if(is_string($ts)) {
+        if (is_string($ts)) {
             $ts = new \Datetime($ts);
         }
-        if(!($ts instanceof \Datetime)) {
+        if (!($ts instanceof \Datetime)) {
             throw new \InvalidArgumentException('ts must be a datetime / string.');
         }
         $this->ts = $ts;
