@@ -3,11 +3,6 @@
 namespace Charcoal\Model;
 
 use \Charcoal\Property\AbstractProperty as AbstractProperty;
-use \Charcoal\Property\PropertyField as PropertyField;
-
-use \Charcoal\Model\Validator\PropertyValidator as PropertyValidator;
-use \Charcoal\Model\View as View;
-use \Charcoal\Model\ViewController as ViewController;
 
 use \Charcoal\Validator\ValidatorInterface as ValidatorInterface;
 
