@@ -39,6 +39,9 @@ trait ConfigurableTrait
     */
     public function config()
     {
+        if($this->_config === null) {
+            $this->_config = $this->create_config();
+        }
         return $this->_config;
     }
 
