@@ -1,6 +1,6 @@
 <?php
 
-namespace \Charcoal\Source;
+namespace Charcoal\Source;
 
 use \Charcoal\Source\AbstractSource as AbstractSource;
 
@@ -26,6 +26,30 @@ class DatabaseSource extends AbstractSource
     private $_table = null;
 
     private static $_dbs = [];
+
+    private $_model = null;
+
+    /**
+    * @var Model $models
+    * @return Source Chainable
+    */
+    public function set_model(Model $model)
+    {
+        $this->_model = $model;
+        return $this;
+    }
+
+    /**
+    * @throws \Exception if not model was previously set
+    * @return Model
+    */
+    public function model()
+    {
+        if ($this->_model === null) {
+            throw new \Exception('No model set.');
+        }
+        return $this->_model;
+    }
 
     /**
     * @param string $database_ident
@@ -207,16 +231,16 @@ class DatabaseSource extends AbstractSource
         // ... The other parameters are required. @todo Really?
         
         try {
+            $database = $db_config['database'];
+            $username = $db_config['username'];
+            $password = $db_config['password'];
+
             // Set UTf-8 compatibility by default. Disable it if it is set as such in config
             $extra_opts = [PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'];
             if (isset($db_config['disable_utf8']) && $db_config['disable_utf8']) {
                 $extra_opts = null;
             }
-            // PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-
-            $database = $db_config['database'];
-            $username = $db_config['username'];
-            $password = $db_config['password'];
+            
             $db = new PDO($db_type.':host='.$db_hostname.';dbname='.$database, $username, $password, $extra_opts);
             
             // Set PDO options
@@ -248,5 +272,17 @@ class DatabaseSource extends AbstractSource
             $fields = array_merge($fields, $p->fields());
         }
         return $fields;
+    }
+
+    /**
+    * ConfigurableTrait > create_config()
+    */
+    public function create_config($data = null)
+    {
+        $config = new SourceConfig();
+        if ($data !== null) {
+            $config->set_data($data);
+        }
+        return $config;
     }
 }

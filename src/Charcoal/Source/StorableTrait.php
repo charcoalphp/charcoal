@@ -31,8 +31,16 @@ trait StorableTrait
     */
     public function source()
     {
+        if ($this->_source === null) {
+            $this->_source = $this->create_source();
+        }
         return $this->_source;
     }
+
+    /**
+    * @return SourceInterface
+    */
+    abstract public function create_source($data = null);
     
     /**
     * Load an object from the database from its ID.
