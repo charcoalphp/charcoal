@@ -10,34 +10,24 @@ use \Charcoal\Charcoal as Charcoal;
 use \Charcoal\Loader\FileLoader as FileLoader;
 
 /**
+* Load metadata from JSON file(s).
 *
+* The Metadata Loader is different than the `FileLoader` class it extends mainly because
+* it tries to find all files matching  the "ident" in all search path and merge them together
+* in an array, to be filled in a `Metadata` object.
+*
+* If `ident` is an actual class name, then it will also try to load all the JSON matching
+* the class' parents and traits.
 */
 class MetadataLoader extends FileLoader
 {
 
-    private $_ident = '';
-
     /**
-    * @param string $ident
-    * @throws \InvalidArgumentException if the ident is not a string
-    * @return MetadataLoader (Chainable)
-    */
-    public function set_ident($ident)
-    {
-        if (!is_string($ident)) {
-            throw new \InvalidArgumentException(__CLASS__.'::'.__FUNCTION__.'() - Ident must be a string.');
-        }
-        $this->_ident = $ident;
-        return $this;
-    }
-
-    public function ident()
-    {
-        return $this->_ident;
-    }
-
-    /**
-    * Get the object's search path, merged with global configuration path
+    * FileLoader > search_path(). Get the object's search path, merged with global configuration.
+    *
+    * This method looks in standard's `parent::search_path()` but adds all the path defined in the
+    * `metadata_path` global configuration.
+    *
     * @return array
     */
     public function search_path()
@@ -54,7 +44,10 @@ class MetadataLoader extends FileLoader
     }
 
     /**
+    * Load the metadata from JSON files.
     *
+    * @param string $ident Optional, set the ident to load.
+    * @return array
     */
     public function load($ident = null)
     {
@@ -132,7 +125,6 @@ class MetadataLoader extends FileLoader
     * Get an "ident" (file) from all search path and merge the content
     *
     * @param string $ident
-    *
     * @return array
     */
     private function _load_ident($ident)
@@ -157,7 +149,6 @@ class MetadataLoader extends FileLoader
 
     /**
     * @param string
-    *
     * @return string
     */
     private function _filename_from_ident($ident)

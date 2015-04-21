@@ -11,7 +11,12 @@ use \Charcoal\Property\PropertyFactory as PropertyFactory;
 use \Charcoal\Property\PropertyInterface as PropertyInterface;
 
 /**
-* Default implementation, as trait, of the `DescribableInterface`
+* Default implementation, as trait, of the `DescribableInterface`.
+*
+* This trait adds 3 abstract methods:
+* - `set_data()`
+* - `create_metadata()`
+* - `property_value()`
 */
 trait DescribableTrait
 {
@@ -25,6 +30,9 @@ trait DescribableTrait
     */
     protected $_metadata_ident;
 
+    /**
+    * @var array $_properties
+    */
     protected $_properties;
 
     /**
@@ -136,10 +144,9 @@ trait DescribableTrait
     }
 
     /**
-    * Return an array of \Charcoal\Model\Property
+    * Return an array of `PropertyInterface`
     *
     * @param boolean
-    *
     * @return array
     */
     public function properties()

@@ -24,7 +24,7 @@ abstract class AbstractMetadata implements
 
     /**
      * Holds the properties of this configuration object
-     * @var array $properties
+     * @var array $_properties
      */
     protected $_properties = [];
 
@@ -81,8 +81,8 @@ abstract class AbstractMetadata implements
     }
 
     /**
-     * ArrayAccess config[a]
-     */
+    * ArrayAccess config[a]
+    */
     public function offsetGet($offset)
     {
         return isset($this->{$offset}) ? $this->{$offset} : null;
@@ -101,8 +101,8 @@ abstract class AbstractMetadata implements
     }
 
     /**
-     *  ArrayAcces unset(config[a])
-     */
+    *  ArrayAcces unset(config[a])
+    */
     public function offsetUnset($offset)
     {
         $this->{$offset} = null;
@@ -112,10 +112,12 @@ abstract class AbstractMetadata implements
     /**
     * @return LoaderInterface
     */
-    public function create_loader()
+    protected function create_loader($data = null)
     {
         $loader = new MetadataLoader();
+        if ($data !== null) {
+            $loader->set_data($data);
+        }
         return $loader;
     }
-
 }

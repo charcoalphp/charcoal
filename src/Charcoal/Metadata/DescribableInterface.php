@@ -9,6 +9,12 @@ use \Charcoal\Property\PropertyInterface as PropertyInterface;
 interface DescribableInterface
 {
     /**
+    * @param array $data
+    * @return DescribableInterface Chainable
+    */
+    public function set_data($data);
+
+    /**
     * @param array|MetadataInterface $metadata
     * @return DescribableInterface Chainable
     */
@@ -35,7 +41,27 @@ interface DescribableInterface
     */
     public function metadata_ident();
 
+    /**
+    * Get the list of properties, as array of `PropertyInterface`
+    *
+    * @return array
+    */
     public function properties();
+
+    /**
+    * Get a single property
+    *
+    * @param string $property_ident
+    * @return PropertyInterface
+    */
     public function property($property_ident);
+
+    /**
+    * Alias of `property()` or `properties()`, depending if argument is set or not.
+    *
+    * @param mixed $property_ident Property ident, if null, return all properties
+    * @return array|PropertyInterface|null
+    */
     public function p($property_ident = null);
+
 }
