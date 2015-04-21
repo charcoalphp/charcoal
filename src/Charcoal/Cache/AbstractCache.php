@@ -12,7 +12,7 @@ use \Charcoal\Cache\CacheInterface as CacheInterface;
 * An abstract class that fulfills the full CacheInterface
 *
 * This class also implements `ConfigurableInterface`. It does so by using the
-* `ConfigurableTrait` and subclassing the `config()` and `_config_from_array()` methods.
+* `ConfigurableTrait` and subclassing the `create_config()` and `_config_from_array()` methods.
 */
 abstract class AbstractCache implements
     CacheInterface,
@@ -137,19 +137,6 @@ abstract class AbstractCache implements
     * @return boolean
     */
     abstract public function clear();
-
-    /**
-    * ConfigurableInterface > config() implementation.
-    *
-    * @return ConfigInterface
-    */
-    public function config()
-    {
-        if ($this->_config === null) {
-            $this->_config = new CacheConfig();
-        }
-        return $this->_config;
-    }
 
     /**
     * ConfigurableInterface > create_config() implementation.

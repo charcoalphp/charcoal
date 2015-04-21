@@ -11,6 +11,14 @@ use \Charcoal\Cache\Noop\NoopCache as NoopCache;
 
 class CacheFactory extends AbstractFactory
 {
+    /*static public function types()
+    {
+        return array_merge(parent::types(), [
+            'apc'       => '\Charcoal\Cache\Apc\ApcCache',
+            'memcache'  => '\Charcoal\Cache\Memcache\MemcacheCache',
+            'noop'      => '\Charcoal\Cache\Noop\NoopCache'
+        ]);
+    }*/
 
     /**
     * Get a cache instance from type
@@ -36,15 +44,5 @@ class CacheFactory extends AbstractFactory
         }
 
         return $cache;
-    }
-
-    static public function types()
-    {
-
-        return array_merge(parent::types(), [
-            'apc'       => '\Charcoal\Cache\Apc\ApcCache',
-            'memcache'  => '\Charcoal\Cache\Memcache\MemcacheCache',
-            'noop'      => '\Charcoal\Cache\Noop\NoopCache'
-        ]);
     }
 }
