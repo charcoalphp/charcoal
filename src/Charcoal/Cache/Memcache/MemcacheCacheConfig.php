@@ -47,6 +47,7 @@ class MemcacheCacheConfig extends CacheConfig
         if (!is_array($servers)) {
             throw new \InvalidArgumentException('Servers must be an array');
         }
+        $this->_servers = [];
         foreach ($servers as $server) {
             $this->add_server($server);
         }
