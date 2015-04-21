@@ -46,7 +46,7 @@ abstract class AbstractView implements ViewInterface
     */
     public function __toString()
     {
-        echo $this->render();
+        return $this->render();
     }
 
     /**
