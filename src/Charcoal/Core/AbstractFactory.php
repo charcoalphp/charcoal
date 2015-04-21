@@ -77,7 +77,7 @@ abstract class AbstractFactory implements FactoryInterface
         if (isset($this->_instances[$type]) && $this->_instances[$type] !== null) {
             return $this->_instances[$type];
         } else {
-            $this->create($type);
+            return $this->create($type);
         }
     }
 
