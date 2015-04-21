@@ -53,7 +53,7 @@ abstract class AbstractViewController implements ViewControllerInterface
             }
         } else if (is_array($context)) {
             if (isset($context[$name])) {
-                return $mode[$name];
+                return $context[$name];
             }
         }
 
