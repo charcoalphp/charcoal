@@ -20,4 +20,67 @@ class ApcCacheTest extends \PHPUnit_Framework_TestCase
         $ext_loaded = !!extension_loaded('apc');
         $this->assertEquals($ext_loaded, $ret);
     }
+
+    public function testStore()
+    {
+        $obj = ApcCache::instance();
+        $ret = $obj->store('foo', 'bar');
+        if($obj->enabled()) {
+            $this->assertTrue($ret);
+        }
+        else {
+            $this->assertNotTrue($ret);
+        }
+    }
+
+    public function testExists()
+    {
+        $obj = ApcCache::instance();
+        $ret = $obj->exists('foo');
+        if($obj->enabled()) {
+            $this->assertTrue($ret);
+        }
+        else {
+            $this->assertNotTrue($ret);
+        }
+    }
+
+    public function testFetch()
+    {
+        $obj = ApcCache::instance();
+        $ret = $obj->fetch('foo');
+        if($obj->enabled()) {
+            // Was set in cache in `testStore`
+            $this->assertEquals('bar', $ret);
+        }
+        else {
+            $this->assertNotTrue($ret);
+        } 
+    }
+
+    public function testMultifetch()
+    {
+        $obj = ApcCache::instance();
+        $obj->store('baz', 123);
+        $ret = $obj->multifetch(['foo', 'baz']);
+        if($obj->enabled()) {
+            // Was set in cache in `testStore`
+            $this->assertEquals(['foo'=>'bar', 'baz'=>123], $ret);
+        }
+        else {
+            $this->assertNotTrue($ret);
+        } 
+    }
+
+    public function testDelete()
+    {
+        $obj = ApcCache::instance();
+        $ret = $obj->delete('foo');
+        if($obj->enabled()) {
+            $this->assertTrue($ret);
+        }
+        else {
+            $this->assertNotTrue($ret);
+        }
+    }
 }

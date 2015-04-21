@@ -16,21 +16,16 @@ class MetadataLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([], $obj->search_path());
         $this->assertEquals('', $obj->ident());
     }
-    /*
+    
     public function testSetIdent()
-    {
-        $obj = new MetadataLoader();
-        $obj->set_ident('foo');
-        $this->assertEquals('foo', $obj->ident());
-    }
-
-    public function testSetIdentIsChainable()
     {
         $obj = new MetadataLoader();
         $ret = $obj->set_ident('foo');
         $this->assertSame($ret, $obj);
+        $this->assertEquals('foo', $obj->ident());
     }
 
+    /*
     public function testSetIdentInvalidParameterThrowsException()
     {
         $this->setExpectedException('\InvalidArgumentException');

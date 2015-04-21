@@ -14,7 +14,6 @@ class CacheConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testDefaultData()
     {
-
         $obj = new CacheConfig();
         $defaults = $obj->default_data();
 

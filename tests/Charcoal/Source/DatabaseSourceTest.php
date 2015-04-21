@@ -1,13 +1,14 @@
 <?php
 
-namespace Charcoal\Tests\Model;
+namespace Charcoal\Tests\Source;
 
 use \Charcoal\Charcoal as Charcoal;
-use \Charcoal\Model\Source\Database as Source;
-use \Charcoal\Model\Model as Model;
+
+use \Charcoal\Source\DatabaseSource as DatabaseSource;
+
 use \Charcoal\Model\Object as Object;
 
-class DatabaseTest extends \PHPUnit_Framework_TestCase
+class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
 {
     static public function setUpBeforeClass()
     {
@@ -19,60 +20,54 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
 
         Charcoal::config()->set_default_database('unit_test');
 
-        $obj = new Source();
+        $obj = new DatabaseSource();
         //$obj->set_model($model);
         $obj->set_table('test');
         $q = 'DROP TABLE IF EXISTS `test`';
         $obj->db()->query($q);
     }
 
-    public function testConstructor()
-    {
-        $obj = new Source();
-        $this->assertInstanceOf('\Charcoal\Model\Source\Database', $obj);
-
-    }
-
     public function testTableWithoutSetterThrowsException()
     {
         $this->setExpectedException('\Exception');
 
-        $obj = new Source();
+        $obj = new DatabaseSource();
         $obj->table();
+    }
+
+    public function testSetDatabaseIdent()
+    {
+        $obj = new DatabaseSource();
+        $ret = $obj->set_database_ident('foo');
+        $this->assertSame($ret, $obj);
+        $this->assertEquals('foo', $obj->database_ident());
+
+        $this->setExpectedException('\InvalidArgumentException');
+        $obj->set_database_ident(null);
     }
 
     public function testSetTable()
     {
-        $obj = new Source();
-        $obj->set_table('foo');
-        $this->assertEquals('foo', $obj->table());
-    }
-
-    public function testSetTableIsChainable()
-    {
-        $obj = new Source();
+        $obj = new DatabaseSource();
         $ret = $obj->set_table('foo');
         $this->assertSame($ret, $obj);
-    }
+        $this->assertEquals('foo', $obj->table());
 
-    public function testSetTableInvalidArgumentThrowsException()
-    {
         $this->setExpectedException('\InvalidArgumentException');
-        $obj = new Source();
         $obj->set_table(null);
     }
 
     public function testCreateTableWithoutTableThrowsException()
     {
         $this->setExpectedException('\Exception');
-        $obj = new Source();
+        $obj = new DatabaseSource();
         $obj->create_table();
     }
 
     public function testCreateTableWithoutModelThrowsException()
     {
         $this->setExpectedException('\Exception');
-        $obj = new Source();
+        $obj = new DatabaseSource();
         $obj->set_table('foo');
         $obj->create_table();
     }
@@ -88,7 +83,7 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
             ]
         ]);
 
-        $obj = new Source();
+        $obj = new DatabaseSource();
         $obj->set_model($model);
         $obj->set_table('test');
         $this->assertNotTrue($obj->table_exists());
@@ -100,7 +95,7 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateTableTableExistsReturnsTrue()
     {
-        $obj = new Source();
+        $obj = new DatabaseSource();
         //$obj->set_model($model);
         $obj->set_table('test');
         $this->assertTrue($obj->table_exists());
@@ -113,7 +108,7 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('\Exception');
         
-        $obj = new Source();
+        $obj = new DatabaseSource();
         $obj->set_table('test');
 
         $this->assertTrue($obj->table_exists());
@@ -135,7 +130,7 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
             ]
         ]);
 
-        $obj = new Source();
+        $obj = new DatabaseSource();
         $obj->set_model($model);
         $obj->set_table('test');
         $ret = $obj->alter_table();
@@ -159,7 +154,7 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
             ]
         ]);
 
-        $obj = new Source();
+        $obj = new DatabaseSource();
         $obj->set_model($model);
         $obj->set_table('test');
         $ret = $obj->alter_table();
