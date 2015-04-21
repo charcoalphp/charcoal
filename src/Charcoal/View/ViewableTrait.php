@@ -24,6 +24,7 @@ trait ViewableTrait
     public function set_view(ViewInterface $view)
     {
         $this->_view = $view;
+        return $this;
     }
     
     /**
