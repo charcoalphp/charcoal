@@ -21,6 +21,7 @@ trait IndexableTrait
     *
     * @param mixed $id
     * @throws \InvalidArgumentException if the argument is not scalar
+    * @throws \Exception if the key is invalid
     * @return IndexableInterface Chainable
     */
     public function set_id($id)
@@ -37,7 +38,7 @@ trait IndexableTrait
             if (is_callable($func)) {
                 call_user_func($func, $id);
             } else {
-                $this->{$key} = $id;
+                throw new \Exception('Invalid key');
             }
         }
 
