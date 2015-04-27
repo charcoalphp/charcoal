@@ -9,7 +9,8 @@ class AbstractViewControllerTest extends \PHPUnit_Framework_TestCase
 
     static public function setUpBeforeClass()
     {
-        include 'AbstractViewControllerClass.php';
+        include_once 'AbstractViewControllerClass.php';
+        include_once 'ContextClass.php';
     }
 
     public function setUp()
@@ -38,6 +39,29 @@ class AbstractViewControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('bar', $obj->foo);
         $this->assertEquals('bar', $obj->foo());
         $this->assertTrue(isset($obj->foo));
+    }
 
+    public function testAutoGetWithObjectContext()
+    {
+        $obj = $this->obj;
+
+        $this->assertEquals(null, $obj->foo);
+        $this->assertNotTrue(isset($obj->foo));
+
+        $this->assertEquals(null, $obj->baz);
+        $this->assertNotTrue(isset($obj->baz));
+        
+        $ctx = new ContextClass();
+        $ctx->set_foo('bar');
+        $ctx->baz = 'test';
+        $obj->set_context($ctx);
+
+        $this->assertEquals('bar', $obj->foo);
+        $this->assertEquals('bar', $obj->foo());
+        $this->assertTrue(isset($obj->foo));
+
+        $this->assertEquals('test', $obj->baz);
+        $this->assertEquals('test', $obj->baz());
+        $this->assertTrue(isset($obj->baz));
     }
 }

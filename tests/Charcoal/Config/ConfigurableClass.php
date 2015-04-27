@@ -16,7 +16,7 @@ class ConfigurableClass implements ConfigurableInterface
     {
         include_once 'AbstractConfigClass.php';
         $config = new AbstractConfigClass();
-        if($data !== null) {
+        if ($data !== null) {
             $config->set_data($data);
         }
         return $config;

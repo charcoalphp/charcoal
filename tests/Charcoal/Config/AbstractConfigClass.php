@@ -14,7 +14,7 @@ class AbstractConfigClass extends AbstractConfig
 
     public function set_data($data)
     {
-        if(isset($data['foo']) && $data['foo'] !== null) {
+        if (isset($data['foo']) && $data['foo'] !== null) {
             $this->set_foo($data['foo']);
         }
         return $this;

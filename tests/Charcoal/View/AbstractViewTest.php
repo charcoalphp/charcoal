@@ -11,7 +11,8 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
 
     static public function setUpBeforeClass()
     {
-        include 'AbstractViewClass.php';
+        include_once 'AbstractViewClass.php';
+        include_once 'AbstractViewControllerClass.php';
     }
 
     public function setUp()
@@ -95,5 +96,48 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
         $obj3 = new AbstractViewClass();
         $this->assertEquals('Hello World!', $obj->render('Hello {{who}}', ['who'=>'World!']));
 
+    }
+
+    public function testSetController()
+    {
+        $ctrl = new AbstractViewControllerClass();
+        $obj = new AbstractViewClass();
+        $ret = $obj->set_controller($ctrl);
+
+        $this->assertSame($ret, $obj);
+        $this->assertSame($ctrl, $obj->controller());
+
+        //$this->setExpectedException('\InvalidArgumentException');
+        //$obj->set_controller(false);
+    }
+
+    public function testFromIdent()
+    {
+        $obj = new AbstractViewClass();
+        $ret = $obj->from_ident('foo');
+        $this->assertSame($ret, $obj);
+
+        $ret = $obj->render();
+        //var_dump($ret);
+    }
+
+    public function testIdentToClassname()
+    {
+        $obj = new AbstractViewClass();
+        $ret = $obj->ident_to_classname('foo');
+        $this->assertEquals('\Foo', $ret);
+
+        $ret = $obj->ident_to_classname('foo/bar');
+        $this->assertEquals('\Foo\Bar', $ret);
+    }
+
+    public function testClassnameToIdent()
+    {
+        $obj = new AbstractViewClass();
+        $ret = $obj->classname_to_ident('Foo');
+        $this->assertEquals('foo', $ret);
+
+        $ret = $obj->classname_to_ident('\Foo\Bar');
+        $this->assertEquals('foo/bar', $ret);
     }
 }
