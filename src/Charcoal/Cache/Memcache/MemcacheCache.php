@@ -70,7 +70,7 @@ class MemcacheCache extends AbstractCache
         }
 
         $prefix = $this->prefix();
-        $ttl = ($ttl > 0) ? $ttl : $this->default_ttl();
+        $ttl = ($ttl > 0) ? $ttl : $this->config()->default_ttl();
 
         $flag = 0; // MEMCACHE_COMPRESSED
         return $this->_memcache->set($prefix.$key, $data, $flag, $ttl);

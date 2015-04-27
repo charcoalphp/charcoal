@@ -40,7 +40,7 @@ class ApcCache extends AbstractCache
             return false;
         }
         $prefix = $this->prefix();
-        $ttl = ($ttl > 0) ? $ttl : $this->default_ttl();
+        $ttl = ($ttl > 0) ? $ttl : $this->config()->default_ttl();
 
         return apc_store($prefix.$key, $data, $ttl);
     }
