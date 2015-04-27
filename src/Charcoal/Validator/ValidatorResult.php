@@ -2,6 +2,8 @@
 
 namespace Charcoal\Validator;
 
+use \Datetime as Datetime;
+
 /**
 * A Validator Result object.
 *
@@ -12,24 +14,24 @@ class ValidatorResult
     /**
     * @var string $ident
     */
-    public $ident;
+    private $ident;
     /**
     * Can be `notice`, `warning` or `error`
     * @var string $level
     */
-    public $level;
+    private $level;
     /**
     * @var string $message
     */
-    public $message;
+    private $message;
     /**
     * @var DateTime $ts
     */
-    public $ts;
+    private $ts;
 
     public function __construct($data = null)
     {
-        $ts = new \DateTime();
+        $ts = new DateTime();
         $this->set_ts($ts);
 
         if ($data !== null) {
@@ -63,8 +65,16 @@ class ValidatorResult
         return $this;
     }
 
+    /**
+    * @var string $ident
+    * @throws \InvalidArgumentException if parameter is not valid
+    * @return ValidatorResult
+    */
     public function set_ident($ident)
     {
+        if (!is_string($ident)) {
+            throw new \InvalidArgumentException('Ident must be a string');
+        }
         $this->ident = $ident;
         return $this;
     }
@@ -74,8 +84,19 @@ class ValidatorResult
         return $this->ident;
     }
 
+    /**
+    * @var string $level
+    * @throws \InvalidArgumentException if parameter is not valid
+    * @return ValidatorResult
+    */
     public function set_level($level)
     {
+        if (!is_string($level)) {
+            throw new \InvalidArgumentException('Level must be a string');
+        }
+        if (!in_array($level, ['notice', 'warning', 'error'])) {
+            throw new \InvalidArgumentException('Level can only be notice, warning or error');
+        }
         $this->level = $level;
         return $this;
     }
@@ -85,8 +106,16 @@ class ValidatorResult
         return $this->level;
     }
 
+    /**
+    * @var string $message
+    * @throws \InvalidArgumentException if parameter is not valid
+    * @return ValidatorResult
+    */
     public function set_message($message)
     {
+        if (!is_string($message)) {
+            throw new \InvalidArgumentException('Message must be a string');
+        }
         $this->message = $message;
         return $this;
     }
@@ -96,13 +125,18 @@ class ValidatorResult
         return $this->message;
     }
 
+    /**
+    * @var string|Datetime $ident
+    * @throws \InvalidArgumentException if parameter is not valid
+    * @return ValidatorResult
+    */
     public function set_ts($ts)
     {
         if (is_string($ts)) {
-            $ts = new \Datetime($ts);
+            $ts = new Datetime($ts);
         }
-        if (!($ts instanceof \Datetime)) {
-            throw new \InvalidArgumentException('ts must be a datetime / string.');
+        if (!($ts instanceof Datetime)) {
+            throw new \InvalidArgumentException('ts must be a datetime / valid string.');
         }
         $this->ts = $ts;
         return $this;

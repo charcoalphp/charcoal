@@ -51,9 +51,6 @@ abstract class AbstractValidator implements ValidatorInterface
 
     public function log($level, $msg)
     {
-        if (!isset($this->_results[$level])) {
-            $this->_results[$level] = [];
-        }
         $this->add_result([
             'ident'=>'',
             'level'=>$level,
@@ -75,6 +72,9 @@ abstract class AbstractValidator implements ValidatorInterface
             throw new \InvalidArgumentException('ValidatorResult must be an array or a ValidatorResult object');
         }
         $level = $result->level();
+        if (!isset($this->_results[$level])) {
+            $this->_results[$level] = [];
+        }
         $this->results[$level][] = $result;
         return $this;
     }
@@ -101,7 +101,7 @@ abstract class AbstractValidator implements ValidatorInterface
     /**
     * @return array
     */
-    public function warnig_results()
+    public function warning_results()
     {
         if (!isset($this->_results[self::WARNING])) {
             return [];
