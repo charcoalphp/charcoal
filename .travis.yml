@@ -9,5 +9,6 @@ php:
 before_script:
   - wget http://getcomposer.org/composer.phar
   - php composer.phar install
+  - mysql -e 'create database charcoal_examples;'
 
 script: phpunit --configuration tests/phpunit.xml
