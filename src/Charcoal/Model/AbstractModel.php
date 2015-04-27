@@ -148,7 +148,7 @@ abstract class AbstractModel implements
     *
     * @return boolean
     */
-    public function pre_save()
+    protected function pre_save()
     {
         return true;
     }
@@ -158,7 +158,7 @@ abstract class AbstractModel implements
     *
     * @return boolean
     */
-    public function post_save()
+    protected function post_save()
     {
         return true;
     }
@@ -169,7 +169,7 @@ abstract class AbstractModel implements
     * @param array $properties
     * @return boolean
     */
-    public function pre_update($properties = null)
+    protected function pre_update($properties = null)
     {
         return true;
     }
@@ -180,7 +180,7 @@ abstract class AbstractModel implements
     * @param array $properties
     * @return boolean
     */
-    public function post_update($properties = null)
+    protected function post_update($properties = null)
     {
         return true;
     }
@@ -190,7 +190,7 @@ abstract class AbstractModel implements
     *
     * @return boolean
     */
-    public function pre_delete()
+    protected function pre_delete()
     {
         return true;
     }
@@ -200,7 +200,7 @@ abstract class AbstractModel implements
     *
     * @return boolean
     */
-    public function post_delete()
+    protected function post_delete()
     {
         return true;
     }
@@ -221,7 +221,20 @@ abstract class AbstractModel implements
     }
 
     /**
-    * ValidatableInterface > create_validator();
+    * @param array $data
+    * @return SourceInterface
+    */
+    protected function create_source($data = null)
+    {
+        $source = new \Charcoal\Source\DatabaseSource();
+        if ($data !== null) {
+            $source->set_data($data);
+        }
+        return $source;
+    }
+
+    /**
+    * ValidatableInterface > create_validator().
     *
     * @return ValidatorInterface
     */
@@ -235,6 +248,8 @@ abstract class AbstractModel implements
     }
 
     /**
+    * ViewableInterface > create_view().
+    *
     * @return ViewInterface
     */
     protected function create_view($data = null)
