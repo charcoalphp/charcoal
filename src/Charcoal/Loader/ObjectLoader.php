@@ -6,6 +6,18 @@ class ObjectLoader extends AbstractLoader
 {
     private $_ident = '';
     private $_obj;
+    private $_source;
+
+    public function set_source($source)
+    {
+        $this->_source = $source;
+        return $this;
+    }
+
+    public function source()
+    {
+        return $this->_source;
+    }
 
     /**
     * @param string $ident

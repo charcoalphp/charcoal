@@ -13,7 +13,7 @@ interface LoadableInterface
     * @param LoaderInterface $loader
     * @return LoadableInterface Chainable
     */
-    public function set_loader(LoaderInterface $loader);
+    public function set_loader($loader);
 
     /**
     * Get the loader object.
