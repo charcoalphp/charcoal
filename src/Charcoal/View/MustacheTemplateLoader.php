@@ -3,7 +3,7 @@
 namespace Charcoal\View;
 
 
-use \Mustache_loader as Mustache_Loader;
+use \Mustache_Loader as Mustache_Loader;
 
 use \Charcoal\Charcoal as Charcoal;
 use \Charcoal\Loader\FileLoader as FileLoader;
