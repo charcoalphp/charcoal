@@ -5,6 +5,7 @@ namespace Charcoal\Core;
 abstract class AbstractFactory implements FactoryInterface
 {
     static protected $instance;
+
     /**
     * Keeps loaded instances in memory, in `[$type=>$instance]` format.
     * @var array $_instances
@@ -36,7 +37,8 @@ abstract class AbstractFactory implements FactoryInterface
             return static::$instance;
         }
         $class = get_called_class();
-        return new $class;
+        $factory = new $class;
+        return $factory;
     }
 
     /**
@@ -56,7 +58,8 @@ abstract class AbstractFactory implements FactoryInterface
         }
         $types = static::types();
         $class = $types[$type];
-        return new $class;
+        $obj = new $class;
+        return $obj;
     }
 
     /**
