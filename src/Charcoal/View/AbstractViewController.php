@@ -79,6 +79,10 @@ abstract class AbstractViewController implements ViewControllerInterface
             if (is_callable([$context, $name])) {
                 return call_user_func_array([$context, $name], $arguments);
             }
+            // Try Properties
+            if (isset($context->{$name})) {
+                return $context->{$name};
+            }
         } else if (is_array($context)) {
             if (isset($context[$name])) {
                 return $context[$name];
