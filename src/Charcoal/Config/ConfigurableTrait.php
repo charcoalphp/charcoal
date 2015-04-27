@@ -5,7 +5,7 @@ namespace Charcoal\Config;
 /**
 * An implementation, as Trait, of the `ConfigurableInterface`.
 *
-* This Trait contains one additional abstract function: `create_config()`
+* This Trait contains one additional abstract (protected) function: `create_config()`
 */
 trait ConfigurableTrait
 {
@@ -22,13 +22,12 @@ trait ConfigurableTrait
     public function set_config($config)
     {
         if (is_array($config)) {
-            $this->_config = $this->_config_from_array();
+            $this->_config = $this->create_config($config);
         } else if (($config instanceof ConfigInterface)) {
             $this->_config = $config;
         } else {
             throw new \InvalidArgumentException('Invalid config Argument');
         }
-        $this->_config = $config;
         return $this;
     }
 
@@ -43,5 +42,5 @@ trait ConfigurableTrait
         return $this->_config;
     }
 
-    abstract protected function create_config($config = null);
+    abstract protected function create_config($data = null);
 }
