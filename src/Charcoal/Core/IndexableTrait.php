@@ -10,11 +10,21 @@ trait IndexableTrait
     /**
     * @var mixed $_id The object (unique) identifier
     */
-    public $_id;
+    protected $_id;
     /**
     * @var string $_key The object key
     */
-    public $_key;
+    protected $_key;
+
+    protected function set_indexable_data($data)
+    {
+        if (isset($data['id']) && $data['id'] !== null) {
+            $this->set_id($data['id']);
+        }
+        if (isset($data['key']) && $data['key'] !== null) {
+            $this->set_key($data['key']);
+        }
+    }
 
     /**
     * Set the object's ID. The actual property set depends on `key()`
