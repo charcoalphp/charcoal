@@ -2,6 +2,8 @@
 
 namespace Charcoal\Model;
 
+use \Charcoal\Charcoal as Charcoal;
+
 use \Charcoal\Model\ModelInterface as ModelInterface;
 use \Charcoal\Model\ModelMetadata as ModelMetadata;
 use \Charcoal\Model\ModelValidator as ModelValidator;
@@ -47,6 +49,8 @@ abstract class AbstractModel implements
         if ($data !== null) {
             $this->set_data($data);
         }
+        // Fix bug @todo
+        $this->metadata();
     }
 
     /**
@@ -137,9 +141,14 @@ abstract class AbstractModel implements
     /**
     *
     */
-    protected function property_value($property_ident)
+    public function property_value($property_ident)
     {
-        return isset($this->{$property_ident}) ? $this->{$property_ident} : null;
+        $fn = [$this, $property_ident];
+        if (is_callable($fn)) {
+            return call_user_func($fn);
+        } else {
+            return isset($this->{$property_ident}) ? $this->{$property_ident} : null;
+        }
     }
 
 
@@ -221,12 +230,26 @@ abstract class AbstractModel implements
     }
 
     /**
+    * StorableInterface > create_source()
+    *
     * @param array $data
     * @return SourceInterface
     */
     protected function create_source($data = null)
     {
+        $metadata = $this->metadata();
+
+        $default_source = $metadata->default_source();
+
+        $source_config = $metadata->source($default_source);
+        $table = $source_config['table'];
+
         $source = new \Charcoal\Source\DatabaseSource();
+        $source->set_model($this);
+        //$source->set_config($source_config);
+        $source->set_table($table);
+
+
         if ($data !== null) {
             $source->set_data($data);
         }

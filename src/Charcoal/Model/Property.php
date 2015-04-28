@@ -2,6 +2,8 @@
 
 namespace Charcoal\Model;
 
+use \PDO as PDO;
+
 use \Charcoal\Property\AbstractProperty as AbstractProperty;
 
 use \Charcoal\Validator\ValidatorInterface as ValidatorInterface;
@@ -40,5 +42,10 @@ class Property extends AbstractProperty
         } else {
             return 'VARCHAR(255)';
         }
+    }
+
+    public function sql_pdo_type()
+    {
+        return PDO::PARAM_STR;
     }
 }

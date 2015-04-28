@@ -2,11 +2,14 @@
 
 namespace Charcoal\Property;
 
+use \PDO as PDO;
+
 class PropertyField
 {
     private $_ident;
     private $_label;
     private $_sql_type;
+    private $_sql_pdo_type;
     private $_val;
     private $_default_val;
     private $_allow_null;
@@ -21,6 +24,9 @@ class PropertyField
         }
         if (isset($data['sql_type'])) {
             $this->set_sql_type($data['sql_type']);
+        }
+        if (isset($data['sql_pdo_type'])) {
+            $this->set_sql_pdo_type($data['sql_pdo_type']);
         }
         if (isset($data['val'])) {
             $this->set_val($data['val']);
@@ -67,11 +73,25 @@ class PropertyField
         return $this->_sql_type;
     }
 
+    public function set_sql_pdo_type($sql_pdo_type)
+    {
+        $this->_sql_pdo_type = $sql_pdo_type;
+        return $this;
+    }
+
+    public function sql_pdo_type()
+    {
+        if ($this->val() === null) {
+            return PDO::PARAM_NULL;
+        }
+        return $this->_sql_pdo_type;
+    }
+
     public function set_val($val)
     {
-        if (!is_scalar($val)) {
+        /*if (!is_scalar($val)) {
             throw new \InvalidArgumentException('Val must be scalar');
-        }
+        }*/
         $this->_val = $val;
         return $this;
     }

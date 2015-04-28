@@ -6,6 +6,7 @@ use \Charcoal\Source\SourceInterface as SourceInterface;
 
 interface StorableInterface
 {
+
     /**
     * Set the object's source.
     *

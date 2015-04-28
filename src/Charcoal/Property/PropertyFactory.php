@@ -8,7 +8,7 @@ class PropertyFactory extends AbstractFactory
 {
     public function get($type)
     {
-        $class_name = '\Charcoal\Property\\'.str_replace('_', '\\', $type);
+        $class_name = '\Charcoal\Property\\'.str_replace('_', '\\', ucfirst($type)).'Property';
         if (class_exists($class_name)) {
             return new $class_name();
         } else {

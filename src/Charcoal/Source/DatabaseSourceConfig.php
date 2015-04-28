@@ -51,6 +51,7 @@ class DatabaseSourceConfig extends SourceConfig
             'password_encoding' => null,
             'password_salt' => null,
             'database'      => null,
+            'table'         => '',
             'disable_utf8'  => false
         ];
     }

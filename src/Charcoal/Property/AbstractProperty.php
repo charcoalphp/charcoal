@@ -36,7 +36,7 @@ abstract class AbstractProperty implements
     /**
     * @var mixed $_val
     */
-    private $_val;
+    protected $_val;
 
     /**
     * @var mixed $_label
@@ -222,13 +222,27 @@ abstract class AbstractProperty implements
             return null;
         }
         if (!is_array($val)) {
-            throw new \Exception('Val is not an array');
+            return $this->storage_val($val);
         }
         if (isset($val[$field_ident])) {
-            return $val[$field_ident];
+            return $this->storage_val($val[$field_ident]);
         } else {
             return null;
         }
+    }
+
+    public function storage_val($val = null)
+    {
+        if ($val === null) {
+            $val = $this->val();
+        }
+        if ($val === null) {
+            return null;
+        }
+        if (!is_scalar($val)) {
+            return json_encode($val, true);
+        }
+        return $val;
     }
 
     /**
@@ -423,6 +437,7 @@ abstract class AbstractProperty implements
                 $field->set_data([
                     'ident'=>$this->ident().'_'.$lang,
                     'sql_type'=>$this->sql_type(),
+                    'sql_pdo_type'=>$this->sql_pdo_type(),
                     'val'=>$this->field_val($lang),
                     'default_val'=>null,
                     'allow_null'=>true,
@@ -435,7 +450,8 @@ abstract class AbstractProperty implements
             $field->set_data([
                 'ident'=>$this->ident(),
                 'sql_type'=>$this->sql_type(),
-                'val'=>$this->val(),
+                'sql_pdo_type'=>$this->sql_pdo_type(),
+                'val'=>$this->storage_val(),
                 'default_val'=>null,
                 'allow_null'=>true,
                 'comment'=>$this->label()
@@ -450,6 +466,10 @@ abstract class AbstractProperty implements
     * @return string
     */
     abstract public function sql_type();
+    /**
+    * @return mixed
+    */
+    abstract public function sql_pdo_type();
 
     /**
     *

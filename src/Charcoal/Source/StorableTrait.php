@@ -53,7 +53,7 @@ trait StorableTrait
     */
     public function load($id = null)
     {
-        $ret = $this->source()->load_data($id);
+        $ret = $this->source()->load_item($id);
         $this->set_flat_data($ret);
         return $ret;
     }
@@ -66,7 +66,7 @@ trait StorableTrait
     public function save()
     {
         $this->pre_save();
-        $ret = $this->source()->save();
+        $ret = $this->source()->save_item($this);
         $this->post_save();
         return $ret;
     }
@@ -80,7 +80,7 @@ trait StorableTrait
     public function update($properties = null)
     {
         $this->pre_update($properties);
-        $ret = $this->source()->update($properties);
+        $ret = $this->source()->update_item($this, $properties);
         $this->post_update($properties);
         return $ret;
     }
@@ -93,7 +93,7 @@ trait StorableTrait
     public function delete()
     {
         $this->pre_delete();
-        $ret = $this->source()->delete();
+        $ret = $this->source()->delete_item($item);
         $this->post_delete();
         return $ret;
     }
