@@ -85,29 +85,14 @@ class MetadataLoader extends FileLoader
         $ident = $this->ident();
         $hierarchy = null;
 
-        if (class_exists($ident)) {
+        $classname = $this->_ident_to_classname($ident);
+        //var_dump($classname);
+        if (class_exists($classname)) {
             // If the object is a class, we use hierarchy from object ancestor classes
-            //  pre('=='.$ident);
-            $p = $ident;
-            $ident_hierarchy = [$p];
-
-            // Also load class' traits, if any
-            $traits = class_uses($ident);
-            foreach ($traits as $trait) {
-                $ident_hierarchy[] = $trait;
+            $ident_hierarchy = [$ident];
+            while ($classname = get_parent_class($classname)) {
+                $ident_hierarchy[] = $this->_classname_to_ident($classname);
             }
-            //pre($p);
-            while ($p = get_parent_class($p)) {
-                $ident_hierarchy[] = $p;
-
-                // Also load parent classes' traits, if any
-                $traits = class_uses($p);
-                foreach ($traits as $trait) {
-                    //pre($trait);
-                    $ident_hierarchy[] = $trait;
-                }
-            }
-            
             $ident_hierarchy = array_reverse($ident_hierarchy);
         } else {
             if (is_array($hierarchy) && !empty($hierarchy)) {
@@ -117,7 +102,6 @@ class MetadataLoader extends FileLoader
                 $ident_hierarchy = [$ident];
             }
         }
-
         return $ident_hierarchy;
     }
 
@@ -158,5 +142,25 @@ class MetadataLoader extends FileLoader
 
         return $filename;
 
+    }
+
+    protected function _ident_to_classname($ident)
+    {
+        $class = str_replace('/', '\\', $ident);
+        $expl = explode('\\', $class);
+        array_walk(
+            $expl, function(&$i) {
+                $i = ucfirst($i);
+            }
+        );
+        $class = '\\'.implode('\\', $expl);
+        return $class;
+    }
+
+    protected function _classname_to_ident($classname)
+    {
+        $ident = str_replace('\\', '/', strtolower($classname));
+        $ident = ltrim($ident, '/');
+        return $ident;
     }
 }
