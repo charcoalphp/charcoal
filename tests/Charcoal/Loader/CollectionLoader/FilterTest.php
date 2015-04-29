@@ -264,7 +264,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
         $sql = $obj->sql();
 
         // @todo: Note that 'bar' is not quoted...
-        $this->assertEquals('(`foo` '.$operator.' bar)', $sql);
+        $this->assertEquals('(`foo` '.$operator.' \'bar\')', $sql);
     }
 
     /**
@@ -292,7 +292,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
         $sql = $obj->sql();
 
         // @todo: Note that 'bar' is not quoted...
-        $this->assertEquals('(ABS(`foo`) = bar)', $sql);
+        $this->assertEquals('(ABS(`foo`) = \'bar\')', $sql);
     }
 
     public function testSQLWithString()
@@ -307,7 +307,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     public function testSQLWithStringTakesPrecedence()
     {
         $obj = new Filter();
-        
+
         // Should be ignored:
         $obj->set_property('foo');
         $obj->set_operator('=');
