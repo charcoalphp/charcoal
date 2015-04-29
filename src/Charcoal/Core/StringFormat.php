@@ -26,9 +26,9 @@ class StringFormat
     /**
     * @var string Optional string
     */
-    public function __construct($string=null)
+    public function __construct($string = null)
     {
-        if($string !== null) {
+        if ($string !== null) {
             $this->set_string($string);
         }
     }
@@ -45,7 +45,7 @@ class StringFormat
     */
     public function set_string($string)
     {
-        if(!is_string($string)) {
+        if (!is_string($string)) {
             throw new InvalidArgumentException('String must be a string');
         }
         $this->_string = $string;
@@ -90,13 +90,14 @@ class StringFormat
         $str = htmlentities($this->_string, ENT_COMPAT, 'UTF-8');
         $this->_string = preg_replace('/&([a-zA-Z])(uml|acute|grave|circ|tilde|cedil|ring|caron|slash);/', '$1', $str);
         $this->_string = preg_replace('/&([a-zA-Z]{2})(lig);/', '$1', $this->_string);
+        $this->_string = html_entity_decode($this->_string);
         return $this;
     }
 
     /**
     * Strip all non-alphanumeric characters from string.
     *
-    * The definietion of alphanumeric is: 
+    * The definietion of alphanumeric is:
     * - In unicode: All letters and numbers
     * - In non-unicode:
     *   -Only the 26 letters of the english alphabets (a to z, no accents)
@@ -107,10 +108,9 @@ class StringFormat
     */
     public function alphanumeric()
     {
-        if($this->unicode()) {
+        if ($this->unicode()) {
             $this->_string = preg_replace("/[^[:alnum:][:space:]]/ui", '', $this->_string);
-        }
-        else {
+        } else {
             $this->_string = preg_replace("/[^A-Za-z0-9 ]/", '', $this->_string);
         }
         return $this;
