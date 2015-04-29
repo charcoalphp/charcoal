@@ -133,11 +133,11 @@
 	<!--Generic.Files_InlineHTMLSniff-->
 
 	<!-- All line endings are standardized to "\n" -->
-	<rule ref="Generic.Files.LineEndings">
+	<!--<rule ref="Generic.Files.LineEndings">
 		<properties>
 			<property name="eolChar" value="\n" />
 		</properties>
-	</rule>
+	</rule>-->
 	<!-- Make sure all files are a certain max length -->
 	<!--<rule ref="Generic.Files.LineLength">
 		<properties>
@@ -156,7 +156,7 @@
 	<rule ref="Generic.Formatting.DisallowMultipleStatements" />
 	<!-- Make sure all adjacent assigments are properly aligned, for the extra-pedantic in you -->
 	<!--<rule ref="Generic.Formatting.MultipleStatementAlignment" />-->
-	
+
 	<!-- Ensure there are no spaces after a typecast Ex: (array)$x -->
 	<rule ref="Generic.Formatting.NoSpaceAfterCast" />
 	<!-- Ensure there *is* a space after a typecase. Incompatible with the previous rule -->
@@ -164,10 +164,10 @@
 
 	<!-- Tests that all arithmetic operations are bracketed. -->
 	<rule ref="Squiz.Formatting.OperatorBracket" />
-	
+
 
 <!-- Functions Sniffs -->
-	
+
 	<!-- Ensures that variables are not passed by reference when calling a function -->
 	<rule ref="Generic.Functions.CallTimePassByReference" />
 	<!-- Spaces are required after every commas in function calls -->
@@ -212,7 +212,7 @@
 	-->
 
 <!-- Naming Conventions Sniffs -->
-	
+
 	<!-- @todo Doc -->
 	<!--<rule ref="Generic.NamingConventions.CamelCapsFunctionName" /> -->
 	<!-- Constructor should be in PHP5 mode (__construct) -->
@@ -235,7 +235,7 @@
 	<rule ref="Squiz.Operators.ValidLogicalOperators" />
 
 <!-- PHP Sniffs -->
-	
+
 	<!-- Checks that the opening PHP tag is the first content in a file -->
 	<!--<rule ref="Generic.PHP.CharacterBeforePHPOpeningTag" />-->
 	<!-- Checks that open PHP tags are paired with closing tags. -->
@@ -268,14 +268,14 @@
 	<!--<rule ref="Squiz.PHP.DisallowMultipleAssignments" />-->
 	<rule ref="Squiz.PHP.DisallowObEndFlush" />
 	<rule ref="Squiz.PHP.DisallowSizeFunctionsInLoops" />
-	<!-- @todo Doc me --> 
+	<!-- @todo Doc me -->
 	<rule ref="Squiz.PHP.DiscouragedFunctions" />
 	<rule ref="Squiz.PHP.EmbeddedPhp" />
 	<rule ref="Squiz.PHP.EmbeddedPhp.Indent">
 		<severity>0</severity>
 	</rule>
 	<rule ref="Squiz.PHP.Eval" />
-	<!-- Disallow usage of functions that should be obsolete but kept for compatibility.  --> 
+	<!-- Disallow usage of functions that should be obsolete but kept for compatibility.  -->
 	<rule ref="Squiz.PHP.ForbiddenFunctions" />
 	<rule ref="Squiz.PHP.GlobalKeyword" />
 	<rule ref="Squiz.PHP.Heredoc" />

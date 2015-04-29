@@ -16,6 +16,7 @@ class CollectionLoader extends AbstractLoader
     private $_filters = [];
     private $_orders = [];
     private $_pagination = null;
+    private $_source = null;
 
     public function set_data($data)
     {
@@ -35,6 +36,17 @@ class CollectionLoader extends AbstractLoader
             $this->set_pagination($data['pagination']);
         }
         return $this;
+    }
+
+    public function set_source($source)
+    {
+        $this->_source = $source;
+        return $this;
+    }
+
+    public function source()
+    {
+        return $this->_source;
     }
 
     public function set_properties($properties)
@@ -237,7 +249,7 @@ class CollectionLoader extends AbstractLoader
         unset($ident);
 
         // Attempt loading from cache
-        $ret = $this->_load_from_cache();
+        $ret = $this->cache_load();
         if ($ret !== false) {
             return $ret;
         }
@@ -265,7 +277,7 @@ class CollectionLoader extends AbstractLoader
             $collection->add($obj);
         }
 
-        $this->_cache($collection);
+        $this->cache_store($collection);
 
         return $collection;
     }
@@ -301,7 +313,7 @@ class CollectionLoader extends AbstractLoader
         if (empty($properties)) {
             return 'obj_table.*';
         }
-        
+
         $sql = '';
         $props_sql = [];
         foreach ($properties as $p) {
@@ -310,7 +322,7 @@ class CollectionLoader extends AbstractLoader
         if (!empty($props_sql)) {
             $sql = implode(', ', $props_sql);
         }
-        
+
         return $sql;
     }
 

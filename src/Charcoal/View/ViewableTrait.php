@@ -26,7 +26,7 @@ trait ViewableTrait
         $this->_view = $view;
         return $this;
     }
-    
+
     /**
     * @return ViewInterface The object's View.
     */

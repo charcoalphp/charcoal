@@ -7,3 +7,4 @@ composer.lock
 tests/tmp
 mustache_cache
 
+"npm-debug.log" 
