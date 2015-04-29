@@ -234,7 +234,7 @@ class DatabaseSource extends AbstractSource
         $db_hostname = isset($db_config['hostname']) ? $db_config['hostname'] : self::DEFAULT_DB_HOSTNAME;
         $db_type = isset($db_config['type']) ? $db_config['type'] : self::DEFAULT_DB_TYPE;
         // ... The other parameters are required. @todo Really?
-        
+
         try {
             $database = $db_config['database'];
             $username = $db_config['username'];
@@ -245,19 +245,19 @@ class DatabaseSource extends AbstractSource
             if (isset($db_config['disable_utf8']) && $db_config['disable_utf8']) {
                 $extra_opts = null;
             }
-            
+
             $db = new PDO($db_type.':host='.$db_hostname.';dbname='.$database, $username, $password, $extra_opts);
-            
+
             // Set PDO options
             $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             if ($db_type == 'mysql') {
                 $db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
             }
-            
+
         } catch (PDOException $e) {
             throw new Exception('Error setting up database');
         }
-        
+
         self::$_dbs[$database_ident] = $db;
 
         return self::$_dbs[$database_ident];
@@ -293,9 +293,29 @@ class DatabaseSource extends AbstractSource
         return $config;
     }
 
+
     public function load_item($ident)
     {
+        $obj = clone($this->model());
 
+        $q = '
+        select
+            *
+        from
+           `'.$this->table().'`
+        where
+           `'.$this->model()->key().'`=:ident
+        limit
+           1';
+
+        $sth = $this->db()->prepare($q);
+        $sth->bindParam(':ident', $ident);
+        $sth->setFetchMode(\PDO::FETCH_ASSOC);
+        $sth->execute();
+        $data = $sth->fetch();
+        $obj->set_flat_data($data);
+
+        return $obj;
     }
 
     /**
@@ -315,7 +335,7 @@ class DatabaseSource extends AbstractSource
         }
         $model = $this->model();
         $table_structure = [];
-        
+
         $q = 'SHOW columns FROM `'.$this->table().'`';
         $sth = $this->db()->query($q);
         while ($field = $sth->fetchColumn(0)) {
@@ -404,13 +424,13 @@ class DatabaseSource extends AbstractSource
         }
 
         $q = '
-        UPDATE 
-            `'.$this->table().'` 
-        SET 
+        UPDATE
+            `'.$this->table().'`
+        SET
             '.implode(", \n\t", $updates).'
-        WHERE 
-            `'.$model->key().'`=:id 
-        LIMIT 
+        WHERE
+            `'.$model->key().'`=:id
+        LIMIT
             1';
 
         $sth = $this->db()->prepare($q);

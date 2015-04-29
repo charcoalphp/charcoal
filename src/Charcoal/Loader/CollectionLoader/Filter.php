@@ -261,7 +261,7 @@ class Filter
 
         $filter = '';
         foreach ($fields as $field) {
-            $val = $this->val();
+            $val = '\'' . $this->val() . '\'';
 
             // Support custom "operator" for the filter
             $operator = $this->operator();
@@ -284,11 +284,11 @@ class Filter
                 $filter = ' FIND_IN_SET('.$sql_val.', '.$filter_ident.')';
                 }
                 else {
-                // The FIND_IN_SET function must work on a comma separated-value. 
+                // The FIND_IN_SET function must work on a comma separated-value.
                 // So create temporary separators to use a comma...
                 $custom_separator = '}x5S_'; // With not much luck, this string should never be used in text
                 $filter = ' FIND_IN_SET(
-                REPLACE('.$sql_val.', \',\', \''.$custom_separator.'\'), 
+                REPLACE('.$sql_val.', \',\', \''.$custom_separator.'\'),
                 REPLACE(REPLACE('.$filter_ident.', \',\', \''.$custom_separator.'\'), \''.$sep.'\', \',\')';
                 }
                 }
