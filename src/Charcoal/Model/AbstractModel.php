@@ -69,7 +69,12 @@ abstract class AbstractModel implements
         }
 
         foreach ($data as $prop => $val) {
-            $this->{$prop} = $val;
+            $func = [$this, 'set_'.$prop];
+            if (is_callable($func)) {
+                call_user_func($func, $val);
+            } else {
+                $this->{$prop} = $val;
+            }
         }
 
         // Chainable
@@ -117,17 +122,8 @@ abstract class AbstractModel implements
     */
     public function set_flat_data($data)
     {
-        if (!is_array($data)) {
-            // @todo Log Error
-            return $this;
-        }
-
-        foreach ($data as $prop => $val) {
-            $this->{$prop} = $val;
-        }
-
-        // Chainable
-        return $this;
+        // @todo.
+        return $this->set_data($data);
     }
 
     /**
@@ -151,6 +147,42 @@ abstract class AbstractModel implements
         }
     }
 
+    /**
+    * @param array $properties
+    * @return boolean
+    */
+    public function save_properties($properties = null)
+    {
+        if ($properties===null) {
+            $properties = array_keys($model->metadata()->properties());
+        }
+        foreach ($properties as $property_ident) {
+            $p = $this->p($property_ident);
+            $p->save();
+        }
+        return true;
+    }
+    /**
+    * StorableTrait > save(). Save an object current state to storage
+    *
+    * @return boolean
+    */
+    public function save()
+    {
+        $pre = $this->pre_save();
+        $this->save_properties();
+        if ($pre === false) {
+            return false;
+        }
+        $ret = $this->source()->save_item($this);
+        if ($ret === false) {
+            return false;
+        } else {
+            $this->set_id($ret);
+        }
+        $this->post_save();
+        return $ret;
+    }
 
     /**
     * StorableTrait > pre_save(). Save hook called before saving the model.
@@ -161,6 +193,8 @@ abstract class AbstractModel implements
     {
         return true;
     }
+
+
 
     /**
     * StorableTrait > post_save(). Save hook called after saving the model.
