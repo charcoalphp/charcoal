@@ -313,7 +313,9 @@ class DatabaseSource extends AbstractSource
         $sth->setFetchMode(\PDO::FETCH_ASSOC);
         $sth->execute();
         $data = $sth->fetch();
-        $obj->set_flat_data($data);
+        if ($data) {
+            $obj->set_flat_data($data);
+        }
 
         return $obj;
     }

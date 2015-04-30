@@ -154,7 +154,7 @@ abstract class AbstractModel implements
     public function save_properties($properties = null)
     {
         if ($properties===null) {
-            $properties = array_keys($model->metadata()->properties());
+            $properties = array_keys($this->metadata()->properties());
         }
         foreach ($properties as $property_ident) {
             $p = $this->p($property_ident);
