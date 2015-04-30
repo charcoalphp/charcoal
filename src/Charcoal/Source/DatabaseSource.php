@@ -294,9 +294,14 @@ class DatabaseSource extends AbstractSource
     }
 
 
-    public function load_item($ident)
+    public function load_item($ident, StorableInterface $item = null)
     {
-        $obj = clone($this->model());
+        if ($item !== null) {
+            $this->set_model($item);
+        }
+        else {
+            $item = clone($this->model());
+        }
 
         $q = '
         select
@@ -314,10 +319,10 @@ class DatabaseSource extends AbstractSource
         $sth->execute();
         $data = $sth->fetch();
         if ($data) {
-            $obj->set_flat_data($data);
+            $item->set_flat_data($data);
         }
 
-        return $obj;
+        return $item;
     }
 
     /**

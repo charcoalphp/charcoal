@@ -122,7 +122,6 @@ abstract class AbstractModel implements
     */
     public function set_flat_data($data)
     {
-        // @todo.
         return $this->set_data($data);
     }
 

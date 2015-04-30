@@ -49,13 +49,15 @@ trait StorableTrait
     * (provide an `id()` and `key()` methods) for this function to work properly.
     *
     * @param mixed $id The i
-    * @return boolean Success / Failure
+    * @return StorableInterface Chainable
     */
     public function load($id = null)
     {
-        $ret = $this->source()->load_item($id);
-        $this->set_flat_data($ret);
-        return $ret;
+        if($id === null) {
+            $id = $this->id();
+        }
+        $this->source()->load_item($id, $this);
+        return $this;
     }
 
     /**
@@ -65,7 +67,10 @@ trait StorableTrait
     */
     public function save()
     {
-        $this->pre_save();
+        $pre = $this->pre_save();
+        if ($pre === false) {
+            return false;
+        }
         $ret = $this->source()->save_item($this);
         $this->post_save();
         return $ret;
@@ -79,7 +84,11 @@ trait StorableTrait
     */
     public function update($properties = null)
     {
-        $this->pre_update($properties);
+        $pre = $this->pre_update($properties);
+        $this->save_properties($properties);
+        if ($pre === false) {
+            return false;
+        }
         $ret = $this->source()->update_item($this, $properties);
         $this->post_update($properties);
         return $ret;
@@ -92,16 +101,39 @@ trait StorableTrait
     */
     public function delete()
     {
-        $this->pre_delete();
+        $pre = $this->pre_delete();
+        if ($pre === false) {
+            return false;
+        }
         $ret = $this->source()->delete_item($item);
         $this->post_delete();
         return $ret;
     }
 
+    /**
+    * @return bool
+    */
     abstract protected function pre_save();
+    /**
+    * @return bool
+    */
     abstract protected function post_save();
+    /**
+    * @param array
+    * @return bool
+    */
     abstract protected function pre_update($properties = null);
+    /**
+    * @param array
+    * @return bool
+    */
     abstract protected function post_update($properties = null);
+    /**
+    * @return bool
+    */
     abstract protected function pre_delete();
+    /**
+    * @return bool
+    */
     abstract protected function post_delete();
 }
