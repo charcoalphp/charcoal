@@ -80,6 +80,11 @@ abstract class AbstractProperty implements
     private $_unique = false;
 
     /**
+    *
+    */
+    private $_allow_null = true;
+
+    /**
     * Inactive properties should be hidden everywhere / unused
     * @var boolean $active
     */
@@ -331,6 +336,28 @@ abstract class AbstractProperty implements
     }
 
     /**
+    * @param boolean
+    * @throws \InvalidArgumentException if the paramter is not a boolean
+    * @return Property (Chainable)
+    */
+    public function set_allow_null($allow)
+    {
+        if (!is_bool($allow)) {
+            throw new \InvalidArgumentException('Allow null must be a boolean');
+        }
+        $this->_allow_null = $allow;
+        return $this;
+    }
+
+    /**
+    * @return boolean
+    */
+    public function allow_null()
+    {
+        return !!$this->_allow_null;
+    }
+
+    /**
     * @param array
     * @throws \InvalidArgumentException if the paramter is not an array
     * @return Property (Chainable)
@@ -462,6 +489,11 @@ abstract class AbstractProperty implements
         }
         
         return $fields;
+    }
+
+    public function validation_methods()
+    {
+        return [];
     }
 
     /**
