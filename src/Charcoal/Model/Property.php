@@ -35,6 +35,11 @@ class Property extends AbstractProperty
         return true;
     }
 
+    public function sql_extra()
+    {
+        return '';
+    }
+    
     public function sql_type()
     {
         if ($this->multiple()) {
@@ -47,5 +52,10 @@ class Property extends AbstractProperty
     public function sql_pdo_type()
     {
         return PDO::PARAM_STR;
+    }
+
+    public function save()
+    {
+        return $this->val();
     }
 }
