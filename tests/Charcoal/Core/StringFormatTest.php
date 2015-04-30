@@ -84,7 +84,7 @@ class StringFormatTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('This string contaïns nonàlphanumerical characters', $obj->string());
     }
 
-     public function testAlphanumericNonUnicode()
+    public function testAlphanumericNonUnicode()
     {
         $obj = new StringFormat('This "string" contaïns non-àlphanumerical #characters');
         $obj->set_unicode(false);
