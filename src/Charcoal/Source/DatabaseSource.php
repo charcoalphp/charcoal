@@ -298,8 +298,7 @@ class DatabaseSource extends AbstractSource
     {
         if ($item !== null) {
             $this->set_model($item);
-        }
-        else {
+        } else {
             $item = clone($this->model());
         }
 

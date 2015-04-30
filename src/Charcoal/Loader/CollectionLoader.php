@@ -6,6 +6,8 @@ use \Charcoal\Model\Collection as Collection;
 use \Charcoal\Loader\CollectionLoader\Filter as Filter;
 use \Charcoal\Loader\CollectionLoader\Order as Order;
 use \Charcoal\Loader\CollectionLoader\Pagination as Pagination;
+use \Charcoal\Model\ModelInterface as ModelInterface;
+use \Exception as Exception;
 
 /**
 * Collection Loader
@@ -17,6 +19,7 @@ class CollectionLoader extends AbstractLoader
     private $_orders = [];
     private $_pagination = null;
     private $_source = null;
+    private $_model = null;
 
     public function set_data($data)
     {
@@ -48,6 +51,32 @@ class CollectionLoader extends AbstractLoader
     {
         return $this->_source;
     }
+
+
+    /**
+    * @var Model $models
+    * @return Source Chainable
+    */
+    public function set_model(ModelInterface $model)
+    {
+        $this->_model = $model;
+        $this->set_source($model->source());
+        return $this;
+    }
+
+    /**
+    * @throws Exception if not model was previously set
+    * @return Model
+    */
+    public function model()
+    {
+        if ($this->_model === null) {
+            throw new Exception('No model set.');
+        }
+        return $this->_model;
+    }
+
+
 
     public function set_properties($properties)
     {
@@ -272,7 +301,10 @@ class CollectionLoader extends AbstractLoader
         $sth->setFetchMode(\PDO::FETCH_ASSOC);
         while ($obj_data = $sth->fetch()) {
             // @todo Custom class
-            $obj = new \Charcoal\Model\Object();
+            $class_name = get_class( $this->model() );
+            // $obj = ModelFactory::instance()->get(
+            $obj = new $class_name;
+            // $obj = new \Charcoal\Model\Object();
             $obj->set_flat_data($obj_data);
             $collection->add($obj);
         }

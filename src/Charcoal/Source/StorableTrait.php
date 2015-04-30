@@ -23,7 +23,7 @@ trait StorableTrait
         $this->_source = $source;
         return $this;
     }
-    
+
     /**
     * Get the object's source.
     *
@@ -41,7 +41,7 @@ trait StorableTrait
     * @return SourceInterface
     */
     abstract public function create_source($data = null);
-    
+
     /**
     * Load an object from the database from its ID.
     *
@@ -53,7 +53,7 @@ trait StorableTrait
     */
     public function load($id = null)
     {
-        if($id === null) {
+        if ($id === null) {
             $id = $this->id();
         }
         $this->source()->load_item($id, $this);

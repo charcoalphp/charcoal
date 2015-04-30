@@ -3,7 +3,7 @@
 namespace Charcoal\Model;
 
 use \Charcoal\Collection\AbstractCollection as AbstractCollection;
-use \Charcoal\Model\IndexableInterface as IndexableInterface;
+use \Charcoal\Core\IndexableInterface as IndexableInterface;
 
 /**
 * Model Collection
@@ -154,7 +154,7 @@ class Collection extends AbstractCollection
     *
     * @return \Charcoal\Collection (Chainable)
     */
-    public function add(Object $obj)
+    public function add(IndexableInterface $obj)
     {
         $this->_objects[] = $obj;
         $this->_map[$obj->id()] = $obj;
@@ -179,6 +179,6 @@ class Collection extends AbstractCollection
         } else {
             throw new \InvalidArgumentException('Key must be a string or an IndexableInterface');
         }
-        
+
     }
 }
