@@ -438,6 +438,7 @@ abstract class AbstractProperty implements
                     'ident'=>$this->ident().'_'.$lang,
                     'sql_type'=>$this->sql_type(),
                     'sql_pdo_type'=>$this->sql_pdo_type(),
+                    'extra'=>$this->sql_extra(),
                     'val'=>$this->field_val($lang),
                     'default_val'=>null,
                     'allow_null'=>true,
@@ -451,6 +452,7 @@ abstract class AbstractProperty implements
                 'ident'=>$this->ident(),
                 'sql_type'=>$this->sql_type(),
                 'sql_pdo_type'=>$this->sql_pdo_type(),
+                'extra'=>$this->sql_extra(),
                 'val'=>$this->storage_val(),
                 'default_val'=>null,
                 'allow_null'=>true,
@@ -465,9 +467,13 @@ abstract class AbstractProperty implements
     /**
     * @return string
     */
+    abstract public function sql_extra();
+    /**
+    * @return string
+    */
     abstract public function sql_type();
     /**
-    * @return mixed
+    * @return integer
     */
     abstract public function sql_pdo_type();
 
@@ -512,4 +518,6 @@ abstract class AbstractProperty implements
         }
         return $view;
     }
+
+    abstract public function save();
 }

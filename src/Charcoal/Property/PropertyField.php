@@ -6,27 +6,43 @@ use \PDO as PDO;
 
 class PropertyField
 {
+    /**
+    * @var string
+    */
     private $_ident;
     private $_label;
+    /**
+    * @var string
+    */
     private $_sql_type;
+    /**
+    * @var integer
+    */
     private $_sql_pdo_type;
+    /**
+    * @var string
+    */
+    private $_extra;
     private $_val;
     private $_default_val;
     private $_allow_null;
 
     public function set_data($data)
     {
-        if (isset($data['ident'])) {
+        if (isset($data['ident']) && $data['ident'] !== null) {
             $this->set_ident($data['ident']);
         }
-        if (isset($data['label'])) {
+        if (isset($data['label']) && $data['label'] !== null) {
             $this->set_label($data['label']);
         }
-        if (isset($data['sql_type'])) {
+        if (isset($data['sql_type']) && $data['sql_type'] !== null) {
             $this->set_sql_type($data['sql_type']);
         }
-        if (isset($data['sql_pdo_type'])) {
+        if (isset($data['sql_pdo_type']) && $data['sql_pdo_type'] !== null) {
             $this->set_sql_pdo_type($data['sql_pdo_type']);
+        }
+        if (isset($data['extra']) && $data['extra'] !== null) {
+            $this->set_extra($data['extra']);
         }
         if (isset($data['val'])) {
             $this->set_val($data['val']);
@@ -34,7 +50,7 @@ class PropertyField
         if (isset($data['default_val'])) {
             $this->set_default($data['default_val']);
         }
-        if (isset($data['allow_null'])) {
+        if (isset($data['allow_null']) && $data['allow_null']) {
             $this->set_allow_null($data['allow_null']);
         }
         return $this;
@@ -85,6 +101,23 @@ class PropertyField
             return PDO::PARAM_NULL;
         }
         return $this->_sql_pdo_type;
+    }
+
+    public function set_extra($extra)
+    {
+        if (!is_string($extra)) {
+            throw new InvalidArgumentException('Extra must be a string');
+        }
+        $this->_extra = $extra;
+        return $this;
+    }
+
+    public function extra()
+    {
+        if (!$this->_extra === null) {
+            return '';
+        }
+        return $this->_extra;
     }
 
     public function set_val($val)
@@ -138,9 +171,10 @@ class PropertyField
 
         $sql_type = $this->sql_type();
         $null = ($this->allow_null() === false) ? ' NOT NULL ' : '';
+        $extra = $this->extra() ? ' '.$this->extra().' ' : '';
         $default = $this->default_val() ? ' DEFAULT \''.addslashes($this->default_val()).'\' ' : '';
         $comment = $this->label() ? ' COMMENT \''.addslashes($this->label()).'\' ' : '';
 
-        return '`'.$ident.'` '.$sql_type.$null.$default.$comment;
+        return '`'.$ident.'` '.$sql_type.$null.$extra.$default.$comment;
     }
 }
