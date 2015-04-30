@@ -50,12 +50,7 @@ class Object extends Model implements IndexableInterface
     {
         parent::set_data($data);
 
-        if (isset($data['key'])) {
-            $this->set_id($data['key']);
-        }
-        if (isset($data['id'])) {
-            $this->set_id($data['id']);
-        }
+        $this->set_indexable_data($data);
         if (isset($data['active'])) {
             $this->set_key($data['active']);
         }
