@@ -8,10 +8,9 @@ use \PDO as PDO;
 use \Exception as Exception;
 use \InvalidArgumentException as InvalidArgumentException;
 
+// From `charcoal-core`
 use \Charcoal\Charcoal as Charcoal;
-
 use \Charcoal\Model\ModelInterface as ModelInterface;
-
 use \Charcoal\Source\DatabaseSourceConfig as DatabaseSourceConfig;
 
 /**
@@ -23,19 +22,28 @@ class DatabaseSource extends AbstractSource
     const DEFAULT_DB_TYPE = 'mysql';
 
     /**
-    * @var string null
+    * @var string $_database_ident
     */
     private $_database_ident;
+    /**
+    * @var DatabaseSourceConfig $_database_config
+    */
     private $_database_config;
 
+    /**
+    * @var string $_table
+    */
     private $_table = null;
 
     private static $_dbs = [];
 
+    /**
+    * @var ModelInterface
+    */
     private $_model = null;
 
     /**
-    * @var Model $models
+    * @param ModelInterface $model
     * @return Source Chainable
     */
     public function set_model(ModelInterface $model)
@@ -71,6 +79,9 @@ class DatabaseSource extends AbstractSource
     }
 
     /**
+    * Get the current database ident.
+    * If null, then the project's default (from `Charcoal::config()` will be used.)
+    *
     * @return string
     */
     public function database_ident()
@@ -81,6 +92,11 @@ class DatabaseSource extends AbstractSource
         return $this->_database_ident;
     }
 
+    /**
+    * @param array $database_config
+    * @throws Exception
+    * @return DatabaseSource Chainable
+    */
     public function set_database_config($database_config)
     {
         if (!is_array($database_config)) {
@@ -90,6 +106,9 @@ class DatabaseSource extends AbstractSource
         return $this;
     }
 
+    /**
+    * @return mixed
+    */
     public function database_config()
     {
         if ($this->_database_config === null) {
@@ -123,7 +142,11 @@ class DatabaseSource extends AbstractSource
         return $this->_table;
     }
 
-
+    /**
+    * Create a table from a model's metadata.
+    *
+    * @return boolean Success / Failure
+    */
     public function create_table()
     {
         if ($this->table_exists()) {
@@ -134,6 +157,7 @@ class DatabaseSource extends AbstractSource
         $model = $this->model();
         $metadata = $model->metadata();
         $fields = $this->_get_model_fields($model);
+
         $fields__sql = [];
         foreach ($fields as $field) {
             $fields_sql[] = $field->sql();
@@ -154,6 +178,11 @@ class DatabaseSource extends AbstractSource
         return true;
     }
 
+    /**
+    * Alter an existing table to match the model's metadata.
+    *
+    * @return boolean Success / Failure
+    */
     public function alter_table()
     {
         if (!$this->table_exists()) {
@@ -162,9 +191,7 @@ class DatabaseSource extends AbstractSource
 
         $fields = $this->_get_model_fields($this->model());
 
-        $q = 'SHOW COLUMNS FROM `'.$this->table().'`';
-        $res = $this->db()->query($q);
-        $cols = $res->fetchAll((PDO::FETCH_GROUP|PDO::FETCH_UNIQUE|PDO::FETCH_ASSOC));
+        $cols = $this->table_structure();
 
         foreach ($fields as $field) {
             $ident = $field->ident();
@@ -212,6 +239,19 @@ class DatabaseSource extends AbstractSource
 
         // Return as boolean
         return !!$table_exists;
+    }
+
+    /**
+    * Get the table columns information.
+    *
+    * @return array
+    */
+    public function table_structure()
+    {
+        $q = 'SHOW COLUMNS FROM `'.$this->table().'`';
+        $res = $this->db()->query($q);
+        $cols = $res->fetchAll((PDO::FETCH_GROUP|PDO::FETCH_UNIQUE|PDO::FETCH_ASSOC));
+        return $cols;
     }
 
     /**
@@ -263,13 +303,20 @@ class DatabaseSource extends AbstractSource
         return self::$_dbs[$database_ident];
     }
 
-    private function _get_model_fields(ModelInterface $model)
+    /**
+    * Get all the fields of a model.
+    *
+    * @todo Move this method in StorableTrait or AbstractModel
+    */
+    private function _get_model_fields(ModelInterface $model, $properties = null)
     {
         $metadata = $model->metadata();
-        $properties = $metadata->properties();
-
+        if ($properties === null) {
+            $properties = array_keys($model->metadata()->properties());
+        }
+        
         $fields = [];
-        foreach ($properties as $property_ident => $property_options) {
+        foreach ($properties as $property_ident) {
             $p = $model->p($property_ident);
             $v = $model->property_value($property_ident);
             $p->set_val($v);
@@ -293,7 +340,12 @@ class DatabaseSource extends AbstractSource
         return $config;
     }
 
-
+    /**
+    * @param mixed $ident
+    * @param StoreableInterface $item Optional item to load into
+    * @throws Exception
+    * @return StorableInterface
+    */
     public function load_item($ident, StorableInterface $item = null)
     {
         if ($item !== null) {
@@ -303,19 +355,23 @@ class DatabaseSource extends AbstractSource
         }
 
         $q = '
-        select
-            *
-        from
-           `'.$this->table().'`
-        where
-           `'.$this->model()->key().'`=:ident
-        limit
-           1';
+            SELECT
+                *
+            FROM
+               `'.$this->table().'`
+            WHERE
+               `'.$this->model()->key().'`=:ident
+            LIMIT
+               1';
 
-        $sth = $this->db()->prepare($q);
-        $sth->bindParam(':ident', $ident);
-        $sth->setFetchMode(\PDO::FETCH_ASSOC);
-        $sth->execute();
+        $binds = [
+            'ident'=>$ident
+        ];
+        $sth = $this->db_query($q, $binds);
+        if ($sth === false) {
+            throw new Exception('Error');
+        }
+
         $data = $sth->fetch();
         if ($data) {
             $item->set_flat_data($data);
@@ -325,7 +381,10 @@ class DatabaseSource extends AbstractSource
     }
 
     /**
-    * @param StorableInterface $idem
+    * Save an item (create a new row) in storage.
+    *
+    *
+    * @param StorableInterface $item The object to save
     * @throws Exception if a database error occurs
     * @return mixed The created item ID, or false in case of an error
     */
@@ -340,13 +399,8 @@ class DatabaseSource extends AbstractSource
             $this->set_model($item);
         }
         $model = $this->model();
-        $table_structure = [];
 
-        $q = 'SHOW columns FROM `'.$this->table().'`';
-        $sth = $this->db()->query($q);
-        while ($field = $sth->fetchColumn(0)) {
-            $table_structure[] = $field;
-        }
+        $table_structure = array_keys($this->table_structure());
 
         $fields = $this->_get_model_fields($model);
 
@@ -372,17 +426,7 @@ class DatabaseSource extends AbstractSource
             VALUES
                 ('.implode(', ', $values).')';
 
-
-        $sth = $this->db()->prepare($q);
-        foreach ($binds as $k => $v) {
-            if ($binds[$k] === null) {
-                $binds[$k] = 'NULL';
-            } else if (!is_scalar($binds[$k])) {
-                $binds[$k] = json_encode($binds[$k]);
-            }
-            $sth->bindParam(':'.$k, $binds[$k], $binds_types[$k]); // Do not use $v to avoir reference error
-        }
-        $res = $sth->execute();
+        $res = $this->db_query($q, $binds, $binds_types);
 
         if ($res === false) {
             throw new Exception('Could not save item');
@@ -395,6 +439,13 @@ class DatabaseSource extends AbstractSource
         }
     }
 
+    /**
+    * Update an item in storage.
+    *
+    * @param StorableInterface $item The object to update
+    * @param array $properties The list of properties to update, if not all
+    * @return boolean Success / Failure
+    */
     public function update_item(StorableInterface $item, $properties = null)
     {
         if ($item !== null) {
@@ -402,18 +453,9 @@ class DatabaseSource extends AbstractSource
         }
         $model = $this->model();
 
-        $table_structure = [];
-        $q = 'SHOW columns FROM `'.$this->table().'`';
-        $sth = $this->db()->query($q);
-        while ($field = $sth->fetchColumn(0)) {
-            $table_structure[] = $field;
-        }
+        $table_structure = array_keys($this->table_structure());
 
-        $fields = $this->_get_model_fields($model);
-
-        if ($properties === null) {
-            $properties = array_keys($model->metadata()->properties());
-        }
+        $fields = $this->_get_model_fields($model, $properties);
 
         $updates = [];
         $binds = [];
@@ -430,25 +472,16 @@ class DatabaseSource extends AbstractSource
         }
 
         $q = '
-        UPDATE
-            `'.$this->table().'`
-        SET
-            '.implode(", \n\t", $updates).'
-        WHERE
-            `'.$model->key().'`=:id
-        LIMIT
-            1';
+            UPDATE
+                `'.$this->table().'`
+            SET
+                '.implode(", \n\t", $updates).'
+            WHERE
+                `'.$model->key().'`=:id
+            LIMIT
+                1';
 
-        $sth = $this->db()->prepare($q);
-        foreach ($binds as $k => $v) {
-            if ($binds[$k] === null) {
-                $binds[$k] = 'NULL';
-            } else if (!is_scalar($binds[$k])) {
-                $binds[$k] = json_encode($binds[$k]);
-            }
-            $sth->bindParam(':'.$k, $binds[$k], $binds_types[$k]); // Do not use $v to avoir reference error
-        }
-        $res = $sth->execute();
+        $res = $this->db_query($q, $binds, $binds_types);
 
         if ($res === false) {
             return false;
@@ -457,12 +490,22 @@ class DatabaseSource extends AbstractSource
         }
     }
 
-    public function delete_item(StorableInterface $item)
+    /**
+    * Delete an item from storage
+    *
+    * @param StorableInterface $item Optional item to delete. If none, the current model object will be used.
+    * @throws Exception
+    */
+    public function delete_item(StorableInterface $item = null)
     {
         if ($item !== null) {
             $this->set_model($item);
         }
         $model = $this->model();
+
+        if (!$model->id()) {
+            throw new Exception('Can not delete item. No ID.');
+        }
 
         $q = '
             DELETE FROM
@@ -470,17 +513,50 @@ class DatabaseSource extends AbstractSource
             WHERE
                 `'.$model->key().'` = :id
             LIMIT
-                1
-        ';
+                1';
 
-        $sth = db()->prepare($q);
-        $sth->bindParam(':id', $model->id());
-        $res = $sth->execute();
+        $binds = [
+            'id'=>$model->id()
+        ];
+
+        $res = $this->db_query($q, $binds);
 
         if ($res === false) {
             return false;
         } else {
             return true;
         }
+    }
+
+    /**
+    * Execute a SQL query, with PDO, and returns the PDOStatement.
+    *
+    * If the query fails, this method will return false.
+    *
+    * @param string $q The SQL query to executed
+    * @param array $binds
+    * @param array $binds_types
+    * @return PDOStatement|false The PDOStatement, or false in case of error
+    */
+    protected function db_query($q, $binds = [], $binds_types = [])
+    {
+        $sth = $this->db()->prepare($q);
+        if (!empty($binds)) {
+            foreach ($binds as $k => $v) {
+                if ($binds[$k] === null) {
+                    $binds[$k] = 'NULL';
+                } else if (!is_scalar($binds[$k])) {
+                    $binds[$k] = json_encode($binds[$k]);
+                }
+                $type = isset($binds_types[$k]) ? $binds_types[$k] : PDO::PARAM_STR;
+                $sth->bindParam(':'.$k, $binds[$k], $type);
+            }
+        }
+        $err = $sth->execute();
+        if ($err === false) {
+            return false;
+        }
+
+        return $sth;
     }
 }

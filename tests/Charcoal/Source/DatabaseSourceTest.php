@@ -12,6 +12,8 @@ class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
 {
     static public function setUpBeforeClass()
     {
+        //include 'DatabaseTestModel.php';
+
         Charcoal::config()->add_database('unit_test', [
             'username'=>'root',
             'password'=>'',
@@ -27,23 +29,28 @@ class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
         $obj->db()->query($q);
     }
 
-    public function testTableWithoutSetterThrowsException()
-    {
-        $this->setExpectedException('\Exception');
 
-        $obj = new DatabaseSource();
-        $obj->table();
-    }
 
     public function testSetDatabaseIdent()
     {
         $obj = new DatabaseSource();
+        $this->assertEquals('unit_test', $obj->database_ident());
+
         $ret = $obj->set_database_ident('foo');
         $this->assertSame($ret, $obj);
         $this->assertEquals('foo', $obj->database_ident());
 
         $this->setExpectedException('\InvalidArgumentException');
         $obj->set_database_ident(null);
+    }
+
+
+    public function testTableWithoutSetterThrowsException()
+    {
+        $this->setExpectedException('\Exception');
+
+        $obj = new DatabaseSource();
+        $obj->table();
     }
 
     public function testSetTable()
@@ -80,6 +87,9 @@ class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
                 'id'=>[
                     'type'=>'id'
                 ]
+            ],
+            'sources'=>[
+
             ]
         ]);
 
@@ -160,5 +170,34 @@ class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
         $ret = $obj->alter_table();
 
         $this->assertTrue($ret);
+    }
+
+    public function testSaveItem()
+    {
+        $model = new Object();
+        $model->set_metadata([
+            'properties'=>[
+                'id'=>[
+                    'type'=>'id',
+
+                ],
+                'name'=>[
+                    'type'=>'string',
+                    'max_length'=>300
+                ]
+            ]
+        ]);
+
+        $model->set_data([
+            //'id'=> NULL,
+            'name'=>'Mathieu Ducharme'
+        ]);
+
+        $obj = new DatabaseSource();
+        $obj->set_model($model);
+        $obj->set_table('test');
+        $ret = $obj->save_item($model);
+
+        //$this->assertTrue($ret);
     }
 }
