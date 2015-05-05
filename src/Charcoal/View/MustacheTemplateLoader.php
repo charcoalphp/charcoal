@@ -37,9 +37,16 @@ class MustacheTemplateLoader extends FileLoader implements Mustache_Loader
     */
     public function load($ident = null)
     {
+        if ($ident === '$widget_template') {
+            $ident = isset($GLOBALS['widget_template']) ? $GLOBALS['widget_template'] : null;
+            if ($ident === null) {
+                return '';
+            }
+        }
         if ($ident !== null) {
             $this->set_ident($ident);
         }
+        $ident = $this->ident();
 
         // Attempt loading from cache
         $ret = $this->cache_load();
@@ -64,6 +71,7 @@ class MustacheTemplateLoader extends FileLoader implements Mustache_Loader
         }
         $this->set_content($data);
         $this->cache_store();
+        unset($this->_content);
 
         return $data;
     }
