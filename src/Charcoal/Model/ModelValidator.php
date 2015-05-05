@@ -16,19 +16,22 @@ class ModelValidator extends AbstractValidator
     {
         $model = $this->_model;
 
-        //$model->validate($this);
-
         $props = $model->properties();
 
+        $ret = true;
         foreach ($props as $ident => $p) {
             if (!$p->active()) {
                 continue;
             }
+            $valid = $p->validate();
+            if ($valid === false) {
+                $validator = $p->validator();
+                $this->merge($validator, $ident);
+                $ret = false;
+            }
 
-            //$property_validator = $p->validator()->validate_model($p);
-            //$this->merge($property_validator, $ident);
         }
 
-        return $this;
+        return $ret;
     }
 }

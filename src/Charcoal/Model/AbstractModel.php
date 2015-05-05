@@ -169,10 +169,18 @@ abstract class AbstractModel implements
     public function save()
     {
         $pre = $this->pre_save();
-        $this->save_properties();
         if ($pre === false) {
             return false;
         }
+
+        $this->save_properties();
+
+        // Invalid models can not be saved.
+        $valid = $this->validate();
+        if ($valid === false) {
+            return false;
+        }
+
         $ret = $this->source()->save_item($this);
         if ($ret === false) {
             return false;

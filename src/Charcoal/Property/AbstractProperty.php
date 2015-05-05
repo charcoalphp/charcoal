@@ -2,6 +2,9 @@
 
 namespace Charcoal\Property;
 
+use \Exception as Exception;
+use \InvalidArgumentException as InvalidArgumentException;
+
 use \Charcoal\Property\PropertyInterface as PropertyInterface;
 use \Charcoal\Property\PropertyValidator as PropertyValidator;
 use \Charcoal\Property\PropertyView as PropertyView;
@@ -131,13 +134,13 @@ abstract class AbstractProperty implements
 
     /**
     * @param array $data
-    * @throws \InvalidArgumentException if the data parameter is not an array
+    * @throws InvalidArgumentException if the data parameter is not an array
     * @return Property Chainable
     */
     public function set_data($data)
     {
         if (!is_array($data)) {
-            throw new \InvalidArgumentException('Data must be an array');
+            throw new InvalidArgumentException('Data must be an array');
         }
 
         if (isset($data['val'])) {
@@ -173,26 +176,26 @@ abstract class AbstractProperty implements
 
     /**
     * @param string $ident
-    * @throws \InvalidArgumentException  if ident is not a string
+    * @throws InvalidArgumentException  if ident is not a string
     * @return AbstractProperty Chainable
     */
     public function set_ident($ident)
     {
         if (!is_string($ident)) {
-            throw new \InvalidArgumentException('Ident needs to be string');
+            throw new InvalidArgumentException('Ident needs to be string');
         }
         $this->_ident = $ident;
         return $this;
     }
 
     /**
-    * @throws \Exception if trying to access getter before setter
+    * @throws Exception if trying to access getter before setter
     * @return string
     */
     public function ident()
     {
         if ($this->_ident === null) {
-            throw new \Exception('Ident was never set');
+            throw new Exception('Ident was never set');
         }
         return $this->_ident;
     }
@@ -217,7 +220,7 @@ abstract class AbstractProperty implements
 
     /**
     * @param string $field_ident
-    * @throws \Exception if the value is not an array (therefore no field should be defined)
+    * @throws Exception if the value is not an array (therefore no field should be defined)
     * @return mixed
     */
     public function field_val($field_ident)
@@ -271,13 +274,13 @@ abstract class AbstractProperty implements
 
     /**
     * @param boolean
-    * @throws \InvalidArgumentException if the paramter is not a boolean
+    * @throws InvalidArgumentException if the paramter is not a boolean
     * @return Property (Chainable)
     */
     public function set_l10n($l10n)
     {
         if (!is_bool($l10n)) {
-            throw new \InvalidArgumentException('l10n must be a boolean');
+            throw new InvalidArgumentException('l10n must be a boolean');
         }
         $this->_l10n = $l10n;
         return $this;
@@ -293,13 +296,13 @@ abstract class AbstractProperty implements
 
     /**
     * @param boolean
-    * @throws \InvalidArgumentException if the paramter is not a boolean
+    * @throws InvalidArgumentException if the paramter is not a boolean
     * @return Property (Chainable)
     */
     public function set_hidden($hidden)
     {
         if (!is_bool($hidden)) {
-            throw new \InvalidArgumentException('hidden must be a boolean');
+            throw new InvalidArgumentException('hidden must be a boolean');
         }
         $this->hidden = $hidden;
         return $this;
@@ -315,13 +318,13 @@ abstract class AbstractProperty implements
 
     /**
     * @param boolean
-    * @throws \InvalidArgumentException if the paramter is not a boolean
+    * @throws InvalidArgumentException if the paramter is not a boolean
     * @return Property (Chainable)
     */
     public function set_multiple($multiple)
     {
         if (!is_bool($multiple)) {
-            throw new \InvalidArgumentException('multiple must be a boolean');
+            throw new InvalidArgumentException('multiple must be a boolean');
         }
         $this->multiple = $multiple;
         return $this;
@@ -337,13 +340,13 @@ abstract class AbstractProperty implements
 
     /**
     * @param boolean
-    * @throws \InvalidArgumentException if the paramter is not a boolean
+    * @throws InvalidArgumentException if the paramter is not a boolean
     * @return Property (Chainable)
     */
     public function set_allow_null($allow)
     {
         if (!is_bool($allow)) {
-            throw new \InvalidArgumentException('Allow null must be a boolean');
+            throw new InvalidArgumentException('Allow null must be a boolean');
         }
         $this->_allow_null = $allow;
         return $this;
@@ -359,13 +362,13 @@ abstract class AbstractProperty implements
 
     /**
     * @param array
-    * @throws \InvalidArgumentException if the paramter is not an array
+    * @throws InvalidArgumentException if the paramter is not an array
     * @return Property (Chainable)
     */
     public function set_multiple_options($multiple_options)
     {
         if (!is_array($multiple_options)) {
-            throw new \InvalidArgumentException('multiple options must be an array');
+            throw new InvalidArgumentException('multiple options must be an array');
         }
         $default_options = [
             'separator'    => ',',
@@ -387,13 +390,13 @@ abstract class AbstractProperty implements
     
     /**
     * @param boolean
-    * @throws \InvalidArgumentException if the paramter is not a boolean
+    * @throws InvalidArgumentException if the paramter is not a boolean
     * @return Property (Chainable)
     */
     public function set_required($required)
     {
         if (!is_bool($required)) {
-            throw new \InvalidArgumentException('required must be a boolean');
+            throw new InvalidArgumentException('required must be a boolean');
         }
         $this->_required = $required;
         return $this;
@@ -409,13 +412,13 @@ abstract class AbstractProperty implements
 
     /**
     * @param boolean
-    * @throws \InvalidArgumentException if the paramter is not a boolean
+    * @throws InvalidArgumentException if the paramter is not a boolean
     * @return Property (Chainable)
     */
     public function set_unique($unique)
     {
         if (!is_bool($unique)) {
-            throw new \InvalidArgumentException('unique must be a boolean');
+            throw new InvalidArgumentException('unique must be a boolean');
         }
         $this->unique = $unique;
         return $this;
@@ -431,13 +434,13 @@ abstract class AbstractProperty implements
 
     /**
     * @param boolean
-    * @throws \InvalidArgumentException if the paramter is not a boolean
+    * @throws InvalidArgumentException if the paramter is not a boolean
     * @return Property (Chainable)
     */
     public function set_active($active)
     {
         if (!is_bool($active)) {
-            throw new \InvalidArgumentException('active must be a boolean');
+            throw new InvalidArgumentException('active must be a boolean');
         }
         $this->active = $active;
         return $this;
@@ -468,7 +471,7 @@ abstract class AbstractProperty implements
                     'extra'=>$this->sql_extra(),
                     'val'=>$this->field_val($lang),
                     'default_val'=>null,
-                    'allow_null'=>true,
+                    'allow_null'=>$this->allow_null(),
                     'comment'=>$this->label()
                 ]);
                 $fields[$lang] = $field;
@@ -482,7 +485,7 @@ abstract class AbstractProperty implements
                 'extra'=>$this->sql_extra(),
                 'val'=>$this->storage_val(),
                 'default_val'=>null,
-                'allow_null'=>true,
+                'allow_null'=>$this->allow_null(),
                 'comment'=>$this->label()
             ]);
             $fields[] = $field;
@@ -493,21 +496,33 @@ abstract class AbstractProperty implements
 
     public function validation_methods()
     {
-        return [];
+        return ['unique', 'allow_null'];
     }
 
     /**
-    * @return string
+    * @return boolean
     */
-    abstract public function sql_extra();
+    public function validate_unique()
+    {
+        if (!$this->unique()) {
+            return true;
+        }
+
+        // @todo Check in model's storage if the value already exists.
+        return true;
+    }
+
     /**
-    * @return string
+    * @return boolean
     */
-    abstract public function sql_type();
-    /**
-    * @return integer
-    */
-    abstract public function sql_pdo_type();
+    public function validate_allow_null()
+    {
+        if (!$this->allow_null() && $this->val() === null) {
+            $this->validator()->error('Value can not be null', 'allow_null');
+            return false;
+        }
+        return true;
+    }
 
     /**
     *
@@ -551,5 +566,20 @@ abstract class AbstractProperty implements
         return $view;
     }
 
+    /**
+    * @return string
+    */
+    abstract public function sql_extra();
+    /**
+    * @return string
+    */
+    abstract public function sql_type();
+    /**
+    * @return integer
+    */
+    abstract public function sql_pdo_type();
+    /**
+    * @return mixed
+    */
     abstract public function save();
 }

@@ -34,25 +34,25 @@ abstract class AbstractValidator implements ValidatorInterface
         $this->_results = [];
     }
 
-    public function error($msg)
+    public function error($msg, $ident = null)
     {
-        return $this->log(self::ERROR, $msg);
+        return $this->log(self::ERROR, $msg, $ident);
     }
 
-    public function warning($msg)
+    public function warning($msg, $ident = null)
     {
-        return $this->log(self::WARNING, $msg);
+        return $this->log(self::WARNING, $msg, $ident);
     }
 
-    public function notice($msg)
+    public function notice($msg, $ident = null)
     {
-        return $this->log(self::NOTICE, $msg);
+        return $this->log(self::NOTICE, $msg, $ident);
     }
 
-    public function log($level, $msg)
+    public function log($level, $msg, $ident = null)
     {
         $this->add_result([
-            'ident'=>'',
+            'ident'=>(($ident !== null) ? $ident : ''),
             'level'=>$level,
             'message'=>$msg
         ]);
@@ -75,7 +75,7 @@ abstract class AbstractValidator implements ValidatorInterface
         if (!isset($this->_results[$level])) {
             $this->_results[$level] = [];
         }
-        $this->results[$level][] = $result;
+        $this->_results[$level][] = $result;
         return $this;
     }
 
@@ -120,15 +120,18 @@ abstract class AbstractValidator implements ValidatorInterface
         return $this->_results[self::NOTICE];
     }
 
-    public function merge(ValidatorInterface $v, $ident)
+    public function merge(ValidatorInterface $v, $ident_prefix = null)
     {
         $results = $v->results();
-        foreach ($results as $level => $res) {
-            foreach ($res as $r) {
-                $r->ident = $ident;
-                $this->_results[$level][] = $r;
+        foreach ($results as $level => $level_results) {
+            foreach ($level_results as $r) {
+                if ($ident_prefix !== null) {
+                    $r->set_ident($ident_prefix.'.'.$r->ident());
+                }
+                $this->add_result($r);
             }
         }
+        return $this;
     }
 
     abstract public function validate();
