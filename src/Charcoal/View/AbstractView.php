@@ -23,7 +23,7 @@ abstract class AbstractView implements ViewInterface
     const ENGINE_PHP_MUSTACHE = 'php_mustache';
     const ENGINE_PHP = 'php';
     
-    private $_engine = self::ENGINE_PHP_MUSTACHE;
+    private $_engine = self::ENGINE_MUSTACHE;
 
     private $_template;
     private $_context;
@@ -173,7 +173,15 @@ abstract class AbstractView implements ViewInterface
 
             'logger' => Charcoal::logger(),
 
-            'strict_callables' => true
+            'strict_callables' => true,
+
+            'helpers'=>[
+                '_t'=>function($str)
+                {
+                    // @todo Translate
+                    return $str;
+                }
+            ]
         ]);
         $controller = $this->controller();
         //var_dump($controller->length());

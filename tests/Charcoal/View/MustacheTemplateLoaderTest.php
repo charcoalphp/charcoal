@@ -34,7 +34,7 @@ class MustacheTemplateLoaderTest extends \PHPUnit_Framework_TestCase
         $obj = new MustacheTemplateLoader();
         $ret = $obj->load('foo');
 
-        $expected = file_get_contents(__DIR__.'/templates/foo.php');
+        $expected = file_get_contents(__DIR__.'/templates/foo.mustache');
         $this->assertEquals($expected, $ret);
     }
 }
