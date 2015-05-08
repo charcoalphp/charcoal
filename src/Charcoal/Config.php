@@ -2,7 +2,9 @@
 
 namespace Charcoal;
 
-class Config implements \ArrayAccess
+use \Charcoal\Config\AbstractConfig as AbstractConfig;
+
+class Config extends AbstractConfig implements \ArrayAccess
 {
     const DEFAULT_APPLICATION_ENV = 'live';
 
@@ -26,15 +28,10 @@ class Config implements \ArrayAccess
 
     public function __construct($config = null)
     {
+        // Default data
         $this->add_file(__DIR__.'/../../config/config.default.json');
 
-        if ($config !== null) {
-            if (is_string($config)) {
-                $this->add_file($config);
-            } else if (is_array($config)) {
-                $this->set_data($config);
-            }
-        }
+        parent::__construct($config);
 
     }
 
@@ -89,33 +86,6 @@ class Config implements \ArrayAccess
 
         foreach ($data as $k => $v) {
             $this->{$k} = $v;
-        }
-
-        return $this;
-    }
-
-    /**
-    * @param string $filename
-    * @throws \InvalidArgumentException if the filename is not a string or not valid json / php
-    * @return Config (Chainable)
-    * @todo Load with Flysystem
-    */
-    public function add_file($filename)
-    {
-        if (!is_string($filename)) {
-            throw new \InvalidArgumentException('');
-        }
-
-        if (pathinfo($filename, PATHINFO_EXTENSION) == 'php') {
-            include $filename;
-        } else if (pathinfo($filename, PATHINFO_EXTENSION) == 'json') {
-            if (file_exists($filename)) {
-                $file_content = file_get_contents($filename);
-                $config = json_decode($file_content, true);
-                $this->set_data($config);
-            }
-        } else {
-            throw new \InvalidArgumentException('Only json and php files are accepted as config file.');
         }
 
         return $this;

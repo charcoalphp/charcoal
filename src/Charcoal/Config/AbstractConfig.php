@@ -3,6 +3,7 @@
 namespace Charcoal\Config;
 
 use \ArrayAccess as ArrayAccess;
+use \InvalidArgumentException as InvalidArgumentException;
 
 use \Charcoal\Config\ConfigInterface as ConfigInterface;
 
@@ -17,20 +18,22 @@ abstract class AbstractConfig implements
 {
     
     /**
-    * @param array $data Optional default data, as `[$key=>$val]` array
-    * @throws \InvalidArgumentException if data is not an array
+    * @param array|string|null $data Optional default data, as `[$key=>$val]` array
+    * @throws InvalidArgumentException if data is not an array
     */
-    final public function __construct($data = null)
+    public function __construct($data = null)
     {
-        if (is_array($data)) {
+        if (is_string($data)) {
+            $this->add_file($data);
+        } else if (is_array($data)) {
              $data = array_merge($this->default_data(), $data);
+             $this->set_data($data);
         } else if ($data === null) {
             $data = $this->default_data();
+            $this->set_data($data);
         } else {
-            throw new \InvalidArgumentException('Data must be an array');
+            throw new InvalidArgumentException('Data must be an array');
         }
-
-        $this->set_data($data);
     }
 
     abstract public function set_data($data);
@@ -47,13 +50,13 @@ abstract class AbstractConfig implements
     * ArrayAccess > offsetExists()
     *
     * @param string $offset
-    * @throws \InvalidArgumentException if $offset is not a string / numeric
+    * @throws InvalidArgumentException if $offset is not a string / numeric
     * @return boolean
     */
     public function offsetExists($offset)
     {
         if (is_numeric($offset)) {
-            throw new \InvalidArgumentException('Config array access only supports non-numeric keys');
+            throw new InvalidArgumentException('Config array access only supports non-numeric keys');
         }
         return isset($this->{$offset});
     }
@@ -62,13 +65,13 @@ abstract class AbstractConfig implements
     * ArrayAccess > offsetGet()
     *
     * @param string $offset
-    * @throws \InvalidArgumentException if $offset is not a string / numeric
+    * @throws InvalidArgumentException if $offset is not a string / numeric
     * @return mixed The value (or null)
     */
     public function offsetGet($offset)
     {
         if (is_numeric($offset)) {
-            throw new \InvalidArgumentException('Config array access only supports non-numeric keys');
+            throw new InvalidArgumentException('Config array access only supports non-numeric keys');
         }
         return isset($this->{$offset}) ? $this->{$offset} : null;
     }
@@ -78,12 +81,12 @@ abstract class AbstractConfig implements
     *
     * @param string $offset
     * @param mixed $value
-    * @throws \InvalidArgumentException if $offset is not a string / numeric
+    * @throws InvalidArgumentException if $offset is not a string / numeric
     */
     public function offsetSet($offset, $value)
     {
         if (is_numeric($offset)) {
-            throw new \InvalidArgumentException('Config array access only supports non-numeric keys');
+            throw new InvalidArgumentException('Config array access only supports non-numeric keys');
         }
         $this->{$offset} = $value;
     }
@@ -92,14 +95,41 @@ abstract class AbstractConfig implements
     * ArrayAccess > offsetUnset()
     *
     * @param string $offset
-    * @throws \InvalidArgumentException if $offset is not a string / numeric
+    * @throws InvalidArgumentException if $offset is not a string / numeric
     */
     public function offsetUnset($offset)
     {
         if (is_numeric($offset)) {
-            throw new \InvalidArgumentException('Config array access only supports non-numeric keys');
+            throw new InvalidArgumentException('Config array access only supports non-numeric keys');
         }
         $this->{$offset} = null;
         unset($this->{$offset});
+    }
+
+    /**
+    * @param string $filename
+    * @throws InvalidArgumentException if the filename is not a string or not valid json / php
+    * @return AbstractConfig (Chainable)
+    * @todo Load with Flysystem
+    */
+    public function add_file($filename)
+    {
+        if (!is_string($filename)) {
+            throw new InvalidArgumentException('');
+        }
+
+        if (pathinfo($filename, PATHINFO_EXTENSION) == 'php') {
+            include $filename;
+        } else if (pathinfo($filename, PATHINFO_EXTENSION) == 'json') {
+            if (file_exists($filename)) {
+                $file_content = file_get_contents($filename);
+                $config = json_decode($file_content, true);
+                $this->set_data($config);
+            }
+        } else {
+            throw new InvalidArgumentException('Only json and php files are accepted as config file.');
+        }
+
+        return $this;
     }
 }
