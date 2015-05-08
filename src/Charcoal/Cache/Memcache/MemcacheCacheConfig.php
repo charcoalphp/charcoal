@@ -2,6 +2,8 @@
 
 namespace Charcoal\Cache\Memcache;
 
+use \InvalidArgumentException as InvalidArgumentException;
+
 use \Charcoal\Cache\CacheConfig as CacheConfig;
 use \Charcoal\Cache\Memcache\MemcacheCacheServerConfig;
 
@@ -16,7 +18,7 @@ class MemcacheCacheConfig extends CacheConfig
     */
     public function default_data()
     {
-        return array_merge(parent::default_data(), [
+        $default_data =  array_merge(parent::default_data(), [
             'servers'=>[[
                 'host'          => 'localhost',
                 'port'          => 11211,
@@ -24,10 +26,19 @@ class MemcacheCacheConfig extends CacheConfig
                 'weight'        => 1
             ]]
         ]);
+        return $default_data;
     }
 
+    /**
+    * @param array $data
+    * @throws InvalidArgumentException
+    * @return MemcacheCacheConfig Chainable
+    */
     public function set_data($data)
     {
+        if (!is_array($data)) {
+            throw new InvalidArgumentException('Data must be an array');
+        }
         parent::set_data($data);
 
         if (isset($data['servers']) && $data['servers'] !== null) {
@@ -39,13 +50,13 @@ class MemcacheCacheConfig extends CacheConfig
 
     /**
     * @param array $servers
-    * @throws \InvalidArgumentException if $servers is not an array
+    * @throws InvalidArgumentException if $servers is not an array
     * @return MemcacheCacheConfig Chainable
     */
     public function set_servers($servers)
     {
         if (!is_array($servers)) {
-            throw new \InvalidArgumentException('Servers must be an array');
+            throw new InvalidArgumentException('Servers must be an array');
         }
         $this->_servers = [];
         foreach ($servers as $server) {
@@ -68,7 +79,7 @@ class MemcacheCacheConfig extends CacheConfig
     * Add a server, from config or array, to the memcache available server pool.
     *
     * @param array|MemcacheCacheServerConfig $server
-    * @throws \InvalidArgumentException if $server is not a proper array or object
+    * @throws InvalidArgumentException if $server is not a proper array or object
     * @return MemcacheCacheConfig Chainable
     */
     public function add_server($server)
@@ -79,7 +90,7 @@ class MemcacheCacheConfig extends CacheConfig
         } else if (($server instanceof MemcacheCacheServerConfig)) {
             $this->_servers[] = $server;
         } else {
-            throw new \InvalidArgumentException('Server must be an array or an object');
+            throw new InvalidArgumentException('Server must be an array or an object');
         }
         return $this;
     }

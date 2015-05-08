@@ -2,6 +2,8 @@
 
 namespace Charcoal\Cache\Memcache;
 
+use \Exception as Exception;
+use \InvalidArgumentException as InvalidArgumentException;
 use \Memcache as Memcache;
 
 use \Charcoal\Cache\AbstractCache as AbstractCache;
@@ -14,9 +16,19 @@ use \Charcoal\Cache\Memcache\MemCacheCacheServerConfig as MemCacheCacheServerCon
 */
 class MemcacheCache extends AbstractCache
 {
+    /**
+    * @var boolean $_enabled
+    */
     private $_enabled;
+    /**
+    * Copy ot the Memcache object
+    */
     private $_memcache;
 
+    /**
+    * @throws Exception
+    * @return MemcacheCache|false
+    */
     public function init()
     {
         if (!$this->enabled()) {
@@ -26,12 +38,12 @@ class MemcacheCache extends AbstractCache
         $cfg = $this->config();
 
         $this->_memcache = new Memcache();
-        $servers = $cfg->servers;
+        $servers = $cfg->servers();
         if (count($servers) == 0) {
-            throw new \Exception('Memcache: no server(s) defined');
+            throw new Exception('Memcache: no server(s) defined');
         }
         foreach ($cfg->servers() as $s) {
-            $this->_add_server($s);
+            $this->add_server($s);
         }
         return $this;
     }
@@ -43,15 +55,13 @@ class MemcacheCache extends AbstractCache
     */
     public function enabled()
     {
-        if ($this->_enabled !== null) {
-            return $this->_enabled;
+        if ($this->config()->active() === false) {
+            return false;
         }
-        $active = $this->config()->active();
-        if (!$active) {
-            $this->_enabled = false;
-            return true;
+        if ($this->_enabled === null) {
+            $this->_enabled = !!class_exists('Memcache');
         }
-        $this->_enabled = !!class_exists('Memcache');
+        
         return $this->_enabled;
     }
 
@@ -111,7 +121,7 @@ class MemcacheCache extends AbstractCache
     /**
     * Fetch, or load, data from the cache.
     *
-    * @param string $key The cache key to fetch
+    * @param array $keys The cache keys to fetch
     * @return mixed The data that was stored in the cache. Null if non-existent.
     */
     public function multifetch($keys)
@@ -125,7 +135,7 @@ class MemcacheCache extends AbstractCache
         foreach ($keys as $k) {
             $pkeys[] = $prefix.$k;
         }
-        return $this->_memcache->getMulti($pkeys);
+        return $this->_memcache->get($pkeys);
     }
 
 
@@ -165,7 +175,7 @@ class MemcacheCache extends AbstractCache
 
     /**
     * @param array|MemcacheCacheServerConfig $server
-    * @throws \InvalidArgumentException if server is not a proper array or object
+    * @throws InvalidArgumentException if server is not a proper array or object
     * @return boolean
     */
     public function add_server($server)
@@ -174,30 +184,27 @@ class MemcacheCache extends AbstractCache
             $server = new MemCacheCacheServerConfig($server);
         }
         if (!($server instanceof MemCacheCacheServerConfig)) {
-            throw new \InvalidArgumentException('Invalid server');
+            throw new InvalidArgumentException('Invalid server');
         }
-        $hostname = $server->hostname();
+        $host = $server->host();
         $port = $server->port();
         $persistent = $server->persistent();
         $weight = $server->weight();
 
-        return $this->_memcache->addServer($hostname, $port, $persistent, $weight);
+        return $this->_memcache->addServer($host, $port, $persistent, $weight);
     }
 
     /**
-    * ConfigurableInterface > config()
+    * ConfigurableInterface > create_config()
     */
-    public function config()
+    public function create_config($data = null)
     {
-        if ($this->_config === null) {
-            $this->_config = new MemcacheCacheConfig();
+        $config = new MemcacheCacheConfig();
+        if ($data !== null) {
+            $config->set_data($data);
         }
-        return $this->_config;
-    }
 
-    protected function _config_from_array($config)
-    {
-        $config = new MemcacheCacheConfig($config);
         return $config;
     }
+
 }

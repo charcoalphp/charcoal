@@ -13,4 +13,24 @@ class MemcacheCacheConfigTest extends \PHPUnit_Framework_TestCase
 
         //$this->assertEquals(1, count($obj->servers()));
     }
+
+    public function testSetData()
+    {
+        $obj = new MemcacheCacheConfig();
+        $ret = $obj->set_data([]);
+        $this->assertSame($ret, $obj);
+
+        $this->setExpectedException('\InvalidArgumentException');
+        $obj->set_data(false);
+    }
+
+    public function testAddServer()
+    {
+        $obj = new MemcacheCacheConfig();
+        $ret = $obj->add_server([]);
+        $this->assertSame($ret, $obj);
+
+        $this->setExpectedException('\InvalidArgumentException');
+        $obj->add_server(false);
+    }
 }

@@ -30,6 +30,7 @@ abstract class AbstractCache implements
     protected function __construct()
     {
         // Protected
+        $this->init();
     }
 
     static public function instance()
