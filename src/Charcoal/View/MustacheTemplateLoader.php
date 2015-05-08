@@ -13,7 +13,6 @@ use \Charcoal\Loader\FileLoader as FileLoader;
 */
 class MustacheTemplateLoader extends FileLoader implements Mustache_Loader
 {
-
     /**
     * FileLoader > search_path()
     *

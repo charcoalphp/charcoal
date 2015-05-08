@@ -6,6 +6,18 @@ use \Charcoal\View\ViewInterface as ViewInterface;
 
 interface ViewableInterface
 {
+
+    /**
+    * @param string $engine
+    * @return ViewableInterface Chainable
+    */
+    public function set_template_engine($engine);
+
+    /**
+    * @return string The template engine (`mustache`, `php`, or `php_mustache`)
+    */
+    public function template_engine();
+
     /**
     * @param ViewInterface $view
     * @return ViewableInterface Chainable

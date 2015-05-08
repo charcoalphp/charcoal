@@ -7,6 +7,7 @@ use \Mustache_Engine as Mustache_Engine;
 use \Charcoal\Charcoal as Charcoal;
 
 use \Charcoal\View\MustachePartialsLoader as MustachePartialsLoader;
+use \Charcoal\View\ViewableInterface as ViewableInterface;
 use \Charcoal\View\ViewInterface as ViewInterface;
 use \Charcoal\View\ViewControllerInterface as ViewControllerInterface;
 
@@ -22,8 +23,13 @@ abstract class AbstractView implements ViewInterface
     const ENGINE_MUSTACHE = 'mustache';
     const ENGINE_PHP_MUSTACHE = 'php_mustache';
     const ENGINE_PHP = 'php';
+
+    const DEFAULT_ENGINE = self::ENGINE_MUSTACHE;
     
-    private $_engine = self::ENGINE_MUSTACHE;
+    /**
+    * @var string $_engine
+    */
+    private $_engine = self::DEFAULT_ENGINE;
 
     private $_template;
     private $_context;
@@ -60,6 +66,9 @@ abstract class AbstractView implements ViewInterface
             throw new \InvalidArgumentException('Data needs to be an array');
         }
 
+        if (isset($data['engine']) && $data['engine'] !== null) {
+            $this->set_engine($data['engine']);
+        }
         if (isset($data['template']) && $data['template'] !== null) {
             $this->set_template($data['template']);
         }
@@ -68,6 +77,28 @@ abstract class AbstractView implements ViewInterface
         }
 
         return $this;
+    }
+
+    /**
+    * @param string $engine
+    * @throws InvalidArgumentException
+    * @return AbstractView Chainable
+    */
+    public function set_engine($engine)
+    {
+        if (!is_string($engine)) {
+            throw new InvalidArgumentException('Engine must be a string');
+        }
+        $this->_engine = $engine;
+        return $this;
+    }
+
+    /**
+    * @return string
+    */
+    public function engine()
+    {
+        return $this->_engine;
     }
 
     /**
@@ -106,6 +137,9 @@ abstract class AbstractView implements ViewInterface
     public function set_context($context)
     {
         $this->_context = $context;
+        if ($context instanceof ViewableInterface) {
+            $this->set_engine($context->template_engine());
+        }
         return $this;
     }
 
@@ -165,27 +199,30 @@ abstract class AbstractView implements ViewInterface
             $this->set_context($context);
         }
 
-        $mustache = new Mustache_Engine([
-            'cache' => 'mustache_cache',
-            
-            //'loader' =>  null,
-            'partials_loader' => new MustacheTemplateLoader(),
+        $engine = $this->engine();
+        if ($engine == self::ENGINE_MUSTACHE || $engine == self::ENGINE_PHP_MUSTACHE) {
+            $mustache = new Mustache_Engine([
+                'cache' => 'mustache_cache',
+                
+                //'loader' =>  null,
+                'partials_loader' => new MustacheTemplateLoader(),
 
-            'logger' => Charcoal::logger(),
+                'logger' => Charcoal::logger(),
 
-            'strict_callables' => true,
+                'strict_callables' => true,
 
-            'helpers'=>[
-                '_t'=>function($str)
-                {
-                    // @todo Translate
-                    return $str;
-                }
-            ]
-        ]);
-        $controller = $this->controller();
-        //var_dump($controller->length());
-        return $mustache->render($this->template(), $controller);
+                'helpers'=>[
+                    '_t'=>function($str) {
+                        // @todo Translate
+                        return $str;
+                    }
+                ]
+            ]);
+            $controller = $this->controller();
+            return $mustache->render($this->template(), $controller);
+        } else {
+            return $this->template();
+        }
     }
 
     /**
@@ -206,8 +243,8 @@ abstract class AbstractView implements ViewInterface
     */
     public function from_ident($ident)
     {
-        $this->load_template($ident);
         $this->load_context($ident);
+        $this->load_template($ident);
 
         return $this;
     }

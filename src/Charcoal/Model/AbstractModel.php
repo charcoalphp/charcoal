@@ -47,6 +47,7 @@ abstract class AbstractModel implements
     public function __construct($data = null)
     {
         if ($data !== null) {
+            $this->set_viewable_data($data);
             $this->set_data($data);
         }
         // Fix bug @todo

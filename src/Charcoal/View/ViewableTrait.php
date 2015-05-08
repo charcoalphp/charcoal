@@ -2,6 +2,9 @@
 
 namespace Charcoal\View;
 
+use \InvalidArgumentException as InvalidArgumentException;
+
+use \Charcoal\View\AbstractView as AbstractView;
 use \Charcoal\View\ViewInterface as ViewInterface;
 
 /**
@@ -13,9 +16,39 @@ use \Charcoal\View\ViewInterface as ViewInterface;
 trait ViewableTrait
 {
     /**
-    * @var ViewInterface
+    * @var string $_template_engine
+    */
+    protected $_template_engine;
+
+    /**
+    * @var ViewInterface $_view
     */
     protected $_view;
+
+    public function set_viewable_data($data)
+    {
+        if (isset($data['template_engine']) && $data['template_engine'] !== null) {
+            $this->set_template_engine($data['template_engine']);
+        }
+        return $this;
+    }
+
+    public function set_template_engine($engine)
+    {
+        if (!is_string($engine)) {
+            throw new InvalidArgumentException('Engine must be a string');
+        }
+        $this->_template_engine = $engine;
+        return $this;
+    }
+
+    public function template_engine()
+    {
+        if ($this->_template_engine === null) {
+            $this->_template_engine = AbstractView::DEFAULT_ENGINE;
+        }
+        return $this->_template_engine;
+    }
 
     /**
     * @param ViewInterface $view

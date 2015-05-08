@@ -2,6 +2,7 @@
 
 namespace Charcoal\Tests\View;
 
+use \Charcoal\View\AbstractView as AbstractView;
 
 class ViewableTraitTest extends \PHPUnit_Framework_TestCase
 {
@@ -9,7 +10,8 @@ class ViewableTraitTest extends \PHPUnit_Framework_TestCase
 
     static public function setUpBeforeClass()
     {
-        include 'ViewableClass.php';
+        include_once 'ViewableClass.php';
+        include_once 'AbstractViewClass.php';
     }
 
     public function setUp()
@@ -23,9 +25,20 @@ class ViewableTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Charcoal\Tests\View\ViewableClass', $obj);
     }
 
+    public function testSetTemplateEngine()
+    {
+        $obj = $this->obj;
+        $this->assertEquals(AbstractView::DEFAULT_ENGINE, $obj->template_engine());
+        $ret = $obj->set_template_engine('php');
+        $this->assertSame($ret, $obj);
+        $this->assertEquals('php', $obj->template_engine());
+
+        $this->setExpectedException('\InvalidArgumentException');
+        $obj->set_template_engine(false);
+    }
+
     public function testSetView()
     {
-        include_once 'AbstractViewClass.php';
         $obj = $this->obj;
         $view = new AbstractViewClass();
         $ret = $obj->set_view($view);
