@@ -1,6 +1,9 @@
 <?php
 namespace Charcoal;
 
+use \Exception as Exception;
+use \InvalidArgumentException as InvalidArgumentException;
+
 use \Slim\Slim as Slim;
 use \Charcoal\Config as Config;
 
@@ -70,10 +73,13 @@ class Charcoal
         }
     }
 
-    static public function config()
+    static public function config($opt=null)
     {
         if (self::$_config === null) {
-            throw new \Exception('Config has not been set. Call Charcoal::init() first.');
+            throw new Exception('Config has not been set. Call Charcoal::init() first.');
+        }
+        if($opt !== null) {
+            return self::$_config[$opt];
         }
         return self::$_config;
     }

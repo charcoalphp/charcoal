@@ -11,6 +11,8 @@ class Config extends AbstractConfig implements \ArrayAccess
     public $ROOT;
     public $URL;
 
+    private $_admin_path;
+
     private $_project_name;
     private $_dev_mode;
 
@@ -37,12 +39,24 @@ class Config extends AbstractConfig implements \ArrayAccess
 
     public function offsetExists($offset)
     {
-        return isset($this->{$offset});
+        $f = [$this, $offset];
+        if(is_callable($f)) {
+            return true;
+        }
+        else {
+            return isset($this->{$offset});
+        }
     }
 
     public function offsetGet($offset)
     {
-        return isset($this->{$offset}) ? $this->{$offset} : null;
+        $f = [$this, $offset];
+        if(is_callable($f)) {
+            return call_user_func($f);
+        }
+        else {
+            return isset($this->{$offset}) ? $this->{$offset} : null;
+        }
     }
 
     public function offsetSet($offset, $value)
@@ -58,6 +72,9 @@ class Config extends AbstractConfig implements \ArrayAccess
 
     public function set_data($data)
     {
+        if(isset($data['admin_path']) && $data['admin_path'] !== null) {
+            $this->set_admin_path($data['admin_path']);
+        }
         if (isset($data['dev_mode'])) {
             $this->set_dev_mode($data['dev_mode']);
             unset($data['dev_mode']);
@@ -108,6 +125,20 @@ class Config extends AbstractConfig implements \ArrayAccess
             $application_env = self::DEFAULT_APPLICATION_ENV;
         }
         return $application_env;
+    }
+
+    public function set_admin_path($admin_path)
+    {
+        if(!is_string($admin_path)) {
+            throw new \InvalidArgumentException('Admin path must be a string');
+        }
+        $this->_admin_path = $admin_path;
+        return $this;
+    }
+
+    public function admin_path()
+    {
+        return $this->_admin_path;
     }
 
     public function set_dev_mode($dev_mode)

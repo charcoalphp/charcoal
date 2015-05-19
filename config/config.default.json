@@ -1,6 +1,8 @@
 {
 	"project_name":"Boilerplate",
 
+	"admin_path":"admin",
+
 	"dev_mode":false,
 
 	"languages":{
