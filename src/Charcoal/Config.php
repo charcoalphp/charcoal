@@ -40,10 +40,9 @@ class Config extends AbstractConfig implements \ArrayAccess
     public function offsetExists($offset)
     {
         $f = [$this, $offset];
-        if(is_callable($f)) {
+        if (is_callable($f)) {
             return true;
-        }
-        else {
+        } else {
             return isset($this->{$offset});
         }
     }
@@ -51,10 +50,9 @@ class Config extends AbstractConfig implements \ArrayAccess
     public function offsetGet($offset)
     {
         $f = [$this, $offset];
-        if(is_callable($f)) {
+        if (is_callable($f)) {
             return call_user_func($f);
-        }
-        else {
+        } else {
             return isset($this->{$offset}) ? $this->{$offset} : null;
         }
     }
@@ -72,7 +70,7 @@ class Config extends AbstractConfig implements \ArrayAccess
 
     public function set_data($data)
     {
-        if(isset($data['admin_path']) && $data['admin_path'] !== null) {
+        if (isset($data['admin_path']) && $data['admin_path'] !== null) {
             $this->set_admin_path($data['admin_path']);
         }
         if (isset($data['dev_mode'])) {
@@ -129,7 +127,7 @@ class Config extends AbstractConfig implements \ArrayAccess
 
     public function set_admin_path($admin_path)
     {
-        if(!is_string($admin_path)) {
+        if (!is_string($admin_path)) {
             throw new \InvalidArgumentException('Admin path must be a string');
         }
         $this->_admin_path = $admin_path;

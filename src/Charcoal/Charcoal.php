@@ -73,12 +73,12 @@ class Charcoal
         }
     }
 
-    static public function config($opt=null)
+    static public function config($opt = null)
     {
         if (self::$_config === null) {
             throw new Exception('Config has not been set. Call Charcoal::init() first.');
         }
-        if($opt !== null) {
+        if ($opt !== null) {
             return self::$_config[$opt];
         }
         return self::$_config;
