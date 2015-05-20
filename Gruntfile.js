@@ -55,6 +55,7 @@ module.exports = function(grunt) {
 
 			options: {
 				colors: true,
+				coverageClover:'build/logs/clover.xml',	
 				coverageHtml:'tests/tmp/report/',
 				//coverageText:'tests/tmp/report/',
 				testdoxHtml:'tests/tmp/testdox.html',

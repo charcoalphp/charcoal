@@ -16,7 +16,7 @@
 	</testsuites>
 	<logging>
 		<log type="coverage-html" target="tmp/report" charset="UTF-8" highlight="true" lowUpperBound="45" highLowerBound="60" showUncoveredFiles="true"/>
-		<!--<log type="coverage-clover" target="tmp/coverage.xml"/>-->
+		<log type="coverage-clover" target="tmp/coverage.xml"/>
 		<!--<log type="coverage-php" target="tmp/coverage.serialized"/>-->
 		<!--<log type="coverage-text" target="php://stdout" showUncoveredFiles="false"/>-->
 		<!--<log type="json" target="tmp/logfile.json"/>-->
