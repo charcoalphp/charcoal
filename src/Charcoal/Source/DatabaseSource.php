@@ -157,7 +157,6 @@ class DatabaseSource extends AbstractSource
         $model = $this->model();
         $metadata = $model->metadata();
         $fields = $this->_get_model_fields($model);
-
         $fields__sql = [];
         foreach ($fields as $field) {
             $fields_sql[] = $field->sql();
@@ -173,6 +172,7 @@ class DatabaseSource extends AbstractSource
         }
         // @todo add indexes for all defined list constraints (yea... tough job...)
         $q .= ') ENGINE = MYISAM DEFAULT CHARSET=utf8 COMMENT=\''.addslashes($metadata['name']).'\';';
+        //var_dump($q);
         $res = $this->db()->query($q);
 
         return true;
@@ -199,6 +199,7 @@ class DatabaseSource extends AbstractSource
             if (!array_key_exists($ident, $cols)) {
                 // The key does not exist at all.
                 $q = 'ALTER TABLE `'.$this->table().'` ADD '.$field->sql();
+                //var_dump($q);
                 $res = $this->db()->query($q);
             } else {
                 // The key exists. Validate.
@@ -219,6 +220,7 @@ class DatabaseSource extends AbstractSource
 
                 if ($alter === true) {
                     $q = 'ALTER TABLE `'.$this->table().'` CHANGE `'.$ident.'` '.$field->sql();
+                    //var_dump($q);
                     $res = $this->db()->query($q);
                 }
 
