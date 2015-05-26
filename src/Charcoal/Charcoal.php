@@ -47,8 +47,6 @@ class Charcoal
             self::init_app();
         }
 
-
-
         date_default_timezone_set(self::config()->timezone());
         mb_internal_encoding('UTF-8');
     }
@@ -129,13 +127,11 @@ class Charcoal
     */
     static public function init_app()
     {
-        self::$_app = new Slim(
-            [
-            'mode'    => self::config()->application_env(),
-            'debug'    => self::config()->dev_mode(),
+        self::$_app = new Slim([
+            'mode'  => self::config()->application_env(),
+            'debug' => self::config()->dev_mode(),
             //'log.writer' => self::logger()
-            ]
-        );
+        ]);
     }
 
     /**
