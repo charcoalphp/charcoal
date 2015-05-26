@@ -269,6 +269,9 @@ abstract class AbstractProperty implements
     */
     public function label()
     {
+        if ($this->_label === null) {
+            return ucwords(str_replace(['.', '_'], ' ', $this->ident()));
+        }
         return $this->_label;
     }
 
