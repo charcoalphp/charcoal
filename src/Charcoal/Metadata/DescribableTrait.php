@@ -147,23 +147,21 @@ trait DescribableTrait
     * Return an array of `PropertyInterface`
     *
     * @param boolean
-    * @return array
     */
     public function properties()
     {
-        $this->metadata();
+        //$this->metadata();
         $props = $this->metadata()->properties();
 
         if (empty($props)) {
-            return [];
+            yield null;
         }
 
         $properties = [];
         foreach ($props as $property_ident => $opts) {
             // Get the property object of this definition
-            $properties[$property_ident] = $this->property($property_ident);
+            yield $property_ident => $this->property($property_ident);
         }
-        return $properties;
     }
 
     /**
