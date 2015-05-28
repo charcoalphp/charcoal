@@ -2,12 +2,15 @@
 
 namespace Charcoal\Loader;
 
+use \Exception as Exception;
+use \InvalidArgumentException as InvalidArgumentException;
+
+use \Charcoal\Model\ModelInterface as ModelInterface;
 use \Charcoal\Model\Collection as Collection;
 use \Charcoal\Loader\CollectionLoader\Filter as Filter;
 use \Charcoal\Loader\CollectionLoader\Order as Order;
 use \Charcoal\Loader\CollectionLoader\Pagination as Pagination;
-use \Charcoal\Model\ModelInterface as ModelInterface;
-use \Exception as Exception;
+
 
 /**
 * Collection Loader
@@ -15,16 +18,23 @@ use \Exception as Exception;
 class CollectionLoader extends AbstractLoader
 {
     private $_properties = [];
+    private $_properties_options = [];
     private $_filters = [];
     private $_orders = [];
     private $_pagination = null;
+
     private $_source = null;
     private $_model = null;
 
+    /**
+    * @param array $data
+    * @throws InvalidArgumentException
+    * @return CollectionLoader Chainable
+    */
     public function set_data($data)
     {
         if (!is_array($data)) {
-            throw new \InvalidArgumentException('Data must be an array');
+            throw new InvalidArgumentException('Data must be an array');
         }
         if (isset($data['properties'])) {
             $this->set_properties($data['properties']);
@@ -54,7 +64,7 @@ class CollectionLoader extends AbstractLoader
 
 
     /**
-    * @var Model $models
+    * @var Model $model
     * @return Source Chainable
     */
     public function set_model(ModelInterface $model)
@@ -76,14 +86,26 @@ class CollectionLoader extends AbstractLoader
         return $this->_model;
     }
 
-
-
+    /**
+    * @param array $properties
+    * @throws InvalidArgumentException
+    * @return ColelectionLoader Chainable
+    */
     public function set_properties($properties)
     {
-        $this->_properties = $properties;
+        if(!is_array($properties)) {
+            throw new InvalidArgumentException('Properties must be an array');
+        }
+        $this->_properties = [];
+        foreach($properties as $p) {
+            $this->add_property($p);
+        }
         return $this;
     }
 
+    /**
+    * @return array
+    */
     public function properties()
     {
         return $this->_properties;
@@ -91,15 +113,15 @@ class CollectionLoader extends AbstractLoader
 
     /**
     * @param string $property Property ident
-    * @throws \InvalidArgumentException if property is not a string or empty
+    * @throws InvalidArgumentException if property is not a string or empty
     */
     public function add_property($property)
     {
         if (!is_string($property)) {
-            throw new \InvalidArgumentException('Property must be a string');
+            throw new InvalidArgumentException('Property must be a string');
         }
         if ($property=='') {
-            throw new \InvalidArgumentException('Property can not be empty');
+            throw new InvalidArgumentException('Property can not be empty');
         }
         $this->_properties[] = $property;
         return $this;
@@ -108,9 +130,14 @@ class CollectionLoader extends AbstractLoader
 
     /**
     * @param array $filters
+    * @throws InvalidArgumentException
+    * @return Collection Chainable
     */
     public function set_filters($filters)
     {
+        if (!is_array($filters)) {
+            throw new InvalidArgumentException('Filters must be an array');
+        }
         $this->_filters = [];
         foreach ($filters as $f) {
             $this->add_filter($f);
@@ -118,6 +145,9 @@ class CollectionLoader extends AbstractLoader
         return $this;
     }
 
+    /**
+    * @return array
+    */
     public function filters()
     {
         if (!isset($this->_filters)) {
@@ -127,12 +157,21 @@ class CollectionLoader extends AbstractLoader
     }
 
     /**
-    * @param string|Filter
-    * @param mixed
-    * @param array
+    * Add a collection filter to the loader.
     *
-    * @throws \InvalidArgumentException if property is not a string or empty
-    * @return \Charcoal\Service\Loader\Collection (Chainable)
+    * There are 3 different ways of adding a filter:
+    * - as a `Filter` object, in which case it will be added directly.
+    *   - `add_filter($obj);`
+    * - as an array of options, which will be used to build the `Filter` object
+    *   - `add_filter(['property'=>'foo', 'val'=>42, 'operator'=>'<=']);`
+    * - as 3 parameters: `property`, `val` and `options`
+    *   - `add_filter('foo', 42, ['operator'=>'<=']);`
+    *
+    * @param string|array|Filter $param
+    * @param mixed $val Optional: Only used if the first argument is a string
+    * @param array $options Optional: Only used if the first argument is a string
+    * @throws InvalidArgumentException if property is not a string or empty
+    * @return CollectionLoader (Chainable)
     */
     public function add_filter($param, $val = null, $options = null)
     {
@@ -146,26 +185,11 @@ class CollectionLoader extends AbstractLoader
             $filter = new Filter();
             $filter->set_property($param);
             $filter->set_val($val);
-            if (isset($options['operator'])) {
-                $filter->set_operator($options['operator']);
-            }
-            if (isset($options['func'])) {
-                $filter->set_func($options['func']);
-            }
-            if (isset($options['function'])) {
-                $filter->set_func($options['function']);
-            }
-            if (isset($options['operand'])) {
-                $filter->set_operand($options['operand']);
-            }
-            if (isset($options['operand_type'])) {
-                // Legacy support for "operand_type"
-                $filter->set_operand($options['operand_type']);
-            }
+            $filter->set_data($options);
             $this->_filters[] = $filter;
 
         } else {
-            throw new \InvalidArgumentException('Parameter must be an array or a property ident');
+            throw new InvalidArgumentException('Parameter must be an array or a property ident');
         }
 
         return $this;
@@ -194,6 +218,13 @@ class CollectionLoader extends AbstractLoader
         return $this->_orders;
     }
 
+    /**
+    * @param string|array|Order $param
+    * @param string $mode Optional
+    * @param array $order_options Optional
+    * @throws InvalidArgumentException
+    * @return CollectionLoader Chainable
+    */
     public function add_order($param, $mode = 'asc', $order_options = null)
     {
         if ($param instanceof Order) {
@@ -211,7 +242,7 @@ class CollectionLoader extends AbstractLoader
             }
             $this->_orders[] = $order;
         } else {
-            throw new \InvalidArgumentException('Parameter must be an Order object or a property ident');
+            throw new InvalidArgumentException('Parameter must be an Order object or a property ident');
         }
 
         return $this;
@@ -232,7 +263,7 @@ class CollectionLoader extends AbstractLoader
     public function pagination()
     {
         if (!isset($this->_pagination)) {
-            $this->_pagination = new Pagination($this);
+            $this->_pagination = new Pagination();
         }
         return $this->_pagination;
     }
@@ -269,7 +300,7 @@ class CollectionLoader extends AbstractLoader
 
     /**
     * Load a collection
-    * @throws \Exception if the database connection fails
+    * @throws Exception if the database connection fails
     * @return Collection
     */
     public function load($ident = null)
@@ -285,7 +316,7 @@ class CollectionLoader extends AbstractLoader
 
         $db = $this->source()->db();
         if (!$db) {
-            throw new \Exception('Could not instanciate database connection');
+            throw new Exception('Could not instanciate database connection');
         }
 
         // @todo Filters, pagination, select, etc
@@ -315,18 +346,18 @@ class CollectionLoader extends AbstractLoader
     }
 
     /**
-    * @throws \Exception if the source does not have a table defined
+    * @throws Exception if the source does not have a table defined
     * @return string
     */
     public function sql()
     {
         $table = $this->source()->table();
         if (!$table) {
-            throw new \Exception('No table defined');
+            throw new Exception('No table defined');
         }
 
         $selects = $this->sql_select();
-        $tables = '`'.$this->source()->table().'` as obj_table';
+        $tables = '`'.$table.'` as obj_table';
         $filters = $this->sql_filters();
         $orders = $this->sql_orders();
         $limits = $this->sql_pagination();
