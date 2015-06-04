@@ -93,11 +93,11 @@ class CollectionLoader extends AbstractLoader
     */
     public function set_properties($properties)
     {
-        if(!is_array($properties)) {
+        if (!is_array($properties)) {
             throw new InvalidArgumentException('Properties must be an array');
         }
         $this->_properties = [];
-        foreach($properties as $p) {
+        foreach ($properties as $p) {
             $this->add_property($p);
         }
         return $this;
