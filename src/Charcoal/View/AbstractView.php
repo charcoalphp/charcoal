@@ -3,6 +3,7 @@
 namespace Charcoal\View;
 
 use \Mustache_Engine as Mustache_Engine;
+use \Mustache_LambdaHelper as Mustache_LambdaHelper;
 
 use \Charcoal\Charcoal as Charcoal;
 
@@ -35,6 +36,11 @@ abstract class AbstractView implements ViewInterface
     private $_context;
 
     protected $_controller;
+
+    static private $_js_requirements = [];
+    static private $_js = '';
+    static private $_css_requirements = [];
+    static private $_css = '';
 
     /**
     * @param string $template
@@ -144,6 +150,70 @@ abstract class AbstractView implements ViewInterface
     }
 
     /**
+    * @return array
+    */
+    public function js_requirements()
+    {
+
+        $req = array_unique(self::$_js_requirements);
+        $ret = [];
+        foreach ($req as $r) {
+            $ret[] = ['script'=>$r];
+        }
+        return $r;
+    }
+
+    public function add_js_requirement($js_requirement)
+    {
+        self::$_js_requirements[] = $js_requirement;
+    }
+
+    /**
+    * @return string
+    */
+    public function js()
+    {
+        return self::$_js;
+    }
+
+    public function add_js($js)
+    {
+        self::$_js .= $js;
+    }
+
+    /**
+    * @return array
+    */
+    public function css_requirements()
+    {
+
+        $req = array_unique(self::$_css_requirements);
+        $ret = [];
+        foreach ($req as $r) {
+            $ret[] = ['style'=>$r];
+        }
+        return $r;
+    }
+
+    public function add_css_requirement($css_requirement)
+    {
+        self::$_css_requirements[] = $css_requirement;
+    }
+
+    /**
+    * @return string
+    */
+    public function css()
+    {
+        return self::$_css;
+    }
+
+    public function add_css($css)
+    {
+        self::$_css .= $css;
+    }
+
+    /**
     * @return mixed
     */
     public function context()
@@ -215,6 +285,27 @@ abstract class AbstractView implements ViewInterface
                     '_t'=>function($str) {
                         // @todo Translate
                         return $str;
+                    },
+                    'add_js'=>function($js, Mustache_LambdaHelper $helper) {
+                        $js = $helper->render($js);
+                        $this->add_js($js);
+
+                    },
+                    'js'=>function() {
+                        return $this->js();
+                    },
+                    'add_js_requirement'=>function($js_requirement) {
+                        $this->add_js_requirement($js_requirement);
+                    },
+                    'js_requirements'=>function() {
+                        return $this->js_requirements();
+                    },
+                    'add_css'=>function($css, Mustache_LambdaHelper $helper) {
+                        $css = $helper->render($css);
+                        $this->add_css($css);
+                    },
+                    'css'=>function() {
+                        return $this->css();
                     }
                 ]
             ]);
