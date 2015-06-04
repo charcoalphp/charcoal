@@ -105,7 +105,7 @@ trait StorableTrait
         if ($pre === false) {
             return false;
         }
-        $ret = $this->source()->delete_item($item);
+        $ret = $this->source()->delete_item($this);
         $this->post_delete();
         return $ret;
     }
