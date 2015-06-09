@@ -150,17 +150,17 @@ abstract class AbstractView implements ViewInterface
     }
 
     /**
-    * @return array
+    * @return string
     */
     public function js_requirements()
     {
 
         $req = array_unique(self::$_js_requirements);
-        $ret = [];
+        $ret = '';
         foreach ($req as $r) {
-            $ret[] = ['script'=>$r];
+            $ret .= $r;
         }
-        return $r;
+        return $ret;
     }
 
     public function add_js_requirement($js_requirement)
@@ -188,11 +188,11 @@ abstract class AbstractView implements ViewInterface
     {
 
         $req = array_unique(self::$_css_requirements);
-        $ret = [];
+        $ret = '';
         foreach ($req as $r) {
-            $ret[] = ['style'=>$r];
+            $ret[] .= $r;
         }
-        return $r;
+        return $ret;
     }
 
     public function add_css_requirement($css_requirement)
