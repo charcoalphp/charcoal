@@ -69,4 +69,111 @@ class AbstractValidatorTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('\InvalidArgumentException');
         $obj->add_result(false);
     }
+
+    public function testResults()
+    {
+        $result = [
+            'ident'=>'bar',
+            'level'=>AbstractValidatorClass::ERROR,
+            'message'=>'foo'
+        ];
+
+        $obj = $this->obj;
+        $this->assertEquals([], $obj->results());
+
+        $obj->add_result($result);
+        $result_obj = new ValidatorResult($result);
+        $this->assertEquals([AbstractValidatorClass::ERROR=>[$result_obj]], $obj->results());
+    }
+
+    public function testErrorResults()
+    {
+        $result = [
+            'ident'=>'bar',
+            'level'=>AbstractValidatorClass::ERROR,
+            'message'=>'foo'
+        ];
+        $result2 = [
+            'ident'=>'foo',
+            'level'=>AbstractValidatorClass::NOTICE,
+            'message'=>'bar'
+        ];
+        $obj = $this->obj;
+        $this->assertEquals([], $obj->error_results());
+
+        $obj->add_result($result);
+        $obj->add_result($result2);
+        $result_obj = new ValidatorResult($result);
+        $this->assertEquals([$result_obj], $obj->error_results());
+    }
+
+    public function testWarningResults()
+    {
+        $result = [
+            'ident'=>'bar',
+            'level'=>AbstractValidatorClass::WARNING,
+            'message'=>'foo'
+        ];
+        $result2 = [
+            'ident'=>'foo',
+            'level'=>AbstractValidatorClass::NOTICE,
+            'message'=>'bar'
+        ];
+        $obj = $this->obj;
+        $this->assertEquals([], $obj->warning_results());
+
+        $obj->add_result($result);
+        $obj->add_result($result2);
+        $result_obj = new ValidatorResult($result);
+        $this->assertEquals([$result_obj], $obj->warning_results());
+    }
+
+    public function testNoticeResults()
+    {
+        $result = [
+            'ident'=>'bar',
+            'level'=>AbstractValidatorClass::NOTICE,
+            'message'=>'foo'
+        ];
+        $result2 = [
+            'ident'=>'foo',
+            'level'=>AbstractValidatorClass::ERROR,
+            'message'=>'bar'
+        ];
+        $obj = $this->obj;
+        $this->assertEquals([], $obj->notice_results());
+
+        $obj->add_result($result);
+        $obj->add_result($result2);
+        $result_obj = new ValidatorResult($result);
+        $this->assertEquals([$result_obj], $obj->notice_results());
+    }
+
+    public function testMerge()
+    {
+        $result = [
+            'ident'=>'bar',
+            'level'=>AbstractValidatorClass::NOTICE,
+            'message'=>'foo'
+        ];
+        $result2 = [
+            'ident'=>'foo',
+            'level'=>AbstractValidatorClass::ERROR,
+            'message'=>'bar'
+        ];
+        $result_obj = new ValidatorResult($result);
+        $result2_obj = new ValidatorResult($result2);
+        $obj = $this->obj;
+        $obj2 = new AbstractValidatorClass($this->model);
+
+        $obj->add_result($result);
+        $obj2->add_result($result2);
+        $obj->merge($obj2);
+
+        $this->assertEquals([
+            AbstractValidatorClass::NOTICE=>[$result_obj],
+            AbstractValidatorClass::ERROR=>[$result2_obj]
+        ], $obj->results());
+
+    }
 }

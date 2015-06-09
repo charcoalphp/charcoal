@@ -26,12 +26,11 @@ abstract class AbstractValidator implements ValidatorInterface
     /**
     * @var array $_results array of ValidatorResult
     */
-    private $_results;
+    private $_results = [];
 
     public function __construct(ValidatableInterface $model)
     {
         $this->_model = $model;
-        $this->_results = [];
     }
 
     public function error($msg, $ident = null)
@@ -92,10 +91,10 @@ abstract class AbstractValidator implements ValidatorInterface
     */
     public function error_results()
     {
-        if (!isset($this_results[self::ERROR])) {
+        if (!isset($this->_results[self::ERROR])) {
             return [];
         }
-        return $this_results[self::ERROR];
+        return $this->_results[self::ERROR];
     }
 
     /**
