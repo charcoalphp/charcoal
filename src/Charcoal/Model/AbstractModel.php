@@ -2,6 +2,8 @@
 
 namespace Charcoal\Model;
 
+use \InvalidArgumentException as InvalidArgumentException;
+
 use \Charcoal\Charcoal as Charcoal;
 
 use \Charcoal\Model\ModelInterface as ModelInterface;
@@ -47,7 +49,6 @@ abstract class AbstractModel implements
     public function __construct($data = null)
     {
         if ($data !== null) {
-            $this->set_viewable_data($data);
             $this->set_data($data);
         }
         // Fix bug @todo
@@ -60,15 +61,17 @@ abstract class AbstractModel implements
     * This function takes an array and fill the object with its value.
     *
     * @param  array $data
-    * @throws \InvalidArgumentException if the data parameter is not an array
+    * @throws InvalidArgumentException if the data parameter is not an array
     * @return ModelInterface Chainable
     */
     public function set_data($data)
     {
         if (!is_array($data)) {
-            throw new \InvalidArgumentException(__CLASS__.'::'.__FUNCTION__.'() - Data must be an array');
+            throw new InvalidArgumentException(__CLASS__.'::'.__FUNCTION__.'() - Data must be an array');
         }
-
+        
+        $this->set_storable_data($data);
+        $this->set_viewable_data($data);
         foreach ($data as $prop => $val) {
             $func = [$this, 'set_'.$prop];
             if (is_callable($func)) {

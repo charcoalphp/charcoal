@@ -8,6 +8,12 @@ interface StorableInterface
 {
 
     /**
+    * @param array $data
+    * @return StorableInterface Chainable
+    */
+    public function set_storable_data($data);
+
+    /**
     * Set the object's source.
     *
     * @param SourceInterface $source

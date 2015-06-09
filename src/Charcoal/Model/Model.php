@@ -11,6 +11,8 @@ namespace Charcoal\Model;
 
 use \Charcoal\Charcoal as Charcoal;
 
+use \Charcoal\Source\DatabaseSource as DatabaseSource;
+
 use \Charcoal\Metadata\MetadataLoader as MetadataLoader;
 
 use \Charcoal\Model\AbstractModel as AbstractModel;
@@ -68,11 +70,11 @@ class Model extends AbstractModel
 {
 
     /**
-    * StorableInterface > source(). Get the source object.
+    * StorableInterface > create_source(). Get the source object.
     *
     * @return SourceInterface;
     */
-    public function source($source_ident = null)
+    public function create_source($source_ident = null)
     {
         $metadata = $this->metadata();
         //var_dump($metadata);
@@ -80,6 +82,9 @@ class Model extends AbstractModel
             // Default source ident
             $source_ident = isset($metadata['default_source']) ? $metadata['default_source'] : '';
         }
+        $s = new DatabaseSource();
+        $s->set_model($this);
+        return $s;
     }
 
 }

@@ -94,13 +94,13 @@ class DatabaseSource extends AbstractSource
 
     /**
     * @param array $database_config
-    * @throws Exception
+    * @throws InvalidArgumentException
     * @return DatabaseSource Chainable
     */
     public function set_database_config($database_config)
     {
         if (!is_array($database_config)) {
-            throw new Exception('Database config needs to be an array.');
+            throw new InvalidArgumentException('Database config needs to be an array.');
         }
         $this->_database_config = $database_config;
         return $this;
@@ -353,7 +353,8 @@ class DatabaseSource extends AbstractSource
         if ($item !== null) {
             $this->set_model($item);
         } else {
-            $item = clone($this->model());
+            $class = get_class($this->model());
+            $item = new $class;
         }
 
         $q = '
@@ -374,7 +375,7 @@ class DatabaseSource extends AbstractSource
             throw new Exception('Error');
         }
 
-        $data = $sth->fetch();
+        $data = $sth->fetch(PDO::FETCH_ASSOC);
         if ($data) {
             $item->set_flat_data($data);
         }
@@ -479,7 +480,7 @@ class DatabaseSource extends AbstractSource
             SET
                 '.implode(", \n\t", $updates).'
             WHERE
-                `'.$model->key().'`=:id
+                `'.$model->key().'`=:'.$model->key().'
             LIMIT
                 1';
 

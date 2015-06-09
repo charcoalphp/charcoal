@@ -2,6 +2,8 @@
 
 namespace Charcoal\Cache;
 
+use \InvalidArgumentException as InvalidArgumentException;
+
 use \Charcoal\Core\AbstractFactory as AbstractFactory;
 
 use \Charcoal\Cache\CacheInterface as CacheInterface;
@@ -11,26 +13,18 @@ use \Charcoal\Cache\Noop\NoopCache as NoopCache;
 
 class CacheFactory extends AbstractFactory
 {
-    /*static public function types()
-    {
-        return array_merge(parent::types(), [
-            'apc'       => '\Charcoal\Cache\Apc\ApcCache',
-            'memcache'  => '\Charcoal\Cache\Memcache\MemcacheCache',
-            'noop'      => '\Charcoal\Cache\Noop\NoopCache'
-        ]);
-    }*/
 
     /**
     * Get a cache instance from type
     *
     * @param string $type;
-    * @throws \InvalidArgumentException if type is not a string or not a valid cache type
+    * @throws InvalidArgumentException if type is not a string or not a valid cache type
     * @return CacheInterface
     */
     public function get($type)
     {
         if (!is_string($type)) {
-            throw new \InvalidArgumentException('Type (of cache) must be a string');
+            throw new InvalidArgumentException('Type (of cache) must be a string');
         }
         
         if ($type == 'apc') {
@@ -40,7 +34,7 @@ class CacheFactory extends AbstractFactory
         } else if ($type == 'noop') {
             $cache = NoopCache::instance();
         } else {
-            throw new \InvalidArgumentException('Type is not a valid cache type');
+            throw new InvalidArgumentException('Type is not a valid cache type');
         }
 
         return $cache;

@@ -146,7 +146,7 @@ abstract class AbstractFactory implements FactoryInterface
     * @param string $ident;
     * @return string
     */
-    protected function _ident_to_classname($ident)
+    public function ident_to_classname($ident)
     {
         $class = str_replace('/', '\\', $ident);
         $expl = explode('\\', $class);
@@ -158,4 +158,5 @@ abstract class AbstractFactory implements FactoryInterface
         $class = '\\'.implode('\\', $expl);
         return $class;
     }
+
 }

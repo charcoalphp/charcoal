@@ -44,6 +44,31 @@ class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
         $obj->set_database_ident(null);
     }
 
+    public function testSetDatabaseConfig()
+    {
+        $this->setExpectedException('\Exception');
+
+        $obj = new DatabaseSource();
+        $ret = $obj->database_config();
+        $this->assertEquals([
+            'username'=>'root',
+            'password'=>'',
+            'database'=>'charcoal_examples'
+        ], $ret);
+
+        $cfg = [
+            'username'=>'x',
+            'password'=>'y',
+            'database'=>'z'
+        ];
+        $ret = $obj->set_database_config($cfg);
+        $this->assertSame($ret, $obj);
+        $this->assertEquals($cfg, $obj->database_config());
+
+        $this->setExpectedException('\InvalidArgumentException');
+        $obj->set_database_config(false);
+    }
+
 
     public function testTableWithoutSetterThrowsException()
     {
@@ -172,7 +197,7 @@ class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($ret);
     }
 
-    public function testSaveItem()
+    protected function getItemModel()
     {
         $model = new Object();
         $model->set_metadata([
@@ -184,20 +209,110 @@ class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
                 'name'=>[
                     'type'=>'string',
                     'max_length'=>300
+                ],
+                '_ignore'=>[
+                    'type'=>'string',
+                    'active'=>false
                 ]
             ]
         ]);
+        return $model;
+    }
+
+    public function testSaveItem()
+    {
+        $model = $this->getItemModel();
 
         $model->set_data([
-            //'id'=> NULL,
-            'name'=>'Mathieu Ducharme'
+            'id'=> 1,
+            'name'=>'Foo bar'
         ]);
 
         $obj = new DatabaseSource();
         $obj->set_model($model);
         $obj->set_table('test');
         $ret = $obj->save_item($model);
+;
+        $this->assertEquals(1, $ret);
+    }
 
-        //$this->assertTrue($ret);
+    public function testLoadItem()
+    {
+        $model = $this->getItemModel();
+
+        $obj = new DatabaseSource();
+        $obj->set_model($model);
+        $obj->set_table('test');
+        $ret = $obj->load_item(1);
+        $this->assertEquals('Foo bar', $ret->name);
+    }
+
+
+    public function testLoadItemNoMatchingId()
+    {
+        $model = $this->getItemModel();
+
+        $obj = new DatabaseSource();
+        $obj->set_model($model);
+        $obj->set_table('test');
+        $ret = $obj->load_item(666);
+        $this->assertNull($ret->id());
+    }
+
+    public function testUpdateItem()
+    {
+        $model = $this->getItemModel();
+
+        $model->set_data([
+            'id'=> 1,
+            'name'=>'Baz Foo'
+        ]);
+
+        $obj = new DatabaseSource();
+        $obj->set_model($model);
+        $obj->set_table('test');
+        $ret = $obj->update_item($model);
+        $this->assertTrue($ret);
+
+        $loaded = $obj->load_item(1);
+        $this->assertEquals('Baz Foo', $loaded->name);
+    }
+
+    public function testDeleteItem()
+    {
+        $model = $this->getItemModel();
+
+        $model->set_data([
+            'id'=> 1
+        ]);
+
+        $obj = new DatabaseSource();
+        $obj->set_model($model);
+        $obj->set_table('test');
+        $ret = $obj->delete_item($model);
+        $this->assertTrue($ret);
+
+        $loaded = $obj->load_item(1);
+        $this->assertNull($loaded->id());
+    }
+
+    public function testDeleteItemInvalidIds()
+    {
+        $model = $this->getItemModel();
+
+        $model->set_data([
+            'id'=> 42
+        ]);
+
+        $obj = new DatabaseSource();
+        $obj->set_model($model);
+        $obj->set_table('test');
+        $ret = $obj->delete_item($model);
+        //$this->assertFalse($ret);
+
+        $model2 = $this->getItemModel();
+
+        $this->setExpectedException('\Exception');
+        $obj->delete_item($model2);
     }
 }

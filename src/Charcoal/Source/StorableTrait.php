@@ -2,6 +2,8 @@
 
 namespace Charcoal\Source;
 
+use \InvalidArgumentException as InvalidArgumentException;
+
 use \Charcoal\Source\SourceInterface as SourceInterface;
 use \Charcoal\Source\StorableInterface as StorableInterface;
 
@@ -11,6 +13,22 @@ trait StorableTrait
     * @var SourceInterfae $_source
     */
     private $_source;
+
+    /**
+    * @param array $data
+    * @throws InvalidArgumentException
+    * @return StorableInterface Chainable
+    */
+    public function set_storable_data($data)
+    {
+        if (!is_array($data)) {
+            throw new InvalidArgumentException('Data must be an array');
+        }
+        if (isset($data['source']) && $data['source'] !== null) {
+            $this->set_source($data['source']);
+        }
+        return $this;
+    }
 
     /**
     * Set the object's source.
