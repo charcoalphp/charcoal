@@ -11,7 +11,6 @@ class ViewableTraitTest extends \PHPUnit_Framework_TestCase
 
     static public function setUpBeforeClass()
     {
-        include_once 'ViewableClass.php';
         include_once 'AbstractViewClass.php';
     }
 
@@ -22,7 +21,7 @@ class ViewableTraitTest extends \PHPUnit_Framework_TestCase
         $view = new AbstractViewClass();
         $mock->expects($this->any())
              ->method('create_view')
-             ->will($this->returnValue(new AbstractViewClass()));
+             ->will($this->returnValue($view));
 
         $mock->foo = 'bar';
         $this->obj = $mock;//new ViewableClass();
