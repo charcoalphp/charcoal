@@ -25,8 +25,16 @@ trait ViewableTrait
     */
     protected $_view;
 
+    /**
+    * @param array $data
+    * @throws InvalidArgumentException
+    * @return ViewableTrait Chainable
+    */
     public function set_viewable_data($data)
     {
+        if (!is_array($data)) {
+            throw new InvalidArgumentException('Data must be an array');
+        }
         if (isset($data['template_engine']) && $data['template_engine'] !== null) {
             $this->set_template_engine($data['template_engine']);
         }

@@ -40,16 +40,31 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
     {
         $obj = $this->obj;
         $ret = $obj->set_data([
+            'engine'=>'php_mustache',
             'template'=>'foo',
             'context'=>['bar'=>'baz']
 
         ]);
         $this->assertSame($ret, $obj);
+        $this->assertEquals('php_mustache', $obj->engine());
         $this->assertEquals('foo', $obj->template());
         $this->assertEquals(['bar'=>'baz'], $obj->context());
 
         $this->setExpectedException('\InvalidArgumentException');
         $obj->set_data(false);
+    }
+
+    public function testSetEngine()
+    {
+        $obj = $this->obj;
+        $this->assertEquals('mustache', $obj->engine());
+
+        $ret = $obj->set_engine('php');
+        $this->assertSame($ret, $obj);
+        $this->assertEquals('php', $obj->engine());
+
+        $this->setExpectedException('\InvalidArgumentException');
+        $obj->set_engine(1);
     }
 
     public function testSetTemplate()
@@ -98,6 +113,50 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    public function testJsRequirements()
+    {
+        $obj = new AbstractViewClass();
+        $this->assertEquals('', $obj->js_requirements());
+
+        $obj->add_js_requirement('foo');
+        $obj->add_js_requirement('bar');
+
+        $this->assertEquals('foobar', $obj->js_requirements());
+    }
+
+    public function testJs()
+    {
+        $obj = new AbstractViewClass();
+        $this->assertEquals('', $obj->js());
+
+        $obj->add_js('foo');
+        $obj->add_js('bar');
+
+        $this->assertEquals('foobar', $obj->js());
+    }
+
+    public function testCssRequirements()
+    {
+        $obj = new AbstractViewClass();
+        $this->assertEquals('', $obj->css_requirements());
+
+        $obj->add_css_requirement('foo');
+        $obj->add_css_requirement('bar');
+
+        $this->assertEquals('foobar', $obj->css_requirements());
+    }
+
+    public function testCss()
+    {
+        $obj = new AbstractViewClass();
+        $this->assertEquals('', $obj->css());
+
+        $obj->add_css('foo');
+        $obj->add_css('bar');
+
+        $this->assertEquals('foobar', $obj->css());
+    }
+
     public function testSetController()
     {
         $ctrl = new AbstractViewControllerClass();
@@ -139,5 +198,22 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
 
         $ret = $obj->classname_to_ident('\Foo\Bar');
         $this->assertEquals('foo/bar', $ret);
+    }
+
+    public function testRenderHelpers()
+    {
+        $obj = new AbstractViewClass();
+        $ret = $obj->render('{{#_t}}Test{{/_t}}');
+        $this->assertEquals('Test', $ret);
+        
+        $ret = $obj->render('Test: {{#add_js}}js{{/add_js}}{{&js}}');
+        $this->assertEquals('Test: js', $ret);
+
+        $ret = $obj->render('Test: {{#add_js_requirement}}js{{/add_js_requirement}}{{&js_requirements}}');
+        $this->assertEquals('Test: js', $ret);
+
+        $ret = $obj->render('Test: {{#add_css}}css{{/add_css}}{{&css}}');
+        $this->assertEquals('Test: css', $ret);
+
     }
 }

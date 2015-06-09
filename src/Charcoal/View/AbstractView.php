@@ -2,6 +2,8 @@
 
 namespace Charcoal\View;
 
+use \InvalidArgumentException as InvalidArgumentException;
+
 use \Mustache_Engine as Mustache_Engine;
 use \Mustache_LambdaHelper as Mustache_LambdaHelper;
 
@@ -160,6 +162,7 @@ abstract class AbstractView implements ViewInterface
         foreach ($req as $r) {
             $ret .= $r;
         }
+        self::$_js_requirements = [];
         return $ret;
     }
 
@@ -173,7 +176,9 @@ abstract class AbstractView implements ViewInterface
     */
     public function js()
     {
-        return self::$_js;
+        $js = self::$_js;
+        self::$_js = '';
+        return $js;
     }
 
     public function add_js($js)
@@ -190,8 +195,9 @@ abstract class AbstractView implements ViewInterface
         $req = array_unique(self::$_css_requirements);
         $ret = '';
         foreach ($req as $r) {
-            $ret[] .= $r;
+            $ret .= $r;
         }
+        self::$_css_requirements = [];
         return $ret;
     }
 
@@ -205,7 +211,9 @@ abstract class AbstractView implements ViewInterface
     */
     public function css()
     {
-        return self::$_css;
+        $css = self::$_css;
+        self::$_css = '';
+        return $css;
     }
 
     public function add_css($css)
