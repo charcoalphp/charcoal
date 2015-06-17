@@ -315,6 +315,8 @@ class DatabaseSource extends AbstractSource
         $metadata = $model->metadata();
         if ($properties === null) {
             $properties = array_keys($model->metadata()->properties());
+        } else {
+            $properties = array_merge($properties, [$model->key()]);
         }
         
         $fields = [];
@@ -555,8 +557,9 @@ class DatabaseSource extends AbstractSource
                 $sth->bindParam(':'.$k, $binds[$k], $type);
             }
         }
-        $err = $sth->execute();
-        if ($err === false) {
+        
+        $ret = $sth->execute();
+        if ($ret === false) {
             return false;
         }
 
