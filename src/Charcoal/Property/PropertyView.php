@@ -14,6 +14,8 @@ use \Charcoal\Property\PropertyViewController as PropertyViewController;
 class PropertyView extends AbstractView
 {
     /**
+    * AbstractView > load_template()
+    *
     * @param string $template_ident
     * @throws \InvalidArgumentException if the ident is not a string
     * @return string
@@ -24,6 +26,8 @@ class PropertyView extends AbstractView
     }
 
     /**
+    * AbstractView > load_context()
+    *
     * @param string $context_ident
     * @throws \InvalidArgumentException if the ident is not a string
     * @return mixed
@@ -33,6 +37,11 @@ class PropertyView extends AbstractView
         return null;
     }
 
+    /**
+    * AbstractView > create_controller()
+    *
+    * @return ViewControllerInterface
+    */
     public function create_controller()
     {
         $context = $this->context();

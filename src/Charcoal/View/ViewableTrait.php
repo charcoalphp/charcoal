@@ -15,10 +15,17 @@ use \Charcoal\View\ViewInterface as ViewInterface;
 */
 trait ViewableTrait
 {
+
+
     /**
     * @var string $_template_engine
     */
     protected $_template_engine;
+
+    /**
+    * @var string $template_ident
+    */
+    protected $_template_ident;
 
     /**
     * @var ViewInterface $_view
@@ -38,6 +45,9 @@ trait ViewableTrait
         if (isset($data['template_engine']) && $data['template_engine'] !== null) {
             $this->set_template_engine($data['template_engine']);
         }
+        if (isset($data['template_ident']) && $data['template_ident'] !== null) {
+            $this->set_template_ident($data['template_ident']);
+        }
         return $this;
     }
 
@@ -56,6 +66,20 @@ trait ViewableTrait
             $this->_template_engine = AbstractView::DEFAULT_ENGINE;
         }
         return $this->_template_engine;
+    }
+
+    public function set_template_ident($ident)
+    {
+        if (!is_string($ident)) {
+            throw new InvalidArgumentException('Template ident must be a string');
+        }
+        $this->_template_ident = $ident;
+        return $this;
+    }
+
+    public function template_ident()
+    {
+        return $this->_template_ident;
     }
 
     /**
@@ -110,8 +134,12 @@ trait ViewableTrait
     * @param string $template_ident The template ident to load and render.
     * @return string The rendered template.
     */
-    public function render_template($template_ident)
+    public function render_template($template_ident = null)
     {
+        if ($template_ident === null) {
+            $template_ident = $this->template_ident();
+        }
+
         $view_data = [
             'context'=>$this
         ];

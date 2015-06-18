@@ -151,6 +151,11 @@ abstract class AbstractView implements ViewInterface
         return $this;
     }
 
+    public function _t($str)
+    {
+        return $str;
+    }
+
     /**
     * @return string
     */
@@ -292,25 +297,25 @@ abstract class AbstractView implements ViewInterface
                 'helpers'=>[
                     '_t'=>function($str) {
                         // @todo Translate
-                        return $str;
+                        return $this->_t($str);
                     },
                     'add_js'=>function($js, Mustache_LambdaHelper $helper) {
                         $js = $helper->render($js);
-                        $this->add_js($js);
+                        return $this->add_js($js);
 
                     },
                     'js'=>function() {
                         return $this->js();
                     },
                     'add_js_requirement'=>function($js_requirement) {
-                        $this->add_js_requirement($js_requirement);
+                        return $this->add_js_requirement($js_requirement);
                     },
                     'js_requirements'=>function() {
                         return $this->js_requirements();
                     },
                     'add_css'=>function($css, Mustache_LambdaHelper $helper) {
                         $css = $helper->render($css);
-                        $this->add_css($css);
+                        return $this->add_css($css);
                     },
                     'css'=>function() {
                         return $this->css();
