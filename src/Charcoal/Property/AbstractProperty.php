@@ -499,7 +499,17 @@ abstract class AbstractProperty implements
 
     public function validation_methods()
     {
-        return ['unique', 'allow_null'];
+        return ['required', 'unique', 'allow_null'];
+    }
+
+    public function validate_required()
+    {
+        if ($this->required() && !$this->val()) {
+            $this->validator()->error('Value is required', 'required');
+            return false;
+        }
+
+        return true;
     }
 
     /**
