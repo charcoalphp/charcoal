@@ -257,6 +257,18 @@ class DatabaseSource extends AbstractSource
     }
 
     /**
+    * Check wether the source table is empty (`true`) or not (`false`)
+    *
+    * @return bool
+    */
+    public function table_is_empty()
+    {
+        $q = 'SELECT NULL FROM `'.$this->table().'` LIMIT 1';
+        $res = $this->db()->query($q);
+        return ($res->rowCount() === 0);
+    }
+
+    /**
     * @throws Exception if the database is not set.
     */
     public function db($database_ident = null)
