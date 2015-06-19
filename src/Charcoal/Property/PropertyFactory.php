@@ -2,10 +2,18 @@
 
 namespace Charcoal\Property;
 
+// From `charcoal-core`
 use \Charcoal\Core\AbstractFactory as AbstractFactory;
 
+/**
+*
+*/
 class PropertyFactory extends AbstractFactory
 {
+    /**
+    * @param string $type
+    * @return PropertyInterface
+    */
     public function get($type)
     {
         $class_name = '\Charcoal\Property\\'.str_replace('_', '\\', ucfirst($type)).'Property';

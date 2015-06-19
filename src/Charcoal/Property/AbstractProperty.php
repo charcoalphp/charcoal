@@ -174,6 +174,8 @@ abstract class AbstractProperty implements
         return $this;
     }
 
+    abstract public function type();
+
     /**
     * @param string $ident
     * @throws InvalidArgumentException  if ident is not a string

@@ -8,6 +8,11 @@ namespace Charcoal\Property;
 interface PropertyInterface
 {
     /**
+    * @return string
+    */
+    public function type();
+    
+    /**
     * @param array $data
     * @return PropertyInterface Chainable
     */

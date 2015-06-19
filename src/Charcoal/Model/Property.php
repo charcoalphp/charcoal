@@ -11,6 +11,11 @@ use \Charcoal\Validator\ValidatorInterface as ValidatorInterface;
 class Property extends AbstractProperty
 {
 
+    public function type()
+    {
+        return 'property';
+    }
+    
     public function validate(ValidatorInterface &$v = null)
     {
         if ($v === null) {
