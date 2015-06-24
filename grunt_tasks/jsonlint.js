@@ -6,7 +6,6 @@ module.exports = {
 		src:[
 			'*.json'
 		]
-
 	},
 	config:{
 		src:[

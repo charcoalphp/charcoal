@@ -14,8 +14,13 @@
 			<directory>Charcoal/</directory>
 		</testsuite>
 	</testsuites>
+	<filter>
+	<whitelist>
+		<directory suffix=".php">../src/Charcoal</directory>
+	</whitelist>
+	</filter> 
 	<logging>
-		<log type="coverage-html" target="tmp/report" charset="UTF-8" highlight="true" lowUpperBound="45" highLowerBound="60" showUncoveredFiles="true"/>
+		<log type="coverage-html" target="tmp/report" charset="UTF-8" highlight="true" lowUpperBound="40" highLowerBound="80" />
 		<log type="coverage-clover" target="tmp/coverage.xml"/>
 		<!--<log type="coverage-php" target="tmp/coverage.serialized"/>-->
 		<!--<log type="coverage-text" target="php://stdout" showUncoveredFiles="false"/>-->
