@@ -27,10 +27,12 @@ class OrderTest extends \PHPUnit_Framework_TestCase
         $obj->set_data(['property'=>'foo']);
         $this->assertEquals('foo', $obj->property());
 
-        $obj->set_data([
+        $obj->set_data(
+            [
             'property'=>'bar',
             'mode'=>'asc'
-        ]);
+            ]
+        );
         $this->assertEquals('bar', $obj->property());
         $this->assertEquals('asc', $obj->mode());
 

@@ -7,6 +7,9 @@ use \Charcoal\Cache\AbstractCache as AbstractCache;
 class ApcCache extends AbstractCache
 {
 
+    /**
+    * @return boolean
+    */
     public function init()
     {
         return true;
@@ -29,9 +32,9 @@ class ApcCache extends AbstractCache
     /**
     * Store the data in the cache.
     *
-    * @param string $key The cache key where to store
-    * @param mixed $data The data to store in the cache
-    * @param integer $ttl Time-to-live, in seconds
+    * @param string  $key  The cache key where to store
+    * @param mixed   $data The data to store in the cache
+    * @param integer $ttl  Time-to-live, in seconds
     * @return boolean If storage was sucessful or not
     */
     public function store($key, $data, $ttl = 0)

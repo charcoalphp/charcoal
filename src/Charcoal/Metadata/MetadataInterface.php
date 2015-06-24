@@ -10,7 +10,7 @@ interface MetadataInterface
     public function properties();
 
     /**
-    * @param array
+    * @param array $properties
     * @return MetadataInterface Chainable
     */
     public function set_properties($properties);

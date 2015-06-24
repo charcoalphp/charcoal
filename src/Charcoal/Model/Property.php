@@ -10,12 +10,18 @@ use \Charcoal\Validator\ValidatorInterface as ValidatorInterface;
 
 class Property extends AbstractProperty
 {
-
+    /**
+    * @return string
+    */
     public function type()
     {
         return 'property';
     }
-    
+
+    /**
+    * @param ValidatorInterface $v
+    * @return boolean
+    */
     public function validate(ValidatorInterface &$v = null)
     {
         if ($v === null) {
@@ -30,21 +36,33 @@ class Property extends AbstractProperty
         return $ret;
     }
 
+    /**
+    * @return boolean
+    */
     public function validate_required()
     {
         return true;
     }
 
+    /**
+    * @return boolean
+    */
     public function validate_unique()
     {
         return true;
     }
 
+    /**
+    * @return string
+    */
     public function sql_extra()
     {
         return '';
     }
-    
+        
+    /**
+    * @return string
+    */
     public function sql_type()
     {
         if ($this->multiple()) {
@@ -54,11 +72,17 @@ class Property extends AbstractProperty
         }
     }
 
+    /**
+    * @return integer
+    */
     public function sql_pdo_type()
     {
         return PDO::PARAM_STR;
     }
 
+    /**
+    * @return mixed
+    */
     public function save()
     {
         return $this->val();

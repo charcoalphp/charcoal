@@ -29,6 +29,9 @@ class ValidatorResult
     */
     private $ts;
 
+    /**
+    * @param array|null $data
+    */
     public function __construct($data = null)
     {
         $ts = new DateTime();
@@ -40,7 +43,7 @@ class ValidatorResult
     }
 
     /**
-    * @var array $data
+    * @param array $data
     * @throws \InvalidArgumentException if data is not an array
     * @return Result Chainable
     */
@@ -66,7 +69,7 @@ class ValidatorResult
     }
 
     /**
-    * @var string $ident
+    * @param string $ident
     * @throws \InvalidArgumentException if parameter is not valid
     * @return ValidatorResult
     */
@@ -79,13 +82,16 @@ class ValidatorResult
         return $this;
     }
 
+    /**
+    * @return string
+    */
     public function ident()
     {
         return $this->ident;
     }
 
     /**
-    * @var string $level
+    * @param string $level
     * @throws \InvalidArgumentException if parameter is not valid
     * @return ValidatorResult
     */
@@ -101,13 +107,16 @@ class ValidatorResult
         return $this;
     }
 
+    /**
+    * @return string
+    */
     public function level()
     {
         return $this->level;
     }
 
     /**
-    * @var string $message
+    * @param string $message
     * @throws \InvalidArgumentException if parameter is not valid
     * @return ValidatorResult
     */
@@ -120,13 +129,16 @@ class ValidatorResult
         return $this;
     }
 
+    /**
+    * @return string
+    */
     public function message()
     {
         return $this->message;
     }
 
     /**
-    * @var string|Datetime $ident
+    * @param string|Datetime $ts
     * @throws \InvalidArgumentException if parameter is not valid
     * @return ValidatorResult
     */
@@ -142,6 +154,9 @@ class ValidatorResult
         return $this;
     }
 
+    /**
+    * @return DateTime
+    */
     public function ts()
     {
         return $this->ts;

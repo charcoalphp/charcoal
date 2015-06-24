@@ -45,12 +45,13 @@ trait LoadableTrait
     }
 
     /**
+    * @param array|null $data
     * @return LoaderInterface
     */
     abstract protected function create_loader($data = null);
 
     /**
-    *
+    * @return mixed
     */
     public function load()
     {

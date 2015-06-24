@@ -2,6 +2,8 @@
 
 namespace Charcoal\Source;
 
+use \InvalidArgumentException as InvalidArgumentException;
+
 use \Charcoal\Config\AbstractConfig as AbstractConfig;
 
 /**
@@ -26,13 +28,13 @@ class SourceConfig extends AbstractConfig
 
     /**
     * @param array $data
-    * @throws \InvalidArgumentException if parameter is not an array
+    * @throws InvalidArgumentException if parameter is not an array
     * @return SourceConfig Chainable
     */
     public function set_data($data)
     {
         if (!is_array($data)) {
-            throw new \InvalidArgumentException('Data must be an array');
+            throw new InvalidArgumentException('Data must be an array');
         }
         if (isset($data['type']) && $data['type'] !== null) {
             $this->set_type($data['type']);
@@ -41,14 +43,14 @@ class SourceConfig extends AbstractConfig
     }
 
     /**
-    * @param string
-    * @throws \InvalidArgumentException if parameter is not a string
+    * @param string $type
+    * @throws InvalidArgumentException if parameter is not a string
     * @return SourceConfig Chainable
     */
     public function set_type($type)
     {
         if (!is_string($type)) {
-            throw new \InvalidArgumentException('Type needs to be a string');
+            throw new InvalidArgumentException('Type needs to be a string');
         }
         $this->_type = $type;
         return $this;

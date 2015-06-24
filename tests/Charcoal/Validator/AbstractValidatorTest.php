@@ -170,10 +170,12 @@ class AbstractValidatorTest extends \PHPUnit_Framework_TestCase
         $obj2->add_result($result2);
         $obj->merge($obj2);
 
-        $this->assertEquals([
+        $this->assertEquals(
+            [
             AbstractValidatorClass::NOTICE=>[$result_obj],
             AbstractValidatorClass::ERROR=>[$result2_obj]
-        ], $obj->results());
+            ], $obj->results()
+        );
 
     }
 }

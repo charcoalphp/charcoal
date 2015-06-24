@@ -142,13 +142,15 @@ class ModelTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('\Exception');
 
         $obj = new Model();
-        $obj->set_metadata([
+        $obj->set_metadata(
+            [
             'properties'=>[
                 'foo'=>[
                     'type'=>'string'
                 ]
             ]
-        ]);
+            ]
+        );
         $p = $obj->property('invalid');
     }
 
@@ -157,14 +159,16 @@ class ModelTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('\Exception');
 
         $obj = new Model();
-        $obj->set_metadata([
+        $obj->set_metadata(
+            [
             'properties'=>[
                 'foo'=>[
                     // no type
                     'l10n'=>true
                 ]
             ]
-        ]);
+            ]
+        );
         $p = $obj->property('foo');
     }
 
@@ -172,7 +176,8 @@ class ModelTest extends \PHPUnit_Framework_TestCase
     {
         $obj = new Model();
 
-        $obj->set_metadata([
+        $obj->set_metadata(
+            [
             'properties'=>[
                 'foo'=>[
                     'type'=>'string',
@@ -182,7 +187,8 @@ class ModelTest extends \PHPUnit_Framework_TestCase
             'data'=>[
                 'foo'=>'baz'
             ]
-        ]);
+            ]
+        );
 
         $p = $obj->p('foo');
         $property = $obj->property('foo');
@@ -194,7 +200,8 @@ class ModelTest extends \PHPUnit_Framework_TestCase
     {
         $obj = new Model();
 
-        $obj->set_metadata([
+        $obj->set_metadata(
+            [
             'properties'=>[
                 'foo'=>[
                     'type'=>'string',
@@ -208,7 +215,8 @@ class ModelTest extends \PHPUnit_Framework_TestCase
                 'foo'=>'baz',
                 'bar'=>true
             ]
-        ]);
+            ]
+        );
 
         $p = $obj->p();
         $properties = $obj->properties();
@@ -230,7 +238,8 @@ class ModelTest extends \PHPUnit_Framework_TestCase
     public function testRender()
     {
         $obj = new Model();
-        $obj->set_metadata([
+        $obj->set_metadata(
+            [
             'properties'=>[
                 'foo'=>[
                     'type'=>'string',
@@ -244,7 +253,8 @@ class ModelTest extends \PHPUnit_Framework_TestCase
                 'foo'=>'baz',
                 'bar'=>true
             ]
-        ]);
+            ]
+        );
         $this->assertEquals('foo is baz', $obj->render('foo is {{foo}}'));
     }
 

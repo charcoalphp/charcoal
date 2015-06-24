@@ -25,13 +25,13 @@ interface ViewInterface
     public function template();
 
     /**
-    * @param string
+    * @param string $template_ident
     * @return string
     */
     public function load_template($template_ident);
 
     /**
-    * @var mixed $context
+    * @param mixed $context
     * @return ViewInterface Chainable
     */
     public function set_context($context);
@@ -48,22 +48,27 @@ interface ViewInterface
     public function load_context($context_ident);
 
     /**
-    *
+    * @param ViewControllerInterface $controller
+    * @return ViewInterface Chainable
     */
     public function set_controller(ViewControllerInterface $controller);
 
     /**
-    *
+    * @return ViewControllerInterface
     */
     public function controller();
 
     /**
-    *
+    * @param string $template
+    * @param mixed  $context
+    * @return string
     */
     public function render($template = null, $context = null);
 
     /**
-    *
+    * @param string $template_ident
+    * @param mixed  $context
+    * @return string
     */
     public function render_template($template_ident = '', $context = null);
 }

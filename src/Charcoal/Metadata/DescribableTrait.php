@@ -39,11 +39,16 @@ trait DescribableTrait
     /**
     * Describable object needs to have a `set_data()` method
     *
-    * @param array $data;
+    * @param array $data
     * @return DescribableTrait Chainable
     */
     abstract public function set_data($data);
 
+    /**
+    * @param array $data
+    * @throws InvalidArgumentException
+    * @return DescribableTrait
+    */
     public function set_describable_data($data)
     {
         if (!is_array($data)) {
@@ -52,6 +57,7 @@ trait DescribableTrait
         if (isset($data['metadata']) && $data['metadata'] !== null) {
             $this->set_metadata($data['metadata']);
         }
+        return $this;
     }
 
     /**
@@ -157,7 +163,7 @@ trait DescribableTrait
     /**
     * Return an array of `PropertyInterface`
     *
-    * @param boolean
+    * @return void Yield, not return
     */
     public function properties()
     {
@@ -222,7 +228,7 @@ trait DescribableTrait
     * - `property()` if the first parameter is set,
     * - `properties()` if the property_ident is not set (null)
     *
-    * @param string  $property_ident   The property ident to return
+    * @param string $property_ident The property ident to return
     * @return array|PropertyInterface
     */
     public function p($property_ident = null)

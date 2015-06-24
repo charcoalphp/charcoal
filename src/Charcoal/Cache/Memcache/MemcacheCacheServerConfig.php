@@ -11,6 +11,9 @@ class MemcacheCacheServerConfig extends AbstractConfig
     public $_persistent;
     public $_weight;
 
+    /**
+    * @return array
+    */
     public function default_data()
     {
         $default = [
@@ -24,6 +27,10 @@ class MemcacheCacheServerConfig extends AbstractConfig
         return $default_data;
     }
 
+    /**
+    * @param array $data
+    * @return MemcacheCacheServerConfig Chainable
+    */
     public function set_data($data)
     {
         if (isset($data['host']) && $data['host'] !== null) {
@@ -42,45 +49,73 @@ class MemcacheCacheServerConfig extends AbstractConfig
         return $this;
     }
 
+    /**
+    * @param string $host
+    * @return MemcacheCacheServerConfig Chainable
+    */
     public function set_host($host)
     {
         $this->_host = $host;
         return $this;
     }
 
+    /**
+    * @return string
+    */
     public function host()
     {
         return $this->_host;
     }
 
+    /**
+    * @param integer $port
+    * @return MemcacheCacheServerConfig Chainable
+    */
     public function set_port($port)
     {
         $this->_port = $port;
         return $this;
     }
 
+    /**
+    * @return integer
+    */
     public function port()
     {
         return $this->_port;
     }
 
+    /**
+    * @param bool $persistent
+    * @return MemcacheCacheServerConfig Chainable
+    */
     public function set_persistent($persistent)
     {
         $this->_persistent = $persistent;
         return $this;
     }
 
+    /**
+    * @return bool
+    */
     public function persistent()
     {
         return $this->_persistent;
     }
 
+    /**
+    * @param integer $weight
+    * @return MemcacheCacheServerConfig Chainable
+    */
     public function set_weight($weight)
     {
         $this->_weight = $weight;
         return $this;
     }
 
+    /**
+    * @return integer
+    */
     public function weight()
     {
         return $this->_weight;

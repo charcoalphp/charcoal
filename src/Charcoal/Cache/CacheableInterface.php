@@ -27,7 +27,7 @@ interface CacheableInterface
     /**
     * Set the object's cache key
     *
-    * @param string
+    * @param string $cache_key
     * @return CacheableInterface Chainable
     */
     public function set_cache_key($cache_key);
@@ -69,6 +69,7 @@ interface CacheableInterface
     public function cache_data();
 
     /**
+    * @param mixed   $data
     * @param integer $ttl
     * @return boolean
     */

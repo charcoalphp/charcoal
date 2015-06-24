@@ -51,6 +51,11 @@ trait ViewableTrait
         return $this;
     }
 
+    /**
+    * @param string $engine
+    * @throws InvalidArgumentException
+    * @return ViewableTrait Chainable
+    */
     public function set_template_engine($engine)
     {
         if (!is_string($engine)) {
@@ -60,6 +65,9 @@ trait ViewableTrait
         return $this;
     }
 
+    /**
+    * @return string
+    */
     public function template_engine()
     {
         if ($this->_template_engine === null) {
@@ -68,6 +76,11 @@ trait ViewableTrait
         return $this->_template_engine;
     }
 
+    /**
+    * @param string $ident
+    * @throws InvalidArgumentException
+    * @return ViewableTrait Chainable
+    */
     public function set_template_ident($ident)
     {
         if (!is_string($ident)) {
@@ -77,6 +90,9 @@ trait ViewableTrait
         return $this;
     }
 
+    /**
+    * @return string
+    */
     public function template_ident()
     {
         return $this->_template_ident;
@@ -104,12 +120,14 @@ trait ViewableTrait
     }
 
     /**
+    * @param mixed $data
     * @return ViewInterface
     */
     abstract protected function create_view($data = null);
 
     /**
-    * @param string The template to parse and echo. If null, use the object's default.
+    * @param string $template The template to parse and echo. If null, use the object's default.
+    * @return void
     */
     public function display($template = null)
     {
@@ -117,7 +135,7 @@ trait ViewableTrait
     }
 
     /**
-    * @param string The template to parse and render. If null, use the object's default.
+    * @param string $template The template to parse and render. If null, use the object's default.
     * @return string The rendered template.
     */
     public function render($template = null)

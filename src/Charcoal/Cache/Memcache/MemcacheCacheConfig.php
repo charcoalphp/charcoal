@@ -18,14 +18,16 @@ class MemcacheCacheConfig extends CacheConfig
     */
     public function default_data()
     {
-        $default_data =  array_merge(parent::default_data(), [
+        $default_data =  array_merge(
+            parent::default_data(), [
             'servers'=>[[
                 'host'          => 'localhost',
                 'port'          => 11211,
                 'persistent'    => false,
                 'weight'        => 1
             ]]
-        ]);
+            ]
+        );
         return $default_data;
     }
 

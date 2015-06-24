@@ -28,10 +28,12 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
 
     public function testContructorWithData()
     {
-        $obj = new AbstractViewClass([
+        $obj = new AbstractViewClass(
+            [
             'template'=>'foo',
             'context'=>['bar'=>'baz']
-        ]);
+            ]
+        );
         $this->assertEquals('foo', $obj->template());
         $this->assertEquals(['bar'=>'baz'], $obj->context());
     }
@@ -39,12 +41,14 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
     public function testSetData()
     {
         $obj = $this->obj;
-        $ret = $obj->set_data([
+        $ret = $obj->set_data(
+            [
             'engine'=>'php_mustache',
             'template'=>'foo',
             'context'=>['bar'=>'baz']
 
-        ]);
+            ]
+        );
         $this->assertSame($ret, $obj);
         $this->assertEquals('php_mustache', $obj->engine());
         $this->assertEquals('foo', $obj->template());

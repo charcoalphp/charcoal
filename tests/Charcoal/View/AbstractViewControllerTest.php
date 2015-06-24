@@ -33,9 +33,11 @@ class AbstractViewControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(null, $obj->foo);
         $this->assertNotTrue(isset($obj->foo));
 
-        $obj->set_context([
+        $obj->set_context(
+            [
             'foo'=>'bar'
-        ]);
+            ]
+        );
         $this->assertEquals('bar', $obj->foo);
         $this->assertEquals('bar', $obj->foo());
         $this->assertTrue(isset($obj->foo));

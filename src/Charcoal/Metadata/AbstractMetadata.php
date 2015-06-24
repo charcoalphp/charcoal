@@ -3,6 +3,8 @@
 namespace Charcoal\Metadata;
 
 use \ArrayAccess as ArrayAccess;
+use \InvalidArgumentException as InvalidArgumentException;
+
 use \Charcoal\Metadata\MetadataInterface as MetadataInterface;
 use \Charcoal\Metadata\MetadataLoader as MetadataLoader;
 
@@ -30,13 +32,13 @@ abstract class AbstractMetadata implements
 
     /**
     * @param array $data
-    * @throws \InvalidArgumentException if the data parameter is not an array
+    * @throws InvalidArgumentException if the data parameter is not an array
     * @return Metadata (Chainable)
     */
     public function set_data($data)
     {
         if (!is_array($data)) {
-            throw new \InvalidArgumentException('Data parameter must be an array');
+            throw new InvalidArgumentException('Data parameter must be an array');
         }
 
         if (isset($data['properties'])) {
@@ -52,13 +54,13 @@ abstract class AbstractMetadata implements
 
     /**
     * @param array $properties
-    * @throws \InvalidArgumentException if parameter is not an array
+    * @throws InvalidArgumentException if parameter is not an array
     * @return MetadataInterface Chainable
     */
     public function set_properties($properties)
     {
         if (!is_array($properties)) {
-            throw new \InvalidArgumentException('Properties need to be an array');
+            throw new InvalidArgumentException('Properties need to be an array');
         }
         $this->_properties = $properties;
         return $this;
@@ -73,8 +75,11 @@ abstract class AbstractMetadata implements
     }
 
     /**
-     * ArrayAccess isset(config[a])
-     */
+    * ArrayAccess isset(config[a])
+    *
+    * @param mixed $offset
+    * @return boolean
+    */
     public function offsetExists($offset)
     {
         return isset($this->{$offset});
@@ -82,6 +87,9 @@ abstract class AbstractMetadata implements
 
     /**
     * ArrayAccess config[a]
+    *
+    * @param mixed $offset
+    * @return mixed
     */
     public function offsetGet($offset)
     {
@@ -90,18 +98,25 @@ abstract class AbstractMetadata implements
 
     /**
     * ArrayAccess config[a] = '';
-    * @throws \InvalidArgumentException if the offset is not set ($config[] = '')
+    *
+    * @param string $offset
+    * @param mixed  $value
+    * @throws InvalidArgumentException if the offset is not set ($config[] = '')
+    * @return void
     */
     public function offsetSet($offset, $value)
     {
         if (empty($offset)) {
-            throw new \InvalidArgumentException('Offset is required');
+            throw new InvalidArgumentException('Offset is required');
         }
         $this->{$offset} = $value;
     }
 
     /**
-    *  ArrayAcces unset(config[a])
+    * ArrayAcces unset(config[a])
+    *
+    * @param mixed $offset
+    * @return void
     */
     public function offsetUnset($offset)
     {
@@ -110,6 +125,7 @@ abstract class AbstractMetadata implements
     }
 
     /**
+    * @param array $data
     * @return LoaderInterface
     */
     protected function create_loader($data = null)

@@ -2,6 +2,9 @@
 
 namespace Charcoal;
 
+use \Exception as Exception;
+use \InvalidArgumentException as InvalidArgumentException;
+
 use \Charcoal\Config\AbstractConfig as AbstractConfig;
 
 class Config extends AbstractConfig implements \ArrayAccess
@@ -28,6 +31,9 @@ class Config extends AbstractConfig implements \ArrayAccess
     private $_metadata_path = [];
     private $_template_path = [];
 
+    /**
+    * @param mixed $config
+    */
     public function __construct($config = null)
     {
         // Default data
@@ -37,6 +43,10 @@ class Config extends AbstractConfig implements \ArrayAccess
 
     }
 
+    /**
+    * @param mixed $offset
+    * @return boolean
+    */
     public function offsetExists($offset)
     {
         $f = [$this, $offset];
@@ -47,6 +57,10 @@ class Config extends AbstractConfig implements \ArrayAccess
         }
     }
 
+    /**
+    * @param mixed $offset
+    * @return mixed
+    */
     public function offsetGet($offset)
     {
         $f = [$this, $offset];
@@ -57,19 +71,36 @@ class Config extends AbstractConfig implements \ArrayAccess
         }
     }
 
+    /**
+    * @param string $offset
+    * @param mixed  $value
+    * @return void
+    */
     public function offsetSet($offset, $value)
     {
         $this->{$offset} = $value;
     }
 
+    /**
+    * @param string $offset
+    * @return void
+    */
     public function offsetUnset($offset)
     {
         $this->{$offset} = null;
         unset($this->{$offset});
     }
 
+    /**
+    * @param array $data
+    * @throws InvalidArgumentException
+    * @return Config Chainable
+    */
     public function set_data($data)
     {
+        if (!is_array($data)) {
+            throw new InvalidArgumentException('Data must be an array');
+        }
         if (isset($data['admin_path']) && $data['admin_path'] !== null) {
             $this->set_admin_path($data['admin_path']);
         }
@@ -106,16 +137,25 @@ class Config extends AbstractConfig implements \ArrayAccess
         return $this;
     }
 
+    /**
+    * @return string
+    */
     public function project_name()
     {
         return $this->project_name;
     }
 
+    /**
+    * @return string
+    */
     public function salt()
     {
         return $this->_salt;
     }
 
+    /**
+    * @return string
+    */
     public function application_env()
     {
         $application_env = preg_replace('/!^[A-Za-z0-9_]+$/', '', getenv('APPLICATION_ENV'));
@@ -125,92 +165,143 @@ class Config extends AbstractConfig implements \ArrayAccess
         return $application_env;
     }
 
+    /**
+    * @param string $admin_path
+    * @throws InvalidArgumentException
+    * @return Config Chainable
+    */
     public function set_admin_path($admin_path)
     {
         if (!is_string($admin_path)) {
-            throw new \InvalidArgumentException('Admin path must be a string');
+            throw new InvalidArgumentException('Admin path must be a string');
         }
         $this->_admin_path = $admin_path;
         return $this;
     }
 
+    /**
+    * @return string
+    */
     public function admin_path()
     {
         return $this->_admin_path;
     }
 
+    /**
+    * @param boolean $dev_mode
+    * @throws InvalidArgumentException
+    * @return Config Chainable
+    */
     public function set_dev_mode($dev_mode)
     {
         if (!is_bool($dev_mode)) {
-            throw new \InvalidArgumentException('Dev mode must be a boolean.');
+            throw new InvalidArgumentException('Dev mode must be a boolean.');
         }
         $this->_dev_mode = $dev_mode;
         return $this;
     }
 
+    /**
+    * @return boolean
+    */
     public function dev_mode()
     {
         return !!$this->_dev_mode;
     }
 
+    /**
+    * @param string $timezone
+    * @throws InvalidArgumentException
+    * @return Config Chainable
+    */
     public function set_timezone($timezone)
     {
         if (!is_string($timezone)) {
-            throw new \InvalidArgumentException('Timezone must be a string.');
+            throw new InvalidArgumentException('Timezone must be a string.');
         }
         $this->_timezone = $timezone;
         return $this;
     }
 
+    /**
+    * @return string
+    */
     public function timezone()
     {
         return $this->_timezone;
     }
 
+    /**
+    * @param array $databases
+    * @throws InvalidArgumentException
+    * @return Config CHainable
+    */
     public function set_databases($databases)
     {
         if (!is_array($databases)) {
-            throw new \InvalidArgumentException('Databases must be an array.');
+            throw new InvalidArgumentException('Databases must be an array.');
         }
         $this->_databases = $databases;
         return $this;
     }
     
+    /**
+    * @throws Exception
+    * @return array
+    */
     public function databases()
     {
         if ($this->_databases == null) {
-            throw new \Exception('Databases are not set');
+            throw new Exception('Databases are not set');
         }
         return $this->_databases;
     }
 
+    /**
+    * @param string $ident
+    * @throws InvalidArgumentException
+    * @throws Exception
+    * @return array
+    */
     public function database_config($ident)
     {
         if (!is_string($ident)) {
-            throw new \InvalidArgumentException('Default database must be a string.');
+            throw new InvalidArgumentException('Default database must be a string.');
         }
         $databases = $this->databases();
         if (!isset($databases[$ident])) {
-            throw new \Exception(sprintf('No database configuration matches "%s"', $ident));
+            throw new Exception(sprintf('No database configuration matches "%s"', $ident));
         }
         return $databases[$ident];
     }
 
+    /**
+    * @param string $default_database
+    * @throws InvalidArgumentException
+    * @return Config Chainable
+    */
     public function set_default_database($default_database)
     {
         if (!is_string($default_database)) {
-            throw new \InvalidArgumentException('Default database must be a string.');
+            throw new InvalidArgumentException('Default database must be a string.');
         }
         $this->_default_database = $default_database;
+        return $this;
     }
 
+    /**
+    * @param string $ident
+    * @param array  $config
+    * @throws InvalidArgumentException
+    * @return Config Chainable
+    */
     public function add_database($ident, $config)
     {
         if (!is_string($ident)) {
-            throw new \InvalidArgumentException('Database ident must be a string.');
+            throw new InvalidArgumentException('Database ident must be a string.');
         }
         if (!is_array($config)) {
-            throw new \InvalidArgumentException('Database config must be an array.');
+            throw new InvalidArgumentException('Database config must be an array.');
         }
 
         if ($this->_databases === null) {
@@ -220,56 +311,86 @@ class Config extends AbstractConfig implements \ArrayAccess
         return $this;
     }
 
+    /**
+    * @throws Exception
+    * @return mixed
+    */
     public function default_database()
     {
         if ($this->_default_database == null) {
-            throw new \Exception('Default database is not set.');
+            throw new Exception('Default database is not set.');
         }
         return $this->_default_database;
     }
 
+    /**
+    * @param array $metadata_path
+    * @throws InvalidArgumentException
+    * @return Config Chainable
+    */
     public function set_metadata_path($metadata_path)
     {
         if (!is_array($metadata_path)) {
-            throw new \Exception('Metadata path needs to be an array');
+            throw new InvalidArgumentException('Metadata path needs to be an array');
         }
         $this->_metadata_path = $metadata_path;
         return $this;
     }
 
+    /**
+    * @return array
+    */
     public function metadata_path()
     {
         return $this->_metadata_path;
     }
 
+    /**
+    * @param string $path
+    * @throws InvalidArgumentException
+    * @return Config Chainable
+    */
     public function add_metadata_path($path)
     {
         if (!is_string($path)) {
-            throw new \InvalidArgumentException('Path needs to be a string');
+            throw new InvalidArgumentException('Path needs to be a string');
         }
 
         $this->_metadata_path[] = $path;
         return $this;
     }
 
+    /**
+    * @param array $template_path
+    * @throws Exception
+    * @return Config Chainable
+    */
     public function set_template_path($template_path)
     {
         if (!is_array($template_path)) {
-            throw new \Exception('Metadata path needs to be an array');
+            throw new Exception('Metadata path needs to be an array');
         }
         $this->_template_path = $template_path;
         return $this;
     }
 
+    /**
+    * @return array
+    */
     public function template_path()
     {
         return $this->_template_path;
     }
 
+    /**
+    * @param string $path
+    * @throws InvalidArgumentException
+    * @return Config Chainable
+    */
     public function add_template_path($path)
     {
         if (!is_string($path)) {
-            throw new \InvalidArgumentException('Path needs to be a string');
+            throw new InvalidArgumentException('Path needs to be a string');
         }
 
         $this->_template_path[] = $path;

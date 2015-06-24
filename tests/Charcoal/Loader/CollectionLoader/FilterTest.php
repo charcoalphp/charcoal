@@ -26,10 +26,12 @@ class FilterTest extends \PHPUnit_Framework_TestCase
         $obj->set_data(['property'=>'foo']);
         $this->assertEquals('foo', $obj->property());
 
-        $obj->set_data([
+        $obj->set_data(
+            [
             'property'=>'bar',
             'val'=>42
-        ]);
+            ]
+        );
         $this->assertEquals('bar', $obj->property());
         $this->assertEquals(42, $obj->val());
 

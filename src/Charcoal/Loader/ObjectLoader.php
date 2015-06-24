@@ -8,12 +8,19 @@ class ObjectLoader extends AbstractLoader
     private $_obj;
     private $_source;
 
+    /**
+    * @param mixed $source
+    * @return ObjectLoader Chainable
+    */
     public function set_source($source)
     {
         $this->_source = $source;
         return $this;
     }
 
+    /**
+    * @return mixed
+    */
     public function source()
     {
         return $this->_source;
@@ -33,22 +40,36 @@ class ObjectLoader extends AbstractLoader
         return $this;
     }
 
+    /**
+    * @return string
+    */
     public function ident()
     {
         return $this->_ident;
     }
 
+    /**
+    * @param ModelInterface $obj
+    * @return ObjectLoader Chainable
+    */
     public function set_obj($obj)
     {
         $this->_obj = $obj;
         return $this;
     }
 
+    /**
+    * @return ModelInterface
+    */
     public function obj()
     {
         return $this->_obj;
     }
 
+    /**
+    * @param string|null $ident
+    * @return ModelInterface
+    */
     public function load($ident = null)
     {
         $data = $this->load_data($ident);
@@ -58,6 +79,10 @@ class ObjectLoader extends AbstractLoader
         return $this->obj();
     }
 
+    /**
+    * @param string|null $ident
+    * @return array
+    */
     public function load_data($ident = null)
     {
         // @todo: The query should call the object's properties to fetch any other needed data from other tables

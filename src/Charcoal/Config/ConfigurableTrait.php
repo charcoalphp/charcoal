@@ -42,5 +42,9 @@ trait ConfigurableTrait
         return $this->_config;
     }
 
+    /**
+    * @param array|null $data
+    * @return ConfigInterface
+    */
     abstract protected function create_config($data = null);
 }

@@ -70,9 +70,9 @@ module.exports = function(grunt) {
 			src:{
 				src:['src/**/*.php']
 			},
-			tests: {
-				src:['tests/**/*.php']
-			},
+			//tests: {
+			//	src:['tests/**/*.php']
+			//},
 			options: {
 				standard: 'phpcs.xml',
 				extensions: 'php',

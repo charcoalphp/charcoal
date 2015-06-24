@@ -36,6 +36,9 @@ class PropertyMetadata extends AbstractMetadata implements \ArrayAccess
         return $this;
     }
 
+    /**
+    * @return string
+    */
     public function ident()
     {
         return $this->_ident;

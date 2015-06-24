@@ -17,7 +17,6 @@ class ModelViewController extends AbstractViewController
     * because `__call()` can not be used.
     *
     * @param string $name
-    *
     * @return mixed
     * @see    https://github.com/bobthecow/mustache.php/wiki/Magic-Methods
     */
@@ -45,7 +44,6 @@ class ModelViewController extends AbstractViewController
     *
     * @param string $name
     * @param mixed  $arguments
-    *
     * @return mixed
     */
     public function __call($name, $arguments)
@@ -64,7 +62,6 @@ class ModelViewController extends AbstractViewController
     
     /**
     * @param string $name
-    *
     * @return boolean
     */
     public function __isset($name)
@@ -87,15 +84,22 @@ class ModelViewController extends AbstractViewController
     }
 
     /**
-    *
+    * @param ModelInterface $context
+    * @throws InvalidArgumentException
+    * @return ModelViewController Chainable
     */
     public function set_context($context)
     {
+        if (!($context instanceof ModelInterface)) {
+            throw new InvalidArgumentException('Context must be a Model');
+        }
         $this->_context = $context;
+        return $this;
     }
 
     /**
     * @throws \Exception if the context is not a model
+    * @return ModelInterface
     */
     protected function _model()
     {

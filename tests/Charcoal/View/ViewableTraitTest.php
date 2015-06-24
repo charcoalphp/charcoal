@@ -30,9 +30,11 @@ class ViewableTraitTest extends \PHPUnit_Framework_TestCase
     public function testSetViewableData()
     {
         $obj = $this->obj;
-        $ret = $obj->set_viewable_data([
+        $ret = $obj->set_viewable_data(
+            [
             'template_engine'=>'php'
-        ]);
+            ]
+        );
         $this->assertSame($ret, $obj);
         $this->assertEquals('php', $obj->template_engine());
 

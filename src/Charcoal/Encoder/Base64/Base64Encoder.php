@@ -16,7 +16,7 @@ class Base64Encoder extends AbstractEncoder
     * Encode a string.
     *
     * @param string $plain_string The (plain) string to encode.
-    * @param string $salt Optional salt.
+    * @param string $salt         Optional salt.
     * @throws \InvalidArgumentException If plain_string is not a string
     * @return string The encoded string.
     */
@@ -42,7 +42,7 @@ class Base64Encoder extends AbstractEncoder
     * Decode an encoded string.
     *
     * @param string $encoded_string The (encoded) string to decode.
-    * @param string $salt Optional salt.
+    * @param string $salt           Optional salt.
     * @throws \InvalidArgumentException If encoded_string is not a string
     * @return string The decoded (original) string.
     */

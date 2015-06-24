@@ -2,6 +2,8 @@
 
 namespace Charcoal\Loader\CollectionLoader;
 
+use \InvalidArgumentException as InvalidArgumentException;
+
 class Filter
 {
     const DEFAULT_OPERATOR = '=';
@@ -35,13 +37,14 @@ class Filter
     private $_active;
 
     /**
-    * @throws \InvalidArgumentException if parameter is not an array
+    * @param array $data
+    * @throws InvalidArgumentException if parameter is not an array
     * @return Filter (Chainable)
     */
     public function set_data($data)
     {
         if (!is_array($data)) {
-            throw new \InvalidArgumentException('Data must be an array');
+            throw new InvalidArgumentException('Data must be an array');
         }
         if (isset($data['property'])) {
             $this->set_property($data['property']);
@@ -68,7 +71,7 @@ class Filter
     }
 
     /**
-    * @param boolean
+    * @param boolean $active
     * @return Filter (Chainable)
     */
     public function set_active($active)
@@ -77,6 +80,9 @@ class Filter
         return $this;
     }
 
+    /**
+    * @return boolean
+    */
     public function active()
     {
         return !!$this->_active;
@@ -84,16 +90,16 @@ class Filter
 
     /**
     * @param string $property
-    * @throws \InvalidArgumentException if the property argument is not a string
+    * @throws InvalidArgumentException if the property argument is not a string
     * @return Filter (Chainable)
     */
     public function set_property($property)
     {
         if (!is_string($property)) {
-            throw new \InvalidArgumentException('Property must be a string');
+            throw new InvalidArgumentException('Property must be a string');
         }
         if ($property=='') {
-            throw new \InvalidArgumentException('Property can not be empty');
+            throw new InvalidArgumentException('Property can not be empty');
         }
 
         $this->_property = $property;
@@ -128,18 +134,18 @@ class Filter
 
     /**
     * @param string $operator
-    * @throws \InvalidArgumentException if the parameter is not a valid operator
+    * @throws InvalidArgumentException if the parameter is not a valid operator
     * @return Filter (Chainable)
     */
     public function set_operator($operator)
     {
         if (!is_string($operator)) {
-            throw new \InvalidArgumentException('Operator should be a string');
+            throw new InvalidArgumentException('Operator should be a string');
         }
 
         $operator = strtoupper($operator);
         if (!in_array($operator, $this->_valid_operators())) {
-            throw new \InvalidArgumentException('This is not a valid operator.');
+            throw new InvalidArgumentException('This is not a valid operator.');
         }
 
         $this->_operator = $operator;
@@ -156,18 +162,18 @@ class Filter
 
     /**
     * @param string $func
-    * @throws \InvalidArgumentException if the parameter is not a valid function
+    * @throws InvalidArgumentException if the parameter is not a valid function
     * @return Filter (Chainable)
     */
     public function set_func($func)
     {
         if (!is_string($func)) {
-            throw new \InvalidArgumentException('Func should be astring');
+            throw new InvalidArgumentException('Func should be astring');
         }
 
         $func = strtoupper($func);
         if (!in_array($func, $this->_valid_func())) {
-            throw new \InvalidArgumentException('This is not a valid function.');
+            throw new InvalidArgumentException('This is not a valid function.');
         }
         $this->_func = $func;
         return $this;
@@ -183,18 +189,18 @@ class Filter
 
     /**
     * @param string $operand
-    * @throws \InvalidArgumentException if the parameter is not a valid operand
+    * @throws InvalidArgumentException if the parameter is not a valid operand
     * @return Filter (Chainable)
     */
     public function set_operand($operand)
     {
         if (!is_string($operand)) {
-            throw new \InvalidArgumentException('Operand should be a string.');
+            throw new InvalidArgumentException('Operand should be a string.');
         }
 
         $operand = strtoupper($operand);
         if (!in_array($operand, $this->_valid_operands())) {
-            throw new \InvalidArgumentException('This is not a valid operand.');
+            throw new InvalidArgumentException('This is not a valid operand.');
         }
 
         $this->_operand = $operand;
@@ -210,14 +216,14 @@ class Filter
     }
 
     /**
-    * @param string $operand
-    * @throws \InvalidArgumentException if the parameter is not a valid operand
+    * @param string $sql
+    * @throws InvalidArgumentException if the parameter is not a valid operand
     * @return Filter (Chainable)
     */
     public function set_string($sql)
     {
         if (!is_string($sql)) {
-            throw new \InvalidArgumentException('String should be a string.');
+            throw new InvalidArgumentException('String should be a string.');
         }
 
         $this->_string = $sql;
@@ -232,6 +238,9 @@ class Filter
         return $this->_string;
     }
 
+    /**
+    * @return array
+    */
     private function sql_fields()
     {
         $property = $this->property();
@@ -261,7 +270,7 @@ class Filter
 
         $filter = '';
         foreach ($fields as $field) {
-            $val = '\'' . $this->val() . '\'';
+            $val = '\''.$this->val().'\'';
 
             // Support custom "operator" for the filter
             $operator = $this->operator();
@@ -333,7 +342,8 @@ class Filter
 
     /**
     * Supported operand types, uppercase
-    ** @return array
+    *
+    * @return array
     */
     protected function _valid_operands()
     {

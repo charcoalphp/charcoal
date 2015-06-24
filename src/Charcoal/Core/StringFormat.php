@@ -24,7 +24,7 @@ class StringFormat
     protected $_unicode = true;
 
     /**
-    * @var string Optional string
+    * @param string $string Optional string
     */
     public function __construct($string = null)
     {
@@ -33,13 +33,16 @@ class StringFormat
         }
     }
 
+    /**
+    * @return string
+    */
     public function __toString()
     {
         return $this->string();
     }
 
     /**
-    * @var string $string
+    * @param string $string
     * @throws InvalidArgumentException
     * @return StringFormat Chainable
     */
@@ -60,12 +63,23 @@ class StringFormat
         return $this->_string;
     }
 
+    /**
+    * @param boolean $unicode
+    * @throws InvalidArgumentException
+    * @return StringFormat Chainable
+    */
     public function set_unicode($unicode)
     {
+        if (!is_bool($unicode)) {
+            throw new InvalidArgumentException('Unicode must be a boolean');
+        }
         $this->_unicode = $unicode;
         return $this;
     }
 
+    /**
+    * @return boolean
+    */
     public function unicode()
     {
         return $this->_unicode;
@@ -105,6 +119,8 @@ class StringFormat
     *   - Plus the number 0 to 9
     *
     * Ideally, should be used with unaccents
+    *
+    * @return StringFormat Chainable
     */
     public function alphanumeric()
     {

@@ -2,6 +2,8 @@
 
 namespace Charcoal\Loader\CollectionLoader;
 
+use \InvalidArgumentException as InvalidArgumentException;
+
 class Order
 {
     const MODE_ASC = 'asc';
@@ -31,13 +33,14 @@ class Order
     private $_active = true;
 
     /**
-    * @throws \InvalidArgumentException if parameter is not an array
+    * @param array $data
+    * @throws InvalidArgumentException if parameter is not an array
     * @return Order (Chainable)
     */
     public function set_data($data)
     {
         if (!is_array($data)) {
-            throw new \InvalidArgumentException('Data must be an array');
+            throw new InvalidArgumentException('Data must be an array');
         }
         if (isset($data['property'])) {
             $this->set_property($data['property']);
@@ -63,41 +66,52 @@ class Order
 
     /**
     * @param string $property
-    * @throws \InvalidArgumentException if the property argument is not a string
+    * @throws InvalidArgumentException if the property argument is not a string
     * @return Order (Chainable)
     */
     public function set_property($property)
     {
         if (!is_string($property)) {
-            throw new \InvalidArgumentException('Property must be a string');
+            throw new InvalidArgumentException('Property must be a string');
         }
         if ($property=='') {
-            throw new \InvalidArgumentException('Property can not be empty');
+            throw new InvalidArgumentException('Property can not be empty');
         }
 
         $this->_property = $property;
         return $this;
     }
 
+    /**
+    * @return string
+    */
     public function property()
     {
         return $this->_property;
     }
 
+    /**
+    * @param string $mode
+    * @throws InvalidArgumentException
+    * @return Order Chainable
+    */
     public function set_mode($mode)
     {
         if (!is_string($mode)) {
-            throw new \InvalidArgumentException('Mode must be a string');
+            throw new InvalidArgumentException('Mode must be a string');
         }
 
         $mode = strtolower($mode);
         if (!in_array($mode, $this->_valid_modes())) {
-            throw new \InvalidArgumentException('Invalid mode');
+            throw new InvalidArgumentException('Invalid mode');
         }
         $this->_mode = $mode;
         return $this;
     }
 
+    /**
+    * @return string
+    */
     public function mode()
     {
         return $this->_mode;
@@ -111,7 +125,7 @@ class Order
     * If it is an array, the values will be used as is.
     * Otherwise, the function will throw an error
     *
-    * @throws \InvalidArgumentException if the parameter is not an array or a string
+    * @throws InvalidArgumentException if the parameter is not an array or a string
     * @param  string|array $values
     * @return Order (Chainable)
     */
@@ -119,21 +133,24 @@ class Order
     {
         if (is_string($values)) {
             if ($values == '') {
-                throw new \InvalidArgumentException('String values can not be empty');
+                throw new InvalidArgumentException('String values can not be empty');
             }
             $values = array_map('trim', explode(',', $values));
             $this->_values = $values;
         } else if (is_array($values)) {
             if (empty($values)) {
-                throw new \InvalidArgumentException('Array values can not be empty');
+                throw new InvalidArgumentException('Array values can not be empty');
             }
             $this->_values = $values;
         } else {
-            throw new \InvalidArgumentException('Values must be an array, or a comma-delimited string');
+            throw new InvalidArgumentException('Values must be an array, or a comma-delimited string');
         }
         return $this;
     }
 
+    /**
+    * @return array
+    */
     public function values()
     {
         return $this->_values;

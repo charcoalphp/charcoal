@@ -16,12 +16,14 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
     public function setData()
     {
         $obj = new CollectionLoader();
-        $obj->set_data([
+        $obj->set_data(
+            [
             'properties'=>[
                 'id',
                 'test'
             ]
-        ]);
+            ]
+        );
         $this->assertEquals(['id', 'test'], $obj->properties());
     }
 

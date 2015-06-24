@@ -2,10 +2,12 @@
 
 namespace Charcoal\Loader;
 
-use \Charcoal\Charcoal as Charcoal;
+use \InvalidArgumentException as InvalidArgumentException;
 
 use League\Flysystem\Filesystem;
 use League\Flysystem\Adapter\Local as LocalAdapter;
+
+use \Charcoal\Charcoal as Charcoal;
 
 class FileLoader extends AbstractLoader
 {
@@ -23,13 +25,13 @@ class FileLoader extends AbstractLoader
 
     /**
     * @param string $ident
-    * @throws \InvalidArgumentException if the ident is not a string
+    * @throws InvalidArgumentException if the ident is not a string
     * @return FileLoader Chainable
     */
     public function set_ident($ident)
     {
         if (!is_string($ident)) {
-            throw new \InvalidArgumentException(__CLASS__.'::'.__FUNCTION__.'() - Ident must be a string.');
+            throw new InvalidArgumentException(__CLASS__.'::'.__FUNCTION__.'() - Ident must be a string.');
         }
         $this->_ident = $ident;
         return $this;
@@ -43,16 +45,23 @@ class FileLoader extends AbstractLoader
         return $this->_ident;
     }
 
-
+    /**
+    * @param string $path
+    * @throws InvalidArgumentException
+    * @return FileLoader Chainable
+    */
     public function set_path($path)
     {
         if (!is_string($path)) {
-            throw new \InvalidArgumentException('set_path() expects a string');
+            throw new InvalidArgumentException('set_path() expects a string');
         }
         $this->_path = $path;
         return $this;
     }
 
+    /**
+    * @return string
+    */
     public function path()
     {
         if (!$this->_path) {
@@ -62,7 +71,7 @@ class FileLoader extends AbstractLoader
     }
 
     /**
-    * @
+    * @return Filesystem
     */
     public function filesystem()
     {
@@ -70,11 +79,13 @@ class FileLoader extends AbstractLoader
             $adapter = new LocalAdapter($this->path());
             $this->_filesystem = new Filesystem($adapter);
         }
+        return $this->_filesystem;
     }
 
     /**
     * Returns the content of the first file found in search path
     *
+    * @param string|null $ident
     * @return string File content
     */
     public function load($ident = null)
@@ -100,6 +111,10 @@ class FileLoader extends AbstractLoader
         return '';
     }
 
+    /**
+    * @param string $filename
+    * @return string
+    */
     protected function _load_first_from_search_path($filename)
     {
         $search_path = $this->search_path();
@@ -117,6 +132,10 @@ class FileLoader extends AbstractLoader
         return '';
     }
 
+    /**
+    * @param string $filename
+    * @return string
+    */
     protected function _first_matching_filename($filename)
     {
         if (file_exists($filename)) {
@@ -137,6 +156,7 @@ class FileLoader extends AbstractLoader
     }
 
     /**
+    * @param string $filename
     * @return array
     */
     protected function _all_matching_filenames($filename)
@@ -162,20 +182,19 @@ class FileLoader extends AbstractLoader
 
     /**
     * @param string $path
-    *
-    * @throws \InvalidArgumentException if the path does not exist or is invalid
+    * @throws InvalidArgumentException if the path does not exist or is invalid
     * @return \Charcoal\Service\Loader\Metadata (Chainable)
     */
     public function add_path($path)
     {
         if (!is_string($path)) {
-            throw new \InvalidArgumentException('Path should be a string.');
+            throw new InvalidArgumentException('Path should be a string.');
         }
         if (!file_exists($path)) {
-            throw new \InvalidArgumentException(sprintf('Path does not exist: %s', $path));
+            throw new InvalidArgumentException(sprintf('Path does not exist: %s', $path));
         }
         if (!is_dir($path)) {
-            throw new \InvalidArgumentException(sprintf('Path is not a directory: %s', $path));
+            throw new InvalidArgumentException(sprintf('Path is not a directory: %s', $path));
         }
 
         $this->_search_path[] = $path;

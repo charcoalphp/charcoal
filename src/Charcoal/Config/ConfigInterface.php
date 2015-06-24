@@ -19,7 +19,7 @@ interface ConfigInterface
     public function default_data();
 
     /**
-    * @param string $filename
+    * @param string $path
     * @return AbstractConfig (Chainable)
     */
     public function add_file($path);

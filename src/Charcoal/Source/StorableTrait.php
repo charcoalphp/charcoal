@@ -56,6 +56,7 @@ trait StorableTrait
     }
 
     /**
+    * @param array $data
     * @return SourceInterface
     */
     abstract public function create_source($data = null);
@@ -137,12 +138,12 @@ trait StorableTrait
     */
     abstract protected function post_save();
     /**
-    * @param array
+    * @param array $properties
     * @return bool
     */
     abstract protected function pre_update($properties = null);
     /**
-    * @param array
+    * @param array $properties
     * @return bool
     */
     abstract protected function post_update($properties = null);

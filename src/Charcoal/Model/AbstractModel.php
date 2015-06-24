@@ -130,7 +130,7 @@ abstract class AbstractModel implements
     }
 
     /**
-    * @return
+    * @return array
     */
     public function flat_data()
     {
@@ -138,7 +138,8 @@ abstract class AbstractModel implements
     }
 
     /**
-    *
+    * @param string $property_ident
+    * @return mixed
     */
     public function property_value($property_ident)
     {
@@ -304,6 +305,7 @@ abstract class AbstractModel implements
     /**
     * ValidatableInterface > create_validator().
     *
+    * @param array|null $data
     * @return ValidatorInterface
     */
     protected function create_validator($data = null)
@@ -318,6 +320,7 @@ abstract class AbstractModel implements
     /**
     * ViewableInterface > create_view().
     *
+    * @param array|null $data
     * @return ViewInterface
     */
     protected function create_view($data = null)

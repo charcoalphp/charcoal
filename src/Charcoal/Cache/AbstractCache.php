@@ -2,6 +2,8 @@
 
 namespace Charcoal\Cache;
 
+use \InvalidArgumentException as InvalidArgumentException;
+
 use \Charcoal\Config\ConfigurableInterface as ConfigurableInterface;
 use \Charcoal\Config\ConfigurableTrait as ConfigurableTrait;
 
@@ -20,6 +22,9 @@ abstract class AbstractCache implements
 {
     use ConfigurableTrait;
 
+    /**
+    * Singleton instance
+    */
     static protected $_instance;
 
     /**
@@ -27,12 +32,19 @@ abstract class AbstractCache implements
     */
     private $_prefix;
 
+    /**
+    *
+    */
     protected function __construct()
     {
         // Protected
         $this->init();
     }
 
+    /**
+    * Static singleton instance getter
+    * @return CacheInterface
+    */
     static public function instance()
     {
         if (static::$_instance !== null) {
@@ -48,13 +60,13 @@ abstract class AbstractCache implements
     * Set this to ensure multiple Charcoal project on the same cache servers do not overwrite eachother's cache.
     *
     * @param string $prefix The hard-coded prefix
-    * @throws \InvalidArgumentException if prefix is not a string
+    * @throws InvalidArgumentException if prefix is not a string
     * @return CacheInterface Chainable
     */
     public function set_prefix($prefix)
     {
         if (!is_string($prefix)) {
-            throw new \InvalidArgumentException('Prefix must be a string');
+            throw new InvalidArgumentException('Prefix must be a string');
         }
         $this->_prefix = $prefix;
         return $this;
@@ -93,9 +105,9 @@ abstract class AbstractCache implements
     /**
     * Store the data in the cache.
     *
-    * @param string $key The cache key where to store
-    * @param mixed $data The data to store in the cache
-    * @param integer $ttl Time-to-live, in seconds
+    * @param string  $key  The cache key where to store
+    * @param mixed   $data The data to store in the cache
+    * @param integer $ttl  Time-to-live, in seconds
     * @return boolean If storage was sucessful or not
     */
     abstract public function store($key, $data, $ttl = 0);
@@ -142,7 +154,7 @@ abstract class AbstractCache implements
     /**
     * ConfigurableInterface > create_config() implementation.
     *
-    * @param array
+    * @param array $data
     * @return ConfigInterface
     */
     protected function create_config($data = null)

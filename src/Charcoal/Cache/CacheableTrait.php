@@ -2,6 +2,8 @@
 
 namespace Charcoal\Cache;
 
+use \InvalidArgumentException as InvalidArgumentException;
+
 /**
 * A default implementation, as trait, of `the CachableInterface`.
 *
@@ -39,6 +41,10 @@ trait CacheableTrait
         return $this->_cache;
     }
 
+    /**
+    * @param array|null $data
+    * @return CacheInterface
+    */
     public function create_cache($data = null)
     {
         $cache = CacheFactory::instance()->get('memcache');
@@ -51,14 +57,14 @@ trait CacheableTrait
     /**
     * Set the object's cache key
     *
-    * @param string
-    * @throws \InvalidArgumentException if cache key is not a string
+    * @param string $cache_key
+    * @throws InvalidArgumentException if cache key is not a string
     * @return CacheableInterface Chainable
     */
     public function set_cache_key($cache_key)
     {
         if (!is_string($cache_key)) {
-            throw new \InvalidArgumentException('Cache key must be a string');
+            throw new InvalidArgumentException('Cache key must be a string');
         }
         $this->_cache_key = $cache_key;
         return $this;
@@ -77,6 +83,9 @@ trait CacheableTrait
         return $this->_cache_key;
     }
 
+    /**
+    * @return string
+    */
     protected function generate_cache_key()
     {
         return '';
@@ -107,13 +116,13 @@ trait CacheableTrait
 
     /**
     * @param boolean $use_cache
-    * @throws \InvalidArgumentException if use_cache is not a boolean
+    * @throws InvalidArgumentException if use_cache is not a boolean
     * @return CacheableInterface Chainable
     */
     public function set_use_cache($use_cache)
     {
         if (!is_bool($use_cache)) {
-            throw new \InvalidArgumentException('Use cache must be a boolean');
+            throw new InvalidArgumentException('Use cache must be a boolean');
         }
         $this->_use_cache = $use_cache;
         return $this;
@@ -133,7 +142,7 @@ trait CacheableTrait
     abstract public function cache_data();
 
     /**
-    * @param mixed $data
+    * @param mixed   $data
     * @param integer $ttl
     * @return boolean
     */

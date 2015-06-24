@@ -11,11 +11,13 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
 
     static public function setUpBeforeClass()
     {
-        Charcoal::config()->add_database('unit_test', [
+        Charcoal::config()->add_database(
+            'unit_test', [
             'username'=>'root',
             'password'=>'',
             'database'=>'charcoal_examples'
-        ]);
+            ]
+        );
 
         Charcoal::config()->set_default_database('unit_test');
 
@@ -31,7 +33,8 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
     public function getObj()
     {
         $obj = new AbstractModelClass();
-        $obj->set_metadata([
+        $obj->set_metadata(
+            [
             'properties'=>[
                 'id'=>[
                     'type'=>'id'
@@ -47,7 +50,8 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
                 ]
             ],
             'default_source'=>'default'
-        ]);
+            ]
+        );
         $obj->source()->create_table();
         return $obj;
     }
@@ -65,9 +69,11 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
 
     public function testConstructorWithData()
     {
-        $obj = new AbstractModelClass([
+        $obj = new AbstractModelClass(
+            [
             'foo'=>'bar'
-        ]);
+            ]
+        );
         $this->assertEquals('bar', $obj->foo);
     }
 
@@ -97,10 +103,12 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
     public function testSave()
     {
         $obj = $this->obj;
-        $obj->set_data([
+        $obj->set_data(
+            [
             'id'=>1,
             'foo'=>'Test'
-        ]);
+            ]
+        );
         $ret = $obj->save();
         $this->assertEquals(1, $ret);
     }
@@ -116,10 +124,12 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
     public function testUpdate()
     {
         $obj = $this->obj;
-        $obj->set_data([
+        $obj->set_data(
+            [
             'id'=>1,
             'foo'=>'Foobar'
-        ]);
+            ]
+        );
         $ret = $obj->update();
         $this->assertTrue($ret);
 
@@ -131,9 +141,11 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
     public function testDelete()
     {
         $obj = $this->obj;
-        $obj->set_data([
+        $obj->set_data(
+            [
             'id'=>1
-        ]);
+            ]
+        );
         $ret = $obj->delete();
         $this->assertTrue($ret);
     }

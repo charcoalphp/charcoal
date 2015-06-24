@@ -119,7 +119,9 @@ class DatabaseSource extends AbstractSource
     }
 
     /**
+    * @param string $table
     * @throws InvalidArgumentException if argument is not a string
+    * @return DatabaseSource Chainable
     */
     public function set_table($table)
     {
@@ -133,6 +135,7 @@ class DatabaseSource extends AbstractSource
 
     /**
     * @throws Exception if the table was not set
+    * @return string
     */
     public function table()
     {
@@ -269,7 +272,9 @@ class DatabaseSource extends AbstractSource
     }
 
     /**
+    * @param string $database_ident
     * @throws Exception if the database is not set.
+    * @return PDO
     */
     public function db($database_ident = null)
     {
@@ -320,6 +325,9 @@ class DatabaseSource extends AbstractSource
     /**
     * Get all the fields of a model.
     *
+    * @param ModelInterface $model
+    * @param array|null     $properties
+    * @return array
     * @todo Move this method in StorableTrait or AbstractModel
     */
     private function _get_model_fields(ModelInterface $model, $properties = null)
@@ -346,6 +354,9 @@ class DatabaseSource extends AbstractSource
 
     /**
     * ConfigurableTrait > create_config()
+    *
+    * @param array $data
+    * @return DatabaseSourceConfig
     */
     public function create_config($data = null)
     {
@@ -357,8 +368,8 @@ class DatabaseSource extends AbstractSource
     }
 
     /**
-    * @param mixed $ident
-    * @param StoreableInterface $item Optional item to load into
+    * @param mixed              $ident
+    * @param StoreableInterface $item  Optional item to load into
     * @throws Exception
     * @return StorableInterface
     */
@@ -459,8 +470,8 @@ class DatabaseSource extends AbstractSource
     /**
     * Update an item in storage.
     *
-    * @param StorableInterface $item The object to update
-    * @param array $properties The list of properties to update, if not all
+    * @param StorableInterface $item       The object to update
+    * @param array             $properties The list of properties to update, if not all
     * @return boolean Success / Failure
     */
     public function update_item(StorableInterface $item, $properties = null)
@@ -512,6 +523,7 @@ class DatabaseSource extends AbstractSource
     *
     * @param StorableInterface $item Optional item to delete. If none, the current model object will be used.
     * @throws Exception
+    * @return boolean Success / Failure
     */
     public function delete_item(StorableInterface $item = null)
     {
@@ -550,9 +562,9 @@ class DatabaseSource extends AbstractSource
     *
     * If the query fails, this method will return false.
     *
-    * @param string $q The SQL query to executed
-    * @param array $binds
-    * @param array $binds_types
+    * @param string $q           The SQL query to executed
+    * @param array  $binds
+    * @param array  $binds_types
     * @return PDOStatement|false The PDOStatement, or false in case of error
     */
     protected function db_query($q, $binds = [], $binds_types = [])

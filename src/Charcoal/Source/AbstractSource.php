@@ -16,6 +16,9 @@ abstract class AbstractSource implements
 
     /**
     * ConfigurableTrait > create_config()
+    *
+    * @param array $data
+    * @return SourceConfig
     */
     public function create_config($data = null)
     {

@@ -51,12 +51,19 @@ class CollectionLoader extends AbstractLoader
         return $this;
     }
 
+    /**
+    * @param mixed $source
+    * @return CollectionLoader Chainable
+    */
     public function set_source($source)
     {
         $this->_source = $source;
         return $this;
     }
 
+    /**
+    * @return mixed
+    */
     public function source()
     {
         return $this->_source;
@@ -64,7 +71,7 @@ class CollectionLoader extends AbstractLoader
 
 
     /**
-    * @var Model $model
+    * @param ModelInterface $model
     * @return Source Chainable
     */
     public function set_model(ModelInterface $model)
@@ -114,6 +121,7 @@ class CollectionLoader extends AbstractLoader
     /**
     * @param string $property Property ident
     * @throws InvalidArgumentException if property is not a string or empty
+    * @return CollectionLoader Chainable
     */
     public function add_property($property)
     {
@@ -168,8 +176,8 @@ class CollectionLoader extends AbstractLoader
     *   - `add_filter('foo', 42, ['operator'=>'<=']);`
     *
     * @param string|array|Filter $param
-    * @param mixed $val Optional: Only used if the first argument is a string
-    * @param array $options Optional: Only used if the first argument is a string
+    * @param mixed               $val     Optional: Only used if the first argument is a string
+    * @param array               $options Optional: Only used if the first argument is a string
     * @throws InvalidArgumentException if property is not a string or empty
     * @return CollectionLoader (Chainable)
     */
@@ -197,6 +205,7 @@ class CollectionLoader extends AbstractLoader
 
     /**
     * @param array $orders
+    * @return CollectionLoader Chainable
     */
     public function set_orders($orders)
     {
@@ -220,8 +229,8 @@ class CollectionLoader extends AbstractLoader
 
     /**
     * @param string|array|Order $param
-    * @param string $mode Optional
-    * @param array $order_options Optional
+    * @param string             $mode          Optional
+    * @param array              $order_options Optional
     * @throws InvalidArgumentException
     * @return CollectionLoader Chainable
     */
@@ -248,6 +257,10 @@ class CollectionLoader extends AbstractLoader
         return $this;
     }
 
+    /**
+    * @param mixed $param
+    * @return CollectionLoader Chainable
+    */
     public function set_pagination($param)
     {
         if ($param instanceof Pagination) {
@@ -260,6 +273,9 @@ class CollectionLoader extends AbstractLoader
         return $this;
     }
 
+    /**
+    * @return Pagination
+    */
     public function pagination()
     {
         if (!isset($this->_pagination)) {
@@ -268,25 +284,39 @@ class CollectionLoader extends AbstractLoader
         return $this->_pagination;
     }
 
+    /**
+    * @param integer $page
+    * @throws InvalidArgumentException
+    * @return CollectionLoader Chainable
+    */
     public function set_page($page)
     {
+        if (!is_integer($page)) {
+            throw new InvalidArgumentException('Page must be an integer');
+        }
         $this->pagination()->set_page($page);
         return $this;
     }
 
+    /**
+    * @return integer
+    */
     public function page()
     {
         return $this->pagination()->page();
     }
 
     /**
-    * @param integer
-    * @return Collection (Chainable)
+    * @param integer $num
+    * @throws InvalidArgumentException
+    * @return CollectionLoader Chainable
     */
     public function set_num_per_page($num)
     {
+        if (!is_integer($num)) {
+            throw new InvalidArgumentException('Num must be an integer');
+        }
         $this->pagination()->set_num_per_page($num);
-
         return $this;
     }
 
@@ -300,6 +330,7 @@ class CollectionLoader extends AbstractLoader
 
     /**
     * Load a collection
+    * @param string|null $ident
     * @throws Exception if the database connection fails
     * @return Collection
     */
@@ -332,7 +363,7 @@ class CollectionLoader extends AbstractLoader
         $sth->setFetchMode(\PDO::FETCH_ASSOC);
         while ($obj_data = $sth->fetch()) {
             // @todo Custom class
-            $class_name = get_class( $this->model() );
+            $class_name = get_class($this->model());
             // $obj = ModelFactory::instance()->get(
             $obj = new $class_name;
             // $obj = new \Charcoal\Model\Object();

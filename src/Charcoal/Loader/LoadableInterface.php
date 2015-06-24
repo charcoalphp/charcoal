@@ -23,7 +23,7 @@ interface LoadableInterface
     public function loader();
 
     /**
-    *
+    * @return mixed
     */
     public function load();
 }

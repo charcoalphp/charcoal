@@ -28,33 +28,59 @@ abstract class AbstractValidator implements ValidatorInterface
     */
     private $_results = [];
 
+    /**
+    * @param ValidatableInterface $model
+    */
     public function __construct(ValidatableInterface $model)
     {
         $this->_model = $model;
     }
 
+    /**
+    * @param string      $msg
+    * @param string|null $ident
+    * @return ValidatorInterface
+    */
     public function error($msg, $ident = null)
     {
         return $this->log(self::ERROR, $msg, $ident);
     }
 
+    /**
+    * @param string      $msg
+    * @param string|null $ident
+    * @return ValidatorInterface
+    */
     public function warning($msg, $ident = null)
     {
         return $this->log(self::WARNING, $msg, $ident);
     }
 
+    /**
+    * @param string      $msg
+    * @param string|null $ident
+    * @return ValidatorInterface
+    */
     public function notice($msg, $ident = null)
     {
         return $this->log(self::NOTICE, $msg, $ident);
     }
 
+    /**
+    * @param string      $level
+    * @param string      $msg
+    * @param string|null $ident
+    * @return ValidatorInterface
+    */
     public function log($level, $msg, $ident = null)
     {
-        $this->add_result([
+        $this->add_result(
+            [
             'ident'=>(($ident !== null) ? $ident : ''),
             'level'=>$level,
             'message'=>$msg
-        ]);
+            ]
+        );
         return $this;
     }
 
@@ -119,6 +145,11 @@ abstract class AbstractValidator implements ValidatorInterface
         return $this->_results[self::NOTICE];
     }
 
+    /**
+    * @param ValidatorInterface $v
+    * @param string             $ident_prefix
+    * @return ValidatorInterface Chainable
+    */
     public function merge(ValidatorInterface $v, $ident_prefix = null)
     {
         $results = $v->results();
@@ -133,5 +164,8 @@ abstract class AbstractValidator implements ValidatorInterface
         return $this;
     }
 
+    /**
+    * @return boolean
+    */
     abstract public function validate();
 }

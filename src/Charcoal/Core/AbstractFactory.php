@@ -118,7 +118,7 @@ abstract class AbstractFactory implements FactoryInterface
     /**
     * Add a type to the available types
     *
-    * @param string $type The type (class ident)
+    * @param string $type  The type (class ident)
     * @param string $class The FQN of the class
     * @return boolean Success / Failure
     */
@@ -143,7 +143,7 @@ abstract class AbstractFactory implements FactoryInterface
     }
 
     /**
-    * @param string $ident;
+    * @param string $ident
     * @return string
     */
     public function ident_to_classname($ident)

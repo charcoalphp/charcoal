@@ -27,6 +27,7 @@ interface DescribableInterface
     
     /**
     * @param string $metadata_ident
+    * @return MetadataInterface
     */
     public function load_metadata($metadata_ident = null);
 

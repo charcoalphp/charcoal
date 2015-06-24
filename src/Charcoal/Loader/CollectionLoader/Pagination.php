@@ -2,6 +2,8 @@
 
 namespace Charcoal\Loader\CollectionLoader;
 
+use \InvalidArgumentException as InvalidArgumentException;
+
 /**
 *
 */
@@ -21,13 +23,13 @@ class Pagination
 
     /**
     * @param array $data
-    * @throws \InvalidArgumentException if the data is not an array
+    * @throws InvalidArgumentException if the data is not an array
     * @return Pagination (Chainable)
     */
     public function set_data($data)
     {
         if (!is_array($data)) {
-            throw new \InvalidArgumentException('Data needs to be an array');
+            throw new InvalidArgumentException('Data needs to be an array');
         }
         if (isset($data['page'])) {
             $this->set_page($data['page']);
@@ -40,17 +42,17 @@ class Pagination
 
     /**
     * @param integer $page
-    * @throws \InvalidArgumentException if the parameter is not numeric or < 0
+    * @throws InvalidArgumentException if the parameter is not numeric or < 0
     * @return Pagination (Chainable)
     */
     public function set_page($page)
     {
         if (!is_numeric($page)) {
-            throw new \InvalidArgumentException('Page number needs to be numeric');
+            throw new InvalidArgumentException('Page number needs to be numeric');
         }
         $page = (int)$page;
         if ($page < 0) {
-            throw new \InvalidArgumentException('Page number needs to be >= 0');
+            throw new InvalidArgumentException('Page number needs to be >= 0');
         }
         $this->_page = $page;
         return $this;
@@ -65,18 +67,18 @@ class Pagination
     }
 
     /**
-    * @param integer $page
-    * @throws \InvalidArgumentException if the parameter is not numeric or < 0
+    * @param integer $num
+    * @throws InvalidArgumentException if the parameter is not numeric or < 0
     * @return Pagination (Chainable)
     */
     public function set_num_per_page($num)
     {
         if (!is_numeric($num)) {
-            throw new \InvalidArgumentException('Num-per-page needs to be numeric');
+            throw new InvalidArgumentException('Num-per-page needs to be numeric');
         }
         $num = (int)$num;
         if ($num < 0) {
-            throw new \InvalidArgumentException('Num-per-page needs to be >= 0');
+            throw new InvalidArgumentException('Num-per-page needs to be >= 0');
         }
 
         $this->_num_per_page = $num;
@@ -112,6 +114,9 @@ class Pagination
         return ($first + $num_per_page);
     }
 
+    /**
+    * @return string
+    */
     public function sql()
     {
         $sql = '';

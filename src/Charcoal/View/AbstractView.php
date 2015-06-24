@@ -45,8 +45,7 @@ abstract class AbstractView implements ViewInterface
     static private $_css = '';
 
     /**
-    * @param string $template
-    * @param mixed  $controller
+    * @param array|null $data
     */
     public function __construct($data = null)
     {
@@ -56,7 +55,7 @@ abstract class AbstractView implements ViewInterface
     }
 
     /**
-    *
+    * @return string
     */
     public function __toString()
     {
@@ -110,14 +109,14 @@ abstract class AbstractView implements ViewInterface
     }
 
     /**
-    * @param string
-    * @throws \InvalidArgumentException if the provided argument is not a string
+    * @param string $template
+    * @throws InvalidArgumentException if the provided argument is not a string
     * @return View (chainable)
     */
     public function set_template($template)
     {
         if (!is_string($template)) {
-            throw new \InvalidArgumentException('Template must be a string');
+            throw new InvalidArgumentException('Template must be a string');
         }
 
         $this->_template = $template;
@@ -142,6 +141,10 @@ abstract class AbstractView implements ViewInterface
     */
     abstract public function load_template($template_ident);
 
+    /**
+    * @param mixed $context
+    * @return AbstractView Chainable
+    */
     public function set_context($context)
     {
         $this->_context = $context;
@@ -151,6 +154,10 @@ abstract class AbstractView implements ViewInterface
         return $this;
     }
 
+    /**
+    * @param string $str
+    * @return string
+    */
     public function _t($str)
     {
         return $str;
@@ -171,6 +178,10 @@ abstract class AbstractView implements ViewInterface
         return $ret;
     }
 
+    /**
+    * @param string $js_requirement
+    * @return void
+    */
     public function add_js_requirement($js_requirement)
     {
         self::$_js_requirements[] = $js_requirement;
@@ -186,6 +197,10 @@ abstract class AbstractView implements ViewInterface
         return $js;
     }
 
+    /**
+    * @param string $js
+    * @return void
+    */
     public function add_js($js)
     {
         self::$_js .= $js;
@@ -206,6 +221,10 @@ abstract class AbstractView implements ViewInterface
         return $ret;
     }
 
+    /**
+    * @param string $css_requirement
+    * @return void
+    */
     public function add_css_requirement($css_requirement)
     {
         self::$_css_requirements[] = $css_requirement;
@@ -221,6 +240,10 @@ abstract class AbstractView implements ViewInterface
         return $css;
     }
 
+    /**
+    * @param string $css
+    * @return void
+    */
     public function add_css($css)
     {
         self::$_css .= $css;
@@ -241,7 +264,8 @@ abstract class AbstractView implements ViewInterface
     abstract public function load_context($context_ident);
 
     /**
-    * @param
+    * @param ViewControllerInterface $controller
+    * @return AbstractView Chainable
     */
     public function set_controller(ViewControllerInterface $controller)
     {
@@ -266,11 +290,8 @@ abstract class AbstractView implements ViewInterface
     abstract public function create_controller();
 
     /**
-    *
-    *
     * @param string $template
-    * @param mixed  $controller
-    *
+    * @param mixed  $context
     * @return string The rendered template
     */
     public function render($template = null, $context = null)
@@ -284,7 +305,8 @@ abstract class AbstractView implements ViewInterface
 
         $engine = $this->engine();
         if ($engine == self::ENGINE_MUSTACHE || $engine == self::ENGINE_PHP_MUSTACHE) {
-            $mustache = new Mustache_Engine([
+            $mustache = new Mustache_Engine(
+                [
                 'cache' => 'mustache_cache',
                 
                 //'loader' =>  null,
@@ -321,7 +343,8 @@ abstract class AbstractView implements ViewInterface
                         return $this->css();
                     }
                 ]
-            ]);
+                ]
+            );
             $controller = $this->controller();
             return $mustache->render($this->template(), $controller);
         } else {
@@ -331,7 +354,7 @@ abstract class AbstractView implements ViewInterface
 
     /**
     * @param string $template_ident
-    * @param mixed $context
+    * @param mixed  $context
     * @return string The rendered templated
     */
     public function render_template($template_ident = '', $context = null)
@@ -354,7 +377,7 @@ abstract class AbstractView implements ViewInterface
     }
 
     /**
-    * @param string @ident
+    * @param string $ident
     * @return string
     */
     protected function _ident_to_classname($ident)

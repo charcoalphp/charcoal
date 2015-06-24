@@ -36,10 +36,15 @@ abstract class AbstractConfig implements
         }
     }
 
+    /**
+    * @param array $data
+    * @return ConfigInterface Chainable
+    */
     abstract public function set_data($data);
 
     /**
     * ConfigInterface > default_data
+    * @return array
     */
     public function default_data()
     {
@@ -80,8 +85,9 @@ abstract class AbstractConfig implements
     * ArrayAccess > offsetSet()
     *
     * @param string $offset
-    * @param mixed $value
+    * @param mixed  $value
     * @throws InvalidArgumentException if $offset is not a string / numeric
+    * @return void
     */
     public function offsetSet($offset, $value)
     {
@@ -96,6 +102,7 @@ abstract class AbstractConfig implements
     *
     * @param string $offset
     * @throws InvalidArgumentException if $offset is not a string / numeric
+    * @return void
     */
     public function offsetUnset($offset)
     {

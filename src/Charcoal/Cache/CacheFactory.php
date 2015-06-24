@@ -17,7 +17,7 @@ class CacheFactory extends AbstractFactory
     /**
     * Get a cache instance from type
     *
-    * @param string $type;
+    * @param string $type
     * @throws InvalidArgumentException if type is not a string or not a valid cache type
     * @return CacheInterface
     */

@@ -14,6 +14,8 @@
 
 namespace Charcoal\Model;
 
+use \InvalidArgumentException as InvalidArgumentException;
+
 use \Charcoal\Charcoal as Charcoal;
 
 use \Charcoal\Core\IndexableInterface as IndexableInterface;
@@ -32,7 +34,9 @@ class Object extends Model implements IndexableInterface
 
     private $_active = true;
     
-
+    /**
+    * @param array $data
+    */
     public function __construct($data = null)
     {
         // Use Model constructor...
@@ -46,6 +50,10 @@ class Object extends Model implements IndexableInterface
         $this->set_data($data);
     }
 
+    /**
+    * @param array $data
+    * @return Object Chainable
+    */
     public function set_data($data)
     {
         parent::set_data($data);
@@ -58,20 +66,31 @@ class Object extends Model implements IndexableInterface
         return $this;
     }
 
+    /**
+    * @param boolean $active
+    * @throws InvalidArgumentException
+    * @return Object Chainable
+    */
     public function set_active($active)
     {
         if (!is_bool($active)) {
-            throw new \InvalidArgumentException('Active parameter needs to be bool');
+            throw new InvalidArgumentException('Active parameter needs to be bool');
         }
         $this->_active = $active;
         return $this;
     }
 
+    /**
+    * @return boolean
+    */
     public function active()
     {
         return $this->_active;
     }
 
+    /**
+    * @return ObjectLoader
+    */
     public function loader()
     {
         $metadata = $this->metadata();
@@ -86,6 +105,10 @@ class Object extends Model implements IndexableInterface
         return $loader;
     }
 
+    /**
+    * @param string|null $ident
+    * @return void
+    */
     public function load($ident = null)
     {
         if ($ident === null) {

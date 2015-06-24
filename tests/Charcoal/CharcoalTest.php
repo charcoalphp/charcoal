@@ -80,7 +80,8 @@ class CharcoalTest extends \PHPUnit_Framework_TestCase
         ];
 
         $merged = Charcoal::merge($arr1, $arr2);
-        $this->assertSame($merged, [
+        $this->assertSame(
+            $merged, [
             'foo'=>[
             'bar'=>'baz',
             'foo'=>'bar',
@@ -88,7 +89,8 @@ class CharcoalTest extends \PHPUnit_Framework_TestCase
             ],
             'bar'=>'foo',
             'baz'=>'con'
-        ]);
+            ]
+        );
     }
 
     public function testMergeWithNoParameterThrowException()

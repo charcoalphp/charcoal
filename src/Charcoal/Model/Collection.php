@@ -2,6 +2,8 @@
 
 namespace Charcoal\Model;
 
+use \InvalidArgumentException as InvalidArgumentException;
+
 use \Charcoal\Collection\AbstractCollection as AbstractCollection;
 use \Charcoal\Core\IndexableInterface as IndexableInterface;
 
@@ -30,19 +32,19 @@ class Collection extends AbstractCollection
      *
     * @param mixed $offset
     * @param mixed $value
-    *
-    * @throws \InvalidArgumentException if the value is not a Object or offset is set
+    * @throws InvalidArgumentException if the value is not a Object or offset is set
+    * @return void
     */
     public function offsetSet($offset, $value)
     {
         if (!($value instanceof IndexableInterface)) {
-            throw new \InvalidArgumentException('Collection value must be an Object');
+            throw new InvalidArgumentException('Collection value must be an Object');
         }
         if ($offset === null) {
             $this->_objects[] = $value;
             $this->_map[$value->id()] = $value;
         } else {
-            throw new \InvalidArgumentException('Collection can set to an offset. Use [].');
+            throw new InvalidArgumentException('Collection can set to an offset. Use [].');
         }
     }
 
@@ -65,8 +67,8 @@ class Collection extends AbstractCollection
      * ArrayAccess > offsetUnset
      *
      * @param mixed $offset
-     *
-     * @throws \InvalidArgumentException if the offset is not an integer or string
+     * @throws InvalidArgumentException if the offset is not an integer or string
+     * @return void
      */
     public function offsetUnset($offset)
     {
@@ -80,7 +82,7 @@ class Collection extends AbstractCollection
             unset($this->_map[$offset]);
             unset($this->_objects[$pos]);
         } else {
-            throw new \InvalidArgumentException('Offset should be either an integer or a string');
+            throw new InvalidArgumentException('Offset should be either an integer or a string');
         }
     }
 
@@ -88,8 +90,8 @@ class Collection extends AbstractCollection
     * ArrayAccess > offsetGet
     *
     * @param mixed $offset
-    *
-    * @throws \InvalidArgumentException if the offset is not an integer or string
+    * @throws InvalidArgumentException if the offset is not an integer or string
+    * @return void
     */
     public function offsetGet($offset)
     {
@@ -98,12 +100,14 @@ class Collection extends AbstractCollection
         } else if (is_string($offset)) {
             return isset($this->_map[$offset]) ? $this->_map[$offset] : null;
         } else {
-            throw new \InvalidArgumentException('Offset should be either an integer or a string');
+            throw new InvalidArgumentException('Offset should be either an integer or a string');
         }
     }
 
     /**
     * IteratorAggregate > getIterator
+    *
+    * @return mixed
     */
     public function getIterator()
     {
@@ -164,20 +168,18 @@ class Collection extends AbstractCollection
     }
 
     /**
-    * @param string|IndexableInterface
-    *
-    * @throws \InvalidArgumentException if the offset is not a string
+    * @param string|IndexableInterface $key
+    * @throws InvalidArgumentException if the offset is not a string
     * @return int|false
     */
     public function pos($key)
     {
-
         if (is_string($key)) {
             return array_search($key, array_keys($this->_map));
         } else if ($key instanceof IndexableInterface) {
             return array_search($key->id(), array_keys($this->_map));
         } else {
-            throw new \InvalidArgumentException('Key must be a string or an IndexableInterface');
+            throw new InvalidArgumentException('Key must be a string or an IndexableInterface');
         }
 
     }

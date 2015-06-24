@@ -17,7 +17,7 @@ trait ValidatableTrait
     protected $_validator;
 
     /**
-    * @param ValidatorInterface
+    * @param ValidatorInterface $validator
     * @return ValidatableInterface Chainable
     */
     public function set_validator(ValidatorInterface $validator)
@@ -43,7 +43,7 @@ trait ValidatableTrait
     abstract protected function create_validator();
     
     /**
-    * @param ValidatorInterface
+    * @param ValidatorInterface $v
     * @return bool
     */
     public function validate(ValidatorInterface &$v = null)

@@ -18,7 +18,8 @@ class ModelValidatorTest extends \PHPUnit_Framework_TestCase
     {
         
         $model = new Model();
-        $model->set_metadata([
+        $model->set_metadata(
+            [
             'properties'=>[
                 'foo'=>[
                     'type'=>'string',
@@ -26,7 +27,8 @@ class ModelValidatorTest extends \PHPUnit_Framework_TestCase
                     'min_length'=>5
                 ]
             ]
-        ]);
+            ]
+        );
 
         $obj = new ModelValidator($model);
         $ret = $obj->validate();

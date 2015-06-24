@@ -132,7 +132,7 @@ class MetadataLoader extends FileLoader
     }
 
     /**
-    * @param string
+    * @param string $ident
     * @return string
     */
     private function _filename_from_ident($ident)
@@ -144,6 +144,10 @@ class MetadataLoader extends FileLoader
 
     }
 
+    /**
+    * @param string $ident
+    * @return string
+    */
     protected function _ident_to_classname($ident)
     {
         $class = str_replace('/', '\\', $ident);
@@ -157,6 +161,10 @@ class MetadataLoader extends FileLoader
         return $class;
     }
 
+    /**
+    * @param string $classname
+    * @return string
+    */
     protected function _classname_to_ident($classname)
     {
         $ident = str_replace('\\', '/', strtolower($classname));

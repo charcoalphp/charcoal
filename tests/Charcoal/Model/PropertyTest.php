@@ -50,10 +50,12 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
         $obj->set_data(['label'=>'foo']);
         $this->assertEquals('foo', $obj->label());
 
-        $obj->set_data([
+        $obj->set_data(
+            [
             'val'=>'123',
             'label'=>'bar'
-        ]);
+            ]
+        );
         $this->assertEquals('123', $obj->val());
         $this->assertEquals('bar', $obj->label());
 

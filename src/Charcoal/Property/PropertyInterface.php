@@ -30,7 +30,7 @@ interface PropertyInterface
     public function ident();
 
     /**
-    * @param mixed
+    * @param mixed $val
     * @return PropertyInterface Chainable
     */
     public function set_val($val);
@@ -42,6 +42,7 @@ interface PropertyInterface
 
     /**
     * @param string $field_ident
+    * @return mixed
     */
     public function field_val($field_ident);
 
@@ -57,7 +58,7 @@ interface PropertyInterface
     public function label();
 
     /**
-    * @param boolean
+    * @param boolean $l10n
     * @return PropertyInterface Chainable
     */
     public function set_l10n($l10n);
@@ -68,7 +69,7 @@ interface PropertyInterface
     public function l10n();
 
     /**
-    * @param boolean
+    * @param boolean $hidden
     * @return PropertyInterface Chainable
     */
     public function set_hidden($hidden);
@@ -79,7 +80,7 @@ interface PropertyInterface
     public function hidden();
 
     /**
-    * @param boolean
+    * @param boolean $multiple
     * @return PropertyInterface Chainable
     */
     public function set_multiple($multiple);
@@ -90,7 +91,7 @@ interface PropertyInterface
     public function multiple();
 
     /**
-    * @param array
+    * @param array $multiple_options
     * @return PropertyInterface Chainable
     */
     public function set_multiple_options($multiple_options);
@@ -101,7 +102,7 @@ interface PropertyInterface
     public function multiple_options();
     
     /**
-    * @param boolean
+    * @param boolean $required
     * @return PropertyInterface Chainable
     */
     public function set_required($required);
@@ -112,7 +113,7 @@ interface PropertyInterface
     public function required();
 
     /**
-    * @param boolean
+    * @param boolean $unique
     * @return PropertyInterface Chainable
     */
     public function set_unique($unique);
@@ -123,7 +124,7 @@ interface PropertyInterface
     public function unique();
 
     /**
-    * @param boolean
+    * @param boolean $active
     * @return PropertyInterface Chainable
     */
     public function set_active($active);

@@ -7,7 +7,7 @@ use \Charcoal\Validator\ValidatorInterface as ValidatorInterface;
 interface ValidatableInterface
 {
     /**
-    * @param ValidatorInterface
+    * @param ValidatorInterface $validator
     * @return ValidatableInterface Chainable
     */
     public function set_validator(ValidatorInterface $validator);
@@ -18,7 +18,7 @@ interface ValidatableInterface
     public function validator();
     
     /**
-    * @param ValidatorInterface
+    * @param ValidatorInterface $v
     * @return bool
     */
     public function validate(ValidatorInterface &$v = null);

@@ -27,6 +27,10 @@ class Charcoal
     */
     static private $_app = null;
 
+    /**
+    * @param array|null $data
+    * @return void
+    */
     static public function init($data = null)
     {
         if (isset($data['config']) && $data['config'] !== null) {
@@ -52,8 +56,9 @@ class Charcoal
     }
 
     /**
-    * @var mixed $config
-    * @throws \InvalidArgumentException if config is not a string, array or Config object
+    * @param mixed $config
+    * @throws InvalidArgumentException if config is not a string, array or Config object
+    * @return void
     */
     static public function set_config($config)
     {
@@ -67,10 +72,15 @@ class Charcoal
         } else if ($config instanceof Config) {
             self::$_config = $config;
         } else {
-            throw new \InvalidArgumentException('Config must be a string (filename), array (config data) or Config object');
+            throw new InvalidArgumentException('Config must be a string (filename), array (config data) or Config object');
         }
     }
 
+    /**
+    * @param mixed $opt
+    * @throws Exception
+    * @return Config
+    */
     static public function config($opt = null)
     {
         if (self::$_config === null) {
@@ -83,7 +93,8 @@ class Charcoal
     }
 
     /**
-    * @param LoggerInterface
+    * @param LoggerInterface $logger
+    * @return void
     */
     static public function set_logger(LoggerInterface $logger)
     {
@@ -101,6 +112,7 @@ class Charcoal
     /**
     * Initialize a default logger.
     * By default, this uses monolog.
+    * @return void
     */
     static public function init_logger()
     {
@@ -111,11 +123,18 @@ class Charcoal
         self::set_logger($logger);
     }
 
+    /**
+    * @param Slim $app
+    * @return void
+    */
     static public function set_app(Slim $app)
     {
         self::$_app = $app;
     }
 
+    /**
+    * @return Slim
+    */
     static public function app()
     {
         return self::$_app;
@@ -124,14 +143,17 @@ class Charcoal
     /**
     * Initialize a default Slim app
     * This function use the configuration object, so it should have been initialiazed first.
+    * @return void
     */
     static public function init_app()
     {
-        self::$_app = new Slim([
+        self::$_app = new Slim(
+            [
             'mode'  => self::config()->application_env(),
             'debug' => self::config()->dev_mode(),
             //'log.writer' => self::logger()
-        ]);
+            ]
+        );
     }
 
     /**
@@ -140,17 +162,14 @@ class Charcoal
     *
     * From http://www.php.net/manual/en/function.array-merge-recursive.php#104145
     *
-    * @param array $array1
-    * @param array $array2,...
-    *
-    * @throws \InvalidArgumentException if there is not at least 2 arguments or any arguments are not array
+    * @throws InvalidArgumentException if there is not at least 2 arguments or any arguments are not array
     * @return array Merged array
     */
     static public function merge()
     {
         $args = func_get_args();
         if (func_num_args() < 2) {
-            throw new \InvalidArgumentException('This function takes at least two parameters');
+            throw new InvalidArgumentException('This function takes at least two parameters');
         }
 
         $array_list = func_get_args();
@@ -161,7 +180,7 @@ class Charcoal
 
             // Make sure the argument is an array. @todo: Convert objects to array??
             if (!is_array($current)) {
-                throw new \InvalidArgumentException('All parameters must be arrays');
+                throw new InvalidArgumentException('All parameters must be arrays');
             }
             if (!$current) {
                 continue;

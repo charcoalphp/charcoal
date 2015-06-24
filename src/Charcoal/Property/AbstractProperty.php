@@ -120,7 +120,7 @@ abstract class AbstractProperty implements
     }
 
     /**
-    *
+    * @return string
     */
     public function __toString()
     {
@@ -174,6 +174,9 @@ abstract class AbstractProperty implements
         return $this;
     }
 
+    /**
+    * @return string
+    */
     abstract public function type();
 
     /**
@@ -203,7 +206,7 @@ abstract class AbstractProperty implements
     }
 
     /**
-    * @param mixed
+    * @param mixed $val
     * @return Property (Chainable)
     */
     public function set_val($val)
@@ -241,6 +244,10 @@ abstract class AbstractProperty implements
         }
     }
 
+    /**
+    * @param mixed $val
+    * @return mixed
+    */
     public function storage_val($val = null)
     {
         if ($val === null) {
@@ -278,7 +285,7 @@ abstract class AbstractProperty implements
     }
 
     /**
-    * @param boolean
+    * @param boolean $l10n
     * @throws InvalidArgumentException if the paramter is not a boolean
     * @return Property (Chainable)
     */
@@ -300,7 +307,7 @@ abstract class AbstractProperty implements
     }
 
     /**
-    * @param boolean
+    * @param boolean $hidden
     * @throws InvalidArgumentException if the paramter is not a boolean
     * @return Property (Chainable)
     */
@@ -322,7 +329,7 @@ abstract class AbstractProperty implements
     }
 
     /**
-    * @param boolean
+    * @param boolean $multiple
     * @throws InvalidArgumentException if the paramter is not a boolean
     * @return Property (Chainable)
     */
@@ -344,7 +351,7 @@ abstract class AbstractProperty implements
     }
 
     /**
-    * @param boolean
+    * @param boolean $allow
     * @throws InvalidArgumentException if the paramter is not a boolean
     * @return Property (Chainable)
     */
@@ -366,7 +373,7 @@ abstract class AbstractProperty implements
     }
 
     /**
-    * @param array
+    * @param array $multiple_options
     * @throws InvalidArgumentException if the paramter is not an array
     * @return Property (Chainable)
     */
@@ -394,7 +401,7 @@ abstract class AbstractProperty implements
     }
     
     /**
-    * @param boolean
+    * @param boolean $required
     * @throws InvalidArgumentException if the paramter is not a boolean
     * @return Property (Chainable)
     */
@@ -416,7 +423,7 @@ abstract class AbstractProperty implements
     }
 
     /**
-    * @param boolean
+    * @param boolean $unique
     * @throws InvalidArgumentException if the paramter is not a boolean
     * @return Property (Chainable)
     */
@@ -438,7 +445,7 @@ abstract class AbstractProperty implements
     }
 
     /**
-    * @param boolean
+    * @param boolean $active
     * @throws InvalidArgumentException if the paramter is not a boolean
     * @return Property (Chainable)
     */
@@ -469,7 +476,8 @@ abstract class AbstractProperty implements
             $langs = ['fr', 'en']; // @todo
             foreach ($langs as $lang) {
                 $field = new PropertyField();
-                $field->set_data([
+                $field->set_data(
+                    [
                     'ident'=>$this->ident().'_'.$lang,
                     'sql_type'=>$this->sql_type(),
                     'sql_pdo_type'=>$this->sql_pdo_type(),
@@ -478,12 +486,14 @@ abstract class AbstractProperty implements
                     'default_val'=>null,
                     'allow_null'=>$this->allow_null(),
                     'comment'=>$this->label()
-                ]);
+                    ]
+                );
                 $fields[$lang] = $field;
             }
         } else {
             $field = new PropertyField();
-            $field->set_data([
+            $field->set_data(
+                [
                 'ident'=>$this->ident(),
                 'sql_type'=>$this->sql_type(),
                 'sql_pdo_type'=>$this->sql_pdo_type(),
@@ -492,18 +502,25 @@ abstract class AbstractProperty implements
                 'default_val'=>null,
                 'allow_null'=>$this->allow_null(),
                 'comment'=>$this->label()
-            ]);
+                ]
+            );
             $fields[] = $field;
         }
         
         return $fields;
     }
 
+    /**
+    * @return array
+    */
     public function validation_methods()
     {
         return ['required', 'unique', 'allow_null'];
     }
 
+    /**
+    * @return boolean
+    */
     public function validate_required()
     {
         if ($this->required() && !$this->val()) {
@@ -540,13 +557,18 @@ abstract class AbstractProperty implements
     }
 
     /**
-    *
+    * @param string $property_ident
+    * @return mixed
     */
     protected function property_value($property_ident)
     {
         return isset($this->{$property_ident}) ? $this->{$property_ident} : null;
     }
 
+    /**
+    * @param array|null $data
+    * @return PropertyMetadata
+    */
     protected function create_metadata($data = null)
     {
         $metadata = new PropertyMetadata();
@@ -570,6 +592,7 @@ abstract class AbstractProperty implements
     /**
     * ViewableTrait > create_validator(). Create a View object
     *
+    * @param array|null $data
     * @return ViewInterface
     */
     protected function create_view($data = null)

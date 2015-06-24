@@ -2,6 +2,8 @@
 
 namespace Charcoal\Source;
 
+use \InvalidArgumentException as InvalidArgumentException;
+
 use \Charcoal\Source\SourceConfig as SourceConfig;
 
 use \Charcoal\Encoder\EncoderFactory as EncoderFactory;
@@ -58,13 +60,13 @@ class DatabaseSourceConfig extends SourceConfig
 
     /**
     * @param array $data
-    * @throws \InvalidArgumentException if data is not an array
+    * @throws InvalidArgumentException if data is not an array
     * @return DatabaseSourceConfig Chainable
     */
     public function set_data($data)
     {
         if (!is_array($data)) {
-            throw new \InvalidArgumentException('Data must be an array');
+            throw new InvalidArgumentException('Data must be an array');
         }
 
         parent::set_data($data);
@@ -91,13 +93,13 @@ class DatabaseSourceConfig extends SourceConfig
     * Set hostname
     *
     * @param string $hostname
-    * @throws \InvalidArgumentException if hostname is not a string
+    * @throws InvalidArgumentException if hostname is not a string
     * @return DatabaseSourceConfig Chainable
     */
     public function set_hostname($hostname)
     {
         if (!is_string($hostname)) {
-            throw new \InvalidArgumentException('Parameter must be a string');
+            throw new InvalidArgumentException('Parameter must be a string');
         }
         $this->_hostname = $hostname;
         return $this;
@@ -117,13 +119,13 @@ class DatabaseSourceConfig extends SourceConfig
     * Set username
     *
     * @param string $username
-    * @throws \InvalidArgumentException if username is not a string
+    * @throws InvalidArgumentException if username is not a string
     * @return DatabaseSourceConfig Chainable
     */
     public function set_username($username)
     {
         if (!is_string($username)) {
-            throw new \InvalidArgumentException('Parameter must be a string');
+            throw new InvalidArgumentException('Parameter must be a string');
         }
         $this->_username = $username;
         return $this;
@@ -143,13 +145,13 @@ class DatabaseSourceConfig extends SourceConfig
     * Set password
     *
     * @param string $password
-    * @throws \InvalidArgumentException if password is not a string
+    * @throws InvalidArgumentException if password is not a string
     * @return DatabaseSourceConfig Chainable
     */
     public function set_password($password)
     {
         if (!is_string($password)) {
-            throw new \InvalidArgumentException('Parameter must be a string');
+            throw new InvalidArgumentException('Parameter must be a string');
         }
         $this->_password = $password;
         return $this;
@@ -176,13 +178,13 @@ class DatabaseSourceConfig extends SourceConfig
     * Set password encoding type
     *
     * @param string $password_encoding Must be a valid `Encoder` type
-    * @throws \InvalidArgumentException if password is not a string
+    * @throws InvalidArgumentException if password is not a string
     * @return DatabaseSourceConfig Chainable
     */
     public function set_password_encoding($password_encoding)
     {
         if (!is_string($password_encoding)) {
-            throw new \InvalidArgumentException('Parameter must be a string');
+            throw new InvalidArgumentException('Parameter must be a string');
         }
         $this->_password_encoding = $password_encoding;
         return $this;
@@ -201,14 +203,14 @@ class DatabaseSourceConfig extends SourceConfig
     /**
     * Set password salt, if using encoding
     *
-    * @param string $password
-    * @throws \InvalidArgumentException if password is not a string
+    * @param string $password_salt
+    * @throws InvalidArgumentException if password is not a string
     * @return DatabaseSourceConfig Chainable
     */
     public function set_password_salt($password_salt)
     {
         if (!is_string($password_salt)) {
-            throw new \InvalidArgumentException('Parameter must be a string');
+            throw new InvalidArgumentException('Parameter must be a string');
         }
         $this->_password_salt = $password_salt;
         return $this;
@@ -228,13 +230,13 @@ class DatabaseSourceConfig extends SourceConfig
     * Set database
     *
     * @param string $database
-    * @throws \InvalidArgumentException if database is not a string
+    * @throws InvalidArgumentException if database is not a string
     * @return DatabaseSourceConfig Chainable
     */
     public function set_database($database)
     {
         if (!is_string($database)) {
-            throw new \InvalidArgumentException('Parameter must be a string');
+            throw new InvalidArgumentException('Parameter must be a string');
         }
         $this->_database = $database;
         return $this;
@@ -252,13 +254,13 @@ class DatabaseSourceConfig extends SourceConfig
 
     /**
     * @param bool $disable_utf8
-    * @throws \InvalidArgumentException if disable_utf8 is not a bool
+    * @throws InvalidArgumentException if disable_utf8 is not a bool
     * @return DatabaseSourceConfig Chainable
     */
     public function set_disable_utf8($disable_utf8)
     {
         if (!is_bool($disable_utf8)) {
-            throw new \InvalidArgumentException('Parameter must be a boolean');
+            throw new InvalidArgumentException('Parameter must be a boolean');
         }
         $this->_disable_utf8 = $disable_utf8;
         return $this;

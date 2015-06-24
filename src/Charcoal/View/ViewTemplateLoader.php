@@ -26,7 +26,7 @@ class ViewTemplateLoader extends FileLoader
     */
     public function set_engine($engine)
     {
-        if(!is_string($engine)) {
+        if (!is_string($engine)) {
             throw new InvalidArgumentException('Engine must be a string');
         }
         $this->_engine = $engine;
@@ -58,9 +58,10 @@ class ViewTemplateLoader extends FileLoader
     }
 
     /**
+    * @param string $ident
     * @return string
     */
-    public function load($ident=null)
+    public function load($ident = null)
     {
         if ($ident !== null) {
             $this->set_ident($ident);
@@ -105,7 +106,7 @@ class ViewTemplateLoader extends FileLoader
     /**
     * Generate a sanitized filename (with extension) from an ident string
     *
-    * @param string
+    * @param string $ident
     * @return string
     */
     private function _filename_from_ident($ident)

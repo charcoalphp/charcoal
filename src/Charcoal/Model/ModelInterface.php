@@ -35,7 +35,7 @@ interface ModelInterface
     public function properties();
 
     /**
-    * @param
+    * @param string $property_ident
     * @return PropertyInterface
     */
     public function property($property_ident);

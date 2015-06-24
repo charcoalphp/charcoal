@@ -32,6 +32,7 @@ class MustacheTemplateLoader extends FileLoader implements Mustache_Loader
     /**
     * AbstractLoader > load()
     *
+    * @param string $ident
     * @return string
     */
     public function load($ident = null)
@@ -76,7 +77,7 @@ class MustacheTemplateLoader extends FileLoader implements Mustache_Loader
     }
 
     /**
-    * @param string
+    * @param string $ident
     * @return string
     */
     private function _filename_from_ident($ident)
