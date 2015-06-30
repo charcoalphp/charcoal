@@ -355,13 +355,13 @@ class DatabaseSource extends AbstractSource
     /**
     * ConfigurableTrait > create_config()
     *
-    * @param array $data
+    * @param array $data Optional
     * @return DatabaseSourceConfig
     */
-    public function create_config($data = null)
+    public function create_config(array $data = null)
     {
         $config = new DatabaseSourceConfig();
-        if ($data !== null) {
+        if (is_array($data)) {
             $config->set_data($data);
         }
         return $config;

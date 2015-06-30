@@ -12,7 +12,7 @@ interface DescribableInterface
     * @param array $data
     * @return DescribableInterface Chainable
     */
-    public function set_data($data);
+    public function set_data(array $data);
 
     /**
     * @param array|MetadataInterface $metadata

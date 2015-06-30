@@ -11,7 +11,7 @@ interface ViewInterface
     * @param array $data
     * @return ViewInterface Chainable
     */
-    public function set_data($data);
+    public function set_data(array $data);
 
     /**
     * @param string $template

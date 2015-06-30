@@ -23,14 +23,10 @@ class Pagination
 
     /**
     * @param array $data
-    * @throws InvalidArgumentException if the data is not an array
-    * @return Pagination (Chainable)
+    * @return Pagination Chainable
     */
-    public function set_data($data)
+    public function set_data(array $data)
     {
-        if (!is_array($data)) {
-            throw new InvalidArgumentException('Data needs to be an array');
-        }
         if (isset($data['page'])) {
             $this->set_page($data['page']);
         }

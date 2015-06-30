@@ -35,16 +35,16 @@ class Object extends Model implements IndexableInterface
     private $_active = true;
     
     /**
-    * @param array $data
+    * @param array $data Optional
     */
-    public function __construct($data = null)
+    public function __construct(array $data = [])
     {
         // Use Model constructor...
         parent::__construct();
 
         $metadata = $this->metadata();
         if (!isset($data['key'])) {
-            $data['key'] = isset($metadata['key']) ? $metadata['key'] : self::DEFAULT_KEY;
+            $data['key'] = ( isset($metadata['key']) ? $metadata['key'] : self::DEFAULT_KEY );
         }
 
         $this->set_data($data);
@@ -54,7 +54,7 @@ class Object extends Model implements IndexableInterface
     * @param array $data
     * @return Object Chainable
     */
-    public function set_data($data)
+    public function set_data(array $data)
     {
         parent::set_data($data);
 

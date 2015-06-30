@@ -154,13 +154,13 @@ abstract class AbstractCache implements
     /**
     * ConfigurableInterface > create_config() implementation.
     *
-    * @param array $data
-    * @return ConfigInterface
+    * @param array $data Optional
+    * @return CacheConfig
     */
-    protected function create_config($data = null)
+    protected function create_config(array $data = null)
     {
         $config = new CacheConfig();
-        if ($data !== null) {
+        if (is_array($data)) {
             $config->set_data($data);
         }
         return $config;

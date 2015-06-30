@@ -16,7 +16,7 @@ interface PropertyInterface
     * @param array $data
     * @return PropertyInterface Chainable
     */
-    public function set_data($data);
+    public function set_data(array $data);
 
     /**
     * @param string $ident

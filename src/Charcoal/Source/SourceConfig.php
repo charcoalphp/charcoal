@@ -28,14 +28,10 @@ class SourceConfig extends AbstractConfig
 
     /**
     * @param array $data
-    * @throws InvalidArgumentException if parameter is not an array
     * @return SourceConfig Chainable
     */
-    public function set_data($data)
+    public function set_data(array $data)
     {
-        if (!is_array($data)) {
-            throw new InvalidArgumentException('Data must be an array');
-        }
         if (isset($data['type']) && $data['type'] !== null) {
             $this->set_type($data['type']);
         }

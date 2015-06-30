@@ -197,13 +197,13 @@ class MemcacheCache extends AbstractCache
     /**
     * ConfigurableInterface > create_config()
     *
-    * @param array|null $data
+    * @param array $data Optional
     * @return MemcacheCacheConfig
     */
-    public function create_config($data = null)
+    public function create_config(array $data = null)
     {
         $config = new MemcacheCacheConfig();
-        if ($data !== null) {
+        if (is_array($data)) {
             $config->set_data($data);
         }
 

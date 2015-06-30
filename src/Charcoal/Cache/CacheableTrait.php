@@ -42,13 +42,13 @@ trait CacheableTrait
     }
 
     /**
-    * @param array|null $data
+    * @param array $data Optional
     * @return CacheInterface
     */
-    public function create_cache($data = null)
+    public function create_cache(array $data = null)
     {
         $cache = CacheFactory::instance()->get('memcache');
-        if ($data !== null) {
+        if (is_array($data)) {
             $cache->set_data($data);
         }
         return $cache;

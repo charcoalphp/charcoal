@@ -49,7 +49,7 @@ class ModelMetadataTest extends \PHPUnit_Framework_TestCase
 
     }
 
-    public function testSetDataSetsData()
+    public function testSetData()
     {
         $data = [
             'foo' => 'bar',
@@ -76,7 +76,8 @@ class ModelMetadataTest extends \PHPUnit_Framework_TestCase
     */
     public function testSetDataInvalidParameterThrowException($invalid_data)
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        # $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException('\PHPUnit_Framework_Error');
 
         $obj = new ModelMetadata();
         $obj->set_data($invalid_data);

@@ -28,14 +28,10 @@ class CollectionLoader extends AbstractLoader
 
     /**
     * @param array $data
-    * @throws InvalidArgumentException
     * @return CollectionLoader Chainable
     */
-    public function set_data($data)
+    public function set_data(array $data)
     {
-        if (!is_array($data)) {
-            throw new InvalidArgumentException('Data must be an array');
-        }
         if (isset($data['properties'])) {
             $this->set_properties($data['properties']);
         }
@@ -181,7 +177,7 @@ class CollectionLoader extends AbstractLoader
     * @throws InvalidArgumentException if property is not a string or empty
     * @return CollectionLoader (Chainable)
     */
-    public function add_filter($param, $val = null, $options = null)
+    public function add_filter($param, $val = null, array $options = null)
     {
         if ($param instanceof Filter) {
             $this->_filters[] = $param;
@@ -193,7 +189,9 @@ class CollectionLoader extends AbstractLoader
             $filter = new Filter();
             $filter->set_property($param);
             $filter->set_val($val);
-            $filter->set_data($options);
+            if (is_array($options)) {
+                $filter->set_data($options);
+            }
             $this->_filters[] = $filter;
 
         } else {

@@ -23,7 +23,8 @@ class DatabaseSourceConfigTest extends \PHPUnit_Framework_TestCase
         $ret = $obj->set_data([]);
         $this->assertSame($ret, $obj);
 
-        $this->setExpectedException('\InvalidArgumentException');
+        # $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException('\PHPUnit_Framework_Error');
         $obj->set_data(false);
     }
 

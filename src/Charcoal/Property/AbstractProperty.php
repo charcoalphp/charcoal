@@ -94,9 +94,9 @@ abstract class AbstractProperty implements
     private $_active = true;
 
     /**
-    * @param array $data
+    * @param array $data Optional
     */
-    public function __construct($data = null)
+    public function __construct(array $data = null)
     {
         // Set default values
         $defaults = [
@@ -134,15 +134,10 @@ abstract class AbstractProperty implements
 
     /**
     * @param array $data
-    * @throws InvalidArgumentException if the data parameter is not an array
-    * @return Property Chainable
+    * @return AbstractProperty Chainable
     */
-    public function set_data($data)
+    public function set_data(array $data)
     {
-        if (!is_array($data)) {
-            throw new InvalidArgumentException('Data must be an array');
-        }
-
         if (isset($data['val'])) {
             $this->set_val($data['val']);
         }
@@ -506,7 +501,7 @@ abstract class AbstractProperty implements
             );
             $fields[] = $field;
         }
-        
+
         return $fields;
     }
 
@@ -566,13 +561,13 @@ abstract class AbstractProperty implements
     }
 
     /**
-    * @param array|null $data
+    * @param array $data Optional
     * @return PropertyMetadata
     */
-    protected function create_metadata($data = null)
+    protected function create_metadata(array $data = null)
     {
         $metadata = new PropertyMetadata();
-        if ($data !== null) {
+        if (is_array($data)) {
             $metadata->set_data($data);
         }
         return $metadata;
@@ -592,13 +587,13 @@ abstract class AbstractProperty implements
     /**
     * ViewableTrait > create_validator(). Create a View object
     *
-    * @param array|null $data
+    * @param array $data Optional
     * @return ViewInterface
     */
-    protected function create_view($data = null)
+    protected function create_view(array $data = null)
     {
         $view = new PropertyView();
-        if ($data !== null) {
+        if (is_array($data)) {
             $view->set_data($data);
         }
         return $view;

@@ -30,29 +30,24 @@ class ValidatorResult
     private $ts;
 
     /**
-    * @param array|null $data
+    * @param array $data Optional
     */
-    public function __construct($data = null)
+    public function __construct(array $data = null)
     {
         $ts = new DateTime();
         $this->set_ts($ts);
 
-        if ($data !== null) {
+        if (is_array($data)) {
             $this->set_data($data);
         }
     }
 
     /**
     * @param array $data
-    * @throws \InvalidArgumentException if data is not an array
-    * @return Result Chainable
+    * @return ValidatorResult Chainable
     */
-    public function set_data($data)
+    public function set_data(array $data)
     {
-        if (!is_array($data)) {
-            throw new \InvalidArgumentException('Data must be an array.');
-        }
-
         if (isset($data['ident'])) {
             $this->set_ident($data['ident']);
         }

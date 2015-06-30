@@ -44,11 +44,11 @@ abstract class AbstractModel implements
     use ViewableTrait;
 
     /**
-    * @param array $data
+    * @param array $data Optional
     */
-    public function __construct($data = null)
+    public function __construct(array $data = null)
     {
-        if ($data !== null) {
+        if (is_array($data)) {
             $this->set_data($data);
         }
         // Fix bug @todo
@@ -60,16 +60,11 @@ abstract class AbstractModel implements
     *
     * This function takes an array and fill the object with its value.
     *
-    * @param  array $data
-    * @throws InvalidArgumentException if the data parameter is not an array
-    * @return ModelInterface Chainable
+    * @param array $data
+    * @return AbstractModel Chainable
     */
-    public function set_data($data)
+    public function set_data(array $data)
     {
-        if (!is_array($data)) {
-            throw new InvalidArgumentException(__CLASS__.'::'.__FUNCTION__.'() - Data must be an array');
-        }
-        
         $this->set_storable_data($data);
         $this->set_viewable_data($data);
         foreach ($data as $prop => $val) {
@@ -121,10 +116,10 @@ abstract class AbstractModel implements
     *
     * This function takes a 1-dimensional array and fill the object with its value.
     *
-    * @param  array $data
+    * @param array $data
     * @return AbstractModel Chainable
     */
-    public function set_flat_data($data)
+    public function set_flat_data(array $data)
     {
         return $this->set_data($data);
     }
@@ -266,10 +261,10 @@ abstract class AbstractModel implements
     * @param array $data Optional data to intialize the Metadata object with.
     * @return MetadataInterface
     */
-    protected function create_metadata($data = null)
+    protected function create_metadata(array $data = null)
     {
         $metadata = new ModelMetadata();
-        if ($data !== null) {
+        if (is_array($data)) {
             $metadata->set_data($data);
         }
         return $metadata;
@@ -278,7 +273,7 @@ abstract class AbstractModel implements
     /**
     * StorableInterface > create_source()
     *
-    * @param array $data
+    * @param array $data Optional
     * @return SourceInterface
     */
     protected function create_source($data = null)
@@ -295,8 +290,7 @@ abstract class AbstractModel implements
         //$source->set_config($source_config);
         $source->set_table($table);
 
-
-        if ($data !== null) {
+        if (is_array($data)) {
             $source->set_data($data);
         }
         return $source;
@@ -305,13 +299,13 @@ abstract class AbstractModel implements
     /**
     * ValidatableInterface > create_validator().
     *
-    * @param array|null $data
+    * @param array $data Optional
     * @return ValidatorInterface
     */
-    protected function create_validator($data = null)
+    protected function create_validator(array $data = null)
     {
         $validator = new ModelValidator($this);
-        if ($data !== null) {
+        if (is_array($data)) {
             $validator->set_data($data);
         }
         return $validator;
@@ -320,13 +314,13 @@ abstract class AbstractModel implements
     /**
     * ViewableInterface > create_view().
     *
-    * @param array|null $data
+    * @param array $data Optional
     * @return ViewInterface
     */
-    protected function create_view($data = null)
+    protected function create_view(array $data = null)
     {
         $view = new ModelView();
-        if ($data !== null) {
+        if (is_array($data)) {
             $view->set_data($data);
         }
         return $view;

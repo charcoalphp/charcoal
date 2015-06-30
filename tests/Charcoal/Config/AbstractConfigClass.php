@@ -9,10 +9,9 @@ use \Charcoal\Config\AbstractConfig as AbstractConfig;
 */
 class AbstractConfigClass extends AbstractConfig
 {
-
     private $_foo;
 
-    public function set_data($data)
+    public function set_data(array $data)
     {
         if (isset($data['foo']) && $data['foo'] !== null) {
             $this->set_foo($data['foo']);

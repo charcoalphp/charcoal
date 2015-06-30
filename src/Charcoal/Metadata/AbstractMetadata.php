@@ -32,15 +32,10 @@ abstract class AbstractMetadata implements
 
     /**
     * @param array $data
-    * @throws InvalidArgumentException if the data parameter is not an array
-    * @return Metadata (Chainable)
+    * @return AbstractMetadata Chainable
     */
-    public function set_data($data)
+    public function set_data(array $data)
     {
-        if (!is_array($data)) {
-            throw new InvalidArgumentException('Data parameter must be an array');
-        }
-
         if (isset($data['properties'])) {
             $this->set_properties($data['properties']);
         }
@@ -125,13 +120,13 @@ abstract class AbstractMetadata implements
     }
 
     /**
-    * @param array $data
+    * @param array $data Optional
     * @return LoaderInterface
     */
-    protected function create_loader($data = null)
+    protected function create_loader(array $data = null)
     {
         $loader = new MetadataLoader();
-        if ($data !== null) {
+        if (is_array($data)) {
             $loader->set_data($data);
         }
         return $loader;

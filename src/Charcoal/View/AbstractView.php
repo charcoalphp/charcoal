@@ -45,11 +45,11 @@ abstract class AbstractView implements ViewInterface
     static private $_css = '';
 
     /**
-    * @param array|null $data
+    * @param array $data Optional
     */
-    public function __construct($data = null)
+    public function __construct(array $data = null)
     {
-        if ($data !== null) {
+        if (is_array($data)) {
             $this->set_data($data);
         }
     }
@@ -64,15 +64,10 @@ abstract class AbstractView implements ViewInterface
 
     /**
     * @param array $data
-    * @throws \InvalidArgumentException If data is not an array
     * @return AbstractView Chainable
     */
-    public function set_data($data)
+    public function set_data(array $data)
     {
-        if (!is_array($data)) {
-            throw new \InvalidArgumentException('Data needs to be an array');
-        }
-
         if (isset($data['engine']) && $data['engine'] !== null) {
             $this->set_engine($data['engine']);
         }

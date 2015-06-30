@@ -38,9 +38,9 @@ abstract class AbstractConfig implements
 
     /**
     * @param array $data
-    * @return ConfigInterface Chainable
+    * @return AbstractConfig Chainable
     */
-    abstract public function set_data($data);
+    abstract public function set_data(array $data);
 
     /**
     * ConfigInterface > default_data

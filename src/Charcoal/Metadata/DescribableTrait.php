@@ -42,7 +42,7 @@ trait DescribableTrait
     * @param array $data
     * @return DescribableTrait Chainable
     */
-    abstract public function set_data($data);
+    abstract public function set_data(array $data);
 
     /**
     * @param array $data
@@ -78,8 +78,8 @@ trait DescribableTrait
         }
 
         // If the metadata contains "data", then automatically set the initial data to the value
-        if (isset($this->_metadata['data'])) {
-            $this->set_data($metadata['data']);
+        if (isset($this->_metadata['data']) && is_array($this->_metadata['data'])) {
+            $this->set_data($this->_metadata['data']);
         }
 
         // Chainable

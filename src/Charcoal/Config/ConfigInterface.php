@@ -11,7 +11,7 @@ interface ConfigInterface
     * @param array $data
     * @return ConfigInterface Chainable
     */
-    public function set_data($data);
+    public function set_data(array $data);
 
     /**
     * @return array

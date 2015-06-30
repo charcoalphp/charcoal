@@ -38,14 +38,10 @@ class Filter
 
     /**
     * @param array $data
-    * @throws InvalidArgumentException if parameter is not an array
-    * @return Filter (Chainable)
+    * @return Filter Chainable
     */
-    public function set_data($data)
+    public function set_data(array $data)
     {
-        if (!is_array($data)) {
-            throw new InvalidArgumentException('Data must be an array');
-        }
         if (isset($data['property'])) {
             $this->set_property($data['property']);
         }

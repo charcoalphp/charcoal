@@ -93,14 +93,10 @@ class Config extends AbstractConfig implements \ArrayAccess
 
     /**
     * @param array $data
-    * @throws InvalidArgumentException
     * @return Config Chainable
     */
-    public function set_data($data)
+    public function set_data(array $data)
     {
-        if (!is_array($data)) {
-            throw new InvalidArgumentException('Data must be an array');
-        }
         if (isset($data['admin_path']) && $data['admin_path'] !== null) {
             $this->set_admin_path($data['admin_path']);
         }

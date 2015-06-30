@@ -56,7 +56,7 @@ trait StorableTrait
     }
 
     /**
-    * @param array $data
+    * @param mixed $data Optional
     * @return SourceInterface
     */
     abstract public function create_source($data = null);

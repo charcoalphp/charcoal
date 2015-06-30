@@ -31,7 +31,7 @@ class MemcacheCacheServerConfig extends AbstractConfig
     * @param array $data
     * @return MemcacheCacheServerConfig Chainable
     */
-    public function set_data($data)
+    public function set_data(array $data)
     {
         if (isset($data['host']) && $data['host'] !== null) {
             $this->set_host($data['host']);

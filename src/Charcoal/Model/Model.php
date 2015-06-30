@@ -72,7 +72,7 @@ class Model extends AbstractModel
     /**
     * StorableInterface > create_source(). Get the source object.
     *
-    * @param string|null $source_ident
+    * @param string $source_ident Optional
     * @return SourceInterface;
     */
     public function create_source($source_ident = null)
@@ -81,7 +81,7 @@ class Model extends AbstractModel
         //var_dump($metadata);
         if ($source_ident === null) {
             // Default source ident
-            $source_ident = isset($metadata['default_source']) ? $metadata['default_source'] : '';
+            $source_ident = ( isset($metadata['default_source']) ? $metadata['default_source'] : '' );
         }
         $s = new DatabaseSource();
         $s->set_model($this);
