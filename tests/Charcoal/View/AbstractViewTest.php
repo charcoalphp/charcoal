@@ -53,10 +53,6 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('php_mustache', $obj->engine());
         $this->assertEquals('foo', $obj->template());
         $this->assertEquals(['bar'=>'baz'], $obj->context());
-
-        # $this->setExpectedException('\InvalidArgumentException');
-        $this->setExpectedException('\PHPUnit_Framework_Error');
-        $obj->set_data(false);
     }
 
     public function testSetEngine()

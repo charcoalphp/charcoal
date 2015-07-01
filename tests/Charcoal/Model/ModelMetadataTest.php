@@ -70,29 +70,4 @@ class ModelMetadataTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame($obj, $ret);
     }
-
-    /**
-    * @dataProvider invalidDataProvider
-    */
-    public function testSetDataInvalidParameterThrowException($invalid_data)
-    {
-        # $this->setExpectedException('\InvalidArgumentException');
-        $this->setExpectedException('\PHPUnit_Framework_Error');
-
-        $obj = new ModelMetadata();
-        $obj->set_data($invalid_data);
-    }
-
-
-
-    public function invalidDataProvider()
-    {
-        $obj = new \StdClass();
-        return [
-            ['string'],
-            [123],
-            [null],
-            [$obj]
-        ];
-    }
 }

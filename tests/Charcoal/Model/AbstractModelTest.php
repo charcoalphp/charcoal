@@ -83,11 +83,6 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
         $ret = $obj->set_data(['foo'=>'bar']);
         $this->assertSame($ret, $obj);
         $this->assertEquals('bar', $obj->foo);
-
-        # $this->setExpectedException('\InvalidArgumentException');
-        $this->setExpectedException('\PHPUnit_Framework_Error');
-        $obj->set_data(false);
-
     }
 
     public function testSetFlatData()
@@ -96,10 +91,6 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
         $ret = $obj->set_flat_data(['foo'=>'baz']);
         $this->assertSame($ret, $obj);
         $this->assertEquals('baz', $obj->foo);
-
-        # $this->setExpectedException('\InvalidArgumentException');
-        $this->setExpectedException('\PHPUnit_Framework_Error');
-        $obj->set_flat_data(false);
     }
 
     public function testSave()

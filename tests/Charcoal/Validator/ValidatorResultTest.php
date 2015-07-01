@@ -17,10 +17,6 @@ class ValidatorResultTest extends \PHPUnit_Framework_TestCase
         $obj = new ValidatorResult();
         $ret = $obj->set_data([]);
         $this->assertSame($ret, $obj);
-
-        # $this->setExpectedException('\InvalidArgumentException');
-        $this->setExpectedException('\PHPUnit_Framework_Error');
-        $obj->set_data(false);
     }
 
     public function testSetIdent()

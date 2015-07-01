@@ -73,15 +73,6 @@ class FilterTest extends \PHPUnit_Framework_TestCase
 
     }
 
-    public function testSetDataInvalidArgumentThrowsException()
-    {
-        # $this->setExpectedException('\InvalidArgumentException');
-        $this->setExpectedException('\PHPUnit_Framework_Error');
-
-        $obj = new Filter();
-        $obj->set_data(null);
-    }
-
     public function testSetProperty()
     {
         $obj = new Filter();
