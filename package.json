@@ -1,14 +1,19 @@
 {
-  "name": "charcoal",
+  "name": "@locomotivemtl/charcoal-core",
   "version": "0.0.1",
-  "description": "Charcoal is a Web Framework",
-  "homepage": "http://charcoal.locomotive.ca",
-  "author": "Mathieu Ducharme <mat@locomotive.ca>",
-  "contributors": [
-    "Benjamin Roch <benjamin@locomotive.ca>",
-    "Stephen Bégay <stephen@locomotive.ca>"
-  ],
+  "description": "Charcoal Web Framework",
   "license": "LGPL-3.0",
+  "homepage": "http://charcoal.locomotive.ca",
+  "author": {
+    "name": "Mathieu Ducharme",
+    "email": "mat@locomotive.ca"
+  },
+  "contributors": [
+    {
+      "name": "Locomotive",
+      "homepage": "http://locomotive.ca"
+    }
+  ],
   "private": true,
   "devDependencies": {
     "glob": "^5.0.10",

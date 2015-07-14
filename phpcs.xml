@@ -88,7 +88,7 @@
     <!-- Class comment blocks -->
     <!--<rule ref="Squiz.Commenting.ClassComment" />-->
     <!-- Tests that the stars in a doc comment align correctly. -->
-    <rule ref="Squiz.Commenting.DocCommentAlignment" />
+    <!-- <rule ref="Squiz.Commenting.DocCommentAlignment" /> -->
     <!-- Ensures CATCH clause must at least have a comment -->
     <rule ref="Squiz.Commenting.EmptyCatchComment" />
     <!-- File comment blocks -->

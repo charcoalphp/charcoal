@@ -1,18 +1,18 @@
 language: php
 php:
-#  - 5.4
+# - 5.4
   - 5.5
   - 5.6
   - hhvm
   - nightly
 
 matrix:
-    allow_failures:
-        - php: hhvm
+  allow_failures:
+    - php: hhvm
 
 before_script:
   - wget http://getcomposer.org/composer.phar
   - php composer.phar install
   - mysql -e 'create database charcoal_examples;'
 
-script: phpunit --configuration tests/phpunit.xml
+script: phpunit --configuration tests/phpunit.xmlound
