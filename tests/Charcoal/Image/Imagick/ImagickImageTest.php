@@ -8,9 +8,8 @@ class ImagickImageTest extends \PHPUnit_Framework_Testcase
 {
     public static function setUpBeforeClass()
     {
-        $target = __DIR__.'/../../../tmp/images/';
-        if(!file_exists($target)) {
-            mkdir($target);
+        if(!file_exists(OUTPUT_DIR)) {
+            mkdir(OUTPUT_DIR);
         }
     }
 
@@ -41,7 +40,7 @@ class ImagickImageTest extends \PHPUnit_Framework_Testcase
     public function testOpen()
     {
         $obj = new Image();
-        $ret = $obj->open(__DIR__.'/../../../examples/test01.jpg');
+        $ret = $obj->open(EXAMPLES_DIR.'/test01.jpg');
         $this->assertSame($ret, $obj);
 
         $this->setExpectedException('\InvalidArgumentException');
@@ -58,12 +57,12 @@ class ImagickImageTest extends \PHPUnit_Framework_Testcase
     public function testOpenWithoutParamUseSource()
     {
         $obj1 = new Image();
-        $obj1->open(__DIR__.'/../../../examples/test01.jpg');
+        $obj1->open(EXAMPLES_DIR.'/test01.jpg');
 
         $id1 = $obj1->imagick()->identifyImage();
 
         $obj2 = new Image();
-        $obj2->set_source(__DIR__.'/../../../examples/test01.jpg');
+        $obj2->set_source(EXAMPLES_DIR.'/test01.jpg');
         $obj2->open();
 
         $id2 = $obj2->imagick()->identifyImage();
@@ -74,7 +73,7 @@ class ImagickImageTest extends \PHPUnit_Framework_Testcase
     public function testWidth()
     {
         $obj = new Image();
-        $ret = $obj->open(__DIR__.'/../../../examples/test01.jpg');
+        $ret = $obj->open(EXAMPLES_DIR.'/test01.jpg');
         
         $width = $obj->width();
         $this->assertEquals(3456, $width);
@@ -83,7 +82,7 @@ class ImagickImageTest extends \PHPUnit_Framework_Testcase
     public function testHeight()
     {
         $obj = new Image();
-        $ret = $obj->open(__DIR__.'/../../../examples/test01.jpg');
+        $ret = $obj->open(EXAMPLES_DIR.'/test01.jpg');
         
         $height = $obj->height();
         $this->assertEquals(2304, $height);
@@ -115,10 +114,10 @@ class ImagickImageTest extends \PHPUnit_Framework_Testcase
     public function testEffects($effect, $filename)
     {
         $obj = new Image();
-        $obj->open(__DIR__.'/../../../examples/test02.png');
+        $obj->open(EXAMPLES_DIR.'/test02.png');
 
         $obj->process_effect($effect);
-        $obj->save(__DIR__.'/../../../tmp/images/'.$filename);
+        $obj->save(OUTPUT_DIR.'/'.$filename);
     }
 
     public function effectProvider()
@@ -157,7 +156,7 @@ class ImagickImageTest extends \PHPUnit_Framework_Testcase
             [['type'=>'tint', 'color'=>'rgb(100%,0,0)'], 'tint-red.png'],
             [['type'=>'tint', 'color'=>'rgb(100%,0,0)', 'midtone'=>false], 'tint-red-colorize.png'],
             // Watermarkk
-            [['type'=>'watermark', 'watermark'=>__DIR__.'/../../../examples/watermark.png'], 'watermark-default.png']
+            [['type'=>'watermark', 'watermark'=>EXAMPLES_DIR.'/watermark.png'], 'watermark-default.png']
         ];
     }
 }
