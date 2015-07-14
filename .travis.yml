@@ -15,4 +15,4 @@ before_script:
   - php composer.phar install
   - mysql -e 'create database charcoal_examples;'
 
-script: phpunit --configuration tests/phpunit.xmlound
+script: phpunit --configuration tests/phpunit.xml
