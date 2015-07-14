@@ -8,7 +8,6 @@
             "email": "mat@locomotive.ca"
         }
     ],
-    "minimum-stability":"dev",
     "require": {
         "php": ">=5.4.0",
         "ext-imagick": "^3.1"
