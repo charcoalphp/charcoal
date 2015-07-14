@@ -1,13 +1,30 @@
 Charcoal Image
 ==============
 
-Image Manipulation library, built on top of `imagick`. It is currently part of `charcoal-base`.
+Charcoal Image is a PHP image manipulation and processing library, currently built on top of `imagick`. 
 
-# Usage
 
-## With `set_data()`
+## How to install
 
-``` php
+The preferred way of installing this module is with `composer`. Using composer, an autoloader is provided automatically with `PSR-4` so there is no further requirement.
+
+```shell
+$ composer require locomotivemtl/charcoal-image
+```
+
+## Dependencies
+
+- `PHP 5.4+`
+- `ext-imagick`
+  -  The `imagick` driver is the only available one at this time, and therefore is required as a hard dependency for now.
+
+> 👉 Although this module was developped for `Charcoal`, there is absolutely no dependencies on any Charcoal modules and can therefore be used in any PHP project.
+
+## Usage
+
+### With `set_data()`
+
+```php
 $img = new \Charcoal\Image\Imagick\ImagickImage();
 $img->set_data([
     'source'=>'example.png',
@@ -28,9 +45,9 @@ $img->process();
 $img->save();
 ```
 
-## With magic (`__call()`) methods
+### With magic (`__call()`) methods
 
-``` php
+```php
 use \Charcoal\Image\Imagick\ImagickImage as Image;
 
 $img = new Image();
@@ -45,7 +62,7 @@ $img->blur([
 $img->save();
 ```
 
-### Chainable version
+#### Chainable version
 
 Also shown: using the `ImageFactory` constructor method:
 ```php
@@ -67,7 +84,7 @@ $img->open('example.png')
   ->save('modified-target.png');
 ```
 
-# Available effects / operations
+## Available effects / operations
 
 Any image operation is called an "effect" and implements the `\Charcoal\Image\EffectInterface` interface.
 
@@ -88,10 +105,10 @@ The available effects are:
 - Watermark
 
 
-## Blur Effect
+### Blur Effect
 **Blurs an image**
 
-### Options
+#### Options
 - `mode` (_string_)
   - The type of blur to apply. Possible valures are: `standard`, `adaptive`, gaussian`, `motion`, `radial`, `soft` (Currently unsupported)
 - `radius` (_float_)
@@ -108,43 +125,50 @@ The available effects are:
   - The angle of the blur. Only used in `motion` or `radial` mode.
   - Default is `0`.
   - 
-### Modes
 
-## Dither Effect
+#### Modes
+- `standard`
+- `adaptive`
+- `gaussian`
+- `motion`
+- `radial`
+- `soft`
+
+### Dither Effect
 **Reduces an image's colors to a certain number, using dithering.**
 
-### Options
+#### Options
 - `colors` (_int_)
   - The number of colors to reduce to
 
-## Grayscale Effect
+### Grayscale Effect
 **Converts an image's colors to a 256-colors greyscale. There are no options.**
 
-### Options
+#### Options
 - _none_
 
-## Mask Effect
+### Mask Effect
 **Apply a 8-bit transparency mask to the image.**
 
-### Options
+#### Options
 - `mask` (_string_)
 - `opacity` (_float_)
 - `gravity` (_string_)
 - `x` (_integer_)
 - `y` (_integer_)
 
-## Mirror Effect
+### Mirror Effect
 **Flip an image horizontally or vertically.**
 
-### Options
+#### Options
  - `axis` (_string_)
    - The axis can be "x" (flip) or "y" (flop). 
    - Default is "y".
 
-## Modulate Effect
+### Modulate Effect
 **Modifies an image's colors in the special HSL (hue-saturation-luminance) colorspace.**
 
-### Options
+#### Options
 - `hue` (_float_)
   - The **color tint** value, between -100 and 100.
   - Default is `0` (no effect)
@@ -155,9 +179,10 @@ The available effects are:
   - The **brightness** value, between -100 and 100.
   - Default is `0` (no effect)
 
-## Resize Effect
+### Resize Effect
 **Resize an image to given dimensions.**
-### Options
+
+#### Options
 - `mode` (_string_)
   - The type of resize operation to perform 
   - Valid modes are: `auto`, `exact`, `width`, `height`, `best_fit`, `crop`, `fill` or `none`.
@@ -179,15 +204,26 @@ The available effects are:
   - Default is _transparent-white_ (`rgb(100%, 100%, 100%, 0)`)
 - `adaptive`
   
+#### Resize Modes
+- `auto`
+- `exact`
+- `width`
+- `height`
+- `best_fit`
+- `crop`
+- `fill`
+- `none`
 
-## Revert
+### Revert
 **Revert (negate) the image's colors.**
-### Options
+
+#### Options
 - `channel` (_string_)
 
-## Rotate
+### Rotate
 **Rotate the image by a certain angle.**
-### Options
+
+#### Options
 - `angle` (_float_)
     - The angle of rotation, in degrees (clockwise).
     - Note that the dimension of the image can be modified if it is not square or if the angle is not a multiple of 90 degrees.
@@ -199,16 +235,18 @@ The available effects are:
     - Can be specified as hexadecimal ("#FF00FF"), RGB values ("rgb(255,0,255)") or color name ("red").
     - Default is _transparent-white_ (`rgb(100%, 100%, 100%, 0)`)
 
-## Sepia
+### Sepia
 **Tint the image with a vintage, sepia look**
-### Options
+
+#### Options
 - `threshold` (_float_)
   - The level of the sepia tone effect.
   - Default is `75`.
 
-## Sharpen
+### Sharpen
 **Sharpen an image, with a simple sharpen algorithm or unsharp mask options.**
-### Options
+
+#### Options
 - `mode`
 - `radius`
 - `sigma`
@@ -216,14 +254,16 @@ The available effects are:
 - `threshold`
 - `channel`
 
-## Threshold
+### Threshold
 **Convert the image to monochrome (black and white).**
-### Options
+
+#### Options
 - `threshold` (_float_)
 
-## Tint 
+### Tint 
 **Tint (or colorize) an image with a certain color.**
-### Options
+
+#### Options
 - `color` (_string_)
     - Color to blend unto the image.
     - Can be specified as hexadecimal ("#FF00FF"), RGB values ("rgb(255,0,255)") or color name ("red").
@@ -236,16 +276,17 @@ The available effects are:
     - Technically, true call the _tint_ function while false calls the _colorize_ function.
     - Default is `true`.
 
-## Watermark
+### Watermark
 **Composite a watermark on top of the image.**
-### Options
+
+#### Options
 - `watermark` (_string_)
 - `opacity` (_float_)
 - `gravity` (_string_)
 - `x` (_integer_)
 - `y` (_integer_)
 
-# Future Effects
+### Future Effects
 These effects are available in the `imagick` library and therefore could easily be added:
 - `Charcoal`
 - `Chop`
@@ -261,3 +302,57 @@ These effects are available in the `imagick` library and therefore could easily 
 - `Reducenoise`
 - `Swirl`
 - `Wave`
+
+## Development
+
+### Coding Style
+
+All Charcoal modules follow the same coding style and `charcoal-core` is no exception. For PHP:
+
+- [_PSR-1_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md), except for
+  - Method names MUST be declared in `snake_case`.
+- [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
+- [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md), autoloading is therefore provided by _Composer_
+- [_phpDocumentor_](http://phpdoc.org/)
+- Arrays should be written in short notation (`[]` instead of `array()`)
+
+Coding styles are  enforced with `grunt phpcs` ([_PHP Code Sniffer_](https://github.com/squizlabs/PHP_CodeSniffer)). The actual ruleset can be found in `phpcs.xml`.
+
+> 👉 To fix minor coding style problems, run `grunt phpcbf` ([_PHP Code Beautifier and Fixer_](https://github.com/squizlabs/PHP_CodeSniffer)). This tool uses the same ruleset as *phpcs* to automatically correct coding standard violations.
+
+The main PHP structure follow the [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md) standard. Autoloading is therefore provided by _Composer_.
+
+### Automated Checks
+
+Most quality checker tools can be run with _Grunt_. They are:
+
+- `grunt phpunit`, to run the Test Suite.
+- `grunt phpcs`, to ensure coding style compliance.
+
+All three tools can also be run from `grunt watch`.
+
+To ensure a clean code base, pre-commit git hooks should be installed on all development environments.
+
+### Continuous Integration
+
+- [Travis](https://travis-ci.org/)
+- [Scrutinizer](https://scrutinizer-ci.com/)
+- [Code Climate](https://codeclimate.com/)
+
+### Unit Tests
+
+Every class, method, and function should be covered by unit tests. PHP code can be tested with [_PHPUnit_](https://phpunit.de/).
+
+## Authors
+
+- Mathieu Ducharme <mat@locomotive.ca>
+
+## Changelog
+
+- Unreleased.
+
+## TODOs
+
+- Write a version for GD
+- Write a version using the binary imagemagick tools directly ('mogrify')
+- Custom Exceptions
