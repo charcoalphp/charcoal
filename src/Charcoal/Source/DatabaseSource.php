@@ -72,7 +72,7 @@ class DatabaseSource extends AbstractSource
     public function set_database_ident($database_ident)
     {
         if (!is_string($database_ident)) {
-            throw new InvalidArgumentException('set_database() expects a string as database ident');
+            throw new InvalidArgumentException('set_database() expects a string as database ident.');
         }
         $this->_database_ident = $database_ident;
         return $this;
@@ -126,7 +126,7 @@ class DatabaseSource extends AbstractSource
     public function set_table($table)
     {
         if (!is_string($table)) {
-            throw new InvalidArgumentException('set_table() expects a string as table');
+            throw new InvalidArgumentException('set_table() expects a string as table.');
         }
         $this->_table = $table;
 
@@ -173,9 +173,9 @@ class DatabaseSource extends AbstractSource
         if ($key) {
             $q .= ', PRIMARY KEY (`'.$key.'`) '."\n";
         }
-        // @todo add indexes for all defined list constraints (yea... tough job...)
-        $q .= ') ENGINE = MYISAM DEFAULT CHARSET=utf8 COMMENT=\''.addslashes($metadata['name']).'\';';
-        //var_dump($q);
+        /** @todo add indexes for all defined list constraints (yea... tough job...) */
+        $q .= ') ENGINE=MYISAM DEFAULT CHARSET=utf8 COMMENT=\''.addslashes($metadata['name']).'\';';
+        // var_dump($q);
         $res = $this->db()->query($q);
 
         return true;
@@ -202,7 +202,7 @@ class DatabaseSource extends AbstractSource
             if (!array_key_exists($ident, $cols)) {
                 // The key does not exist at all.
                 $q = 'ALTER TABLE `'.$this->table().'` ADD '.$field->sql();
-                //var_dump($q);
+                // var_dump($q);
                 $res = $this->db()->query($q);
             } else {
                 // The key exists. Validate.
@@ -223,7 +223,7 @@ class DatabaseSource extends AbstractSource
 
                 if ($alter === true) {
                     $q = 'ALTER TABLE `'.$this->table().'` CHANGE `'.$ident.'` '.$field->sql();
-                    //var_dump($q);
+                    // var_dump($q);
                     $res = $this->db()->query($q);
                 }
 
@@ -262,7 +262,7 @@ class DatabaseSource extends AbstractSource
     /**
     * Check wether the source table is empty (`true`) or not (`false`)
     *
-    * @return bool
+    * @return boolean
     */
     public function table_is_empty()
     {
@@ -290,9 +290,9 @@ class DatabaseSource extends AbstractSource
 
         $db_config = $this->database_config();
 
-        $db_hostname = isset($db_config['hostname']) ? $db_config['hostname'] : self::DEFAULT_DB_HOSTNAME;
-        $db_type = isset($db_config['type']) ? $db_config['type'] : self::DEFAULT_DB_TYPE;
-        // ... The other parameters are required. @todo Really?
+        $db_hostname = (isset($db_config['hostname']) ? $db_config['hostname'] : self::DEFAULT_DB_HOSTNAME);
+        $db_type = (isset($db_config['type']) ? $db_config['type'] : self::DEFAULT_DB_TYPE);
+        /** @todo ... The other parameters are required. Really? */
 
         try {
             $database = $db_config['database'];
@@ -314,7 +314,7 @@ class DatabaseSource extends AbstractSource
             }
 
         } catch (PDOException $e) {
-            throw new Exception('Error setting up database');
+            throw new Exception('Error setting up database.');
         }
 
         self::$_dbs[$database_ident] = $db;
@@ -338,7 +338,7 @@ class DatabaseSource extends AbstractSource
         } else {
             $properties = array_merge($properties, [$model->key()]);
         }
-        
+
         $fields = [];
         foreach ($properties as $property_ident) {
             $p = $model->p($property_ident);
@@ -393,7 +393,7 @@ class DatabaseSource extends AbstractSource
                1';
 
         $binds = [
-            'ident'=>$ident
+            'ident' => $ident
         ];
         $sth = $this->db_query($q, $binds);
         if ($sth === false) {
@@ -411,7 +411,6 @@ class DatabaseSource extends AbstractSource
     /**
     * Save an item (create a new row) in storage.
     *
-    *
     * @param StorableInterface $item The object to save
     * @throws Exception if a database error occurs
     * @return mixed The created item ID, or false in case of an error
@@ -419,7 +418,7 @@ class DatabaseSource extends AbstractSource
     public function save_item(StorableInterface $item)
     {
         if ($this->table_exists() === false) {
-            // @todo - Optionnally turn off for some models
+            /** @todo Optionnally turn off for some models */
             $this->create_table();
         }
 
@@ -457,7 +456,7 @@ class DatabaseSource extends AbstractSource
         $res = $this->db_query($q, $binds, $binds_types);
 
         if ($res === false) {
-            throw new Exception('Could not save item');
+            throw new Exception('Could not save item.');
         } else {
             if ($model->id()) {
                 return $model->id();
@@ -545,7 +544,7 @@ class DatabaseSource extends AbstractSource
                 1';
 
         $binds = [
-            'id'=>$model->id()
+            'id' => $model->id()
         ];
 
         $res = $this->db_query($q, $binds);
@@ -577,11 +576,11 @@ class DatabaseSource extends AbstractSource
                 } else if (!is_scalar($binds[$k])) {
                     $binds[$k] = json_encode($binds[$k]);
                 }
-                $type = isset($binds_types[$k]) ? $binds_types[$k] : PDO::PARAM_STR;
+                $type = (isset($binds_types[$k]) ? $binds_types[$k] : PDO::PARAM_STR);
                 $sth->bindParam(':'.$k, $binds[$k], $type);
             }
         }
-        
+
         $ret = $sth->execute();
         if ($ret === false) {
             return false;

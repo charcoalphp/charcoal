@@ -28,7 +28,7 @@ abstract class AbstractView implements ViewInterface
     const ENGINE_PHP = 'php';
 
     const DEFAULT_ENGINE = self::ENGINE_MUSTACHE;
-    
+
     /**
     * @var string $_engine
     */
@@ -89,7 +89,7 @@ abstract class AbstractView implements ViewInterface
     public function set_engine($engine)
     {
         if (!is_string($engine)) {
-            throw new InvalidArgumentException('Engine must be a string');
+            throw new InvalidArgumentException('Engine must be a string.');
         }
         $this->_engine = $engine;
         return $this;
@@ -111,7 +111,7 @@ abstract class AbstractView implements ViewInterface
     public function set_template($template)
     {
         if (!is_string($template)) {
-            throw new InvalidArgumentException('Template must be a string');
+            throw new InvalidArgumentException('Template must be a string.');
         }
 
         $this->_template = $template;
@@ -163,7 +163,6 @@ abstract class AbstractView implements ViewInterface
     */
     public function js_requirements()
     {
-
         $req = array_unique(self::$_js_requirements);
         $ret = '';
         foreach ($req as $r) {
@@ -206,7 +205,6 @@ abstract class AbstractView implements ViewInterface
     */
     public function css_requirements()
     {
-
         $req = array_unique(self::$_css_requirements);
         $ret = '';
         foreach ($req as $r) {
@@ -302,42 +300,42 @@ abstract class AbstractView implements ViewInterface
         if ($engine == self::ENGINE_MUSTACHE || $engine == self::ENGINE_PHP_MUSTACHE) {
             $mustache = new Mustache_Engine(
                 [
-                'cache' => 'mustache_cache',
-                
-                //'loader' =>  null,
-                'partials_loader' => new MustacheTemplateLoader(),
+                    'cache' => 'mustache_cache',
 
-                'logger' => Charcoal::logger(),
+                    // 'loader' =>  null,
+                    'partials_loader' => new MustacheTemplateLoader(),
 
-                'strict_callables' => true,
+                    'logger' => Charcoal::logger(),
 
-                'helpers'=>[
-                    '_t'=>function($str) {
-                        // @todo Translate
-                        return $this->_t($str);
-                    },
-                    'add_js'=>function($js, Mustache_LambdaHelper $helper) {
-                        $js = $helper->render($js);
-                        return $this->add_js($js);
+                    'strict_callables' => true,
 
-                    },
-                    'js'=>function() {
-                        return $this->js();
-                    },
-                    'add_js_requirement'=>function($js_requirement) {
-                        return $this->add_js_requirement($js_requirement);
-                    },
-                    'js_requirements'=>function() {
-                        return $this->js_requirements();
-                    },
-                    'add_css'=>function($css, Mustache_LambdaHelper $helper) {
-                        $css = $helper->render($css);
-                        return $this->add_css($css);
-                    },
-                    'css'=>function() {
-                        return $this->css();
-                    }
-                ]
+                    'helpers' => [
+                        '_t' => function($str) {
+                            /** @todo Translate */
+                            return $this->_t($str);
+                        },
+                        'add_js' => function($js, Mustache_LambdaHelper $helper) {
+                            $js = $helper->render($js);
+                            return $this->add_js($js);
+
+                        },
+                        'js' => function() {
+                            return $this->js();
+                        },
+                        'add_js_requirement' => function($js_requirement) {
+                            return $this->add_js_requirement($js_requirement);
+                        },
+                        'js_requirements' => function() {
+                            return $this->js_requirements();
+                        },
+                        'add_css' => function($css, Mustache_LambdaHelper $helper) {
+                            $css = $helper->render($css);
+                            return $this->add_css($css);
+                        },
+                        'css' => function() {
+                            return $this->css();
+                        }
+                    ]
                 ]
             );
             $controller = $this->controller();
@@ -380,7 +378,8 @@ abstract class AbstractView implements ViewInterface
         $class = str_replace('/', '\\', $ident);
         $expl = explode('\\', $class);
         array_walk(
-            $expl, function(&$i) {
+            $expl,
+            function(&$i) {
                 $i = ucfirst($i);
             }
         );
@@ -398,5 +397,4 @@ abstract class AbstractView implements ViewInterface
         $ident = ltrim($ident, '/');
         return $ident;
     }
-
 }

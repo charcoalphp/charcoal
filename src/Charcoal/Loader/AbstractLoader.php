@@ -12,7 +12,7 @@ abstract class AbstractLoader implements
     CacheableInterface
 {
     use CacheableTrait;
-    
+
     /**
     * @var mixed $_content
     */
@@ -41,7 +41,7 @@ abstract class AbstractLoader implements
     * @return mixed
     */
     abstract public function load($ident = null);
-    
+
     /**
     * CacheableInterface > cache_data().
     *

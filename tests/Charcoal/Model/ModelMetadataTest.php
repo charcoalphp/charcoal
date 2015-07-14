@@ -46,7 +46,6 @@ class ModelMetadataTest extends \PHPUnit_Framework_TestCase
 
         unset($obj['foo']);
         $this->assertObjectNotHasAttribute('foo', $obj);
-
     }
 
     public function testSetData()

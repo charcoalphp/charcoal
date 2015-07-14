@@ -49,11 +49,8 @@ trait DescribableTrait
     * @throws InvalidArgumentException
     * @return DescribableTrait
     */
-    public function set_describable_data($data)
+    public function set_describable_data(array $data)
     {
-        if (!is_array($data)) {
-            throw new InvalidArgumentException('Data must be an array');
-        }
         if (isset($data['metadata']) && $data['metadata'] !== null) {
             $this->set_metadata($data['metadata']);
         }
@@ -74,7 +71,7 @@ trait DescribableTrait
         } else if ($metadata instanceof MetadataInterface) {
             $this->_metadata = $metadata;
         } else {
-            throw new \InvalidArgumentException('Metadata argument is invalid (must be array or Medatadata object)');
+            throw new \InvalidArgumentException('Metadata argument is invalid (must be array or Medatadata object).');
         }
 
         // If the metadata contains "data", then automatically set the initial data to the value
@@ -114,10 +111,10 @@ trait DescribableTrait
         $metadata_loader = new MetadataLoader();
         $metadata = $metadata_loader->load($metadata_ident);
         $this->set_metadata($metadata);
-        
+
         return $metadata;
     }
-    
+
     /**
     * @return MetadataInterface
     */
@@ -167,7 +164,7 @@ trait DescribableTrait
     */
     public function properties()
     {
-        //$this->metadata();
+        // $this->metadata();
         $props = $this->metadata()->properties();
 
         if (empty($props)) {
@@ -185,30 +182,30 @@ trait DescribableTrait
     * Get an object's property
     *
     * @param string $property_ident The property ident to return
-    * @throws InvalidArgumentException if the property_ident is not a scalar
+    * @throws InvalidArgumentException if the property_ident is not a string
     * @throws Exception if the requested property is invalid
     * @return PropertyInterface The \Charcoal\Model\Property if found, null otherwise
     */
     public function property($property_ident)
     {
         if (!is_string($property_ident)) {
-            throw new InvalidArgumentException('Invalid ident argument (must be scalar)');
+            throw new InvalidArgumentException('Property Ident must be a string.');
         }
 
         $metadata = $this->metadata();
         $props = $this->metadata()->properties();
 
         if (empty($props)) {
-            throw new Exception('Invalid model metadata - No properties defined');
+            throw new Exception('Invalid model metadata - No properties defined.');
         }
 
         if (!isset($props[$property_ident])) {
-            throw new Exception(sprintf('Invalid property: %s (not defined in metadata)', $property_ident));
+            throw new Exception(sprintf('Invalid property: %s (not defined in metadata).', $property_ident));
         }
 
         $property_metadata = $props[$property_ident];
         if (!isset($property_metadata['type'])) {
-            throw new Exception(sprintf('Invalid property: %s (type is undefined)', $property_ident));
+            throw new Exception(sprintf('Invalid property: %s (type is undefined).', $property_ident));
         }
 
         $property = PropertyFactory::instance()->get($property_metadata['type']);

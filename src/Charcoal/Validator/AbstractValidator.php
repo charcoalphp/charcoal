@@ -14,9 +14,9 @@ use \Charcoal\Validator\ValidatorResult as ValidatorResult;
 */
 abstract class AbstractValidator implements ValidatorInterface
 {
-    const ERROR     = 'error';
-    const WARNING   = 'warning';
-    const NOTICE    = 'notice';
+    const ERROR   = 'error';
+    const WARNING = 'warning';
+    const NOTICE  = 'notice';
 
     /**
     * @var ValidatableInterface
@@ -76,9 +76,9 @@ abstract class AbstractValidator implements ValidatorInterface
     {
         $this->add_result(
             [
-            'ident'=>(($ident !== null) ? $ident : ''),
-            'level'=>$level,
-            'message'=>$msg
+                'ident'   => (($ident !== null) ? $ident : ''),
+                'level'   => $level,
+                'message' => $msg
             ]
         );
         return $this;
@@ -94,7 +94,7 @@ abstract class AbstractValidator implements ValidatorInterface
         if (is_array($result)) {
             $result = new ValidatorResult($result);
         } else if (!($result instanceof ValidatorResult)) {
-            throw new \InvalidArgumentException('ValidatorResult must be an array or a ValidatorResult object');
+            throw new \InvalidArgumentException('Result must be an array or a ValidatorResult object.');
         }
         $level = $result->level();
         if (!isset($this->_results[$level])) {

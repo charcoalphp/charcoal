@@ -100,13 +100,13 @@ abstract class AbstractProperty implements
     {
         // Set default values
         $defaults = [
-            'ident'=>'',
-            'l10n'=>false,
-            'hidden'=>false,
-            'multiple'=>false,
-            'required'=>false,
-            'unique'=>false,
-            'active'=>true
+            'ident'    => '',
+            'l10n'     => false,
+            'hidden'   => false,
+            'multiple' => false,
+            'required' => false,
+            'unique'   => false,
+            'active'   => true
         ];
 
         if ($data === null) {
@@ -116,7 +116,6 @@ abstract class AbstractProperty implements
         }
 
         $this->set_data($data);
-
     }
 
     /**
@@ -182,7 +181,7 @@ abstract class AbstractProperty implements
     public function set_ident($ident)
     {
         if (!is_string($ident)) {
-            throw new InvalidArgumentException('Ident needs to be string');
+            throw new InvalidArgumentException('Ident needs to be string.');
         }
         $this->_ident = $ident;
         return $this;
@@ -195,7 +194,7 @@ abstract class AbstractProperty implements
     public function ident()
     {
         if ($this->_ident === null) {
-            throw new Exception('Ident was never set');
+            throw new Exception('Ident was never set.');
         }
         return $this->_ident;
     }
@@ -263,7 +262,6 @@ abstract class AbstractProperty implements
     */
     public function set_label($label)
     {
-
         $this->_label = $label;
         return $this;
     }
@@ -287,7 +285,7 @@ abstract class AbstractProperty implements
     public function set_l10n($l10n)
     {
         if (!is_bool($l10n)) {
-            throw new InvalidArgumentException('l10n must be a boolean');
+            throw new InvalidArgumentException('l10n must be a boolean.');
         }
         $this->_l10n = $l10n;
         return $this;
@@ -309,7 +307,7 @@ abstract class AbstractProperty implements
     public function set_hidden($hidden)
     {
         if (!is_bool($hidden)) {
-            throw new InvalidArgumentException('hidden must be a boolean');
+            throw new InvalidArgumentException('hidden must be a boolean.');
         }
         $this->hidden = $hidden;
         return $this;
@@ -331,7 +329,7 @@ abstract class AbstractProperty implements
     public function set_multiple($multiple)
     {
         if (!is_bool($multiple)) {
-            throw new InvalidArgumentException('multiple must be a boolean');
+            throw new InvalidArgumentException('multiple must be a boolean.');
         }
         $this->multiple = $multiple;
         return $this;
@@ -353,7 +351,7 @@ abstract class AbstractProperty implements
     public function set_allow_null($allow)
     {
         if (!is_bool($allow)) {
-            throw new InvalidArgumentException('Allow null must be a boolean');
+            throw new InvalidArgumentException('Allow null must be a boolean.');
         }
         $this->_allow_null = $allow;
         return $this;
@@ -372,15 +370,12 @@ abstract class AbstractProperty implements
     * @throws InvalidArgumentException if the paramter is not an array
     * @return Property (Chainable)
     */
-    public function set_multiple_options($multiple_options)
+    public function set_multiple_options(array $multiple_options)
     {
-        if (!is_array($multiple_options)) {
-            throw new InvalidArgumentException('multiple options must be an array');
-        }
         $default_options = [
-            'separator'    => ',',
-            'min'        => 0,
-            'max'        => 0
+            'separator' => ',',
+            'min'       => 0,
+            'max'       => 0
         ];
         $options = array_merge($default_options, $multiple_options);
         $this->multiple_options = $options;
@@ -394,7 +389,7 @@ abstract class AbstractProperty implements
     {
         return $this->multiple_options;
     }
-    
+
     /**
     * @param boolean $required
     * @throws InvalidArgumentException if the paramter is not a boolean
@@ -403,7 +398,7 @@ abstract class AbstractProperty implements
     public function set_required($required)
     {
         if (!is_bool($required)) {
-            throw new InvalidArgumentException('required must be a boolean');
+            throw new InvalidArgumentException('Required must be a boolean.');
         }
         $this->_required = $required;
         return $this;
@@ -425,7 +420,7 @@ abstract class AbstractProperty implements
     public function set_unique($unique)
     {
         if (!is_bool($unique)) {
-            throw new InvalidArgumentException('unique must be a boolean');
+            throw new InvalidArgumentException('Unique must be a boolean.');
         }
         $this->unique = $unique;
         return $this;
@@ -447,7 +442,7 @@ abstract class AbstractProperty implements
     public function set_active($active)
     {
         if (!is_bool($active)) {
-            throw new InvalidArgumentException('active must be a boolean');
+            throw new InvalidArgumentException('Active must be a boolean.');
         }
         $this->active = $active;
         return $this;
@@ -468,19 +463,19 @@ abstract class AbstractProperty implements
     {
         $fields = [];
         if ($this->l10n()) {
-            $langs = ['fr', 'en']; // @todo
+            $langs = ['fr', 'en']; /** @todo Implement retrieval of active languages */
             foreach ($langs as $lang) {
                 $field = new PropertyField();
                 $field->set_data(
                     [
-                    'ident'=>$this->ident().'_'.$lang,
-                    'sql_type'=>$this->sql_type(),
-                    'sql_pdo_type'=>$this->sql_pdo_type(),
-                    'extra'=>$this->sql_extra(),
-                    'val'=>$this->field_val($lang),
-                    'default_val'=>null,
-                    'allow_null'=>$this->allow_null(),
-                    'comment'=>$this->label()
+                        'ident'        => $this->ident().'_'.$lang,
+                        'sql_type'     => $this->sql_type(),
+                        'sql_pdo_type' => $this->sql_pdo_type(),
+                        'extra'        => $this->sql_extra(),
+                        'val'          => $this->field_val($lang),
+                        'default_val'  => null,
+                        'allow_null'   => $this->allow_null(),
+                        'comment'      => $this->label()
                     ]
                 );
                 $fields[$lang] = $field;
@@ -489,14 +484,14 @@ abstract class AbstractProperty implements
             $field = new PropertyField();
             $field->set_data(
                 [
-                'ident'=>$this->ident(),
-                'sql_type'=>$this->sql_type(),
-                'sql_pdo_type'=>$this->sql_pdo_type(),
-                'extra'=>$this->sql_extra(),
-                'val'=>$this->storage_val(),
-                'default_val'=>null,
-                'allow_null'=>$this->allow_null(),
-                'comment'=>$this->label()
+                    'ident'        => $this->ident(),
+                    'sql_type'     => $this->sql_type(),
+                    'sql_pdo_type' => $this->sql_pdo_type(),
+                    'extra'        => $this->sql_extra(),
+                    'val'          => $this->storage_val(),
+                    'default_val'  => null,
+                    'allow_null'   => $this->allow_null(),
+                    'comment'      => $this->label()
                 ]
             );
             $fields[] = $field;
@@ -519,7 +514,7 @@ abstract class AbstractProperty implements
     public function validate_required()
     {
         if ($this->required() && !$this->val()) {
-            $this->validator()->error('Value is required', 'required');
+            $this->validator()->error('Value is required.', 'required');
             return false;
         }
 
@@ -535,7 +530,7 @@ abstract class AbstractProperty implements
             return true;
         }
 
-        // @todo Check in model's storage if the value already exists.
+        /** @todo Check in the model's storage if the value already exists. */
         return true;
     }
 
@@ -545,7 +540,7 @@ abstract class AbstractProperty implements
     public function validate_allow_null()
     {
         if (!$this->allow_null() && $this->val() === null) {
-            $this->validator()->error('Value can not be null', 'allow_null');
+            $this->validator()->error('Value can not be null.', 'allow_null');
             return false;
         }
         return true;
@@ -603,14 +598,17 @@ abstract class AbstractProperty implements
     * @return string
     */
     abstract public function sql_extra();
+
     /**
     * @return string
     */
     abstract public function sql_type();
+
     /**
     * @return integer
     */
     abstract public function sql_pdo_type();
+
     /**
     * @return mixed
     */

@@ -16,24 +16,23 @@ class ModelValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testValidateModel()
     {
-        
         $model = new Model();
         $model->set_metadata(
             [
-            'properties'=>[
-                'foo'=>[
-                    'type'=>'string',
-                    'required'=>true,
-                    'min_length'=>5
+                'properties' => [
+                    'foo' => [
+                        'type' => 'string',
+                        'required' => true,
+                        'min_length' => 5
+                    ]
                 ]
-            ]
             ]
         );
 
         $obj = new ModelValidator($model);
         $ret = $obj->validate();
-        
-        //var_dump($ret);
-        //$this->assertSame($ret, $obj);
+
+        // var_dump($ret);
+        // $this->assertSame($ret, $obj);
     }
 }

@@ -18,11 +18,10 @@ class ModelViewController extends AbstractViewController
     *
     * @param string $name
     * @return mixed
-    * @see    https://github.com/bobthecow/mustache.php/wiki/Magic-Methods
+    * @see    https:// github.com/bobthecow/mustache.php/wiki/Magic-Methods
     */
     public function __get($name)
     {
-
         $model = $this->_model();
         if ($model === null) {
             return null;
@@ -59,7 +58,7 @@ class ModelViewController extends AbstractViewController
 
         return null;
     }
-    
+
     /**
     * @param string $name
     * @return boolean
@@ -91,7 +90,7 @@ class ModelViewController extends AbstractViewController
     public function set_context($context)
     {
         if (!($context instanceof ModelInterface)) {
-            throw new InvalidArgumentException('Context must be a Model');
+            throw new InvalidArgumentException('Context must be a Model.');
         }
         $this->_context = $context;
         return $this;
@@ -107,9 +106,8 @@ class ModelViewController extends AbstractViewController
             return null;
         }
         if (!($this->_context instanceof ModelInterface)) {
-            throw new \Exception('Context neeeds to be a Model');
+            throw new \Exception('Context neeeds to be a Model.');
         }
         return $this->_context;
     }
-
 }

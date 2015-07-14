@@ -23,13 +23,13 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     {
         $obj = new Filter();
 
-        $obj->set_data(['property'=>'foo']);
+        $obj->set_data(['property' => 'foo']);
         $this->assertEquals('foo', $obj->property());
 
         $obj->set_data(
             [
-            'property'=>'bar',
-            'val'=>42
+                'property' => 'bar',
+                'val' => 42
             ]
         );
         $this->assertEquals('bar', $obj->property());
@@ -37,13 +37,13 @@ class FilterTest extends \PHPUnit_Framework_TestCase
 
         // Full data et
         $data = [
-            'property'=>'foo',
-            'val'=>42,
-            'operator'=>'=',
-            'func'=>'abs',
-            'operand'=>'and',
-            'string'=>'(1=1)',
-            'active'=>true
+            'property' => 'foo',
+            'val'      => 42,
+            'operator' => '=',
+            'func'     => 'abs',
+            'operand'  => 'and',
+            'string'   => '(1=1)',
+            'active'   => true
         ];
         $obj->set_data($data);
 
@@ -60,17 +60,16 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     {
         $obj = new Filter();
         $data = [
-            'property'=>'foo',
-            'val'=>42,
-            'operator'=>'=',
-            'func'=>'abs',
-            'operand'=>'and',
-            'string'=>'(1=1)',
-            'active'=>true
+            'property' => 'foo',
+            'val'      => 42,
+            'operator' => '=',
+            'func'     => 'abs',
+            'operand'  => 'and',
+            'string'   => '(1=1)',
+            'active'   => true
         ];
         $ret = $obj->set_data($data);
         $this->assertSame($obj, $ret);
-
     }
 
     public function testSetProperty()
@@ -144,8 +143,6 @@ class FilterTest extends \PHPUnit_Framework_TestCase
         $obj->set_operator('Like');
         $this->assertEquals('LIKE', $obj->operator());
     }
-
-
 
     /**
     * @dataProvider providerInvalidArguments
@@ -229,7 +226,6 @@ class FilterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($obj, $ret);
     }
 
-
     public function testSetInvalidStringThrowsException()
     {
         $this->setExpectedException('\InvalidArgumentException');
@@ -257,7 +253,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
         $obj->set_val('bar');
         $sql = $obj->sql();
 
-        // @todo: Note that 'bar' is not quoted...
+        /** @todo: Note that 'bar' is not quoted... */
         $this->assertEquals('(`foo` '.$operator.' \'bar\')', $sql);
     }
 
@@ -272,7 +268,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
         $obj->set_val('bar');
         $sql = $obj->sql();
 
-        // @todo: Note that 'bar' is not quoted...
+        /** @todo: Note that 'bar' is not quoted... */
         $this->assertEquals('(`foo` '.$operator.')', $sql);
     }
 
@@ -285,7 +281,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
         $obj->set_func('abs');
         $sql = $obj->sql();
 
-        // @todo: Note that 'bar' is not quoted...
+        /** @todo: Note that 'bar' is not quoted... */
         $this->assertEquals('(ABS(`foo`) = \'bar\')', $sql);
     }
 

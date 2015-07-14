@@ -31,7 +31,7 @@ class CacheFactoryTest extends \PHPUnit_Framework_TestCase
     public function testGetInvalid()
     {
         $this->setExpectedException('\InvalidArgumentException');
-        
+
         $obj = CacheFactory::instance();
         $obj->get('foobar');
     }

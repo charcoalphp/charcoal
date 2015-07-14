@@ -11,7 +11,6 @@ use \Charcoal\Loader\CollectionLoader\Filter as Filter;
 use \Charcoal\Loader\CollectionLoader\Order as Order;
 use \Charcoal\Loader\CollectionLoader\Pagination as Pagination;
 
-
 /**
 * Collection Loader
 */
@@ -65,7 +64,6 @@ class CollectionLoader extends AbstractLoader
         return $this->_source;
     }
 
-
     /**
     * @param ModelInterface $model
     * @return Source Chainable
@@ -97,7 +95,7 @@ class CollectionLoader extends AbstractLoader
     public function set_properties($properties)
     {
         if (!is_array($properties)) {
-            throw new InvalidArgumentException('Properties must be an array');
+            throw new InvalidArgumentException('Properties must be an array.');
         }
         $this->_properties = [];
         foreach ($properties as $p) {
@@ -122,15 +120,14 @@ class CollectionLoader extends AbstractLoader
     public function add_property($property)
     {
         if (!is_string($property)) {
-            throw new InvalidArgumentException('Property must be a string');
+            throw new InvalidArgumentException('Property must be a string.');
         }
         if ($property=='') {
-            throw new InvalidArgumentException('Property can not be empty');
+            throw new InvalidArgumentException('Property can not be empty.');
         }
         $this->_properties[] = $property;
         return $this;
     }
-
 
     /**
     * @param array $filters
@@ -140,7 +137,7 @@ class CollectionLoader extends AbstractLoader
     public function set_filters($filters)
     {
         if (!is_array($filters)) {
-            throw new InvalidArgumentException('Filters must be an array');
+            throw new InvalidArgumentException('Filters must be an array.');
         }
         $this->_filters = [];
         foreach ($filters as $f) {
@@ -167,9 +164,9 @@ class CollectionLoader extends AbstractLoader
     * - as a `Filter` object, in which case it will be added directly.
     *   - `add_filter($obj);`
     * - as an array of options, which will be used to build the `Filter` object
-    *   - `add_filter(['property'=>'foo', 'val'=>42, 'operator'=>'<=']);`
+    *   - `add_filter(['property' => 'foo', 'val' => 42, 'operator' => '<=']);`
     * - as 3 parameters: `property`, `val` and `options`
-    *   - `add_filter('foo', 42, ['operator'=>'<=']);`
+    *   - `add_filter('foo', 42, ['operator' => '<=']);`
     *
     * @param string|array|Filter $param
     * @param mixed               $val     Optional: Only used if the first argument is a string
@@ -195,7 +192,7 @@ class CollectionLoader extends AbstractLoader
             $this->_filters[] = $filter;
 
         } else {
-            throw new InvalidArgumentException('Parameter must be an array or a property ident');
+            throw new InvalidArgumentException('Parameter must be an array or a property ident.');
         }
 
         return $this;
@@ -249,7 +246,7 @@ class CollectionLoader extends AbstractLoader
             }
             $this->_orders[] = $order;
         } else {
-            throw new InvalidArgumentException('Parameter must be an Order object or a property ident');
+            throw new InvalidArgumentException('Parameter must be an Order object or a property ident.');
         }
 
         return $this;
@@ -290,7 +287,7 @@ class CollectionLoader extends AbstractLoader
     public function set_page($page)
     {
         if (!is_integer($page)) {
-            throw new InvalidArgumentException('Page must be an integer');
+            throw new InvalidArgumentException('Page must be an integer.');
         }
         $this->pagination()->set_page($page);
         return $this;
@@ -312,7 +309,7 @@ class CollectionLoader extends AbstractLoader
     public function set_num_per_page($num)
     {
         if (!is_integer($num)) {
-            throw new InvalidArgumentException('Num must be an integer');
+            throw new InvalidArgumentException('Num must be an integer.');
         }
         $this->pagination()->set_num_per_page($num);
         return $this;
@@ -345,10 +342,10 @@ class CollectionLoader extends AbstractLoader
 
         $db = $this->source()->db();
         if (!$db) {
-            throw new Exception('Could not instanciate database connection');
+            throw new Exception('Could not instanciate database connection.');
         }
 
-        // @todo Filters, pagination, select, etc
+        /** @todo Filters, pagination, select, etc */
         $q = $this->sql();
 
         $collection = new Collection();
@@ -356,11 +353,11 @@ class CollectionLoader extends AbstractLoader
         $db = $this->source()->db();
 
         $sth = $db->prepare($q);
-        // @todo filter binds
+        /** @todo Filter binds */
         $sth->execute();
         $sth->setFetchMode(\PDO::FETCH_ASSOC);
         while ($obj_data = $sth->fetch()) {
-            // @todo Custom class
+            /** @todo Custom class */
             $class_name = get_class($this->model());
             // $obj = ModelFactory::instance()->get(
             $obj = new $class_name;
@@ -382,17 +379,17 @@ class CollectionLoader extends AbstractLoader
     {
         $table = $this->source()->table();
         if (!$table) {
-            throw new Exception('No table defined');
+            throw new Exception('No table defined.');
         }
 
         $selects = $this->sql_select();
-        $tables = '`'.$table.'` as obj_table';
+        $tables  = '`'.$table.'` AS obj_table';
         $filters = $this->sql_filters();
-        $orders = $this->sql_orders();
-        $limits = $this->sql_pagination();
+        $orders  = $this->sql_orders();
+        $limits  = $this->sql_pagination();
 
-        $q = 'select '.$selects.' from '.$tables.$filters.$orders.$limits;
-        //var_dump($q);
+        $q = 'SELECT '.$selects.' FROM '.$tables.$filters.$orders.$limits;
+        // var_dump($q);
         return $q;
     }
 
@@ -433,8 +430,8 @@ class CollectionLoader extends AbstractLoader
                 $f_sql = $f->sql();
                 if ($f_sql) {
                     $filters_sql[] = [
-                    'sql'        => $f->sql(),
-                    'operand'    => $f->operand()
+                        'sql'     => $f->sql(),
+                        'operand' => $f->operand()
                     ];
                 }
             }

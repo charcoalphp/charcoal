@@ -34,13 +34,13 @@ class MemcacheCache extends AbstractCache
         if (!$this->enabled()) {
             return false;
         }
-        
+
         $cfg = $this->config();
 
         $this->_memcache = new Memcache();
         $servers = $cfg->servers();
         if (count($servers) == 0) {
-            throw new Exception('Memcache: no server(s) defined');
+            throw new Exception('Memcache: no server(s) defined.');
         }
         foreach ($cfg->servers() as $s) {
             $this->add_server($s);
@@ -61,7 +61,7 @@ class MemcacheCache extends AbstractCache
         if ($this->_enabled === null) {
             $this->_enabled = !!class_exists('Memcache');
         }
-        
+
         return $this->_enabled;
     }
 
@@ -80,7 +80,7 @@ class MemcacheCache extends AbstractCache
         }
 
         $prefix = $this->prefix();
-        $ttl = ($ttl > 0) ? $ttl : $this->config()->default_ttl();
+        $ttl = (($ttl > 0) ? $ttl : $this->config()->default_ttl());
 
         $flag = 0; // MEMCACHE_COMPRESSED
         return $this->_memcache->set($prefix.$key, $data, $flag, $ttl);
@@ -98,7 +98,7 @@ class MemcacheCache extends AbstractCache
             return false;
         }
         $prefix = $this->prefix();
-        
+
         return !!$this->_memcache->get($prefix.$key);
     }
 
@@ -114,7 +114,7 @@ class MemcacheCache extends AbstractCache
             return false;
         }
         $prefix = $this->prefix();
-        
+
         return $this->_memcache->get($prefix.$key);
     }
 
@@ -137,7 +137,6 @@ class MemcacheCache extends AbstractCache
         }
         return $this->_memcache->get($pkeys);
     }
-
 
     /**
     * Delete a key from the cache.
@@ -184,7 +183,7 @@ class MemcacheCache extends AbstractCache
             $server = new MemCacheCacheServerConfig($server);
         }
         if (!($server instanceof MemCacheCacheServerConfig)) {
-            throw new InvalidArgumentException('Invalid server');
+            throw new InvalidArgumentException('Invalid server.');
         }
         $host = $server->host();
         $port = $server->port();
@@ -209,5 +208,4 @@ class MemcacheCache extends AbstractCache
 
         return $config;
     }
-
 }

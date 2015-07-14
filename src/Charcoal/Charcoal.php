@@ -31,7 +31,7 @@ class Charcoal
     * @param array|null $data
     * @return void
     */
-    static public function init($data = null)
+    public static function init($data = null)
     {
         if (isset($data['config']) && $data['config'] !== null) {
             self::set_config($data['config']);
@@ -60,7 +60,7 @@ class Charcoal
     * @throws InvalidArgumentException if config is not a string, array or Config object
     * @return void
     */
-    static public function set_config($config)
+    public static function set_config($config)
     {
         if (self::$_config === null) {
             self::$_config = new Config();
@@ -72,7 +72,9 @@ class Charcoal
         } else if ($config instanceof Config) {
             self::$_config = $config;
         } else {
-            throw new InvalidArgumentException('Config must be a string (filename), array (config data) or Config object');
+            throw new InvalidArgumentException(
+                'Config must be a string (filename), an array (config data), or a Config object.'
+            );
         }
     }
 
@@ -81,7 +83,7 @@ class Charcoal
     * @throws Exception
     * @return Config
     */
-    static public function config($opt = null)
+    public static function config($opt = null)
     {
         if (self::$_config === null) {
             throw new Exception('Config has not been set. Call Charcoal::init() first.');
@@ -96,7 +98,7 @@ class Charcoal
     * @param LoggerInterface $logger
     * @return void
     */
-    static public function set_logger(LoggerInterface $logger)
+    public static function set_logger(LoggerInterface $logger)
     {
         self::$_logger = $logger;
     }
@@ -104,7 +106,7 @@ class Charcoal
     /**
     * @return LoggerInterface
     */
-    static public function logger()
+    public static function logger()
     {
         return self::$_logger;
     }
@@ -114,7 +116,7 @@ class Charcoal
     * By default, this uses monolog.
     * @return void
     */
-    static public function init_logger()
+    public static function init_logger()
     {
         $logger = new \Monolog\Logger('charcoal');
         $handler = new \Monolog\Handler\StreamHandler('charcoal.debug.log', LogLevel::WARNING);
@@ -127,7 +129,7 @@ class Charcoal
     * @param Slim $app
     * @return void
     */
-    static public function set_app(Slim $app)
+    public static function set_app(Slim $app)
     {
         self::$_app = $app;
     }
@@ -135,7 +137,7 @@ class Charcoal
     /**
     * @return Slim
     */
-    static public function app()
+    public static function app()
     {
         return self::$_app;
     }
@@ -145,13 +147,13 @@ class Charcoal
     * This function use the configuration object, so it should have been initialiazed first.
     * @return void
     */
-    static public function init_app()
+    public static function init_app()
     {
         self::$_app = new Slim(
             [
-            'mode'  => self::config()->application_env(),
-            'debug' => self::config()->dev_mode(),
-            //'log.writer' => self::logger()
+                'mode'  => self::config()->application_env(),
+                'debug' => self::config()->dev_mode()
+                // 'log.writer' => self::logger()
             ]
         );
     }
@@ -160,16 +162,18 @@ class Charcoal
     * Rewrite the "array_merge_recursive" function to behave more like standard "array_merge"
     * (overwrite values instead of appending them)
     *
-    * From http://www.php.net/manual/en/function.array-merge-recursive.php#104145
+    * From http:// www.php.net/manual/en/function.array-merge-recursive.php#104145
     *
-    * @throws InvalidArgumentException if there is not at least 2 arguments or any arguments are not array
+    * @param array $array1 Initial array to merge.
+    * @param array $... Variable list of arrays to merge.
+    * @throws InvalidArgumentException If there isn't at least 2 arguments or any arguments are not an array
     * @return array Merged array
     */
-    static public function merge()
+    public static function merge()
     {
         $args = func_get_args();
         if (func_num_args() < 2) {
-            throw new InvalidArgumentException('This function takes at least two parameters');
+            throw new InvalidArgumentException('This function takes at least two parameters.');
         }
 
         $array_list = func_get_args();
@@ -178,9 +182,9 @@ class Charcoal
         while ($array_list) {
             $current = array_shift($array_list);
 
-            // Make sure the argument is an array. @todo: Convert objects to array??
+            /** @todo Convert objects to array? */
             if (!is_array($current)) {
-                throw new InvalidArgumentException('All parameters must be arrays');
+                throw new InvalidArgumentException('All parameters must be arrays.');
             }
             if (!$current) {
                 continue;

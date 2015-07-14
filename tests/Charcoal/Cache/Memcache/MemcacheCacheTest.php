@@ -66,7 +66,7 @@ class MemcacheCacheTest extends \PHPUnit_Framework_TestCase
         $obj->store('baz', 123);
         if ($obj->enabled() !== false) {
             // Was set in cache in `testStore`
-            $this->assertEquals(['foo'=>'bar', 'baz'=>123], $obj->multifetch(['foo', 'baz']));
+            $this->assertEquals(['foo' => 'bar', 'baz' => 123], $obj->multifetch(['foo', 'baz']));
         }
         $obj->config()->set_active(false);
         $this->assertNotTrue($obj->multifetch(['foo', 'baz']));

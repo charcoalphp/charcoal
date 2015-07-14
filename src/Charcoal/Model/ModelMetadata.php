@@ -11,7 +11,6 @@ use \Charcoal\Helper\Cache as Cache;
 
 class ModelMetadata extends AbstractMetadata implements \ArrayAccess
 {
-
     /**
      * @var string $_ident
      */
@@ -55,7 +54,7 @@ class ModelMetadata extends AbstractMetadata implements \ArrayAccess
     public function set_ident($ident)
     {
         if (!is_string($ident)) {
-            throw new InvalidArgumentException(__CLASS__.'::'.__FUNCTION__.'Ident must be a string');
+            throw new InvalidArgumentException(__CLASS__.'::'.__FUNCTION__.'Ident must be a string.');
         }
         $this->_ident = $ident;
         return $this;
@@ -77,7 +76,7 @@ class ModelMetadata extends AbstractMetadata implements \ArrayAccess
     public function set_sources($sources)
     {
         if (!is_array($sources)) {
-            throw new InvalidArgumentException('Sources must be an array');
+            throw new InvalidArgumentException('Sources must be an array.');
         }
         foreach ($sources as $source_ident => $source) {
             $this->add_source($source_ident, $source);
@@ -121,7 +120,7 @@ class ModelMetadata extends AbstractMetadata implements \ArrayAccess
     public function set_default_source($default_source)
     {
         if (!is_string($default_source)) {
-            throw new InvalidArgumentException('Default source needs to be a string');
+            throw new InvalidArgumentException('Default source needs to be a string.');
         }
         $this->_default_source = $default_source;
         return $this;

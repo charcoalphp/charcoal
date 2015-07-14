@@ -52,11 +52,8 @@ abstract class AbstractMetadata implements
     * @throws InvalidArgumentException if parameter is not an array
     * @return MetadataInterface Chainable
     */
-    public function set_properties($properties)
+    public function set_properties(array $properties)
     {
-        if (!is_array($properties)) {
-            throw new InvalidArgumentException('Properties need to be an array');
-        }
         $this->_properties = $properties;
         return $this;
     }
@@ -88,7 +85,7 @@ abstract class AbstractMetadata implements
     */
     public function offsetGet($offset)
     {
-        return isset($this->{$offset}) ? $this->{$offset} : null;
+        return (isset($this->{$offset}) ? $this->{$offset} : null);
     }
 
     /**
@@ -102,7 +99,7 @@ abstract class AbstractMetadata implements
     public function offsetSet($offset, $value)
     {
         if (empty($offset)) {
-            throw new InvalidArgumentException('Offset is required');
+            throw new InvalidArgumentException('Offset is required.');
         }
         $this->{$offset} = $value;
     }

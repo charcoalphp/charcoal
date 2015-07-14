@@ -5,10 +5,8 @@ namespace Charcoal\Tests\View;
 use \Charcoal\View\AbstractView as AbstractView;
 use \Charcoal\View\ViewTemplateLoader as ViewTemplateLoader;
 
-
 class ViewTemplateLoaderTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testSetEngine()
     {
         $obj = new ViewTemplateLoader();
@@ -21,5 +19,4 @@ class ViewTemplateLoaderTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('\InvalidArgumentException');
         $obj->set_engine(false);
     }
-    
 }

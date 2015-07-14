@@ -59,7 +59,7 @@ class Property extends AbstractProperty
     {
         return '';
     }
-        
+
     /**
     * @return string
     */

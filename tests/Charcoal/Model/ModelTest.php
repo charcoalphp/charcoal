@@ -15,21 +15,21 @@ class ModelTest extends \PHPUnit_Framework_TestCase
         $obj = new Model();
         $this->assertInstanceOf('\Charcoal\Model\Model', $obj);
 
-        //$this->assertEquals([], $obj->properties());
+        // $this->assertEquals([], $obj->properties());
     }
 
     public function testSetMetadataFromArray()
     {
         $data = [
-            'data'=>[
-                'foo'=>'bar',
-                'bar'=>'foo'
+            'data' => [
+                'foo' => 'bar',
+                'bar' => 'foo'
             ]
         ];
 
         $obj = new Model();
         $obj->set_metadata($data);
-        
+
         $metadata = $obj->metadata();
         $this->assertSame($metadata['data'], $data['data']);
     }
@@ -37,9 +37,9 @@ class ModelTest extends \PHPUnit_Framework_TestCase
     public function testSetMetadataFromObject()
     {
         $data = [
-            'data'=>[
-                'foo'=>'bar',
-                'bar'=>'foo'
+            'data' => [
+                'foo' => 'bar',
+                'bar' => 'foo'
             ]
         ];
 
@@ -48,7 +48,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
 
         $obj = new Model();
         $obj->set_metadata($metadata);
-        
+
         $metadata = $obj->metadata();
         $this->assertSame($metadata['data'], $data['data']);
     }
@@ -56,15 +56,15 @@ class ModelTest extends \PHPUnit_Framework_TestCase
     public function testSetMetadataSetsData()
     {
         $data = [
-            'data'=>[
-                'foo'=>'bar',
-                'bar'=>'foo'
+            'data' => [
+                'foo' => 'bar',
+                'bar' => 'foo'
             ]
         ];
 
         $obj = new Model();
         $obj->set_metadata($data);
-        
+
         $this->assertEquals($obj->foo, 'bar');
         $this->assertEquals($obj->bar, 'foo');
     }
@@ -72,26 +72,26 @@ class ModelTest extends \PHPUnit_Framework_TestCase
     public function testSetMetadataSetsProperties()
     {
         $data = [
-            'properties'=>[
-                'foo'=>[
-                    'type'=>'string',
-                    'l10n'=>true
+            'properties' => [
+                'foo' => [
+                    'type' => 'string',
+                    'l10n' => true
                 ],
-                'bar'=>[
-                    'type'=>'boolean'
+                'bar' => [
+                    'type' => 'boolean'
                 ]
             ],
-            'data'=>[
-                'foo'=>'baz',
-                'bar'=>true
+            'data' => [
+                'foo' => 'baz',
+                'bar' => true
             ]
         ];
 
         $obj = new Model();
         $obj->set_metadata($data);
-        
+
         $properties = $obj->properties();
-        //$this->assertEquals(['foo', 'bar'], array_keys($properties));
+        // $this->assertEquals(['foo', 'bar'], array_keys($properties));
 
         // Ensure properties attributes are set
         $foo = $obj->p('foo');
@@ -144,11 +144,11 @@ class ModelTest extends \PHPUnit_Framework_TestCase
         $obj = new Model();
         $obj->set_metadata(
             [
-            'properties'=>[
-                'foo'=>[
-                    'type'=>'string'
+                'properties' => [
+                    'foo' => [
+                        'type' => 'string'
+                    ]
                 ]
-            ]
             ]
         );
         $p = $obj->property('invalid');
@@ -161,12 +161,12 @@ class ModelTest extends \PHPUnit_Framework_TestCase
         $obj = new Model();
         $obj->set_metadata(
             [
-            'properties'=>[
-                'foo'=>[
-                    // no type
-                    'l10n'=>true
+                'properties' => [
+                    'foo' => [
+                        // no type
+                        'l10n' => true
+                    ]
                 ]
-            ]
             ]
         );
         $p = $obj->property('foo');
@@ -178,15 +178,15 @@ class ModelTest extends \PHPUnit_Framework_TestCase
 
         $obj->set_metadata(
             [
-            'properties'=>[
-                'foo'=>[
-                    'type'=>'string',
-                    'l10n'=>true
+                'properties' => [
+                    'foo' => [
+                        'type' => 'string',
+                        'l10n' => true
+                    ]
+                ],
+                'data' => [
+                    'foo' => 'baz'
                 ]
-            ],
-            'data'=>[
-                'foo'=>'baz'
-            ]
             ]
         );
 
@@ -202,19 +202,19 @@ class ModelTest extends \PHPUnit_Framework_TestCase
 
         $obj->set_metadata(
             [
-            'properties'=>[
-                'foo'=>[
-                    'type'=>'string',
-                    'l10n'=>true
+                'properties' => [
+                    'foo' => [
+                        'type' => 'string',
+                        'l10n' => true
+                    ],
+                    'bar' => [
+                        'type' => 'boolean'
+                    ]
                 ],
-                'bar'=>[
-                    'type'=>'boolean'
+                'data' => [
+                    'foo' => 'baz',
+                    'bar' => true
                 ]
-            ],
-            'data'=>[
-                'foo'=>'baz',
-                'bar'=>true
-            ]
             ]
         );
 
@@ -240,24 +240,23 @@ class ModelTest extends \PHPUnit_Framework_TestCase
         $obj = new Model();
         $obj->set_metadata(
             [
-            'properties'=>[
-                'foo'=>[
-                    'type'=>'string',
-                    'l10n'=>true
+                'properties' => [
+                    'foo' => [
+                        'type' => 'string',
+                        'l10n' => true
+                    ],
+                    'bar' => [
+                        'type' => 'boolean'
+                    ]
                 ],
-                'bar'=>[
-                    'type'=>'boolean'
+                'data' => [
+                    'foo' => 'baz',
+                    'bar' => true
                 ]
-            ],
-            'data'=>[
-                'foo'=>'baz',
-                'bar'=>true
-            ]
             ]
         );
         $this->assertEquals('foo is baz', $obj->render('foo is {{foo}}'));
     }
-
 
     public function testRenderTemplateInvalidTemplateReturnsEmptyString()
     {
@@ -276,6 +275,4 @@ class ModelTest extends \PHPUnit_Framework_TestCase
             [$obj]
         ];
     }
-
 }
-

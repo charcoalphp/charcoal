@@ -8,7 +8,6 @@ use \Charcoal\View\MustacheTemplateLoader as MustacheTemplateLoader;
 
 class MustacheTemplateLoaderTest extends \PHPUnit_Framework_TestCase
 {
-
     public function setUp()
     {
         Charcoal::config()->set_template_path([]);

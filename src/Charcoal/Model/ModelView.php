@@ -11,10 +11,10 @@ class ModelView extends AbstractView
     * @param string $template_ident
     * @throws \InvalidArgumentException if the ident is not a string
     * @return string
+    * @todo Implement template loader via $template_ident
     */
     public function load_template($template_ident)
     {
-        // @todo
         return '';
     }
 
@@ -22,10 +22,10 @@ class ModelView extends AbstractView
     * @param string $context_ident
     * @throws \InvalidArgumentException if the ident is not a string
     * @return mixed
+    * @todo Implement context loader via $template_ident
     */
     public function load_context($context_ident)
     {
-        // @todo
         return null;
     }
 

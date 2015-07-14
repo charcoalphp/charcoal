@@ -11,7 +11,7 @@ class MemcacheCacheConfigTest extends \PHPUnit_Framework_TestCase
         $obj = new MemcacheCacheConfig();
         $this->assertInstanceOf('\Charcoal\Cache\Memcache\MemcacheCacheConfig', $obj);
 
-        //$this->assertEquals(1, count($obj->servers()));
+        // $this->assertEquals(1, count($obj->servers()));
     }
 
     public function testSetData()

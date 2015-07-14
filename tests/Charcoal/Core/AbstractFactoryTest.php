@@ -6,7 +6,6 @@ use \Charcoal\Core\AbstractFactory as AbstractFactory;
 
 use \Charcoal\Tests\Core\AbstractFactoryClass as AbstractFactoryClass;
 
-
 class AbstractFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()

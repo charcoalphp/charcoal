@@ -33,7 +33,7 @@ abstract class AbstractViewController implements ViewControllerInterface
     * @param string $name
     *
     * @return mixed
-    * @see    https://github.com/bobthecow/mustache.php/wiki/Magic-Methods
+    * @see    https:// github.com/bobthecow/mustache.php/wiki/Magic-Methods
     */
     public function __get($name)
     {
@@ -91,7 +91,7 @@ abstract class AbstractViewController implements ViewControllerInterface
 
         return null;
     }
-    
+
     /**
     * @param string $name
     *
@@ -131,7 +131,7 @@ abstract class AbstractViewController implements ViewControllerInterface
         $this->_context = $context;
         return $this;
     }
-        
+
     /**
     * @return mixed
     */

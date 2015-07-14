@@ -9,11 +9,12 @@ class SourceFactory extends AbstractFactory
     /**
     * @return array
     */
-    static public function types()
+    public static function types()
     {
         return array_merge(
-            parent::types(), [
-            'database'       => '\Charcoal\Source\DatabaseSource'
+            parent::types(),
+            [
+                'database' => '\Charcoal\Source\DatabaseSource'
             ]
         );
     }

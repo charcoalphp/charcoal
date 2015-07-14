@@ -9,20 +9,21 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
 {
     public $obj;
 
-    static public function setUpBeforeClass()
+    public static function setUpBeforeClass()
     {
         Charcoal::config()->add_database(
-            'unit_test', [
-            'username'=>'root',
-            'password'=>'',
-            'database'=>'charcoal_examples'
+            'unit_test',
+            [
+                'username' => 'root',
+                'password' => '',
+                'database' => 'charcoal_examples'
             ]
         );
 
         Charcoal::config()->set_default_database('unit_test');
 
         $s = new DatabaseSource();
-        //$obj->set_model($model);
+        // $obj->set_model($model);
         $s->set_table('test');
         $q = 'DROP TABLE IF EXISTS `test`';
         $s->db()->query($q);
@@ -35,21 +36,21 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
         $obj = new AbstractModelClass();
         $obj->set_metadata(
             [
-            'properties'=>[
-                'id'=>[
-                    'type'=>'id'
+                'properties' => [
+                    'id' => [
+                        'type' => 'id'
+                    ],
+                    'foo' => [
+                        'type' => 'string'
+                    ]
                 ],
-                'foo'=>[
-                    'type'=>'string'
-                ]
-            ],
-            'key'=>'id',
-            'sources'=>[
-                'default'=>[
-                    'table'=>'test'
-                ]
-            ],
-            'default_source'=>'default'
+                'key' => 'id',
+                'sources' => [
+                    'default' => [
+                        'table' => 'test'
+                    ]
+                ],
+                'default_source' => 'default'
             ]
         );
         $obj->source()->create_table();
@@ -71,7 +72,7 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
     {
         $obj = new AbstractModelClass(
             [
-            'foo'=>'bar'
+                'foo' => 'bar'
             ]
         );
         $this->assertEquals('bar', $obj->foo);
@@ -80,7 +81,7 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
     public function testSetData()
     {
         $obj = $this->obj;
-        $ret = $obj->set_data(['foo'=>'bar']);
+        $ret = $obj->set_data(['foo' => 'bar']);
         $this->assertSame($ret, $obj);
         $this->assertEquals('bar', $obj->foo);
     }
@@ -88,7 +89,7 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
     public function testSetFlatData()
     {
         $obj = $this->obj;
-        $ret = $obj->set_flat_data(['foo'=>'baz']);
+        $ret = $obj->set_flat_data(['foo' => 'baz']);
         $this->assertSame($ret, $obj);
         $this->assertEquals('baz', $obj->foo);
     }
@@ -98,8 +99,8 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
         $obj = $this->obj;
         $obj->set_data(
             [
-            'id'=>1,
-            'foo'=>'Test'
+                'id'  => 1,
+                'foo' => 'Test'
             ]
         );
         $ret = $obj->save();
@@ -110,7 +111,7 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
     {
         $obj = $this->obj;
         $ret = $obj->load(1);
-        //var_dump($ret);
+        // var_dump($ret);
         $this->assertEquals('Test', $obj->foo);
     }
 
@@ -119,8 +120,8 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
         $obj = $this->obj;
         $obj->set_data(
             [
-            'id'=>1,
-            'foo'=>'Foobar'
+                'id'  => 1,
+                'foo' => 'Foobar'
             ]
         );
         $ret = $obj->update();
@@ -136,7 +137,7 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
         $obj = $this->obj;
         $obj->set_data(
             [
-            'id'=>1
+                'id' => 1
             ]
         );
         $ret = $obj->delete();

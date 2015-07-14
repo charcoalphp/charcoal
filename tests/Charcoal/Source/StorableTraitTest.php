@@ -12,22 +12,23 @@ class StorableTraitTest extends \PHPUnit_Framework_TestCase
     public $obj;
     public $source;
 
-    static public function setUpBeforeClass()
+    public static function setUpBeforeClass()
     {
-        //include 'DatabaseTestModel.php';
+        // include 'DatabaseTestModel.php';
 
         Charcoal::config()->add_database(
-            'unit_test', [
-            'username'=>'root',
-            'password'=>'',
-            'database'=>'charcoal_examples'
+            'unit_test',
+            [
+                'username' => 'root',
+                'password' => '',
+                'database' => 'charcoal_examples'
             ]
         );
 
         Charcoal::config()->set_default_database('unit_test');
 
         $obj = new DatabaseSource();
-        //$obj->set_model($model);
+        // $obj->set_model($model);
         $obj->set_table('test');
         $q = 'DROP TABLE IF EXISTS `test`';
         $obj->db()->query($q);
@@ -38,30 +39,23 @@ class StorableTraitTest extends \PHPUnit_Framework_TestCase
         $mock_obj = $this->getMockForTrait('\Charcoal\Source\StorableTrait');
         $mock_source = $this->getMockForAbstractClass('\Charcoal\Source\AbstractSource');
 
-        $this->obj = $mock_obj;//new ViewableClass();
+        $this->obj = $mock_obj;// new ViewableClass();
         $this->source = $mock_source;
     }
 
     public function testSetStorableData()
     {
-        $obj =  $this->obj;
+        $obj = $this->obj;
         $source = $this->source;
 
-        $ret = $obj->set_storable_data(
-            [
-            'source'=>$source
-            ]
-        );
+        $ret = $obj->set_storable_data(['source' => $source]);
         $this->assertSame($obj, $ret);
         $this->assertSame($source, $obj->source());
-
-        $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_storable_data(false);
     }
 
     public function testSetSource()
     {
-        $obj =  $this->obj;
+        $obj = $this->obj;
         $source = $this->source;
 
         $ret = $obj->set_source($source);
@@ -75,22 +69,22 @@ class StorableTraitTest extends \PHPUnit_Framework_TestCase
 
         $model->set_metadata(
             [
-            'properties'=>[
-                'id'=>[
-                    'type'=>'id',
+                'properties' => [
+                    'id' => [
+                        'type' => 'id',
 
+                    ],
+                    'name' => [
+                        'type' => 'string',
+                        'max_length' => 300
+                    ]
                 ],
-                'name'=>[
-                    'type'=>'string',
-                    'max_length'=>300
+                'sources' => [
+                    'default' => 'test'
                 ]
-            ],
-            'sources'=>[
-                'default'=>'test'
-            ]
             ]
         );
-       
+
         $s = new DatabaseSource();
         $s->set_model($model);
         $s->set_table('test');
@@ -109,18 +103,18 @@ class StorableTraitTest extends \PHPUnit_Framework_TestCase
         $model = $this->getItemModel();
         $model->set_data(
             [
-            'id'=>1,
-            'name'=>'Foo bar.baz'
+                'id'   => 1,
+                'name' => 'Foo bar.baz'
             ]
         );
-        //$ret = $model->save();
-        //var_dump($ret);
+        // $ret = $model->save();
+        // var_dump($ret);
     }
 
     public function testLoad()
     {
         $model = $this->getItemModel();
-        //$ret = $model->load(1);
-        //var_dump($ret);
+        // $ret = $model->load(1);
+        // var_dump($ret);
     }
 }

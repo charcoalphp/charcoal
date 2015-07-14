@@ -69,7 +69,7 @@ class PropertyField
     public function set_ident($ident)
     {
         if (!is_string($ident)) {
-            throw new InvalidArgumentException('Ident must be a string');
+            throw new InvalidArgumentException('Ident must be a string.');
         }
         $this->_ident = $ident;
         return $this;
@@ -109,7 +109,7 @@ class PropertyField
     public function set_sql_type($sql_type)
     {
         if (!is_string($sql_type)) {
-            throw new InvalidArgumentException('Sql Type must be a string');
+            throw new InvalidArgumentException('Sql Type must be a string.');
         }
         $this->_sql_type = $sql_type;
         return $this;
@@ -131,7 +131,7 @@ class PropertyField
     public function set_sql_pdo_type($sql_pdo_type)
     {
         if (!is_integer($sql_pdo_type)) {
-            throw new InvalidArgumentException('PDO Type must be an integer');
+            throw new InvalidArgumentException('PDO Type must be an integer.');
         }
         $this->_sql_pdo_type = $sql_pdo_type;
         return $this;
@@ -156,7 +156,7 @@ class PropertyField
     public function set_extra($extra)
     {
         if (!is_string($extra)) {
-            throw new InvalidArgumentException('Extra must be a string');
+            throw new InvalidArgumentException('Extra must be a string.');
         }
         $this->_extra = $extra;
         return $this;
@@ -179,9 +179,11 @@ class PropertyField
     */
     public function set_val($val)
     {
-        /*if (!is_scalar($val)) {
-            throw new \InvalidArgumentException('Val must be scalar');
-        }*/
+        /*
+        if (!is_scalar($val)) {
+            throw new \InvalidArgumentException('Val must be scalar.');
+        }
+        */
         $this->_val = $val;
         return $this;
     }
@@ -220,7 +222,7 @@ class PropertyField
     public function set_allow_null($allow_null)
     {
         if (!is_bool($allow_null)) {
-            throw new InvalidArgumentException('Allow null must be a boolean');
+            throw new InvalidArgumentException('Allow null must be a boolean.');
         }
         $this->_allow_null = $allow_null;
         return $this;
@@ -245,10 +247,10 @@ class PropertyField
         }
 
         $sql_type = $this->sql_type();
-        $null = ($this->allow_null() === false) ? ' NOT NULL ' : '';
+        $null = (($this->allow_null() === false) ? ' NOT NULL ' : '');
         $extra = $this->extra() ? ' '.$this->extra().' ' : '';
-        $default = $this->default_val() ? ' DEFAULT \''.addslashes($this->default_val()).'\' ' : '';
-        $comment = $this->label() ? ' COMMENT \''.addslashes($this->label()).'\' ' : '';
+        $default = ($this->default_val() ? ' DEFAULT \''.addslashes($this->default_val()).'\' ' : '');
+        $comment = ($this->label() ? ' COMMENT \''.addslashes($this->label()).'\' ' : '');
 
         return '`'.$ident.'` '.$sql_type.$null.$extra.$default.$comment;
     }

@@ -71,7 +71,7 @@ class ValidatorResult
     public function set_ident($ident)
     {
         if (!is_string($ident)) {
-            throw new \InvalidArgumentException('Ident must be a string');
+            throw new \InvalidArgumentException('Ident must be a string.');
         }
         $this->ident = $ident;
         return $this;
@@ -93,10 +93,10 @@ class ValidatorResult
     public function set_level($level)
     {
         if (!is_string($level)) {
-            throw new \InvalidArgumentException('Level must be a string');
+            throw new \InvalidArgumentException('Level must be a string.');
         }
         if (!in_array($level, ['notice', 'warning', 'error'])) {
-            throw new \InvalidArgumentException('Level can only be notice, warning or error');
+            throw new \InvalidArgumentException('Level can only be notice, warning or error.');
         }
         $this->level = $level;
         return $this;
@@ -118,7 +118,7 @@ class ValidatorResult
     public function set_message($message)
     {
         if (!is_string($message)) {
-            throw new \InvalidArgumentException('Message must be a string');
+            throw new \InvalidArgumentException('Message must be a string.');
         }
         $this->message = $message;
         return $this;
@@ -143,7 +143,7 @@ class ValidatorResult
             $ts = new Datetime($ts);
         }
         if (!($ts instanceof Datetime)) {
-            throw new \InvalidArgumentException('ts must be a datetime / valid string.');
+            throw new \InvalidArgumentException('TS must be a datetime / valid string.');
         }
         $this->ts = $ts;
         return $this;

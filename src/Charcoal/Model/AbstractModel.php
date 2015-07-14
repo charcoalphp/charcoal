@@ -51,7 +51,7 @@ abstract class AbstractModel implements
         if (is_array($data)) {
             $this->set_data($data);
         }
-        // Fix bug @todo
+        /** @todo Needs fix. Must be manually triggered after setting data for metadata to work */
         $this->metadata();
     }
 
@@ -94,8 +94,9 @@ abstract class AbstractModel implements
         $props = $metadata['properties'];
 
         if (!is_array($props)) {
-            // Error. Invalid object? @todo error report
-            // @todo Throw exception here?
+            /**
+            * @todo Error. Invalid object? Report error or throw exception?
+            */
             return false;
         }
 
@@ -126,10 +127,11 @@ abstract class AbstractModel implements
 
     /**
     * @return array
+    * @todo Implement retrieval of flattened data
     */
     public function flat_data()
     {
-        return []; // @todo
+        return [];
     }
 
     /**
@@ -142,7 +144,7 @@ abstract class AbstractModel implements
         if (is_callable($fn)) {
             return call_user_func($fn);
         } else {
-            return isset($this->{$property_ident}) ? $this->{$property_ident} : null;
+            return (isset($this->{$property_ident}) ? $this->{$property_ident} : null);
         }
     }
 
@@ -200,8 +202,6 @@ abstract class AbstractModel implements
     {
         return true;
     }
-
-
 
     /**
     * StorableTrait > post_save(). Save hook called after saving the model.
@@ -287,7 +287,7 @@ abstract class AbstractModel implements
 
         $source = new \Charcoal\Source\DatabaseSource();
         $source->set_model($this);
-        //$source->set_config($source_config);
+        // $source->set_config($source_config);
         $source->set_table($table);
 
         if (is_array($data)) {

@@ -6,7 +6,6 @@ use \Charcoal\View\ViewInterface as ViewInterface;
 
 interface ViewableInterface
 {
-
     /**
     * @param string $engine
     * @return ViewableInterface Chainable
@@ -23,7 +22,7 @@ interface ViewableInterface
     * @return ViewableInterface Chainable
     */
     public function set_view(ViewInterface $view);
-    
+
     /**
     * @return ViewInterface The object's View.
     */

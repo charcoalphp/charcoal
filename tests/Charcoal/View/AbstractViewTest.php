@@ -9,7 +9,7 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
 {
     public $obj;
 
-    static public function setUpBeforeClass()
+    public static function setUpBeforeClass()
     {
         include_once 'AbstractViewClass.php';
         include_once 'AbstractViewControllerClass.php';
@@ -30,12 +30,15 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
     {
         $obj = new AbstractViewClass(
             [
-            'template'=>'foo',
-            'context'=>['bar'=>'baz']
+                'template' => 'foo',
+                'context'  => [
+                    'bar'  => 'baz'
+                ]
             ]
         );
+
         $this->assertEquals('foo', $obj->template());
-        $this->assertEquals(['bar'=>'baz'], $obj->context());
+        $this->assertEquals(['bar' => 'baz'], $obj->context());
     }
 
     public function testSetData()
@@ -43,16 +46,18 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
         $obj = $this->obj;
         $ret = $obj->set_data(
             [
-            'engine'=>'php_mustache',
-            'template'=>'foo',
-            'context'=>['bar'=>'baz']
-
+                'engine'   => 'php_mustache',
+                'template' => 'foo',
+                'context'  => [
+                    'bar'  => 'baz'
+                ]
             ]
         );
+
         $this->assertSame($ret, $obj);
         $this->assertEquals('php_mustache', $obj->engine());
         $this->assertEquals('foo', $obj->template());
-        $this->assertEquals(['bar'=>'baz'], $obj->context());
+        $this->assertEquals(['bar' => 'baz'], $obj->context());
     }
 
     public function testSetEngine()
@@ -85,20 +90,20 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
     {
         $obj = $this->obj;
         $this->assertEquals(null, $obj->context());
-        
-        $ret = $obj->set_context(['foo'=>1]);
-        $this->assertSame($ret, $obj);
-        $this->assertEquals(['foo'=>1], $obj->context());
 
-        //$this->setExpectedException('\InvalidArgumentException');
-        //$obj->set_context(false);
+        $ret = $obj->set_context(['foo' => 1]);
+        $this->assertSame($ret, $obj);
+        $this->assertEquals(['foo' => 1], $obj->context());
+
+        // $this->setExpectedException('\InvalidArgumentException');
+        // $obj->set_context(false);
     }
 
     public function testRender()
     {
         $obj = new AbstractViewClass();
         $obj->set_template('Hello {{who}}');
-        $obj->set_context(['who'=>'World!']);
+        $obj->set_context(['who' => 'World!']);
         $this->assertEquals('Hello World!', $obj->render());
 
         ob_start();
@@ -110,8 +115,7 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Hello', $obj->render('Hello'));
 
         $obj3 = new AbstractViewClass();
-        $this->assertEquals('Hello World!', $obj->render('Hello {{who}}', ['who'=>'World!']));
-
+        $this->assertEquals('Hello World!', $obj->render('Hello {{who}}', ['who' => 'World!']));
     }
 
     public function testJsRequirements()
@@ -167,8 +171,8 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
         $this->assertSame($ctrl, $obj->controller());
 
-        //$this->setExpectedException('\InvalidArgumentException');
-        //$obj->set_controller(false);
+        // $this->setExpectedException('\InvalidArgumentException');
+        // $obj->set_controller(false);
     }
 
     public function testFromIdent()
@@ -178,7 +182,6 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
 
         $ret = $obj->render();
-        //var_dump($ret);
     }
 
     public function testIdentToClassname()
@@ -206,7 +209,7 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
         $obj = new AbstractViewClass();
         $ret = $obj->render('{{#_t}}Test{{/_t}}');
         $this->assertEquals('Test', $ret);
-        
+
         $ret = $obj->render('Test: {{#add_js}}js{{/add_js}}{{&js}}');
         $this->assertEquals('Test: js', $ret);
 
@@ -215,6 +218,5 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
 
         $ret = $obj->render('Test: {{#add_css}}css{{/add_css}}{{&css}}');
         $this->assertEquals('Test: css', $ret);
-
     }
 }

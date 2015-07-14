@@ -34,10 +34,10 @@ class CacheConfig extends AbstractConfig
     public function default_data()
     {
         return [
-            'active'        => true,
-            'type'          => 'noop',
-            'default_ttl'   => 0,
-            'prefix'        => ''
+            'active'      => true,
+            'type'        => 'noop',
+            'default_ttl' => 0,
+            'prefix'      => ''
         ];
     }
 
@@ -47,7 +47,7 @@ class CacheConfig extends AbstractConfig
     */
     public function set_data(array $data)
     {
-        //parent::set_data($data);
+        // parent::set_data($data);
         if (isset($data['active']) && $data['active'] !== null) {
             $this->set_active($data['active']);
         }
@@ -64,15 +64,14 @@ class CacheConfig extends AbstractConfig
     }
 
     /**
-    * @param bool $active
+    * @param boolean $active
     * @throws InvalidArgumentException
     * @return CacheConfig Chainable
     */
     public function set_active($active)
     {
         if (!is_bool($active)) {
-            throw new InvalidArgumentException('Active must be boolean');
-            
+            throw new InvalidArgumentException('Active must be a boolean.');
         }
         $this->_active = $active;
         return $this;
@@ -94,7 +93,7 @@ class CacheConfig extends AbstractConfig
     public function set_type($type)
     {
         if (!is_string($type)) {
-            throw new InvalidArgumentException('Active must be boolean');
+            throw new InvalidArgumentException('Active must be a boolean.');
         }
         $this->_type = $type;
         return $this;
@@ -116,7 +115,7 @@ class CacheConfig extends AbstractConfig
     public function set_default_ttl($ttl)
     {
         if (!is_integer($ttl)) {
-            throw new InvalidArgumentException('TTL must be an integer (seconds)');
+            throw new InvalidArgumentException('TTL must be an integer (seconds).');
         }
         $this->_default_ttl = $ttl;
         return $this;
@@ -138,7 +137,7 @@ class CacheConfig extends AbstractConfig
     public function set_prefix($prefix)
     {
         if (!is_string($prefix)) {
-            throw new InvalidArgumentException('Prefix must be a string');
+            throw new InvalidArgumentException('Prefix must be a string.');
         }
         $this->_prefix = $prefix;
         return $this;

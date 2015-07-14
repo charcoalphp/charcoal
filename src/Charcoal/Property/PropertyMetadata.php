@@ -9,7 +9,6 @@ use \Charcoal\Helper\Cache as Cache;
 
 class PropertyMetadata extends AbstractMetadata implements \ArrayAccess
 {
-
     /**
      * @var string $_ident
      */
@@ -29,7 +28,7 @@ class PropertyMetadata extends AbstractMetadata implements \ArrayAccess
     public function set_ident($ident)
     {
         if (!is_string($ident)) {
-            throw new \InvalidArgumentException(__CLASS__.'::'.__FUNCTION__.'Ident must be a string');
+            throw new \InvalidArgumentException(__CLASS__.'::'.__FUNCTION__.' - Ident must be a string.');
         }
         $this->_ident = $ident;
 
@@ -43,5 +42,4 @@ class PropertyMetadata extends AbstractMetadata implements \ArrayAccess
     {
         return $this->_ident;
     }
-
 }

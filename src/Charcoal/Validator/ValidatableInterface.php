@@ -16,10 +16,10 @@ interface ValidatableInterface
     * @return ValidatorInterface
     */
     public function validator();
-    
+
     /**
     * @param ValidatorInterface $v
-    * @return bool
+    * @return boolean
     */
     public function validate(ValidatorInterface &$v = null);
 }

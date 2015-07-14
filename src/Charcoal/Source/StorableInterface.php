@@ -6,12 +6,11 @@ use \Charcoal\Source\SourceInterface as SourceInterface;
 
 interface StorableInterface
 {
-
     /**
     * @param array $data
     * @return StorableInterface Chainable
     */
-    public function set_storable_data($data);
+    public function set_storable_data(array $data);
 
     /**
     * Set the object's source.
@@ -20,14 +19,14 @@ interface StorableInterface
     * @return StorableInterface Chainable
     */
     public function set_source(SourceInterface $source);
-    
+
     /**
     * Get the object's source.
     *
     * @return SourceInterface
     */
     public function source();
-    
+
     /**
     * Load an object from the database from its ID.
     *

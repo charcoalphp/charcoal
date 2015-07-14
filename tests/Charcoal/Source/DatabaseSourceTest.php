@@ -10,28 +10,27 @@ use \Charcoal\Model\Object as Object;
 
 class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
 {
-    static public function setUpBeforeClass()
+    public static function setUpBeforeClass()
     {
-        //include 'DatabaseTestModel.php';
+        // include 'DatabaseTestModel.php';
 
         Charcoal::config()->add_database(
-            'unit_test', [
-            'username'=>'root',
-            'password'=>'',
-            'database'=>'charcoal_examples'
+            'unit_test',
+            [
+                'username' => 'root',
+                'password' => '',
+                'database' => 'charcoal_examples'
             ]
         );
 
         Charcoal::config()->set_default_database('unit_test');
 
         $obj = new DatabaseSource();
-        //$obj->set_model($model);
+        // $obj->set_model($model);
         $obj->set_table('test');
         $q = 'DROP TABLE IF EXISTS `test`';
         $obj->db()->query($q);
     }
-
-
 
     public function testSetDatabaseIdent()
     {
@@ -54,16 +53,17 @@ class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
         $ret = $obj->database_config();
         $this->assertEquals(
             [
-            'username'=>'root',
-            'password'=>'',
-            'database'=>'charcoal_examples'
-            ], $ret
+                'username' => 'root',
+                'password' => '',
+                'database' => 'charcoal_examples'
+            ],
+            $ret
         );
 
         $cfg = [
-            'username'=>'x',
-            'password'=>'y',
-            'database'=>'z'
+            'username' => 'x',
+            'password' => 'y',
+            'database' => 'z'
         ];
         $ret = $obj->set_database_config($cfg);
         $this->assertSame($ret, $obj);
@@ -72,7 +72,6 @@ class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('\InvalidArgumentException');
         $obj->set_database_config(false);
     }
-
 
     public function testTableWithoutSetterThrowsException()
     {
@@ -113,14 +112,12 @@ class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
         $model = new Object();
         $model->set_metadata(
             [
-            'properties'=>[
-                'id'=>[
-                    'type'=>'id'
-                ]
-            ],
-            'sources'=>[
-
-            ]
+                'properties' => [
+                    'id' => [
+                        'type' => 'id'
+                    ]
+                ],
+                'sources' => []
             ]
         );
 
@@ -137,7 +134,7 @@ class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
     public function testCreateTableTableExistsReturnsTrue()
     {
         $obj = new DatabaseSource();
-        //$obj->set_model($model);
+        // $obj->set_model($model);
         $obj->set_table('test');
         $this->assertTrue($obj->table_exists());
 
@@ -148,7 +145,7 @@ class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
     public function testCreateAlterWithoutModelThrowsException()
     {
         $this->setExpectedException('\Exception');
-        
+
         $obj = new DatabaseSource();
         $obj->set_table('test');
 
@@ -161,15 +158,15 @@ class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
         $model = new Object();
         $model->set_metadata(
             [
-            'properties'=>[
-                'id'=>[
-                    'type'=>'id'
-                ],
-                'name'=>[
-                    'type'=>'string',
-                    'max_length'=>120
+                'properties' => [
+                    'id' => [
+                        'type' => 'id'
+                    ],
+                    'name' => [
+                        'type' => 'string',
+                        'max_length' => 120
+                    ]
                 ]
-            ]
             ]
         );
 
@@ -186,16 +183,16 @@ class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
         $model = new Object();
         $model->set_metadata(
             [
-            'properties'=>[
-                'id'=>[
-                    'type'=>'id',
+                'properties' => [
+                    'id' => [
+                        'type' => 'id',
 
-                ],
-                'name'=>[
-                    'type'=>'string',
-                    'max_length'=>300
+                    ],
+                    'name' => [
+                        'type' => 'string',
+                        'max_length' => 300
+                    ]
                 ]
-            ]
             ]
         );
 
@@ -212,20 +209,20 @@ class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
         $model = new Object();
         $model->set_metadata(
             [
-            'properties'=>[
-                'id'=>[
-                    'type'=>'id',
+                'properties' => [
+                    'id' => [
+                        'type' => 'id',
 
-                ],
-                'name'=>[
-                    'type'=>'string',
-                    'max_length'=>300
-                ],
-                '_ignore'=>[
-                    'type'=>'string',
-                    'active'=>false
+                    ],
+                    'name' => [
+                        'type' => 'string',
+                        'max_length' => 300
+                    ],
+                    '_ignore' => [
+                        'type'   => 'string',
+                        'active' => false
+                    ]
                 ]
-            ]
             ]
         );
         return $model;
@@ -237,8 +234,8 @@ class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
 
         $model->set_data(
             [
-            'id'=> 1,
-            'name'=>'Foo bar'
+                'id'   => 1,
+                'name' => 'Foo bar'
             ]
         );
 
@@ -246,7 +243,6 @@ class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
         $obj->set_model($model);
         $obj->set_table('test');
         $ret = $obj->save_item($model);
-        ;
         $this->assertEquals(1, $ret);
     }
 
@@ -260,7 +256,6 @@ class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
         $ret = $obj->load_item(1);
         $this->assertEquals('Foo bar', $ret->name);
     }
-
 
     public function testLoadItemNoMatchingId()
     {
@@ -279,8 +274,8 @@ class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
 
         $model->set_data(
             [
-            'id'=> 1,
-            'name'=>'Baz Foo'
+                'id'   => 1,
+                'name' => 'Baz Foo'
             ]
         );
 
@@ -300,7 +295,7 @@ class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
 
         $model->set_data(
             [
-            'id'=> 1
+                'id' => 1
             ]
         );
 
@@ -320,7 +315,7 @@ class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
 
         $model->set_data(
             [
-            'id'=> 42
+                'id' => 42
             ]
         );
 
@@ -328,7 +323,7 @@ class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
         $obj->set_model($model);
         $obj->set_table('test');
         $ret = $obj->delete_item($model);
-        //$this->assertFalse($ret);
+        // $this->assertFalse($ret);
 
         $model2 = $this->getItemModel();
 

@@ -39,7 +39,6 @@ abstract class AbstractViewEngine implements ViewEngineInterface
     */
     public function js_requirements()
     {
-
         $req = array_unique(self::$_js_requirements);
         $ret = '';
         foreach ($req as $r) {
@@ -82,7 +81,6 @@ abstract class AbstractViewEngine implements ViewEngineInterface
     */
     public function css_requirements()
     {
-
         $req = array_unique(self::$_css_requirements);
         $ret = '';
         foreach ($req as $r) {

@@ -11,7 +11,7 @@ interface PropertyInterface
     * @return string
     */
     public function type();
-    
+
     /**
     * @param array $data
     * @return PropertyInterface Chainable
@@ -94,13 +94,13 @@ interface PropertyInterface
     * @param array $multiple_options
     * @return PropertyInterface Chainable
     */
-    public function set_multiple_options($multiple_options);
+    public function set_multiple_options(array $multiple_options);
 
     /**
     * @return array
     */
     public function multiple_options();
-    
+
     /**
     * @param boolean $required
     * @return PropertyInterface Chainable

@@ -7,7 +7,7 @@ use \Charcoal\Charcoal as Charcoal;
 
 class MetadataLoaderTest extends \PHPUnit_Framework_TestCase
 {
-    
+
     public function testContructor()
     {
         $obj = new MetadataLoader();
@@ -16,7 +16,7 @@ class MetadataLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([], $obj->search_path());
         $this->assertEquals('', $obj->ident());
     }
-    
+
     public function testSetIdent()
     {
         $obj = new MetadataLoader();
@@ -84,9 +84,9 @@ class MetadataLoaderTest extends \PHPUnit_Framework_TestCase
         Charcoal::config()->set_metadata_path([]);
 
         $obj = new MetadataLoader();
-        //$obj->add_path('metadata');
-        //$obj->set_ident('test');
-        //var_dump($obj->search_path());
+        // $obj->add_path('metadata');
+        // $obj->set_ident('test');
+        // var_dump($obj->search_path());
         $ret = $obj->load();
 
         $this->assertEquals([], $ret);

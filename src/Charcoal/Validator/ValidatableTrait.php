@@ -41,10 +41,10 @@ trait ValidatableTrait
     * @return ValidatorInterface
     */
     abstract protected function create_validator();
-    
+
     /**
     * @param ValidatorInterface $v
-    * @return bool
+    * @return boolean
     */
     public function validate(ValidatorInterface &$v = null)
     {

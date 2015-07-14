@@ -33,7 +33,7 @@ class Object extends Model implements IndexableInterface
     const DEFAULT_KEY = 'id';
 
     private $_active = true;
-    
+
     /**
     * @param array $data Optional
     */
@@ -44,7 +44,7 @@ class Object extends Model implements IndexableInterface
 
         $metadata = $this->metadata();
         if (!isset($data['key'])) {
-            $data['key'] = ( isset($metadata['key']) ? $metadata['key'] : self::DEFAULT_KEY );
+            $data['key'] = (isset($metadata['key']) ? $metadata['key'] : self::DEFAULT_KEY);
         }
 
         $this->set_data($data);
@@ -74,7 +74,7 @@ class Object extends Model implements IndexableInterface
     public function set_active($active)
     {
         if (!is_bool($active)) {
-            throw new InvalidArgumentException('Active parameter needs to be bool');
+            throw new InvalidArgumentException('Active parameter must be a boolean.');
         }
         $this->_active = $active;
         return $this;
@@ -116,6 +116,5 @@ class Object extends Model implements IndexableInterface
         }
         $loader = $this->loader();
         $data = $loader->load_data($ident);
-
     }
 }

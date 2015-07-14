@@ -20,7 +20,7 @@ class ModelFactory extends AbstractFactory
         if (class_exists($class_name)) {
             $obj = new $class_name();
             if (!($obj instanceof ModelInterface)) {
-                throw new Exception('Invalid model (2): '.$type.' (not an action)');
+                throw new Exception('Invalid model (2): '.$type.' (not an action).');
             }
             return $obj;
         } else {

@@ -21,7 +21,7 @@ class CharcoalTest extends \PHPUnit_Framework_TestCase
     public function testMergeSimple()
     {
         $obj = new Charcoal();
-        
+
         $arr1 = [1,2,3];
         $arr2 = [3,4,5];
 
@@ -48,47 +48,46 @@ class CharcoalTest extends \PHPUnit_Framework_TestCase
     */
     public function testMergeAssoc()
     {
-        
         $arr1 = [
-            'foo'=>'bar',
-            'bar'=>'foo'
+            'foo' => 'bar',
+            'bar' => 'foo'
         ];
         $arr2 = [
-            'foo'=>'baz',
-            'baz'=>'con'
+            'foo' => 'baz',
+            'baz' => 'con'
         ];
 
         $merged = Charcoal::merge($arr1, $arr2);
-        $this->assertSame($merged, ['foo'=>'baz', 'bar'=>'foo', 'baz'=>'con']);
+        $this->assertSame($merged, ['foo' => 'baz', 'bar' => 'foo', 'baz' => 'con']);
     }
 
     public function testMergeAssoc2Dimensions()
     {
-
         $arr1 = [
-            'foo'=>[
-                'bar'=>'baz',
-                'foo'=>'bar'
+            'foo' => [
+                'bar' => 'baz',
+                'foo' => 'bar'
             ],
-            'bar'=>'foo'
+            'bar' => 'foo'
         ];
         $arr2 = [
-            'foo'=>[
-                'baz'=>'foo'
+            'foo' => [
+                'baz' => 'foo'
             ],
-            'baz'=>'con'
+            'baz' => 'con'
         ];
 
         $merged = Charcoal::merge($arr1, $arr2);
         $this->assertSame(
-            $merged, [
-            'foo'=>[
-            'bar'=>'baz',
-            'foo'=>'bar',
-            'baz'=>'foo'
-            ],
-            'bar'=>'foo',
-            'baz'=>'con'
+            $merged,
+            [
+                'foo' => [
+                    'bar' => 'baz',
+                    'foo' => 'bar',
+                    'baz' => 'foo'
+                ],
+                'bar' => 'foo',
+                'baz' => 'con'
             ]
         );
     }
@@ -110,5 +109,4 @@ class CharcoalTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('\InvalidArgumentException');
         $merged = Charcoal::merge(1, 2, 3);
     }
-
 }

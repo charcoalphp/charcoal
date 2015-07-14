@@ -6,17 +6,13 @@ use \Charcoal\Source\SourceConfig as SourceConfig;
 
 class SourceConfigTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testDefaultData()
     {
-
         $obj = new SourceConfig();
         $defaults = $obj->default_data();
 
         $this->assertEquals($obj->type(), $defaults['type']);
-
     }
-
 
     public function testSetType()
     {
