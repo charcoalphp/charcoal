@@ -1,0 +1,7 @@
+.DS_Store
+node_modules
+vendor
+phpdoc
+composer.phar
+composer.lock
+tests/tmp
