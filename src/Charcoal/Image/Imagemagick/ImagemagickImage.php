@@ -253,31 +253,43 @@ class ImagemagickImage extends AbstractImage
     }
 
     /**
+    * Exec a command, either with `proc_open()` or `shell_exec()`
+    *
+    * The `proc_open()` method is preferred, as it allows to catch errors in
+    * the STDERR buffer (and throw Exception) but it might be disabled in some
+    * systems for security reasons.
+    *
     * @param string $cmd
     * @throws Exception
     * @return string
     */
     public function exec($cmd)
     {
-        $proc = proc_open(
-            $cmd,
-            [
-            1 => ['pipe','w'],
-            2 => ['pipe','w'],
-            ],
-            $pipes
-        );
-        $out = stream_get_contents($pipes[1]);
-        fclose($pipes[1]);
-        $err = stream_get_contents($pipes[2]);
-        fclose($pipes[2]);
-        proc_close($proc);
+        if (function_exists('proc_open')) {
+            $proc = proc_open(
+                $cmd,
+                [
+                1 => ['pipe','w'],
+                2 => ['pipe','w'],
+                ],
+                $pipes
+            );
+            $out = stream_get_contents($pipes[1]);
+            fclose($pipes[1]);
+            $err = stream_get_contents($pipes[2]);
+            fclose($pipes[2]);
+            proc_close($proc);
 
-        if ($err) {
-            throw new Exception('Can not execute command.');
+            if ($err) {
+                throw new Exception('Can not execute command.');
+            }
+
+            return $out;
+        } else {
+            $ret = shell_exec($cmd, $out);
+
+            return $ret;
         }
-
-        return $out;
     }
 
     /**
