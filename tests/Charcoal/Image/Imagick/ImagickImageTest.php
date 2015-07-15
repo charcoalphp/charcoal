@@ -8,7 +8,7 @@ class ImagickImageTest extends \PHPUnit_Framework_Testcase
 {
     public static function setUpBeforeClass()
     {
-        if(!file_exists(OUTPUT_DIR)) {
+        if (!file_exists(OUTPUT_DIR)) {
             mkdir(OUTPUT_DIR);
         }
     }

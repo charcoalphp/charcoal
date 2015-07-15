@@ -76,14 +76,14 @@ abstract class AbstractResizeEffect extends AbstractEffect
     public function set_mode($mode)
     {
         $allowed_modes = [
-            'auto',     // Auto-determined from effect options
-            'exact',    // To exact width and height
-            'width',    // Resize to an exact width, keeping aspect ratio
-            'height',   // Resize to an exact height, keeping aspect ratio
-            'best_fit', // Resize to the best matching fit, keeping aspect ratio
-            'crop',      // Resize to the best match possible (oversized) to keep ratio and crop the superfluous data
-            'fill',      // Resize to the best match possible (undersize) to keep ratio and fill the superfluous area of a $background_color,
-            'none'      // Do not resize (do nothing)
+            'auto',
+            'exact',
+            'width',
+            'height',
+            'best_fit',
+            'crop',
+            'fill',
+            'none'
         ];
         if (!is_string($mode) || (!in_array($mode, $allowed_modes))) {
             throw new InvalidArgumentException('Mode is not valid');
@@ -221,9 +221,9 @@ abstract class AbstractResizeEffect extends AbstractEffect
 
         if ($width > 0 && $height > 0) {
             return 'exact';
-        } else if ($width > 0) {
+        } elseif ($width > 0) {
             return 'width';
-        } else if ($height > 0) {
+        } elseif ($height > 0) {
             return 'height';
         } else {
             // Error. No sizes were set.
@@ -257,28 +257,28 @@ abstract class AbstractResizeEffect extends AbstractEffect
                     throw new Exception('Missing parameters to perform exact resize');
                 }
                 $this->do_resize($this->width(), $this->height(), false);
-            break;
+                break;
 
             case 'width':
                 if ($this->width() <= 0) {
                     throw new Exception('Missing parameters to perform exact width resize');
                 }
                 $this->do_resize($this->width(), 0, false);
-            break;
+                break;
 
             case 'height':
                 if ($this->height() <= 0) {
                     throw new Exception('Missing parameters to perform exact height resize');
                 }
                 $this->do_resize(0, $this->height(), false);
-            break;
+                break;
 
             case 'best_fit':
                 if (($this->width() <= 0) || ($this->height() <= 0)) {
                     throw new Exception('Missing parameters to perform "best fit" resize');
                 }
                 $this->do_resize($this->width(), $this->height(), true);
-            break;
+                break;
 
             case 'crop':
                 $ratio = $this->image()->ratio();

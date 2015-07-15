@@ -37,5 +37,4 @@ class EffectFactory extends AbstractFactory
         $class_name = $this->ident_to_classname($type);
         return class_exists($class_name);
     }
-
 }

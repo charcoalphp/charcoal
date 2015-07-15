@@ -2,7 +2,6 @@
 
 namespace Charcoals\Tests\Image\Effect;
 
-
 class AbstractSepiaEffectTest extends \PHPUnit_Framework_Testcase
 {
     public $obj;

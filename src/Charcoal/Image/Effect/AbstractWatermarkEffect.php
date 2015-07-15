@@ -18,26 +18,29 @@ abstract class AbstractWatermarkEffect extends AbstractEffect
     private $_watermark;
 
     /**
-    * @param float $_opacity
+    * @var float $_opacity
     */
     private $_opacity = 1.0;
 
     /**
-    * The gra
+    * The gravity
+    * @var string $_gravity
     */
     private $_gravity = 'center';
+
     /**
     * Horizontal adjustment, in pixels.
     * Negative values will move watermark to the left, positive values to the right.
     * Depends on the gravity setting
-    * @param integer $_x
+    * @var integer $_x
     */
     private $_x = 0;
+
     /**
     * Vertical adjustment, in pixels.
     * Negative values will move watermark to the top, positive values to the bottom.
     * Depends on the gravity setting
-    * @param integer $_y
+    * @var integer $_y
     */
     private $_y = 0;
 
@@ -175,5 +178,4 @@ abstract class AbstractWatermarkEffect extends AbstractEffect
     {
         return $this->_y;
     }
-
 }

@@ -2,7 +2,6 @@
 
 namespace Charcoals\Tests\Image\Effect;
 
-
 class AbstractResizeEffectTest extends \PHPUnit_Framework_Testcase
 {
     public $obj;
@@ -192,5 +191,4 @@ class AbstractResizeEffectTest extends \PHPUnit_Framework_Testcase
         $this->setExpectedException('\Exception');
         $obj->process();
     }
-
 }

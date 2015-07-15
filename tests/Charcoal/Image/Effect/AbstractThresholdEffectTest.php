@@ -2,7 +2,6 @@
 
 namespace Charcoals\Tests\Image\Effect;
 
-
 class AbstractThresholdEffectTest extends \PHPUnit_Framework_Testcase
 {
     public $obj;
@@ -52,5 +51,4 @@ class AbstractThresholdEffectTest extends \PHPUnit_Framework_Testcase
         $obj = $this->obj;
         $obj->set_threshold(-1);
     }
-
 }

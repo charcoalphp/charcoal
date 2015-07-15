@@ -11,7 +11,10 @@
  	</rule>
 
  	<!-- Include the whole PSR-2 standard -->
- 	<!--<rule ref="PSR2"/>-->
+ 	<rule ref="PSR2"/>
+ 	<rule ref="PSR2.Classes.PropertyDeclaration.Underscore">
+ 		<severity>0</severity>
+ 	</rule>
 
 <!-- Array Sniffs -->
 	
@@ -111,7 +114,11 @@
 	<rule ref="Generic.ControlStructures.InlineControlStructure" />
 	<!-- Controls signature, such as spacing. if (expr) {... -->
 	<rule ref="Squiz.ControlStructures.ControlSignature" />
-	<rule ref="Squiz.ControlStructures.ElseIfDeclaration" />
+	<!-- else if should be used, no elseif. Incompatible with PSR2 recommendations. -->
+	<!--<rule ref="Squiz.ControlStructures.ElseIfDeclaration" />-->
+	<rule ref="Squiz.ControlStructures.ElseIfDeclaration.NotAllowed">
+		<severity>0</severity>
+	</rule>
 	<!-- @todo Doc me -->
 	<rule ref="Squiz.ControlStructures.ForEachLoopDeclaration" />
 	<!-- @todo Doc me -->
@@ -324,7 +331,7 @@
 	<!-- Throws errors if tabs are used for indentation -->
 	<rule ref="Generic.WhiteSpace.DisallowTabIndent" />
 	<!-- Checks that control structures are structured correctly -->
-	<rule ref="Generic.Whitespace.ScopeIndent" />
+	<!--<rule ref="Generic.Whitespace.ScopeIndent" />-->
 	 <!-- There MUST NOT be trailing whitespace at the end of non-blank lines. -->
 	<rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">
 		<properties>

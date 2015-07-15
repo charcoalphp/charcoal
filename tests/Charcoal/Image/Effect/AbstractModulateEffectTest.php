@@ -2,7 +2,6 @@
 
 namespace Charcoals\Tests\Image\Effect;
 
-
 class AbstractModulateEffectTest extends \PHPUnit_Framework_Testcase
 {
     public $obj;
@@ -123,5 +122,4 @@ class AbstractModulateEffectTest extends \PHPUnit_Framework_Testcase
         $obj = $this->obj;
         $obj->set_luminance(-101);
     }
-
 }

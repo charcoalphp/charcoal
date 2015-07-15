@@ -107,5 +107,4 @@ abstract class AbstractTintEffect extends AbstractEffect
     {
         return $this->_midtone;
     }
-
 }

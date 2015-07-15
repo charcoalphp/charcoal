@@ -3,6 +3,7 @@
 namespace Charcoal\Image\Imagick\Effect;
 
 use \Exception as Exception;
+use \Imagick as Imagick;
 
 use \Charcoal\Image\Effect\AbstractWatermarkEffect as AbstractWatermarkEffect;
 
@@ -31,7 +32,11 @@ class ImagickWatermarkEffect extends AbstractWatermarkEffect
         
         $gravity = $this->image()->imagick_gravity($this->gravity());
         $this->image()->imagick()->setGravity($gravity);
-        $this->image()->imagick()->compositeImage($watermark->imagick(), \Imagick::COMPOSITE_MULTIPLY, $this->x(), $this->y());
+
+        $x = $this->x();
+        $y = $this->y();
+        $composite_mode = Imagick::COMPOSITE_MULTIPLY;
+        $this->image()->imagick()->compositeImage($watermark->imagick(), $composite_mode, $x, $y;
 
         //throw new Exception('Watermark effect is not (yet) supported with imagick driver.');
 

@@ -237,7 +237,7 @@ abstract class AbstractImage implements ImageInterface
         $ratio = $this->ratio;
         if ($ratio > 1) {
             return 'horizontal';
-        } else if ($ratio < 1) {
+        } elseif ($ratio < 1) {
             return 'vertical';
         } else {
             return 'square';
@@ -280,7 +280,7 @@ abstract class AbstractImage implements ImageInterface
         if ($effect instanceof EffectInterface) {
             $effect->set_image($this);
             return $effect;
-        } else if (is_array($effect)) {
+        } elseif (is_array($effect)) {
             if (!isset($effect['type'])) {
                 throw new InvalidArgumentException('Effect parameter must define effect type');
             }

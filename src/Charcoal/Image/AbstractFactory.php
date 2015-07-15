@@ -34,7 +34,7 @@ abstract class AbstractFactory
     *
     * @return FactoryInterface
     */
-    static public function instance()
+    public static function instance()
     {
         if (static::$instance !== null) {
             return static::$instance;
@@ -125,7 +125,7 @@ abstract class AbstractFactory
     * @param string $class The FQN of the class
     * @return boolean Success / Failure
     */
-    static public function add_type($type, $class)
+    public static function add_type($type, $class)
     {
         if (!class_exists($class)) {
             return false;
@@ -140,7 +140,7 @@ abstract class AbstractFactory
     *
     * @return array
     */
-    static public function types()
+    public static function types()
     {
         return static::$_types;
     }
@@ -154,12 +154,12 @@ abstract class AbstractFactory
         $class = str_replace('/', '\\', $ident);
         $expl = explode('\\', $class);
         array_walk(
-            $expl, function(&$i) {
+            $expl,
+            function(&$i) {
                 $i = ucfirst($i);
             }
         );
         $class = '\\'.implode('\\', $expl);
         return $class;
     }
-
 }

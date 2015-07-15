@@ -2,7 +2,6 @@
 
 namespace Charcoals\Tests\Image;
 
-
 class AbstractImageTest extends \PHPUnit_Framework_Testcase
 {
 
@@ -45,5 +44,4 @@ class AbstractImageTest extends \PHPUnit_Framework_Testcase
         $this->setExpectedException('\InvalidArgumentException');
         $obj->set_target(false);
     }
-
 }

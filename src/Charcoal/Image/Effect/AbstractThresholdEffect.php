@@ -50,5 +50,4 @@ abstract class AbstractThresholdEffect extends AbstractEffect
     {
         return $this->_threshold;
     }
-
 }

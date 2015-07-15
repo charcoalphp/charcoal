@@ -2,7 +2,6 @@
 
 namespace Charcoals\Tests\Image\Effect;
 
-
 class AbstractMirrorEffectTest extends \PHPUnit_Framework_Testcase
 {
     public $obj;
@@ -19,7 +18,8 @@ class AbstractMirrorEffectTest extends \PHPUnit_Framework_Testcase
         $obj = $this->obj;
 
         $this->assertEquals(
-            'y', $obj->axis()
+            'y',
+            $obj->axis()
         );
     }
 

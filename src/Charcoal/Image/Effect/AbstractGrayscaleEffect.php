@@ -26,5 +26,4 @@ abstract class AbstractGrayscaleEffect extends AbstractEffect
     * @return AbstractGrayscaleEffect Chainable
     */
     //abstract public function process(array $data = null);
-
 }

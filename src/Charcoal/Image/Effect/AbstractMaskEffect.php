@@ -177,6 +177,4 @@ abstract class AbstractMaskEffect extends AbstractEffect
     {
         return $this->_y;
     }
-
-
 }

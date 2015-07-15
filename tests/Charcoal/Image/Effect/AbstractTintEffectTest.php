@@ -2,7 +2,6 @@
 
 namespace Charcoals\Tests\Image\Effect;
 
-
 class AbstractTintEffectTest extends \PHPUnit_Framework_Testcase
 {
     public $obj;
@@ -72,5 +71,4 @@ class AbstractTintEffectTest extends \PHPUnit_Framework_Testcase
         $this->setExpectedException('\InvalidArgumentException');
         $obj->set_midtone('foobar');
     }
-
 }

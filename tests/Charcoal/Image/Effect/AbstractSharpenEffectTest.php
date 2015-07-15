@@ -2,7 +2,6 @@
 
 namespace Charcoals\Tests\Image\Effect;
 
-
 class AbstractSharpenEffectTest extends \PHPUnit_Framework_Testcase
 {
     public $obj;
@@ -139,5 +138,4 @@ class AbstractSharpenEffectTest extends \PHPUnit_Framework_Testcase
             $this->setExpectedException('\InvalidArgumentException');
             $obj->set_channel('foobar');
         }
-
 }
