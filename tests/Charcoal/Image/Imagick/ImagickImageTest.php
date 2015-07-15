@@ -13,6 +13,13 @@ class ImagickImageTest extends \PHPUnit_Framework_Testcase
         }
     }
 
+    public function testFromFactory()
+    {
+        $obj = \Charcoal\Image\ImageFactory::instance()->get('imagick');
+
+        $this->assertInstanceOf('\Charcoal\Image\Imagick\ImagickImage', $obj);
+    }
+
     public function testCreate()
     {
         $obj = new Image();
