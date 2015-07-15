@@ -16,8 +16,7 @@ before_install:
   - sudo apt-get update
   - sudo apt-get -y --reinstall install imagemagick
   - sh -c "if [ $TRAVIS_PHP_VERSION != 'hhvm' ]; then printf "\n" | pecl install imagick-beta; fi"
-  - pear install pear/PHP_CodeSniffer
-  - phpenv rehash
+  - sh -c "if [ $TRAVIS_PHP_VERSION != 'hhvm' ]; then pear install pear/PHP_CodeSniffer && phpenv rehash; fi"
   - mkdir -p ./tests/tmp/images
 
 before_script:
@@ -25,5 +24,5 @@ before_script:
   - php composer.phar install
 
 script: 
-  - phpcs -ps --colors --standard=phpcs.xml src/
+  - sh -c "if [ $TRAVIS_PHP_VERSION != 'hhvm' ]; then phpcs -ps --colors --standard=phpcs.xml src/; fi"
   - phpunit --bootstrap ./tests/bootstrap.php --configuration ./tests/phpunit.xml --coverage-text
