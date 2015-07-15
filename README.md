@@ -426,5 +426,4 @@ Every class, method, and function should be covered by unit tests. PHP code can 
 ## TODOs
 
 - Write a version for GD
-- Write a version using the binary imagemagick tools directly ('mogrify')
 - Custom Exceptions
