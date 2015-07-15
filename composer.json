@@ -22,9 +22,7 @@
     "ext-pdo": "*",
     "slim/slim": "~2.6",
     "monolog/monolog": "~1.13",
-    "ircmaxell/password-compat": "dev-master",
-    "mustache/mustache": "~2.5",
-    "league/flysystem": "~1.0"
+    "mustache/mustache": "~2.5"
   },
   "require-dev": {
     "phpunit/phpunit": "~4.5",
