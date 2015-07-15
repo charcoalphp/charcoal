@@ -69,7 +69,7 @@ Also shown: using the `ImageFactory` constructor method:
 ```php
 use \Charcoal\Image\ImageFactory;
 
-$img = ImageFactory::instance()->get('imagick');
+$img = ImageFactory::instance()->get('imagemagick');
 $img->open('example.png')
   ->resize([
     'mode'=>'best_fit',
@@ -83,6 +83,34 @@ $img->open('example.png')
     'luminance'=>50
   ])
   ->save('modified-target.png');
+```
+
+# Available image drivers
+
+There are currently only 2 available drivers:
+- `imagick`
+  - The imagick driver use the `Imagick` PHP extension, which is build on top of imagemagick.
+- `imagemagick`
+  - The imagemagick driver uses the imagmagick binaries directly, running the operations in a separate shell process instead of directely within PHP.
+  - The commands `convert`, `mogrify` and `identify` should be installed on the system and reachable from the PHP process.
+
+## How to select a driver
+
+There are two different ways to instantiate an _Image_ object for a specific driver.
+
+Directly:
+```php
+$img = new \Charcoal\Image\Imagick\ImagickImage();
+// or
+$img = new \Charcoal\Image\Imagemagick\ImagemagickImage();
+```
+
+With `ImageFactory`:
+```php
+use \Charcoal\Image\ImageFactory;
+$img = ImageFactory::instance()->get('imagick');
+// or
+$img = ImageFactory::instance()->get('imagemagick');
 ```
 
 # Available effects / operations
@@ -142,7 +170,8 @@ The available effects are:
   - The `sigma` and `radius` parameters are ignored in this mode.
 - `soft`
   - Blend the blur with the original image.
-  - Unsupported for now. 
+
+> 👉 The `soft` mode is currently only available with the `imagemagick` driver.
 
 ## Dither Effect
 **Reduces an image's colors to a certain number, using dithering.**
@@ -150,6 +179,8 @@ The available effects are:
 ### Options
 - `colors` (_int_)
   - The number of colors to reduce to
+
+> 👉 The `dither` effect is currently only available with the `imagick` driver.
 
 ## Grayscale Effect
 **Converts an image's colors to a 256-colors greyscale. There are no options.**
@@ -166,6 +197,8 @@ The available effects are:
 - `gravity` (_string_)
 - `x` (_integer_)
 - `y` (_integer_)
+
+> 👉 The `mask` effect is currently not supported by any driver.
 
 ## Mirror Effect
 **Flip an image horizontally or vertically.**
@@ -321,6 +354,8 @@ The available effects are:
 - `gravity` (_string_)
 - `x` (_integer_)
 - `y` (_integer_)
+
+> 👉 The `watermark` effect is currently only available with the `imagick` driver.
 
 ## Future Effects
 These effects are available in the `imagick` library and therefore could easily be added:
