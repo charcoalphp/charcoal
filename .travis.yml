@@ -25,5 +25,5 @@ before_script:
   - php composer.phar install
 
 script: 
-  - phpcs -vps --colors --standard=phpcs.xml src/
+  - phpcs -ps --colors --standard=phpcs.xml src/
   - phpunit --bootstrap ./tests/bootstrap.php --configuration ./tests/phpunit.xml --coverage-text
