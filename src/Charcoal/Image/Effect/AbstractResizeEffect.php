@@ -27,6 +27,24 @@ abstract class AbstractResizeEffect extends AbstractEffect
     private $_height = 0;
 
     /**
+    * @var integer $_min_width
+    */
+    private $_min_width = 0;
+    /**
+    * @var integer $_min_height
+    */
+    private $_min_height = 0;
+
+    /**
+    * @var integer $_max_width
+    */
+    private $_max_width = 0;
+    /**
+    * @var integer $_max_height
+    */
+    private $_max_height = 0;
+
+    /**
     * @var string $_gravity
     */
     private $_gravity = 'center';
@@ -55,6 +73,18 @@ abstract class AbstractResizeEffect extends AbstractEffect
         }
         if (isset($data['height']) && $data['height'] !== null) {
             $this->set_height($data['height']);
+        }
+        if (isset($data['min_width']) && $data['min_width'] !== null) {
+            $this->set_min_width($data['min_width']);
+        }
+        if (isset($data['min_height']) && $data['min_height'] !== null) {
+            $this->set_min_height($data['min_height']);
+        }
+        if (isset($data['max_width']) && $data['max_width'] !== null) {
+            $this->set_max_width($data['max_width']);
+        }
+        if (isset($data['max_height']) && $data['max_height'] !== null) {
+            $this->set_max_height($data['max_height']);
         }
         if (isset($data['gravity']) && $data['gravity'] !== null) {
             $this->set_gravity($data['gravity']);
@@ -145,6 +175,94 @@ abstract class AbstractResizeEffect extends AbstractEffect
     }
 
     /**
+    * @param int $min_width
+    * @throws InvalidArgumentException
+    * @return Rotate Chainable
+    */
+    public function set_min_width($min_width)
+    {
+        if (!is_int($min_width) || ($min_width < 0)) {
+            throw new InvalidArgumentException('Min Width must be a a positive integer');
+        }
+        $this->_min_width = $min_width;
+        return $this;
+    }
+
+    /**
+    * @return float
+    */
+    public function min_width()
+    {
+        return $this->_min_width;
+    }
+
+    /**
+    * @param integer $min_height
+    * @throws InvalidArgumentException
+    * @return Rotate Chainable
+    */
+    public function set_min_height($min_height)
+    {
+        if (!is_int($min_height) || ($min_height < 0)) {
+            throw new InvalidArgumentException('Min Height must be a positive integer');
+        }
+        $this->_min_height = $min_height;
+        return $this;
+    }
+
+    /**
+    * @return float
+    */
+    public function min_height()
+    {
+        return $this->_min_height;
+    }
+
+    /**
+    * @param int $max_width
+    * @throws InvalidArgumentException
+    * @return Rotate Chainable
+    */
+    public function set_max_width($max_width)
+    {
+        if (!is_int($max_width) || ($max_width < 0)) {
+            throw new InvalidArgumentException('Max Width must be a a positive integer');
+        }
+        $this->_max_width = $max_width;
+        return $this;
+    }
+
+    /**
+    * @return float
+    */
+    public function max_width()
+    {
+        return $this->_max_width;
+    }
+
+    /**
+    * @param integer $max_height
+    * @throws InvalidArgumentException
+    * @return Rotate Chainable
+    */
+    public function set_max_height($max_height)
+    {
+        if (!is_int($max_height) || ($max_height < 0)) {
+            throw new InvalidArgumentException('Height must be a positive integer');
+        }
+        $this->_max_height = $max_height;
+        return $this;
+    }
+
+    /**
+    * @return float
+    */
+    public function max_height()
+    {
+        return $this->_max_height;
+    }
+
+    /**
     * @param string $gravity
     * @throws InvalidArgumentException
     * @return AbstractWatermarkEffect Chainable
@@ -226,8 +344,11 @@ abstract class AbstractResizeEffect extends AbstractEffect
         } elseif ($height > 0) {
             return 'height';
         } else {
-            // Error. No sizes were set.
-            return '';
+            if ($this->min_width() || $this->min_height() || $this->max_width() || $this->max_height()) {
+                return 'constraints';
+            } else {
+                return 'none';
+            }
         }
     }
 
@@ -251,47 +372,81 @@ abstract class AbstractResizeEffect extends AbstractEffect
             return;
         }
 
+        $img_w = $this->image()->width();
+        $img_h = $this->image()->height();
+
         switch ($mode) {
             case 'exact':
                 if (($this->width() <= 0) || ($this->height() <= 0)) {
                     throw new Exception('Missing parameters to perform exact resize');
                 }
-                $this->do_resize($this->width(), $this->height(), false);
+                if ($img_w != $this->width() || $img_h != $this->height()) {
+                    $this->do_resize($this->width(), $this->height(), false);
+                }
                 break;
 
             case 'width':
                 if ($this->width() <= 0) {
                     throw new Exception('Missing parameters to perform exact width resize');
                 }
-                $this->do_resize($this->width(), 0, false);
+                if ($img_w != $this->width()) {
+                    $this->do_resize($this->width(), 0, false);
+                }
                 break;
 
             case 'height':
                 if ($this->height() <= 0) {
                     throw new Exception('Missing parameters to perform exact height resize');
                 }
-                $this->do_resize(0, $this->height(), false);
+                if ($img_h != $this->height()) {
+                    $this->do_resize(0, $this->height(), false);
+                }
                 break;
 
             case 'best_fit':
                 if (($this->width() <= 0) || ($this->height() <= 0)) {
                     throw new Exception('Missing parameters to perform "best fit" resize');
                 }
-                $this->do_resize($this->width(), $this->height(), true);
+                if ($img_w != $this->width() || $img_h != $this->height()) {
+                    $this->do_resize($this->width(), $this->height(), true);
+                }
+                break;
+
+            case 'constraints':
+                $min_w = $this->min_width();
+                $min_h = $this->min_height();
+                $max_w = $this->max_width();
+                $max_h = $this->max_height();
+
+                if (array_sum([$min_w, $min_h, $max_w, $max_h]) == 0) {
+                    throw new Exception('Missing parameter(s) to perform "constraints" resize');
+                }
+
+                if (($min_w && ($min_w > $img_w)) || ($min_h && ($min_h > $img_h))) {
+                    // Must scale up, keeping ratio
+                    $this->do_resize($min_w, $min_h, true);
+                    break;
+                }
+
+                if (($max_w && ($max_w < $img_w)) || ($max_h && ($max_h < $img_h))) {
+                    // Must scale down. keeping ratio
+                    $this->do_resize($max_w, $max_h, true);
+                    break;
+                }
                 break;
 
             case 'crop':
                 $ratio = $this->image()->ratio();
 
                 throw new Exception('Crop resize mode is not (yet) supported');
-            //break;
+                //break;
 
             case 'fill':
                 $img_class = get_class($this->image());
                 $canvas = new $img_class;
                 $canvas->create($this->width(), $this->width(), $this->background_color());
                 throw new Exception('Crop resize mode is not (yet) supported');
-            //break;
+                //break;
         }
 
         return $this;

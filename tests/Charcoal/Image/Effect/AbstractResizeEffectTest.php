@@ -141,7 +141,7 @@ class AbstractResizeEffectTest extends \PHPUnit_Framework_Testcase
 
         $obj->set_width(0);
         $obj->set_height(0);
-        $this->assertEquals('', $obj->auto_mode());
+        $this->assertEquals('none', $obj->auto_mode());
     }
 
     public function testProcessExactParametersException()
