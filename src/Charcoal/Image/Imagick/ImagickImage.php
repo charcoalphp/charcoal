@@ -6,10 +6,7 @@ use \Exception as Exception;
 use \InvalidArgumentException as InvalidArgumentException;
 use \Imagick as Imagick;
 
-
 use \Charcoal\Image\AbstractImage as AbstractImage;
-use \Charcoal\Image\EffectInterface as EffectInterface;
-use \Charcoal\Image\EffectFactory as EffectFactory;
 
 /**
 *
@@ -18,18 +15,13 @@ class ImagickImage extends AbstractImage
 {
     private $_imagick;
 
-    private $_source;
-    private $_target;
-
-    private $_effects = [];
-
     /**
     * @throws Exception
     */
     public function __construct()
     {
         if (!extension_loaded('imagick') || !class_exists('Imagick')) {
-            throw new Exception('Image Magick extension is required.');
+            throw new Exception('The Imagick PHP extension is required.');
         }
 
         // @todo: also validate imagick version

@@ -14,13 +14,13 @@ use \Charcoal\Image\EffectFactory as EffectFactory;
 */
 abstract class AbstractImage implements ImageInterface
 {
-    private $_source;
-    private $_target;
+    protected $_source;
+    protected $_target;
 
     /**
     * @var array $_effects
     */
-    private $_effects = [];
+    protected $_effects = [];
 
 
     /**

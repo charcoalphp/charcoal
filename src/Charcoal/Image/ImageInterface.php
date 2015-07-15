@@ -5,11 +5,6 @@ namespace Charcoal\Image;
 interface ImageInterface
 {
     /**
-    * @return Imagick
-    */
-    public function imagick();
-
-    /**
     * @param array $data
     * @return ImageInterface Chainable
     */
