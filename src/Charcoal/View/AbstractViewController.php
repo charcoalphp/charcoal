@@ -51,7 +51,7 @@ abstract class AbstractViewController implements ViewControllerInterface
             if (isset($context->{$name})) {
                 return $context->{$name};
             }
-        } else if (is_array($context)) {
+        } elseif (is_array($context)) {
             if (isset($context[$name])) {
                 return $context[$name];
             }
@@ -83,7 +83,7 @@ abstract class AbstractViewController implements ViewControllerInterface
             if (isset($context->{$name})) {
                 return $context->{$name};
             }
-        } else if (is_array($context)) {
+        } elseif (is_array($context)) {
             if (isset($context[$name])) {
                 return $context[$name];
             }
@@ -114,7 +114,7 @@ abstract class AbstractViewController implements ViewControllerInterface
             if (isset($context->{$name})) {
                 return true;
             }
-        } else if (is_array($context)) {
+        } elseif (is_array($context)) {
             if (isset($context[$name])) {
                 return $context[$name];
             }

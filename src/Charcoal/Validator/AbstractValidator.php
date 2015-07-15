@@ -93,7 +93,7 @@ abstract class AbstractValidator implements ValidatorInterface
     {
         if (is_array($result)) {
             $result = new ValidatorResult($result);
-        } else if (!($result instanceof ValidatorResult)) {
+        } elseif (!($result instanceof ValidatorResult)) {
             throw new \InvalidArgumentException('Result must be an array or a ValidatorResult object.');
         }
         $level = $result->level();

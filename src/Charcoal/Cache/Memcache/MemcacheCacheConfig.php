@@ -85,7 +85,7 @@ class MemcacheCacheConfig extends CacheConfig
         if (is_array($server)) {
             $server = new MemcacheCacheServerConfig($server);
             $this->_servers[] = $server;
-        } else if (($server instanceof MemcacheCacheServerConfig)) {
+        } elseif (($server instanceof MemcacheCacheServerConfig)) {
             $this->_servers[] = $server;
         } else {
             throw new InvalidArgumentException('Server must be an array or a MemcacheCacheServerConfig object.');

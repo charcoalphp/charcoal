@@ -133,7 +133,7 @@ class Order
             }
             $values = array_map('trim', explode(',', $values));
             $this->_values = $values;
-        } else if (is_array($values)) {
+        } elseif (is_array($values)) {
             if (empty($values)) {
                 throw new InvalidArgumentException('Array values can not be empty.');
             }

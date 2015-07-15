@@ -178,11 +178,11 @@ class CollectionLoader extends AbstractLoader
     {
         if ($param instanceof Filter) {
             $this->_filters[] = $param;
-        } else if (is_array($param)) {
+        } elseif (is_array($param)) {
             $filter = new Filter();
             $filter->set_data($param);
             $this->_filters[] = $filter;
-        } else if (is_string($param) && $val !== null) {
+        } elseif (is_string($param) && $val !== null) {
             $filter = new Filter();
             $filter->set_property($param);
             $filter->set_val($val);
@@ -233,11 +233,11 @@ class CollectionLoader extends AbstractLoader
     {
         if ($param instanceof Order) {
             $this->_orders[] = $param;
-        } else if (is_array($param)) {
+        } elseif (is_array($param)) {
             $order = new Order();
             $order->set_data($param);
             $this->_orders[] = $order;
-        } else if (is_string($param)) {
+        } elseif (is_string($param)) {
             $order = new Order();
             $order->set_property($param);
             $order->set_mode($mode);
@@ -260,7 +260,7 @@ class CollectionLoader extends AbstractLoader
     {
         if ($param instanceof Pagination) {
             $this->_pagination = $param;
-        } else if (is_array($param)) {
+        } elseif (is_array($param)) {
             $pagination = new Pagination();
             $pagination->set_data($param);
             $this->_pagination = $pagination;

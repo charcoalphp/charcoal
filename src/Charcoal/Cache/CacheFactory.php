@@ -28,9 +28,9 @@ class CacheFactory extends AbstractFactory
 
         if ($type == 'apc') {
             $cache = ApcCache::instance();
-        } else if ($type == 'memcache') {
+        } elseif ($type == 'memcache') {
             $cache = MemcacheCache::instance();
-        } else if ($type == 'noop') {
+        } elseif ($type == 'noop') {
             $cache = NoopCache::instance();
         } else {
             throw new InvalidArgumentException('Type is not a valid cache type.');

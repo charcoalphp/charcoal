@@ -25,10 +25,10 @@ abstract class AbstractConfig implements
     {
         if (is_string($data)) {
             $this->add_file($data);
-        } else if (is_array($data)) {
+        } elseif (is_array($data)) {
              $data = array_merge($this->default_data(), $data);
              $this->set_data($data);
-        } else if ($data === null) {
+        } elseif ($data === null) {
             $data = $this->default_data();
             $this->set_data($data);
         } else {
@@ -127,7 +127,7 @@ abstract class AbstractConfig implements
 
         if (pathinfo($filename, PATHINFO_EXTENSION) == 'php') {
             include $filename;
-        } else if (pathinfo($filename, PATHINFO_EXTENSION) == 'json') {
+        } elseif (pathinfo($filename, PATHINFO_EXTENSION) == 'json') {
             if (file_exists($filename)) {
                 $file_content = file_get_contents($filename);
                 $config = json_decode($file_content, true);

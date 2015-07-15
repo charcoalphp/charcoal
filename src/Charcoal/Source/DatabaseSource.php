@@ -573,7 +573,7 @@ class DatabaseSource extends AbstractSource
             foreach ($binds as $k => $v) {
                 if ($binds[$k] === null) {
                     $binds[$k] = 'NULL';
-                } else if (!is_scalar($binds[$k])) {
+                } elseif (!is_scalar($binds[$k])) {
                     $binds[$k] = json_encode($binds[$k]);
                 }
                 $type = (isset($binds_types[$k]) ? $binds_types[$k] : PDO::PARAM_STR);

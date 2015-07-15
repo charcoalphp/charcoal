@@ -111,7 +111,7 @@ abstract class AbstractProperty implements
 
         if ($data === null) {
             $data = $defaults;
-        } else if (is_array($data)) {
+        } elseif (is_array($data)) {
             $data = array_merge($defaluts, $data);
         }
 

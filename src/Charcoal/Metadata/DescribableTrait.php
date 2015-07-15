@@ -68,7 +68,7 @@ trait DescribableTrait
             $meta = $this->create_metadata();
             $meta->set_data($metadata);
             $this->_metadata = $meta;
-        } else if ($metadata instanceof MetadataInterface) {
+        } elseif ($metadata instanceof MetadataInterface) {
             $this->_metadata = $metadata;
         } else {
             throw new \InvalidArgumentException('Metadata argument is invalid (must be array or Medatadata object).');

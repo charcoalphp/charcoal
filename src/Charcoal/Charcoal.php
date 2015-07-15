@@ -67,9 +67,9 @@ class Charcoal
         }
         if (is_string($config)) {
             self::$_config->add_file($config);
-        } else if (is_array($config)) {
+        } elseif (is_array($config)) {
             self::$_config->set_data($config);
-        } else if ($config instanceof Config) {
+        } elseif ($config instanceof Config) {
             self::$_config = $config;
         } else {
             throw new InvalidArgumentException(

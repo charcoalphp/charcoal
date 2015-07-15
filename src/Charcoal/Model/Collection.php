@@ -60,7 +60,7 @@ class Collection extends AbstractCollection
     {
         if (is_int($offset)) {
             return isset($this->_objects[$offset]);
-        } else if (is_string($offset)) {
+        } elseif (is_string($offset)) {
             return isset($this->_map[$offset]);
         }
     }
@@ -79,7 +79,7 @@ class Collection extends AbstractCollection
             unset($this->_objects[$offset]);
             unset($this->_map[$id]);
 
-        } else if (is_string($offset)) {
+        } elseif (is_string($offset)) {
             $pos = $this->pos($offset);
             unset($this->_map[$offset]);
             unset($this->_objects[$pos]);
@@ -99,7 +99,7 @@ class Collection extends AbstractCollection
     {
         if (is_int($offset)) {
             return (isset($this->_objects[$offset]) ? $this->_objects[$offset] : null);
-        } else if (is_string($offset)) {
+        } elseif (is_string($offset)) {
             return (isset($this->_map[$offset]) ? $this->_map[$offset] : null);
         } else {
             throw new InvalidArgumentException('Offset should be either an integer or a string.');
@@ -178,7 +178,7 @@ class Collection extends AbstractCollection
     {
         if (is_string($key)) {
             return array_search($key, array_keys($this->_map));
-        } else if ($key instanceof IndexableInterface) {
+        } elseif ($key instanceof IndexableInterface) {
             return array_search($key->id(), array_keys($this->_map));
         } else {
             throw new InvalidArgumentException('Key must be a string or an IndexableInterface object.');
