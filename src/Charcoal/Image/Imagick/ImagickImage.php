@@ -26,6 +26,15 @@ class ImagickImage extends AbstractImage
 
         // @todo: also validate imagick version
     }
+
+    /**
+    * @return string
+    */
+    public function driver_type()
+    {
+        return 'imagick';
+    }
+
     /**
     * @return Imagick
     */

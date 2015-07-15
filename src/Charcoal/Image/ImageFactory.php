@@ -10,14 +10,14 @@ class ImageFactory extends AbstractFactory
     /**
     * @return array
     */
-    public static function types()
+    static public function types()
     {
         return array_merge(
-            parent::types(),
-            [
+            parent::types(), [
             'imagick'       => '\Charcoal\Image\Imagick\ImagickImage',
             'imagemagick'   => '\Charcoal\Image\Imagemagick\ImagemagickImage'
             //'gd'            => '\Charcoal\Image\Gd\GdImage'
+            // gmagick'       => '\Charcoal\Image\Gmagick\GmagickIimage'
             ]
         );
     }

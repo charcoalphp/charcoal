@@ -42,6 +42,11 @@ abstract class AbstractImage implements ImageInterface
         return $this;
     }
 
+    /**
+    * @return string
+    */
+    abstract public function driver_type();
+
 
     /**
     * @param array $data
@@ -287,7 +292,8 @@ abstract class AbstractImage implements ImageInterface
             $fx_type = $effect['type'];
             if (strstr($fx_type, '/') === false) {
                 // Core effects do not need to be namespaced
-                $fx_type = 'charcoal/image/imagick/effect/imagick'.$fx_type.'effect';
+                $driver = $this->driver_type();
+                $fx_type = 'charcoal/image/'.$driver.'/effect/'.$driver.$fx_type.'effect';
             }
             $image_fx = EffectFactory::instance()->create($fx_type);
             $image_fx->set_image($this);
