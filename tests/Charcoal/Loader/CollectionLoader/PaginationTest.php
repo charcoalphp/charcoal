@@ -116,7 +116,6 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
         $obj->set_num_per_page(20);
         $sql = $obj->sql();
 
-
         $this->assertEquals(' LIMIT 0, 20', $sql);
 
         $obj = new Pagination();

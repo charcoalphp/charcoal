@@ -2,12 +2,11 @@
 
 namespace Charcoal\Tests\Config;
 
-
 class ConfigurableTraitTest extends \PHPUnit_Framework_TestCase
 {
     public $obj;
 
-    static public function setUpBeforeClass()
+    public static function setUpBeforeClass()
     {
         include_once 'ConfigurableClass.php';
     }
@@ -23,7 +22,6 @@ class ConfigurableTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Charcoal\Tests\Config\ConfigurableClass', $obj);
     }
 
-
     public function testSetConfig()
     {
         include_once 'AbstractConfigClass.php';
@@ -33,7 +31,7 @@ class ConfigurableTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
         $this->assertEquals($config, $obj->config());
 
-        $config = ['foo'=>'baz'];
+        $config = ['foo' => 'baz'];
         $obj->set_config($config);
         $this->assertEquals('baz', $obj->config()->foo());
 

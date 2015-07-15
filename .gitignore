@@ -1,10 +1,28 @@
-.DS_Store
-node_modules
-vendor
-phpdoc
-composer.phar
+# Charcoal
+
+config/config.*.json
+!config/config.default.json
+
+# Package Managers
+
 composer.lock
-tests/tmp
-mustache_cache
-npm-debug.log
-build
+composer.phar
+vendor/
+node_modules/
+bower_components/
+
+# Documentation
+
+documentation/
+phpdoc/
+docs/
+
+# Logging
+
+*.log
+logs/
+
+# Caches
+
+mustache_cache/
+tmp/

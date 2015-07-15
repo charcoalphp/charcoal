@@ -9,7 +9,7 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
 {
     public $obj;
 
-    static public function setUpBeforeClass()
+    public static function setUpBeforeClass()
     {
         include_once 'AbstractConfigClass.php';
     }

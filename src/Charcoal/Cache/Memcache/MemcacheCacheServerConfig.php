@@ -17,10 +17,10 @@ class MemcacheCacheServerConfig extends AbstractConfig
     public function default_data()
     {
         $default = [
-            'host'=>'localhost',
-            'port'=>11211,
-            'persistent'=>true,
-            'weight'=>1
+            'host'       => 'localhost',
+            'port'       => 11211,
+            'persistent' => true,
+            'weight'     => 1
         ];
 
         $default_data = array_merge(parent::default_data(), $default);
@@ -86,7 +86,7 @@ class MemcacheCacheServerConfig extends AbstractConfig
     }
 
     /**
-    * @param bool $persistent
+    * @param boolean $persistent
     * @return MemcacheCacheServerConfig Chainable
     */
     public function set_persistent($persistent)
@@ -96,7 +96,7 @@ class MemcacheCacheServerConfig extends AbstractConfig
     }
 
     /**
-    * @return bool
+    * @return boolean
     */
     public function persistent()
     {

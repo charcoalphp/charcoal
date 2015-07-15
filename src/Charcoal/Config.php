@@ -40,7 +40,6 @@ class Config extends AbstractConfig implements \ArrayAccess
         $this->add_file(__DIR__.'/../../config/config.default.json');
 
         parent::__construct($config);
-
     }
 
     /**
@@ -67,7 +66,7 @@ class Config extends AbstractConfig implements \ArrayAccess
         if (is_callable($f)) {
             return call_user_func($f);
         } else {
-            return isset($this->{$offset}) ? $this->{$offset} : null;
+            return (isset($this->{$offset}) ? $this->{$offset} : null);
         }
     }
 
@@ -169,7 +168,7 @@ class Config extends AbstractConfig implements \ArrayAccess
     public function set_admin_path($admin_path)
     {
         if (!is_string($admin_path)) {
-            throw new InvalidArgumentException('Admin path must be a string');
+            throw new InvalidArgumentException('Admin Path must be a string.');
         }
         $this->_admin_path = $admin_path;
         return $this;
@@ -191,7 +190,7 @@ class Config extends AbstractConfig implements \ArrayAccess
     public function set_dev_mode($dev_mode)
     {
         if (!is_bool($dev_mode)) {
-            throw new InvalidArgumentException('Dev mode must be a boolean.');
+            throw new InvalidArgumentException('Developer Mode must be a boolean.');
         }
         $this->_dev_mode = $dev_mode;
         return $this;
@@ -240,7 +239,7 @@ class Config extends AbstractConfig implements \ArrayAccess
         $this->_databases = $databases;
         return $this;
     }
-    
+
     /**
     * @throws Exception
     * @return array
@@ -248,7 +247,7 @@ class Config extends AbstractConfig implements \ArrayAccess
     public function databases()
     {
         if ($this->_databases == null) {
-            throw new Exception('Databases are not set');
+            throw new Exception('Databases are not set.');
         }
         return $this->_databases;
     }
@@ -266,7 +265,7 @@ class Config extends AbstractConfig implements \ArrayAccess
         }
         $databases = $this->databases();
         if (!isset($databases[$ident])) {
-            throw new Exception(sprintf('No database configuration matches "%s"', $ident));
+            throw new Exception(sprintf('No database configuration matches "%s".', $ident));
         }
         return $databases[$ident];
     }
@@ -327,7 +326,7 @@ class Config extends AbstractConfig implements \ArrayAccess
     public function set_metadata_path($metadata_path)
     {
         if (!is_array($metadata_path)) {
-            throw new InvalidArgumentException('Metadata path needs to be an array');
+            throw new InvalidArgumentException('Metadata path needs to be an array.');
         }
         $this->_metadata_path = $metadata_path;
         return $this;
@@ -349,7 +348,7 @@ class Config extends AbstractConfig implements \ArrayAccess
     public function add_metadata_path($path)
     {
         if (!is_string($path)) {
-            throw new InvalidArgumentException('Path needs to be a string');
+            throw new InvalidArgumentException('Path needs to be a string.');
         }
 
         $this->_metadata_path[] = $path;
@@ -364,7 +363,7 @@ class Config extends AbstractConfig implements \ArrayAccess
     public function set_template_path($template_path)
     {
         if (!is_array($template_path)) {
-            throw new Exception('Metadata path needs to be an array');
+            throw new Exception('Metadata Path needs to be an array.');
         }
         $this->_template_path = $template_path;
         return $this;
@@ -386,7 +385,7 @@ class Config extends AbstractConfig implements \ArrayAccess
     public function add_template_path($path)
     {
         if (!is_string($path)) {
-            throw new InvalidArgumentException('Path needs to be a string');
+            throw new InvalidArgumentException('Path needs to be a string.');
         }
 
         $this->_template_path[] = $path;

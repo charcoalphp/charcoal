@@ -6,7 +6,6 @@ use \Charcoal\Cache\AbstractCache as AbstractCache;
 
 class NoopCache extends AbstractCache
 {
-
     /**
     * @return boolean
     */

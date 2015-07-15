@@ -45,7 +45,7 @@ abstract class AbstractCache implements
     * Static singleton instance getter
     * @return CacheInterface
     */
-    static public function instance()
+    public static function instance()
     {
         if (static::$_instance !== null) {
             return static::$_instance;
@@ -66,7 +66,7 @@ abstract class AbstractCache implements
     public function set_prefix($prefix)
     {
         if (!is_string($prefix)) {
-            throw new InvalidArgumentException('Prefix must be a string');
+            throw new InvalidArgumentException('Prefix must be a string.');
         }
         $this->_prefix = $prefix;
         return $this;
@@ -132,7 +132,7 @@ abstract class AbstractCache implements
     * Fetch, or load, multiple keys at once from the cache.
     *
     * @param array $keys An array of cache keys to fetch
-    * @return array  The data, in an associatve array of `$key=>$data`
+    * @return array  The data, in an associatve array of `$key => $data`
     */
     abstract public function multifetch($keys);
 

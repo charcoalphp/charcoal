@@ -9,11 +9,12 @@ class EncoderFactory extends AbstractFactory
     /**
     * @return array
     */
-    static public function types()
+    public static function types()
     {
         return array_merge(
-            parent::types(), [
-            'base64'       => '\Charcoal\Encoder\Base64\Base64Encoder'
+            parent::types(),
+            [
+                'base64' => '\Charcoal\Encoder\Base64\Base64Encoder'
             ]
         );
     }

@@ -23,10 +23,10 @@ trait ConfigurableTrait
     {
         if (is_array($config)) {
             $this->_config = $this->create_config($config);
-        } else if (($config instanceof ConfigInterface)) {
+        } elseif (($config instanceof ConfigInterface)) {
             $this->_config = $config;
         } else {
-            throw new \InvalidArgumentException('Invalid config Argument');
+            throw new \InvalidArgumentException('Config must be an array or a ConfigInterface object.');
         }
         return $this;
     }

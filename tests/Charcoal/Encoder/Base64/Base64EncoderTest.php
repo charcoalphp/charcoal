@@ -23,7 +23,6 @@ class Base64EncoderTest extends \PHPUnit_Framework_TestCase
         $decoded = $obj->decode($encoded);
 
         $this->assertEquals($decoded, $orig);
-
     }
 
     /**
@@ -38,7 +37,6 @@ class Base64EncoderTest extends \PHPUnit_Framework_TestCase
         $decoded = $obj->decode($encoded, $salt);
 
         $this->assertEquals($decoded, $orig);
-
     }
 
     /**

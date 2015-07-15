@@ -7,8 +7,8 @@ use \InvalidArgumentException as InvalidArgumentException;
 class Filter
 {
     const DEFAULT_OPERATOR = '=';
-    const DEFAULT_FUNC = '';
-    const DEFAULT_OPERAND = 'AND';
+    const DEFAULT_FUNC     = '';
+    const DEFAULT_OPERAND  = 'AND';
 
     /**
     * @var string $_property
@@ -92,10 +92,10 @@ class Filter
     public function set_property($property)
     {
         if (!is_string($property)) {
-            throw new InvalidArgumentException('Property must be a string');
+            throw new InvalidArgumentException('Property must be a string.');
         }
         if ($property=='') {
-            throw new InvalidArgumentException('Property can not be empty');
+            throw new InvalidArgumentException('Property can not be empty.');
         }
 
         $this->_property = $property;
@@ -136,7 +136,7 @@ class Filter
     public function set_operator($operator)
     {
         if (!is_string($operator)) {
-            throw new InvalidArgumentException('Operator should be a string');
+            throw new InvalidArgumentException('Operator should be a string.');
         }
 
         $operator = strtoupper($operator);
@@ -164,7 +164,7 @@ class Filter
     public function set_func($func)
     {
         if (!is_string($func)) {
-            throw new InvalidArgumentException('Func should be astring');
+            throw new InvalidArgumentException('Func should be astring.');
         }
 
         $func = strtoupper($func);
@@ -241,13 +241,15 @@ class Filter
     {
         $property = $this->property();
         if ($property) {
-            // @todo Load Property from associated model metadata.
+            /** @todo Load Property from associated model metadata. */
             return [$property];
         }
-        /*$field = $this->field();
+        /*
+        $field = $this->field();
         if($field) {
         return [$field];
-        }*/
+        }
+        */
         return [];
     }
 
@@ -280,11 +282,12 @@ class Filter
                 $target = '`'.$field.'`';
             }
 
-            switch($operator) {
-                /*case '=':
+            switch ($operator) {
+                /*
+                case '=':
 
                 if($this->multiple() && ($sql_val != "''")) {
-                $sep = isset($this->multiple_options['separator']) ? $this->multiple_options['separator'] : ',';
+                $sep = (isset($this->multiple_options['separator']) ? $this->multiple_options['separator'] : ',');
                 if($sep == ',') {
                 $filter = ' FIND_IN_SET('.$sql_val.', '.$filter_ident.')';
                 }
@@ -386,5 +389,4 @@ class Filter
 
         return $valid_functions;
     }
-
 }

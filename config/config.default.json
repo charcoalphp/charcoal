@@ -1,45 +1,45 @@
 {
-	"project_name":"Boilerplate",
+  "project_name": "Boilerplate",
 
-	"admin_path":"admin",
+  "admin_path": "admin",
 
-	"dev_mode":false,
+  "dev_mode": false,
 
-	"languages":{
-		"en":{
-			"active":true,
-			"priority":1
-		},
-		"fr":{
-			"active":true,
-			"priority":2
-		}
-	},
-	"default_language":"en",
+  "languages": {
+    "en": {
+      "active": true,
+      "priority": 1
+    },
+    "fr": {
+      "active": true,
+      "priority": 2
+    }
+  },
+  "default_language": "en",
 
-	"timezone":"America/Montreal",
+  "timezone": "America/Montreal",
 
-	"salt":"(*&0|}HIUW$Huihs$slls/ssd/",
+  "salt": "(*&0|}HIUW$Huihs$slls/ssd/",
 
-	"cache":{
-		"active":true,
-		"backend":"memcache",
-		"prefix":"boilerplate_"
-	},
+  "cache": {
+    "active": true,
+    "backend": "memcache",
+    "prefix": "boilerplate_"
+  },
 
-	"logger":{
-		"active":false,
-		"output":"file",
-		"levels":{
-			"query":true,
-			"info":true,
-			"debug":true,
-			"notice":true,
-			"warning":true,
-			"error":true,
-			"critical":true,
-			"alert":true,
-			"emergency":true
-		}
-	}
+  "logger": {
+    "active": false,
+    "output": "file",
+    "levels": {
+      "query": true,
+      "info": true,
+      "debug": true,
+      "notice": true,
+      "warning": true,
+      "error": true,
+      "critical": true,
+      "alert": true,
+      "emergency": true
+    }
+  }
 }

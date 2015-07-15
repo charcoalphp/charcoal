@@ -8,7 +8,6 @@
 
 namespace Charcoal\Model;
 
-
 use \Charcoal\Charcoal as Charcoal;
 
 use \Charcoal\Source\DatabaseSource as DatabaseSource;
@@ -23,7 +22,7 @@ use \Charcoal\Model\ModelMetadata as ModelMetadata;
 *
 * # The Charcoal Model
 * <figure>
-*   <img src="http://charcoal.locomotive.ca/doc/assets/images/uml/charcoal.model.svg" alt="The Charcoal Model UML" />
+*   <img src="http:// charcoal.locomotive.ca/doc/assets/images/uml/charcoal.model.svg" alt="The Charcoal Model UML" />
 *   <figcaption>The Charcoal Model Class Diagram</figcaption>
 * </figure>
 *
@@ -68,7 +67,6 @@ use \Charcoal\Model\ModelMetadata as ModelMetadata;
 */
 class Model extends AbstractModel
 {
-
     /**
     * StorableInterface > create_source(). Get the source object.
     *
@@ -78,14 +76,13 @@ class Model extends AbstractModel
     public function create_source($source_ident = null)
     {
         $metadata = $this->metadata();
-        //var_dump($metadata);
+        // var_dump($metadata);
         if ($source_ident === null) {
             // Default source ident
-            $source_ident = ( isset($metadata['default_source']) ? $metadata['default_source'] : '' );
+            $source_ident = (isset($metadata['default_source']) ? $metadata['default_source'] : '');
         }
         $s = new DatabaseSource();
         $s->set_model($this);
         return $s;
     }
-
 }

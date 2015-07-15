@@ -18,14 +18,17 @@ class MemcacheCacheConfig extends CacheConfig
     */
     public function default_data()
     {
-        $default_data =  array_merge(
-            parent::default_data(), [
-            'servers'=>[[
-                'host'          => 'localhost',
-                'port'          => 11211,
-                'persistent'    => false,
-                'weight'        => 1
-            ]]
+        $default_data = array_merge(
+            parent::default_data(),
+            [
+                'servers' => [
+                    [
+                        'host'       => 'localhost',
+                        'port'       => 11211,
+                        'persistent' => false,
+                        'weight'     => 1
+                    ]
+                ]
             ]
         );
         return $default_data;
@@ -51,11 +54,8 @@ class MemcacheCacheConfig extends CacheConfig
     * @throws InvalidArgumentException if $servers is not an array
     * @return MemcacheCacheConfig Chainable
     */
-    public function set_servers($servers)
+    public function set_servers(array $servers)
     {
-        if (!is_array($servers)) {
-            throw new InvalidArgumentException('Servers must be an array');
-        }
         $this->_servers = [];
         foreach ($servers as $server) {
             $this->add_server($server);
@@ -85,10 +85,10 @@ class MemcacheCacheConfig extends CacheConfig
         if (is_array($server)) {
             $server = new MemcacheCacheServerConfig($server);
             $this->_servers[] = $server;
-        } else if (($server instanceof MemcacheCacheServerConfig)) {
+        } elseif (($server instanceof MemcacheCacheServerConfig)) {
             $this->_servers[] = $server;
         } else {
-            throw new InvalidArgumentException('Server must be an array or an object');
+            throw new InvalidArgumentException('Server must be an array or a MemcacheCacheServerConfig object.');
         }
         return $this;
     }

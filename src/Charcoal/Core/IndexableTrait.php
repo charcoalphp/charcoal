@@ -23,11 +23,8 @@ trait IndexableTrait
     * @throws InvalidArgumentException $data
     * @return IndexableInterface Chainable
     */
-    protected function set_indexable_data($data)
+    protected function set_indexable_data(array $data)
     {
-        if (!is_array($data)) {
-            throw new InvalidArgumentException('Data must be an array');
-        }
         if (isset($data['id']) && $data['id'] !== null) {
             $this->set_id($data['id']);
         }
@@ -48,7 +45,7 @@ trait IndexableTrait
     public function set_id($id)
     {
         if (!is_scalar($id)) {
-            throw new InvalidArgumentException('Id argument must be scalar');
+            throw new InvalidArgumentException('ID argument must be a scalar (integer, float, string, or boolean).');
         }
 
         $key = $this->key();
@@ -59,7 +56,7 @@ trait IndexableTrait
             if (is_callable($func)) {
                 call_user_func($func, $id);
             } else {
-                throw new \Exception('Invalid key');
+                throw new \Exception('Invalid key.');
             }
         }
 
@@ -83,7 +80,7 @@ trait IndexableTrait
         if (is_callable($func)) {
             return call_user_func($func);
         } else {
-            throw new \Exception('Invalid key');
+            throw new \Exception('Invalid key.');
         }
     }
 
@@ -97,7 +94,7 @@ trait IndexableTrait
     public function set_key($key)
     {
         if (!is_scalar($key)) {
-            throw new InvalidArgumentException('Key argument must be scalar');
+            throw new InvalidArgumentException('Key argument must be scalar (integer, float, string, or boolean).');
         }
         $this->_key = $key;
 

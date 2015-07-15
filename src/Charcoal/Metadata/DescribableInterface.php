@@ -24,7 +24,7 @@ interface DescribableInterface
     * @return MetadataInterface
     */
     public function metadata();
-    
+
     /**
     * @param string $metadata_ident
     * @return MetadataInterface
@@ -64,5 +64,4 @@ interface DescribableInterface
     * @return array|PropertyInterface|null
     */
     public function p($property_ident = null);
-
 }

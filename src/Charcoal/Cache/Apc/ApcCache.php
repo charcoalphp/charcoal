@@ -6,7 +6,6 @@ use \Charcoal\Cache\AbstractCache as AbstractCache;
 
 class ApcCache extends AbstractCache
 {
-
     /**
     * @return boolean
     */
@@ -43,7 +42,7 @@ class ApcCache extends AbstractCache
             return false;
         }
         $prefix = $this->prefix();
-        $ttl = ($ttl > 0) ? $ttl : $this->config()->default_ttl();
+        $ttl = (($ttl > 0) ? $ttl : $this->config()->default_ttl());
 
         return apc_store($prefix.$key, $data, $ttl);
     }
@@ -60,7 +59,7 @@ class ApcCache extends AbstractCache
             return false;
         }
         $prefix = $this->prefix();
-        
+
         $exists = false;
         apc_fetch($prefix.$key, $exists);
         return $exists;
@@ -86,7 +85,7 @@ class ApcCache extends AbstractCache
     * Fetch, or load, multiple keys at once from the cache.
     *
     * @param array $keys The cache keys to fetch
-    * @return array The data, in an associatve array of `$key=>$data`
+    * @return array The data, in an associatve array of `$key => $data`
     */
     public function multifetch($keys)
     {

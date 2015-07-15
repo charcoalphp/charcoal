@@ -9,7 +9,7 @@ class ViewableTraitTest extends \PHPUnit_Framework_TestCase
 {
     public $obj;
 
-    static public function setUpBeforeClass()
+    public static function setUpBeforeClass()
     {
         include_once 'AbstractViewClass.php';
     }
@@ -24,22 +24,15 @@ class ViewableTraitTest extends \PHPUnit_Framework_TestCase
              ->will($this->returnValue($view));
 
         $mock->foo = 'bar';
-        $this->obj = $mock;//new ViewableClass();
+        $this->obj = $mock; // new ViewableClass();
     }
 
     public function testSetViewableData()
     {
         $obj = $this->obj;
-        $ret = $obj->set_viewable_data(
-            [
-            'template_engine'=>'php'
-            ]
-        );
+        $ret = $obj->set_viewable_data(['template_engine' => 'php']);
         $this->assertSame($ret, $obj);
         $this->assertEquals('php', $obj->template_engine());
-
-        $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_viewable_data(false);
     }
 
     public function testSetTemplateEngine()
@@ -74,6 +67,5 @@ class ViewableTraitTest extends \PHPUnit_Framework_TestCase
         $ret2 = ob_get_clean();
 
         $this->assertEquals($ret, $ret2);
-
     }
 }

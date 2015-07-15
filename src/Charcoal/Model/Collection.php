@@ -14,22 +14,24 @@ class Collection extends AbstractCollection
 {
     /**
     * Array of (ordered) objects
-    * @access private
     */
     private $_objects;
 
     /**
     * Identity Map
-    * Ensures that each object gets loaded only once by keeping every loaded object in a map. Looks up objects using the map when referring to them.
-    * @access private
+    *
+    * Ensures that each object gets loaded only once by keeping
+    * every loaded object in a map. Looks up objects using the
+    * map when referring to them.
     */
     private $_map;
 
     /**
     * ArrayAccess > offsetSet
     *
-    * Note that collection does not support setting object to a specific key (The object's ID is always used for this).
-     *
+    * Note that collection does not support setting object to a specific key
+    * (The object's ID is always used for this).
+    *
     * @param mixed $offset
     * @param mixed $value
     * @throws InvalidArgumentException if the value is not a Object or offset is set
@@ -38,13 +40,13 @@ class Collection extends AbstractCollection
     public function offsetSet($offset, $value)
     {
         if (!($value instanceof IndexableInterface)) {
-            throw new InvalidArgumentException('Collection value must be an Object');
+            throw new InvalidArgumentException('Collection value must be a IndexableInterface object.');
         }
         if ($offset === null) {
             $this->_objects[] = $value;
             $this->_map[$value->id()] = $value;
         } else {
-            throw new InvalidArgumentException('Collection can set to an offset. Use [].');
+            throw new InvalidArgumentException('Collection value can be set like an array.');
         }
     }
 
@@ -58,7 +60,7 @@ class Collection extends AbstractCollection
     {
         if (is_int($offset)) {
             return isset($this->_objects[$offset]);
-        } else if (is_string($offset)) {
+        } elseif (is_string($offset)) {
             return isset($this->_map[$offset]);
         }
     }
@@ -77,12 +79,12 @@ class Collection extends AbstractCollection
             unset($this->_objects[$offset]);
             unset($this->_map[$id]);
 
-        } else if (is_string($offset)) {
+        } elseif (is_string($offset)) {
             $pos = $this->pos($offset);
             unset($this->_map[$offset]);
             unset($this->_objects[$pos]);
         } else {
-            throw new InvalidArgumentException('Offset should be either an integer or a string');
+            throw new InvalidArgumentException('Offset should be either an integer or a string.');
         }
     }
 
@@ -96,11 +98,11 @@ class Collection extends AbstractCollection
     public function offsetGet($offset)
     {
         if (is_int($offset)) {
-            return isset($this->_objects[$offset]) ? $this->_objects[$offset] : null;
-        } else if (is_string($offset)) {
-            return isset($this->_map[$offset]) ? $this->_map[$offset] : null;
+            return (isset($this->_objects[$offset]) ? $this->_objects[$offset] : null);
+        } elseif (is_string($offset)) {
+            return (isset($this->_map[$offset]) ? $this->_map[$offset] : null);
         } else {
-            throw new InvalidArgumentException('Offset should be either an integer or a string');
+            throw new InvalidArgumentException('Offset should be either an integer or a string.');
         }
     }
 
@@ -118,11 +120,11 @@ class Collection extends AbstractCollection
         return new \ArrayIterator($this->_map);
     }
 
-
     /**
     * Countable > count
     *
-    * By implementing the Countable interface, the php count() function can be called directly on a list.
+    * By implementing the Countable interface, the PHP `count()` function
+    * can be called directly on a list.
     *
     * @return integer The number of objects in the list
     */
@@ -170,17 +172,16 @@ class Collection extends AbstractCollection
     /**
     * @param string|IndexableInterface $key
     * @throws InvalidArgumentException if the offset is not a string
-    * @return int|false
+    * @return integer|boolean
     */
     public function pos($key)
     {
         if (is_string($key)) {
             return array_search($key, array_keys($this->_map));
-        } else if ($key instanceof IndexableInterface) {
+        } elseif ($key instanceof IndexableInterface) {
             return array_search($key->id(), array_keys($this->_map));
         } else {
-            throw new InvalidArgumentException('Key must be a string or an IndexableInterface');
+            throw new InvalidArgumentException('Key must be a string or an IndexableInterface object.');
         }
-
     }
 }

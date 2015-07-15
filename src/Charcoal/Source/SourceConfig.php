@@ -22,7 +22,7 @@ class SourceConfig extends AbstractConfig
     public function default_data()
     {
         return [
-            'type'=>null
+            'type' => null
         ];
     }
 
@@ -46,7 +46,7 @@ class SourceConfig extends AbstractConfig
     public function set_type($type)
     {
         if (!is_string($type)) {
-            throw new InvalidArgumentException('Type needs to be a string');
+            throw new InvalidArgumentException('Type must be a string.');
         }
         $this->_type = $type;
         return $this;

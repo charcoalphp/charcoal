@@ -2,7 +2,6 @@
 
 namespace Charcoal\View;
 
-
 use \Mustache_Loader as Mustache_Loader;
 
 use \Charcoal\Charcoal as Charcoal;
@@ -38,7 +37,7 @@ class MustacheTemplateLoader extends FileLoader implements Mustache_Loader
     public function load($ident = null)
     {
         if ($ident === '$widget_template') {
-            $ident = isset($GLOBALS['widget_template']) ? $GLOBALS['widget_template'] : null;
+            $ident = (isset($GLOBALS['widget_template']) ? $GLOBALS['widget_template'] : null);
             if ($ident === null) {
                 return '';
             }

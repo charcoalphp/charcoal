@@ -2,12 +2,11 @@
 
 namespace Charcoal\Tests\View;
 
-
 class AbstractViewControllerTest extends \PHPUnit_Framework_TestCase
 {
     public $obj;
 
-    static public function setUpBeforeClass()
+    public static function setUpBeforeClass()
     {
         include_once 'AbstractViewControllerClass.php';
         include_once 'ContextClass.php';
@@ -21,23 +20,19 @@ class AbstractViewControllerTest extends \PHPUnit_Framework_TestCase
     public function testSetContext()
     {
         $obj = $this->obj;
-        $ret = $obj->set_context(['foo'=>'bar']);
+        $ret = $obj->set_context(['foo' => 'bar']);
         $this->assertSame($ret, $obj);
-        $this->assertEquals(['foo'=>'bar'], $obj->context());
+        $this->assertEquals(['foo' => 'bar'], $obj->context());
     }
 
     public function testAutoGetWithArrayContext()
     {
         $obj = $this->obj;
-        
+
         $this->assertEquals(null, $obj->foo);
         $this->assertNotTrue(isset($obj->foo));
 
-        $obj->set_context(
-            [
-            'foo'=>'bar'
-            ]
-        );
+        $obj->set_context(['foo' => 'bar']);
         $this->assertEquals('bar', $obj->foo);
         $this->assertEquals('bar', $obj->foo());
         $this->assertTrue(isset($obj->foo));
@@ -52,7 +47,7 @@ class AbstractViewControllerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(null, $obj->baz);
         $this->assertNotTrue(isset($obj->baz));
-        
+
         $ctx = new ContextClass();
         $ctx->set_foo('bar');
         $ctx->baz = 'test';

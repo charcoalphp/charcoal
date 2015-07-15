@@ -49,7 +49,7 @@ class StringFormat
     public function set_string($string)
     {
         if (!is_string($string)) {
-            throw new InvalidArgumentException('String must be a string');
+            throw new InvalidArgumentException('String must be a string.');
         }
         $this->_string = $string;
         return $this;
@@ -71,7 +71,7 @@ class StringFormat
     public function set_unicode($unicode)
     {
         if (!is_bool($unicode)) {
-            throw new InvalidArgumentException('Unicode must be a boolean');
+            throw new InvalidArgumentException('Unicode must be a boolean.');
         }
         $this->_unicode = $unicode;
         return $this;

@@ -64,7 +64,7 @@ trait CacheableTrait
     public function set_cache_key($cache_key)
     {
         if (!is_string($cache_key)) {
-            throw new InvalidArgumentException('Cache key must be a string');
+            throw new InvalidArgumentException('Cache key must be a string.');
         }
         $this->_cache_key = $cache_key;
         return $this;
@@ -122,7 +122,7 @@ trait CacheableTrait
     public function set_use_cache($use_cache)
     {
         if (!is_bool($use_cache)) {
-            throw new InvalidArgumentException('Use cache must be a boolean');
+            throw new InvalidArgumentException('Use cache must be a boolean.');
         }
         $this->_use_cache = $use_cache;
         return $this;
@@ -155,7 +155,7 @@ trait CacheableTrait
         if ($data === null) {
             $data = $this->cache_data();
         }
-        $ttl = ($ttl > 0) ? $ttl : $this->cache_ttl();
+        $ttl = (($ttl > 0) ? $ttl : $this->cache_ttl());
 
         return $this->cache()->store($key, $data, $ttl);
     }

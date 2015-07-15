@@ -15,8 +15,6 @@ use \Charcoal\View\ViewInterface as ViewInterface;
 */
 trait ViewableTrait
 {
-
-
     /**
     * @var string $_template_engine
     */
@@ -37,11 +35,8 @@ trait ViewableTrait
     * @throws InvalidArgumentException
     * @return ViewableTrait Chainable
     */
-    public function set_viewable_data($data)
+    public function set_viewable_data(array $data)
     {
-        if (!is_array($data)) {
-            throw new InvalidArgumentException('Data must be an array');
-        }
         if (isset($data['template_engine']) && $data['template_engine'] !== null) {
             $this->set_template_engine($data['template_engine']);
         }
@@ -59,7 +54,7 @@ trait ViewableTrait
     public function set_template_engine($engine)
     {
         if (!is_string($engine)) {
-            throw new InvalidArgumentException('Engine must be a string');
+            throw new InvalidArgumentException('Engine must be a string.');
         }
         $this->_template_engine = $engine;
         return $this;
@@ -84,7 +79,7 @@ trait ViewableTrait
     public function set_template_ident($ident)
     {
         if (!is_string($ident)) {
-            throw new InvalidArgumentException('Template ident must be a string');
+            throw new InvalidArgumentException('Template ident must be a string.');
         }
         $this->_template_ident = $ident;
         return $this;
@@ -141,8 +136,8 @@ trait ViewableTrait
     public function render($template = null)
     {
         $view_data = [
-            'template'=>$template,
-            'context'=>$this
+            'template' => $template,
+            'context'  => $this
         ];
         $this->view()->set_data($view_data);
         return $this->view()->render();
@@ -159,7 +154,7 @@ trait ViewableTrait
         }
 
         $view_data = [
-            'context'=>$this
+            'context' => $this
         ];
         $this->view()->set_data($view_data);
         return $this->view()->render_template($template_ident);

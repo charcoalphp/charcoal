@@ -20,7 +20,7 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
     {
         $obj = new Object();
         $obj->set_key('id');
-        //$this->assertEquals(null, $obj->id());
+        // $this->assertEquals(null, $obj->id());
         $this->assertTrue(true);
     }
 
@@ -41,11 +41,10 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
     public function testSetIdInvalidParameterThrowException($invalid_id)
     {
         $this->setExpectedException('\InvalidArgumentException');
-        
+
         $obj = new Object();
         $obj->set_key('id');
         $obj->set_id($invalid_id);
-
     }
 
     public function testSetIdIsChainable()
@@ -77,6 +76,4 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
             [$obj]
         ];
     }
-
 }
-

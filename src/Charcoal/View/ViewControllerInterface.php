@@ -7,7 +7,6 @@ namespace Charcoal\View;
 */
 interface ViewControllerInterface
 {
-
     /**
     * @param mixed $context
     * @return ViewControllerInterface Chainable

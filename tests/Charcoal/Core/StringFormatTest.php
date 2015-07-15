@@ -6,8 +6,6 @@ use \Charcoal\Core\StringFormat as StringFormat;
 
 class StringFormatTest extends \PHPUnit_Framework_TestCase
 {
-
-
     public function testConstructor()
     {
         $obj = new StringFormat();

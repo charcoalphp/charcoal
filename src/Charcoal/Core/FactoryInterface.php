@@ -34,7 +34,7 @@ interface FactoryInterface
     * @return boolean True if the type is available, false if not
     */
     public function is_type_available($type);
-    
+
     /**
     * Add a type to the available types
     *
@@ -42,12 +42,12 @@ interface FactoryInterface
     * @param string $class The FQN of the class
     * @return boolean Success / Failure
     */
-    static public function add_type($type, $class);
+    public static function add_type($type, $class);
 
     /**
     * Get the map of all types in `[$type => $class]` format
     *
     * @return array
     */
-    static public function types();
+    public static function types();
 }

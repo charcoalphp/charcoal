@@ -13,7 +13,6 @@ use \Charcoal\Cache\Noop\NoopCache as NoopCache;
 
 class CacheFactory extends AbstractFactory
 {
-
     /**
     * Get a cache instance from type
     *
@@ -24,17 +23,17 @@ class CacheFactory extends AbstractFactory
     public function get($type)
     {
         if (!is_string($type)) {
-            throw new InvalidArgumentException('Type (of cache) must be a string');
+            throw new InvalidArgumentException('Type (of cache) must be a string.');
         }
-        
+
         if ($type == 'apc') {
             $cache = ApcCache::instance();
-        } else if ($type == 'memcache') {
+        } elseif ($type == 'memcache') {
             $cache = MemcacheCache::instance();
-        } else if ($type == 'noop') {
+        } elseif ($type == 'noop') {
             $cache = NoopCache::instance();
         } else {
-            throw new InvalidArgumentException('Type is not a valid cache type');
+            throw new InvalidArgumentException('Type is not a valid cache type.');
         }
 
         return $cache;

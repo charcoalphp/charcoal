@@ -24,7 +24,7 @@ abstract class AbstractEncoder implements EncoderInterface
     public function set_salt($salt)
     {
         if (!is_string($salt)) {
-            throw new InvalidArgumentException('Salt must be a string');
+            throw new InvalidArgumentException('Salt must be a string.');
         }
         $this->_salt = $salt;
         return $this;

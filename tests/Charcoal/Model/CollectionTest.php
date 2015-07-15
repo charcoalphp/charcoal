@@ -22,14 +22,14 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
 
     public function testContructor()
     {
-        $collection =  new Collection();
+        $collection = new Collection();
         $this->assertInstanceOf('\Charcoal\Model\Collection', $collection);
     }
-    /*
 
+    /*
     public function testArrayAccessSet()
     {
-        $collection =  new Collection();
+        $collection = new Collection();
         $collection[] = $this->obj;
 
         $this->assertEquals($this->obj, $collection['foo']);
@@ -40,7 +40,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('\InvalidArgumentException');
 
-        $collection =  new Collection();
+        $collection = new Collection();
         $collection['bar'] = $this->obj;
     }
 
@@ -48,13 +48,13 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('\InvalidArgumentException');
 
-        $collection =  new Collection();
+        $collection = new Collection();
         $collection[] = 'foo';
     }
 
     public function testArrayAccessGet()
     {
-        $collection =  new Collection();
+        $collection = new Collection();
         $collection->add($this->obj);
 
         $this->assertSame($this->obj, $collection['foo']);
@@ -65,13 +65,13 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('\InvalidArgumentException');
 
-        $collection =  new Collection();
+        $collection = new Collection();
         $ret = $collection[null];
     }
 
     public function testArrayAccessExist()
     {
-        $collection =  new Collection();
+        $collection = new Collection();
 
         $this->assertNotTrue(isset($collection[0]));
 
@@ -82,7 +82,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
 
     public function testArrayAccessExistByKey()
     {
-        $collection =  new Collection();
+        $collection = new Collection();
 
         $this->assertNotTrue(isset($collection['foo']));
 
@@ -95,13 +95,13 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('\InvalidArgumentException');
 
-        $collection =  new Collection();
+        $collection = new Collection();
         unset($collection[null]);
     }
 
     public function testArrayAccessUnset()
     {
-        $collection =  new Collection();
+        $collection = new Collection();
         $collection[] = $this->obj;
 
         $this->assertArrayHasKey('foo', $collection->map());
@@ -111,12 +111,11 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertArrayNotHasKey('foo', $collection->map());
         $this->assertEquals(0, count($collection->objects()));
-
     }
 
     public function testArrayAccessUnsetByKey()
     {
-        $collection =  new Collection();
+        $collection = new Collection();
         $collection[] = $this->obj;
 
         $this->assertArrayHasKey('foo', $collection->map());
@@ -130,7 +129,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
 
     public function testIterator()
     {
-        $collection =  new Collection();
+        $collection = new Collection();
         $collection[] = $this->obj;
         $collection[] = $this->obj2;
 
@@ -146,7 +145,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
 
     public function testIteratorEmptyCollection()
     {
-        $collection =  new Collection();
+        $collection = new Collection();
 
         $i = 0;
         foreach($collection as $id => $obj) {
@@ -210,7 +209,8 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('\InvalidArgumentException');
 
-        $collection =  new Collection();
+        $collection = new Collection();
         $collection->pos(null);
-    }*/
+    }
+    */
 }

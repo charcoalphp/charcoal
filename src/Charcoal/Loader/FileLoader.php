@@ -11,7 +11,6 @@ use \Charcoal\Charcoal as Charcoal;
 
 class FileLoader extends AbstractLoader
 {
-
     private $_search_path = [];
 
     private $_filesystem;
@@ -53,7 +52,7 @@ class FileLoader extends AbstractLoader
     public function set_path($path)
     {
         if (!is_string($path)) {
-            throw new InvalidArgumentException('set_path() expects a string');
+            throw new InvalidArgumentException('set_path() expects a string.');
         }
         $this->_path = $path;
         return $this;

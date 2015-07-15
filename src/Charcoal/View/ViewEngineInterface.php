@@ -4,7 +4,6 @@ namespace Charcoal\View;
 
 interface ViewEngineInterface
 {
-
     /**
     * @return string
     */

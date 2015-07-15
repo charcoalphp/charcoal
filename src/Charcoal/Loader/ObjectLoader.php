@@ -85,16 +85,19 @@ class ObjectLoader extends AbstractLoader
     */
     public function load_data($ident = null)
     {
-        // @todo: The query should call the object's properties to fetch any other needed data from other tables
+        /**
+        * @todo The query should call the object's properties to fetch
+        *       any other needed data from other tables.
+        */
         $q = '
-		select
-			 *
-		from
-			`'.$this->source()->table().'`
-		where
-			`'.$this->obj()->key().'`=:ident
-		limit
-			1';
+        SELECT
+             *
+        FROM
+            `'.$this->source()->table().'`
+        WHERE
+            `'.$this->obj()->key().'`=:ident
+        LIMIT
+            1';
 
         $sth = $this->source()->db()->prepare($q);
         $sth->bindParam(':ident', $ident);

@@ -23,10 +23,10 @@ trait LoadableTrait
     {
         if (is_array($loader)) {
             $this->_loader = $this->create_loader($loader);
-        } else if (($loader instanceof LoaderInterface)) {
+        } elseif (($loader instanceof LoaderInterface)) {
             $this->_loader = $loader;
         } else {
-            throw new \InvalidArgumentException('Loader must be an array or a Loader object');
+            throw new \InvalidArgumentException('Loader must be an array or a Loader object.');
         }
         return $this;
     }

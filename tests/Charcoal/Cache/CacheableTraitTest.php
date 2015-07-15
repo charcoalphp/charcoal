@@ -8,7 +8,7 @@ class CacheableTraitTest extends \PHPUnit_Framework_TestCase
 {
     public $obj;
 
-    static public function setUpBeforeClass()
+    public static function setUpBeforeClass()
     {
         include 'CacheableClass.php';
     }

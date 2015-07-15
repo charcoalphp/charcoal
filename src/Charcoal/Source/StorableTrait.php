@@ -19,11 +19,8 @@ trait StorableTrait
     * @throws InvalidArgumentException
     * @return StorableInterface Chainable
     */
-    public function set_storable_data($data)
+    public function set_storable_data(array $data)
     {
-        if (!is_array($data)) {
-            throw new InvalidArgumentException('Data must be an array');
-        }
         if (isset($data['source']) && $data['source'] !== null) {
             $this->set_source($data['source']);
         }
@@ -130,29 +127,29 @@ trait StorableTrait
     }
 
     /**
-    * @return bool
+    * @return boolean
     */
     abstract protected function pre_save();
     /**
-    * @return bool
+    * @return boolean
     */
     abstract protected function post_save();
     /**
     * @param array $properties
-    * @return bool
+    * @return boolean
     */
     abstract protected function pre_update($properties = null);
     /**
     * @param array $properties
-    * @return bool
+    * @return boolean
     */
     abstract protected function post_update($properties = null);
     /**
-    * @return bool
+    * @return boolean
     */
     abstract protected function pre_delete();
     /**
-    * @return bool
+    * @return boolean
     */
     abstract protected function post_delete();
 }

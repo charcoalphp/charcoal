@@ -21,7 +21,6 @@ use \Charcoal\Loader\FileLoader as FileLoader;
 */
 class MetadataLoader extends FileLoader
 {
-
     /**
     * FileLoader > search_path(). Get the object's search path, merged with global configuration.
     *
@@ -86,7 +85,7 @@ class MetadataLoader extends FileLoader
         $hierarchy = null;
 
         $classname = $this->_ident_to_classname($ident);
-        //var_dump($classname);
+        // var_dump($classname);
         if (class_exists($classname)) {
             // If the object is a class, we use hierarchy from object ancestor classes
             $ident_hierarchy = [$ident];
@@ -141,7 +140,6 @@ class MetadataLoader extends FileLoader
         $filename .= '.json';
 
         return $filename;
-
     }
 
     /**
@@ -153,7 +151,8 @@ class MetadataLoader extends FileLoader
         $class = str_replace('/', '\\', $ident);
         $expl = explode('\\', $class);
         array_walk(
-            $expl, function(&$i) {
+            $expl,
+            function(&$i) {
                 $i = ucfirst($i);
             }
         );

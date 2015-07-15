@@ -64,7 +64,7 @@ class ApcCacheTest extends \PHPUnit_Framework_TestCase
         $ret = $obj->multifetch(['foo', 'baz']);
         if ($obj->enabled()) {
             // Was set in cache in `testStore`
-            $this->assertEquals(['foo'=>'bar', 'baz'=>123], $ret);
+            $this->assertEquals(['foo' => 'bar', 'baz' => 123], $ret);
         } else {
             $this->assertNotTrue($ret);
         }

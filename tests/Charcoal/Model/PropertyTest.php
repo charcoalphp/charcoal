@@ -47,13 +47,13 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
     {
         $obj = new Property();
 
-        $obj->set_data(['label'=>'foo']);
+        $obj->set_data(['label' => 'foo']);
         $this->assertEquals('foo', $obj->label());
 
         $obj->set_data(
             [
-            'val'=>'123',
-            'label'=>'bar'
+                'val'   => '123',
+                'label' => 'bar'
             ]
         );
         $this->assertEquals('123', $obj->val());
@@ -61,14 +61,14 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
 
         // Full data et
         $data = [
-            'val'=>[1, 2, 3],
-            'label'=>'baz',
-            'l10n'=>true,
-            'multiple'=>false,
-            'required'=>true,
-            'unique'=>false,
-            'hidden'=>true,
-            'active'=>false,
+            'val'      => [1, 2, 3],
+            'label'    => 'baz',
+            'l10n'     => true,
+            'multiple' => false,
+            'required' => true,
+            'unique'   => false,
+            'hidden'   => true,
+            'active'   => false
         ];
         $obj->set_data($data);
 
@@ -88,7 +88,7 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
     public function testSetVal($val)
     {
         $obj = new Property();
-        
+
         $obj->set_val($val);
         $this->assertEquals($val, $obj->val());
     }
@@ -103,7 +103,7 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
     public function testSetL10n()
     {
         $obj = new Property();
-        
+
         $obj->set_l10n(true);
         $this->assertEquals(true, $obj->l10n());
 
@@ -120,7 +120,6 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
 
         $obj = new Property();
         $obj->set_l10n($invalid);
-
     }
 
     public function testSetL10nIsChainable()
@@ -133,7 +132,7 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
     public function testSetHidden()
     {
         $obj = new Property();
-        
+
         $obj->set_hidden(true);
         $this->assertEquals(true, $obj->hidden());
 
@@ -150,7 +149,6 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
 
         $obj = new Property();
         $obj->set_hidden($invalid);
-
     }
 
     public function testSetHiddenIsChainable()
@@ -163,7 +161,7 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
     public function testSetMultiple()
     {
         $obj = new Property();
-        
+
         $obj->set_multiple(true);
         $this->assertEquals(true, $obj->multiple());
 
@@ -180,7 +178,6 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
 
         $obj = new Property();
         $obj->set_multiple($invalid);
-
     }
 
     public function testSetMultipleIsChainable()
@@ -193,7 +190,7 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
     public function testSetUnique()
     {
         $obj = new Property();
-        
+
         $obj->set_unique(true);
         $this->assertEquals(true, $obj->unique());
 
@@ -210,7 +207,6 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
 
         $obj = new Property();
         $obj->set_unique($invalid);
-
     }
 
     public function testSetUniqueIsChainable()
@@ -223,7 +219,7 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
     public function testSetRequired()
     {
         $obj = new Property();
-        
+
         $obj->set_required(true);
         $this->assertEquals(true, $obj->required());
 
@@ -240,7 +236,6 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
 
         $obj = new Property();
         $obj->set_required($invalid);
-
     }
 
     public function testSetRequiredIsChainable()
@@ -253,7 +248,7 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
     public function testSetActive()
     {
         $obj = new Property();
-        
+
         $obj->set_active(true);
         $this->assertEquals(true, $obj->active());
 
@@ -270,7 +265,6 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
 
         $obj = new Property();
         $obj->set_active($invalid);
-
     }
 
     public function testSetActiveIsChainable()
@@ -320,4 +314,3 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
         ];
     }
 }
-

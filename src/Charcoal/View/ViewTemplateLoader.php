@@ -17,7 +17,7 @@ class ViewTemplateLoader extends FileLoader
     /**
     * @var string $engine
     */
-    private $_engine = 'mustache';//= AbstractView::DEFAULT_ENGINE;
+    private $_engine = 'mustache';// = AbstractView::DEFAULT_ENGINE;
 
     /**
     * @param string $engine
@@ -27,7 +27,7 @@ class ViewTemplateLoader extends FileLoader
     public function set_engine($engine)
     {
         if (!is_string($engine)) {
-            throw new InvalidArgumentException('Engine must be a string');
+            throw new InvalidArgumentException('Engine must be a string.');
         }
         $this->_engine = $engine;
         return $this;

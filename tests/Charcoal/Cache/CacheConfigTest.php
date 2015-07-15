@@ -17,11 +17,12 @@ class CacheConfigTest extends \PHPUnit_Framework_TestCase
         $obj = new CacheConfig();
         $defaults = $obj->default_data();
 
-        /*$this->assertEquals($obj->active(), $defaults['active']);
+        /*
+        $this->assertEquals($obj->active(), $defaults['active']);
         $this->assertEquals($obj->type(), $defaults['type']);
         $this->assertEquals($obj->default_ttl(), $defaults['default_ttl']);
-        $this->assertEquals($obj->prefix(), $defaults['prefix']);*/
-
+        $this->assertEquals($obj->prefix(), $defaults['prefix']);
+        */
     }
 
     public function testSetActive()

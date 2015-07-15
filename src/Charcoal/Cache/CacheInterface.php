@@ -68,7 +68,7 @@ interface CacheInterface
     * Fetch, or load, multiple keys from the cache
     *
     * @param array $keys An array of cache keys to fetch
-    * @return array  The data, in an associatve array of `$key=>$data`
+    * @return array  The data, in an associatve array of `$key => $data`
     */
     public function multifetch($keys);
 
