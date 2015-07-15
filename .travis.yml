@@ -16,9 +16,9 @@ before_install:
   - sudo apt-get update
   - sudo apt-get -y --reinstall install imagemagick
   - printf "\n" | pecl install imagick-beta
-  -  pear install pear/PHP_CodeSniffer
+  - pear install pear/PHP_CodeSniffer
   - phpenv rehash
-  - mkdir -p tests/tmp/images
+  - mkdir -p ./tests/tmp/images
 
 before_script:
   - wget http://getcomposer.org/composer.phar
@@ -26,4 +26,4 @@ before_script:
 
 script: 
   - phpcs -vps --colors --standard=phpcs.xml src/
-  - phpunit --configuration tests/phpunit.xml
+  - phpunit --bootstrap ./tests/bootstrap.php --configuration ./tests/phpunit.xml --coverage-text
