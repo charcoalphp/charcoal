@@ -133,6 +133,7 @@ class ImagickImage extends AbstractImage
     * @param string $channel
     * @throws InvalidArgumentException
     * @return integer
+    * @todo Rename to `convert_channel()`
     */
     public function imagick_channel($channel)
     {

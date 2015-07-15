@@ -15,7 +15,7 @@ abstract class AbstractThresholdEffect extends AbstractEffect
     /**
     * @var float $_threshold
     */
-    private $_threshold = 0;
+    private $_threshold = 0.5;
 
     /**
     * @param array $data
@@ -36,8 +36,8 @@ abstract class AbstractThresholdEffect extends AbstractEffect
     */
     public function set_threshold($threshold)
     {
-        if (!is_numeric($threshold) || ($threshold < 0)) {
-            throw new InvalidArgumentException('Threshold must be a float (greater than 0)');
+        if (!is_numeric($threshold) || ($threshold < 0) || ($threshold > 1)) {
+            throw new InvalidArgumentException('Threshold must be a float between 0 and 1.');
         }
          $this->_threshold = (float)$threshold;
          return $this;
