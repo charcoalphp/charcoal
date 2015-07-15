@@ -127,7 +127,7 @@ class ImagickImageTest extends \PHPUnit_Framework_Testcase
             [['type'=>'blur', 'radius'=>5, 'sigma'=>15], 'blur-strong.png'],
             [['type'=>'blur', 'mode'=>'adaptive', 'radius'=>5, 'sigma'=>15], 'blur-adaptive-strong.png'],
             [['type'=>'blur', 'mode'=>'gaussian', 'radius'=>5, 'sigma'=>15], 'blur-gaussian-strong.png'],
-            [['type'=>'blur', 'mode'=>'radial', 'radius'=>5, 'sigma'=>15], 'blur-radial-strong.png'],
+            [['type'=>'blur', 'mode'=>'radial', 'angle'=>8], 'blur-radial-8.png'],
             [['type'=>'blur', 'mode'=>'motion', 'radius'=>5, 'sigma'=>15, 'angle'=>45], 'blur-motion-strong.png'],
             [['type'=>'dither'], 'dither-default.png'],
             [['type'=>'dither', 'colors'=>3], 'dithers-3colors.png'],
@@ -141,6 +141,7 @@ class ImagickImageTest extends \PHPUnit_Framework_Testcase
             [['type'=>'modulate', 'luminance'=>20, 'hue'=>-20, 'saturation'=>40], 'modulate-hsl.png'],
             // Resize
             [['type'=>'resize', 'width'=>400], 'resize-width-400.png'],
+            [['type'=>'resize', 'height'=>1200], 'resize-height-1200.png'],
             [['type'=>'resize', 'mode'=>'best_fit', 'width'=>300, 'height'=>300], 'resize-bestfit-300.png'],
             [['type'=>'revert'], 'revert-default.png'],
             [['type'=>'revert', 'channel'=>'red'], 'revert-red.png'],

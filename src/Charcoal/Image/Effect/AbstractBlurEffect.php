@@ -182,7 +182,7 @@ abstract class AbstractBlurEffect extends AbstractEffect
         }
 
         $mode = $this->mode();
-        switch($mode) {
+        switch ($mode) {
             case 'adaptive':
                 return $this->process_adaptive();
             //break;

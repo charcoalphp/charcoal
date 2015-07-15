@@ -43,8 +43,11 @@ class ImagickBlurEffect extends AbstractBlurEffect
     */
     public function process_radial()
     {
+        $angle = $this->angle();
         $channel = $this->image()->imagick_channel($this->channel());
-        $this->image()->imagick()->radialBlurImage($this->angle(), $channel);
+        //$this->image()->imagick()->radialBlurImage(($angle-2), $channel);
+        $this->image()->imagick()->radialBlurImage(($angle), $channel);
+        //$this->image()->imagick()->radialBlurImage(($angle+2), $channel);
         return $this;
     }
     

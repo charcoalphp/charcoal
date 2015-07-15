@@ -251,7 +251,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
             return;
         }
 
-        switch($mode) {
+        switch ($mode) {
             case 'exact':
                 if (($this->width() <= 0) || ($this->height() <= 0)) {
                     throw new Exception('Missing parameters to perform exact resize');
