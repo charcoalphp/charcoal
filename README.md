@@ -3,8 +3,9 @@ Charcoal Image
 
 Charcoal Image is a PHP image manipulation and processing library, currently built on top of `imagick`. 
 
+[![Build Status](https://travis-ci.org/locomotivemtl/charcoal-image.svg?branch=master)](https://travis-ci.org/locomotivemtl/charcoal-image)
 
-## How to install
+# How to install
 
 The preferred way of installing this module is with `composer`. Using composer, an autoloader is provided automatically with `PSR-4` so there is no further requirement.
 
@@ -20,9 +21,9 @@ $ composer require locomotivemtl/charcoal-image
 
 > 👉 Although this module was developped for `Charcoal`, there is absolutely no dependencies on any Charcoal modules and can therefore be used in any PHP project.
 
-## Usage
+# Usage
 
-### With `set_data()`
+## With `set_data()`
 
 ```php
 $img = new \Charcoal\Image\Imagick\ImagickImage();
@@ -45,7 +46,7 @@ $img->process();
 $img->save();
 ```
 
-### With magic (`__call()`) methods
+## With magic (`__call()`) methods
 
 ```php
 use \Charcoal\Image\Imagick\ImagickImage as Image;
@@ -62,7 +63,7 @@ $img->blur([
 $img->save();
 ```
 
-#### Chainable version
+### Chainable version
 
 Also shown: using the `ImageFactory` constructor method:
 ```php
@@ -84,31 +85,30 @@ $img->open('example.png')
   ->save('modified-target.png');
 ```
 
-## Available effects / operations
+# Available effects / operations
 
 Any image operation is called an "effect" and implements the `\Charcoal\Image\EffectInterface` interface.
 
 The available effects are:
-- Blur
-- Dither
-- Grayscale
-- Mask
-- Mirror
-- Modulate
-- Resize
-- Revert
-- Rotate
-- Sepia
-- Sharpen
-- Threshold
-- Tint
-- Watermark
+- [Blur](#blur-effect)
+- [Dither](#dither-effect)
+- [Grayscale](#grayscale-effect)
+- [Mask](#mask-effect)
+- [Mirror](#mirror-effect)
+- [Modulate](#modulate-effect)
+- [Resize](#resize-effect)
+- [Revert](#revert-effect)
+- [Rotate](#rotate-effect)
+- [Sepia](#sepia-effect)
+- [Sharpen](#sharpen-effect)
+- [Threshold](#threshold-effect)
+- [Tint](#tint-effect)
+- [Watermark](#watermark-effect)
 
-
-### Blur Effect
+## Blur Effect
 **Blurs an image**
 
-#### Options
+### Options
 - `mode` (_string_)
   - The type of blur to apply. Possible valures are: `standard`, `adaptive`, gaussian`, `motion`, `radial`, `soft` (Currently unsupported)
 - `radius` (_float_)
@@ -124,51 +124,61 @@ The available effects are:
 - `angle` (_float_)
   - The angle of the blur. Only used in `motion` or `radial` mode.
   - Default is `0`.
-  - 
 
-#### Modes
+### Blur Modes
 - `standard`
+  - Perform a standard blur operation on the image.
 - `adaptive`
+  - Perform an adaptive blur on the image. 
+  - The intensity of an adaptive blur depends is dramatically decreased at edge of the image, whereas a standard blur is uniform across the image. 
 - `gaussian`
+  - Perform a gaussian blur on the image.
 - `motion`
+  - Simulate a motion blur effect on the image.
+  - The "direction" of the blur is determined by the `angle` paramter. 
 - `radial`
+  - Perform a radial (circular) blur on the image. 
+  - The `angle` argument is the angle the radial-blur coversThat is half that angle in each direction from the original image. So an angle of 180 is over a half circle, while 360 degrees will blur the image in a full circle.
+  - The `sigma` and `radius` parameters are ignored in this mode.
 - `soft`
+  - Blend the blur with the original image.
+  - Unsupported for now. 
 
-### Dither Effect
+## Dither Effect
 **Reduces an image's colors to a certain number, using dithering.**
 
-#### Options
+### Options
 - `colors` (_int_)
   - The number of colors to reduce to
 
-### Grayscale Effect
+## Grayscale Effect
 **Converts an image's colors to a 256-colors greyscale. There are no options.**
 
-#### Options
+### Options
 - _none_
 
-### Mask Effect
+## Mask Effect
 **Apply a 8-bit transparency mask to the image.**
 
-#### Options
+### Options
 - `mask` (_string_)
 - `opacity` (_float_)
 - `gravity` (_string_)
 - `x` (_integer_)
 - `y` (_integer_)
 
-### Mirror Effect
+## Mirror Effect
 **Flip an image horizontally or vertically.**
 
-#### Options
+### Options
  - `axis` (_string_)
    - The axis can be "x" (flip) or "y" (flop). 
    - Default is "y".
 
-### Modulate Effect
+## Modulate Effect
 **Modifies an image's colors in the special HSL (hue-saturation-luminance) colorspace.**
 
-#### Options
+### Options
 - `hue` (_float_)
   - The **color tint** value, between -100 and 100.
   - Default is `0` (no effect)
@@ -179,10 +189,10 @@ The available effects are:
   - The **brightness** value, between -100 and 100.
   - Default is `0` (no effect)
 
-### Resize Effect
+## Resize Effect
 **Resize an image to given dimensions.**
 
-#### Options
+### Options
 - `mode` (_string_)
   - The type of resize operation to perform 
   - Valid modes are: `auto`, `exact`, `width`, `height`, `best_fit`, `crop`, `fill` or `none`.
@@ -204,26 +214,36 @@ The available effects are:
   - Default is _transparent-white_ (`rgb(100%, 100%, 100%, 0)`)
 - `adaptive`
   
-#### Resize Modes
+### Resize Modes
 - `auto`
+  - Auto-determined from effect options.
 - `exact`
+  - Resize to an exact width and height (ignoring original ratio). 
 - `width`
+  - Resize to an exact width, keeping aspect ratio.
+  - In this mode, the `width` parameter is required and the `height` parameter is ignored.
 - `height`
+  - Resize to an exact height, keeping aspect ratio.
+  - In this mode, the `width` parameter is required and the `height` parameter is ignored.
 - `best_fit`
+  - Resize to the maximum `width` or `height`, keeping aspect ratio. 
 - `crop`
+  - Resize to the best match possible (oversized) to keep ratio and crop the superfluous data.
 - `fill`
+  - Resize to the best match possible (undersize) to keep ratio and fill the superfluous area with the `background_color`.
 - `none`
+  - Ignore resize operation entirely (do nothing) 
 
-### Revert
+## Revert Effect
 **Revert (negate) the image's colors.**
 
-#### Options
+### Options
 - `channel` (_string_)
 
-### Rotate
+## Rotate Effect
 **Rotate the image by a certain angle.**
 
-#### Options
+### Options
 - `angle` (_float_)
     - The angle of rotation, in degrees (clockwise).
     - Note that the dimension of the image can be modified if it is not square or if the angle is not a multiple of 90 degrees.
@@ -235,35 +255,51 @@ The available effects are:
     - Can be specified as hexadecimal ("#FF00FF"), RGB values ("rgb(255,0,255)") or color name ("red").
     - Default is _transparent-white_ (`rgb(100%, 100%, 100%, 0)`)
 
-### Sepia
+## Sepia Effect
 **Tint the image with a vintage, sepia look**
 
-#### Options
+### Options
 - `threshold` (_float_)
   - The level of the sepia tone effect.
   - Default is `75`.
 
-### Sharpen
+## Sharpen Effect
 **Sharpen an image, with a simple sharpen algorithm or unsharp mask options.**
 
-#### Options
-- `mode`
-- `radius`
-- `sigma`
-- `amount`
-- `threshold`
+### Options
+- `mode` (_string_)
+  - Can be `standard`, `adaptive` or `unsharp` 
+- `radius` (_float_)
+  - The sharpen radius 
+  - Default is `0`.
+- `sigma` (_float_)
+  - Default is `1`. 
+- `amount` (_float_)
+  - The amount (or _gain_) to unsharp.
+  - Only used in `unsharp` mode.
+  - Default is `1` 
+- `threshold` (_float_)
+  - Only used in `unsharp` mode. 
+  - Default is `0.05` 
 - `channel`
 
-### Threshold
+### Sharpen Modes
+- `standard`
+  - Perform a simple, standard sharpen operation on the image.
+- `adaptive`
+- `unsharp`
+  - Sharpen the image with a more complex   
+
+## Threshold
 **Convert the image to monochrome (black and white).**
 
-#### Options
+### Options
 - `threshold` (_float_)
 
-### Tint 
+## Tint Effect
 **Tint (or colorize) an image with a certain color.**
 
-#### Options
+### Options
 - `color` (_string_)
     - Color to blend unto the image.
     - Can be specified as hexadecimal ("#FF00FF"), RGB values ("rgb(255,0,255)") or color name ("red").
@@ -276,17 +312,17 @@ The available effects are:
     - Technically, true call the _tint_ function while false calls the _colorize_ function.
     - Default is `true`.
 
-### Watermark
+## Watermark Effect
 **Composite a watermark on top of the image.**
 
-#### Options
+### Options
 - `watermark` (_string_)
 - `opacity` (_float_)
 - `gravity` (_string_)
 - `x` (_integer_)
 - `y` (_integer_)
 
-### Future Effects
+## Future Effects
 These effects are available in the `imagick` library and therefore could easily be added:
 - `Charcoal`
 - `Chop`
@@ -305,13 +341,14 @@ These effects are available in the `imagick` library and therefore could easily 
 
 ## Development
 
-### Coding Style
+## Coding Style
 
 All Charcoal modules follow the same coding style and `charcoal-core` is no exception. For PHP:
 
 - [_PSR-1_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md), except for
   - Method names MUST be declared in `snake_case`.
-- [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
+- [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md), except for
+  - Private variables SHOULD be prefixed with a single underscore to indicate protected or private visibility. 
 - [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md), autoloading is therefore provided by _Composer_
 - [_phpDocumentor_](http://phpdoc.org/)
 - Arrays should be written in short notation (`[]` instead of `array()`)
@@ -322,7 +359,7 @@ Coding styles are  enforced with `grunt phpcs` ([_PHP Code Sniffer_](https://git
 
 The main PHP structure follow the [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md) standard. Autoloading is therefore provided by _Composer_.
 
-### Automated Checks
+## Automated Checks
 
 Most quality checker tools can be run with _Grunt_. They are:
 
@@ -333,13 +370,13 @@ All three tools can also be run from `grunt watch`.
 
 To ensure a clean code base, pre-commit git hooks should be installed on all development environments.
 
-### Continuous Integration
+## Continuous Integration
 
 - [Travis](https://travis-ci.org/)
 - [Scrutinizer](https://scrutinizer-ci.com/)
 - [Code Climate](https://codeclimate.com/)
 
-### Unit Tests
+## Unit Tests
 
 Every class, method, and function should be covered by unit tests. PHP code can be tested with [_PHPUnit_](https://phpunit.de/).
 
