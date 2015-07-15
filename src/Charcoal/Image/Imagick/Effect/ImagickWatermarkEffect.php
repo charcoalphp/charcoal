@@ -36,7 +36,7 @@ class ImagickWatermarkEffect extends AbstractWatermarkEffect
         $x = $this->x();
         $y = $this->y();
         $composite_mode = Imagick::COMPOSITE_MULTIPLY;
-        $this->image()->imagick()->compositeImage($watermark->imagick(), $composite_mode, $x, $y;
+        $this->image()->imagick()->compositeImage($watermark->imagick(), $composite_mode, $x, $y);
 
         //throw new Exception('Watermark effect is not (yet) supported with imagick driver.');
 
