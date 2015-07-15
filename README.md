@@ -22,7 +22,8 @@ $ composer require locomotivemtl/charcoal-core
 Charcoal depends on:
 
 - **PHP** 5.5+
-  - with [_PHP Generators_](http://php.net/generators) and the [`password_hash`](http://php.net/password-hash) methods.
+  - with [_PHP Generators_](http://php.net/generators).
+  - [`slim`](http://www.slimframework.com/), [`mustache`](https://github.com/bobthecow/mustache.php), [`monolog`](https://github.com/Seldaek/monologm/) (see [`composer.json`](composer.json) for details)
 - **MySQL**
   - with [_PDO_](http://php.net/pdo)
   - Other databases are currently not supported
@@ -35,10 +36,7 @@ Charcoal uses:
 
 - [**Composer**](http://getcomposer.org/) is the preferred way of installing Charcoal modules and projects.
 - [**Grunt**](http://gruntjs.com/) is used to build the assets from source and also to run various scripts (linters, unit tests) automatically.
-  - The CSS is generated with [(lib)Sass](http://sass-lang.com/libsass)
-- [**Bower**](http://bower.io/) is used for managing external dependencies.
 - [**NPM**](https://npmjs.com/) is needed for Bower and Grunt.
-
 
 ## Table of Contents
 
@@ -88,10 +86,23 @@ All Charcoal modules follow the same coding style and `charcoal-core` is no exce
 
 - [_PSR-1_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md), except for
   - Method names MUST be declared in `snake_case`.
-- [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
+- [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md), except for
+  - Property names MAY be prefixed with a single, or double, underscore to indicate protected or private visibility;
+  - Method names MAY be prefixed with a single, or double, underscore to indicate protected or private visibility.
 - [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md), autoloading is therefore provided by _Composer_
 - [_phpDocumentor_](http://phpdoc.org/)
-- Arrays should be written in short notation (`[]` instead of `array()`)
+  - Add DocBlocks for all classes, methods, and functions;
+  - For type-hinting, use `boolean` (instead of `bool`), `integer` (instead of `int`), `float` (instead of `double` or `real`);
+  - Omit the `@return` tag if the method does not return anything.
+- Naming conventions
+  - Use `snake_case`, not `camelCase`, for variable, option, parameter, argument, function, and method names;
+  - Prefix abstract classes with `Abstract`;
+  - Suffix interfaces with `Interface`;
+  - Suffix traits with `Trait`;
+  - Suffix exceptions with `Exception`;
+  - For type-hinting, use `int` (instead of `integer`) and `bool` (instead of `boolean`);
+  - For casting, use `int` (instead of `integer`) and `!!` (instead of `bool` or `boolean`);
+  - For arrays, use `[]` (instead of `array()`).
 
 Coding styles are  enforced with `grunt phpcs` ([_PHP Code Sniffer_](https://github.com/squizlabs/PHP_CodeSniffer)). The actual ruleset can be found in `phpcs.xml`.
 
