@@ -2,7 +2,9 @@
 
 namespace Charcoal\Validator;
 
-use \Datetime as Datetime;
+use \DateTime as DateTime;
+use \DateTimeInterface as DateTimeInterface;
+use \InvalidArgumentException as InvalidArgumentException;
 
 /**
 * A Validator Result object.
@@ -65,13 +67,13 @@ class ValidatorResult
 
     /**
     * @param string $ident
-    * @throws \InvalidArgumentException if parameter is not valid
+    * @throws InvalidArgumentException if parameter is not valid
     * @return ValidatorResult
     */
     public function set_ident($ident)
     {
         if (!is_string($ident)) {
-            throw new \InvalidArgumentException('Ident must be a string.');
+            throw new InvalidArgumentException('Ident must be a string.');
         }
         $this->ident = $ident;
         return $this;
@@ -87,16 +89,16 @@ class ValidatorResult
 
     /**
     * @param string $level
-    * @throws \InvalidArgumentException if parameter is not valid
+    * @throws InvalidArgumentException if parameter is not valid
     * @return ValidatorResult
     */
     public function set_level($level)
     {
         if (!is_string($level)) {
-            throw new \InvalidArgumentException('Level must be a string.');
+            throw new InvalidArgumentException('Level must be a string.');
         }
         if (!in_array($level, ['notice', 'warning', 'error'])) {
-            throw new \InvalidArgumentException('Level can only be notice, warning or error.');
+            throw new InvalidArgumentException('Level can only be notice, warning or error.');
         }
         $this->level = $level;
         return $this;
@@ -112,13 +114,13 @@ class ValidatorResult
 
     /**
     * @param string $message
-    * @throws \InvalidArgumentException if parameter is not valid
+    * @throws InvalidArgumentException if parameter is not valid
     * @return ValidatorResult
     */
     public function set_message($message)
     {
         if (!is_string($message)) {
-            throw new \InvalidArgumentException('Message must be a string.');
+            throw new InvalidArgumentException('Message must be a string.');
         }
         $this->message = $message;
         return $this;
@@ -133,17 +135,17 @@ class ValidatorResult
     }
 
     /**
-    * @param string|Datetime $ts
-    * @throws \InvalidArgumentException if parameter is not valid
+    * @param string|DateTime $ts
+    * @throws InvalidArgumentException if parameter is not valid
     * @return ValidatorResult
     */
     public function set_ts($ts)
     {
         if (is_string($ts)) {
-            $ts = new Datetime($ts);
+            $ts = new DateTime($ts);
         }
-        if (!($ts instanceof Datetime)) {
-            throw new \InvalidArgumentException('TS must be a datetime / valid string.');
+        if (!($ts instanceof DateTimeInterface)) {
+            throw new InvalidArgumentException('Invalid "Timestamp" value. Must be a date/time string or a DateTime object.');
         }
         $this->ts = $ts;
         return $this;

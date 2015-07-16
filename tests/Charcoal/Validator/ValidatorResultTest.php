@@ -71,7 +71,7 @@ class ValidatorResultTest extends \PHPUnit_Framework_TestCase
         $ret = $obj->set_ts('2015-01-01 00:00:00');
         $this->assertSame($ret, $obj);
 
-        $this->assertInstanceOf('\Datetime', $obj->ts());
+        $this->assertInstanceOf('\DateTime', $obj->ts());
 
         $this->setExpectedException('\InvalidArgumentException');
         $obj->set_ts(false);
