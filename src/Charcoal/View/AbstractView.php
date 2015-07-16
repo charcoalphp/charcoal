@@ -376,14 +376,16 @@ abstract class AbstractView implements ViewInterface
     protected function _ident_to_classname($ident)
     {
         $class = str_replace('/', '\\', $ident);
-        $expl = explode('\\', $class);
+        $expl  = explode('\\', $class);
+
         array_walk(
             $expl,
             function(&$i) {
                 $i = ucfirst($i);
             }
         );
-        $class = '\\'.implode('\\', $expl);
+
+        $class = '\\'.ltrim( implode('\\', $expl), '\\' );
         return $class;
     }
 
