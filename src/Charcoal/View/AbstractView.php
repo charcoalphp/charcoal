@@ -34,14 +34,36 @@ abstract class AbstractView implements ViewInterface
     */
     private $_engine = self::DEFAULT_ENGINE;
 
+    /**
+    * @var string $_template
+    */
     private $_template;
+
+    /**
+    * @var mixed $_context;
+    */
     private $_context;
 
+    /**
+    * @var ViewControllerInterface $_controlle
+    */
     protected $_controller;
 
+    /**
+    * @var array $_js_requirements
+    */
     static private $_js_requirements = [];
+    /**
+    * @var string $_js
+    */
     static private $_js = '';
+    /**
+    * @var array $_css_requirements
+    */
     static private $_css_requirements = [];
+    /**
+    * @var string $_css;
+    */
     static private $_css = '';
 
     /**
@@ -385,7 +407,7 @@ abstract class AbstractView implements ViewInterface
             }
         );
 
-        $class = '\\'.ltrim( implode('\\', $expl), '\\' );
+        $class = '\\'.ltrim(implode('\\', $expl), '\\');
         return $class;
     }
 

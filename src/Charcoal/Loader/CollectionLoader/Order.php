@@ -11,8 +11,6 @@ class Order
     const MODE_RANDOM = 'rand';
     const MODE_VALUES = 'values';
 
-    private $_parent_loader;
-
     /**
     * @var string
     */
@@ -30,6 +28,9 @@ class Order
     */
     private $_values;
 
+    /**
+    * @var boolean $_active
+    */
     private $_active = true;
 
     /**

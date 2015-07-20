@@ -32,8 +32,15 @@ class Filter
     */
     private $_operand = self::DEFAULT_OPERAND;
 
+    /**
+    * @var string $_string
+    */
     private $_string;
 
+    /**
+    * Inactive filter should be skipped completely.
+    * @var boolean $_active
+    */
     private $_active;
 
     /**

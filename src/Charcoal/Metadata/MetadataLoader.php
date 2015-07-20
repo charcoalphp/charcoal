@@ -158,7 +158,7 @@ class MetadataLoader extends FileLoader
             }
         );
 
-        $class = '\\'.ltrim( implode('\\', $expl), '\\' );
+        $class = '\\'.ltrim(implode('\\', $expl), '\\');
         return $class;
     }
 

@@ -5,33 +5,81 @@ namespace Charcoal;
 use \Exception as Exception;
 use \InvalidArgumentException as InvalidArgumentException;
 
+// From `charcoal-core`
 use \Charcoal\Config\AbstractConfig as AbstractConfig;
 
-class Config extends AbstractConfig implements \ArrayAccess
+/**
+* Main project configuration
+*
+* The default data values is set from the JSON file locate at
+* - `../../config/config.default.json`
+*/
+class Config extends AbstractConfig
 {
     const DEFAULT_APPLICATION_ENV = 'live';
 
+    /**
+    * @var string $ROOT
+    */
     public $ROOT;
+
+    /**
+    * @var string $URL
+    */
     public $URL;
 
+    /**
+    * The path of the `admin` module, if set.
+    * @var string $_admin_path
+    */
     private $_admin_path;
 
+    /**
+    * The project name
+    * @var string $_project_name
+    */
     private $_project_name;
+
+    /**
+    * Extra debugging informations might be had when dev_mode is true.
+    * @var boolean $_dev_mode
+    */
     private $_dev_mode;
 
+    /**
+    * @var string $_timezone
+    */
     private $_timezone;
 
-    public $_salt;
-
-    public $cache;
-
+    /**
+    * Available database pool in project
+    * @var array $_databases
+    * @see \Charcoal\Source\DatabaseSourceConfig
+    */
     private $_databases;
+    /**
+    * Default database identifier
+    * @var string $_default_database
+    */
     private $_default_database;
 
+    /**
+    * List of path where to search for metadata.
+    * (ex: Model metadata as json config)
+    * @var array $_metadata_path
+    */
     private $_metadata_path = [];
+
+    /**
+    * List of path where to search for view templates.
+    * (ex: templates, widgets and property inputs "mustache" templates)
+    * @var array $_template_path
+    */
     private $_template_path = [];
 
     /**
+    * The Config class is always extended with the default JSON config, from charcoal-core.
+    *
     * @param mixed $config
     */
     public function __construct($config = null)
@@ -137,15 +185,10 @@ class Config extends AbstractConfig implements \ArrayAccess
     */
     public function project_name()
     {
-        return $this->project_name;
-    }
-
-    /**
-    * @return string
-    */
-    public function salt()
-    {
-        return $this->_salt;
+        if ($this->_project_name === null) {
+            $this->_project_name = $this->url();
+        }
+        return $this->_project_name;
     }
 
     /**

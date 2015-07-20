@@ -16,13 +16,39 @@ use \Charcoal\Loader\CollectionLoader\Pagination as Pagination;
 */
 class CollectionLoader extends AbstractLoader
 {
+    /**
+    * @var array $_properties
+    */
     private $_properties = [];
+    /**
+    * @var array $_properties_options
+    */
     private $_properties_options = [];
+    /**
+    * Array of `Filter` objects
+    * @var array $_filters
+    */
     private $_filters = [];
+    /**
+    * Array of `Order` object
+    * @var array $_orders
+    */
     private $_orders = [];
+    /**
+    * The `Pagniation` object
+    * @var Pagination|null $_pagination
+    */
     private $_pagination = null;
 
+    /**
+    * The source to load the object from
+    * @var SourceInterface $_source
+    */
     private $_source = null;
+    /**
+    * The model to load the collection from
+    * @var ModelInterface $_model
+    */
     private $_model = null;
 
     /**

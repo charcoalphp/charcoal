@@ -17,13 +17,14 @@ use \Charcoal\Cache\Memcache\MemCacheCacheServerConfig as MemCacheCacheServerCon
 class MemcacheCache extends AbstractCache
 {
     /**
-    * @var boolean $_enabled
+    * @var boolean|null $_enabled
     */
-    private $_enabled;
+    private $_enabled = null;
     /**
     * Copy ot the Memcache object
+    * @var Memcache|null $_memcache
     */
-    private $_memcache;
+    private $_memcache = null;
 
     /**
     * @throws Exception

@@ -11,9 +11,21 @@ use \InvalidArgumentException as InvalidArgumentException;
 */
 trait CacheableTrait
 {
+    /**
+    * @var CacheInterface $_cache
+    */
     private $_cache;
+    /**
+    * @var string $_cache_key
+    */
     private $_cache_key;
+    /**
+    * @var integer $_cache_ttl
+    */
     private $_cache_ttl;
+    /**
+    * @var boolean $_use_cache
+    */
     private $_use_cache = true;
 
     /**

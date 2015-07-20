@@ -32,6 +32,9 @@ class Object extends Model implements IndexableInterface
 
     const DEFAULT_KEY = 'id';
 
+    /**
+    * @var boolean $_active
+    */
     private $_active = true;
 
     /**

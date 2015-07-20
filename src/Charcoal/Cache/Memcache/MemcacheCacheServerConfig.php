@@ -4,11 +4,28 @@ namespace Charcoal\Cache\Memcache;
 
 use \Charcoal\Config\AbstractConfig as AbstractConfig;
 
+/**
+* Memcache Cache Server Config
+*
+* Defines a memcache server configuration.
+*/
 class MemcacheCacheServerConfig extends AbstractConfig
 {
+    /**
+    * @var string $_host
+    */
     public $_host;
+    /**
+    * @var integer $_port
+    */
     public $_port;
+    /**
+    * @var boolean $_persistent
+    */
     public $_persistent;
+    /**
+    * @var integer $_weight
+    */
     public $_weight;
 
     /**

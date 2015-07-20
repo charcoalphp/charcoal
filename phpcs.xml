@@ -104,10 +104,7 @@
     <!-- Checks to ensure that there are no comments after statements (on same line, after ;) -->
     <!--<rule ref="Squiz.Commenting.PostStatementComment" />-->
     <!-- Variable commenting rules -->
-    <!--<rule ref="Squiz.Commenting.VariableComment" />-->
-    <!--<rule ref="Squiz.Commenting.VariableComment.ShortFullStop">
-        <severity>0</severity>
-    </rule>-->
+    <rule ref="Squiz.Commenting.VariableComment" />
 
 <!-- Control Structures Sniffs -->
 

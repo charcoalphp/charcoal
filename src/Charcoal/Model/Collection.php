@@ -14,6 +14,7 @@ class Collection extends AbstractCollection
 {
     /**
     * Array of (ordered) objects
+    * @var array $_objects
     */
     private $_objects;
 
@@ -23,6 +24,7 @@ class Collection extends AbstractCollection
     * Ensures that each object gets loaded only once by keeping
     * every loaded object in a map. Looks up objects using the
     * map when referring to them.
+    * @var array $_map
     */
     private $_map;
 

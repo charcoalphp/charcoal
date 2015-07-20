@@ -2,8 +2,15 @@
 
 namespace Charcoal\Core;
 
+/**
+*
+*/
 abstract class AbstractFactory implements FactoryInterface
 {
+    /**
+    * Keep latest instance, as singleton copy.
+    * @var AbstractFactory $instance
+    */
     static protected $instance;
 
     /**
@@ -148,9 +155,19 @@ abstract class AbstractFactory implements FactoryInterface
     */
     public function ident_to_classname($ident)
     {
+        // Change "foo-bar" to "fooBar"
+        $expl = explode('-', $ident);
+        array_walk(
+            $expl,
+            function(&$i) {
+                $i = ucfirst($i);
+            }
+        );
+        $ident = implode('', $expl);
+
+        // Change "/foo/bar" to "\Foo\Bar"
         $class = str_replace('/', '\\', $ident);
         $expl  = explode('\\', $class);
-
         array_walk(
             $expl,
             function(&$i) {
@@ -158,7 +175,7 @@ abstract class AbstractFactory implements FactoryInterface
             }
         );
 
-        $class = '\\'.ltrim( implode('\\', $expl), '\\' );
+        $class = '\\'.ltrim(implode('\\', $expl), '\\');
         return $class;
     }
 }

@@ -12,7 +12,8 @@ use \Charcoal\Validator\ValidatorInterface as ValidatorInterface;
 trait ValidatableTrait
 {
     /**
-    * @return string
+    * In-objet copy of the `ValidatorInterface` validator object
+    * @var ValidatorInterface $_validator
     */
     protected $_validator;
 

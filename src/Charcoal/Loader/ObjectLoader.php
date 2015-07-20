@@ -4,8 +4,17 @@ namespace Charcoal\Loader;
 
 class ObjectLoader extends AbstractLoader
 {
+    /**
+    * @var string $_ident
+    */
     private $_ident = '';
+    /**
+    * @var ModelInterface $_obj
+    */
     private $_obj;
+    /**
+    * @var SourceInterface $_source
+    */
     private $_source;
 
     /**

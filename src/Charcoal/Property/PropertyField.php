@@ -5,12 +5,18 @@ namespace Charcoal\Property;
 use \InvalidArgumentException as InvalidArgumentException;
 use \PDO as PDO;
 
+// From `charcoal-core`
+use \Charcoal\Tranlsation\TranslationString;
+
 class PropertyField
 {
     /**
-    * @var string
+    * @var string $_ident
     */
     private $_ident;
+    /**
+    * @var TranslationString $_label
+    */
     private $_label;
     /**
     * @var string
@@ -24,8 +30,17 @@ class PropertyField
     * @var string
     */
     private $_extra;
+    /**
+    * @var mixed $_val
+    */
     private $_val;
+    /**
+    * @var mixed $_default_val
+    */
     private $_default_val;
+    /**
+    * @var boolean $_allow_null
+    */
     private $_allow_null;
 
     /**
@@ -89,7 +104,7 @@ class PropertyField
     */
     public function set_label($label)
     {
-        $this->_label = $label;
+        $this->_label = new TranslationString($label);
         return $this;
     }
 

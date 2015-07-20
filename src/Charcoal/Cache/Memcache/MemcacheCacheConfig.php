@@ -7,8 +7,17 @@ use \InvalidArgumentException as InvalidArgumentException;
 use \Charcoal\Cache\CacheConfig as CacheConfig;
 use \Charcoal\Cache\Memcache\MemcacheCacheServerConfig;
 
+/**
+* Memcache Cache Config
+*
+* Extends the `CacheConfig` class with an available `servers` pool array
+*/
 class MemcacheCacheConfig extends CacheConfig
 {
+    /**
+    * Pool of available serer, as `MemcacheCacheServerConfig` objects.
+    * @var array $_servers
+    */
     private $_servers = [];
 
     /**

@@ -4,17 +4,18 @@ namespace Charcoal\Loader;
 
 use \InvalidArgumentException as InvalidArgumentException;
 
-use League\Flysystem\Filesystem;
-use League\Flysystem\Adapter\Local as LocalAdapter;
-
 use \Charcoal\Charcoal as Charcoal;
 
 class FileLoader extends AbstractLoader
 {
+    /**
+    * @var array $_search_path
+    */
     private $_search_path = [];
 
-    private $_filesystem;
-
+    /**
+    * @var string $_path
+    */
     private $_path;
 
     /**
@@ -67,18 +68,6 @@ class FileLoader extends AbstractLoader
             return '';
         }
         return $this->_path;
-    }
-
-    /**
-    * @return Filesystem
-    */
-    public function filesystem()
-    {
-        if ($this->_filesystem === null) {
-            $adapter = new LocalAdapter($this->path());
-            $this->_filesystem = new Filesystem($adapter);
-        }
-        return $this->_filesystem;
     }
 
     /**

@@ -16,7 +16,13 @@ class ModelMetadata extends AbstractMetadata implements \ArrayAccess
      */
     private $_ident;
 
+    /**
+    * @var array $_sources
+    */
     private $_sources;
+    /**
+    * @var string $_default_source
+    */
     private $_default_source;
 
     /**

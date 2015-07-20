@@ -145,7 +145,9 @@ class ValidatorResult
             $ts = new DateTime($ts);
         }
         if (!($ts instanceof DateTimeInterface)) {
-            throw new InvalidArgumentException('Invalid "Timestamp" value. Must be a date/time string or a DateTime object.');
+            throw new InvalidArgumentException(
+                'Invalid "Timestamp" value. Must be a date/time string or a DateTime object.'
+            );
         }
         $this->ts = $ts;
         return $this;

@@ -35,6 +35,9 @@ class DatabaseSource extends AbstractSource
     */
     private $_table = null;
 
+    /**
+    * @var array $_dbs
+    */
     private static $_dbs = [];
 
     /**

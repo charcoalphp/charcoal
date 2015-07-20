@@ -24,11 +24,12 @@ abstract class AbstractCache implements
 
     /**
     * Singleton instance
+    * @var AbstractCache $_instance
     */
     static protected $_instance;
 
     /**
-    * @var string
+    * @var string $_prefix
     */
     private $_prefix;
 

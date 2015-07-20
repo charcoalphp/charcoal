@@ -83,7 +83,7 @@ abstract class AbstractProperty implements
     private $_unique = false;
 
     /**
-    *
+    * @var boolean $_allow_null
     */
     private $_allow_null = true;
 
