@@ -43,6 +43,9 @@ class StringFormatTest extends \PHPUnit_Framework_TestCase
         $ret=  $obj->set_unicode(false);
         $this->assertSame($ret, $obj);
         $this->assertNotTrue($obj->unicode());
+
+        $this->setExpectedException('\InvalidArgumentException');
+        $obj->set_unicode('foo');
     }
 
     public function testStripTags()
