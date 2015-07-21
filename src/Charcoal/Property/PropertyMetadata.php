@@ -2,11 +2,12 @@
 
 namespace Charcoal\Property;
 
+// Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Metadata\AbstractMetadata as AbstractMetadata;
 
-use \Charcoal\Charcoal as Charcoal;
-use \Charcoal\Helper\Cache as Cache;
-
+/**
+*
+*/
 class PropertyMetadata extends AbstractMetadata implements \ArrayAccess
 {
     /**

@@ -2,6 +2,7 @@
 
 namespace Charcoal\Source\File;
 
+// Local parent namespace dependencies
 use \Charcoal\Source\FileSource as FileSource;
 
 /**

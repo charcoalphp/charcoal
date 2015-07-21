@@ -2,6 +2,7 @@
 
 namespace Charcoal\Source\Database;
 
+// Local parent namespace dependencies
 use \Charcoal\Source\DatabaseSource as DatabaseSource;
 
 /**

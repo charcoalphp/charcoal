@@ -2,6 +2,9 @@
 
 namespace Charcoal\View;
 
+/**
+* View Engine Interface
+*/
 interface ViewEngineInterface
 {
     /**

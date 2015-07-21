@@ -2,13 +2,17 @@
 
 namespace Charcoal\View;
 
+// Dependencies from `PHP`
 use \InvalidArgumentException as InvalidArgumentException;
 
+// 3rd-party libraries dependencies
 use \Mustache_Engine as Mustache_Engine;
 use \Mustache_LambdaHelper as Mustache_LambdaHelper;
 
+// Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Charcoal as Charcoal;
 
+// Local namespace dependencies
 use \Charcoal\View\MustachePartialsLoader as MustachePartialsLoader;
 use \Charcoal\View\ViewableInterface as ViewableInterface;
 use \Charcoal\View\ViewInterface as ViewInterface;
@@ -71,7 +75,7 @@ abstract class AbstractView implements ViewInterface
     */
     public function __construct(array $data = null)
     {
-        if (is_array($data)) {
+        if ($data !== null) {
             $this->set_data($data);
         }
     }
@@ -85,6 +89,13 @@ abstract class AbstractView implements ViewInterface
     }
 
     /**
+    * Set the data / properties of this view.
+    *
+    * Base data is:
+    * - `engine` (_string_) - The engine type to use. If unset, the default will be used.
+    * - `template` (_mixed_) - The actual template to render.
+    * - `context` (_mixed_) - The context (view data) to render the template with.
+    *
     * @param array $data
     * @return AbstractView Chainable
     */
@@ -104,6 +115,8 @@ abstract class AbstractView implements ViewInterface
     }
 
     /**
+    * Set the engine type
+    *
     * @param string $engine
     * @throws InvalidArgumentException
     * @return AbstractView Chainable

@@ -2,8 +2,10 @@
 
 namespace Charcoal\View;
 
+// Dependencies from `PHP`
 use \InvalidArgumentException as InvalidArgumentException;
 
+// Local namespace dependencies
 use \Charcoal\View\AbstractView as AbstractView;
 use \Charcoal\View\ViewInterface as ViewInterface;
 

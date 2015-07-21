@@ -2,21 +2,22 @@
 
 namespace Charcoal\Property;
 
+// Dependencies from `PHP`
 use \Exception as Exception;
 use \InvalidArgumentException as InvalidArgumentException;
 
+// Intra-module (`charcoal-core`) dependencies
+use \Charcoal\Metadata\DescribableInterface as DescribableInterface;
+use \Charcoal\Metadata\DescribableTrait as DescribableTrait;
+use \Charcoal\Validator\ValidatableInterface as ValidatableInterface;
+use \Charcoal\Validator\ValidatableTrait as validatableTrait;
+use \Charcoal\View\ViewableInterface as ViewableInterface;
+use \Charcoal\View\ViewableTrait as ViewableTrait;
+
+// Local namespace dependencies
 use \Charcoal\Property\PropertyInterface as PropertyInterface;
 use \Charcoal\Property\PropertyValidator as PropertyValidator;
 use \Charcoal\Property\PropertyView as PropertyView;
-
-use \Charcoal\Metadata\DescribableInterface as DescribableInterface;
-use \Charcoal\Metadata\DescribableTrait as DescribableTrait;
-
-use \Charcoal\Validator\ValidatableInterface as ValidatableInterface;
-use \Charcoal\Validator\ValidatableTrait as validatableTrait;
-
-use \Charcoal\View\ViewableInterface as ViewableInterface;
-use \Charcoal\View\ViewableTrait as ViewableTrait;
 
 /**
 * An abstract class that implements the full `PropertyInterface`.

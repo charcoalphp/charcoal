@@ -2,6 +2,7 @@
 
 namespace Charcoal\Source;
 
+// Local namespace dependencies
 use \Charcoal\Source\AbstractSource as AbstractSource;
 
 /**

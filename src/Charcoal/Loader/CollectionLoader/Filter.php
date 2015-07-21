@@ -2,6 +2,7 @@
 
 namespace Charcoal\Loader\CollectionLoader;
 
+// Dependencies from `PHP`
 use \InvalidArgumentException as InvalidArgumentException;
 
 class Filter

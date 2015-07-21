@@ -2,9 +2,11 @@
 
 namespace Charcoal\Config;
 
+// Dependencies from `PHP`
 use \ArrayAccess as ArrayAccess;
 use \InvalidArgumentException as InvalidArgumentException;
 
+// Local namespace dependencies
 use \Charcoal\Config\ConfigInterface as ConfigInterface;
 
 /**

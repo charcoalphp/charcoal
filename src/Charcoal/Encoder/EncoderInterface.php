@@ -2,6 +2,9 @@
 
 namespace Charcoal\Encoder;
 
+/**
+*
+*/
 interface EncoderInterface
 {
     /**

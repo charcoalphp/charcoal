@@ -2,11 +2,14 @@
 
 namespace Charcoal\View;
 
+// Dependencies from `PHP`
 use \InvalidArgumentException as InvalidArgumentException;
 
-// From `charcoal-core`
+// Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Charcoal as Charcoal;
 use \Charcoal\Loader\FileLoader as FileLoader;
+
+// Local namespace dependencies
 use \Charcoal\View\AbstractView as AbstractView;
 
 /**

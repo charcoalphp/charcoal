@@ -2,9 +2,12 @@
 
 namespace Charcoal\Cache\Memcache;
 
+// Dependencies from `PHP`
 use \InvalidArgumentException as InvalidArgumentException;
 
+// Local parent namespace dependencies
 use \Charcoal\Cache\CacheConfig as CacheConfig;
+// Local namespace dependencies
 use \Charcoal\Cache\Memcache\MemcacheCacheServerConfig;
 
 /**

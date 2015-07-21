@@ -2,8 +2,15 @@
 
 namespace Charcoal\Cache\Noop;
 
+// Local parent namespace dependencies
 use \Charcoal\Cache\AbstractCache as AbstractCache;
 
+/**
+* A Charcoal Cache implementations using a null backend.
+*
+* This class allows to use the cache system seamlessly but disregard all cache.
+* > ⚠ Obviously, the noop cache should not be used in situation where having data in cache is actually crucial.
+*/
 class NoopCache extends AbstractCache
 {
     /**

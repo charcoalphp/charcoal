@@ -2,12 +2,16 @@
 
 namespace Charcoal\Property;
 
+// Intra-module (`charcoal-core`) dependencies
 use \InvalidArgumentException as InvalidArgumentException;
 use \PDO as PDO;
 
-// From `charcoal-core`
+// Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Tranlsation\TranslationString;
 
+/**
+*
+*/
 class PropertyField
 {
     /**

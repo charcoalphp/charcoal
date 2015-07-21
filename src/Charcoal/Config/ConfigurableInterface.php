@@ -2,6 +2,7 @@
 
 namespace Charcoal\Config;
 
+// Local namespace dependencies
 use \Charcoal\Config\ConfigInterface as ConfigInterface;
 
 /**

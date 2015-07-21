@@ -1,31 +1,23 @@
 <?php
-/**
- * Charcoal Object
- *
- * @package    Charcoal
- * @subpackage core
- *
- * @copyright (c) Locomotive 2007-2012
- * @author    Mathieu Ducharme <mat@locomotive.ca>
- * @version   2012-06-28
- * @since     Version 2012-03-01
- * @license   LGPL
- */
 
 namespace Charcoal\Model;
 
+// Dependencies from `PHP`
 use \InvalidArgumentException as InvalidArgumentException;
 
+// Dependencies from `PHP`
 use \Charcoal\Charcoal as Charcoal;
-
 use \Charcoal\Core\IndexableInterface as IndexableInterface;
 use \Charcoal\Core\IndexableTrait as IndexableTrait;
-
-use \Charcoal\Model\Model as Model;
 use \Charcoal\Source\DatabaseSource as Database;
-
 use \Charcoal\Loader\ObjectLoader as ObjectLoader;
 
+// Local namespace dependencies
+use \Charcoal\Model\Model as Model;
+
+/**
+*
+*/
 class Object extends Model implements IndexableInterface
 {
     use IndexableTrait;

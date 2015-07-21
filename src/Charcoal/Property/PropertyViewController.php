@@ -2,6 +2,7 @@
 
 namespace Charcoal\Property;
 
+// Intra-module (`charcoal-core`) dependencies
 use \Charcoal\View\AbstractViewController as AbstractViewController;
 
 /**

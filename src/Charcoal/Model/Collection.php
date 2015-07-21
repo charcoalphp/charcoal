@@ -2,10 +2,12 @@
 
 namespace Charcoal\Model;
 
+// Dependencies from `PHP`
 use \InvalidArgumentException as InvalidArgumentException;
 
-use \Charcoal\Collection\AbstractCollection as AbstractCollection;
+// Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Core\IndexableInterface as IndexableInterface;
+use \Charcoal\Collection\AbstractCollection as AbstractCollection;
 
 /**
 * Model Collection

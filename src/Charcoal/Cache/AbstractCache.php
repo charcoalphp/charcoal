@@ -2,11 +2,14 @@
 
 namespace Charcoal\Cache;
 
+// Dependencies from `PHP`
 use \InvalidArgumentException as InvalidArgumentException;
 
+// Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Config\ConfigurableInterface as ConfigurableInterface;
 use \Charcoal\Config\ConfigurableTrait as ConfigurableTrait;
 
+// Local namespace dependencies
 use \Charcoal\Cache\CacheConfig as CacheConfig;
 use \Charcoal\Cache\CacheInterface as CacheInterface;
 
@@ -15,6 +18,7 @@ use \Charcoal\Cache\CacheInterface as CacheInterface;
 *
 * This class also implements `ConfigurableInterface`. It does so by using the
 * `ConfigurableTrait` and subclassing the `create_config()` and `_config_from_array()` methods.
+*
 */
 abstract class AbstractCache implements
     CacheInterface,

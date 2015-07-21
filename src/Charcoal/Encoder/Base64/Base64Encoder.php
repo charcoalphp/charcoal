@@ -2,6 +2,7 @@
 
 namespace Charcoal\Encoder\Base64;
 
+// Local parent namespace dependencies
 use \Charcoal\Encoder\AbstractEncoder as AbstractEncoder;
 
 /**

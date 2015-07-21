@@ -2,12 +2,17 @@
 
 namespace Charcoal\Cache\Memcache;
 
+// Dependencies from `PHP`
 use \Exception as Exception;
 use \InvalidArgumentException as InvalidArgumentException;
+
+// Dependencies from PHP extensions
 use \Memcache as Memcache;
 
+// Local parent namespace dependencies
 use \Charcoal\Cache\AbstractCache as AbstractCache;
 
+// Local namespace dependencies
 use \Charcoal\Cache\Memcache\MemcacheCacheConfig as MemcacheCacheConfig;
 use \Charcoal\Cache\Memcache\MemCacheCacheServerConfig as MemCacheCacheServerConfig;
 

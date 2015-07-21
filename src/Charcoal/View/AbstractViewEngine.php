@@ -2,6 +2,9 @@
 
 namespace Charcoal\View;
 
+// Local namespace dependencies
+use \Charcoal\View\ViewEngineInterface as ViewEngineInterface;
+
 abstract class AbstractViewEngine implements ViewEngineInterface
 {
     /**
@@ -9,15 +12,18 @@ abstract class AbstractViewEngine implements ViewEngineInterface
     * @var array $_js_requirements
     */
     static private $_js_requirements = [];
+
     /**
     * Holds custom JS scripts to append to View
     * @var string $_js
     */
     static private $_js = '';
+
     /**
     * @var array $_css_requirements
     */
     static private $_css_requirements = [];
+
     /**
     * @var array $_css;
     */

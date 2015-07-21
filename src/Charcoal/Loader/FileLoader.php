@@ -2,10 +2,15 @@
 
 namespace Charcoal\Loader;
 
+// Dependencies from `PHP`
 use \InvalidArgumentException as InvalidArgumentException;
 
+// Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Charcoal as Charcoal;
 
+/**
+*
+*/
 class FileLoader extends AbstractLoader
 {
     /**

@@ -2,8 +2,13 @@
 
 namespace Charcoal\Loader\CollectionLoader;
 
+// Dependencies from `PHP`
+use \DomainException as DomainException;
 use \InvalidArgumentException as InvalidArgumentException;
 
+/**
+*
+*/
 class Order
 {
     const MODE_ASC = 'asc';
@@ -171,7 +176,7 @@ class Order
     }
 
     /**
-    * @throws \DomainException
+    * @throws DomainException
     * @return string
     */
     public function sql()
@@ -185,16 +190,16 @@ class Order
         if ($mode == 'values') {
             $values = $this->values();
             if (empty($values)) {
-                throw new \DomainException('Values can not be empty.');
+                throw new DomainException('Values can not be empty.');
             }
             if ($property == '') {
-                throw new \DomainException('Property can not be empty.');
+                throw new DomainException('Property can not be empty.');
             }
 
             return 'FIELD(`'.$property.'`, '.implode(',', $values).')';
         } else {
             if ($property == '') {
-                throw new \DomainException('Property can not be empty.');
+                throw new DomainException('Property can not be empty.');
             }
             return '`'.$property.'` '.$mode;
         }

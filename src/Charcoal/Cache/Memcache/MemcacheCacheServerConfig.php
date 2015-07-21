@@ -2,6 +2,7 @@
 
 namespace Charcoal\Cache\Memcache;
 
+// Local parent namespace dependencies
 use \Charcoal\Config\AbstractConfig as AbstractConfig;
 
 /**

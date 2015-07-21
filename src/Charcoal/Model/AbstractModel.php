@@ -2,26 +2,25 @@
 
 namespace Charcoal\Model;
 
+// Dependencies from `PHP`
 use \InvalidArgumentException as InvalidArgumentException;
 
+// Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Charcoal as Charcoal;
+use \Charcoal\Metadata\DescribableInterface as DescribableInterface;
+use \Charcoal\Metadata\DescribableTrait as DescribableTrait;
+use \Charcoal\Source\StorableInterface as StorableInterface;
+use \Charcoal\Source\StorableTrait as StorableTrait;
+use \Charcoal\Validator\ValidatableInterface as ValidatableInterface;
+use \Charcoal\Validator\ValidatableTrait as validatableTrait;
+use \Charcoal\View\ViewableInterface as ViewableInterface;
+use \Charcoal\View\ViewableTrait as ViewableTrait;
 
+// Local namespace dependencies
 use \Charcoal\Model\ModelInterface as ModelInterface;
 use \Charcoal\Model\ModelMetadata as ModelMetadata;
 use \Charcoal\Model\ModelValidator as ModelValidator;
 use \Charcoal\Model\ModelView as ModelView;
-
-use \Charcoal\Metadata\DescribableInterface as DescribableInterface;
-use \Charcoal\Metadata\DescribableTrait as DescribableTrait;
-
-use \Charcoal\Source\StorableInterface as StorableInterface;
-use \Charcoal\Source\StorableTrait as StorableTrait;
-
-use \Charcoal\Validator\ValidatableInterface as ValidatableInterface;
-use \Charcoal\Validator\ValidatableTrait as validatableTrait;
-
-use \Charcoal\View\ViewableInterface as ViewableInterface;
-use \Charcoal\View\ViewableTrait as ViewableTrait;
 
 /**
 * An abstract class that implements most of `ModelInterface`.

@@ -2,6 +2,7 @@
 
 namespace Charcoal\Cache;
 
+// Local namespace dependencies
 use \Charcoal\Cache\CacheInterface as CacheInterface;
 
 /**

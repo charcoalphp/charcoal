@@ -1,15 +1,22 @@
 <?php
+
 namespace Charcoal;
 
+// Dependencies from `PHP`
 use \Exception as Exception;
 use \InvalidArgumentException as InvalidArgumentException;
 
+// 3rd-party libraries dependencies
 use \Slim\Slim as Slim;
-use \Charcoal\Config as Config;
-
 use \Psr\Log\LoggerInterface as LoggerInterface;
 use \Psr\Log\LogLevel as LogLevel;
 
+// Intra-module (`charcoal-core`) dependencies
+use \Charcoal\Config as Config;
+
+/**
+*
+*/
 class Charcoal
 {
     /**

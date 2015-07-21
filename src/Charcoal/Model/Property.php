@@ -2,12 +2,16 @@
 
 namespace Charcoal\Model;
 
+// Dependencies from `PHP`
 use \PDO as PDO;
 
+// Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Property\AbstractProperty as AbstractProperty;
-
 use \Charcoal\Validator\ValidatorInterface as ValidatorInterface;
 
+/**
+*
+*/
 class Property extends AbstractProperty
 {
     /**

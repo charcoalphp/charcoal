@@ -2,14 +2,17 @@
 
 namespace Charcoal\Metadata;
 
+// Dependencies from `PHP`
 use \ArrayAccess as ArrayAccess;
 use \InvalidArgumentException as InvalidArgumentException;
 
-use \Charcoal\Metadata\MetadataInterface as MetadataInterface;
-use \Charcoal\Metadata\MetadataLoader as MetadataLoader;
-
+// Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Loader\LoadableInterface as LoadableInterface;
 use \Charcoal\Loader\LoadableTrait as LoadableTrait;
+
+// Local namespace dependencies
+use \Charcoal\Metadata\MetadataInterface as MetadataInterface;
+use \Charcoal\Metadata\MetadataLoader as MetadataLoader;
 
 /**
 * An implementation, as abstract class, of `MetadataInterface`.
@@ -38,6 +41,7 @@ abstract class AbstractMetadata implements
     {
         if (isset($data['properties'])) {
             $this->set_properties($data['properties']);
+            unset($data['properties']);
         }
 
         foreach ($data as $k => $v) {
@@ -89,7 +93,7 @@ abstract class AbstractMetadata implements
     }
 
     /**
-    * ArrayAccess config[a] = '';
+    * ArrayAccess > offsetSet $config[a] = '';
     *
     * @param string $offset
     * @param mixed  $value
@@ -105,7 +109,7 @@ abstract class AbstractMetadata implements
     }
 
     /**
-    * ArrayAcces unset(config[a])
+    * ArrayAcces > offsetUnest `unset($config[a])`
     *
     * @param mixed $offset
     * @return void

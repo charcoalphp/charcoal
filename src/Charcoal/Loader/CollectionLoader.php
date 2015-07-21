@@ -2,11 +2,15 @@
 
 namespace Charcoal\Loader;
 
+// Intra-module (`charcoal-core`) dependencies
 use \Exception as Exception;
 use \InvalidArgumentException as InvalidArgumentException;
 
+// Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Model\ModelInterface as ModelInterface;
 use \Charcoal\Model\Collection as Collection;
+
+// Local namespace dependencies
 use \Charcoal\Loader\CollectionLoader\Filter as Filter;
 use \Charcoal\Loader\CollectionLoader\Order as Order;
 use \Charcoal\Loader\CollectionLoader\Pagination as Pagination;

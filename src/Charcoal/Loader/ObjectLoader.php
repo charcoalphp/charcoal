@@ -2,6 +2,9 @@
 
 namespace Charcoal\Loader;
 
+/**
+*
+*/
 class ObjectLoader extends AbstractLoader
 {
     /**

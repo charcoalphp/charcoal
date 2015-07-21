@@ -2,6 +2,11 @@
 
 namespace Charcoal\Metadata;
 
+/**
+* Metadata is typically used to describe an object.
+*
+* Metadata
+*/
 interface MetadataInterface
 {
     /**

@@ -2,6 +2,7 @@
 
 namespace Charcoal\View;
 
+// Local namespace dependencies
 use \Charcoal\View\ViewControllerInterface as ViewControllerInterface;
 
 /**

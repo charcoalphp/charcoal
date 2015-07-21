@@ -2,8 +2,12 @@
 
 namespace Charcoal\Source;
 
+// Local namespace dependencies
 use \Charcoal\Source\SourceInterface as SourceInterface;
 
+/**
+*
+*/
 interface StorableInterface
 {
     /**

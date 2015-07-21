@@ -2,6 +2,7 @@
 
 namespace Charcoal\Validator;
 
+// Local namespace dependencies
 use \Charcoal\Validator\ValidatorInterface as ValidatorInterface;
 
 /**

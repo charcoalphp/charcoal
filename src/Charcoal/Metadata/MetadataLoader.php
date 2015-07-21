@@ -5,8 +5,8 @@
 
 namespace Charcoal\Metadata;
 
+// Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Charcoal as Charcoal;
-
 use \Charcoal\Loader\FileLoader as FileLoader;
 
 /**

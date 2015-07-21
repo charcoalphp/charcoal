@@ -2,8 +2,10 @@
 
 namespace Charcoal\Encoder;
 
+// Dependencies from `PHP`
 use \InvalidArgumentException as InvalidArgumentException;
 
+// Local namespace dependencies
 use \Charcoal\Encoder\EncoderInterface as EncoderInterface;
 
 /**

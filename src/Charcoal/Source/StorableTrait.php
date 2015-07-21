@@ -2,11 +2,16 @@
 
 namespace Charcoal\Source;
 
+// Dependencies from `PHP`
 use \InvalidArgumentException as InvalidArgumentException;
 
+// Local namespace dependencies
 use \Charcoal\Source\SourceInterface as SourceInterface;
 use \Charcoal\Source\StorableInterface as StorableInterface;
 
+/**
+* Full implementation, as trait, of the StorableInterface
+*/
 trait StorableTrait
 {
     /**

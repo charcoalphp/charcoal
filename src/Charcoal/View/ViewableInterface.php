@@ -2,11 +2,17 @@
 
 namespace Charcoal\View;
 
+// Local namespace dependencies
 use \Charcoal\View\ViewInterface as ViewInterface;
 
+/**
+*
+*/
 interface ViewableInterface
 {
     /**
+    * Set the type of view engine to use for this vi
+    *
     * @param string $engine
     * @return ViewableInterface Chainable
     */

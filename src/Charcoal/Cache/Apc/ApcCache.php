@@ -2,8 +2,17 @@
 
 namespace Charcoal\Cache\Apc;
 
+// Dependencies from PHP extensions
+use \ApcIterator as ApcIterator;
+
+// Local parent namespace dependencies
 use \Charcoal\Cache\AbstractCache as AbstractCache;
 
+/**
+* A Charcoal Cache implementation using APC as backend.
+*
+* > ⚠ Warning: since PHP 5.5, the apc driver is very buggy and should not be used.
+*/
 class ApcCache extends AbstractCache
 {
     /**
@@ -130,7 +139,7 @@ class ApcCache extends AbstractCache
         }
         $prefix = $this->prefix();
 
-        $keys = new \APCIterator('user', '/^'.$prefix.'/', APC_ITER_VALUE);
+        $keys = new APCIterator('user', '/^'.$prefix.'/', APC_ITER_VALUE);
         return apc_delete($keys);
     }
 }

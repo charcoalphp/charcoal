@@ -2,15 +2,17 @@
 
 namespace Charcoal\Source;
 
-use \Charcoal\Source\AbstractSource as AbstractSource;
-
-use \PDO as PDO;
+// Dependencies from `PHP`
 use \Exception as Exception;
 use \InvalidArgumentException as InvalidArgumentException;
+use \PDO as PDO;
 
-// From `charcoal-core`
+// Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Charcoal as Charcoal;
 use \Charcoal\Model\ModelInterface as ModelInterface;
+
+// Local namespace dependencies
+use \Charcoal\Source\AbstractSource as AbstractSource;
 use \Charcoal\Source\DatabaseSourceConfig as DatabaseSourceConfig;
 
 /**
@@ -357,6 +359,8 @@ class DatabaseSource extends AbstractSource
 
     /**
     * ConfigurableTrait > create_config()
+    *
+    * Overrides the method defined in AbstractSource to returns a `DatabaseSourceConfig` object.
     *
     * @param array $data Optional
     * @return DatabaseSourceConfig

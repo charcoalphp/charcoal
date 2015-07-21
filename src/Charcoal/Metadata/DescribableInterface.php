@@ -2,10 +2,15 @@
 
 namespace Charcoal\Metadata;
 
-use \Charcoal\Metadata\MetadataInterface as MetadataInterface;
-
+// Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Property\PropertyInterface as PropertyInterface;
 
+// Local namespace dependencies
+use \Charcoal\Metadata\MetadataInterface as MetadataInterface;
+
+/**
+*
+*/
 interface DescribableInterface
 {
     /**

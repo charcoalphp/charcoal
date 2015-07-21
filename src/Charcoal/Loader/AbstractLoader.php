@@ -2,11 +2,16 @@
 
 namespace Charcoal\Loader;
 
+// Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Cache\CacheableInterface as CacheableInterface;
 use \Charcoal\Cache\CacheableTrait as CacheableTrait;
 
+// Local namespace dependencies
 use \Charcoal\Loader\LoaderInterface as LoaderInterface;
 
+/**
+*
+*/
 abstract class AbstractLoader implements
     LoaderInterface,
     CacheableInterface

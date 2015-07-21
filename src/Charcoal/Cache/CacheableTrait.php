@@ -2,6 +2,7 @@
 
 namespace Charcoal\Cache;
 
+// Dependencies from `PHP`
 use \InvalidArgumentException as InvalidArgumentException;
 
 /**
