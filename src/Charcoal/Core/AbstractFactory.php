@@ -2,16 +2,40 @@
 
 namespace Charcoal\Core;
 
+// Dependencies from `PHP`
+use \InvalidArgumentException as InvalidArgumentException;
+
+// Local namespace dependencies
+use \Charcoal\Core\FactoryInterface as FactoryInterface;
+
 /**
-*
+* Full implementation, as Abstract class, of the FactoryInterface
 */
 abstract class AbstractFactory implements FactoryInterface
 {
+    const MODE_CLASS_MAP = 'class_map';
+    const MODE_IDENT = 'ident';
+
     /**
     * Keep latest instance, as singleton copy.
     * @var AbstractFactory $instance
     */
-    static protected $instance;
+    static protected $instance = [];
+
+    /**
+    * @var string $_factory_mode
+    */
+    protected $_factory_mode;
+
+    /**
+    * If a base class is set, then it must be ensured that the
+    * @var string $_base_class
+    */
+    protected $_base_class = '';
+    /**
+    * @var string $_default_class
+    */
+    protected $_default_class = '';
 
     /**
     * Keeps loaded instances in memory, in `[$type => $instance]` format.
@@ -23,7 +47,7 @@ abstract class AbstractFactory implements FactoryInterface
     * Available types, in `[$type => $classname]` format.
     * @var array $_types
     */
-    static protected $_types = [];
+    protected $_types = [];
 
     /**
     * Constructor is protected. Singleton must be created with AbstractFactory::instance()
@@ -40,32 +64,165 @@ abstract class AbstractFactory implements FactoryInterface
     */
     public static function instance()
     {
-        if (static::$instance !== null) {
-            return static::$instance;
+        $factory_class = get_called_class();
+
+        if (isset(static::$instance[$factory_class]) && static::$instance[$factory_class] !== null) {
+            return static::$instance[$factory_class];
         }
-        $class = get_called_class();
-        $factory = new $class;
+
+        $factory = new $factory_class;
+        static::$instance[$factory_class] = $factory;
         return $factory;
+    }
+
+    /**
+    * Set the factory's data / properties
+    *
+    * @param array $data
+    * @return
+    */
+    public function set_data(array $data)
+    {
+        if (isset($data['factory_mode']) && $data['factory_mode'] !== null) {
+            $this->set_factory_mode($data['factory_mode']);
+        }
+        if (isset($data['base_class']) && $data['base_class'] !== null) {
+            $this->set_base_class($data['base_class']);
+        }
+        if (isset($data['default_class']) && $data['default_class'] !== null) {
+            $this->set_default_class($data['default_class']);
+        }
+        if (isset($data['types']) && $data['types'] !== null) {
+            $this->set_types($data['types']);
+        }
+        return $this;
+    }
+
+    /**
+    * @param string $mode
+    * @throws InvalidArgumentException
+    * @return AbstractFactory Chainable
+    */
+    public function set_factory_mode($mode)
+    {
+        $valid_modes = [self::MODE_CLASS_MAP, self::MODE_IDENT];
+        if (!in_array($mode, $valid_modes)) {
+            throw new InvalidArgumentException('Not a valid factory mode');
+        }
+        $this->_factory_mode = $mode;
+        return $this;
+    }
+
+    /**
+    * There are 2 different factory modes:
+    * - class_map: Use the $type array for class map matching the ident
+    * - ident: Try to deduce the class name from the ident itself
+    *
+    * @return string
+    */
+    public function factory_mode()
+    {
+        if (!$this->_factory_mode) {
+            $this->_factory_mode = self::MODE_CLASS_MAP;
+        }
+        return $this->_factory_mode;
+    }
+
+    /**
+    * If a base class is set, then it must be ensured that the created objects
+    * are `instanceof` this base class.
+    * @param string $classname
+    * @throws InvalidArgumentException
+    * @return FactoryInterface
+    */
+    public function set_base_class($classname)
+    {
+        if (!is_string($classname)) {
+            throw new InvalidArgumentException(
+                'Classname must be a string.'
+            );
+        }
+        $class_exists = (class_exists($classname) || interface_exists($classname));
+        if (!$class_exists) {
+            throw new InvalidArgumentException(
+                sprintf('Can not set "%s" as base class: Invalid class name', $classname)
+            );
+        }
+        $this->_base_class = $classname;
+        return $this;
+    }
+
+    /**
+    * @return string
+    */
+    public function base_class()
+    {
+        return $this->_base_class;
+    }
+
+    /**
+    * If a default class is set, then calling `get()` or `create()`
+    * an invalid type should return an object of this class instead of throwing an error.
+    *
+    * @param string $classname
+    * @throws InvalidArgumentException
+    * @return FactoryInterface
+    */
+    public function set_default_class($classname)
+    {
+        if (!is_string($classname)) {
+            throw new InvalidArgumentException(
+                'Classname must be a string.'
+            );
+        }
+        if (!class_exists($classname)) {
+            throw new InvalidArgumentException(
+                sprintf('Can not set "%s" as base class: Invalid class name', $classname)
+            );
+        }
+        $this->_default_class = $classname;
+        return $this;
+    }
+
+    /**
+    * @return string
+    */
+    public function default_class()
+    {
+        return $this->_default_class;
     }
 
     /**
     * Create a new instance of a class, by type.
     *
     * @param string $type The type (class ident)
-    * @throws \InvalidArgumentException if type is not a string or is not an available type
+    * @throws Exception
+    * @throws InvalidArgumentException if type is not a string or is not an available type
     * @return mixed The instance / object
     */
     public function create($type)
     {
         if (!is_string($type)) {
-            throw new \InvalidArgumentException('Type must be a string.');
+            throw new InvalidArgumentException('Type must be a string.');
         }
         if (!$this->is_type_available($type)) {
-            throw new \InvalidArgumentException(sprintf('Type "%s" is not a valid type.', $type));
+            $default_class = $this->default_class();
+            if ($default_class !== '') {
+                return new $default_class;
+            } else {
+                throw new InvalidArgumentException(sprintf('Type "%s" is not a valid type.', $type));
+            }
         }
-        $types = static::types();
-        $class = $types[$type];
-        $obj = new $class;
+        $classname = $this->type_to_classname($type);
+        $obj = new $classname;
+
+        // Ensure base class is respected, if set.
+        $base_class = $this->base_class();
+        if ($base_class !== '' && !($obj instanceof $base_class)) {
+            throw new Exception(sprintf('Object is not a valid %s class', $base_class));
+        }
+
+        $this->_instances[$type] = $obj;
         return $obj;
     }
 
@@ -76,29 +233,48 @@ abstract class AbstractFactory implements FactoryInterface
     * an already created object of this type, from memory.
     *
     * @param string $type The type (class ident)
-    * @throws \InvalidArgumentException if type is not a string
+    * @throws InvalidArgumentException if type is not a string
     * @return mixed The instance / object
     */
     public function get($type)
     {
         if (!is_string($type)) {
-            throw new \InvalidArgumentException('Type must be a string.');
+            throw new InvalidArgumentException('Type must be a string.');
         }
         if (isset($this->_instances[$type]) && $this->_instances[$type] !== null) {
             return $this->_instances[$type];
         } else {
             return $this->create($type);
+
         }
     }
 
     /**
-    * Get all the currently available types
+    * Get the class name from "type".
     *
-    * @return array
+    * @param string $type
+    * @throws InvalidArgumentException
+    * @return string
     */
-    public function available_types()
+    public function type_to_classname($type)
     {
-        return array_keys(static::types());
+        $classname = '';
+        $mode = $this->factory_mode();
+        switch ($mode) {
+            case self::MODE_IDENT:
+                $classname = $this->ident_to_classname($type);
+                break;
+
+            case self::MODE_CLASS_MAP:
+                $types = $this->types();
+                if (!isset($types[$type])) {
+                    throw new InvalidArgumentException('Invalid type');
+                }
+                $classname = $types[$type];
+                break;
+        }
+
+        return $classname;
     }
 
     /**
@@ -109,34 +285,61 @@ abstract class AbstractFactory implements FactoryInterface
     */
     public function is_type_available($type)
     {
-        $types = static::types();
-        if (!in_array($type, array_keys($types))) {
-            return false;
-        } else {
-            $class = $types[$type];
-            if (!class_exists($class)) {
-                return false;
-            } else {
-                return true;
-            }
+        $is_available = false;
+        $mode = $this->factory_mode();
+        switch ($mode) {
+            case self::MODE_IDENT:
+                $class_name = $this->ident_to_classname($type);
+                $is_available = class_exists($class_name);
+                break;
+
+            case self::MODE_CLASS_MAP:
+                $types = $this->types();
+                if (!in_array($type, array_keys($types))) {
+                    $is_available = false;
+                } else {
+                    $class_name = $types[$type];
+                    $is_available = class_exists($class_name);
+                }
+                break;
         }
+
+        return $is_available;
+    }
+
+    /**
+    * Add multiple types, in a an array of `type` => `classname`.
+    *
+    * @param array $types
+    * @return AbstractFactory Chainable
+    */
+    public function set_types(array $types)
+    {
+        $this->_types = [];
+        foreach ($types as $type => $classname) {
+            $this->add_type($type, $classname);
+        }
+        return $this;
     }
 
     /**
     * Add a type to the available types
     *
     * @param string $type  The type (class ident)
-    * @param string $class The FQN of the class
-    * @return boolean Success / Failure
+    * @param string $classname The FQN of the class
+    * @throws InvalidArgumentException
+    * @return AbstractFactory Chainable
     */
-    public static function add_type($type, $class)
+    public function add_type($type, $classname)
     {
-        if (!class_exists($class)) {
-            return false;
-        } else {
-            static::$_types[$type] = $class;
-            return true;
+        if (!class_exists($classname)) {
+            throw new InvalidArgumentException(
+                sprintf('Class "%s" is not a valid class name.', $classname)
+            );
         }
+
+        $this->_types[$type] = $classname;
+        return $this;
     }
 
     /**
@@ -144,9 +347,9 @@ abstract class AbstractFactory implements FactoryInterface
     *
     * @return array
     */
-    public static function types()
+    public function types()
     {
-        return static::$_types;
+        return $this->_types;
     }
 
     /**
@@ -175,7 +378,7 @@ abstract class AbstractFactory implements FactoryInterface
             }
         );
 
-        $class = '\\'.ltrim(implode('\\', $expl), '\\');
+        $class = '\\'.trim(implode('\\', $expl), '\\');
         return $class;
     }
 }

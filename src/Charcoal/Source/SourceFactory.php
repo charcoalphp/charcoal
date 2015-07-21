@@ -2,8 +2,12 @@
 
 namespace Charcoal\Source;
 
+// Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Core\AbstractFactory as AbstractFactory;
 
+/**
+*
+*/
 class SourceFactory extends AbstractFactory
 {
     /**

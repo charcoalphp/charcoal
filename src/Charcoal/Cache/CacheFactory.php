@@ -2,15 +2,21 @@
 
 namespace Charcoal\Cache;
 
+// Dependencies from `PHP`
 use \InvalidArgumentException as InvalidArgumentException;
 
+// Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Core\AbstractFactory as AbstractFactory;
 
+// Local namespace dependencies
 use \Charcoal\Cache\CacheInterface as CacheInterface;
 use \Charcoal\Cache\Apc\ApcCache as ApcCache;
 use \Charcoal\Cache\Memcache\MemcacheCache as MemcacheCache;
 use \Charcoal\Cache\Noop\NoopCache as NoopCache;
 
+/**
+* Cache factory
+*/
 class CacheFactory extends AbstractFactory
 {
     /**
@@ -33,7 +39,7 @@ class CacheFactory extends AbstractFactory
         } elseif ($type == 'noop') {
             $cache = NoopCache::instance();
         } else {
-            throw new InvalidArgumentException('Type is not a valid cache type.');
+            throw new InvalidArgumentException(sprintf('Type "%s" is not a valid cache type.', $type));
         }
 
         return $cache;

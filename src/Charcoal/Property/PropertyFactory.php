@@ -2,7 +2,7 @@
 
 namespace Charcoal\Property;
 
-// From `charcoal-core`
+// Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Core\AbstractFactory as AbstractFactory;
 
 /**
@@ -10,6 +10,19 @@ use \Charcoal\Core\AbstractFactory as AbstractFactory;
 */
 class PropertyFactory extends AbstractFactory
 {
+    /**
+    * @param array $data
+    */
+    protected function __construct(array $data = null)
+    {
+        $this->set_factory_mode(AbstractFactory::MODE_IDENT);
+        $this->set_base_class('\Charcoal\Property\PropertyInterface');
+        $this->set_default_class('\Charcoal\Model\Property');
+        if ($data !== null) {
+            $this->set_data($data);
+        }
+    }
+
     /**
     * @param string $type
     * @return PropertyInterface

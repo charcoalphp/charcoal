@@ -2,29 +2,29 @@
 
 namespace Charcoal\Model;
 
+// Dependencies from `PHP`
 use \Exception as Exception;
 
+// Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Core\AbstractFactory as AbstractFactory;
+
+// Local namespace dependencies
 use \Charcoal\Model\ModelInterface as ModelInterface;
 
+/**
+*
+*/
 class ModelFactory extends AbstractFactory
 {
     /**
-    * @param string $type
-    * @throws Exception
-    * @return ModelInterface
+    * @param array $data
     */
-    public function get($type)
+    protected function __construct(array $data = null)
     {
-        $class_name = $this->ident_to_classname($type);
-        if (class_exists($class_name)) {
-            $obj = new $class_name();
-            if (!($obj instanceof ModelInterface)) {
-                throw new Exception('Invalid model (2): '.$type.' (not an action).');
-            }
-            return $obj;
-        } else {
-            throw new Exception('Invalid model: '.$type);
+        $this->set_factory_mode(AbstractFactory::MODE_IDENT);
+        $this->set_base_class('\Charcoal\Model\ModelInterface');
+        if ($data !== null) {
+            $this->set_data($data);
         }
     }
 }
