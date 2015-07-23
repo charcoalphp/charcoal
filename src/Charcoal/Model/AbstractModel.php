@@ -6,7 +6,6 @@ namespace Charcoal\Model;
 use \InvalidArgumentException as InvalidArgumentException;
 
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Charcoal as Charcoal;
 use \Charcoal\Metadata\DescribableInterface as DescribableInterface;
 use \Charcoal\Metadata\DescribableTrait as DescribableTrait;
 use \Charcoal\Source\StorableInterface as StorableInterface;
@@ -64,6 +63,7 @@ abstract class AbstractModel implements
     */
     public function set_data(array $data)
     {
+        $this->set_describable_data($data);
         $this->set_storable_data($data);
         $this->set_viewable_data($data);
         foreach ($data as $prop => $val) {
