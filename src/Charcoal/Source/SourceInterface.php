@@ -91,7 +91,7 @@ interface SourceInterface
     * @throws InvalidArgumentException
     * @return Collection Chainable
     */
-    public function set_filters($filters);
+    public function set_filters(array $filters);
 
     /**
     * @return array
@@ -112,7 +112,7 @@ interface SourceInterface
     * @param array $orders
     * @return CollectionLoader Chainable
     */
-    public function set_orders($orders);
+    public function set_orders(array $orders);
 
     /**
     * @return array

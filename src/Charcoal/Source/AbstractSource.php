@@ -4,6 +4,7 @@ namespace Charcoal\Source;
 
 // Dependencies from `PHP`
 use \Exception as Exception;
+use \InvalidArgumentException as InvalidArgumentException;
 
 // Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Config\ConfigurableInterface as ConfigurableInterface;
@@ -142,11 +143,8 @@ abstract class AbstractSource implements
     * @throws InvalidArgumentException
     * @return Collection Chainable
     */
-    public function set_filters($filters)
+    public function set_filters(array $filters)
     {
-        if (!is_array($filters)) {
-            throw new InvalidArgumentException('Filters must be an array.');
-        }
         $this->_filters = [];
         foreach ($filters as $f) {
             $this->add_filter($f);
@@ -159,9 +157,6 @@ abstract class AbstractSource implements
     */
     public function filters()
     {
-        if (!isset($this->_filters)) {
-            $this->_filters = [];
-        }
         return $this->_filters;
     }
 
@@ -219,7 +214,7 @@ abstract class AbstractSource implements
     * @param array $orders
     * @return CollectionLoader Chainable
     */
-    public function set_orders($orders)
+    public function set_orders(array $orders)
     {
         $this->_orders = [];
         foreach ($orders as $o) {
@@ -233,9 +228,6 @@ abstract class AbstractSource implements
     */
     public function orders()
     {
-        if (!isset($this->_orders)) {
-            $this->_orders = [];
-        }
         return $this->_orders;
     }
 
@@ -280,6 +272,7 @@ abstract class AbstractSource implements
 
     /**
     * @param mixed $param
+    * @throws InvalidArgumentException
     * @return CollectionLoader Chainable
     */
     public function set_pagination($param)
@@ -290,6 +283,8 @@ abstract class AbstractSource implements
             $pagination = $this->create_pagination();
             $pagination->set_data($param);
             $this->_pagination = $pagination;
+        } else {
+            throw new InvalidArgumentException('Can not set pagination, invalid argument.');
         }
         return $this;
     }
@@ -299,7 +294,7 @@ abstract class AbstractSource implements
     */
     public function pagination()
     {
-        if (!isset($this->_pagination)) {
+        if ($this->_pagination === null) {
             $this->_pagination = $this->create_pagination();
         }
         return $this->_pagination;
@@ -311,7 +306,7 @@ abstract class AbstractSource implements
     protected function create_pagination()
     {
         $pagination = new Pagination();
-        return $this->_pagination;
+        return $pagination;
     }
 
     /**
