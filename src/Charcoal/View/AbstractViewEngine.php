@@ -5,6 +5,9 @@ namespace Charcoal\View;
 // Local namespace dependencies
 use \Charcoal\View\ViewEngineInterface as ViewEngineInterface;
 
+/**
+* Full implementation, as abstract class, of ViewEngineInterface
+*/
 abstract class AbstractViewEngine implements ViewEngineInterface
 {
     /**

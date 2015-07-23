@@ -2,6 +2,9 @@
 
 namespace Charcoal\View\Engine;
 
+/**
+*
+*/
 class PhpMustacheEngine extends AbstractViewEngine
 {
     /**
@@ -9,7 +12,7 @@ class PhpMustacheEngine extends AbstractViewEngine
     */
     public function type()
     {
-        return 'php_mustache';
+        return 'php-mustache';
     }
 
     /**

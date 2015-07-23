@@ -28,7 +28,7 @@ use \Charcoal\View\ViewControllerInterface as ViewControllerInterface;
 abstract class AbstractView implements ViewInterface
 {
     const ENGINE_MUSTACHE = 'mustache';
-    const ENGINE_PHP_MUSTACHE = 'php_mustache';
+    const ENGINE_PHP_MUSTACHE = 'php-mustache';
     const ENGINE_PHP = 'php';
 
     const DEFAULT_ENGINE = self::ENGINE_MUSTACHE;
@@ -410,9 +410,19 @@ abstract class AbstractView implements ViewInterface
     */
     protected function _ident_to_classname($ident)
     {
+        // Change "foo-bar" to "fooBar"
+        $expl = explode('-', $ident);
+        array_walk(
+            $expl,
+            function(&$i) {
+                $i = ucfirst($i);
+            }
+        );
+        $ident = implode('', $expl);
+
+        // Change "/foo/bar" to "\Foo\Bar"
         $class = str_replace('/', '\\', $ident);
         $expl  = explode('\\', $class);
-
         array_walk(
             $expl,
             function(&$i) {
@@ -420,7 +430,7 @@ abstract class AbstractView implements ViewInterface
             }
         );
 
-        $class = '\\'.ltrim(implode('\\', $expl), '\\');
+        $class = '\\'.trim(implode('\\', $expl), '\\');
         return $class;
     }
 
