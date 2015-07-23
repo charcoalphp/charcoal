@@ -57,6 +57,9 @@ trait DescribableTrait
         if (isset($data['metadata']) && $data['metadata'] !== null) {
             $this->set_metadata($data['metadata']);
         }
+        if (isset($data['metdata_ident']) && $data['metadata_ident'] !== null) {
+            $this->set_metadata_ident($data['metadata_ident']);
+        }
         return $this;
     }
 
