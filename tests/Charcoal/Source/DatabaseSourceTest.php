@@ -26,12 +26,21 @@ class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
         Charcoal::config()->set_default_database('unit_test');
 
         $obj = new DatabaseSource();
-        // $obj->set_model($model);
-        $obj->set_table('test');
+        // $obj->set_model($item);
+        //$obj->set_table('test');
         $q = 'DROP TABLE IF EXISTS `test`';
         $obj->db()->query($q);
+
+        $q2 = 'DROP TABLE IF EXISTS `empty_test`';
+        $obj->db()->query($q2);
     }
 
+    /**
+    * Assert that the method `set_database_ident()`:
+    * - is chainable
+    * - sets the database ident propertly in object
+    * - throws an exception if the parameter is not a string
+    */
     public function testSetDatabaseIdent()
     {
         $obj = new DatabaseSource();
@@ -73,6 +82,9 @@ class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
         $obj->set_database_config(false);
     }
 
+    /**
+    * Assert that calling the `table()` method without first having set a table throws an exception.
+    */
     public function testTableWithoutSetterThrowsException()
     {
         $this->setExpectedException('\Exception');
@@ -81,6 +93,12 @@ class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
         $obj->table();
     }
 
+    /**
+    * Assert that, with the method `set_table()`:
+    * - setting the table change the table.
+    * - the method is chainable.
+    * - passing a non-string argument throws an exception.
+    */
     public function testSetTable()
     {
         $obj = new DatabaseSource();
@@ -109,8 +127,8 @@ class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateTable()
     {
-        $model = new Object();
-        $model->set_metadata(
+        $item = new Object();
+        $item->set_metadata(
             [
                 'properties' => [
                     'id' => [
@@ -122,7 +140,7 @@ class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
         );
 
         $obj = new DatabaseSource();
-        $obj->set_model($model);
+        $obj->set_model($item);
         $obj->set_table('test');
         $this->assertNotTrue($obj->table_exists());
 
@@ -134,7 +152,7 @@ class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
     public function testCreateTableTableExistsReturnsTrue()
     {
         $obj = new DatabaseSource();
-        // $obj->set_model($model);
+        // $obj->set_model($item);
         $obj->set_table('test');
         $this->assertTrue($obj->table_exists());
 
@@ -155,8 +173,8 @@ class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
 
     public function testAlterTableNewProperty()
     {
-        $model = new Object();
-        $model->set_metadata(
+        $item = new Object();
+        $item->set_metadata(
             [
                 'properties' => [
                     'id' => [
@@ -171,7 +189,7 @@ class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
         );
 
         $obj = new DatabaseSource();
-        $obj->set_model($model);
+        $obj->set_model($item);
         $obj->set_table('test');
         $ret = $obj->alter_table();
 
@@ -180,8 +198,8 @@ class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
 
     public function testAlterTablePropertyChange()
     {
-        $model = new Object();
-        $model->set_metadata(
+        $item = new Object();
+        $item->set_metadata(
             [
                 'properties' => [
                     'id' => [
@@ -197,17 +215,68 @@ class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
         );
 
         $obj = new DatabaseSource();
-        $obj->set_model($model);
+        $obj->set_model($item);
         $obj->set_table('test');
         $ret = $obj->alter_table();
 
         $this->assertTrue($ret);
     }
 
+    public function testAlterTableInvalidTableReturnFalse()
+    {
+        $obj = new DatabaseSource();
+        $obj->set_table('invalid-table');
+        $this->assertFalse($obj->alter_table());
+    }
+
+
+    public function testTableExists()
+    {
+        $obj = new DatabaseSource();
+        $obj->set_table('invalid-table');
+        $this->assertFalse($obj->table_exists());
+        $obj->set_table('test');
+        $this->assertTrue($obj->table_exists());
+    }
+
+    public function testTableStructure()
+    {
+        $obj = new DatabaseSource();
+        $obj->set_table('test');
+        $ret = $obj->table_structure();
+        $this->assertNotEmpty($ret);
+    }
+
+    /**
+    * Assert that, with the method `table_is_empty()`:
+    * - using with an empty table returns true.
+    * - using with a non-empty table returns false.
+    * - using with an invalid table throws a PDOException
+    */
+    public function testTableIsEmpty()
+    {
+        $obj = new DatabaseSource();
+        $obj->set_table('empty_test');
+
+        $item = $this->getItemModel();
+        $obj->set_model($item);
+        $obj->create_table();
+        $this->assertTrue($obj->table_is_empty());
+
+        $item->set_data(['id'=>1, 'name'=>'Empty Test']);
+        $obj->save_item($item);
+        $this->assertFalse($obj->table_is_empty());
+
+        $this->setExpectedException('\PDOException');
+        $obj->set_table('invalid-db-table');
+        $obj->table_is_empty();
+    }
+
+
     protected function getItemModel()
     {
-        $model = new Object();
-        $model->set_metadata(
+        $item = new Object();
+        $item->set_metadata(
             [
                 'properties' => [
                     'id' => [
@@ -225,14 +294,14 @@ class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
                 ]
             ]
         );
-        return $model;
+        return $item;
     }
 
     public function testSaveItem()
     {
-        $model = $this->getItemModel();
+        $item = $this->getItemModel();
 
-        $model->set_data(
+        $item->set_data(
             [
                 'id'   => 1,
                 'name' => 'Foo bar'
@@ -240,39 +309,55 @@ class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
         );
 
         $obj = new DatabaseSource();
-        $obj->set_model($model);
+        $obj->set_model($item);
         $obj->set_table('test');
-        $ret = $obj->save_item($model);
+        $ret = $obj->save_item($item);
         $this->assertEquals(1, $ret);
     }
 
+    /**
+    * @depends testSaveItem
+    */
     public function testLoadItem()
     {
-        $model = $this->getItemModel();
+        $item = $this->getItemModel();
 
         $obj = new DatabaseSource();
-        $obj->set_model($model);
+        $obj->set_model($item);
         $obj->set_table('test');
         $ret = $obj->load_item(1);
+        $this->assertInstanceOf(get_class($item), $ret);
         $this->assertEquals('Foo bar', $ret->name);
     }
 
     public function testLoadItemNoMatchingId()
     {
-        $model = $this->getItemModel();
+        $item = $this->getItemModel();
 
         $obj = new DatabaseSource();
-        $obj->set_model($model);
+        $obj->set_model($item);
         $obj->set_table('test');
         $ret = $obj->load_item(666);
         $this->assertNull($ret->id());
     }
 
+    public function testLoadItems()
+    {
+        $item = $this->getItemModel();
+
+        $obj = new DatabaseSource();
+        $obj->set_model($item);
+        $obj->set_table('test');
+
+        $ret = $obj->load_items();
+        //var_dump($ret);
+    }
+
     public function testUpdateItem()
     {
-        $model = $this->getItemModel();
+        $item = $this->getItemModel();
 
-        $model->set_data(
+        $item->set_data(
             [
                 'id'   => 1,
                 'name' => 'Baz Foo'
@@ -280,9 +365,9 @@ class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
         );
 
         $obj = new DatabaseSource();
-        $obj->set_model($model);
+        $obj->set_model($item);
         $obj->set_table('test');
-        $ret = $obj->update_item($model);
+        $ret = $obj->update_item($item);
         $this->assertTrue($ret);
 
         $loaded = $obj->load_item(1);
@@ -291,18 +376,18 @@ class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
 
     public function testDeleteItem()
     {
-        $model = $this->getItemModel();
+        $item = $this->getItemModel();
 
-        $model->set_data(
+        $item->set_data(
             [
                 'id' => 1
             ]
         );
 
         $obj = new DatabaseSource();
-        $obj->set_model($model);
+        $obj->set_model($item);
         $obj->set_table('test');
-        $ret = $obj->delete_item($model);
+        $ret = $obj->delete_item($item);
         $this->assertTrue($ret);
 
         $loaded = $obj->load_item(1);
@@ -311,23 +396,23 @@ class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
 
     public function testDeleteItemInvalidIds()
     {
-        $model = $this->getItemModel();
+        $item = $this->getItemModel();
 
-        $model->set_data(
+        $item->set_data(
             [
                 'id' => 42
             ]
         );
 
         $obj = new DatabaseSource();
-        $obj->set_model($model);
+        $obj->set_model($item);
         $obj->set_table('test');
-        $ret = $obj->delete_item($model);
+        $ret = $obj->delete_item($item);
         // $this->assertFalse($ret);
 
-        $model2 = $this->getItemModel();
+        $item2 = $this->getItemModel();
 
         $this->setExpectedException('\Exception');
-        $obj->delete_item($model2);
+        $obj->delete_item($item2);
     }
 }

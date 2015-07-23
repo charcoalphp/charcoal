@@ -1,8 +1,8 @@
 <?php
 
-namespace Charcoal\Tests\Loader\CollectionLoader;
+namespace Charcoal\Tests\Source;
 
-use \Charcoal\Loader\CollectionLoader\Filter as Filter;
+use \Charcoal\Source\Filter as Filter;
 use \Charcoal\Charcoal as Charcoal;
 
 class FilterTest extends \PHPUnit_Framework_TestCase
@@ -10,7 +10,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     public function testContructor()
     {
         $obj = new Filter();
-        $this->assertInstanceOf('\Charcoal\Loader\CollectionLoader\Filter', $obj);
+        $this->assertInstanceOf('\Charcoal\Source\Filter', $obj);
 
         // Default values
         $this->assertEquals('', $obj->property());
@@ -234,81 +234,6 @@ class FilterTest extends \PHPUnit_Framework_TestCase
         $obj->set_string([]);
     }
 
-    public function testSQLNoPropertyIsEmpty()
-    {
-        $obj = new Filter();
-        $sql = $obj->sql();
-
-        $this->assertEquals('', $sql);
-    }
-
-    /**
-    * @dataProvider providerBasicOperators
-    */
-    public function testSQLBasicOperators($operator)
-    {
-        $obj = new Filter();
-        $obj->set_property('foo');
-        $obj->set_operator($operator);
-        $obj->set_val('bar');
-        $sql = $obj->sql();
-
-        /** @todo: Note that 'bar' is not quoted... */
-        $this->assertEquals('(`foo` '.$operator.' \'bar\')', $sql);
-    }
-
-    /**
-    * @dataProvider providerNullStyleOperators
-    */
-    public function testSQLNullStyleOperators($operator)
-    {
-        $obj = new Filter();
-        $obj->set_property('foo');
-        $obj->set_operator($operator);
-        $obj->set_val('bar');
-        $sql = $obj->sql();
-
-        /** @todo: Note that 'bar' is not quoted... */
-        $this->assertEquals('(`foo` '.$operator.')', $sql);
-    }
-
-    public function testSQLFunction()
-    {
-        $obj = new Filter();
-        $obj->set_property('foo');
-        $obj->set_operator('=');
-        $obj->set_val('bar');
-        $obj->set_func('abs');
-        $sql = $obj->sql();
-
-        /** @todo: Note that 'bar' is not quoted... */
-        $this->assertEquals('(ABS(`foo`) = \'bar\')', $sql);
-    }
-
-    public function testSQLWithString()
-    {
-        $obj = new Filter();
-        $obj->set_string('1=1');
-
-        $sql = $obj->sql();
-        $this->assertEquals('1=1', $sql);
-    }
-
-    public function testSQLWithStringTakesPrecedence()
-    {
-        $obj = new Filter();
-
-        // Should be ignored:
-        $obj->set_property('foo');
-        $obj->set_operator('=');
-        $obj->set_val('bar');
-
-        // Should take precedence:
-        $obj->set_string('1=1');
-
-        $sql = $obj->sql();
-        $this->assertEquals('1=1', $sql);
-    }
 
     public function providerValidOperators()
     {
@@ -327,28 +252,6 @@ class FilterTest extends \PHPUnit_Framework_TestCase
             ['Is'], // Mixed case is also valid
             ['like'],
             ['Is Not NULL']
-        ];
-    }
-
-    public function providerBasicOperators()
-    {
-        return [
-            ['='],
-            ['>'],
-            ['>='],
-            ['<'],
-            ['>'],
-            ['IS'],
-            ['IS NOT'],
-            ['LIKE']
-        ];
-    }
-
-    public function providerNullStyleOperators()
-    {
-        return [
-            ['IS NULL'],
-            ['IS NOT NULL']
         ];
     }
 

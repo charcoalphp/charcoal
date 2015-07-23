@@ -2,6 +2,9 @@
 
 namespace Charcoal\Loader;
 
+// Intra-module (`charcoal-core`) dependencies
+use \Charcoal\Model\ModelInterface as ModelInterface;
+
 /**
 *
 */
@@ -36,6 +39,29 @@ class ObjectLoader extends AbstractLoader
     public function source()
     {
         return $this->_source;
+    }
+
+    /**
+    * @param ModelInterface $model
+    * @return Source Chainable
+    */
+    public function set_model(ModelInterface $model)
+    {
+        $this->_model = $model;
+        $this->set_source($model->source());
+        return $this;
+    }
+
+    /**
+    * @throws Exception if not model was previously set
+    * @return Model
+    */
+    public function model()
+    {
+        if ($this->_model === null) {
+            throw new Exception('No model set.');
+        }
+        return $this->_model;
     }
 
     /**

@@ -2,7 +2,7 @@
 
 namespace Charcoal\Tests\Loader\CollectionLoader;
 
-use \Charcoal\Loader\CollectionLoader\Pagination;
+use \Charcoal\Source\Pagination;
 use \Charcoal\Charcoal as Charcoal;
 
 class PaginationTest extends \PHPUnit_Framework_TestCase
@@ -10,7 +10,7 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
     public function testContructor()
     {
         $obj = new Pagination();
-        $this->assertInstanceOf('\Charcoal\Loader\CollectionLoader\Pagination', $obj);
+        $this->assertInstanceOf('\Charcoal\Source\Pagination', $obj);
 
         // Default values
         $this->assertEquals(0, $obj->page());
@@ -87,50 +87,6 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
         $obj->set_num_per_page(20);
 
         $this->assertEquals(60, $obj->last());
-    }
-
-    public function testSQLEmptyWithoutPage()
-    {
-        $obj = new Pagination();
-        $sql = $obj->sql();
-
-        $this->assertEquals('', $sql);
-
-        $obj = new Pagination();
-        $obj->set_num_per_page(20);
-        $sql = $obj->sql();
-
-        $this->assertEquals('', $sql);
-
-        $obj = new Pagination();
-        $obj->set_page(1);
-        $sql = $obj->sql();
-
-        $this->assertEquals('', $sql);
-    }
-
-    public function testSQL()
-    {
-        $obj = new Pagination();
-        $obj->set_page(1);
-        $obj->set_num_per_page(20);
-        $sql = $obj->sql();
-
-        $this->assertEquals(' LIMIT 0, 20', $sql);
-
-        $obj = new Pagination();
-        $obj->set_page(2);
-        $obj->set_num_per_page(25);
-        $sql = $obj->sql();
-
-        $this->assertEquals(' LIMIT 25, 25', $sql);
-
-        $obj = new Pagination();
-        $obj->set_page(5);
-        $obj->set_num_per_page(50);
-        $sql = $obj->sql();
-
-        $this->assertEquals(' LIMIT 200, 50', $sql);
     }
 
     /**

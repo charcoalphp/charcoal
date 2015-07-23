@@ -2,13 +2,20 @@
 
 namespace Charcoal\Source;
 
+// Dependencies from `PHP`
+use \Exception as Exception;
+
 // Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Config\ConfigurableInterface as ConfigurableInterface;
 use \Charcoal\Config\ConfigurableTrait as ConfigurableTrait;
+use \Charcoal\Model\ModelInterface as ModelInterface;
 
 // Local namespace dependencies
 use \Charcoal\Source\SourceConfig as SourceConfig;
 use \Charcoal\Source\SourceInterface as SourceInterface;
+use \Charcoal\Source\Filter as Filter;
+use \Charcoal\Source\Order as Order;
+use \Charcoal\Source\Pagination as Pagination;
 
 /**
 *
@@ -18,6 +25,338 @@ abstract class AbstractSource implements
     ConfigurableInterface
 {
     use ConfigurableTrait;
+
+    /**
+    * @var ModelInterface $_model
+    */
+    protected $_model = null;
+
+    /**
+    * @var array $_properties
+    */
+    private $_properties = [];
+    /**
+    * @var array $_properties_options
+    */
+    private $_properties_options = [];
+    /**
+    * Array of `Filter` objects
+    * @var array $_filters
+    */
+    private $_filters = [];
+    /**
+    * Array of `Order` object
+    * @var array $_orders
+    */
+    private $_orders = [];
+    /**
+    * The `Pagination` object
+    * @var Pagination|null $_pagination
+    */
+    private $_pagination = null;
+
+    /**
+    * @param array $data
+    * @return AbstractSource Chainable
+    */
+    public function set_data(array $data)
+    {
+        if (isset($data['properties'])) {
+            $this->set_properties($data['properties']);
+        }
+        if (isset($data['filters'])) {
+            $this->set_filters($data['filters']);
+        }
+        if (isset($data['orders'])) {
+            $this->set_orders($data['orders']);
+        }
+        if (isset($data['pagination'])) {
+            $this->set_pagination($data['pagination']);
+        }
+        return $this;
+    }
+
+    /**
+    * @param ModelInterface $model
+    * @return AbstractSource Chainable
+    */
+    public function set_model(ModelInterface $model)
+    {
+        $this->_model = $model;
+        return $this;
+    }
+
+    /**
+    * @throws Exception if not model was previously set
+    * @return ModelInterface
+    */
+    public function model()
+    {
+        if ($this->_model === null) {
+            throw new Exception('No model set.');
+        }
+        return $this->_model;
+    }
+
+    /**
+    * @param array $properties
+    * @throws InvalidArgumentException
+    * @return ColelectionLoader Chainable
+    */
+    public function set_properties(array $properties)
+    {
+        $this->_properties = [];
+        foreach ($properties as $p) {
+            $this->add_property($p);
+        }
+        return $this;
+    }
+
+    /**
+    * @return array
+    */
+    public function properties()
+    {
+        return $this->_properties;
+    }
+
+    /**
+    * @param string $property Property ident
+    * @throws InvalidArgumentException if property is not a string or empty
+    * @return CollectionLoader Chainable
+    */
+    public function add_property($property)
+    {
+        if (!is_string($property)) {
+            throw new InvalidArgumentException('Property must be a string.');
+        }
+        if ($property=='') {
+            throw new InvalidArgumentException('Property can not be empty.');
+        }
+        $this->_properties[] = $property;
+        return $this;
+    }
+
+    /**
+    * @param array $filters
+    * @throws InvalidArgumentException
+    * @return Collection Chainable
+    */
+    public function set_filters($filters)
+    {
+        if (!is_array($filters)) {
+            throw new InvalidArgumentException('Filters must be an array.');
+        }
+        $this->_filters = [];
+        foreach ($filters as $f) {
+            $this->add_filter($f);
+        }
+        return $this;
+    }
+
+    /**
+    * @return array
+    */
+    public function filters()
+    {
+        if (!isset($this->_filters)) {
+            $this->_filters = [];
+        }
+        return $this->_filters;
+    }
+
+    /**
+    * Add a collection filter to the loader.
+    *
+    * There are 3 different ways of adding a filter:
+    * - as a `Filter` object, in which case it will be added directly.
+    *   - `add_filter($obj);`
+    * - as an array of options, which will be used to build the `Filter` object
+    *   - `add_filter(['property' => 'foo', 'val' => 42, 'operator' => '<=']);`
+    * - as 3 parameters: `property`, `val` and `options`
+    *   - `add_filter('foo', 42, ['operator' => '<=']);`
+    *
+    * @param string|array|Filter $param
+    * @param mixed               $val     Optional: Only used if the first argument is a string
+    * @param array               $options Optional: Only used if the first argument is a string
+    * @throws InvalidArgumentException if property is not a string or empty
+    * @return CollectionLoader (Chainable)
+    */
+    public function add_filter($param, $val = null, array $options = null)
+    {
+        if ($param instanceof Filter) {
+            $this->_filters[] = $param;
+        } elseif (is_array($param)) {
+            $filter = $this->create_filter();
+            $filter->set_data($param);
+            $this->_filters[] = $filter;
+        } elseif (is_string($param) && $val !== null) {
+            $filter = $this->create_filter();
+            $filter->set_property($param);
+            $filter->set_val($val);
+            if (is_array($options)) {
+                $filter->set_data($options);
+            }
+            $this->_filters[] = $filter;
+
+        } else {
+            throw new InvalidArgumentException('Parameter must be an array or a property ident.');
+        }
+
+        return $this;
+    }
+
+    /**
+    * @return FilterInterface
+    */
+    protected function create_filter()
+    {
+        $filter = new Filter();
+        return $filter;
+    }
+
+    /**
+    * @param array $orders
+    * @return CollectionLoader Chainable
+    */
+    public function set_orders($orders)
+    {
+        $this->_orders = [];
+        foreach ($orders as $o) {
+            $this->add_order($o);
+        }
+        return $this;
+    }
+
+    /**
+    * @return array
+    */
+    public function orders()
+    {
+        if (!isset($this->_orders)) {
+            $this->_orders = [];
+        }
+        return $this->_orders;
+    }
+
+    /**
+    * @param string|array|Order $param
+    * @param string             $mode          Optional
+    * @param array              $order_options Optional
+    * @throws InvalidArgumentException
+    * @return CollectionLoader Chainable
+    */
+    public function add_order($param, $mode = 'asc', $order_options = null)
+    {
+        if ($param instanceof Order) {
+            $this->_orders[] = $param;
+        } elseif (is_array($param)) {
+            $order = $this->create_order();
+            $order->set_data($param);
+            $this->_orders[] = $order;
+        } elseif (is_string($param)) {
+            $order = $this->create_order();
+            $order->set_property($param);
+            $order->set_mode($mode);
+            if (isset($order_options['values'])) {
+                $order->set_values($order_options['values']);
+            }
+            $this->_orders[] = $order;
+        } else {
+            throw new InvalidArgumentException('Parameter must be an Order object or a property ident.');
+        }
+
+        return $this;
+    }
+
+    /**
+    * @return OrderInterface
+    */
+    protected function create_order()
+    {
+        $order = new Order();
+        return $order;
+    }
+
+    /**
+    * @param mixed $param
+    * @return CollectionLoader Chainable
+    */
+    public function set_pagination($param)
+    {
+        if ($param instanceof Pagination) {
+            $this->_pagination = $param;
+        } elseif (is_array($param)) {
+            $pagination = $this->create_pagination();
+            $pagination->set_data($param);
+            $this->_pagination = $pagination;
+        }
+        return $this;
+    }
+
+    /**
+    * @return Pagination
+    */
+    public function pagination()
+    {
+        if (!isset($this->_pagination)) {
+            $this->_pagination = $this->create_pagination();
+        }
+        return $this->_pagination;
+    }
+
+    /**
+    * @return PaginationInterface
+    */
+    protected function create_pagination()
+    {
+        $pagination = new Pagination();
+        return $this->_pagination;
+    }
+
+    /**
+    * @param integer $page
+    * @throws InvalidArgumentException
+    * @return CollectionLoader Chainable
+    */
+    public function set_page($page)
+    {
+        if (!is_integer($page)) {
+            throw new InvalidArgumentException('Page must be an integer.');
+        }
+        $this->pagination()->set_page($page);
+        return $this;
+    }
+
+    /**
+    * @return integer
+    */
+    public function page()
+    {
+        return $this->pagination()->page();
+    }
+
+    /**
+    * @param integer $num
+    * @throws InvalidArgumentException
+    * @return CollectionLoader Chainable
+    */
+    public function set_num_per_page($num)
+    {
+        if (!is_integer($num)) {
+            throw new InvalidArgumentException('Num must be an integer.');
+        }
+        $this->pagination()->set_num_per_page($num);
+        return $this;
+    }
+
+    /**
+    * @return integer
+    */
+    public function num_per_page()
+    {
+        return $this->pagination()->num_per_page();
+    }
 
     /**
     * ConfigurableTrait > create_config()
@@ -33,4 +372,47 @@ abstract class AbstractSource implements
         }
         return $config;
     }
+
+
+
+    /**
+    * @param mixed              $ident
+    * @param StorableInterface $item  Optional item to load into
+    * @throws Exception
+    * @return StorableInterface
+    */
+    abstract public function load_item($ident, StorableInterface $item = null);
+
+        /**
+    * @param StorableInterface|null $item
+    * @return array
+    */
+    abstract public function load_items(StorableInterface $item = null);
+
+    /**
+    * Save an item (create a new row) in storage.
+    *
+    * @param StorableInterface $item The object to save
+    * @throws Exception if a database error occurs
+    * @return mixed The created item ID, or false in case of an error
+    */
+    abstract public function save_item(StorableInterface $item);
+
+    /**
+    * Update an item in storage.
+    *
+    * @param StorableInterface $item       The object to update
+    * @param array             $properties The list of properties to update, if not all
+    * @return boolean Success / Failure
+    */
+    abstract public function update_item(StorableInterface $item, $properties = null);
+
+    /**
+    * Delete an item from storage
+    *
+    * @param StorableInterface $item Optional item to delete. If none, the current model object will be used.
+    * @throws Exception
+    * @return boolean Success / Failure
+    */
+    abstract public function delete_item(StorableInterface $item = null);
 }

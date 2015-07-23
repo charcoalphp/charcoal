@@ -7,12 +7,17 @@ use \InvalidArgumentException as InvalidArgumentException;
 
 // Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Core\IndexableInterface as IndexableInterface;
-use \Charcoal\Collection\AbstractCollection as AbstractCollection;
+
+use \Charcoal\Model\CollectionInterface as CollectionInterface;
 
 /**
 * Model Collection
 */
-class Collection extends AbstractCollection
+class Collection implements
+    CollectionInterface,
+    \ArrayAccess,
+    \Countable,
+    \IteratorAggregate
 {
     /**
     * Array of (ordered) objects

@@ -6,7 +6,7 @@ namespace Charcoal\Source;
 use \Charcoal\Source\SourceInterface as SourceInterface;
 
 /**
-*
+* Storable items can be stored and loaded from a Source.
 */
 interface StorableInterface
 {

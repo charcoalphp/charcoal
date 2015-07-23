@@ -1,13 +1,13 @@
 <?php
 
-namespace Charcoal\Loader\CollectionLoader;
+namespace Charcoal\Source;
 
 use \InvalidArgumentException as InvalidArgumentException;
 
 /**
 *
 */
-class Pagination
+class Pagination implements PaginationInterface
 {
     const DEFAULT_PAGE = 0;
     const DEFAULT_NUM_PER_PAGE = 0;
@@ -15,11 +15,11 @@ class Pagination
     /**
     * @var integer $_page
     */
-    private $_page = self::DEFAULT_PAGE;
+    protected $_page = self::DEFAULT_PAGE;
     /**
     * @var integer $_num_per_page
     */
-    private $_num_per_page = self::DEFAULT_NUM_PER_PAGE;
+    protected $_num_per_page = self::DEFAULT_NUM_PER_PAGE;
 
     /**
     * @param array $data
@@ -108,22 +108,5 @@ class Pagination
         $first = $this->first();
         $num_per_page = $this->num_per_page();
         return ($first + $num_per_page);
-    }
-
-    /**
-    * @return string
-    */
-    public function sql()
-    {
-        $sql = '';
-        $page = $this->page();
-        $num_per_page = $this->num_per_page();
-
-        if ($page && $num_per_page) {
-            $first_page = max(0, (($page-1)*$num_per_page));
-            $sql = ' LIMIT '.$first_page.', '.$num_per_page;
-        }
-        // pre($limits);
-        return $sql;
     }
 }

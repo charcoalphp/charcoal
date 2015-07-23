@@ -8,7 +8,7 @@ use \Charcoal\Source\AbstractSource as AbstractSource;
 /**
 * @todo Concrete implementation of AbstractSource.
 */
-class FileSource extends AbstractSource
+abstract class FileSource extends AbstractSource
 {
     // ...
 }

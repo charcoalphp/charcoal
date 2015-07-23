@@ -5,6 +5,8 @@ namespace Charcoal\Source;
 // Dependencies from `PHP`
 use \Exception as Exception;
 use \InvalidArgumentException as InvalidArgumentException;
+
+// Dependencies from `PHP` modules
 use \PDO as PDO;
 
 // Intra-module (`charcoal-core`) dependencies
@@ -14,11 +16,15 @@ use \Charcoal\Model\ModelInterface as ModelInterface;
 // Local namespace dependencies
 use \Charcoal\Source\AbstractSource as AbstractSource;
 use \Charcoal\Source\DatabaseSourceConfig as DatabaseSourceConfig;
+use \Charcoal\Source\DatabaseSourceInterface as DatabaseSourceInterface;
+use \Charcoal\Source\Database\DatabaseFilter as DatabaseFilter;
+use \Charcoal\Source\Database\DatabaseOrder as DatabaseOrder;
+use \Charcoal\Source\Database\DatabasePagination as DatabasePagination;
 
 /**
 * Database Source, through PDO.
 */
-class DatabaseSource extends AbstractSource
+class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
 {
     const DEFAULT_DB_HOSTNAME = 'localhost';
     const DEFAULT_DB_TYPE = 'mysql';
@@ -41,33 +47,6 @@ class DatabaseSource extends AbstractSource
     * @var array $_dbs
     */
     private static $_dbs = [];
-
-    /**
-    * @var ModelInterface
-    */
-    private $_model = null;
-
-    /**
-    * @param ModelInterface $model
-    * @return Source Chainable
-    */
-    public function set_model(ModelInterface $model)
-    {
-        $this->_model = $model;
-        return $this;
-    }
-
-    /**
-    * @throws Exception if not model was previously set
-    * @return Model
-    */
-    public function model()
-    {
-        if ($this->_model === null) {
-            throw new Exception('No model set.');
-        }
-        return $this->_model;
-    }
 
     /**
     * @param string $database_ident
@@ -124,6 +103,8 @@ class DatabaseSource extends AbstractSource
     }
 
     /**
+    * Set the database's table to use.
+    *
     * @param string $table
     * @throws InvalidArgumentException if argument is not a string
     * @return DatabaseSource Chainable
@@ -139,6 +120,8 @@ class DatabaseSource extends AbstractSource
     }
 
     /**
+    * Get the database's current table.
+    *
     * @throws Exception if the table was not set
     * @return string
     */
@@ -358,23 +341,6 @@ class DatabaseSource extends AbstractSource
     }
 
     /**
-    * ConfigurableTrait > create_config()
-    *
-    * Overrides the method defined in AbstractSource to returns a `DatabaseSourceConfig` object.
-    *
-    * @param array $data Optional
-    * @return DatabaseSourceConfig
-    */
-    public function create_config(array $data = null)
-    {
-        $config = new DatabaseSourceConfig();
-        if (is_array($data)) {
-            $config->set_data($data);
-        }
-        return $config;
-    }
-
-    /**
     * @param mixed              $ident
     * @param StoreableInterface $item  Optional item to load into
     * @throws Exception
@@ -413,6 +379,35 @@ class DatabaseSource extends AbstractSource
         }
 
         return $item;
+    }
+
+    /**
+    * @param StorableInterface|null $item
+    * @return array
+    */
+    public function load_items(StorableInterface $item = null)
+    {
+        if ($item !== null) {
+            $this->set_model($item);
+        }
+
+        $items = [];
+        $model = $this->model();
+        $db = $this->db();
+
+        $q = $this->sql_load();
+        $sth = $db->prepare($q);
+        $sth->execute();
+        $sth->setFetchMode(PDO::FETCH_ASSOC);
+
+        $classname = get_class($model);
+        while ($obj_data = $sth->fetch()) {
+            $obj = new $classname;
+            $obj->set_flat_data($obj_data);
+            $items[] = $obj;
+        }
+
+        return $items;
     }
 
     /**
@@ -594,5 +589,159 @@ class DatabaseSource extends AbstractSource
         }
 
         return $sth;
+    }
+
+    /**
+    * @throws Exception if the source does not have a table defined
+    * @return string
+    */
+    public function sql_load()
+    {
+        $table = $this->table();
+        if (!$table) {
+            throw new Exception('No table defined.');
+        }
+
+        $selects = $this->sql_select();
+        $tables  = '`'.$table.'` AS obj_table';
+        $filters = $this->sql_filters();
+        $orders  = $this->sql_orders();
+        $limits  = $this->sql_pagination();
+
+        $q = 'SELECT '.$selects.' FROM '.$tables.$filters.$orders.$limits;
+        // var_dump($q);
+        return $q;
+    }
+
+    /**
+    * @return string
+    */
+    protected function sql_select()
+    {
+        $properties = $this->properties();
+        if (empty($properties)) {
+            return 'obj_table.*';
+        }
+
+        $sql = '';
+        $props_sql = [];
+        foreach ($properties as $p) {
+            $props_sql[] = 'obj_table.`'.$p.'`';
+        }
+        if (!empty($props_sql)) {
+            $sql = implode(', ', $props_sql);
+        }
+
+        return $sql;
+    }
+
+    /**
+    * @return string
+    * @todo 2015-03-04 Use bindings for filters value
+    */
+    protected function sql_filters()
+    {
+        $sql = '';
+
+        // Process filters
+        if (!empty($this->_filters)) {
+            $filters_sql = [];
+            foreach ($this->_filters as $f) {
+                $f_sql = $f->sql();
+                if ($f_sql) {
+                    $filters_sql[] = [
+                        'sql'     => $f->sql(),
+                        'operand' => $f->operand()
+                    ];
+                }
+            }
+            if (!empty($filters_sql)) {
+                $sql .= ' WHERE';
+                $i = 0;
+
+                foreach ($filters_sql as $f) {
+                    if ($i > 0) {
+                        $sql .= ' '.$f['operand'];
+                    }
+                    $sql .= ' '.$f['sql'];
+                    $i++;
+                }
+            }
+
+        }
+
+        return $sql;
+    }
+
+    /**
+    * @return string
+    */
+    protected function sql_orders()
+    {
+        $sql = '';
+
+        if (!empty($this->_orders)) {
+            $orders_sql = [];
+            foreach ($this->_orders as $o) {
+                $orders_sql[] = $o->sql();
+            }
+            if (!empty($orders_sql)) {
+                $sql = ' ORDER BY '.implode(', ', $orders_sql);
+            }
+        }
+
+        return $sql;
+    }
+
+    /**
+    * @return string
+    */
+    protected function sql_pagination()
+    {
+        return $this->pagination()->sql();
+    }
+
+    /**
+    * @return FilterInterface
+    */
+    protected function create_filter()
+    {
+        $filter = new DatabaseFilter();
+        return $filter;
+    }
+
+    /**
+    * @return OrderInterface
+    */
+    protected function create_order()
+    {
+        $order = new DatabaseOrder();
+        return $order;
+    }
+
+    /**
+    * @return PaginationInterface
+    */
+    protected function create_pagination()
+    {
+        $pagination = new DatabasePagination();
+        return $pagination;
+    }
+
+    /**
+    * ConfigurableTrait > create_config()
+    *
+    * Overrides the method defined in AbstractSource to returns a `DatabaseSourceConfig` object.
+    *
+    * @param array $data Optional
+    * @return DatabaseSourceConfig
+    */
+    public function create_config(array $data = null)
+    {
+        $config = new DatabaseSourceConfig();
+        if (is_array($data)) {
+            $config->set_data($data);
+        }
+        return $config;
     }
 }

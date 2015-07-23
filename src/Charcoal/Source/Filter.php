@@ -1,11 +1,17 @@
 <?php
 
-namespace Charcoal\Loader\CollectionLoader;
+namespace Charcoal\Source;
 
 // Dependencies from `PHP`
 use \InvalidArgumentException as InvalidArgumentException;
 
-class Filter
+// Local namespace dependencies
+use \Charcoal\Source\FilterInterface as FilterInterface;
+
+/**
+*
+*/
+class Filter implements FilterInterface
 {
     const DEFAULT_OPERATOR = '=';
     const DEFAULT_FUNC     = '';
@@ -14,35 +20,35 @@ class Filter
     /**
     * @var string $_property
     */
-    private $_property;
+    protected $_property;
     /**
     * @var mixed $_val
     */
-    private $_val;
+    protected $_val;
 
     /**
     * @var string $_operator
     */
-    private $_operator = self::DEFAULT_OPERATOR;
+    protected $_operator = self::DEFAULT_OPERATOR;
     /**
     * @var string $_func
     */
-    private $_func = self::DEFAULT_FUNC;
+    protected $_func = self::DEFAULT_FUNC;
     /**
     * @var string $_operand
     */
-    private $_operand = self::DEFAULT_OPERAND;
+    protected $_operand = self::DEFAULT_OPERAND;
 
     /**
     * @var string $_string
     */
-    private $_string;
+    protected $_string;
 
     /**
     * Inactive filter should be skipped completely.
     * @var boolean $_active
     */
-    private $_active;
+    protected $_active;
 
     /**
     * @param array $data
@@ -72,24 +78,6 @@ class Filter
             $this->set_active($data['active']);
         }
         return $this;
-    }
-
-    /**
-    * @param boolean $active
-    * @return Filter (Chainable)
-    */
-    public function set_active($active)
-    {
-        $this->_active = $active;
-        return $this;
-    }
-
-    /**
-    * @return boolean
-    */
-    public function active()
-    {
-        return !!$this->_active;
     }
 
     /**
@@ -148,7 +136,7 @@ class Filter
         }
 
         $operator = strtoupper($operator);
-        if (!in_array($operator, $this->_valid_operators())) {
+        if (!in_array($operator, $this->valid_operators())) {
             throw new InvalidArgumentException('This is not a valid operator.');
         }
 
@@ -176,7 +164,7 @@ class Filter
         }
 
         $func = strtoupper($func);
-        if (!in_array($func, $this->_valid_func())) {
+        if (!in_array($func, $this->valid_func())) {
             throw new InvalidArgumentException('This is not a valid function.');
         }
         $this->_func = $func;
@@ -203,7 +191,7 @@ class Filter
         }
 
         $operand = strtoupper($operand);
-        if (!in_array($operand, $this->_valid_operands())) {
+        if (!in_array($operand, $this->valid_operands())) {
             throw new InvalidArgumentException('This is not a valid operand.');
         }
 
@@ -243,97 +231,31 @@ class Filter
     }
 
     /**
-    * @return array
+    * @param boolean $active
+    * @return Filter (Chainable)
     */
-    private function sql_fields()
+    public function set_active($active)
     {
-        $property = $this->property();
-        if ($property) {
-            /** @todo Load Property from associated model metadata. */
-            return [$property];
-        }
-        /*
-        $field = $this->field();
-        if($field) {
-        return [$field];
-        }
-        */
-        return [];
+        $this->_active = $active;
+        return $this;
     }
 
     /**
-    * @return string
+    * @return boolean
     */
-    public function sql()
+    public function active()
     {
-        if ($this->_string) {
-            return $this->_string;
-        }
-        $fields = $this->sql_fields();
-        if (empty($fields)) {
-            return '';
-        }
-
-        $filter = '';
-        foreach ($fields as $field) {
-            $val = '\''.$this->val().'\'';
-
-            // Support custom "operator" for the filter
-            $operator = $this->operator();
-
-            // Support for custom function on column name
-            $function = $this->func();
-
-            if ($function) {
-                $target = $function.'(`'.$field.'`)';
-            } else {
-                $target = '`'.$field.'`';
-            }
-
-            switch ($operator) {
-                /*
-                case '=':
-
-                if($this->multiple() && ($sql_val != "''")) {
-                $sep = (isset($this->multiple_options['separator']) ? $this->multiple_options['separator'] : ',');
-                if($sep == ',') {
-                $filter = ' FIND_IN_SET('.$sql_val.', '.$filter_ident.')';
-                }
-                else {
-                // The FIND_IN_SET function must work on a comma separated-value.
-                // So create temporary separators to use a comma...
-                $custom_separator = '}x5S_'; // With not much luck, this string should never be used in text
-                $filter = ' FIND_IN_SET(
-                REPLACE('.$sql_val.', \',\', \''.$custom_separator.'\'),
-                REPLACE(REPLACE('.$filter_ident.', \',\', \''.$custom_separator.'\'), \''.$sep.'\', \',\')';
-                }
-                }
-                else {
-                $filter = '('.$filter_ident.' '.$operator.' '.$sql_val.')';
-                }
-                break;
-                */
-
-                case 'IS NULL':
-                case 'IS NOT NULL':
-                    $filter .= '('.$target.' '.$operator.')';
-                    break;
-
-                default:
-                    $filter .= '('.$target.' '.$operator.' '.$val.')';
-                    break;
-            }
-        }
-
-        return $filter;
+        return !!$this->_active;
     }
 
-    /**
+
+
+        /**
     * Supported operators
     *
     * @return array
     */
-    protected function _valid_operators()
+    protected function valid_operators()
     {
         $valid_operators = [
             '=', 'IS', '!=', 'IS NOT',
@@ -352,7 +274,7 @@ class Filter
     *
     * @return array
     */
-    protected function _valid_operands()
+    protected function valid_operands()
     {
         $valid_operands = [
             'AND', '&&',
@@ -367,7 +289,7 @@ class Filter
     * Supported functions, uppercase
     * @return array
     */
-    protected function _valid_func()
+    protected function valid_func()
     {
         $valid_functions = [
             'ABS',

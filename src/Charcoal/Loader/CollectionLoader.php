@@ -11,9 +11,9 @@ use \Charcoal\Model\ModelInterface as ModelInterface;
 use \Charcoal\Model\Collection as Collection;
 
 // Local namespace dependencies
-use \Charcoal\Loader\CollectionLoader\Filter as Filter;
-use \Charcoal\Loader\CollectionLoader\Order as Order;
-use \Charcoal\Loader\CollectionLoader\Pagination as Pagination;
+use \Charcoal\Source\Database\DatabaseFilter as Filter;
+use \Charcoal\Source\Database\DatabaseOrder as Order;
+use \Charcoal\Source\Database\DatabasePagination as Pagination;
 
 /**
 * Collection Loader
@@ -87,10 +87,14 @@ class CollectionLoader extends AbstractLoader
     }
 
     /**
+    * @throws Exception
     * @return mixed
     */
     public function source()
     {
+        if ($this->_source === null) {
+            throw new Exception('No source set.');
+        }
         return $this->_source;
     }
 
@@ -124,14 +128,7 @@ class CollectionLoader extends AbstractLoader
     */
     public function set_properties($properties)
     {
-        if (!is_array($properties)) {
-            throw new InvalidArgumentException('Properties must be an array.');
-        }
-        $this->_properties = [];
-        foreach ($properties as $p) {
-            $this->add_property($p);
-        }
-        return $this;
+        return $this->source()->set_properties($properties);
     }
 
     /**
@@ -139,7 +136,7 @@ class CollectionLoader extends AbstractLoader
     */
     public function properties()
     {
-        return $this->_properties;
+        return $this->source()->properties();
     }
 
     /**
@@ -149,14 +146,7 @@ class CollectionLoader extends AbstractLoader
     */
     public function add_property($property)
     {
-        if (!is_string($property)) {
-            throw new InvalidArgumentException('Property must be a string.');
-        }
-        if ($property=='') {
-            throw new InvalidArgumentException('Property can not be empty.');
-        }
-        $this->_properties[] = $property;
-        return $this;
+        return $this->source()->add_property($property);
     }
 
     /**
@@ -166,14 +156,7 @@ class CollectionLoader extends AbstractLoader
     */
     public function set_filters($filters)
     {
-        if (!is_array($filters)) {
-            throw new InvalidArgumentException('Filters must be an array.');
-        }
-        $this->_filters = [];
-        foreach ($filters as $f) {
-            $this->add_filter($f);
-        }
-        return $this;
+        return $this->source()->set_filters($filters);
     }
 
     /**
@@ -181,10 +164,7 @@ class CollectionLoader extends AbstractLoader
     */
     public function filters()
     {
-        if (!isset($this->_filters)) {
-            $this->_filters = [];
-        }
-        return $this->_filters;
+        return $this->source()->filters();
     }
 
     /**
@@ -206,26 +186,7 @@ class CollectionLoader extends AbstractLoader
     */
     public function add_filter($param, $val = null, array $options = null)
     {
-        if ($param instanceof Filter) {
-            $this->_filters[] = $param;
-        } elseif (is_array($param)) {
-            $filter = new Filter();
-            $filter->set_data($param);
-            $this->_filters[] = $filter;
-        } elseif (is_string($param) && $val !== null) {
-            $filter = new Filter();
-            $filter->set_property($param);
-            $filter->set_val($val);
-            if (is_array($options)) {
-                $filter->set_data($options);
-            }
-            $this->_filters[] = $filter;
-
-        } else {
-            throw new InvalidArgumentException('Parameter must be an array or a property ident.');
-        }
-
-        return $this;
+        return $this->source->add_filter($param, $val, $options);
     }
 
     /**
@@ -234,11 +195,7 @@ class CollectionLoader extends AbstractLoader
     */
     public function set_orders($orders)
     {
-        $this->_orders = [];
-        foreach ($orders as $o) {
-            $this->add_order($o);
-        }
-        return $this;
+        return $this->set_orders($orders);
     }
 
     /**
@@ -246,10 +203,7 @@ class CollectionLoader extends AbstractLoader
     */
     public function orders()
     {
-        if (!isset($this->_orders)) {
-            $this->_orders = [];
-        }
-        return $this->_orders;
+        return $this->orders();
     }
 
     /**
@@ -261,25 +215,7 @@ class CollectionLoader extends AbstractLoader
     */
     public function add_order($param, $mode = 'asc', $order_options = null)
     {
-        if ($param instanceof Order) {
-            $this->_orders[] = $param;
-        } elseif (is_array($param)) {
-            $order = new Order();
-            $order->set_data($param);
-            $this->_orders[] = $order;
-        } elseif (is_string($param)) {
-            $order = new Order();
-            $order->set_property($param);
-            $order->set_mode($mode);
-            if (isset($order_options['values'])) {
-                $order->set_values($order_options['values']);
-            }
-            $this->_orders[] = $order;
-        } else {
-            throw new InvalidArgumentException('Parameter must be an Order object or a property ident.');
-        }
-
-        return $this;
+        return $this->source()->add_order($param, $mode, $order_options);
     }
 
     /**
@@ -288,14 +224,7 @@ class CollectionLoader extends AbstractLoader
     */
     public function set_pagination($param)
     {
-        if ($param instanceof Pagination) {
-            $this->_pagination = $param;
-        } elseif (is_array($param)) {
-            $pagination = new Pagination();
-            $pagination->set_data($param);
-            $this->_pagination = $pagination;
-        }
-        return $this;
+        return $this->source()->set_pagination($param);
     }
 
     /**
@@ -303,10 +232,7 @@ class CollectionLoader extends AbstractLoader
     */
     public function pagination()
     {
-        if (!isset($this->_pagination)) {
-            $this->_pagination = new Pagination();
-        }
-        return $this->_pagination;
+        return $this->source()->pagination();
     }
 
     /**
@@ -376,22 +302,18 @@ class CollectionLoader extends AbstractLoader
         }
 
         /** @todo Filters, pagination, select, etc */
-        $q = $this->sql();
+        $q = $this->source()->sql_load();
 
         $collection = new Collection();
 
-        $db = $this->source()->db();
 
         $sth = $db->prepare($q);
         /** @todo Filter binds */
         $sth->execute();
         $sth->setFetchMode(\PDO::FETCH_ASSOC);
+        $class_name = get_class($this->model());
         while ($obj_data = $sth->fetch()) {
-            /** @todo Custom class */
-            $class_name = get_class($this->model());
-            // $obj = ModelFactory::instance()->get(
             $obj = new $class_name;
-            // $obj = new \Charcoal\Model\Object();
             $obj->set_flat_data($obj_data);
             $collection->add($obj);
         }
@@ -399,115 +321,5 @@ class CollectionLoader extends AbstractLoader
         $this->cache_store($collection);
 
         return $collection;
-    }
-
-    /**
-    * @throws Exception if the source does not have a table defined
-    * @return string
-    */
-    public function sql()
-    {
-        $table = $this->source()->table();
-        if (!$table) {
-            throw new Exception('No table defined.');
-        }
-
-        $selects = $this->sql_select();
-        $tables  = '`'.$table.'` AS obj_table';
-        $filters = $this->sql_filters();
-        $orders  = $this->sql_orders();
-        $limits  = $this->sql_pagination();
-
-        $q = 'SELECT '.$selects.' FROM '.$tables.$filters.$orders.$limits;
-        // var_dump($q);
-        return $q;
-    }
-
-    /**
-    * @return string
-    */
-    protected function sql_select()
-    {
-        $properties = $this->properties();
-        if (empty($properties)) {
-            return 'obj_table.*';
-        }
-
-        $sql = '';
-        $props_sql = [];
-        foreach ($properties as $p) {
-            $props_sql[] = 'obj_table.`'.$p.'`';
-        }
-        if (!empty($props_sql)) {
-            $sql = implode(', ', $props_sql);
-        }
-
-        return $sql;
-    }
-
-    /**
-    * @return string
-    * @todo 2015-03-04 Use bindings for filters value
-    */
-    protected function sql_filters()
-    {
-        $sql = '';
-
-        // Process filters
-        if (!empty($this->_filters)) {
-            $filters_sql = [];
-            foreach ($this->_filters as $f) {
-                $f_sql = $f->sql();
-                if ($f_sql) {
-                    $filters_sql[] = [
-                        'sql'     => $f->sql(),
-                        'operand' => $f->operand()
-                    ];
-                }
-            }
-            if (!empty($filters_sql)) {
-                $sql .= ' WHERE';
-                $i = 0;
-
-                foreach ($filters_sql as $f) {
-                    if ($i > 0) {
-                        $sql .= ' '.$f['operand'];
-                    }
-                    $sql .= ' '.$f['sql'];
-                    $i++;
-                }
-            }
-
-        }
-
-        return $sql;
-    }
-
-    /**
-    * @return string
-    */
-    protected function sql_orders()
-    {
-        $sql = '';
-
-        if (!empty($this->_orders)) {
-            $orders_sql = [];
-            foreach ($this->_orders as $o) {
-                $orders_sql[] = $o->sql();
-            }
-            if (!empty($orders_sql)) {
-                $sql = ' ORDER BY '.implode(', ', $orders_sql);
-            }
-        }
-
-        return $sql;
-    }
-
-    /**
-    * @return string
-    */
-    protected function sql_pagination()
-    {
-        return $this->pagination()->sql();
     }
 }

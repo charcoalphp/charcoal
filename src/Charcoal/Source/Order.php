@@ -1,15 +1,18 @@
 <?php
 
-namespace Charcoal\Loader\CollectionLoader;
+namespace Charcoal\Source;
 
 // Dependencies from `PHP`
 use \DomainException as DomainException;
 use \InvalidArgumentException as InvalidArgumentException;
 
+// Local namespace dependencies
+use \Charcoal\Source\OrderInterface as OrderInterface;
+
 /**
 *
 */
-class Order
+class Order implements OrderInterface
 {
     const MODE_ASC = 'asc';
     const MODE_DESC = 'desc';
@@ -19,24 +22,24 @@ class Order
     /**
     * @var string
     */
-    private $_property;
+    protected $_property;
 
     /**
     * Can be 'asc', 'desc', 'rand' or 'values'
     * @var string $mode
     */
-    private $_mode;
+    protected $_mode;
 
     /**
     * If $_mode is "values"
     * @var array $values
     */
-    private $_values;
+    protected $_values;
 
     /**
     * @var boolean $_active
     */
-    private $_active = true;
+    protected $_active = true;
 
     /**
     * @param array $data
@@ -159,6 +162,24 @@ class Order
     }
 
     /**
+    * @param boolean $active
+    * @return Order (Chainable)
+    */
+    public function set_active($active)
+    {
+        $this->_active = $active;
+        return $this;
+    }
+
+    /**
+    * @return boolean
+    */
+    public function active()
+    {
+        return !!$this->_active;
+    }
+
+    /**
     * Supported operators
     *
     * @return array
@@ -173,35 +194,5 @@ class Order
         ];
 
         return $valid_modes;
-    }
-
-    /**
-    * @throws DomainException
-    * @return string
-    */
-    public function sql()
-    {
-        $property = $this->property();
-        $mode = $this->mode();
-
-        if ($mode == 'rand') {
-            return 'RAND()';
-        }
-        if ($mode == 'values') {
-            $values = $this->values();
-            if (empty($values)) {
-                throw new DomainException('Values can not be empty.');
-            }
-            if ($property == '') {
-                throw new DomainException('Property can not be empty.');
-            }
-
-            return 'FIELD(`'.$property.'`, '.implode(',', $values).')';
-        } else {
-            if ($property == '') {
-                throw new DomainException('Property can not be empty.');
-            }
-            return '`'.$property.'` '.$mode;
-        }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Charcoal\Tests\Loader\CollectionLoader;
 
-use \Charcoal\Loader\CollectionLoader\Order as Order;
+use \Charcoal\Source\Order as Order;
 use \Charcoal\Charcoal as Charcoal;
 
 class OrderTest extends \PHPUnit_Framework_TestCase
@@ -11,7 +11,7 @@ class OrderTest extends \PHPUnit_Framework_TestCase
     public function testContructor()
     {
         $obj = new Order();
-        $this->assertInstanceOf('\Charcoal\Loader\CollectionLoader\Order', $obj);
+        $this->assertInstanceOf('\Charcoal\Source\Order', $obj);
 
         // Default values
         $this->assertEquals('', $obj->property());
@@ -141,73 +141,7 @@ class OrderTest extends \PHPUnit_Framework_TestCase
         $obj->set_values($values);
     }
 
-    public function testSqlRandMode()
-    {
-        $obj = new Order();
-        $obj->set_mode('rand');
 
-        $sql = $obj->sql();
-        $this->assertEquals('RAND()', $sql);
-    }
-
-    public function testSqlValuesMode()
-    {
-        $obj = new Order();
-        $obj->set_mode('values');
-        $obj->set_property('test');
-        $obj->set_values('1,2,3');
-
-        $sql = $obj->sql();
-        $this->assertEquals('FIELD(`test`, 1,2,3)', $sql);
-    }
-
-    public function testSqlValuesModeWithoutPropertyThrowException()
-    {
-        $this->setExpectedException('\DomainException');
-
-        $obj = new Order();
-        $obj->set_mode('values');
-        $obj->set_values('1,2,3');
-
-        $sql = $obj->sql();
-    }
-
-    public function testSqlValuesModeWithoutValuesThrowException()
-    {
-        $this->setExpectedException('\DomainException');
-
-        $obj = new Order();
-        $obj->set_mode('values');
-        $obj->set_property('test');
-
-        $sql = $obj->sql();
-    }
-
-    /**
-    * @dataProvider providerAscDesc
-    */
-    public function testSqlAscDesc($mode)
-    {
-        $obj = new Order();
-        $obj->set_property('test');
-        $obj->set_mode($mode);
-
-        $sql = $obj->sql();
-        $this->assertEquals('`test` '.$mode, $sql);
-    }
-
-    /**
-    * @dataProvider providerAscDesc
-    */
-    public function testSqlAscDescWithoutPropertyThrowsException($mode)
-    {
-        $this->setExpectedException('\DomainException');
-
-        $obj = new Order();
-        $obj->set_mode($mode);
-
-        $sql = $obj->sql();
-    }
 
     /**
     * Invalid arguments for operator, func and operand
