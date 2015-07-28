@@ -379,6 +379,16 @@ abstract class AbstractFactory implements FactoryInterface
         );
 
         $class = '\\'.trim(implode('\\', $expl), '\\');
+        $class = $this->factory_class($class);
         return $class;
+    }
+
+    /**
+    * @param string
+    * @return string
+    */
+    public function factory_class($ident)
+    {
+        return $ident;
     }
 }
