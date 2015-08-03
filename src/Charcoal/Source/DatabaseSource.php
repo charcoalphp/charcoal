@@ -568,13 +568,13 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     * @param array  $binds_types
     * @return PDOStatement|false The PDOStatement, or false in case of error
     */
-    protected function db_query($q, $binds = [], $binds_types = [])
+    protected function db_query($q, array $binds = [], array $binds_types = [])
     {
         $sth = $this->db()->prepare($q);
         if (!empty($binds)) {
             foreach ($binds as $k => $v) {
                 if ($binds[$k] === null) {
-                    $binds[$k] = 'NULL';
+                    $binds_types[$k] = PDO::PARAM_NULL;
                 } elseif (!is_scalar($binds[$k])) {
                     $binds[$k] = json_encode($binds[$k]);
                 }
