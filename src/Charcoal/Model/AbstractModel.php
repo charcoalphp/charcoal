@@ -159,6 +159,7 @@ abstract class AbstractModel implements
         foreach ($properties as $property_ident) {
             $p = $this->p($property_ident);
             $p->save();
+            $this->{$property_ident}  = $p->val();
         }
         return true;
     }
