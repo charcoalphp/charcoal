@@ -19,7 +19,7 @@ use \Charcoal\Source\Order as Order;
 use \Charcoal\Source\Pagination as Pagination;
 
 /**
-*
+* Full implementation, as abstract class, of the SourceInterface.
 */
 abstract class AbstractSource implements
     SourceInterface,
@@ -57,6 +57,23 @@ abstract class AbstractSource implements
     private $_pagination = null;
 
     /**
+    * Reset everything but the model.
+    *
+    * @return AbstractSource Chainable
+    */
+    public function reset()
+    {
+        $this->_properties = [];
+        $this->_properties_options = [];
+        $this->_filters = [];
+        $this->_orders = [];
+        $this->_pagination = null;
+        return $this;
+    }
+
+    /**
+    * Initialize the source's properties with an array of data.
+    *
     * @param array $data
     * @return AbstractSource Chainable
     */
@@ -78,6 +95,8 @@ abstract class AbstractSource implements
     }
 
     /**
+    * Set the source's Model.
+    *
     * @param ModelInterface $model
     * @return AbstractSource Chainable
     */
@@ -88,6 +107,8 @@ abstract class AbstractSource implements
     }
 
     /**
+    * Return the source's Model.
+    *
     * @throws Exception if not model was previously set
     * @return ModelInterface
     */
@@ -100,6 +121,13 @@ abstract class AbstractSource implements
     }
 
     /**
+    * Set the properties of the source to fetch.
+    *
+    * This method accepts an array of property identifiers (property ident, as string)
+    * that will, if supported, be fetched from the source.
+    *
+    * If no properties are set, it is assumed that all the Model's properties are to be fetched.
+    *
     * @param array $properties
     * @throws InvalidArgumentException
     * @return ColelectionLoader Chainable
@@ -290,6 +318,11 @@ abstract class AbstractSource implements
     }
 
     /**
+    * Get the pagination object.
+    *
+    * If the pagination wasn't set previously, a new (default / blank) Pagination object will be created.
+    * (Always return a `PaginationInterface` object)
+    *
     * @return Pagination
     */
     public function pagination()
@@ -368,10 +401,8 @@ abstract class AbstractSource implements
         return $config;
     }
 
-
-
     /**
-    * @param mixed              $ident
+    * @param mixed $ident
     * @param StorableInterface $item  Optional item to load into
     * @throws Exception
     * @return StorableInterface

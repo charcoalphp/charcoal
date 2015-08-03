@@ -12,6 +12,35 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+    * Assert that the `reset` method:
+    * - is chainable
+    * - clear the properties
+    * - clear the filters
+    * - clear the orders
+    * - @todo clear the pagination
+    */
+    public function testReset()
+    {
+        $obj = $this->obj;
+        $filter = $this->getFilter1();
+        $order = $this->getOrder1();
+        $pagination = ['page'=>3, 'num_per_page'=>120];
+        $obj->set_data([
+            'properties'=>['foo'],
+            'filters'=>[$filter],
+            'orders'=>[$order],
+            'pagination'=>$pagination
+        ]);
+        $ret = $obj->reset();
+        $this->assertSame($ret, $obj);
+
+        $this->assertEquals([], $obj->properties());
+        $this->assertEquals([], $obj->filters());
+        $this->assertEquals([], $obj->orders());
+        //$this->assertEquals(null, $obj->pagination());
+    }
+
+    /**
     * Assert that the `set_data` method:
     * - is chainable
     * - set the data (properties, filters, orders & pagination)
@@ -33,7 +62,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
     /**
     * Assert that the `set_model` method:
     * - is chainable
-    * - set the model
+    * - set the model (retrievable with the `model` method)
     */
     public function testSetModel()
     {

@@ -5,7 +5,7 @@ namespace Charcoal\Source;
 use \InvalidArgumentException as InvalidArgumentException;
 
 /**
-*
+* Implementation, as concrete class, of the PaginationInterface.
 */
 class Pagination implements PaginationInterface
 {
@@ -100,7 +100,7 @@ class Pagination implements PaginationInterface
     }
 
     /**
-    * Can be greater than the actual number of items to retrieve
+    * Can be greater than the actual number of items in Storage
     * @return integer
     */
     public function last()

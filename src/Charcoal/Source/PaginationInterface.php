@@ -2,6 +2,9 @@
 
 namespace Charcoal\Source;
 
+/**
+* Pagination Interface.
+*/
 interface PaginationInterface
 {
     /**

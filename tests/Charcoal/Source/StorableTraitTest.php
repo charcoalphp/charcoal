@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Source;
 
+use Charcoal\Tests\Model\AbstractModelClass as AbstractModelClass;
+
 use \Charcoal\Charcoal as Charcoal;
 use \Charcoal\Source\DatabaseSource as DatabaseSource;
 
@@ -32,6 +34,34 @@ class StorableTraitTest extends \PHPUnit_Framework_TestCase
         $obj->set_table('test');
         $q = 'DROP TABLE IF EXISTS `test`';
         $obj->db()->query($q);
+
+        include_once __DIR__.'/../Model/AbstractModelClass.php';
+    }
+
+    public function getObj()
+    {
+        $obj = new AbstractModelClass();
+        $obj->set_metadata(
+            [
+                'properties' => [
+                    'id' => [
+                        'type' => 'id'
+                    ],
+                    'foo' => [
+                        'type' => 'string'
+                    ]
+                ],
+                'key' => 'id',
+                'sources' => [
+                    'default' => [
+                        'table' => 'test'
+                    ]
+                ],
+                'default_source' => 'default'
+            ]
+        );
+        $obj->source()->create_table();
+        return $obj;
     }
 
     public function setUp()
@@ -107,7 +137,7 @@ class StorableTraitTest extends \PHPUnit_Framework_TestCase
                 'name' => 'Foo bar.baz'
             ]
         );
-        // $ret = $model->save();
+        $ret = $model->save();
         // var_dump($ret);
     }
 
