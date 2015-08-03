@@ -4,6 +4,8 @@ namespace Charcoal\Model;
 
 // Dependencies from `PHP`
 use \InvalidArgumentException as InvalidArgumentException;
+use \JsonSerializable as JsonSerializable;
+use \Serializable as Serializable;
 
 // Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Metadata\DescribableInterface as DescribableInterface;
@@ -28,8 +30,12 @@ use \Charcoal\Model\ModelView as ModelView;
 * `StorableInterface, `ValidatableInterface` and the `ViewableInterface`. Those interfaces
 * are implemented (in parts, at least) with the `DescribableTrait`, `StorableTrait`,
 * `ValidatableTrait` and the `ViewableTrait`.
+*
+* The `JsonSerializable` interface is fully provided by the `DescribableTrait`.
 */
 abstract class AbstractModel implements
+    JsonSerializable,
+    Serializable,
     ModelInterface,
     DescribableInterface,
     StorableInterface,
@@ -46,7 +52,7 @@ abstract class AbstractModel implements
     */
     public function __construct(array $data = null)
     {
-        if (is_array($data)) {
+        if ($data !== null) {
             $this->set_data($data);
         }
         /** @todo Needs fix. Must be manually triggered after setting data for metadata to work */
@@ -86,29 +92,12 @@ abstract class AbstractModel implements
     */
     public function data()
     {
-        // Return value is array
-        $data = [];
-
-        $metadata = $this->metadata();
-        $props = $metadata['properties'];
-
-        if (!is_array($props)) {
-            /**
-            * @todo Error. Invalid object? Report error or throw exception?
-            */
-            return false;
+        $ret = [];
+        $properties = $this->properties();
+        foreach ($properties as $property_ident => $property) {
+            $ret[$property_ident] = $property->val();
         }
-
-        foreach ($props as $property_ident => $property_options) {
-            $p = $this->p($property_ident);
-
-            if (!$p instanceof PropertyInterface) {
-                continue;
-            }
-            $data[$property_ident] = $this->p($property_ident)->val();
-        }
-
-        return $data;
+        return $ret;
     }
 
     /**
@@ -151,7 +140,7 @@ abstract class AbstractModel implements
     * @param array $properties
     * @return boolean
     */
-    public function save_properties($properties = null)
+    public function save_properties(array $properties = null)
     {
         if ($properties===null) {
             $properties = array_keys($this->metadata()->properties());
@@ -264,7 +253,7 @@ abstract class AbstractModel implements
     protected function create_metadata(array $data = null)
     {
         $metadata = new ModelMetadata();
-        if (is_array($data)) {
+        if ($data !== null) {
             $metadata->set_data($data);
         }
         return $metadata;
@@ -290,7 +279,7 @@ abstract class AbstractModel implements
         // $source->set_config($source_config);
         $source->set_table($table);
 
-        if (is_array($data)) {
+        if ($data !== null) {
             $source->set_data($data);
         }
         return $source;
@@ -305,7 +294,7 @@ abstract class AbstractModel implements
     protected function create_validator(array $data = null)
     {
         $validator = new ModelValidator($this);
-        if (is_array($data)) {
+        if ($data !== null) {
             $validator->set_data($data);
         }
         return $validator;
@@ -320,9 +309,38 @@ abstract class AbstractModel implements
     protected function create_view(array $data = null)
     {
         $view = new ModelView();
-        if (is_array($data)) {
+        if ($data !== null) {
             $view->set_data($data);
         }
         return $view;
+    }
+
+    /**
+    * Serializable > serialize()
+    */
+    public function serialize()
+    {
+        $data = $this->data();
+        return serialize($data);
+    }
+
+    /**
+    * Serializable > unsierialize()
+    *
+    * @param string $data Serialized data
+    * @return void
+    */
+    public function unserialize($data)
+    {
+        $data = unserialize($data);
+        $this->set_data($data);
+    }
+
+    /**
+    * JsonSerializable > jsonSerialize()
+    */
+    public function jsonSerialize()
+    {
+        return $this->data();
     }
 }
