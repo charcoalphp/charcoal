@@ -199,10 +199,10 @@ trait DescribableTrait
         }
 
         $metadata = $this->metadata();
-        $props = $this->metadata()->properties();
+        $props = $metadata->properties();
 
         if (empty($props)) {
-            throw new Exception('Invalid model metadata - No properties defined.');
+            throw new Exception(sprintf('Invalid model metadata (%s) - No properties defined.', get_class($this)));
         }
 
         if (!isset($props[$property_ident])) {

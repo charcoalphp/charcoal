@@ -6,7 +6,9 @@ namespace Charcoal\Validator;
 use \Charcoal\Validator\ValidatorInterface as ValidatorInterface;
 
 /**
+* Validatable Interface
 *
+* Add a validator to an object, as well as a `validate()` method.
 */
 interface ValidatableInterface
 {
