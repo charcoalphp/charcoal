@@ -6,12 +6,20 @@ use \Charcoal\Cache\Memcache\MemcacheCache as MemcacheCache;
 
 class MemcacheCacheTest extends \PHPUnit_Framework_TestCase
 {
-    public function testContructor()
+
+    /**
+    * Assert that the default `instance()` static method returns a valid object.
+    */
+    public function testContructorByInstance()
     {
         $obj = MemcacheCache::instance();
         $this->assertInstanceOf('\Charcoal\Cache\Memcache\MemcacheCache', $obj);
+        return true;
     }
 
+    /**
+    * @depends testConstructorByInstance
+    */
     public function testEnabled()
     {
         $obj = MemcacheCache::instance();
@@ -22,30 +30,36 @@ class MemcacheCacheTest extends \PHPUnit_Framework_TestCase
         $this->assertNotTrue($obj->enabled());
     }
 
+    /**
+    * @depends testEnabled
+    */
     public function testStore()
     {
         $obj = MemcacheCache::instance();
+
         $obj->config()->set_active(true);
-        if ($obj->enabled() !== false) {
-            $this->assertTrue($obj->store('foo', 'bar'));
-        }
+        $this->assertTrue($obj->store('foo', 'bar'));
 
         $obj->config()->set_active(false);
         $this->assertNotTrue($obj->store('foo', 'bar'));
     }
 
+    /**
+    * @depends testEnabled
+    */
     public function testExists()
     {
         $obj = MemcacheCache::instance();
         $obj->config()->set_active(true);
-        if ($obj->enabled() !== false) {
-            $this->assertTrue($obj->exists('foo'));
-        }
+        $this->assertTrue($obj->exists('foo'));
 
         $obj->config()->set_active(false);
         $this->assertNotTrue($obj->exists('foo'));
     }
 
+    /**
+    * @depends testEnabled
+    */
     public function testFetch()
     {
         $obj = MemcacheCache::instance();
@@ -59,26 +73,31 @@ class MemcacheCacheTest extends \PHPUnit_Framework_TestCase
         $this->assertNotTrue($obj->fetch('foo'));
     }
 
+    /**
+    * @depends testEnabled
+    */
     public function testMultifetch()
     {
         $obj = MemcacheCache::instance();
         $obj->config()->set_active(true);
         $obj->store('baz', 123);
-        if ($obj->enabled() !== false) {
-            // Was set in cache in `testStore`
-            $this->assertEquals(['foo' => 'bar', 'baz' => 123], $obj->multifetch(['foo', 'baz']));
-        }
+
+        // "foo" Was set in cache in `testStore`
+        $this->assertEquals(['foo' => 'bar', 'baz' => 123], $obj->multifetch(['foo', 'baz']));
+
         $obj->config()->set_active(false);
         $this->assertNotTrue($obj->multifetch(['foo', 'baz']));
     }
 
+    /**
+    * @depends testEnabled
+    */
     public function testDelete()
     {
         $obj = MemcacheCache::instance();
+
         $obj->config()->set_active(true);
-        if ($obj->enabled() !== false) {
-            $this->assertTrue($obj->delete('foo'));
-        }
+        $this->assertTrue($obj->delete('foo'));
 
         $obj->config()->set_active(false);
         $this->assertNotTrue($obj->delete('baz'));

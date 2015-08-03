@@ -40,7 +40,7 @@ abstract class AbstractCache implements
     /**
     *
     */
-    protected function __construct()
+    final protected function __construct()
     {
         // Protected
         $this->init();
@@ -50,13 +50,14 @@ abstract class AbstractCache implements
     * Static singleton instance getter
     * @return CacheInterface
     */
-    public static function instance()
+    final public static function instance()
     {
         if (static::$_instance !== null) {
             return static::$_instance;
         }
         $class = get_called_class();
-        return new $class;
+        $instance = new $class;
+        return $instance;
     }
 
     /**

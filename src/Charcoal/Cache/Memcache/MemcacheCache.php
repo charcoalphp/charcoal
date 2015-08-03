@@ -49,7 +49,10 @@ class MemcacheCache extends AbstractCache
             throw new Exception('Memcache: no server(s) defined.');
         }
         foreach ($cfg->servers() as $s) {
-            $this->add_server($s);
+            $srv = $this->add_server($s);
+            if ($srv === false) {
+                throw new Exception('Memcache: could not add server.');
+            }
         }
         return $this;
     }
@@ -89,6 +92,7 @@ class MemcacheCache extends AbstractCache
         $ttl = (($ttl > 0) ? $ttl : $this->config()->default_ttl());
 
         $flag = 0; // MEMCACHE_COMPRESSED
+
         return $this->_memcache->set($prefix.$key, $data, $flag, $ttl);
     }
 
@@ -163,6 +167,8 @@ class MemcacheCache extends AbstractCache
     /**
     * Completely clear the cache.
     *
+    * Warning: This function sleeps for 1 second.
+    *
     * @return boolean
     */
     public function clear()
@@ -179,8 +185,14 @@ class MemcacheCache extends AbstractCache
     }
 
     /**
+    * Add a server to the server pool.
+    *
+    * Note that this method does *not* check if a server is valid.
+    * To test validity of a server, use `test_server()`
+    *
     * @param array|MemcacheCacheServerConfig $server
-    * @throws InvalidArgumentException if server is not a proper array or object
+    * @throws InvalidArgumentException If server is not a proper array or object.
+    * @throws Exception If the server is invalid.
     * @return boolean
     */
     public function add_server($server)
@@ -191,12 +203,44 @@ class MemcacheCache extends AbstractCache
         if (!($server instanceof MemCacheCacheServerConfig)) {
             throw new InvalidArgumentException('Invalid server.');
         }
+        if ($this->test_server($server) === false) {
+            throw new Exception('Memcache: impossible to connect to server.');
+        }
+
         $host = $server->host();
         $port = $server->port();
         $persistent = $server->persistent();
         $weight = $server->weight();
 
         return $this->_memcache->addServer($host, $port, $persistent, $weight);
+    }
+
+    /**
+    * Return wether a server is valid (can be connected to).
+    *
+    * @param array|MemcacheCacheServerConfig $server
+    * @throws InvalidArgumentException if server is not a proper array or object
+    * @return boolean
+    */
+    public function test_server($server)
+    {
+        if (is_array($server)) {
+            $server = new MemCacheCacheServerConfig($server);
+        }
+        if (!($server instanceof MemCacheCacheServerConfig)) {
+            throw new InvalidArgumentException('Invalid server.');
+        }
+
+        $host = $server->host();
+        $port = $server->port();
+        set_error_handler(function($err_no, $err_str) {
+            unset($err_no, $err_str);
+
+        });
+        $res = $this->_memcache->connect($host, $port);
+        restore_error_handler();
+        return $res;
+
     }
 
     /**
