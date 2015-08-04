@@ -282,7 +282,7 @@ class ImagemagickImage extends AbstractImage
 
             if ($err) {
                 throw new Exception(
-                    sprintf('Error executing command: %s', $err)
+                    sprintf('Error executing command "%s": %s', $cmd, $err)
                 );
             }
 
