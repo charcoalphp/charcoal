@@ -152,6 +152,16 @@ abstract class AbstractFactory
     public function ident_to_classname($ident)
     {
         $class = str_replace('/', '\\', $ident);
+        
+        $expl = explode('-', $class);
+        array_walk(
+            $expl,
+            function(&$i) {
+                $i = ucfirst($i);
+            }
+        );
+        $class = implode('', $expl);
+
         $expl = explode('\\', $class);
         array_walk(
             $expl,
@@ -159,7 +169,7 @@ abstract class AbstractFactory
                 $i = ucfirst($i);
             }
         );
-        $class = '\\'.implode('\\', $expl);
+        $class = '\\'.ltrim(implode('\\', $expl), '\\');
         return $class;
     }
 }

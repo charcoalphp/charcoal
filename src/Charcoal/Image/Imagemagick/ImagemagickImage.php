@@ -269,8 +269,8 @@ class ImagemagickImage extends AbstractImage
             $proc = proc_open(
                 $cmd,
                 [
-                1 => ['pipe','w'],
-                2 => ['pipe','w'],
+                    1 => ['pipe','w'],
+                    2 => ['pipe','w'],
                 ],
                 $pipes
             );
@@ -281,7 +281,9 @@ class ImagemagickImage extends AbstractImage
             proc_close($proc);
 
             if ($err) {
-                throw new Exception('Can not execute command.');
+                throw new Exception(
+                    sprintf('Error executing command: %s', $err)
+                );
             }
 
             return $out;
