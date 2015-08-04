@@ -156,6 +156,36 @@ class ImagemagickImage extends AbstractImage
     }
 
     /**
+    * Try (as best as possible) to find a command name.
+    * - With `type -p`
+    * - Or else, with `where`
+    * - Or else, with `which`
+    *
+    * @param string $cmd_name
+    * @throws Exception
+    * @return string
+    */
+    protected function find_cmd($cmd_name)
+    {
+        $cmd = exec('type -p '.$cmd_name);
+        $cmd = str_replace($cmd_name.' is ', '', $cmd);
+        
+        if (!$cmd) {
+            $cmd = exec('where '.$cmd_name);
+        }
+
+        if (!$cmd) {
+            exec('which mogrify');
+        }
+
+        if (!$cmd) {
+            throw new Exception('Can not find imagemagick\'s '.$cmd_name.' command.');
+        }
+        
+        return $cmd;
+    }
+
+    /**
     * @throws Exception
     * @return string
     */
@@ -164,17 +194,8 @@ class ImagemagickImage extends AbstractImage
         if ($this->_mogrify_cmd !== null) {
             return $this->_mogrify_cmd;
         }
-        $cmd = exec('type -p mogrify');
-        if (!$cmd) {
-            $cmd = exec('where mogrify');
-        }
-        if (!$cmd) {
-            exec('which mogrify');
-        }
-        if (!$cmd) {
-            throw new Exception('Can not find imagemagick\'s mogrify command.');
-        }
-        return $cmd;
+        $this->_mogrify_cmd = $this->find_cmd('mogrify');
+        return $this->_mogrify_cmd;
     }
 
     /**
@@ -186,20 +207,8 @@ class ImagemagickImage extends AbstractImage
         if ($this->_convert_cmd !== null) {
             return $this->_convert_cmd;
         }
-
-        $cmd = exec('type -p convert');
-
-        if (! $cmd) {
-            $cmd = exec('where convert');
-        }
-
-        if (! $cmd) {
-            $cmd = exec('which convert');
-        }
-        if (!$cmd) {
-            throw new Exception('Can not find imagemagick\'s convert command.');
-        }
-        return $cmd;
+        $this->_convert_cmd = $this->find_cmd('convert');
+        return $this->_convert_cmd;
     }
 
     /**
@@ -211,20 +220,8 @@ class ImagemagickImage extends AbstractImage
         if ($this->_identify_cmd !== null) {
             return $this->_identify_cmd;
         }
-
-        $cmd = exec('type -p identify');
-
-        if (! $cmd) {
-            $cmd = exec('where identify');
-        }
-
-        if (! $cmd) {
-            $cmd = exec('which identify');
-        }
-        if (!$cmd) {
-            throw new Exception('Can not find imagemagick\'s identify command.');
-        }
-        return $cmd;
+        $this->_identify_cmd = $this->find_cmd('identify');
+        return $this->_identify_cmd;
     }
 
     /**
