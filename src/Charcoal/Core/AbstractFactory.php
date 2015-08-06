@@ -210,7 +210,9 @@ abstract class AbstractFactory implements FactoryInterface
             if ($default_class !== '') {
                 return new $default_class;
             } else {
-                throw new InvalidArgumentException(sprintf('Type "%s" is not a valid type.', $type));
+                throw new InvalidArgumentException(
+                    sprintf(__METHOD__.': Type "%s" is not a valid type. [%s]', $type, $this->factory_mode())
+                );
             }
         }
         $classname = $this->type_to_classname($type);
@@ -219,7 +221,9 @@ abstract class AbstractFactory implements FactoryInterface
         // Ensure base class is respected, if set.
         $base_class = $this->base_class();
         if ($base_class !== '' && !($obj instanceof $base_class)) {
-            throw new Exception(sprintf('Object is not a valid %s class', $base_class));
+            throw new Exception(
+                sprintf(__METHOD__.': Object is not a valid "%s" class', $base_class)
+            );
         }
 
         $this->_instances[$type] = $obj;

@@ -170,7 +170,7 @@ trait DescribableTrait
     */
     public function properties()
     {
-        // $this->metadata();
+        $this->metadata(); // Hack!
         $props = $this->metadata()->properties();
 
         if (empty($props)) {
