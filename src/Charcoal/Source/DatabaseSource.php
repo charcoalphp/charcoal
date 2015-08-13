@@ -396,6 +396,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
         $db = $this->db();
 
         $q = $this->sql_load();
+        Charcoal::logger()->debug($q);
         $sth = $db->prepare($q);
         $sth->execute();
         $sth->setFetchMode(PDO::FETCH_ASSOC);
@@ -570,6 +571,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     */
     protected function db_query($q, array $binds = [], array $binds_types = [])
     {
+        Charcoal::logger()->debug($q, $binds);
         $sth = $this->db()->prepare($q);
         if (!empty($binds)) {
             foreach ($binds as $k => $v) {
@@ -609,7 +611,6 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
         $limits  = $this->sql_pagination();
 
         $q = 'SELECT '.$selects.' FROM '.$tables.$filters.$orders.$limits;
-        // var_dump($q);
         return $q;
     }
 
@@ -642,11 +643,11 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     protected function sql_filters()
     {
         $sql = '';
-
+        $filters = $this->filters();
         // Process filters
-        if (!empty($this->_filters)) {
+        if (!empty($filters)) {
             $filters_sql = [];
-            foreach ($this->_filters as $f) {
+            foreach ($filters as $f) {
                 $f_sql = $f->sql();
                 if ($f_sql) {
                     $filters_sql[] = [
@@ -669,7 +670,6 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
             }
 
         }
-
         return $sql;
     }
 
