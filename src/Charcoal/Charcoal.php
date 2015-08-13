@@ -40,6 +40,7 @@ class Charcoal
     */
     public static function init($data = null)
     {
+        // Important: set config first. This affects later behavior
         if (isset($data['config']) && $data['config'] !== null) {
             self::set_config($data['config']);
         } else {
@@ -125,8 +126,9 @@ class Charcoal
     */
     public static function init_logger()
     {
+        //$config = self::config();
         $logger = new \Monolog\Logger('charcoal');
-        $handler = new \Monolog\Handler\StreamHandler('charcoal.debug.log', LogLevel::WARNING);
+        $handler = new \Monolog\Handler\StreamHandler('charcoal.debug.log', LogLevel::DEBUG);
         $logger->pushHandler($handler);
 
         self::set_logger($logger);
@@ -159,8 +161,8 @@ class Charcoal
         self::$_app = new Slim(
             [
                 'mode'  => self::config()->application_env(),
-                'debug' => self::config()->dev_mode()
-                // 'log.writer' => self::logger()
+                'debug' => self::config()->dev_mode(),
+                'log.writer' => self::logger()
             ]
         );
     }
