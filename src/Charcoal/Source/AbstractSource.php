@@ -7,16 +7,19 @@ use \Exception as Exception;
 use \InvalidArgumentException as InvalidArgumentException;
 
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Config\ConfigurableInterface as ConfigurableInterface;
-use \Charcoal\Config\ConfigurableTrait as ConfigurableTrait;
-use \Charcoal\Model\ModelInterface as ModelInterface;
+use \Charcoal\Config\ConfigurableInterface;
+use \Charcoal\Config\ConfigurableTrait;
+use \Charcoal\Model\ModelInterface;
 
 // Local namespace dependencies
-use \Charcoal\Source\SourceConfig as SourceConfig;
-use \Charcoal\Source\SourceInterface as SourceInterface;
-use \Charcoal\Source\Filter as Filter;
-use \Charcoal\Source\Order as Order;
-use \Charcoal\Source\Pagination as Pagination;
+use \Charcoal\Source\SourceConfig;
+use \Charcoal\Source\SourceInterface;
+use \Charcoal\Source\Filter;
+use \Charcoal\Source\FilterInterface;
+use \Charcoal\Source\Order;
+use \Charcoal\Source\OrderInterfae;
+use \Charcoal\Source\Pagination;
+use \Charcoal\Source\PaginationInterface;
 
 /**
 * Full implementation, as abstract class, of the SourceInterface.
@@ -207,7 +210,7 @@ abstract class AbstractSource implements
     */
     public function add_filter($param, $val = null, array $options = null)
     {
-        if ($param instanceof Filter) {
+        if ($param instanceof FilterInterface) {
             $this->_filters[] = $param;
         } elseif (is_array($param)) {
             $filter = $this->create_filter();
@@ -268,7 +271,7 @@ abstract class AbstractSource implements
     */
     public function add_order($param, $mode = 'asc', $order_options = null)
     {
-        if ($param instanceof Order) {
+        if ($param instanceof OrderInterfae) {
             $this->_orders[] = $param;
         } elseif (is_array($param)) {
             $order = $this->create_order();
@@ -305,7 +308,7 @@ abstract class AbstractSource implements
     */
     public function set_pagination($param)
     {
-        if ($param instanceof Pagination) {
+        if ($param instanceof PaginationInterface) {
             $this->_pagination = $param;
         } elseif (is_array($param)) {
             $pagination = $this->create_pagination();
