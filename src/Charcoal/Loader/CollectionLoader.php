@@ -3,12 +3,15 @@
 namespace Charcoal\Loader;
 
 // Intra-module (`charcoal-core`) dependencies
-use \Exception as Exception;
-use \InvalidArgumentException as InvalidArgumentException;
+use \Exception;
+use \InvalidArgumentException;
+
+use \PDO;
 
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Model\ModelInterface as ModelInterface;
-use \Charcoal\Model\Collection as Collection;
+use \Charcoal\Charcoal;
+use \Charcoal\Model\ModelInterface;
+use \Charcoal\Model\Collection;
 
 // Local namespace dependencies
 use \Charcoal\Source\Database\DatabaseFilter as Filter;
@@ -186,7 +189,7 @@ class CollectionLoader extends AbstractLoader
     */
     public function add_filter($param, $val = null, array $options = null)
     {
-        return $this->source->add_filter($param, $val, $options);
+        return $this->source()->add_filter($param, $val, $options);
     }
 
     /**
@@ -280,7 +283,7 @@ class CollectionLoader extends AbstractLoader
     }
 
     /**
-    * Load a collection
+    * Load a collection from source
     * @param string|null $ident
     * @throws Exception if the database connection fails
     * @return Collection
@@ -303,14 +306,14 @@ class CollectionLoader extends AbstractLoader
 
         /** @todo Filters, pagination, select, etc */
         $q = $this->source()->sql_load();
-
+        Charcoal::logger()->debug($q);
         $collection = new Collection();
 
 
         $sth = $db->prepare($q);
         /** @todo Filter binds */
         $sth->execute();
-        $sth->setFetchMode(\PDO::FETCH_ASSOC);
+        $sth->setFetchMode(PDO::FETCH_ASSOC);
         $class_name = get_class($this->model());
         while ($obj_data = $sth->fetch()) {
             $obj = new $class_name;
