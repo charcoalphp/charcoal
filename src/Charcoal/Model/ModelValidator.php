@@ -20,7 +20,7 @@ class ModelValidator extends AbstractValidator
 
         $ret = true;
         foreach ($props as $ident => $p) {
-            if (!$p->active()) {
+            if (!$p ||  !$p->active()) {
                 continue;
             }
             $valid = $p->validate();
