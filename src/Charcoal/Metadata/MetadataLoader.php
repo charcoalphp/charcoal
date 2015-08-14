@@ -148,6 +148,17 @@ class MetadataLoader extends FileLoader
     */
     protected function _ident_to_classname($ident)
     {
+        // Change "foo-bar" to "fooBar"
+        $expl = explode('-', $ident);
+        array_walk(
+            $expl,
+            function(&$i) {
+                $i = ucfirst($i);
+            }
+        );
+        $ident = implode('', $expl);
+
+        // Change "/foo/bar" to "\Foo\Bar"
         $class = str_replace('/', '\\', $ident);
         $expl  = explode('\\', $class);
 
@@ -158,7 +169,7 @@ class MetadataLoader extends FileLoader
             }
         );
 
-        $class = '\\'.ltrim(implode('\\', $expl), '\\');
+        $class = '\\'.trim(implode('\\', $expl), '\\');
         return $class;
     }
 
