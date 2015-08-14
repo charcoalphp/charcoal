@@ -40,7 +40,7 @@ abstract class AbstractCache implements
     /**
     *
     */
-    final protected function __construct()
+    public function __construct()
     {
         // Protected
         $this->init();
