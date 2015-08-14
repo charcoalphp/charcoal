@@ -161,8 +161,8 @@ class Charcoal
         self::$_app = new Slim(
             [
                 'mode'  => self::config()->application_env(),
-                'debug' => self::config()->dev_mode(),
-                'log.writer' => self::logger()
+                'debug' => self::config()->dev_mode()
+                //'log.writer' => self::logger()
             ]
         );
     }
