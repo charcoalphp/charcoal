@@ -3,25 +3,25 @@
 namespace Charcoal\Encoder;
 
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Core\AbstractFactory as AbstractFactory;
+use \Charcoal\Core\ClassMapFactory as ClassMapFactory;
 
 /**
 *
 */
-class EncoderFactory extends AbstractFactory
+class EncoderFactory extends ClassMapFactory
 {
     /**
-    * Force base types. (Only base64 for now)
-    *
-    * @return array
+    * @param array|null $data
     */
-    public function types()
+    public function __construct(array $data = null)
     {
-        return array_merge(
-            parent::types(),
-            [
-                'base64' => '\Charcoal\Encoder\Base64\Base64Encoder'
-            ]
-        );
+        $this->set_base_class('\Charcoal\Encoder\EncoderInterface');
+        $this->set_class_map([
+            'base64' => '\Charcoal\Encoder\Base64\Base64Encoder'
+        ]);
+
+        if ($data !== null) {
+            $this->set_data($data);
+        }
     }
 }

@@ -3,19 +3,18 @@
 namespace Charcoal\Property;
 
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Core\AbstractFactory as AbstractFactory;
+use \Charcoal\Core\IdentFactory as IdentFactory;
 
 /**
 *
 */
-class PropertyFactory extends AbstractFactory
+class PropertyFactory extends IdentFactory
 {
     /**
     * @param array $data
     */
-    protected function __construct(array $data = null)
+    public function __construct(array $data = null)
     {
-        $this->set_factory_mode(AbstractFactory::MODE_IDENT);
         $this->set_base_class('\Charcoal\Property\PropertyInterface');
         $this->set_default_class('\Charcoal\Model\Property');
         if ($data !== null) {
@@ -24,16 +23,11 @@ class PropertyFactory extends AbstractFactory
     }
 
     /**
-    * @param string $type
-    * @return PropertyInterface
+    * @param string $classname
+    * @return string
     */
-    public function get($type)
+    public function prepare_classname($classname)
     {
-        $class_name = '\Charcoal\Property\\'.str_replace('_', '\\', ucfirst($type)).'Property';
-        if (class_exists($class_name)) {
-            return new $class_name();
-        } else {
-            return new \Charcoal\Model\Property();
-        }
+        return '\Charcoal\Property\\'.$classname.'Property';
     }
 }
