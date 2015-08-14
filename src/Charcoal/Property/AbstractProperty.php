@@ -133,6 +133,12 @@ abstract class AbstractProperty implements
     }
 
     /**
+    * Get the "property type" string.
+    * @return string
+    */
+    abstract public function type();
+
+    /**
     * @param array $data
     * @return AbstractProperty Chainable
     */
@@ -168,11 +174,6 @@ abstract class AbstractProperty implements
 
         return $this;
     }
-
-    /**
-    * @return string
-    */
-    abstract public function type();
 
     /**
     * @param string $ident
@@ -240,6 +241,8 @@ abstract class AbstractProperty implements
     }
 
     /**
+    * Get the property's value in a format suitable for storage.
+    *
     * @param mixed $val
     * @return mixed
     */
@@ -249,6 +252,7 @@ abstract class AbstractProperty implements
             $val = $this->val();
         }
         if ($val === null) {
+            // Do not json_encode NULL values
             return null;
         }
         if (!is_scalar($val)) {
@@ -268,7 +272,7 @@ abstract class AbstractProperty implements
     }
 
     /**
-    * @return boolean
+    * @return string
     */
     public function label()
     {
@@ -344,27 +348,7 @@ abstract class AbstractProperty implements
         return !!$this->multiple;
     }
 
-    /**
-    * @param boolean $allow
-    * @throws InvalidArgumentException if the paramter is not a boolean
-    * @return Property (Chainable)
-    */
-    public function set_allow_null($allow)
-    {
-        if (!is_bool($allow)) {
-            throw new InvalidArgumentException('Allow null must be a boolean.');
-        }
-        $this->_allow_null = $allow;
-        return $this;
-    }
 
-    /**
-    * @return boolean
-    */
-    public function allow_null()
-    {
-        return !!$this->_allow_null;
-    }
 
     /**
     * @param array $multiple_options
@@ -389,6 +373,28 @@ abstract class AbstractProperty implements
     public function multiple_options()
     {
         return $this->multiple_options;
+    }
+
+    /**
+    * @param boolean $allow
+    * @throws InvalidArgumentException if the paramter is not a boolean
+    * @return Property (Chainable)
+    */
+    public function set_allow_null($allow)
+    {
+        if (!is_bool($allow)) {
+            throw new InvalidArgumentException('Allow null must be a boolean.');
+        }
+        $this->_allow_null = $allow;
+        return $this;
+    }
+
+    /**
+    * @return boolean
+    */
+    public function allow_null()
+    {
+        return !!$this->_allow_null;
     }
 
     /**
@@ -524,6 +530,7 @@ abstract class AbstractProperty implements
 
     /**
     * @return boolean
+    * @todo
     */
     public function validate_unique()
     {

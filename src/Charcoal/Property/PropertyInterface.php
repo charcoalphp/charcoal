@@ -8,9 +8,15 @@ namespace Charcoal\Property;
 interface PropertyInterface
 {
     /**
+    * Get the "type" (identifier) of the property.
     * @return string
     */
     public function type();
+
+    /**
+    * @return array
+    */
+    public function fields();
 
     /**
     * @param array $data
@@ -45,6 +51,12 @@ interface PropertyInterface
     * @return mixed
     */
     public function field_val($field_ident);
+
+    /**
+    * @param mixed $val
+    * @return mixed
+    */
+    public function storage_val($val = null);
 
     /**
     * @param mixed $label
@@ -135,12 +147,17 @@ interface PropertyInterface
     public function active();
 
     /**
-    * @return array
+    * @return string
     */
-    public function fields();
+    public function sql_extra();
 
     /**
     * @return string
     */
     public function sql_type();
+
+    /**
+    * @return integer
+    */
+    public function sql_pdo_type();
 }

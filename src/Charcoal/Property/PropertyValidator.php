@@ -15,6 +15,7 @@ class PropertyValidator extends AbstractValidator
     */
     public function validate()
     {
+        // The model, in this case, should be a PropertyInterface
         $model = $this->_model;
 
         $ret = true;
