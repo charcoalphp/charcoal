@@ -3,7 +3,7 @@
 namespace Charcoal\Model;
 
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Core\IndexableInterface as IndexableInterface;
+use \Charcoal\Model\ModelInterface;
 
 /**
 *
@@ -31,10 +31,10 @@ interface CollectionInterface
     *
     * @return \Charcoal\Collection (Chainable)
     */
-    public function add(IndexableInterface $obj);
+    public function add(ModelInterface $obj);
 
     /**
-    * @param string|IndexableInterface $key
+    * @param string|ModelInterface $key
     * @throws InvalidArgumentException if the offset is not a string
     * @return integer|boolean
     */
