@@ -1,216 +1,216 @@
 <?php
 
-namespace Charcoal\Tests\Model;
+// namespace Charcoal\Tests\Model;
 
-use \Charcoal\Model\Collection as Collection;
-use \Charcoal\Model\Object as Object;
+// use \Charcoal\Model\Collection as Collection;
 
-class CollectionTest extends \PHPUnit_Framework_TestCase
-{
-    public $obj;
 
-    public function setUp()
-    {
-        $this->obj = new Object();
-        $this->obj->set_key('id');
-        $this->obj->set_id('foo');
+// class CollectionTest extends \PHPUnit_Framework_TestCase
+// {
+//     public $obj;
 
-        $this->obj2 = new Object();
-        $this->obj2->set_key('id');
-        $this->obj2->set_id('bar');
-    }
+//     public function setUp()
+//     {
+//         $this->obj = new Object();
+//         $this->obj->set_key('id');
+//         $this->obj->set_id('foo');
 
-    public function testContructor()
-    {
-        $collection = new Collection();
-        $this->assertInstanceOf('\Charcoal\Model\Collection', $collection);
-    }
+//         $this->obj2 = new Object();
+//         $this->obj2->set_key('id');
+//         $this->obj2->set_id('bar');
+//     }
 
-    /*
-    public function testArrayAccessSet()
-    {
-        $collection = new Collection();
-        $collection[] = $this->obj;
+//     public function testContructor()
+//     {
+//         $collection = new Collection();
+//         $this->assertInstanceOf('\Charcoal\Model\Collection', $collection);
+//     }
 
-        $this->assertEquals($this->obj, $collection['foo']);
-        $this->assertSame($this->obj, $collection[0]);
-    }
 
-    public function testArrayAccessSetWithOffsetThrowsException()
-    {
-        $this->setExpectedException('\InvalidArgumentException');
+//     public function testArrayAccessSet()
+//     {
+//         $collection = new Collection();
+//         $collection[] = $this->obj;
 
-        $collection = new Collection();
-        $collection['bar'] = $this->obj;
-    }
+//         $this->assertEquals($this->obj, $collection['foo']);
+//         $this->assertSame($this->obj, $collection[0]);
+//     }
 
-    public function testArrayAccessSetWithInvalidValueThrowsException()
-    {
-        $this->setExpectedException('\InvalidArgumentException');
+//     public function testArrayAccessSetWithOffsetThrowsException()
+//     {
+//         $this->setExpectedException('\InvalidArgumentException');
 
-        $collection = new Collection();
-        $collection[] = 'foo';
-    }
+//         $collection = new Collection();
+//         $collection['bar'] = $this->obj;
+//     }
 
-    public function testArrayAccessGet()
-    {
-        $collection = new Collection();
-        $collection->add($this->obj);
+//     public function testArrayAccessSetWithInvalidValueThrowsException()
+//     {
+//         $this->setExpectedException('\InvalidArgumentException');
 
-        $this->assertSame($this->obj, $collection['foo']);
-        $this->assertSame($this->obj, $collection[0]);
-    }
+//         $collection = new Collection();
+//         $collection[] = 'foo';
+//     }
 
-    public function testArrayAccessGetWithInvalidOffsetThrowsException()
-    {
-        $this->setExpectedException('\InvalidArgumentException');
+//     public function testArrayAccessGet()
+//     {
+//         $collection = new Collection();
+//         $collection->add($this->obj);
 
-        $collection = new Collection();
-        $ret = $collection[null];
-    }
+//         $this->assertSame($this->obj, $collection['foo']);
+//         $this->assertSame($this->obj, $collection[0]);
+//     }
 
-    public function testArrayAccessExist()
-    {
-        $collection = new Collection();
+//     public function testArrayAccessGetWithInvalidOffsetThrowsException()
+//     {
+//         $this->setExpectedException('\InvalidArgumentException');
 
-        $this->assertNotTrue(isset($collection[0]));
+//         $collection = new Collection();
+//         $ret = $collection[null];
+//     }
 
-        $collection[] = $this->obj;
+//     public function testArrayAccessExist()
+//     {
+//         $collection = new Collection();
 
-        $this->assertTrue(isset($collection[0]));
-    }
+//         $this->assertNotTrue(isset($collection[0]));
 
-    public function testArrayAccessExistByKey()
-    {
-        $collection = new Collection();
+//         $collection[] = $this->obj;
 
-        $this->assertNotTrue(isset($collection['foo']));
+//         $this->assertTrue(isset($collection[0]));
+//     }
 
-        $collection[] = $this->obj;
+//     public function testArrayAccessExistByKey()
+//     {
+//         $collection = new Collection();
 
-        $this->assertTrue(isset($collection['foo']));
-    }
+//         $this->assertNotTrue(isset($collection['foo']));
 
-    public function testArrayAccessInvalidParameterThrowsException()
-    {
-        $this->setExpectedException('\InvalidArgumentException');
+//         $collection[] = $this->obj;
 
-        $collection = new Collection();
-        unset($collection[null]);
-    }
+//         $this->assertTrue(isset($collection['foo']));
+//     }
 
-    public function testArrayAccessUnset()
-    {
-        $collection = new Collection();
-        $collection[] = $this->obj;
+//     public function testArrayAccessInvalidParameterThrowsException()
+//     {
+//         $this->setExpectedException('\InvalidArgumentException');
 
-        $this->assertArrayHasKey('foo', $collection->map());
-        $this->assertEquals(1, count($collection->objects()));
+//         $collection = new Collection();
+//         unset($collection[null]);
+//     }
 
-        unset($collection[0]);
+//     public function testArrayAccessUnset()
+//     {
+//         $collection = new Collection();
+//         $collection[] = $this->obj;
 
-        $this->assertArrayNotHasKey('foo', $collection->map());
-        $this->assertEquals(0, count($collection->objects()));
-    }
+//         $this->assertArrayHasKey('foo', $collection->map());
+//         $this->assertEquals(1, count($collection->objects()));
 
-    public function testArrayAccessUnsetByKey()
-    {
-        $collection = new Collection();
-        $collection[] = $this->obj;
+//         unset($collection[0]);
 
-        $this->assertArrayHasKey('foo', $collection->map());
-        $this->assertEquals(1, count($collection->objects()));
+//         $this->assertArrayNotHasKey('foo', $collection->map());
+//         $this->assertEquals(0, count($collection->objects()));
+//     }
 
-        unset($collection['foo']);
+//     public function testArrayAccessUnsetByKey()
+//     {
+//         $collection = new Collection();
+//         $collection[] = $this->obj;
 
-        $this->assertArrayNotHasKey('foo', $collection->map());
-        $this->assertEquals(0, count($collection->objects()));
-    }
+//         $this->assertArrayHasKey('foo', $collection->map());
+//         $this->assertEquals(1, count($collection->objects()));
 
-    public function testIterator()
-    {
-        $collection = new Collection();
-        $collection[] = $this->obj;
-        $collection[] = $this->obj2;
+//         unset($collection['foo']);
 
-        $tests = ['foo', 'bar'];
-        $i = 0;
-        foreach($collection as $id => $obj) {
-            $this->assertEquals($tests[$i], $id);
-            $this->assertTrue($obj instanceof Object);
-            $i++;
-        }
-        $this->assertEquals(2, $i);
-    }
+//         $this->assertArrayNotHasKey('foo', $collection->map());
+//         $this->assertEquals(0, count($collection->objects()));
+//     }
 
-    public function testIteratorEmptyCollection()
-    {
-        $collection = new Collection();
+//     public function testIterator()
+//     {
+//         $collection = new Collection();
+//         $collection[] = $this->obj;
+//         $collection[] = $this->obj2;
 
-        $i = 0;
-        foreach($collection as $id => $obj) {
-            $i++;
-        }
-        $this->assertEquals(0, $i);
-    }
+//         $tests = ['foo', 'bar'];
+//         $i = 0;
+//         foreach($collection as $id => $obj) {
+//             $this->assertEquals($tests[$i], $id);
+//             $this->assertTrue($obj instanceof Object);
+//             $i++;
+//         }
+//         $this->assertEquals(2, $i);
+//     }
 
-    public function testCount()
-    {
-        $collection = new Collection();
+//     public function testIteratorEmptyCollection()
+//     {
+//         $collection = new Collection();
 
-        $this->assertEquals(0, count($collection));
+//         $i = 0;
+//         foreach($collection as $id => $obj) {
+//             $i++;
+//         }
+//         $this->assertEquals(0, $i);
+//     }
 
-        $collection[] = $this->obj;
+//     public function testCount()
+//     {
+//         $collection = new Collection();
 
-        $this->assertEquals(1, count($collection));
+//         $this->assertEquals(0, count($collection));
 
-        unset($collection['foo']);
+//         $collection[] = $this->obj;
 
-        $this->assertEquals(0, count($collection));
-    }
+//         $this->assertEquals(1, count($collection));
 
-    public function testAdd()
-    {
-        $collection = new Collection();
-        $collection->add($this->obj);
+//         unset($collection['foo']);
 
-        $this->assertSame($this->obj, $collection['foo']);
-        $this->assertEquals(1, count($collection));
+//         $this->assertEquals(0, count($collection));
+//     }
 
-        $collection->add($this->obj2);
+//     public function testAdd()
+//     {
+//         $collection = new Collection();
+//         $collection->add($this->obj);
 
-        $this->assertSame($this->obj2, $collection['bar']);
-        $this->assertEquals(2, count($collection));
-    }*/
+//         $this->assertSame($this->obj, $collection['foo']);
+//         $this->assertEquals(1, count($collection));
 
-    // todo: testRemove
+//         $collection->add($this->obj2);
 
-    /*public function testPosById()
-    {
-        $collection = new Collection();
-        $collection[] = $this->obj;
-        $collection[] = $this->obj2;
+//         $this->assertSame($this->obj2, $collection['bar']);
+//         $this->assertEquals(2, count($collection));
+//     }
 
-        $this->assertEquals(0, $collection->pos('foo'));
-        $this->assertEquals(1, $collection->pos('bar'));
-    }
+//     // todo: testRemove
 
-    public function testPosByObject()
-    {
-        $collection = new Collection();
-        $collection[] = $this->obj;
-        $collection[] = $this->obj2;
+//     /*public function testPosById()
+//     {
+//         $collection = new Collection();
+//         $collection[] = $this->obj;
+//         $collection[] = $this->obj2;
 
-        $this->assertEquals(0, $collection->pos($this->obj));
-        $this->assertEquals(1, $collection->pos($this->obj2));
-    }
+//         $this->assertEquals(0, $collection->pos('foo'));
+//         $this->assertEquals(1, $collection->pos('bar'));
+//     }
 
-    public function testPosInvalidParameterThrowsException()
-    {
-        $this->setExpectedException('\InvalidArgumentException');
+//     public function testPosByObject()
+//     {
+//         $collection = new Collection();
+//         $collection[] = $this->obj;
+//         $collection[] = $this->obj2;
 
-        $collection = new Collection();
-        $collection->pos(null);
-    }
-    */
-}
+//         $this->assertEquals(0, $collection->pos($this->obj));
+//         $this->assertEquals(1, $collection->pos($this->obj2));
+//     }
+
+//     public function testPosInvalidParameterThrowsException()
+//     {
+//         $this->setExpectedException('\InvalidArgumentException');
+
+//         $collection = new Collection();
+//         $collection->pos(null);
+//     }
+//     */
+// }

@@ -2,8 +2,8 @@
 
 namespace Charcoal\Tests\Metadata;
 
-use \Charcoal\Metadata\MetadataLoader as MetadataLoader;
-use \Charcoal\Charcoal as Charcoal;
+use \Charcoal\Metadata\MetadataLoader;
+use \Charcoal\Charcoal;
 
 class MetadataLoaderTest extends \PHPUnit_Framework_TestCase
 {
