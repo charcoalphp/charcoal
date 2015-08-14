@@ -6,7 +6,7 @@ namespace Charcoal\Model;
 use \Exception as Exception;
 
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Core\AbstractFactory as AbstractFactory;
+use \Charcoal\Core\IdentFactory as IdentFactory;
 
 // Local namespace dependencies
 use \Charcoal\Model\ModelInterface as ModelInterface;
@@ -14,17 +14,13 @@ use \Charcoal\Model\ModelInterface as ModelInterface;
 /**
 *
 */
-class ModelFactory extends AbstractFactory
+class ModelFactory extends IdentFactory
 {
     /**
     * @param array $data
     */
-    protected function __construct(array $data = null)
+    protected function __construct()
     {
-        $this->set_factory_mode(AbstractFactory::MODE_IDENT);
         $this->set_base_class('\Charcoal\Model\ModelInterface');
-        if ($data !== null) {
-            $this->set_data($data);
-        }
     }
 }
