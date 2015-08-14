@@ -17,7 +17,7 @@ use \Charcoal\Source\SourceInterface;
 use \Charcoal\Source\Filter;
 use \Charcoal\Source\FilterInterface;
 use \Charcoal\Source\Order;
-use \Charcoal\Source\OrderInterfae;
+use \Charcoal\Source\OrderInterface;
 use \Charcoal\Source\Pagination;
 use \Charcoal\Source\PaginationInterface;
 
@@ -271,7 +271,7 @@ abstract class AbstractSource implements
     */
     public function add_order($param, $mode = 'asc', $order_options = null)
     {
-        if ($param instanceof OrderInterfae) {
+        if ($param instanceof OrderInterface) {
             $this->_orders[] = $param;
         } elseif (is_array($param)) {
             $order = $this->create_order();
@@ -286,7 +286,9 @@ abstract class AbstractSource implements
             }
             $this->_orders[] = $order;
         } else {
-            throw new InvalidArgumentException('Parameter must be an Order object or a property ident.');
+            throw new InvalidArgumentException(
+                'Parameter must be an OrderInterface object or a property ident.'
+            );
         }
 
         return $this;
