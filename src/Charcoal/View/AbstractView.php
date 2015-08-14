@@ -3,20 +3,20 @@
 namespace Charcoal\View;
 
 // Dependencies from `PHP`
-use \InvalidArgumentException as InvalidArgumentException;
+use \InvalidArgumentException;
 
 // 3rd-party libraries dependencies
-use \Mustache_Engine as Mustache_Engine;
-use \Mustache_LambdaHelper as Mustache_LambdaHelper;
+use \Mustache_Engine;
+use \Mustache_LambdaHelper;
 
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Charcoal as Charcoal;
+use \Charcoal\Charcoal;
 
 // Local namespace dependencies
-use \Charcoal\View\MustachePartialsLoader as MustachePartialsLoader;
-use \Charcoal\View\ViewableInterface as ViewableInterface;
-use \Charcoal\View\ViewInterface as ViewInterface;
-use \Charcoal\View\ViewControllerInterface as ViewControllerInterface;
+use \Charcoal\View\MustachePartialsLoader;
+use \Charcoal\View\ViewableInterface;
+use \Charcoal\View\ViewInterface;
+use \Charcoal\View\ViewControllerInterface;
 
 /**
 * An abstract class that fulfills the full ViewInterface.

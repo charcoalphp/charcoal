@@ -3,14 +3,14 @@
 namespace Charcoal\View;
 
 // Dependencies from `PHP`
-use \InvalidArgumentException as InvalidArgumentException;
+use \InvalidArgumentException;
 
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Charcoal as Charcoal;
-use \Charcoal\Loader\FileLoader as FileLoader;
+use \Charcoal\Charcoal;
+use \Charcoal\Loader\FileLoader;
 
 // Local namespace dependencies
-use \Charcoal\View\AbstractView as AbstractView;
+use \Charcoal\View\AbstractView;
 
 /**
 *

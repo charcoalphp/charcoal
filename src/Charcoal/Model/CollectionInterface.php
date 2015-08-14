@@ -6,7 +6,7 @@ namespace Charcoal\Model;
 use \Charcoal\Core\IndexableInterface as IndexableInterface;
 
 /**
-* @todo Implement CollectionInterface.
+*
 */
 interface CollectionInterface
 {

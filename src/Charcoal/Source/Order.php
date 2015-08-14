@@ -3,11 +3,11 @@
 namespace Charcoal\Source;
 
 // Dependencies from `PHP`
-use \DomainException as DomainException;
-use \InvalidArgumentException as InvalidArgumentException;
+use \DomainException;
+use \InvalidArgumentException;
 
 // Local namespace dependencies
-use \Charcoal\Source\OrderInterface as OrderInterface;
+use \Charcoal\Source\OrderInterface;
 
 /**
 *

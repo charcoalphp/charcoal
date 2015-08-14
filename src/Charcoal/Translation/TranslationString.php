@@ -5,17 +5,19 @@ namespace Charcoal\Translation;
 // Dependencies from `PHP`
 use \ArrayAccess as ArrayAccess;
 use \Exception as Exception;
-use \InvalidArgumentException as InvalidArgumentException;
+use \InvalidArgumentException;
 
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Config\ConfigurableInterface as ConfigurableInterface;
-use \Charcoal\Config\ConfigurableTrait as ConfigurableTrait;
+use \Charcoal\Config\ConfigurableInterface;
+use \Charcoal\Config\ConfigurableTrait;
 
 // Local namespace dependencies
-use \Charcoal\Translation\TranslationStringInterface as TranslationStringInterface;
+use \Charcoal\Translation\TranslationStringInterface;
 
 /**
+* Translation String object
 *
+* Allow a string to be translatable, transparently.
 */
 class TranslationString implements
     TranslationStringInterface,

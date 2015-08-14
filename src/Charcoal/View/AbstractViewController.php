@@ -3,7 +3,7 @@
 namespace Charcoal\View;
 
 // Local namespace dependencies
-use \Charcoal\View\ViewControllerInterface as ViewControllerInterface;
+use \Charcoal\View\ViewControllerInterface;
 
 /**
 * Model View\Controller

@@ -15,6 +15,14 @@ interface TranslationStringInterface
     public function set_val($val);
 
     /**
+    * @param string $lang
+    * @param string $val
+    * @throws InvalidArgumentException
+    * @return TranslationString Chainable
+    */
+    public function add_val($lang, $val);
+
+    /**
     * Get the the translation values.
     *
     * The returned value depends on the parameter:

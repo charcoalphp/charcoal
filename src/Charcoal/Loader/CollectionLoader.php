@@ -6,6 +6,7 @@ namespace Charcoal\Loader;
 use \Exception;
 use \InvalidArgumentException;
 
+// PHP Modules dependencies
 use \PDO;
 
 // Intra-module (`charcoal-core`) dependencies
@@ -20,6 +21,8 @@ use \Charcoal\Source\Database\DatabasePagination as Pagination;
 
 /**
 * Collection Loader
+*
+* @uses \Charcoal\Model\Collection
 */
 class CollectionLoader extends AbstractLoader
 {

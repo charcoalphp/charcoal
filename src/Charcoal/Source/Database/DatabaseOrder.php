@@ -2,17 +2,26 @@
 
 namespace Charcoal\Source\Database;
 
-use \DomainException as DomainException;
+// Dependencies from `PHP`
+use \DomainException;
 
 // Local parent namespace dependencies
-use \Charcoal\Source\Order as Order;
+use \Charcoal\Source\Order;
 
 /**
-*
+* The DatabaseOrder makes a Order SQL-aware.
 */
 class DatabaseOrder extends Order
 {
     /**
+    * Get the order's SQL string to append to an "ORDER BY" subquery.
+    *
+    * There are 4 modes of "Order":
+    * - `asc` to order in ascending (A-Z / 0-9) order.
+    * - `desc` to order in descending (Z-A / 9-0) order.
+    * - `rand` to order in a random fashion.
+    * - `values` to order by a defined array of properties.
+    *
     * @throws DomainException
     * @return string
     */

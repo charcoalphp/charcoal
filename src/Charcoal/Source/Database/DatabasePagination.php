@@ -3,14 +3,16 @@
 namespace Charcoal\Source\Database;
 
 // Local parent namespace dependencies
-use \Charcoal\Source\Pagination as Pagination;
+use \Charcoal\Source\Pagination;
 
 /**
-*
+* The DatabasePagination makes a Pagination SQL-aware
 */
 class DatabasePagination extends Pagination
 {
     /**
+    * Get the pagination's SQL string (Full "LIMIT" subquery)
+    *
     * @return string
     */
     public function sql()

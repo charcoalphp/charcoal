@@ -3,11 +3,11 @@
 namespace Charcoal\View;
 
 // 3rd-party libraries dependencies
-use \Mustache_Loader as Mustache_Loader;
+use \Mustache_Loader;
 
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Charcoal as Charcoal;
-use \Charcoal\Loader\FileLoader as FileLoader;
+use \Charcoal\Charcoal;
+use \Charcoal\Loader\FileLoader;
 
 /**
 * Mustache Template Loader

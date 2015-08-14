@@ -3,7 +3,7 @@
 namespace Charcoal\View;
 
 // Local namespace dependencies
-use \Charcoal\View\ViewInterface as ViewInterface;
+use \Charcoal\View\ViewInterface;
 
 /**
 *

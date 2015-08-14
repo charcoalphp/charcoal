@@ -3,21 +3,27 @@
 namespace Charcoal\Model;
 
 // Dependencies from `PHP`
-use \InvalidArgumentException as InvalidArgumentException;
+use \InvalidArgumentException;
+use \ArrayAccess;
+use \Countable;
+use \IteratorAggregate;
 
-// Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Core\IndexableInterface as IndexableInterface;
-
-use \Charcoal\Model\CollectionInterface as CollectionInterface;
+// Local namespace dependencies
+use \Charcoal\Model\CollectionInterface;
+use \Charcoal\Model\ModelInterface;
 
 /**
-* Model Collection
+* Model Collection. An Iterator of ModelInterface.
+*
+* Typically, the Model Collection will be used to hold the result of a "CollectionLoader".
+*
+* @see Charcoal\Loader\CollectionLoader
 */
 class Collection implements
     CollectionInterface,
-    \ArrayAccess,
-    \Countable,
-    \IteratorAggregate
+    ArrayAccess,
+    Countable,
+    IteratorAggregate
 {
     /**
     * Array of (ordered) objects
@@ -48,8 +54,8 @@ class Collection implements
     */
     public function offsetSet($offset, $value)
     {
-        if (!($value instanceof IndexableInterface)) {
-            throw new InvalidArgumentException('Collection value must be a IndexableInterface object.');
+        if (!($value instanceof ModelInterface)) {
+            throw new InvalidArgumentException('Collection value must be a ModelInterface object.');
         }
         if ($offset === null) {
             $this->_objects[] = $value;
@@ -118,6 +124,9 @@ class Collection implements
     /**
     * IteratorAggregate > getIterator
     *
+    * By implementint the IteratorAggregate interface, Collection lists can be
+    *
+    *
     * @return mixed
     */
     public function getIterator()
@@ -133,9 +142,9 @@ class Collection implements
     * Countable > count
     *
     * By implementing the Countable interface, the PHP `count()` function
-    * can be called directly on a list.
+    * can be called directly on a Collection.
     *
-    * @return integer The number of objects in the list
+    * @return integer The number of objects in the Collection.
     */
     public function count()
     {
@@ -143,7 +152,7 @@ class Collection implements
     }
 
     /**
-    * Get the ordered object array
+    * Get the ordered object array.
     *
     * @return array
     */
@@ -153,7 +162,7 @@ class Collection implements
     }
 
     /**
-    * Get the map array, with IDs as keys
+    * Get the map array, with IDs as keys.
     *
     * @return array
     */
@@ -169,7 +178,7 @@ class Collection implements
     *
     * @return \Charcoal\Collection (Chainable)
     */
-    public function add(IndexableInterface $obj)
+    public function add(ModelInterface $obj)
     {
         $this->_objects[] = $obj;
         $this->_map[$obj->id()] = $obj;
@@ -179,7 +188,7 @@ class Collection implements
     }
 
     /**
-    * @param string|IndexableInterface $key
+    * @param string|ModelInterface $key
     * @throws InvalidArgumentException if the offset is not a string
     * @return integer|boolean
     */
@@ -187,10 +196,10 @@ class Collection implements
     {
         if (is_string($key)) {
             return array_search($key, array_keys($this->_map));
-        } elseif ($key instanceof IndexableInterface) {
+        } elseif ($key instanceof ModelInterface) {
             return array_search($key->id(), array_keys($this->_map));
         } else {
-            throw new InvalidArgumentException('Key must be a string or an IndexableInterface object.');
+            throw new InvalidArgumentException('Key must be a string or an ModelInterface object.');
         }
     }
 }

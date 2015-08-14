@@ -3,11 +3,11 @@
 namespace Charcoal\View;
 
 // Dependencies from `PHP`
-use \InvalidArgumentException as InvalidArgumentException;
+use \InvalidArgumentException;
 
 // Local namespace dependencies
-use \Charcoal\View\AbstractView as AbstractView;
-use \Charcoal\View\ViewInterface as ViewInterface;
+use \Charcoal\View\AbstractView;
+use \Charcoal\View\ViewInterface;
 
 /**
 * A default (abstract) implementation, as trait, of the ViewableInterface.

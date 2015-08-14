@@ -3,10 +3,10 @@
 namespace Charcoal\Translation;
 
 // Dependencies from `PHP`
-use \InvalidArgumentException as InvalidArgumentException;
+use \InvalidArgumentException;
 
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Config\AbstractConfig as AbstractConfig;
+use \Charcoal\Config\AbstractConfig;
 
 /**
 * Global Translation configuration.

@@ -3,14 +3,17 @@
 namespace Charcoal\Source;
 
 // Dependencies from `PHP`
-use \InvalidArgumentException as InvalidArgumentException;
+use \InvalidArgumentException;
 
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Encoder\EncoderFactory as EncoderFactory;
+use \Charcoal\Encoder\EncoderFactory;
 
 // Local namespace dependencies
-use \Charcoal\Source\SourceConfig as SourceConfig;
+use \Charcoal\Source\SourceConfig;
 
+/**
+*
+*/
 class DatabaseSourceConfig extends SourceConfig
 {
     /**

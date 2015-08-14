@@ -3,10 +3,10 @@
 namespace Charcoal\Source;
 
 // Dependencies from `PHP`
-use \InvalidArgumentException as InvalidArgumentException;
+use \InvalidArgumentException;
 
 // Local namespace dependencies
-use \Charcoal\Source\FilterInterface as FilterInterface;
+use \Charcoal\Source\FilterInterface;
 
 /**
 *
@@ -250,7 +250,7 @@ class Filter implements FilterInterface
 
 
 
-        /**
+    /**
     * Supported operators
     *
     * @return array

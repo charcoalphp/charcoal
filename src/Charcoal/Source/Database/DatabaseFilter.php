@@ -3,14 +3,16 @@
 namespace Charcoal\Source\Database;
 
 // Local parent namespace dependencies
-use \Charcoal\Source\Filter as Filter;
+use \Charcoal\Source\Filter;
 
 /**
-*
+* The DatabaseFilter makes a Filter SQL-aware.
 */
 class DatabaseFilter extends Filter
 {
     /**
+    * Get the filter's SQL string to append to a "WHERE" clause.
+    *
     * @return string
     */
     public function sql()

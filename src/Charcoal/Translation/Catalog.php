@@ -3,18 +3,18 @@
 namespace Charcoal\Translation;
 
 // Dependencies from `PHP`
-use \ArrayAccess as ArrayAccess;
-use \InvalidArgumentException as InvalidArgumentException;
+use \ArrayAccess;
+use \InvalidArgumentException;
 
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Config\ConfigurableInterface as ConfigurableInterface;
-use \Charcoal\Config\ConfigurableTrait as ConfigurableTrait;
+use \Charcoal\Config\ConfigurableInterface;
+use \Charcoal\Config\ConfigurableTrait;
 
 // Local namespace dependencies
-use \Charcoal\Translation\CatalogInterface as CatalogInterface;
+use \Charcoal\Translation\CatalogInterface;
 
 /**
-*
+* Translation Catalog
 */
 class Catalog implements
     CatalogInterface,
