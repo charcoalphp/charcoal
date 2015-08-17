@@ -214,7 +214,7 @@ trait DescribableTrait
             throw new Exception(sprintf('Invalid property: %s (type is undefined).', $property_ident));
         }
 
-        $property = PropertyFactory::instance()->get($property_metadata['type']);
+        $property = PropertyFactory::instance()->create($property_metadata['type']);
         $property->set_ident($property_ident);
         $property->set_data($property_metadata);
 
