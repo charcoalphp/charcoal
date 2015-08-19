@@ -77,7 +77,7 @@ trait DescribableTrait
         } elseif ($metadata instanceof MetadataInterface) {
             $this->_metadata = $metadata;
         } else {
-            throw new \InvalidArgumentException('Metadata argument is invalid (must be array or Medatadata object).');
+            throw new InvalidArgumentException('Metadata argument is invalid (must be array or Medatadata object).');
         }
 
         // If the metadata contains "data", then automatically set the initial data to the value
@@ -195,23 +195,32 @@ trait DescribableTrait
     public function property($property_ident)
     {
         if (!is_string($property_ident)) {
-            throw new InvalidArgumentException('Property Ident must be a string.');
+            throw new InvalidArgumentException(
+                'Property Ident must be a string.'
+            );
         }
 
         $metadata = $this->metadata();
         $props = $metadata->properties();
 
         if (empty($props)) {
-            throw new Exception(sprintf('Invalid model metadata (%s) - No properties defined.', get_class($this)));
+            throw new Exception(sprintf(
+            'Invalid model metadata (%s) - No properties defined.',
+                get_class($this)
+                ));
         }
 
         if (!isset($props[$property_ident])) {
-            throw new Exception(sprintf('Invalid property: %s (not defined in metadata).', $property_ident));
+            throw new Exception(
+                sprintf('Invalid property: %s (not defined in metadata).', $property_ident)
+            );
         }
 
         $property_metadata = $props[$property_ident];
         if (!isset($property_metadata['type'])) {
-            throw new Exception(sprintf('Invalid property: %s (type is undefined).', $property_ident));
+            throw new Exception(
+                sprintf('Invalid property: %s (type is undefined).', $property_ident)
+            );
         }
 
         $property = PropertyFactory::instance()->create($property_metadata['type']);
