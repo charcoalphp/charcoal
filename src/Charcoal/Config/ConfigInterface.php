@@ -7,6 +7,19 @@ namespace Charcoal\Config;
 */
 interface ConfigInterface
 {
+
+    /**
+    * @param string $separator
+    * @return ConfigInterface Chainable
+    */
+    public function set_separator($separator);
+
+    /**
+    * @return string
+    */
+    public function separator();
+
+
     /**
     * @param array $data
     * @return ConfigInterface Chainable
@@ -17,6 +30,21 @@ interface ConfigInterface
     * @return array
     */
     public function default_data();
+
+    /**
+    * @param string $key
+    * @return mixed
+    */
+    public function get($key);
+
+    /**
+    * @param string $key
+    * @param mixed $val
+    * @return ConfigInterface Chainable
+    */
+    public function set($key, $val);
+
+
 
     /**
     * @param string $path
