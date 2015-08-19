@@ -3,19 +3,30 @@
 namespace Charcoal;
 
 // Dependencies from `PHP`
-use \Exception as Exception;
-use \InvalidArgumentException as InvalidArgumentException;
+use \Exception;
+use \InvalidArgumentException;
 
 // 3rd-party libraries dependencies
-use \Slim\Slim as Slim;
-use \Psr\Log\LoggerInterface as LoggerInterface;
-use \Psr\Log\LogLevel as LogLevel;
+use \Slim\Slim;
+use \Psr\Log\LoggerInterface;
+use \Psr\Log\LogLevel;
 
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Config as Config;
+use \Charcoal\CharcoalConfig;
 
 /**
+* Main Charcoal container.
 *
+* The Charcoal container has:
+* - `config`
+*   - The root configuration object.
+*   - Should implement `\Charcoal\ConfigInterface`
+* - `logger`
+*   - The PSR-3 compatible logger
+*   - Should implement `\Psr\Log\LoggerInterface`
+* - `app`
+*   - The Slim application
+*   - An instance of `\Slim\Slim`
 */
 class Charcoal
 {
@@ -44,7 +55,7 @@ class Charcoal
         if (isset($data['config']) && $data['config'] !== null) {
             self::set_config($data['config']);
         } else {
-            self::$_config = new Config();
+            self::$_config = new CharcoalConfig();
         }
 
         if (isset($data['logger']) && $data['logger'] !== null) {
@@ -71,13 +82,13 @@ class Charcoal
     public static function set_config($config)
     {
         if (self::$_config === null) {
-            self::$_config = new Config();
+            self::$_config = new CharcoalConfig();
         }
         if (is_string($config)) {
             self::$_config->add_file($config);
         } elseif (is_array($config)) {
             self::$_config->set_data($config);
-        } elseif ($config instanceof Config) {
+        } elseif ($config instanceof CharcoalConfig) {
             self::$_config = $config;
         } else {
             throw new InvalidArgumentException(

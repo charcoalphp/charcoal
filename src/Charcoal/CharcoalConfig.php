@@ -3,19 +3,19 @@
 namespace Charcoal;
 
 // Dependencies from `PHP`
-use \Exception as Exception;
-use \InvalidArgumentException as InvalidArgumentException;
+use \Exception;
+use \InvalidArgumentException;
 
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Config\AbstractConfig as AbstractConfig;
+use \Charcoal\Config\AbstractConfig;
 
 /**
-* Main project configuration
+* Main project configuration container
 *
 * The default data values is set from the JSON file locate at
 * - `../../config/config.default.json`
 */
-class Config extends AbstractConfig
+class CharcoalConfig extends AbstractConfig
 {
     const DEFAULT_APPLICATION_ENV = 'live';
 
@@ -89,96 +89,6 @@ class Config extends AbstractConfig
         $this->add_file(__DIR__.'/../../config/config.default.json');
 
         parent::__construct($config);
-    }
-
-    /**
-    * @param mixed $offset
-    * @return boolean
-    */
-    public function offsetExists($offset)
-    {
-        $f = [$this, $offset];
-        if (is_callable($f)) {
-            return true;
-        } else {
-            return isset($this->{$offset});
-        }
-    }
-
-    /**
-    * @param mixed $offset
-    * @return mixed
-    */
-    public function offsetGet($offset)
-    {
-        $f = [$this, $offset];
-        if (is_callable($f)) {
-            return call_user_func($f);
-        } else {
-            return (isset($this->{$offset}) ? $this->{$offset} : null);
-        }
-    }
-
-    /**
-    * @param string $offset
-    * @param mixed  $value
-    * @return void
-    */
-    public function offsetSet($offset, $value)
-    {
-        $this->{$offset} = $value;
-    }
-
-    /**
-    * @param string $offset
-    * @return void
-    */
-    public function offsetUnset($offset)
-    {
-        $this->{$offset} = null;
-        unset($this->{$offset});
-    }
-
-    /**
-    * @param array $data
-    * @return Config Chainable
-    */
-    public function set_data(array $data)
-    {
-        if (isset($data['admin_path']) && $data['admin_path'] !== null) {
-            $this->set_admin_path($data['admin_path']);
-        }
-        if (isset($data['dev_mode'])) {
-            $this->set_dev_mode($data['dev_mode']);
-            unset($data['dev_mode']);
-        }
-        if (isset($data['timezone'])) {
-            $this->set_timezone($data['timezone']);
-            unset($data['timezone']);
-        }
-
-        if (isset($data['databases'])) {
-            $this->set_databases($data['databases']);
-            unset($data['databases']);
-        }
-        if (isset($data['default_database'])) {
-            $this->set_default_database($data['default_database']);
-            unset($data['default_database']);
-        }
-        if (isset($data['metadata_path'])) {
-            $this->set_metadata_path($data['metadata_path']);
-            unset($data['metadata_path']);
-        }
-        if (isset($data['template_path'])) {
-            $this->set_metadata_path($data['template_path']);
-            unset($data['template_path']);
-        }
-
-        foreach ($data as $k => $v) {
-            $this->{$k} = $v;
-        }
-
-        return $this;
     }
 
     /**
@@ -366,6 +276,7 @@ class Config extends AbstractConfig
     * @param array $metadata_path
     * @throws InvalidArgumentException
     * @return Config Chainable
+    * @todo Move to MetadataConfig
     */
     public function set_metadata_path($metadata_path)
     {
@@ -403,6 +314,7 @@ class Config extends AbstractConfig
     * @param array $template_path
     * @throws Exception
     * @return Config Chainable
+    * @todo Move to ViewConfig
     */
     public function set_template_path($template_path)
     {
