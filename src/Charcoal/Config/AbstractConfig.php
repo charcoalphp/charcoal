@@ -51,16 +51,17 @@ abstract class AbstractConfig implements
 
     /**
     * @param string $separator
+    * @throws InvalidArgumentException
     * @return AbstractConfig Chainable
     */
     public function set_separator($separator)
     {
-        if(!is_string($separator)) {
+        if (!is_string($separator)) {
             throw new InvalidArgumentException(
                 'Separator needs to be a string.'
             );
         }
-        if(strlen($separator) > 1) {
+        if (strlen($separator) > 1) {
             throw new InvalidArgumentException(
                 'Separator needs to be only one-character.'
             );
@@ -110,11 +111,11 @@ abstract class AbstractConfig implements
     {
         $arr = $this;
         $split_keys = explode($this->separator(), $key);
-        foreach($split_keys as $k) {
-            if(!isset($arr[$k])) {
+        foreach ($split_keys as $k) {
+            if (!isset($arr[$k])) {
                 return null;
             }
-            if(!is_array($arr[$k]) && ($arr[$k] instanceof ArrayAccess)) {
+            if (!is_array($arr[$k]) && ($arr[$k] instanceof ArrayAccess)) {
                 return $arr[$k];
             }
             $arr = $arr[$k];
@@ -130,11 +131,11 @@ abstract class AbstractConfig implements
     {
         $arr = $this;
         $split_keys = explode($this->separator(), $key);
-        foreach($split_keys as $k) {
-            if(!isset($arr[$k])) {
+        foreach ($split_keys as $k) {
+            if (!isset($arr[$k])) {
                 return false;
             }
-            if(!is_array($arr[$k]) && ($arr[$k] instanceof ArrayAccess)) {
+            if (!is_array($arr[$k]) && ($arr[$k] instanceof ArrayAccess)) {
                 return true;
             }
             $arr = $arr[$k];
@@ -246,7 +247,7 @@ abstract class AbstractConfig implements
                 'Config File must be a string.'
             );
         }
-        if(!file_exists($filename)) {
+        if (!file_exists($filename)) {
             throw new InvalidArgumentException(
                 'Config File does not exist'
             );
