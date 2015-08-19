@@ -58,7 +58,7 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
         $obj = $this->obj;
         $this->assertFalse($obj->has('foobar'));
         $obj['foobar'] = 42;
-        $this->assertTrue($obj->has('foobar']));
+        $this->assertTrue($obj->has('foobar'));
     }
 
     /**

@@ -4,15 +4,15 @@ namespace Charcoal\Metadata;
 
 // Dependencies from `PHP`
 use \Exception as Exception;
-use \InvalidArgumentException as InvalidArgumentException;
+use \InvalidArgumentException;
 
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Property\PropertyFactory as PropertyFactory;
-use \Charcoal\Property\PropertyInterface as PropertyInterface;
+use \Charcoal\Property\PropertyFactory;
+use \Charcoal\Property\PropertyInterface;
 
 // Local namespace dependencies
-use \Charcoal\Metadata\MetadataLoader as MetadataLoader;
-use \Charcoal\Metadata\MetadataInterface as MetadataInterface;
+use \Charcoal\Metadata\MetadataLoader;
+use \Charcoal\Metadata\MetadataInterface;
 
 /**
 * Default implementation, as trait, of the `DescribableInterface`.
@@ -65,7 +65,7 @@ trait DescribableTrait
 
     /**
     * @param array|MetadataInterface $metadata
-    * @throws \InvalidArgumentException if the parameter is not an array or MetadataInterface
+    * @throws InvalidArgumentException if the parameter is not an array or MetadataInterface
     * @return DescribableInterface Chainable
     */
     public function set_metadata($metadata)
@@ -205,9 +205,9 @@ trait DescribableTrait
 
         if (empty($props)) {
             throw new Exception(sprintf(
-            'Invalid model metadata (%s) - No properties defined.',
+                'Invalid model metadata (%s) - No properties defined.',
                 get_class($this)
-                ));
+            ));
         }
 
         if (!isset($props[$property_ident])) {
