@@ -23,7 +23,7 @@ class MustacheTemplateLoader extends FileLoader implements Mustache_Loader
     {
         $all_path = parent::search_path();
 
-        $global_path = Charcoal::config()->template_path();
+        $global_path = Charcoal::config()->get('template_path');
         if (!empty($global_path)) {
             $all_path = array_merge($global_path, $all_path);
         }
@@ -38,6 +38,7 @@ class MustacheTemplateLoader extends FileLoader implements Mustache_Loader
     */
     public function load($ident = null)
     {
+        // Handle dynamic template hack. @todo rename to $mustache_template
         if ($ident === '$widget_template') {
             $ident = (isset($GLOBALS['widget_template']) ? $GLOBALS['widget_template'] : null);
             if ($ident === null) {
