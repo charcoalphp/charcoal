@@ -21,7 +21,8 @@
     "php": ">=5.5.0",
     "ext-pdo": "*",
     "ext-mbstring": "*",
-    "slim/slim": "~2.6",
+    "slim/slim": "^3.0@beta",
+    "slim/flash": "dev-master",
     "monolog/monolog": "~1.13",
     "mustache/mustache": "~2.5"
   },
