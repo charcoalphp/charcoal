@@ -7,7 +7,7 @@ use \Exception;
 use \InvalidArgumentException;
 
 // 3rd-party libraries dependencies
-use \Slim\Slim;
+use \Slim\App as Slim;
 use \Psr\Log\LoggerInterface;
 use \Psr\Log\LogLevel;
 
@@ -26,7 +26,7 @@ use \Charcoal\CharcoalConfig;
 *   - Should implement `\Psr\Log\LoggerInterface`
 * - `app`
 *   - The Slim application
-*   - An instance of `\Slim\Slim`
+*   - An instance of `\Slim\App`
 */
 class Charcoal
 {
@@ -54,24 +54,18 @@ class Charcoal
         // Important: set config first. This affects later behavior
         if (isset($data['config']) && $data['config'] !== null) {
             self::set_config($data['config']);
-        } else {
-            self::$_config = new CharcoalConfig();
         }
 
         if (isset($data['logger']) && $data['logger'] !== null) {
             self::set_logger($data['logger']);
-        } else {
-            self::init_logger();
         }
 
         if (isset($data['app']) && $data['app'] !== null) {
             self::set_app($data['app']);
-        } else {
-            self::init_app();
         }
 
-        date_default_timezone_set(self::config()->timezone());
-        mb_internal_encoding('UTF-8');
+       // date_default_timezone_set(self::config()->get('timezone'));
+        //mb_internal_encoding('UTF-8');
     }
 
     /**
@@ -81,14 +75,7 @@ class Charcoal
     */
     public static function set_config($config)
     {
-        if (self::$_config === null) {
-            self::$_config = new CharcoalConfig();
-        }
-        if (is_string($config)) {
-            self::$_config->add_file($config);
-        } elseif (is_array($config)) {
-            self::$_config->set_data($config);
-        } elseif ($config instanceof CharcoalConfig) {
+        if ($config instanceof CharcoalConfig) {
             self::$_config = $config;
         } else {
             throw new InvalidArgumentException(
@@ -105,7 +92,9 @@ class Charcoal
     public static function config($opt = null)
     {
         if (self::$_config === null) {
-            throw new Exception('Config has not been set. Call Charcoal::init() first.');
+            throw new Exception(
+                'Config has not been set. Call Charcoal::init() first.'
+            );
         }
         if ($opt !== null) {
             return self::$_config[$opt];
@@ -131,21 +120,6 @@ class Charcoal
     }
 
     /**
-    * Initialize a default logger.
-    * By default, this uses monolog.
-    * @return void
-    */
-    public static function init_logger()
-    {
-        //$config = self::config();
-        $logger = new \Monolog\Logger('charcoal');
-        $handler = new \Monolog\Handler\StreamHandler('charcoal.debug.log', LogLevel::DEBUG);
-        $logger->pushHandler($handler);
-
-        self::set_logger($logger);
-    }
-
-    /**
     * @param Slim $app
     * @return void
     */
@@ -160,22 +134,6 @@ class Charcoal
     public static function app()
     {
         return self::$_app;
-    }
-
-    /**
-    * Initialize a default Slim app
-    * This function use the configuration object, so it should have been initialiazed first.
-    * @return void
-    */
-    public static function init_app()
-    {
-        self::$_app = new Slim(
-            [
-                'mode'  => self::config()->application_env(),
-                'debug' => self::config()->dev_mode()
-                //'log.writer' => self::logger()
-            ]
-        );
     }
 
     /**
