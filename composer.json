@@ -22,7 +22,6 @@
     "ext-pdo": "*",
     "ext-mbstring": "*",
     "slim/slim": "^3.0@dev",
-    "slim/flash": "dev-master",
     "monolog/monolog": "~1.13",
     "mustache/mustache": "~2.5"
   },
