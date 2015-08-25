@@ -32,6 +32,8 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('baz', $obj->get('bar'));
     }
 
+
+
     public function testGet()
     {
         $obj = $this->obj;
@@ -59,7 +61,18 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($obj->has('foobar'));
         $obj['foobar'] = 42;
         $this->assertTrue($obj->has('foobar'));
+
+        $obj['foo'] = ['bar'=>'baz'];
+        $this->assertTrue($obj->has('foo/bar'));
     }
+
+    // public function testSetWithSeparator()
+    // {
+    //     $obj = $this->obj;
+    //     $obj->set('foo/bar', 'baz');
+    //     $this->assertEquals('baz', $obj->get('foo/bar'));
+    //     $this->assertEquals(['bar'=>'baz'],
+    // }
 
     /**
     * Assert that the `set_separator` method:

@@ -44,8 +44,6 @@ interface ConfigInterface
     */
     public function set($key, $val);
 
-
-
     /**
     * @param string $path
     * @return AbstractConfig (Chainable)

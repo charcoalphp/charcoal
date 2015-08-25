@@ -2,6 +2,8 @@
 
 namespace Charcoal\Config;
 
+use \InvalidArgumentException;
+
 /**
 * An implementation, as Trait, of the `ConfigurableInterface`.
 *

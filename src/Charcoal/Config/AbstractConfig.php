@@ -25,14 +25,23 @@ abstract class AbstractConfig implements
     /**
     * @var string $_separator
     */
-    protected $_separator = self::DEFAULT_SEPARATOR;
+    private $_separator = self::DEFAULT_SEPARATOR;
+
+    /**
+    * @var ConfigInterface $_root
+    */
+    private $_root = null;
 
     /**
     * @param array|string|null $data Optional default data, as `[$key => $val]` array
     * @throws InvalidArgumentException if data is not an array
     */
-    public function __construct($data = null)
+    public function __construct($data = null, ConfigIntergace $root = null)
     {
+        if ($root) {
+            $this->_root = $root;
+        }
+
         if (is_string($data)) {
             $this->set_data($this->default_data());
             $this->add_file($data);
@@ -102,7 +111,6 @@ abstract class AbstractConfig implements
         return [];
     }
 
-
     /**
     * @param string $key
     * @return mixed
@@ -143,6 +151,10 @@ abstract class AbstractConfig implements
         return true;
     }
 
+    /**
+    * @param string $key
+    * @return mixed $value
+    */
     public function set($key, $value)
     {
         $this[$key] = $value;
@@ -152,86 +164,86 @@ abstract class AbstractConfig implements
     /**
     * ArrayAccess > offsetExists()
     *
-    * @param string $offset
-    * @throws InvalidArgumentException if $offset is not a string / numeric
+    * @param string $key
+    * @throws InvalidArgumentException if $key is not a string / numeric
     * @return boolean
     */
-    public function offsetExists($offset)
+    public function offsetExists($key)
     {
-        if (is_numeric($offset)) {
+        if (is_numeric($key)) {
             throw new InvalidArgumentException(
                 'Config array access only supports non-numeric keys.'
             );
         }
-        $f = [$this, $offset];
+        $f = [$this, $key];
         if (is_callable($f)) {
             return true;
         } else {
-            return isset($this->{$offset});
+            return isset($this->{$key});
         }
     }
 
     /**
     * ArrayAccess > offsetGet()
     *
-    * @param string $offset
-    * @throws InvalidArgumentException if $offset is not a string / numeric
+    * @param string $key
+    * @throws InvalidArgumentException if $key is not a string / numeric
     * @return mixed The value (or null)
     */
-    public function offsetGet($offset)
+    public function offsetGet($key)
     {
-        if (is_numeric($offset)) {
+        if (is_numeric($key)) {
             throw new InvalidArgumentException(
                 'Config array access only supports non-numeric keys.'
             );
         }
-        $f = [$this, $offset];
+        $f = [$this, $key];
         if (is_callable($f)) {
             return call_user_func($f);
         } else {
-            return (isset($this->{$offset}) ? $this->{$offset} : null);
+            return (isset($this->{$key}) ? $this->{$key} : null);
         }
     }
 
     /**
     * ArrayAccess > offsetSet()
     *
-    * @param string $offset
+    * @param string $key
     * @param mixed  $value
-    * @throws InvalidArgumentException if $offset is not a string / numeric
+    * @throws InvalidArgumentException if $key is not a string / numeric
     * @return void
     */
-    public function offsetSet($offset, $value)
+    public function offsetSet($key, $value)
     {
-        if (is_numeric($offset)) {
+        if (is_numeric($key)) {
             throw new InvalidArgumentException(
                 'Config array access only supports non-numeric keys.'
             );
         }
-        $f = [$this, 'set_'.$offset];
+        $f = [$this, 'set_'.$key];
         if (is_callable($f)) {
             call_user_func($f, $value);
         } else {
-            $this->{$offset} = $value;
+            $this->{$key} = $value;
         }
     }
 
     /**
     * ArrayAccess > offsetUnset()
     *
-    * @param string $offset
-    * @throws InvalidArgumentException if $offset is not a string / numeric
+    * @param string $key
+    * @throws InvalidArgumentException if $key is not a string / numeric
     * @return void
     */
-    public function offsetUnset($offset)
+    public function offsetUnset($key)
     {
-        if (is_numeric($offset)) {
+        if (is_numeric($key)) {
             throw new InvalidArgumentException(
                 'Config array access only supports non-numeric keys.'
             );
         }
-        $this->{$offset} = null;
-        unset($this->{$offset});
+        $this->{$key} = null;
+        unset($this->{$key});
     }
 
     /**
@@ -244,30 +256,85 @@ abstract class AbstractConfig implements
     {
         if (!is_string($filename)) {
             throw new InvalidArgumentException(
-                'Config File must be a string.'
+                'Configuration file must be a string.'
             );
         }
         if (!file_exists($filename)) {
             throw new InvalidArgumentException(
-                'Config File does not exist'
+                sprintf('Configuration file "%s" does not exist', $filename)
             );
         }
 
         $ext = pathinfo($filename, PATHINFO_EXTENSION);
-        if ($ext == 'php') {
-            include $filename;
-        } elseif ($ext == 'json') {
-            $file_content = file_get_contents($filename);
-            $config = json_decode($file_content, true);
-            // Todo: check json error
-            $this->set_data($config);
 
+        if ($ext == 'php') {
+            return $this->add_php_file($filename);
+        } elseif ($ext == 'json') {
+            return $this->add_json_file($filename);
+        } elseif ($ext == 'ini') {
+            return $this->add_ini_file($filename);
         } else {
             throw new InvalidArgumentException(
-                'Only JSON and PHP files are accepted as a Config File.'
+                'Only JSON, INI and PHP files are accepted as a Configuration file.'
             );
         }
+    }
 
+    private function add_ini_file($filename)
+    {
+        $config = parse_ini_file($filename, true);
+        if ($config === false) {
+            throw new InvalidArgumentException(
+                sprintf('Ini file "%s" is empty or invalid.')
+            );
+        }
+        $this->set_data($config);
+        return $this;
+    }
+
+    private function add_json_file($filename)
+    {
+        $file_content = file_get_contents($filename);
+        $config = json_decode($file_content, true);
+        $err_code = json_last_error();
+        if ($err_code == JSON_ERROR_NONE) {
+            $this->set_data($config);
+                return $this;
+        }
+        // Handle JSON error
+        switch ($err_code) {
+            case JSON_ERROR_NONE:
+                break;
+            case JSON_ERROR_DEPTH:
+                $err_msg = 'Maximum stack depth exceeded';
+                break;
+            case JSON_ERROR_STATE_MISMATCH:
+                $err_msg = 'Underflow or the modes mismatch';
+                break;
+            case JSON_ERROR_CTRL_CHAR:
+                $err_msg = 'Unexpected control character found';
+                break;
+            case JSON_ERROR_SYNTAX:
+                $err_msg = 'Syntax error, malformed JSON';
+                break;
+            case JSON_ERROR_UTF8:
+                $err_msg = 'Malformed UTF-8 characters, possibly incorrectly encoded';
+                break;
+            default:
+                $err_msg = 'Unknown error';
+                break;
+        }
+
+        throw new InvalidArgumentException(
+            sprintf('JSON could not be parsed: "%s"', $err_msg)
+        );
+
+    }
+
+    private function add_php_file($filename)
+    {
+        // `$this` is bound to the current configuration object (Current `$this`)
+        include $filename;
         return $this;
     }
 }
