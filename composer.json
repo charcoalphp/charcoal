@@ -1,0 +1,21 @@
+{
+    "name": "locomotivemtl/charcoal-config",
+    "description": "Configuration container for all things Charcoal",
+    "authors": [
+        {
+            "name": "Mathieu Ducharme",
+            "email": "mat@locomotive.ca"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.0.*"
+    },
+    "autoload":{
+        "psr-4": {
+            "Charcoal\\Config\\": "src/Charcoal/Config"
+        }
+    }
+}
