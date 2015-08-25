@@ -360,7 +360,7 @@ abstract class AbstractConfig implements
     {
         // `$this` is bound to the current configuration object (Current `$this`)
         $config = include $filename;
-        if(is_array($config)) {
+        if (is_array($config)) {
             $this->set_data($config);
         }
         return $this;

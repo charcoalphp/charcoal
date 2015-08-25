@@ -21,7 +21,7 @@ class ConfigurableTraitTest extends \PHPUnit_Framework_TestCase
              ->with($this->isType('array'))
              ->will($this->returnCallback(function($args) {
                 return new \Charcoal\Config\GenericConfig($args);
-            }));
+             }));
     }
 
     /**
