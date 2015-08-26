@@ -43,6 +43,18 @@ To use a different separator (for dot notation, for example) use:
 $config->set_separator('.');
 ```
 
+## Configuration chaining
+
 ## Interoperability
 The `\Charcoal\Config` container implements the `container-interop` interface.
 See [https://github.com/container-interop/container-interop]
+
+## Changelog
+
+### 0.1.1
+_Unreleased_
+- Fix typo in class name
+
+### 0.1
+_Released on 2015-08-25_
+- Initial release of `charcoal-config`, 

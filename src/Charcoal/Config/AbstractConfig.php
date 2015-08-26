@@ -3,11 +3,11 @@
 namespace Charcoal\Config;
 
 // Dependencies from `PHP`
-use \ArrayAccess as ArrayAccess;
-use \InvalidArgumentException as InvalidArgumentException;
+use \ArrayAccess;
+use \InvalidArgumentException;
 
 // Local namespace dependencies
-use \Charcoal\Config\ConfigInterface as ConfigInterface;
+use \Charcoal\Config\ConfigInterface;
 
 /**
 * Configuration container / registry.
@@ -36,7 +36,7 @@ abstract class AbstractConfig implements
     * @param array|string|null $data Optional default data, as `[$key => $val]` array
     * @throws InvalidArgumentException if data is not an array
     */
-    public function __construct($data = null, ConfigIntergace $root = null)
+    public function __construct($data = null, ConfigInterface $root = null)
     {
         if ($root) {
             $this->_root = $root;
