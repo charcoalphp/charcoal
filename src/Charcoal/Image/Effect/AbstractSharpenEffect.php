@@ -13,64 +13,38 @@ abstract class AbstractSharpenEffect extends AbstractEffect
 {
 
     /**
-    * @var float $_radius
+    * @var float $radius
     */
-    private $_radius = 0;
+    private $radius = 0;
 
     /**
-    * @var float $_sigma
+    * @var float $sigma
     */
-    private $_sigma = 1;
+    private $sigma = 1;
 
     /**
     * Amount (or _gain_) to unsharp. Only used in `unsharp` mode
-    * @var float $_amount
+    * @var float $amount
     */
-    private $_amount = 1;
+    private $amount = 1;
 
     /**
     * Threshold. Ony used in `unsharp` mode
     */
-    private $_threshold = 0.05;
+    private $threshold = 0.05;
 
     /**
-    * @var boolean $_mode
+    * @var boolean $mode
     */
-    private $_mode = 'standard';
+    private $mode = 'standard';
 
     /**
-    * @var integer $_channel
+    * @var integer $channel
     */
-    private $_channel = 'all';
+    private $channel = 'all';
+
 
     /**
-    * @param array $data
-    * @return AbstractSharpenEffect Chainable
-    */
-    public function set_data(array $data)
-    {
-        if (isset($data['radius']) && $data['radius'] !== null) {
-            $this->set_radius($data['radius']);
-        }
-        if (isset($data['sigma']) && $data['sigma'] !== null) {
-            $this->set_sigma($data['sigma']);
-        }
-        if (isset($data['amount']) && $data['amount'] !== null) {
-            $this->set_amount($data['amount']);
-        }
-        if (isset($data['threshold']) && $data['threshold'] !== null) {
-            $this->set_threshold($data['threshold']);
-        }
-        if (isset($data['mode']) && $data['mode'] !== null) {
-            $this->set_mode($data['mode']);
-        }
-        if (isset($data['channel']) && $data['channel'] !== null) {
-            $this->set_channel($data['channel']);
-        }
-        return $this;
-    }
-
-        /**
     * @param float $radius
     * @throws InvalidArgumentException
     * @return Blur Chainable
@@ -80,7 +54,7 @@ abstract class AbstractSharpenEffect extends AbstractEffect
         if (!is_numeric($radius) || ($radius < 0)) {
             throw new InvalidArgumentException('Radius must be a float (greater than 0)');
         }
-         $this->_radius = (float)$radius;
+         $this->radius = (float)$radius;
          return $this;
     }
 
@@ -89,7 +63,7 @@ abstract class AbstractSharpenEffect extends AbstractEffect
     */
     public function radius()
     {
-        return $this->_radius;
+        return $this->radius;
     }
 
     /**
@@ -102,7 +76,7 @@ abstract class AbstractSharpenEffect extends AbstractEffect
         if (!is_numeric($sigma) || ($sigma < 0)) {
             throw new InvalidArgumentException('Sigma value must be a float (greater than 0)');
         }
-        $this->_sigma = $sigma;
+        $this->sigma = $sigma;
         return $this;
     }
 
@@ -111,7 +85,7 @@ abstract class AbstractSharpenEffect extends AbstractEffect
     */
     public function sigma()
     {
-        return $this->_sigma;
+        return $this->sigma;
     }
 
     /**
@@ -124,7 +98,7 @@ abstract class AbstractSharpenEffect extends AbstractEffect
         if (!is_numeric($amount) || ($amount < 0)) {
             throw new InvalidArgumentException('Threshold must be a float (greater than 0)');
         }
-         $this->_amount = (float)$amount;
+         $this->amount = (float)$amount;
          return $this;
     }
 
@@ -133,7 +107,7 @@ abstract class AbstractSharpenEffect extends AbstractEffect
     */
     public function amount()
     {
-        return $this->_amount;
+        return $this->amount;
     }
     
     /**
@@ -146,7 +120,7 @@ abstract class AbstractSharpenEffect extends AbstractEffect
         if (!is_numeric($threshold) || ($threshold < 0)) {
             throw new InvalidArgumentException('Threshold must be a float (greater than 0)');
         }
-         $this->_threshold = (float)$threshold;
+         $this->threshold = (float)$threshold;
          return $this;
     }
 
@@ -155,7 +129,7 @@ abstract class AbstractSharpenEffect extends AbstractEffect
     */
     public function threshold()
     {
-        return $this->_threshold;
+        return $this->threshold;
     }
 
     /**
@@ -169,7 +143,7 @@ abstract class AbstractSharpenEffect extends AbstractEffect
         if (!in_array($mode, $allowed_modes)) {
             throw new InvalidArgumentException(sprintf('Mode %s is not an allowed blur mode', $mode));
         }
-        $this->_mode = $mode;
+        $this->mode = $mode;
         return $this;
     }
 
@@ -178,7 +152,7 @@ abstract class AbstractSharpenEffect extends AbstractEffect
     */
     public function mode()
     {
-        return $this->_mode;
+        return $this->mode;
     }
 
     /**
@@ -191,7 +165,7 @@ abstract class AbstractSharpenEffect extends AbstractEffect
         if (!in_array($channel, $this->image()->available_channels())) {
             throw new InvalidArgumentException('Channel is not valid');
         }
-        $this->_channel = $channel;
+        $this->channel = $channel;
         return $this;
     }
 
@@ -200,7 +174,7 @@ abstract class AbstractSharpenEffect extends AbstractEffect
     */
     public function channel()
     {
-        return $this->_channel;
+        return $this->channel;
     }
 
 

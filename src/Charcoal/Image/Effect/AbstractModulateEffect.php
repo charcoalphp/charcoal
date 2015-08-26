@@ -13,39 +13,21 @@ abstract class AbstractModulateEffect extends AbstractEffect
 {
     /**
     * The color tint (-100 to 100)
-    * @var float $_hue
+    * @var float $hue
     */
-    private $_hue = 0;
+    private $hue = 0;
 
     /**
     * The color intensity (-100 to 100)
-    * @var float $_saturation
+    * @var float $saturation
     */
-    private $_saturation = 0;
+    private $saturation = 0;
 
     /**
     * The brightness (-100 to 100)
-    * @var float $_luminance
+    * @var float $luminance
     */
-    private $_luminance = 0;
-    
-    /**
-    * @param array $data
-    * @return AbstractModulateEffect Chainable
-    */
-    public function set_data(array $data)
-    {
-        if (isset($data['hue']) && $data['hue'] !== null) {
-            $this->set_hue($data['hue']);
-        }
-        if (isset($data['saturation']) && $data['saturation'] !== null) {
-            $this->set_saturation($data['saturation']);
-        }
-        if (isset($data['luminance']) && $data['luminance'] !== null) {
-            $this->set_luminance($data['luminance']);
-        }
-        return $this;
-    }
+    private $luminance = 0;
 
     /**
     * @param float $hue
@@ -57,7 +39,7 @@ abstract class AbstractModulateEffect extends AbstractEffect
         if (!is_numeric($hue) || ($hue < -100) || ($hue > 100)) {
             throw new InvalidArgumentException('Hue (color tint) must be a float between 0 and 200');
         }
-        $this->_hue = (float)$hue;
+        $this->hue = (float)$hue;
         return $this;
     }
 
@@ -66,7 +48,7 @@ abstract class AbstractModulateEffect extends AbstractEffect
     */
     public function hue()
     {
-        return $this->_hue;
+        return $this->hue;
     }
 
     /**
@@ -79,7 +61,7 @@ abstract class AbstractModulateEffect extends AbstractEffect
         if (!is_numeric($saturation) || ($saturation < -100) || ($saturation > 100)) {
             throw new InvalidArgumentException('Saturation (color intensity) must be a float between 0 and 200');
         }
-        $this->_saturation = (float)$saturation;
+        $this->saturation = (float)$saturation;
         return $this;
     }
 
@@ -88,7 +70,7 @@ abstract class AbstractModulateEffect extends AbstractEffect
     */
     public function saturation()
     {
-        return $this->_saturation;
+        return $this->saturation;
     }
 
     /**
@@ -101,7 +83,7 @@ abstract class AbstractModulateEffect extends AbstractEffect
         if (!is_numeric($luminance) || ($luminance < -100) || ($luminance > 100)) {
             throw new InvalidArgumentException('Luminance (brightness) must be a float between 0 and 200');
         }
-        $this->_luminance = (float)$luminance;
+        $this->luminance = (float)$luminance;
         return $this;
     }
 
@@ -110,6 +92,6 @@ abstract class AbstractModulateEffect extends AbstractEffect
     */
     public function luminance()
     {
-        return $this->_luminance;
+        return $this->luminance;
     }
 }

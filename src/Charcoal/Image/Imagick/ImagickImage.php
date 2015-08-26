@@ -4,6 +4,7 @@ namespace Charcoal\Image\Imagick;
 
 use \Exception as Exception;
 use \InvalidArgumentException as InvalidArgumentException;
+
 use \Imagick as Imagick;
 
 use \Charcoal\Image\AbstractImage as AbstractImage;
@@ -13,7 +14,10 @@ use \Charcoal\Image\AbstractImage as AbstractImage;
 */
 class ImagickImage extends AbstractImage
 {
-    private $_imagick;
+    /**
+    * @var Imagick $imagick
+    */
+    private $imagick;
 
     /**
     * @throws Exception
@@ -23,6 +27,7 @@ class ImagickImage extends AbstractImage
         if (!extension_loaded('imagick') || !class_exists('Imagick')) {
             throw new Exception('The Imagick PHP extension is required.');
         }
+        $this->imagick = new Imagick();
 
         // @todo: also validate imagick version
     }
@@ -40,10 +45,7 @@ class ImagickImage extends AbstractImage
     */
     public function imagick()
     {
-        if ($this->_imagick === null) {
-            $this->_imagick = new Imagick();
-        }
-        return $this->_imagick;
+        return $this->imagick;
     }
 
     /**

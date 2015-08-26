@@ -103,7 +103,7 @@ class AbstractSharpenEffectTest extends \PHPUnit_Framework_Testcase
         $this->setExpectedException('\InvalidArgumentException');
         $obj = $this->obj;
         $obj->set_amount(-1);
-     }
+        }
 
         public function testSetThreshold()
         {

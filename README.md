@@ -407,7 +407,7 @@ To ensure a clean code base, pre-commit git hooks should be installed on all dev
 
 ## Continuous Integration
 
-- [Travis](https://travis-ci.org/)
+- [Travis](https://travis-ci.org/locomotivemtl/charcoal-image)
 - [Scrutinizer](https://scrutinizer-ci.com/)
 - [Code Climate](https://codeclimate.com/)
 

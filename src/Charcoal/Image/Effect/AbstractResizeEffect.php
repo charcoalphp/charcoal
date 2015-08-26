@@ -13,90 +13,53 @@ use \Charcoal\Image\AbstractEffect as AbstractEffect;
 abstract class AbstractResizeEffect extends AbstractEffect
 {
     /**
-    * @var string $_mode
+    * @var string $mode
     */
-    private $_mode = 'auto';
+    private $mode = 'auto';
 
     /**
-    * @var integer $_width
+    * @var integer $width
     */
-    private $_width = 0;
+    private $width = 0;
     /**
-    * @var integer $_height
+    * @var integer $height
     */
-    private $_height = 0;
+    private $height = 0;
 
     /**
-    * @var integer $_min_width
+    * @var integer $min_width
     */
-    private $_min_width = 0;
-    /**
-    * @var integer $_min_height
-    */
-    private $_min_height = 0;
+    private $min_width = 0;
 
     /**
-    * @var integer $_max_width
+    * @var integer $min_height
     */
-    private $_max_width = 0;
-    /**
-    * @var integer $_max_height
-    */
-    private $_max_height = 0;
+    private $min_height = 0;
 
     /**
-    * @var string $_gravity
+    * @var integer $max_width
     */
-    private $_gravity = 'center';
+    private $max_width = 0;
 
     /**
-    * @var string $_background_color
+    * @var integer $max_height
     */
-    private $_background_color = 'rgba(100%, 100%, 100%, 0)';
+    private $max_height = 0;
+
+    /**
+    * @var string $gravity
+    */
+    private $gravity = 'center';
+
+    /**
+    * @var string $background_color
+    */
+    private $background_color = 'rgba(100%, 100%, 100%, 0)';
 
     /**
     * @var string
     */
-    private $_adaptive = false;
-
-    /**
-    * @param array $data
-    * @return AbstractResizeEffect Chainable
-    */
-    public function set_data(array $data)
-    {
-        if (isset($data['mode']) && $data['mode'] !== null) {
-            $this->set_mode($data['mode']);
-        }
-        if (isset($data['width']) && $data['width'] !== null) {
-            $this->set_width($data['width']);
-        }
-        if (isset($data['height']) && $data['height'] !== null) {
-            $this->set_height($data['height']);
-        }
-        if (isset($data['min_width']) && $data['min_width'] !== null) {
-            $this->set_min_width($data['min_width']);
-        }
-        if (isset($data['min_height']) && $data['min_height'] !== null) {
-            $this->set_min_height($data['min_height']);
-        }
-        if (isset($data['max_width']) && $data['max_width'] !== null) {
-            $this->set_max_width($data['max_width']);
-        }
-        if (isset($data['max_height']) && $data['max_height'] !== null) {
-            $this->set_max_height($data['max_height']);
-        }
-        if (isset($data['gravity']) && $data['gravity'] !== null) {
-            $this->set_gravity($data['gravity']);
-        }
-        if (isset($data['background_color']) && $data['background_color'] !== null) {
-            $this->set_background_color($data['background_color']);
-        }
-        if (isset($data['adaptive']) && $data['adaptive'] !== null) {
-            $this->set_adaptive($data['adaptive']);
-        }
-        return $this;
-    }
+    private $adaptive = false;
 
     /**
     * @param string $mode
@@ -118,7 +81,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
         if (!is_string($mode) || (!in_array($mode, $allowed_modes))) {
             throw new InvalidArgumentException('Mode is not valid');
         }
-        $this->_mode = $mode;
+        $this->mode = $mode;
         return $this;
     }
 
@@ -127,7 +90,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
     */
     public function mode()
     {
-        return $this->_mode;
+        return $this->mode;
     }
 
     /**
@@ -140,7 +103,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
         if (!is_int($width) || ($width < 0)) {
             throw new InvalidArgumentException('Width must be a a positive integer');
         }
-        $this->_width = $width;
+        $this->width = $width;
         return $this;
     }
 
@@ -149,7 +112,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
     */
     public function width()
     {
-        return $this->_width;
+        return $this->width;
     }
 
     /**
@@ -162,7 +125,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
         if (!is_int($height) || ($height < 0)) {
             throw new InvalidArgumentException('Height must be a positive integer');
         }
-        $this->_height = $height;
+        $this->height = $height;
         return $this;
     }
 
@@ -171,7 +134,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
     */
     public function height()
     {
-        return $this->_height;
+        return $this->height;
     }
 
     /**
@@ -184,7 +147,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
         if (!is_int($min_width) || ($min_width < 0)) {
             throw new InvalidArgumentException('Min Width must be a a positive integer');
         }
-        $this->_min_width = $min_width;
+        $this->min_width = $min_width;
         return $this;
     }
 
@@ -193,7 +156,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
     */
     public function min_width()
     {
-        return $this->_min_width;
+        return $this->min_width;
     }
 
     /**
@@ -206,7 +169,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
         if (!is_int($min_height) || ($min_height < 0)) {
             throw new InvalidArgumentException('Min Height must be a positive integer');
         }
-        $this->_min_height = $min_height;
+        $this->min_height = $min_height;
         return $this;
     }
 
@@ -215,7 +178,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
     */
     public function min_height()
     {
-        return $this->_min_height;
+        return $this->min_height;
     }
 
     /**
@@ -228,7 +191,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
         if (!is_int($max_width) || ($max_width < 0)) {
             throw new InvalidArgumentException('Max Width must be a a positive integer');
         }
-        $this->_max_width = $max_width;
+        $this->max_width = $max_width;
         return $this;
     }
 
@@ -237,7 +200,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
     */
     public function max_width()
     {
-        return $this->_max_width;
+        return $this->max_width;
     }
 
     /**
@@ -250,7 +213,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
         if (!is_int($max_height) || ($max_height < 0)) {
             throw new InvalidArgumentException('Height must be a positive integer');
         }
-        $this->_max_height = $max_height;
+        $this->max_height = $max_height;
         return $this;
     }
 
@@ -259,7 +222,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
     */
     public function max_height()
     {
-        return $this->_max_height;
+        return $this->max_height;
     }
 
     /**
@@ -272,7 +235,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
         if (!in_array($gravity, $this->image()->available_gravities())) {
             throw new InvalidArgumentException('Gravity is not valid');
         }
-        $this->_gravity = $gravity;
+        $this->gravity = $gravity;
         return $this;
     }
 
@@ -281,7 +244,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
     */
     public function gravity()
     {
-        return $this->_gravity;
+        return $this->gravity;
     }
 
     /**
@@ -294,7 +257,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
         if (!is_string($color)) {
             throw new InvalidArgumentException('Color must be a string');
         }
-        $this->_background_color = $color;
+        $this->background_color = $color;
         return $this;
     }
 
@@ -303,7 +266,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
     */
     public function background_color()
     {
-        return $this->_background_color;
+        return $this->background_color;
     }
 
 
@@ -317,7 +280,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
         if (!is_bool($adaptive)) {
             throw new InvalidArgumentException('Adaptive flag must be a boolean');
         }
-        $this->_adaptive = $adaptive;
+        $this->adaptive = $adaptive;
         return $this;
     }
 
@@ -326,7 +289,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
     */
     public function adaptive()
     {
-        return $this->_adaptive;
+        return $this->adaptive;
     }
 
     /**

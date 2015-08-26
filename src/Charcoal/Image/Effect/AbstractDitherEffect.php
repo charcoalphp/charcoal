@@ -14,26 +14,11 @@ abstract class AbstractDitherEffect extends AbstractEffect
     /**
     * @var integer $_colors
     */
-    private $_colors = 16;
+    private $colors = 16;
     /**
     * @var string $_mode
     */
-    private $_mode = '';
-
-    /**
-    * @param array $data
-    * @return AbstractDitherEffect Chainable
-    */
-    public function set_data(array $data)
-    {
-        if (isset($data['colors']) && $data['colors'] !== null) {
-            $this->set_colors($data['colors']);
-        }
-        if (isset($data['mode']) && $data['mode'] !== null) {
-            $this->set_mode($data['mode']);
-        }
-        return $this;
-    }
+    private $mode = '';
 
     /**
     * @param integer $colors
@@ -45,7 +30,7 @@ abstract class AbstractDitherEffect extends AbstractEffect
         if (!is_int($colors)) {
             throw new InvalidArgumentException('Colors must be an integer');
         }
-        $this->_colors = $colors;
+        $this->colors = $colors;
         return $this;
     }
 
@@ -54,7 +39,7 @@ abstract class AbstractDitherEffect extends AbstractEffect
     */
     public function colors()
     {
-        return $this->_colors;
+        return $this->colors;
     }
 
     /**
@@ -89,7 +74,7 @@ abstract class AbstractDitherEffect extends AbstractEffect
         if (!in_array($mode, $allowed_modes)) {
             throw new InvalidArgumentException('Invalid dither mode');
         }
-        $this->_mode = $mode;
+        $this->mode = $mode;
         return $this;
     }
 
@@ -98,6 +83,6 @@ abstract class AbstractDitherEffect extends AbstractEffect
     */
     public function mode()
     {
-        return $this->_mode;
+        return $this->mode;
     }
 }

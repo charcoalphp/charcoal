@@ -39,7 +39,16 @@ abstract class AbstractEffect implements EffectInterface
     * @param array $data
     * @return AbstractEffect Chainable
     */
-    abstract public function set_data(array $data);
+    public function set_data(array $data)
+    {
+        foreach ($data as $key => $val) {
+            $f = [$this, 'set_'.$key];
+            if (is_callable($f)) {
+                call_user_func($f, $val);
+            }
+        }
+        return $this;
+    }
 
     /**
     * @param array $data

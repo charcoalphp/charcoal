@@ -11,19 +11,5 @@ use \Charcoal\Image\AbstractEffect as AbstractEffect;
 */
 abstract class AbstractGrayscaleEffect extends AbstractEffect
 {
-
-    /**
-    * @param array $data
-    * @return AbstractGrayscaleEffect Chainable
-    */
-    public function set_data(array $data)
-    {
-        return $this;
-    }
-
-    /**
-    * @param array $data
-    * @return AbstractGrayscaleEffect Chainable
-    */
-    //abstract public function process(array $data = null);
+    // ...
 }
