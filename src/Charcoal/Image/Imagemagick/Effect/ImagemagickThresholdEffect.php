@@ -2,7 +2,6 @@
 
 namespace Charcoal\Image\Imagemagick\Effect;
 
-
 use \Charcoal\Image\Effect\AbstractThresholdEffect;
 
 class ImagemagickThresholdEffect extends AbstractThresholdEffect
