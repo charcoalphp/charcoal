@@ -2,9 +2,9 @@
 
 namespace Charcoal\Image\Imagick\Effect;
 
-use \Exception as Exception;
+use \Exception;
 
-use \Charcoal\Image\Effect\AbstractMaskEffect as AbstractMaskEffect;
+use \Charcoal\Image\Effect\AbstractMaskEffect;
 
 class ImagickMaskEffect extends AbstractMaskEffect
 {

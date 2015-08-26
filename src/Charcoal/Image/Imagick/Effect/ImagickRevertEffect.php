@@ -2,7 +2,7 @@
 
 namespace Charcoal\Image\Imagick\Effect;
 
-use \Charcoal\Image\Effect\AbstractRevertEffect as AbstractRevertEffect;
+use \Charcoal\Image\Effect\AbstractRevertEffect;
 
 class ImagickRevertEffect extends AbstractRevertEffect
 {

@@ -2,9 +2,9 @@
 
 namespace Charcoal\Image\Imagick\Effect;
 
-use \Imagick as Imagick;
+use \Imagick;
 
-use \Charcoal\Image\Effect\AbstractResizeEffect as AbstractResizeEffect;
+use \Charcoal\Image\Effect\AbstractResizeEffect;
 
 class ImagickResizeEffect extends AbstractResizeEffect
 {

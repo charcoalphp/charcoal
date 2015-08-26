@@ -2,9 +2,9 @@
 
 namespace Charcoal\Image\Effect;
 
-use \InvalidArgumentException as InvalidArgumentException;
+use \InvalidArgumentException;
 
-use \Charcoal\Image\AbstractEffect as AbstractEffect;
+use \Charcoal\Image\AbstractEffect;
 
 /**
 * Convert an image to grayscale colorspace
@@ -13,21 +13,10 @@ abstract class AbstractSepiaEffect extends AbstractEffect
 {
 
     /**
-    * @var float $_threshold
+    * @var float $threshold
     */
-    private $_threshold = 75;
+    private $threshold = 75;
 
-    /**
-    * @param array $data
-    * @return AbstractSepiaEffect Chainable
-    */
-    public function set_data(array $data)
-    {
-        if (isset($data['threshold']) && $data['threshold'] !== null) {
-            $this->set_threshold($data['threshold']);
-        }
-        return $this;
-    }
 
     /**
     * @param float $threshold
@@ -38,9 +27,11 @@ abstract class AbstractSepiaEffect extends AbstractEffect
     {
         $max = 255; // @todo: QuantumRange
         if (!is_numeric($threshold) || ($threshold < 0) || ($threshold > $max)) {
-            throw new InvalidArgumentException(sprintf('Threshold must be a number between 0 and %s', $max));
+            throw new InvalidArgumentException(
+                sprintf('Threshold must be a number between 0 and %s', $max)
+            );
         }
-        $this->_threshold = (float)$threshold;
+        $this->threshold = (float)$threshold;
         return $this;
     }
 
@@ -49,6 +40,6 @@ abstract class AbstractSepiaEffect extends AbstractEffect
     */
     public function threshold()
     {
-        return $this->_threshold;
+        return $this->threshold;
     }
 }

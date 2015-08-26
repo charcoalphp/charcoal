@@ -4,7 +4,7 @@ namespace Charcoal\Image\Imagick\Effect;
 
 use \Imagick as Imagick;
 
-use \Charcoal\Image\Effect\AbstractGrayscaleEffect as AbstractGrayscaleEffect;
+use \Charcoal\Image\Effect\AbstractGrayscaleEffect;
 
 class ImagickGrayscaleEffect extends AbstractGrayscaleEffect
 {

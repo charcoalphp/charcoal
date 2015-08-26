@@ -153,6 +153,7 @@ abstract class AbstractFactory
     {
         $class = str_replace('/', '\\', $ident);
         
+        // Change "foo-bar" to "fooBar"
         $expl = explode('-', $class);
         array_walk(
             $expl,
@@ -162,6 +163,7 @@ abstract class AbstractFactory
         );
         $class = implode('', $expl);
 
+        // Change "/foo/bar" to "\Foo\Bar"
         $expl = explode('\\', $class);
         array_walk(
             $expl,
@@ -169,7 +171,7 @@ abstract class AbstractFactory
                 $i = ucfirst($i);
             }
         );
-        $class = '\\'.ltrim(implode('\\', $expl), '\\');
+        $class = '\\'.trim(implode('\\', $expl), '\\');
         return $class;
     }
 }

@@ -2,9 +2,9 @@
 
 namespace Charcoal\Image\Imagemagick\Effect;
 
-use \Exception as Exception;
+use \Exception;
 
-use \Charcoal\Image\Effect\AbstractMaskEffect as AbstractMaskEffect;
+use \Charcoal\Image\Effect\AbstractMaskEffect;
 
 class ImagemagickMaskEffect extends AbstractMaskEffect
 {
@@ -19,6 +19,8 @@ class ImagemagickMaskEffect extends AbstractMaskEffect
             $this->set_data($data);
         }
         
-        throw new Exception('Mask Effect is not (yet) supported with imagemagick driver.');
+        throw new Exception(
+            'Mask Effect is not (yet) supported with imagemagick driver.'
+        );
     }
 }

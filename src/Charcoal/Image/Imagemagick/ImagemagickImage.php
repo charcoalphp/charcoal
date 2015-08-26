@@ -2,10 +2,10 @@
 
 namespace Charcoal\Image\Imagemagick;
 
-use \Exception as Exception;
-use \InvalidArgumentException as InvalidArgumentException;
+use \Exception;
+use \InvalidArgumentException;
 
-use \Charcoal\Image\AbstractImage as AbstractImage;
+use \Charcoal\Image\AbstractImage;
 
 /**
 *
@@ -60,10 +60,14 @@ class ImagemagickImage extends AbstractImage
     public function create($width, $height, $color = 'rgb(100%, 100%, 100%, 0)')
     {
         if (!is_int($width) || $width < 1) {
-            throw new InvalidArgumentException('Width must be an integer of at least 1 pixel');
+            throw new InvalidArgumentException(
+                'Width must be an integer of at least 1 pixel'
+            );
         }
         if (!is_int($height) || $height < 1) {
-            throw new InvalidArgumentException('Height must be an integer of at least 1 pixel');
+            throw new InvalidArgumentException(
+                'Height must be an integer of at least 1 pixel'
+            );
         }
         
         $this->reset_tmp();
@@ -83,12 +87,16 @@ class ImagemagickImage extends AbstractImage
     public function open($source = null)
     {
         if ($source !== null && !is_string($source)) {
-            throw new InvalidArgumentException('Source must be a string');
+            throw new InvalidArgumentException(
+                'Source must be a string'
+            );
         }
         $source = ($source) ? $source : $this->source();
         $this->reset_tmp();
         if (!file_exists($source)) {
-            throw new Exception('File does not exist');
+            throw new Exception(
+                sprintf('File "%s" does not exist', $source)
+            );
         }
         $tmp = $this->tmp();
         copy($source, $tmp);
@@ -107,11 +115,15 @@ class ImagemagickImage extends AbstractImage
     public function save($target = null)
     {
         if ($target !== null && !is_string($target)) {
-            throw new InvalidArgumentException('Target must be a string');
+            throw new InvalidArgumentException(
+                'Target must be a string'
+            );
         }
         $target = ($target) ? $target : $this->target();
         if (!is_writable(dirname($target))) {
-            throw new Exception('Target is not writable');
+            throw new Exception(
+                sprintf('Target "%s" is not writable', $target)
+            );
         }
         copy($this->tmp(), $target);
         return $this;
@@ -128,7 +140,7 @@ class ImagemagickImage extends AbstractImage
             return 0;
         }
         $cmd = $this->identify_cmd().' -format "%w" '.$this->tmp();
-        return $this->exec($cmd);
+        return trim($this->exec($cmd));
     }
 
     /**
@@ -142,7 +154,7 @@ class ImagemagickImage extends AbstractImage
             return 0;
         }
         $cmd = $this->identify_cmd().' -format "%h" '.$this->tmp();
-        return $this->exec($cmd);
+        return trim($this->exec($cmd));
     }
 
     /**
@@ -179,7 +191,9 @@ class ImagemagickImage extends AbstractImage
         }
 
         if (!$cmd) {
-            throw new Exception('Can not find imagemagick\'s '.$cmd_name.' command.');
+            throw new Exception(
+                sprintf('Can not find imagemagick\'s "%s" command.', $cmd_name)
+            );
         }
         
         return $cmd;

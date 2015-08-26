@@ -4,7 +4,7 @@ namespace Charcoal\Image\Effect;
 
 use \InvalidArgumentException;
 
-use \Charcoal\Image\AbstractEffect as AbstractEffect;
+use \Charcoal\Image\AbstractEffect;
 
 /**
 * Composite a watermark on top of the image.
@@ -13,61 +13,36 @@ abstract class AbstractWatermarkEffect extends AbstractEffect
 {
     /**
     * The watermark image source
-    * @var string $_watermark
+    * @var string $watermark
     */
-    private $_watermark;
+    private $watermark;
 
     /**
-    * @var float $_opacity
+    * @var float $opacity
     */
-    private $_opacity = 1.0;
+    private $opacity = 1.0;
 
     /**
     * The gravity
-    * @var string $_gravity
+    * @var string $gravity
     */
-    private $_gravity = 'center';
+    private $gravity = 'center';
 
     /**
     * Horizontal adjustment, in pixels.
     * Negative values will move watermark to the left, positive values to the right.
     * Depends on the gravity setting
-    * @var integer $_x
+    * @var integer $x
     */
-    private $_x = 0;
+    private $x = 0;
 
     /**
     * Vertical adjustment, in pixels.
     * Negative values will move watermark to the top, positive values to the bottom.
     * Depends on the gravity setting
-    * @var integer $_y
+    * @var integer $y
     */
-    private $_y = 0;
-
-    /**
-    * @param array $data
-    * @return AbstractTintEffect Chainable
-    */
-    public function set_data(array $data)
-    {
-        if (isset($data['watermark']) && $data['watermark'] !== null) {
-            $this->set_watermark($data['watermark']);
-        }
-        if (isset($data['opacity']) && $data['opacity'] !== null) {
-            $this->set_opacity($data['opacity']);
-        }
-        if (isset($data['gravity']) && $data['gravity'] !== null) {
-            $this->set_gravity($data['gravity']);
-        }
-        if (isset($data['x']) && $data['x'] !== null) {
-            $this->set_x($data['x']);
-        }
-        if (isset($data['y']) && $data['y'] !== null) {
-            $this->set_y($data['y']);
-        }
-
-        return $this;
-    }
+    private $y = 0;
 
     /**
     * @param string $watermark
@@ -77,9 +52,11 @@ abstract class AbstractWatermarkEffect extends AbstractEffect
     public function set_watermark($watermark)
     {
         if (!is_string($watermark)) {
-            throw new InvalidArgumentException('Mask must be a string');
+            throw new InvalidArgumentException(
+                'Mask must be a string'
+            );
         }
-        $this->_watermark = $watermark;
+        $this->watermark = $watermark;
         return $this;
     }
 
@@ -88,7 +65,7 @@ abstract class AbstractWatermarkEffect extends AbstractEffect
     */
     public function watermark()
     {
-        return $this->_watermark;
+        return $this->watermark;
     }
 
     /**
@@ -99,9 +76,11 @@ abstract class AbstractWatermarkEffect extends AbstractEffect
     public function set_opacity($opacity)
     {
         if (!is_numeric($opacity) || ($opacity < 0) || ( $opacity > 1)) {
-            throw new InvalidArgumentException('Opacity must be a float between 0.0 and 1.0');
+            throw new InvalidArgumentException(
+                'Opacity must be a float between 0.0 and 1.0'
+            );
         }
-        $this->_opacity = (float)$opacity;
+        $this->opacity = (float)$opacity;
         return $this;
     }
 
@@ -110,7 +89,7 @@ abstract class AbstractWatermarkEffect extends AbstractEffect
     */
     public function opacity()
     {
-        return $this->_opacity;
+        return $this->opacity;
     }
 
     /**
@@ -121,9 +100,11 @@ abstract class AbstractWatermarkEffect extends AbstractEffect
     public function set_gravity($gravity)
     {
         if (!in_array($gravity, $this->image()->available_gravities())) {
-            throw new InvalidArgumentException('Gravity is not valid');
+            throw new InvalidArgumentException(
+                'Gravity is not valid'
+            );
         }
-        $this->_gravity = $gravity;
+        $this->gravity = $gravity;
         return $this;
     }
 
@@ -132,7 +113,7 @@ abstract class AbstractWatermarkEffect extends AbstractEffect
     */
     public function gravity()
     {
-        return $this->_gravity;
+        return $this->gravity;
     }
     
     /**
@@ -143,9 +124,11 @@ abstract class AbstractWatermarkEffect extends AbstractEffect
     public function set_x($x)
     {
         if (!is_int($x)) {
-            throw new InvalidArgumentException('X must be a an integer');
+            throw new InvalidArgumentException(
+                'X must be a an integer'
+            );
         }
-        $this->_x = $x;
+        $this->x = $x;
         return $this;
     }
 
@@ -154,7 +137,7 @@ abstract class AbstractWatermarkEffect extends AbstractEffect
     */
     public function x()
     {
-        return $this->_x;
+        return $this->x;
     }
 
     /**
@@ -165,9 +148,11 @@ abstract class AbstractWatermarkEffect extends AbstractEffect
     public function set_y($y)
     {
         if (!is_int($y)) {
-            throw new InvalidArgumentException('Y must be a an integer');
+            throw new InvalidArgumentException(
+                'Y must be a an integer'
+            );
         }
-        $this->_y = $y;
+        $this->y = $y;
         return $this;
     }
 
@@ -176,6 +161,6 @@ abstract class AbstractWatermarkEffect extends AbstractEffect
     */
     public function y()
     {
-        return $this->_y;
+        return $this->y;
     }
 }

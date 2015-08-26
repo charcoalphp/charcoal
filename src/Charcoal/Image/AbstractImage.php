@@ -2,25 +2,25 @@
 
 namespace Charcoal\Image;
 
-use \Exception as Exception;
-use \InvalidArgumentException as InvalidArgumentException;
+use \Exception;
+use \InvalidArgumentException;
 
-use \Charcoal\Image\ImageInterface as ImageInterface;
-use \Charcoal\Image\EffectInterface as EffectInterface;
-use \Charcoal\Image\EffectFactory as EffectFactory;
+use \Charcoal\Image\ImageInterface;
+use \Charcoal\Image\EffectInterface;
+use \Charcoal\Image\EffectFactory;
 
 /**
 *
 */
 abstract class AbstractImage implements ImageInterface
 {
-    protected $_source;
-    protected $_target;
+    protected $source;
+    protected $target;
 
     /**
     * @var array $_effects
     */
-    protected $_effects = [];
+    protected $effects = [];
 
 
     /**
@@ -74,9 +74,11 @@ abstract class AbstractImage implements ImageInterface
     public function set_source($source)
     {
         if (!is_string($source)) {
-            throw new InvalidArgumentException('Target must be a string');
+            throw new InvalidArgumentException(
+                'Source must be a string'
+            );
         }
-        $this->_source=  $source;
+        $this->source = $source;
         return $this;
     }
 
@@ -85,7 +87,7 @@ abstract class AbstractImage implements ImageInterface
     */
     public function source()
     {
-        return $this->_source;
+        return $this->source;
     }
 
     /**
@@ -96,9 +98,11 @@ abstract class AbstractImage implements ImageInterface
     public function set_target($target)
     {
         if (!is_string($target)) {
-            throw new InvalidArgumentException('Target must be a string');
+            throw new InvalidArgumentException(
+                'Target must be a string'
+            );
         }
-        $this->_target=  $target;
+        $this->target = $target;
         return $this;
     }
 
@@ -107,7 +111,7 @@ abstract class AbstractImage implements ImageInterface
     */
     public function target()
     {
-        return $this->_target;
+        return $this->target;
     }
 
     /**
@@ -116,7 +120,7 @@ abstract class AbstractImage implements ImageInterface
     */
     public function set_effects(array $effects)
     {
-        $this->_effects = [];
+        $this->effects = [];
         foreach ($effects as $effect) {
             $this->add_effect($effect);
         }
@@ -128,7 +132,7 @@ abstract class AbstractImage implements ImageInterface
     */
     public function effects()
     {
-        return $this->_effects;
+        return $this->effects;
     }
 
     /**
@@ -139,7 +143,7 @@ abstract class AbstractImage implements ImageInterface
     public function add_effect($effect)
     {
         $fx = $this->create_effect($effect);
-        $this->_effects[] = $fx;
+        $this->effects[] = $fx;
     }
 
     /**
@@ -239,7 +243,7 @@ abstract class AbstractImage implements ImageInterface
     */
     public function orientation()
     {
-        $ratio = $this->ratio;
+        $ratio = $this->ratio();
         if ($ratio > 1) {
             return 'horizontal';
         } elseif ($ratio < 1) {
@@ -293,7 +297,7 @@ abstract class AbstractImage implements ImageInterface
             if (strstr($fx_type, '/') === false) {
                 // Core effects do not need to be namespaced
                 $driver = $this->driver_type();
-                $fx_type = 'charcoal/image/'.$driver.'/effect/'.$driver.$fx_type.'effect';
+                $fx_type = 'charcoal/image/'.$driver.'/effect/'.$driver.'-'.$fx_type.'-effect';
             }
             $image_fx = EffectFactory::instance()->create($fx_type);
             $image_fx->set_image($this);

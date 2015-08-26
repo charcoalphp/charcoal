@@ -2,9 +2,7 @@
 
 namespace Charcoal\Image\Imagemagick\Effect;
 
-use \Exception as Exception;
-
-use \Charcoal\Image\Effect\AbstractMirrorEffect as AbstractMirrorEffect;
+use \Charcoal\Image\Effect\AbstractMirrorEffect;
 
 class ImagemagickMirrorEffect extends AbstractMirrorEffect
 {

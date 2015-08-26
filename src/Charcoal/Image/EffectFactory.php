@@ -2,10 +2,10 @@
 
 namespace Charcoal\Image;
 
-use \InvalidArgumentException as InvalidArgumentException;
+use \InvalidArgumentException;
 
 // File copied from `charcoal-core`
-use \Charcoal\Image\AbstractFactory as AbstractFactory;
+use \Charcoal\Image\AbstractFactory;
 
 class EffectFactory extends AbstractFactory
 {
@@ -17,10 +17,14 @@ class EffectFactory extends AbstractFactory
     public function create($type)
     {
         if (!is_string($type)) {
-            throw new InvalidArgumentException('Type must be a string');
+            throw new InvalidArgumentException(
+                'Type must be a string'
+            );
         }
         if (!$this->is_type_available($type)) {
-            throw new InvalidArgumentException(sprintf('Type "%s" is not a valid effect type', $type));
+            throw new InvalidArgumentException(
+                sprintf('Type "%s" is not a valid effect type', $type)
+            );
         }
         $class_name = $this->ident_to_classname($type);
         return new $class_name();

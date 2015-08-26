@@ -2,9 +2,9 @@
 
 namespace Charcoal\Image\Imagick\Effect;
 
-use \Exception as Exception;
+use \Exception;
 
-use \Charcoal\Image\Effect\AbstractBlurEffect as AbstractBlurEffect;
+use \Charcoal\Image\Effect\AbstractBlurEffect;
 
 class ImagickBlurEffect extends AbstractBlurEffect
 {
@@ -14,7 +14,7 @@ class ImagickBlurEffect extends AbstractBlurEffect
     public function process_adaptive()
     {
         $channel = $this->image()->imagick_channel($this->channel());
-        $this->image()->imagick()->adaptiveBlurImage($this->radius(), $this->sigma());
+        $this->image()->imagick()->adaptiveBlurImage($this->radius(), $this->sigma(), $channel);
         return $this;
     }
     
@@ -59,7 +59,9 @@ class ImagickBlurEffect extends AbstractBlurEffect
     {
         // @todo
         //'-define convolve:scale=60,40% -morphology Convolve \'Gaussian:'.$this->radius().'x'.$this->radius().'\'';
-        throw new Exception('Soft blur is not (yet) supported with imagick driver.');
+        throw new Exception(
+            'Soft blur is not (yet) supported with imagick driver.'
+        );
     }
     
     /**

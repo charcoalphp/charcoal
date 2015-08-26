@@ -3,7 +3,7 @@
 namespace Charcoal\Image;
 
 // File copied from `charcoal-core`
-use \Charcoal\Image\AbstractFactory as AbstractFactory;
+use \Charcoal\Image\AbstractFactory;
 
 class ImageFactory extends AbstractFactory
 {

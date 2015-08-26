@@ -2,9 +2,9 @@
 
 namespace Charcoal\Image\Effect;
 
-use \InvalidArgumentException as InvalidArgumentException;
+use \InvalidArgumentException;
 
-use \Charcoal\Image\AbstractEffect as AbstractEffect;
+use \Charcoal\Image\AbstractEffect;
 
 /**
 * Blur the image
@@ -13,52 +13,28 @@ abstract class AbstractBlurEffect extends AbstractEffect
 {
     
     /**
-    * @var float $_radius
+    * @var float $radius
     */
-    private $_radius = 0;
+    private $radius = 0;
     /**
-    * @var float $_sigma
+    * @var float $sigma
     */
-    private $_sigma = 1;
+    private $sigma = 1;
     /**
-    * @var boolean $_mode
+    * @var string $mode
     */
-    private $_mode = 'standard';
+    private $mode = 'standard';
 
     /**
-    * @var integer $_channel
+    * @var string $channel
     */
-    private $_channel = 'all';
+    private $channel = 'all';
 
     /**
     * The angle is only used for "motion" and "radial" modes
-    * @var float $_angle
+    * @var float $angle
     */
-    private $_angle = 0;
-
-    /**
-    * @param array $data
-    * @return AbstractBlurEffect Chainable
-    */
-    public function set_data(array $data)
-    {
-        if (isset($data['radius']) && $data['radius'] !== null) {
-            $this->set_radius($data['radius']);
-        }
-        if (isset($data['sigma']) && $data['sigma'] !== null) {
-            $this->set_sigma($data['sigma']);
-        }
-        if (isset($data['mode']) && $data['mode'] !== null) {
-            $this->set_mode($data['mode']);
-        }
-        if (isset($data['channel']) && $data['channel'] !== null) {
-            $this->set_channel($data['channel']);
-        }
-        if (isset($data['angle']) && $data['angle'] !== null) {
-            $this->set_angle($data['angle']);
-        }
-        return $this;
-    }
+    private $angle = 0;
 
     /**
     * @param float $radius
@@ -70,7 +46,7 @@ abstract class AbstractBlurEffect extends AbstractEffect
         if (!is_numeric($radius) || ($radius < 0)) {
             throw new InvalidArgumentException('Radius must be a float (greater than 0)');
         }
-         $this->_radius = (float)$radius;
+         $this->radius = (float)$radius;
          return $this;
     }
 
@@ -79,11 +55,11 @@ abstract class AbstractBlurEffect extends AbstractEffect
     */
     public function radius()
     {
-        return $this->_radius;
+        return $this->radius;
     }
 
     /**
-    * @param float $sigma
+    * @param float] $sigma
     * @throws InvalidArgumentException
     * @return AbstractBlurEffect Chainable
     */
@@ -92,7 +68,7 @@ abstract class AbstractBlurEffect extends AbstractEffect
         if (!is_numeric($sigma) || ($sigma < 0)) {
             throw new InvalidArgumentException('Sigma value must be a float (greater than 0)');
         }
-        $this->_sigma = $sigma;
+        $this->sigma = (float)$sigma;
         return $this;
     }
 
@@ -101,7 +77,7 @@ abstract class AbstractBlurEffect extends AbstractEffect
     */
     public function sigma()
     {
-        return $this->_sigma;
+        return $this->sigma;
     }
 
     /**
@@ -115,7 +91,7 @@ abstract class AbstractBlurEffect extends AbstractEffect
         if (!in_array($mode, $allowed_modes)) {
             throw new InvalidArgumentException(sprintf('Mode %s is not an allowed blur mode', $mode));
         }
-        $this->_mode = $mode;
+        $this->mode = $mode;
         return $this;
     }
 
@@ -124,7 +100,7 @@ abstract class AbstractBlurEffect extends AbstractEffect
     */
     public function mode()
     {
-        return $this->_mode;
+        return $this->mode;
     }
 
     /**
@@ -137,7 +113,7 @@ abstract class AbstractBlurEffect extends AbstractEffect
         if (!in_array($channel, $this->image()->available_channels())) {
             throw new InvalidArgumentException('Channel is not valid');
         }
-        $this->_channel = $channel;
+        $this->channel = $channel;
         return $this;
     }
 
@@ -146,7 +122,7 @@ abstract class AbstractBlurEffect extends AbstractEffect
     */
     public function channel()
     {
-        return $this->_channel;
+        return $this->channel;
     }
 
     /**
@@ -159,7 +135,7 @@ abstract class AbstractBlurEffect extends AbstractEffect
         if (!is_numeric($angle)) {
             throw new InvalidArgumentException('Angle must be a numeric value, in degrees');
         }
-        $this->_angle = (float)$angle;
+        $this->angle = (float)$angle;
         return $this;
     }
 
@@ -168,7 +144,7 @@ abstract class AbstractBlurEffect extends AbstractEffect
     */
     public function angle()
     {
-        return $this->_angle;
+        return $this->angle;
     }
 
     /**
@@ -211,32 +187,32 @@ abstract class AbstractBlurEffect extends AbstractEffect
     }
 
     /**
-    * @return AbstractBlurEffectChainable
+    * @return AbstractBlurEffect Chainable
     */
     abstract public function process_adaptive();
     
     /**
-    * @return AbstractBlurEffectChainable
+    * @return AbstractBlurEffect Chainable
     */
     abstract public function process_gaussian();
     
     /**
-    * @return AbstractBlurEffectChainable
+    * @return AbstractBlurEffect Chainable
     */
     abstract public function process_motion();
     
     /**
-    * @return AbstractBlurEffectChainable
+    * @return AbstractBlurEffect Chainable
     */
     abstract public function process_radial();
     
     /**
-    * @return AbstractBlurEffectChainable
+    * @return AbstractBlurEffect Chainable
     */
     abstract public function process_soft();
     
     /**
-    * @return AbstractBlurEffectChainable
+    * @return AbstractBlurEffect Chainable
     */
     abstract public function process_standard();
 }

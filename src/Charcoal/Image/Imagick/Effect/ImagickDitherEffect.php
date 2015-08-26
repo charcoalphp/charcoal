@@ -4,7 +4,7 @@ namespace Charcoal\Image\Imagick\Effect;
 
 use \Imagick;
 
-use \Charcoal\Image\Effect\AbstractDitherEffect as AbstractDitherEffect;
+use \Charcoal\Image\Effect\AbstractDitherEffect;
 
 class ImagickDitherEffect extends AbstractDitherEffect
 {

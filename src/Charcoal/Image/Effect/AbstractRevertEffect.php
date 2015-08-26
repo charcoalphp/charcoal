@@ -2,9 +2,9 @@
 
 namespace Charcoal\Image\Effect;
 
-use \InvalidArgumentException as InvalidArgumentException;
+use \InvalidArgumentException;
 
-use \Charcoal\Image\AbstractEffect as AbstractEffect;
+use \Charcoal\Image\AbstractEffect;
 
 /**
 * Revert (negate) the image's colors.
@@ -12,22 +12,9 @@ use \Charcoal\Image\AbstractEffect as AbstractEffect;
 abstract class AbstractRevertEffect extends AbstractEffect
 {
     /**
-    * @var string $_channel
+    * @var string $channel
     */
-    private $_channel = 'all';
-
-
-    /**
-    * @param array $data
-    * @return AbstractRevertEffect Chainable
-    */
-    public function set_data(array $data)
-    {
-        if (isset($data['channel']) && $data['channel'] !== null) {
-            $this->set_channel($data['channel']);
-        }
-        return $this;
-    }
+    private $channel = 'all';
 
     /**
     * @param string $channel
@@ -37,9 +24,11 @@ abstract class AbstractRevertEffect extends AbstractEffect
     public function set_channel($channel)
     {
         if (!in_array($channel, $this->image()->available_channels())) {
-            throw new InvalidArgumentException('Channel is not valid');
+            throw new InvalidArgumentException(
+                'Channel is not valid'
+            );
         }
-        $this->_channel = $channel;
+        $this->channel = $channel;
         return $this;
     }
     
@@ -48,6 +37,6 @@ abstract class AbstractRevertEffect extends AbstractEffect
     */
     public function channel()
     {
-        return $this->_channel;
+        return $this->channel;
     }
 }

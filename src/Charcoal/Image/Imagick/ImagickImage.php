@@ -2,18 +2,22 @@
 
 namespace Charcoal\Image\Imagick;
 
-use \Exception as Exception;
-use \InvalidArgumentException as InvalidArgumentException;
-use \Imagick as Imagick;
+use \Exception;
+use \InvalidArgumentException;
 
-use \Charcoal\Image\AbstractImage as AbstractImage;
+use \Imagick;
+
+use \Charcoal\Image\AbstractImage;
 
 /**
 *
 */
 class ImagickImage extends AbstractImage
 {
-    private $_imagick;
+    /**
+    * @var Imagick $imagick
+    */
+    private $imagick;
 
     /**
     * @throws Exception
@@ -21,10 +25,11 @@ class ImagickImage extends AbstractImage
     public function __construct()
     {
         if (!extension_loaded('imagick') || !class_exists('Imagick')) {
-            throw new Exception('The Imagick PHP extension is required.');
+            throw new Exception(
+                'The Imagick PHP extension is required.'
+            );
         }
-
-        // @todo: also validate imagick version
+        $this->imagick = new Imagick();
     }
 
     /**
@@ -40,10 +45,7 @@ class ImagickImage extends AbstractImage
     */
     public function imagick()
     {
-        if ($this->_imagick === null) {
-            $this->_imagick = new Imagick();
-        }
-        return $this->_imagick;
+        return $this->imagick;
     }
 
     /**
@@ -58,10 +60,14 @@ class ImagickImage extends AbstractImage
     public function create($width, $height, $color = 'rgb(100%, 100%, 100%, 0)')
     {
         if (!is_int($width) || $width < 1) {
-            throw new InvalidArgumentException('Width must be an integer of at least 1 pixel');
+            throw new InvalidArgumentException(
+                'Width must be an integer of at least 1 pixel'
+            );
         }
         if (!is_int($height) || $height < 1) {
-            throw new InvalidArgumentException('Height must be an integer of at least 1 pixel');
+            throw new InvalidArgumentException(
+                'Height must be an integer of at least 1 pixel'
+            );
         }
         $this->imagick()->newImage($width, $height, $color);
         return $this;
@@ -77,7 +83,9 @@ class ImagickImage extends AbstractImage
     public function open($source = null)
     {
         if ($source !== null && !is_string($source)) {
-            throw new InvalidArgumentException('Source must be a string');
+            throw new InvalidArgumentException(
+                'Source must be a string'
+            );
         }
         $source = ($source) ? $source : $this->source();
         $this->imagick()->readImage($source);
@@ -95,7 +103,9 @@ class ImagickImage extends AbstractImage
     public function save($target = null)
     {
         if ($target !== null && !is_string($target)) {
-            throw new InvalidArgumentException('Target must be a string');
+            throw new InvalidArgumentException(
+                'Target must be a string'
+            );
         }
         $target = ($target) ? $target : $this->target();
 
@@ -154,7 +164,9 @@ class ImagickImage extends AbstractImage
             'gray'      => Imagick::CHANNEL_GRAY
         ];
         if (!isset($channel_map[$channel])) {
-            throw new InvalidArgumentException('Invalid channel');
+            throw new InvalidArgumentException(
+                'Invalid channel'
+            );
         }
         return $channel_map[$channel];
     }
@@ -180,7 +192,9 @@ class ImagickImage extends AbstractImage
             'sw'        => Imagick::GRAVITY_SOUTHWEST
         ];
         if (!isset($gravity_map[$gravity])) {
-            throw new InvalidArgumentException('Invalid gravity');
+            throw new InvalidArgumentException(
+                'Invalid gravity'
+            );
         }
         return $gravity_map[$gravity];
     }

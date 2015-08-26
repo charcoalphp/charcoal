@@ -2,9 +2,9 @@
 
 namespace Charcoal\Image\Imagemagick\Effect;
 
-use \Exception as Exception;
+use \Exception;
 
-use \Charcoal\Image\Effect\AbstractDitherEffect as AbstractDitherEffect;
+use \Charcoal\Image\Effect\AbstractDitherEffect;
 
 class ImagemagickDitherEffect extends AbstractDitherEffect
 {
@@ -19,6 +19,8 @@ class ImagemagickDitherEffect extends AbstractDitherEffect
             $this->set_data($data);
         }
 
-        throw new Exception('Dither Effect is not (yet) supported with imagemagick driver.');
+        throw new Exception(
+            'Dither Effect is not (yet) supported with imagemagick driver.'
+        );
     }
 }

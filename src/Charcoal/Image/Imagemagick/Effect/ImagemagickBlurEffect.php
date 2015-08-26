@@ -2,9 +2,7 @@
 
 namespace Charcoal\Image\Imagemagick\Effect;
 
-use \Exception as Exception;
-
-use \Charcoal\Image\Effect\AbstractBlurEffect as AbstractBlurEffect;
+use \Charcoal\Image\Effect\AbstractBlurEffect;
 
 class ImagemagickBlurEffect extends AbstractBlurEffect
 {

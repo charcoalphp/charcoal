@@ -2,9 +2,7 @@
 
 namespace Charcoal\Image\Imagemagick\Effect;
 
-use \Exception as Exception;
-
-use \Charcoal\Image\Effect\AbstractGrayscaleEffect as AbstractGrayscaleEffect;
+use \Charcoal\Image\Effect\AbstractGrayscaleEffect;
 
 class ImagemagickGrayscaleEffect extends AbstractGrayscaleEffect
 {

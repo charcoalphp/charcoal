@@ -2,9 +2,7 @@
 
 namespace Charcoal\Image\Imagemagick\Effect;
 
-use \Exception as Exception;
-
-use \Charcoal\Image\Effect\AbstractRotateEffect as AbstractRotateEffect;
+use \Charcoal\Image\Effect\AbstractRotateEffect;
 
 class ImagemagickRotateEffect extends AbstractRotateEffect
 {

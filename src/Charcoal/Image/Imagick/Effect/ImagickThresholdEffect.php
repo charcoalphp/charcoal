@@ -2,10 +2,7 @@
 
 namespace Charcoal\Image\Imagick\Effect;
 
-use \Exception as Exception;
-use \Imagick as Imagick;
-
-use \Charcoal\Image\Effect\AbstractThresholdEffect as AbstractThresholdEffect;
+use \Charcoal\Image\Effect\AbstractThresholdEffect;
 
 class ImagickThresholdEffect extends AbstractThresholdEffect
 {
