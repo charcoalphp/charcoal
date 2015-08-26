@@ -15,7 +15,7 @@ $ composer require locomotivemtl/charcoal-image
 ## Dependencies
 - `PHP 5.4+`
 - `ext-imagick` (optional but _recommended_)
-*OR*
+**OR**
 - `ImageMagick binaries`
 
 > 👉 Although this module was developped for `Charcoal`, there is absolutely no dependencies on any Charcoal modules and can therefore be used in any PHP project.
@@ -92,12 +92,11 @@ _Why not?_. Charcoal-Image has been developped and used in in-house projects for
 
 The main differences between existing PHP libraries like _Imagine_ or _Intervention_ are:
 - Effect parameters are sent as an array.
-  - Is it `blur($sigma, $radius)`` or `blur($radius, $sigma)?
+  - Is it `blur($sigma, $radius)` or `blur($radius, $sigma)`?
   - With charcoal image it's constant: `blur(['radius'=>$radius, 'sigma'=>$sigma]);`
 - It supports *ImageMagick* binaries
   - It seems to be a pretty common setup where Imagemagick is installed on a server, but the _Imagick_ PHP library is not. charcoal-image can be used
 - No external dependencies
-  - 
 
 # Available image drivers
 
@@ -458,11 +457,11 @@ These effects are available in the `imagick` library and therefore could easily 
 - `Swirl`
 - `Wave`
 
-## Development
+# Development
 
 ## Coding Style
 
-All Charcoal modules follow the same coding style and `charcoal-core` is no exception. For PHP:
+All Charcoal modules follow the same coding style and `charcoal-image` is no exception. For PHP:
 
 - [_PSR-1_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md), except for
   - Method names MUST be declared in `snake_case`.
@@ -484,8 +483,6 @@ Most quality checker tools can be run with _Grunt_. They are:
 - `grunt phpunit`, to run the Test Suite.
 - `grunt phpcs`, to ensure coding style compliance.
 
-All three tools can also be run from `grunt watch`.
-
 To ensure a clean code base, pre-commit git hooks should be installed on all development environments.
 
 ## Continuous Integration
@@ -506,10 +503,12 @@ Every class, method, and function should be covered by unit tests. PHP code can 
 ## Changelog
 
 ### 0.1
-_Unreleased_
+_Released 2015-08-26_
+Initial release
 
 ## TODOs
 
-- Write a version for GD
-- Custom Exceptions
-- Change effect signature to be callable instead of using the process() method
+- Write a version for PHP's `gd` driver.
+- Custom Exceptions.
+- Change effect signature to be callable instead of using the process() method.
+- Skip unit tests instead of failing if a driver is not available.
