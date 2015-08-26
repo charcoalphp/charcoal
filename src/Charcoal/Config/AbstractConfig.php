@@ -335,7 +335,7 @@ abstract class AbstractConfig implements
         }
 
         throw new InvalidArgumentException(
-            sprintf('JSON could not be parsed: "%s"', $err_msg)
+            sprintf('JSON file "%s" could not be parsed: "%s"', $filename, $err_msg)
         );
 
     }

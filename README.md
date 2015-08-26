@@ -55,7 +55,8 @@ See [https://github.com/container-interop/container-interop]
 
 ### 0.1.1
 _Unreleased_
-- Fix typo in class name
+- Removed the second argumnet for the constructor (currently unused)
+- Clearer error message on invalid JSON files
 
 ### 0.1
 _Released on 2015-08-25_
