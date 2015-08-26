@@ -1,29 +1,30 @@
 Charcoal Image
 ==============
 
-Charcoal Image is a PHP image manipulation and processing library, currently built on top of `imagick`. 
+Charcoal Image is a PHP image manipulation and processing library, providing a consistent API across different Image drivers. Currently supported drivers are `Imagick` (the PHP extension) and `Imagemagick` (using shell commands) 
 
 [![Build Status](https://travis-ci.org/locomotivemtl/charcoal-image.svg?branch=master)](https://travis-ci.org/locomotivemtl/charcoal-image)
 
 # How to install
-
-The preferred way of installing this module is with `composer`. Using composer, an autoloader is provided automatically with `PSR-4` so there is no further requirement.
+The preferred (and only supported) way of installing charcoal-image is with **composer**:
 
 ```shell
 $ composer require locomotivemtl/charcoal-image
 ```
 
 ## Dependencies
-
 - `PHP 5.4+`
-- `ext-imagick`
-  -  The `imagick` driver is the only available one at this time, and therefore is required as a hard dependency for now.
+- `ext-imagick` (optional but _recommended_)
+*OR*
+- `ImageMagick binaries`
 
 > 👉 Although this module was developped for `Charcoal`, there is absolutely no dependencies on any Charcoal modules and can therefore be used in any PHP project.
 
 # Usage
+Typically, _charcoal-image_ is used to load an image, perform operations (called _effects_ such as blur, resize, watermark, etc.) and write the modified image.
 
 ## With `set_data()`
+All effects can be added at once in a single array.
 
 ```php
 $img = new \Charcoal\Image\Imagick\ImagickImage();
@@ -46,7 +47,8 @@ $img->process();
 $img->save();
 ```
 
-## With magic (`__call()`) methods
+## With magic  methods
+All effects can also be used as methods on the image (using `__call()` magic).
 
 ```php
 use \Charcoal\Image\Imagick\ImagickImage as Image;
@@ -85,6 +87,18 @@ $img->open('example.png')
   ->save('modified-target.png');
 ```
 
+# Why another PHP image libary?
+_Why not?_. Charcoal-Image has been developped and used in in-house projects for almost 10 years. It has recently been rewritten to a more modern PHP style and released under an open-source license (MIT).
+
+The main differences between existing PHP libraries like _Imagine_ or _Intervention_ are:
+- Effect parameters are sent as an array.
+  - Is it `blur($sigma, $radius)`` or `blur($radius, $sigma)?
+  - With charcoal image it's constant: `blur(['radius'=>$radius, 'sigma'=>$sigma]);`
+- It supports *ImageMagick* binaries
+  - It seems to be a pretty common setup where Imagemagick is installed on a server, but the _Imagick_ PHP library is not. charcoal-image can be used
+- No external dependencies
+  - 
+
 # Available image drivers
 
 There are currently only 2 available drivers:
@@ -93,6 +107,8 @@ There are currently only 2 available drivers:
 - `imagemagick`
   - The imagemagick driver uses the imagmagick binaries directly, running the operations in a separate shell process instead of directely within PHP.
   - The commands `convert`, `mogrify` and `identify` should be installed on the system and reachable from the PHP process.
+
+> 👉 Comming soon, the `gd` driver to use PHP builtin's image capacity.
 
 ## How to select a driver
 
@@ -105,7 +121,7 @@ $img = new \Charcoal\Image\Imagick\ImagickImage();
 $img = new \Charcoal\Image\Imagemagick\ImagemagickImage();
 ```
 
-With `ImageFactory`:
+With the provided `ImageFactory`:
 ```php
 use \Charcoal\Image\ImageFactory;
 $img = ImageFactory::instance()->get('imagick');
@@ -173,6 +189,13 @@ The available effects are:
 
 > 👉 The `soft` mode is currently only available with the `imagemagick` driver.
 
+### Examples
+![Gaussian blur](docs/images/flower/imagick-blur-gaussian-strong.png)
+Gaussian blur: `$img->blur(['mode'=>'gaussian', 'radius'=>5, 'sigma'=>15]);`
+
+![Radial blur](docs/images/panda/imagick-blur-radial-8.png)
+Radial blur: `$img->blur('mode'=>'radial', 'angle'=>8]);`
+
 ## Dither Effect
 **Reduces an image's colors to a certain number, using dithering.**
 
@@ -182,11 +205,19 @@ The available effects are:
 
 > 👉 The `dither` effect is currently only available with the `imagick` driver.
 
+### Examples
+![Dither 3](docs/images/panda/imagick-dithers-3colors.png)
+Dither wit 3 colors: `$img->dither(['colors'=>3]);`
+
 ## Grayscale Effect
 **Converts an image's colors to a 256-colors greyscale. There are no options.**
 
 ### Options
 - _none_
+
+### Examples
+![Grayscale](docs/images/panda/imagick-grayscale.png)
+Grayscale: `$img->grayscale();`
 
 ## Mask Effect
 **Apply a 8-bit transparency mask to the image.**
@@ -208,6 +239,13 @@ The available effects are:
    - The axis can be "x" (flip) or "y" (flop). 
    - Default is "y".
 
+### Examples
+![X-axis mirror](docs/images/panda/imagick-mirror-x.png)
+Mirror (x-axis): `$img->mirror(['axis'=>'x']);`
+
+![Y-axis mirror](docs/images/flower/imagick-mirror-y.png)
+Mirror (x-axis): `$img->mirror(['axis'=>'y']);`
+
 ## Modulate Effect
 **Modifies an image's colors in the special HSL (hue-saturation-luminance) colorspace.**
 
@@ -221,6 +259,13 @@ The available effects are:
 - `luminance` (_float_)
   - The **brightness** value, between -100 and 100.
   - Default is `0` (no effect)
+
+### Examples
+![Modulate brightness](docs/images/flower/imagick-modulate-brightness.png)
+Modulate with brightness only: `$img->modulate(['luminance'=>50]);`
+
+![HSL](docs/images/panda/imagick-modulate-hsl.png)
+Modulate HSL: `$img->modulate(['luminance'=>20, 'hue'=>-20, 'saturation'=>40]);`
 
 ## Resize Effect
 **Resize an image to given dimensions.**
@@ -273,6 +318,13 @@ The available effects are:
 ### Options
 - `channel` (_string_)
 
+### Examples
+![Revert](docs/images/panda/imagick-revert-default.png)
+Revert default (all channels): `$img->revert();`
+
+![Revert](docs/images/panda/imagick-revert-red.png)
+Revert red channel: `$img->revert(['channel'=>'red']);`
+
 ## Rotate Effect
 **Rotate the image by a certain angle.**
 
@@ -288,6 +340,16 @@ The available effects are:
     - Can be specified as hexadecimal ("#FF00FF"), RGB values ("rgb(255,0,255)") or color name ("red").
     - Default is _transparent-white_ (`rgb(100%, 100%, 100%, 0)`)
 
+### Examples
+![Rotate 90](docs/images/flower/imagick-rotate-90.png)
+Rotate 90: `$img->rotate(['angle'=>90]);`
+
+![Rotate -135](docs/images/flower/imagick-rotate-135.png)
+Rotate -135: `$img->rotate(['angle'=>-135]);``
+
+![Rotate 135 black](docs/images/flower/imagick-rotate-135-black.png)
+Rotate 135, black background: `$img->rotate(['angle'=>135, 'background_color'=>'black']);`
+
 ## Sepia Effect
 **Tint the image with a vintage, sepia look**
 
@@ -295,6 +357,13 @@ The available effects are:
 - `threshold` (_float_)
   - The level of the sepia tone effect.
   - Default is `75`.
+
+### Examples
+![Sepia Default (75)](docs/images/flower/imagick-sepia-default.png)
+Default sepia (75): `$img->sepia();`
+
+![Sepia 115](docs/images/flower/imagick-sepia-115.png)
+Default sepia (75): `$img->sepia(['threshold'=>115]);`
 
 ## Sharpen Effect
 **Sharpen an image, with a simple sharpen algorithm or unsharp mask options.**
@@ -329,6 +398,9 @@ The available effects are:
 ### Options
 - `threshold` (_float_)
 
+### Examples
+![Threshold]()
+
 ## Tint Effect
 **Tint (or colorize) an image with a certain color.**
 
@@ -345,6 +417,13 @@ The available effects are:
     - Technically, true call the _tint_ function while false calls the _colorize_ function.
     - Default is `true`.
 
+### Examples
+![Tint / colorize (red)](docs/images/panda/imagemagick-tint-red-colorize.png)
+Colorize / Tint red: `$img->tint(['color'=>'rgb(100%,0,0)', 'midtone'=>false]);`
+
+![Tint midtones (red)](docs/images/panda/imagemagick-tint-red.png)
+Midtone tint red: `$img->tint(['color'=>'rgb(100%,0,0)']);`
+
 ## Watermark Effect
 **Composite a watermark on top of the image.**
 
@@ -356,6 +435,10 @@ The available effects are:
 - `y` (_integer_)
 
 > 👉 The `watermark` effect is currently only available with the `imagick` driver.
+
+### Examples
+![Watermark](docs/images/panda/imagick-watermark-default.png)
+Watermark: `$img->watermark(['watermark=>'charcoal.png']);`
 
 ## Future Effects
 These effects are available in the `imagick` library and therefore could easily be added:
@@ -382,13 +465,12 @@ All Charcoal modules follow the same coding style and `charcoal-core` is no exce
 
 - [_PSR-1_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md), except for
   - Method names MUST be declared in `snake_case`.
-- [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md), except for
-  - Private variables SHOULD be prefixed with a single underscore to indicate protected or private visibility. 
+- [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
 - [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md), autoloading is therefore provided by _Composer_
 - [_phpDocumentor_](http://phpdoc.org/)
 - Arrays should be written in short notation (`[]` instead of `array()`)
 
-Coding styles are  enforced with `grunt phpcs` ([_PHP Code Sniffer_](https://github.com/squizlabs/PHP_CodeSniffer)). The actual ruleset can be found in `phpcs.xml`.
+Coding styles are enforced with `grunt phpcs` ([_PHP Code Sniffer_](https://github.com/squizlabs/PHP_CodeSniffer)). The actual ruleset can be found in `phpcs.xml`.
 
 > 👉 To fix minor coding style problems, run `grunt phpcbf` ([_PHP Code Beautifier and Fixer_](https://github.com/squizlabs/PHP_CodeSniffer)). This tool uses the same ruleset as *phpcs* to automatically correct coding standard violations.
 
@@ -407,7 +489,8 @@ To ensure a clean code base, pre-commit git hooks should be installed on all dev
 
 ## Continuous Integration
 
-- [Travis](https://travis-ci.org/)
+- [Travis](https://travis-ci.org/locomotivemtl/charcoal-image)
+- [Sensio Labs](https://insight.sensiolabs.com/projects/87c9621d-3b2e-4e71-a42f-e69ebca4672e)
 - [Scrutinizer](https://scrutinizer-ci.com/)
 - [Code Climate](https://codeclimate.com/)
 
@@ -421,9 +504,11 @@ Every class, method, and function should be covered by unit tests. PHP code can 
 
 ## Changelog
 
-- Unreleased.
+### 0.1
+_Unreleased_
 
 ## TODOs
 
 - Write a version for GD
 - Custom Exceptions
+- Change effect signature to be callable instead of using the process() method
