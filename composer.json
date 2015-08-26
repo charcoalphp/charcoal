@@ -16,7 +16,7 @@
     },
     "autoload":{
         "psr-4": {
-            "Charcoal\\Config\\": "src/Charcoal/Config"
+            "Charcoal\\": "src/Charcoal/"
         }
     }
 }
