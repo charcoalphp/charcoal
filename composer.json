@@ -1,6 +1,7 @@
 {
     "name": "locomotivemtl/charcoal-config",
     "description": "Configuration container for all things Charcoal",
+    "license":"MIT",
     "authors": [
         {
             "name": "Mathieu Ducharme",

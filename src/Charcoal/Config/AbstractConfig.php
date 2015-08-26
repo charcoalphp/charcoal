@@ -23,25 +23,17 @@ abstract class AbstractConfig implements
     const DEFAULT_SEPARATOR = '/';
 
     /**
-    * @var string $_separator
+    * @var string $separator
     */
-    private $_separator = self::DEFAULT_SEPARATOR;
+    private $separator = self::DEFAULT_SEPARATOR;
 
-    /**
-    * @var ConfigInterface $_root
-    */
-    private $_root = null;
 
     /**
     * @param array|string|null $data Optional default data, as `[$key => $val]` array
     * @throws InvalidArgumentException if data is not an array
     */
-    public function __construct($data = null, ConfigInterface $root = null)
+    public function __construct($data = null)
     {
-        if ($root) {
-            $this->_root = $root;
-        }
-
         if (is_string($data)) {
             $this->set_data($this->default_data());
             $this->add_file($data);
@@ -75,7 +67,7 @@ abstract class AbstractConfig implements
                 'Separator needs to be only one-character.'
             );
         }
-        $this->_separator = $separator;
+        $this->separator = $separator;
         return $this;
     }
 
@@ -84,7 +76,7 @@ abstract class AbstractConfig implements
     */
     public function separator()
     {
-        return $this->_separator;
+        return $this->separator;
     }
 
     /**
@@ -254,7 +246,6 @@ abstract class AbstractConfig implements
     * @param string $filename
     * @throws InvalidArgumentException if the filename is not a string or not valid json / php
     * @return AbstractConfig (Chainable)
-    * @todo Load with Flysystem
     */
     public function add_file($filename)
     {
