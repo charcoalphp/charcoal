@@ -55,7 +55,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
     private $_background_color = 'rgba(100%, 100%, 100%, 0)';
 
     /**
-    * @var string
+    * @var bool $adaptive
     */
     private $_adaptive = false;
 

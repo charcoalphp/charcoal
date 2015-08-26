@@ -4,14 +4,14 @@ namespace Charcoal\Image;
 
 use \Exception;
 
-use \Charcoal\Image\ImageInterface as ImageInterface;
+use \Charcoal\Image\ImageInterface;
 
 abstract class AbstractEffect implements EffectInterface
 {
     /**
-    * @var ImageInterface $_image
+    * @var ImageInterface $image
     */
-    private $_image;
+    private $image;
 
     /**
     * @param ImageInterface $image
@@ -19,7 +19,7 @@ abstract class AbstractEffect implements EffectInterface
     */
     public function set_image(ImageInterface $image)
     {
-        $this->_image = $image;
+        $this->image = $image;
         return $this;
     }
 
@@ -29,17 +29,28 @@ abstract class AbstractEffect implements EffectInterface
     */
     public function image()
     {
-        if ($this->_image === null) {
-            throw new Exception('Trying to access an unset image');
+        if ($this->image === null) {
+            throw new Exception(
+                'Trying to access an unset image'
+            );
         }
-        return $this->_image;
+        return $this->image;
     }
 
     /**
     * @param array $data
     * @return AbstractEffect Chainable
     */
-    abstract public function set_data(array $data);
+    public function set_data(array $data)
+    {
+        foreach ($data as $key => $val) {
+            $f = [$this, 'set_'.$key];
+            if (is_callable($f)) {
+                call_user_func($f, $val);
+            }
+        }
+        return $this;
+    }
 
     /**
     * @param array $data
