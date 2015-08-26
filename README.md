@@ -421,9 +421,11 @@ Every class, method, and function should be covered by unit tests. PHP code can 
 
 ## Changelog
 
-- Unreleased.
+### 0.1
+_Unreleased_
 
 ## TODOs
 
 - Write a version for GD
 - Custom Exceptions
+- Change effect signature to be callable instead of using the process() method

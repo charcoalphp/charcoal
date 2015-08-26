@@ -2,7 +2,7 @@
 
 namespace Charcoal\Image\Imagick\Effect;
 
-use \Charcoal\Image\Effect\AbstractMirrorEffect as AbstractMirrorEffect;
+use \Charcoal\Image\Effect\AbstractMirrorEffect;
 
 class ImagickMirrorEffect extends AbstractMirrorEffect
 {

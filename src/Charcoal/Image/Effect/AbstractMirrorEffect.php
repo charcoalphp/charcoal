@@ -2,9 +2,9 @@
 
 namespace Charcoal\Image\Effect;
 
-use \InvalidArgumentException as InvalidArgumentException;
+use \InvalidArgumentException;
 
-use \Charcoal\Image\AbstractEffect as AbstractEffect;
+use \Charcoal\Image\AbstractEffect;
 
 /**
 * Flip an image horizontally or vertically.
@@ -26,7 +26,9 @@ abstract class AbstractMirrorEffect extends AbstractEffect
     {
         $allowed_vals = ['x', 'y'];
         if (!is_string($axis) || !in_array($axis, $allowed_vals)) {
-            throw new InvalidArgumentException('Axis must be "x" or "y"');
+            throw new InvalidArgumentException(
+                'Axis must be "x" or "y"'
+            );
         }
         $this->axis = $axis;
         return $this;

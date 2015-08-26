@@ -2,10 +2,10 @@
 
 namespace Charcoal\Image\Effect;
 
-use \Exception as Exception;
-use \InvalidArgumentException as InvalidArgumentException;
+use \Exception;
+use \InvalidArgumentException;
 
-use \Charcoal\Image\AbstractEffect as AbstractEffect;
+use \Charcoal\Image\AbstractEffect;
 
 /**
 * Resize an image to given dimensions
@@ -79,7 +79,9 @@ abstract class AbstractResizeEffect extends AbstractEffect
             'none'
         ];
         if (!is_string($mode) || (!in_array($mode, $allowed_modes))) {
-            throw new InvalidArgumentException('Mode is not valid');
+            throw new InvalidArgumentException(
+                'Mode is not valid'
+            );
         }
         $this->mode = $mode;
         return $this;
@@ -101,7 +103,9 @@ abstract class AbstractResizeEffect extends AbstractEffect
     public function set_width($width)
     {
         if (!is_int($width) || ($width < 0)) {
-            throw new InvalidArgumentException('Width must be a a positive integer');
+            throw new InvalidArgumentException(
+                'Width must be a a positive integer'
+            );
         }
         $this->width = $width;
         return $this;
@@ -123,7 +127,9 @@ abstract class AbstractResizeEffect extends AbstractEffect
     public function set_height($height)
     {
         if (!is_int($height) || ($height < 0)) {
-            throw new InvalidArgumentException('Height must be a positive integer');
+            throw new InvalidArgumentException(
+                'Height must be a positive integer'
+            );
         }
         $this->height = $height;
         return $this;
@@ -145,7 +151,9 @@ abstract class AbstractResizeEffect extends AbstractEffect
     public function set_min_width($min_width)
     {
         if (!is_int($min_width) || ($min_width < 0)) {
-            throw new InvalidArgumentException('Min Width must be a a positive integer');
+            throw new InvalidArgumentException(
+                'Min Width must be a a positive integer'
+            );
         }
         $this->min_width = $min_width;
         return $this;
@@ -167,7 +175,9 @@ abstract class AbstractResizeEffect extends AbstractEffect
     public function set_min_height($min_height)
     {
         if (!is_int($min_height) || ($min_height < 0)) {
-            throw new InvalidArgumentException('Min Height must be a positive integer');
+            throw new InvalidArgumentException(
+                'Min Height must be a positive integer'
+            );
         }
         $this->min_height = $min_height;
         return $this;
@@ -189,7 +199,9 @@ abstract class AbstractResizeEffect extends AbstractEffect
     public function set_max_width($max_width)
     {
         if (!is_int($max_width) || ($max_width < 0)) {
-            throw new InvalidArgumentException('Max Width must be a a positive integer');
+            throw new InvalidArgumentException(
+                'Max Width must be a a positive integer'
+            );
         }
         $this->max_width = $max_width;
         return $this;
@@ -211,7 +223,9 @@ abstract class AbstractResizeEffect extends AbstractEffect
     public function set_max_height($max_height)
     {
         if (!is_int($max_height) || ($max_height < 0)) {
-            throw new InvalidArgumentException('Height must be a positive integer');
+            throw new InvalidArgumentException(
+                'Height must be a positive integer'
+            );
         }
         $this->max_height = $max_height;
         return $this;
@@ -233,7 +247,9 @@ abstract class AbstractResizeEffect extends AbstractEffect
     public function set_gravity($gravity)
     {
         if (!in_array($gravity, $this->image()->available_gravities())) {
-            throw new InvalidArgumentException('Gravity is not valid');
+            throw new InvalidArgumentException(
+                'Gravity is not valid'
+            );
         }
         $this->gravity = $gravity;
         return $this;
@@ -255,7 +271,9 @@ abstract class AbstractResizeEffect extends AbstractEffect
     public function set_background_color($color)
     {
         if (!is_string($color)) {
-            throw new InvalidArgumentException('Color must be a string');
+            throw new InvalidArgumentException(
+                'Color must be a string'
+            );
         }
         $this->background_color = $color;
         return $this;
@@ -278,7 +296,9 @@ abstract class AbstractResizeEffect extends AbstractEffect
     public function set_adaptive($adaptive)
     {
         if (!is_bool($adaptive)) {
-            throw new InvalidArgumentException('Adaptive flag must be a boolean');
+            throw new InvalidArgumentException(
+                'Adaptive flag must be a boolean'
+            );
         }
         $this->adaptive = $adaptive;
         return $this;
@@ -341,7 +361,9 @@ abstract class AbstractResizeEffect extends AbstractEffect
         switch ($mode) {
             case 'exact':
                 if (($this->width() <= 0) || ($this->height() <= 0)) {
-                    throw new Exception('Missing parameters to perform exact resize');
+                    throw new Exception(
+                        'Missing parameters to perform exact resize'
+                    );
                 }
                 if ($img_w != $this->width() || $img_h != $this->height()) {
                     $this->do_resize($this->width(), $this->height(), false);
@@ -350,7 +372,9 @@ abstract class AbstractResizeEffect extends AbstractEffect
 
             case 'width':
                 if ($this->width() <= 0) {
-                    throw new Exception('Missing parameters to perform exact width resize');
+                    throw new Exception(
+                        'Missing parameters to perform exact width resize'
+                    );
                 }
                 if ($img_w != $this->width()) {
                     $this->do_resize($this->width(), 0, false);
@@ -359,7 +383,9 @@ abstract class AbstractResizeEffect extends AbstractEffect
 
             case 'height':
                 if ($this->height() <= 0) {
-                    throw new Exception('Missing parameters to perform exact height resize');
+                    throw new Exception(
+                        'Missing parameters to perform exact height resize'
+                    );
                 }
                 if ($img_h != $this->height()) {
                     $this->do_resize(0, $this->height(), false);
@@ -368,7 +394,9 @@ abstract class AbstractResizeEffect extends AbstractEffect
 
             case 'best_fit':
                 if (($this->width() <= 0) || ($this->height() <= 0)) {
-                    throw new Exception('Missing parameters to perform "best fit" resize');
+                    throw new Exception(
+                        'Missing parameters to perform "best fit" resize'
+                    );
                 }
                 if ($img_w != $this->width() || $img_h != $this->height()) {
                     $this->do_resize($this->width(), $this->height(), true);
@@ -382,7 +410,9 @@ abstract class AbstractResizeEffect extends AbstractEffect
                 $max_h = $this->max_height();
 
                 if (array_sum([$min_w, $min_h, $max_w, $max_h]) == 0) {
-                    throw new Exception('Missing parameter(s) to perform "constraints" resize');
+                    throw new Exception(
+                        'Missing parameter(s) to perform "constraints" resize'
+                    );
                 }
 
                 if (($min_w && ($min_w > $img_w)) || ($min_h && ($min_h > $img_h))) {
@@ -401,14 +431,18 @@ abstract class AbstractResizeEffect extends AbstractEffect
             case 'crop':
                 $ratio = $this->image()->ratio();
 
-                throw new Exception('Crop resize mode is not (yet) supported');
+                throw new Exception(
+                    'Crop resize mode is not (yet) supported'
+                );
                 //break;
 
             case 'fill':
                 $img_class = get_class($this->image());
                 $canvas = new $img_class;
                 $canvas->create($this->width(), $this->width(), $this->background_color());
-                throw new Exception('Crop resize mode is not (yet) supported');
+                throw new Exception(
+                    'Crop resize mode is not (yet) supported'
+                );
                 //break;
         }
 

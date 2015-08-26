@@ -2,7 +2,7 @@
 
 namespace Charcoal\Image\Imagick\Effect;
 
-use \Charcoal\Image\Effect\AbstractRotateEffect as AbstractRotateEffect;
+use \Charcoal\Image\Effect\AbstractRotateEffect;
 
 class ImagickRotateEffect extends AbstractRotateEffect
 {

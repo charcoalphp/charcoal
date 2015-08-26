@@ -2,9 +2,7 @@
 
 namespace Charcoal\Image\Imagick\Effect;
 
-use \Exception as Exception;
-
-use \Charcoal\Image\Effect\AbstractSharpenEffect as AbstractSharpenEffect;
+use \Charcoal\Image\Effect\AbstractSharpenEffect;
 
 class ImagickSharpenEffect extends AbstractSharpenEffect
 {

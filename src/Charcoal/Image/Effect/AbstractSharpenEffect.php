@@ -4,7 +4,7 @@ namespace Charcoal\Image\Effect;
 
 use \InvalidArgumentException;
 
-use \Charcoal\Image\AbstractEffect as AbstractEffect;
+use \Charcoal\Image\AbstractEffect;
 
 /**
 * Sharpen an image, with a simple sharpen algorithm or unsharp mask options
@@ -52,7 +52,9 @@ abstract class AbstractSharpenEffect extends AbstractEffect
     public function set_radius($radius)
     {
         if (!is_numeric($radius) || ($radius < 0)) {
-            throw new InvalidArgumentException('Radius must be a float (greater than 0)');
+            throw new InvalidArgumentException(
+                'Radius must be a float (greater than 0)'
+            );
         }
          $this->radius = (float)$radius;
          return $this;
@@ -74,7 +76,9 @@ abstract class AbstractSharpenEffect extends AbstractEffect
     public function set_sigma($sigma)
     {
         if (!is_numeric($sigma) || ($sigma < 0)) {
-            throw new InvalidArgumentException('Sigma value must be a float (greater than 0)');
+            throw new InvalidArgumentException(
+                'Sigma value must be a float (greater than 0)'
+            );
         }
         $this->sigma = (float)$sigma;
         return $this;
@@ -96,7 +100,9 @@ abstract class AbstractSharpenEffect extends AbstractEffect
     public function set_amount($amount)
     {
         if (!is_numeric($amount) || ($amount < 0)) {
-            throw new InvalidArgumentException('Threshold must be a float (greater than 0)');
+            throw new InvalidArgumentException(
+                'Threshold must be a float (greater than 0)'
+            );
         }
          $this->amount = (float)$amount;
          return $this;
@@ -118,7 +124,9 @@ abstract class AbstractSharpenEffect extends AbstractEffect
     public function set_threshold($threshold)
     {
         if (!is_numeric($threshold) || ($threshold < 0)) {
-            throw new InvalidArgumentException('Threshold must be a float (greater than 0)');
+            throw new InvalidArgumentException(
+                'Threshold must be a float (greater than 0)'
+            );
         }
          $this->threshold = (float)$threshold;
          return $this;
@@ -141,7 +149,9 @@ abstract class AbstractSharpenEffect extends AbstractEffect
     {
         $allowed_modes = ['standard', 'adaptive', 'unsharp'];
         if (!in_array($mode, $allowed_modes)) {
-            throw new InvalidArgumentException(sprintf('Mode %s is not an allowed blur mode', $mode));
+            throw new InvalidArgumentException(
+                sprintf('Mode %s is not an allowed blur mode', $mode)
+            );
         }
         $this->mode = $mode;
         return $this;
@@ -163,7 +173,9 @@ abstract class AbstractSharpenEffect extends AbstractEffect
     public function set_channel($channel)
     {
         if (!in_array($channel, $this->image()->available_channels())) {
-            throw new InvalidArgumentException('Channel is not valid');
+            throw new InvalidArgumentException(
+                'Channel is not valid'
+            );
         }
         $this->channel = $channel;
         return $this;

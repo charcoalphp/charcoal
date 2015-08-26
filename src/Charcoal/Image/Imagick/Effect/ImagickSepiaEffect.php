@@ -2,9 +2,7 @@
 
 namespace Charcoal\Image\Imagick\Effect;
 
-use \Exception as Exception;
-
-use \Charcoal\Image\Effect\AbstractSepiaEffect as AbstractSepiaEffect;
+use \Charcoal\Image\Effect\AbstractSepiaEffect;
 
 class ImagickSepiaEffect extends AbstractSepiaEffect
 {

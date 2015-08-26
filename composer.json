@@ -2,6 +2,7 @@
     "name": "locomotivemtl/charcoal-image",
     "description": "PHP Image manipulation library",
     "keywords":["php", "image", "imagick", "gd", "imagemagick", "charcoal", "locomotive"],
+    "license": "MIT",
     "authors": [
         {
             "name": "Mathieu Ducharme",

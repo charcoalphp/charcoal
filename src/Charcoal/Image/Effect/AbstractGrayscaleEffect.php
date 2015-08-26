@@ -2,9 +2,7 @@
 
 namespace Charcoal\Image\Effect;
 
-use \InvalidArgumentException as InvalidArgumentException;
-
-use \Charcoal\Image\AbstractEffect as AbstractEffect;
+use \Charcoal\Image\AbstractEffect;
 
 /**
 * Convert an image to grayscale colorspace

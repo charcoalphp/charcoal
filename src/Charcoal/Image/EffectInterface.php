@@ -4,7 +4,6 @@ namespace Charcoal\Image;
 
 interface EffectInterface
 {
-
     /**
     * @param ImageInterface $image
     * @return EffectInterface

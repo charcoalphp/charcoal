@@ -2,9 +2,7 @@
 
 namespace Charcoal\Image\Imagemagick\Effect;
 
-use \Exception as Exception;
-
-use \Charcoal\Image\Effect\AbstractModulateEffect as AbstractModulateEffect;
+use \Charcoal\Image\Effect\AbstractModulateEffect;
 
 class ImagemagickModulateEffect extends AbstractModulateEffect
 {

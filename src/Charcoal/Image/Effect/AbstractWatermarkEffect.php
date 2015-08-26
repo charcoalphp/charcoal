@@ -4,7 +4,7 @@ namespace Charcoal\Image\Effect;
 
 use \InvalidArgumentException;
 
-use \Charcoal\Image\AbstractEffect as AbstractEffect;
+use \Charcoal\Image\AbstractEffect;
 
 /**
 * Composite a watermark on top of the image.
@@ -52,7 +52,9 @@ abstract class AbstractWatermarkEffect extends AbstractEffect
     public function set_watermark($watermark)
     {
         if (!is_string($watermark)) {
-            throw new InvalidArgumentException('Mask must be a string');
+            throw new InvalidArgumentException(
+                'Mask must be a string'
+            );
         }
         $this->watermark = $watermark;
         return $this;
@@ -74,7 +76,9 @@ abstract class AbstractWatermarkEffect extends AbstractEffect
     public function set_opacity($opacity)
     {
         if (!is_numeric($opacity) || ($opacity < 0) || ( $opacity > 1)) {
-            throw new InvalidArgumentException('Opacity must be a float between 0.0 and 1.0');
+            throw new InvalidArgumentException(
+                'Opacity must be a float between 0.0 and 1.0'
+            );
         }
         $this->opacity = (float)$opacity;
         return $this;
@@ -96,7 +100,9 @@ abstract class AbstractWatermarkEffect extends AbstractEffect
     public function set_gravity($gravity)
     {
         if (!in_array($gravity, $this->image()->available_gravities())) {
-            throw new InvalidArgumentException('Gravity is not valid');
+            throw new InvalidArgumentException(
+                'Gravity is not valid'
+            );
         }
         $this->gravity = $gravity;
         return $this;
@@ -118,7 +124,9 @@ abstract class AbstractWatermarkEffect extends AbstractEffect
     public function set_x($x)
     {
         if (!is_int($x)) {
-            throw new InvalidArgumentException('X must be a an integer');
+            throw new InvalidArgumentException(
+                'X must be a an integer'
+            );
         }
         $this->x = $x;
         return $this;
@@ -140,7 +148,9 @@ abstract class AbstractWatermarkEffect extends AbstractEffect
     public function set_y($y)
     {
         if (!is_int($y)) {
-            throw new InvalidArgumentException('Y must be a an integer');
+            throw new InvalidArgumentException(
+                'Y must be a an integer'
+            );
         }
         $this->y = $y;
         return $this;

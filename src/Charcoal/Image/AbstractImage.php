@@ -2,12 +2,12 @@
 
 namespace Charcoal\Image;
 
-use \Exception as Exception;
-use \InvalidArgumentException as InvalidArgumentException;
+use \Exception;
+use \InvalidArgumentException;
 
-use \Charcoal\Image\ImageInterface as ImageInterface;
-use \Charcoal\Image\EffectInterface as EffectInterface;
-use \Charcoal\Image\EffectFactory as EffectFactory;
+use \Charcoal\Image\ImageInterface;
+use \Charcoal\Image\EffectInterface;
+use \Charcoal\Image\EffectFactory;
 
 /**
 *
@@ -74,7 +74,9 @@ abstract class AbstractImage implements ImageInterface
     public function set_source($source)
     {
         if (!is_string($source)) {
-            throw new InvalidArgumentException('Target must be a string');
+            throw new InvalidArgumentException(
+                'Source must be a string'
+            );
         }
         $this->source = $source;
         return $this;
@@ -96,7 +98,9 @@ abstract class AbstractImage implements ImageInterface
     public function set_target($target)
     {
         if (!is_string($target)) {
-            throw new InvalidArgumentException('Target must be a string');
+            throw new InvalidArgumentException(
+                'Target must be a string'
+            );
         }
         $this->target = $target;
         return $this;

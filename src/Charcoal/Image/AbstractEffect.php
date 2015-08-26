@@ -4,7 +4,7 @@ namespace Charcoal\Image;
 
 use \Exception;
 
-use \Charcoal\Image\ImageInterface as ImageInterface;
+use \Charcoal\Image\ImageInterface;
 
 abstract class AbstractEffect implements EffectInterface
 {
@@ -30,7 +30,9 @@ abstract class AbstractEffect implements EffectInterface
     public function image()
     {
         if ($this->_image === null) {
-            throw new Exception('Trying to access an unset image');
+            throw new Exception(
+                'Trying to access an unset image'
+            );
         }
         return $this->_image;
     }

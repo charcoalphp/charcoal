@@ -2,9 +2,9 @@
 
 namespace Charcoal\Image\Effect;
 
-use \InvalidArgumentException as InvalidArgumentException;
+use \InvalidArgumentException;
 
-use \Charcoal\Image\AbstractEffect as AbstractEffect;
+use \Charcoal\Image\AbstractEffect;
 
 /**
 * Rotate the image by a certain angle
@@ -33,7 +33,9 @@ abstract class AbstractRotateEffect extends AbstractEffect
     public function set_angle($angle)
     {
         if (!is_numeric($angle)) {
-            throw new InvalidArgumentException('Angle must be a float');
+            throw new InvalidArgumentException(
+                'Angle must be a float'
+            );
         }
         $this->angle = (float)$angle;
         return $this;
@@ -55,7 +57,9 @@ abstract class AbstractRotateEffect extends AbstractEffect
     public function set_background_color($color)
     {
         if (!is_string($color)) {
-            throw new InvalidArgumentException('Color must be a string');
+            throw new InvalidArgumentException(
+                'Color must be a string'
+            );
         }
         $this->background_color = $color;
         return $this;

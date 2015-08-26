@@ -2,7 +2,7 @@
 
 namespace Charcoal\Image\Imagick\Effect;
 
-use \Charcoal\Image\Effect\AbstractModulateEffect as AbstractModulateEffect;
+use \Charcoal\Image\Effect\AbstractModulateEffect;
 
 class ImagickModulateEffect extends AbstractModulateEffect
 {

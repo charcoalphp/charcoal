@@ -2,9 +2,7 @@
 
 namespace Charcoal\Image\Imagemagick\Effect;
 
-use \Exception as Exception;
-
-use \Charcoal\Image\Effect\AbstractRevertEffect as AbstractRevertEffect;
+use \Charcoal\Image\Effect\AbstractRevertEffect;
 
 class ImagemagickRevertEffect extends AbstractRevertEffect
 {
