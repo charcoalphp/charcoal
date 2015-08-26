@@ -191,10 +191,10 @@ The available effects are:
 
 ### Examples
 ![Gaussian blur](docs/images/flower/imagick-blur-gaussian-strong.png)
-Gaussian blur: `$img->blur(['mode'=>'gaussian', 'radius'=>5, 'sigma'=>15]);`
+- Gaussian blur: `$img->blur(['mode'=>'gaussian', 'radius'=>5, 'sigma'=>15]);`
 
 ![Radial blur](docs/images/panda/imagick-blur-radial-8.png)
-Radial blur: `$img->blur('mode'=>'radial', 'angle'=>8]);`
+- Radial blur: `$img->blur('mode'=>'radial', 'angle'=>8]);`
 
 ## Dither Effect
 **Reduces an image's colors to a certain number, using dithering.**
@@ -207,7 +207,7 @@ Radial blur: `$img->blur('mode'=>'radial', 'angle'=>8]);`
 
 ### Examples
 ![Dither 3](docs/images/panda/imagick-dithers-3colors.png)
-Dither wit 3 colors: `$img->dither(['colors'=>3]);`
+- Dither wit 3 colors: `$img->dither(['colors'=>3]);`
 
 ## Grayscale Effect
 **Converts an image's colors to a 256-colors greyscale. There are no options.**
@@ -216,8 +216,8 @@ Dither wit 3 colors: `$img->dither(['colors'=>3]);`
 - _none_
 
 ### Examples
-![Grayscale](docs/images/panda/imagick-grayscale.png)
-Grayscale: `$img->grayscale();`
+![Grayscale](docs/images/panda/imagick-grayscale-default.png)
+- Grayscale: `$img->grayscale();`
 
 ## Mask Effect
 **Apply a 8-bit transparency mask to the image.**
@@ -241,10 +241,10 @@ Grayscale: `$img->grayscale();`
 
 ### Examples
 ![X-axis mirror](docs/images/panda/imagick-mirror-x.png)
-Mirror (x-axis): `$img->mirror(['axis'=>'x']);`
+- Mirror (x-axis): `$img->mirror(['axis'=>'x']);`
 
 ![Y-axis mirror](docs/images/flower/imagick-mirror-y.png)
-Mirror (x-axis): `$img->mirror(['axis'=>'y']);`
+- Mirror (x-axis): `$img->mirror(['axis'=>'y']);`
 
 ## Modulate Effect
 **Modifies an image's colors in the special HSL (hue-saturation-luminance) colorspace.**
@@ -262,10 +262,10 @@ Mirror (x-axis): `$img->mirror(['axis'=>'y']);`
 
 ### Examples
 ![Modulate brightness](docs/images/flower/imagick-modulate-brightness.png)
-Modulate with brightness only: `$img->modulate(['luminance'=>50]);`
+- Modulate with brightness only: `$img->modulate(['luminance'=>50]);`
 
 ![HSL](docs/images/panda/imagick-modulate-hsl.png)
-Modulate HSL: `$img->modulate(['luminance'=>20, 'hue'=>-20, 'saturation'=>40]);`
+- Modulate HSL: `$img->modulate(['luminance'=>20, 'hue'=>-20, 'saturation'=>40]);`
 
 ## Resize Effect
 **Resize an image to given dimensions.**
@@ -320,10 +320,10 @@ Modulate HSL: `$img->modulate(['luminance'=>20, 'hue'=>-20, 'saturation'=>40]);`
 
 ### Examples
 ![Revert](docs/images/panda/imagick-revert-default.png)
-Revert default (all channels): `$img->revert();`
+- Revert default (all channels): `$img->revert();`
 
 ![Revert](docs/images/panda/imagick-revert-red.png)
-Revert red channel: `$img->revert(['channel'=>'red']);`
+- Revert red channel: `$img->revert(['channel'=>'red']);`
 
 ## Rotate Effect
 **Rotate the image by a certain angle.**
@@ -342,13 +342,13 @@ Revert red channel: `$img->revert(['channel'=>'red']);`
 
 ### Examples
 ![Rotate 90](docs/images/flower/imagick-rotate-90.png)
-Rotate 90: `$img->rotate(['angle'=>90]);`
+- Rotate 90: `$img->rotate(['angle'=>90]);`
 
 ![Rotate -135](docs/images/flower/imagick-rotate-135.png)
-Rotate -135: `$img->rotate(['angle'=>-135]);``
+- Rotate -135: `$img->rotate(['angle'=>-135]);``
 
 ![Rotate 135 black](docs/images/flower/imagick-rotate-135-black.png)
-Rotate 135, black background: `$img->rotate(['angle'=>135, 'background_color'=>'black']);`
+- Rotate 135, black background: `$img->rotate(['angle'=>135, 'background_color'=>'black']);`
 
 ## Sepia Effect
 **Tint the image with a vintage, sepia look**
@@ -360,10 +360,10 @@ Rotate 135, black background: `$img->rotate(['angle'=>135, 'background_color'=>'
 
 ### Examples
 ![Sepia Default (75)](docs/images/flower/imagick-sepia-default.png)
-Default sepia (75): `$img->sepia();`
+- Default sepia (75): `$img->sepia();`
 
 ![Sepia 115](docs/images/flower/imagick-sepia-115.png)
-Default sepia (75): `$img->sepia(['threshold'=>115]);`
+- Default sepia (75): `$img->sepia(['threshold'=>115]);`
 
 ## Sharpen Effect
 **Sharpen an image, with a simple sharpen algorithm or unsharp mask options.**
@@ -399,7 +399,8 @@ Default sepia (75): `$img->sepia(['threshold'=>115]);`
 - `threshold` (_float_)
 
 ### Examples
-![Threshold]()
+![Threshold](docs/images/flower/imagick-threshold-default.png)
+- Default threshold: `$img->threshold();`
 
 ## Tint Effect
 **Tint (or colorize) an image with a certain color.**
@@ -419,10 +420,10 @@ Default sepia (75): `$img->sepia(['threshold'=>115]);`
 
 ### Examples
 ![Tint / colorize (red)](docs/images/panda/imagemagick-tint-red-colorize.png)
-Colorize / Tint red: `$img->tint(['color'=>'rgb(100%,0,0)', 'midtone'=>false]);`
+- Colorize / Tint red: `$img->tint(['color'=>'rgb(100%,0,0)', 'midtone'=>false]);`
 
 ![Tint midtones (red)](docs/images/panda/imagemagick-tint-red.png)
-Midtone tint red: `$img->tint(['color'=>'rgb(100%,0,0)']);`
+- Midtone tint red: `$img->tint(['color'=>'rgb(100%,0,0)']);`
 
 ## Watermark Effect
 **Composite a watermark on top of the image.**
@@ -438,7 +439,7 @@ Midtone tint red: `$img->tint(['color'=>'rgb(100%,0,0)']);`
 
 ### Examples
 ![Watermark](docs/images/panda/imagick-watermark-default.png)
-Watermark: `$img->watermark(['watermark=>'charcoal.png']);`
+- Watermark: `$img->watermark(['watermark=>'charcoal.png']);`
 
 ## Future Effects
 These effects are available in the `imagick` library and therefore could easily be added:
