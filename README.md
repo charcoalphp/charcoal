@@ -3,6 +3,8 @@ Charcoal Config
 
 Configuration container for all things Charcoal.
 
+[![Build Status](https://travis-ci.org/locomotivemtl/charcoal-config.svg?branch=master)](https://travis-ci.org/locomotivemtl/charcoal-config)
+
 This package provides easy hierarchical configuration container (for config storage and access). 
 `Charcoal\Config` acts as a configuration registry / repository.
 
