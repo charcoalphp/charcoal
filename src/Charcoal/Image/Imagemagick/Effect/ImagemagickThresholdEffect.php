@@ -2,9 +2,8 @@
 
 namespace Charcoal\Image\Imagemagick\Effect;
 
-use \Exception as Exception;
 
-use \Charcoal\Image\Effect\AbstractThresholdEffect as AbstractThresholdEffect;
+use \Charcoal\Image\Effect\AbstractThresholdEffect;
 
 class ImagemagickThresholdEffect extends AbstractThresholdEffect
 {

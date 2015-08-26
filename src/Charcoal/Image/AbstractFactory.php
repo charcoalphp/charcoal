@@ -11,15 +11,15 @@ abstract class AbstractFactory
 
     /**
     * Keeps loaded instances in memory, in `[$type=>$instance]` format.
-    * @var array $_instances
+    * @var array $instances
     */
-    protected $_instances = [];
+    protected $instances = [];
 
     /**
     * Available types, in `[$type=>$classname]` format.
-    * @var array $_types
+    * @var array $types
     */
-    static protected $_types = [];
+    static protected $types = [];
 
     /**
     * Constructor is protected. Singleton must be created with AbstractFactory::instance()
@@ -80,8 +80,8 @@ abstract class AbstractFactory
         if (!is_string($type)) {
             throw new \InvalidArgumentException('Type must be a string');
         }
-        if (isset($this->_instances[$type]) && $this->_instances[$type] !== null) {
-            return $this->_instances[$type];
+        if (isset($this->instances[$type]) && $this->instances[$type] !== null) {
+            return $this->instances[$type];
         } else {
             return $this->create($type);
         }
@@ -130,7 +130,7 @@ abstract class AbstractFactory
         if (!class_exists($class)) {
             return false;
         } else {
-            static::$_types[$type] = $class;
+            static::$types[$type] = $class;
             return true;
         }
     }
@@ -142,7 +142,7 @@ abstract class AbstractFactory
     */
     public static function types()
     {
-        return static::$_types;
+        return static::$types;
     }
 
     /**

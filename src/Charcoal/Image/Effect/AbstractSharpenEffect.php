@@ -204,16 +204,13 @@ abstract class AbstractSharpenEffect extends AbstractEffect
         switch ($mode) {
             case 'adaptive':
                 return $this->process_adaptive();
-            //break;
 
             case 'unsharp':
                 return $this->process_unsharp();
-            //break;
 
             case 'standard':
             default:
                 return $this->process_standard();
-            //break;
         }
     }
 

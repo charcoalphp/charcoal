@@ -19,6 +19,8 @@ class ImagemagickWatermarkEffect extends AbstractWatermarkEffect
             $this->set_data($data);
         }
         
-        throw new Exception('Watermark Effect is not (yet) supported with imagemagick driver.');
+        throw new Exception(
+            'Watermark Effect is not (yet) supported with imagemagick driver.'
+        );
     }
 }

@@ -15,12 +15,12 @@ class ImagemagickImage extends AbstractImage
 
     /**
     * The temporary file location
-    * @var string $_tmp
+    * @var string $tmp_file
     */
-    private $_tmp;
-    private $_mogrify_cmd;
-    private $_convert_cmd;
-    private $_identify_cmd;
+    private $tmp_file;
+    private $mogrify_cmd;
+    private $convert_cmd;
+    private $identify_cmd;
 
     /**
     * @throws Exception
@@ -28,8 +28,8 @@ class ImagemagickImage extends AbstractImage
     public function __construct()
     {
         // This will throw exception if the binaris are not found.
-        $this->_mogrify_cmd = $this->mogrify_cmd();
-        $this->_convert_cmd = $this->convert_cmd();
+        $this->mogrify_cmd = $this->mogrify_cmd();
+        $this->convert_cmd = $this->convert_cmd();
     }
 
     /**
@@ -205,11 +205,11 @@ class ImagemagickImage extends AbstractImage
     */
     public function mogrify_cmd()
     {
-        if ($this->_mogrify_cmd !== null) {
-            return $this->_mogrify_cmd;
+        if ($this->mogrify_cmd !== null) {
+            return $this->mogrify_cmd;
         }
-        $this->_mogrify_cmd = $this->find_cmd('mogrify');
-        return $this->_mogrify_cmd;
+        $this->mogrify_cmd = $this->find_cmd('mogrify');
+        return $this->mogrify_cmd;
     }
 
     /**
@@ -218,11 +218,11 @@ class ImagemagickImage extends AbstractImage
     */
     public function convert_cmd()
     {
-        if ($this->_convert_cmd !== null) {
-            return $this->_convert_cmd;
+        if ($this->convert_cmd !== null) {
+            return $this->convert_cmd;
         }
-        $this->_convert_cmd = $this->find_cmd('convert');
-        return $this->_convert_cmd;
+        $this->convert_cmd = $this->find_cmd('convert');
+        return $this->convert_cmd;
     }
 
     /**
@@ -231,11 +231,11 @@ class ImagemagickImage extends AbstractImage
     */
     public function identify_cmd()
     {
-        if ($this->_identify_cmd !== null) {
-            return $this->_identify_cmd;
+        if ($this->identify_cmd !== null) {
+            return $this->identify_cmd;
         }
-        $this->_identify_cmd = $this->find_cmd('identify');
-        return $this->_identify_cmd;
+        $this->identify_cmd = $this->find_cmd('identify');
+        return $this->identify_cmd;
     }
 
     /**
@@ -243,12 +243,12 @@ class ImagemagickImage extends AbstractImage
     */
     public function tmp()
     {
-        if ($this->_tmp !== null) {
-            return $this->_tmp;
+        if ($this->tmp_file !== null) {
+            return $this->tmp_file;
         }
 
-        $this->_tmp = sys_get_temp_dir().'/'.uniqid().'.png';
-        return $this->_tmp;
+        $this->tmp_file = sys_get_temp_dir().'/'.uniqid().'.png';
+        return $this->tmp_file;
     }
 
     /**
@@ -256,10 +256,10 @@ class ImagemagickImage extends AbstractImage
     */
     public function reset_tmp()
     {
-        if (file_exists($this->_tmp)) {
-            unlink($this->_tmp);
+        if (file_exists($this->tmp_file)) {
+            unlink($this->tmp_file);
         }
-        $this->_tmp = null;
+        $this->tmp_file = null;
         return $this;
     }
 

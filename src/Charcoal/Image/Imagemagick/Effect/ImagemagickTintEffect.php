@@ -2,9 +2,7 @@
 
 namespace Charcoal\Image\Imagemagick\Effect;
 
-use \Exception as Exception;
-
-use \Charcoal\Image\Effect\AbstractTintEffect as AbstractTintEffect;
+use \Charcoal\Image\Effect\AbstractTintEffect;
 
 class ImagemagickTintEffect extends AbstractTintEffect
 {

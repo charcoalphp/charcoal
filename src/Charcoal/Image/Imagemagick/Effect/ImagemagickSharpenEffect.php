@@ -2,9 +2,8 @@
 
 namespace Charcoal\Image\Imagemagick\Effect;
 
-use \Exception as Exception;
 
-use \Charcoal\Image\Effect\AbstractSharpenEffect as AbstractSharpenEffect;
+use \Charcoal\Image\Effect\AbstractSharpenEffect;
 
 class ImagemagickSharpenEffect extends AbstractSharpenEffect
 {

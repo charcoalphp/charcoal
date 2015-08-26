@@ -19,8 +19,9 @@ class ImagickMaskEffect extends AbstractMaskEffect
             $this->set_data($data);
         }
 
-        throw new Exception('Mask effect is not (yet) supported with imagick driver.');
+        throw new Exception(
+            'Mask effect is not (yet) supported with imagick driver.'
+        );
 
-        //return $this;
     }
 }

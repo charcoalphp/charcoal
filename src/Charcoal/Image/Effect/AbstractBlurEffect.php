@@ -161,28 +161,22 @@ abstract class AbstractBlurEffect extends AbstractEffect
         switch ($mode) {
             case 'adaptive':
                 return $this->process_adaptive();
-            //break;
 
             case 'gaussian':
                 return $this->process_gaussian();
-            //break;
 
             case 'motion':
                 return $this->process_motion();
-            //break;
 
             case 'radial':
                 return $this->process_radial();
-            //break;
 
             case 'soft':
                 return $this->process_soft();
-            //break;
 
             case 'standard':
             default:
                 return $this->process_standard();
-            //break;
         }
     }
 
