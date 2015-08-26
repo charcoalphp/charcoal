@@ -34,12 +34,12 @@ abstract class AbstractSharpenEffect extends AbstractEffect
     private $threshold = 0.05;
 
     /**
-    * @var boolean $mode
+    * @var string $mode
     */
     private $mode = 'standard';
 
     /**
-    * @var integer $channel
+    * @var string $channel
     */
     private $channel = 'all';
 
@@ -76,7 +76,7 @@ abstract class AbstractSharpenEffect extends AbstractEffect
         if (!is_numeric($sigma) || ($sigma < 0)) {
             throw new InvalidArgumentException('Sigma value must be a float (greater than 0)');
         }
-        $this->sigma = $sigma;
+        $this->sigma = (float)$sigma;
         return $this;
     }
 

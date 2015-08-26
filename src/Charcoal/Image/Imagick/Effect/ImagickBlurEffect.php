@@ -14,7 +14,7 @@ class ImagickBlurEffect extends AbstractBlurEffect
     public function process_adaptive()
     {
         $channel = $this->image()->imagick_channel($this->channel());
-        $this->image()->imagick()->adaptiveBlurImage($this->radius(), $this->sigma());
+        $this->image()->imagick()->adaptiveBlurImage($this->radius(), $this->sigma(), $channel);
         return $this;
     }
     
