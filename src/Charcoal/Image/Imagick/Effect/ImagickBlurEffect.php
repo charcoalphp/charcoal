@@ -45,9 +45,7 @@ class ImagickBlurEffect extends AbstractBlurEffect
     {
         $angle = $this->angle();
         $channel = $this->image()->imagick_channel($this->channel());
-        //$this->image()->imagick()->radialBlurImage(($angle-2), $channel);
         $this->image()->imagick()->radialBlurImage(($angle), $channel);
-        //$this->image()->imagick()->radialBlurImage(($angle+2), $channel);
         return $this;
     }
     
@@ -57,8 +55,6 @@ class ImagickBlurEffect extends AbstractBlurEffect
     */
     public function process_soft()
     {
-        // @todo
-        //'-define convolve:scale=60,40% -morphology Convolve \'Gaussian:'.$this->radius().'x'.$this->radius().'\'';
         throw new Exception(
             'Soft blur is not (yet) supported with imagick driver.'
         );

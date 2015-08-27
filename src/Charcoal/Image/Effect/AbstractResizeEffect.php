@@ -434,7 +434,6 @@ abstract class AbstractResizeEffect extends AbstractEffect
                 throw new Exception(
                     'Crop resize mode is not (yet) supported'
                 );
-                //break;
 
             case 'fill':
                 $img_class = get_class($this->image());
@@ -443,7 +442,6 @@ abstract class AbstractResizeEffect extends AbstractEffect
                 throw new Exception(
                     'Crop resize mode is not (yet) supported'
                 );
-                //break;
         }
 
         return $this;

@@ -55,8 +55,6 @@ class ImagemagickBlurEffect extends AbstractBlurEffect
     */
     public function process_soft()
     {
-        // Todo: Support channel
-        $channel = $this->image()->convert_channel($this->channel());
         $cmd = '-define convolve:scale=60,40% -morphology Convolve \'Gaussian:'.$this->radius().'x'.$this->sigma().'\'';
         $this->image()->apply_cmd($cmd);
         return $this;

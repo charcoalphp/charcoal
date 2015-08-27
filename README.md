@@ -185,6 +185,7 @@ The available effects are:
   - The `sigma` and `radius` parameters are ignored in this mode.
 - `soft`
   - Blend the blur with the original image.
+  - Note that the `channel` value is ignored in this mode.
 
 > 👉 The `soft` mode is currently only available with the `imagemagick` driver.
 
@@ -494,7 +495,7 @@ These effects are available in the `imagick` library and therefore could easily 
 
 All Charcoal modules follow the same coding style and `charcoal-image` is no exception. For PHP:
 
-- [_PSR-1_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md), except for
+- [_PSR-1_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md), **with the followinf exceptions**
   - Method names MUST be declared in `snake_case`.
 - [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
 - [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md), autoloading is therefore provided by _Composer_
