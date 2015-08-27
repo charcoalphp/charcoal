@@ -502,9 +502,14 @@ Every class, method, and function should be covered by unit tests. PHP code can 
 
 ## Changelog
 
+### 0.1.1
+_Unreleased_
+- Fixed the "unsharp mask" sharpen mode for imagick
+- Fixed the gravity for the watermark effect for imagick
+
 ### 0.1
 _Released 2015-08-26_
-Initial release
+- Initial release
 
 ## TODOs
 

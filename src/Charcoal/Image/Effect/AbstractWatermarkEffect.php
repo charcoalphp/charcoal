@@ -26,7 +26,7 @@ abstract class AbstractWatermarkEffect extends AbstractEffect
     * The gravity
     * @var string $gravity
     */
-    private $gravity = 'center';
+    private $gravity = 'nw';
 
     /**
     * Horizontal adjustment, in pixels.
@@ -45,7 +45,7 @@ abstract class AbstractWatermarkEffect extends AbstractEffect
     private $y = 0;
 
     /**
-    * @param string $watermark
+    * @param string|ImageInterface $watermark
     * @throws InvalidArgumentException
     * @return AbstractMaskEffect Chainable
     */
@@ -53,7 +53,7 @@ abstract class AbstractWatermarkEffect extends AbstractEffect
     {
         if (!is_string($watermark)) {
             throw new InvalidArgumentException(
-                'Mask must be a string'
+                'Watermark must be a string'
             );
         }
         $this->watermark = $watermark;
