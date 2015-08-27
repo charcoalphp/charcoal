@@ -428,13 +428,18 @@ The available effects are:
 **Composite a watermark on top of the image.**
 
 ### Options
-- `watermark` (_string_)
+- `watermark` (_string_ or _ImageInterface_)
 - `opacity` (_float_)
 - `gravity` (_string_)
 - `x` (_integer_)
 - `y` (_integer_)
 
-> 👉 The `watermark` effect is currently only available with the `imagick` driver.
+### Notes
+- The effect of the `x` and `y` values depends of the `gravity`.
+  - Default gravity is "nw" for a top-left watermark. Set to "center" to align to center. 
+- The `opacity` option is currently ignored by both drivers.
+- The watermark image will always be rescaled to fit inside the image's container.
+- It will also always be moved to ensure the watermark is inside the image's container.
 
 ### Examples
 ![Watermark](docs/images/panda/imagick-watermark-default.png)
@@ -460,8 +465,8 @@ $img = new Image();
 $img->open(__DIR__.'/tests/examples/test02.png')
     ->mirror(['axis'=>'y'])
     ->sharpen(['mode'=>'unsharp', 'amount'=>2])
-    ->watermark(['watermark'=>$watermark, 'gravity'=>'nw'])
-    ->watermark(['watermark'=>$watermark2, 'gravity'=>'e'])
+    ->watermark(['watermark'=>$watermark, 'gravity'=>'ne'])
+    ->watermark(['watermark'=>$watermark2, 'gravity'=>'w'])
     ->modulate(['luminance'=>25])
     ->save(__DIR__.'/out.png');
 ```
@@ -533,6 +538,7 @@ _Unreleased_
 - Fixed the "unsharp mask" mode for sharpen effect (imagick)
 - Fixed the gravity for the watermark effect (imagick)
 - Accept _ImageInterface_ objects as watermark (global)
+- Add the watermark effect to imagemagick (imagemagick)
 
 ### 0.1
 _Released 2015-08-26_
