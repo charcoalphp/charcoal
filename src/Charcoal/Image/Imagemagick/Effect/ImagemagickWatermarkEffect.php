@@ -36,7 +36,10 @@ class ImagemagickWatermarkEffect extends AbstractWatermarkEffect
         }
 
         $gravity = $this->image()->imagemagick_gravity($this->gravity());
-        $cmd = '-gravity '.$gravity.' -geometry +'.$this->x().'+'.$this->y().' -draw "image Multiply 0,0 '.$width.','.$height.' \''.$watermark.'\'"';
+        $cmd =  '-gravity '.$gravity.' ';
+        $cmd .= '-geometry +'.$this->x().'+'.$this->y().' ';
+        $cmd .= '-draw "image Multiply 0,0 '.$width.','.$height.' ';
+        $cmd .= '\''.$watermark.'\'"';
         $this->image()->apply_cmd($cmd);
         return $this;
     }
