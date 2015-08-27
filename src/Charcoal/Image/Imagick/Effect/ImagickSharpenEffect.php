@@ -27,7 +27,7 @@ class ImagickSharpenEffect extends AbstractSharpenEffect
         $threshold = $this->threshold();
         $channel = $this->image()->imagick_channel($this->channel());
 
-        $this->image()->unsharpMaskImage($radius, $sigma, $amount, $threshold, $channel);
+        $this->image()->imagick()->unsharpMaskImage($radius, $sigma, $amount, $threshold, $channel);
 
         return $this;
     }

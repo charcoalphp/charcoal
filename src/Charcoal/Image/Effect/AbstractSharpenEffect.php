@@ -30,6 +30,7 @@ abstract class AbstractSharpenEffect extends AbstractEffect
 
     /**
     * Threshold. Ony used in `unsharp` mode
+    * @var float $threshold
     */
     private $threshold = 0.05;
 
