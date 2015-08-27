@@ -5,6 +5,7 @@ namespace Charcoal\Image\Effect;
 use \InvalidArgumentException;
 
 use \Charcoal\Image\AbstractEffect;
+use \Charcoal\Image\ImageInterface;
 
 /**
 * Composite a watermark on top of the image.
@@ -13,7 +14,7 @@ abstract class AbstractWatermarkEffect extends AbstractEffect
 {
     /**
     * The watermark image source
-    * @var string $watermark
+    * @var string|ImageInterface $watermark
     */
     private $watermark;
 
@@ -51,13 +52,14 @@ abstract class AbstractWatermarkEffect extends AbstractEffect
     */
     public function set_watermark($watermark)
     {
-        if (!is_string($watermark)) {
+        if (is_string($watermark) || ($watermark instanceof ImageInterface)) {
+            $this->watermark = $watermark;
+            return $this;
+        } else {
             throw new InvalidArgumentException(
                 'Watermark must be a string'
             );
         }
-        $this->watermark = $watermark;
-        return $this;
     }
 
     /**

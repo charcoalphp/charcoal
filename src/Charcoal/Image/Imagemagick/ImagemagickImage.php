@@ -319,4 +319,33 @@ class ImagemagickImage extends AbstractImage
         $ret = $this->exec($mogrify.' '.$cmd.' '.$this->tmp());
         return $this;
     }
+
+
+    /**
+    * Convert a gravity name (string) to an `Imagick::GRAVITY_*` constant (integer)
+    *
+    * @param string $gravity
+    * @throws InvalidArgumentException
+    * @return integer
+    */
+    public function imagemagick_gravity($gravity)
+    {
+        $gravity_map = [
+            'center'    => 'center',
+            'n'         => 'north',
+            's'         => 'south',
+            'e'         => 'east',
+            'w'         => 'west',
+            'ne'        => 'northeast',
+            'nw'        => 'northwest',
+            'se'        => 'southeast',
+            'sw'        => 'southwest'
+        ];
+        if (!isset($gravity_map[$gravity])) {
+            throw new InvalidArgumentException(
+                'Invalid gravity'
+            );
+        }
+        return $gravity_map[$gravity];
+    }
 }

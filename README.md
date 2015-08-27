@@ -440,6 +440,32 @@ The available effects are:
 ![Watermark](docs/images/panda/imagick-watermark-default.png)
 - Watermark: `$img->watermark(['watermark=>'charcoal.png']);`
 
+## Advanced (chained effects) example
+![Advanced example](docs/images/advanced-example.png)
+```php
+use \Charcoal\Image\Imagick\ImagickImage as Image;;
+
+$watermark = new Image();
+$watermark->open(__DIR__.'/tests/examples/watermark.png')
+    ->blur(['mode'=>'gaussian', 'sigma'=>2])
+    ->rotate(['angle'=>45])
+    ->tint(['color'=>'red', 'midtone'=>false]);
+
+$watermark2 = new Image();
+$watermark2->open(__DIR__.'/tests/examples/watermark.png')
+    ->blur(['mode'=>'gaussian', 'sigma'=>1])
+    ->tint(['color'=>'blue', 'midtone'=>false]);
+
+$img = new Image();
+$img->open(__DIR__.'/tests/examples/test02.png')
+    ->mirror(['axis'=>'y'])
+    ->sharpen(['mode'=>'unsharp', 'amount'=>2])
+    ->watermark(['watermark'=>$watermark, 'gravity'=>'nw'])
+    ->watermark(['watermark'=>$watermark2, 'gravity'=>'e'])
+    ->modulate(['luminance'=>25])
+    ->save(__DIR__.'/out.png');
+```
+
 ## Future Effects
 These effects are available in the `imagick` library and therefore could easily be added:
 - `Charcoal`
@@ -504,8 +530,9 @@ Every class, method, and function should be covered by unit tests. PHP code can 
 
 ### 0.1.1
 _Unreleased_
-- Fixed the "unsharp mask" sharpen mode for imagick
-- Fixed the gravity for the watermark effect for imagick
+- Fixed the "unsharp mask" mode for sharpen effect (imagick)
+- Fixed the gravity for the watermark effect (imagick)
+- Accept _ImageInterface_ objects as watermark (global)
 
 ### 0.1
 _Released 2015-08-26_

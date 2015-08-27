@@ -2,10 +2,11 @@
 
 namespace Charcoal\Image\Imagick\Effect;
 
-use \Exception as Exception;
-use \Imagick as Imagick;
+use \Exception;
+use \Imagick;
 
-use \Charcoal\Image\Effect\AbstractWatermarkEffect as AbstractWatermarkEffect;
+use \Charcoal\Image\Effect\AbstractWatermarkEffect;
+use \Charcoal\Image\ImageInterface;
 
 class ImagickWatermarkEffect extends AbstractWatermarkEffect
 {
@@ -24,9 +25,14 @@ class ImagickWatermarkEffect extends AbstractWatermarkEffect
         $img_w = $img->width();
         $img_h = $img->height();
         
-        $img_class = get_class($img);
-        $watermark = new $img_class;
-        $watermark->open($this->watermark());
+        if ($this->watermark() instanceof ImageInterface) {
+            $watermark = $this->watermark();
+        } else {
+            $img_class = get_class($img);
+            $watermark = new $img_class;
+            $watermark->open($this->watermark());
+        }
+        
         if (($watermark->width() > $img_w) || ($watermark->height() > $img_h)) {
             // Scale-down watermark image, if necessary
             $watermark->resize(['mode'=>'best_fit', 'width'=>$img_w, 'height'=>$img_h]);
@@ -36,31 +42,31 @@ class ImagickWatermarkEffect extends AbstractWatermarkEffect
         $mark_h = $watermark->height();
 
         $gravity = $this->gravity();
-        if ($gravity == 'ne') {
+        if ($gravity == 'nw') {
             $x = $this->x();
             $y = $this->y();
         } elseif ($gravity == 'n') {
             $x = ($img_w/2 - ($mark_w/2) + $this->x());
             $y = $this->y();
-        } elseif ($gravity == 'nw') {
+        } elseif ($gravity == 'ne') {
             $x = ($img_w - $mark_h - $this->x());
             $y = $this->y();
-        } elseif ($gravity == 'e') {
+        } elseif ($gravity == 'w') {
             $x = $this->x();
             $y = ($img_h/2 - ($mark_h/2) + $this->y());
         } elseif ($gravity == 'center') {
             $x = ($img_w/2 - ($mark_w/2) + $this->x());
             $y = ($img_h/2 - ($mark_h/2) + $this->y());
-        } elseif ($gravity == 'w') {
+        } elseif ($gravity == 'e') {
             $x = ($img_w - $mark_w - $this->x());
             $y = ($img_h/2 - ($mark_h/2) + $this->y());
-        } elseif ($gravity == 'se') {
+        } elseif ($gravity == 'sw') {
             $x = $this->x();
             $y = ($img_h - $mark_h - $this->y());
         } elseif ($gravity == 's') {
             $x = ($img_w/2 - ($mark_w/2) + $this->x());
             $y = ($img_h - $mark_h - $this->y());
-        } elseif ($gravity == 'sw') {
+        } elseif ($gravity == 'se') {
             $x = ($img_w - $mark_w - $this->x());
             $y = ($img_h - $mark_h - $this->y());
         }
