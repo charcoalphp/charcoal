@@ -4,13 +4,13 @@ namespace Charcoal\Image\Imagick\Effect;
 
 use \Imagick;
 
-use \Charcoal\Image\Effect\AbstractAutorotateEffect;
+use \Charcoal\Image\Effect\AbstractAutoorientationEffect;
 
-class ImagickAutorotateEffect extends AbstractAutorotateEffect
+class ImagickAutoorientationEffect extends AbstractAutoorientationEffect
 {
     /**
     * @param array $data
-    * @return ImagickRotateEffect Chainable
+    * @return ImagickAutoorientationEffect Chainable
     */
     public function process(array $data = null)
     {

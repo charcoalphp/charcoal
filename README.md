@@ -133,6 +133,7 @@ $img = ImageFactory::instance()->get('imagemagick');
 Any image operation is called an "effect" and implements the `\Charcoal\Image\EffectInterface` interface.
 
 The available effects are:
+- [Auto-orientation](#auto-orientation-effect)
 - [Blur](#blur-effect)
 - [Dither](#dither-effect)
 - [Grayscale](#grayscale-effect)
@@ -147,6 +148,21 @@ The available effects are:
 - [Threshold](#threshold-effect)
 - [Tint](#tint-effect)
 - [Watermark](#watermark-effect)
+
+## Auto-orientation Effect
+**Reads image EXIF data to automatically rotate it to the proper orientation**
+
+### Options
+- _none_
+
+> 👉 The `auto-orientation` effect is currently only available with the `imagick` driver.
+
+### Examples
+![Default image](docs/images/portrait-5.jpg)
+- Default image (with EXIF orientation #5)
+
+![Auto-orientation](docs/images/portrait-5-autoorientation.jpg)
+- Auto-orientation (with EXIF orientation #1): `$img->autoorientation();`
 
 ## Blur Effect
 **Blurs an image**
