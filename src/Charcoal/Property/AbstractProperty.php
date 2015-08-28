@@ -3,21 +3,22 @@
 namespace Charcoal\Property;
 
 // Dependencies from `PHP`
-use \Exception as Exception;
-use \InvalidArgumentException as InvalidArgumentException;
+use \Exception;
+use \InvalidArgumentException;
 
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Metadata\DescribableInterface as DescribableInterface;
-use \Charcoal\Metadata\DescribableTrait as DescribableTrait;
-use \Charcoal\Validator\ValidatableInterface as ValidatableInterface;
-use \Charcoal\Validator\ValidatableTrait as validatableTrait;
-use \Charcoal\View\ViewableInterface as ViewableInterface;
-use \Charcoal\View\ViewableTrait as ViewableTrait;
+use \Charcoal\Metadata\DescribableInterface;
+use \Charcoal\Metadata\DescribableTrait;
+use \Charcoal\Translation\TranslationString;
+use \Charcoal\Validator\ValidatableInterface;
+use \Charcoal\Validator\ValidatableTrait;
+use \Charcoal\View\ViewableInterface;
+use \Charcoal\View\ViewableTrait;
 
 // Local namespace dependencies
-use \Charcoal\Property\PropertyInterface as PropertyInterface;
-use \Charcoal\Property\PropertyValidator as PropertyValidator;
-use \Charcoal\Property\PropertyView as PropertyView;
+use \Charcoal\Property\PropertyInterface;
+use \Charcoal\Property\PropertyValidator;
+use \Charcoal\Property\PropertyView;
 
 /**
 * An abstract class that implements the full `PropertyInterface`.
@@ -35,7 +36,7 @@ abstract class AbstractProperty implements
     /**
     * @var string $_ident
     */
-    private $_ident;
+    private $_ident = '';
 
     /**
     * @var mixed $_val
@@ -43,7 +44,7 @@ abstract class AbstractProperty implements
     protected $_val;
 
     /**
-    * @var mixed $_label
+    * @var TranslationString $_label
     */
     private $_label;
 
@@ -95,29 +96,14 @@ abstract class AbstractProperty implements
     private $_active = true;
 
     /**
-    * @param array $data Optional
+    * @var TranslationString $_description
     */
-    public function __construct(array $data = null)
-    {
-        // Set default values
-        $defaults = [
-            'ident'    => '',
-            'l10n'     => false,
-            'hidden'   => false,
-            'multiple' => false,
-            'required' => false,
-            'unique'   => false,
-            'active'   => true
-        ];
+    private $_description = '';
 
-        if ($data === null) {
-            $data = $defaults;
-        } elseif (is_array($data)) {
-            $data = array_merge($defaluts, $data);
-        }
-
-        $this->set_data($data);
-    }
+    /**
+    * @var TranslationString $_notes
+    */
+    private $_notes = '';
 
     /**
     * @return string
@@ -125,10 +111,16 @@ abstract class AbstractProperty implements
     public function __toString()
     {
         $val = $this->val();
-        if (is_string($val)) {
+        if(is_string($val)) {
             return $val;
-        } else {
-            return '';
+        }
+        else {
+            if(is_object($val)) {
+                return (string)$val;
+            }
+            else {
+                return '';
+            }
         }
     }
 
@@ -170,6 +162,12 @@ abstract class AbstractProperty implements
         }
         if (isset($data['active'])) {
             $this->set_active($data['active']);
+        }
+        if (isset($data['description'])) {
+            $this->set_description($data['description']);
+        }
+        if (isset($data['notes'])) {
+            $this->set_notes($data['notes']);
         }
 
         return $this;
@@ -267,7 +265,7 @@ abstract class AbstractProperty implements
     */
     public function set_label($label)
     {
-        $this->_label = $label;
+        $this->_label = new TranslationString($label);
         return $this;
     }
 
@@ -314,7 +312,7 @@ abstract class AbstractProperty implements
         if (!is_bool($hidden)) {
             throw new InvalidArgumentException('hidden must be a boolean.');
         }
-        $this->hidden = $hidden;
+        $this->_hidden = $hidden;
         return $this;
     }
 
@@ -323,7 +321,7 @@ abstract class AbstractProperty implements
     */
     public function hidden()
     {
-        return !!$this->hidden;
+        return !!$this->_hidden;
     }
 
     /**
@@ -336,7 +334,7 @@ abstract class AbstractProperty implements
         if (!is_bool($multiple)) {
             throw new InvalidArgumentException('multiple must be a boolean.');
         }
-        $this->multiple = $multiple;
+        $this->_multiple = $multiple;
         return $this;
     }
 
@@ -345,7 +343,7 @@ abstract class AbstractProperty implements
     */
     public function multiple()
     {
-        return !!$this->multiple;
+        return !!$this->_multiple;
     }
 
 
@@ -363,7 +361,7 @@ abstract class AbstractProperty implements
             'max'       => 0
         ];
         $options = array_merge($default_options, $multiple_options);
-        $this->multiple_options = $options;
+        $this->_multiple_options = $options;
         return $this;
     }
 
@@ -372,7 +370,7 @@ abstract class AbstractProperty implements
     */
     public function multiple_options()
     {
-        return $this->multiple_options;
+        return $this->_multiple_options;
     }
 
     /**
@@ -429,7 +427,7 @@ abstract class AbstractProperty implements
         if (!is_bool($unique)) {
             throw new InvalidArgumentException('Unique must be a boolean.');
         }
-        $this->unique = $unique;
+        $this->_unique = $unique;
         return $this;
     }
 
@@ -438,7 +436,7 @@ abstract class AbstractProperty implements
     */
     public function unique()
     {
-        return !!$this->unique;
+        return !!$this->_unique;
     }
 
     /**
@@ -451,7 +449,7 @@ abstract class AbstractProperty implements
         if (!is_bool($active)) {
             throw new InvalidArgumentException('Active must be a boolean.');
         }
-        $this->active = $active;
+        $this->_active = $active;
         return $this;
     }
 
@@ -460,7 +458,43 @@ abstract class AbstractProperty implements
     */
     public function active()
     {
-        return !!$this->active;
+        return !!$this->_active;
+    }
+
+    /**
+    * @param mixed $description
+    * @return Property (Chainable)
+    */
+    public function set_description($description)
+    {
+        $this->_description = new TranslationString($description);
+        return $this;
+    }
+
+    /**
+    * @return string
+    */
+    public function description()
+    {
+        return $this->_description;
+    }
+
+    /**
+    * @param mixed $notes
+    * @return Property (Chainable)
+    */
+    public function set_notes($notes)
+    {
+        $this->_notes = new TranslationString($notes);
+        return $this;
+    }
+
+    /**
+    * @return string
+    */
+    public function notes()
+    {
+        return $this->_notes;
     }
 
     /**
