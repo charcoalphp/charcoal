@@ -111,14 +111,12 @@ abstract class AbstractProperty implements
     public function __toString()
     {
         $val = $this->val();
-        if(is_string($val)) {
+        if (is_string($val)) {
             return $val;
-        }
-        else {
-            if(is_object($val)) {
+        } else {
+            if (is_object($val)) {
                 return (string)$val;
-            }
-            else {
+            } else {
                 return '';
             }
         }
