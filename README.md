@@ -1,7 +1,7 @@
 Charcoal Image
 ==============
 
-Charcoal Image is a PHP image manipulation and processing library, providing a consistent API across different Image drivers. Currently supported drivers are `Imagick` (the PHP extension) and `Imagemagick` (using shell commands) 
+Charcoal Image is a PHP image manipulation and processing library, providing a consistent API across different Image drivers. Currently supported drivers are `Imagick` (the PHP extension) and `Imagemagick` (using shell commands)
 
 [![Build Status](https://travis-ci.org/locomotivemtl/charcoal-image.svg?branch=master)](https://travis-ci.org/locomotivemtl/charcoal-image)
 
@@ -39,7 +39,7 @@ $img->set_data([
         [
             'type'=>'blur',
             'mode'=>'gaussian',
-            'sigma'=>15
+            'sigma'=>5
         ]
     ]
 ]);
@@ -60,7 +60,7 @@ $img->resize([
 ]);
 $img->blur([
     'mode'=>'gaussian',
-    'sigma'=>15
+    'sigma'=>5
 ]);
 $img->save();
 ```
@@ -172,15 +172,15 @@ The available effects are:
 - `standard`
   - Perform a standard blur operation on the image.
 - `adaptive`
-  - Perform an adaptive blur on the image. 
-  - The intensity of an adaptive blur depends is dramatically decreased at edge of the image, whereas a standard blur is uniform across the image. 
+  - Perform an adaptive blur on the image.
+  - The intensity of an adaptive blur depends is dramatically decreased at edge of the image, whereas a standard blur is uniform across the image.
 - `gaussian`
   - Perform a gaussian blur on the image.
 - `motion`
   - Simulate a motion blur effect on the image.
-  - The "direction" of the blur is determined by the `angle` paramter. 
+  - The "direction" of the blur is determined by the `angle` paramter.
 - `radial`
-  - Perform a radial (circular) blur on the image. 
+  - Perform a radial (circular) blur on the image.
   - The `angle` argument is the angle the radial-blur coversThat is half that angle in each direction from the original image. So an angle of 180 is over a half circle, while 360 degrees will blur the image in a full circle.
   - The `sigma` and `radius` parameters are ignored in this mode.
 - `soft`
@@ -191,7 +191,7 @@ The available effects are:
 
 ### Examples
 ![Gaussian blur](docs/images/flower/imagick-blur-gaussian-strong.png)
-- Gaussian blur: `$img->blur(['mode'=>'gaussian', 'radius'=>5, 'sigma'=>15]);`
+- Gaussian blur: `$img->blur(['mode'=>'gaussian', 'radius'=>5, 'sigma'=>5]);`
 
 ![Radial blur](docs/images/panda/imagick-blur-radial-8.png)
 - Radial blur: `$img->blur('mode'=>'radial', 'angle'=>8]);`
@@ -236,7 +236,7 @@ The available effects are:
 
 ### Options
  - `axis` (_string_)
-   - The axis can be "x" (flip) or "y" (flop). 
+   - The axis can be "x" (flip) or "y" (flop).
    - Default is "y".
 
 ### Examples
@@ -272,7 +272,7 @@ The available effects are:
 
 ### Options
 - `mode` (_string_)
-  - The type of resize operation to perform 
+  - The type of resize operation to perform
   - Valid modes are: `auto`, `exact`, `width`, `height`, `best_fit`, `crop`, `fill` or `none`.
   - Default is `auto`.
 - `width` (_integer_)
@@ -291,12 +291,12 @@ The available effects are:
   - Can be specified as hexadecimal ("#FF00FF"), RGB values ("rgb(255,0,255)") or color name ("red").
   - Default is _transparent-white_ (`rgb(100%, 100%, 100%, 0)`)
 - `adaptive`
-  
+
 ### Resize Modes
 - `auto`
   - Auto-determined from effect options.
 - `exact`
-  - Resize to an exact width and height (ignoring original ratio). 
+  - Resize to an exact width and height (ignoring original ratio).
 - `width`
   - Resize to an exact width, keeping aspect ratio.
   - In this mode, the `width` parameter is required and the `height` parameter is ignored.
@@ -304,13 +304,13 @@ The available effects are:
   - Resize to an exact height, keeping aspect ratio.
   - In this mode, the `width` parameter is required and the `height` parameter is ignored.
 - `best_fit`
-  - Resize to the maximum `width` or `height`, keeping aspect ratio. 
+  - Resize to the maximum `width` or `height`, keeping aspect ratio.
 - `crop`
   - Resize to the best match possible (oversized) to keep ratio and crop the superfluous data.
 - `fill`
   - Resize to the best match possible (undersize) to keep ratio and fill the superfluous area with the `background_color`.
 - `none`
-  - Ignore resize operation entirely (do nothing) 
+  - Ignore resize operation entirely (do nothing)
 
 ## Revert Effect
 **Revert (negate) the image's colors.**
@@ -370,19 +370,19 @@ The available effects are:
 
 ### Options
 - `mode` (_string_)
-  - Can be `standard`, `adaptive` or `unsharp` 
+  - Can be `standard`, `adaptive` or `unsharp`
 - `radius` (_float_)
-  - The sharpen radius 
+  - The sharpen radius
   - Default is `0`.
 - `sigma` (_float_)
-  - Default is `1`. 
+  - Default is `1`.
 - `amount` (_float_)
   - The amount (or _gain_) to unsharp.
   - Only used in `unsharp` mode.
-  - Default is `1` 
+  - Default is `1`
 - `threshold` (_float_)
-  - Only used in `unsharp` mode. 
-  - Default is `0.05` 
+  - Only used in `unsharp` mode.
+  - Default is `0.05`
 - `channel`
 
 ### Sharpen Modes
@@ -390,7 +390,7 @@ The available effects are:
   - Perform a simple, standard sharpen operation on the image.
 - `adaptive`
 - `unsharp`
-  - Sharpen the image with a more complex   
+  - Sharpen the image with a more complex
 
 ## Threshold
 **Convert the image to monochrome (black and white).**
@@ -437,7 +437,7 @@ The available effects are:
 
 ### Notes
 - The effect of the `x` and `y` values depends of the `gravity`.
-  - Default gravity is "nw" for a top-left watermark. Set to "center" to align to center. 
+  - Default gravity is "nw" for a top-left watermark. Set to "center" to align to center.
 - The `opacity` option is currently ignored by both drivers.
 - The watermark image will always be rescaled to fit inside the image's container.
 - It will also always be moved to ensure the watermark is inside the image's container.
