@@ -5,9 +5,6 @@ namespace Charcoal\Loader;
 // Dependencies from `PHP`
 use \InvalidArgumentException as InvalidArgumentException;
 
-// Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Charcoal as Charcoal;
-
 /**
 *
 */
@@ -181,13 +178,19 @@ class FileLoader extends AbstractLoader
     public function add_path($path)
     {
         if (!is_string($path)) {
-            throw new InvalidArgumentException('Path should be a string.');
+            throw new InvalidArgumentException(
+                'Path should be a string.'
+            );
         }
         if (!file_exists($path)) {
-            throw new InvalidArgumentException(sprintf('Path does not exist: %s', $path));
+            throw new InvalidArgumentException(
+                sprintf('Path does not exist: "%s"', $path)
+            );
         }
         if (!is_dir($path)) {
-            throw new InvalidArgumentException(sprintf('Path is not a directory: %s', $path));
+            throw new InvalidArgumentException(
+                sprintf('Path is not a directory: "%s"', $path)
+            );
         }
 
         $this->_search_path[] = $path;

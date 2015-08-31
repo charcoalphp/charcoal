@@ -27,7 +27,7 @@ interface ViewableInterface
     * @param ViewInterface $view
     * @return ViewableInterface Chainable
     */
-    public function set_view(ViewInterface $view);
+    public function set_view($view);
 
     /**
     * @return ViewInterface The object's View.

@@ -56,7 +56,9 @@ trait ViewableTrait
     public function set_template_engine($engine)
     {
         if (!is_string($engine)) {
-            throw new InvalidArgumentException('Engine must be a string.');
+            throw new InvalidArgumentException(
+                'Engine must be a string.'
+            );
         }
         $this->_template_engine = $engine;
         return $this;
@@ -81,7 +83,9 @@ trait ViewableTrait
     public function set_template_ident($ident)
     {
         if (!is_string($ident)) {
-            throw new InvalidArgumentException('Template ident must be a string.');
+            throw new InvalidArgumentException(
+                'Template ident must be a string.'
+            );
         }
         $this->_template_ident = $ident;
         return $this;
@@ -96,12 +100,21 @@ trait ViewableTrait
     }
 
     /**
-    * @param ViewInterface $view
+    * @param ViewInterface|array $view
+    * @throws InvalidArgumentException
     * @return mixed Chainable
     */
-    public function set_view(ViewInterface $view)
+    public function set_view($view)
     {
-        $this->_view = $view;
+        if (is_array($view)) {
+            $this->_view = $this->create_view($view);
+        } elseif (($view instanceof ViewInterface)) {
+            $this->_view = $view;
+        } else {
+            throw new InvalidArgumentException(
+                'View must be an array or a ViewInterface object.'
+            );
+        }
         return $this;
     }
 
