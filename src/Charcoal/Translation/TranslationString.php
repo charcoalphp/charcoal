@@ -21,7 +21,8 @@ use \Charcoal\Translation\TranslationStringInterface;
 */
 class TranslationString implements
     TranslationStringInterface,
-    ConfigurableInterface
+    ConfigurableInterface,
+    \ArrayAccess
 {
     use ConfigurableTrait;
 
@@ -233,5 +234,52 @@ class TranslationString implements
     {
         // Get the latest created instance of the config.
         return new TranslationConfig();
+    }
+
+    /**
+    * ArrayAccess > offsetGet
+    *
+    * @param string $key
+    * @return string
+    */
+    public function offsetGet($key)
+    {
+        return $this->val($key);
+    }
+
+    /**
+    * ArrayAccess > offsetSet
+    *
+    * @param string $key
+    * @param string $val
+    * @return void
+    */
+    public function offsetSet($key, $val)
+    {
+        $this->add_val($key, $val);
+    }
+
+    /**
+    * ArrayAccess > offsetExists
+    *
+    * @param string $key
+    * @return boolean
+    */
+    public function offsetExists($key)
+    {
+        return in_array($key, $this->available_langs());
+    }
+
+    /**
+    * ArrayAccess > offsetUnset
+    *
+    * @param string $key
+    * @return void
+    */
+    public function offsetUnset($key)
+    {
+        if (isset($this->_val[$key])) {
+            unset($this->_val[$key]);
+        }
     }
 }
