@@ -182,6 +182,29 @@ abstract class AbstractModel implements
         return $ret;
     }
 
+    public function update($properties = null)
+    {
+        $pre = $this->pre_update();
+        if ($pre === false) {
+            return false;
+        }
+
+        $this->save_properties();
+
+        $valid = $this->validate();
+        if ($valid === false) {
+            return false;
+        }
+
+        $ret = $this->source()->update_item($this, $properties);
+        if ($ret === false) {
+            return false;
+        }
+
+        $this->post_update();
+        return $ret;
+    }
+
     /**
     * StorableTrait > pre_save(). Save hook called before saving the model.
     *

@@ -484,7 +484,6 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
         $model = $this->model();
 
         $table_structure = array_keys($this->table_structure());
-
         $fields = $this->_get_model_fields($model, $properties);
 
         $updates = [];
@@ -498,6 +497,10 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
                 }
                 $binds[$k] = $f->val();
                 $binds_types[$k] = $f->sql_pdo_type();
+            } else {
+                Charcoal::logger()->debug(
+                    sprintf('Field %s not in table structure', $k)
+                );
             }
         }
 

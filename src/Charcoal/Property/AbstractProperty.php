@@ -223,10 +223,11 @@ abstract class AbstractProperty implements
     public function field_val($field_ident)
     {
         $val = $this->val();
+
         if ($val === null) {
             return null;
         }
-        if (!is_array($val)) {
+        if (is_scalar($val)) {
             return $this->storage_val($val);
         }
         if (isset($val[$field_ident])) {
