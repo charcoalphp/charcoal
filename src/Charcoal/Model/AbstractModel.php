@@ -3,25 +3,25 @@
 namespace Charcoal\Model;
 
 // Dependencies from `PHP`
-use \InvalidArgumentException as InvalidArgumentException;
-use \JsonSerializable as JsonSerializable;
-use \Serializable as Serializable;
+use \InvalidArgumentException;
+use \JsonSerializable;
+use \Serializable;
 
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Metadata\DescribableInterface as DescribableInterface;
-use \Charcoal\Metadata\DescribableTrait as DescribableTrait;
-use \Charcoal\Source\StorableInterface as StorableInterface;
-use \Charcoal\Source\StorableTrait as StorableTrait;
-use \Charcoal\Validator\ValidatableInterface as ValidatableInterface;
-use \Charcoal\Validator\ValidatableTrait as validatableTrait;
-use \Charcoal\View\ViewableInterface as ViewableInterface;
-use \Charcoal\View\ViewableTrait as ViewableTrait;
+use \Charcoal\Metadata\DescribableInterface;
+use \Charcoal\Metadata\DescribableTrait;
+use \Charcoal\Source\StorableInterface;
+use \Charcoal\Source\StorableTrait;
+use \Charcoal\Validator\ValidatableInterface;
+use \Charcoal\Validator\ValidatableTrait;
+use \Charcoal\View\ViewableInterface;
+use \Charcoal\View\ViewableTrait;
 
 // Local namespace dependencies
-use \Charcoal\Model\ModelInterface as ModelInterface;
-use \Charcoal\Model\ModelMetadata as ModelMetadata;
-use \Charcoal\Model\ModelValidator as ModelValidator;
-use \Charcoal\Model\ModelView as ModelView;
+use \Charcoal\Model\ModelInterface;
+use \Charcoal\Model\ModelMetadata;
+use \Charcoal\Model\ModelValidator;
+use \Charcoal\Model\ModelView;
 
 /**
 * An abstract class that implements most of `ModelInterface`.
@@ -108,9 +108,36 @@ abstract class AbstractModel implements
     * @param array $data
     * @return AbstractModel Chainable
     */
-    public function set_flat_data(array $data)
+    public function set_flat_data(array $flat_data)
     {
-        return $this->set_data($data);
+        $data = [];
+        $properties = $this->properties();
+        foreach ($properties as $property_ident => $property) {
+            $fields = $property->fields();
+            if (count($fields) == 1) {
+                $f = $fields[0];
+                $f_id = $f->ident();
+                if (isset($flat_data[$f_id])) {
+                    $data[$property_ident] = $flat_data[$f_id];
+                    unset($flat_data[$f_id]);
+                }
+            } else {
+                $p = [];
+                foreach ($fields as $f) {
+                    $f_id = $f->ident();
+                    $key = str_replace($property_ident.'_', '', $f_id);
+                    if (isset($flat_data[$f_id])) {
+                        $data[$property_ident][$key] = $flat_data[$f_id];
+                        unset($flat_data[$f_id]);
+                    }
+                }
+            }
+        }
+        $this->set_data($data);
+        if (!empty($flat_data)) {
+            $this->set_data($flat_data);
+        }
+        return $this;
     }
 
     /**
