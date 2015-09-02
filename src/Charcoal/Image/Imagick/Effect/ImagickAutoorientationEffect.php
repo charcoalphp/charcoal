@@ -20,33 +20,34 @@ class ImagickAutoorientationEffect extends AbstractAutoorientationEffect
 
         switch ($this->image()->imagick()->getImageOrientation()) {
             case Imagick::ORIENTATION_TOPLEFT:
-            break;
+                break;
             case Imagick::ORIENTATION_TOPRIGHT:
                 $this->image()->imagick()->flopImage();
-            break;
+                break;
             case Imagick::ORIENTATION_BOTTOMRIGHT:
                 $this->image()->imagick()->rotateImage("#000", 180);
-            break;
+                break;
             case Imagick::ORIENTATION_BOTTOMLEFT:
                 $this->image()->imagick()->flopImage();
                 $this->image()->imagick()->rotateImage("#000", 180);
-            break;
+                break;
             case Imagick::ORIENTATION_LEFTTOP:
                 $this->image()->imagick()->flopImage();
                 $this->image()->imagick()->rotateImage("#000", -90);
-            break;
+                break;
             case Imagick::ORIENTATION_RIGHTTOP:
                 $this->image()->imagick()->rotateImage("#000", 90);
-            break;
+                break;
             case Imagick::ORIENTATION_RIGHTBOTTOM:
                 $this->image()->imagick()->flopImage();
                 $this->image()->imagick()->rotateImage("#000", 90);
-            break;
+                break;
             case Imagick::ORIENTATION_LEFTBOTTOM:
                 $this->image()->imagick()->rotateImage("#000", -90);
-            break;
-            default: // Invalid orientation
-            break;
+                break;
+            default:
+                // Invalid orientation
+                break;
         }
 
         $this->image()->imagick()->setImageOrientation(Imagick::ORIENTATION_TOPLEFT);
