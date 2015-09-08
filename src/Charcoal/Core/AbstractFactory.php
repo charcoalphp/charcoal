@@ -181,14 +181,17 @@ abstract class AbstractFactory implements FactoryInterface
             );
         }
 
-        //
         if (!$this->validate($type)) {
             $default_class = $this->default_class();
             if ($default_class !== '') {
                 return new $default_class;
             } else {
                 throw new InvalidArgumentException(
-                    sprintf(__METHOD__.': Type "%s" is not a valid type.', $type)
+                    sprintf(
+                        __METHOD__.': Type "%s" is not a valid type. (Using default class %s)',
+                        $type,
+                        $default_class
+                    )
                 );
             }
         }

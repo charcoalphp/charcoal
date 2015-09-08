@@ -85,7 +85,11 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     {
         if (!is_array($database_config)) {
             throw new InvalidArgumentException(
-                sprintf('Database config needs to be an array. (%s given)', gettype($database_config), get_class($this->model()))
+                sprintf(
+                    'Database config needs to be an array. (%s given) [%s]',
+                    gettype($database_config),
+                    get_class($this->model())
+                )
             );
         }
         $this->_database_config = $database_config;
@@ -115,7 +119,11 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     {
         if (!is_string($table)) {
             throw new InvalidArgumentException(
-                sprintf('DatabaseSource::set_table() expects a string as table. (%s given). [%s]', gettype($table), get_class($this->model()))
+                sprintf(
+                    'DatabaseSource::set_table() expects a string as table. (%s given). [%s]',
+                    gettype($table),
+                    get_class($this->model())
+                )
             );
         }
         $this->_table = $table;

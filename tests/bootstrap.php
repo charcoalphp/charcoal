@@ -1,11 +1,5 @@
 <?php
 
-/**
-* Test Charcoal
-*
-* @package Charcoal\Boilerplate
-*/
-
 use \Slim\Container;
 use \Slim\App;
 
