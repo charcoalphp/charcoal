@@ -253,6 +253,24 @@ trait DescribableTrait
     }
 
     /**
+    * @throws InvalidArgumentException
+    * @return boolean
+    */
+    public function has_property($property_ident)
+    {
+        if (!is_string($property_ident)) {
+            throw new InvalidArgumentException(
+                'Property Ident must be a string.'
+            );
+        }
+
+        $metadata = $this->metadata();
+        $props = $metadata->properties();
+
+        return isset($props[$property_ident]);
+    }
+
+    /**
     * @param string $property_ident
     * @return mixed
     */
