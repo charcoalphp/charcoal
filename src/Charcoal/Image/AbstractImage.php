@@ -202,21 +202,21 @@ abstract class AbstractImage implements ImageInterface
     * @throws InvalidArgumentException
     * @return Image Chainable
     */
-     abstract public function save($target = null);
+    abstract public function save($target = null);
 
     /**
     * Get the image's width, in pixels
     *
     * @return integer
     */
-     abstract public function width();
+    abstract public function width();
 
     /**
     * Get the image's height, in pixels
     *
     * @return integer
     */
-     abstract public function height();
+    abstract public function height();
 
     /**
     * Get the image's ratio (width / height)
