@@ -18,7 +18,7 @@ class AbstractWatermarkEffectTest extends \PHPUnit_Framework_Testcase
         $obj = $this->obj;
 
         $this->assertEquals(1.0, $obj->opacity());
-        $this->assertEquals('center', $obj->gravity());
+        $this->assertEquals('nw', $obj->gravity());
         $this->assertEquals(0, $obj->x());
         $this->assertEquals(0, $obj->y());
     }

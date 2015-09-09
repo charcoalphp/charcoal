@@ -155,8 +155,6 @@ The available effects are:
 ### Options
 - _none_
 
-> 👉 The `auto-orientation` effect is currently only available with the `imagick` driver.
-
 ### Examples
 ![Default image](docs/images/portrait-5.jpg)
 - Default image (with EXIF orientation #5)
@@ -552,10 +550,11 @@ Every class, method, and function should be covered by unit tests. PHP code can 
 
 ### 0.1.1
 _Unreleased_
+- Add a new "auto-orientation" effect (imagick + imagemagick)
+- Add the watermark effect to imagemagick (imagemagick)
 - Fixed the "unsharp mask" mode for sharpen effect (imagick)
 - Fixed the gravity for the watermark effect (imagick)
 - Accept _ImageInterface_ objects as watermark (global)
-- Add the watermark effect to imagemagick (imagemagick)
 
 ### 0.1
 _Released 2015-08-26_
