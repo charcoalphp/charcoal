@@ -175,7 +175,6 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
         }
         /** @todo add indexes for all defined list constraints (yea... tough job...) */
         $q .= ') ENGINE=MYISAM DEFAULT CHARSET=utf8 COMMENT=\''.addslashes($metadata['name']).'\';';
-        // var_dump($q);
         $res = $this->db()->query($q);
 
         return true;
@@ -347,7 +346,13 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
             if (!$p || !$p->active()) {
                 continue;
             }
-            $fields = array_merge($fields, $p->fields());
+            foreach ($p->fields() as $field_ident => $field) {
+                if (is_string($field_ident) && $field_ident) {
+                    $field_ident = $property_ident.'_'.$field_ident;
+                }
+
+                $fields[$field_ident] = $field;
+            }
         }
         return $fields;
     }
@@ -515,6 +520,8 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
                 );
             }
         }
+        $binds[$model->key()] = $model->id();
+        $binds_types[$model->key()] = PDO::PARAM_STR;
 
         $q = '
             UPDATE
