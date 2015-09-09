@@ -347,11 +347,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
                 continue;
             }
             foreach ($p->fields() as $field_ident => $field) {
-                if (is_string($field_ident) && $field_ident) {
-                    $field_ident = $property_ident.'_'.$field_ident;
-                }
-
-                $fields[$field_ident] = $field;
+                $fields[$field->ident()] = $field;
             }
         }
         return $fields;
