@@ -14,16 +14,16 @@ class ModelMetadata extends AbstractMetadata implements \ArrayAccess
     /**
      * @var string $_ident
      */
-    private $_ident;
+    private $ident;
 
     /**
     * @var array $_sources
     */
-    private $_sources;
+    private $sources;
     /**
     * @var string $_default_source
     */
-    private $_default_source;
+    private $default_source;
 
     /**
     * The actual config data
@@ -62,7 +62,7 @@ class ModelMetadata extends AbstractMetadata implements \ArrayAccess
         if (!is_string($ident)) {
             throw new InvalidArgumentException(__CLASS__.'::'.__FUNCTION__.'Ident must be a string.');
         }
-        $this->_ident = $ident;
+        $this->ident = $ident;
         return $this;
     }
 
@@ -71,7 +71,7 @@ class ModelMetadata extends AbstractMetadata implements \ArrayAccess
     */
     public function ident()
     {
-        return $this->_ident;
+        return $this->ident;
     }
 
     /**
@@ -95,7 +95,7 @@ class ModelMetadata extends AbstractMetadata implements \ArrayAccess
     */
     public function sources()
     {
-        return $this->_sources;
+        return $this->sources;
     }
 
     /**
@@ -105,7 +105,7 @@ class ModelMetadata extends AbstractMetadata implements \ArrayAccess
     */
     public function add_source($source_ident, $source)
     {
-        $this->_sources[$source_ident] = $source;
+        $this->sources[$source_ident] = $source;
         return $this;
     }
 
@@ -115,7 +115,7 @@ class ModelMetadata extends AbstractMetadata implements \ArrayAccess
     */
     public function source($source_ident)
     {
-        return $this->_sources[$source_ident];
+        return $this->sources[$source_ident];
     }
 
     /**
@@ -128,7 +128,7 @@ class ModelMetadata extends AbstractMetadata implements \ArrayAccess
         if (!is_string($default_source)) {
             throw new InvalidArgumentException('Default source needs to be a string.');
         }
-        $this->_default_source = $default_source;
+        $this->default_source = $default_source;
         return $this;
     }
 
@@ -137,6 +137,6 @@ class ModelMetadata extends AbstractMetadata implements \ArrayAccess
     */
     public function default_source()
     {
-        return $this->_default_source;
+        return $this->default_source;
     }
 }
