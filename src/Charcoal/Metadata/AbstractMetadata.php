@@ -34,18 +34,29 @@ abstract class AbstractMetadata implements
     protected $_properties = [];
 
     /**
+    * Convert an array of parameters in the metadata format.
+    *
+    * This method either calls a setter for each key (`set_{$key}()`) or sets a public member.
+    *
+    * For example, calling with `set_data(['properties'=>$properties])` would call
+    * `set_properties($properties)`, because `set_properties()` exists.
+    *
+    * But calling with `set_data(['foobar'=>$foo])` would set the `$foobar` member
+    * on the metadata object, because the method `set_foobar()` does not exist.
+    *
     * @param array $data
     * @return AbstractMetadata Chainable
     */
     public function set_data(array $data)
     {
-        if (isset($data['properties'])) {
-            $this->set_properties($data['properties']);
-            unset($data['properties']);
-        }
-
-        foreach ($data as $k => $v) {
-            $this->{$k} = $v;
+        foreach ($data as $prop => $val) {
+            $func = [$this, 'set_'.$prop];
+            if (is_callable($func)) {
+                call_user_func($func, $val);
+                unset($data[$prop]);
+            } else {
+                $this->{$prop} = $val;
+            }
         }
 
         return $this;

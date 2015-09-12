@@ -129,43 +129,30 @@ abstract class AbstractProperty implements
     abstract public function type();
 
     /**
+    * This function takes an array and fill the property with its value.
+    *
+    * This method either calls a setter for each key (`set_{$key}()`) or sets a public member.
+    *
+    * For example, calling with `set_data(['ident'=>$ident])` would call `set_ident($ident)`
+    * becasue `set_ident()` exists.
+    *
+    * But calling with `set_data(['foobar'=>$foo])` would set the `$foobar` member
+    * on the metadata object, because the method `set_foobar()` does not exist.
+    *
+    *
     * @param array $data
     * @return AbstractProperty Chainable
     */
     public function set_data(array $data)
     {
-        if (isset($data['val'])) {
-            $this->set_val($data['val']);
-        }
-        if (isset($data['label'])) {
-            $this->set_label($data['label']);
-        }
-        if (isset($data['l10n'])) {
-            $this->set_l10n($data['l10n']);
-        }
-        if (isset($data['hidden'])) {
-            $this->set_hidden($data['hidden']);
-        }
-        if (isset($data['multiple'])) {
-            $this->set_multiple($data['multiple']);
-        }
-        if (isset($data['multiple_options'])) {
-            $this->set_multiple_options($data['multiple_options']);
-        }
-        if (isset($data['required'])) {
-            $this->set_required($data['required']);
-        }
-        if (isset($data['unique'])) {
-            $this->set_unique($data['unique']);
-        }
-        if (isset($data['active'])) {
-            $this->set_active($data['active']);
-        }
-        if (isset($data['description'])) {
-            $this->set_description($data['description']);
-        }
-        if (isset($data['notes'])) {
-            $this->set_notes($data['notes']);
+        foreach ($data as $prop => $val) {
+            $func = [$this, 'set_'.$prop];
+            if (is_callable($func)) {
+                call_user_func($func, $val);
+                unset($data[$prop]);
+            } else {
+                $this->{$prop} = $val;
+            }
         }
 
         return $this;

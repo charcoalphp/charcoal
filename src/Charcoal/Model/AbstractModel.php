@@ -62,24 +62,35 @@ abstract class AbstractModel implements
     /**
     * ModelInterface > set_data(). Sets the data
     *
-    * This function takes an array and fill the object with its value.
+    * This function takes an array and fill the model object with its value.
+    *
+    * This method either calls a setter for each key (`set_{$key}()`) or sets a public member.
+    *
+    * For example, calling with `set_data(['properties'=>$properties])` would call
+    *`set_properties($properties)`, becasue `set_properties()` exists.
+    *
+    * But calling with `set_data(['foobar'=>$foo])` would set the `$foobar` member
+    * on the metadata object, because the method `set_foobar()` does not exist.
+    *
     *
     * @param array $data
     * @return AbstractModel Chainable
     */
     public function set_data(array $data)
     {
-        $this->set_describable_data($data);
-        $this->set_storable_data($data);
-        $this->set_viewable_data($data);
         foreach ($data as $prop => $val) {
             $func = [$this, 'set_'.$prop];
             if (is_callable($func)) {
                 call_user_func($func, $val);
+                unset($data[$prop]);
             } else {
                 $this->{$prop} = $val;
             }
         }
+
+        $this->set_describable_data($data);
+        $this->set_storable_data($data);
+        $this->set_viewable_data($data);
 
         // Chainable
         return $this;
@@ -92,12 +103,12 @@ abstract class AbstractModel implements
     */
     public function data()
     {
-        $ret = [];
+        $data = [];
         $properties = $this->properties();
         foreach ($properties as $property_ident => $property) {
-            $ret[$property_ident] = $property->val();
+            $data[$property_ident] = $property->val();
         }
-        return $ret;
+        return $data;
     }
 
     /**
@@ -209,6 +220,10 @@ abstract class AbstractModel implements
         return $ret;
     }
 
+    /**
+    * @param array $properties
+    * @return mixed
+    */
     public function update($properties = null)
     {
         $pre = $this->pre_update();
