@@ -139,7 +139,6 @@ abstract class AbstractProperty implements
     * But calling with `set_data(['foobar'=>$foo])` would set the `$foobar` member
     * on the metadata object, because the method `set_foobar()` does not exist.
     *
-    *
     * @param array $data
     * @return AbstractProperty Chainable
     */
@@ -186,15 +185,23 @@ abstract class AbstractProperty implements
 
     /**
     * @param mixed $val
+    * @throws InvalidArgumentException
     * @return Property (Chainable)
     */
     public function set_val($val)
     {
+        if ($val === null) {
+            $this->val = null;
+            return $this;
+        }
         if ($this->multiple()) {
             if (is_string($val)) {
-                $opts = $this->multiple_options();
-                $sep = $opts['separator'];
-                $val = explode($sep, $val);
+                $val = explode($this->multiple_separator(), $val);
+            }
+            if (!is_array($val)) {
+                throw new InvalidArgumentException(
+                    'Val is multiple so it must be a string (convertable to array by separator) or an array'
+                );
             }
         }
         $this->val = $val;
@@ -249,9 +256,7 @@ abstract class AbstractProperty implements
 
         if ($this->multiple()) {
             if (is_array($val)) {
-                $opts = $this->multiple_options();
-                $sep = $opts['separator'];
-                $val = implode($sep, $val);
+                $val = implode($this->multiple_separator(), $val);
             }
         }
 
@@ -357,12 +362,7 @@ abstract class AbstractProperty implements
     */
     public function set_multiple_options(array $multiple_options)
     {
-        $default_options = [
-            'separator' => ',',
-            'min'       => 0,
-            'max'       => 0
-        ];
-        $options = array_merge($default_options, $multiple_options);
+        $options = array_merge($this->default_multiple_options(), $multiple_options);
         $this->multiple_options = $options;
         return $this;
     }
@@ -373,14 +373,30 @@ abstract class AbstractProperty implements
     public function multiple_options()
     {
         if ($this->multiple_options === null) {
-            $default_options = [
-                'separator' => ',',
-                'min'       => 0,
-                'max'       => 0
-            ];
-            return $default_options;
+            return $this->default_multiple_options();
         }
         return $this->multiple_options;
+    }
+
+    /**
+    * @return array
+    */
+    public function default_multiple_options()
+    {
+        return [
+            'separator' => ',',
+            'min'       => 0,
+            'max'       => 0
+        ];
+    }
+
+    /**
+    * @return string
+    */
+    public function multiple_separator()
+    {
+        $multiple_options = $this->multiple_options();
+        return $multiple_options['separator'];
     }
 
     /**
