@@ -36,32 +36,32 @@ abstract class AbstractProperty implements
     /**
     * @var string $_ident
     */
-    private $_ident = '';
+    private $ident = '';
 
     /**
     * @var mixed $_val
     */
-    protected $_val;
+    protected $val;
 
     /**
     * @var TranslationString $_label
     */
-    private $_label;
+    private $label;
 
     /**
     * @var boolean $l10n
     */
-    private $_l10n = false;
+    private $l10n = false;
 
     /**
     * @var boolean $hidden;
     */
-    private $_hidden = false;
+    private $hidden = false;
 
     /**
     * @var boolean $multiple
     */
-    private $_multiple = false;
+    private $multiple = false;
 
     /**
     * Array of options for multiple properties
@@ -70,40 +70,40 @@ abstract class AbstractProperty implements
     * - `max` (default=null) The maximum number of values. If null, <0 or NaN, then there is not limit
     * @var mixed $multiple_options
     */
-    private $_multiple_options;
+    private $multiple_options;
 
     /**
     * If true, this property *must* have a value
     * @var boolean $required
     */
-    private $_required = false;
+    private $required = false;
 
     /**
     * Unique properties should not share he same value across 2 objects
     * @var boolean $unique
     */
-    private $_unique = false;
+    private $unique = false;
 
     /**
     * @var boolean $_allow_null
     */
-    private $_allow_null = true;
+    private $allow_null = true;
 
     /**
     * Inactive properties should be hidden everywhere / unused
     * @var boolean $active
     */
-    private $_active = true;
+    private $active = true;
 
     /**
     * @var TranslationString $_description
     */
-    private $_description = '';
+    private $description = '';
 
     /**
     * @var TranslationString $_notes
     */
-    private $_notes = '';
+    private $notes = '';
 
     /**
     * @return string
@@ -168,7 +168,7 @@ abstract class AbstractProperty implements
         if (!is_string($ident)) {
             throw new InvalidArgumentException('Ident needs to be string.');
         }
-        $this->_ident = $ident;
+        $this->ident = $ident;
         return $this;
     }
 
@@ -178,10 +178,10 @@ abstract class AbstractProperty implements
     */
     public function ident()
     {
-        if ($this->_ident === null) {
+        if ($this->ident === null) {
             throw new Exception('Ident was never set.');
         }
-        return $this->_ident;
+        return $this->ident;
     }
 
     /**
@@ -190,7 +190,14 @@ abstract class AbstractProperty implements
     */
     public function set_val($val)
     {
-        $this->_val = $val;
+        if ($this->multiple()) {
+            if (is_string($val)) {
+                $opts = $this->multiple_options();
+                $sep = $opts['separator'];
+                $val = explode($sep, $val);
+            }
+        }
+        $this->val = $val;
         return $this;
     }
 
@@ -199,7 +206,7 @@ abstract class AbstractProperty implements
     */
     public function val()
     {
-        return $this->_val;
+        return $this->val;
     }
 
     /**
@@ -239,6 +246,15 @@ abstract class AbstractProperty implements
             // Do not json_encode NULL values
             return null;
         }
+
+        if ($this->multiple()) {
+            if (is_array($val)) {
+                $opts = $this->multiple_options();
+                $sep = $opts['separator'];
+                $val = implode($sep, $val);
+            }
+        }
+
         if (!is_scalar($val)) {
             return json_encode($val, true);
         }
@@ -251,7 +267,7 @@ abstract class AbstractProperty implements
     */
     public function set_label($label)
     {
-        $this->_label = new TranslationString($label);
+        $this->label = new TranslationString($label);
         return $this;
     }
 
@@ -260,10 +276,10 @@ abstract class AbstractProperty implements
     */
     public function label()
     {
-        if ($this->_label === null) {
+        if ($this->label === null) {
             return ucwords(str_replace(['.', '_'], ' ', $this->ident()));
         }
-        return $this->_label;
+        return $this->label;
     }
 
     /**
@@ -276,7 +292,7 @@ abstract class AbstractProperty implements
         if (!is_bool($l10n)) {
             throw new InvalidArgumentException('l10n must be a boolean.');
         }
-        $this->_l10n = $l10n;
+        $this->l10n = $l10n;
         return $this;
     }
 
@@ -285,7 +301,7 @@ abstract class AbstractProperty implements
     */
     public function l10n()
     {
-        return $this->_l10n;
+        return $this->l10n;
     }
 
     /**
@@ -298,7 +314,7 @@ abstract class AbstractProperty implements
         if (!is_bool($hidden)) {
             throw new InvalidArgumentException('hidden must be a boolean.');
         }
-        $this->_hidden = $hidden;
+        $this->hidden = $hidden;
         return $this;
     }
 
@@ -307,7 +323,7 @@ abstract class AbstractProperty implements
     */
     public function hidden()
     {
-        return !!$this->_hidden;
+        return !!$this->hidden;
     }
 
     /**
@@ -320,7 +336,7 @@ abstract class AbstractProperty implements
         if (!is_bool($multiple)) {
             throw new InvalidArgumentException('multiple must be a boolean.');
         }
-        $this->_multiple = $multiple;
+        $this->multiple = $multiple;
         return $this;
     }
 
@@ -329,7 +345,7 @@ abstract class AbstractProperty implements
     */
     public function multiple()
     {
-        return !!$this->_multiple;
+        return !!$this->multiple;
     }
 
 
@@ -347,7 +363,7 @@ abstract class AbstractProperty implements
             'max'       => 0
         ];
         $options = array_merge($default_options, $multiple_options);
-        $this->_multiple_options = $options;
+        $this->multiple_options = $options;
         return $this;
     }
 
@@ -356,7 +372,15 @@ abstract class AbstractProperty implements
     */
     public function multiple_options()
     {
-        return $this->_multiple_options;
+        if ($this->multiple_options === null) {
+            $default_options = [
+                'separator' => ',',
+                'min'       => 0,
+                'max'       => 0
+            ];
+            return $default_options;
+        }
+        return $this->multiple_options;
     }
 
     /**
@@ -369,7 +393,7 @@ abstract class AbstractProperty implements
         if (!is_bool($allow)) {
             throw new InvalidArgumentException('Allow null must be a boolean.');
         }
-        $this->_allow_null = $allow;
+        $this->allow_null = $allow;
         return $this;
     }
 
@@ -378,7 +402,7 @@ abstract class AbstractProperty implements
     */
     public function allow_null()
     {
-        return !!$this->_allow_null;
+        return !!$this->allow_null;
     }
 
     /**
@@ -391,7 +415,7 @@ abstract class AbstractProperty implements
         if (!is_bool($required)) {
             throw new InvalidArgumentException('Required must be a boolean.');
         }
-        $this->_required = $required;
+        $this->required = $required;
         return $this;
     }
 
@@ -400,7 +424,7 @@ abstract class AbstractProperty implements
     */
     public function required()
     {
-        return !!$this->_required;
+        return !!$this->required;
     }
 
     /**
@@ -413,7 +437,7 @@ abstract class AbstractProperty implements
         if (!is_bool($unique)) {
             throw new InvalidArgumentException('Unique must be a boolean.');
         }
-        $this->_unique = $unique;
+        $this->unique = $unique;
         return $this;
     }
 
@@ -422,7 +446,7 @@ abstract class AbstractProperty implements
     */
     public function unique()
     {
-        return !!$this->_unique;
+        return !!$this->unique;
     }
 
     /**
@@ -435,7 +459,7 @@ abstract class AbstractProperty implements
         if (!is_bool($active)) {
             throw new InvalidArgumentException('Active must be a boolean.');
         }
-        $this->_active = $active;
+        $this->active = $active;
         return $this;
     }
 
@@ -444,7 +468,7 @@ abstract class AbstractProperty implements
     */
     public function active()
     {
-        return !!$this->_active;
+        return !!$this->active;
     }
 
     /**
@@ -453,7 +477,7 @@ abstract class AbstractProperty implements
     */
     public function set_description($description)
     {
-        $this->_description = new TranslationString($description);
+        $this->description = new TranslationString($description);
         return $this;
     }
 
@@ -462,7 +486,7 @@ abstract class AbstractProperty implements
     */
     public function description()
     {
-        return $this->_description;
+        return $this->description;
     }
 
     /**
@@ -471,7 +495,7 @@ abstract class AbstractProperty implements
     */
     public function set_notes($notes)
     {
-        $this->_notes = new TranslationString($notes);
+        $this->notes = new TranslationString($notes);
         return $this;
     }
 
@@ -480,7 +504,7 @@ abstract class AbstractProperty implements
     */
     public function notes()
     {
-        return $this->_notes;
+        return $this->notes;
     }
 
     /**
