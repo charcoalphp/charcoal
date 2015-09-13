@@ -2,8 +2,10 @@
 
 namespace Charcoal\Property;
 
+use \InvalidArgumentException;
+
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Metadata\AbstractMetadata as AbstractMetadata;
+use \Charcoal\Metadata\AbstractMetadata;
 
 /**
 *
@@ -13,7 +15,7 @@ class PropertyMetadata extends AbstractMetadata implements \ArrayAccess
     /**
      * @var string $_ident
      */
-    private $_ident;
+    private $ident;
 
     /**
     * The actual config data
@@ -23,15 +25,17 @@ class PropertyMetadata extends AbstractMetadata implements \ArrayAccess
 
     /**
     * @param string $ident
-    * @throws \InvalidArgumentException if the ident is not a string
+    * @throws InvalidArgumentException if the ident is not a string
     * @return PropertyMetadata Chainable
     */
     public function set_ident($ident)
     {
         if (!is_string($ident)) {
-            throw new \InvalidArgumentException(__CLASS__.'::'.__FUNCTION__.' - Ident must be a string.');
+            throw new InvalidArgumentException(
+                __CLASS__.'::'.__FUNCTION__.' - Ident must be a string.'
+            );
         }
-        $this->_ident = $ident;
+        $this->ident = $ident;
 
         return $this;
     }
@@ -41,6 +45,6 @@ class PropertyMetadata extends AbstractMetadata implements \ArrayAccess
     */
     public function ident()
     {
-        return $this->_ident;
+        return $this->ident;
     }
 }

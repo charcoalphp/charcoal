@@ -2,9 +2,8 @@
 
 namespace Charcoal\Property;
 
-// Intra-module (`charcoal-core`) dependencies
-use \InvalidArgumentException as InvalidArgumentException;
-use \PDO as PDO;
+use \InvalidArgumentException;
+use \PDO;
 
 // Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Tranlsation\TranslationString;
@@ -17,35 +16,35 @@ class PropertyField
     /**
     * @var string $_ident
     */
-    private $_ident;
+    private $ident;
     /**
     * @var TranslationString $_label
     */
-    private $_label;
+    private $label;
     /**
     * @var string
     */
-    private $_sql_type;
+    private $sql_type;
     /**
     * @var integer
     */
-    private $_sql_pdo_type;
+    private $sql_pdo_type;
     /**
     * @var string
     */
-    private $_extra;
+    private $extra;
     /**
     * @var mixed $_val
     */
-    private $_val;
+    private $val;
     /**
     * @var mixed $_default_val
     */
-    private $_default_val;
+    private $default_val;
     /**
     * @var boolean $_allow_null
     */
-    private $_allow_null;
+    private $allow_null;
 
     /**
     * @param array $data
@@ -53,30 +52,16 @@ class PropertyField
     */
     public function set_data(array $data)
     {
-        if (isset($data['ident']) && $data['ident'] !== null) {
-            $this->set_ident($data['ident']);
+        foreach ($data as $prop => $val) {
+            $func = [$this, 'set_'.$prop];
+            if (is_callable($func)) {
+                call_user_func($func, $val);
+                unset($data[$prop]);
+            } else {
+                $this->{$prop} = $val;
+            }
         }
-        if (isset($data['label']) && $data['label'] !== null) {
-            $this->set_label($data['label']);
-        }
-        if (isset($data['sql_type']) && $data['sql_type'] !== null) {
-            $this->set_sql_type($data['sql_type']);
-        }
-        if (isset($data['sql_pdo_type']) && $data['sql_pdo_type'] !== null) {
-            $this->set_sql_pdo_type($data['sql_pdo_type']);
-        }
-        if (isset($data['extra']) && $data['extra'] !== null) {
-            $this->set_extra($data['extra']);
-        }
-        if (isset($data['val'])) {
-            $this->set_val($data['val']);
-        }
-        if (isset($data['default_val'])) {
-            $this->set_default($data['default_val']);
-        }
-        if (isset($data['allow_null']) && $data['allow_null']) {
-            $this->set_allow_null($data['allow_null']);
-        }
+
         return $this;
     }
 
@@ -90,7 +75,7 @@ class PropertyField
         if (!is_string($ident)) {
             throw new InvalidArgumentException('Ident must be a string.');
         }
-        $this->_ident = $ident;
+        $this->ident = $ident;
         return $this;
     }
 
@@ -99,7 +84,7 @@ class PropertyField
     */
     public function ident()
     {
-        return $this->_ident;
+        return $this->ident;
     }
 
     /**
@@ -108,7 +93,7 @@ class PropertyField
     */
     public function set_label($label)
     {
-        $this->_label = new TranslationString($label);
+        $this->label = new TranslationString($label);
         return $this;
     }
 
@@ -117,7 +102,7 @@ class PropertyField
     */
     public function label()
     {
-        return $this->_label;
+        return $this->label;
     }
 
     /**
@@ -130,7 +115,7 @@ class PropertyField
         if (!is_string($sql_type)) {
             throw new InvalidArgumentException('Sql Type must be a string.');
         }
-        $this->_sql_type = $sql_type;
+        $this->sql_type = $sql_type;
         return $this;
     }
 
@@ -139,7 +124,7 @@ class PropertyField
     */
     public function sql_type()
     {
-        return $this->_sql_type;
+        return $this->sql_type;
     }
 
     /**
@@ -152,7 +137,7 @@ class PropertyField
         if (!is_integer($sql_pdo_type)) {
             throw new InvalidArgumentException('PDO Type must be an integer.');
         }
-        $this->_sql_pdo_type = $sql_pdo_type;
+        $this->sql_pdo_type = $sql_pdo_type;
         return $this;
     }
 
@@ -164,7 +149,7 @@ class PropertyField
         if ($this->val() === null) {
             return PDO::PARAM_NULL;
         }
-        return $this->_sql_pdo_type;
+        return $this->sql_pdo_type;
     }
 
     /**
@@ -177,7 +162,7 @@ class PropertyField
         if (!is_string($extra)) {
             throw new InvalidArgumentException('Extra must be a string.');
         }
-        $this->_extra = $extra;
+        $this->extra = $extra;
         return $this;
     }
 
@@ -186,10 +171,10 @@ class PropertyField
     */
     public function extra()
     {
-        if (!$this->_extra === null) {
+        if (!$this->extra === null) {
             return '';
         }
-        return $this->_extra;
+        return $this->extra;
     }
 
     /**
@@ -203,7 +188,7 @@ class PropertyField
             throw new \InvalidArgumentException('Val must be scalar.');
         }
         */
-        $this->_val = $val;
+        $this->val = $val;
         return $this;
     }
 
@@ -212,7 +197,7 @@ class PropertyField
     */
     public function val()
     {
-        return $this->_val;
+        return $this->val;
     }
 
     /**
@@ -221,7 +206,7 @@ class PropertyField
     */
     public function set_default_val($default_val)
     {
-        $this->_default_val = $default_val;
+        $this->default_val = $default_val;
         return $this;
     }
 
@@ -230,7 +215,7 @@ class PropertyField
     */
     public function default_val()
     {
-        return $this->_default_val;
+        return $this->default_val;
     }
 
     /**
@@ -243,7 +228,7 @@ class PropertyField
         if (!is_bool($allow_null)) {
             throw new InvalidArgumentException('Allow null must be a boolean.');
         }
-        $this->_allow_null = $allow_null;
+        $this->allow_null = $allow_null;
         return $this;
     }
 
@@ -252,7 +237,7 @@ class PropertyField
     */
     public function allow_null()
     {
-        return $this->_allow_null;
+        return $this->allow_null;
     }
 
     /**

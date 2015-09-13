@@ -6,10 +6,10 @@
 namespace Charcoal\Property;
 
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\View\AbstractView as AbstractView;
+use \Charcoal\View\AbstractView;
 
 // Local namespace dependencies
-use \Charcoal\Property\PropertyViewController as PropertyViewController;
+use \Charcoal\Property\PropertyViewController;
 
 /**
 *

@@ -3,7 +3,7 @@
 namespace Charcoal\Property;
 
 // Intra-module (`charcoal-core`) dependencies
-use Charcoal\Validator\AbstractValidator as AbstractValidator;
+use Charcoal\Validator\AbstractValidator;
 
 /**
 *
