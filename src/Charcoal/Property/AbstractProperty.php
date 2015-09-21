@@ -266,6 +266,29 @@ abstract class AbstractProperty implements
         return $val;
     }
 
+    public function display_val($val = null)
+    {
+        if ($val === null) {
+            $val = $this->val();
+        }
+
+        if ($val === null) {
+            return '';
+        }
+
+        $property_value = $val;
+
+        if ($this->l10n() === true) {
+            $property_value = $property_value['fr'];
+        }
+        if ($this->multiple() === true) {
+            if (is_array($property_value)) {
+                $property_value = implode($this->multiple_separator(), $property_value);
+            }
+        }
+        return $property_value;
+    }
+
     /**
     * @param mixed $label
     * @return Property (Chainable)
