@@ -8,6 +8,7 @@ use \JsonSerializable;
 use \Serializable;
 
 // Intra-module (`charcoal-core`) dependencies
+use \Charcoal\Charcoal;
 use \Charcoal\Metadata\DescribableInterface;
 use \Charcoal\Metadata\DescribableTrait;
 use \Charcoal\Source\StorableInterface;
@@ -186,7 +187,9 @@ abstract class AbstractModel implements
         foreach ($properties as $property_ident) {
             $p = $this->p($property_ident);
             $p->save();
-            $this->{$property_ident}  = $p->val();
+            $this->set_data([
+                $property_ident => $p->val()
+            ]);
         }
         return true;
     }
