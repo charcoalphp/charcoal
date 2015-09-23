@@ -41,20 +41,20 @@ abstract class AbstractQueueManager implements QueueManagerInterface
     /**
     * @var callable $_item_callback
     */
-    protected $_item_callback;
+    private $item_callback;
     /**
     * @var callable $_item_success_callback
     */
-    protected $_item_success_callback;
+    private $item_success_callback;
     /**
     * @var callable $_item_failure_callback
     */
-    protected $_item_failure_callback;
+    private $item_failure_callback;
 
     /**
     * @var $_processed_callback
     */
-    protected $_processed_callback;
+    private $processed_callback;
 
     public function set_data(array $data)
     {
@@ -88,7 +88,7 @@ abstract class AbstractQueueManager implements QueueManagerInterface
     */
     public function set_item_callback(callable $cb)
     {
-        $this->_item_callback = $cb;
+        $this->item_callback = $cb;
         return $this;
     }
 
@@ -98,7 +98,7 @@ abstract class AbstractQueueManager implements QueueManagerInterface
     */
     public function set_item_success_callback(callable $cb)
     {
-        $this->_item_success_callback = $cb;
+        $this->item_success_callback = $cb;
         return $this;
     }
 
@@ -108,7 +108,7 @@ abstract class AbstractQueueManager implements QueueManagerInterface
     */
     public function set_item_failure_callback(callable $cb)
     {
-        $this->_item_success_callback = $cb;
+        $this->item_success_callback = $cb;
         return $this;
     }
 
@@ -118,7 +118,7 @@ abstract class AbstractQueueManager implements QueueManagerInterface
     */
     public function set_processed_callback(callable $cb)
     {
-        $this->_processed_callback = $cb;
+        $this->processed_callback = $cb;
         return $this;
     }
 
@@ -130,13 +130,13 @@ abstract class AbstractQueueManager implements QueueManagerInterface
     {
         $queued = $this->load_queue_items();
 
-        $cb = ($callback !== null) ? $callback : $this->_processed_callback;
+        $cb = ($callback !== null) ? $callback : $this->processed_callback;
 
         $success = [];
         $failures = [];
         $skipped = [];
         foreach ($queued as $q) {
-            $res = $q->process($this->_item_callback, $this->_item_success_callback, $this->_item_failure_callback);
+            $res = $q->process($this->item_callback, $this->item_success_callback, $this->item_failure_callback);
             if ($res === true) {
                 $success[] = $q;
             } elseif ($res === false) {
@@ -145,8 +145,8 @@ abstract class AbstractQueueManager implements QueueManagerInterface
                 $skipped[] = $q;
             }
         }
-        if ($this->_processed_callback !== null) {
-            $cb = $this->_processed_callback;
+        if ($this->processed_callback !== null) {
+            $cb = $this->processed_callback;
             $cb($success, $failures, $skipped);
         }
         return true;
