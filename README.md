@@ -3,6 +3,14 @@ Charcoal Queue
 
 Queue, Queue Items and Queueable objects (through Interface & Trait) for Charcoal.
 
+## How to install
+```
+composer require locomotivemtl/charcoal-queue`
+```
+
+## Dependencies
+- `locomotivemtl/charcoal-core` for the CollectionLoader
+
 ## Queueing system
 
 Queue managers loop queue items. Queue items represent actions to be performed (as defined by the `process()` method.)
@@ -45,5 +53,7 @@ The `QueueableInterface` defines objects that can be queued. This interface is r
   - `set_queue_id()` which can be inherited from `QueueableTrait`
   - `queue_id()` (queue_id getter) which can be inherited from `QueueableTrait`
   - `queue($ts=null)` which is abstract and must be written inside class which implement the queueable interface
+
+
 
 

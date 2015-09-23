@@ -17,8 +17,10 @@
       "homepage": "http://locomotive.ca"
     }
   ],
+  "minimum-stability":"dev",
   "require": {
-    "php": ">=5.5.0"
+    "php": ">=5.5.0",
+    "locomotivemtl/charcoal-core": "@dev"
   },
   "require-dev": {
     "phpunit/phpunit": "~4.5",
