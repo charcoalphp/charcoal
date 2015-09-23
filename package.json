@@ -1,0 +1,42 @@
+{
+  "name": "@locomotivemtl/charcoal-queue",
+  "version": "0.0.1",
+  "description": "Queue, Queue Items, Queuable Objects for Charcoal",
+  "license": "LGPL-3.0",
+  "homepage": "http://charcoal.locomotive.ca",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/locomotivemtl/charcoal-queue"
+  },
+  "bugs": {
+    "url": "https://github.com/locomotivemtl/charcoal-queue/issues"
+  },
+  "author": {
+    "name": "Mathieu Ducharme",
+    "email": "mat@locomotive.ca"
+  },
+  "contributors": [
+    {
+      "name": "Locomotive",
+      "homepage": "http://locomotive.ca"
+    }
+  ],
+  "private": true,
+  "devDependencies": {
+    "glob": "^5.0.12",
+    "grunt": "^0.4.4",
+    "grunt-composer": "^0.4.4",
+    "grunt-contrib-jshint": "^0.11.2",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-githooks": "^0.3.1",
+    "grunt-jsonlint": "^1.0.4",
+    "grunt-phpcbf": "^0.1.0",
+    "grunt-phpcs": "~0.4.0",
+    "grunt-phpdocumentor": "^0.4.1",
+    "grunt-phplint": "0.0.5",
+    "grunt-phpunit": "^0.3.6",
+    "grunt-yaml-validate": "^0.1.1",
+    "load-grunt-tasks": "^3.2.0",
+    "qunit": "^0.7.6"
+  }
+}
