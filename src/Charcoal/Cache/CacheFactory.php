@@ -2,17 +2,8 @@
 
 namespace Charcoal\Cache;
 
-// Dependencies from `PHP`
-use \InvalidArgumentException as InvalidArgumentException;
-
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Core\ClassMapFactory as ClassMapFactory;
-
-// Local namespace dependencies
-use \Charcoal\Cache\CacheInterface as CacheInterface;
-use \Charcoal\Cache\Apc\ApcCache as ApcCache;
-use \Charcoal\Cache\Memcache\MemcacheCache as MemcacheCache;
-use \Charcoal\Cache\Noop\NoopCache as NoopCache;
+use \Charcoal\Core\ClassMapFactory;
 
 /**
 * Cache factory

@@ -13,7 +13,6 @@ use \Mustache_LambdaHelper;
 use \Charcoal\Charcoal;
 
 // Local namespace dependencies
-use \Charcoal\View\MustachePartialsLoader;
 use \Charcoal\View\ViewableInterface;
 use \Charcoal\View\ViewInterface;
 use \Charcoal\View\ViewControllerInterface;

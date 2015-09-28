@@ -9,7 +9,6 @@ use \InvalidArgumentException;
 // 3rd-party libraries dependencies
 use \Slim\App as Slim;
 use \Psr\Log\LoggerInterface;
-use \Psr\Log\LogLevel;
 
 // Intra-module (`charcoal-core`) dependencies
 use \Charcoal\CharcoalConfig;

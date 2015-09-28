@@ -9,13 +9,10 @@
 namespace Charcoal\Model;
 
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Charcoal as Charcoal;
 use \Charcoal\Source\DatabaseSource as DatabaseSource;
-use \Charcoal\Metadata\MetadataLoader as MetadataLoader;
 
 // Local namespace dependencies
 use \Charcoal\Model\AbstractModel as AbstractModel;
-use \Charcoal\Model\ModelMetadata as ModelMetadata;
 
 /**
 * Charcoal Model class

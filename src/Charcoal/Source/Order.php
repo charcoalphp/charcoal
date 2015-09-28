@@ -3,7 +3,6 @@
 namespace Charcoal\Source;
 
 // Dependencies from `PHP`
-use \DomainException;
 use \InvalidArgumentException;
 
 // Local namespace dependencies

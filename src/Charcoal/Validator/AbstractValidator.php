@@ -3,10 +3,9 @@
 namespace Charcoal\Validator;
 
 // Local namespace dependencies
-use \Charcoal\Validator\ValidatabaleInterface as ValidatabaleInterface;
-use \Charcoal\Validator\ValidatorInterface as ValidatorInterface;
-use \Charcoal\Validator\ValidatableInterface as ValidatableInterface;
-use \Charcoal\Validator\ValidatorResult as ValidatorResult;
+use \Charcoal\Validator\ValidatorInterface;
+use \Charcoal\Validator\ValidatableInterface;
+use \Charcoal\Validator\ValidatorResult;
 
 /**
 * An abstract class that implements most of ValidatorInterface.

@@ -6,9 +6,6 @@ use \InvalidArgumentException as InvalidArgumentException;
 
 use \Charcoal\Metadata\AbstractMetadata as AbstractMetadata;
 
-use \Charcoal\Charcoal as Charcoal;
-use \Charcoal\Helper\Cache as Cache;
-
 class ModelMetadata extends AbstractMetadata implements \ArrayAccess
 {
     /**

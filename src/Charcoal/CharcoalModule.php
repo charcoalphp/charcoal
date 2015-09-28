@@ -3,9 +3,6 @@
 namespace Charcoal;
 
 // 3rd-party libraries dependencies from PSR-1 and PSR-7
-use \Psr\Http\Message\ServerRequestInterface;
-use \Psr\Http\Message\ResponseInterface;
-use \Psr\Log\LoggerInterface;
 use \Psr\Log\LogLevel;
 
 // 3rd-party libraries dependencies, from Monolog

@@ -8,7 +8,6 @@ use \InvalidArgumentException;
 
 // Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Property\PropertyFactory;
-use \Charcoal\Property\PropertyInterface;
 
 // Local namespace dependencies
 use \Charcoal\Metadata\MetadataLoader;
