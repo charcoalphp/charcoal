@@ -7,6 +7,7 @@ use \Exception as Exception;
 use \InvalidArgumentException as InvalidArgumentException;
 
 // Intra-module (`charcoal-core`) dependencies
+use \Charcoal\Charcoal;
 use \Charcoal\Config\ConfigurableInterface;
 use \Charcoal\Config\ConfigurableTrait;
 use \Charcoal\Model\ModelInterface;
@@ -115,9 +116,19 @@ abstract class AbstractSource implements
     public function model()
     {
         if ($this->model === null) {
-            throw new Exception('No model set.');
+            throw new Exception(
+                'No model set.'
+            );
         }
         return $this->model;
+    }
+
+    /**
+    * @return boolean
+    */
+    public function has_model()
+    {
+        return ($this->model !== null);
     }
 
     /**
@@ -157,10 +168,14 @@ abstract class AbstractSource implements
     public function add_property($property)
     {
         if (!is_string($property)) {
-            throw new InvalidArgumentException('Property must be a string.');
+            throw new InvalidArgumentException(
+                'Property must be a string.'
+            );
         }
         if ($property=='') {
-            throw new InvalidArgumentException('Property can not be empty.');
+            throw new InvalidArgumentException(
+                'Property can not be empty.'
+            );
         }
         $this->properties[] = $property;
         return $this;
@@ -210,11 +225,10 @@ abstract class AbstractSource implements
     public function add_filter($param, $val = null, array $options = null)
     {
         if ($param instanceof FilterInterface) {
-            $this->filters[] = $param;
+            $filter = $param;
         } elseif (is_array($param)) {
             $filter = $this->create_filter();
             $filter->set_data($param);
-            $this->filters[] = $filter;
         } elseif (is_string($param) && $val !== null) {
             $filter = $this->create_filter();
             $filter->set_property($param);
@@ -222,11 +236,23 @@ abstract class AbstractSource implements
             if (is_array($options)) {
                 $filter->set_data($options);
             }
-            $this->filters[] = $filter;
-
         } else {
-            throw new InvalidArgumentException('Parameter must be an array or a property ident.');
+            throw new InvalidArgumentException(
+                'Parameter must be an array or a property ident.'
+            );
         }
+
+        if ($this->has_model()) {
+            $property = $filter->property();
+            $p = $this->model()->p($property);
+
+            if ($p && $p->l10n()) {
+                $lang = Charcoal::config()->translation()->lang();
+                $filter->set_property($property.'_'.$lang);
+            }
+        }
+
+        $this->filters[] = $filter;
 
         return $this;
     }
@@ -316,7 +342,9 @@ abstract class AbstractSource implements
             $pagination->set_data($param);
             $this->pagination = $pagination;
         } else {
-            throw new InvalidArgumentException('Can not set pagination, invalid argument.');
+            throw new InvalidArgumentException(
+                'Can not set pagination, invalid argument.'
+            );
         }
         return $this;
     }
@@ -354,7 +382,9 @@ abstract class AbstractSource implements
     public function set_page($page)
     {
         if (!is_integer($page)) {
-            throw new InvalidArgumentException('Page must be an integer.');
+            throw new InvalidArgumentException(
+                'Page must be an integer.'
+            );
         }
         $this->pagination()->set_page($page);
         return $this;
@@ -376,7 +406,9 @@ abstract class AbstractSource implements
     public function set_num_per_page($num)
     {
         if (!is_integer($num)) {
-            throw new InvalidArgumentException('Num must be an integer.');
+            throw new InvalidArgumentException(
+                'Num must be an integer.'
+            );
         }
         $this->pagination()->set_num_per_page($num);
         return $this;

@@ -191,6 +191,8 @@ class CollectionLoader extends AbstractLoader
                 'operand'   => 'OR'
             ]);
         }
+
+        return $this;
     }
 
     /**
