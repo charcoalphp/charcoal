@@ -9,6 +9,8 @@ use \InvalidArgumentException;
 // Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Config\AbstractConfig;
 
+use \Charcoal\Translation\TranslationConfig;
+
 /**
 * Main project configuration container
 *
@@ -77,6 +79,11 @@ class CharcoalConfig extends AbstractConfig
     * @var array $template_path
     */
     private $template_path = [];
+
+    /**
+    * @var array|TranslationConfig $translation
+    */
+    private $translation;
 
     /**
     * The Config class is always extended with the default JSON config, from charcoal-core.
@@ -366,5 +373,28 @@ class CharcoalConfig extends AbstractConfig
 
         $this->template_path[] = $path;
         return $this;
+    }
+
+    /**
+    * @param array $translation
+    * @return CharcoalConfig Chainable
+    */
+    public function set_translation($translation)
+    {
+        $this->translation = $translation;
+        return $this;
+    }
+
+    /**
+    * @return TranslationConfig
+    */
+    public function translation()
+    {
+        $translation = new TranslationConfig();
+        if (is_array($this->translation)) {
+            $translation->set_data($this->translation);
+        }
+        $this->translation = $translation;
+        return $this->translation;
     }
 }
