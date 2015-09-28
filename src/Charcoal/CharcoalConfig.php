@@ -227,7 +227,7 @@ class CharcoalConfig extends AbstractConfig
     */
     public function databases()
     {
-        if ($this->databases == null) {
+        if ($this->databases === null) {
             throw new Exception('Databases are not set.');
         }
         return $this->databases;
@@ -293,7 +293,7 @@ class CharcoalConfig extends AbstractConfig
     */
     public function default_database()
     {
-        if ($this->default_database == null) {
+        if ($this->default_database === null) {
             throw new Exception('Default database is not set.');
         }
         return $this->default_database;
