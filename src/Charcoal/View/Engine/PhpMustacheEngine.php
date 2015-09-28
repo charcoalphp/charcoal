@@ -2,6 +2,8 @@
 
 namespace Charcoal\View\Engine;
 
+use \Charcoal\View\AbstractViewEngine;
+
 /**
 *
 */

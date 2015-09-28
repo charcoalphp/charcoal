@@ -57,7 +57,7 @@ class MustacheTemplateLoader extends FileLoader implements Mustache_Loader
         }
 
         $data = '';
-        $filename = $this->_filename_from_ident($ident);
+        $filename = $this->filename_from_ident($ident);
 
         $search_path = $this->search_path();
         foreach ($search_path as $path) {
@@ -73,7 +73,7 @@ class MustacheTemplateLoader extends FileLoader implements Mustache_Loader
         }
         $this->set_content($data);
         $this->cache_store();
-        unset($this->_content);
+        unset($this->content);
 
         return $data;
     }
@@ -82,7 +82,7 @@ class MustacheTemplateLoader extends FileLoader implements Mustache_Loader
     * @param string $ident
     * @return string
     */
-    private function _filename_from_ident($ident)
+    private function filename_from_ident($ident)
     {
         $filename = str_replace(['\\'], '.', $ident);
         $filename .= '.mustache';

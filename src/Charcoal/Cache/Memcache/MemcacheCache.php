@@ -22,14 +22,14 @@ use \Charcoal\Cache\Memcache\MemCacheCacheServerConfig as MemCacheCacheServerCon
 class MemcacheCache extends AbstractCache
 {
     /**
-    * @var boolean|null $_enabled
+    * @var boolean|null $enabled
     */
-    private $_enabled = null;
+    private $enabled = null;
     /**
     * Copy ot the Memcache object
-    * @var Memcache|null $_memcache
+    * @var Memcache|null $memcache
     */
-    private $_memcache = null;
+    private $memcache = null;
 
     /**
     * @throws Exception
@@ -43,7 +43,7 @@ class MemcacheCache extends AbstractCache
 
         $cfg = $this->config();
 
-        $this->_memcache = new Memcache();
+        $this->memcache = new Memcache();
         $servers = $cfg->servers();
         if (count($servers) == 0) {
             throw new Exception('Memcache: no server(s) defined.');
@@ -67,11 +67,11 @@ class MemcacheCache extends AbstractCache
         if ($this->config()->active() === false) {
             return false;
         }
-        if ($this->_enabled === null) {
-            $this->_enabled = !!class_exists('Memcache');
+        if ($this->enabled === null) {
+            $this->enabled = !!class_exists('Memcache');
         }
 
-        return $this->_enabled;
+        return $this->enabled;
     }
 
     /**
@@ -93,7 +93,7 @@ class MemcacheCache extends AbstractCache
 
         $flag = 0; // MEMCACHE_COMPRESSED
 
-        return $this->_memcache->set($prefix.$key, $data, $flag, $ttl);
+        return $this->memcache->set($prefix.$key, $data, $flag, $ttl);
     }
 
     /**
@@ -109,7 +109,7 @@ class MemcacheCache extends AbstractCache
         }
         $prefix = $this->prefix();
 
-        return !!$this->_memcache->get($prefix.$key);
+        return !!$this->memcache->get($prefix.$key);
     }
 
     /**
@@ -125,7 +125,7 @@ class MemcacheCache extends AbstractCache
         }
         $prefix = $this->prefix();
 
-        return $this->_memcache->get($prefix.$key);
+        return $this->memcache->get($prefix.$key);
     }
 
     /**
@@ -145,7 +145,7 @@ class MemcacheCache extends AbstractCache
         foreach ($keys as $k) {
             $pkeys[] = $prefix.$k;
         }
-        return $this->_memcache->get($pkeys);
+        return $this->memcache->get($pkeys);
     }
 
     /**
@@ -161,7 +161,7 @@ class MemcacheCache extends AbstractCache
         }
         $prefix = $this->prefix();
 
-        return $this->_memcache->delete($prefix.$key);
+        return $this->memcache->delete($prefix.$key);
     }
 
     /**
@@ -177,7 +177,7 @@ class MemcacheCache extends AbstractCache
             return false;
         }
 
-        $this->_memcache->flush();
+        $this->memcache->flush();
         // Memcache invalidates any cache in th same second as the flush.
         // So sleep for 1 full second to ensure nothing will be lost.
         sleep(1);
@@ -212,7 +212,7 @@ class MemcacheCache extends AbstractCache
         $persistent = $server->persistent();
         $weight = $server->weight();
 
-        return $this->_memcache->addServer($host, $port, $persistent, $weight);
+        return $this->memcache->addServer($host, $port, $persistent, $weight);
     }
 
     /**
@@ -237,7 +237,7 @@ class MemcacheCache extends AbstractCache
             unset($err_no, $err_str);
 
         });
-        $res = $this->_memcache->connect($host, $port);
+        $res = $this->memcache->connect($host, $port);
         restore_error_handler();
         return $res;
 

@@ -19,13 +19,13 @@ use \Monolog\Processor\UidProcessor;
 class CharcoalModule
 {
     /**
-    * @var CharcoalConfig $_config
+    * @var CharcoalConfig $config
     */
-    private $_config;
+    private $config;
     /**
-    * @var \Slim\App $_app
+    * @var \Slim\App $app
     */
-    private $_app;
+    private $app;
 
     /**
     * Charcoal Module setup.
@@ -70,7 +70,7 @@ class CharcoalModule
 
     public function __construct($data)
     {
-        $this->_config = $data['config'];
-        $this->_app = $data['app'];
+        $this->config = $data['config'];
+        $this->app = $data['app'];
     }
 }

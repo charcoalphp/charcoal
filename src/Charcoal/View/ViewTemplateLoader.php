@@ -20,7 +20,7 @@ class ViewTemplateLoader extends FileLoader
     /**
     * @var string $engine
     */
-    private $_engine = 'mustache';// = AbstractView::DEFAULT_ENGINE;
+    private $engine = 'mustache';// = AbstractView::DEFAULT_ENGINE;
 
     /**
     * @param string $engine
@@ -32,7 +32,7 @@ class ViewTemplateLoader extends FileLoader
         if (!is_string($engine)) {
             throw new InvalidArgumentException('Engine must be a string.');
         }
-        $this->_engine = $engine;
+        $this->engine = $engine;
         return $this;
     }
 
@@ -41,7 +41,7 @@ class ViewTemplateLoader extends FileLoader
     */
     public function engine()
     {
-        return $this->_engine;
+        return $this->engine;
     }
 
     /**
@@ -79,7 +79,7 @@ class ViewTemplateLoader extends FileLoader
         $engine = $this->engine();
 
         $data = '';
-        $filename = $this->_filename_from_ident($ident);
+        $filename = $this->filename_from_ident($ident);
         $search_path = $this->search_path();
         foreach ($search_path as $path) {
             $f = $path.'/'.$filename;
@@ -112,7 +112,7 @@ class ViewTemplateLoader extends FileLoader
     * @param string $ident
     * @return string
     */
-    private function _filename_from_ident($ident)
+    private function filename_from_ident($ident)
     {
         $engine = $this->engine();
         $filename = str_replace(['\\'], '.', $ident);

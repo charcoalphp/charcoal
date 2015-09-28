@@ -31,12 +31,12 @@ class TranslationString implements
     * Stored as a $lang=>$val hash.
     * @var array $val
     */
-    private $_val = [];
+    private $val = [];
 
     /**
-    * @var string $_lang
+    * @var string $lang
     */
-    private $_lang = null;
+    private $lang = null;
 
     /**
     * Calling the constructor with a parameter should force setting it up as value.
@@ -105,15 +105,15 @@ class TranslationString implements
     public function set_val($val)
     {
         if ($val instanceof TranslationString) {
-            $this->_val = $val->all();
+            $this->val = $val->all();
         } elseif (is_array($val)) {
-            $this->_val = [];
+            $this->val = [];
             foreach ($val as $lang => $l10n) {
                 $this->add_val($lang, $l10n);
             }
         } elseif (is_string($val)) {
             // Set as default lang
-            $this->_val[$this->lang()] = $val;
+            $this->val[$this->lang()] = $val;
         } else {
             throw new InvalidArgumentException('Invalid L10n value');
         }
@@ -137,7 +137,7 @@ class TranslationString implements
         if (!in_array($lang, $this->available_langs())) {
             throw new InvalidArgumentException('Invalid lang');
         }
-        $this->_val[$lang] = $val;
+        $this->val[$lang] = $val;
         return $this;
     }
 
@@ -157,12 +157,12 @@ class TranslationString implements
             throw new InvalidArgumentException('Invalid lang');
         }
 
-        if (isset($this->_val[$lang]) && $this->_val[$lang] !== null) {
-            return $this->_val[$lang];
+        if (isset($this->val[$lang]) && $this->val[$lang] !== null) {
+            return $this->val[$lang];
         } else {
             $l = $this->default_lang();
-            if (isset($this->_val[$l]) && $this->_val[$l] !== null) {
-                return $this->_val[$l];
+            if (isset($this->val[$l]) && $this->val[$l] !== null) {
+                return $this->val[$l];
             } else {
                 return '';
             }
@@ -175,7 +175,7 @@ class TranslationString implements
     */
     public function all()
     {
-        return $this->_val;
+        return $this->val;
     }
 
     /**
@@ -188,7 +188,7 @@ class TranslationString implements
         if (!in_array($lang, $this->available_langs())) {
             throw new InvalidArgumentException('Invalid lang');
         }
-        $this->_lang = $lang;
+        $this->lang = $lang;
         return $this;
     }
 
@@ -199,10 +199,10 @@ class TranslationString implements
     */
     public function lang()
     {
-        if (!$this->_lang) {
-            $this->_lang = $this->default_lang();
+        if (!$this->lang) {
+            $this->lang = $this->default_lang();
         }
-        return $this->_lang;
+        return $this->lang;
     }
 
     /**
@@ -278,8 +278,8 @@ class TranslationString implements
     */
     public function offsetUnset($key)
     {
-        if (isset($this->_val[$key])) {
-            unset($this->_val[$key]);
+        if (isset($this->val[$key])) {
+            unset($this->val[$key]);
         }
     }
 }

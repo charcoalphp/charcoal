@@ -14,7 +14,7 @@ class ModelValidator extends AbstractValidator
     */
     public function validate()
     {
-        $model = $this->_model;
+        $model = $this->model;
 
         $props = $model->properties();
 

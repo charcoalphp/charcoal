@@ -3,6 +3,7 @@
   "description": "Charcoal Web Framework",
   "keywords": ["charcoal", "locomotive", "php", "framework", "cms"],
   "homepage": "http://charcoal.locomotive.ca",
+  "license":"MIT",
   "support": {
     "issues": "https://github.com/locomotivemtl/charcoal-core/issues",
     "source": "https://github.com/locomotivemtl/charcoal-core"

@@ -14,9 +14,9 @@ use \Charcoal\Encoder\EncoderInterface as EncoderInterface;
 abstract class AbstractEncoder implements EncoderInterface
 {
     /**
-    * @var string $_salt
+    * @var string $salt
     */
-    private $_salt = '';
+    private $salt = '';
 
     /**
     * @param string $salt
@@ -28,7 +28,7 @@ abstract class AbstractEncoder implements EncoderInterface
         if (!is_string($salt)) {
             throw new InvalidArgumentException('Salt must be a string.');
         }
-        $this->_salt = $salt;
+        $this->salt = $salt;
         return $this;
     }
 
@@ -37,7 +37,7 @@ abstract class AbstractEncoder implements EncoderInterface
     */
     public function salt()
     {
-        return $this->_salt;
+        return $this->salt;
     }
 
     /**

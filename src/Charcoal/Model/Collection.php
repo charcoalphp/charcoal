@@ -5,6 +5,7 @@ namespace Charcoal\Model;
 // Dependencies from `PHP`
 use \InvalidArgumentException;
 use \ArrayAccess;
+use \ArrayIterator;
 use \Countable;
 use \IteratorAggregate;
 
@@ -27,9 +28,9 @@ class Collection implements
 {
     /**
     * Array of (ordered) objects
-    * @var array $_objects
+    * @var array $objects
     */
-    private $_objects;
+    private $objects;
 
     /**
     * Identity Map
@@ -37,9 +38,9 @@ class Collection implements
     * Ensures that each object gets loaded only once by keeping
     * every loaded object in a map. Looks up objects using the
     * map when referring to them.
-    * @var array $_map
+    * @var array $map
     */
-    private $_map;
+    private $map;
 
     /**
     * ArrayAccess > offsetSet
@@ -58,8 +59,8 @@ class Collection implements
             throw new InvalidArgumentException('Collection value must be a ModelInterface object.');
         }
         if ($offset === null) {
-            $this->_objects[] = $value;
-            $this->_map[$value->id()] = $value;
+            $this->objects[] = $value;
+            $this->map[$value->id()] = $value;
         } else {
             throw new InvalidArgumentException('Collection value can be set like an array.');
         }
@@ -74,9 +75,9 @@ class Collection implements
     public function offsetExists($offset)
     {
         if (is_int($offset)) {
-            return isset($this->_objects[$offset]);
+            return isset($this->objects[$offset]);
         } elseif (is_string($offset)) {
-            return isset($this->_map[$offset]);
+            return isset($this->map[$offset]);
         }
     }
 
@@ -90,14 +91,14 @@ class Collection implements
     public function offsetUnset($offset)
     {
         if (is_int($offset)) {
-            $id = $this->_objects[$offset]->id();
-            unset($this->_objects[$offset]);
-            unset($this->_map[$id]);
+            $id = $this->objects[$offset]->id();
+            unset($this->objects[$offset]);
+            unset($this->map[$id]);
 
         } elseif (is_string($offset)) {
             $pos = $this->pos($offset);
-            unset($this->_map[$offset]);
-            unset($this->_objects[$pos]);
+            unset($this->map[$offset]);
+            unset($this->objects[$pos]);
         } else {
             throw new InvalidArgumentException('Offset should be either an integer or a string.');
         }
@@ -113,9 +114,9 @@ class Collection implements
     public function offsetGet($offset)
     {
         if (is_int($offset)) {
-            return (isset($this->_objects[$offset]) ? $this->_objects[$offset] : null);
+            return (isset($this->objects[$offset]) ? $this->objects[$offset] : null);
         } elseif (is_string($offset)) {
-            return (isset($this->_map[$offset]) ? $this->_map[$offset] : null);
+            return (isset($this->map[$offset]) ? $this->map[$offset] : null);
         } else {
             throw new InvalidArgumentException('Offset should be either an integer or a string.');
         }
@@ -131,11 +132,11 @@ class Collection implements
     */
     public function getIterator()
     {
-        if (empty($this->_map)) {
+        if (empty($this->map)) {
             // Empty object
-            return new \ArrayIterator();
+            return new ArrayIterator();
         }
-        return new \ArrayIterator($this->_map);
+        return new ArrayIterator($this->map);
     }
 
     /**
@@ -148,7 +149,7 @@ class Collection implements
     */
     public function count()
     {
-        return count($this->_objects);
+        return count($this->objects);
     }
 
     /**
@@ -158,7 +159,7 @@ class Collection implements
     */
     public function objects()
     {
-        return $this->_objects;
+        return $this->objects;
     }
 
     /**
@@ -168,7 +169,7 @@ class Collection implements
     */
     public function map()
     {
-        return $this->_map;
+        return $this->map;
     }
 
     /**
@@ -180,8 +181,8 @@ class Collection implements
     */
     public function add(ModelInterface $obj)
     {
-        $this->_objects[] = $obj;
-        $this->_map[$obj->id()] = $obj;
+        $this->objects[] = $obj;
+        $this->map[$obj->id()] = $obj;
 
         // Chainable
         return $this;
@@ -195,9 +196,9 @@ class Collection implements
     public function pos($key)
     {
         if (is_string($key)) {
-            return array_search($key, array_keys($this->_map));
+            return array_search($key, array_keys($this->map));
         } elseif ($key instanceof ModelInterface) {
-            return array_search($key->id(), array_keys($this->_map));
+            return array_search($key->id(), array_keys($this->map));
         } else {
             throw new InvalidArgumentException('Key must be a string or an ModelInterface object.');
         }

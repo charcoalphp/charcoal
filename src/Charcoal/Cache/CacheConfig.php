@@ -14,21 +14,21 @@ use \Charcoal\Config\AbstractConfig as AbstractConfig;
 class CacheConfig extends AbstractConfig
 {
     /**
-    * @var boolean $_active
+    * @var boolean $active
     */
-    private $_active;
+    private $active;
     /**
-    * @var string $_type
+    * @var string $type
     */
-    private $_type;
+    private $type;
     /**
-    * @var integer $_default_ttl
+    * @var integer $default_ttl
     */
-    private $_default_ttl;
+    private $default_ttl;
     /**
-    * @var string $_prefix
+    * @var string $prefix
     */
-    private $_prefix;
+    private $prefix;
 
     /**
     * @return array
@@ -75,7 +75,7 @@ class CacheConfig extends AbstractConfig
         if (!is_bool($active)) {
             throw new InvalidArgumentException('Active must be a boolean.');
         }
-        $this->_active = $active;
+        $this->active = $active;
         return $this;
     }
 
@@ -84,7 +84,7 @@ class CacheConfig extends AbstractConfig
     */
     public function active()
     {
-        return $this->_active;
+        return $this->active;
     }
 
     /**
@@ -97,7 +97,7 @@ class CacheConfig extends AbstractConfig
         if (!is_string($type)) {
             throw new InvalidArgumentException('Active must be a boolean.');
         }
-        $this->_type = $type;
+        $this->type = $type;
         return $this;
     }
 
@@ -106,7 +106,7 @@ class CacheConfig extends AbstractConfig
     */
     public function type()
     {
-        return $this->_type;
+        return $this->type;
     }
 
     /**
@@ -119,7 +119,7 @@ class CacheConfig extends AbstractConfig
         if (!is_integer($ttl)) {
             throw new InvalidArgumentException('TTL must be an integer (seconds).');
         }
-        $this->_default_ttl = $ttl;
+        $this->default_ttl = $ttl;
         return $this;
     }
 
@@ -128,7 +128,7 @@ class CacheConfig extends AbstractConfig
     */
     public function default_ttl()
     {
-        return $this->_default_ttl;
+        return $this->default_ttl;
     }
 
     /**
@@ -141,7 +141,7 @@ class CacheConfig extends AbstractConfig
         if (!is_string($prefix)) {
             throw new InvalidArgumentException('Prefix must be a string.');
         }
-        $this->_prefix = $prefix;
+        $this->prefix = $prefix;
         return $this;
     }
 
@@ -150,6 +150,6 @@ class CacheConfig extends AbstractConfig
     */
     public function prefix()
     {
-        return $this->_prefix;
+        return $this->prefix;
     }
 }

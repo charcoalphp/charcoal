@@ -14,9 +14,9 @@ use \Charcoal\Config\AbstractConfig as AbstractConfig;
 class SourceConfig extends AbstractConfig
 {
     /**
-    * @var string $_type
+    * @var string $type
     */
-    private $_type;
+    private $type;
 
     /**
     * @return array
@@ -50,7 +50,7 @@ class SourceConfig extends AbstractConfig
         if (!is_string($type)) {
             throw new InvalidArgumentException('Type must be a string.');
         }
-        $this->_type = $type;
+        $this->type = $type;
         return $this;
     }
 
@@ -59,6 +59,6 @@ class SourceConfig extends AbstractConfig
     */
     public function type()
     {
-        return $this->_type;
+        return $this->type;
     }
 }

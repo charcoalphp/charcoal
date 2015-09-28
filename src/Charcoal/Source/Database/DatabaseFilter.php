@@ -17,8 +17,8 @@ class DatabaseFilter extends Filter
     */
     public function sql()
     {
-        if ($this->_string) {
-            return $this->_string;
+        if ($this->string) {
+            return $this->string;
         }
         $fields = $this->sql_fields();
         if (empty($fields)) {

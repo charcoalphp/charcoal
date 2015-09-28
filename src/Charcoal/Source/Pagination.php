@@ -13,13 +13,13 @@ class Pagination implements PaginationInterface
     const DEFAULT_NUM_PER_PAGE = 0;
 
     /**
-    * @var integer $_page
+    * @var integer $page
     */
-    protected $_page = self::DEFAULT_PAGE;
+    protected $page = self::DEFAULT_PAGE;
     /**
-    * @var integer $_num_per_page
+    * @var integer $num_per_page
     */
-    protected $_num_per_page = self::DEFAULT_NUM_PER_PAGE;
+    protected $num_per_page = self::DEFAULT_NUM_PER_PAGE;
 
     /**
     * @param array $data
@@ -50,7 +50,7 @@ class Pagination implements PaginationInterface
         if ($page < 0) {
             throw new InvalidArgumentException('Page number needs to be >= 0.');
         }
-        $this->_page = $page;
+        $this->page = $page;
         return $this;
     }
 
@@ -59,7 +59,7 @@ class Pagination implements PaginationInterface
     */
     public function page()
     {
-        return $this->_page;
+        return $this->page;
     }
 
     /**
@@ -77,7 +77,7 @@ class Pagination implements PaginationInterface
             throw new InvalidArgumentException('Num-per-page needs to be >= 0.');
         }
 
-        $this->_num_per_page = $num;
+        $this->num_per_page = $num;
         return $this;
     }
 
@@ -86,7 +86,7 @@ class Pagination implements PaginationInterface
     */
     public function num_per_page()
     {
-        return $this->_num_per_page;
+        return $this->num_per_page;
     }
 
     /**

@@ -2,6 +2,9 @@
 
 namespace Charcoal\Model;
 
+use \Exception;
+use \InvalidArgumentException;
+
 use \Charcoal\View\AbstractViewController as AbstractViewController;
 use \Charcoal\Model\ModelInterface as ModelInterface;
 
@@ -97,7 +100,7 @@ class ModelViewController extends AbstractViewController
     }
 
     /**
-    * @throws \Exception if the context is not a model
+    * @throws Exception if the context is not a model
     * @return ModelInterface
     */
     protected function _model()
@@ -106,7 +109,7 @@ class ModelViewController extends AbstractViewController
             return null;
         }
         if (!($this->_context instanceof ModelInterface)) {
-            throw new \Exception('Context neeeds to be a Model.');
+            throw new Exception('Context neeeds to be a Model.');
         }
         return $this->_context;
     }

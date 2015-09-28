@@ -13,7 +13,7 @@ abstract class AbstractViewController implements ViewControllerInterface
     /**
     * @var mixed $context
     */
-    protected $_context;
+    protected $context;
 
     /**
     * @param mixed|null $context
@@ -129,7 +129,7 @@ abstract class AbstractViewController implements ViewControllerInterface
     */
     public function set_context($context)
     {
-        $this->_context = $context;
+        $this->context = $context;
         return $this;
     }
 
@@ -138,6 +138,6 @@ abstract class AbstractViewController implements ViewControllerInterface
     */
     public function context()
     {
-        return $this->_context;
+        return $this->context;
     }
 }

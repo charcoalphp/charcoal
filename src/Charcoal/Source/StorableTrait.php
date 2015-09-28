@@ -15,9 +15,9 @@ use \Charcoal\Source\StorableInterface as StorableInterface;
 trait StorableTrait
 {
     /**
-    * @var SourceInterfae $_source
+    * @var SourceInterfae $source
     */
-    private $_source;
+    private $source;
 
     /**
     * @param array $data
@@ -40,7 +40,7 @@ trait StorableTrait
     */
     public function set_source(SourceInterface $source)
     {
-        $this->_source = $source;
+        $this->source = $source;
         return $this;
     }
 
@@ -51,10 +51,10 @@ trait StorableTrait
     */
     public function source()
     {
-        if ($this->_source === null) {
-            $this->_source = $this->create_source();
+        if ($this->source === null) {
+            $this->source = $this->create_source();
         }
-        return $this->_source;
+        return $this->source;
     }
 
     /**

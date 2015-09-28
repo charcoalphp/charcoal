@@ -2,6 +2,8 @@
 
 namespace Charcoal\Core;
 
+use \InvalidArgumentException;
+
 /**
 * Class Map Factory
 *
@@ -10,9 +12,9 @@ class ClassMapFactory extends AbstractFactory
 {
     /**
     * Available types, in `[$type => $classname]` format.
-    * @var array $_class_map
+    * @var array $class_map
     */
-    protected $_class_map = [];
+    protected $class_map = [];
 
     /**
     * Set the factory's data / properties
@@ -37,7 +39,7 @@ class ClassMapFactory extends AbstractFactory
     */
     public function set_class_map(array $types)
     {
-        $this->_class_map = [];
+        $this->class_map = [];
         foreach ($types as $type => $classname) {
             $this->add_class($type, $classname);
         }
@@ -60,7 +62,7 @@ class ClassMapFactory extends AbstractFactory
             );
         }
 
-        $this->_class_map[$type] = $classname;
+        $this->class_map[$type] = $classname;
         return $this;
     }
 
@@ -71,7 +73,7 @@ class ClassMapFactory extends AbstractFactory
     */
     public function class_map()
     {
-        return $this->_class_map;
+        return $this->class_map;
     }
 
     /**

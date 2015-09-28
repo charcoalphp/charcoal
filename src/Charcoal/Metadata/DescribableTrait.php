@@ -25,19 +25,19 @@ use \Charcoal\Metadata\MetadataInterface;
 trait DescribableTrait
 {
     /**
-    * @var MetadataInterface $_metadata
+    * @var MetadataInterface $metadata
     */
-    protected $_metadata;
+    protected $metadata;
 
     /**
-    * @var string $_metadata_ident
+    * @var string $metadata_ident
     */
-    protected $_metadata_ident;
+    protected $metadata_ident;
 
     /**
-    * @var array $_properties
+    * @var array $properties
     */
-    protected $_properties;
+    protected $properties;
 
     /**
     * Describable object needs to have a `set_data()` method
@@ -73,16 +73,16 @@ trait DescribableTrait
         if (is_array($metadata)) {
             $meta = $this->create_metadata();
             $meta->set_data($metadata);
-            $this->_metadata = $meta;
+            $this->metadata = $meta;
         } elseif ($metadata instanceof MetadataInterface) {
-            $this->_metadata = $metadata;
+            $this->metadata = $metadata;
         } else {
             throw new InvalidArgumentException('Metadata argument is invalid (must be array or Medatadata object).');
         }
 
         // If the metadata contains "data", then automatically set the initial data to the value
-        if (isset($this->_metadata['data']) && is_array($this->_metadata['data'])) {
-            $this->set_data($this->_metadata['data']);
+        if (isset($this->metadata['data']) && is_array($this->metadata['data'])) {
+            $this->set_data($this->metadata['data']);
         }
 
         // Chainable
@@ -94,10 +94,10 @@ trait DescribableTrait
     */
     public function metadata()
     {
-        if ($this->_metadata === null) {
+        if ($this->metadata === null) {
             return $this->load_metadata();
         }
-        return $this->_metadata;
+        return $this->metadata;
     }
 
     /**
@@ -132,7 +132,7 @@ trait DescribableTrait
     */
     public function set_metadata_ident($metadata_ident)
     {
-        $this->_metadata_ident = $metadata_ident;
+        $this->metadata_ident = $metadata_ident;
         return $this;
     }
 
@@ -143,10 +143,10 @@ trait DescribableTrait
     */
     public function metadata_ident()
     {
-        if ($this->_metadata_ident === null) {
-            $this->_metadata_ident = $this->generate_metadata_ident();
+        if ($this->metadata_ident === null) {
+            $this->metadata_ident = $this->generate_metadata_ident();
         }
-        return $this->_metadata_ident;
+        return $this->metadata_ident;
     }
 
     /**

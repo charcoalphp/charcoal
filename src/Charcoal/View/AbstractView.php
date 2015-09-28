@@ -34,41 +34,41 @@ abstract class AbstractView implements ViewInterface
     const DEFAULT_ENGINE = self::ENGINE_MUSTACHE;
 
     /**
-    * @var string $_engine
+    * @var string $engine
     */
-    private $_engine = self::DEFAULT_ENGINE;
+    private $engine = self::DEFAULT_ENGINE;
 
     /**
-    * @var string $_template
+    * @var string $template
     */
-    private $_template;
+    private $template;
 
     /**
-    * @var mixed $_context;
+    * @var mixed $context;
     */
-    private $_context;
+    private $context;
 
     /**
-    * @var ViewControllerInterface $_controlle
+    * @var ViewControllerInterface $controlle
     */
-    protected $_controller;
+    protected $controller;
 
     /**
-    * @var array $_js_requirements
+    * @var array $js_requirements
     */
-    static private $_js_requirements = [];
+    static private $js_requirements = [];
     /**
-    * @var string $_js
+    * @var string $js
     */
-    static private $_js = '';
+    static private $js = '';
     /**
-    * @var array $_css_requirements
+    * @var array $css_requirements
     */
-    static private $_css_requirements = [];
+    static private $css_requirements = [];
     /**
-    * @var string $_css;
+    * @var string $css;
     */
-    static private $_css = '';
+    static private $css = '';
 
     /**
     * @param array $data Optional
@@ -126,7 +126,7 @@ abstract class AbstractView implements ViewInterface
         if (!is_string($engine)) {
             throw new InvalidArgumentException('Engine must be a string.');
         }
-        $this->_engine = $engine;
+        $this->engine = $engine;
         return $this;
     }
 
@@ -135,7 +135,7 @@ abstract class AbstractView implements ViewInterface
     */
     public function engine()
     {
-        return $this->_engine;
+        return $this->engine;
     }
 
     /**
@@ -149,7 +149,7 @@ abstract class AbstractView implements ViewInterface
             throw new InvalidArgumentException('Template must be a string.');
         }
 
-        $this->_template = $template;
+        $this->template = $template;
         return $this;
     }
 
@@ -158,11 +158,11 @@ abstract class AbstractView implements ViewInterface
     */
     public function template()
     {
-        if ($this->_template === null) {
+        if ($this->template === null) {
             return '';
         }
 
-        return $this->_template;
+        return $this->template;
     }
 
     /**
@@ -177,7 +177,7 @@ abstract class AbstractView implements ViewInterface
     */
     public function set_context($context)
     {
-        $this->_context = $context;
+        $this->context = $context;
         if ($context instanceof ViewableInterface) {
             $this->set_engine($context->template_engine());
         }
@@ -198,12 +198,12 @@ abstract class AbstractView implements ViewInterface
     */
     public function js_requirements()
     {
-        $req = array_unique(self::$_js_requirements);
+        $req = array_unique(self::$js_requirements);
         $ret = '';
         foreach ($req as $r) {
             $ret .= $r;
         }
-        self::$_js_requirements = [];
+        self::$js_requirements = [];
         return $ret;
     }
 
@@ -213,7 +213,7 @@ abstract class AbstractView implements ViewInterface
     */
     public function add_js_requirement($js_requirement)
     {
-        self::$_js_requirements[] = $js_requirement;
+        self::$js_requirements[] = $js_requirement;
     }
 
     /**
@@ -221,8 +221,8 @@ abstract class AbstractView implements ViewInterface
     */
     public function js()
     {
-        $js = self::$_js;
-        self::$_js = '';
+        $js = self::$js;
+        self::$js = '';
         return $js;
     }
 
@@ -232,7 +232,7 @@ abstract class AbstractView implements ViewInterface
     */
     public function add_js($js)
     {
-        self::$_js .= $js;
+        self::$js .= $js;
     }
 
     /**
@@ -240,12 +240,12 @@ abstract class AbstractView implements ViewInterface
     */
     public function css_requirements()
     {
-        $req = array_unique(self::$_css_requirements);
+        $req = array_unique(self::$css_requirements);
         $ret = '';
         foreach ($req as $r) {
             $ret .= $r;
         }
-        self::$_css_requirements = [];
+        self::$css_requirements = [];
         return $ret;
     }
 
@@ -255,7 +255,7 @@ abstract class AbstractView implements ViewInterface
     */
     public function add_css_requirement($css_requirement)
     {
-        self::$_css_requirements[] = $css_requirement;
+        self::$css_requirements[] = $css_requirement;
     }
 
     /**
@@ -263,8 +263,8 @@ abstract class AbstractView implements ViewInterface
     */
     public function css()
     {
-        $css = self::$_css;
-        self::$_css = '';
+        $css = self::$css;
+        self::$css = '';
         return $css;
     }
 
@@ -274,7 +274,7 @@ abstract class AbstractView implements ViewInterface
     */
     public function add_css($css)
     {
-        self::$_css .= $css;
+        self::$css .= $css;
     }
 
     /**
@@ -282,7 +282,7 @@ abstract class AbstractView implements ViewInterface
     */
     public function context()
     {
-        return $this->_context;
+        return $this->context;
     }
 
     /**
@@ -297,7 +297,7 @@ abstract class AbstractView implements ViewInterface
     */
     public function set_controller(ViewControllerInterface $controller)
     {
-        $this->_controller = $controller;
+        $this->controller = $controller;
         return $this;
     }
 
@@ -306,10 +306,10 @@ abstract class AbstractView implements ViewInterface
     */
     public function controller()
     {
-        if ($this->_controller === null) {
-            $this->_controller = $this->create_controller();
+        if ($this->controller === null) {
+            $this->controller = $this->create_controller();
         }
-        return $this->_controller;
+        return $this->controller;
     }
 
     /**

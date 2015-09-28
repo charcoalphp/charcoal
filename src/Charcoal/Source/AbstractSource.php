@@ -31,33 +31,33 @@ abstract class AbstractSource implements
     use ConfigurableTrait;
 
     /**
-    * @var ModelInterface $_model
+    * @var ModelInterface $model
     */
-    protected $_model = null;
+    private $model = null;
 
     /**
-    * @var array $_properties
+    * @var array $properties
     */
-    private $_properties = [];
+    private $properties = [];
     /**
-    * @var array $_properties_options
+    * @var array $properties_options
     */
-    private $_properties_options = [];
+    private $properties_options = [];
     /**
     * Array of `Filter` objects
-    * @var array $_filters
+    * @var array $filters
     */
-    private $_filters = [];
+    private $filters = [];
     /**
     * Array of `Order` object
-    * @var array $_orders
+    * @var array $orders
     */
-    private $_orders = [];
+    private $orders = [];
     /**
     * The `Pagination` object
-    * @var Pagination|null $_pagination
+    * @var Pagination|null $pagination
     */
-    private $_pagination = null;
+    private $pagination = null;
 
     /**
     * Reset everything but the model.
@@ -66,11 +66,11 @@ abstract class AbstractSource implements
     */
     public function reset()
     {
-        $this->_properties = [];
-        $this->_properties_options = [];
-        $this->_filters = [];
-        $this->_orders = [];
-        $this->_pagination = null;
+        $this->properties = [];
+        $this->properties_options = [];
+        $this->filters = [];
+        $this->orders = [];
+        $this->pagination = null;
         return $this;
     }
 
@@ -82,17 +82,14 @@ abstract class AbstractSource implements
     */
     public function set_data(array $data)
     {
-        if (isset($data['properties'])) {
-            $this->set_properties($data['properties']);
-        }
-        if (isset($data['filters'])) {
-            $this->set_filters($data['filters']);
-        }
-        if (isset($data['orders'])) {
-            $this->set_orders($data['orders']);
-        }
-        if (isset($data['pagination'])) {
-            $this->set_pagination($data['pagination']);
+        foreach ($data as $prop => $val) {
+            $func = [$this, 'set_'.$prop];
+            if (is_callable($func)) {
+                call_user_func($func, $val);
+                unset($data[$prop]);
+            } else {
+                $this->{$prop} = $val;
+            }
         }
         return $this;
     }
@@ -105,7 +102,7 @@ abstract class AbstractSource implements
     */
     public function set_model(ModelInterface $model)
     {
-        $this->_model = $model;
+        $this->model = $model;
         return $this;
     }
 
@@ -117,10 +114,10 @@ abstract class AbstractSource implements
     */
     public function model()
     {
-        if ($this->_model === null) {
+        if ($this->model === null) {
             throw new Exception('No model set.');
         }
-        return $this->_model;
+        return $this->model;
     }
 
     /**
@@ -137,7 +134,7 @@ abstract class AbstractSource implements
     */
     public function set_properties(array $properties)
     {
-        $this->_properties = [];
+        $this->properties = [];
         foreach ($properties as $p) {
             $this->add_property($p);
         }
@@ -149,7 +146,7 @@ abstract class AbstractSource implements
     */
     public function properties()
     {
-        return $this->_properties;
+        return $this->properties;
     }
 
     /**
@@ -165,9 +162,11 @@ abstract class AbstractSource implements
         if ($property=='') {
             throw new InvalidArgumentException('Property can not be empty.');
         }
-        $this->_properties[] = $property;
+        $this->properties[] = $property;
         return $this;
     }
+
+
 
     /**
     * @param array $filters
@@ -176,7 +175,7 @@ abstract class AbstractSource implements
     */
     public function set_filters(array $filters)
     {
-        $this->_filters = [];
+        $this->filters = [];
         foreach ($filters as $f) {
             $this->add_filter($f);
         }
@@ -188,7 +187,7 @@ abstract class AbstractSource implements
     */
     public function filters()
     {
-        return $this->_filters;
+        return $this->filters;
     }
 
     /**
@@ -211,11 +210,11 @@ abstract class AbstractSource implements
     public function add_filter($param, $val = null, array $options = null)
     {
         if ($param instanceof FilterInterface) {
-            $this->_filters[] = $param;
+            $this->filters[] = $param;
         } elseif (is_array($param)) {
             $filter = $this->create_filter();
             $filter->set_data($param);
-            $this->_filters[] = $filter;
+            $this->filters[] = $filter;
         } elseif (is_string($param) && $val !== null) {
             $filter = $this->create_filter();
             $filter->set_property($param);
@@ -223,7 +222,7 @@ abstract class AbstractSource implements
             if (is_array($options)) {
                 $filter->set_data($options);
             }
-            $this->_filters[] = $filter;
+            $this->filters[] = $filter;
 
         } else {
             throw new InvalidArgumentException('Parameter must be an array or a property ident.');
@@ -247,7 +246,7 @@ abstract class AbstractSource implements
     */
     public function set_orders(array $orders)
     {
-        $this->_orders = [];
+        $this->orders = [];
         foreach ($orders as $o) {
             $this->add_order($o);
         }
@@ -259,7 +258,7 @@ abstract class AbstractSource implements
     */
     public function orders()
     {
-        return $this->_orders;
+        return $this->orders;
     }
 
     /**
@@ -272,11 +271,11 @@ abstract class AbstractSource implements
     public function add_order($param, $mode = 'asc', $order_options = null)
     {
         if ($param instanceof OrderInterface) {
-            $this->_orders[] = $param;
+            $this->orders[] = $param;
         } elseif (is_array($param)) {
             $order = $this->create_order();
             $order->set_data($param);
-            $this->_orders[] = $order;
+            $this->orders[] = $order;
         } elseif (is_string($param)) {
             $order = $this->create_order();
             $order->set_property($param);
@@ -284,7 +283,7 @@ abstract class AbstractSource implements
             if (isset($order_options['values'])) {
                 $order->set_values($order_options['values']);
             }
-            $this->_orders[] = $order;
+            $this->orders[] = $order;
         } else {
             throw new InvalidArgumentException(
                 'Parameter must be an OrderInterface object or a property ident.'
@@ -311,11 +310,11 @@ abstract class AbstractSource implements
     public function set_pagination($param)
     {
         if ($param instanceof PaginationInterface) {
-            $this->_pagination = $param;
+            $this->pagination = $param;
         } elseif (is_array($param)) {
             $pagination = $this->create_pagination();
             $pagination->set_data($param);
-            $this->_pagination = $pagination;
+            $this->pagination = $pagination;
         } else {
             throw new InvalidArgumentException('Can not set pagination, invalid argument.');
         }
@@ -332,10 +331,10 @@ abstract class AbstractSource implements
     */
     public function pagination()
     {
-        if ($this->_pagination === null) {
-            $this->_pagination = $this->create_pagination();
+        if ($this->pagination === null) {
+            $this->pagination = $this->create_pagination();
         }
-        return $this->_pagination;
+        return $this->pagination;
     }
 
     /**

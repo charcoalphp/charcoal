@@ -12,16 +12,16 @@ class StringFormat
     /**
     * Holds the string to format.
     *
-    * @var string $_string
+    * @var string $string
     */
-    protected $_string = '';
+    protected $string = '';
 
     /**
     * Supports unicode or no.
     *
-    * @var boolean $_unicode
+    * @var boolean $unicode
     */
-    protected $_unicode = true;
+    protected $unicode = true;
 
     /**
     * @param string $string Optional string
@@ -51,7 +51,7 @@ class StringFormat
         if (!is_string($string)) {
             throw new InvalidArgumentException('String must be a string.');
         }
-        $this->_string = $string;
+        $this->string = $string;
         return $this;
     }
 
@@ -60,7 +60,7 @@ class StringFormat
     */
     public function string()
     {
-        return $this->_string;
+        return $this->string;
     }
 
     /**
@@ -73,7 +73,7 @@ class StringFormat
         if (!is_bool($unicode)) {
             throw new InvalidArgumentException('Unicode must be a boolean.');
         }
-        $this->_unicode = $unicode;
+        $this->unicode = $unicode;
         return $this;
     }
 
@@ -82,7 +82,7 @@ class StringFormat
     */
     public function unicode()
     {
-        return $this->_unicode;
+        return $this->unicode;
     }
 
     /**
@@ -91,7 +91,7 @@ class StringFormat
     */
     public function strip_tags()
     {
-        $this->_string = strip_tags($this->_string);
+        $this->string = strip_tags($this->string);
         return $this;
     }
 
@@ -101,10 +101,10 @@ class StringFormat
     */
     public function unaccents()
     {
-        $str = htmlentities($this->_string, ENT_COMPAT, 'UTF-8');
-        $this->_string = preg_replace('/&([a-zA-Z])(uml|acute|grave|circ|tilde|cedil|ring|caron|slash);/', '$1', $str);
-        $this->_string = preg_replace('/&([a-zA-Z]{2})(lig);/', '$1', $this->_string);
-        $this->_string = html_entity_decode($this->_string);
+        $str = htmlentities($this->string, ENT_COMPAT, 'UTF-8');
+        $this->string = preg_replace('/&([a-zA-Z])(uml|acute|grave|circ|tilde|cedil|ring|caron|slash);/', '$1', $str);
+        $this->string = preg_replace('/&([a-zA-Z]{2})(lig);/', '$1', $this->string);
+        $this->string = html_entity_decode($this->string);
         return $this;
     }
 
@@ -125,9 +125,9 @@ class StringFormat
     public function alphanumeric()
     {
         if ($this->unicode()) {
-            $this->_string = preg_replace("/[^[:alnum:][:space:]]/ui", '', $this->_string);
+            $this->string = preg_replace("/[^[:alnum:][:space:]]/ui", '', $this->string);
         } else {
-            $this->_string = preg_replace("/[^A-Za-z0-9 ]/", '', $this->_string);
+            $this->string = preg_replace("/[^A-Za-z0-9 ]/", '', $this->string);
         }
         return $this;
     }

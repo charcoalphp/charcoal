@@ -2,6 +2,8 @@
 
 namespace Charcoal\Loader;
 
+use Exception;
+
 // Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Model\ModelInterface as ModelInterface;
 
@@ -11,17 +13,17 @@ use \Charcoal\Model\ModelInterface as ModelInterface;
 class ObjectLoader extends AbstractLoader
 {
     /**
-    * @var string $_ident
+    * @var string $ident
     */
-    private $_ident = '';
+    private $ident = '';
     /**
-    * @var ModelInterface $_obj
+    * @var ModelInterface $obj
     */
-    private $_obj;
+    private $obj;
     /**
-    * @var SourceInterface $_source
+    * @var SourceInterface $source
     */
-    private $_source;
+    private $source;
 
     /**
     * @param mixed $source
@@ -29,7 +31,7 @@ class ObjectLoader extends AbstractLoader
     */
     public function set_source($source)
     {
-        $this->_source = $source;
+        $this->source = $source;
         return $this;
     }
 
@@ -38,7 +40,7 @@ class ObjectLoader extends AbstractLoader
     */
     public function source()
     {
-        return $this->_source;
+        return $this->source;
     }
 
     /**
@@ -47,7 +49,7 @@ class ObjectLoader extends AbstractLoader
     */
     public function set_model(ModelInterface $model)
     {
-        $this->_model = $model;
+        $this->model = $model;
         $this->set_source($model->source());
         return $this;
     }
@@ -58,10 +60,10 @@ class ObjectLoader extends AbstractLoader
     */
     public function model()
     {
-        if ($this->_model === null) {
+        if ($this->model === null) {
             throw new Exception('No model set.');
         }
-        return $this->_model;
+        return $this->model;
     }
 
     /**
@@ -74,7 +76,7 @@ class ObjectLoader extends AbstractLoader
         if (!is_string($ident)) {
             throw new \InvalidArgumentException(__CLASS__.'::'.__FUNCTION__.'() - Ident must be a string.');
         }
-        $this->_ident = $ident;
+        $this->ident = $ident;
         return $this;
     }
 
@@ -83,7 +85,7 @@ class ObjectLoader extends AbstractLoader
     */
     public function ident()
     {
-        return $this->_ident;
+        return $this->ident;
     }
 
     /**
@@ -92,7 +94,7 @@ class ObjectLoader extends AbstractLoader
     */
     public function set_obj($obj)
     {
-        $this->_obj = $obj;
+        $this->obj = $obj;
         return $this;
     }
 
@@ -101,7 +103,7 @@ class ObjectLoader extends AbstractLoader
     */
     public function obj()
     {
-        return $this->_obj;
+        return $this->obj;
     }
 
     /**

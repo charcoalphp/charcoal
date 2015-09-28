@@ -8,6 +8,7 @@ use \InvalidArgumentException;
 
 // Dependencies from `PHP` modules
 use \PDO;
+use \PDOException;
 
 // Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Charcoal;
@@ -30,23 +31,23 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     const DEFAULT_DB_TYPE = 'mysql';
 
     /**
-    * @var string $_database_ident
+    * @var string $database_ident
     */
-    private $_database_ident;
+    private $database_ident;
     /**
-    * @var DatabaseSourceConfig $_database_config
+    * @var DatabaseSourceConfig $database_config
     */
-    private $_database_config;
+    private $database_config;
 
     /**
-    * @var string $_table
+    * @var string $table
     */
-    private $_table = null;
+    private $table = null;
 
     /**
-    * @var array $_dbs
+    * @var array $dbs
     */
-    private static $_dbs = [];
+    private static $dbs = [];
 
     /**
     * @param string $database_ident
@@ -58,7 +59,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
         if (!is_string($database_ident)) {
             throw new InvalidArgumentException('set_database() expects a string as database ident.');
         }
-        $this->_database_ident = $database_ident;
+        $this->database_ident = $database_ident;
         return $this;
     }
 
@@ -70,10 +71,10 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     */
     public function database_ident()
     {
-        if ($this->_database_ident === null) {
+        if ($this->database_ident === null) {
             return Charcoal::config()->default_database();
         }
-        return $this->_database_ident;
+        return $this->database_ident;
     }
 
     /**
@@ -92,7 +93,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
                 )
             );
         }
-        $this->_database_config = $database_config;
+        $this->database_config = $database_config;
         return $this;
     }
 
@@ -101,11 +102,11 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     */
     public function database_config()
     {
-        if ($this->_database_config === null) {
+        if ($this->database_config === null) {
             $ident = $this->database_ident();
             return Charcoal::config()->database_config($ident);
         }
-        return $this->_database_config;
+        return $this->database_config;
     }
 
     /**
@@ -126,7 +127,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
                 )
             );
         }
-        $this->_table = $table;
+        $this->table = $table;
 
         return $this;
     }
@@ -139,10 +140,10 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     */
     public function table()
     {
-        if ($this->_table === null) {
+        if ($this->table === null) {
             throw new Exception('Table was not set.');
         }
-        return $this->_table;
+        return $this->table;
     }
 
     /**
@@ -159,7 +160,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
 
         $model = $this->model();
         $metadata = $model->metadata();
-        $fields = $this->_get_model_fields($model);
+        $fields = $this->get_model_fields($model);
         $fields__sql = [];
         foreach ($fields as $field) {
             $fields_sql[] = $field->sql();
@@ -191,7 +192,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
             return false;
         }
 
-        $fields = $this->_get_model_fields($this->model());
+        $fields = $this->get_model_fields($this->model());
 
         $cols = $this->table_structure();
 
@@ -201,7 +202,6 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
             if (!array_key_exists($ident, $cols)) {
                 // The key does not exist at all.
                 $q = 'ALTER TABLE `'.$this->table().'` ADD '.$field->sql();
-                // var_dump($q);
                 $res = $this->db()->query($q);
             } else {
                 // The key exists. Validate.
@@ -222,7 +222,6 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
 
                 if ($alter === true) {
                     $q = 'ALTER TABLE `'.$this->table().'` CHANGE `'.$ident.'` '.$field->sql();
-                    // var_dump($q);
                     $res = $this->db()->query($q);
                 }
 
@@ -283,8 +282,8 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
         }
 
         // If the handle was already created, reuse from static $dbh variable
-        if (isset(self::$_dbs[$database_ident])) {
-            return self::$_dbs[$database_ident];
+        if (isset(self::$dbs[$database_ident])) {
+            return self::$dbs[$database_ident];
         }
 
         $db_config = $this->database_config();
@@ -316,9 +315,9 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
             throw new Exception('Error setting up database.');
         }
 
-        self::$_dbs[$database_ident] = $db;
+        self::$dbs[$database_ident] = $db;
 
-        return self::$_dbs[$database_ident];
+        return self::$dbs[$database_ident];
     }
 
     /**
@@ -329,7 +328,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     * @return array
     * @todo Move this method in StorableTrait or AbstractModel
     */
-    private function _get_model_fields(ModelInterface $model, $properties = null)
+    private function get_model_fields(ModelInterface $model, $properties = null)
     {
         $metadata = $model->metadata();
         if ($properties === null) {
@@ -445,7 +444,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
 
         $table_structure = array_keys($this->table_structure());
 
-        $fields = $this->_get_model_fields($model);
+        $fields = $this->get_model_fields($model);
 
         $keys = [];
         $values = [];
@@ -497,7 +496,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
         $model = $this->model();
 
         $table_structure = array_keys($this->table_structure());
-        $fields = $this->_get_model_fields($model, $properties);
+        $fields = $this->get_model_fields($model, $properties);
 
         $updates = [];
         $binds = [];
@@ -698,9 +697,9 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     {
         $sql = '';
 
-        if (!empty($this->_orders)) {
+        if (!empty($this->orders)) {
             $orders_sql = [];
-            foreach ($this->_orders as $o) {
+            foreach ($this->orders as $o) {
                 $orders_sql[] = $o->sql();
             }
             if (!empty($orders_sql)) {

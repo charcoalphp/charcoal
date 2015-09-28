@@ -31,52 +31,52 @@ class CharcoalConfig extends AbstractConfig
 
     /**
     * The path of the `admin` module, if set.
-    * @var string $_admin_path
+    * @var string $admin_path
     */
-    private $_admin_path;
+    private $admin_path;
 
     /**
     * The project name
-    * @var string $_project_name
+    * @var string $project_name
     */
-    private $_project_name;
+    private $project_name;
 
     /**
     * Extra debugging informations might be had when dev_mode is true.
-    * @var boolean $_dev_mode
+    * @var boolean $dev_mode
     */
-    private $_dev_mode;
+    private $dev_mode;
 
     /**
-    * @var string $_timezone
+    * @var string $timezone
     */
-    private $_timezone;
+    private $timezone;
 
     /**
     * Available database pool in project
-    * @var array $_databases
+    * @var array $databases
     * @see \Charcoal\Source\DatabaseSourceConfig
     */
-    private $_databases;
+    private $databases;
     /**
     * Default database identifier
-    * @var string $_default_database
+    * @var string $default_database
     */
-    private $_default_database;
+    private $default_database;
 
     /**
     * List of path where to search for metadata.
     * (ex: Model metadata as json config)
-    * @var array $_metadata_path
+    * @var array $metadata_path
     */
-    private $_metadata_path = [];
+    private $metadata_path = [];
 
     /**
     * List of path where to search for view templates.
     * (ex: templates, widgets and property inputs "mustache" templates)
-    * @var array $_template_path
+    * @var array $template_path
     */
-    private $_template_path = [];
+    private $template_path = [];
 
     /**
     * The Config class is always extended with the default JSON config, from charcoal-core.
@@ -91,16 +91,7 @@ class CharcoalConfig extends AbstractConfig
         parent::__construct($config);
     }
 
-    /**
-    * @return string
-    */
-    public function project_name()
-    {
-        if ($this->_project_name === null) {
-            $this->_project_name = $this->url();
-        }
-        return $this->_project_name;
-    }
+
 
     /**
     * @return string
@@ -117,14 +108,14 @@ class CharcoalConfig extends AbstractConfig
     /**
     * @param string $admin_path
     * @throws InvalidArgumentException
-    * @return Config Chainable
+    * @return CharcoalConfig Chainable
     */
     public function set_admin_path($admin_path)
     {
         if (!is_string($admin_path)) {
             throw new InvalidArgumentException('Admin Path must be a string.');
         }
-        $this->_admin_path = $admin_path;
+        $this->admin_path = $admin_path;
         return $this;
     }
 
@@ -133,20 +124,49 @@ class CharcoalConfig extends AbstractConfig
     */
     public function admin_path()
     {
-        return $this->_admin_path;
+        return $this->admin_path;
+    }
+
+    /**
+    * @param string $project_name
+    * @throws InvalidArgumentException
+    * @return CharcoalConfig Chainable
+    */
+    public function set_project_name($project_name)
+    {
+        if ($project_name === null) {
+            $this->project_name = $null;
+            return $this;
+        }
+        if (!is_string($project_name)) {
+            throw new InvalidArgumentException('Project name must be a string');
+        }
+        $this->project_name = $project_name;
+        return $this;
+    }
+
+    /**
+    * @return string
+    */
+    public function project_name()
+    {
+        if ($this->project_name === null) {
+            return $this->url();
+        }
+        return $this->project_name;
     }
 
     /**
     * @param boolean $dev_mode
     * @throws InvalidArgumentException
-    * @return Config Chainable
+    * @return CharcoalConfig Chainable
     */
     public function set_dev_mode($dev_mode)
     {
         if (!is_bool($dev_mode)) {
             throw new InvalidArgumentException('Developer Mode must be a boolean.');
         }
-        $this->_dev_mode = $dev_mode;
+        $this->dev_mode = $dev_mode;
         return $this;
     }
 
@@ -155,20 +175,20 @@ class CharcoalConfig extends AbstractConfig
     */
     public function dev_mode()
     {
-        return !!$this->_dev_mode;
+        return !!$this->dev_mode;
     }
 
     /**
     * @param string $timezone
     * @throws InvalidArgumentException
-    * @return Config Chainable
+    * @return CharcoalConfig Chainable
     */
     public function set_timezone($timezone)
     {
         if (!is_string($timezone)) {
             throw new InvalidArgumentException('Timezone must be a string.');
         }
-        $this->_timezone = $timezone;
+        $this->timezone = $timezone;
         return $this;
     }
 
@@ -177,7 +197,7 @@ class CharcoalConfig extends AbstractConfig
     */
     public function timezone()
     {
-        return $this->_timezone;
+        return $this->timezone;
     }
 
     /**
@@ -190,7 +210,7 @@ class CharcoalConfig extends AbstractConfig
         if (!is_array($databases)) {
             throw new InvalidArgumentException('Databases must be an array.');
         }
-        $this->_databases = $databases;
+        $this->databases = $databases;
         return $this;
     }
 
@@ -200,10 +220,10 @@ class CharcoalConfig extends AbstractConfig
     */
     public function databases()
     {
-        if ($this->_databases == null) {
+        if ($this->databases == null) {
             throw new Exception('Databases are not set.');
         }
-        return $this->_databases;
+        return $this->databases;
     }
 
     /**
@@ -227,14 +247,14 @@ class CharcoalConfig extends AbstractConfig
     /**
     * @param string $default_database
     * @throws InvalidArgumentException
-    * @return Config Chainable
+    * @return CharcoalConfig Chainable
     */
     public function set_default_database($default_database)
     {
         if (!is_string($default_database)) {
             throw new InvalidArgumentException('Default database must be a string.');
         }
-        $this->_default_database = $default_database;
+        $this->default_database = $default_database;
         return $this;
     }
 
@@ -242,7 +262,7 @@ class CharcoalConfig extends AbstractConfig
     * @param string $ident
     * @param array  $config
     * @throws InvalidArgumentException
-    * @return Config Chainable
+    * @return CharcoalConfig Chainable
     */
     public function add_database($ident, $config)
     {
@@ -253,10 +273,10 @@ class CharcoalConfig extends AbstractConfig
             throw new InvalidArgumentException('Database config must be an array.');
         }
 
-        if ($this->_databases === null) {
-            $this->_databases = [];
+        if ($this->databases === null) {
+            $this->databases = [];
         }
-        $this->_databases[$ident] = $config;
+        $this->databases[$ident] = $config;
         return $this;
     }
 
@@ -266,16 +286,16 @@ class CharcoalConfig extends AbstractConfig
     */
     public function default_database()
     {
-        if ($this->_default_database == null) {
+        if ($this->default_database == null) {
             throw new Exception('Default database is not set.');
         }
-        return $this->_default_database;
+        return $this->default_database;
     }
 
     /**
     * @param array $metadata_path
     * @throws InvalidArgumentException
-    * @return Config Chainable
+    * @return CharcoalConfig Chainable
     * @todo Move to MetadataConfig
     */
     public function set_metadata_path($metadata_path)
@@ -283,7 +303,7 @@ class CharcoalConfig extends AbstractConfig
         if (!is_array($metadata_path)) {
             throw new InvalidArgumentException('Metadata path needs to be an array.');
         }
-        $this->_metadata_path = $metadata_path;
+        $this->metadata_path = $metadata_path;
         return $this;
     }
 
@@ -292,13 +312,13 @@ class CharcoalConfig extends AbstractConfig
     */
     public function metadata_path()
     {
-        return $this->_metadata_path;
+        return $this->metadata_path;
     }
 
     /**
     * @param string $path
     * @throws InvalidArgumentException
-    * @return Config Chainable
+    * @return CharcoalConfig Chainable
     */
     public function add_metadata_path($path)
     {
@@ -306,14 +326,14 @@ class CharcoalConfig extends AbstractConfig
             throw new InvalidArgumentException('Path needs to be a string.');
         }
 
-        $this->_metadata_path[] = $path;
+        $this->metadata_path[] = $path;
         return $this;
     }
 
     /**
     * @param array $template_path
     * @throws Exception
-    * @return Config Chainable
+    * @return CharcoalConfig Chainable
     * @todo Move to ViewConfig
     */
     public function set_template_path($template_path)
@@ -321,7 +341,7 @@ class CharcoalConfig extends AbstractConfig
         if (!is_array($template_path)) {
             throw new Exception('Metadata Path needs to be an array.');
         }
-        $this->_template_path = $template_path;
+        $this->template_path = $template_path;
         return $this;
     }
 
@@ -330,13 +350,13 @@ class CharcoalConfig extends AbstractConfig
     */
     public function template_path()
     {
-        return $this->_template_path;
+        return $this->template_path;
     }
 
     /**
     * @param string $path
     * @throws InvalidArgumentException
-    * @return Config Chainable
+    * @return CharcoalConfig Chainable
     */
     public function add_template_path($path)
     {
@@ -344,7 +364,7 @@ class CharcoalConfig extends AbstractConfig
             throw new InvalidArgumentException('Path needs to be a string.');
         }
 
-        $this->_template_path[] = $path;
+        $this->template_path[] = $path;
         return $this;
     }
 }

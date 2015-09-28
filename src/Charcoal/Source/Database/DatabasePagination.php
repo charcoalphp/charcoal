@@ -25,7 +25,6 @@ class DatabasePagination extends Pagination
             $first_page = max(0, (($page-1)*$num_per_page));
             $sql = ' LIMIT '.$first_page.', '.$num_per_page;
         }
-        // pre($limits);
         return $sql;
     }
 }

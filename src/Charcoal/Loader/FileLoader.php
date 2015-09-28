@@ -11,19 +11,19 @@ use \InvalidArgumentException as InvalidArgumentException;
 class FileLoader extends AbstractLoader
 {
     /**
-    * @var array $_search_path
+    * @var array $search_path
     */
-    private $_search_path = [];
+    private $search_path = [];
 
     /**
-    * @var string $_path
+    * @var string $path
     */
-    private $_path;
+    private $path;
 
     /**
-    * @var string $_ident
+    * @var string $ident
     */
-    private $_ident;
+    private $ident;
 
     /**
     * @param string $ident
@@ -35,7 +35,7 @@ class FileLoader extends AbstractLoader
         if (!is_string($ident)) {
             throw new InvalidArgumentException(__CLASS__.'::'.__FUNCTION__.'() - Ident must be a string.');
         }
-        $this->_ident = $ident;
+        $this->ident = $ident;
         return $this;
     }
 
@@ -44,7 +44,7 @@ class FileLoader extends AbstractLoader
     */
     public function ident()
     {
-        return $this->_ident;
+        return $this->ident;
     }
 
     /**
@@ -57,7 +57,7 @@ class FileLoader extends AbstractLoader
         if (!is_string($path)) {
             throw new InvalidArgumentException('set_path() expects a string.');
         }
-        $this->_path = $path;
+        $this->path = $path;
         return $this;
     }
 
@@ -66,10 +66,10 @@ class FileLoader extends AbstractLoader
     */
     public function path()
     {
-        if (!$this->_path) {
+        if (!$this->path) {
             return '';
         }
-        return $this->_path;
+        return $this->path;
     }
 
     /**
@@ -90,7 +90,7 @@ class FileLoader extends AbstractLoader
             return $ret;
         }
 
-        $filename = $this->_first_matching_filename($ident);
+        $filename = $this->first_matching_filename($ident);
         if ($filename) {
             $file_content = file_get_contents($filename);
             $this->set_content($file_content);
@@ -105,7 +105,7 @@ class FileLoader extends AbstractLoader
     * @param string $filename
     * @return string
     */
-    protected function _load_first_from_search_path($filename)
+    protected function load_first_from_search_path($filename)
     {
         $search_path = $this->search_path();
         if (empty($search_path)) {
@@ -126,7 +126,7 @@ class FileLoader extends AbstractLoader
     * @param string $filename
     * @return string
     */
-    protected function _first_matching_filename($filename)
+    protected function first_matching_filename($filename)
     {
         if (file_exists($filename)) {
             return $filename;
@@ -149,7 +149,7 @@ class FileLoader extends AbstractLoader
     * @param string $filename
     * @return array
     */
-    protected function _all_matching_filenames($filename)
+    protected function all_matching_filenames($filename)
     {
         $ret = [];
         if (file_exists($filename)) {
@@ -193,7 +193,7 @@ class FileLoader extends AbstractLoader
             );
         }
 
-        $this->_search_path[] = $path;
+        $this->search_path[] = $path;
 
         return $this;
     }
@@ -204,6 +204,6 @@ class FileLoader extends AbstractLoader
     */
     public function search_path()
     {
-        return $this->_search_path;
+        return $this->search_path;
     }
 }

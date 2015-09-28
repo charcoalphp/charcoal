@@ -12,25 +12,25 @@ abstract class AbstractViewEngine implements ViewEngineInterface
 {
     /**
     * Holds the list of JS requirements for View
-    * @var array $_js_requirements
+    * @var array $js_requirements
     */
-    static private $_js_requirements = [];
+    static private $js_requirements = [];
 
     /**
     * Holds custom JS scripts to append to View
-    * @var string $_js
+    * @var string $js
     */
-    static private $_js = '';
+    static private $js = '';
 
     /**
-    * @var array $_css_requirements
+    * @var array $css_requirements
     */
-    static private $_css_requirements = [];
+    static private $css_requirements = [];
 
     /**
-    * @var array $_css;
+    * @var array $css;
     */
-    static private $_css = '';
+    static private $css = '';
 
     /**
     * @return string
@@ -62,12 +62,12 @@ abstract class AbstractViewEngine implements ViewEngineInterface
     */
     public function js_requirements()
     {
-        $req = array_unique(self::$_js_requirements);
+        $req = array_unique(self::$js_requirements);
         $ret = '';
         foreach ($req as $r) {
             $ret .= $r;
         }
-        self::$_js_requirements = [];
+        self::$js_requirements = [];
         return $ret;
     }
 
@@ -77,7 +77,7 @@ abstract class AbstractViewEngine implements ViewEngineInterface
     */
     public function add_js_requirement($js_requirement)
     {
-        self::$_js_requirements[] = $js_requirement;
+        self::$js_requirements[] = $js_requirement;
     }
 
     /**
@@ -85,8 +85,8 @@ abstract class AbstractViewEngine implements ViewEngineInterface
     */
     public function js()
     {
-        $js = self::$_js;
-        self::$_js = '';
+        $js = self::$js;
+        self::$js = '';
         return $js;
     }
 
@@ -96,7 +96,7 @@ abstract class AbstractViewEngine implements ViewEngineInterface
     */
     public function add_js($js)
     {
-        self::$_js .= $js;
+        self::$js .= $js;
     }
 
     /**
@@ -104,12 +104,12 @@ abstract class AbstractViewEngine implements ViewEngineInterface
     */
     public function css_requirements()
     {
-        $req = array_unique(self::$_css_requirements);
+        $req = array_unique(self::$css_requirements);
         $ret = '';
         foreach ($req as $r) {
             $ret .= $r;
         }
-        self::$_css_requirements = [];
+        self::$css_requirements = [];
         return $ret;
     }
 
@@ -119,7 +119,7 @@ abstract class AbstractViewEngine implements ViewEngineInterface
     */
     public function add_css_requirement($css_requirement)
     {
-        self::$_css_requirements[] = $css_requirement;
+        self::$css_requirements[] = $css_requirement;
     }
 
     /**
@@ -127,8 +127,8 @@ abstract class AbstractViewEngine implements ViewEngineInterface
     */
     public function css()
     {
-        $css = self::$_css;
-        self::$_css = '';
+        $css = self::$css;
+        self::$css = '';
         return $css;
     }
 
@@ -138,6 +138,6 @@ abstract class AbstractViewEngine implements ViewEngineInterface
     */
     public function add_css($css)
     {
-        self::$_css .= $css;
+        self::$css .= $css;
     }
 }

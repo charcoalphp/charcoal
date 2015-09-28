@@ -18,19 +18,19 @@ use \Charcoal\View\ViewInterface;
 trait ViewableTrait
 {
     /**
-    * @var string $_template_engine
+    * @var string $template_engine
     */
-    protected $_template_engine;
+    protected $template_engine;
 
     /**
     * @var string $template_ident
     */
-    protected $_template_ident;
+    protected $template_ident;
 
     /**
-    * @var ViewInterface $_view
+    * @var ViewInterface $view
     */
-    protected $_view;
+    protected $view;
 
     /**
     * @param array $data
@@ -60,7 +60,7 @@ trait ViewableTrait
                 'Engine must be a string.'
             );
         }
-        $this->_template_engine = $engine;
+        $this->template_engine = $engine;
         return $this;
     }
 
@@ -69,10 +69,10 @@ trait ViewableTrait
     */
     public function template_engine()
     {
-        if ($this->_template_engine === null) {
-            $this->_template_engine = AbstractView::DEFAULT_ENGINE;
+        if ($this->template_engine === null) {
+            $this->template_engine = AbstractView::DEFAULT_ENGINE;
         }
-        return $this->_template_engine;
+        return $this->template_engine;
     }
 
     /**
@@ -87,7 +87,7 @@ trait ViewableTrait
                 'Template ident must be a string.'
             );
         }
-        $this->_template_ident = $ident;
+        $this->template_ident = $ident;
         return $this;
     }
 
@@ -96,7 +96,7 @@ trait ViewableTrait
     */
     public function template_ident()
     {
-        return $this->_template_ident;
+        return $this->template_ident;
     }
 
     /**
@@ -107,9 +107,9 @@ trait ViewableTrait
     public function set_view($view)
     {
         if (is_array($view)) {
-            $this->_view = $this->create_view($view);
+            $this->view = $this->create_view($view);
         } elseif (($view instanceof ViewInterface)) {
-            $this->_view = $view;
+            $this->view = $view;
         } else {
             throw new InvalidArgumentException(
                 'View must be an array or a ViewInterface object.'
@@ -123,10 +123,10 @@ trait ViewableTrait
     */
     public function view()
     {
-        if ($this->_view === null) {
-            $this->_view = $this->create_view();
+        if ($this->view === null) {
+            $this->view = $this->create_view();
         }
-        return $this->_view;
+        return $this->view;
     }
 
     /**

@@ -29,9 +29,9 @@ abstract class AbstractMetadata implements
 
     /**
      * Holds the properties of this configuration object
-     * @var array $_properties
+     * @var array $properties
      */
-    protected $_properties = [];
+    protected $properties = [];
 
     /**
     * Convert an array of parameters in the metadata format.
@@ -69,7 +69,7 @@ abstract class AbstractMetadata implements
     */
     public function set_properties(array $properties)
     {
-        $this->_properties = $properties;
+        $this->properties = $properties;
         return $this;
     }
 
@@ -78,7 +78,7 @@ abstract class AbstractMetadata implements
     */
     public function properties()
     {
-        return $this->_properties;
+        return $this->properties;
     }
 
     /**

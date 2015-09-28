@@ -13,14 +13,14 @@ class Language implements LanguageInterface
 {
     /**
     * The language identifier, as 2-chacters ISO code
-    * @var string $_ident
+    * @var string $ident
     */
-    private $_ident;
+    private $ident;
     /**
     * The language
-    * @var TranslationString $_name;
+    * @var TranslationString $name;
     */
-    private $_name;
+    private $name;
 
     public function set_data(array $data)
     {
@@ -35,23 +35,23 @@ class Language implements LanguageInterface
 
     public function set_ident($ident)
     {
-        $this->_ident = $ident;
+        $this->ident = $ident;
         return $this;
     }
 
     public function ident()
     {
-        return $this->_ident;
+        return $this->ident;
     }
 
     public function set_name($name)
     {
-        $this->_name = new TranslationString($name);
+        $this->name = new TranslationString($name);
         return $this;
     }
 
     public function name()
     {
-        return $this->_name;
+        return $this->name;
     }
 }

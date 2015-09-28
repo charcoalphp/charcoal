@@ -14,9 +14,9 @@ trait ValidatableTrait
 {
     /**
     * In-objet copy of the `ValidatorInterface` validator object
-    * @var ValidatorInterface $_validator
+    * @var ValidatorInterface $validator
     */
-    protected $_validator;
+    protected $validator;
 
     /**
     * @param ValidatorInterface $validator
@@ -24,7 +24,7 @@ trait ValidatableTrait
     */
     public function set_validator(ValidatorInterface $validator)
     {
-        $this->_validator = $validator;
+        $this->validator = $validator;
         return $this;
     }
 
@@ -33,10 +33,10 @@ trait ValidatableTrait
     */
     public function validator()
     {
-        if ($this->_validator === null) {
-            $this->_validator = $this->create_validator();
+        if ($this->validator === null) {
+            $this->validator = $this->create_validator();
         }
-        return $this->_validator;
+        return $this->validator;
     }
 
     /**

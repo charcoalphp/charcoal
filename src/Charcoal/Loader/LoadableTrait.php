@@ -2,31 +2,35 @@
 
 namespace Charcoal\Loader;
 
+use \InvalidArgumentException;
+
 /**
 * Default implementation, as trait, of the `LoadableInterface`
 */
 trait LoadableTrait
 {
     /**
-    * @var LoaderInterface $_loader
+    * @var LoaderInterface $loader
     */
-    protected $_loader;
+    protected $loader;
 
     /**
     * Set the loader object.
     *
     * @param array|LoaderInterface $loader
-    * @throws \InvalidArgumentException if loader is not an array or object
+    * @throws InvalidArgumentException if loader is not an array or object
     * @return LoadableInterface Chainable
     */
     public function set_loader($loader)
     {
         if (is_array($loader)) {
-            $this->_loader = $this->create_loader($loader);
+            $this->loader = $this->create_loader($loader);
         } elseif (($loader instanceof LoaderInterface)) {
-            $this->_loader = $loader;
+            $this->loader = $loader;
         } else {
-            throw new \InvalidArgumentException('Loader must be an array or a Loader object.');
+            throw new InvalidArgumentException(
+                'Loader must be an array or a Loader object.'
+            );
         }
         return $this;
     }
@@ -38,10 +42,10 @@ trait LoadableTrait
     */
     public function loader()
     {
-        if ($this->_loader === null) {
-            $this->_loader = $this->create_loader();
+        if ($this->loader === null) {
+            $this->loader = $this->create_loader();
         }
-        return $this->_loader;
+        return $this->loader;
     }
 
     /**

@@ -60,11 +60,11 @@ class MetadataLoader extends FileLoader
             return $ret;
         }
 
-        $hierarchy = $this->_hierarchy();
+        $hierarchy = $this->hierarchy();
 
         $metadata = [];
         foreach ($hierarchy as $id) {
-            $ident_data = self::_load_ident($id);
+            $ident_data = self::load_ident($id);
             if (is_array($ident_data)) {
                 $metadata = Charcoal::merge($metadata, $ident_data);
             }
@@ -79,18 +79,18 @@ class MetadataLoader extends FileLoader
     /**
     * @return array
     */
-    private function _hierarchy()
+    private function hierarchy()
     {
         $ident = $this->ident();
         $hierarchy = null;
 
-        $classname = $this->_ident_to_classname($ident);
+        $classname = $this->ident_to_classname($ident);
         // var_dump($classname);
         if (class_exists($classname)) {
             // If the object is a class, we use hierarchy from object ancestor classes
             $ident_hierarchy = [$ident];
             while ($classname = get_parent_class($classname)) {
-                $ident_hierarchy[] = $this->_classname_to_ident($classname);
+                $ident_hierarchy[] = $this->classname_to_ident($classname);
             }
             $ident_hierarchy = array_reverse($ident_hierarchy);
         } else {
@@ -110,11 +110,11 @@ class MetadataLoader extends FileLoader
     * @param string $ident
     * @return array
     */
-    private function _load_ident($ident)
+    private function load_ident($ident)
     {
         $data = [];
-        $filename = $this->_filename_from_ident($ident);
-        $files = $this->_all_matching_filenames($filename);
+        $filename = $this->filename_from_ident($ident);
+        $files = $this->all_matching_filenames($filename);
         foreach ($files as $f) {
             $file_content = file_get_contents($f);
             if ($file_content === '') {
@@ -134,7 +134,7 @@ class MetadataLoader extends FileLoader
     * @param string $ident
     * @return string
     */
-    private function _filename_from_ident($ident)
+    private function filename_from_ident($ident)
     {
         $filename = str_replace(['\\'], '.', $ident);
         $filename .= '.json';
@@ -146,7 +146,7 @@ class MetadataLoader extends FileLoader
     * @param string $ident
     * @return string
     */
-    protected function _ident_to_classname($ident)
+    protected function ident_to_classname($ident)
     {
         // Change "foo-bar" to "fooBar"
         $expl = explode('-', $ident);
@@ -177,7 +177,7 @@ class MetadataLoader extends FileLoader
     * @param string $classname
     * @return string
     */
-    protected function _classname_to_ident($classname)
+    protected function classname_to_ident($classname)
     {
         $ident = str_replace('\\', '/', strtolower($classname));
         $ident = ltrim($ident, '/');

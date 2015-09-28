@@ -18,37 +18,37 @@ class Filter implements FilterInterface
     const DEFAULT_OPERAND  = 'AND';
 
     /**
-    * @var string $_property
+    * @var string $property
     */
-    protected $_property;
+    protected $property;
     /**
-    * @var mixed $_val
+    * @var mixed $val
     */
-    protected $_val;
+    protected $val;
 
     /**
-    * @var string $_operator
+    * @var string $operator
     */
-    protected $_operator = self::DEFAULT_OPERATOR;
+    protected $operator = self::DEFAULT_OPERATOR;
     /**
-    * @var string $_func
+    * @var string $func
     */
-    protected $_func = self::DEFAULT_FUNC;
+    protected $func = self::DEFAULT_FUNC;
     /**
-    * @var string $_operand
+    * @var string $operand
     */
-    protected $_operand = self::DEFAULT_OPERAND;
+    protected $operand = self::DEFAULT_OPERAND;
 
     /**
-    * @var string $_string
+    * @var string $string
     */
-    protected $_string;
+    protected $string;
 
     /**
     * Inactive filter should be skipped completely.
-    * @var boolean $_active
+    * @var boolean $active
     */
-    protected $_active;
+    protected $active;
 
     /**
     * @param array $data
@@ -94,7 +94,7 @@ class Filter implements FilterInterface
             throw new InvalidArgumentException('Property can not be empty.');
         }
 
-        $this->_property = $property;
+        $this->property = $property;
         return $this;
     }
 
@@ -103,7 +103,7 @@ class Filter implements FilterInterface
     */
     public function property()
     {
-        return $this->_property;
+        return $this->property;
     }
 
     /**
@@ -112,7 +112,7 @@ class Filter implements FilterInterface
     */
     public function set_val($val)
     {
-        $this->_val = $val;
+        $this->val = $val;
         return $this;
     }
 
@@ -121,7 +121,7 @@ class Filter implements FilterInterface
     */
     public function val()
     {
-        return $this->_val;
+        return $this->val;
     }
 
     /**
@@ -140,7 +140,7 @@ class Filter implements FilterInterface
             throw new InvalidArgumentException('This is not a valid operator.');
         }
 
-        $this->_operator = $operator;
+        $this->operator = $operator;
         return $this;
     }
 
@@ -149,7 +149,7 @@ class Filter implements FilterInterface
     */
     public function operator()
     {
-        return strtoupper($this->_operator);
+        return strtoupper($this->operator);
     }
 
     /**
@@ -167,7 +167,7 @@ class Filter implements FilterInterface
         if (!in_array($func, $this->valid_func())) {
             throw new InvalidArgumentException('This is not a valid function.');
         }
-        $this->_func = $func;
+        $this->func = $func;
         return $this;
     }
 
@@ -176,7 +176,7 @@ class Filter implements FilterInterface
     */
     public function func()
     {
-        return $this->_func;
+        return $this->func;
     }
 
     /**
@@ -195,7 +195,7 @@ class Filter implements FilterInterface
             throw new InvalidArgumentException('This is not a valid operand.');
         }
 
-        $this->_operand = $operand;
+        $this->operand = $operand;
         return $this;
     }
 
@@ -204,7 +204,7 @@ class Filter implements FilterInterface
     */
     public function operand()
     {
-        return strtoupper($this->_operand);
+        return strtoupper($this->operand);
     }
 
     /**
@@ -218,7 +218,7 @@ class Filter implements FilterInterface
             throw new InvalidArgumentException('String should be a string.');
         }
 
-        $this->_string = $sql;
+        $this->string = $sql;
         return $this;
     }
 
@@ -227,7 +227,7 @@ class Filter implements FilterInterface
     */
     public function string()
     {
-        return $this->_string;
+        return $this->string;
     }
 
     /**
@@ -236,7 +236,7 @@ class Filter implements FilterInterface
     */
     public function set_active($active)
     {
-        $this->_active = $active;
+        $this->active = $active;
         return $this;
     }
 
@@ -245,7 +245,7 @@ class Filter implements FilterInterface
     */
     public function active()
     {
-        return !!$this->_active;
+        return !!$this->active;
     }
 
 

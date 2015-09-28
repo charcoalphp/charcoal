@@ -31,19 +31,19 @@ use \Charcoal\CharcoalConfig;
 class Charcoal
 {
     /**
-    * @var Config $_config
+    * @var Config $config
     */
-    static private $_config = null;
+    static private $config = null;
 
     /**
-    * @var LoggerInterface $_logger
+    * @var LoggerInterface $logger
     */
-    static private $_logger = null;
+    static private $logger = null;
 
     /**
-    * @var Slim $_app
+    * @var Slim $app
     */
-    static private $_app = null;
+    static private $app = null;
 
     /**
     * @param array|null $data
@@ -76,7 +76,7 @@ class Charcoal
     public static function set_config($config)
     {
         if ($config instanceof CharcoalConfig) {
-            self::$_config = $config;
+            self::$config = $config;
         } else {
             throw new InvalidArgumentException(
                 'Config must be a string (filename), an array (config data), or a Config object.'
@@ -91,15 +91,15 @@ class Charcoal
     */
     public static function config($opt = null)
     {
-        if (self::$_config === null) {
+        if (self::$config === null) {
             throw new Exception(
                 'Config has not been set. Call Charcoal::init() first.'
             );
         }
         if ($opt !== null) {
-            return self::$_config[$opt];
+            return self::$config[$opt];
         }
-        return self::$_config;
+        return self::$config;
     }
 
     /**
@@ -108,7 +108,7 @@ class Charcoal
     */
     public static function set_logger(LoggerInterface $logger)
     {
-        self::$_logger = $logger;
+        self::$logger = $logger;
     }
 
     /**
@@ -116,7 +116,7 @@ class Charcoal
     */
     public static function logger()
     {
-        return self::$_logger;
+        return self::$logger;
     }
 
     /**
@@ -125,7 +125,7 @@ class Charcoal
     */
     public static function set_app(Slim $app)
     {
-        self::$_app = $app;
+        self::$app = $app;
     }
 
     /**
@@ -133,7 +133,7 @@ class Charcoal
     */
     public static function app()
     {
-        return self::$_app;
+        return self::$app;
     }
 
     /**

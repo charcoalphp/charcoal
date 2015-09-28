@@ -13,21 +13,21 @@ use \InvalidArgumentException as InvalidArgumentException;
 trait CacheableTrait
 {
     /**
-    * @var CacheInterface $_cache
+    * @var CacheInterface $cache
     */
-    private $_cache;
+    private $cache;
     /**
-    * @var string $_cache_key
+    * @var string $cache_key
     */
-    private $_cache_key;
+    private $cache_key;
     /**
-    * @var integer $_cache_ttl
+    * @var integer $cache_ttl
     */
-    private $_cache_ttl;
+    private $cache_ttl;
     /**
-    * @var boolean $_use_cache
+    * @var boolean $use_cache
     */
-    private $_use_cache = true;
+    private $use_cache = true;
 
     /**
     * Set the object's Cache
@@ -37,7 +37,7 @@ trait CacheableTrait
     */
     public function set_cache(CacheInterface $cache)
     {
-        $this->_cache = $cache;
+        $this->cache = $cache;
         return $this;
     }
 
@@ -48,10 +48,10 @@ trait CacheableTrait
     */
     public function cache()
     {
-        if ($this->_cache === null) {
-            $this->_cache = $this->create_cache();
+        if ($this->cache === null) {
+            $this->cache = $this->create_cache();
         }
-        return $this->_cache;
+        return $this->cache;
     }
 
     /**
@@ -79,7 +79,7 @@ trait CacheableTrait
         if (!is_string($cache_key)) {
             throw new InvalidArgumentException('Cache key must be a string.');
         }
-        $this->_cache_key = $cache_key;
+        $this->cache_key = $cache_key;
         return $this;
     }
 
@@ -90,10 +90,10 @@ trait CacheableTrait
     */
     public function cache_key()
     {
-        if ($this->_cache_key === null) {
-            $this->_cache_key = $this->generate_cache_key();
+        if ($this->cache_key === null) {
+            $this->cache_key = $this->generate_cache_key();
         }
-        return $this->_cache_key;
+        return $this->cache_key;
     }
 
     /**
@@ -112,7 +112,7 @@ trait CacheableTrait
     */
     public function set_cache_ttl($ttl)
     {
-        $this->_cache_ttl = $ttl;
+        $this->cache_ttl = $ttl;
         return $this;
     }
 
@@ -121,10 +121,10 @@ trait CacheableTrait
     */
     public function cache_ttl()
     {
-        if ($this->_cache_ttl === null) {
-            $this->_cache_ttl = $this->cache()->config()->default_ttl();
+        if ($this->cache_ttl === null) {
+            $this->cache_ttl = $this->cache()->config()->default_ttl();
         }
-        return $this->_cache_ttl;
+        return $this->cache_ttl;
     }
 
     /**
@@ -137,7 +137,7 @@ trait CacheableTrait
         if (!is_bool($use_cache)) {
             throw new InvalidArgumentException('Use cache must be a boolean.');
         }
-        $this->_use_cache = $use_cache;
+        $this->use_cache = $use_cache;
         return $this;
     }
 
@@ -146,7 +146,7 @@ trait CacheableTrait
     */
     public function use_cache()
     {
-        return ($this->_use_cache && $this->cache_key() && $this->cache()->enabled());
+        return ($this->use_cache && $this->cache_key() && $this->cache()->enabled());
     }
 
     /**

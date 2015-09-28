@@ -19,9 +19,9 @@ abstract class AbstractLoader implements
     use CacheableTrait;
 
     /**
-    * @var mixed $_content
+    * @var mixed $content
     */
-    protected $_content;
+    protected $content;
 
     /**
     * @param mixed $content
@@ -29,7 +29,7 @@ abstract class AbstractLoader implements
     */
     public function set_content($content)
     {
-        $this->_content = $content;
+        $this->content = $content;
         return $this;
     }
 
@@ -38,7 +38,7 @@ abstract class AbstractLoader implements
     */
     public function content()
     {
-        return $this->_content;
+        return $this->content;
     }
 
     /**

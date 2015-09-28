@@ -27,39 +27,39 @@ use \Charcoal\Source\Database\DatabasePagination as Pagination;
 class CollectionLoader extends AbstractLoader
 {
     /**
-    * @var array $_properties
+    * @var array $properties
     */
-    private $_properties = [];
+    private $properties = [];
     /**
-    * @var array $_properties_options
+    * @var array $properties_options
     */
-    private $_properties_options = [];
+    private $properties_options = [];
     /**
     * Array of `Filter` objects
-    * @var array $_filters
+    * @var array $filters
     */
-    private $_filters = [];
+    private $filters = [];
     /**
     * Array of `Order` object
-    * @var array $_orders
+    * @var array $orders
     */
-    private $_orders = [];
+    private $orders = [];
     /**
     * The `Pagniation` object
-    * @var Pagination|null $_pagination
+    * @var Pagination|null $pagination
     */
-    private $_pagination = null;
+    private $pagination = null;
 
     /**
     * The source to load the object from
-    * @var SourceInterface $_source
+    * @var SourceInterface $source
     */
-    private $_source = null;
+    private $source = null;
     /**
     * The model to load the collection from
-    * @var ModelInterface $_model
+    * @var ModelInterface $model
     */
-    private $_model = null;
+    private $model = null;
 
     /**
     * @param array $data
@@ -67,17 +67,14 @@ class CollectionLoader extends AbstractLoader
     */
     public function set_data(array $data)
     {
-        if (isset($data['properties'])) {
-            $this->set_properties($data['properties']);
-        }
-        if (isset($data['filters'])) {
-            $this->set_filters($data['filters']);
-        }
-        if (isset($data['orders'])) {
-            $this->set_orders($data['orders']);
-        }
-        if (isset($data['pagination'])) {
-            $this->set_pagination($data['pagination']);
+        foreach ($data as $prop => $val) {
+            $func = [$this, 'set_'.$prop];
+            if (is_callable($func)) {
+                call_user_func($func, $val);
+                unset($data[$prop]);
+            } else {
+                $this->{$prop} = $val;
+            }
         }
         return $this;
     }
@@ -88,7 +85,7 @@ class CollectionLoader extends AbstractLoader
     */
     public function set_source($source)
     {
-        $this->_source = $source;
+        $this->source = $source;
         return $this;
     }
 
@@ -98,10 +95,10 @@ class CollectionLoader extends AbstractLoader
     */
     public function source()
     {
-        if ($this->_source === null) {
+        if ($this->source === null) {
             throw new Exception('No source set.');
         }
-        return $this->_source;
+        return $this->source;
     }
 
     /**
@@ -110,7 +107,7 @@ class CollectionLoader extends AbstractLoader
     */
     public function set_model(ModelInterface $model)
     {
-        $this->_model = $model;
+        $this->model = $model;
         $this->set_source($model->source());
         return $this;
     }
@@ -121,10 +118,10 @@ class CollectionLoader extends AbstractLoader
     */
     public function model()
     {
-        if ($this->_model === null) {
+        if ($this->model === null) {
             throw new Exception('No model set.');
         }
-        return $this->_model;
+        return $this->model;
     }
 
     /**
@@ -153,6 +150,47 @@ class CollectionLoader extends AbstractLoader
     public function add_property($property)
     {
         return $this->source()->add_property($property);
+    }
+
+    /**
+    * @param array $keywords
+    * @return CollectionLoader Chainable
+    */
+    public function set_keywords()
+    {
+        foreach ($keywords as $k) {
+            $keyword = $k[0];
+            $properties = isset($k[1]) ? $k[1] : null;
+            $this->add_keyword($keyword, $properties);
+        }
+        return $this;
+    }
+
+    /**
+    * Helper function to add a "search" keyword filter to multiple properties.
+    *
+    * @param string $keyword
+    * @param array $properties
+    * @return CollectionLoader Chainable
+    */
+    public function add_keyword($keyword, $properties = null)
+    {
+        $model = $this->model();
+        if (!is_array($properties) || empty($properties)) {
+            // @todo Load from
+            $properties = [];
+        }
+
+        foreach ($properties as $property_ident) {
+            $prop = $model->p($property_ident);
+            $val = ('%'.$keyword.'%');
+            $this->add_filter([
+                'property'  => $property_ident,
+                'val'       => $val,
+                'operator'  => 'LIKE',
+                'operand'   => 'OR'
+            ]);
+        }
     }
 
     /**

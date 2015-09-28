@@ -15,20 +15,20 @@ class TranslationConfig extends AbstractConfig
 {
     /**
     * All available languages
-    * @var array $_languages
+    * @var array $languages
     */
-    private $_languages = [];
+    private $languages = [];
 
     /**
-    * @var string $_default_lang
+    * @var string $default_lang
     */
-    private $_default_lang = 'en';
+    private $default_lang = 'en';
 
     /**
     * Current language
-    * @var string $_lang
+    * @var string $lang
     */
-    private $_lang = null;
+    private $lang = null;
 
     /**
     * @param array $data
@@ -56,7 +56,7 @@ class TranslationConfig extends AbstractConfig
         if (!in_array($lang, $this->available_langs())) {
             throw new InvalidArgumentException('Invalid lang');
         }
-        $this->_lang = $lang;
+        $this->lang = $lang;
         return $this;
     }
 
@@ -67,10 +67,10 @@ class TranslationConfig extends AbstractConfig
     */
     public function lang()
     {
-        if (!$this->_lang) {
-            $this->_lang = $this->default_lang();
+        if (!$this->lang) {
+            $this->lang = $this->default_lang();
         }
-        return $this->_lang;
+        return $this->lang;
     }
 
     /**
@@ -85,7 +85,7 @@ class TranslationConfig extends AbstractConfig
         if (!in_array($lang, $this->available_langs())) {
             throw new InvalidArgumentException('Invalid lang');
         }
-        $this->_default_lang = $lang;
+        $this->default_lang = $lang;
         return $this;
     }
 
@@ -96,7 +96,7 @@ class TranslationConfig extends AbstractConfig
     */
     public function default_lang()
     {
-        return $this->_default_lang;
+        return $this->default_lang;
     }
 
     /**

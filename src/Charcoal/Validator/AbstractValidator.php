@@ -22,19 +22,19 @@ abstract class AbstractValidator implements ValidatorInterface
     /**
     * @var ValidatableInterface
     */
-    protected $_model;
+    protected $model;
 
     /**
-    * @var array $_results array of ValidatorResult
+    * @var array $results array of ValidatorResult
     */
-    private $_results = [];
+    private $results = [];
 
     /**
     * @param ValidatableInterface $model
     */
     public function __construct(ValidatableInterface $model)
     {
-        $this->_model = $model;
+        $this->model = $model;
     }
 
     /**
@@ -98,10 +98,10 @@ abstract class AbstractValidator implements ValidatorInterface
             throw new \InvalidArgumentException('Result must be an array or a ValidatorResult object.');
         }
         $level = $result->level();
-        if (!isset($this->_results[$level])) {
-            $this->_results[$level] = [];
+        if (!isset($this->results[$level])) {
+            $this->results[$level] = [];
         }
-        $this->_results[$level][] = $result;
+        $this->results[$level][] = $result;
         return $this;
     }
 
@@ -110,7 +110,7 @@ abstract class AbstractValidator implements ValidatorInterface
     */
     public function results()
     {
-        return $this->_results;
+        return $this->results;
     }
 
     /**
@@ -118,10 +118,10 @@ abstract class AbstractValidator implements ValidatorInterface
     */
     public function error_results()
     {
-        if (!isset($this->_results[self::ERROR])) {
+        if (!isset($this->results[self::ERROR])) {
             return [];
         }
-        return $this->_results[self::ERROR];
+        return $this->results[self::ERROR];
     }
 
     /**
@@ -129,10 +129,10 @@ abstract class AbstractValidator implements ValidatorInterface
     */
     public function warning_results()
     {
-        if (!isset($this->_results[self::WARNING])) {
+        if (!isset($this->results[self::WARNING])) {
             return [];
         }
-        return $this->_results[self::WARNING];
+        return $this->results[self::WARNING];
     }
 
     /**
@@ -140,10 +140,10 @@ abstract class AbstractValidator implements ValidatorInterface
     */
     public function notice_results()
     {
-        if (!isset($this->_results[self::NOTICE])) {
+        if (!isset($this->results[self::NOTICE])) {
             return [];
         }
-        return $this->_results[self::NOTICE];
+        return $this->results[self::NOTICE];
     }
 
     /**

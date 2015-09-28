@@ -19,9 +19,9 @@ class MemcacheCacheConfig extends CacheConfig
 {
     /**
     * Pool of available serer, as `MemcacheCacheServerConfig` objects.
-    * @var array $_servers
+    * @var array $servers
     */
-    private $_servers = [];
+    private $servers = [];
 
     /**
     * Default memcache configuration
@@ -68,7 +68,7 @@ class MemcacheCacheConfig extends CacheConfig
     */
     public function set_servers(array $servers)
     {
-        $this->_servers = [];
+        $this->servers = [];
         foreach ($servers as $server) {
             $this->add_server($server);
         }
@@ -82,7 +82,7 @@ class MemcacheCacheConfig extends CacheConfig
     */
     public function servers()
     {
-        return $this->_servers;
+        return $this->servers;
     }
 
     /**
@@ -96,9 +96,9 @@ class MemcacheCacheConfig extends CacheConfig
     {
         if (is_array($server)) {
             $server = new MemcacheCacheServerConfig($server);
-            $this->_servers[] = $server;
+            $this->servers[] = $server;
         } elseif (($server instanceof MemcacheCacheServerConfig)) {
-            $this->_servers[] = $server;
+            $this->servers[] = $server;
         } else {
             throw new InvalidArgumentException('Server must be an array or a MemcacheCacheServerConfig object.');
         }

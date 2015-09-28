@@ -13,21 +13,21 @@ use \Charcoal\Config\AbstractConfig as AbstractConfig;
 class MemcacheCacheServerConfig extends AbstractConfig
 {
     /**
-    * @var string $_host
+    * @var string $host
     */
-    public $_host;
+    public $host;
     /**
-    * @var integer $_port
+    * @var integer $port
     */
-    public $_port;
+    public $port;
     /**
-    * @var boolean $_persistent
+    * @var boolean $persistent
     */
-    public $_persistent;
+    public $persistent;
     /**
-    * @var integer $_weight
+    * @var integer $weight
     */
-    public $_weight;
+    public $weight;
 
     /**
     * @return array
@@ -73,7 +73,7 @@ class MemcacheCacheServerConfig extends AbstractConfig
     */
     public function set_host($host)
     {
-        $this->_host = $host;
+        $this->host = $host;
         return $this;
     }
 
@@ -82,7 +82,7 @@ class MemcacheCacheServerConfig extends AbstractConfig
     */
     public function host()
     {
-        return $this->_host;
+        return $this->host;
     }
 
     /**
@@ -91,7 +91,7 @@ class MemcacheCacheServerConfig extends AbstractConfig
     */
     public function set_port($port)
     {
-        $this->_port = $port;
+        $this->port = $port;
         return $this;
     }
 
@@ -100,7 +100,7 @@ class MemcacheCacheServerConfig extends AbstractConfig
     */
     public function port()
     {
-        return $this->_port;
+        return $this->port;
     }
 
     /**
@@ -109,7 +109,7 @@ class MemcacheCacheServerConfig extends AbstractConfig
     */
     public function set_persistent($persistent)
     {
-        $this->_persistent = $persistent;
+        $this->persistent = $persistent;
         return $this;
     }
 
@@ -118,7 +118,7 @@ class MemcacheCacheServerConfig extends AbstractConfig
     */
     public function persistent()
     {
-        return $this->_persistent;
+        return $this->persistent;
     }
 
     /**
@@ -127,7 +127,7 @@ class MemcacheCacheServerConfig extends AbstractConfig
     */
     public function set_weight($weight)
     {
-        $this->_weight = $weight;
+        $this->weight = $weight;
         return $this;
     }
 
@@ -136,6 +136,6 @@ class MemcacheCacheServerConfig extends AbstractConfig
     */
     public function weight()
     {
-        return $this->_weight;
+        return $this->weight;
     }
 }

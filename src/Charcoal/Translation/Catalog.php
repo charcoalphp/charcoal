@@ -25,15 +25,15 @@ class Catalog implements
 
     /**
     * The array of translations, as a $lang => $val hash.
-    * @var array $_translation_map
+    * @var array $translation_map
     */
-    private $_translation_map = [];
+    private $translation_map = [];
 
     /**
     * Current language
-    * @var string $_lang
+    * @var string $lang
     */
-    private $_lang;
+    private $lang;
 
     /**
     * ArrayAccess -> offsetExists()
@@ -47,7 +47,7 @@ class Catalog implements
         if (!is_string($offset)) {
             throw new InvalidArgumentException('Can not get numeric array keys. Use string for array acccess.');
         } else {
-            return isset($this->_translation_map[$offset]);
+            return isset($this->translation_map[$offset]);
         }
     }
 
@@ -101,8 +101,8 @@ class Catalog implements
             throw new InvalidArgumentException('Can not set numeric array keys. Use string for array acccess.');
         }
 
-        if (isset($this->_translation_map[$offset])) {
-            unset($this->_translation_map[$offset]);
+        if (isset($this->translation_map[$offset])) {
+            unset($this->translation_map[$offset]);
         }
     }
 
@@ -178,10 +178,10 @@ class Catalog implements
             throw new InvalidArgumentException('Invalid lang');
         }
 
-        if (isset($this->_translation_map[$ident])) {
-            $this->_translation_map[$ident][$lang] = $translation;
+        if (isset($this->translation_map[$ident])) {
+            $this->translation_map[$ident][$lang] = $translation;
         } else {
-            $this->_translation_map[$ident] = [$lang=>$translation];
+            $this->translation_map[$ident] = [$lang=>$translation];
         }
         return $this;
     }
@@ -197,14 +197,14 @@ class Catalog implements
     public function available_translations($lang = null)
     {
         if ($lang===null) {
-            return array_keys($this->_translation_map);
+            return array_keys($this->translation_map);
         }
 
         if (!in_array($lang, $this->available_langs())) {
             throw new InvalidArgumentException('Invalid lang');
         }
         $ret = [];
-        foreach ($this->_translation_map as $ident => $translations) {
+        foreach ($this->translation_map as $ident => $translations) {
             if (isset($translations[$lang])) {
                 $ret[] = $ident;
             }
@@ -226,9 +226,9 @@ class Catalog implements
         if (!in_array($lang, $this->available_langs())) {
             throw new InvalidArgumentException('Invalid lang');
         }
-        if (isset($this->_translation_map[$ident])) {
-            if (isset($this->_translation_map[$ident][$lang])) {
-                return $this->_translation_map[$ident][$lang];
+        if (isset($this->translation_map[$ident])) {
+            if (isset($this->translation_map[$ident][$lang])) {
+                return $this->translation_map[$ident][$lang];
             } else {
                 return $ident;
             }
@@ -247,7 +247,7 @@ class Catalog implements
         if (!in_array($lang, $this->available_langs())) {
             throw new InvalidArgumentException('Invalid lang');
         }
-        $this->_lang = $lang;
+        $this->lang = $lang;
         return $this;
     }
 
@@ -258,10 +258,10 @@ class Catalog implements
     */
     public function lang()
     {
-        if (!$this->_lang) {
-            $this->_lang = $this->default_lang();
+        if (!$this->lang) {
+            $this->lang = $this->default_lang();
         }
-        return $this->_lang;
+        return $this->lang;
     }
 
     /**

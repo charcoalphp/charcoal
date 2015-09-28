@@ -17,34 +17,34 @@ use \Charcoal\Source\SourceConfig;
 class DatabaseSourceConfig extends SourceConfig
 {
     /**
-    * @var string $_hostname
+    * @var string $hostname
     */
-    private $_hostname;
+    private $hostname;
     /**
-    * @var string $_username
+    * @var string $username
     */
-    private $_username;
+    private $username;
     /**
-    * @var string $_password
+    * @var string $password
     */
-    private $_password;
+    private $password;
     /**
-    * @var string $_password_encoding
+    * @var string $password_encoding
     */
-    private $_password_encoding;
+    private $password_encoding;
     /**
-    * @var string $_password_salt
+    * @var string $password_salt
     */
-    private $_password_salt;
+    private $password_salt;
     /**
-    * @var string $_database
+    * @var string $database
     */
-    private $_database;
+    private $database;
 
     /**
-    * @var boolean $_disable_utf8
+    * @var boolean $disable_utf8
     */
-    private $_disable_utf8;
+    private $disable_utf8;
 
     /**
     * @return array
@@ -102,7 +102,7 @@ class DatabaseSourceConfig extends SourceConfig
         if (!is_string($hostname)) {
             throw new InvalidArgumentException('Hostname must be a string.');
         }
-        $this->_hostname = $hostname;
+        $this->hostname = $hostname;
         return $this;
     }
 
@@ -113,7 +113,7 @@ class DatabaseSourceConfig extends SourceConfig
     */
     public function hostname()
     {
-        return $this->_hostname;
+        return $this->hostname;
     }
 
     /**
@@ -128,7 +128,7 @@ class DatabaseSourceConfig extends SourceConfig
         if (!is_string($username)) {
             throw new InvalidArgumentException('Username must be a string.');
         }
-        $this->_username = $username;
+        $this->username = $username;
         return $this;
     }
 
@@ -139,7 +139,7 @@ class DatabaseSourceConfig extends SourceConfig
     */
     public function username()
     {
-        return $this->_username;
+        return $this->username;
     }
 
     /**
@@ -154,7 +154,7 @@ class DatabaseSourceConfig extends SourceConfig
         if (!is_string($password)) {
             throw new InvalidArgumentException('Password must be a string.');
         }
-        $this->_password = $password;
+        $this->password = $password;
         return $this;
     }
 
@@ -168,11 +168,11 @@ class DatabaseSourceConfig extends SourceConfig
         if ($this->password_encoding()) {
             $encoder = EncoderFactory::instance()->get($this->password_encoding());
 
-            $this->_password = $encoder->decode($this->_password, $this->password_salt());
-            $this->_password_encoding = null;
-            $this->_password_salt = null;
+            $this->password = $encoder->decode($this->password, $this->password_salt());
+            $this->password_encoding = null;
+            $this->password_salt = null;
         }
-        return $this->_password;
+        return $this->password;
     }
 
     /**
@@ -187,7 +187,7 @@ class DatabaseSourceConfig extends SourceConfig
         if (!is_string($password_encoding)) {
             throw new InvalidArgumentException('Password Encoding must be a string.');
         }
-        $this->_password_encoding = $password_encoding;
+        $this->password_encoding = $password_encoding;
         return $this;
     }
 
@@ -198,7 +198,7 @@ class DatabaseSourceConfig extends SourceConfig
     */
     public function password_encoding()
     {
-        return $this->_password_encoding;
+        return $this->password_encoding;
     }
 
     /**
@@ -213,7 +213,7 @@ class DatabaseSourceConfig extends SourceConfig
         if (!is_string($password_salt)) {
             throw new InvalidArgumentException('Password Salt must be a string.');
         }
-        $this->_password_salt = $password_salt;
+        $this->password_salt = $password_salt;
         return $this;
     }
 
@@ -224,7 +224,7 @@ class DatabaseSourceConfig extends SourceConfig
     */
     public function password_salt()
     {
-        return $this->_password_salt;
+        return $this->password_salt;
     }
 
     /**
@@ -239,7 +239,7 @@ class DatabaseSourceConfig extends SourceConfig
         if (!is_string($database)) {
             throw new InvalidArgumentException('Database must be a string.');
         }
-        $this->_database = $database;
+        $this->database = $database;
         return $this;
     }
 
@@ -250,7 +250,7 @@ class DatabaseSourceConfig extends SourceConfig
     */
     public function database()
     {
-        return $this->_database;
+        return $this->database;
     }
 
     /**
@@ -263,7 +263,7 @@ class DatabaseSourceConfig extends SourceConfig
         if (!is_bool($disable_utf8)) {
             throw new InvalidArgumentException('Disable UTF8 must be a boolean.');
         }
-        $this->_disable_utf8 = $disable_utf8;
+        $this->disable_utf8 = $disable_utf8;
         return $this;
     }
 
@@ -272,6 +272,6 @@ class DatabaseSourceConfig extends SourceConfig
     */
     public function disable_utf8()
     {
-        return $this->_disable_utf8;
+        return $this->disable_utf8;
     }
 }

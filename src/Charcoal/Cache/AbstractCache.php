@@ -28,14 +28,14 @@ abstract class AbstractCache implements
 
     /**
     * Singleton instance
-    * @var AbstractCache $_instance
+    * @var AbstractCache $instance
     */
-    static protected $_instance;
+    static protected $instance;
 
     /**
-    * @var string $_prefix
+    * @var string $prefix
     */
-    private $_prefix;
+    private $prefix;
 
     /**
     *
@@ -52,8 +52,8 @@ abstract class AbstractCache implements
     */
     final public static function instance()
     {
-        if (static::$_instance !== null) {
-            return static::$_instance;
+        if (static::$instance !== null) {
+            return static::$instance;
         }
         $class = get_called_class();
         $instance = new $class;
@@ -74,7 +74,7 @@ abstract class AbstractCache implements
         if (!is_string($prefix)) {
             throw new InvalidArgumentException('Prefix must be a string.');
         }
-        $this->_prefix = $prefix;
+        $this->prefix = $prefix;
         return $this;
     }
 
@@ -85,10 +85,10 @@ abstract class AbstractCache implements
     */
     public function prefix()
     {
-        if ($this->_prefix === null) {
+        if ($this->prefix === null) {
             return $this->config()->prefix();
         }
-        return $this->_prefix;
+        return $this->prefix;
     }
 
     /**

@@ -65,20 +65,20 @@ abstract class AbstractFactory implements FactoryInterface
 
     /**
     * If a base class is set, then it must be ensured that the
-    * @var string $_base_class
+    * @var string $base_class
     */
-    protected $_base_class = '';
+    protected $base_class = '';
     /**
     *
-    * @var string $_default_class
+    * @var string $default_class
     */
-    protected $_default_class = '';
+    protected $default_class = '';
 
     /**
     * Keeps loaded instances in memory, in `[$type => $instance]` format.
-    * @var array $_instances
+    * @var array $instances
     */
-    protected $_instances = [];
+    protected $instances = [];
 
     /**
     * Singleton instance
@@ -119,7 +119,7 @@ abstract class AbstractFactory implements FactoryInterface
                 sprintf('Can not set "%s" as base class: Invalid class or interface name.', $classname)
             );
         }
-        $this->_base_class = $classname;
+        $this->base_class = $classname;
         return $this;
     }
 
@@ -128,7 +128,7 @@ abstract class AbstractFactory implements FactoryInterface
     */
     public function base_class()
     {
-        return $this->_base_class;
+        return $this->base_class;
     }
 
     /**
@@ -151,7 +151,7 @@ abstract class AbstractFactory implements FactoryInterface
                 sprintf('Can not set "%s" as base class: Invalid class name', $classname)
             );
         }
-        $this->_default_class = $classname;
+        $this->default_class = $classname;
         return $this;
     }
 
@@ -160,7 +160,7 @@ abstract class AbstractFactory implements FactoryInterface
     */
     public function default_class()
     {
-        return $this->_default_class;
+        return $this->default_class;
     }
 
     /**
@@ -209,7 +209,7 @@ abstract class AbstractFactory implements FactoryInterface
             );
         }
 
-        $this->_instances[$type] = $obj;
+        $this->instances[$type] = $obj;
         return $obj;
     }
 
@@ -228,8 +228,8 @@ abstract class AbstractFactory implements FactoryInterface
         if (!is_string($type)) {
             throw new InvalidArgumentException('Type must be a string.');
         }
-        if (isset($this->_instances[$type]) && $this->_instances[$type] !== null) {
-            return $this->_instances[$type];
+        if (isset($this->instances[$type]) && $this->instances[$type] !== null) {
+            return $this->instances[$type];
         } else {
             return $this->create($type);
 
