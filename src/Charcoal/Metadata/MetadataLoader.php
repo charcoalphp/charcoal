@@ -85,7 +85,6 @@ class MetadataLoader extends FileLoader
         $hierarchy = null;
 
         $classname = $this->ident_to_classname($ident);
-        // var_dump($classname);
         if (class_exists($classname)) {
             // If the object is a class, we use hierarchy from object ancestor classes
             $ident_hierarchy = [$ident];

@@ -183,11 +183,6 @@ class PropertyField
     */
     public function set_val($val)
     {
-        /*
-        if (!is_scalar($val)) {
-            throw new \InvalidArgumentException('Val must be scalar.');
-        }
-        */
         $this->val = $val;
         return $this;
     }

@@ -25,7 +25,6 @@ class PropertyFactory extends IdentFactory
     */
     public function prepare_classname($classname)
     {
-//        var_dump($classname);
         return '\Charcoal\Property'.$classname.'Property';
     }
 }

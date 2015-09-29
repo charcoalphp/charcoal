@@ -44,28 +44,6 @@ class CacheConfig extends AbstractConfig
     }
 
     /**
-    * @param array $data
-    * @return CacheConfig Chainable
-    */
-    public function set_data(array $data)
-    {
-        // parent::set_data($data);
-        if (isset($data['active']) && $data['active'] !== null) {
-            $this->set_active($data['active']);
-        }
-        if (isset($data['type']) && $data['type'] !== null) {
-            $this->set_type($data['type']);
-        }
-        if (isset($data['default_ttl']) && $data['default_ttl'] !== null) {
-            $this->set_default_ttl($data['default_ttl']);
-        }
-        if (isset($data['prefix']) && $data['prefix'] !== null) {
-            $this->set_prefix($data['prefix']);
-        }
-        return $this;
-    }
-
-    /**
     * @param boolean $active
     * @throws InvalidArgumentException
     * @return CacheConfig Chainable
