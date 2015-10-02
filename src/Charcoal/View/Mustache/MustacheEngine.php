@@ -28,7 +28,6 @@ class MustacheEngine implements EngineInterface
     */
     private $helper;
 
-
     /**
     * @var Mustache_Engine $mustache
     */
@@ -114,10 +113,10 @@ class MustacheEngine implements EngineInterface
     }
 
     /**
-    * @param LoaderInterface $helper
+    * @param mixed $helper
     * @return MustacheEngine Chainable
     */
-    public function set_helper(HelperInterface $helper)
+    public function set_helper($helper)
     {
         $this->helper = $helper;
         return $this;

@@ -7,6 +7,7 @@ use \InvalidArgumentException;
 
 // Local namespace dependencies
 use \Charcoal\View\AbstractView;
+use \Charcoal\View\GenericView;
 use \Charcoal\View\ViewInterface;
 
 /**
@@ -119,7 +120,16 @@ trait ViewableTrait
     * @param mixed $data
     * @return ViewInterface
     */
-    abstract public function create_view($data = null);
+    public function create_view($data = null)
+    {
+        $view = new GenericView([
+            'logger'=>null
+        ]);
+        if($data !== null) {
+            $view->set_data($data);
+        }
+        return $view;
+    }
 
     /**
     * @param string $template The template to parse and echo. If null, use the object's default.

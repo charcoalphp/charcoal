@@ -16,11 +16,6 @@ class PhpEngine implements EngineInterface
     private $loader;
 
     /**
-    * @var mixed $cache
-    */
-    private $cache;
-
-    /**
     * @var \Psr\Log\LoggerInterface $logger
     */
     private $logger;

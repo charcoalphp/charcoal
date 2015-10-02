@@ -20,20 +20,10 @@ class ViewableTraitTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $mock = $this->getMockForTrait('\Charcoal\View\ViewableTrait', [], '', true, true, true, ['create_view']);
-
-        $view_args = [
-            'logger'=>[]
-        ];
-        $view = $this->getMockForAbstractClass('\Charcoal\View\AbstractView', $view_args);
-       
-        $mock->expects($this->any())
-            ->method('create_view')
-            ->will($this->returnValue($view));
-
+        $mock = $this->getMockForTrait('\Charcoal\View\ViewableTrait');
         $mock->foo = 'bar';
         $this->obj = $mock;
-        $this->view = $view;
+
     }
 
     public function testSetTemplateEngine()
@@ -64,11 +54,15 @@ class ViewableTraitTest extends \PHPUnit_Framework_TestCase
     public function testSetView()
     {
         $obj = $this->obj;
-        $view = $this->view;
+
+        $view = $this->obj->create_view();
 
         $ret = $obj->set_view($view);
         $this->assertSame($ret, $obj);
         $this->assertEquals($view, $obj->view());
+
+        $this->setExpectedException('\InvalidArgumentException');
+        $obj->set_view(false);
     }
 
     public function testRenderAndDisplay()
