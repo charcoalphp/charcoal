@@ -4,12 +4,10 @@ namespace Charcoal\View\Mustache;
 
 // 3rd-party libraries (`mustache/mustache`) dependencies
 use \Mustache_Engine;
-use \Mustache_LambdaHelper;
-use \Mustache_Loader_CascadingLoader;
-use \Mustache_Loader_StringLoader;
 
 // Intra-module (`charcoal-view`) depentencies
 use \Charcoal\View\EngineInterface;
+use \Charcoal\View\LoaderInterface;
 
 // Local namespace dependencies
 use \Charcoal\View\Mustache\MustacheLoader;
@@ -26,9 +24,10 @@ class MustacheEngine implements EngineInterface
     private $loader;
 
     /**
-    * @var mixed $cache
+    * @var GenericHelper $helper
     */
-    private $cache;
+    private $helper;
+
 
     /**
     * @var Mustache_Engine $mustache
@@ -77,35 +76,19 @@ class MustacheEngine implements EngineInterface
 
             'strict_callables' => true,
 
-            // 'helpers' => [
-            //     '_t' => function($str) {
-            //         /** @todo Translate */
-            //         return $this->_t($str);
-            //     },
-            //     'add_js' => function($js, Mustache_LambdaHelper $helper) {
-            //         $js = $helper->render($js);
-            //         return $this->add_js($js);
-
-            //     },
-            //     'js' => function() {
-            //         return $this->js();
-            //     },
-            //     'add_js_requirement' => function($js_requirement) {
-            //         return $this->add_js_requirement($js_requirement);
-            //     },
-            //     'js_requirements' => function() {
-            //         return $this->js_requirements();
-            //     },
-            //     'add_css' => function($css, Mustache_LambdaHelper $helper) {
-            //         $css = $helper->render($css);
-            //         return $this->add_css($css);
-            //     },
-            //     'css' => function() {
-            //         return $this->css();
-            //     }
-            // ]
+            'helpers' => $this->helper()
         ]);
         return $mustache;
+    }
+
+    /**
+    * @param LoaderInterface $loader
+    * @return MustacheEngine Chainable
+    */
+    public function set_loader(LoaderInterface $loader)
+    {
+        $this->loader = $loader;
+        return $this;
     }
 
     /**
@@ -129,6 +112,37 @@ class MustacheEngine implements EngineInterface
         ]);
         return $loader;
     }
+
+    /**
+    * @param LoaderInterface $helper
+    * @return MustacheEngine Chainable
+    */
+    public function set_helper(HelperInterface $helper)
+    {
+        $this->helper = $helper;
+        return $this;
+    }
+
+    /**
+    * @return MustacheLoader
+    */
+    public function helper()
+    {
+        if ($this->helper === null) {
+            $this->helper = $this->create_helper();
+        }
+        return $this->helper;
+    }
+
+    /**
+    * @return MustacheLoader
+    */
+    public function create_helper()
+    {
+        $helper = new GenericHelper();
+        return $helper;
+    }
+
 
     /**
     * @param string $template_ident

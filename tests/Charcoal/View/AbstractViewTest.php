@@ -65,4 +65,44 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Hello', $obj->render('Hello'));
         $this->assertEquals('Hello Foo!', $obj->render('Hello {{bar}}', ['bar' => 'Foo!']));
     }
+
+    public function testRenderTemplate()
+    {
+        $loader = new \Charcoal\View\Mustache\MustacheLoader();
+        $loader->add_search_path(__DIR__.'/Mustache/templates');
+        
+        $engine = new \Charcoal\View\Mustache\MustacheEngine([
+            'logger'=>null,
+            'loader'=>$loader
+        ]);
+
+        $this->obj->set_engine($engine);
+        $this->assertEquals('Hello Charcoal', trim($this->obj->render_template('foo', ['foo'=>'Charcoal'])));
+    }
+
+    public function testRenderTemplateHelper()
+    {
+        $loader = new \Charcoal\View\Mustache\MustacheLoader();
+        $loader->add_search_path(__DIR__.'/Mustache/templates');
+        
+        $engine = new \Charcoal\View\Mustache\MustacheEngine([
+            'logger'=>null,
+            'loader'=>$loader
+        ]);
+
+        $this->obj->set_engine($engine);
+
+        $expected = trim('
+<div>
+    Charcoal
+</div>
+
+<!-- Javascript should be printed below: -->
+
+<script>
+    window.alert(\'Charcoal Unit Tests\');
+</script>');
+
+        $this->assertEquals($expected, trim($this->obj->render_template('helpers', ['foo'=>'Charcoal'])));
+    }
 }

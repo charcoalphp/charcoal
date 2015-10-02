@@ -48,6 +48,19 @@ class ViewableTraitTest extends \PHPUnit_Framework_TestCase
         $obj->set_template_engine(false);
     }
 
+    public function testSetTemplateIdent()
+    {
+        $obj = $this->obj;
+        $this->assertEquals('', $obj->template_ident());
+
+        $ret = $obj->set_template_ident('foobar');
+        $this->assertSame($ret, $obj);
+        $this->assertEquals('foobar', $obj->template_ident());
+
+        $this->setExpectedException('\InvalidArgumentException');
+        $obj->set_template_ident(false);
+    }
+
     public function testSetView()
     {
         $obj = $this->obj;
