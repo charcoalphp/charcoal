@@ -5,16 +5,11 @@ namespace Charcoal\View;
 // Dependencies from `PHP`
 use \InvalidArgumentException;
 
-// 3rd-party libraries dependencies
-use \Mustache_Engine;
-use \Mustache_LambdaHelper;
-
-// Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Charcoal;
 
 // Local namespace dependencies
-use \Charcoal\View\MustachePartialsLoader;
-use \Charcoal\View\ViewableInterface;
+use \Charcoal\View\Mustache\MustacheEngine;
+use \Charcoal\View\Php\PhpEngine;
+use \Charcoal\View\PhpMustache\PhpMustacheEngine;
 use \Charcoal\View\ViewInterface;
 
 /**
@@ -162,28 +157,28 @@ abstract class AbstractView implements ViewInterface
         $type = $this->engine_type();
         switch ($type) {
             case 'mustache':
-                return new \Charcoal\View\Mustache\MustacheEngine([
+                return new MustacheEngine([
                     'logger'=>null,
                     'cache'=>null,
                     'loader'=>null
                 ]);
 
             case 'php':
-                return new \Charcoal\View\Php\PhpEngine([
+                return new PhpEngine([
                     'logger'=>null,
                     'cache'=>null,
                     'loader'=>null
                 ]);
 
             case 'php-mustache':
-                return new \Charcoal\View\PhpMustach\PhpMustacheEngine([
+                return new PhpMustacheEngine([
                     'logger'=>null,
                     'cache'=>null,
                     'loader'=>null
                 ]);
 
             default:
-                return new \Charcoal\View\Mustache\MustacheEngine([
+                return new MustacheEngine([
                     'logger'=>null,
                     'cache'=>null,
                     'loader'=>null
