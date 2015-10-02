@@ -10,13 +10,13 @@
     verbose="true"
 >
     <testsuites>
-        <testsuite name="Charcoal Config Test Suite">
-            <directory>Charcoal/Config</directory>
+        <testsuite name="Charcoal View Test Suite">
+            <directory>Charcoal/View</directory>
         </testsuite>
     </testsuites>
     <filter>
     <whitelist>
-        <directory suffix=".php">../src/Charcoal/Config</directory>
+        <directory suffix=".php">../src/Charcoal/View</directory>
     </whitelist>
     </filter>
     <logging>
