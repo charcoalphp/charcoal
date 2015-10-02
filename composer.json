@@ -24,7 +24,7 @@
     "ext-mbstring": "*",
     "slim/slim": "^3.0@dev",
     "monolog/monolog": "~1.13",
-    "mustache/mustache": "~2.9",
+    "mustache/mustache": "2.9.0",
     "locomotivemtl/charcoal-config": "~0.1"
   },
   "require-dev": {
