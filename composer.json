@@ -4,6 +4,7 @@
   "keywords": ["charcoal", "locomotive", "php", "framework", "cms"],
   "homepage": "http://charcoal.locomotive.ca",
   "license":"MIT",
+  "minimum-stability":"dev",
   "support": {
     "issues": "https://github.com/locomotivemtl/charcoal-core/issues",
     "source": "https://github.com/locomotivemtl/charcoal-core"
@@ -25,7 +26,8 @@
     "slim/slim": "^3.0@dev",
     "monolog/monolog": "~1.13",
     "mustache/mustache": "2.9.0",
-    "locomotivemtl/charcoal-config": "~0.1"
+    "locomotivemtl/charcoal-config": "~0.1",
+    "locomotivemtl/charcoal-view": "dev-master"
   },
   "require-dev": {
     "phpunit/phpunit": "~4.5",
