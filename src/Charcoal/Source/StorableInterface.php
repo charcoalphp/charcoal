@@ -11,12 +11,6 @@ use \Charcoal\Source\SourceInterface as SourceInterface;
 interface StorableInterface
 {
     /**
-    * @param array $data
-    * @return StorableInterface Chainable
-    */
-    public function set_storable_data(array $data);
-
-    /**
     * Set the object's source.
     *
     * @param SourceInterface $source

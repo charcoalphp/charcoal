@@ -47,22 +47,6 @@ trait DescribableTrait
     abstract public function set_data(array $data);
 
     /**
-    * @param array $data
-    * @throws InvalidArgumentException
-    * @return DescribableTrait
-    */
-    public function set_describable_data(array $data)
-    {
-        if (isset($data['metadata']) && $data['metadata'] !== null) {
-            $this->set_metadata($data['metadata']);
-        }
-        if (isset($data['metdata_ident']) && $data['metadata_ident'] !== null) {
-            $this->set_metadata_ident($data['metadata_ident']);
-        }
-        return $this;
-    }
-
-    /**
     * @param array|MetadataInterface $metadata
     * @throws InvalidArgumentException if the parameter is not an array or MetadataInterface
     * @return DescribableInterface Chainable

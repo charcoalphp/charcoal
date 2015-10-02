@@ -16,19 +16,6 @@ trait StorableTrait
     private $source;
 
     /**
-    * @param array $data
-    * @throws InvalidArgumentException
-    * @return StorableInterface Chainable
-    */
-    public function set_storable_data(array $data)
-    {
-        if (isset($data['source']) && $data['source'] !== null) {
-            $this->set_source($data['source']);
-        }
-        return $this;
-    }
-
-    /**
     * Set the object's source.
     *
     * @param SourceInterface $source

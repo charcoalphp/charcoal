@@ -89,8 +89,6 @@ abstract class AbstractModel implements
             }
         }
 
-        $this->set_describable_data($data);
-        $this->set_storable_data($data);
         $this->set_viewable_data($data);
 
         // Chainable
