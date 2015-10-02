@@ -3,6 +3,7 @@
   "description": "Queue, Queue items and Queueable objects for Charcoal",
   "keywords": ["charcoal", "queue", "locomotive", "php", "framework", "cms"],
   "homepage": "http://charcoal.locomotive.ca",
+  "license":"MIT",
   "support": {
     "issues": "https://github.com/locomotivemtl/charcoal-queue/issues",
     "source": "https://github.com/locomotivemtl/charcoal-queue"
