@@ -142,7 +142,6 @@ class MustacheEngine implements EngineInterface
         return $helper;
     }
 
-
     /**
     * @param string $template_ident
     * @return string

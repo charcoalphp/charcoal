@@ -125,7 +125,7 @@ trait ViewableTrait
         $view = new GenericView([
             'logger'=>null
         ]);
-        if($data !== null) {
+        if ($data !== null) {
             $view->set_data($data);
         }
         return $view;
