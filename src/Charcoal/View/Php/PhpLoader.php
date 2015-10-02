@@ -55,7 +55,7 @@ class PhpLoader
             }
         }
 
-        return '';
+        return $ident;
     }
 
     /**
