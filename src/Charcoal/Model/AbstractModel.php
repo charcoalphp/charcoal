@@ -89,8 +89,6 @@ abstract class AbstractModel implements
             }
         }
 
-        $this->set_viewable_data($data);
-
         // Chainable
         return $this;
     }
@@ -364,21 +362,6 @@ abstract class AbstractModel implements
             $validator->set_data($data);
         }
         return $validator;
-    }
-
-    /**
-    * ViewableInterface > create_view().
-    *
-    * @param array $data Optional
-    * @return ViewInterface
-    */
-    protected function create_view(array $data = null)
-    {
-        $view = new ModelView();
-        if ($data !== null) {
-            $view->set_data($data);
-        }
-        return $view;
     }
 
     /**
