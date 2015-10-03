@@ -45,7 +45,7 @@ class MustacheEngine implements EngineInterface
     {
         $this->logger = $data['logger'];
         if (isset($data['loader'])) {
-            $this->loader = $data['loader'];
+            $this->set_loader($data['loader']);
         }
     }
 
