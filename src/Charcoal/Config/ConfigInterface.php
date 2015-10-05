@@ -39,6 +39,12 @@ interface ConfigInterface
 
     /**
     * @param string $key
+    * @return boolean
+    */
+    public function has($key);
+
+    /**
+    * @param string $key
     * @param mixed $val
     * @return ConfigInterface Chainable
     */
