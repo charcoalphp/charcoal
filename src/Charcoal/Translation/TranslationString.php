@@ -3,9 +3,11 @@
 namespace Charcoal\Translation;
 
 // Dependencies from `PHP`
-use \ArrayAccess as ArrayAccess;
-use \Exception as Exception;
+use \ArrayAccess;
+use \ArrayIterator;
+use \Exception;
 use \InvalidArgumentException;
+use \IteratorAggregate;
 
 // Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Config\ConfigurableInterface;
@@ -22,7 +24,8 @@ use \Charcoal\Translation\TranslationStringInterface;
 class TranslationString implements
     TranslationStringInterface,
     ConfigurableInterface,
-    \ArrayAccess
+    ArrayAccess,
+    IteratorAggregate
 {
     use ConfigurableTrait;
 
@@ -281,5 +284,16 @@ class TranslationString implements
         if (isset($this->val[$key])) {
             unset($this->val[$key]);
         }
+    }
+
+    /**
+    * IteratorAggregate > getIterator
+    *
+    * @return array
+    */
+    public function getIterator()
+    {
+        $iterator = new ArrayIterator($this->val);
+        return $iterator;
     }
 }
