@@ -12,9 +12,9 @@ use \InvalidArgumentException;
 trait ConfigurableTrait
 {
     /**
-    * @var ConfigInterface $_config
+    * @var ConfigInterface $config
     */
-    private $_config;
+    private $config;
 
     /**
     * @param ConfigInterface|array $config
@@ -24,9 +24,9 @@ trait ConfigurableTrait
     public function set_config($config)
     {
         if (is_array($config)) {
-            $this->_config = $this->create_config($config);
+            $this->config = $this->create_config($config);
         } elseif (($config instanceof ConfigInterface)) {
-            $this->_config = $config;
+            $this->config = $config;
         } else {
             throw new InvalidArgumentException('Config must be an array or a ConfigInterface object.');
         }
@@ -38,10 +38,10 @@ trait ConfigurableTrait
     */
     public function config()
     {
-        if ($this->_config === null) {
-            $this->_config = $this->create_config();
+        if ($this->config === null) {
+            $this->config = $this->create_config();
         }
-        return $this->_config;
+        return $this->config;
     }
 
     /**

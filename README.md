@@ -109,8 +109,10 @@ See [https://github.com/container-interop/container-interop]
 
 ### 0.1.1
 _Unreleased_
-- Removed the second argumnet for the constructor (currently unused)
+- Removed the second argument for the constructor (currently unused)
 - Clearer error message on invalid JSON files
+- Fix composer.json and the autoloader
+- Various internal changes (PSR2 compliancy, _with psr1 exception_)
 
 ### 0.1
 _Released on 2015-08-25_
