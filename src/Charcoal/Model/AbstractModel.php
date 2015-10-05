@@ -22,7 +22,6 @@ use \Charcoal\View\ViewableTrait;
 use \Charcoal\Model\ModelInterface;
 use \Charcoal\Model\ModelMetadata;
 use \Charcoal\Model\ModelValidator;
-use \Charcoal\Model\ModelView;
 
 /**
 * An abstract class that implements most of `ModelInterface`.

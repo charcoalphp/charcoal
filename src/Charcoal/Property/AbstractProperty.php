@@ -18,7 +18,6 @@ use \Charcoal\View\ViewableTrait;
 // Local namespace dependencies
 use \Charcoal\Property\PropertyInterface;
 use \Charcoal\Property\PropertyValidator;
-use \Charcoal\Property\PropertyView;
 
 /**
 * An abstract class that implements the full `PropertyInterface`.
@@ -668,21 +667,6 @@ abstract class AbstractProperty implements
     {
         $validator = new PropertyValidator($this);
         return $validator;
-    }
-
-    /**
-    * ViewableTrait > create_validator(). Create a View object
-    *
-    * @param array $data Optional
-    * @return ViewInterface
-    */
-    protected function create_view(array $data = null)
-    {
-        $view = new PropertyView();
-        if (is_array($data)) {
-            $view->set_data($data);
-        }
-        return $view;
     }
 
     /**
