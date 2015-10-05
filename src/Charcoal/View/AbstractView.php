@@ -5,6 +5,9 @@ namespace Charcoal\View;
 // Dependencies from `PHP`
 use \InvalidArgumentException;
 
+// Module `charcoal-config` dependencies
+use \Charcoal\Config\ConfigurableInterface;
+use \Charcoal\Config\ConfigurableTrait;
 
 // Local namespace dependencies
 use \Charcoal\View\Mustache\MustacheEngine;
@@ -19,8 +22,12 @@ use \Charcoal\View\ViewInterface;
 * - `load_template()`
 * - `load_context()`
 */
-abstract class AbstractView implements ViewInterface
+abstract class AbstractView implements 
+    ConfigurableInterface,
+    ViewInterface
 {
+    use ConfigurableTrait;
+
     const DEFAULT_ENGINE = 'mustache';
 
     /**
@@ -54,11 +61,8 @@ abstract class AbstractView implements ViewInterface
     * Build the object with an array of options.
     *
     * ## Required parameters:
+    * - `config` a ViewConfig object
     * - `logger` a PSR logger
-    *
-    * ## Optional parameters
-    * - `engine_type`
-    * - `engine`
     *
     * @param array $data
     * @throws InvalidArgumentException If required parameters are missing.
@@ -71,6 +75,12 @@ abstract class AbstractView implements ViewInterface
         //         'Logger is required for the view constructor'
         //     );
         // }
+
+        // set_config() is defined in the `ConfigurableTrait`
+        if (isset($data['config'])) {
+            $this->set_config($data['config']);
+        }
+
         if (isset($data['logger'])) {
             $this->logger = $data['logger'];
         }
@@ -101,6 +111,18 @@ abstract class AbstractView implements ViewInterface
     public function __toString()
     {
         return $this->render();
+    }
+
+    /**
+    * > ConfigurableTrait . create_config()
+    *
+    * @param array $data
+    * @return ViewConfig
+    */
+    public function create_config($data=null)
+    {
+        $config = new ViewConfig($data);
+        return $config;
     }
 
     /**
