@@ -113,9 +113,7 @@ All Charcoal modules follow the same coding style and `charcoal-core` is no exce
 
 - [_PSR-1_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md), except for
   - Method names MUST be declared in `snake_case`.
-- [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md), except for
-  - Property names MAY be prefixed with a single, or double, underscore to indicate protected or private visibility;
-  - Method names MAY be prefixed with a single, or double, underscore to indicate protected or private visibility.
+- [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md), except the PSR-1 requirement.
 - [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md), autoloading is therefore provided by _Composer_
 - [_phpDocumentor_](http://phpdoc.org/)
   - Add DocBlocks for all classes, methods, and functions;
