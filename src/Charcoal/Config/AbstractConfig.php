@@ -80,8 +80,12 @@ abstract class AbstractConfig implements
     }
 
     /**
+    * For each key, calls `set()`, which calls `offsetSet()`  (from ArrayAccess)
+    *
     * @param array $data
     * @return AbstractConfig Chainable
+    * @see self::set()
+    * @see self::offsetSet()
     */
     public function set_data(array $data)
     {
@@ -91,11 +95,11 @@ abstract class AbstractConfig implements
         return $this;
     }
 
-        /**
+    /**
     * ConfigInterface > default_data
     *
     * A stub for when the default data is empty.
-    * Mae sure to reimplement in children Config classes if any default data should be set.
+    * Make sure to reimplement in children Config classes if any default data should be set.
     * @return array
     */
     public function default_data()
@@ -106,6 +110,7 @@ abstract class AbstractConfig implements
     /**
     * @param string $key
     * @return mixed
+    * @see self::offsetSet()
     */
     public function get($key)
     {
@@ -146,6 +151,7 @@ abstract class AbstractConfig implements
     /**
     * @param string $key
     * @return mixed $value
+    * @see offsetSet
     */
     public function set($key, $value)
     {
