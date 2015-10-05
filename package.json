@@ -1,5 +1,5 @@
 {
-  "name": "@locomotivemtl/charcoal-config",
+  "name": "@locomotivemtl/charcoal-view",
   "license": "MIT",
   "devDependencies": {
     "glob": "^5.0.14",
