@@ -11,14 +11,68 @@ This package provides easy hierarchical configuration container (for config stor
 ## Supported file formats
 There are currently 3 supported file formats: `ini`, `json` and `php`.
 To load configuration from a file:
+
+### JSON configuration
+For the JSON file:
+```json
+{
+	"example":{
+		"foo":"bar"
+	}
+}
+
+```
+
+
+Loading this file into configuration would be:
 ```php
 $config = new \Charcoal\GenericConfig();
 $config->add_file('./config/my-config.json');
+
+// Output "bar"
+echo $config['example/foo'];
+```
+
+### INI configuration
+For the INI file:
+```ini
+[example]
+foo=bar
+```
+
+Loading this file into configuration would be:
+```php
+$config = new \Charcoal\GenericConfig();
+$config->add_file('./config/my-config.ini');
+
+// Outputs "bar"
+echo $config['exampe/foo'];
+```
+
+### PHP configuration
+The PHP configuration is loaded from an internal `include`, therefore, the scope of `$this` in the php file is the current _Config_ instance.
+
+For the PHP file:
+```php
+<?php
+$this['example'] = [
+	'foo'=>'bar'
+];
+```
+
+Loading this file into configuration would be:
+```php
+$config = new \Charcoal\GenericConfig();
+$config->add_file('./config/my-config.php');
+
+// Outputs "bar"
+echo $config['example/foo'];
 ```
 
 ## How to use
 ```php
 $config = new \Charcoal\GenericConfig();
+$config->set_separator('.'); // Default is "/"
 $config->set('foo', [
 	'baz'=>example,
 	'bar'=>42
