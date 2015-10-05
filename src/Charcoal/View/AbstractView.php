@@ -22,7 +22,7 @@ use \Charcoal\View\ViewInterface;
 * - `load_template()`
 * - `load_context()`
 */
-abstract class AbstractView implements 
+abstract class AbstractView implements
     ConfigurableInterface,
     ViewInterface
 {
@@ -119,7 +119,7 @@ abstract class AbstractView implements
     * @param array $data
     * @return ViewConfig
     */
-    public function create_config($data=null)
+    public function create_config($data = null)
     {
         $config = new ViewConfig($data);
         return $config;
