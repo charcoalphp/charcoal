@@ -3,7 +3,7 @@
 namespace Charcoal\View;
 
 /**
-* The GenericView class is a full, concrete implementation of the ViewInterface.
+* Concrete implementation of a _View_ interface (extends `AbstractView`).
 *
 */
 class GenericView extends AbstractView

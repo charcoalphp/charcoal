@@ -10,7 +10,7 @@ use \Mustache_Loader;
 use \Charcoal\View\LoaderInterface;
 
 /**
-* Mustache Template Loader
+* - The mustache template loader finds a mustache template file in directories.
 */
 class MustacheLoader implements
     Mustache_Loader,

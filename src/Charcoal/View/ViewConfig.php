@@ -7,6 +7,9 @@ use \InvalidArgumentException;
 // Module `charcoal-config` dependencies
 use \Charcoal\Config\AbstractConfig;
 
+/**
+* View configuration.
+*/
 class ViewConfig extends AbstractConfig
 {
     /**

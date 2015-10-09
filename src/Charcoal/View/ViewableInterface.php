@@ -6,7 +6,7 @@ namespace Charcoal\View;
 use \Charcoal\View\ViewInterface;
 
 /**
-*
+* Viewable objects have a view, and therefore can be rendered.
 */
 interface ViewableInterface
 {

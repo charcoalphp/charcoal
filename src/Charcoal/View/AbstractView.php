@@ -16,11 +16,9 @@ use \Charcoal\View\PhpMustache\PhpMustacheEngine;
 use \Charcoal\View\ViewInterface;
 
 /**
-* An abstract class that fulfills the full ViewInterface.
+* Base abstract class for _View_ interfaces, implements `ViewInterface`.
 *
-* There are 2 remaining abstract methods:
-* - `load_template()`
-* - `load_context()`
+* Also implements the `ConfigurableInterface`
 */
 abstract class AbstractView implements
     ConfigurableInterface,
@@ -60,12 +58,13 @@ abstract class AbstractView implements
     /**
     * Build the object with an array of options.
     *
-    * ## Required parameters:
+    * ## Optional parameters:
     * - `config` a ViewConfig object
     * - `logger` a PSR logger
     *
     * @param array $data
     * @throws InvalidArgumentException If required parameters are missing.
+    * @todo The `config` and `logger` parameters should be made required (API break)
     */
     public function __construct($data)
     {
@@ -87,6 +86,14 @@ abstract class AbstractView implements
     }
 
     /**
+    * @return string
+    */
+    public function __toString()
+    {
+        return $this->render();
+    }
+
+    /**
     * @param array $data
     * @return AbstractView Chainable
     */
@@ -105,13 +112,7 @@ abstract class AbstractView implements
         return $this;
     }
 
-    /**
-    * @return string
-    */
-    public function __toString()
-    {
-        return $this->render();
-    }
+
 
     /**
     * > ConfigurableTrait . create_config()

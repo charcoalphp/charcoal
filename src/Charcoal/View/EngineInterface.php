@@ -3,17 +3,18 @@
 namespace Charcoal\View;
 
 /**
-* View Engine Interface
+* _Engines_ are the actual template renderers for the views.
+*
 */
 interface EngineInterface
 {
     /**
-    * @return MustacheLoader
+    * @return LoaderInterface
     */
     public function loader();
 
     /**
-    * @return MustacheLoader
+    * @return LoaderInterface
     */
     public function create_loader();
 

@@ -3,7 +3,7 @@
 namespace Charcoal\View\Php;
 
 /**
-* PHP Template Loader
+* The PHP template loader finds a mustache php template file in directories and includes it (run as PHP).
 */
 class PhpLoader
 {

@@ -13,13 +13,13 @@ use \Charcoal\View\LoaderInterface;
 use \Charcoal\View\Mustache\MustacheLoader;
 
 /**
-*
+* Mustache view rendering engine.
 */
 class MustacheEngine implements EngineInterface
 {
 
     /**
-    * @var MustacheLoader $loader
+    * @var LoaderInterface $loader
     */
     private $loader;
 

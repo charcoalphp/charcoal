@@ -8,7 +8,7 @@ use \IteratorAggregate;
 use \Mustache_LambdaHelper;
 
 /**
-*
+* Default mustache render helper. Helpers are global functions available to all the templates.
 */
 class GenericHelper implements IteratorAggregate
 {
