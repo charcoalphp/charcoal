@@ -56,7 +56,6 @@ use \Charcoal\Core\FactoryInterface as FactoryInterface;
 */
 abstract class AbstractFactory implements FactoryInterface
 {
-
     /**
     * Keep latest instances, as singleton copies.
     * @var AbstractFactory $instance
@@ -79,6 +78,11 @@ abstract class AbstractFactory implements FactoryInterface
     * @var array $instances
     */
     protected $instances = [];
+
+    /**
+    * @var array|null $args
+    */
+    private $args = null;
 
     /**
     * Singleton instance
@@ -163,6 +167,16 @@ abstract class AbstractFactory implements FactoryInterface
         return $this->default_class;
     }
 
+    public function set_args(array $args)
+    {
+        $this->args = $args;
+    }
+
+    public function args()
+    {
+        return $this->args;
+    }
+
     /**
     * Create a new instance of a class, by type.
     *
@@ -173,8 +187,11 @@ abstract class AbstractFactory implements FactoryInterface
     * @throws InvalidArgumentException if type is not a string or is not an available type
     * @return mixed The instance / object
     */
-    final public function create($type)
+    final public function create($type, $args=null)
     {
+        if($args === null) {
+            $args = $this->args();
+        }
         if (!is_string($type)) {
             throw new InvalidArgumentException(
                 __METHOD__.': Type must be a string.'
@@ -184,7 +201,7 @@ abstract class AbstractFactory implements FactoryInterface
         if (!$this->validate($type)) {
             $default_class = $this->default_class();
             if ($default_class !== '') {
-                return new $default_class;
+                return new $default_class($args);
             } else {
                 throw new InvalidArgumentException(
                     sprintf(
@@ -198,7 +215,7 @@ abstract class AbstractFactory implements FactoryInterface
 
         // Create the object from the type's class name.
         $classname = $this->classname($type);
-        $obj = new $classname;
+        $obj = new $classname($args);
 
 
         // Ensure base class is respected, if set.
@@ -223,15 +240,17 @@ abstract class AbstractFactory implements FactoryInterface
     * @throws InvalidArgumentException if type is not a string
     * @return mixed The instance / object
     */
-    final public function get($type)
+    final public function get($type, $args = null)
     {
         if (!is_string($type)) {
-            throw new InvalidArgumentException('Type must be a string.');
+            throw new InvalidArgumentException(
+                'Type must be a string.'
+            );
         }
         if (isset($this->instances[$type]) && $this->instances[$type] !== null) {
             return $this->instances[$type];
         } else {
-            return $this->create($type);
+            return $this->create($type, $args);
 
         }
     }
