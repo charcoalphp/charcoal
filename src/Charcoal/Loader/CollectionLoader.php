@@ -359,7 +359,9 @@ class CollectionLoader extends AbstractLoader
         $sth->setFetchMode(PDO::FETCH_ASSOC);
         $class_name = get_class($this->model());
         while ($obj_data = $sth->fetch()) {
-            $obj = new $class_name;
+            $obj = new $class_name([
+                'logger'=>Charcoal::logger()
+            ]);
             $obj->set_flat_data($obj_data);
             $collection->add($obj);
         }
