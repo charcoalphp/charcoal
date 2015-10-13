@@ -285,7 +285,7 @@ abstract class AbstractProperty implements
                 $property_value = implode($this->multiple_separator(), $property_value);
             }
         }
-        return $property_value;
+        return (string)$property_value;
     }
 
     /**
@@ -667,6 +667,17 @@ abstract class AbstractProperty implements
     {
         $validator = new PropertyValidator($this);
         return $validator;
+    }
+
+    public function create_view(array $data = null)
+    {
+         $view = new \Charcoal\View\GenericView([
+            'logger'=>$this->logger()
+        ]);
+        if ($data !== null) {
+            $view->set_data($data);
+        }
+        return $view;
     }
 
     /**

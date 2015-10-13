@@ -7,6 +7,10 @@ use \InvalidArgumentException;
 use \JsonSerializable;
 use \Serializable;
 
+// PSR-3 logger
+use \Psr\Log\LoggerInterface;
+use \Psr\Log\LoggerAwareInterface;
+
 // Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Charcoal;
 use \Charcoal\Metadata\DescribableInterface;
@@ -38,6 +42,7 @@ abstract class AbstractModel implements
     Serializable,
     ModelInterface,
     DescribableInterface,
+    LoggerAwareInterface,
     StorableInterface,
     ValidatableInterface,
     ViewableInterface
@@ -48,15 +53,50 @@ abstract class AbstractModel implements
     use ViewableTrait;
 
     /**
+    * @var LoggerInterface $logger
+    */
+    private $logger;
+
+    /**
     * @param array $data Optional
     */
     public function __construct(array $data = null)
     {
-        if ($data !== null) {
-            $this->set_data($data);
-        }
+        $this->set_logger($data['logger']);
+
         /** @todo Needs fix. Must be manually triggered after setting data for metadata to work */
         $this->metadata();
+    }
+
+    /**
+    * > LoggerAwareInterface > setLogger()
+    *
+    * Fulfills the PSR-1 style LoggerAwareInterface
+    *
+    * @param LoggerInterface $logger
+    * @return AbstractEngine Chainable
+    */
+    public function setLogger(LoggerInterface $logger)
+    {
+        return $this->set_logger($logger);
+    }
+
+    /**
+    * @param LoggerInterface $logger
+    * @return AbstractEngine Chainable
+    */
+    public function set_logger(LoggerInterface $logger=null)
+    {
+        $this->logger = $logger;
+        return $this;
+    }
+
+    /**
+    * @erturn LoggerInterface
+    */
+    public function logger()
+    {
+        return $this->logger;
     }
 
     /**
@@ -91,6 +131,7 @@ abstract class AbstractModel implements
         // Chainable
         return $this;
     }
+
 
     /**
     * Return the object data as an array
@@ -361,6 +402,17 @@ abstract class AbstractModel implements
             $validator->set_data($data);
         }
         return $validator;
+    }
+
+    public function create_view(array $data = null)
+    {
+         $view = new \Charcoal\View\GenericView([
+            'logger'=>$this->logger()
+        ]);
+        if ($data !== null) {
+            $view->set_data($data);
+        }
+        return $view;
     }
 
     /**
