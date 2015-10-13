@@ -187,9 +187,9 @@ abstract class AbstractFactory implements FactoryInterface
     * @throws InvalidArgumentException if type is not a string or is not an available type
     * @return mixed The instance / object
     */
-    final public function create($type, $args=null)
+    final public function create($type, $args = null)
     {
-        if($args === null) {
+        if ($args === null) {
             $args = $this->args();
         }
         if (!is_string($type)) {

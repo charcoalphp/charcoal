@@ -85,7 +85,7 @@ abstract class AbstractModel implements
     * @param LoggerInterface $logger
     * @return AbstractEngine Chainable
     */
-    public function set_logger(LoggerInterface $logger=null)
+    public function set_logger(LoggerInterface $logger = null)
     {
         $this->logger = $logger;
         return $this;
@@ -404,9 +404,13 @@ abstract class AbstractModel implements
         return $validator;
     }
 
+    /**
+    * @param array $data
+    * @return ViewInterface
+    */
     public function create_view(array $data = null)
     {
-         $view = new \Charcoal\View\GenericView([
+        $view = new \Charcoal\View\GenericView([
             'logger'=>$this->logger()
         ]);
         if ($data !== null) {

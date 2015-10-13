@@ -70,16 +70,6 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Charcoal\Model\AbstractModel', $obj);
     }
 
-    public function testConstructorWithData()
-    {
-        $obj = new AbstractModelClass(
-            [
-                'foo' => 'bar'
-            ]
-        );
-        $this->assertEquals('bar', $obj->foo);
-    }
-
     public function testSetData()
     {
         $obj = $this->obj;

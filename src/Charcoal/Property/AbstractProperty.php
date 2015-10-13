@@ -6,6 +6,10 @@ namespace Charcoal\Property;
 use \Exception;
 use \InvalidArgumentException;
 
+// PSR-3 logger
+use \Psr\Log\LoggerInterface;
+use \Psr\Log\LoggerAwareInterface;
+
 // Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Metadata\DescribableInterface;
 use \Charcoal\Metadata\DescribableTrait;
@@ -25,12 +29,18 @@ use \Charcoal\Property\PropertyValidator;
 abstract class AbstractProperty implements
     PropertyInterface,
     DescribableInterface,
+    LoggerAwareInterface,
     ValidatableInterface,
     ViewableInterface
 {
     use DescribableTrait;
     use ValidatableTrait;
     use ViewableTrait;
+
+    /**
+    * @var LoggerInterface $logger
+    */
+    private $logger;
 
     /**
     * @var string $_ident
@@ -126,6 +136,38 @@ abstract class AbstractProperty implements
     * @return string
     */
     abstract public function type();
+
+    /**
+    * > LoggerAwareInterface > setLogger()
+    *
+    * Fulfills the PSR-1 style LoggerAwareInterface
+    *
+    * @param LoggerInterface $logger
+    * @return AbstractEngine Chainable
+    */
+    public function setLogger(LoggerInterface $logger)
+    {
+        return $this->set_logger($logger);
+    }
+
+    /**
+    * @param LoggerInterface $logger
+    * @return AbstractEngine Chainable
+    */
+    public function set_logger(LoggerInterface $logger = null)
+    {
+        $this->logger = $logger;
+        return $this;
+    }
+
+    /**
+    * @erturn LoggerInterface
+    */
+    public function logger()
+    {
+        return $this->logger;
+    }
+
 
     /**
     * This function takes an array and fill the property with its value.
@@ -374,8 +416,6 @@ abstract class AbstractProperty implements
     {
         return !!$this->multiple;
     }
-
-
 
     /**
     * @param array $multiple_options
@@ -669,9 +709,13 @@ abstract class AbstractProperty implements
         return $validator;
     }
 
+    /**
+    * @param array $data
+    * @return ViewInterface
+    */
     public function create_view(array $data = null)
     {
-         $view = new \Charcoal\View\GenericView([
+        $view = new \Charcoal\View\GenericView([
             'logger'=>$this->logger()
         ]);
         if ($data !== null) {
