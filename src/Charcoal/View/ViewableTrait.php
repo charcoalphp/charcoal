@@ -111,7 +111,7 @@ trait ViewableTrait
     public function view()
     {
         if ($this->view === null) {
-            $this->view = $this->create_view();
+            return $this->create_view();
         }
         return $this->view;
     }
@@ -120,16 +120,7 @@ trait ViewableTrait
     * @param mixed $data
     * @return ViewInterface
     */
-    public function create_view($data = null)
-    {
-        $view = new GenericView([
-            'logger'=>null
-        ]);
-        if ($data !== null) {
-            $view->set_data($data);
-        }
-        return $view;
-    }
+    abstract public function create_view($data = null);
 
     /**
     * @param string $template The template to parse and echo. If null, use the object's default.

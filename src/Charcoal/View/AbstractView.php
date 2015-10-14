@@ -5,6 +5,10 @@ namespace Charcoal\View;
 // Dependencies from `PHP`
 use \InvalidArgumentException;
 
+// PSR-3 logger
+use \Psr\Log\LoggerInterface;
+use \Psr\Log\LoggerAwareInterface;
+
 // Module `charcoal-config` dependencies
 use \Charcoal\Config\ConfigurableInterface;
 use \Charcoal\Config\ConfigurableTrait;
@@ -22,6 +26,7 @@ use \Charcoal\View\ViewInterface;
 */
 abstract class AbstractView implements
     ConfigurableInterface,
+    LoggerAwareInterface,
     ViewInterface
 {
     use ConfigurableTrait;
@@ -39,9 +44,9 @@ abstract class AbstractView implements
     private $template;
 
     /**
-    * @var \Psr\Log\LoggerInterface $logger
+    * @var LoggerInterface $logger
     */
-    // private $logger;
+    private $logger;
 
     /**
     * @var string $engine_type
@@ -54,36 +59,6 @@ abstract class AbstractView implements
     private $engine;
 
 
-
-    /**
-    * Build the object with an array of options.
-    *
-    * ## Optional parameters:
-    * - `config` a ViewConfig object
-    * - `logger` a PSR logger
-    *
-    * @param array $data
-    * @throws InvalidArgumentException If required parameters are missing.
-    * @todo The `config` and `logger` parameters should be made required (API break)
-    */
-    public function __construct($data)
-    {
-        // Required parameters
-        // if(!isset($data['logger'])) {
-        //     throw new InvalidArgumentException(
-        //         'Logger is required for the view constructor'
-        //     );
-        // }
-
-        // set_config() is defined in the `ConfigurableTrait`
-        if (isset($data['config'])) {
-            $this->set_config($data['config']);
-        }
-
-        if (isset($data['logger'])) {
-            $this->logger = $data['logger'];
-        }
-    }
 
     /**
     * @return string
@@ -112,7 +87,36 @@ abstract class AbstractView implements
         return $this;
     }
 
+    /**
+    * > LoggerAwareInterface > setLogger()
+    *
+    * Fulfills the PSR-1 style LoggerAwareInterface
+    *
+    * @param LoggerInterface $logger
+    * @return AbstractEngine Chainable
+    */
+    public function setLogger(LoggerInterface $logger)
+    {
+        return $this->set_logger($logger);
+    }
 
+    /**
+    * @param LoggerInterface $logger
+    * @return AbstractEngine Chainable
+    */
+    public function set_logger(LoggerInterface $logger = null)
+    {
+        $this->logger = $logger;
+        return $this;
+    }
+
+    /**
+    * @erturn LoggerInterface
+    */
+    public function logger()
+    {
+        return $this->logger;
+    }
 
     /**
     * > ConfigurableTrait . create_config()
@@ -181,28 +185,28 @@ abstract class AbstractView implements
         switch ($type) {
             case 'mustache':
                 return new MustacheEngine([
-                    'logger'=>null,
+                    'logger'=>$this->logger(),
                     'cache'=>null,
                     'loader'=>null
                 ]);
 
             case 'php':
                 return new PhpEngine([
-                    'logger'=>null,
+                    'logger'=>$this->logger(),
                     'cache'=>null,
                     'loader'=>null
                 ]);
 
             case 'php-mustache':
                 return new PhpMustacheEngine([
-                    'logger'=>null,
+                    'logger'=>$this->logger(),
                     'cache'=>null,
                     'loader'=>null
                 ]);
 
             default:
                 return new MustacheEngine([
-                    'logger'=>null,
+                    'logger'=>$this->logger,
                     'cache'=>null,
                     'loader'=>null
                 ]);

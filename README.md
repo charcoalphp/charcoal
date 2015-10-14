@@ -17,9 +17,12 @@ $ composer require locomotivemtl/charcoal-view
 ## Dependencies
 - `PHP 5.5+`
   - Older versions of PHP are deprecated, therefore not supported.
-- [`charcoal-config`](https://github.com/locomotivemtl/charcoal-config) 
+  - `ext-fileinfo` File / MIME identification.
+  - `ext-mbstring` Multi-bytes string support.
+  - `ext-pdo` PDO Database driver.
+- [`locomotivemtl/charcoal-config`](https://github.com/locomotivemtl/charcoal-config) 
   - The view objects are _configurable_ with `\Charcoal\View\ViewConfig`.
-- [`mustache`](https://github.com/bobthecow/mustache.php)
+- [`mustache/mustache`](https://github.com/bobthecow/mustache.php)
   - The default rendering engine is _mustache_, therefore there is a hard dependency for now.
   - All default charcoal modules use mustache templates. 
 
@@ -152,6 +155,9 @@ would output: `"Hello world!"`
 
 ## Classes summary
 
+- `\Charcoal\View\AbstractEngine`
+  - Base abstract class for _Engine_ interfaces, implements `EngineInterface`. 
+  - Is the base of all 3 engines: `mustache`, `php`, `php-mustache`.
 - `\Charcoal\View\AbstractView`
   -  Base abstract class for _View_ interfaces, implements `ViewInterface`.
   -  Also implements `\Charcoal\Config\ConfigurableInterface` through the `ConfigurableTrait`
