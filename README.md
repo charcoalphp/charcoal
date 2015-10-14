@@ -42,12 +42,6 @@ Charcoal uses:
 
 The core concepts (namespaces) defined in Charcoal Core are:
 
-- `Cache`, for the cache interfaces as well as a few drivers.
-  - Available cache types: `apc`, `memcache` and `noop`.
-  - Extra interface: `CacheableInterface` / `CacheableTrait` for objects that can be stored in the cache.
-  - Default cache should typically be _memcache_.
-- `Config`, for the configuration objects.
-  - Extra interface: `ConfigurableInterface` / `ConfigurableTrait` for objects that can be defined with a `*Config` object.
 - `Core`, for core patterns, classes and traits.
   - `AbstractFactory` / `FactoryInterface`: a base class for all Factories in Charcoal.
   - `IndexableInterface` / `IndexableTrait`:

@@ -54,12 +54,6 @@ class MetadataLoader extends FileLoader
             $this->set_ident($ident);
         }
 
-        // Attempt loading from cache
-        $ret = $this->cache_load();
-        if ($ret !== false) {
-            return $ret;
-        }
-
         $hierarchy = $this->hierarchy();
 
         $metadata = [];
@@ -71,7 +65,6 @@ class MetadataLoader extends FileLoader
         }
 
         $this->set_content($metadata);
-        $this->cache_store();
 
         return $metadata;
     }

@@ -84,17 +84,10 @@ class FileLoader extends AbstractLoader
             return '';
         }
 
-        // Attempt loading from cache
-        $ret = $this->cache_load();
-        if ($ret !== false) {
-            return $ret;
-        }
-
         $filename = $this->first_matching_filename($ident);
         if ($filename) {
             $file_content = file_get_contents($filename);
             $this->set_content($file_content);
-            $this->cache_store();
             return $file_content;
         }
 

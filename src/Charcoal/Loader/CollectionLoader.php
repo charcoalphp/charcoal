@@ -336,12 +336,6 @@ class CollectionLoader extends AbstractLoader
         // Unused.
         unset($ident);
 
-        // Attempt loading from cache
-        $ret = $this->cache_load();
-        if ($ret !== false) {
-            return $ret;
-        }
-
         $db = $this->source()->db();
         if (!$db) {
             throw new Exception('Could not instanciate database connection.');
@@ -365,8 +359,6 @@ class CollectionLoader extends AbstractLoader
             $obj->set_flat_data($obj_data);
             $collection->add($obj);
         }
-
-        $this->cache_store($collection);
 
         return $collection;
     }
