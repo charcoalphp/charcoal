@@ -6,7 +6,7 @@ namespace Charcoal\View\Mustache;
 use \Mustache_Engine;
 
 // Intra-module (`charcoal-view`) depentencies
-use \Charcoal\View\EngineInterface;
+use \Charcoal\View\AbstractEngine;
 use \Charcoal\View\LoaderInterface;
 
 // Local namespace dependencies
@@ -15,14 +15,8 @@ use \Charcoal\View\Mustache\MustacheLoader;
 /**
 * Mustache view rendering engine.
 */
-class MustacheEngine implements EngineInterface
+class MustacheEngine extends AbstractEngine
 {
-
-    /**
-    * @var LoaderInterface $loader
-    */
-    private $loader;
-
     /**
     * @var GenericHelper $helper
     */
@@ -34,19 +28,30 @@ class MustacheEngine implements EngineInterface
     private $mustache;
 
     /**
-    * @var \Psr\Log\LoggerInterface $logger
-    */
-    private $logger;
-
-    /**
+    * Build the object with an array of dependencies.
+    *
+    * ## Optional parameters:
+    * - `loader` a Loader object
+    * - `logger` a PSR logger
+    *
     * @param array $data
     */
     public function __construct($data)
     {
-        $this->logger = $data['logger'];
+        if (isset($data['logger'])) {
+            $this->set_logger($data['logger']);
+        }
         if (isset($data['loader'])) {
             $this->set_loader($data['loader']);
         }
+    }
+
+    /**
+    * @return string
+    */
+    public function type()
+    {
+        return 'mustache';
     }
 
     /**
@@ -81,28 +86,7 @@ class MustacheEngine implements EngineInterface
     }
 
     /**
-    * @param LoaderInterface $loader
-    * @return MustacheEngine Chainable
-    */
-    public function set_loader(LoaderInterface $loader)
-    {
-        $this->loader = $loader;
-        return $this;
-    }
-
-    /**
-    * @return MustacheLoader
-    */
-    public function loader()
-    {
-        if ($this->loader === null) {
-            $this->loader = $this->create_loader();
-        }
-        return $this->loader;
-    }
-
-    /**
-    * @return MustacheLoader
+    * @return LoaderInterface
     */
     public function create_loader()
     {
@@ -140,15 +124,6 @@ class MustacheEngine implements EngineInterface
     {
         $helper = new GenericHelper();
         return $helper;
-    }
-
-    /**
-    * @param string $template_ident
-    * @return string
-    */
-    public function load_template($template_ident)
-    {
-        return $this->loader()->load($template_ident);
     }
 
     /**

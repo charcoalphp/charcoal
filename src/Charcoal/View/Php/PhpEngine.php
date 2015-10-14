@@ -3,28 +3,22 @@
 namespace Charcoal\View\Engine;
 
 // Intra-module (`charcoal-view`) depentencies
-use \Charcoal\View\EngineInterface;
+use \Charcoal\View\AbstractEngine;
 
 /**
 *
 */
-class PhpEngine implements EngineInterface
+class PhpEngine extends AbstractEngine
 {
     /**
-    * @var PhpLoader $loader
+    * @param array $data Dependencies
     */
-    private $loader;
-
-    /**
-    * @var \Psr\Log\LoggerInterface $logger
-    */
-    private $logger;
-
     public function __construct($data)
     {
-        $this->logger = $data['logger'];
-        $this->cache = $data['cache'];
-        $this->loader = $data['loader'];
+        $this->set_logger($data['logger']);
+        if (isset($data['loader'])) {
+            $this->set_loader($data['loader']);
+        }
     }
 
     /**
@@ -33,15 +27,6 @@ class PhpEngine implements EngineInterface
     public function type()
     {
         return 'php';
-    }
-
-    /**
-    * @param string $template_ident
-    * @return string
-    */
-    public function load_template($template_ident)
-    {
-        return $this->loader()->load($template_ident);
     }
 
     /**
