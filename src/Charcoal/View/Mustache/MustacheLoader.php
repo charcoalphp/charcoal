@@ -92,7 +92,8 @@ class MustacheLoader implements
         $filename = $this->filename_from_ident($ident);
         $search_path = $this->search_path();
         foreach ($search_path as $path) {
-            $f = $path.'/'.$filename;
+            $f = realpath($path).'/'.$filename;
+            //var_dump($f);
             if (!file_exists($f)) {
                 continue;
             }
