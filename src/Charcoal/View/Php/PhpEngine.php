@@ -2,6 +2,8 @@
 
 namespace Charcoal\View\Engine;
 
+use \InvalidArgumentException;
+
 // Intra-module (`charcoal-view`) depentencies
 use \Charcoal\View\AbstractEngine;
 
@@ -32,10 +34,27 @@ class PhpEngine extends AbstractEngine
     /**
     * @param string $template
     * @param mixed $context
+    * @throws InvalidArgumentException
     * @return string
     */
     public function render($template, $context)
     {
-        return $this->mustache()->render($template, $context);
+        if (!is_string($template)) {
+            throw new InvalidArgumentException(
+                'Render method called with invalid template parameter (not a string).'
+            );
+        }
+
+        // Prevents leaking global variable by forcing anonymous scope
+        $render = function($template, $context) {
+            extract($context);
+            include $template;
+        };
+        
+        ob_start();
+        $render($$template, $context);
+        $output = ob_get_clean();
+
+        return $output;
     }
 }
