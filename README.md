@@ -58,6 +58,37 @@ echo $view->render_template('foo/bar/template', $context);
 
 > 👉 The default view engine, used in those examples, would be _mustache_.
 
+Using renderer, with a PSR7 framework (in this example, Slim 3):
+```php
+use \Charcoal\View\GenericView;
+use \Charcoal\View\Renderer;
+
+include 'vendor/autoload.php';
+
+$app = new \Slim\App();
+$container = $app->getContainer();
+
+$container['view_config'] = function($c) {
+  $config = new \Charcoal\View\ViewConfig();
+  return $config;
+};
+$container['view'] = function($c) {
+  return new GenericView([
+    'config'=>$c['view_config'],
+    'logger'=>$c['logger']
+  ]);
+};
+$container['renderer'] = function($c) {
+  return new Renderer($c['view']);
+};
+
+$app->get('/hello/{name}', function ($request, $response, $args) {
+    return $this->renderer->render($response, 'hello', $args);
+});
+
+$app->run();
+```
+
 ## Views
 
 The `Charcoal\View\ViewInterface` defines all that is needed to render templates via a view engine:
