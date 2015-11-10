@@ -6,11 +6,21 @@ namespace Charcoal\View;
 use \Psr\Log\LoggerInterface;
 use \Psr\Log\LoggerAwareInterface;
 
-
 // Local namespace dependencies
 use \Charcoal\View\EngineInterface;
 use \Charcoal\View\LoaderInterface;
 
+/**
+* Default implementation, as abstract class, of the `EngineInterface`.
+*
+* View Engines are comprised of 2 things:
+* - A template loader, wich is a `LoaderInterfaceObject`
+*   - Set with `set_loader()` / Get with `loader()`
+*   - Provides `loadtemplate()` method
+* - A `render()` method, which takes a $template and a $context arguments
+*
+* > Engines implements the `LoggerAwareInterface`. A logger can be accessed with the `logger()` method.
+*/
 abstract class AbstractEngine implements
     EngineInterface,
     LoggerAwareInterface
@@ -33,7 +43,7 @@ abstract class AbstractEngine implements
     /**
     * > LoggerAwareInterface > setLogger()
     *
-    * Fulfills the PSR-1 style LoggerAwareInterface
+    * Fulfills the PSR-3 style LoggerAwareInterface `setLogger`
     *
     * @param LoggerInterface $logger
     * @return AbstractEngine Chainable
@@ -54,7 +64,7 @@ abstract class AbstractEngine implements
     }
 
     /**
-    * @erturn LoggerInterface
+    * @return LoggerInterface
     */
     public function logger()
     {
@@ -88,6 +98,8 @@ abstract class AbstractEngine implements
     abstract public function create_loader();
 
     /**
+    * Delegates template loading to the engine's Loader object.
+    *
     * @param string $template_ident
     * @return string
     */

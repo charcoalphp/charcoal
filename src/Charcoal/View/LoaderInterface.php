@@ -14,7 +14,7 @@ interface LoaderInterface
     * @throws InvalidArgumentException
     * @return MustacheLoader Chainable
     */
-    public function set_search_path($search_path);
+    public function set_search_path(array $search_path);
 
     /**
     * @param string $path

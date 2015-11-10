@@ -59,7 +59,6 @@ abstract class AbstractView implements
     private $engine;
 
 
-
     /**
     * @return string
     */

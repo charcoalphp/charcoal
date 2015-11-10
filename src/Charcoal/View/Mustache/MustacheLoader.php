@@ -38,16 +38,10 @@ class MustacheLoader implements
 
     /**
     * @param array $search_path
-    * @throws InvalidArgumentException
     * @return MustacheLoader Chainable
     */
-    public function set_search_path($search_path)
+    public function set_search_path(array $search_path)
     {
-        if (!is_array($search_path)) {
-            throw new InvalidArgumentException(
-                'Search path needs to be an array'
-            );
-        }
         $this->search_path = [];
         foreach ($search_path as $path) {
             $this->add_search_path($path);
@@ -93,10 +87,10 @@ class MustacheLoader implements
         $search_path = $this->search_path();
         foreach ($search_path as $path) {
             $f = realpath($path).'/'.$filename;
-            //var_dump($f);
             if (!file_exists($f)) {
                 continue;
             }
+            
             $file_content = file_get_contents($f);
             if ($file_content !== '') {
                 return $file_content;

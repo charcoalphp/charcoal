@@ -102,8 +102,8 @@ There are 3 engines available by default:
  
 ### Templates
 Templates are simply files, stored on the filesystem, containing the main view (typically, HTML code + templating tags, but can be kind of text data). 
-- For the mustache engine, they are `.mustache` files. 
-- For the php and php-mustache engines, they are `.php` files.
+- For the *mustache* engine, they are `.mustache` files. 
+- For the *php* and *php-mustache* engines, they are `.php` files.
 
 Templates are loaded with template _loaders_. Loaders implement the `Charcoal\View\LoaderInterface` and simply tries to match an identifier (passed as argument to the `load()` method) to a file on the filesystem.
 
