@@ -2,6 +2,9 @@
 
 namespace Charcoal\Factory;
 
+// Local namespace dependencies
+use \Charcoal\Factory\AbstractFactory;
+
 /**
 *
 */

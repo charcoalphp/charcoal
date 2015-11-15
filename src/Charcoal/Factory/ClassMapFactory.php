@@ -5,6 +5,9 @@ namespace Charcoal\Factory;
 // Dependencies from `PHP`
 use \InvalidArgumentException;
 
+// Local namespace dependencies
+use \Charcoal\Factory\AbstractFactory;
+
 /**
 * Class Map Factory
 *
@@ -16,7 +19,6 @@ class ClassMapFactory extends AbstractFactory
     * @var array $class_map
     */
     private $class_map = [];
-
 
     /**
     * Add multiple types, in a an array of `type` => `classname`.

@@ -2,6 +2,12 @@
 
 namespace Charcoal\Core;
 
+// Local namespace dependencies
+use \Charcoal\Factory\AbstractFactory;
+
+/**
+*
+*/
 class ClassNameFactory extends AbstractFactory
 {
     /**
