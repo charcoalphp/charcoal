@@ -85,6 +85,84 @@ abstract class AbstractFactory implements FactoryInterface
     private $args = null;
 
     /**
+    * Create a new instance of a class, by type.
+    *
+    * Unlike `get()`, this method *always* return a new instance of the requested class.
+    *
+    * @param string $type The type (class ident)
+    * @throws Exception If the
+    * @throws InvalidArgumentException if type is not a string or is not an available type
+    * @return mixed The instance / object
+    */
+    final public function create($type, $args = null)
+    {
+        if ($args === null) {
+            $args = $this->args();
+        }
+        if (!is_string($type)) {
+            throw new InvalidArgumentException(
+                __METHOD__.': Type must be a string.'
+            );
+        }
+
+        if (!$this->validate($type)) {
+            $default_class = $this->default_class();
+            if ($default_class !== '') {
+                return new $default_class($args);
+            } else {
+                throw new InvalidArgumentException(
+                    sprintf(
+                        __METHOD__.': Type "%s" is not a valid type. (Using default class %s)',
+                        $type,
+                        $default_class
+                    )
+                );
+            }
+        }
+
+        // Create the object from the type's class name.
+        $classname = $this->classname($type);
+        $obj = new $classname($args);
+
+
+        // Ensure base class is respected, if set.
+        $base_class = $this->base_class();
+        if ($base_class !== '' && !($obj instanceof $base_class)) {
+            throw new Exception(
+                sprintf(__METHOD__.': Object is not a valid "%s" class', $base_class)
+            );
+        }
+
+        $this->instances[$type] = $obj;
+        return $obj;
+    }
+
+    /**
+    * Get (load or create) an instance of a class, by type.
+    *
+    * Unlike `create()` (which always call a `new` instance), this function first tries to load / reuse
+    * an already created object of this type, from memory.
+    *
+    * @param string $type The type (class ident)
+    * @throws InvalidArgumentException if type is not a string
+    * @return mixed The instance / object
+    */
+    final public function get($type, $args = null)
+    {
+        if (!is_string($type)) {
+            throw new InvalidArgumentException(
+                'Type must be a string.'
+            );
+        }
+        if (isset($this->instances[$type]) && $this->instances[$type] !== null) {
+            return $this->instances[$type];
+        } else {
+            return $this->create($type, $args);
+
+        }
+    }
+
+    /**
     * Singleton instance
     *
     * @return FactoryInterface
@@ -167,93 +245,7 @@ abstract class AbstractFactory implements FactoryInterface
         return $this->default_class;
     }
 
-    public function set_args(array $args)
-    {
-        $this->args = $args;
-    }
 
-    public function args()
-    {
-        return $this->args;
-    }
-
-    /**
-    * Create a new instance of a class, by type.
-    *
-    * Unlike `get()`, this method *always* return a new instance of the requested class.
-    *
-    * @param string $type The type (class ident)
-    * @throws Exception If the
-    * @throws InvalidArgumentException if type is not a string or is not an available type
-    * @return mixed The instance / object
-    */
-    final public function create($type, $args = null)
-    {
-        if ($args === null) {
-            $args = $this->args();
-        }
-        if (!is_string($type)) {
-            throw new InvalidArgumentException(
-                __METHOD__.': Type must be a string.'
-            );
-        }
-
-        if (!$this->validate($type)) {
-            $default_class = $this->default_class();
-            if ($default_class !== '') {
-                return new $default_class($args);
-            } else {
-                throw new InvalidArgumentException(
-                    sprintf(
-                        __METHOD__.': Type "%s" is not a valid type. (Using default class %s)',
-                        $type,
-                        $default_class
-                    )
-                );
-            }
-        }
-
-        // Create the object from the type's class name.
-        $classname = $this->classname($type);
-        $obj = new $classname($args);
-
-
-        // Ensure base class is respected, if set.
-        $base_class = $this->base_class();
-        if ($base_class !== '' && !($obj instanceof $base_class)) {
-            throw new Exception(
-                sprintf(__METHOD__.': Object is not a valid "%s" class', $base_class)
-            );
-        }
-
-        $this->instances[$type] = $obj;
-        return $obj;
-    }
-
-    /**
-    * Get (load or create) an instance of a class, by type.
-    *
-    * Unlike `create()` (which always call a `new` instance), this function first tries to load / reuse
-    * an already created object of this type, from memory.
-    *
-    * @param string $type The type (class ident)
-    * @throws InvalidArgumentException if type is not a string
-    * @return mixed The instance / object
-    */
-    final public function get($type, $args = null)
-    {
-        if (!is_string($type)) {
-            throw new InvalidArgumentException(
-                'Type must be a string.'
-            );
-        }
-        if (isset($this->instances[$type]) && $this->instances[$type] !== null) {
-            return $this->instances[$type];
-        } else {
-            return $this->create($type, $args);
-
-        }
-    }
 
     /**
     * Get the class name from "type".

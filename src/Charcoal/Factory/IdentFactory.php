@@ -57,7 +57,7 @@ class IdentFactory extends AbstractFactory
     * @param string
     * @return string
     */
-    public function prepare_classname($class)
+    protected function prepare_classname($class)
     {
         return $class;
     }
