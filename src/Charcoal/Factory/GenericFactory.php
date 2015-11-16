@@ -8,12 +8,12 @@ use \Charcoal\Factory\AbstractFactory;
 /**
 *
 */
-class ClassNameFactory extends AbstractFactory
+class GenericFactory extends AbstractFactory
 {
     /**
     * {@inheritdoc}
     */
-    public function classname($type)
+    public function resolve($type)
     {
         return $type;
     }
@@ -21,8 +21,8 @@ class ClassNameFactory extends AbstractFactory
     /**
     * {@inheritdoc}
     */
-    public function validate($type)
+    public function is_resolvable($type)
     {
-        return class_exists($type);
+        return !!class_exists($type);
     }
 }

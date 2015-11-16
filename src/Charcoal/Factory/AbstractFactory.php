@@ -11,48 +11,6 @@ use \Charcoal\Factory\FactoryInterface;
 
 /**
 * Full implementation, as Abstract class, of the FactoryInterface.
-*
-* The AbstractFactory is an implementation of the Factory Method / Abstract Fatory Pattern
-* in PHP.
-*
-* ## How to use
-* Factories have only one use: create an object.
-* The "object type" to create can be dynamic and specified to the 2 fetch methods:
-* - `create()`
-* - `get()`
-*
-* ```php
-* $factory = new ConcreteFactory;
-* // The `create()` method ensures the object is re-created at every call:
-* $obj = $factory->create('namespace/vendor/object');
-* // The `get()` method returns the created object, or create one if none was set:
-* $obj = $factory->get('namespace/vendor/object');
-* ```
-*
-* ## Limiting the types of instanciated objects
-* Because of the very dynamic nature of this factory, it is a good practice to limit the type
-* of objects that can be created by setting the `base_class` to a base
-* class or interface that the instanciated object must extends or implements.
-* ```php
-* $factory = new ConcreteFactory();
-* $factory->set_base_class('\Namespace\Vendor\Foo');
-* // This will throw an Exception or return the default object if the resulting object
-* // instance does not extends \Namespace\Verndor\Foo
-* $obj = $factory->create('bar');
-* ```
-*
-* ## Ensuring an object is always returned.
-* By default, calling `get()` or `create()` will throw an exception if the type is not valid.
-* (What is considered a valid type depends on the `classname()` method.
-*
-* It is possible to ensure that an object is always returned by
-* setting the *default_class* property to a valid class name.
-* ```php
-* $factory = new ConcreteFactory();
-* $factory->set_default_class('\Namespace\Vendor\Bar');
-* // This will return an instance of \Namespace\Vendor\Bar if 'bar' is an invalid type:
-* $obj = $factory->create('bar');
-* ```
 */
 abstract class AbstractFactory implements FactoryInterface
 {
@@ -66,23 +24,35 @@ abstract class AbstractFactory implements FactoryInterface
     * If a base class is set, then it must be ensured that the
     * @var string $base_class
     */
-    protected $base_class = '';
+    private $base_class = '';
     /**
     *
     * @var string $default_class
     */
-    protected $default_class = '';
+    private $default_class = '';
 
     /**
     * Keeps loaded instances in memory, in `[$type => $instance]` format.
+    * Used with the `get()` method only.
     * @var array $instances
     */
-    protected $instances = [];
+    private $instances = [];
 
     /**
-    * @var array|null $args
+    * Build a new instance of a class, from options.
+    *
+    * @param array $options
+    * @param array $args
+    * @return mixed The Instance / object
     */
-    private $args = null;
+    public function build(array $options, array $args = null)
+    {
+        $builder_ident = 'obj_type';
+        $type = isset($options[$builder_ident]) ? $options[$builder_ident] : '';
+
+        return $this->create($type, $args);
+    }
+
 
     /**
     * Create a new instance of a class, by type.
@@ -90,22 +60,20 @@ abstract class AbstractFactory implements FactoryInterface
     * Unlike `get()`, this method *always* return a new instance of the requested class.
     *
     * @param string $type The type (class ident)
+    * @param array $args The constructor arguments
     * @throws Exception If the
     * @throws InvalidArgumentException if type is not a string or is not an available type
     * @return mixed The instance / object
     */
-    final public function create($type, $args = null)
+    public function create($type, array $args = null)
     {
-        if ($args === null) {
-            $args = $this->args();
-        }
         if (!is_string($type)) {
             throw new InvalidArgumentException(
                 __METHOD__.': Type must be a string.'
             );
         }
 
-        if (!$this->validate($type)) {
+        if ($this->is_resolvable($type) === false) {
             $default_class = $this->default_class();
             if ($default_class !== '') {
                 return new $default_class($args);
@@ -121,7 +89,7 @@ abstract class AbstractFactory implements FactoryInterface
         }
 
         // Create the object from the type's class name.
-        $classname = $this->classname($type);
+        $classname = $this->resolve($type);
         $obj = new $classname($args);
 
 
@@ -133,7 +101,6 @@ abstract class AbstractFactory implements FactoryInterface
             );
         }
 
-        $this->instances[$type] = $obj;
         return $obj;
     }
 
@@ -147,19 +114,17 @@ abstract class AbstractFactory implements FactoryInterface
     * @throws InvalidArgumentException if type is not a string
     * @return mixed The instance / object
     */
-    final public function get($type, $args = null)
+    public function get($type, array $args = null)
     {
         if (!is_string($type)) {
             throw new InvalidArgumentException(
                 'Type must be a string.'
             );
         }
-        if (isset($this->instances[$type]) && $this->instances[$type] !== null) {
-            return $this->instances[$type];
-        } else {
-            return $this->create($type, $args);
-
+        if (!isset($this->instances[$type]) || $this->instances[$type] === null) {
+            $this->instances[$type] = $this->create($type, $args);
         }
+        return $this->instances[$type];
     }
 
     /**
@@ -248,19 +213,19 @@ abstract class AbstractFactory implements FactoryInterface
 
 
     /**
-    * Get the class name from "type".
+    * Resolve the class name from "type".
     *
     * @param string $type
     * @throws InvalidArgumentException
     * @return string
     */
-    abstract public function classname($type);
+    abstract public function resolve($type);
 
     /**
-    * Returns wether a type is available
+    * Returns wether a type is resolvable (is valid)
     *
     * @param string $type The type to check
     * @return boolean True if the type is available, false if not
     */
-    abstract public function validate($class_ident);
+    abstract public function is_resolvable($type);
 }

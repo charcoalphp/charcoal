@@ -10,26 +10,30 @@ interface FactoryInterface
     /**
     * Build an object from an array of options.
     *
-    * @param array $data
+    * @param array $data Object data
+    * @param array $args Constructor arguments
+    * @return mixed The instance / object.
     *
     */
-    public function build($data);
+    public function build(array $data, array $args = null);
 
     /**
     * Create a new instance of a class, by type.
     *
     * @param string $type The type (class ident)
+    * @param array $args Constructor arguments
     * @return mixed The instance / object
     */
-    public function create($type);
+    public function create($type, array $args = null);
 
     /**
     * Get an instance of a class, by type.
     *
     * @param string $type The type (class ident)
+    * @param array $args Constructor arguments
     * @return mixed
     */
-    public function get($type);
+    public function get($type, array $args = null);
 
     /**
     * If a base class is set, then it must be ensured that the created objects
@@ -68,7 +72,7 @@ interface FactoryInterface
     * @throws InvalidArgumentException
     * @return string
     */
-    public function classname($type);
+    public function resolve($type);
 
     /**
     * Returns wether a type is available
@@ -76,5 +80,5 @@ interface FactoryInterface
     * @param string $type The type to check
     * @return boolean True if the type is available, false if not
     */
-    public function validate($type);
+    public function is_resolvable($type);
 }
