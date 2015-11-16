@@ -13,7 +13,9 @@ $ composer require locomotivemtl/charcoal-image
 ```
 
 ## Dependencies
+
 - `PHP 5.4+`
+- `locomotivemtl/charcoal-factory`
 - `ext-imagick` (optional but _recommended_)
 **OR**
 - `ImageMagick binaries`
@@ -555,6 +557,7 @@ _Unreleased_
 - Fixed the "unsharp mask" mode for sharpen effect (imagick)
 - Fixed the gravity for the watermark effect (imagick)
 - Accept _ImageInterface_ objects as watermark (global)
+- Add a dependency on `locomotivemtl/charcoal-factory` and fix factories accordingly. (global)
 
 ### 0.1
 _Released 2015-08-26_

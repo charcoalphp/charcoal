@@ -2,24 +2,21 @@
 
 namespace Charcoal\Image;
 
-// File copied from `charcoal-core`
-use \Charcoal\Image\AbstractFactory;
+// Dependencies from `charcoal-factory` module
+use \Charcoal\Factory\MapFactory;
 
-class ImageFactory extends AbstractFactory
+class ImageFactory extends MapFactory
 {
     /**
     * @return array
     */
-    public static function types()
+    public function map()
     {
-        return array_merge(
-            parent::types(),
-            [
+        return [
             'imagick'       => '\Charcoal\Image\Imagick\ImagickImage',
             'imagemagick'   => '\Charcoal\Image\Imagemagick\ImagemagickImage'
             //'gd'            => '\Charcoal\Image\Gd\GdImage'
             // gmagick'       => '\Charcoal\Image\Gmagick\GmagickIimage'
-            ]
-        );
+        ];
     }
 }
