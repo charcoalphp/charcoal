@@ -1,7 +1,7 @@
 Charcoal Factory
 ================
 
-`Charcoal\Factory` creates factories which create or build dynamic Charcoal objects.
+`Charcoal\Factory` defines _factories_, which create or build dynamic Charcoal PHP objects.
 
 [![Build Status](https://travis-ci.org/locomotivemtl/charcoal-factory.svg?branch=master)](https://travis-ci.org/locomotivemtl/charcoal-factory)
 
@@ -20,31 +20,47 @@ $ composer require locomotivemtl/charcoal-factory
 > 👉 Development dependencies, which are optional when using charcoal-app, are described in the [Development](#development) section of this README file.
 
 
-#Factories
+# Factories
 
 ## About factories
 
-A factory object can do 2 things:
+Factories have only one purpose: to create / instanciate new PHP objects. There is 2 different methods of object creation:
 
 - `build` an object, from an array of options.
 - `create` an object, from a class ident.
 
+Additionnally, the `get` method can be called to retrieve the last created instance.
+
+```php
+$factory = new \Charcoal\Factory\IdentFactory();
+
+// Ensure the created object is a Charcoal Model
+$factory->set_base_class('\Charcoal\Model\ModelInterface');
+
+// Create a "news" object (from the `charcoal-cms` module)
+$factory->create('charcoal/cms/news');
+
+
+
+```
+
 There are 3 default type of factory provided:
 
-### `ClassMapFactory`
-Get the **class name** from an associative array with the **class ident** key.
+### `GenericFactory`
+Resolve the **class name** by using the requested **type** directly as the class name.
 
-### `ClassNameFactory`
-Use the **class ident** directly for **class name**.
+### `MapFactory`
+Resolve the **class name** from an associative array (_map_) with the requested **type** as key.
 
-### `IdentFactory`
- Generate a **class name** (`\Namespace\Class\Name`) from a **class ident** (`namespace/class/ident`).
+
+### `ResolverFactory`
+Resolves the **class name** from the `resolve()` method, which typically transform the requested **type** by:
 
 ## Ensuring a type of object
 Ensuring a type of object can be done by setting the `base_class`, either forced in a class:
 
 ```php
-class MyFactory
+class MyFactory extends AbstractFactory
 {
 	public function base_class()
 	{
@@ -56,16 +72,18 @@ class MyFactory
 Or, dynamically:
 
 ```php
-$factory = IdentFactory::instance();
+$factory = ResolverFactory::instance();
 $factory->set_base_class('\My\Foo\BaseClassInterface');
 ```	
+
+> 👉 Note that _Interfaces_ can also be used as a factory's base class.
 
 ## Setting a default type of object
 
 It is possible to set a default type of object (default class) by setting the `default_class`, either forced in a class:
 
 ```php
-class MyFactory
+class MyFactory extends AbstractFactory
 {
 	public function default_class()
 	{
@@ -77,7 +95,7 @@ class MyFactory
 Or, dynamically:
 
 ```php
-$factory = IdentFactory::instance();
+$factory = ResolverFactory::instance();
 $factory->set_default_class('\My\Foo\DefaultClassInterface');
 ```	
 
@@ -86,30 +104,57 @@ $factory->set_default_class('\My\Foo\DefaultClassInterface');
 
 ## The `AbstractFactory` API
 
-| Method     | Parameters | Return value | Description |
+| Method     | Return value | Description |
 | ---------- | ---------- | ------------ | ----------- |
-| `build`    | _array_ `$data` | _Object_ | Build a class from an array of options.
-| `create`   | _string_ `$type` [, _array_ `$constructor_args`] | _Object_ | Create a class from a "type" string.
-| `get`      | _string_ `$type` | _Object_
-| `set_base_class` | 
-| `base_class` |
-| `set_default_class` |
+| `build(array $data)` | _Object_ | Build a class from an array of options.
+| `create(string $type)` [, _array_ `$constructor_args`] | _Object_ | Create a class from a "type" string.
+| `get(_string $type)` | _Object_ | Get returns the latest created class instance, or a new one if none exists.
+| `set_base_class(string $classname)` | 
+| `base_class()` |
+| `set_default_class(string $classname)` |
 | `default_class` |
-| `classname` | _string_ `$type` | _string_ Class name | **abstract**, must be reimplemented in children classes.
-| `validate`  | _string_ `$type` | _boolean_ | **abstract**, must be reimplemented in children classes.
+| `resolve(string $type)` | _string_ Class name | **abstract**, must be reimplemented in children classes.
+| `is_resolvable(string $type)` | _boolean_ | **abstract**, must be reimplemented in children classes.
 
-### The `ClassMapFactory` additional API
+### The `MapFactory` additional API
 
-### The `ClassNameFactory` additional API
-Because the `ClassNameFactory` uses the parameter directly 
+| Method     | Return value | Description |
+| ---------- | ---------- | ------------ | ----------- |
+| `add_class($type, $class_name)` | _Chainable_ | 
+| `set_map(array $map)` | _Chainable_ |
+| `map()` | _array_ | 
+
+### The `GenericFactory` additional API
+Because the `ClassNameFactory` uses the parameter directly, there is no additional methods for this type of class.
+
+The `resolve()` method simply returns its _type_ argument, and the `validate()` method simply ensures its _type_ argument is a valid (existing) class.
+
+###The `ResolverFactory` additional API
+The `ResolverFactory` resolves the classname from the class resolver options:
+
+- `resolver_prefix` _string_ that will be prepended to the resolved class name.
+- `resolver_suffix` _string_ that will be appended to the resolved class name.
+- `resolver_capitals` _array_ of characters that will cause the next character to be capitalized.
+- `resolver_replacements` _array_
+
+| Method     | Return value | Description |
+| ---------- | ---------- | ------------ | ----------- |
+| `set_resolver_prefix(string $prefix)` | _Chainable_ |
+| `resolver_prefix()` | _string_ | 
+| `set_resolver_suffix(string $suffix)` | _Chainable_ |
+| `resolver_suffix()` | _string_ |
+| `set_resolver_capitals(array $capitals)` | _Chainable_ | 
+| `resolver_capitals()` | _array_ | 
+| `set_resolver_replacements(array $replacements)` | _Chainable_ | 
+| `resolver_replacements()` | _array_ | 
 
 # Usage
 
 To create a `\Foo\Bar\Baz` object:
 
 ```php
-$class_ident = '/foo/bar/baz';
-$obj = IdentFactory::instance()->create($class_ident);
+use \Charcoal\Factory\ResolverFactory;
+$obj = ResolverFactory::instance()->create('foo/bar/baz');
 ```
 
 # Development
