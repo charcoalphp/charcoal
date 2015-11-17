@@ -45,12 +45,17 @@ class TranslationString implements
     * Calling the constructor with a parameter should force setting it up as value.
     *
     * @param TranslationString|array|string $val
+    * @param TranslationConfig|array        $config
     */
-    public function __construct($val = null)
+    public function __construct($val = null, $config = null)
     {
+        if ($config !== null) {
+            $this->set_config($config);
+        }
         if ($val !== null) {
             $this->set_val($val);
         }
+        return $this;
     }
 
     /**
@@ -74,7 +79,7 @@ class TranslationString implements
             $lang = $method;
             return $this->val($lang);
         } else {
-            throw new Exception('Invalid lang');
+            throw new Exception('Invalid language: "' . (string)$lang . '"');
         }
     }
 
@@ -118,7 +123,7 @@ class TranslationString implements
             // Set as default lang
             $this->val[$this->lang()] = $val;
         } else {
-            throw new InvalidArgumentException('Invalid L10n value');
+            throw new InvalidArgumentException('Invalid localized value.');
         }
         return $this;
     }
@@ -132,13 +137,13 @@ class TranslationString implements
     public function add_val($lang, $val)
     {
         if (!is_string($lang)) {
-            throw new InvalidArgumentException('Lang must be a string.');
+            throw new InvalidArgumentException('Language must be a string.');
         }
         if (!is_string($val)) {
-            throw new InvalidArgumentException('L10n value must be a string.');
+            throw new InvalidArgumentException('Localized value must be a string.');
         }
         if (!in_array($lang, $this->available_langs())) {
-            throw new InvalidArgumentException('Invalid lang');
+            throw new InvalidArgumentException('Invalid language: "' . (string)$lang . '"');
         }
         $this->val[$lang] = $val;
         return $this;
@@ -157,7 +162,7 @@ class TranslationString implements
         if ($lang === null) {
             $lang = $this->lang();
         } elseif (!in_array($lang, $this->available_langs())) {
-            throw new InvalidArgumentException('Invalid lang');
+            throw new InvalidArgumentException('Invalid language: "' . (string)$lang . '"');
         }
 
         if (isset($this->val[$lang]) && $this->val[$lang] !== null) {
@@ -189,7 +194,7 @@ class TranslationString implements
     public function set_lang($lang)
     {
         if (!in_array($lang, $this->available_langs())) {
-            throw new InvalidArgumentException('Invalid lang');
+            throw new InvalidArgumentException('Invalid language: "' . (string)$lang . '"');
         }
         $this->lang = $lang;
         return $this;
@@ -231,12 +236,17 @@ class TranslationString implements
     /**
     * ConfigurableInterface > create_config()
     *
-    * @return
+    * @param array $data Optional
+    * @return TranslationConfig
+    * @todo Get the latest created instance of the config.
     */
-    private function create_config()
+    private function create_config(array $data = null)
     {
-        // Get the latest created instance of the config.
-        return new TranslationConfig();
+        $config = new TranslationConfig;
+        if ($data !== null) {
+            $config->set_data($data);
+        }
+        return $config;
     }
 
     /**
