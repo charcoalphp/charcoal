@@ -30,13 +30,17 @@ class TranslationString implements
     use ConfigurableTrait;
 
     /**
-    * The language translations array.
-    * Stored as a $lang=>$val hash.
+    * The object's translations
+    *
+    * Stored as a `$lang => $val` hash.
+    *
     * @var array $val
     */
     private $val = [];
 
     /**
+    * The object's current language
+    *
     * @var string $lang
     */
     private $lang = null;
@@ -44,8 +48,9 @@ class TranslationString implements
     /**
     * Calling the constructor with a parameter should force setting it up as value.
     *
-    * @param TranslationString|array|string $val
-    * @param TranslationConfig|array        $config
+    * @param  TranslationStringInterface|array|string $val
+    * @param  TranslationConfig|array                 $config
+    * @return self
     */
     public function __construct($val = null, $config = null)
     {
@@ -62,24 +67,24 @@ class TranslationString implements
     * Magic caller.
     *
     * Accepts language as a method:
+    *
     * ```php
-    * $str = new TranslationString(['en'=>'foo', 'fr'=>'bar']);
+    * $str = new TranslationString([ 'en' => 'foo', 'fr' => 'bar' ]);
     * // Because "fr" is an available language, this will output "bar".
-    * echo $str-fr();
+    * echo $str->fr();
     * ```
     *
-    * @param string $method
-    * @throws Exception
+    * @param  string $method
     * @return string
+    * @throws Exception
     */
     public function __call($method, $args = null)
     {
         unset($args);
         if (in_array($method, $this->available_langs())) {
-            $lang = $method;
-            return $this->val($lang);
+            return $this->val($method);
         } else {
-            throw new Exception('Invalid language: "' . (string)$lang . '"');
+            throw new Exception(sprintf('Invalid language: "%s"', (string)$method));
         }
     }
 
@@ -100,19 +105,21 @@ class TranslationString implements
     /**
     * Set the current translation value(s)
     *
-    * Accept 3 types of arguments:
-    * - object (TranslationStringInterface): The data will be copied from object's
-    * - array: All languages available in the array
-    *   - The format of the array should be a hash in the `lang` => `string` format.
-    * - string: The value will be assigned to the current language
+    * @param TranslationStringInterface|array|string $val {
+    *     Add one or more translation values.
     *
-    * @param TranslationString|array|string $val
+    *     Accept 3 types of arguments:
+    *     - object (TranslationStringInterface): The data will be copied from the object's.
+    *     - array: All languages available in the array. The format of the array should
+    *       be a hash in the `lang` => `string` format.
+    *     - string: The value will be assigned to the current language.
+    * }
+    * @return self
     * @throws InvalidArgumentException
-    * @return TranslationString Chainable
     */
     public function set_val($val)
     {
-        if ($val instanceof TranslationString) {
+        if ($val instanceof TranslationStringInterface) {
             $this->val = $val->all();
         } elseif (is_array($val)) {
             $this->val = [];
@@ -129,10 +136,12 @@ class TranslationString implements
     }
 
     /**
-    * @param string $lang
-    * @param string $val
+    * Add a translation value to a specified, and available, language
+    *
+    * @param  string $lang An available language identifier
+    * @param  string $val  The translation to be added
+    * @return self
     * @throws InvalidArgumentException
-    * @return TranslationString Chainable
     */
     public function add_val($lang, $val)
     {
@@ -143,7 +152,7 @@ class TranslationString implements
             throw new InvalidArgumentException('Localized value must be a string.');
         }
         if (!in_array($lang, $this->available_langs())) {
-            throw new InvalidArgumentException('Invalid language: "' . (string)$lang . '"');
+            throw new InvalidArgumentException(sprintf('Invalid language: "%s"', (string)$lang));
         }
         $this->val[$lang] = $val;
         return $this;
@@ -151,18 +160,24 @@ class TranslationString implements
 
 
     /**
-    * Get the the translation values.
+    * Get a translation value
     *
-    * @param string|null $lang
-    * @throws InvalidArgumentException
+    * Returns a translation in the current language.
+    *
+    * If $lang is provided, that language's translation is returned.
+    * If $lang isn't a supported language or the translation is unavailable,
+    * the translation in the default language is returned.
+    *
+    * @param  string|null $lang Optional supported language to retrieve a translation in.
     * @return string
+    * @throws InvalidArgumentException
     */
     public function val($lang = null)
     {
         if ($lang === null) {
             $lang = $this->lang();
         } elseif (!in_array($lang, $this->available_langs())) {
-            throw new InvalidArgumentException('Invalid language: "' . (string)$lang . '"');
+            throw new InvalidArgumentException(sprintf('Invalid language: "%s"', (string)$lang));
         }
 
         if (isset($this->val[$lang]) && $this->val[$lang] !== null) {
@@ -178,8 +193,11 @@ class TranslationString implements
     }
 
     /**
-    * Get the array of values in all langueages
+    * Get the array of translations in all languages
+    *
     * @return array
+    *
+    * @todo Add support for retrieving a subset of translations.
     */
     public function all()
     {
@@ -187,23 +205,30 @@ class TranslationString implements
     }
 
     /**
-    * @param string $lang
+    * Set the current object's language
+    *
+    * @see    TranslationConfig::set_lang() for another copy of this method
+    * @param  string $lang The current language
+    * @return self
     * @throws InvalidArgumentException
-    * @return TranslationString Chainable
     */
     public function set_lang($lang)
     {
         if (!in_array($lang, $this->available_langs())) {
-            throw new InvalidArgumentException('Invalid language: "' . (string)$lang . '"');
+            throw new InvalidArgumentException(sprintf('Invalid language: "%s"', (string)$lang));
         }
         $this->lang = $lang;
         return $this;
     }
 
     /**
-    * Get the actual language (Set in either the object or the dfault configuration)
-    * Typically from config / session.
-    * @return string
+    * Get the current object's language
+    *
+    * @see    TranslationConfig::lang() for another copy of this method
+    * @return string If none was set, returns the object's default language.
+    *
+    * @todo Add support for retrieving the current language
+    *       from the project config or the client session.
     */
     public function lang()
     {
@@ -214,8 +239,8 @@ class TranslationString implements
     }
 
     /**
-    * Get the default language (used when none is set/specified).
-    * Typicaly from config.
+    * Get the object's default language
+    *
     * @return string
     */
     private function default_lang()
@@ -225,6 +250,8 @@ class TranslationString implements
     }
 
     /**
+    * Get the object's list of available languages
+    *
     * @return array
     */
     private function available_langs()
@@ -236,13 +263,15 @@ class TranslationString implements
     /**
     * ConfigurableInterface > create_config()
     *
-    * @param array $data Optional
+    * @see    Catalog::create_config() for another copy of this method
+    * @param  array $data Optional
     * @return TranslationConfig
-    * @todo Get the latest created instance of the config.
+    *
+    * @todo   Get the latest created instance of the config.
     */
     private function create_config(array $data = null)
     {
-        $config = new TranslationConfig;
+        $config = new TranslationConfig();
         if ($data !== null) {
             $config->set_data($data);
         }

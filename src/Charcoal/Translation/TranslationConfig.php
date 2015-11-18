@@ -14,25 +14,29 @@ use \Charcoal\Config\AbstractConfig;
 class TranslationConfig extends AbstractConfig
 {
     /**
-    * All available languages
+    * Available languages
+    *
     * @var array $languages
     */
-    private $languages;
+    private $languages = [];
 
     /**
+    * Default language
+    *
     * @var string $default_lang
     */
-    private $default_lang;
+    private $default_lang = '';
 
     /**
     * Current language
+    *
     * @var string $lang
     */
-    private $lang;
+    private $lang = null;
 
     /**
-    * @param array $data
-    * @return TranslationConfig Chainable
+    * @param  array $data
+    * @return self
     */
     public function set_data(array $data)
     {
@@ -46,7 +50,9 @@ class TranslationConfig extends AbstractConfig
     }
 
     /**
-    * {@inheritdoc}
+    * Get the object's default configuration
+    *
+    * @return array
     */
     public function default_data()
     {
@@ -57,23 +63,30 @@ class TranslationConfig extends AbstractConfig
     }
 
     /**
-    * @param string $lang;
+    * Set the current object's language
+    *
+    * @see    TranslationString::set_lang() for another copy of this method
+    * @param  string $lang The current language
+    * @return self
     * @throws InvalidArgumentException
-    * @return TranslationString Chainable
     */
     public function set_lang($lang)
     {
         if (!in_array($lang, $this->available_langs())) {
-            throw new InvalidArgumentException('Invalid language: "' . (string)$lang . '"');
+            throw new InvalidArgumentException(sprintf('Invalid language: "%s"', (string)$lang));
         }
         $this->lang = $lang;
         return $this;
     }
 
     /**
-    * Get the actual language (Set in either the object or the dfault configuration)
-    * Typically from config / session.
-    * @return string
+    * Get the current object's language
+    *
+    * @see    TranslationString::lang() for another copy of this method
+    * @return string If none was set, returns the object's default language.
+    *
+    * @todo Add support for retrieving the current language
+    *       from the project config or the client session.
     */
     public function lang()
     {
@@ -84,23 +97,23 @@ class TranslationConfig extends AbstractConfig
     }
 
     /**
-    * Set the default language.
+    * Set the object's default language.
     *
-    * @param string $lang
+    * @param  string $lang
+    * @return self
     * @throws InvalidArgumentException
-    * @return TranlsationConfig (Chainable)
     */
     public function set_default_lang($lang)
     {
         if (!in_array($lang, $this->available_langs())) {
-            throw new InvalidArgumentException('Invalid language: "' . (string)$lang . '"');
+            throw new InvalidArgumentException(sprintf('Invalid language: "%s"', (string)$lang));
         }
         $this->default_lang = $lang;
         return $this;
     }
 
     /**
-    * Get the default language.
+    * Get the object's default language
     *
     * @return string
     */
@@ -110,7 +123,7 @@ class TranslationConfig extends AbstractConfig
     }
 
     /**
-    * Set the list of available languages.
+    * Set the object's list of available languages.
     *
     * When updating the list of available languages, the default language
     * is checked against the new list. If the default language doesn't
@@ -118,7 +131,7 @@ class TranslationConfig extends AbstractConfig
     *
     * @param array $languages
     * @throws InvalidArgumentException
-    * @return TranlsationConfig (Chainable)
+    * @return self
     */
     public function set_available_langs($languages)
     {
@@ -136,7 +149,7 @@ class TranslationConfig extends AbstractConfig
     }
 
     /**
-    * Get the list (array) of all available languages.
+    * Get the object's list of available languages
     *
     * @return array
     */
