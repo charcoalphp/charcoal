@@ -2,6 +2,9 @@
 
 namespace Charcoal\View\Php;
 
+use \InvalidArgumentException;
+
+// Parent namespace dependencies
 use \Charcoal\View\LoaderInterface;
 
 /**
@@ -10,8 +13,6 @@ use \Charcoal\View\LoaderInterface;
 class PhpLoader implements LoaderInterface
 {
     /**
-    * FileLoader > search_path()
-    *
     * @return array
     */
     public function search_path()
@@ -24,7 +25,7 @@ class PhpLoader implements LoaderInterface
         return $this->search_path;
     }
 
-        /**
+    /**
     * @param array $search_path
     * @return PhpLoader Chainable
     */
