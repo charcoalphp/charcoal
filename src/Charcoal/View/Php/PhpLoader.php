@@ -2,9 +2,6 @@
 
 namespace Charcoal\View\Php;
 
-// PHP Dependencies
-use \InvalidArgumentException;
-
 // Parent namespace dependencies
 use \Charcoal\View\AbstractLoader;
 use \Charcoal\View\LoaderInterface;
