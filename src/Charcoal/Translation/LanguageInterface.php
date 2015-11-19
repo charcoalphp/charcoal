@@ -4,23 +4,62 @@ namespace Charcoal\Translation;
 
 interface LanguageInterface
 {
-    public function set_data(array $data);
-    public function set_ident($ident);
-    public function ident();
-    public function set_name($name);
-    public function name();
     /**
-    * Get the ISO-639-1 (2-character) language code.
+    * @param array $data
+    * @return LanguageInterface Chainable
+    */
+    public function set_data(array $data);
+
+    /**
+    * Set the language identifier
+    *
+    * @param  string $ident
+    * @return LanguageInterface Chainable
+    */
+    public function set_ident($ident);
+
+    /**
+    * Get the language identifier
+    *
     * @return string
     */
-    public function iso639();
+    public function ident();
+
+    /**
+    * Set the name of the language and, optionally,
+    * the name translated in other languages.
+    *
+    * @param  TranslationString|array|string $name
+    * @return LanguageInterface Chainable
+    */
+    public function set_name($name);
+
+    /**
+    * Get the name of the language
+    *
+    * @return string
+    */
+    public function name();
 
     /**
     * Set the language's locale
+    *
+    * @param  string $ident
+    * @return LanguageInterface Chainable
     */
     public function set_locale($locale);
+
     /**
+    * Get the language's locale
     *
+    * @return string
     */
     public function locale();
+
+    /**
+    * Get the language's ISO 639 code.
+    *
+    * @return string
+    */
+    public function iso639();
 }

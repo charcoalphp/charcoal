@@ -7,34 +7,35 @@ namespace Charcoal\Translation;
 */
 interface TranslationStringInterface
 {
-
     /**
-    * @param TranslationStringInterface|array|string $val
-    * @return TranslationString Chainable
+    * Set the current translation value(s)
+    *
+    * @param  TranslationStringInterface|array|string $val
+    *
+    * @return TranslationStringInterface Chainable
     */
     public function set_val($val);
 
     /**
-    * @param string $lang
-    * @param string $val
-    * @throws InvalidArgumentException
-    * @return TranslationString Chainable
+    * Add a translation value to a specified, and available, language
+    *
+    * @param  string $lang An available language identifier
+    * @param  string $val  The translation to be added
+    *
+    * @return TranslationStringInterface Chainable
     */
     public function add_val($lang, $val);
 
     /**
-    * Get the the translation values.
+    * Get a translation value
     *
-    * The returned value depends on the parameter:
-    * - if a `$lang`, then a string containing the translated string for this language
-    * - if `null`, then an array containing all languag strings
-    *
+    * @param  string|null $lang Optional supported language to retrieve a translation in.
     * @return string
     */
     public function val($lang = null);
 
     /**
-    * Set the current object's language.
+    * Set the current object's language
     *
     * @param string $lang
     * @return TranslationStringInterface Chainable
@@ -42,9 +43,9 @@ interface TranslationStringInterface
     public function set_lang($lang);
 
     /**
-    * Get the current language.
-    * If none was set, this function returns the configration's default language.
-    * @return string
+    * Get the current object's language
+    *
+    * @return string If none was set, returns the object's default language.
     */
     public function lang();
 }

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Charcoal\Tests\Translation;
 
 use \Charcoal\Translation\TranslationString as TranslationString;
@@ -21,7 +20,12 @@ class TranslationStringTest extends \PHPUnit_Framework_TestCase
     */
     public function testMagicCall()
     {
-        $obj = new TranslationString(['fr'=>'foobar']);
+        $obj = new TranslationString(
+            [ 'fr' => 'foobar' ],
+            [
+                'languages' => [ 'fr' ]
+            ]
+        );
         $this->assertEquals('foobar', $obj->val('fr'));
         $this->assertEquals('foobar', $obj->fr());
 
@@ -46,17 +50,27 @@ class TranslationStringTest extends \PHPUnit_Framework_TestCase
     */
     public function testSetVal()
     {
-        $obj = new TranslationString();
+        $obj = new TranslationString(
+            null,
+            [
+                'languages' => [ 'en', 'fr' ]
+            ]
+        );
         $ret = $obj->set_val('foo bar');
 
         $this->assertSame($ret, $obj);
         $this->assertEquals('foo bar', $obj->val());
 
-        $ret = $obj->set_val(['en'=>'foo bar', 'fr'=>'bar baz']);
+        $ret = $obj->set_val([ 'en' => 'foo bar', 'fr' => 'bar baz' ]);
         $this->assertEquals('foo bar', $obj->en());
         $this->assertEquals('bar baz', $obj->fr());
 
-        $clone = new TranslationString(['en'=>'foo', 'fr'=>'bar']);
+        $clone = new TranslationString(
+            [ 'en' => 'foo', 'fr' => 'bar' ],
+            [
+                'languages' => [ 'en', 'fr' ]
+            ]
+        );
         $obj->set_val($clone);
         $this->assertEquals('foo', $obj->en());
         $this->assertEquals('bar', $obj->fr());
@@ -115,8 +129,13 @@ class TranslationStringTest extends \PHPUnit_Framework_TestCase
     */
     public function testValGetDefaultLang()
     {
-        $obj = new TranslationString();
-        $obj->set_val(['en'=>'foo']);
+        $obj = new TranslationString(
+            null,
+            [
+                'languages' => [ 'en', 'fr' ]
+            ]
+        );
+        $obj->set_val([ 'en' => 'foo' ]);
 
         $this->assertEquals('foo', $obj->val('fr'));
     }
@@ -136,7 +155,12 @@ class TranslationStringTest extends \PHPUnit_Framework_TestCase
     */
     public function testSetLang()
     {
-        $obj = new TranslationString(['en'=>'foo bar', 'fr'=>'bar baz']);
+        $obj = new TranslationString(
+            [ 'en' => 'foo bar', 'fr' => 'bar baz' ],
+            [
+                'languages' => [ 'en', 'fr' ]
+            ]
+        );
         $ret = $obj->set_lang('en');
         $this->assertSame($ret, $obj);
         $this->assertEquals('en', $obj->lang());
@@ -164,7 +188,12 @@ class TranslationStringTest extends \PHPUnit_Framework_TestCase
     */
     public function testSetValStringDefaultLanguage()
     {
-        $obj = new TranslationString();
+        $obj = new TranslationString(
+            null,
+            [
+                'languages' => [ 'en', 'fr' ]
+            ]
+        );
         $obj->set_lang('en');
         $obj->set_val('foo');
         $obj->set_lang('fr');

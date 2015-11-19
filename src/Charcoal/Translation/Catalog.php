@@ -111,7 +111,7 @@ class Catalog implements
     *
     * @param ResourceInterface|array|string $resource
     * @throws InvalidArgumentException
-    * @return CatalogInterface Chainable
+    * @return self
     */
     public function add_resource($resource)
     {
@@ -135,7 +135,7 @@ class Catalog implements
     * @param string $ident
     * @param TranslationStringInterface|array $translations
     * @throws InvalidArgumentException
-    * @return CatalogInterface Chainable
+    * @return self
     */
     public function add_translation($ident, $translations)
     {
@@ -160,7 +160,7 @@ class Catalog implements
     * @param string $translation
     * @param string|null $lang
     * @throws InvalidArgumentException
-    * @return Caltaog Chainable
+    * @return self
     *
     */
     public function add_translation_lang($ident, $translation, $lang = null)
@@ -240,7 +240,7 @@ class Catalog implements
     /**
     * @param string $lang
     * @throws InvalidArgumentException
-    * @return TranslationString Chainable
+    * @return self
     */
     public function set_lang($lang)
     {
@@ -285,13 +285,20 @@ class Catalog implements
     }
 
     /**
-    * ConfigurableTrait > create_config()
+    * ConfigurableInterface > create_config()
     *
-    * @return
+    * @see    TranslationString::create_config() for another copy of this method
+    * @param  array $data Optional
+    * @return TranslationConfig
+    *
+    * @todo   Get the latest created instance of the config.
     */
-    private function create_config()
+    private function create_config(array $data = null)
     {
-        // Get the latest created instance of the config.
-        return new TranslationConfig();
+        $config = new TranslationConfig();
+        if ($data !== null) {
+            $config->set_data($data);
+        }
+        return $config;
     }
 }
