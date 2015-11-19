@@ -2,29 +2,43 @@
 
 namespace Charcoal\Property;
 
-// Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Core\IdentFactory as IdentFactory;
+// Moule `charcoal-factory` dependencies
+use \Charcoal\Factory\ResolverFactory;
 
 /**
 *
 */
-class PropertyFactory extends IdentFactory
+class PropertyFactory extends ResolverFactory
 {
     /**
-    * @param array $data
+    * @return string
     */
-    public function __construct()
+    public function base_class()
     {
-        $this->set_base_class('\Charcoal\Property\PropertyInterface');
-        $this->set_default_class('\Charcoal\Model\Property');
+        return '\Charcoal\Property\PropertyInterface';
     }
 
     /**
-    * @param string $classname
     * @return string
     */
-    public function prepare_classname($classname)
+    public function default_class()
     {
-        return '\Charcoal\Property'.$classname.'Property';
+        return '\Charcoal\Model\Property';
+    }
+
+    /**
+    * @return string
+    */
+    public function resolver_prefix()
+    {
+        return '\Charcoal\Property';
+    }
+
+    /**
+    * @return string
+    */
+    public function resolver_suffix()
+    {
+        return 'Property';
     }
 }

@@ -311,7 +311,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
 
         } catch (PDOException $e) {
             throw new Exception(
-                'Error setting up database.'
+                sprintf('Error setting up database: %s', $e->getMessage())
             );
         }
 

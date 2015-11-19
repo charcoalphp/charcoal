@@ -2,19 +2,19 @@
 
 namespace Charcoal\Model;
 
-// Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Core\IdentFactory as IdentFactory;
+// Moule `charcoal-factory` dependencies
+use \Charcoal\Factory\ResolverFactory;
 
 /**
 *
 */
-class ModelFactory extends IdentFactory
+class ModelFactory extends ResolverFactory
 {
     /**
-    * @param array $data
+    * @return string
     */
-    protected function __construct()
+    public function base_class()
     {
-        $this->set_base_class('\Charcoal\Model\ModelInterface');
+        return '\Charcoal\Model\ModelInterface';
     }
 }

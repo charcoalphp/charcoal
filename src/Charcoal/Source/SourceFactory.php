@@ -2,22 +2,29 @@
 
 namespace Charcoal\Source;
 
-// Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Core\ClassMapFactory;
+// Moule `charcoal-factory` dependencies
+use \Charcoal\Factory\MapFactory;
 
 /**
 *
 */
-class SourceFactory extends ClassMapFactory
+class SourceFactory extends MapFactory
 {
     /**
-    * @param array $data
+    * @return string
     */
-    public function __construct()
+    public function base_class()
     {
-        $this->set_base_class('\Charcoal\Source\SourceInterface');
-        $this->set_class_map([
+        return '\Charcoal\Source\SourceInterface';
+    }
+
+    /**
+    * @return array
+    */
+    public function map()
+    {
+        return [
             'database' => '\Charcoal\Source\DatabaseSource'
-        ]);
+        ];
     }
 }

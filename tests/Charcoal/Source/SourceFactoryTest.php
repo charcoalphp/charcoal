@@ -10,7 +10,7 @@ class SourceFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $obj = SourceFactory::instance();
         $this->assertEquals('\Charcoal\Source\SourceInterface', $obj->base_class());
-        $this->assertArrayHasKey('database', $obj->class_map());
+        $this->assertArrayHasKey('database', $obj->map());
 
     }
 }

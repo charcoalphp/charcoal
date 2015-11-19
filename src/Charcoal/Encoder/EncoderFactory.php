@@ -2,26 +2,31 @@
 
 namespace Charcoal\Encoder;
 
-// Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Core\ClassMapFactory as ClassMapFactory;
+// Moule `charcoal-factory` dependencies
+use \Charcoal\Factory\MapFactory as MapFactory;
 
 /**
 *
 */
-class EncoderFactory extends ClassMapFactory
+class EncoderFactory extends MapFactory
 {
-    /**
-    * @param array|null $data
-    */
-    public function __construct(array $data = null)
-    {
-        $this->set_base_class('\Charcoal\Encoder\EncoderInterface');
-        $this->set_class_map([
-            'base64' => '\Charcoal\Encoder\Base64\Base64Encoder'
-        ]);
 
-        if ($data !== null) {
-            $this->set_data($data);
-        }
+    /**
+    * @return string
+    */
+    public function base_class()
+    {
+        return '\Charcoal\Encoder\EncoderInterface';
     }
+
+    /**
+    * @return array
+    */
+    public function map()
+    {
+        return [
+            'base64' => '\Charcoal\Encoder\Base64\Base64Encoder'
+        ];
+    }
+
 }
