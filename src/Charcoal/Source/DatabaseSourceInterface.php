@@ -2,8 +2,6 @@
 
 namespace Charcoal\Source;
 
-use \Charcoal\Source\StorableInterface as StorableInterface;
-
 /**
 *
 */

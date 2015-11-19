@@ -43,7 +43,6 @@ Charcoal uses:
 The core concepts (namespaces) defined in Charcoal Core are:
 
 - `Core`, for core patterns, classes and traits.
-  - `AbstractFactory` / `FactoryInterface`: a base class for all Factories in Charcoal.
   - `IndexableInterface` / `IndexableTrait`:
     -  Defines `set_id()`, `id()`, `set_key()` and `key()`.
   - `StringFormat`: a helper class to format strings, mostly for final output within templates & widgets:
@@ -67,10 +66,6 @@ The core concepts (namespaces) defined in Charcoal Core are:
   - Extra interface:
 - `Validator`, to validate objects / models.
   - Extra interface: `ValidatableInterface` / `ValidatableTrait` for objects that can be validated with a validator.
-- `View` for rendering objects with templates.
-  - 4 core concepts: `View` and `ViewController`, `ViewEngine` and `ViewTemplate`
-  - Available view engines: `php_mustache` and `mustache`
-  - Extra interface: `ViewableInterface` / `ViewableTrait` for objects that can be rendered
 
 ## Development
 

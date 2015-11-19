@@ -3,10 +3,8 @@
 namespace Charcoal\Source;
 
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Model\ModelInterface as ModelInterface;
-
-// Local namespace dependencies
-use \Charcoal\Source\SourceInterface as SourceInterface;
+use \Charcoal\Model\ModelInterface;
+use \Charcoal\Source\StorableInterface;
 
 /**
 * @todo Implement SourceInterface.

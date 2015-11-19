@@ -161,12 +161,10 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
         $model = $this->model();
         $metadata = $model->metadata();
         $fields = $this->get_model_fields($model);
-        $fields__sql = [];
+        $fields_sql = [];
         foreach ($fields as $field) {
             $fields_sql[] = $field->sql();
         }
-
-        $defaults = $metadata['data'];
 
         $q = 'CREATE TABLE  `'.$this->table().'` ('."\n";
         $q .= implode(',', $fields_sql);
@@ -176,7 +174,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
         }
         /** @todo add indexes for all defined list constraints (yea... tough job...) */
         $q .= ') ENGINE=MYISAM DEFAULT CHARSET=utf8 COMMENT=\''.addslashes($metadata['name']).'\';';
-        $res = $this->db()->query($q);
+        $this->db()->query($q);
 
         return true;
     }
@@ -222,7 +220,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
 
                 if ($alter === true) {
                     $q = 'ALTER TABLE `'.$this->table().'` CHANGE `'.$ident.'` '.$field->sql();
-                    $res = $this->db()->query($q);
+                    $this->db()->query($q);
                 }
 
             }
@@ -312,7 +310,9 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
             }
 
         } catch (PDOException $e) {
-            throw new Exception('Error setting up database.');
+            throw new Exception(
+                'Error setting up database.'
+            );
         }
 
         self::$dbs[$database_ident] = $db;
