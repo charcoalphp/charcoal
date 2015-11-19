@@ -14,7 +14,7 @@ $ composer require locomotivemtl/charcoal-image
 
 ## Dependencies
 
-- `PHP 5.4+`
+- `PHP 5.5+`
 - `locomotivemtl/charcoal-factory`
 - `ext-imagick` (optional but _recommended_)
 **OR**
