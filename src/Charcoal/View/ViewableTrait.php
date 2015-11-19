@@ -7,7 +7,6 @@ use \InvalidArgumentException;
 
 // Local namespace dependencies
 use \Charcoal\View\AbstractView;
-use \Charcoal\View\GenericView;
 use \Charcoal\View\ViewInterface;
 
 /**

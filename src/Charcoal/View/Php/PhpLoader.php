@@ -2,6 +2,10 @@
 
 namespace Charcoal\View\Php;
 
+// PHP Dependencies
+use \InvalidArgumentException;
+
+// Parent namespace dependencies
 use \Charcoal\View\AbstractLoader;
 use \Charcoal\View\LoaderInterface;
 
@@ -10,8 +14,6 @@ use \Charcoal\View\LoaderInterface;
 */
 class PhpLoader extends AbstractLoader implements LoaderInterface
 {
-
-
     /**
     * AbstractLoader > load()
     *
