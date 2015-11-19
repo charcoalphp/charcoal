@@ -429,8 +429,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
                 break;
 
             case 'crop':
-                $ratio = $this->image()->ratio();
-
+                
                 throw new Exception(
                     'Crop resize mode is not (yet) supported'
                 );

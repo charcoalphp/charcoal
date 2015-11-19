@@ -88,7 +88,7 @@ class ImagemagickImage extends AbstractImage
     {
         if ($source !== null && !is_string($source)) {
             throw new InvalidArgumentException(
-                'Source must be a string'
+                'Source must be a string (file path)'
             );
         }
         $source = ($source) ? $source : $this->source();
@@ -116,7 +116,7 @@ class ImagemagickImage extends AbstractImage
     {
         if ($target !== null && !is_string($target)) {
             throw new InvalidArgumentException(
-                'Target must be a string'
+                'Target must be a string (file path)'
             );
         }
         $target = ($target) ? $target : $this->target();
@@ -313,10 +313,12 @@ class ImagemagickImage extends AbstractImage
     public function apply_cmd($cmd)
     {
         if (!file_exists($this->tmp())) {
-            throw new Exception('No file');
+            throw new Exception(
+                'No file currently set as tmp file, commands can not be executed.'
+            );
         }
         $mogrify = $this->mogrify_cmd();
-        $ret = $this->exec($mogrify.' '.$cmd.' '.$this->tmp());
+        $this->exec($mogrify.' '.$cmd.' '.$this->tmp());
         return $this;
     }
 
@@ -343,7 +345,7 @@ class ImagemagickImage extends AbstractImage
         ];
         if (!isset($gravity_map[$gravity])) {
             throw new InvalidArgumentException(
-                'Invalid gravity'
+                'Invalid gravity. Possible values are: center, n, s, e, w, ne, nw, se, sw.'
             );
         }
         return $gravity_map[$gravity];
