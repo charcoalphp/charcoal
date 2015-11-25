@@ -2,9 +2,9 @@
 
 namespace Charcoal\Model;
 
-use \InvalidArgumentException as InvalidArgumentException;
+use \InvalidArgumentException;
 
-use \Charcoal\Metadata\AbstractMetadata as AbstractMetadata;
+use \Charcoal\Model\AbstractMetadata;
 
 class ModelMetadata extends AbstractMetadata implements \ArrayAccess
 {

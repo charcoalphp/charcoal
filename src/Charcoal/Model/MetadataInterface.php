@@ -1,6 +1,6 @@
 <?php
 
-namespace Charcoal\Metadata;
+namespace Charcoal\Model;
 
 /**
 * Metadata is typically used to describe an object.

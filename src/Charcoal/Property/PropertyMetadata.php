@@ -5,7 +5,7 @@ namespace Charcoal\Property;
 use \InvalidArgumentException;
 
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Metadata\AbstractMetadata;
+use \Charcoal\Model\AbstractMetadata;
 
 /**
 *

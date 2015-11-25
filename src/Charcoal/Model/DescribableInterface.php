@@ -1,12 +1,9 @@
 <?php
 
-namespace Charcoal\Metadata;
-
-// Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Property\PropertyInterface as PropertyInterface;
+namespace Charcoal\Model;
 
 // Local namespace dependencies
-use \Charcoal\Metadata\MetadataInterface as MetadataInterface;
+use \Charcoal\Model\MetadataInterface;
 
 /**
 *

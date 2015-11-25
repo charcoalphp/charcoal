@@ -11,8 +11,8 @@ use \Psr\Log\LoggerInterface;
 use \Psr\Log\LoggerAwareInterface;
 
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Metadata\DescribableInterface;
-use \Charcoal\Metadata\DescribableTrait;
+use \Charcoal\Model\DescribableInterface;
+use \Charcoal\Model\DescribableTrait;
 use \Charcoal\Translation\TranslationString;
 use \Charcoal\Validator\ValidatableInterface;
 use \Charcoal\Validator\ValidatableTrait;

@@ -13,8 +13,8 @@ use \Psr\Log\LoggerAwareInterface;
 
 // Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Charcoal;
-use \Charcoal\Metadata\DescribableInterface;
-use \Charcoal\Metadata\DescribableTrait;
+use \Charcoal\Model\DescribableInterface;
+use \Charcoal\Model\DescribableTrait;
 use \Charcoal\Source\StorableInterface;
 use \Charcoal\Source\StorableTrait;
 use \Charcoal\Validator\ValidatableInterface;
@@ -30,8 +30,14 @@ use \Charcoal\Model\ModelValidator;
 /**
 * An abstract class that implements most of `ModelInterface`.
 *
-* In addition to `ModelInterface`, the abstract model implements the `DescribableInterface`,
-* `StorableInterface, `ValidatableInterface` and the `ViewableInterface`. Those interfaces
+* In addition to `ModelInterface`, the abstract model implements the following interfaces:
+*
+* - `DescribableInterface`
+* - `StorableInterface
+* - `ValidatableInterface`
+* - `ViewableInterface`.
+*
+* Those interfaces
 * are implemented (in parts, at least) with the `DescribableTrait`, `StorableTrait`,
 * `ValidatableTrait` and the `ViewableTrait`.
 *

@@ -3,11 +3,11 @@
 *
 */
 
-namespace Charcoal\Metadata;
+namespace Charcoal\Model;
 
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Charcoal as Charcoal;
-use \Charcoal\Loader\FileLoader as FileLoader;
+use \Charcoal\Charcoal;
+use \Charcoal\Loader\FileLoader;
 
 /**
 * Load metadata from JSON file(s).

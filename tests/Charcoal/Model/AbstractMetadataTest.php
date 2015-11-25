@@ -1,6 +1,6 @@
 <?php
 
-namespace Charcoal\Tests\Metadata;
+namespace Charcoal\Tests\Model;
 
 class AbstractMetadataTest extends \PHPUnit_Framework_TestCase
 {
@@ -8,7 +8,7 @@ class AbstractMetadataTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->obj = $this->getMockForAbstractClass('\Charcoal\Metadata\AbstractMetadata');
+        $this->obj = $this->getMockForAbstractClass('\Charcoal\Model\AbstractMetadata');
     }
 
     public function testSetData()

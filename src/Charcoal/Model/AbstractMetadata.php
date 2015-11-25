@@ -1,18 +1,18 @@
 <?php
 
-namespace Charcoal\Metadata;
+namespace Charcoal\Model;
 
 // Dependencies from `PHP`
-use \ArrayAccess as ArrayAccess;
-use \InvalidArgumentException as InvalidArgumentException;
+use \ArrayAccess;
+use \InvalidArgumentException;
 
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Loader\LoadableInterface as LoadableInterface;
-use \Charcoal\Loader\LoadableTrait as LoadableTrait;
+use \Charcoal\Loader\LoadableInterface;
+use \Charcoal\Loader\LoadableTrait;
 
 // Local namespace dependencies
-use \Charcoal\Metadata\MetadataInterface as MetadataInterface;
-use \Charcoal\Metadata\MetadataLoader as MetadataLoader;
+use \Charcoal\Model\MetadataInterface;
+use \Charcoal\Model\MetadataLoader;
 
 /**
 * An implementation, as abstract class, of `MetadataInterface`.
@@ -114,7 +114,9 @@ abstract class AbstractMetadata implements
     public function offsetSet($offset, $value)
     {
         if (empty($offset)) {
-            throw new InvalidArgumentException('Offset is required.');
+            throw new InvalidArgumentException(
+                'Offset is required.'
+            );
         }
         $this->{$offset} = $value;
     }

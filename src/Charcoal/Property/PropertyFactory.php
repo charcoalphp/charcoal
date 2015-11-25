@@ -23,7 +23,7 @@ class PropertyFactory extends ResolverFactory
     */
     public function default_class()
     {
-        return '\Charcoal\Model\Property';
+        return '\Charcoal\Property\GenericProperty';
     }
 
     /**

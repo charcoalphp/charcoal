@@ -1,17 +1,17 @@
 <?php
 
-namespace Charcoal\Metadata;
+namespace Charcoal\Model;
 
 // Dependencies from `PHP`
-use \Exception as Exception;
+use \Exception;
 use \InvalidArgumentException;
 
 // Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Property\PropertyFactory;
 
 // Local namespace dependencies
-use \Charcoal\Metadata\MetadataLoader;
-use \Charcoal\Metadata\MetadataInterface;
+use \Charcoal\Model\MetadataLoader;
+use \Charcoal\Model\MetadataInterface;
 
 /**
 * Default implementation, as trait, of the `DescribableInterface`.
