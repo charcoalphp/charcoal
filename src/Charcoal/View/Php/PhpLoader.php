@@ -2,6 +2,9 @@
 
 namespace Charcoal\View\Php;
 
+// PHP Dependencies
+use \InvalidArgumentException;
+
 // Parent namespace dependencies
 use \Charcoal\View\AbstractLoader;
 use \Charcoal\View\LoaderInterface;
@@ -19,6 +22,12 @@ class PhpLoader extends AbstractLoader implements LoaderInterface
     */
     public function load($ident)
     {
+        if(!is_string($ident)) {
+            throw new InvalidArgumentException(
+                'Template ident  must be a string'
+            ); 
+        }
+
         // Handle dynamic template hack. @todo rename to $mustache_template
         if ($ident === '$widget_template') {
             $ident = (isset($GLOBALS['widget_template']) ? $GLOBALS['widget_template'] : null);

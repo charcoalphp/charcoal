@@ -2,6 +2,8 @@
 
 namespace Charcoal\View\Mustache;
 
+use \InvalidArgumentException;
+
 // 3rd-party libraries (`mustache/mustache`) dependencies
 use \Mustache_Loader;
 
@@ -25,6 +27,12 @@ class MustacheLoader extends AbstractLoader implements
     */
     public function load($ident)
     {
+        if(!is_string($ident)) {
+            throw new InvalidArgumentException(
+                'Template ident must be a string'
+            ); 
+        }
+
         // Handle dynamic template hack. @todo rename to $mustache_template
         if ($ident === '$widget_template') {
             $ident = (isset($GLOBALS['widget_template']) ? $GLOBALS['widget_template'] : null);
@@ -39,6 +47,7 @@ class MustacheLoader extends AbstractLoader implements
         $search_path = $this->search_path();
         foreach ($search_path as $path) {
             $f = realpath($path).'/'.$filename;
+
             if (!file_exists($f)) {
                 continue;
             }
