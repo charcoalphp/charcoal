@@ -8,16 +8,6 @@ namespace Charcoal\Factory;
 interface FactoryInterface
 {
     /**
-    * Build an object from an array of options.
-    *
-    * @param array $data Object data
-    * @param array $args Constructor arguments
-    * @return mixed The instance / object.
-    *
-    */
-    public function build(array $data, array $args = null);
-
-    /**
     * Create a new instance of a class, by type.
     *
     * @param string $type The type (class ident)

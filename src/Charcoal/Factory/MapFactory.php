@@ -83,6 +83,12 @@ class MapFactory extends AbstractFactory
     */
     public function resolve($type)
     {
+        if (!is_string($type)) {
+            throw new InvalidArgumentException(
+                'Can not resolve class ident: type must be a string'
+            );
+        }
+
         $map = $this->map();
         if (!isset($map[$type])) {
             throw new InvalidArgumentException(
@@ -97,10 +103,17 @@ class MapFactory extends AbstractFactory
     * by ensuring the class ident is defined in the class map and is a validd class.
     *
     * @param string $type
+    * @throws InvalidArgumentException
     * @return boolean
     */
     public function is_resolvable($type)
     {
+        if (!is_string($type)) {
+            throw new InvalidArgumentException(
+                'Can not check resolvable: type must be a string'
+            );
+        }
+
         $map = $this->map();
         if (!isset($map[$type])) {
             return false;

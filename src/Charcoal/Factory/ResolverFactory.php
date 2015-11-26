@@ -143,7 +143,7 @@ class ResolverFactory extends AbstractFactory
     {
         if (!is_string($type)) {
             throw new InvalidArgumentException(
-                'Type must be a string'
+                'Can not resolve class ident: type must be a string'
             );
         }
 
@@ -172,10 +172,18 @@ class ResolverFactory extends AbstractFactory
     }
 
     /**
-    * {@inheritdoc}
+    * @param string $type
+    * @throws InvalidArgumentException If the type parameter is not a string
+    * @return boolean
     */
     public function is_resolvable($type)
     {
+        if (!is_string($type)) {
+            throw new InvalidArgumentException(
+                'Can not check resolvable: type must be a string'
+            );
+        }
+        
         $class_name = $this->resolve($type);
         return class_exists($class_name);
     }

@@ -26,10 +26,8 @@ $ composer require locomotivemtl/charcoal-factory
 
 Factories have only one purpose: to create / instanciate new PHP objects. There is 2 different methods of object creation:
 
-- `build` an object, from an array of options.
-- `create` an object, from a class ident.
-
-Additionnally, the `get` method can be called to retrieve the last created instance.
+- Typically, the `create` method instantiates an object, from a class ident.
+- Additionnally, the `get` method can be called to retrieve the last created instance.
 
 ```php
 $factory = new \Charcoal\Factory\IdentFactory();
@@ -106,7 +104,6 @@ $factory->set_default_class('\My\Foo\DefaultClassInterface');
 
 | Method     | Return value | Description |
 | ---------- | ---------- | ------------ | ----------- |
-| `build(array $data)` | _Object_ | Build a class from an array of options.
 | `create(string $type)` [, _array_ `$constructor_args`] | _Object_ | Create a class from a "type" string.
 | `get(_string $type)` | _Object_ | Get returns the latest created class instance, or a new one if none exists.
 | `set_base_class(string $classname)` | 
@@ -196,6 +193,9 @@ The Charcoal-App module follows the Charcoal coding-style:
 
 ## Changelog
 
-### 0.1
+### dev-master (0.1.1 or 0.2)
 _Unreleased_
+
+### 0.1
+_Released 2015-11-25_
 - Initial release

@@ -43,6 +43,25 @@ class ResolverFactoryTest extends \PHPUnit_Framework_TestCase
         $this->obj->set_resolver_suffix(false);
     }
 
+    public function testSetResolverCapitals()
+    {
+        //$this->assertEquals([], $this->obj->resolver_capitals());
+        $ret = $this->obj->set_resolver_capitals(['$']);
+        $this->assertSame($ret, $this->obj);
+        $this->assertEquals(['$'], $this->obj->resolver_capitals());
+
+        $this->assertEquals('\$Abc$De', $this->obj->resolve('$abc$de'));
+    }
+
+    public function testSetResoverReplacements()
+    {
+        $ret = $this->obj->set_resolver_replacements(['$'=>'_']);
+        $this->assertSame($ret, $this->obj);
+        $this->assertEquals(['$'=>'_'], $this->obj->resolver_replacements());
+
+        $this->assertEquals('\_abc_de', $this->obj->resolve('$abc$de'));
+    }
+
     /**
     * @dataProvider providerResolve
     */
@@ -61,6 +80,21 @@ class ResolverFactoryTest extends \PHPUnit_Framework_TestCase
         $this->obj->resolve(false);
     }
 
+    public function testIsResolvable()
+    {
+        $this->assertFalse($this->obj->is_resolvable('foo'));
+        $this->assertTrue($this->obj->is_resolvable('charcoal/factory/map-factory'));
+
+        $this->setExpectedException('\InvalidArgumentException');
+        $this->obj->is_resolvable(false);
+    }
+
+    public function testCreate()
+    {
+        $ret = $this->obj->create('charcoal/factory/map-factory');
+        $this->assertInstanceOf('\Charcoal\Factory\MapFactory', $ret);
+    }
+
     public function providerResolve()
     {
         return [
@@ -72,11 +106,5 @@ class ResolverFactoryTest extends \PHPUnit_Framework_TestCase
             ['foo.bar\baz_baz-baz/foo\\', '\Foo_Bar\Baz_BazBaz\Foo'],
             ['charcoal/factory/map-factory', '\Charcoal\Factory\MapFactory']
         ];
-    }
-
-    public function testCreate()
-    {
-        $ret = $this->obj->create('charcoal/factory/map-factory');
-        $this->assertInstanceOf('\Charcoal\Factory\MapFactory', $ret);
     }
 }

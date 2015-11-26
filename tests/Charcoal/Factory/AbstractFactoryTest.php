@@ -43,6 +43,12 @@ class AbstractFactoryTest extends \PHPUnit_Framework_TestCase
         $obj->set_base_class('foobar');
     }
 
+    public function testSetBaseClassNotAString()
+    {
+        $this->setExpectedException('\InvalidArgumentException');
+        $this->obj->set_base_class(false);
+    }
+
     /**
     * Assert that the `default_class()` method:
     * - Defaults to ''
@@ -54,14 +60,25 @@ class AbstractFactoryTest extends \PHPUnit_Framework_TestCase
     */
     public function testSetDefaultClass()
     {
-        $obj = $this->obj;
-        $this->assertSame('', $obj->default_class());
+        $this->assertSame('', $this->obj->default_class());
 
-        $ret = $obj->set_default_class('\Charcoal\Factory\AbstractFactory');
-        $this->assertSame($ret, $obj);
-        $this->assertEquals('\Charcoal\Factory\AbstractFactory', $obj->default_class());
+        $ret = $this->obj->set_default_class('\Charcoal\Factory\AbstractFactory');
+        $this->assertSame($ret, $this->obj);
+        $this->assertEquals('\Charcoal\Factory\AbstractFactory', $this->obj->default_class());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_default_class('foobar');
+        $this->obj->set_default_class('foobar');
+    }
+
+    public function testSetDefaultClassNotAString()
+    {
+        $this->setExpectedException('\InvalidArgumentException');
+        $this->obj->set_default_class(false);
+    }
+
+    public function testCreateInvalidArgumentException()
+    {
+        $this->setExpectedException('\InvalidArgumentException');
+        $this->obj->create(false);
     }
 }

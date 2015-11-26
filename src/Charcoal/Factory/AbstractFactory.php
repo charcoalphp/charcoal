@@ -15,12 +15,6 @@ use \Charcoal\Factory\FactoryInterface;
 abstract class AbstractFactory implements FactoryInterface
 {
     /**
-    * Keep latest instances, as singleton copies.
-    * @var AbstractFactory $instance
-    */
-    static protected $instance = [];
-
-    /**
     * If a base class is set, then it must be ensured that the
     * @var string $base_class
     */
@@ -37,22 +31,6 @@ abstract class AbstractFactory implements FactoryInterface
     * @var array $instances
     */
     private $instances = [];
-
-    /**
-    * Build a new instance of a class, from options.
-    *
-    * @param array $options
-    * @param array $args
-    * @return mixed The Instance / object
-    */
-    public function build(array $options, array $args = null)
-    {
-        $builder_ident = 'obj_type';
-        $type = isset($options[$builder_ident]) ? $options[$builder_ident] : '';
-
-        return $this->create($type, $args);
-    }
-
 
     /**
     * Create a new instance of a class, by type.
@@ -128,24 +106,6 @@ abstract class AbstractFactory implements FactoryInterface
     }
 
     /**
-    * Singleton instance
-    *
-    * @return FactoryInterface
-    */
-    final public static function instance()
-    {
-        $factory_class = get_called_class();
-
-        if (isset(static::$instance[$factory_class]) && static::$instance[$factory_class] !== null) {
-            return static::$instance[$factory_class];
-        }
-
-        $factory = new $factory_class;
-        static::$instance[$factory_class] = $factory;
-        return $factory;
-    }
-
-    /**
     * If a base class is set, then it must be ensured that the created objects
     * are `instanceof` this base class.
     *
@@ -190,12 +150,12 @@ abstract class AbstractFactory implements FactoryInterface
     {
         if (!is_string($classname)) {
             throw new InvalidArgumentException(
-                'Classname must be a string.'
+                'Class name must be a string.'
             );
         }
-        if (!class_exists($classname)) {
+        if ($classname !== '' && !class_exists($classname)) {
             throw new InvalidArgumentException(
-                sprintf('Can not set "%s" as base class: Invalid class name', $classname)
+                sprintf('Can not set "%s" as defaut class: Invalid class name', $classname)
             );
         }
         $this->default_class = $classname;
