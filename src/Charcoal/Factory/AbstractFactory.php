@@ -10,39 +10,39 @@ use \InvalidArgumentException;
 use \Charcoal\Factory\FactoryInterface;
 
 /**
-* Full implementation, as Abstract class, of the FactoryInterface.
-*/
+ * Full implementation, as Abstract class, of the FactoryInterface.
+ */
 abstract class AbstractFactory implements FactoryInterface
 {
     /**
-    * If a base class is set, then it must be ensured that the
-    * @var string $base_class
-    */
+     * If a base class is set, then it must be ensured that the
+     * @var string $base_class
+     */
     private $base_class = '';
     /**
-    *
-    * @var string $default_class
-    */
+     *
+     * @var string $default_class
+     */
     private $default_class = '';
 
     /**
-    * Keeps loaded instances in memory, in `[$type => $instance]` format.
-    * Used with the `get()` method only.
-    * @var array $instances
-    */
+     * Keeps loaded instances in memory, in `[$type => $instance]` format.
+     * Used with the `get()` method only.
+     * @var array $instances
+     */
     private $instances = [];
 
     /**
-    * Create a new instance of a class, by type.
-    *
-    * Unlike `get()`, this method *always* return a new instance of the requested class.
-    *
-    * @param string $type The type (class ident)
-    * @param array $args The constructor arguments
-    * @throws Exception If the
-    * @throws InvalidArgumentException if type is not a string or is not an available type
-    * @return mixed The instance / object
-    */
+     * Create a new instance of a class, by type.
+     *
+     * Unlike `get()`, this method *always* return a new instance of the requested class.
+     *
+     * @param string $type The type (class ident).
+     * @param array  $args The constructor arguments (optional).
+     * @throws Exception If the base class is set and  the resulting instance is not of the base class.
+     * @throws InvalidArgumentException If type argument is not a string or is not an available type.
+     * @return mixed The instance / object
+     */
     public function create($type, array $args = null)
     {
         if (!is_string($type)) {
@@ -83,15 +83,16 @@ abstract class AbstractFactory implements FactoryInterface
     }
 
     /**
-    * Get (load or create) an instance of a class, by type.
-    *
-    * Unlike `create()` (which always call a `new` instance), this function first tries to load / reuse
-    * an already created object of this type, from memory.
-    *
-    * @param string $type The type (class ident)
-    * @throws InvalidArgumentException if type is not a string
-    * @return mixed The instance / object
-    */
+     * Get (load or create) an instance of a class, by type.
+     *
+     * Unlike `create()` (which always call a `new` instance), this function first tries to load / reuse
+     * an already created object of this type, from memory.
+     *
+     * @param string $type The type (class ident).
+     * @param array  $args The constructor arguments (optional).
+     * @throws InvalidArgumentException If type argument is not a string.
+     * @return mixed The instance / object
+     */
     public function get($type, array $args = null)
     {
         if (!is_string($type)) {
@@ -106,13 +107,13 @@ abstract class AbstractFactory implements FactoryInterface
     }
 
     /**
-    * If a base class is set, then it must be ensured that the created objects
-    * are `instanceof` this base class.
-    *
-    * @param string $classname
-    * @throws InvalidArgumentException If the class is not a string or is not an existing class / interface.
-    * @return FactoryInterface
-    */
+     * If a base class is set, then it must be ensured that the created objects
+     * are `instanceof` this base class.
+     *
+     * @param string $classname The FQN of the class to set as base class.
+     * @throws InvalidArgumentException If the class is not a string or is not an existing class / interface.
+     * @return FactoryInterface
+     */
     public function set_base_class($classname)
     {
         if (!is_string($classname)) {
@@ -131,21 +132,21 @@ abstract class AbstractFactory implements FactoryInterface
     }
 
     /**
-    * @return string
-    */
+     * @return string
+     */
     public function base_class()
     {
         return $this->base_class;
     }
 
     /**
-    * If a default class is set, then calling `get()` or `create()`
-    * an invalid type should return an object of this class instead of throwing an error.
-    *
-    * @param string $classname
-    * @throws InvalidArgumentException
-    * @return FactoryInterface
-    */
+     * If a default class is set, then calling `get()` or `create()`
+     * an invalid type should return an object of this class instead of throwing an error.
+     *
+     * @param string $classname The FQN of the class to set as default class.
+     * @throws InvalidArgumentException If the class name is not a string or not a valid class.
+     * @return FactoryInterface
+     */
     public function set_default_class($classname)
     {
         if (!is_string($classname)) {
@@ -163,8 +164,8 @@ abstract class AbstractFactory implements FactoryInterface
     }
 
     /**
-    * @return string
-    */
+     * @return string
+     */
     public function default_class()
     {
         return $this->default_class;
@@ -173,19 +174,18 @@ abstract class AbstractFactory implements FactoryInterface
 
 
     /**
-    * Resolve the class name from "type".
-    *
-    * @param string $type
-    * @throws InvalidArgumentException
-    * @return string
-    */
+     * Resolve the class name from "type".
+     *
+     * @param string $type The "type" of object to resolve (the object ident).
+     * @return string
+     */
     abstract public function resolve($type);
 
     /**
-    * Returns wether a type is resolvable (is valid)
-    *
-    * @param string $type The type to check
-    * @return boolean True if the type is available, false if not
-    */
+     * Returns wether a type is resolvable (is valid)
+     *
+     * @param string $type The "type" of object to resolve (the object ident).
+     * @return boolean True if the type is available, false if not
+     */
     abstract public function is_resolvable($type);
 }

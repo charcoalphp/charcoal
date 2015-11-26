@@ -7,15 +7,15 @@ use \Charcoal\Factory\AbstractFactory;
 use \Charcoal\Tests\Factory\AbstractFactoryClass as AbstractFactoryClass;
 
 /**
-*
-*/
+ *
+ */
 class ResolverFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public $obj;
 
     /**
-    *
-    */
+     *
+     */
     public function setUp()
     {
         $this->obj = new \Charcoal\Factory\ResolverFactory();
@@ -63,8 +63,8 @@ class ResolverFactoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * @dataProvider providerResolve
-    */
+     * @dataProvider providerResolve
+     */
     public function testResolve($type, $classname)
     {
         $this->assertEquals($classname, $this->obj->resolve($type));

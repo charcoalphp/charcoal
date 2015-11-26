@@ -9,25 +9,25 @@ use \InvalidArgumentException;
 use \Charcoal\Factory\AbstractFactory;
 
 /**
-* The map Factory resolves the **class name** from an associative array with the **type** key.
-*
-*/
+ * The map Factory resolves the **class name** from an associative array with the **type** key.
+ *
+ */
 class MapFactory extends AbstractFactory
 {
     /**
-    * The class map array holds available types, in `[$type => $class_name]` format.
-    * @var array $map
-    */
+     * The class map array holds available types, in `[$type => $class_name]` format.
+     * @var array $map
+     */
     private $map = [];
 
     /**
-    * Add a class name to the available types _map_.
-    *
-    * @param string $type  The type (class ident)
-    * @param string $class_name The FQN of the class
-    * @throws InvalidArgumentException If the $type parameter is not a striing or the $class_name class does not exist.
-    * @return FactoryInterface Chainable
-    */
+     * Add a class name to the available types _map_.
+     *
+     * @param string $type       The type (class ident).
+     * @param string $class_name The FQN of the class.
+     * @throws InvalidArgumentException If the $type parameter is not a striing or the $class_name class does not exist.
+     * @return FactoryInterface Chainable
+     */
     public function add_class($type, $class_name)
     {
         if (!is_string($type)) {
@@ -46,11 +46,11 @@ class MapFactory extends AbstractFactory
     }
 
     /**
-    * Add multiple types, in a an array of `type` => `class_name`.
-    *
-    * @param array $types
-    * @return FactoryInterface Chainable
-    */
+     * Add multiple types, in a an array of `type` => `class_name`.
+     *
+     * @param array $map The map (key=>classname) to use.
+     * @return FactoryInterface Chainable
+     */
     public function set_map(array $map)
     {
         // Resets (overwrites) map.
@@ -62,25 +62,25 @@ class MapFactory extends AbstractFactory
     }
 
     /**
-    * Get the map of all types in `[$type => $class]` format.
-    *
-    * @return array
-    */
+     * Get the map of all types in `[$type => $class]` format.
+     *
+     * @return array
+     */
     public function map()
     {
         return $this->map;
     }
 
     /**
-    * The "Map Factory" implements `AbstractFactory`'s `resolve()` abstract method
-    * by fetching the class ident from the `map` member array.
-    *
-    * If the object's `type` is not defined in the class map, an exception will be thrown.
-    *
-    * @param string $type
-    * @throws InvalidArgumentException
-    * @return string
-    */
+     * The "Map Factory" implements `AbstractFactory`'s `resolve()` abstract method
+     * by fetching the class ident from the `map` member array.
+     *
+     * If the object's `type` is not defined in the class map, an exception will be thrown.
+     *
+     * @param string $type The "type" of object to resolve (the object ident).
+     * @throws InvalidArgumentException If the type parameter is not a string.
+     * @return string
+     */
     public function resolve($type)
     {
         if (!is_string($type)) {
@@ -99,13 +99,13 @@ class MapFactory extends AbstractFactory
     }
 
     /**
-    * The "Map Factory" implements `AbstractFactory`'s `is_resolvable()` abstract method
-    * by ensuring the class ident is defined in the class map and is a validd class.
-    *
-    * @param string $type
-    * @throws InvalidArgumentException
-    * @return boolean
-    */
+     * The "Map Factory" implements `AbstractFactory`'s `is_resolvable()` abstract method
+     * by ensuring the class ident is defined in the class map and is a validd class.
+     *
+     * @param string $type The "type" of object to resolve (the object ident).
+     * @throws InvalidArgumentException If the type parameter is not a string.
+     * @return boolean
+     */
     public function is_resolvable($type)
     {
         if (!is_string($type)) {

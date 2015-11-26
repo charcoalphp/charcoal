@@ -3,15 +3,15 @@
 namespace Charcoal\Tests\Core;
 
 /**
-*
-*/
+ *
+ */
 class MapFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public $obj;
 
     /**
-    *
-    */
+     *
+     */
     public function setUp()
     {
         $this->obj = new \Charcoal\Factory\MapFactory();

@@ -8,35 +8,35 @@ use \InvalidArgumentException;
 use \Charcoal\Factory\AbstractFactory;
 
 /**
-*
-*/
+ *
+ */
 class ResolverFactory extends AbstractFactory
 {
     /**
-    * @var string $resolver_prefix
-    */
+     * @var string $resolver_prefix
+     */
     private $resolver_prefix = '';
 
     /**
-    * @var string $resolver_suffix
-    */
+     * @var string $resolver_suffix
+     */
     private $resolver_suffix = '';
 
     /**
-    * @var array $resolver_capitals
-    */
+     * @var array $resolver_capitals
+     */
     private $resolver_capitals = null;
 
     /**
-    * @var array $resolver_replacements
-    */
+     * @var array $resolver_replacements
+     */
     private $resolver_replacements = null;
 
     /**
-    * @param string $prefix
-    * @throws InvalidArgumentException
-    * @return ResolverFactory Chainable
-    */
+     * @param string $prefix The resolver prefix string.
+     * @throws InvalidArgumentException If the prefix argument is not a string.
+     * @return ResolverFactory Chainable
+     */
     public function set_resolver_prefix($prefix)
     {
         if (!is_string($prefix)) {
@@ -49,18 +49,18 @@ class ResolverFactory extends AbstractFactory
     }
 
     /**
-    * @return string
-    */
+     * @return string
+     */
     public function resolver_prefix()
     {
         return $this->resolver_prefix;
     }
 
     /**
-    * @param string $suffix
-    * @throws InvalidArgumentException
-    * @return ResolverFactory Chainable
-    */
+     * @param string $suffix The resolver suffix string.
+     * @throws InvalidArgumentException If the suffix argument is not a string.
+     * @return ResolverFactory Chainable
+     */
     public function set_resolver_suffix($suffix)
     {
         if (!is_string($suffix)) {
@@ -73,17 +73,17 @@ class ResolverFactory extends AbstractFactory
     }
 
     /**
-    * @return string
-    */
+     * @return string
+     */
     public function resolver_suffix()
     {
         return $this->resolver_suffix;
     }
 
     /**
-    * @param array $capitals
-    * @return ResolverFactory Chainable
-    */
+     * @param array $capitals The array of letter to "calitalize-next" (uppercase next letter in the string).
+     * @return ResolverFactory Chainable
+     */
     public function set_resolver_capitals(array $capitals)
     {
         $this->resolver_capitals = $capitals;
@@ -91,8 +91,8 @@ class ResolverFactory extends AbstractFactory
     }
 
     /**
-    * @return array
-    */
+     * @return array
+     */
     public function resolver_capitals()
     {
         if ($this->resolver_capitals === null) {
@@ -108,9 +108,9 @@ class ResolverFactory extends AbstractFactory
     }
 
     /**
-    * @param array $replacements
-    * @return ResolverFactory Chainable
-    */
+     * @param array $replacements The array (key=>value) of replacements.
+     * @return ResolverFactory Chainable
+     */
     public function set_resolver_replacements(array $replacements)
     {
         $this->resolver_replacements = $replacements;
@@ -118,8 +118,8 @@ class ResolverFactory extends AbstractFactory
     }
 
     /**
-    * @return array
-    */
+     * @return array
+     */
     public function resolver_replacements()
     {
         if ($this->resolver_replacements === null) {
@@ -133,12 +133,12 @@ class ResolverFactory extends AbstractFactory
     }
 
     /**
-    * Resolve the class name from the requested type.
-    *
-    * @param string $type
-    * @throws InvalidArgumentException
-    * @return string
-    */
+     * Resolve the class name from the requested type.
+     *
+     * @param string $type The "type" of object to resolve (the object ident).
+     * @throws InvalidArgumentException If the type parameter is not a string.
+     * @return string
+     */
     public function resolve($type)
     {
         if (!is_string($type)) {
@@ -172,10 +172,10 @@ class ResolverFactory extends AbstractFactory
     }
 
     /**
-    * @param string $type
-    * @throws InvalidArgumentException If the type parameter is not a string
-    * @return boolean
-    */
+     * @param string $type The "type" of object to resolve (the object ident).
+     * @throws InvalidArgumentException If the type parameter is not a string.
+     * @return boolean
+     */
     public function is_resolvable($type)
     {
         if (!is_string($type)) {

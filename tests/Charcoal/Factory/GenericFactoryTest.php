@@ -3,25 +3,25 @@
 namespace Charcoal\Tests\Core;
 
 /**
-*
-*/
+ *
+ */
 class GenericFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public $obj;
 
     /**
-    *
-    */
+     *
+     */
     public function setUp()
     {
         $this->obj = new \Charcoal\Factory\GenericFactory();
     }
 
     /**
-    * Asserts that the resolve method:
-    * - Simply returns the parameter, as is.
-    * - Throws an exception if the parameter is not a string
-    */
+     * Asserts that the resolve method:
+     * - Simply returns the parameter, as is.
+     * - Throws an exception if the parameter is not a string
+     */
     public function testResolve()
     {
         $ret = $this->obj->resolve('foo');
@@ -50,10 +50,10 @@ class GenericFactoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * Asserts that the AbstractFactory's `create()` method, as GenericFactory:
-    * - Returns the default class when passing an invalid argument, if set
-    * - Throws an exception when passing an invalid argument, if no default class is set
-    */
+     * Asserts that the AbstractFactory's `create()` method, as GenericFactory:
+     * - Returns the default class when passing an invalid argument, if set
+     * - Throws an exception when passing an invalid argument, if no default class is set
+     */
     public function testCreateDefaultClass()
     {
         $this->obj->set_default_class('\DateTime');

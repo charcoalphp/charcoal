@@ -8,15 +8,15 @@ use \InvalidArgumentException;
 use \Charcoal\Factory\AbstractFactory;
 
 /**
-*
-*/
+ *
+ */
 class GenericFactory extends AbstractFactory
 {
     /**
-    * @param string $type
-    * @throws InvalidArgumentException If the type parameter is not a string
-    * @return string
-    */
+     * @param string $type The "type" of object to resolve (the object ident).
+     * @throws InvalidArgumentException If the type parameter is not a string.
+     * @return string
+     */
     public function resolve($type)
     {
         if (!is_string($type)) {
@@ -28,10 +28,10 @@ class GenericFactory extends AbstractFactory
     }
 
     /**
-    * @param string $type
-    * @throws InvalidArgumentException If the type parameter is not a string
-    * @return boolean
-    */
+     * @param string $type The "type" of object to resolve (the object ident).
+     * @throws InvalidArgumentException If the type parameter is not a string.
+     * @return boolean
+     */
     public function is_resolvable($type)
     {
         if (!is_string($type)) {

@@ -7,29 +7,29 @@ use \Charcoal\Factory\AbstractFactory;
 use \Charcoal\Tests\Factory\AbstractFactoryClass as AbstractFactoryClass;
 
 /**
-*
-*/
+ *
+ */
 class AbstractFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public $obj;
 
     /**
-    *
-    */
+     *
+     */
     public function setUp()
     {
         $this->obj = $this->getMockForAbstractClass('\Charcoal\Factory\AbstractFactory');
     }
 
     /**
-    * Assert that the `base_class()` method:
-    * - Defaults to ''
-    * - Returns the proper value when the `base_class is set
-    * and that the `set_base_class()` method:
-    * - Is chainable
-    * - Properly sets the base_class value.
-    * - Throws an exception if the parameter is not a valid (existing) class
-    */
+     * Assert that the `base_class()` method:
+     * - Defaults to ''
+     * - Returns the proper value when the `base_class is set
+     * and that the `set_base_class()` method:
+     * - Is chainable
+     * - Properly sets the base_class value.
+     * - Throws an exception if the parameter is not a valid (existing) class
+     */
     public function testSetBaseClass()
     {
         $obj = $this->obj;
@@ -50,14 +50,14 @@ class AbstractFactoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * Assert that the `default_class()` method:
-    * - Defaults to ''
-    * - Returns the proper value when the `default_class is set
-    * and that the `set_default_class()` method:
-    * - Is chainable
-    * - Properly sets the default_class value.
-    * - Throws an exception if the parameter is not a valid (existing) class
-    */
+     * Assert that the `default_class()` method:
+     * - Defaults to ''
+     * - Returns the proper value when the `default_class is set
+     * and that the `set_default_class()` method:
+     * - Is chainable
+     * - Properly sets the default_class value.
+     * - Throws an exception if the parameter is not a valid (existing) class
+     */
     public function testSetDefaultClass()
     {
         $this->assertSame('', $this->obj->default_class());
