@@ -166,7 +166,8 @@ class DatabaseSourceConfig extends SourceConfig
     public function password()
     {
         if ($this->password_encoding()) {
-            $encoder = EncoderFactory::instance()->get($this->password_encoding());
+            $factory = new EncoderFactory();
+            $encoder = $factory->get($this->password_encoding());
 
             $this->password = $encoder->decode($this->password, $this->password_salt());
             $this->password_encoding = null;

@@ -8,9 +8,8 @@ class SourceFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testDefaultData()
     {
-        $obj = SourceFactory::instance();
-        $this->assertEquals('\Charcoal\Source\SourceInterface', $obj->base_class());
-        $this->assertArrayHasKey('database', $obj->map());
-
+        $factory = new SourceFactory();
+        $this->assertEquals('\Charcoal\Source\SourceInterface', $factory->base_class());
+        $this->assertArrayHasKey('database', $factory->map());
     }
 }

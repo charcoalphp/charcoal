@@ -26,7 +26,7 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
     public function testStaticGetWithoutParameter()
     {
         $obj = new GenericProperty();
-        $this->assertInstanceOf('\Charcoal\Model\Property', $obj);
+        $this->assertInstanceOf('\Charcoal\Property\GenericProperty', $obj);
     }
 
     public function testToStringReturnsVal()

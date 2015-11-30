@@ -28,5 +28,4 @@ class EncoderFactory extends MapFactory
             'base64' => '\Charcoal\Encoder\Base64\Base64Encoder'
         ];
     }
-
 }

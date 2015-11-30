@@ -11,7 +11,7 @@ class MetadataLoaderTest extends \PHPUnit_Framework_TestCase
     public function testContructor()
     {
         $obj = new MetadataLoader();
-        $this->assertInstanceOf('\Charcoal\Metadata\MetadataLoader', $obj);
+        $this->assertInstanceOf('\Charcoal\Model\MetadataLoader', $obj);
 
         $this->assertEquals([], $obj->search_path());
         $this->assertEquals('', $obj->ident());

@@ -88,7 +88,8 @@ class DatabaseSourceConfigTest extends \PHPUnit_Framework_TestCase
     {
         $plain_password = 'foobar123';
         $salt = 'barbaz987';
-        $encoder = EncoderFactory::instance()->get('base64');
+        $factory = new EncoderFactory();
+        $encoder = $factory->get('base64');
         $encoded = $encoder->encode($plain_password, $salt);
 
         $obj = new DatabaseSourceConfig();
