@@ -61,7 +61,7 @@ trait ConfigurableTranslationTrait
      *     If an array of one or more lanagues is provided, the method returns
      *     a subset of the config's available languages (if any).
      * }
-     * @return (LanguageInterface|string)[] An array of available languages
+     * @return string[] An array of available languages
      */
     public function languages(array $langs = [])
     {
@@ -154,7 +154,7 @@ trait ConfigurableTranslationTrait
      * is not available. This is especially useful when dealing with translations.
      *
      * @uses   ConfigurableInterface::config()
-     * @return LanguageInterface|string  A language object or identifier
+     * @return string  A language identifier
      */
     public function default_language()
     {
@@ -184,7 +184,7 @@ trait ConfigurableTranslationTrait
      * with data in a context where the language isn't explicitly specified.
      *
      * @uses   ConfigurableInterface::config()
-     * @return LanguageInterface|string  A language object or identifier
+     * @return string  A language identifier
      */
     public function current_language()
     {

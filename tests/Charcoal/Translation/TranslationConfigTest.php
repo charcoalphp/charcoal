@@ -2,6 +2,7 @@
 
 namespace Charcoal\Tests\Translation;
 
+// Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Translation\TranslationConfig as TranslationConfig;
 
 class TranslationConfigTest extends \PHPUnit_Framework_TestCase
@@ -20,32 +21,32 @@ class TranslationConfigTest extends \PHPUnit_Framework_TestCase
         $obj = new TranslationConfig();
 
         $ret = $obj->set_data([
-            'languages'    => [ 'en', 'fr' ],
-            'default_lang' => 'fr'
+            'languages'        => [ 'en', 'fr' ],
+            'default_language' => 'fr'
         ]);
         $this->assertSame($ret, $obj);
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_default_lang('es');
+        $obj->set_default_language('es');
 
-        $this->assertEquals('es', $obj->default_lang());
+        $this->assertEquals('es', $obj->default_language());
     }
 
-    public function testSetLang()
+    public function testSetLanguage()
     {
         $obj = new TranslationConfig([
             'languages' => [ 'en', 'fr' ]
         ]);
-        $this->assertSame('en', $obj->lang());
-        $ret = $obj->set_lang('fr');
+        $this->assertSame('en', $obj->current_language());
+        $ret = $obj->set_current_language('fr');
         $this->assertSame($ret, $obj);
-        $this->assertEquals('fr', $obj->lang());
+        $this->assertEquals('fr', $obj->current_language());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_lang('foobar-lang');
+        $obj->set_current_language('foobar-lang');
     }
 
-    public function testSetDefaultLang()
+    public function testSetDefaultLanguage()
     {
         $obj = new TranslationConfig();
     }

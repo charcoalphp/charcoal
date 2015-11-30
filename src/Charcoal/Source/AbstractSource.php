@@ -247,8 +247,23 @@ abstract class AbstractSource implements
             $p = $this->model()->p($property);
 
             if ($p && $p->l10n()) {
-                $lang = Charcoal::config()->translation()->lang();
-                $filter->set_property($property.'_'.$lang);
+                /**
+                 * If a CharcoalApp instance exists, a TranslationConfig is
+                 * retrieved from the application's LanguageManager (if any).
+                 *
+                 * @todo Maybe implement a Charcoal::app() which retrieves our app's instance?
+                 * @see \Charcoal\Translation\ConfigurableTranslationTrait::create_config()
+                 * @var TranslationConfig
+                 */
+                if (class_exists('\Charcoal\App\App')) {
+                    $app = CharcoalApp::instance();
+                    $lng = $app->language_manager()->config();
+                } else {
+                    $lng = new TranslationConfig();
+                }
+
+                $ident = sprintf('%1$s_%2$s', $property, $lng->current_language());
+                $filter->set_property($ident);
             }
         }
 

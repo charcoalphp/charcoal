@@ -68,19 +68,11 @@ trait TranslatableTrait
     public function resolve_special_languages()
     {
         if (count($this->languages)) {
-            /* [1] */
-            $default_lang = self::resolve_language_ident($this->default_language);
-
-            /* [2] */
-            if (!isset($this->languages[$default_lang])) {
+            if (!isset($this->languages[$this->default_language])) {
                 $this->set_default_language();
             }
 
-            /* [1] */
-            $current_lang = self::resolve_language_ident($this->current_language);
-
-            /* [2] */
-            if (!isset($this->languages[$current_lang])) {
+            if (!isset($this->languages[$this->current_language])) {
                 $this->set_current_language();
             }
         }
@@ -95,19 +87,22 @@ trait TranslatableTrait
      *     If an array of one or more lanagues is provided, the method returns
      *     a subset of the object's available languages (if any).
      * }
-     * @return (LanguageInterface|string)[] An array of available languages
+     * @return string[] An array of available languages
      */
     public function languages(array $langs = [])
     {
+        $available = array_keys($this->languages);
+
         if (count($langs)) {
             array_walk($langs, function (&$val, $key) {
                 $val = self::resolve_language_ident($val);
             });
 
-            return array_intersect_key($this->languages, array_flip($langs));
+            // return array_intersect_key($this->languages, array_flip($langs));
+            return array_intersect($available, $langs);
         }
 
-        return $this->languages;
+        return $available;
     }
 
     /**
@@ -245,7 +240,7 @@ trait TranslatableTrait
      * The default language acts as a fallback when the current language
      * is not available. This is especially useful when dealing with translations.
      *
-     * @return LanguageInterface|string  A language object or identifier
+     * @return string  A language identifier
      */
     public function default_language()
     {
@@ -253,7 +248,7 @@ trait TranslatableTrait
             $this->set_default_language();
         }
 
-        return $this->language($this->default_language);
+        return $this->default_language;
     }
 
     /**
@@ -278,8 +273,7 @@ trait TranslatableTrait
             }
         } else {
             $languages = $this->languages();
-            reset($languages);
-            $this->default_language = key($languages);
+            $this->default_language = reset($languages);
         }
 
         return $this;
@@ -291,7 +285,7 @@ trait TranslatableTrait
      * The current language acts as the first to be used when interacting
      * with data in a context where the language isn't explicitly specified.
      *
-     * @return LanguageInterface|string  A language object or identifier
+     * @return string  A language identifier
      */
     public function current_language()
     {
@@ -299,7 +293,7 @@ trait TranslatableTrait
             return $this->default_language();
         }
 
-        return $this->language($this->current_language);
+        return $this->current_language;
     }
 
     /**
