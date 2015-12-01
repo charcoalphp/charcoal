@@ -52,7 +52,7 @@ class PhpEngine extends AbstractEngine
         };
         
         ob_start();
-        $render($$template, $context);
+        $render($template, $context);
         $output = ob_get_clean();
 
         return $output;

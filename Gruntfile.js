@@ -31,6 +31,7 @@ module.exports = function(grunt) {
 
     // Register Task(s)
     grunt.registerTask('default', [
+	'jsonlint',
         'phplint',
         'phpunit'
     ]);

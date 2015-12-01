@@ -59,7 +59,7 @@ class TwigLoader extends AbstractLoader implements LoaderInterface
      * @param string $ident
      * @return string
      */
-    private function filename_from_ident($ident)
+    public function filename_from_ident($ident)
     {
         $filename = str_replace(['\\'], '.', $ident);
         $filename .= '.twig';

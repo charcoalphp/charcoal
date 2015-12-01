@@ -19,7 +19,8 @@
          "twig/twig": "^1.18"
     },
     "suggest": {
-        "mustache/mustache": "Required for MimeType"
+        "mustache/mustache": "For (optional) Mustache templating support",
+        "twig/twig":"For (optional) Twig templating support."
     },
     "autoload":{
         "psr-4": {

@@ -93,6 +93,7 @@ class TwigEngine extends AbstractEngine
      */
     public function render($template, $context)
     {
-        
+        $template = $this->loader()->filename_from_ident($template);
+        return $this->twig()->render($template, $context);
     }
 }
