@@ -78,7 +78,7 @@ class CharcoalConfig extends AbstractConfig
     * (ex: templates, widgets and property inputs "mustache" templates)
     * @var array $template_path
     */
-    private $template_path = [];
+    private $templates_path = [];
 
     /**
     * @var array|TranslationConfig $translation
@@ -343,21 +343,21 @@ class CharcoalConfig extends AbstractConfig
     * @return CharcoalConfig Chainable
     * @todo Move to ViewConfig
     */
-    public function set_template_path($template_path)
+    public function set_templates_path($template_path)
     {
         if (!is_array($template_path)) {
             throw new Exception('Metadata Path needs to be an array.');
         }
-        $this->template_path = $template_path;
+        $this->templates_path = $template_path;
         return $this;
     }
 
     /**
     * @return array
     */
-    public function template_path()
+    public function templates_path()
     {
-        return $this->template_path;
+        return $this->templates_path;
     }
 
     /**
@@ -371,7 +371,7 @@ class CharcoalConfig extends AbstractConfig
             throw new InvalidArgumentException('Path needs to be a string.');
         }
 
-        $this->template_path[] = $path;
+        $this->templates_path[] = $path;
         return $this;
     }
 

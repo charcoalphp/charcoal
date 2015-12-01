@@ -57,7 +57,7 @@ class TranslationConfig extends AbstractConfig
     public function default_data()
     {
         return [
-            'languages'    => [ 'en' ],
+            'languages'    => [ 'en', 'fr' ],
             'default_lang' => 'en'
         ];
     }
