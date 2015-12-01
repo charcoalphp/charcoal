@@ -8,13 +8,13 @@ use \InvalidArgumentException;
 use \Charcoal\View\AbstractEngine;
 
 /**
-*
-*/
+ *
+ */
 class PhpEngine extends AbstractEngine
 {
     /**
-    * @param array $data Dependencies
-    */
+     * @param array $data Dependencies
+     */
     public function __construct($data)
     {
         $this->set_logger($data['logger']);
@@ -24,19 +24,19 @@ class PhpEngine extends AbstractEngine
     }
 
     /**
-    * @return string
-    */
+     * @return string
+     */
     public function type()
     {
         return 'php';
     }
 
     /**
-    * @param string $template
-    * @param mixed $context
-    * @throws InvalidArgumentException
-    * @return string
-    */
+     * @param string $template
+     * @param mixed  $context
+     * @throws InvalidArgumentException
+     * @return string
+     */
     public function render($template, $context)
     {
         if (!is_string($template)) {

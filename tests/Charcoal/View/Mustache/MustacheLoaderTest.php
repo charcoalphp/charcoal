@@ -9,8 +9,8 @@ use \Charcoal\View\Mustache\MustacheLoader;
 class MustacheLoaderTest extends \PHPUnit_Framework_TestCase
 {
     /**
-    * @var MustacheLoader
-    */
+     * @var MustacheLoader
+     */
     private $obj;
 
     public function setUp()

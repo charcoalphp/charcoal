@@ -8,13 +8,13 @@ use \Charcoal\View\AbstractView as AbstractView;
 class ViewableTraitTest extends \PHPUnit_Framework_TestCase
 {
     /**
-    * @var ViewableTrait $obj
-    */
+     * @var ViewableTrait $obj
+     */
     private $obj;
 
     /**
-    * @var AbtractView $view
-    */
+     * @var AbtractView $view
+     */
     private $view;
 
 

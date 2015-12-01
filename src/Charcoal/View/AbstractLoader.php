@@ -5,64 +5,126 @@ namespace Charcoal\View;
 // PHP Dependencies
 use \InvalidArgumentException;
 
+// PSR-3 logger
+use \Psr\Log\LoggerInterface;
+use \Psr\Log\LoggerAwareInterface;
+
 /**
-*
-*/
-abstract class AbstractLoader
+ *
+ */
+abstract class AbstractLoader implements LoggerAwareInterface
 {
     /**
-    * @var array $search_path
-    */
-    private $search_path = [];
+     * @var string $path
+     */
+    private $paths = [];
 
     /**
-    * FileLoader > search_path()
-    *
-    * @return array
-    */
-    public function search_path()
+     * @var LoggerInterface $logger
+     */
+    private $logger;
+
+    public function __construct($data)
     {
-        if (empty($this->search_path)) {
-            // Use default templates path if none was set
-            return [
-                '../templates/'
-            ];
-        }
-        return $this->search_path;
+        $this->set_logger($data['logger']);
     }
 
     /**
-    * @param array $search_path
-    * @return MustacheLoader Chainable
-    */
-    public function set_search_path(array $search_path)
+     * > LoggerAwareInterface > setLogger()
+     *
+     * Fulfills the PSR-1 style LoggerAwareInterface
+     *
+     * @param LoggerInterface $logger
+     * @return AbstractEngine Chainable
+     */
+    public function setLogger(LoggerInterface $logger)
     {
-        $this->search_path = [];
-        foreach ($search_path as $path) {
-            $this->add_search_path($path);
+        return $this->set_logger($logger);
+    }
+
+    /**
+     * @param LoggerInterface $logger
+     * @return AbstractEngine Chainable
+     */
+    public function set_logger(LoggerInterface $logger = null)
+    {
+        $this->logger = $logger;
+        return $this;
+    }
+
+    /**
+     * @erturn LoggerInterface
+     */
+    public function logger()
+    {
+        return $this->logger;
+    }
+
+    /**
+     * FileLoader > path()
+     *
+     * @return string[]
+     */
+    public function paths()
+    {
+        if (empty($this->paths)) {
+            // Use default templates path if none was set
+            return \Charcoal\Charcoal::config()->templates_path();
+        }
+        return $this->paths;
+    }
+
+    /**
+     * @param string[] $paths The list of path to add.
+     * @return MustacheLoader Chainable
+     */
+    public function set_paths(array $paths)
+    {
+        $this->paths = [];
+        foreach ($paths as $path) {
+            $this->add_path($path);
         }
         return $this;
     }
 
     /**
-    * @param string $path
-    * @throws InvalidArgumentException
-    * @return MustacheLoader Chainable
-    */
-    public function add_search_path($path)
+     * @param string $path The path to add to the load.
+     * @throws InvalidArgumentException If the path  argument is not a string.
+     * @return MustacheLoader Chainable
+     */
+    public function add_path($path)
     {
         if (!is_string($path)) {
             throw new InvalidArgumentException(
                 'Path needs to be a string'
             );
         }
-        $this->search_path[] = $path;
+        $path = rtrim('/\\', $path).'/';
+        $this->path[] = $path;
         return $this;
     }
 
     /**
-    * @param string $ident
-    * @return string
-    */
+     * @param string $path The path to add (prepend) to the load.
+     * @throws InvalidArgumentException If the path  argument is not a string.
+     * @return MustacheLoader Chainable
+     */
+    public function prepend_path($path)
+    {
+        if (!is_string($path)) {
+            throw new InvalidArgumentException(
+                'Path needs to be a string'
+            );
+        }
+
+        $path = rtrim('/\\', $path).'/';
+        array_unshift($this->path, $path);
+        return $this;
+    }
+
+    /**
+     * @param string $ident
+     * @return string
+     */
     abstract public function load($ident);
 }

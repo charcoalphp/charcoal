@@ -8,38 +8,41 @@ use \IteratorAggregate;
 use \Mustache_LambdaHelper;
 
 /**
-* Default mustache render helper. Helpers are global functions available to all the templates.
-*/
+ * Default mustache render helper. Helpers are global functions available to all the templates.
+ */
 class GenericHelper implements IteratorAggregate
 {
     /**
-    * @var string $js
-    */
+     * @var string $js
+     */
     static private $js = '';
 
     /**
-    * @var array $js_requirements
-    */
+     * @var array $js_requirements
+     */
     static private $js_requirements = [];
    
     /**
-    * @var array $css_requirements
-    */
+     * @var array $css_requirements
+     */
     static private $css_requirements = [];
     /**
-    * @var string $css;
-    */
+     * @var string $css;
+     */
     static private $css = '';
 
     /**
-    * IteratorAggregate > getIterator
-    * Also ensure this class is `Traversable`
-    *
-    * @return ArrayIterator
-    */
+     * IteratorAggregate > getIterator
+     * Also ensure this class is `Traversable`
+     *
+     * @return ArrayIterator
+     */
     public function getIterator()
     {
         return new ArrayIterator([
+            '_t' => function($txt) {
+                return $txt;
+            },
             'add_js' => function($js, Mustache_LambdaHelper $helper) {
                 return $this->add_js($js, $helper);
             },
@@ -62,10 +65,10 @@ class GenericHelper implements IteratorAggregate
     }
 
     /**
-    * @param string $js
-    * @param Mustache_LamdaHelper $helper
-    * @return void
-    */
+     * @param string               $js
+     * @param Mustache_LamdaHelper $helper
+     * @return void
+     */
     public function add_js($js, Mustache_LambdaHelper $helper = null)
     {
         if ($helper !== null) {
@@ -75,10 +78,10 @@ class GenericHelper implements IteratorAggregate
     }
 
     /**
-    * Get the saved js content and purge
-    *
-    * @return string
-    */
+     * Get the saved js content and purge
+     *
+     * @return string
+     */
     public function js()
     {
         $js = self::$js;
@@ -87,9 +90,9 @@ class GenericHelper implements IteratorAggregate
     }
 
     /**
-    * @param string $js_requirement
-    * @return void
-    */
+     * @param string $js_requirement
+     * @return void
+     */
     public function add_js_requirement($js_requirement)
     {
         if (!in_array($js_requirement, self::$js_requirements)) {
@@ -98,9 +101,9 @@ class GenericHelper implements IteratorAggregate
     }
 
     /**
-    * @param string $css
-    * @return void
-    */
+     * @param string $css
+     * @return void
+     */
     public function add_css($css, Mustache_LambdaHelper $helper = null)
     {
         if ($helper !== null) {
@@ -110,10 +113,10 @@ class GenericHelper implements IteratorAggregate
     }
 
     /**
-    * Get the saved css content and purge
-    *
-    * @return string
-    */
+     * Get the saved css content and purge
+     *
+     * @return string
+     */
     public function css()
     {
         $css = self::$css;
@@ -122,9 +125,9 @@ class GenericHelper implements IteratorAggregate
     }
 
     /**
-    * @param string $css_requirement
-    * @return string
-    */
+     * @param string $css_requirement
+     * @return string
+     */
     public function add_css_requirement($css_requirement)
     {
         if (!in_array($css_requirement, self::$css_requirements)) {

@@ -20,10 +20,10 @@ use \Charcoal\View\PhpMustache\PhpMustacheEngine;
 use \Charcoal\View\ViewInterface;
 
 /**
-* Base abstract class for _View_ interfaces, implements `ViewInterface`.
-*
-* Also implements the `ConfigurableInterface`
-*/
+ * Base abstract class for _View_ interfaces, implements `ViewInterface`.
+ *
+ * Also implements the `ConfigurableInterface`
+ */
 abstract class AbstractView implements
     ConfigurableInterface,
     LoggerAwareInterface,
@@ -34,50 +34,49 @@ abstract class AbstractView implements
     const DEFAULT_ENGINE = 'mustache';
 
     /**
-    * @var string $template_ident
-    */
+     * @var string $template_ident
+     */
     private $template_ident;
 
     /**
-    * @var string $template
-    */
+     * @var string $template
+     */
     private $template;
 
     /**
-    * @var LoggerInterface $logger
-    */
+     * @var LoggerInterface $logger
+     */
     private $logger;
 
     /**
-    * @var string $engine_type
-    */
+     * @var string $engine_type
+     */
     private $engine_type = self::DEFAULT_ENGINE;
 
     /**
-    * @var EngineInterface $engine
-    */
+     * @var EngineInterface $engine
+     */
     private $engine;
 
 
     /**
-    * @return string
-    */
+     * @return string
+     */
     public function __toString()
     {
         return $this->render();
     }
 
     /**
-    * @param array $data
-    * @return AbstractView Chainable
-    */
+     * @param array $data
+     * @return AbstractView Chainable
+     */
     public function set_data(array $data)
     {
         foreach ($data as $prop => $val) {
             $func = [$this, 'set_'.$prop];
             if (is_callable($func)) {
                 call_user_func($func, $val);
-                unset($data[$prop]);
             } else {
                 $this->{$prop} = $val;
             }
@@ -87,22 +86,22 @@ abstract class AbstractView implements
     }
 
     /**
-    * > LoggerAwareInterface > setLogger()
-    *
-    * Fulfills the PSR-1 style LoggerAwareInterface
-    *
-    * @param LoggerInterface $logger
-    * @return AbstractEngine Chainable
-    */
+     * > LoggerAwareInterface > setLogger()
+     *
+     * Fulfills the PSR-1 style LoggerAwareInterface
+     *
+     * @param LoggerInterface $logger
+     * @return AbstractEngine Chainable
+     */
     public function setLogger(LoggerInterface $logger)
     {
         return $this->set_logger($logger);
     }
 
     /**
-    * @param LoggerInterface $logger
-    * @return AbstractEngine Chainable
-    */
+     * @param LoggerInterface $logger
+     * @return AbstractEngine Chainable
+     */
     public function set_logger(LoggerInterface $logger = null)
     {
         $this->logger = $logger;
@@ -110,32 +109,35 @@ abstract class AbstractView implements
     }
 
     /**
-    * @erturn LoggerInterface
-    */
+     * @erturn LoggerInterface
+     */
     public function logger()
     {
         return $this->logger;
     }
 
     /**
-    * > ConfigurableTrait . create_config()
-    *
-    * @param array $data
-    * @return ViewConfig
-    */
-    public function create_config($data = null)
+     * > ConfigurableTrait . create_config()
+     *
+     * @param array $data
+     * @return ViewConfig
+     */
+    public function create_config(array $data = null)
     {
-        $config = new ViewConfig($data);
+        $config = new ViewConfig();
+        if ($data !== null) {
+            $config->set_data($data);
+        }
         return $config;
     }
 
     /**
-    * Set the engine type
-    *
-    * @param string $engine_type
-    * @throws InvalidArgumentException
-    * @return AbstractView Chainable
-    */
+     * Set the engine type
+     *
+     * @param string $engine_type
+     * @throws InvalidArgumentException
+     * @return AbstractView Chainable
+     */
     public function set_engine_type($engine_type)
     {
         if (!is_string($engine_type)) {
@@ -148,16 +150,16 @@ abstract class AbstractView implements
     }
 
     /**
-    * @return string
-    */
+     * @return string
+     */
     public function engine_type()
     {
         return $this->engine_type;
     }
 
     /**
-    * @param EngineInterface $engine
-    */
+     * @param EngineInterface $engine
+     */
     public function set_engine(EngineInterface $engine)
     {
         $this->engine = $engine;
@@ -165,8 +167,8 @@ abstract class AbstractView implements
     }
 
     /**
-    * @return EngineInterface
-    */
+     * @return EngineInterface
+     */
     public function engine()
     {
         if ($this->engine === null) {
@@ -176,8 +178,8 @@ abstract class AbstractView implements
     }
 
     /**
-    * @return EngineInterface
-    */
+     * @return EngineInterface
+     */
     public function create_engine()
     {
         $type = $this->engine_type();
@@ -189,21 +191,28 @@ abstract class AbstractView implements
                     'loader'=>null
                 ]);
 
-            case 'php':
+                case 'php':
                 return new PhpEngine([
                     'logger'=>$this->logger(),
                     'cache'=>null,
                     'loader'=>null
                 ]);
 
-            case 'php-mustache':
+                case 'php-mustache':
                 return new PhpMustacheEngine([
                     'logger'=>$this->logger(),
                     'cache'=>null,
                     'loader'=>null
                 ]);
 
-            default:
+                case 'twig':
+                return new TwigEngine([
+                    'logger'=>$this->logger(),
+                    'cache'=>null,
+                    'loader'=>null
+                ]);
+
+                default:
                 return new MustacheEngine([
                     'logger'=>$this->logger,
                     'cache'=>null,
@@ -213,10 +222,10 @@ abstract class AbstractView implements
     }
 
     /**
-    * @param string $template_ident
-    * @throws InvalidArgumentException if the provided argument is not a string
-    * @return AbstractView Chainable
-    */
+     * @param string $template_ident
+     * @throws InvalidArgumentException if the provided argument is not a string
+     * @return AbstractView Chainable
+     */
     public function set_template_ident($template_ident)
     {
         if (!is_string($template_ident)) {
@@ -230,18 +239,18 @@ abstract class AbstractView implements
     }
 
     /**
-    * @return string
-    */
+     * @return string
+     */
     public function template_ident()
     {
         return $this->template_ident;
     }
 
     /**
-    * @param string $template
-    * @throws InvalidArgumentException if the provided argument is not a string
-    * @return AbstractView Chainable
-    */
+     * @param string $template
+     * @throws InvalidArgumentException if the provided argument is not a string
+     * @return AbstractView Chainable
+     */
     public function set_template($template)
     {
         if (!is_string($template)) {
@@ -255,8 +264,8 @@ abstract class AbstractView implements
     }
 
     /**
-    * @return string
-    */
+     * @return string
+     */
     public function template()
     {
         if ($this->template === null) {
@@ -267,10 +276,10 @@ abstract class AbstractView implements
     }
 
     /**
-    * @param string $template_ident
-    * @throws InvalidArgumentException
-    * @return string
-    */
+     * @param string $template_ident
+     * @throws InvalidArgumentException
+     * @return string
+     */
     public function load_template($template_ident = null)
     {
         if ($template_ident === null) {
@@ -289,9 +298,9 @@ abstract class AbstractView implements
     }
 
     /**
-    * @param mixed $context
-    * @return AbstractView Chainable
-    */
+     * @param mixed $context
+     * @return AbstractView Chainable
+     */
     public function set_context($context)
     {
         $this->context = $context;
@@ -299,18 +308,18 @@ abstract class AbstractView implements
     }
 
     /**
-    * @return mixed
-    */
+     * @return mixed
+     */
     public function context()
     {
         return $this->context;
     }
 
     /**
-    * @param string $template
-    * @param mixed  $context
-    * @return string The rendered template
-    */
+     * @param string $template
+     * @param mixed  $context
+     * @return string The rendered template
+     */
     public function render($template = null, $context = null)
     {
         if ($template === null) {
@@ -324,10 +333,10 @@ abstract class AbstractView implements
     }
 
     /**
-    * @param string $template_ident
-    * @param mixed $context
-    * @return string The rendered template
-    */
+     * @param string $template_ident
+     * @param mixed  $context
+     * @return string The rendered template
+     */
     public function render_template($template_ident, $context = null)
     {
         $template = $this->load_template($template_ident);

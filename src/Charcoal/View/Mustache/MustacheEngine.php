@@ -13,29 +13,29 @@ use \Charcoal\View\LoaderInterface;
 use \Charcoal\View\Mustache\MustacheLoader;
 
 /**
-* Mustache view rendering engine.
-*/
+ * Mustache view rendering engine.
+ */
 class MustacheEngine extends AbstractEngine
 {
     /**
-    * @var GenericHelper $helper
-    */
+     * @var GenericHelper $helper
+     */
     private $helper;
 
     /**
-    * @var Mustache_Engine $mustache
-    */
+     * @var Mustache_Engine $mustache
+     */
     private $mustache;
 
     /**
-    * Build the object with an array of dependencies.
-    *
-    * ## Optional parameters:
-    * - `loader` a Loader object
-    * - `logger` a PSR logger
-    *
-    * @param array $data
-    */
+     * Build the object with an array of dependencies.
+     *
+     * ## Optional parameters:
+     * - `loader` a Loader object
+     * - `logger` a PSR logger
+     *
+     * @param array $data
+     */
     public function __construct($data)
     {
         if (isset($data['logger'])) {
@@ -47,16 +47,16 @@ class MustacheEngine extends AbstractEngine
     }
 
     /**
-    * @return string
-    */
+     * @return string
+     */
     public function type()
     {
         return 'mustache';
     }
 
     /**
-    * @return Mustache_Engine
-    */
+     * @return Mustache_Engine
+     */
     public function mustache()
     {
         if ($this->mustache === null) {
@@ -66,8 +66,8 @@ class MustacheEngine extends AbstractEngine
     }
     
     /**
-    * @return Mustache_Engine
-    */
+     * @return Mustache_Engine
+     */
     public function create_mustache()
     {
         $mustache = new Mustache_Engine([
@@ -75,8 +75,6 @@ class MustacheEngine extends AbstractEngine
 
             'loader' =>  $this->loader(),
             'partials_loader' => $this->loader(),
-
-            //'logger' => $this->logger,
 
             'strict_callables' => true,
 
@@ -86,20 +84,20 @@ class MustacheEngine extends AbstractEngine
     }
 
     /**
-    * @return LoaderInterface
-    */
+     * @return LoaderInterface
+     */
     public function create_loader()
     {
         $loader = new MustacheLoader([
-            'search_path'=>[]
+            'logger' => $this->logger()
         ]);
         return $loader;
     }
 
     /**
-    * @param mixed $helper
-    * @return MustacheEngine Chainable
-    */
+     * @param mixed $helper
+     * @return MustacheEngine Chainable
+     */
     public function set_helper($helper)
     {
         $this->helper = $helper;
@@ -107,8 +105,8 @@ class MustacheEngine extends AbstractEngine
     }
 
     /**
-    * @return MustacheLoader
-    */
+     * @return MustacheLoader
+     */
     public function helper()
     {
         if ($this->helper === null) {
@@ -118,8 +116,8 @@ class MustacheEngine extends AbstractEngine
     }
 
     /**
-    * @return MustacheLoader
-    */
+     * @return MustacheLoader
+     */
     public function create_helper()
     {
         $helper = new GenericHelper();
@@ -127,10 +125,10 @@ class MustacheEngine extends AbstractEngine
     }
 
     /**
-    * @param string $template
-    * @param mixed $context
-    * @return string
-    */
+     * @param string $template
+     * @param mixed  $context
+     * @return string
+     */
     public function render($template, $context)
     {
         return $this->mustache()->render($template, $context);

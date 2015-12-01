@@ -7,8 +7,8 @@ use \Charcoal\View\Mustache\GenericHelper;
 class GenericHelperTest extends \PHPUnit_Framework_TestCase
 {
     /**
-    * @var MustacheEngine
-    */
+     * @var MustacheEngine
+     */
     private $obj;
 
     public function setUp()

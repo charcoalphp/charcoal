@@ -9,8 +9,8 @@ use \Charcoal\View\Mustache\MustacheEngine;
 class MustacheEngineTest extends \PHPUnit_Framework_TestCase
 {
     /**
-    * @var MustacheEngine
-    */
+     * @var MustacheEngine
+     */
     private $obj;
 
     public function setUp()

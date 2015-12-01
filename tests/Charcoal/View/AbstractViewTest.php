@@ -8,8 +8,8 @@ use \Charcoal\Model\ModelMetadata as Metadata;
 class AbstractViewTest extends \PHPUnit_Framework_TestCase
 {
     /**
-    * @var AbstractViewClass $obj
-    */
+     * @var AbstractViewClass $obj
+     */
     public $obj;
 
     public function setUp()
@@ -41,12 +41,12 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * Asserts that the render() method:
-    * - Can be used without parameters
-    * - Can be used only with the template parameter
-    * - Can be used with a template and a context parameter
-    * - Is called when casting to string
-    */
+     * Asserts that the render() method:
+     * - Can be used without parameters
+     * - Can be used only with the template parameter
+     * - Can be used with a template and a context parameter
+     * - Is called when casting to string
+     */
     public function testRender()
     {
         $obj = $this->obj;
