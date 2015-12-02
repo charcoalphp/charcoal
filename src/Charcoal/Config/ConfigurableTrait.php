@@ -12,15 +12,15 @@ use \InvalidArgumentException;
 trait ConfigurableTrait
 {
     /**
-    * @var ConfigInterface $config
-    */
+     * @var ConfigInterface $config
+     */
     private $config;
 
     /**
-    * @param ConfigInterface|array $config
-    * @throws InvalidArgumentException if config is not an array or Config object
-    * @return ConfigurableInterface Chainable
-    */
+     * @param ConfigInterface|array $config
+     * @throws InvalidArgumentException if config is not an array or Config object
+     * @return ConfigurableInterface Chainable
+     */
     public function set_config($config)
     {
         if (is_array($config)) {
@@ -34,8 +34,8 @@ trait ConfigurableTrait
     }
 
     /**
-    * @return ConfigInterface
-    */
+     * @return ConfigInterface
+     */
     public function config()
     {
         if ($this->config === null) {
@@ -45,8 +45,8 @@ trait ConfigurableTrait
     }
 
     /**
-    * @param array|null $data
-    * @return ConfigInterface
-    */
+     * @param array|null $data
+     * @return ConfigInterface
+     */
     abstract protected function create_config($data = null);
 }

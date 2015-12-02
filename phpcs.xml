@@ -80,9 +80,9 @@
     <!-- Block comments should be used appropriately -->
     <!--<rule ref="Squiz.Commenting.BlockComment" />-->
     <!-- Class comment blocks -->
-    <!--<rule ref="Squiz.Commenting.ClassComment" />-->
+    <rule ref="Squiz.Commenting.ClassComment" />
     <!-- Tests that the stars in a doc comment align correctly. -->
-    <!-- <rule ref="Squiz.Commenting.DocCommentAlignment" /> -->
+    <rule ref="Squiz.Commenting.DocCommentAlignment" />
     <!-- Ensures CATCH clause must at least have a comment -->
     <rule ref="Squiz.Commenting.EmptyCatchComment" />
     <!-- File comment blocks -->
@@ -96,7 +96,7 @@
     <!-- @todo doc me -->
     <!--<rule ref="Squiz.Commenting.LongConditionClosingComment" />-->
     <!-- Checks to ensure that there are no comments after statements (on same line, after ;) -->
-    <!--<rule ref="Squiz.Commenting.PostStatementComment" />-->
+    <rule ref="Squiz.Commenting.PostStatementComment" />
     <!-- Variable commenting rules -->
     <rule ref="Squiz.Commenting.VariableComment" />
 
@@ -187,7 +187,7 @@
     <!-- @todo doc me -->
     <rule ref="Squiz.Functions.FunctionDuplicateArgument" />
     <!-- Completely disallow global Functions -->
-    <!--<rule ref="Squiz.Functions.GlobalFunction" />-->
+    <rule ref="Squiz.Functions.GlobalFunction" />
     <!-- @todo doc me -->
     <rule ref="Squiz.Functions.LowercaseFunctionKeywords" />
     <!-- Ensure single and multi-line function declarations are defined correctly -->
@@ -257,7 +257,7 @@
     <!--<rule ref="Generic.PHP.UpperCaseConstant" />-->
 
     <!-- Warn of commented out code -->
-    <!--<rule ref="Squiz.PHP.CommentedOutCode" />-->
+    <rule ref="Squiz.PHP.CommentedOutCode" />
     <!--<rule ref="Squiz.PHP.DisallowBooleanStatement" />-->
     <!-- @todo Doc me -->
     <!--<rule ref="Squiz.PHP.DisallowComparisonAssignment" />-->
@@ -298,9 +298,9 @@
     <!-- Use one string instead of concatenating 2 strings together -->
     <rule ref="Generic.Strings.UnnecessaryStringConcat" />
     <!-- Makes sure there are no spaces between the concatenation operator (.) the strings -->
-    <!--<rule ref="Squiz.Strings.ConcatenationSpacing" />-->
+    <rule ref="Squiz.Strings.ConcatenationSpacing" />
     <!-- Makes sure that any use of Double Quotes ("") are warranted. @todo Enable me! -->
-    <!--<rule ref="Squiz.Strings.DoubleQuoteUsage" />-->
+    <rule ref="Squiz.Strings.DoubleQuoteUsage" />
     <!-- Makes sure that any strings that are "echoed" are not enclosed in brackets -->
     <rule ref="Squiz.Strings.EchoedStrings" />
 

@@ -3,13 +3,13 @@
 namespace Charcoal\Tests\Config;
 
 /**
-*
-*/
+ *
+ */
 class AbstractConfigTest extends \PHPUnit_Framework_TestCase
 {
     /**
-    * @var mixed The Abstract Config mock
-    */
+     * @var mixed The Abstract Config mock
+     */
     public $obj;
 
     public function setUp()
@@ -76,11 +76,11 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
     // }
 
     /**
-    * Assert that the `set_separator` method:
-    * - is chainable
-    * - sets the value (retrievable with `separator()`)
-    * - only accepts strings (or throws exception)
-    */
+     * Assert that the `set_separator` method:
+     * - is chainable
+     * - sets the value (retrievable with `separator()`)
+     * - only accepts strings (or throws exception)
+     */
     public function testSetSeparator()
     {
         $obj = $this->obj;
