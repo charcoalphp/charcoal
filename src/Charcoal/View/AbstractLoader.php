@@ -24,7 +24,15 @@ abstract class AbstractLoader implements LoggerAwareInterface
      */
     private $logger;
 
-    public function __construct($data)
+    /**
+    * Default constructor, if none is provided by the concrete class implementations.
+    *
+    * ## Required dependencies
+    * - `logger` A PSR-3 logger
+    *
+    * @param array $data The class dependencies map.
+    */
+    public function __construct(array $data)
     {
         $this->set_logger($data['logger']);
     }
@@ -68,7 +76,7 @@ abstract class AbstractLoader implements LoggerAwareInterface
     public function paths()
     {
         if (empty($this->paths)) {
-            // Use default templates path if none was set
+            // Use default templates path (from app config) if none was set
             return \Charcoal\Charcoal::config()->templates_path();
         }
         return $this->paths;

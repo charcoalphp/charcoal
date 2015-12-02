@@ -4,6 +4,7 @@ namespace Charcoal\View\Twig;
 
 // 3rd-party libraries (`twigphp/twig`) dependencies
 use \Twig_Environment;
+use \Twig_Loader_Filesystem;
 
 // Intra-module (`charcoal-view`) depentencies
 use \Charcoal\View\AbstractEngine;
@@ -65,14 +66,13 @@ class TwigEngine extends AbstractEngine
      */
     public function create_twig()
     {
-        $loader = new Twig_Loader_Filesystem($this->loader()->paths());
-        $twig = new Twig_Environment($loader, [
-            'cache' => 'twig_cache',
+        $twig = new Twig_Environment($this->loader(), [
+            'cache'     => 'twig_cache',
             'charset'   => 'utf-8',
-            'debug' => false
+            'debug'     => false
         ]);
 
-        return $mustache;
+        return $twig;
     }
 
     /**
@@ -81,7 +81,7 @@ class TwigEngine extends AbstractEngine
     public function create_loader()
     {
         $loader = new TwigLoader([
-            'search_path'=>[]
+            'logger'=>$this->logger()
         ]);
         return $loader;
     }
@@ -93,7 +93,6 @@ class TwigEngine extends AbstractEngine
      */
     public function render($template, $context)
     {
-        $template = $this->loader()->filename_from_ident($template);
-        return $this->twig()->render($template, $context);
+        return $this->twig()->render($template, ['data'=>$context]);
     }
 }

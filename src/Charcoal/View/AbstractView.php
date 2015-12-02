@@ -17,6 +17,7 @@ use \Charcoal\Config\ConfigurableTrait;
 use \Charcoal\View\Mustache\MustacheEngine;
 use \Charcoal\View\Php\PhpEngine;
 use \Charcoal\View\PhpMustache\PhpMustacheEngine;
+use \Charcoal\View\Twig\TwigEngine;
 use \Charcoal\View\ViewInterface;
 
 /**
