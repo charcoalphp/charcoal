@@ -163,7 +163,7 @@ abstract class AbstractConfig implements
     * ArrayAccess > offsetExists()
     *
     * @param string $key
-    * @throws InvalidArgumentException if $key is not a string / numeric
+    * @throws InvalidArgumentException If the key argument is not a string or is a "numeric" value.
     * @return boolean
     */
     public function offsetExists($key)
@@ -173,19 +173,22 @@ abstract class AbstractConfig implements
                 'Config array access only supports non-numeric keys.'
             );
         }
-        $f = [$this, $key];
-        if (is_callable($f)) {
-            return true;
+        if (is_callable([$this, $key])) {
+            $value = $this->{$key}();
         } else {
-            return isset($this->{$key});
+            if (!isset($this->{$key})) {
+                return false;
+            }
+            $value = $this->{$key};
         }
+        return ($value !== null);
     }
 
     /**
     * ArrayAccess > offsetGet()
     *
     * @param string $key
-    * @throws InvalidArgumentException if $key is not a string / numeric
+    * @throws InvalidArgumentException If the key argument is not a string or is a "numeric" value.
     * @return mixed The value (or null)
     */
     public function offsetGet($key)
@@ -196,10 +199,14 @@ abstract class AbstractConfig implements
             );
         }
         $f = [$this, $key];
-        if (is_callable($f)) {
-            return call_user_func($f);
+        if (is_callable([$this, $key])) {
+            return $this->{$key}();
         } else {
-            return (isset($this->{$key}) ? $this->{$key} : null);
+            if (isset($this->{$key})) {
+                return $this->{$key};
+            } else {
+                return null;
+            }
         }
     }
 
@@ -208,7 +215,7 @@ abstract class AbstractConfig implements
     *
     * @param string $key
     * @param mixed  $value
-    * @throws InvalidArgumentException if $key is not a string / numeric
+    * @throws InvalidArgumentException If the key argument is not a string or is a "numeric" value.
     * @return void
     */
     public function offsetSet($key, $value)
@@ -218,9 +225,8 @@ abstract class AbstractConfig implements
                 'Config array access only supports non-numeric keys.'
             );
         }
-        $f = [$this, 'set_'.$key];
-        if (is_callable($f)) {
-            call_user_func($f, $value);
+        if (is_callable([$this, 'set_'.$key])) {
+            $this->{'set_'.$key}($value);
         } else {
             $this->{$key} = $value;
         }
@@ -230,7 +236,7 @@ abstract class AbstractConfig implements
     * ArrayAccess > offsetUnset()
     *
     * @param string $key
-    * @throws InvalidArgumentException if $key is not a string / numeric
+    * @throws InvalidArgumentException If the key argument is not a string or is a "numeric" value.
     * @return void
     */
     public function offsetUnset($key)
@@ -240,8 +246,11 @@ abstract class AbstractConfig implements
                 'Config array access only supports non-numeric keys.'
             );
         }
-        $this->{$key} = null;
-        unset($this->{$key});
+        if (is_callable([$this, 'set_'.$key])) {
+            $this->{'set_'.$key}(null);
+        } else {
+            $this->{$key} = null;
+        }
     }
 
     /**
