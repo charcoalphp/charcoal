@@ -15,7 +15,7 @@ use \Charcoal\View\LoaderInterface;
 /**
  *
  */
-class TwigLoader extends AbstractLoader implements 
+class TwigLoader extends AbstractLoader implements
     LoaderInterface,
     Twig_LoaderInterface
 {
@@ -23,13 +23,14 @@ class TwigLoader extends AbstractLoader implements
      * AbstractLoader > load()
      *
      * @param string $ident The template identifier to load.
+     * @throws Exception If the target template file is empty
      * @return string
      */
     public function load($ident)
     {
-        $f = $this->find_template($ident);
+        $file = $this->find_template_file($ident);
             
-        $file_content = file_get_contents($f);
+        $file_content = file_get_contents($file);
         if ($file_content == '') {
             throw new Exception(
                 sprintf('Can not load template %s (empty file)', $ident)
@@ -40,10 +41,12 @@ class TwigLoader extends AbstractLoader implements
     }
 
     /**
-    * @throws InvalidArgumentException If the ident parameter is not a string or is an invalid template.
-    * @throws Exception If no template could be found
-    */
-    public function find_template($ident)
+     * @param string $ident The template identifier to load.
+     * @throws InvalidArgumentException If the ident parameter is not a string or is an invalid template.
+     * @throws Exception If no template could be found
+     * @return sring The matching template file name (full path).
+     */
+    public function find_template_file($ident)
     {
         if (!is_string($ident)) {
             throw new InvalidArgumentException(
@@ -89,6 +92,8 @@ class TwigLoader extends AbstractLoader implements
     }
 
     /**
+     * Twig_LoaderInterface > getSource()
+     *
      * Gets the source code of a template, given its name.
      *
      * @param  string $name string The name of the template to load
@@ -97,11 +102,12 @@ class TwigLoader extends AbstractLoader implements
     public function getSource($name)
     {
         $source = $this->load($name);
-        var_dump($source);
         return $source;
     }
 
     /**
+     * Twig_LoaderInterface > getCacheKey()
+     *
      * Gets the cache key to use for the cache for a given template name.
      *
      * @param  string $name string The name of the template to load
@@ -109,11 +115,13 @@ class TwigLoader extends AbstractLoader implements
      */
     public function getCacheKey($name)
     {
-        $key = $this->find_template($name);
+        $key = $this->find_template_file($name);
         return $key;
     }
 
     /**
+     * Twig_LoaderInterface > isFresh()
+     *
      * Returns true if the template is still fresh.
      *
      * @param string    $name The template name
@@ -121,7 +129,8 @@ class TwigLoader extends AbstractLoader implements
      */
     public function isFresh($name, $time)
     {
-        $fresh = filemtime($this->find_template($name)) <= $time;
+        $file = $this->find_template_file($name);
+        $fresh = (filemtime($file) <= $time);
         return $fresh;
     }
 }

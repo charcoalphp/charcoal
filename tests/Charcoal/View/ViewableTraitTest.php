@@ -24,7 +24,7 @@ class ViewableTraitTest extends \PHPUnit_Framework_TestCase
         $generic_view = new GenericView([
             'logger'=>new \Monolog\Logger('charcoal.test')
         ]);
-        $mock = $this->getMockForTrait('\Charcoal\View\ViewableTrait'); 
+        $mock = $this->getMockForTrait('\Charcoal\View\ViewableTrait');
         $mock->method('create_view')
              ->willReturn($generic_view);
         $mock->foo = 'bar';

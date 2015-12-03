@@ -2,16 +2,17 @@
 
 namespace Charcoal\View;
 
-// Local namespace dependencies
-use \Charcoal\View\EngineInterface;
-use \Charcoal\View\LoaderInterface;
-use \Charcoal\View\ViewInterface;
-
 /**
  * Viewable objects have a view, and therefore can be rendered.
  */
 interface ViewableInterface
 {
+
+    /**
+     * @return string
+     */
+    public function __toString();
+
     /**
      * Set the type of view engine to use for this vi
      *
@@ -21,9 +22,20 @@ interface ViewableInterface
     public function set_template_engine($engine);
 
     /**
-     * @return string The template engine (`mustache`, `php`, or `php_mustache`)
+     * @return string The template engine (`mustache`, `php`, `php-mustache` or `twig`)
      */
     public function template_engine();
+
+    /**
+     * @param string $ident
+     * @return ViewableInterface Chainable
+     */
+    public function set_template_ident($ident);
+
+    /**
+     * @return string
+     */
+    public function template_ident();
 
     /**
      * @param ViewInterface|array $view
@@ -35,12 +47,6 @@ interface ViewableInterface
      * @return ViewInterface The object's View.
      */
     public function view();
-
-    /**
-     * @param string $template The template to parse and echo. If null, use the object's default.
-     * @return void
-     */
-    public function display($template = null);
 
     /**
      * @param string $template The template to parse and render. If null, use the object's default.

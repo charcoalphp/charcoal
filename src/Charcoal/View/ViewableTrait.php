@@ -7,8 +7,6 @@ use \InvalidArgumentException;
 
 // Local namespace dependencies
 use \Charcoal\View\AbstractView;
-use \Charcoal\View\EngineInterface;
-use \Charcoal\View\LoaderInterface;
 use \Charcoal\View\ViewInterface;
 
 /**
@@ -35,6 +33,16 @@ trait ViewableTrait
     private $view;
 
     /**
+     * Viewable objects can be rendered with `print` or `echo`
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->render();
+    }
+
+    /**
      * @param string $engine
      * @throws InvalidArgumentException
      * @return ViewableTrait Chainable
@@ -51,6 +59,10 @@ trait ViewableTrait
     }
 
     /**
+     * Return the view engine type (identifier).
+     *
+     * Can be "mustache", "php", "php-mustache" or "twig".
+     *
      * @return string
      */
     public function template_engine()
@@ -88,7 +100,7 @@ trait ViewableTrait
     /**
      * @param ViewInterface|array $view
      * @throws InvalidArgumentException If the view parameter is not an array or a View object.
-     * @return mixed Chainable
+     * @return ViewableInterface Chainable
      */
     public function set_view($view)
     {
@@ -103,7 +115,6 @@ trait ViewableTrait
         }
         return $this;
     }
-
 
     /**
      * @return ViewInterface The object's View.
@@ -121,15 +132,6 @@ trait ViewableTrait
      * @return ViewInterface
      */
     abstract public function create_view($data = null);
-
-    /**
-     * @param string $template The template to parse and echo. If null, use the object's default.
-     * @return void
-     */
-    public function display($template = null)
-    {
-        echo $this->render($template);
-    }
 
     /**
      * @param string $template The template to parse and render. If null, use the object's default.

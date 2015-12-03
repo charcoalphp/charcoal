@@ -4,7 +4,6 @@ namespace Charcoal\View\Twig;
 
 // 3rd-party libraries (`twigphp/twig`) dependencies
 use \Twig_Environment;
-use \Twig_Loader_Filesystem;
 
 // Intra-module (`charcoal-view`) depentencies
 use \Charcoal\View\AbstractEngine;

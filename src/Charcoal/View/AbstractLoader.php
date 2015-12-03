@@ -25,13 +25,13 @@ abstract class AbstractLoader implements LoggerAwareInterface
     private $logger;
 
     /**
-    * Default constructor, if none is provided by the concrete class implementations.
-    *
-    * ## Required dependencies
-    * - `logger` A PSR-3 logger
-    *
-    * @param array $data The class dependencies map.
-    */
+     * Default constructor, if none is provided by the concrete class implementations.
+     *
+     * ## Required dependencies
+     * - `logger` A PSR-3 logger
+     *
+     * @param array $data The class dependencies map.
+     */
     public function __construct(array $data)
     {
         $this->set_logger($data['logger']);
@@ -40,7 +40,7 @@ abstract class AbstractLoader implements LoggerAwareInterface
     /**
      * > LoggerAwareInterface > setLogger()
      *
-     * Fulfills the PSR-1 style LoggerAwareInterface
+     * Fulfills the PSR-1 style (camelCaps) LoggerAwareInterface
      *
      * @param LoggerInterface $logger
      * @return AbstractEngine Chainable
@@ -61,7 +61,7 @@ abstract class AbstractLoader implements LoggerAwareInterface
     }
 
     /**
-     * @erturn LoggerInterface
+     * @return LoggerInterface
      */
     public function logger()
     {
