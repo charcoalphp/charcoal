@@ -14,10 +14,7 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $view_args = [
-            'logger'=>null
-        ];
-        $this->obj = $this->getMockForAbstractClass('\Charcoal\View\AbstractView', $view_args);
+        $this->obj = $this->getMockForAbstractClass('\Charcoal\View\AbstractView');
     }
 
     public function testConstructor()

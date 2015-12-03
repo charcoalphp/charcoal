@@ -2,8 +2,9 @@
 
 namespace Charcoal\Tests\View;
 
-use \Charcoal\View\ViewableTrait as ViewableTrait;
-use \Charcoal\View\AbstractView as AbstractView;
+use \Charcoal\View\ViewableTrait;
+use \Charcoal\View\AbstractView;
+use \Charcoal\View\GenericView;
 
 class ViewableTraitTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,7 +21,12 @@ class ViewableTraitTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $mock = $this->getMockForTrait('\Charcoal\View\ViewableTrait');
+        $generic_view = new GenericView([
+            'logger'=>new \Monolog\Logger('charcoal.test')
+        ]);
+        $mock = $this->getMockForTrait('\Charcoal\View\ViewableTrait'); 
+        $mock->method('create_view')
+             ->willReturn($generic_view);
         $mock->foo = 'bar';
         $this->obj = $mock;
 
