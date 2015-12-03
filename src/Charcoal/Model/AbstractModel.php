@@ -229,6 +229,11 @@ abstract class AbstractModel implements
         foreach ($properties as $property_ident) {
             $p = $this->p($property_ident);
             $p->save();
+
+            if ($p->val() === null) {
+                continue;
+            }
+
             $this->set_data([
                 $property_ident => $p->val()
             ]);
@@ -250,10 +255,10 @@ abstract class AbstractModel implements
         $this->save_properties();
 
         // Invalid models can not be saved.
-        $valid = $this->validate();
-        if ($valid === false) {
-            return false;
-        }
+        // $valid = $this->validate();
+        // if ($valid === false) {
+        //     return false;
+        // }
 
         $ret = $this->source()->save_item($this);
         if ($ret === false) {
