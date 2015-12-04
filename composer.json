@@ -1,9 +1,9 @@
 {
   "name": "locomotivemtl/charcoal-queue",
   "description": "Queue, Queue items and Queueable objects for Charcoal",
-  "keywords": ["charcoal", "queue", "locomotive", "php", "framework", "cms"],
-  "homepage": "http://charcoal.locomotive.ca",
-  "license":"MIT",
+  "keywords": [ "charcoal", "queue", "locomotive", "php", "framework", "cms" ],
+  "homepage": "https://charcoal.locomotive.ca",
+  "license": "MIT",
   "support": {
     "issues": "https://github.com/locomotivemtl/charcoal-queue/issues",
     "source": "https://github.com/locomotivemtl/charcoal-queue"
@@ -15,17 +15,17 @@
     },
     {
       "name": "Locomotive",
-      "homepage": "http://locomotive.ca"
+      "homepage": "https://locomotive.ca"
     }
   ],
-  "minimum-stability":"dev",
+  "minimum-stability": "dev",
   "require": {
     "php": ">=5.5.0",
     "locomotivemtl/charcoal-core": "@dev"
   },
   "require-dev": {
-    "phpunit/phpunit": "~4.5",
-    "squizlabs/php_codesniffer": "2.*"
+    "phpunit/phpunit": "^4.8",
+    "squizlabs/php_codesniffer": "^2.4"
   },
   "autoload": {
     "psr-4": {
