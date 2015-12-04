@@ -8,10 +8,25 @@ Configuration container for all things Charcoal.
 This package provides easy hierarchical configuration container (for config storage and access).
 `Charcoal\Config` acts as a configuration registry / repository.
 
+## Main features
+
+- [Load data from ini, json or php files.](#supported-file-formats)
+- [Customizable separator access.](#seperators)
+- [Delegates (Chaining configurations).](#delegates)
+- [Array access.](#array-access)
+- [Implement Interop-Container.](#interoperability)
+
 ## Supported file formats
 
 There are currently 3 supported file formats: `ini`, `json` and `php`.
-To load configuration from a file:
+
+To load configuration from a file, simply use the `add_file()` method. The file's extension will be used to determine how to load the file.
+
+It is also possible to load a config file directly from the constructor, by passing a file _string_ as the first argument.
+
+``` php
+$config = new \Charcoal\GenericConfig('../config/my-config.json');
+```
 
 ### JSON configuration
 
@@ -23,7 +38,6 @@ For the JSON file:
 		"foo":"bar"
 	}
 }
-
 ```
 
 Loading this file into configuration would be:
@@ -62,6 +76,7 @@ The PHP configuration is loaded from an internal `include`, therefore, the scope
 For the PHP file:
 
 ```php
+<?php
 $this['example'] = [
 	'foo'=>'bar'
 ];
@@ -77,45 +92,115 @@ $config->add_file('./config/my-config.php');
 echo $config['example/foo'];
 ```
 
-## How to use
+## Separators
+
+It is possible to fetch embedded _array-ish_ values recursively in a single call with the help of _separators_.
+
+The default separator is `/` (it can be retrieved with `separator()`) but it can be changed easily with `set_separator()`.
+
+> 👉 Separator must be a single character. An exception will be thrown if trying to call `set_separator()` with a longer string.
+
+### How to use
 
 ```php
 $config = new \Charcoal\GenericConfig();
 $config->set_separator('.'); // Default is "/"
-$config->set('foo', [
-	'baz'=>example,
-	'bar'=>42
+$config->set_data([
+	'foo', [
+		'baz'=>example,
+		'bar'=>42
+	]
 ]);
 // Ouput "42"
 echo $config->get('foo.bar');
 ```
 
-Usage with `ArrayAccess`, and setting data from the constructor
+## Delegates
+
+It is possible to "chain" configuration containers with the help of _delegates_.
+
+If one or more delegates are added to a class, they will be used as _fallback_ when trying to fetch a key that isn't set in the config.
 
 ```php
-$config = new \Charcoal\GenericConfig([
-    'foo' => [
-        'baz'=>'example',
-        'bar'=>42
-    ]
+$config = new \Charcoal\Config\GenericConfig([
+	'foo' => 'baz'
 ]);
-// Output "example"
-echo $config['foo/baz'];
+
+// Returns `false`
+$config->has('bar');
+
+// Throws exception
+echo $config->get('bar');
+
+$config2 = new \Charcoal\Config\GenericConfig([
+	'bar' => 42
+]);
+
+$config->add_delegate($config2);
+
+// Returns 42
+echo $config->get('bar');
 ```
 
-Note that the previous example uses the default separator, which is `/`.
-To use a different separator (for dot notation, for example) use:
+Delegates can be set with:
+
+- `set_delegates()` to set an array of delegates.
+- `add_delegate()` to add a config object at the end of the delegate list.
+- `prepend_delegate()` to add a config object at the beginning of the delegate list.
+
+It is also possible to set delegates by passing them (as an array of ConfigInterface) to the constructor:
 
 ```php
-$config->set_separator('.');
+$config = new \Charcoal\Config\GenericConfig('../config/my-config.json', [$delegate1, $delegate2]);
 ```
 
-## Configuration chaining
+> 👉 The order of the delegates is important. They are looked in the order they are added, so the first match is returned. Use `prepend_delegate()` to add a config at the beginning of the stack (top priority).
+
+## Array Access
+
+The config class implements the `ArrayAccess` interface and therefore can be used with array style:
+
+```php
+$config = new \Charcoal\Config\GenericConfig();
+
+// Set value with array
+$config['foobar'] = 42;
+
+// Returns `42`
+echo $config['foobar'];
+
+// Returns `true`
+isset($config['foobar']);
+
+// Returns `false`
+isset($config['invalid-key']);
+
+// Invalidate the "foobar" config key
+unset($config['foobar']);
+```
 
 ## Interoperability
 
 The `\Charcoal\Config` container implements the `container-interop` interface.
-See [https://github.com/container-interop/container-interop]
+
+See [https://github.com/container-interop/container-interop](https://github.com/container-interop/container-interop).
+
+This interface requires the `get()` and `has()` methods:
+
+```php
+$config = new \Charcoal\Config\GenericConfig([
+	'foobar'=>42
+]);
+
+// Returns `true`
+$config->has('foobar');
+
+// Returns `false`
+$config->has('invalid-key');
+
+// Returns `42`
+$config->get('foobar');
+```
 
 ## Development
 
@@ -145,7 +230,7 @@ Coding styles are  enforced with `grunt phpcs` ([_PHP Code Sniffer_](https://git
 
 > 👉 To fix minor coding style problems, run `grunt phpcbf` ([_PHP Code Beautifier and Fixer_](https://github.com/squizlabs/PHP_CodeSniffer)). This tool uses the same ruleset as *phpcs* to automatically correct coding standard violations.
 
-The main PHP structure follow the [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md) standard. Autoloading is therefore provided by _Composer_.
+The main PHP structure follows the [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md) standard. Autoloading is therefore provided by _Composer_.
 
 ## Authors
 
@@ -153,15 +238,22 @@ The main PHP structure follow the [_PSR-4_](https://github.com/php-fig/fig-stand
 
 ## Changelog
 
-### 0.1.1
-
+### 0.2
 _Unreleased_
-- Removed the second argument for the constructor (currently unused)
-- Clearer error message on invalid JSON files
-- Fix composer.json and the autoloader
-- Various internal changes (PSR2 compliancy, _with psr1 exception_)
+
+- Added the "delegates" feature.
+- Setting value with a separator now tries to set as array.
+- Implements the container-interop interface.
+
+### 0.1.1
+_Released on 2015-12-02_
+
+- Removed the second argument for the constructor (currently unused).
+- Clearer error message on invalid JSON files.
+- Fix composer.json and the autoloader.
+- Various internal changes (PSR2 compliancy, _with psr1 exception_).
 
 ### 0.1
-
 _Released on 2015-08-25_
+
 - Initial release of `charcoal-config`,

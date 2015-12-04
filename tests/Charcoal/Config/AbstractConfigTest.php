@@ -67,13 +67,24 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($obj->has('foo/bar'));
     }
 
-    // public function testSetWithSeparator()
-    // {
-    //     $obj = $this->obj;
-    //     $obj->set('foo/bar', 'baz');
-    //     $this->assertEquals('baz', $obj->get('foo/bar'));
-    //     $this->assertEquals(['bar'=>'baz'],
-    // }
+
+    public function testSetWithSeparator()
+    {
+        $obj = $this->obj;
+
+        $obj->set('foo', ['a'=>'b']);
+        $obj->set('foo/bar1/foo2', 'baz');
+
+        $this->assertEquals('baz', $obj->get('foo/bar1/foo2'));
+        $this->assertEquals(
+            [
+            'a'     => 'b',
+            'bar1'  => [
+            'foo2' =>'baz'
+            ]],
+            $obj['foo']
+        );
+    }
 
     /**
      * Assert that the `set_separator` method:
@@ -110,6 +121,8 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertNotTrue(isset($obj['foo']));
     }
 
+
+
     public function testArrayAccessGetNumericException()
     {
         $obj = $this->obj;
@@ -136,6 +149,29 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
         $obj = $this->obj;
         $this->setExpectedException('\InvalidArgumentException');
         unset($obj[0]);
+    }
+
+    public function testDelegates()
+    {
+        $obj = $this->obj;
+
+        $this->assertFalse($obj->has('foo'));
+
+        $delegate = $this->getMockForAbstractClass('\Charcoal\Config\AbstractConfig');
+        $delegate->set('foo', 'bar');
+        $obj->add_delegate($delegate);
+
+        $this->assertTrue($obj->has('foo'));
+        $this->assertEquals('bar', $obj->get('foo'));
+
+        $delegate2 = $this->getMockForAbstractClass('\Charcoal\Config\AbstractConfig');
+        $delegate2->set('foo', 'baz');
+
+        $obj->add_delegate($delegate2);
+        $this->assertEquals('bar', $obj->get('foo'));
+
+        $obj->prepend_delegate($delegate2);
+        $this->assertEquals('baz', $obj->get('foo'));
     }
 
     public function testAddFileIni()

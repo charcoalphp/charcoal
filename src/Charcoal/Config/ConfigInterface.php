@@ -7,9 +7,14 @@ namespace Charcoal\Config;
  */
 interface ConfigInterface
 {
+    public function set_delegates(array $delegates);
+
+    public function add_delegate(ConfigInterface $delegate);
+
+    public function prepend_delegate(ConfigInterface $delegate);
 
     /**
-     * @param string $separator
+     * @param string $separator The separator character.
      * @return ConfigInterface Chainable
      */
     public function set_separator($separator);
@@ -19,9 +24,8 @@ interface ConfigInterface
      */
     public function separator();
 
-
     /**
-     * @param array $data
+     * @param array $data The map of [$key=>$item] items to set.
      * @return ConfigInterface Chainable
      */
     public function set_data(array $data);
@@ -32,26 +36,26 @@ interface ConfigInterface
     public function default_data();
 
     /**
-     * @param string $key
+     * @param string $key The key of the configuration item to fetch.
      * @return mixed
      */
     public function get($key);
 
     /**
-     * @param string $key
-     * @return boolean
-     */
-    public function has($key);
-
-    /**
-     * @param string $key
+     * @param string $key The key of the configuration item to set.
      * @param mixed $val
      * @return ConfigInterface Chainable
      */
     public function set($key, $val);
 
     /**
-     * @param string $path
+     * @param string $key The key of the configuration item to check.
+     * @return boolean
+     */
+    public function has($key);
+
+    /**
+     * @param string $path The file to load and add.
      * @return AbstractConfig (Chainable)
      */
     public function add_file($path);

@@ -4,7 +4,11 @@ namespace Charcoal\Config;
 
 // Dependencies from `PHP`
 use \ArrayAccess;
+use \Exception;
 use \InvalidArgumentException;
+
+// Dependencies from `container-interop/container-interop`
+use Interop\Container\ContainerInterface;
 
 // Local namespace dependencies
 use \Charcoal\Config\ConfigInterface;
@@ -27,12 +31,20 @@ abstract class AbstractConfig implements
      */
     private $separator = self::DEFAULT_SEPARATOR;
 
+    /**
+     * @var ConfigInterface[] $delegates
+     */
+    private $delegates = [];
+
 
     /**
+     * Create the configuration
+     *
      * @param array|string|null $data Optional default data, as `[$key => $val]` array
+     * @param ConfigInterface[] delegates
      * @throws InvalidArgumentException if data is not an array
      */
-    public function __construct($data = null)
+    public function __construct($data = null, array $delegates = null)
     {
         if (is_string($data)) {
             $this->set_data($this->default_data());
@@ -45,9 +57,46 @@ abstract class AbstractConfig implements
             $this->set_data($data);
         } else {
             throw new InvalidArgumentException(
-                'Data must be an array.'
+                'Data must be an array, a file string or a Config object.'
             );
         }
+
+        if ($delegates !== null) {
+            $this->set_delegates($delegates);
+        }
+    }
+
+    /**
+     * @param ConfigInterface[] $delegates The array of delegates (config) to set.
+     * @return ConfigInterface Chainable
+     */
+    public function set_delegates(array $delegates)
+    {
+        $this->delegates = [];
+        foreach ($delegates as $delegate) {
+            $this->add_delegate($delegate);
+        }
+        return $this;
+    }
+
+    /**
+     * @param ConfigInterface[] $delegates A delegate (config) instance.
+     * @return ConfigInterface Chainable
+     */
+    public function add_delegate(ConfigInterface $delegate)
+    {
+        $this->delegates[] = $delegate;
+        return $this;
+    }
+
+    /**
+     * @param ConfigInterface[] $delegates A delegate (config) instance.
+     * @return ConfigInterface Chainable
+     */
+    public function prepend_delegate(ConfigInterface $delegate)
+    {
+        array_unshift($this->delegates, $delegate);
+        return $this;
     }
 
     /**
@@ -110,53 +159,60 @@ abstract class AbstractConfig implements
     /**
      * @param string $key
      * @return mixed
-     * @see self::offsetSet()
+     * @see self::offsetGet()
      */
     public function get($key)
     {
-        $arr = $this;
-        $split_keys = explode($this->separator(), $key);
-        foreach ($split_keys as $k) {
-            if (!isset($arr[$k])) {
-                return null;
-            }
-            if (!is_array($arr[$k]) && ($arr[$k] instanceof ArrayAccess)) {
-                return $arr[$k];
-            }
-            $arr = $arr[$k];
-        }
-        return $arr;
-    }
-
-    /**
-     * @param string $key
-     * @return boolean
-     */
-    public function has($key)
-    {
-        $arr = $this;
-        $split_keys = explode($this->separator(), $key);
-        foreach ($split_keys as $k) {
-            if (!isset($arr[$k])) {
-                return false;
-            }
-            if (!is_array($arr[$k]) && ($arr[$k] instanceof ArrayAccess)) {
-                return true;
-            }
-            $arr = $arr[$k];
-        }
-        return true;
+        return $this[$key];
     }
 
     /**
      * @param string $key
      * @return mixed $value
-     * @see offsetSet
+     * @see self::offsetSet
      */
     public function set($key, $value)
     {
         $this[$key] = $value;
         return $this;
+    }
+
+    /**
+     * @param string $key
+     * @return boolean
+     * @see self::offsetExists
+     */
+    public function has($key)
+    {
+        return isset($this[$key]);
+    }
+
+    /**
+     * @param string $key The key of the configuration item to fetch.
+     * @return mixed The item, if found, or null.
+     */
+    private function get_in_delegates($key)
+    {
+        foreach ($this->delegates as $delegate) {
+            if ($delegate->has($key)) {
+                return $delegate->get($key);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param string $key The key of the configuration item to check.
+     */
+    private function has_in_delegates($key)
+    {
+        foreach ($this->delegates as $delegate) {
+            if ($delegate->has($key)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -173,11 +229,16 @@ abstract class AbstractConfig implements
                 'Config array access only supports non-numeric keys.'
             );
         }
+
+        if (strstr($key, $this->separator())) {
+            return $this->has_with_separator($key);
+        }
+
         if (is_callable([$this, $key])) {
             $value = $this->{$key}();
         } else {
             if (!isset($this->{$key})) {
-                return false;
+                return $this->has_in_delegates($key);
             }
             $value = $this->{$key};
         }
@@ -198,14 +259,17 @@ abstract class AbstractConfig implements
                 'Config array access only supports non-numeric keys.'
             );
         }
-        $f = [$this, $key];
-        if (is_callable([$this, $key])) {
-            return $this->{$key}();
+        if (strstr($key, $this->separator())) {
+            return $this->get_with_separator($key);
+        }
+        $getter = $key;
+        if (is_callable([$this, $getter])) {
+            return $this->{$getter}();
         } else {
             if (isset($this->{$key})) {
                 return $this->{$key};
             } else {
-                return null;
+                return $this->get_in_delegates($key);
             }
         }
     }
@@ -225,11 +289,105 @@ abstract class AbstractConfig implements
                 'Config array access only supports non-numeric keys.'
             );
         }
-        if (is_callable([$this, 'set_'.$key])) {
-            $this->{'set_'.$key}($value);
+
+        if (strstr($key, $this->separator())) {
+            return $this->set_with_separator($key, $value);
         } else {
-            $this->{$key} = $value;
+            $setter = 'set_'.$key;
+            if (is_callable([$this, $setter])) {
+                $this->{$setter}($value);
+            } else {
+                $this->{$key} = $value;
+            }
         }
+    }
+
+    /**
+     * @param string $key
+     * @return mixed The value (or null)
+     */
+    private function get_with_separator($key)
+    {
+        $arr = $this;
+        $split_keys = explode($this->separator(), $key);
+        foreach ($split_keys as $k) {
+            if (!isset($arr[$k])) {
+                return $this->get_in_delegates($key);
+            }
+            if (!is_array($arr[$k]) && ($arr[$k] instanceof ArrayAccess)) {
+                return $arr[$k];
+            }
+            $arr = $arr[$k];
+        }
+        return $arr;
+    }
+
+    /**
+     * @param string $key
+     * @return boolean
+     */
+    private function has_with_separator($key)
+    {
+        $arr = $this;
+        $split_keys = explode($this->separator(), $key);
+        foreach ($split_keys as $k) {
+            if (!isset($arr[$k])) {
+                return $this->has_in_delegates($key);
+            }
+            if (!is_array($arr[$k]) && ($arr[$k] instanceof ArrayAccess)) {
+                return true;
+            }
+            $arr = $arr[$k];
+        }
+        return true;
+    }
+
+    /**
+     * @param string $key
+     * @param mixed  $value
+     * @return void
+     */
+    private function set_with_separator($key, $value)
+    {
+        $split_keys = explode($this->separator(), $key);
+        $first = array_shift($split_keys);
+
+        $lvl = 1;
+        $num = count($split_keys);
+
+        $source = $this[$first];
+        $ref = &$result;
+
+        foreach ($split_keys as $p) {
+
+            if ($lvl == $num) {
+                $ref[$p] = $value;
+            } else {
+                if (!isset($source[$p])) {
+                    $ref[$p] = [];
+                } else {
+                    if (is_array($source[$p]) || ($source[$p] instanceof ArrayAccess)) {
+                        $ref[$p] = $source[$p];
+
+                    } else {
+                        throw new Exception(
+                            sprintf('Can not set recursively with separator.')
+                        );
+                    }
+
+                }
+            }
+
+            $ref = &$ref[$p];
+            $lvl++;
+        }
+
+        // Merge, if necessary.
+        if ($this->has($first)) {
+            $result = ($this[$first] + $result);
+        }
+
+        $this[$first] = $result;
     }
 
     /**
@@ -246,11 +404,7 @@ abstract class AbstractConfig implements
                 'Config array access only supports non-numeric keys.'
             );
         }
-        if (is_callable([$this, 'set_'.$key])) {
-            $this->{'set_'.$key}(null);
-        } else {
-            $this->{$key} = null;
-        }
+        $this[$key] = null;
     }
 
     /**
