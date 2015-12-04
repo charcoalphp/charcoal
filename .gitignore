@@ -1,7 +1,18 @@
-.DS_Store
-node_modules
-vendor
-phpdoc
+# Package Managers
+
 composer.phar
-composer.lock
-tests/tmp
+vendor/
+node_modules/
+
+# Documentation
+
+phpdoc/
+
+# Logging
+
+*.log
+logs/
+
+# Caches
+
+tmp/
