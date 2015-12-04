@@ -1,26 +1,6 @@
 {
+  "private": true,
   "name": "@locomotivemtl/charcoal-config",
-  "version": "0.1.1",
-  "description": "Configuration container for all things Charcoal",
-  "license": "MIT",
-  "homepage": "http://charcoal.locomotive.ca",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/locomotivemtl/charcoal-config"
-  },
-  "bugs": {
-    "url": "https://github.com/locomotivemtl/charcoal-config/issues"
-  },
-  "author": {
-    "name": "Mathieu Ducharme",
-    "email": "mat@locomotive.ca"
-  },
-  "contributors": [
-    {
-      "name": "Locomotive",
-      "homepage": "http://locomotive.ca"
-    }
-  ],
   "devDependencies": {
     "glob": "^6.0.1",
     "grunt": "^0.4.5",
