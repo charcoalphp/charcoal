@@ -1,6 +1,5 @@
 {
   "name": "locomotivemtl/charcoal-config",
-  "version": "0.1.1",
   "description": "Configuration container for all things Charcoal",
   "homepage": "https://charcoal.locomotive.ca",
   "license": "MIT",
@@ -21,10 +20,11 @@
   "require": {
     "php": ">=5.5.0",
     "ext-json": "*",
-    "ext-spl": "*"
+    "ext-spl": "*",
+    "container-interop/container-interop": "^1.1"
   },
   "require-dev": {
-    "phpunit/phpunit": "^4.8",
+    "phpunit/phpunit": "~4.0",
     "squizlabs/php_codesniffer": "^2.4"
   },
   "autoload": {

@@ -22,6 +22,7 @@ use \Charcoal\Config\ConfigInterface;
  */
 abstract class AbstractConfig implements
     ConfigInterface,
+    ContainerInterface,
     ArrayAccess
 {
     const DEFAULT_SEPARATOR = '/';
