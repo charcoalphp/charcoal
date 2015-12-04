@@ -43,7 +43,7 @@ abstract class AbstractProperty implements
     private $logger;
 
     /**
-    * @var string $_ident
+    * @var string $ident
     */
     private $ident = '';
 
@@ -53,7 +53,7 @@ abstract class AbstractProperty implements
     protected $val;
 
     /**
-    * @var TranslationString $_label
+    * @var TranslationString $label
     */
     private $label;
 
@@ -94,9 +94,15 @@ abstract class AbstractProperty implements
     private $unique = false;
 
     /**
-    * @var boolean $_allow_null
+    * @var boolean $allow_null
     */
     private $allow_null = true;
+
+    /**
+    * Only the storable properties should be saved in storage.
+    * @var boolean $storable
+    */
+    private $storable;
 
     /**
     * Inactive properties should be hidden everywhere / unused
@@ -186,11 +192,11 @@ abstract class AbstractProperty implements
     public function set_data(array $data)
     {
         foreach ($data as $prop => $val) {
-            $func = [$this, 'set_'.$prop];
-            if (is_callable($func)) {
-                call_user_func($func, $val);
-                unset($data[$prop]);
+            $setter = 'set_'.$prop;
+            if (is_callable([$this, $setter])) {
+                $this->{$setter}($val);
             } else {
+                // Set as public member if setter is not set on object.
                 $this->{$prop} = $val;
             }
         }
@@ -535,7 +541,9 @@ abstract class AbstractProperty implements
     public function set_active($active)
     {
         if (!is_bool($active)) {
-            throw new InvalidArgumentException('Active must be a boolean.');
+            throw new InvalidArgumentException(
+                'Active must be a boolean.'
+            );
         }
         $this->active = $active;
         return $this;
@@ -547,6 +555,29 @@ abstract class AbstractProperty implements
     public function active()
     {
         return !!$this->active;
+    }
+
+    /**
+    * @param boolean $storable
+    * @return PropertyInterface Chainable
+    */
+    public function set_storable($storable)
+    {
+        if (!is_bool($storable)) {
+            throw new InvalidArgumentException(
+                'Storable must be a boolean.'
+            );
+        }
+        $this->storable = $storable;
+        return $this;
+    }
+
+    /**
+    * @return boolean
+    */
+    public function storable()
+    {
+        return !!$this->storable;
     }
 
     /**

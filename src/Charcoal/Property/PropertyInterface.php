@@ -136,6 +136,17 @@ interface PropertyInterface
     public function unique();
 
     /**
+    * @param boolean $storable
+    * @return PropertyInterface Chainable
+    */
+    public function set_storable($storable);
+
+    /**
+    * @return boolean
+    */
+    public function storable();
+
+    /**
     * @param boolean $active
     * @return PropertyInterface Chainable
     */
