@@ -1,4 +1,4 @@
-# editorconfig.org -- For unifying the coding style between editors and IDEs
+# editorconfig.org
 
 root = true
 
@@ -10,10 +10,10 @@ insert_final_newline = true
 indent_style = space
 indent_size = 4
 
-[*.{json,yml}]
-insert_final_newline = false
+[*.md]
+indent_style = tab
 indent_size = 2
 
-[.{bowerrc,editorconfig,gitattributes,gitignore,htaccess,npmrc}]
+[{*.json,*.yml,.bowerrc,.editorconfig,.env,.env.*,.gitattributes,.gitignore,.htaccess,.jscsrc,.jshintignore,.jshintrc,.npmrc,.sassdocrc}]
 insert_final_newline = false
 indent_size = 2

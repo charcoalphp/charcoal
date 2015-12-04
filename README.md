@@ -22,13 +22,13 @@ $ composer require locomotivemtl/charcoal-core
 Charcoal depends on:
 
 - **PHP** 5.5+
-  - with [_PHP Generators_](http://php.net/generators).
-  - [`slim`](http://www.slimframework.com/), [`mustache`](https://github.com/bobthecow/mustache.php), [`monolog`](https://github.com/Seldaek/monologm/) (see [`composer.json`](composer.json) for details)
+	- with [_PHP Generators_](http://php.net/generators).
+	- [`slim`](http://www.slimframework.com/), [`mustache`](https://github.com/bobthecow/mustache.php), [`monolog`](https://github.com/Seldaek/monologm/) (see [`composer.json`](composer.json) for details)
 - **MySQL**
-  - with [_PDO_](http://php.net/pdo)
-  - Other databases are currently not supported
+	- with [_PDO_](http://php.net/pdo)
+	- Other databases are currently not supported
 - **Apache**
-  - with _mod_rewrite_
+	- with _mod_rewrite_
 
 ## Build System(s)
 
@@ -43,29 +43,29 @@ Charcoal uses:
 The core concepts (namespaces) defined in Charcoal Core are:
 
 - `Core`, for core patterns, classes and traits.
-  - `IndexableInterface` / `IndexableTrait`:
-    -  Defines `set_id()`, `id()`, `set_key()` and `key()`.
-  - `StringFormat`: a helper class to format strings, mostly for final output within templates & widgets:
-    - `unicode()`, `strip_tags()`, `unaccents()` and `alphanumeric()`
+	- `IndexableInterface` / `IndexableTrait`:
+		-  Defines `set_id()`, `id()`, `set_key()` and `key()`.
+	- `StringFormat`: a helper class to format strings, mostly for final output within templates & widgets:
+		- `unicode()`, `strip_tags()`, `unaccents()` and `alphanumeric()`
 - `Encoder`, for the encoder interfaces as well as a few drivers:
-  - Available encoder types: `base64`.
-  - Note that this is a simple encoding library,**not** a cryptographic lib.
+	- Available encoder types: `base64`.
+	- Note that this is a simple encoding library,**not** a cryptographic lib.
 - `Loader`, for everything that can be loaded.
-  - Base loaders: `AbstractLoader`, `FileLoader`
-  - Extra interface: `LoadableInterface` / `LoadableTrait`
+	- Base loaders: `AbstractLoader`, `FileLoader`
+	- Extra interface: `LoadableInterface` / `LoadableTrait`
 - `Metadata`, for object definition through standardized metadata.
-  - Extra interfaces: `DescribableInterface` / `DescribableTrait` for objects
+	- Extra interfaces: `DescribableInterface` / `DescribableTrait` for objects
 - `Model`, for base domain model objects.
-  - Extra interface: `CategorizableInterface` / `CategorizableTrait`
-  - Extra interface: `CategoryInterface` / `CategoryTrait`
-  - Extra interface: `IndexableInterface` / `IndexableTrait` for models that can be loaded with `id()` (and `key()`)
-  - Extra interface: `RoutableInterface` / `RoutableTrait`
+	- Extra interface: `CategorizableInterface` / `CategorizableTrait`
+	- Extra interface: `CategoryInterface` / `CategoryTrait`
+	- Extra interface: `IndexableInterface` / `IndexableTrait` for models that can be loaded with `id()` (and `key()`)
+	- Extra interface: `RoutableInterface` / `RoutableTrait`
 - `Property`, the building blocks of models (through metadata)
-  - Only the core property concepts are defined in the `charcoal-core` module. Extra property types can be found in `charcoal-base`
+	- Only the core property concepts are defined in the `charcoal-core` module. Extra property types can be found in `charcoal-base`
 - `Source`, for storage (typically accessed with a Loader)
-  - Extra interface:
+	- Extra interface:
 - `Validator`, to validate objects / models.
-  - Extra interface: `ValidatableInterface` / `ValidatableTrait` for objects that can be validated with a validator.
+	- Extra interface: `ValidatableInterface` / `ValidatableTrait` for objects that can be validated with a validator.
 
 ## Development
 
@@ -74,24 +74,24 @@ The core concepts (namespaces) defined in Charcoal Core are:
 All Charcoal modules follow the same coding style and `charcoal-core` is no exception. For PHP:
 
 - [_PSR-1_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md), except for
-  - Method names MUST be declared in `snake_case`.
+	- Method names MUST be declared in `snake_case`.
 - [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md), except for
-  - Property names MAY be prefixed with a single, or double, underscore to indicate protected or private visibility;
-  - Method names MAY be prefixed with a single, or double, underscore to indicate protected or private visibility.
-- [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md), autoloading is therefore provided by _Composer_
+	- Property names MAY be prefixed with a single, or double, underscore to indicate protected or private visibility;
+	- Method names MAY be prefixed with a single, or double, underscore to indicate protected or private visibility.
+- [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md), autoloading is therefore provided by _Composer_.
 - [_phpDocumentor_](http://phpdoc.org/)
-  - Add DocBlocks for all classes, methods, and functions;
-  - For type-hinting, use `boolean` (instead of `bool`), `integer` (instead of `int`), `float` (instead of `double` or `real`);
-  - Omit the `@return` tag if the method does not return anything.
+	- Add DocBlocks for all classes, methods, and functions;
+	- For type-hinting, use `boolean` (instead of `bool`), `integer` (instead of `int`), `float` (instead of `double` or `real`);
+	- Omit the `@return` tag if the method does not return anything.
 - Naming conventions
-  - Use `snake_case`, not `camelCase`, for variable, option, parameter, argument, function, and method names;
-  - Prefix abstract classes with `Abstract`;
-  - Suffix interfaces with `Interface`;
-  - Suffix traits with `Trait`;
-  - Suffix exceptions with `Exception`;
-  - For type-hinting, use `int` (instead of `integer`) and `bool` (instead of `boolean`);
-  - For casting, use `int` (instead of `integer`) and `!!` (instead of `bool` or `boolean`);
-  - For arrays, use `[]` (instead of `array()`).
+	- Use `snake_case`, not `camelCase`, for variable, option, parameter, argument, function, and method names;
+	- Prefix abstract classes with `Abstract`;
+	- Suffix interfaces with `Interface`;
+	- Suffix traits with `Trait`;
+	- Suffix exceptions with `Exception`;
+	- For type-hinting, use `int` (instead of `integer`) and `bool` (instead of `boolean`);
+	- For casting, use `int` (instead of `integer`) and `!!` (instead of `bool` or `boolean`);
+	- For arrays, use `[]` (instead of `array()`).
 
 Coding styles are  enforced with `grunt phpcs` ([_PHP Code Sniffer_](https://github.com/squizlabs/PHP_CodeSniffer)). The actual ruleset can be found in `phpcs.xml`.
 
@@ -135,6 +135,5 @@ Every class, method, and function should be covered by unit tests. PHP code can 
 
 ## TODOs
 
-- Add `SingletonInterface` / `SingletonTrait`
 - Translation (l10n) module
 - The main `Charcoal\Charcoal` class should be moved to `charcoal-base` and not used anywhere directly, if possible
