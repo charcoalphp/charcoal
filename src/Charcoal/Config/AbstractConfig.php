@@ -345,6 +345,7 @@ abstract class AbstractConfig implements
     /**
      * @param string $key
      * @param mixed  $value
+     * @throws Exception If a value already exists and is scalar (can not be merged).
      * @return void
      */
     private function set_with_separator($key, $value)
