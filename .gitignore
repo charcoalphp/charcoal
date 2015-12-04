@@ -1,6 +1,19 @@
-vendor
-tests/tmp
-node_modules
-mustache_cache
+# Package Managers
 
+composer.phar
+vendor/
+node_modules/
 
+# Documentation
+
+phpdoc/
+
+# Logging
+
+*.log
+logs/
+
+# Caches
+
+mustache_cache/
+tmp/
