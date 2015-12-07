@@ -13,6 +13,7 @@ use \Psr\Log\LoggerAwareInterface;
 // Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Model\DescribableInterface;
 use \Charcoal\Model\DescribableTrait;
+use \Charcoal\Translation\TranslationConfig;
 use \Charcoal\Translation\TranslationString;
 use \Charcoal\Validator\ValidatableInterface;
 use \Charcoal\Validator\ValidatableTrait;
@@ -535,7 +536,7 @@ abstract class AbstractProperty implements
 
     /**
     * @param boolean $active
-    * @throws InvalidArgumentException if the paramter is not a boolean
+    * @throws InvalidArgumentException If paramter is not a boolean.
     * @return Property (Chainable)
     */
     public function set_active($active)
@@ -560,6 +561,7 @@ abstract class AbstractProperty implements
     /**
     * @param boolean $storable
     * @return PropertyInterface Chainable
+    * @throws InvalidArgumentException If paramter is not a boolean.
     */
     public function set_storable($storable)
     {
@@ -623,22 +625,24 @@ abstract class AbstractProperty implements
     {
         $fields = [];
         if ($this->l10n()) {
-            $langs = ['fr', 'en']; /** @todo Implement retrieval of active languages */
-            foreach ($langs as $lang) {
+            $translator = TranslationConfig::instance();
+
+            foreach ($translator->languages() as $langcode => $langdata) {
+                $ident = sprintf('%1$s_%2$s', $this->ident(), $langcode);
                 $field = new PropertyField();
                 $field->set_data(
                     [
-                        'ident'        => $this->ident().'_'.$lang,
+                        'ident'        => $ident,
                         'sql_type'     => $this->sql_type(),
                         'sql_pdo_type' => $this->sql_pdo_type(),
                         'extra'        => $this->sql_extra(),
-                        'val'          => $this->field_val($lang),
+                        'val'          => $this->field_val($langcode),
                         'default_val'  => null,
                         'allow_null'   => $this->allow_null(),
                         'comment'      => $this->label()
                     ]
                 );
-                $fields[$lang] = $field;
+                $fields[$langcode] = $field;
             }
         } else {
             $field = new PropertyField();

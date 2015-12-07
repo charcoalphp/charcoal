@@ -7,7 +7,6 @@ use \Exception as Exception;
 use \InvalidArgumentException as InvalidArgumentException;
 
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Charcoal;
 use \Charcoal\Config\ConfigurableInterface;
 use \Charcoal\Config\ConfigurableTrait;
 use \Charcoal\Model\ModelInterface;
@@ -247,8 +246,10 @@ abstract class AbstractSource implements
             $p = $this->model()->p($property);
 
             if ($p && $p->l10n()) {
-                $lang = Charcoal::config()->translation()->lang();
-                $filter->set_property($property.'_'.$lang);
+                $translator = TranslationConfig::instance();
+
+                $ident = sprintf('%1$s_%2$s', $property, $translator->current_language());
+                $filter->set_property($ident);
             }
         }
 
