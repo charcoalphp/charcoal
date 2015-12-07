@@ -96,7 +96,9 @@ class TranslationString implements
         if (in_array($method, $this->languages())) {
             return $this->val($method);
         } else {
-            throw new Exception(sprintf('Invalid language: "%s"', (string)$method));
+            throw new Exception(
+                sprintf('Invalid language: "%s"', (string)$method)
+            );
         }
     }
 
@@ -142,7 +144,9 @@ class TranslationString implements
 
             $this->val[$lang] = $val;
         } else {
-            throw new InvalidArgumentException('Invalid localized value.');
+            throw new InvalidArgumentException(
+                'Invalid localized value.'
+            );
         }
         return $this;
     }
@@ -314,7 +318,9 @@ class TranslationString implements
     public function offsetExists($lang)
     {
         if (!is_string($lang)) {
-            throw new InvalidArgumentException('Array key must be a string.');
+            throw new InvalidArgumentException(
+                'Array key must be a string.'
+            );
         }
 
         return $this->has_val($lang);
@@ -331,7 +337,9 @@ class TranslationString implements
     public function offsetGet($lang)
     {
         if (!is_string($lang)) {
-            throw new InvalidArgumentException('Array key must be a string.');
+            throw new InvalidArgumentException(
+                'Array key must be a string.'
+            );
         }
 
         return $this->val($lang);
@@ -349,7 +357,9 @@ class TranslationString implements
     public function offsetSet($lang, $val)
     {
         if (!is_string($lang)) {
-            throw new InvalidArgumentException('Array key must be a string.');
+            throw new InvalidArgumentException(
+                'Array key must be a string.'
+            );
         }
 
         $this->add_val($lang, $val);
@@ -368,7 +378,9 @@ class TranslationString implements
     public function offsetUnset($lang)
     {
         if (!is_string($lang)) {
-            throw new InvalidArgumentException('Array key must be a string.');
+            throw new InvalidArgumentException(
+                'Array key must be a string.'
+            );
         }
 
         $this->remove_val($lang);
@@ -439,7 +451,9 @@ class TranslationString implements
             if ($this->has_language($lang)) {
                 $this->current_language = $lang;
             } else {
-                throw new InvalidArgumentException(sprintf('Invalid language: "%s"', (string)$lang));
+                throw new InvalidArgumentException(
+                    sprintf('Invalid language: "%s"', (string)$lang)
+                );
             }
         } else {
             $this->current_language = null;
