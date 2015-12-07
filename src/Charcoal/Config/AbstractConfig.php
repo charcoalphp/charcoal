@@ -28,22 +28,27 @@ abstract class AbstractConfig implements
     const DEFAULT_SEPARATOR = '/';
 
     /**
+     * Delimiter for accessing nested options.
+     *
      * @var string $separator
      */
     private $separator = self::DEFAULT_SEPARATOR;
 
     /**
+     * Delegates act as fallbacks when the current object
+     * doesn't have a requested option.
+     *
      * @var ConfigInterface[] $delegates
      */
     private $delegates = [];
 
-
     /**
      * Create the configuration
      *
-     * @param array|string|null $data Optional default data, as `[$key => $val]` array
-     * @param ConfigInterface[] delegates
-     * @throws InvalidArgumentException if data is not an array
+     * @param array|string|null $data Optional default data, as `[$key => $val]` array.
+     * @param ConfigInterface[] $delegates An array of delegates (config) to set.
+     * @throws InvalidArgumentException If $data is invalid.
+     * @todo Implement data migration from a passed ConfigInterface.
      */
     public function __construct($data = null, array $delegates = null)
     {
@@ -58,11 +63,11 @@ abstract class AbstractConfig implements
             $this->set_data($data);
         } else {
             throw new InvalidArgumentException(
-                'Data must be an array, a file string or a Config object.'
+                'Data must be an array, a file string or a ConfigInterface object.'
             );
         }
 
-        if ($delegates !== null) {
+        if (isset($delegates)) {
             $this->set_delegates($delegates);
         }
     }
@@ -101,8 +106,8 @@ abstract class AbstractConfig implements
     }
 
     /**
-     * @param string $separator
-     * @throws InvalidArgumentException
+     * @param string $separator A single-character to delimite nested options.
+     * @throws InvalidArgumentException If $separator is invalid.
      * @return AbstractConfig Chainable
      */
     public function set_separator($separator)
@@ -132,7 +137,7 @@ abstract class AbstractConfig implements
     /**
      * For each key, calls `set()`, which calls `offsetSet()`  (from ArrayAccess)
      *
-     * @param array $data
+     * @param array $data The data to set.
      * @return AbstractConfig Chainable
      * @see self::set()
      * @see self::offsetSet()
@@ -146,10 +151,11 @@ abstract class AbstractConfig implements
     }
 
     /**
-     * ConfigInterface > default_data
-     *
      * A stub for when the default data is empty.
-     * Make sure to reimplement in children Config classes if any default data should be set.
+     *
+     * Make sure to reimplement in children ConfigInterface classes if any default data should be set.
+     *
+     * @see ConfigInterface::default_data()
      * @return array
      */
     public function default_data()
@@ -158,9 +164,11 @@ abstract class AbstractConfig implements
     }
 
     /**
-     * @param string $key
-     * @return mixed
+     * Find an entry of the configuration by its key and retrieve it.
+     *
      * @see self::offsetGet()
+     * @param string $key The key of the configuration item to look for.
+     * @return mixed
      */
     public function get($key)
     {
@@ -168,9 +176,12 @@ abstract class AbstractConfig implements
     }
 
     /**
-     * @param string $key
-     * @return mixed $value
-     * @see self::offsetSet
+     * Assign a value to the specified key of the configuration.
+     *
+     * @see self::offsetSet()
+     * @param string $key The key to assign $value to.
+     * @param mixed $value Value to assign to $key.
+     * @return AbstractConfig Chainable
      */
     public function set($key, $value)
     {
@@ -179,9 +190,11 @@ abstract class AbstractConfig implements
     }
 
     /**
-     * @param string $key
+     * Determine if a configuration key exists.
+     *
+     * @see self::offsetExists()
+     * @param string $key The key of the configuration item to look for.
      * @return boolean
-     * @see self::offsetExists
      */
     public function has($key)
     {
@@ -217,9 +230,10 @@ abstract class AbstractConfig implements
     }
 
     /**
-     * ArrayAccess > offsetExists()
+     * Determine if a configuration key exists.
      *
-     * @param string $key
+     * @see ArrayAccess::offsetExists()
+     * @param string $key The key of the configuration item to look for.
      * @throws InvalidArgumentException If the key argument is not a string or is a "numeric" value.
      * @return boolean
      */
@@ -247,9 +261,10 @@ abstract class AbstractConfig implements
     }
 
     /**
-     * ArrayAccess > offsetGet()
+     * Find an entry of the configuration by its key and retrieve it.
      *
-     * @param string $key
+     * @see ArrayAccess::offsetGet()
+     * @param string $key The key of the configuration item to look for.
      * @throws InvalidArgumentException If the key argument is not a string or is a "numeric" value.
      * @return mixed The value (or null)
      */
@@ -276,10 +291,11 @@ abstract class AbstractConfig implements
     }
 
     /**
-     * ArrayAccess > offsetSet()
+     * Assign a value to the specified key of the configuration.
      *
-     * @param string $key
-     * @param mixed  $value
+     * @see ArrayAccess::offsetSet()
+     * @param string $key The key to assign $value to.
+     * @param mixed $value Value to assign to $key.
      * @throws InvalidArgumentException If the key argument is not a string or is a "numeric" value.
      * @return void
      */
@@ -304,7 +320,7 @@ abstract class AbstractConfig implements
     }
 
     /**
-     * @param string $key
+     * @param string $key The key of the configuration item to look for.
      * @return mixed The value (or null)
      */
     private function get_with_separator($key)
@@ -324,7 +340,7 @@ abstract class AbstractConfig implements
     }
 
     /**
-     * @param string $key
+     * @param string $key The key of the configuration item to look for.
      * @return boolean
      */
     private function has_with_separator($key)
@@ -344,8 +360,8 @@ abstract class AbstractConfig implements
     }
 
     /**
-     * @param string $key
-     * @param mixed  $value
+     * @param string $key The key to assign $value to.
+     * @param mixed $value Value to assign to $key.
      * @throws Exception If a value already exists and is scalar (can not be merged).
      * @return void
      */
@@ -395,7 +411,7 @@ abstract class AbstractConfig implements
     /**
      * ArrayAccess > offsetUnset()
      *
-     * @param string $key
+     * @param string $key The key of the configuration item to remove.
      * @throws InvalidArgumentException If the key argument is not a string or is a "numeric" value.
      * @return void
      */
@@ -414,8 +430,8 @@ abstract class AbstractConfig implements
      *
      * Supported file types are `ini`, `json`, `php`
      *
-     * @param string $filename
-     * @throws InvalidArgumentException if the filename is not a string or not valid json / php
+     * @param string $filename A supported configuration file.
+     * @throws InvalidArgumentException If the file is invalid.
      * @return AbstractConfig (Chainable)
      */
     public function add_file($filename)
@@ -447,10 +463,10 @@ abstract class AbstractConfig implements
     }
 
     /**
-     * Add a .ini file to the configuration
+     * Add a `.ini` file to the configuration
      *
-     * @param string $filename
-     * @throws InvalidArgumentException
+     * @param string $filename A INI configuration file.
+     * @throws InvalidArgumentException If the file or invalid.
      * @return AbstractConfig Chainable
      */
     private function add_ini_file($filename)
@@ -466,10 +482,10 @@ abstract class AbstractConfig implements
     }
 
     /**
-     * Add a .json file to the configuration
+     * Add a `.json` file to the configuration
      *
-     * @param string $filename
-     * @throws InvalidArgumentException
+     * @param string $filename A JSON configuration file.
+     * @throws InvalidArgumentException If the file or invalid.
      * @return AbstractConfig Chainable
      */
     private function add_json_file($filename)
@@ -512,10 +528,10 @@ abstract class AbstractConfig implements
     }
 
     /**
-     * Add a .json file to the configuration
+     * Add a PHP file to the configuration
      *
-     * @param string $filename
-     * @throws InvalidArgumentException
+     * @param string $filename A PHP configuration file.
+     * @throws InvalidArgumentException If the file or invalid.
      * @return AbstractConfig Chainable
      */
     private function add_php_file($filename)

@@ -17,23 +17,30 @@ trait ConfigurableTrait
     private $config;
 
     /**
-     * @param ConfigInterface|array $config
-     * @throws InvalidArgumentException if config is not an array or Config object
+     * Set the object's configuration container.
+     *
+     * @param  ConfigInterface|array $config The datas to set.
+     * @throws InvalidArgumentException If the parameter is invalid.
      * @return ConfigurableInterface Chainable
      */
     public function set_config($config)
     {
         if (is_array($config)) {
             $this->config = $this->create_config($config);
-        } elseif (($config instanceof ConfigInterface)) {
+        } elseif ($config instanceof ConfigInterface) {
             $this->config = $config;
         } else {
-            throw new InvalidArgumentException('Config must be an array or a ConfigInterface object.');
+            throw new InvalidArgumentException('Configuration must be an array or a ConfigInterface object.');
         }
         return $this;
     }
 
     /**
+     * Retrieve the object's configuration container.
+     *
+     * If the object has no existing config, create one.
+     *
+     * @see    self::create_config()
      * @return ConfigInterface
      */
     public function config()
@@ -45,7 +52,10 @@ trait ConfigurableTrait
     }
 
     /**
-     * @param array|null $data
+     * Retrieve a new ConfigInterface instance for the object.
+     *
+     * @see    AbstractConfig::__construct()
+     * @param  array|string|null $data Optional data to pass to the new ConfigInterface instance.
      * @return ConfigInterface
      */
     abstract protected function create_config($data = null);
