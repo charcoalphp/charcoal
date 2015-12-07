@@ -12,13 +12,12 @@ use \Charcoal\App\Language\LanguageInterface;
  *
  * A basic trait for objects needed to interact with languages defined for itself.
  *
- * @see \Charcoal\Translation\ConfigurableTranslationTrait {
+ * @see \Charcoal\Translation\ConfigurableTranslationTrait
  *     For objects that use ConfigurableTrait. Useful for sharing a single
  *     instance of TranslationString.
  *
  *     Provides a working exampel of how to delegate language-handling to
  *     a separate object.
- * }
  *
  * Contains three additional methods:
  *
@@ -29,9 +28,9 @@ use \Charcoal\App\Language\LanguageInterface;
 trait MultilingualAwareTrait
 {
     /**
-     * Determine if the object has more than one available language
+     * Determine if the object has more than one available language.
      *
-     * @return boolean Whether the object is unilingual or not
+     * @return boolean Whether the object is unilingual or not.
      */
     public function is_multilingual()
     {
@@ -39,10 +38,10 @@ trait MultilingualAwareTrait
     }
 
     /**
-     * Resolve a language's identifier
+     * Resolve a language's identifier.
      *
-     * @param  LanguageInterface|string  $lang  A language object or identifier
-     * @return string|mixed                     A language identifier
+     * @param  LanguageInterface|string $lang A language object or identifier.
+     * @return string|mixed A language identifier.
      */
     public static function resolve_language_ident($lang)
     {

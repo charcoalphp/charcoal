@@ -48,7 +48,7 @@ class TranslationString implements
     /**
      * The object's translations
      *
-     * Stored as a `$lang => $val` hash.
+     * Stored as a `[ $lang => $val ]` hash.
      *
      * @var array $val
      */
@@ -57,8 +57,8 @@ class TranslationString implements
     /**
      * Calling the constructor with a parameter should force setting it up as value.
      *
-     * @param  mixed                   $val
-     * @param  TranslationConfig|array $config
+     * @param  mixed                   $val One or more strings (as an array).
+     * @param  TranslationConfig|array $config An existing TranslationConfig or settings to apply to this instance.
      * @return self
      */
     public function __construct($val = null, $config = null)
@@ -85,13 +85,14 @@ class TranslationString implements
      * echo $str->fr();
      * ```
      *
-     * @param  string $method
-     * @return string
-     * @throws Exception
+     * @param  string $method A language for an available translation.
+     * @return string A translated string.
+     * @throws Exception If language isn't available.
      */
     public function __call($method, $args = null)
     {
         unset($args);
+
         if (in_array($method, $this->languages())) {
             return $this->val($method);
         } else {
@@ -113,9 +114,9 @@ class TranslationString implements
     }
 
     /**
-     * Set the current translation value(s)
+     * Assign the current translation value(s).
      *
-     * @param TranslationStringInterface|array|string $val {
+     * @param TranslationStringInterface|array|string $val
      *     Add one or more translation values.
      *
      *     Accept 3 types of arguments:
@@ -123,9 +124,8 @@ class TranslationString implements
      *     - array: All languages available in the array. The format of the array should
      *       be a hash in the `lang` => `string` format.
      *     - string: The value will be assigned to the current language.
-     * }
      * @return self
-     * @throws InvalidArgumentException
+     * @throws InvalidArgumentException If value is invalid.
      */
     public function set_val($val)
     {
@@ -148,13 +148,12 @@ class TranslationString implements
     }
 
     /**
-     * Add a translation value to a specified and available language
+     * Add a translation value to a specified and available language.
      *
-     * @param  LanguageInterface|string  $lang  A language object or identifier
-     * @param  string                    $val   The translation to be added
+     * @param  LanguageInterface|string $lang A language object or identifier.
+     * @param  string                   $val  The translation to be added.
      * @return self
-     *
-     * @throws InvalidArgumentException
+     * @throws InvalidArgumentException If the language or value is invalid.
      */
     public function add_val($lang, $val)
     {
@@ -180,12 +179,11 @@ class TranslationString implements
     }
 
     /**
-     * Remove a translation value specified by an available language
+     * Remove a translation value specified by an available language.
      *
-     * @param  LanguageInterface|string  $lang  A language object or identifier
+     * @param  LanguageInterface|string $lang A language object or identifier.
      * @return self
-     *
-     * @throws InvalidArgumentException if an array member isn't a string or instance of LanguageInterface
+     * @throws InvalidArgumentException If language is invalid.
      */
     public function remove_val($lang)
     {
@@ -204,7 +202,7 @@ class TranslationString implements
     }
 
     /**
-     * Get a translation value
+     * Get a translation value.
      *
      * Returns a translation in the current language.
      *
@@ -212,11 +210,11 @@ class TranslationString implements
      * If $lang isn't a supported language or the translation is unavailable,
      * the translation in the default language is returned.
      *
-     * @param  LanguageInterface|string|null  $lang  Optional supported language to retrieve a translation in.
+     * @param  LanguageInterface|string|null $lang Optional supported language to retrieve a translation in.
      * @return string
-     * @throws throw new InvalidArgumentException(sprintf('Invalid language: "%s"', (string)$lang));
+     * @throws InvalidArgumentException If language is invalid.
      * @todo   When the language is invalid, should we fallback to the default language
-     *         or throw an InvalidArgumentException
+     *         or throw an InvalidArgumentException.
      */
     public function val($lang = null)
     {
@@ -240,12 +238,11 @@ class TranslationString implements
     }
 
     /**
-     * Determine if the object has a specified translation
+     * Determine if the object has a specified translation.
      *
-     * @param  LanguageInterface|string  $lang  A language object or identifier
+     * @param  LanguageInterface|string $lang A language object or identifier.
      * @return boolean
-     *
-     * @throws InvalidArgumentException if an array member isn't a string or instance of LanguageInterface
+     * @throws InvalidArgumentException If language is invalid.
      */
     public function has_val($lang)
     {
@@ -261,9 +258,9 @@ class TranslationString implements
     }
 
     /**
-     * Alias of `self::has_val()`
+     * Alias of `self::has_val()`.
      *
-     * @param  LanguageInterface|string  $lang  A language object or identifier
+     * @param  LanguageInterface|string $lang A language object or identifier.
      * @return boolean
      */
     public function has_translation($lang)
@@ -272,7 +269,7 @@ class TranslationString implements
     }
 
     /**
-     * Get the array of translations in all languages
+     * Get the array of translations in all languages.
      *
      * @return string[]
      *
@@ -284,13 +281,12 @@ class TranslationString implements
     }
 
     /**
-     * Get an array of translations in either all languages or a select few
+     * Get an array of translations in either all languages or a select few.
      *
-     * @param  (LanguageInterface|string)[]  $langs {
+     * @param  (LanguageInterface|string)[] $langs
      *     If an array of one or more lanagues is provided, the method returns
      *     a subset of the object's available languages (if any).
-     * }
-     * @return (LanguageInterface|string)[] An array of available languages
+     * @return (LanguageInterface|string)[] An array of available languages.
      */
     public function translations(array $langs = [])
     {
@@ -306,14 +302,14 @@ class TranslationString implements
     }
 
     /**
-     * Alias of `ConfigurableTranslationTrait::has_language()`
+     * Alias of `ConfigurableTranslationTrait::has_language()`.
      *
      * Called when using the objects as `isset($obj['foo'])`.
      *
      * @see    ArrayAccess::offsetExists()
-     * @param  string  $lang
+     * @param  string $lang A language identifier.
      * @return boolean
-     * @throws InvalidArgumentException if array key isn't a string
+     * @throws InvalidArgumentException If array key isn't a string.
      */
     public function offsetExists($lang)
     {
@@ -325,12 +321,12 @@ class TranslationString implements
     }
 
     /**
-     * Alias of `self::val()`
+     * Alias of `self::val()`.
      *
      * @see    ArrayAccess::offsetGet()
-     * @param  string  $lang
-     * @return string
-     * @throws InvalidArgumentException if array key isn't a string
+     * @param  string $lang A language identifier.
+     * @return string A translated string.
+     * @throws InvalidArgumentException If array key isn't a string.
      */
     public function offsetGet($lang)
     {
@@ -342,13 +338,13 @@ class TranslationString implements
     }
 
     /**
-     * Alias of `self::add_val()`
+     * Alias of `self::add_val()`.
      *
      * @see    ArrayAccess::offsetSet()
-     * @param  string  $lang
-     * @param  string  $val
+     * @param  string $lang A language identifier.
+     * @param  string $val  A translation value.
      * @return void
-     * @throws InvalidArgumentException if array key isn't a string
+     * @throws InvalidArgumentException If array key isn't a string.
      */
     public function offsetSet($lang, $val)
     {
@@ -360,14 +356,14 @@ class TranslationString implements
     }
 
     /**
-     * Alias of `self::remove_val()`
+     * Alias of `self::remove_val()`.
      *
      * Called when using `unset($obj['foo']);`.
      *
      * @see    ArrayAccess::offsetUnset()
-     * @param  string  $lang
+     * @param  string $lang A language identifier.
      * @return void
-     * @throws InvalidArgumentException if array key isn't a string
+     * @throws InvalidArgumentException If array key isn't a string.
      */
     public function offsetUnset($lang)
     {
@@ -379,7 +375,7 @@ class TranslationString implements
     }
 
     /**
-     * Retrieve an external iterator of translations in all languages
+     * Retrieve an external iterator of translations in all languages.
      *
      * @see    IteratorAggregate::getIterator()
      * @uses   self::all()
@@ -391,13 +387,13 @@ class TranslationString implements
     }
 
     /**
-     * Get the config's default language
+     * Get the config's default language.
      *
      * The configurable object's default language is
      * assumed to be the configuration's current language.
      *
      * @uses   ConfigurableInterface::config()
-     * @return string  A language identifier
+     * @return string A language identifier.
      */
     public function default_language()
     {
@@ -405,13 +401,13 @@ class TranslationString implements
     }
 
     /**
-     * Get the object's current language
+     * Get the object's current language.
      *
      * The current language acts as the first to be used when interacting
      * with data in a context where the language isn't explicitly specified.
      *
      * @see    TranslatableTrait::current_language()
-     * @return string  A language identifier
+     * @return string A language identifier.
      */
     public function current_language()
     {
@@ -431,10 +427,9 @@ class TranslationString implements
      * (which falls onto the default language).
      *
      * @see    TranslatableTrait::set_current_language()
-     * @param  LanguageInterface|string|null  $lang  A language object or identifier
+     * @param  LanguageInterface|string|null $lang A language object or identifier.
      * @return self
-     *
-     * @throws InvalidArgumentException if language isn't available
+     * @throws InvalidArgumentException If language isn't available.
      */
     public function set_current_language($lang = null)
     {

@@ -11,19 +11,19 @@ use \Charcoal\App\Language\LanguageInterface;
 trait LanguageAwareTrait
 {
     /**
-     * Current language identifier
+     * Current language identifier.
      *
      * @var string
      */
     private $language;
 
     /**
-     * Get the object's current language
+     * Retrieve the object's current language.
      *
      * The current language acts as the first to be used when interacting
      * with data in a context where the language isn't explicitly specified.
      *
-     * @return string  A language identifier
+     * @return string A language identifier.
      */
     public function language()
     {
@@ -38,10 +38,8 @@ trait LanguageAwareTrait
      * Defaults to resetting the object's current language to NULL,
      * (which falls onto the default language).
      *
-     * @param  LanguageInterface|string|null  $lang  A language object or identifier
+     * @param  LanguageInterface|string|null $lang A language object or identifier.
      * @return self
-     *
-     * @throws InvalidArgumentException if language isn't available
      */
     public function set_language($lang = null)
     {

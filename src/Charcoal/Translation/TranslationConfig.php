@@ -21,7 +21,7 @@ class TranslationConfig extends AbstractConfig implements MultilingualAwareInter
     /**
      * Set the configuration
      *
-     * @param  array $data
+     * @param  array $data The data to set.
      * @return self
      */
     public function set_data(array $data)

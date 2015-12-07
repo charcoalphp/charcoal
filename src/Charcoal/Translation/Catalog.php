@@ -52,7 +52,7 @@ class Catalog implements
     /**
      * Calling the constructor with a parameter should force setting it up as value.
      *
-     * @param  mixed[]                 $entries
+     * @param  mixed[]                 $entries An array of entries, each composed of translations.
      * @param  TranslationConfig|array $config
      * @return self
      */

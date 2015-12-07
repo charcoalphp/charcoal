@@ -54,14 +54,13 @@ trait ConfigurableTranslationTrait
     }
 
     /**
-     * Get the config's list of available languages
+     * Retrieve the config's list of available languages.
      *
      * @uses   ConfigurableInterface::config()
-     * @param  (LanguageInterface|string)[]  $langs {
+     * @param  (LanguageInterface|string)[] $langs
      *     If an array of one or more lanagues is provided, the method returns
      *     a subset of the config's available languages (if any).
-     * }
-     * @return string[] An array of available languages
+     * @return string[] An array of available languages.
      */
     public function languages(array $langs = [])
     {
@@ -69,7 +68,7 @@ trait ConfigurableTranslationTrait
     }
 
     /**
-     * Set the config's list of available languages
+     * Assign a list of languages to the config.
      *
      * When updating the list of available languages, the default and current language
      * is checked against the new list. If the either doesn't exist in the new list,
@@ -77,14 +76,13 @@ trait ConfigurableTranslationTrait
      * is reset to NULL (which falls onto the default language).
      *
      * @uses   ConfigurableInterface::config()
-     * @param  (LanguageInterface|string)[]  $langs {
+     * @param  (LanguageInterface|string)[] $langs
      *     An array of zero or more language objects or language identifiers to set
      *     on the config.
      *
      *     If an empty array is provided, the method should consider this a request
      *     to empty the languages store.
-     * }
-     * @return self
+     * @return MultilingualAwareInterface Chainable
      */
     public function set_languages(array $langs = [])
     {
@@ -94,11 +92,11 @@ trait ConfigurableTranslationTrait
     }
 
     /**
-     * Add an available language to the config
+     * Add an available language to the config.
      *
      * @uses   ConfigurableInterface::config()
-     * @param  LanguageInterface|array|string  $lang  A language object or identifier
-     * @return self
+     * @param  LanguageInterface|array|string $lang A language object or identifier.
+     * @return MultilingualAwareInterface Chainable
      */
     public function add_language($lang)
     {
@@ -108,11 +106,11 @@ trait ConfigurableTranslationTrait
     }
 
     /**
-     * Remove an available language from the config
+     * Remove an available language from the config.
      *
      * @uses   ConfigurableInterface::config()
-     * @param  LanguageInterface|string  $lang  A language object or identifier
-     * @return self
+     * @param  LanguageInterface|string $lang A language object or identifier.
+     * @return MultilingualAwareInterface Chainable
      */
     public function remove_language($lang)
     {
@@ -122,13 +120,11 @@ trait ConfigurableTranslationTrait
     }
 
     /**
-     * Get an available language from the config
+     * Retrieve an available language from the config.
      *
      * @uses   ConfigurableInterface::config()
-     * @param  LanguageInterface|string       $lang  A language object or identifier
-     * @return LanguageInterface|string|null         A language object or identifier
-     *
-     * @throws InvalidArgumentException if an array member isn't a string or instance of LanguageInterface
+     * @param  LanguageInterface|string $lang A language object or identifier.
+     * @return LanguageInterface|string|null A language object or identifier.
      */
     public function language($lang)
     {
@@ -136,11 +132,11 @@ trait ConfigurableTranslationTrait
     }
 
     /**
-     * Determine if the config has a specified language
+     * Determine if the config has a specified language.
      *
      * @uses   ConfigurableInterface::config()
-     * @param  LanguageInterface|string  $lang  A language object or identifier
-     * @return boolean                          Whether the language is available
+     * @param  LanguageInterface|string $lang A language object or identifier.
+     * @return boolean Whether the language is available.
      */
     public function has_language($lang)
     {
@@ -148,13 +144,13 @@ trait ConfigurableTranslationTrait
     }
 
     /**
-     * Get the config's default language
+     * Retrieve the config's default language.
      *
      * The default language acts as a fallback when the current language
      * is not available. This is especially useful when dealing with translations.
      *
      * @uses   ConfigurableInterface::config()
-     * @return string  A language identifier
+     * @return string A language identifier.
      */
     public function default_language()
     {
@@ -167,8 +163,8 @@ trait ConfigurableTranslationTrait
      * Must be one of the available languages assigned to the config.
      *
      * @uses   ConfigurableInterface::config()
-     * @param  LanguageInterface|string|null  $lang  A language object or identifier
-     * @return self
+     * @param  LanguageInterface|string|null $lang A language object or identifier.
+     * @return MultilingualAwareInterface Chainable
      */
     public function set_default_language($lang = null)
     {
@@ -178,13 +174,13 @@ trait ConfigurableTranslationTrait
     }
 
     /**
-     * Get the config's current language
+     * Retrieve the config's current language.
      *
      * The current language acts as the first to be used when interacting
      * with data in a context where the language isn't explicitly specified.
      *
      * @uses   ConfigurableInterface::config()
-     * @return string  A language identifier
+     * @return string A language identifier.
      */
     public function current_language()
     {
@@ -200,9 +196,8 @@ trait ConfigurableTranslationTrait
      * (which falls onto the default language).
      *
      * @uses   ConfigurableInterface::config()
-     * @param  string|null  $lang
-     * @return self
-     * @throws InvalidArgumentException if language isn't available
+     * @param  LanguageInterface|string|null $lang A language object or identifier.
+     * @return MultilingualAwareInterface Chainable
      */
     public function set_current_language($lang = null)
     {
