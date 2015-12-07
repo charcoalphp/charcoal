@@ -13,6 +13,7 @@ use \Psr\Log\LoggerAwareInterface;
 // Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Model\DescribableInterface;
 use \Charcoal\Model\DescribableTrait;
+use \Charcoal\Translation\TranslationConfig;
 use \Charcoal\Translation\TranslationString;
 use \Charcoal\Validator\ValidatableInterface;
 use \Charcoal\Validator\ValidatableTrait;
