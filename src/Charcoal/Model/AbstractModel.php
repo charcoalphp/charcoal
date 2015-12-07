@@ -283,10 +283,10 @@ abstract class AbstractModel implements
 
         $this->save_properties();
 
-        $valid = $this->validate();
-        if ($valid === false) {
-            return false;
-        }
+        // $valid = $this->validate();
+        // if ($valid === false) {
+        //     return false;
+        // }
 
         $ret = $this->source()->update_item($this, $properties);
         if ($ret === false) {
