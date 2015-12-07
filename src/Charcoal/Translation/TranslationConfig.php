@@ -25,29 +25,6 @@ class TranslationConfig extends AbstractConfig implements MultilingualAwareInter
     use TranslatableTrait;
 
     /**
-     * Set the configuration
-     *
-     * @param  array $data The data to set.
-     * @return self
-     */
-    public function set_data(array $data)
-    {
-        if (isset($data['languages'])) {
-            $this->set_languages($data['languages']);
-        }
-
-        if (isset($data['default_language'])) {
-            $this->set_default_language($data['default_language']);
-        }
-
-        if (isset($data['current_language'])) {
-            $this->set_current_language($data['current_language']);
-        }
-
-        return $this;
-    }
-
-    /**
      * Get the default configuration
      *
      * @return array
@@ -58,8 +35,12 @@ class TranslationConfig extends AbstractConfig implements MultilingualAwareInter
             'languages' => [
                 'en' => [
                     'name' => 'English'
+                ],
+                'fr' => [
+                    'name' => 'Français'
                 ]
-            ]
+            ],
+            'default_language' => 'fr'
         ];
     }
 
