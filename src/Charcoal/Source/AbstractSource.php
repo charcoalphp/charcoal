@@ -7,7 +7,6 @@ use \Exception as Exception;
 use \InvalidArgumentException as InvalidArgumentException;
 
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Charcoal;
 use \Charcoal\Config\ConfigurableInterface;
 use \Charcoal\Config\ConfigurableTrait;
 use \Charcoal\Model\ModelInterface;
@@ -247,22 +246,9 @@ abstract class AbstractSource implements
             $p = $this->model()->p($property);
 
             if ($p && $p->l10n()) {
-                /**
-                 * If a CharcoalApp instance exists, a TranslationConfig is
-                 * retrieved from the application's LanguageManager (if any).
-                 *
-                 * @todo Maybe implement a Charcoal::app() which retrieves our app's instance?
-                 * @see \Charcoal\Translation\ConfigurableTranslationTrait::create_config()
-                 * @var TranslationConfig
-                 */
-                if (class_exists('\Charcoal\App\App')) {
-                    $app = CharcoalApp::instance();
-                    $lng = $app->language_manager()->config();
-                } else {
-                    $lng = new TranslationConfig();
-                }
+                $translator = TranslationConfig::instance();
 
-                $ident = sprintf('%1$s_%2$s', $property, $lng->current_language());
+                $ident = sprintf('%1$s_%2$s', $property, $translator->current_language());
                 $filter->set_property($ident);
             }
         }

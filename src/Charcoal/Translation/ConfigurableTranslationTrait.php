@@ -2,11 +2,6 @@
 
 namespace Charcoal\Translation;
 
-use \InvalidArgumentException;
-
-// Intra-module (`charcoal-app`) dependencies
-use \Charcoal\App\App as CharcoalApp;
-
 // Intra-module (`charcoal-config`) dependency
 use \Charcoal\Config\ConfigurableInterface;
 
@@ -33,24 +28,17 @@ trait ConfigurableTranslationTrait
     use MultilingualAwareTrait;
 
     /**
-     * Retrieve a new TranslationConfig instance
+     * Retrieve a Charcoal application's instance or a new instance of self.
      *
-     * If a CharcoalApp instance exists, a TranslationConfig is
-     * retrieved from the application's LanguageManager (if any).
-     *
-     * @todo Maybe implement a Charcoal::app() which retrieves our app's instance?
-     * @see    ConfigurableInterface::create_config()
-     * @param  array  $data  Optional settings to pass to a new instance of TranslationConfig
+     * @see    Charcoal\App\Language\LanguageManager For application-wide source of instance returned.
+     * @see    ConfigurableInterface::create_config() For abstract definition of this method.
+     * @uses   TranslationConfig::instance()
+     * @param  array|string|null $data Optional data to pass to the new TranslationConfig instance.
      * @return TranslationConfig
      */
     protected function create_config($data = null)
     {
-        if (!isset($data) && class_exists('\Charcoal\App\App')) {
-            $app = CharcoalApp::instance();
-            return $app->language_manager()->config();
-        } else {
-            return new TranslationConfig($data);
-        }
+        return TranslationConfig::instance($data);
     }
 
     /**

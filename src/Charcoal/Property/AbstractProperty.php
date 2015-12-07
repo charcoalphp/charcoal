@@ -10,9 +10,6 @@ use \InvalidArgumentException;
 use \Psr\Log\LoggerInterface;
 use \Psr\Log\LoggerAwareInterface;
 
-// Intra-module (`charcoal-app`) dependency
-use \Charcoal\App\App as CharcoalApp;
-
 // Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Model\DescribableInterface;
 use \Charcoal\Model\DescribableTrait;
@@ -538,7 +535,7 @@ abstract class AbstractProperty implements
 
     /**
     * @param boolean $active
-    * @throws InvalidArgumentException if the paramter is not a boolean
+    * @throws InvalidArgumentException If paramter is not a boolean.
     * @return Property (Chainable)
     */
     public function set_active($active)
@@ -563,6 +560,7 @@ abstract class AbstractProperty implements
     /**
     * @param boolean $storable
     * @return PropertyInterface Chainable
+    * @throws InvalidArgumentException If paramter is not a boolean.
     */
     public function set_storable($storable)
     {
@@ -626,22 +624,9 @@ abstract class AbstractProperty implements
     {
         $fields = [];
         if ($this->l10n()) {
-            /**
-             * If a CharcoalApp instance exists, a TranslationConfig is
-             * retrieved from the application's LanguageManager (if any).
-             *
-             * @todo Maybe implement a Charcoal::app() which retrieves our app's instance?
-             * @see \Charcoal\Translation\ConfigurableTranslationTrait::create_config()
-             * @var TranslationConfig
-             */
-            if (class_exists('\Charcoal\App\App')) {
-                $app = CharcoalApp::instance();
-                $lng = $app->language_manager()->config();
-            } else {
-                $lng = new TranslationConfig();
-            }
+            $translator = TranslationConfig::instance();
 
-            foreach ($lng->languages() as $langcode => $langdata) {
+            foreach ($translator->languages() as $langcode => $langdata) {
                 $ident = sprintf('%1$s_%2$s', $this->ident(), $langcode);
                 $field = new PropertyField();
                 $field->set_data(
