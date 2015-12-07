@@ -2,6 +2,7 @@
 
 namespace Charcoal\Tests\Translation;
 
+// Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Translation\TranslationString as TranslationString;
 
 class TranslationStringTest extends \PHPUnit_Framework_TestCase
@@ -97,7 +98,7 @@ class TranslationStringTest extends \PHPUnit_Framework_TestCase
         $obj->add_val(false, 'foo');
     }
 
-    public function testAddVallInvalidLang()
+    public function testAddVallInvalidLanguage()
     {
         $obj = new TranslationString();
         $this->setExpectedException('\InvalidArgumentException');
@@ -117,7 +118,7 @@ class TranslationStringTest extends \PHPUnit_Framework_TestCase
     /**
     *
     */
-    public function testValInvalidLang()
+    public function testValInvalidLanguage()
     {
         $obj = new TranslationString();
         $this->setExpectedException('\InvalidArgumentException');
@@ -127,7 +128,7 @@ class TranslationStringTest extends \PHPUnit_Framework_TestCase
     /**
     *
     */
-    public function testValGetDefaultLang()
+    public function testValGetDefaultLanguage()
     {
         $obj = new TranslationString(
             null,
@@ -153,7 +154,7 @@ class TranslationStringTest extends \PHPUnit_Framework_TestCase
     /**
     *
     */
-    public function testSetLang()
+    public function testSetCurrentLanguage()
     {
         $obj = new TranslationString(
             [ 'en' => 'foo bar', 'fr' => 'bar baz' ],
@@ -161,26 +162,26 @@ class TranslationStringTest extends \PHPUnit_Framework_TestCase
                 'languages' => [ 'en', 'fr' ]
             ]
         );
-        $ret = $obj->set_lang('en');
+        $ret = $obj->set_current_language('en');
         $this->assertSame($ret, $obj);
-        $this->assertEquals('en', $obj->lang());
+        $this->assertEquals('en', $obj->current_language());
 
         $this->assertEquals('foo bar', $obj->val());
 
-        $obj->set_lang('fr');
+        $obj->set_current_language('fr');
         $this->assertEquals('bar baz', $obj->val());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_lang(false);
+        $obj->set_current_language(false);
     }
 
     /**
     *
     */
-    public function testLangUnsetReturnsDefault()
+    public function testLanguageUnsetReturnsDefault()
     {
         $obj = new TranslationString();
-        $this->assertEquals('en', $obj->lang());
+        $this->assertEquals('en', $obj->current_language());
     }
 
     /**
@@ -194,9 +195,11 @@ class TranslationStringTest extends \PHPUnit_Framework_TestCase
                 'languages' => [ 'en', 'fr' ]
             ]
         );
-        $obj->set_lang('en');
+
+        $obj->set_current_language('en');
         $obj->set_val('foo');
-        $obj->set_lang('fr');
+
+        $obj->set_current_language('fr');
         $obj->set_val('bar');
 
         $this->assertEquals(['en'=>'foo', 'fr'=>'bar'], $obj->all());
