@@ -266,7 +266,9 @@ trait TranslatableTrait
             if ($this->has_language($lang)) {
                 $this->default_language = $lang;
             } else {
-                throw new InvalidArgumentException(sprintf('Invalid language: "%s"', (string)$lang));
+                throw new InvalidArgumentException(
+                    sprintf('Invalid language: "%s"', (string)$lang)
+                );
             }
         } else {
             $languages = $this->languages();
@@ -314,7 +316,9 @@ trait TranslatableTrait
             if ($this->has_language($lang)) {
                 $this->current_language = $lang;
             } else {
-                throw new InvalidArgumentException(sprintf('Invalid language: "%s"', (string)$lang));
+                throw new InvalidArgumentException(
+                    sprintf('Invalid language: "%s"', (string)$lang)
+                );
             }
         } else {
             $this->current_language = null;
