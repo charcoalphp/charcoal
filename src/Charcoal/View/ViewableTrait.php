@@ -139,7 +139,7 @@ trait ViewableTrait
      */
     public function render($template = null)
     {
-        return $this->view()->render($template, $this);
+        return $this->view()->render($template, $this->view_controller());
     }
 
     /**
@@ -151,6 +151,15 @@ trait ViewableTrait
         if ($template_ident === null) {
             $template_ident = $this->template_ident();
         }
-        return $this->view()->render_template($template_ident, $this);
+        return $this->view()->render_template($template_ident, $this->view_controller());
+    }
+
+    /**
+     * Return a viewableinterface
+     * @return ViewableInterface [description]
+     */
+    public function view_controller()
+    {
+        return $this;
     }
 }
