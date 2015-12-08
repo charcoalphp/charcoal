@@ -187,37 +187,37 @@ abstract class AbstractView implements
         switch ($type) {
             case 'mustache':
                 return new MustacheEngine([
-                    'logger'=>$this->logger(),
-                    'cache'=>null,
-                    'loader'=>null
+                    'logger' => $this->logger(),
+                    'cache'  => null,
+                    'loader' => null
                 ]);
 
-                case 'php':
+            case 'php':
                 return new PhpEngine([
-                    'logger'=>$this->logger(),
-                    'cache'=>null,
-                    'loader'=>null
+                    'logger' => $this->logger(),
+                    'cache'  => null,
+                    'loader' => null
                 ]);
 
-                case 'php-mustache':
+            case 'php-mustache':
                 return new PhpMustacheEngine([
-                    'logger'=>$this->logger(),
-                    'cache'=>null,
-                    'loader'=>null
+                    'logger' => $this->logger(),
+                    'cache'  => null,
+                    'loader' => null
                 ]);
 
-                case 'twig':
+            case 'twig':
                 return new TwigEngine([
-                    'logger'=>$this->logger(),
-                    'cache'=>null,
-                    'loader'=>null
+                    'logger' => $this->logger(),
+                    'cache'  => null,
+                    'loader' => null
                 ]);
 
-                default:
+            default:
                 return new MustacheEngine([
-                    'logger'=>$this->logger,
-                    'cache'=>null,
-                    'loader'=>null
+                    'logger' => $this->logger(),
+                    'cache'  => null,
+                    'loader' => null
                 ]);
         }
     }
