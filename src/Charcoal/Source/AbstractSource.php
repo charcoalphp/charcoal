@@ -10,6 +10,7 @@ use \InvalidArgumentException as InvalidArgumentException;
 use \Charcoal\Config\ConfigurableInterface;
 use \Charcoal\Config\ConfigurableTrait;
 use \Charcoal\Model\ModelInterface;
+use \Charcoal\Translation\TranslationConfig;
 
 // Local namespace dependencies
 use \Charcoal\Source\SourceConfig;
