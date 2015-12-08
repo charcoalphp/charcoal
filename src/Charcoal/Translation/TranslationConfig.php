@@ -47,8 +47,7 @@ class TranslationConfig extends AbstractConfig implements MultilingualAwareInter
     /**
      * Retrieve a Charcoal application's instance or a new instance of self.
      *
-     * If {@see Charcoal} has been assigned an application, a TranslationConfig
-     * is retrieved from the application's LanguageManager (if any).
+     * A TranslationConfig is retrieved from the {@see CharcoalApp}'s LanguageManager (if any).
      *
      * @see    AbstractSource::add_filter() Similar implementation.
      * @see    AbstractProperty::fields() Similar implementation.
@@ -60,12 +59,10 @@ class TranslationConfig extends AbstractConfig implements MultilingualAwareInter
      */
     public static function instance($data = null)
     {
-        if ($data === null) {
-            $app = Charcoal::app();
+        if ($data === null && method_exists('CharcoalApp', 'instance')) {
+            $app = CharcoalApp::instance();
 
-            if ($app instanceof CharcoalApp) {
-                return $app->language_manager()->config();
-            }
+            return $app->language_manager()->config();
         }
 
         return new self($data);
