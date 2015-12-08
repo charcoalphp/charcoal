@@ -627,8 +627,8 @@ abstract class AbstractProperty implements
         if ($this->l10n()) {
             $translator = TranslationConfig::instance();
 
-            foreach ($translator->languages() as $langcode => $langdata) {
-                $ident = sprintf('%1$s_%2$s', $this->ident(), $langcode);
+            foreach ($translator->languages() as $lang_code) {
+                $ident = sprintf('%1$s_%2$s', $this->ident(), $lang_code);
                 $field = new PropertyField();
                 $field->set_data(
                     [
@@ -636,13 +636,13 @@ abstract class AbstractProperty implements
                         'sql_type'     => $this->sql_type(),
                         'sql_pdo_type' => $this->sql_pdo_type(),
                         'extra'        => $this->sql_extra(),
-                        'val'          => $this->field_val($langcode),
+                        'val'          => $this->field_val($lang_code),
                         'default_val'  => null,
                         'allow_null'   => $this->allow_null(),
                         'comment'      => $this->label()
                     ]
                 );
-                $fields[$langcode] = $field;
+                $fields[$lang_code] = $field;
             }
         } else {
             $field = new PropertyField();
