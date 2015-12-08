@@ -39,8 +39,7 @@ class TranslationConfig extends AbstractConfig implements MultilingualAwareInter
                 'fr' => [
                     'name' => 'Français'
                 ]
-            ],
-            'default_language' => 'fr'
+            ]
         ];
     }
 
