@@ -21,8 +21,7 @@ class TranslationConfigTest extends \PHPUnit_Framework_TestCase
         $obj = new TranslationConfig();
 
         $ret = $obj->set_data([
-            'languages'        => [ 'en', 'fr' ],
-            'default_language' => 'fr'
+            'languages' => [ 'en', 'fr' ]
         ]);
         $this->assertSame($ret, $obj);
 

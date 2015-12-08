@@ -114,11 +114,11 @@ class CatalogTest extends \PHPUnit_Framework_TestCase
         $obj = new Catalog();
 
         $this->setExpectedException('\InvalidArgumentException');
-        $ret = $obj->set_current_language('fr');
+        $ret = $obj->set_current_language('jp');
 
         $this->assertSame($ret, $obj);
 
-        $this->assertEquals('fr', $obj->current_language());
+        $this->assertEquals('jp', $obj->current_language());
     }
 
     /**
