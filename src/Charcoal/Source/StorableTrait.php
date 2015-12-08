@@ -65,6 +65,22 @@ trait StorableTrait
     }
 
     /**
+    * Load an object from the database from its key $key.
+    *
+    * Note that the object should also implement `Charcoal\Model\IndexableInterface`
+    * (provide an `id()` and `key()` methods) for this function to work properly.
+    *
+    * @param string $key Key pointing a column's name
+    * @param mixed $value Value of said column
+    * @return StorableInterface Chainable
+    */
+    public function load_from($key = null, $value = null)
+    {
+        $this->source()->load_item_from_key($key, $value, $this);
+        return $this;
+    }
+
+    /**
     * Save an object current state to storage
     *
     * @return boolean

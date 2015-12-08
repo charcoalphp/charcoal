@@ -353,12 +353,27 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     }
 
     /**
-    * @param mixed              $ident
+    * @param mixed              $ident Ident can be an integer, a string, ...
     * @param StoreableInterface $item  Optional item to load into
     * @throws Exception
     * @return StorableInterface
     */
     public function load_item($ident, StorableInterface $item = null)
+    {
+        $key = $this->model()->key();
+
+        return $this->load_item_from_key($key, $ident, $item);
+    }
+
+    /**
+     * Load item from a custom column's name ($key)
+     *
+     * @param  string                 $key   Column name
+     * @param  mixed                  $ident Value of said column
+     * @param  StorableInterface|null $item  Optional item to load into
+     * @return StorableInterface             Item
+     */
+    public function load_item_from_key($key, $ident, StorableInterface $item = null)
     {
         if ($item !== null) {
             $this->set_model($item);
@@ -367,13 +382,18 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
             $item = new $class;
         }
 
+        // Missing parameters
+        if (!$key || !$ident) {
+            return $item;
+        }
+
         $q = '
             SELECT
                 *
             FROM
                `'.$this->table().'`
             WHERE
-               `'.$this->model()->key().'`=:ident
+               `'.$key.'`=:ident
             LIMIT
                1';
 
