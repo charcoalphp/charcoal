@@ -110,29 +110,39 @@ abstract class AbstractFactory implements FactoryInterface
      * If a base class is set, then it must be ensured that the created objects
      * are `instanceof` this base class.
      *
-     * @param string $classname The FQN of the class to set as base class.
+     * @param string $type The FQN of the class, or "type" of object, to set as base class.
      * @throws InvalidArgumentException If the class is not a string or is not an existing class / interface.
      * @return FactoryInterface
      */
-    public function set_base_class($classname)
+    public function set_base_class($type)
     {
-        if (!is_string($classname)) {
+        if (!is_string($type) || empty($type)) {
             throw new InvalidArgumentException(
-                'Classname must be a string.'
+                'Class name or type must be a non-empty string.'
             );
         }
-        $class_exists = (class_exists($classname) || interface_exists($classname));
-        if (!$class_exists) {
-            throw new InvalidArgumentException(
-                sprintf('Can not set "%s" as base class: Invalid class or interface name.', $classname)
-            );
+
+        $exists = (class_exists($type) || interface_exists($type));
+        if ($exists) {
+            $classname = $type;
+        } else {
+            $classname = $this->resolve($type);
+
+            $exists = (class_exists($classname) || interface_exists($classname));
+            if (!$exists) {
+                throw new InvalidArgumentException(
+                    sprintf('Can not set "%s" as base class: Invalid class or interface name.', $classname)
+                );
+            }
         }
+
         $this->base_class = $classname;
+
         return $this;
     }
 
     /**
-     * @return string
+     * @return string The FQN of the base class
      */
     public function base_class()
     {
@@ -140,31 +150,40 @@ abstract class AbstractFactory implements FactoryInterface
     }
 
     /**
-     * If a default class is set, then calling `get()` or `create()`
-     * an invalid type should return an object of this class instead of throwing an error.
+     * If a default class is set, then calling `get()` or `create()` an invalid type
+     * should return an object of this class instead of throwing an error.
      *
-     * @param string $classname The FQN of the class to set as default class.
+     * @param string $type The FQN of the class, or "type" of object, to set as default class.
      * @throws InvalidArgumentException If the class name is not a string or not a valid class.
      * @return FactoryInterface
      */
-    public function set_default_class($classname)
+    public function set_default_class($type)
     {
-        if (!is_string($classname)) {
+        if (!is_string($type) || empty($type)) {
             throw new InvalidArgumentException(
-                'Class name must be a string.'
+                'Class name or type must be a non-empty string.'
             );
         }
-        if ($classname !== '' && !class_exists($classname)) {
-            throw new InvalidArgumentException(
-                sprintf('Can not set "%s" as defaut class: Invalid class name', $classname)
-            );
+
+        if (class_exists($type)) {
+            $classname = $type;
+        } else {
+            $classname = $this->resolve($type);
+
+            if (!class_exists($classname)) {
+                throw new InvalidArgumentException(
+                    sprintf('Can not set "%s" as defaut class: Invalid class name.', $classname)
+                );
+            }
         }
+
         $this->default_class = $classname;
+
         return $this;
     }
 
     /**
-     * @return string
+     * @return string The FQN of the default class
      */
     public function default_class()
     {
