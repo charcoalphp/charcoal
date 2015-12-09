@@ -91,10 +91,6 @@ abstract class AbstractLoader implements
         $paths = [];
 
         // Use default templates path (from app config) if none was set
-        if (class_exists('\Charcoal\Charcoal')) {
-            $paths = $paths + \Charcoal\Charcoal::config()->templates_path();
-        }
-
         if (class_exists('\Charcoal\App\App')) {
             $paths = $paths + \Charcoal\App\App::instance()->config()->get('view/path');
         }
@@ -121,29 +117,33 @@ abstract class AbstractLoader implements
 
     /**
      * @param string $path The path to add to the load.
-     * @throws InvalidArgumentException If the path  argument is not a string.
      * @return AbstractLoader Chainable
      */
     public function add_path($path)
     {
-        if (!is_string($path)) {
-            throw new InvalidArgumentException(
-                'Path needs to be a string'
-            );
-        }
-
-        $path = rtrim($path, '/\\').'/';
-        $this->paths[] = $path;
+        $this->paths[] = $this->resolve_path($path);
 
         return $this;
     }
 
     /**
      * @param string $path The path to add (prepend) to the load.
-     * @throws InvalidArgumentException If the path  argument is not a string.
      * @return AbstractLoader Chainable
      */
     public function prepend_path($path)
+    {
+        $path = $this->resolve_path($path);
+        array_unshift($this->paths, $path);
+
+        return $this;
+    }
+
+    /**
+     * @param string $path The path to resolve.
+     * @throws InvalidArgumentException If the path argument is not a string.
+     * @return string
+     */
+    public function resolve_path($path)
     {
         if (!is_string($path)) {
             throw new InvalidArgumentException(
@@ -152,9 +152,16 @@ abstract class AbstractLoader implements
         }
 
         $path = rtrim($path, '/\\').'/';
-        array_unshift($this->paths, $path);
 
-        return $this;
+        if (class_exists('\Charcoal\App\App')) {
+            $base_path = \Charcoal\App\App::instance()->config()->get('ROOT');
+
+            if (false === strpos($path, $base_path)) {
+                $path = $base_path . $path;
+            }
+        }
+
+        return $path;
     }
 
     /**
