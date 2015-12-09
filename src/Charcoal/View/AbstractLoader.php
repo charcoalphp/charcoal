@@ -12,7 +12,9 @@ use \Psr\Log\LoggerAwareInterface;
 /**
  *
  */
-abstract class AbstractLoader implements LoggerAwareInterface
+abstract class AbstractLoader implements
+    LoggerAwareInterface,
+    LoaderInterface
 {
     /**
      * @var string $path
@@ -38,10 +40,9 @@ abstract class AbstractLoader implements LoggerAwareInterface
     }
 
     /**
-     * > LoggerAwareInterface > setLogger()
-     *
      * Fulfills the PSR-1 style (camelCaps) LoggerAwareInterface
      *
+     * @see LoggerAwareInterface::setLogger()
      * @param LoggerInterface $logger
      * @return AbstractEngine Chainable
      */
@@ -57,6 +58,7 @@ abstract class AbstractLoader implements LoggerAwareInterface
     public function set_logger(LoggerInterface $logger = null)
     {
         $this->logger = $logger;
+
         return $this;
     }
 
@@ -69,36 +71,58 @@ abstract class AbstractLoader implements LoggerAwareInterface
     }
 
     /**
-     * FileLoader > path()
-     *
+     * @see FileLoader::path()
      * @return string[]
      */
     public function paths()
     {
         if (empty($this->paths)) {
-            // Use default templates path (from app config) if none was set
-            return \Charcoal\Charcoal::config()->templates_path();
+            $this->set_default_paths();
         }
+
         return $this->paths;
     }
 
     /**
+     * @return AbstractLoader Chainable
+     */
+    public function set_default_paths()
+    {
+        $paths = [];
+
+        // Use default templates path (from app config) if none was set
+        if (class_exists('\Charcoal\Charcoal')) {
+            $paths = $paths + \Charcoal\Charcoal::config()->templates_path();
+        }
+
+        if (class_exists('\Charcoal\App\App')) {
+            $paths = $paths + \Charcoal\App\App::instance()->config()->get('view/path');
+        }
+
+        $this->set_paths($paths);
+
+        return $this;
+    }
+
+    /**
      * @param string[] $paths The list of path to add.
-     * @return MustacheLoader Chainable
+     * @return AbstractLoader Chainable
      */
     public function set_paths(array $paths)
     {
         $this->paths = [];
+
         foreach ($paths as $path) {
             $this->add_path($path);
         }
+
         return $this;
     }
 
     /**
      * @param string $path The path to add to the load.
      * @throws InvalidArgumentException If the path  argument is not a string.
-     * @return MustacheLoader Chainable
+     * @return AbstractLoader Chainable
      */
     public function add_path($path)
     {
@@ -107,15 +131,17 @@ abstract class AbstractLoader implements LoggerAwareInterface
                 'Path needs to be a string'
             );
         }
-        $path = rtrim('/\\', $path).'/';
-        $this->path[] = $path;
+
+        $path = rtrim($path, '/\\').'/';
+        $this->paths[] = $path;
+
         return $this;
     }
 
     /**
      * @param string $path The path to add (prepend) to the load.
      * @throws InvalidArgumentException If the path  argument is not a string.
-     * @return MustacheLoader Chainable
+     * @return AbstractLoader Chainable
      */
     public function prepend_path($path)
     {
@@ -125,8 +151,9 @@ abstract class AbstractLoader implements LoggerAwareInterface
             );
         }
 
-        $path = rtrim('/\\', $path).'/';
-        array_unshift($this->path, $path);
+        $path = rtrim($path, '/\\').'/';
+        array_unshift($this->paths, $path);
+
         return $this;
     }
 
