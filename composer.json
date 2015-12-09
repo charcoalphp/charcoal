@@ -1,7 +1,7 @@
 {
   "name": "locomotivemtl/charcoal-config",
   "description": "Configuration container for all things Charcoal",
-  "homepage": "https://charcoal.locomotive.ca",
+  "homepage": "http://locomotivemtl.github.io/charcoal-config/",
   "license": "MIT",
   "support": {
     "issues": "https://github.com/locomotivemtl/charcoal-config/issues",
@@ -25,7 +25,9 @@
   },
   "require-dev": {
     "phpunit/phpunit": "~4.0",
-    "squizlabs/php_codesniffer": "^2.4"
+    "squizlabs/php_codesniffer": "^2.4",
+    "satooshi/php-coveralls":"dev-master"
+
   },
   "autoload": {
     "psr-4": {
