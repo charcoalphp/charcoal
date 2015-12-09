@@ -327,8 +327,11 @@ abstract class AbstractProperty implements
         $property_value = $val;
 
         if ($this->l10n() === true) {
-            $property_value = $property_value['fr'];
+            $translator = TranslationConfig::instance();
+
+            $property_value = $property_value[$translator->current_language()];
         }
+
         if ($this->multiple() === true) {
             if (is_array($property_value)) {
                 $property_value = implode($this->multiple_separator(), $property_value);
