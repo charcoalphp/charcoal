@@ -18,17 +18,14 @@ class MustacheLoader extends AbstractLoader implements
     Mustache_Loader,
     LoaderInterface
 {
-
     /**
-     * AbstractLoader > load()
-     *
+     * @see AbstractLoader::load()
      * @param string $ident The template identifier to load.
      * @throws InvalidArgumentException If the template ident parameter is not a string.
      * @return string
      */
     public function load($ident)
     {
-
         if (!is_string($ident)) {
             throw new InvalidArgumentException(
                 'Template ident must be a string'
@@ -45,6 +42,7 @@ class MustacheLoader extends AbstractLoader implements
             return '';
         }
 
+        $ident = $this->classname_to_ident($ident);
         $filename = $this->filename_from_ident($ident);
         $search_path = $this->paths();
         foreach ($search_path as $path) {
@@ -52,7 +50,7 @@ class MustacheLoader extends AbstractLoader implements
             if (!file_exists($f)) {
                 continue;
             }
-            
+
             $this->logger()->debug('Found matching template: '.$f);
 
             $file_content = file_get_contents($f);
@@ -61,20 +59,42 @@ class MustacheLoader extends AbstractLoader implements
             }
         }
 
-        $this->logger()->debug('No matching templates found: '.$ident, $search_path);
+        $this->logger()->debug(
+            sprintf(
+                'No matching templates found for "%1$s": %2$s',
+                $ident,
+                $filename
+            ),
+            $search_path
+        );
 
         return $ident;
     }
 
     /**
-     * @param string $ident
+     * Convert an identifier to a file path.
+     *
+     * @param string $ident The identifier to convert.
      * @return string
      */
     public function filename_from_ident($ident)
     {
-        $filename = str_replace(['\\'], '.', $ident);
+        $filename  = str_replace([ '\\' ], '.', $ident);
         $filename .= '.mustache';
 
         return $filename;
+    }
+
+    /**
+     * Convert a FQN to an identifier.
+     *
+     * @param string $classname The FQN to convert.
+     * @return string
+     */
+    public function classname_to_ident($classname)
+    {
+        $ident = str_replace('\\', '/', strtolower($classname));
+        $ident = ltrim($ident, '/');
+        return $ident;
     }
 }

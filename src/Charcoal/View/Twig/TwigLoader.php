@@ -29,7 +29,7 @@ class TwigLoader extends AbstractLoader implements
     public function load($ident)
     {
         $file = $this->find_template_file($ident);
-            
+
         $file_content = file_get_contents($file);
         if ($file_content == '') {
             throw new Exception(
@@ -65,30 +65,53 @@ class TwigLoader extends AbstractLoader implements
             );
         }
 
+        $ident = $this->classname_to_ident($ident);
         $filename = $this->filename_from_ident($ident);
         $search_path = $this->paths();
         foreach ($search_path as $path) {
             $f = realpath($path).'/'.$filename;
             if (file_exists($f)) {
+                $this->logger()->debug('Found matching template: '.$f);
                 return $f;
             }
         }
 
-        throw new Exception(
-            sprintf('Can not find template "%s" (%s).', $ident, $filename)
+        $log = sprintf(
+            'No matching templates found for "%1$s": %2$s',
+            $ident,
+            $filename
         );
+
+        $this->logger()->debug($log, $search_path);
+
+        throw new Exception($log);
     }
 
     /**
-     * @param string $ident
+     * Convert an identifier to a file path.
+     *
+     * @param string $ident The identifier to convert.
      * @return string
      */
     public function filename_from_ident($ident)
     {
-        $filename = str_replace(['\\'], '.', $ident);
+        $filename = str_replace([ '\\' ], '.', $ident);
         $filename .= '.twig';
 
         return $filename;
+    }
+
+    /**
+     * Convert a FQN to an identifier.
+     *
+     * @param string $classname The FQN to convert.
+     * @return string
+     */
+    public function classname_to_ident($classname)
+    {
+        $ident = str_replace('\\', '/', strtolower($classname));
+        $ident = ltrim($ident, '/');
+        return $ident;
     }
 
     /**
