@@ -58,7 +58,7 @@ class TranslationConfig extends AbstractConfig implements MultilingualAwareInter
      */
     public static function instance($data = null)
     {
-        if ($data === null && method_exists('CharcoalApp', 'instance')) {
+        if ($data === null && method_exists('\Charcoal\App\App', 'instance')) {
             $app = CharcoalApp::instance();
 
             return $app->language_manager()->config();
