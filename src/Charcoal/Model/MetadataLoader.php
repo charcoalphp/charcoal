@@ -1,7 +1,4 @@
 <?php
-/**
-*
-*/
 
 namespace Charcoal\Model;
 
@@ -10,25 +7,25 @@ use \Charcoal\Charcoal;
 use \Charcoal\Loader\FileLoader;
 
 /**
-* Load metadata from JSON file(s).
-*
-* The Metadata Loader is different than the `FileLoader` class it extends mainly because
-* it tries to find all files matching  the "ident" in all search path and merge them together
-* in an array, to be filled in a `Metadata` object.
-*
-* If `ident` is an actual class name, then it will also try to load all the JSON matching
-* the class' parents and traits.
-*/
+ * Load metadata from JSON file(s).
+ *
+ * The Metadata Loader is different than the `FileLoader` class it extends mainly because
+ * it tries to find all files matching  the "ident" in all search path and merge them together
+ * in an array, to be filled in a `Metadata` object.
+ *
+ * If `ident` is an actual class name, then it will also try to load all the JSON matching
+ * the class' parents and traits.
+ */
 class MetadataLoader extends FileLoader
 {
     /**
-    * FileLoader > search_path(). Get the object's search path, merged with global configuration.
-    *
-    * This method looks in standard's `parent::search_path()` but adds all the path defined in the
-    * `metadata_path` global configuration.
-    *
-    * @return array
-    */
+     * FileLoader > search_path(). Get the object's search path, merged with global configuration.
+     *
+     * This method looks in standard's `parent::search_path()` but adds all the path defined in the
+     * `metadata_path` global configuration.
+     *
+     * @return array
+     */
     public function search_path()
     {
         $cfg = Charcoal::config();
@@ -43,11 +40,11 @@ class MetadataLoader extends FileLoader
     }
 
     /**
-    * Load the metadata from JSON files.
-    *
-    * @param string $ident Optional, set the ident to load.
-    * @return array
-    */
+     * Load the metadata from JSON files.
+     *
+     * @param string $ident Optional, set the ident to load.
+     * @return array
+     */
     public function load($ident = null)
     {
         if ($ident !== null) {
@@ -70,8 +67,8 @@ class MetadataLoader extends FileLoader
     }
 
     /**
-    * @return array
-    */
+     * @return array
+     */
     private function hierarchy()
     {
         $ident = $this->ident();
@@ -97,11 +94,11 @@ class MetadataLoader extends FileLoader
     }
 
     /**
-    * Get an "ident" (file) from all search path and merge the content
-    *
-    * @param string $ident
-    * @return array
-    */
+     * Get an "ident" (file) from all search path and merge the content
+     *
+     * @param string $ident The identifier from which to retrieve a file.
+     * @return array
+     */
     private function load_ident($ident)
     {
         $data = [];
@@ -123,21 +120,25 @@ class MetadataLoader extends FileLoader
     }
 
     /**
-    * @param string $ident
-    * @return string
-    */
+     * Convert an identifier to a file path.
+     *
+     * @param string $ident The identifier to convert.
+     * @return string
+     */
     private function filename_from_ident($ident)
     {
-        $filename = str_replace(['\\'], '.', $ident);
+        $filename  = str_replace([ '\\' ], '.', $ident);
         $filename .= '.json';
 
         return $filename;
     }
 
     /**
-    * @param string $ident
-    * @return string
-    */
+     * Convert an identifier to a FQN.
+     *
+     * @param string $ident The identifier to convert.
+     * @return string
+     */
     protected function ident_to_classname($ident)
     {
         // Change "foo-bar" to "fooBar"
@@ -166,9 +167,11 @@ class MetadataLoader extends FileLoader
     }
 
     /**
-    * @param string $classname
-    * @return string
-    */
+     * Convert a FQN to an identifier.
+     *
+     * @param string $classname The FQN to convert.
+     * @return string
+     */
     protected function classname_to_ident($classname)
     {
         $ident = str_replace('\\', '/', strtolower($classname));
