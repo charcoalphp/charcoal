@@ -7,6 +7,7 @@ use \Charcoal\Config\ConfigurableInterface;
 
 // Local namespace dependency
 use \Charcoal\Translation\MultilingualAwareTrait;
+use \Charcoal\Translation\TranslationConfig;
 
 /**
  * An implementation of the `LanguageAwareInterface` and `ConfigurableInterface`.
