@@ -99,7 +99,7 @@ It is possible to fetch embedded _array-ish_ values recursively in a single call
 
 The default separator is `/` (it can be retrieved with `separator()`) but it can be changed easily with `set_separator()`.
 
->  Separator must be a single character. An exception will be thrown if trying to call `set_separator()` with a longer string.
+> 👉 Separator must be a single character. An exception will be thrown if trying to call `set_separator()` with a longer string.
 
 ### How to use
 
@@ -155,7 +155,7 @@ It is also possible to set delegates by passing them (as an array of ConfigInter
 $config = new \Charcoal\Config\GenericConfig('../config/my-config.json', [$delegate1, $delegate2]);
 ```
 
->  The order of the delegates is important. They are looked in the order they are added, so the first match is returned. Use `prepend_delegate()` to add a config at the beginning of the stack (top priority).
+> 👉 The order of the delegates is important. They are looked in the order they are added, so the first match is returned. Use `prepend_delegate()` to add a config at the beginning of the stack (top priority).
 
 ## Array Access
 
@@ -225,7 +225,11 @@ class Foo implements ConfigurableInterface
 
 	public function create_config(array $data = null)
 	{
-		$
+		$config = new FooConfig();
+		if ($data !== null) {
+			$config->set_data($data);
+		}
+		return $config;
 	}
 }
 ```
@@ -271,7 +275,7 @@ All Charcoal modules follow the same coding style and `charcoal-core` is no exce
 
 Coding styles are  enforced with `grunt phpcs` ([_PHP Code Sniffer_](https://github.com/squizlabs/PHP_CodeSniffer)). The actual ruleset can be found in `phpcs.xml`.
 
->  To fix minor coding style problems, run `grunt phpcbf` ([_PHP Code Beautifier and Fixer_](https://github.com/squizlabs/PHP_CodeSniffer)). This tool uses the same ruleset as *phpcs* to automatically correct coding standard violations.
+> 👉 To fix minor coding style problems, run `grunt phpcbf` ([_PHP Code Beautifier and Fixer_](https://github.com/squizlabs/PHP_CodeSniffer)). This tool uses the same ruleset as *phpcs* to automatically correct coding standard violations.
 
 The main PHP structure follows the [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md) standard. Autoloading is therefore provided by _Composer_.
 
