@@ -11,10 +11,11 @@ This package provides easy hierarchical configuration container (for config stor
 ## Main features
 
 - [Load data from ini, json or php files.](#supported-file-formats)
-- [Customizable separator access.](#seperators)
+- [Customizable separator access.](#separators)
 - [Delegates (Chaining configurations).](#delegates)
 - [Array access.](#array-access)
 - [Implement Interop-Container.](#interoperability)
+- [Provide Configurable Interface](#configurable)
 
 ## Supported file formats
 
@@ -98,7 +99,7 @@ It is possible to fetch embedded _array-ish_ values recursively in a single call
 
 The default separator is `/` (it can be retrieved with `separator()`) but it can be changed easily with `set_separator()`.
 
-> 👉 Separator must be a single character. An exception will be thrown if trying to call `set_separator()` with a longer string.
+>  Separator must be a single character. An exception will be thrown if trying to call `set_separator()` with a longer string.
 
 ### How to use
 
@@ -154,7 +155,7 @@ It is also possible to set delegates by passing them (as an array of ConfigInter
 $config = new \Charcoal\Config\GenericConfig('../config/my-config.json', [$delegate1, $delegate2]);
 ```
 
-> 👉 The order of the delegates is important. They are looked in the order they are added, so the first match is returned. Use `prepend_delegate()` to add a config at the beginning of the stack (top priority).
+>  The order of the delegates is important. They are looked in the order they are added, so the first match is returned. Use `prepend_delegate()` to add a config at the beginning of the stack (top priority).
 
 ## Array Access
 
@@ -202,6 +203,48 @@ $config->has('invalid-key');
 $config->get('foobar');
 ```
 
+## Configurable
+
+Also provided in this package is a _Configurable_ interface (`\Charcoal\Config\ConfigrableInterface`) and its full implementation as a trait. `\Charcoal\Config\ConfigurableTrait`.
+
+Configurable (which could have been called "_Config Aware_") objects can have an associated config instance that can help defines various properties, states, or other.
+
+The config object can be set with `set_config()` and retrieve with `config()`.
+
+Implementation example:
+
+```php
+use \Charcoal\Config\ConfigurableInterface;
+use \Charcoal\Config\ConfigurableTrait;
+
+use \Acme\Foo\FooConfig;
+
+class Foo implements ConfigurableInterface
+{
+	use ConfigurableTrait;
+
+	public function create_config(array $data = null)
+	{
+		$
+	}
+}
+```
+
+The previous class could be use as such:
+
+```php
+$foo = new Foo();
+$foo->set_config([
+	'bar'=>[
+		'baz'=>42
+	]
+]);
+
+// echo 42
+$foo_config = $foo->config();
+echo $foo_config['bar/baz'];
+```
+
 ## Development
 
 ### Coding Style
@@ -209,26 +252,26 @@ $config->get('foobar');
 All Charcoal modules follow the same coding style and `charcoal-core` is no exception. For PHP:
 
 - [_PSR-1_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md), except for
-  - Method names MUST be declared in `snake_case`.
+	- Method names MUST be declared in `snake_case`.
 - [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md), except the PSR-1 requirement.
 - [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md), autoloading is therefore provided by _Composer_
 - [_phpDocumentor_](http://phpdoc.org/)
-  - Add DocBlocks for all classes, methods, and functions;
-  - For type-hinting, use `boolean` (instead of `bool`), `integer` (instead of `int`), `float` (instead of `double` or `real`);
-  - Omit the `@return` tag if the method does not return anything.
+	- Add DocBlocks for all classes, methods, and functions;
+	- For type-hinting, use `boolean` (instead of `bool`), `integer` (instead of `int`), `float` (instead of `double` or `real`);
+	- Omit the `@return` tag if the method does not return anything.
 - Naming conventions
-  - Use `snake_case`, not `camelCase`, for variable, option, parameter, argument, function, and method names;
-  - Prefix abstract classes with `Abstract`;
-  - Suffix interfaces with `Interface`;
-  - Suffix traits with `Trait`;
-  - Suffix exceptions with `Exception`;
-  - For type-hinting, use `int` (instead of `integer`) and `bool` (instead of `boolean`);
-  - For casting, use `int` (instead of `integer`) and `!!` (instead of `bool` or `boolean`);
-  - For arrays, use `[]` (instead of `array()`).
+	- Use `snake_case`, not `camelCase`, for variable, option, parameter, argument, function, and method names;
+	- Prefix abstract classes with `Abstract`;
+	- Suffix interfaces with `Interface`;
+	- Suffix traits with `Trait`;
+	- Suffix exceptions with `Exception`;
+	- For type-hinting, use `int` (instead of `integer`) and `bool` (instead of `boolean`);
+	- For casting, use `int` (instead of `integer`) and `!!` (instead of `bool` or `boolean`);
+	- For arrays, use `[]` (instead of `array()`).
 
 Coding styles are  enforced with `grunt phpcs` ([_PHP Code Sniffer_](https://github.com/squizlabs/PHP_CodeSniffer)). The actual ruleset can be found in `phpcs.xml`.
 
-> 👉 To fix minor coding style problems, run `grunt phpcbf` ([_PHP Code Beautifier and Fixer_](https://github.com/squizlabs/PHP_CodeSniffer)). This tool uses the same ruleset as *phpcs* to automatically correct coding standard violations.
+>  To fix minor coding style problems, run `grunt phpcbf` ([_PHP Code Beautifier and Fixer_](https://github.com/squizlabs/PHP_CodeSniffer)). This tool uses the same ruleset as *phpcs* to automatically correct coding standard violations.
 
 The main PHP structure follows the [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md) standard. Autoloading is therefore provided by _Composer_.
 
@@ -239,7 +282,7 @@ The main PHP structure follows the [_PSR-4_](https://github.com/php-fig/fig-stan
 ## Changelog
 
 ### 0.2
-_Unreleased_
+_Released on 2015-02-09_
 
 - Added the "delegates" feature.
 - Setting value with a separator now tries to set as array.
