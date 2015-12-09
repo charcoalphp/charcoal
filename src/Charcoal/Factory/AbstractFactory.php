@@ -47,7 +47,10 @@ abstract class AbstractFactory implements FactoryInterface
     {
         if (!is_string($type)) {
             throw new InvalidArgumentException(
-                __METHOD__.': Type must be a string.'
+                sprintf(
+                    '%s: Type must be a string.'
+                ),
+                get_called_class()
             );
         }
 
@@ -56,13 +59,16 @@ abstract class AbstractFactory implements FactoryInterface
             if ($default_class !== '') {
                 return new $default_class($args);
             } else {
-                throw new InvalidArgumentException(
+                $e = new InvalidArgumentException(
                     sprintf(
-                        __METHOD__.': Type "%s" is not a valid type. (Using default class %s)',
+                        '%1$s: Type "%2$s" is not a valid type. (Using default class "%3$s")',
+                        get_called_class(),
                         $type,
                         $default_class
                     )
                 );
+
+                throw $e;
             }
         }
 
@@ -75,7 +81,11 @@ abstract class AbstractFactory implements FactoryInterface
         $base_class = $this->base_class();
         if ($base_class !== '' && !($obj instanceof $base_class)) {
             throw new Exception(
-                sprintf(__METHOD__.': Object is not a valid "%s" class', $base_class)
+                sprintf(
+                    '%1$s: Object is not a valid "%2$s" class',
+                    get_called_class(),
+                    $base_class
+                )
             );
         }
 
