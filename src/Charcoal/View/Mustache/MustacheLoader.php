@@ -42,7 +42,7 @@ class MustacheLoader extends AbstractLoader implements
             return '';
         }
 
-        $ident = $this->classname_to_ident($ident);
+        // $ident = $this->classname_to_ident($ident);
         $filename = $this->filename_from_ident($ident);
         $search_path = $this->paths();
         foreach ($search_path as $path) {

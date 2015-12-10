@@ -39,7 +39,7 @@ class PhpLoader extends AbstractLoader implements LoaderInterface
             return '';
         }
 
-        $ident = $this->classname_to_ident($ident);
+        // $ident = $this->classname_to_ident($ident);
         $filename = $this->filename_from_ident($ident);
         $search_path = $this->search_path();
         foreach ($search_path as $path) {
