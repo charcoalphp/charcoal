@@ -21,7 +21,7 @@
         "monolog/monolog": "^1.17"
     },
     "suggest": {
-        "mustache/mustache": "For (optional) Mustache templating support",
+        "mustache/mustache": "For (optional, but default) Mustache templating support",
         "twig/twig":"For (optional) Twig templating support."
     },
     "autoload":{
