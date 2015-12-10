@@ -10,10 +10,10 @@ interface LoaderInterface
     public function paths();
 
     /**
-     * @param string[] $path The list of path to add.
+     * @param string[] $paths The list of path to add.
      * @return LoaderInterface Chainable
      */
-    public function set_paths(array $path);
+    public function set_paths(array $paths);
 
     /**
      * @param string $path The path to add to the load.
