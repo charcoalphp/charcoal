@@ -46,7 +46,7 @@ class MustacheLoader extends AbstractLoader implements
         $filename = $this->filename_from_ident($ident);
         $search_path = $this->paths();
         foreach ($search_path as $path) {
-            $f = realpath($path).'/'.$filename;
+            $f = realpath($path).'/'.strtolower($filename);
             if (!file_exists($f)) {
                 continue;
             }
