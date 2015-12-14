@@ -64,7 +64,7 @@ abstract class AbstractModel implements
     private $logger;
 
     /**
-    * @param array $data Optional
+    * @param array $data Dependencies.
     */
     public function __construct(array $data = null)
     {

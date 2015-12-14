@@ -122,6 +122,14 @@ abstract class AbstractProperty implements
     private $notes = '';
 
     /**
+    * @param array $data Dependencies
+    */
+    public function __construct(array $data = null)
+    {
+        $this->set_logger($data['logger']);
+    }
+
+    /**
     * @return string
     */
     public function __toString()
@@ -168,7 +176,7 @@ abstract class AbstractProperty implements
     }
 
     /**
-    * @erturn LoggerInterface
+    * @return LoggerInterface
     */
     public function logger()
     {
@@ -226,7 +234,9 @@ abstract class AbstractProperty implements
     public function ident()
     {
         if ($this->ident === null) {
-            throw new Exception('Ident was never set.');
+            throw new Exception(
+                'Ident was never set.'
+            );
         }
         return $this->ident;
     }

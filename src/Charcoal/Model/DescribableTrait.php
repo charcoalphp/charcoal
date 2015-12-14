@@ -207,7 +207,9 @@ trait DescribableTrait
         }
 
         $factory  = new PropertyFactory();
-        $property = $factory->create($property_metadata['type']);
+        $property = $factory->create($property_metadata['type'], [
+            'logger'=>$this->logger()
+        ]);
         $property->set_ident($property_ident);
         $property->set_data($property_metadata);
 
