@@ -60,6 +60,11 @@ abstract class AbstractSource implements
     */
     private $pagination = null;
 
+    public function logger()
+    {
+        return \Charcoal\Charcoal::logger();
+    }
+
     /**
     * Reset everything but the model.
     *

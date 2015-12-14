@@ -174,6 +174,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
         }
         /** @todo add indexes for all defined list constraints (yea... tough job...) */
         $q .= ') ENGINE=MYISAM DEFAULT CHARSET=utf8 COMMENT=\''.addslashes($metadata['name']).'\';';
+        $this->logger()->debug($q);
         $this->db()->query($q);
 
         return true;
@@ -200,6 +201,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
             if (!array_key_exists($ident, $cols)) {
                 // The key does not exist at all.
                 $q = 'ALTER TABLE `'.$this->table().'` ADD '.$field->sql();
+                $this->logger()->debug($q);
                 $res = $this->db()->query($q);
             } else {
                 // The key exists. Validate.
@@ -220,6 +222,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
 
                 if ($alter === true) {
                     $q = 'ALTER TABLE `'.$this->table().'` CHANGE `'.$ident.'` '.$field->sql();
+                    $this->logger()->debug($q);
                     $this->db()->query($q);
                 }
 
@@ -235,6 +238,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     public function table_exists()
     {
         $q = 'SHOW TABLES LIKE \''.$this->table().'\'';
+        $this->logger()->debug($q);
         $res = $this->db()->query($q);
         $table_exists = $res->fetchColumn(0);
 
@@ -250,6 +254,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     public function table_structure()
     {
         $q = 'SHOW COLUMNS FROM `'.$this->table().'`';
+        $this->logger()->debug($q);
         $res = $this->db()->query($q);
         $cols = $res->fetchAll((PDO::FETCH_GROUP|PDO::FETCH_UNIQUE|PDO::FETCH_ASSOC));
         return $cols;
@@ -263,6 +268,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     public function table_is_empty()
     {
         $q = 'SELECT NULL FROM `'.$this->table().'` LIMIT 1';
+        $this->logger()->debug($q);
         $res = $this->db()->query($q);
         return ($res->rowCount() === 0);
     }
@@ -371,6 +377,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
      * @param  string                 $key   Column name
      * @param  mixed                  $ident Value of said column
      * @param  StorableInterface|null $item  Optional item to load into
+     * @throws Exception If the query fails.
      * @return StorableInterface             Item
      */
     public function load_item_from_key($key, $ident, StorableInterface $item = null)
@@ -428,7 +435,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
         $db = $this->db();
 
         $q = $this->sql_load();
-        Charcoal::logger()->debug($q);
+        $this->logger()->debug($q);
         $sth = $db->prepare($q);
         $sth->execute();
         $sth->setFetchMode(PDO::FETCH_ASSOC);
@@ -608,7 +615,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     */
     protected function db_query($q, array $binds = [], array $binds_types = [])
     {
-        Charcoal::logger()->debug($q, $binds);
+        $this->logger()->debug($q, $binds);
         $sth = $this->db()->prepare($q);
         if (!empty($binds)) {
             foreach ($binds as $k => $v) {
