@@ -18,7 +18,7 @@ class GenericProperty extends AbstractProperty
     */
     public function type()
     {
-        return 'property';
+        return 'generic';
     }
 
     /**

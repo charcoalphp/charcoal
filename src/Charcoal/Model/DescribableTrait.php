@@ -97,6 +97,9 @@ trait DescribableTrait
         if ($metadata_ident === null) {
             $metadata_ident = $this->metadata_ident();
         }
+
+        //$this->logger()->debug(sprintf('Loading metadata from ident: %s', $metadata_ident));
+
         $metadata_loader = new MetadataLoader();
         $metadata = $metadata_loader->load($metadata_ident);
         $this->set_metadata($metadata);

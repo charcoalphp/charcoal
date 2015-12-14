@@ -122,6 +122,9 @@ abstract class AbstractProperty implements
     private $notes = '';
 
     /**
+    * Required dependencies:
+    * - `logger` a PSR3-compliant logger.
+    *
     * @param array $data Dependencies
     */
     public function __construct(array $data = null)
@@ -182,7 +185,6 @@ abstract class AbstractProperty implements
     {
         return $this->logger;
     }
-
 
     /**
     * This function takes an array and fill the property with its value.
@@ -324,6 +326,10 @@ abstract class AbstractProperty implements
         return $val;
     }
 
+    /**
+    * @param mixed $val
+    * @return string
+    */
     public function display_val($val = null)
     {
         if ($val === null) {
@@ -379,7 +385,9 @@ abstract class AbstractProperty implements
     public function set_l10n($l10n)
     {
         if (!is_bool($l10n)) {
-            throw new InvalidArgumentException('l10n must be a boolean.');
+            throw new InvalidArgumentException(
+                'l10n must be a boolean.'
+            );
         }
         $this->l10n = $l10n;
         return $this;
@@ -401,7 +409,9 @@ abstract class AbstractProperty implements
     public function set_hidden($hidden)
     {
         if (!is_bool($hidden)) {
-            throw new InvalidArgumentException('hidden must be a boolean.');
+            throw new InvalidArgumentException(
+                'hidden must be a boolean.'
+            );
         }
         $this->hidden = $hidden;
         return $this;
@@ -423,7 +433,9 @@ abstract class AbstractProperty implements
     public function set_multiple($multiple)
     {
         if (!is_bool($multiple)) {
-            throw new InvalidArgumentException('multiple must be a boolean.');
+            throw new InvalidArgumentException(
+                'multiple must be a boolean.'
+            );
         }
         $this->multiple = $multiple;
         return $this;
