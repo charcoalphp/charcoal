@@ -55,6 +55,13 @@ class TranslationString implements
     private $val = [];
 
     /**
+     * Current language identifier.
+     *
+     * @var string
+     */
+    private $current_language;
+
+    /**
      * Calling the constructor with a parameter should force setting it up as value.
      *
      * @param  mixed                   $val One or more strings (as an array).
@@ -397,15 +404,12 @@ class TranslationString implements
     /**
      * Get the config's default language.
      *
-     * The configurable object's default language is
-     * assumed to be the configuration's current language.
-     *
      * @uses   ConfigurableInterface::config()
      * @return string A language identifier.
      */
     public function default_language()
     {
-        return $this->config()->current_language();
+        return $this->config()->default_language();
     }
 
     /**
@@ -420,7 +424,7 @@ class TranslationString implements
     public function current_language()
     {
         if (!isset($this->current_language)) {
-            return $this->default_language();
+            return $this->config()->current_language();
         }
 
         return $this->current_language;
@@ -431,8 +435,8 @@ class TranslationString implements
      *
      * Must be one of the available languages assigned to the object.
      *
-     * Defaults to resetting the object's current language to NULL,
-     * (which falls onto the default language).
+     * Defaults to resetting the object's current language to the config's,
+     * (which might fall onto the default language).
      *
      * @see    TranslatableTrait::set_current_language()
      * @param  LanguageInterface|string|null $lang A language object or identifier.
