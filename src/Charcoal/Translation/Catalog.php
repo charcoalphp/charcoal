@@ -203,10 +203,25 @@ class Catalog implements
      * @return self
      * @throws InvalidArgumentException if the idenfitier isn't a string
      */
-    public function add_entry($ident, $translations)
+    public function add_entry($ident, $translations = null)
     {
         if (!is_string($ident)) {
-            throw new InvalidArgumentException('Entry identifier must be a string.');
+            if ($ident instanceof TranslationStringInterface) {
+                $translations = $ident->all();
+            } elseif (is_array($ident)) {
+                $translations = $ident;
+            } else {
+                throw new InvalidArgumentException('Entry identifier must be a string.');
+                return $this;
+            }
+
+            $lang = $this->default_language();
+            if (isset($translations[$lang])) {
+                $ident = $translations[$lang];
+            } else {
+                throw new InvalidArgumentException('Entry identifier must be a string.');
+                return $this;
+            }
         }
 
         if ($translations instanceof TranslationStringInterface) {
@@ -220,21 +235,6 @@ class Catalog implements
         }
 
         $entry = new TranslationString($translations, $this->config());
-
-        // try {
-        //     $entry = new TranslationString(
-        //         $translations,
-        //         [
-        //             'languages'        => array_keys($translations),
-        //             'default_language' => $this->default_language(),
-        //             'current_language' => $this->current_language()
-        //         ]
-        //     );
-        //
-        //     $this->entries[$ident] = $entry;
-        // } catch (Exception $e) {
-        //     Do nothing
-        // }
 
         $this->entries[$ident] = $entry;
 

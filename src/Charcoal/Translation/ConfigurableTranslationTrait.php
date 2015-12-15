@@ -10,7 +10,7 @@ use \Charcoal\Translation\MultilingualAwareTrait;
 use \Charcoal\Translation\TranslationConfig;
 
 /**
- * An implementation of the `LanguageAwareInterface` and `ConfigurableInterface`.
+ * An implementation of the `MultilingualAwareInterface` and `ConfigurableInterface`.
  *
  * For objects needed to interact with `TranslationConfig`.
  *
