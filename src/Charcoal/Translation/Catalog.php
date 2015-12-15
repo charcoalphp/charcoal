@@ -276,10 +276,6 @@ class Catalog implements
 
             $lang = self::resolve_language_ident($lang);
 
-            if (!$this->has_language($lang)) {
-                throw new InvalidArgumentException(sprintf('Invalid language: "%s"', (string)$lang));
-            }
-
             $this->add_entry(
                 $ident,
                 [
@@ -336,9 +332,7 @@ class Catalog implements
                     return $this->entries[$ident][$lang];
                 }
             }
-        }/* else {
-            throw new InvalidArgumentException(sprintf('Invalid language: "%s"', (string)$lang));
-        }*/
+        }
 
         return $ident;
     }

@@ -165,16 +165,12 @@ class TranslationString implements
 
         if (!is_string($lang)) {
             throw new InvalidArgumentException(
-                'Must be a string-cast language code or an instance of LanguageInterface.'
+                'Language code must be a string or an instance of LanguageInterface.'
             );
         }
 
         if (!is_string($val)) {
             throw new InvalidArgumentException('Localized value must be a string.');
-        }
-
-        if (!$this->has_language($lang)) {
-            throw new InvalidArgumentException(sprintf('Invalid language: "%s"', (string)$lang));
         }
 
         $this->val[$lang] = $val;
