@@ -8,6 +8,8 @@ namespace Charcoal\Translation;
  * This interface is useful for handling collections of languages
  * and resolving translations based on context.
  *
+ * For a unilingual solution, {@see LanguageAwareInterface}.
+ *
  * A multilingual interface is composed of three facets:
  *
  * 1. A _collection of languages_; to be interpreted as those available or supported.

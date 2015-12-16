@@ -6,6 +6,8 @@ namespace Charcoal\Translation;
 use \Charcoal\App\Language\LanguageInterface;
 
 /**
+ * An implementation of the `LanguageAwareInterface`.
+ *
  * A basic trait for objects that simply need to track a single language value.
  */
 trait LanguageAwareTrait
@@ -20,9 +22,6 @@ trait LanguageAwareTrait
     /**
      * Retrieve the object's current language.
      *
-     * The current language acts as the first to be used when interacting
-     * with data in a context where the language isn't explicitly specified.
-     *
      * @return string A language identifier.
      */
     public function language()
@@ -32,11 +31,6 @@ trait LanguageAwareTrait
 
     /**
      * Set the object's current language.
-     *
-     * Must be one of the available languages assigned to the object.
-     *
-     * Defaults to resetting the object's current language to NULL,
-     * (which falls onto the default language).
      *
      * @param  LanguageInterface|string|null $lang A language object or identifier.
      * @return self
