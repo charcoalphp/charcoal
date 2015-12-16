@@ -6,11 +6,9 @@ namespace Charcoal\Property;
 use \Exception;
 use \InvalidArgumentException;
 
-// PSR-3 logger
-use \Psr\Log\LoggerInterface;
-use \Psr\Log\LoggerAwareInterface;
-
 // Intra-module (`charcoal-core`) dependencies
+use \Charcoal\Log\LoggerAwareInterface;
+use \Charcoal\Log\LoggerAwareTrait;
 use \Charcoal\Model\DescribableInterface;
 use \Charcoal\Model\DescribableTrait;
 use \Charcoal\Translation\TranslationConfig;
@@ -34,14 +32,10 @@ abstract class AbstractProperty implements
     ValidatableInterface,
     ViewableInterface
 {
+    use LoggerAwareTrait;
     use DescribableTrait;
     use ValidatableTrait;
     use ViewableTrait;
-
-    /**
-    * @var LoggerInterface $logger
-    */
-    private $logger;
 
     /**
     * @var string $ident
@@ -129,7 +123,9 @@ abstract class AbstractProperty implements
     */
     public function __construct(array $data = null)
     {
-        $this->set_logger($data['logger']);
+        if (isset($data['logger'])) {
+            $this->set_logger($data['logger']);
+        }
     }
 
     /**
@@ -154,37 +150,6 @@ abstract class AbstractProperty implements
     * @return string
     */
     abstract public function type();
-
-    /**
-    * > LoggerAwareInterface > setLogger()
-    *
-    * Fulfills the PSR-1 style LoggerAwareInterface
-    *
-    * @param LoggerInterface $logger
-    * @return AbstractEngine Chainable
-    */
-    public function setLogger(LoggerInterface $logger)
-    {
-        return $this->set_logger($logger);
-    }
-
-    /**
-    * @param LoggerInterface $logger
-    * @return AbstractEngine Chainable
-    */
-    public function set_logger(LoggerInterface $logger = null)
-    {
-        $this->logger = $logger;
-        return $this;
-    }
-
-    /**
-    * @return LoggerInterface
-    */
-    public function logger()
-    {
-        return $this->logger;
-    }
 
     /**
     * This function takes an array and fill the property with its value.

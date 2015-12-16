@@ -7,12 +7,10 @@ use \InvalidArgumentException;
 use \JsonSerializable;
 use \Serializable;
 
-// PSR-3 logger
-use \Psr\Log\LoggerInterface;
-use \Psr\Log\LoggerAwareInterface;
-
 // Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Charcoal;
+use \Charcoal\Log\LoggerAwareInterface;
+use \Charcoal\Log\LoggerAwareTrait;
 use \Charcoal\Model\DescribableInterface;
 use \Charcoal\Model\DescribableTrait;
 use \Charcoal\Source\StorableInterface;
@@ -53,56 +51,23 @@ abstract class AbstractModel implements
     ValidatableInterface,
     ViewableInterface
 {
+    use LoggerAwareTrait;
     use DescribableTrait;
     use StorableTrait;
     use ValidatableTrait;
     use ViewableTrait;
 
     /**
-    * @var LoggerInterface $logger
-    */
-    private $logger;
-
-    /**
     * @param array $data Dependencies.
     */
     public function __construct(array $data = null)
     {
-        $this->set_logger($data['logger']);
+        if (isset($data['logger'])) {
+            $this->set_logger($data['logger']);
+        }
 
         /** @todo Needs fix. Must be manually triggered after setting data for metadata to work */
         $this->metadata();
-    }
-
-    /**
-    * > LoggerAwareInterface > setLogger()
-    *
-    * Fulfills the PSR-1 style LoggerAwareInterface
-    *
-    * @param LoggerInterface $logger
-    * @return AbstractEngine Chainable
-    */
-    public function setLogger(LoggerInterface $logger)
-    {
-        return $this->set_logger($logger);
-    }
-
-    /**
-    * @param LoggerInterface $logger
-    * @return AbstractEngine Chainable
-    */
-    public function set_logger(LoggerInterface $logger = null)
-    {
-        $this->logger = $logger;
-        return $this;
-    }
-
-    /**
-    * @erturn LoggerInterface
-    */
-    public function logger()
-    {
-        return $this->logger;
     }
 
     /**
