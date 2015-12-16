@@ -5,9 +5,6 @@ namespace Charcoal\Log;
 // PSR-3 logger
 use \Psr\Log\LoggerInterface;
 
-// Local namespace
-use \Charcoal\Log\NoopLogger;
-
 /**
  * A simple implementation of `Charcoal\Log\LoggerAwareInterface`.
  */
@@ -52,10 +49,6 @@ trait LoggerAwareTrait
      */
     public function logger()
     {
-        if (!isset($this->logger)) {
-            $this->logger = new NoopLogger();
-        }
-
         return $this->logger;
     }
 }

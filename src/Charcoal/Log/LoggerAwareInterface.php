@@ -10,6 +10,12 @@ use \Psr\Log\LoggerAwareInterface as PsrLoggerAwareInterface;
  * Describes a logger-aware instance.
  *
  * Defines methods required by Charcoal's coding standards (`snake_case`, mutator methods).
+ *
+ * @see \Psr\Log\NullLogger
+ *     Logging should always be optional, and if no logger is provided to your
+ *     library creating a NullLogger instance to have something to throw logs at
+ *     is a good way to avoid littering your code with `if ($this->logger) { }`
+ *     blocks.
  */
 interface LoggerAwareInterface extends PsrLoggerAwareInterface
 {
