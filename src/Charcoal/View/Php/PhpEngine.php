@@ -17,7 +17,10 @@ class PhpEngine extends AbstractEngine
      */
     public function __construct($data)
     {
-        $this->set_logger($data['logger']);
+        if (isset($data['logger'])) {
+            $this->set_logger($data['logger']);
+        }
+
         if (isset($data['loader'])) {
             $this->set_loader($data['loader']);
         }
@@ -50,7 +53,7 @@ class PhpEngine extends AbstractEngine
             extract($context);
             include $template;
         };
-        
+
         ob_start();
         $render($template, $context);
         $output = ob_get_clean();

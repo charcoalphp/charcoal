@@ -22,10 +22,12 @@ class GenericView extends AbstractView
      */
     public function __construct($data)
     {
+        if (isset($data['logger'])) {
+            $this->set_logger($data['logger']);
+        }
+
         if (isset($data['config'])) {
             $this->set_config($data['config']);
         }
-        $this->set_logger($data['logger']);
-
     }
 }

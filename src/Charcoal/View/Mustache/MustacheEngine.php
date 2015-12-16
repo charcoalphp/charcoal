@@ -41,6 +41,7 @@ class MustacheEngine extends AbstractEngine
         if (isset($data['logger'])) {
             $this->set_logger($data['logger']);
         }
+
         if (isset($data['loader'])) {
             $this->set_loader($data['loader']);
         }
@@ -64,7 +65,7 @@ class MustacheEngine extends AbstractEngine
         }
         return $this->mustache;
     }
-    
+
     /**
      * @return Mustache_Engine
      */

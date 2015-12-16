@@ -36,6 +36,7 @@ class TwigEngine extends AbstractEngine
         if (isset($data['logger'])) {
             $this->set_logger($data['logger']);
         }
+
         if (isset($data['loader'])) {
             $this->set_loader($data['loader']);
         }
@@ -59,7 +60,7 @@ class TwigEngine extends AbstractEngine
         }
         return $this->twig;
     }
-    
+
     /**
      * @return Twig_Environment
      */

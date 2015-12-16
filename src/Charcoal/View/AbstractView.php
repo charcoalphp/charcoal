@@ -5,9 +5,9 @@ namespace Charcoal\View;
 // Dependencies from `PHP`
 use \InvalidArgumentException;
 
-// PSR-3 logger
-use \Psr\Log\LoggerInterface;
-use \Psr\Log\LoggerAwareInterface;
+// Module `charcoal-core` dependencies
+use \Charcoal\Log\LoggerAwareInterface;
+use \Charcoal\Log\LoggerAwareTrait;
 
 // Module `charcoal-config` dependencies
 use \Charcoal\Config\ConfigurableInterface;
@@ -30,6 +30,7 @@ abstract class AbstractView implements
     LoggerAwareInterface,
     ViewInterface
 {
+    use LoggerAwareTrait;
     use ConfigurableTrait;
 
     const DEFAULT_ENGINE = 'mustache';
@@ -45,11 +46,6 @@ abstract class AbstractView implements
     private $template;
 
     /**
-     * @var LoggerInterface $logger
-     */
-    private $logger;
-
-    /**
      * @var string $engine_type
      */
     private $engine_type = self::DEFAULT_ENGINE;
@@ -58,7 +54,6 @@ abstract class AbstractView implements
      * @var EngineInterface $engine
      */
     private $engine;
-
 
     /**
      * @return string
@@ -84,37 +79,6 @@ abstract class AbstractView implements
         }
 
         return $this;
-    }
-
-    /**
-     * > LoggerAwareInterface > setLogger()
-     *
-     * Fulfills the PSR-1 style LoggerAwareInterface
-     *
-     * @param LoggerInterface $logger
-     * @return AbstractEngine Chainable
-     */
-    public function setLogger(LoggerInterface $logger)
-    {
-        return $this->set_logger($logger);
-    }
-
-    /**
-     * @param LoggerInterface $logger
-     * @return AbstractEngine Chainable
-     */
-    public function set_logger(LoggerInterface $logger = null)
-    {
-        $this->logger = $logger;
-        return $this;
-    }
-
-    /**
-     * @erturn LoggerInterface
-     */
-    public function logger()
-    {
-        return $this->logger;
     }
 
     /**

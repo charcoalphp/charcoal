@@ -5,9 +5,9 @@ namespace Charcoal\View;
 // PHP Dependencies
 use \InvalidArgumentException;
 
-// PSR-3 logger
-use \Psr\Log\LoggerInterface;
-use \Psr\Log\LoggerAwareInterface;
+// Module `charcoal-core` dependencies
+use \Charcoal\Log\LoggerAwareInterface;
+use \Charcoal\Log\LoggerAwareTrait;
 
 /**
  *
@@ -16,15 +16,12 @@ abstract class AbstractLoader implements
     LoggerAwareInterface,
     LoaderInterface
 {
+    use LoggerAwareTrait;
+
     /**
      * @var string $path
      */
     private $paths = [];
-
-    /**
-     * @var LoggerInterface $logger
-     */
-    private $logger;
 
     /**
      * Default constructor, if none is provided by the concrete class implementations.
@@ -36,38 +33,9 @@ abstract class AbstractLoader implements
      */
     public function __construct(array $data)
     {
-        $this->set_logger($data['logger']);
-    }
-
-    /**
-     * Fulfills the PSR-1 style (camelCaps) LoggerAwareInterface
-     *
-     * @see LoggerAwareInterface::setLogger()
-     * @param LoggerInterface $logger
-     * @return AbstractEngine Chainable
-     */
-    public function setLogger(LoggerInterface $logger)
-    {
-        return $this->set_logger($logger);
-    }
-
-    /**
-     * @param LoggerInterface $logger
-     * @return AbstractEngine Chainable
-     */
-    public function set_logger(LoggerInterface $logger = null)
-    {
-        $this->logger = $logger;
-
-        return $this;
-    }
-
-    /**
-     * @return LoggerInterface
-     */
-    public function logger()
-    {
-        return $this->logger;
+        if (isset($data['logger'])) {
+            $this->set_logger($data['logger']);
+        }
     }
 
     /**

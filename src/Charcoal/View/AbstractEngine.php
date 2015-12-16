@@ -2,9 +2,9 @@
 
 namespace Charcoal\View;
 
-// PSR-3 logger
-use \Psr\Log\LoggerInterface;
-use \Psr\Log\LoggerAwareInterface;
+// Module `charcoal-core` dependencies
+use \Charcoal\Log\LoggerAwareInterface;
+use \Charcoal\Log\LoggerAwareTrait;
 
 // Local namespace dependencies
 use \Charcoal\View\EngineInterface;
@@ -25,51 +25,17 @@ abstract class AbstractEngine implements
     EngineInterface,
     LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
     /**
      * @var LoaderInterface $loader
      */
     private $loader;
 
     /**
-     * @var LoggerInterface $logger
-     */
-    private $logger;
-
-    /**
      * @return string
      */
     abstract public function type();
-
-    /**
-     * > LoggerAwareInterface > setLogger()
-     *
-     * Fulfills the PSR-3 style LoggerAwareInterface `setLogger`
-     *
-     * @param LoggerInterface $logger  A PSR-3 compatible logger instance.
-     * @return AbstractEngine Chainable
-     */
-    public function setLogger(LoggerInterface $logger)
-    {
-        return $this->set_logger($logger);
-    }
-
-    /**
-     * @param LoggerInterface $logger A PSR-3 compatible logger instance.
-     * @return AbstractEngine Chainable
-     */
-    public function set_logger(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-        return $this;
-    }
-
-    /**
-     * @return LoggerInterface
-     */
-    public function logger()
-    {
-        return $this->logger;
-    }
 
     /**
      * @param LoaderInterface $loader A loader instance.
