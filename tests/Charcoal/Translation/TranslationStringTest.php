@@ -98,13 +98,6 @@ class TranslationStringTest extends \PHPUnit_Framework_TestCase
         $obj->add_val(false, 'foo');
     }
 
-    public function testAddVallInvalidLanguage()
-    {
-        $obj = new TranslationString();
-        $this->setExpectedException('\InvalidArgumentException');
-        $obj->add_val('invalid-lang-foo', 'foo');
-    }
-
     /**
     *
     */
