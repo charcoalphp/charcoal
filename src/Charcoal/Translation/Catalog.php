@@ -212,7 +212,6 @@ class Catalog implements
                 $translations = $ident;
             } else {
                 throw new InvalidArgumentException('Entry identifier must be a string.');
-                return $this;
             }
 
             $lang = $this->default_language();
@@ -220,7 +219,6 @@ class Catalog implements
                 $ident = $translations[$lang];
             } else {
                 throw new InvalidArgumentException('Entry identifier must be a string.');
-                return $this;
             }
         }
 

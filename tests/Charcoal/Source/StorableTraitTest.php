@@ -18,17 +18,6 @@
 //     {
 //         // include 'DatabaseTestModel.php';
 
-//         Charcoal::config()->add_database(
-//             'unit_test',
-//             [
-//                 'username' => 'root',
-//                 'password' => '',
-//                 'database' => 'charcoal_examples'
-//             ]
-//         );
-
-//         Charcoal::config()->set_default_database('unit_test');
-
 //         $obj = new DatabaseSource();
 //         // $obj->set_model($model);
 //         $obj->set_table('test');

@@ -2,8 +2,8 @@
 
 namespace Charcoal\Tests\Model;
 
-use \Charcoal\Charcoal as Charcoal;
-use \Charcoal\Source\DatabaseSource as DatabaseSource;
+use \Charcoal\Charcoal;
+use \Charcoal\Source\DatabaseSource;
 
 class AbstractModelTest extends \PHPUnit_Framework_TestCase
 {
@@ -11,17 +11,6 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        Charcoal::config()->add_database(
-            'unit_test',
-            [
-                'username' => 'root',
-                'password' => '',
-                'database' => 'charcoal_examples'
-            ]
-        );
-
-        Charcoal::config()->set_default_database('unit_test');
-
         $s = new DatabaseSource();
         // $obj->set_model($model);
         $s->set_table('test');

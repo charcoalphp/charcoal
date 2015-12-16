@@ -2,16 +2,33 @@
 
 namespace Charcoal\Tests\Model;
 
+use \Charcoal\Property\PropertyFactory;
 use \Charcoal\Property\GenericProperty;
 
 class PropertyTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-    * Hello world
-    */
+    public $container;
+    public $factory;
+    public $obj;
+
+    public function getObj()
+    {
+        return $this->factory->create('GenericProperty', [
+            'logger' => $this->container->logger
+        ]);
+    }
+
+    public function setUp()
+    {
+        $this->container = $GLOBALS['container'];
+        $this->factory   = new PropertyFactory();
+        $this->obj       = $this->getObj();
+    }
+
     public function testConstructor()
     {
-        $obj = new GenericProperty();
+        $obj = $this->obj;
+
         $this->assertInstanceOf('\Charcoal\Property\GenericProperty', $obj);
 
         // Check default Value
@@ -25,27 +42,30 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testStaticGetWithoutParameter()
     {
-        $obj = new GenericProperty();
+        $obj = $this->obj;
+
         $this->assertInstanceOf('\Charcoal\Property\GenericProperty', $obj);
     }
 
     public function testToStringReturnsVal()
     {
-        $obj = new GenericProperty();
+        $obj = $this->obj;
+
         $obj->set_val('foo');
         $this->assertEquals('foo', sprintf($obj));
     }
 
     public function testToStringReturnsEmptyIfValIsNotAString()
     {
-        $obj = new GenericProperty();
+        $obj = $this->obj;
+
         $obj->set_val([1, 2, 3]);
         $this->assertEquals('', sprintf($obj));
     }
 
     public function testSetData()
     {
-        $obj = new GenericProperty();
+        $obj = $this->obj;
 
         $obj->set_data(['label' => 'foo']);
         $this->assertEquals('foo', $obj->label());
@@ -87,7 +107,7 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
     */
     public function testSetVal($val)
     {
-        $obj = new GenericProperty();
+        $obj = $this->obj;
 
         $obj->set_val($val);
         $this->assertEquals($val, $obj->val());
@@ -95,14 +115,15 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testSetValIsChainable()
     {
-        $obj = new GenericProperty();
+        $obj = $this->obj;
+
         $ret = $obj->set_val('foo');
         $this->assertSame($ret, $obj);
     }
 
     public function testSetL10n()
     {
-        $obj = new GenericProperty();
+        $obj = $this->obj;
 
         $obj->set_l10n(true);
         $this->assertEquals(true, $obj->l10n());
@@ -118,20 +139,20 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('\InvalidArgumentException');
 
-        $obj = new GenericProperty();
+        $obj = $this->obj;
         $obj->set_l10n($invalid);
     }
 
     public function testSetL10nIsChainable()
     {
-        $obj = new GenericProperty();
+        $obj = $this->obj;
         $ret = $obj->set_l10n(true);
         $this->assertSame($ret, $obj);
     }
 
     public function testSetHidden()
     {
-        $obj = new GenericProperty();
+        $obj = $this->obj;
 
         $obj->set_hidden(true);
         $this->assertEquals(true, $obj->hidden());
@@ -147,20 +168,20 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('\InvalidArgumentException');
 
-        $obj = new GenericProperty();
+        $obj = $this->obj;
         $obj->set_hidden($invalid);
     }
 
     public function testSetHiddenIsChainable()
     {
-        $obj = new GenericProperty();
+        $obj = $this->obj;
         $ret = $obj->set_hidden(true);
         $this->assertSame($ret, $obj);
     }
 
     public function testSetMultiple()
     {
-        $obj = new GenericProperty();
+        $obj = $this->obj;
 
         $obj->set_multiple(true);
         $this->assertEquals(true, $obj->multiple());
@@ -176,20 +197,20 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('\InvalidArgumentException');
 
-        $obj = new GenericProperty();
+        $obj = $this->obj;
         $obj->set_multiple($invalid);
     }
 
     public function testSetMultipleIsChainable()
     {
-        $obj = new GenericProperty();
+        $obj = $this->obj;
         $ret = $obj->set_multiple(true);
         $this->assertSame($ret, $obj);
     }
 
     public function testSetUnique()
     {
-        $obj = new GenericProperty();
+        $obj = $this->obj;
 
         $obj->set_unique(true);
         $this->assertEquals(true, $obj->unique());
@@ -205,20 +226,20 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('\InvalidArgumentException');
 
-        $obj = new GenericProperty();
+        $obj = $this->obj;
         $obj->set_unique($invalid);
     }
 
     public function testSetUniqueIsChainable()
     {
-        $obj = new GenericProperty();
+        $obj = $this->obj;
         $ret = $obj->set_unique(true);
         $this->assertSame($ret, $obj);
     }
 
     public function testSetRequired()
     {
-        $obj = new GenericProperty();
+        $obj = $this->obj;
 
         $obj->set_required(true);
         $this->assertEquals(true, $obj->required());
@@ -234,20 +255,20 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('\InvalidArgumentException');
 
-        $obj = new GenericProperty();
+        $obj = $this->obj;
         $obj->set_required($invalid);
     }
 
     public function testSetRequiredIsChainable()
     {
-        $obj = new GenericProperty();
+        $obj = $this->obj;
         $ret = $obj->set_required(true);
         $this->assertSame($ret, $obj);
     }
 
     public function testSetActive()
     {
-        $obj = new GenericProperty();
+        $obj = $this->obj;
 
         $obj->set_active(true);
         $this->assertEquals(true, $obj->active());
@@ -263,20 +284,20 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('\InvalidArgumentException');
 
-        $obj = new GenericProperty();
+        $obj = $this->obj;
         $obj->set_active($invalid);
     }
 
     public function testSetActiveIsChainable()
     {
-        $obj = new GenericProperty();
+        $obj = $this->obj;
         $ret = $obj->set_active(true);
         $this->assertSame($ret, $obj);
     }
 
     public function testRenderWithoutReplacements()
     {
-        $obj= new GenericProperty();
+        $obj = $this->obj;
         $this->assertEquals('empty', $obj->render('empty'));
     }
 

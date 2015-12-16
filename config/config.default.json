@@ -5,17 +5,28 @@
 
   "dev_mode": false,
 
-  "languages": {
-    "en": {
-      "active": true,
-      "priority": 1
-    },
-    "fr": {
-      "active": true,
-      "priority": 2
+  "databases": {
+    "unit_test": {
+      "username": "root",
+      "password": "",
+      "database": "charcoal_examples"
     }
   },
-  "default_language": "en",
+  "default_database": "unit_test",
+
+  "locales": {
+    "languages": {
+      "en": {
+        "active": true,
+        "priority": 1
+      },
+      "fr": {
+        "active": true,
+        "priority": 2
+      }
+    },
+    "default_language": "en"
+  },
 
   "timezone": "America/Montreal",
 

@@ -37,15 +37,6 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
     public function testAll()
     {
         /*
-        Charcoal::$config['databases'] = [
-            'default' => [
-                'database' => 'test',
-                'username' => 'root',
-                'password' => ''
-            ]
-        ];
-        Charcoal::$config['default_database'] = 'default';
-
         $source = new \Charcoal\Model\Source();
         $source->set_table('tests');
 

@@ -36,38 +36,45 @@ class CharcoalModule
     {
         $container = $app->getContainer();
 
-        $container['charcoal/module'] = function($c) use ($app) {
-            return new CharcoalModule([
-                'config'=>$c['charcoal/config'],
-                'app'=>$app
-            ]);
-        };
+        if (!isset($container['charcoal/module'])) {
+            $container['charcoal/module'] = function ($c) use ($app) {
+                return new CharcoalModule([
+                    'config' => $c['charcoal/config'],
+                    'app'    => $app
+                ]);
+            };
+        }
 
-        $container['charcoal/config'] = function($c) {
-            return $c['config'];
-        };
+        if (!isset($container['charcoal/config']) && isset($container['config'])) {
+            $container['charcoal/config'] = function ($c) {
+                return $c['config'];
+            };
+        }
 
-        $container['logger'] = function ($c) {
-            $logger = new Logger('charcoal');
-            $processor = new UidProcessor();
-            $logger->pushProcessor($processor);
-            $handler = new StreamHandler('charcoal.debug.log', LogLevel::DEBUG);
-            $logger->pushHandler($handler);
+        if (!isset($container['logger'])) {
+            $container['logger'] = function ($c) {
+                $logger    = new Logger('charcoal');
+                $processor = new UidProcessor();
+                $handler   = new StreamHandler('charcoal.debug.log', LogLevel::DEBUG);
 
-            return $logger;
-        };
+                $logger->pushProcessor($processor);
+                $logger->pushHandler($handler);
+
+                return $logger;
+            };
+        }
 
         /** Setup and initialize Charcoal */
         Charcoal::init([
-            'config'=>$container['charcoal/config'],
-            'logger'=>$container['logger'],
-            'app'=>$app
+            'config' => $container['charcoal/config'],
+            'logger' => $container['logger'],
+            'app'    => $app
         ]);
     }
 
     public function __construct($data)
     {
         $this->config = $data['config'];
-        $this->app = $data['app'];
+        $this->app    = $data['app'];
     }
 }

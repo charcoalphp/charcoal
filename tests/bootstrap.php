@@ -1,38 +1,48 @@
 <?php
 
-use \Slim\Container;
-use \Slim\App;
-
-use \Charcoal\CharcoalModule as CharcoalModule;
+use \Charcoal\Charcoal;
+use \Charcoal\CharcoalModule;
 use \Charcoal\CharcoalConfig;
+
+use \Psr\Log\NullLogger;
+
+use \Slim\App;
+use \Slim\Container;
 
 /** Composer autoloader for Charcoal's PSR4-compliant Unit Tests */
 $autoloader = require __DIR__.'/../vendor/autoload.php';
 $autoloader->add('Charcoal\\', __DIR__.'/src/');
 $autoloader->add('Charcoal\\Tests\\', __DIR__);
 
-/** @todo For now, this var needs to be set automatically */
-//Charcoal::init();
-//Charcoal::config()['ROOT'] = '';
+$GLOBALS['container'] = new Container();
 
+// Disable Logger
+$GLOBALS['container']['logger'] = function ($c)
+{
+    return new NullLogger();
+};
 
-
-
-// create container and configure it
-$container = new Container();
-
-$container['config'] = function($c) {
+// Import Local Configuration
+$GLOBALS['container']['charcoal/config'] = function ($c)
+{
     $config = new CharcoalConfig();
-    //$config->add_file('../config/config.php');
+
+    $env = preg_replace('/[^A-Za-z0-9_]+/', '', $c->environment['APPLICATION_ENV']);
+    $dir = dirname(__DIR__);
+    $xts = [ 'ini', 'json', 'php' ];
+
+    while ($xts) {
+        $cfg = sprintf('%1$s/config/config.%2$s.%3$s', $dir, $env, array_pop($xts));
+
+        if ( file_exists($cfg) ) {
+            $config->add_file($cfg);
+            break;
+        }
+    }
+
     return $config;
 };
 
-/*
-$container['flash'] = function ($c) {
-    return new Messages;
-};
-*/
+$GLOBALS['app'] = new App($GLOBALS['container']);
 
-$app = new App($container);
-
-CharcoalModule::setup($app);
+CharcoalModule::setup($GLOBALS['app']);
