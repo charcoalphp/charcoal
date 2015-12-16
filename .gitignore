@@ -15,5 +15,7 @@ logs/
 
 # Caches
 
+build/docs/
+build/logs/
 mustache_cache/
 tmp/
