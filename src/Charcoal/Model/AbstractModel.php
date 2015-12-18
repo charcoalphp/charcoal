@@ -423,4 +423,17 @@ abstract class AbstractModel implements
     {
         return $this->data();
     }
+
+    /**
+    * Convert the current class name in
+    *
+    * @return string
+    */
+    public function obj_type()
+    {
+        $classname = get_class($this);
+        $ident = preg_replace('/(^\\[A-Z])/', '-${1}', $classname);
+        $obj_type = strtolower(str_replace('\\', '/', $ident));
+        return $obj_type;
+    }
 }
