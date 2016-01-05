@@ -119,11 +119,11 @@ abstract class AbstractLoader implements
             );
         }
 
-        $path = rtrim($path, '/\\').'/';
+        $path = rtrim($path, '/\\').DIRECTORY_SEPARATOR;
 
         if (class_exists('\Charcoal\App\App')) {
             $base_path = \Charcoal\App\App::instance()->config()->get('ROOT');
-
+            $base_path = rtrim($base_path, '/\\').DIRECTORY_SEPARATOR;
             if (false === strpos($path, $base_path)) {
                 $path = $base_path . $path;
             }
