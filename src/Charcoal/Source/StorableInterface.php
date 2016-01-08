@@ -37,6 +37,27 @@ interface StorableInterface
     public function load($id);
 
     /**
+    * Load an object from the database from its key $key.
+    *
+    * Note that the object should also implement `Charcoal\Model\IndexableInterface`
+    * (provide an `id()` and `key()` methods) for this function to work properly.
+    *
+    * @param string $key Key pointing a column's name
+    * @param mixed $value Value of said column
+    * @return StorableInterface Chainable.
+    */
+    public function load_from($key = null, $value = null);
+
+    /**
+    * Load an object from the database from a custom SQL query.
+    *
+    * @param string $query The SQL query.
+    * @param array $binds Optional. The SQL query parameters.
+    * @return StorableInterface Chainable.
+    */
+    public function load_from_query($query, array $binds = null);
+
+    /**
     * Save an object current state to storage
     *
     * @return boolean

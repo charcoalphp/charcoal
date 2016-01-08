@@ -376,7 +376,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
      *
      * @param  string                 $key   Column name
      * @param  mixed                  $ident Value of said column
-     * @param  StorableInterface|null $item  Optional item to load into
+     * @param  StorableInterface|null $item  Optional. Item (storable object) to load into
      * @throws Exception If the query fails.
      * @return StorableInterface             Item
      */
@@ -407,7 +407,31 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
         $binds = [
             'ident' => $ident
         ];
-        $sth = $this->db_query($q, $binds);
+
+        return $this->load_item_from_query($q, $binds, $item);
+    }
+
+    /**
+     * @param string $query The SQL query.
+     * @param array $binds Optional. The query parameters.
+     * @param StorableInterface $item Optional. Item (storable object) to load into.
+     * @return StorableInterface Item.
+     */
+    public function load_item_from_query($query, array $binds=null, StorableInterface $item = null)
+    {
+        if ($item !== null) {
+            $this->set_model($item);
+        } else {
+            $class = get_class($this->model());
+            $item = new $class;
+        }
+
+        // Missing parameters
+        if (!$query) {
+            return $item;
+        }
+
+        $sth = $this->db_query($query, $binds);
         if ($sth === false) {
             throw new Exception('Error');
         }

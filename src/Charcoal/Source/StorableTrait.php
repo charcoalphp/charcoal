@@ -52,7 +52,7 @@ trait StorableTrait
     * Note that the object should also implement `Charcoal\Model\IndexableInterface`
     * (provide an `id()` and `key()` methods) for this function to work properly.
     *
-    * @param mixed $id The i
+    * @param mixed $id The identifier to load.
     * @return StorableInterface Chainable
     */
     public function load($id = null)
@@ -72,11 +72,24 @@ trait StorableTrait
     *
     * @param string $key Key pointing a column's name
     * @param mixed $value Value of said column
-    * @return StorableInterface Chainable
+    * @return StorableInterface Chainable.
     */
     public function load_from($key = null, $value = null)
     {
         $this->source()->load_item_from_key($key, $value, $this);
+        return $this;
+    }
+
+    /**
+    * Load an object from the database from a custom SQL query.
+    *
+    * @param string $query The SQL query.
+    * @param array $binds Optional. The SQL query parameters.
+    * @return StorableInterface Chainable.
+    */
+    public function load_from_query($query, array $binds = null)
+    {
+        $this->source()->load_item_from_query($query, $binds, $this);
         return $this;
     }
 
