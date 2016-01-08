@@ -7,6 +7,8 @@ use \ArrayIterator;
 use \Exception;
 use \InvalidArgumentException;
 use \IteratorAggregate;
+use \JsonSerializable;
+use \Serializable;
 
 // Intra-module (`charcoal-config`) dependencies
 use \Charcoal\Config\ConfigurableInterface;
@@ -36,6 +38,8 @@ use \Charcoal\Translation\TranslationStringInterface;
  * @see \Charcoal\Translation\Catalog for a similar exception for the current language.
  */
 class TranslationString implements
+    JsonSerializable,
+    Serializable,
     MultilingualAwareInterface,
     TranslationStringInterface,
     ConfigurableInterface,
@@ -460,5 +464,33 @@ class TranslationString implements
         }
 
         return $this;
+    }
+
+    /**
+    * Serializable > serialize()
+    */
+    public function serialize()
+    {
+        $data = $this->all();
+        return serialize($data);
+    }
+    /**
+    * Serializable > unsierialize()
+    *
+    * @param string $data Serialized data
+    * @return void
+    */
+    public function unserialize($data)
+    {
+        $data = unserialize($data);
+        $this->set_val($data);
+    }
+
+    /**
+    * JsonSerializable > jsonSerialize()
+    */
+    public function jsonSerialize()
+    {
+        return $this->all();
     }
 }
