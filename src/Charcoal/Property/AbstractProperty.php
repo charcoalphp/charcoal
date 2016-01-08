@@ -6,9 +6,11 @@ namespace Charcoal\Property;
 use \Exception;
 use \InvalidArgumentException;
 
+// PSR-3 (logger) dependencies
+use \Psr\Log\LoggerAwareInterface;
+use \Psr\Log\LoggerAwareTrait;
+
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Log\LoggerAwareInterface;
-use \Charcoal\Log\LoggerAwareTrait;
 use \Charcoal\Model\DescribableInterface;
 use \Charcoal\Model\DescribableTrait;
 use \Charcoal\Translation\TranslationConfig;
@@ -97,7 +99,7 @@ abstract class AbstractProperty implements
     * Only the storable properties should be saved in storage.
     * @var boolean $storable
     */
-    private $storable;
+    private $storable = true;
 
     /**
     * Inactive properties should be hidden everywhere / unused
@@ -124,7 +126,7 @@ abstract class AbstractProperty implements
     public function __construct(array $data = null)
     {
         if (isset($data['logger'])) {
-            $this->set_logger($data['logger']);
+            $this->setLogger($data['logger']);
         }
     }
 
@@ -216,8 +218,14 @@ abstract class AbstractProperty implements
     public function set_val($val)
     {
         if ($val === null) {
-            $this->val = null;
-            return $this;
+            if ($this->allow_null()) {
+                $this->val = null;
+                return $this;
+            } else {
+                throw new InvalidArgumentException(
+                    'Val can not be null (Not allowed)'
+                );
+            }
         }
         if ($this->multiple()) {
             if (is_string($val)) {
@@ -504,15 +512,11 @@ abstract class AbstractProperty implements
 
     /**
     * @param boolean $unique
-    * @throws InvalidArgumentException if the paramter is not a boolean
     * @return Property (Chainable)
     */
     public function set_unique($unique)
     {
-        if (!is_bool($unique)) {
-            throw new InvalidArgumentException('Unique must be a boolean.');
-        }
-        $this->unique = $unique;
+        $this->unique = !!$unique;
         return $this;
     }
 
@@ -526,17 +530,11 @@ abstract class AbstractProperty implements
 
     /**
     * @param boolean $active
-    * @throws InvalidArgumentException If paramter is not a boolean.
     * @return Property (Chainable)
     */
     public function set_active($active)
     {
-        if (!is_bool($active)) {
-            throw new InvalidArgumentException(
-                'Active must be a boolean.'
-            );
-        }
-        $this->active = $active;
+        $this->active = !!$active;
         return $this;
     }
 
@@ -545,22 +543,16 @@ abstract class AbstractProperty implements
     */
     public function active()
     {
-        return !!$this->active;
+        return $this->active;
     }
 
     /**
     * @param boolean $storable
-    * @return PropertyInterface Chainable
     * @throws InvalidArgumentException If paramter is not a boolean.
     */
     public function set_storable($storable)
     {
-        if (!is_bool($storable)) {
-            throw new InvalidArgumentException(
-                'Storable must be a boolean.'
-            );
-        }
-        $this->storable = $storable;
+        $this->storable = !!$storable;
         return $this;
     }
 
@@ -569,7 +561,7 @@ abstract class AbstractProperty implements
     */
     public function storable()
     {
-        return !!$this->storable;
+        return $this->storable;
     }
 
     /**
@@ -741,7 +733,7 @@ abstract class AbstractProperty implements
     public function create_view(array $data = null)
     {
         $view = new \Charcoal\View\GenericView([
-            'logger'=>$this->logger()
+            'logger'=>$this->logger
         ]);
         if ($data !== null) {
             $view->set_data($data);
