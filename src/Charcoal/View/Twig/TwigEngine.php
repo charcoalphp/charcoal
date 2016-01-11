@@ -34,7 +34,7 @@ class TwigEngine extends AbstractEngine
     public function __construct($data)
     {
         if (isset($data['logger'])) {
-            $this->set_logger($data['logger']);
+            $this->setLogger($data['logger']);
         }
 
         if (isset($data['loader'])) {
@@ -81,7 +81,7 @@ class TwigEngine extends AbstractEngine
     public function create_loader()
     {
         $loader = new TwigLoader([
-            'logger'=>$this->logger()
+            'logger'=>$this->logger
         ]);
         return $loader;
     }

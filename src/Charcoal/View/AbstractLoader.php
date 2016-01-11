@@ -5,9 +5,9 @@ namespace Charcoal\View;
 // PHP Dependencies
 use \InvalidArgumentException;
 
-// Module `charcoal-core` dependencies
-use \Charcoal\Log\LoggerAwareInterface;
-use \Charcoal\Log\LoggerAwareTrait;
+// PSR-3 (logger) dependencies
+use \Psr\Log\LoggerAwareInterface;
+use \Psr\Log\LoggerAwareTrait;
 
 /**
  *
@@ -34,7 +34,7 @@ abstract class AbstractLoader implements
     public function __construct(array $data)
     {
         if (isset($data['logger'])) {
-            $this->set_logger($data['logger']);
+            $this->setLogger($data['logger']);
         }
     }
 
@@ -60,7 +60,7 @@ abstract class AbstractLoader implements
 
         // Use default templates path (from app config) if none was set
         if (class_exists('\Charcoal\App\App')) {
-            $paths = $paths + \Charcoal\App\App::instance()->config()->get('view/path');
+            $paths = \Charcoal\App\App::instance()->config()->get('view/path');
         }
 
         $this->set_paths($paths);
@@ -125,7 +125,7 @@ abstract class AbstractLoader implements
             $base_path = \Charcoal\App\App::instance()->config()->get('ROOT');
             $base_path = rtrim($base_path, '/\\').DIRECTORY_SEPARATOR;
             if (false === strpos($path, $base_path)) {
-                $path = $base_path . $path;
+                $path = $base_path.$path;
             }
         }
 

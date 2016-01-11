@@ -71,7 +71,7 @@ class TwigLoader extends AbstractLoader implements
         foreach ($search_path as $path) {
             $f = realpath($path).'/'.$filename;
             if (file_exists($f)) {
-                $this->logger()->debug('Found matching template: '.$f);
+                $this->logger->debug('Found matching template: '.$f);
                 return $f;
             }
         }
@@ -82,7 +82,7 @@ class TwigLoader extends AbstractLoader implements
             $filename
         );
 
-        $this->logger()->debug($log, $search_path);
+        $this->logger->debug($log, $search_path);
 
         throw new Exception($log);
     }

@@ -2,9 +2,9 @@
 
 namespace Charcoal\View;
 
-// Module `charcoal-core` dependencies
-use \Charcoal\Log\LoggerAwareInterface;
-use \Charcoal\Log\LoggerAwareTrait;
+// PSR-3 (logger) dependencies
+use \Psr\Log\LoggerAwareInterface;
+use \Psr\Log\LoggerAwareTrait;
 
 // Local namespace dependencies
 use \Charcoal\View\EngineInterface;

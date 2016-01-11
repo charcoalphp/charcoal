@@ -5,9 +5,9 @@ namespace Charcoal\View;
 // Dependencies from `PHP`
 use \InvalidArgumentException;
 
-// Module `charcoal-core` dependencies
-use \Charcoal\Log\LoggerAwareInterface;
-use \Charcoal\Log\LoggerAwareTrait;
+// PSR-3 (logger) dependencies
+use \Psr\Log\LoggerAwareInterface;
+use \Psr\Log\LoggerAwareTrait;
 
 // Module `charcoal-config` dependencies
 use \Charcoal\Config\ConfigurableInterface;
@@ -151,35 +151,35 @@ abstract class AbstractView implements
         switch ($type) {
             case 'mustache':
                 return new MustacheEngine([
-                    'logger' => $this->logger(),
+                    'logger' => $this->logger,
                     'cache'  => null,
                     'loader' => null
                 ]);
 
-            case 'php':
+                case 'php':
                 return new PhpEngine([
-                    'logger' => $this->logger(),
+                    'logger' => $this->logger,
                     'cache'  => null,
                     'loader' => null
                 ]);
 
-            case 'php-mustache':
+                case 'php-mustache':
                 return new PhpMustacheEngine([
-                    'logger' => $this->logger(),
+                    'logger' => $this->logger,
                     'cache'  => null,
                     'loader' => null
                 ]);
 
-            case 'twig':
+                case 'twig':
                 return new TwigEngine([
-                    'logger' => $this->logger(),
+                    'logger' => $this->logger,
                     'cache'  => null,
                     'loader' => null
                 ]);
 
-            default:
+                default:
                 return new MustacheEngine([
-                    'logger' => $this->logger(),
+                    'logger' => $this->logger,
                     'cache'  => null,
                     'loader' => null
                 ]);
@@ -302,9 +302,9 @@ abstract class AbstractView implements
      * @param mixed  $context
      * @return string The rendered template
      */
-    public function render_template($template_string=null, $context = null)
+    public function render_template($template_string = null, $context = null)
     {
-        if($template_string === null) {
+        if ($template_string === null) {
             $template_string = $this->template();
         }
         return $this->engine()->render($template_string, $context);

@@ -48,7 +48,7 @@ class PhpLoader extends AbstractLoader implements LoaderInterface
                 continue;
             }
 
-            $this->logger()->debug('Found matching template: '.$f);
+            $this->logger->debug('Found matching template: '.$f);
 
             ob_start();
             include $f;
@@ -59,7 +59,7 @@ class PhpLoader extends AbstractLoader implements LoaderInterface
             }
         }
 
-        $this->logger()->debug(
+        $this->logger->debug(
             sprintf(
                 'No matching templates found for "%1$s": %2$s',
                 $ident,

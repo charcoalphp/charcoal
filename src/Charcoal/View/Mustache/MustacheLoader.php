@@ -51,7 +51,7 @@ class MustacheLoader extends AbstractLoader implements
                 continue;
             }
 
-            $this->logger()->debug('Found matching template: '.$f);
+            $this->logger->debug('Found matching template: '.$f);
 
             $file_content = file_get_contents($f);
             if ($file_content !== '') {
@@ -59,7 +59,7 @@ class MustacheLoader extends AbstractLoader implements
             }
         }
 
-        $this->logger()->debug(
+        $this->logger->debug(
             sprintf(
                 'No matching templates found for "%1$s": %2$s',
                 $ident,
