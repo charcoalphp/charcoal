@@ -417,7 +417,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
      * @param StorableInterface $item Optional. Item (storable object) to load into.
      * @return StorableInterface Item.
      */
-    public function load_item_from_query($query, array $binds=null, StorableInterface $item = null)
+    public function load_item_from_query($query, array $binds = null, StorableInterface $item = null)
     {
         if ($item !== null) {
             $this->set_model($item);

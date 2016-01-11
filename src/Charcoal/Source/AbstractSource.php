@@ -40,20 +40,24 @@ abstract class AbstractSource implements
     * @var array $properties
     */
     private $properties = [];
+
     /**
     * @var array $properties_options
     */
     private $properties_options = [];
+
     /**
     * Array of `Filter` objects
     * @var array $filters
     */
     private $filters = [];
+
     /**
     * Array of `Order` object
     * @var array $orders
     */
     private $orders = [];
+
     /**
     * The `Pagination` object
     * @var Pagination|null $pagination

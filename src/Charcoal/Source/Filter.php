@@ -215,7 +215,9 @@ class Filter implements FilterInterface
     public function set_string($sql)
     {
         if (!is_string($sql)) {
-            throw new InvalidArgumentException('String should be a string.');
+            throw new InvalidArgumentException(
+                'String should be a string.'
+            );
         }
 
         $this->string = $sql;

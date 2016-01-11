@@ -53,13 +53,7 @@ class Order implements OrderInterface
             $this->set_mode($data['mode']);
         }
         if (isset($data['values'])) {
-            $this->set_operator($data['values']);
-        }
-        if (isset($data['operand'])) {
-            $this->set_operand($data['operand']);
-        }
-        if (isset($data['sql'])) {
-            $this->set_sql($data['sql']);
+            $this->set_values($data['values']);
         }
         if (isset($data['active'])) {
             $this->set_active($data['active']);
