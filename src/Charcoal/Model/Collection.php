@@ -56,13 +56,17 @@ class Collection implements
     public function offsetSet($offset, $value)
     {
         if (!($value instanceof ModelInterface)) {
-            throw new InvalidArgumentException('Collection value must be a ModelInterface object.');
+            throw new InvalidArgumentException(
+                'Collection value must be a ModelInterface object.'
+            );
         }
         if ($offset === null) {
             $this->objects[] = $value;
             $this->map[$value->id()] = $value;
         } else {
-            throw new InvalidArgumentException('Collection value can be set like an array.');
+            throw new InvalidArgumentException(
+                'Collection value can be set like an array.'
+            );
         }
     }
 
@@ -100,7 +104,9 @@ class Collection implements
             unset($this->map[$offset]);
             unset($this->objects[$pos]);
         } else {
-            throw new InvalidArgumentException('Offset should be either an integer or a string.');
+            throw new InvalidArgumentException(
+                'Offset should be either an integer or a string.'
+            );
         }
     }
 
@@ -118,7 +124,9 @@ class Collection implements
         } elseif (is_string($offset)) {
             return (isset($this->map[$offset]) ? $this->map[$offset] : null);
         } else {
-            throw new InvalidArgumentException('Offset should be either an integer or a string.');
+            throw new InvalidArgumentException(
+                'Offset should be either an integer or a string.'
+            );
         }
     }
 
@@ -200,7 +208,9 @@ class Collection implements
         } elseif ($key instanceof ModelInterface) {
             return array_search($key->id(), array_keys($this->map));
         } else {
-            throw new InvalidArgumentException('Key must be a string or an ModelInterface object.');
+            throw new InvalidArgumentException(
+                'Key must be a string or an ModelInterface object.'
+            );
         }
     }
 }
