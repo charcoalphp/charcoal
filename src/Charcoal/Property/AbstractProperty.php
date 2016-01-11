@@ -5,6 +5,8 @@ namespace Charcoal\Property;
 // Dependencies from `PHP`
 use \Exception;
 use \InvalidArgumentException;
+use \JsonSerializable;
+use \Serializable;
 
 // PSR-3 (logger) dependencies
 use \Psr\Log\LoggerAwareInterface;
@@ -17,6 +19,7 @@ use \Charcoal\Translation\TranslationConfig;
 use \Charcoal\Translation\TranslationString;
 use \Charcoal\Validator\ValidatableInterface;
 use \Charcoal\Validator\ValidatableTrait;
+use \Charcoal\View\GenericView;
 use \Charcoal\View\ViewableInterface;
 use \Charcoal\View\ViewableTrait;
 
@@ -28,6 +31,8 @@ use \Charcoal\Property\PropertyValidator;
 * An abstract class that implements the full `PropertyInterface`.
 */
 abstract class AbstractProperty implements
+    JsonSerializable,
+    Serializable,
     PropertyInterface,
     DescribableInterface,
     LoggerAwareInterface,
@@ -121,7 +126,7 @@ abstract class AbstractProperty implements
     * Required dependencies:
     * - `logger` a PSR3-compliant logger.
     *
-    * @param array $data Dependencies
+    * @param array $data Optional. Class Dependencies.
     */
     public function __construct(array $data = null)
     {
@@ -131,6 +136,8 @@ abstract class AbstractProperty implements
     }
 
     /**
+    *
+    *
     * @return string
     */
     public function __toString()
@@ -149,6 +156,10 @@ abstract class AbstractProperty implements
 
     /**
     * Get the "property type" string.
+    *
+    * ## Notes
+    * - Type can not be set, so it must be explicitely provided by each implementing property classes.
+    *
     * @return string
     */
     abstract public function type();
@@ -184,13 +195,15 @@ abstract class AbstractProperty implements
 
     /**
     * @param string $ident
-    * @throws InvalidArgumentException  if ident is not a string
+    * @throws InvalidArgumentException  If the ident parameter is not a string
     * @return AbstractProperty Chainable
     */
     public function set_ident($ident)
     {
         if (!is_string($ident)) {
-            throw new InvalidArgumentException('Ident needs to be string.');
+            throw new InvalidArgumentException(
+                'Ident needs to be string.'
+            );
         }
         $this->ident = $ident;
         return $this;
@@ -204,7 +217,7 @@ abstract class AbstractProperty implements
     {
         if ($this->ident === null) {
             throw new Exception(
-                'Ident was never set.'
+                'Can not get ident(): Ident was never set.'
             );
         }
         return $this->ident;
@@ -213,7 +226,7 @@ abstract class AbstractProperty implements
     /**
     * @param mixed $val
     * @throws InvalidArgumentException
-    * @return Property (Chainable)
+    * @return PropertyInterface Chainable
     */
     public function set_val($val)
     {
@@ -251,7 +264,6 @@ abstract class AbstractProperty implements
 
     /**
     * @param string $field_ident
-    * @throws Exception if the value is not an array (therefore no field should be defined)
     * @return mixed
     */
     public function field_val($field_ident)
@@ -274,7 +286,7 @@ abstract class AbstractProperty implements
     /**
     * Get the property's value in a format suitable for storage.
     *
-    * @param mixed $val
+    * @param mixed $val Optional.
     * @return mixed
     */
     public function storage_val($val = null)
@@ -300,7 +312,7 @@ abstract class AbstractProperty implements
     }
 
     /**
-    * @param mixed $val
+    * @param mixed $val Optional.
     * @return string
     */
     public function display_val($val = null)
@@ -331,7 +343,7 @@ abstract class AbstractProperty implements
 
     /**
     * @param mixed $label
-    * @return Property (Chainable)
+    * @return PropertyInterface Chainable
     */
     public function set_label($label)
     {
@@ -352,21 +364,17 @@ abstract class AbstractProperty implements
 
     /**
     * @param boolean $l10n
-    * @throws InvalidArgumentException if the paramter is not a boolean
-    * @return Property (Chainable)
+    * @return PropertyInterface Chainable
     */
     public function set_l10n($l10n)
     {
-        if (!is_bool($l10n)) {
-            throw new InvalidArgumentException(
-                'l10n must be a boolean.'
-            );
-        }
-        $this->l10n = $l10n;
+        $this->l10n = !!$l10n;
         return $this;
     }
 
     /**
+    * The l10n flag sets the property as being translatable, meaning the data is held for multple languages.
+    *
     * @return boolean
     */
     public function l10n()
@@ -376,17 +384,11 @@ abstract class AbstractProperty implements
 
     /**
     * @param boolean $hidden
-    * @throws InvalidArgumentException if the paramter is not a boolean
-    * @return Property (Chainable)
+    * @return PropertyInterface Chainable
     */
     public function set_hidden($hidden)
     {
-        if (!is_bool($hidden)) {
-            throw new InvalidArgumentException(
-                'hidden must be a boolean.'
-            );
-        }
-        $this->hidden = $hidden;
+        $this->hidden = !!$hidden;
         return $this;
     }
 
@@ -395,47 +397,55 @@ abstract class AbstractProperty implements
     */
     public function hidden()
     {
-        return !!$this->hidden;
+        return $this->hidden;
     }
 
     /**
     * @param boolean $multiple
-    * @throws InvalidArgumentException if the paramter is not a boolean
-    * @return Property (Chainable)
+    * @return PropertyInterface Chainable
     */
     public function set_multiple($multiple)
     {
-        if (!is_bool($multiple)) {
-            throw new InvalidArgumentException(
-                'multiple must be a boolean.'
-            );
-        }
-        $this->multiple = $multiple;
+        $this->multiple = !!$multiple;
         return $this;
     }
 
     /**
+    * The multiple flags sets the property as being "repeatable", or allow to represent an array of multiple values.
+    *
+    * ## Notes
+    * - The multiple flag can be forced to false (or true) in implementing property class.
+    * - How a multiple behaves also depend on `multiple_options`.
+    *
     * @return boolean
     */
     public function multiple()
     {
-        return !!$this->multiple;
+        return $this->multiple;
     }
 
     /**
     * @param array $multiple_options
-    * @throws InvalidArgumentException if the paramter is not an array
-    * @return Property (Chainable)
+    * @return PropertyInterface Chainable
     */
     public function set_multiple_options(array $multiple_options)
     {
+        // The options are always merged with the defaults, to ensure minimum required array structure.
         $options = array_merge($this->default_multiple_options(), $multiple_options);
         $this->multiple_options = $options;
         return $this;
     }
 
     /**
+    * The options defining the property behavior when the multiple flag is set to true.
+    *
+    * ## Options structure
+    * - `separator` (string) The separator charactor.
+    * - `min` (integer) The minimum number of values. (0 = no limit).
+    * - `max` (integer) The maximum number of values. (0 = no limit).
+    *
     * @return array
+    * @see self::default_multiple_options
     */
     public function multiple_options()
     {
@@ -468,51 +478,54 @@ abstract class AbstractProperty implements
 
     /**
     * @param boolean $allow
-    * @throws InvalidArgumentException if the paramter is not a boolean
-    * @return Property (Chainable)
+    * @return PropertyInterface Chainable
     */
     public function set_allow_null($allow)
     {
-        if (!is_bool($allow)) {
-            throw new InvalidArgumentException('Allow null must be a boolean.');
-        }
-        $this->allow_null = $allow;
+        $this->allow_null = !!$allow;
         return $this;
     }
 
     /**
+    * The allow null flag sets the property as being able to be of a "null" value.
+    *
+    * ## Notes
+    * - This flag typically modifies the storage database to also allow null values.
+    * -
+    *
     * @return boolean
     */
     public function allow_null()
     {
-        return !!$this->allow_null;
+        return $this->allow_null;
     }
 
     /**
     * @param boolean $required
-    * @throws InvalidArgumentException if the paramter is not a boolean
-    * @return Property (Chainable)
+    * @return PropertyInterface Chainable
     */
     public function set_required($required)
     {
-        if (!is_bool($required)) {
-            throw new InvalidArgumentException('Required must be a boolean.');
-        }
-        $this->required = $required;
+        $this->required = !!$required;
         return $this;
     }
 
     /**
+    * Required flag sets the property as being required, meaning not allowed to be null / empty.
+    *
+    * ## Notes
+    * - The actual meaning of "required" might be different for implementing property class.
+    *
     * @return boolean
     */
     public function required()
     {
-        return !!$this->required;
+        return $this->required;
     }
 
     /**
     * @param boolean $unique
-    * @return Property (Chainable)
+    * @return PropertyInterface Chainable
     */
     public function set_unique($unique)
     {
@@ -525,12 +538,12 @@ abstract class AbstractProperty implements
     */
     public function unique()
     {
-        return !!$this->unique;
+        return $this->unique;
     }
 
     /**
     * @param boolean $active
-    * @return Property (Chainable)
+    * @return PropertyInterface Chainable
     */
     public function set_active($active)
     {
@@ -566,7 +579,7 @@ abstract class AbstractProperty implements
 
     /**
     * @param mixed $description
-    * @return Property (Chainable)
+    * @return PropertyInterface Chainable
     */
     public function set_description($description)
     {
@@ -584,7 +597,7 @@ abstract class AbstractProperty implements
 
     /**
     * @param mixed $notes
-    * @return Property (Chainable)
+    * @return PropertyInterface Chainable
     */
     public function set_notes($notes)
     {
@@ -647,11 +660,24 @@ abstract class AbstractProperty implements
     }
 
     /**
+    * The property's default validation methods/
+    *
+    * - `required`
+    * - `unique`
+    * - `allow_null`
+    *
+    * ## Notes
+    * - Those 3 base validation methods should always be merged, in implementing factory class.
+    *
     * @return array
     */
     public function validation_methods()
     {
-        return ['required', 'unique', 'allow_null'];
+        return [
+            'required',
+            'unique',
+            'allow_null'
+        ];
     }
 
     /**
@@ -699,11 +725,15 @@ abstract class AbstractProperty implements
     */
     protected function property_value($property_ident)
     {
-        return isset($this->{$property_ident}) ? $this->{$property_ident} : null;
+        if (isset($this->{$property_ident})) {
+            return $this->{$property_ident};
+        } else {
+            return null;
+        }
     }
 
     /**
-    * @param array $data Optional
+    * @param array $data Optional. Metadata data.
     * @return PropertyMetadata
     */
     protected function create_metadata(array $data = null)
@@ -727,12 +757,12 @@ abstract class AbstractProperty implements
     }
 
     /**
-    * @param array $data
+    * @param array $data Optional. View data.
     * @return ViewInterface
     */
     public function create_view(array $data = null)
     {
-        $view = new \Charcoal\View\GenericView([
+        $view = new GenericView([
             'logger'=>$this->logger
         ]);
         if ($data !== null) {
@@ -760,4 +790,36 @@ abstract class AbstractProperty implements
     * @return mixed
     */
     abstract public function save();
+
+    /**
+    * Serializable > serialize()
+    *
+    * @return string
+    */
+    public function serialize()
+    {
+        $data = $this->val();
+        return serialize($data);
+    }
+    /**
+    * Serializable > unsierialize()
+    *
+    * @param string $data Serialized data
+    * @return void
+    */
+    public function unserialize($data)
+    {
+        $data = unserialize($data);
+        $this->set_val($data);
+    }
+
+    /**
+    * JsonSerializable > jsonSerialize()
+    *
+    * @return mixed
+    */
+    public function jsonSerialize()
+    {
+        return $this->val();
+    }
 }
