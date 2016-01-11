@@ -7,16 +7,20 @@ use \InvalidArgumentException;
 use \JsonSerializable;
 use \Serializable;
 
+// PSR-3 (logger) dependencies
+use \Psr\Log\LoggerAwareInterface;
+use \Psr\Log\LoggerAwareTrait;
+
 // Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Charcoal;
-use \Charcoal\Log\LoggerAwareInterface;
-use \Charcoal\Log\LoggerAwareTrait;
 use \Charcoal\Model\DescribableInterface;
 use \Charcoal\Model\DescribableTrait;
+use \Charcoal\Source\SourceFactory;
 use \Charcoal\Source\StorableInterface;
 use \Charcoal\Source\StorableTrait;
 use \Charcoal\Validator\ValidatableInterface;
 use \Charcoal\Validator\ValidatableTrait;
+use \Charcoal\View\GenericView;
 use \Charcoal\View\ViewableInterface;
 use \Charcoal\View\ViewableTrait;
 
@@ -57,13 +61,15 @@ abstract class AbstractModel implements
     use ValidatableTrait;
     use ViewableTrait;
 
+    const DEFAULT_SOURCE_TYPE = 'database';
+
     /**
     * @param array $data Dependencies.
     */
     public function __construct(array $data = null)
     {
         if (isset($data['logger'])) {
-            $this->set_logger($data['logger']);
+            $this->setLogger($data['logger']);
         }
 
         /** @todo Needs fix. Must be manually triggered after setting data for metadata to work */
@@ -107,14 +113,16 @@ abstract class AbstractModel implements
     /**
     * Return the object data as an array
     *
+    * @param array $filters Optional. Property filter.
     * @return array
     */
-    public function data()
+    public function data(array $property_filters = null)
     {
         $data = [];
-        $properties = $this->properties();
+        $properties = $this->properties($property_filters);
         foreach ($properties as $property_ident => $property) {
-            $data[$property_ident] = $property->val();
+            // Ensure objects are properly encoded.
+            $data[$property_ident] = json_decode(json_encode($property), true);
         }
         return $data;
     }
@@ -348,20 +356,24 @@ abstract class AbstractModel implements
     protected function create_source($data = null)
     {
         $metadata = $this->metadata();
-
         $default_source = $metadata->default_source();
-
         $source_config = $metadata->source($default_source);
-        $table = $source_config['table'];
 
-        $source = new \Charcoal\Source\DatabaseSource();
+        $source_type = isset($source_config['type']) ? $source_config['type'] : self::DEFAULT_SOURCE_TYPE;
+
+        $source_factory = new SourceFactory();
+        $source = $source_factory->create($source_type, [
+            'logger'=>$this->logger
+        ]);
         $source->set_model($this);
-        // $source->set_config($source_config);
-        $source->set_table($table);
 
         if ($data !== null) {
-            $source->set_data($data);
+            $data = array_merge_recursive($source_config, $data);
+        } else {
+            $data = $source_config;
         }
+        $source->set_data($data);
+
         return $source;
     }
 
@@ -386,8 +398,8 @@ abstract class AbstractModel implements
     */
     public function create_view(array $data = null)
     {
-        $view = new \Charcoal\View\GenericView([
-            'logger'=>$this->logger()
+        $view = new GenericView([
+            'logger'=>$this->logger
         ]);
         if ($data !== null) {
             $view->set_data($data);
