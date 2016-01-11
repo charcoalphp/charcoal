@@ -132,17 +132,6 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(false, $obj->l10n());
     }
 
-    /**
-    * @dataProvider providerInvalidBools
-    */
-    public function testSetL10nInvalidParameterThrowException($invalid)
-    {
-        $this->setExpectedException('\InvalidArgumentException');
-
-        $obj = $this->obj;
-        $obj->set_l10n($invalid);
-    }
-
     public function testSetL10nIsChainable()
     {
         $obj = $this->obj;
@@ -159,17 +148,6 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
 
         $obj->set_hidden(false);
         $this->assertEquals(false, $obj->hidden());
-    }
-
-    /**
-    * @dataProvider providerInvalidBools
-    */
-    public function testSetHiddenInvalidParameterThrowException($invalid)
-    {
-        $this->setExpectedException('\InvalidArgumentException');
-
-        $obj = $this->obj;
-        $obj->set_hidden($invalid);
     }
 
     public function testSetHiddenIsChainable()
@@ -190,17 +168,6 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(false, $obj->multiple());
     }
 
-    /**
-    * @dataProvider providerInvalidBools
-    */
-    public function testSetMultipleInvalidParameterThrowException($invalid)
-    {
-        $this->setExpectedException('\InvalidArgumentException');
-
-        $obj = $this->obj;
-        $obj->set_multiple($invalid);
-    }
-
     public function testSetMultipleIsChainable()
     {
         $obj = $this->obj;
@@ -217,17 +184,6 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
 
         $obj->set_unique(false);
         $this->assertEquals(false, $obj->unique());
-    }
-
-    /**
-    * @dataProvider providerInvalidBools
-    */
-    public function testSetUniqueInvalidParameterThrowException($invalid)
-    {
-        $this->setExpectedException('\InvalidArgumentException');
-
-        $obj = $this->obj;
-        $obj->set_unique($invalid);
     }
 
     public function testSetUniqueIsChainable()
@@ -248,17 +204,6 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(false, $obj->required());
     }
 
-    /**
-    * @dataProvider providerInvalidBools
-    */
-    public function testSetRequiredInvalidParameterThrowException($invalid)
-    {
-        $this->setExpectedException('\InvalidArgumentException');
-
-        $obj = $this->obj;
-        $obj->set_required($invalid);
-    }
-
     public function testSetRequiredIsChainable()
     {
         $obj = $this->obj;
@@ -275,17 +220,6 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
 
         $obj->set_active(false);
         $this->assertEquals(false, $obj->active());
-    }
-
-    /**
-    * @dataProvider providerInvalidBools
-    */
-    public function testSetActiveInvalidParameterThrowException($invalid)
-    {
-        $this->setExpectedException('\InvalidArgumentException');
-
-        $obj = $this->obj;
-        $obj->set_active($invalid);
     }
 
     public function testSetActiveIsChainable()

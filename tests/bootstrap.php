@@ -17,14 +17,14 @@ $autoloader->add('Charcoal\\Tests\\', __DIR__);
 $GLOBALS['container'] = new Container();
 
 // Disable Logger
-$GLOBALS['container']['logger'] = function ($c)
-{
+$GLOBALS['container']['logger'] = function ($c) {
+
     return new NullLogger();
 };
 
 // Import Local Configuration
-$GLOBALS['container']['charcoal/config'] = function ($c)
-{
+$GLOBALS['container']['charcoal/config'] = function ($c) {
+
     $config = new CharcoalConfig();
 
     $env = preg_replace('/[^A-Za-z0-9_]+/', '', $c->environment['APPLICATION_ENV']);
@@ -34,7 +34,7 @@ $GLOBALS['container']['charcoal/config'] = function ($c)
     while ($xts) {
         $cfg = sprintf('%1$s/config/config.%2$s.%3$s', $dir, $env, array_pop($xts));
 
-        if ( file_exists($cfg) ) {
+        if (file_exists($cfg)) {
             $config->add_file($cfg);
             break;
         }
