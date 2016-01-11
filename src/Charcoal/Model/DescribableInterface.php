@@ -66,4 +66,10 @@ interface DescribableInterface
     * @return array|PropertyInterface|null
     */
     public function p($property_ident = null);
+
+    /**
+    * @param array $filters The filters to apply
+    * @return boolean False if the object doesn't match any filter, true otherwise.
+    */
+    public function is_filtered(array $filters = null);
 }

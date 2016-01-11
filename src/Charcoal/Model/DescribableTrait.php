@@ -60,7 +60,9 @@ trait DescribableTrait
         } elseif ($metadata instanceof MetadataInterface) {
             $this->metadata = $metadata;
         } else {
-            throw new InvalidArgumentException('Metadata argument is invalid (must be array or Medatadata object).');
+            throw new InvalidArgumentException(
+                'Metadata argument is invalid (must be array or Medatadata object).'
+            );
         }
 
         // If the metadata contains "data", then automatically set the initial data to the value
@@ -98,7 +100,7 @@ trait DescribableTrait
             $metadata_ident = $this->metadata_ident();
         }
 
-        //$this->logger()->debug(sprintf('Loading metadata from ident: %s', $metadata_ident));
+        //$this->logger->debug(sprintf('Loading metadata from ident: %s', $metadata_ident));
 
         $metadata_loader = new MetadataLoader();
         $metadata = $metadata_loader->load($metadata_ident);
@@ -154,17 +156,18 @@ trait DescribableTrait
     *
     * @return void Yield, not return
     */
-    public function properties()
+    public function properties(array $filters = null)
     {
         $this->metadata(); // Hack!
-        $props = $this->metadata()->properties();
+        $props = array_keys($this->metadata()->properties());
 
         if (empty($props)) {
             yield null;
         }
 
-        $properties = [];
-        foreach ($props as $property_ident => $opts) {
+        foreach ($props as $property_ident) {
+            $property = $this->property($property_ident);
+            $filtered = (int)$property->is_filtered($filters);
             // Get the property object of this definition
             yield $property_ident => $this->property($property_ident);
         }
@@ -211,7 +214,7 @@ trait DescribableTrait
 
         $factory  = new PropertyFactory();
         $property = $factory->create($property_metadata['type'], [
-            'logger' => $this->logger()
+            'logger' => $this->logger
         ]);
         $property->set_ident($property_ident);
         $property->set_data($property_metadata);
@@ -264,4 +267,20 @@ trait DescribableTrait
     * @return mixed
     */
     abstract protected function property_value($property_ident);
+
+    /**
+    * @param array $filters The filters to apply
+    * @return boolean False if the object doesn't match any filter, true otherwise.
+    */
+    public function is_filtered(array $filters = null)
+    {
+        if ($filters === null) {
+            return true;
+        }
+
+        foreach ($filters as $filter_ident => $filter_data) {
+            var_dump($filter_ident);
+            var_dump($filter_data);
+        }
+    }
 }
