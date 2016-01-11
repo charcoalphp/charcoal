@@ -74,7 +74,7 @@ class MustacheEngine extends AbstractEngine
         $mustache = new Mustache_Engine([
             'cache'             => 'mustache_cache',
 
-            'loader'            =>  $this->loader(),
+            'loader'            => $this->loader(),
             'partials_loader'   => $this->loader(),
 
             'strict_callables'  => true,

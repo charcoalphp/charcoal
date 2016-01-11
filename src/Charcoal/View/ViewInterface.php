@@ -79,16 +79,16 @@ interface ViewInterface
     public function context();
 
     /**
-     * @param string $template
-     * @param mixed  $context
+     * @param string $template The template identifier, to load and render.
+     * @param mixed  $context Template context
      * @return string
      */
-    public function render($template = null, $context = null);
+    public function render($template_ident = null, $context = null);
 
     /**
-     * @param string $template_ident
+     * @param string $template_string The full template string to render.
      * @param mixed  $context
      * @return string
      */
-    public function render_template($template_ident, $context = null);
+    public function render_template($template_string = null, $context = null);
 }

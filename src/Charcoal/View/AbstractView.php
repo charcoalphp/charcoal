@@ -285,16 +285,16 @@ abstract class AbstractView implements
      * @param mixed  $context
      * @return string The rendered template
      */
-    public function render($template = null, $context = null)
+    public function render($template_ident = null, $context = null)
     {
-        if ($template === null) {
-            $template = $this->template();
+        if ($template_ident === null) {
+            $template_ident = $this->template_ident();
         }
         if ($context === null) {
             $context = $this->context();
         }
 
-        return $this->engine()->render($template, $context);
+        return $this->engine()->render($template_ident, $context);
     }
 
     /**
@@ -302,9 +302,11 @@ abstract class AbstractView implements
      * @param mixed  $context
      * @return string The rendered template
      */
-    public function render_template($template_ident, $context = null)
+    public function render_template($template_string=null, $context = null)
     {
-        $template = $this->load_template($template_ident);
-        return $this->engine()->render($template, $context);
+        if($template_string === null) {
+            $template_string = $this->template();
+        }
+        return $this->engine()->render($template_string, $context);
     }
 }
