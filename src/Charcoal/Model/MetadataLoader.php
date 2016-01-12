@@ -75,9 +75,19 @@ class MetadataLoader extends FileLoader
         $hierarchy = null;
 
         $classname = $this->ident_to_classname($ident);
+
         if (class_exists($classname)) {
             // If the object is a class, we use hierarchy from object ancestor classes
             $ident_hierarchy = [$ident];
+
+            // Get interfaces
+            // class_implements returns parent classes interfaces at first
+            $implements = class_implements($classname);
+
+            foreach ($implements as $interface => $val) {
+                $ident_hierarchy[] = $this->classname_to_ident($interface);
+            }
+
             while ($classname = get_parent_class($classname)) {
                 $ident_hierarchy[] = $this->classname_to_ident($classname);
             }
