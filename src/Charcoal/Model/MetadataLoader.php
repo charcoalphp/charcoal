@@ -184,7 +184,8 @@ class MetadataLoader extends FileLoader
      */
     protected function classname_to_ident($classname)
     {
-        $ident = str_replace('\\', '/', strtolower($classname));
+        $ident = strtolower(preg_replace('/([a-z])([A-Z])/', '$1-$2', $classname));
+        $ident = str_replace('\\', '/', strtolower($ident));
         $ident = ltrim($ident, '/');
         return $ident;
     }
