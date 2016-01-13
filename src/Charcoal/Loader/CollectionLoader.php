@@ -24,7 +24,7 @@ use \Charcoal\Source\Database\DatabasePagination as Pagination;
 *
 * @uses \Charcoal\Model\Collection
 */
-class CollectionLoader extends AbstractLoader
+class CollectionLoader
 {
     /**
     * @var array $properties

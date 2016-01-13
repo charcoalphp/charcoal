@@ -10,7 +10,7 @@ use \Charcoal\Model\ModelInterface as ModelInterface;
 /**
 *
 */
-class ObjectLoader extends AbstractLoader
+class ObjectLoader
 {
     /**
     * @var string $ident

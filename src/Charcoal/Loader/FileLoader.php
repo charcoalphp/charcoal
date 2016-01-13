@@ -8,7 +8,7 @@ use \InvalidArgumentException as InvalidArgumentException;
 /**
 *
 */
-class FileLoader extends AbstractLoader
+class FileLoader
 {
     /**
     * @var array $search_path
@@ -33,7 +33,9 @@ class FileLoader extends AbstractLoader
     public function set_ident($ident)
     {
         if (!is_string($ident)) {
-            throw new InvalidArgumentException(__CLASS__.'::'.__FUNCTION__.'() - Ident must be a string.');
+            throw new InvalidArgumentException(
+                __CLASS__.'::'.__FUNCTION__.'() - Ident must be a string.'
+            );
         }
         $this->ident = $ident;
         return $this;
@@ -96,13 +98,13 @@ class FileLoader extends AbstractLoader
 
     /**
     * @param string $filename
-    * @return string
+    * @return string|null The file content, or null if no file found.
     */
     protected function load_first_from_search_path($filename)
     {
         $search_path = $this->search_path();
         if (empty($search_path)) {
-            return '';
+            return null;
         }
         foreach ($search_path as $path) {
             $f = $path.DIRECTORY_SEPARATOR.$filename;
@@ -112,7 +114,7 @@ class FileLoader extends AbstractLoader
             }
         }
 
-        return '';
+        return null;
     }
 
     /**
