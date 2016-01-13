@@ -275,12 +275,14 @@ trait DescribableTrait
     public function is_filtered(array $filters = null)
     {
         if ($filters === null) {
-            return true;
+            return false;
         }
 
         foreach ($filters as $filter_ident => $filter_data) {
-            var_dump($filter_ident);
-            var_dump($filter_data);
+            unset($filter_ident);
+            unset($filter_data);
         }
+
+        return false;
     }
 }
