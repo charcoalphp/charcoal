@@ -2,6 +2,12 @@
 
 namespace Charcoal\Model;
 
+// PHP dependencies
+use \InvalidArgumentException;
+
+// Module `charcoal-app` dependencies
+use \Charcoal\App\App;
+
 // Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Charcoal;
 use \Charcoal\Loader\FileLoader;
@@ -14,10 +20,17 @@ use \Charcoal\Loader\FileLoader;
  * in an array, to be filled in a `Metadata` object.
  *
  * If `ident` is an actual class name, then it will also try to load all the JSON matching
- * the class' parents and traits.
+ * the class' parents and interfaces.
  */
 class MetadataLoader extends FileLoader
 {
+    protected function cache_pool()
+    {
+        $container = App::instance()->getContainer();
+        $cache_pool = $container['cache'];
+        return $cache_pool;
+    }
+
     /**
      * FileLoader > search_path(). Get the object's search path, merged with global configuration.
      *
@@ -51,17 +64,25 @@ class MetadataLoader extends FileLoader
             $this->set_ident($ident);
         }
 
-        $hierarchy = $this->hierarchy();
+        $cache_pool = $this->cache_pool();
+        $cache_item = $cache_pool->getItem('metadata', $this->ident());
 
-        $metadata = [];
-        foreach ($hierarchy as $id) {
-            $ident_data = self::load_ident($id);
-            if (is_array($ident_data)) {
-                $metadata = Charcoal::merge($metadata, $ident_data);
+        $metadata = $cache_item->get();
+        if ($cache_item->isMiss()) {
+            $cache_item->lock();
+
+            $hierarchy = $this->hierarchy();
+
+            $metadata = [];
+            foreach ($hierarchy as $id) {
+                $ident_data = self::load_ident($id);
+                if (is_array($ident_data)) {
+                    $metadata = Charcoal::merge($metadata, $ident_data);
+                }
             }
-        }
 
-        $this->set_content($metadata);
+            $cache_item->set($metadata);
+        }
 
         return $metadata;
     }
@@ -82,15 +103,16 @@ class MetadataLoader extends FileLoader
 
             // Get interfaces
             // class_implements returns parent classes interfaces at first
-            $implements = class_implements($classname);
+            $implements = array_values(class_implements($classname));
 
-            foreach ($implements as $interface => $val) {
+            foreach ($implements as $interface) {
                 $ident_hierarchy[] = $this->classname_to_ident($interface);
             }
 
             while ($classname = get_parent_class($classname)) {
                 $ident_hierarchy[] = $this->classname_to_ident($classname);
             }
+
             $ident_hierarchy = array_reverse($ident_hierarchy);
         } else {
             if (is_array($hierarchy) && !empty($hierarchy)) {
@@ -107,26 +129,52 @@ class MetadataLoader extends FileLoader
      * Get an "ident" (file) from all search path and merge the content
      *
      * @param string $ident The identifier from which to retrieve a file.
-     * @return array
+     * @throws InvalidArgumentException If a JSON decoding error occurs.
+     * @return array|null
      */
     private function load_ident($ident)
     {
-        $data = [];
         $filename = $this->filename_from_ident($ident);
-        $files = $this->all_matching_filenames($filename);
-        foreach ($files as $f) {
-            $file_content = file_get_contents($f);
-            if ($file_content === '') {
-                continue;
-            }
-            // Decode as an array (2nd parameter, true = array)
-            $file_data = json_decode($file_content, true);
-            // Todo: Handle json_last_error()
-            if (is_array($file_data)) {
-                $data = Charcoal::merge($data, $file_data);
-            }
+
+        $file_content = $this->load_first_from_search_path($filename);
+        if ($file_content === null) {
+            return null;
         }
-        return $data;
+
+        // Decode as an array (2nd parameter, true = array)
+        $file_data = json_decode($file_content, true);
+        $err_code = json_last_error();
+        if ($err_code == JSON_ERROR_NONE) {
+            return $file_data;
+        }
+
+        // Handle JSON error
+        switch ($err_code) {
+            case JSON_ERROR_NONE:
+                break;
+            case JSON_ERROR_DEPTH:
+                $err_msg = 'Maximum stack depth exceeded';
+                break;
+            case JSON_ERROR_STATE_MISMATCH:
+                $err_msg = 'Underflow or the modes mismatch';
+                break;
+            case JSON_ERROR_CTRL_CHAR:
+                $err_msg = 'Unexpected control character found';
+                break;
+            case JSON_ERROR_SYNTAX:
+                $err_msg = 'Syntax error, malformed JSON';
+                break;
+            case JSON_ERROR_UTF8:
+                $err_msg = 'Malformed UTF-8 characters, possibly incorrectly encoded';
+                break;
+            default:
+                $err_msg = 'Unknown error';
+                break;
+        }
+
+        throw new InvalidArgumentException(
+            sprintf('JSON %s could not be parsed: "%s"', $ident, $err_msg)
+        );
     }
 
     /**
