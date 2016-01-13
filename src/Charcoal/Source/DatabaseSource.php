@@ -415,6 +415,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
      * @param string $query The SQL query.
      * @param array $binds Optional. The query parameters.
      * @param StorableInterface $item Optional. Item (storable object) to load into.
+     * @throws Exception If there is a query error.
      * @return StorableInterface Item.
      */
     public function load_item_from_query($query, array $binds = null, StorableInterface $item = null)
