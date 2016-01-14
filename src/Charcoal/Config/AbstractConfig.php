@@ -4,8 +4,13 @@ namespace Charcoal\Config;
 
 // Dependencies from `PHP`
 use \ArrayAccess;
+use \ArrayIterator;
 use \Exception;
 use \InvalidArgumentException;
+use \IteratorAggregate;
+use \JsonSerializable;
+use \Serializable;
+use \Traversable;
 
 // Dependencies from `container-interop/container-interop`
 use Interop\Container\ContainerInterface;
@@ -21,9 +26,12 @@ use \Charcoal\Config\ConfigInterface;
  * This class also implements the `ArrayAccess` interface, so each member can be accessed with `[]`.
  */
 abstract class AbstractConfig implements
+    ArrayAccess,
     ConfigInterface,
     ContainerInterface,
-    ArrayAccess
+    IteratorAggregate,
+    JsonSerializable,
+    Serializable
 {
     const DEFAULT_SEPARATOR = '/';
 
@@ -43,24 +51,34 @@ abstract class AbstractConfig implements
     private $delegates = [];
 
     /**
-     * Create the configuration
+     * Keep a list of all config keys available.
+     * @var array $keys
+     */
+    private $keys = [];
+
+    /**
+     * Create the configuration.
      *
      * @param array|string|null $data Optional default data, as `[$key => $val]` array.
      * @param ConfigInterface[] $delegates An array of delegates (config) to set.
      * @throws InvalidArgumentException If $data is invalid.
      * @todo Implement data migration from a passed ConfigInterface.
      */
-    public function __construct($data = null, array $delegates = null)
+    final public function __construct($data = null, array $delegates = null)
     {
         if (is_string($data)) {
-            $this->set_data($this->default_data());
+            // Treat the parameter as a filename
+            $this->merge($this->defaults());
             $this->add_file($data);
         } elseif (is_array($data)) {
-             $data = array_merge($this->default_data(), $data);
-             $this->set_data($data);
+            $data = array_merge($this->defaults(), $data);
+            $this->merge($data);
+        } elseif ($data instanceof ConfigInterface) {
+            $this->merge($this->defaults());
+            $this->merge($data);
         } elseif ($data === null) {
-            $data = $this->default_data();
-            $this->set_data($data);
+            $data = $this->defaults();
+            $this->merge($data);
         } else {
             throw new InvalidArgumentException(
                 'Data must be an array, a file string or a ConfigInterface object.'
@@ -70,6 +88,16 @@ abstract class AbstractConfig implements
         if (isset($delegates)) {
             $this->set_delegates($delegates);
         }
+    }
+
+    /**
+     * Get the configuration's available keys.
+     *
+     * @return array
+     */
+    public function keys()
+    {
+        return array_keys($this->keys);
     }
 
     /**
@@ -106,6 +134,14 @@ abstract class AbstractConfig implements
     }
 
     /**
+     * @return string
+     */
+    public function separator()
+    {
+        return $this->separator;
+    }
+
+    /**
      * @param string $separator A single-character to delimite nested options.
      * @throws InvalidArgumentException If $separator is invalid.
      * @return AbstractConfig Chainable
@@ -117,6 +153,7 @@ abstract class AbstractConfig implements
                 'Separator needs to be a string.'
             );
         }
+        // Question: should we use mb_strlen() here to allow unicode characters?
         if (strlen($separator) > 1) {
             throw new InvalidArgumentException(
                 'Separator needs to be only one-character.'
@@ -126,23 +163,72 @@ abstract class AbstractConfig implements
         return $this;
     }
 
+
+
     /**
-     * @return string
+     * Add a configuration file. The file type is determined by its extension.
+     *
+     * Supported file types are `ini`, `json`, `php`
+     *
+     * @param string $filename A supported configuration file.
+     * @throws InvalidArgumentException If the file is invalid.
+     * @return AbstractConfig (Chainable)
      */
-    public function separator()
+    public function add_file($filename)
     {
-        return $this->separator;
+        $content = $this->load_file($filename);
+        if (is_array($content)) {
+            $this->merge($content);
+        }
+        return $this;
     }
 
     /**
-     * For each key, calls `set()`, which calls `offsetSet()`  (from ArrayAccess)
+     * Load a configuration file. The file type is determined by its extension.
      *
-     * @param array $data The data to set.
-     * @return AbstractConfig Chainable
-     * @see self::set()
-     * @see self::offsetSet()
+     * Supported file types are `ini`, `json`, `php`
+     *
+     * @param string $filename A supported configuration file.
+     * @throws InvalidArgumentException If the filename is invalid.
+     * @return mixed The file content.
      */
-    public function set_data(array $data)
+    public function load_file($filename)
+    {
+        if (!is_string($filename)) {
+            throw new InvalidArgumentException(
+                'Configuration file must be a string.'
+            );
+        }
+        if (!file_exists($filename)) {
+            throw new InvalidArgumentException(
+                sprintf('Configuration file "%s" does not exist', $filename)
+            );
+        }
+
+        $ext = pathinfo($filename, PATHINFO_EXTENSION);
+
+        if ($ext == 'php') {
+            return $this->load_php_file($filename);
+        } elseif ($ext == 'json') {
+            return $this->load_json_file($filename);
+        } elseif ($ext == 'ini') {
+            return $this->load_ini_file($filename);
+        } else {
+            throw new InvalidArgumentException(
+                'Only JSON, INI and PHP files are accepted as a Configuration file.'
+            );
+        }
+    }
+
+     /**
+      * For each key, calls `set()`, which calls `offsetSet()`  (from ArrayAccess)
+      *
+      * @param array|Traversable $data The data to set.
+      * @return AbstractConfig Chainable
+      * @see self::set()
+      * @see self::offsetSet()
+      */
+    public function merge($data)
     {
         foreach ($data as $k => $v) {
                 $this->set($k, $v);
@@ -151,14 +237,40 @@ abstract class AbstractConfig implements
     }
 
     /**
+     * For each key, calls `set()`, which calls `offsetSet()`  (from ArrayAccess)
+     *
+     * @param array|Traversable $data The data to set.
+     * @return AbstractConfig Chainable
+     * @see self::set()
+     * @see self::offsetSet()
+     */
+    public function set_data($data)
+    {
+        trigger_error('Use merge() instead of set_data() for Config objects', E_USER_DEPRECATED);
+        return $this->merge($data);
+    }
+
+    public function data()
+    {
+        $ret = [];
+        $keys = $this->keys();
+        foreach ($keys as $k) {
+            if ($this->has($k)) {
+                $ret[$k] = $this[$k];
+            }
+        }
+        return $ret;
+    }
+
+    /**
      * A stub for when the default data is empty.
      *
      * Make sure to reimplement in children ConfigInterface classes if any default data should be set.
      *
-     * @see ConfigInterface::default_data()
+     * @see ConfigInterface::defaults()
      * @return array
      */
-    public function default_data()
+    public function defaults()
     {
         return [];
     }
@@ -174,6 +286,8 @@ abstract class AbstractConfig implements
     {
         return $this[$key];
     }
+
+
 
     /**
      * Assign a value to the specified key of the configuration.
@@ -202,31 +316,35 @@ abstract class AbstractConfig implements
     }
 
     /**
-     * @param string $key The key of the configuration item to fetch.
-     * @return mixed The item, if found, or null.
+     * JsonSerializable > jsonSerialize()
+     *
+     * @return array
      */
-    private function get_in_delegates($key)
+    public function jsonSerialize()
     {
-        foreach ($this->delegates as $delegate) {
-            if ($delegate->has($key)) {
-                return $delegate->get($key);
-            }
-        }
-
-        return null;
+        return $this->data();
     }
 
     /**
-     * @param string $key The key of the configuration item to check.
+     * Serializable > serialize()
+     *
+     * @return string
      */
-    private function has_in_delegates($key)
+    public function serialize()
     {
-        foreach ($this->delegates as $delegate) {
-            if ($delegate->has($key)) {
-                return true;
-            }
-        }
-        return false;
+        return serialize($this->data());
+    }
+
+    /**
+     * Serializable > unserialize()
+     *
+     * @param string $serialized The serialized data (with `serialize()`).
+     * @return void
+     */
+    public function unserialize($serialized)
+    {
+        $unserialized = unserialize($serialized);
+        $this->merge($unserialized);
     }
 
     /**
@@ -293,6 +411,10 @@ abstract class AbstractConfig implements
     /**
      * Assign a value to the specified key of the configuration.
      *
+     * Set the value either by:
+     * - a setter method (`set_{$key}()`)
+     * - setting (or overriding)
+     *
      * @see ArrayAccess::offsetSet()
      * @param string $key The key to assign $value to.
      * @param mixed $value Value to assign to $key.
@@ -310,13 +432,74 @@ abstract class AbstractConfig implements
         if (strstr($key, $this->separator())) {
             return $this->set_with_separator($key, $value);
         } else {
-            $setter = 'set_'.$key;
+            $setter = $this->setter($key);
             if (is_callable([$this, $setter])) {
                 $this->{$setter}($value);
             } else {
                 $this->{$key} = $value;
             }
+            $this->keys[$key] = true;
         }
+    }
+
+    /**
+     * ArrayAccess > offsetUnset()
+     *
+     * @param string $key The key of the configuration item to remove.
+     * @throws InvalidArgumentException If the key argument is not a string or is a "numeric" value.
+     * @return void
+     */
+    public function offsetUnset($key)
+    {
+        if (is_numeric($key)) {
+            throw new InvalidArgumentException(
+                'Config array access only supports non-numeric keys.'
+            );
+        }
+        $this[$key] = null;
+    }
+
+    public function getIterator()
+    {
+        return new ArrayIterator($this->data());
+    }
+
+    /**
+     * Allow an object to define are the setter are usually
+     *
+     * @return string
+     */
+    private function setter($key)
+    {
+        return 'set_'.$key;
+    }
+
+    /**
+     * @param string $key The key of the configuration item to fetch.
+     * @return mixed The item, if found, or null.
+     */
+    private function get_in_delegates($key)
+    {
+        foreach ($this->delegates as $delegate) {
+            if ($delegate->has($key)) {
+                return $delegate->get($key);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param string $key The key of the configuration item to check.
+     */
+    private function has_in_delegates($key)
+    {
+        foreach ($this->delegates as $delegate) {
+            if ($delegate->has($key)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -408,68 +591,16 @@ abstract class AbstractConfig implements
         $this[$first] = $result;
     }
 
-    /**
-     * ArrayAccess > offsetUnset()
-     *
-     * @param string $key The key of the configuration item to remove.
-     * @throws InvalidArgumentException If the key argument is not a string or is a "numeric" value.
-     * @return void
-     */
-    public function offsetUnset($key)
-    {
-        if (is_numeric($key)) {
-            throw new InvalidArgumentException(
-                'Config array access only supports non-numeric keys.'
-            );
-        }
-        $this[$key] = null;
-    }
+
 
     /**
-     * Add a configuration file. The file type is determined by its extension.
-     *
-     * Supported file types are `ini`, `json`, `php`
-     *
-     * @param string $filename A supported configuration file.
-     * @throws InvalidArgumentException If the file is invalid.
-     * @return AbstractConfig (Chainable)
-     */
-    public function add_file($filename)
-    {
-        if (!is_string($filename)) {
-            throw new InvalidArgumentException(
-                'Configuration file must be a string.'
-            );
-        }
-        if (!file_exists($filename)) {
-            throw new InvalidArgumentException(
-                sprintf('Configuration file "%s" does not exist', $filename)
-            );
-        }
-
-        $ext = pathinfo($filename, PATHINFO_EXTENSION);
-
-        if ($ext == 'php') {
-            return $this->add_php_file($filename);
-        } elseif ($ext == 'json') {
-            return $this->add_json_file($filename);
-        } elseif ($ext == 'ini') {
-            return $this->add_ini_file($filename);
-        } else {
-            throw new InvalidArgumentException(
-                'Only JSON, INI and PHP files are accepted as a Configuration file.'
-            );
-        }
-    }
-
-    /**
-     * Add a `.ini` file to the configuration
+     * Add a `.ini` file to the configuration.
      *
      * @param string $filename A INI configuration file.
      * @throws InvalidArgumentException If the file or invalid.
      * @return AbstractConfig Chainable
      */
-    private function add_ini_file($filename)
+    private function load_ini_file($filename)
     {
         $config = parse_ini_file($filename, true);
         if ($config === false) {
@@ -477,25 +608,23 @@ abstract class AbstractConfig implements
                 sprintf('Ini file "%s" is empty or invalid.')
             );
         }
-        $this->set_data($config);
-        return $this;
+        return $config;
     }
 
     /**
-     * Add a `.json` file to the configuration
+     * Add a `.json` file to the configuration.
      *
      * @param string $filename A JSON configuration file.
      * @throws InvalidArgumentException If the file or invalid.
      * @return AbstractConfig Chainable
      */
-    private function add_json_file($filename)
+    private function load_json_file($filename)
     {
         $file_content = file_get_contents($filename);
         $config = json_decode($file_content, true);
         $err_code = json_last_error();
         if ($err_code == JSON_ERROR_NONE) {
-            $this->set_data($config);
-            return $this;
+            return $config;
         }
         // Handle JSON error
         switch ($err_code) {
@@ -534,13 +663,10 @@ abstract class AbstractConfig implements
      * @throws InvalidArgumentException If the file or invalid.
      * @return AbstractConfig Chainable
      */
-    private function add_php_file($filename)
+    private function load_php_file($filename)
     {
         // `$this` is bound to the current configuration object (Current `$this`)
         $config = include $filename;
-        if (is_array($config)) {
-            $this->set_data($config);
-        }
-        return $this;
+        return $config;
     }
 }

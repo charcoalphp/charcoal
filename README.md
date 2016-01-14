@@ -51,6 +51,13 @@ $config->add_file('./config/my-config.json');
 echo $config['example/foo'];
 ```
 
+If you want to load a configuration file *without* adding its content automatically, use:
+
+```php
+$config = new \Charcoal\GenericConfig();
+$file_content = $config->load_file('my-config.json');
+```
+
 ### INI configuration
 
 For the INI file:
@@ -106,7 +113,7 @@ The default separator is `/` (it can be retrieved with `separator()`) but it can
 ```php
 $config = new \Charcoal\GenericConfig();
 $config->set_separator('.'); // Default is "/"
-$config->set_data([
+$config->merge([
 	'foo', [
 		'baz'=>example,
 		'bar'=>42
@@ -227,7 +234,7 @@ class Foo implements ConfigurableInterface
 	{
 		$config = new FooConfig();
 		if ($data !== null) {
-			$config->set_data($data);
+			$config->merge($data);
 		}
 		return $config;
 	}
@@ -284,6 +291,22 @@ The main PHP structure follows the [_PSR-4_](https://github.com/php-fig/fig-stan
 - Mathieu Ducharme <mat@locomotive.ca>
 
 ## Changelog
+
+### 0.3
+_Unreleased_
+
+This releases breaks compatibility
+
+- AbstractConfig constructor is now final.
+- `set_data()` has been renamed to `merge()`.
+- `merge()` (previously set_data) can now accept any `Traversable` objects, as well as array.
+- `default_data()` has been renamed to `defaults()`
+- Added a new `load_file()` method, to return the content of a config file.
+- Added the `keys()` method, to retrieve the list of keys of the config file.
+- Added the `data()` method, to retrieve the config as an array data, now that we have `keys()`.
+- Config now inherits `IteratorAggregate` / `Traversable` (made possible with `data()`).
+- Config is now `serializable` AND `jsonSerializable`.
+- Setter rules can be overridden in children classes (for PSR2-style setter, for example).
 
 ### 0.2
 _Released on 2015-02-09_

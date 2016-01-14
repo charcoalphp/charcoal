@@ -20,13 +20,13 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
     public function testDefaultData()
     {
         $obj = $this->obj;
-        $this->assertEquals([], $obj->default_data());
+        $this->assertEquals([], $obj->defaults());
     }
 
     public function testSetData()
     {
         $obj = $this->obj;
-        $ret = $obj->set_data([
+        $ret = $obj->merge([
             'foo'=>'bar',
             'bar'=>'baz'
         ]);

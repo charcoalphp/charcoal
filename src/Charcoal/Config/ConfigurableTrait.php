@@ -30,7 +30,9 @@ trait ConfigurableTrait
         } elseif ($config instanceof ConfigInterface) {
             $this->config = $config;
         } else {
-            throw new InvalidArgumentException('Configuration must be an array or a ConfigInterface object.');
+            throw new InvalidArgumentException(
+                'Configuration must be an array or a ConfigInterface object.'
+            );
         }
         return $this;
     }
