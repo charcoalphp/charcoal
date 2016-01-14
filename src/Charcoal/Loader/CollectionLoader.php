@@ -9,8 +9,11 @@ use \InvalidArgumentException;
 // PHP Modules dependencies
 use \PDO;
 
+// PSR-3 (logger) dependencies
+use \Psr\Log\LoggerAwareInterface;
+use \Psr\Log\LoggerAwareTrait;
+
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Charcoal;
 use \Charcoal\Model\ModelInterface;
 use \Charcoal\Model\Collection;
 
@@ -24,8 +27,10 @@ use \Charcoal\Source\Database\DatabasePagination as Pagination;
 *
 * @uses \Charcoal\Model\Collection
 */
-class CollectionLoader
+class CollectionLoader implements LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
     /**
     * @var array $properties
     */
@@ -60,6 +65,11 @@ class CollectionLoader
     * @var ModelInterface $model
     */
     private $model = null;
+
+    public function __construct($data)
+    {
+        $this->setLogger($data['logger']);
+    }
 
     /**
     * @param array $data
@@ -343,7 +353,7 @@ class CollectionLoader
 
         /** @todo Filters, pagination, select, etc */
         $q = $this->source()->sql_load();
-        Charcoal::logger()->debug($q);
+        $this->logger->debug($q);
         $collection = new Collection();
 
 
@@ -354,7 +364,7 @@ class CollectionLoader
         $class_name = get_class($this->model());
         while ($obj_data = $sth->fetch()) {
             $obj = new $class_name([
-                'logger'=>Charcoal::logger()
+                'logger'=>$this->logger
             ]);
             $obj->set_flat_data($obj_data);
             $collection->add($obj);
