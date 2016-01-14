@@ -21,23 +21,11 @@ class SourceConfig extends AbstractConfig
     /**
     * @return array
     */
-    public function default_data()
+    public function defaults()
     {
         return [
             'type' => null
         ];
-    }
-
-    /**
-    * @param array $data
-    * @return SourceConfig Chainable
-    */
-    public function set_data(array $data)
-    {
-        if (isset($data['type']) && $data['type'] !== null) {
-            $this->set_type($data['type']);
-        }
-        return $this;
     }
 
     /**

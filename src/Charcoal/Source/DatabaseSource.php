@@ -11,7 +11,6 @@ use \PDO;
 use \PDOException;
 
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Charcoal;
 use \Charcoal\Model\ModelInterface;
 
 // Local namespace dependencies
@@ -57,7 +56,9 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     public function set_database_ident($database_ident)
     {
         if (!is_string($database_ident)) {
-            throw new InvalidArgumentException('set_database() expects a string as database ident.');
+            throw new InvalidArgumentException(
+                'set_database() expects a string as database ident.'
+            );
         }
         $this->database_ident = $database_ident;
         return $this;
@@ -72,7 +73,9 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     public function database_ident()
     {
         if ($this->database_ident === null) {
-            return Charcoal::config()->default_database();
+            $container = \Charcoal\App\App::instance()->getContainer();
+            $app_config = $container['charcoal/app/config'];
+            return $app_config->get('default_database');
         }
         return $this->database_ident;
     }
@@ -104,7 +107,10 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     {
         if ($this->database_config === null) {
             $ident = $this->database_ident();
-            return Charcoal::config()->database_config($ident);
+            $container = \Charcoal\App\App::instance()->getContainer();
+            $app_config = $container['charcoal/app/config'];
+            $default = $app_config->default_database();
+            return $app_config->database_config($default);
         }
         return $this->database_config;
     }
@@ -174,7 +180,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
         }
         /** @todo add indexes for all defined list constraints (yea... tough job...) */
         $q .= ') ENGINE=MYISAM DEFAULT CHARSET=utf8 COMMENT=\''.addslashes($metadata['name']).'\';';
-        $this->logger()->debug($q);
+        $this->logger->debug($q);
         $this->db()->query($q);
 
         return true;
@@ -201,7 +207,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
             if (!array_key_exists($ident, $cols)) {
                 // The key does not exist at all.
                 $q = 'ALTER TABLE `'.$this->table().'` ADD '.$field->sql();
-                $this->logger()->debug($q);
+                $this->logger->debug($q);
                 $res = $this->db()->query($q);
             } else {
                 // The key exists. Validate.
@@ -222,7 +228,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
 
                 if ($alter === true) {
                     $q = 'ALTER TABLE `'.$this->table().'` CHANGE `'.$ident.'` '.$field->sql();
-                    $this->logger()->debug($q);
+                    $this->logger->debug($q);
                     $this->db()->query($q);
                 }
 
@@ -238,7 +244,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     public function table_exists()
     {
         $q = 'SHOW TABLES LIKE \''.$this->table().'\'';
-        $this->logger()->debug($q);
+        $this->logger->debug($q);
         $res = $this->db()->query($q);
         $table_exists = $res->fetchColumn(0);
 
@@ -254,7 +260,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     public function table_structure()
     {
         $q = 'SHOW COLUMNS FROM `'.$this->table().'`';
-        $this->logger()->debug($q);
+        $this->logger->debug($q);
         $res = $this->db()->query($q);
         $cols = $res->fetchAll((PDO::FETCH_GROUP|PDO::FETCH_UNIQUE|PDO::FETCH_ASSOC));
         return $cols;
@@ -268,7 +274,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     public function table_is_empty()
     {
         $q = 'SELECT NULL FROM `'.$this->table().'` LIMIT 1';
-        $this->logger()->debug($q);
+        $this->logger->debug($q);
         $res = $this->db()->query($q);
         return ($res->rowCount() === 0);
     }
@@ -460,7 +466,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
         $db = $this->db();
 
         $q = $this->sql_load();
-        $this->logger()->debug($q);
+        $this->logger->debug($q);
         $sth = $db->prepare($q);
         $sth->execute();
         $sth->setFetchMode(PDO::FETCH_ASSOC);
@@ -562,7 +568,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
                 $binds[$k] = $f->val();
                 $binds_types[$k] = $f->sql_pdo_type();
             } else {
-                Charcoal::logger()->debug(
+                $this->logger->debug(
                     sprintf('Field %s not in table structure', $k)
                 );
             }
@@ -640,7 +646,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     */
     protected function db_query($q, array $binds = [], array $binds_types = [])
     {
-        $this->logger()->debug($q, $binds);
+        $this->logger->debug($q, $binds);
         $sth = $this->db()->prepare($q);
         if (!empty($binds)) {
             foreach ($binds as $k => $v) {

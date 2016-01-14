@@ -49,45 +49,19 @@ class DatabaseSourceConfig extends SourceConfig
     /**
     * @return array
     */
-    public function default_data()
+    public function defaults()
     {
         return [
             'type'              => 'mysql',
             'hostname'          => 'localhost',
-            'username'          => null,
+            'username'          => '',
             'password'          => '',
-            'password_encoding' => null,
-            'password_salt'     => null,
-            'database'          => null,
+            'password_encoding' => '',
+            'password_salt'     => '',
+            'database'          => '',
             'table'             => '',
             'disable_utf8'      => false
         ];
-    }
-
-    /**
-    * @param array $data
-    * @return DatabaseSourceConfig Chainable
-    */
-    public function set_data(array $data)
-    {
-        parent::set_data($data);
-
-        if (isset($data['hostname']) && $data['hostname'] !== null) {
-            $this->set_hostname($data['hostname']);
-        }
-        if (isset($data['username']) && $data['username'] !== null) {
-            $this->set_username($data['username']);
-        }
-        if (isset($data['password']) && $data['password'] !== null) {
-            $this->set_password($data['password']);
-        }
-        if (isset($data['database']) && $data['database'] !== null) {
-            $this->set_database($data['database']);
-        }
-        if (isset($data['disable_utf8']) && $data['disable_utf8'] !== null) {
-            $this->set_disable_utf8($data['disable_utf8']);
-        }
-        return $this;
     }
 
     /**
@@ -100,7 +74,9 @@ class DatabaseSourceConfig extends SourceConfig
     public function set_hostname($hostname)
     {
         if (!is_string($hostname)) {
-            throw new InvalidArgumentException('Hostname must be a string.');
+            throw new InvalidArgumentException(
+                'Hostname must be a string.'
+            );
         }
         $this->hostname = $hostname;
         return $this;
@@ -126,7 +102,9 @@ class DatabaseSourceConfig extends SourceConfig
     public function set_username($username)
     {
         if (!is_string($username)) {
-            throw new InvalidArgumentException('Username must be a string.');
+            throw new InvalidArgumentException(
+                'Username must be a string.'
+            );
         }
         $this->username = $username;
         return $this;
@@ -152,7 +130,9 @@ class DatabaseSourceConfig extends SourceConfig
     public function set_password($password)
     {
         if (!is_string($password)) {
-            throw new InvalidArgumentException('Password must be a string.');
+            throw new InvalidArgumentException(
+                'Password must be a string.'
+            );
         }
         $this->password = $password;
         return $this;
@@ -186,7 +166,9 @@ class DatabaseSourceConfig extends SourceConfig
     public function set_password_encoding($password_encoding)
     {
         if (!is_string($password_encoding)) {
-            throw new InvalidArgumentException('Password Encoding must be a string.');
+            throw new InvalidArgumentException(
+                'Password Encoding must be a string.'
+            );
         }
         $this->password_encoding = $password_encoding;
         return $this;
@@ -212,7 +194,9 @@ class DatabaseSourceConfig extends SourceConfig
     public function set_password_salt($password_salt)
     {
         if (!is_string($password_salt)) {
-            throw new InvalidArgumentException('Password Salt must be a string.');
+            throw new InvalidArgumentException(
+                'Password Salt must be a string.'
+            );
         }
         $this->password_salt = $password_salt;
         return $this;
@@ -238,7 +222,9 @@ class DatabaseSourceConfig extends SourceConfig
     public function set_database($database)
     {
         if (!is_string($database)) {
-            throw new InvalidArgumentException('Database must be a string.');
+            throw new InvalidArgumentException(
+                'Database must be a string.'
+            );
         }
         $this->database = $database;
         return $this;
@@ -262,7 +248,9 @@ class DatabaseSourceConfig extends SourceConfig
     public function set_disable_utf8($disable_utf8)
     {
         if (!is_bool($disable_utf8)) {
-            throw new InvalidArgumentException('Disable UTF8 must be a boolean.');
+            throw new InvalidArgumentException(
+                'Disable UTF8 must be a boolean.'
+            );
         }
         $this->disable_utf8 = $disable_utf8;
         return $this;
