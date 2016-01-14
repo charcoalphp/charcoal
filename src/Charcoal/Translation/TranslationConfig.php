@@ -29,7 +29,7 @@ class TranslationConfig extends AbstractConfig implements MultilingualAwareInter
      *
      * @return array
      */
-    public function default_data()
+    public function defaults()
     {
         return [
             'languages' => [
