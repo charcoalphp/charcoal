@@ -29,27 +29,6 @@ class ModelMetadata extends AbstractMetadata implements \ArrayAccess
     public $data;
 
     /**
-    * @param array $data
-    * @return ModelMetadata Chainable
-    */
-    public function set_data(array $data)
-    {
-        parent::set_data($data);
-
-        if (isset($data['ident']) && $data['ident'] !== null) {
-            $this->set_ident($data['ident']);
-        }
-        if (isset($data['sources']) && $data['sources'] !== null) {
-            $this->set_sources($data['sources']);
-        }
-        if (isset($data['default_source']) && $data['default_source'] !== null) {
-            $this->set_default_source($data['default_source']);
-        }
-
-        return $this;
-    }
-
-    /**
     * @param string $ident
     * @throws InvalidArgumentException if ident is not a string
     * @return ModelMetadata Chainable
@@ -57,7 +36,9 @@ class ModelMetadata extends AbstractMetadata implements \ArrayAccess
     public function set_ident($ident)
     {
         if (!is_string($ident)) {
-            throw new InvalidArgumentException(__CLASS__.'::'.__FUNCTION__.'Ident must be a string.');
+            throw new InvalidArgumentException(
+                __CLASS__.'::'.__FUNCTION__.'Ident must be a string.'
+            );
         }
         $this->ident = $ident;
         return $this;
@@ -79,7 +60,9 @@ class ModelMetadata extends AbstractMetadata implements \ArrayAccess
     public function set_sources($sources)
     {
         if (!is_array($sources)) {
-            throw new InvalidArgumentException('Sources must be an array.');
+            throw new InvalidArgumentException(
+                'Sources must be an array.'
+            );
         }
         foreach ($sources as $source_ident => $source) {
             $this->add_source($source_ident, $source);
@@ -123,7 +106,9 @@ class ModelMetadata extends AbstractMetadata implements \ArrayAccess
     public function set_default_source($default_source)
     {
         if (!is_string($default_source)) {
-            throw new InvalidArgumentException('Default source needs to be a string.');
+            throw new InvalidArgumentException(
+                'Default source needs to be a string.'
+            );
         }
         $this->default_source = $default_source;
         return $this;
