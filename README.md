@@ -21,7 +21,7 @@ This package provides easy hierarchical configuration container (for config stor
 
 There are currently 3 supported file formats: `ini`, `json` and `php`.
 
-To load configuration from a file, simply use the `add_file()` method. The file's extension will be used to determine how to load the file.
+To load configuration from a file, simply use the `addFile()` method. The file's extension will be used to determine how to load the file.
 
 It is also possible to load a config file directly from the constructor, by passing a file _string_ as the first argument.
 
@@ -45,7 +45,7 @@ Loading this file into configuration would be:
 
 ```php
 $config = new \Charcoal\GenericConfig();
-$config->add_file('./config/my-config.json');
+$config->addFile('./config/my-config.json');
 
 // Output "bar"
 echo $config['example/foo'];
@@ -55,7 +55,7 @@ If you want to load a configuration file *without* adding its content automatica
 
 ```php
 $config = new \Charcoal\GenericConfig();
-$file_content = $config->load_file('my-config.json');
+$file_content = $config->loadFile('my-config.json');
 ```
 
 ### INI configuration
@@ -71,7 +71,7 @@ Loading this file into configuration would be:
 
 ```php
 $config = new \Charcoal\GenericConfig();
-$config->add_file('./config/my-config.ini');
+$config->addFile('./config/my-config.ini');
 
 // Outputs "bar"
 echo $config['exampe/foo'];
@@ -94,7 +94,7 @@ Loading this file into configuration would be:
 
 ```php
 $config = new \Charcoal\GenericConfig();
-$config->add_file('./config/my-config.php');
+$config->addFile('./config/my-config.php');
 
 // Outputs "bar"
 echo $config['example/foo'];
@@ -104,15 +104,15 @@ echo $config['example/foo'];
 
 It is possible to fetch embedded _array-ish_ values recursively in a single call with the help of _separators_.
 
-The default separator is `/` (it can be retrieved with `separator()`) but it can be changed easily with `set_separator()`.
+The default separator is `/` (it can be retrieved with `separator()`) but it can be changed easily with `setSeparator()`.
 
-> 👉 Separator must be a single character. An exception will be thrown if trying to call `set_separator()` with a longer string.
+> 👉 Separator must be a single character. An exception will be thrown if trying to call `setSeparator()` with a longer string.
 
 ### How to use
 
 ```php
 $config = new \Charcoal\GenericConfig();
-$config->set_separator('.'); // Default is "/"
+$config->setSeparator('.'); // Default is "/"
 $config->merge([
 	'foo', [
 		'baz'=>example,
@@ -144,7 +144,7 @@ $config2 = new \Charcoal\Config\GenericConfig([
 	'bar' => 42
 ]);
 
-$config->add_delegate($config2);
+$config->addDelegate($config2);
 
 // Returns 42
 echo $config->get('bar');
@@ -152,9 +152,9 @@ echo $config->get('bar');
 
 Delegates can be set with:
 
-- `set_delegates()` to set an array of delegates.
-- `add_delegate()` to add a config object at the end of the delegate list.
-- `prepend_delegate()` to add a config object at the beginning of the delegate list.
+- `setDelegates()` to set an array of delegates.
+- `addDelegate()` to add a config object at the end of the delegate list.
+- `prependDelegate()` to add a config object at the beginning of the delegate list.
 
 It is also possible to set delegates by passing them (as an array of ConfigInterface) to the constructor:
 
@@ -162,7 +162,7 @@ It is also possible to set delegates by passing them (as an array of ConfigInter
 $config = new \Charcoal\Config\GenericConfig('../config/my-config.json', [$delegate1, $delegate2]);
 ```
 
-> 👉 The order of the delegates is important. They are looked in the order they are added, so the first match is returned. Use `prepend_delegate()` to add a config at the beginning of the stack (top priority).
+> 👉 The order of the delegates is important. They are looked in the order they are added, so the first match is returned. Use `prependDelegate()` to add a config at the beginning of the stack (top priority).
 
 ## Array Access
 
@@ -216,7 +216,9 @@ Also provided in this package is a _Configurable_ interface (`\Charcoal\Config\C
 
 Configurable (which could have been called "_Config Aware_") objects can have an associated config instance that can help defines various properties, states, or other.
 
-The config object can be set with `set_config()` and retrieve with `config()`.
+The config object can be set with `setConfig()` and retrieve with `config()`.
+
+Note that the `ConfigurableTrait` adds an abstract method that must be implemented: `createConfig(array $data)` (returns `ConfigInterface`).
 
 Implementation example:
 
@@ -230,7 +232,7 @@ class Foo implements ConfigurableInterface
 {
 	use ConfigurableTrait;
 
-	public function create_config(array $data = null)
+	public function createConfig(array $data = null)
 	{
 		$config = new FooConfig();
 		if ($data !== null) {
@@ -245,7 +247,7 @@ The previous class could be use as such:
 
 ```php
 $foo = new Foo();
-$foo->set_config([
+$foo->setConfig([
 	'bar'=>[
 		'baz'=>42
 	]
@@ -265,14 +267,12 @@ echo $foo->config('bar/baz');
 
 All Charcoal modules follow the same coding style and `charcoal-core` is no exception. For PHP:
 
-- [_PSR-1_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md), except for
-	- Method names MUST be declared in `snake_case`.
-- [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md), except the PSR-1 requirement.
+- [_PSR-1_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md)
+- [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
 - [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md), autoloading is therefore provided by _Composer_
 - [_phpDocumentor_](http://phpdoc.org/)
 	- Add DocBlocks for all classes, methods, and functions;
 - Naming conventions
-	- Use `snake_case`, not `camelCase`, for variable, option, parameter, argument, function, and method names;
 	- Prefix abstract classes with `Abstract`;
 	- Suffix interfaces with `Interface`, traits with `Trait`, exceptions with `Exception`;
 	- For arrays, use short notation `[]` (instead of `array()`).
@@ -286,6 +286,13 @@ Coding styles are  enforced with `grunt phpcs` ([_PHP Code Sniffer_](https://git
 - Mathieu Ducharme <mat@locomotive.ca>
 
 ## Changelog
+
+### 0.4
+_Released on 2016-01-16_
+
+This release breaks compatibility.
+
+- Move to camelCase, for 100% PSR-1 compliance.
 
 ### 0.3
 _Released on 2016-01-15_

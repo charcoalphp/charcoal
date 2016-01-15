@@ -3,7 +3,7 @@
 namespace Charcoal\Config;
 
 // Local namespace dependencies
-use \Charcoal\Config\ConfigInterface as ConfigInterface;
+use \Charcoal\Config\ConfigInterface;
 
 /**
  * Configurable Interface defines object that can be configured with a Config object.
@@ -18,7 +18,7 @@ interface ConfigurableInterface
      * @param ConfigInterface|array $config
      * @return ConfigurableInterface Chainable
      */
-    public function set_config($config);
+    public function setConfig($config);
 
     /**
      * Retrieve the object's configuration container, or one of its entry.

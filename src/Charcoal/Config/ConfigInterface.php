@@ -14,25 +14,25 @@ interface ConfigInterface
      * @param ConfigInterface[] $delegates The list of delegates to add.
      * @return ConfigInterface Chainable.
      */
-    public function set_delegates(array $delegates);
+    public function setDelegates(array $delegates);
 
     /**
      * @param ConfigInterface $delegate A config object to add as delegate.
      * @return ConfigInterface Chainable
      */
-    public function add_delegate(ConfigInterface $delegate);
+    public function addDelegate(ConfigInterface $delegate);
 
     /**
      * @param ConfigInterface $delegate A config object to prepend as delegate.
      * @return ConfigInterface Chainable
      */
-    public function prepend_delegate(ConfigInterface $delegate);
+    public function prependDelegate(ConfigInterface $delegate);
 
     /**
      * @param string $separator The separator character.
      * @return ConfigInterface Chainable
      */
-    public function set_separator($separator);
+    public function setSeparator($separator);
 
     /**
      * @return string
@@ -89,11 +89,11 @@ interface ConfigInterface
      * @param string $filename The file to load and add.
      * @return ConfigInterface Chainable
      */
-    public function add_file($filename);
+    public function addFile($filename);
 
     /**
      * @param string $filename The file to load.
      * @return mixed The file content.
      */
-    public function load_file($filename);
+    public function loadFile($filename);
 }

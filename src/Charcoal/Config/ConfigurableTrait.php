@@ -23,10 +23,10 @@ trait ConfigurableTrait
      * @throws InvalidArgumentException If the parameter is invalid.
      * @return ConfigurableInterface Chainable
      */
-    public function set_config($config)
+    public function setConfig($config)
     {
         if (is_array($config)) {
-            $this->config = $this->create_config($config);
+            $this->config = $this->createConfig($config);
         } elseif ($config instanceof ConfigInterface) {
             $this->config = $config;
         } else {
@@ -51,7 +51,7 @@ trait ConfigurableTrait
     public function config($key = null)
     {
         if ($this->config === null) {
-            $this->config = $this->create_config();
+            $this->config = $this->createConfig();
         }
         if ($key !== null) {
             return $this->config->get($key);
@@ -67,5 +67,5 @@ trait ConfigurableTrait
      * @param  array|string|null $data Optional data to pass to the new ConfigInterface instance.
      * @return ConfigInterface
      */
-    abstract protected function create_config($data = null);
+    abstract protected function createConfig($data = null);
 }

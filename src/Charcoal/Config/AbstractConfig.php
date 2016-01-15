@@ -59,25 +59,30 @@ abstract class AbstractConfig implements
     /**
      * Create the configuration.
      *
-     * @param array|string|null $data Optional default data, as `[$key => $val]` array.
+     * @param mixed $data Optional default data. Either a filename, an array, or a Config object.
      * @param ConfigInterface[] $delegates An array of delegates (config) to set.
      * @throws InvalidArgumentException If $data is invalid.
-     * @todo Implement data migration from a passed ConfigInterface.
      */
     final public function __construct($data = null, array $delegates = null)
     {
+        // Always set the default data first.
+        $this->merge($this->defaults());
+
+        // Set the delegates, if necessary.
+        if (isset($delegates)) {
+            $this->setDelegates($delegates);
+        }
+
+        if ($data === null) {
+            return;
+        }
+
         if (is_string($data)) {
             // Treat the parameter as a filename
-            $this->merge($this->defaults());
-            $this->add_file($data);
+            $this->addFile($data);
         } elseif (is_array($data)) {
-            $data = array_merge($this->defaults(), $data);
             $this->merge($data);
         } elseif ($data instanceof ConfigInterface) {
-            $this->merge($this->defaults());
-            $this->merge($data);
-        } elseif ($data === null) {
-            $data = $this->defaults();
             $this->merge($data);
         } else {
             throw new InvalidArgumentException(
@@ -85,9 +90,7 @@ abstract class AbstractConfig implements
             );
         }
 
-        if (isset($delegates)) {
-            $this->set_delegates($delegates);
-        }
+
     }
 
     /**
@@ -104,11 +107,11 @@ abstract class AbstractConfig implements
      * @param ConfigInterface[] $delegates The array of delegates (config) to set.
      * @return ConfigInterface Chainable
      */
-    public function set_delegates(array $delegates)
+    public function setDelegates(array $delegates)
     {
         $this->delegates = [];
         foreach ($delegates as $delegate) {
-            $this->add_delegate($delegate);
+            $this->addDelegate($delegate);
         }
         return $this;
     }
@@ -117,7 +120,7 @@ abstract class AbstractConfig implements
      * @param ConfigInterface[] $delegate A delegate (config) instance.
      * @return ConfigInterface Chainable
      */
-    public function add_delegate(ConfigInterface $delegate)
+    public function addDelegate(ConfigInterface $delegate)
     {
         $this->delegates[] = $delegate;
         return $this;
@@ -127,7 +130,7 @@ abstract class AbstractConfig implements
      * @param ConfigInterface[] $delegate A delegate (config) instance.
      * @return ConfigInterface Chainable
      */
-    public function prepend_delegate(ConfigInterface $delegate)
+    public function prependDelegate(ConfigInterface $delegate)
     {
         array_unshift($this->delegates, $delegate);
         return $this;
@@ -146,7 +149,7 @@ abstract class AbstractConfig implements
      * @throws InvalidArgumentException If $separator is invalid.
      * @return AbstractConfig Chainable
      */
-    public function set_separator($separator)
+    public function setSeparator($separator)
     {
         if (!is_string($separator)) {
             throw new InvalidArgumentException(
@@ -174,9 +177,9 @@ abstract class AbstractConfig implements
      * @throws InvalidArgumentException If the file is invalid.
      * @return AbstractConfig (Chainable)
      */
-    public function add_file($filename)
+    public function addFile($filename)
     {
-        $content = $this->load_file($filename);
+        $content = $this->loadFile($filename);
         if (is_array($content)) {
             $this->merge($content);
         }
@@ -192,7 +195,7 @@ abstract class AbstractConfig implements
      * @throws InvalidArgumentException If the filename is invalid.
      * @return mixed The file content.
      */
-    public function load_file($filename)
+    public function loadFile($filename)
     {
         if (!is_string($filename)) {
             throw new InvalidArgumentException(
@@ -208,11 +211,11 @@ abstract class AbstractConfig implements
         $ext = pathinfo($filename, PATHINFO_EXTENSION);
 
         if ($ext == 'php') {
-            return $this->load_php_file($filename);
+            return $this->loadPhpFile($filename);
         } elseif ($ext == 'json') {
-            return $this->load_json_file($filename);
+            return $this->loadJsonFile($filename);
         } elseif ($ext == 'ini') {
-            return $this->load_ini_file($filename);
+            return $this->loadIniFile($filename);
         } else {
             throw new InvalidArgumentException(
                 'Only JSON, INI and PHP files are accepted as a Configuration file.'
@@ -237,20 +240,6 @@ abstract class AbstractConfig implements
                 $this->set($k, $v);
         }
         return $this;
-    }
-
-    /**
-     * For each key, calls `set()`, which calls `offsetSet()`  (from ArrayAccess)
-     *
-     * @param array|Traversable $data The data to set.
-     * @return AbstractConfig Chainable
-     * @see self::set()
-     * @see self::offsetSet()
-     */
-    public function set_data($data)
-    {
-        trigger_error('Use merge() instead of set_data() for Config objects', E_USER_DEPRECATED);
-        return $this->merge($data);
     }
 
     /**
@@ -372,14 +361,15 @@ abstract class AbstractConfig implements
         }
 
         if (strstr($key, $this->separator())) {
-            return $this->has_with_separator($key);
+            return $this->hasWithSeparator($key);
         }
 
-        if (is_callable([$this, $key])) {
-            $value = $this->{$key}();
+        $getter = $this->getter($key);
+        if (is_callable([$this, $getter])) {
+            $value = $this->{$getter}();
         } else {
             if (!isset($this->{$key})) {
-                return $this->has_in_delegates($key);
+                return $this->hasInDelegates($key);
             }
             $value = $this->{$key};
         }
@@ -402,16 +392,16 @@ abstract class AbstractConfig implements
             );
         }
         if (strstr($key, $this->separator())) {
-            return $this->get_with_separator($key);
+            return $this->getWithSeparator($key);
         }
-        $getter = $key;
+        $getter = $this->getter($key);
         if (is_callable([$this, $getter])) {
             return $this->{$getter}();
         } else {
             if (isset($this->{$key})) {
                 return $this->{$key};
             } else {
-                return $this->get_in_delegates($key);
+                return $this->getInDelegates($key);
             }
         }
     }
@@ -438,7 +428,7 @@ abstract class AbstractConfig implements
         }
 
         if (strstr($key, $this->separator())) {
-            return $this->set_with_separator($key, $value);
+            return $this->setWithSeparator($key, $value);
         } else {
             $setter = $this->setter($key);
             if (is_callable([$this, $setter])) {
@@ -468,27 +458,83 @@ abstract class AbstractConfig implements
         unset($this->keys[$key]);
     }
 
+    /**
+     * IteratorAggregate > getIterator()
+     *
+     * @return ArrayIterator
+     */
     public function getIterator()
     {
         return new ArrayIterator($this->data());
     }
 
     /**
-     * Allow an object to define are the setter are usually.
+     * Allow an object to define how the key getter are called.
+     *
+     * @param string $key The key to get the getter from.
+     * @param string $case Optional. The type of case to return. camel, pascal or snake.
+     * @return string The getter method name, for a given key.
+     */
+    private function getter($key, $case = 'camel')
+    {
+        $getter = $key;
+
+        if ($case == 'camel') {
+            return $this->camelize($getter);
+        } elseif ($case == 'pascal') {
+            return $this->pascalize($getter);
+        } else {
+            return $getter;
+        }
+    }
+
+    /**
+     * Allow an object to define how the key setter are called.
      *
      * @param string $key The key to get the setter from.
-     * @return string
+     * @param string $case Optional. The type of case to return. camel, pascal or snake.
+     * @return string The setter method name, for a given key.
      */
-    private function setter($key)
+    private function setter($key, $case = 'camel')
     {
-        return 'set_'.$key;
+        $setter = 'set_'.$key;
+
+        if ($case == 'camel') {
+            return $this->camelize($setter);
+        } elseif ($case == 'pascal') {
+            return $this->pascalize($setter);
+        } else {
+            return $setter;
+        }
+    }
+
+    /**
+     * Transform a snake_case string to camelCase.
+     *
+     * @param string $str The snake_case string to camelize.
+     * @return string The camelCase string.
+     */
+    private function camelize($str)
+    {
+        return lcfirst($this->pascalize($str));
+    }
+
+    /**
+     * Transform a snake_case string to PamelCase.
+     *
+     * @param string $str The snake_case string to pascalize.
+     * @return string The PamelCase string.
+     */
+    private function pascalize($str)
+    {
+        return implode('', array_map('ucfirst', explode('_', $str)));
     }
 
     /**
      * @param string $key The key of the configuration item to fetch.
      * @return mixed The item, if found, or null.
      */
-    private function get_in_delegates($key)
+    private function getInDelegates($key)
     {
         foreach ($this->delegates as $delegate) {
             if ($delegate->has($key)) {
@@ -502,7 +548,7 @@ abstract class AbstractConfig implements
     /**
      * @param string $key The key of the configuration item to check.
      */
-    private function has_in_delegates($key)
+    private function hasInDelegates($key)
     {
         foreach ($this->delegates as $delegate) {
             if ($delegate->has($key)) {
@@ -516,13 +562,13 @@ abstract class AbstractConfig implements
      * @param string $key The key of the configuration item to look for.
      * @return mixed The value (or null)
      */
-    private function get_with_separator($key)
+    private function getWithSeparator($key)
     {
         $arr = $this;
         $split_keys = explode($this->separator(), $key);
         foreach ($split_keys as $k) {
             if (!isset($arr[$k])) {
-                return $this->get_in_delegates($key);
+                return $this->getInDelegates($key);
             }
             if (!is_array($arr[$k]) && ($arr[$k] instanceof ArrayAccess)) {
                 return $arr[$k];
@@ -536,13 +582,13 @@ abstract class AbstractConfig implements
      * @param string $key The key of the configuration item to look for.
      * @return boolean
      */
-    private function has_with_separator($key)
+    private function hasWithSeparator($key)
     {
         $arr = $this;
         $split_keys = explode($this->separator(), $key);
         foreach ($split_keys as $k) {
             if (!isset($arr[$k])) {
-                return $this->has_in_delegates($key);
+                return $this->hasInDelegates($key);
             }
             if (!is_array($arr[$k]) && ($arr[$k] instanceof ArrayAccess)) {
                 return true;
@@ -558,20 +604,20 @@ abstract class AbstractConfig implements
      * @throws Exception If a value already exists and is scalar (can not be merged).
      * @return void
      */
-    private function set_with_separator($key, $value)
+    private function setWithSeparator($key, $value)
     {
-        $split_keys = explode($this->separator(), $key);
-        $first = array_shift($split_keys);
+        $keys = explode($this->separator(), $key);
+        $first = array_shift($keys);
 
         $lvl = 1;
-        $num = count($split_keys);
+        $num = count($keys);
 
         $source = $this[$first];
 
         $result = [];
         $ref = &$result;
 
-        foreach ($split_keys as $p) {
+        foreach ($keys as $p) {
 
             if ($lvl == $num) {
                 $ref[$p] = $value;
@@ -612,7 +658,7 @@ abstract class AbstractConfig implements
      * @throws InvalidArgumentException If the file or invalid.
      * @return AbstractConfig Chainable
      */
-    private function load_ini_file($filename)
+    private function loadIniFile($filename)
     {
         $config = parse_ini_file($filename, true);
         if ($config === false) {
@@ -630,40 +676,40 @@ abstract class AbstractConfig implements
      * @throws InvalidArgumentException If the file or invalid.
      * @return AbstractConfig Chainable
      */
-    private function load_json_file($filename)
+    private function loadJsonFile($filename)
     {
-        $file_content = file_get_contents($filename);
-        $config = json_decode($file_content, true);
-        $err_code = json_last_error();
-        if ($err_code == JSON_ERROR_NONE) {
+        $fileContent = file_get_contents($filename);
+        $config = json_decode($fileContent, true);
+        $errCode = json_last_error();
+        if ($errCode == JSON_ERROR_NONE) {
             return $config;
         }
         // Handle JSON error
-        switch ($err_code) {
+        switch ($errCode) {
             case JSON_ERROR_NONE:
                 break;
             case JSON_ERROR_DEPTH:
-                $err_msg = 'Maximum stack depth exceeded';
+                $errMsg = 'Maximum stack depth exceeded';
                 break;
             case JSON_ERROR_STATE_MISMATCH:
-                $err_msg = 'Underflow or the modes mismatch';
+                $errMsg = 'Underflow or the modes mismatch';
                 break;
             case JSON_ERROR_CTRL_CHAR:
-                $err_msg = 'Unexpected control character found';
+                $errMsg = 'Unexpected control character found';
                 break;
             case JSON_ERROR_SYNTAX:
-                $err_msg = 'Syntax error, malformed JSON';
+                $errMsg = 'Syntax error, malformed JSON';
                 break;
             case JSON_ERROR_UTF8:
-                $err_msg = 'Malformed UTF-8 characters, possibly incorrectly encoded';
+                $errMsg = 'Malformed UTF-8 characters, possibly incorrectly encoded';
                 break;
             default:
-                $err_msg = 'Unknown error';
+                $errMsg = 'Unknown error';
                 break;
         }
 
         throw new InvalidArgumentException(
-            sprintf('JSON file "%s" could not be parsed: "%s"', $filename, $err_msg)
+            sprintf('JSON file "%s" could not be parsed: "%s"', $filename, $errMsg)
         );
 
     }
@@ -675,7 +721,7 @@ abstract class AbstractConfig implements
      * @throws InvalidArgumentException If the file or invalid.
      * @return AbstractConfig Chainable
      */
-    private function load_php_file($filename)
+    private function loadPhpFile($filename)
     {
         // `$this` is bound to the current configuration object (Current `$this`)
         $config = include $filename;

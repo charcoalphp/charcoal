@@ -79,7 +79,7 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
     {
         $obj = $this->obj;
         $obj->set('foo', ['bar'=>42]);
-        $obj->set_separator('.');
+        $obj->setSeparator('.');
         $this->assertEquals(42, $obj->get('foo.bar'));
     }
 
@@ -114,7 +114,7 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Assert that the `set_separator` method:
+     * Assert that the `setSeparator` method:
      * - is chainable
      * - sets the value (retrievable with `separator()`)
      * - only accepts strings (or throws exception)
@@ -122,19 +122,19 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
     public function testSetSeparator()
     {
         $obj = $this->obj;
-        $ret = $obj->set_separator('_');
+        $ret = $obj->setSeparator('_');
         $this->assertSame($ret, $obj);
         $this->assertEquals('_', $obj->separator());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_separator(false);
+        $obj->setSeparator(false);
     }
 
     public function testSetSeparatorWithMoreThanOneCharacterThrowsException()
     {
         $obj = $this->obj;
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_separator('foo');
+        $obj->setSeparator('foo');
     }
 
     public function testArrayAccess()
@@ -184,7 +184,7 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
 
         $delegate = $this->getMockForAbstractClass('\Charcoal\Config\AbstractConfig');
         $delegate->set('foo', 'bar');
-        $obj->add_delegate($delegate);
+        $obj->addDelegate($delegate);
 
         $this->assertTrue($obj->has('foo'));
         $this->assertEquals('bar', $obj->get('foo'));
@@ -192,29 +192,29 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
         $delegate2 = $this->getMockForAbstractClass('\Charcoal\Config\AbstractConfig');
         $delegate2->set('foo', 'baz');
 
-        $obj->add_delegate($delegate2);
+        $obj->addDelegate($delegate2);
         $this->assertEquals('bar', $obj->get('foo'));
 
-        $obj->prepend_delegate($delegate2);
+        $obj->prependDelegate($delegate2);
         $this->assertEquals('baz', $obj->get('foo'));
     }
 
     public function testAddFileIni()
     {
         $obj = $this->obj;
-        $ret = $obj->add_file(__DIR__.'/config_files/test.ini');
+        $ret = $obj->addFile(__DIR__.'/config_files/test.ini');
         $this->assertSame($ret, $obj);
 
         $this->assertEquals(['test'=>'phpunit'], $obj['config']);
 
         //$this->setExpectedException('\InvalidArgumentException');
-        //$obj->add_file(__DIR__.'/config_files/broken.ini');
+        //$obj->addFile(__DIR__.'/config_files/broken.ini');
     }
 
     public function testAddFileJson()
     {
         $obj = $this->obj;
-        $ret = $obj->add_file(__DIR__.'/config_files/test.json');
+        $ret = $obj->addFile(__DIR__.'/config_files/test.json');
         $this->assertSame($ret, $obj);
 
         $this->assertEquals(['test'=>'phpunit'], $obj['config']);
@@ -224,7 +224,7 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
     public function testAddFilePhp()
     {
         $obj = $this->obj;
-        $ret = $obj->add_file(__DIR__.'/config_files/test.php');
+        $ret = $obj->addFile(__DIR__.'/config_files/test.php');
         $this->assertSame($ret, $obj);
         $this->assertEquals(['test'=>'phpunit'], $obj['config']);
     }
@@ -255,7 +255,7 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
 
         $keys = [];
         $vals = [];
-        foreach($obj as $k=>$v) {
+        foreach ($obj as $k => $v) {
             $keys[] = $k;
             $vals[] = $v;
         }
