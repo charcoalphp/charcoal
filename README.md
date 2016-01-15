@@ -265,7 +265,7 @@ echo $foo->config('bar/baz');
 
 ### Coding Style
 
-All Charcoal modules follow the same coding style and `charcoal-core` is no exception. For PHP:
+All Charcoal modules follow the same coding style and `charcoal-config` is no exception. For PHP:
 
 - [_PSR-1_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md)
 - [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
@@ -276,6 +276,7 @@ All Charcoal modules follow the same coding style and `charcoal-core` is no exce
 	- Prefix abstract classes with `Abstract`;
 	- Suffix interfaces with `Interface`, traits with `Trait`, exceptions with `Exception`;
 	- For arrays, use short notation `[]` (instead of `array()`).
+	- Read the [phpcs.xml](phpcs.xml) file for all the details.
 
 Coding styles are  enforced with `grunt phpcs` ([_PHP Code Sniffer_](https://github.com/squizlabs/PHP_CodeSniffer)). The actual ruleset can be found in `phpcs.xml`.
 

@@ -252,6 +252,9 @@ abstract class AbstractConfig implements
         $ret = [];
         $keys = $this->keys();
         foreach ($keys as $k) {
+            if ($k == 'data') {
+                continue;
+            }
             if ($this->has($k)) {
                 $ret[$k] = $this[$k];
             }
