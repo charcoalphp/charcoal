@@ -92,7 +92,7 @@ interface ConfigInterface
     public function add_file($filename);
 
     /**
-     * @param string $path The file to load.
+     * @param string $filename The file to load.
      * @return mixed The file content.
      */
     public function load_file($filename);

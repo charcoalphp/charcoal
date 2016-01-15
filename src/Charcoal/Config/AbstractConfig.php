@@ -114,7 +114,7 @@ abstract class AbstractConfig implements
     }
 
     /**
-     * @param ConfigInterface[] $delegates A delegate (config) instance.
+     * @param ConfigInterface[] $delegate A delegate (config) instance.
      * @return ConfigInterface Chainable
      */
     public function add_delegate(ConfigInterface $delegate)
@@ -124,7 +124,7 @@ abstract class AbstractConfig implements
     }
 
     /**
-     * @param ConfigInterface[] $delegates A delegate (config) instance.
+     * @param ConfigInterface[] $delegate A delegate (config) instance.
      * @return ConfigInterface Chainable
      */
     public function prepend_delegate(ConfigInterface $delegate)
@@ -474,8 +474,9 @@ abstract class AbstractConfig implements
     }
 
     /**
-     * Allow an object to define are the setter are usually
+     * Allow an object to define are the setter are usually.
      *
+     * @param string $key The key to get the setter from.
      * @return string
      */
     private function setter($key)
@@ -566,6 +567,8 @@ abstract class AbstractConfig implements
         $num = count($split_keys);
 
         $source = $this[$first];
+
+        $result = [];
         $ref = &$result;
 
         foreach ($split_keys as $p) {
