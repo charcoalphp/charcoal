@@ -32,7 +32,7 @@ class GenericFactory extends AbstractFactory
      * @throws InvalidArgumentException If the type parameter is not a string.
      * @return boolean
      */
-    public function is_resolvable($type)
+    public function isResolvable($type)
     {
         if (!is_string($type)) {
             throw new InvalidArgumentException(

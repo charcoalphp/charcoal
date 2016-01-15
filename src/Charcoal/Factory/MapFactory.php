@@ -15,7 +15,7 @@ use \Charcoal\Factory\AbstractFactory;
 class MapFactory extends AbstractFactory
 {
     /**
-     * The class map array holds available types, in `[$type => $class_name]` format.
+     * The class map array holds available types, in `[$type => $className]` format.
      * @var array $map
      */
     private $map = [];
@@ -23,40 +23,40 @@ class MapFactory extends AbstractFactory
     /**
      * Add a class name to the available types _map_.
      *
-     * @param string $type       The type (class ident).
-     * @param string $class_name The FQN of the class.
-     * @throws InvalidArgumentException If the $type parameter is not a striing or the $class_name class does not exist.
+     * @param string $type      The type (class ident).
+     * @param string $className The FQN of the class.
+     * @throws InvalidArgumentException If the $type parameter is not a striing or the $className class does not exist.
      * @return FactoryInterface Chainable
      */
-    public function add_class($type, $class_name)
+    public function addClass($type, $className)
     {
         if (!is_string($type)) {
             throw new InvalidArgumentException(
                 'Type (class key) must be a string'
             );
         }
-        if (!class_exists($class_name)) {
+        if (!class_exists($className)) {
             throw new InvalidArgumentException(
-                sprintf('Class "%s" is not a valid class name.', $class_name)
+                sprintf('Class "%s" is not a valid class name.', $className)
             );
         }
 
-        $this->map[$type] = $class_name;
+        $this->map[$type] = $className;
         return $this;
     }
 
     /**
-     * Add multiple types, in a an array of `type` => `class_name`.
+     * Add multiple types, in a an array of `type` => `className`.
      *
      * @param array $map The map (key=>classname) to use.
      * @return FactoryInterface Chainable
      */
-    public function set_map(array $map)
+    public function setMap(array $map)
     {
         // Resets (overwrites) map.
         $this->map = [];
-        foreach ($map as $type => $class_name) {
-            $this->add_class($type, $class_name);
+        foreach ($map as $type => $className) {
+            $this->addClass($type, $className);
         }
         return $this;
     }
@@ -106,7 +106,7 @@ class MapFactory extends AbstractFactory
      * @throws InvalidArgumentException If the type parameter is not a string.
      * @return boolean
      */
-    public function is_resolvable($type)
+    public function isResolvable($type)
     {
         if (!is_string($type)) {
             throw new InvalidArgumentException(
@@ -118,8 +118,8 @@ class MapFactory extends AbstractFactory
         if (!isset($map[$type])) {
             return false;
         }
-        
-        $class_name = $map[$type];
-        return !!class_exists($class_name);
+
+        $className = $map[$type];
+        return !!class_exists($className);
     }
 }

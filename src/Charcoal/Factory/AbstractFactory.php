@@ -16,14 +16,14 @@ abstract class AbstractFactory implements FactoryInterface
 {
     /**
      * If a base class is set, then it must be ensured that the
-     * @var string $base_class
+     * @var string $baseClass
      */
-    private $base_class = '';
+    private $baseClass = '';
     /**
      *
-     * @var string $default_class
+     * @var string $defaultClass
      */
-    private $default_class = '';
+    private $defaultClass = '';
 
     /**
      * Keeps loaded instances in memory, in `[$type => $instance]` format.
@@ -48,23 +48,23 @@ abstract class AbstractFactory implements FactoryInterface
         if (!is_string($type)) {
             throw new InvalidArgumentException(
                 sprintf(
-                    '%s: Type must be a string.'
-                ),
-                get_called_class()
+                    '%s: Type must be a string.',
+                    get_called_class()
+                )
             );
         }
 
-        if ($this->is_resolvable($type) === false) {
-            $default_class = $this->default_class();
-            if ($default_class !== '') {
-                return new $default_class($args);
+        if ($this->isResolvable($type) === false) {
+            $defaultClass = $this->defaultClass();
+            if ($defaultClass !== '') {
+                return new $defaultClass($args);
             } else {
                 $e = new InvalidArgumentException(
                     sprintf(
                         '%1$s: Type "%2$s" is not a valid type. (Using default class "%3$s")',
                         get_called_class(),
                         $type,
-                        $default_class
+                        $defaultClass
                     )
                 );
 
@@ -78,13 +78,13 @@ abstract class AbstractFactory implements FactoryInterface
 
 
         // Ensure base class is respected, if set.
-        $base_class = $this->base_class();
-        if ($base_class !== '' && !($obj instanceof $base_class)) {
+        $baseClass = $this->baseClass();
+        if ($baseClass !== '' && !($obj instanceof $baseClass)) {
             throw new Exception(
                 sprintf(
                     '%1$s: Object is not a valid "%2$s" class',
                     get_called_class(),
-                    $base_class
+                    $baseClass
                 )
             );
         }
@@ -124,7 +124,7 @@ abstract class AbstractFactory implements FactoryInterface
      * @throws InvalidArgumentException If the class is not a string or is not an existing class / interface.
      * @return FactoryInterface
      */
-    public function set_base_class($type)
+    public function setBaseClass($type)
     {
         if (!is_string($type) || empty($type)) {
             throw new InvalidArgumentException(
@@ -146,7 +146,7 @@ abstract class AbstractFactory implements FactoryInterface
             }
         }
 
-        $this->base_class = $classname;
+        $this->baseClass = $classname;
 
         return $this;
     }
@@ -154,9 +154,9 @@ abstract class AbstractFactory implements FactoryInterface
     /**
      * @return string The FQN of the base class
      */
-    public function base_class()
+    public function baseClass()
     {
-        return $this->base_class;
+        return $this->baseClass;
     }
 
     /**
@@ -167,7 +167,7 @@ abstract class AbstractFactory implements FactoryInterface
      * @throws InvalidArgumentException If the class name is not a string or not a valid class.
      * @return FactoryInterface
      */
-    public function set_default_class($type)
+    public function setDefaultClass($type)
     {
         if (!is_string($type) || empty($type)) {
             throw new InvalidArgumentException(
@@ -187,7 +187,7 @@ abstract class AbstractFactory implements FactoryInterface
             }
         }
 
-        $this->default_class = $classname;
+        $this->defaultClass = $classname;
 
         return $this;
     }
@@ -195,9 +195,9 @@ abstract class AbstractFactory implements FactoryInterface
     /**
      * @return string The FQN of the default class
      */
-    public function default_class()
+    public function defaultClass()
     {
-        return $this->default_class;
+        return $this->defaultClass;
     }
 
 
@@ -216,5 +216,5 @@ abstract class AbstractFactory implements FactoryInterface
      * @param string $type The "type" of object to resolve (the object ident).
      * @return boolean True if the type is available, false if not
      */
-    abstract public function is_resolvable($type);
+    abstract public function isResolvable($type);
 }

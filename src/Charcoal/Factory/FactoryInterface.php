@@ -32,12 +32,12 @@ interface FactoryInterface
      * @param string $classname The FQN of the class to set as base class.
      * @return FactoryInterface
      */
-    public function set_base_class($classname);
+    public function setBaseClass($classname);
 
     /**
      * @return string
      */
-    public function base_class();
+    public function baseClass();
 
     /**
      * If a default class is set, then calling `get()` or `create()`
@@ -46,12 +46,12 @@ interface FactoryInterface
      * @param string $classname The FQN of the class to set as default class.
      * @return FactoryInterface
      */
-    public function set_default_class($classname);
+    public function setDefaultClass($classname);
 
     /**
      * @return string
      */
-    public function default_class();
+    public function defaultClass();
 
 
     /**
@@ -68,5 +68,5 @@ interface FactoryInterface
      * @param string $type The "type" of object to resolve (the object ident).
      * @return boolean True if the type is available, false if not.
      */
-    public function is_resolvable($type);
+    public function isResolvable($type);
 }

@@ -23,41 +23,41 @@ class ResolverFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testSetResolverPrefix()
     {
-        $this->assertEquals('', $this->obj->resolver_prefix());
-        $ret = $this->obj->set_resolver_prefix('foo');
+        $this->assertEquals('', $this->obj->resolverPrefix());
+        $ret = $this->obj->setResolverPrefix('foo');
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals('foo', $this->obj->resolver_prefix());
+        $this->assertEquals('foo', $this->obj->resolverPrefix());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $this->obj->set_resolver_prefix(false);
+        $this->obj->setResolverPrefix(false);
     }
 
     public function testSetResolverSuffix()
     {
-        $this->assertEquals('', $this->obj->resolver_suffix());
-        $ret = $this->obj->set_resolver_suffix('foo');
+        $this->assertEquals('', $this->obj->resolverSuffix());
+        $ret = $this->obj->setResolverSuffix('foo');
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals('foo', $this->obj->resolver_suffix());
+        $this->assertEquals('foo', $this->obj->resolverSuffix());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $this->obj->set_resolver_suffix(false);
+        $this->obj->setResolverSuffix(false);
     }
 
     public function testSetResolverCapitals()
     {
-        //$this->assertEquals([], $this->obj->resolver_capitals());
-        $ret = $this->obj->set_resolver_capitals(['$']);
+        //$this->assertEquals([], $this->obj->resolverCapitals());
+        $ret = $this->obj->setResolverCapitals(['$']);
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals(['$'], $this->obj->resolver_capitals());
+        $this->assertEquals(['$'], $this->obj->resolverCapitals());
 
         $this->assertEquals('\$Abc$De', $this->obj->resolve('$abc$de'));
     }
 
     public function testSetResoverReplacements()
     {
-        $ret = $this->obj->set_resolver_replacements(['$'=>'_']);
+        $ret = $this->obj->setResolverReplacements(['$'=>'_']);
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals(['$'=>'_'], $this->obj->resolver_replacements());
+        $this->assertEquals(['$'=>'_'], $this->obj->resolverReplacements());
 
         $this->assertEquals('\_abc_de', $this->obj->resolve('$abc$de'));
     }
@@ -68,9 +68,9 @@ class ResolverFactoryTest extends \PHPUnit_Framework_TestCase
     public function testResolve($type, $classname)
     {
         $this->assertEquals($classname, $this->obj->resolve($type));
-        
+
         // Test with additional prefix / suffix
-        $this->obj->set_resolver_suffix('Test');
+        $this->obj->setResolverSuffix('Test');
         $this->assertEquals($classname.'Test', $this->obj->resolve($type));
     }
 
@@ -82,11 +82,11 @@ class ResolverFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testIsResolvable()
     {
-        $this->assertFalse($this->obj->is_resolvable('foo'));
-        $this->assertTrue($this->obj->is_resolvable('charcoal/factory/map-factory'));
+        $this->assertFalse($this->obj->isResolvable('foo'));
+        $this->assertTrue($this->obj->isResolvable('charcoal/factory/map-factory'));
 
         $this->setExpectedException('\InvalidArgumentException');
-        $this->obj->is_resolvable(false);
+        $this->obj->isResolvable(false);
     }
 
     public function testCreate()

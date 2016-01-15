@@ -34,7 +34,7 @@ Factories have only one purpose: to create / instanciate new PHP objects. There 
 $factory = new \Charcoal\Factory\IdentFactory();
 
 // Ensure the created object is a Charcoal Model
-$factory->set_base_class('\Charcoal\Model\ModelInterface');
+$factory->setBaseClass('\Charcoal\Model\ModelInterface');
 
 // Create a "news" object (from the `charcoal-cms` module)
 $factory->create('charcoal/cms/news');
@@ -56,7 +56,7 @@ Resolves the **class name** from the `resolve()` method, which typically transfo
 
 ## Ensuring a type of object
 
-Ensuring a type of object can be done by setting the `base_class`, either forced in a class:
+Ensuring a type of object can be done by setting the `baseClass`, either forced in a class:
 
 ```php
 class MyFactory extends AbstractFactory
@@ -72,7 +72,7 @@ Or, dynamically:
 
 ```php
 $factory = ResolverFactory::instance();
-$factory->set_base_class('\My\Foo\BaseClassInterface');
+$factory->setBaseClass('\My\Foo\BaseClassInterface');
 ```
 
 > 👉 Note that _Interfaces_ can also be used as a factory's base class.
@@ -95,7 +95,7 @@ Or, dynamically:
 
 ```php
 $factory = ResolverFactory::instance();
-$factory->set_default_class('\My\Foo\DefaultClassInterface');
+$factory->setDefaultClass('\My\Foo\DefaultClassInterface');
 ```
 
 > ⚠ Setting a default class name changes the standard Factory behavior. When an invalid class name is used, instead of throwing an `Exception`, an object of the default class type will **always** be returned.
@@ -106,20 +106,20 @@ $factory->set_default_class('\My\Foo\DefaultClassInterface');
 | -------------------------------------- | ------------ | ----------- |
 | `create(string $type [, array $args])` | _Object_     | Create a class from a "type" string. |
 | `get(string $type [, array $args])`    | _Object_     | Get returns the latest created class instance, or a new one if none exists. |
-| `set_base_class(string $classname)`    | _Chainable_  |             |
-| `base_class()`                         | `string`     |             |
-| `set_default_class(string $classname)` | _Chainable_  |             |
-| `default_class()`                      | `string`     |             |
-| `resolve(string $type)`                | `string`     | **abstract**, must be reimplemented in children classes. |
-| `is_resolvable(string $type)`          | `boolean`    | **abstract**, must be reimplemented in children classes. |
+| `setBase_class(string $classname)`    | _Chainable_  |             |
+| `baseClass()`                         | `string`     |             |
+| `setDefaultClass(string $classname)`  | _Chainable_  |             |
+| `defaultClass()`                      | `string`     |             |
+| `resolve(string $type)`               | `string`     | **abstract**, must be reimplemented in children classes. |
+| `isResolvable(string $type)`          | `boolean`    | **abstract**, must be reimplemented in children classes. |
 
 ### The `MapFactory` additional API
 
-| Method                                        | Return value | Description |
-| --------------------------------------------- | ------------ | ----------- |
-| `add_class(string $type, string $class_name)` | _Chainable_  |             |
-| `set_map(array $map)`                         | _Chainable_  |             |
-| `map()`                                       | `array`      |             |
+| Method                                       | Return value | Description |
+| -------------------------------------------- | ------------ | ----------- |
+| `addClass(string $type, string $class_name)` | _Chainable_  |             |
+| `setMap(array $map)`                         | _Chainable_  |             |
+| `map()`                                      | `array`      |             |
 
 ### The `GenericFactory` additional API
 
@@ -131,21 +131,21 @@ The `resolve()` method simply returns its _type_ argument, and the `validate()` 
 
 The `ResolverFactory` resolves the classname from the class resolver options:
 
-- `resolver_prefix` `string` that will be prepended to the resolved class name.
-- `resolver_suffix` `string` that will be appended to the resolved class name.
-- `resolver_capitals` `array` of characters that will cause the next character to be capitalized.
-- `resolver_replacements` `array`
+- `resolverPrefix` `string` that will be prepended to the resolved class name.
+- `resolverSuffix` `string` that will be appended to the resolved class name.
+- `resolverCapitals` `array` of characters that will cause the next character to be capitalized.
+- `resolverReplacements` `array`
 
 | Method                                           | Return value | Description |
-| ------------------------------------------------ | ------------ | ----------- |
-| `set_resolver_prefix(string $prefix)`            | _Chainable_  |             |
-| `resolver_prefix()`                              | `string`     |             |
-| `set_resolver_suffix(string $suffix)`            | _Chainable_  |             |
-| `resolver_suffix()`                              | `string`     |             |
-| `set_resolver_capitals(array $capitals)`         | _Chainable_  |             |
-| `resolver_capitals()`                            | `array`      |             |
-| `set_resolver_replacements(array $replacements)` | _Chainable_  |             |
-| `resolver_replacements()`                        | `array`      |             |
+| -----------------------------------------------| ------------ | ----------- |
+| `setResolverPrefix(string $prefix)`            | _Chainable_  |             |
+| `resolverPrefix()`                             | `string`     |             |
+| `setResolverSuffix(string $suffix)`            | _Chainable_  |             |
+| `resolverSuffix()`                             | `string`     |             |
+| `setResolveCcapitals(array $capitals)`         | _Chainable_  |             |
+| `resolverCapitals()`                           | `array`      |             |
+| `setResolverReplacements(array $replacements)` | _Chainable_  |             |
+| `resolverReplacements()`                       | `array`      |             |
 
 # Usage
 
@@ -174,20 +174,22 @@ $ composer install
 
 ## Coding Style
 
-The Charcoal-App module follows the Charcoal coding-style:
+All Charcoal modules follow the same coding style and `charcoal-factory` is no exception. For PHP:
 
-- [_PSR-1_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md), except for
-	- Method names MUST be declared in `snake_case`.
-- [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md), except for the PSR-1 requirement.
+- [_PSR-1_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md)
+- [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
 - [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md), autoloading is therefore provided by _Composer_
 - [_phpDocumentor_](http://phpdoc.org/)
 	- Add DocBlocks for all classes, methods, and functions;
-	- For type-hinting, use `boolean` (instead of `bool`), `integer` (instead of `int`), `float` (instead of `double` or `real`);
-	- Omit the `@return` tag if the method does not return anything.
 - Naming conventions
+	- Prefix abstract classes with `Abstract`;
+	- Suffix interfaces with `Interface`, traits with `Trait`, exceptions with `Exception`;
+	- For arrays, use short notation `[]` (instead of `array()`).
 	- Read the [phpcs.xml](phpcs.xml) file for all the details.
 
-> 👉 Coding style validation / enforcement can be performed with `grunt phpcs`. An auto-fixer is also available with `grunt phpcbf`.
+Coding styles are  enforced with `grunt phpcs` ([_PHP Code Sniffer_](https://github.com/squizlabs/PHP_CodeSniffer)). The actual ruleset can be found in `phpcs.xml`.
+
+> 👉 To fix minor coding style problems, run `grunt phpcbf` ([_PHP Code Beautifier and Fixer_](https://github.com/squizlabs/PHP_CodeSniffer)). This tool uses the same ruleset as *phpcs* to automatically correct coding standard violations.
 
 ## Authors
 

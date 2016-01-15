@@ -13,47 +13,47 @@ use \Charcoal\Factory\AbstractFactory;
 class ResolverFactory extends AbstractFactory
 {
     /**
-     * @var string $resolver_prefix
+     * @var string $resolverPrefix
      */
-    private $resolver_prefix = '';
+    private $resolverPrefix = '';
 
     /**
-     * @var string $resolver_suffix
+     * @var string $resolverSuffix
      */
-    private $resolver_suffix = '';
+    private $resolverSuffix = '';
 
     /**
-     * @var array $resolver_capitals
+     * @var array $resolverCapitals
      */
-    private $resolver_capitals = null;
+    private $resolverCapitals = null;
 
     /**
-     * @var array $resolver_replacements
+     * @var array $resolverReplacements
      */
-    private $resolver_replacements = null;
+    private $resolverReplacements = null;
 
     /**
      * @param string $prefix The resolver prefix string.
      * @throws InvalidArgumentException If the prefix argument is not a string.
      * @return ResolverFactory Chainable
      */
-    public function set_resolver_prefix($prefix)
+    public function setResolverPrefix($prefix)
     {
         if (!is_string($prefix)) {
             throw new InvalidArgumentException(
                 'Prefix must be a string'
             );
         }
-        $this->resolver_prefix = $prefix;
+        $this->resolverPrefix = $prefix;
         return $this;
     }
 
     /**
      * @return string
      */
-    public function resolver_prefix()
+    public function resolverPrefix()
     {
-        return $this->resolver_prefix;
+        return $this->resolverPrefix;
     }
 
     /**
@@ -61,41 +61,41 @@ class ResolverFactory extends AbstractFactory
      * @throws InvalidArgumentException If the suffix argument is not a string.
      * @return ResolverFactory Chainable
      */
-    public function set_resolver_suffix($suffix)
+    public function setResolverSuffix($suffix)
     {
         if (!is_string($suffix)) {
             throw new InvalidArgumentException(
                 'Prefix must be a string'
             );
         }
-        $this->resolver_suffix = $suffix;
+        $this->resolverSuffix = $suffix;
         return $this;
     }
 
     /**
      * @return string
      */
-    public function resolver_suffix()
+    public function resolverSuffix()
     {
-        return $this->resolver_suffix;
+        return $this->resolverSuffix;
     }
 
     /**
      * @param array $capitals The array of letter to "calitalize-next" (uppercase next letter in the string).
      * @return ResolverFactory Chainable
      */
-    public function set_resolver_capitals(array $capitals)
+    public function setResolverCapitals(array $capitals)
     {
-        $this->resolver_capitals = $capitals;
+        $this->resolverCapitals = $capitals;
         return $this;
     }
 
     /**
      * @return array
      */
-    public function resolver_capitals()
+    public function resolverCapitals()
     {
-        if ($this->resolver_capitals === null) {
+        if ($this->resolverCapitals === null) {
             return [
                 '-',
                 '\\',
@@ -104,32 +104,32 @@ class ResolverFactory extends AbstractFactory
                 '_'
             ];
         }
-        return $this->resolver_capitals;
+        return $this->resolverCapitals;
     }
 
     /**
      * @param array $replacements The array (key=>value) of replacements.
      * @return ResolverFactory Chainable
      */
-    public function set_resolver_replacements(array $replacements)
+    public function setResolverReplacements(array $replacements)
     {
-        $this->resolver_replacements = $replacements;
+        $this->resolverReplacements = $replacements;
         return $this;
     }
 
     /**
      * @return array
      */
-    public function resolver_replacements()
+    public function resolverReplacements()
     {
-        if ($this->resolver_replacements === null) {
+        if ($this->resolverReplacements === null) {
             return [
                 '-'=>'',
                 '/'=>'\\',
                 '.'=>'_'
             ];
         }
-        return $this->resolver_replacements;
+        return $this->resolverReplacements;
     }
 
     /**
@@ -151,22 +151,22 @@ class ResolverFactory extends AbstractFactory
             $i = ucfirst($i);
         };
 
-        $capitals = $this->resolver_capitals();
+        $capitals = $this->resolverCapitals();
         foreach ($capitals as $cap) {
             $expl = explode($cap, $type);
             array_walk($expl, $capitalize_next);
             $type = implode($cap, $expl);
         }
 
-        $replacements = $this->resolver_replacements();
+        $replacements = $this->resolverReplacements();
         foreach ($replacements as $rep => $target) {
             $type = str_replace($rep, $target, $type);
         }
 
         $class = '\\'.trim($type, '\\');
-            
+
         // Add prefix + suffix, if applicable
-        $class = $this->resolver_prefix().$class.$this->resolver_suffix();
+        $class = $this->resolverPrefix().$class.$this->resolverSuffix();
 
         return $class;
     }
@@ -176,14 +176,14 @@ class ResolverFactory extends AbstractFactory
      * @throws InvalidArgumentException If the type parameter is not a string.
      * @return boolean
      */
-    public function is_resolvable($type)
+    public function isResolvable($type)
     {
         if (!is_string($type)) {
             throw new InvalidArgumentException(
                 'Can not check resolvable: type must be a string'
             );
         }
-        
+
         $class_name = $this->resolve($type);
         return class_exists($class_name);
     }
