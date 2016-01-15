@@ -9,6 +9,8 @@ class ConfigurableTraitTest extends \PHPUnit_Framework_TestCase
      */
     public $obj;
 
+    public $config;
+
     /**
      * Create the Trait stub
      */
@@ -22,6 +24,8 @@ class ConfigurableTraitTest extends \PHPUnit_Framework_TestCase
              ->will($this->returnCallback(function($args) {
                 return new \Charcoal\Config\GenericConfig($args);
              }));
+
+        $this->config = new \Charcoal\Config\GenericConfig();
     }
 
     /**
@@ -34,14 +38,24 @@ class ConfigurableTraitTest extends \PHPUnit_Framework_TestCase
     public function testSetConfig()
     {
         $obj = $this->obj;
-        $config = new \Charcoal\Config\GenericConfig();
+        $config = $this->config;
+
         $ret = $obj->set_config($config);
         $this->assertSame($ret, $obj);
         $this->assertEquals($config, $obj->config());
 
         $obj->set_config(['foo' => 'baz']);
         $this->assertEquals('baz', $obj->config()->get('foo'));
+
         $this->setExpectedException('\InvalidArgumentException');
         $obj->set_config(false);
+    }
+
+    public function testConfigWithKey()
+    {
+        $obj = $this->obj;
+        $obj->set_config(['foo' => 'baz']);
+        $this->assertEquals('baz', $obj->config('foo'));
+
     }
 }

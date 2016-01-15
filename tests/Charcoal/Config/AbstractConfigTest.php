@@ -17,13 +17,25 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
         $this->obj = $this->getMockForAbstractClass('\Charcoal\Config\AbstractConfig');
     }
 
-    public function testDefaultData()
+    public function testKeys()
+    {
+        $obj = $this->obj;
+        $this->assertEquals([], $obj->keys());
+
+        $obj->set('foobar', 42);
+        $this->assertEquals(['foobar'], $obj->keys());
+
+        unset($obj['foobar']);
+        $this->assertEquals([], $obj->keys());
+    }
+
+    public function testDefaults()
     {
         $obj = $this->obj;
         $this->assertEquals([], $obj->defaults());
     }
 
-    public function testSetData()
+    public function testMerge()
     {
         $obj = $this->obj;
         $ret = $obj->merge([
@@ -33,6 +45,21 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
         $this->assertEquals('bar', $obj->get('foo'));
         $this->assertEquals('baz', $obj->get('bar'));
+    }
+
+    public function testData()
+    {
+        $obj = $this->obj;
+
+        $c = [
+            'foo'=>'bar',
+            'bar'=>[
+                'foobar'=>42
+            ]
+        ];
+
+        $obj->merge($c);
+        $this->assertSame($c, $obj->data());
     }
 
     public function testGet()
@@ -121,8 +148,6 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertNotTrue(isset($obj['foo']));
     }
 
-
-
     public function testArrayAccessGetNumericException()
     {
         $obj = $this->obj;
@@ -202,5 +227,40 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
         $ret = $obj->add_file(__DIR__.'/config_files/test.php');
         $this->assertSame($ret, $obj);
         $this->assertEquals(['test'=>'phpunit'], $obj['config']);
+    }
+
+    public function testSerializable()
+    {
+        $obj = $this->obj;
+        $obj->set('foo', 'bar');
+
+        $s = serialize($obj);
+        $o = unserialize($s);
+
+        $this->assertEquals($o->get('foo'), 'bar');
+        $this->assertEquals($o, $obj);
+    }
+
+    public function testJsonSerializable()
+    {
+        $obj = $this->obj;
+        $obj->set('foo', 'bar');
+    }
+
+    public function testIterator()
+    {
+        $obj = $this->obj;
+        $obj['foo'] = 'baz';
+        $obj['bar'] = 42;
+
+        $keys = [];
+        $vals = [];
+        foreach($obj as $k=>$v) {
+            $keys[] = $k;
+            $vals[] = $v;
+        }
+
+        $this->assertEquals(['foo','bar'], $keys);
+        $this->assertEquals(['baz', 42], $vals);
     }
 }

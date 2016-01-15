@@ -254,6 +254,9 @@ $foo->set_config([
 // echo 42
 $foo_config = $foo->config();
 echo $foo_config['bar/baz'];
+
+// Also echo 42
+echo $foo->config('bar/baz');
 ```
 
 ## Development
@@ -268,21 +271,15 @@ All Charcoal modules follow the same coding style and `charcoal-core` is no exce
 - [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md), autoloading is therefore provided by _Composer_
 - [_phpDocumentor_](http://phpdoc.org/)
 	- Add DocBlocks for all classes, methods, and functions;
-	- For type-hinting, use `boolean` (instead of `bool`), `integer` (instead of `int`), `float` (instead of `double` or `real`);
-	- Omit the `@return` tag if the method does not return anything.
 - Naming conventions
 	- Use `snake_case`, not `camelCase`, for variable, option, parameter, argument, function, and method names;
 	- Prefix abstract classes with `Abstract`;
-	- Suffix interfaces with `Interface`;
-	- Suffix traits with `Trait`;
-	- Suffix exceptions with `Exception`;
+	- Suffix interfaces with `Interface`, traits with `Trait`, exceptions with `Exception`;
 	- For arrays, use short notation `[]` (instead of `array()`).
 
 Coding styles are  enforced with `grunt phpcs` ([_PHP Code Sniffer_](https://github.com/squizlabs/PHP_CodeSniffer)). The actual ruleset can be found in `phpcs.xml`.
 
 > 👉 To fix minor coding style problems, run `grunt phpcbf` ([_PHP Code Beautifier and Fixer_](https://github.com/squizlabs/PHP_CodeSniffer)). This tool uses the same ruleset as *phpcs* to automatically correct coding standard violations.
-
-The main PHP structure follows the [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md) standard. Autoloading is therefore provided by _Composer_.
 
 ## Authors
 

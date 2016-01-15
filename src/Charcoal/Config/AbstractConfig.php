@@ -465,6 +465,7 @@ abstract class AbstractConfig implements
             );
         }
         $this[$key] = null;
+        unset($this->keys[$key]);
     }
 
     public function getIterator()
