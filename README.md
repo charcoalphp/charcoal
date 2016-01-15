@@ -276,9 +276,7 @@ All Charcoal modules follow the same coding style and `charcoal-core` is no exce
 	- Suffix interfaces with `Interface`;
 	- Suffix traits with `Trait`;
 	- Suffix exceptions with `Exception`;
-	- For type-hinting, use `int` (instead of `integer`) and `bool` (instead of `boolean`);
-	- For casting, use `int` (instead of `integer`) and `!!` (instead of `bool` or `boolean`);
-	- For arrays, use `[]` (instead of `array()`).
+	- For arrays, use short notation `[]` (instead of `array()`).
 
 Coding styles are  enforced with `grunt phpcs` ([_PHP Code Sniffer_](https://github.com/squizlabs/PHP_CodeSniffer)). The actual ruleset can be found in `phpcs.xml`.
 
@@ -293,7 +291,7 @@ The main PHP structure follows the [_PSR-4_](https://github.com/php-fig/fig-stan
 ## Changelog
 
 ### 0.3
-_Unreleased_
+_Released on 2016-01-15_
 
 This releases breaks compatibility
 
@@ -307,9 +305,10 @@ This releases breaks compatibility
 - Config now inherits `IteratorAggregate` / `Traversable` (made possible with `data()`).
 - Config is now `serializable` AND `jsonSerializable`.
 - Setter rules can be overridden in children classes (for PSR2-style setter, for example).
+- ConfigurableInterface / Trait `config()` method now accepts an optional `$key` argument.
 
 ### 0.2
-_Released on 2015-02-09_
+_Released on 2015-12-09_
 
 - Added the "delegates" feature.
 - Setting value with a separator now tries to set as array.

@@ -221,7 +221,10 @@ abstract class AbstractConfig implements
     }
 
      /**
-      * For each key, calls `set()`, which calls `offsetSet()`  (from ArrayAccess)
+      * For each key, calls `set()`, which calls `offsetSet()`  (from ArrayAccess).
+      *
+      * The provided `$data` can be a simple array or an object which implements `Traversable`
+      * (such as a `ConfigInterface` instance).
       *
       * @param array|Traversable $data The data to set.
       * @return AbstractConfig Chainable
@@ -250,6 +253,11 @@ abstract class AbstractConfig implements
         return $this->merge($data);
     }
 
+    /**
+     * Get the configuration data, as an assoicative array map.
+     *
+     * @return array
+     */
     public function data()
     {
         $ret = [];

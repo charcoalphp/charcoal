@@ -40,12 +40,28 @@ interface ConfigInterface
     public function separator();
 
     /**
+     * Get the configuration's available keys.
+     *
+     * @return array
+     */
+    public function keys();
+
+    /**
      * @param array|Traversable $data The map of [$key=>$item] items to set.
      * @return ConfigInterface Chainable
      */
     public function merge($data);
 
     /**
+     * Get the configuration data, as an associative array map.
+     *
+     * @return array
+     */
+    public function data();
+
+    /**
+     * The default data, called from object's constructor.
+     *
      * @return array
      */
     public function defaults();
@@ -70,8 +86,14 @@ interface ConfigInterface
     public function has($key);
 
     /**
-     * @param string $path The file to load and add.
-     * @return AbstractConfig (Chainable)
+     * @param string $filename The file to load and add.
+     * @return ConfigInterface Chainable
      */
-    public function add_file($path);
+    public function add_file($filename);
+
+    /**
+     * @param string $path The file to load.
+     * @return mixed The file content.
+     */
+    public function load_file($filename);
 }

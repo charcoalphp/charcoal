@@ -38,19 +38,26 @@ trait ConfigurableTrait
     }
 
     /**
-     * Retrieve the object's configuration container.
+     * Retrieve the object's configuration container, or one of its entry.
      *
      * If the object has no existing config, create one.
      *
+     * If a key is provided, return the configuration key value instead of the full object.
+     *
+     * @param string $key Optional. If provided, the config key value will be returned, instead of the full object.
      * @see    self::create_config()
      * @return ConfigInterface
      */
-    public function config()
+    public function config($key = null)
     {
         if ($this->config === null) {
             $this->config = $this->create_config();
         }
-        return $this->config;
+        if ($key !== null) {
+            return $this->config->get($key);
+        } else {
+            return $this->config;
+        }
     }
 
     /**
