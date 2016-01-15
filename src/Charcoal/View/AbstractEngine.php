@@ -41,7 +41,7 @@ abstract class AbstractEngine implements
      * @param LoaderInterface $loader A loader instance.
      * @return MustacheEngine Chainable
      */
-    public function set_loader(LoaderInterface $loader)
+    public function setLoader(LoaderInterface $loader)
     {
         $this->loader = $loader;
         return $this;
@@ -53,7 +53,7 @@ abstract class AbstractEngine implements
     public function loader()
     {
         if ($this->loader === null) {
-            $this->loader = $this->create_loader();
+            $this->loader = $this->createLoader();
         }
         return $this->loader;
     }
@@ -61,7 +61,7 @@ abstract class AbstractEngine implements
     /**
      * @return LoaderInterface
      */
-    abstract public function create_loader();
+    abstract public function createLoader();
 
     /**
      * Delegates template loading to the engine's Loader object.
@@ -69,7 +69,7 @@ abstract class AbstractEngine implements
      * @param string $template_ident
      * @return string
      */
-    public function load_template($template_ident)
+    public function loadTemplate($template_ident)
     {
         return $this->loader()->load($template_ident);
     }

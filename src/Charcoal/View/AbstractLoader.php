@@ -10,7 +10,7 @@ use \Psr\Log\LoggerAwareInterface;
 use \Psr\Log\LoggerAwareTrait;
 
 /**
- *
+ * Base template loader.
  */
 abstract class AbstractLoader implements
     LoggerAwareInterface,
@@ -31,7 +31,7 @@ abstract class AbstractLoader implements
      *
      * @param array $data The class dependencies map.
      */
-    public function __construct(array $data)
+    public function __construct(array $data = null)
     {
         if (isset($data['logger'])) {
             $this->setLogger($data['logger']);
@@ -45,7 +45,7 @@ abstract class AbstractLoader implements
     public function paths()
     {
         if (empty($this->paths)) {
-            $this->set_default_paths();
+            $this->setDefaultPaths();
         }
 
         return $this->paths;
@@ -54,7 +54,7 @@ abstract class AbstractLoader implements
     /**
      * @return AbstractLoader Chainable
      */
-    public function set_default_paths()
+    public function setDefaultPaths()
     {
         $paths = [];
 
@@ -63,7 +63,7 @@ abstract class AbstractLoader implements
             $paths = \Charcoal\App\App::instance()->config()->get('view/path');
         }
 
-        $this->set_paths($paths);
+        $this->setPaths($paths);
 
         return $this;
     }
@@ -72,12 +72,12 @@ abstract class AbstractLoader implements
      * @param string[] $paths The list of path to add.
      * @return AbstractLoader Chainable
      */
-    public function set_paths(array $paths)
+    public function setPaths(array $paths)
     {
         $this->paths = [];
 
         foreach ($paths as $path) {
-            $this->add_path($path);
+            $this->addPath($path);
         }
 
         return $this;
@@ -87,9 +87,9 @@ abstract class AbstractLoader implements
      * @param string $path The path to add to the load.
      * @return AbstractLoader Chainable
      */
-    public function add_path($path)
+    public function addPath($path)
     {
-        $this->paths[] = $this->resolve_path($path);
+        $this->paths[] = $this->resolvePath($path);
 
         return $this;
     }
@@ -98,9 +98,9 @@ abstract class AbstractLoader implements
      * @param string $path The path to add (prepend) to the load.
      * @return AbstractLoader Chainable
      */
-    public function prepend_path($path)
+    public function prependPath($path)
     {
-        $path = $this->resolve_path($path);
+        $path = $this->resolvePath($path);
         array_unshift($this->paths, $path);
 
         return $this;
@@ -111,7 +111,7 @@ abstract class AbstractLoader implements
      * @throws InvalidArgumentException If the path argument is not a string.
      * @return string
      */
-    public function resolve_path($path)
+    public function resolvePath($path)
     {
         if (!is_string($path)) {
             throw new InvalidArgumentException(
@@ -122,10 +122,10 @@ abstract class AbstractLoader implements
         $path = rtrim($path, '/\\').DIRECTORY_SEPARATOR;
 
         if (class_exists('\Charcoal\App\App')) {
-            $base_path = \Charcoal\App\App::instance()->config()->get('ROOT');
-            $base_path = rtrim($base_path, '/\\').DIRECTORY_SEPARATOR;
-            if (false === strpos($path, $base_path)) {
-                $path = $base_path.$path;
+            $basePath = \Charcoal\App\App::instance()->config()->get('ROOT');
+            $basePath = rtrim($basePath, '/\\').DIRECTORY_SEPARATOR;
+            if (false === strpos($path, $basePath)) {
+                $path = $basePath.$path;
             }
         }
 

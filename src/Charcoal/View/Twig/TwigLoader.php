@@ -28,7 +28,7 @@ class TwigLoader extends AbstractLoader implements
      */
     public function load($ident)
     {
-        $file = $this->find_template_file($ident);
+        $file = $this->findTemplateFile($ident);
 
         $file_content = file_get_contents($file);
         if ($file_content == '') {
@@ -46,7 +46,7 @@ class TwigLoader extends AbstractLoader implements
      * @throws Exception If no template could be found
      * @return sring The matching template file name (full path).
      */
-    public function find_template_file($ident)
+    public function findTemplateFile($ident)
     {
         if (!is_string($ident)) {
             throw new InvalidArgumentException(
@@ -54,19 +54,18 @@ class TwigLoader extends AbstractLoader implements
             );
         }
 
-        // Handle dynamic template hack. @todo rename to $mustache_template
-        if ($ident === '$widget_template') {
-            $ident = (isset($GLOBALS['widget_template']) ? $GLOBALS['widget_template'] : null);
+        // Handle dynamic template hack. @todo rename to $mustacheTemplate
+        if ($ident === '$widgetTemplate') {
+            $ident = (isset($GLOBALS['widgetTemplate']) ? $GLOBALS['widgetTemplate'] : null);
         }
 
         if ($ident === null) {
             throw new InvalidArgumentException(
-                'Can not find template (invalid $widget_template).'
+                'Can not find template (invalid $widgetTemplate).'
             );
         }
 
-        // $ident = $this->classname_to_ident($ident);
-        $filename = $this->filename_from_ident($ident);
+        $filename = $this->filenameFromIdent($ident);
         $search_path = $this->paths();
         foreach ($search_path as $path) {
             $f = realpath($path).'/'.$filename;
@@ -93,7 +92,7 @@ class TwigLoader extends AbstractLoader implements
      * @param string $ident The identifier to convert.
      * @return string
      */
-    public function filename_from_ident($ident)
+    public function filenameFromIdent($ident)
     {
         $filename = str_replace([ '\\' ], '.', $ident);
         $filename .= '.twig';
@@ -107,7 +106,7 @@ class TwigLoader extends AbstractLoader implements
      * @param string $classname The FQN to convert.
      * @return string
      */
-    public function classname_to_ident($classname)
+    public function classnameToIdent($classname)
     {
         $ident = str_replace('\\', '/', strtolower($classname));
         $ident = ltrim($ident, '/');
@@ -138,7 +137,7 @@ class TwigLoader extends AbstractLoader implements
      */
     public function getCacheKey($name)
     {
-        $key = $this->find_template_file($name);
+        $key = $this->findTemplateFile($name);
         return $key;
     }
 
@@ -152,7 +151,7 @@ class TwigLoader extends AbstractLoader implements
      */
     public function isFresh($name, $time)
     {
-        $file = $this->find_template_file($name);
+        $file = $this->findTemplateFile($name);
         $fresh = (filemtime($file) <= $time);
         return $fresh;
     }

@@ -42,7 +42,7 @@ class MyClass implements \Charcoal\View\ViewableInterface
 }
 
 $viewable = new MyClass();
-echo $viewable->render_template('foo/bar/template');
+echo $viewable->renderTemplate('foo/bar/template');
 ```
 
 Full example of the API:
@@ -52,11 +52,11 @@ $engine = new \Charcoal\View\Mustache\MustacheEngine([
 	'loader' => // ...
 ]);
 $view = new \Charcoal\View\GenericView();
-$view->set_engine($engine)
+$view->setEngine($engine)
 
 $context = new \Foo\Bar\ContextData();
 
-echo $view->render_template('foo/bar/template', $context);
+echo $view->renderTemplate('foo/bar/template', $context);
 ```
 
 > 👉 The default view engine, used in those examples, would be _mustache_.
@@ -98,11 +98,11 @@ $app->run();
 The `Charcoal\View\ViewInterface` defines all that is needed to render templates via a view engine:
 
 - `render($template = null, $context = null)`
-- `render_template($template_ident, $context = null)`
+- `renderTemplate($template_ident, $context = null)`
 
 The abstract class `Charcoal\View\AbstractView` fully implements the `ViewInterface` and adds the methods:
 
-- `set_engine($engine)`
+- `setEngine($engine)`
 - `engine()`
 
 ### Generic view
@@ -117,7 +117,7 @@ $view = new GenericView([
 	'engine_type' => 'mustache'
 ]);
 $context = new \Foo\Bar\ModelController();
-echo $view->render_template('example/foo/bar', $context);
+echo $view->renderTemplate('example/foo/bar', $context);
 
 // Using with a template string, directly
 $view = new GenericView([
@@ -132,7 +132,7 @@ echo $view->render($template, $context);
 
 ## View Engines
 
-Charcoal _views_ support different templating _engines_, which are responsible for loading the appropriate template (through a _loader_) and render a template with a given context according to its internal rules. Every view engines should implement `\Charcoal\View\EngineInterface`.
+Charcoal _views_ support different templating Engines_, which are responsible for loading the appropriate template (through a _loader_) and render a template with a given context according to its internal rules. Every view engines should implement `\Charcoal\View\EngineInterface`.
 
 There are 3 engines available by default:
 
@@ -149,7 +149,7 @@ Templates are simply files, stored on the filesystem, containing the main view (
 
 Templates are loaded with template _loaders_. Loaders implement the `Charcoal\View\LoaderInterface` and simply tries to match an identifier (passed as argument to the `load()` method) to a file on the filesystem.
 
-Calling `$view->render_template($template_ident, $ctx)` will automatically use the `Loader` object to find the template `$template_ident`.
+Calling `$view->renderTemplate($template_ident, $ctx)` will automatically use the `Loader` object to find the template `$template_ident`.
 
 Otherwise, calling `$view->render($template_string, $ctx)` expects an already-loaded template string.
 
@@ -159,19 +159,19 @@ Any objects can be made renderable (viewable) by implementing the `Charcoal\View
 
 The interface adds the following methods:
 
-- `set_template_engine($engine)`
-- `template_engine()`
-- `set_template_ident($ident)`
-- `template_ident()`
-- `set_view($view)`
+- `setTemplateEngine($engine)`
+- `templateEngine()`
+- `setTemplateIdent($ident)`
+- `templateIdent()`
+- `setView($view)`
 - `view()`
 - `display($template = null)`
 - `render($template = null)`
-- `render_template($template_ident)`
+- `renderTemplate($template_ident)`
 
 The viewable trait also adds the following abstract methods:
 
-- `create_view` (**abstract** / _private_)
+- `createView` (**abstract** / _private_)
 
 ### Examples
 
@@ -226,7 +226,7 @@ would output: `"Hello world!"`
 	- View configuration.
 	- Inherits `Charcoal\Config\AbstractConfig`, from the `charcoal-config` package.
 - `\Charcoal\View\ViewInterface`
-	- _Views_ are the base rendering objects. They act as the public API, exposing the same methods as the engine (`render()` and `render_template()`).
+	- _Views_ are the base rendering objects. They act as the public API, exposing the same methods as the engine (`render()` and `renderTemplate()`).
 - `\Charcoal\View\Mustache\GenericHelper`
 	- Default mustache render helper. Helpers are global functions available to all the templates.
 - `\Charcoal\View\Mustache\MustacheEngine`

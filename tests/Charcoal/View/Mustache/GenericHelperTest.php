@@ -18,7 +18,7 @@ class GenericHelperTest extends \PHPUnit_Framework_TestCase
 
     public function testAddJs()
     {
-        $this->obj->add_js('foo');
+        $this->obj->addJs('foo');
         $this->assertEquals('foo', $this->obj->js());
     }
 }

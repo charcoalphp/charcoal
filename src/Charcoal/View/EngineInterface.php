@@ -16,13 +16,13 @@ interface EngineInterface
     /**
      * @return LoaderInterface
      */
-    public function create_loader();
+    public function createLoader();
 
     /**
      * @param string $template_ident
      * @return string
      */
-    public function load_template($template_ident);
+    public function loadTemplate($template_ident);
 
     /**
      * @param string $template

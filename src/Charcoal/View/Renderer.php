@@ -25,16 +25,16 @@ class Renderer
      */
     public function __construct(array $data)
     {
-        $this->set_view($data['view']);
+        $this->setView($data['view']);
     }
 
     /**
      * @param ViewInterface $view
      * @return Renderer Chainable
      */
-    public function set_view(ViewInterface $view)
+    public function setView(ViewInterface $view)
     {
-        $this->_view = $view;
+        $this->view = $view;
         return $this;
     }
 
@@ -54,7 +54,7 @@ class Renderer
      */
     public function render(ResponseInterface $response, $template, $context = null)
     {
-         $response->getBody()->write($this->view()->render_template($template, $context));
+         $response->getBody()->write($this->view()->renderTemplate($template, $context));
          return $response;
     }
 }

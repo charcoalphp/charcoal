@@ -36,9 +36,9 @@ abstract class AbstractView implements
     const DEFAULT_ENGINE = 'mustache';
 
     /**
-     * @var string $template_ident
+     * @var string $templateIdent
      */
-    private $template_ident;
+    private $templateIdent;
 
     /**
      * @var string $template
@@ -46,9 +46,9 @@ abstract class AbstractView implements
     private $template;
 
     /**
-     * @var string $engine_type
+     * @var string $engineType
      */
-    private $engine_type = self::DEFAULT_ENGINE;
+    private $engineType = self::DEFAULT_ENGINE;
 
     /**
      * @var EngineInterface $engine
@@ -60,17 +60,18 @@ abstract class AbstractView implements
      */
     public function __toString()
     {
-        return $this->render();
+        return $this->renderTemplate();
     }
 
     /**
      * @param array $data
      * @return AbstractView Chainable
      */
-    public function set_data(array $data)
+    public function setData(array $data)
     {
         foreach ($data as $prop => $val) {
-            $func = [$this, 'set_'.$prop];
+            $setter = $this->setter($prop);
+            $func = [$this, $setter];
             if (is_callable($func)) {
                 call_user_func($func, $val);
             } else {
@@ -82,16 +83,16 @@ abstract class AbstractView implements
     }
 
     /**
-     * > ConfigurableTrait . create_config()
+     * > ConfigurableTrait . createConfig()
      *
      * @param array $data
      * @return ViewConfig
      */
-    public function create_config(array $data = null)
+    public function createConfig(array $data = null)
     {
         $config = new ViewConfig();
         if ($data !== null) {
-            $config->set_data($data);
+            $config->merge($data);
         }
         return $config;
     }
@@ -99,33 +100,33 @@ abstract class AbstractView implements
     /**
      * Set the engine type
      *
-     * @param string $engine_type
+     * @param string $engineType
      * @throws InvalidArgumentException
      * @return AbstractView Chainable
      */
-    public function set_engine_type($engine_type)
+    public function setEngineType($engineType)
     {
-        if (!is_string($engine_type)) {
+        if (!is_string($engineType)) {
             throw new InvalidArgumentException(
                 'Engine type must be a string (mustache, php or php-mustache)'
             );
         }
-        $this->engine_type = $engine_type;
+        $this->engineType = $engineType;
         return $this;
     }
 
     /**
      * @return string
      */
-    public function engine_type()
+    public function engineType()
     {
-        return $this->engine_type;
+        return $this->engineType;
     }
 
     /**
      * @param EngineInterface $engine
      */
-    public function set_engine(EngineInterface $engine)
+    public function setEngine(EngineInterface $engine)
     {
         $this->engine = $engine;
         return $this;
@@ -137,7 +138,7 @@ abstract class AbstractView implements
     public function engine()
     {
         if ($this->engine === null) {
-            $this->engine = $this->create_engine();
+            $this->engine = $this->createEngine();
         }
         return $this->engine;
     }
@@ -145,9 +146,9 @@ abstract class AbstractView implements
     /**
      * @return EngineInterface
      */
-    public function create_engine()
+    public function createEngine()
     {
-        $type = $this->engine_type();
+        $type = $this->engineType();
         switch ($type) {
             case 'mustache':
                 return new MustacheEngine([
@@ -187,28 +188,28 @@ abstract class AbstractView implements
     }
 
     /**
-     * @param string $template_ident
+     * @param string $templateIdent
      * @throws InvalidArgumentException if the provided argument is not a string
      * @return AbstractView Chainable
      */
-    public function set_template_ident($template_ident)
+    public function setTemplateIdent($templateIdent)
     {
-        if (!is_string($template_ident)) {
+        if (!is_string($templateIdent)) {
             throw new InvalidArgumentException(
                 'Template ident must be a string.'
             );
         }
 
-        $this->template_ident = $template_ident;
+        $this->templateIdent = $templateIdent;
         return $this;
     }
 
     /**
      * @return string
      */
-    public function template_ident()
+    public function templateIdent()
     {
-        return $this->template_ident;
+        return $this->templateIdent;
     }
 
     /**
@@ -216,7 +217,7 @@ abstract class AbstractView implements
      * @throws InvalidArgumentException if the provided argument is not a string
      * @return AbstractView Chainable
      */
-    public function set_template($template)
+    public function setTemplate($template)
     {
         if (!is_string($template)) {
             throw new InvalidArgumentException(
@@ -234,31 +235,31 @@ abstract class AbstractView implements
     public function template()
     {
         if ($this->template === null) {
-            return $this->load_template();
+            return $this->loadTemplate();
         }
 
         return $this->template;
     }
 
     /**
-     * @param string $template_ident
+     * @param string $templateIdent
      * @throws InvalidArgumentException
      * @return string
      */
-    public function load_template($template_ident = null)
+    public function loadTemplate($templateIdent = null)
     {
-        if ($template_ident === null) {
-            $template_ident = $this->template_ident();
+        if ($templateIdent === null) {
+            $templateIdent = $this->templateIdent();
         }
-        if (!is_string($template_ident)) {
+        if (!is_string($templateIdent)) {
             throw new InvalidArgumentException(
                 'Template ident must be a string'
             );
         }
-        if (!$template_ident) {
+        if (!$templateIdent) {
             return '';
         }
-        $template = $this->engine()->load_template($template_ident);
+        $template = $this->engine()->loadTemplate($templateIdent);
         return $template;
     }
 
@@ -266,7 +267,7 @@ abstract class AbstractView implements
      * @param mixed $context
      * @return AbstractView Chainable
      */
-    public function set_context($context)
+    public function setContext($context)
     {
         $this->context = $context;
         return $this;
@@ -285,28 +286,92 @@ abstract class AbstractView implements
      * @param mixed  $context
      * @return string The rendered template
      */
-    public function render($template_ident = null, $context = null)
+    public function render($templateIdent = null, $context = null)
     {
-        if ($template_ident === null) {
-            $template_ident = $this->template_ident();
+        if ($templateIdent === null) {
+            $templateIdent = $this->templateIdent();
         }
         if ($context === null) {
             $context = $this->context();
         }
-
-        return $this->engine()->render($template_ident, $context);
+        return $this->engine()->render($templateIdent, $context);
     }
 
     /**
-     * @param string $template_ident
+     * @param string $templateIdent
      * @param mixed  $context
      * @return string The rendered template
      */
-    public function render_template($template_string = null, $context = null)
+    public function renderTemplate($template_string = null, $context = null)
     {
         if ($template_string === null) {
             $template_string = $this->template();
         }
+        if ($context === null) {
+            $context = $this->context();
+        }
         return $this->engine()->render($template_string, $context);
+    }
+
+        /**
+         * Allow an object to define how the key getter are called.
+         *
+         * @param string $key The key to get the getter from.
+         * @param string $case Optional. The type of case to return. camel, pascal or snake.
+         * @return string The getter method name, for a given key.
+         */
+    private function getter($key, $case = 'camel')
+    {
+        $getter = $key;
+
+        if ($case == 'camel') {
+            return $this->camelize($getter);
+        } elseif ($case == 'pascal') {
+            return $this->pascalize($getter);
+        } else {
+            return $getter;
+        }
+    }
+
+    /**
+     * Allow an object to define how the key setter are called.
+     *
+     * @param string $key The key to get the setter from.
+     * @param string $case Optional. The type of case to return. camel, pascal or snake.
+     * @return string The setter method name, for a given key.
+     */
+    private function setter($key, $case = 'camel')
+    {
+        $setter = 'set_'.$key;
+
+        if ($case == 'camel') {
+            return $this->camelize($setter);
+        } elseif ($case == 'pascal') {
+            return $this->pascalize($setter);
+        } else {
+            return $setter;
+        }
+    }
+
+    /**
+     * Transform a snake_case string to camelCase.
+     *
+     * @param string $str The snake_case string to camelize.
+     * @return string The camelCase string.
+     */
+    private function camelize($str)
+    {
+        return lcfirst($this->pascalize($str));
+    }
+
+    /**
+     * Transform a snake_case string to PamelCase.
+     *
+     * @param string $str The snake_case string to pascalize.
+     * @return string The PamelCase string.
+     */
+    private function pascalize($str)
+    {
+        return implode('', array_map('ucfirst', explode('_', $str)));
     }
 }

@@ -18,14 +18,14 @@ use \Charcoal\View\ViewInterface;
 trait ViewableTrait
 {
     /**
-     * @var string $template_engine
+     * @var string $templateEngine
      */
-    private $template_engine;
+    private $templateEngine;
 
     /**
-     * @var string $template_ident
+     * @var string $templateIdent
      */
-    private $template_ident;
+    private $templateIdent;
 
     /**
      * @var ViewInterface $view
@@ -47,14 +47,14 @@ trait ViewableTrait
      * @throws InvalidArgumentException
      * @return ViewableTrait Chainable
      */
-    public function set_template_engine($engine)
+    public function setTemplateEngine($engine)
     {
         if (!is_string($engine)) {
             throw new InvalidArgumentException(
                 'Template engine must be a string.'
             );
         }
-        $this->template_engine = $engine;
+        $this->templateEngine = $engine;
         return $this;
     }
 
@@ -65,12 +65,12 @@ trait ViewableTrait
      *
      * @return string
      */
-    public function template_engine()
+    public function templateEngine()
     {
-        if ($this->template_engine === null) {
-            $this->template_engine = AbstractView::DEFAULT_ENGINE;
+        if ($this->templateEngine === null) {
+            $this->templateEngine = AbstractView::DEFAULT_ENGINE;
         }
-        return $this->template_engine;
+        return $this->templateEngine;
     }
 
     /**
@@ -78,23 +78,23 @@ trait ViewableTrait
      * @throws InvalidArgumentException
      * @return ViewableTrait Chainable
      */
-    public function set_template_ident($ident)
+    public function setTemplateIdent($ident)
     {
         if (!is_string($ident)) {
             throw new InvalidArgumentException(
                 'Template ident must be a string.'
             );
         }
-        $this->template_ident = $ident;
+        $this->templateIdent = $ident;
         return $this;
     }
 
     /**
      * @return string
      */
-    public function template_ident()
+    public function templateIdent()
     {
-        return $this->template_ident;
+        return $this->templateIdent;
     }
 
     /**
@@ -102,10 +102,10 @@ trait ViewableTrait
      * @throws InvalidArgumentException If the view parameter is not an array or a View object.
      * @return ViewableInterface Chainable
      */
-    public function set_view($view)
+    public function setView($view)
     {
         if (is_array($view)) {
-            $this->view = $this->create_view($view);
+            $this->view = $this->createView($view);
         } elseif (($view instanceof ViewInterface)) {
             $this->view = $view;
         } else {
@@ -122,7 +122,7 @@ trait ViewableTrait
     public function view()
     {
         if ($this->view === null) {
-            return $this->create_view();
+            return $this->createView();
         }
         return $this->view;
     }
@@ -131,7 +131,7 @@ trait ViewableTrait
      * @param mixed $data
      * @return ViewInterface
      */
-    abstract public function create_view($data = null);
+    abstract public function createView($data = null);
 
     /**
      * @param string $template The template to parse and render. If null, use the object's default.
@@ -139,26 +139,26 @@ trait ViewableTrait
      */
     public function render($template = null)
     {
-        return $this->view()->render($template, $this->view_controller());
+        return $this->view()->render($template, $this->viewController());
     }
 
     /**
-     * @param string $template_ident The template ident to load and render.
+     * @param string $templateIdent The template ident to load and render.
      * @return string The rendered template.
      */
-    public function render_template($template_ident = null)
+    public function renderTemplate($templateIdent = null)
     {
-        if ($template_ident === null) {
-            $template_ident = $this->template_ident();
+        if ($templateIdent === null) {
+            $templateIdent = $this->templateIdent();
         }
-        return $this->view()->render_template($template_ident, $this->view_controller());
+        return $this->view()->renderTemplate($templateIdent, $this->viewController());
     }
 
     /**
      * Return a viewableinterface
      * @return ViewableInterface [description]
      */
-    public function view_controller()
+    public function viewController()
     {
         return $this;
     }

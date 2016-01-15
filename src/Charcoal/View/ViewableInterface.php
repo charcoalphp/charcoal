@@ -19,29 +19,29 @@ interface ViewableInterface
      * @param string $engine
      * @return ViewableInterface Chainable
      */
-    public function set_template_engine($engine);
+    public function setTemplateEngine($engine);
 
     /**
      * @return string The template engine (`mustache`, `php`, `php-mustache` or `twig`)
      */
-    public function template_engine();
+    public function templateEngine();
 
     /**
      * @param string $ident
      * @return ViewableInterface Chainable
      */
-    public function set_template_ident($ident);
+    public function setTemplateIdent($ident);
 
     /**
      * @return string
      */
-    public function template_ident();
+    public function templateIdent();
 
     /**
      * @param ViewInterface|array $view
      * @return ViewableInterface Chainable
      */
-    public function set_view($view);
+    public function setView($view);
 
     /**
      * @return ViewInterface The object's View.
@@ -55,8 +55,8 @@ interface ViewableInterface
     public function render($template = null);
 
     /**
-     * @param string $template_ident The template ident to load and render.
+     * @param string $templateIdent The template ident to load and render.
      * @return string The rendered template.
      */
-    public function render_template($template_ident);
+    public function renderTemplate($templateIdent);
 }

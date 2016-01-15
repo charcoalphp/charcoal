@@ -39,8 +39,7 @@ class PhpLoader extends AbstractLoader implements LoaderInterface
             return '';
         }
 
-        // $ident = $this->classname_to_ident($ident);
-        $filename = $this->filename_from_ident($ident);
+        $filename = $this->filenameFromIdent($ident);
         $search_path = $this->search_path();
         foreach ($search_path as $path) {
             $f = realpath($path).'/'.$filename;
@@ -77,7 +76,7 @@ class PhpLoader extends AbstractLoader implements LoaderInterface
      * @param string $ident The identifier to convert.
      * @return string
      */
-    private function filename_from_ident($ident)
+    private function filenameFromIdent($ident)
     {
         $filename = str_replace([ '\\' ], '.', $ident);
         $filename .= '.php';
@@ -91,7 +90,7 @@ class PhpLoader extends AbstractLoader implements LoaderInterface
      * @param string $classname The FQN to convert.
      * @return string
      */
-    public function classname_to_ident($classname)
+    public function classnameToIdent($classname)
     {
         $ident = str_replace('\\', '/', strtolower($classname));
         $ident = ltrim($ident, '/');

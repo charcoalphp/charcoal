@@ -21,7 +21,7 @@ class PhpMustacheEngine extends MustacheEngine
     /**
      * @return PhpLoader
      */
-    public function create_loader()
+    public function createLoader()
     {
         $loader = new PhpLoader([
             'search_path'=>[]

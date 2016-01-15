@@ -27,7 +27,7 @@ class GenericView extends AbstractView
         }
 
         if (isset($data['config'])) {
-            $this->set_config($data['config']);
+            $this->setConfig($data['config']);
         }
     }
 }

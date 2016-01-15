@@ -16,8 +16,8 @@ class MustacheEngineTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->obj = new MustacheEngine([
-            'logger'=>null,
-            
+            'logger'=>$GLOBALS['logger'],
+
         ]);
     }
     public function testConstructor()

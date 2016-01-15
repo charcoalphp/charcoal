@@ -13,19 +13,19 @@ interface LoaderInterface
      * @param string[] $paths The list of path to add.
      * @return LoaderInterface Chainable
      */
-    public function set_paths(array $paths);
+    public function setPaths(array $paths);
 
     /**
      * @param string $path The path to add to the load.
      * @return LoaderInterface Chainable
      */
-    public function add_path($path);
+    public function addPath($path);
 
     /**
      * @param string $path The path to add (prepend) to the load.
      * @return LoaderInterface Chainable
      */
-    public function prepend_path($path);
+    public function prependPath($path);
 
     /**
      * @param string $ident

@@ -10,21 +10,21 @@ interface ViewInterface
     /**
      * Set the engine type
      *
-     * @param string $engine_type
+     * @param string $engineType
      * @throws InvalidArgumentException
      * @return AbstractView Chainable
      */
-    public function set_engine_type($engine_type);
+    public function setEngineType($engineType);
 
     /**
      * @return string
      */
-    public function engine_type();
+    public function engineType();
 
     /**
      * @param EngineInterface $engine
      */
-    public function set_engine(EngineInterface $engine);
+    public function setEngine(EngineInterface $engine);
 
     /**
      * @return EngineInterface
@@ -34,26 +34,26 @@ interface ViewInterface
     /**
      * @return EngineInterface
      */
-    public function create_engine();
+    public function createEngine();
 
     /**
      * @param string $template_ident
      * @throws InvalidArgumentException if the provided argument is not a string
      * @return AbstractView Chainable
      */
-    public function set_template_ident($template_ident);
+    public function setTemplateIdent($template_ident);
 
     /**
      * @return string
      */
-    public function template_ident();
+    public function templateIdent();
 
     /**
      * @param string $template
      * @throws InvalidArgumentException if the provided argument is not a string
      * @return AbstractView Chainable
      */
-    public function set_template($template);
+    public function setTemplate($template);
 
     /**
      * @return string
@@ -65,13 +65,13 @@ interface ViewInterface
      * @throws InvalidArgumentException
      * @return string
      */
-    public function load_template($template_ident = null);
+    public function loadTemplate($template_ident = null);
 
     /**
      * @param mixed $context
      * @return AbstractView Chainable
      */
-    public function set_context($context);
+    public function setContext($context);
 
     /**
      * @return mixed
@@ -90,5 +90,5 @@ interface ViewInterface
      * @param mixed  $context
      * @return string
      */
-    public function render_template($template_string = null, $context = null);
+    public function renderTemplate($template_string = null, $context = null);
 }

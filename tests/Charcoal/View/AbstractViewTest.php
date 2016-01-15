@@ -15,6 +15,13 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->obj = $this->getMockForAbstractClass('\Charcoal\View\AbstractView');
+        $this->obj->setLogger($GLOBALS['logger']);
+    }
+
+    public function logger()
+    {
+        // Set in boostrap.php
+        return $GLOBALS['logger'];
     }
 
     public function testConstructor()
@@ -27,14 +34,14 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
     public function testSetEngineType()
     {
         $obj = $this->obj;
-        $this->assertEquals('mustache', $obj->engine_type());
+        $this->assertEquals('mustache', $obj->engineType());
 
-        $ret = $obj->set_engine_type('php');
+        $ret = $obj->setEngineType('php');
         $this->assertSame($ret, $obj);
-        $this->assertEquals('php', $obj->engine_type());
+        $this->assertEquals('php', $obj->engineType());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_engine_type(1);
+        $obj->setEngineType(1);
     }
 
     /**
@@ -50,9 +57,9 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
         $tpl = 'Hello {{who}}';
         $ctx = ['who' => 'World!'];
 
-        $obj->set_template($tpl);
-        $obj->set_context($ctx);
-        $this->assertEquals('Hello World!', $obj->render());
+        $obj->setTemplate($tpl);
+        $obj->setContext($ctx);
+        $this->assertEquals('Hello World!', $obj->renderTemplate());
 
         ob_start();
         echo $obj;
@@ -65,29 +72,33 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
 
     public function testRenderTemplate()
     {
-        $loader = new \Charcoal\View\Mustache\MustacheLoader();
-        $loader->add_search_path(__DIR__.'/Mustache/templates');
-        
+        $loader = new \Charcoal\View\Mustache\MustacheLoader([
+            'logger'=>$this->logger()
+        ]);
+        $loader->addPath(__DIR__.'/Mustache/templates');
+
         $engine = new \Charcoal\View\Mustache\MustacheEngine([
-            'logger'=>null,
+            'logger'=>$this->logger(),
             'loader'=>$loader
         ]);
 
-        $this->obj->set_engine($engine);
-        $this->assertEquals('Hello Charcoal', trim($this->obj->render_template('foo', ['foo'=>'Charcoal'])));
+        $this->obj->setEngine($engine);
+        $this->assertEquals('Hello Charcoal', trim($this->obj->render('foo', ['foo'=>'Charcoal'])));
     }
 
     public function testRenderTemplateHelper()
     {
-        $loader = new \Charcoal\View\Mustache\MustacheLoader();
-        $loader->add_search_path(__DIR__.'/Mustache/templates');
-        
+        $loader = new \Charcoal\View\Mustache\MustacheLoader([
+            'logger'=>$this->logger()
+        ]);
+        $loader->addPath(__DIR__.'/Mustache/templates');
+
         $engine = new \Charcoal\View\Mustache\MustacheEngine([
-            'logger'=>null,
+            'logger'=>$this->logger(),
             'loader'=>$loader
         ]);
 
-        $this->obj->set_engine($engine);
+        $this->obj->setEngine($engine);
 
         $expected = trim('
 <div>
@@ -100,6 +111,6 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
     window.alert(\'Charcoal Unit Tests\');
 </script>');
 
-        $this->assertEquals($expected, trim($this->obj->render_template('helpers', ['foo'=>'Charcoal'])));
+        $this->assertEquals($expected, trim($this->obj->renderTemplate('helpers', ['foo'=>'Charcoal'])));
     }
 }

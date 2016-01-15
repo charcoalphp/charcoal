@@ -22,7 +22,7 @@ class PhpEngine extends AbstractEngine
         }
 
         if (isset($data['loader'])) {
-            $this->set_loader($data['loader']);
+            $this->setLoader($data['loader']);
         }
     }
 

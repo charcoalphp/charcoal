@@ -13,9 +13,9 @@ use \Charcoal\Config\AbstractConfig;
 class ViewConfig extends AbstractConfig
 {
     /**
-     * @var array $template_path
+     * @var array $templatePath
      */
-    private $template_path = [];
+    private $templatePath = [];
 
     /**
      * @var array $engines
@@ -23,17 +23,17 @@ class ViewConfig extends AbstractConfig
     private $engines = [];
 
     /**
-     * @var string $default_engine
+     * @var string $defaultEngine
      */
-    private $default_engine;
+    private $defaultEngine;
 
     /**
      * @return array
      */
-    public function default_data()
+    public function defaults()
     {
         return [
-            'template_path' => [],
+            'templatePath' => [],
             'engines' => [
                 'mustache' => [
 
@@ -45,7 +45,7 @@ class ViewConfig extends AbstractConfig
 
                 ]
             ],
-            'default_engine'=> 'mustache'
+            'defaultEngine'=> 'mustache'
         ];
     }
 
@@ -53,11 +53,11 @@ class ViewConfig extends AbstractConfig
      * @param array $path
      * @return ViewConfig Chainable
      */
-    public function set_template_path(array $path)
+    public function setTemplatePath(array $path)
     {
-        $this->template_path = [];
+        $this->templatePath = [];
         foreach ($path as $p) {
-            $this->add_template_path($p);
+            $this->addTemplatePath($p);
         }
         return $this;
     }
@@ -67,46 +67,46 @@ class ViewConfig extends AbstractConfig
      * @throws InvalidArgumentException
      * @return ViewConfig Chainable
      */
-    public function add_template_path($path)
+    public function addTemplatePath($path)
     {
         if (!is_string($path)) {
             throw new InvalidArgumentException(
                 'Template path must be a string'
             );
         }
-        $this->template_path[] = $path;
+        $this->templatePath[] = $path;
         return $this;
     }
 
     /**
      * @return array
      */
-    public function template_path()
+    public function templatePath()
     {
-        return $this->template_path;
+        return $this->templatePath;
     }
 
     /**
      * @param array $engines
      * @return ViewConfig Chainable
      */
-    public function set_engines($engines)
+    public function setEngines($engines)
     {
         $this->engines = [];
-        foreach ($engines as $engine_ident => $engine_config) {
-            $this->add_engine($engine_ident, $engine_config);
+        foreach ($engines as $engineIdent => $engineConfig) {
+            $this->addEngine($engineIdent, $engineConfig);
         }
         return $this;
     }
 
     /**
-     * @param string $engine_ident
-     * @param array  $engine_config
+     * @param string $engineIdent
+     * @param array  $engineConfig
      * @return ViewConfig Chainable
      */
-    public function add_engine($engine_ident, $engine_config)
+    public function addEngine($engineIdent, $engineConfig)
     {
-        $this->engines[$engine_ident] = $engine_config;
+        $this->engines[$engineIdent] = $engineConfig;
         return $this;
     }
 
@@ -119,27 +119,27 @@ class ViewConfig extends AbstractConfig
     }
 
     /**
-     * @param string|null $engine_ident
+     * @param string|null $engineIdent
      * @throws InvalidArgumentException
      * @return array
      */
-    public function engine($engine_ident = null)
+    public function engine($engineIdent = null)
     {
-        if ($engine_ident === null) {
-            $engine_ident = $this->default_engine();
+        if ($engineIdent === null) {
+            $engineIdent = $this->defaultEngine();
         }
-        if (!is_string($engine_ident)) {
+        if (!is_string($engineIdent)) {
             throw new InvalidArgumentException(
                 'Invalid engine identifier (must be a string)'
             );
         }
 
-        if (!isset($this->engines[$engine_ident])) {
+        if (!isset($this->engines[$engineIdent])) {
             throw new InvalidArgumentException(
-                sprintf('No configured engines matching "%s"', $engine_ident)
+                sprintf('No configured engines matching "%s"', $engineIdent)
             );
         }
-        return $this->engines[$engine_ident];
+        return $this->engines[$engineIdent];
     }
 
     /**
@@ -147,22 +147,22 @@ class ViewConfig extends AbstractConfig
      * @throws InvalidArgumentException
      * @return ViewConfig Chainable
      */
-    public function set_default_engine($engine)
+    public function setDefaultEngine($engine)
     {
         if (!is_string($engine)) {
             throw new InvalidArgumentException(
                 'Default engine must be a string'
             );
         }
-        $this->default_engine = $engine;
+        $this->defaultEngine = $engine;
         return $this;
     }
 
     /**
      * @return string
      */
-    public function default_engine()
+    public function defaultEngine()
     {
-        return $this->default_engine;
+        return $this->defaultEngine;
     }
 }

@@ -42,8 +42,7 @@ class MustacheLoader extends AbstractLoader implements
             return '';
         }
 
-        // $ident = $this->classname_to_ident($ident);
-        $filename = $this->filename_from_ident($ident);
+        $filename = $this->filenameFromIdent($ident);
         $search_path = $this->paths();
         foreach ($search_path as $path) {
             $f = realpath($path).'/'.strtolower($filename);
@@ -77,7 +76,7 @@ class MustacheLoader extends AbstractLoader implements
      * @param string $ident The identifier to convert.
      * @return string
      */
-    public function filename_from_ident($ident)
+    public function filenameFromIdent($ident)
     {
         $filename  = str_replace([ '\\' ], '.', $ident);
         $filename .= '.mustache';
@@ -91,7 +90,7 @@ class MustacheLoader extends AbstractLoader implements
      * @param string $classname The FQN to convert.
      * @return string
      */
-    public function classname_to_ident($classname)
+    public function classnameToIdent($classname)
     {
         $ident = str_replace('\\', '/', strtolower($classname));
         $ident = ltrim($ident, '/');

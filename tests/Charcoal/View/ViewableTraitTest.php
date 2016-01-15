@@ -21,12 +21,12 @@ class ViewableTraitTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $generic_view = new GenericView([
+        $genericView = new GenericView([
             'logger'=>new \Monolog\Logger('charcoal.test')
         ]);
         $mock = $this->getMockForTrait('\Charcoal\View\ViewableTrait');
-        $mock->method('create_view')
-             ->willReturn($generic_view);
+        $mock->method('createView')
+             ->willReturn($genericView);
         $mock->foo = 'bar';
         $this->obj = $mock;
 
@@ -35,53 +35,47 @@ class ViewableTraitTest extends \PHPUnit_Framework_TestCase
     public function testSetTemplateEngine()
     {
         $obj = $this->obj;
-        $this->assertEquals(AbstractView::DEFAULT_ENGINE, $obj->template_engine());
-        $ret = $obj->set_template_engine('php');
+        $this->assertEquals(AbstractView::DEFAULT_ENGINE, $obj->templateEngine());
+        $ret = $obj->setTemplateEngine('php');
         $this->assertSame($ret, $obj);
-        $this->assertEquals('php', $obj->template_engine());
+        $this->assertEquals('php', $obj->templateEngine());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_template_engine(false);
+        $obj->setTemplateEngine(false);
     }
 
     public function testSetTemplateIdent()
     {
         $obj = $this->obj;
-        $this->assertEquals('', $obj->template_ident());
+        $this->assertEquals('', $obj->templateIdent());
 
-        $ret = $obj->set_template_ident('foobar');
+        $ret = $obj->setTemplateIdent('foobar');
         $this->assertSame($ret, $obj);
-        $this->assertEquals('foobar', $obj->template_ident());
+        $this->assertEquals('foobar', $obj->templateIdent());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_template_ident(false);
+        $obj->setTemplateIdent(false);
     }
 
     public function testSetView()
     {
         $obj = $this->obj;
 
-        $view = $this->obj->create_view();
+        $view = $this->obj->createView();
 
-        $ret = $obj->set_view($view);
+        $ret = $obj->setView($view);
         $this->assertSame($ret, $obj);
         $this->assertEquals($view, $obj->view());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_view(false);
+        $obj->setView(false);
     }
 
     public function testRenderAndDisplay()
     {
         $obj = $this->obj;
         $obj->foo = 'bar';
-        $ret = $obj->render('Hello {{foo}}');
+        $ret = $obj->renderTemplate('Hello {{foo}}');
         $this->assertEquals('Hello bar', $ret);
-
-        ob_start();
-        $obj->render('Hello {{foo}}');
-        $ret2 = ob_get_clean();
-
-        $this->assertEquals($ret, $ret2);
     }
 }

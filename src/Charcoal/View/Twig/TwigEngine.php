@@ -56,7 +56,7 @@ class TwigEngine extends AbstractEngine
     public function twig()
     {
         if ($this->twig === null) {
-            $this->twig = $this->create_twig();
+            $this->twig = $this->createTwig();
         }
         return $this->twig;
     }
@@ -64,7 +64,7 @@ class TwigEngine extends AbstractEngine
     /**
      * @return Twig_Environment
      */
-    public function create_twig()
+    public function createTwig()
     {
         $twig = new Twig_Environment($this->loader(), [
             'cache'     => 'twig_cache',
@@ -78,7 +78,7 @@ class TwigEngine extends AbstractEngine
     /**
      * @return LoaderInterface
      */
-    public function create_loader()
+    public function createLoader()
     {
         $loader = new TwigLoader([
             'logger'=>$this->logger

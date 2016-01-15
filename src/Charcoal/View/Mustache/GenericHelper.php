@@ -18,14 +18,14 @@ class GenericHelper implements IteratorAggregate
     static private $js = '';
 
     /**
-     * @var array $js_requirements
+     * @var array $jsRequirements
      */
-    static private $js_requirements = [];
-   
+    static private $jsRequirements = [];
+
     /**
-     * @var array $css_requirements
+     * @var array $cssRequirements
      */
-    static private $css_requirements = [];
+    static private $cssRequirements = [];
     /**
      * @var string $css;
      */
@@ -43,23 +43,23 @@ class GenericHelper implements IteratorAggregate
             '_t' => function($txt) {
                 return $txt;
             },
-            'add_js' => function($js, Mustache_LambdaHelper $helper) {
-                return $this->add_js($js, $helper);
+            'addJs' => function($js, Mustache_LambdaHelper $helper) {
+                return $this->addJs($js, $helper);
             },
             'js' => function() {
                 return $this->js();
             },
-            'add_js_requirement' => function($js_requirement) {
-                return $this->add_js_requirement($js_requirement);
+            'addJsRequirement' => function($jsRequirement) {
+                return $this->addJsRequirement($jsRequirement);
             },
-            'add_css' => function($css, Mustache_LambdaHelper $helper) {
-                return $this->add_css($css, $helper);
+            'addCss' => function($css, Mustache_LambdaHelper $helper) {
+                return $this->addCss($css, $helper);
             },
             'css' => function() {
                 return $this->css();
             },
-            'add_css_requirement' => function($css_requirement) {
-                return $this->add_css_requirement($css_requirement);
+            'addCssRequirement' => function($cssRequirement) {
+                return $this->addCssRequirement($cssRequirement);
             }
         ]);
     }
@@ -69,7 +69,7 @@ class GenericHelper implements IteratorAggregate
      * @param Mustache_LamdaHelper $helper
      * @return void
      */
-    public function add_js($js, Mustache_LambdaHelper $helper = null)
+    public function addJs($js, Mustache_LambdaHelper $helper = null)
     {
         if ($helper !== null) {
             $js = $helper->render($js);
@@ -90,13 +90,13 @@ class GenericHelper implements IteratorAggregate
     }
 
     /**
-     * @param string $js_requirement
+     * @param string $jsRequirement
      * @return void
      */
-    public function add_js_requirement($js_requirement)
+    public function addJsRequirement($jsRequirement)
     {
-        if (!in_array($js_requirement, self::$js_requirements)) {
-            self::$js_requirements[] = $js_requirement;
+        if (!in_array($jsRequirement, self::$jsRequirements)) {
+            self::$jsRequirements[] = $jsRequirement;
         }
     }
 
@@ -104,7 +104,7 @@ class GenericHelper implements IteratorAggregate
      * @param string $css
      * @return void
      */
-    public function add_css($css, Mustache_LambdaHelper $helper = null)
+    public function addCss($css, Mustache_LambdaHelper $helper = null)
     {
         if ($helper !== null) {
             $css = $helper->render($css);
@@ -125,13 +125,13 @@ class GenericHelper implements IteratorAggregate
     }
 
     /**
-     * @param string $css_requirement
+     * @param string $cssRequirement
      * @return string
      */
-    public function add_css_requirement($css_requirement)
+    public function addCssRequirement($cssRequirement)
     {
-        if (!in_array($css_requirement, self::$css_requirements)) {
-            self::$css_requirements[] = $css_requirement;
+        if (!in_array($cssRequirement, self::$cssRequirements)) {
+            self::$cssRequirements[] = $cssRequirement;
         }
     }
 }

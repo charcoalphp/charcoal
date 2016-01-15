@@ -43,7 +43,7 @@ class MustacheEngine extends AbstractEngine
         }
 
         if (isset($data['loader'])) {
-            $this->set_loader($data['loader']);
+            $this->setLoader($data['loader']);
         }
     }
 
@@ -61,7 +61,7 @@ class MustacheEngine extends AbstractEngine
     public function mustache()
     {
         if ($this->mustache === null) {
-            $this->mustache = $this->create_mustache();
+            $this->mustache = $this->createMustache();
         }
         return $this->mustache;
     }
@@ -69,7 +69,7 @@ class MustacheEngine extends AbstractEngine
     /**
      * @return Mustache_Engine
      */
-    public function create_mustache()
+    public function createMustache()
     {
         $mustache = new Mustache_Engine([
             'cache'             => 'mustache_cache',
@@ -87,7 +87,7 @@ class MustacheEngine extends AbstractEngine
     /**
      * @return LoaderInterface
      */
-    public function create_loader()
+    public function createLoader()
     {
         $loader = new MustacheLoader([
             'logger' => $this->logger
@@ -99,7 +99,7 @@ class MustacheEngine extends AbstractEngine
      * @param mixed $helper
      * @return MustacheEngine Chainable
      */
-    public function set_helper($helper)
+    public function setHelper($helper)
     {
         $this->helper = $helper;
         return $this;
@@ -111,7 +111,7 @@ class MustacheEngine extends AbstractEngine
     public function helper()
     {
         if ($this->helper === null) {
-            $this->helper = $this->create_helper();
+            $this->helper = $this->createHelper();
         }
         return $this->helper;
     }
@@ -119,7 +119,7 @@ class MustacheEngine extends AbstractEngine
     /**
      * @return MustacheLoader
      */
-    public function create_helper()
+    public function createHelper()
     {
         $helper = new GenericHelper();
         return $helper;
