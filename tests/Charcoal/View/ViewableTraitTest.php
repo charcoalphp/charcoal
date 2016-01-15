@@ -79,7 +79,7 @@ class ViewableTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Hello bar', $ret);
 
         ob_start();
-        $obj->display('Hello {{foo}}');
+        $obj->render('Hello {{foo}}');
         $ret2 = ob_get_clean();
 
         $this->assertEquals($ret, $ret2);
