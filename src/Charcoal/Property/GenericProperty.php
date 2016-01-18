@@ -24,7 +24,7 @@ class GenericProperty extends AbstractProperty
     /**
     * @return string
     */
-    public function sql_extra()
+    public function sqlExtra()
     {
         return '';
     }
@@ -32,7 +32,7 @@ class GenericProperty extends AbstractProperty
     /**
     * @return string
     */
-    public function sql_type()
+    public function sqlType()
     {
         if ($this->multiple()) {
             return 'TEXT';
@@ -44,7 +44,7 @@ class GenericProperty extends AbstractProperty
     /**
     * @return integer
     */
-    public function sql_pdo_type()
+    public function sqlPdoType()
     {
         return PDO::PARAM_STR;
     }

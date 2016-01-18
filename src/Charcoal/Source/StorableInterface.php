@@ -16,7 +16,7 @@ interface StorableInterface
     * @param SourceInterface $source
     * @return StorableInterface Chainable
     */
-    public function set_source(SourceInterface $source);
+    public function setSource(SourceInterface $source);
 
     /**
     * Get the object's source.
@@ -46,7 +46,7 @@ interface StorableInterface
     * @param mixed $value Value of said column
     * @return StorableInterface Chainable.
     */
-    public function load_from($key = null, $value = null);
+    public function loadFrom($key = null, $value = null);
 
     /**
     * Load an object from the database from a custom SQL query.
@@ -55,7 +55,7 @@ interface StorableInterface
     * @param array $binds Optional. The SQL query parameters.
     * @return StorableInterface Chainable.
     */
-    public function load_from_query($query, array $binds = null);
+    public function loadFromQuery($query, array $binds = null);
 
     /**
     * Save an object current state to storage

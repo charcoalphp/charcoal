@@ -74,7 +74,7 @@ abstract class AbstractValidator implements ValidatorInterface
     */
     public function log($level, $msg, $ident = null)
     {
-        $this->add_result(
+        $this->addResult(
             [
                 'ident'   => (($ident !== null) ? $ident : ''),
                 'level'   => $level,
@@ -89,7 +89,7 @@ abstract class AbstractValidator implements ValidatorInterface
     * @throws \InvalidArgumentException if result is not an array or object
     * @return AbstractValidator Chainable
     */
-    public function add_result($result)
+    public function addResult($result)
     {
         if (is_array($result)) {
             $result = new ValidatorResult($result);
@@ -115,7 +115,7 @@ abstract class AbstractValidator implements ValidatorInterface
     /**
     * @return array
     */
-    public function error_results()
+    public function errorResults()
     {
         if (!isset($this->results[self::ERROR])) {
             return [];
@@ -126,7 +126,7 @@ abstract class AbstractValidator implements ValidatorInterface
     /**
     * @return array
     */
-    public function warning_results()
+    public function warningResults()
     {
         if (!isset($this->results[self::WARNING])) {
             return [];
@@ -137,7 +137,7 @@ abstract class AbstractValidator implements ValidatorInterface
     /**
     * @return array
     */
-    public function notice_results()
+    public function noticeResults()
     {
         if (!isset($this->results[self::NOTICE])) {
             return [];
@@ -153,12 +153,12 @@ abstract class AbstractValidator implements ValidatorInterface
     public function merge(ValidatorInterface $v, $ident_prefix = null)
     {
         $results = $v->results();
-        foreach ($results as $level => $level_results) {
-            foreach ($level_results as $r) {
+        foreach ($results as $level => $levelResults) {
+            foreach ($levelResults as $r) {
                 if ($ident_prefix !== null) {
                     $r->set_ident($ident_prefix.'.'.$r->ident());
                 }
-                $this->add_result($r);
+                $this->addResult($r);
             }
         }
         return $this;

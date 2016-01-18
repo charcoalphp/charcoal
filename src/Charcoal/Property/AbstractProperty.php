@@ -50,7 +50,7 @@ abstract class AbstractProperty implements
     private $ident = '';
 
     /**
-    * @var mixed $_val
+    * @var mixed $Val
     */
     protected $val;
 
@@ -79,9 +79,9 @@ abstract class AbstractProperty implements
     * - `separator` (default=",") How the values will be separated in the storage (sql)
     * - `min` (default=null) The minimum number of values. If null, <0 or NaN, then this is not taken into consideration
     * - `max` (default=null) The maximum number of values. If null, <0 or NaN, then there is not limit
-    * @var mixed $multiple_options
+    * @var mixed $multipleOptions
     */
-    private $multiple_options;
+    private $multipleOptions;
 
     /**
     * If true, this property *must* have a value
@@ -96,9 +96,9 @@ abstract class AbstractProperty implements
     private $unique = false;
 
     /**
-    * @var boolean $allow_null
+    * @var boolean $allowNull
     */
-    private $allow_null = true;
+    private $allowNull = true;
 
     /**
     * Only the storable properties should be saved in storage.
@@ -113,7 +113,7 @@ abstract class AbstractProperty implements
     private $active = true;
 
     /**
-    * @var TranslationString $_description
+    * @var TranslationString $description
     */
     private $description = '';
 
@@ -169,8 +169,8 @@ abstract class AbstractProperty implements
     *
     * This method either calls a setter for each key (`set_{$key}()`) or sets a public member.
     *
-    * For example, calling with `set_data(['ident'=>$ident])` would call `set_ident($ident)`
-    * becasue `set_ident()` exists.
+    * For example, calling with `set_data(['ident'=>$ident])` would call `setIdent($ident)`
+    * becasue `setIdent()` exists.
     *
     * But calling with `set_data(['foobar'=>$foo])` would set the `$foobar` member
     * on the metadata object, because the method `set_foobar()` does not exist.
@@ -178,10 +178,10 @@ abstract class AbstractProperty implements
     * @param array $data
     * @return AbstractProperty Chainable
     */
-    public function set_data(array $data)
+    public function setData(array $data)
     {
         foreach ($data as $prop => $val) {
-            $setter = 'set_'.$prop;
+            $setter = $this->setter($prop);
             if (is_callable([$this, $setter])) {
                 $this->{$setter}($val);
             } else {
@@ -198,7 +198,7 @@ abstract class AbstractProperty implements
     * @throws InvalidArgumentException  If the ident parameter is not a string
     * @return AbstractProperty Chainable
     */
-    public function set_ident($ident)
+    public function setIdent($ident)
     {
         if (!is_string($ident)) {
             throw new InvalidArgumentException(
@@ -228,10 +228,10 @@ abstract class AbstractProperty implements
     * @throws InvalidArgumentException
     * @return PropertyInterface Chainable
     */
-    public function set_val($val)
+    public function setVal($val)
     {
         if ($val === null) {
-            if ($this->allow_null()) {
+            if ($this->allowNull()) {
                 $this->val = null;
                 return $this;
             } else {
@@ -242,7 +242,7 @@ abstract class AbstractProperty implements
         }
         if ($this->multiple()) {
             if (is_string($val)) {
-                $val = explode($this->multiple_separator(), $val);
+                $val = explode($this->multipleSeparator(), $val);
             }
             if (!is_array($val)) {
                 throw new InvalidArgumentException(
@@ -263,10 +263,10 @@ abstract class AbstractProperty implements
     }
 
     /**
-    * @param string $field_ident
+    * @param string $fieldIdent
     * @return mixed
     */
-    public function field_val($field_ident)
+    public function fieldVal($fieldIdent)
     {
         $val = $this->val();
 
@@ -274,10 +274,10 @@ abstract class AbstractProperty implements
             return null;
         }
         if (is_scalar($val)) {
-            return $this->storage_val($val);
+            return $this->storageVal($val);
         }
-        if (isset($val[$field_ident])) {
-            return $this->storage_val($val[$field_ident]);
+        if (isset($val[$fieldIdent])) {
+            return $this->storageVal($val[$fieldIdent]);
         } else {
             return null;
         }
@@ -289,7 +289,7 @@ abstract class AbstractProperty implements
     * @param mixed $val Optional.
     * @return mixed
     */
-    public function storage_val($val = null)
+    public function storageVal($val = null)
     {
         if ($val === null) {
             $val = $this->val();
@@ -301,7 +301,7 @@ abstract class AbstractProperty implements
 
         if ($this->multiple()) {
             if (is_array($val)) {
-                $val = implode($this->multiple_separator(), $val);
+                $val = implode($this->multipleSeparator(), $val);
             }
         }
 
@@ -315,7 +315,7 @@ abstract class AbstractProperty implements
     * @param mixed $val Optional.
     * @return string
     */
-    public function display_val($val = null)
+    public function displayVal($val = null)
     {
         if ($val === null) {
             $val = $this->val();
@@ -325,27 +325,27 @@ abstract class AbstractProperty implements
             return '';
         }
 
-        $property_value = $val;
+        $propertyValue = $val;
 
         if ($this->l10n() === true) {
             $translator = TranslationConfig::instance();
 
-            $property_value = $property_value[$translator->current_language()];
+            $propertyValue = $propertyValue[$translator->current_language()];
         }
 
         if ($this->multiple() === true) {
-            if (is_array($property_value)) {
-                $property_value = implode($this->multiple_separator(), $property_value);
+            if (is_array($propertyValue)) {
+                $propertyValue = implode($this->multipleSeparator(), $propertyValue);
             }
         }
-        return (string)$property_value;
+        return (string)$propertyValue;
     }
 
     /**
     * @param mixed $label
     * @return PropertyInterface Chainable
     */
-    public function set_label($label)
+    public function setLabel($label)
     {
         $this->label = new TranslationString($label);
         return $this;
@@ -366,7 +366,7 @@ abstract class AbstractProperty implements
     * @param boolean $l10n
     * @return PropertyInterface Chainable
     */
-    public function set_l10n($l10n)
+    public function setL10n($l10n)
     {
         $this->l10n = !!$l10n;
         return $this;
@@ -386,7 +386,7 @@ abstract class AbstractProperty implements
     * @param boolean $hidden
     * @return PropertyInterface Chainable
     */
-    public function set_hidden($hidden)
+    public function setHidden($hidden)
     {
         $this->hidden = !!$hidden;
         return $this;
@@ -404,7 +404,7 @@ abstract class AbstractProperty implements
     * @param boolean $multiple
     * @return PropertyInterface Chainable
     */
-    public function set_multiple($multiple)
+    public function setMultiple($multiple)
     {
         $this->multiple = !!$multiple;
         return $this;
@@ -415,7 +415,7 @@ abstract class AbstractProperty implements
     *
     * ## Notes
     * - The multiple flag can be forced to false (or true) in implementing property class.
-    * - How a multiple behaves also depend on `multiple_options`.
+    * - How a multiple behaves also depend on `multipleOptions`.
     *
     * @return boolean
     */
@@ -425,14 +425,14 @@ abstract class AbstractProperty implements
     }
 
     /**
-    * @param array $multiple_options
+    * @param array $multipleOptions
     * @return PropertyInterface Chainable
     */
-    public function set_multiple_options(array $multiple_options)
+    public function setMultipleOptions(array $multipleOptions)
     {
         // The options are always merged with the defaults, to ensure minimum required array structure.
-        $options = array_merge($this->default_multiple_options(), $multiple_options);
-        $this->multiple_options = $options;
+        $options = array_merge($this->defaultMultipleOptions(), $multipleOptions);
+        $this->multipleOptions = $options;
         return $this;
     }
 
@@ -445,20 +445,20 @@ abstract class AbstractProperty implements
     * - `max` (integer) The maximum number of values. (0 = no limit).
     *
     * @return array
-    * @see self::default_multiple_options
+    * @see self::defaultMultipleOptions
     */
-    public function multiple_options()
+    public function multipleOptions()
     {
-        if ($this->multiple_options === null) {
-            return $this->default_multiple_options();
+        if ($this->multipleOptions === null) {
+            return $this->defaultMultipleOptions();
         }
-        return $this->multiple_options;
+        return $this->multipleOptions;
     }
 
     /**
     * @return array
     */
-    public function default_multiple_options()
+    public function defaultMultipleOptions()
     {
         return [
             'separator' => ',',
@@ -470,19 +470,19 @@ abstract class AbstractProperty implements
     /**
     * @return string
     */
-    public function multiple_separator()
+    public function multipleSeparator()
     {
-        $multiple_options = $this->multiple_options();
-        return $multiple_options['separator'];
+        $multipleOptions = $this->multipleOptions();
+        return $multipleOptions['separator'];
     }
 
     /**
     * @param boolean $allow
     * @return PropertyInterface Chainable
     */
-    public function set_allow_null($allow)
+    public function setAllowNull($allow)
     {
-        $this->allow_null = !!$allow;
+        $this->allowNull = !!$allow;
         return $this;
     }
 
@@ -495,16 +495,16 @@ abstract class AbstractProperty implements
     *
     * @return boolean
     */
-    public function allow_null()
+    public function allowNull()
     {
-        return $this->allow_null;
+        return $this->allowNull;
     }
 
     /**
     * @param boolean $required
     * @return PropertyInterface Chainable
     */
-    public function set_required($required)
+    public function setRequired($required)
     {
         $this->required = !!$required;
         return $this;
@@ -527,7 +527,7 @@ abstract class AbstractProperty implements
     * @param boolean $unique
     * @return PropertyInterface Chainable
     */
-    public function set_unique($unique)
+    public function setUnique($unique)
     {
         $this->unique = !!$unique;
         return $this;
@@ -545,7 +545,7 @@ abstract class AbstractProperty implements
     * @param boolean $active
     * @return PropertyInterface Chainable
     */
-    public function set_active($active)
+    public function setActive($active)
     {
         $this->active = !!$active;
         return $this;
@@ -563,7 +563,7 @@ abstract class AbstractProperty implements
     * @param boolean $storable
     * @throws InvalidArgumentException If paramter is not a boolean.
     */
-    public function set_storable($storable)
+    public function setStorable($storable)
     {
         $this->storable = !!$storable;
         return $this;
@@ -581,7 +581,7 @@ abstract class AbstractProperty implements
     * @param mixed $description
     * @return PropertyInterface Chainable
     */
-    public function set_description($description)
+    public function setDescription($description)
     {
         $this->description = new TranslationString($description);
         return $this;
@@ -599,7 +599,7 @@ abstract class AbstractProperty implements
     * @param mixed $notes
     * @return PropertyInterface Chainable
     */
-    public function set_notes($notes)
+    public function setNotes($notes)
     {
         $this->notes = new TranslationString($notes);
         return $this;
@@ -622,34 +622,34 @@ abstract class AbstractProperty implements
         if ($this->l10n()) {
             $translator = TranslationConfig::instance();
 
-            foreach ($translator->languages() as $lang_code) {
-                $ident = sprintf('%1$s_%2$s', $this->ident(), $lang_code);
+            foreach ($translator->languages() as $langCode) {
+                $ident = sprintf('%1$s_%2$s', $this->ident(), $langCode);
                 $field = new PropertyField();
-                $field->set_data(
+                $field->setData(
                     [
                         'ident'        => $ident,
-                        'sql_type'     => $this->sql_type(),
-                        'sql_pdo_type' => $this->sql_pdo_type(),
-                        'extra'        => $this->sql_extra(),
-                        'val'          => $this->field_val($lang_code),
-                        'default_val'  => null,
-                        'allow_null'   => $this->allow_null(),
+                        'sqlType'     => $this->sqlType(),
+                        'sqlPdoType' => $this->sqlPdoType(),
+                        'extra'        => $this->sqlExtra(),
+                        'val'          => $this->fieldVal($langCode),
+                        'defaultVal'  => null,
+                        'allowNull'   => $this->allowNull(),
                         'comment'      => $this->label()
                     ]
                 );
-                $fields[$lang_code] = $field;
+                $fields[$langCode] = $field;
             }
         } else {
             $field = new PropertyField();
-            $field->set_data(
+            $field->setData(
                 [
                     'ident'        => $this->ident(),
-                    'sql_type'     => $this->sql_type(),
-                    'sql_pdo_type' => $this->sql_pdo_type(),
-                    'extra'        => $this->sql_extra(),
-                    'val'          => $this->storage_val(),
-                    'default_val'  => null,
-                    'allow_null'   => $this->allow_null(),
+                    'sqlType'     => $this->sqlType(),
+                    'sqlPdoType' => $this->sqlPdoType(),
+                    'extra'        => $this->sqlExtra(),
+                    'val'          => $this->storageVal(),
+                    'defaultVal'  => null,
+                    'allowNull'   => $this->allowNull(),
                     'comment'      => $this->label()
                 ]
             );
@@ -664,26 +664,26 @@ abstract class AbstractProperty implements
     *
     * - `required`
     * - `unique`
-    * - `allow_null`
+    * - `allowNull`
     *
     * ## Notes
     * - Those 3 base validation methods should always be merged, in implementing factory class.
     *
     * @return array
     */
-    public function validation_methods()
+    public function validationMethods()
     {
         return [
             'required',
             'unique',
-            'allow_null'
+            'allowNull'
         ];
     }
 
     /**
     * @return boolean
     */
-    public function validate_required()
+    public function validateRequired()
     {
         if ($this->required() && !$this->val()) {
             $this->validator()->error('Value is required.', 'required');
@@ -697,7 +697,7 @@ abstract class AbstractProperty implements
     * @return boolean
     * @todo
     */
-    public function validate_unique()
+    public function validateUnique()
     {
         if (!$this->unique()) {
             return true;
@@ -710,23 +710,23 @@ abstract class AbstractProperty implements
     /**
     * @return boolean
     */
-    public function validate_allow_null()
+    public function validateAllowNull()
     {
-        if (!$this->allow_null() && $this->val() === null) {
-            $this->validator()->error('Value can not be null.', 'allow_null');
+        if (!$this->allowNull() && $this->val() === null) {
+            $this->validator()->error('Value can not be null.', 'allowNull');
             return false;
         }
         return true;
     }
 
     /**
-    * @param string $property_ident
+    * @param string $propertyIdent
     * @return mixed
     */
-    protected function property_value($property_ident)
+    protected function propertyValue($propertyIdent)
     {
-        if (isset($this->{$property_ident})) {
-            return $this->{$property_ident};
+        if (isset($this->{$propertyIdent})) {
+            return $this->{$propertyIdent};
         } else {
             return null;
         }
@@ -736,21 +736,21 @@ abstract class AbstractProperty implements
     * @param array $data Optional. Metadata data.
     * @return PropertyMetadata
     */
-    protected function create_metadata(array $data = null)
+    protected function createMetadata(array $data = null)
     {
         $metadata = new PropertyMetadata();
         if (is_array($data)) {
-            $metadata->set_data($data);
+            $metadata->setData($data);
         }
         return $metadata;
     }
 
     /**
-    * ValidatableTrait > create_validator(). Create a Validator object
+    * ValidatableTrait > createValidator(). Create a Validator object
     *
     * @return ValidatorInterface
     */
-    protected function create_validator()
+    protected function createValidator()
     {
         $validator = new PropertyValidator($this);
         return $validator;
@@ -760,13 +760,13 @@ abstract class AbstractProperty implements
     * @param array $data Optional. View data.
     * @return ViewInterface
     */
-    public function create_view(array $data = null)
+    public function createView(array $data = null)
     {
         $view = new GenericView([
             'logger'=>$this->logger
         ]);
         if ($data !== null) {
-            $view->set_data($data);
+            $view->setData($data);
         }
         return $view;
     }
@@ -774,17 +774,17 @@ abstract class AbstractProperty implements
     /**
     * @return string
     */
-    abstract public function sql_extra();
+    abstract public function sqlExtra();
 
     /**
     * @return string
     */
-    abstract public function sql_type();
+    abstract public function sqlType();
 
     /**
     * @return integer
     */
-    abstract public function sql_pdo_type();
+    abstract public function sqlPdoType();
 
     /**
     * @return mixed
@@ -810,7 +810,7 @@ abstract class AbstractProperty implements
     public function unserialize($data)
     {
         $data = unserialize($data);
-        $this->set_val($data);
+        $this->setVal($data);
     }
 
     /**
@@ -821,5 +821,43 @@ abstract class AbstractProperty implements
     public function jsonSerialize()
     {
         return $this->val();
+    }
+
+       /**
+     * Allow an object to define how the key getter are called.
+     *
+     * @param string $key The key to get the getter from.
+     * @param string $case Optional. The type of case to return. camel, pascal or snake.
+     * @return string The getter method name, for a given key.
+     */
+    private function getter($key)
+    {
+        $getter = $key;
+        return $this->camelize($getter);
+
+    }
+
+    /**
+     * Allow an object to define how the key setter are called.
+     *
+     * @param string $key The key to get the setter from.
+     * @param string $case Optional. The type of case to return. camel, pascal or snake.
+     * @return string The setter method name, for a given key.
+     */
+    private function setter($key)
+    {
+        $setter = 'set_'.$key;
+        return $this->camelize($setter);
+    }
+
+    /**
+     * Transform a snake_case string to camelCase.
+     *
+     * @param string $str The snake_case string to camelize.
+     * @return string The camelCase string.
+     */
+    private function camelize($str)
+    {
+        return lcfirst(implode('', array_map('ucfirst', explode('_', $str))));
     }
 }

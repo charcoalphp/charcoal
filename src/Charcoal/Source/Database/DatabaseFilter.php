@@ -20,7 +20,7 @@ class DatabaseFilter extends Filter
         if ($this->string) {
             return $this->string;
         }
-        $fields = $this->sql_fields();
+        $fields = $this->sqlFields();
         if (empty($fields)) {
             return '';
         }
@@ -82,7 +82,7 @@ class DatabaseFilter extends Filter
     /**
     * @return array
     */
-    private function sql_fields()
+    private function sqlFields()
     {
         $property = $this->property();
         if ($property) {

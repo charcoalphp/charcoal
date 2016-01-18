@@ -11,7 +11,7 @@ interface ModelInterface
     * @param array $data
     * @return ModelInterface Chainable
     */
-    public function set_data(array $data);
+    public function setData(array $data);
 
     /**
     * @return array
@@ -22,12 +22,12 @@ interface ModelInterface
     * @param array $data
     * @return ModelInterface Chainable
     */
-    public function set_flat_data(array $data);
+    public function setFlatData(array $data);
 
     /**
     * @return array
     */
-    public function flat_data();
+    public function flatData();
 
     /**
     * @return array

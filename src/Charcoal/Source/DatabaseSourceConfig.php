@@ -29,22 +29,22 @@ class DatabaseSourceConfig extends SourceConfig
     */
     private $password;
     /**
-    * @var string $password_encoding
+    * @var string $passwordEncoding
     */
-    private $password_encoding;
+    private $passwordEncoding;
     /**
-    * @var string $password_salt
+    * @var string $passwordSalt
     */
-    private $password_salt;
+    private $passwordSalt;
     /**
     * @var string $database
     */
     private $database;
 
     /**
-    * @var boolean $disable_utf8
+    * @var boolean $disableUtf8
     */
-    private $disable_utf8;
+    private $disableUtf8;
 
     /**
     * @return array
@@ -56,11 +56,11 @@ class DatabaseSourceConfig extends SourceConfig
             'hostname'          => 'localhost',
             'username'          => '',
             'password'          => '',
-            'password_encoding' => '',
-            'password_salt'     => '',
+            'passwordEncoding' => '',
+            'passwordSalt'     => '',
             'database'          => '',
             'table'             => '',
-            'disable_utf8'      => false
+            'disableUtf8'      => false
         ];
     }
 
@@ -71,7 +71,7 @@ class DatabaseSourceConfig extends SourceConfig
     * @throws InvalidArgumentException if hostname is not a string
     * @return DatabaseSourceConfig Chainable
     */
-    public function set_hostname($hostname)
+    public function setHostname($hostname)
     {
         if (!is_string($hostname)) {
             throw new InvalidArgumentException(
@@ -99,7 +99,7 @@ class DatabaseSourceConfig extends SourceConfig
     * @throws InvalidArgumentException if username is not a string
     * @return DatabaseSourceConfig Chainable
     */
-    public function set_username($username)
+    public function setUsername($username)
     {
         if (!is_string($username)) {
             throw new InvalidArgumentException(
@@ -127,7 +127,7 @@ class DatabaseSourceConfig extends SourceConfig
     * @throws InvalidArgumentException if password is not a string
     * @return DatabaseSourceConfig Chainable
     */
-    public function set_password($password)
+    public function setPassword($password)
     {
         if (!is_string($password)) {
             throw new InvalidArgumentException(
@@ -145,13 +145,13 @@ class DatabaseSourceConfig extends SourceConfig
     */
     public function password()
     {
-        if ($this->password_encoding()) {
+        if ($this->passwordEncoding()) {
             $factory = new EncoderFactory();
-            $encoder = $factory->get($this->password_encoding());
+            $encoder = $factory->get($this->passwordEncoding());
 
-            $this->password = $encoder->decode($this->password, $this->password_salt());
-            $this->password_encoding = null;
-            $this->password_salt = null;
+            $this->password = $encoder->decode($this->password, $this->passwordSalt());
+            $this->passwordEncoding = null;
+            $this->passwordSalt = null;
         }
         return $this->password;
     }
@@ -159,18 +159,18 @@ class DatabaseSourceConfig extends SourceConfig
     /**
     * Set password encoding type
     *
-    * @param string $password_encoding Must be a valid `Encoder` type
+    * @param string $passwordEncoding Must be a valid `Encoder` type
     * @throws InvalidArgumentException if password is not a string
     * @return DatabaseSourceConfig Chainable
     */
-    public function set_password_encoding($password_encoding)
+    public function setPasswordEncoding($passwordEncoding)
     {
-        if (!is_string($password_encoding)) {
+        if (!is_string($passwordEncoding)) {
             throw new InvalidArgumentException(
                 'Password Encoding must be a string.'
             );
         }
-        $this->password_encoding = $password_encoding;
+        $this->passwordEncoding = $passwordEncoding;
         return $this;
     }
 
@@ -179,26 +179,26 @@ class DatabaseSourceConfig extends SourceConfig
     *
     * @return string
     */
-    public function password_encoding()
+    public function passwordEncoding()
     {
-        return $this->password_encoding;
+        return $this->passwordEncoding;
     }
 
     /**
     * Set password salt, if using encoding
     *
-    * @param string $password_salt
+    * @param string $passwordSalt
     * @throws InvalidArgumentException if password is not a string
     * @return DatabaseSourceConfig Chainable
     */
-    public function set_password_salt($password_salt)
+    public function setPasswordSalt($passwordSalt)
     {
-        if (!is_string($password_salt)) {
+        if (!is_string($passwordSalt)) {
             throw new InvalidArgumentException(
                 'Password Salt must be a string.'
             );
         }
-        $this->password_salt = $password_salt;
+        $this->passwordSalt = $passwordSalt;
         return $this;
     }
 
@@ -207,9 +207,9 @@ class DatabaseSourceConfig extends SourceConfig
     *
     * @return string
     */
-    public function password_salt()
+    public function passwordSalt()
     {
-        return $this->password_salt;
+        return $this->passwordSalt;
     }
 
     /**
@@ -219,7 +219,7 @@ class DatabaseSourceConfig extends SourceConfig
     * @throws InvalidArgumentException if database is not a string
     * @return DatabaseSourceConfig Chainable
     */
-    public function set_database($database)
+    public function setDatabase($database)
     {
         if (!is_string($database)) {
             throw new InvalidArgumentException(
@@ -241,26 +241,26 @@ class DatabaseSourceConfig extends SourceConfig
     }
 
     /**
-    * @param boolean $disable_utf8
-    * @throws InvalidArgumentException if disable_utf8 is not a boolean
+    * @param boolean $disableUtf8
+    * @throws InvalidArgumentException if disableUtf8 is not a boolean
     * @return DatabaseSourceConfig Chainable
     */
-    public function set_disable_utf8($disable_utf8)
+    public function setDisableUtf8($disableUtf8)
     {
-        if (!is_bool($disable_utf8)) {
+        if (!is_bool($disableUtf8)) {
             throw new InvalidArgumentException(
                 'Disable UTF8 must be a boolean.'
             );
         }
-        $this->disable_utf8 = $disable_utf8;
+        $this->disableUtf8 = $disableUtf8;
         return $this;
     }
 
     /**
     * @return bools
     */
-    public function disable_utf8()
+    public function disableUtf8()
     {
-        return $this->disable_utf8;
+        return $this->disableUtf8;
     }
 }

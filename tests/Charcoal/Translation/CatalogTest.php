@@ -14,13 +14,13 @@ class CatalogTest extends \PHPUnit_Framework_TestCase
     public function testOffsetExists()
     {
         $obj = new Catalog();
-        $obj->set_config([
+        $obj->setConfig([
             'languages' => [ 'en' ]
         ]);
 
         $this->assertFalse(isset($obj['test']));
 
-        $obj->add_entry('test', [ 'en' => 'foo' ]);
+        $obj->addEntry('test', [ 'en' => 'foo' ]);
 
         $this->assertTrue(isset($obj['test']));
 
@@ -34,17 +34,17 @@ class CatalogTest extends \PHPUnit_Framework_TestCase
     public function testOffsetGet()
     {
         $obj = new Catalog();
-        $obj->set_config([
+        $obj->setConfig([
             'languages' => [ 'en', 'fr' ]
         ]);
 
         $this->assertEquals($obj->translate('test'), $obj['test']);
-        $obj->add_entry('test', [ 'en' => 'foo', 'fr' => 'bar' ]);
+        $obj->addEntry('test', [ 'en' => 'foo', 'fr' => 'bar' ]);
 
-        $obj->set_current_language('en');
+        $obj->setCurrentLanguage('en');
         $this->assertEquals('foo', $obj['test']);
 
-        $obj->set_current_language('fr');
+        $obj->setCurrentLanguage('fr');
         $this->assertEquals('bar', $obj['test']);
 
         $this->setExpectedException('\InvalidArgumentException');
@@ -57,15 +57,15 @@ class CatalogTest extends \PHPUnit_Framework_TestCase
     public function testOffsetSetString()
     {
         $obj = new Catalog();
-        $obj->set_config([
+        $obj->setConfig([
             'languages' => [ 'en', 'fr' ]
         ]);
 
-        $obj->set_current_language('en');
+        $obj->setCurrentLanguage('en');
         $obj['test'] = 'foo';
         $this->assertEquals('foo', $obj->translate('test', 'en'));
 
-        $obj->set_current_language('fr');
+        $obj->setCurrentLanguage('fr');
         $obj['test'] = 'bar';
         $this->assertEquals('bar', $obj->translate('test', 'fr'));
 
@@ -90,7 +90,7 @@ class CatalogTest extends \PHPUnit_Framework_TestCase
     public function testOffsetUnset()
     {
         $obj = new Catalog();
-        $obj->set_config([
+        $obj->setConfig([
             'languages' => [ 'en', 'fr' ]
         ]);
 
@@ -114,11 +114,11 @@ class CatalogTest extends \PHPUnit_Framework_TestCase
         $obj = new Catalog();
 
         $this->setExpectedException('\InvalidArgumentException');
-        $ret = $obj->set_current_language('jp');
+        $ret = $obj->setCurrentLanguage('jp');
 
         $this->assertSame($ret, $obj);
 
-        $this->assertEquals('jp', $obj->current_language());
+        $this->assertEquals('jp', $obj->currentLanguage());
     }
 
     /**
@@ -127,7 +127,7 @@ class CatalogTest extends \PHPUnit_Framework_TestCase
     public function testLangUnsetReturnsDefault()
     {
         $obj = new Catalog();
-        $this->assertEquals('en', $obj->current_language());
+        $this->assertEquals('en', $obj->currentLanguage());
     }
 
     /**
@@ -136,10 +136,10 @@ class CatalogTest extends \PHPUnit_Framework_TestCase
     public function testAddTranslation()
     {
         $obj = new Catalog();
-        $obj->set_config([
+        $obj->setConfig([
             'languages' => [ 'en', 'fr' ]
         ]);
-        $ret = $obj->add_entry('test', [ 'en' => 'foo', 'fr' => 'bar' ]);
+        $ret = $obj->addEntry('test', [ 'en' => 'foo', 'fr' => 'bar' ]);
         $this->assertSame($ret, $obj);
 
         $this->assertEquals('foo', $obj->translate('test', 'en'));
@@ -154,11 +154,11 @@ class CatalogTest extends \PHPUnit_Framework_TestCase
         $obj = new Catalog();
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->add_entry(false, []);
+        $obj->addEntry(false, []);
     }
 
     /**
-    * Test the `add_entry()` method with a `TranslationString`
+    * Test the `addEntry()` method with a `TranslationString`
     * object as "values" (or "translations") parameter.
     */
     public function testAddTranslationTranslationString()
@@ -167,11 +167,11 @@ class CatalogTest extends \PHPUnit_Framework_TestCase
             'languages' => [ 'en', 'fr' ]
         ];
         $obj = new Catalog();
-        $obj->set_config($cfg);
+        $obj->setConfig($cfg);
 
         $str = new TranslationString([ 'en' => 'en string', 'fr' => 'chaîne fr'], $cfg);
 
-        $obj->add_entry('str', $str);
+        $obj->addEntry('str', $str);
 
         $this->assertEquals('en string', $obj->translate('str', 'en'));
         $this->assertEquals('chaîne fr', $obj->translate('str', 'fr'));

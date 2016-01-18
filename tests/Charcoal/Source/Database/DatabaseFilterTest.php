@@ -20,9 +20,9 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
     public function testSQLBasicOperators($operator)
     {
         $obj = new DatabaseFilter();
-        $obj->set_property('foo');
-        $obj->set_operator($operator);
-        $obj->set_val('bar');
+        $obj->setProperty('foo');
+        $obj->setOperator($operator);
+        $obj->setVal('bar');
         $sql = $obj->sql();
 
         /** @todo: Note that 'bar' is not quoted... */
@@ -35,9 +35,9 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
     public function testSQLNullStyleOperators($operator)
     {
         $obj = new DatabaseFilter();
-        $obj->set_property('foo');
-        $obj->set_operator($operator);
-        $obj->set_val('bar');
+        $obj->setProperty('foo');
+        $obj->setOperator($operator);
+        $obj->setVal('bar');
         $sql = $obj->sql();
 
         /** @todo: Note that 'bar' is not quoted... */
@@ -47,10 +47,10 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
     public function testSQLFunction()
     {
         $obj = new DatabaseFilter();
-        $obj->set_property('foo');
-        $obj->set_operator('=');
-        $obj->set_val('bar');
-        $obj->set_func('abs');
+        $obj->setProperty('foo');
+        $obj->setOperator('=');
+        $obj->setVal('bar');
+        $obj->setFunc('abs');
         $sql = $obj->sql();
 
         /** @todo: Note that 'bar' is not quoted... */
@@ -60,7 +60,7 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
     public function testSQLWithString()
     {
         $obj = new DatabaseFilter();
-        $obj->set_string('1=1');
+        $obj->setString('1=1');
 
         $sql = $obj->sql();
         $this->assertEquals('1=1', $sql);
@@ -71,12 +71,12 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
         $obj = new DatabaseFilter();
 
         // Should be ignored:
-        $obj->set_property('foo');
-        $obj->set_operator('=');
-        $obj->set_val('bar');
+        $obj->setProperty('foo');
+        $obj->setOperator('=');
+        $obj->setVal('bar');
 
         // Should take precedence:
-        $obj->set_string('1=1');
+        $obj->setString('1=1');
 
         $sql = $obj->sql();
         $this->assertEquals('1=1', $sql);

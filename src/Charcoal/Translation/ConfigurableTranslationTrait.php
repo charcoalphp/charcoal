@@ -37,7 +37,7 @@ trait ConfigurableTranslationTrait
      * @param  array|string|null $data Optional data to pass to the new TranslationConfig instance.
      * @return TranslationConfig
      */
-    protected function create_config($data = null)
+    protected function createConfig($data = null)
     {
         return TranslationConfig::instance($data);
     }
@@ -73,9 +73,9 @@ trait ConfigurableTranslationTrait
      *     to empty the languages store.
      * @return MultilingualAwareInterface Chainable
      */
-    public function set_languages(array $langs = [])
+    public function setLanguages(array $langs = [])
     {
-        $this->config()->set_languages($langs);
+        $this->config()->setLanguages($langs);
 
         return $this;
     }
@@ -87,9 +87,9 @@ trait ConfigurableTranslationTrait
      * @param  LanguageInterface|array|string $lang A language object or identifier.
      * @return MultilingualAwareInterface Chainable
      */
-    public function add_language($lang)
+    public function addLanguage($lang)
     {
-        $this->config()->add_language($lang);
+        $this->config()->addLanguage($lang);
 
         return $this;
     }
@@ -101,9 +101,9 @@ trait ConfigurableTranslationTrait
      * @param  LanguageInterface|string $lang A language object or identifier.
      * @return MultilingualAwareInterface Chainable
      */
-    public function remove_language($lang)
+    public function removeLanguage($lang)
     {
-        $this->config()->remove_language($lang);
+        $this->config()->removeLanguage($lang);
 
         return $this;
     }
@@ -127,9 +127,9 @@ trait ConfigurableTranslationTrait
      * @param  LanguageInterface|string $lang A language object or identifier.
      * @return boolean Whether the language is available.
      */
-    public function has_language($lang)
+    public function hasLanguage($lang)
     {
-        return $this->config()->has_language($lang);
+        return $this->config()->hasLanguage($lang);
     }
 
     /**
@@ -141,9 +141,9 @@ trait ConfigurableTranslationTrait
      * @uses   ConfigurableInterface::config()
      * @return string A language identifier.
      */
-    public function default_language()
+    public function defaultLanguage()
     {
-        return $this->config()->default_language();
+        return $this->config()->defaultLanguage();
     }
 
     /**
@@ -155,9 +155,9 @@ trait ConfigurableTranslationTrait
      * @param  LanguageInterface|string|null $lang A language object or identifier.
      * @return MultilingualAwareInterface Chainable
      */
-    public function set_default_language($lang = null)
+    public function setDefaultLanguage($lang = null)
     {
-        $this->config()->set_default_language($lang);
+        $this->config()->set_defaultLanguage($lang);
 
         return $this;
     }
@@ -171,9 +171,9 @@ trait ConfigurableTranslationTrait
      * @uses   ConfigurableInterface::config()
      * @return string A language identifier.
      */
-    public function current_language()
+    public function currentLanguage()
     {
-        return $this->config()->current_language();
+        return $this->config()->currentLanguage();
     }
 
     /**
@@ -188,9 +188,9 @@ trait ConfigurableTranslationTrait
      * @param  LanguageInterface|string|null $lang A language object or identifier.
      * @return MultilingualAwareInterface Chainable
      */
-    public function set_current_language($lang = null)
+    public function setCurrentLanguage($lang = null)
     {
-        $this->config()->set_current_language($lang);
+        $this->config()->set_currentLanguage($lang);
 
         return $this;
     }

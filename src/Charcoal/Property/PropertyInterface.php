@@ -22,13 +22,13 @@ interface PropertyInterface
     * @param array $data
     * @return PropertyInterface Chainable
     */
-    public function set_data(array $data);
+    public function setData(array $data);
 
     /**
     * @param string $ident
     * @return PropertyInterface Chainable
     */
-    public function set_ident($ident);
+    public function setIdent($ident);
 
     /**
     * @return string
@@ -39,7 +39,7 @@ interface PropertyInterface
     * @param mixed $val
     * @return PropertyInterface Chainable
     */
-    public function set_val($val);
+    public function setVal($val);
 
     /**
     * @return mixed
@@ -47,22 +47,22 @@ interface PropertyInterface
     public function val();
 
     /**
-    * @param string $field_ident
+    * @param string $fieldIdent
     * @return mixed
     */
-    public function field_val($field_ident);
+    public function fieldVal($fieldIdent);
 
     /**
     * @param mixed $val
     * @return mixed
     */
-    public function storage_val($val = null);
+    public function storageVal($val = null);
 
     /**
     * @param mixed $label
     * @return PropertyInterface Chainable
     */
-    public function set_label($label);
+    public function setLabel($label);
 
     /**
     * @return boolean
@@ -73,7 +73,7 @@ interface PropertyInterface
     * @param boolean $l10n
     * @return PropertyInterface Chainable
     */
-    public function set_l10n($l10n);
+    public function setL10n($l10n);
 
     /**
     * @return boolean
@@ -84,7 +84,7 @@ interface PropertyInterface
     * @param boolean $hidden
     * @return PropertyInterface Chainable
     */
-    public function set_hidden($hidden);
+    public function setHidden($hidden);
 
     /**
     * @return boolean
@@ -95,7 +95,7 @@ interface PropertyInterface
     * @param boolean $multiple
     * @return PropertyInterface Chainable
     */
-    public function set_multiple($multiple);
+    public function setMultiple($multiple);
 
     /**
     * @return boolean
@@ -103,21 +103,21 @@ interface PropertyInterface
     public function multiple();
 
     /**
-    * @param array $multiple_options
+    * @param array $multipleOptions
     * @return PropertyInterface Chainable
     */
-    public function set_multiple_options(array $multiple_options);
+    public function setMultipleOptions(array $multipleOptions);
 
     /**
     * @return array
     */
-    public function multiple_options();
+    public function multipleOptions();
 
     /**
     * @param boolean $required
     * @return PropertyInterface Chainable
     */
-    public function set_required($required);
+    public function setRequired($required);
 
     /**
     * @return boolean
@@ -128,7 +128,7 @@ interface PropertyInterface
     * @param boolean $unique
     * @return PropertyInterface Chainable
     */
-    public function set_unique($unique);
+    public function setUnique($unique);
 
     /**
     * @return boolean
@@ -139,7 +139,7 @@ interface PropertyInterface
     * @param boolean $storable
     * @return PropertyInterface Chainable
     */
-    public function set_storable($storable);
+    public function setStorable($storable);
 
     /**
     * @return boolean
@@ -150,7 +150,7 @@ interface PropertyInterface
     * @param boolean $active
     * @return PropertyInterface Chainable
     */
-    public function set_active($active);
+    public function setActive($active);
 
     /**
     * @return boolean
@@ -160,15 +160,15 @@ interface PropertyInterface
     /**
     * @return string
     */
-    public function sql_extra();
+    public function sqlExtra();
 
     /**
     * @return string
     */
-    public function sql_type();
+    public function sqlType();
 
     /**
     * @return integer
     */
-    public function sql_pdo_type();
+    public function sqlPdoType();
 }

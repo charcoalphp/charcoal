@@ -9,7 +9,6 @@ use \InvalidArgumentException;
 use \Charcoal\App\App;
 
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Charcoal;
 use \Charcoal\Loader\FileLoader;
 
 /**
@@ -24,32 +23,36 @@ use \Charcoal\Loader\FileLoader;
  */
 class MetadataLoader extends FileLoader
 {
-    protected function cache_pool()
+
+    /**
+    * @return \Stash\Pool
+    */
+    protected function cachePool()
     {
         $container = App::instance()->getContainer();
-        $cache_pool = $container['cache'];
-        return $cache_pool;
+        $cachePool = $container->get('cache');
+        return $cachePool;
     }
 
     /**
-     * FileLoader > search_path(). Get the object's search path, merged with global configuration.
+     * FileLoader > searchPath(). Get the object's search path, merged with global configuration.
      *
-     * This method looks in standard's `parent::search_path()` but adds all the path defined in the
-     * `metadata_path` global configuration.
+     * This method looks in standard's `parent::searchPath()` but adds all the path defined in the
+     * `metadataPath` global configuration.
      *
      * @return array
      */
-    public function search_path()
+    public function searchPath()
     {
-        $cfg = Charcoal::config();
+        $cfg = \Charcoal\App\App::instance()->getContainer()->get('charcoal/app/config');
 
-        $all_path = parent::search_path();
+        $allPath = parent::searchPath();
 
-        $global_path = Charcoal::config()->metadata_path();
-        if (!empty($global_path)) {
-            $all_path = Charcoal::merge($global_path, $all_path);
+        $globalPath = $cfg->get('metadataPath');
+        if (!empty($globalPath)) {
+            $allPath = array_merge($globalPath, $allPath);
         }
-        return $all_path;
+        return $allPath;
     }
 
     /**
@@ -61,11 +64,11 @@ class MetadataLoader extends FileLoader
     public function load($ident = null)
     {
         if ($ident !== null) {
-            $this->set_ident($ident);
+            $this->setIdent($ident);
         }
 
-        $cache_pool = $this->cache_pool();
-        $cache_item = $cache_pool->getItem('metadata', $this->ident());
+        $cachePool = $this->cachePool();
+        $cache_item = $cachePool->getItem('metadata', $this->ident());
 
         $metadata = $cache_item->get();
         if ($cache_item->isMiss()) {
@@ -75,9 +78,9 @@ class MetadataLoader extends FileLoader
 
             $metadata = [];
             foreach ($hierarchy as $id) {
-                $ident_data = self::load_ident($id);
+                $ident_data = self::loadIdent($id);
                 if (is_array($ident_data)) {
-                    $metadata = Charcoal::merge($metadata, $ident_data);
+                    $metadata = array_replace_recursive($metadata, $ident_data);
                 }
             }
 
@@ -95,7 +98,7 @@ class MetadataLoader extends FileLoader
         $ident = $this->ident();
         $hierarchy = null;
 
-        $classname = $this->ident_to_classname($ident);
+        $classname = $this->identToClassname($ident);
 
         if (class_exists($classname)) {
             // If the object is a class, we use hierarchy from object ancestor classes
@@ -106,11 +109,11 @@ class MetadataLoader extends FileLoader
             $implements = array_values(class_implements($classname));
 
             foreach ($implements as $interface) {
-                $ident_hierarchy[] = $this->classname_to_ident($interface);
+                $ident_hierarchy[] = $this->classnameToIdent($interface);
             }
 
             while ($classname = get_parent_class($classname)) {
-                $ident_hierarchy[] = $this->classname_to_ident($classname);
+                $ident_hierarchy[] = $this->classnameToIdent($classname);
             }
 
             $ident_hierarchy = array_reverse($ident_hierarchy);
@@ -132,48 +135,48 @@ class MetadataLoader extends FileLoader
      * @throws InvalidArgumentException If a JSON decoding error occurs.
      * @return array|null
      */
-    private function load_ident($ident)
+    private function loadIdent($ident)
     {
-        $filename = $this->filename_from_ident($ident);
+        $filename = $this->filenameFromIdent($ident);
 
-        $file_content = $this->load_first_from_search_path($filename);
+        $file_content = $this->loadFirstFromSearchPath($filename);
         if ($file_content === null) {
             return null;
         }
 
         // Decode as an array (2nd parameter, true = array)
         $file_data = json_decode($file_content, true);
-        $err_code = json_last_error();
-        if ($err_code == JSON_ERROR_NONE) {
+        $errCode = json_last_error();
+        if ($errCode == JSON_ERROR_NONE) {
             return $file_data;
         }
 
         // Handle JSON error
-        switch ($err_code) {
+        switch ($errCode) {
             case JSON_ERROR_NONE:
                 break;
             case JSON_ERROR_DEPTH:
-                $err_msg = 'Maximum stack depth exceeded';
+                $errMsg = 'Maximum stack depth exceeded';
                 break;
             case JSON_ERROR_STATE_MISMATCH:
-                $err_msg = 'Underflow or the modes mismatch';
+                $errMsg = 'Underflow or the modes mismatch';
                 break;
             case JSON_ERROR_CTRL_CHAR:
-                $err_msg = 'Unexpected control character found';
+                $errMsg = 'Unexpected control character found';
                 break;
             case JSON_ERROR_SYNTAX:
-                $err_msg = 'Syntax error, malformed JSON';
+                $errMsg = 'Syntax error, malformed JSON';
                 break;
             case JSON_ERROR_UTF8:
-                $err_msg = 'Malformed UTF-8 characters, possibly incorrectly encoded';
+                $errMsg = 'Malformed UTF-8 characters, possibly incorrectly encoded';
                 break;
             default:
-                $err_msg = 'Unknown error';
+                $errMsg = 'Unknown error';
                 break;
         }
 
         throw new InvalidArgumentException(
-            sprintf('JSON %s could not be parsed: "%s"', $ident, $err_msg)
+            sprintf('JSON %s could not be parsed: "%s"', $ident, $errMsg)
         );
     }
 
@@ -183,7 +186,7 @@ class MetadataLoader extends FileLoader
      * @param string $ident The identifier to convert.
      * @return string
      */
-    private function filename_from_ident($ident)
+    private function filenameFromIdent($ident)
     {
         $filename  = str_replace([ '\\' ], '.', $ident);
         $filename .= '.json';
@@ -197,7 +200,7 @@ class MetadataLoader extends FileLoader
      * @param string $ident The identifier to convert.
      * @return string
      */
-    protected function ident_to_classname($ident)
+    protected function identToClassname($ident)
     {
         // Change "foo-bar" to "fooBar"
         $expl = explode('-', $ident);
@@ -230,11 +233,59 @@ class MetadataLoader extends FileLoader
      * @param string $classname The FQN to convert.
      * @return string
      */
-    protected function classname_to_ident($classname)
+    protected function classnameToIdent($classname)
     {
         $ident = strtolower(preg_replace('/([a-z])([A-Z])/', '$1-$2', $classname));
         $ident = str_replace('\\', '/', strtolower($ident));
         $ident = ltrim($ident, '/');
         return $ident;
+    }
+
+    /**
+    * Rewrite the "array_merge_recursive" function to behave more like standard "array_merge"
+    * (overwrite values instead of appending them)
+    *
+    * From http:// www.php.net/manual/en/function.array-merge-recursive.php#104145
+    *
+    * @param array $array1 Initial array to merge.
+    * @param array $... Variable list of arrays to merge.
+    * @throws InvalidArgumentException If there isn't at least 2 arguments or any arguments are not an array
+    * @return array Merged array
+    */
+    private static function arrrayMerge()
+    {
+        $args = func_get_args();
+        if (func_num_args() < 2) {
+            throw new InvalidArgumentException('This function takes at least two parameters.');
+        }
+
+        $array_list = func_get_args();
+        $result = [];
+
+        while ($array_list) {
+            $current = array_shift($array_list);
+
+            /** @todo Convert objects to array? */
+            if (!is_array($current)) {
+                throw new InvalidArgumentException('All parameters must be arrays.');
+            }
+            if (!$current) {
+                continue;
+            }
+
+            foreach ($current as $key => $value) {
+                if (is_string($key)) {
+                    if (is_array($value) && array_key_exists($key, $result) && is_array($result[$key])) {
+                        $result[$key] = call_user_func([__CLASS__, __FUNCTION__], $result[$key], $value);
+                    } else {
+                        $result[$key] = $value;
+                    }
+                } else {
+                    $result[] = $value;
+                }
+            }
+        }
+
+        return $result;
     }
 }

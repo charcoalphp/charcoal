@@ -48,9 +48,9 @@ abstract class AbstractSource implements
     private $properties = [];
 
     /**
-    * @var array $properties_options
+    * @var array $propertiesOptions
     */
-    private $properties_options = [];
+    private $propertiesOptions = [];
 
     /**
     * Array of `Filter` objects
@@ -87,7 +87,7 @@ abstract class AbstractSource implements
     public function reset()
     {
         $this->properties = [];
-        $this->properties_options = [];
+        $this->propertiesOptions = [];
         $this->filters = [];
         $this->orders = [];
         $this->pagination = null;
@@ -100,10 +100,10 @@ abstract class AbstractSource implements
     * @param array $data
     * @return AbstractSource Chainable
     */
-    public function set_data(array $data)
+    public function setData(array $data)
     {
         foreach ($data as $prop => $val) {
-            $func = [$this, 'set_'.$prop];
+            $func = [$this, $this->setter($prop)];
             if (is_callable($func)) {
                 call_user_func($func, $val);
                 unset($data[$prop]);
@@ -120,7 +120,7 @@ abstract class AbstractSource implements
     * @param ModelInterface $model
     * @return AbstractSource Chainable
     */
-    public function set_model(ModelInterface $model)
+    public function setModel(ModelInterface $model)
     {
         $this->model = $model;
         return $this;
@@ -145,7 +145,7 @@ abstract class AbstractSource implements
     /**
     * @return boolean
     */
-    public function has_model()
+    public function hasModel()
     {
         return ($this->model !== null);
     }
@@ -162,11 +162,11 @@ abstract class AbstractSource implements
     * @throws InvalidArgumentException
     * @return ColelectionLoader Chainable
     */
-    public function set_properties(array $properties)
+    public function setProperties(array $properties)
     {
         $this->properties = [];
         foreach ($properties as $p) {
-            $this->add_property($p);
+            $this->addProperty($p);
         }
         return $this;
     }
@@ -184,7 +184,7 @@ abstract class AbstractSource implements
     * @throws InvalidArgumentException if property is not a string or empty
     * @return CollectionLoader Chainable
     */
-    public function add_property($property)
+    public function addProperty($property)
     {
         if (!is_string($property)) {
             throw new InvalidArgumentException(
@@ -207,11 +207,11 @@ abstract class AbstractSource implements
     * @throws InvalidArgumentException
     * @return Collection Chainable
     */
-    public function set_filters(array $filters)
+    public function setFilters(array $filters)
     {
         $this->filters = [];
         foreach ($filters as $f) {
-            $this->add_filter($f);
+            $this->addFilter($f);
         }
         return $this;
     }
@@ -229,11 +229,11 @@ abstract class AbstractSource implements
     *
     * There are 3 different ways of adding a filter:
     * - as a `Filter` object, in which case it will be added directly.
-    *   - `add_filter($obj);`
+    *   - `addFilter($obj);`
     * - as an array of options, which will be used to build the `Filter` object
-    *   - `add_filter(['property' => 'foo', 'val' => 42, 'operator' => '<=']);`
+    *   - `addFilter(['property' => 'foo', 'val' => 42, 'operator' => '<=']);`
     * - as 3 parameters: `property`, `val` and `options`
-    *   - `add_filter('foo', 42, ['operator' => '<=']);`
+    *   - `addFilter('foo', 42, ['operator' => '<=']);`
     *
     * @param string|array|Filter $param
     * @param mixed               $val     Optional: Only used if the first argument is a string
@@ -241,19 +241,19 @@ abstract class AbstractSource implements
     * @throws InvalidArgumentException if property is not a string or empty
     * @return CollectionLoader (Chainable)
     */
-    public function add_filter($param, $val = null, array $options = null)
+    public function addFilter($param, $val = null, array $options = null)
     {
         if ($param instanceof FilterInterface) {
             $filter = $param;
         } elseif (is_array($param)) {
-            $filter = $this->create_filter();
-            $filter->set_data($param);
+            $filter = $this->createFilter();
+            $filter->setData($param);
         } elseif (is_string($param) && $val !== null) {
-            $filter = $this->create_filter();
-            $filter->set_property($param);
-            $filter->set_val($val);
+            $filter = $this->createFilter();
+            $filter->setProperty($param);
+            $filter->setVal($val);
             if (is_array($options)) {
-                $filter->set_data($options);
+                $filter->setData($options);
             }
         } else {
             throw new InvalidArgumentException(
@@ -261,15 +261,15 @@ abstract class AbstractSource implements
             );
         }
 
-        if ($this->has_model()) {
+        if ($this->hasModel()) {
             $property = $filter->property();
             $p = $this->model()->p($property);
 
             if ($p && $p->l10n()) {
                 $translator = TranslationConfig::instance();
 
-                $ident = sprintf('%1$s_%2$s', $property, $translator->current_language());
-                $filter->set_property($ident);
+                $ident = sprintf('%1$s_%2$s', $property, $translator->currentLanguage());
+                $filter->setProperty($ident);
             }
         }
 
@@ -281,7 +281,7 @@ abstract class AbstractSource implements
     /**
     * @return FilterInterface
     */
-    protected function create_filter()
+    protected function createFilter()
     {
         $filter = new Filter();
         return $filter;
@@ -291,11 +291,11 @@ abstract class AbstractSource implements
     * @param array $orders
     * @return CollectionLoader Chainable
     */
-    public function set_orders(array $orders)
+    public function setOrders(array $orders)
     {
         $this->orders = [];
         foreach ($orders as $o) {
-            $this->add_order($o);
+            $this->addOrder($o);
         }
         return $this;
     }
@@ -311,24 +311,24 @@ abstract class AbstractSource implements
     /**
     * @param string|array|Order $param
     * @param string             $mode          Optional
-    * @param array              $order_options Optional
+    * @param array              $orderOptions Optional
     * @throws InvalidArgumentException
     * @return CollectionLoader Chainable
     */
-    public function add_order($param, $mode = 'asc', $order_options = null)
+    public function addOrder($param, $mode = 'asc', $orderOptions = null)
     {
         if ($param instanceof OrderInterface) {
             $this->orders[] = $param;
         } elseif (is_array($param)) {
-            $order = $this->create_order();
-            $order->set_data($param);
+            $order = $this->createOrder();
+            $order->setData($param);
             $this->orders[] = $order;
         } elseif (is_string($param)) {
-            $order = $this->create_order();
-            $order->set_property($param);
-            $order->set_mode($mode);
-            if (isset($order_options['values'])) {
-                $order->set_values($order_options['values']);
+            $order = $this->createOrder();
+            $order->setProperty($param);
+            $order->setMode($mode);
+            if (isset($orderOptions['values'])) {
+                $order->setValues($orderOptions['values']);
             }
             $this->orders[] = $order;
         } else {
@@ -343,7 +343,7 @@ abstract class AbstractSource implements
     /**
     * @return OrderInterface
     */
-    protected function create_order()
+    protected function createOrder()
     {
         $order = new Order();
         return $order;
@@ -354,13 +354,13 @@ abstract class AbstractSource implements
     * @throws InvalidArgumentException
     * @return CollectionLoader Chainable
     */
-    public function set_pagination($param)
+    public function setPagination($param)
     {
         if ($param instanceof PaginationInterface) {
             $this->pagination = $param;
         } elseif (is_array($param)) {
-            $pagination = $this->create_pagination();
-            $pagination->set_data($param);
+            $pagination = $this->createPagination();
+            $pagination->setData($param);
             $this->pagination = $pagination;
         } else {
             throw new InvalidArgumentException(
@@ -381,7 +381,7 @@ abstract class AbstractSource implements
     public function pagination()
     {
         if ($this->pagination === null) {
-            $this->pagination = $this->create_pagination();
+            $this->pagination = $this->createPagination();
         }
         return $this->pagination;
     }
@@ -389,7 +389,7 @@ abstract class AbstractSource implements
     /**
     * @return PaginationInterface
     */
-    protected function create_pagination()
+    protected function createPagination()
     {
         $pagination = new Pagination();
         return $pagination;
@@ -400,14 +400,14 @@ abstract class AbstractSource implements
     * @throws InvalidArgumentException
     * @return CollectionLoader Chainable
     */
-    public function set_page($page)
+    public function setPage($page)
     {
         if (!is_integer($page)) {
             throw new InvalidArgumentException(
                 'Page must be an integer.'
             );
         }
-        $this->pagination()->set_page($page);
+        $this->pagination()->setPage($page);
         return $this;
     }
 
@@ -424,36 +424,36 @@ abstract class AbstractSource implements
     * @throws InvalidArgumentException
     * @return CollectionLoader Chainable
     */
-    public function set_num_per_page($num)
+    public function setNumPerPage($num)
     {
         if (!is_integer($num)) {
             throw new InvalidArgumentException(
                 'Num must be an integer.'
             );
         }
-        $this->pagination()->set_num_per_page($num);
+        $this->pagination()->setNumPerPage($num);
         return $this;
     }
 
     /**
     * @return integer
     */
-    public function num_per_page()
+    public function numPerPage()
     {
-        return $this->pagination()->num_per_page();
+        return $this->pagination()->numPerPage();
     }
 
     /**
-    * ConfigurableTrait > create_config()
+    * ConfigurableTrait > createConfig()
     *
     * @param array $data Optional
     * @return SourceConfig
     */
-    public function create_config(array $data = null)
+    public function createConfig(array $data = null)
     {
         $config = new SourceConfig();
         if (is_array($data)) {
-            $config->set_data($data);
+            $config->merge($data);
         }
         return $config;
     }
@@ -464,13 +464,13 @@ abstract class AbstractSource implements
     * @throws Exception
     * @return StorableInterface
     */
-    abstract public function load_item($ident, StorableInterface $item = null);
+    abstract public function loadItem($ident, StorableInterface $item = null);
 
         /**
     * @param StorableInterface|null $item
     * @return array
     */
-    abstract public function load_items(StorableInterface $item = null);
+    abstract public function loadItems(StorableInterface $item = null);
 
     /**
     * Save an item (create a new row) in storage.
@@ -479,7 +479,7 @@ abstract class AbstractSource implements
     * @throws Exception if a database error occurs
     * @return mixed The created item ID, or false in case of an error
     */
-    abstract public function save_item(StorableInterface $item);
+    abstract public function saveItem(StorableInterface $item);
 
     /**
     * Update an item in storage.
@@ -488,7 +488,7 @@ abstract class AbstractSource implements
     * @param array             $properties The list of properties to update, if not all
     * @return boolean Success / Failure
     */
-    abstract public function update_item(StorableInterface $item, $properties = null);
+    abstract public function updateItem(StorableInterface $item, $properties = null);
 
     /**
     * Delete an item from storage
@@ -497,5 +497,67 @@ abstract class AbstractSource implements
     * @throws Exception
     * @return boolean Success / Failure
     */
-    abstract public function delete_item(StorableInterface $item = null);
+    abstract public function deleteItem(StorableInterface $item = null);
+
+    /**
+     * Allow an object to define how the key getter are called.
+     *
+     * @param string $key The key to get the getter from.
+     * @param string $case Optional. The type of case to return. camel, pascal or snake.
+     * @return string The getter method name, for a given key.
+     */
+    private function getter($key, $case = 'camel')
+    {
+        $getter = $key;
+
+        if ($case == 'camel') {
+            return $this->camelize($getter);
+        } elseif ($case == 'pascal') {
+            return $this->pascalize($getter);
+        } else {
+            return $getter;
+        }
+    }
+
+    /**
+     * Allow an object to define how the key setter are called.
+     *
+     * @param string $key The key to get the setter from.
+     * @param string $case Optional. The type of case to return. camel, pascal or snake.
+     * @return string The setter method name, for a given key.
+     */
+    private function setter($key, $case = 'camel')
+    {
+        $setter = 'set_'.$key;
+
+        if ($case == 'camel') {
+            return $this->camelize($setter);
+        } elseif ($case == 'pascal') {
+            return $this->pascalize($setter);
+        } else {
+            return $setter;
+        }
+    }
+
+    /**
+     * Transform a snake_case string to camelCase.
+     *
+     * @param string $str The snake_case string to camelize.
+     * @return string The camelCase string.
+     */
+    private function camelize($str)
+    {
+        return lcfirst($this->pascalize($str));
+    }
+
+    /**
+     * Transform a snake_case string to PamelCase.
+     *
+     * @param string $str The snake_case string to pascalize.
+     * @return string The PamelCase string.
+     */
+    private function pascalize($str)
+    {
+        return implode('', array_map('ucfirst', explode('_', $str)));
+    }
 }

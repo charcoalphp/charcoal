@@ -21,15 +21,15 @@ use \Charcoal\Translation\TranslationStringInterface;
  *
  * A collection of translatable strings.
  *
- * Except for `self::$current_language`, this configurable object delegates
+ * Except for `self::$currentLanguage`, this configurable object delegates
  * most of its multi-language handling to TranslationConfig.
  *
- * The TranslationString class provides it's own independant `self::$current_language`.
+ * The TranslationString class provides it's own independant `self::$currentLanguage`.
  * The class redefines the following methods from ConfigurableTranslationTrait:
  *
- * • `self::default_language()` → `ConfigurableTranslationTrait::current_language()`
- * • `self::current_language()` → `self::$current_language`
- * • `self::set_current_language()` → `self::$current_language`
+ * • `self::defaultLanguage()` → `ConfigurableTranslationTrait::currentLanguage()`
+ * • `self::currentLanguage()` → `self::$currentLanguage`
+ * • `self::setCurrentLanguage()` → `self::$currentLanguage`
  *
  * @see TranslationString for a similar exception for the current language.
  */
@@ -54,7 +54,7 @@ class Catalog implements
      *
      * @var string
      */
-    private $current_language;
+    private $currentLanguage;
 
     /**
      * Calling the constructor with a parameter should force setting it up as value.
@@ -70,7 +70,7 @@ class Catalog implements
         }
 
         if (isset($entries)) {
-            $this->set_entries($entries);
+            $this->setEntries($entries);
         }
 
         return $this;
@@ -84,13 +84,13 @@ class Catalog implements
      * @return self
      * @todo   Implement handling of a ResourceInterface instance.
      */
-    public function add_resource($resource)
+    public function addResource($resource)
     {
         if ($resource instanceof ResourceInterface) {
             throw new InvalidArgumentException('ResourceInterface object not (yet) supported.');
         } elseif (is_array($resource)) {
             foreach ($resource as $ident => $translations) {
-                $this->add_translations($ident, $translations);
+                $this->addTranslations($ident, $translations);
             }
         } elseif (is_string($resource)) {
             throw new InvalidArgumentException('String resource not (yet) supported.');
@@ -114,10 +114,10 @@ class Catalog implements
      */
     public function entries($lang = null)
     {
-        $lang = self::resolve_language_ident($lang);
+        $lang = self::resolveLanguageIdentent($lang);
 
         if (isset($lang)) {
-            if ($this->has_language($lang)) {
+            if ($this->hasLanguage($lang)) {
                 $entries = [];
 
                 foreach ($this->entries as $ident => $translations) {
@@ -146,13 +146,13 @@ class Catalog implements
      * }
      * @return self
      */
-    public function set_entries(array $entries = [])
+    public function setEntries(array $entries = [])
     {
         $this->entries = [];
 
         if (count($entries)) {
             foreach ($entries as $ident => $translations) {
-                $this->add_entry($ident, $translations);
+                $this->addEntry($ident, $translations);
             }
         }
 
@@ -172,7 +172,7 @@ class Catalog implements
             throw new InvalidArgumentException('Entry identifier must be a string.');
         }
 
-        if ($this->has_entry($ident)) {
+        if ($this->hasEntry($ident)) {
             return $this->entries[$ident];
         }
     }
@@ -184,10 +184,12 @@ class Catalog implements
      * @return boolean
      * @throws InvalidArgumentException if the idenfitier isn't a string
      */
-    public function has_entry($ident)
+    public function hasEntry($ident)
     {
         if (!is_string($ident)) {
-            throw new InvalidArgumentException('Entry identifier must be a string.');
+            throw new InvalidArgumentException(
+                'Entry identifier must be a string.'
+            );
         }
 
         return isset($this->entries[$ident]);
@@ -203,7 +205,7 @@ class Catalog implements
      * @return self
      * @throws InvalidArgumentException if the idenfitier isn't a string
      */
-    public function add_entry($ident, $translations = null)
+    public function addEntry($ident, $translations = null)
     {
         if (!is_string($ident)) {
             if ($ident instanceof TranslationStringInterface) {
@@ -211,14 +213,18 @@ class Catalog implements
             } elseif (is_array($ident)) {
                 $translations = $ident;
             } else {
-                throw new InvalidArgumentException('Entry identifier must be a string.');
+                throw new InvalidArgumentException(
+                    'Entry identifier must be a string.'
+                );
             }
 
-            $lang = $this->default_language();
+            $lang = $this->defaultLanguage();
             if (isset($translations[$lang])) {
                 $ident = $translations[$lang];
             } else {
-                throw new InvalidArgumentException('Entry identifier must be a string.');
+                throw new InvalidArgumentException(
+                    'Entry identifier must be a string.'
+                );
             }
         }
 
@@ -246,13 +252,15 @@ class Catalog implements
      * @return self
      * @throws InvalidArgumentException if the idenfitier isn't a string
      */
-    public function remove_entry($ident)
+    public function removeEntry($ident)
     {
         if (!is_string($ident)) {
-            throw new InvalidArgumentException('Entry identifier must be a string.');
+            throw new InvalidArgumentException(
+                'Entry identifier must be a string.'
+            );
         }
 
-        if ($this->has_entry($ident)) {
+        if ($this->hasEntry($ident)) {
             unset($this->entries[$ident]);
         }
     }
@@ -266,22 +274,26 @@ class Catalog implements
      * @return self
      * @throws InvalidArgumentException if entry key, entry value, or language is invalid
      */
-    public function add_entry_translation($ident, $lang, $val)
+    public function addEntryTranslation($ident, $lang, $val)
     {
         if (!is_string($ident)) {
-            throw new InvalidArgumentException('Entry identifier must be a string.');
+            throw new InvalidArgumentException(
+                'Entry identifier must be a string.'
+            );
         }
 
-        if ($this->has_entry($ident)) {
+        if ($this->hasEntry($ident)) {
             $this->entries[$ident]->add_val($lang, $val);
         } else {
             if (!is_string($val)) {
-                throw new InvalidArgumentException('Localized value must be a string.');
+                throw new InvalidArgumentException(
+                    'Localized value must be a string.'
+                );
             }
 
-            $lang = self::resolve_language_ident($lang);
+            $lang = self::resolveLanguageIdentent($lang);
 
-            $this->add_entry(
+            $this->addEntry(
                 $ident,
                 [
                     $lang => $val
@@ -298,14 +310,16 @@ class Catalog implements
      * @return self
      * @throws InvalidArgumentException if the idenfitier isn't a string
      */
-    public function remove_entry_translation($ident, $lang)
+    public function removeEntryTranslation($ident, $lang)
     {
         if (!is_string($ident)) {
-            throw new InvalidArgumentException('Entry identifier must be a string.');
+            throw new InvalidArgumentException(
+                'Entry identifier must be a string.'
+            );
         }
 
-        if ($this->has_entry($ident)) {
-            $lang = self::resolve_language_ident($lang);
+        if ($this->hasEntry($ident)) {
+            $lang = self::resolveLanguageIdentent($lang);
 
             unset($this->entries[$ident][$lang]);
         }
@@ -322,17 +336,19 @@ class Catalog implements
     public function translate($ident, $lang = null)
     {
         if (!is_string($ident)) {
-            throw new InvalidArgumentException('Entry identifier must be a string.');
+            throw new InvalidArgumentException(
+                'Entry identifier must be a string.'
+            );
         }
 
         if (!isset($lang)) {
-            $lang = $this->current_language();
+            $lang = $this->currentLanguage();
         }
 
-        $lang = self::resolve_language_ident($lang);
+        $lang = self::resolveLanguageIdentent($lang);
 
-        if ($this->has_language($lang)) {
-            if ($this->has_entry($ident)) {
+        if ($this->hasLanguage($lang)) {
+            if ($this->hasEntry($ident)) {
                 if (isset($this->entries[$ident][$lang])) {
                     return $this->entries[$ident][$lang];
                 }
@@ -355,9 +371,11 @@ class Catalog implements
     public function offsetExists($ident)
     {
         if (!is_string($ident)) {
-            throw new InvalidArgumentException('Array key must be a string.');
+            throw new InvalidArgumentException(
+                'Array key must be a string.'
+            );
         } else {
-            return $this->has_entry($ident);
+            return $this->hasEntry($ident);
         }
     }
 
@@ -372,14 +390,16 @@ class Catalog implements
     public function offsetGet($ident)
     {
         if (!is_string($ident)) {
-            throw new InvalidArgumentException('Array key must be a string.');
+            throw new InvalidArgumentException(
+                'Array key must be a string.'
+            );
         }
 
         return $this->translate($ident);
     }
 
     /**
-     * Alias of `self::add_translations()` and `self::add_translation_language()`
+     * Alias of `self::addTranslations()` and `self::addTranslationLanguage()`
      * depending on value assigned.
      *
      * @see    ArrayAccess::offsetSet()
@@ -391,22 +411,26 @@ class Catalog implements
     public function offsetSet($ident, $value)
     {
         if (!is_string($ident)) {
-            throw new InvalidArgumentException('Array key must be a string.');
+            throw new InvalidArgumentException(
+                'Array key must be a string.'
+            );
         }
 
         if (is_array($value) || ($value instanceof TranslationStringInterface)) {
-            $this->add_entry($ident, $value);
+            $this->addEntry($ident, $value);
         } elseif (is_string($value)) {
-            $lang = $this->current_language();
-            $lang = self::resolve_language_ident($lang);
-            $this->add_entry_translation($ident, $lang, $value);
+            $lang = $this->currentLanguage();
+            $lang = self::resolveLanguageIdentent($lang);
+            $this->addEntryTranslation($ident, $lang, $value);
         } else {
-            throw new InvalidArgumentException('Invalid value argument.');
+            throw new InvalidArgumentException(
+                'Invalid value argument.'
+            );
         }
 
     }
     /**
-     * Alias of `self::remove_translation()`
+     * Alias of `self::removeTranslation()`
      *
      * Called when using `unset($obj['foo']);`.
      *
@@ -418,10 +442,12 @@ class Catalog implements
     public function offsetUnset($ident)
     {
         if (!is_string($ident)) {
-            throw new InvalidArgumentException('Array key must be a string.');
+            throw new InvalidArgumentException(
+                'Array key must be a string.'
+            );
         }
 
-        $this->remove_entry($ident);
+        $this->removeEntry($ident);
     }
 
     /**
@@ -430,9 +456,9 @@ class Catalog implements
      * @uses   ConfigurableInterface::config()
      * @return string  A language identifier
      */
-    public function default_language()
+    public function defaultLanguage()
     {
-        return $this->config()->default_language();
+        return $this->config()->defaultLanguage();
     }
 
     /**
@@ -441,16 +467,16 @@ class Catalog implements
      * The current language acts as the first to be used when interacting
      * with data in a context where the language isn't explicitly specified.
      *
-     * @see    TranslatableTrait::current_language()
+     * @see    TranslatableTrait::currentLanguage()
      * @return string  A language identifier
      */
-    public function current_language()
+    public function currentLanguage()
     {
-        if (!isset($this->current_language)) {
-            return $this->config()->current_language();
+        if (!isset($this->currentLanguage)) {
+            return $this->config()->currentLanguage();
         }
 
-        return $this->current_language;
+        return $this->currentLanguage;
     }
 
     /**
@@ -461,24 +487,27 @@ class Catalog implements
      * Defaults to resetting the object's current language to the config's,
      * (which might fall onto the default language).
      *
-     * @see    TranslatableTrait::set_current_language()
+     * @see    TranslatableTrait::setCurrentLanguage()
      * @param  LanguageInterface|string|null  $lang  A language object or identifier
      * @return self
      *
      * @throws InvalidArgumentException if language isn't available
      */
-    public function set_current_language($lang = null)
+    public function setCurrentLanguage($lang = null)
     {
         if (isset($lang)) {
-            $lang = self::resolve_language_ident($lang);
+            $lang = self::resolveLanguageIdentent($lang);
 
-            if ($this->has_language($lang)) {
-                $this->current_language = $lang;
+            if ($this->hasLanguage($lang)) {
+                $this->currentLanguage = $lang;
             } else {
-                throw new InvalidArgumentException(sprintf('Invalid language: "%s"', (string)$lang));
+                throw new InvalidArgumentException(sprintf(
+                    'Invalid language: "%s"',
+                    (string)$lang
+                ));
             }
         } else {
-            $this->current_language = null;
+            $this->currentLanguage = null;
         }
 
         return $this;

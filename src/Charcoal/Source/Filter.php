@@ -54,28 +54,28 @@ class Filter implements FilterInterface
     * @param array $data
     * @return Filter Chainable
     */
-    public function set_data(array $data)
+    public function setData(array $data)
     {
         if (isset($data['property'])) {
-            $this->set_property($data['property']);
+            $this->setProperty($data['property']);
         }
         if (isset($data['val'])) {
-            $this->set_val($data['val']);
+            $this->setVal($data['val']);
         }
         if (isset($data['operator'])) {
-            $this->set_operator($data['operator']);
+            $this->setOperator($data['operator']);
         }
         if (isset($data['func'])) {
-            $this->set_func($data['func']);
+            $this->setFunc($data['func']);
         }
         if (isset($data['operand'])) {
-            $this->set_operand($data['operand']);
+            $this->setOperand($data['operand']);
         }
         if (isset($data['string'])) {
-            $this->set_string($data['string']);
+            $this->setString($data['string']);
         }
         if (isset($data['active'])) {
-            $this->set_active($data['active']);
+            $this->setActive($data['active']);
         }
         return $this;
     }
@@ -85,7 +85,7 @@ class Filter implements FilterInterface
     * @throws InvalidArgumentException if the property argument is not a string
     * @return Filter (Chainable)
     */
-    public function set_property($property)
+    public function setProperty($property)
     {
         if (!is_string($property)) {
             throw new InvalidArgumentException('Property must be a string.');
@@ -110,7 +110,7 @@ class Filter implements FilterInterface
     * @param mixed $val
     * @return Filter (Chainable)
     */
-    public function set_val($val)
+    public function setVal($val)
     {
         $this->val = $val;
         return $this;
@@ -129,14 +129,14 @@ class Filter implements FilterInterface
     * @throws InvalidArgumentException if the parameter is not a valid operator
     * @return Filter (Chainable)
     */
-    public function set_operator($operator)
+    public function setOperator($operator)
     {
         if (!is_string($operator)) {
             throw new InvalidArgumentException('Operator should be a string.');
         }
 
         $operator = strtoupper($operator);
-        if (!in_array($operator, $this->valid_operators())) {
+        if (!in_array($operator, $this->validOperators())) {
             throw new InvalidArgumentException('This is not a valid operator.');
         }
 
@@ -157,14 +157,14 @@ class Filter implements FilterInterface
     * @throws InvalidArgumentException if the parameter is not a valid function
     * @return Filter (Chainable)
     */
-    public function set_func($func)
+    public function setFunc($func)
     {
         if (!is_string($func)) {
             throw new InvalidArgumentException('Func should be astring.');
         }
 
         $func = strtoupper($func);
-        if (!in_array($func, $this->valid_func())) {
+        if (!in_array($func, $this->validFunc())) {
             throw new InvalidArgumentException('This is not a valid function.');
         }
         $this->func = $func;
@@ -184,14 +184,14 @@ class Filter implements FilterInterface
     * @throws InvalidArgumentException if the parameter is not a valid operand
     * @return Filter (Chainable)
     */
-    public function set_operand($operand)
+    public function setOperand($operand)
     {
         if (!is_string($operand)) {
             throw new InvalidArgumentException('Operand should be a string.');
         }
 
         $operand = strtoupper($operand);
-        if (!in_array($operand, $this->valid_operands())) {
+        if (!in_array($operand, $this->validOperands())) {
             throw new InvalidArgumentException('This is not a valid operand.');
         }
 
@@ -212,7 +212,7 @@ class Filter implements FilterInterface
     * @throws InvalidArgumentException if the parameter is not a valid operand
     * @return Filter (Chainable)
     */
-    public function set_string($sql)
+    public function setString($sql)
     {
         if (!is_string($sql)) {
             throw new InvalidArgumentException(
@@ -236,7 +236,7 @@ class Filter implements FilterInterface
     * @param boolean $active
     * @return Filter (Chainable)
     */
-    public function set_active($active)
+    public function setActive($active)
     {
         $this->active = $active;
         return $this;
@@ -257,9 +257,9 @@ class Filter implements FilterInterface
     *
     * @return array
     */
-    protected function valid_operators()
+    protected function validOperators()
     {
-        $valid_operators = [
+        $validOperators = [
             '=', 'IS', '!=', 'IS NOT',
             'LIKE', 'NOT LIKE',
             '>', '>=', '<', '<=',
@@ -268,7 +268,7 @@ class Filter implements FilterInterface
             'REGEXP', 'NOT REGEXP'
         ];
 
-        return $valid_operators;
+        return $validOperators;
     }
 
     /**
@@ -276,24 +276,24 @@ class Filter implements FilterInterface
     *
     * @return array
     */
-    protected function valid_operands()
+    protected function validOperands()
     {
-        $valid_operands = [
+        $validOperands = [
             'AND', '&&',
             'OR', '||',
             'XOR'
         ];
 
-        return $valid_operands;
+        return $validOperands;
     }
 
     /**
     * Supported functions, uppercase
     * @return array
     */
-    protected function valid_func()
+    protected function validFunc()
     {
-        $valid_functions = [
+        $validFunctions = [
             'ABS',
             'ACOS', 'ASIN', 'ATAN',
             'COS', 'COT', 'SIN', 'TAN',
@@ -319,6 +319,6 @@ class Filter implements FilterInterface
             'SQRT'
         ];
 
-        return $valid_functions;
+        return $validFunctions;
     }
 }

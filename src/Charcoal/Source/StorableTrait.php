@@ -21,7 +21,7 @@ trait StorableTrait
     * @param SourceInterface $source
     * @return StorableInterface Chainable
     */
-    public function set_source(SourceInterface $source)
+    public function setSource(SourceInterface $source)
     {
         $this->source = $source;
         return $this;
@@ -35,7 +35,7 @@ trait StorableTrait
     public function source()
     {
         if ($this->source === null) {
-            $this->source = $this->create_source();
+            $this->source = $this->createSource();
         }
         return $this->source;
     }
@@ -44,7 +44,7 @@ trait StorableTrait
     * @param mixed $data Optional
     * @return SourceInterface
     */
-    abstract public function create_source($data = null);
+    abstract public function createSource($data = null);
 
     /**
     * Load an object from the database from its ID.
@@ -60,7 +60,7 @@ trait StorableTrait
         if ($id === null) {
             $id = $this->id();
         }
-        $this->source()->load_item($id, $this);
+        $this->source()->loadItem($id, $this);
         return $this;
     }
 
@@ -74,9 +74,9 @@ trait StorableTrait
     * @param mixed $value Value of said column
     * @return StorableInterface Chainable.
     */
-    public function load_from($key = null, $value = null)
+    public function loadFrom($key = null, $value = null)
     {
-        $this->source()->load_item_from_key($key, $value, $this);
+        $this->source()->loadItemFromKey($key, $value, $this);
         return $this;
     }
 
@@ -87,9 +87,9 @@ trait StorableTrait
     * @param array $binds Optional. The SQL query parameters.
     * @return StorableInterface Chainable.
     */
-    public function load_from_query($query, array $binds = null)
+    public function loadFromQuery($query, array $binds = null)
     {
-        $this->source()->load_item_from_query($query, $binds, $this);
+        $this->source()->loadItemFromQuery($query, $binds, $this);
         return $this;
     }
 
@@ -100,12 +100,12 @@ trait StorableTrait
     */
     public function save()
     {
-        $pre = $this->pre_save();
+        $pre = $this->preSave();
         if ($pre === false) {
             return false;
         }
-        $ret = $this->source()->save_item($this);
-        $this->post_save();
+        $ret = $this->source()->saveItem($this);
+        $this->postSave();
         return $ret;
     }
 
@@ -117,13 +117,13 @@ trait StorableTrait
     */
     public function update($properties = null)
     {
-        $pre = $this->pre_update($properties);
+        $pre = $this->preUpdate($properties);
         $this->save_properties($properties);
         if ($pre === false) {
             return false;
         }
-        $ret = $this->source()->update_item($this, $properties);
-        $this->post_update($properties);
+        $ret = $this->source()->updateItem($this, $properties);
+        $this->postUpdate($properties);
         return $ret;
     }
 
@@ -134,39 +134,39 @@ trait StorableTrait
     */
     public function delete()
     {
-        $pre = $this->pre_delete();
+        $pre = $this->preDelete();
         if ($pre === false) {
             return false;
         }
-        $ret = $this->source()->delete_item($this);
-        $this->post_delete();
+        $ret = $this->source()->deleteItem($this);
+        $this->postDelete();
         return $ret;
     }
 
     /**
     * @return boolean
     */
-    abstract protected function pre_save();
+    abstract protected function preSave();
     /**
     * @return boolean
     */
-    abstract protected function post_save();
-    /**
-    * @param array $properties
-    * @return boolean
-    */
-    abstract protected function pre_update($properties = null);
+    abstract protected function postSave();
     /**
     * @param array $properties
     * @return boolean
     */
-    abstract protected function post_update($properties = null);
+    abstract protected function preUpdate($properties = null);
+    /**
+    * @param array $properties
+    * @return boolean
+    */
+    abstract protected function postUpdate($properties = null);
     /**
     * @return boolean
     */
-    abstract protected function pre_delete();
+    abstract protected function preDelete();
     /**
     * @return boolean
     */
-    abstract protected function post_delete();
+    abstract protected function postDelete();
 }

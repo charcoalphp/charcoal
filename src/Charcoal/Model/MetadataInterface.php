@@ -18,5 +18,5 @@ interface MetadataInterface
     * @param array $properties
     * @return MetadataInterface Chainable
     */
-    public function set_properties(array $properties);
+    public function setProperties(array $properties);
 }

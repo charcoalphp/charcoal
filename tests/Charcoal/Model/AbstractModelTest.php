@@ -11,9 +11,11 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        $s = new DatabaseSource();
+        $s = new DatabaseSource([
+            'logger'=>$GLOBALS['container']['logger']
+        ]);
         // $obj->set_model($model);
-        $s->set_table('test');
+        $s->setTable('test');
         $q = 'DROP TABLE IF EXISTS `test`';
         $s->db()->query($q);
 
@@ -23,7 +25,7 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
     public function getObj()
     {
         $obj = new AbstractModelClass();
-        $obj->set_metadata(
+        $obj->setMetadata(
             [
                 'properties' => [
                     'id' => [
@@ -42,8 +44,8 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
                 'default_source' => 'default'
             ]
         );
-        if ($obj->source()->table_exists() === false) {
-            $obj->source()->create_table();
+        if ($obj->source()->tableExists() === false) {
+            $obj->source()->createTable();
         }
         return $obj;
     }
@@ -62,7 +64,7 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
     public function testSetData()
     {
         $obj = $this->obj;
-        $ret = $obj->set_data(['foo' => 'bar']);
+        $ret = $obj->setData(['foo' => 'bar']);
         $this->assertSame($ret, $obj);
         $this->assertEquals('bar', $obj->foo);
     }
@@ -70,7 +72,7 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
     public function testSetFlatData()
     {
         $obj = $this->obj;
-        $ret = $obj->set_flat_data(['foo' => 'baz']);
+        $ret = $obj->setFlatData(['foo' => 'baz']);
         $this->assertSame($ret, $obj);
         $this->assertEquals('baz', $obj->foo);
     }
@@ -78,7 +80,7 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
     public function testSave()
     {
         $obj = $this->obj;
-        $obj->set_data(
+        $obj->setData(
             [
                 'id'  => 1,
                 'foo' => 'Test'
@@ -100,7 +102,7 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
     public function testUpdate()
     {
         $obj = $this->obj;
-        $obj->set_data(
+        $obj->setData(
             [
                 'id'  => 1,
                 'foo' => 'Foobar'
@@ -117,7 +119,7 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
     public function testDelete()
     {
         $obj = $this->obj;
-        $obj->set_data(
+        $obj->setData(
             [
                 'id' => 1
             ]
@@ -129,7 +131,7 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
     public function testSerializeUnserialize()
     {
         $obj = $this->obj;
-        $obj->set_data([
+        $obj->setData([
             'id'=>42,
             'foo'=>'Bar'
         ]);
@@ -149,7 +151,7 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
             'id'=>42,
             'foo'=>'Bar'
         ];
-        $obj->set_data($data);
+        $obj->setData($data);
         $json = json_encode($obj);
         $this->assertEquals(json_encode($data), $json);
 

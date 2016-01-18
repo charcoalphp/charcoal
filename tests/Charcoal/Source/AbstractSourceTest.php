@@ -25,7 +25,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
         $filter = $this->getFilter1();
         $order = $this->getOrder1();
         $pagination = ['page'=>3, 'num_per_page'=>120];
-        $obj->set_data([
+        $obj->setData([
             'properties'=>['foo'],
             'filters'=>[$filter],
             'orders'=>[$order],
@@ -41,14 +41,14 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * Assert that the `set_data` method:
+    * Assert that the `setData` method:
     * - is chainable
     * - set the data (properties, filters, orders & pagination)
     */
     public function testSetData()
     {
         $obj = $this->obj;
-        $ret = $obj->set_data([
+        $ret = $obj->setData([
             'properties'=>['foo'],
             'filters'=>[],
             'orders'=>[],
@@ -289,7 +289,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
     public function getFilter1()
     {
         $filter1 = new \Charcoal\Source\Filter();
-        $filter1->set_data([
+        $filter1->setData([
             'property'=>'foo',
             'operator'=>'=',
             'val'=>42
@@ -300,7 +300,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
     public function getFilter2()
     {
         $filter2 = new \Charcoal\Source\Filter();
-        $filter2->set_data([
+        $filter2->setData([
             'property'=>'bar',
             'operator'=>'>',
             'val'=>666
@@ -311,7 +311,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
     public function getOrder1()
     {
         $order1 = new \Charcoal\Source\Order();
-        $order1->set_data([
+        $order1->setData([
             'mode'=>'asc'
         ]);
         return $order1;
@@ -320,7 +320,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
     public function getOrder2()
     {
         $order2 = new \Charcoal\Source\Order();
-        $order2->set_data([
+        $order2->setData([
             'mode'=>'desc'
         ]);
         return $order2;

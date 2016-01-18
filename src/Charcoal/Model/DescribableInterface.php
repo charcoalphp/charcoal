@@ -14,13 +14,13 @@ interface DescribableInterface
     * @param array $data
     * @return DescribableInterface Chainable
     */
-    public function set_data(array $data);
+    public function setData(array $data);
 
     /**
     * @param array|MetadataInterface $metadata
     * @return DescribableInterface Chainable
     */
-    public function set_metadata($metadata);
+    public function setMetadata($metadata);
 
     /**
     * @return MetadataInterface
@@ -28,21 +28,21 @@ interface DescribableInterface
     public function metadata();
 
     /**
-    * @param string $metadata_ident
+    * @param string $metadataIdent
     * @return MetadataInterface
     */
-    public function load_metadata($metadata_ident = null);
+    public function loadMetadata($metadataIdent = null);
 
     /**
-    * @param string $metadata_ident
+    * @param string $metadataIdent
     * @return DescribableInterface Chainable
     */
-    public function set_metadata_ident($metadata_ident);
+    public function setMetadataIdent($metadataIdent);
 
     /**
     * @return string
     */
-    public function metadata_ident();
+    public function metadataIdent();
 
     /**
     * Get the list of properties, as array of `PropertyInterface`
@@ -54,22 +54,22 @@ interface DescribableInterface
     /**
     * Get a single property
     *
-    * @param string $property_ident
+    * @param string $propertyIdent
     * @return PropertyInterface
     */
-    public function property($property_ident);
+    public function property($propertyIdent);
 
     /**
     * Alias of `property()` or `properties()`, depending if argument is set or not.
     *
-    * @param mixed $property_ident Property ident, if null, return all properties
+    * @param mixed $propertyIdent Property ident, if null, return all properties
     * @return array|PropertyInterface|null
     */
-    public function p($property_ident = null);
+    public function p($propertyIdent = null);
 
     /**
     * @param array $filters The filters to apply
     * @return boolean False if the object doesn't match any filter, true otherwise.
     */
-    public function is_filtered(array $filters = null);
+    public function isFiltered(array $filters = null);
 }

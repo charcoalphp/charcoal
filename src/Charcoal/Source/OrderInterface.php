@@ -8,13 +8,13 @@ interface OrderInterface
     * @param array $data
     * @return Order Chainable
     */
-    public function set_data(array $data);
+    public function setData(array $data);
     /**
     * @param string $property
     * @throws InvalidArgumentException if the property argument is not a string
     * @return Order (Chainable)
     */
-    public function set_property($property);
+    public function setProperty($property);
 
     /**
     * @return string
@@ -26,7 +26,7 @@ interface OrderInterface
     * @throws InvalidArgumentException
     * @return Order Chainable
     */
-    public function set_mode($mode);
+    public function setMode($mode);
 
     /**
     * @return string
@@ -45,7 +45,7 @@ interface OrderInterface
     * @param  string|array $values
     * @return Order (Chainable)
     */
-    public function set_values($values);
+    public function setValues($values);
 
     /**
     * @return array

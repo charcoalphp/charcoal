@@ -38,10 +38,10 @@ class ValidatorResult
     public function __construct(array $data = null)
     {
         $ts = new DateTime();
-        $this->set_ts($ts);
+        $this->setTs($ts);
 
         if (is_array($data)) {
-            $this->set_data($data);
+            $this->setData($data);
         }
     }
 
@@ -49,19 +49,19 @@ class ValidatorResult
     * @param array $data
     * @return ValidatorResult Chainable
     */
-    public function set_data(array $data)
+    public function setData(array $data)
     {
         if (isset($data['ident'])) {
-            $this->set_ident($data['ident']);
+            $this->setIdent($data['ident']);
         }
         if (isset($data['level']) && $data['message'] !== null) {
-            $this->set_level($data['level']);
+            $this->setLevel($data['level']);
         }
         if (isset($data['message']) && $data['message'] !== null) {
             $this->set_message($data['message']);
         }
         if (isset($data['ts']) && $data['ts'] !== null) {
-            $this->set_ts($data['ts']);
+            $this->setTs($data['ts']);
         }
         return $this;
     }
@@ -71,7 +71,7 @@ class ValidatorResult
     * @throws InvalidArgumentException if parameter is not valid
     * @return ValidatorResult
     */
-    public function set_ident($ident)
+    public function setIdent($ident)
     {
         if (!is_string($ident)) {
             throw new InvalidArgumentException('Ident must be a string.');
@@ -93,13 +93,15 @@ class ValidatorResult
     * @throws InvalidArgumentException if parameter is not valid
     * @return ValidatorResult
     */
-    public function set_level($level)
+    public function setLevel($level)
     {
         if (!is_string($level)) {
             throw new InvalidArgumentException('Level must be a string.');
         }
         if (!in_array($level, ['notice', 'warning', 'error'])) {
-            throw new InvalidArgumentException('Level can only be notice, warning or error.');
+            throw new InvalidArgumentException(
+                'Level can only be notice, warning or error.'
+            );
         }
         $this->level = $level;
         return $this;
@@ -118,10 +120,12 @@ class ValidatorResult
     * @throws InvalidArgumentException if parameter is not valid
     * @return ValidatorResult
     */
-    public function set_message($message)
+    public function setMessage($message)
     {
         if (!is_string($message)) {
-            throw new InvalidArgumentException('Message must be a string.');
+            throw new InvalidArgumentException(
+                'Message must be a string.'
+            );
         }
         $this->message = $message;
         return $this;
@@ -140,7 +144,7 @@ class ValidatorResult
     * @throws InvalidArgumentException if parameter is not valid
     * @return ValidatorResult
     */
-    public function set_ts($ts)
+    public function setTs($ts)
     {
         if (is_string($ts)) {
             $ts = new DateTime($ts);

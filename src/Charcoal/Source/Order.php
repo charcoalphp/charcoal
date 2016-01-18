@@ -44,19 +44,19 @@ class Order implements OrderInterface
     * @param array $data
     * @return Order Chainable
     */
-    public function set_data(array $data)
+    public function setData(array $data)
     {
         if (isset($data['property'])) {
-            $this->set_property($data['property']);
+            $this->setProperty($data['property']);
         }
         if (isset($data['mode'])) {
-            $this->set_mode($data['mode']);
+            $this->setMode($data['mode']);
         }
         if (isset($data['values'])) {
-            $this->set_values($data['values']);
+            $this->setValues($data['values']);
         }
         if (isset($data['active'])) {
-            $this->set_active($data['active']);
+            $this->setActive($data['active']);
         }
 
         return $this;
@@ -67,7 +67,7 @@ class Order implements OrderInterface
     * @throws InvalidArgumentException if the property argument is not a string
     * @return Order (Chainable)
     */
-    public function set_property($property)
+    public function setProperty($property)
     {
         if (!is_string($property)) {
             throw new InvalidArgumentException('Property must be a string.');
@@ -93,14 +93,14 @@ class Order implements OrderInterface
     * @throws InvalidArgumentException
     * @return Order Chainable
     */
-    public function set_mode($mode)
+    public function setMode($mode)
     {
         if (!is_string($mode)) {
             throw new InvalidArgumentException('Mode must be a string.');
         }
 
         $mode = strtolower($mode);
-        if (!in_array($mode, $this->valid_modes())) {
+        if (!in_array($mode, $this->validModes())) {
             throw new InvalidArgumentException('Invalid mode.');
         }
         $this->mode = $mode;
@@ -127,7 +127,7 @@ class Order implements OrderInterface
     * @param  string|array $values
     * @return Order (Chainable)
     */
-    public function set_values($values)
+    public function setValues($values)
     {
         if (is_string($values)) {
             if ($values == '') {
@@ -158,7 +158,7 @@ class Order implements OrderInterface
     * @param boolean $active
     * @return Order (Chainable)
     */
-    public function set_active($active)
+    public function setActive($active)
     {
         $this->active = $active;
         return $this;
@@ -177,15 +177,15 @@ class Order implements OrderInterface
     *
     * @return array
     */
-    protected function valid_modes()
+    protected function validModes()
     {
-        $valid_modes = [
+        $validModes = [
             self::MODE_DESC,
             self::MODE_ASC,
             self::MODE_RANDOM,
             self::MODE_VALUES
         ];
 
-        return $valid_modes;
+        return $validModes;
     }
 }

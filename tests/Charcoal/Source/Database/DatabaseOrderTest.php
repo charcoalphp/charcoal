@@ -9,7 +9,7 @@ class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
     public function testSqlRandMode()
     {
         $obj = new DatabaseOrder();
-        $obj->set_mode('rand');
+        $obj->setMode('rand');
 
         $sql = $obj->sql();
         $this->assertEquals('RAND()', $sql);
@@ -18,9 +18,9 @@ class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
     public function testSqlValuesMode()
     {
         $obj = new DatabaseOrder();
-        $obj->set_mode('values');
-        $obj->set_property('test');
-        $obj->set_values('1,2,3');
+        $obj->setMode('values');
+        $obj->setProperty('test');
+        $obj->setValues('1,2,3');
 
         $sql = $obj->sql();
         $this->assertEquals('FIELD(`test`, 1,2,3)', $sql);
@@ -31,8 +31,8 @@ class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('\DomainException');
 
         $obj = new DatabaseOrder();
-        $obj->set_mode('values');
-        $obj->set_values('1,2,3');
+        $obj->setMode('values');
+        $obj->setValues('1,2,3');
 
         $sql = $obj->sql();
     }
@@ -42,8 +42,8 @@ class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('\DomainException');
 
         $obj = new DatabaseOrder();
-        $obj->set_mode('values');
-        $obj->set_property('test');
+        $obj->setMode('values');
+        $obj->setProperty('test');
 
         $sql = $obj->sql();
     }
@@ -54,8 +54,8 @@ class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
     public function testSqlAscDesc($mode)
     {
         $obj = new DatabaseOrder();
-        $obj->set_property('test');
-        $obj->set_mode($mode);
+        $obj->setProperty('test');
+        $obj->setMode($mode);
 
         $sql = $obj->sql();
         $this->assertEquals('`test` '.$mode, $sql);
@@ -69,7 +69,7 @@ class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('\DomainException');
 
         $obj = new DatabaseOrder();
-        $obj->set_mode($mode);
+        $obj->setMode($mode);
 
         $sql = $obj->sql();
     }

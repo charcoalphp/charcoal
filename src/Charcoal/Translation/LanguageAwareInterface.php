@@ -27,5 +27,5 @@ interface LanguageAwareInterface
      * @param  LanguageInterface|string|null $lang A language object or identifier.
      * @return self
      */
-    public function set_language($lang = null);
+    public function setLanguage($lang = null);
 }

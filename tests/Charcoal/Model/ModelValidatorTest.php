@@ -17,7 +17,7 @@ class ModelValidatorTest extends \PHPUnit_Framework_TestCase
     public function testValidateModel()
     {
         $model = new Model();
-        $model->set_metadata(
+        $model->setMetadata(
             [
                 'properties' => [
                     'foo' => [

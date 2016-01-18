@@ -22,8 +22,8 @@ use \Charcoal\App\Language\LanguageInterface;
  * Contains three additional methods:
  *
  * • `is_multilingual()`
- * • `resolve_language_ident()` (static)
- * • `resolve_special_languages()`
+ * • `resolveLanguage_ident()` (static)
+ * • `resolve_specialLanguages()`
  */
 trait MultilingualAwareTrait
 {
@@ -32,7 +32,7 @@ trait MultilingualAwareTrait
      *
      * @return boolean Whether the object is unilingual or not.
      */
-    public function is_multilingual()
+    public function isMultilingual()
     {
         return ($this->languages() > 1);
     }
@@ -43,7 +43,7 @@ trait MultilingualAwareTrait
      * @param  LanguageInterface|string $lang A language object or identifier.
      * @return string|mixed A language identifier.
      */
-    public static function resolve_language_ident($lang)
+    public static function resolveLanguageIdent($lang)
     {
         if ($lang instanceof LanguageInterface) {
             return (string)$lang->ident();

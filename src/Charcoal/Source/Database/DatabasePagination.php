@@ -19,11 +19,11 @@ class DatabasePagination extends Pagination
     {
         $sql = '';
         $page = $this->page();
-        $num_per_page = $this->num_per_page();
+        $numPerPage = $this->numPerPage();
 
-        if ($page && $num_per_page) {
-            $first_page = max(0, (($page-1)*$num_per_page));
-            $sql = ' LIMIT '.$first_page.', '.$num_per_page;
+        if ($page && $numPerPage) {
+            $first_page = max(0, (($page-1)*$numPerPage));
+            $sql = ' LIMIT '.$first_page.', '.$numPerPage;
         }
         return $sql;
     }

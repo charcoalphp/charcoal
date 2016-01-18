@@ -68,32 +68,30 @@ abstract class AbstractModel implements
     */
     public function __construct(array $data = null)
     {
-        if (isset($data['logger'])) {
-            $this->setLogger($data['logger']);
-        }
+        $this->setLogger($data['logger']);
 
         /** @todo Needs fix. Must be manually triggered after setting data for metadata to work */
         $this->metadata();
     }
 
     /**
-    * ModelInterface > set_data(). Sets the data
+    * ModelInterface > setData(). Sets the data
     *
     * This function takes an array and fill the model object with its value.
     *
     * This method either calls a setter for each key (`set_{$key}()`) or sets a public member.
     *
-    * For example, calling with `set_data(['properties'=>$properties])` would call
-    *`set_properties($properties)`, becasue `set_properties()` exists.
+    * For example, calling with `setData(['properties'=>$properties])` would call
+    *`setProperties($properties)`, becasue `setProperties()` exists.
     *
-    * But calling with `set_data(['foobar'=>$foo])` would set the `$foobar` member
+    * But calling with `setData(['foobar'=>$foo])` would set the `$foobar` member
     * on the metadata object, because the method `set_foobar()` does not exist.
     *
     *
     * @param array $data
     * @return AbstractModel Chainable
     */
-    public function set_data(array $data)
+    public function setData(array $data)
     {
         foreach ($data as $prop => $val) {
             $func = [$this, 'set_'.$prop];
@@ -135,7 +133,7 @@ abstract class AbstractModel implements
     * @param array $data
     * @return AbstractModel Chainable
     */
-    public function set_flat_data(array $flat_data)
+    public function setFlatData(array $flatData)
     {
         $data = [];
         $properties = $this->properties();
@@ -144,25 +142,25 @@ abstract class AbstractModel implements
             if (count($fields) == 1) {
                 $f = $fields[0];
                 $f_id = $f->ident();
-                if (isset($flat_data[$f_id])) {
-                    $data[$property_ident] = $flat_data[$f_id];
-                    unset($flat_data[$f_id]);
+                if (isset($flatData[$f_id])) {
+                    $data[$property_ident] = $flatData[$f_id];
+                    unset($flatData[$f_id]);
                 }
             } else {
                 $p = [];
                 foreach ($fields as $f) {
                     $f_id = $f->ident();
                     $key = str_replace($property_ident.'_', '', $f_id);
-                    if (isset($flat_data[$f_id])) {
-                        $data[$property_ident][$key] = $flat_data[$f_id];
-                        unset($flat_data[$f_id]);
+                    if (isset($flatData[$f_id])) {
+                        $data[$property_ident][$key] = $flatData[$f_id];
+                        unset($flatData[$f_id]);
                     }
                 }
             }
         }
-        $this->set_data($data);
-        if (!empty($flat_data)) {
-            $this->set_data($flat_data);
+        $this->setData($data);
+        if (!empty($flatData)) {
+            $this->setData($flatData);
         }
         return $this;
     }
@@ -171,7 +169,7 @@ abstract class AbstractModel implements
     * @return array
     * @todo Implement retrieval of flattened data
     */
-    public function flat_data()
+    public function flatData()
     {
         return [];
     }
@@ -180,7 +178,7 @@ abstract class AbstractModel implements
     * @param string $property_ident
     * @return mixed
     */
-    public function property_value($property_ident)
+    public function propertyValue($property_ident)
     {
         $fn = [$this, $property_ident];
         if (is_callable($fn)) {
@@ -194,7 +192,7 @@ abstract class AbstractModel implements
     * @param array $properties
     * @return boolean
     */
-    public function save_properties(array $properties = null)
+    public function saveProperties(array $properties = null)
     {
         if ($properties===null) {
             $properties = array_keys($this->metadata()->properties());
@@ -207,7 +205,7 @@ abstract class AbstractModel implements
                 continue;
             }
 
-            $this->set_data([
+            $this->setData([
                 $property_ident => $p->val()
             ]);
         }
@@ -220,12 +218,12 @@ abstract class AbstractModel implements
     */
     public function save()
     {
-        $pre = $this->pre_save();
+        $pre = $this->preSave();
         if ($pre === false) {
             return false;
         }
 
-        $this->save_properties();
+        $this->saveProperties();
 
         // Invalid models can not be saved.
         // $valid = $this->validate();
@@ -239,7 +237,7 @@ abstract class AbstractModel implements
         } else {
             $this->set_id($ret);
         }
-        $this->post_save();
+        $this->postSave();
         return $ret;
     }
 
@@ -249,85 +247,85 @@ abstract class AbstractModel implements
     */
     public function update($properties = null)
     {
-        $pre = $this->pre_update();
+        $pre = $this->preUpdate();
         if ($pre === false) {
             return false;
         }
 
-        $this->save_properties();
+        $this->saveProperties();
 
         // $valid = $this->validate();
         // if ($valid === false) {
         //     return false;
         // }
 
-        $ret = $this->source()->update_item($this, $properties);
+        $ret = $this->source()->updateItem($this, $properties);
         if ($ret === false) {
             return false;
         }
 
-        $this->post_update();
+        $this->postUpdate();
         return $ret;
     }
 
     /**
-    * StorableTrait > pre_save(). Save hook called before saving the model.
+    * StorableTrait > preSave(). Save hook called before saving the model.
     *
     * @return boolean
     */
-    protected function pre_save()
+    protected function preSave()
     {
         return true;
     }
 
     /**
-    * StorableTrait > post_save(). Save hook called after saving the model.
+    * StorableTrait > postSave(). Save hook called after saving the model.
     *
     * @return boolean
     */
-    protected function post_save()
+    protected function postSave()
     {
         return true;
     }
 
     /**
-    * StorableTrait > pre_update(). Update hook called before updating the model.
+    * StorableTrait > preUpdate(). Update hook called before updating the model.
     *
     * @param array $properties
     * @return boolean
     */
-    protected function pre_update($properties = null)
+    protected function preUpdate($properties = null)
     {
         return true;
     }
 
     /**
-    * StorableTrait > post_update(). Update hook called after updating the model.
+    * StorableTrait > postUpdate(). Update hook called after updating the model.
     *
     * @param array $properties
     * @return boolean
     */
-    protected function post_update($properties = null)
+    protected function postUpdate($properties = null)
     {
         return true;
     }
 
     /**
-    * StorableTrait > pre_delete(). Delete hook called before deleting the model.
+    * StorableTrait > preDelete(). Delete hook called before deleting the model.
     *
     * @return boolean
     */
-    protected function pre_delete()
+    protected function preDelete()
     {
         return true;
     }
 
     /**
-    * StorableTrait > post_delete(). Delete hook called after deleting the model.
+    * StorableTrait > postDelete(). Delete hook called after deleting the model.
     *
     * @return boolean
     */
-    protected function post_delete()
+    protected function postDelete()
     {
         return true;
     }
@@ -338,41 +336,40 @@ abstract class AbstractModel implements
     * @param array $data Optional data to intialize the Metadata object with.
     * @return MetadataInterface
     */
-    protected function create_metadata(array $data = null)
+    protected function createMetadata(array $data = null)
     {
         $metadata = new ModelMetadata();
         if ($data !== null) {
-            $metadata->set_data($data);
+            $metadata->setData($data);
         }
         return $metadata;
     }
 
     /**
-    * StorableInterface > create_source()
+    * StorableInterface > createSource()
     *
     * @param array $data Optional
     * @return SourceInterface
     */
-    protected function create_source($data = null)
+    protected function createSource($data = null)
     {
         $metadata = $this->metadata();
-        $default_source = $metadata->default_source();
-        $source_config = $metadata->source($default_source);
+        $defaultSource = $metadata->defaultSource();
+        $source_config = $metadata->source($defaultSource);
 
         $source_type = isset($source_config['type']) ? $source_config['type'] : self::DEFAULT_SOURCE_TYPE;
-
-        $source_factory = new SourceFactory();
+        $source_factory = new   SourceFactory();
         $source = $source_factory->create($source_type, [
             'logger'=>$this->logger
         ]);
-        $source->set_model($this);
+        $source->setModel($this);
 
         if ($data !== null) {
             $data = array_merge_recursive($source_config, $data);
         } else {
             $data = $source_config;
         }
-        $source->set_data($data);
+        $source->setData($data);
 
         return $source;
     }
@@ -383,11 +380,11 @@ abstract class AbstractModel implements
     * @param array $data Optional
     * @return ValidatorInterface
     */
-    protected function create_validator(array $data = null)
+    protected function createValidator(array $data = null)
     {
         $validator = new ModelValidator($this);
         if ($data !== null) {
-            $validator->set_data($data);
+            $validator->setData($data);
         }
         return $validator;
     }
@@ -396,13 +393,13 @@ abstract class AbstractModel implements
     * @param array $data
     * @return ViewInterface
     */
-    public function create_view(array $data = null)
+    public function createView(array $data = null)
     {
         $view = new GenericView([
             'logger'=>$this->logger
         ]);
         if ($data !== null) {
-            $view->set_data($data);
+            $view->setData($data);
         }
         return $view;
     }
@@ -425,7 +422,7 @@ abstract class AbstractModel implements
     public function unserialize($data)
     {
         $data = unserialize($data);
-        $this->set_data($data);
+        $this->setData($data);
     }
 
     /**
@@ -441,7 +438,7 @@ abstract class AbstractModel implements
     *
     * @return string
     */
-    public function obj_type()
+    public function objType()
     {
         $classname = get_class($this);
         $ident = preg_replace('/(^\\[A-Z])/', '-${1}', $classname);

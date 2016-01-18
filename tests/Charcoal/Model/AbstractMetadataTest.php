@@ -14,7 +14,7 @@ class AbstractMetadataTest extends \PHPUnit_Framework_TestCase
     public function testSetData()
     {
         $obj = $this->obj;
-        $ret = $obj->set_data([
+        $ret = $obj->merge([
             'properties'=>[],
             'foo'=>'bar'
         ]);

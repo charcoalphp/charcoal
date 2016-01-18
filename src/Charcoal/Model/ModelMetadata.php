@@ -9,31 +9,31 @@ use \Charcoal\Model\AbstractMetadata;
 class ModelMetadata extends AbstractMetadata implements \ArrayAccess
 {
     /**
-     * @var string $_ident
+     * @var string $Ident
      */
     private $ident;
 
     /**
-    * @var array $_sources
+    * @var array $Sources
     */
     private $sources;
     /**
-    * @var string $_default_source
+    * @var string $defaultSource
     */
-    private $default_source;
+    private $defaultSource;
 
     /**
     * The actual config data
     * @var array $data
     */
-    public $data;
+//    public $data;
 
     /**
     * @param string $ident
     * @throws InvalidArgumentException if ident is not a string
     * @return ModelMetadata Chainable
     */
-    public function set_ident($ident)
+    public function setIdent($ident)
     {
         if (!is_string($ident)) {
             throw new InvalidArgumentException(
@@ -57,15 +57,15 @@ class ModelMetadata extends AbstractMetadata implements \ArrayAccess
     * @throws InvalidArgumentException
     * @return ModelMetadata Chainable
     */
-    public function set_sources($sources)
+    public function setSources($sources)
     {
         if (!is_array($sources)) {
             throw new InvalidArgumentException(
                 'Sources must be an array.'
             );
         }
-        foreach ($sources as $source_ident => $source) {
-            $this->add_source($source_ident, $source);
+        foreach ($sources as $sourceIdent => $source) {
+            $this->addSource($sourceIdent, $source);
         }
         return $this;
     }
@@ -79,46 +79,46 @@ class ModelMetadata extends AbstractMetadata implements \ArrayAccess
     }
 
     /**
-    * @param string $source_ident
+    * @param string $sourceIdent
     * @param mixed  $source
     * @return ModelMetadata Chainable
     */
-    public function add_source($source_ident, $source)
+    public function addSource($sourceIdent, $source)
     {
-        $this->sources[$source_ident] = $source;
+        $this->sources[$sourceIdent] = $source;
         return $this;
     }
 
     /**
-    * @param string $source_ident
+    * @param string $sourceIdent
     * @return mixed
     */
-    public function source($source_ident)
+    public function source($sourceIdent)
     {
-        return $this->sources[$source_ident];
+        return $this->sources[$sourceIdent];
     }
 
     /**
-    * @param string $default_source
+    * @param string $defaultSource
     * @throws InvalidArgumentException
     * @return ModelMetadata Chainable
     */
-    public function set_default_source($default_source)
+    public function setDefaultSource($defaultSource)
     {
-        if (!is_string($default_source)) {
+        if (!is_string($defaultSource)) {
             throw new InvalidArgumentException(
                 'Default source needs to be a string.'
             );
         }
-        $this->default_source = $default_source;
+        $this->defaultSource = $defaultSource;
         return $this;
     }
 
     /**
     * @return string
     */
-    public function default_source()
+    public function defaultSource()
     {
-        return $this->default_source;
+        return $this->defaultSource;
     }
 }

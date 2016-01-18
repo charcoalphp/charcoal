@@ -16,7 +16,7 @@ interface ValidatableInterface
     * @param ValidatorInterface $validator
     * @return ValidatableInterface Chainable
     */
-    public function set_validator(ValidatorInterface $validator);
+    public function setValidator(ValidatorInterface $validator);
 
     /**
     * @return ValidatorInterface

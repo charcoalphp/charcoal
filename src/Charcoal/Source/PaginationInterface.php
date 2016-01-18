@@ -11,14 +11,14 @@ interface PaginationInterface
     * @param array $data
     * @return Pagination Chainable
     */
-    public function set_data(array $data);
+    public function setData(array $data);
 
     /**
     * @param integer $page
     * @throws InvalidArgumentException if the parameter is not numeric or < 0
     * @return Pagination (Chainable)
     */
-    public function set_page($page);
+    public function setPage($page);
 
     /**
     * @return integer
@@ -30,11 +30,11 @@ interface PaginationInterface
     * @throws InvalidArgumentException if the parameter is not numeric or < 0
     * @return Pagination (Chainable)
     */
-    public function set_num_per_page($num);
+    public function setNumPerPage($num);
     /**
     * @return integer
     */
-    public function num_per_page();
+    public function numPerPage();
 
     /**
     * @return integer

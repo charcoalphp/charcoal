@@ -14,12 +14,12 @@ class ValidatableClass implements ValidatableInterface
 
     public $foo = 'bar';
 
-    public function create_validator($data = null)
+    public function createValidator($data = null)
     {
         include_once 'AbstractValidatorClass.php';
         $v = new AbstractValidatorClass();
         if ($data !== null) {
-            $v->set_data($data);
+            $v->setData($data);
         }
         return $v;
     }

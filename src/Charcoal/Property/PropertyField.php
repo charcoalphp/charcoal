@@ -14,43 +14,43 @@ use \Charcoal\Tranlsation\TranslationString;
 class PropertyField
 {
     /**
-    * @var string $_ident
+    * @var string $Ident
     */
     private $ident;
     /**
-    * @var TranslationString $_label
+    * @var TranslationString $Label
     */
     private $label;
     /**
     * @var string
     */
-    private $sql_type;
+    private $sqlType;
     /**
     * @var integer
     */
-    private $sql_pdo_type;
+    private $sqlPdoType;
     /**
     * @var string
     */
     private $extra;
     /**
-    * @var mixed $_val
+    * @var mixed $Val
     */
     private $val;
     /**
-    * @var mixed $_default_val
+    * @var mixed $_defaultVal
     */
-    private $default_val;
+    private $defaultVal;
     /**
-    * @var boolean $_allow_null
+    * @var boolean $_allowNull
     */
-    private $allow_null;
+    private $allowNull;
 
     /**
     * @param array $data
     * @return PropertyField Chainable
     */
-    public function set_data(array $data)
+    public function setData(array $data)
     {
         foreach ($data as $prop => $val) {
             $func = [$this, 'set_'.$prop];
@@ -70,10 +70,12 @@ class PropertyField
     * @throws InvalidArgumentException
     * @return PropertyField Chainable
     */
-    public function set_ident($ident)
+    public function setIdent($ident)
     {
         if (!is_string($ident)) {
-            throw new InvalidArgumentException('Ident must be a string.');
+            throw new InvalidArgumentException(
+                'Ident must be a string.'
+            );
         }
         $this->ident = $ident;
         return $this;
@@ -91,7 +93,7 @@ class PropertyField
     * @param mixed $label
     * @return PropertyField Chainable
     */
-    public function set_label($label)
+    public function setLabel($label)
     {
         $this->label = new TranslationString($label);
         return $this;
@@ -106,50 +108,54 @@ class PropertyField
     }
 
     /**
-    * @param string $sql_type
+    * @param string $sqlType
     * @throws InvalidArgumentException
     * @return PropertyField Chainable
     */
-    public function set_sql_type($sql_type)
+    public function setSqlType($sqlType)
     {
-        if (!is_string($sql_type)) {
-            throw new InvalidArgumentException('Sql Type must be a string.');
+        if (!is_string($sqlType)) {
+            throw new InvalidArgumentException(
+                'Sql Type must be a string.'
+            );
         }
-        $this->sql_type = $sql_type;
+        $this->sqlType = $sqlType;
         return $this;
     }
 
     /**
     * @return string
     */
-    public function sql_type()
+    public function sqlType()
     {
-        return $this->sql_type;
+        return $this->sqlType;
     }
 
     /**
-    * @param integer $sql_pdo_type
+    * @param integer $sqlPdoType
     * @throws InvalidArgumentException
     * @return PropertyField Chainable
     */
-    public function set_sql_pdo_type($sql_pdo_type)
+    public function setSqlPdoType($sqlPdoType)
     {
-        if (!is_integer($sql_pdo_type)) {
-            throw new InvalidArgumentException('PDO Type must be an integer.');
+        if (!is_integer($sqlPdoType)) {
+            throw new InvalidArgumentException(
+                'PDO Type must be an integer.'
+            );
         }
-        $this->sql_pdo_type = $sql_pdo_type;
+        $this->sqlPdoType = $sqlPdoType;
         return $this;
     }
 
     /**
     * @return integer
     */
-    public function sql_pdo_type()
+    public function sqlPdoType()
     {
         if ($this->val() === null) {
             return PDO::PARAM_NULL;
         }
-        return $this->sql_pdo_type;
+        return $this->sqlPdoType;
     }
 
     /**
@@ -157,10 +163,12 @@ class PropertyField
     * @throws InvalidArgumentException
     * @return PropertyField Chainable
     */
-    public function set_extra($extra)
+    public function setExtra($extra)
     {
         if (!is_string($extra)) {
-            throw new InvalidArgumentException('Extra must be a string.');
+            throw new InvalidArgumentException(
+                'Extra must be a string.'
+            );
         }
         $this->extra = $extra;
         return $this;
@@ -181,7 +189,7 @@ class PropertyField
     * @param mixed $val
     * @return PropertyField Chainable
     */
-    public function set_val($val)
+    public function setVal($val)
     {
         $this->val = $val;
         return $this;
@@ -196,43 +204,39 @@ class PropertyField
     }
 
     /**
-    * @param mixed $default_val
+    * @param mixed $defaultVal
     * @return PropertyField Chainable
     */
-    public function set_default_val($default_val)
+    public function setDefaultVal($defaultVal)
     {
-        $this->default_val = $default_val;
+        $this->defaultVal = $defaultVal;
         return $this;
     }
 
     /**
     * @return mixed
     */
-    public function default_val()
+    public function defaultVal()
     {
-        return $this->default_val;
+        return $this->defaultVal;
     }
 
     /**
-    * @param boolean $allow_null
-    * @throws InvalidArgumentException
+    * @param boolean $allowNull
     * @return PropertyField Chainable
     */
-    public function set_allow_null($allow_null)
+    public function setAllowNull($allowNull)
     {
-        if (!is_bool($allow_null)) {
-            throw new InvalidArgumentException('Allow null must be a boolean.');
-        }
-        $this->allow_null = $allow_null;
+        $this->allowNull = !!$allowNull;
         return $this;
     }
 
     /**
     * @return boolean
     */
-    public function allow_null()
+    public function allowNull()
     {
-        return $this->allow_null;
+        return $this->allowNull;
     }
 
     /**
@@ -245,12 +249,12 @@ class PropertyField
             return '';
         }
 
-        $sql_type = $this->sql_type();
-        $null = (($this->allow_null() === false) ? ' NOT NULL ' : '');
+        $sqlType = $this->sqlType();
+        $null = (($this->allowNull() === false) ? ' NOT NULL ' : '');
         $extra = $this->extra() ? ' '.$this->extra().' ' : '';
-        $default = ($this->default_val() ? ' DEFAULT \''.addslashes($this->default_val()).'\' ' : '');
+        $default = ($this->defaultVal() ? ' DEFAULT \''.addslashes($this->defaultVal()).'\' ' : '');
         $comment = ($this->label() ? ' COMMENT \''.addslashes($this->label()).'\' ' : '');
 
-        return '`'.$ident.'` '.$sql_type.$null.$extra.$default.$comment;
+        return '`'.$ident.'` '.$sqlType.$null.$extra.$default.$comment;
     }
 }

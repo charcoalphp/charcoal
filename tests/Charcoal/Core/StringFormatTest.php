@@ -29,29 +29,29 @@ class StringFormatTest extends \PHPUnit_Framework_TestCase
     public function testSetString()
     {
         $obj = new StringFormat();
-        $ret = $obj->set_string('Foo bar');
+        $ret = $obj->setString('Foo bar');
         $this->assertSame($ret, $obj);
         $this->assertEquals('Foo bar', $obj->string());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_string(false);
+        $obj->setString(false);
     }
 
     public function testSetUnicode()
     {
         $obj = new StringFormat();
-        $ret=  $obj->set_unicode(false);
+        $ret=  $obj->setUnicode(false);
         $this->assertSame($ret, $obj);
         $this->assertNotTrue($obj->unicode());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_unicode('foo');
+        $obj->setUnicode('foo');
     }
 
     public function testStripTags()
     {
         $obj = new StringFormat('<p>Test</p>');
-        $ret = $obj->strip_tags();
+        $ret = $obj->stripTags();
         $this->assertSame($ret, $obj);
         $this->assertEquals('Test', $obj->string());
     }
@@ -88,7 +88,7 @@ class StringFormatTest extends \PHPUnit_Framework_TestCase
     public function testAlphanumericNonUnicode()
     {
         $obj = new StringFormat('This "string" contaïns non-àlphanumerical #characters');
-        $obj->set_unicode(false);
+        $obj->setUnicode(false);
         $ret = $obj->alphanumeric();
         $this->assertSame($ret, $obj);
         $this->assertEquals('This string contans nonlphanumerical characters', $obj->string());

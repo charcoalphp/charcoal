@@ -22,7 +22,7 @@ trait ValidatableTrait
     * @param ValidatorInterface $validator
     * @return ValidatableInterface Chainable
     */
-    public function set_validator(ValidatorInterface $validator)
+    public function setValidator(ValidatorInterface $validator)
     {
         $this->validator = $validator;
         return $this;
@@ -34,7 +34,7 @@ trait ValidatableTrait
     public function validator()
     {
         if ($this->validator === null) {
-            $this->validator = $this->create_validator();
+            $this->validator = $this->createValidator();
         }
         return $this->validator;
     }
@@ -42,7 +42,7 @@ trait ValidatableTrait
     /**
     * @return ValidatorInterface
     */
-    abstract protected function create_validator();
+    abstract protected function createValidator();
 
     /**
     * @param ValidatorInterface $v
@@ -51,7 +51,7 @@ trait ValidatableTrait
     public function validate(ValidatorInterface &$v = null)
     {
         if ($v !== null) {
-            $this->set_validator($v);
+            $this->setValidator($v);
         }
 
         return $this->validator()->validate();

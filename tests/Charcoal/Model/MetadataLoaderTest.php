@@ -13,14 +13,14 @@ class MetadataLoaderTest extends \PHPUnit_Framework_TestCase
         $obj = new MetadataLoader();
         $this->assertInstanceOf('\Charcoal\Model\MetadataLoader', $obj);
 
-        $this->assertEquals([], $obj->search_path());
+        $this->assertEquals([], $obj->searchPath());
         $this->assertEquals('', $obj->ident());
     }
 
     public function testSetIdent()
     {
         $obj = new MetadataLoader();
-        $ret = $obj->set_ident('foo');
+        $ret = $obj->setIdent('foo');
         $this->assertSame($ret, $obj);
         $this->assertEquals('foo', $obj->ident());
     }

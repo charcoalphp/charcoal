@@ -25,15 +25,15 @@ use \Charcoal\Translation\TranslationStringInterface;
  *
  * Allow a string to be translatable, transparently.
  *
- * Except for `self::$current_language`, this configurable object delegates
+ * Except for `self::$currentLanguage`, this configurable object delegates
  * most of its multi-language handling to TranslationConfig.
  *
- * The TranslationString class provides it's own independant `self::$current_language`.
+ * The TranslationString class provides it's own independant `self::$currentLanguage`.
  * The class redefines the following methods from ConfigurableTranslationTrait:
  *
- * • `self::default_language()` → `ConfigurableTranslationTrait::current_language()`
- * • `self::current_language()` → `self::$current_language`
- * • `self::set_current_language()` → `self::$current_language`
+ * • `self::defaultLanguage()` → `ConfigurableTranslationTrait::currentLanguage()`
+ * • `self::currentLanguage()` → `self::$currentLanguage`
+ * • `self::setCurrentLanguage()` → `self::$currentLanguage`
  *
  * @see \Charcoal\Translation\Catalog for a similar exception for the current language.
  */
@@ -63,7 +63,7 @@ class TranslationString implements
      *
      * @var string
      */
-    private $current_language;
+    private $currentLanguage;
 
     /**
      * Calling the constructor with a parameter should force setting it up as value.
@@ -79,7 +79,7 @@ class TranslationString implements
         }
 
         if (isset($val)) {
-            $this->set_val($val);
+            $this->setVal($val);
         }
 
         return $this;
@@ -140,7 +140,7 @@ class TranslationString implements
      * @return self
      * @throws InvalidArgumentException If value is invalid.
      */
-    public function set_val($val)
+    public function setVal($val)
     {
         if ($val instanceof TranslationStringInterface) {
             $this->val = $val->all();
@@ -148,10 +148,10 @@ class TranslationString implements
             $this->val = [];
 
             foreach ($val as $lang => $l10n) {
-                $this->add_val($lang, $l10n);
+                $this->addVal($lang, $l10n);
             }
         } elseif (is_string($val)) {
-            $lang = $this->current_language();
+            $lang = $this->currentLanguage();
 
             $this->val[$lang] = $val;
         } else {
@@ -170,9 +170,9 @@ class TranslationString implements
      * @return self
      * @throws InvalidArgumentException If the language or value is invalid.
      */
-    public function add_val($lang, $val)
+    public function addVal($lang, $val)
     {
-        $lang = self::resolve_language_ident($lang);
+        $lang = self::resolveLanguageIdent($lang);
 
         if (!is_string($lang)) {
             throw new InvalidArgumentException(
@@ -196,9 +196,9 @@ class TranslationString implements
      * @return self
      * @throws InvalidArgumentException If language is invalid.
      */
-    public function remove_val($lang)
+    public function removeVal($lang)
     {
-        $lang = self::resolve_language_ident($lang);
+        $lang = self::resolveLanguageIdent($lang);
 
         if (!is_string($lang)) {
             throw new InvalidArgumentException(
@@ -206,7 +206,7 @@ class TranslationString implements
             );
         }
 
-        if ($this->has_val($lang)) {
+        if ($this->hasVal($lang)) {
             unset($this->val[$lang]);
         }
         return $this;
@@ -230,17 +230,17 @@ class TranslationString implements
     public function val($lang = null)
     {
         if ($lang === null) {
-            $lang = $this->current_language();
-        } elseif (!$this->has_language($lang)) {
+            $lang = $this->currentLanguage();
+        } elseif (!$this->hasLanguage($lang)) {
             throw new InvalidArgumentException(sprintf('Invalid language: "%s"', (string)$lang));
         }
 
-        if ($this->has_val($lang)) {
+        if ($this->hasVal($lang)) {
             return $this->val[$lang];
         } else {
-            $lang = $this->default_language();
+            $lang = $this->defaultLanguage();
 
-            if ($this->has_val($lang)) {
+            if ($this->hasVal($lang)) {
                 return $this->val[$lang];
             } else {
                 return '';
@@ -255,9 +255,9 @@ class TranslationString implements
      * @return boolean
      * @throws InvalidArgumentException If language is invalid.
      */
-    public function has_val($lang)
+    public function hasVal($lang)
     {
-        $lang = self::resolve_language_ident($lang);
+        $lang = self::resolveLanguageIdent($lang);
 
         if (!is_string($lang)) {
             throw new InvalidArgumentException(
@@ -269,14 +269,14 @@ class TranslationString implements
     }
 
     /**
-     * Alias of `self::has_val()`.
+     * Alias of `self::hasVal()`.
      *
      * @param  LanguageInterface|string $lang A language object or identifier.
      * @return boolean
      */
-    public function has_translation($lang)
+    public function hasTranslation($lang)
     {
-        return $this->has_val($lang);
+        return $this->hasVal($lang);
     }
 
     /**
@@ -303,7 +303,7 @@ class TranslationString implements
     {
         if (count($langs)) {
             array_walk($langs, function (&$val, $key) {
-                $val = self::resolve_language_ident($val);
+                $val = self::resolveLanguageIdent($val);
             });
 
             return array_intersect_key($this->all(), array_flip($langs));
@@ -313,7 +313,7 @@ class TranslationString implements
     }
 
     /**
-     * Alias of `ConfigurableTranslationTrait::has_language()`.
+     * Alias of `ConfigurableTranslationTrait::hasLanguage()`.
      *
      * Called when using the objects as `isset($obj['foo'])`.
      *
@@ -330,7 +330,7 @@ class TranslationString implements
             );
         }
 
-        return $this->has_val($lang);
+        return $this->hasVal($lang);
     }
 
     /**
@@ -353,7 +353,7 @@ class TranslationString implements
     }
 
     /**
-     * Alias of `self::add_val()`.
+     * Alias of `self::addVal()`.
      *
      * @see    ArrayAccess::offsetSet()
      * @param  string $lang A language identifier.
@@ -369,11 +369,11 @@ class TranslationString implements
             );
         }
 
-        $this->add_val($lang, $val);
+        $this->addVal($lang, $val);
     }
 
     /**
-     * Alias of `self::remove_val()`.
+     * Alias of `self::removeVal()`.
      *
      * Called when using `unset($obj['foo']);`.
      *
@@ -390,7 +390,7 @@ class TranslationString implements
             );
         }
 
-        $this->remove_val($lang);
+        $this->removeVal($lang);
     }
 
     /**
@@ -411,9 +411,9 @@ class TranslationString implements
      * @uses   ConfigurableInterface::config()
      * @return string A language identifier.
      */
-    public function default_language()
+    public function defaultLanguage()
     {
-        return $this->config()->default_language();
+        return $this->config()->defaultLanguage();
     }
 
     /**
@@ -422,16 +422,17 @@ class TranslationString implements
      * The current language acts as the first to be used when interacting
      * with data in a context where the language isn't explicitly specified.
      *
-     * @see    TranslatableTrait::current_language()
+     * @see    TranslatableTrait::currentLanguage()
      * @return string A language identifier.
      */
-    public function current_language()
+    public function currentLanguage()
     {
-        if (!isset($this->current_language)) {
-            return $this->config()->current_language();
+        if (!isset($this->currentLanguage)) {
+            return 'fr';
+            //return $this->config()->currentLanguage();
         }
 
-        return $this->current_language;
+        return $this->currentLanguage;
     }
 
     /**
@@ -442,25 +443,25 @@ class TranslationString implements
      * Defaults to resetting the object's current language to the config's,
      * (which might fall onto the default language).
      *
-     * @see    TranslatableTrait::set_current_language()
+     * @see    TranslatableTrait::setCurrentLanguage()
      * @param  LanguageInterface|string|null $lang A language object or identifier.
      * @return self
      * @throws InvalidArgumentException If language isn't available.
      */
-    public function set_current_language($lang = null)
+    public function setCurrentLanguage($lang = null)
     {
         if (isset($lang)) {
-            $lang = self::resolve_language_ident($lang);
+            $lang = self::resolveLanguageIdent($lang);
 
-            if ($this->has_language($lang)) {
-                $this->current_language = $lang;
+            if ($this->hasLanguage($lang)) {
+                $this->currentLanguage = $lang;
             } else {
                 throw new InvalidArgumentException(
                     sprintf('Invalid language: "%s"', (string)$lang)
                 );
             }
         } else {
-            $this->current_language = null;
+            $this->currentLanguage = null;
         }
 
         return $this;
@@ -483,7 +484,7 @@ class TranslationString implements
     public function unserialize($data)
     {
         $data = unserialize($data);
-        $this->set_val($data);
+        $this->setVal($data);
     }
 
     /**

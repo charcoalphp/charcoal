@@ -30,13 +30,13 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     const DEFAULT_DB_TYPE = 'mysql';
 
     /**
-    * @var string $database_ident
+    * @var string $databaseIdent
     */
-    private $database_ident;
+    private $databaseIdent;
     /**
-    * @var DatabaseSourceConfig $database_config
+    * @var DatabaseSourceConfig $databaseConfig
     */
-    private $database_config;
+    private $databaseConfig;
 
     /**
     * @var string $table
@@ -49,18 +49,18 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     private static $dbs = [];
 
     /**
-    * @param string $database_ident
+    * @param string $databaseIdent
     * @throws InvalidArgumentException if ident is not a string
     * @return DatabaseSource Chainable
     */
-    public function set_database_ident($database_ident)
+    public function setDatabaseIdent($databaseIdent)
     {
-        if (!is_string($database_ident)) {
+        if (!is_string($databaseIdent)) {
             throw new InvalidArgumentException(
-                'set_database() expects a string as database ident.'
+                'setDatabase() expects a string as database ident.'
             );
         }
-        $this->database_ident = $database_ident;
+        $this->databaseIdent = $databaseIdent;
         return $this;
     }
 
@@ -70,49 +70,49 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     *
     * @return string
     */
-    public function database_ident()
+    public function databaseIdent()
     {
-        if ($this->database_ident === null) {
+        if ($this->databaseIdent === null) {
             $container = \Charcoal\App\App::instance()->getContainer();
-            $app_config = $container['charcoal/app/config'];
-            return $app_config->get('default_database');
+            $appConfig = $container['charcoal/app/config'];
+            return $appConfig->get('defaultDatabase');
         }
-        return $this->database_ident;
+        return $this->databaseIdent;
     }
 
     /**
-    * @param array $database_config
+    * @param array $databaseConfig
     * @throws InvalidArgumentException
     * @return DatabaseSource Chainable
     */
-    public function set_database_config($database_config)
+    public function setDatabaseConfig($databaseConfig)
     {
-        if (!is_array($database_config)) {
+        if (!is_array($databaseConfig)) {
             throw new InvalidArgumentException(
                 sprintf(
                     'Database config needs to be an array. (%s given) [%s]',
-                    gettype($database_config),
+                    gettype($databaseConfig),
                     get_class($this->model())
                 )
             );
         }
-        $this->database_config = $database_config;
+        $this->databaseConfig = $databaseConfig;
         return $this;
     }
 
     /**
     * @return mixed
     */
-    public function database_config()
+    public function databaseConfig()
     {
-        if ($this->database_config === null) {
-            $ident = $this->database_ident();
+        if ($this->databaseConfig === null) {
+            $ident = $this->databaseIdent();
             $container = \Charcoal\App\App::instance()->getContainer();
-            $app_config = $container['charcoal/app/config'];
-            $default = $app_config->default_database();
-            return $app_config->database_config($default);
+            $appConfig = $container['charcoal/app/config'];
+            $default = $appConfig->defaultDatabase();
+            return $appConfig->databaseConfig($default);
         }
-        return $this->database_config;
+        return $this->databaseConfig;
     }
 
     /**
@@ -122,12 +122,12 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     * @throws InvalidArgumentException if argument is not a string
     * @return DatabaseSource Chainable
     */
-    public function set_table($table)
+    public function setTable($table)
     {
         if (!is_string($table)) {
             throw new InvalidArgumentException(
                 sprintf(
-                    'DatabaseSource::set_table() expects a string as table. (%s given). [%s]',
+                    'DatabaseSource::setTable() expects a string as table. (%s given). [%s]',
                     gettype($table),
                     get_class($this->model())
                 )
@@ -157,23 +157,23 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     *
     * @return boolean Success / Failure
     */
-    public function create_table()
+    public function createTable()
     {
-        if ($this->table_exists()) {
+        if ($this->tableExists()) {
             // Table already exists
             return true;
         }
 
         $model = $this->model();
         $metadata = $model->metadata();
-        $fields = $this->get_model_fields($model);
-        $fields_sql = [];
+        $fields = $this->getModelFields($model);
+        $fieldsSql = [];
         foreach ($fields as $field) {
-            $fields_sql[] = $field->sql();
+            $fieldsSql[] = $field->sql();
         }
 
         $q = 'CREATE TABLE  `'.$this->table().'` ('."\n";
-        $q .= implode(',', $fields_sql);
+        $q .= implode(',', $fieldsSql);
         $key = $model->key();
         if ($key) {
             $q .= ', PRIMARY KEY (`'.$key.'`) '."\n";
@@ -191,15 +191,15 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     *
     * @return boolean Success / Failure
     */
-    public function alter_table()
+    public function alterTable()
     {
-        if (!$this->table_exists()) {
+        if (!$this->tableExists()) {
             return false;
         }
 
-        $fields = $this->get_model_fields($this->model());
+        $fields = $this->getModelFields($this->model());
 
-        $cols = $this->table_structure();
+        $cols = $this->tableStructure();
 
         foreach ($fields as $field) {
             $ident = $field->ident();
@@ -241,15 +241,15 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     /**
     * @return boolean
     */
-    public function table_exists()
+    public function tableExists()
     {
         $q = 'SHOW TABLES LIKE \''.$this->table().'\'';
         $this->logger->debug($q);
         $res = $this->db()->query($q);
-        $table_exists = $res->fetchColumn(0);
+        $tableExists = $res->fetchColumn(0);
 
         // Return as boolean
-        return !!$table_exists;
+        return !!$tableExists;
     }
 
     /**
@@ -257,7 +257,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     *
     * @return array
     */
-    public function table_structure()
+    public function tableStructure()
     {
         $q = 'SHOW COLUMNS FROM `'.$this->table().'`';
         $this->logger->debug($q);
@@ -271,7 +271,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     *
     * @return boolean
     */
-    public function table_is_empty()
+    public function tableIsEmpty()
     {
         $q = 'SELECT NULL FROM `'.$this->table().'` LIMIT 1';
         $this->logger->debug($q);
@@ -280,36 +280,36 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     }
 
     /**
-    * @param string $database_ident
+    * @param string $databaseIdent
     * @throws Exception if the database is not set.
     * @return PDO
     */
-    public function db($database_ident = null)
+    public function db($databaseIdent = null)
     {
         // If no database ident was passed in parameter, use the class database or the config databases
-        if ($database_ident === null) {
-            $database_ident = $this->database_ident();
+        if ($databaseIdent === null) {
+            $databaseIdent = $this->databaseIdent();
         }
 
         // If the handle was already created, reuse from static $dbh variable
-        if (isset(self::$dbs[$database_ident])) {
-            return self::$dbs[$database_ident];
+        if (isset(self::$dbs[$databaseIdent])) {
+            return self::$dbs[$databaseIdent];
         }
 
-        $db_config = $this->database_config();
+        $dbConfig = $this->databaseConfig();
 
-        $db_hostname = (isset($db_config['hostname']) ? $db_config['hostname'] : self::DEFAULT_DB_HOSTNAME);
-        $db_type = (isset($db_config['type']) ? $db_config['type'] : self::DEFAULT_DB_TYPE);
+        $db_hostname = (isset($dbConfig['hostname']) ? $dbConfig['hostname'] : self::DEFAULT_DB_HOSTNAME);
+        $db_type = (isset($dbConfig['type']) ? $dbConfig['type'] : self::DEFAULT_DB_TYPE);
         /** @todo ... The other parameters are required. Really? */
 
         try {
-            $database = $db_config['database'];
-            $username = $db_config['username'];
-            $password = $db_config['password'];
+            $database = $dbConfig['database'];
+            $username = $dbConfig['username'];
+            $password = $dbConfig['password'];
 
             // Set UTf-8 compatibility by default. Disable it if it is set as such in config
             $extra_opts = [PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'];
-            if (isset($db_config['disable_utf8']) && $db_config['disable_utf8']) {
+            if (isset($dbConfig['disable_utf8']) && $dbConfig['disable_utf8']) {
                 $extra_opts = null;
             }
 
@@ -327,9 +327,9 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
             );
         }
 
-        self::$dbs[$database_ident] = $db;
+        self::$dbs[$databaseIdent] = $db;
 
-        return self::$dbs[$database_ident];
+        return self::$dbs[$databaseIdent];
     }
 
     /**
@@ -340,7 +340,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     * @return array
     * @todo Move this method in StorableTrait or AbstractModel
     */
-    private function get_model_fields(ModelInterface $model, $properties = null)
+    private function getModelFields(ModelInterface $model, $properties = null)
     {
         $metadata = $model->metadata();
         if ($properties === null) {
@@ -350,14 +350,14 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
         }
 
         $fields = [];
-        foreach ($properties as $property_ident) {
-            $p = $model->p($property_ident);
-            $v = $model->property_value($property_ident);
-            $p->set_val($v);
+        foreach ($properties as $propertyIdent) {
+            $p = $model->p($propertyIdent);
+            $v = $model->propertyValue($propertyIdent);
+            $p->setVal($v);
             if (!$p || !$p->active()) {
                 continue;
             }
-            foreach ($p->fields() as $field_ident => $field) {
+            foreach ($p->fields() as $fieldIdent => $field) {
                 $fields[$field->ident()] = $field;
             }
         }
@@ -370,11 +370,11 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     * @throws Exception
     * @return StorableInterface
     */
-    public function load_item($ident, StorableInterface $item = null)
+    public function loadItem($ident, StorableInterface $item = null)
     {
         $key = $this->model()->key();
 
-        return $this->load_item_from_key($key, $ident, $item);
+        return $this->loadItemFromKey($key, $ident, $item);
     }
 
     /**
@@ -386,10 +386,10 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
      * @throws Exception If the query fails.
      * @return StorableInterface             Item
      */
-    public function load_item_from_key($key, $ident, StorableInterface $item = null)
+    public function loadItemFromKey($key, $ident, StorableInterface $item = null)
     {
         if ($item !== null) {
-            $this->set_model($item);
+            $this->setModel($item);
         } else {
             $class = get_class($this->model());
             $item = new $class;
@@ -414,7 +414,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
             'ident' => $ident
         ];
 
-        return $this->load_item_from_query($q, $binds, $item);
+        return $this->loadItemFromQuery($q, $binds, $item);
     }
 
     /**
@@ -424,10 +424,10 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
      * @throws Exception If there is a query error.
      * @return StorableInterface Item.
      */
-    public function load_item_from_query($query, array $binds = null, StorableInterface $item = null)
+    public function loadItemFromQuery($query, array $binds = null, StorableInterface $item = null)
     {
         if ($item !== null) {
-            $this->set_model($item);
+            $this->setModel($item);
         } else {
             $class = get_class($this->model());
             $item = new $class;
@@ -438,14 +438,14 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
             return $item;
         }
 
-        $sth = $this->db_query($query, $binds);
+        $sth = $this->dbQuery($query, $binds);
         if ($sth === false) {
             throw new Exception('Error');
         }
 
         $data = $sth->fetch(PDO::FETCH_ASSOC);
         if ($data) {
-            $item->set_flat_data($data);
+            $item->setFlatData($data);
         }
 
         return $item;
@@ -455,26 +455,26 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     * @param StorableInterface|null $item
     * @return array
     */
-    public function load_items(StorableInterface $item = null)
+    public function loadItems(StorableInterface $item = null)
     {
         if ($item !== null) {
-            $this->set_model($item);
+            $this->setModel($item);
         }
 
         $items = [];
         $model = $this->model();
         $db = $this->db();
 
-        $q = $this->sql_load();
+        $q = $this->sqlLoad();
         $this->logger->debug($q);
         $sth = $db->prepare($q);
         $sth->execute();
         $sth->setFetchMode(PDO::FETCH_ASSOC);
 
         $classname = get_class($model);
-        while ($obj_data = $sth->fetch()) {
+        while ($objData = $sth->fetch()) {
             $obj = new $classname;
-            $obj->set_flat_data($obj_data);
+            $obj->setFlatData($objData);
             $items[] = $obj;
         }
 
@@ -488,21 +488,21 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     * @throws Exception if a database error occurs
     * @return mixed The created item ID, or false in case of an error
     */
-    public function save_item(StorableInterface $item)
+    public function saveItem(StorableInterface $item)
     {
-        if ($this->table_exists() === false) {
+        if ($this->tableExists() === false) {
             /** @todo Optionnally turn off for some models */
-            $this->create_table();
+            $this->createTable();
         }
 
         if ($item !== null) {
-            $this->set_model($item);
+            $this->setModel($item);
         }
         $model = $this->model();
 
-        $table_structure = array_keys($this->table_structure());
+        $tableStructure = array_keys($this->tableStructure());
 
-        $fields = $this->get_model_fields($model);
+        $fields = $this->getModelFields($model);
 
         $keys = [];
         $values = [];
@@ -510,11 +510,11 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
         $binds_types = [];
         foreach ($fields as $f) {
             $k = $f->ident();
-            if (in_array($k, $table_structure)) {
+            if (in_array($k, $tableStructure)) {
                 $keys[] = '`'.$k.'`';
                 $values[] = ':'.$k.'';
                 $binds[$k] = $f->val();
-                $binds_types[$k] = $f->sql_pdo_type();
+                $binds_types[$k] = $f->sqlPdoType();
             }
         }
 
@@ -526,7 +526,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
             VALUES
                 ('.implode(', ', $values).')';
 
-        $res = $this->db_query($q, $binds, $binds_types);
+        $res = $this->dbQuery($q, $binds, $binds_types);
 
         if ($res === false) {
             throw new Exception('Could not save item.');
@@ -546,27 +546,27 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     * @param array             $properties The list of properties to update, if not all
     * @return boolean Success / Failure
     */
-    public function update_item(StorableInterface $item, $properties = null)
+    public function updateItem(StorableInterface $item, $properties = null)
     {
         if ($item !== null) {
-            $this->set_model($item);
+            $this->setModel($item);
         }
         $model = $this->model();
 
-        $table_structure = array_keys($this->table_structure());
-        $fields = $this->get_model_fields($model, $properties);
+        $tableStructure = array_keys($this->tableStructure());
+        $fields = $this->getModelFields($model, $properties);
 
         $updates = [];
         $binds = [];
         $binds_types = [];
         foreach ($fields as $f) {
             $k = $f->ident();
-            if (in_array($k, $table_structure)) {
+            if (in_array($k, $tableStructure)) {
                 if ($k !== $model->key()) {
                     $updates[] = '`'.$k.'` = :'.$k;
                 }
                 $binds[$k] = $f->val();
-                $binds_types[$k] = $f->sql_pdo_type();
+                $binds_types[$k] = $f->sqlPdoType();
             } else {
                 $this->logger->debug(
                     sprintf('Field %s not in table structure', $k)
@@ -586,7 +586,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
             LIMIT
                 1';
 
-        $res = $this->db_query($q, $binds, $binds_types);
+        $res = $this->dbQuery($q, $binds, $binds_types);
 
         if ($res === false) {
             return false;
@@ -602,10 +602,10 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     * @throws Exception
     * @return boolean Success / Failure
     */
-    public function delete_item(StorableInterface $item = null)
+    public function deleteItem(StorableInterface $item = null)
     {
         if ($item !== null) {
-            $this->set_model($item);
+            $this->setModel($item);
         }
         $model = $this->model();
 
@@ -625,7 +625,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
             'id' => $model->id()
         ];
 
-        $res = $this->db_query($q, $binds);
+        $res = $this->dbQuery($q, $binds);
 
         if ($res === false) {
             return false;
@@ -644,7 +644,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     * @param array  $binds_types
     * @return PDOStatement|false The PDOStatement, or false in case of error
     */
-    protected function db_query($q, array $binds = [], array $binds_types = [])
+    protected function dbQuery($q, array $binds = [], array $binds_types = [])
     {
         $this->logger->debug($q, $binds);
         $sth = $this->db()->prepare($q);
@@ -672,18 +672,18 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     * @throws Exception if the source does not have a table defined
     * @return string
     */
-    public function sql_load()
+    public function sqlLoad()
     {
         $table = $this->table();
         if (!$table) {
             throw new Exception('No table defined.');
         }
 
-        $selects = $this->sql_select();
-        $tables  = '`'.$table.'` AS obj_table';
-        $filters = $this->sql_filters();
-        $orders  = $this->sql_orders();
-        $limits  = $this->sql_pagination();
+        $selects = $this->sqlSelect();
+        $tables  = '`'.$table.'` AS objTable';
+        $filters = $this->sqlFilters();
+        $orders  = $this->sqlOrders();
+        $limits  = $this->sqlPagination();
 
         $q = 'SELECT '.$selects.' FROM '.$tables.$filters.$orders.$limits;
         return $q;
@@ -692,20 +692,20 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     /**
     * @return string
     */
-    protected function sql_select()
+    protected function sqlSelect()
     {
         $properties = $this->properties();
         if (empty($properties)) {
-            return 'obj_table.*';
+            return 'objTable.*';
         }
 
         $sql = '';
-        $props_sql = [];
+        $propsSql = [];
         foreach ($properties as $p) {
-            $props_sql[] = 'obj_table.`'.$p.'`';
+            $propsSql[] = 'objTable.`'.$p.'`';
         }
-        if (!empty($props_sql)) {
-            $sql = implode(', ', $props_sql);
+        if (!empty($propsSql)) {
+            $sql = implode(', ', $propsSql);
         }
 
         return $sql;
@@ -715,27 +715,27 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     * @return string
     * @todo 2015-03-04 Use bindings for filters value
     */
-    protected function sql_filters()
+    protected function sqlFilters()
     {
         $sql = '';
         $filters = $this->filters();
         // Process filters
         if (!empty($filters)) {
-            $filters_sql = [];
+            $filtersSql = [];
             foreach ($filters as $f) {
-                $f_sql = $f->sql();
-                if ($f_sql) {
-                    $filters_sql[] = [
+                $fSql = $f->sql();
+                if ($fSql) {
+                    $filtersSql[] = [
                         'sql'     => $f->sql(),
                         'operand' => $f->operand()
                     ];
                 }
             }
-            if (!empty($filters_sql)) {
+            if (!empty($filtersSql)) {
                 $sql .= ' WHERE';
                 $i = 0;
 
-                foreach ($filters_sql as $f) {
+                foreach ($filtersSql as $f) {
                     if ($i > 0) {
                         $sql .= ' '.$f['operand'];
                     }
@@ -751,17 +751,17 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     /**
     * @return string
     */
-    protected function sql_orders()
+    protected function sqlOrders()
     {
         $sql = '';
 
         if (!empty($this->orders)) {
-            $orders_sql = [];
+            $ordersSql = [];
             foreach ($this->orders as $o) {
-                $orders_sql[] = $o->sql();
+                $ordersSql[] = $o->sql();
             }
-            if (!empty($orders_sql)) {
-                $sql = ' ORDER BY '.implode(', ', $orders_sql);
+            if (!empty($ordersSql)) {
+                $sql = ' ORDER BY '.implode(', ', $ordersSql);
             }
         }
 
@@ -771,7 +771,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     /**
     * @return string
     */
-    protected function sql_pagination()
+    protected function sqlPagination()
     {
         return $this->pagination()->sql();
     }
@@ -779,7 +779,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     /**
     * @return FilterInterface
     */
-    protected function create_filter()
+    protected function createFilter()
     {
         $filter = new DatabaseFilter();
         return $filter;
@@ -788,7 +788,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     /**
     * @return OrderInterface
     */
-    protected function create_order()
+    protected function createOrder()
     {
         $order = new DatabaseOrder();
         return $order;
@@ -797,25 +797,25 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     /**
     * @return PaginationInterface
     */
-    protected function create_pagination()
+    protected function createPagination()
     {
         $pagination = new DatabasePagination();
         return $pagination;
     }
 
     /**
-    * ConfigurableTrait > create_config()
+    * ConfigurableTrait > createConfig()
     *
     * Overrides the method defined in AbstractSource to returns a `DatabaseSourceConfig` object.
     *
     * @param array $data Optional
     * @return DatabaseSourceConfig
     */
-    public function create_config(array $data = null)
+    public function createConfig(array $data = null)
     {
         $config = new DatabaseSourceConfig();
         if (is_array($data)) {
-            $config->set_data($data);
+            $config->merge($data);
         }
         return $config;
     }

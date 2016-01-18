@@ -15,7 +15,7 @@ interface SourceInterface
     * @param ModelInterface $model
     * @return AbstractSource Chainable
     */
-    public function set_model(ModelInterface $model);
+    public function setModel(ModelInterface $model);
 
     /**
     * @throws Exception if model was not previously set
@@ -30,13 +30,13 @@ interface SourceInterface
     * @throws Exception
     * @return StorableInterface
     */
-    public function load_item($ident, StorableInterface $item = null);
+    public function loadItem($ident, StorableInterface $item = null);
 
     /**
     * @param StorableInterface|null $item
     * @return array
     */
-    public function load_items(StorableInterface $item = null);
+    public function loadItems(StorableInterface $item = null);
 
     /**
     * Save an item (create a new row) in storage.
@@ -45,7 +45,7 @@ interface SourceInterface
     * @throws Exception if a database error occurs
     * @return mixed The created item ID, or false in case of an error
     */
-    public function save_item(StorableInterface $item);
+    public function saveItem(StorableInterface $item);
 
     /**
     * Update an item in storage.
@@ -54,7 +54,7 @@ interface SourceInterface
     * @param array             $properties The list of properties to update, if not all
     * @return boolean Success / Failure
     */
-    public function update_item(StorableInterface $item, $properties = null);
+    public function updateItem(StorableInterface $item, $properties = null);
 
     /**
     * Delete an item from storage
@@ -63,14 +63,14 @@ interface SourceInterface
     * @throws Exception
     * @return boolean Success / Failure
     */
-    public function delete_item(StorableInterface $item = null);
+    public function deleteItem(StorableInterface $item = null);
 
     /**
     * @param array $properties
     * @throws InvalidArgumentException
     * @return ColelectionLoader Chainable
     */
-    public function set_properties(array $properties);
+    public function setProperties(array $properties);
 
     /**
     * @return array
@@ -82,14 +82,14 @@ interface SourceInterface
     * @throws InvalidArgumentException if property is not a string or empty
     * @return CollectionLoader Chainable
     */
-    public function add_property($property);
+    public function addProperty($property);
 
     /**
     * @param array $filters
     * @throws InvalidArgumentException
     * @return Collection Chainable
     */
-    public function set_filters(array $filters);
+    public function setFilters(array $filters);
 
     /**
     * @return array
@@ -105,12 +105,12 @@ interface SourceInterface
     * @throws InvalidArgumentException if property is not a string or empty
     * @return CollectionLoader (Chainable)
     */
-    public function add_filter($param, $val = null, array $options = null);
+    public function addFilter($param, $val = null, array $options = null);
     /**
     * @param array $orders
     * @return CollectionLoader Chainable
     */
-    public function set_orders(array $orders);
+    public function setOrders(array $orders);
 
     /**
     * @return array
@@ -124,13 +124,13 @@ interface SourceInterface
     * @throws InvalidArgumentException
     * @return CollectionLoader Chainable
     */
-    public function add_order($param, $mode = 'asc', $order_options = null);
+    public function addOrder($param, $mode = 'asc', $order_options = null);
 
     /**
     * @param mixed $param
     * @return CollectionLoader Chainable
     */
-    public function set_pagination($param);
+    public function setPagination($param);
 
     /**
     * @return Pagination
@@ -142,7 +142,7 @@ interface SourceInterface
     * @throws InvalidArgumentException
     * @return CollectionLoader Chainable
     */
-    public function set_page($page);
+    public function setPage($page);
 
     /**
     * @return integer
@@ -154,10 +154,10 @@ interface SourceInterface
     * @throws InvalidArgumentException
     * @return CollectionLoader Chainable
     */
-    public function set_num_per_page($num);
+    public function setNumPerPage($num);
 
     /**
     * @return integer
     */
-    public function num_per_page();
+    public function numPerPage();
 }

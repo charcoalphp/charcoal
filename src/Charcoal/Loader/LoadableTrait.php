@@ -21,10 +21,10 @@ trait LoadableTrait
     * @throws InvalidArgumentException if loader is not an array or object
     * @return LoadableInterface Chainable
     */
-    public function set_loader($loader)
+    public function setLoader($loader)
     {
         if (is_array($loader)) {
-            $this->loader = $this->create_loader($loader);
+            $this->loader = $this->createLoader($loader);
         } elseif (($loader instanceof LoaderInterface)) {
             $this->loader = $loader;
         } else {
@@ -43,7 +43,7 @@ trait LoadableTrait
     public function loader()
     {
         if ($this->loader === null) {
-            $this->loader = $this->create_loader();
+            $this->loader = $this->createLoader();
         }
         return $this->loader;
     }
@@ -52,7 +52,7 @@ trait LoadableTrait
     * @param array|null $data
     * @return LoaderInterface
     */
-    abstract protected function create_loader($data = null);
+    abstract protected function createLoader($data = null);
 
     /**
     * @return mixed

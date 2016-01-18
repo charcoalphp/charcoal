@@ -6,6 +6,9 @@ namespace Charcoal\Model;
 use \ArrayAccess;
 use \InvalidArgumentException;
 
+// Module `charcoal-config` dependencies
+use \Charcoal\Config\AbstractConfig;
+
 // Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Loader\LoadableInterface;
 use \Charcoal\Loader\LoadableTrait;
@@ -20,7 +23,7 @@ use \Charcoal\Model\MetadataLoader;
 * This class also implements the `ArrayAccess`, so properties can be accessed with `[]`.
 * The `LoadableInterface` is also implemented, mostly through `LoadableTrait`.
 */
-abstract class AbstractMetadata implements
+abstract class AbstractMetadata extends AbstractConfig implements
     MetadataInterface,
     LoadableInterface,
     ArrayAccess
@@ -34,40 +37,11 @@ abstract class AbstractMetadata implements
     protected $properties = [];
 
     /**
-    * Convert an array of parameters in the metadata format.
-    *
-    * This method either calls a setter for each key (`set_{$key}()`) or sets a public member.
-    *
-    * For example, calling with `set_data(['properties'=>$properties])` would call
-    * `set_properties($properties)`, because `set_properties()` exists.
-    *
-    * But calling with `set_data(['foobar'=>$foo])` would set the `$foobar` member
-    * on the metadata object, because the method `set_foobar()` does not exist.
-    *
-    * @param array $data
-    * @return AbstractMetadata Chainable
-    */
-    public function set_data(array $data)
-    {
-        foreach ($data as $prop => $val) {
-            $func = [$this, 'set_'.$prop];
-            if (is_callable($func)) {
-                call_user_func($func, $val);
-                unset($data[$prop]);
-            } else {
-                $this->{$prop} = $val;
-            }
-        }
-
-        return $this;
-    }
-
-    /**
     * @param array $properties
     * @throws InvalidArgumentException if parameter is not an array
     * @return MetadataInterface Chainable
     */
-    public function set_properties(array $properties)
+    public function setProperties(array $properties)
     {
         $this->properties = $properties;
         return $this;
@@ -82,66 +56,14 @@ abstract class AbstractMetadata implements
     }
 
     /**
-    * ArrayAccess isset(config[a])
-    *
-    * @param mixed $offset
-    * @return boolean
-    */
-    public function offsetExists($offset)
-    {
-        return isset($this->{$offset});
-    }
-
-    /**
-    * ArrayAccess config[a]
-    *
-    * @param mixed $offset
-    * @return mixed
-    */
-    public function offsetGet($offset)
-    {
-        return (isset($this->{$offset}) ? $this->{$offset} : null);
-    }
-
-    /**
-    * ArrayAccess > offsetSet $config[a] = '';
-    *
-    * @param string $offset
-    * @param mixed  $value
-    * @throws InvalidArgumentException if the offset is not set ($config[] = '')
-    * @return void
-    */
-    public function offsetSet($offset, $value)
-    {
-        if (empty($offset)) {
-            throw new InvalidArgumentException(
-                'Offset is required.'
-            );
-        }
-        $this->{$offset} = $value;
-    }
-
-    /**
-    * ArrayAcces > offsetUnest `unset($config[a])`
-    *
-    * @param mixed $offset
-    * @return void
-    */
-    public function offsetUnset($offset)
-    {
-        $this->{$offset} = null;
-        unset($this->{$offset});
-    }
-
-    /**
     * @param array $data Optional
     * @return LoaderInterface
     */
-    protected function create_loader(array $data = null)
+    protected function createLoader(array $data = null)
     {
         $loader = new MetadataLoader();
         if (is_array($data)) {
-            $loader->set_data($data);
+            $loader->setData($data);
         }
         return $loader;
     }

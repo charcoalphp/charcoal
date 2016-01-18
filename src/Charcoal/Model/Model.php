@@ -70,7 +70,7 @@ class Model extends AbstractModel
     * @param string $source_ident Optional
     * @return SourceInterface;
     */
-    public function create_source($source_ident = null)
+    public function createSource($source_ident = null)
     {
         $metadata = $this->metadata();
         // var_dump($metadata);
@@ -79,7 +79,7 @@ class Model extends AbstractModel
             $source_ident = (isset($metadata['default_source']) ? $metadata['default_source'] : '');
         }
         $s = new DatabaseSource();
-        $s->set_model($this);
+        $s->setModel($this);
         return $s;
     }
 }

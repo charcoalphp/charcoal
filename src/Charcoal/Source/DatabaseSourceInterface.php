@@ -8,11 +8,11 @@ namespace Charcoal\Source;
 interface DatabaseSourceInterface
 {
     /**
-    * @param string $database_ident
+    * @param string $databaseIdent
     * @throws InvalidArgumentException if ident is not a string
     * @return DatabaseSource Chainable
     */
-    public function set_database_ident($database_ident);
+    public function setDatabaseIdent($databaseIdent);
 
     /**
     * Get the current database ident.
@@ -20,19 +20,19 @@ interface DatabaseSourceInterface
     *
     * @return string
     */
-    public function database_ident();
+    public function databaseIdent();
 
     /**
-    * @param array $database_config
+    * @param array $databaseConfig
     * @throws InvalidArgumentException
     * @return DatabaseSource Chainable
     */
-    public function set_database_config($database_config);
+    public function setDatabaseConfig($databaseConfig);
 
     /**
     * @return mixed
     */
-    public function database_config();
+    public function databaseConfig();
 
     /**
     * Set the database's table to use.
@@ -41,7 +41,7 @@ interface DatabaseSourceInterface
     * @throws InvalidArgumentException if argument is not a string
     * @return DatabaseSource Chainable
     */
-    public function set_table($table);
+    public function setTable($table);
 
     /**
     * Get the database's current table.
@@ -56,38 +56,38 @@ interface DatabaseSourceInterface
     *
     * @return boolean Success / Failure
     */
-    public function create_table();
+    public function createTable();
 
     /**
     * Alter an existing table to match the model's metadata.
     *
     * @return boolean Success / Failure
     */
-    public function alter_table();
+    public function alterTable();
 
     /**
     * @return boolean
     */
-    public function table_exists();
+    public function tableExists();
 
     /**
     * Get the table columns information.
     *
     * @return array
     */
-    public function table_structure();
+    public function tableStructure();
 
     /**
     * Check wether the source table is empty (`true`) or not (`false`)
     *
     * @return boolean
     */
-    public function table_is_empty();
+    public function tableIsEmpty();
 
     /**
-    * @param string $database_ident
+    * @param string $databaseIdent
     * @throws Exception if the database is not set.
     * @return PDO
     */
-    public function db($database_ident = null);
+    public function db($databaseIdent = null);
 }

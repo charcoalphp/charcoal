@@ -14,7 +14,7 @@ class IndexableClass implements IndexableInterface
 
     private $_foo;
 
-    public function set_foo($foo)
+    public function setFoo($foo)
     {
         $this->_foo = $foo;
     }

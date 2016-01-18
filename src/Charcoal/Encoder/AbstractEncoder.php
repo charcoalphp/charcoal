@@ -23,7 +23,7 @@ abstract class AbstractEncoder implements EncoderInterface
     * @throws InvalidArgumentException
     * @return AbstractEncoder Chainable
     */
-    public function set_salt($salt)
+    public function setSalt($salt)
     {
         if (!is_string($salt)) {
             throw new InvalidArgumentException('Salt must be a string.');

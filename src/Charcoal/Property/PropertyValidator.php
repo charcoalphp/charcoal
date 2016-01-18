@@ -19,8 +19,8 @@ class PropertyValidator extends AbstractValidator
         $model = $this->model;
 
         $ret = true;
-        $validation_methods = $model->validation_methods();
-        foreach ($validation_methods as $m) {
+        $validationMethods = $model->validationMethods();
+        foreach ($validationMethods as $m) {
             $fn = [$model, 'validate_'.$m];
             if (is_callable($fn)) {
                 $ret = $ret && call_user_func($fn);

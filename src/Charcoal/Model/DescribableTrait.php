@@ -17,8 +17,8 @@ use \Charcoal\Model\MetadataInterface;
 * Default implementation, as trait, of the `DescribableInterface`.
 *
 * This trait adds 3 abstract methods:
-* - `set_data()`
-* - `create_metadata()`
+* - `setData()`
+* - `createMetadata()`
 * - `property_value()`
 */
 trait DescribableTrait
@@ -29,9 +29,9 @@ trait DescribableTrait
     protected $metadata;
 
     /**
-    * @var string $metadata_ident
+    * @var string $metadataIdent
     */
-    protected $metadata_ident;
+    protected $metadataIdent;
 
     /**
     * @var array $properties
@@ -39,23 +39,23 @@ trait DescribableTrait
     protected $properties;
 
     /**
-    * Describable object needs to have a `set_data()` method
+    * Describable object needs to have a `setData()` method
     *
     * @param array $data
     * @return DescribableTrait Chainable
     */
-    abstract public function set_data(array $data);
+    abstract public function setData(array $data);
 
     /**
     * @param array|MetadataInterface $metadata
     * @throws InvalidArgumentException if the parameter is not an array or MetadataInterface
     * @return DescribableInterface Chainable
     */
-    public function set_metadata($metadata)
+    public function setMetadata($metadata)
     {
         if (is_array($metadata)) {
-            $meta = $this->create_metadata();
-            $meta->set_data($metadata);
+            $meta = $this->createMetadata();
+            $meta->merge($metadata);
             $this->metadata = $meta;
         } elseif ($metadata instanceof MetadataInterface) {
             $this->metadata = $metadata;
@@ -67,7 +67,7 @@ trait DescribableTrait
 
         // If the metadata contains "data", then automatically set the initial data to the value
         if (isset($this->metadata['data']) && is_array($this->metadata['data'])) {
-            $this->set_data($this->metadata['data']);
+            $this->setData($this->metadata['data']);
         }
 
         // Chainable
@@ -80,7 +80,7 @@ trait DescribableTrait
     public function metadata()
     {
         if ($this->metadata === null) {
-            return $this->load_metadata();
+            return $this->loadMetadata();
         }
         return $this->metadata;
     }
@@ -88,23 +88,23 @@ trait DescribableTrait
     /**
     * Load a metadata file and store it as a static var.
     *
-    * Use a `MetadataLoader` object and the object's metadata_ident
+    * Use a `MetadataLoader` object and the object's metadataIdent
     * to load the metadata content (typically from the filesystem, as json).
     *
-    * @param string $metadata_ident Optional ident
+    * @param string $metadataIdent Optional ident
     * @return MetadataInterface
     */
-    public function load_metadata($metadata_ident = null)
+    public function loadMetadata($metadataIdent = null)
     {
-        if ($metadata_ident === null) {
-            $metadata_ident = $this->metadata_ident();
+        if ($metadataIdent === null) {
+            $metadataIdent = $this->metadataIdent();
         }
 
-        //$this->logger->debug(sprintf('Loading metadata from ident: %s', $metadata_ident));
+        //$this->logger->debug(sprintf('Loading metadata from ident: %s', $metadataIdent));
 
         $metadata_loader = new MetadataLoader();
-        $metadata = $metadata_loader->load($metadata_ident);
-        $this->set_metadata($metadata);
+        $metadata = $metadata_loader->load($metadataIdent);
+        $this->setMetadata($metadata);
 
         return $metadata;
     }
@@ -112,15 +112,15 @@ trait DescribableTrait
     /**
     * @return MetadataInterface
     */
-    abstract protected function create_metadata();
+    abstract protected function createMetadata();
 
     /**
-    * @param string $metadata_ident
+    * @param string $metadataIdent
     * @return DescribableInterface Chainable
     */
-    public function set_metadata_ident($metadata_ident)
+    public function setMetadataIdent($metadataIdent)
     {
-        $this->metadata_ident = $metadata_ident;
+        $this->metadataIdent = $metadataIdent;
         return $this;
     }
 
@@ -129,12 +129,12 @@ trait DescribableTrait
     *
     * @return string
     */
-    public function metadata_ident()
+    public function metadataIdent()
     {
-        if ($this->metadata_ident === null) {
-            $this->metadata_ident = $this->generate_metadata_ident();
+        if ($this->metadataIdent === null) {
+            $this->metadataIdent = $this->generateMetadataIdent();
         }
-        return $this->metadata_ident;
+        return $this->metadataIdent;
     }
 
     /**
@@ -144,11 +144,11 @@ trait DescribableTrait
     *
     * @return string
     */
-    protected function generate_metadata_ident()
+    protected function generateMetadataIdent()
     {
         $class_name = get_class($this);
-        $metadata_ident = str_replace(['\\', '.'], '/', strtolower($class_name));
-        return $metadata_ident;
+        $metadataIdent = str_replace(['\\', '.'], '/', strtolower($class_name));
+        return $metadataIdent;
     }
 
     /**
@@ -165,25 +165,25 @@ trait DescribableTrait
             yield null;
         }
 
-        foreach ($props as $property_ident) {
-            $property = $this->property($property_ident);
-            $filtered = (int)$property->is_filtered($filters);
+        foreach ($props as $propertyIdent) {
+            $property = $this->property($propertyIdent);
+            $filtered = (int)$property->isFiltered($filters);
             // Get the property object of this definition
-            yield $property_ident => $this->property($property_ident);
+            yield $propertyIdent => $this->property($propertyIdent);
         }
     }
 
     /**
     * Get an object's property
     *
-    * @param string $property_ident The property ident to return
-    * @throws InvalidArgumentException if the property_ident is not a string
+    * @param string $propertyIdent The property ident to return
+    * @throws InvalidArgumentException if the propertyIdent is not a string
     * @throws Exception if the requested property is invalid
     * @return PropertyInterface The \Charcoal\Model\Property if found, null otherwise
     */
-    public function property($property_ident)
+    public function property($propertyIdent)
     {
-        if (!is_string($property_ident)) {
+        if (!is_string($propertyIdent)) {
             throw new InvalidArgumentException(
                 'Property Ident must be a string.'
             );
@@ -199,29 +199,29 @@ trait DescribableTrait
             ));
         }
 
-        if (!isset($props[$property_ident])) {
+        if (!isset($props[$propertyIdent])) {
             throw new Exception(
-                sprintf('Invalid property: %s (not defined in metadata).', $property_ident)
+                sprintf('Invalid property: %s (not defined in metadata).', $propertyIdent)
             );
         }
 
-        $property_metadata = $props[$property_ident];
-        if (!isset($property_metadata['type'])) {
+        $propertyMetadata = $props[$propertyIdent];
+        if (!isset($propertyMetadata['type'])) {
             throw new Exception(
-                sprintf('Invalid property: %s (type is undefined).', $property_ident)
+                sprintf('Invalid  %s property: %s (type is undefined).', get_class($this), $propertyIdent)
             );
         }
 
         $factory  = new PropertyFactory();
-        $property = $factory->create($property_metadata['type'], [
+        $property = $factory->create($propertyMetadata['type'], [
             'logger' => $this->logger
         ]);
-        $property->set_ident($property_ident);
-        $property->set_data($property_metadata);
+        $property->setIdent($propertyIdent);
+        $property->setData($propertyMetadata);
 
-        $property_value = $this->property_value($property_ident);
+        $property_value = $this->propertyValue($propertyIdent);
         if ($property_value !== null) {
-            $property->set_val($property_value);
+            $property->setVal($property_value);
         }
 
         return $property;
@@ -230,27 +230,27 @@ trait DescribableTrait
     /**
     * Shortcut (alias) for:
     * - `property()` if the first parameter is set,
-    * - `properties()` if the property_ident is not set (null)
+    * - `properties()` if the propertyIdent is not set (null)
     *
-    * @param string $property_ident The property ident to return
+    * @param string $propertyIdent The property ident to return
     * @return array|PropertyInterface
     */
-    public function p($property_ident = null)
+    public function p($propertyIdent = null)
     {
-        if ($property_ident === null) {
+        if ($propertyIdent === null) {
             return $this->properties();
         }
         // Alias for property()
-        return $this->property($property_ident);
+        return $this->property($propertyIdent);
     }
 
     /**
     * @throws InvalidArgumentException
     * @return boolean
     */
-    public function has_property($property_ident)
+    public function hasProperty($propertyIdent)
     {
-        if (!is_string($property_ident)) {
+        if (!is_string($propertyIdent)) {
             throw new InvalidArgumentException(
                 'Property Ident must be a string.'
             );
@@ -259,28 +259,28 @@ trait DescribableTrait
         $metadata = $this->metadata();
         $props = $metadata->properties();
 
-        return isset($props[$property_ident]);
+        return isset($props[$propertyIdent]);
     }
 
     /**
-    * @param string $property_ident
+    * @param string $propertyIdent
     * @return mixed
     */
-    abstract protected function property_value($property_ident);
+    abstract protected function propertyValue($propertyIdent);
 
     /**
     * @param array $filters The filters to apply
     * @return boolean False if the object doesn't match any filter, true otherwise.
     */
-    public function is_filtered(array $filters = null)
+    public function isFiltered(array $filters = null)
     {
         if ($filters === null) {
             return false;
         }
 
-        foreach ($filters as $filter_ident => $filter_data) {
-            unset($filter_ident);
-            unset($filter_data);
+        foreach ($filters as $filterIdent => $filterData) {
+            unset($filterIdent);
+            unset($filterData);
         }
 
         return false;

@@ -13,7 +13,7 @@ interface TranslationStringInterface
      * @param  TranslationStringInterface|array|string $val
      * @return TranslationStringInterface Chainable
      */
-    public function set_val($val);
+    public function setVal($val);
 
     /**
      * Add a translation value to a specified, and available, language
@@ -22,7 +22,7 @@ interface TranslationStringInterface
      * @param  string $val  The translation to be added
      * @return TranslationStringInterface Chainable
      */
-    public function add_val($lang, $val);
+    public function addVal($lang, $val);
 
     /**
      * Remove a translation value specified by an available language
@@ -30,7 +30,7 @@ interface TranslationStringInterface
      * @param  string $lang
      * @return TranslationStringInterface Chainable
      */
-    public function remove_val($lang);
+    public function removeVal($lang);
 
     /**
      * Get a translation value
@@ -47,5 +47,5 @@ interface TranslationStringInterface
      * @return boolean
      * @throws InvalidArgumentException if language code isn't a string
      */
-    public function has_val($lang);
+    public function hasVal($lang);
 }

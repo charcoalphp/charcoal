@@ -2,10 +2,11 @@
 
 namespace Charcoal\Loader;
 
-use Exception;
+use \Exception;
+use \InvalidArgumentException;
 
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Model\ModelInterface as ModelInterface;
+use \Charcoal\Model\ModelInterface;
 
 /**
 *
@@ -29,7 +30,7 @@ class ObjectLoader
     * @param mixed $source
     * @return ObjectLoader Chainable
     */
-    public function set_source($source)
+    public function setSource($source)
     {
         $this->source = $source;
         return $this;
@@ -47,7 +48,7 @@ class ObjectLoader
     * @param ModelInterface $model
     * @return Source Chainable
     */
-    public function set_model(ModelInterface $model)
+    public function setModel(ModelInterface $model)
     {
         $this->model = $model;
         $this->set_source($model->source());
@@ -71,7 +72,7 @@ class ObjectLoader
     * @throws \InvalidArgumentException if the ident is not a string
     * @return MetadataLoader (Chainable)
     */
-    public function set_ident($ident)
+    public function setIdent($ident)
     {
         if (!is_string($ident)) {
             throw new \InvalidArgumentException(__CLASS__.'::'.__FUNCTION__.'() - Ident must be a string.');
@@ -92,7 +93,7 @@ class ObjectLoader
     * @param ModelInterface $obj
     * @return ObjectLoader Chainable
     */
-    public function set_obj($obj)
+    public function setObj($obj)
     {
         $this->obj = $obj;
         return $this;
@@ -114,7 +115,7 @@ class ObjectLoader
     {
         $data = $this->load_data($ident);
         if ($data !== false) {
-            $this->obj()->set_flat_data($data);
+            $this->obj()->setFlatData($data);
         }
         return $this->obj();
     }
@@ -123,7 +124,7 @@ class ObjectLoader
     * @param string|null $ident
     * @return array
     */
-    public function load_data($ident = null)
+    public function loadData($ident = null)
     {
         /**
         * @todo The query should call the object's properties to fetch

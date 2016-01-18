@@ -8,13 +8,13 @@ interface FilterInterface
     * @param array $data
     * @return Filter Chainable
     */
-    public function set_data(array $data);
+    public function setData(array $data);
 
     /**
     * @param boolean $active
     * @return Filter (Chainable)
     */
-    public function set_active($active);
+    public function setActive($active);
 
     /**
     * @return boolean
@@ -26,7 +26,7 @@ interface FilterInterface
     * @throws InvalidArgumentException if the property argument is not a string
     * @return Filter (Chainable)
     */
-    public function set_property($property);
+    public function setProperty($property);
 
     /**
     * @return string
@@ -36,7 +36,7 @@ interface FilterInterface
     * @param mixed $val
     * @return Filter (Chainable)
     */
-    public function set_val($val);
+    public function setVal($val);
 
     /**
     * @return mixed
@@ -48,7 +48,7 @@ interface FilterInterface
     * @throws InvalidArgumentException if the parameter is not a valid operator
     * @return Filter (Chainable)
     */
-    public function set_operator($operator);
+    public function setOperator($operator);
 
     /**
     * @return string
@@ -60,7 +60,7 @@ interface FilterInterface
     * @throws InvalidArgumentException if the parameter is not a valid function
     * @return Filter (Chainable)
     */
-    public function set_func($func);
+    public function setFunc($func);
 
     /**
     * @return string
@@ -72,7 +72,7 @@ interface FilterInterface
     * @throws InvalidArgumentException if the parameter is not a valid operand
     * @return Filter (Chainable)
     */
-    public function set_operand($operand);
+    public function setOperand($operand);
     /**
     * @return string
     */
@@ -83,7 +83,7 @@ interface FilterInterface
     * @throws InvalidArgumentException if the parameter is not a valid operand
     * @return Filter (Chainable)
     */
-    public function set_string($sql);
+    public function setString($sql);
 
     /**
     * @return string

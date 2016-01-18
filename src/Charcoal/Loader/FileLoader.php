@@ -11,9 +11,9 @@ use \InvalidArgumentException as InvalidArgumentException;
 class FileLoader
 {
     /**
-    * @var array $search_path
+    * @var array $searchPath
     */
-    private $search_path = [];
+    private $searchPath = [];
 
     /**
     * @var string $path
@@ -30,7 +30,7 @@ class FileLoader
     * @throws InvalidArgumentException if the ident is not a string
     * @return FileLoader Chainable
     */
-    public function set_ident($ident)
+    public function setIdent($ident)
     {
         if (!is_string($ident)) {
             throw new InvalidArgumentException(
@@ -54,10 +54,10 @@ class FileLoader
     * @throws InvalidArgumentException
     * @return FileLoader Chainable
     */
-    public function set_path($path)
+    public function setPath($path)
     {
         if (!is_string($path)) {
-            throw new InvalidArgumentException('set_path() expects a string.');
+            throw new InvalidArgumentException('setPath() expects a string.');
         }
         $this->path = $path;
         return $this;
@@ -86,7 +86,7 @@ class FileLoader
             return '';
         }
 
-        $filename = $this->first_matching_filename($ident);
+        $filename = $this->firstMatchingFilename($ident);
         if ($filename) {
             $file_content = file_get_contents($filename);
             $this->set_content($file_content);
@@ -100,17 +100,17 @@ class FileLoader
     * @param string $filename
     * @return string|null The file content, or null if no file found.
     */
-    protected function load_first_from_search_path($filename)
+    protected function loadFirstFromSearchPath($filename)
     {
-        $search_path = $this->search_path();
-        if (empty($search_path)) {
+        $searchPath = $this->searchPath();
+        if (empty($searchPath)) {
             return null;
         }
-        foreach ($search_path as $path) {
+        foreach ($searchPath as $path) {
             $f = $path.DIRECTORY_SEPARATOR.$filename;
             if (file_exists($f)) {
-                $file_content = file_get_contents($f);
-                return $file_content;
+                $fileContent = file_get_contents($f);
+                return $fileContent;
             }
         }
 
@@ -121,16 +121,16 @@ class FileLoader
     * @param string $filename
     * @return string
     */
-    protected function first_matching_filename($filename)
+    protected function firstMatchingFilename($filename)
     {
         if (file_exists($filename)) {
             return $filename;
         }
-        $search_path = $this->search_path();
-        if (empty($search_path)) {
+        $searchPath = $this->searchPath();
+        if (empty($searchPath)) {
             return null;
         }
-        foreach ($search_path as $path) {
+        foreach ($searchPath as $path) {
             $f = $path.DIRECTORY_SEPARATOR.$filename;
             if (file_exists($f)) {
                 return $f;
@@ -144,18 +144,18 @@ class FileLoader
     * @param string $filename
     * @return array
     */
-    protected function all_matching_filenames($filename)
+    protected function allMatchingFilenames($filename)
     {
         $ret = [];
         if (file_exists($filename)) {
             $ret[] = $filename;
         }
 
-        $search_path = $this->search_path();
-        if (empty($search_path)) {
+        $searchPath = $this->searchPath();
+        if (empty($searchPath)) {
             return $ret;
         }
-        foreach ($search_path as $path) {
+        foreach ($searchPath as $path) {
             $f = $path.DIRECTORY_SEPARATOR.$filename;
             if (file_exists($f)) {
                 $ret[] = $f;
@@ -170,7 +170,7 @@ class FileLoader
     * @throws InvalidArgumentException if the path does not exist or is invalid
     * @return \Charcoal\Service\Loader\Metadata (Chainable)
     */
-    public function add_path($path)
+    public function addPath($path)
     {
         if (!is_string($path)) {
             throw new InvalidArgumentException(
@@ -188,7 +188,7 @@ class FileLoader
             );
         }
 
-        $this->search_path[] = $path;
+        $this->searchPath[] = $path;
 
         return $this;
     }
@@ -197,8 +197,8 @@ class FileLoader
     * Get the object's search path, merged with global configuration path
     * @return array
     */
-    public function search_path()
+    public function searchPath()
     {
-        return $this->search_path;
+        return $this->searchPath;
     }
 }

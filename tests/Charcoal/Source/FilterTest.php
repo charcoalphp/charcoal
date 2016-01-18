@@ -23,10 +23,10 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     {
         $obj = new Filter();
 
-        $obj->set_data(['property' => 'foo']);
+        $obj->setData(['property' => 'foo']);
         $this->assertEquals('foo', $obj->property());
 
-        $obj->set_data(
+        $obj->setData(
             [
                 'property' => 'bar',
                 'val' => 42
@@ -45,7 +45,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
             'string'   => '(1=1)',
             'active'   => true
         ];
-        $obj->set_data($data);
+        $obj->setData($data);
 
         $this->assertEquals('foo', $obj->property());
         $this->assertEquals(42, $obj->val());
@@ -68,14 +68,14 @@ class FilterTest extends \PHPUnit_Framework_TestCase
             'string'   => '(1=1)',
             'active'   => true
         ];
-        $ret = $obj->set_data($data);
+        $ret = $obj->setData($data);
         $this->assertSame($obj, $ret);
     }
 
     public function testSetProperty()
     {
         $obj = new Filter();
-        $obj->set_property('foo');
+        $obj->setProperty('foo');
 
         $this->assertEquals('foo', $obj->property());
     }
@@ -83,7 +83,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     public function testSetPropertyIsChainable()
     {
         $obj = new Filter();
-        $ret = $obj->set_property('foo');
+        $ret = $obj->setProperty('foo');
 
         $this->assertSame($obj, $ret);
     }
@@ -96,13 +96,13 @@ class FilterTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('\InvalidArgumentException');
 
         $obj = new Filter();
-        $obj->set_property($property);
+        $obj->setProperty($property);
     }
 
     public function testSetVal()
     {
         $obj = new Filter();
-        $obj->set_val('1');
+        $obj->setVal('1');
 
         $this->assertEquals('1', $obj->val());
     }
@@ -110,7 +110,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     public function testSetValIsChainable()
     {
         $obj = new Filter();
-        $ret = $obj->set_val('foo');
+        $ret = $obj->setVal('foo');
 
         $this->assertSame($obj, $ret);
     }
@@ -121,7 +121,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     public function testSetOperator($op)
     {
         $obj = new Filter();
-        $obj->set_operator($op);
+        $obj->setOperator($op);
 
         $this->assertEquals(strtoupper($op), $obj->operator());
     }
@@ -129,7 +129,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     public function testSetOperatorIsChainable()
     {
         $obj = new Filter();
-        $ret = $obj->set_operator('=');
+        $ret = $obj->setOperator('=');
 
         $this->assertSame($obj, $ret);
     }
@@ -137,10 +137,10 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     public function testOperatorUppercase()
     {
         $obj = new Filter();
-        $obj->set_operator('is null');
+        $obj->setOperator('is null');
         $this->assertEquals('IS NULL', $obj->operator());
 
-        $obj->set_operator('Like');
+        $obj->setOperator('Like');
         $this->assertEquals('LIKE', $obj->operator());
     }
 
@@ -152,7 +152,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('\InvalidArgumentException');
 
         $obj = new Filter();
-        $obj->set_operator($op);
+        $obj->setOperator($op);
     }
 
     /**
@@ -161,7 +161,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     public function testSetFunc($func)
     {
         $obj = new Filter();
-        $obj->set_func($func);
+        $obj->setFunc($func);
 
         $this->assertEquals(strtoupper($func), $obj->func());
     }
@@ -169,7 +169,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     public function testSetFuncIsChainable()
     {
         $obj = new Filter();
-        $ret = $obj->set_func('abs');
+        $ret = $obj->setFunc('abs');
 
         $this->assertSame($obj, $ret);
     }
@@ -182,7 +182,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('\InvalidArgumentException');
 
         $obj = new Filter();
-        $obj->set_func($func);
+        $obj->setFunc($func);
     }
 
     /**
@@ -191,7 +191,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     public function testSetOperandGetterUppercase($operand)
     {
         $obj = new Filter();
-        $obj->set_operand($operand);
+        $obj->setOperand($operand);
 
         $this->assertEquals(strtoupper($operand), $obj->operand());
     }
@@ -204,7 +204,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('\InvalidArgumentException');
 
         $obj = new Filter();
-        $obj->set_operand($op);
+        $obj->setOperand($op);
     }
 
     /**
@@ -213,7 +213,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     public function testSetString($func)
     {
         $obj = new Filter();
-        $obj->set_string($func);
+        $obj->setString($func);
 
         $this->assertEquals($func, $obj->string());
     }
@@ -221,7 +221,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     public function testSetStringIsChainable()
     {
         $obj = new Filter();
-        $ret = $obj->set_string('and foo=1');
+        $ret = $obj->setString('and foo=1');
 
         $this->assertSame($obj, $ret);
     }
@@ -231,7 +231,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('\InvalidArgumentException');
 
         $obj = new Filter();
-        $obj->set_string([]);
+        $obj->setString([]);
     }
 
 

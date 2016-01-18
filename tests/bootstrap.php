@@ -22,27 +22,4 @@ $GLOBALS['container']['logger'] = function ($c) {
     return new NullLogger();
 };
 
-// Import Local Configuration
-$GLOBALS['container']['charcoal/config'] = function ($c) {
 
-    $config = new CharcoalConfig();
-
-    $env = preg_replace('/[^A-Za-z0-9_]+/', '', $c->environment['APPLICATION_ENV']);
-    $dir = dirname(__DIR__);
-    $xts = [ 'ini', 'json', 'php' ];
-
-    while ($xts) {
-        $cfg = sprintf('%1$s/config/config.%2$s.%3$s', $dir, $env, array_pop($xts));
-
-        if (file_exists($cfg)) {
-            $config->add_file($cfg);
-            break;
-        }
-    }
-
-    return $config;
-};
-
-$GLOBALS['app'] = new App($GLOBALS['container']);
-
-CharcoalModule::setup($GLOBALS['app']);

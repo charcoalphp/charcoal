@@ -29,7 +29,7 @@ class StringFormat
     public function __construct($string = null)
     {
         if ($string !== null) {
-            $this->set_string($string);
+            $this->setString($string);
         }
     }
 
@@ -46,7 +46,7 @@ class StringFormat
     * @throws InvalidArgumentException
     * @return StringFormat Chainable
     */
-    public function set_string($string)
+    public function setString($string)
     {
         if (!is_string($string)) {
             throw new InvalidArgumentException('String must be a string.');
@@ -68,12 +68,9 @@ class StringFormat
     * @throws InvalidArgumentException
     * @return StringFormat Chainable
     */
-    public function set_unicode($unicode)
+    public function setUnicode($unicode)
     {
-        if (!is_bool($unicode)) {
-            throw new InvalidArgumentException('Unicode must be a boolean.');
-        }
-        $this->unicode = $unicode;
+        $this->unicode = !!$unicode;
         return $this;
     }
 
@@ -89,7 +86,7 @@ class StringFormat
     * Strip all HTML tags.
     * @return StringFormat Chainable
     */
-    public function strip_tags()
+    public function stripTags()
     {
         $this->string = strip_tags($this->string);
         return $this;

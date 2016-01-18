@@ -27,12 +27,12 @@ class IndexableTraitTest extends \PHPUnit_Framework_TestCase
     public function testSetId()
     {
         $obj = $this->obj;
-        $ret = $obj->set_id(1);
+        $ret = $obj->setId(1);
         $this->assertSame($ret, $obj);
         $this->assertEquals(1, $obj->id());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_id([1, 2, 3]);
+        $obj->setId([1, 2, 3]);
     }
 
     public function testSetKey()
@@ -40,18 +40,18 @@ class IndexableTraitTest extends \PHPUnit_Framework_TestCase
         $obj = $this->obj;
         $this->assertEquals('id', $obj->key());
 
-        $ret = $obj->set_key('foo');
+        $ret = $obj->setKey('foo');
         $this->assertSame($ret, $obj);
         $this->assertEquals('foo', $obj->key());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_key([1, 2, 3]);
+        $obj->setKey([1, 2, 3]);
     }
 
     public function testSetInvalidKeyIdThrowsException()
     {
         $obj = $this->obj;
-        $obj->set_key('foobar');
+        $obj->setKey('foobar');
 
         $this->setExpectedException('\Exception');
         $obj->id();
@@ -60,18 +60,18 @@ class IndexableTraitTest extends \PHPUnit_Framework_TestCase
     public function testSetInvalidKeySetIdThrowsException()
     {
         $obj = $this->obj;
-        $obj->set_key('foobar');
+        $obj->setKey('foobar');
 
         $this->setExpectedException('\Exception');
-        $obj->set_id(1);
+        $obj->setId(1);
     }
 
     public function testSetIdWithCustomKey()
     {
         $obj = $this->obj;
 
-        $obj->set_key('foo');
-        $obj->set_id('bar');
+        $obj->setKey('foo');
+        $obj->setId('bar');
         $this->assertEquals('bar', $obj->id());
         $this->assertEquals('bar', $obj->foo());
     }

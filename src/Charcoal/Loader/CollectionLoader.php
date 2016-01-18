@@ -36,9 +36,9 @@ class CollectionLoader implements LoggerAwareInterface
     */
     private $properties = [];
     /**
-    * @var array $properties_options
+    * @var array $propertiesOptions
     */
-    private $properties_options = [];
+    private $propertiesOptions = [];
     /**
     * Array of `Filter` objects
     * @var array $filters
@@ -75,7 +75,7 @@ class CollectionLoader implements LoggerAwareInterface
     * @param array $data
     * @return CollectionLoader Chainable
     */
-    public function set_data(array $data)
+    public function setData(array $data)
     {
         foreach ($data as $prop => $val) {
             $func = [$this, 'set_'.$prop];
@@ -93,7 +93,7 @@ class CollectionLoader implements LoggerAwareInterface
     * @param mixed $source
     * @return CollectionLoader Chainable
     */
-    public function set_source($source)
+    public function setSource($source)
     {
         $this->source = $source;
         return $this;
@@ -115,10 +115,10 @@ class CollectionLoader implements LoggerAwareInterface
     * @param ModelInterface $model
     * @return Source Chainable
     */
-    public function set_model(ModelInterface $model)
+    public function setModel(ModelInterface $model)
     {
         $this->model = $model;
-        $this->set_source($model->source());
+        $this->setSource($model->source());
         return $this;
     }
 
@@ -139,9 +139,9 @@ class CollectionLoader implements LoggerAwareInterface
     * @throws InvalidArgumentException
     * @return ColelectionLoader Chainable
     */
-    public function set_properties($properties)
+    public function setProperties($properties)
     {
-        return $this->source()->set_properties($properties);
+        return $this->source()->setProperties($properties);
     }
 
     /**
@@ -157,21 +157,21 @@ class CollectionLoader implements LoggerAwareInterface
     * @throws InvalidArgumentException if property is not a string or empty
     * @return CollectionLoader Chainable
     */
-    public function add_property($property)
+    public function addProperty($property)
     {
-        return $this->source()->add_property($property);
+        return $this->source()->addProperty($property);
     }
 
     /**
     * @param array $keywords
     * @return CollectionLoader Chainable
     */
-    public function set_keywords()
+    public function setKeywords()
     {
         foreach ($keywords as $k) {
             $keyword = $k[0];
             $properties = isset($k[1]) ? $k[1] : null;
-            $this->add_keyword($keyword, $properties);
+            $this->addKeyword($keyword, $properties);
         }
         return $this;
     }
@@ -183,7 +183,7 @@ class CollectionLoader implements LoggerAwareInterface
     * @param array $properties
     * @return CollectionLoader Chainable
     */
-    public function add_keyword($keyword, $properties = null)
+    public function addKeyword($keyword, $properties = null)
     {
         $model = $this->model();
         if (!is_array($properties) || empty($properties)) {
@@ -194,7 +194,7 @@ class CollectionLoader implements LoggerAwareInterface
         foreach ($properties as $property_ident) {
             $prop = $model->p($property_ident);
             $val = ('%'.$keyword.'%');
-            $this->add_filter([
+            $this->addFilter([
                 'property'  => $property_ident,
                 'val'       => $val,
                 'operator'  => 'LIKE',
@@ -210,9 +210,9 @@ class CollectionLoader implements LoggerAwareInterface
     * @throws InvalidArgumentException
     * @return Collection Chainable
     */
-    public function set_filters($filters)
+    public function setFilters($filters)
     {
-        return $this->source()->set_filters($filters);
+        return $this->source()->setFilters($filters);
     }
 
     /**
@@ -228,11 +228,11 @@ class CollectionLoader implements LoggerAwareInterface
     *
     * There are 3 different ways of adding a filter:
     * - as a `Filter` object, in which case it will be added directly.
-    *   - `add_filter($obj);`
+    *   - `addFilter($obj);`
     * - as an array of options, which will be used to build the `Filter` object
-    *   - `add_filter(['property' => 'foo', 'val' => 42, 'operator' => '<=']);`
+    *   - `addFilter(['property' => 'foo', 'val' => 42, 'operator' => '<=']);`
     * - as 3 parameters: `property`, `val` and `options`
-    *   - `add_filter('foo', 42, ['operator' => '<=']);`
+    *   - `addFilter('foo', 42, ['operator' => '<=']);`
     *
     * @param string|array|Filter $param
     * @param mixed               $val     Optional: Only used if the first argument is a string
@@ -240,18 +240,18 @@ class CollectionLoader implements LoggerAwareInterface
     * @throws InvalidArgumentException if property is not a string or empty
     * @return CollectionLoader (Chainable)
     */
-    public function add_filter($param, $val = null, array $options = null)
+    public function addFilter($param, $val = null, array $options = null)
     {
-        return $this->source()->add_filter($param, $val, $options);
+        return $this->source()->addFilter($param, $val, $options);
     }
 
     /**
     * @param array $orders
     * @return CollectionLoader Chainable
     */
-    public function set_orders($orders)
+    public function setOrders($orders)
     {
-        return $this->set_orders($orders);
+        return $this->setOrders($orders);
     }
 
     /**
@@ -265,22 +265,22 @@ class CollectionLoader implements LoggerAwareInterface
     /**
     * @param string|array|Order $param
     * @param string             $mode          Optional
-    * @param array              $order_options Optional
+    * @param array              $orderOptions Optional
     * @throws InvalidArgumentException
     * @return CollectionLoader Chainable
     */
-    public function add_order($param, $mode = 'asc', $order_options = null)
+    public function addOrder($param, $mode = 'asc', $orderOptions = null)
     {
-        return $this->source()->add_order($param, $mode, $order_options);
+        return $this->source()->addOrder($param, $mode, $orderOptions);
     }
 
     /**
     * @param mixed $param
     * @return CollectionLoader Chainable
     */
-    public function set_pagination($param)
+    public function setPagination($param)
     {
-        return $this->source()->set_pagination($param);
+        return $this->source()->setPagination($param);
     }
 
     /**
@@ -296,12 +296,12 @@ class CollectionLoader implements LoggerAwareInterface
     * @throws InvalidArgumentException
     * @return CollectionLoader Chainable
     */
-    public function set_page($page)
+    public function setPage($page)
     {
         if (!is_integer($page)) {
             throw new InvalidArgumentException('Page must be an integer.');
         }
-        $this->pagination()->set_page($page);
+        $this->pagination()->setPage($page);
         return $this;
     }
 
@@ -318,21 +318,21 @@ class CollectionLoader implements LoggerAwareInterface
     * @throws InvalidArgumentException
     * @return CollectionLoader Chainable
     */
-    public function set_num_per_page($num)
+    public function setNumPerPage($num)
     {
         if (!is_integer($num)) {
             throw new InvalidArgumentException('Num must be an integer.');
         }
-        $this->pagination()->set_num_per_page($num);
+        $this->pagination()->setNumPerPage($num);
         return $this;
     }
 
     /**
     * @return integer
     */
-    public function num_per_page()
+    public function numPerPage()
     {
-        return $this->pagination()->num_per_page();
+        return $this->pagination()->numPerPage();
     }
 
     /**
@@ -352,7 +352,7 @@ class CollectionLoader implements LoggerAwareInterface
         }
 
         /** @todo Filters, pagination, select, etc */
-        $q = $this->source()->sql_load();
+        $q = $this->source()->sqlLoad();
         $this->logger->debug($q);
         $collection = new Collection();
 
@@ -366,7 +366,7 @@ class CollectionLoader implements LoggerAwareInterface
             $obj = new $class_name([
                 'logger'=>$this->logger
             ]);
-            $obj->set_flat_data($obj_data);
+            $obj->setFlatData($obj_data);
             $collection->add($obj);
         }
 

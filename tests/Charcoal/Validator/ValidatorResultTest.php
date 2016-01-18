@@ -24,12 +24,12 @@ class ValidatorResultTest extends \PHPUnit_Framework_TestCase
         $obj = new ValidatorResult();
         $this->assertEquals(null, $obj->ident());
 
-        $ret = $obj->set_ident('foo');
+        $ret = $obj->setIdent('foo');
         $this->assertSame($ret, $obj);
         $this->assertEquals('foo', $obj->ident());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_ident(false);
+        $obj->setIdent(false);
     }
 
     public function testSetLevel()
@@ -37,19 +37,19 @@ class ValidatorResultTest extends \PHPUnit_Framework_TestCase
         $obj = new ValidatorResult();
         $this->assertEquals(null, $obj->level());
 
-        $ret = $obj->set_level('warning');
+        $ret = $obj->setLevel('warning');
         $this->assertSame($ret, $obj);
         $this->assertEquals('warning', $obj->level());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_level(false);
+        $obj->setLevel(false);
     }
 
     public function testSetLevelWithInvalidLevelsThrowException()
     {
         $obj = new ValidatorResult();
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_level('foo');
+        $obj->setLevel('foo');
     }
 
     public function testSetMessage()
@@ -57,23 +57,23 @@ class ValidatorResultTest extends \PHPUnit_Framework_TestCase
         $obj = new ValidatorResult();
         $this->assertEquals('', $obj->message());
 
-        $ret = $obj->set_message('foo');
+        $ret = $obj->setMessage('foo');
         $this->assertSame($ret, $obj);
         $this->assertEquals('foo', $obj->message());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_message(false);
+        $obj->setMessage(false);
     }
 
     public function testSetTs()
     {
         $obj = new ValidatorResult();
-        $ret = $obj->set_ts('2015-01-01 00:00:00');
+        $ret = $obj->setTs('2015-01-01 00:00:00');
         $this->assertSame($ret, $obj);
 
         $this->assertInstanceOf('\DateTime', $obj->ts());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_ts(false);
+        $obj->setTs(false);
     }
 }

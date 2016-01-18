@@ -13,7 +13,7 @@ class PropertyFactory extends ResolverFactory
     /**
     * @return string
     */
-    public function base_class()
+    public function baseClass()
     {
         return '\Charcoal\Property\PropertyInterface';
     }
@@ -21,7 +21,7 @@ class PropertyFactory extends ResolverFactory
     /**
     * @return string
     */
-    public function default_class()
+    public function defaultClass()
     {
         return '\Charcoal\Property\GenericProperty';
     }
@@ -29,7 +29,7 @@ class PropertyFactory extends ResolverFactory
     /**
     * @return string
     */
-    public function resolver_prefix()
+    public function resolverPrefix()
     {
         return '\Charcoal\Property';
     }
@@ -37,7 +37,7 @@ class PropertyFactory extends ResolverFactory
     /**
     * @return string
     */
-    public function resolver_suffix()
+    public function resolverSuffix()
     {
         return 'Property';
     }

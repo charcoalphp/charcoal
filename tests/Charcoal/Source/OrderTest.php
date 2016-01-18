@@ -23,10 +23,10 @@ class OrderTest extends \PHPUnit_Framework_TestCase
     {
         $obj = new Order();
 
-        $obj->set_data(['property' => 'foo']);
+        $obj->setData(['property' => 'foo']);
         $this->assertEquals('foo', $obj->property());
 
-        $obj->set_data(
+        $obj->setData(
             [
                 'property' => 'bar',
                 'mode' => 'asc'
@@ -39,7 +39,7 @@ class OrderTest extends \PHPUnit_Framework_TestCase
     public function testDataIsChainable()
     {
         $obj = new Order();
-        $ret = $obj->set_data([]);
+        $ret = $obj->setData([]);
 
         $this->assertSame($ret, $obj);
     }
@@ -47,7 +47,7 @@ class OrderTest extends \PHPUnit_Framework_TestCase
     public function testSetProperty()
     {
         $obj = new Order();
-        $obj->set_property('foo');
+        $obj->setProperty('foo');
 
         $this->assertEquals('foo', $obj->property());
     }
@@ -55,7 +55,7 @@ class OrderTest extends \PHPUnit_Framework_TestCase
     public function testSetPropertyIsChainable()
     {
         $obj = new Order();
-        $ret = $obj->set_property('foo');
+        $ret = $obj->setProperty('foo');
 
         $this->assertSame($obj, $ret);
     }
@@ -68,13 +68,13 @@ class OrderTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('\InvalidArgumentException');
 
         $obj = new Order();
-        $obj->set_property($property);
+        $obj->setProperty($property);
     }
 
     public function testSetMode()
     {
         $obj = new Order();
-        $obj->set_mode('asc');
+        $obj->setMode('asc');
 
         $this->assertEquals('asc', $obj->mode());
     }
@@ -82,7 +82,7 @@ class OrderTest extends \PHPUnit_Framework_TestCase
     public function testSetModeIsChainable()
     {
         $obj = new Order();
-        $ret = $obj->set_mode('asc');
+        $ret = $obj->setMode('asc');
 
         $this->assertSame($obj, $ret);
     }
@@ -95,13 +95,13 @@ class OrderTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('\InvalidArgumentException');
 
         $obj = new Order();
-        $obj->set_mode($mode);
+        $obj->setMode($mode);
     }
 
     public function testSetValues()
     {
         $obj = new Order();
-        $obj->set_values(['foo']);
+        $obj->setValues(['foo']);
 
         $this->assertEquals(['foo'], $obj->values());
     }
@@ -109,7 +109,7 @@ class OrderTest extends \PHPUnit_Framework_TestCase
     public function testSetValuesByStringExplodesArray()
     {
         $obj = new Order();
-        $obj->set_values('foo,bar,val');
+        $obj->setValues('foo,bar,val');
 
         $this->assertEquals(['foo','bar','val'], $obj->values());
     }
@@ -117,7 +117,7 @@ class OrderTest extends \PHPUnit_Framework_TestCase
     public function testSetValuesByStringTrim()
     {
         $obj = new Order();
-        $obj->set_values('foo, bar, val'); // Spaces between values
+        $obj->setValues('foo, bar, val'); // Spaces between values
 
         $this->assertEquals(['foo','bar','val'], $obj->values());
     }
@@ -125,7 +125,7 @@ class OrderTest extends \PHPUnit_Framework_TestCase
     public function testSetValuesIsChainable()
     {
         $obj = new Order();
-        $ret = $obj->set_values(['foo']);
+        $ret = $obj->setValues(['foo']);
 
         $this->assertSame($obj, $ret);
     }
@@ -138,7 +138,7 @@ class OrderTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('\InvalidArgumentException');
 
         $obj = new Order();
-        $obj->set_values($values);
+        $obj->setValues($values);
     }
 
 

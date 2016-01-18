@@ -16,7 +16,7 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
     public function setData()
     {
         $obj = new CollectionLoader();
-        $obj->set_data(
+        $obj->setData(
             [
                 'properties' => [
                     'id',
@@ -30,7 +30,7 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
     public function setDataIsChainable()
     {
         $obj = new CollectionLoader();
-        $ret = $obj->set_data([]);
+        $ret = $obj->setData([]);
         $this->assertSame($ret, $obj);
     }
 

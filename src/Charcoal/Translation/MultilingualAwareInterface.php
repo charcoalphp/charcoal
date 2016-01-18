@@ -57,7 +57,7 @@ interface MultilingualAwareInterface
      *     to empty the languages store.
      * @return MultilingualAwareInterface Chainable
      */
-    public function set_languages(array $langs = []);
+    public function setLanguages(array $langs = []);
 
     /**
      * Add an available language to the object.
@@ -65,7 +65,7 @@ interface MultilingualAwareInterface
      * @param  LanguageInterface|array|string $lang A language object or identifier.
      * @return MultilingualAwareInterface Chainable
      */
-    public function add_language($lang);
+    public function addLanguage($lang);
 
     /**
      * Remove an available language from the object.
@@ -73,7 +73,7 @@ interface MultilingualAwareInterface
      * @param  LanguageInterface|string $lang A language object or identifier.
      * @return MultilingualAwareInterface Chainable
      */
-    public function remove_language($lang);
+    public function removeLanguage($lang);
 
     /**
      * Retrieve an available language from the object.
@@ -89,7 +89,7 @@ interface MultilingualAwareInterface
      * @param  LanguageInterface|string $lang A language object or identifier.
      * @return boolean Whether the language is available
      */
-    public function has_language($lang);
+    public function hasLanguage($lang);
 
     /**
      * Retrieve the object's default language.
@@ -99,7 +99,7 @@ interface MultilingualAwareInterface
      *
      * @return string A language identifier.
      */
-    public function default_language();
+    public function defaultLanguage();
 
     /**
      * Set the object's default language.
@@ -109,7 +109,7 @@ interface MultilingualAwareInterface
      * @param  LanguageInterface|string|null $lang A language object or identifier.
      * @return MultilingualAwareInterface Chainable
      */
-    public function set_default_language($lang = null);
+    public function setDefaultLanguage($lang = null);
 
     /**
      * Retrieve the object's current language.
@@ -119,7 +119,7 @@ interface MultilingualAwareInterface
      *
      * @return string A language identifier.
      */
-    public function current_language();
+    public function currentLanguage();
 
     /**
      * Set the object's current language.
@@ -129,5 +129,5 @@ interface MultilingualAwareInterface
      * @param  LanguageInterface|string|null $lang A language object or identifier.
      * @return MultilingualAwareInterface Chainable
      */
-    public function set_current_language($lang = null);
+    public function setCurrentLanguage($lang = null);
 }

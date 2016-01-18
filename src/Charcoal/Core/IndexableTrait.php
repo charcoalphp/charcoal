@@ -14,26 +14,11 @@ trait IndexableTrait
     * @var mixed $id The object (unique) identifier
     */
     protected $id;
+
     /**
     * @var string $key The object key
     */
-    protected $key;
-
-    /**
-    * @param array $data
-    * @throws InvalidArgumentException $data
-    * @return IndexableInterface Chainable
-    */
-    protected function set_indexable_data(array $data)
-    {
-        if (isset($data['id']) && $data['id'] !== null) {
-            $this->set_id($data['id']);
-        }
-        if (isset($data['key']) && $data['key'] !== null) {
-            $this->set_key($data['key']);
-        }
-        return $this;
-    }
+    protected $key = 'id';
 
     /**
     * Set the object's ID. The actual property set depends on `key()`
@@ -43,10 +28,12 @@ trait IndexableTrait
     * @throws Exception if the key is invalid
     * @return IndexableInterface Chainable
     */
-    public function set_id($id)
+    public function setId($id)
     {
         if (!is_scalar($id)) {
-            throw new InvalidArgumentException('ID argument must be a scalar (integer, float, string, or boolean).');
+            throw new InvalidArgumentException(
+                'ID argument must be a scalar (integer, float, string, or boolean).'
+            );
         }
 
         $key = $this->key();
@@ -81,7 +68,9 @@ trait IndexableTrait
         if (is_callable($func)) {
             return call_user_func($func);
         } else {
-            throw new Exception('Invalid key.');
+            throw new Exception(
+                'Invalid key.'
+            );
         }
     }
 
@@ -92,10 +81,12 @@ trait IndexableTrait
     * @throws InvalidArgumentException if the argument is not scalar
     * @return IndexableInterface Chainable
     */
-    public function set_key($key)
+    public function setKey($key)
     {
         if (!is_scalar($key)) {
-            throw new InvalidArgumentException('Key argument must be scalar (integer, float, string, or boolean).');
+            throw new InvalidArgumentException(
+                'Key argument must be scalar (integer, float, string, or boolean).'
+            );
         }
         $this->key = $key;
 
@@ -109,9 +100,6 @@ trait IndexableTrait
     */
     public function key()
     {
-        if ($this->key === null) {
-            $this->key = 'id';
-        }
         return $this->key;
     }
 }

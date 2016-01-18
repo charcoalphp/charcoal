@@ -33,7 +33,7 @@ class SourceConfig extends AbstractConfig
     * @throws InvalidArgumentException if parameter is not a string
     * @return SourceConfig Chainable
     */
-    public function set_type($type)
+    public function setType($type)
     {
         if (!is_string($type)) {
             throw new InvalidArgumentException('Type must be a string.');

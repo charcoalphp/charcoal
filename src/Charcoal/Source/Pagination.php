@@ -17,21 +17,21 @@ class Pagination implements PaginationInterface
     */
     protected $page = self::DEFAULT_PAGE;
     /**
-    * @var integer $num_per_page
+    * @var integer $numPerPage
     */
-    protected $num_per_page = self::DEFAULT_NUM_PER_PAGE;
+    protected $numPerPage = self::DEFAULT_NUM_PER_PAGE;
 
     /**
     * @param array $data
     * @return Pagination Chainable
     */
-    public function set_data(array $data)
+    public function setData(array $data)
     {
         if (isset($data['page'])) {
-            $this->set_page($data['page']);
+            $this->setPage($data['page']);
         }
-        if (isset($data['num_per_page'])) {
-            $this->set_num_per_page($data['num_per_page']);
+        if (isset($data['numPerPage'])) {
+            $this->setNumPerPage($data['numPerPage']);
         }
         return $this;
     }
@@ -41,7 +41,7 @@ class Pagination implements PaginationInterface
     * @throws InvalidArgumentException if the parameter is not numeric or < 0
     * @return Pagination (Chainable)
     */
-    public function set_page($page)
+    public function setPage($page)
     {
         if (!is_numeric($page)) {
             throw new InvalidArgumentException('Page number needs to be numeric.');
@@ -67,7 +67,7 @@ class Pagination implements PaginationInterface
     * @throws InvalidArgumentException if the parameter is not numeric or < 0
     * @return Pagination (Chainable)
     */
-    public function set_num_per_page($num)
+    public function setNumPerPage($num)
     {
         if (!is_numeric($num)) {
             throw new InvalidArgumentException('Num-per-page needs to be numeric.');
@@ -77,16 +77,16 @@ class Pagination implements PaginationInterface
             throw new InvalidArgumentException('Num-per-page needs to be >= 0.');
         }
 
-        $this->num_per_page = $num;
+        $this->numPerPage = $num;
         return $this;
     }
 
     /**
     * @return integer
     */
-    public function num_per_page()
+    public function numPerPage()
     {
-        return $this->num_per_page;
+        return $this->numPerPage;
     }
 
     /**
@@ -95,8 +95,8 @@ class Pagination implements PaginationInterface
     public function first()
     {
         $page = $this->page();
-        $num_per_page = $this->num_per_page();
-        return max(0, (($page-1)*$num_per_page));
+        $numPerPage = $this->numPerPage();
+        return max(0, (($page-1)*$numPerPage));
     }
 
     /**
@@ -106,7 +106,7 @@ class Pagination implements PaginationInterface
     public function last()
     {
         $first = $this->first();
-        $num_per_page = $this->num_per_page();
-        return ($first + $num_per_page);
+        $numPerPage = $this->numPerPage();
+        return ($first + $numPerPage);
     }
 }

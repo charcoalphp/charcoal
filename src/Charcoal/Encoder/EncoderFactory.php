@@ -14,7 +14,7 @@ class EncoderFactory extends MapFactory
     /**
     * @return string
     */
-    public function base_class()
+    public function baseClass()
     {
         return '\Charcoal\Encoder\EncoderInterface';
     }

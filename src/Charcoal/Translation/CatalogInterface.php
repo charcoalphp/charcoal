@@ -13,7 +13,7 @@ interface CatalogInterface
      * @param  ResourceInterface|array|string $resource
      * @return CatalogInterface Chainable
      */
-    public function add_resource($resource);
+    public function addResource($resource);
 
     /**
      * Get the array of entries and their translations
@@ -37,7 +37,7 @@ interface CatalogInterface
      * }
      * @return CatalogInterface Chainable
      */
-    public function set_entries(array $entries = []);
+    public function setEntries(array $entries = []);
 
     /**
      * Get an entry in the catalog
@@ -53,7 +53,7 @@ interface CatalogInterface
      * @param  string  $ident  An entry's key
      * @return boolean
      */
-    public function has_entry($ident);
+    public function hasEntry($ident);
 
     /**
      * Add entry to the catalog
@@ -62,7 +62,7 @@ interface CatalogInterface
      * @param  TranslationStringInterface|array  $translations  A set of translations
      * @return CatalogInterface Chainable
      */
-    public function add_entry($ident, $translations);
+    public function addEntry($ident, $translations);
 
     /**
      * Remove an entry from the catalog
@@ -70,7 +70,7 @@ interface CatalogInterface
      * @param  string  $ident   An entry's key
      * @return CatalogInterface Chainable
      */
-    public function remove_entry($ident);
+    public function removeEntry($ident);
 
     /**
      * Add a translation to an entry in the catalog
@@ -80,7 +80,7 @@ interface CatalogInterface
      * @param  string  $val    The translation to be added
      * @return CatalogInterface Chainable
      */
-    public function add_entry_translation($ident, $lang, $val);
+    public function addEntryTranslation($ident, $lang, $val);
 
     /**
      * Remove a translation from an entry in the catalog
@@ -90,7 +90,7 @@ interface CatalogInterface
      * @param  array   $translations
      * @return CatalogInterface Chainable
      */
-    public function remove_entry_translation($ident, $lang);
+    public function removeEntryTranslation($ident, $lang);
 
     /**
      * Get a translation for an entry in the catalog

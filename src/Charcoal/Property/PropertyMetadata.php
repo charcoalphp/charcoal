@@ -10,7 +10,7 @@ use \Charcoal\Model\AbstractMetadata;
 /**
 *
 */
-class PropertyMetadata extends AbstractMetadata implements \ArrayAccess
+class PropertyMetadata extends AbstractMetadata
 {
     /**
      * @var string $_ident
@@ -28,7 +28,7 @@ class PropertyMetadata extends AbstractMetadata implements \ArrayAccess
     * @throws InvalidArgumentException if the ident is not a string
     * @return PropertyMetadata Chainable
     */
-    public function set_ident($ident)
+    public function setIdent($ident)
     {
         if (!is_string($ident)) {
             throw new InvalidArgumentException(

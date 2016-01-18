@@ -10,17 +10,17 @@ class DatabaseSourceConfigTest extends \PHPUnit_Framework_TestCase
     public function testDefaultData()
     {
         $obj = new DatabaseSourceConfig();
-        $defaults = $obj->default_data();
+        $defaults = $obj->defaults();
 
         $this->assertEquals('mysql', $obj->type());
         $this->assertEquals($obj->type(), $defaults['type']);
         $this->assertEquals($obj->hostname(), $defaults['hostname']);
     }
 
-    public function testSetData()
+    public function testMerge()
     {
         $obj = new DatabaseSourceConfig();
-        $ret = $obj->set_data([]);
+        $ret = $obj->merge([]);
         $this->assertSame($ret, $obj);
     }
 
@@ -28,98 +28,98 @@ class DatabaseSourceConfigTest extends \PHPUnit_Framework_TestCase
     {
         $obj = new DatabaseSourceConfig();
         $this->assertEquals('localhost', $obj->hostname());
-        $ret = $obj->set_hostname('foo');
+        $ret = $obj->setHostname('foo');
         $this->assertSame($ret, $obj);
         $this->assertEquals('foo', $obj->hostname());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_hostname(false);
+        $obj->setHostname(false);
     }
 
     public function testSetUsername()
     {
         $obj = new DatabaseSourceConfig();
         $this->assertEquals(null, $obj->username());
-        $ret = $obj->set_username('foo');
+        $ret = $obj->setUsername('foo');
         $this->assertSame($ret, $obj);
         $this->assertEquals('foo', $obj->username());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_username(false);
+        $obj->setUsername(false);
     }
 
     public function testSetPassword()
     {
         $obj = new DatabaseSourceConfig();
         $this->assertEquals('', $obj->password());
-        $ret = $obj->set_password('foo');
+        $ret = $obj->setPassword('foo');
         $this->assertSame($ret, $obj);
         $this->assertEquals('foo', $obj->password());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_password(false);
+        $obj->setPassword(false);
     }
 
     public function testSetPasswordEncoding()
     {
         $obj = new DatabaseSourceConfig();
-        $this->assertEquals(null, $obj->password_encoding());
-        $ret = $obj->set_password_encoding('foo');
+        $this->assertEquals(null, $obj->passwordEncoding());
+        $ret = $obj->setPasswordEncoding('foo');
         $this->assertSame($ret, $obj);
-        $this->assertEquals('foo', $obj->password_encoding());
+        $this->assertEquals('foo', $obj->passwordEncoding());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_password_encoding(false);
+        $obj->setPasswordEncoding(false);
     }
 
     public function testSetPasswordSalt()
     {
         $obj = new DatabaseSourceConfig();
-        $this->assertEquals(null, $obj->password_salt());
-        $ret = $obj->set_password_salt('foo');
+        $this->assertEquals(null, $obj->passwordSalt());
+        $ret = $obj->setPasswordSalt('foo');
         $this->assertSame($ret, $obj);
-        $this->assertEquals('foo', $obj->password_salt());
+        $this->assertEquals('foo', $obj->passwordSalt());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_password_salt(false);
+        $obj->setPasswordSalt(false);
     }
 
     public function testEncodedPassword()
     {
-        $plain_password = 'foobar123';
+        $plainPassword = 'foobar123';
         $salt = 'barbaz987';
         $factory = new EncoderFactory();
         $encoder = $factory->get('base64');
-        $encoded = $encoder->encode($plain_password, $salt);
+        $encoded = $encoder->encode($plainPassword, $salt);
 
         $obj = new DatabaseSourceConfig();
-        $obj->set_password_encoding('base64');
-        $obj->set_password_salt($salt);
-        $obj->set_password($encoded);
-        $this->assertEquals($plain_password, $obj->password());
+        $obj->setPasswordEncoding('base64');
+        $obj->setPasswordSalt($salt);
+        $obj->setPassword($encoded);
+        $this->assertEquals($plainPassword, $obj->password());
     }
 
     public function testSetDatabase()
     {
         $obj = new DatabaseSourceConfig();
         $this->assertEquals(null, $obj->database());
-        $ret = $obj->set_database('foo');
+        $ret = $obj->setDatabase('foo');
         $this->assertSame($ret, $obj);
         $this->assertEquals('foo', $obj->database());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_database(false);
+        $obj->setDatabase(false);
     }
 
     public function testSetDisableUtf8()
     {
         $obj = new DatabaseSourceConfig();
-        $this->assertEquals(false, $obj->disable_utf8());
-        $ret = $obj->set_disable_utf8(true);
+        $this->assertEquals(false, $obj->disableUtf8());
+        $ret = $obj->setDisableUtf8(true);
         $this->assertSame($ret, $obj);
-        $this->assertEquals(true, $obj->disable_utf8());
+        $this->assertEquals(true, $obj->disableUtf8());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_disable_utf8('foo');
+        $obj->setDisableUtf8('foo');
     }
 }

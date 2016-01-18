@@ -40,16 +40,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/locomotivemtl/charcoal-app.git",
-                "reference": "3830e2dddb4f5fdc9eb9378cef0058bc4ca62d7c"
+                "reference": "357cd2e0e60570f646a5d5b42699dc49ecbc4454"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/locomotivemtl/charcoal-app/zipball/3830e2dddb4f5fdc9eb9378cef0058bc4ca62d7c",
-                "reference": "3830e2dddb4f5fdc9eb9378cef0058bc4ca62d7c",
+                "url": "https://api.github.com/repos/locomotivemtl/charcoal-app/zipball/357cd2e0e60570f646a5d5b42699dc49ecbc4454",
+                "reference": "357cd2e0e60570f646a5d5b42699dc49ecbc4454",
                 "shasum": ""
             },
             "require": {
                 "locomotivemtl/charcoal-config": "~0.1",
+                "locomotivemtl/charcoal-core": "dev-master",
                 "locomotivemtl/charcoal-factory": "dev-master",
                 "locomotivemtl/charcoal-view": "dev-master",
                 "monolog/monolog": "^1.16",
@@ -87,20 +88,20 @@
             ],
             "description": "Charcoal App, based on Slim 3",
             "homepage": "https://charcoal.locomotive.ca",
-            "time": "2016-01-12 20:04:41"
+            "time": "2016-01-18 16:15:57"
         },
         {
             "name": "locomotivemtl/charcoal-config",
-            "version": "0.2",
+            "version": "0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/locomotivemtl/charcoal-config.git",
-                "reference": "9c6c7e4e83d4e61f370bff28f2d6b284d335909a"
+                "reference": "415389b3d2b587c8f312561876dbc4a801002270"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/locomotivemtl/charcoal-config/zipball/9c6c7e4e83d4e61f370bff28f2d6b284d335909a",
-                "reference": "9c6c7e4e83d4e61f370bff28f2d6b284d335909a",
+                "url": "https://api.github.com/repos/locomotivemtl/charcoal-config/zipball/415389b3d2b587c8f312561876dbc4a801002270",
+                "reference": "415389b3d2b587c8f312561876dbc4a801002270",
                 "shasum": ""
             },
             "require": {
@@ -136,7 +137,7 @@
             ],
             "description": "Configuration container for all things Charcoal",
             "homepage": "http://locomotivemtl.github.io/charcoal-config/",
-            "time": "2015-12-09 16:07:58"
+            "time": "2016-01-15 20:54:35"
         },
         {
             "name": "locomotivemtl/charcoal-factory",
@@ -144,12 +145,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/locomotivemtl/charcoal-factory.git",
-                "reference": "4d7d0cfcd5f0d3450821481f01a1137d190a9a10"
+                "reference": "65bf098e081711e1b438e9af89e94c45ecf79f71"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/locomotivemtl/charcoal-factory/zipball/4d7d0cfcd5f0d3450821481f01a1137d190a9a10",
-                "reference": "4d7d0cfcd5f0d3450821481f01a1137d190a9a10",
+                "url": "https://api.github.com/repos/locomotivemtl/charcoal-factory/zipball/65bf098e081711e1b438e9af89e94c45ecf79f71",
+                "reference": "65bf098e081711e1b438e9af89e94c45ecf79f71",
                 "shasum": ""
             },
             "require": {
@@ -181,7 +182,7 @@
             ],
             "description": "Charcoal object creation (Factory, AbstractFactory, Builder, Class Resolver)",
             "homepage": "https://charcoal.locomotive.ca",
-            "time": "2015-12-16 22:40:03"
+            "time": "2016-01-15 20:15:31"
         },
         {
             "name": "locomotivemtl/charcoal-view",
@@ -189,17 +190,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/locomotivemtl/charcoal-view.git",
-                "reference": "4b917f763548c340e008ba7539ddc0a2b893e978"
+                "reference": "96e4965874e3cfa9da52a4191b826f208e2bcab4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/locomotivemtl/charcoal-view/zipball/4b917f763548c340e008ba7539ddc0a2b893e978",
-                "reference": "4b917f763548c340e008ba7539ddc0a2b893e978",
+                "url": "https://api.github.com/repos/locomotivemtl/charcoal-view/zipball/96e4965874e3cfa9da52a4191b826f208e2bcab4",
+                "reference": "96e4965874e3cfa9da52a4191b826f208e2bcab4",
                 "shasum": ""
             },
             "require": {
                 "locomotivemtl/charcoal-config": "~0.2",
-                "locomotivemtl/charcoal-core": "@dev",
                 "php": ">=5.5.0",
                 "psr/http-message": "^1.0",
                 "psr/log": "^1.0"
@@ -237,7 +237,7 @@
             ],
             "description": "Charcoal View (templates)",
             "homepage": "https://charcoal.locomotive.ca",
-            "time": "2016-01-11 19:25:33"
+            "time": "2016-01-15 21:37:05"
         },
         {
             "name": "monolog/monolog",
@@ -1582,12 +1582,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "4966b545db497e038b3ba01fd21c0899be9365a9"
+                "reference": "7271b28e04ebc1fbec31b31f6ae22ad478425156"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/4966b545db497e038b3ba01fd21c0899be9365a9",
-                "reference": "4966b545db497e038b3ba01fd21c0899be9365a9",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/7271b28e04ebc1fbec31b31f6ae22ad478425156",
+                "reference": "7271b28e04ebc1fbec31b31f6ae22ad478425156",
                 "shasum": ""
             },
             "require": {
@@ -1651,7 +1651,7 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2016-01-12 23:22:08"
+            "time": "2016-01-18 05:26:11"
         },
         {
             "name": "symfony/yaml",
@@ -1659,12 +1659,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "9db3e5a309bd5f3dfd974f5b42d820904352c4d8"
+                "reference": "82287b794641153ae1837b9288c3ae90cecdf5c4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/9db3e5a309bd5f3dfd974f5b42d820904352c4d8",
-                "reference": "9db3e5a309bd5f3dfd974f5b42d820904352c4d8",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/82287b794641153ae1837b9288c3ae90cecdf5c4",
+                "reference": "82287b794641153ae1837b9288c3ae90cecdf5c4",
                 "shasum": ""
             },
             "require": {
@@ -1700,7 +1700,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2016-01-06 10:01:46"
+            "time": "2016-01-13 16:23:43"
         }
     ],
     "aliases": [],

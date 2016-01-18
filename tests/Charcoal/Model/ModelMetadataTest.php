@@ -56,7 +56,7 @@ class ModelMetadataTest extends \PHPUnit_Framework_TestCase
         ];
 
         $obj = new ModelMetadata();
-        $obj->set_data($data);
+        $obj->merge($data);
 
         $this->assertEquals($obj->foo, 'bar');
         $this->assertEquals($obj->bar, 'foo');
@@ -65,7 +65,7 @@ class ModelMetadataTest extends \PHPUnit_Framework_TestCase
     public function testSetDataIsChainable()
     {
         $obj = new ModelMetadata();
-        $ret = $obj->set_data([]);
+        $ret = $obj->merge([]);
 
         $this->assertSame($obj, $ret);
     }

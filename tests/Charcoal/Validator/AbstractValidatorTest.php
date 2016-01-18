@@ -31,7 +31,7 @@ class AbstractValidatorTest extends \PHPUnit_Framework_TestCase
         $obj = $this->obj;
         $ret = $obj->error('foo');
         $this->assertSame($ret, $obj);
-        // var_dump($obj->error_results());
+        // var_dump($obj->errorResults());
     }
 
     public function testWarning()
@@ -39,7 +39,7 @@ class AbstractValidatorTest extends \PHPUnit_Framework_TestCase
         $obj = $this->obj;
         $ret = $obj->warning('foo');
         $this->assertSame($ret, $obj);
-        // var_dump($obj->warning_results());
+        // var_dump($obj->warningResults());
     }
 
     public function testNotice()
@@ -47,7 +47,7 @@ class AbstractValidatorTest extends \PHPUnit_Framework_TestCase
         $obj = $this->obj;
         $ret = $obj->notice('foo');
         $this->assertSame($ret, $obj);
-        // var_dump($obj->notice_results());
+        // var_dump($obj->noticeResults());
     }
 
     public function testAddResult()
@@ -59,15 +59,15 @@ class AbstractValidatorTest extends \PHPUnit_Framework_TestCase
         ];
 
         $obj = $this->obj;
-        $ret = $obj->add_result($result);
+        $ret = $obj->addResult($result);
         $this->assertSame($ret, $obj);
 
         $result_obj = new ValidatorResult($result);
-        $ret = $obj->add_result($result_obj);
+        $ret = $obj->addResult($result_obj);
         $this->assertSame($ret, $obj);
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->add_result(false);
+        $obj->addResult(false);
     }
 
     public function testResults()
@@ -81,7 +81,7 @@ class AbstractValidatorTest extends \PHPUnit_Framework_TestCase
         $obj = $this->obj;
         $this->assertEquals([], $obj->results());
 
-        $obj->add_result($result);
+        $obj->addResult($result);
         $result_obj = new ValidatorResult($result);
         $this->assertEquals([AbstractValidatorClass::ERROR => [$result_obj]], $obj->results());
     }
@@ -99,12 +99,12 @@ class AbstractValidatorTest extends \PHPUnit_Framework_TestCase
             'message' => 'bar'
         ];
         $obj = $this->obj;
-        $this->assertEquals([], $obj->error_results());
+        $this->assertEquals([], $obj->errorResults());
 
-        $obj->add_result($result);
-        $obj->add_result($result2);
+        $obj->addResult($result);
+        $obj->addResult($result2);
         $result_obj = new ValidatorResult($result);
-        $this->assertEquals([$result_obj], $obj->error_results());
+        $this->assertEquals([$result_obj], $obj->errorResults());
     }
 
     public function testWarningResults()
@@ -120,12 +120,12 @@ class AbstractValidatorTest extends \PHPUnit_Framework_TestCase
             'message' => 'bar'
         ];
         $obj = $this->obj;
-        $this->assertEquals([], $obj->warning_results());
+        $this->assertEquals([], $obj->warningResults());
 
-        $obj->add_result($result);
-        $obj->add_result($result2);
+        $obj->addResult($result);
+        $obj->addResult($result2);
         $result_obj = new ValidatorResult($result);
-        $this->assertEquals([$result_obj], $obj->warning_results());
+        $this->assertEquals([$result_obj], $obj->warningResults());
     }
 
     public function testNoticeResults()
@@ -141,12 +141,12 @@ class AbstractValidatorTest extends \PHPUnit_Framework_TestCase
             'message' => 'bar'
         ];
         $obj = $this->obj;
-        $this->assertEquals([], $obj->notice_results());
+        $this->assertEquals([], $obj->noticeResults());
 
-        $obj->add_result($result);
-        $obj->add_result($result2);
+        $obj->addResult($result);
+        $obj->addResult($result2);
         $result_obj = new ValidatorResult($result);
-        $this->assertEquals([$result_obj], $obj->notice_results());
+        $this->assertEquals([$result_obj], $obj->noticeResults());
     }
 
     public function testMerge()
@@ -166,8 +166,8 @@ class AbstractValidatorTest extends \PHPUnit_Framework_TestCase
         $obj = $this->obj;
         $obj2 = new AbstractValidatorClass($this->model);
 
-        $obj->add_result($result);
-        $obj2->add_result($result2);
+        $obj->addResult($result);
+        $obj2->addResult($result2);
         $obj->merge($obj2);
 
         $this->assertEquals(

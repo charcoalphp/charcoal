@@ -25,7 +25,7 @@ use \Charcoal\Translation\MultilingualAwareTrait;
  *
  * Contains one additional method:
  *
- * • `self::resolve_special_languages()`
+ * • `self::resolve_specialLanguages()`
  */
 trait TranslatableTrait
 {
@@ -43,14 +43,14 @@ trait TranslatableTrait
      *
      * @var string
      */
-    private $default_language;
+    private $defaultLanguage;
 
     /**
      * Current language identifier.
      *
      * @var string
      */
-    private $current_language;
+    private $currentLanguage;
 
     /**
      * Resolve the default and current languages.
@@ -60,19 +60,19 @@ trait TranslatableTrait
      * 1. Retrieve special language directly; mitigates validating value twice.
      * 2. Validate existence of special language; if missing, reset value.
      *
-     * @used-by self::set_languages()
-     * @used-by self::remove_language()
+     * @used-by self::setLanguages()
+     * @used-by self::removeLanguage()
      * @return  MultilingualAwareInterface Chainable
      */
-    public function resolve_special_languages()
+    public function resolveSpecialLanguages()
     {
         if (count($this->languages)) {
-            if (!isset($this->languages[$this->default_language])) {
-                $this->set_default_language();
+            if (!isset($this->languages[$this->defaultLanguage])) {
+                $this->setDefaultLanguage();
             }
 
-            if (!isset($this->languages[$this->current_language])) {
-                $this->set_current_language();
+            if (!isset($this->languages[$this->currentLanguage])) {
+                $this->setCurrentLanguage();
             }
         }
 
@@ -93,7 +93,7 @@ trait TranslatableTrait
 
         if (count($langs)) {
             array_walk($langs, function (&$val, $key) {
-                $val = self::resolve_language_ident($val);
+                $val = self::resolveLanguage_ident($val);
             });
 
             // return array_intersect_key($this->languages, array_flip($langs));
@@ -119,7 +119,7 @@ trait TranslatableTrait
      *     to empty the languages store.
      * @return MultilingualAwareInterface Chainable
      */
-    public function set_languages(array $langs = [])
+    public function setLanguages(array $langs = [])
     {
         $this->languages = [];
 
@@ -130,11 +130,11 @@ trait TranslatableTrait
                     $lang['ident'] = $ident;
                 }
 
-                $this->add_language($lang);
+                $this->addLanguage($lang);
             }
         }
 
-        $this->resolve_special_languages();
+        $this->resolveSpecialLanguages();
 
         return $this;
     }
@@ -150,7 +150,7 @@ trait TranslatableTrait
      *
      * @throws InvalidArgumentException if an array member isn't a string or instance of LanguageInterface
      */
-    public function add_language($lang)
+    public function addLanguage($lang)
     {
         if (is_string($lang)) {
             $this->languages[$lang] = $lang;
@@ -170,15 +170,15 @@ trait TranslatableTrait
     /**
      * Remove an available language from the object.
      *
-     * @uses   self::resolve_special_languages()
+     * @uses   self::resolve_specialLanguages()
      * @param  LanguageInterface|string $lang A language object or identifier.
      * @return MultilingualAwareInterface Chainable
      *
      * @throws InvalidArgumentException if an array member isn't a string or instance of LanguageInterface
      */
-    public function remove_language($lang)
+    public function removeLanguage($lang)
     {
-        $lang = self::resolve_language_ident($lang);
+        $lang = self::resolveLanguageIdent($lang);
 
         if (!is_string($lang)) {
             throw new InvalidArgumentException(
@@ -190,7 +190,7 @@ trait TranslatableTrait
             unset($this->languages[$lang]);
         }
 
-        $this->resolve_special_languages();
+        $this->resolve_specialLanguages();
 
         return $this;
     }
@@ -205,7 +205,7 @@ trait TranslatableTrait
      */
     public function language($lang)
     {
-        $lang = self::resolve_language_ident($lang);
+        $lang = self::resolveLanguageIdent($lang);
 
         if (!is_string($lang)) {
             throw new InvalidArgumentException(
@@ -226,7 +226,7 @@ trait TranslatableTrait
      * @param  LanguageInterface|string $lang A language object or identifier.
      * @return boolean Whether the language is available
      */
-    public function has_language($lang)
+    public function hasLanguage($lang)
     {
         return (bool)$this->language($lang);
     }
@@ -239,13 +239,13 @@ trait TranslatableTrait
      *
      * @return string A language identifier.
      */
-    public function default_language()
+    public function defaultLanguage()
     {
-        if (!isset($this->default_language)) {
-            $this->set_default_language();
+        if (!isset($this->defaultLanguage)) {
+            $this->setDefaultLanguage();
         }
 
-        return $this->default_language;
+        return $this->defaultLanguage;
     }
 
     /**
@@ -258,13 +258,13 @@ trait TranslatableTrait
      *
      * @throws InvalidArgumentException if language isn't available
      */
-    public function set_default_language($lang = null)
+    public function setDefaultLanguage($lang = null)
     {
         if (isset($lang)) {
-            $lang = self::resolve_language_ident($lang);
+            $lang = self::resolveLanguageIdent($lang);
 
-            if ($this->has_language($lang)) {
-                $this->default_language = $lang;
+            if ($this->hasLanguage($lang)) {
+                $this->defaultLanguage = $lang;
             } else {
                 throw new InvalidArgumentException(
                     sprintf('Invalid language: "%s"', (string)$lang)
@@ -272,7 +272,7 @@ trait TranslatableTrait
             }
         } else {
             $languages = $this->languages();
-            $this->default_language = reset($languages);
+            $this->defaultLanguage = reset($languages);
         }
 
         return $this;
@@ -286,13 +286,13 @@ trait TranslatableTrait
      *
      * @return string A language identifier.
      */
-    public function current_language()
+    public function currentLanguage()
     {
-        if (!isset($this->current_language)) {
-            return $this->default_language();
+        if (!isset($this->currentLanguage)) {
+            return $this->defaultLanguage();
         }
 
-        return $this->current_language;
+        return $this->currentLanguage;
     }
 
     /**
@@ -308,20 +308,20 @@ trait TranslatableTrait
      *
      * @throws InvalidArgumentException If language isn't available.
      */
-    public function set_current_language($lang = null)
+    public function setCurrentLanguage($lang = null)
     {
         if (isset($lang)) {
-            $lang = self::resolve_language_ident($lang);
+            $lang = self::resolveLanguageIdent($lang);
 
-            if ($this->has_language($lang)) {
-                $this->current_language = $lang;
+            if ($this->hasLanguage($lang)) {
+                $this->currentLanguage = $lang;
             } else {
                 throw new InvalidArgumentException(
                     sprintf('Invalid language: "%s"', (string)$lang)
                 );
             }
         } else {
-            $this->current_language = null;
+            $this->currentLanguage = null;
         }
 
         return $this;

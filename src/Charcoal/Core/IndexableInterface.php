@@ -13,7 +13,7 @@ interface IndexableInterface
     * @param mixed $id
     * @return IndexableInterface Chainable
     */
-    public function set_id($id);
+    public function setId($id);
 
     /**
     * Get the object's (unique) ID. The actualy property get depends on `key()`
@@ -28,7 +28,7 @@ interface IndexableInterface
     * @param string $key
     * @return IndexableInterface Chainable
     */
-    public function set_key($key);
+    public function setKey($key);
 
     /**
     * Get the key property.
