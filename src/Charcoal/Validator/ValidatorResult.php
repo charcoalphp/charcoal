@@ -58,7 +58,7 @@ class ValidatorResult
             $this->setLevel($data['level']);
         }
         if (isset($data['message']) && $data['message'] !== null) {
-            $this->set_message($data['message']);
+            $this->setMessage($data['message']);
         }
         if (isset($data['ts']) && $data['ts'] !== null) {
             $this->setTs($data['ts']);
