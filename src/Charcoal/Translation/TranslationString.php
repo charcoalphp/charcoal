@@ -75,7 +75,7 @@ class TranslationString implements
     public function __construct($val = null, $config = null)
     {
         if (isset($config)) {
-            $this->set_config($config);
+            $this->setConfig($config);
         }
 
         if (isset($val)) {

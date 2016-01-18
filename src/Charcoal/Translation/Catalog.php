@@ -114,7 +114,7 @@ class Catalog implements
      */
     public function entries($lang = null)
     {
-        $lang = self::resolveLanguageIdentent($lang);
+        $lang = self::resolveLanguageIdent($lang);
 
         if (isset($lang)) {
             if ($this->hasLanguage($lang)) {
@@ -291,7 +291,7 @@ class Catalog implements
                 );
             }
 
-            $lang = self::resolveLanguageIdentent($lang);
+            $lang = self::resolveLanguageIdent($lang);
 
             $this->addEntry(
                 $ident,
@@ -319,7 +319,7 @@ class Catalog implements
         }
 
         if ($this->hasEntry($ident)) {
-            $lang = self::resolveLanguageIdentent($lang);
+            $lang = self::resolveLanguageIdent($lang);
 
             unset($this->entries[$ident][$lang]);
         }
@@ -345,7 +345,7 @@ class Catalog implements
             $lang = $this->currentLanguage();
         }
 
-        $lang = self::resolveLanguageIdentent($lang);
+        $lang = self::resolveLanguageIdent($lang);
 
         if ($this->hasLanguage($lang)) {
             if ($this->hasEntry($ident)) {
@@ -420,7 +420,7 @@ class Catalog implements
             $this->addEntry($ident, $value);
         } elseif (is_string($value)) {
             $lang = $this->currentLanguage();
-            $lang = self::resolveLanguageIdentent($lang);
+            $lang = self::resolveLanguageIdent($lang);
             $this->addEntryTranslation($ident, $lang, $value);
         } else {
             throw new InvalidArgumentException(
@@ -496,7 +496,7 @@ class Catalog implements
     public function setCurrentLanguage($lang = null)
     {
         if (isset($lang)) {
-            $lang = self::resolveLanguageIdentent($lang);
+            $lang = self::resolveLanguageIdent($lang);
 
             if ($this->hasLanguage($lang)) {
                 $this->currentLanguage = $lang;

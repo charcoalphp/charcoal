@@ -157,7 +157,7 @@ trait ConfigurableTranslationTrait
      */
     public function setDefaultLanguage($lang = null)
     {
-        $this->config()->set_defaultLanguage($lang);
+        $this->config()->setDefaultLanguage($lang);
 
         return $this;
     }
@@ -190,7 +190,7 @@ trait ConfigurableTranslationTrait
      */
     public function setCurrentLanguage($lang = null)
     {
-        $this->config()->set_currentLanguage($lang);
+        $this->config()->setCurrentLanguage($lang);
 
         return $this;
     }
