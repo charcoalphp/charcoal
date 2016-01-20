@@ -3,51 +3,67 @@
 namespace Charcoal\Queue;
 
 /**
-* The queue manager is used to load queued items and batch-process them.
-*/
+ * The queue manager is used to load queued items and batch-process them.
+ */
 interface QueueManagerInterface
 {
     /**
-    * @param mixed $id
-    * @return QueueManagerInterface Chainable
-    */
-    public function set_queue_id($id);
+     * Set the queue's ID.
+     *
+     * @param mixed $id The unique queue identifier.
+     * @return QueueManagerInterface Chainable
+     */
+    public function setQueueId($id);
 
     /**
-    * @return mixed
-    */
-    public function queue_id();
+     * Get the queue's ID.
+     *
+     * @return mixed
+     */
+    public function queueId();
 
     /**
-    * @param callable $cb
-    * @return QueueManagerInterface Chainable
-    */
-    public function set_item_failure_callback(callable $cb);
+     * Set the callback routine when the item is resolved.
+     *
+     * @param callable $callback A item callback routine.
+     * @return QueueManagerInterface Chainable
+     */
+    public function setItemSuccessCallback(callable $callback);
 
     /**
-    * @param callable $cb
-    * @return QueueManagerInterface Chainable
-    */
-    public function set_item_success_callback(callable $cb);
+     * Set the callback routine when the item is rejected.
+     *
+     * @param callable $callback A item callback routine.
+     * @return QueueManagerInterface Chainable
+     */
+    public function setItemFailureCallback(callable $callback);
 
     /**
-    * @param callable $cb
-    * @return QueueManagerInterface Chainable
-    */
-    public function set_processed_callback(callable $cb);
+     * Set the callback routine when the queue is processed.
+     *
+     * @param callable $callback A queue callback routine.
+     * @return QueueManagerInterface Chainable
+     */
+    public function setProcessedCallback(callable $callback);
 
     /**
-    *
-    */
-    public function process_queue();
+     * Process the items of the queue.
+     *
+     * @return boolean Success / Failure
+     */
+    public function processQueue();
 
     /**
-    * @return Collection
-    */
-    public function load_queue_items();
+     * Retrieve the items of the current queue.
+     *
+     * @return Collection
+     */
+    public function loadQueueItems();
 
     /**
-    * @return QueueItemInterface
-    */
-    public function queue_item_proto();
+     * Retrieve the queue item's model.
+     *
+     * @return QueueItemInterface
+     */
+    public function queueItemProto();
 }

@@ -3,24 +3,30 @@
 namespace Charcoal\Queue;
 
 /**
-* Queuable objects can be queued.
-*/
+ * Queuable objects can be queued.
+ */
 interface QueueableInterface
 {
     /**
-    * @param string $queue_id
-    * @return QueueableInterface Chainable
-    */
-    public function set_queue_id($queue_id);
+     * Set the queue's ID.
+     *
+     * @param mixed $id The unique queue identifier.
+     * @return QueueableInterface Chainable
+     */
+    public function setQueueId($id);
 
     /**
-    * @return string $queue_id
-    */
-    public function queue_id();
+     * Get the queue's ID.
+     *
+     * @return string $queueId
+     */
+    public function queueId();
 
     /**
-    * @param mixed $ts Date/time to set the queue processing time
-    * @return mixed
-    */
+     * Set the date/time to process the queue.
+     *
+     * @param mixed $ts A date/time to initiate the queue processing.
+     * @return QueueableInterface Chainable
+     */
     public function queue($ts = null);
 }

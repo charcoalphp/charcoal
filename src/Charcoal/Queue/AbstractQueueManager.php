@@ -6,137 +6,180 @@ namespace Charcoal\Queue;
 use \Charcoal\Loader\CollectionLoader;
 
 /**
-* Abstract Queue Manager
-*
-* The queue manager is used to load queued items and batch-process them.
-*
-* ## Loading queued items
-* If a "queue_id" is specified, only the item for this specific queue will be loaded.
-* Otherwise, all unprocessed queue items will be processed.
-*
-* ## Type of queue items
-* The type of queue items can be set in extended concrete class with the
-* `queue_item_proto()` method. This method should return a QueueItemInterface instance.
-*
-* ## Callbacks
-* There are 4 available callback methods that can be set:
-* - `item_callback`
-*   - Called after an item has been processed.
-*   - Arguments: [`QueueModelInterface $item`]
-* - `item_success_callback`
-* - `item_failure_callback`
-* - `processed_callback`
-*   - Called when the entire queue has been processed
-*   - Arguments: [`array $success`, array $failures]
-*/
+ * Abstract Queue Manager
+ *
+ * The queue manager is used to load queued items and batch-process them.
+ *
+ * ## Loading queued items
+ *
+ * If a "queue_id" is specified, only the item for this specific queue will be loaded.
+ * Otherwise, all unprocessed queue items will be processed.
+ *
+ * ## Type of queue items
+ *
+ * The type of queue items can be set in extended concrete class with the
+ * `queue_item_proto()` method. This method should return a QueueItemInterface instance.
+ *
+ * ## Callbacks
+ *
+ * There are 4 available callback methods that can be set:
+ *
+ * - `item_callback`
+ *   - Called after an item has been processed.
+ *   - Arguments: `QueueModelInterface $item`
+ * - `item_success_callback`
+ * - `item_failure_callback`
+ * - `processed_callback`
+ *   - Called when the entire queue has been processed
+ *   - Arguments: `array $success`, `array $failures`
+ */
 abstract class AbstractQueueManager implements QueueManagerInterface
 {
     /**
-    * If it is set, then it will load only the items from this queue.
-    * If null, load *all* queued items.
-    * @var mixed $queue_id
-    */
-    private $queue_id;
+     * The queue ID.
+     *
+     * If set, then it will load only the items from this queue.
+     * If NULL, load *all* queued items.
+     *
+     * @var mixed $queueId
+     */
+    private $queueId;
 
     /**
-    * @var callable $_item_callback
-    */
-    private $item_callback;
-    /**
-    * @var callable $_item_success_callback
-    */
-    private $item_success_callback;
-    /**
-    * @var callable $_item_failure_callback
-    */
-    private $item_failure_callback;
+     * The callback routine when an item is processed (whether resolved or rejected).
+     *
+     * @var callable $itemCallback
+     */
+    private $itemCallback;
 
     /**
-    * @var $_processed_callback
-    */
-    private $processed_callback;
+     * The callback routine when the item is resolved.
+     *
+     * @var callable $itemSuccessCallback
+     */
+    private $itemSuccessCallback;
 
-    public function set_data(array $data)
+    /**
+     * The callback routine when the item is rejected.
+     *
+     * @var callable $itemFailureCallback
+     */
+    private $itemFailureCallback;
+
+    /**
+     * The callback routine when the queue is processed.
+     *
+     * @var callable $processedCallback
+     */
+    private $processedCallback;
+
+    /**
+     * Set the manager's data.
+     *
+     * @param array $data The queue data to set.
+     * @return AbstractQueueManager Chainable
+     */
+    public function setData(array $data)
     {
         if (isset($data['queue_id']) && $data['queue_id']) {
-            $this->set_queue_id($data['queue_id']);
+            $this->setQueueId($data['queue_id']);
         }
+
         return $this;
     }
 
     /**
-    * @param mixed $id
-    * @return AbstractQueueManager Chainable
-    */
-    public function set_queue_id($id)
+     * Set the queue's ID.
+     *
+     * @param mixed $id The unique queue identifier.
+     * @return AbstractQueueManager Chainable
+     */
+    public function setQueueId($id)
     {
-        $this->queue_id = $id;
+        $this->queueId = $id;
         return $this;
     }
 
     /**
-    * @return mixed
-    */
-    public function queue_id()
+     * Get the queue's ID.
+     *
+     * @return mixed
+     */
+    public function queueId()
     {
-        return $this->queue_id;
+        return $this->queueId;
     }
 
     /**
-    * @param callable $cb
-    * @return QueueManagerInterface Chainable
-    */
-    public function set_item_callback(callable $cb)
+     * Set the callback routine when an item is processed.
+     *
+     * @param callable $callback A item callback routine.
+     * @return QueueManagerInterface Chainable
+     */
+    public function setItemCallback(callable $callback)
     {
-        $this->item_callback = $cb;
+        $this->itemCallback = $callback;
         return $this;
     }
 
     /**
-    * @param callable $cb
-    * @return QueueManagerInterface Chainable
-    */
-    public function set_item_success_callback(callable $cb)
+     * Set the callback routine when the item is resolved.
+     *
+     * @param callable $callback A item callback routine.
+     * @return QueueManagerInterface Chainable
+     */
+    public function setItemSuccessCallback(callable $callback)
     {
-        $this->item_success_callback = $cb;
+        $this->itemSuccessCallback = $callback;
         return $this;
     }
 
     /**
-    * @param callable $cb
-    * @return QueueManagerInterface Chainable
-    */
-    public function set_item_failure_callback(callable $cb)
+     * Set the callback routine when the item is rejected.
+     *
+     * @param callable $callback A item callback routine.
+     * @return QueueManagerInterface Chainable
+     */
+    public function setItemFailureCallback(callable $callback)
     {
-        $this->item_success_callback = $cb;
+        $this->itemSuccessCallback = $callback;
         return $this;
     }
 
     /**
-    * @param callable $cb
-    * @return QueueManagerInterface Chainable
-    */
-    public function set_processed_callback(callable $cb)
+     * Set the callback routine when the queue is processed.
+     *
+     * @param callable $callback A queue callback routine.
+     * @return QueueManagerInterface Chainable
+     */
+    public function setProcessedCallback(callable $callback)
     {
-        $this->processed_callback = $cb;
+        $this->processedCallback = $callback;
         return $this;
     }
 
     /**
-    * @param callable $callback Callback after all queue items are processed.
-    * @return boolean Success / Failure
-    */
-    public function process_queue($callback = null)
+     * Process the items of the queue.
+     *
+     * If no callback is passed and a self::$processedCallback is set, the latter is used.
+     *
+     * @param  callable $callback An optional alternative callback routine executed
+     *                            after all queue items are processed.
+     * @return boolean  Success / Failure
+     */
+    public function processQueue(callable $callback = null)
     {
-        $queued = $this->load_queue_items();
+        $queued = $this->loadQueueItems();
 
-        $cb = ($callback !== null) ? $callback : $this->processed_callback;
+        if (!is_callable($callback)) {
+            $callback = $this->processedCallback;
+        }
 
-        $success = [];
+        $success  = [];
         $failures = [];
-        $skipped = [];
+        $skipped  = [];
         foreach ($queued as $q) {
-            $res = $q->process($this->item_callback, $this->item_success_callback, $this->item_failure_callback);
+            $res = $q->process($this->itemCallback, $this->itemSuccessCallback, $this->itemFailureCallback);
             if ($res === true) {
                 $success[] = $q;
             } elseif ($res === false) {
@@ -145,42 +188,44 @@ abstract class AbstractQueueManager implements QueueManagerInterface
                 $skipped[] = $q;
             }
         }
-        if ($this->processed_callback !== null) {
-            $cb = $this->processed_callback;
+
+        if (is_callable($callback)) {
             $cb($success, $failures, $skipped);
         }
+
         return true;
     }
 
     /**
-    * @return Collection
-    */
-    public function load_queue_items()
+     * Retrieve the items of the current queue.
+     *
+     * @return Collection
+     */
+    public function loadQueueItems()
     {
-
         $loader = new CollectionLoader();
-        $loader->set_model($this->queue_item_proto());
-        $loader->add_filter([
-            'property'=>'processed',
-            'val'=>0
+        $loader->setModel($this->queueItemProto());
+        $loader->addFilter([
+            'property' => 'processed',
+            'val'      => 0
         ]);
-        $loader->add_filter([
-             'property'=>'processing_date',
-             'val'=>date('Y-m-d H:i:s'),
-             'operator'=>'<'
+        $loader->addFilter([
+             'property' => 'processing_date',
+             'val'      => date('Y-m-d H:i:s'),
+             'operator' => '<'
         ]);
 
-        $queue_id = $this->queue_id();
-        if ($queue_id) {
-            $loader->add_filter([
-                'property'=>'queue_id',
-                'val'=>$queue_id
+        $queueId = $this->queueId();
+        if ($queueId) {
+            $loader->addFilter([
+                'property' => 'queue_id',
+                'val'      => $queueId
             ]);
         }
 
-        $loader->add_order([
-            'property'=>'queued_date',
-            'mode'=>'asc'
+        $loader->addOrder([
+            'property' => 'queued_date',
+            'mode'     => 'asc'
         ]);
         $queued = $loader->load();
 
@@ -188,7 +233,9 @@ abstract class AbstractQueueManager implements QueueManagerInterface
     }
 
     /**
-    * @return QueueItemInterface
-    */
-    abstract public function queue_item_proto();
+     * Retrieve the queue item's model.
+     *
+     * @return QueueItemInterface
+     */
+    abstract public function queueItemProto();
 }
