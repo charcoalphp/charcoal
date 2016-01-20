@@ -27,7 +27,8 @@
     "locomotivemtl/charcoal-config": "~0.2",
     "locomotivemtl/charcoal-factory": "dev-master",
     "locomotivemtl/charcoal-view": "dev-master",
-    "locomotivemtl/charcoal-app": "dev-master"
+    "locomotivemtl/charcoal-app": "dev-master",
+    "locomotivemtl/charcoal-property": "dev-master"
   },
   "require-dev": {
     "monolog/monolog": "^1.13",
