@@ -3,10 +3,8 @@
 namespace Charcoal\Translation;
 
 use \ArrayAccess;
-use \ArrayIterator;
 use \Exception;
 use \InvalidArgumentException;
-use \IteratorAggregate;
 use \JsonSerializable;
 use \Serializable;
 
@@ -43,8 +41,7 @@ class TranslationString implements
     MultilingualAwareInterface,
     TranslationStringInterface,
     ConfigurableInterface,
-    ArrayAccess,
-    IteratorAggregate
+    ArrayAccess
 {
     use ConfigurableTrait;
     use ConfigurableTranslationTrait;
@@ -391,18 +388,6 @@ class TranslationString implements
         }
 
         $this->removeVal($lang);
-    }
-
-    /**
-     * Retrieve an external iterator of translations in all languages.
-     *
-     * @see    IteratorAggregate::getIterator()
-     * @uses   self::all()
-     * @return array
-     */
-    public function getIterator()
-    {
-        return new ArrayIterator($this->all());
     }
 
     /**
