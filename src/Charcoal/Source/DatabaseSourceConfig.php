@@ -5,9 +5,6 @@ namespace Charcoal\Source;
 // Dependencies from `PHP`
 use \InvalidArgumentException;
 
-// Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Encoder\EncoderFactory;
-
 // Local namespace dependencies
 use \Charcoal\Source\SourceConfig;
 
@@ -29,14 +26,6 @@ class DatabaseSourceConfig extends SourceConfig
     */
     private $password;
     /**
-    * @var string $passwordEncoding
-    */
-    private $passwordEncoding;
-    /**
-    * @var string $passwordSalt
-    */
-    private $passwordSalt;
-    /**
     * @var string $database
     */
     private $database;
@@ -56,11 +45,9 @@ class DatabaseSourceConfig extends SourceConfig
             'hostname'          => 'localhost',
             'username'          => '',
             'password'          => '',
-            'passwordEncoding' => '',
-            'passwordSalt'     => '',
             'database'          => '',
             'table'             => '',
-            'disableUtf8'      => false
+            'disable_ytf8'      => false
         ];
     }
 
@@ -145,71 +132,7 @@ class DatabaseSourceConfig extends SourceConfig
     */
     public function password()
     {
-        if ($this->passwordEncoding()) {
-            $factory = new EncoderFactory();
-            $encoder = $factory->get($this->passwordEncoding());
-
-            $this->password = $encoder->decode($this->password, $this->passwordSalt());
-            $this->passwordEncoding = null;
-            $this->passwordSalt = null;
-        }
         return $this->password;
-    }
-
-    /**
-    * Set password encoding type
-    *
-    * @param string $passwordEncoding Must be a valid `Encoder` type
-    * @throws InvalidArgumentException if password is not a string
-    * @return DatabaseSourceConfig Chainable
-    */
-    public function setPasswordEncoding($passwordEncoding)
-    {
-        if (!is_string($passwordEncoding)) {
-            throw new InvalidArgumentException(
-                'Password Encoding must be a string.'
-            );
-        }
-        $this->passwordEncoding = $passwordEncoding;
-        return $this;
-    }
-
-    /**
-    * Get password encoding type
-    *
-    * @return string
-    */
-    public function passwordEncoding()
-    {
-        return $this->passwordEncoding;
-    }
-
-    /**
-    * Set password salt, if using encoding
-    *
-    * @param string $passwordSalt
-    * @throws InvalidArgumentException if password is not a string
-    * @return DatabaseSourceConfig Chainable
-    */
-    public function setPasswordSalt($passwordSalt)
-    {
-        if (!is_string($passwordSalt)) {
-            throw new InvalidArgumentException(
-                'Password Salt must be a string.'
-            );
-        }
-        $this->passwordSalt = $passwordSalt;
-        return $this;
-    }
-
-    /**
-    * Get password salt (optional), if using encoding
-    *
-    * @return string
-    */
-    public function passwordSalt()
-    {
-        return $this->passwordSalt;
     }
 
     /**

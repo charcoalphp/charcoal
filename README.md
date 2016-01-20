@@ -47,9 +47,6 @@ The core concepts (namespaces) defined in Charcoal Core are:
 		-  Defines `set_id()`, `id()`, `set_key()` and `key()`.
 	- `StringFormat`: a helper class to format strings, mostly for final output within templates & widgets:
 		- `unicode()`, `strip_tags()`, `unaccents()` and `alphanumeric()`
-- `Encoder`, for the encoder interfaces as well as a few drivers:
-	- Available encoder types: `base64`.
-	- Note that this is a simple encoding library,**not** a cryptographic lib.
 - `Loader`, for everything that can be loaded.
 	- Base loaders: `AbstractLoader`, `FileLoader`
 	- Extra interface: `LoadableInterface` / `LoadableTrait`

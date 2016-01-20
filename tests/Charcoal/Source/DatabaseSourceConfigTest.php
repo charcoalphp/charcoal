@@ -3,7 +3,6 @@
 namespace Charcoal\Tests\Source;
 
 use \Charcoal\Source\DatabaseSourceConfig as DatabaseSourceConfig;
-use \Charcoal\Encoder\EncoderFactory as EncoderFactory;
 
 class DatabaseSourceConfigTest extends \PHPUnit_Framework_TestCase
 {
@@ -58,45 +57,6 @@ class DatabaseSourceConfigTest extends \PHPUnit_Framework_TestCase
 
         $this->setExpectedException('\InvalidArgumentException');
         $obj->setPassword(false);
-    }
-
-    public function testSetPasswordEncoding()
-    {
-        $obj = new DatabaseSourceConfig();
-        $this->assertEquals(null, $obj->passwordEncoding());
-        $ret = $obj->setPasswordEncoding('foo');
-        $this->assertSame($ret, $obj);
-        $this->assertEquals('foo', $obj->passwordEncoding());
-
-        $this->setExpectedException('\InvalidArgumentException');
-        $obj->setPasswordEncoding(false);
-    }
-
-    public function testSetPasswordSalt()
-    {
-        $obj = new DatabaseSourceConfig();
-        $this->assertEquals(null, $obj->passwordSalt());
-        $ret = $obj->setPasswordSalt('foo');
-        $this->assertSame($ret, $obj);
-        $this->assertEquals('foo', $obj->passwordSalt());
-
-        $this->setExpectedException('\InvalidArgumentException');
-        $obj->setPasswordSalt(false);
-    }
-
-    public function testEncodedPassword()
-    {
-        $plainPassword = 'foobar123';
-        $salt = 'barbaz987';
-        $factory = new EncoderFactory();
-        $encoder = $factory->get('base64');
-        $encoded = $encoder->encode($plainPassword, $salt);
-
-        $obj = new DatabaseSourceConfig();
-        $obj->setPasswordEncoding('base64');
-        $obj->setPasswordSalt($salt);
-        $obj->setPassword($encoded);
-        $this->assertEquals($plainPassword, $obj->password());
     }
 
     public function testSetDatabase()
