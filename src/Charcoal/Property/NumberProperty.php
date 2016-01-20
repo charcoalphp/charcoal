@@ -2,9 +2,6 @@
 
 namespace Charcoal\Property;
 
-// Dependencies from `PHP`
-use \InvalidArgumentException;
-
 // Dependencies from `PHP` extensions
 use \PDO;
 
@@ -16,12 +13,6 @@ use \Charcoal\Property\AbstractProperty;
  */
 class NumberProperty extends AbstractProperty
 {
-
-    /**
-     * @var boolean $_allow_empty
-     */
-    private $allow_empty;
-
     /**
      * @return string
      */

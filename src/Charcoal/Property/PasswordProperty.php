@@ -3,7 +3,7 @@
 namespace Charcoal\Property;
 
 // Local namespace dependencies
-use \Charcoal\Property\StringProperty as StringProperty;
+use \Charcoal\Property\StringProperty
 
 /**
  * Password Property

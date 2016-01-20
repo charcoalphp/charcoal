@@ -2,9 +2,6 @@
 
 namespace Charcoal\Property;
 
-// Dependencies from `PHP`
-use \InvalidArgumentException as InvalidArgumentException;
-
 // Dependencies from `PHP` extensions
 use \PDO;
 

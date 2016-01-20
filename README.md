@@ -14,7 +14,7 @@ $ composer require locomotivemtl/charcoal-property
 ## Dependencies
 - [`PHP 5.5+`](http:///php.net)
 
-## Property options
+# Property options
 
 The basic property interface requires the following methods:
 
@@ -57,7 +57,7 @@ Properties need 3 method to integrate with a SQL source:
 
 > 👉 Those methods are _abstract_ and therefore must be implemented in actual properties.
 
-## Types of properties
+# Types of properties
 
 - [Boolean](#boolean-property)
 - ~~Color~~

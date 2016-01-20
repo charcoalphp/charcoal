@@ -5,7 +5,6 @@ namespace Charcoal\Property;
 use \PDO;
 
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Charcoal;
 use \Charcoal\Translation\TranslationConfig;
 
 /**

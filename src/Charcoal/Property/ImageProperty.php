@@ -6,7 +6,7 @@ namespace Charcoal\Property;
 use \Charcoal\Image\ImageFactory;
 
 // Local namespace dependencies
-use \Charcoal\Property\AbstractProperty as AbstractProperty;
+use \Charcoal\Property\FileProperty;
 
 /**
  * Image Property.

@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "@locomotivemtl/charcoal-app",
+  "name": "@locomotivemtl/charcoal-property",
   "devDependencies": {
     "glob": "^6.0.1",
     "grunt": "^0.4.5",
