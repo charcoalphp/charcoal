@@ -212,11 +212,10 @@ class TranslationString implements
     /**
      * Get a translation value.
      *
-     * Returns a translation in the current language.
-     *
      * If $lang is provided, that language's translation is returned.
      * If $lang isn't a supported language or the translation is unavailable,
      * the translation in the default language is returned.
+     * If $lang isn't provided, the translation in the current language is returned.
      *
      * @param  LanguageInterface|string|null $lang Optional supported language to retrieve a translation in.
      * @return string
@@ -246,32 +245,39 @@ class TranslationString implements
     }
 
     /**
-     * Determine if the object has a specified translation.
+     * Determine if a translation exists.
      *
-     * @param  LanguageInterface|string $lang A language object or identifier.
+     * If $lang is provided, that language's translation is tested.
+     * If $lang isn't provided, the translation in the current language is tested.
+     *
+     * @param  LanguageInterface|string $lang Optional supported language to lookup.
      * @return boolean
      * @throws InvalidArgumentException If language is invalid.
      */
-    public function hasVal($lang)
+    public function hasVal($lang = null)
     {
-        $lang = self::resolveLanguageIdent($lang);
+        if ($lang === null) {
+            $lang = $this->currentLanguage();
+        } else {
+            $lang = self::resolveLanguageIdent($lang);
 
-        if (!is_string($lang)) {
-            throw new InvalidArgumentException(
-                'Must be a string-cast language code or an instance of LanguageInterface.'
-            );
+            if (!is_string($lang)) {
+                throw new InvalidArgumentException(
+                    'Must be a string-cast language code or an instance of LanguageInterface.'
+                );
+            }
         }
 
-        return isset($this->val[$lang]);
+        return !empty($this->val[$lang]);
     }
 
     /**
      * Alias of `self::hasVal()`.
      *
-     * @param  LanguageInterface|string $lang A language object or identifier.
+     * @param  LanguageInterface|string $lang Optional supported language to lookup.
      * @return boolean
      */
-    public function hasTranslation($lang)
+    public function hasTranslation($lang = null)
     {
         return $this->hasVal($lang);
     }
@@ -413,8 +419,7 @@ class TranslationString implements
     public function currentLanguage()
     {
         if (!isset($this->currentLanguage)) {
-            return 'fr';
-            //return $this->config()->currentLanguage();
+            return $this->config()->currentLanguage();
         }
 
         return $this->currentLanguage;
@@ -453,19 +458,25 @@ class TranslationString implements
     }
 
     /**
-    * Serializable > serialize()
-    */
+     * Retrieve a string representation of translations.
+     *
+     * @see    Serializable::serialize()
+     * @return string
+     */
     public function serialize()
     {
         $data = $this->all();
         return serialize($data);
     }
+
     /**
-    * Serializable > unsierialize()
-    *
-    * @param string $data Serialized data
-    * @return void
-    */
+     * Assign translation value(s) from a
+     * string representation of translations.
+     *
+     * @see    Serializable::unsierialize()
+     * @param  string $data The string representation of the translations.
+     * @return void
+     */
     public function unserialize($data)
     {
         $data = unserialize($data);
@@ -473,8 +484,11 @@ class TranslationString implements
     }
 
     /**
-    * JsonSerializable > jsonSerialize()
-    */
+     * Retrieve translations that can be serialized natively by json_encode().
+     *
+     * @see    JsonSerializable::jsonSerialize()
+     * @return string[]
+     */
     public function jsonSerialize()
     {
         return $this->all();
