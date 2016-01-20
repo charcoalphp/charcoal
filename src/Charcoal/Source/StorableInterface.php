@@ -67,10 +67,10 @@ interface StorableInterface
     /**
     * Update the object in storage to the current object state.
     *
-    * @param array $properties If set, only update the properties specified in this array.
+    * @param string[] $keys If set, only update the properties specified in this array.
     * @return boolean
     */
-    public function update($properties = null);
+    public function update(array $keys = null);
 
     /**
     * Delete an object from storage.

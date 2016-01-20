@@ -115,10 +115,10 @@ trait StorableTrait
     * @param array $properties If set, only update the properties specified in this array.
     * @return boolean
     */
-    public function update($properties = null)
+    public function update(array $properties = null)
     {
         $pre = $this->preUpdate($properties);
-        $this->save_properties($properties);
+        $this->saveProperties($properties);
         if ($pre === false) {
             return false;
         }
@@ -152,15 +152,15 @@ trait StorableTrait
     */
     abstract protected function postSave();
     /**
-    * @param array $properties
+    * @param string[] $properties
     * @return boolean
     */
-    abstract protected function preUpdate($properties = null);
+    abstract protected function preUpdate(array $keys = null);
     /**
-    * @param array $properties
+    * @param string $keys
     * @return boolean
     */
-    abstract protected function postUpdate($properties = null);
+    abstract protected function postUpdate(array $keys = null);
     /**
     * @return boolean
     */

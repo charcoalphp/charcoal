@@ -245,7 +245,7 @@ abstract class AbstractModel implements
     * @param array $properties
     * @return mixed
     */
-    public function update($properties = null)
+    public function update(array $properties = null)
     {
         $pre = $this->preUpdate();
         if ($pre === false) {
@@ -294,7 +294,7 @@ abstract class AbstractModel implements
     * @param array $properties
     * @return boolean
     */
-    protected function preUpdate($properties = null)
+    protected function preUpdate(array $properties = null)
     {
         return true;
     }
