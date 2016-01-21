@@ -23,15 +23,14 @@ use \Charcoal\Loader\FileLoader;
  */
 class MetadataLoader extends FileLoader
 {
-
     /**
-    * @return \Stash\Pool
-    */
+     * @return \Stash\Pool
+     */
     protected function cachePool()
     {
         $container = App::instance()->getContainer();
-        $cachePool = $container->get('cache');
-        return $cachePool;
+
+        return $container->get('cache');
     }
 
     /**
@@ -68,23 +67,44 @@ class MetadataLoader extends FileLoader
         }
 
         $cachePool = $this->cachePool();
-        $cache_item = $cachePool->getItem('metadata', $this->ident());
+        if ($cachePool) {
+            $cache_item = $cachePool->getItem('metadata', $this->ident());
 
-        $metadata = $cache_item->get();
-        if ($cache_item->isMiss()) {
-            $cache_item->lock();
+            $metadata = $cache_item->get();
+            if ($cache_item->isMiss()) {
+                $cache_item->lock();
 
-            $hierarchy = $this->hierarchy();
+                $metadata = $this->loadData($ident);
 
-            $metadata = [];
-            foreach ($hierarchy as $id) {
-                $ident_data = self::loadIdent($id);
-                if (is_array($ident_data)) {
-                    $metadata = array_replace_recursive($metadata, $ident_data);
-                }
+                $cache_item->set($metadata);
             }
+        } else {
+            $metadata = $this->loadData($ident);
+        }
 
-            $cache_item->set($metadata);
+        return $metadata;
+    }
+
+    /**
+     * Load the metadata from JSON files.
+     *
+     * @param string $ident Optional, set the ident to load.
+     * @return array
+     */
+    public function loadData($ident = null)
+    {
+        if ($ident !== null) {
+            $this->setIdent($ident);
+        }
+
+        $hierarchy = $this->hierarchy();
+
+        $metadata = [];
+        foreach ($hierarchy as $id) {
+            $ident_data = self::loadIdent($id);
+            if (is_array($ident_data)) {
+                $metadata = array_replace_recursive($metadata, $ident_data);
+            }
         }
 
         return $metadata;
