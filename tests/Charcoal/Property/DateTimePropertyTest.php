@@ -4,22 +4,22 @@ namespace Charcoal\Tests\Property;
 
 use \DateTime;
 
-use \Charcoal\Property\DatetimeProperty;
+use \Charcoal\Property\DateTimeProperty;
 
 /**
  * ## TODOs
  * - 2015-03-12:
  */
-class DatetimePropertyTest extends \PHPUnit_Framework_TestCase
+class DateTimePropertyTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Assert that the `type` method:
-     * - returns "datetime"
+     * - returns "date-time"
      */
     public function testType()
     {
-        $obj = new DatetimeProperty();
-        $this->assertEquals('datetime', $obj->type());
+        $obj = new DateTimeProperty();
+        $this->assertEquals('date-time', $obj->type());
     }
 
     /**
@@ -29,7 +29,7 @@ class DatetimePropertyTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetData()
     {
-        $obj = new DatetimeProperty();
+        $obj = new DateTimeProperty();
 
         $ret = $obj->setData([
             'min'=>'2015-01-01 00:00:00',
@@ -52,7 +52,7 @@ class DatetimePropertyTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetValWithNullValue()
     {
-        $obj = new DatetimeProperty();
+        $obj = new DateTimeProperty();
         $obj->setAllowNull(true);
 
         $ret = $obj->setVal(null);
@@ -72,12 +72,12 @@ class DatetimePropertyTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetVal()
     {
-        $obj = new DatetimeProperty();
+        $obj = new DateTimeProperty();
         $ret = $obj->setVal('2000-01-01 00:00:00');
         $this->assertSame($ret, $obj);
         $this->assertEquals(new DateTime('2000-01-01 00:00:00'), $obj->val());
 
-        $dt = new Datetime('October 1st, 1984');
+        $dt = new DateTime('October 1st, 1984');
         $ret = $obj->setVal($dt);
         $this->assertSame($ret, $obj);
         $this->assertEquals($dt, $obj->val());
@@ -88,7 +88,7 @@ class DatetimePropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testStorageVal()
     {
-        $obj = new DatetimeProperty();
+        $obj = new DateTimeProperty();
 
         $obj->setVal('October 1st, 1984');
         $this->assertEquals('1984-10-01 00:00:00', $obj->storageVal());
@@ -105,7 +105,7 @@ class DatetimePropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testDisplayVal()
     {
-        $obj = new DatetimeProperty();
+        $obj = new DateTimeProperty();
         $this->assertEquals('', $obj->displayVal());
 
         $obj->setVal('October 1st, 2015 15:00:00');
@@ -123,7 +123,7 @@ class DatetimePropertyTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetMultiple()
     {
-        $obj = new DatetimeProperty();
+        $obj = new DateTimeProperty();
         $ret = $obj->setMultiple(0);
         $this->assertSame($ret, $obj);
         $this->assertSame(false, $ret->multiple());
@@ -134,7 +134,7 @@ class DatetimePropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testMultiple()
     {
-        $obj = new DatetimeProperty();
+        $obj = new DateTimeProperty();
         $this->assertSame(false, $obj->multiple());
     }
 
@@ -147,14 +147,14 @@ class DatetimePropertyTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetMin()
     {
-        $obj = new DatetimeProperty();
+        $obj = new DateTimeProperty();
 
         // Setting by string
         $ret = $obj->setMin('2020-01-01 01:02:03');
         $this->assertSame($ret, $obj);
-        $this->assertEquals(new Datetime('2020-01-01 01:02:03'), $obj->min());
+        $this->assertEquals(new DateTime('2020-01-01 01:02:03'), $obj->min());
 
-        // Setting by Datetime
+        // Setting by DateTime
         $dt = new DateTime('today');
         $ret = $obj->setMin($dt);
         $this->assertSame($ret, $obj);
@@ -177,11 +177,11 @@ class DatetimePropertyTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetMax()
     {
-        $obj = new DatetimeProperty();
+        $obj = new DateTimeProperty();
 
         $ret = $obj->setMax('2020-01-01 01:02:03');
         $this->assertSame($ret, $obj);
-        $this->assertEquals(new Datetime('2020-01-01 01:02:03'), $obj->max());
+        $this->assertEquals(new DateTime('2020-01-01 01:02:03'), $obj->max());
 
         $this->setExpectedException('\InvalidArgumentException');
         $obj->setMax('foo');
@@ -201,7 +201,7 @@ class DatetimePropertyTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetFormat()
     {
-        $obj = new DatetimeProperty();
+        $obj = new DateTimeProperty();
         $this->assertEquals('Y-m-d H:i:s', $obj->format());
 
         $ret = $obj->setFormat('Y/m/d');
@@ -214,7 +214,7 @@ class DatetimePropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testSave()
     {
-        $obj = new DatetimeProperty();
+        $obj = new DateTimeProperty();
         $this->assertEquals(null, $obj->save());
 
         $obj->setVal('2015-01-01');
@@ -230,7 +230,7 @@ class DatetimePropertyTest extends \PHPUnit_Framework_TestCase
      */
     public function testValidateMin()
     {
-        $obj = new DatetimeProperty();
+        $obj = new DateTimeProperty();
         $this->assertTrue($obj->validateMin());
 
         $obj->setMin('2015-01-01');
@@ -257,7 +257,7 @@ class DatetimePropertyTest extends \PHPUnit_Framework_TestCase
      */
     public function testValidateMax()
     {
-        $obj = new DatetimeProperty();
+        $obj = new DateTimeProperty();
         $this->assertTrue($obj->validateMax());
 
         $obj->setMax('2015-01-01');
@@ -277,7 +277,7 @@ class DatetimePropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testSqlExtra()
     {
-        $obj = new DatetimeProperty();
+        $obj = new DateTimeProperty();
         $this->assertSame('', $obj->sqlExtra());
     }
 
@@ -289,7 +289,7 @@ class DatetimePropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testSqlPdoType()
     {
-        $obj = new DatetimeProperty();
+        $obj = new DateTimeProperty();
         $this->assertEquals(\PDO::PARAM_STR, $obj->sqlPdoType());
     }
 }

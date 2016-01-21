@@ -62,7 +62,7 @@ Properties need 3 method to integrate with a SQL source:
 - [Boolean](#boolean-property)
 - ~~Color~~
 - ~~Date~~
-  - [Datetime](#datetime-property)
+  - [DateTime](#datetime-property)
   - ~~Day~~
   - ~~Month~~
   - ~~Time~~
@@ -104,11 +104,11 @@ The boolean property adds the following concepts to the [basic property options]
 
 > ⚠ Boolean properties can not be multiple. (`multiple()` will always return false). Calling `set_multiple(true)` will throw an exception
 
-## Datetime Property
+## DateTime Property
 
 The datetime property store a date (and time) value.
 
-### Datetime Property options
+### DateTime Property options
 
 The datetime property adds the following concepts to the [basic property options](#basic-property-options):
 
@@ -119,7 +119,7 @@ The datetime property adds the following concepts to the [basic property options
 | **format**      |     | _string_            |
 <small>(V) indicates options used in validation</small>
 
-> ⚠ Datetime properties can not be multiple. (`multiple()` will always return false). Calling `set_multiple(true)` will throw an exception
+> ⚠ DateTime properties can not be multiple. (`multiple()` will always return false). Calling `set_multiple(true)` will throw an exception
 
 ## File Property
 
