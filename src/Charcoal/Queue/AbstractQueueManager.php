@@ -5,6 +5,10 @@ namespace Charcoal\Queue;
 // From `charcoal-core`
 use \Charcoal\Loader\CollectionLoader;
 
+// PSR-3 (logger) dependencies
+use \Psr\Log\LoggerAwareInterface;
+use \Psr\Log\LoggerAwareTrait;
+
 /**
  * Abstract Queue Manager
  *
@@ -33,8 +37,12 @@ use \Charcoal\Loader\CollectionLoader;
  *   - Called when the entire queue has been processed
  *   - Arguments: `array $success`, `array $failures`
  */
-abstract class AbstractQueueManager implements QueueManagerInterface
+abstract class AbstractQueueManager implements
+    QueueManagerInterface,
+    LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
     /**
      * The queue ID.
      *
@@ -72,6 +80,16 @@ abstract class AbstractQueueManager implements QueueManagerInterface
      * @var callable $processedCallback
      */
     private $processedCallback;
+
+    /**
+     * Construct new queue manager.
+     *
+     * @param array $data Dependencies and settings.
+     */
+    public function __construct(array $data = [])
+    {
+        $this->setLogger($data['logger']);
+    }
 
     /**
      * Set the manager's data.
