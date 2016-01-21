@@ -2,6 +2,8 @@
 
 namespace Charcoal\Property;
 
+use \InvalidArgumentException;
+
 /**
 *
 */

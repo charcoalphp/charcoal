@@ -7,11 +7,12 @@ use \Exception;
 use \InvalidArgumentException;
 
 // Module `charcoal-core` dependencies
-use \Charcoal\Property\AbstractProperty;
 use \Charcoal\Model\ModelFactory;
 use \Charcoal\Loader\CollectionLoader;
+use \Charcoal\Translation\TranslationConfig;
 
 // Local namespace dependencies
+use \Charcoal\Property\AbstractProperty;
 use \Charcoal\Property\SelectablePropertyInterface;
 
 /**
