@@ -20,15 +20,15 @@ class TranslationConfigTest extends \PHPUnit_Framework_TestCase
     {
         $obj = new TranslationConfig();
 
-        $ret = $obj->set_data([
+        $ret = $obj->setData([
             'languages' => [ 'en', 'fr' ]
         ]);
         $this->assertSame($ret, $obj);
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_default_language('es');
+        $obj->setDefaultLanguage('es');
 
-        $this->assertEquals('es', $obj->default_language());
+        $this->assertEquals('es', $obj->defaultLanguage());
     }
 
     public function testSetLanguage()
@@ -36,13 +36,13 @@ class TranslationConfigTest extends \PHPUnit_Framework_TestCase
         $obj = new TranslationConfig([
             'languages' => [ 'en', 'fr' ]
         ]);
-        $this->assertSame('en', $obj->current_language());
-        $ret = $obj->set_current_language('fr');
+        $this->assertSame('en', $obj->currentLanguage());
+        $ret = $obj->setCurrentLanguage('fr');
         $this->assertSame($ret, $obj);
-        $this->assertEquals('fr', $obj->current_language());
+        $this->assertEquals('fr', $obj->currentLanguage());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_current_language('foobar-lang');
+        $obj->setCurrentLanguage('foobar-lang');
     }
 
     public function testSetDefaultLanguage()

@@ -57,12 +57,12 @@ class TranslationStringTest extends \PHPUnit_Framework_TestCase
                 'languages' => [ 'en', 'fr' ]
             ]
         );
-        $ret = $obj->set_val('foo bar');
+        $ret = $obj->setVal('foo bar');
 
         $this->assertSame($ret, $obj);
         $this->assertEquals('foo bar', $obj->val());
 
-        $ret = $obj->set_val([ 'en' => 'foo bar', 'fr' => 'bar baz' ]);
+        $ret = $obj->setVal([ 'en' => 'foo bar', 'fr' => 'bar baz' ]);
         $this->assertEquals('foo bar', $obj->en());
         $this->assertEquals('bar baz', $obj->fr());
 
@@ -72,12 +72,12 @@ class TranslationStringTest extends \PHPUnit_Framework_TestCase
                 'languages' => [ 'en', 'fr' ]
             ]
         );
-        $obj->set_val($clone);
+        $obj->setVal($clone);
         $this->assertEquals('foo', $obj->en());
         $this->assertEquals('bar', $obj->fr());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_val(false);
+        $obj->setVal(false);
     }
 
     /**
@@ -95,7 +95,7 @@ class TranslationStringTest extends \PHPUnit_Framework_TestCase
     {
         $obj = new TranslationString();
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->add_val(false, 'foo');
+        $obj->addVal(false, 'foo');
     }
 
     /**
@@ -105,7 +105,7 @@ class TranslationStringTest extends \PHPUnit_Framework_TestCase
     {
         $obj = new TranslationString();
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->add_val('en', [1,2,3]);
+        $obj->addVal('en', [1,2,3]);
     }
 
     /**
@@ -129,7 +129,7 @@ class TranslationStringTest extends \PHPUnit_Framework_TestCase
                 'languages' => [ 'en', 'fr' ]
             ]
         );
-        $obj->set_val([ 'en' => 'foo' ]);
+        $obj->setVal([ 'en' => 'foo' ]);
 
         $this->assertEquals('foo', $obj->val('fr'));
     }
@@ -155,17 +155,17 @@ class TranslationStringTest extends \PHPUnit_Framework_TestCase
                 'languages' => [ 'en', 'fr' ]
             ]
         );
-        $ret = $obj->set_current_language('en');
+        $ret = $obj->setCurrentLanguage('en');
         $this->assertSame($ret, $obj);
-        $this->assertEquals('en', $obj->current_language());
+        $this->assertEquals('en', $obj->currentLanguage());
 
         $this->assertEquals('foo bar', $obj->val());
 
-        $obj->set_current_language('fr');
+        $obj->setCurrentLanguage('fr');
         $this->assertEquals('bar baz', $obj->val());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_current_language(false);
+        $obj->setCurrentLanguage(false);
     }
 
     /**
@@ -174,7 +174,7 @@ class TranslationStringTest extends \PHPUnit_Framework_TestCase
     public function testLanguageUnsetReturnsDefault()
     {
         $obj = new TranslationString();
-        $this->assertEquals('en', $obj->current_language());
+        $this->assertEquals('en', $obj->currentLanguage());
     }
 
     /**
@@ -189,11 +189,11 @@ class TranslationStringTest extends \PHPUnit_Framework_TestCase
             ]
         );
 
-        $obj->set_current_language('en');
-        $obj->set_val('foo');
+        $obj->setCurrentLanguage('en');
+        $obj->setVal('foo');
 
-        $obj->set_current_language('fr');
-        $obj->set_val('bar');
+        $obj->setCurrentLanguage('fr');
+        $obj->setVal('bar');
 
         $this->assertEquals(['en'=>'foo', 'fr'=>'bar'], $obj->all());
     }
