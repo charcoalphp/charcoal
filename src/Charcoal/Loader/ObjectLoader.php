@@ -113,10 +113,12 @@ class ObjectLoader
     */
     public function load($ident = null)
     {
-        $data = $this->load_data($ident);
+        $data = $this->loadData($ident);
+
         if ($data !== false) {
             $this->obj()->setFlatData($data);
         }
+
         return $this->obj();
     }
 

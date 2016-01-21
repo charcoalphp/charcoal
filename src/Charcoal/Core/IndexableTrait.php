@@ -32,7 +32,10 @@ trait IndexableTrait
     {
         if (!is_scalar($id)) {
             throw new InvalidArgumentException(
-                'ID argument must be a scalar (integer, float, string, or boolean).'
+                sprintf(
+                    'ID must be a scalar (integer, float, string, or boolean); received %s',
+                    (is_object($id) ? get_class($id) : gettype($id))
+                )
             );
         }
 
@@ -40,11 +43,11 @@ trait IndexableTrait
         if ($key == 'id') {
             $this->id = $id;
         } else {
-            $func = [$this, 'set_'.$key];
+            $func = [ $this, $this->setter($key) ];
             if (is_callable($func)) {
                 call_user_func($func, $id);
             } else {
-                throw new Exception('Invalid key.');
+                throw new Exception('Invalid Key');
             }
         }
 
@@ -64,13 +67,11 @@ trait IndexableTrait
             return $this->id;
         }
 
-        $func = [$this, $key];
+        $func = [ $this, $this->getter($key) ];
         if (is_callable($func)) {
             return call_user_func($func);
         } else {
-            throw new Exception(
-                'Invalid key.'
-            );
+            throw new Exception('Invalid Key');
         }
     }
 
@@ -85,9 +86,13 @@ trait IndexableTrait
     {
         if (!is_scalar($key)) {
             throw new InvalidArgumentException(
-                'Key argument must be scalar (integer, float, string, or boolean).'
+                sprintf(
+                    'ID must be a scalar (integer, float, string, or boolean); received %s',
+                    (is_object($key) ? get_class($key) : gettype($key))
+                )
             );
         }
+
         $this->key = $key;
 
         return $this;

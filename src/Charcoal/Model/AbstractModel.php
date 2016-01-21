@@ -94,16 +94,15 @@ abstract class AbstractModel implements
     public function setData(array $data)
     {
         foreach ($data as $prop => $val) {
-            $func = [$this, 'set_'.$prop];
-            if (is_callable($func)) {
-                call_user_func($func, $val);
-                unset($data[$prop]);
+            $setter = $this->setter($prop);
+            if (is_callable([ $this, $setter ])) {
+                $this->{$setter}($val);
             } else {
+                // Set as public member if setter is not set on object.
                 $this->{$prop} = $val;
             }
         }
 
-        // Chainable
         return $this;
     }
 
@@ -180,12 +179,16 @@ abstract class AbstractModel implements
     */
     public function propertyValue($property_ident)
     {
-        $fn = [$this, $property_ident];
-        if (is_callable($fn)) {
-            return call_user_func($fn);
-        } else {
-            return (isset($this->{$property_ident}) ? $this->{$property_ident} : null);
+        $getter = $this->getter($property_ident);
+        $func   = [ $this, $getter ];
+
+        if (is_callable($func)) {
+            return call_user_func($func);
+        } elseif (isset($this->{$property_ident})) {
+            return $this->{$property_ident};
         }
+
+        return null;
     }
 
     /**
@@ -194,9 +197,10 @@ abstract class AbstractModel implements
     */
     public function saveProperties(array $properties = null)
     {
-        if ($properties===null) {
+        if ($properties === null) {
             $properties = array_keys($this->metadata()->properties());
         }
+
         foreach ($properties as $property_ident) {
             $p = $this->p($property_ident);
             $p->save();
@@ -209,6 +213,7 @@ abstract class AbstractModel implements
                 $property_ident => $p->val()
             ]);
         }
+
         return true;
     }
     /**
@@ -444,5 +449,42 @@ abstract class AbstractModel implements
         $ident = preg_replace('/(^\\[A-Z])/', '-${1}', $classname);
         $obj_type = strtolower(str_replace('\\', '/', $ident));
         return $obj_type;
+    }
+
+   /**
+    * Allow an object to define how the key getter are called.
+    *
+    * @param string $key  The key to get the getter from.
+    * @param string $case Optional. The type of case to return. camel, pascal or snake.
+    * @return string The getter method name, for a given key.
+    */
+    private function getter($key)
+    {
+        $getter = $key;
+        return $this->camelize($getter);
+    }
+
+    /**
+     * Allow an object to define how the key setter are called.
+     *
+     * @param string $key  The key to get the setter from.
+     * @param string $case Optional. The type of case to return. camel, pascal or snake.
+     * @return string The setter method name, for a given key.
+     */
+    private function setter($key)
+    {
+        $setter = 'set_'.$key;
+        return $this->camelize($setter);
+    }
+
+    /**
+     * Transform a snake_case string to camelCase.
+     *
+     * @param string $str The snake_case string to camelize.
+     * @return string The camelCase string.
+     */
+    private function camelize($str)
+    {
+        return lcfirst(implode('', array_map('ucfirst', explode('_', $str))));
     }
 }

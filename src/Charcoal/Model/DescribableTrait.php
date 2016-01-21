@@ -208,7 +208,7 @@ trait DescribableTrait
         $propertyMetadata = $props[$propertyIdent];
         if (!isset($propertyMetadata['type'])) {
             throw new Exception(
-                sprintf('Invalid  %s property: %s (type is undefined).', get_class($this), $propertyIdent)
+                sprintf('Invalid %s property: %s (type is undefined).', get_class($this), $propertyIdent)
             );
         }
 
