@@ -1,21 +1,21 @@
 language: php
 php:
-  - 5.5
-  - 5.6
-  - hhvm
-  - nightly
+    - 5.5
+    - 5.6
+    - hhvm
+    - nightly
 
 matrix:
-  allow_failures:
-    - php: hhvm
-    - php: nightly
+    allow_failures:
+        - php: hhvm
+        - php: nightly
 
 before_install:
-  - sh -c "if [ $TRAVIS_PHP_VERSION != 'hhvm' ]; then pear install pear/PHP_CodeSniffer && phpenv rehash; fi"
+    - sh -c "if [ $TRAVIS_PHP_VERSION != 'hhvm' ]; then pear install pear/PHP_CodeSniffer && phpenv rehash; fi"
 
 before_script:
-  - composer install
+    - composer install
 
 script:
-  - sh -c "if [ $TRAVIS_PHP_VERSION != 'hhvm' ]; then phpcs -ps --colors --standard=phpcs.xml src/; fi"
-  - phpunit --bootstrap ./tests/bootstrap.php --configuration ./tests/phpunit.xml --coverage-text
+    - sh -c "if [ $TRAVIS_PHP_VERSION != 'hhvm' ]; then phpcs -ps --colors --standard=phpcs.xml src/; fi"
+    - phpunit --bootstrap ./tests/bootstrap.php --configuration ./tests/phpunit.xml --coverage-text
