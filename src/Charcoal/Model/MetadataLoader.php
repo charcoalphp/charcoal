@@ -48,7 +48,7 @@ class MetadataLoader extends FileLoader
 
         $allPath = parent::searchPath();
 
-        $globalPath = $cfg->get('metadataPath');
+        $globalPath = $cfg->get('metadata_path');
         if (!empty($globalPath)) {
             $allPath = array_merge($globalPath, $allPath);
         }
