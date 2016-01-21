@@ -82,7 +82,7 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
         if ($this->l10n() === true) {
             $translator = TranslationConfig::instance();
 
-            $propertyValue = $propertyValue[$translator->current_language()];
+            $propertyValue = $propertyValue[$translator->currentLanguage()];
         }
 
         if ($this->multiple() === true) {
@@ -92,7 +92,7 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
                     ;
                     $props[] = $this->valLabel($pv);
                 }
-                $propertyValue = implode($this->multiple_separator(), $props);
+                $propertyValue = implode($this->multipleSeparator(), $props);
             }
         } else {
             $propertyValue = (string)$propertyValue;
@@ -272,7 +272,7 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
     public function validationMethods()
     {
         $parentMethods = parent::validationMethods();
-        return array_merge($parentMethods, ['maxLength', 'minLength', 'regexp', 'allowEmpty']);
+        return array_merge($parentMethods, [ 'maxLength', 'minLength', 'regexp', 'allowEmpty' ]);
     }
 
     /**

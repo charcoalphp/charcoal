@@ -54,7 +54,7 @@ class BooleanProperty extends AbstractProperty
     /**
      * AbstractProperty > set_multiple()
      *
-     * Ensure multiple can not be true for Datetime property.
+     * Ensure multiple can not be true for DateTime property.
      *
      * @param boolean $multiple The multiple flag.
      * @throws InvalidArgumentException If multiple is true. (must be false for boolean properties).

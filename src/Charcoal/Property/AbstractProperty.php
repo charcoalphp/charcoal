@@ -330,7 +330,7 @@ abstract class AbstractProperty implements
         if ($this->l10n() === true) {
             $translator = TranslationConfig::instance();
 
-            $propertyValue = $propertyValue[$translator->current_language()];
+            $propertyValue = $propertyValue[$translator->currentLanguage()];
         }
 
         if ($this->multiple() === true) {
@@ -823,18 +823,17 @@ abstract class AbstractProperty implements
         return $this->val();
     }
 
-       /**
-        * Allow an object to define how the key getter are called.
-        *
-        * @param string $key  The key to get the getter from.
-        * @param string $case Optional. The type of case to return. camel, pascal or snake.
-        * @return string The getter method name, for a given key.
-        */
+   /**
+    * Allow an object to define how the key getter are called.
+    *
+    * @param string $key  The key to get the getter from.
+    * @param string $case Optional. The type of case to return. camel, pascal or snake.
+    * @return string The getter method name, for a given key.
+    */
     private function getter($key)
     {
         $getter = $key;
         return $this->camelize($getter);
-
     }
 
     /**
