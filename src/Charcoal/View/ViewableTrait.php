@@ -155,8 +155,9 @@ trait ViewableTrait
     }
 
     /**
-     * Return a viewableinterface
-     * @return ViewableInterface [description]
+     * Retrieve a ViewableInterface instance for the template's context.
+     *
+     * @return ViewableInterface
      */
     public function viewController()
     {
