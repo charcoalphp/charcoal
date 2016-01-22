@@ -4,7 +4,7 @@
 */
 
 module.exports = function(grunt) {
-	"use strict";
+    "use strict";
 
     function loadConfig(path) {
         var glob = require('glob');
@@ -29,16 +29,15 @@ module.exports = function(grunt) {
     // Load tasks
     require('load-grunt-tasks')(grunt);
 
-	// Register Task(s)
-	grunt.registerTask('default', [
-		'tests'
-	]);
+    // Register Task(s)
+    grunt.registerTask('default', [
+        'tests'
+    ]);
 
-
-	grunt.registerTask('tests', [
+    grunt.registerTask('tests', [
         'phplint',
-		'phpunit',
+        'phpunit',
         'phpcs'
-	]);
+    ]);
 
 };

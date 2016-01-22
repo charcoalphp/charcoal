@@ -1,26 +1,37 @@
 {
-    "name": "locomotivemtl/charcoal-email",
-    "description": "Email sending, email queue, etc.",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Mathieu Ducharme",
-            "email": "mat@locomotive.ca"
-        }
-    ],
-    "minimum-stability":"dev",
-    "require": {
-        "phpmailer/phpmailer": "^5.2",
-        "locomotivemtl/charcoal-config": "^0.2.0",
-        "locomotivemtl/charcoal-app": "dev-master"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^5.1",
-        "squizlabs/php_codesniffer": "^2.5"
-    },
-    "autoload": {
-        "psr-4": {
-            "Charcoal\\": "src/Charcoal"
-        }
-    }
+	"name": "locomotivemtl/charcoal-email",
+	"description": "Email sending and queueing for Charcoal",
+	"keywords": [ "charcoal", "email", "queue" ],
+	"homepage": "https://charcoal.locomotive.ca",
+	"license": "MIT",
+	"support": {
+		"issues": "https://github.com/locomotivemtl/charcoal-email/issues",
+		"source": "https://github.com/locomotivemtl/charcoal-email"
+	},
+	"authors": [
+		{
+			"name": "Mathieu Ducharme",
+			"email": "mat@locomotive.ca"
+		},
+		{
+			"name": "Locomotive",
+			"homepage": "https://locomotive.ca"
+		}
+	],
+	"minimum-stability":"dev",
+	"require": {
+		"php": ">=5.5.0",
+		"phpmailer/phpmailer": "^5.2",
+		"locomotivemtl/charcoal-config": "^0.2.0",
+		"locomotivemtl/charcoal-app": "dev-master"
+	},
+	"require-dev": {
+		"phpunit/phpunit": "^5.1",
+		"squizlabs/php_codesniffer": "^2.5"
+	},
+	"autoload": {
+		"psr-4": {
+			"Charcoal\\": "src/Charcoal"
+		}
+	}
 }
