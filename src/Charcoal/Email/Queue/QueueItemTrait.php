@@ -9,185 +9,281 @@ use \Exception;
 use \InvalidArgumentException;
 
 /**
-*
-*/
+ *
+ */
 trait QueueItemTrait
 {
     /**
-    * @var mixed $queue_id
-    */
-    private $queue_id;
+     * The queue ID.
+     *
+     * @var mixed $queueId
+     */
+    private $queueId;
+
     /**
-    * @var boolean $processed
-    */
+     * Whether the item has been processed.
+     *
+     * @var boolean $processed
+     */
     private $processed = false;
-    /**
-    * @var DateTime $queued_date
-    */
-    private $queued_date;
 
     /**
-    * The date/time at which this queue item job should be ran.
-    * If null, 0, or past, then it should be performed immediately.
-    * @var DateTime $processing_date;
-    */
-    private $processing_date;
+     * When the item was queued.
+     *
+     * @var DateTimeInterface $queuedDate
+     */
+    private $queuedDate;
 
     /**
-    * @var DateTime $queued_date
-    */
-    private $processed_date;
+     * When the item should be processed.
+     *
+     * The date/time at which this queue item job should be ran.
+     * If NULL, 0, or a past date/time, then it should be performed immediately.
+     *
+     * @var DateTimeInterface $processingDate
+     */
+    private $processingDate;
 
     /**
-    * @return boolean Success / Failure
-    */
+     * When the item was processed.
+     *
+     * @var DateTimeInterface $processedDate
+     */
+    private $processedDate;
+
+    /**
+     * Process the item.
+     *
+     * @param  callable $callback        An optional callback routine executed after the item is processed.
+     * @param  callable $successCallback An optional callback routine executed when the item is resolved.
+     * @param  callable $failureCallback An optional callback routine executed when the item is rejected.
+     * @return boolean  Success / Failure
+     */
     abstract public function process(
         callable $callback = null,
-        callable $success_callback = null,
-        callable $failure_callback = null
+        callable $successCallback = null,
+        callable $failureCallback = null
     );
 
     /**
-    * @param mixed $queue_id
-    * @return QueueItemInterface Chainable
-    */
-    public function set_queue_id($queue_id)
+     * Set the queue item's data.
+     *
+     * @param array $data The queue item data to set.
+     * @return QueueItemTrait Chainable
+     */
+    public function setQueueItemData(array $data)
     {
-        $this->queue_id = $queue_id;
+        if (isset($data['queue_id'])) {
+            $this->setQueueId($data['queue_id']);
+        }
+
+        if (isset($data['processed'])) {
+            $this->setProcessed($data['processed']);
+        }
+
+        if (isset($data['queued_date'])) {
+            $this->setQueuedDate($data['queue_date']);
+        }
+
+        if (isset($data['processed_date'])) {
+            $this->setProcessedDate($data['processed_date']);
+        }
+
         return $this;
     }
 
     /**
-    * @return mixed
-    */
-    public function queue_id()
+     * Set the queue's ID.
+     *
+     * @param mixed $id The unique queue identifier.
+     * @return QueueItemInterface Chainable
+     */
+    public function setQueueId($id)
     {
-        return $this->queue_id;
+        $this->queueId = $id;
+
+        return $this;
     }
 
-    public function set_processed($processed)
+    /**
+     * Get the queue's ID.
+     *
+     * @return mixed
+     */
+    public function queueId()
+    {
+        return $this->queueId;
+    }
+
+    /**
+     * Set the item's processed status.
+     *
+     * @param boolean $processed Whether the item has been processed.
+     * @return QueueItemInterface Chainable
+     */
+    public function setProcessed($processed)
     {
         $this->processed = !!$processed;
         return $this;
     }
 
+    /**
+     * Determine if the item has been processed.
+     *
+     * @return boolean
+     */
     public function processed()
     {
         return $this->processed;
     }
 
     /**
-    * @param string|DateTime $ts
-    * @throws InvalidArgumentException
-    * @return QueueItemInterface Chainable
-    */
-    public function set_queued_date($ts)
+     * Set the date/time the item was queued at.
+     *
+     * @param  null|string|DateTimeInterface $ts A date/time string or object.
+     * @throws InvalidArgumentException If the date/time is invalid.
+     * @return QueueItemInterface Chainable
+     */
+    public function setQueuedDate($ts)
     {
         if ($ts === null) {
-            $this->queued_date = null;
+            $this->queuedDate = null;
             return $this;
         }
+
         if (is_string($ts)) {
             try {
                 $ts = new DateTime($ts);
             } catch (Exception $e) {
                 throw new InvalidArgumentException(
-                    'Can not set queued date: '.$e->getMessage()
+                    sprintf('Can not set queued date: %s', $e->getMessage())
                 );
             }
         }
+
         if (!($ts instanceof DateTimeInterface)) {
             throw new InvalidArgumentException(
                 'Invalid "Queued Date" value. Must be a date/time string or a DateTime object.'
             );
         }
-        $this->queued_date = $ts;
+
+        $this->queuedDate = $ts;
+
         return $this;
     }
 
     /**
-    * @return DateTime|null
-    */
-    public function queued_date()
+     * Retrieve the date/time the item was queued at.
+     *
+     * @return null|DateTimeInterface
+     */
+    public function queuedDate()
     {
-        return $this->queued_date;
+        return $this->queuedDate;
     }
 
     /**
-    * @param null|string|DateTime $ts
-    * @throws InvalidArgumentException
-    * @return QueueItemInterface Chainable
-    */
-    public function set_processing_date($ts)
+     * Set the date/time the item should be processed at.
+     *
+     * @param  null|string|DateTimeInterface $ts A date/time string or object.
+     * @throws InvalidArgumentException If the date/time is invalid.
+     * @return QueueItemInterface Chainable
+     */
+    public function setProcessingDate($ts)
     {
         if ($ts === null) {
-            $this->processing_date = null;
+            $this->processingDate = null;
             return $this;
         }
+
         if (is_string($ts)) {
             try {
                 $ts = new DateTime($ts);
             } catch (Exception $e) {
                 throw new InvalidArgumentException(
-                    'Can not set processing date: '.$e->getMessage()
+                    sprintf('%s (%s)', $e->getMessage(), $ts)
                 );
             }
         }
+
         if (!($ts instanceof DateTimeInterface)) {
             throw new InvalidArgumentException(
                 'Invalid "Processing Date" value. Must be a date/time string or a DateTime object.'
             );
         }
-        $this->processing_date = $ts;
+
+        $this->processingDate = $ts;
+
         return $this;
     }
 
     /**
-    * @return DateTime|null
-    */
-    public function processing_date()
+     * Retrieve the date/time the item should be processed at.
+     *
+     * @return null|DateTimeInterface
+     */
+    public function processingDate()
     {
-        return $this->processing_date;
+        return $this->processingDate;
     }
 
     /**
-    * @param null|string|DateTime $ts
-    * @throws InvalidArgumentException
-    * @return QueueItemInterface Chainable
-    */
-    public function set_processed_date($ts)
+     * Set the date/time the item was processed at.
+     *
+     * @param  null|string|DateTimeInterface $ts A date/time string or object.
+     * @throws InvalidArgumentException If the date/time is invalid.
+     * @return QueueItemInterface Chainable
+     */
+    public function setProcessedDate($ts)
     {
         if ($ts === null) {
-            $this->processed_date = null;
+            $this->processedDate = null;
             return $this;
         }
+
         if (is_string($ts)) {
             try {
                 $ts = new DateTime($ts);
             } catch (Exception $e) {
-                throw new InvalidArgumentException($e->getMessage().' ('.$ts.')');
+                throw new InvalidArgumentException(
+                    sprintf('%s (%s)', $e->getMessage(), $ts)
+                );
             }
         }
+
         if (!($ts instanceof DateTimeInterface)) {
             throw new InvalidArgumentException(
                 'Invalid "Processed Date" value. Must be a date/time string or a DateTime object.'
             );
         }
-        $this->processed_date = $ts;
+
+        $this->processedDate = $ts;
+
         return $this;
     }
 
     /**
-    * @return DateTime|null
-    */
-    public function processed_date()
+     * Retrieve the date/time the item was processed at.
+     *
+     * @return null|DateTimeInterface
+     */
+    public function processedDate()
     {
-        return $this->processed_date;
+        return $this->processedDate;
     }
 
-    public function pre_save_queue_item()
+    /**
+     * Hook called before saving the item.
+     *
+     * Presets the item as _to-be_ processed and queued now.
+     *
+     * @return QueueItemInterface Chainable
+     */
+    public function preSaveQueueItem()
     {
-        $this->set_processed(false);
-        $this->set_queued_date('now');
+        $this->setProcessed(false);
+        $this->setQueuedDate('now');
+
+        return $this;
     }
 }

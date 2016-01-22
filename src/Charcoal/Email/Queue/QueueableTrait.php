@@ -5,47 +5,57 @@ namespace Charcoal\Email\Queue;
 use \InvalidArgumentException;
 
 /**
-* Full implementation, as a Trait, of the `QueueableInterface`.
-*/
+ * Full implementation, as a Trait, of the `QueueableInterface`.
+ */
 trait QueueableTrait
 {
     /**
-    * @var string $queue_id
-    */
-    private $queue_id;
+     * The queue ID.
+     *
+     * @var mixed $queueId
+     */
+    private $queueId;
 
     /**
-    * @param string|null $queue_id
-    * @throws InvalidArgumentException
-    * @return QueueableInterface Chainable
-    */
-    public function set_queue_id($queue_id)
+     * Set the queue's ID.
+     *
+     * @param mixed $id The unique queue identifier.
+     * @throws InvalidArgumentException If the ID isn't a string.
+     * @return QueueableInterface Chainable
+     */
+    public function setQueueId($id)
     {
-        if ($queue_id === null) {
-            $this->queue_id = null;
+        if ($id === null) {
+            $this->queueId = null;
             return $this;
         }
 
-        if (!is_string($queue_id)) {
+        if (!is_string($id)) {
             throw new InvalidArgumentException(
                 'Queue ID must be a string'
             );
         }
-        $this->queue_id = $queue_id;
+
+        $this->queueId = $id;
+
         return $this;
     }
 
     /**
-    * @return string $queue_id
-    */
-    public function queue_id()
+     * Get the queue's ID.
+     *
+     * @return string $queueId
+     */
+    public function queueId()
     {
-        return $this->queue_id;
+        return $this->queueId;
     }
 
     /**
-    * @param mixed $ts Date/time to set the queue processing time
-    * @return mixed
-    */
+     * Set the date/time to process the queue.
+     *
+     * @param mixed $ts A date/time to initiate the queue processing.
+     * @return mixed
+     */
     abstract public function queue($ts = null);
 }
