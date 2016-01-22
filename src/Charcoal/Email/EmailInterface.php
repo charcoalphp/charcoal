@@ -2,146 +2,197 @@
 
 namespace Charcoal\Email;
 
+/**
+ *
+ */
 interface EmailInterface
 {
     /**
+     * Set the email's data.
+     *
      * @param array $data The data to set.
-     * @return EmailInterface Chainable
+     * @return Email Chainable
      */
-    public function set_data(array $data);
+    public function setData(array $data);
 
     /**
-     * @param string $campaign The campaign identifier.
+     * Set the campaign ID.
+     *
+     * @param  string $campaign The campaign identifier.
      * @return EmailInterface Chainable
      */
-    public function set_campaign($campaign);
+    public function setCampaign($campaign);
 
     /**
+     * Get the campaign identifier.
+     *
      * @return string
      */
     public function campaign();
 
     /**
-     * @param mixed $to The email's main recipient(s).
+     * Set the recipient email address(es).
+     *
+     * @param string|array $email The recipient email address(es).
      * @return EmailInterface Chainable
      */
-    public function set_to($to);
+    public function setTo($email);
 
     /**
-     * @param mixed $to The email's recipient to add, either as a string or an "email" array.
+     * Add a recipient email address.
+     *
+     * @param  mixed $email The recipient email address to add.
      * @return EmailInterface Chainable
      */
-    public function add_to($to);
+    public function addTo($email);
 
     /**
-     * @return string[] The email's recipients.
+     * Get the recipient's email address.
+     *
+     * @return string[]
      */
     public function to();
 
     /**
-     * @param mixed $cc The emails' carbon-copy (CC) recipient(s).
+     * Set the carbon copy (CC) recipient email address(es).
+     *
+     * @param string|array $email The CC recipient email address(es).
      * @return EmailInterface Chainable
      */
-    public function set_cc($cc);
+    public function setCc($email);
 
     /**
-     * @param mixed $cc The emails' carbon-copy (CC) recipient to add.
+     * Add a CC recipient email address.
+     *
+     * @param mixed $email The CC recipient email address to add.
      * @return EmailInterface Chainable
      */
-    public function add_cc($cc);
+    public function addCc($email);
 
     /**
-     * @return string[] The emails' carbon-copy (CC) recipient(s).
+     * Get the CC recipient's email address.
+     *
+     * @return string[]
      */
     public function cc();
 
-     /**
-      * @param mixed $bcc The emails' black-carbon-copy (BCC) recipient(s).
-      * @return EmailInterface Chainable
-      */
-    public function set_bcc($bcc);
-
     /**
-     * @param mixed $bcc The emails' black-carbon-copy (BCC) recipient to add.
+     * Set the blind carbon copy (BCC) recipient email address(es).
+     *
+     * @param string|array $email The BCC recipient email address(es).
      * @return EmailInterface Chainable
      */
-    public function add_bcc($bcc);
+    public function setBcc($email);
 
     /**
-     * @return string[] The emails' black-carbon-copy (BCC) recipient(s).
+     * Add a BCC recipient email address.
+     *
+     * @param mixed $email The BCC recipient email address to add.
+     * @return EmailInterface Chainable
+     */
+    public function addBcc($email);
+
+    /**
+     * Get the BCC recipient's email address.
+     *
+     * @return string[]
      */
     public function bcc();
 
     /**
-     * @param mixed $from The message's sender email address.
+     * Set the sender's email address.
+     *
+     * @param  string|array $email An email address.
      * @return EmailInterface Chainable
      */
-    public function set_from($from);
+    public function setFrom($email);
 
     /**
-     * @return string The message's sender email address.
+     * Get the sender's email address.
+     *
+     * @return string
      */
     public function from();
 
     /**
-     * Set the "reply-to" header field.
+     * Set email address to reply to the message.
      *
-     * @param mixed $reply_to The sender's reply-to email address.
+     * @param  mixed $email The sender's "Reply-To" email address.
      * @return EmailInterface Chainable
      */
-    public function set_reply_to($reply_to);
+    public function setReplyTo($email);
 
     /**
-     * @return string The sender's reply-to email address.
+     * Get email address to reply to the message.
+     *
+     * @return string
      */
-    public function reply_to();
+    public function replyTo();
 
     /**
-     * @param string $subject The emails' subject.
+     * Set the email subject.
+     *
+     * @param  string $subject The email subject.
      * @return EmailInterface Chainable
      */
-    public function set_subject($subject);
+    public function setSubject($subject);
 
     /**
+     * Get the email subject.
+     *
      * @return string The emails' subject.
      */
     public function subject();
 
     /**
-     * @param string $msg_html The message's HTML body.
+     * Set the email's HTML message body.
+     *
+     * @param  string $body The HTML message body.
      * @return EmailInterface Chainable
      */
-    public function set_msg_html($msg_html);
+    public function setMsgHtml($body);
 
     /**
-     * @return string The message's HTML body.
+     * Get the email's HTML message body.
+     *
+     * @return string
      */
-    public function msg_html();
+    public function msgHtml();
 
     /**
-     * @param string $msg_txt The message's text body.
+     * Set the email's plain-text message body.
+     *
+     * @param string $body The message's text body.
      * @return EmailInterface Chainable
      */
-    public function set_msg_txt($msg_txt);
+    public function setMsgTxt($body);
 
     /**
-     * @return string The message's text body.
+     * Get the email's plain-text message body.
+     *
+     * @return string
      */
-    public function msg_txt();
+    public function msgTxt();
 
     /**
-     * @param array $attachments The attachments.
+     * Set the email's attachments.
+     *
+     * @param  array $attachments The file attachments.
      * @return EmailInterface Chainable
      */
-    public function set_attachments(array $attachments);
+    public function setAttachments(array $attachments);
 
     /**
-     * @param mixed $attachment The attachments.
+     * Add an attachment to the email.
+     *
+     * @param  mixed $attachment A single file attachment.
      * @return EmailInterface Chainable
      */
-    public function add_attachment($attachment);
+    public function addAttachment($attachment);
 
     /**
+     * Get the email's attachments.
+     *
      * @return array
      */
     public function attachments();
@@ -149,12 +200,14 @@ interface EmailInterface
     /**
      * Enable or disable logging for this particular email.
      *
-     * @param boolean $log The log flag.
+     * @param  boolean $log The log flag.
      * @return EmailInterface Chainable
      */
-    public function set_log($log);
+    public function setLog($log);
 
     /**
+     * Determine if logging is enabled for this particular email.
+     *
      * @return boolean
      */
     public function log();
@@ -165,9 +218,11 @@ interface EmailInterface
      * @param boolean $track The track flag.
      * @return EmailInterface Chainable
      */
-    public function set_track($track);
+    public function setTrack($track);
 
     /**
+     * Determine if tracking is enabled for this particular email.
+     *
      * @return boolean
      */
     public function track();
@@ -180,9 +235,10 @@ interface EmailInterface
     public function send();
 
     /**
-     * Add the email to the queue pool.
+     * Enqueue the email for each recipient.
      *
+     * @param mixed $ts A date/time to initiate the queue processing.
      * @return boolean Success / Failure.
      */
-    public function queue();
+    public function queue($ts = null);
 }

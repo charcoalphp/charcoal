@@ -18,7 +18,7 @@ $GLOBALS['container'] = new SlimContainer();
 
 $GLOBALS['container']['charcoal/app/config'] = function($c) {
     $config = new AppConfig();
-    $config->set_data([
+    $config->setData([
     	'logger'=>[
 			'level'=>'debug'
 		]
@@ -29,4 +29,4 @@ $GLOBALS['container']['charcoal/app/config'] = function($c) {
 // Charcoal / Slim is the main app
 $GLOBALS['app'] = new App($GLOBALS['container']);
 
-$GLOBALS['app']->set_logger(new \Monolog\Logger('charcoal.test'));
+$GLOBALS['app']->setLogger(new \Monolog\Logger('charcoal.test'));

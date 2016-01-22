@@ -14,12 +14,14 @@ use \Charcoal\Email\EmailQueueItem;
 class EmailQueueManager extends AbstractQueueManager
 {
     /**
-     * @return SmsQueueItem
+     * Retrieve the queue item's model.
+     *
+     * @return EmailQueueItem
      */
-    public function queue_item_proto()
+    public function queueItemProto()
     {
         return new EmailQueueItem([
-            'logger'=>$this->logger
+            'logger' => $this->logger
         ]);
     }
 }

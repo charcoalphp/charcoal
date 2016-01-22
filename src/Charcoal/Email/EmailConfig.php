@@ -13,65 +13,91 @@ use \Charcoal\Config\AbstractConfig as AbstractConfig;
  */
 class EmailConfig extends AbstractConfig
 {
+    use EmailAwareTrait;
+
     /**
+     * Whether SMTP should be used.
+     *
      * @var boolean $smtp
      */
     private $smtp = false;
 
     /**
-     * @var string $smtp_hostname
+     * The SMTP hostname.
+     *
+     * @var string $smtpHostname
      */
-    private $smtp_hostname;
+    private $smtpHostname;
 
     /**
-     * @var integer $smtp_port
+     * The SMTP port.
+     *
+     * @var integer $smtpPort
      */
-    private $smtp_port;
+    private $smtpPort;
 
     /**
-     * @var string $smtp_security
+     * The SMTP security type.
+     *
+     * @var string $smtpSecurity
      */
-    private $smtp_security = '';
+    private $smtpSecurity = '';
 
     /**
-     * @var boolean $smtp_auth
+     * Whether SMTP requires authentication.
+     *
+     * @var boolean $smtpAuth
      */
-    private $smtp_auth;
+    private $smtpAuth;
 
     /**
-     * @var string $smtp_username
+     * The SMTP username.
+     *
+     * @var string $smtpUsername
      */
-    private $smtp_username;
+    private $smtpUsername;
 
     /**
-     * @var string $smtp_password
+     * The SMTP password.
+     *
+     * @var string $smtpPassword
      */
-    private $smtp_password;
+    private $smtpPassword;
 
     /**
-     * @var string $default_from
+     * The default sender's email address.
+     *
+     * @var string $defaultFrom
      */
-    private $default_from;
+    private $defaultFrom;
 
     /**
-     * @var string $default_reply_to
+     * The default "Reply-To" email address.
+     *
+     * @var string $defaultReplyTo
      */
-    private $default_reply_to;
+    private $defaultReplyTo;
 
     /**
-     * @var boolean $default_track
+     * Whether the email should be tracked by default.
+     *
+     * @var boolean $defaultTrack
      */
-    private $default_track;
+    private $defaultTrack;
 
     /**
-     * @var boolean $default_log
+     * Whether the email should be logged by default.
+     *
+     * @var boolean $defaultLog
      */
-    private $default_log;
+    private $defaultLog;
 
     /**
+     * Default email configuration.
+     *
      * @return array
      */
-    public function default_data()
+    public function defaults()
     {
         return [
             'smtp'              => false,
@@ -85,17 +111,21 @@ class EmailConfig extends AbstractConfig
     }
 
     /**
-     * @param boolean $smtp If the email should be sent using SMTP or not.
-     * @throws InvalidArgumentException If the smtp parameter is not boolean.
+     * Set whether SMTP should be used for sending the email.
+     *
+     * @param  boolean $smtp If the email should be sent using SMTP or not.
+     * @throws InvalidArgumentException If the SMTP state is not a boolean.
      * @return EmailConfig Chainable
      */
-    public function set_smtp($smtp)
+    public function setSmtp($smtp)
     {
         $this->smtp = !!$smtp;
         return $this;
     }
 
     /**
+     * Determine if SMTP should be used.
+     *
      * @return boolean
      */
     public function smtp()
@@ -104,253 +134,285 @@ class EmailConfig extends AbstractConfig
     }
 
     /**
-     * @param string $smtp_hostname The SMTP hostname.
-     * @throws InvalidArgumentException If the SMTP hostname parameter is not a string.
+     * Set the SMTP hostname to be used.
+     *
+     * @param  string $hostname The SMTP hostname.
+     * @throws InvalidArgumentException If the SMTP hostname is not a string.
      * @return EmailConfig Chainable
      */
-    public function set_smtp_hostname($smtp_hostname)
+    public function setSmtpHostname($hostname)
     {
-        if (!is_string($smtp_hostname)) {
+        if (!is_string($hostname)) {
             throw new InvalidArgumentException(
-                'SMTP Host name must be a string.'
+                'SMTP Hostname must be a string.'
             );
         }
-        $this->smtp_hostname = $smtp_hostname;
+
+        $this->smtpHostname = $hostname;
+
         return $this;
     }
 
     /**
+     * Get the SMTP hostname.
+     *
      * @return string
      */
-    public function smtp_hostname()
+    public function smtpHostname()
     {
-        return $this->smtp_hostname;
+        return $this->smtpHostname;
     }
 
     /**
-     * @param integer $smtp_port The SMTP port.
-     * @throws InvalidArgumentException If the SMTP port parameter is not an integer.
+     * Set the SMTP port to be used.
+     *
+     * @param  integer $port The SMTP port.
+     * @throws InvalidArgumentException If the SMTP port is not an integer.
      * @return EmailConfig Chainable
      */
-    public function set_smtp_port($smtp_port)
+    public function setSmtpPort($port)
     {
-        if (!is_int($smtp_port)) {
+        if (!is_int($port)) {
             throw new InvalidArgumentException(
                 'SMTP Port must be an integer.'
             );
         }
-        $this->smtp_port = $smtp_port;
+
+        $this->smtpPort = $port;
+
         return $this;
     }
 
     /**
+     * Get the SMTP port.
+     *
      * @return integer
      */
-    public function smtp_port()
+    public function smtpPort()
     {
-        return $this->smtp_port;
+        return $this->smtpPort;
     }
 
     /**
-     * @param boolean $smtp_auth The SMTP authentication flag (if auth is required).
+     * Set whether SMTP requires authentication.
+     *
+     * @param  boolean $auth The SMTP authentication flag (if auth is required).
      * @return EmailConfig Chainable
      */
-    public function set_smtp_auth($smtp_auth)
+    public function setSmtpAuth($auth)
     {
-        $this->smtp_auth = !!$smtp_auth;
+        $this->smtpAuth = !!$auth;
         return $this;
     }
 
     /**
+     * Determine if SMTP requires authentication.
+     *
      * @return boolean
      */
-    public function smtp_auth()
+    public function smtpAuth()
     {
-        return $this->smtp_auth;
+        return $this->smtpAuth;
     }
 
     /**
-     * @param string $smtp_username The SMTP username, if using authentication.
-     * @throws InvalidArgumentException If the SMTP username parameter is not a string.
+     * Set the SMTP username to be used.
+     *
+     * @param  string $username The SMTP username, if using authentication.
+     * @throws InvalidArgumentException If the SMTP username is not a string.
      * @return EmailConfig Chainable
      */
-    public function set_smtp_username($smtp_username)
+    public function setSmtpUsername($username)
     {
-        if (!is_string($smtp_username)) {
+        if (!is_string($username)) {
             throw new InvalidArgumentException(
                 'SMTP Username must be a string.'
             );
         }
-        $this->smtp_username = $smtp_username;
+
+        $this->smtpUsername = $username;
+
         return $this;
     }
 
     /**
+     * Get the SMTP username.
+     *
      * @return string
      */
-    public function smtp_username()
+    public function smtpUsername()
     {
-        return $this->smtp_username;
+        return $this->smtpUsername;
     }
 
     /**
-     * @param string $smtp_password The SMTP password, if using authentication.
-     * @throws InvalidArgumentException If the parameter is not a string.
+     * Set the SMTP password to be used.
+     *
+     * @param  string $password The SMTP password, if using authentication.
+     * @throws InvalidArgumentException If the SMTP password is not a string.
      * @return EmailConfig Chainable
      */
-    public function set_smtp_password($smtp_password)
+    public function setSmtpPassword($password)
     {
-        if (!is_string($smtp_password)) {
+        if (!is_string($password)) {
             throw new InvalidArgumentException(
                 'SMTP Password must be a string.'
             );
         }
-        $this->smtp_password = $smtp_password;
+
+        $this->smtpPassword = $password;
+
         return $this;
     }
 
     /**
+     * Get the SMTP password.
+     *
      * @return string
      */
-    public function smtp_password()
+    public function smtpPassword()
     {
-        return $this->smtp_password;
+        return $this->smtpPassword;
     }
 
     /**
-     * @param string $smtp_security The SMTP security type (empty "tls" or "ssl").
-     * @throws InvalidArgumentException If the parameter is not valid (empty, "tls" or "ssl").
+     * Set the SMTP security type to be used.
+     *
+     * @param  string $security The SMTP security type (empty, "TLS", or "SSL").
+     * @throws InvalidArgumentException If the security type is not valid (empty, "TLS", or "SSL").
      * @return EmailConfig Chainable
      */
-    public function set_smtp_security($smtp_security)
+    public function setSmtpSecurity($security)
     {
-        $valid_security = ['', 'tls', 'ssl'];
-        if (!in_array($smtp_security, $valid_security)) {
+        $security = strtoupper($security);
+        $validSecurity = [ '', 'TLS', 'SSL' ];
+
+        if (!in_array($security, $validSecurity)) {
             throw new InvalidArgumentException(
-                'SMTP Security is not valid. Must be "", "tls" or "ssl".'
+                'SMTP Security is not valid. Must be "", "TLS" or "SSL".'
             );
         }
-        $this->smtp_security = $smtp_security;
+
+        $this->smtpSecurity = $security;
+
         return $this;
     }
 
     /**
+     * Get the SMTP security type.
+     *
      * @return string
      */
-    public function smtp_security()
+    public function smtpSecurity()
     {
-        return $this->smtp_security;
+        return $this->smtpSecurity;
     }
 
     /**
-     * @param mixed $default_from The default "From" email address.
-     * @throws InvalidArgumentException If the default from email address is invalid.
+     * Set the default sender's email address.
+     *
+     * @param  string|array $email The default "From" email address.
+     * @throws InvalidArgumentException If the email address is invalid.
      * @return EmailConfig Chainable
      */
-    public function set_default_from($default_from)
+    public function setDefaultFrom($email)
     {
-        if (is_string($default_from)) {
-            $this->default_from = $default_from;
-        } elseif (is_array($default_from)) {
-            $this->default_from = $this->email_from_array($default_from);
+        if (is_string($email)) {
+            $this->defaultFrom = $email;
+        } elseif (is_array($email)) {
+            $this->defaultFrom = $this->emailFromArray($email);
         } else {
             throw new InvalidArgumentException(
-                'Default "from" email address must be an array or a string'
+                'Default sender email address must be an array or a string.'
             );
         }
+
         return $this;
     }
 
     /**
+     * Get the sender email address.
+     *
      * @return string
      */
-    public function default_from()
+    public function defaultFrom()
     {
-        return $this->default_from;
+        return $this->defaultFrom;
     }
 
     /**
-     * @param mixed $default_reply_to The default "reply-to" email address.
-     * @throws InvalidArgumentException If the default reply-to email address is invalid.
+     * Set the default "Reply-To" email address.
+     *
+     * @param  string|array $email The default "Reply-To" email address.
+     * @throws InvalidArgumentException If the email address is invalid.
      * @return EmailConfig Chainable
      */
-    public function set_default_reply_to($default_reply_to)
+    public function setDefaultReplyTo($email)
     {
-        if (is_string($default_reply_to)) {
-            $this->default_reply_to = $default_reply_to;
-        } elseif (is_array($default_reply_to)) {
-            $this->default_reply_to = $this->email_from_array($default_reply_to);
+        if (is_string($email)) {
+            $this->defaultReplyTo = $email;
+        } elseif (is_array($email)) {
+            $this->defaultReplyTo = $this->emailFromArray($email);
         } else {
             throw new InvalidArgumentException(
-                'Default "from" email address must be an array or a string'
-            );
-        }
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function default_reply_to()
-    {
-        return $this->default_reply_to;
-    }
-
-    /**
-     * @param boolean $default_log The default log flag.
-     * @return EmailConfig Chainable
-     */
-    public function set_default_log($default_log)
-    {
-        $this->default_log = !!$default_log;
-        return $this;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function default_log()
-    {
-        return $this->default_log;
-    }
-
-    /**
-     * @param boolean $default_track The default track flag.
-     * @return EmailConfig Chainable
-     */
-    public function set_default_track($default_track)
-    {
-        $this->default_track = !!$default_track;
-        return $this;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function default_track()
-    {
-        return $this->default_track;
-    }
-
-    /**
-     * @param array $email_array An email array (containing an "email" key and optionally a "name" key).
-     * @throws InvalidArgumentException If the email parameter is not an array or invalid array.
-     * @return string
-     */
-    protected function email_from_array(array $email_array)
-    {
-        if (!isset($email_array['email'])) {
-            throw new InvalidArgumentException(
-                'Email Array must atleast contain the email key.'
+                'Default reply-to email address must be an array or a string.'
             );
         }
 
-        $email = filter_var($email_array['email'], FILTER_SANITIZE_EMAIL);
-        if (!isset($email_array['name'])) {
-            return $email;
-        }
+        return $this;
+    }
 
-        $name = str_replace('"', '', filter_var($email_array['name'], FILTER_SANITIZE_STRING));
-        return '"'.$name.'" <'.$email.'>';
+    /**
+     * Get the "Reply-To" email address.
+     *
+     * @return string
+     */
+    public function defaultReplyTo()
+    {
+        return $this->defaultReplyTo;
+    }
+
+    /**
+     * Set whether the email should be logged by defaultd.
+     *
+     * @param  boolean $log The default log flag.
+     * @return EmailConfig Chainable
+     */
+    public function setDefaultLog($log)
+    {
+        $this->defaultLog = !!$log;
+        return $this;
+    }
+
+    /**
+     * Determine if the email should be logged by default.
+     *
+     * @return boolean
+     */
+    public function defaultLog()
+    {
+        return $this->defaultLog;
+    }
+
+    /**
+     * Set whether the email should be tracked by default.
+     *
+     * @param  boolean $track The default track flag.
+     * @return EmailConfig Chainable
+     */
+    public function setDefaultTrack($track)
+    {
+        $this->defaultTrack = !!$track;
+        return $this;
+    }
+
+    /**
+     * Determine if the email should be tracked by default.
+     *
+     * @return boolean
+     */
+    public function defaultTrack()
+    {
+        return $this->defaultTrack;
     }
 }

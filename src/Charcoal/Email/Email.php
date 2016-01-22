@@ -36,7 +36,6 @@ use \Charcoal\Email\EmailLog;
 
 /**
  * Default implementation of the `EmailInterface`.
- *
  */
 class Email implements
     AppAwareInterface,
@@ -51,51 +50,70 @@ class Email implements
     use LoggerAwareTrait;
     use QueueableTrait;
     use ViewableTrait;
+    use EmailAwareTrait;
 
     /**
+     * The campaign ID.
+     *
      * @var string $campaign
      */
     private $campaign;
 
     /**
+     * The recipient email address(es).
+     *
      * @var array $to
      */
     private $to = [];
 
     /**
+     * The CC recipient email address(es).
+     *
      * @var array $cc
      */
     private $cc = [];
 
     /**
+     * The BCC recipient email address(es).
+     *
      * @var array $bcc
      */
     private $bcc = [];
 
     /**
+     * The sender's email address.
+     *
      * @var string $from
      */
     private $from;
 
     /**
-     * @var string $reply_to
+     * The email address to reply to the message.
+     *
+     * @var string $replyTo
      */
-    private $reply_to;
+    private $replyTo;
 
     /**
+     * The email subject.
+     *
      * @var string $subject
      */
     private $subject;
 
-     /**
-      * @var string $msg_html
-      */
-    private $msg_html;
+    /**
+     * The HTML message body.
+     *
+     * @var string $msgHtml
+     */
+    private $msgHtml;
 
-     /**
-      * @var string $msg_txt
-      */
-    private $msg_txt;
+    /**
+     * The plain-text message body.
+     *
+     * @var string $msgTxt
+     */
+    private $msgTxt;
 
     /**
      * @var array $attachments
@@ -103,42 +121,47 @@ class Email implements
     private $attachments = [];
 
     /**
+     * Whether the email should be logged.
+     *
      * @var boolean $log
      */
     private $log;
 
     /**
+     * Whether the email should be tracked.
+     *
      * @var boolean $track
      */
     private $track;
 
     /**
-     * @var array $template_data
+     * The data to pass onto the view controller.
+     *
+     * @var array $templateData
      */
-    private $template_data = [];
+    private $templateData = [];
 
     /**
-     * @param array $data Dependencies.
+     * Construct a new Email object.
+     *
+     * @param array $data Dependencies and settings.
      */
     public function __construct(array $data)
     {
-        $this->set_app($data['app']);
+        $this->setApp($data['app']);
         $this->setLogger($data['logger']);
     }
 
     /**
+     * Set the email's data.
+     *
      * @param array $data The data to set.
      * @return Email Chainable
      */
-    public function set_data(array $data)
+    public function setData(array $data)
     {
         foreach ($data as $prop => $val) {
-            $func = [$this, 'set_'.$prop];
-
-            if ($val === null) {
-                continue;
-            }
-
+            $func = [$this, $this->setter($prop)];
             if (is_callable($func)) {
                 call_user_func($func, $val);
                 unset($data[$prop]);
@@ -146,109 +169,106 @@ class Email implements
                 $this->{$prop} = $val;
             }
         }
+
         return $this;
     }
 
     /**
-     * @param string $campaign The campaign identifier.
-     * @throws InvalidArgumentException If the campaign parameter is invalid.
+     * Set the campaign ID.
+     *
+     * @param  string $campaign The campaign identifier.
+     * @throws InvalidArgumentException If the campaign is invalid.
      * @return EmailInterface Chainable
      */
-    public function set_campaign($campaign)
+    public function setCampaign($campaign)
     {
         if (!is_string($campaign)) {
             throw new InvalidArgumentException(
                 'Campaign must be a string'
             );
         }
+
         $this->campaign = $campaign;
+
         return $this;
     }
 
     /**
      * Get the campaign identifier.
      *
-     * If it has not been explicitely set, it will be aut-generated (with uniqid).
+     * If it has not been explicitely set, it will be auto-generated (with uniqid).
      *
      * @return string
      */
     public function campaign()
     {
         if ($this->campaign === null) {
-            $this->campaign = $this->generate_campaign();
+            $this->campaign = $this->generateCampaign();
         }
+
         return $this->campaign;
     }
 
     /**
+     * Generates a unique identifier ideal for a campaign ID.
+     *
      * @return string
      */
-    protected function generate_campaign()
+    protected function generateCampaign()
     {
         return uniqid();
     }
 
     /**
-     * @param string|array $to The email's main recipient(s).
-     * @throws InvalidArgumentException If parameter is invalid.
+     * Set the recipient email address(es).
+     *
+     * @param string|array $email The recipient email address(es).
+     * @throws InvalidArgumentException If the email address is invalid.
      * @return EmailInterface Chainable
      */
-    public function set_to($to)
+    public function setTo($email)
     {
-        if (is_string($to)) {
-            $to = [$to];
+        if (is_string($email)) {
+            $email = [ $email ];
         }
-        if (!is_array($to)) {
+
+        if (!is_array($email)) {
             throw new InvalidArgumentException(
-                'To must be an array of recipients'
+                'Must be an array of recipients.'
             );
         }
+
         $this->to = [];
 
-        if (isset($to['email'])) {
+        if (isset($email['email'])) {
             // Means we're not dealing with multiple emails
-            $this->add_to($to);
+            $this->addTo($email);
         } else {
-            foreach ($to as $t) {
-                $this->add_to($t);
+            foreach ($email as $recipient) {
+                $this->addTo($recipient);
             }
         }
+
         return $this;
     }
 
     /**
-     * @param mixed $to The email's recipient to add, either as a string or an "email" array.
-     * @throws InvalidArgumentException If the to parameter is invalid.
+     * Add a recipient email address.
+     *
+     * @param  mixed $email The recipient email address to add.
      * @return EmailInterface Chainable
      */
-    public function add_to($to)
+    public function addTo($email)
     {
-        if (!is_string($to) && !is_array($to)) {
-            throw new InvalidArgumentException(
-                'Email address must be an array or a string'
-            );
-        }
-
-        // Assuming nobody's gonna set a from which is only a name
-        if (is_string($to)) {
-            // @todo Validation
-            $to = [
-                'email' => $to,
-                'name' => ''
-            ];
-        }
-
-        if (!isset($to['name'])) {
-            $to['name'] = '';
-        }
-
-        $this->to[] = $to;
+        $this->to[] = $this->emailToArray($email);
 
         return $this;
     }
 
     /**
-     * @return string[] The email's recipients.
+     * Get the recipient's email address.
+     *
+     * @return string[]
      */
     public function to()
     {
@@ -256,28 +276,32 @@ class Email implements
     }
 
     /**
-     * @param string|array $cc The emails' carbon-copy (CC) recipient(s).
-     * @throws InvalidArgumentException If the CC parameter is invalid.
+     * Set the carbon copy (CC) recipient email address(es).
+     *
+     * @param string|array $email The CC recipient email address(es).
+     * @throws InvalidArgumentException If the email address is invalid.
      * @return EmailInterface Chainable
      */
-    public function set_cc($cc)
+    public function setCc($email)
     {
-        if (is_string($cc)) {
-            $cc = [$cc];
+        if (is_string($email)) {
+            $email = [ $email ];
         }
-        if (!is_array($cc)) {
+
+        if (!is_array($email)) {
             throw new InvalidArgumentException(
-                'CC must be an array of recipients'
+                'Must be an array of CC recipients.'
             );
         }
+
         $this->cc = [];
 
-        if (isset($cc['email'])) {
+        if (isset($email['email'])) {
             // Means we're not dealing with multiple emails
-            $this->add_cc($cc);
+            $this->addCc($email);
         } else {
-            foreach ($cc as $t) {
-                $this->add_cc($t);
+            foreach ($email as $recipient) {
+                $this->addCc($recipient);
             }
         }
 
@@ -285,38 +309,22 @@ class Email implements
     }
 
     /**
-     * @param mixed $cc The emails' carbon-copy (CC) recipient to add.
-     * @throws InvalidArgumentException If the CC parameter is invalid.
+     * Add a CC recipient email address.
+     *
+     * @param mixed $email The CC recipient email address to add.
      * @return EmailInterface Chainable
      */
-    public function add_cc($cc)
+    public function addCc($email)
     {
-        if (!is_string($cc) && !is_array($cc)) {
-            throw new InvalidArgumentException(
-                'CC email address must be an array or a string'
-            );
-        }
-
-        // Assuming nobody's gonna set a from which is only a name
-        if (is_string($cc)) {
-            // @todo Validation
-            $cc = [
-                'email' => $cc,
-                'name' => ''
-            ];
-        }
-
-        if (!isset($cc['name'])) {
-            $cc['name'] = '';
-        }
-
-        $this->cc[] = $cc;
+        $this->cc[] = $this->emailToArray($email);
 
         return $this;
     }
 
     /**
-     * @return string[] The emails' carbon-copy (CC) recipient(s).
+     * Get the CC recipient's email address.
+     *
+     * @return string[]
      */
     public function cc()
     {
@@ -324,29 +332,33 @@ class Email implements
     }
 
     /**
-     * @param string|array $bcc The emails' black-carbon-copy (BCC) recipient(s).
-     * @throws InvalidArgumentException If the BCC parameter is invalid.
+     * Set the blind carbon copy (BCC) recipient email address(es).
+     *
+     * @param string|array $email The BCC recipient email address(es).
+     * @throws InvalidArgumentException If the email address is invalid.
      * @return EmailInterface Chainable
      */
-    public function set_bcc($bcc)
+    public function setBcc($email)
     {
-        if (is_string($bcc)) {
+        if (is_string($email)) {
             // Means we have a straight email
-            $bcc = [$bcc];
+            $email = [ $email ];
         }
-        if (!is_array($bcc)) {
+
+        if (!is_array($email)) {
             throw new InvalidArgumentException(
-                'BCC must be an array of recipients'
+                'Must be an array of BCC recipients.'
             );
         }
+
         $this->bcc = [];
 
-        if (isset($bcc['email'])) {
+        if (isset($email['email'])) {
             // Means we're not dealing with multiple emails
-            $this->add_bcc($bcc);
+            $this->addBcc($email);
         } else {
-            foreach ($bcc as $t) {
-                $this->add_bcc($t);
+            foreach ($email as $recipient) {
+                $this->addBcc($recipient);
             }
         }
 
@@ -354,38 +366,22 @@ class Email implements
     }
 
     /**
-     * @param mixed $bcc The emails' black-carbon-copy (BCC) recipient to add.
-     * @throws InvalidArgumentException If the BCC parameter is invalid.
+     * Add a BCC recipient email address.
+     *
+     * @param mixed $email The BCC recipient email address to add.
      * @return EmailInterface Chainable
      */
-    public function add_bcc($bcc)
+    public function addBcc($email)
     {
-        if (!is_string($bcc) && !is_array($bcc)) {
-            throw new InvalidArgumentException(
-                'BCC email address must be an array or a string'
-            );
-        }
-
-        // Assuming nobody's gonna set a from which is only a name
-        if (is_string($bcc)) {
-            // @todo Validation
-            $bcc = [
-                'email' => $bcc,
-                'name' => ''
-            ];
-        }
-
-        if (!isset($bcc['name'])) {
-            $bcc['name'] = '';
-        }
-
-        $this->bcc[] = $bcc;
+        $this->bcc[] = $this->emailToArray($email);
 
         return $this;
     }
 
     /**
-     * @return string[] The emails' black-carbon-copy (BCC) recipient(s).
+     * Get the BCC recipient's email address.
+     *
+     * @return string[]
      */
     public function bcc()
     {
@@ -393,106 +389,83 @@ class Email implements
     }
 
     /**
-     * @param mixed $from The message's sender email address.
-     * @throws InvalidArgumentException If the from parameter is invalid.
+     * Set the sender's email address.
+     *
+     * @param  string|array $email An email address.
      * @return EmailInterface Chainable
+     * @todo   Implement optional "Sender" field.
      */
-    public function set_from($from)
+    public function setFrom($email)
     {
-        if (!is_string($from) && !is_array($from)) {
-            throw new InvalidArgumentException(
-                'From email address must be an array or a string'
-            );
-        }
-
-        // Assuming nobody's gonna set a from which is only a name
-        if (is_string($from)) {
-            // @todo Validation
-            $from = [
-                'email' => $from,
-                'name' => ''
-            ];
-        }
-
-        if (!isset($from['name'])) {
-            $from['name'] = '';
-        }
-
-        $this->from = $from;
+        $this->from = $this->emailToArray($email);
 
         return $this;
     }
 
     /**
-     * @return string The message's sender email address.
+     * Get the sender's email address.
+     *
+     * @return string
      */
     public function from()
     {
         if ($this->from === null) {
-            $this->from = $this->config()->default_from();
+            $this->from = $this->config()->defaultFrom();
         }
+
         return $this->from;
     }
 
     /**
-     * Set the "reply-to" header field.
+     * Set email address to reply to the message.
      *
-     * @param mixed $reply_to The sender's reply-to email address.
-     * @throws InvalidArgumentException If the reply_to parameter is invalid.
+     * @param  mixed $email The sender's "Reply-To" email address.
      * @return EmailInterface Chainable
      */
-    public function set_reply_to($reply_to)
+    public function setReplyTo($email)
     {
-        if (!is_string($reply_to) && !is_array($reply_to)) {
-            throw new InvalidArgumentException(
-                'Reply to email address must be an array or a string'
-            );
-        }
-
-        if (is_string($reply_to)) {
-            $reply_to = [
-                'email' => $reply_to,
-                'name' => ''
-            ];
-        }
-
-        if (!isset($reply_to['name'])) {
-            $reply_to['name'] = '';
-        }
-
-        $this->reply_to = $reply_to;
+        $this->replyTo = $this->emailFromArray($email);
 
         return $this;
     }
 
     /**
-     * @return string The sender's reply-to email address.
+     * Get email address to reply to the message.
+     *
+     * @return string
      */
-    public function reply_to()
+    public function replyTo()
     {
-        if ($this->reply_to === null) {
-            $this->from = $this->config()->default_reply_to();
+        if ($this->replyTo === null) {
+            $this->replyTo = $this->config()->defaultReplyTo();
         }
-        return $this->reply_to;
+
+        return $this->replyTo;
     }
 
     /**
-     * @param string $subject The emails' subject.
-     * @throws InvalidArgumentException If the subject parameter is invalid.
+     * Set the email subject.
+     *
+     * @param  string $subject The email subject.
+     * @throws InvalidArgumentException If the subject is not a string.
      * @return EmailInterface Chainable
      */
-    public function set_subject($subject)
+    public function setSubject($subject)
     {
         if (!is_string($subject)) {
             throw new InvalidArgumentException(
                 'Subject needs to be a string'
             );
         }
+
         $this->subject = $subject;
+
         return $this;
     }
 
     /**
+     * Get the email subject.
+     *
      * @return string The emails' subject.
      */
     public function subject()
@@ -501,118 +474,138 @@ class Email implements
     }
 
     /**
-     * Explicitely set the HTML message body.
+     * Set the email's HTML message body.
      *
-     * If the HTML message is not explitely set here, it will be auto-generated.
-     *
-     * @param string $msg_html The HTML body string.
-     * @throws InvalidArgumentException If the parameter is invalid.
+     * @param  string $body The HTML message body.
+     * @throws InvalidArgumentException If the message is not a string.
      * @return EmailInterface Chainable
      */
-    public function set_msg_html($msg_html)
+    public function setMsgHtml($body)
     {
-        if (!is_string($msg_html)) {
+        if (!is_string($body)) {
             throw new InvalidArgumentException(
-                'HTML message must be a string'
+                'HTML message needs to be a string'
             );
         }
-        $this->msg_html = $msg_html;
+
+        $this->msgHtml = $body;
+
         return $this;
     }
 
     /**
      * Get the email's HTML message body.
      *
-     * If it has not been explitely set, it will be aut-generated from a template view.
+     * If the message is not explitely set, it will be
+     * auto-generated from a template view.
      *
-     * @return string The HTML body string.
-     */
-    public function msg_html()
-    {
-        if ($this->msg_html === null) {
-            $this->msg_html = $this->generate_msg_html();
-        }
-        return $this->msg_html;
-    }
-
-    /**
-     * Get the message's HTML content from the template, if applicable.
-     *
-     * @see ViewableInterface::render_template
      * @return string
      */
-    protected function generate_msg_html()
+    public function msgHtml()
     {
-        $template_ident = $this->template_ident();
-        if (!$template_ident) {
-            $msg_html = '';
-        } else {
-            $msg_html = $this->render_template($template_ident);
+        if ($this->msgHtml === null) {
+            $this->msgHtml = $this->generateMsgHtml();
         }
-        return $msg_html;
+        return $this->msgHtml;
     }
 
     /**
-     * Explicitely set the message's text body.
+     * Get the email's HTML message from the template, if applicable.
      *
-     * If the text message is not explicitely set here, it will be auto-generated from the HTML.
+     * @see    ViewableInterface::renderTemplate()
+     * @return string
+     */
+    protected function generateMsgHtml()
+    {
+        $templateIdent = $this->templateIdent();
+
+        if (!$templateIdent) {
+            $message = '';
+        } else {
+            $message = $this->renderTemplate($templateIdent);
+        }
+
+        return $message;
+    }
+
+    /**
+     * Set the email's plain-text message body.
      *
-     * @param string $msg_txt The message's text body.
+     * @param string $body The message's text body.
      * @throws InvalidArgumentException If the parameter is invalid.
      * @return EmailInterface Chainable
      */
-    public function set_msg_txt($msg_txt)
+    public function setMsgTxt($body)
     {
-        if (!is_string($msg_txt)) {
-            throw new InvalidArgumentException('Text msg must be a string');
+        if (!is_string($body)) {
+            throw new InvalidArgumentException(
+                'Plan-text message needs to be a string'
+            );
         }
-        $this->msg_txt = $msg_txt;
+
+        $this->msgTxt = $body;
+
         return $this;
     }
 
     /**
+     * Get the email's plain-text message body.
+     *
+     * If the plain-text message is not explitely set,
+     * it will be auto-generated from the HTML message.
+     *
      * @return string
      */
-    public function msg_txt()
+    public function msgTxt()
     {
-        if ($this->msg_txt === null) {
-            $this->msg_txt = $this->generate_msg_txt();
+        if ($this->msgTxt === null) {
+            $this->msgTxt = $this->generateMsgTxt();
         }
-        return $this->msg_txt;
+
+        return $this->msgTxt;
     }
 
     /**
+     * Get the email's plain-text message from the HTML message, if applicable.
+     *
      * @return string
      */
-    protected function generate_msg_txt()
+    protected function generateMsgTxt()
     {
-        $msg_html = $this->msg_html();
-        return $msg_html;
+        $message = $this->msgHtml();
+        return $message;
     }
 
     /**
-     * @param array $attachments The file attachments.
+     * Set the email's attachments.
+     *
+     * @param  array $attachments The file attachments.
      * @return EmailInterface Chainable
      */
-    public function set_attachments(array $attachments)
+    public function setAttachments(array $attachments)
     {
         foreach ($attachments as $att) {
-            $this->add_attachment($att);
+            $this->addAttachment($att);
         }
+
         return $this;
     }
 
     /**
-     * @param mixed $attachment The attachments.
+     * Add an attachment to the email.
+     *
+     * @param  mixed $attachment A single file attachment.
      * @return EmailInterface Chainable
      */
-    public function add_attachment($attachment)
+    public function addAttachment($attachment)
     {
         $this->attachments[] = $attachment;
         return $this;
     }
 
     /**
+     * Get the email's attachments.
+     *
      * @return array
      */
     public function attachments()
@@ -623,22 +616,24 @@ class Email implements
     /**
      * Enable or disable logging for this particular email.
      *
-     * @param boolean $log The log flag.
+     * @param  boolean $log The log flag.
      * @return EmailInterface Chainable
      */
-    public function set_log($log)
+    public function setLog($log)
     {
         $this->log = !!$log;
         return $this;
     }
 
     /**
+     * Determine if logging is enabled for this particular email.
+     *
      * @return boolean
      */
     public function log()
     {
         if ($this->log === null) {
-            $this->log = $this->config()->default_log();
+            $this->log = $this->config()->defaultLog();
         }
         return $this->log;
     }
@@ -649,19 +644,21 @@ class Email implements
      * @param boolean $track The track flag.
      * @return EmailInterface Chainable
      */
-    public function set_track($track)
+    public function setTrack($track)
     {
         $this->track = !!$track;
         return $this;
     }
 
     /**
+     * Determine if tracking is enabled for this particular email.
+     *
      * @return boolean
      */
     public function track()
     {
         if ($this->track === null) {
-            $this->track = $this->config()->default_track();
+            $this->track = $this->config()->defaultTrack();
         }
         return $this->track;
     }
@@ -669,7 +666,9 @@ class Email implements
     /**
      * Send the email to all recipients
      *
-     * @return bool Success / Failure.
+     * @return boolean Success / Failure.
+     * @todo Implement methods and property for toggling rich-text vs. plain-text
+     *       emails (`$mail->isHTML(true)`).
      */
     public function send()
     {
@@ -681,7 +680,7 @@ class Email implements
         $mail = new PHPMailer(true);
 
         try {
-            $this->set_smtp_options($mail);
+            $this->setSmtpOptions($mail);
 
             $mail->CharSet = 'UTF-8';
 
@@ -695,24 +694,26 @@ class Email implements
             $to = $this->to();
 
             foreach ($to as $recipient) {
-                // Default name set in set_to
+                // Default name set in setTo()
                 $mail->addAddress($recipient['email'], $recipient['name']);
             }
 
-            $reply_to = $this->reply_to();
-            if ($reply_to) {
-                // Default name set in set_reply_to
-                $mail->addReplyTo($reply_to['email'], $reply_to['name']);
+            $replyTo = $this->replyTo();
+            if ($replyTo) {
+                // Default name set in setReplyTo()
+                $mail->addReplyTo($replyTo['email'], $replyTo['name']);
             }
+
             $cc = $this->bcc();
-            foreach ($cc as $cc_recipient) {
-                // Default name set in add_cc
-                $mail->addCC($cc_recipient['email'], $cc_recipient['name']);
+            foreach ($cc as $ccRecipient) {
+                // Default name set in addCc()
+                $mail->addCC($ccRecipient['email'], $ccRecipient['name']);
             }
+
             $bcc = $this->bcc();
-            foreach ($bcc as $bcc_recipient) {
-                // Default name set in add_bcc
-                $mail->addBCC($bcc_recipient['email'], $bcc_recipient['name']);
+            foreach ($bcc as $bccRecipient) {
+                // Default name set in addBcc()
+                $mail->addBCC($bccRecipient['email'], $bccRecipient['name']);
             }
 
             $attachments = $this->attachments();
@@ -723,24 +724,28 @@ class Email implements
             $mail->isHTML(true);
 
             $mail->Subject = $this->subject();
-            $mail->Body    = $this->msg_html();
-            $mail->AltBody = $this->msg_txt();
+            $mail->Body    = $this->msgHtml();
+            $mail->AltBody = $this->msgTxt();
 
             $ret = $mail->send();
 
-            $this->log_send($ret, $mail);
+            $this->logSend($ret, $mail);
 
             return $ret;
         } catch (Exception $e) {
-            $this->logger->error('Error sending email: '.$e->getMessage());
+            $this->logger->error(
+                sprintf('Error sending email: %s', $e->getMessage())
+            );
         }
     }
 
     /**
+     * Set the SMTP's options for PHPMailer.
+     *
      * @param PHPMailer $mail The PHPMailer to setup.
      * @return void
      */
-    public function set_smtp_options(PHPMailer $mail)
+    public function setSmtpOptions(PHPMailer $mail)
     {
         $config = $this->config();
         if (!$config['smtp']) {
@@ -748,7 +753,7 @@ class Email implements
         }
 
         $this->logger->debug(
-            sprintf('Using SMTP %s server to send email', $config['smtp_hostname'])
+            sprintf('Using SMTP "%s" server to send email', $config['smtp_hostname'])
         );
 
         $mail->IsSMTP();
@@ -761,48 +766,55 @@ class Email implements
     }
 
     /**
-     * @param mixed $ts The queue processing date/time.
+     * Enqueue the email for each recipient.
+     *
+     * @param mixed $ts A date/time to initiate the queue processing.
      * @return boolean Success / Failure.
      */
     public function queue($ts = null)
     {
         $recipients = $this->to();
-        $from = $this->from();
-        $subject = $this->subject();
-        $msg_html = $this->msg_html();
-        $msg_txt = $this->msg_txt();
-        $campaign = $this->campaign();
-        $queue_id = $this->queue_id();
+        $author     = $this->from();
+        $subject    = $this->subject();
+        $msgHtml    = $this->msgHtml();
+        $msgTxt     = $this->msgTxt();
+        $campaign   = $this->campaign();
+        $queueId    = $this->queueId();
 
         foreach ($recipients as $to) {
-            $queue_item = new EmailQueueItem();
+            $queueItem = new EmailQueueItem();
 
-            $queue_item->set_to($to['email']);
-            $queue_item->set_from($from['email']);
-            $queue_item->set_subject($subject);
-            $queue_item->set_msg_html($msg_html);
-            $queue_item->set_msg_txt($msg_txt);
-            $queue_item->set_campaign($campaign);
-            $queue_item->set_processing_date($ts);
-            $queue_item->set_queue_id($queue_id);
+            $queueItem->setTo($to['email']);
+            $queueItem->setFrom($author['email']);
+            $queueItem->setSubject($subject);
+            $queueItem->setMsgHtml($msgHtml);
+            $queueItem->setMsgTxt($msgTxt);
+            $queueItem->setCampaign($campaign);
+            $queueItem->setProcessingDate($ts);
+            $queueItem->setQueueId($queueId);
 
-            $res = $queue_item->save();
+            $res = $queueItem->save();
         }
 
         return true;
     }
 
     /**
-     * @param boolean $result Success or failure.
-     * @param mixed   $mailer The raw mailer.
+     * Log the send event for each recipient.
+     *
+     * @param  boolean $result Success or failure.
+     * @param  mixed   $mailer The raw mailer.
      * @return void
      */
-    protected function log_send($result, $mailer)
+    protected function logSend($result, $mailer)
     {
         if (!$result) {
             $this->logger->error('Email could not be sent.');
         } else {
-            $this->logger->debug(sprintf('Email "%s" sent successfully.', $this->subject()), $this->to());
+            $this->logger->debug(
+                sprintf('Email "%s" sent successfully.', $this->subject()),
+                $this->to()
+            );
         }
 
         $recipients = array_merge(
@@ -810,24 +822,25 @@ class Email implements
             $this->cc(),
             $this->bcc()
         );
+
         foreach ($recipients as $to) {
             $log = new EmailLog([
-                'logger'=>$this->logger
+                'logger' => $this->logger
             ]);
 
-            $log->set_type('email');
-            $log->set_action('send');
+            $log->setType('email');
+            $log->setAction('send');
 
-            $log->set_raw_response($mailer);
+            $log->setRawResponse($mailer);
 
-            $log->set_message_id($mailer->getLastMessageId());
-            $log->set_campaign($this->campaign());
+            $log->setMessageId($mailer->getLastMessageId());
+            $log->setCampaign($this->campaign());
 
-            $log->set_send_ts('now');
+            $log->setSendTs('now');
 
-            $log->set_from($mailer->From);
-            $log->set_to($to['email']);
-            $log->set_subject($this->subject());
+            $log->setFrom($mailer->From);
+            $log->setTo($to['email']);
+            $log->setSubject($this->subject());
 
             $log->save();
         }
@@ -835,114 +848,140 @@ class Email implements
     }
 
     /**
-     * @return void
-     */
-    protected function log_queue()
-    {
-
-
-    }
-    /**
-     * @param array $email_array An email array (containing an "email" key and optionally a "name" key).
-     * @throws InvalidArgumentException If parameter is not an array or invalid array.
-     * @return string
-     */
-    protected function email_from_array(array $email_array)
-    {
-
-        if (!isset($email_array['email'])) {
-            throw new InvalidArgumentException(
-                'Email array must atleast contain the email key.'
-            );
-        }
-
-        $email = filter_var($email_array['email'], FILTER_SANITIZE_EMAIL);
-        if (!isset($email_array['name'])) {
-            return $email;
-        }
-
-        $name = str_replace('"', '', filter_var($email_array['name'], FILTER_SANITIZE_STRING));
-        return '"'.$name.'" <'.$email.'>';
-    }
-
-    /**
-     * ConfigurableInterface > create_config()
+     * Log the queue event.
      *
-     * @param array $data Optional config data.
+     * @return void
+     * @todo Implement log qeueing.
+     */
+    protected function logQueue()
+    {
+    }
+
+    /**
+     * Construct a new email configuration object.
+     *
+     * @see    ConfigurableInterface::createConfig()
+     * @param  array $data Optional configuration data.
      * @return EmailConfig
      */
-    public function create_config(array $data = null)
+    public function createConfig(array $data = null)
     {
         $config = new EmailConfig();
+
         if ($data !== null) {
-            $config->set_data($data);
+            $config->setData($data);
         } else {
             // Use default app config
-            $config->set_data($this->app()->config()->get('email'));
+            $config->setData($this->app()->config()->get('email'));
         }
+
         return $config;
     }
 
     /**
-     * ViewableInterface > create_view()
+     * Construct a new generic view object.
      *
-     * @param array $data Optional view data.
+     * @see    ViewableInterface::createView()
+     * @param  array $data Optional view data.
      * @return EmailView
      */
-    public function create_view(array $data = null)
+    public function createView(array $data = null)
     {
         $view = new GenericView([
             'logger' => $this->logger
         ]);
+
         if ($data !== null) {
-            $view->set_data($data);
+            $view->setData($data);
         }
+
         return $view;
     }
 
     /**
+     * Set the template data for the view.
+     *
      * @param array $data The template data.
      * @return Email Chainable
      */
-    public function set_template_data(array $data)
+    public function setTemplateData(array $data)
     {
-        $this->template_data = $data;
+        $this->templateData = $data;
         return $this;
     }
 
     /**
+     * Get the template data for the view.
+     *
      * @return array
      */
-    public function template_data()
+    public function templateData()
     {
-        return $this->template_data;
+        return $this->templateData;
     }
 
     /**
-     * Custom view controller for email.
+     * Get the custom view controller for rendering
+     * the email's HTML message.
      *
-     * Unlike typical `Viewable` objects, the view controller is not the email itself
-     * but an external "email" template.
+     * Unlike typical `ViewableInterface` objects, the view controller is not
+     * the email itself but an external "email" template.
      *
-     * @see ViewableInterface::view_controller()
+     * @see    ViewableInterface::viewController()
      * @return TemplateInterface|array
      */
-    public function view_controller()
+    public function viewController()
     {
-        $template_ident = $this->template_ident();
+        $templateIdent = $this->templateIdent();
 
-        if (!$template_ident) {
+        if (!$templateIdent) {
             return [];
         }
 
-        $template_factory = new TemplateFactory();
-        $template = $template_factory->create($template_ident, [
+        $templateFactory = new TemplateFactory();
+        $template = $templateFactory->create($templateIdent, [
             'app'    => $this->app,
             'logger' => $this->logger
         ]);
 
-        $template->set_data($this->template_data());
+        $template->setData($this->templateData());
 
         return $template;
+    }
+
+    /**
+     * Allow an object to define how the key getter are called.
+     *
+     * @param string $key The key to get the getter from.
+     * @return string The getter method name, for a given key.
+     */
+    protected function getter($key)
+    {
+        $getter = $key;
+        return $this->camelize($getter);
+    }
+
+    /**
+     * Allow an object to define how the key setter are called.
+     *
+     * @param string $key The key to get the setter from.
+     * @return string The setter method name, for a given key.
+     */
+    protected function setter($key)
+    {
+        $setter = 'set_'.$key;
+        return $this->camelize($setter);
+
+    }
+
+    /**
+     * Transform a snake_case string to camelCase.
+     *
+     * @param string $str The snake_case string to camelize.
+     * @return string The camelCase string.
+     */
+    private function camelize($str)
+    {
+        return lcfirst(implode('', array_map('ucfirst', explode('_', $str))));
     }
 }

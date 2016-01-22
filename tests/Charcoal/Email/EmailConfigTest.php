@@ -10,30 +10,30 @@ class EmailConfigTest extends \PHPUnit_Framework_TestCase
     {
         $obj = new EmailConfig();
         $data = [
-            'smtp'=>true,
-            'smtp_hostname'=>'localhost',
-            'default_from'=>'test@example.com',
-            'default_reply_to'=>[
-                'name'=>'Test',
-                'email'=>'test@example.com'
+            'smtp'             => true,
+            'smtp_hostname'    => 'localhost',
+            'default_from'     => 'test@example.com',
+            'default_reply_to' => [
+                'name'  => 'Test',
+                'email' => 'test@example.com'
             ],
-            'default_log'=>true,
-            'default_track'=>true
+            'default_log'   => true,
+            'default_track' => true
         ];
-        $ret = $obj->set_data($data);
+        $ret = $obj->setData($data);
         $this->assertSame($ret, $obj);
         $this->assertEquals(true, $obj->smtp());
-        $this->assertEquals('localhost', $obj->smtp_hostname());
-        $this->assertEquals('test@example.com', $obj->default_from());
-        $this->assertEquals('"Test" <test@example.com>', $obj->default_reply_to());
-        $this->assertEquals(true, $obj->default_log());
-        $this->assertEquals(true, $obj->default_track());
+        $this->assertEquals('localhost', $obj->smtpHostname());
+        $this->assertEquals('test@example.com', $obj->defaultFrom());
+        $this->assertEquals('"Test" <test@example.com>', $obj->defaultReplyTo());
+        $this->assertEquals(true, $obj->defaultLog());
+        $this->assertEquals(true, $obj->defaultTrack());
     }
 
     public function testSetSmtp()
     {
         $obj = new EmailConfig();
-        $ret = $obj->set_smtp(true);
+        $ret = $obj->setSmtp(true);
         $this->assertSame($ret, $obj);
         $this->assertEquals(true, $obj->smtp());
 
@@ -42,55 +42,51 @@ class EmailConfigTest extends \PHPUnit_Framework_TestCase
     public function testSetDefaultFrom()
     {
         $obj = new EmailConfig();
-        $ret = $obj->set_default_from('test@example.com');
+        $ret = $obj->setDefaultFrom('test@example.com');
         $this->assertSame($ret, $obj);
-        $this->assertEquals('test@example.com', $obj->default_from());
+        $this->assertEquals('test@example.com', $obj->defaultFrom());
 
-        $obj->set_default_from(
-            [
-            'name'=>'Test',
-            'email'=>'test@example.com'
-            ]
-        );
-        $this->assertEquals('"Test" <test@example.com>', $obj->default_from());
+        $obj->setDefaultFrom([
+            'name'  => 'Test',
+            'email' => 'test@example.com'
+        ]);
+        $this->assertEquals('"Test" <test@example.com>', $obj->defaultFrom());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_default_from(123);
+        $obj->setDefaultFrom(123);
     }
 
     public function testSetDefaultReplyTo()
     {
         $obj = new EmailConfig();
-        $ret = $obj->set_default_reply_to('test@example.com');
+        $ret = $obj->setDefaultReplyTo('test@example.com');
         $this->assertSame($ret, $obj);
-        $this->assertEquals('test@example.com', $obj->default_reply_to());
+        $this->assertEquals('test@example.com', $obj->defaultReplyTo());
 
-        $obj->set_default_reply_to(
-            [
-            'name'=>'Test',
-            'email'=>'test@example.com'
-            ]
-        );
-        $this->assertEquals('"Test" <test@example.com>', $obj->default_reply_to());
+        $obj->setDefaultReplyTo([
+            'name'  => 'Test',
+            'email' => 'test@example.com'
+        ]);
+        $this->assertEquals('"Test" <test@example.com>', $obj->defaultReplyTo());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_default_reply_to(123);
+        $obj->setDefaultReplyTo(123);
     }
 
     public function testSetDefaultLog()
     {
         $obj = new EmailConfig();
-        $ret = $obj->set_default_log(true);
+        $ret = $obj->setDefaultLog(true);
         $this->assertSame($ret, $obj);
-        $this->assertEquals(true, $obj->default_log());
+        $this->assertEquals(true, $obj->defaultLog());
     }
 
     public function testSetDefaultTrack()
     {
         $obj = new EmailConfig();
-        $ret = $obj->set_default_track(true);
+        $ret = $obj->setDefaultTrack(true);
         $this->assertSame($ret, $obj);
-        $this->assertEquals(true, $obj->default_track());
+        $this->assertEquals(true, $obj->defaultTrack());
 
     }
 }

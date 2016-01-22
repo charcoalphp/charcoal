@@ -19,77 +19,104 @@ use \Charcoal\Model\AbstractModel;
 class EmailLog extends AbstractModel implements IndexableInterface
 {
     use IndexableTrait;
+    use EmailAwareTrait;
 
     /**
-     * Type of log (ex: email)
+     * Type of log (e.g., "email").
+     *
      * @var string $type
      */
     private $type;
 
     /**
-     * Action logged (ex: send)
+     * The action logged (e.g., "send").
+     *
      * @var string $action
      */
     private $action;
 
     /**
-     * @var mixed $raw_response
+     * The mailer's raw response.
+     *
+     * @var mixed $rawResponse
      */
-    private $raw_response;
+    private $rawResponse;
 
     /**
-     * Unique message identifier
-     * @var string $message_id
+     * The Message-ID (Unique message identifier)
+     *
+     * @var string $messageId
      */
-    private $message_id;
+    private $messageId;
 
     /**
+     * The campaign ID.
+     *
      * @var string $campaign
      */
     private $campaign;
 
     /**
+     * The sender's email address.
+     *
      * @var string $from
      */
     private $from;
 
     /**
+     * The recipient's email address.
+     *
      * @var string $to
      */
     private $to;
 
     /**
+     * The email subject.
+     *
      * @var string $subject
      */
     private $subject;
 
     /**
+     * Whether the email has been semt.
+     *
      * Error code (0 = success)
-     * @var int $_send_status
+     *
+     * @var int $sendStatus
      */
-    private $send_status;
+    private $sendStatus;
 
     /**
-     * Error message
-     * @var string $_send_error
+     * The error message from a failed send.
+     *
+     * @var string $sendError
      */
-    private $send_error;
+    private $sendError;
 
     /**
-     * @var DateTime $_send_ts
+     * When the email should be sent.
+     *
+     * @var DateTime $sendDate
      */
-    private $send_ts;
+    private $sendDate;
 
     /**
+     * The current IP address at the time of the log.
+     *
      * @var string $ip
      */
     private $ip;
-    /**
-     * @var string $session_id
-     */
-    private $session_id;
 
     /**
+     * The current session ID at the time of the log.
+     *
+     * @var string $sessionId
+     */
+    private $sessionId;
+
+    /**
+     * Get the primary key that uniquely identifies each queue item.
+     *
      * @return string
      */
     public function key()
@@ -98,22 +125,28 @@ class EmailLog extends AbstractModel implements IndexableInterface
     }
 
     /**
-     * @param string $type The log action type. (ex: "email").
-     * @throws InvalidArgumentException If the type is not a string.
+     * Set the type of log.
+     *
+     * @param  string $type The log type. (e.g., "email").
+     * @throws InvalidArgumentException If the log type is not a string.
      * @return EmailLog Chainable
      */
-    public function set_type($type)
+    public function setType($type)
     {
         if (!is_string($type)) {
             throw new InvalidArgumentException(
                 'Log type must be a string.'
             );
         }
+
         $this->type = $type;
+
         return $this;
     }
 
     /**
+     * Get the log type.
+     *
      * @return string
      */
     public function type()
@@ -122,22 +155,28 @@ class EmailLog extends AbstractModel implements IndexableInterface
     }
 
     /**
-     * @param string $action The log action (ex: "send").
+     * Set the logged action.
+     *
+     * @param  string $action The log action (e.g., "send").
      * @throws InvalidArgumentException If the action is not a string.
      * @return EmailLog Chainable
      */
-    public function set_action($action)
+    public function setAction($action)
     {
         if (!is_string($action)) {
             throw new InvalidArgumentException(
                 'Action must be a string.'
             );
         }
+
         $this->action = $action;
+
         return $this;
     }
 
     /**
+     * Get the logged action.
+     *
      * @return string
      */
     public function action()
@@ -146,68 +185,80 @@ class EmailLog extends AbstractModel implements IndexableInterface
     }
 
     /**
-     * @param mixed $res The mailer response object / array.
+     * Set the raw response from the mailer.
+     *
+     * @param mixed $res The response object or array.
      * @return EmailLog Chainable
      */
-    public function set_raw_response($res)
+    public function setRawResponse($res)
     {
-        $this->raw_response = $res;
+        $this->rawResponse = $res;
         return $this;
     }
 
     /**
+     * Get the raw response from the mailer.
+     *
      * @return mixed
      */
-    public function raw_response()
+    public function rawResponse()
     {
-        return $this->raw_response;
+        return $this->rawResponse;
     }
 
     /**
-     * @param string $message_id The SMTP message ID.
-     * @throws InvalidArgumentException If the message id is not a string.
+     * Set the Message-ID.
+     *
+     * @param string $messageId The Message-ID.
+     * @throws InvalidArgumentException If the Message-ID is not a string.
      * @return EmailLog Chainable
      */
-    public function set_message_id($message_id)
+    public function setMessageId($messageId)
     {
-        if (!is_string($message_id)) {
+        if (!is_string($messageId)) {
             throw new InvalidArgumentException(
-                'Message ID must be a string.'
+                'Message-ID must be a string.'
             );
         }
-        $this->message_id = $message_id;
+
+        $this->messageId = $messageId;
+
         return $this;
     }
 
     /**
+     * Get the Message-ID.
+     *
      * @return string
      */
-    public function message_id()
+    public function messageId()
     {
-        return $this->message_id;
+        return $this->messageId;
     }
 
 
     /**
-     * @param string $campaign The campaign identifier.
-     * @throws InvalidArgumentException If the campaign parameter is invalid.
+     * Set the campaign ID.
+     *
+     * @param  string $campaign The campaign identifier.
+     * @throws InvalidArgumentException If the campaign is invalid.
      * @return EmailInterface Chainable
      */
-    public function set_campaign($campaign)
+    public function setCampaign($campaign)
     {
         if (!is_string($campaign)) {
             throw new InvalidArgumentException(
                 'Campaign must be a string'
             );
         }
+
         $this->campaign = $campaign;
+
         return $this;
     }
 
     /**
      * Get the campaign identifier.
-     *
-     * If it has not been explicitely set, it will be aut-generated (with uniqid).
      *
      * @return string
      */
@@ -217,22 +268,30 @@ class EmailLog extends AbstractModel implements IndexableInterface
     }
 
     /**
-     * @param string $from The sender email address.
-     * @throws InvalidArgumentException If the email is not a string.
+     * Set the sender's email address.
+     *
+     * @param  string|array $email An email address.
+     * @throws InvalidArgumentException If the email address is invalid.
      * @return EmailLog Chainable
      */
-    public function set_from($from)
+    public function setFrom($email)
     {
-        if (!is_string($from)) {
+        if (is_string($email)) {
+            $this->from = $email;
+        } elseif (is_array($email)) {
+            $this->from = $this->emailFromArray($email);
+        } else {
             throw new InvalidArgumentException(
-                'From (sender email) must be a string.'
+                'Sender email address must be a string.'
             );
         }
-        $this->from = $from;
+
         return $this;
     }
 
     /**
+     * Get the sender's email address.
+     *
      * @return string
      */
     public function from()
@@ -241,22 +300,30 @@ class EmailLog extends AbstractModel implements IndexableInterface
     }
 
     /**
-     * @param string $to The recipient email address.
-     * @throws InvalidArgumentException If the email is not a string.
+     * Set the recipient's email address.
+     *
+     * @param  string|array $email An email address.
+     * @throws InvalidArgumentException If the email address is invalid.
      * @return EmailLog Chainable
      */
-    public function set_to($to)
+    public function setTo($email)
     {
-        if (!is_string($to)) {
+        if (is_string($email)) {
+            $this->to = $email;
+        } elseif (is_array($email)) {
+            $this->to = $this->emailFromArray($email);
+        } else {
             throw new InvalidArgumentException(
-                'To (recipient email) must be a string.'
+                'Recipient email address must be a string.'
             );
         }
-        $this->to = $to;
+
         return $this;
     }
 
     /**
+     * Get the recipient's email address.
+     *
      * @return string
      */
     public function to()
@@ -265,16 +332,28 @@ class EmailLog extends AbstractModel implements IndexableInterface
     }
 
     /**
-     * @param string $subject The email subject.
+     * Set the email subject.
+     *
+     * @param  string $subject The email subject.
+     * @throws InvalidArgumentException If the subject is not a string.
      * @return EmailLog Chainable
      */
-    public function set_subject($subject)
+    public function setSubject($subject)
     {
+        if (!is_string($subject)) {
+            throw new InvalidArgumentException(
+                'Subject needs to be a string'
+            );
+        }
+
         $this->subject = $subject;
+
         return $this;
     }
 
     /**
+     * Get the email subject.
+     *
      * @return string
      */
     public function subject()
@@ -283,45 +362,49 @@ class EmailLog extends AbstractModel implements IndexableInterface
     }
 
     /**
-     * @param string|DateTime|null $send_ts The "send date" datetime value.
+     * @param  null|string|DateTime $ts The "send date" datetime value.
      * @throws InvalidArgumentException If the ts is not a valid datetime value.
      * @return EmailLog Chainable
      */
-    public function set_send_ts($send_ts)
+    public function setSendDate($ts)
     {
-        if ($send_ts === null) {
-            $this->send_ts = null;
+        if ($ts === null) {
+            $this->sendDate = null;
             return $this;
         }
-        if (is_string($send_ts)) {
+
+        if (is_string($ts)) {
             try {
-                $send_ts = new DateTime($send_ts);
+                $ts = new DateTime($ts);
             } catch (Exception $e) {
                 throw new InvalidArgumentException($e->getMessage());
             }
         }
-        if (!($send_ts instanceof DateTimeInterface)) {
+
+        if (!($ts instanceof DateTimeInterface)) {
             throw new InvalidArgumentException(
                 'Invalid "Send Date" value. Must be a date/time string or a DateTime object.'
             );
         }
-        $this->send_ts = $send_ts;
+
+        $this->sendDate = $ts;
+
         return $this;
     }
 
     /**
-     * @return DateTime|null
+     * @return null|DateTimeInterface
      */
-    public function send_ts()
+    public function sendDate()
     {
-        return $this->send_ts;
+        return $this->sendDate;
     }
 
     /**
      * @param mixed $ip The IP adress.
      * @return EmailLog Chainable
      */
-    public function set_ip($ip)
+    public function setIp($ip)
     {
         $this->ip = $ip;
         return $this;
@@ -336,36 +419,36 @@ class EmailLog extends AbstractModel implements IndexableInterface
     }
 
     /**
-     * @param string $session_id The session identifier.
+     * @param string $sessionId The session identifier.
      * @return EmailLog Chainable
      */
-    public function set_session_id($session_id)
+    public function setSessionId($sessionId)
     {
-        $this->session_id = $session_id;
+        $this->sessionId = $sessionId;
         return $this;
     }
 
     /**
      * @return string
      */
-    public function session_id()
+    public function sessionId()
     {
-        return $this->session_id;
+        return $this->sessionId;
     }
 
     /**
-     * StorableTrait > pre_save()
-     *
-     * @return void
+     * @see    StorableTrait::preSave()
+     * @return boolean
      */
-    public function pre_save()
+    public function preSave()
     {
-        parent::pre_save();
-        $ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
-        $session_id = session_id();
+        parent::preSave();
+        $ip = (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '');
+        $sessionId = session_id();
 
-        $this->set_ip($ip);
-        $this->set_session_id($session_id);
+        $this->setIp($ip);
+        $this->setSessionId($sessionId);
 
+        return true;
     }
 }

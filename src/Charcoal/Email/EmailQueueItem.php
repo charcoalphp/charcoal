@@ -27,48 +27,60 @@ class EmailQueueItem extends AbstractModel implements
 {
     use QueueItemTrait;
     use IndexableTrait;
+    use EmailAwareTrait;
 
     /**
-     * @var string $provider_ident
-     */
-    private $provider_ident;
-    /**
+     * The queue item ID.
+     *
      * @var string $ident
      */
     private $ident;
 
     /**
+     * The recipient's email address.
+     *
      * @var string $to
      */
     private $to;
 
     /**
+     * The sender's email address.
+     *
      * @var string $from
      */
     private $from;
 
     /**
-     * @var string $carrier
+     * The email subject.
+     *
+     * @var string $subject.
      */
     private $subject;
 
     /**
-     * @var string $message
+     * The HTML message body.
+     *
+     * @var string $msgHtml
      */
-    private $msg_html;
+    private $msgHtml;
 
     /**
-     * @var string $message
+     * The plain-text message body.
+     *
+     * @var string $msgTxt
      */
-    private $msg_txt;
+    private $msgTxt;
 
     /**
+     * The campaign ID.
+     *
      * @var string $campaign
      */
     private $campaign;
 
-
     /**
+     * Get the primary key that uniquely identifies each queue item.
+     *
      * @return string
      */
     public function key()
@@ -77,26 +89,33 @@ class EmailQueueItem extends AbstractModel implements
     }
 
     /**
-     * @param string|null $ident The current ident.
-     * @throws InvalidArgumentException If the ident is not a string.
+     * Set the queue item's ID.
+     *
+     * @param  string|null $ident The unique queue item identifier.
+     * @throws InvalidArgumentException If the identifier is not a string.
      * @return AbstractMessage Chainable
      */
-    public function set_ident($ident)
+    public function setIdent($ident)
     {
         if ($ident === null) {
             $this->ident = null;
             return $this;
         }
+
         if (!is_string($ident)) {
             throw new InvalidArgumentException(
                 'Ident needs to be a string'
             );
         }
+
         $this->ident = $ident;
+
         return $this;
     }
 
     /**
+     * Get the queue item's ID.
+     *
      * @return string
      */
     public function ident()
@@ -105,22 +124,32 @@ class EmailQueueItem extends AbstractModel implements
     }
 
     /**
-     * @param string $email The email sender.
-     * @throws InvalidArgumentException If the sender email is not a string.
-     * @return SmsQueueItem Chainable
+     * Set the recipient's email address.
+     *
+     * @param  string|array $email An email address.
+     * @throws InvalidArgumentException If the email address is invalid.
+     * @return EmailQueueItem Chainable
      */
-    public function set_to($email)
+    public function setTo($email)
     {
-        if (!is_string($email)) {
+        if (is_string($email)) {
+            $this->to = $email;
+        } elseif (is_array($email)) {
+            $this->to = $this->emailFromArray($email);
+        } else {
             throw new InvalidArgumentException(
-                'Queue item recipient: To needs to be a string'
+                'Queue item recipient: Email address must to be a string.'
             );
         }
+
         $this->to = $email;
+
         return $this;
     }
 
     /**
+     * Get the recipient's email address.
+     *
      * @return string
      */
     public function to()
@@ -129,23 +158,32 @@ class EmailQueueItem extends AbstractModel implements
     }
 
     /**
-     * @param string $email The email recipient.
-     * @throws InvalidArgumentException If the recipient email is not a string.
-     * @return SmsQueueItem Chainable
+     * Set the sender's email address.
+     *
+     * @param  string|array $email An email address.
+     * @throws InvalidArgumentException If the email address is invalid.
+     * @return EmailQueueItem Chainable
      */
-    public function set_from($email)
+    public function setFrom($email)
     {
-        if (!is_string($email)) {
+        if (is_string($email)) {
+            $this->from = $email;
+        } elseif (is_array($email)) {
+            $this->from = $this->emailFromArray($email);
+        } else {
             throw new InvalidArgumentException(
-                'To needs to be a string'
+                'Queue item sender: Email address must to be a string.'
             );
         }
+
         $this->from = $email;
+
         return $this;
     }
 
     /**
-     * Get the recipient's phone number.
+     * Get the sender's email address.
+     *
      * @return string
      */
     public function from()
@@ -154,22 +192,28 @@ class EmailQueueItem extends AbstractModel implements
     }
 
     /**
-     * @param string $subject The email subject.
+     * Set the email subject.
+     *
+     * @param  string $subject The email subject.
      * @throws InvalidArgumentException If the subject is not a string.
-     * @return SmsQueueItem Chainable
+     * @return EmailQueueItem Chainable
      */
-    public function set_subject($subject)
+    public function setSubject($subject)
     {
         if (!is_string($subject)) {
             throw new InvalidArgumentException(
-                'Message needs to be a string'
+                'Subject needs to be a string'
             );
         }
+
         $this->subject = $subject;
+
         return $this;
     }
 
     /**
+     * Get the email subject.
+     *
      * @return string
      */
     public function subject()
@@ -178,70 +222,90 @@ class EmailQueueItem extends AbstractModel implements
     }
 
     /**
-     * @param string $msg_html The message HTML.
-     * @throws InvalidArgumentException If the html is not a string.
-     * @return SmsQueueItem Chainable
+     * Set the email's HTML message body.
+     *
+     * @param  string $body The HTML message body.
+     * @throws InvalidArgumentException If the message is not a string.
+     * @return EmailQueueItem Chainable
      */
-    public function set_msg_html($msg_html)
+    public function setMsgHtml($body)
     {
-        if (!is_string($msg_html)) {
+        if (!is_string($body)) {
             throw new InvalidArgumentException(
-                'Message needs to be a string'
+                'HTML message needs to be a string'
             );
         }
-        $this->msg_html = $msg_html;
+
+        $this->msgHtml = $body;
+
         return $this;
     }
 
     /**
+     * Get the email's HTML message body.
+     *
      * @return string
      */
-    public function msg_html()
+    public function msgHtml()
     {
-        return $this->msg_html;
+        return $this->msgHtml;
     }
 
     /**
-     * @param string $msg_txt The mesage text.
-     * @throws InvalidArgumentException If the text is not a string.
-     * @return SmsQueueItem Chainable
+     * Set the email's plain-text message body.
+     *
+     * @param  string $body The plain-text mesage body.
+     * @throws InvalidArgumentException If the message is not a string.
+     * @return EmailQueueItem Chainable
      */
-    public function set_msg_txt($msg_txt)
+    public function setMsgTxt($body)
     {
-        if (!is_string($msg_txt)) {
+        if (!is_string($body)) {
             throw new InvalidArgumentException(
-                'Message needs to be a string'
+                'Plan-text message needs to be a string'
             );
         }
-        $this->msg_txt = $msg_txt;
+
+        $this->msgTxt = $body;
+
         return $this;
     }
 
     /**
+     * Get the email's plain-text message body.
+     *
      * @return string
      */
-    public function msg_txt()
+    public function msgTxt()
     {
-        return $this->msg_txt;
+        return $this->msgTxt;
     }
 
     /**
-     * @param string $campaign The campaign identifier.
+     * Set the campaign ID.
+     *
+     * @param  string $campaign The campaign identifier.
      * @throws InvalidArgumentException If the campaign is not a string.
-     * @return SmsQueueItem Chainable
+     * @return EmailQueueItem Chainable
      */
-    public function set_campaign($campaign)
+    public function setCampaign($campaign)
     {
         if (!is_string($campaign)) {
             throw new InvalidArgumentException(
-                'Message needs to be a string'
+                'Campaign ID needs to be a string'
             );
         }
+
         $this->campaign = $campaign;
+
         return $this;
     }
 
     /**
+     * Get the campaign ID.
+     *
+     * If it has not been explicitely set, it will be auto-generated (with uniqid).
+     *
      * @return string
      */
     public function campaign()
@@ -250,57 +314,73 @@ class EmailQueueItem extends AbstractModel implements
     }
 
     /**
-     * @param callable $cb         Callback function, will be called after completion (any results).
-     * @param callable $success_cb Success callback, will be called only if sending the message succeeded.
-     * @param callback $failure_cb Failure callback, in case of any errors / failures.
-     * @return boolean
+     * Process the item.
+     *
+     * @param  callable $callback        An optional callback routine executed after the item is processed.
+     * @param  callable $successCallback An optional callback routine executed when the item is resolved.
+     * @param  callable $failureCallback An optional callback routine executed when the item is rejected.
+     * @return boolean  Success / Failure
      */
-    public function process(callable $cb = null, callable $success_cb = null, callable $failure_cb = null)
-    {
+    public function process(
+        callable $callback = null,
+        callable $successCallback = null,
+        callable $failureCallback = null
+    ) {
         if ($this->processed() === true) {
             // Do not process twice, ever.
             return null;
         }
+
         $email = new Email([
-            'app' => App::instance(),
+            'app'    => App::instance(),
             'logger' => $this->logger
         ]);
-        $email->set_data($this->data());
+
+        $email->setData($this->data());
+
         try {
             $res = $email->send();
             if ($res === true) {
-                $this->set_processed(true);
-                $this->set_processed_date('now');
+                $this->setProcessed(true);
+                $this->setProcessedDate('now');
                 $this->update();
-                if ($success_cb !== null) {
-                    $success_cb($this);
+
+                if ($successCallback !== null) {
+                    $successCallback($this);
                 }
             } else {
-                if ($failure_cb !== null) {
-                    $failure_cb($this);
+                if ($failureCallback !== null) {
+                    $failureCallback($this);
                 }
             }
-            if ($cb !== null) {
-                $cb($this);
+
+            if ($callback !== null) {
+                $callback($this);
             }
+
             return $res;
 
         } catch (Exception $e) {
             // Todo log error
-            if ($failure_cb !== null) {
-                $failure_cb($this);
+            if ($failureCallback !== null) {
+                $failureCallback($this);
             }
+
             return false;
         }
     }
 
     /**
+     * Hook called before saving the item.
+     *
      * @return boolean
      */
-    public function pre_save()
+    public function preSave()
     {
-        parent::pre_save();
-        $this->pre_save_queue_item();
+        parent::preSave();
+
+        $this->preSaveQueueItem();
+
         return true;
     }
 }

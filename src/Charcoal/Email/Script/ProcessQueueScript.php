@@ -11,7 +11,7 @@ use \Charcoal\App\Script\AbstractScript;
 use \Charcoal\App\Script\CronScriptInterface;
 use \Charcoal\App\Script\CronScriptTrait;
 
-// Local namespace (`charcoal-email`) dependencies
+// Local dependencies
 use \Charcoal\Email\EmailQueueManager;
 
 /**
@@ -23,6 +23,7 @@ class ProcessQueueScript extends AbstractScript implements CronScriptInterface
 
     /**
      * A copy of all sent message.
+     *
      * @var array $sent
      */
     private $sent;
@@ -30,8 +31,8 @@ class ProcessQueueScript extends AbstractScript implements CronScriptInterface
     /**
      * Process all messages currently in queue.
      *
-     * @param RequestInterface  $request  A PSR-7 compatible Request instance.
-     * @param ResponseInterface $response A PSR-7 compatible Response instance.
+     * @param  RequestInterface  $request  A PSR-7 compatible Request instance.
+     * @param  ResponseInterface $response A PSR-7 compatible Response instance.
      * @return ResponseInterface
      */
     public function run(RequestInterface $request, ResponseInterface $response)
@@ -39,30 +40,32 @@ class ProcessQueueScript extends AbstractScript implements CronScriptInterface
         // Unused parameter
         unset($request);
 
-        $this->start_lock();
+        $this->startLock();
 
         $climate = $this->climate();
 
-        $processed_callback = function($success, $failures, $skipped) use ($climate) {
+        $processedCallback = function($success, $failures, $skipped) use ($climate) {
             if (!empty($success)) {
                 $climate->green()->out(sprintf('%s emails were successfully sent.', count($success)));
             }
+
             if (!empty($failures)) {
                 $climate->red()->out(sprintf('%s emails were not successfully sent', count($failures)));
             }
+
             if (!empty($skipped)) {
                 $climate->orange()->out(sprintf('%s emails were skipped.', count($skipped)));
             }
         };
 
-        $queue_manager = new EmailQueueManager([
-            'logger'=>$this->logger
+        $queueManager = new EmailQueueManager([
+            'logger' => $this->logger
         ]);
-        $queue_manager->set_processed_callback($processed_callback);
-        $queue_manager->process_queue();
+        $queueManager->setProcessedCallback($processedCallback);
+        $queueManager->processQueue();
 
+        $this->stopLock();
 
-        $this->stop_lock();
         return $response;
     }
 }
