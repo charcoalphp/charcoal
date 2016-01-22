@@ -830,7 +830,7 @@ abstract class AbstractProperty implements
     * @param string $case Optional. The type of case to return. camel, pascal or snake.
     * @return string The getter method name, for a given key.
     */
-    private function getter($key)
+    protected function getter($key)
     {
         $getter = $key;
         return $this->camelize($getter);
@@ -843,7 +843,7 @@ abstract class AbstractProperty implements
      * @param string $case Optional. The type of case to return. camel, pascal or snake.
      * @return string The setter method name, for a given key.
      */
-    private function setter($key)
+    protected function setter($key)
     {
         $setter = 'set_'.$key;
         return $this->camelize($setter);
