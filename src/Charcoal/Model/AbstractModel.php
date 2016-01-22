@@ -458,7 +458,7 @@ abstract class AbstractModel implements
     * @param string $case Optional. The type of case to return. camel, pascal or snake.
     * @return string The getter method name, for a given key.
     */
-    private function getter($key)
+    protected function getter($key)
     {
         $getter = $key;
         return $this->camelize($getter);
@@ -471,7 +471,7 @@ abstract class AbstractModel implements
      * @param string $case Optional. The type of case to return. camel, pascal or snake.
      * @return string The setter method name, for a given key.
      */
-    private function setter($key)
+    protected function setter($key)
     {
         $setter = 'set_'.$key;
         return $this->camelize($setter);
@@ -483,7 +483,7 @@ abstract class AbstractModel implements
      * @param string $str The snake_case string to camelize.
      * @return string The camelCase string.
      */
-    private function camelize($str)
+    protected function camelize($str)
     {
         return lcfirst(implode('', array_map('ucfirst', explode('_', $str))));
     }

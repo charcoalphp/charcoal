@@ -267,7 +267,7 @@ abstract class AbstractEntity implements
      *
      * @return string
      */
-    private function setter($key)
+    protected function setter($key)
     {
         return 'set_'.$key;
     }

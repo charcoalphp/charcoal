@@ -506,7 +506,7 @@ abstract class AbstractSource implements
      * @param string $case Optional. The type of case to return. camel, pascal or snake.
      * @return string The getter method name, for a given key.
      */
-    private function getter($key, $case = 'camel')
+    protected function getter($key, $case = 'camel')
     {
         $getter = $key;
 
@@ -526,7 +526,7 @@ abstract class AbstractSource implements
      * @param string $case Optional. The type of case to return. camel, pascal or snake.
      * @return string The setter method name, for a given key.
      */
-    private function setter($key, $case = 'camel')
+    protected function setter($key, $case = 'camel')
     {
         $setter = 'set_'.$key;
 
