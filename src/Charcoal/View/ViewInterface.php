@@ -32,11 +32,6 @@ interface ViewInterface
     public function engine();
 
     /**
-     * @return EngineInterface
-     */
-    public function createEngine();
-
-    /**
      * @param string $template_ident
      * @throws InvalidArgumentException if the provided argument is not a string
      * @return AbstractView Chainable

@@ -102,17 +102,9 @@ trait ViewableTrait
      * @throws InvalidArgumentException If the view parameter is not an array or a View object.
      * @return ViewableInterface Chainable
      */
-    public function setView($view)
+    public function setView(ViewInterface $view)
     {
-        if (is_array($view)) {
-            $this->view = $this->createView($view);
-        } elseif (($view instanceof ViewInterface)) {
-            $this->view = $view;
-        } else {
-            throw new InvalidArgumentException(
-                'View must be an array or a ViewInterface object.'
-            );
-        }
+        $this->view = $view;
         return $this;
     }
 
@@ -121,37 +113,29 @@ trait ViewableTrait
      */
     public function view()
     {
-        if ($this->view === null) {
-            return $this->createView();
-        }
         return $this->view;
     }
-
-    /**
-     * @param mixed $data
-     * @return ViewInterface
-     */
-    abstract public function createView($data = null);
 
     /**
      * @param string $template The template to parse and render. If null, use the object's default.
      * @return string The rendered template.
      */
-    public function render($template = null)
+    public function render($templateIdent = null)
     {
-        return $this->view()->render($template, $this->viewController());
+        if ($templateIdent === null) {
+            $templateIdent = $this->templateIdent();
+        }
+        return $this->view()->render($templateIdent, $this->viewController());
     }
 
     /**
      * @param string $templateIdent The template ident to load and render.
      * @return string The rendered template.
      */
-    public function renderTemplate($templateIdent = null)
+    public function renderTemplate($templateString = null)
     {
-        if ($templateIdent === null) {
-            $templateIdent = $this->templateIdent();
-        }
-        return $this->view()->renderTemplate($templateIdent, $this->viewController());
+
+        return $this->view()->renderTemplate($templateString, $this->viewController());
     }
 
     /**

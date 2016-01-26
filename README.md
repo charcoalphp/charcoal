@@ -19,14 +19,20 @@ $ composer require locomotivemtl/charcoal-view
 
 - `PHP 5.5+`
 	- Older versions of PHP are deprecated, therefore not supported.
-	- `ext-fileinfo` File / MIME identification.
-	- `ext-mbstring` Multi-bytes string support.
-	- `ext-pdo` PDO Database driver.
+- `psr/log`
+	- A PSR-3 compliant logger should be provided to the various services / classes.
+- `psr/http-message`
+  - Charcoal View provides a PSR7 renderer.
 - [`locomotivemtl/charcoal-config`](https://github.com/locomotivemtl/charcoal-config)
 	- The view objects are _configurable_ with `\Charcoal\View\ViewConfig`.
+
+### Optional dependencies
+
 - [`mustache/mustache`](https://github.com/bobthecow/mustache.php)
-	- The default rendering engine is _mustache_, therefore there is a hard dependency for now.
+	- The default rendering engine is _mustache_, so it should be included in most cases.
 	- All default charcoal modules use mustache templates.
+- [`twig/twig`](http://twig.sensiolabs.org/)
+	- Twig can also be used as a rendering engine for the view.
 
 > 👉 Development dependencies are described in the _Development_ section of this README file.
 
@@ -42,6 +48,7 @@ class MyClass implements \Charcoal\View\ViewableInterface
 }
 
 $viewable = new MyClass();
+$viewable->setView($container['view']);
 echo $viewable->renderTemplate('foo/bar/template');
 ```
 
@@ -56,7 +63,7 @@ $view->setEngine($engine)
 
 $context = new \Foo\Bar\ContextData();
 
-echo $view->renderTemplate('foo/bar/template', $context);
+echo $view->render('foo/bar/template', $context);
 ```
 
 > 👉 The default view engine, used in those examples, would be _mustache_.
@@ -97,8 +104,8 @@ $app->run();
 
 The `Charcoal\View\ViewInterface` defines all that is needed to render templates via a view engine:
 
-- `render($template = null, $context = null)`
-- `renderTemplate($template_ident, $context = null)`
+- `render($templateIdent = null, $context = null)`
+- `renderTemplate($templateString, $context = null)`
 
 The abstract class `Charcoal\View\AbstractView` fully implements the `ViewInterface` and adds the methods:
 
@@ -117,7 +124,7 @@ $view = new GenericView([
 	'engine_type' => 'mustache'
 ]);
 $context = new \Foo\Bar\ModelController();
-echo $view->renderTemplate('example/foo/bar', $context);
+echo $view->render('example/foo/bar', $context);
 
 // Using with a template string, directly
 $view = new GenericView([

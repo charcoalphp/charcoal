@@ -28,12 +28,17 @@ class ViewConfig extends AbstractConfig
     private $defaultEngine;
 
     /**
+     * @var string $defaultController
+     */
+    private $defaultController;
+
+    /**
      * @return array
      */
     public function defaults()
     {
         return [
-            'templatePath' => [],
+            'template_path' => [],
             'engines' => [
                 'mustache' => [
 
@@ -45,7 +50,7 @@ class ViewConfig extends AbstractConfig
 
                 ]
             ],
-            'defaultEngine'=> 'mustache'
+            'default_engine'=> 'mustache'
         ];
     }
 
@@ -162,6 +167,30 @@ class ViewConfig extends AbstractConfig
      * @return string
      */
     public function defaultEngine()
+    {
+        return $this->defaultEngine;
+    }
+
+    /**
+     * @param string $engine
+     * @throws InvalidArgumentException
+     * @return ViewConfig Chainable
+     */
+    public function setDefaultController($engine)
+    {
+        if (!is_string($engine)) {
+            throw new InvalidArgumentException(
+                'Default engine must be a string'
+            );
+        }
+        $this->defaultEngine = $engine;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function defaultController()
     {
         return $this->defaultEngine;
     }

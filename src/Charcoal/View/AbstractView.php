@@ -70,8 +70,7 @@ abstract class AbstractView implements
     public function setData(array $data)
     {
         foreach ($data as $prop => $val) {
-            $setter = $this->setter($prop);
-            $func = [$this, $setter];
+            $func = [$this, $this->setter($prop)];
             if (is_callable($func)) {
                 call_user_func($func, $val);
             } else {
@@ -137,54 +136,7 @@ abstract class AbstractView implements
      */
     public function engine()
     {
-        if ($this->engine === null) {
-            $this->engine = $this->createEngine();
-        }
         return $this->engine;
-    }
-
-    /**
-     * @return EngineInterface
-     */
-    public function createEngine()
-    {
-        $type = $this->engineType();
-        switch ($type) {
-            case 'mustache':
-                return new MustacheEngine([
-                    'logger' => $this->logger,
-                    'cache'  => null,
-                    'loader' => null
-                ]);
-
-                case 'php':
-                return new PhpEngine([
-                    'logger' => $this->logger,
-                    'cache'  => null,
-                    'loader' => null
-                ]);
-
-                case 'php-mustache':
-                return new PhpMustacheEngine([
-                    'logger' => $this->logger,
-                    'cache'  => null,
-                    'loader' => null
-                ]);
-
-                case 'twig':
-                return new TwigEngine([
-                    'logger' => $this->logger,
-                    'cache'  => null,
-                    'loader' => null
-                ]);
-
-                default:
-                return new MustacheEngine([
-                    'logger' => $this->logger,
-                    'cache'  => null,
-                    'loader' => null
-                ]);
-        }
     }
 
     /**
@@ -302,55 +254,41 @@ abstract class AbstractView implements
      * @param mixed  $context
      * @return string The rendered template
      */
-    public function renderTemplate($template_string = null, $context = null)
+    public function renderTemplate($templateString = null, $context = null)
     {
-        if ($template_string === null) {
-            $template_string = $this->template();
+        if ($templateString === null) {
+            $templateString = $this->template();
         }
         if ($context === null) {
             $context = $this->context();
         }
-        return $this->engine()->render($template_string, $context);
+        return $this->engine()->render($templateString, $context);
     }
 
     /**
      * Allow an object to define how the key getter are called.
      *
      * @param string $key The key to get the getter from.
-     * @param string $case Optional. The type of case to return. camel, pascal or snake.
      * @return string The getter method name, for a given key.
      */
-    protected function getter($key, $case = 'camel')
+    protected function getter($key)
     {
         $getter = $key;
-
-        if ($case == 'camel') {
-            return $this->camelize($getter);
-        } elseif ($case == 'pascal') {
-            return $this->pascalize($getter);
-        } else {
-            return $getter;
-        }
+        return $this->camelize($getter);
     }
 
     /**
      * Allow an object to define how the key setter are called.
      *
      * @param string $key The key to get the setter from.
-     * @param string $case Optional. The type of case to return. camel, pascal or snake.
      * @return string The setter method name, for a given key.
      */
-    protected function setter($key, $case = 'camel')
+
+    protected function setter($key)
     {
         $setter = 'set_'.$key;
+        return $this->camelize($setter);
 
-        if ($case == 'camel') {
-            return $this->camelize($setter);
-        } elseif ($case == 'pascal') {
-            return $this->pascalize($setter);
-        } else {
-            return $setter;
-        }
     }
 
     /**
@@ -361,17 +299,6 @@ abstract class AbstractView implements
      */
     private function camelize($str)
     {
-        return lcfirst($this->pascalize($str));
-    }
-
-    /**
-     * Transform a snake_case string to PamelCase.
-     *
-     * @param string $str The snake_case string to pascalize.
-     * @return string The PamelCase string.
-     */
-    private function pascalize($str)
-    {
-        return implode('', array_map('ucfirst', explode('_', $str)));
+        return lcfirst(implode('', array_map('ucfirst', explode('_', $str))));
     }
 }

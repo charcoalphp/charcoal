@@ -22,11 +22,14 @@ class ViewableTraitTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $genericView = new GenericView([
-            'logger'=>new \Monolog\Logger('charcoal.test')
+            'logger'=>new \Psr\Log\NullLogger()
         ]);
+        $engine = new \Charcoal\View\Mustache\MustacheEngine([
+            'logger'=>new \Psr\Log\NullLogger()
+        ]);
+        $genericView->setEngine($engine);
         $mock = $this->getMockForTrait('\Charcoal\View\ViewableTrait');
-        $mock->method('createView')
-             ->willReturn($genericView);
+        $mock->setView($genericView);
         $mock->foo = 'bar';
         $this->obj = $mock;
 
@@ -61,14 +64,13 @@ class ViewableTraitTest extends \PHPUnit_Framework_TestCase
     {
         $obj = $this->obj;
 
-        $view = $this->obj->createView();
+        $view = new GenericView([
+            'logger'=>new \Monolog\Logger('charcoal.test')
+        ]);
 
         $ret = $obj->setView($view);
         $this->assertSame($ret, $obj);
         $this->assertEquals($view, $obj->view());
-
-        $this->setExpectedException('\InvalidArgumentException');
-        $obj->setView(false);
     }
 
     public function testRenderAndDisplay()

@@ -41,7 +41,7 @@ interface ViewableInterface
      * @param ViewInterface|array $view
      * @return ViewableInterface Chainable
      */
-    public function setView($view);
+    public function setView(ViewInterface $view);
 
     /**
      * @return ViewInterface The object's View.

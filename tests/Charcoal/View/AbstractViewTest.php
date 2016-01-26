@@ -14,8 +14,12 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        $engine = new \Charcoal\View\Mustache\MustacheEngine([
+            'logger'=>new \Psr\Log\NullLogger()
+        ]);
         $this->obj = $this->getMockForAbstractClass('\Charcoal\View\AbstractView');
         $this->obj->setLogger($GLOBALS['logger']);
+        $this->obj->setEngine($engine);
     }
 
     public function logger()
