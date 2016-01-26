@@ -74,6 +74,13 @@ class GenericFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertNotSame($ret1, $ret2);
     }
 
+    public function testCreateCallback()
+    {
+        $ret = $this->obj->create('\DateTime', null, function($obj) {
+            $this->assertInstanceOf('\DateTime', $obj);
+        });
+    }
+
     public function testGetReturnsSameInstance()
     {
         $ret1 = $this->obj->get('\DateTime');

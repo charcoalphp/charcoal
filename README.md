@@ -71,7 +71,7 @@ class MyFactory extends AbstractFactory
 Or, dynamically:
 
 ```php
-$factory = ResolverFactory::instance();
+$factory = new ResolverFactory();
 $factory->setBaseClass('\My\Foo\BaseClassInterface');
 ```
 
@@ -84,7 +84,7 @@ It is possible to set a default type of object (default class) by setting the `d
 ```php
 class MyFactory extends AbstractFactory
 {
-	public function default_class()
+	public function defaultClass()
 	{
 		return '\My\Foo\DefaultClassInterface`;
 	}
@@ -94,17 +94,35 @@ class MyFactory extends AbstractFactory
 Or, dynamically:
 
 ```php
-$factory = ResolverFactory::instance();
+$factory = new ResolverFactory();
 $factory->setDefaultClass('\My\Foo\DefaultClassInterface');
 ```
 
 > ⚠ Setting a default class name changes the standard Factory behavior. When an invalid class name is used, instead of throwing an `Exception`, an object of the default class type will **always** be returned.
 
+## Executing an object callback
+
+It is possible to execute an object callback upon object instanciation by passing a `callable` object as the 3rd argument of the `create()` method. The callback should have the following signature:
+
+```php
+// $obj is the newly created object
+function callback($obj);
+```
+
+Example:
+
+```php
+$factory = new GenericFactory();
+$factory->create('\Foo\Bar', null, function($obj) {
+  // Outputs the newly created `\Foo\Bar` object
+	var_dump($obj);
+});
+
 ## The `AbstractFactory` API
 
 | Method                                 | Return value | Description |
 | -------------------------------------- | ------------ | ----------- |
-| `create(string $type [, array $args])` | _Object_     | Create a class from a "type" string. |
+| `create(string $type [, array $args, callable $cb])` | _Object_     | Create a class from a "type" string. |
 | `get(string $type [, array $args])`    | _Object_     | Get returns the latest created class instance, or a new one if none exists. |
 | `setBase_class(string $classname)`    | _Chainable_  |             |
 | `baseClass()`                         | `string`     |             |
@@ -153,7 +171,8 @@ To create a `\Foo\Bar\Baz` object:
 
 ```php
 use \Charcoal\Factory\ResolverFactory;
-$obj = ResolverFactory::instance()->create('foo/bar/baz');
+$factory = new ResolverFactory();
+$obj = $factory->create('foo/bar/baz');
 ```
 
 # Development

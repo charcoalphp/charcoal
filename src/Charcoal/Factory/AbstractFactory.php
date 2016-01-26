@@ -37,13 +37,19 @@ abstract class AbstractFactory implements FactoryInterface
      *
      * Unlike `get()`, this method *always* return a new instance of the requested class.
      *
-     * @param string $type The type (class ident).
-     * @param array  $args The constructor arguments (optional).
+     * ## Object callback
+     * It is possible to pass a callback method that will be executed upon object instanciation.
+     * The callable should have a signature: `function($obj);` where $obj is the newly created object.
+     *
+     *
+     * @param string   $type The type (class ident).
+     * @param array    $args The constructor arguments (optional).
+     * @param callable $cb   Object callback.
      * @throws Exception If the base class is set and  the resulting instance is not of the base class.
      * @throws InvalidArgumentException If type argument is not a string or is not an available type.
      * @return mixed The instance / object
      */
-    public function create($type, array $args = null)
+    final public function create($type, array $args = null, callable $cb = null)
     {
         if (!is_string($type)) {
             throw new InvalidArgumentException(
@@ -59,7 +65,7 @@ abstract class AbstractFactory implements FactoryInterface
             if ($defaultClass !== '') {
                 return new $defaultClass($args);
             } else {
-                $e = new InvalidArgumentException(
+                throw new InvalidArgumentException(
                     sprintf(
                         '%1$s: Type "%2$s" is not a valid type. (Using default class "%3$s")',
                         get_called_class(),
@@ -67,8 +73,6 @@ abstract class AbstractFactory implements FactoryInterface
                         $defaultClass
                     )
                 );
-
-                throw $e;
             }
         }
 
@@ -89,6 +93,10 @@ abstract class AbstractFactory implements FactoryInterface
             );
         }
 
+        if (isset($cb)) {
+            $cb($obj);
+        }
+
         return $obj;
     }
 
@@ -103,7 +111,7 @@ abstract class AbstractFactory implements FactoryInterface
      * @throws InvalidArgumentException If type argument is not a string.
      * @return mixed The instance / object
      */
-    public function get($type, array $args = null)
+    final public function get($type, array $args = null)
     {
         if (!is_string($type)) {
             throw new InvalidArgumentException(
