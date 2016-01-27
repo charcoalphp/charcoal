@@ -20,9 +20,9 @@
   "minimum-stability":"dev",
   "require": {
     "php": ">=5.5.0",
-    "locomotivemtl/charcoal-config": "~0.1",
+    "locomotivemtl/charcoal-config": "~0.4",
     "locomotivemtl/charcoal-view": "dev-master",
-    "locomotivemtl/charcoal-factory": "dev-master",
+    "locomotivemtl/charcoal-factory": "~0.2",
     "locomotivemtl/charcoal-core": "dev-master"
   },
   "require-dev": {
