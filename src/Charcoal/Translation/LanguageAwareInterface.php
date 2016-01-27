@@ -2,9 +2,6 @@
 
 namespace Charcoal\Translation;
 
-// Intra-module (`charcoal-app`) dependency
-use \Charcoal\App\Language\LanguageInterface;
-
 /**
  * Defines an object that can track a single language value.
  *
@@ -22,10 +19,10 @@ interface LanguageAwareInterface
     public function language();
 
     /**
-     * Set the object's current language.
+     * Assign a language to the object.
      *
-     * @param  LanguageInterface|string|null $lang A language object or identifier.
+     * @param  string|LanguageInterface $lang A language object or identifier.
      * @return self
      */
-    public function setLanguage($lang = null);
+    public function setLanguage($lang);
 }

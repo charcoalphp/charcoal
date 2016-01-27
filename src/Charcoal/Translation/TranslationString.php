@@ -141,11 +141,11 @@ class TranslationString implements
     {
         if ($val instanceof TranslationStringInterface) {
             $this->val = $val->all();
-        } elseif (is_array($val)) {
+        } elseif (is_array($val) || is_a($val, 'Traversable')) {
             $this->val = [];
 
             foreach ($val as $lang => $l10n) {
-                $this->addVal($lang, $l10n);
+                $this->addVal($lang, (string)$l10n);
             }
         } elseif (is_string($val)) {
             $lang = $this->currentLanguage();

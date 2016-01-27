@@ -2,7 +2,9 @@
 
 namespace Charcoal\Translation;
 
-// Intra-module (`charcoal-app`) dependency
+use \InvalidArgumentException;
+
+// Dependency from 'charcoal-app'
 use \Charcoal\App\Language\LanguageInterface;
 
 /**
@@ -22,7 +24,7 @@ trait LanguageAwareTrait
     /**
      * Retrieve the object's current language.
      *
-     * @return string A language identifier.
+     * @return string|LanguageInterface A language identifier.
      */
     public function language()
     {
@@ -30,23 +32,36 @@ trait LanguageAwareTrait
     }
 
     /**
-     * Set the object's current language.
+     * Determine if the object has a language.
      *
-     * @param  LanguageInterface|string|null $lang A language object or identifier.
+     * @return bool Whether a language has been assigned.
+     */
+    public function hasLanguage()
+    {
+        return !!$this->language;
+    }
+
+    /**
+     * Assign a language to the object.
+     *
+     * @param  string|LanguageInterface $lang A language object or identifier.
      * @return self
      */
-    public function setLanguage($lang = null)
+    public function setLanguage($lang)
     {
-        if (isset($lang)) {
-            if ($lang instanceof LanguageInterface) {
-                $lang = (string)$lang->ident();
-            } elseif (is_array($lang) && isset($lang['ident'])) {
-                $lang = (string)$lang['ident'];
-            }
-
+        if (is_array($lang) && isset($lang['ident'])) {
+            $this->language = (string)$lang['ident'];
+        } elseif ($lang instanceof LanguageInterface) {
             $this->language = $lang;
+        } elseif (is_string((string) $lang)) {
+            $this->language = (string)$lang;
         } else {
-            $this->language = null;
+            throw new InvalidArgumentException(
+                sprintf(
+                    'Invalid language, received %s',
+                    (is_object($lang) ? get_class($lang) : gettype($lang))
+                )
+            );
         }
 
         return $this;
