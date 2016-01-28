@@ -369,11 +369,7 @@ abstract class AbstractConfig implements
 
         $getter = $this->getter($key);
         if (is_callable([$this, $getter])) {
-            try {
-                $value = $this->{$getter}();
-            } catch (Exception $e) {
-                $value = null;
-            }
+            $value = $this->{$getter}();
         } else {
             if (!isset($this->{$key})) {
                 return $this->hasInDelegates($key);
