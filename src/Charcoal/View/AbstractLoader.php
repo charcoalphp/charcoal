@@ -60,7 +60,7 @@ abstract class AbstractLoader implements
 
         // Use default templates path (from app config) if none was set
         if (class_exists('\Charcoal\App\App')) {
-            $paths = \Charcoal\App\App::instance()->config()->get('view/path');
+            $paths = \Charcoal\App\App::instance()->config()->get('view.path');
         }
 
         $this->setPaths($paths);
