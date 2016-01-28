@@ -33,7 +33,7 @@ abstract class AbstractConfig implements
     JsonSerializable,
     Serializable
 {
-    const DEFAULT_SEPARATOR = '/';
+    const DEFAULT_SEPARATOR = '.';
 
     /**
      * Delimiter for accessing nested options.
