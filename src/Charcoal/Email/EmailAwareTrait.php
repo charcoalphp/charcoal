@@ -3,7 +3,7 @@
 namespace Charcoal\Email;
 
 // From `PHP`
-use \InvalidArgumentException as InvalidArgumentException;
+use \InvalidArgumentException;
 
 /**
  * For objects that are or interact with emails.
@@ -19,9 +19,12 @@ trait EmailAwareTrait
      */
     protected function emailToArray($var)
     {
+        if($var === null) {
+            return null;
+        }
         if (!is_string($var) && !is_array($var)) {
             throw new InvalidArgumentException(
-                'Email address must be an array or a string.'
+                sprintf('Email address must be an array or a string. (%s given)', gettype($var))
             );
         }
 
@@ -32,10 +35,12 @@ trait EmailAwareTrait
                 'email' => $var,
                 'name'  => ''
             ];
+        } else {
+            $arr = $var;
         }
 
-        if (!isset($var['name'])) {
-            $var['name'] = '';
+        if (!isset($arr['name'])) {
+            $arr['name'] = '';
         }
 
         return $arr;

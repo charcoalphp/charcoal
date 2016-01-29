@@ -11,7 +11,7 @@ use \Psr\Log\LoggerAwareInterface;
 use \Psr\Log\LoggerAwareTrait;
 
 // From `phpmailer/phpmailer`
-use \PHPMailer;
+use \PHPMailer\PHPMailer\PHPMailer;
 
 // Module `charcoal-config` dependencies
 use \Charcoal\Config\ConfigurableInterface;
@@ -23,8 +23,6 @@ use \Charcoal\View\ViewableInterface;
 use \Charcoal\View\ViewableTrait;
 
 // Module `charcoal-app` dependencies
-use \Charcoal\App\AppAwareInterface;
-use \Charcoal\App\AppAwareTrait;
 use \Charcoal\App\Template\TemplateFactory;
 
 // Intra module (`charcoal-email`) dependencies
@@ -38,14 +36,12 @@ use \Charcoal\Email\EmailLog;
  * Default implementation of the `EmailInterface`.
  */
 class Email implements
-    AppAwareInterface,
     ConfigurableInterface,
     EmailInterface,
     LoggerAwareInterface,
     QueueableInterface,
     ViewableInterface
 {
-    use AppAwareTrait;
     use ConfigurableTrait;
     use LoggerAwareTrait;
     use QueueableTrait;
@@ -142,14 +138,26 @@ class Email implements
     private $templateData = [];
 
     /**
+     * @var PHPMailer PHP Mailer instance.
+     */
+    private $phpMailer;
+
+    /**
      * Construct a new Email object.
      *
      * @param array $data Dependencies and settings.
      */
     public function __construct(array $data)
     {
-        $this->setApp($data['app']);
+        $this->phpMailer = $data['phpmailer'];
         $this->setLogger($data['logger']);
+
+        if(isset($data['view'])) {
+            $this->setView($data['view']);
+        }
+        if(isset($data['config'])) {
+            $this->setConfig($data['config']);
+        }
     }
 
     /**
@@ -410,7 +418,7 @@ class Email implements
     public function from()
     {
         if ($this->from === null) {
-            $this->from = $this->config()->defaultFrom();
+            $this->setFrom($this->config()->defaultFrom());
         }
 
         return $this->from;
@@ -677,7 +685,7 @@ class Email implements
             $this->to()
         );
 
-        $mail = new PHPMailer(true);
+        $mail = $this->phpMailer;
 
         try {
             $this->setSmtpOptions($mail);
@@ -836,7 +844,7 @@ class Email implements
             $log->setMessageId($mailer->getLastMessageId());
             $log->setCampaign($this->campaign());
 
-            $log->setSendTs('now');
+            $log->setSendDate('now');
 
             $log->setFrom($mailer->From);
             $log->setTo($to['email']);
@@ -855,47 +863,7 @@ class Email implements
      */
     protected function logQueue()
     {
-    }
 
-    /**
-     * Construct a new email configuration object.
-     *
-     * @see    ConfigurableInterface::createConfig()
-     * @param  array $data Optional configuration data.
-     * @return EmailConfig
-     */
-    public function createConfig(array $data = null)
-    {
-        $config = new EmailConfig();
-
-        if ($data !== null) {
-            $config->setData($data);
-        } else {
-            // Use default app config
-            $config->setData($this->app()->config()->get('email'));
-        }
-
-        return $config;
-    }
-
-    /**
-     * Construct a new generic view object.
-     *
-     * @see    ViewableInterface::createView()
-     * @param  array $data Optional view data.
-     * @return EmailView
-     */
-    public function createView(array $data = null)
-    {
-        $view = new GenericView([
-            'logger' => $this->logger
-        ]);
-
-        if ($data !== null) {
-            $view->setData($data);
-        }
-
-        return $view;
     }
 
     /**
@@ -940,7 +908,6 @@ class Email implements
 
         $templateFactory = new TemplateFactory();
         $template = $templateFactory->create($templateIdent, [
-            'app'    => $this->app,
             'logger' => $this->logger
         ]);
 
@@ -983,5 +950,12 @@ class Email implements
     private function camelize($str)
     {
         return lcfirst(implode('', array_map('ucfirst', explode('_', $str))));
+    }
+
+    public function createConfig()
+    {
+        throw new Exception(
+            'Deprecated method'
+        );
     }
 }
