@@ -100,8 +100,6 @@ trait DescribableTrait
             $metadataIdent = $this->metadataIdent();
         }
 
-        //$this->logger->debug(sprintf('Loading metadata from ident: %s', $metadataIdent));
-
         $metadata_loader = new MetadataLoader();
         $metadata = $metadata_loader->load($metadataIdent);
         $this->setMetadata($metadata);
@@ -146,8 +144,9 @@ trait DescribableTrait
     */
     protected function generateMetadataIdent()
     {
-        $class_name = get_class($this);
-        $metadataIdent = str_replace(['\\', '.'], '/', strtolower($class_name));
+        $classname = get_class($this);
+        $ident = preg_replace('/([a-z])([A-Z])/', '$1-$2', $classname);
+        $metadataIdent = strtolower(str_replace('\\', '/', $ident));
         return $metadataIdent;
     }
 

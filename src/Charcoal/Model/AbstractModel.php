@@ -363,7 +363,7 @@ abstract class AbstractModel implements
         $source_config = $metadata->source($defaultSource);
 
         $source_type = isset($source_config['type']) ? $source_config['type'] : self::DEFAULT_SOURCE_TYPE;
-        $source_factory = new   SourceFactory();
+        $source_factory = new SourceFactory();
         $source = $source_factory->create($source_type, [
             'logger'=>$this->logger
         ]);
@@ -447,7 +447,7 @@ abstract class AbstractModel implements
     public function objType()
     {
         $classname = get_class($this);
-        $ident = preg_replace('/(^\\[A-Z])/', '-${1}', $classname);
+        $ident = preg_replace('/([a-z])([A-Z])/', '$1-$2', $classname);
         $obj_type = strtolower(str_replace('\\', '/', $ident));
         return $obj_type;
     }
