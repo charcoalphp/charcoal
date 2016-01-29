@@ -1,0 +1,29 @@
+{
+  "properties":{
+    "upload_path":{
+      "type":"string"
+    },
+    "overwrite":{
+      "type":"boolean"
+    },
+    "accepted_mimetypes":{
+      "type":"string",
+      "multiple":true
+    },
+    "max_filesize":{
+      "type":"number"
+    },
+    "mimetype":{
+      "type":"string",
+      "read_only":true,
+      "storable":false
+    },
+    "filesize":{
+      "read_only":true,
+      "storable":false
+    }
+  },
+	"admin":{
+		"input_type":"charcoal/admin/property/input/file"
+	}
+}

@@ -1,0 +1,19 @@
+{
+  "properties":{
+    "min":{
+      "type": "date-time",
+      "allow_null":true
+    },
+    "max":{
+      "type": "date-time",
+      "allow_null":true
+    },
+    "format":{
+      "type":"string",
+      "allow_empty":true
+    }
+  },
+	"admin":{
+		"input_type":"charcoal/admin/property/input/date-time-picker"
+	}
+}

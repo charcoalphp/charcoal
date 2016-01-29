@@ -1,0 +1,16 @@
+{
+    "properties":{
+        "true_label":{
+            "type":"string",
+            "l10n":true
+        },
+        "false_label":{
+          "type":"string",
+          "l10n":true
+        }
+    },
+    "admin":{
+        "input_type":"charcoal/admin/property/input/switch"
+    }
+}
+
