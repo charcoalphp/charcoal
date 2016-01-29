@@ -19,10 +19,10 @@ $GLOBALS['container'] = new SlimContainer();
 $GLOBALS['container']['charcoal/app/config'] = function($c) {
     $config = new AppConfig();
     $config->setData([
-    	'logger'=>[
-			'level'=>'debug'
-		]
-	]);
+        'logger'=>[
+            'level'=>'debug'
+        ]
+    ]);
     return $config;
 };
 

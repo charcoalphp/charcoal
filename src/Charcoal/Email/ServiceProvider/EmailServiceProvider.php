@@ -14,14 +14,14 @@ use \Charcoal\Email\EmailConfig;
 use \Charcoal\Factory\MapFactory;
 
 /**
-* Email Service Provider
-*/
+ * Email Service Provider
+ */
 class EmailServiceProvider implements ServiceProviderInterface
 {
     /**
-    * @param Container $container A pimple container instance.
-    * @return void
-    */
+     * @param Container $container A pimple container instance.
+     * @return void
+     */
     public function register(Container $container)
     {
         /**
@@ -69,7 +69,7 @@ class EmailServiceProvider implements ServiceProviderInterface
                 'phpmailer' => $container['phpmailer'],
                 'config'    => $container['email/config'],
                 'view'      => $container['email/view']
-            ] );
+            ]);
             return $factory;
         };
     }

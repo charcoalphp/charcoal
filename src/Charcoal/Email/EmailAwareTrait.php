@@ -19,7 +19,7 @@ trait EmailAwareTrait
      */
     protected function emailToArray($var)
     {
-        if($var === null) {
+        if ($var === null) {
             return null;
         }
         if (!is_string($var) && !is_array($var)) {

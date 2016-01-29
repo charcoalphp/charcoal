@@ -152,10 +152,10 @@ class Email implements
         $this->phpMailer = $data['phpmailer'];
         $this->setLogger($data['logger']);
 
-        if(isset($data['view'])) {
+        if (isset($data['view'])) {
             $this->setView($data['view']);
         }
-        if(isset($data['config'])) {
+        if (isset($data['config'])) {
             $this->setConfig($data['config']);
         }
     }
@@ -816,6 +816,10 @@ class Email implements
      */
     protected function logSend($result, $mailer)
     {
+        if ($this->log() === false) {
+            return;
+        }
+
         if (!$result) {
             $this->logger->error('Email could not be sent.');
         } else {
@@ -907,6 +911,7 @@ class Email implements
         }
 
         $templateFactory = new TemplateFactory();
+        $templateFactory->setDefaultClass('charcoal/email/generic-email');
         $template = $templateFactory->create($templateIdent, [
             'logger' => $this->logger
         ]);
@@ -952,6 +957,12 @@ class Email implements
         return lcfirst(implode('', array_map('ucfirst', explode('_', $str))));
     }
 
+    /**
+     * Temporary hack to fulfills the Configurable Interface.
+     *
+     * @throws Exception If this function is ever called (obsolete).
+     * @return void
+     */
     public function createConfig()
     {
         throw new Exception(
