@@ -54,6 +54,16 @@ interface FactoryInterface
      */
     public function defaultClass();
 
+    /**
+     * @param array $arguments The constructor arguments to be passed to the created object's initialization.
+     * @return AbstractFactory Chainable
+     */
+    public function setArguments(array $arguments);
+
+    /**
+     * @return array
+     */
+    public function arguments();
 
     /**
      * Get the class name (FQN) from "type".
@@ -64,7 +74,7 @@ interface FactoryInterface
     public function resolve($type);
 
     /**
-     * Returns wether a type is available
+     * Returns wether a type is available (is valid).
      *
      * @param string $type The "type" of object to resolve (the object ident).
      * @return boolean True if the type is available, false if not.
