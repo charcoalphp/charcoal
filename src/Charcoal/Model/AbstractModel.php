@@ -236,11 +236,11 @@ abstract class AbstractModel implements
         //     return false;
         // }
 
-        $ret = $this->source()->save_item($this);
+        $ret = $this->source()->saveItem($this);
         if ($ret === false) {
             return false;
         } else {
-            $this->set_id($ret);
+            $this->setId($ret);
         }
         $this->postSave();
         return $ret;
@@ -374,6 +374,7 @@ abstract class AbstractModel implements
         } else {
             $data = $source_config;
         }
+
         $source->setData($data);
 
         return $source;
