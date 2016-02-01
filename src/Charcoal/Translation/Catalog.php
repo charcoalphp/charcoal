@@ -66,7 +66,7 @@ class Catalog implements
     public function __construct(array $entries = null, $config = null)
     {
         if (isset($config)) {
-            $this->set_config($config);
+            $this->setConfig($config);
         }
 
         if (isset($entries)) {
@@ -283,7 +283,7 @@ class Catalog implements
         }
 
         if ($this->hasEntry($ident)) {
-            $this->entries[$ident]->add_val($lang, $val);
+            $this->entries[$ident]->addVal($lang, $val);
         } else {
             if (!is_string($val)) {
                 throw new InvalidArgumentException(
