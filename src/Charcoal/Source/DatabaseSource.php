@@ -212,17 +212,17 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
             } else {
                 // The key exists. Validate.
                 $col = $cols[$ident];
-                $alter = false;
-                if (strtolower($col['Type']) != strtolower($field->sql_type())) {
+                $alter = true;
+                if (strtolower($col['Type']) != strtolower($field->sqlType())) {
                     $alter = true;
                 }
-                if ((strtolower($col['Null']) == 'no') && !$field->allow_null()) {
+                if ((strtolower($col['Null']) == 'no') && !$field->allowNull()) {
                     $alter = true;
                 }
-                if ((strtolower($col['Null']) != 'no') && $field->allow_null()) {
+                if ((strtolower($col['Null']) != 'no') && $field->allowNull()) {
                     $alter = true;
                 }
-                if ($col['Default'] != $field->default_val()) {
+                if ($col['Default'] != $field->defaultVal()) {
                     $alter = true;
                 }
 
