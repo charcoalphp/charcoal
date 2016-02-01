@@ -72,15 +72,15 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
 
         $obj->set('foo', ['bar'=>666]);
         $this->assertEquals(['bar'=>666], $obj->get('foo'));
-        $this->assertEquals(666, $obj->get('foo/bar'));
+        $this->assertEquals(666, $obj->get('foo.bar'));
     }
 
     public function testGetWithCustomSeparator()
     {
         $obj = $this->obj;
         $obj->set('foo', ['bar'=>42]);
-        $obj->setSeparator('.');
-        $this->assertEquals(42, $obj->get('foo.bar'));
+        $obj->setSeparator('/');
+        $this->assertEquals(42, $obj->get('foo/bar'));
     }
 
     public function testHas()
@@ -91,14 +91,14 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($obj->has('foobar'));
 
         $obj['foo'] = ['bar'=>'baz'];
-        $this->assertTrue($obj->has('foo/bar'));
+        $this->assertTrue($obj->has('foo.bar'));
     }
 
 
     public function testSetWithSeparator()
     {
         $obj = $this->obj;
-
+        $obj->setSeparator('/');
         $obj->set('foo', ['a'=>'b']);
         $obj->set('foo/bar1/foo2', 'baz');
 
