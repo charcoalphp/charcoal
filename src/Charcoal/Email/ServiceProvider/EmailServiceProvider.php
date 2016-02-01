@@ -25,8 +25,8 @@ class EmailServiceProvider implements ServiceProviderInterface
     public function register(Container $container)
     {
         /**
-        * @return PHPMailer
-        */
+         * @return PHPMailer
+         */
         $container['phpmailer'] = $container->factory(function (Container $container) {
             $throwException = true;
             $mailer = new PHPMailer($throwException);
@@ -34,8 +34,8 @@ class EmailServiceProvider implements ServiceProviderInterface
         });
 
         /**
-        * @return EmailConfig
-        */
+         * @return EmailConfig
+         */
         $container['email/config'] = function (Container $container) {
             $config = $container['config'];
             $emailConfig = new EmailConfig($config['email']);
@@ -43,15 +43,15 @@ class EmailServiceProvider implements ServiceProviderInterface
         };
 
         /**
-        * @return \Charcoal\View\ViewInterface
-        */
+         * @return \Charcoal\View\ViewInterface
+         */
         $container['email/view'] = function (Container $container) {
             return $container['view'];
         };
 
         /**
-        * @return Email
-        */
+         * @return Email
+         */
         $container['email'] = $container->factory(function (Container $container) {
             $email = new Email();
             return $email;
