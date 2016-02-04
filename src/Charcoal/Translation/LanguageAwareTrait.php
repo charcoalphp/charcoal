@@ -17,7 +17,7 @@ trait LanguageAwareTrait
     /**
      * Current language identifier.
      *
-     * @var string
+     * @var string|LanguageInterface
      */
     private $language;
 
