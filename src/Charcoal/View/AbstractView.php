@@ -3,6 +3,7 @@
 namespace Charcoal\View;
 
 // Dependencies from `PHP`
+use \Exception;
 use \InvalidArgumentException;
 
 // PSR-3 (logger) dependencies
@@ -33,8 +34,6 @@ abstract class AbstractView implements
     use LoggerAwareTrait;
     use ConfigurableTrait;
 
-    const DEFAULT_ENGINE = 'mustache';
-
     /**
      * @var string $templateIdent
      */
@@ -44,11 +43,6 @@ abstract class AbstractView implements
      * @var string $template
      */
     private $template;
-
-    /**
-     * @var string $engineType
-     */
-    private $engineType = self::DEFAULT_ENGINE;
 
     /**
      * @var EngineInterface $engine
@@ -109,10 +103,18 @@ abstract class AbstractView implements
     }
 
     /**
+     * Get the view's rendering engine instance.
+     *
+     * @throws Exception If the engine is accessed before it was properly set.
      * @return EngineInterface
      */
     public function engine()
     {
+        if (!isset($this->engine)) {
+            throw new Exception(
+                'Engine must first be set on view, with `setEngine()`'
+            );
+        }
         return $this->engine;
     }
 

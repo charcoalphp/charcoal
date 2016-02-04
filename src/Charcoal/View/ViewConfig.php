@@ -40,17 +40,12 @@ class ViewConfig extends AbstractConfig
         return [
             'template_path' => [],
             'engines' => [
-                'mustache' => [
-
-                ],
-                'php' => [
-
-                ],
-                'php-mustache' => [
-
-                ]
+                'mustache'      => [],
+                'php'           => [],
+                'php-mustache'  => [],
+                'twig'          => []
             ],
-            'default_engine'=> 'mustache'
+            'default_engine' => 'mustache'
         ];
     }
 
