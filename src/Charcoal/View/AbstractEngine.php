@@ -50,7 +50,7 @@ abstract class AbstractEngine implements
     /**
      * @return LoaderInterface
      */
-    public function loader()
+    protected function loader()
     {
         if ($this->loader === null) {
             $this->loader = $this->createLoader();
@@ -61,7 +61,7 @@ abstract class AbstractEngine implements
     /**
      * @return LoaderInterface
      */
-    abstract public function createLoader();
+    abstract protected function createLoader();
 
     /**
      * Delegates template loading to the engine's Loader object.
@@ -69,15 +69,26 @@ abstract class AbstractEngine implements
      * @param string $template_ident
      * @return string
      */
-    public function loadTemplate($template_ident)
+    public function loadTemplate($templateIdent)
     {
-        return $this->loader()->load($template_ident);
+        return $this->loader()->load($templateIdent);
     }
 
     /**
-     * @param string $template
+     * @param string $templateIdent
      * @param mixed  $context
      * @return string
      */
-    abstract public function render($template, $context);
+    public function render($templateIdent, $context)
+    {
+        $template = $this->loadTemplate($templateIdent);
+        return $this->renderTemplate($template, $context);
+    }
+
+    /**
+     * @param string $templateString
+     * @param mixed  $context
+     * @return string
+     */
+    abstract public function renderTemplate($templateString, $context);
 }

@@ -97,33 +97,10 @@ abstract class AbstractView implements
     }
 
     /**
-     * Set the engine type
+     * Set the engine (`EngineInterface`) dependency.
      *
-     * @param string $engineType
-     * @throws InvalidArgumentException
-     * @return AbstractView Chainable
-     */
-    public function setEngineType($engineType)
-    {
-        if (!is_string($engineType)) {
-            throw new InvalidArgumentException(
-                'Engine type must be a string (mustache, php or php-mustache)'
-            );
-        }
-        $this->engineType = $engineType;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function engineType()
-    {
-        return $this->engineType;
-    }
-
-    /**
-     * @param EngineInterface $engine
+     * @param EngineInterface $engine The
+     * @return ViewInterface Chainable
      */
     public function setEngine(EngineInterface $engine)
     {
@@ -216,7 +193,9 @@ abstract class AbstractView implements
     }
 
     /**
-     * @param mixed $context
+     * Set the rendering context ("view controller").
+     *
+     * @param mixed $context The context / view controller to render the template with.
      * @return AbstractView Chainable
      */
     public function setContext($context)
@@ -226,6 +205,7 @@ abstract class AbstractView implements
     }
 
     /**
+     * Get the rendering context ("view controller").
      * @return mixed
      */
     public function context()

@@ -9,6 +9,9 @@ use \InvalidArgumentException;
 use \Psr\Log\LoggerAwareInterface;
 use \Psr\Log\LoggerAwareTrait;
 
+// Local namespace dependencies
+use \Charcoal\View\LoaderInterface;
+
 /**
  * Base template loader.
  */
@@ -17,6 +20,11 @@ abstract class AbstractLoader implements
     LoaderInterface
 {
     use LoggerAwareTrait;
+
+    /**
+     * @var string $basePath
+     */
+    private $basePath = '';
 
     /**
      * @var string $path
@@ -36,6 +44,51 @@ abstract class AbstractLoader implements
         if (isset($data['logger'])) {
             $this->setLogger($data['logger']);
         }
+
+        if (isset($data['base_path'])) {
+            $this->setBasePath($data['base_path']);
+        } else {
+            if (class_exists('\Charcoal\App\App')) {
+                $this->logger->debug('OBSOLETE: Using Charcoal App  for base path (1)');
+                $basePath = \Charcoal\App\App::instance()->config()->get('ROOT');
+                $basePath = rtrim($basePath, '/\\').DIRECTORY_SEPARATOR;
+                $this->setBasePath($basePath);
+            }
+        }
+
+        if (isset($data['paths'])) {
+            $this->setPaths($data['paths']);
+        } else {
+            if (class_exists('\Charcoal\App\App')) {
+                $this->logger->debug('OBSOLETE: Using Charcoal App  for paths (2)');
+                $this->setPaths(\Charcoal\App\App::instance()->config()->get('view.path'));
+            }
+        }
+    }
+
+    /**
+     * @param string $basePath The base path to set.
+     * @throws InvalidArgumentException if the base path parameter is not a string.
+     * @return LoaderInterface Chainable
+     */
+    public function setBasePath($basePath)
+    {
+        if (!is_string($basePath)) {
+            throw new InvalidArgumentException(
+                'Base path must be a string'
+            );
+        }
+        $basePath = realpath($basePath);
+        $this->basePath = rtrim($basePath, '/\\').DIRECTORY_SEPARATOR;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function basePath()
+    {
+        return $this->basePath;
     }
 
     /**
@@ -44,33 +97,12 @@ abstract class AbstractLoader implements
      */
     public function paths()
     {
-        if (empty($this->paths)) {
-            $this->setDefaultPaths();
-        }
-
         return $this->paths;
     }
 
     /**
-     * @return AbstractLoader Chainable
-     */
-    public function setDefaultPaths()
-    {
-        $paths = [];
-
-        // Use default templates path (from app config) if none was set
-        if (class_exists('\Charcoal\App\App')) {
-            $paths = \Charcoal\App\App::instance()->config()->get('view.path');
-        }
-
-        $this->setPaths($paths);
-
-        return $this;
-    }
-
-    /**
      * @param string[] $paths The list of path to add.
-     * @return AbstractLoader Chainable
+     * @return LoaderInterface Chainable
      */
     public function setPaths(array $paths)
     {
@@ -85,7 +117,7 @@ abstract class AbstractLoader implements
 
     /**
      * @param string $path The path to add to the load.
-     * @return AbstractLoader Chainable
+     * @return LoaderInterface Chainable
      */
     public function addPath($path)
     {
@@ -96,7 +128,7 @@ abstract class AbstractLoader implements
 
     /**
      * @param string $path The path to add (prepend) to the load.
-     * @return AbstractLoader Chainable
+     * @return LoaderInterface Chainable
      */
     public function prependPath($path)
     {
@@ -119,14 +151,10 @@ abstract class AbstractLoader implements
             );
         }
 
+        $basePath = $this->basePath();
         $path = rtrim($path, '/\\').DIRECTORY_SEPARATOR;
-
-        if (class_exists('\Charcoal\App\App')) {
-            $basePath = \Charcoal\App\App::instance()->config()->get('ROOT');
-            $basePath = rtrim($basePath, '/\\').DIRECTORY_SEPARATOR;
-            if (false === strpos($path, $basePath)) {
-                $path = $basePath.$path;
-            }
+        if ($basePath && strpos($path, $basePath) === false) {
+            $path = $basePath.$path;
         }
 
         return $path;

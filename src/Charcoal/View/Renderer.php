@@ -18,7 +18,7 @@ class Renderer
     /**
      * @var ViewInterface $view
      */
-    private $view;
+    protected $view;
 
     /**
      * @param array $data The constructor dependencies
@@ -39,14 +39,6 @@ class Renderer
     }
 
     /**
-     * @return ViewInterface
-     */
-    public function view()
-    {
-        return $this->view;
-    }
-
-    /**
      * @param ResponseInterface $response
      * @param string            $template
      * @param mixed             $context
@@ -54,7 +46,7 @@ class Renderer
      */
     public function render(ResponseInterface $response, $template, $context = null)
     {
-         $response->getBody()->write($this->view()->renderTemplate($template, $context));
+         $response->getBody()->write($this->view->renderTemplate($template, $context));
          return $response;
     }
 }

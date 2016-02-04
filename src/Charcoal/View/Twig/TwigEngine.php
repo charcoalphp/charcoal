@@ -64,7 +64,7 @@ class TwigEngine extends AbstractEngine
     /**
      * @return Twig_Environment
      */
-    public function createTwig()
+    protected function createTwig()
     {
         $twig = new Twig_Environment($this->loader(), [
             'cache'     => 'twig_cache',
@@ -78,7 +78,7 @@ class TwigEngine extends AbstractEngine
     /**
      * @return LoaderInterface
      */
-    public function createLoader()
+    protected function createLoader()
     {
         $loader = new TwigLoader([
             'logger'=>$this->logger
@@ -87,12 +87,22 @@ class TwigEngine extends AbstractEngine
     }
 
     /**
-     * @param string $template
+     * @param string $templateIdent
      * @param mixed  $context
      * @return string
      */
-    public function render($template, $context)
+    public function render($templateIdent, $context)
     {
-        return $this->twig()->render($template, ['data'=>$context]);
+        return $this->twig()->render($templateIdent, ['data'=>$context]);
+    }
+
+    /**
+     * @param string $templateString
+     * @param mixed  $context
+     * @return string
+     */
+    public function renderTemplate($templateString, $context)
+    {
+        return $this->twig()->render($templateString, ['data'=>$context]);
     }
 }

@@ -9,25 +9,28 @@ namespace Charcoal\View;
 interface EngineInterface
 {
     /**
-     * @return LoaderInterface
+     * @param LoaderInterface $loader A loader instance.
+     * @return MustacheEngine Chainable
      */
-    public function loader();
+    public function setLoader(LoaderInterface $loader);
 
     /**
-     * @return LoaderInterface
-     */
-    public function createLoader();
-
-    /**
-     * @param string $template_ident
+     * @param string $templateIdent
      * @return string
      */
-    public function loadTemplate($template_ident);
+    public function loadTemplate($templateIdent);
 
     /**
-     * @param string $template
+     * @param string $templateIdent
      * @param mixed  $context
      * @return string
      */
-    public function render($template, $context);
+    public function render($templateIdent, $context);
+
+    /**
+     * @param string $templateIdent
+     * @param mixed  $context
+     * @return string
+     */
+    public function renderTemplate($templateString, $context);
 }

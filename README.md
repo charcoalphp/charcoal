@@ -3,6 +3,8 @@ Charcoal View
 
 The `Charcoal\View` module provides everything needed to render templates and add renderer to objects.
 
+It is a thin layer on top of various _rendering engines_, such as **mustache** or **twig**.
+
 [![Build Status](https://travis-ci.org/locomotivemtl/charcoal-view.svg?branch=master)](https://travis-ci.org/locomotivemtl/charcoal-view)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/396d2f06-82ba-4c79-b8cc-762f1e8bda29/mini.png)](https://insight.sensiolabs.com/projects/396d2f06-82ba-4c79-b8cc-762f1e8bda29)
 
@@ -19,9 +21,9 @@ $ composer require locomotivemtl/charcoal-view
 
 - `PHP 5.5+`
 	- Older versions of PHP are deprecated, therefore not supported.
-- `psr/log`
+- [`psr/log`](http://www.php-fig.org/psr/psr-3/)
 	- A PSR-3 compliant logger should be provided to the various services / classes.
-- `psr/http-message`
+- [`psr/http-message`](http://www.php-fig.org/psr/psr-7/)
   - Charcoal View provides a PSR7 renderer.
 - [`locomotivemtl/charcoal-config`](https://github.com/locomotivemtl/charcoal-config)
 	- The view objects are _configurable_ with `\Charcoal\View\ViewConfig`.
@@ -38,21 +40,6 @@ $ composer require locomotivemtl/charcoal-view
 
 # Usage
 
-Typical usage, through _Viewable_:
-
-```php
-class MyClass implements \Charcoal\View\ViewableInterface
-{
-	use \Charcoal\View\ViewableTrait;
-	// ...
-}
-
-$viewable = new MyClass();
-$viewable->setView($container['view']);
-echo $viewable->renderTemplate('foo/bar/template');
-```
-
-Full example of the API:
 ```php
 $engine = new \Charcoal\View\Mustache\MustacheEngine([
 	'logger' => $logger, // PSR-3 logger
@@ -141,11 +128,12 @@ echo $view->render($template, $context);
 
 Charcoal _views_ support different templating Engines_, which are responsible for loading the appropriate template (through a _loader_) and render a template with a given context according to its internal rules. Every view engines should implement `\Charcoal\View\EngineInterface`.
 
-There are 3 engines available by default:
+There are 4 engines available by default:
 
 - `mustache` (**default**)
 - `php`
 - `php-mustache`, the mustache templating engine with a PHP template loader. (Files are parsed with PHP before being used as a mustache templates).
+- `twig`
 
 ### Templates
 
@@ -156,9 +144,9 @@ Templates are simply files, stored on the filesystem, containing the main view (
 
 Templates are loaded with template _loaders_. Loaders implement the `Charcoal\View\LoaderInterface` and simply tries to match an identifier (passed as argument to the `load()` method) to a file on the filesystem.
 
-Calling `$view->renderTemplate($template_ident, $ctx)` will automatically use the `Loader` object to find the template `$template_ident`.
+Calling `$view->render($templateIdent, $ctx)` will automatically use the engine's `Loader` object to find the template `$template_ident`.
 
-Otherwise, calling `$view->render($template_string, $ctx)` expects an already-loaded template string.
+Otherwise, calling `$view->renderTemplate($templateString, $ctx)` expects an already-loaded template string as parameter.
 
 ## Viewable Interface and Trait
 

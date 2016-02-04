@@ -5,6 +5,17 @@ namespace Charcoal\View;
 interface LoaderInterface
 {
     /**
+     * @param string $basePath The base path to set.
+     * @return LoaderInterface Chainable
+     */
+    public function setBasePath($basePath);
+
+    /**
+     * @return string
+     */
+    public function basePath();
+
+    /**
      * @return string[]
      */
     public function paths();

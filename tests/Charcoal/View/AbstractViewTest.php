@@ -34,20 +34,6 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Charcoal\View\AbstractView', $obj);
     }
 
-
-    public function testSetEngineType()
-    {
-        $obj = $this->obj;
-        $this->assertEquals('mustache', $obj->engineType());
-
-        $ret = $obj->setEngineType('php');
-        $this->assertSame($ret, $obj);
-        $this->assertEquals('php', $obj->engineType());
-
-        $this->setExpectedException('\InvalidArgumentException');
-        $obj->setEngineType(1);
-    }
-
     /**
      * Asserts that the render() method:
      * - Can be used without parameters

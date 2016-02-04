@@ -30,17 +30,17 @@ class MustacheEngine extends AbstractEngine
     /**
      * Build the object with an array of dependencies.
      *
+     * ## Required parameters:
+     * - `logger` a PSR-3 logger
+     *
      * ## Optional parameters:
      * - `loader` a Loader object
-     * - `logger` a PSR logger
      *
      * @param array $data
      */
     public function __construct($data)
     {
-        if (isset($data['logger'])) {
-            $this->setLogger($data['logger']);
-        }
+        $this->setLogger($data['logger']);
 
         if (isset($data['loader'])) {
             $this->setLoader($data['loader']);
@@ -58,7 +58,7 @@ class MustacheEngine extends AbstractEngine
     /**
      * @return Mustache_Engine
      */
-    public function mustache()
+    protected function mustache()
     {
         if ($this->mustache === null) {
             $this->mustache = $this->createMustache();
@@ -69,7 +69,7 @@ class MustacheEngine extends AbstractEngine
     /**
      * @return Mustache_Engine
      */
-    public function createMustache()
+    protected function createMustache()
     {
         $mustache = new Mustache_Engine([
             'cache'             => 'mustache_cache',
@@ -87,7 +87,7 @@ class MustacheEngine extends AbstractEngine
     /**
      * @return LoaderInterface
      */
-    public function createLoader()
+    protected function createLoader()
     {
         $loader = new MustacheLoader([
             'logger' => $this->logger
@@ -119,19 +119,29 @@ class MustacheEngine extends AbstractEngine
     /**
      * @return MustacheLoader
      */
-    public function createHelper()
+    protected function createHelper()
     {
         $helper = new GenericHelper();
         return $helper;
     }
 
     /**
-     * @param string $template
+     * @param string $templateIdent
      * @param mixed  $context
      * @return string
      */
-    public function render($template, $context)
+    public function render($templateIdent, $context)
     {
-        return $this->mustache()->render($template, $context);
+        return $this->mustache()->render($templateIdent, $context);
+    }
+
+    /**
+     * @param string $templateString
+     * @param mixed  $context
+     * @return string
+     */
+    public function renderTemplate($templateString, $context)
+    {
+        return $this->mustache()->render($templateString, $context);
     }
 }

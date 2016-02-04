@@ -8,20 +8,6 @@ namespace Charcoal\View;
 interface ViewInterface
 {
     /**
-     * Set the engine type
-     *
-     * @param string $engineType
-     * @throws InvalidArgumentException
-     * @return AbstractView Chainable
-     */
-    public function setEngineType($engineType);
-
-    /**
-     * @return string
-     */
-    public function engineType();
-
-    /**
      * @param EngineInterface $engine
      */
     public function setEngine(EngineInterface $engine);
@@ -56,13 +42,15 @@ interface ViewInterface
     public function template();
 
     /**
-     * @param string $template_ident
+     * @param string $templateIdent
      * @throws InvalidArgumentException
      * @return string
      */
-    public function loadTemplate($template_ident = null);
+    public function loadTemplate($templateIdent = null);
 
     /**
+     * Set the rendering context ("view controller").
+     *
      * @param mixed $context
      * @return AbstractView Chainable
      */
