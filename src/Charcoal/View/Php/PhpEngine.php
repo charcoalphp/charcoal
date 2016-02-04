@@ -17,9 +17,7 @@ class PhpEngine extends AbstractEngine
      */
     public function __construct($data)
     {
-        if (isset($data['logger'])) {
-            $this->setLogger($data['logger']);
-        }
+        $this->setLogger($data['logger']);
 
         if (isset($data['loader'])) {
             $this->setLoader($data['loader']);

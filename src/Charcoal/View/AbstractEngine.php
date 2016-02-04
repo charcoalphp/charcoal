@@ -2,6 +2,9 @@
 
 namespace Charcoal\View;
 
+// PHP dependencies
+use \Exception;
+
 // PSR-3 (logger) dependencies
 use \Psr\Log\LoggerAwareInterface;
 use \Psr\Log\LoggerAwareTrait;
@@ -48,20 +51,18 @@ abstract class AbstractEngine implements
     }
 
     /**
+     * @throws Exception If the loader getter is called before it was set.
      * @return LoaderInterface
      */
     protected function loader()
     {
         if ($this->loader === null) {
-            $this->loader = $this->createLoader();
+            throw new Exception(
+                'Loader must first be passed with `setLoader()`'
+            );
         }
         return $this->loader;
     }
-
-    /**
-     * @return LoaderInterface
-     */
-    abstract protected function createLoader();
 
     /**
      * Delegates template loading to the engine's Loader object.

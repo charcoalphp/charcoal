@@ -39,7 +39,7 @@ abstract class AbstractLoader implements
      *
      * @param array $data The class dependencies map.
      */
-    public function __construct(array $data = null)
+    final public function __construct(array $data = null)
     {
         if (isset($data['logger'])) {
             $this->setLogger($data['logger']);
@@ -47,22 +47,10 @@ abstract class AbstractLoader implements
 
         if (isset($data['base_path'])) {
             $this->setBasePath($data['base_path']);
-        } else {
-            if (class_exists('\Charcoal\App\App')) {
-                $this->logger->debug('OBSOLETE: Using Charcoal App  for base path (1)');
-                $basePath = \Charcoal\App\App::instance()->config()->get('ROOT');
-                $basePath = rtrim($basePath, '/\\').DIRECTORY_SEPARATOR;
-                $this->setBasePath($basePath);
-            }
         }
 
         if (isset($data['paths'])) {
             $this->setPaths($data['paths']);
-        } else {
-            if (class_exists('\Charcoal\App\App')) {
-                $this->logger->debug('OBSOLETE: Using Charcoal App  for paths (2)');
-                $this->setPaths(\Charcoal\App\App::instance()->config()->get('view.path'));
-            }
         }
     }
 

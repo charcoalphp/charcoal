@@ -85,17 +85,6 @@ class MustacheEngine extends AbstractEngine
     }
 
     /**
-     * @return LoaderInterface
-     */
-    protected function createLoader()
-    {
-        $loader = new MustacheLoader([
-            'logger' => $this->logger
-        ]);
-        return $loader;
-    }
-
-    /**
      * @param mixed $helper
      * @return MustacheEngine Chainable
      */
