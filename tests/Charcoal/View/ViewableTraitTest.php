@@ -19,8 +19,8 @@ class ViewableTraitTest extends \PHPUnit_Framework_TestCase
     private $view;
 
     /**
-    *
-    */
+     *
+     */
     public function setUp()
     {
         $logger = new \Psr\Log\NullLogger();
@@ -43,8 +43,8 @@ class ViewableTraitTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    *
-    */
+     *
+     */
     public function testSetTemplateIdent()
     {
         $obj = $this->obj;
@@ -59,8 +59,8 @@ class ViewableTraitTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    *
-    */
+     *
+     */
     public function testSetView()
     {
         $obj = $this->obj;
@@ -75,8 +75,8 @@ class ViewableTraitTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    *
-    */
+     *
+     */
     public function testRenderAndDisplay()
     {
         $obj = $this->obj;

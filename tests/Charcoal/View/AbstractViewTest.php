@@ -13,8 +13,8 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
     public $obj;
 
     /**
-    *
-    */
+     *
+     */
     public function setUp()
     {
         $this->logger = new \Psr\Log\NullLogger();
@@ -33,8 +33,8 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
 
 
     /**
-    *
-    */
+     *
+     */
     public function testConstructor()
     {
         $obj = $this->obj;
@@ -68,8 +68,8 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    *
-    */
+     *
+     */
     public function testRenderTemplate()
     {
         $loader = new \Charcoal\View\Mustache\MustacheLoader([
@@ -87,8 +87,8 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    *
-    */
+     *
+     */
     public function testRenderTemplateHelper()
     {
         $loader = new \Charcoal\View\Mustache\MustacheLoader([
