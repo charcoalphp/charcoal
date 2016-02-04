@@ -5,9 +5,27 @@ The `Charcoal\View` module provides everything needed to render templates and ad
 
 It is a thin layer on top of various _rendering engines_, such as **mustache** or **twig**.
 
+It is the default view layer for `charcoal-app` projects.
+
 [![Build Status](https://travis-ci.org/locomotivemtl/charcoal-view.svg?branch=master)](https://travis-ci.org/locomotivemtl/charcoal-view)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/396d2f06-82ba-4c79-b8cc-762f1e8bda29/mini.png)](https://insight.sensiolabs.com/projects/396d2f06-82ba-4c79-b8cc-762f1e8bda29)
 
+# Table of content
+- [How to install](#how-to-install)
+	- [Dependencies](#dependencies)
+- [Usage](#usage)
+- [Module components](#module-components)
+	- Views
+		- Generic View
+	- View Engines
+	- Loaders
+		- Templates
+	- Viewable Interface and Trait
+- [Development](#development)
+  - [Development dependencies](#development-dependencies)
+  - [Coding Style](#coding-style)
+  - [Authors](#authors)
+  - [Changelog](#changelog)
 
 # How to install
 
@@ -87,6 +105,16 @@ $app->get('/hello/{name}', function ($request, $response, $args) {
 $app->run();
 ```
 
+# Module components
+
+The basic components in `charcoal-view` are:
+
+- [**View**](#views), which provide the basic interface to all components.
+- [**Engine**](#view-engines), to actually render the templates.
+- [**Loader**](#loader), to load _template files_.
+- [**Viewable**](#viewable-interface-and-trait), which allow any object to be rendered with a _View_.
+- **Renderer**, an extra helper to use a view to render into PSR-7 request/response objects.
+
 ## Views
 
 The `Charcoal\View\ViewInterface` defines all that is needed to render templates via a view engine:
@@ -95,9 +123,6 @@ The `Charcoal\View\ViewInterface` defines all that is needed to render templates
 - `renderTemplate($templateString, $context = null)`
 
 The abstract class `Charcoal\View\AbstractView` fully implements the `ViewInterface` and adds the methods:
-
-- `setEngine($engine)`
-- `engine()`
 
 ### Generic view
 
@@ -135,6 +160,8 @@ There are 4 engines available by default:
 - `php-mustache`, the mustache templating engine with a PHP template loader. (Files are parsed with PHP before being used as a mustache templates).
 - `twig`
 
+## Loaders
+
 ### Templates
 
 Templates are simply files, stored on the filesystem, containing the main view (typically, HTML code + templating tags, but can be kind of text data).
@@ -144,7 +171,7 @@ Templates are simply files, stored on the filesystem, containing the main view (
 
 Templates are loaded with template _loaders_. Loaders implement the `Charcoal\View\LoaderInterface` and simply tries to match an identifier (passed as argument to the `load()` method) to a file on the filesystem.
 
-Calling `$view->render($templateIdent, $ctx)` will automatically use the engine's `Loader` object to find the template `$template_ident`.
+Calling `$view->render($templateIdent, $ctx)` will automatically use the engine's `Loader` object to find the template `$templateIdent`.
 
 Otherwise, calling `$view->renderTemplate($templateString, $ctx)` expects an already-loaded template string as parameter.
 
@@ -154,19 +181,12 @@ Any objects can be made renderable (viewable) by implementing the `Charcoal\View
 
 The interface adds the following methods:
 
-- `setTemplateEngine($engine)`
-- `templateEngine()`
 - `setTemplateIdent($ident)`
 - `templateIdent()`
 - `setView($view)`
 - `view()`
-- `display($template = null)`
-- `render($template = null)`
-- `renderTemplate($template_ident)`
-
-The viewable trait also adds the following abstract methods:
-
-- `createView` (**abstract** / _private_)
+- `render($templateIdent = null)`
+- `renderTemplate($templateString)`
 
 ### Examples
 
@@ -192,56 +212,28 @@ The following code:
 
 ```php
 $obj = new MyObject();
-$obj->render('Hello {{world}}');
+$obj->renderTemplate('Hello {{world}}');
 ```
 
 would output: `"Hello world!"`
 
-## Classes summary
-
-- `\Charcoal\View\AbstractEngine`
-	- Base abstract class for _Engine_ interfaces, implements `EngineInterface`.
-	- Is the base of all 3 engines: `mustache`, `php`, `php-mustache`.
-- `\Charcoal\View\AbstractView`
-	-  Base abstract class for _View_ interfaces, implements `ViewInterface`.
-	-  Also implements `\Charcoal\Config\ConfigurableInterface` through the `ConfigurableTrait`
-	-  Can be cast to string (will call `render()`)
-	-  *Dependencies*: a `ViewConfig` configuration object and a PSR-3 logger
-- `\Charcoal\View\EngineInterface`
-	- _Engines_ are the actual template renderers for the views.
-	- *Dependencies*: a Loader (MustacheLoader)
-- `\Charcoal\View\GenericView`
-	- Concrete implementation of a _View_ interface (extends `AbstractView`).
-- `\Charcoal\View\LoaderInterface`
-- `\Charcoal\View\ViewableInterface`
-	- Viewable objects have a view, and therefore can be rendered.
-- `\Charcoal\View\ViewableTrait`
-	- A default (abstract) implementation, as trait, of the ViewableInterface.
-- `\Charcoal\View\ViewConfig`
-	- View configuration.
-	- Inherits `Charcoal\Config\AbstractConfig`, from the `charcoal-config` package.
-- `\Charcoal\View\ViewInterface`
-	- _Views_ are the base rendering objects. They act as the public API, exposing the same methods as the engine (`render()` and `renderTemplate()`).
-- `\Charcoal\View\Mustache\GenericHelper`
-	- Default mustache render helper. Helpers are global functions available to all the templates.
-- `\Charcoal\View\Mustache\MustacheEngine`
-	- Mustache view rendering engine (`\Charcoal\View\EngineInterface`)
-- `\Charcoal\View\Mustache\MustacheLoader`
-	- The mustache template loader finds a mustache template file in directories.
-- `\Charcoal\View\Php\PhpEngine`
-- `\Charcoal\View\Php\PhpLoader`
-	- The PHP template loader finds a mustache php template file in directories and includes it (run as PHP).
-- `\Charcoal\View\PhpMustache\PhpMustacheEngine`
+#
 
 # Development
+
+## Development dependencies
+
+- `npm`
+- `grunt` (install with `npm install grunt-cli`)
+- `composer`
+- `phpunit`
 
 ## Coding Style
 
 The Charcoal-View module follows the Charcoal coding-style:
 
-- [_PSR-1_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md), except for
-	- Method names MUST be declared in `snake_case`.
-- [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md), except for the PSR-1 requirement.q
+- [_PSR-1_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md)
+- [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
 - [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md), autoloading is therefore provided by _Composer_
 - [_phpDocumentor_](http://phpdoc.org/)
 	- Add DocBlocks for all classes, methods, and functions;
@@ -259,12 +251,7 @@ The Charcoal-View module follows the Charcoal coding-style:
 ## Changelog
 
 ### 0.1
+_Released on 2016-02-04_
 
-_Unreleased_
+- Initial release of `charcoal-view`.
 
-- Initial release
-
-## TODOs
-
-- Engines should all derive a base class (AbstractEngine)
-- More engines: twig, plates, etc.
