@@ -19,13 +19,13 @@ interface PropertyInterface
     public function fields();
 
     /**
-     * @param array $data
+     * @param array $data The property data.
      * @return PropertyInterface Chainable
      */
     public function setData(array $data);
 
     /**
-     * @param string $ident
+     * @param string $ident The property identifier.
      * @return PropertyInterface Chainable
      */
     public function setIdent($ident);
@@ -36,7 +36,7 @@ interface PropertyInterface
     public function ident();
 
     /**
-     * @param mixed $val
+     * @param mixed $val The value.
      * @return PropertyInterface Chainable
      */
     public function setVal($val);
@@ -47,19 +47,25 @@ interface PropertyInterface
     public function val();
 
     /**
-     * @param string $fieldIdent
+     * @param string $fieldIdent The property field identifier.
      * @return mixed
      */
     public function fieldVal($fieldIdent);
 
     /**
-     * @param mixed $val
+     * @param mixed $val Optional. The value to convert to storage value.
      * @return mixed
      */
     public function storageVal($val = null);
 
     /**
-     * @param mixed $label
+     * @param mixed $val Optional. The value to to convert to display.
+     * @return string
+     */
+    public function displayVal($val = null);
+
+    /**
+     * @param mixed $label The property label.
      * @return PropertyInterface Chainable
      */
     public function setLabel($label);
@@ -70,7 +76,7 @@ interface PropertyInterface
     public function label();
 
     /**
-     * @param boolean $l10n
+     * @param boolean $l10n The l10n, or "translatable" flag.
      * @return PropertyInterface Chainable
      */
     public function setL10n($l10n);
@@ -81,7 +87,7 @@ interface PropertyInterface
     public function l10n();
 
     /**
-     * @param boolean $hidden
+     * @param boolean $hidden The hidden flag.
      * @return PropertyInterface Chainable
      */
     public function setHidden($hidden);
@@ -92,7 +98,7 @@ interface PropertyInterface
     public function hidden();
 
     /**
-     * @param boolean $multiple
+     * @param boolean $multiple The multiple flag.
      * @return PropertyInterface Chainable
      */
     public function setMultiple($multiple);
@@ -103,7 +109,14 @@ interface PropertyInterface
     public function multiple();
 
     /**
-     * @param array $multipleOptions
+     * Set the multiple options / configuration, when property is `multiple`.
+     *
+     * ## Options structure
+     * - `separator` (string) The separator charactor.
+     * - `min` (integer) The minimum number of values. (0 = no limit).
+     * - `max` (integer) The maximum number of values. (0 = no limit).
+     *
+     * @param array $multipleOptions The property multiple options.
      * @return PropertyInterface Chainable
      */
     public function setMultipleOptions(array $multipleOptions);
@@ -114,7 +127,7 @@ interface PropertyInterface
     public function multipleOptions();
 
     /**
-     * @param boolean $required
+     * @param boolean $required The property required flag.
      * @return PropertyInterface Chainable
      */
     public function setRequired($required);
@@ -125,7 +138,7 @@ interface PropertyInterface
     public function required();
 
     /**
-     * @param boolean $unique
+     * @param boolean $unique The property unique flag.
      * @return PropertyInterface Chainable
      */
     public function setUnique($unique);
@@ -136,7 +149,7 @@ interface PropertyInterface
     public function unique();
 
     /**
-     * @param boolean $storable
+     * @param boolean $storable The property storable flag.
      * @return PropertyInterface Chainable
      */
     public function setStorable($storable);
@@ -147,7 +160,7 @@ interface PropertyInterface
     public function storable();
 
     /**
-     * @param boolean $active
+     * @param boolean $active The property active flag. Inactive properties should have no effects.
      * @return PropertyInterface Chainable
      */
     public function setActive($active);

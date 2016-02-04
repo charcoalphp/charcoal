@@ -76,9 +76,9 @@ abstract class AbstractProperty implements
 
     /**
      * Array of options for multiple properties
-     * - `separator` (default=",") How the values will be separated in the storage (sql)
-     * - `min` (default=null) The minimum number of values. If null, <0 or NaN, then this is not taken into consideration
-     * - `max` (default=null) The maximum number of values. If null, <0 or NaN, then there is not limit
+     * - `separator` (default=",") How the values will be separated in the storage (sql).
+     * - `min` (default=null) The min number of values. If null, <0 or NaN, then this is not taken into consideration.
+     * - `max` (default=null) The max number of values. If null, <0 or NaN, then there is not limit.
      * @var mixed $multipleOptions
      */
     private $multipleOptions;
@@ -175,7 +175,7 @@ abstract class AbstractProperty implements
      * But calling with `set_data(['foobar'=>$foo])` would set the `$foobar` member
      * on the metadata object, because the method `set_foobar()` does not exist.
      *
-     * @param array $data
+     * @param array $data The property data.
      * @return AbstractProperty Chainable
      */
     public function setData(array $data)
@@ -194,8 +194,8 @@ abstract class AbstractProperty implements
     }
 
     /**
-     * @param string $ident
-     * @throws InvalidArgumentException  If the ident parameter is not a string
+     * @param string $ident The property identifier.
+     * @throws InvalidArgumentException  If the ident parameter is not a string.
      * @return AbstractProperty Chainable
      */
     public function setIdent($ident)
@@ -210,7 +210,7 @@ abstract class AbstractProperty implements
     }
 
     /**
-     * @throws Exception if trying to access getter before setter
+     * @throws Exception If trying to access getter before setter.
      * @return string
      */
     public function ident()
@@ -224,8 +224,8 @@ abstract class AbstractProperty implements
     }
 
     /**
-     * @param mixed $val
-     * @throws InvalidArgumentException
+     * @param mixed $val The property (raw) value.
+     * @throws InvalidArgumentException If the value is invalid (null or not multiple when supposed to).
      * @return PropertyInterface Chainable
      */
     public function setVal($val)
@@ -263,7 +263,7 @@ abstract class AbstractProperty implements
     }
 
     /**
-     * @param string $fieldIdent
+     * @param string $fieldIdent The property field identifier.
      * @return mixed
      */
     public function fieldVal($fieldIdent)
@@ -286,7 +286,7 @@ abstract class AbstractProperty implements
     /**
      * Get the property's value in a format suitable for storage.
      *
-     * @param mixed $val Optional.
+     * @param mixed $val Optional. The value to convert to storage value.
      * @return mixed
      */
     public function storageVal($val = null)
@@ -312,7 +312,7 @@ abstract class AbstractProperty implements
     }
 
     /**
-     * @param mixed $val Optional.
+     * @param mixed $val Optional. The value to to convert to display.
      * @return string
      */
     public function displayVal($val = null)
@@ -342,7 +342,7 @@ abstract class AbstractProperty implements
     }
 
     /**
-     * @param mixed $label
+     * @param mixed $label The property label.
      * @return PropertyInterface Chainable
      */
     public function setLabel($label)
@@ -363,7 +363,7 @@ abstract class AbstractProperty implements
     }
 
     /**
-     * @param boolean $l10n
+     * @param boolean $l10n The l10n, or "translatable" flag.
      * @return PropertyInterface Chainable
      */
     public function setL10n($l10n)
@@ -383,7 +383,7 @@ abstract class AbstractProperty implements
     }
 
     /**
-     * @param boolean $hidden
+     * @param boolean $hidden The hidden flag.
      * @return PropertyInterface Chainable
      */
     public function setHidden($hidden)
@@ -401,7 +401,7 @@ abstract class AbstractProperty implements
     }
 
     /**
-     * @param boolean $multiple
+     * @param boolean $multiple The multiple flag.
      * @return PropertyInterface Chainable
      */
     public function setMultiple($multiple)
@@ -425,7 +425,14 @@ abstract class AbstractProperty implements
     }
 
     /**
-     * @param array $multipleOptions
+     * Set the multiple options / configuration, when property is `multiple`.
+     *
+     * ## Options structure
+     * - `separator` (string) The separator charactor.
+     * - `min` (integer) The minimum number of values. (0 = no limit).
+     * - `max` (integer) The maximum number of values. (0 = no limit).
+     *
+     * @param array $multipleOptions The property multiple options.
      * @return PropertyInterface Chainable
      */
     public function setMultipleOptions(array $multipleOptions)
@@ -438,11 +445,6 @@ abstract class AbstractProperty implements
 
     /**
      * The options defining the property behavior when the multiple flag is set to true.
-     *
-     * ## Options structure
-     * - `separator` (string) The separator charactor.
-     * - `min` (integer) The minimum number of values. (0 = no limit).
-     * - `max` (integer) The maximum number of values. (0 = no limit).
      *
      * @return array
      * @see self::defaultMultipleOptions
@@ -477,7 +479,7 @@ abstract class AbstractProperty implements
     }
 
     /**
-     * @param boolean $allow
+     * @param boolean $allow The property allow null flag.
      * @return PropertyInterface Chainable
      */
     public function setAllowNull($allow)
@@ -491,7 +493,6 @@ abstract class AbstractProperty implements
      *
      * ## Notes
      * - This flag typically modifies the storage database to also allow null values.
-     * -
      *
      * @return boolean
      */
@@ -501,7 +502,7 @@ abstract class AbstractProperty implements
     }
 
     /**
-     * @param boolean $required
+     * @param boolean $required The property required flag.
      * @return PropertyInterface Chainable
      */
     public function setRequired($required)
@@ -524,7 +525,7 @@ abstract class AbstractProperty implements
     }
 
     /**
-     * @param boolean $unique
+     * @param boolean $unique The property unique flag.
      * @return PropertyInterface Chainable
      */
     public function setUnique($unique)
@@ -542,7 +543,7 @@ abstract class AbstractProperty implements
     }
 
     /**
-     * @param boolean $active
+     * @param boolean $active The property active flag. Inactive properties should have no effects.
      * @return PropertyInterface Chainable
      */
     public function setActive($active)
@@ -560,8 +561,8 @@ abstract class AbstractProperty implements
     }
 
     /**
-     * @param boolean $storable
-     * @throws InvalidArgumentException If paramter is not a boolean.
+     * @param boolean $storable The storable flag.
+     * @return PropertyInterface Chainable
      */
     public function setStorable($storable)
     {
@@ -578,7 +579,7 @@ abstract class AbstractProperty implements
     }
 
     /**
-     * @param mixed $description
+     * @param mixed $description The property description.
      * @return PropertyInterface Chainable
      */
     public function setDescription($description)
@@ -596,7 +597,7 @@ abstract class AbstractProperty implements
     }
 
     /**
-     * @param mixed $notes
+     * @param mixed $notes The property notes.
      * @return PropertyInterface Chainable
      */
     public function setNotes($notes)
@@ -695,7 +696,6 @@ abstract class AbstractProperty implements
 
     /**
      * @return boolean
-     * @todo
      */
     public function validateUnique()
     {
@@ -720,7 +720,7 @@ abstract class AbstractProperty implements
     }
 
     /**
-     * @param string $propertyIdent
+     * @param string $propertyIdent The ident of the property to retrieve.
      * @return mixed
      */
     protected function propertyValue($propertyIdent)
@@ -804,7 +804,7 @@ abstract class AbstractProperty implements
     /**
      * Serializable > unsierialize()
      *
-     * @param string $data Serialized data
+     * @param string $data Serialized data.
      * @return void
      */
     public function unserialize($data)
@@ -826,8 +826,7 @@ abstract class AbstractProperty implements
    /**
     * Allow an object to define how the key getter are called.
     *
-    * @param string $key  The key to get the getter from.
-    * @param string $case Optional. The type of case to return. camel, pascal or snake.
+    * @param string $key The key to get the getter from.
     * @return string The getter method name, for a given key.
     */
     protected function getter($key)
@@ -839,8 +838,7 @@ abstract class AbstractProperty implements
     /**
      * Allow an object to define how the key setter are called.
      *
-     * @param string $key  The key to get the setter from.
-     * @param string $case Optional. The type of case to return. camel, pascal or snake.
+     * @param string $key The key to get the setter from.
      * @return string The setter method name, for a given key.
      */
     protected function setter($key)

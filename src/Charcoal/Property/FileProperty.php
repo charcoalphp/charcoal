@@ -21,6 +21,12 @@ class FileProperty extends AbstractProperty
 {
 
     /**
+     * Public access flag, wether the file should be accessible from web root or not.
+     * @var boolean $publicAccess
+     */
+    private $publicAccess = false;
+
+    /**
      * The upload path is a {{patern}}.
      * @var string $UploadPath
      */
@@ -64,6 +70,24 @@ class FileProperty extends AbstractProperty
     public function type()
     {
         return 'file';
+    }
+
+    /**
+     * @param boolean $public The public access flag.
+     * @return FileProperty Chainable
+     */
+    public function setPublicAccess($public)
+    {
+        $this->publicAccess = !!$public;
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function publicAccess()
+    {
+        return $this->publicAccess;
     }
 
     /**
@@ -365,8 +389,7 @@ class FileProperty extends AbstractProperty
                     return $f;
                 }
             }
-        }
-        // @todo add L10n if necessary
+        } // @todo add L10n if necessary
         elseif (preg_match('/^data:/', $val)) {
             $f = $this->dataUpload($val);
             $this->setVal($f);
@@ -474,7 +497,7 @@ class FileProperty extends AbstractProperty
         if (!file_exists($dir)) {
             // @todo: Feedback
             $this->logger->debug(
-                'Path does not exist. Attempting to create path ' .$dir .'.',
+                'Path does not exist. Attempting to create path '.$dir.'.',
                 [get_called_class().'::'.__FUNCTION__]
             );
             mkdir($dir, 0777, true);

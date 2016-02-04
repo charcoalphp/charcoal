@@ -175,7 +175,6 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
         foreach ($propertyValue as $p) {
             $proto = $this->proto();
             $proto->load($p);
-            var_dump($proto->name());
             $names[] = (string)$proto->name();
         }
         return implode(', ', $names);

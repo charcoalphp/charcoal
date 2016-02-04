@@ -85,29 +85,7 @@ class DateTimeProperty extends AbstractProperty
      */
     public function setVal($val)
     {
-        if ($val === null) {
-            if ($this->allowNull()) {
-                $this->val = null;
-                return $this;
-            } else {
-                throw new InvalidArgumentException(
-                    'Val can not be null (Not allowed)'
-                );
-            }
-        }
-
-        if (is_string($val)) {
-            $val = new DateTime($val);
-        }
-
-        if (!($val instanceof DateTimeInterface)) {
-            throw new InvalidArgumentException(
-                'Val must be a valid date'
-            );
-        }
-
-        $this->val = $val;
-
+        $this->val = $this->dateTimeVal($val);
         return $this;
     }
 
@@ -122,6 +100,8 @@ class DateTimeProperty extends AbstractProperty
     {
         if ($val === null) {
             $val = $this->val();
+        } else {
+            $val = $this->dateTimeVal($val);
         }
         if ($val instanceof DateTimeInterface) {
             return $this->val->format('Y-m-d H:i:s');
@@ -147,12 +127,44 @@ class DateTimeProperty extends AbstractProperty
     {
         if ($val === null) {
             $val = $this->val();
+        } else {
+            $val = $this->dateTimeVal($val);
         }
-
         if ($val === null) {
             return '';
         }
+
         return $val->format($this->format());
+    }
+
+    /**
+     * @param mixed $val Value to convert to DateTime.
+     * @throws InvalidArgumentException If the value is not a valid datetime.
+     * @return DateTime
+     */
+    private function dateTimeVal($val)
+    {
+        if ($val === null) {
+            if ($this->allowNull()) {
+                return null;
+            } else {
+                throw new InvalidArgumentException(
+                    'Val can not be null (Not allowed)'
+                );
+            }
+        }
+
+        if (is_string($val)) {
+            $val = new DateTime($val);
+        }
+
+        if (!($val instanceof DateTimeInterface)) {
+            throw new InvalidArgumentException(
+                'Val must be a valid date'
+            );
+        }
+
+        return $val;
     }
 
     /**

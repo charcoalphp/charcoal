@@ -13,19 +13,19 @@ use \Charcoal\Model\AbstractMetadata;
 class PropertyMetadata extends AbstractMetadata
 {
     /**
-     * @var string $_ident
+     * @var string $ident The metadata identifier.
      */
     private $ident;
 
     /**
-     * The actual config data
+     * The actual config data.
      * @var array $data
      */
     public $data;
 
     /**
-     * @param string $ident
-     * @throws InvalidArgumentException if the ident is not a string
+     * @param string $ident The metadata identifier.
+     * @throws InvalidArgumentException If the ident is not a string.
      * @return PropertyMetadata Chainable
      */
     public function setIdent($ident)

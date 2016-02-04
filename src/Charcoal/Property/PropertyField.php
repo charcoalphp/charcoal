@@ -14,40 +14,47 @@ use \Charcoal\Tranlsation\TranslationString;
 class PropertyField
 {
     /**
-     * @var string $Ident
+     * @var string $ident
      */
     private $ident;
+
     /**
      * @var TranslationString $Label
      */
     private $label;
+
     /**
      * @var string
      */
     private $sqlType;
+
     /**
      * @var integer
      */
     private $sqlPdoType;
+
     /**
      * @var string
      */
     private $extra;
+
     /**
      * @var mixed $Val
      */
     private $val;
+
     /**
      * @var mixed $_defaultVal
      */
     private $defaultVal;
+
     /**
      * @var boolean $_allowNull
      */
     private $allowNull;
 
     /**
-     * @param array $data
+     * @param array $data The field data.
      * @return PropertyField Chainable
      */
     public function setData(array $data)
@@ -66,8 +73,8 @@ class PropertyField
     }
 
     /**
-     * @param string $ident
-     * @throws InvalidArgumentException
+     * @param string $ident The field identifier.
+     * @throws InvalidArgumentException If the identifier is not a string.
      * @return PropertyField Chainable
      */
     public function setIdent($ident)
@@ -90,7 +97,7 @@ class PropertyField
     }
 
     /**
-     * @param mixed $label
+     * @param mixed $label The field label.
      * @return PropertyField Chainable
      */
     public function setLabel($label)
@@ -108,8 +115,8 @@ class PropertyField
     }
 
     /**
-     * @param string $sqlType
-     * @throws InvalidArgumentException
+     * @param string $sqlType The field sql column type.
+     * @throws InvalidArgumentException If the sql type is not a string.
      * @return PropertyField Chainable
      */
     public function setSqlType($sqlType)
@@ -132,8 +139,8 @@ class PropertyField
     }
 
     /**
-     * @param integer $sqlPdoType
-     * @throws InvalidArgumentException
+     * @param integer $sqlPdoType The field PDO type.
+     * @throws InvalidArgumentException If the PDO type is not an integer.
      * @return PropertyField Chainable
      */
     public function setSqlPdoType($sqlPdoType)
@@ -159,8 +166,8 @@ class PropertyField
     }
 
     /**
-     * @param mixed $extra
-     * @throws InvalidArgumentException
+     * @param string $extra The extra.
+     * @throws InvalidArgumentException If the extra is not a string.
      * @return PropertyField Chainable
      */
     public function setExtra($extra)
@@ -186,7 +193,7 @@ class PropertyField
     }
 
     /**
-     * @param mixed $val
+     * @param mixed $val The field value.
      * @return PropertyField Chainable
      */
     public function setVal($val)
@@ -204,7 +211,7 @@ class PropertyField
     }
 
     /**
-     * @param mixed $defaultVal
+     * @param mixed $defaultVal The default field value.
      * @return PropertyField Chainable
      */
     public function setDefaultVal($defaultVal)
@@ -222,7 +229,7 @@ class PropertyField
     }
 
     /**
-     * @param boolean $allowNull
+     * @param boolean $allowNull The field allow null flag.
      * @return PropertyField Chainable
      */
     public function setAllowNull($allowNull)

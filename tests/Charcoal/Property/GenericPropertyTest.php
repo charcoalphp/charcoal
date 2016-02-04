@@ -7,20 +7,18 @@ use \Charcoal\Property\GenericProperty;
 
 class PropertyTest extends \PHPUnit_Framework_TestCase
 {
-    public $container;
     public $factory;
     public $obj;
 
     public function getObj()
     {
         return $this->factory->create('GenericProperty', [
-            'logger' => $this->container['logger']
+            'logger' => new \Psr\Log\NullLogger()
         ]);
     }
 
     public function setUp()
     {
-        $this->container = $GLOBALS['container'];
         $this->factory   = new PropertyFactory();
         $this->obj       = $this->getObj();
     }
@@ -227,12 +225,6 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
         $obj = $this->obj;
         $ret = $obj->setActive(true);
         $this->assertSame($ret, $obj);
-    }
-
-    public function testRenderWithoutReplacements()
-    {
-        $obj = $this->obj;
-        $this->assertEquals('empty', $obj->render('empty'));
     }
 
     public function providerVals()

@@ -18,11 +18,11 @@ use \Charcoal\Translation\TranslationString;
 class BooleanProperty extends AbstractProperty
 {
     /**
-     * @var TranslationString $trueLabel
+     * @var TranslationString $trueLabel The label, for "true".
      */
     private $trueLabel;
     /**
-     * @var TranslationString $falseLabel
+     * @var TranslationString $falseLabel The label, for "false"
      */
     private $falseLabel;
 

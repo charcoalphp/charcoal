@@ -1,7 +1,7 @@
 Charcoal Property
 =================
 
-Properties define objects (metadata).
+Properties define object's metadata / definition.
 
 # How to install
 
@@ -13,10 +13,20 @@ $ composer require locomotivemtl/charcoal-property
 
 ## Dependencies
 - [`PHP 5.5+`](http:///php.net)
+- [`psr/log`](http://www.php-fig.org/psr/psr-3/)
+	- A PSR-3 compliant logger should be provided to the various services / classes.
+- [`locomotivemtl/charcoal-config`](https://github.com/locomotivemtl/charcoal-config)
+	- Properties configuration and metadata.
+- [`locomotivemtl/charcoal-core`](https://github.com/locomotivemtl/charcoal-core)
+	- Required for l10n / translation features.
+	- Also required for validator, model and more.
+- [`locomotivemtl/charcoal-factory`](https://github.com/locomotivemtl/charcoal-fatory)
+	- Dynamic object creation is provided with charcoal factories.
+- [`locomotivemtl/charcoal-view`](https://github.com/locomotivemtl/charcoal-view)
 
 # Property options
 
-The basic property interface requires the following methods:
+The basic property interface (API) requires / provides the following members:
 
 | Name           | (V) | Type                | Description
 | -------------- | :-: | ------------------- | -----------
@@ -32,12 +42,16 @@ The basic property interface requires the following methods:
 | **active**     |     | _bool_              |
 <small>(V) indicates options used in validation</small>
 
+> All those methods can be accessed either via the `setData()` method or with a standard PSR-1/PSR-2 getter / setter. (`foo` would have `foo()` as a getter and `setFoo()` as a setter).
+
 ### Data retrieval
 
-The _raw_ data held in a property can be accessed with `set_val()` and `val()`.
-To get a string-safe, displaybale value, use `display_val()`. To get the storage-ready format, use `storage_val()`.
+The _raw_ data held in a property can be accessed with `setVal()` and `val()`.
+To get a string-safe, displaybale value, use `displayVal()`. To get the storage-ready format, use `storageSal()`.
 
-> ⚠ Even for string properties `val()` is not sure to return string values (a property can be multiple, or l10n, for example) so use `display_val()` when working with displayable stirng is crucial.
+> ⚠ Even for string properties `val()` is not sure to return string values (a property can be multiple, or l10n, for example) so use `displayVal()` when working with displayable stirng is crucial.
+
+The `val()` value will be used for serialization and json serialization.
 
 ## Default validation
 
@@ -137,24 +151,24 @@ The file property adds the following concepts to the [basic property options](#b
 
 | Name                  | (V) | Type        | Description
 | --------------------- | :-: | ----------- | -----------
-| **upload_path**       |     | _string_  | The folder, relative to `ROOT`, where the file will be uploaded to.
-| **overwrite**         |     | _bool_  | If true, when a target file already exists it will be overwrited. If false, a new unique name will be generated (with a suffix).
+| **public_access**     |     | _bool_      |
+| **upload_path**       |     | _string_    | The folder, relative to `ROOT` or `URL`, where the file will be uploaded to.
+| **overwrite**         |     | _bool_      | If true, when a target file already exists it will be overwrited. If false, a new unique name will be generated (with a suffix).
 | **accepted_mimeypes** |  ✓  | _string[]_  | List of accepted mimetypes. Empty / null to accept all types.
 | **max_filesize**      |  ✓  | _integer_   | Maximum alowed file size, in bytes.
 <small>(V) indicates options used in validation</small>
 
 ### Additional file methods
 
-- `mimetype()` and `set_mimetype()`
-- `filesize()` and `set_filesize()`
-- `data_upload()`
-- `file_upload()`
+- `mimetype()` and `setMimetype()`
+- `filesize()` and `setFilesize()`
+- `dataUpload()`
+- `fileUpload()`
 
 ### Specialized File properties
 
 - [`AudioProperty`](#audio-file-property)
-- [`PasswordProperty`](#image-file-property)
-- [`PhoneProperty`](#phone-string-property)
+- [`ImageProperty`](#image-file-property)
 - ~~VideoProperty~~
 
 ## Audio File Property
