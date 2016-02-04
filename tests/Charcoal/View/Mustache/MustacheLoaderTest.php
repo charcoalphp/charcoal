@@ -16,7 +16,7 @@ class MustacheLoaderTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->obj = new MustacheLoader([
-            'logger'=>$GLOBALS['logger']
+            'logger'=>new \Psr\Log\NullLogger()
         ]);
         $this->obj->addPath(__DIR__.'/templates');
     }

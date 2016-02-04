@@ -12,22 +12,29 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
      */
     public $obj;
 
+    /**
+    *
+    */
     public function setUp()
     {
+        $this->logger = new \Psr\Log\NullLogger();
+        $loader = new \Charcoal\View\Mustache\MustacheLoader([
+            'logger'=>$this->logger
+        ]);
         $engine = new \Charcoal\View\Mustache\MustacheEngine([
-            'logger'=>new \Psr\Log\NullLogger()
+            'logger'=>$this->logger,
+            'loader'=>$loader
         ]);
         $this->obj = $this->getMockForAbstractClass('\Charcoal\View\AbstractView');
-        $this->obj->setLogger($GLOBALS['logger']);
+        $this->obj->setLogger($this->logger);
         $this->obj->setEngine($engine);
     }
 
-    public function logger()
-    {
-        // Set in boostrap.php
-        return $GLOBALS['logger'];
-    }
 
+
+    /**
+    *
+    */
     public function testConstructor()
     {
         $obj = $this->obj;
@@ -60,15 +67,18 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Hello Foo!', $obj->render('Hello {{bar}}', ['bar' => 'Foo!']));
     }
 
+    /**
+    *
+    */
     public function testRenderTemplate()
     {
         $loader = new \Charcoal\View\Mustache\MustacheLoader([
-            'logger'=>$this->logger()
+            'logger'=>$this->logger
         ]);
         $loader->addPath(__DIR__.'/Mustache/templates');
 
         $engine = new \Charcoal\View\Mustache\MustacheEngine([
-            'logger'=>$this->logger(),
+            'logger'=>$this->logger,
             'loader'=>$loader
         ]);
 
@@ -76,15 +86,18 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Hello Charcoal', trim($this->obj->render('foo', ['foo'=>'Charcoal'])));
     }
 
+    /**
+    *
+    */
     public function testRenderTemplateHelper()
     {
         $loader = new \Charcoal\View\Mustache\MustacheLoader([
-            'logger'=>$this->logger()
+            'logger'=>$this->logger
         ]);
         $loader->addPath(__DIR__.'/Mustache/templates');
 
         $engine = new \Charcoal\View\Mustache\MustacheEngine([
-            'logger'=>$this->logger(),
+            'logger'=>$this->logger,
             'loader'=>$loader
         ]);
 

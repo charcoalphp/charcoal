@@ -18,14 +18,21 @@ class ViewableTraitTest extends \PHPUnit_Framework_TestCase
      */
     private $view;
 
-
+    /**
+    *
+    */
     public function setUp()
     {
+        $logger = new \Psr\Log\NullLogger();
         $genericView = new GenericView([
-            'logger'=>new \Psr\Log\NullLogger()
+            'logger'=>$logger
+        ]);
+        $loader = new \Charcoal\View\Mustache\MustacheLoader([
+            'logger'=>$logger
         ]);
         $engine = new \Charcoal\View\Mustache\MustacheEngine([
-            'logger'=>new \Psr\Log\NullLogger()
+            'logger'=>$logger,
+            'loader'=>$loader
         ]);
         $genericView->setEngine($engine);
         $mock = $this->getMockForTrait('\Charcoal\View\ViewableTrait');
@@ -35,18 +42,9 @@ class ViewableTraitTest extends \PHPUnit_Framework_TestCase
 
     }
 
-    public function testSetTemplateEngine()
-    {
-        $obj = $this->obj;
-        $this->assertEquals(AbstractView::DEFAULT_ENGINE, $obj->templateEngine());
-        $ret = $obj->setTemplateEngine('php');
-        $this->assertSame($ret, $obj);
-        $this->assertEquals('php', $obj->templateEngine());
-
-        $this->setExpectedException('\InvalidArgumentException');
-        $obj->setTemplateEngine(false);
-    }
-
+    /**
+    *
+    */
     public function testSetTemplateIdent()
     {
         $obj = $this->obj;
@@ -60,6 +58,9 @@ class ViewableTraitTest extends \PHPUnit_Framework_TestCase
         $obj->setTemplateIdent(false);
     }
 
+    /**
+    *
+    */
     public function testSetView()
     {
         $obj = $this->obj;
@@ -73,6 +74,9 @@ class ViewableTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($view, $obj->view());
     }
 
+    /**
+    *
+    */
     public function testRenderAndDisplay()
     {
         $obj = $this->obj;
