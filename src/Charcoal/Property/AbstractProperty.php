@@ -26,6 +26,8 @@ use \Charcoal\View\ViewableTrait;
 // Local namespace dependencies
 use \Charcoal\Property\PropertyInterface;
 use \Charcoal\Property\PropertyValidator;
+use \Charcoal\Property\StorablePropertyInterface;
+use \Charcoal\Property\StorablePropertyTrait;
 
 /**
  * An abstract class that implements the full `PropertyInterface`.
@@ -36,11 +38,13 @@ abstract class AbstractProperty implements
     PropertyInterface,
     DescribableInterface,
     LoggerAwareInterface,
+    StorablePropertyInterface,
     ValidatableInterface,
     ViewableInterface
 {
     use LoggerAwareTrait;
     use DescribableTrait;
+    use StorablePropertyTrait;
     use ValidatableTrait;
     use ViewableTrait;
 
@@ -262,54 +266,7 @@ abstract class AbstractProperty implements
         return $this->val;
     }
 
-    /**
-     * @param string $fieldIdent The property field identifier.
-     * @return mixed
-     */
-    public function fieldVal($fieldIdent)
-    {
-        $val = $this->val();
 
-        if ($val === null) {
-            return null;
-        }
-        if (is_scalar($val)) {
-            return $this->storageVal($val);
-        }
-        if (isset($val[$fieldIdent])) {
-            return $this->storageVal($val[$fieldIdent]);
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Get the property's value in a format suitable for storage.
-     *
-     * @param mixed $val Optional. The value to convert to storage value.
-     * @return mixed
-     */
-    public function storageVal($val = null)
-    {
-        if ($val === null) {
-            $val = $this->val();
-        }
-        if ($val === null) {
-            // Do not json_encode NULL values
-            return null;
-        }
-
-        if ($this->multiple()) {
-            if (is_array($val)) {
-                $val = implode($this->multipleSeparator(), $val);
-            }
-        }
-
-        if (!is_scalar($val)) {
-            return json_encode($val, true);
-        }
-        return $val;
-    }
 
     /**
      * @param mixed $val Optional. The value to to convert to display.
@@ -614,51 +571,7 @@ abstract class AbstractProperty implements
         return $this->notes;
     }
 
-    /**
-     * @return array
-     */
-    public function fields()
-    {
-        $fields = [];
-        if ($this->l10n()) {
-            $translator = TranslationConfig::instance();
 
-            foreach ($translator->languages() as $langCode) {
-                $ident = sprintf('%1$s_%2$s', $this->ident(), $langCode);
-                $field = new PropertyField();
-                $field->setData(
-                    [
-                        'ident'        => $ident,
-                        'sqlType'     => $this->sqlType(),
-                        'sqlPdoType' => $this->sqlPdoType(),
-                        'extra'        => $this->sqlExtra(),
-                        'val'          => $this->fieldVal($langCode),
-                        'defaultVal'  => null,
-                        'allowNull'   => $this->allowNull(),
-                        'comment'      => $this->label()
-                    ]
-                );
-                $fields[$langCode] = $field;
-            }
-        } else {
-            $field = new PropertyField();
-            $field->setData(
-                [
-                    'ident'        => $this->ident(),
-                    'sqlType'     => $this->sqlType(),
-                    'sqlPdoType' => $this->sqlPdoType(),
-                    'extra'        => $this->sqlExtra(),
-                    'val'          => $this->storageVal(),
-                    'defaultVal'  => null,
-                    'allowNull'   => $this->allowNull(),
-                    'comment'      => $this->label()
-                ]
-            );
-            $fields[] = $field;
-        }
-
-        return $fields;
-    }
 
     /**
      * The property's default validation methods/
@@ -770,21 +683,6 @@ abstract class AbstractProperty implements
         }
         return $view;
     }
-
-    /**
-     * @return string
-     */
-    abstract public function sqlExtra();
-
-    /**
-     * @return string
-     */
-    abstract public function sqlType();
-
-    /**
-     * @return integer
-     */
-    abstract public function sqlPdoType();
 
     /**
      * @return mixed

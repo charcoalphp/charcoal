@@ -10,21 +10,40 @@ use \Charcoal\Property\BooleanProperty as BooleanProperty;
  */
 class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
 {
+    public $obj;
+
+    /**
+    *
+    */
+    public function setUp()
+    {
+        $this->obj = new BooleanProperty();
+    }
+
+    /**
+    *
+    */
     public function testConstructor()
     {
-        $obj = new BooleanProperty();
+        $obj = $this->obj;
         $this->assertInstanceOf('\Charcoal\Property\BooleanProperty', $obj);
     }
 
+    /**
+    *
+    */
     public function testType()
     {
-        $obj = new BooleanProperty();
+        $obj = $this->obj;
         $this->assertEquals('boolean', $obj->type());
     }
 
+    /**
+    *
+    */
     public function testDisplayVal()
     {
-        $obj = new BooleanProperty();
+        $obj = $this->obj;
         $this->assertEquals('False', $obj->displayVal());
         $obj->setVal(true);
         $this->assertEquals('True', $obj->displayVal());
@@ -46,7 +65,7 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetMultiple()
     {
-        $obj = new BooleanProperty();
+        $obj = $this->obj;
         $ret = $obj->setMultiple(0);
         $this->assertSame($ret, $obj);
         $this->assertSame(false, $ret->multiple());
@@ -55,15 +74,21 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
         $obj->setMultiple(1);
     }
 
+    /**
+    *
+    */
     public function testMultiple()
     {
-        $obj = new BooleanProperty();
+        $obj = $this->obj;
         $this->assertSame(false, $obj->multiple());
     }
 
+    /**
+    *
+    */
     public function testSetData()
     {
-        $obj = new BooleanProperty();
+        $obj = $this->obj;
         $data = [
             'true_label'=>'foo',
             'false_label'=>'bar'
@@ -76,9 +101,12 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('bar', $obj->falseLabel());
     }
 
+    /**
+    *
+    */
     public function testSetTrueLabel()
     {
-        $obj = new BooleanProperty();
+        $obj = $this->obj;
         $ret = $obj->setTrueLabel('foo');
         $this->assertSame($ret, $obj);
 
@@ -88,9 +116,12 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
         //$obj->setTrueLabel(false);
     }
 
+    /**
+    *
+    */
     public function testSetFalseLabel()
     {
-        $obj = new BooleanProperty();
+        $obj = $this->obj;
         $ret = $obj->setFalseLabel('foo');
         $this->assertSame($ret, $obj);
 
@@ -100,27 +131,39 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
         //$obj->setFalseLabel(false);
     }
 
+    /**
+    *
+    */
     public function testSqlExtra()
     {
-        $obj = new BooleanProperty();
+        $obj = $this->obj;
         $this->assertSame('', $obj->sqlExtra());
     }
 
+    /**
+    *
+    */
     public function testSqlType()
     {
-        $obj = new BooleanProperty();
+        $obj = $this->obj;
         $this->assertEquals('TINYINT(1) UNSIGNED', $obj->sqlType());
     }
 
+    /**
+    *
+    */
     public function testSqlPdoType()
     {
-        $obj = new BooleanProperty();
+        $obj = $this->obj;
         $this->assertEquals(\PDO::PARAM_BOOL, $obj->sqlPdoType());
     }
 
+    /**
+    *
+    */
     public function testChoices()
     {
-        $obj = new BooleanProperty();
+        $obj = $this->obj;
         $obj->setVal(false);
         $choices = [
             [
@@ -138,9 +181,12 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    /**
+    *
+    */
     public function testSave()
     {
-        $obj = new BooleanProperty();
+        $obj = $this->obj;
 
         $obj->setVal(true);
         $this->assertTrue($obj->save());

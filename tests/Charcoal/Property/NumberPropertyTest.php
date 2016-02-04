@@ -10,8 +10,8 @@ use \Charcoal\Property\NumberProperty;
 class NumberPropertyTest extends \PHPUnit_Framework_TestCase
 {
     /**
-    * @var NumberProperty $obj
-    */
+     * @var NumberProperty $obj
+     */
     public $obj;
 
     public function setUp()

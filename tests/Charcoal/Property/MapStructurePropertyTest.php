@@ -11,8 +11,8 @@ use \Charcoal\Property\MapStructureProperty;
 class MapStructurePropertyTest extends \PHPUnit_Framework_TestCase
 {
     /**
-    * @var MapStructureProperty $obj
-    */
+     * @var MapStructureProperty $obj
+     */
     public $obj;
 
     public function setUp()

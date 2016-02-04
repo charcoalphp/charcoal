@@ -14,11 +14,6 @@ interface PropertyInterface
     public function type();
 
     /**
-     * @return array
-     */
-    public function fields();
-
-    /**
      * @param array $data The property data.
      * @return PropertyInterface Chainable
      */
@@ -45,18 +40,6 @@ interface PropertyInterface
      * @return mixed
      */
     public function val();
-
-    /**
-     * @param string $fieldIdent The property field identifier.
-     * @return mixed
-     */
-    public function fieldVal($fieldIdent);
-
-    /**
-     * @param mixed $val Optional. The value to convert to storage value.
-     * @return mixed
-     */
-    public function storageVal($val = null);
 
     /**
      * @param mixed $val Optional. The value to to convert to display.
@@ -169,19 +152,4 @@ interface PropertyInterface
      * @return boolean
      */
     public function active();
-
-    /**
-     * @return string
-     */
-    public function sqlExtra();
-
-    /**
-     * @return string
-     */
-    public function sqlType();
-
-    /**
-     * @return integer
-     */
-    public function sqlPdoType();
 }
