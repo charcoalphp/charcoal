@@ -22,7 +22,7 @@ class HtmlProperty extends StringProperty
     }
 
     /**
-     * Unlike strings' upper limit of 255, HTML has no defualt max length (0).
+     * Unlike strings' default upper limit of 255, HTML has no default max length (0).
      *
      * @return integer
      */
@@ -32,7 +32,7 @@ class HtmlProperty extends StringProperty
     }
 
     /**
-     * Get the SQL type (Storage format)
+     * Get the SQL type (Storage format).
      *
      * @return string The SQL type
      */

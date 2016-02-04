@@ -2,7 +2,7 @@
 
 namespace Charcoal\Tests\Property;
 
-use \Charcoal\Property\FileProperty as FileProperty;
+use \Charcoal\Property\FileProperty;
 
 /**
  * ## TODOs

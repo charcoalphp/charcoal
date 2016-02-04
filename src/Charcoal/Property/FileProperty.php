@@ -10,8 +10,7 @@ use \InvalidArgumentException;
 use \finfo;
 use \PDO;
 
-// Module `charcoal-core` dependencies
-use \Charcoal\Charcoal;
+// Intra-Module `charcoal-property` dependencies
 use \Charcoal\Property\AbstractProperty;
 
 /**
@@ -595,7 +594,6 @@ class FileProperty extends AbstractProperty
      */
     public function generateExtension()
     {
-        $mimetype = $this->mimetype();
         return '';
     }
 }

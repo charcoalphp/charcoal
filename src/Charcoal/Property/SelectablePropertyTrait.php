@@ -5,7 +5,7 @@ namespace Charcoal\Property;
 use \InvalidArgumentException;
 
 /**
-*
+* Fully implements, as a Trait, the SelectablePropertyInterface.
 */
 trait SelectablePropertyTrait
 {

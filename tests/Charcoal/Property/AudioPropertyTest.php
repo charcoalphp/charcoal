@@ -10,12 +10,19 @@ use \Charcoal\Property\AudioProperty;
  */
 class AudioPropertyTest extends \PHPUnit_Framework_TestCase
 {
+    public $obj;
+
+    public function setUp()
+    {
+        $this->obj = new AudioProperty();
+    }
+
     /**
      * Hello world
      */
     public function testConstructor()
     {
-        $obj = new AudioProperty();
+        $obj = $this->obj;
         $this->assertInstanceOf('\Charcoal\Property\AudioProperty', $obj);
 
         $this->assertEquals(0, $obj->minLength());
@@ -24,13 +31,13 @@ class AudioPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testType()
     {
-        $obj = new AudioProperty();
+        $obj = $this->obj;
         $this->assertEquals('audio', $obj->type());
     }
 
     public function testSetData()
     {
-        $obj = new AudioProperty();
+        $obj = $this->obj;
         $data = [
             'minLength'=>20,
             'maxLength'=>500
@@ -44,7 +51,7 @@ class AudioPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testSetMinLength()
     {
-        $obj = new AudioProperty();
+        $obj = $this->obj;
 
         $ret = $obj->setMinLength(5);
         $this->assertSame($ret, $obj);
@@ -57,7 +64,7 @@ class AudioPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testSetMaxLength()
     {
-        $obj = new AudioProperty();
+        $obj = $this->obj;
 
         $ret = $obj->setMaxLength(5);
         $this->assertSame($ret, $obj);
@@ -73,7 +80,7 @@ class AudioPropertyTest extends \PHPUnit_Framework_TestCase
      */
     public function testGenerateExtension($mime, $ext)
     {
-        $obj = new AudioProperty();
+        $obj = $this->obj;
         $obj->setMimetype($mime);
         $this->assertEquals($ext, $obj->generateExtension());
     }
