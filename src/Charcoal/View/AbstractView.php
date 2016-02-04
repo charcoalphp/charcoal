@@ -58,24 +58,6 @@ abstract class AbstractView implements
     }
 
     /**
-     * @param array $data
-     * @return AbstractView Chainable
-     */
-    // public function setData(array $data)
-    // {
-    //     foreach ($data as $prop => $val) {
-    //         $func = [$this, $this->setter($prop)];
-    //         if (is_callable($func)) {
-    //             call_user_func($func, $val);
-    //         } else {
-    //             $this->{$prop} = $val;
-    //         }
-    //     }
-
-    //     return $this;
-    // }
-
-    /**
      * > ConfigurableTrait . createConfig()
      *
      * @param array $data
