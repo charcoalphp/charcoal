@@ -7,10 +7,6 @@ use \Twig_Environment;
 
 // Intra-module (`charcoal-view`) depentencies
 use \Charcoal\View\AbstractEngine;
-use \Charcoal\View\LoaderInterface;
-
-// Local namespace dependencies
-use \Charcoal\View\Twig\TwigLoader;
 
 /**
  *

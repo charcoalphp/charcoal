@@ -7,10 +7,6 @@ use \Mustache_Engine;
 
 // Intra-module (`charcoal-view`) depentencies
 use \Charcoal\View\AbstractEngine;
-use \Charcoal\View\LoaderInterface;
-
-// Local namespace dependencies
-use \Charcoal\View\Mustache\MustacheLoader;
 
 /**
  * Mustache view rendering engine.
@@ -95,7 +91,7 @@ class MustacheEngine extends AbstractEngine
     }
 
     /**
-     * @return MustacheLoader
+     * @return GenericHelper
      */
     public function helper()
     {
@@ -106,7 +102,7 @@ class MustacheEngine extends AbstractEngine
     }
 
     /**
-     * @return MustacheLoader
+     * @return GenericHelper
      */
     protected function createHelper()
     {
