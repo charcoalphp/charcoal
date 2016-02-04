@@ -71,7 +71,7 @@ interface PropertyInterface
     public function setLabel($label);
 
     /**
-     * @return boolean
+     * @return mixed
      */
     public function label();
 
