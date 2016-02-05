@@ -19,9 +19,6 @@ use \Charcoal\Translation\TranslationConfig;
 use \Charcoal\Translation\TranslationString;
 use \Charcoal\Validator\ValidatableInterface;
 use \Charcoal\Validator\ValidatableTrait;
-use \Charcoal\View\GenericView;
-use \Charcoal\View\ViewableInterface;
-use \Charcoal\View\ViewableTrait;
 
 // Local namespace dependencies
 use \Charcoal\Property\PropertyInterface;
@@ -39,14 +36,12 @@ abstract class AbstractProperty implements
     DescribableInterface,
     LoggerAwareInterface,
     StorablePropertyInterface,
-    ValidatableInterface,
-    ViewableInterface
+    ValidatableInterface
 {
     use LoggerAwareTrait;
     use DescribableTrait;
     use StorablePropertyTrait;
     use ValidatableTrait;
-    use ViewableTrait;
 
     /**
      * @var string $ident
@@ -667,21 +662,6 @@ abstract class AbstractProperty implements
     {
         $validator = new PropertyValidator($this);
         return $validator;
-    }
-
-    /**
-     * @param array $data Optional. View data.
-     * @return ViewInterface
-     */
-    public function createView(array $data = null)
-    {
-        $view = new GenericView([
-            'logger'=>$this->logger
-        ]);
-        if ($data !== null) {
-            $view->setData($data);
-        }
-        return $view;
     }
 
     /**
