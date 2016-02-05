@@ -43,7 +43,7 @@ class MetadataLoader extends FileLoader
      */
     public function searchPath()
     {
-        $cfg = \Charcoal\App\App::instance()->getContainer()->get('charcoal/app/config');
+        $cfg = App::instance()->getContainer()->get('config');
 
         $allPath = parent::searchPath();
 

@@ -74,7 +74,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     {
         if ($this->databaseIdent === null) {
             $container = \Charcoal\App\App::instance()->getContainer();
-            $appConfig = $container['charcoal/app/config'];
+            $appConfig = $container['config'];
             return $appConfig->get('default_database');
         }
         return $this->databaseIdent;
