@@ -541,7 +541,7 @@ abstract class AbstractProperty implements
     }
 
     /**
-     * @return string
+     * @return TranslationString
      */
     public function description()
     {
@@ -559,7 +559,7 @@ abstract class AbstractProperty implements
     }
 
     /**
-     * @return string
+     * @return TranslationString
      */
     public function notes()
     {

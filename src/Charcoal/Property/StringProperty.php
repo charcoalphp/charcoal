@@ -11,10 +11,11 @@ use \PDO;
 
 // Module `charcoal-core` dependencies
 use \Charcoal\Core\StringFormat;
-use \Charcoal\Property\AbstractProperty;
+
 use \Charcoal\Translation\TranslationConfig;
 
 // Local namespace dependencies
+use \Charcoal\Property\AbstractProperty;
 use \Charcoal\Property\SelectablePropertyInterface;
 use \Charcoal\Property\SelectablePropertyTrait;
 

@@ -1,0 +1,10 @@
+{
+  "properties":{
+    "support_alpha":{
+      "type":"boolean"
+    }
+  },
+  "admin":{
+    "input_type":"charcoal/admin/property/input/color-picker"
+  }
+}

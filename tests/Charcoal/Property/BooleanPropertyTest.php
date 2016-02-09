@@ -13,16 +13,16 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
     public $obj;
 
     /**
-    *
-    */
+     *
+     */
     public function setUp()
     {
         $this->obj = new BooleanProperty();
     }
 
     /**
-    *
-    */
+     *
+     */
     public function testConstructor()
     {
         $obj = $this->obj;
@@ -30,8 +30,8 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    *
-    */
+     *
+     */
     public function testType()
     {
         $obj = $this->obj;
@@ -39,8 +39,8 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    *
-    */
+     *
+     */
     public function testDisplayVal()
     {
         $obj = $this->obj;
@@ -75,8 +75,8 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    *
-    */
+     *
+     */
     public function testMultiple()
     {
         $obj = $this->obj;
@@ -84,8 +84,8 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    *
-    */
+     *
+     */
     public function testSetData()
     {
         $obj = $this->obj;
@@ -102,8 +102,8 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    *
-    */
+     *
+     */
     public function testSetTrueLabel()
     {
         $obj = $this->obj;
@@ -117,8 +117,8 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    *
-    */
+     *
+     */
     public function testSetFalseLabel()
     {
         $obj = $this->obj;
@@ -132,8 +132,8 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    *
-    */
+     *
+     */
     public function testSqlExtra()
     {
         $obj = $this->obj;
@@ -141,8 +141,8 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    *
-    */
+     *
+     */
     public function testSqlType()
     {
         $obj = $this->obj;
@@ -150,8 +150,8 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    *
-    */
+     *
+     */
     public function testSqlPdoType()
     {
         $obj = $this->obj;
@@ -159,8 +159,8 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    *
-    */
+     *
+     */
     public function testChoices()
     {
         $obj = $this->obj;
@@ -182,8 +182,8 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    *
-    */
+     *
+     */
     public function testSave()
     {
         $obj = $this->obj;
