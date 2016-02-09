@@ -2,8 +2,8 @@
 
 namespace Charcoal\Property;
 
+// Module `charcoal-core` dependencies
 use \Charcoal\Translation\TranslationConfig;
-use \Charcoal\Translation\TranslationString;
 
 // Local namespace dependencies
 use \Charcoal\Property\PropertyField;

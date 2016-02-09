@@ -3,6 +3,7 @@
 namespace Charcoal\Property;
 
 // Dependencies from `PHP`
+use \Exception;
 use \InvalidArgumentException;
 
 // Dependencies from `PHP` extensions
