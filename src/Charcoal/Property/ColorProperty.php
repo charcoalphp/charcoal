@@ -55,7 +55,33 @@ class ColorProperty extends AbstractProperty
      */
     public function setVal($val)
     {
-        $this->val = $this->colorVal($val);
+        if ($val === null) {
+            if ($this->allowNull()) {
+                $this->val = null;
+                return $this;
+            } else {
+                throw new InvalidArgumentException(
+                    'Val can not be null (Not allowed)'
+                );
+            }
+        }
+        if ($this->multiple()) {
+            if (is_string($val)) {
+                $val = explode($this->multipleSeparator(), $val);
+            }
+            if (!is_array($val)) {
+                throw new InvalidArgumentException(
+                    'Val is multiple so it must be a string (convertable to array by separator) or an array'
+                );
+            }
+            $ret = [];
+            foreach($val as $v) {
+                $ret[] = $this->colorVal($v);
+            }
+            $this->val = $ret;
+        } else {
+            $this->val = $this->colorVal($val);
+        }
         return $this;
     }
 
@@ -268,7 +294,7 @@ class ColorProperty extends AbstractProperty
      */
     private function parseRgba($val)
     {
-        preg_match('/rgba\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\(\d+)\s*\)/i', $val, $m);
+        $match = preg_match('/rgba\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\(\d+)\s*\)/i', $val, $m);
         if (!$match) {
             throw new InvalidArgumentException(
                 'String does not match rgba() format to be parsed by parseRgba()'
@@ -288,6 +314,7 @@ class ColorProperty extends AbstractProperty
      */
     private function parseHsl($val)
     {
+        unset($val);
         throw new Exception(
             'HSL color value is not yet supported'
         );
@@ -299,6 +326,7 @@ class ColorProperty extends AbstractProperty
      */
     private function parseHsla($val)
     {
+        unset($val);
         throw new Exception(
             'HSL color value is not yet supported'
         );

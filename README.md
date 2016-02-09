@@ -69,35 +69,35 @@ Properties need 3 method to integrate with a SQL source:
 - `sql_type()` _string_ The SQL column type (ex: `VARCHAR(16)`)
 - `sql_pdo_type()` _integer_ The PDO column type (ex: `PDO::PARAM_STR`)
 
-> 👉 Those methods are _abstract_ and therefore must be implemented in actual properties.
+>  Those methods are _abstract_ and therefore must be implemented in actual properties.
 
 # Types of properties
 
 - [Boolean](#boolean-property)
-- ~~Color~~
+- [Color](#color-property)
 - ~~Date~~
-  - [DateTime](#datetime-property)
-  - ~~Day~~
-  - ~~Month~~
-  - ~~Time~~
-  - ~~Year~~
+	- [DateTime](#datetime-property)
+	- ~~Day~~
+	- ~~Month~~
+	- ~~Time~~
+	- ~~Year~~
 - [File](#file-property)
-  - [Audio](#file-audio-property)
-  - [Image](#image-property)
-  - ~~Video~~
+	- [Audio](#file-audio-property)
+	- [Image](#image-property)
+	- ~~Video~~
 - [Lang](#lang-property)
 - [Number](#number-property)
-  - ~~Float~~
-  - ~~Integer~~
+	- ~~Float~~
+	- ~~Integer~~
 - [Object](#object-property)
 - Id
 - [String](#string-property)
-  - [Html](#html-string-property)
-  - [Password](#password-string-property)
-  - [Phone](#phone-string-property)
-  - [Text](#text-string-propery)
+	- [Html](#html-string-property)
+	- [Password](#password-string-property)
+	- [Phone](#phone-string-property)
+	- [Text](#text-string-propery)
 - ~~Structure~~
-  - [MapStructure](#map-structure-property)
+	- [MapStructure](#map-structure-property)
 
 Retrieve
 
@@ -117,6 +117,20 @@ The boolean property adds the following concepts to the [basic property options]
 <small>(V) indicates options used in validation</small>
 
 > ⚠ Boolean properties can not be multiple. (`multiple()` will always return false). Calling `set_multiple(true)` will throw an exception
+
+## Color Property
+
+The color property stores a color. If alpha is not supported, it is stored as an hexadecimal value (ex: `#5590BA`). If alpha is supported, it is stored as a rgba() string value (ex: `rgb(85, 144, 186, 0.5)`).
+
+### Color Property options
+
+The boolean property adds the following concepts to the [basic property options](#basic-property-options):
+
+| Name               | (V) | Type                | Description
+| ------------------ | :-: | ------------------- | -----------
+| **support_alpha**  |  ✓  | _boolean_           | ...
+<small>(V) indicates options used in validation</small>
+
 
 ## DateTime Property
 
