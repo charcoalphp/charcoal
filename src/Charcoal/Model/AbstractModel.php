@@ -3,6 +3,7 @@
 namespace Charcoal\Model;
 
 // Dependencies from `PHP`
+use \Exception;
 use \InvalidArgumentException;
 use \JsonSerializable;
 use \Serializable;
@@ -354,15 +355,22 @@ abstract class AbstractModel implements
     * StorableInterface > createSource()
     *
     * @param array $data Optional
+    * @throws Exception If the metadata source can not be found.
     * @return SourceInterface
     */
     protected function createSource($data = null)
     {
         $metadata = $this->metadata();
         $defaultSource = $metadata->defaultSource();
-        $source_config = $metadata->source($defaultSource);
+        $sourceConfig = $metadata->source($defaultSource);
 
-        $source_type = isset($source_config['type']) ? $source_config['type'] : self::DEFAULT_SOURCE_TYPE;
+        if(!$sourceConfig) {
+            throw new Exception(
+                sprintf('Can not create %s source: invalid metadata.', get_class($this))
+            );
+        }
+
+        $source_type = isset($sourceConfig['type']) ? $sourceConfig['type'] : self::DEFAULT_SOURCE_TYPE;
         $source_factory = new SourceFactory();
         $source = $source_factory->create($source_type, [
             'logger'=>$this->logger
@@ -370,9 +378,9 @@ abstract class AbstractModel implements
         $source->setModel($this);
 
         if ($data !== null) {
-            $data = array_merge_recursive($source_config, $data);
+            $data = array_merge_recursive($sourceConfig, $data);
         } else {
-            $data = $source_config;
+            $data = $sourceConfig;
         }
 
         $source->setData($data);
