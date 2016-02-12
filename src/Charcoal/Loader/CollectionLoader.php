@@ -2,14 +2,11 @@
 
 namespace Charcoal\Loader;
 
-// Intra-module (`charcoal-core`) dependencies
-use \Exception;
 use \InvalidArgumentException;
-
-// PHP Modules dependencies
+use \Exception;
 use \PDO;
 
-// PSR-3 (logger) dependencies
+// Dependencies from PSR-3 (Logger)
 use \Psr\Log\LoggerAwareInterface;
 use \Psr\Log\LoggerAwareTrait;
 
@@ -17,155 +14,192 @@ use \Psr\Log\LoggerAwareTrait;
 use \Charcoal\Model\ModelInterface;
 use \Charcoal\Model\Collection;
 
-// Local namespace dependencies
-use \Charcoal\Source\Database\DatabaseFilter as Filter;
-use \Charcoal\Source\Database\DatabaseOrder as Order;
-use \Charcoal\Source\Database\DatabasePagination as Pagination;
+// Local Dependencies
+use \Charcoal\Source\Database\DatabaseFilter;
+use \Charcoal\Source\Database\DatabaseOrder;
+use \Charcoal\Source\Database\DatabasePagination;
 
 /**
-* Collection Loader
-*
-* @uses \Charcoal\Model\Collection
-*/
+ * Collection Loader
+ *
+ * @uses \Charcoal\Model\Collection
+ */
 class CollectionLoader implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
     /**
-    * @var array $properties
-    */
+     * @var array $properties
+     */
     private $properties = [];
+
     /**
-    * @var array $propertiesOptions
-    */
+     * @var array $propertiesOptions
+     */
     private $propertiesOptions = [];
+
     /**
-    * Array of `Filter` objects
-    * @var array $filters
-    */
+     * Array of `Filter` objects.
+     *
+     * @var array $filters
+     */
     private $filters = [];
+
     /**
-    * Array of `Order` object
-    * @var array $orders
-    */
+     * Array of `Order` object.
+     *
+     * @var array $orders
+     */
     private $orders = [];
-    /**
-    * The `Pagniation` object
-    * @var Pagination|null $pagination
-    */
-    private $pagination = null;
 
     /**
-    * The source to load the object from
-    * @var SourceInterface $source
-    */
-    private $source = null;
-    /**
-    * The model to load the collection from
-    * @var ModelInterface $model
-    */
-    private $model = null;
+     * The `Pagniation` object.
+     *
+     * @var Pagination|null $pagination
+     */
+    private $pagination;
 
+    /**
+     * The source to load the object from.
+     *
+     * @var SourceInterface $source
+     */
+    private $source;
+
+    /**
+     * The model to load the collection from.
+     *
+     * @var ModelInterface $model
+     */
+    private $model;
+
+    /**
+     * The constructor arguments for the model.
+     *
+     * @var array $arguments
+     */
+    private $arguments;
+
+    /**
+     * The callback routine applied to every object added to the collection.
+     *
+     * @var callable $callback
+     */
+    private $callback;
+
+    /**
+     * Return a new Collection loader.
+     *
+     * @param array $data The loader's dependencies.
+     */
     public function __construct($data)
     {
         $this->setLogger($data['logger']);
+        $this->setArguments([ 'logger' => $this->logger ]);
     }
 
     /**
-    * @param array $data
-    * @return CollectionLoader Chainable
-    */
-    public function setData(array $data)
+     * Set the loader data, from an associative array map (or any other Traversable).
+     *
+     * @param  array|Traversable $data Data to assign to the loader.
+     * @return CollectionLoader Chainable
+     */
+    public function setData($data)
     {
         foreach ($data as $prop => $val) {
-            $func = [$this, 'set_'.$prop];
-            if (is_callable($func)) {
-                call_user_func($func, $val);
-                unset($data[$prop]);
+            $setter = $this->setter($key);
+
+            if (is_callable([$this, $setter])) {
+                $this->{$setter}($value);
             } else {
-                $this->{$prop} = $val;
+                $this->{$key} = $value;
             }
         }
+
         return $this;
     }
 
     /**
-    * @param mixed $source
-    * @return CollectionLoader Chainable
-    */
+     * @param mixed $source
+     * @return CollectionLoader Chainable
+     */
     public function setSource($source)
     {
         $this->source = $source;
+
         return $this;
     }
 
     /**
-    * @throws Exception
-    * @return mixed
-    */
+     * @throws Exception
+     * @return mixed
+     */
     public function source()
     {
-        if ($this->source === null) {
+        if (!isset($this->source)) {
             throw new Exception('No source set.');
         }
+
         return $this->source;
     }
 
     /**
-    * @param ModelInterface $model
-    * @return Source Chainable
-    */
+     * @param ModelInterface $model
+     * @return Source Chainable
+     */
     public function setModel(ModelInterface $model)
     {
         $this->model = $model;
         $this->setSource($model->source());
+
         return $this;
     }
 
     /**
-    * @throws Exception if not model was previously set
-    * @return Model
-    */
+     * @throws Exception if not model was previously set
+     * @return Model
+     */
     public function model()
     {
-        if ($this->model === null) {
+        if (!isset($this->model)) {
             throw new Exception('No model set.');
         }
+
         return $this->model;
     }
 
     /**
-    * @param array $properties
-    * @throws InvalidArgumentException
-    * @return ColelectionLoader Chainable
-    */
+     * @param array $properties
+     * @throws InvalidArgumentException
+     * @return ColelectionLoader Chainable
+     */
     public function setProperties($properties)
     {
         return $this->source()->setProperties($properties);
     }
 
     /**
-    * @return array
-    */
+     * @return array
+     */
     public function properties()
     {
         return $this->source()->properties();
     }
 
     /**
-    * @param string $property Property ident
-    * @throws InvalidArgumentException if property is not a string or empty
-    * @return CollectionLoader Chainable
-    */
+     * @param string $property Property ident
+     * @throws InvalidArgumentException if property is not a string or empty
+     * @return CollectionLoader Chainable
+     */
     public function addProperty($property)
     {
         return $this->source()->addProperty($property);
     }
 
     /**
-    * @param array $keywords
-    * @return CollectionLoader Chainable
-    */
+     * @param array $keywords
+     * @return CollectionLoader Chainable
+     */
     public function setKeywords()
     {
         foreach ($keywords as $k) {
@@ -177,12 +211,12 @@ class CollectionLoader implements LoggerAwareInterface
     }
 
     /**
-    * Helper function to add a "search" keyword filter to multiple properties.
-    *
-    * @param string $keyword
-    * @param array $properties
-    * @return CollectionLoader Chainable
-    */
+     * Helper function to add a "search" keyword filter to multiple properties.
+     *
+     * @param string $keyword
+     * @param array $properties
+     * @return CollectionLoader Chainable
+     */
     public function addKeyword($keyword, $properties = null)
     {
         $model = $this->model();
@@ -206,96 +240,96 @@ class CollectionLoader implements LoggerAwareInterface
     }
 
     /**
-    * @param array $filters
-    * @throws InvalidArgumentException
-    * @return Collection Chainable
-    */
+     * @param array $filters
+     * @throws InvalidArgumentException
+     * @return Collection Chainable
+     */
     public function setFilters($filters)
     {
         return $this->source()->setFilters($filters);
     }
 
     /**
-    * @return array
-    */
+     * @return array
+     */
     public function filters()
     {
         return $this->source()->filters();
     }
 
     /**
-    * Add a collection filter to the loader.
-    *
-    * There are 3 different ways of adding a filter:
-    * - as a `Filter` object, in which case it will be added directly.
-    *   - `addFilter($obj);`
-    * - as an array of options, which will be used to build the `Filter` object
-    *   - `addFilter(['property' => 'foo', 'val' => 42, 'operator' => '<=']);`
-    * - as 3 parameters: `property`, `val` and `options`
-    *   - `addFilter('foo', 42, ['operator' => '<=']);`
-    *
-    * @param string|array|Filter $param
-    * @param mixed               $val     Optional: Only used if the first argument is a string
-    * @param array               $options Optional: Only used if the first argument is a string
-    * @throws InvalidArgumentException if property is not a string or empty
-    * @return CollectionLoader (Chainable)
-    */
+     * Add a collection filter to the loader.
+     *
+     * There are 3 different ways of adding a filter:
+     * - as a `Filter` object, in which case it will be added directly.
+     *   - `addFilter($obj);`
+     * - as an array of options, which will be used to build the `Filter` object
+     *   - `addFilter(['property' => 'foo', 'val' => 42, 'operator' => '<=']);`
+     * - as 3 parameters: `property`, `val` and `options`
+     *   - `addFilter('foo', 42, ['operator' => '<=']);`
+     *
+     * @param string|array|Filter $param
+     * @param mixed               $val     Optional: Only used if the first argument is a string
+     * @param array               $options Optional: Only used if the first argument is a string
+     * @throws InvalidArgumentException if property is not a string or empty
+     * @return CollectionLoader (Chainable)
+     */
     public function addFilter($param, $val = null, array $options = null)
     {
         return $this->source()->addFilter($param, $val, $options);
     }
 
     /**
-    * @param array $orders
-    * @return CollectionLoader Chainable
-    */
+     * @param array $orders
+     * @return CollectionLoader Chainable
+     */
     public function setOrders($orders)
     {
         return $this->setOrders($orders);
     }
 
     /**
-    * @return array
-    */
+     * @return array
+     */
     public function orders()
     {
         return $this->orders();
     }
 
     /**
-    * @param string|array|Order $param
-    * @param string             $mode          Optional
-    * @param array              $orderOptions Optional
-    * @throws InvalidArgumentException
-    * @return CollectionLoader Chainable
-    */
+     * @param string|array|Order $param
+     * @param string             $mode          Optional
+     * @param array              $orderOptions Optional
+     * @throws InvalidArgumentException
+     * @return CollectionLoader Chainable
+     */
     public function addOrder($param, $mode = 'asc', $orderOptions = null)
     {
         return $this->source()->addOrder($param, $mode, $orderOptions);
     }
 
     /**
-    * @param mixed $param
-    * @return CollectionLoader Chainable
-    */
+     * @param mixed $param
+     * @return CollectionLoader Chainable
+     */
     public function setPagination($param)
     {
         return $this->source()->setPagination($param);
     }
 
     /**
-    * @return Pagination
-    */
+     * @return Pagination
+     */
     public function pagination()
     {
         return $this->source()->pagination();
     }
 
     /**
-    * @param integer $page
-    * @throws InvalidArgumentException
-    * @return CollectionLoader Chainable
-    */
+     * @param integer $page
+     * @throws InvalidArgumentException
+     * @return CollectionLoader Chainable
+     */
     public function setPage($page)
     {
         if (!is_integer($page)) {
@@ -306,18 +340,26 @@ class CollectionLoader implements LoggerAwareInterface
     }
 
     /**
-    * @return integer
-    */
+     * @return integer
+     */
     public function page()
     {
         return $this->pagination()->page();
     }
 
     /**
-    * @param integer $num
-    * @throws InvalidArgumentException
-    * @return CollectionLoader Chainable
-    */
+     * @return integer
+     */
+    public function numPerPage()
+    {
+        return $this->pagination()->numPerPage();
+    }
+
+    /**
+     * @param integer $num
+     * @throws InvalidArgumentException
+     * @return CollectionLoader Chainable
+     */
     public function setNumPerPage($num)
     {
         if (!is_integer($num)) {
@@ -328,48 +370,136 @@ class CollectionLoader implements LoggerAwareInterface
     }
 
     /**
-    * @return integer
-    */
-    public function numPerPage()
+     * Retrieve the model's constructor arguments.
+     *
+     * @return array
+     */
+    public function arguments()
     {
-        return $this->pagination()->numPerPage();
+        return $this->arguments;
     }
 
     /**
-    * Load a collection from source
-    * @param string|null $ident
-    * @throws Exception if the database connection fails
-    * @return Collection
-    */
-    public function load($ident = null)
+     * Set the model's constructor arguments.
+     *
+     * @param array $arguments The constructor arguments to be passed to the created object's initialization.
+     * @return CollectionLoader Chainable
+     */
+    public function setArguments(array $arguments)
+    {
+        $this->arguments = $arguments;
+
+        return $this;
+    }
+
+    /**
+     * Retrieve the callback routine applied to every object added to the collection.
+     *
+     * @return callable|null
+     */
+    public function callback()
+    {
+        return $this->callback;
+    }
+
+    /**
+     * Set the callback routine applied to every object added to the collection.
+     *
+     * @param callable $callback The callback routine.
+     * @return CollectionLoader Chainable
+     */
+    public function setCallback(callable $callback)
+    {
+        $this->callback = $callback;
+
+        return $this;
+    }
+
+    /**
+     * Load a collection from source.
+     *
+     * @param  string|null $ident  Optional. A pre-defined list to use from the model.
+     * @param  array       $args   Optional. The constructor arguments. Leave blank to use `$arguments` member.
+     * @param  callable    $cb     Optional. Apply a callback to every entity of the collection. Leave blank to use `$callback` member.
+     * @throws Exception If the database connection fails.
+     * @return Collection
+     */
+    public function load($ident = null, array $args = null, callable $cb = null)
     {
         // Unused.
         unset($ident);
 
+        if (!isset($args)) {
+            $args = $this->arguments();
+        }
+
+        if (!isset($cb)) {
+            $cb = $this->callback();
+        }
+
         $db = $this->source()->db();
         if (!$db) {
-            throw new Exception('Could not instanciate database connection.');
+            throw new Exception('Could not instanciate a database connection.');
         }
 
         /** @todo Filters, pagination, select, etc */
-        $q = $this->source()->sqlLoad();
-        $this->logger->debug($q);
+        $query = $this->source()->sqlLoad();
+        $this->logger->debug($query);
         $collection = new Collection();
 
-
-        $sth = $db->prepare($q);
+        $sth = $db->prepare($query);
         /** @todo Filter binds */
         $sth->execute();
         $sth->setFetchMode(PDO::FETCH_ASSOC);
-        $class_name = get_class($this->model());
-        while ($obj_data = $sth->fetch()) {
-            $obj = new $class_name([
-                'logger'=>$this->logger
-            ]);
-            $obj->setFlatData($obj_data);
+
+        $classname = get_class($this->model());
+
+        while ($objData = $sth->fetch()) {
+            $obj = new $classname($args);
+            $obj->setFlatData($objData);
+
+            if (isset($cb)) {
+                call_user_func_array($cb, [ &$obj ]);
+            }
+
             $collection->add($obj);
         }
 
         return $collection;
+    }
+
+    /**
+     * Allow an object to define how the key getter are called.
+     *
+     * @param string $key  The key to get the getter from.
+     * @return string The getter method name, for a given key.
+     */
+    protected function getter($key)
+    {
+        $getter = $key;
+        return $this->camelize($getter);
+    }
+
+    /**
+     * Allow an object to define how the key setter are called.
+     *
+     * @param string $key  The key to get the setter from.
+     * @return string The setter method name, for a given key.
+     */
+    protected function setter($key)
+    {
+        $setter = 'set_'.$key;
+        return $this->camelize($setter);
+    }
+
+    /**
+     * Transform a snake_case string to camelCase.
+     *
+     * @param string $str The snake_case string to camelize.
+     * @return string The camelcase'd string.
+     */
+    protected function camelize($str)
+    {
+        return lcfirst(implode('', array_map('ucfirst', explode('_', $str))));
     }
 }
