@@ -2,21 +2,17 @@
 
 namespace Charcoal\Source;
 
-// Dependencies from `PHP`
-use \Exception as Exception;
-use \InvalidArgumentException as InvalidArgumentException;
+use \Exception;
+use \InvalidArgumentException;
 
-// PSR-3 (logger) dependencies
 use \Psr\Log\LoggerAwareInterface;
 use \Psr\Log\LoggerAwareTrait;
 
-// Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Config\ConfigurableInterface;
 use \Charcoal\Config\ConfigurableTrait;
-use \Charcoal\Model\ModelInterface;
 use \Charcoal\Translation\TranslationConfig;
+use \Charcoal\Model\ModelInterface;
 
-// Local namespace dependencies
 use \Charcoal\Source\SourceConfig;
 use \Charcoal\Source\SourceInterface;
 use \Charcoal\Source\Filter;
