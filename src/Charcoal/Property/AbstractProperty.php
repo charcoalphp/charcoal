@@ -121,6 +121,9 @@ abstract class AbstractProperty implements
      */
     private $notes = '';
 
+    protected $viewOptions;
+    protected $displayType;
+
     /**
      * Required dependencies:
      * - `logger` a PSR3-compliant logger.
@@ -734,5 +737,63 @@ abstract class AbstractProperty implements
     private function camelize($str)
     {
         return lcfirst(implode('', array_map('ucfirst', explode('_', $str))));
+    }
+
+
+    public function setDisplayType($type)
+    {
+        $this->displayType = $type;
+    }
+    public function displayType()
+    {
+        if (!$this->displayType) {
+            $meta = $this->metadata();
+
+            // text display outputs the val as text
+            $default = 'charcoal/admin/property/display/text';
+
+            // This default would be defined in type-property.json (@see charcoal-property/metadata)
+            if (isset($meta['admin']) && isset($meta['admin']['display_type'])) {
+                $default = $meta['admin']['display_type'];
+            }
+            $this->setDisplayType($default);
+        }
+        return $this->displayType;
+    }
+
+    /**
+     * View options.
+     * @param string $ident (ex: charcoal/admin/property/display/text)
+     * @return array Should ALWAYS be an array
+     */
+    public function viewOptions($ident=null)
+    {
+        // No options defined
+        if (!$this->viewOptions) {
+            return [];
+        }
+
+        // No ident defined
+        if (!$ident) {
+            return $this->viewOptions;
+        }
+
+        // Invalid ident
+        if (!isset($this->viewOptions[$ident])) {
+            return [];
+        }
+
+        // Success!
+        return $this->viewOptions[$ident];
+    }
+
+    /**
+     * Set view options for both display and input
+     *
+     * @param array $viewOpts
+     */
+    public function setViewOptions($viewOpts=[])
+    {
+        $this->viewOptions = $viewOpts;
     }
 }
