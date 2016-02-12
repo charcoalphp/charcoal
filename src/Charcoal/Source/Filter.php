@@ -265,6 +265,7 @@ class Filter implements FilterInterface
             '>', '>=', '<', '<=',
             'IS NULL', 'IS NOT NULL',
             '%', 'MOD',
+            'IN',
             'REGEXP', 'NOT REGEXP'
         ];
 

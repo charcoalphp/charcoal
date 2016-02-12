@@ -27,7 +27,7 @@ class DatabaseFilter extends Filter
 
         $filter = '';
         foreach ($fields as $field) {
-            $val = '\''.$this->val().'\'';
+            $val = $this->val();
 
             // Support custom "operator" for the filter
             $operator = $this->operator();
@@ -36,9 +36,9 @@ class DatabaseFilter extends Filter
             $function = $this->func();
 
             if ($function) {
-                $target = $function.'(`'.$field.'`)';
+                $target = sprintf('%1$s(`%2$s`)', $function, $field);
             } else {
-                $target = '`'.$field.'`';
+                $target = sprintf('`%s`', $field);
             }
 
             switch ($operator) {
@@ -67,11 +67,19 @@ class DatabaseFilter extends Filter
 
                 case 'IS NULL':
                 case 'IS NOT NULL':
-                    $filter .= '('.$target.' '.$operator.')';
+                    $filter .= sprintf('(%1$s %2$s)', $target, $operator);
+                    break;
+
+                case 'IN':
+                    if (is_array($val)) {
+                        $val = '\''.implode('\',\'', $val).'\'';
+                    }
+
+                    $filter .= sprintf('(%1$s %2$s (%3$s))', $target, $operator, $val);
                     break;
 
                 default:
-                    $filter .= '('.$target.' '.$operator.' '.$val.')';
+                    $filter .= sprintf('(%1$s %2$s \'%3$s\')', $target, $operator, $val);
                     break;
             }
         }
