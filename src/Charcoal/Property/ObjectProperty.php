@@ -2,16 +2,13 @@
 
 namespace Charcoal\Property;
 
-// Dependencies from `PHP`
 use \Exception;
 use \InvalidArgumentException;
 
-// Module `charcoal-core` dependencies
 use \Charcoal\Model\ModelFactory;
 use \Charcoal\Loader\CollectionLoader;
 use \Charcoal\Translation\TranslationConfig;
 
-// Local namespace dependencies
 use \Charcoal\Property\AbstractProperty;
 use \Charcoal\Property\SelectablePropertyInterface;
 
@@ -55,6 +52,9 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     {
         if ($this->modelFactory === null) {
             $this->modelFactory = new ModelFactory();
+            $this->modelFactory->setArguments([
+                'logger' => $this->logger
+            ]);
         }
         return $this->modelFactory;
     }
@@ -136,9 +136,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      */
     public function proto()
     {
-        return $this->modelFactory()->get($this->objType(), [
-            'logger' => $this->logger
-        ]);
+        return $this->modelFactory()->get($this->objType());
     }
 
     /**
@@ -227,10 +225,10 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
         $choices = $loader->load();
         foreach ($choices as $c) {
             $choice = [
-                'value'=>$c->id(),
-                'label'=>$c->name(),
-                'title'=>$c->name(),
-                'subtext'=>''
+                'value'   => $c->id(),
+                'label'   => $c->name(),
+                'title'   => $c->name(),
+                'subtext' => ''
             ];
 
             if (is_callable([ $c, 'icon' ])) {
@@ -251,9 +249,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      */
     public function hasChoice($choice_ident)
     {
-        $c = $this->modelFactory()->create($this->objType(), [
-            'logger'=>$this->logger
-        ]);
+        $c = $this->modelFactory()->create($this->objType());
         $c->load($choice_ident);
         return ($c->id() == $choice_ident);
     }
@@ -266,17 +262,15 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      */
     public function choice($choice_ident)
     {
-        $c = $this->modelFactory()->create($this->objType(), [
-            'logger'=>$this->logger
-        ]);
+        $c = $this->modelFactory()->create($this->objType());
         $c->load($choice_ident);
 
         $choice = [
-            'value'=>$c->id(),
-            'label'=>$c->name(),
-            'title'=>$c->name(),
-            'subtext'=>'',
-            'icon'=>$c->icon()
+            'value'   => $c->id(),
+            'label'   => $c->name(),
+            'title'   => $c->name(),
+            'subtext' => '',
+            'icon'    => $c->icon()
         ];
 
         return $choice;

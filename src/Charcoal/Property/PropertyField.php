@@ -5,7 +5,6 @@ namespace Charcoal\Property;
 use \InvalidArgumentException;
 use \PDO;
 
-// Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Tranlsation\TranslationString;
 
 /**

@@ -2,10 +2,8 @@
 
 namespace Charcoal\Property;
 
-// Module `charcoal-core` dependencies
 use \Charcoal\Translation\TranslationConfig;
 
-// Local namespace dependencies
 use \Charcoal\Property\PropertyField;
 
 /**
@@ -27,14 +25,14 @@ trait StorablePropertyTrait
                 $field = new PropertyField();
                 $field->setData(
                     [
-                        'ident'        => $ident,
-                        'sqlType'     => $this->sqlType(),
+                        'ident'      => $ident,
+                        'sqlType'    => $this->sqlType(),
                         'sqlPdoType' => $this->sqlPdoType(),
-                        'extra'        => $this->sqlExtra(),
-                        'val'          => $this->fieldVal($langCode),
-                        'defaultVal'  => null,
-                        'allowNull'   => $this->allowNull(),
-                        'comment'      => $this->label()
+                        'extra'      => $this->sqlExtra(),
+                        'val'        => $this->fieldVal($langCode),
+                        'defaultVal' => null,
+                        'allowNull'  => $this->allowNull(),
+                        'comment'    => $this->label()
                     ]
                 );
                 $fields[$langCode] = $field;
@@ -43,14 +41,14 @@ trait StorablePropertyTrait
             $field = new PropertyField();
             $field->setData(
                 [
-                    'ident'        => $this->ident(),
-                    'sqlType'     => $this->sqlType(),
+                    'ident'      => $this->ident(),
+                    'sqlType'    => $this->sqlType(),
                     'sqlPdoType' => $this->sqlPdoType(),
-                    'extra'        => $this->sqlExtra(),
-                    'val'          => $this->storageVal(),
-                    'defaultVal'  => null,
-                    'allowNull'   => $this->allowNull(),
-                    'comment'      => $this->label()
+                    'extra'      => $this->sqlExtra(),
+                    'val'        => $this->storageVal(),
+                    'defaultVal' => null,
+                    'allowNull'  => $this->allowNull(),
+                    'comment'    => $this->label()
                 ]
             );
             $fields[] = $field;

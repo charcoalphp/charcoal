@@ -2,17 +2,14 @@
 
 namespace Charcoal\Property;
 
-// Dependencies from `PHP`
 use \Exception;
 use \InvalidArgumentException;
 use \JsonSerializable;
 use \Serializable;
 
-// PSR-3 (logger) dependencies
 use \Psr\Log\LoggerAwareInterface;
 use \Psr\Log\LoggerAwareTrait;
 
-// Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Model\DescribableInterface;
 use \Charcoal\Model\DescribableTrait;
 use \Charcoal\Translation\TranslationConfig;
@@ -20,7 +17,6 @@ use \Charcoal\Translation\TranslationString;
 use \Charcoal\Validator\ValidatableInterface;
 use \Charcoal\Validator\ValidatableTrait;
 
-// Local namespace dependencies
 use \Charcoal\Property\PropertyInterface;
 use \Charcoal\Property\PropertyValidator;
 use \Charcoal\Property\StorablePropertyInterface;

@@ -4,7 +4,6 @@ namespace Charcoal\Property;
 
 use \PDO;
 
-// Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Translation\TranslationConfig;
 
 /**
@@ -31,9 +30,8 @@ class LangProperty extends AbstractProperty
     /**
      * Get the SQL type (Storage format)
      *
-     * Only the 2-character language code (ISO 639-1)
-     *
      * @return string The SQL type
+     * @todo   Only the 2-character language code (ISO 639-1)
      */
     public function sqlType()
     {

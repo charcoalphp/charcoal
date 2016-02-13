@@ -2,13 +2,9 @@
 
 namespace Charcoal\Property;
 
-// Dependencies from `PHP`
 use \InvalidArgumentException;
+use \PDO;
 
-// Dependencies from `PHP` extensions
-use \PDO as PDO;
-
-// Module `charcoal-core` dependencies
 use \Charcoal\Property\AbstractProperty;
 use \Charcoal\Translation\TranslationString;
 
@@ -162,14 +158,14 @@ class BooleanProperty extends AbstractProperty
     {
         return [
             [
-                'label'     => 'True',
-                'selected'  => !!($this->val()),
-                'value'     => 1
+                'label'    => 'True',
+                'selected' => !!($this->val()),
+                'value'    => 1
             ],
             [
-                'label'     => 'False',
-                'selected'  => !($this->val()),
-                'value'     => 0
+                'label'    => 'False',
+                'selected' => !($this->val()),
+                'value'    => 0
             ]
         ];
     }
