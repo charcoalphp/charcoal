@@ -68,15 +68,15 @@ class MetadataLoader extends FileLoader
 
         $cachePool = $this->cachePool();
         if ($cachePool) {
-            $cache_item = $cachePool->getItem('metadata', $this->ident());
+            $cacheItem = $cachePool->getItem('metadata', $this->ident());
 
-            $metadata = $cache_item->get();
-            if ($cache_item->isMiss()) {
-                $cache_item->lock();
+            $metadata = $cacheItem->get();
+            if ($cacheItem->isMiss()) {
+                $cacheItem->lock();
 
                 $metadata = $this->loadData($ident);
 
-                $cache_item->set($metadata);
+                $cacheItem->set($metadata);
             }
         } else {
             $metadata = $this->loadData($ident);
@@ -101,9 +101,9 @@ class MetadataLoader extends FileLoader
 
         $metadata = [];
         foreach ($hierarchy as $id) {
-            $ident_data = self::loadIdent($id);
-            if (is_array($ident_data)) {
-                $metadata = array_replace_recursive($metadata, $ident_data);
+            $identData = self::loadIdent($id);
+            if (is_array($identData)) {
+                $metadata = array_replace_recursive($metadata, $identData);
             }
         }
 
@@ -165,10 +165,10 @@ class MetadataLoader extends FileLoader
         }
 
         // Decode as an array (2nd parameter, true = array)
-        $file_data = json_decode($file_content, true);
+        $fileData = json_decode($file_content, true);
         $errCode = json_last_error();
         if ($errCode == JSON_ERROR_NONE) {
-            return $file_data;
+            return $fileData;
         }
 
         // Handle JSON error
@@ -272,11 +272,13 @@ class MetadataLoader extends FileLoader
     * @throws InvalidArgumentException If there isn't at least 2 arguments or any arguments are not an array
     * @return array Merged array
     */
-    private static function arrrayMerge()
+    private static function arrayMerge()
     {
         $args = func_get_args();
         if (func_num_args() < 2) {
-            throw new InvalidArgumentException('This function takes at least two parameters.');
+            throw new InvalidArgumentException(
+                'This function takes at least two parameters.'
+            );
         }
 
         $array_list = func_get_args();
@@ -287,7 +289,9 @@ class MetadataLoader extends FileLoader
 
             /** @todo Convert objects to array? */
             if (!is_array($current)) {
-                throw new InvalidArgumentException('All parameters must be arrays.');
+                throw new InvalidArgumentException(
+                    'All parameters must be arrays.'
+                );
             }
             if (!$current) {
                 continue;
