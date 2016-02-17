@@ -44,11 +44,15 @@ class Pagination implements PaginationInterface
     public function setPage($page)
     {
         if (!is_numeric($page)) {
-            throw new InvalidArgumentException('Page number needs to be numeric.');
+            throw new InvalidArgumentException(
+                'Page number needs to be numeric.'
+            );
         }
         $page = (int)$page;
         if ($page < 0) {
-            throw new InvalidArgumentException('Page number needs to be >= 0.');
+            throw new InvalidArgumentException(
+                'Page number needs to be >= 0.'
+            );
         }
         $this->page = $page;
         return $this;
@@ -70,11 +74,15 @@ class Pagination implements PaginationInterface
     public function setNumPerPage($num)
     {
         if (!is_numeric($num)) {
-            throw new InvalidArgumentException('Num-per-page needs to be numeric.');
+            throw new InvalidArgumentException(
+                'Num-per-page needs to be numeric.'
+            );
         }
         $num = (int)$num;
         if ($num < 0) {
-            throw new InvalidArgumentException('Num-per-page needs to be >= 0.');
+            throw new InvalidArgumentException(
+                'Num-per-page needs to be >= 0.'
+            );
         }
 
         $this->numPerPage = $num;
