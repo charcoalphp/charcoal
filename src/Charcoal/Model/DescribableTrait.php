@@ -26,12 +26,12 @@ trait DescribableTrait
     /**
      * @var PropertyFactory $propertyFactory
      */
-    protected $propertyFactory;
+    protected $propertyFactory = null;
 
     /**
      * @var MetadataLoader $metadataLoader
      */
-    protected $metadataLoader;
+    protected $metadataLoader = null;
 
     /**
     * @var MetadataInterface $metadata
@@ -73,7 +73,7 @@ trait DescribableTrait
      */
     protected function propertyFactory()
     {
-        if (isset($this->propertyFactory)) {
+        if ($this->propertyFactory === null) {
             $this->propertyFactory = new PropertyFactory();
         }
         return $this->propertyFactory;
@@ -94,9 +94,9 @@ trait DescribableTrait
      *
      * @return MetadataLoader
      */
-    protected function metatadataLoader()
+    protected function metadataLoader()
     {
-        if (!isset($this->metadataLoader)) {
+        if ($this->metadataLoader === null) {
             $this->metadataLoader = new MetadataLoader();
         }
         return $this->metadataLoader;

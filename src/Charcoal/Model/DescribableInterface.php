@@ -2,7 +2,11 @@
 
 namespace Charcoal\Model;
 
+// Module (`charcoal-property`) dependencies
+use \Charcoal\Property\PropertyFactory;
+
 // Local namespace dependencies
+use \Charcoal\Model\MetadataLoader;
 use \Charcoal\Model\MetadataInterface;
 
 /**
