@@ -11,10 +11,8 @@ class GenericView extends AbstractView
     /**
      * Build the object with an array of dependencies.
      *
-     * ## Required paramaters:
-     * - `logger` a PSR-3 logger
-     *
      * ## Optional parameters:
+     * - `logger` a PSR-3 logger
      * - `config` a ViewConfig object
      *
      * @param array $data

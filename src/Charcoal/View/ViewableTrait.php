@@ -141,7 +141,7 @@ trait ViewableTrait
     /**
      * Retrieve a ViewableInterface instance for the template's context.
      *
-     * @return ViewableInterface
+     * @return mixed
      */
     public function viewController()
     {
