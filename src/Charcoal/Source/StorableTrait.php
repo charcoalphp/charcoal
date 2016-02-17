@@ -3,6 +3,7 @@
 namespace Charcoal\Source;
 
 // Local namespace dependencies
+use \Charcoal\Source\SourceFactory;
 use \Charcoal\Source\SourceInterface;
 
 /**
@@ -11,9 +12,35 @@ use \Charcoal\Source\SourceInterface;
 trait StorableTrait
 {
     /**
+    * @var SourceFactory $sourceFactory
+    */
+    protected $sourceFactory;
+
+    /**
     * @var SourceInterfae $source
     */
     private $source;
+
+    /**
+     * @param SourceFactory $sourceFactory The source factory, which is useful to create source.
+     * @return StorableInterface Chainable
+     */
+    public function setSourceFactory(SourceFactory $factory)
+    {
+        $this->sourceFactory = $factory;
+        return $this;
+    }
+
+    /**
+     * @return SourceFactory
+     */
+    protected function sourceFactory()
+    {
+        if (!isset($this->sourceFactory)) {
+            $this->sourceFactory = new SourceFactory();
+        }
+        return $this->sourceFactory;
+    }
 
     /**
     * Set the object's source.
@@ -41,10 +68,12 @@ trait StorableTrait
     }
 
     /**
+    * Create the model's source, with the Source Factory.
+    *
     * @param mixed $data Optional
     * @return SourceInterface
     */
-    abstract public function createSource($data = null);
+    abstract protected function createSource($data = null);
 
     /**
     * Load an object from the database from its ID.

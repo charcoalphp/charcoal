@@ -17,6 +17,18 @@ interface DescribableInterface
     public function setData(array $data);
 
     /**
+     * @param PropertyFactory $factory The property factory, used to create metadata properties.
+     * @return DescribableInterface Chainable
+     */
+    public function setPropertyFactory(PropertyFactory $factory);
+
+    /**
+     * @param MedataLoader $loader The loader instance, used to load metadata.
+     * @return DescribableInterface Chainable
+     */
+    public function setMetadataLoader(MetadataLoader $loader);
+
+    /**
     * @param array|MetadataInterface $metadata
     * @return DescribableInterface Chainable
     */

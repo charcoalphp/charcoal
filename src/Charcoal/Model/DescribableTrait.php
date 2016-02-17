@@ -6,7 +6,7 @@ namespace Charcoal\Model;
 use \Exception;
 use \InvalidArgumentException;
 
-// Intra-module (`charcoal-core`) dependencies
+// Module (`charcoal-property`) dependencies
 use \Charcoal\Property\PropertyFactory;
 
 // Local namespace dependencies
@@ -23,6 +23,16 @@ use \Charcoal\Model\MetadataInterface;
 */
 trait DescribableTrait
 {
+    /**
+     * @var PropertyFactory $propertyFactory
+     */
+    protected $propertyFactory;
+
+    /**
+     * @var MetadataLoader $metadataLoader
+     */
+    protected $metadataLoader;
+
     /**
     * @var MetadataInterface $metadata
     */
@@ -42,9 +52,56 @@ trait DescribableTrait
     * Describable object needs to have a `setData()` method
     *
     * @param array $data
-    * @return DescribableTrait Chainable
+    * @return DescribableInterface Chainable
     */
     abstract public function setData(array $data);
+
+    /**
+     * @param PropertyFactory $factory The property factory, used to create metadata properties.
+     * @return DescribableInterface Chainable
+     */
+    public function setPropertyFactory(PropertyFactory $factory)
+    {
+        $this->propertyFactory = $propertyFactory;
+        return $this;
+    }
+
+    /**
+     * Safe PropertyFactory getter. Create the factory if it does not exist.
+     *
+     * @return PropertyFactory
+     */
+    protected function propertyFactory()
+    {
+        if (isset($this->propertyFactory)) {
+            $this->propertyFactory = new PropertyFactory();
+        }
+        return $this->propertyFactory;
+    }
+
+    /**
+     * @param MedataLoader $loader The loader instance, used to load metadata.
+     * @return DescribableInterface Chainable
+     */
+    public function setMetadataLoader(MetadataLoader $loader)
+    {
+        $this->metadataLoader = $loader;
+        return $this;
+    }
+
+    /**
+     * Safe MetdataLoader getter. Create the loader if it does not exist.
+     *
+     * @return MetadataLoader
+     */
+    protected function metatadataLoader()
+    {
+        if (!isset($this->metadataLoader)) {
+            $this->metadataLoader = new MetadataLoader();
+        }
+        return $this->metadataLoader;
+    }
+
 
     /**
     * @param array|MetadataInterface $metadata
@@ -100,8 +157,8 @@ trait DescribableTrait
             $metadataIdent = $this->metadataIdent();
         }
 
-        $metadata_loader = new MetadataLoader();
-        $metadata = $metadata_loader->load($metadataIdent);
+        $metadataLoader = $this->metadataLoader();
+        $metadata = $metadataLoader->load($metadataIdent);
         $this->setMetadata($metadata);
 
         return $metadata;
@@ -211,7 +268,7 @@ trait DescribableTrait
             );
         }
 
-        $factory  = new PropertyFactory();
+        $factory  = $this->propertyFactory();
         $property = $factory->create($propertyMetadata['type'], [
             'logger' => $this->logger
         ]);

@@ -12,8 +12,12 @@ use \Serializable;
 use \Psr\Log\LoggerAwareInterface;
 use \Psr\Log\LoggerAwareTrait;
 
+// Module `charcoal-view` dependencies
+use \Charcoal\View\GenericView;
+use \Charcoal\View\ViewableInterface;
+use \Charcoal\View\ViewableTrait;
+
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Charcoal;
 use \Charcoal\Model\DescribableInterface;
 use \Charcoal\Model\DescribableTrait;
 use \Charcoal\Source\SourceFactory;
@@ -21,9 +25,6 @@ use \Charcoal\Source\StorableInterface;
 use \Charcoal\Source\StorableTrait;
 use \Charcoal\Validator\ValidatableInterface;
 use \Charcoal\Validator\ValidatableTrait;
-use \Charcoal\View\GenericView;
-use \Charcoal\View\ViewableInterface;
-use \Charcoal\View\ViewableTrait;
 
 // Local namespace dependencies
 use \Charcoal\Model\ModelInterface;
@@ -70,6 +71,18 @@ abstract class AbstractModel implements
     public function __construct(array $data = null)
     {
         $this->setLogger($data['logger']);
+
+        // Optional DescribableInterface dependencies
+        if (isset($data['property_factory'])) {
+            $this->setPropertyFactory($data['property_factory']);
+        }
+        if (isset($data['metadata_loader'])) {
+            $this->setMetadataLoader($data['metadata_loader']);
+        }
+        // Optional StorableInterface dependencies
+        if (isset($data['source_factory'])) {
+            $this->setSourceFactory($data['source_factory']);
+        }
 
         /** @todo Needs fix. Must be manually triggered after setting data for metadata to work */
         $this->metadata();
@@ -364,14 +377,14 @@ abstract class AbstractModel implements
         $defaultSource = $metadata->defaultSource();
         $sourceConfig = $metadata->source($defaultSource);
 
-        if(!$sourceConfig) {
+        if (!$sourceConfig) {
             throw new Exception(
                 sprintf('Can not create %s source: invalid metadata.', get_class($this))
             );
         }
 
         $source_type = isset($sourceConfig['type']) ? $sourceConfig['type'] : self::DEFAULT_SOURCE_TYPE;
-        $source_factory = new SourceFactory();
+        $source_factory = $this->sourceFactory();
         $source = $source_factory->create($source_type, [
             'logger'=>$this->logger
         ]);

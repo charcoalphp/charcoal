@@ -3,13 +3,20 @@
 namespace Charcoal\Source;
 
 // Local namespace dependencies
-use \Charcoal\Source\SourceInterface as SourceInterface;
+use \Charcoal\Source\SourceFactory;
+use \Charcoal\Source\SourceInterface;
 
 /**
 * Storable items can be stored and loaded from a Source.
 */
 interface StorableInterface
 {
+    /**
+     * @param SourceFactory $sourceFactory The source factory, which is useful to create source.
+     * @param
+     */
+    public function setSourceFactory(SourceFactory $factory);
+
     /**
     * Set the object's source.
     *
