@@ -49,7 +49,7 @@ class Renderer
      */
     public function render(ResponseInterface $response, $templateIdent, $context = null)
     {
-        $rendered = $this->view->renderTemplate($templateIdent, $context)
+        $rendered = $this->view->renderTemplate($templateIdent, $context);
         $response->getBody()->write($rendered);
         return $response;
     }
