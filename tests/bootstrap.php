@@ -18,8 +18,5 @@ $GLOBALS['container'] = new Container();
 
 // Disable Logger
 $GLOBALS['container']['logger'] = function ($c) {
-
     return new NullLogger();
 };
-
-
