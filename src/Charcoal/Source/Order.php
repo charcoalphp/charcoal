@@ -70,10 +70,14 @@ class Order implements OrderInterface
     public function setProperty($property)
     {
         if (!is_string($property)) {
-            throw new InvalidArgumentException('Property must be a string.');
+            throw new InvalidArgumentException(
+                'Order Property must be a string.'
+            );
         }
-        if ($property=='') {
-            throw new InvalidArgumentException('Property can not be empty.');
+        if ($property == '') {
+            throw new InvalidArgumentException(
+                'Order Property can not be empty.'
+            );
         }
 
         $this->property = $property;
@@ -96,12 +100,16 @@ class Order implements OrderInterface
     public function setMode($mode)
     {
         if (!is_string($mode)) {
-            throw new InvalidArgumentException('Mode must be a string.');
+            throw new InvalidArgumentException(
+                'Order Mode must be a string.'
+            );
         }
 
         $mode = strtolower($mode);
         if (!in_array($mode, $this->validModes())) {
-            throw new InvalidArgumentException('Invalid mode.');
+            throw new InvalidArgumentException(
+                sprintf('Invalid Order mode "%s".', $mode)
+            );
         }
         $this->mode = $mode;
         return $this;
@@ -131,17 +139,23 @@ class Order implements OrderInterface
     {
         if (is_string($values)) {
             if ($values == '') {
-                throw new InvalidArgumentException('String values can not be empty.');
+                throw new InvalidArgumentException(
+                    'String values can not be empty.'
+                );
             }
             $values = array_map('trim', explode(',', $values));
             $this->values = $values;
         } elseif (is_array($values)) {
             if (empty($values)) {
-                throw new InvalidArgumentException('Array values can not be empty.');
+                throw new InvalidArgumentException(
+                    'Array values can not be empty.'
+                );
             }
             $this->values = $values;
         } else {
-            throw new InvalidArgumentException('Values must be an array, or a comma-delimited string.');
+            throw new InvalidArgumentException(
+                'Order Values must be an array, or a comma-delimited string.'
+            );
         }
         return $this;
     }
@@ -160,7 +174,7 @@ class Order implements OrderInterface
     */
     public function setActive($active)
     {
-        $this->active = $active;
+        $this->active = !!$active;
         return $this;
     }
 
@@ -169,7 +183,7 @@ class Order implements OrderInterface
     */
     public function active()
     {
-        return !!$this->active;
+        return $this->active;
     }
 
     /**
