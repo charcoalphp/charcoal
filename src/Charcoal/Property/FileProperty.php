@@ -368,6 +368,26 @@ class FileProperty extends AbstractProperty
                     $data['size']       = $file['size'][$k];
                     $f[] = $this->fileUpload($data);
                 }
+            } elseif (is_array($file['name']) && $this->l10n()) {
+                // Not so cool
+                // Both the multiple and l10n loop could and
+                // should be combined into one.
+                // Not sure how
+                $f = [];
+                foreach ($file['name'] as $lang => $val) {
+                    $data = [];
+                    $data['name']       = $file['name'][$lang];
+                    if (!$data['name']) {
+                        $f[$lang] = $data['name'];
+                        continue;
+                    }
+                    $data['tmp_name']   = $file['tmp_name'][$lang];
+                    $data['error']      = $file['error'][$lang];
+                    $data['type']       = $file['type'][$lang];
+                    $data['size']       = $file['size'][$lang];
+
+                    $f[ $lang ] = $this->fileUpload($data);
+                }
             } else {
                 $f = $this->fileUpload($file);
             }
@@ -546,12 +566,12 @@ class FileProperty extends AbstractProperty
             return false;
         }
 
-        $files = glob(dirname($file).'/*', GLOB_NOSORT);
-        foreach ($files as $f) {
-            if (preg_match("#{$file}#i", $f)) {
-                return true;
-            }
-        }
+        // $files = glob(dirname($file).DIRECTORY_SEPARATOR .'*', GLOB_NOSORT);
+        // foreach ($files as $f) {
+        //     if (preg_match("#{$file}#i", $f)) {
+        //         return true;
+        //     }
+        // }
 
         return false;
     }
