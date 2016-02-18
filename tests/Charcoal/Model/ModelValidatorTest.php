@@ -7,16 +7,26 @@ use \Charcoal\Model\Model as Model;
 
 class ModelValidatorTest extends \PHPUnit_Framework_TestCase
 {
+    private $obj;
+    private $model;
+
+    protected function model()
+    {
+        return new Model([
+            'logger' => new \Psr\Log\NullLogger()
+        ]);
+    }
+
     public function testConstructor()
     {
-        $model = new Model();
+        $model = $this->model();
         $obj = new ModelValidator($model);
         $this->assertInstanceOf('\Charcoal\Model\ModelValidator', $obj);
     }
 
     public function testValidateModel()
     {
-        $model = new Model();
+        $model = $this->model();
         $model->setMetadata(
             [
                 'properties' => [

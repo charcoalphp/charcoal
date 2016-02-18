@@ -15,7 +15,7 @@ class ValidatorResultTest extends \PHPUnit_Framework_TestCase
     public function testSetData()
     {
         $obj = new ValidatorResult();
-        $ret = $obj->set_data([]);
+        $ret = $obj->setData([]);
         $this->assertSame($ret, $obj);
     }
 

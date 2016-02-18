@@ -8,7 +8,9 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->obj = $this->getMockForAbstractClass('\Charcoal\Source\AbstractSource');
+        $this->obj = $this->getMockForAbstractClass('\Charcoal\Source\AbstractSource', [[
+            'logger' => new \Psr\Log\NullLogger()
+        ]]);
     }
 
     /**
@@ -67,7 +69,9 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
     public function testSetModel()
     {
         $obj = $this->obj;
-        $model = new \Charcoal\Model\Model();
+        $model = new \Charcoal\Model\Model([
+            'logger' => new \Psr\Log\NullLogger()
+        ]);
         $ret = $obj->set_model($model);
         $this->assertSame($ret, $obj);
         $this->assertSame($model, $obj->model());
@@ -81,7 +85,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * Assert that the `set_properties` method:
+    * Assert that the `setProperties` method:
     * - is chainable
     * - set the properties
     * - reset the properties, when called again
@@ -89,11 +93,11 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
     public function testSetProperties()
     {
         $obj = $this->obj;
-        $ret = $obj->set_properties(['foo']);
+        $ret = $obj->setProperties(['foo']);
         $this->assertSame($ret, $obj);
         $this->assertEquals(['foo'], $obj->properties());
 
-        $obj->set_properties(['bar']);
+        $obj->setProperties(['bar']);
         $this->assertEquals(['bar'], $obj->properties());
     }
 
@@ -102,25 +106,25 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
         $obj = $this->obj;
         $this->assertEquals([], $obj->properties());
 
-        $ret = $obj->add_property('foo');
+        $ret = $obj->addProperty('foo');
         $this->assertSame($ret, $obj);
         $this->assertEquals(['foo'], $obj->properties());
-        $obj->add_property('bar');
+        $obj->addProperty('bar');
         $this->assertEquals(['foo', 'bar'], $obj->properties());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->add_property(false);
+        $obj->addProperty(false);
     }
 
     public function testAddPropertyEmptyPropThrowsException()
     {
         $obj = $this->obj;
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->add_property('');
+        $obj->addProperty('');
     }
 
     /**
-    * Assert that the `set_filters` method:
+    * Assert that the `setFilters` method:
     * - is chainable
     * - set the filters member
     * - reset the filters, when called again
@@ -130,16 +134,16 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
         $filter1 = $this->getFilter1();
         $filter2 = $this->getFilter2();
         $obj = $this->obj;
-        $ret = $obj->set_filters([$filter1]);
+        $ret = $obj->setFilters([$filter1]);
         $this->assertSame($ret, $obj);
         $this->assertEquals([$filter1], $obj->filters());
 
-        $obj->set_filters([$filter2]);
+        $obj->setFilters([$filter2]);
         $this->assertEquals([$filter2], $obj->filters());
     }
 
     /**
-    * Assert that the `add_filter` method:
+    * Assert that the `addFilter` method:
     * - is chainable
     * - add the filter object to the filters
     * - append the filter, when a filter already exists
@@ -153,17 +157,17 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
         $filter2 = $this->getFilter2();
 
         $obj = $this->obj;
-        $ret = $obj->add_filter($filter1);
+        $ret = $obj->addFilter($filter1);
         $this->assertSame($ret, $obj);
         $this->assertEquals([$filter1], $obj->filters());
 
-        $obj->add_filter($filter2);
+        $obj->addFilter($filter2);
         $this->assertEquals([$filter1, $filter2], $obj->filters());
 
-        $obj->add_filter([
+        $obj->addFilter([
             'property'=>'baz'
         ]);
-        $obj->add_filter('foobar', '4', ['operator'=>'<']);
+        $obj->addFilter('foobar', '4', ['operator'=>'<']);
 
         $filters = $obj->filters();
         $this->assertEquals(4, count($filters));
@@ -171,11 +175,11 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Charcoal\Source\Filter', $filters[3]);
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->add_filter(true);
+        $obj->addFilter(true);
     }
 
     /**
-    * Assert that the `set_orders` method:
+    * Assert that the `setOrders` method:
     * - is chainable
     * - set the orders member
     * - reset the orders, when called again
@@ -185,16 +189,16 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
         $order1 = $this->getOrder1();
         $order2 = $this->getOrder2();
         $obj = $this->obj;
-        $ret = $obj->set_orders([$order1]);
+        $ret = $obj->setOrders([$order1]);
         $this->assertSame($ret, $obj);
         $this->assertEquals([$order1], $obj->orders());
 
-        $obj->set_orders([$order2]);
+        $obj->setOrders([$order2]);
         $this->assertEquals([$order2], $obj->orders());
     }
 
     /**
-    * Assert that the `add_order` method:
+    * Assert that the `addOrder` method:
     * - is chainable
     * - add the order object to the orders
     * - append the order, when a order already exists
@@ -208,17 +212,17 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
         $order2 = $this->getOrder2();
 
         $obj = $this->obj;
-        $ret = $obj->add_order($order1);
+        $ret = $obj->addOrder($order1);
         $this->assertSame($ret, $obj);
         $this->assertEquals([$order1], $obj->orders());
 
-        $obj->add_order($order2);
+        $obj->addOrder($order2);
         $this->assertEquals([$order1, $order2], $obj->orders());
 
-        $obj->add_order([
+        $obj->addOrder([
             'property'=>'baz'
         ]);
-        $obj->add_order('foobar', 'desc', ['values'=>[1, 2]]);
+        $obj->addOrder('foobar', 'desc', ['values'=>[1, 2]]);
 
         $orders = $obj->orders();
         $this->assertEquals(4, count($orders));
@@ -226,7 +230,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Charcoal\Source\Order', $orders[3]);
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->add_order(true);
+        $obj->addOrder(true);
     }
 
     public function testSetPagination()
@@ -234,17 +238,17 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
         $p = new \Charcoal\Source\Pagination();
         $obj = $this->obj;
 
-        $ret = $obj->set_pagination($p);
+        $ret = $obj->setPagination($p);
         $this->assertSame($ret, $obj);
         $this->assertSame($p, $obj->pagination());
 
-        $obj->set_pagination(['page'=>3, 'num_per_page'=>120]);
+        $obj->setPagination(['page'=>3, 'num_per_page'=>120]);
         $this->assertInstanceOf('\Charcoal\Source\Pagination', $obj->pagination());
         $this->assertEquals(3, $obj->page());
-        $this->assertEquals(120, $obj->num_per_page());
+        $this->assertEquals(120, $obj->numPerPage());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_pagination(false);
+        $obj->setPagination(false);
     }
 
     public function testPaginationWithoutSetReturnsObject()
@@ -258,30 +262,30 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
     {
         $obj = $this->obj;
         $this->assertEquals(0, $obj->page());
-        $ret = $obj->set_page(42);
+        $ret = $obj->setPage(42);
         $this->assertSame($ret, $obj);
         $this->assertEquals(42, $obj->page());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_page('foo');
+        $obj->setPage('foo');
     }
 
     public function testNumPerPage()
     {
         $obj = $this->obj;
-        $this->assertEquals(\Charcoal\Source\Pagination::DEFAULT_NUM_PER_PAGE, $obj->num_per_page());
-        $ret = $obj->set_num_per_page(666);
+        $this->assertEquals(\Charcoal\Source\Pagination::DEFAULT_NUM_PER_PAGE, $obj->numPerPage());
+        $ret = $obj->setNumPerPage(666);
         $this->assertSame($ret, $obj);
-        $this->assertEquals(666, $obj->num_per_page());
+        $this->assertEquals(666, $obj->numPerPage());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_num_per_page('foobar');
+        $obj->setNumPerPage('foobar');
     }
 
     public function testCreateConfig()
     {
         $obj = $this->obj;
-        $config = $obj->create_config(['type'=>'foo']);
+        $config = $obj->createConfig(['type'=>'foo']);
         $this->assertInstanceOf('\Charcoal\Source\SourceConfig', $config);
         $this->assertEquals('foo', $config->type());
     }

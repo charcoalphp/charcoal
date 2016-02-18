@@ -7,15 +7,18 @@ use \Charcoal\Charcoal as Charcoal;
 
 class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
 {
-    public function testContructor()
+    private $obj;
+
+    public function setUp()
     {
-        $obj = new CollectionLoader();
-        $this->assertInstanceOf('\Charcoal\Loader\CollectionLoader', $obj);
+        $this->obj = new CollectionLoader([
+            'logger' => new \Psr\Log\NullLogger()
+        ]);
     }
 
     public function setData()
     {
-        $obj = new CollectionLoader();
+        $obj = $this->obj;
         $obj->setData(
             [
                 'properties' => [
@@ -29,7 +32,7 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function setDataIsChainable()
     {
-        $obj = new CollectionLoader();
+        $obj = $this->obj;
         $ret = $obj->setData([]);
         $this->assertSame($ret, $obj);
     }

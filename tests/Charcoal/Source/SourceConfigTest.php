@@ -23,6 +23,6 @@ class SourceConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $obj->type());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_type([1,2,3]);
+        $obj->setType([1,2,3]);
     }
 }
