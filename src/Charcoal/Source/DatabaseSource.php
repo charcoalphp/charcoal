@@ -573,6 +573,14 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
                 );
             }
         }
+        if (empty($updates)) {
+            $this->logger->warning('Could not update items. No valid fields were set / available in database table.', [
+                'properties'=>$properties,
+                'structure'=>$tableStructure
+            ]);
+            return false;
+        }
+
         $binds[$model->key()] = $model->id();
         $binds_types[$model->key()] = PDO::PARAM_STR;
 
