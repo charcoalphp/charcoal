@@ -10,6 +10,8 @@ use \Serializable;
 use \Psr\Log\LoggerAwareInterface;
 use \Psr\Log\LoggerAwareTrait;
 
+use \Charcoal\Config\AbstractEntity;
+
 use \Charcoal\Model\DescribableInterface;
 use \Charcoal\Model\DescribableTrait;
 use \Charcoal\Translation\TranslationConfig;
@@ -25,7 +27,7 @@ use \Charcoal\Property\StorablePropertyTrait;
 /**
  * An abstract class that implements the full `PropertyInterface`.
  */
-abstract class AbstractProperty implements
+abstract class AbstractProperty extends AbstractEntity implements
     JsonSerializable,
     Serializable,
     PropertyInterface,
@@ -161,35 +163,6 @@ abstract class AbstractProperty implements
      * @return string
      */
     abstract public function type();
-
-    /**
-     * This function takes an array and fill the property with its value.
-     *
-     * This method either calls a setter for each key (`set_{$key}()`) or sets a public member.
-     *
-     * For example, calling with `set_data(['ident'=>$ident])` would call `setIdent($ident)`
-     * becasue `setIdent()` exists.
-     *
-     * But calling with `set_data(['foobar'=>$foo])` would set the `$foobar` member
-     * on the metadata object, because the method `set_foobar()` does not exist.
-     *
-     * @param array $data The property data.
-     * @return AbstractProperty Chainable
-     */
-    public function setData(array $data)
-    {
-        foreach ($data as $prop => $val) {
-            $setter = $this->setter($prop);
-            if (is_callable([$this, $setter])) {
-                $this->{$setter}($val);
-            } else {
-                // Set as public member if setter is not set on object.
-                $this->{$prop} = $val;
-            }
-        }
-
-        return $this;
-    }
 
     /**
      * @param string $ident The property identifier.
@@ -700,42 +673,6 @@ abstract class AbstractProperty implements
         return $this->val();
     }
 
-   /**
-    * Allow an object to define how the key getter are called.
-    *
-    * @param string $key The key to get the getter from.
-    * @return string The getter method name, for a given key.
-    */
-    protected function getter($key)
-    {
-        $getter = $key;
-        return $this->camelize($getter);
-    }
-
-    /**
-     * Allow an object to define how the key setter are called.
-     *
-     * @param string $key The key to get the setter from.
-     * @return string The setter method name, for a given key.
-     */
-    protected function setter($key)
-    {
-        $setter = 'set_'.$key;
-        return $this->camelize($setter);
-    }
-
-    /**
-     * Transform a snake_case string to camelCase.
-     *
-     * @param string $str The snake_case string to camelize.
-     * @return string The camelCase string.
-     */
-    private function camelize($str)
-    {
-        return lcfirst(implode('', array_map('ucfirst', explode('_', $str))));
-    }
-
-
     public function setDisplayType($type)
     {
         $this->displayType = $type;
@@ -762,7 +699,7 @@ abstract class AbstractProperty implements
      * @param string $ident (ex: charcoal/admin/property/display/text)
      * @return array Should ALWAYS be an array
      */
-    public function viewOptions($ident=null)
+    public function viewOptions($ident = null)
     {
         // No options defined
         if (!$this->viewOptions) {
@@ -788,7 +725,7 @@ abstract class AbstractProperty implements
      *
      * @param array $viewOpts
      */
-    public function setViewOptions($viewOpts=[])
+    public function setViewOptions($viewOpts = [])
     {
         $this->viewOptions = $viewOpts;
     }

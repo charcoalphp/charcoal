@@ -13,11 +13,6 @@ interface PropertyInterface
      */
     public function type();
 
-    /**
-     * @param array $data The property data.
-     * @return PropertyInterface Chainable
-     */
-    public function setData(array $data);
 
     /**
      * @param string $ident The property identifier.
