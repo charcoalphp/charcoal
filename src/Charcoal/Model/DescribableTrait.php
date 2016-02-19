@@ -51,10 +51,10 @@ trait DescribableTrait
     /**
     * Describable object needs to have a `setData()` method
     *
-    * @param array $data
+    * @param array|\ArrayAccess $data
     * @return DescribableInterface Chainable
     */
-    abstract public function setData(array $data);
+    abstract public function setData($data);
 
     /**
      * @param PropertyFactory $factory The property factory, used to create metadata properties.

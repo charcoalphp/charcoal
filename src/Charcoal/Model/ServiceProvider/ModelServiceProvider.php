@@ -52,9 +52,10 @@ class ModelServiceProvider implements ServiceProviderInterface
 
         $container['model/dependencies'] = function (Container $container) {
             return [
-                'logger' => $container['logger'],
-                'property_factory' => $container['model/property/factory'],
-                'metadata_loader'  => $container['model/dependency/metadata/loader']
+                'logger'            => $container['logger'],
+                'view'              => $container['view'],
+                'property_factory'  => $container['model/dependency/property/factory'],
+                'metadata_loader'   => $container['model/dependency/metadata/loader']
             ];
         };
 

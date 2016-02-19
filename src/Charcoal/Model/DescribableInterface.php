@@ -15,10 +15,10 @@ use \Charcoal\Model\MetadataInterface;
 interface DescribableInterface
 {
     /**
-    * @param array $data
+    * @param array|\ArrayAccess $data
     * @return DescribableInterface Chainable
     */
-    public function setData(array $data);
+    public function setData($data);
 
     /**
      * @param PropertyFactory $factory The property factory, used to create metadata properties.

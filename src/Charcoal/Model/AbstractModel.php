@@ -12,6 +12,9 @@ use \Serializable;
 use \Psr\Log\LoggerAwareInterface;
 use \Psr\Log\LoggerAwareTrait;
 
+// Module `charcoal-config` dependencies
+use \Charcoal\Config\AbstractEntity;
+
 // Module `charcoal-view` dependencies
 use \Charcoal\View\GenericView;
 use \Charcoal\View\ViewableInterface;
@@ -47,9 +50,7 @@ use \Charcoal\Model\ModelValidator;
 *
 * The `JsonSerializable` interface is fully provided by the `DescribableTrait`.
 */
-abstract class AbstractModel implements
-    JsonSerializable,
-    Serializable,
+abstract class AbstractModel extends AbstractEntity implements
     ModelInterface,
     DescribableInterface,
     LoggerAwareInterface,
@@ -83,41 +84,14 @@ abstract class AbstractModel implements
         if (isset($data['source_factory'])) {
             $this->setSourceFactory($data['source_factory']);
         }
+        // Optional ViewableInterface dependencies
+        if (isset($data['view'])) {
+            var_dump('Cool, view was set '.get_class($this));
+            $this->setView($data['view']);
+        }
 
         /** @todo Needs fix. Must be manually triggered after setting data for metadata to work */
         $this->metadata();
-    }
-
-    /**
-    * ModelInterface > setData(). Sets the data
-    *
-    * This function takes an array and fill the model object with its value.
-    *
-    * This method either calls a setter for each key (`set_{$key}()`) or sets a public member.
-    *
-    * For example, calling with `setData(['properties'=>$properties])` would call
-    *`setProperties($properties)`, becasue `setProperties()` exists.
-    *
-    * But calling with `setData(['foobar'=>$foo])` would set the `$foobar` member
-    * on the metadata object, because the method `set_foobar()` does not exist.
-    *
-    *
-    * @param array $data
-    * @return AbstractModel Chainable
-    */
-    public function setData(array $data)
-    {
-        foreach ($data as $prop => $val) {
-            $setter = $this->setter($prop);
-            if (is_callable([ $this, $setter ])) {
-                $this->{$setter}($val);
-            } else {
-                // Set as public member if setter is not set on object.
-                $this->{$prop} = $val;
-            }
-        }
-
-        return $this;
     }
 
 
@@ -432,81 +406,14 @@ abstract class AbstractModel implements
     }
 
     /**
-    * Serializable > serialize()
-    */
-    public function serialize()
-    {
-        $data = $this->data();
-        return serialize($data);
-    }
-
-    /**
-    * Serializable > unsierialize()
-    *
-    * @param string $data Serialized data
-    * @return void
-    */
-    public function unserialize($data)
-    {
-        $data = unserialize($data);
-        $this->setData($data);
-    }
-
-    /**
-    * JsonSerializable > jsonSerialize()
-    */
-    public function jsonSerialize()
-    {
-        return $this->data();
-    }
-
-    /**
     * Convert the current class name in
     *
     * @return string
     */
     public function objType()
     {
-        $classname = get_class($this);
-        $ident = preg_replace('/([a-z])([A-Z])/', '$1-$2', $classname);
-        $obj_type = strtolower(str_replace('\\', '/', $ident));
-        return $obj_type;
-    }
-
-   /**
-    * Allow an object to define how the key getter are called.
-    *
-    * @param string $key  The key to get the getter from.
-    * @param string $case Optional. The type of case to return. camel, pascal or snake.
-    * @return string The getter method name, for a given key.
-    */
-    protected function getter($key)
-    {
-        $getter = $key;
-        return $this->camelize($getter);
-    }
-
-    /**
-     * Allow an object to define how the key setter are called.
-     *
-     * @param string $key  The key to get the setter from.
-     * @param string $case Optional. The type of case to return. camel, pascal or snake.
-     * @return string The setter method name, for a given key.
-     */
-    protected function setter($key)
-    {
-        $setter = 'set_'.$key;
-        return $this->camelize($setter);
-    }
-
-    /**
-     * Transform a snake_case string to camelCase.
-     *
-     * @param string $str The snake_case string to camelize.
-     * @return string The camelCase string.
-     */
-    protected function camelize($str)
-    {
-        return lcfirst(implode('', array_map('ucfirst', explode('_', $str))));
+        $ident = preg_replace('/([a-z])([A-Z])/', '$1-$2', get_class($this));
+        $objType = strtolower(str_replace('\\', '/', $ident));
+        return $objType;
     }
 }
