@@ -90,8 +90,8 @@ class ColorPropertyTest extends \PHPUnit_Framework_TestCase
     }
 
         /**
-     * Provider for hexadcimalValue, in `[$color, $result]` pairs.
-     */
+         * Provider for hexadcimalValue, in `[$color, $result]` pairs.
+         */
     public function colorProviderAlpha()
     {
         return [

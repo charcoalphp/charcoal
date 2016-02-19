@@ -386,7 +386,7 @@ class FileProperty extends AbstractProperty
                     $data['type']       = $file['type'][$lang];
                     $data['size']       = $file['size'][$lang];
 
-                    $f[ $lang ] = $this->fileUpload($data);
+                    $f[$lang] = $this->fileUpload($data);
                 }
             } else {
                 $f = $this->fileUpload($file);

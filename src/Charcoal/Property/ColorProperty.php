@@ -76,7 +76,7 @@ class ColorProperty extends AbstractProperty
                 );
             }
             $ret = [];
-            foreach($val as $v) {
+            foreach ($val as $v) {
                 $ret[] = $this->colorVal($v);
             }
             $this->val = $ret;
