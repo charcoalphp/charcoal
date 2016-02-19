@@ -260,6 +260,7 @@ The object property adds the following concepts to the [basic property options](
 | Name            | (V) | Type                | Description
 | --------------- | :-: | ------------------- | -----------
 | **obj-type**    |  ✓  | _string_            | The target object's type. In a string format that can be fetched with a `ModelFactory`. |
+| **pattern**     |     | _string_            | The rendering pattern, used to display the object(s) when necessary.
 <small>(V) indicates options used in validation</small>
 
 ## String Property

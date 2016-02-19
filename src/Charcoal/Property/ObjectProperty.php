@@ -21,14 +21,19 @@ use \Charcoal\Property\SelectablePropertyInterface;
 class ObjectProperty extends AbstractProperty implements SelectablePropertyInterface
 {
     /**
+     * @var ModelFactory $modelFactory
+     */
+    private $modelFactory;
+
+    /**
      * @var string $ObjType
      */
     private $objType;
 
     /**
-     * @var ModelFactory $modelFactory
+     * @var string Pattern
      */
-    private $modelFactory;
+    private $pattern = '{{name}}';
 
     /**
      * The available selectable choices map.
@@ -37,12 +42,23 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      */
     protected $choices = [];
 
+
+
     /**
      * @return string
      */
     public function type()
     {
         return 'object';
+    }
+
+    /**
+     * @return ModelFactory
+     */
+    public function setModelFactory(ModelFactory $factory)
+    {
+        $this->modelFactory = $factory;
+        return $this;
     }
 
     /**
@@ -68,7 +84,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     {
         if (!is_string($objType)) {
             throw new InvalidArgumentException(
-                'Obj type needs to be a string'
+                'Can not set property\'s object type: "Obj type" needs to be a string'
             );
         }
         $this->objType = $objType;
@@ -87,6 +103,29 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
             );
         }
         return $this->objType;
+    }
+
+    /**
+     * @param string $pattern
+     * @return ObjectProperty Chainable
+     */
+    public function setPattern($pattern)
+    {
+        if (!is_string($pattern)) {
+            throw new InvalidArgumentException(
+                'Can not set property object pattern, needs to be a string.'
+            );
+        }
+        $this->pattern = $pattern;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function pattern()
+    {
+        return $this->pattern;
     }
 
     /**
@@ -170,10 +209,18 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
         }
 
         $names = [];
-        foreach ($propertyValue as $p) {
+        foreach ($propertyValue as $objIdent) {
             $proto = $this->proto();
-            $proto->load($p);
-            $names[] = (string)$proto->name();
+            $proto->load($objIdent);
+
+            // Hack. View should always be set
+            if ($proto->view() !== null) {
+                $names[] = $proto->render($this->pattern());
+            } else {
+                $this->logger->warning('Object property\'s prototype view is not set.');
+                $names[] = (string)$proto->name();
+            }
+
         }
         return implode(', ', $names);
     }
