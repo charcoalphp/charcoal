@@ -51,8 +51,6 @@ class MustacheLoader extends AbstractLoader implements
                 continue;
             }
 
-            $this->logger->debug('Found matching template: '.$f);
-
             $file_content = file_get_contents($f);
             if ($file_content !== '') {
                 return $file_content;
