@@ -254,7 +254,7 @@ abstract class AbstractProperty extends AbstractEntity implements
         if ($this->l10n() === true) {
             $translator = TranslationConfig::instance();
 
-            $propertyValue = ( isset($propertyValue[$translator->currentLanguage()]) ? $propertyValue[$translator->currentLanguage()] : '';
+            $propertyValue = ( isset($propertyValue[$translator->currentLanguage()]) ? $propertyValue[$translator->currentLanguage()] : '' );
         }
 
         if ($this->multiple() === true) {
