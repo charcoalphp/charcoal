@@ -52,6 +52,9 @@ class GenericHelper implements IteratorAggregate
             'addJsRequirement' => function($jsRequirement) {
                 return $this->addJsRequirement($jsRequirement);
             },
+            'jsRequirements' => function() {
+                return $this->jsRequirements();
+            },
             'addCss' => function($css, Mustache_LambdaHelper $helper) {
                 return $this->addCss($css, $helper);
             },
@@ -101,6 +104,18 @@ class GenericHelper implements IteratorAggregate
     }
 
     /**
+     * Ouput and reset JS requirements
+     *
+     * @return string
+     */
+    public function jsRequirements()
+    {
+        $req = implode("\n", self::$jsRequirements);
+        self::$jsRequirements = [];
+        return $req;
+    }
+
+    /**
      * @param string $css
      * @return void
      */
@@ -133,5 +148,17 @@ class GenericHelper implements IteratorAggregate
         if (!in_array($cssRequirement, self::$cssRequirements)) {
             self::$cssRequirements[] = $cssRequirement;
         }
+    }
+
+    /**
+     * Ouput and reset CSS requirements
+     *
+     * @return string
+     */
+    public function cssRequirements()
+    {
+        $req = implode("\n", self::$cssRequirements);
+        self::$cssRequirements = [];
+        return $req;
     }
 }
