@@ -250,6 +250,11 @@ The Charcoal-View module follows the Charcoal coding-style:
 
 ## Changelog
 
+### 0.1.1
+_Released on 2016-02-22_
+
+- Add jsRequirements and cssRequirements to default mustache helper.
+
 ### 0.1
 _Released on 2016-02-04_
 
