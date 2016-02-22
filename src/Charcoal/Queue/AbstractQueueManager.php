@@ -208,7 +208,7 @@ abstract class AbstractQueueManager implements
         }
 
         if (is_callable($callback)) {
-            $cb($success, $failures, $skipped);
+            $callback($success, $failures, $skipped);
         }
 
         return true;
@@ -221,7 +221,7 @@ abstract class AbstractQueueManager implements
      */
     public function loadQueueItems()
     {
-        $loader = new CollectionLoader();
+        $loader = new CollectionLoader([]);
         $loader->setModel($this->queueItemProto());
         $loader->addFilter([
             'property' => 'processed',
