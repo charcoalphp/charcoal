@@ -262,6 +262,7 @@ class Filter implements FilterInterface
         $validOperators = [
             '=', 'IS', '!=', 'IS NOT',
             'LIKE', 'NOT LIKE',
+            'FIND_IN_SET',
             '>', '>=', '<', '<=',
             'IS NULL', 'IS NOT NULL',
             '%', 'MOD',

@@ -264,12 +264,14 @@ abstract class AbstractSource implements
         if ($this->hasModel()) {
             $property = $filter->property();
             $p = $this->model()->p($property);
-
             if ($p && $p->l10n()) {
                 $translator = TranslationConfig::instance();
 
                 $ident = sprintf('%1$s_%2$s', $property, $translator->currentLanguage());
                 $filter->setProperty($ident);
+            }
+            if ($p && $p->multiple()) {
+                $filter->setOperator('FIND_IN_SET');
             }
         }
 

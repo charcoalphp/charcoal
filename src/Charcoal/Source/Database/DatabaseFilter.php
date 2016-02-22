@@ -26,6 +26,7 @@ class DatabaseFilter extends Filter
         }
 
         $filter = '';
+
         foreach ($fields as $field) {
             $val = $this->val();
 
@@ -64,6 +65,9 @@ class DatabaseFilter extends Filter
                 }
                 break;
                 */
+                case 'FIND_IN_SET':
+                    $filter .= sprintf('%1$s(\'%2$s\', %3$s)', $operator, $val, $target);
+                    break;
 
                 case 'IS NULL':
                 case 'IS NOT NULL':
