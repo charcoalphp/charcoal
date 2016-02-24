@@ -63,6 +63,9 @@ class GenericHelper implements IteratorAggregate
             },
             'addCssRequirement' => function($cssRequirement) {
                 return $this->addCssRequirement($cssRequirement);
+            },
+            'cssRequirements' => function() {
+                return $this->cssRequirements();
             }
         ]);
     }

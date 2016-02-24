@@ -50,6 +50,13 @@ abstract class AbstractView implements
     private $engine;
 
     /**
+     * @var mixed $context
+     */
+    private $context;
+
+    /**
+     * A view object can simply be echoed to be rendered.
+     *
      * @return string
      */
     public function __toString()
@@ -198,9 +205,9 @@ abstract class AbstractView implements
     }
 
     /**
-     * @param string $template
-     * @param mixed  $context
-     * @return string The rendered template
+     * @param string $templateIdent Optional. The template identifier to load. If none then use instance's.
+     * @param mixed  $context The rendering context.
+     * @return string The rendered template string.
      */
     public function render($templateIdent = null, $context = null)
     {
@@ -214,9 +221,9 @@ abstract class AbstractView implements
     }
 
     /**
-     * @param string $templateIdent
-     * @param mixed  $context
-     * @return string The rendered template
+     * @param string $templateString Optional. The template string to render. If none then load instance's.
+     * @param mixed  $context The rendering context.
+     * @return string The rendered template string.
      */
     public function renderTemplate($templateString = null, $context = null)
     {
@@ -227,42 +234,5 @@ abstract class AbstractView implements
             $context = $this->context();
         }
         return $this->engine()->render($templateString, $context);
-    }
-
-    /**
-     * Allow an object to define how the key getter are called.
-     *
-     * @param string $key The key to get the getter from.
-     * @return string The getter method name, for a given key.
-     */
-    protected function getter($key)
-    {
-        $getter = $key;
-        return $this->camelize($getter);
-    }
-
-    /**
-     * Allow an object to define how the key setter are called.
-     *
-     * @param string $key The key to get the setter from.
-     * @return string The setter method name, for a given key.
-     */
-
-    protected function setter($key)
-    {
-        $setter = 'set_'.$key;
-        return $this->camelize($setter);
-
-    }
-
-    /**
-     * Transform a snake_case string to camelCase.
-     *
-     * @param string $str The snake_case string to camelize.
-     * @return string The camelCase string.
-     */
-    private function camelize($str)
-    {
-        return lcfirst(implode('', array_map('ucfirst', explode('_', $str))));
     }
 }

@@ -42,7 +42,7 @@ abstract class AbstractEngine implements
 
     /**
      * @param LoaderInterface $loader A loader instance.
-     * @return MustacheEngine Chainable
+     * @return EngineInterface Chainable
      */
     public function setLoader(LoaderInterface $loader)
     {
@@ -67,8 +67,8 @@ abstract class AbstractEngine implements
     /**
      * Delegates template loading to the engine's Loader object.
      *
-     * @param string $template_ident
-     * @return string
+     * @param string $templateIdent The template identifier to load.
+     * @return string The template string, loaded from identifier.
      */
     public function loadTemplate($templateIdent)
     {
@@ -76,9 +76,9 @@ abstract class AbstractEngine implements
     }
 
     /**
-     * @param string $templateIdent
-     * @param mixed  $context
-     * @return string
+     * @param string $templateIdent The template identifier to render.
+     * @param mixed  $context The rendering context.
+     * @return string The rendeered template string.
      */
     public function render($templateIdent, $context)
     {
@@ -87,9 +87,9 @@ abstract class AbstractEngine implements
     }
 
     /**
-     * @param string $templateString
-     * @param mixed  $context
-     * @return string
+     * @param string $templateString The template string to render.
+     * @param mixed  $context The rendering context.
+     * @return string The rendered template string.
      */
     abstract public function renderTemplate($templateString, $context);
 }

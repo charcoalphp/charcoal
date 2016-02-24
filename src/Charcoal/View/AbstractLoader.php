@@ -27,7 +27,7 @@ abstract class AbstractLoader implements
     private $basePath = '';
 
     /**
-     * @var string $path
+     * @var string[] $path
      */
     private $paths = [];
 

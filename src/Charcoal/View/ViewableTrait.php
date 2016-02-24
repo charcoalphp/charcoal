@@ -45,7 +45,7 @@ trait ViewableTrait
     /**
      * @param string $engine
      * @throws InvalidArgumentException
-     * @return ViewableTrait Chainable
+     * @return ViewableInterface Chainable
      */
     public function setTemplateEngine($engine)
     {
@@ -76,7 +76,7 @@ trait ViewableTrait
     /**
      * @param string $ident
      * @throws InvalidArgumentException
-     * @return ViewableTrait Chainable
+     * @return ViewableInterface Chainable
      */
     public function setTemplateIdent($ident)
     {
