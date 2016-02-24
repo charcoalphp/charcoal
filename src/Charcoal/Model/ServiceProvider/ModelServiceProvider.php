@@ -50,6 +50,10 @@ class ModelServiceProvider implements ServiceProviderInterface
 
         };
 
+        /**
+         * @param Container $container
+         * @return array
+         */
         $container['model/dependencies'] = function (Container $container) {
             return [
                 'logger'            => $container['logger'],

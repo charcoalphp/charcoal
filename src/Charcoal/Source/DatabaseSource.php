@@ -618,7 +618,9 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
         $model = $this->model();
 
         if (!$model->id()) {
-            throw new Exception('Can not delete item. No ID.');
+            throw new Exception(
+                sprintf('Can not delete "%s" item. No ID.', get_class($this))
+            );
         }
 
         $q = '
@@ -721,39 +723,42 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
 
     /**
     * @return string
-    * @todo 2015-03-04 Use bindings for filters value
+    * @todo 2016-02-19 Use bindings for filters value
     */
     protected function sqlFilters()
     {
         $sql = '';
+
         $filters = $this->filters();
-        // Process filters
-        if (!empty($filters)) {
-            $filtersSql = [];
-            foreach ($filters as $f) {
-                $fSql = $f->sql();
-                if ($fSql) {
-                    $filtersSql[] = [
-                        'sql'     => $f->sql(),
-                        'operand' => $f->operand()
-                    ];
-                }
-            }
-            if (!empty($filtersSql)) {
-                $sql .= ' WHERE';
-                $i = 0;
-
-                foreach ($filtersSql as $f) {
-                    if ($i > 0) {
-                        $sql .= ' '.$f['operand'];
-                    }
-                    $sql .= ' '.$f['sql'];
-                    $i++;
-                }
-            }
-
+        if (empty($filters)) {
+            return '';
         }
-        return $sql;
+
+        // Process filters
+        $filtersSql = [];
+        foreach ($filters as $f) {
+            $fSql = $f->sql();
+            if ($fSql) {
+                $filtersSql[] = [
+                    'sql'     => $f->sql(),
+                    'operand' => $f->operand()
+                ];
+            }
+        }
+        if (empty($filtersSql)) {
+            return '';
+        }
+
+        $sql .= ' WHERE';
+        $i = 0;
+
+        foreach ($filtersSql as $f) {
+            if ($i > 0) {
+                $sql .= ' '.$f['operand'];
+            }
+            $sql .= ' '.$f['sql'];
+            $i++;
+        }
     }
 
     /**

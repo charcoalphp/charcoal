@@ -23,8 +23,8 @@ class SourceServiceProvider
          * @param Container $container A pimple DI container.
          * @return SourceFactory
          */
-        $container['source/factory'] = function (Container $container)
-        {
+        $container['source/factory'] = function (Container $container) {
+        
             $factory = new SourceFactory();
             $factory->setArguments([
                 'database' => $container['database']
