@@ -759,6 +759,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
             $sql .= ' '.$f['sql'];
             $i++;
         }
+        return $sql;
     }
 
     /**
