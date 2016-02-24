@@ -11,6 +11,7 @@ use \Serializable;
 // PSR-3 (logger) dependencies
 use \Psr\Log\LoggerAwareInterface;
 use \Psr\Log\LoggerAwareTrait;
+use \Psr\Log\NullLogger;
 
 // Module `charcoal-config` dependencies
 use \Charcoal\Config\AbstractEntity;
@@ -71,6 +72,9 @@ abstract class AbstractModel extends AbstractEntity implements
     */
     public function __construct(array $data = null)
     {
+        if (!isset($data['logger'])) {
+            $data['logger'] = new NullLogger();
+        }
         $this->setLogger($data['logger']);
 
         // Optional DescribableInterface dependencies

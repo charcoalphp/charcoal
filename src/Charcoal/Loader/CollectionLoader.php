@@ -94,6 +94,9 @@ class CollectionLoader implements LoggerAwareInterface
      */
     public function __construct($data)
     {
+        if (!isset($data['logger'])) {
+            $data['logger'] = new \Psr\Log\NullLogger();
+        }
         $this->setLogger($data['logger']);
         $this->setArguments([ 'logger' => $this->logger ]);
     }
