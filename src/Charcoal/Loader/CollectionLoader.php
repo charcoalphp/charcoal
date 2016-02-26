@@ -109,13 +109,13 @@ class CollectionLoader implements LoggerAwareInterface
      */
     public function setData($data)
     {
-        foreach ($data as $prop => $val) {
+        foreach ($data as $key=> $val) {
             $setter = $this->setter($key);
 
             if (is_callable([$this, $setter])) {
-                $this->{$setter}($value);
+                $this->{$setter}($val);
             } else {
-                $this->{$key} = $value;
+                $this->{$key} = $val;
             }
         }
 
