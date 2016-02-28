@@ -654,7 +654,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     * @param array  $binds_types
     * @return PDOStatement|false The PDOStatement, or false in case of error
     */
-    protected function dbQuery($q, array $binds = [], array $binds_types = [])
+    public function dbQuery($q, array $binds = [], array $binds_types = [])
     {
         $this->logger->debug($q, $binds);
         $sth = $this->db()->prepare($q);
