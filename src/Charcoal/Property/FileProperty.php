@@ -469,25 +469,24 @@ class FileProperty extends AbstractProperty
             );
         }
 
-        if (!file_exists($fileData['tmp_name'])) {
-            throw new InvalidArgumentException(
-                'The uploaded file could not be read (does not exist)'
-            );
-        }
-
-        $info = new finfo(FILEINFO_MIME_TYPE);
-        $this->setMimetype($info->file($fileData['tmp_name']));
-        $this->setFilesize(filesize($fileData['tmp_name']));
-        if (!$this->validateAcceptedMimetypes() || !$this->validateMaxFilesize()) {
-            return '';
-        }
-
         $target = $this->uploadTarget($fileData['name']);
 
+        if (file_exists($fileData['tmp_name'])) {
+            $info = new finfo(FILEINFO_MIME_TYPE);
+            $this->setMimetype($info->file($fileData['tmp_name']));
+            $this->setFilesize(filesize($fileData['tmp_name']));
+            if (!$this->validateAcceptedMimetypes() || !$this->validateMaxFilesize()) {
+                return '';
+            }
+        }
+
         $ret = move_uploaded_file($fileData['tmp_name'], $target);
+
         if ($ret === false) {
+            $this->logger->warning(sprintf('Could not upload file %s', $target));
             return '';
         } else {
+            $this->logger->notice(sprintf('File %s uploaded succesfully', $target));
             if (class_exists('\Charcoal\App\App')) {
                 $basePath = \Charcoal\App\App::instance()->config()->get('ROOT');
                 $target = str_replace($basePath, '', $target);
