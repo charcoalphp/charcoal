@@ -56,19 +56,19 @@ abstract class AbstractSource implements
     * Array of `Filter` objects
     * @var array $filters
     */
-    private $filters = [];
+    protected $filters = [];
 
     /**
     * Array of `Order` object
     * @var array $orders
     */
-    private $orders = [];
+    protected $orders = [];
 
     /**
     * The `Pagination` object
     * @var Pagination|null $pagination
     */
-    private $pagination = null;
+    protected $pagination = null;
 
     /**
     * @param array|\ArrayAccess $dependencies
