@@ -16,7 +16,7 @@ use \Charcoal\Queue\QueueItemTrait;
 
 // Module `charcoal-app` dependencies
 use \Charcoal\App\App;
-use \Charcoal\Email;
+use \Charcoal\Email\Email;
 
 /**
  * Email queue item.
