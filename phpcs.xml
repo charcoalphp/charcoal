@@ -217,7 +217,8 @@
 <!-- Objects Sniffs -->
 
     <!-- Ensures objects are assigned to a variable when instantiated. -->
-    <rule ref="Squiz.Objects.ObjectInstantiation" />
+    <!--<rule ref="Squiz.Objects.ObjectInstantiation" />-->
+
 
 <!-- Operators Sniffs -->
 

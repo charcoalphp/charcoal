@@ -7,9 +7,9 @@ The `Charcoal\Ui` module provides tools to create UI elements (dashboards, layou
 
 - [How to install](#how-to-install)
 	- [Dependencies](#dependencies)
+- [Base UI Item](#base-ui-item)
 - [Dashboard](#dashboard)
 - [Layout](#layout)
-- [Widget](#widget)
 - [Form](#form)
 - [Form Group](#form-group)
 - [Form Input](#form-input)
@@ -33,22 +33,112 @@ $ composer require locomotivemtl/charcoal-view
 ## Dependencies
 
 - `PHP 5.5+`
-	- Older versions of PHP are deprecated, therefore not supported.
+	+ Older versions of PHP are deprecated, therefore not supported.
 - [`psr/log`](http://www.php-fig.org/psr/psr-3/)
-	- A PSR-3 compliant logger should be provided to the various services / classes.
-- [`locomotivemtl/charcoal-config`](https://github.com/locomotivemtl/charcoal-config)
-	- The view objects are _configurable_ with `\Charcoal\View\ViewConfig`.
+	+ A PSR-3 compliant logger should be provided to the various services / classes.
+- [`locomotivemtl/charcoal-config`](https://github.com/locomotivemtl/charcoal-config) 0.5+
+	+ The UI objects are _configurable_ with `\Charcoal\View\ViewConfig`.
+- [`locomotivemtl/charcoal-translation`](https://github.com/locomotivemtl/charcoal-translation)
+	+
+- [`locomotivemtl/charcoal-view`](https://github.com/locomotivemtl/charcoal-view) 0.1+
+	+ The base `UiItem` can be are `Viewable`, meaning they can be rendered with a `View`.
+
+# Example Usage
+
+## Form
+
+```php
+
+$metadata = new \Charcoal\Config\GenericMetadata([
+	'properties' => [
+		'first_name' => [
+			'type' => 'string'
+		],
+		'last_name' => [
+			'type' => 'string'
+		],
+		'email' => [
+			'type' => 'email'
+		]
+	]
+]);
+
+$formData = [
+	'first_name' => 'Mathieu',
+	'last_name' => 'Ducharme',
+	'email' => 'mat@locomotive.ca'
+];
+
+$formConfig = [
+	'type' 						=> 'charcoal/ui/form/generic'
+	'template_ident'	=> 'foo/bar/form',
+	'template_data'		=> [],
+	'label'						=> 'Example Form',
+	'groups'					=> [
+		'info' => [
+			'layout' =>[
+				'structure' => [
+					'columns' => [
+						[1,1],
+						[1]
+					]
+				]
+			],
+			'properties' => [
+				'first_name',
+				'last_name',
+				'email'
+			]
+		]
+	]
+];
+
+$formBuilder = new \Charcoal\Ui\Form\FormBuilder([
+	'form_factory' => new \Charcoal\Ui\Form\FormFactory(),
+	'view' => $container['view']
+]);
+
+$form = $formBuilder->buid($formConfig);
+$form->setMetadata($metadata);
+$form->setFormData($formData);
+
+echo $form->render();
+```
+
+# Base UI Item
+
+All UI classes implements the same basic class: `\Charcoal\Ui\UiItemInterface`. This interface defines
+
+## Base UI Item config
+
+- `type`
+- `title`
+- `subtitle`
+- `description`
+- `notes`
+- `template_ident`
+	+ The default view template.
+
+## View Integration
+
+The `UiItemInterface` is a _Viewable_ item; that means it also implements the `\Charcoal\View\ViewableInterface`. The `AbstractUiItem` fully implements this interface by using `\Charcoal\View\ViewableTrait`.
+
+_Viewable_ objects can set a _View_ object with `setView($view)` have a `template_ident` (which can be set with `setTemplateIdent($id)`). See the [charcoal-view](https://github.com/locomotivemtl/charcoal-view) module for details.
+
+The easiest way to use a View is by setting a `ViewInterface` object as `view` service on a DI container / Service Provider.
 
 # Dashboard
 
-Dashboards define a layout of widgets.
+Dashboards define a _layout_ of _widgets_.
+
+ - `layout` is a `LayoutInterface` object that can be created with a `LayoutBuilder`.
+ - `widgets` is a collection of any `UiItemInterface` objects.
 
 ## Dashboard config
 
-- `template_ident`
-- `template_controller`
-- `layout`
-- `widgets`
+- `type` _string_
+- `layout` _array_
+- `widgets` _array_
 
 ## Dashboard dependencies
 
@@ -94,38 +184,32 @@ Layouts define a grid (column-based) structure.
 - `start()`
 - `end()`
 
-# Widget
+## Layout Aware objects
 
-Widgets are simply viewable objects that can be rendered in a layout.
+In the `charcoal-ui` module, 3 base objects use a layout: _dashboards_, _forms_ and _form groups_.
 
-## Widget config
-
-- `template_ident`
-- `template_controller`
-
-## Widget dependencies:
-
-- `logger`
-- `view`
+Those classes implement the Layout requirement by implementing the `\Charcoal\Ui\Layout\LayoutAwareInterface` with the use of its corresponding `LayoutAwareTrait`.
 
 # Form
 
 Forms define a layout of form groups, form options, data and medata.
 
+- Forms have [_groups_](#form-group), which have [_inputs_](#form-input).
+- Groups can be layouted with a `layout` object.
+- Form can be pre-populated with _form data_.
+- _Metadata_ ca
+
 ## Form config
 
-- `title`
-- `subtitle`
+- `type`
 - `action`
+	+ Where the form will be sent upon submission (URL).
 - `method`
-- `template_ident`
-- `template_controller`
+	+ The http method to submit the form: "post" (default) or "get".
 - `layout`
 - `groups`
 - `form_data`
-- `form_metadata`
-- `description`
-- `notes`
+- `metadata`
 
 ## Form dependencies
 
@@ -134,10 +218,6 @@ Forms define a layout of form groups, form options, data and medata.
 
 ## Form API
 
-- `setTitle($title)`
-- `title()`
-- `setSubtitle($subtitle)`
-- `subtitle()`
 - `setAction($action)`
 - `action()`
 - `setMethod($method)`
@@ -156,13 +236,20 @@ Forms define a layout of form groups, form options, data and medata.
 ## Form group config
 
 - `form`
-- `title`
-- `subtitle`
 - `template_ident`
 - `template_controller`
 - `priority`
 - `layout`
 - `properties`
+
+## Form group API
+
+- `setForm($form)`
+- `setInputs(array $groups)`
+- `inputs()`
+- `addInput($inputIdent, $inputData)`
+- `numInputs()`
+- `hasInputs()`
 
 # Form Input
 
@@ -170,7 +257,7 @@ Forms define a layout of form groups, form options, data and medata.
 - `label`
 - `property_ident`
 - `template_ident`
-- `template_controller`
+- `template_data`
 - `read_only`
 - `required`
 - `disabled`
@@ -207,51 +294,64 @@ Menu items define a menu level (ident, label and url) and its children (array of
 
 # Creational Helpers
 
-Factories and builders
+Most UI elements are very dynamic. The types of object to create is often read from a string in a configuration object. Therefore, factories are the preferred way of instanciating new UI items.
+
+Ui items have also many inter-connected dependencies. Builders should therefore be used for object creation / instanciation. They use a factory internally, and have a `build($opts)` methods that allow to retrieve class name from a dynamic source, do initialization, dpendencies management and more. Builders require `Pimple` for a DI container.
 
 ## Factories
 
-- DashboardFactory
-- LayoutFactory
-- WidgetFactory
-- FormFactory
-- FormGroupFactory
-- FormInputFactory
-- MenuFactory
-- MenuItemFactory
+- `\Charcoal\Ui\Dashboard\DashboardFactory`
+- `\Charcoal\Ui\Layout\LayoutFactory`
+- `\Charcoal\Ui\Form\FormFactory`
+- `\Charcoal\Ui\FormGroup\FormGroupFactory`
+- `\Charcoal\Ui\FormInput\FormInputFactory`
+- `\Charcoal\Ui\Menu\MenuFactory`
+- `\Charcoal\Ui\MenuItem\MenuItemFactory`
 
 ## Builders
 
-- DashboardBuilder
-- LayoutBuilder
-- WidgetBuilder
-- FormBuilder
-- FormGroupBuilder
-- FormInputBuilder
-- MenuBuilder
-- MenuItemBuilder
+- `\Charcoal\Ui\Dashboard\DashboardBuilder`
+- `\Charcoal\Ui\Layout\LayoutBuilder`
+- `\Charcoal\Ui\Form\FormBuilder`
+- `\Charcoal\Ui\FormGroup\FormGroupBuilder`
+- `\Charcoal\Ui\FormInput\FormInputBuilder`
+- `\Charcoal\Ui\Menu\MenuBuilder`
+- `\Charcoal\Ui\MenuItem\MenuItemBuilder`
+
 
 # Service Providers
 
-- DashboardServiceProvider
+Service providers are provided in the `Charcoal\Ui\ServiceProvider` namespace for for convenience. They are the recommended way of using `charcoal-ui`, as they register all the creational utilities to a container, taking care of dependencies.
+
+- `\Charcoal\Ui\ServiceProvider\DashboardServiceProvider`
 	+ `dashboard/factory`
 	+ `dashboard/builder`
-	+ `layout/factory`
-	+ `layout/builder`
-	+ `widget/factory`
-	+ `widget/builder`
-- FormServiceProvider
+- `\Charcoal\Ui\ServiceProvider\FormServiceProvider`
 	+ `form/factory`
 	+ `form/builder`
 	+ `form/group/factory`
 	+ `form/group/builder`
 	+ `form/input/factory`
 	+ `form/input/builder`
-- MenuServiceProvider
+- `\Charcoal\Ui\ServiceProvider\LayoutServiceProvider`
+	+ `layout/factory`
+	+ `layout/builder`
+- `\Charcoal\Ui\ServiceProvider\MenuServiceProvider`
 	+ `menu/factory`
 	+ `menu/builder`
 	+ `menu/item/factory`
 	+ `menu/item/builder`
+- `\Charcoal\Ui\ServiceProvider\UiServiceProvider`
+	+ Register all the other service providers (dashboard, form, layout and menu).
+
+## Required services
+
+There are a few dependencies on external services, that should be set on the same DI container as the one passed to the service providers:
+
+- `logger`, a PSR-3 logger instance.
+	+ Typically a `monolog` instance from `charcoal-app`.
+- `view`, a `\Charcoal\View\ViewInterface` instance.
+	+ Typically provided with `\Charcoal\App\Provider\ViewServiceProvider`.
 
 # Development
 
