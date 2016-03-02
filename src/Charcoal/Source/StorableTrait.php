@@ -116,7 +116,7 @@ trait StorableTrait
     * @param array $binds Optional. The SQL query parameters.
     * @return StorableInterface Chainable.
     */
-    public function loadFromQuery($query, array $binds = null)
+    public function loadFromQuery($query, array $binds = [])
     {
         $this->source()->loadItemFromQuery($query, $binds, $this);
         return $this;

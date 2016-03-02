@@ -424,7 +424,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
      * @throws Exception If there is a query error.
      * @return StorableInterface Item.
      */
-    public function loadItemFromQuery($query, array $binds = null, StorableInterface $item = null)
+    public function loadItemFromQuery($query, array $binds = [], StorableInterface $item = null)
     {
         if ($item !== null) {
             $this->setModel($item);
@@ -504,15 +504,15 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
 
         $fields = $this->getModelFields($model);
 
-        $keys = [];
+        $keys   = [];
         $values = [];
-        $binds = [];
+        $binds  = [];
         $binds_types = [];
         foreach ($fields as $f) {
             $k = $f->ident();
             if (in_array($k, $tableStructure)) {
-                $keys[] = '`'.$k.'`';
-                $values[] = ':'.$k.'';
+                $keys[]    = '`'.$k.'`';
+                $values[]  = ':'.$k.'';
                 $binds[$k] = $f->val();
                 $binds_types[$k] = $f->sqlPdoType();
             }
@@ -557,7 +557,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
         $fields = $this->getModelFields($model, $properties);
 
         $updates = [];
-        $binds = [];
+        $binds   = [];
         $binds_types = [];
         foreach ($fields as $f) {
             $k = $f->ident();

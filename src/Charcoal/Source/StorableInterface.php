@@ -62,7 +62,7 @@ interface StorableInterface
     * @param array $binds Optional. The SQL query parameters.
     * @return StorableInterface Chainable.
     */
-    public function loadFromQuery($query, array $binds = null);
+    public function loadFromQuery($query, array $binds = []);
 
     /**
     * Save an object current state to storage
