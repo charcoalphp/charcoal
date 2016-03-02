@@ -296,7 +296,7 @@ class CollectionLoader implements LoggerAwareInterface
      */
     public function orders()
     {
-        return $this->orders();
+        return $this->source()->orders();
     }
 
     /**
