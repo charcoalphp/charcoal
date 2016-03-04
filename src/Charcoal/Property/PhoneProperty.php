@@ -5,7 +5,7 @@ namespace Charcoal\Property;
 use \Charcoal\Property\StringProperty;
 
 /**
- *
+ * Telephone Property
  */
 class PhoneProperty extends StringProperty
 {
