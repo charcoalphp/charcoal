@@ -233,10 +233,55 @@ abstract class AbstractProperty extends AbstractEntity implements
         return $this->val;
     }
 
+    /**
+     * @todo    [mcaskill: 2016-03-04] Should the property have access to the inputType?
+     * @used-by AbstractProperty::inputVal() Must handle string sanitization of value.
+     * @param   mixed $val Optional. The value to to convert for input.
+     * @return  string
+     */
+    public function inputVal($val = null)
+    {
+        if ($val === null) {
+            $val = $this->val();
+        }
 
+        if ($val === null) {
+            return '';
+        }
+
+        /** Parse multilingual values */
+        if ($this->l10n()) {
+            $lang = TranslationConfig::instance()->currentLanguage();
+
+            if (isset($val[$lang])) {
+                $val = $val[$lang];
+            } else {
+                $val = '';
+            }
+        }
+
+        /** Parse multiple values */
+        if ($this->multiple()) {
+            if (is_array($val)) {
+                $val = implode($this->multipleSeparator(), $val);
+            }
+        }
+
+        if (!is_scalar($val)) {
+            $val = json_encode($val, true);
+            /*throw new Exception(
+                sprintf(
+                    'Input value must be a string, received %s',
+                    (is_object($val) ? get_class($val) : gettype($val))
+                )
+            );*/
+        }
+
+        return $val;
+    }
 
     /**
-     * @param mixed $val Optional. The value to to convert to display.
+     * @param  mixed $val Optional. The value to to convert for display.
      * @return string
      */
     public function displayVal($val = null)
@@ -251,13 +296,13 @@ abstract class AbstractProperty extends AbstractEntity implements
 
         $propertyValue = $val;
 
-        if ($this->l10n() === true) {
+        if ($this->l10n()) {
             $translator = TranslationConfig::instance();
 
             $propertyValue = ( isset($propertyValue[$translator->currentLanguage()]) ? $propertyValue[$translator->currentLanguage()] : '' );
         }
 
-        if ($this->multiple() === true) {
+        if ($this->multiple()) {
             if (is_array($propertyValue)) {
                 $propertyValue = implode($this->multipleSeparator(), $propertyValue);
             }

@@ -37,7 +37,13 @@ interface PropertyInterface
     public function val();
 
     /**
-     * @param mixed $val Optional. The value to to convert to display.
+     * @param mixed $val Optional. The value to to convert for input.
+     * @return string
+     */
+    public function inputVal($val = null);
+
+    /**
+     * @param mixed $val Optional. The value to to convert for display.
      * @return string
      */
     public function displayVal($val = null);
