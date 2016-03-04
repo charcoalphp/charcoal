@@ -16,6 +16,8 @@ use \Charcoal\Property\AbstractProperty;
 
 /**
  * DateTime Property
+ *
+ * @todo [mcaskill: 2016-03-04] DEFAULT_FORMAT should be renamed to SQL_DATETIME
  */
 class DateTimeProperty extends AbstractProperty
 {
@@ -90,6 +92,31 @@ class DateTimeProperty extends AbstractProperty
     }
 
     /**
+     * AbstractProperty > inputVal(). Convert `DateTime` to input-friendly string.
+     *
+     * @todo   [mcaskill: 2016-03-04] Should this be DateTime::RFC3339?
+     * @param  mixed $val Optional. The value to to convert for input.
+     * @throws Exception If the date/time is invalid.
+     * @return string|null
+     */
+    public function inputVal($val = null)
+    {
+        if ($val === null) {
+            $val = $this->val();
+        } else {
+            $val = $this->dateTimeVal($val);
+        }
+
+        if ($val instanceof DateTimeInterface) {
+            return $this->val->format('Y-m-d H:i:s');
+        } elseif (is_string($val)) {
+            return $val;
+        } else {
+            return '';
+        }
+    }
+
+    /**
      * AbstractProperty > storageVal(). Convert `DateTime` to SQL-friendly string.
      *
      * @param string|DateTime $val Optional. Value to convert to storage format.
@@ -103,6 +130,7 @@ class DateTimeProperty extends AbstractProperty
         } else {
             $val = $this->dateTimeVal($val);
         }
+
         if ($val instanceof DateTimeInterface) {
             return $this->val->format('Y-m-d H:i:s');
         } else {
@@ -130,6 +158,7 @@ class DateTimeProperty extends AbstractProperty
         } else {
             $val = $this->dateTimeVal($val);
         }
+
         if ($val === null) {
             return '';
         }
@@ -144,7 +173,11 @@ class DateTimeProperty extends AbstractProperty
      */
     private function dateTimeVal($val)
     {
-        if ($val === null) {
+        if (
+            $val === null ||
+            (is_string($val) && ! strlen(trim($val))) ||
+            (is_array($val) && ! count(array_filter($val, 'strlen')))
+        ) {
             if ($this->allowNull()) {
                 return null;
             } else {
