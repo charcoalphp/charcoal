@@ -20,7 +20,7 @@ trait StorablePropertyTrait
         if ($this->l10n()) {
             $translator = TranslationConfig::instance();
 
-            foreach ($translator->languages() as $langCode) {
+            foreach ($translator->availableLanguages() as $langCode) {
                 $ident = sprintf('%1$s_%2$s', $this->ident(), $langCode);
                 $field = new PropertyField();
                 $field->setData(
