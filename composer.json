@@ -25,7 +25,7 @@
     "ext-mbstring": "*",
     "psr/log": "^1.0",
     "locomotivemtl/charcoal-app": "dev-master",
-    "locomotivemtl/charcoal-config": "~0.4",
+    "locomotivemtl/charcoal-config": "~0.5",
     "locomotivemtl/charcoal-property": "dev-master",
     "locomotivemtl/charcoal-factory": "~0.2",
     "locomotivemtl/charcoal-view": "~0.1"
