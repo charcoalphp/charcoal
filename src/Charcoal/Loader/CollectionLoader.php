@@ -109,6 +109,9 @@ class CollectionLoader implements LoggerAwareInterface
      */
     public function setData($data)
     {
+        if (isset($data['filters'])) {
+            $this->setFilters($data['filters']);
+        }
         foreach ($data as $key=> $val) {
             $setter = $this->setter($key);
 
