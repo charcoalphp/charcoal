@@ -23,6 +23,11 @@ abstract class AbstractUiItem extends AbstractEntity implements UiItemInterface
     use ViewableTrait;
 
     /**
+     * @var string $template
+     */
+    private $template;
+
+    /**
      * @var TranslationString $label
      */
     private $label = '';
@@ -46,6 +51,35 @@ abstract class AbstractUiItem extends AbstractEntity implements UiItemInterface
      * @var TranslationString $notes
      */
     private $notes = '';
+
+    abstract public function type();
+
+    /**
+     * @param string $template
+     * @throws InvalidArgumentException If the template identifier is not a string.
+     * @return UiItemInterface Chainable
+     */
+    public function setTemplate($template)
+    {
+        if (!is_string($template)) {
+            throw new InvalidArgumentException(
+                'Can not set UI Item\'s template: template identifier must be a string'
+            );
+        }
+        $this->template = $template;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function template()
+    {
+        if ($this->template === null) {
+            return $this->type();
+        }
+        return $this->template;
+    }
 
     /**
      * @param mixed $title The group title.

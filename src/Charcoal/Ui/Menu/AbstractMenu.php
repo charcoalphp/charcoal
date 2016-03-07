@@ -114,7 +114,7 @@ abstract class AbstractMenu extends AbstractUiItem implements MenuInterface
             if ($itemCallback) {
                 $itemCallback($item);
             }
-            //$GLOBALS['widget_template'] = $item->widgetType();
+            $GLOBALS['widget_template'] = $item->template();
             yield $item->ident() => $item;
         }
     }

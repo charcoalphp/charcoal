@@ -9,5 +9,11 @@ use \Charcoal\Ui\Menu\AbstractMenu;
  */
 class GenericMenu extends AbstractMenu
 {
-    // ...
+    /**
+     * @return string
+     */
+    public function type()
+    {
+        return 'charcoal/ui/menu/generic';
+    }
 }

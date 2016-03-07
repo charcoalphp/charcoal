@@ -2,12 +2,10 @@
 
 namespace Charcoal\Ui\MenuItem;
 
-use \Charcoal\Ui\UiItemInterface;
-
 /**
  *
  */
-interface MenuItemInterface extends UiItemInterface
+interface MenuItemInterface
 {
     /**
      * @param string $ident

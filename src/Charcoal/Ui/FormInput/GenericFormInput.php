@@ -9,5 +9,11 @@ use \Charcoal\Ui\FormInput\AbstractFormInput;
  */
 class GenericFormInput extends AbstractFormInput
 {
-    // ...
+    /**
+     * @return string
+     */
+    public function type()
+    {
+        return 'charcoal/ui/form-input/generic';
+    }
 }

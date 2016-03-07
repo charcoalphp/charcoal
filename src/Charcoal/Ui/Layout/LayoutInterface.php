@@ -2,12 +2,10 @@
 
 namespace Charcoal\Ui\Layout;
 
-use \Charcoal\Config\EntityInterface;
-
 /**
  *
  */
-interface LayoutInterface extends EntityInterface
+interface LayoutInterface
 {
     /**
      * @param integer $position

@@ -7,7 +7,7 @@ use \Charcoal\Ui\UiItemInterface;
 /**
  *
  */
-interface MenuInterface extends UiItemInterface
+interface MenuInterface
 {
     /**
      * @param array $items

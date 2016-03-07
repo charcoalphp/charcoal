@@ -1,6 +1,6 @@
 <?php
 
-namespace Charcoal\Ui\Form;
+namespace Charcoal\Ui\Dashboard;
 
 use \Charcoal\Factory\ResolverFactory;
 

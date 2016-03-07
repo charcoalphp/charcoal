@@ -2,9 +2,10 @@
 
 namespace Charcoal\Ui\Form;
 
-use \Charcoal\Ui\UiItemInterface;
-
-interface FormInterface extends UiItemInterface
+/**
+ * Form Interface
+ */
+interface FormInterface
 {
     /**
      * @param string $action

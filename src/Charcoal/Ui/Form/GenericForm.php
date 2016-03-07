@@ -9,5 +9,11 @@ use \Charcoal\Ui\Form\AbstractForm;
  */
 class GenericForm extends AbstractForm
 {
-    // ...
+    /**
+     * @return string
+     */
+    public function type()
+    {
+        return 'charcoal/ui/form/generic';
+    }
 }

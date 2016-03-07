@@ -8,7 +8,7 @@ use \Charcoal\Ui\UiItemConfig;
 /**
  * Form Input Config
  */
-class DashboardConfig extends UiItemConfig
+class FormInputConfig extends UiItemConfig
 {
 
 }

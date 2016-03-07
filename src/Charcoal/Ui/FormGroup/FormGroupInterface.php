@@ -2,13 +2,12 @@
 
 namespace Charcoal\Ui\FormGroup;
 
-use \Charcoal\Ui\UiItemInterface;
 use \Charcoal\Ui\Form\FormInterface;
 
 /**
  * Form Group Interface
  */
-interface FormGroupInterface extends UiItemInterface
+interface FormGroupInterface
 {
     /**
      * @param callable $cb

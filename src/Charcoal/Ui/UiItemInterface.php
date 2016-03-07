@@ -22,6 +22,18 @@ use \Charcoal\View\ViewableInterface;
 interface UiItemInterface extends EntityInterface, ViewableInterface
 {
     /**
+     * @param string $template
+     * @throws InvalidArgumentException If the template identifier is not a string.
+     * @return UiItemInterface Chainable
+     */
+    public function setTemplate($template);
+
+    /**
+     * @return string
+     */
+    public function template();
+
+    /**
      * @param mixed $description The group title.
      * @return UiItemInterface Chainable
      */

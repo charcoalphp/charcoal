@@ -3,13 +3,12 @@
 namespace Charcoal\Ui\FormInput;
 
 // Intra-module (`charcoal-ui`) dependencies
-use \Charcoal\Ui\UiItemInterface;
 use \Charcoal\Ui\FormGroup\FormGroupInterface;
 
 /**
  * Form Input Interface
  */
-interface FormInputInterface extends UiItemInterface
+interface FormInputInterface
 {
     /**
      * @param FormGroupInterface $formGroup

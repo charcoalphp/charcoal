@@ -1,6 +1,6 @@
 <?php
 
-namespace Charcoal\Ui\Form;
+namespace Charcoal\Ui\Dashboard;
 
 use \Pimple\Container;
 
@@ -43,10 +43,7 @@ class DashboardBuilder
         $container = $this->container;
         $objType = isset($options['type']) ? $options['type'] : self::DEFAULT_TYPE;
 
-        $obj = $this->factory->create($objType, [
-            'logger'    =>  $container['logger'],
-            'view'      =>  $container['view']
-        ]);
+        $obj = $this->factory->create($objType);
         $obj->setData($options);
         return $obj;
     }
