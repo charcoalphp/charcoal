@@ -30,7 +30,7 @@ class Collection implements
     * Array of (ordered) objects
     * @var array $objects
     */
-    private $objects;
+    private $objects = [];
 
     /**
     * Identity Map
@@ -40,7 +40,7 @@ class Collection implements
     * map when referring to them.
     * @var array $map
     */
-    private $map;
+    private $map = [];
 
     /**
     * ArrayAccess > offsetSet
