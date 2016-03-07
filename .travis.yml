@@ -18,7 +18,7 @@ matrix:
 before_script:
   ## Init composer
   - composer selfupdate --quiet
-  - composer install -n --dev
+  - COMPOSER_ROOT_VERSION=dev-master composer install -n --dev
   ## Install the PHPdoc binary
   - pear channel-discover pear.phpdoc.org
   - pear install phpdoc/phpDocumentor
