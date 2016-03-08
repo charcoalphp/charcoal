@@ -11,7 +11,7 @@ $autoloader->add('Charcoal\\Tests\\', __DIR__);
 
 /** @todo For now, this var needs to be set automatically */
 //Charcoal::init();
-//Charcoal::config()['ROOT'] = '';
+//Charcoal::config()['base_path'] = '';
 
 // Create container and configure it (with charcoal-config)
 $GLOBALS['container'] = new SlimContainer();
