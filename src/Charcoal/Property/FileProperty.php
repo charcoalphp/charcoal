@@ -448,7 +448,7 @@ class FileProperty extends AbstractProperty
             return '';
         } else {
             if (class_exists('\Charcoal\App\App')) {
-                $basePath = \Charcoal\App\App::instance()->config()->get('ROOT');
+                $basePath = \Charcoal\App\App::instance()->config()->get('base_path');
                 $target = str_replace($basePath, '', $target);
             }
 
@@ -488,7 +488,7 @@ class FileProperty extends AbstractProperty
         } else {
             $this->logger->notice(sprintf('File %s uploaded succesfully', $target));
             if (class_exists('\Charcoal\App\App')) {
-                $basePath = \Charcoal\App\App::instance()->config()->get('ROOT');
+                $basePath = \Charcoal\App\App::instance()->config()->get('base_path');
                 $target = str_replace($basePath, '', $target);
             }
 
@@ -504,7 +504,7 @@ class FileProperty extends AbstractProperty
     public function uploadTarget($filename = null)
     {
         if (class_exists('\Charcoal\App\App')) {
-            $basePath = \Charcoal\App\App::instance()->config()->get('ROOT');
+            $basePath = \Charcoal\App\App::instance()->config()->get('base_path');
         } else {
             $basePath = '';
         }
