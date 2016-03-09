@@ -12,7 +12,6 @@ use \Psr\Log\LoggerAwareTrait;
 use \Psr\Log\NullLogger;
 
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Loader\LoaderInterface;
 use \Charcoal\Model\ModelInterface;
 use \Charcoal\Model\Collection;
 
@@ -24,9 +23,7 @@ use \Charcoal\Source\Database\DatabasePagination;
 /**
  * Object Collection Loader
  */
-class CollectionLoader implements
-    LoaderInterface,
-    LoggerAwareInterface
+class CollectionLoader implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
@@ -430,22 +427,31 @@ class CollectionLoader implements
      * Load a collection from source.
      *
      * @param  string|null $ident  Optional. A pre-defined list to use from the model.
+     * @param  array       $args   Optional. The constructor arguments.
+     *                             Leave blank to use `$arguments` member.
+     * @param  callable    $cb     Optional. Apply a callback to every entity of the collection.
+     *                             Leave blank to use `$callback` member.
      * @throws Exception If the database connection fails.
      * @return Collection
      */
-    public function load($ident = null)
+    public function load($ident = null, array $args = null, callable $cb = null)
     {
         // Unused.
         unset($ident);
 
-        $db   = $this->source()->db();
+        $db = $this->source()->db();
 
         if (!$db) {
             throw new Exception('Could not instanciate a database connection.');
         }
 
-        $args = $this->arguments();
-        $cb   = $this->callback();
+        if (!isset($args)) {
+            $args = $this->arguments();
+        }
+
+        if (!isset($cb)) {
+            $cb = $this->callback();
+        }
 
         /** @todo Filters, pagination, select, etc */
         $query = $this->source()->sqlLoad();
