@@ -90,7 +90,6 @@ abstract class AbstractModel extends AbstractEntity implements
         }
         // Optional ViewableInterface dependencies
         if (isset($data['view'])) {
-            var_dump('Cool, view was set '.get_class($this));
             $this->setView($data['view']);
         }
 

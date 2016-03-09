@@ -62,7 +62,8 @@ trait DescribableTrait
      */
     public function setPropertyFactory(PropertyFactory $factory)
     {
-        $this->propertyFactory = $propertyFactory;
+        $this->propertyFactory = $factory;
+
         return $this;
     }
 

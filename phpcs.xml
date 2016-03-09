@@ -169,7 +169,7 @@
 <!-- Functions Sniffs -->
 
     <!-- Ensures that variables are not passed by reference when calling a function -->
-    <rule ref="Generic.Functions.CallTimePassByReference" />
+    <!--<rule ref="Generic.Functions.CallTimePassByReference" />-->
     <!-- Spaces are required after every commas in function calls -->
     <rule ref="Generic.Functions.FunctionCallArgumentSpacing" />
     <!-- Opening braces should be on a new line for functions -->

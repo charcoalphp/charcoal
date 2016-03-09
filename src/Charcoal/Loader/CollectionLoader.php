@@ -9,8 +9,10 @@ use \PDO;
 // Dependencies from PSR-3 (Logger)
 use \Psr\Log\LoggerAwareInterface;
 use \Psr\Log\LoggerAwareTrait;
+use \Psr\Log\NullLogger;
 
 // Intra-module (`charcoal-core`) dependencies
+use \Charcoal\Loader\LoaderInterface;
 use \Charcoal\Model\ModelInterface;
 use \Charcoal\Model\Collection;
 
@@ -20,47 +22,16 @@ use \Charcoal\Source\Database\DatabaseOrder;
 use \Charcoal\Source\Database\DatabasePagination;
 
 /**
- * Collection Loader
- *
- * @uses \Charcoal\Model\Collection
+ * Object Collection Loader
  */
-class CollectionLoader implements LoggerAwareInterface
+class CollectionLoader implements
+    LoaderInterface,
+    LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
     /**
-     * @var array $properties
-     */
-    private $properties = [];
-
-    /**
-     * @var array $propertiesOptions
-     */
-    private $propertiesOptions = [];
-
-    /**
-     * Array of `Filter` objects.
-     *
-     * @var array $filters
-     */
-    private $filters = [];
-
-    /**
-     * Array of `Order` object.
-     *
-     * @var array $orders
-     */
-    private $orders = [];
-
-    /**
-     * The `Pagniation` object.
-     *
-     * @var Pagination|null $pagination
-     */
-    private $pagination;
-
-    /**
-     * The source to load the object from.
+     * The source to load objects from.
      *
      * @var SourceInterface $source
      */
@@ -88,14 +59,14 @@ class CollectionLoader implements LoggerAwareInterface
     private $callback;
 
     /**
-     * Return a new Collection loader.
+     * Return a new CollectionLoader object.
      *
      * @param array $data The loader's dependencies.
      */
     public function __construct($data)
     {
         if (!isset($data['logger'])) {
-            $data['logger'] = new \Psr\Log\NullLogger();
+            $data['logger'] = new NullLogger();
         }
         $this->setLogger($data['logger']);
         $this->setArguments([ 'logger' => $this->logger ]);
@@ -112,7 +83,7 @@ class CollectionLoader implements LoggerAwareInterface
         if (isset($data['filters'])) {
             $this->setFilters($data['filters']);
         }
-        foreach ($data as $key=> $val) {
+        foreach ($data as $key => $val) {
             $setter = $this->setter($key);
 
             if (is_callable([$this, $setter])) {
@@ -126,18 +97,9 @@ class CollectionLoader implements LoggerAwareInterface
     }
 
     /**
-     * @param mixed $source
-     * @return CollectionLoader Chainable
-     */
-    public function setSource($source)
-    {
-        $this->source = $source;
-
-        return $this;
-    }
-
-    /**
-     * @throws Exception
+     * Retrieve the source to load objects from.
+     *
+     * @throws Exception If no source has been defined.
      * @return mixed
      */
     public function source()
@@ -150,19 +112,22 @@ class CollectionLoader implements LoggerAwareInterface
     }
 
     /**
-     * @param ModelInterface $model
-     * @return Source Chainable
+     * Set the source to load objects from.
+     *
+     * @param  mixed $source A data source.
+     * @return CollectionLoader Chainable
      */
-    public function setModel(ModelInterface $model)
+    public function setSource($source)
     {
-        $this->model = $model;
-        $this->setSource($model->source());
+        $this->source = $source;
 
         return $this;
     }
 
     /**
-     * @throws Exception if not model was previously set
+     * Retrieve the object model.
+     *
+     * @throws Exception If no model has been defined.
      * @return Model
      */
     public function model()
@@ -175,16 +140,22 @@ class CollectionLoader implements LoggerAwareInterface
     }
 
     /**
-     * @param array $properties
-     * @throws InvalidArgumentException
-     * @return ColelectionLoader Chainable
+     * Set the model to use for the loaded objects.
+     *
+     * @param  ModelInterface $model An object model.
+     * @return Source Chainable
      */
-    public function setProperties($properties)
+    public function setModel(ModelInterface $model)
     {
-        return $this->source()->setProperties($properties);
+        $this->model = $model;
+        $this->setSource($model->source());
+
+        return $this;
     }
 
     /**
+     * Alias of {@see SourceInterface::properties()}
+     *
      * @return array
      */
     public function properties()
@@ -193,34 +164,53 @@ class CollectionLoader implements LoggerAwareInterface
     }
 
     /**
-     * @param string $property Property ident
-     * @throws InvalidArgumentException if property is not a string or empty
+     * Alias of {@see SourceInterface::setProperties()}
+     *
+     * @param  array $properties An array of property identifiers.
+     * @return ColelectionLoader Chainable
+     */
+    public function setProperties($properties)
+    {
+        $this->source()->setProperties($properties);
+
+        return $this;
+    }
+
+    /**
+     * Alias of {@see SourceInterface::addProperty()}
+     *
+     * @param  string $property A property identifier.
      * @return CollectionLoader Chainable
      */
     public function addProperty($property)
     {
-        return $this->source()->addProperty($property);
+        $this->source()->addProperty($property);
+
+        return $this;
     }
 
     /**
-     * @param array $keywords
+     * Set "search" keywords to filter multiple properties.
+     *
+     * @param  array $keywords An array of keywords and properties.
      * @return CollectionLoader Chainable
      */
     public function setKeywords()
     {
         foreach ($keywords as $k) {
             $keyword = $k[0];
-            $properties = isset($k[1]) ? $k[1] : null;
+            $properties = (isset($k[1]) ? $k[1] : null);
             $this->addKeyword($keyword, $properties);
         }
+
         return $this;
     }
 
     /**
-     * Helper function to add a "search" keyword filter to multiple properties.
+     * Add a "search" keyword filter to multiple properties.
      *
-     * @param string $keyword
-     * @param array $properties
+     * @param  string $keyword    A value to match among $properties.
+     * @param  array  $properties An array of property identifiers.
      * @return CollectionLoader Chainable
      */
     public function addKeyword($keyword, $properties = null)
@@ -235,10 +225,10 @@ class CollectionLoader implements LoggerAwareInterface
             $prop = $model->p($property_ident);
             $val = ('%'.$keyword.'%');
             $this->addFilter([
-                'property'  => $property_ident,
-                'val'       => $val,
-                'operator'  => 'LIKE',
-                'operand'   => 'OR'
+                'property' => $property_ident,
+                'val'      => $val,
+                'operator' => 'LIKE',
+                'operand'  => 'OR'
             ]);
         }
 
@@ -246,16 +236,8 @@ class CollectionLoader implements LoggerAwareInterface
     }
 
     /**
-     * @param array $filters
-     * @throws InvalidArgumentException
-     * @return Collection Chainable
-     */
-    public function setFilters($filters)
-    {
-        return $this->source()->setFilters($filters);
-    }
-
-    /**
+     * Alias of {@see SourceInterface::filters()}
+     *
      * @return array
      */
     public function filters()
@@ -264,37 +246,36 @@ class CollectionLoader implements LoggerAwareInterface
     }
 
     /**
-     * Add a collection filter to the loader.
+     * Alias of {@see SourceInterface::setFilters()}
      *
-     * There are 3 different ways of adding a filter:
-     * - as a `Filter` object, in which case it will be added directly.
-     *   - `addFilter($obj);`
-     * - as an array of options, which will be used to build the `Filter` object
-     *   - `addFilter(['property' => 'foo', 'val' => 42, 'operator' => '<=']);`
-     * - as 3 parameters: `property`, `val` and `options`
-     *   - `addFilter('foo', 42, ['operator' => '<=']);`
+     * @param  array $filters An array of filters.
+     * @return Collection Chainable
+     */
+    public function setFilters($filters)
+    {
+        $this->source()->setFilters($filters);
+
+        return $this;
+    }
+
+    /**
+     * Alias of {@see SourceInterface::addFilter()}
      *
-     * @param string|array|Filter $param
-     * @param mixed               $val     Optional: Only used if the first argument is a string
-     * @param array               $options Optional: Only used if the first argument is a string
-     * @throws InvalidArgumentException if property is not a string or empty
-     * @return CollectionLoader (Chainable)
+     * @param  string|array|Filter $param   A property identifier, filter array, or Filter object.
+     * @param  mixed               $val     Optional. The value to match. Only used if the first argument is a string.
+     * @param  array               $options Optional. Filter options. Only used if the first argument is a string.
+     * @return CollectionLoader Chainable
      */
     public function addFilter($param, $val = null, array $options = null)
     {
-        return $this->source()->addFilter($param, $val, $options);
+        $this->source()->addFilter($param, $val, $options);
+
+        return $this;
     }
 
     /**
-     * @param array $orders
-     * @return CollectionLoader Chainable
-     */
-    public function setOrders($orders)
-    {
-        return $this->source()->setOrders($orders);
-    }
-
-    /**
+     * Alias of {@see SourceInterface::orders()}
+     *
      * @return array
      */
     public function orders()
@@ -303,27 +284,36 @@ class CollectionLoader implements LoggerAwareInterface
     }
 
     /**
-     * @param string|array|Order $param
-     * @param string             $mode          Optional
-     * @param array              $orderOptions Optional
-     * @throws InvalidArgumentException
+     * Alias of {@see SourceInterface::setOrders()}
+     *
+     * @param  array $orders An array of orders.
+     * @return CollectionLoader Chainable
+     */
+    public function setOrders($orders)
+    {
+        $this->source()->setOrders($orders);
+
+        return $this;
+    }
+
+    /**
+     * Alias of {@see SourceInterface::addOrder()}
+     *
+     * @param  string|array|Order $param        A property identifier, order array, or Order object.
+     * @param  string             $mode         Optional. Sort order. Only used if the first argument is a string.
+     * @param  array              $orderOptions Optional. Filter options. Only used if the first argument is a string.
      * @return CollectionLoader Chainable
      */
     public function addOrder($param, $mode = 'asc', $orderOptions = null)
     {
-        return $this->source()->addOrder($param, $mode, $orderOptions);
+        $this->source()->addOrder($param, $mode, $orderOptions);
+
+        return $this;
     }
 
     /**
-     * @param mixed $param
-     * @return CollectionLoader Chainable
-     */
-    public function setPagination($param)
-    {
-        return $this->source()->setPagination($param);
-    }
-
-    /**
+     * Alias of {@see SourceInterface::pagination()}
+     *
      * @return Pagination
      */
     public function pagination()
@@ -332,20 +322,21 @@ class CollectionLoader implements LoggerAwareInterface
     }
 
     /**
-     * @param integer $page
-     * @throws InvalidArgumentException
+     * Alias of {@see SourceInterface::setPagination()}
+     *
+     * @param  mixed $param An associative array of pagination settings.
      * @return CollectionLoader Chainable
      */
-    public function setPage($page)
+    public function setPagination($param)
     {
-        if (!is_integer($page)) {
-            throw new InvalidArgumentException('Page must be an integer.');
-        }
-        $this->pagination()->setPage($page);
+        $this->source()->setPagination($param);
+
         return $this;
     }
 
     /**
+     * Alias of {@see PaginationInterface::page()}
+     *
      * @return integer
      */
     public function page()
@@ -354,6 +345,21 @@ class CollectionLoader implements LoggerAwareInterface
     }
 
     /**
+     * Alias of {@see PaginationInterface::pagination()}
+     *
+     * @param  integer $page A page number.
+     * @return CollectionLoader Chainable
+     */
+    public function setPage($page)
+    {
+        $this->pagination()->setPage($page);
+
+        return $this;
+    }
+
+    /**
+     * Alias of {@see PaginationInterface::numPerPage()}
+     *
      * @return integer
      */
     public function numPerPage()
@@ -362,16 +368,15 @@ class CollectionLoader implements LoggerAwareInterface
     }
 
     /**
-     * @param integer $num
-     * @throws InvalidArgumentException
+     * Alias of {@see PaginationInterface::setNumPerPage()}
+     *
+     * @param  integer $num The number of items to display per page.
      * @return CollectionLoader Chainable
      */
     public function setNumPerPage($num)
     {
-        if (!is_integer($num)) {
-            throw new InvalidArgumentException('Num must be an integer.');
-        }
         $this->pagination()->setNumPerPage($num);
+
         return $this;
     }
 
@@ -425,28 +430,22 @@ class CollectionLoader implements LoggerAwareInterface
      * Load a collection from source.
      *
      * @param  string|null $ident  Optional. A pre-defined list to use from the model.
-     * @param  array       $args   Optional. The constructor arguments. Leave blank to use `$arguments` member.
-     * @param  callable    $cb     Optional. Apply a callback to every entity of the collection. Leave blank to use `$callback` member.
      * @throws Exception If the database connection fails.
      * @return Collection
      */
-    public function load($ident = null, array $args = null, callable $cb = null)
+    public function load($ident = null)
     {
         // Unused.
         unset($ident);
 
-        if (!isset($args)) {
-            $args = $this->arguments();
-        }
+        $db   = $this->source()->db();
 
-        if (!isset($cb)) {
-            $cb = $this->callback();
-        }
-
-        $db = $this->source()->db();
         if (!$db) {
             throw new Exception('Could not instanciate a database connection.');
         }
+
+        $args = $this->arguments();
+        $cb   = $this->callback();
 
         /** @todo Filters, pagination, select, etc */
         $query = $this->source()->sqlLoad();
