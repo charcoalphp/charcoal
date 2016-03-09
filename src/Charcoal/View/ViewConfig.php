@@ -13,9 +13,9 @@ use \Charcoal\Config\AbstractConfig;
 class ViewConfig extends AbstractConfig
 {
     /**
-     * @var array $templatePath
+     * @var array $paths
      */
-    private $templatePath = [];
+    private $paths = [];
 
     /**
      * @var array $engines
@@ -33,7 +33,7 @@ class ViewConfig extends AbstractConfig
     public function defaults()
     {
         return [
-            'template_path' => [],
+            'paths' => [],
             'engines' => [
                 'mustache'      => [],
                 'php'           => [],
@@ -43,16 +43,16 @@ class ViewConfig extends AbstractConfig
             'default_engine' => 'mustache'
         ];
     }
-
+    
     /**
-     * @param array $path
+     * @param array $paths
      * @return ViewConfig Chainable
      */
-    public function setTemplatePath(array $path)
+    public function setPaths(array $paths)
     {
-        $this->templatePath = [];
-        foreach ($path as $p) {
-            $this->addTemplatePath($p);
+        $this->paths = [];
+        foreach ($paths as $p) {
+            $this->addPath($p);
         }
         return $this;
     }
@@ -62,23 +62,23 @@ class ViewConfig extends AbstractConfig
      * @throws InvalidArgumentException
      * @return ViewConfig Chainable
      */
-    public function addTemplatePath($path)
+    public function addPath($path)
     {
         if (!is_string($path)) {
             throw new InvalidArgumentException(
                 'Template path must be a string'
             );
         }
-        $this->templatePath[] = $path;
+        $this->paths[] = $path;
         return $this;
     }
 
     /**
      * @return array
      */
-    public function templatePath()
+    public function paths()
     {
-        return $this->templatePath;
+        return $this->paths;
     }
 
     /**
