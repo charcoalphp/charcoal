@@ -10,7 +10,7 @@ interface EngineInterface
 {
     /**
      * @param LoaderInterface $loader A loader instance.
-     * @return MustacheEngine Chainable
+     * @return EngineInterface Chainable
      */
     public function setLoader(LoaderInterface $loader);
 
