@@ -33,7 +33,7 @@ class TwigEngine extends AbstractEngine
         $this->setLogger($data['logger']);
 
         if (isset($data['loader'])) {
-            $this->set_loader($data['loader']);
+            $this->setLoader($data['loader']);
         }
     }
 
