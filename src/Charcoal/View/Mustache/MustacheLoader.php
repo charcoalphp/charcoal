@@ -51,7 +51,7 @@ class MustacheLoader extends AbstractLoader implements
                 continue;
             }
 
-            $fileContent = file_getContents($f);
+            $fileContent = file_get_contents($f);
             if ($fileContent !== '') {
                 return $fileContent;
             }
