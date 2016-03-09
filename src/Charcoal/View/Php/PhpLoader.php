@@ -40,14 +40,12 @@ class PhpLoader extends AbstractLoader implements LoaderInterface
         }
 
         $filename = $this->filenameFromIdent($ident);
-        $searchPath = $this->searchPath();
+        $searchPath = $this->paths();
         foreach ($searchPath as $path) {
             $f = realpath($path).'/'.$filename;
             if (!file_exists($f)) {
                 continue;
             }
-
-            $this->logger->debug('Found matching template: '.$f);
 
             ob_start();
             include $f;
