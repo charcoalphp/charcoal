@@ -28,7 +28,7 @@ interface EngineInterface
     public function render($templateIdent, $context);
 
     /**
-     * @param string $templateIdent
+     * @param string $templateString
      * @param mixed  $context
      * @return string
      */
