@@ -117,7 +117,7 @@ trait ViewableTrait
     }
 
     /**
-     * @param string $template The template to parse and render. If null, use the object's default.
+     * @param string $templateIdent The template to load, parse and render. If null, use the object's default.
      * @return string The rendered template.
      */
     public function render($templateIdent = null)
@@ -129,7 +129,7 @@ trait ViewableTrait
     }
 
     /**
-     * @param string $templateIdent The template ident to load and render.
+     * @param string $templateString The template (string) to render. If null, use the object's default.
      * @return string The rendered template.
      */
     public function renderTemplate($templateString = null)
