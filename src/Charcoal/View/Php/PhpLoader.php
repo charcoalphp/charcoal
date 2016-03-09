@@ -40,8 +40,8 @@ class PhpLoader extends AbstractLoader implements LoaderInterface
         }
 
         $filename = $this->filenameFromIdent($ident);
-        $search_path = $this->search_path();
-        foreach ($search_path as $path) {
+        $searchPath = $this->searchPath();
+        foreach ($searchPath as $path) {
             $f = realpath($path).'/'.$filename;
             if (!file_exists($f)) {
                 continue;
@@ -64,7 +64,7 @@ class PhpLoader extends AbstractLoader implements LoaderInterface
                 $ident,
                 $filename
             ),
-            $search_path
+            $searchPath
         );
 
         return $ident;
