@@ -24,6 +24,52 @@ use \Charcoal\Loader\FileLoader;
 class MetadataLoader extends FileLoader
 {
     /**
+     * Return new MetadataLoader object.
+     *
+     * The application's metadata paths, if any, are merged with
+     * the loader's search paths.
+     *
+     * @param array $data The loader's dependencies.
+     */
+    public function __construct(array $data = null)
+    {
+        $config   = App::instance()->config();
+        $basePath = $config->get('base_path');
+        $metadata = $config->get('metadata');
+
+        if (!is_array($metadata)) {
+            $metadata = [];
+        }
+
+        if ($config->has('metadata_path')) {
+            trigger_error(
+                '"metadata_path" is deprecated. Use "metadata.paths" instead.',
+                E_USER_DEPRECATED
+            );
+
+            if (!isset($metadata['paths'])) {
+                $metadata['paths'] = $config->get('metadata_path');
+            }
+        }
+
+        if (isset($metadata['paths'])) {
+            if (isset($data['paths'])) {
+                $data['paths'] = array_merge($metadata['paths'], $data['paths']);
+            } else {
+                $data['paths'] = $metadata['paths'];
+            }
+        }
+
+        if (!isset($data['base_path']) && $basePath) {
+            $data['base_path'] = $basePath;
+        }
+
+        parent::__construct($data);
+    }
+
+    /**
+     * Retrieve the cache service provider.
+     *
      * @return \Stash\Pool
      */
     protected function cachePool()
@@ -34,24 +80,14 @@ class MetadataLoader extends FileLoader
     }
 
     /**
-     * FileLoader > searchPath(). Get the object's search path, merged with global configuration.
+     * Validate a resolved path.
      *
-     * This method looks in standard's `parent::searchPath()` but adds all the path defined in the
-     * `metadataPath` global configuration.
-     *
-     * @return array
+     * @param  string $path The path to validate.
+     * @return string
      */
-    public function searchPath()
+    public function validatePath($path)
     {
-        $cfg = App::instance()->getContainer()->get('config');
-
-        $allPath = parent::searchPath();
-
-        $globalPath = $cfg->get('metadata_path');
-        if (!empty($globalPath)) {
-            $allPath = array_merge($globalPath, $allPath);
-        }
-        return $allPath;
+        return (parent::validatePath($path) && is_dir($path));
     }
 
     /**
@@ -66,9 +102,11 @@ class MetadataLoader extends FileLoader
             $this->setIdent($ident);
         }
 
+        $ident = $this->ident();
+
         $cachePool = $this->cachePool();
         if ($cachePool) {
-            $cacheItem = $cachePool->getItem('metadata', $this->ident());
+            $cacheItem = $cachePool->getItem('metadata', $ident);
 
             $metadata = $cacheItem->get();
             if ($cacheItem->isMiss()) {
@@ -102,6 +140,7 @@ class MetadataLoader extends FileLoader
         $metadata = [];
         foreach ($hierarchy as $id) {
             $identData = self::loadIdent($id);
+
             if (is_array($identData)) {
                 $metadata = array_replace_recursive($metadata, $identData);
             }
@@ -157,47 +196,14 @@ class MetadataLoader extends FileLoader
      */
     private function loadIdent($ident)
     {
-        $filename = $this->filenameFromIdent($ident);
+        $name = $this->filenameFromIdent($ident);
+        $file = $this->firstMatchingFilename($name);
 
-        $file_content = $this->loadFirstFromSearchPath($filename);
-        if ($file_content === null) {
-            return null;
+        if ($file) {
+            return $this->loadJsonFile($file);
         }
 
-        // Decode as an array (2nd parameter, true = array)
-        $fileData = json_decode($file_content, true);
-        $errCode = json_last_error();
-        if ($errCode == JSON_ERROR_NONE) {
-            return $fileData;
-        }
-
-        // Handle JSON error
-        switch ($errCode) {
-            case JSON_ERROR_NONE:
-                break;
-            case JSON_ERROR_DEPTH:
-                $errMsg = 'Maximum stack depth exceeded';
-                break;
-            case JSON_ERROR_STATE_MISMATCH:
-                $errMsg = 'Underflow or the modes mismatch';
-                break;
-            case JSON_ERROR_CTRL_CHAR:
-                $errMsg = 'Unexpected control character found';
-                break;
-            case JSON_ERROR_SYNTAX:
-                $errMsg = 'Syntax error, malformed JSON';
-                break;
-            case JSON_ERROR_UTF8:
-                $errMsg = 'Malformed UTF-8 characters, possibly incorrectly encoded';
-                break;
-            default:
-                $errMsg = 'Unknown error';
-                break;
-        }
-
-        throw new InvalidArgumentException(
-            sprintf('JSON %s could not be parsed: "%s"', $ident, $errMsg)
-        );
+        return null;
     }
 
     /**

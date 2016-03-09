@@ -2,138 +2,194 @@
 
 namespace Charcoal\Loader;
 
-// Dependencies from `PHP`
-use \InvalidArgumentException as InvalidArgumentException;
+use \InvalidArgumentException;
+
+// Dependencies from PSR-3 (Logger)
+use \Psr\Log\LoggerAwareInterface;
+use \Psr\Log\LoggerAwareTrait;
+use \Psr\Log\NullLogger;
+
+// Local Dependency
+use \Charcoal\Loader\LoaderInterface;
 
 /**
-*
-*/
-class FileLoader
+ * Base File Loader
+ */
+class FileLoader implements
+    LoaderInterface,
+    LoggerAwareInterface
 {
-    /**
-    * @var array $searchPath
-    */
-    private $searchPath = [];
+    use LoggerAwareTrait;
 
     /**
-    * @var string $path
-    */
-    private $path;
+     * The base path to prepend to any relative paths to search in.
+     *
+     * @var string $basePath
+     */
+    private $basePath = '';
 
     /**
-    * @var string $ident
-    */
+     * The paths to search in.
+     *
+     * @var string $paths
+     */
+    private $paths = [];
+
+    /**
+     * The loader's identifier (for caching found paths).
+     *
+     * @var string $ident
+     */
     private $ident;
 
     /**
-    * @param string $ident
-    * @throws InvalidArgumentException if the ident is not a string
-    * @return FileLoader Chainable
-    */
-    public function setIdent($ident)
+     * Return new FileLoader object.
+     *
+     * @param array $data The loader's dependencies.
+     */
+    public function __construct(array $data = null)
     {
-        if (!is_string($ident)) {
-            throw new InvalidArgumentException(
-                __CLASS__.'::'.__FUNCTION__.'() - Ident must be a string.'
-            );
+        if (isset($data['base_path'])) {
+            $this->setBasePath($data['base_path']);
         }
-        $this->ident = $ident;
-        return $this;
+
+        if (isset($data['paths'])) {
+            $this->addPaths($data['paths']);
+        }
+
+        if (!isset($data['logger'])) {
+            $data['logger'] = new NullLogger();
+        }
+
+        $this->setLogger($data['logger']);
     }
 
     /**
-    * @return string
-    */
+     * Retrieve the loader's identifier.
+     *
+     * @return string
+     */
     public function ident()
     {
         return $this->ident;
     }
 
     /**
-    * @param string $path
-    * @throws InvalidArgumentException
-    * @return FileLoader Chainable
-    */
-    public function setPath($path)
+     * Set the loader's identifier.
+     *
+     * @param  mixed $ident A subset of language identifiers.
+     * @throws InvalidArgumentException If the ident is invalid.
+     * @return self
+     */
+    public function setIdent($ident)
     {
-        if (!is_string($path)) {
-            throw new InvalidArgumentException('setPath() expects a string.');
+        if (!is_string($ident)) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    '%1$s::%2$s() — Identifier must be a string.',
+                    __CLASS__,
+                    __FUNCTION__
+                )
+            );
         }
-        $this->path = $path;
+
+        $this->ident = $ident;
+
         return $this;
     }
 
     /**
-    * @return string
-    */
-    public function path()
+     * Retrieve the base path for relative search paths.
+     *
+     * @return string
+     */
+    public function basePath()
     {
-        if (!$this->path) {
-            return '';
-        }
-        return $this->path;
+        return $this->basePath;
     }
 
     /**
-    * Returns the content of the first file found in search path
-    *
-    * @param string|null $ident
-    * @return string File content
-    */
+     * Assign a base path for relative search paths.
+     *
+     * @param  string $basePath The base path to use.
+     * @throws InvalidArgumentException if the base path parameter is not a string.
+     * @return self
+     */
+    public function setBasePath($basePath)
+    {
+        if (!is_string($basePath)) {
+            throw new InvalidArgumentException(
+                'Base path must be a string'
+            );
+        }
+
+        $basePath = realpath($basePath);
+
+        $this->basePath = rtrim($basePath, '/\\').DIRECTORY_SEPARATOR;
+
+        return $this;
+    }
+
+    /**
+     * Returns the content of the first file found in search path.
+     *
+     * @param  string|null $ident Optional. A file to search for.
+     * @return string The file's content or an empty string.
+     */
     public function load($ident = null)
     {
         if ($ident === null) {
             return '';
         }
 
-        $filename = $this->firstMatchingFilename($ident);
-        if ($filename) {
-            $file_content = file_get_contents($filename);
-            $this->set_content($file_content);
-            return $file_content;
+        $fileContent = $this->loadFirstFromSearchPath($ident);
+
+        if ($fileContent) {
+            return $fileContent;
         }
 
         return '';
     }
 
     /**
-    * @param string $filename
-    * @return string|null The file content, or null if no file found.
-    */
+     * Load the first match from search paths.
+     *
+     * @param  string $filename A file to search for.
+     * @return string|null The matched file's content or an empty string.
+     */
     protected function loadFirstFromSearchPath($filename)
     {
-        $searchPath = $this->searchPath();
-        if (empty($searchPath)) {
-            return null;
-        }
-        foreach ($searchPath as $path) {
-            $f = $path.DIRECTORY_SEPARATOR.$filename;
-            if (file_exists($f)) {
-                $fileContent = file_get_contents($f);
-                return $fileContent;
-            }
+        $file = $this->firstMatchingFilename($filename);
+
+        if ($file) {
+            return file_get_contents($file);
         }
 
         return null;
     }
 
     /**
-    * @param string $filename
-    * @return string
-    */
+     * Retrieve the first match from search paths.
+     *
+     * @param  string $filename A file to search for.
+     * @return string The full path to the matched file.
+     */
     protected function firstMatchingFilename($filename)
     {
         if (file_exists($filename)) {
             return $filename;
         }
-        $searchPath = $this->searchPath();
-        if (empty($searchPath)) {
+
+        $paths = $this->paths();
+
+        if (empty($paths)) {
             return null;
         }
-        foreach ($searchPath as $path) {
-            $f = $path.DIRECTORY_SEPARATOR.$filename;
-            if (file_exists($f)) {
-                return $f;
+
+        foreach ($paths as $path) {
+            $file = $path.DIRECTORY_SEPARATOR.$filename;
+            if (file_exists($file)) {
+                return $file;
             }
         }
 
@@ -141,64 +197,191 @@ class FileLoader
     }
 
     /**
-    * @param string $filename
-    * @return array
-    */
+     * Retrieve all matches from search paths.
+     *
+     * @param  string $filename A file to search for.
+     * @return array An array of matches.
+     */
     protected function allMatchingFilenames($filename)
     {
-        $ret = [];
+        $matches = [];
+
         if (file_exists($filename)) {
-            $ret[] = $filename;
+            $matches[] = $filename;
         }
 
-        $searchPath = $this->searchPath();
-        if (empty($searchPath)) {
-            return $ret;
+        $paths = $this->paths();
+
+        if (empty($paths)) {
+            return $matches;
         }
-        foreach ($searchPath as $path) {
-            $f = $path.DIRECTORY_SEPARATOR.$filename;
-            if (file_exists($f)) {
-                $ret[] = $f;
+
+        foreach ($paths as $path) {
+            $file = $path.DIRECTORY_SEPARATOR.$filename;
+            if (file_exists($file)) {
+                $matches[] = $file;
             }
         }
 
-        return $ret;
+        return $matches;
+    }
+    /**
+     * Load the contents of a JSON file.
+     *
+     * @param  mixed $filename The file path to retrieve.
+     * @throws InvalidArgumentException If a JSON decoding error occurs.
+     * @return array|null
+     */
+    protected function loadJsonFile($filename)
+    {
+        $content = file_get_contents($filename);
+
+        if ($content === null) {
+            return null;
+        }
+
+        $data  = json_decode($content, true);
+        $error = json_last_error();
+
+        if ($error == JSON_ERROR_NONE) {
+            return $data;
+        }
+
+        switch ($error) {
+            case JSON_ERROR_NONE:
+                break;
+            case JSON_ERROR_DEPTH:
+                $issue = 'Maximum stack depth exceeded';
+                break;
+            case JSON_ERROR_STATE_MISMATCH:
+                $issue = 'Underflow or the modes mismatch';
+                break;
+            case JSON_ERROR_CTRL_CHAR:
+                $issue = 'Unexpected control character found';
+                break;
+            case JSON_ERROR_SYNTAX:
+                $issue = 'Syntax error, malformed JSON';
+                break;
+            case JSON_ERROR_UTF8:
+                $issue = 'Malformed UTF-8 characters, possibly incorrectly encoded';
+                break;
+            default:
+                $issue = 'Unknown error';
+                break;
+        }
+
+        throw new InvalidArgumentException(
+            sprintf('JSON %s could not be parsed: "%s"', $filename, $issue)
+        );
     }
 
     /**
-    * @param string $path
-    * @throws InvalidArgumentException if the path does not exist or is invalid
-    * @return \Charcoal\Service\Loader\Metadata (Chainable)
-    */
-    public function addPath($path)
+     * Retrieve the searchable paths.
+     *
+     * @return string[]
+     */
+    public function paths()
     {
-        if (!is_string($path)) {
-            throw new InvalidArgumentException(
-                'Path should be a string.'
-            );
-        }
-        if (!file_exists($path)) {
-            throw new InvalidArgumentException(
-                sprintf('Path does not exist: "%s"', $path)
-            );
-        }
-        if (!is_dir($path)) {
-            throw new InvalidArgumentException(
-                sprintf('Path is not a directory: "%s"', $path)
-            );
-        }
+        return $this->paths;
+    }
 
-        $this->searchPath[] = $path;
+    /**
+     * Assign a list of paths.
+     *
+     * @param  string[] $paths The list of paths to add.
+     * @return self
+     */
+    public function setPaths(array $paths)
+    {
+        $this->paths = [];
+        $this->addPaths($paths);
 
         return $this;
     }
 
     /**
-    * Get the object's search path, merged with global configuration path
-    * @return array
-    */
-    public function searchPath()
+     * Append a list of paths.
+     *
+     * @param  string[] $paths The list of paths to add.
+     * @return self
+     */
+    public function addPaths(array $paths)
     {
-        return $this->searchPath;
+        foreach ($paths as $path) {
+            $this->addPath($path);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Append a path.
+     *
+     * @param  string $path A file or directory path.
+     * @throws InvalidArgumentException if the path does not exist or is invalid
+     * @return self
+     */
+    public function addPath($path)
+    {
+        $path = $this->resolvePath($path);
+
+        if ($this->validatePath($path)) {
+            $this->paths[] = $path;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Prepend a path.
+     *
+     * @param  string $path A file or directory path.
+     * @return self
+     */
+    public function prependPath($path)
+    {
+        $path = $this->resolvePath($path);
+
+        if ($this->validatePath($path)) {
+            array_unshift($this->paths, $path);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Parse a relative path using the base path if needed.
+     *
+     * @param  string $path The path to resolve.
+     * @throws InvalidArgumentException If the path is invalid.
+     * @return string
+     */
+    public function resolvePath($path)
+    {
+        if (!is_string($path)) {
+            throw new InvalidArgumentException(
+                'Path needs to be a string'
+            );
+        }
+
+        $basePath = $this->basePath();
+        $path = ltrim($path, '/\\');
+
+        if ($basePath && strpos($path, $basePath) === false) {
+            $path = $basePath.$path;
+        }
+
+        return $path;
+    }
+
+    /**
+     * Validate a resolved path.
+     *
+     * @param  string $path The path to validate.
+     * @return string
+     */
+    public function validatePath($path)
+    {
+        return file_exists($path);
     }
 }
