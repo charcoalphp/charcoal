@@ -44,16 +44,16 @@ class MustacheLoader extends AbstractLoader implements
         }
 
         $filename = $this->filenameFromIdent($ident);
-        $search_path = $this->paths();
-        foreach ($search_path as $path) {
+        $searchPath = $this->paths();
+        foreach ($searchPath as $path) {
             $f = realpath($path).'/'.strtolower($filename);
             if (!file_exists($f)) {
                 continue;
             }
 
-            $file_content = file_get_contents($f);
-            if ($file_content !== '') {
-                return $file_content;
+            $fileContent = file_getContents($f);
+            if ($fileContent !== '') {
+                return $fileContent;
             }
         }
 
@@ -63,7 +63,7 @@ class MustacheLoader extends AbstractLoader implements
                 $ident,
                 $filename
             ),
-            $search_path
+            $searchPath
         );
 
         return $ident;
