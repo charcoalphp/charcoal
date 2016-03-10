@@ -73,7 +73,6 @@ class Model extends AbstractModel
     public function createSource($source_ident = null)
     {
         $metadata = $this->metadata();
-        // var_dump($metadata);
         if ($source_ident === null) {
             // Default source ident
             $source_ident = (isset($metadata['default_source']) ? $metadata['default_source'] : '');
