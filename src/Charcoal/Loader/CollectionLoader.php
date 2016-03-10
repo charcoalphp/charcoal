@@ -116,6 +116,7 @@ class CollectionLoader implements LoggerAwareInterface
      */
     public function setSource($source)
     {
+        $source->reset();
         $this->source = $source;
 
         return $this;
