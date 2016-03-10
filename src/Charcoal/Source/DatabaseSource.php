@@ -181,7 +181,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
             $fieldsSql[] = $field->sql();
         }
 
-        $engine = 'MYISAM';
+        $engine = 'InnoDB';
 
         $q = 'CREATE TABLE  `'.$this->table().'` ('."\n";
         $q .= implode(',', $fieldsSql);

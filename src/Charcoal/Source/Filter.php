@@ -88,10 +88,14 @@ class Filter implements FilterInterface
     public function setProperty($property)
     {
         if (!is_string($property)) {
-            throw new InvalidArgumentException('Property must be a string.');
+            throw new InvalidArgumentException(
+                'Property must be a string.'
+            );
         }
-        if ($property=='') {
-            throw new InvalidArgumentException('Property can not be empty.');
+        if ($property == '') {
+            throw new InvalidArgumentException(
+                'Property can not be empty.'
+            );
         }
 
         $this->property = $property;
@@ -238,7 +242,7 @@ class Filter implements FilterInterface
     */
     public function setActive($active)
     {
-        $this->active = $active;
+        $this->active = !!$active;
         return $this;
     }
 
@@ -247,7 +251,7 @@ class Filter implements FilterInterface
     */
     public function active()
     {
-        return !!$this->active;
+        return $this->active;
     }
 
 
