@@ -133,6 +133,13 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
                 )
             );
         }
+        // For security reason, only alphanumeric characters (+ underscores) are valid table names.
+        // Although SQL can support more, there's really no reason to.
+        if (!preg_match('/[A-Za-z0-9_]/', $table)) {
+            throw new InvalidArgumentException(
+                sprintf('Table name "%s" is invalid: must be alphanumeric / underscore.', $table)
+            );
+        }
         $this->table = $table;
 
         return $this;
@@ -147,7 +154,9 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     public function table()
     {
         if ($this->table === null) {
-            throw new Exception('Table was not set.');
+            throw new Exception(
+                'Table was not set.'
+            );
         }
         return $this->table;
     }
@@ -172,6 +181,8 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
             $fieldsSql[] = $field->sql();
         }
 
+        $engine = 'MYISAM';
+
         $q = 'CREATE TABLE  `'.$this->table().'` ('."\n";
         $q .= implode(',', $fieldsSql);
         $key = $model->key();
@@ -179,7 +190,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
             $q .= ', PRIMARY KEY (`'.$key.'`) '."\n";
         }
         /** @todo add indexes for all defined list constraints (yea... tough job...) */
-        $q .= ') ENGINE=MYISAM DEFAULT CHARSET=utf8 COMMENT=\''.addslashes($metadata['name']).'\';';
+        $q .= ') ENGINE='.$engine.' DEFAULT CHARSET=utf8 COMMENT=\''.addslashes($metadata['name']).'\';';
         $this->logger->debug($q);
         $this->db()->query($q);
 
