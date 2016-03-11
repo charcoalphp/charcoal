@@ -162,8 +162,8 @@ class ImagickImageTest extends \PHPUnit_Framework_Testcase
             [['type'=>'sharpen'], 'imagick-sharpen-default.png'],
             [['type'=>'sharpen', 'radius'=>5, 'sigma'=>15], 'imagick-sharpen-strong.png'],
             [['type'=>'threshold'], 'imagick-threshold-default.png'],
-            [['type'=>'tint', 'color'=>'rgb(100%,0,0)'], 'imagick-tint-red.png'],
-            [['type'=>'tint', 'color'=>'rgb(100%,0,0)', 'midtone'=>false], 'imagick-tint-red-colorize.png'],
+            [['type'=>'tint', 'color'=>'rgb(255,0,0)'], 'imagick-tint-red.png'],
+            [['type'=>'tint', 'color'=>'rgb(255,0,0)', 'midtone'=>false], 'imagick-tint-red-colorize.png'],
             // Watermarkk
             [['type'=>'watermark', 'watermark'=>EXAMPLES_DIR.'/watermark.png'], 'imagick-watermark-default.png']
         ];

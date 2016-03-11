@@ -141,8 +141,8 @@ class ImagemagickImageTest extends \PHPUnit_Framework_Testcase
             [['type'=>'sharpen'], 'imagemagick-sharpen-default.png'],
             [['type'=>'sharpen', 'radius'=>5, 'sigma'=>15], 'imagemagick-sharpen-strong.png'],
             [['type'=>'threshold'], 'imagemagick-threshold-default.png'],
-            [['type'=>'tint', 'color'=>'rgb(100%,0,0)'], 'imagemagick-tint-red.png'],
-            [['type'=>'tint', 'color'=>'rgb(100%,0,0)', 'midtone'=>false], 'imagemagick-tint-red-colorize.png'],
+            [['type'=>'tint', 'color'=>'rgb(255,0,0)'], 'imagemagick-tint-red.png'],
+            [['type'=>'tint', 'color'=>'rgb(255,0,0)', 'midtone'=>false], 'imagemagick-tint-red-colorize.png'],
             //[['type'=>'watermark', 'watermark'=>EXAMPLES_DIR.'/watermark.png'], 'imagemagick-watermark-default.png']
         ];
     }
