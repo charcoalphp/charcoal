@@ -2,7 +2,6 @@
 
 namespace Charcoal\Image\Imagick\Effect;
 
-use \Exception;
 use \Imagick;
 
 use \Charcoal\Image\Effect\AbstractWatermarkEffect;
@@ -15,6 +14,7 @@ class ImagickWatermarkEffect extends AbstractWatermarkEffect
 {
     /**
      * @param array $data The effect data, if available.
+     * @throws Exception If the image data is invalid.
      * @return ImagickWatermarkEffect Chainable
      */
     public function process(array $data = null)
@@ -75,6 +75,10 @@ class ImagickWatermarkEffect extends AbstractWatermarkEffect
         } elseif ($gravity == 'se') {
             $x = ($imageWidth - $watermarkWidth - $this->x());
             $y = ($imageHeight - $watermarkHeight - $this->y());
+        } else {
+            throw new Exception(
+                'Invalid gravity'
+            );
         }
 
         $x = max(0, $x);

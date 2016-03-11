@@ -26,7 +26,6 @@ abstract class AbstractSepiaEffect extends AbstractEffect
     public function setThreshold($threshold)
     {
         $max = 255;
-// @todo: QuantumRange
         if (!is_numeric($threshold) || ($threshold < 0) || ($threshold > $max)) {
             throw new InvalidArgumentException(
                 sprintf('Threshold must be a number between 0 and %s', $max)

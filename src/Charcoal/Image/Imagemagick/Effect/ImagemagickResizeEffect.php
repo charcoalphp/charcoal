@@ -12,16 +12,13 @@ use \Charcoal\Image\Effect\AbstractResizeEffect;
 class ImagemagickResizeEffect extends AbstractResizeEffect
 {
     /**
-     * @param array $data The effect data, if available.
-     * @throws Exception This effect is not yet available for Imagemagick driver.
+     * @param integer $width   The target width.
+     * @param integer $height  The target height.
+     * @param boolean $bestFit The "best_fit" flag.
      * @return void
      */
-    public function process(array $data = null)
+    protected function doResize($width, $height, $bestFit = false)
     {
-        if ($data !== null) {
-            $this->setData($data);
-        }
-
         throw new Exception(
             'Resize Effect not valid'
         );

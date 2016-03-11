@@ -16,7 +16,7 @@ class ImagemagickRevertEffect extends AbstractRevertEffect
     public function process(array $data = null)
     {
         if ($data !== null) {
-            $this->set_data($data);
+            $this->setData($data);
         }
 
         $channel = $this->image()->convertChannel($this->channel());

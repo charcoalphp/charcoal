@@ -171,7 +171,7 @@ abstract class AbstractBlurEffect extends AbstractEffect
     public function process(array $data = null)
     {
         if ($data !== null) {
-            $this->set_data($data);
+            $this->setData($data);
         }
 
         $mode = $this->mode();

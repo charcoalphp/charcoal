@@ -43,7 +43,7 @@ abstract class AbstractImage implements ImageInterface
      *
      * @param string $fxType The effect type.
      * @param array  $data   The effect options.
-     * @return Image Chainable
+     * @return ImageInterface Chainable
      */
     public function __call($fxType, array $data)
     {
@@ -76,7 +76,7 @@ abstract class AbstractImage implements ImageInterface
 
     /**
      * @param array $data The image data (source, target and effects).
-     * @return Image Chainable
+     * @return ImageInterface Chainable
      */
     public function setData(array $data)
     {
@@ -95,7 +95,7 @@ abstract class AbstractImage implements ImageInterface
     /**
      * @param string $source The image source.
      * @throws InvalidArgumentException If the source argument is not a string.
-     * @return Image Chainable
+     * @return ImageInterface Chainable
      */
     public function setSource($source)
     {
@@ -119,7 +119,7 @@ abstract class AbstractImage implements ImageInterface
     /**
      * @param string $target The image target.
      * @throws InvalidArgumentException If the target argument is not a string.
-     * @return Image Chainable
+     * @return ImageInterface Chainable
      */
     public function setTarget($target)
     {
@@ -142,7 +142,7 @@ abstract class AbstractImage implements ImageInterface
 
     /**
      * @param array $effects The effects to apply.
-     * @return Image Chainable
+     * @return ImageInterface Chainable
      */
     public function setEffects(array $effects)
     {
@@ -163,7 +163,7 @@ abstract class AbstractImage implements ImageInterface
 
     /**
      * @param array|EffectInterface $effect The effect to add.
-     * @return Image Chainable
+     * @return ImageInterface Chainable
      */
     public function addEffect($effect)
     {
@@ -174,7 +174,7 @@ abstract class AbstractImage implements ImageInterface
 
     /**
      * @param array $effects Optional. The effects to process. If null, use in-memory's.
-     * @return Image Chainable
+     * @return ImageInterface Chainable
      */
     public function process(array $effects = null)
     {
@@ -191,7 +191,7 @@ abstract class AbstractImage implements ImageInterface
 
     /**
      * @param array|EffectInterface $effect The effect to process.
-     * @return Image Chainable
+     * @return ImageInterface Chainable
      */
     public function processEffect($effect)
     {
@@ -206,7 +206,7 @@ abstract class AbstractImage implements ImageInterface
      * @param integer $width  Image width, in pixels.
      * @param integer $height Image height, in pixels.
      * @param string  $color  Default to transparent.
-     * @return Image Chainable
+     * @return ImageInterface Chainable
      */
     abstract public function create($width, $height, $color = 'rgb(100%, 100%, 100%, 0)');
 
@@ -214,7 +214,7 @@ abstract class AbstractImage implements ImageInterface
      * Open an image file
      *
      * @param string $source The source path / filename.
-     * @return Image Chainable
+     * @return ImageInterface Chainable
      */
     abstract public function open($source = null);
 
@@ -223,7 +223,7 @@ abstract class AbstractImage implements ImageInterface
      * If no target is set, the original source will be owerwritten
      *
      * @param string $target The target path / filename.
-     * @return Image Chainable
+     * @return ImageInterface Chainable
      */
     abstract public function save($target = null);
 
