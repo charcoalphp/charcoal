@@ -84,15 +84,21 @@ trait IndexableTrait
     */
     public function setKey($key)
     {
-        if (!is_scalar($key)) {
+        if (!is_string($key)) {
             throw new InvalidArgumentException(
                 sprintf(
-                    'ID must be a scalar (integer, float, string, or boolean); received %s',
+                    'Key must be a string; received %s',
                     (is_object($key) ? get_class($key) : gettype($key))
                 )
             );
         }
-
+        // For security reason, only alphanumeric characters (+ underscores) are valid key names.
+        // Although SQL can support more, there's really no reason to.
+        if (!preg_match('/[A-Za-z0-9_]/', $key)) {
+            throw new InvalidArgumentException(
+                sprintf('Key "%s" is invalid: must be alphanumeric / underscore.', $key)
+            );
+        }
         $this->key = $key;
 
         return $this;

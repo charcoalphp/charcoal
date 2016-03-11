@@ -409,7 +409,7 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-    * Convert the current class name in
+    * Convert the current class name in "type-ident" format.
     *
     * @return string
     */
