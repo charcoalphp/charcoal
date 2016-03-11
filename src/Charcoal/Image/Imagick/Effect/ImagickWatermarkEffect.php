@@ -2,6 +2,7 @@
 
 namespace Charcoal\Image\Imagick\Effect;
 
+use \Exception;
 use \Imagick;
 
 use \Charcoal\Image\Effect\AbstractWatermarkEffect;

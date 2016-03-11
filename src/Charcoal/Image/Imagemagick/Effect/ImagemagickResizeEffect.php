@@ -15,6 +15,7 @@ class ImagemagickResizeEffect extends AbstractResizeEffect
      * @param integer $width   The target width.
      * @param integer $height  The target height.
      * @param boolean $bestFit The "best_fit" flag.
+     * @throws Exception This effect is not yet supported with the imagemagick driver.
      * @return void
      */
     protected function doResize($width, $height, $bestFit = false)
