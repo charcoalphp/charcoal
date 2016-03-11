@@ -265,6 +265,7 @@ class Email implements
      * Add a recipient email address.
      *
      * @param  mixed $email The recipient email address to add.
+     * @throws InvalidArgumentException If the email address is invalid.
      * @return EmailInterface Chainable
      */
     public function addTo($email)
@@ -330,6 +331,7 @@ class Email implements
      * Add a CC recipient email address.
      *
      * @param mixed $email The CC recipient email address to add.
+     * @throws InvalidArgumentException If the email address is invalid.
      * @return EmailInterface Chainable
      */
     public function addCc($email)
@@ -396,6 +398,7 @@ class Email implements
      * Add a BCC recipient email address.
      *
      * @param mixed $email The BCC recipient email address to add.
+     * @throws InvalidArgumentException If the email address is invalid.
      * @return EmailInterface Chainable
      */
     public function addBcc($email)

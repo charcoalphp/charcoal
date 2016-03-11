@@ -359,7 +359,6 @@ class EmailQueueItem extends AbstractModel implements
             }
 
             return $res;
-
         } catch (Exception $e) {
             // Todo log error
             if ($failureCallback !== null) {
