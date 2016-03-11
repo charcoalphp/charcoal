@@ -10,7 +10,7 @@ class AbstractSepiaEffectTest extends \PHPUnit_Framework_Testcase
     {
         $img = $this->getMockForAbstractClass('\Charcoal\Image\AbstractImage');
         $this->obj = $this->getMockForAbstractClass('\Charcoal\Image\Effect\AbstractSepiaEffect');
-        $this->obj->set_image($img);
+        $this->obj->setImage($img);
     }
 
     public function testDefaults()
@@ -23,7 +23,7 @@ class AbstractSepiaEffectTest extends \PHPUnit_Framework_Testcase
     public function testSetData()
     {
         $obj = $this->obj;
-        $ret = $obj->set_data(
+        $ret = $obj->setData(
             [
             'threshold'=>100
             ]
@@ -37,24 +37,24 @@ class AbstractSepiaEffectTest extends \PHPUnit_Framework_Testcase
     {
         $obj = $this->obj;
 
-        $ret = $obj->set_threshold(42);
+        $ret = $obj->setThreshold(42);
         $this->assertSame($ret, $obj);
         $this->assertEquals(42, $obj->threshold());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_threshold('foobar');
+        $obj->setThreshold('foobar');
     }
 
     public function testSetThresholdMinException()
     {
         $this->setExpectedException('\InvalidArgumentException');
         $obj = $this->obj;
-        $obj->set_threshold(-1);
+        $obj->setThreshold(-1);
     }
     public function testSetThresholdMaxException()
     {
         $this->setExpectedException('\InvalidArgumentException');
         $obj = $this->obj;
-        $obj->set_threshold(256);
+        $obj->setThreshold(256);
     }
 }

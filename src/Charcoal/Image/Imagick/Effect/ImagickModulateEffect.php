@@ -4,16 +4,19 @@ namespace Charcoal\Image\Imagick\Effect;
 
 use \Charcoal\Image\Effect\AbstractModulateEffect;
 
+/**
+ * Module Effect for the Imagick driver.
+ */
 class ImagickModulateEffect extends AbstractModulateEffect
 {
     /**
-    * @param array $data
-    * @return AbstractModulateEffect Chainable
-    */
+     * @param array $data The effect data, if available.
+     * @return AbstractModulateEffect Chainable
+     */
     public function process(array $data = null)
     {
         if ($data !== null) {
-            $this->set_data($data);
+            $this->setData($data);
         }
 
         $h = ($this->hue() + 100);

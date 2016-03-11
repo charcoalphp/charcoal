@@ -4,16 +4,19 @@ namespace Charcoal\Image\Imagick\Effect;
 
 use \Charcoal\Image\Effect\AbstractMirrorEffect;
 
+/**
+ * Mirror Effect for the Imagick driver.
+ */
 class ImagickMirrorEffect extends AbstractMirrorEffect
 {
     /**
-    * @param array $data
-    * @return ImagickBlurEffect Chainable
-    */
+     * @param array $data The effect data, if available.
+     * @return ImagickBlurEffect Chainable
+     */
     public function process(array $data = null)
     {
         if ($data !== null) {
-            $this->set_data($data);
+            $this->setData($data);
         }
 
         $axis = $this->axis();

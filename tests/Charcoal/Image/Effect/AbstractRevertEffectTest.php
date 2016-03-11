@@ -10,7 +10,7 @@ class AbstractRevertEffectTest extends \PHPUnit_Framework_Testcase
     {
         $img = $this->getMockForAbstractClass('\Charcoal\Image\AbstractImage');
         $this->obj = $this->getMockForAbstractClass('\Charcoal\Image\Effect\AbstractRevertEffect');
-        $this->obj->set_image($img);
+        $this->obj->setImage($img);
     }
 
     public function testDefaults()
@@ -23,7 +23,7 @@ class AbstractRevertEffectTest extends \PHPUnit_Framework_Testcase
     public function testSetData()
     {
         $obj = $this->obj;
-        $ret = $obj->set_data(
+        $ret = $obj->setData(
             [
             'channel'=>'green'
             ]
@@ -36,11 +36,11 @@ class AbstractRevertEffectTest extends \PHPUnit_Framework_Testcase
     public function testSetChannel()
     {
         $obj = $this->obj;
-        $ret = $obj->set_channel('gray');
+        $ret = $obj->setChannel('gray');
         $this->assertSame($ret, $obj);
         $this->assertEquals('gray', $obj->channel());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_channel('foobar');
+        $obj->setChannel('foobar');
     }
 }

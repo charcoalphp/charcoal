@@ -8,7 +8,7 @@ class AbstractImageTest extends \PHPUnit_Framework_Testcase
     public function testSetData()
     {
         $obj = $this->getMockForAbstractClass('\Charcoal\Image\AbstractImage');
-        $ret = $obj->set_data(
+        $ret = $obj->setData(
             [
             'source'=>__DIR__.'/test.png',
             'target'=>'/tmp/phpunit.png',
@@ -26,22 +26,22 @@ class AbstractImageTest extends \PHPUnit_Framework_Testcase
     public function testSetSource()
     {
         $obj = $this->getMockForAbstractClass('\Charcoal\Image\AbstractImage');
-        $ret = $obj->set_source('test.png');
+        $ret = $obj->setSource('test.png');
         $this->assertSame($ret, $obj);
         $this->assertEquals('test.png', $obj->source());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_source(false);
+        $obj->setSource(false);
     }
 
     public function testSetTarget()
     {
         $obj = $this->getMockForAbstractClass('\Charcoal\Image\AbstractImage');
-        $ret = $obj->set_target('test.png');
+        $ret = $obj->setTarget('test.png');
         $this->assertSame($ret, $obj);
         $this->assertEquals('test.png', $obj->target());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_target(false);
+        $obj->setTarget(false);
     }
 }

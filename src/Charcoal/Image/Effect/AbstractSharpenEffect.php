@@ -7,50 +7,50 @@ use \InvalidArgumentException;
 use \Charcoal\Image\AbstractEffect;
 
 /**
-* Sharpen an image, with a simple sharpen algorithm or unsharp mask options
-*/
+ * Sharpen an image, with a simple sharpen algorithm or unsharp mask options
+ */
 abstract class AbstractSharpenEffect extends AbstractEffect
 {
 
     /**
-    * @var float $radius
-    */
+     * @var float $radius
+     */
     private $radius = 0;
 
     /**
-    * @var float $sigma
-    */
+     * @var float $sigma
+     */
     private $sigma = 1;
 
     /**
-    * Amount (or _gain_) to unsharp. Only used in `unsharp` mode
-    * @var float $amount
-    */
+     * Amount (or _gain_) to unsharp. Only used in `unsharp` mode
+     * @var float $amount
+     */
     private $amount = 1;
 
     /**
-    * Threshold. Ony used in `unsharp` mode
-    * @var float $threshold
-    */
+     * Threshold. Ony used in `unsharp` mode
+     * @var float $threshold
+     */
     private $threshold = 0.05;
 
     /**
-    * @var string $mode
-    */
+     * @var string $mode
+     */
     private $mode = 'standard';
 
     /**
-    * @var string $channel
-    */
+     * @var string $channel
+     */
     private $channel = 'all';
 
 
     /**
-    * @param float $radius
-    * @throws InvalidArgumentException
-    * @return Blur Chainable
-    */
-    public function set_radius($radius)
+     * @param float $radius The sharpen radius value.
+     * @throws InvalidArgumentException If the radius argument is not numeric or lower than 0.
+     * @return AbstractSharpenEffect
+     */
+    public function setRadius($radius)
     {
         if (!is_numeric($radius) || ($radius < 0)) {
             throw new InvalidArgumentException(
@@ -62,19 +62,19 @@ abstract class AbstractSharpenEffect extends AbstractEffect
     }
 
     /**
-    * @return float
-    */
+     * @return float
+     */
     public function radius()
     {
         return $this->radius;
     }
 
     /**
-    * @param float $sigma
-    * @throws InvalidArgumentException
-    * @return Blur Chainable
-    */
-    public function set_sigma($sigma)
+     * @param float $sigma The sharpen sigma value.
+     * @throws InvalidArgumentException If the ssigma value is not numeric or lower than 0.
+     * @return AbstractSharpenEffect
+     */
+    public function setSigma($sigma)
     {
         if (!is_numeric($sigma) || ($sigma < 0)) {
             throw new InvalidArgumentException(
@@ -86,19 +86,19 @@ abstract class AbstractSharpenEffect extends AbstractEffect
     }
 
     /**
-    * @return float
-    */
+     * @return float
+     */
     public function sigma()
     {
         return $this->sigma;
     }
 
     /**
-    * @param float $amount
-    * @throws InvalidArgumentException
-    * @return AbstractThresholdEffect Chainable
-    */
-    public function set_amount($amount)
+     * @param float $amount The sharpen amount.
+     * @throws InvalidArgumentException If the amount argument is not numeric or lower than 0.
+     * @return AbstractSharpenEffect Chainable
+     */
+    public function setAmount($amount)
     {
         if (!is_numeric($amount) || ($amount < 0)) {
             throw new InvalidArgumentException(
@@ -110,19 +110,19 @@ abstract class AbstractSharpenEffect extends AbstractEffect
     }
 
     /**
-    * @return float
-    */
+     * @return float
+     */
     public function amount()
     {
         return $this->amount;
     }
-    
+
     /**
-    * @param float $threshold
-    * @throws InvalidArgumentException
-    * @return AbstractThresholdEffect Chainable
-    */
-    public function set_threshold($threshold)
+     * @param float $threshold The sharpen threshold value.
+     * @throws InvalidArgumentException If the threshold argumnet is not numeric or lower than 0.
+     * @return AbstractSharpenEffect Chainable
+     */
+    public function setThreshold($threshold)
     {
         if (!is_numeric($threshold) || ($threshold < 0)) {
             throw new InvalidArgumentException(
@@ -134,22 +134,22 @@ abstract class AbstractSharpenEffect extends AbstractEffect
     }
 
     /**
-    * @return float
-    */
+     * @return float
+     */
     public function threshold()
     {
         return $this->threshold;
     }
 
     /**
-    * @param string $mode
-    * @throws InvalidArgumentException
-    * @return Blur Chainable
-    */
-    public function set_mode($mode)
+     * @param string $mode The sharpen mode.
+     * @throws InvalidArgumentException If the mode argument is not a valid sharpen mode.
+     * @return AbstractSharpenEffect Chainable
+     */
+    public function setMode($mode)
     {
-        $allowed_modes = ['standard', 'adaptive', 'unsharp'];
-        if (!in_array($mode, $allowed_modes)) {
+        $allowedModes = ['standard', 'adaptive', 'unsharp'];
+        if (!in_array($mode, $allowedModes)) {
             throw new InvalidArgumentException(
                 sprintf('Mode %s is not an allowed blur mode', $mode)
             );
@@ -159,21 +159,21 @@ abstract class AbstractSharpenEffect extends AbstractEffect
     }
 
     /**
-    * @return string
-    */
+     * @return string
+     */
     public function mode()
     {
         return $this->mode;
     }
 
     /**
-    * @param string $channel
-    * @throws InvalidArgumentException
-    * @return AbstractBlurEffect Chainable
-    */
-    public function set_channel($channel)
+     * @param string $channel The sharpen channel.
+     * @throws InvalidArgumentException If the channel argument is not a valid channel.
+     * @return AbstractBlurEffect Chainable
+     */
+    public function setChannel($channel)
     {
-        if (!in_array($channel, $this->image()->available_channels())) {
+        if (!in_array($channel, $this->image()->availableChannels())) {
             throw new InvalidArgumentException(
                 'Channel is not valid'
             );
@@ -183,8 +183,8 @@ abstract class AbstractSharpenEffect extends AbstractEffect
     }
 
     /**
-    * @return string
-    */
+     * @return string
+     */
     public function channel()
     {
         return $this->channel;
@@ -192,41 +192,41 @@ abstract class AbstractSharpenEffect extends AbstractEffect
 
 
     /**
-    * @param array $data
-    * @return AbstractSharpenEffect Chainable
-    */
+     * @param array $data The effect data, if available.
+     * @return AbstractSharpenEffect Chainable
+     */
     public function process(array $data = null)
     {
         if ($data !== null) {
-            $this->set_data($data);
+            $this->setData($data);
         }
 
         $mode = $this->mode();
         switch ($mode) {
             case 'adaptive':
-                return $this->process_adaptive();
+                return $this->processAdaptive();
 
             case 'unsharp':
-                return $this->process_unsharp();
+                return $this->processUnsharp();
 
             case 'standard':
             default:
-                return $this->process_standard();
+                return $this->processStandard();
         }
     }
 
     /**
-    * @return AbstractSharpenEffect Chainable
-    */
-    abstract public function process_adaptive();
+     * @return AbstractSharpenEffect Chainable
+     */
+    abstract public function processAdaptive();
 
     /**
-    * @return AbstractSharpenEffect Chainable
-    */
-    abstract public function process_unsharp();
+     * @return AbstractSharpenEffect Chainable
+     */
+    abstract public function processUnsharp();
 
     /**
-    * @return AbstractSharpenEffect Chainable
-    */
-    abstract public function process_standard();
+     * @return AbstractSharpenEffect Chainable
+     */
+    abstract public function processStandard();
 }

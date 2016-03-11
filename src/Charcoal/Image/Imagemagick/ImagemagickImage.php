@@ -8,82 +8,95 @@ use \InvalidArgumentException;
 use \Charcoal\Image\AbstractImage;
 
 /**
-*
-*/
+ * The Imagemagick image driver.
+ *
+ * Run from the binary imagemagick scripts.
+ * (`mogrify`, `convert` and `identify`)
+ */
 class ImagemagickImage extends AbstractImage
 {
 
     /**
-    * The temporary file location
-    * @var string $tmp_file
-    */
-    private $tmp_file;
-    private $mogrify_cmd;
-    private $convert_cmd;
-    private $identify_cmd;
+     * The temporary file location
+     * @var string $tmpFile
+     */
+    private $tmpFile;
 
     /**
-    * @throws Exception
-    */
+     * @var string $mogrifyCmd
+     */
+    private $mogrifyCmd;
+    /**
+     * @var string $convertCmd
+     */
+    private $convertCmd;
+    /**
+     * @var string $identifyCmd
+     */
+    private $identifyCmd;
+
+    /**
+     * Set up the commands.
+     */
     public function __construct()
     {
         // This will throw exception if the binaris are not found.
-        $this->mogrify_cmd = $this->mogrify_cmd();
-        $this->convert_cmd = $this->convert_cmd();
+        $this->mogrifyCmd = $this->mogrifyCmd();
+        $this->convertCmd = $this->convertCmd();
     }
 
     /**
-    * Clean up the tmp file, if necessary
-    */
+     * Clean up the tmp file, if necessary
+     */
     public function __destruct()
     {
-        $this->reset_tmp();
+        $this->resetTmp();
     }
 
     /**
-    * @return string
-    */
-    public function driver_type()
+     * @return string
+     */
+    public function driverType()
     {
         return 'imagemagick';
     }
 
     /**
-    * Create a blank canvas of a given size, with a given background color.
-    *
-    * @param integer $width  Image size, in pixels
-    * @param integer $height Image height, in pixels
-    * @param string  $color  Default to transparent.
-    * @throws InvalidArgumentException
-    * @return Image Chainable
-    */
+     * Create a blank canvas of a given size, with a given background color.
+     *
+     * @param integer $width  Image size, in pixels.
+     * @param integer $height Image height, in pixels.
+     * @param string  $color  Default to transparent.
+     * @throws InvalidArgumentException If the size arguments are not valid.
+     * @return Image Chainable
+     */
     public function create($width, $height, $color = 'rgb(100%, 100%, 100%, 0)')
     {
-        if (!is_int($width) || $width < 1) {
+        if (!is_numeric($width) || $width < 1) {
             throw new InvalidArgumentException(
                 'Width must be an integer of at least 1 pixel'
             );
         }
-        if (!is_int($height) || $height < 1) {
+        if (!is_numeric($height) || $height < 1) {
             throw new InvalidArgumentException(
                 'Height must be an integer of at least 1 pixel'
             );
         }
-        
-        $this->reset_tmp();
+
+        $this->resetTmp();
         touch($this->tmp());
-        $this->exec($this->convert_cmd().' -size '.$width.'x'.$height.' canvas:"'.$color.'" '.$this->tmp());
+        $this->exec($this->convertCmd().' -size '.(int)$width.'x'.(int)$height.' canvas:"'.$color.'" '.$this->tmp());
         return $this;
     }
 
     /**
-    * Open an image file
-    *
-    * @param string $source The source path / filename
-    * @throws Exception
-    * @throws InvalidArgumentException
-    * @return Image Chainable
-    */
+     * Open an image file
+     *
+     * @param string $source The source path / filename.
+     * @throws Exception If the source file does not exist.
+     * @throws InvalidArgumentException If the source argument is not a string.
+     * @return Image Chainable
+     */
     public function open($source = null)
     {
         if ($source !== null && !is_string($source)) {
@@ -92,7 +105,7 @@ class ImagemagickImage extends AbstractImage
             );
         }
         $source = ($source) ? $source : $this->source();
-        $this->reset_tmp();
+        $this->resetTmp();
         if (!file_exists($source)) {
             throw new Exception(
                 sprintf('File "%s" does not exist', $source)
@@ -104,14 +117,14 @@ class ImagemagickImage extends AbstractImage
     }
 
     /**
-    * Save an image to a target.
-    * If no target is set, the original source will be owerwritten
-    *
-    * @param string $target The target path / filename
-    * @throws Exception
-    * @throws InvalidArgumentException
-    * @return Image Chainable
-    */
+     * Save an image to a target.
+     * If no target is set, the original source will be owerwritten
+     *
+     * @param string $target The target path / filename.
+     * @throws Exception If the target file does not exist or is not writeable.
+     * @throws InvalidArgumentException If the target argument is not a string.
+     * @return Image Chainable
+     */
     public function save($target = null)
     {
         if ($target !== null && !is_string($target)) {
@@ -130,60 +143,59 @@ class ImagemagickImage extends AbstractImage
     }
 
     /**
-    * Get the image's width, in pixels
-    *
-    * @return integer
-    */
+     * Get the image's width, in pixels
+     *
+     * @return integer
+     */
     public function width()
     {
         if (!file_exists($this->tmp())) {
             return 0;
         }
-        $cmd = $this->identify_cmd().' -format "%w" '.$this->tmp();
-        return trim($this->exec($cmd));
+        $cmd = $this->identifyCmd().' -format "%w" '.$this->tmp();
+        return (int)trim($this->exec($cmd));
     }
 
     /**
-    * Get the image's height, in pixels
-    *
-    * @return integer
-    */
+     * Get the image's height, in pixels
+     *
+     * @return integer
+     */
     public function height()
     {
         if (!file_exists($this->tmp())) {
             return 0;
         }
-        $cmd = $this->identify_cmd().' -format "%h" '.$this->tmp();
-        return trim($this->exec($cmd));
+        $cmd = $this->identifyCmd().' -format "%h" '.$this->tmp();
+        return (int)trim($this->exec($cmd));
     }
 
     /**
-    * @param string $channel
-    * @return string
-    */
-    public function convert_channel($channel)
+     * @param string $channel The channel name to convert.
+     * @return string
+     */
+    public function convertChannel($channel)
     {
-
         return ucfirst($channel);
     }
 
     /**
-    * Try (as best as possible) to find a command name.
-    * - With `type -p`
-    * - Or else, with `where`
-    * - Or else, with `which`
-    *
-    * @param string $cmd_name
-    * @throws Exception
-    * @return string
-    */
-    protected function find_cmd($cmd_name)
+     * Try (as best as possible) to find a command name.
+     * - With `type -p`
+     * - Or else, with `where`
+     * - Or else, with `which`
+     *
+     * @param string $cmdName The command name to find.
+     * @throws Exception If the command can not be found.
+     * @return string
+     */
+    protected function findCmd($cmdName)
     {
-        $cmd = exec('type -p '.$cmd_name);
-        $cmd = str_replace($cmd_name.' is ', '', $cmd);
-        
+        $cmd = exec('type -p '.$cmdName);
+        $cmd = str_replace($cmdName.' is ', '', $cmd);
+
         if (!$cmd) {
-            $cmd = exec('where '.$cmd_name);
+            $cmd = exec('where '.$cmdName);
         }
 
         if (!$cmd) {
@@ -192,88 +204,87 @@ class ImagemagickImage extends AbstractImage
 
         if (!$cmd) {
             throw new Exception(
-                sprintf('Can not find imagemagick\'s "%s" command.', $cmd_name)
+                sprintf('Can not find imagemagick\'s "%s" command.', $cmdName)
             );
         }
-        
+
         return $cmd;
     }
 
     /**
-    * @throws Exception
-    * @return string
-    */
-    public function mogrify_cmd()
+     * @return string The full path of the mogrify command.
+     */
+    public function mogrifyCmd()
     {
-        if ($this->mogrify_cmd !== null) {
-            return $this->mogrify_cmd;
+        if ($this->mogrifyCmd !== null) {
+            return $this->mogrifyCmd;
         }
-        $this->mogrify_cmd = $this->find_cmd('mogrify');
-        return $this->mogrify_cmd;
+        $this->mogrifyCmd = $this->findCmd('mogrify');
+        return $this->mogrifyCmd;
     }
 
     /**
-    * @throws Exception
-    * @return string
-    */
-    public function convert_cmd()
+     * @return string The full path of the convert command.
+     */
+    public function convertCmd()
     {
-        if ($this->convert_cmd !== null) {
-            return $this->convert_cmd;
+        if ($this->convertCmd !== null) {
+            return $this->convertCmd;
         }
-        $this->convert_cmd = $this->find_cmd('convert');
-        return $this->convert_cmd;
+        $this->convertCmd = $this->findCmd('convert');
+        return $this->convertCmd;
     }
 
     /**
-    * @throws Exception
-    * @return string
-    */
-    public function identify_cmd()
+     * @return string The full path of the identify comand.
+     */
+    public function identifyCmd()
     {
-        if ($this->identify_cmd !== null) {
-            return $this->identify_cmd;
+        if ($this->identifyCmd !== null) {
+            return $this->identifyCmd;
         }
-        $this->identify_cmd = $this->find_cmd('identify');
-        return $this->identify_cmd;
+        $this->identifyCmd = $this->findCmd('identify');
+        return $this->identifyCmd;
     }
 
     /**
-    * @return string
-    */
+     * Generate a temporary file, to apply effects on.
+     *
+     * @return string
+     */
     public function tmp()
     {
-        if ($this->tmp_file !== null) {
-            return $this->tmp_file;
+        if ($this->tmpFile !== null) {
+            return $this->tmpFile;
         }
 
-        $this->tmp_file = sys_get_temp_dir().'/'.uniqid().'.png';
-        return $this->tmp_file;
+        $this->tmpFile = sys_get_temp_dir().'/'.uniqid().'.png';
+        return $this->tmpFile;
     }
 
     /**
-    * @return ImagemagickImage Chainable
-    */
-    public function reset_tmp()
+     * @return ImagemagickImage Chainable
+     */
+    public function resetTmp()
     {
-        if (file_exists($this->tmp_file)) {
-            unlink($this->tmp_file);
+        if (file_exists($this->tmpFile)) {
+            unlink($this->tmpFile);
         }
-        $this->tmp_file = null;
+        $this->tmpFile = null;
         return $this;
     }
 
     /**
-    * Exec a command, either with `proc_open()` or `shell_exec()`
-    *
-    * The `proc_open()` method is preferred, as it allows to catch errors in
-    * the STDERR buffer (and throw Exception) but it might be disabled in some
-    * systems for security reasons.
-    *
-    * @param string $cmd
-    * @throws Exception
-    * @return string
-    */
+     * Exec a command, either with `proc_open()` or `shell_exec()`
+     *
+     * The `proc_open()` method is preferred, as it allows to catch errors in
+     * the STDERR buffer (and throw Exception) but it might be disabled in some
+     * systems for security reasons.
+     *
+     * @param string $cmd The command to execute.
+     * @throws Exception If the command fails.
+     * @return string
+     */
     public function exec($cmd)
     {
         if (function_exists('proc_open')) {
@@ -306,33 +317,33 @@ class ImagemagickImage extends AbstractImage
     }
 
     /**
-    * @param string $cmd
-    * @throws Exception
-    * @return ImagemagickImage Chainable
-    */
-    public function apply_cmd($cmd)
+     * @param string $cmd The command to run.
+     * @throws Exception If the tmp file was not properly set.
+     * @return ImagemagickImage Chainable
+     */
+    public function applyCmd($cmd)
     {
         if (!file_exists($this->tmp())) {
             throw new Exception(
                 'No file currently set as tmp file, commands can not be executed.'
             );
         }
-        $mogrify = $this->mogrify_cmd();
+        $mogrify = $this->mogrifyCmd();
         $this->exec($mogrify.' '.$cmd.' '.$this->tmp());
         return $this;
     }
 
 
     /**
-    * Convert a gravity name (string) to an `Imagick::GRAVITY_*` constant (integer)
-    *
-    * @param string $gravity
-    * @throws InvalidArgumentException
-    * @return integer
-    */
-    public function imagemagick_gravity($gravity)
+     * Convert a gravity name (string) to an `Imagick::GRAVITY_*` constant (integer)
+     *
+     * @param string $gravity The standard gravity name.
+     * @throws InvalidArgumentException If the gravity argument is not a valid gravity.
+     * @return integer
+     */
+    public function imagemagickGravity($gravity)
     {
-        $gravity_map = [
+        $gravityMap = [
             'center'    => 'center',
             'n'         => 'north',
             's'         => 'south',
@@ -343,11 +354,11 @@ class ImagemagickImage extends AbstractImage
             'se'        => 'southeast',
             'sw'        => 'southwest'
         ];
-        if (!isset($gravity_map[$gravity])) {
+        if (!isset($gravityMap[$gravity])) {
             throw new InvalidArgumentException(
                 'Invalid gravity. Possible values are: center, n, s, e, w, ne, nw, se, sw.'
             );
         }
-        return $gravity_map[$gravity];
+        return $gravityMap[$gravity];
     }
 }

@@ -4,21 +4,24 @@ namespace Charcoal\Image\Imagemagick\Effect;
 
 use \Charcoal\Image\Effect\AbstractThresholdEffect;
 
+/**
+ * Threshold Effect for the Imagemagick driver.
+ */
 class ImagemagickThresholdEffect extends AbstractThresholdEffect
 {
     /**
-    * @param array $data
-    * @return ImagickThresholdEffect Chainable
-    */
+     * @param array $data The effect data, if available.
+     * @return ImagickThresholdEffect Chainable
+     */
     public function process(array $data = null)
     {
         if ($data !== null) {
-            $this->set_data($data);
+            $this->setData($data);
         }
-        
+
         $value = ($this->threshold()*100).'%';
         $cmd = '-threshold '.$value;
-        $this->image()->apply_cmd($cmd);
+        $this->image()->applyCmd($cmd);
         return $this;
     }
 }

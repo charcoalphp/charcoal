@@ -10,7 +10,7 @@ class AbstractRotateEffectTest extends \PHPUnit_Framework_Testcase
     {
         $img = $this->getMockForAbstractClass('\Charcoal\Image\AbstractImage');
         $this->obj = $this->getMockForAbstractClass('\Charcoal\Image\Effect\AbstractRotateEffect');
-        $this->obj->set_image($img);
+        $this->obj->setImage($img);
     }
 
     public function testDefaults()
@@ -18,43 +18,43 @@ class AbstractRotateEffectTest extends \PHPUnit_Framework_Testcase
         $obj = $this->obj;
 
         $this->assertEquals(0, $obj->angle());
-        $this->assertEquals('rgb(100%, 100%, 100%, 0)', $obj->background_color());
+        $this->assertEquals('rgb(100%, 100%, 100%, 0)', $obj->backgroundColor());
     }
 
     public function testSetData()
     {
         $obj = $this->obj;
-        $ret = $obj->set_data(
+        $ret = $obj->setData(
             [
             'angle'=>42,
-            'background_color'=>'blue'
+            'backgroundColor'=>'blue'
             ]
         );
         $this->assertSame($ret, $obj);
 
         $this->assertEquals(42, $obj->angle());
-        $this->assertEquals('blue', $obj->background_color());
+        $this->assertEquals('blue', $obj->backgroundColor());
     }
 
     public function testSetAngle()
     {
         $obj = $this->obj;
-        $ret = $obj->set_angle(135);
+        $ret = $obj->setAngle(135);
         $this->assertSame($ret, $obj);
         $this->assertEquals(135, $obj->angle());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_angle('foobar');
+        $obj->setAngle('foobar');
     }
 
     public function testSetBackgroundColor()
     {
         $obj = $this->obj;
-        $ret = $obj->set_background_color('red');
+        $ret = $obj->setBackgroundColor('red');
         $this->assertSame($ret, $obj);
-        $this->assertEquals('red', $obj->background_color());
+        $this->assertEquals('red', $obj->backgroundColor());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_background_color(false);
+        $obj->setBackgroundColor(false);
     }
 }

@@ -10,18 +10,18 @@ use \Imagick;
 use \Charcoal\Image\AbstractImage;
 
 /**
-*
-*/
+ *
+ */
 class ImagickImage extends AbstractImage
 {
     /**
-    * @var Imagick $imagick
-    */
+     * @var Imagick $imagick
+     */
     private $imagick;
 
     /**
-    * @throws Exception
-    */
+     * @throws Exception If imagick driver can not be loaded.
+     */
     public function __construct()
     {
         if (!extension_loaded('imagick') || !class_exists('Imagick')) {
@@ -33,53 +33,53 @@ class ImagickImage extends AbstractImage
     }
 
     /**
-    * @return string
-    */
-    public function driver_type()
+     * @return string
+     */
+    public function driverType()
     {
         return 'imagick';
     }
 
     /**
-    * @return Imagick
-    */
+     * @return Imagick
+     */
     public function imagick()
     {
         return $this->imagick;
     }
 
     /**
-    * Create a blank canvas of a given size, with a given background color.
-    *
-    * @param integer $width  Image size, in pixels
-    * @param integer $height Image height, in pixels
-    * @param string  $color  Default to transparent.
-    * @throws InvalidArgumentException
-    * @return Image Chainable
-    */
+     * Create a blank canvas of a given size, with a given background color.
+     *
+     * @param integer $width  Image size, in pixels.
+     * @param integer $height Image height, in pixels.
+     * @param string  $color  Default to transparent.
+     * @throws InvalidArgumentException If the size arguments are not valid, positive integers.
+     * @return Image Chainable
+     */
     public function create($width, $height, $color = 'rgb(100%, 100%, 100%, 0)')
     {
-        if (!is_int($width) || $width < 1) {
+        if (!is_numeric($width) || $width < 1) {
             throw new InvalidArgumentException(
                 'Width must be an integer of at least 1 pixel'
             );
         }
-        if (!is_int($height) || $height < 1) {
+        if (!is_numeric($height) || $height < 1) {
             throw new InvalidArgumentException(
                 'Height must be an integer of at least 1 pixel'
             );
         }
-        $this->imagick()->newImage($width, $height, $color);
+        $this->imagick()->newImage((int)$width, (int)$height, $color);
         return $this;
     }
 
     /**
-    * Open an image file
-    *
-    * @param string $source The source path / filename
-    * @throws InvalidArgumentException
-    * @return Image Chainable
-    */
+     * Open an image file
+     *
+     * @param string $source The source path / filename.
+     * @throws InvalidArgumentException If the source argument is not a string.
+     * @return Image Chainable
+     */
     public function open($source = null)
     {
         if ($source !== null && !is_string($source)) {
@@ -93,13 +93,13 @@ class ImagickImage extends AbstractImage
     }
 
     /**
-    * Save an image to a target.
-    * If no target is set, the original source will be owerwritten
-    *
-    * @param string $target The target path / filename
-    * @throws InvalidArgumentException
-    * @return Image Chainable
-    */
+     * Save an image to a target.
+     * If no target is set, the original source will be owerwritten
+     *
+     * @param string $target The target path / filename.
+     * @throws InvalidArgumentException If the target argument is not a string.
+     * @return Image Chainable
+     */
     public function save($target = null)
     {
         if ($target !== null && !is_string($target)) {
@@ -109,44 +109,44 @@ class ImagickImage extends AbstractImage
         }
         $target = ($target) ? $target : $this->target();
 
-        $file_ext = pathinfo($target, PATHINFO_EXTENSION);
+        $fileExt = pathinfo($target, PATHINFO_EXTENSION);
 
-        $this->imagick()->setImageFormat($file_ext);
+        $this->imagick()->setImageFormat($fileExt);
 
         $this->imagick()->writeImage($target);
         return $this;
     }
 
     /**
-    * Get the image's width, in pixels
-    *
-    * @return integer
-    */
+     * Get the image's width, in pixels
+     *
+     * @return integer
+     */
     public function width()
     {
         return $this->imagick()->getImageWidth();
     }
 
     /**
-    * Get the image's height, in pixels
-    *
-    * @return integer
-    */
+     * Get the image's height, in pixels
+     *
+     * @return integer
+     */
     public function height()
     {
         return $this->imagick()->getImageHeight();
     }
 
     /**
-    * Convert a channel name (string) to an `Imagick::CHANNEL_*` constant (integer)
-    *
-    * @param string $channel
-    * @throws InvalidArgumentException
-    * @return integer
-    */
-    public function imagick_channel($channel)
+     * Convert a channel name (string) to an `Imagick::CHANNEL_*` constant (integer)
+     *
+     * @param string $channel The standard "channel" string.
+     * @throws InvalidArgumentException If the channel argument is not a valid channel.
+     * @return integer
+     */
+    public function imagickChannel($channel)
     {
-        $channel_map = [
+        $channelMap = [
             // RGB
             'red'       => Imagick::CHANNEL_RED,
             'green'     => Imagick::CHANNEL_GREEN,
@@ -162,24 +162,24 @@ class ImagickImage extends AbstractImage
             'opacity'   => Imagick::CHANNEL_RED,
             'gray'      => Imagick::CHANNEL_GRAY
         ];
-        if (!isset($channel_map[$channel])) {
+        if (!isset($channelMap[$channel])) {
             throw new InvalidArgumentException(
                 'Invalid channel'
             );
         }
-        return $channel_map[$channel];
+        return $channelMap[$channel];
     }
 
     /**
-    * Convert a gravity name (string) to an `Imagick::GRAVITY_*` constant (integer)
-    *
-    * @param string $gravity
-    * @throws InvalidArgumentException
-    * @return integer
-    */
-    public function imagick_gravity($gravity)
+     * Convert a gravity name (string) to an `Imagick::GRAVITY_*` constant (integer)
+     *
+     * @param string $gravity The standard gravity name.
+     * @throws InvalidArgumentException If the gravity argument is not a valid gravity type.
+     * @return integer
+     */
+    public function imagickGravity($gravity)
     {
-        $gravity_map = [
+        $gravityMap = [
             'center'    => Imagick::GRAVITY_CENTER,
             'n'         => Imagick::GRAVITY_NORTH,
             's'         => Imagick::GRAVITY_SOUTH,
@@ -190,11 +190,11 @@ class ImagickImage extends AbstractImage
             'se'        => Imagick::GRAVITY_SOUTHEAST,
             'sw'        => Imagick::GRAVITY_SOUTHWEST
         ];
-        if (!isset($gravity_map[$gravity])) {
+        if (!isset($gravityMap[$gravity])) {
             throw new InvalidArgumentException(
                 'Invalid gravity'
             );
         }
-        return $gravity_map[$gravity];
+        return $gravityMap[$gravity];
     }
 }

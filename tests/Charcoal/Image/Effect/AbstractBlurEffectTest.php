@@ -9,8 +9,9 @@ class AbstractBlurEffectTest extends \PHPUnit_Framework_Testcase
     public function setUp()
     {
         $img = $this->getMockForAbstractClass('\Charcoal\Image\AbstractImage');
+        $img->method('driverType')->willReturn('imagick');
         $this->obj = $this->getMockForAbstractClass('\Charcoal\Image\Effect\AbstractBlurEffect');
-        $this->obj->set_image($img);
+        $this->obj->setImage($img);
     }
 
     public function testDefaults()
@@ -27,7 +28,7 @@ class AbstractBlurEffectTest extends \PHPUnit_Framework_Testcase
     public function testSetData()
     {
         $obj = $this->obj;
-        $ret = $obj->set_data(
+        $ret = $obj->setData(
             [
             'radius'=>8,
             'sigma'=>12,
@@ -49,70 +50,70 @@ class AbstractBlurEffectTest extends \PHPUnit_Framework_Testcase
     {
         $obj = $this->obj;
 
-        $ret = $obj->set_radius(5.6);
+        $ret = $obj->setRadius(5.6);
         $this->assertSame($ret, $obj);
         $this->assertEquals(5.6, $obj->radius());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_radius(false);
+        $obj->setRadius(false);
     }
 
     public function testSetRadiusNegativeThrowsException()
     {
         $this->setExpectedException('\InvalidArgumentException');
         $obj = $this->obj;
-        $obj->set_radius(-1);
+        $obj->setRadius(-1);
     }
 
     public function testSetSigma()
     {
         $obj = $this->obj;
 
-        $ret = $obj->set_sigma(5.6);
+        $ret = $obj->setSigma(5.6);
         $this->assertSame($ret, $obj);
         $this->assertEquals(5.6, $obj->sigma());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_sigma(false);
+        $obj->setSigma(false);
     }
 
     public function testSetSigmaNegativeThrowsException()
     {
         $this->setExpectedException('\InvalidArgumentException');
         $obj = $this->obj;
-        $obj->set_sigma(-1);
+        $obj->setSigma(-1);
     }
 
     public function testSetMode()
     {
         $obj = $this->obj;
-        $ret = $obj->set_mode('radial');
+        $ret = $obj->setMode('radial');
         $this->assertSame($ret, $obj);
         $this->assertEquals('radial', $obj->mode());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_mode('foobar');
+        $obj->setMode('foobar');
     }
 
     public function testSetChannel()
     {
         $obj = $this->obj;
-        $ret = $obj->set_channel('alpha');
+        $ret = $obj->setChannel('alpha');
         $this->assertSame($ret, $obj);
         $this->assertEquals('alpha', $obj->channel());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_channel('foobar');
+        $obj->setChannel('foobar');
     }
 
     public function testSetAngle()
     {
         $obj = $this->obj;
-        $ret = $obj->set_angle(45);
+        $ret = $obj->setAngle(45);
         $this->assertSame($ret, $obj);
         $this->assertEquals(45, $obj->angle());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_angle(false);
+        $obj->setAngle(false);
     }
 }

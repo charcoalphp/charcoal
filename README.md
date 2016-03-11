@@ -27,13 +27,13 @@ $ composer require locomotivemtl/charcoal-image
 
 Typically, _charcoal-image_ is used to load an image, perform operations (called _effects_ such as blur, resize, watermark, etc.) and write the modified image.
 
-## With `set_data()`
+## With `setData()`
 
 All effects can be added at once in a single array.
 
 ```php
 $img = new \Charcoal\Image\Imagick\ImagickImage();
-$img->set_data([
+$img->setData([
 	'source'  => 'example.png',
 	'target'  => 'example-modified.png',
 	'effects' => [
@@ -78,7 +78,8 @@ Also shown: using the `ImageFactory` constructor method:
 ```php
 use \Charcoal\Image\ImageFactory;
 
-$img = ImageFactory::instance()->get('imagemagick');
+$factory = new ImageFactory();
+$img = $factory->create('imagemagick');
 $img->open('example.png')
 	->resize([
 		'mode'   => 'best_fit',
@@ -105,7 +106,7 @@ The main differences between existing PHP libraries like _Imagine_ or _Intervent
 	- With charcoal image it's constant: `blur(['radius' => $radius, 'sigma' => $sigma]);`
 - It supports *ImageMagick* binaries
 	- It seems to be a pretty common setup where Imagemagick is installed on a server, but the _Imagick_ PHP library is not. charcoal-image can be used
-- No external dependencies
+- No external dependencies, except the tiny `charcoal-factory`.
 
 # Available image drivers
 
@@ -135,9 +136,11 @@ With the provided `ImageFactory`:
 
 ```php
 use \Charcoal\Image\ImageFactory;
-$img = ImageFactory::instance()->get('imagick');
+$factory = new ImageFactory();
+
+$img = $factory->create('imagick');
 // or
-$img = ImageFactory::instance()->get('imagemagick');
+$img = $factory->create('imagemagick');
 ```
 
 # Available effects / operations
@@ -591,8 +594,7 @@ These effects are available in the `imagick` library and therefore could easily 
 
 All Charcoal modules follow the same coding style and `charcoal-image` is no exception. For PHP:
 
-- [_PSR-1_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md), **with the followinf exceptions**
-	- Method names MUST be declared in `snake_case`.
+- [_PSR-1_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md)
 - [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
 - [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md), autoloading is therefore provided by _Composer_
 - [_phpDocumentor_](http://phpdoc.org/)
@@ -618,7 +620,6 @@ To ensure a clean code base, pre-commit git hooks should be installed on all dev
 - [Travis](https://travis-ci.org/locomotivemtl/charcoal-image)
 - [Sensio Labs](https://insight.sensiolabs.com/projects/87c9621d-3b2e-4e71-a42f-e69ebca4672e)
 - [Scrutinizer](https://scrutinizer-ci.com/)
-- [Code Climate](https://codeclimate.com/)
 
 ## Unit Tests
 
@@ -630,9 +631,16 @@ Every class, method, and function should be covered by unit tests. PHP code can 
 
 ## Changelog
 
-### 0.1.1
+### 0.3
 
-_Unreleased_
+_Released 2016-03-11_
+
+- Break BC in every way.
+- Convert to camelCase / Full PSR-1 / PSR-2 support.
+
+### 0.2
+
+_Released 2015-09-15_
 
 - Add a new "auto-orientation" effect (imagick + imagemagick)
 - Add the watermark effect to imagemagick (imagemagick)
@@ -651,5 +659,5 @@ _Released 2015-08-26_
 
 - Write a version for PHP's `gd` driver.
 - Custom Exceptions.
-- Change effect signature to be callable instead of using the process() method.
+- Change effect signature to be callable (invokable) instead of using the process() method.
 - Skip unit tests instead of failing if a driver is not available.

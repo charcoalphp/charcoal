@@ -8,67 +8,67 @@ use \InvalidArgumentException;
 use \Charcoal\Image\AbstractEffect;
 
 /**
-* Resize an image to given dimensions
-*/
+ * Resize an image to given dimensions
+ */
 abstract class AbstractResizeEffect extends AbstractEffect
 {
     /**
-    * @var string $mode
-    */
+     * @var string $mode
+     */
     private $mode = 'auto';
 
     /**
-    * @var integer $width
-    */
+     * @var integer $width
+     */
     private $width = 0;
     /**
-    * @var integer $height
-    */
+     * @var integer $height
+     */
     private $height = 0;
 
     /**
-    * @var integer $min_width
-    */
-    private $min_width = 0;
+     * @var integer $minWidth
+     */
+    private $minWidth = 0;
 
     /**
-    * @var integer $min_height
-    */
-    private $min_height = 0;
+     * @var integer $minHeight
+     */
+    private $minHeight = 0;
 
     /**
-    * @var integer $max_width
-    */
-    private $max_width = 0;
+     * @var integer $maxWidth
+     */
+    private $maxWidth = 0;
 
     /**
-    * @var integer $max_height
-    */
-    private $max_height = 0;
+     * @var integer $maxHeight
+     */
+    private $maxHeight = 0;
 
     /**
-    * @var string $gravity
-    */
+     * @var string $gravity
+     */
     private $gravity = 'center';
 
     /**
-    * @var string $background_color
-    */
-    private $background_color = 'rgba(100%, 100%, 100%, 0)';
+     * @var string $backgroundColor
+     */
+    private $backgroundColor = 'rgba(100%, 100%, 100%, 0)';
 
     /**
-    * @var string
-    */
+     * @var string
+     */
     private $adaptive = false;
 
     /**
-    * @param string $mode
-    * @throws InvalidArgumentException
-    * @return AbstractResizeEffect Chainable
-    */
-    public function set_mode($mode)
+     * @param string $mode The resize mode.
+     * @throws InvalidArgumentException If the mode argument is not a valid resize mode.
+     * @return AbstractResizeEffect Chainable
+     */
+    public function setMode($mode)
     {
-        $allowed_modes = [
+        $allowedModes = [
             'auto',
             'exact',
             'width',
@@ -78,7 +78,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
             'fill',
             'none'
         ];
-        if (!is_string($mode) || (!in_array($mode, $allowed_modes))) {
+        if (!is_string($mode) || (!in_array($mode, $allowedModes))) {
             throw new InvalidArgumentException(
                 'Mode is not valid'
             );
@@ -88,165 +88,165 @@ abstract class AbstractResizeEffect extends AbstractEffect
     }
 
     /**
-    * @return string
-    */
+     * @return string
+     */
     public function mode()
     {
         return $this->mode;
     }
 
     /**
-    * @param int $width
-    * @throws InvalidArgumentException
-    * @return Rotate Chainable
-    */
-    public function set_width($width)
+     * @param integer $width The target resize width.
+     * @throws InvalidArgumentException If the width argument is not numeric or lower than 0.
+     * @return Rotate Chainable
+     */
+    public function setWidth($width)
     {
-        if (!is_int($width) || ($width < 0)) {
+        if (!is_numeric($width) || ($width < 0)) {
             throw new InvalidArgumentException(
                 'Width must be a a positive integer'
             );
         }
-        $this->width = $width;
+        $this->width = (int)$width;
         return $this;
     }
 
     /**
-    * @return float
-    */
+     * @return float
+     */
     public function width()
     {
         return $this->width;
     }
 
     /**
-    * @param integer $height
-    * @throws InvalidArgumentException
-    * @return Rotate Chainable
-    */
-    public function set_height($height)
+     * @param integer $height The target resize height.
+     * @throws InvalidArgumentException If the height argument is not numeric or lower than 0.
+     * @return Rotate Chainable
+     */
+    public function setHeight($height)
     {
         if (!is_int($height) || ($height < 0)) {
             throw new InvalidArgumentException(
                 'Height must be a positive integer'
             );
         }
-        $this->height = $height;
+        $this->height = (int)$height;
         return $this;
     }
 
     /**
-    * @return float
-    */
+     * @return float
+     */
     public function height()
     {
         return $this->height;
     }
 
     /**
-    * @param int $min_width
-    * @throws InvalidArgumentException
-    * @return Rotate Chainable
-    */
-    public function set_min_width($min_width)
+     * @param integer $minWidth The resize minimal width.
+     * @throws InvalidArgumentException If the argument is not numeric or lower than 0.
+     * @return Rotate Chainable
+     */
+    public function setMinWidth($minWidth)
     {
-        if (!is_int($min_width) || ($min_width < 0)) {
+        if (!is_numeric($minWidth) || ($minWidth < 0)) {
             throw new InvalidArgumentException(
                 'Min Width must be a a positive integer'
             );
         }
-        $this->min_width = $min_width;
+        $this->minWidth = (int)$minWidth;
         return $this;
     }
 
     /**
-    * @return float
-    */
-    public function min_width()
+     * @return float
+     */
+    public function minWidth()
     {
-        return $this->min_width;
+        return $this->minWidth;
     }
 
     /**
-    * @param integer $min_height
-    * @throws InvalidArgumentException
-    * @return Rotate Chainable
-    */
-    public function set_min_height($min_height)
+     * @param integer $minHeight The resize minimal height.
+     * @throws InvalidArgumentException If the argument is not numeric or lower than 0.
+     * @return Rotate Chainable
+     */
+    public function setMinHeight($minHeight)
     {
-        if (!is_int($min_height) || ($min_height < 0)) {
+        if (!is_numeric($minHeight) || ($minHeight < 0)) {
             throw new InvalidArgumentException(
                 'Min Height must be a positive integer'
             );
         }
-        $this->min_height = $min_height;
+        $this->minHeight = (int)$minHeight;
         return $this;
     }
 
     /**
-    * @return float
-    */
-    public function min_height()
+     * @return float
+     */
+    public function minHeight()
     {
-        return $this->min_height;
+        return $this->minHeight;
     }
 
     /**
-    * @param int $max_width
-    * @throws InvalidArgumentException
-    * @return Rotate Chainable
-    */
-    public function set_max_width($max_width)
+     * @param integer $maxWidth The resize max width.
+     * @throws InvalidArgumentException If the argument is not numeric or lower than 0.
+     * @return Rotate Chainable
+     */
+    public function setMaxWidth($maxWidth)
     {
-        if (!is_int($max_width) || ($max_width < 0)) {
+        if (!is_numeric($maxWidth) || ($maxWidth < 0)) {
             throw new InvalidArgumentException(
                 'Max Width must be a a positive integer'
             );
         }
-        $this->max_width = $max_width;
+        $this->maxWidth = (int)$maxWidth;
         return $this;
     }
 
     /**
-    * @return float
-    */
-    public function max_width()
+     * @return float
+     */
+    public function maxWidth()
     {
-        return $this->max_width;
+        return $this->maxWidth;
     }
 
     /**
-    * @param integer $max_height
-    * @throws InvalidArgumentException
-    * @return Rotate Chainable
-    */
-    public function set_max_height($max_height)
+     * @param integer $maxHeight The resize max height.
+     * @throws InvalidArgumentException If the argument is not numeric or lower than 0.
+     * @return Rotate Chainable
+     */
+    public function setMaxHeight($maxHeight)
     {
-        if (!is_int($max_height) || ($max_height < 0)) {
+        if (!is_numeric($maxHeight) || ($maxHeight < 0)) {
             throw new InvalidArgumentException(
                 'Height must be a positive integer'
             );
         }
-        $this->max_height = $max_height;
+        $this->maxHeight = (int)$maxHeight;
         return $this;
     }
 
     /**
-    * @return float
-    */
-    public function max_height()
+     * @return float
+     */
+    public function maxHeight()
     {
-        return $this->max_height;
+        return $this->maxHeight;
     }
 
     /**
-    * @param string $gravity
-    * @throws InvalidArgumentException
-    * @return AbstractWatermarkEffect Chainable
-    */
-    public function set_gravity($gravity)
+     * @param string $gravity The resize gravity.
+     * @throws InvalidArgumentException If the argument is not a valid gravity name.
+     * @return AbstractWatermarkEffect Chainable
+     */
+    public function setGravity($gravity)
     {
-        if (!in_array($gravity, $this->image()->available_gravities())) {
+        if (!in_array($gravity, $this->image()->availableGravities())) {
             throw new InvalidArgumentException(
                 'Gravity is not valid'
             );
@@ -256,66 +256,60 @@ abstract class AbstractResizeEffect extends AbstractEffect
     }
 
     /**
-    * @return string
-    */
+     * @return string
+     */
     public function gravity()
     {
         return $this->gravity;
     }
 
     /**
-    * @param string $color
-    * @throws InvalidArgumentException
-    * @return AbstractRotateEffect Chainable
-    */
-    public function set_background_color($color)
+     * @param string $color The resize background color.
+     * @throws InvalidArgumentException If the color argument is not a string.
+     * @return AbstractRotateEffect Chainable
+     */
+    public function setBackgroundColor($color)
     {
         if (!is_string($color)) {
             throw new InvalidArgumentException(
                 'Color must be a string'
             );
         }
-        $this->background_color = $color;
+        $this->backgroundColor = $color;
         return $this;
     }
 
     /**
-    * @return string
-    */
-    public function background_color()
+     * @return string
+     */
+    public function backgroundColor()
     {
-        return $this->background_color;
+        return $this->backgroundColor;
     }
 
 
     /**
-    * @param boolean $adaptive
-    * @throws InvalidArgumentException
-    * @return AbstractRotateEffect Chainable
-    */
-    public function set_adaptive($adaptive)
+     * @param boolean $adaptive The adaptative resize flag.
+     * @return AbstractRotateEffect Chainable
+     */
+    public function setAdaptive($adaptive)
     {
-        if (!is_bool($adaptive)) {
-            throw new InvalidArgumentException(
-                'Adaptive flag must be a boolean'
-            );
-        }
-        $this->adaptive = $adaptive;
+        $this->adaptive = !!$adaptive;
         return $this;
     }
 
     /**
-    * @return boolean
-    */
+     * @return boolean
+     */
     public function adaptive()
     {
         return $this->adaptive;
     }
 
     /**
-    * @return string
-    */
-    public function auto_mode()
+     * @return string
+     */
+    public function autoMode()
     {
         $width = $this->width();
         $height = $this->height();
@@ -327,7 +321,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
         } elseif ($height > 0) {
             return 'height';
         } else {
-            if ($this->min_width() || $this->min_height() || $this->max_width() || $this->max_height()) {
+            if ($this->minWidth() || $this->minHeight() || $this->maxWidth() || $this->maxHeight()) {
                 return 'constraints';
             } else {
                 return 'none';
@@ -336,27 +330,28 @@ abstract class AbstractResizeEffect extends AbstractEffect
     }
 
     /**
-    * @param array $data
-    * @throws Exception
-    * @return AbstractResizeEffect Chainable
-    */
+     * @param array $data The effect data, if available.
+     * @throws Exception If the effect data is invalid for its resize mode.
+     * @return AbstractResizeEffect Chainable
+     */
     public function process(array $data = null)
     {
         if ($data !== null) {
-            $this->set_data($data);
+            $this->setData($data);
         }
 
         $mode = $this->mode();
         if ($mode == 'auto') {
-            $mode = $this->auto_mode();
+            $mode = $this->autoMode();
         }
 
         if ($mode == 'none') {
-            return;
+            // Noting to do.
+            return $this;
         }
 
-        $img_w = $this->image()->width();
-        $img_h = $this->image()->height();
+        $imageWidth = $this->image()->width();
+        $imageHeight = $this->image()->height();
 
         switch ($mode) {
             case 'exact':
@@ -365,8 +360,8 @@ abstract class AbstractResizeEffect extends AbstractEffect
                         'Missing parameters to perform exact resize'
                     );
                 }
-                if ($img_w != $this->width() || $img_h != $this->height()) {
-                    $this->do_resize($this->width(), $this->height(), false);
+                if ($imageWidth != $this->width() || $imageHeight != $this->height()) {
+                    $this->doResize($this->width(), $this->height(), false);
                 }
                 break;
 
@@ -376,8 +371,8 @@ abstract class AbstractResizeEffect extends AbstractEffect
                         'Missing parameters to perform exact width resize'
                     );
                 }
-                if ($img_w != $this->width()) {
-                    $this->do_resize($this->width(), 0, false);
+                if ($imageWidth != $this->width()) {
+                    $this->doResize($this->width(), 0, false);
                 }
                 break;
 
@@ -387,8 +382,8 @@ abstract class AbstractResizeEffect extends AbstractEffect
                         'Missing parameters to perform exact height resize'
                     );
                 }
-                if ($img_h != $this->height()) {
-                    $this->do_resize(0, $this->height(), false);
+                if ($imageHeight != $this->height()) {
+                    $this->doResize(0, $this->height(), false);
                 }
                 break;
 
@@ -398,46 +393,45 @@ abstract class AbstractResizeEffect extends AbstractEffect
                         'Missing parameters to perform "best fit" resize'
                     );
                 }
-                if ($img_w != $this->width() || $img_h != $this->height()) {
-                    $this->do_resize($this->width(), $this->height(), true);
+                if ($imageWidth != $this->width() || $imageHeight != $this->height()) {
+                    $this->doResize($this->width(), $this->height(), true);
                 }
                 break;
 
             case 'constraints':
-                $min_w = $this->min_width();
-                $min_h = $this->min_height();
-                $max_w = $this->max_width();
-                $max_h = $this->max_height();
+                $minW = $this->minWidth();
+                $minH = $this->minHeight();
+                $maxW = $this->maxWidth();
+                $maxH = $this->maxHeight();
 
-                if (array_sum([$min_w, $min_h, $max_w, $max_h]) == 0) {
+                if (array_sum([$minW, $minH, $maxW, $maxH]) == 0) {
                     throw new Exception(
                         'Missing parameter(s) to perform "constraints" resize'
                     );
                 }
 
-                if (($min_w && ($min_w > $img_w)) || ($min_h && ($min_h > $img_h))) {
+                if (($minW && ($minW > $imageWidth)) || ($minH && ($minH > $imageHeight))) {
                     // Must scale up, keeping ratio
-                    $this->do_resize($min_w, $min_h, true);
+                    $this->doResize($minW, $minH, true);
                     break;
                 }
 
-                if (($max_w && ($max_w < $img_w)) || ($max_h && ($max_h < $img_h))) {
+                if (($maxW && ($maxW < $imageWidth)) || ($maxH && ($maxH < $imageHeight))) {
                     // Must scale down. keeping ratio
-                    $this->do_resize($max_w, $max_h, true);
+                    $this->doResize($maxW, $maxH, true);
                     break;
                 }
                 break;
 
             case 'crop':
-                
                 throw new Exception(
                     'Crop resize mode is not (yet) supported'
                 );
 
             case 'fill':
-                $img_class = get_class($this->image());
-                $canvas = new $img_class;
-                $canvas->create($this->width(), $this->width(), $this->background_color());
+                $imgClass = get_class($this->image());
+                $canvas = new $imgClass;
+                $canvas->create($this->width(), $this->width(), $this->backgroundColor());
                 throw new Exception(
                     'Crop resize mode is not (yet) supported'
                 );
@@ -447,10 +441,10 @@ abstract class AbstractResizeEffect extends AbstractEffect
     }
 
     /**
-    * @param integer $width
-    * @param integer $height
-    * @param boolean $best_fit
-    * @return void
-    */
-    abstract protected function do_resize($width, $height, $best_fit = false);
+     * @param integer $width   The target width.
+     * @param integer $height  The target height.
+     * @param boolean $bestFit The "best_fit" flag.
+     * @return void
+     */
+    abstract protected function doResize($width, $height, $bestFit = false);
 }

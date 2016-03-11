@@ -4,16 +4,19 @@ namespace Charcoal\Image\Imagick\Effect;
 
 use \Charcoal\Image\Effect\AbstractTintEffect;
 
+/**
+ * Tint Effect for the Imagick driver.
+ */
 class ImagickTintEffect extends AbstractTintEffect
 {
     /**
-    * @param array $data
-    * @return ImagickTintEffect Chainable
-    */
+     * @param array $data The effect data, if available.
+     * @return ImagickTintEffect Chainable
+     */
     public function process(array $data = null)
     {
         if ($data !== null) {
-            $this->set_data($data);
+            $this->setData($data);
         }
 
         if ($this->midtone() === true) {

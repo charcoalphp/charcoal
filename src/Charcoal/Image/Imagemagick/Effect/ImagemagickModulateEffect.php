@@ -4,16 +4,19 @@ namespace Charcoal\Image\Imagemagick\Effect;
 
 use \Charcoal\Image\Effect\AbstractModulateEffect;
 
+/**
+ * Modulate Effect for the Imagemagick driver.
+ */
 class ImagemagickModulateEffect extends AbstractModulateEffect
 {
     /**
-    * @param array $data
-    * @return ImagemagickModulateEffect Chainable
-    */
+     * @param array $data The effect data, if available.
+     * @return ImagemagickModulateEffect Chainable
+     */
     public function process(array $data = null)
     {
         if ($data !== null) {
-            $this->set_data($data);
+            $this->setData($data);
         }
 
         $h = ($this->hue() + 100);
@@ -21,7 +24,7 @@ class ImagemagickModulateEffect extends AbstractModulateEffect
         $l = ($this->luminance() + 100);
 
         $cmd = '-modulate '.$l.','.$s.','.$h;
-        $this->image()->apply_cmd($cmd);
+        $this->image()->applyCmd($cmd);
         return $this;
     }
 }

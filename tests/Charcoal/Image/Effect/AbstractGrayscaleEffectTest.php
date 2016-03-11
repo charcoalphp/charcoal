@@ -9,14 +9,15 @@ class AbstractGrayscaleEffectTest extends \PHPUnit_Framework_Testcase
     public function setUp()
     {
         $img = $this->getMockForAbstractClass('\Charcoal\Image\AbstractImage');
+        $img->method('driverType')->willReturn('imagick');
         $this->obj = $this->getMockForAbstractClass('\Charcoal\Image\Effect\AbstractGrayscaleEffect');
-        $this->obj->set_image($img);
+        $this->obj->setImage($img);
     }
 
     public function testSetData()
     {
         $obj = $this->obj;
-        $ret = $obj->set_data([]);
+        $ret = $obj->setData([]);
         $this->assertSame($ret, $obj);
     }
 }

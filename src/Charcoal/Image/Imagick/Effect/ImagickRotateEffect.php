@@ -4,19 +4,22 @@ namespace Charcoal\Image\Imagick\Effect;
 
 use \Charcoal\Image\Effect\AbstractRotateEffect;
 
+/**
+ * Rotate Effect for the imagick driver.
+ */
 class ImagickRotateEffect extends AbstractRotateEffect
 {
     /**
-    * @param array $data
-    * @return ImagickRotateEffect Chainable
-    */
+     * @param array $data The effect data, if available.
+     * @return ImagickRotateEffect Chainable
+     */
     public function process(array $data = null)
     {
         if ($data !== null) {
-            $this->set_data($data);
+            $this->setData($data);
         }
 
-        $this->image()->imagick()->rotateImage($this->background_color(), $this->angle());
+        $this->image()->imagick()->rotateImage($this->backgroundColor(), $this->angle());
         return $this;
     }
 }

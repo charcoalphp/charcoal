@@ -9,8 +9,9 @@ class AbstractResizeEffectTest extends \PHPUnit_Framework_Testcase
     public function setUp()
     {
         $img = $this->getMockForAbstractClass('\Charcoal\Image\AbstractImage');
+        $img->method('driverType')->willReturn('imagick');
         $this->obj = $this->getMockForAbstractClass('\Charcoal\Image\Effect\AbstractResizeEffect');
-        $this->obj->set_image($img);
+        $this->obj->setImage($img);
     }
 
     public function testDefaults()
@@ -21,20 +22,20 @@ class AbstractResizeEffectTest extends \PHPUnit_Framework_Testcase
         $this->assertEquals(0, $obj->width());
         $this->assertEquals(0, $obj->height());
         $this->assertEquals('center', $obj->gravity());
-        $this->assertEquals('rgba(100%, 100%, 100%, 0)', $obj->background_color());
+        $this->assertEquals('rgba(100%, 100%, 100%, 0)', $obj->backgroundColor());
         $this->assertFalse($obj->adaptive());
     }
 
     public function testSetData()
     {
         $obj = $this->obj;
-        $ret = $obj->set_data(
+        $ret = $obj->setData(
             [
             'mode'=>'exact',
             'width'=>100,
             'height'=>50,
             'gravity'=>'e',
-            'background_color'=>'red',
+            'backgroundColor'=>'red',
             'adaptive'=>true
             ]
         );
@@ -44,25 +45,25 @@ class AbstractResizeEffectTest extends \PHPUnit_Framework_Testcase
         $this->assertEquals(100, $obj->width());
         $this->assertEquals(50, $obj->height());
         $this->assertEquals('e', $obj->gravity());
-        $this->assertEquals('red', $obj->background_color());
+        $this->assertEquals('red', $obj->backgroundColor());
         $this->assertTrue($obj->adaptive());
     }
 
     public function testSetMode()
     {
         $obj = $this->obj;
-        $ret = $obj->set_mode('width');
+        $ret = $obj->setMode('width');
         $this->assertSame($ret, $obj);
         $this->assertEquals('width', $obj->mode());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_mode('foobar');
+        $obj->setMode('foobar');
     }
 
     public function testSetWidth()
     {
         $obj = $this->obj;
-        $ret = $obj->set_width(400);
+        $ret = $obj->setWidth(400);
         $this->assertSame($ret, $obj);
         $this->assertEquals(400, $obj->width());
     }
@@ -71,13 +72,13 @@ class AbstractResizeEffectTest extends \PHPUnit_Framework_Testcase
     {
         $obj = $this->obj;
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_width(-1);
+        $obj->setWidth(-1);
     }
 
     public function testSetHeight()
     {
         $obj = $this->obj;
-        $ret = $obj->set_height(400);
+        $ret = $obj->setHeight(400);
         $this->assertSame($ret, $obj);
         $this->assertEquals(400, $obj->height());
     }
@@ -86,68 +87,65 @@ class AbstractResizeEffectTest extends \PHPUnit_Framework_Testcase
     {
         $obj = $this->obj;
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_height(-1);
+        $obj->setHeight(-1);
     }
 
     public function testSetGravity()
     {
         $obj = $this->obj;
-        $ret = $obj->set_gravity('nw');
+        $ret = $obj->setGravity('nw');
         $this->assertSame($ret, $obj);
         $this->assertEquals('nw', $obj->gravity());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_gravity('foobar');
+        $obj->setGravity('foobar');
     }
 
     public function testSetBackgroundColor()
     {
         $obj = $this->obj;
-        $ret = $obj->set_background_color('red');
+        $ret = $obj->setBackgroundColor('red');
         $this->assertSame($ret, $obj);
-        $this->assertEquals('red', $obj->background_color());
+        $this->assertEquals('red', $obj->backgroundColor());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_background_color(false);
+        $obj->setBackgroundColor(false);
     }
 
     public function testSetAdaptive()
     {
         $obj = $this->obj;
-        $ret = $obj->set_adaptive(true);
+        $ret = $obj->setAdaptive(true);
         $this->assertSame($ret, $obj);
         $this->assertTrue($obj->adaptive());
-
-        $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_adaptive('foobar');
     }
 
     public function testAutoMode()
     {
         $obj = $this->obj;
-        $obj->set_mode('auto');
+        $obj->setMode('auto');
 
-        $obj->set_width(100);
-        $obj->set_height(100);
-        $this->assertEquals('exact', $obj->auto_mode());
+        $obj->setWidth(100);
+        $obj->setHeight(100);
+        $this->assertEquals('exact', $obj->autoMode());
 
-        $obj->set_width(100);
-        $obj->set_height(0);
-        $this->assertEquals('width', $obj->auto_mode());
+        $obj->setWidth(100);
+        $obj->setHeight(0);
+        $this->assertEquals('width', $obj->autoMode());
 
-        $obj->set_width(0);
-        $obj->set_height(100);
-        $this->assertEquals('height', $obj->auto_mode());
+        $obj->setWidth(0);
+        $obj->setHeight(100);
+        $this->assertEquals('height', $obj->autoMode());
 
-        $obj->set_width(0);
-        $obj->set_height(0);
-        $this->assertEquals('none', $obj->auto_mode());
+        $obj->setWidth(0);
+        $obj->setHeight(0);
+        $this->assertEquals('none', $obj->autoMode());
     }
 
     public function testProcessExactParametersException()
     {
         $obj = $this->obj;
-        $obj->set_mode('exact');
+        $obj->setMode('exact');
         $this->setExpectedException('\Exception');
         $obj->process();
     }
@@ -155,7 +153,7 @@ class AbstractResizeEffectTest extends \PHPUnit_Framework_Testcase
     public function testProcessWidthParameterException()
     {
         $obj = $this->obj;
-        $obj->set_mode('width');
+        $obj->setMode('width');
         $this->setExpectedException('\Exception');
         $obj->process();
     }
@@ -163,7 +161,7 @@ class AbstractResizeEffectTest extends \PHPUnit_Framework_Testcase
     public function testProcessHeightParameterException()
     {
         $obj = $this->obj;
-        $obj->set_mode('height');
+        $obj->setMode('height');
         $this->setExpectedException('\Exception');
         $obj->process();
     }
@@ -171,7 +169,7 @@ class AbstractResizeEffectTest extends \PHPUnit_Framework_Testcase
     public function testProcessBestFitParameterException()
     {
         $obj = $this->obj;
-        $obj->set_mode('best_fit');
+        $obj->setMode('best_fit');
         $this->setExpectedException('\Exception');
         $obj->process();
     }
@@ -179,7 +177,7 @@ class AbstractResizeEffectTest extends \PHPUnit_Framework_Testcase
     public function testProcessCropException()
     {
         $obj = $this->obj;
-        $obj->set_mode('crop');
+        $obj->setMode('crop');
         $this->setExpectedException('\Exception');
         $obj->process();
     }
@@ -187,7 +185,7 @@ class AbstractResizeEffectTest extends \PHPUnit_Framework_Testcase
     public function testProcessFillException()
     {
         $obj = $this->obj;
-        $obj->set_mode('fill');
+        $obj->setMode('fill');
         $this->setExpectedException('\Exception');
         $obj->process();
     }

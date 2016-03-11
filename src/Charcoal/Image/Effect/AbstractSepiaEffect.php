@@ -7,25 +7,26 @@ use \InvalidArgumentException;
 use \Charcoal\Image\AbstractEffect;
 
 /**
-* Convert an image to grayscale colorspace
-*/
+ * Convert an image to grayscale colorspace
+ */
 abstract class AbstractSepiaEffect extends AbstractEffect
 {
 
     /**
-    * @var float $threshold
-    */
+     * @var float $threshold
+     */
     private $threshold = 75;
 
 
     /**
-    * @param float $threshold
-    * @throws InvalidArgumentException
-    * @return AbstractSepiaEffect Chainable
-    */
-    public function set_threshold($threshold)
+     * @param float $threshold The sepia threshold value.
+     * @throws InvalidArgumentException If the threshold argument is not numeric, lower than 0 or greater than max.
+     * @return AbstractSepiaEffect Chainable
+     */
+    public function setThreshold($threshold)
     {
-        $max = 255; // @todo: QuantumRange
+        $max = 255;
+// @todo: QuantumRange
         if (!is_numeric($threshold) || ($threshold < 0) || ($threshold > $max)) {
             throw new InvalidArgumentException(
                 sprintf('Threshold must be a number between 0 and %s', $max)
@@ -36,8 +37,8 @@ abstract class AbstractSepiaEffect extends AbstractEffect
     }
 
     /**
-    * @return float
-    */
+     * @return float
+     */
     public function threshold()
     {
         return $this->threshold;

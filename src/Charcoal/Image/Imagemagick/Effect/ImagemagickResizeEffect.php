@@ -2,23 +2,28 @@
 
 namespace Charcoal\Image\Imagemagick\Effect;
 
-use \Exception as Exception;
+use \Exception;
 
-use \Charcoal\Image\Effect\AbstractResizeEffect as AbstractResizeEffect;
+use \Charcoal\Image\Effect\AbstractResizeEffect;
 
+/**
+ * Reisze Effect for the Imagemagick driver.
+ */
 class ImagemagickResizeEffect extends AbstractResizeEffect
 {
     /**
-    * @param array $data
-    * @throws Exception
-    * @return ImagickResizeEffect Chainable
-    */
+     * @param array $data The effect data, if available.
+     * @throws Exception This effect is not yet available for Imagemagick driver.
+     * @return void
+     */
     public function process(array $data = null)
     {
         if ($data !== null) {
-            $this->set_data($data);
+            $this->setData($data);
         }
-        
-        throw new Exception('Resize Effect not valid');
+
+        throw new Exception(
+            'Resize Effect not valid'
+        );
     }
 }

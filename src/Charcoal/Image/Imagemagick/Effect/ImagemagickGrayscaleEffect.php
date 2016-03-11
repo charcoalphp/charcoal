@@ -4,19 +4,22 @@ namespace Charcoal\Image\Imagemagick\Effect;
 
 use \Charcoal\Image\Effect\AbstractGrayscaleEffect;
 
+/**
+ * Grayscale Effect for the Imagemagick driver.
+ */
 class ImagemagickGrayscaleEffect extends AbstractGrayscaleEffect
 {
     /**
-    * @param array $data
-    * @return ImagickGrayscaleEffect Chainable
-    */
+     * @param array $data The effect data, if available.
+     * @return ImagickGrayscaleEffect Chainable
+     */
     public function process(array $data = null)
     {
         if ($data !== null) {
-            $this->set_data($data);
+            $this->setData($data);
         }
-        
+
         $cmd = '-colorspace Gray';
-        return $this->image()->apply_cmd($cmd);
+        return $this->image()->applyCmd($cmd);
     }
 }

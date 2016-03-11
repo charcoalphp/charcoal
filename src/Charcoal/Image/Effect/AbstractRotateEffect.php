@@ -7,30 +7,30 @@ use \InvalidArgumentException;
 use \Charcoal\Image\AbstractEffect;
 
 /**
-* Rotate the image by a certain angle
-*/
+ * Rotate the image by a certain angle
+ */
 abstract class AbstractRotateEffect extends AbstractEffect
 {
-    
+
     /**
-    * The angle of rotation, in degrees, clockwise
-    * @var float $_angle
-    */
+     * The angle of rotation, in degrees, clockwise
+     * @var float $Angle
+     */
     private $angle = 0;
 
     /**
-    * The background color, for non-90-multiple rotation
-    * Defaults to transparent
-    * @var string $_background_color
-    */
-    private $background_color = 'rgb(100%, 100%, 100%, 0)';
+     * The background color, for non-90-multiple rotation
+     * Defaults to transparent
+     * @var string $BackgroundColor
+     */
+    private $backgroundColor = 'rgb(100%, 100%, 100%, 0)';
 
     /**
-    * @param numeric $angle
-    * @throws InvalidArgumentException
-    * @return AbstractRotateEffect Chainable
-    */
-    public function set_angle($angle)
+     * @param float $angle The rotation angle.
+     * @throws InvalidArgumentException If the angle argument is not numeric.
+     * @return AbstractRotateEffect Chainable
+     */
+    public function setAngle($angle)
     {
         if (!is_numeric($angle)) {
             throw new InvalidArgumentException(
@@ -42,34 +42,34 @@ abstract class AbstractRotateEffect extends AbstractEffect
     }
 
     /**
-    * @return float
-    */
+     * @return float
+     */
     public function angle()
     {
         return $this->angle;
     }
 
     /**
-    * @param string $color
-    * @throws InvalidArgumentException
-    * @return AbstractRotateEffect Chainable
-    */
-    public function set_background_color($color)
+     * @param string $color The background color, for non-90 rotations.
+     * @throws InvalidArgumentException If the color argument is not a string.
+     * @return AbstractRotateEffect Chainable
+     */
+    public function setBackgroundColor($color)
     {
         if (!is_string($color)) {
             throw new InvalidArgumentException(
                 'Color must be a string'
             );
         }
-        $this->background_color = $color;
+        $this->backgroundColor = $color;
         return $this;
     }
 
     /**
-    * @return string
-    */
-    public function background_color()
+     * @return string
+     */
+    public function backgroundColor()
     {
-        return $this->background_color;
+        return $this->backgroundColor;
     }
 }

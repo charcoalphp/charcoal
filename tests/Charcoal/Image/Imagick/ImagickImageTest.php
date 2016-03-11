@@ -8,14 +8,15 @@ class ImagickImageTest extends \PHPUnit_Framework_Testcase
 {
     public static function setUpBeforeClass()
     {
-        if (!file_exists(OUTPUT_DIR)) {
+        if (OUTPUT_DIR && !file_exists(OUTPUT_DIR)) {
             mkdir(OUTPUT_DIR);
         }
     }
 
     public function testFromFactory()
     {
-        $obj = \Charcoal\Image\ImageFactory::instance()->get('imagick');
+        $factory = new \Charcoal\Image\ImageFactory();
+        $obj = $factory->create('imagick');
 
         $this->assertInstanceOf('\Charcoal\Image\Imagick\ImagickImage', $obj);
     }
@@ -69,7 +70,7 @@ class ImagickImageTest extends \PHPUnit_Framework_Testcase
         $id1 = $obj1->imagick()->identifyImage();
 
         $obj2 = new Image();
-        $obj2->set_source(EXAMPLES_DIR.'/test01.jpg');
+        $obj2->setSource(EXAMPLES_DIR.'/test01.jpg');
         $obj2->open();
 
         $id2 = $obj2->imagick()->identifyImage();
@@ -81,7 +82,7 @@ class ImagickImageTest extends \PHPUnit_Framework_Testcase
     {
         $obj = new Image();
         $ret = $obj->open(EXAMPLES_DIR.'/test01.jpg');
-        
+
         $width = $obj->width();
         $this->assertEquals(3456, $width);
     }
@@ -90,7 +91,7 @@ class ImagickImageTest extends \PHPUnit_Framework_Testcase
     {
         $obj = new Image();
         $ret = $obj->open(EXAMPLES_DIR.'/test01.jpg');
-        
+
         $height = $obj->height();
         $this->assertEquals(2304, $height);
     }
@@ -98,32 +99,32 @@ class ImagickImageTest extends \PHPUnit_Framework_Testcase
     public function testImagickChannel()
     {
         $obj = new Image();
-        $ret = $obj->imagick_channel('red');
+        $ret = $obj->imagickChannel('red');
         $this->assertEquals(\Imagick::CHANNEL_RED, $ret);
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->imagick_channel('foobar');
+        $obj->imagickChannel('foobar');
     }
 
     public function testImagickGravity()
     {
         $obj = new Image();
-        $ret = $obj->imagick_gravity('ne');
+        $ret = $obj->imagickGravity('ne');
         $this->assertEquals(\Imagick::GRAVITY_NORTHEAST, $ret);
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->imagick_gravity('foobar');
+        $obj->imagickGravity('foobar');
     }
 
     /**
-    * @dataProvider effectProvider
-    */
+     * @dataProvider effectProvider
+     */
     public function testEffects($effect, $filename)
     {
         $obj = new Image();
         $obj->open(EXAMPLES_DIR.'/test02.png');
 
-        $obj->process_effect($effect);
+        $obj->processEffect($effect);
         $obj->save(OUTPUT_DIR.'/'.$filename);
     }
 

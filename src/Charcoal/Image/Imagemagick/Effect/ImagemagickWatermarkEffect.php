@@ -2,22 +2,22 @@
 
 namespace Charcoal\Image\Imagemagick\Effect;
 
-use \Exception;
-
 use \Charcoal\Image\Effect\AbstractWatermarkEffect;
 use \Charcoal\Image\ImageInterface;
 
+/**
+ * Watermark Effect for the Imagemagick driver.
+ */
 class ImagemagickWatermarkEffect extends AbstractWatermarkEffect
 {
     /**
-    * @param array $data
-    * @throws Exception
-    * @return ImagickWatermarkEffect Chainable
-    */
+     * @param array $data The effect data, if available.
+     * @return ImagickWatermarkEffect Chainable
+     */
     public function process(array $data = null)
     {
         if ($data !== null) {
-            $this->set_data($data);
+            $this->setData($data);
         }
 
         if ($this->watermark() instanceof ImageInterface) {
@@ -35,12 +35,12 @@ class ImagemagickWatermarkEffect extends AbstractWatermarkEffect
             $height = $w->height();
         }
 
-        $gravity = $this->image()->imagemagick_gravity($this->gravity());
+        $gravity = $this->image()->imagemagickGravity($this->gravity());
         $cmd =  '-gravity '.$gravity.' ';
         $cmd .= '-geometry +'.$this->x().'+'.$this->y().' ';
         $cmd .= '-draw "image Multiply 0,0 '.$width.','.$height.' ';
         $cmd .= '\''.$watermark.'\'"';
-        $this->image()->apply_cmd($cmd);
+        $this->image()->applyCmd($cmd);
         return $this;
     }
 }

@@ -9,8 +9,9 @@ class AbstractMirrorEffectTest extends \PHPUnit_Framework_Testcase
     public function setUp()
     {
         $img = $this->getMockForAbstractClass('\Charcoal\Image\AbstractImage');
+        $img->method('driverType')->willReturn('imagick');
         $this->obj = $this->getMockForAbstractClass('\Charcoal\Image\Effect\AbstractMirrorEffect');
-        $this->obj->set_image($img);
+        $this->obj->setImage($img);
     }
 
     public function testDefaults()
@@ -26,7 +27,7 @@ class AbstractMirrorEffectTest extends \PHPUnit_Framework_Testcase
     public function testSetData()
     {
         $obj = $this->obj;
-        $ret = $obj->set_data(
+        $ret = $obj->setData(
             [
             'axis'=>'x'
             ]
@@ -40,11 +41,11 @@ class AbstractMirrorEffectTest extends \PHPUnit_Framework_Testcase
     {
         $obj = $this->obj;
 
-        $ret = $obj->set_axis('x');
+        $ret = $obj->setAxis('x');
         $this->assertSame($ret, $obj);
         $this->assertEquals('x', $obj->axis());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_axis('foobar');
+        $obj->setAxis('foobar');
     }
 }

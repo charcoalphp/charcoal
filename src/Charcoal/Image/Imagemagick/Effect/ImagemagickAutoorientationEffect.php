@@ -4,19 +4,22 @@ namespace Charcoal\Image\Imagemagick\Effect;
 
 use \Charcoal\Image\Effect\AbstractAutoorientationEffect;
 
+/**
+ * Auto-orientate Effect for the Imagemagick driver.
+ */
 class ImagemagickAutoorientationEffect extends AbstractAutoorientationEffect
 {
     /**
-    * @param array $data
-    * @return ImagemagickAutoorientationEffect Chainable
-    */
+     * @param array $data The effect data, if available.
+     * @return ImagemagickAutoorientationEffect Chainable
+     */
     public function process(array $data = null)
     {
         if ($data !== null) {
-            $this->set_data($data);
+            $this->setData($data);
         }
 
         $cmd = '-auto-orient';
-        return $this->image()->apply_cmd($cmd);
+        return $this->image()->applyCmd($cmd);
     }
 }

@@ -9,8 +9,9 @@ class AbstractDitherEffectTest extends \PHPUnit_Framework_Testcase
     public function setUp()
     {
         $img = $this->getMockForAbstractClass('\Charcoal\Image\AbstractImage');
+        $img->method('driverType')->willReturn('imagick');
         $this->obj = $this->getMockForAbstractClass('\Charcoal\Image\Effect\AbstractDitherEffect');
-        $this->obj->set_image($img);
+        $this->obj->setImage($img);
     }
 
     public function testDefaults()
@@ -24,7 +25,7 @@ class AbstractDitherEffectTest extends \PHPUnit_Framework_Testcase
     public function testSetData()
     {
         $obj = $this->obj;
-        $ret = $obj->set_data(
+        $ret = $obj->setData(
             [
             'colors'=>8,
             'mode'=>'h6x6a'
@@ -39,22 +40,22 @@ class AbstractDitherEffectTest extends \PHPUnit_Framework_Testcase
     public function testSetColors()
     {
         $obj = $this->obj;
-        $ret = $obj->set_colors(6);
+        $ret = $obj->setColors(6);
         $this->assertSame($ret, $obj);
         $this->assertEquals(6, $obj->colors());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_colors(false);
+        $obj->setColors(false);
     }
 
     public function testSetMode()
     {
         $obj = $this->obj;
-        $ret = $obj->set_mode('checks');
+        $ret = $obj->setMode('checks');
         $this->assertSame($ret, $obj);
         $this->assertEquals('checks', $obj->mode());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_mode('foobar');
+        $obj->setMode('foobar');
     }
 }

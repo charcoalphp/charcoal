@@ -10,68 +10,94 @@ use \Charcoal\Image\EffectInterface;
 use \Charcoal\Image\EffectFactory;
 
 /**
-*
-*/
+ * Base Image class
+ */
 abstract class AbstractImage implements ImageInterface
 {
+    /**
+     * @var string $source
+     */
     protected $source;
+
+    /**
+     * @var string $target
+     */
     protected $target;
 
     /**
-    * @var array $_effects
-    */
+     * @var array $Effects
+     */
     protected $effects = [];
+
+    /**
+     * @var EffectFactory $effectFactory
+     */
+    private $effectFactory;
 
 
     /**
-    * Magic call function
-    * Tries to load the effect of the called method name.
-    *
-    * For example, $img->blur(['sigma'=>15]); would create a "Blur" effect.
-    *
-    * @param string $fx_type
-    * @param array  $data
-    * @return Image Chainable
-    */
-    public function __call($fx_type, array $data)
+     * Magic call function
+     * Tries to load the effect of the called method name.
+     *
+     * For example, $img->blur(['sigma'=>15]); would create a "Blur" effect.
+     *
+     * @param string $fxType The effect type.
+     * @param array  $data   The effect options.
+     * @return Image Chainable
+     */
+    public function __call($fxType, array $data)
     {
-        $fx_data = isset($data[0]) ? $data[0] : [];
-        $fx_data['type'] = $fx_type;
-        $fx = $this->create_effect($fx_data);
+        $fxData = $data;
+        $fxData['type'] = $fxType;
+        $fx = $this->createEffect($fxData);
         $fx->process();
         return $this;
     }
 
     /**
-    * @return string
-    */
-    abstract public function driver_type();
+     * Safe effect factory getter.
+     * If the factory doesn't exist, create it.
+     *
+     * @return EfectFactory
+     */
+    protected function effectFactory()
+    {
+        if ($this->effectFactory === null) {
+            $this->effectFactory = new EffectFactory();
+        }
+        return $this->effectFactory;
+    }
+
+    /**
+     * @return string
+     */
+    abstract public function driverType();
 
 
     /**
-    * @param array $data
-    * @return Image Chainable
-    */
-    public function set_data(array $data)
+     * @param array $data The image data (source, target and effects).
+     * @return Image Chainable
+     */
+    public function setData(array $data)
     {
         if (isset($data['source']) && $data['source'] !== null) {
-            $this->set_source($data['source']);
+            $this->setSource($data['source']);
         }
         if (isset($data['target']) && $data['target'] !==null) {
-            $this->set_target($data['target']);
+            $this->setTarget($data['target']);
         }
         if (isset($data['effects']) && $data['effects'] !== null) {
-            $this->set_effects($data['effects']);
+            $this->setEffects($data['effects']);
         }
         return $this;
     }
 
     /**
-    * @param string $source
-    * @throws InvalidArgumentException
-    * @return Image Chainable
-    */
-    public function set_source($source)
+     * @param string $source The image source.
+     * @throws InvalidArgumentException If the source argument is not a string.
+     * @return Image Chainable
+     */
+    public function setSource($source)
     {
         if (!is_string($source)) {
             throw new InvalidArgumentException(
@@ -83,19 +109,19 @@ abstract class AbstractImage implements ImageInterface
     }
 
     /**
-    * @return string
-    */
+     * @return string
+     */
     public function source()
     {
         return $this->source;
     }
 
     /**
-    * @param string $target
-    * @throws InvalidArgumentException
-    * @return Image Chainable
-    */
-    public function set_target($target)
+     * @param string $target The image target.
+     * @throws InvalidArgumentException If the target argument is not a string.
+     * @return Image Chainable
+     */
+    public function setTarget($target)
     {
         if (!is_string($target)) {
             throw new InvalidArgumentException(
@@ -107,53 +133,53 @@ abstract class AbstractImage implements ImageInterface
     }
 
     /**
-    * @return string
-    */
+     * @return string
+     */
     public function target()
     {
         return $this->target;
     }
 
     /**
-    * @param array $effects
-    * @return Image Chainable
-    */
-    public function set_effects(array $effects)
+     * @param array $effects The effects to apply.
+     * @return Image Chainable
+     */
+    public function setEffects(array $effects)
     {
         $this->effects = [];
         foreach ($effects as $effect) {
-            $this->add_effect($effect);
+            $this->addEffect($effect);
         }
         return $this;
     }
-    
+
     /**
-    * @return array The array of `EffectInterface` effects
-    */
+     * @return EffectInterface[] The array of `EffectInterface` effects.
+     */
     public function effects()
     {
         return $this->effects;
     }
 
     /**
-    * @param array|EffectInterface $effect
-    * @throws InvalidArgumentException
-    * @return Image Chainable
-    */
-    public function add_effect($effect)
+     * @param array|EffectInterface $effect The effect to add.
+     * @return Image Chainable
+     */
+    public function addEffect($effect)
     {
-        $fx = $this->create_effect($effect);
+        $fx = $this->createEffect($effect);
         $this->effects[] = $fx;
+        return $this;
     }
 
     /**
-    * @param array $effects
-    * @return Image Chainable
-    */
+     * @param array $effects Optional. The effects to process. If null, use in-memory's.
+     * @return Image Chainable
+     */
     public function process(array $effects = null)
     {
         if ($effects !== null) {
-            $this->set_effects($effects);
+            $this->setEffects($effects);
         }
 
         $effects = $this->effects();
@@ -164,72 +190,71 @@ abstract class AbstractImage implements ImageInterface
     }
 
     /**
-    * @param array|EffectInterface $effect
-    * @return Image Chainable
-    */
-    public function process_effect($effect)
+     * @param array|EffectInterface $effect The effect to process.
+     * @return Image Chainable
+     */
+    public function processEffect($effect)
     {
-        $fx = $this->create_effect($effect);
+        $fx = $this->createEffect($effect);
         $fx->process();
         return $this;
     }
 
     /**
-    * Create a blank canvas of a given size, with a given background color.
-    *
-    * @param integer $width  Image size, in pixels
-    * @param integer $height Image height, in pixels
-    * @param string  $color  Default to transparent.
-    * @throws InvalidArgumentException
-    * @return Image Chainable
-    */
+     * Create a blank canvas of a given size, with a given background color.
+     *
+     * @param integer $width  Image width, in pixels.
+     * @param integer $height Image height, in pixels.
+     * @param string  $color  Default to transparent.
+     * @return Image Chainable
+     */
     abstract public function create($width, $height, $color = 'rgb(100%, 100%, 100%, 0)');
 
     /**
-    * Open an image file
-    *
-    * @param string $source The source path / filename
-    * @throws InvalidArgumentException
-    * @return Image Chainable
-    */
+     * Open an image file
+     *
+     * @param string $source The source path / filename.
+     * @return Image Chainable
+     */
     abstract public function open($source = null);
 
     /**
-    * Save an image to a target.
-    * If no target is set, the original source will be owerwritten
-    *
-    * @param string $target The target path / filename
-    * @throws InvalidArgumentException
-    * @return Image Chainable
-    */
+     * Save an image to a target.
+     * If no target is set, the original source will be owerwritten
+     *
+     * @param string $target The target path / filename.
+     * @return Image Chainable
+     */
     abstract public function save($target = null);
 
     /**
-    * Get the image's width, in pixels
-    *
-    * @return integer
-    */
+     * Get the image's width, in pixels
+     *
+     * @return integer
+     */
     abstract public function width();
 
     /**
-    * Get the image's height, in pixels
-    *
-    * @return integer
-    */
+     * Get the image's height, in pixels
+     *
+     * @return integer
+     */
     abstract public function height();
 
     /**
-    * Get the image's ratio (width / height)
-    *
-    * @return float
-    * @throws Exception
-    */
+     * Get the image's ratio (width / height)
+     *
+     * @return float
+     * @throws Exception If the width or height has not been set.
+     */
     public function ratio()
     {
         $width = $this->width();
         $height = $this->height();
         if (!$width || !$height) {
-            throw new Exception('Ratio can not be calculated. Invalid image dimensions');
+            throw new Exception(
+                'Ratio can not be calculated. Invalid image dimensions'
+            );
         }
 
         $ratio = ($width / $height);
@@ -237,10 +262,10 @@ abstract class AbstractImage implements ImageInterface
     }
 
     /**
-    * Orientation can be "horizontal", "vertical" or "square"
-    *
-    * @return string
-    */
+     * Orientation can be "horizontal", "vertical" or "square"
+     *
+     * @return string
+     */
     public function orientation()
     {
         $ratio = $this->ratio();
@@ -254,64 +279,68 @@ abstract class AbstractImage implements ImageInterface
     }
 
     /**
-    * @return boolean
-    */
-    public function is_horizontal()
+     * @return boolean
+     */
+    public function isHorizontal()
     {
         return ($this->orientation() == 'horizontal');
     }
 
     /**
-    * @return boolean
-    */
-    public function is_vertical()
+     * @return boolean
+     */
+    public function isVertical()
     {
         return ($this->orientation() == 'vertical');
     }
 
     /**
-    * @return boolean
-    */
-    public function is_square()
+     * @return boolean
+     */
+    public function isSquare()
     {
         return ($this->orientation() == 'square');
     }
 
     /**
-    * Ensure an EffectInterface object
-    *
-    * @param array|EffectInterface $effect
-    * @throws InvalidArgumentException
-    * @return EffectInterface
-    */
-    protected function create_effect($effect)
+     * Ensure an EffectInterface object
+     *
+     * @param array|EffectInterface $effect The effect to create.
+     * @throws InvalidArgumentException If the argument is not an array or Effect.
+     * @return EffectInterface
+     */
+    protected function createEffect($effect)
     {
         if ($effect instanceof EffectInterface) {
-            $effect->set_image($this);
+            $effect->setImage($this);
             return $effect;
         } elseif (is_array($effect)) {
             if (!isset($effect['type'])) {
-                throw new InvalidArgumentException('Effect parameter must define effect type');
+                throw new InvalidArgumentException(
+                    'Effect parameter must define effect type'
+                );
             }
-            $fx_type = $effect['type'];
-            if (strstr($fx_type, '/') === false) {
+            $fxType = $effect['type'];
+            if (strstr($fxType, '/') === false) {
                 // Core effects do not need to be namespaced
-                $driver = $this->driver_type();
-                $fx_type = 'charcoal/image/'.$driver.'/effect/'.$driver.'-'.$fx_type.'-effect';
+                $driver = $this->driverType();
+                $fxType = 'charcoal/image/'.$driver.'/effect/'.$driver.'-'.$fxType.'-effect';
             }
-            $image_fx = EffectFactory::instance()->create($fx_type);
-            $image_fx->set_image($this);
-            $image_fx->set_data($effect);
-            return $image_fx;
+            $imageEffect = $this->effectFactory()->create($fxType);
+            $imageEffect->setImage($this);
+            $imageEffect->setData($effect);
+            return $imageEffect;
         } else {
-            throw new InvalidArgumentException('Effect must be an array or effect object');
+            throw new InvalidArgumentException(
+                'Effect must be an array or effect object'
+            );
         }
     }
 
     /**
-    * @return array
-    */
-    public function available_channels()
+     * @return array
+     */
+    public function availableChannels()
     {
         return [
             // RGB
@@ -332,9 +361,9 @@ abstract class AbstractImage implements ImageInterface
     }
 
     /**
-    * @return array
-    */
-    public function available_gravities()
+     * @return array
+     */
+    public function availableGravities()
     {
         return [
             'center',
@@ -350,29 +379,25 @@ abstract class AbstractImage implements ImageInterface
     }
 
     /**
-    * @return array
-    */
-    public function available_filters()
+     * @return array
+     */
+    public function availableFilters()
     {
+        // Unsupported: bartlett, bohman, kaiser, parzen and welsh.
         return [
-            //'bartlett',
             'blackman',
-            //'bohman',
             'box',
             'catrom',
             'cubic',
             'hamming',
             'hanning',
             'hermite',
-            //'kaiser',
             'gaussian',
             'lanczos',
             'mitchell',
-            //'parzen',
             'point',
             'quadratic',
-            'triangle',
-            //'welsh'
+            'triangle'
         ];
     }
 }

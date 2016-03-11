@@ -4,21 +4,24 @@ namespace Charcoal\Image\Imagemagick\Effect;
 
 use \Charcoal\Image\Effect\AbstractSepiaEffect;
 
+/**
+ * Sepia Effect for the Imagemagick driver.
+ */
 class ImagemagickSepiaEffect extends AbstractSepiaEffect
 {
     /**
-    * @param array $data
-    * @return ImagickSepiaEffect Chainable
-    */
+     * @param array $data The effect data, if available.
+     * @return ImagickSepiaEffect Chainable
+     */
     public function process(array $data = null)
     {
         if ($data !== null) {
-            $this->set_data($data);
+            $this->setData($data);
         }
 
         $value = (($this->threshold()/255)*100).'%';
         $cmd = '-sepia-tone '.$value;
-        $this->image()->apply_cmd($cmd);
+        $this->image()->applyCmd($cmd);
         return $this;
     }
 }

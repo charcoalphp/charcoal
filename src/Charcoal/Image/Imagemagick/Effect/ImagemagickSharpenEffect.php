@@ -4,47 +4,50 @@ namespace Charcoal\Image\Imagemagick\Effect;
 
 use \Charcoal\Image\Effect\AbstractSharpenEffect;
 
+/**
+ * Sharpen Effect for the Imagemagick driver.
+ */
 class ImagemagickSharpenEffect extends AbstractSharpenEffect
 {
     /**
-    * @return ImagickSharpenEffect Chainable
-    */
-    public function process_adaptive()
+     * @return ImagickSharpenEffect Chainable
+     */
+    public function processAdaptive()
     {
         $radius = $this->radius();
         $sigma = $this->sigma();
-        $channel = $this->image()->convert_channel($this->channel());
+        $channel = $this->image()->convertChannel($this->channel());
         $cmd = '-channel '.$channel.' -adaptive-sharpen '.$radius.'x'.$sigma;
-        $this->image()->apply_cmd($cmd);
+        $this->image()->applyCmd($cmd);
         return $this;
     }
 
     /**
-    * @return ImagickSharpenEffect Chainable
-    */
-    public function process_unsharp()
+     * @return ImagickSharpenEffect Chainable
+     */
+    public function processUnsharp()
     {
         $radius = $this->radius();
         $sigma = $this->sigma();
         $amount = $this->amount();
         $threshold = $this->threshold();
-        $channel = $this->image()->convert_channel($this->channel());
+        $channel = $this->image()->convertChannel($this->channel());
 
         $cmd = '-channel '.$channel.' -unsharp '.$radius.'x'.$sigma.'+'.$amount.'+'.$threshold;
-        $this->image()->apply_cmd($cmd);
+        $this->image()->applyCmd($cmd);
         return $this;
     }
 
     /**
-    * @return ImagickSharpenEffect Chainable
-    */
-    public function process_standard()
+     * @return ImagickSharpenEffect Chainable
+     */
+    public function processStandard()
     {
         $radius = $this->radius();
         $sigma = $this->sigma();
-        $channel = $this->image()->convert_channel($this->channel());
+        $channel = $this->image()->convertChannel($this->channel());
         $cmd = '-channel '.$channel.' -sharpen '.$radius.'x'.$sigma;
-        $this->image()->apply_cmd($cmd);
+        $this->image()->applyCmd($cmd);
         return $this;
     }
 }

@@ -6,19 +6,22 @@ use \Exception;
 
 use \Charcoal\Image\Effect\AbstractMaskEffect;
 
+/**
+ * Mask Effect for the Imagemagick driver.
+ */
 class ImagemagickMaskEffect extends AbstractMaskEffect
 {
     /**
-    * @param array $data
-    * @throws Exception
-    * @return ImagickMaskEffect Chainable
-    */
+     * @param array $data The effect data, if available.
+     * @throws Exception This effect is not yet supported by Imagemagick driver.
+     * @return void
+     */
     public function process(array $data = null)
     {
         if ($data !== null) {
-            $this->set_data($data);
+            $this->setData($data);
         }
-        
+
         throw new Exception(
             'Mask Effect is not (yet) supported with imagemagick driver.'
         );

@@ -8,14 +8,15 @@ class ImagemagickImageTest extends \PHPUnit_Framework_Testcase
 {
     public static function setUpBeforeClass()
     {
-        if (!file_exists(OUTPUT_DIR)) {
-            mkdir(OUTPUT_DIR);
+        if (OUTPUT_DIR && !file_exists(OUTPUT_DIR)) {
+            mkdir(OUTPUT_DIR, 0777, true);
         }
     }
 
     public function testFromFactory()
     {
-        $obj = \Charcoal\Image\ImageFactory::instance()->get('imagemagick');
+        $factory = new \Charcoal\Image\ImageFactory();
+        $obj = $factory->create('imagemagick');
 
         $this->assertInstanceOf('\Charcoal\Image\Imagemagick\ImagemagickImage', $obj);
     }
@@ -69,7 +70,7 @@ class ImagemagickImageTest extends \PHPUnit_Framework_Testcase
         //$id1 = $obj1->imagick()->identifyImage();
 
         $obj2 = new Image();
-        $obj2->set_source(EXAMPLES_DIR.'/test01.jpg');
+        $obj2->setSource(EXAMPLES_DIR.'/test01.jpg');
         $obj2->open();
 
         //$id2 = $obj2->imagick()->identifyImage();
@@ -81,7 +82,7 @@ class ImagemagickImageTest extends \PHPUnit_Framework_Testcase
     {
         $obj = new Image();
         $obj->open(EXAMPLES_DIR.'/test01.jpg');
-        
+
         $width = $obj->width();
         $this->assertEquals(3456, $width);
     }
@@ -90,20 +91,20 @@ class ImagemagickImageTest extends \PHPUnit_Framework_Testcase
     {
         $obj = new Image();
         $obj->open(EXAMPLES_DIR.'/test01.jpg');
-        
+
         $height = $obj->height();
         $this->assertEquals(2304, $height);
     }
 
     /**
-    * @dataProvider effectProvider
-    */
+     * @dataProvider effectProvider
+     */
     public function testEffects($effect, $filename)
     {
         $obj = new Image();
         $obj->open(EXAMPLES_DIR.'/test02.png');
 
-        $obj->process_effect($effect);
+        $obj->processEffect($effect);
         $obj->save(OUTPUT_DIR.'/'.$filename);
     }
 

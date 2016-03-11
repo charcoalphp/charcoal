@@ -6,16 +6,19 @@ use \Imagick;
 
 use \Charcoal\Image\Effect\AbstractDitherEffect;
 
+/**
+ * Dither Effect for the Imagick driver.
+ */
 class ImagickDitherEffect extends AbstractDitherEffect
 {
     /**
-    * @param array $data
-    * @return ImagickDitherEffect Chainable
-    */
+     * @param array $data The effect data, if available.
+     * @return ImagickDitherEffect Chainable
+     */
     public function process(array $data = null)
     {
         if ($data !== null) {
-            $this->set_data($data);
+            $this->setData($data);
         }
 
         $mode = $this->mode();

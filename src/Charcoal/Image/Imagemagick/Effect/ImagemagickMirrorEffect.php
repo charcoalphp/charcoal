@@ -4,25 +4,28 @@ namespace Charcoal\Image\Imagemagick\Effect;
 
 use \Charcoal\Image\Effect\AbstractMirrorEffect;
 
+/**
+ * Mirror Effect for the Imagemagick driver.
+ */
 class ImagemagickMirrorEffect extends AbstractMirrorEffect
 {
     /**
-    * @param array $data
-    * @return ImagickMirrorEffect Chainable
-    */
+     * @param array $data The effect data, if available.
+     * @return ImagickMirrorEffect Chainable
+     */
     public function process(array $data = null)
     {
         if ($data !== null) {
-            $this->set_data($data);
+            $this->setData($data);
         }
-        
+
         $axis = $this->axis();
         if ($axis == 'x') {
             $cmd = '-flip';
         } else {
             $cmd = '-flop';
         }
-        $this->image()->apply_cmd($cmd);
+        $this->image()->applyCmd($cmd);
         return $this;
     }
 }

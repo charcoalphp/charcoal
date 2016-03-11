@@ -2,25 +2,56 @@ language: php
 php:
   - 5.5
   - 5.6
+  - 7.0
   - hhvm
   - nightly
 
+env:
+  global:
+    - secure: "m51ay1rZpv3EyRNyrk/irXjJezB0oTsC/LhvVOERmeiapKvshv0roCAzW16Zeh3Z5VfqAK0n1GU7ZlPtyASW1r7rU4+YRWz/2kwMvmPVGYinXfuOhcK8AVGb+WME7ObduwNXLr76N2OAifL2t2F/l0mdCshHhzxficjKlschrxHvX+kl7IUlDn9YK1IQi7UntVRkfgr9LBcbKo4D562vXauX2IVexOw7aRisdyOhWI8FVZXgoWwQvgEehOFNgmWGOOhGOORLvCNxOrHoKEYecdy5pPRVKl/+TEacLC9Z4svr5jM6+/MwE03XSnSy08UlwMVdJmmr47hbVY4DvFMiExjGAOnczFgDLB8gWpXjmHjtihQWoJbA5pF1DWdWEgX7iw/zNqgQ9SszDLlCrBYi4enXqZzvTgU71Zu51Dhxv/858poD2pnOmk/TYKHY2eD+Rp5sWM98n5WXxeVXC70Q0N1l3wYQ+RRlvXzc3B0GMfr/q+xzjqSnkzij16cNC+4tM4aHRC78p8ufenBX89YZ3XOP30K2jA0gCnEsk0j2egSzqpGuK/hTBZaAPAIHgShFcpuQ5UjcqZ0xcHy+cssasxEGzW1aEnjiFW564TmXMGdftBtxEBbPZcXOYh0KI/Mj2Vic4WBE5HJJRIcHxAag8VEskm48pUNy5VBK+JBhTW4="
+    - GH_REPO: github.com/locomotivemtl/charcoal-image.git
+
 matrix:
   allow_failures:
+    - php: 7.0
     - php: hhvm
     - php: nightly
 
 before_install:
+  ## Install imagemagick from PPA
   - sudo add-apt-repository -y ppa:moti-p/cc
   - sudo apt-get update
   - sudo apt-get -y --reinstall install imagemagick
   - sh -c "if [ $TRAVIS_PHP_VERSION != 'hhvm' ]; then printf "\n" | pecl install imagick-beta; fi"
-  - sh -c "if [ $TRAVIS_PHP_VERSION != 'hhvm' ]; then pear install pear/PHP_CodeSniffer && phpenv rehash; fi"
   - mkdir -p ./tests/tmp/images
 
 before_script:
-  - composer install
+  ## Init composer
+  - composer selfupdate --quiet
+  # see https://getcomposer.org/doc/articles/troubleshooting.md#package-not-found-on-travis-ci-org
+  - COMPOSER_ROOT_VERSION=dev-master composer install -n --dev
+  ## Install the PHPdoc binary
+  - pear channel-discover pear.phpdoc.org
+  - pear install phpdoc/phpDocumentor
+  - phpenv rehash
+  ## Create temporary folders
+  - mkdir -p build/logs
+  - mkdir -p build/docs
+
 
 script:
-  - sh -c "if [ $TRAVIS_PHP_VERSION != 'hhvm' ]; then phpcs -ps --colors --standard=phpcs.xml src/; fi"
-  - phpunit --bootstrap ./tests/bootstrap.php --configuration ./tests/phpunit.xml --coverage-text
+  ## Lint PHP Files
+  - find {src,tests} -name '*.php' -print0 | xargs -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1
+  - if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then ./vendor/bin/phpcs -ps --colors --standard=phpcs.xml src/; fi
+  ## Run PHPUnit Tests
+  - phpunit --configuration ./tests/phpunit.xml --coverage-text --coverage-clover build/logs/clover.xml
+  ## Generate phpdoc
+  - if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_PHP_VERSION" == "5.6" ]; then phpdoc -p -d ./src -t ./build/docs; fi
+
+after_script:
+  - php vendor/bin/coveralls -v
+ # - bash build/travis/phpdoc_ghpages.sh
+
+notifications:
+  slack: locomotivemtl:d9h8ZWwTZ6b3WUsSP9s26nb1
+  email: charcoal@locomotive.ca

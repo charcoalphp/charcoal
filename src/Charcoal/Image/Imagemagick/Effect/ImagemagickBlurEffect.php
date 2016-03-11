@@ -4,70 +4,73 @@ namespace Charcoal\Image\Imagemagick\Effect;
 
 use \Charcoal\Image\Effect\AbstractBlurEffect;
 
+/**
+ * Blur Effect for the Imagemagick driver.
+ */
 class ImagemagickBlurEffect extends AbstractBlurEffect
 {
     /**
-    * @return ImagemagickBlurEffect Chainable
-    */
-    public function process_adaptive()
+     * @return ImagemagickBlurEffect Chainable
+     */
+    public function processAdaptive()
     {
-        $channel = $this->image()->convert_channel($this->channel());
+        $channel = $this->image()->convertChannel($this->channel());
         $cmd = '-channel '.$channel.' -adaptive-blur '.$this->radius().'x'.$this->sigma();
-        $this->image()->apply_cmd($cmd);
+        $this->image()->applyCmd($cmd);
         return $this;
     }
-    
+
     /**
-    * @return ImagemagickBlurEffect Chainable
-    */
-    public function process_gaussian()
+     * @return ImagemagickBlurEffect Chainable
+     */
+    public function processGaussian()
     {
-        $channel = $this->image()->convert_channel($this->channel());
+        $channel = $this->image()->convertChannel($this->channel());
         $cmd = '-channel '.$channel.' -gaussian-blur '.$this->radius().'x'.$this->sigma();
-        $this->image()->apply_cmd($cmd);
+        $this->image()->applyCmd($cmd);
         return $this;
     }
-    
+
     /**
-    * @return ImagemagickBlurEffect Chainable
-    */
-    public function process_motion()
+     * @return ImagemagickBlurEffect Chainable
+     */
+    public function processMotion()
     {
-        $channel = $this->image()->convert_channel($this->channel());
+        $channel = $this->image()->convertChannel($this->channel());
         $cmd = '-channel '.$channel.' -motion-blur '.$this->radius().'x'.$this->sigma().'+'.$this->angle();
-        $this->image()->apply_cmd($cmd);
+        $this->image()->applyCmd($cmd);
         return $this;
     }
-    
+
     /**
-    * @return ImagemagickBlurEffect Chainable
-    */
-    public function process_radial()
+     * @return ImagemagickBlurEffect Chainable
+     */
+    public function processRadial()
     {
-        $channel = $this->image()->convert_channel($this->channel());
+        $channel = $this->image()->convertChannel($this->channel());
         $cmd = '-channel '.$channel.' -radial-blur '.$this->angle();
-        $this->image()->apply_cmd($cmd);
+        $this->image()->applyCmd($cmd);
         return $this;
     }
-    
+
     /**
-    * @return ImagemagickBlurEffect Chainable
-    */
-    public function process_soft()
+     * @return ImagemagickBlurEffect Chainable
+     */
+    public function processSoft()
     {
         $cmd = '-define convolve:scale=60,40% -morphology Convolve \'Gaussian:'.$this->radius().'x'.$this->sigma().'\'';
-        $this->image()->apply_cmd($cmd);
+        $this->image()->applyCmd($cmd);
         return $this;
     }
-    
+
     /**
-    * @return ImagemagickBlurEffect Chainable
-    */
-    public function process_standard()
+     * @return ImagemagickBlurEffect Chainable
+     */
+    public function processStandard()
     {
-        $channel = $this->image()->convert_channel($this->channel());
+        $channel = $this->image()->convertChannel($this->channel());
         $cmd = '-channel '.$channel.' -blur '.$this->radius().'x'.$this->sigma();
-        $this->image()->apply_cmd($cmd);
+        $this->image()->applyCmd($cmd);
         return $this;
     }
 }

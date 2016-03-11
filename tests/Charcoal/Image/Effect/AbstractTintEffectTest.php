@@ -10,7 +10,7 @@ class AbstractTintEffectTest extends \PHPUnit_Framework_Testcase
     {
         $img = $this->getMockForAbstractClass('\Charcoal\Image\AbstractImage');
         $this->obj = $this->getMockForAbstractClass('\Charcoal\Image\Effect\AbstractTintEffect');
-        $this->obj->set_image($img);
+        $this->obj->setImage($img);
     }
 
     public function testDefaults()
@@ -25,7 +25,7 @@ class AbstractTintEffectTest extends \PHPUnit_Framework_Testcase
     public function testSetData()
     {
         $obj = $this->obj;
-        $ret = $obj->set_data(
+        $ret = $obj->setData(
             [
             'color'=>'white',
             'opacity'=>0.42,
@@ -42,33 +42,30 @@ class AbstractTintEffectTest extends \PHPUnit_Framework_Testcase
     public function testSetColor()
     {
         $obj = $this->obj;
-        $ret = $obj->set_color('#ff00ff');
+        $ret = $obj->setColor('#ff00ff');
         $this->assertSame($ret, $obj);
         $this->assertEquals('#ff00ff', $obj->color());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_color(false);
+        $obj->setColor(false);
     }
 
     public function testSetOpacity()
     {
         $obj = $this->obj;
-        $ret = $obj->set_opacity(0.42);
+        $ret = $obj->setOpacity(0.42);
         $this->assertSame($ret, $obj);
         $this->assertEquals(0.42, $obj->opacity());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_opacity(false);
+        $obj->setOpacity(false);
     }
 
     public function testSetMidtone()
     {
         $obj = $this->obj;
-        $ret = $obj->set_midtone(false);
+        $ret = $obj->setMidtone(false);
         $this->assertSame($ret, $obj);
         $this->assertFalse($obj->midtone());
-
-        $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_midtone('foobar');
     }
 }

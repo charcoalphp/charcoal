@@ -7,23 +7,23 @@ use \InvalidArgumentException;
 use \Charcoal\Image\AbstractEffect;
 
 /**
-* Revert (negate) the image's colors.
-*/
+ * Revert (negate) the image's colors.
+ */
 abstract class AbstractRevertEffect extends AbstractEffect
 {
     /**
-    * @var string $channel
-    */
+     * @var string $channel
+     */
     private $channel = 'all';
 
     /**
-    * @param string $channel
-    * @throws InvalidArgumentException
-    * @return AbstractBlurEffect Chainable
-    */
-    public function set_channel($channel)
+     * @param string $channel The channel to revert.
+     * @throws InvalidArgumentException If the channel argument is not a valid channel.
+     * @return AbstractBlurEffect Chainable
+     */
+    public function setChannel($channel)
     {
-        if (!in_array($channel, $this->image()->available_channels())) {
+        if (!in_array($channel, $this->image()->availableChannels())) {
             throw new InvalidArgumentException(
                 'Channel is not valid'
             );
@@ -31,10 +31,10 @@ abstract class AbstractRevertEffect extends AbstractEffect
         $this->channel = $channel;
         return $this;
     }
-    
+
     /**
-    * @return string
-    */
+     * @return string
+     */
     public function channel()
     {
         return $this->channel;

@@ -9,8 +9,9 @@ class AbstractMaskEffectTest extends \PHPUnit_Framework_Testcase
     public function setUp()
     {
         $img = $this->getMockForAbstractClass('\Charcoal\Image\AbstractImage');
+        $img->method('driverType')->willReturn('imagick');
         $this->obj = $this->getMockForAbstractClass('\Charcoal\Image\Effect\AbstractMaskEffect');
-        $this->obj->set_image($img);
+        $this->obj->setImage($img);
     }
 
     public function testDefaults()
@@ -26,7 +27,7 @@ class AbstractMaskEffectTest extends \PHPUnit_Framework_Testcase
     public function testSetData()
     {
         $obj = $this->obj;
-        $ret = $obj->set_data(
+        $ret = $obj->setData(
             [
             'mask'=>'foo/bar.png',
             'opacity'=>0.5,
@@ -47,55 +48,55 @@ class AbstractMaskEffectTest extends \PHPUnit_Framework_Testcase
     public function testSetMask()
     {
         $obj = $this->obj;
-        $ret = $obj->set_mask('bar/baz.png');
+        $ret = $obj->setMask('bar/baz.png');
         $this->assertSame($ret, $obj);
         $this->assertEquals('bar/baz.png', $obj->mask());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_mask(false);
+        $obj->setMask(false);
     }
 
     public function testSetOpacity()
     {
         $obj = $this->obj;
-        $ret = $obj->set_opacity(0.42);
+        $ret = $obj->setOpacity(0.42);
         $this->assertSame($ret, $obj);
         $this->assertEquals(0.42, $obj->opacity());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_opacity(false);
+        $obj->setOpacity(false);
     }
 
     public function testSetGravity()
     {
         $obj = $this->obj;
-        $ret = $obj->set_gravity('se');
+        $ret = $obj->setGravity('se');
         $this->assertSame($ret, $obj);
         $this->assertEquals('se', $obj->gravity());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_gravity('foobar');
+        $obj->setGravity('foobar');
     }
 
     public function testSetX()
     {
         $obj = $this->obj;
-        $ret = $obj->set_x(15);
+        $ret = $obj->setX(15);
         $this->assertSame($ret, $obj);
         $this->assertEquals(15, $obj->x());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_x(false);
+        $obj->setX(false);
     }
 
     public function testSetY()
     {
         $obj = $this->obj;
-        $ret = $obj->set_y(15);
+        $ret = $obj->setY(15);
         $this->assertSame($ret, $obj);
         $this->assertEquals(15, $obj->y());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->set_y(false);
+        $obj->setY(false);
     }
 }

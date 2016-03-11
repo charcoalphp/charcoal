@@ -6,16 +6,19 @@ use \Imagick;
 
 use \Charcoal\Image\Effect\AbstractAutoorientationEffect;
 
+/**
+ * Auto-orientation Effect for the Imagick driver.
+ */
 class ImagickAutoorientationEffect extends AbstractAutoorientationEffect
 {
     /**
-    * @param array $data
-    * @return ImagickAutoorientationEffect Chainable
-    */
+     * @param array $data The effect data, if available.
+     * @return ImagickAutoorientationEffect Chainable
+     */
     public function process(array $data = null)
     {
         if ($data !== null) {
-            $this->set_data($data);
+            $this->setData($data);
         }
 
         switch ($this->image()->imagick()->getImageOrientation()) {
@@ -25,25 +28,25 @@ class ImagickAutoorientationEffect extends AbstractAutoorientationEffect
                 $this->image()->imagick()->flopImage();
                 break;
             case Imagick::ORIENTATION_BOTTOMRIGHT:
-                $this->image()->imagick()->rotateImage("#000", 180);
+                $this->image()->imagick()->rotateImage('#000', 180);
                 break;
             case Imagick::ORIENTATION_BOTTOMLEFT:
                 $this->image()->imagick()->flopImage();
-                $this->image()->imagick()->rotateImage("#000", 180);
+                $this->image()->imagick()->rotateImage('#000', 180);
                 break;
             case Imagick::ORIENTATION_LEFTTOP:
                 $this->image()->imagick()->flopImage();
-                $this->image()->imagick()->rotateImage("#000", -90);
+                $this->image()->imagick()->rotateImage('#000', -90);
                 break;
             case Imagick::ORIENTATION_RIGHTTOP:
-                $this->image()->imagick()->rotateImage("#000", 90);
+                $this->image()->imagick()->rotateImage('#000', 90);
                 break;
             case Imagick::ORIENTATION_RIGHTBOTTOM:
                 $this->image()->imagick()->flopImage();
-                $this->image()->imagick()->rotateImage("#000", 90);
+                $this->image()->imagick()->rotateImage('#000', 90);
                 break;
             case Imagick::ORIENTATION_LEFTBOTTOM:
-                $this->image()->imagick()->rotateImage("#000", -90);
+                $this->image()->imagick()->rotateImage('#000', -90);
                 break;
             default:
                 // Invalid orientation

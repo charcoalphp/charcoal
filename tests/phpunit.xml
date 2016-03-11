@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit 
+<phpunit
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.5/phpunit.xsd"
-	backupGlobals="false" 
-	backupStaticAttributes="false" 
-	bootstrap="bootstrap.php" 
+	backupGlobals="false"
+	backupStaticAttributes="false"
+	bootstrap="bootstrap.php"
 	convertErrorsToExceptions="true"
-	colors="true" 
+	colors="true"
 	verbose="true"
 >
 	<testsuites>
-		<testsuite name="Charcoal Core Test Suite">
-			<directory>Charcoal/</directory>
+		<testsuite name="Charcoal Image Test Suite">
+			<directory>Charcoal/Image/</directory>
 		</testsuite>
 	</testsuites>
 	<filter>
 	<whitelist>
-		<directory suffix=".php">../src/Charcoal</directory>
+		<directory suffix=".php">../src/Charcoal/Image</directory>
 	</whitelist>
-	</filter> 
+	</filter>
 	<logging>
 		<log type="coverage-html" target="tmp/report" charset="UTF-8" highlight="true" lowUpperBound="40" highLowerBound="80" />
 		<log type="coverage-clover" target="tmp/coverage.xml"/>
