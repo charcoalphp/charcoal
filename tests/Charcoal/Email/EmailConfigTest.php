@@ -2,7 +2,7 @@
 
 namespace Charcoals\Tests\Email;
 
-use \Charcoal\App\Email\EmailConfig;
+use \Charcoal\Email\EmailConfig;
 
 class EmailConfigTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,7 +20,7 @@ class EmailConfigTest extends \PHPUnit_Framework_TestCase
             'default_log'   => true,
             'default_track' => true
         ];
-        $ret = $obj->setData($data);
+        $ret = $obj->merge($data);
         $this->assertSame($ret, $obj);
         $this->assertEquals(true, $obj->smtp());
         $this->assertEquals('localhost', $obj->smtpHostname());
