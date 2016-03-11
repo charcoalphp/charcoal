@@ -67,6 +67,6 @@ trait EmailAwareTrait
         }
 
         $name = str_replace('"', '', filter_var($arr['name'], FILTER_SANITIZE_STRING));
-        return sprintf('%s <%s>', $name, $email);
+        return sprintf('"%s" <%s>', $name, $email);
     }
 }

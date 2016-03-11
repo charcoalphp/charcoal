@@ -248,6 +248,7 @@ class Email implements
 
         $this->to = [];
 
+        // At this point, `$email` can be an _email array_ or an _array of emails_...
         if (isset($email['email'])) {
             // Means we're not dealing with multiple emails
             $this->addTo($email);
@@ -268,7 +269,15 @@ class Email implements
      */
     public function addTo($email)
     {
-        $this->to[] = $this->emailToArray($email);
+        if (is_string($email)) {
+            $this->to[] = $email;
+        } elseif (is_array($email)) {
+            $this->to[] = $this->emailFromArray($email);
+        } else {
+            throw new InvalidArgumentException(
+                'Can not set to: email must be an array or a string'
+            );
+        }
 
         return $this;
     }
@@ -304,6 +313,7 @@ class Email implements
 
         $this->cc = [];
 
+        // At this point, `$email` can be an _email array_ or an _array of emails_...
         if (isset($email['email'])) {
             // Means we're not dealing with multiple emails
             $this->addCc($email);
@@ -324,7 +334,15 @@ class Email implements
      */
     public function addCc($email)
     {
-        $this->cc[] = $this->emailToArray($email);
+        if (is_string($email)) {
+            $this->cc[] = $email;
+        } elseif (is_array($email)) {
+            $this->cc[] = $this->emailFromArray($email);
+        } else {
+            throw new InvalidArgumentException(
+                'Can not set to: email must be an array or a string'
+            );
+        }
 
         return $this;
     }
@@ -361,6 +379,7 @@ class Email implements
 
         $this->bcc = [];
 
+        // At this point, `$email` can be an _email array_ or an _array of emails_...
         if (isset($email['email'])) {
             // Means we're not dealing with multiple emails
             $this->addBcc($email);
@@ -381,7 +400,15 @@ class Email implements
      */
     public function addBcc($email)
     {
-        $this->bcc[] = $this->emailToArray($email);
+        if (is_string($email)) {
+            $this->bcc[] = $email;
+        } elseif (is_array($email)) {
+            $this->bcc[] = $this->emailFromArray($email);
+        } else {
+            throw new InvalidArgumentException(
+                'Can not set to: email must be an array or a string'
+            );
+        }
 
         return $this;
     }
@@ -400,12 +427,21 @@ class Email implements
      * Set the sender's email address.
      *
      * @param  string|array $email An email address.
+     * @throws InvalidArgumentException If the email is not a string or an array.
      * @return EmailInterface Chainable
      * @todo   Implement optional "Sender" field.
      */
     public function setFrom($email)
     {
-        $this->from = $this->emailToArray($email);
+        if (is_array($email)) {
+            $this->from = $this->emailFromArray($email);
+        } elseif (is_string($email)) {
+            $this->from = $email;
+        } else {
+            throw new InvalidArgumentException(
+                'Can not set from: email must be an array or a string'
+            );
+        }
 
         return $this;
     }
@@ -428,11 +464,20 @@ class Email implements
      * Set email address to reply to the message.
      *
      * @param  mixed $email The sender's "Reply-To" email address.
+     * @throws InvalidArgumentException If the email is not a string or an array.
      * @return EmailInterface Chainable
      */
     public function setReplyTo($email)
     {
-        $this->replyTo = $this->emailFromArray($email);
+        if (is_array($email)) {
+            $this->replyTo = $this->emailFromArray($email);
+        } elseif (is_string($email)) {
+            $this->replyTo = $email;
+        } else {
+            throw new InvalidArgumentException(
+                'Can not set reply-to: email must be an array or a string'
+            );
+        }
 
         return $this;
     }
@@ -567,21 +612,49 @@ class Email implements
     public function msgTxt()
     {
         if ($this->msgTxt === null) {
-            $this->msgTxt = $this->generateMsgTxt();
+            $this->msgTxt = $this->stripHtml($this->msgHtml());
         }
 
         return $this->msgTxt;
     }
 
     /**
-     * Get the email's plain-text message from the HTML message, if applicable.
+     * Convert an HTML string to plain-text.
      *
-     * @return string
+     * @param string $html The HTML string to convert.
+     * @return string The resulting plain-text string.
      */
-    protected function generateMsgTxt()
+    protected function stripHtml($html)
     {
-        $message = $this->msgHtml();
-        return $message;
+        $str = html_entity_decode($html);
+
+        // Strip HTML (Replace br with newline, remove "invisible" tags and strip other tags)
+        $str = preg_replace('#<br[^>]*?>#siu', "\n", $str);
+        $str = preg_replace(
+            [
+                '#<applet[^>]*?.*?</applet>#siu',
+                '#<embed[^>]*?.*?</embed>#siu',
+                '#<head[^>]*?>.*?</head>#siu',
+                '#<noframes[^>]*?.*?</noframes>#siu',
+                '#<noscript[^>]*?.*?</noscript>#siu',
+                '#<noembed[^>]*?.*?</noembed>#siu',
+                '#<object[^>]*?.*?</object>#siu',
+                '#<script[^>]*?.*?</script>#siu',
+                '#<style[^>]*?>.*?</style>#siu'
+            ],
+            '',
+            $str
+        );
+        $str = strip_tags($str);
+
+        // Trim whitespace
+        $str = str_replace("\t", '', $str);
+        $str = preg_replace('#\n\r|\r\n#', "\n", $str);
+        $str = preg_replace('#\n{3,}#', "\n\n", $str);
+        $str = preg_replace('/ {2,}/', ' ', $str);
+        $str = implode("\n", array_map('trim', explode("\n", $str)));
+        $str = trim($str)."\n";
+        return $str;
     }
 
     /**
