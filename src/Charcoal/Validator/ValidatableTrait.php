@@ -19,7 +19,7 @@ trait ValidatableTrait
     protected $validator;
 
     /**
-    * @param ValidatorInterface $validator
+    * @param ValidatorInterface $validator The validator object to use for validation.
     * @return ValidatableInterface Chainable
     */
     public function setValidator(ValidatorInterface $validator)
@@ -45,7 +45,7 @@ trait ValidatableTrait
     abstract protected function createValidator();
 
     /**
-    * @param ValidatorInterface $v
+    * @param ValidatorInterface $v Optional. A custom validator object to use for validation. If null, use object's.
     * @return boolean
     */
     public function validate(ValidatorInterface &$v = null)

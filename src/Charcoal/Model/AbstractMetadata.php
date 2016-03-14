@@ -37,8 +37,8 @@ abstract class AbstractMetadata extends AbstractConfig implements
     protected $properties = [];
 
     /**
-    * @param array $properties
-    * @throws InvalidArgumentException if parameter is not an array
+    * @param array $properties The properties.
+    * @throws InvalidArgumentException If parameter is not an array.
     * @return MetadataInterface Chainable
     */
     public function setProperties(array $properties)
@@ -56,7 +56,7 @@ abstract class AbstractMetadata extends AbstractConfig implements
     }
 
     /**
-    * @param array $data Optional
+    * @param array $data Optional.
     * @return LoaderInterface
     */
     protected function createLoader(array $data = null)

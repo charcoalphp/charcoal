@@ -29,8 +29,8 @@ class SourceConfig extends AbstractConfig
     }
 
     /**
-    * @param string $type
-    * @throws InvalidArgumentException if parameter is not a string
+    * @param string $type The type of source.
+    * @throws InvalidArgumentException If parameter is not a string.
     * @return SourceConfig Chainable
     */
     public function setType($type)

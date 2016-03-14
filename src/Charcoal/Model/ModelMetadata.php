@@ -6,7 +6,10 @@ use \InvalidArgumentException;
 
 use \Charcoal\Model\AbstractMetadata;
 
-class ModelMetadata extends AbstractMetadata implements \ArrayAccess
+/**
+ *
+ */
+class ModelMetadata extends AbstractMetadata
 {
     /**
      * @var string $Ident
@@ -17,20 +20,15 @@ class ModelMetadata extends AbstractMetadata implements \ArrayAccess
     * @var array $Sources
     */
     private $sources;
+
     /**
     * @var string $defaultSource
     */
     private $defaultSource;
 
     /**
-    * The actual config data
-    * @var array $data
-    */
-//    public $data;
-
-    /**
-    * @param string $ident
-    * @throws InvalidArgumentException if ident is not a string
+    * @param string $ident The object meta identifier.
+    * @throws InvalidArgumentException If ident is not a string.
     * @return ModelMetadata Chainable
     */
     public function setIdent($ident)
@@ -53,17 +51,12 @@ class ModelMetadata extends AbstractMetadata implements \ArrayAccess
     }
 
     /**
-    * @param array $sources
-    * @throws InvalidArgumentException
+    * @param array $sources The available sources for this model.
     * @return ModelMetadata Chainable
     */
-    public function setSources($sources)
+    public function setSources(array $sources)
     {
-        if (!is_array($sources)) {
-            throw new InvalidArgumentException(
-                'Sources must be an array.'
-            );
-        }
+
         foreach ($sources as $sourceIdent => $source) {
             $this->addSource($sourceIdent, $source);
         }
@@ -79,8 +72,8 @@ class ModelMetadata extends AbstractMetadata implements \ArrayAccess
     }
 
     /**
-    * @param string $sourceIdent
-    * @param mixed  $source
+    * @param string $sourceIdent The source identifier.
+    * @param mixed  $source      The source data.
     * @return ModelMetadata Chainable
     */
     public function addSource($sourceIdent, $source)
@@ -90,7 +83,7 @@ class ModelMetadata extends AbstractMetadata implements \ArrayAccess
     }
 
     /**
-    * @param string $sourceIdent
+    * @param string $sourceIdent The source identifier to get.
     * @return mixed
     */
     public function source($sourceIdent)
@@ -99,8 +92,8 @@ class ModelMetadata extends AbstractMetadata implements \ArrayAccess
     }
 
     /**
-    * @param string $defaultSource
-    * @throws InvalidArgumentException
+    * @param string $defaultSource The default source identifier.
+    * @throws InvalidArgumentException If the argument is not a string.
     * @return ModelMetadata Chainable
     */
     public function setDefaultSource($defaultSource)

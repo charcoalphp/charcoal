@@ -10,6 +10,9 @@ use \InvalidArgumentException;
 use \PDO;
 use \PDOException;
 
+// Dependencies from `charcoal-app`
+use \Charcoal\App\App;
+
 // Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Model\ModelInterface;
 
@@ -49,8 +52,19 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     private static $dbs = [];
 
     /**
-    * @param string $databaseIdent
-    * @throws InvalidArgumentException if ident is not a string
+     * @return ConfigInterface
+     */
+    private function appConfig()
+    {
+        $app = App::instance();
+        $container = $app->getContainer();
+        $appConfig = $container['config'];
+        return $appConfig;
+    }
+
+    /**
+    * @param string $databaseIdent The database identifier.
+    * @throws InvalidArgumentException If the ident argument is not a string.
     * @return DatabaseSource Chainable
     */
     public function setDatabaseIdent($databaseIdent)
@@ -73,29 +87,18 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     public function databaseIdent()
     {
         if ($this->databaseIdent === null) {
-            $container = \Charcoal\App\App::instance()->getContainer();
-            $appConfig = $container['config'];
+            $appConfig = $this->appConfig();
             return $appConfig['default_database'];
         }
         return $this->databaseIdent;
     }
 
     /**
-    * @param array $databaseConfig
-    * @throws InvalidArgumentException
+    * @param array $databaseConfig The database configuration.
     * @return DatabaseSource Chainable
     */
-    public function setDatabaseConfig($databaseConfig)
+    public function setDatabaseConfig(array $databaseConfig)
     {
-        if (!is_array($databaseConfig)) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    'Database config needs to be an array. (%s given) [%s]',
-                    gettype($databaseConfig),
-                    get_class($this->model())
-                )
-            );
-        }
         $this->databaseConfig = $databaseConfig;
         return $this;
     }
@@ -106,9 +109,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     public function databaseConfig()
     {
         if ($this->databaseConfig === null) {
-            $ident = $this->databaseIdent();
-            $container = \Charcoal\App\App::instance()->getContainer();
-            $appConfig = $container['config'];
+            $appConfig = $this->appConfig();
             $default = $appConfig->defaultDatabase();
             return $appConfig->databaseConfig($default);
         }
@@ -118,8 +119,8 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     /**
     * Set the database's table to use.
     *
-    * @param string $table
-    * @throws InvalidArgumentException if argument is not a string
+    * @param string $table The source table.
+    * @throws InvalidArgumentException If argument is not a string or alphanumeric/underscore.
     * @return DatabaseSource Chainable
     */
     public function setTable($table)
@@ -148,7 +149,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     /**
     * Get the database's current table.
     *
-    * @throws Exception if the table was not set
+    * @throws Exception If the table was not set.
     * @return string
     */
     public function table()
@@ -291,8 +292,8 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     }
 
     /**
-    * @param string $databaseIdent
-    * @throws Exception if the database is not set.
+    * @param string $databaseIdent The database identifier. If null, use default.
+    * @throws Exception If the database is not set.
     * @return PDO
     */
     public function db($databaseIdent = null)
@@ -346,8 +347,8 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     /**
     * Get all the fields of a model.
     *
-    * @param ModelInterface $model
-    * @param array|null     $properties
+    * @param ModelInterface $model      The model to get fields from.
+    * @param array|null     $properties Optional list of properties to get. If null, retrieve all (from metadata).
     * @return array
     * @todo Move this method in StorableTrait or AbstractModel
     */
@@ -376,9 +377,8 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     }
 
     /**
-    * @param mixed              $ident Ident can be an integer, a string, ...
-    * @param StoreableInterface $item  Optional item to load into
-    * @throws Exception
+    * @param mixed             $ident Ident can be any scalar value.
+    * @param StorableInterface $item  Optional item to load into.
     * @return StorableInterface
     */
     public function loadItem($ident, StorableInterface $item = null)
@@ -391,9 +391,9 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     /**
      * Load item from a custom column's name ($key)
      *
-     * @param  string                 $key   Column name
-     * @param  mixed                  $ident Value of said column
-     * @param  StorableInterface|null $item  Optional. Item (storable object) to load into
+     * @param  string                 $key   Column name.
+     * @param  mixed                  $ident Value of said column.
+     * @param  StorableInterface|null $item  Optional. Item (storable object) to load into.
      * @throws Exception If the query fails.
      * @return StorableInterface             Item
      */
@@ -429,9 +429,9 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     }
 
     /**
-     * @param string $query The SQL query.
-     * @param array $binds Optional. The query parameters.
-     * @param StorableInterface $item Optional. Item (storable object) to load into.
+     * @param string            $query The SQL query.
+     * @param array             $binds Optional. The query parameters.
+     * @param StorableInterface $item  Optional. Item (storable object) to load into.
      * @throws Exception If there is a query error.
      * @return StorableInterface Item.
      */
@@ -463,7 +463,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     }
 
     /**
-    * @param StorableInterface|null $item
+    * @param StorableInterface|null $item Optional item to use as model.
     * @return array
     */
     public function loadItems(StorableInterface $item = null)
@@ -495,9 +495,9 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     /**
     * Save an item (create a new row) in storage.
     *
-    * @param StorableInterface $item The object to save
-    * @throws Exception if a database error occurs
-    * @return mixed The created item ID, or false in case of an error
+    * @param StorableInterface $item The object to save.
+    * @throws Exception If a database error occurs.
+    * @return mixed The created item ID, or false in case of an error.
     */
     public function saveItem(StorableInterface $item)
     {
@@ -540,7 +540,9 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
         $res = $this->dbQuery($q, $binds, $binds_types);
 
         if ($res === false) {
-            throw new Exception('Could not save item.');
+            throw new Exception(
+                'Could not save item.'
+            );
         } else {
             if ($model->id()) {
                 return $model->id();
@@ -553,11 +555,11 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     /**
     * Update an item in storage.
     *
-    * @param StorableInterface $item       The object to update
-    * @param array             $properties The list of properties to update, if not all
+    * @param StorableInterface $item       The object to update.
+    * @param array             $properties The list of properties to update, if not all.
     * @return boolean Success / Failure
     */
-    public function updateItem(StorableInterface $item, $properties = null)
+    public function updateItem(StorableInterface $item, array $properties = null)
     {
         if ($item !== null) {
             $this->setModel($item);
@@ -586,8 +588,8 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
         }
         if (empty($updates)) {
             $this->logger->warning('Could not update items. No valid fields were set / available in database table.', [
-                'properties'=>$properties,
-                'structure'=>$tableStructure
+                'properties'    => $properties,
+                'structure'     => $tableStructure
             ]);
             return false;
         }
@@ -618,7 +620,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     * Delete an item from storage
     *
     * @param StorableInterface $item Optional item to delete. If none, the current model object will be used.
-    * @throws Exception
+    * @throws Exception If the item does not have an ID.
     * @return boolean Success / Failure
     */
     public function deleteItem(StorableInterface $item = null)
@@ -660,9 +662,9 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     *
     * If the query fails, this method will return false.
     *
-    * @param string $q           The SQL query to executed
-    * @param array  $binds
-    * @param array  $binds_types
+    * @param string $q           The SQL query to executed.
+    * @param array  $binds       Optional. Query parameter binds.
+    * @param array  $binds_types Optional. Types of parameter bindings.
     * @return PDOStatement|false The PDOStatement, or false in case of error
     */
     public function dbQuery($q, array $binds = [], array $binds_types = [])
@@ -690,14 +692,16 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     }
 
     /**
-    * @throws Exception if the source does not have a table defined
+    * @throws Exception If the source does not have a table defined.
     * @return string
     */
     public function sqlLoad()
     {
         $table = $this->table();
         if (!$table) {
-            throw new Exception('No table defined.');
+            throw new Exception(
+                'Can not get SQL. No table defined.'
+            );
         }
 
         $selects = $this->sqlSelect();
@@ -833,7 +837,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     *
     * Overrides the method defined in AbstractSource to returns a `DatabaseSourceConfig` object.
     *
-    * @param array $data Optional
+    * @param array $data Optional.
     * @return DatabaseSourceConfig
     */
     public function createConfig(array $data = null)

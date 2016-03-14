@@ -33,23 +33,23 @@ class ValidatorResult
     private $ts;
 
     /**
-    * @param array $data Optional
+    * @param array|\ArrayAccess $data Optional data.
     */
-    public function __construct(array $data = null)
+    public function __construct($data = null)
     {
         $ts = new DateTime();
         $this->setTs($ts);
 
-        if (is_array($data)) {
+        if (is_array($data) || ($data instanceof \ArrayAccess)) {
             $this->setData($data);
         }
     }
 
     /**
-    * @param array $data
+    * @param array|\ArrayAccess $data The validator result data.
     * @return ValidatorResult Chainable
     */
-    public function setData(array $data)
+    public function setData($data)
     {
         if (isset($data['ident'])) {
             $this->setIdent($data['ident']);
@@ -67,14 +67,16 @@ class ValidatorResult
     }
 
     /**
-    * @param string $ident
-    * @throws InvalidArgumentException if parameter is not valid
+    * @param string $ident The result identigier.
+    * @throws InvalidArgumentException If parameter is not valid.
     * @return ValidatorResult
     */
     public function setIdent($ident)
     {
         if (!is_string($ident)) {
-            throw new InvalidArgumentException('Ident must be a string.');
+            throw new InvalidArgumentException(
+                'Ident must be a string.'
+            );
         }
         $this->ident = $ident;
         return $this;
@@ -89,14 +91,16 @@ class ValidatorResult
     }
 
     /**
-    * @param string $level
-    * @throws InvalidArgumentException if parameter is not valid
+    * @param string $level The validation level ('notice', 'warning' or 'error').
+    * @throws InvalidArgumentException If parameter is not a valid level.
     * @return ValidatorResult
     */
     public function setLevel($level)
     {
         if (!is_string($level)) {
-            throw new InvalidArgumentException('Level must be a string.');
+            throw new InvalidArgumentException(
+                'Level must be a string.'
+            );
         }
         if (!in_array($level, ['notice', 'warning', 'error'])) {
             throw new InvalidArgumentException(
@@ -116,8 +120,8 @@ class ValidatorResult
     }
 
     /**
-    * @param string $message
-    * @throws InvalidArgumentException if parameter is not valid
+    * @param string $message The validation message.
+    * @throws InvalidArgumentException If parameter is not valid.
     * @return ValidatorResult
     */
     public function setMessage($message)
@@ -140,8 +144,8 @@ class ValidatorResult
     }
 
     /**
-    * @param string|DateTime $ts
-    * @throws InvalidArgumentException if parameter is not valid
+    * @param string|DateTime $ts The datetime value.
+    * @throws InvalidArgumentException If parameter is not valid "datetime".
     * @return ValidatorResult
     */
     public function setTs($ts)

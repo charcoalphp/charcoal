@@ -273,9 +273,7 @@ class MetadataLoader extends FileLoader
     *
     * From http:// www.php.net/manual/en/function.array-merge-recursive.php#104145
     *
-    * @param array $array1 Initial array to merge.
-    * @param array $... Variable list of arrays to merge.
-    * @throws InvalidArgumentException If there isn't at least 2 arguments or any arguments are not an array
+    * @throws InvalidArgumentException If there isn't at least 2 arguments or any arguments are not an array.
     * @return array Merged array
     */
     private static function arrayMerge()

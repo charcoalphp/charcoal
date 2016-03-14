@@ -8,8 +8,7 @@ namespace Charcoal\Source;
 interface DatabaseSourceInterface
 {
     /**
-    * @param string $databaseIdent
-    * @throws InvalidArgumentException if ident is not a string
+    * @param string $databaseIdent The database identifiter.
     * @return DatabaseSource Chainable
     */
     public function setDatabaseIdent($databaseIdent);
@@ -23,11 +22,10 @@ interface DatabaseSourceInterface
     public function databaseIdent();
 
     /**
-    * @param array $databaseConfig
-    * @throws InvalidArgumentException
+    * @param  array $databaseConfig The database confguration.
     * @return DatabaseSource Chainable
     */
-    public function setDatabaseConfig($databaseConfig);
+    public function setDatabaseConfig(array $databaseConfig);
 
     /**
     * @return mixed
@@ -37,8 +35,7 @@ interface DatabaseSourceInterface
     /**
     * Set the database's table to use.
     *
-    * @param string $table
-    * @throws InvalidArgumentException if argument is not a string
+    * @param string $table The database table.
     * @return DatabaseSource Chainable
     */
     public function setTable($table);
@@ -46,7 +43,6 @@ interface DatabaseSourceInterface
     /**
     * Get the database's current table.
     *
-    * @throws Exception if the table was not set
     * @return string
     */
     public function table();
@@ -85,9 +81,8 @@ interface DatabaseSourceInterface
     public function tableIsEmpty();
 
     /**
-    * @param string $databaseIdent
-    * @throws Exception if the database is not set.
-    * @return PDO
+    * @param string $databaseIdent The database identifier to return. If null, use default.
+    * @return \PDO
     */
     public function db($databaseIdent = null);
 }

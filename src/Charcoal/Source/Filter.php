@@ -51,10 +51,10 @@ class Filter implements FilterInterface
     protected $active;
 
     /**
-    * @param array $data
+    * @param array|\ArrayAccess $data The filter data.
     * @return Filter Chainable
     */
-    public function setData(array $data)
+    public function setData($data)
     {
         if (isset($data['property'])) {
             $this->setProperty($data['property']);
@@ -81,8 +81,8 @@ class Filter implements FilterInterface
     }
 
     /**
-    * @param string $property
-    * @throws InvalidArgumentException if the property argument is not a string
+    * @param string $property The filter property.
+    * @throws InvalidArgumentException If the property argument is not a string.
     * @return Filter (Chainable)
     */
     public function setProperty($property)
@@ -111,7 +111,7 @@ class Filter implements FilterInterface
     }
 
     /**
-    * @param mixed $val
+    * @param mixed $val The filter value.
     * @return Filter (Chainable)
     */
     public function setVal($val)
@@ -129,19 +129,23 @@ class Filter implements FilterInterface
     }
 
     /**
-    * @param string $operator
-    * @throws InvalidArgumentException if the parameter is not a valid operator
+    * @param string $operator The filter operator.
+    * @throws InvalidArgumentException If the parameter is not a valid operator.
     * @return Filter (Chainable)
     */
     public function setOperator($operator)
     {
         if (!is_string($operator)) {
-            throw new InvalidArgumentException('Operator should be a string.');
+            throw new InvalidArgumentException(
+                'Operator should be a string.'
+            );
         }
 
         $operator = strtoupper($operator);
         if (!in_array($operator, $this->validOperators())) {
-            throw new InvalidArgumentException('This is not a valid operator.');
+            throw new InvalidArgumentException(
+                'This is not a valid operator.'
+            );
         }
 
         $this->operator = $operator;
@@ -157,19 +161,23 @@ class Filter implements FilterInterface
     }
 
     /**
-    * @param string $func
-    * @throws InvalidArgumentException if the parameter is not a valid function
+    * @param string $func The filter function.
+    * @throws InvalidArgumentException If the parameter is not a valid function.
     * @return Filter (Chainable)
     */
     public function setFunc($func)
     {
         if (!is_string($func)) {
-            throw new InvalidArgumentException('Func should be astring.');
+            throw new InvalidArgumentException(
+                'Func should be astring.'
+            );
         }
 
         $func = strtoupper($func);
         if (!in_array($func, $this->validFunc())) {
-            throw new InvalidArgumentException('This is not a valid function.');
+            throw new InvalidArgumentException(
+                'This is not a valid function.'
+            );
         }
         $this->func = $func;
         return $this;
@@ -184,19 +192,23 @@ class Filter implements FilterInterface
     }
 
     /**
-    * @param string $operand
-    * @throws InvalidArgumentException if the parameter is not a valid operand
+    * @param string $operand The filter operand.
+    * @throws InvalidArgumentException If the parameter is not a valid operand.
     * @return Filter (Chainable)
     */
     public function setOperand($operand)
     {
         if (!is_string($operand)) {
-            throw new InvalidArgumentException('Operand should be a string.');
+            throw new InvalidArgumentException(
+                'Operand should be a string.'
+            );
         }
 
         $operand = strtoupper($operand);
         if (!in_array($operand, $this->validOperands())) {
-            throw new InvalidArgumentException('This is not a valid operand.');
+            throw new InvalidArgumentException(
+                'This is not a valid operand.'
+            );
         }
 
         $this->operand = $operand;
@@ -212,8 +224,8 @@ class Filter implements FilterInterface
     }
 
     /**
-    * @param string $sql
-    * @throws InvalidArgumentException if the parameter is not a valid operand
+    * @param string $sql The custom filter SQL string.
+    * @throws InvalidArgumentException If the parameter is not a valid operand.
     * @return Filter (Chainable)
     */
     public function setString($sql)
@@ -237,7 +249,7 @@ class Filter implements FilterInterface
     }
 
     /**
-    * @param boolean $active
+    * @param boolean $active The active flag.
     * @return Filter (Chainable)
     */
     public function setActive($active)

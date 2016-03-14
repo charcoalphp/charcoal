@@ -67,7 +67,7 @@ class Model extends AbstractModel
     /**
     * StorableInterface > create_source(). Get the source object.
     *
-    * @param string $source_ident Optional
+    * @param string $source_ident Optional. The source to use. If null, use default (from metadata).
     * @return SourceInterface;
     */
     public function createSource($source_ident = null)

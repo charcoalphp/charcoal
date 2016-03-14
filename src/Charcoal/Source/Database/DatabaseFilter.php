@@ -43,28 +43,6 @@ class DatabaseFilter extends Filter
             }
 
             switch ($operator) {
-                /*
-                case '=':
-
-                if($this->multiple() && ($sql_val != "''")) {
-                $sep = (isset($this->multiple_options['separator']) ? $this->multiple_options['separator'] : ',');
-                if($sep == ',') {
-                $filter = ' FIND_IN_SET('.$sql_val.', '.$filter_ident.')';
-                }
-                else {
-                // The FIND_IN_SET function must work on a comma separated-value.
-                // So create temporary separators to use a comma...
-                $custom_separator = '}x5S_'; // With not much luck, this string should never be used in text
-                $filter = ' FIND_IN_SET(
-                REPLACE('.$sql_val.', \',\', \''.$custom_separator.'\'),
-                REPLACE(REPLACE('.$filter_ident.', \',\', \''.$custom_separator.'\'), \''.$sep.'\', \',\')';
-                }
-                }
-                else {
-                $filter = '('.$filter_ident.' '.$operator.' '.$sql_val.')';
-                }
-                break;
-                */
                 case 'FIND_IN_SET':
                     $filter .= sprintf('%1$s(\'%2$s\', %3$s)', $operator, $val, $target);
                     break;

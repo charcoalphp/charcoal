@@ -17,8 +17,8 @@ trait LoadableTrait
     /**
     * Set the loader object.
     *
-    * @param array|LoaderInterface $loader
-    * @throws InvalidArgumentException if loader is not an array or object
+    * @param array|LoaderInterface $loader The object loader.
+    * @throws InvalidArgumentException If loader is not an array or object.
     * @return LoadableInterface Chainable
     */
     public function setLoader($loader)
@@ -49,7 +49,7 @@ trait LoadableTrait
     }
 
     /**
-    * @param array|null $data
+    * @param array|null $data Optional loader data.
     * @return LoaderInterface
     */
     abstract protected function createLoader($data = null);

@@ -22,23 +22,23 @@ class Pagination implements PaginationInterface
     protected $numPerPage = self::DEFAULT_NUM_PER_PAGE;
 
     /**
-    * @param array $data
+    * @param array|\ArrayAccess $data The pagination data (page, num_per_page).
     * @return Pagination Chainable
     */
-    public function setData(array $data)
+    public function setData($data)
     {
         if (isset($data['page'])) {
             $this->setPage($data['page']);
         }
-        if (isset($data['numPerPage'])) {
-            $this->setNumPerPage($data['numPerPage']);
+        if (isset($data['num_per_page'])) {
+            $this->setNumPerPage($data['num_per_page']);
         }
         return $this;
     }
 
     /**
-    * @param integer $page
-    * @throws InvalidArgumentException if the parameter is not numeric or < 0
+    * @param integer $page The current page. Start at 0.
+    * @throws InvalidArgumentException If the parameter is not numeric or < 0.
     * @return Pagination (Chainable)
     */
     public function setPage($page)
@@ -67,8 +67,8 @@ class Pagination implements PaginationInterface
     }
 
     /**
-    * @param integer $num
-    * @throws InvalidArgumentException if the parameter is not numeric or < 0
+    * @param integer $num The number of results to retrieve, per page.
+    * @throws InvalidArgumentException If the parameter is not numeric or < 0.
     * @return Pagination (Chainable)
     */
     public function setNumPerPage($num)

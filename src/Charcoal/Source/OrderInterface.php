@@ -4,14 +4,14 @@ namespace Charcoal\Source;
 
 interface OrderInterface
 {
-        /**
-    * @param array $data
+    /**
+    * @param array|\ArrayAccess $data The order data.
     * @return Order Chainable
     */
-    public function setData(array $data);
+    public function setData($data);
+
     /**
-    * @param string $property
-    * @throws InvalidArgumentException if the property argument is not a string
+    * @param string $property The property to order with.
     * @return Order (Chainable)
     */
     public function setProperty($property);
@@ -22,8 +22,7 @@ interface OrderInterface
     public function property();
 
     /**
-    * @param string $mode
-    * @throws InvalidArgumentException
+    * @param string $mode The order mode.
     * @return Order Chainable
     */
     public function setMode($mode);
@@ -41,8 +40,7 @@ interface OrderInterface
     * If it is an array, the values will be used as is.
     * Otherwise, the function will throw an error
     *
-    * @throws InvalidArgumentException if the parameter is not an array or a string
-    * @param  string|array $values
+    * @param  string|array $values The order values.
     * @return Order (Chainable)
     */
     public function setValues($values);

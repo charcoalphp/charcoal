@@ -12,15 +12,15 @@ use \Charcoal\Source\SourceInterface;
 interface StorableInterface
 {
     /**
-     * @param SourceFactory $sourceFactory The source factory, which is useful to create source.
-     * @param
+     * @param SourceFactory $factory The source factory, which is useful to create source.
+     * @return StorableInterface Chainable
      */
     public function setSourceFactory(SourceFactory $factory);
 
     /**
     * Set the object's source.
     *
-    * @param SourceInterface $source
+    * @param SourceInterface $source The storable object's source.
     * @return StorableInterface Chainable
     */
     public function setSource(SourceInterface $source);
@@ -38,7 +38,7 @@ interface StorableInterface
     * Note that the object should also implement `Charcoal\Model\IndexableInterface`
     * (provide an `id()` and `key()` methods) for this function to work properly.
     *
-    * @param mixed $id The i
+    * @param mixed $id The ID of the object to load.
     * @return boolean Success / Failure
     */
     public function load($id);
@@ -49,8 +49,8 @@ interface StorableInterface
     * Note that the object should also implement `Charcoal\Model\IndexableInterface`
     * (provide an `id()` and `key()` methods) for this function to work properly.
     *
-    * @param string $key Key pointing a column's name
-    * @param mixed $value Value of said column
+    * @param string $key   Key pointing a column's name.
+    * @param mixed  $value Value of said column.
     * @return StorableInterface Chainable.
     */
     public function loadFrom($key = null, $value = null);
@@ -59,7 +59,7 @@ interface StorableInterface
     * Load an object from the database from a custom SQL query.
     *
     * @param string $query The SQL query.
-    * @param array $binds Optional. The SQL query parameters.
+    * @param array  $binds Optional. The SQL query parameters.
     * @return StorableInterface Chainable.
     */
     public function loadFromQuery($query, array $binds = []);

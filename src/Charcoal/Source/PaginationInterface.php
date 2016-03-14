@@ -8,14 +8,13 @@ namespace Charcoal\Source;
 interface PaginationInterface
 {
     /**
-    * @param array $data
+    * @param array|\ArrayAcess $data The pagination data (page, num_per_page).
     * @return Pagination Chainable
     */
-    public function setData(array $data);
+    public function setData($data);
 
     /**
-    * @param integer $page
-    * @throws InvalidArgumentException if the parameter is not numeric or < 0
+    * @param integer $page The current page. Starts at 0.
     * @return Pagination (Chainable)
     */
     public function setPage($page);
@@ -26,8 +25,8 @@ interface PaginationInterface
     public function page();
 
     /**
-    * @param integer $num
-    * @throws InvalidArgumentException if the parameter is not numeric or < 0
+    * @param integer $num The number ot item to retrieve per page.
+    * @throws InvalidArgumentException If the parameter is not numeric or < 0.
     * @return Pagination (Chainable)
     */
     public function setNumPerPage($num);
@@ -42,7 +41,7 @@ interface PaginationInterface
     public function first();
 
     /**
-    * Can be greater than the actual number of items to retrieve
+    * Can be greater than the actual number of items to retrieve.
     * @return integer
     */
     public function last();

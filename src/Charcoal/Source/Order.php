@@ -41,10 +41,10 @@ class Order implements OrderInterface
     protected $active = true;
 
     /**
-    * @param array $data
+    * @param array|\ArrayAccess $data The order data.
     * @return Order Chainable
     */
-    public function setData(array $data)
+    public function setData($data)
     {
         if (isset($data['property'])) {
             $this->setProperty($data['property']);
@@ -63,8 +63,8 @@ class Order implements OrderInterface
     }
 
     /**
-    * @param string $property
-    * @throws InvalidArgumentException if the property argument is not a string
+    * @param string $property The order property.
+    * @throws InvalidArgumentException If the property argument is not a string.
     * @return Order (Chainable)
     */
     public function setProperty($property)
@@ -93,8 +93,8 @@ class Order implements OrderInterface
     }
 
     /**
-    * @param string $mode
-    * @throws InvalidArgumentException
+    * @param string $mode The order mode.
+    * @throws InvalidArgumentException If the mode is not a string or invalid.
     * @return Order Chainable
     */
     public function setMode($mode)
@@ -131,8 +131,8 @@ class Order implements OrderInterface
     * If it is an array, the values will be used as is.
     * Otherwise, the function will throw an error
     *
-    * @throws InvalidArgumentException if the parameter is not an array or a string
-    * @param  string|array $values
+    * @throws InvalidArgumentException If the parameter is not an array or a string.
+    * @param  string|array $values The order values.
     * @return Order (Chainable)
     */
     public function setValues($values)
@@ -169,7 +169,7 @@ class Order implements OrderInterface
     }
 
     /**
-    * @param boolean $active
+    * @param boolean $active The active flag.
     * @return Order (Chainable)
     */
     public function setActive($active)

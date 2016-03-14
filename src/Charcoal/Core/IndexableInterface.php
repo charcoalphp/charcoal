@@ -10,7 +10,7 @@ interface IndexableInterface
     /**
     * Set the object's ID. The actual property set depends on `key()`
     *
-    * @param mixed $id
+    * @param mixed $id The object's ID.
     * @return IndexableInterface Chainable
     */
     public function setId($id);
@@ -25,7 +25,7 @@ interface IndexableInterface
     /**
     * Set the key property.
     *
-    * @param string $key
+    * @param string $key The object's key.
     * @return IndexableInterface Chainable
     */
     public function setKey($key);

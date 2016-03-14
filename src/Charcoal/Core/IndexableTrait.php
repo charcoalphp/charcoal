@@ -23,9 +23,9 @@ trait IndexableTrait
     /**
     * Set the object's ID. The actual property set depends on `key()`
     *
-    * @param mixed $id
-    * @throws InvalidArgumentException if the argument is not scalar
-    * @throws Exception if the key is invalid
+    * @param mixed $id The object id (identifier / primary key value).
+    * @throws InvalidArgumentException If the argument is not scalar.
+    * @throws Exception If the key is invalid.
     * @return IndexableInterface Chainable
     */
     public function setId($id)
@@ -57,7 +57,7 @@ trait IndexableTrait
     /**
     * Get the object's (unique) ID. The actualy property get depends on `key()`
     *
-    * @throws Exception if the set key is invalid
+    * @throws Exception If the set key is invalid.
     * @return mixed
     */
     public function id()
@@ -78,8 +78,8 @@ trait IndexableTrait
     /**
     * Set the key property.
     *
-    * @param string $key
-    * @throws InvalidArgumentException if the argument is not scalar
+    * @param string $key The object key, or identifier "name".
+    * @throws InvalidArgumentException If the argument is not scalar.
     * @return IndexableInterface Chainable
     */
     public function setKey($key)

@@ -9,14 +9,10 @@ use \Psr\Log\LoggerAwareInterface;
 use \Psr\Log\LoggerAwareTrait;
 use \Psr\Log\NullLogger;
 
-// Local Dependency
-use \Charcoal\Loader\LoaderInterface;
-
 /**
  * Base File Loader
  */
 class FileLoader implements
-    LoaderInterface,
     LoggerAwareInterface
 {
     use LoggerAwareTrait;
@@ -112,7 +108,7 @@ class FileLoader implements
      * Assign a base path for relative search paths.
      *
      * @param  string $basePath The base path to use.
-     * @throws InvalidArgumentException if the base path parameter is not a string.
+     * @throws InvalidArgumentException If the base path parameter is not a string.
      * @return self
      */
     public function setBasePath($basePath)
@@ -318,7 +314,7 @@ class FileLoader implements
      * Append a path.
      *
      * @param  string $path A file or directory path.
-     * @throws InvalidArgumentException if the path does not exist or is invalid
+     * @throws InvalidArgumentException If the path does not exist or is invalid.
      * @return self
      */
     public function addPath($path)

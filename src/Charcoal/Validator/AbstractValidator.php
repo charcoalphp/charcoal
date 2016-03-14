@@ -2,6 +2,8 @@
 
 namespace Charcoal\Validator;
 
+use \InvalidArgumentException;
+
 // Local namespace dependencies
 use \Charcoal\Validator\ValidatorInterface;
 use \Charcoal\Validator\ValidatableInterface;
@@ -24,12 +26,12 @@ abstract class AbstractValidator implements ValidatorInterface
     protected $model;
 
     /**
-    * @var array $results array of ValidatorResult
+    * @var ValidatorResult[] $results
     */
     private $results = [];
 
     /**
-    * @param ValidatableInterface $model
+    * @param ValidatableInterface $model The object to validate.
     */
     public function __construct(ValidatableInterface $model)
     {
@@ -37,8 +39,8 @@ abstract class AbstractValidator implements ValidatorInterface
     }
 
     /**
-    * @param string      $msg
-    * @param string|null $ident
+    * @param string      $msg   The error message.
+    * @param string|null $ident Optional result ident.
     * @return ValidatorInterface
     */
     public function error($msg, $ident = null)
@@ -47,8 +49,8 @@ abstract class AbstractValidator implements ValidatorInterface
     }
 
     /**
-    * @param string      $msg
-    * @param string|null $ident
+    * @param string      $msg   The warning message.
+    * @param string|null $ident Optional result ident.
     * @return ValidatorInterface
     */
     public function warning($msg, $ident = null)
@@ -57,8 +59,8 @@ abstract class AbstractValidator implements ValidatorInterface
     }
 
     /**
-    * @param string      $msg
-    * @param string|null $ident
+    * @param string      $msg   The notice message.
+    * @param string|null $ident Optional result ident.
     * @return ValidatorInterface
     */
     public function notice($msg, $ident = null)
@@ -67,9 +69,9 @@ abstract class AbstractValidator implements ValidatorInterface
     }
 
     /**
-    * @param string      $level
-    * @param string      $msg
-    * @param string|null $ident
+    * @param string      $level The validation level.
+    * @param string      $msg   The validation message.
+    * @param string|null $ident Optional result ident.
     * @return ValidatorInterface
     */
     public function log($level, $msg, $ident = null)
@@ -85,8 +87,8 @@ abstract class AbstractValidator implements ValidatorInterface
     }
 
     /**
-    * @param array|ValidatorResult $result
-    * @throws \InvalidArgumentException if result is not an array or object
+    * @param array|ValidatorResult $result The result object or array.
+    * @throws InvalidArgumentException If result is not an array or object.
     * @return AbstractValidator Chainable
     */
     public function addResult($result)
@@ -94,7 +96,9 @@ abstract class AbstractValidator implements ValidatorInterface
         if (is_array($result)) {
             $result = new ValidatorResult($result);
         } elseif (!($result instanceof ValidatorResult)) {
-            throw new \InvalidArgumentException('Result must be an array or a ValidatorResult object.');
+            throw new InvalidArgumentException(
+                'Result must be an array or a ValidatorResult object.'
+            );
         }
         $level = $result->level();
         if (!isset($this->results[$level])) {
@@ -146,8 +150,8 @@ abstract class AbstractValidator implements ValidatorInterface
     }
 
     /**
-    * @param ValidatorInterface $v
-    * @param string             $ident_prefix
+    * @param ValidatorInterface $v            The validator to merge.
+    * @param string             $ident_prefix Optional identigfier prefix.
     * @return ValidatorInterface Chainable
     */
     public function merge(ValidatorInterface $v, $ident_prefix = null)

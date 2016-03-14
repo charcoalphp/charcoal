@@ -17,18 +17,22 @@ class DatabaseSourceConfig extends SourceConfig
     * @var string $hostname
     */
     private $hostname;
+
     /**
     * @var string $username
     */
     private $username;
+
     /**
     * @var string $password
     */
     private $password;
+
     /**
     * @var string $database
     */
     private $database;
+
 
     /**
     * @var boolean $disableUtf8
@@ -54,8 +58,8 @@ class DatabaseSourceConfig extends SourceConfig
     /**
     * Set hostname
     *
-    * @param string $hostname
-    * @throws InvalidArgumentException if hostname is not a string
+    * @param string $hostname The database hostname.
+    * @throws InvalidArgumentException If hostname is not a string.
     * @return DatabaseSourceConfig Chainable
     */
     public function setHostname($hostname)
@@ -82,8 +86,8 @@ class DatabaseSourceConfig extends SourceConfig
     /**
     * Set username
     *
-    * @param string $username
-    * @throws InvalidArgumentException if username is not a string
+    * @param string $username The database username.
+    * @throws InvalidArgumentException If username is not a string.
     * @return DatabaseSourceConfig Chainable
     */
     public function setUsername($username)
@@ -110,8 +114,8 @@ class DatabaseSourceConfig extends SourceConfig
     /**
     * Set password
     *
-    * @param string $password
-    * @throws InvalidArgumentException if password is not a string
+    * @param string $password The database password.
+    * @throws InvalidArgumentException If password is not a string.
     * @return DatabaseSourceConfig Chainable
     */
     public function setPassword($password)
@@ -138,8 +142,8 @@ class DatabaseSourceConfig extends SourceConfig
     /**
     * Set database
     *
-    * @param string $database
-    * @throws InvalidArgumentException if database is not a string
+    * @param string $database The database name.
+    * @throws InvalidArgumentException If database is not a string.
     * @return DatabaseSourceConfig Chainable
     */
     public function setDatabase($database)
@@ -164,18 +168,12 @@ class DatabaseSourceConfig extends SourceConfig
     }
 
     /**
-    * @param boolean $disableUtf8
-    * @throws InvalidArgumentException if disableUtf8 is not a boolean
+    * @param boolean $disableUtf8 The "disable UTF8" flag.
     * @return DatabaseSourceConfig Chainable
     */
     public function setDisableUtf8($disableUtf8)
     {
-        if (!is_bool($disableUtf8)) {
-            throw new InvalidArgumentException(
-                'Disable UTF8 must be a boolean.'
-            );
-        }
-        $this->disableUtf8 = $disableUtf8;
+        $this->disableUtf8 = !!$disableUtf8;
         return $this;
     }
 

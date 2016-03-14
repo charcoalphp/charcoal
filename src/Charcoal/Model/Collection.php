@@ -48,9 +48,9 @@ class Collection implements
     * Note that collection does not support setting object to a specific key
     * (The object's ID is always used for this).
     *
-    * @param mixed $offset
-    * @param mixed $value
-    * @throws InvalidArgumentException if the value is not a Object or offset is set
+    * @param mixed $offset The array offset to set.
+    * @param mixed $value  The value to set.
+    * @throws InvalidArgumentException If the value is not a Object or offset is set.
     * @return void
     */
     public function offsetSet($offset, $value)
@@ -73,7 +73,7 @@ class Collection implements
     /**
     * ArrayAccess > offsetExists
     *
-    * @param  mixed $offset
+    * @param  mixed $offset The array offset to check.
     * @return boolean
     */
     public function offsetExists($offset)
@@ -88,8 +88,8 @@ class Collection implements
     /**
      * ArrayAccess > offsetUnset
      *
-     * @param mixed $offset
-     * @throws InvalidArgumentException if the offset is not an integer or string
+     * @param mixed $offset The array offset to unset.
+     * @throws InvalidArgumentException If the offset is not an integer or string.
      * @return void
      */
     public function offsetUnset($offset)
@@ -113,9 +113,9 @@ class Collection implements
     /**
     * ArrayAccess > offsetGet
     *
-    * @param mixed $offset
-    * @throws InvalidArgumentException if the offset is not an integer or string
-    * @return void
+    * @param mixed $offset The array offset to get.
+    * @throws InvalidArgumentException If the offset is not an integer or string.
+    * @return mixed
     */
     public function offsetGet($offset)
     {
@@ -183,8 +183,7 @@ class Collection implements
     /**
     * Manually add an object to the list
     *
-    * @param Charcoal_Base $obj
-    *
+    * @param ModelInterface $obj The object to add.
     * @return \Charcoal\Collection (Chainable)
     */
     public function add(ModelInterface $obj)
@@ -197,8 +196,8 @@ class Collection implements
     }
 
     /**
-    * @param string|ModelInterface $key
-    * @throws InvalidArgumentException if the offset is not a string
+    * @param string|ModelInterface $key The key to retrieve the position from.
+    * @throws InvalidArgumentException If the offset is not a string.
     * @return integer|boolean
     */
     public function pos($key)

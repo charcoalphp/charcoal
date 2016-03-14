@@ -12,28 +12,26 @@ use \Charcoal\Source\StorableInterface;
 interface SourceInterface
 {
     /**
-    * @param ModelInterface $model
+    * @param ModelInterface $model The source's model.
     * @return AbstractSource Chainable
     */
     public function setModel(ModelInterface $model);
 
     /**
-    * @throws Exception if model was not previously set
     * @return ModelInterface
     */
     public function model();
 
 
     /**
-    * @param mixed              $ident
-    * @param StorableInterface $item  Optional item to load into
-    * @throws Exception
+    * @param mixed             $ident The ID of the item to load.
+    * @param StorableInterface $item  Optional item to load into.
     * @return StorableInterface
     */
     public function loadItem($ident, StorableInterface $item = null);
 
     /**
-    * @param StorableInterface|null $item
+    * @param StorableInterface|null $item The item type to load.
     * @return array
     */
     public function loadItems(StorableInterface $item = null);
@@ -41,33 +39,30 @@ interface SourceInterface
     /**
     * Save an item (create a new row) in storage.
     *
-    * @param StorableInterface $item The object to save
-    * @throws Exception if a database error occurs
-    * @return mixed The created item ID, or false in case of an error
+    * @param StorableInterface $item The object to save.
+    * @return mixed The created item ID, or false in case of an error.
     */
     public function saveItem(StorableInterface $item);
 
     /**
     * Update an item in storage.
     *
-    * @param StorableInterface $item       The object to update
-    * @param array             $properties The list of properties to update, if not all
+    * @param StorableInterface $item       The object to update.
+    * @param array             $properties The list of properties to update, if not all.
     * @return boolean Success / Failure
     */
-    public function updateItem(StorableInterface $item, $properties = null);
+    public function updateItem(StorableInterface $item, array $properties = null);
 
     /**
     * Delete an item from storage
     *
     * @param StorableInterface $item Optional item to delete. If none, the current model object will be used.
-    * @throws Exception
     * @return boolean Success / Failure
     */
     public function deleteItem(StorableInterface $item = null);
 
     /**
-    * @param array $properties
-    * @throws InvalidArgumentException
+    * @param array $properties The properties.
     * @return ColelectionLoader Chainable
     */
     public function setProperties(array $properties);
@@ -78,15 +73,13 @@ interface SourceInterface
     public function properties();
 
     /**
-    * @param string $property Property ident
-    * @throws InvalidArgumentException if property is not a string or empty
+    * @param string $property Property ident.
     * @return CollectionLoader Chainable
     */
     public function addProperty($property);
 
     /**
-    * @param array $filters
-    * @throws InvalidArgumentException
+    * @param array $filters The filters.
     * @return Collection Chainable
     */
     public function setFilters(array $filters);
@@ -99,15 +92,15 @@ interface SourceInterface
     /**
     * Add a collection filter to the loader.
     *
-    * @param string|array|Filter $param
-    * @param mixed               $val     Optional: Only used if the first argument is a string
-    * @param array               $options Optional: Only used if the first argument is a string
-    * @throws InvalidArgumentException if property is not a string or empty
+    * @param string|array|Filter $param   The filter parameter. May the "filter property" or an array / object.
+    * @param mixed               $val     Optional. Val, only used if the first argument is a string.
+    * @param array               $options Optional. Options, only used if the first argument is a string.
     * @return CollectionLoader (Chainable)
     */
     public function addFilter($param, $val = null, array $options = null);
+
     /**
-    * @param array $orders
+    * @param array $orders The orders.
     * @return CollectionLoader Chainable
     */
     public function setOrders(array $orders);
@@ -118,16 +111,15 @@ interface SourceInterface
     public function orders();
 
     /**
-    * @param string|array|Order $param
-    * @param string             $mode          Optional
-    * @param array              $order_options Optional
-    * @throws InvalidArgumentException
+    * @param string|array|Order $param   The order parameter. May the "order property" or an array / object.
+    * @param string             $mode    Optional. Mode, only used if the first argument is a string.
+    * @param array              $options Optional. Options, only user if the first argument is a string.
     * @return CollectionLoader Chainable
     */
-    public function addOrder($param, $mode = 'asc', $order_options = null);
+    public function addOrder($param, $mode = 'asc', array $options = null);
 
     /**
-    * @param mixed $param
+    * @param mixed $param The pagination information.
     * @return CollectionLoader Chainable
     */
     public function setPagination($param);
@@ -138,8 +130,7 @@ interface SourceInterface
     public function pagination();
 
     /**
-    * @param integer $page
-    * @throws InvalidArgumentException
+    * @param integer $page The page number. Starts with 0.
     * @return CollectionLoader Chainable
     */
     public function setPage($page);
@@ -150,8 +141,7 @@ interface SourceInterface
     public function page();
 
     /**
-    * @param integer $num
-    * @throws InvalidArgumentException
+    * @param integer $num The number of item to retrieve per page.
     * @return CollectionLoader Chainable
     */
     public function setNumPerPage($num);

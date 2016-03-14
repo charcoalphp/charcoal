@@ -5,14 +5,14 @@ namespace Charcoal\Source;
 interface FilterInterface
 {
     /**
-    * @param array $data
+    * @param array|\ArrayAccess $data The filter data.
     * @return Filter Chainable
     */
-    public function setData(array $data);
+    public function setData($data);
 
     /**
-    * @param boolean $active
-    * @return Filter (Chainable)
+    * @param boolean $active The active flag.
+    * @return FilterInterface Chainable
     */
     public function setActive($active);
 
@@ -22,9 +22,9 @@ interface FilterInterface
     public function active();
 
     /**
-    * @param string $property
-    * @throws InvalidArgumentException if the property argument is not a string
-    * @return Filter (Chainable)
+    * @param string $property The filter's property.
+    * @throws InvalidArgumentException If the property argument is not a string.
+    * @return FilterInterface Chainable
     */
     public function setProperty($property);
 
@@ -33,8 +33,8 @@ interface FilterInterface
     */
     public function property();
     /**
-    * @param mixed $val
-    * @return Filter (Chainable)
+    * @param mixed $val The filter value.
+    * @return FilterInterface Chainable
     */
     public function setVal($val);
 
@@ -44,9 +44,8 @@ interface FilterInterface
     public function val();
 
     /**
-    * @param string $operator
-    * @throws InvalidArgumentException if the parameter is not a valid operator
-    * @return Filter (Chainable)
+    * @param string $operator The filter operator.
+    * @return FilterInterface Chainable
     */
     public function setOperator($operator);
 
@@ -56,9 +55,8 @@ interface FilterInterface
     public function operator();
 
     /**
-    * @param string $func
-    * @throws InvalidArgumentException if the parameter is not a valid function
-    * @return Filter (Chainable)
+    * @param string $func The filter function.
+    * @return FilterInterface Chainable
     */
     public function setFunc($func);
 
@@ -68,9 +66,8 @@ interface FilterInterface
     public function func();
 
     /**
-    * @param string $operand
-    * @throws InvalidArgumentException if the parameter is not a valid operand
-    * @return Filter (Chainable)
+    * @param string $operand The filter operand.
+    * @return FilterInterface Chainable
     */
     public function setOperand($operand);
     /**
@@ -79,9 +76,8 @@ interface FilterInterface
     public function operand();
 
     /**
-    * @param string $sql
-    * @throws InvalidArgumentException if the parameter is not a valid operand
-    * @return Filter (Chainable)
+    * @param string $sql The filter SQL string.
+    * @return FilterInterface Chainable
     */
     public function setString($sql);
 

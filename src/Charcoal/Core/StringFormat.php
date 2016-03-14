@@ -24,7 +24,7 @@ class StringFormat
     protected $unicode = true;
 
     /**
-    * @param string $string Optional string
+    * @param string $string Optional string.
     */
     public function __construct($string = null)
     {
@@ -42,8 +42,8 @@ class StringFormat
     }
 
     /**
-    * @param string $string
-    * @throws InvalidArgumentException
+    * @param string $string The string value.
+    * @throws InvalidArgumentException If not a string.
     * @return StringFormat Chainable
     */
     public function setString($string)
@@ -64,8 +64,7 @@ class StringFormat
     }
 
     /**
-    * @param boolean $unicode
-    * @throws InvalidArgumentException
+    * @param boolean $unicode The unicode flag.
     * @return StringFormat Chainable
     */
     public function setUnicode($unicode)

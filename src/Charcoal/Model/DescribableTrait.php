@@ -51,7 +51,7 @@ trait DescribableTrait
     /**
     * Describable object needs to have a `setData()` method
     *
-    * @param array|\ArrayAccess $data
+    * @param array|\ArrayAccess $data The object's data.
     * @return DescribableInterface Chainable
     */
     abstract public function setData($data);
@@ -81,7 +81,7 @@ trait DescribableTrait
     }
 
     /**
-     * @param MedataLoader $loader The loader instance, used to load metadata.
+     * @param MetadataLoader $loader The loader instance, used to load metadata.
      * @return DescribableInterface Chainable
      */
     public function setMetadataLoader(MetadataLoader $loader)
@@ -105,8 +105,8 @@ trait DescribableTrait
 
 
     /**
-    * @param array|MetadataInterface $metadata
-    * @throws InvalidArgumentException if the parameter is not an array or MetadataInterface
+    * @param array|MetadataInterface $metadata The object's metadata.
+    * @throws InvalidArgumentException If the parameter is not an array or MetadataInterface.
     * @return DescribableInterface Chainable
     */
     public function setMetadata($metadata)
@@ -149,7 +149,7 @@ trait DescribableTrait
     * Use a `MetadataLoader` object and the object's metadataIdent
     * to load the metadata content (typically from the filesystem, as json).
     *
-    * @param string $metadataIdent Optional ident
+    * @param string $metadataIdent Optional ident.
     * @return MetadataInterface
     */
     public function loadMetadata($metadataIdent = null)
@@ -171,7 +171,7 @@ trait DescribableTrait
     abstract protected function createMetadata();
 
     /**
-    * @param string $metadataIdent
+    * @param string $metadataIdent The metadata ident.
     * @return DescribableInterface Chainable
     */
     public function setMetadataIdent($metadataIdent)
@@ -211,6 +211,7 @@ trait DescribableTrait
     /**
     * Return an array of `PropertyInterface`
     *
+    * @param array|null $filters Unused.
     * @return void Yield, not return
     */
     public function properties(array $filters = null)
@@ -233,9 +234,9 @@ trait DescribableTrait
     /**
     * Get an object's property
     *
-    * @param string $propertyIdent The property ident to return
-    * @throws InvalidArgumentException if the propertyIdent is not a string
-    * @throws Exception if the requested property is invalid
+    * @param string $propertyIdent The property ident to return.
+    * @throws InvalidArgumentException If the propertyIdent is not a string.
+    * @throws Exception If the requested property is invalid.
     * @return PropertyInterface The \Charcoal\Model\Property if found, null otherwise
     */
     public function property($propertyIdent)
@@ -289,7 +290,7 @@ trait DescribableTrait
     * - `property()` if the first parameter is set,
     * - `properties()` if the propertyIdent is not set (null)
     *
-    * @param string $propertyIdent The property ident to return
+    * @param string $propertyIdent The property ident to return.
     * @return array|PropertyInterface
     */
     public function p($propertyIdent = null)
@@ -302,7 +303,8 @@ trait DescribableTrait
     }
 
     /**
-    * @throws InvalidArgumentException
+    * @param  string $propertyIdent The ident of the property to check.
+    * @throws InvalidArgumentException If the ident argument is not a string.
     * @return boolean
     */
     public function hasProperty($propertyIdent)
@@ -320,13 +322,13 @@ trait DescribableTrait
     }
 
     /**
-    * @param string $propertyIdent
+    * @param string $propertyIdent The property ident to retrieve the value for.
     * @return mixed
     */
     abstract protected function propertyValue($propertyIdent);
 
     /**
-    * @param array $filters The filters to apply
+    * @param array $filters The filters to apply.
     * @return boolean False if the object doesn't match any filter, true otherwise.
     */
     public function isFiltered(array $filters = null)

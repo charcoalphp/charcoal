@@ -101,16 +101,16 @@ abstract class AbstractModel extends AbstractEntity implements
     /**
     * Return the object data as an array
     *
-    * @param array $filters Optional. Property filter.
+    * @param array $propertyFilters Optional. Property filter.
     * @return array
     */
-    public function data(array $property_filters = null)
+    public function data(array $propertyFilters = null)
     {
         $data = [];
-        $properties = $this->properties($property_filters);
-        foreach ($properties as $property_ident => $property) {
+        $properties = $this->properties($propertyFilters);
+        foreach ($properties as $propertyIdent => $property) {
             // Ensure objects are properly encoded.
-            $data[$property_ident] = json_decode(json_encode($property), true);
+            $data[$propertyIdent] = json_decode(json_encode($property), true);
         }
         return $data;
     }
@@ -120,29 +120,29 @@ abstract class AbstractModel extends AbstractEntity implements
     *
     * This function takes a 1-dimensional array and fill the object with its value.
     *
-    * @param array $data
+    * @param array $flatData The data, as a flat (1-dimension) array.
     * @return AbstractModel Chainable
     */
     public function setFlatData(array $flatData)
     {
         $data = [];
         $properties = $this->properties();
-        foreach ($properties as $property_ident => $property) {
+        foreach ($properties as $propertyIdent => $property) {
             $fields = $property->fields();
             if (count($fields) == 1) {
                 $f = $fields[0];
                 $f_id = $f->ident();
                 if (isset($flatData[$f_id])) {
-                    $data[$property_ident] = $flatData[$f_id];
+                    $data[$propertyIdent] = $flatData[$f_id];
                     unset($flatData[$f_id]);
                 }
             } else {
                 $p = [];
                 foreach ($fields as $f) {
                     $f_id = $f->ident();
-                    $key = str_replace($property_ident.'_', '', $f_id);
+                    $key = str_replace($propertyIdent.'_', '', $f_id);
                     if (isset($flatData[$f_id])) {
-                        $data[$property_ident][$key] = $flatData[$f_id];
+                        $data[$propertyIdent][$key] = $flatData[$f_id];
                         unset($flatData[$f_id]);
                     }
                 }
@@ -165,25 +165,25 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-    * @param string $property_ident
+    * @param string $propertyIdent The property ident to get the value from.
     * @return mixed
     */
-    public function propertyValue($property_ident)
+    public function propertyValue($propertyIdent)
     {
-        $getter = $this->getter($property_ident);
+        $getter = $this->getter($propertyIdent);
         $func   = [ $this, $getter ];
 
         if (is_callable($func)) {
             return call_user_func($func);
-        } elseif (isset($this->{$property_ident})) {
-            return $this->{$property_ident};
+        } elseif (isset($this->{$propertyIdent})) {
+            return $this->{$propertyIdent};
         }
 
         return null;
     }
 
     /**
-    * @param array $properties
+    * @param array $properties Optional array of properties to save. If null, use all object's properties.
     * @return boolean
     */
     public function saveProperties(array $properties = null)
@@ -192,8 +192,8 @@ abstract class AbstractModel extends AbstractEntity implements
             $properties = array_keys($this->metadata()->properties());
         }
 
-        foreach ($properties as $property_ident) {
-            $p = $this->p($property_ident);
+        foreach ($properties as $propertyIdent) {
+            $p = $this->p($propertyIdent);
             $p->save();
 
             if ($p->val() === null) {
@@ -201,7 +201,7 @@ abstract class AbstractModel extends AbstractEntity implements
             }
 
             $this->setData([
-                $property_ident => $p->val()
+                $propertyIdent => $p->val()
             ]);
         }
 
@@ -238,7 +238,7 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-    * @param array $properties
+    * @param array $properties Optional. Properties to update. If null use all of object's.
     * @return mixed
     */
     public function update(array $properties = null)
@@ -287,7 +287,7 @@ abstract class AbstractModel extends AbstractEntity implements
     /**
     * StorableTrait > preUpdate(). Update hook called before updating the model.
     *
-    * @param array $properties
+    * @param string[] $properties Optional. The properties to update.
     * @return boolean
     */
     protected function preUpdate(array $properties = null)
@@ -298,10 +298,10 @@ abstract class AbstractModel extends AbstractEntity implements
     /**
     * StorableTrait > postUpdate(). Update hook called after updating the model.
     *
-    * @param array $properties
+    * @param string[] $properties Optional. The properties to update.
     * @return boolean
     */
-    protected function postUpdate($properties = null)
+    protected function postUpdate(array $properties = null)
     {
         return true;
     }
@@ -344,11 +344,11 @@ abstract class AbstractModel extends AbstractEntity implements
     /**
     * StorableInterface > createSource()
     *
-    * @param array $data Optional
+    * @param array $data Optional source data.
     * @throws Exception If the metadata source can not be found.
     * @return SourceInterface
     */
-    protected function createSource($data = null)
+    protected function createSource(array $data = null)
     {
         $metadata = $this->metadata();
         $defaultSource = $metadata->defaultSource();
@@ -381,7 +381,7 @@ abstract class AbstractModel extends AbstractEntity implements
     /**
     * ValidatableInterface > create_validator().
     *
-    * @param array $data Optional
+    * @param array $data Optional.
     * @return ValidatorInterface
     */
     protected function createValidator(array $data = null)
@@ -394,7 +394,7 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-    * @param array $data
+    * @param array $data Optional. View data.
     * @return ViewInterface
     */
     public function createView(array $data = null)

@@ -27,7 +27,7 @@ class ObjectLoader
     private $source;
 
     /**
-    * @param mixed $source
+    * @param mixed $source The loader source.
     * @return ObjectLoader Chainable
     */
     public function setSource($source)
@@ -45,7 +45,7 @@ class ObjectLoader
     }
 
     /**
-    * @param ModelInterface $model
+    * @param ModelInterface $model The loader / source model.
     * @return Source Chainable
     */
     public function setModel(ModelInterface $model)
@@ -56,7 +56,7 @@ class ObjectLoader
     }
 
     /**
-    * @throws Exception if not model was previously set
+    * @throws Exception If not model was previously set.
     * @return Model
     */
     public function model()
@@ -68,14 +68,16 @@ class ObjectLoader
     }
 
     /**
-    * @param string $ident
-    * @throws \InvalidArgumentException if the ident is not a string
-    * @return MetadataLoader (Chainable)
+    * @param string $ident The loader ident.
+    * @throws InvalidArgumentException If the ident is not a string.
+    * @return MetadataLoader Chainable
     */
     public function setIdent($ident)
     {
         if (!is_string($ident)) {
-            throw new \InvalidArgumentException(__CLASS__.'::'.__FUNCTION__.'() - Ident must be a string.');
+            throw new InvalidArgumentException(
+                __CLASS__.'::'.__FUNCTION__.'() - Ident must be a string.'
+            );
         }
         $this->ident = $ident;
         return $this;
@@ -90,10 +92,10 @@ class ObjectLoader
     }
 
     /**
-    * @param ModelInterface $obj
+    * @param ModelInterface $obj The prototype object.
     * @return ObjectLoader Chainable
     */
-    public function setObj($obj)
+    public function setObj(ModelInterface $obj)
     {
         $this->obj = $obj;
         return $this;
@@ -108,7 +110,7 @@ class ObjectLoader
     }
 
     /**
-    * @param string|null $ident
+    * @param string|null $ident Optional. The ident.
     * @return ModelInterface
     */
     public function load($ident = null)
@@ -123,7 +125,7 @@ class ObjectLoader
     }
 
     /**
-    * @param string|null $ident
+    * @param string|null $ident Optional. The ident.
     * @return array
     */
     public function loadData($ident = null)

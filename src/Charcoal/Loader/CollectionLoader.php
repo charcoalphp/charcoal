@@ -58,7 +58,7 @@ class CollectionLoader implements LoggerAwareInterface
     /**
      * Return a new CollectionLoader object.
      *
-     * @param array $data The loader's dependencies.
+     * @param array|\ArrayAccess $data The loader's dependencies.
      */
     public function __construct($data)
     {
@@ -167,7 +167,7 @@ class CollectionLoader implements LoggerAwareInterface
      * @param  array $properties An array of property identifiers.
      * @return ColelectionLoader Chainable
      */
-    public function setProperties($properties)
+    public function setProperties(array $properties)
     {
         $this->source()->setProperties($properties);
 
@@ -193,7 +193,7 @@ class CollectionLoader implements LoggerAwareInterface
      * @param  array $keywords An array of keywords and properties.
      * @return CollectionLoader Chainable
      */
-    public function setKeywords()
+    public function setKeywords(array $keywords)
     {
         foreach ($keywords as $k) {
             $keyword = $k[0];
@@ -211,7 +211,7 @@ class CollectionLoader implements LoggerAwareInterface
      * @param  array  $properties An array of property identifiers.
      * @return CollectionLoader Chainable
      */
-    public function addKeyword($keyword, $properties = null)
+    public function addKeyword($keyword, array $properties = null)
     {
         $model = $this->model();
         if (!is_array($properties) || empty($properties)) {
@@ -249,7 +249,7 @@ class CollectionLoader implements LoggerAwareInterface
      * @param  array $filters An array of filters.
      * @return Collection Chainable
      */
-    public function setFilters($filters)
+    public function setFilters(array $filters)
     {
         $this->source()->setFilters($filters);
 
@@ -287,7 +287,7 @@ class CollectionLoader implements LoggerAwareInterface
      * @param  array $orders An array of orders.
      * @return CollectionLoader Chainable
      */
-    public function setOrders($orders)
+    public function setOrders(array $orders)
     {
         $this->source()->setOrders($orders);
 
@@ -302,7 +302,7 @@ class CollectionLoader implements LoggerAwareInterface
      * @param  array              $orderOptions Optional. Filter options. Only used if the first argument is a string.
      * @return CollectionLoader Chainable
      */
-    public function addOrder($param, $mode = 'asc', $orderOptions = null)
+    public function addOrder($param, $mode = 'asc', array $orderOptions = null)
     {
         $this->source()->addOrder($param, $mode, $orderOptions);
 
@@ -427,11 +427,11 @@ class CollectionLoader implements LoggerAwareInterface
     /**
      * Load a collection from source.
      *
-     * @param  string|null $ident  Optional. A pre-defined list to use from the model.
-     * @param  array       $args   Optional. The constructor arguments.
-     *                             Leave blank to use `$arguments` member.
-     * @param  callable    $cb     Optional. Apply a callback to every entity of the collection.
-     *                             Leave blank to use `$callback` member.
+     * @param  string|null $ident Optional. A pre-defined list to use from the model.
+     * @param  array       $args  Optional. The constructor arguments.
+     *                            Leave blank to use `$arguments` member.
+     * @param  callable    $cb    Optional. Apply a callback to every entity of the collection.
+     *                            Leave blank to use `$callback` member.
      * @throws Exception If the database connection fails.
      * @return Collection
      */
@@ -483,7 +483,7 @@ class CollectionLoader implements LoggerAwareInterface
     /**
      * Allow an object to define how the key getter are called.
      *
-     * @param string $key  The key to get the getter from.
+     * @param string $key The key to get the getter from.
      * @return string The getter method name, for a given key.
      */
     protected function getter($key)
@@ -495,7 +495,7 @@ class CollectionLoader implements LoggerAwareInterface
     /**
      * Allow an object to define how the key setter are called.
      *
-     * @param string $key  The key to get the setter from.
+     * @param string $key The key to get the setter from.
      * @return string The setter method name, for a given key.
      */
     protected function setter($key)

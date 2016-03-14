@@ -17,12 +17,12 @@ trait StorableTrait
     protected $sourceFactory;
 
     /**
-    * @var SourceInterfae $source
+    * @var SourceInterface $source
     */
     private $source;
 
     /**
-     * @param SourceFactory $sourceFactory The source factory, which is useful to create source.
+     * @param SourceFactory $factory The source factory, which is useful to create source.
      * @return StorableInterface Chainable
      */
     public function setSourceFactory(SourceFactory $factory)
@@ -45,7 +45,7 @@ trait StorableTrait
     /**
     * Set the object's source.
     *
-    * @param SourceInterface $source
+    * @param SourceInterface $source The storable object's source.
     * @return StorableInterface Chainable
     */
     public function setSource(SourceInterface $source)
@@ -70,7 +70,7 @@ trait StorableTrait
     /**
     * Create the model's source, with the Source Factory.
     *
-    * @param mixed $data Optional
+    * @param mixed $data Optional.
     * @return SourceInterface
     */
     abstract protected function createSource($data = null);
@@ -99,8 +99,8 @@ trait StorableTrait
     * Note that the object should also implement `Charcoal\Model\IndexableInterface`
     * (provide an `id()` and `key()` methods) for this function to work properly.
     *
-    * @param string $key Key pointing a column's name
-    * @param mixed $value Value of said column
+    * @param string $key   Key pointing a column's name.
+    * @param mixed  $value Value of said column.
     * @return StorableInterface Chainable.
     */
     public function loadFrom($key = null, $value = null)
@@ -113,7 +113,7 @@ trait StorableTrait
     * Load an object from the database from a custom SQL query.
     *
     * @param string $query The SQL query.
-    * @param array $binds Optional. The SQL query parameters.
+    * @param array  $binds Optional. The SQL query parameters.
     * @return StorableInterface Chainable.
     */
     public function loadFromQuery($query, array $binds = [])
@@ -176,24 +176,29 @@ trait StorableTrait
     * @return boolean
     */
     abstract protected function preSave();
+
     /**
     * @return boolean
     */
     abstract protected function postSave();
+
     /**
-    * @param string[] $properties
+    * @param string[] $keys Optional. The list of keys to update.
     * @return boolean
     */
     abstract protected function preUpdate(array $keys = null);
+
     /**
-    * @param string $keys
+    * @param string[] $keys Optional. The list of keys to update.
     * @return boolean
     */
     abstract protected function postUpdate(array $keys = null);
+
     /**
     * @return boolean
     */
     abstract protected function preDelete();
+
     /**
     * @return boolean
     */

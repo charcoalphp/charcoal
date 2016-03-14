@@ -11,6 +11,7 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
+        $app = $GLOBALS['app'];
         $s = new DatabaseSource([
             'logger'=>$GLOBALS['container']['logger']
         ]);

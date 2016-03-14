@@ -22,7 +22,7 @@ class DatabaseOrder extends Order
     * - `rand` to order in a random fashion.
     * - `values` to order by a defined array of properties.
     *
-    * @throws DomainException
+    * @throws DomainException If any required property is empty.
     * @return string
     */
     public function sql()
@@ -36,16 +36,22 @@ class DatabaseOrder extends Order
         if ($mode == 'values') {
             $values = $this->values();
             if (empty($values)) {
-                throw new DomainException('Values can not be empty.');
+                throw new DomainException(
+                    'Values can not be empty.'
+                );
             }
             if ($property == '') {
-                throw new DomainException('Property can not be empty.');
+                throw new DomainException(
+                    'Property can not be empty.'
+                );
             }
 
             return 'FIELD(`'.$property.'`, '.implode(',', $values).')';
         } else {
             if ($property == '') {
-                throw new DomainException('Property can not be empty.');
+                throw new DomainException(
+                    'Property can not be empty.'
+                );
             }
             return '`'.$property.'` '.$mode;
         }

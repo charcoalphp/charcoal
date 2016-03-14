@@ -8,7 +8,7 @@ namespace Charcoal\Model;
 interface ModelInterface
 {
     /**
-    * @param array|\ArrayAccess $data
+    * @param array|\ArrayAccess $data The model data.
     * @return ModelInterface Chainable
     */
     public function setData($data);
@@ -19,7 +19,7 @@ interface ModelInterface
     public function data();
 
     /**
-    * @param array $data
+    * @param array $data The odel flat data.
     * @return ModelInterface Chainable
     */
     public function setFlatData(array $data);
@@ -35,16 +35,16 @@ interface ModelInterface
     public function properties();
 
     /**
-    * @param string $property_ident
+    * @param string $propertyIdent The property (ident) to get.
     * @return PropertyInterface
     */
-    public function property($property_ident);
+    public function property($propertyIdent);
 
     /**
     * Alias of `properties()` (if not parameter is set) or `property()`.
     *
-    * @param string $property_ident
+    * @param string $propertyIdent The property (ident) to get.
     * @return mixed
     */
-    public function p($property_ident = null);
+    public function p($propertyIdent = null);
 }

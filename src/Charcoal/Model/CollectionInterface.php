@@ -27,15 +27,15 @@ interface CollectionInterface
     /**
     * Manually add an object to the list
     *
-    * @param Charcoal_Base $obj
+    * @param ModelInterface $obj The object to add.
     *
     * @return \Charcoal\Collection (Chainable)
     */
     public function add(ModelInterface $obj);
 
     /**
-    * @param string|ModelInterface $key
-    * @throws InvalidArgumentException if the offset is not a string
+    * @param string|ModelInterface $key The key to retrieve.
+    * @throws InvalidArgumentException If the offset is not a string.
     * @return integer|boolean
     */
     public function pos($key);

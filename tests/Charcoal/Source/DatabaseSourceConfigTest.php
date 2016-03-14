@@ -78,8 +78,5 @@ class DatabaseSourceConfigTest extends \PHPUnit_Framework_TestCase
         $ret = $obj->setDisableUtf8(true);
         $this->assertSame($ret, $obj);
         $this->assertEquals(true, $obj->disableUtf8());
-
-        $this->setExpectedException('\InvalidArgumentException');
-        $obj->setDisableUtf8('foo');
     }
 }

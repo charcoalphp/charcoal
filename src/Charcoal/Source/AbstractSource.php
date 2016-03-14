@@ -67,7 +67,7 @@ abstract class AbstractSource implements
     protected $pagination = null;
 
     /**
-    * @param array|\ArrayAccess $dependencies
+    * @param array|\ArrayAccess $dependencies The class dependencies.
     * @return void
     */
     public function __construct($dependencies)
@@ -93,10 +93,10 @@ abstract class AbstractSource implements
     /**
     * Initialize the source's properties with an array of data.
     *
-    * @param array $data
+    * @param array|\ArrayAccess $data The source data.
     * @return AbstractSource Chainable
     */
-    public function setData(array $data)
+    public function setData($data)
     {
         foreach ($data as $prop => $val) {
             $func = [$this, $this->setter($prop)];
@@ -113,7 +113,7 @@ abstract class AbstractSource implements
     /**
     * Set the source's Model.
     *
-    * @param ModelInterface $model
+    * @param ModelInterface $model The source's model.
     * @return AbstractSource Chainable
     */
     public function setModel(ModelInterface $model)
@@ -125,7 +125,7 @@ abstract class AbstractSource implements
     /**
     * Return the source's Model.
     *
-    * @throws Exception if not model was previously set
+    * @throws Exception If not model was previously set.
     * @return ModelInterface
     */
     public function model()
@@ -154,8 +154,7 @@ abstract class AbstractSource implements
     *
     * If no properties are set, it is assumed that all the Model's properties are to be fetched.
     *
-    * @param array $properties
-    * @throws InvalidArgumentException
+    * @param array $properties The properties.
     * @return ColelectionLoader Chainable
     */
     public function setProperties(array $properties)
@@ -176,8 +175,8 @@ abstract class AbstractSource implements
     }
 
     /**
-    * @param string $property Property ident
-    * @throws InvalidArgumentException if property is not a string or empty
+    * @param string $property Property ident.
+    * @throws InvalidArgumentException If property is not a string or empty.
     * @return CollectionLoader Chainable
     */
     public function addProperty($property)
@@ -197,8 +196,7 @@ abstract class AbstractSource implements
     }
 
     /**
-    * @param array $filters
-    * @throws InvalidArgumentException
+    * @param array $filters The filters to set.
     * @return Collection Chainable
     */
     public function setFilters(array $filters)
@@ -229,10 +227,10 @@ abstract class AbstractSource implements
     * - as 3 parameters: `property`, `val` and `options`
     *   - `addFilter('foo', 42, ['operator' => '<=']);`
     *
-    * @param string|array|Filter $param
-    * @param mixed               $val     Optional: Only used if the first argument is a string
-    * @param array               $options Optional: Only used if the first argument is a string
-    * @throws InvalidArgumentException if property is not a string or empty
+    * @param string|array|Filter $param   The filter property, or a Filter object / array.
+    * @param mixed               $val     Optional: Only used if the first argument is a string.
+    * @param array               $options Optional: Only used if the first argument is a string.
+    * @throws InvalidArgumentException If property is not a string or empty.
     * @return CollectionLoader (Chainable)
     */
     public function addFilter($param, $val = null, array $options = null)
@@ -257,7 +255,7 @@ abstract class AbstractSource implements
 
         if ($this->hasModel()) {
             $property = $filter->property();
-            if($property) {
+            if ($property) {
                 $p = $this->model()->p($property);
                 if ($p && $p->l10n()) {
                     $translator = TranslationConfig::instance();
@@ -286,7 +284,7 @@ abstract class AbstractSource implements
     }
 
     /**
-    * @param array $orders
+    * @param array $orders The orders to set.
     * @return CollectionLoader Chainable
     */
     public function setOrders(array $orders)
@@ -307,13 +305,13 @@ abstract class AbstractSource implements
     }
 
     /**
-    * @param string|array|Order $param
-    * @param string             $mode          Optional
-    * @param array              $orderOptions Optional
-    * @throws InvalidArgumentException
+    * @param string|array|Order $param        The order property, or an Order object / array.
+    * @param string             $mode         Optional.
+    * @param array              $orderOptions Optional.
+    * @throws InvalidArgumentException If the param argument is invalid.
     * @return CollectionLoader Chainable
     */
-    public function addOrder($param, $mode = 'asc', $orderOptions = null)
+    public function addOrder($param, $mode = 'asc', array $orderOptions = null)
     {
         if ($param instanceof OrderInterface) {
             $this->orders[] = $param;
@@ -348,8 +346,8 @@ abstract class AbstractSource implements
     }
 
     /**
-    * @param mixed $param
-    * @throws InvalidArgumentException
+    * @param mixed $param The pagination object or array.
+    * @throws InvalidArgumentException If the argument is not an object or array.
     * @return CollectionLoader Chainable
     */
     public function setPagination($param)
@@ -394,18 +392,18 @@ abstract class AbstractSource implements
     }
 
     /**
-    * @param integer $page
-    * @throws InvalidArgumentException
+    * @param integer $page The page number.
+    * @throws InvalidArgumentException If the page argument is not numeric.
     * @return CollectionLoader Chainable
     */
     public function setPage($page)
     {
-        if (!is_integer($page)) {
+        if (!is_numeric($page)) {
             throw new InvalidArgumentException(
                 'Page must be an integer.'
             );
         }
-        $this->pagination()->setPage($page);
+        $this->pagination()->setPage((int)$page);
         return $this;
     }
 
@@ -418,18 +416,18 @@ abstract class AbstractSource implements
     }
 
     /**
-    * @param integer $num
-    * @throws InvalidArgumentException
+    * @param integer $num The number of items to retrieve per page.
+    * @throws InvalidArgumentException If the num per page argument is not numeric.
     * @return CollectionLoader Chainable
     */
     public function setNumPerPage($num)
     {
-        if (!is_integer($num)) {
+        if (!is_numeric($num)) {
             throw new InvalidArgumentException(
                 'Num must be an integer.'
             );
         }
-        $this->pagination()->setNumPerPage($num);
+        $this->pagination()->setNumPerPage((int)$num);
         return $this;
     }
 
@@ -444,7 +442,7 @@ abstract class AbstractSource implements
     /**
     * ConfigurableTrait > createConfig()
     *
-    * @param array $data Optional
+    * @param array $data Optional.
     * @return SourceConfig
     */
     public function createConfig(array $data = null)
@@ -457,15 +455,14 @@ abstract class AbstractSource implements
     }
 
     /**
-    * @param mixed $ident
-    * @param StorableInterface $item  Optional item to load into
-    * @throws Exception
+    * @param mixed             $ident The ID of the item to load.
+    * @param StorableInterface $item  Optional item to load into.
     * @return StorableInterface
     */
     abstract public function loadItem($ident, StorableInterface $item = null);
 
-        /**
-    * @param StorableInterface|null $item
+    /**
+    * @param StorableInterface|null $item The model to load items from.
     * @return array
     */
     abstract public function loadItems(StorableInterface $item = null);
@@ -473,26 +470,24 @@ abstract class AbstractSource implements
     /**
     * Save an item (create a new row) in storage.
     *
-    * @param StorableInterface $item The object to save
-    * @throws Exception if a database error occurs
-    * @return mixed The created item ID, or false in case of an error
+    * @param StorableInterface $item The object to save.
+    * @return mixed The created item ID, or false in case of an error.
     */
     abstract public function saveItem(StorableInterface $item);
 
     /**
     * Update an item in storage.
     *
-    * @param StorableInterface $item       The object to update
-    * @param array             $properties The list of properties to update, if not all
+    * @param StorableInterface $item       The object to update.
+    * @param array             $properties The list of properties to update, if not all.
     * @return boolean Success / Failure
     */
-    abstract public function updateItem(StorableInterface $item, $properties = null);
+    abstract public function updateItem(StorableInterface $item, array $properties = null);
 
     /**
     * Delete an item from storage
     *
-    * @param StorableInterface $item Optional item to delete. If none, the current model object will be used.
-    * @throws Exception
+    * @param StorableInterface $item Optional item to delete. If none, the current model object will be used..
     * @return boolean Success / Failure
     */
     abstract public function deleteItem(StorableInterface $item = null);
@@ -500,7 +495,7 @@ abstract class AbstractSource implements
     /**
      * Allow an object to define how the key getter are called.
      *
-     * @param string $key The key to get the getter from.
+     * @param string $key  The key to get the getter from.
      * @param string $case Optional. The type of case to return. camel, pascal or snake.
      * @return string The getter method name, for a given key.
      */
@@ -520,7 +515,7 @@ abstract class AbstractSource implements
     /**
      * Allow an object to define how the key setter are called.
      *
-     * @param string $key The key to get the setter from.
+     * @param string $key  The key to get the setter from.
      * @param string $case Optional. The type of case to return. camel, pascal or snake.
      * @return string The setter method name, for a given key.
      */
