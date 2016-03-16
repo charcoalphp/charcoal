@@ -49,7 +49,7 @@ abstract class AbstractMenu extends AbstractUiItem implements MenuInterface
     }
 
     /**
-     * @param callable $cb
+     * @param callable $cb The item callback.
      * @return AbstractMenu Chainable
      */
     public function setItemCallback(callable $cb)
@@ -59,17 +59,11 @@ abstract class AbstractMenu extends AbstractUiItem implements MenuInterface
     }
 
     /**
-     * @param array $items
-     * @throws InvalidArgumentException
+     * @param array $items The menu items.
      * @return AbstractMenu Chainable
      */
-    public function setItems($items)
+    public function setItems(array $items)
     {
-        if (!is_array($items)) {
-            throw new InvalidArgumentException(
-                'Items must be an array'
-            );
-        }
         $this->items = [];
         foreach ($items as $item) {
             $this->addItem($item);
@@ -78,8 +72,8 @@ abstract class AbstractMenu extends AbstractUiItem implements MenuInterface
     }
 
     /**
-     * @param array|MenuItemInterface $item
-     * @throws InvalidArgumentException
+     * @param array|MenuItemInterface $item A menu item structure or object.
+     * @throws InvalidArgumentException If the item argument is not a structure or object.
      * @return MenuItem Chainable
      */
     public function addItem($item)
@@ -102,6 +96,7 @@ abstract class AbstractMenu extends AbstractUiItem implements MenuInterface
     /**
      * Menu Item generator.
      *
+     * @param callable $itemCallback Optional. Item callback.
      * @return MenuItemInterface[]
      */
     public function items(callable $itemCallback = null)
@@ -138,8 +133,8 @@ abstract class AbstractMenu extends AbstractUiItem implements MenuInterface
     /**
      * To be called with uasort()
      *
-     * @param FormGroupInterface $a
-     * @param FormGroupInterface $b
+     * @param MenuItemInterface $a First item to compare.
+     * @param MenuItemInterface $b Second item to compare.
      * @return integer Sorting value: -1, 0, or 1
      */
     protected static function sortItemsByPriority(MenuItemInterface $a, MenuItemInterface $b)
@@ -148,8 +143,7 @@ abstract class AbstractMenu extends AbstractUiItem implements MenuInterface
         $b = $b->priority();
 
         if ($a == $b) {
-            return 1;
-// Should be 0?
+            return 0;
         }
 
         return ($a < $b) ? (-1) : 1;

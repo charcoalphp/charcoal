@@ -11,7 +11,7 @@ use \Charcoal\Ui\FormGroup\FormGroupInterface;
 interface FormInputInterface
 {
     /**
-     * @param FormGroupInterface $formGroup
+     * @param FormGroupInterface $formGroup The parent form group object.
      * @return FormInputInterface Chainable
      */
     public function setFormGroup(FormGroupInterface $formGroup);

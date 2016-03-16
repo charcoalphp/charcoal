@@ -10,13 +10,13 @@ use \Charcoal\Ui\Layout\LayoutBuilder;
 interface LayoutAwareInterface
 {
     /**
-     * @param LayoutBuilder $builder
+     * @param LayoutBuilder $builder The layout builder, to create customized layout object(s).
      * @return DashboardInterface Chainable
      */
     public function setLayoutBuilder(LayoutBuilder $builder);
+
     /**
-     * @param LayoutInterface|array
-     * @throws InvalidArgumentException
+     * @param LayoutInterface|array $layout The layout object or structure.
      * @return DashboardInterface Chainable
      */
     public function setLayout($layout);

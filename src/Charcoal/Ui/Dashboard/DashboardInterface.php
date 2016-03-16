@@ -15,33 +15,23 @@ use \Charcoal\Ui\Layout\LayoutAwareInterface;
  */
 interface DashboardInterface extends UiItemInterface, LayoutAwareInterface
 {
-
     /**
-     * @param LayoutInterface|array
-     * @return DashboardInterface Chainable
-     */
-    public function setLayout($layout);
-
-    /**
-     * @return LayoutInterface
-     */
-    public function layout();
-
-    /**
-     * @param array $widgets
+     * @param array $widgets The widgets.
      * @return DashboardInterface Chainable
      */
     public function setWidgets(array $widgets);
 
     /**
-     * @param string                $widget_ident
-     * @param WidgetInterface|array $widget
+     * @param string                $widgetIdent The widget identifier.
+     * @param WidgetInterface|array $widget      The widget object or structure.
      * @return DashboardInterface Chainable
      */
     public function addWidget($widgetIdent, $widget);
 
     /**
      * Widgets generator
+     *
+     * @return void This method is a `WidgetInterface` generator.
      */
     public function widgets();
 

@@ -54,10 +54,13 @@ abstract class AbstractUiItem extends AbstractEntity implements UiItemInterface
      */
     private $notes = '';
 
+    /**
+     * @return string
+     */
     abstract public function type();
 
     /**
-     * @param string $template
+     * @param string $template The UI item's template (identifier).
      * @throws InvalidArgumentException If the template identifier is not a string.
      * @return UiItemInterface Chainable
      */

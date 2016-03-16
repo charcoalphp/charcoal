@@ -8,7 +8,7 @@ namespace Charcoal\Ui\MenuItem;
 interface MenuItemInterface
 {
     /**
-     * @param string $ident
+     * @param string $ident The menu item identifier.
      * @return MenuItemInterface Chainable
      */
     public function setIdent($ident);
@@ -19,7 +19,7 @@ interface MenuItemInterface
     public function ident();
 
     /**
-     * @param string $label
+     * @param string $label The menu item label.
      * @return MenuItemInterface Chainable
      */
     public function setLabel($label);
@@ -30,7 +30,7 @@ interface MenuItemInterface
     public function label();
 
     /**
-     * @param string $url
+     * @param string $url The menu item URL.
      * @return MenuItemInterface Chainable
      */
     public function setUrl($url);
@@ -46,13 +46,13 @@ interface MenuItemInterface
     public function hasUrl();
 
     /**
-     * @param array $children
+     * @param array $children The menu item children menu structure.
      * @return MenuItemInterface Chainable
      */
-    public function setChildren($children);
+    public function setChildren(array $children);
 
     /**
-     * @param array|MenuItemInterface $child
+     * @param array|MenuItemInterface $child The child object or structure.
      * @return MenuItemInterface Chainable
      */
     public function addChild($child);

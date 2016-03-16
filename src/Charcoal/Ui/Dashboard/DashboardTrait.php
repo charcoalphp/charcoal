@@ -30,7 +30,7 @@ trait DashboardTrait
 
 
     /**
-     * @param mixed $builder
+     * @param mixed $builder The builder to create customized widget objects.
      * @return DashboardInterface Chainable
      */
     protected function setWidgetBuilder($builder)
@@ -40,7 +40,7 @@ trait DashboardTrait
     }
 
     /**
-     * @param callable $cb
+     * @param callable $cb The widget callback.
      * @return DashboardInterface Chainable
      */
     public function setWidgetCallback(callable $cb)
@@ -50,7 +50,7 @@ trait DashboardTrait
     }
 
     /**
-     * @param array $groups
+     * @param array $widgets The widgets.
      * @return DashboardInterface Chainable
      */
     public function setWidgets(array $widgets)
@@ -63,9 +63,10 @@ trait DashboardTrait
     }
 
     /**
-     * @param string                $widgetIdent
-     * @param WidgetInterface|array $widget
-     * @throws InvalidArgumentException
+     * @param string                $widgetIdent The widget identifier.
+     * @param WidgetInterface|array $widget      The widget object or structure.
+     * @throws InvalidArgumentException If the argument is not a widget object or structure.
+     * @return DashboardInterface Chainable
      */
     public function addWidget($widgetIdent, $widget)
     {
@@ -88,12 +89,14 @@ trait DashboardTrait
                 'Can not add widget: Invalid Widget.'
             );
         }
+        return $this;
     }
 
     /**
      * Widgets generator.
      *
-     * @return WidgetInterface[]
+     * @param callable $widgetCallback Widget callback.
+     * @return void Is a generator of `WidgetInterface[]` objects.
      */
     public function widgets(callable $widgetCallback = null)
     {
@@ -130,8 +133,8 @@ trait DashboardTrait
     /**
      * To be called with uasort()
      *
-     * @param mixed $a
-     * @param mixed $b
+     * @param mixed $a Widget a.
+     * @param mixed $b Widget b.
      * @return integer Sorting value: -1, 0, or 1
      */
     protected static function sortWidgetsByPriority($a, $b)

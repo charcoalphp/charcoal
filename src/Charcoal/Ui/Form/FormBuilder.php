@@ -25,8 +25,7 @@ class FormBuilder
     protected $container;
 
     /**
-     * @param FactoryInterface $factory   An object factory.
-     * @param Container        $container The DI container.
+     * @param FactoryInterface $factory An object factory.
      */
     public function __construct(FactoryInterface $factory)
     {

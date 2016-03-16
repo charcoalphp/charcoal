@@ -8,13 +8,13 @@ namespace Charcoal\Ui\Menu;
 interface MenuInterface
 {
     /**
-     * @param array $items
+     * @param array $items The menu items.
      * @return MenuInterface Chainable
      */
-    public function setItems($items);
+    public function setItems(array $items);
 
     /**
-     * @param array|MenuItemInterface $child
+     * @param array|MenuItemInterface $item A menu item structure or object.
      * @return MenuInterface Chainable
      */
     public function addItem($item);

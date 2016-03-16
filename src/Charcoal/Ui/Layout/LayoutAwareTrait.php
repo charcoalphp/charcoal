@@ -24,7 +24,7 @@ trait LayoutAwareTrait
     protected $layoutBuilder = null;
 
     /**
-     * @param LayoutBuilder $builder
+     * @param LayoutBuilder $builder The layout builder, to create customized layout object(s).
      * @return DashboardInterface Chainable
      */
     public function setLayoutBuilder(LayoutBuilder $builder)
@@ -34,8 +34,8 @@ trait LayoutAwareTrait
     }
 
     /**
-     * @param LayoutInterface|array
-     * @throws InvalidArgumentException
+     * @param LayoutInterface|array $layout The layout object or structure.
+     * @throws InvalidArgumentException If the layout argument is not an object or layout structure.
      * @return DashboardInterface Chainable
      */
     public function setLayout($layout)
@@ -43,8 +43,7 @@ trait LayoutAwareTrait
         if (($layout instanceof LayoutInterface)) {
             $this->layout = $layout;
         } elseif (is_array($layout)) {
-            $l = $this->layoutBuilder->build($layout);
-            $this->layout = $l;
+            $this->layout = $this->layoutBuilder->build($layout);
         } else {
             throw new InvalidArgumentException(
                 'Layout must be a LayoutInterface object or an array'

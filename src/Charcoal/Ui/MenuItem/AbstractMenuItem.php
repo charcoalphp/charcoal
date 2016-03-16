@@ -57,6 +57,12 @@ abstract class AbstractMenuItem extends AbstractUiItem implements MenuItemInterf
         $this->setMenuItemBuilder($data['menu_item_builder']);
     }
 
+    /**
+     * Set the parent (menu) object.
+     *
+     * @param MenuInterface $menu The parent menu object.
+     * @return MenuItemInterface Chainable
+     */
     protected function setMenu(MenuInterface $menu)
     {
         $this->menu = $menu;
@@ -65,7 +71,7 @@ abstract class AbstractMenuItem extends AbstractUiItem implements MenuItemInterf
 
     /**
      * @param MenuItemBuilder $menuItemBuilder The Menu Item Builder that will be used to create new items.
-     * @return AsbtractMenu Chainable
+     * @return MenuItemInterface Chainable
      */
     public function setMenuItemBuilder(MenuItemBuilder $menuItemBuilder)
     {
@@ -74,8 +80,8 @@ abstract class AbstractMenuItem extends AbstractUiItem implements MenuItemInterf
     }
 
     /**
-     * @param callable $cb
-     * @return AbstractMenu Chainable
+     * @param callable $cb The item callback.
+     * @return MenuItemInterface Chainable
      */
     public function setItemCallback(callable $cb)
     {
@@ -85,7 +91,7 @@ abstract class AbstractMenuItem extends AbstractUiItem implements MenuItemInterf
 
     /**
      * @param string $ident The menu item identifier.
-     * @throws InvalidArgumentException
+     * @throws InvalidArgumentException If the identifier argument is not a string.
      * @return MenuItem Chainable
      */
     public function setIdent($ident)
@@ -108,7 +114,7 @@ abstract class AbstractMenuItem extends AbstractUiItem implements MenuItemInterf
     }
 
     /**
-     * @param string $label
+     * @param mixed $label The menu item label.
      * @return MenuItem Chainable
      */
     public function setLabel($label)
@@ -125,10 +131,10 @@ abstract class AbstractMenuItem extends AbstractUiItem implements MenuItemInterf
         return $this->label;
     }
 
-        /**
-         * @param string $url
-         * @return MenuItem Chainable
-         */
+    /**
+     * @param string $url The menu item URL.
+     * @return MenuItem Chainable
+     */
     public function setUrl($url)
     {
         $this->url = $url;
@@ -152,17 +158,11 @@ abstract class AbstractMenuItem extends AbstractUiItem implements MenuItemInterf
     }
 
     /**
-     * @param array $children
-     * @throws InvalidArgumentException
+     * @param array $children The menu item children items structure.
      * @return MenuItem Chainable
      */
-    public function setChildren($children)
+    public function setChildren(array $children)
     {
-        if (!is_array($children)) {
-            throw new InvalidArgumentException(
-                'Children must be an array'
-            );
-        }
         $this->children = [];
         foreach ($children as $c) {
             $this->addChild($c);
@@ -171,8 +171,8 @@ abstract class AbstractMenuItem extends AbstractUiItem implements MenuItemInterf
     }
 
     /**
-     * @param array|MenuItem $child
-     * @throws InvalidArgumentException
+     * @param array|MenuItem $child The child menu structure or object.
+     * @throws InvalidArgumentException If the child is not a menu object or structure.
      * @return MenuItem Chainable
      */
     public function addChild($child)
@@ -194,9 +194,10 @@ abstract class AbstractMenuItem extends AbstractUiItem implements MenuItemInterf
     /**
      * Children (menu item) generator
      *
+     * @param callable $childCallback Optional callback.
      * @return MenuItemInterface[]
      */
-    public function children($childCallback = nulll)
+    public function children(callable $childCallback = null)
     {
         $children = $this->children;
         uasort($children, ['self', 'sortChildrenByPrioriy']);

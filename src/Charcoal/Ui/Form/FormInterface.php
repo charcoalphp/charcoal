@@ -8,7 +8,7 @@ namespace Charcoal\Ui\Form;
 interface FormInterface
 {
     /**
-     * @param string $action
+     * @param string $action The form action, typically a URL.
      * @return FormInterface Chainable
      */
     public function setAction($action);
@@ -30,14 +30,14 @@ interface FormInterface
     public function method();
 
     /**
-     * @param array $data
+     * @param array $data The (pre-populated) form data.
      * @return FormInterface Chainable
      */
     public function setFormData(array $data);
 
     /**
-     * @param string $key
-     * @param mixed  $val
+     * @param string $key The form data key, or property identifier.
+     * @param mixed  $val The form data value, for a given key.
      * @return FormInterface Chainable
      */
     public function addFormData($key, $val);

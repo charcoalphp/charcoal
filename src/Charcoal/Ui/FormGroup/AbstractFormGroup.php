@@ -20,7 +20,7 @@ abstract class AbstractFormGroup extends AbstractUiItem implements
     use FormGroupTrait;
 
     /**
-     * @param array|ArrayAccess $data The class depdendencies
+     * @param array|ArrayAccess $data The class depdendencies.
      */
     public function __construct($data)
     {

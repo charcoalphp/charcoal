@@ -51,7 +51,7 @@ trait FormTrait
     private $groupCallback = null;
 
     /**
-     * @param FormGroupBuilder $builder
+     * @param FormGroupBuilder $builder A builder, to create customized form gorup objects.
      * @return FormInterface Chainable
      */
     public function setFormGroupBuilder(FormGroupBuilder $builder)
@@ -75,7 +75,7 @@ trait FormTrait
     }
 
     /**
-     * @param callable $cb
+     * @param callable $cb The group callback.
      * @return FormInterface Chainable
      */
     public function setGroupCallback(callable $cb)
@@ -85,8 +85,8 @@ trait FormTrait
     }
 
     /**
-     * @param string $action
-     * @throws InvalidArgumentException
+     * @param string $action The "action" value, typically a URL.
+     * @throws InvalidArgumentException If the action argument is not a string.
      * @return FormInterface Chainable
      */
     public function setAction($action)
@@ -111,8 +111,8 @@ trait FormTrait
     /**
      * Set the method (forcing lowercase) to "post" or "get".
      *
-     * @param string $method Either "post" or "get"
-     * @throws InvalidArgumentException
+     * @param string $method Either "post" or "get".
+     * @throws InvalidArgumentException If the method is not post or get.
      * @return FormInterface Chainable
      */
     public function setMethod($method)
@@ -136,7 +136,7 @@ trait FormTrait
     }
 
     /**
-     * @param array $groups
+     * @param array $groups The groups structure.
      * @return FormInterface Chainable
      */
     public function setGroups(array $groups)
@@ -149,9 +149,9 @@ trait FormTrait
     }
 
     /**
-     * @param string                   $groupIdent
-     * @param array|FormGroupInterface
-     * @throws InvalidArgumentException
+     * @param string                   $groupIdent The group identifier.
+     * @param array|FormGroupInterface $group      The group object or structure.
+     * @throws InvalidArgumentException If the ident is not a string or the group not a valid object or structure.
      * @return FormInterface Chainable
      */
     public function addGroup($groupIdent, $group)
@@ -181,6 +181,7 @@ trait FormTrait
     /**
      * Form Group generator.
      *
+     * @param callable $groupCallback Optional. Group callback.
      * @return FormGroupInterface[]
      */
     public function groups(callable $groupCallback = null)
@@ -218,7 +219,7 @@ trait FormTrait
 
 
     /**
-     * @param array $formData
+     * @param array $formData The (pre-populated) form data, as [$key=>$val] array.
      * @return FormInterface Chainable
      */
     public function setFormData(array $formData)
@@ -228,9 +229,9 @@ trait FormTrait
     }
 
     /**
-     * @param string $key
-     * @param mixed  $val
-     * @throws InvalidArgumentException
+     * @param string $key The form data key, or poperty identifier.
+     * @param mixed  $val The form data value, for a given key.
+     * @throws InvalidArgumentException If the key argument is not a string.
      * @return FormInterface Chainable
      */
     public function addFormData($key, $val)
@@ -255,18 +256,17 @@ trait FormTrait
     /**
      * To be called with uasort()
      *
-     * @param mixed $a
-     * @param mixed $b
+     * @param FormGroupInterface $a First group object to sort.
+     * @param FormGroupInterface $b Second group object to sort.
      * @return integer Sorting value: -1, 0, or 1
      */
-    protected static function sortGroupsByPriority($a, $b)
+    protected static function sortGroupsByPriority(FormGroupInterface $a, FormGroupInterface $b)
     {
         $a = $a->priority();
         $b = $b->priority();
 
         if ($a == $b) {
-            // Should be 0?
-            return 1;
+            return 0;
         }
 
         return ($a < $b) ? (-1) : 1;

@@ -17,7 +17,7 @@ abstract class AbstractFormInput extends AbstractUiItem implements FormInputInte
     protected $formGroup;
 
     /**
-     * @param FormGroupInterface $formGroup
+     * @param FormGroupInterface $formGroup The parent form group object.
      * @return FormInputInterface Chainable
      */
     public function setFormGroup(FormGroupInterface $formGroup)

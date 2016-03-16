@@ -10,22 +10,21 @@ use \Charcoal\Ui\Form\FormInterface;
 interface FormGroupInterface
 {
     /**
-     * @param callable $cb
+     * @param callable $cb The input callback.
      * @return FormGroupInterface Chainable
      */
     public function setInputCallback(callable $cb);
 
     /**
-     * @param Form $form
+     * @param FormInterface $form The parent form object.
      * @return FormGroupInterface Chainable
      */
     public function setForm(FormInterface $form);
 
-        /**
-         * @var integer $priority
-         * @throws InvalidArgumentException
-         * @return FormGroupInterface Chainable
-         */
+    /**
+     * @param integer $priority Group priority, for sorting.
+     * @return FormGroupInterface Chainable
+     */
     public function setPriority($priority);
 
     /**
@@ -34,15 +33,14 @@ interface FormGroupInterface
     public function priority();
 
     /**
-     * @param array $inputs
+     * @param array $inputs The group inputs structure.
      * @return FormGroupInterface Chainable
      */
     public function setInputs(array $inputs);
 
     /**
-     * @param string                   $propertyIdent
-     * @param array|FormInputInterface
-     * @throws InvalidArgumentException
+     * @param string                   $inputIdent The input identifier.
+     * @param array|FormInputInterface $input      The input object or structure.
      * @return FormInterface Chainable
      */
     public function addInput($inputIdent, $input);
@@ -50,6 +48,7 @@ interface FormGroupInterface
     /**
      * Form Input generator
      *
+     * @param callable $inputCallback Optional. Input callback.
      * @return FormGroupInterface[]
      */
     public function inputs(callable $inputCallback = null);

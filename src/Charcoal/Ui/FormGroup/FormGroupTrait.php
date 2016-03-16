@@ -36,7 +36,7 @@ trait FormGroupTrait
     private $inputCallback = null;
 
     /**
-     * @param FormInputBuilder $builder
+     * @param FormInputBuilder $builder The builder, to create customized form input objects.
      * @return FormGroupInterface Chainable
      */
     protected function setFormInputBuilder(FormInputBuilder $builder)
@@ -46,7 +46,7 @@ trait FormGroupTrait
     }
 
     /**
-     * @param callable $cb
+     * @param callable $cb The input callback.
      * @return FormGroupInterface Chainable
      */
     public function setInputCallback(callable $cb)
@@ -56,7 +56,7 @@ trait FormGroupTrait
     }
 
     /**
-     * @param Form $form
+     * @param FormInterface $form The parent form object.
      * @return FormGroupInterface Chainable
      */
     public function setForm(FormInterface $form)
@@ -66,8 +66,8 @@ trait FormGroupTrait
     }
 
     /**
-     * @var integer $priority
-     * @throws InvalidArgumentException
+     * @param integer $priority The priority, for ordering purpose.
+     * @throws InvalidArgumentException If the priority argument is not a number.
      * @return FormGroupInterface Chainable
      */
     public function setPriority($priority)
@@ -91,7 +91,7 @@ trait FormGroupTrait
     }
 
     /**
-     * @param array $inputs
+     * @param array $inputs The group inputs.
      * @return FormGroupInterface Chainable
      */
     public function setInputs(array $inputs)
@@ -104,9 +104,9 @@ trait FormGroupTrait
     }
 
     /**
-     * @param string                   $propertyIdent
-     * @param array|FormInputInterface
-     * @throws InvalidArgumentException
+     * @param string                   $inputIdent The input identifier.
+     * @param array|FormInputInterface $input      The input object or structure.
+     * @throws InvalidArgumentException If the ident argument is not a string or if the input is not valid.
      * @return FormInterface Chainable
      */
     public function addInput($inputIdent, $input)
@@ -136,6 +136,7 @@ trait FormGroupTrait
     /**
      * Form Input generator.
      *
+     * @param callable $inputCallback Optional. Input callback.
      * @return FormGroupInterface[]
      */
     public function inputs(callable $inputCallback = null)
