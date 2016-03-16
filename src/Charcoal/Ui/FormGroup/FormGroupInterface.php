@@ -40,7 +40,7 @@ interface FormGroupInterface
     public function setInputs(array $inputs);
 
     /**
-     * @param string $propertyIdent
+     * @param string                   $propertyIdent
      * @param array|FormInputInterface
      * @throws InvalidArgumentException
      * @return FormInterface Chainable

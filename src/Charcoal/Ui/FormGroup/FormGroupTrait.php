@@ -2,9 +2,10 @@
 
 namespace Charcoal\Ui\FormGroup;
 
+use \InvalidArgumentException;
+
 // Intra-module (`charcoal-ui`) dependencies
 use \Charcoal\Ui\Form\FormInterface;
-use \Charcoal\Ui\FormGroup\FormGroupInterface;
 use \Charcoal\Ui\FormInput\FormInputBuilder;
 use \Charcoal\Ui\FormInput\FormInputInterface;
 
@@ -103,7 +104,7 @@ trait FormGroupTrait
     }
 
     /**
-     * @param string $propertyIdent
+     * @param string                   $propertyIdent
      * @param array|FormInputInterface
      * @throws InvalidArgumentException
      * @return FormInterface Chainable

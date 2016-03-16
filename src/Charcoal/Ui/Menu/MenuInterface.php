@@ -2,8 +2,6 @@
 
 namespace Charcoal\Ui\Menu;
 
-use \Charcoal\Ui\UiItemInterface;
-
 /**
  *
  */

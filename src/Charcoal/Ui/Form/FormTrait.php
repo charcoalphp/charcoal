@@ -8,6 +8,7 @@ use \InvalidArgumentException;
 
 // Intra-module (`charcoal-ui`) dependencies
 use \Charcoal\Ui\FormGroup\FormGroupBuilder;
+use \Charcoal\Ui\FormGroup\FormGroupInterface;
 
 /**
  *
@@ -148,7 +149,7 @@ trait FormTrait
     }
 
     /**
-     * @param string $groupIdent
+     * @param string                   $groupIdent
      * @param array|FormGroupInterface
      * @throws InvalidArgumentException
      * @return FormInterface Chainable

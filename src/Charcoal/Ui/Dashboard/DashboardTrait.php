@@ -5,9 +5,7 @@ namespace Charcoal\Ui\Dashboard;
 use \InvalidArgumentException;
 
 // Intra-module (`charcoal-ui`) dependencies
-use \Charcoal\Ui\AbstractUiItem;
 use \Charcoal\Ui\UiItemInterface;
-use \Charcoal\Ui\Layout\LayoutAwareTrait;
 
 /**
  * Full implementation of the Dashboard Interface, as abstract class.

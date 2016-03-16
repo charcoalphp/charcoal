@@ -4,6 +4,9 @@ namespace Charcoal\Ui\MenuItem;
 
 use \InvalidArgumentException;
 
+// Module `charcoal-translation` dependencies
+use \Charcoal\Translation\TranslationString;
+
 // Intra-module (`charcoal-ui`) dependencies
 use \Charcoal\Ui\AbstractUiItem;
 use \Charcoal\Ui\Menu\MenuInterface;

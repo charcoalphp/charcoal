@@ -64,7 +64,6 @@ trait LayoutTrait
         foreach ($layouts as $l) {
             $loop = isset($l['loop']) ? $l['loop'] : 1;
             $columns = isset($l['columns']) ? $l['columns'] : [1];
-            $origColumns = $columns;
             for ($i=0; $i<$loop; $i++) {
                 $computedLayouts[] = $l;
                 $i ++;
@@ -73,7 +72,6 @@ trait LayoutTrait
 
         $this->structure = $computedLayouts;
 
-        // Chainable
         return $this;
     }
 

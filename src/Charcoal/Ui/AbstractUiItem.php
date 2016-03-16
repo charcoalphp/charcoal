@@ -2,6 +2,8 @@
 
 namespace Charcoal\Ui;
 
+use \InvalidArgumentException;
+
 // Module `charcoal-config` dependencies
 use \Charcoal\Config\AbstractEntity;
 
