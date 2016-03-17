@@ -130,4 +130,9 @@ trait LayerEffectTrait
     {
         return $this->y;
     }
+
+    /**
+     * @return ImageInterface
+     */
+    abstract public function image();
 }

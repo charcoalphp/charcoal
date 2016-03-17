@@ -5,6 +5,7 @@ namespace Charcoal\Image\Effect;
 use \InvalidArgumentException;
 
 use \Charcoal\Image\AbstractEffect;
+use \Charcoal\Image\ImageInterface;
 use \Charcoal\Image\Effect\LayerEffectInterface;
 use \Charcoal\Image\Effect\LayerEffectTrait;
 
