@@ -64,21 +64,5 @@ use \Charcoal\Model\AbstractModel as AbstractModel;
 */
 class Model extends AbstractModel
 {
-    /**
-    * StorableInterface > create_source(). Get the source object.
-    *
-    * @param string $source_ident Optional. The source to use. If null, use default (from metadata).
-    * @return SourceInterface;
-    */
-    public function createSource($source_ident = null)
-    {
-        $metadata = $this->metadata();
-        if ($source_ident === null) {
-            // Default source ident
-            $source_ident = (isset($metadata['default_source']) ? $metadata['default_source'] : '');
-        }
-        $s = new DatabaseSource();
-        $s->setModel($this);
-        return $s;
-    }
+
 }
