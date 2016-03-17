@@ -49,7 +49,6 @@ class FormGroupBuilder
             'layout_builder'     => $container['layout/builder'],
             'form_input_builder' => $container['form/input/builder']
         ]);
-        $obj->setDependencies($container);
         $obj->setData($options);
         return $obj;
     }

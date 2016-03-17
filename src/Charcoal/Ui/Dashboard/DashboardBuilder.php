@@ -40,7 +40,6 @@ class DashboardBuilder
      */
     public function build($options)
     {
-        $container = $this->container;
         $objType = isset($options['type']) ? $options['type'] : self::DEFAULT_TYPE;
 
         $obj = $this->factory->create($objType);
