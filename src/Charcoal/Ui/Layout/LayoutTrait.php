@@ -56,8 +56,7 @@ trait LayoutTrait
         $computedLayouts = [];
         foreach ($layouts as $l) {
             $loop = isset($l['loop']) ? $l['loop'] : 1;
-            $columns = isset($l['columns']) ? $l['columns'] : [1];
-            for ($i=0; $i<$loop; $i++) {
+             for ($i=0; $i<$loop; $i++) {
                 $computedLayouts[] = $l;
                 $i ++;
             }
