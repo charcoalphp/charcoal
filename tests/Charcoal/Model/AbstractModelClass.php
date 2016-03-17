@@ -18,7 +18,7 @@ class AbstractModelClass extends AbstractModel
         return $this->id;
     }
 
-    public function set_id($id)
+    public function setId($id)
     {
         $this->id = $id;
         return $this;

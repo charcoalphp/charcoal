@@ -28,14 +28,6 @@ class ModelMetadataTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($obj->foo, $obj['foo']);
     }
 
-    public function testArrayAccessSetWithNoOffsetThrowsException()
-    {
-        $this->setExpectedException('\InvalidArgumentException');
-
-        $obj = new ModelMetadata();
-        $obj[] = 'bar';
-    }
-
     public function testArrayAccessUnset()
     {
         $obj = new ModelMetadata();

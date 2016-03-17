@@ -62,7 +62,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * Assert that the `set_model` method:
+    * Assert that the `setModel` method:
     * - is chainable
     * - set the model (retrievable with the `model` method)
     */
@@ -72,7 +72,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
         $model = new \Charcoal\Model\Model([
             'logger' => new \Psr\Log\NullLogger()
         ]);
-        $ret = $obj->set_model($model);
+        $ret = $obj->setModel($model);
         $this->assertSame($ret, $obj);
         $this->assertSame($model, $obj->model());
     }

@@ -19,14 +19,26 @@ $GLOBALS['container']['logger'] = function ($c) {
 
 $config = new AppConfig();
 $config->merge([
-    'base_path' => (dirname(__DIR__) . '/')
+    'base_path' => (dirname(__DIR__) . '/'),
+    'databases'=>[
+        'default'=>[
+            'database'=>'charcoal_examples',
+            'username'=>'root',
+            'password'=>''
+        ]
+    ],
+    'default_database'=>'default'
 ]);
 $GLOBALS['container'] = new AppContainer([
-    'config' => $config
+    'config' => $config,
+    'metadata' => [
+        'paths' => __DIR__.'/metadata/'
+    ]
+
 ]);
 
 // Charcoal / Slim is the main app
-$GLOBALS['app'] = new App($GLOBALS['container']);
+$GLOBALS['app'] = App::instance($GLOBALS['container']);
 $GLOBALS['app']->setLogger(new \Psr\Log\NullLogger());
 
 var_dump('ssss');
