@@ -31,6 +31,6 @@ class FormGroupFactory extends ResolverFactory
      */
     public function resolverSuffix()
     {
-        //return 'FormGroup';
+        return '';
     }
 }

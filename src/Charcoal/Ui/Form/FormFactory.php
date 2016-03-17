@@ -30,6 +30,6 @@ class FormFactory extends ResolverFactory
      */
     public function resolverSuffix()
     {
-        //return 'Form';
+        return '';
     }
 }

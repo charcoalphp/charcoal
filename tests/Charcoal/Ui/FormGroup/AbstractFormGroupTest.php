@@ -32,7 +32,7 @@ class AbstractFormGroupTest extends \PHPUnit_Framework_TestCase
         $this->container = $container;
 
         $form = $container['form/builder']->build([
-            'type'=>''
+            'type'=>null
         ]);
 
         $this->obj = $this->getMockForAbstractClass('\Charcoal\Ui\FormGroup\AbstractFormGroup', [[

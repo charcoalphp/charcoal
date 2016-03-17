@@ -73,11 +73,29 @@ class AbstractLayoutTest extends \PHPUnit_Framework_TestCase
             ]
         ];
 
+        $res = [
+            [
+                'columns'=>[1,2],
+            ],
+            [
+                'columns'=>[1]
+            ],
+            [
+                'columns'=>[1,1,1,1]
+            ],
+            [
+                'columns'=>[1,1,1,1]
+            ],
+            [
+                'columns'=>[1,1,1,1]
+            ]
+        ];
+
         $obj = $this->obj;
         $ret = $obj->setStructure($struct);
 
         $this->assertSame($ret, $obj);
-        //$this->assertEquals($struct, $obj->structure());
+        $this->assertEquals($res, $obj->structure());
 
     }
 

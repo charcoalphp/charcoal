@@ -88,6 +88,10 @@ abstract class AbstractUiItem extends AbstractEntity implements UiItemInterface
      */
     private $showFooter = true;
 
+    /**
+     * @param string $type The UI item type.
+     * @return UiItemInterface Chainable
+     */
     public function setType($type)
     {
         $this->type = $type;
@@ -204,9 +208,9 @@ abstract class AbstractUiItem extends AbstractEntity implements UiItemInterface
     }
 
         /**
-     * @param boolean $show The show title flag.
-     * @return FormGroup Chainable
-     */
+         * @param boolean $show The show title flag.
+         * @return FormGroup Chainable
+         */
     public function setShowTitle($show)
     {
         $this->showTitle = !!$show;

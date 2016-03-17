@@ -55,11 +55,12 @@ trait LayoutTrait
     {
         $computedLayouts = [];
         foreach ($layouts as $l) {
-            $loop = isset($l['loop']) ? $l['loop'] : 1;
-             for ($i=0; $i<$loop; $i++) {
+            $loop = isset($l['loop']) ? (int)$l['loop'] : 1;
+            unset($l['loop']);
+            for ($i=0; $i<$loop; $i++) {
                 $computedLayouts[] = $l;
-                $i ++;
             }
+
         }
 
         $this->structure = $computedLayouts;

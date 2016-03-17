@@ -14,9 +14,9 @@ use \Charcoal\Ui\FormInput\FormInputInterface;
  */
 trait FormGroupTrait
 {
-     /**
-      * @var FormInputInterface[] $inputs
-      */
+    /**
+     * @var FormInputInterface[] $inputs
+     */
     private $inputs;
 
     /**
@@ -36,7 +36,7 @@ trait FormGroupTrait
     private $inputCallback = null;
 
     /**
-     * @param integer $priority
+     * @var integer $priority
      */
     private $priority;
 

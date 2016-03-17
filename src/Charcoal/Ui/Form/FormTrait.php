@@ -181,6 +181,9 @@ trait FormTrait
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function defaultGroupType()
     {
         return 'charcoal/ui/form-group/generic';
