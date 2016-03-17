@@ -77,4 +77,71 @@ interface UiItemInterface extends EntityInterface, ViewableInterface
      * @return TranslationString
      */
     public function notes();
+
+    /**
+     * @param boolean $show The show title flag.
+     * @return FormGroup Chainable
+     */
+    public function setShowTitle($show);
+
+    /**
+     * @return boolean
+     */
+    public function showTitle();
+
+    /**
+     * @param boolean $show The show subtitle flag.
+     * @return FormGroup Chainable
+     */
+    public function setShowSubtitle($show);
+
+    /**
+     * @return boolean
+     */
+    public function showSubtitle();
+
+    /**
+     * @param boolean $show The show description flag.
+     * @return FormGroup Chainable
+     */
+    public function setShowDescription($show);
+
+    /**
+     * @return boolean
+     */
+    public function showDescription();
+
+    /**
+     * @param boolean $show The show notes flag.
+     * @return FormGroup Chainable
+     */
+    public function setShowNotes($show);
+
+    /**
+     * Ensure there are are notes to show, if notes are to be shown.
+     * @return boolean
+     */
+    public function showNotes();
+
+    /**
+     * @param boolean $show The show header flag.
+     * @return FormGroup Chainable
+     */
+    public function setShowHeader($show);
+
+    /**
+     * @return boolean
+     */
+    public function showHeader();
+
+    /**
+     * @param boolean $show The show footer flag.
+     * @return FormGroup Chainable
+     */
+    public function setShowFooter($show);
+
+    /**
+     * @return boolean
+     */
+    public function showFooter();
 }

@@ -25,14 +25,14 @@ abstract class AbstractUiItem extends AbstractEntity implements UiItemInterface
     use ViewableTrait;
 
     /**
+     * @var string $type
+     */
+    private $type;
+
+    /**
      * @var string $template
      */
     private $template;
-
-    /**
-     * @var TranslationString $label
-     */
-    private $label = '';
 
     /**
      * @var TranslationString $title
@@ -55,9 +55,52 @@ abstract class AbstractUiItem extends AbstractEntity implements UiItemInterface
     private $notes = '';
 
     /**
+     * If it is set to false, will disable display of title.
+     * @var boolean $showTitle
+     */
+    private $showTitle = true;
+
+    /**
+     * If it is set to false, will disable display of title.
+     * @var boolean $showSubtitle
+     */
+    private $showSubtitle = true;
+
+    /**
+     * If it is set to false, will disable display of description
+     * @var boolean $showDescription
+     */
+    private $showDescription = true;
+
+    /**
+     * If it is set to false, will disable display of the notes (footer).
+     * @var boolean $showNotes
+     */
+    private $showNotes = true;
+
+    /**
+     * @var boolean $showHeader
+     */
+    private $showHeader = true;
+
+    /**
+     * @var boolean $showFooter
+     */
+    private $showFooter = true;
+
+    public function setType($type)
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+    /**
      * @return string
      */
-    abstract public function type();
+    public function type()
+    {
+        return $this->type;
+    }
 
     /**
      * @param string $template The UI item's template (identifier).
@@ -97,7 +140,7 @@ abstract class AbstractUiItem extends AbstractEntity implements UiItemInterface
     }
 
     /**
-     * Get the title. If unset, returns the label.
+     * Get the title.
      *
      * @return TranslationString
      */
@@ -158,5 +201,139 @@ abstract class AbstractUiItem extends AbstractEntity implements UiItemInterface
     public function notes()
     {
         return $this->notes;
+    }
+
+        /**
+     * @param boolean $show The show title flag.
+     * @return FormGroup Chainable
+     */
+    public function setShowTitle($show)
+    {
+        $this->showTitle = !!$show;
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function showTitle()
+    {
+        if ($this->showTitle === false) {
+            return false;
+        } else {
+            return !!$this->title();
+        }
+    }
+
+    /**
+     * @param boolean $show The show subtitle flag.
+     * @return FormGroup Chainable
+     */
+    public function setShowSubtitle($show)
+    {
+        $this->showSubtitle = !!$show;
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function showSubtitle()
+    {
+        if ($this->showSubtitle === false) {
+            return false;
+        } else {
+            return !!$this->subtitle();
+        }
+    }
+
+    /**
+     * @param boolean $show The show description flag.
+     * @return FormGroup Chainable
+     */
+    public function setShowDescription($show)
+    {
+        $this->showDescription = !!$show;
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function showDescription()
+    {
+        if ($this->showTitle === false) {
+            return false;
+        } else {
+            return !!$this->description();
+        }
+    }
+
+    /**
+     * @param boolean $show The show notes flag.
+     * @return FormGroup Chainable
+     */
+    public function setShowNotes($show)
+    {
+        $this->showNotes = !!$show;
+        return $this;
+    }
+
+    /**
+     * Ensure there are are notes to show, if notes are to be shown.
+     * @return boolean
+     */
+    public function showNotes()
+    {
+        if ($this->showNotes === false) {
+            return false;
+        } else {
+            $notes = $this->notes();
+            return !!$notes;
+        }
+    }
+
+    /**
+     * @param boolean $show The show header flag.
+     * @return FormGroup Chainable
+     */
+    public function setShowHeader($show)
+    {
+        $this->showHeader = !!$show;
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function showHeader()
+    {
+        if ($this->showHeader === false) {
+            return false;
+        } else {
+            return $this->showTitle();
+        }
+    }
+
+    /**
+     * @param boolean $show The show footer flag.
+     * @return FormGroup Chainable
+     */
+    public function setShowFooter($show)
+    {
+        $this->showFooger = !!$show;
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function showFooter()
+    {
+        if ($this->showFooter === false) {
+            return false;
+        } else {
+            return $this->showNotes();
+        }
     }
 }
