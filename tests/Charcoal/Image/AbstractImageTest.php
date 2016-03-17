@@ -2,7 +2,7 @@
 
 namespace Charcoals\Tests\Image;
 
-class AbstractImageTest extends \PHPUnit_Framework_Testcase
+class AbstractImageTest extends \PHPUnit_Framework_TestCase
 {
 
     public function testSetData()
