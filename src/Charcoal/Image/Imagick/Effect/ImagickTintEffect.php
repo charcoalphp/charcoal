@@ -2,6 +2,8 @@
 
 namespace Charcoal\Image\Imagick\Effect;
 
+use \ImagickPixel;
+
 use \Charcoal\Image\Effect\AbstractTintEffect;
 
 /**
@@ -19,10 +21,14 @@ class ImagickTintEffect extends AbstractTintEffect
             $this->setData($data);
         }
 
+        $color = new ImagickPixel($this->color());
+        $opacity = new ImagickPixel(sprintf('rgba(128,128,128,%f)', $this->opacity()));
+
         if ($this->midtone() === true) {
-            $this->image()->imagick()->tintImage($this->color(), $this->opacity());
+
+            $this->image()->imagick()->tintImage($color, $opacity);
         } else {
-            $this->image()->imagick()->colorizeImage($this->color(), $this->opacity());
+            $this->image()->imagick()->colorizeImage($color, $opacity);
         }
 
         return $this;
