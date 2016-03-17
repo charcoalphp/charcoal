@@ -167,6 +167,9 @@ trait FormTrait
             $this->groups[$groupIdent] = $group;
         } elseif (is_array($group)) {
             $group['form'] = $this;
+            if (!isset($group['type'])) {
+                $group['type'] = $this->defaultGroupType();
+            }
             $g = $this->formGroupBuilder()->build($group);
             $this->groups[$groupIdent] = $g;
         } else {
@@ -176,6 +179,11 @@ trait FormTrait
         }
 
         return $this;
+    }
+
+    public function defaultGroupType()
+    {
+        return 'charcoal/ui/form-group/generic';
     }
 
     /**
@@ -264,10 +272,6 @@ trait FormTrait
     {
         $a = $a->priority();
         $b = $b->priority();
-
-        if ($a == $b) {
-            return 0;
-        }
 
         return ($a < $b) ? (-1) : 1;
     }

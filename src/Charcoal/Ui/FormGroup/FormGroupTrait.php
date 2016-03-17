@@ -36,6 +36,11 @@ trait FormGroupTrait
     private $inputCallback = null;
 
     /**
+     * @param integer $priority
+     */
+    private $priority;
+
+    /**
      * @param FormInputBuilder $builder The builder, to create customized form input objects.
      * @return FormGroupInterface Chainable
      */
@@ -63,6 +68,15 @@ trait FormGroupTrait
     {
         $this->form = $form;
         return $this;
+    }
+
+    /**
+     * Allow the form to public.
+     * @return FormInterface
+     */
+    public function form()
+    {
+        return $this->form;
     }
 
     /**
