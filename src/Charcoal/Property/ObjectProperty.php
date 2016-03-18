@@ -20,6 +20,8 @@ use \Charcoal\Property\SelectablePropertyInterface;
  */
 class ObjectProperty extends AbstractProperty implements SelectablePropertyInterface
 {
+    static public $objectCache;
+
     /**
      * @var ModelFactory $modelFactory
      */
@@ -42,6 +44,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      */
     protected $choices = [];
 
+    private $proto;
 
 
     /**
@@ -175,7 +178,10 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      */
     public function proto()
     {
-        return $this->modelFactory()->get($this->objType());
+        if ($this->proto === null) {
+            $this->proto = $this->modelFactory()->get($this->objType());
+        }
+        return $this->proto;
     }
 
     /**
@@ -210,15 +216,14 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
 
         $names = [];
         foreach ($propertyValue as $objIdent) {
-            $proto = $this->proto();
-            $proto->load($objIdent);
+            $obj = $this->loadObject($objIdent);
 
             // Hack. View should always be set
-            if ($proto->view() !== null) {
-                $names[] = $proto->render($this->pattern());
+            if ($obj->view() !== null) {
+                $names[] = $obj->render($this->pattern());
             } else {
                 $this->logger->warning('Object property\'s prototype view is not set.');
-                $names[] = (string)$proto->name();
+                $names[] = (string)$obj->name();
             }
 
         }
@@ -241,13 +246,13 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     /**
      * Add a choice to the available choices map.
      *
-     * @param string $choice_ident The choice identifier (will be key / default ident).
+     * @param string $choiceIdent The choice identifier (will be key / default ident).
      * @param array  $choice       A choice structure.
      * @return SelectablePropertyInterface Chainable.
      */
-    public function addChoice($choice_ident, array $choice)
+    public function addChoice($choiceIdent, array $choice)
     {
-        unset($choice_ident, $choice);
+        unset($choiceIdent, $choice);
         $this->logger->debug('Choices can not be added for object properties. They are auto-generated from objects.');
         return $this;
     }
@@ -289,28 +294,26 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
-     * Returns wether a given choice_ident exists or not.
+     * Returns wether a given choiceIdent exists or not.
      *
-     * @param string $choice_ident The choice identifier.
+     * @param string $choiceIdent The choice identifier.
      * @return boolean True / false wether the choice exists or not.
      */
-    public function hasChoice($choice_ident)
+    public function hasChoice($choiceIdent)
     {
-        $c = $this->modelFactory()->create($this->objType());
-        $c->load($choice_ident);
-        return ($c->id() == $choice_ident);
+        $c = $this->loadObject($choiceIdent);
+        return ($c->id() == $choiceIdent);
     }
 
     /**
      * Returns a choice structure for a given ident.
      *
-     * @param string $choice_ident The choice ident to load.
+     * @param string $choiceIdent The choice ident to load.
      * @return mixed The matching choice.
      */
-    public function choice($choice_ident)
+    public function choice($choiceIdent)
     {
-        $c = $this->modelFactory()->create($this->objType());
-        $c->load($choice_ident);
+        $c = $this->loadObject($choiceIdent);
 
         $choice = [
             'value'   => $c->id(),
@@ -321,5 +324,46 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
         ];
 
         return $choice;
+    }
+
+    /**
+     * @param mixed $id Object id.
+     * @return ModelInterface
+     */
+    private function loadObject($id)
+    {
+        $cached = $this->loadObjectFromCache($id);
+        if ($cached !== null) {
+            return $cached;
+        }
+        $obj = $this->modelFactory()->create($this->objType());
+        $obj->load($id);
+        $this->addObjectToCache($id, $obj);
+        return $obj;
+    }
+
+    /**
+     * @param mixed $id Object id.
+     * @return null|ModelInterface
+     */
+    private function loadObjectFromCache($id)
+    {
+        $objType = $this->objType();
+        if(isset(static::$objectCache[$objType][$id])) {
+            return static::$objectCache[$objType][$id];
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * @param mixed $id Object id.
+     * @param ModelInterface $obj Object to store.
+     * @return void
+     */
+    private function addObjectToCache($id, $obj)
+    {
+        $objType = $this->objType();
+        static::$objectCache[$objType][$id] = $obj;
     }
 }
