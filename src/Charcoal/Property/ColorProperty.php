@@ -52,6 +52,7 @@ class ColorProperty extends AbstractProperty
      * AbstractProperty > setVal(). Ensure proper hexadecimal value.
      *
      * @param mixed $val The value to set.
+     * @throws InvalidArgumentException If the value does not match property's options.
      * @return ColorProperty Chainable
      */
     public function setVal($val)
@@ -273,6 +274,7 @@ class ColorProperty extends AbstractProperty
 
     /**
      * @param string $val The rgb() color string to parse.
+     * @throws InvalidArgumentException If the color can not be parsed.
      * @return array The parsed `[r,g,b,a]` color array.
      */
     private function parseRgb($val)
@@ -294,6 +296,7 @@ class ColorProperty extends AbstractProperty
 
     /**
      * @param string $val The rgab() color string to parse.
+     * @throws InvalidArgumentException If The colors string is invalid (does not match rgba format).
      * @return array The parsed `[r,g,b,a]` color array.
      */
     private function parseRgba($val)
@@ -315,6 +318,7 @@ class ColorProperty extends AbstractProperty
     /**
      * @param string $val The hsl() color string to parse.
      * @throws Exception This parse method is not yet supported.
+     * @return void
      */
     private function parseHsl($val)
     {
@@ -327,6 +331,7 @@ class ColorProperty extends AbstractProperty
     /**
      * @param string $val The hsla() string color val to parse.
      * @throws Exception This parse method is not yet supported.
+     * @return void
      */
     private function parseHsla($val)
     {

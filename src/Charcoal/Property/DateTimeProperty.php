@@ -173,8 +173,7 @@ class DateTimeProperty extends AbstractProperty
      */
     private function dateTimeVal($val)
     {
-        if (
-            $val === null ||
+        if ($val === null ||
             (is_string($val) && ! strlen(trim($val))) ||
             (is_array($val) && ! count(array_filter($val, 'strlen')))
         ) {

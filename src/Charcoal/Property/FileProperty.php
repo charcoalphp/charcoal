@@ -352,7 +352,6 @@ class FileProperty extends AbstractProperty
         if (isset($_FILES[$i])
             && (isset($_FILES[$i]['name']) && $_FILES[$i]['name'])
             && (isset($_FILES[$i]['tmp_name']) && $_FILES[$i]['tmp_name'])) {
-
             $file = $_FILES[$i];
 
             if (is_array($file['name']) && $this->multiple()) {

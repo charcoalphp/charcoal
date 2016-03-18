@@ -20,7 +20,10 @@ use \Charcoal\Property\SelectablePropertyInterface;
  */
 class ObjectProperty extends AbstractProperty implements SelectablePropertyInterface
 {
-    static public $objectCache;
+    /**
+     * @var array $objectCache
+     */
+    static public $objectCache = [];
 
     /**
      * @var ModelFactory $modelFactory
@@ -28,22 +31,25 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     private $modelFactory;
 
     /**
-     * @var string $ObjType
+     * @var string $objType
      */
     private $objType;
 
     /**
-     * @var string Pattern
+     * @var string $pattern
      */
     private $pattern = '{{name}}';
 
     /**
      * The available selectable choices map.
      *
-     * @var array The internal choices
+     * @var array $choices The internal choices
      */
     protected $choices = [];
 
+    /**
+     * @var ModelInterface $proto
+     */
     private $proto;
 
 
@@ -56,7 +62,8 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
-     * @return ModelFactory
+     * @param ModelFactory $factory The factory, to create model objects.
+     * @return ObjectProperty Chainable
      */
     public function setModelFactory(ModelFactory $factory)
     {
@@ -109,7 +116,8 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
-     * @param string $pattern
+     * @param string $pattern The render pattern.
+     * @throws InvalidArgumentException If the pattern is not a string.
      * @return ObjectProperty Chainable
      */
     public function setPattern($pattern)
@@ -225,7 +233,6 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
                 $this->logger->warning('Object property\'s prototype view is not set.');
                 $names[] = (string)$obj->name();
             }
-
         }
         return implode(', ', $names);
     }
@@ -247,7 +254,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      * Add a choice to the available choices map.
      *
      * @param string $choiceIdent The choice identifier (will be key / default ident).
-     * @param array  $choice       A choice structure.
+     * @param array  $choice      A choice structure.
      * @return SelectablePropertyInterface Chainable.
      */
     public function addChoice($choiceIdent, array $choice)
@@ -349,7 +356,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     private function loadObjectFromCache($id)
     {
         $objType = $this->objType();
-        if(isset(static::$objectCache[$objType][$id])) {
+        if (isset(static::$objectCache[$objType][$id])) {
             return static::$objectCache[$objType][$id];
         } else {
             return null;
@@ -357,11 +364,11 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
-     * @param mixed $id Object id.
+     * @param mixed          $id  Object id.
      * @param ModelInterface $obj Object to store.
      * @return void
      */
-    private function addObjectToCache($id, $obj)
+    private function addObjectToCache($id, ModelInterface $obj)
     {
         $objType = $this->objType();
         static::$objectCache[$objType][$id] = $obj;

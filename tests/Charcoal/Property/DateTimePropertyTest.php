@@ -82,8 +82,6 @@ class DateTimePropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
         $this->assertEquals($dt, $obj->val());
 
-        $this->setExpectedException('\InvalidArgumentException');
-        $obj->setVal([]);
     }
 
     public function testStorageVal()

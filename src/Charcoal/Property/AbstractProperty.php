@@ -119,7 +119,14 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     private $notes = '';
 
+    /**
+     * @var array $viewOptions
+     */
     protected $viewOptions;
+
+    /**
+     * @var string $displayType
+     */
     protected $displayType;
 
     /**
@@ -260,7 +267,7 @@ abstract class AbstractProperty extends AbstractEntity implements
             }
         }
 
-        /** Parse multiple values */
+        /** Parse multiple values / ensure they are of array type. */
         if ($this->multiple()) {
             if (is_array($val)) {
                 $val = implode($this->multipleSeparator(), $val);
@@ -269,12 +276,6 @@ abstract class AbstractProperty extends AbstractEntity implements
 
         if (!is_scalar($val)) {
             $val = json_encode($val, true);
-            /*throw new Exception(
-                sprintf(
-                    'Input value must be a string, received %s',
-                    (is_object($val) ? get_class($val) : gettype($val))
-                )
-            );*/
         }
 
         return $val;
@@ -298,8 +299,8 @@ abstract class AbstractProperty extends AbstractEntity implements
 
         if ($this->l10n()) {
             $translator = TranslationConfig::instance();
-
-            $propertyValue = ( isset($propertyValue[$translator->currentLanguage()]) ? $propertyValue[$translator->currentLanguage()] : '' );
+            $currentLanguage = $translator->currentLanguage();
+            $propertyValue = (isset($propertyValue[$currentLanguage]) ? $propertyValue[$currentLanguage] : '');
         }
 
         if ($this->multiple()) {
@@ -718,10 +719,19 @@ abstract class AbstractProperty extends AbstractEntity implements
         return $this->val();
     }
 
+    /**
+     * @param string $type The display type.
+     * @return PropertyInterface Chainable
+     */
     public function setDisplayType($type)
     {
         $this->displayType = $type;
+        return $this;
     }
+
+    /**
+     * @return string
+     */
     public function displayType()
     {
         if (!$this->displayType) {
@@ -741,8 +751,8 @@ abstract class AbstractProperty extends AbstractEntity implements
 
     /**
      * View options.
-     * @param string $ident (ex: charcoal/admin/property/display/text)
-     * @return array Should ALWAYS be an array
+     * @param string $ident The display ident (ex: charcoal/admin/property/display/text).
+     * @return array Should ALWAYS be an array.
      */
     public function viewOptions($ident = null)
     {
@@ -768,10 +778,12 @@ abstract class AbstractProperty extends AbstractEntity implements
     /**
      * Set view options for both display and input
      *
-     * @param array $viewOpts
+     * @param array $viewOpts View options.
+     * @return PropertyInterface Chainable
      */
-    public function setViewOptions($viewOpts = [])
+    public function setViewOptions(array $viewOpts = [])
     {
         $this->viewOptions = $viewOpts;
+        return $this;
     }
 }
