@@ -275,7 +275,7 @@ abstract class AbstractProperty extends AbstractEntity implements
         }
 
         if (!is_scalar($val)) {
-            $val = json_encode($val, true);
+            $val = json_encode($val, JSON_PRETTY_PRINT);
         }
 
         return $val;
