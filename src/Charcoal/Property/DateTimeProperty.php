@@ -16,13 +16,14 @@ use \Charcoal\Property\AbstractProperty;
 
 /**
  * DateTime Property
- *
- * @todo [mcaskill: 2016-03-04] DEFAULT_FORMAT should be renamed to SQL_DATETIME
  */
 class DateTimeProperty extends AbstractProperty
 {
     const DEFAULT_MIN = null;
     const DEFAULT_MAX = null;
+    /**
+     * @todo [mcaskill: 2016-03-04] DEFAULT_FORMAT should be renamed to SQL_DATETIME
+     */
     const DEFAULT_FORMAT = 'Y-m-d H:i:s';
 
     /**
