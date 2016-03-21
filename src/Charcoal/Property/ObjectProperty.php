@@ -5,6 +5,7 @@ namespace Charcoal\Property;
 use \Exception;
 use \InvalidArgumentException;
 
+use \Charcoal\Model\ModelInterface;
 use \Charcoal\Model\ModelFactory;
 use \Charcoal\Loader\CollectionLoader;
 use \Charcoal\Translation\TranslationConfig;
