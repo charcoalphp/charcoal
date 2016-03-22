@@ -14,7 +14,6 @@ use \Charcoal\Config\AbstractEntity;
 
 use \Charcoal\Model\DescribableInterface;
 use \Charcoal\Model\DescribableTrait;
-use \Charcoal\Translation\TranslationConfig;
 use \Charcoal\Translation\TranslationString;
 use \Charcoal\Validator\ValidatableInterface;
 use \Charcoal\Validator\ValidatableTrait;
@@ -244,10 +243,11 @@ abstract class AbstractProperty extends AbstractEntity implements
     /**
      * @todo    [mcaskill: 2016-03-04] Should the property have access to the inputType?
      * @used-by AbstractProperty::inputVal() Must handle string sanitization of value.
-     * @param   mixed $val Optional. The value to to convert for input.
+     * @param   mixed $val     Optional. The value to to convert for input.
+     * @param   array $options Optional input options.
      * @return  string
      */
-    public function inputVal($val = null, $options=[])
+    public function inputVal($val = null, array $options = [])
     {
         if ($val === null) {
             $val = $this->val();
@@ -283,10 +283,11 @@ abstract class AbstractProperty extends AbstractEntity implements
     }
 
     /**
-     * @param  mixed $val Optional. The value to to convert for display.
+     * @param  mixed $val     Optional. The value to to convert for display.
+     * @param  array $options Optional display options.
      * @return string
      */
-    public function displayVal($val = null)
+    public function displayVal($val = null, array $options = [])
     {
         if ($val === null) {
             $val = $this->val();
@@ -299,8 +300,8 @@ abstract class AbstractProperty extends AbstractEntity implements
         $propertyValue = $val;
 
         if ($this->l10n()) {
-            $currentLanguage = $this->lang();
-            $propertyValue = (isset($propertyValue[$currentLanguage]) ? $propertyValue[$currentLanguage] : '');
+            $lang = isset($options['lang']) ? $options['lang'] : '';
+            $propertyValue = (isset($propertyValue[$lang]) ? $propertyValue[$lang] : '');
         }
 
         if ($this->multiple()) {
