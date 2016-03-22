@@ -29,7 +29,6 @@ class ModelValidator extends AbstractValidator
                 $this->merge($validator, $ident);
                 $ret = false;
             }
-
         }
 
         return $ret;

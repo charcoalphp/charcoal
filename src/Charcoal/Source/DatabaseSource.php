@@ -243,7 +243,6 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
                     $this->logger->debug($q);
                     $this->db()->query($q);
                 }
-
             }
         }
 
@@ -332,7 +331,6 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
             if ($db_type == 'mysql') {
                 $db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
             }
-
         } catch (PDOException $e) {
             throw new Exception(
                 sprintf('Error setting up database: %s', $e->getMessage())

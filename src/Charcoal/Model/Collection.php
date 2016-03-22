@@ -98,7 +98,6 @@ class Collection implements
             $id = $this->objects[$offset]->id();
             unset($this->objects[$offset]);
             unset($this->map[$id]);
-
         } elseif (is_string($offset)) {
             $pos = $this->pos($offset);
             unset($this->map[$offset]);
