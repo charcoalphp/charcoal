@@ -64,12 +64,18 @@ class ModelServiceProvider implements ServiceProviderInterface
         };
 
         $container['model/dependency/metadata/loader'] = function (Container $container) {
-            $metadataLoader = new MetadataLoader();
+            $metadataLoader = new MetadataLoader([
+                'loader' => $container['logger']
+            ]);
             return $metadataLoader;
         };
 
         $container['model/dependency/property/factory'] = function (Container $container) {
             $propertyFactory = new PropertyFactory();
+            $propertyFactory->setArguments([
+                'logger'            => $container['logger'],
+                'metadata_loader'   => $container['model/dependency/metadata/loader']
+            ]);
             return $propertyFactory;
         };
     }

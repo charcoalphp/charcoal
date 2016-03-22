@@ -98,7 +98,9 @@ trait DescribableTrait
     protected function metadataLoader()
     {
         if ($this->metadataLoader === null) {
-            $this->metadataLoader = new MetadataLoader();
+            $this->metadataLoader = new MetadataLoader([
+                'logger' => $this->logger
+            ]);
         }
         return $this->metadataLoader;
     }
@@ -271,9 +273,7 @@ trait DescribableTrait
         }
 
         $factory  = $this->propertyFactory();
-        $property = $factory->create($propertyMetadata['type'], [
-            'logger' => $this->logger
-        ]);
+        $property = $factory->create($propertyMetadata['type']);
         $property->setIdent($propertyIdent);
         $property->setData($propertyMetadata);
 
