@@ -11,8 +11,10 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        $factory = new \Charcoal\Model\ModelFactory();
         $this->obj = new CollectionLoader([
-            'logger' => new \Psr\Log\NullLogger()
+            'logger' => new \Psr\Log\NullLogger(),
+            'factory' => $factory
         ]);
     }
 

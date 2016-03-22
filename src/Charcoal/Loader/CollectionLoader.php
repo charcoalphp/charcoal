@@ -11,6 +11,9 @@ use \Psr\Log\LoggerAwareInterface;
 use \Psr\Log\LoggerAwareTrait;
 use \Psr\Log\NullLogger;
 
+// Module `charcoal-factory` dependencies.
+use \Charcoal\Factory\FactoryInterface;
+
 // Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Model\ModelInterface;
 use \Charcoal\Model\Collection;
@@ -65,8 +68,23 @@ class CollectionLoader implements LoggerAwareInterface
         if (!isset($data['logger'])) {
             $data['logger'] = new NullLogger();
         }
+        if (!isset($data['factory'])) {
+            $data['factory'] = new \Charcoal\Model\ModelFactory();
+        }
+
+
         $this->setLogger($data['logger']);
-        $this->setArguments([ 'logger' => $this->logger ]);
+        $this->setFactory($data['factory']);
+    }
+
+    /**
+     * @param FactoryInterface $factory The factory used to create new objects.
+     * @return CollectionLoader Chainable
+     */
+    public function setFactory(FactoryInterface $factory)
+    {
+        $this->factory = $factory;
+        return $this;
     }
 
     /**
@@ -379,25 +397,14 @@ class CollectionLoader implements LoggerAwareInterface
     }
 
     /**
-     * Retrieve the model's constructor arguments.
+     * Set the callback routine applied to every object added to the collection.
      *
-     * @return array
-     */
-    public function arguments()
-    {
-        return $this->arguments;
-    }
-
-    /**
-     * Set the model's constructor arguments.
-     *
-     * @param array $arguments The constructor arguments to be passed to the created object's initialization.
+     * @param callable $callback The callback routine.
      * @return CollectionLoader Chainable
      */
-    public function setArguments(array $arguments)
+    public function setCallback(callable $callback)
     {
-        $this->arguments = $arguments;
-
+        $this->callback = $callback;
         return $this;
     }
 
@@ -412,30 +419,15 @@ class CollectionLoader implements LoggerAwareInterface
     }
 
     /**
-     * Set the callback routine applied to every object added to the collection.
-     *
-     * @param callable $callback The callback routine.
-     * @return CollectionLoader Chainable
-     */
-    public function setCallback(callable $callback)
-    {
-        $this->callback = $callback;
-
-        return $this;
-    }
-
-    /**
      * Load a collection from source.
      *
      * @param  string|null $ident Optional. A pre-defined list to use from the model.
-     * @param  array       $args  Optional. The constructor arguments.
-     *                            Leave blank to use `$arguments` member.
      * @param  callable    $cb    Optional. Apply a callback to every entity of the collection.
      *                            Leave blank to use `$callback` member.
      * @throws Exception If the database connection fails.
      * @return Collection
      */
-    public function load($ident = null, array $args = null, callable $cb = null)
+    public function load($ident = null, callable $cb = null)
     {
         // Unused.
         unset($ident);
@@ -443,11 +435,9 @@ class CollectionLoader implements LoggerAwareInterface
         $db = $this->source()->db();
 
         if (!$db) {
-            throw new Exception('Could not instanciate a database connection.');
-        }
-
-        if (!isset($args)) {
-            $args = $this->arguments();
+            throw new Exception(
+                'Could not instanciate a database connection.'
+            );
         }
 
         if (!isset($cb)) {
@@ -464,10 +454,10 @@ class CollectionLoader implements LoggerAwareInterface
         $sth->execute();
         $sth->setFetchMode(PDO::FETCH_ASSOC);
 
-        $classname = get_class($this->model());
+        $objType = $this->model()->objType();
 
         while ($objData = $sth->fetch()) {
-            $obj = new $classname($args);
+            $obj = $this->factory->create($objType);
             $obj->setFlatData($objData);
 
             if (isset($cb)) {
