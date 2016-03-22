@@ -106,7 +106,7 @@ class MetadataLoader extends FileLoader
 
         $cachePool = $this->cachePool();
         if ($cachePool) {
-            $cacheItem = $cachePool->getItem('metadata', $ident);
+            $cacheItem = $cachePool->getItem('metadata/'.$ident);
 
             $metadata = $cacheItem->get();
             if ($cacheItem->isMiss()) {
@@ -114,7 +114,7 @@ class MetadataLoader extends FileLoader
 
                 $metadata = $this->loadData($ident);
 
-                $cacheItem->set($metadata);
+                $cachePool->save($cacheItem->set($metadata));
             }
         } else {
             $metadata = $this->loadData($ident);
