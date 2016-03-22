@@ -15,6 +15,11 @@ use \Charcoal\Factory\FactoryInterface;
 abstract class AbstractFactory implements FactoryInterface
 {
     /**
+     * @var array $resolved
+     */
+    static protected $resolved = [];
+
+    /**
      * If a base class is set, then it must be ensured that the
      * @var string $baseClass
      */
@@ -78,28 +83,34 @@ abstract class AbstractFactory implements FactoryInterface
             $cb = $this->callback();
         }
 
-        if ($this->isResolvable($type) === false) {
-            $defaultClass = $this->defaultClass();
-            if ($defaultClass !== '') {
-                $obj = new $defaultClass($args);
-                if (isset($cb)) {
-                    $cb($obj);
+        if (isset(self::$resolved[$type])) {
+            $classname = self::$resolved[$type];
+        } else {
+            if ($this->isResolvable($type) === false) {
+                $defaultClass = $this->defaultClass();
+                if ($defaultClass !== '') {
+                    $obj = new $defaultClass($args);
+                    if (isset($cb)) {
+                        $cb($obj);
+                    }
+                    return $obj;
+                } else {
+                    throw new InvalidArgumentException(
+                        sprintf(
+                            '%1$s: Type "%2$s" is not a valid type. (Using default class "%3$s")',
+                            get_called_class(),
+                            $type,
+                            $defaultClass
+                        )
+                    );
                 }
-                return $obj;
-            } else {
-                throw new InvalidArgumentException(
-                    sprintf(
-                        '%1$s: Type "%2$s" is not a valid type. (Using default class "%3$s")',
-                        get_called_class(),
-                        $type,
-                        $defaultClass
-                    )
-                );
             }
+
+            // Create the object from the type's class name.
+            $classname = $this->resolve($type);
+            self::$resolved[$type] = $classname;
         }
 
-        // Create the object from the type's class name.
-        $classname = $this->resolve($type);
         $obj = new $classname($args);
 
 
