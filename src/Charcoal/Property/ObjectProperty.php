@@ -274,7 +274,8 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     {
         $proto = $this->proto();
         $loader = new CollectionLoader([
-            'logger' => $this->logger
+            'logger'    => $this->logger,
+            'factory'   => $this->modelFactory()
         ]);
         $loader->setModel($this->proto());
 
