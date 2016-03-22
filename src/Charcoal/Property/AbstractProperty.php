@@ -137,9 +137,10 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     public function __construct(array $data = null)
     {
-        if (isset($data['logger'])) {
-            $this->setLogger($data['logger']);
+        if (!isset($data['logger'])) {
+            $data['logger'] = new \Psr\Log\NullLogger();
         }
+        $this->setLogger($data['logger']);
     }
 
     /**
@@ -174,7 +175,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     /**
      * @param string $ident The property identifier.
      * @throws InvalidArgumentException  If the ident parameter is not a string.
-     * @return AbstractProperty Chainable
+     * @return PropertyInterface Chainable
      */
     public function setIdent($ident)
     {
@@ -246,7 +247,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      * @param   mixed $val Optional. The value to to convert for input.
      * @return  string
      */
-    public function inputVal($val = null)
+    public function inputVal($val = null, $options=[])
     {
         if ($val === null) {
             $val = $this->val();
@@ -258,7 +259,7 @@ abstract class AbstractProperty extends AbstractEntity implements
 
         /** Parse multilingual values */
         if ($this->l10n()) {
-            $lang = TranslationConfig::instance()->currentLanguage();
+            $lang = isset($options['lang']) ? $options['lang'] : '';
 
             if (isset($val[$lang])) {
                 $val = $val[$lang];
@@ -298,8 +299,7 @@ abstract class AbstractProperty extends AbstractEntity implements
         $propertyValue = $val;
 
         if ($this->l10n()) {
-            $translator = TranslationConfig::instance();
-            $currentLanguage = $translator->currentLanguage();
+            $currentLanguage = $this->lang();
             $propertyValue = (isset($propertyValue[$currentLanguage]) ? $propertyValue[$currentLanguage] : '');
         }
 
