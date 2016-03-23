@@ -388,7 +388,6 @@ class EmailLog extends AbstractModel implements IndexableInterface
         }
 
         $this->sendDate = $ts;
-
         return $this;
     }
 

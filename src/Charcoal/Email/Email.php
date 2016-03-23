@@ -149,6 +149,10 @@ class Email implements
      */
     public function __construct(array $data)
     {
+        if (!isset($data['phpmailer'])) {
+            $data['phpmailer'] = new PHPMailer(true);
+        }
+
         $this->phpMailer = $data['phpmailer'];
         $this->setLogger($data['logger']);
 
@@ -773,31 +777,31 @@ class Email implements
 
             // From DOC, $name = ''
             // Set from defines the default vars
-            $mail->setFrom($from['email'], $from['name']);
+            $mail->setFrom($from);
 
             $to = $this->to();
 
             foreach ($to as $recipient) {
                 // Default name set in setTo()
-                $mail->addAddress($recipient['email'], $recipient['name']);
+                $mail->addAddress($recipient);
             }
 
             $replyTo = $this->replyTo();
             if ($replyTo) {
                 // Default name set in setReplyTo()
-                $mail->addReplyTo($replyTo['email'], $replyTo['name']);
+                $mail->addReplyTo($replyTo);
             }
 
             $cc = $this->bcc();
             foreach ($cc as $ccRecipient) {
                 // Default name set in addCc()
-                $mail->addCC($ccRecipient['email'], $ccRecipient['name']);
+                $mail->addCC($ccRecipient);
             }
 
             $bcc = $this->bcc();
             foreach ($bcc as $bccRecipient) {
                 // Default name set in addBcc()
-                $mail->addBCC($bccRecipient['email'], $bccRecipient['name']);
+                $mail->addBCC($bccRecipient);
             }
 
             $attachments = $this->attachments();
@@ -927,7 +931,7 @@ class Email implements
             $log->setSendDate('now');
 
             $log->setFrom($mailer->From);
-            $log->setTo($to['email']);
+            $log->setTo($to);
             $log->setSubject($this->subject());
 
             $log->save();
@@ -1041,8 +1045,8 @@ class Email implements
      */
     public function createConfig()
     {
-        throw new Exception(
-            'Deprecated method'
-        );
+        // This should really be avoided.
+        $this->logger->warning('AbstractEmail::createConfig() was called, but should not.');
+        return new \Charcoal\Email\EmailConfig();
     }
 }
