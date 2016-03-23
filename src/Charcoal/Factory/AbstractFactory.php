@@ -83,8 +83,9 @@ abstract class AbstractFactory implements FactoryInterface
             $cb = $this->callback();
         }
 
-        if (isset(self::$resolved[$type])) {
-            $classname = self::$resolved[$type];
+        $pool = get_called_class();
+        if (isset(self::$resolved[$pool][$type])) {
+            $classname = self::$resolved[$pool][$type];
         } else {
             if ($this->isResolvable($type) === false) {
                 $defaultClass = $this->defaultClass();
@@ -108,7 +109,7 @@ abstract class AbstractFactory implements FactoryInterface
 
             // Create the object from the type's class name.
             $classname = $this->resolve($type);
-            self::$resolved[$type] = $classname;
+            self::$resolved[$pool][$type] = $classname;
         }
 
         $obj = new $classname($args);
