@@ -16,6 +16,7 @@ use \Charcoal\Factory\FactoryInterface;
 
 // Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Model\ModelInterface;
+use \Charcoal\Model\ModelFactory;
 use \Charcoal\Model\Collection;
 
 // Local Dependencies
@@ -45,11 +46,11 @@ class CollectionLoader implements LoggerAwareInterface
     private $model;
 
     /**
-     * The constructor arguments for the model.
+     * The factory used to create new objects.
      *
-     * @var array $arguments
+     * @var FactoryInterface $factory
      */
-    private $arguments;
+    private $factory;
 
     /**
      * The callback routine applied to every object added to the collection.
@@ -68,10 +69,10 @@ class CollectionLoader implements LoggerAwareInterface
         if (!isset($data['logger'])) {
             $data['logger'] = new NullLogger();
         }
-        if (!isset($data['factory'])) {
-            $data['factory'] = new \Charcoal\Model\ModelFactory();
-        }
 
+        if (!isset($data['factory'])) {
+            $data['factory'] = new ModelFactory();
+        }
 
         $this->setLogger($data['logger']);
         $this->setFactory($data['factory']);
