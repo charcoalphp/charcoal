@@ -11,7 +11,7 @@ use \InvalidArgumentException;
 trait EmailAwareTrait
 {
     /**
-     * Convert an email address into a proper array notation.
+     * Convert an email address (RFC822) into a proper array notation.
      *
      * @param  mixed $var An email array (containing an "email" key and optionally a "name" key).
      * @throws InvalidArgumentException If the email is invalid.
@@ -30,10 +30,11 @@ trait EmailAwareTrait
 
         // Assuming nobody's gonna set an email that is just a display name
         if (is_string($var)) {
-            // @todo Validation
+            $regexp = '/([\w\s\'\"]+[\s]+)?(<)?(([\w-\.]+)@((?:[\w]+\.)+)([a-zA-Z]{2,4}))?(>)?/';
+            preg_match($regexp, $var, $out);
             $arr = [
-                'email' => $var,
-                'name'  => ''
+                'email' => (isset($out[3]) ? trim($out[3]) : ''),
+                'name'  => (isset($out[1]) ? trim($out[1], " \t\n\r\0\x0B\"'") : '')
             ];
         } else {
             $arr = $var;
@@ -47,7 +48,7 @@ trait EmailAwareTrait
     }
 
     /**
-     * Convert an email address array to a string notation.
+     * Convert an email address array to a RFC-822 string notation.
      *
      * @param  array $arr An email array (containing an "email" key and optionally a "name" key).
      * @throws InvalidArgumentException If the email array is invalid.

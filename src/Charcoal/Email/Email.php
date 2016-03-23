@@ -782,26 +782,26 @@ class Email implements
             $to = $this->to();
 
             foreach ($to as $recipient) {
-                // Default name set in setTo()
-                $mail->addAddress($recipient);
+                $toArr = $this->emailToArray($recipient);
+                $mail->addAddress($toArr['email'], $toArr['name']);
             }
 
             $replyTo = $this->replyTo();
             if ($replyTo) {
-                // Default name set in setReplyTo()
-                $mail->addReplyTo($replyTo);
+                $replyArr = $this->emailToArray($replyTo);
+                $mail->addReplyTo($replyArr['email'], $replyArr['name']);
             }
 
-            $cc = $this->bcc();
+            $cc = $this->cc();
             foreach ($cc as $ccRecipient) {
-                // Default name set in addCc()
-                $mail->addCC($ccRecipient);
+                $ccArr = $this->emailToArray($ccRecipient);
+                $mail->addCC($ccArr['email'], $ccArr['name']);
             }
 
             $bcc = $this->bcc();
             foreach ($bcc as $bccRecipient) {
-                // Default name set in addBcc()
-                $mail->addBCC($bccRecipient);
+                $bccArr = $this->emailToArray($bccRecipient);
+                $mail->addBCC($bccArr['email'], $cc['name']);
             }
 
             $attachments = $this->attachments();
@@ -1040,8 +1040,7 @@ class Email implements
     /**
      * Temporary hack to fulfills the Configurable Interface.
      *
-     * @throws Exception If this function is ever called (obsolete).
-     * @return void
+     * @return EmailConfig
      */
     public function createConfig()
     {
