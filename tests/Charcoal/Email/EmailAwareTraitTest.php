@@ -37,7 +37,7 @@ class EmailAwareTraitTest extends \PHPUnit_Framework_TestCase
             ['mat@locomotive.ca', ['email'=>'mat@locomotive.ca', 'name'=>'']],
             ["Mathieu <mat@locomotive.ca>", ['email'=>'mat@locomotive.ca', 'name'=>'Mathieu']],
             ["'Mathieu' <mat@locomotive.ca>", ['email'=>'mat@locomotive.ca', 'name'=>'Mathieu']],
-            ['"Mat" <mat@locomotive.ca>', ['email'=>'mat@locomotive.ca', 'name'=>'Mat']]
+            ['"Mathieu Mémo" <mat@locomotive.ca>', ['email'=>'mat@locomotive.ca', 'name'=>'Mathieu Mémo']]
         ];
     }
 }

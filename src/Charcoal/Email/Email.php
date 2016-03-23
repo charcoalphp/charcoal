@@ -777,7 +777,8 @@ class Email implements
 
             // From DOC, $name = ''
             // Set from defines the default vars
-            $mail->setFrom($from);
+            $fromArr = $this->emailToArray($from);
+            $mail->setFrom($fromArr['email'], $fromArr['name']);
 
             $to = $this->to();
 

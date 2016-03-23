@@ -30,11 +30,11 @@ trait EmailAwareTrait
 
         // Assuming nobody's gonna set an email that is just a display name
         if (is_string($var)) {
-            $regexp = '/([\w\s\'\"]+[\s]+)?(<)?(([\w-\.]+)@((?:[\w]+\.)+)([a-zA-Z]{2,4}))?(>)?/';
+            $regexp = '/([\w\s\'\"]+[\s]+)?(<)?(([\w-\.]+)@((?:[\w]+\.)+)([a-zA-Z]{2,4}))?(>)?/u';
             preg_match($regexp, $var, $out);
             $arr = [
                 'email' => (isset($out[3]) ? trim($out[3]) : ''),
-                'name'  => (isset($out[1]) ? trim($out[1], " \t\n\r\0\x0B\"'") : '')
+                'name'  => (isset($out[1]) ? trim(trim($out[1]), '\'"') : '')
             ];
         } else {
             $arr = $var;
