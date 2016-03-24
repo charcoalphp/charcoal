@@ -1,7 +1,7 @@
 {
 	"name": "locomotivemtl/charcoal-email",
 	"description": "Email sending and queueing for Charcoal",
-	"keywords": [ "charcoal", "email", "queue" ],
+	"keywords": [ "charcoal", "email", "queue", "phpmailer" ],
 	"homepage": "https://charcoal.locomotive.ca",
 	"license": "MIT",
 	"support": {
@@ -43,6 +43,7 @@
 		],
 		"phplint": "find {src,tests} -name '*.php' -print0 | xargs -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1",
 		"phpunit": "php vendor/bin/phpunit --configuration tests/phpunit.xml --coverage-text",
-		"phpcs": "php vendor/bin/phpcs -ps --colors --standard=phpcs.xml src/"
+		"phpcs": "php vendor/bin/phpcs -ps --colors --standard=phpcs.xml src/",
+		"phpcbf": "php vendor/bin/phpcbf -ps --colors --standard=phpcs.xml src/ tests/"
 	}
 }
