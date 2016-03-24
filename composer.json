@@ -27,7 +27,7 @@
     "locomotivemtl/charcoal-app": "dev-master",
     "locomotivemtl/charcoal-config": "~0.5",
     "locomotivemtl/charcoal-property": "dev-master",
-    "locomotivemtl/charcoal-factory": "~0.2",
+    "locomotivemtl/charcoal-factory": "~0.3",
     "locomotivemtl/charcoal-view": "~0.1",
     "locomotivemtl/charcoal-translation": "dev-master"
   },
@@ -53,3 +53,5 @@
     "phpunit": "php vendor/bin/phpunit --configuration tests/phpunit.xml --coverage-text",
     "phpcs": "php vendor/bin/phpcs -ps --colors --standard=phpcs.xml src/",
     "phpcbf": "php vendor/bin/phpcbf -ps --colors --standard=phpcs.xml src/ tests/"
+  }
+}
