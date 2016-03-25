@@ -11,7 +11,7 @@
     ],
     "require": {
         "php": ">=5.5.0",
-        "locomotivemtl/charcoal-factory": "^0.2"
+        "locomotivemtl/charcoal-factory": "^0.3"
     },
     "require-dev":{
         "phpunit/phpunit": "^4.8",
