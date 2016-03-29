@@ -292,6 +292,9 @@
     <rule ref="Squiz.Strings.ConcatenationSpacing" />
     <!-- Makes sure that any use of Double Quotes ("") are warranted. -->
     <rule ref="Squiz.Strings.DoubleQuoteUsage" />
+    <rule ref="Squiz.Strings.DoubleQuoteUsage.ContainsVar">
+        <severity>0</severity>
+    </rule>
     <!-- Makes sure that any strings that are "echoed" are not enclosed in brackets -->
     <rule ref="Squiz.Strings.EchoedStrings" />
 
