@@ -9,7 +9,7 @@ use \Charcoal\Image\Effect\AbstractResizeEffect;
 /**
  * Resize Effect for the Imagick driver
  */
-class ImagickCropEffect extends AbstractResizeEffect
+class ImagickCropEffect extends AbstractCropEffect
 {
     /**
     * @param integer $x
