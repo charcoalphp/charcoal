@@ -4,7 +4,7 @@ namespace Charcoal\Image\Imagick\Effect;
 
 use \Imagick;
 
-use \Charcoal\Image\Effect\AbstractResizeEffect;
+use \Charcoal\Image\Effect\AbstractCropEffect;
 
 /**
  * Resize Effect for the Imagick driver
