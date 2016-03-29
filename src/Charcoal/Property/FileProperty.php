@@ -564,12 +564,12 @@ class FileProperty extends AbstractProperty
             return false;
         }
 
-        // $files = glob(dirname($file).DIRECTORY_SEPARATOR .'*', GLOB_NOSORT);
-        // foreach ($files as $f) {
-        //     if (preg_match("#{$file}#i", $f)) {
-        //         return true;
-        //     }
-        // }
+        $files = glob(dirname($file).DIRECTORY_SEPARATOR.'*', GLOB_NOSORT);
+        foreach ($files as $f) {
+            if (preg_match("#{$file}#i", $f)) {
+                return true;
+            }
+        }
 
         return false;
     }
