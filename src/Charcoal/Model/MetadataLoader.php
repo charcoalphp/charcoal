@@ -76,7 +76,7 @@ class MetadataLoader extends FileLoader
     {
         $container = App::instance()->getContainer();
 
-        return $container->get('cache');
+        return $container['cache'];
     }
 
     /**

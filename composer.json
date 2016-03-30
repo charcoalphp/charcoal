@@ -55,3 +55,4 @@
     "phpcbf": "php vendor/bin/phpcbf -ps --colors --standard=phpcs.xml src/ tests/"
   }
 }
+

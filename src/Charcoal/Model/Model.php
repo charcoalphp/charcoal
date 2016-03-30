@@ -8,11 +8,8 @@
 
 namespace Charcoal\Model;
 
-// Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Source\DatabaseSource as DatabaseSource;
-
 // Local namespace dependencies
-use \Charcoal\Model\AbstractModel as AbstractModel;
+use \Charcoal\Model\AbstractModel;
 
 /**
 * Charcoal Model class
