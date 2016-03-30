@@ -124,9 +124,9 @@ abstract class AbstractCropEffect extends AbstractEffect
     /**
     * @return float
     */
-    public function x()
+    public function y()
     {
-        return $this->x;
+        return $this->y;
     }
 
     /**
@@ -145,7 +145,7 @@ abstract class AbstractCropEffect extends AbstractEffect
         $width = $this->width();
         $height = $this->height();
 
-        $this->doCrop($x, $y, $width, $height);
+        $this->doCrop($width, $height, $x, $y);
 
         return $this;
     }
@@ -156,5 +156,5 @@ abstract class AbstractCropEffect extends AbstractEffect
     * @param boolean $best_fit
     * @return void
     */
-    abstract protected function doCrop($x, $y, $width, $height);
+    abstract protected function doCrop($width, $height, $x, $y);
 }
