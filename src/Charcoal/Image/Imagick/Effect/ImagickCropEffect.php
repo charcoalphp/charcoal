@@ -20,6 +20,6 @@ class ImagickCropEffect extends AbstractCropEffect
     */
     protected function doCrop($x, $y, $width, $height)
     {
-        $this->image()->imagick()->cropImage($x, $y, $width, $height);
+        $this->image()->imagick()->cropImage($width, $height, $x, $y);
     }
 }
