@@ -12,12 +12,12 @@ use \Charcoal\Image\Effect\AbstractCropEffect;
 class ImagickCropEffect extends AbstractCropEffect
 {
     /**
-    * @param integer $x
-    * @param integer $y
-    * @param integer $width
-    * @param integer $height
-    * @return void
-    */
+     * @param integer $width  The crop width.
+     * @param integer $height The crop height.
+     * @param integer $x      The x-position (in pixel) of the crop.
+     * @param integer $y      The y-position (in pixel) of the crop.
+     * @return void
+     */
     protected function doCrop($width, $height, $x, $y)
     {
         $this->image()->imagick()->cropImage($width, $height, $x, $y);
