@@ -132,12 +132,12 @@ class IdProperty extends AbstractProperty
     {
         $mode = $this->mode();
 
-        if ($mode == self::MODE_AUTO_INCREMENT) {
-            // auto-increment is handled at the database level (for now...)
-            return '';
-        } elseif ($mode == self::MODE_UNIQID) {
-            return \uniqid();
-        } elseif ($mode == self::MODE_UUID) {
+        if ($mode === self::MODE_AUTO_INCREMENT) {
+            // Auto-increment is handled at the database level (for now...)
+            return null;
+        } elseif ($mode === self::MODE_UNIQID) {
+            return uniqid();
+        } elseif ($mode === self::MODE_UUID) {
             return $this->generateUuid();
         }
     }
