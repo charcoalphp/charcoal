@@ -20,19 +20,23 @@ class IdProperty extends AbstractProperty
     const MODE_UNIQID = 'uniqid';
     const MODE_UUID = 'uuid';
 
-    const DEFAULT_MODE = 'auto-increment';
+    const DEFAULT_MODE = self::MODE_AUTO_INCREMENT;
 
     /**
-     * ID mode. Can be:
+     * The ID mode.
+     *
+     * One of:
      * - `auto-increment` (default)
      * - `uniq`
      * - `uuid`
      *
-     * @var string $_mode
+     * @var string $mode
      */
     private $mode;
 
     /**
+     * Retrieve the property type.
+     *
      * @return string
      */
     public function type()
@@ -41,30 +45,30 @@ class IdProperty extends AbstractProperty
     }
 
     /**
-     * AbstractProperty > set_multiple()
+     * Ensure multiple can not be TRUE for ID property.
      *
-     * Ensure multiple can not be true for ID property.
-     *
-     * @param boolean $multiple The multiple flag.
-     * @throws InvalidArgumentException If the multiple argument is true (must be false).
+     * @see    AbstractProperty::setMultiple()
+     * @param  boolean $flag The multiple flag.
+     * @throws InvalidArgumentException If the multiple argument is TRUE (must be FALSE).
      * @return IdProperty Chainable
      */
-    public function setMultiple($multiple)
+    public function setMultiple($flag)
     {
-        $multiple = !!$multiple;
-        if ($multiple === true) {
+        $flag = !!$flag;
+
+        if ($flag === true) {
             throw new InvalidArgumentException(
-                'Multiple can not be true for ID property.'
+                'The ID property does not support multiple values.'
             );
         }
+
         return $this;
     }
 
     /**
-     * AbstractProperty > multiple()
+     * Multiple is always FALSE for ID property.
      *
-     * Multiple is always false for ID property.
-     *
+     * @see    AbstractProperty::multiple()
      * @return boolean
      */
     public function multiple()
@@ -73,27 +77,79 @@ class IdProperty extends AbstractProperty
     }
 
     /**
+     * Ensure l10n can not be TRUE for ID property.
+     *
+     * @see    AbstractProperty::setL10n()
+     * @param  boolean $flag The l10n, or "translatable" flag.
+     * @throws InvalidArgumentException If the L10N argument is TRUE (must be FALSE).
+     * @return IdProperty Chainable
+     */
+    public function setL10n($flag)
+    {
+        $flag = !!$flag;
+
+        if ($flag === true) {
+            throw new InvalidArgumentException(
+                'The ID property is not translatable.'
+            );
+        }
+
+        return $this;
+    }
+
+    /**
+     * L10N is always FALSE for ID property.
+     *
+     * @see    AbstractProperty::l10n()
+     * @return boolean
+     */
+    public function l10n()
+    {
+        return false;
+    }
+
+    /**
+     * Retrieve the available ID modes.
+     *
+     * @return array
+     */
+    public function availableModes()
+    {
+        return [
+            self::MODE_AUTO_INCREMENT,
+            self::MODE_UNIQID,
+            self::MODE_UUID
+        ];
+    }
+
+    /**
+     * Set the allowed ID mode.
+     *
      * @param string $mode The ID mode (auto-increment, uniqid or uuid).
      * @throws InvalidArgumentException If the mode is not one of the 3 valid modes.
      * @return IdProperty Chainable
      */
     public function setMode($mode)
     {
-        $available_modes = [
-            self::MODE_AUTO_INCREMENT,
-            self::MODE_UNIQID,
-            self::MODE_UUID
-        ];
-        if (!in_array($mode, $available_modes)) {
+        $availableModes = $this->availableModes();
+
+        if (!in_array($mode, $availableModes)) {
             throw new InvalidArgumentException(
-                'Mode is not a valid mode.'
+                sprintf(
+                    'Invalid mode. Must be one of %s',
+                    implode(', ', $availableModes)
+                )
             );
         }
+
         $this->mode = $mode;
+
         return $this;
     }
 
     /**
+     * Retrieve the allowed ID mode.
+     *
      * @return string
      */
     public function mode()
@@ -101,13 +157,14 @@ class IdProperty extends AbstractProperty
         if ($this->mode === null) {
             $this->mode = self::DEFAULT_MODE;
         }
+
         return $this->mode;
     }
 
     /**
-     * Prepare the value for save
+     * Prepare the value for save.
      *
-     * If no ID is set upon first save, then auto-generate it if necessary
+     * If no ID is set upon first save, then auto-generate it if necessary.
      *
      * @see Charcoal_Object::save()
      * @return mixed
@@ -115,6 +172,7 @@ class IdProperty extends AbstractProperty
     public function save()
     {
         $val = $this->val();
+
         if (!$val) {
             $val = $this->autoGenerate();
             $this->setVal($val);
@@ -124,7 +182,7 @@ class IdProperty extends AbstractProperty
     }
 
     /**
-     * Auto-generate a value upon first save
+     * Auto-generate a value upon first save.
      *
      * @return string
      */
@@ -143,7 +201,7 @@ class IdProperty extends AbstractProperty
     }
 
     /**
-     * Generate a RFC-4122 v4 Universally-Unique Identifier
+     * Generate a RFC-4122 v4 Universally-Unique Identifier.
      *
      * @return string
      *
@@ -172,13 +230,16 @@ class IdProperty extends AbstractProperty
     }
 
     /**
+     * Get additional SQL field options.
+     *
      * @return string
      * @see AbstractProperty::fields()
      */
     public function sqlExtra()
     {
         $mode = $this->mode();
-        if ($mode == self::MODE_AUTO_INCREMENT) {
+
+        if ($mode === self::MODE_AUTO_INCREMENT) {
             return 'AUTO_INCREMENT';
         } else {
             return '';
@@ -186,31 +247,35 @@ class IdProperty extends AbstractProperty
     }
 
     /**
-     * Get the SQL type (Storage format)
+     * Get the SQL data type (Storage format).
      *
-     * @return string The SQL type
+     * @return string The SQL type.
      * @see AbstractProperty::fields()
      */
     public function sqlType()
     {
         $mode = $this->mode();
-        if ($mode == self::MODE_AUTO_INCREMENT) {
+
+        if ($mode === self::MODE_AUTO_INCREMENT) {
             return 'INT(10) UNSIGNED';
-        } elseif ($mode == self::MODE_UNIQID) {
+        } elseif ($mode === self::MODE_UNIQID) {
             return 'CHAR(13)';
-        } elseif ($mode == self::MODE_UUID) {
+        } elseif ($mode === self::MODE_UUID) {
             return 'CHAR(36)';
         }
     }
 
     /**
+     * Get the PDO data type.
+     *
      * @return integer
      * @see AbstractProperty::fields()
      */
     public function sqlPdoType()
     {
         $mode = $this->mode();
-        if ($mode == 'auto-increment') {
+
+        if ($mode === self::MODE_AUTO_INCREMENT) {
             return PDO::PARAM_INT;
         } else {
             return PDO::PARAM_STR;
