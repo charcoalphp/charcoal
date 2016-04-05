@@ -583,7 +583,7 @@ class FileProperty extends AbstractProperty
     public function sanitizeFilename($filename)
     {
         // Remove blacklisted caharacters
-        $blacklist = ['/', '\\', '\0', '*', ':', '?', '"', '<', '>', '|', '#', '&', '!', '`'];
+        $blacklist = ['/', '\\', '\0', '*', ':', '?', '"', '<', '>', '|', '#', '&', '!', '`', ' '];
         $filename = str_replace($blacklist, '_', $filename);
 
         // Avoid hidden file
