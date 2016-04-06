@@ -22,6 +22,21 @@ interface QueueItemInterface
     );
 
     /**
+     * Set the item's processed status.
+     *
+     * @param boolean $processed Whether the item has been processed.
+     * @return QueueItemInterface Chainable
+     */
+    public function setProcessed($processed);
+
+    /**
+     * Determine if the item has been processed.
+     *
+     * @return boolean
+     */
+    public function processed();
+
+    /**
      * Set the queue item's data.
      *
      * @param array $data The queue item data to set.
