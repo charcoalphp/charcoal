@@ -873,8 +873,8 @@ class Email implements
         foreach ($recipients as $to) {
             $queueItem = new EmailQueueItem();
 
-            $queueItem->setTo($to['email']);
-            $queueItem->setFrom($author['email']);
+            $queueItem->setTo($to);
+            $queueItem->setFrom($author);
             $queueItem->setSubject($subject);
             $queueItem->setMsgHtml($msgHtml);
             $queueItem->setMsgTxt($msgTxt);
