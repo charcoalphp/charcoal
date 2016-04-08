@@ -354,7 +354,27 @@ class FileProperty extends AbstractProperty
             && (isset($_FILES[$i]['tmp_name']) && $_FILES[$i]['tmp_name'])) {
             $file = $_FILES[$i];
 
-            if (is_array($file['name']) && $this->multiple()) {
+            if (is_array($file['name']) && $this->multiple() && $this->l10n()) {
+                $f = [];
+                foreach ($file['name'] as $lang => $val) {
+                    $f[$lang] = [];
+                    if (!$file['name'][$lang]) {
+                        $f[$lang] = '';
+                        continue;
+                    }
+                    $k = 0;
+                    $total = count($file['name'][$lang]);
+                    for (; $k < $total; $k++) {
+                        $data = [];
+                        $data['name']       = $file['name'][$lang][$k];
+                        $data['tmp_name']   = $file['tmp_name'][$lang][$k];
+                        $data['error']      = $file['error'][$lang][$k];
+                        $data['type']       = $file['type'][$lang][$k];
+                        $data['size']       = $file['size'][$lang][$k];
+                        $f[$lang][] = $this->fileUpload($data);
+                    }
+                }
+            } elseif (is_array($file['name']) && $this->multiple()) {
                 $f = [];
                 $k = 0;
                 $total = count($file['name']);
@@ -375,11 +395,12 @@ class FileProperty extends AbstractProperty
                 $f = [];
                 foreach ($file['name'] as $lang => $val) {
                     $data = [];
-                    $data['name']       = $file['name'][$lang];
-                    if (!$data['name']) {
-                        $f[$lang] = $data['name'];
+
+                    if (!$file['name'][$lang]) {
+                        $f[$lang] = '';
                         continue;
                     }
+                    $data['name']       = $file['name'][$lang];
                     $data['tmp_name']   = $file['tmp_name'][$lang];
                     $data['error']      = $file['error'][$lang];
                     $data['type']       = $file['type'][$lang];
