@@ -14,9 +14,10 @@ use \Charcoal\Config\AbstractEntity;
 
 use \Charcoal\Model\DescribableInterface;
 use \Charcoal\Model\DescribableTrait;
-use \Charcoal\Translation\TranslationString;
 use \Charcoal\Validator\ValidatableInterface;
 use \Charcoal\Validator\ValidatableTrait;
+
+use \Charcoal\Translation\TranslationString;
 
 use \Charcoal\Property\PropertyInterface;
 use \Charcoal\Property\PropertyValidator;
