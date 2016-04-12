@@ -194,11 +194,6 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     public function ident()
     {
-        if ($this->ident === null) {
-            throw new Exception(
-                'Can not get ident(): Ident was never set.'
-            );
-        }
         return $this->ident;
     }
 
@@ -242,8 +237,6 @@ abstract class AbstractProperty extends AbstractEntity implements
     }
 
     /**
-     * @todo    [mcaskill: 2016-03-04] Should the property have access to the inputType?
-     * @used-by AbstractProperty::inputVal() Must handle string sanitization of value.
      * @param   mixed $val     Optional. The value to to convert for input.
      * @param   array $options Optional input options.
      * @return  string
