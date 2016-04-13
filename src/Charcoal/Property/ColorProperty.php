@@ -348,7 +348,10 @@ class ColorProperty extends AbstractProperty
      */
     private function parseNamedColor($val)
     {
-        $colors = include 'data/colors.php';
+        static $colors;
+        if (!$colors) {
+            $colors = include 'data/colors.php';
+        }
         $val = strtolower($val);
         if (in_array($val, array_keys($colors))) {
             return $this->parseVal($colors[$val]);

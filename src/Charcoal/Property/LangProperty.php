@@ -6,11 +6,16 @@ use \PDO;
 
 use \Charcoal\Translation\TranslationConfig;
 
+use \Charcoal\Property\SelectablePropertyInterface;
+use \Charcoal\Property\SelectablePropertyTrait;
+
 /**
  * Language property
  */
-class LangProperty extends AbstractProperty
+class LangProperty extends AbstractProperty implements SelectablePropertyInterface
 {
+    use SelectablePropertyTrait;
+
     /**
      * @return string
      */
