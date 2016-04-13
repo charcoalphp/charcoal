@@ -17,13 +17,9 @@ class AudioPropertyTest extends \PHPUnit_Framework_TestCase
         $this->obj = new AudioProperty();
     }
 
-    /**
-     * Hello world
-     */
-    public function testConstructor()
+    public function testDefauls()
     {
         $obj = $this->obj;
-        $this->assertInstanceOf('\Charcoal\Property\AudioProperty', $obj);
 
         $this->assertEquals(0, $obj->minLength());
         $this->assertEquals(0, $obj->maxLength());
@@ -39,8 +35,8 @@ class AudioPropertyTest extends \PHPUnit_Framework_TestCase
     {
         $obj = $this->obj;
         $data = [
-            'minLength'=>20,
-            'maxLength'=>500
+            'minLength' => 20,
+            'maxLength' => 500
         ];
         $ret = $obj->setData($data);
         $this->assertSame($ret, $obj);

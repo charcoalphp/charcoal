@@ -2,7 +2,7 @@
 
 namespace Charcoal\Tests\Property;
 
-use \Charcoal\Property\TextProperty as TextProperty;
+use \Charcoal\Property\TextProperty;
 
 /**
  * ## TODOs
@@ -10,9 +10,34 @@ use \Charcoal\Property\TextProperty as TextProperty;
  */
 class TextPropertyTest extends \PHPUnit_Framework_TestCase
 {
+    public $obj;
+
+    public function setUp()
+    {
+        $this->obj = new TextProperty();
+    }
+
+    /**
+     * Asserts that the `type()` method returns "text".
+     */
     public function testType()
     {
-        $obj = new TextProperty();
-        $this->assertEquals('text', $obj->type());
+        $this->assertEquals('text', $this->obj->type());
+    }
+
+    /**
+     * Asserts that the `defaultMaxLength` method returns 0 (no limit).
+     */
+    public function testDefaultMaxLength()
+    {
+        $this->assertEquals(0, $this->obj->defaultMaxLength());
+    }
+
+    /**
+     * Asserts that the `sqlType()` method returns "TEXT".
+     */
+    public function testSqlType()
+    {
+        $this->assertEquals('TEXT', $this->obj->sqlType());
     }
 }

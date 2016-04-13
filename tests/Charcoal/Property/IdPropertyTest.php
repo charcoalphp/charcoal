@@ -2,7 +2,7 @@
 
 namespace Charcoal\Tests\Property;
 
-use \Charcoal\Property\IdProperty as IdProperty;
+use \Charcoal\Property\IdProperty;
 
 /**
  * ## TODOs
@@ -10,15 +10,23 @@ use \Charcoal\Property\IdProperty as IdProperty;
  */
 class IdPropertyTest extends \PHPUnit_Framework_TestCase
 {
-    public function testConstructor()
+
+    public $obj;
+
+    public function setUp()
     {
-        $obj = new IdProperty();
-        $this->assertInstanceOf('\Charcoal\Property\IdProperty', $obj);
+        $this->obj = new IdProperty();
     }
+
+    public function testType()
+    {
+        $this->assertEquals('id', $this->obj->type());
+    }
+
 
     public function testSetData()
     {
-        $obj = new IdProperty();
+        $obj = $this->obj;
         $ret = $obj->setData(
             [
             'mode'=>'uniqid'
@@ -30,7 +38,7 @@ class IdPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testSetMode()
     {
-        $obj = new IdProperty();
+        $obj = $this->obj;
         $this->assertEquals('auto-increment', $obj->mode());
 
         $ret = $obj->setMode('uuid');
@@ -41,21 +49,45 @@ class IdPropertyTest extends \PHPUnit_Framework_TestCase
         $obj->setMode('foo');
     }
 
-    public function testSaveAndAutoGenerate()
+    public function testMultipleCannotBeTrue()
     {
-        $obj = new IdProperty();
+        $this->assertFalse($this->obj->multiple());
+
+        $this->assertSame($this->obj, $this->obj->setMultiple(false));
+        $this->setExpectedException('\InvalidArgumentException');
+        $this->obj->setMultiple(true);
+    }
+
+    public function testL10nCannotBeTrue()
+    {
+        $this->assertFalse($this->obj->l10n());
+
+        $this->assertSame($this->obj, $this->obj->setL10n(false));
+        $this->setExpectedException('\InvalidArgumentException');
+        $this->obj->setL10n(true);
+    }
+
+    public function testSaveAndAutoGenerateAutoIncrement()
+    {
+        $obj = $this->obj;
         $obj->setMode('auto-increment');
         $id = $obj->save();
         $this->assertEquals($id, $obj->val());
         $this->assertEquals('', $obj->val());
+    }
 
-        $obj = new IdProperty();
+    public function testSaveAndAutoGenerateUniqid()
+    {
+        $obj = $this->obj;
         $obj->setMode('uniqid');
         $id = $obj->save();
         $this->assertEquals($id, $obj->val());
         $this->assertEquals(13, strlen($obj->val()));
+    }
 
-        $obj = new IdProperty();
+    public function testSaveAndAutoGenerateUuid()
+    {
+        $obj = $this->obj;
         $obj->setMode('uuid');
         $id = $obj->save();
         $this->assertEquals($id, $obj->val());
@@ -64,7 +96,7 @@ class IdPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testSqlExtra()
     {
-        $obj = new IdProperty();
+        $obj = $this->obj;
         $obj->setMode('auto-increment');
         $ret = $obj->sqlExtra();
         $this->assertEquals('AUTO_INCREMENT', $ret);
@@ -76,7 +108,7 @@ class IdPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testSqlType()
     {
-        $obj = new IdProperty();
+        $obj = $this->obj;
         $obj->setMode('auto-increment');
         $ret = $obj->sqlType();
         $this->assertEquals('INT(10) UNSIGNED', $ret);
@@ -92,7 +124,7 @@ class IdPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testSqlPdoType()
     {
-        $obj = new IdProperty();
+        $obj = $this->obj;
         $obj->setMode('auto-increment');
         $ret = $obj->sqlPdoType();
         $this->assertEquals(\PDO::PARAM_INT, $ret);
