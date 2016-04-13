@@ -108,7 +108,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      */
     public function objType()
     {
-        if (!$this->objType === null) {
+        if ($this->objType === null) {
             throw new Exception(
                 'No obj type defined. Invalid property.'
             );
