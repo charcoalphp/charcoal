@@ -105,6 +105,7 @@ class IpProperty extends AbstractProperty
 
     /**
      * @param string $mode Either "string" or "int".
+     * @throws InvalidArgumentException If the storage mode is invalid.
      * @return IpProperty Chainable
      */
     public function setStorageMode($mode)
@@ -187,7 +188,7 @@ class IpProperty extends AbstractProperty
 
         $mode = $this->storageMode();
 
-        if($mode === self::STORAGE_MODE_INT) {
+        if ($mode === self::STORAGE_MODE_INT) {
             return $this->intVal($val);
         } else {
             return $this->stringVal($val);
@@ -195,11 +196,11 @@ class IpProperty extends AbstractProperty
     }
 
      /**
-     * Get the hostname currently associated with an IP value.
-     *
-     * @param mixed $val The value to convert to string.
-     * @return string
-     */
+      * Get the hostname currently associated with an IP value.
+      *
+      * @param mixed $val The value to convert to string.
+      * @return string
+      */
     public function hostname($val)
     {
         $val = $this->stringVal($val);
@@ -220,7 +221,7 @@ class IpProperty extends AbstractProperty
     {
         $mode = $this->storageMode();
 
-        if($mode === self::STORAGE_MODE_INT) {
+        if ($mode === self::STORAGE_MODE_INT) {
             return 'BIGINT';
         } else {
             return 'VARCHAR(15)';
@@ -234,7 +235,7 @@ class IpProperty extends AbstractProperty
     {
         $mode = $this->storageMode();
 
-        if($mode === self::STORAGE_MODE_INT) {
+        if ($mode === self::STORAGE_MODE_INT) {
             return PDO::PARAM_INT;
         } else {
             return PDO::PARAM_STR;
