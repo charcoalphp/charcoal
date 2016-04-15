@@ -462,6 +462,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
 
     /**
     * @param StorableInterface|null $item Optional item to use as model.
+    * @see this->loadItemsFromQuery()
     * @return array
     */
     public function loadItems(StorableInterface $item = null)
@@ -470,13 +471,40 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
             $this->setModel($item);
         }
 
+        $q = $this->sqlLoad();
+        return $this->loadItemsFromQuery($q, [], $item);
+    }
+
+    /**
+     * Loads items to a list from a query
+     * Allows external use.
+     *
+     * @param  string                 $q     The actual query.
+     * @param  array                  $binds This has to be done.
+     * @param  StorableInterface|null $item  Model Item.
+     * @return array                         Collection of Items | Model
+     */
+    public function loadItemsFromQuery($q, array $binds = [], StorableInterface $item = null)
+    {
+        if ($item !== null) {
+            $this->setModel($item);
+        }
+
+        // Out
         $items = [];
+
         $model = $this->model();
         $db = $this->db();
 
-        $q = $this->sqlLoad();
         $this->logger->debug($q);
         $sth = $db->prepare($q);
+
+        // @todo Binds
+        if (!empty($binds)) {
+            //
+            unset($binds);
+        }
+
         $sth->execute();
         $sth->setFetchMode(PDO::FETCH_ASSOC);
 

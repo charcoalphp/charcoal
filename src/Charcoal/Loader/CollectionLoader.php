@@ -432,6 +432,23 @@ class CollectionLoader implements LoggerAwareInterface
         // Unused.
         unset($ident);
 
+        /** @todo Filters, pagination, select, etc */
+        $query = $this->source()->sqlLoad();
+
+        return $this->loadFromQuery($query, $cb);
+    }
+
+    /**
+     * Load list from query.
+     *
+     * @param  string   $query The actual query.
+     * @param  callable $cb    Optional. Apply a callback to every entity of the collection.
+     *                            Leave blank to use `$callback` member.
+     * @throws Exception If the database connection fails.
+     * @return CollectionLoader   Collection of items.
+     */
+    public function loadFromQuery($query, callable $cb = null)
+    {
         $db = $this->source()->db();
 
         if (!$db) {
@@ -444,8 +461,6 @@ class CollectionLoader implements LoggerAwareInterface
             $cb = $this->callback();
         }
 
-        /** @todo Filters, pagination, select, etc */
-        $query = $this->source()->sqlLoad();
         $this->logger->debug($query);
         $collection = new Collection();
 
