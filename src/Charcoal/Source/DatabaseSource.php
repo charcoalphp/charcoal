@@ -715,7 +715,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     /**
     * @return string
     */
-    protected function sqlSelect()
+    public function sqlSelect()
     {
         $properties = $this->properties();
         if (empty($properties)) {
@@ -738,7 +738,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     * @return string
     * @todo 2016-02-19 Use bindings for filters value
     */
-    protected function sqlFilters()
+    public function sqlFilters()
     {
         $sql = '';
 
@@ -778,7 +778,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     /**
     * @return string
     */
-    protected function sqlOrders()
+    public function sqlOrders()
     {
         $sql = '';
 
@@ -798,7 +798,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     /**
     * @return string
     */
-    protected function sqlPagination()
+    public function sqlPagination()
     {
         return $this->pagination()->sql();
     }
