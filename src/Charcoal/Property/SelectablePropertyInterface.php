@@ -26,11 +26,11 @@ interface SelectablePropertyInterface
     /**
      * Add a choice to the available choices map.
      *
-     * @param string $choice_ident The choice identifier (will be key / default ident).
-     * @param array  $choice       A choice structure.
+     * @param string       $choiceIdent The choice identifier (will be key / default ident).
+     * @param string|array $choice      A string representing the choice label or a structure.
      * @return SelectablePropertyInterface Chainable.
      */
-    public function addChoice($choice_ident, array $choice);
+    public function addChoice($choiceIdent, $choice);
 
     /**
      * Get the choices array map.
@@ -42,16 +42,16 @@ interface SelectablePropertyInterface
     /**
      * Returns wether a given choice_ident exists or not.
      *
-     * @param string $choice_ident The choice ident.
+     * @param string $choiceIdent The choice ident.
      * @return boolean True / false wether the choice exists or not.
      */
-    public function hasChoice($choice_ident);
+    public function hasChoice($choiceIdent);
 
     /**
      * Returns a choice structure for a given ident.
      *
-     * @param string $choice_ident The choice ident to load.
+     * @param string $choiceIdent The choice ident to load.
      * @return mixed The matching choice.
      */
-    public function choice($choice_ident);
+    public function choice($choiceIdent);
 }
