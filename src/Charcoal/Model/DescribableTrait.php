@@ -2,83 +2,41 @@
 
 namespace Charcoal\Model;
 
-// Dependencies from `PHP`
+use \Traversable;
 use \Exception;
 use \InvalidArgumentException;
-
-// Module (`charcoal-property`) dependencies
-use \Charcoal\Property\PropertyFactory;
 
 // Local namespace dependencies
 use \Charcoal\Model\MetadataLoader;
 use \Charcoal\Model\MetadataInterface;
 
 /**
-* Default implementation, as trait, of the `DescribableInterface`.
-*
-* This trait adds 3 abstract methods:
-* - `setData()`
-* - `createMetadata()`
-* - `property_value()`
-*/
+ * Default implementation, as trait, of the `DescribableInterface`.
+ */
 trait DescribableTrait
 {
-    /**
-     * @var PropertyFactory $propertyFactory
-     */
-    protected $propertyFactory = null;
-
     /**
      * @var MetadataLoader $metadataLoader
      */
     protected $metadataLoader = null;
 
     /**
-    * @var MetadataInterface $metadata
-    */
+     * @var MetadataInterface $metadata
+     */
     protected $metadata;
 
     /**
-    * @var string $metadataIdent
-    */
+     * @var string $metadataIdent
+     */
     protected $metadataIdent;
 
     /**
-    * @var array $properties
-    */
-    protected $properties;
-
-    /**
-    * Describable object needs to have a `setData()` method
-    *
-    * @param array|\ArrayAccess $data The object's data.
-    * @return DescribableInterface Chainable
-    */
-    abstract public function setData($data);
-
-    /**
-     * @param PropertyFactory $factory The property factory, used to create metadata properties.
+     * Describable object needs to have a `setData()` method
+     *
+     * @param array|Traversable $data The object's data.
      * @return DescribableInterface Chainable
      */
-    public function setPropertyFactory(PropertyFactory $factory)
-    {
-        $this->propertyFactory = $factory;
-
-        return $this;
-    }
-
-    /**
-     * Safe PropertyFactory getter. Create the factory if it does not exist.
-     *
-     * @return PropertyFactory
-     */
-    protected function propertyFactory()
-    {
-        if ($this->propertyFactory === null) {
-            $this->propertyFactory = new PropertyFactory();
-        }
-        return $this->propertyFactory;
-    }
+    abstract public function setData($data);
 
     /**
      * @param MetadataLoader $loader The loader instance, used to load metadata.
@@ -105,12 +63,11 @@ trait DescribableTrait
         return $this->metadataLoader;
     }
 
-
     /**
-    * @param array|MetadataInterface $metadata The object's metadata.
-    * @throws InvalidArgumentException If the parameter is not an array or MetadataInterface.
-    * @return DescribableInterface Chainable
-    */
+     * @param array|MetadataInterface $metadata The object's metadata.
+     * @throws InvalidArgumentException If the parameter is not an array or MetadataInterface.
+     * @return DescribableInterface Chainable
+     */
     public function setMetadata($metadata)
     {
         if (is_array($metadata)) {
@@ -135,8 +92,8 @@ trait DescribableTrait
     }
 
     /**
-    * @return MetadataInterface
-    */
+     * @return MetadataInterface
+     */
     public function metadata()
     {
         if ($this->metadata === null) {
@@ -146,14 +103,14 @@ trait DescribableTrait
     }
 
     /**
-    * Load a metadata file and store it as a static var.
-    *
-    * Use a `MetadataLoader` object and the object's metadataIdent
-    * to load the metadata content (typically from the filesystem, as json).
-    *
-    * @param string $metadataIdent Optional ident.
-    * @return MetadataInterface
-    */
+     * Load a metadata file and store it as a static var.
+     *
+     * Use a `MetadataLoader` object and the object's metadataIdent
+     * to load the metadata content (typically from the filesystem, as json).
+     *
+     * @param string $metadataIdent Optional ident.
+     * @return MetadataInterface
+     */
     public function loadMetadata($metadataIdent = null)
     {
         if ($metadataIdent === null) {
@@ -168,14 +125,14 @@ trait DescribableTrait
     }
 
     /**
-    * @return MetadataInterface
-    */
+     * @return MetadataInterface
+     */
     abstract protected function createMetadata();
 
     /**
-    * @param string $metadataIdent The metadata ident.
-    * @return DescribableInterface Chainable
-    */
+     * @param string $metadataIdent The metadata ident.
+     * @return DescribableInterface Chainable
+     */
     public function setMetadataIdent($metadataIdent)
     {
         $this->metadataIdent = $metadataIdent;
@@ -183,10 +140,10 @@ trait DescribableTrait
     }
 
     /**
-    * Get the metadata ident, or generate it from class name.
-    *
-    * @return string
-    */
+     * Get the metadata ident, or generate it from class name.
+     *
+     * @return string
+     */
     public function metadataIdent()
     {
         if ($this->metadataIdent === null) {
@@ -196,152 +153,17 @@ trait DescribableTrait
     }
 
     /**
-    * Generate a metadata ident from class name.
-    *
-    * Change `\` and `.` to `/` and force lowercase
-    *
-    * @return string
-    */
+     * Generate a metadata ident from class name.
+     *
+     * Change `\` and `.` to `/` and force lowercase
+     *
+     * @return string
+     */
     protected function generateMetadataIdent()
     {
         $classname = get_class($this);
         $ident = preg_replace('/([a-z])([A-Z])/', '$1-$2', $classname);
         $metadataIdent = strtolower(str_replace('\\', '/', $ident));
         return $metadataIdent;
-    }
-
-    /**
-    * Return an array of `PropertyInterface`
-    *
-    * @param array|null $filters Unused.
-    * @return void Yield, not return
-    */
-    public function properties(array $filters = null)
-    {
-        $this->metadata(); // Hack!
-        $props = array_keys($this->metadata()->properties());
-
-        if (empty($props)) {
-            yield null;
-        }
-
-        foreach ($props as $propertyIdent) {
-            $property = $this->property($propertyIdent);
-            $filtered = (int)$property->isFiltered($filters);
-            // Get the property object of this definition
-            yield $propertyIdent => $this->property($propertyIdent);
-        }
-    }
-
-    /**
-    * Get an object's property
-    *
-    * @param string $propertyIdent The property ident to return.
-    * @throws InvalidArgumentException If the propertyIdent is not a string.
-    * @throws Exception If the requested property is invalid.
-    * @return PropertyInterface The \Charcoal\Model\Property if found, null otherwise
-    */
-    public function property($propertyIdent)
-    {
-        if (!is_string($propertyIdent)) {
-            throw new InvalidArgumentException(
-                'Property Ident must be a string.'
-            );
-        }
-
-        $metadata = $this->metadata();
-        $props = $metadata->properties();
-
-        if (empty($props)) {
-            throw new Exception(sprintf(
-                'Invalid model metadata (%s) - No properties defined.',
-                get_class($this)
-            ));
-        }
-
-        if (!isset($props[$propertyIdent])) {
-            throw new Exception(
-                sprintf('Invalid property: %s (not defined in metadata).', $propertyIdent)
-            );
-        }
-
-        $propertyMetadata = $props[$propertyIdent];
-        if (!isset($propertyMetadata['type'])) {
-            throw new Exception(
-                sprintf('Invalid %s property: %s (type is undefined).', get_class($this), $propertyIdent)
-            );
-        }
-
-        $factory  = $this->propertyFactory();
-        $property = $factory->create($propertyMetadata['type']);
-        $property->setIdent($propertyIdent);
-        $property->setData($propertyMetadata);
-
-        $property_value = $this->propertyValue($propertyIdent);
-        if ($property_value !== null) {
-            $property->setVal($property_value);
-        }
-
-        return $property;
-    }
-
-    /**
-    * Shortcut (alias) for:
-    * - `property()` if the first parameter is set,
-    * - `properties()` if the propertyIdent is not set (null)
-    *
-    * @param string $propertyIdent The property ident to return.
-    * @return array|PropertyInterface
-    */
-    public function p($propertyIdent = null)
-    {
-        if ($propertyIdent === null) {
-            return $this->properties();
-        }
-        // Alias for property()
-        return $this->property($propertyIdent);
-    }
-
-    /**
-    * @param  string $propertyIdent The ident of the property to check.
-    * @throws InvalidArgumentException If the ident argument is not a string.
-    * @return boolean
-    */
-    public function hasProperty($propertyIdent)
-    {
-        if (!is_string($propertyIdent)) {
-            throw new InvalidArgumentException(
-                'Property Ident must be a string.'
-            );
-        }
-
-        $metadata = $this->metadata();
-        $props = $metadata->properties();
-
-        return isset($props[$propertyIdent]);
-    }
-
-    /**
-    * @param string $propertyIdent The property ident to retrieve the value for.
-    * @return mixed
-    */
-    abstract protected function propertyValue($propertyIdent);
-
-    /**
-    * @param array $filters The filters to apply.
-    * @return boolean False if the object doesn't match any filter, true otherwise.
-    */
-    public function isFiltered(array $filters = null)
-    {
-        if ($filters === null) {
-            return false;
-        }
-
-        foreach ($filters as $filterIdent => $filterData) {
-            unset($filterIdent);
-            unset($filterData);
-        }
-
-        return false;
     }
 }

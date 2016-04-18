@@ -2,26 +2,29 @@
 
 namespace Charcoal\Model;
 
-// Dependencies from `PHP`
 use \Exception;
 use \InvalidArgumentException;
 use \JsonSerializable;
 use \Serializable;
 
-// PSR-3 (logger) dependencies
+// Dependencies from PSR-3 (Logger)
 use \Psr\Log\LoggerAwareInterface;
 use \Psr\Log\LoggerAwareTrait;
 use \Psr\Log\NullLogger;
 
-// Module `charcoal-config` dependencies
+// Dependency from 'charcoal-config'
 use \Charcoal\Config\AbstractEntity;
 
-// Module `charcoal-view` dependencies
+// Dependencies from 'charcoal-view'
 use \Charcoal\View\GenericView;
 use \Charcoal\View\ViewableInterface;
 use \Charcoal\View\ViewableTrait;
 
-// Intra-module (`charcoal-core`) dependencies
+// Dependencies from 'charcoal-property'
+use \Charcoal\Property\DescribablePropertyInterface;
+use \Charcoal\Property\DescribablePropertyTrait;
+
+// Intra-module ('charcoal-core') dependencies
 use \Charcoal\Model\DescribableInterface;
 use \Charcoal\Model\DescribableTrait;
 use \Charcoal\Source\SourceFactory;
@@ -54,6 +57,7 @@ use \Charcoal\Model\ModelValidator;
 abstract class AbstractModel extends AbstractEntity implements
     ModelInterface,
     DescribableInterface,
+    DescribablePropertyInterface,
     LoggerAwareInterface,
     StorableInterface,
     ValidatableInterface,
@@ -61,6 +65,7 @@ abstract class AbstractModel extends AbstractEntity implements
 {
     use LoggerAwareTrait;
     use DescribableTrait;
+    use DescribablePropertyTrait;
     use StorableTrait;
     use ValidatableTrait;
     use ViewableTrait;
