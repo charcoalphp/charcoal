@@ -36,11 +36,15 @@ class DatabaseFilter extends Filter
             // Support for custom function on column name
             $function = $this->func();
 
+            // Support custom table name
+            $tableName = $this->tableName();
+
             if ($function) {
-                $target = sprintf('%1$s(`%2$s`)', $function, $field);
+                $target = sprintf('%1$s(%2$s.%3$s)', $function, $tableName, $field);
             } else {
-                $target = sprintf('`%s`', $field);
+                $target = sprintf('%1$s.%2$s', $tableName, $field);
             }
+
 
             switch ($operator) {
                 case 'FIND_IN_SET':

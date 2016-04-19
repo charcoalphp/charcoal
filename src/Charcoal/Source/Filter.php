@@ -16,6 +16,7 @@ class Filter implements FilterInterface
     const DEFAULT_OPERATOR = '=';
     const DEFAULT_FUNC     = '';
     const DEFAULT_OPERAND  = 'AND';
+    const DEFAULT_TABLE_NAME = 'objTable';
 
     /**
     * @var string $property
@@ -38,6 +39,11 @@ class Filter implements FilterInterface
     * @var string $operand
     */
     protected $operand = self::DEFAULT_OPERAND;
+
+    /**
+    * @var string $tableName
+    */
+    protected $tableName = self::DEFAULT_TABLE_NAME;
 
     /**
     * @var string $string
@@ -70,6 +76,9 @@ class Filter implements FilterInterface
         }
         if (isset($data['operand'])) {
             $this->setOperand($data['operand']);
+        }
+        if (isset($data['table_name'])) {
+            $this->setTableName($data['table_name']);
         }
         if (isset($data['string'])) {
             $this->setString($data['string']);
@@ -221,6 +230,31 @@ class Filter implements FilterInterface
     public function operand()
     {
         return strtoupper($this->operand);
+    }
+
+    /**
+    * @param string $tableName The filter table name.
+    * @throws InvalidArgumentException If the parameter is not a string.
+    * @return Filter (Chainable)
+    */
+    public function setTableName($tableName)
+    {
+        if (!is_string($tableName)) {
+            throw new InvalidArgumentException(
+                'TableName should be a string.'
+            );
+        }
+
+        $this->tableName = $tableName;
+        return $this;
+    }
+
+    /**
+    * @return string
+    */
+    public function tableName()
+    {
+        return $this->tableName;
     }
 
     /**

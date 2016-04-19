@@ -76,6 +76,16 @@ interface FilterInterface
     public function operand();
 
     /**
+    * @param string $tableName The table name (default to objTable).
+    * @return FilterInterface Chainable
+    */
+    public function setTableName($tableName);
+    /**
+    * @return string
+    */
+    public function tableName();
+
+    /**
     * @param string $sql The filter SQL string.
     * @return FilterInterface Chainable
     */
