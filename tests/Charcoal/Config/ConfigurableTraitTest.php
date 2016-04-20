@@ -44,11 +44,11 @@ class ConfigurableTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
         $this->assertEquals($config, $obj->config());
 
-        // $obj->setConfig(['foo' => 'baz']);
-        // $this->assertEquals('baz', $obj->config()->get('foo'));
+        $obj->setConfig(['foo' => 'baz']);
+        $this->assertEquals('baz', $obj->config()->get('foo'));
 
-        // $this->setExpectedException('\InvalidArgumentException');
-        // $obj->setConfig(false);
+        $this->setExpectedException('\InvalidArgumentException');
+        $obj->setConfig(false);
     }
 
     public function testConfigWithKey()

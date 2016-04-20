@@ -207,8 +207,8 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(['test'=>'phpunit'], $obj['config']);
 
-        //$this->setExpectedException('\InvalidArgumentException');
-        //$obj->addFile(__DIR__.'/config_files/broken.ini');
+        $this->setExpectedException('\InvalidArgumentException');
+        @$obj->addFile(__DIR__.'/config_files/invalid.ini');
     }
 
     public function testAddFileJson()
@@ -219,6 +219,8 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(['test'=>'phpunit'], $obj['config']);
 
+        $this->setExpectedException('\InvalidArgumentException');
+        $obj->addFile(__DIR__.'/config_files/invalid.json');
     }
 
     public function testAddFilePhp()
@@ -227,6 +229,24 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
         $ret = $obj->addFile(__DIR__.'/config_files/test.php');
         $this->assertSame($ret, $obj);
         $this->assertEquals(['test'=>'phpunit'], $obj['config']);
+    }
+
+    public function testLoadFileInvalidArgument()
+    {
+        $this->setExpectedException('\InvalidArgumentException');
+        $this->obj->loadFile(false);
+    }
+
+    public function testLoadFileNotExist()
+    {
+        $this->setExpectedException('\InvalidArgumentException');
+        $this->obj->loadFile('foo.php');
+    }
+
+    public function testLoadFileInvalidFile()
+    {
+        $this->setExpectedException('\InvalidArgumentException');
+        $this->obj->loadFile(__DIR__.'/config_files/invalid.txt');
     }
 
     public function testSerializable()
