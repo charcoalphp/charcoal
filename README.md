@@ -261,26 +261,45 @@ echo $foo_config['bar.baz'];
 echo $foo->config('bar.baz');
 ```
 
-## Development
+# Development
 
-### Coding Style
+To install the development environment:
 
-All Charcoal modules follow the same coding style and `charcoal-config` is no exception. For PHP:
+```shell
+$ composer install --prefer-source
+```
+
+## API documentation
+
+- The auto-generated `phpDocumentor` API documentation is available at [https://locomotivemtl.github.io/charcoal-config/docs/master/](https://locomotivemtl.github.io/charcoal-config/docs/master/)
+- The auto-generated `apigen` API documentation is available at [https://codedoc.pub/locomotivemtl/charcoal-config/master/](https://codedoc.pub/locomotivemtl/charcoal-config/master/index.html)
+
+## Development dependencies
+
+- `phpunit/phpunit`
+- `squizlabs/php_codesniffer`
+- `satooshi/php-coveralls`
+
+## Continuous Integration
+
+| Service | Badge | Description |
+| ------- | ----- | ----------- |
+| [Travis](https://travis-ci.org/locomotivemtl/charcoal-config) | [![Build Status](https://travis-ci.org/locomotivemtl/charcoal-config.svg?branch=master)](https://travis-ci.org/locomotivemtl/charcoal-config) | Runs code sniff check and unit tests. Auto-generates API documentation. |
+| [Scrutinizer](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-config/) | [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-config/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-config/?branch=master) | Code quality checker. Also validates API documentation quality. |
+| [Coveralls](https://coveralls.io/github/locomotivemtl/charcoal-config) | [![Coverage Status](https://coveralls.io/repos/github/locomotivemtl/charcoal-config/badge.svg?branch=master)](https://coveralls.io/github/locomotivemtl/charcoal-config?branch=master) | Unit Tests code coverage. |
+| [Sensiolabs](https://insight.sensiolabs.com/projects/27ad205f-4208-4fa6-9dcf-534b3a1c0aaa) | [![SensioLabsInsight](https://insight.sensiolabs.com/projects/27ad205f-4208-4fa6-9dcf-534b3a1c0aaa/mini.png)](https://insight.sensiolabs.com/projects/27ad205f-4208-4fa6-9dcf-534b3a1c0aaa) | Another code quality checker, focused on PHP. |
+
+## Coding Style
+
+The Charcoal-Config module follows the Charcoal coding-style:
 
 - [_PSR-1_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md)
 - [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
-- [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md), autoloading is therefore provided by _Composer_
-- [_phpDocumentor_](http://phpdoc.org/)
-	- Add DocBlocks for all classes, methods, and functions;
-- Naming conventions
-	- Prefix abstract classes with `Abstract`;
-	- Suffix interfaces with `Interface`, traits with `Trait`, exceptions with `Exception`;
-	- For arrays, use short notation `[]` (instead of `array()`).
-	- Read the [phpcs.xml](phpcs.xml) file for all the details.
+- [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md), autoloading is therefore provided by _Composer_.
+- [_phpDocumentor_](http://phpdoc.org/) comments.
+- Read the [phpcs.xml](phpcs.xml) file for all the details on code style.
 
-Coding styles are  enforced with `grunt phpcs` ([_PHP Code Sniffer_](https://github.com/squizlabs/PHP_CodeSniffer)). The actual ruleset can be found in `phpcs.xml`.
-
-> 👉 To fix minor coding style problems, run `grunt phpcbf` ([_PHP Code Beautifier and Fixer_](https://github.com/squizlabs/PHP_CodeSniffer)). This tool uses the same ruleset as *phpcs* to automatically correct coding standard violations.
+> Coding style validation / enforcement can be performed with `composer phpcs`. An auto-fixer is also available with `composer phpcbf`.
 
 ## Authors
 
