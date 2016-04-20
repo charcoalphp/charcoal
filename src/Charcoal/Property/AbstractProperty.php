@@ -210,7 +210,7 @@ abstract class AbstractProperty extends AbstractEntity implements
                 return $this;
             } else {
                 throw new InvalidArgumentException(
-                    'Val can not be null (Not allowed)'
+                    sprintf('Property "%s" value can not be null (Not allowed)', $this->ident())
                 );
             }
         }
