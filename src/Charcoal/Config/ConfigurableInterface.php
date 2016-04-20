@@ -15,7 +15,7 @@ interface ConfigurableInterface
     /**
      * Set the object's configuration container.
      *
-     * @param ConfigInterface|array $config
+     * @param ConfigInterface|array $config The config object or data.
      * @return ConfigurableInterface Chainable
      */
     public function setConfig($config);

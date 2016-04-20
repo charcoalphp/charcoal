@@ -51,7 +51,7 @@ abstract class AbstractEntity implements EntityInterface
     }
 
     /**
-     * @param EntityInterface[] $delegate A delegate (config) instance.
+     * @param EntityInterface $delegate A delegate (config) instance.
      * @return EntityInterface Chainable
      */
     public function addDelegate(EntityInterface $delegate)
@@ -61,7 +61,7 @@ abstract class AbstractEntity implements EntityInterface
     }
 
     /**
-     * @param EntityInterface[] $delegate A delegate (config) instance.
+     * @param EntityInterface $delegate A delegate (config) instance.
      * @return EntityInterface Chainable
      */
     public function prependDelegate(EntityInterface $delegate)
@@ -130,7 +130,7 @@ abstract class AbstractEntity implements EntityInterface
      *
      * This function takes an array and fill the property with its value.
      *
-     * @param array|\Traversable $data
+     * @param array|\Traversable $data The entity data. Will call setters.
      * @return EntityInterface Chainable
      * @see self::offsetSet()
      */
@@ -175,8 +175,8 @@ abstract class AbstractEntity implements EntityInterface
      * Public method variant of setting by array key.
      *
      * @see self::offsetSet()
-     * @param string $key The key to assign $value to.
-     * @param mixed $value Value to assign to $key.
+     * @param string $key   The key to assign $value to.
+     * @param mixed  $value Value to assign to $key.
      * @return AbstractConfig Chainable
      */
     public function set($key, $value)
@@ -287,8 +287,8 @@ abstract class AbstractEntity implements EntityInterface
      * - setting (or overriding)
      *
      * @see ArrayAccess::offsetSet()
-     * @param string $key The key to assign $value to.
-     * @param mixed $value Value to assign to $key.
+     * @param string $key   The key to assign $value to.
+     * @param mixed  $value Value to assign to $key.
      * @throws InvalidArgumentException If the key argument is not a string or is a "numeric" value.
      * @return void
      */
@@ -301,7 +301,7 @@ abstract class AbstractEntity implements EntityInterface
         }
 
         if ($this->separator && strstr($key, $this->separator)) {
-            return $this->setWithSeparator($key, $value);
+            $this->setWithSeparator($key, $value);
         } else {
             $setter = $this->setter($key);
             if (is_callable([$this, $setter])) {
@@ -348,6 +348,7 @@ abstract class AbstractEntity implements EntityInterface
 
     /**
      * @param string $key The key of the configuration item to check.
+     * @return boolean
      */
     protected function hasInDelegates($key)
     {
@@ -400,8 +401,8 @@ abstract class AbstractEntity implements EntityInterface
     }
 
     /**
-     * @param string $key The key to assign $value to.
-     * @param mixed $value Value to assign to $key.
+     * @param string $key   The key to assign $value to.
+     * @param mixed  $value Value to assign to $key.
      * @throws Exception If a value already exists and is scalar (can not be merged).
      * @return void
      */
@@ -419,7 +420,6 @@ abstract class AbstractEntity implements EntityInterface
         $ref = &$result;
 
         foreach ($keys as $p) {
-
             if ($lvl == $num) {
                 $ref[$p] = $value;
             } else {
@@ -428,13 +428,11 @@ abstract class AbstractEntity implements EntityInterface
                 } else {
                     if (is_array($source[$p]) || ($source[$p] instanceof ArrayAccess)) {
                         $ref[$p] = $source[$p];
-
                     } else {
                         throw new Exception(
                             sprintf('Can not set recursively with separator.')
                         );
                     }
-
                 }
             }
 
@@ -453,7 +451,7 @@ abstract class AbstractEntity implements EntityInterface
     /**
      * Allow an object to define how the key getter are called.
      *
-     * @param string $key  The key to get the getter from.
+     * @param string $key The key to get the getter from.
      * @return string The getter method name, for a given key.
      */
     protected function getter($key)
@@ -465,7 +463,7 @@ abstract class AbstractEntity implements EntityInterface
     /**
      * Allow an object to define how the key setter are called.
      *
-     * @param string $key  The key to get the setter from.
+     * @param string $key The key to get the setter from.
      * @return string The setter method name, for a given key.
      */
     protected function setter($key)

@@ -34,7 +34,7 @@ interface EntityInterface extends
      *
      * This function takes an array and fill the property with its value.
      *
-     * @param array|\Traversable $data
+     * @param array|\Traversable $data The entity data.
      * @return EntityInterface Chainable
      */
     public function setData($data);
@@ -54,7 +54,7 @@ interface EntityInterface extends
     /**
      * Finds an entry of the container by its identifier and returns it.
      *
-     * @param string $id Identifier of the entry to look for.
+     * @param string $key Identifier of the entry to look for.
      * @throws NotFoundException  No entry was found for this identifier.
      * @throws ContainerException Error while retrieving the entry.
      * @return mixed Entry.
@@ -64,7 +64,7 @@ interface EntityInterface extends
 
     /**
      * @param string $key Identifier of the entry to set.
-     * @param mixed $val The value to set.
+     * @param mixed  $val The value to set.
      * @return EntityInterface Chainable
      */
     public function set($key, $val);

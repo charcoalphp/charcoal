@@ -39,7 +39,7 @@ abstract class AbstractConfig extends AbstractEntity implements
     /**
      * Create the configuration.
      *
-     * @param mixed $data Optional default data. Either a filename, an array, or a Config object.
+     * @param mixed             $data      Optional default data. Either a filename, an array, or a Config object.
      * @param ConfigInterface[] $delegates An array of delegates (config) to set.
      * @throws InvalidArgumentException If $data is invalid.
      */
