@@ -104,7 +104,7 @@ echo $config['example/foo'];
 
 It is possible to fetch embedded _array-ish_ values recursively in a single call with the help of _separators_.
 
-The default separator is `/` (it can be retrieved with `separator()`) but it can be changed easily with `setSeparator()`.
+The default separator is `.` (it can be retrieved with `separator()`) but it can be changed easily with `setSeparator()`.
 
 > 👉 Separator must be a single character. An exception will be thrown if trying to call `setSeparator()` with a longer string.
 
@@ -112,7 +112,7 @@ The default separator is `/` (it can be retrieved with `separator()`) but it can
 
 ```php
 $config = new \Charcoal\GenericConfig();
-$config->setSeparator('.'); // Default is "/"
+$config->setSeparator('/'); // Default is "."
 $config->merge([
 	'foo', [
 		'baz'=>example,
@@ -120,7 +120,7 @@ $config->merge([
 	]
 ]);
 // Ouput "42"
-echo $config->get('foo.bar');
+echo $config->get('foo/bar');
 ```
 
 ## Delegates
@@ -255,10 +255,10 @@ $foo->setConfig([
 
 // echo 42
 $foo_config = $foo->config();
-echo $foo_config['bar/baz'];
+echo $foo_config['bar.baz'];
 
 // Also echo 42
-echo $foo->config('bar/baz');
+echo $foo->config('bar.baz');
 ```
 
 ## Development
@@ -287,6 +287,12 @@ Coding styles are  enforced with `grunt phpcs` ([_PHP Code Sniffer_](https://git
 - Mathieu Ducharme <mat@locomotive.ca>
 
 ## Changelog
+
+### 0.5
+_Released on 2016-02-02_
+
+- Split the base config class into AbstractEntity
+- AbstractEntity is the default data container that implements ArrayAccess, Container Interface and serialization.
 
 ### 0.4
 _Released on 2016-01-16_
