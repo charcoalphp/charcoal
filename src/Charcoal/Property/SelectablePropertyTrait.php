@@ -37,22 +37,33 @@ trait SelectablePropertyTrait
     /**
      * Add a choice to the available choices map.
      *
-     * @param string $choiceIdent The choice identifier (will be key / default ident).
-     * @param array  $choice      A choice structure.
-     * @throws InvalidArgumentException If the choice ident is not a string.
+     * @param string       $choiceIdent The choice identifier (will be key / default ident).
+     * @param string|array $choice      A string representing the choice label or a structure.
+     * @throws InvalidArgumentException If the choice identifier is not a string.
      * @return SelectablePropertyInterface Chainable.
      */
-    public function addChoice($choiceIdent, array $choice)
+    public function addChoice($choiceIdent, $choice)
     {
         if (!is_string($choiceIdent)) {
             throw new InvalidArgumentException(
                 'Choice identifier must be a string.'
             );
         }
-        if (isset($choice['label'])) {
+
+        if (!is_array($choice) && !is_string($choice)) {
+            throw new InvalidArgumentException(
+                'Choice must be a string or an array.'
+            );
+        }
+
+        if (is_string($choice)) {
+            $choice = [ 'label' => new TranslationString($choice) ];
+        } elseif (isset($choice['label'])) {
             $choice['label'] = new TranslationString($choice['label']);
         }
+
         $this->choices[$choiceIdent] = $choice;
+
         return $this;
     }
 

@@ -7,18 +7,25 @@ use \InvalidArgumentException;
 use \JsonSerializable;
 use \Serializable;
 
+// Dependencies from PSR-3 (Logger)
 use \Psr\Log\LoggerAwareInterface;
 use \Psr\Log\LoggerAwareTrait;
 
+// Dependencies from 'charcoal-config'
 use \Charcoal\Config\AbstractEntity;
 
+// Dependencies from 'charcoal-core'
 use \Charcoal\Model\DescribableInterface;
 use \Charcoal\Model\DescribableTrait;
 use \Charcoal\Validator\ValidatableInterface;
 use \Charcoal\Validator\ValidatableTrait;
 
+// Dependency from 'charcoal-translation'
 use \Charcoal\Translation\TranslationString;
 
+// Local namespace dependencies
+use \Charcoal\Property\DescribablePropertyInterface;
+use \Charcoal\Property\DescribablePropertyTrait;
 use \Charcoal\Property\PropertyInterface;
 use \Charcoal\Property\PropertyValidator;
 use \Charcoal\Property\StorablePropertyInterface;
@@ -32,12 +39,14 @@ abstract class AbstractProperty extends AbstractEntity implements
     Serializable,
     PropertyInterface,
     DescribableInterface,
+    DescribablePropertyInterface,
     LoggerAwareInterface,
     StorablePropertyInterface,
     ValidatableInterface
 {
     use LoggerAwareTrait;
     use DescribableTrait;
+    use DescribablePropertyTrait;
     use StorablePropertyTrait;
     use ValidatableTrait;
 

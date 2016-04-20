@@ -13,7 +13,6 @@ interface PropertyInterface
      */
     public function type();
 
-
     /**
      * @param string $ident The property identifier.
      * @return PropertyInterface Chainable

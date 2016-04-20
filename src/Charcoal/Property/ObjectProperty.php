@@ -254,11 +254,11 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     /**
      * Add a choice to the available choices map.
      *
-     * @param string $choiceIdent The choice identifier (will be key / default ident).
-     * @param array  $choice      A choice structure.
+     * @param string       $choiceIdent The choice identifier (will be key / default ident).
+     * @param string|array $choice      A string representing the choice label or a structure.
      * @return SelectablePropertyInterface Chainable.
      */
-    public function addChoice($choiceIdent, array $choice)
+    public function addChoice($choiceIdent, $choice)
     {
         unset($choiceIdent, $choice);
         $this->logger->debug('Choices can not be added for object properties. They are auto-generated from objects.');
@@ -282,9 +282,10 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
         if ($proto->hasProperty('active')) {
             $loader->addFilter('active', true);
         }
-        $ret = [];
-        $choices = $loader->load();
-        foreach ($choices as $c) {
+
+        $choices = [];
+        $objects = $loader->load();
+        foreach ($objects as $c) {
             $choice = [
                 'value'   => $c->id(),
                 'label'   => $c->name(),
@@ -296,10 +297,10 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
                 $choice['icon'] = $c->icon();
             }
 
-            $ret[$c->id()] = $choice;
+            $choices[$c->id()] = $choice;
         }
 
-        return $ret;
+        return $choices;
     }
 
     /**
