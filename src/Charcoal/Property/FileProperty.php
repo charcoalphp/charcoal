@@ -72,6 +72,31 @@ class FileProperty extends AbstractProperty
     }
 
     /**
+     * @return string
+     */
+    protected function basePath()
+    {
+        if (class_exists('\Charcoal\App\App')) {
+            $basePath = \Charcoal\App\App::instance()->config()->get('base_path');
+        } else {
+            $basePath = '';
+        }
+        $basePath = rtrim($basePath, '/').'/';
+        if ($this->publicAccess()) {
+            $basePath .= $this->publicPath();
+        }
+        return $basePath;
+    }
+
+    /**
+     * @return string
+     */
+    protected function publicPath()
+    {
+        return 'www/';
+    }
+
+    /**
      * @param boolean $public The public access flag.
      * @return FileProperty Chainable
      */
@@ -467,10 +492,8 @@ class FileProperty extends AbstractProperty
         if ($ret === false) {
             return '';
         } else {
-            if (class_exists('\Charcoal\App\App')) {
-                $basePath = \Charcoal\App\App::instance()->config()->get('base_path');
-                $target = str_replace($basePath, '', $target);
-            }
+            $basePath = $this->basePath();
+            $target = str_replace($basePath, '', $target);
 
             return $target;
         }
@@ -507,10 +530,8 @@ class FileProperty extends AbstractProperty
             return '';
         } else {
             $this->logger->notice(sprintf('File %s uploaded succesfully', $target));
-            if (class_exists('\Charcoal\App\App')) {
-                $basePath = \Charcoal\App\App::instance()->config()->get('base_path');
-                $target = str_replace($basePath, '', $target);
-            }
+            $basePath = $this->basePath();
+            $target = str_replace($basePath, '', $target);
 
             return $target;
         }
@@ -523,11 +544,7 @@ class FileProperty extends AbstractProperty
      */
     public function uploadTarget($filename = null)
     {
-        if (class_exists('\Charcoal\App\App')) {
-            $basePath = \Charcoal\App\App::instance()->config()->get('base_path');
-        } else {
-            $basePath = '';
-        }
+        $basePath = $this->basePath();
 
         $dir = $basePath.$this->uploadPath();
         $filename = ($filename) ? $this->sanitizeFilename($filename) : $this->generateFilename();
@@ -587,7 +604,7 @@ class FileProperty extends AbstractProperty
 
         $files = glob(dirname($file).DIRECTORY_SEPARATOR.'*', GLOB_NOSORT);
         foreach ($files as $f) {
-            if (preg_match("#{$file}#i", $f)) {
+            if (preg_match("#{$file}#i", preg_quote($f))) {
                 return true;
             }
         }
