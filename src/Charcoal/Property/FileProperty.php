@@ -362,7 +362,7 @@ class FileProperty extends AbstractProperty
     }
 
     /**
-     * @return string
+     * @return mixed
      */
     public function save()
     {

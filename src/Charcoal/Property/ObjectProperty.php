@@ -212,7 +212,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
         if ($this->l10n() === true) {
             $translator = TranslationConfig::instance();
 
-            $propertyValue = $propertyValue[$translator->current_language()];
+            $propertyValue = $propertyValue[$translator->currentLanguage()];
         }
 
         if ($this->multiple() === true) {
@@ -226,14 +226,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
         $names = [];
         foreach ($propertyValue as $objIdent) {
             $obj = $this->loadObject($objIdent);
-
-            // Hack. View should always be set
-            if ($obj->view() !== null) {
-                $names[] = $obj->render($this->pattern());
-            } else {
-                $this->logger->warning('Object property\'s prototype view is not set.');
-                $names[] = (string)$obj->name();
-            }
+            $names[] = $this->objPattern($obj);
         }
         return implode(', ', $names);
     }
@@ -288,8 +281,8 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
         foreach ($objects as $c) {
             $choice = [
                 'value'   => $c->id(),
-                'label'   => $c->name(),
-                'title'   => $c->name(),
+                'label'   => $this->objPattern($c),
+                'title'   => $this->objPattern($c),
                 'subtext' => ''
             ];
 
@@ -327,13 +320,37 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
 
         $choice = [
             'value'   => $c->id(),
-            'label'   => $c->name(),
-            'title'   => $c->name(),
+            'label'   => $this->objPattern($c),
+            'title'   => $this->objPattern($c),
             'subtext' => '',
             'icon'    => $c->icon()
         ];
 
         return $choice;
+    }
+
+    /**
+     * @param string $obj The object to "render".
+     * @return string
+     */
+    protected function objPattern($obj)
+    {
+        $pattern = (string)$this->pattern();
+        if ($obj instanceof Viewable && $obj->view() !== null) {
+            return $obj->render($pattern);
+        } else {
+            $cb = function ($matches) use ($obj) {
+                $method = trim($matches[1]);
+                if (method_exists($obj, $method)) {
+                    return call_user_func([$obj, $method]);
+                } elseif (isset($obj[$method])) {
+                    return $obj[$method];
+                } else {
+                    return '';
+                }
+            };
+            return preg_replace_callback('~{{(.*?)}}~i', $cb, $pattern);
+        }
     }
 
     /**
