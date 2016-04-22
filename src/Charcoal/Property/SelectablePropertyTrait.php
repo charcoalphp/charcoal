@@ -96,6 +96,11 @@ trait SelectablePropertyTrait
      */
     public function choice($choiceIdent)
     {
+        if (!isset($this->choices[$choiceIdent])) {
+            return [
+                'label'=>''
+            ];
+        }
         return $this->choices[$choiceIdent];
     }
 }

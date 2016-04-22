@@ -3,6 +3,7 @@
 namespace Charcoal\Tests\Property;
 
 use \Charcoal\Property\ImageProperty;
+
 /**
  * ## TODOs
  * - 2015-03-12:

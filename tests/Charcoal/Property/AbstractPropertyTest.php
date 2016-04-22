@@ -2,7 +2,6 @@
 
 namespace Charcoal\Tests\Property;
 
-
 /**
  * ## TODOs
  * - 2015-03-12:
@@ -125,5 +124,4 @@ class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $this->obj);
         $this->assertFalse($this->obj->storable());
     }
-
 }

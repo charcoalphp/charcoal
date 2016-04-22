@@ -58,7 +58,8 @@ trait DescribablePropertyTrait
      */
     public function properties(array $filters = null)
     {
-        $this->metadata(); // Hack!
+        $this->metadata();
+// Hack!
         $props = array_keys($this->metadata()->properties());
 
         if (empty($props)) {

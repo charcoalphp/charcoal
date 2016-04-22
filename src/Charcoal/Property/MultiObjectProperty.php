@@ -2,6 +2,8 @@
 
 namespace Charcoal\Property;
 
+use \InvalidArgumentException;
+
 /**
  *
  */
@@ -28,18 +30,18 @@ class MultiObjectProperty extends AbstractProperty
      */
     public function setAllowedTypes(array $types)
     {
-        foreach($types as $type=>$typeOptions) {
+        foreach ($types as $type => $typeOptions) {
             $this->addAllowedType($type, $typeOptions);
         }
         return $this;
     }
 
     /**
-     * @param string $type The (allowed) object type.
-     * @param array $typeOptions Extra options for the type.
+     * @param string $type        The (allowed) object type.
+     * @param array  $typeOptions Extra options for the type.
      * @return MultiObjectProperty Chainable
      */
-    public function addAllowedType($type, array $typeOptions=[])
+    public function addAllowedType($type, array $typeOptions = [])
     {
         $this->allowedType[$type] = $typeOptions;
         return $this;
@@ -55,6 +57,7 @@ class MultiObjectProperty extends AbstractProperty
 
     /**
      * @param string $table The join table.
+     * @throws InvalidArgumentException If the table is not a string or contains invalid table characters.
      * @return MultiObjectProperty Chainable
      */
     public function setJoinTable($table)
@@ -86,7 +89,7 @@ class MultiObjectProperty extends AbstractProperty
     /**
      * Create the join table on the database source, if it does not exist.
      *
-      * @return void
+     * @return void
      */
     public function createJoinTable()
     {
@@ -104,10 +107,11 @@ class MultiObjectProperty extends AbstractProperty
         )';
         $this->logger->debug($q);
         $this->source()->db()->query($q);
-
-        return;
     }
 
+    /**
+     * @return boolean
+     */
     public function joinTableExists()
     {
         $q = 'SHOW TABLES LIKE \''.$this->joinTable().'\'';
@@ -151,6 +155,9 @@ class MultiObjectProperty extends AbstractProperty
         return 0;
     }
 
+    /**
+     * @return mixed
+     */
     public function save()
     {
         return;
