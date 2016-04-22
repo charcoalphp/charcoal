@@ -60,7 +60,6 @@ trait LayoutTrait
             for ($i=0; $i<$loop; $i++) {
                 $computedLayouts[] = $l;
             }
-
         }
 
         $this->structure = $computedLayouts;
