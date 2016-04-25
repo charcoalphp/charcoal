@@ -21,7 +21,7 @@
 	"minimum-stability":"dev",
 	"require": {
 		"php": ">=5.5.0",
-		"phpmailer/phpmailer": "~5.4",
+		"phpmailer/phpmailer": "~5.2",
 		"locomotivemtl/charcoal-config": "~0.4",
 		"locomotivemtl/charcoal-app": "dev-master"
 	},
