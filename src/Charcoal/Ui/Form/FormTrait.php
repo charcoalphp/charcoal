@@ -28,7 +28,7 @@ trait FormTrait
     /**
      * @var string $l10nMode
      */
-    private $l10nMode;
+    private $l10nMode = 'loop_inputs';
 
     /**
      * @var FormGroupInterface[] $groups
