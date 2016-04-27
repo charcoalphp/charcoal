@@ -64,6 +64,27 @@ class AbstractFormGroupTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
     }
 
+    public function testSetPriority()
+    {
+        $this->assertEquals(0, $this->obj->priority());
+
+        $ret = $this->obj->setPriority(42);
+        $this->assertSame($ret, $this->obj);
+        $this->assertEquals(42, $this->obj->priority());
+
+        $this->assertEquals(12, $this->obj->setPriority(12.34)->priority());
+
+        $this->setExpectedException('\InvalidArgumentException');
+        $this->obj->setPriority('foobar');
+    }
+
+    public function testSetL10nMode()
+    {
+        $ret = $this->obj->setL10nMode('loop');
+        $this->assertSame($ret, $this->obj);
+        $this->assertEquals('loop', $this->obj->l10nMode());
+    }
+
     public function testHasInputs()
     {
         $obj = $this->obj;

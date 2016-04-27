@@ -79,6 +79,13 @@ class AbstractFormTest extends \PHPUnit_Framework_TestCase
         $obj->setMethod('foobar');
     }
 
+    public function testSetL10nMode()
+    {
+        $ret = $this->obj->setL10nMode('loop');
+        $this->assertSame($ret, $this->obj);
+        $this->assertEquals('loop', $this->obj->l10nMode());
+    }
+
     public function testSetGroup()
     {
         $obj = $this->obj;
@@ -86,6 +93,8 @@ class AbstractFormTest extends \PHPUnit_Framework_TestCase
             'test'=>[]
         ]);
         $this->assertSame($ret, $obj);
+
+        $this->assertEquals(1, count($obj->groups()));
     }
 
     public function testHasGroups()
@@ -111,5 +120,28 @@ class AbstractFormTest extends \PHPUnit_Framework_TestCase
         ]);
 
          $this->assertEquals(2, $obj->numGroups());
+    }
+
+    public function testSetFormData()
+    {
+        $this->assertEquals([], $this->obj->formData());
+        $ret = $this->obj->setFormData(['foo'=>'bar']);
+        $this->assertSame($ret, $this->obj);
+        $this->assertEquals(['foo'=>'bar'], $this->obj->formData());
+
+        $this->obj->setFormData(['baz'=>42]);
+        $this->assertEquals(['baz'=>42], $this->obj->formData());
+    }
+
+    public function testAddData()
+    {
+        $ret = $this->obj->addFormData('foo', 'bar');
+        $this->assertSame($ret, $this->obj);
+        $this->assertEquals(['foo'=>'bar'], $this->obj->formData());
+        $this->obj->addFormData('baz', 42);
+        $this->assertEquals(['foo'=>'bar', 'baz'=>42], $this->obj->formData());
+
+        $this->setExpectedException('\InvalidArgumentException');
+        $this->obj->addFormData(false, 'bar');
     }
 }
