@@ -137,7 +137,7 @@ trait DashboardTrait
      * @param mixed $b Widget b.
      * @return integer Sorting value: -1, 0, or 1
      */
-    protected static function sortWidgetsByPriority(FormGroupInterface $a, FormGroupInterface $b)
+    protected static function sortWidgetsByPriority($a, $b)
     {
         $a = $a->priority();
         $b = $b->priority();
