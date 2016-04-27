@@ -25,15 +25,6 @@ class EmailServiceProvider implements ServiceProviderInterface
     public function register(Container $container)
     {
         /**
-         * @return PHPMailer
-         */
-        $container['phpmailer'] = $container->factory(function (Container $container) {
-            $throwException = true;
-            $mailer = new PHPMailer($throwException);
-            return $mailer;
-        });
-
-        /**
          * @return EmailConfig
          */
         $container['email/config'] = function (Container $container) {
@@ -66,7 +57,6 @@ class EmailServiceProvider implements ServiceProviderInterface
             $factory->setDefaultClass('\Charcoal\Email\Email');
             $factory->setArguments([
                 'logger'    => $container['logger'],
-                'phpmailer' => $container['phpmailer'],
                 'config'    => $container['email/config'],
                 'view'      => $container['email/view']
             ]);

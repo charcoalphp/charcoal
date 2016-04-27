@@ -149,11 +149,7 @@ class Email implements
      */
     public function __construct(array $data)
     {
-        if (!isset($data['phpmailer'])) {
-            $data['phpmailer'] = new PHPMailer(true);
-        }
-
-        $this->phpMailer = $data['phpmailer'];
+        $this->phpMailer = new PHPMailer(true);
         $this->setLogger($data['logger']);
 
         if (isset($data['view'])) {
