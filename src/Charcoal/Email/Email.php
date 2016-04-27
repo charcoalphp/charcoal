@@ -772,39 +772,40 @@ class Email implements
 
             $mail->CharSet = 'UTF-8';
 
-            // Setting FROM
-            $from = $this->from();
-
-            // From DOC, $name = ''
-            // Set from defines the default vars
-            $fromArr = $this->emailToArray($from);
-            $mail->setFrom($fromArr['email'], $fromArr['name']);
-
-            $to = $this->to();
-
-            foreach ($to as $recipient) {
-                $toArr = $this->emailToArray($recipient);
-                $mail->addAddress($toArr['email'], $toArr['name']);
-            }
-
+            // Setting reply-to field, if required.
             $replyTo = $this->replyTo();
             if ($replyTo) {
                 $replyArr = $this->emailToArray($replyTo);
                 $mail->addReplyTo($replyArr['email'], $replyArr['name']);
             }
 
+            // Setting from (sender) field.
+            $from = $this->from();
+            $fromArr = $this->emailToArray($from);
+            $mail->setFrom($fromArr['email'], $fromArr['name']);
+
+            // Setting to (recipients) field(s).
+            $to = $this->to();
+            foreach ($to as $recipient) {
+                $toArr = $this->emailToArray($recipient);
+                $mail->addAddress($toArr['email'], $toArr['name']);
+            }
+
+            // Setting cc (carbon-copy) field(s).
             $cc = $this->cc();
             foreach ($cc as $ccRecipient) {
                 $ccArr = $this->emailToArray($ccRecipient);
                 $mail->addCC($ccArr['email'], $ccArr['name']);
             }
 
+            // Setting bcc (black-carbon-copy) field(s).
             $bcc = $this->bcc();
             foreach ($bcc as $bccRecipient) {
                 $bccArr = $this->emailToArray($bccRecipient);
                 $mail->addBCC($bccArr['email'], $cc['name']);
             }
 
+            // Setting attachment(s), if required.
             $attachments = $this->attachments();
             foreach ($attachments as $att) {
                 $mail->addAttachment($att);
