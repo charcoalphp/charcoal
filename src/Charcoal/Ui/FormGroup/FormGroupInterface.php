@@ -33,6 +33,17 @@ interface FormGroupInterface
     public function priority();
 
     /**
+     * @param string $mode The l10n mode.
+     * @return FormGroupInterface Chainable
+     */
+    public function setL10nMode($mode);
+
+    /**
+     * @return string
+     */
+    public function l10nMode();
+
+    /**
      * @param array $inputs The group inputs structure.
      * @return FormGroupInterface Chainable
      */

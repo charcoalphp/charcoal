@@ -261,7 +261,7 @@ trait UiItemtrait
      */
     public function showDescription()
     {
-        if ($this->showTitle === false) {
+        if ($this->showDescription === false) {
             return false;
         } else {
             return !!$this->description();

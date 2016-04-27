@@ -31,6 +31,9 @@ trait FormGroupTrait
     protected $formInputBuilder;
 
     /**
+     * The input callback; called on every input.
+     * Callable signature: `function(FormInputInterface $input)`
+     *
      * @var callable $itemCallback
      */
     private $inputCallback = null;
@@ -39,6 +42,11 @@ trait FormGroupTrait
      * @var integer $priority
      */
     private $priority;
+
+    /**
+     * @var string $l10nMode
+     */
+    private $l10nMode;
 
     /**
      * @param FormInputBuilder $builder The builder, to create customized form input objects.
@@ -105,6 +113,24 @@ trait FormGroupTrait
     }
 
     /**
+     * @param string $mode The l10n mode.
+     * @return FormGroupInterface Chainable
+     */
+    public function setL10nMode($mode)
+    {
+        $this->l10nMode = $mode;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function l10nMode()
+    {
+        return $this->l10nMode;
+    }
+
+    /**
      * @param array $inputs The group inputs.
      * @return FormGroupInterface Chainable
      */
@@ -158,10 +184,13 @@ trait FormGroupTrait
         $groups = $this->groups;
         uasort($groups, ['self', 'sortInputsByPriority']);
 
-        $groupCallback = isset($inputCallback) ? $inputCallback : $this->inputCallback;
+        $inputCallback = isset($inputCallback) ? $inputCallback : $this->inputCallback;
         foreach ($inputs as $input) {
-            if ($groupCallback) {
-                $groupCallback($input);
+            if (!$input->l10nMode()) {
+                $input->setL10nMode($this->l10nMode());
+            }
+            if ($inputCallback) {
+                $inputCallback($input);
             }
             $GLOBALS['widget_template'] = $input->template();
             yield $input->ident() => $input;
@@ -170,6 +199,8 @@ trait FormGroupTrait
     }
 
     /**
+     * Wether this group contains any inputs.
+     *
      * @return boolean
      */
     public function hasInputs()
@@ -178,6 +209,8 @@ trait FormGroupTrait
     }
 
     /**
+     * Get the number of inputs in this group.
+     *
      * @return integer
      */
     public function numInputs()

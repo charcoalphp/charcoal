@@ -26,6 +26,11 @@ trait FormTrait
     private $method = 'post';
 
     /**
+     * @var string $l10nMode
+     */
+    private $l10nMode;
+
+    /**
      * @var FormGroupInterface[] $groups
      */
     protected $groups = [];
@@ -136,6 +141,24 @@ trait FormTrait
     }
 
     /**
+     * @param string $mode The l10n mode.
+     * @return FormGroupInterface Chainable
+     */
+    public function setL10nMode($mode)
+    {
+        $this->l10nMode = $mode;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function l10nMode()
+    {
+        return $this->l10nMode;
+    }
+
+    /**
      * @param array $groups The groups structure.
      * @return FormInterface Chainable
      */
@@ -202,6 +225,9 @@ trait FormTrait
 
         $groupCallback = isset($groupCallback) ? $groupCallback : $this->groupCallback;
         foreach ($groups as $group) {
+            if (!$group->l10nMode()) {
+                $group->setL10nMode($this->l10nMode());
+            }
             if ($groupCallback) {
                 $groupCallback($group);
             }
@@ -269,7 +295,7 @@ trait FormTrait
      *
      * @param FormGroupInterface $a First group object to sort.
      * @param FormGroupInterface $b Second group object to sort.
-     * @return integer Sorting value: -1, 0, or 1
+     * @return integer Sorting value: -1 or 1
      */
     protected static function sortGroupsByPriority(FormGroupInterface $a, FormGroupInterface $b)
     {

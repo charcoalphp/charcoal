@@ -30,6 +30,17 @@ interface FormInterface
     public function method();
 
     /**
+     * @param string $mode The l10n mode.
+     * @return FormGroupInterface Chainable
+     */
+    public function setL10nMode($mode);
+
+    /**
+     * @return string
+     */
+    public function l10nMode();
+
+    /**
      * @param array $data The (pre-populated) form data.
      * @return FormInterface Chainable
      */
