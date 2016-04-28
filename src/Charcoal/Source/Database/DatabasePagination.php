@@ -18,10 +18,10 @@ class DatabasePagination extends Pagination
     public function sql()
     {
         $sql = '';
-        $page = $this->page();
+        $page = $this->page() ? $this->page() : 1;
         $numPerPage = $this->numPerPage();
 
-        if ($page && $numPerPage) {
+        if ($numPerPage) {
             $first_page = max(0, (($page-1)*$numPerPage));
             $sql = ' LIMIT '.$first_page.', '.$numPerPage;
         }
