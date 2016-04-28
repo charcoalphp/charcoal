@@ -39,5 +39,3 @@ $GLOBALS['container'] = new AppContainer([
 // Charcoal / Slim is the main app
 $GLOBALS['app'] = App::instance($GLOBALS['container']);
 $GLOBALS['app']->setLogger(new \Psr\Log\NullLogger());
-
-var_dump('ssss');
