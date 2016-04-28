@@ -741,6 +741,27 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     }
 
     /**
+     * Get a special SQL query for loading the count.
+     *
+     * @throws Exception If the source does not have a table defined.
+     * @return string
+     */
+    public function sqlLoadCount()
+    {
+        $table = $this->table();
+        if (!$table) {
+            throw new Exception(
+                'Can not get count SQL. No table defined.s'
+            );
+        }
+
+        $tables = '`'.$table.'` AS objTable';
+        $filters = $this->sqlFilters();
+        $q = 'SELECT COUNT(*) FROM '.$tables.$filters;
+        return $q;
+    }
+
+    /**
     * @return string
     */
     public function sqlSelect()

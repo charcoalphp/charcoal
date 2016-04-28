@@ -95,7 +95,7 @@ class CollectionLoader implements LoggerAwareInterface
      */
     public function setData($data)
     {
-        if (isset($data['filters'])) {
+        if (isset($data['filters']) && $data['filters']) {
             $this->setFilters($data['filters']);
         }
         foreach ($data as $key => $val) {
@@ -436,6 +436,32 @@ class CollectionLoader implements LoggerAwareInterface
         $query = $this->source()->sqlLoad();
 
         return $this->loadFromQuery($query, $cb);
+    }
+
+    /**
+     * Get the total number of items for this collection query.
+     *
+     * @throws Exception If the database connection fails.
+     * @return integer
+     */
+    public function loadCount()
+    {
+        $query = $this->source()->sqlLoadCount();
+
+        $db = $this->source()->db();
+        if (!$db) {
+            throw new Exception(
+                'Could not instanciate a database connection.'
+            );
+        }
+        $this->logger->debug($query);
+
+        $sth = $db->prepare($query);
+        /** @todo Filter binds */
+        $sth->execute();
+        //$sth->setFetchMode(PDO::FETCH_ASSOC);
+        $res = $sth->fetchColumn(0);
+        return (int)$res;
     }
 
     /**
