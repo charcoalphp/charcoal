@@ -60,6 +60,13 @@ class CollectionLoader implements LoggerAwareInterface
     private $callback;
 
     /**
+     * If
+     *
+     * @var string $dynamicTypeField
+     */
+    private $dynamicTypeField;
+
+    /**
      * Return a new CollectionLoader object.
      *
      * @param array|\ArrayAccess $data The loader's dependencies.
@@ -159,13 +166,29 @@ class CollectionLoader implements LoggerAwareInterface
      * Set the model to use for the loaded objects.
      *
      * @param  ModelInterface $model An object model.
-     * @return Source Chainable
+     * @return CollectionLoader CHainable
      */
     public function setModel(ModelInterface $model)
     {
         $this->model = $model;
         $this->setSource($model->source());
 
+        return $this;
+    }
+
+    /**
+     * @param string $field The field to use for dynamic object type.
+     * @throws InvalidArgumentException If the field is not a string.
+     * @return CollectionLoader Chainable
+     */
+    public function setDynamicTypeField($field)
+    {
+        if (!is_string($field)) {
+            throw new InvalidArgumentException(
+                'Dynamic type field must be a string'
+            );
+        }
+        $this->dynamicTypeField = $field;
         return $this;
     }
 
@@ -183,7 +206,7 @@ class CollectionLoader implements LoggerAwareInterface
      * Alias of {@see SourceInterface::setProperties()}
      *
      * @param  array $properties An array of property identifiers.
-     * @return ColelectionLoader Chainable
+     * @return CollectionLoader Chainable
      */
     public function setProperties(array $properties)
     {
@@ -457,9 +480,7 @@ class CollectionLoader implements LoggerAwareInterface
         $this->logger->debug($query);
 
         $sth = $db->prepare($query);
-        /** @todo Filter binds */
         $sth->execute();
-        //$sth->setFetchMode(PDO::FETCH_ASSOC);
         $res = $sth->fetchColumn(0);
         return (int)$res;
     }
@@ -495,9 +516,15 @@ class CollectionLoader implements LoggerAwareInterface
         $sth->execute();
         $sth->setFetchMode(PDO::FETCH_ASSOC);
 
-        $objType = $this->model()->objType();
+        $modelObjType = $this->model()->objType();
 
         while ($objData = $sth->fetch()) {
+            if ($this->dynamicTypeField && isset($objData[$this->dynamicTypeField])) {
+                $objType = $objData[$this->dynamicTypeField];
+            } else {
+                $objType = $modelObjType;
+            }
+
             $obj = $this->factory->create($objType);
             $obj->setFlatData($objData);
 
