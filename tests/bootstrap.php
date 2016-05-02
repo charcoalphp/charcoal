@@ -7,9 +7,10 @@ use \Charcoal\App\AppContainer;
 use \Psr\Log\NullLogger;
 
 /** Composer autoloader for Charcoal's PSR4-compliant Unit Tests */
-$autoloader = require __DIR__.'/../vendor/autoload.php';
+$autoloader = require dirname(__DIR__) . '/vendor/autoload.php';
 $autoloader->add('Charcoal\\', __DIR__.'/src/');
 $autoloader->add('Charcoal\\Tests\\', __DIR__);
+$autoloader->add('Charcoal\\Tests\\', __DIR__.'/Charcoal/');
 
 // Disable Logger
 $GLOBALS['container']['logger'] = function ($c) {

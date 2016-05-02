@@ -9,6 +9,9 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
 {
     private $obj;
 
+    private $model;
+    private $source;
+
     public function setUp()
     {
         $factory = new \Charcoal\Model\ModelFactory();
@@ -16,6 +19,34 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
             'logger' => new \Psr\Log\NullLogger(),
             'factory' => $factory
         ]);
+
+        $this->model = new \Charcoal\Model\Model([
+            'logger' => new \Psr\Log\NullLogger()
+        ]);
+        $this->model->setMetadata(json_decode('
+        {
+            "properties":{
+                "id": {
+                    "type":"id"
+                },
+                "test": {
+                    "type": "number"
+                },
+                "allo": {
+                    "type": "number"
+                }
+            },
+            "sources":{
+                "default":{
+                    "table":"tests"
+                }
+            },
+            "default_source":"default"
+        }', true));
+
+        $this->model->source()->createTable();
+
+
     }
 
     public function setData()
@@ -41,25 +72,20 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testAll()
     {
-        /*
-        $source = new \Charcoal\Model\Source();
-        $source->set_table('tests');
 
-        $loader = new CollectionLoader();
-        $loader->set_source($source)
-            // ->set_obj_type()
-            ->set_properties(['id', 'test'])
-            ->add_filter('test', 10, ['operator' => '<'])
-            ->add_filter('allo', 1, ['operator' => '>='])
-            ->add_order('test', 'asc')
-            // ->add_order(null, 'rand')
-            ->set_page(1)
-            ->set_num_per_page(10);
+        $loader = $this->obj;
+        $loader->setModel($this->model)
+            ->setProperties(['id', 'test'])
+            ->addFilter('test', 10, ['operator' => '<'])
+            ->addFilter('allo', 1, ['operator' => '>='])
+            ->addOrder('test', 'asc')
+            ->setPage(1)
+            ->setNumPerPage(10);
 
         $collection = $loader->load();
 
-        $this->assertEquals(1,1);
-        */
+        $this->assertEquals(1, 1);
+
         $this->assertTrue(true);
     }
 }
