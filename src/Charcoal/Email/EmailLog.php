@@ -9,16 +9,14 @@ use \Exception;
 use \InvalidArgumentException;
 
 // From `charcoal-core`
-use \Charcoal\Core\IndexableInterface;
-use \Charcoal\Core\IndexableTrait;
 use \Charcoal\Model\AbstractModel;
 
 /**
  * Email log
  */
-class EmailLog extends AbstractModel implements IndexableInterface
+class EmailLog extends AbstractModel
 {
-    use IndexableTrait;
+
     use EmailAwareTrait;
 
     /**

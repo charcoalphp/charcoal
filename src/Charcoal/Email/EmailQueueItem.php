@@ -7,8 +7,6 @@ use \InvalidArgumentException;
 
 // Module `charcoal-core` dependencies
 use \Charcoal\Model\AbstractModel;
-use \Charcoal\Core\IndexableInterface;
-use \Charcoal\Core\IndexableTrait;
 
 // Module `charcoal-queue` dependencies
 use \Charcoal\Queue\QueueItemInterface;
@@ -21,12 +19,9 @@ use \Charcoal\Email\Email;
 /**
  * Email queue item.
  */
-class EmailQueueItem extends AbstractModel implements
-    QueueItemInterface,
-    IndexableInterface
+class EmailQueueItem extends AbstractModel implements QueueItemInterface
 {
     use QueueItemTrait;
-    use IndexableTrait;
     use EmailAwareTrait;
 
     /**
