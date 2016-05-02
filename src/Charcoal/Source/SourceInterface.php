@@ -22,7 +22,6 @@ interface SourceInterface
     */
     public function model();
 
-
     /**
     * @param mixed             $ident The ID of the item to load.
     * @param StorableInterface $item  Optional item to load into.

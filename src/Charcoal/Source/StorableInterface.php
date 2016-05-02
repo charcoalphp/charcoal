@@ -12,6 +12,36 @@ use \Charcoal\Source\SourceInterface;
 interface StorableInterface
 {
     /**
+    * Set the object's ID. The actual property set depends on `key()`
+    *
+    * @param mixed $id The object's ID.
+    * @return StorableInterface Chainable
+    */
+    public function setId($id);
+
+    /**
+    * Get the object's (unique) ID. The actualy property get depends on `key()`
+    *
+    * @return mixed
+    */
+    public function id();
+
+    /**
+    * Set the key property.
+    *
+    * @param string $key The object's key.
+    * @return StorableInterface Chainable
+    */
+    public function setKey($key);
+
+    /**
+    * Get the key property.
+    *
+    * @return string
+    */
+    public function key();
+
+    /**
      * @param SourceFactory $factory The source factory, which is useful to create source.
      * @return StorableInterface Chainable
      */
@@ -35,9 +65,6 @@ interface StorableInterface
     /**
     * Load an object from the database from its ID.
     *
-    * Note that the object should also implement `Charcoal\Model\IndexableInterface`
-    * (provide an `id()` and `key()` methods) for this function to work properly.
-    *
     * @param mixed $id The ID of the object to load.
     * @return boolean Success / Failure
     */
@@ -45,9 +72,6 @@ interface StorableInterface
 
     /**
     * Load an object from the database from its key $key.
-    *
-    * Note that the object should also implement `Charcoal\Model\IndexableInterface`
-    * (provide an `id()` and `key()` methods) for this function to work properly.
     *
     * @param string $key   Key pointing a column's name.
     * @param mixed  $value Value of said column.

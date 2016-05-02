@@ -2,6 +2,8 @@
 
 namespace Charcoal\Source;
 
+use \InvalidArgumentException;
+
 // Local namespace dependencies
 use \Charcoal\Source\SourceFactory;
 use \Charcoal\Source\SourceInterface;
@@ -12,6 +14,16 @@ use \Charcoal\Source\SourceInterface;
 trait StorableTrait
 {
     /**
+    * @var mixed $id The object (unique) identifier
+    */
+    protected $id;
+
+    /**
+    * @var string $key The object key
+    */
+    protected $key = 'id';
+
+    /**
     * @var SourceFactory $sourceFactory
     */
     protected $sourceFactory;
@@ -20,6 +32,89 @@ trait StorableTrait
     * @var SourceInterface $source
     */
     private $source;
+
+        /**
+    * Set the object's ID. The actual property set depends on `key()`
+    *
+    * @param mixed $id The object id (identifier / primary key value).
+    * @throws InvalidArgumentException If the argument is not scalar.
+    * @return StorableInterface Chainable
+    */
+    public function setId($id)
+    {
+        if (!is_scalar($id)) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'ID must be a scalar (integer, float, string, or boolean); received %s',
+                    (is_object($id) ? get_class($id) : gettype($id))
+                )
+            );
+        }
+
+        $key = $this->key();
+        if ($key == 'id') {
+            $this->id = $id;
+        } else {
+            $this[$key] = $id;
+        }
+
+        return $this;
+    }
+
+    /**
+    * Get the object's (unique) ID. The actualy property get depends on `key()`
+    *
+    * @throws Exception If the set key is invalid.
+    * @return mixed
+    */
+    public function id()
+    {
+        $key = $this->key();
+        if ($key == 'id') {
+            return $this->id;
+        } else {
+            return $this[$key];
+        }
+    }
+
+    /**
+    * Set the key property.
+    *
+    * @param string $key The object key, or identifier "name".
+    * @throws InvalidArgumentException If the argument is not scalar.
+    * @return StorableInterface Chainable
+    */
+    public function setKey($key)
+    {
+        if (!is_string($key)) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'Key must be a string; received %s',
+                    (is_object($key) ? get_class($key) : gettype($key))
+                )
+            );
+        }
+        // For security reason, only alphanumeric characters (+ underscores) are valid key names.
+        // Although SQL can support more, there's really no reason to.
+        if (!preg_match_all('/^[A-Za-z0-9_]+$/', $key)) {
+            throw new InvalidArgumentException(
+                sprintf('Key "%s" is invalid: must be alphanumeric / underscore.', $key)
+            );
+        }
+        $this->key = $key;
+
+        return $this;
+    }
+
+    /**
+    * Get the key property.
+    *
+    * @return string
+    */
+    public function key()
+    {
+        return $this->key;
+    }
 
     /**
      * @param SourceFactory $factory The source factory, which is useful to create source.
@@ -78,9 +173,6 @@ trait StorableTrait
     /**
     * Load an object from the database from its ID.
     *
-    * Note that the object should also implement `Charcoal\Model\IndexableInterface`
-    * (provide an `id()` and `key()` methods) for this function to work properly.
-    *
     * @param mixed $id The identifier to load.
     * @return StorableInterface Chainable
     */
@@ -95,9 +187,6 @@ trait StorableTrait
 
     /**
     * Load an object from the database from its key $key.
-    *
-    * Note that the object should also implement `Charcoal\Model\IndexableInterface`
-    * (provide an `id()` and `key()` methods) for this function to work properly.
     *
     * @param string $key   Key pointing a column's name.
     * @param mixed  $value Value of said column.
