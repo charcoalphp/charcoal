@@ -130,12 +130,11 @@ abstract class AbstractModel extends AbstractEntity implements
      */
     public function mergeData($data)
     {
-        $keys = $this->keys();
         foreach ($data as $propIdent => $val) {
             if (!$this->hasProperty($propIdent)) {
-                // $this->logger->warning(
-                //     sprintf('Can not set property "%s" on object; not defined in metadata.', $propIdent)
-                // );
+                $this->logger->warning(
+                    sprintf('Can not set property "%s" on object; not defined in metadata.', $propIdent)
+                );
                 continue;
             }
             $property = $this->p($propIdent);
@@ -175,7 +174,6 @@ abstract class AbstractModel extends AbstractEntity implements
                     unset($flatData[$f_id]);
                 }
             } else {
-                $p = [];
                 foreach ($fields as $f) {
                     $f_id = $f->ident();
                     $key = str_replace($propertyIdent.'_', '', $f_id);
