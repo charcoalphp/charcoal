@@ -102,7 +102,6 @@ abstract class AbstractModel extends AbstractEntity implements
         $this->metadata();
     }
 
-
     /**
     * Return the object data as an array
     *
@@ -118,6 +117,40 @@ abstract class AbstractModel extends AbstractEntity implements
             $data[$propertyIdent] = json_decode(json_encode($property), true);
         }
         return $data;
+    }
+
+    /**
+     * Override's `\Charcoal\Config\AbstractEntity`'s `setData` method to take properties into consideration.
+     *
+     * Also add a special case, to merge values for l10n properties.
+    *
+     * @param array|\Traversable $data The data to merge.
+     * @return EntityInterface Chainable
+     * @see \Charcoal\Config\AbstractEntity::offsetSet()
+     */
+    public function mergeData($data)
+    {
+        $keys = $this->keys();
+        foreach ($data as $propIdent => $val) {
+            if (!$this->hasProperty($propIdent)) {
+                // $this->logger->warning(
+                //     sprintf('Can not set property "%s" on object; not defined in metadata.', $propIdent)
+                // );
+                continue;
+            }
+            $property = $this->p($propIdent);
+            if ($property->l10n()) {
+                $currentValue = json_decode(json_encode($this[$propIdent]), true);
+                if (is_array($currentValue)) {
+                    $this[$propIdent] = array_merge($currentValue, $val);
+                } else {
+                    $this[$propIdent] = $val;
+                }
+            } else {
+                $this[$propIdent] = $val;
+            }
+        }
+        return $this;
     }
 
     /**
