@@ -10,6 +10,7 @@ use \Pimple\ServiceProviderInterface;
 use \Charcoal\Property\PropertyFactory;
 
 // Intra-module (`charcoal-core`) dependencies
+use \Charcoal\Loader\CollectionLoader;
 use \Charcoal\Model\MetadataLoader;
 use \Charcoal\Model\ModelBuilder;
 use \Charcoal\Model\ModelFactory;
@@ -25,6 +26,25 @@ class ModelServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $container)
     {
+        if (!isset($container['property/factory'])) {
+            $container['property/factory'] = function (Container $container) {
+                $propertyFactory = new PropertyFactory();
+                $propertyFactory->setArguments([
+                    'logger'            => $container['logger'],
+                    'metadata_loader'   => $container['metadata/loader']
+                ]);
+                return $propertyFactory;
+            };
+        }
+
+        if (!isset($container['metadata/loader'])) {
+            $container['metadata/loader'] = function (Container $container) {
+                return new MetadataLoader([
+                    'logger' => $container['logger']
+                ]);
+            };
+        }
+
         /**
         * @param Container $container A container instance.
         * @return ModelFactory
@@ -35,20 +55,24 @@ class ModelServiceProvider implements ServiceProviderInterface
             return $modelFactory;
         };
 
+        /**
+        * @param Container $container A container instance.
+        * @return ModelBuilder
+        */
         $container['model/builder'] = function (Container $container) {
-            $factory = $container['model/factory'];
-            $modelBuilder = new ModelBuilder($factory, $container);
-            return $modelBuilder;
+            return new ModelBuilder($container['model/factory'], $container);
         };
 
-        $container['model/loader'] = function (Container $container) {
-
-
-        };
-
-        $container['model/collection/loader'] = function (Container $container) {
-
-        };
+        /**
+        * @param Container $container A container instance.
+        * @return CollectionLoader
+        */
+        $container['model/collection/loader'] = $container->factory(function (Container $container) {
+            return new CollectionLoader([
+                'logger'  => $container['logger'],
+                'factory' => $container['model/factory']
+            ]);
+        });
 
         /**
          * @param Container $container
@@ -56,27 +80,28 @@ class ModelServiceProvider implements ServiceProviderInterface
          */
         $container['model/dependencies'] = function (Container $container) {
             return [
+                'container'         => $container,
                 'logger'            => $container['logger'],
                 'view'              => $container['view'],
-                'property_factory'  => $container['model/dependency/property/factory'],
-                'metadata_loader'   => $container['model/dependency/metadata/loader']
+                'property_factory'  => $container['property/factory'],
+                'metadata_loader'   => $container['metadata/loader']
             ];
         };
 
+        /**
+        * @param Container $container A container instance.
+        * @return MetadataLoader
+        */
         $container['model/dependency/metadata/loader'] = function (Container $container) {
-            $metadataLoader = new MetadataLoader([
-                'loader' => $container['logger']
-            ]);
-            return $metadataLoader;
+            return $container['metadata/loader'];
         };
 
+        /**
+        * @param Container $container A container instance.
+        * @return PropertyFactory
+        */
         $container['model/dependency/property/factory'] = function (Container $container) {
-            $propertyFactory = new PropertyFactory();
-            $propertyFactory->setArguments([
-                'logger'            => $container['logger'],
-                'metadata_loader'   => $container['model/dependency/metadata/loader']
-            ]);
-            return $propertyFactory;
+            return $container['property/factory'];
         };
     }
 }
