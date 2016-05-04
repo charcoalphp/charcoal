@@ -110,7 +110,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     {
         if ($this->objType === null) {
             throw new Exception(
-                'No obj type defined. Invalid property.'
+                sprintf('No obj type defined. Invalid property "%s"', $this->ident())
             );
         }
         return $this->objType;

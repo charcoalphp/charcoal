@@ -44,6 +44,9 @@ trait DescribablePropertyTrait
     protected function propertyFactory()
     {
         if ($this->propertyFactory === null) {
+            $this->logger->warning(
+                sprintf('Creating a property factory for describable %s', get_class($this))
+            );
             $this->propertyFactory = new PropertyFactory();
         }
 
