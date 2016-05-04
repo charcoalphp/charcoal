@@ -243,6 +243,60 @@ abstract class AbstractModel extends AbstractEntity implements
 
         return true;
     }
+
+    /**
+    * Load an object from the database from its l10n key $key.
+    * Also retrieve and return the actual language that matched.
+    *
+    * @param string $key   Key pointing a column's l10n base ident.
+    * @param mixed  $value Value to search in all languages.
+    * @param array  $langs List of languages (code, ex: "en") to check into.
+    * @throws Exception If the PDO query fails.
+    * @return string The matching language.
+    */
+    public function loadFromL10n($key, $value, array $langs)
+    {
+        $switch = [];
+        $where = [];
+        foreach ($langs as $lang) {
+            $switch[] = 'when `'.$key.'_'.$lang.'` = :ident then \''.$lang.'\'';
+            $where[] = '`'.$key.'_'.$lang.'` = :ident';
+        }
+
+        $q = '
+            SELECT
+                *,
+                (case
+                    '.implode("\n", $switch).'
+                end) as _lang
+            FROM
+               `'.$this->source()->table().'`
+            WHERE
+                ('.implode(' OR ', $where).')
+            LIMIT
+               1';
+
+        $binds = [
+            'ident' => $value
+        ];
+
+        $sth = $this->source()->dbQuery($q, $binds);
+        if ($sth === false) {
+            throw new Exception('Error');
+        }
+
+        $data = $sth->fetch(\PDO::FETCH_ASSOC);
+
+        $lang = $data['_lang'];
+        unset($data['_lang']);
+
+        if ($data) {
+            $this->setFlatData($data);
+        }
+
+        return $lang;
+    }
+
     /**
     * StorableTrait > save(). Save an object current state to storage
     *
