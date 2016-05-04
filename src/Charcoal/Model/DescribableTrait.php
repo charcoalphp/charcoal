@@ -56,6 +56,9 @@ trait DescribableTrait
     protected function metadataLoader()
     {
         if ($this->metadataLoader === null) {
+            $this->logger->warning(
+                sprintf('Metadata loader was not set for %s', get_class($this))
+            );
             $this->metadataLoader = new MetadataLoader([
                 'logger' => $this->logger
             ]);

@@ -100,6 +100,7 @@ abstract class AbstractModel extends AbstractEntity implements
 
         /** @todo Needs fix. Must be manually triggered after setting data for metadata to work */
         $this->metadata();
+
     }
 
     /**
@@ -489,7 +490,8 @@ abstract class AbstractModel extends AbstractEntity implements
     */
     public function createView(array $data = null)
     {
-        $view = new GenericView([
+        $this->logger->warning('Obsolete method createView called.');
+        $view = new GenericVwiew([
             'logger'=>$this->logger
         ]);
         if ($data !== null) {

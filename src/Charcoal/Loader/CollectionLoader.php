@@ -78,6 +78,7 @@ class CollectionLoader implements LoggerAwareInterface
         }
 
         if (!isset($data['factory'])) {
+            $data['logger']->warning('Creating a model factory for collection loader...');
             $data['factory'] = new ModelFactory();
         }
         $this->setLogger($data['logger']);
