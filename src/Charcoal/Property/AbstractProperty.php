@@ -150,6 +150,14 @@ abstract class AbstractProperty extends AbstractEntity implements
             $data['logger'] = new \Psr\Log\NullLogger();
         }
         $this->setLogger($data['logger']);
+
+        // Optional DescribableInterface dependencies
+        if (isset($data['property_factory'])) {
+            $this->setPropertyFactory($data['property_factory']);
+        }
+        if (isset($data['metadata_loader'])) {
+            $this->setMetadataLoader($data['metadata_loader']);
+        }
     }
 
     /**
