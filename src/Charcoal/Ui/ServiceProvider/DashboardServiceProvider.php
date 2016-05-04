@@ -20,7 +20,6 @@ class DashboardServiceProvider implements ServiceProviderInterface
     public function register(Container $container)
     {
         $this->registerDashboardServices($container);
-        $this->registerWidgetServices($container);
     }
 
     /**
@@ -52,14 +51,5 @@ class DashboardServiceProvider implements ServiceProviderInterface
             $dashboardBuilder = new DashboardBuilder($dashboardFactory, $container);
             return $dashboardBuilder;
         };
-    }
-
-    /**
-     * @param Container $container A Pimple DI container.
-     * @return void
-     */
-    private function registerWidgetServices(Container $container)
-    {
-
     }
 }
