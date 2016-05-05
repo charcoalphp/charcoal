@@ -81,7 +81,7 @@ trait DescribableTrait
             $this->metadata = $metadata;
         } else {
             throw new InvalidArgumentException(
-                'Metadata argument is invalid (must be array or Medatadata object).'
+                'Metadata argument is invalid (must be array or Metadata object).'
             );
         }
 
