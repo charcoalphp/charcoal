@@ -36,11 +36,11 @@ class MustacheLoader extends AbstractLoader implements
         // Handle dynamic template hack. @todo rename to $mustache_template
         if ($ident === '$widget_template') {
             $ident = (isset($GLOBALS['widget_template']) ? $GLOBALS['widget_template'] : null);
-        }
-
-        if ($ident === null) {
-            // Error
-            return '';
+            if (!is_string($ident)) {
+                throw new InvalidArgumentException(
+                    'Template ident (dynamic, from \$widget_templatee) must be a string'
+                );
+            }
         }
 
         $filename = $this->filenameFromIdent($ident);
