@@ -2,7 +2,6 @@
 
 namespace Charcoal\Tests\View\Mustache;
 
-
 use \Charcoal\View\Mustache\MustacheLoader;
 
 /**
@@ -89,5 +88,4 @@ class MustacheLoaderTest extends \PHPUnit_Framework_TestCase
             ['Foobar', 'foobar']
         ];
     }
-
 }

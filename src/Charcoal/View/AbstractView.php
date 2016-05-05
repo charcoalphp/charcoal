@@ -67,7 +67,7 @@ abstract class AbstractView implements
     /**
      * > ConfigurableTrait . createConfig()
      *
-     * @param array $data
+     * @param array $data Optional config data.
      * @return ViewConfig
      */
     public function createConfig(array $data = null)
@@ -82,7 +82,7 @@ abstract class AbstractView implements
     /**
      * Set the engine (`EngineInterface`) dependency.
      *
-     * @param EngineInterface $engine The
+     * @param EngineInterface $engine The rendering engine.
      * @return ViewInterface Chainable
      */
     public function setEngine(EngineInterface $engine)
@@ -108,8 +108,8 @@ abstract class AbstractView implements
     }
 
     /**
-     * @param string $templateIdent
-     * @throws InvalidArgumentException if the provided argument is not a string
+     * @param string $templateIdent The template ident.
+     * @throws InvalidArgumentException If the provided argument is not a string.
      * @return AbstractView Chainable
      */
     public function setTemplateIdent($templateIdent)
@@ -133,8 +133,8 @@ abstract class AbstractView implements
     }
 
     /**
-     * @param string $template
-     * @throws InvalidArgumentException if the provided argument is not a string
+     * @param string $template The template string.
+     * @throws InvalidArgumentException If the provided argument is not a string.
      * @return AbstractView Chainable
      */
     public function setTemplate($template)
@@ -162,8 +162,8 @@ abstract class AbstractView implements
     }
 
     /**
-     * @param string $templateIdent
-     * @throws InvalidArgumentException
+     * @param string $templateIdent The template identifier to load..
+     * @throws InvalidArgumentException If the template ident is not a string.
      * @return string
      */
     public function loadTemplate($templateIdent = null)
@@ -197,6 +197,7 @@ abstract class AbstractView implements
 
     /**
      * Get the rendering context ("view controller").
+     *
      * @return mixed
      */
     public function context()
@@ -205,9 +206,9 @@ abstract class AbstractView implements
     }
 
     /**
-     * @param string $templateIdent Optional. The template identifier to load. If none then use instance's.
-     * @param mixed  $context The rendering context.
-     * @return string The rendered template string.
+     * @param string $templateIdent The template identifier, to load and render.
+     * @param mixed  $context       The view controller (rendering context).
+     * @return string
      */
     public function render($templateIdent = null, $context = null)
     {
@@ -221,9 +222,9 @@ abstract class AbstractView implements
     }
 
     /**
-     * @param string $templateString Optional. The template string to render. If none then load instance's.
-     * @param mixed  $context The rendering context.
-     * @return string The rendered template string.
+     * @param string $templateString The full template string to render.
+     * @param mixed  $context        The view controller (rendering context).
+     * @return string
      */
     public function renderTemplate($templateString = null, $context = null)
     {

@@ -17,7 +17,7 @@ class PhpLoader extends AbstractLoader implements LoaderInterface
     /**
      * AbstractLoader > load()
      *
-     * @param string $ident
+     * @param string $ident The template ident to load and render.
      * @throws InvalidArgumentException If the template ident is not a string.
      * @return string
      */
@@ -32,12 +32,14 @@ class PhpLoader extends AbstractLoader implements LoaderInterface
         // Handle dynamic template hack. @todo rename to $mustache_template
         if ($ident === '$widget_template') {
             $ident = (isset($GLOBALS['widget_template']) ? $GLOBALS['widget_template'] : null);
+            if ($ident === null) {
+                throw new InvalidArgumentException(
+                    'Template ident must be a string'
+                );
+            }
         }
 
-        if ($ident === null) {
-            // Error
-            return '';
-        }
+
 
         $filename = $this->filenameFromIdent($ident);
         $searchPath = $this->paths();

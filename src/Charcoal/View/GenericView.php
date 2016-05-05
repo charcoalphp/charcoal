@@ -15,14 +15,15 @@ class GenericView extends AbstractView
      * - `logger` a PSR-3 logger
      * - `config` a ViewConfig object
      *
-     * @param array $data
+     * @param array $data View class dependencies.
      * @throws InvalidArgumentException If required parameters are missing.
      */
-    public function __construct($data)
+    public function __construct(array $data)
     {
         if (isset($data['logger'])) {
-            $this->setLogger($data['logger']);
+            $data['logger'] = new \Psr\Log\NullLogger();
         }
+        $this->setLogger($data['logger']);
 
         if (isset($data['config'])) {
             $this->setConfig($data['config']);

@@ -24,7 +24,7 @@ class Renderer
     protected $view;
 
     /**
-     * @param array $data The constructor dependencies
+     * @param array $data The constructor dependencies.
      */
     public function __construct(array $data)
     {
@@ -32,7 +32,7 @@ class Renderer
     }
 
     /**
-     * @param ViewInterface $view
+     * @param ViewInterface $view The view instance to use.
      * @return Renderer Chainable
      */
     public function setView(ViewInterface $view)
@@ -42,9 +42,9 @@ class Renderer
     }
 
     /**
-     * @param ResponseInterface $response
-     * @param string            $templateIdent
-     * @param mixed             $context
+     * @param ResponseInterface $response      The HTTP response.
+     * @param string            $templateIdent The template identifier to load and render.
+     * @param mixed             $context       The view controller / context.
      * @return ResponseInterface
      */
     public function render(ResponseInterface $response, $templateIdent, $context = null)

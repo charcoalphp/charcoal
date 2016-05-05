@@ -76,9 +76,9 @@ abstract class AbstractEngine implements
     }
 
     /**
-     * @param string $templateIdent The template identifier to render.
-     * @param mixed  $context The rendering context.
-     * @return string The rendeered template string.
+     * @param string $templateIdent The template identifier to load and render.
+     * @param mixed  $context       The rendering context.
+     * @return string The rendered template string.
      */
     public function render($templateIdent, $context)
     {
@@ -88,7 +88,7 @@ abstract class AbstractEngine implements
 
     /**
      * @param string $templateString The template string to render.
-     * @param mixed  $context The rendering context.
+     * @param mixed  $context        The rendering context.
      * @return string The rendered template string.
      */
     abstract public function renderTemplate($templateString, $context);

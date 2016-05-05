@@ -71,8 +71,8 @@ class GenericHelper implements IteratorAggregate
     }
 
     /**
-     * @param string               $js
-     * @param Mustache_LamdaHelper $helper
+     * @param string                $js     The javascript to add.
+     * @param Mustache_LambdaHelper $helper Lambda helper.
      * @return void
      */
     public function addJs($js, Mustache_LambdaHelper $helper = null)
@@ -96,7 +96,7 @@ class GenericHelper implements IteratorAggregate
     }
 
     /**
-     * @param string $jsRequirement
+     * @param string $jsRequirement The js requirements.
      * @return void
      */
     public function addJsRequirement($jsRequirement)
@@ -119,7 +119,8 @@ class GenericHelper implements IteratorAggregate
     }
 
     /**
-     * @param string $css
+     * @param string                $css    The CSS string to add.
+     * @param Mustache_LambdaHelper $helper Lambda helper.
      * @return void
      */
     public function addCss($css, Mustache_LambdaHelper $helper = null)
@@ -143,8 +144,8 @@ class GenericHelper implements IteratorAggregate
     }
 
     /**
-     * @param string $cssRequirement
-     * @return string
+     * @param string $cssRequirement The CSS requirements.
+     * @return void
      */
     public function addCssRequirement($cssRequirement)
     {

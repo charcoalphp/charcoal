@@ -25,9 +25,9 @@ class TwigEngine extends AbstractEngine
      * - `loader` a Loader object
      * - `logger` a PSR logger
      *
-     * @param array $data
+     * @param array $data The dependencies.
      */
-    public function __construct($data)
+    public function __construct(array $data)
     {
 
         $this->setLogger($data['logger']);
@@ -71,9 +71,9 @@ class TwigEngine extends AbstractEngine
     }
 
     /**
-     * @param string $templateIdent
-     * @param mixed  $context
-     * @return string
+     * @param string $templateIdent The template identifier to load and render.
+     * @param mixed  $context       The rendering context.
+     * @return string The rendered template string.
      */
     public function render($templateIdent, $context)
     {
@@ -81,9 +81,9 @@ class TwigEngine extends AbstractEngine
     }
 
     /**
-     * @param string $templateString
-     * @param mixed  $context
-     * @return string
+     * @param string $templateString The template string to render.
+     * @param mixed  $context        The rendering context.
+     * @return string The rendered template string.
      */
     public function renderTemplate($templateString, $context)
     {

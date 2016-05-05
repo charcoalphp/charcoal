@@ -8,7 +8,8 @@ namespace Charcoal\View;
 interface ViewInterface
 {
     /**
-     * @param EngineInterface $engine
+     * @param EngineInterface $engine The rendering engine.
+     * @return ViewInterface Chainable
      */
     public function setEngine(EngineInterface $engine);
 
@@ -18,11 +19,10 @@ interface ViewInterface
     public function engine();
 
     /**
-     * @param string $template_ident
-     * @throws InvalidArgumentException if the provided argument is not a string
+     * @param string $templateIdent The template ident.
      * @return AbstractView Chainable
      */
-    public function setTemplateIdent($template_ident);
+    public function setTemplateIdent($templateIdent);
 
     /**
      * @return string
@@ -30,8 +30,7 @@ interface ViewInterface
     public function templateIdent();
 
     /**
-     * @param string $template
-     * @throws InvalidArgumentException if the provided argument is not a string
+     * @param string $template The template string.
      * @return AbstractView Chainable
      */
     public function setTemplate($template);
@@ -42,16 +41,15 @@ interface ViewInterface
     public function template();
 
     /**
-     * @param string $templateIdent
-     * @throws InvalidArgumentException
-     * @return string
+     * @param string $templateIdent The template identifier to load.
+     * @return string The loaded template string.
      */
     public function loadTemplate($templateIdent = null);
 
     /**
      * Set the rendering context ("view controller").
      *
-     * @param mixed $context
+     * @param mixed $context The view controller (context).
      * @return AbstractView Chainable
      */
     public function setContext($context);
@@ -63,14 +61,14 @@ interface ViewInterface
 
     /**
      * @param string $templateIdent The template identifier, to load and render.
-     * @param mixed  $context Template context
+     * @param mixed  $context       The view controller (rendering context).
      * @return string
      */
     public function render($templateIdent = null, $context = null);
 
     /**
      * @param string $templateString The full template string to render.
-     * @param mixed  $context
+     * @param mixed  $context        The view controller (rendering context).
      * @return string
      */
     public function renderTemplate($templateString = null, $context = null);

@@ -32,9 +32,9 @@ class MustacheEngine extends AbstractEngine
      * ## Optional parameters:
      * - `loader` a Loader object
      *
-     * @param array $data
+     * @param array $data Engine dependencie.
      */
-    public function __construct($data)
+    public function __construct(array $data)
     {
         $this->setLogger($data['logger']);
 
@@ -81,7 +81,7 @@ class MustacheEngine extends AbstractEngine
     }
 
     /**
-     * @param mixed $helper
+     * @param mixed $helper The helper.
      * @return MustacheEngine Chainable
      */
     public function setHelper($helper)
@@ -111,9 +111,9 @@ class MustacheEngine extends AbstractEngine
     }
 
     /**
-     * @param string $templateIdent
-     * @param mixed  $context
-     * @return string
+     * @param string $templateIdent The template identifier to load and render.
+     * @param mixed  $context       The rendering context.
+     * @return string The rendered template string.
      */
     public function render($templateIdent, $context)
     {
@@ -121,9 +121,9 @@ class MustacheEngine extends AbstractEngine
     }
 
     /**
-     * @param string $templateString
-     * @param mixed  $context
-     * @return string
+     * @param string $templateString The template string to render.
+     * @param mixed  $context        The rendering context.
+     * @return string The rendered template string.
      */
     public function renderTemplate($templateString, $context)
     {

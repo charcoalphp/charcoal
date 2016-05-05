@@ -56,7 +56,7 @@ abstract class AbstractLoader implements
 
     /**
      * @param string $basePath The base path to set.
-     * @throws InvalidArgumentException if the base path parameter is not a string.
+     * @throws InvalidArgumentException If the base path parameter is not a string.
      * @return LoaderInterface Chainable
      */
     public function setBasePath($basePath)
@@ -149,7 +149,7 @@ abstract class AbstractLoader implements
     }
 
     /**
-     * @param string $ident
+     * @param string $ident The template identifier to load.
      * @return string
      */
     abstract public function load($ident);

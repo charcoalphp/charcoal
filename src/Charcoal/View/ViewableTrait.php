@@ -43,18 +43,18 @@ trait ViewableTrait
     }
 
     /**
-     * @param string $engine
-     * @throws InvalidArgumentException
+     * @param string $engineIdent The rendering engine (identifier).
+     * @throws InvalidArgumentException If the engine ident is not a string.
      * @return ViewableInterface Chainable
      */
-    public function setTemplateEngine($engine)
+    public function setTemplateEngine($engineIdent)
     {
-        if (!is_string($engine)) {
+        if (!is_string($engineIdent)) {
             throw new InvalidArgumentException(
                 'Template engine must be a string.'
             );
         }
-        $this->templateEngine = $engine;
+        $this->templateEngine = $engineIdent;
         return $this;
     }
 
@@ -74,8 +74,8 @@ trait ViewableTrait
     }
 
     /**
-     * @param string $ident
-     * @throws InvalidArgumentException
+     * @param string $ident The template ident for this viewable object.
+     * @throws InvalidArgumentException If the template ident is not a string.
      * @return ViewableInterface Chainable
      */
     public function setTemplateIdent($ident)
@@ -98,7 +98,7 @@ trait ViewableTrait
     }
 
     /**
-     * @param ViewInterface|array $view
+     * @param ViewInterface|array $view The view instance to use to render.
      * @throws InvalidArgumentException If the view parameter is not an array or a View object.
      * @return ViewableInterface Chainable
      */
@@ -109,7 +109,7 @@ trait ViewableTrait
     }
 
     /**
-     * @return ViewInterface The object's View.
+     * @return ViewInterface The object's View instance.
      */
     public function view()
     {

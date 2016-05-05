@@ -15,22 +15,22 @@ interface EngineInterface
     public function setLoader(LoaderInterface $loader);
 
     /**
-     * @param string $templateIdent
+     * @param string $templateIdent The template identifier to load.
      * @return string
      */
     public function loadTemplate($templateIdent);
 
     /**
-     * @param string $templateIdent
-     * @param mixed  $context
-     * @return string
+     * @param string $templateIdent The template identifier to load and render.
+     * @param mixed  $context       The rendering context.
+     * @return string The rendered template string.
      */
     public function render($templateIdent, $context);
 
     /**
-     * @param string $templateString
-     * @param mixed  $context
-     * @return string
+     * @param string $templateString The template string to render.
+     * @param mixed  $context        The rendering context.
+     * @return string The rendered template string.
      */
     public function renderTemplate($templateString, $context);
 }

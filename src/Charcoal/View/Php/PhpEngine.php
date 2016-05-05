@@ -13,9 +13,9 @@ use \Charcoal\View\AbstractEngine;
 class PhpEngine extends AbstractEngine
 {
     /**
-     * @param array $data Dependencies
+     * @param array $data Dependencies.
      */
-    public function __construct($data)
+    public function __construct(array $data)
     {
         $this->setLogger($data['logger']);
 
@@ -33,10 +33,10 @@ class PhpEngine extends AbstractEngine
     }
 
     /**
-     * @param string $templateIdent
-     * @param mixed  $context
-     * @throws InvalidArgumentException
-     * @return string
+     * @param string $templateIdent The template identifier to load and render.
+     * @param mixed  $context       The rendering context.
+     * @throws InvalidArgumentException If the template ident is not a string.
+     * @return string The rendered template string.
      */
     public function render($templateIdent, $context)
     {
@@ -60,9 +60,9 @@ class PhpEngine extends AbstractEngine
     }
 
     /**
-     * @param string $templateString
-     * @param mixed  $context
-     * @return string
+     * @param string $templateString The template string to render.
+     * @param mixed  $context        The rendering context.
+     * @return string The rendered template string.
      */
     public function renderTemplate($templateString, $context)
     {

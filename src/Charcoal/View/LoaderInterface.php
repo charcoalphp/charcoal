@@ -39,7 +39,7 @@ interface LoaderInterface
     public function prependPath($path);
 
     /**
-     * @param string $ident
+     * @param string $ident The template to load.
      * @return string
      */
     public function load($ident);
