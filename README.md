@@ -192,7 +192,7 @@ Those classes implement the Layout requirement by implementing the `\Charcoal\Ui
 
 # Form
 
-Forms define a layout of form groups, form options, data and medata.
+Forms define a layout of form groups, form options, data and metadata.
 
 - Forms have [_groups_](#form-group), which have [_inputs_](#form-input).
 - Groups can be layouted with a `layout` object.
