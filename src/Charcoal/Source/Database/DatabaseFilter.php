@@ -57,6 +57,7 @@ class DatabaseFilter extends Filter
                     break;
 
                 case 'IN':
+                case 'NOT IN':
                     if (is_array($val)) {
                         $val = '\''.implode('\',\'', $val).'\'';
                     }
