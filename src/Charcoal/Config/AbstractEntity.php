@@ -70,8 +70,6 @@ abstract class AbstractEntity implements EntityInterface
         return $this;
     }
 
-
-
     /**
      * @param string $separator A single-character to delimite nested options.
      * @throws InvalidArgumentException If $separator is invalid.
