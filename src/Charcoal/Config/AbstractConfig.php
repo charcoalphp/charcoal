@@ -72,7 +72,7 @@ abstract class AbstractConfig extends AbstractEntity implements
     }
 
     /**
-     * Config gives public access to its constructor.
+     * Config gives public access to its separator.
      *
      * @return string
      */
