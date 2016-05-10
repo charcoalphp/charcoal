@@ -175,6 +175,38 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
         return $key->sqlPdoType();
     }
 
+
+
+    /**
+     * At this point, does nothing but return
+     * the actual value. Other properties could
+     * parse values such as ObjectProperty who
+     * could parse objects into object IDs.
+     *
+     * @param mixed $val Value to be parsed.
+     * @return mixed
+     */
+    public function parseVal($val = null)
+    {
+        if ($val instanceof StorableInterface) {
+            return $val->id();
+        }
+
+        if ($this->multiple()) {
+            $out = [];
+            foreach ($val as $i => $v) {
+                if ($v instanceof StorableInterface) {
+                    $out[] = $v->id();
+                } else {
+                    $out[] = $v;
+                }
+            }
+            $val = $out;
+        }
+
+        return $val;
+    }
+
     /**
      * Get the property's value in a format suitable for storage.
      *
@@ -192,21 +224,12 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
             return null;
         }
 
-        if ($val instanceof StorableInterface) {
-            return $val->id();
-        }
+        // Get parsedVal
+        $val = $this->parseVal($val);
 
         if ($this->multiple()) {
             if (is_array($val)) {
-                $out = [];
-                foreach ($val as $i => $v) {
-                    if ($v instanceof StorableInterface) {
-                        $out[] = $v->id();
-                    } else {
-                        $out[] = $v;
-                    }
-                }
-                $val = implode($this->multipleSeparator(), $out);
+                $val = implode($this->multipleSeparator(), $val);
             }
         }
 

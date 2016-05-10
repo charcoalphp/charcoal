@@ -254,6 +254,20 @@ abstract class AbstractProperty extends AbstractEntity implements
     }
 
     /**
+     * At this point, does nothing but return
+     * the actual value. Other properties could
+     * parse values such as ObjectProperty who
+     * could parse objects into object IDs.
+     *
+     * @param mixed $val Value to be parsed.
+     * @return mixed
+     */
+    public function parseVal($val = null)
+    {
+        return $val;
+    }
+
+    /**
      * @param   mixed $val     Optional. The value to to convert for input.
      * @param   array $options Optional input options.
      * @return  string
