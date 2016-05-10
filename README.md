@@ -10,7 +10,7 @@ This package provides easy hierarchical configuration container (for config stor
 
 ## Main features
 
-- [Load data from ini, json or php files.](#supported-file-formats)
+- [Load data from ini, json, php or yaml files.](#supported-file-formats)
 - [Customizable separator access.](#separators)
 - [Delegates (Chaining configurations).](#delegates)
 - [Array access.](#array-access)
@@ -19,9 +19,21 @@ This package provides easy hierarchical configuration container (for config stor
 
 ## Supported file formats
 
-There are currently 3 supported file formats: `ini`, `json` and `php`.
+There are currently 4 supported file formats: `ini`, `json`, `php` and `yaml`.
 
-To load configuration from a file, simply use the `addFile()` method. The file's extension will be used to determine how to load the file.
+To load configuration from a file, simply use the `addFile($filename)` method. The file's extension will be used to determine how to load the file.
+
+```php
+$config = new \Charcoal\GenericConfig();
+$config->addFile('./config/my-config.ext');
+```
+
+>If you want to load a configuration file *without* adding its content automatically, use `loadFile($filename)`:
+>
+> ```php
+> $config = new \Charcoal\GenericConfig();
+> $file_content = $config->loadFile('my-config.ext');
+> ```
 
 It is also possible to load a config file directly from the constructor, by passing a file _string_ as the first argument.
 
@@ -31,7 +43,7 @@ $config = new \Charcoal\GenericConfig('../config/my-config.json');
 
 ### JSON configuration
 
-For the JSON file:
+For the JSON file (ex: `config/my-config.json`):
 
 ```json
 {
@@ -41,21 +53,14 @@ For the JSON file:
 }
 ```
 
-Loading this file into configuration would be:
+Loading this file into configuration is done by using `addFile($filename)`:
 
 ```php
 $config = new \Charcoal\GenericConfig();
 $config->addFile('./config/my-config.json');
 
 // Output "bar"
-echo $config['example/foo'];
-```
-
-If you want to load a configuration file *without* adding its content automatically, use:
-
-```php
-$config = new \Charcoal\GenericConfig();
-$file_content = $config->loadFile('my-config.json');
+echo $config['example.foo'];
 ```
 
 ### INI configuration
@@ -74,7 +79,7 @@ $config = new \Charcoal\GenericConfig();
 $config->addFile('./config/my-config.ini');
 
 // Outputs "bar"
-echo $config['exampe/foo'];
+echo $config['example.foo'];
 ```
 
 ### PHP configuration
@@ -97,8 +102,43 @@ $config = new \Charcoal\GenericConfig();
 $config->addFile('./config/my-config.php');
 
 // Outputs "bar"
-echo $config['example/foo'];
+echo $config['example.foo'];
 ```
+
+> Because `$this` references the actual `ConfigInterface` object, it is possible to include more config files from a PHP file:
+>
+> ```php
+> <?php
+> $this->addFile('./config/more-config.json');
+> ```
+>
+> The recommended way of use a _Config_ object is to include a single `config/config.php` file (that is outside of the document root) that takes care of loading required configuration (json or PHP) files.
+
+### Yaml configuration
+
+To be able to use the yaml loader, make sure `symfony/yaml` is included in your project composer dependencies:
+
+```shell
+$ composer require symfony/yaml
+```
+
+For the YAML file (ex: `config/my-config.yml`):
+
+```yaml
+example:
+	foo: bar
+```
+
+Loading this file into configuration would be:
+
+```php
+$config = new \Charcoal\GenericConfig();
+$config->addFile('./config/my-config.yml');
+
+// Outputs "bar"
+echo $config['exampe.foo'];
+```
+> YAML files can have 2 different extensions: `.yml` or `.yaml`. The standard is to use `.yml`.
 
 ## Separators
 
@@ -307,10 +347,20 @@ The Charcoal-Config module follows the Charcoal coding-style:
 
 ## Changelog
 
+### 0.6
+_Released on 2016-05-10_
+
+- Support for Yaml files.
+
+### 0.5.1
+_Released on 2016-05-09_
+
+- Minor internal changes.
+
 ### 0.5
 _Released on 2016-02-02_
 
-- Split the base config class into AbstractEntity
+- Split the base config class into AbstractEntity.
 - AbstractEntity is the default data container that implements ArrayAccess, Container Interface and serialization.
 
 ### 0.4
