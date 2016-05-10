@@ -8,6 +8,7 @@ use \InvalidArgumentException;
 use \Charcoal\Model\ModelInterface;
 use \Charcoal\Model\ModelFactory;
 use \Charcoal\Loader\CollectionLoader;
+use \Charcoal\Source\StorableInterface;
 use \Charcoal\Translation\TranslationConfig;
 
 use \Charcoal\Property\AbstractProperty;
@@ -172,6 +173,47 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
         $proto = $this->proto();
         $key = $proto->p($proto->key());
         return $key->sqlPdoType();
+    }
+
+    /**
+     * Get the property's value in a format suitable for storage.
+     *
+     * @param mixed $val Optional. The value to convert to storage value.
+     * @return mixed
+     */
+    public function storageVal($val = null)
+    {
+        if ($val === null) {
+            $this->logger->warning('Calling storageVal without argument.');
+            $val = $this->val();
+        }
+        if ($val === null) {
+            // Do not json_encode NULL values
+            return null;
+        }
+
+        if ($val instanceof StorableInterface) {
+            return $val->id();
+        }
+
+        if ($this->multiple()) {
+            if (is_array($val)) {
+                $out = [];
+                foreach ($val as $i => $v) {
+                    if ($v instanceof StorableInterface) {
+                        $out[] = $v->id();
+                    } else {
+                        $out[] = $v;
+                    }
+                }
+                $val = implode($this->multipleSeparator(), $out);
+            }
+        }
+
+        if (!is_scalar($val)) {
+            return json_encode($val, true);
+        }
+        return $val;
     }
 
     /**
