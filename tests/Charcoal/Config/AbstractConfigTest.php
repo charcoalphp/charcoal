@@ -157,6 +157,17 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['test'=>'phpunit'], $obj['config']);
     }
 
+    public function testAddFileYaml()
+    {
+        $obj = $this->obj;
+        $ret = $obj->addFile(__DIR__.'/config_files/test.yml');
+        $this->assertSame($ret, $obj);
+        $this->assertEquals(['test'=>'phpunit'], $obj['config']);
+
+        $this->setExpectedException('\Exception');
+        $obj->addFile(__DIR__.'/config_files/invalid.yml');
+    }
+
     public function testLoadFileInvalidArgument()
     {
         $this->setExpectedException('\InvalidArgumentException');

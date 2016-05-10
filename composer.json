@@ -24,10 +24,13 @@
     "container-interop/container-interop": "^1.1"
   },
   "require-dev": {
+    "symfony/yaml": "^3.0",
     "phpunit/phpunit": "^4.8",
     "squizlabs/php_codesniffer": "^2.4",
     "satooshi/php-coveralls":"~1.0.1"
-
+  },
+  "suggest":{
+    "symfony/yaml":"To load and parse configuration files in yaml format."
   },
   "autoload": {
     "psr-4": {

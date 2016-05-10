@@ -10,6 +10,9 @@ use \InvalidArgumentException;
 use \IteratorAggregate;
 use \Traversable;
 
+// Dependencies from `symfony/yaml`
+use Symfony\Component\Yaml\Parser as YamlParser;
+
 // Dependencies from `container-interop/container-interop`
 use Interop\Container\ContainerInterface;
 
@@ -129,6 +132,8 @@ abstract class AbstractConfig extends AbstractEntity implements
             return $this->loadJsonFile($filename);
         } elseif ($ext == 'ini') {
             return $this->loadIniFile($filename);
+        } elseif ($ext == 'yml' || $ext == 'yaml') {
+            return $this->loadYamlFile($filename);
         } else {
             throw new InvalidArgumentException(
                 'Only JSON, INI and PHP files are accepted as a Configuration file.'
@@ -245,13 +250,26 @@ abstract class AbstractConfig extends AbstractEntity implements
      * Add a PHP file to the configuration
      *
      * @param string $filename A PHP configuration file.
-     * @throws InvalidArgumentException If the file or invalid.
      * @return AbstractConfig Chainable
      */
     private function loadPhpFile($filename)
     {
         // `$this` is bound to the current configuration object (Current `$this`)
         $config = include $filename;
+        return $config;
+    }
+
+    /**
+     * Add a YAML file to the configuration
+     *
+     * @param string $filename A YAML configuration file.
+     * @return AbstractConfig Chainable
+     */
+    private function loadYamlFile($filename)
+    {
+        $parser = new YamlParser();
+        $fileContent = file_get_contents($filename);
+        $config = $parser->parse($fileContent);
         return $config;
     }
 }
