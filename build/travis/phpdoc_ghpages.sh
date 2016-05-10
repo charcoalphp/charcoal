@@ -10,12 +10,13 @@
 
 if [ "$TRAVIS_REPO_SLUG" == "locomotivemtl/charcoal-config" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_PHP_VERSION" == "5.6" ]; then
 
-  echo -e "Publishing PHPDoc to Github pages...\n"
+  echo -e "Publishing PHPDoc to Github Pages...\n"
 
   # Copie de la documentation generee dans le $HOME
   cp -R build/docs $HOME/docs-latest
 
   cd $HOME
+
   ## Initialisation et recuperation de la branche gh-pages du depot Git
   git config --global user.email "travis@travis-ci.org"
   git config --global user.name "travis-ci"
@@ -35,15 +36,12 @@ if [ "$TRAVIS_REPO_SLUG" == "locomotivemtl/charcoal-config" ] && [ "$TRAVIS_PULL
   cp -Rf $HOME/docs-latest/* ./$TRAVIS_BRANCH/
   rm -rf ./$TRAVIS_BRANCH/phpdoc-cache-*
 
-  ## On ajoute tout
   git add -f .
-  ## On commit
   git commit -m "PHPDocumentor (Travis Build : $TRAVIS_BUILD_NUMBER  - Branch : $TRAVIS_BRANCH)"
-  ## On push
   git push -fq origin gh-pages > /dev/null
-  ## Et c est en ligne !
 
   echo "Published PHPDoc to gh-pages.\n"
+  echo ">>> http://locomotivemtl.github.io/charcoal-config/docs/$TRAVIS_BRANCH/ \n"
 
 fi
 
