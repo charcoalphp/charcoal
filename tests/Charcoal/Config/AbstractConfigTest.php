@@ -145,7 +145,7 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(['test'=>'phpunit'], $obj['config']);
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException('\Exception');
         $obj->addFile(__DIR__.'/config_files/invalid.json');
     }
 
@@ -170,13 +170,13 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testLoadFileInvalidArgument()
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException('\Exception');
         $this->obj->loadFile(false);
     }
 
     public function testLoadFileNotExist()
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException('\Exception');
         $this->obj->loadFile('foo.php');
     }
 

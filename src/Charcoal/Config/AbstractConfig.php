@@ -3,9 +3,7 @@
 namespace Charcoal\Config;
 
 // Dependencies from `PHP`
-use \ArrayAccess;
 use \ArrayIterator;
-use \Exception;
 use \InvalidArgumentException;
 use \IteratorAggregate;
 use \Traversable;

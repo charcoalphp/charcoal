@@ -3,6 +3,7 @@
 namespace Charcoal\Config;
 
 // Dependencies from `PHP`
+use \ArrayAccess;
 use \Exception;
 use \InvalidArgumentException;
 
