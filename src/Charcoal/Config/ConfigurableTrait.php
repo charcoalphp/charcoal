@@ -6,7 +6,7 @@ use \InvalidArgumentException;
 
 
 // Local namespace depeendencies
-use \Charcoal\Config\ConfigInterface
+use \Charcoal\Config\ConfigInterface;
 use \Charcoal\Config\GenericConfig;
 
 /**
