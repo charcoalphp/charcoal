@@ -50,6 +50,19 @@ class AbstractEntityTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(42, $obj->get('foobar'));
     }
 
+    public function testSetGetWithSetterGetter()
+    {
+        $obj = new \Charcoal\Tests\Config\AbstractEntityClass();
+        $obj->set('foo', 2);
+        $this->assertEquals('foo is 12', $obj->get('foo'));
+    }
+
+    public function testHasWithSetterGetter()
+    {
+        $obj = new \Charcoal\Tests\Config\AbstractEntityClass();
+        $this->assertTrue($obj->has('foo'));
+    }
+
     /**
      * Asserts that:
      * - The `ArrayAccess` interface is properly implemented
@@ -197,24 +210,4 @@ class AbstractEntityTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(trim('{"foo":"bar"}'), $ret);
     }
 
-    /**
-     * Asserts that the objects can be iterated:
-     * - The actual data is iterated (with key=>value).
-     */
-    public function testIterator()
-    {
-        $obj = $this->obj;
-        $obj['foo'] = 'baz';
-        $obj['bar'] = 42;
-
-        $keys = [];
-        $vals = [];
-        foreach ($obj as $k => $v) {
-            $keys[] = $k;
-            $vals[] = $v;
-        }
-
-        $this->assertEquals(['foo','bar'], $keys);
-        $this->assertEquals(['baz', 42], $vals);
-    }
 }

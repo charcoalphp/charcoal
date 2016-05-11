@@ -145,15 +145,14 @@ abstract class AbstractConfig extends AbstractEntity implements
       * The provided `$data` can be a simple array or an object which implements `Traversable`
       * (such as a `ConfigInterface` instance).
       *
-      * @param array|Traversable $data The data to set.
+      * @param array|Traversable|ConfigInterface $data The data to set.
       * @return AbstractConfig Chainable
-      * @see self::set()
       * @see self::offsetSet()
       */
     public function merge($data)
     {
         foreach ($data as $k => $v) {
-                $this->set($k, $v);
+                $this[$k] = $v;
         }
         return $this;
     }

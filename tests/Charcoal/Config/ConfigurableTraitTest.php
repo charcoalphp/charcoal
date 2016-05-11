@@ -29,7 +29,7 @@ class ConfigurableTraitTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Assert that the `set_config` method:
+     * Assert that the `setConfig` method:
      * - is chainable
      * - sets the config properly when passing a ConfigInterface object
      * - sets the config properly when passing an array

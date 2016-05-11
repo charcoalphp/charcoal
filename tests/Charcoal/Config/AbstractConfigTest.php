@@ -14,7 +14,47 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        include_once 'AbstractEntityClass.php';
         $this->obj = $this->getMockForAbstractClass('\Charcoal\Config\AbstractConfig');
+    }
+
+    /**
+     * Asserts that passing a string argument to the constructor loads it as a config file.
+     */
+    public function testConstructorString()
+    {
+        $obj = $this->getMockForAbstractClass('\Charcoal\Config\AbstractConfig', [__DIR__.'/config_files/test.json']);
+        $this->assertEquals(['test'=>'phpunit'], $obj['config']);
+    }
+
+    public function testConstructorArray()
+    {
+        $obj = $this->getMockForAbstractClass('\Charcoal\Config\AbstractConfig', [['config'=>['foo'=>'bar']]]);
+        $this->assertEquals(['foo'=>'bar'], $obj['config']);
+    }
+
+    public function testConstructorConfig()
+    {
+        $config = $this->obj;
+        $config['foo'] = 'bar';
+        $obj = $this->getMockForAbstractClass('\Charcoal\Config\AbstractConfig', [$config]);
+        $this->assertEquals('bar', $obj['foo']);
+    }
+
+    public function testConstructorInvalidParamThrowsException()
+    {
+        $this->setExpectedException('\InvalidArgumentException');
+        $obj = $this->getMockForAbstractClass('\Charcoal\Config\AbstractConfig', [new \StdClass()]);
+    }
+
+    public function testConstructorDelegates()
+    {
+        $config = $this->obj;
+        $config['foo'] = 42;
+        $config['test'] = 'baz';
+        $obj = $this->getMockForAbstractClass('\Charcoal\Config\AbstractConfig', [['foo'=>666], [$config]]);
+        $this->assertEquals(666, $obj['foo']);
+        $this->assertEquals('baz', $obj['test']);
     }
 
     public function testDefaults()
@@ -81,10 +121,32 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
 
         $obj->set('foobar', 42);
         $this->assertEquals(42, $obj->get('foobar'));
+    }
 
-        $obj->set('foo', ['bar'=>666]);
-        $this->assertEquals(['bar'=>666], $obj->get('foo'));
-        $this->assertEquals(666, $obj->get('foo.bar'));
+    public function testGetWithSeparator()
+    {
+        $obj = $this->obj;
+        $obj->set('foo', ['bar'=>42]);
+        $this->assertEquals(['bar'=>42], $obj->get('foo'));
+        $this->assertEquals(42, $obj->get('foo.bar'));
+    }
+
+    public function testSetWithSeparator()
+    {
+        $obj = $this->obj;
+        $obj->set('foo.bar', 42);
+        $this->assertEquals(['bar'=>42], $obj->get('foo'));
+        $this->assertEquals(42, $obj->get('foo.bar'));
+
+        //$obj->set('foo.bar', 13);
+        //$this->assertEquals(13, $obj->get('foo.bar'));
+
+        $obj->set('foo.baz', 666);
+        $this->assertEquals(42, $obj->get('foo.bar'));
+        $this->assertEquals(666, $obj->get('foo.baz'));
+
+        $obj->set('foo.x.y.z', 'test');
+        $this->assertEquals('test', $obj->get('foo.x.y.z'));
     }
 
     public function testGetWithCustomSeparator()
@@ -95,34 +157,28 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(42, $obj->get('foo/bar'));
     }
 
+    public function testOffsetGetWithCustomSeparator()
+    {
+        $obj = $this->obj;
+        $obj->set('foo', ['bar'=>42]);
+        $obj->setSeparator('/');
+        $this->assertEquals(42, $obj['foo/bar']);
+    }
+
     public function testHas()
     {
         $obj = $this->obj;
         $this->assertFalse($obj->has('foobar'));
         $obj['foobar'] = 42;
         $this->assertTrue($obj->has('foobar'));
-
-        $obj['foo'] = ['bar'=>'baz'];
-        $this->assertTrue($obj->has('foo.bar'));
     }
 
-
-    public function testSetWithSeparator()
+    public function testHasWithSeparator()
     {
         $obj = $this->obj;
-        $obj->setSeparator('/');
-        $obj->set('foo', ['a'=>'b']);
-        $obj->set('foo/bar1/foo2', 'baz');
-
-        $this->assertEquals('baz', $obj->get('foo/bar1/foo2'));
-        $this->assertEquals(
-            [
-            'a'     => 'b',
-            'bar1'  => [
-            'foo2' =>'baz'
-            ]],
-            $obj['foo']
-        );
+        $this->assertFalse($obj->has('foo.bar'));
+        $obj['foo'] = ['bar'=>'baz'];
+        $this->assertTrue($obj->has('foo.bar'));
     }
 
     public function testAddFileIni()
@@ -184,5 +240,26 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('\InvalidArgumentException');
         $this->obj->loadFile(__DIR__.'/config_files/invalid.txt');
+    }
+
+    /**
+     * Asserts that the object can be iterated (with IteratorAggregate):
+     * - The actual data is iterated (with key=>value).
+     */
+    public function testIterator()
+    {
+        $obj = $this->obj;
+        $obj['foo'] = 'baz';
+        $obj['bar'] = 42;
+
+        $keys = [];
+        $vals = [];
+        foreach ($obj as $k => $v) {
+            $keys[] = $k;
+            $vals[] = $v;
+        }
+
+        $this->assertEquals(['foo','bar'], $keys);
+        $this->assertEquals(['baz', 42], $vals);
     }
 }
