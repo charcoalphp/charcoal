@@ -11,6 +11,9 @@ use \Serializable;
 use \Psr\Log\LoggerAwareInterface;
 use \Psr\Log\LoggerAwareTrait;
 
+// Dependencies from 'pimple`'
+use \Pimple\Container;
+
 // Dependencies from 'charcoal-config'
 use \Charcoal\Config\AbstractEntity;
 
@@ -158,6 +161,22 @@ abstract class AbstractProperty extends AbstractEntity implements
         if (isset($data['metadata_loader'])) {
             $this->setMetadataLoader($data['metadata_loader']);
         }
+
+        // DI Container can optionally be set in property constructor.
+        if (isset($data['container'])) {
+            $this->setDependencies($data['container']);
+        }
+    }
+
+    /**
+     * @param Container $container A Pimple DI container.
+     * @return void
+     */
+    public function setDependencies(Container $container)
+    {
+        // This method is a stub. Reimplement in children class.
+        $this->setPropertyFactory($container['property/factory']);
+        $this->setMetadataLoader($container['metadata/loader']);
     }
 
     /**

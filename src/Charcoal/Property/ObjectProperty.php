@@ -5,6 +5,8 @@ namespace Charcoal\Property;
 use \Exception;
 use \InvalidArgumentException;
 
+use \Pimple\Container;
+
 use \Charcoal\Model\ModelInterface;
 use \Charcoal\Model\ModelFactory;
 use \Charcoal\Loader\CollectionLoader;
@@ -54,6 +56,16 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      */
     private $proto;
 
+    /**
+     * @param Container $container A Pimple DI container.
+     * @return void
+     */
+    public function setDependencies(Container $container)
+    {
+        parent::setDependencies($container);
+
+        $this->setModelFactory($container['model/factory']);
+    }
 
     /**
      * @return string
@@ -79,6 +91,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     private function modelFactory()
     {
         if ($this->modelFactory === null) {
+            $this->logger->warning('Creating a new model factory for object property');
             $this->modelFactory = new ModelFactory();
             $this->modelFactory->setArguments([
                 'logger' => $this->logger
