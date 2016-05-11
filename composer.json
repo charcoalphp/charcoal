@@ -18,8 +18,8 @@
   "require": {
     "php": ">=5.5.0",
     "psr/log": "^1.0",
-    "locomotivemtl/charcoal-config": "^0.5",
-    "locomotivemtl/charcoal-factory": "^0.3",
+    "locomotivemtl/charcoal-config": "~0.6",
+    "locomotivemtl/charcoal-factory": "~0.3",
     "locomotivemtl/charcoal-translation": "dev-master",
     "locomotivemtl/charcoal-view": "~0.1"
   },
