@@ -40,8 +40,8 @@ if [ "$TRAVIS_REPO_SLUG" == "locomotivemtl/charcoal-config" ] && [ "$TRAVIS_PULL
   git commit -m "PHPDocumentor (Travis Build : $TRAVIS_BUILD_NUMBER  - Branch : $TRAVIS_BRANCH)"
   git push -fq origin gh-pages > /dev/null
 
-  echo "Published PHPDoc to gh-pages.\n"
-  echo ">>> http://locomotivemtl.github.io/charcoal-config/docs/$TRAVIS_BRANCH/ \n"
+  echo -e "Published PHPDoc to gh-pages.\n"
+  echo -e ">>> http://locomotivemtl.github.io/charcoal-config/docs/$TRAVIS_BRANCH/ \n"
 
 fi
 

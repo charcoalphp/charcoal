@@ -18,9 +18,9 @@ if [ "$TRAVIS_REPO_SLUG" == "locomotivemtl/charcoal-config" ] && [ "$TRAVIS_PULL
     ## Initialisation et recuperation de la branche gh-pages du depot Git
     git config --global user.email "travis@travis-ci.org"
     git config --global user.name "travis-ci"
-    git clone --quiet --branch=gh-pages https://${GH_TOKEN}@${GH_REPO} gh-pages > /dev/null
+    git clone --quiet --branch=gh-pages https://${GH_TOKEN}@${GH_REPO} api-pages > /dev/null
 
-    cd gh-pages
+    cd api-pages
 
     ## Suppression de l'ancienne version
     git rm -rf ./apigen/$TRAVIS_BRANCH
@@ -37,6 +37,6 @@ if [ "$TRAVIS_REPO_SLUG" == "locomotivemtl/charcoal-config" ] && [ "$TRAVIS_PULL
     git commit -m "ApiGen (Travis Build : $TRAVIS_BUILD_NUMBER  - Branch : $TRAVIS_BRANCH)"
     git push -fq origin gh-pages > /dev/null
 
-    echo "Published ApiGen to gh-pages.\n"
-    echo ">>> http://locomotivemtl.github.io/charcoal-config/apigen/$TRAVIS_BRANCH/ \n"
+    echo -e "Published ApiGen to gh-pages.\n"
+    echo -e ">>> http://locomotivemtl.github.io/charcoal-config/apigen/$TRAVIS_BRANCH/ \n"
 fi
