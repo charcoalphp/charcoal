@@ -22,7 +22,6 @@ $ composer require locomotivemtl/charcoal-property
 	- Also required for validator, model and more.
 - [`locomotivemtl/charcoal-factory`](https://github.com/locomotivemtl/charcoal-fatory)
 	- Dynamic object creation is provided with charcoal factories.
-- [`locomotivemtl/charcoal-view`](https://github.com/locomotivemtl/charcoal-view)
 
 # Property options
 
