@@ -4,6 +4,11 @@ namespace Charcoal\Config;
 
 use \InvalidArgumentException;
 
+
+// Local namespace depeendencies
+use \Charcoal\Config\ConfigInterface
+use \Charcoal\Config\GenericConfig;
+
 /**
 * An implementation, as Trait, of the `ConfigurableInterface`.
 *
@@ -67,5 +72,8 @@ trait ConfigurableTrait
      * @param  array|string|null $data Optional data to pass to the new ConfigInterface instance.
      * @return ConfigInterface
      */
-    abstract protected function createConfig($data = null);
+    protected function createConfig($data = null)
+    {
+        return new GenericConfig($data);
+    }
 }
