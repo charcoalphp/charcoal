@@ -96,7 +96,7 @@ class ColorProperty extends AbstractProperty
         if (!$val) {
             return $val;
         }
-        $parsed = $this->parseVal($val);
+        $parsed = $this->parseColorVal($val);
         if (!$this->supportAlpha()) {
             return '#'.$this->rgbToHexadecimal($parsed['r'], $parsed['g'], $parsed['b']);
         } else {
@@ -175,7 +175,7 @@ class ColorProperty extends AbstractProperty
      * @param string|array $val The color array or string to parse.
      * @return array The parsed `[r,g,b,a]` color array.
      */
-    private function parseVal($val)
+    private function parseColorVal($val)
     {
         if (is_array($val)) {
             return $this->parseArray($val);
@@ -354,7 +354,7 @@ class ColorProperty extends AbstractProperty
         }
         $val = strtolower($val);
         if (in_array($val, array_keys($colors))) {
-            return $this->parseVal($colors[$val]);
+            return $this->parseColorVal($colors[$val]);
         }
 
         throw new InvalidArgumentException(
