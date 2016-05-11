@@ -24,10 +24,10 @@ The `Charcoal\Ui` module provides tools to create UI elements (dashboards, layou
 
 # How to install
 
-The preferred (and only supported) way of installing charcoal-view is with **composer**:
+The preferred (and only supported) way of installing charcoal-ui is with **composer**:
 
 ```shell
-$ composer require locomotivemtl/charcoal-view
+$ composer require locomotivemtl/charcoal-ui
 ```
 
 ## Dependencies
@@ -36,12 +36,12 @@ $ composer require locomotivemtl/charcoal-view
 	+ Older versions of PHP are deprecated, therefore not supported.
 - [`psr/log`](http://www.php-fig.org/psr/psr-3/)
 	+ A PSR-3 compliant logger should be provided to the various services / classes.
-- [`locomotivemtl/charcoal-config`](https://github.com/locomotivemtl/charcoal-config) 0.5+
-	+ The UI objects are _configurable_ with `\Charcoal\View\ViewConfig`.
+- [`locomotivemtl/charcoal-config`](https://github.com/locomotivemtl/charcoal-config) 0.6+
+	+ The UI objects are _configurable_ with various configs.
 - [`locomotivemtl/charcoal-translation`](https://github.com/locomotivemtl/charcoal-translation)
-	+
+	+ To provide l10n to the UI objects.
 - [`locomotivemtl/charcoal-view`](https://github.com/locomotivemtl/charcoal-view) 0.1+
-	+ The base `UiItem` can be are `Viewable`, meaning they can be rendered with a `View`.
+	+ The base `UiItem` are `Viewable`, meaning they can be rendered with a `View`.
 
 # Example Usage
 
@@ -49,7 +49,12 @@ $ composer require locomotivemtl/charcoal-view
 
 ```php
 
-$metadata = new \Charcoal\Config\GenericMetadata([
+use \Charcoal\Config\GenericMetadata;
+
+use \Charcoal\Ui\Form\FormBuilder;
+use \Charcoal\Ui\Form\FormFactory;
+
+$metadata = new GenericMetadata([
 	'properties' => [
 		'first_name' => [
 			'type' => 'string'
@@ -93,12 +98,12 @@ $formConfig = [
 	]
 ];
 
-$formBuilder = new \Charcoal\Ui\Form\FormBuilder([
-	'form_factory' => new \Charcoal\Ui\Form\FormFactory(),
+$formBuilder = new FormBuilder([
+	'form_factory' => new FormFactory(),
 	'view' => $container['view']
 ]);
 
-$form = $formBuilder->buid($formConfig);
+$form = $formBuilder->build($formConfig);
 $form->setMetadata($metadata);
 $form->setFormData($formData);
 
@@ -107,17 +112,20 @@ echo $form->render();
 
 # Base UI Item
 
-All UI classes implements the same basic class: `\Charcoal\Ui\UiItemInterface`. This interface defines
+All UI classes implements the same basic class: `\Charcoal\Ui\UiItemInterface`. This interface defines a basic set of properties that are shared across (almost) all ui item types.
 
 ## Base UI Item config
 
-- `type`
-- `title`
-- `subtitle`
-- `description`
-- `notes`
-- `template_ident`
-	+ The default view template.
+| Key                | Type        | Default     | Description |
+| ------------------ | ----------- | ----------- | ----------- |
+| **type**           | `string`    |
+| **title**          | `string[1]` |
+| **subtitle**       | `string[1]` |
+| **description**    | `string[1]` |
+| **notes**          | `string[1]` |
+| **template_ident** | `string`    | `''`        | The default view template. |
+
+<small><sup>[1]</sup> indicates a l10n string (`TranslationString`) </small>
 
 ## View Integration
 
@@ -133,12 +141,16 @@ Dashboards define a _layout_ of _widgets_.
 
  - `layout` is a `LayoutInterface` object that can be created with a `LayoutBuilder`.
  - `widgets` is a collection of any `UiItemInterface` objects.
+	+ Any  PHP class can actually be a "widget", but base widgets are provided as convenience.
 
 ## Dashboard config
 
-- `type` _string_
-- `layout` _array_
-- `widgets` _array_
+| Key         | Type           | Default     | Description |
+| ----------- | -------------- | ----------- | ----------- |
+| **type**    | `string`       |
+| **layout**  | `LayoutConfig` |
+| **widgets** | `array`        |
+
 
 ## Dashboard dependencies
 
@@ -150,7 +162,7 @@ Dashboards define a _layout_ of _widgets_.
 
 - `setLayout()`
 - `layout()`
-- `setWidgets(array $)`
+- `setWidgets(array $widgets)`
 - `widgets()`
 - `addWidget()`
 - `numWidgets()`
@@ -162,8 +174,22 @@ Layouts define a grid (column-based) structure.
 
 ## Layout config
 
-- `structure`
-	- `columns`
+| Key                   | Type     | Default     | Description |
+| --------------------- | -------- | ----------- | ----------- |
+| **structure**         | `array`  |
+| **structure.columns** | `array`  |
+
+**Example layout JSON config**
+
+```json
+"layout": {
+	"structure": [
+		{ "columns": [ 2, 1 ] },
+		{ "columns": [ 1 ] },
+		{ "columns": [ 1 ] }
+	]
+}
+```
 
 ## Layout API
 
@@ -201,15 +227,16 @@ Forms define a layout of form groups, form options, data and metadata.
 
 ## Form config
 
-- `type`
-- `action`
-	+ Where the form will be sent upon submission (URL).
-- `method`
-	+ The http method to submit the form: "post" (default) or "get".
-- `layout`
-- `groups`
-- `form_data`
-- `metadata`
+| Key           | Type            | Default     | Description |
+| ------------- | --------------- | ----------- | ----------- |
+| **type**      | `string`        |
+| **action**    | `string`        | `''`        | URL where the form will be submitted. |
+| **method**    | `string`        | `'post'`    | HTTP method to submit ("post" or "get"). |
+| **layout**    | `LayoutConfig`  |
+| **groups**    | `FormGroupConfig[]` |
+| **form_data** | `array`         |
+| **metadata**  | `array`         |
+
 
 ## Form dependencies
 
@@ -235,12 +262,14 @@ Forms define a layout of form groups, form options, data and metadata.
 
 ## Form group config
 
-- `form`
-- `template_ident`
-- `template_controller`
-- `priority`
-- `layout`
-- `properties`
+| Key                     | Type           | Default     | Description |
+| ----------------------- | -------------- | ----------- | ----------- |
+| **form**                |
+| **template_ident**      | `string`       |
+| **template_controller** | `string`       |
+| **priority**            | `int`          |
+| **layout**              | `LayoutConfig` |
+| **properties**          | `array`        |
 
 ## Form group API
 
@@ -344,6 +373,7 @@ Service providers are provided in the `Charcoal\Ui\ServiceProvider` namespace fo
 - `\Charcoal\Ui\ServiceProvider\UiServiceProvider`
 	+ Register all the other service providers (dashboard, form, layout and menu).
 
+
 ## Required services
 
 There are a few dependencies on external services, that should be set on the same DI container as the one passed to the service providers:
@@ -355,28 +385,43 @@ There are a few dependencies on external services, that should be set on the sam
 
 # Development
 
+To install the development environment:
+
+```shell
+$ composer install --prefer-source
+```
+
+## API documentation
+
+- The auto-generated `phpDocumentor` API documentation is available at [https://locomotivemtl.github.io/charcoal-ui/docs/master/](https://locomotivemtl.github.io/charcoal-ui/docs/master/)
+- The auto-generated `apigen` API documentation is available at [https://codedoc.pub/locomotivemtl/charcoal-ui/master/](https://codedoc.pub/locomotivemtl/charcoal-ui/master/index.html)
+
 ## Development dependencies
 
-- `npm`
-- `grunt` (install with `npm install grunt-cli`)
-- `composer`
-- `phpunit`
+- `phpunit/phpunit`
+- `squizlabs/php_codesniffer`
+- `satooshi/php-coveralls`
+
+## Continuous Integration
+
+| Service | Badge | Description |
+| ------- | ----- | ----------- |
+| [Travis](https://travis-ci.org/locomotivemtl/charcoal-ui) | [![Build Status](https://travis-ci.org/locomotivemtl/charcoal-ui.svg?branch=master)](https://travis-ci.org/locomotivemtl/charcoal-ui) | Runs code sniff check and unit tests. Auto-generates API documentation. |
+| [Scrutinizer](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-ui/) | [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-ui/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-ui/?branch=master) | Code quality checker. Also validates API documentation quality. |
+| [Coveralls](https://coveralls.io/github/locomotivemtl/charcoal-ui) | [![Coverage Status](https://coveralls.io/repos/github/locomotivemtl/charcoal-ui/badge.svg?branch=master)](https://coveralls.io/github/locomotivemtl/charcoal-ui?branch=master) | Unit Tests code coverage. |
+| [Sensiolabs](https://insight.sensiolabs.com/projects/533b5796-7e69-42a7-a046-71342146308a) | [![SensioLabsInsight](https://insight.sensiolabs.com/projects/ad5d1699-07cc-45b5-9ba4-9b3b45f677e0/mini.png)](https://insight.sensiolabs.com/projects/ad5d1699-07cc-45b5-9ba4-9b3b45f677e0) | Another code quality checker, focused on PHP. |
 
 ## Coding Style
 
-The Charcoal-UI module follows the Charcoal coding-style:
+The Charcoal-Ui module follows the Charcoal coding-style:
 
 - [_PSR-1_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md)
 - [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
-- [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md), autoloading is therefore provided by _Composer_
-- [_phpDocumentor_](http://phpdoc.org/)
-	- Add DocBlocks for all classes, methods, and functions;
-	- For type-hinting, use `boolean` (instead of `bool`), `integer` (instead of `int`), `float` (instead of `double` or `real`);
-	- Omit the `@return` tag if the method does not return anything.
-- Naming conventions
-	- Read the [phpcs.xml](phpcs.xml) file for all the details.
+- [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md), autoloading is therefore provided by _Composer_.
+- [_phpDocumentor_](http://phpdoc.org/) comments.
+- Read the [phpcs.xml](phpcs.xml) file for all the details on code style.
 
-> Coding style validation / enforcement can be performed with `grunt phpcs`. An auto-fixer is also available with `grunt phpcbf`.
+> Coding style validation / enforcement can be performed with `composer phpcs`. An auto-fixer is also available with `composer phpcbf`.
 
 ## Authors
 
@@ -386,4 +431,15 @@ The Charcoal-UI module follows the Charcoal coding-style:
 
 ### Unreleased
 
+# License
 
+**The MIT License (MIT)**
+
+_Copyright © 2016 Locomotive inc._
+> See [Authors](#authors).
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
