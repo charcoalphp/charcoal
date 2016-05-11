@@ -10,12 +10,22 @@ if [ "$TRAVIS_REPO_SLUG" == "locomotivemtl/charcoal-config" ] && [ "$TRAVIS_PULL
 
     echo -e "Publishing ApiGen to Github Pages...\n";
 
-    cd $HOME
+    pwd
+
+    mkdir -p ./build/apidocs;
 
     # Get apigen binary
     wget http://www.apigen.org/apigen.phar
 
-    ## Initialisation et recuperation de la branche gh-pages du depot Git
+    # Generate Api
+    php apigen.phar generate -s ./src -d ./build/apidocs
+
+    # Copy generated doc in $HOME
+    cp -R build/apidocs $HOME/apidocs-latest
+
+    cd $HOME
+
+    ## Clone gh-pages branch
     git config --global user.email "travis@travis-ci.org"
     git config --global user.name "travis-ci"
     git clone --quiet --branch=gh-pages https://${GH_TOKEN}@${GH_REPO} api-pages > /dev/null
@@ -30,8 +40,8 @@ if [ "$TRAVIS_REPO_SLUG" == "locomotivemtl/charcoal-config" ] && [ "$TRAVIS_PULL
     cd apigen
     mkdir $TRAVIS_BRANCH
 
-    # Generate Api
-    php $HOME/apigen.phar generate -s src -d .
+    ## Copie de la nouvelle version
+    cp -Rf $HOME/apidocs-latest/* ./$TRAVIS_BRANCH/
 
     git add -f .
     git commit -m "ApiGen (Travis Build : $TRAVIS_BUILD_NUMBER  - Branch : $TRAVIS_BRANCH)"
