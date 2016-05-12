@@ -21,7 +21,7 @@ Factories create or build dynamic PHP objects.
 The preferred (and only supported) way of installing _charcoal-factory_ is with **composer**:
 
 ```shell
-$ composer require locomotivemtl/charcoal-factory
+★ composer require locomotivemtl/charcoal-factory
 ```
 
 ## Dependencies
@@ -235,16 +235,29 @@ The `ResolverFactory` resolves the classname from the class resolver options:
 To install the development environment:
 
 ```shell
-$ npm install
-$ composer install
+★ composer install --prefer-source
+```
+
+To run the scripts (phplint, phpcs and phpunit):
+
+```shell
+★ composer test
 ```
 
 ## Development dependencies
 
-- `npm`
-- `grunt` (install with `npm install grunt-cli`)
-- `composer`
-- `phpunit`
+- `phpunit/phpunit`
+- `squizlabs/php_codesniffer`
+- `satooshi/php-coveralls`
+
+## Continuous Integration
+
+| Service | Badge | Description |
+| ------- | ----- | ----------- |
+| [Travis](https://travis-ci.org/locomotivemtl/charcoal-factory) | [![Build Status](https://travis-ci.org/locomotivemtl/charcoal-factory.svg?branch=master)](https://travis-ci.org/locomotivemtl/charcoal-factory) | Runs code sniff check and unit tests. Auto-generates API documentation. |
+| [Scrutinizer](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-factory/) | [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-factory/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-factory/?branch=master) | Code quality checker. Also validates API documentation quality. |
+| [Coveralls](https://coveralls.io/github/locomotivemtl/charcoal-factory) | [![Coverage Status](https://coveralls.io/repos/github/locomotivemtl/charcoal-factory/badge.svg?branch=master)](https://coveralls.io/github/locomotivemtl/charcoal-factory?branch=master) | Unit Tests code coverage. |
+| [Sensiolabs](https://insight.sensiolabs.com/projects/54058388-3b5d-47e3-8185-f001232d31f7) | [![SensioLabsInsight](https://insight.sensiolabs.com/projects/54058388-3b5d-47e3-8185-f001232d31f7/mini.png)](https://insight.sensiolabs.com/projects/54058388-3b5d-47e3-8185-f001232d31f7) | Another code quality checker, focused on PHP. |
 
 ## Coding Style
 
@@ -254,16 +267,9 @@ All Charcoal modules follow the same coding style and `charcoal-factory` is no e
 - [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
 - [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md), autoloading is therefore provided by _Composer_
 - [_phpDocumentor_](http://phpdoc.org/)
-	- Add DocBlocks for all classes, methods, and functions;
-- Naming conventions
-	- Prefix abstract classes with `Abstract`;
-	- Suffix interfaces with `Interface`, traits with `Trait`, exceptions with `Exception`;
-	- For arrays, use short notation `[]` (instead of `array()`).
-	- Read the [phpcs.xml](phpcs.xml) file for all the details.
+- Read the [phpcs.xml](phpcs.xml) file for all the details on code style.
 
-Coding styles are  enforced with `grunt phpcs` ([_PHP Code Sniffer_](https://github.com/squizlabs/PHP_CodeSniffer)). The actual ruleset can be found in `phpcs.xml`.
-
-> 👉 To fix minor coding style problems, run `grunt phpcbf` ([_PHP Code Beautifier and Fixer_](https://github.com/squizlabs/PHP_CodeSniffer)). This tool uses the same ruleset as *phpcs* to automatically correct coding standard violations.
+> Coding style validation / enforcement can be performed with `composer phpcs`. An auto-fixer is also available with `composer phpcbf`.
 
 ## Authors
 
@@ -271,12 +277,23 @@ Coding styles are  enforced with `grunt phpcs` ([_PHP Code Sniffer_](https://git
 
 ## Changelog
 
+### 0.3.2
+
+- Split resolved classname "cache" by factory class.
+
+### 0.3.1
+
+_Released 2016-03-22_
+
+- Keep resolved classname in memory. Can greatly speed things up if instancing many objects.
+
 ### 0.3
+
+_Released 2016-01-28_
 
 - Add the `setArguments()` method to factories.
 - Add the `setCallback()` method to factories.
 - Execute the callback when using the default class too.
-
 
 ### 0.2
 
@@ -289,9 +306,21 @@ Minor (but BC-breaking) changes to Charcoal-Factory
 - `create()` and `get()` are now `final` in the base abstract factory class.
 - Internal code, docs and tool improvements.
 
-
 ### 0.1
 
 _Released 2015-11-25_
 
 - Initial release
+
+# License
+
+**The MIT License (MIT)**
+
+_Copyright © 2016 Locomotive inc._
+> See [Authors](#authors).
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

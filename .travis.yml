@@ -1,35 +1,46 @@
 language: php
+
 php:
-  - 5.5
-  - 5.6
-  - hhvm
-  - nightly
+- 5.5
+- 5.6
+- 7.0
+- hhvm
+- nightly
+
+env:
+  global:
+    - secure: NTBzOCmcS+06Rn88PEsbb9OEdsujy5/doN4bx96FFDM+jiJI6aQgDt1IVQDXuoirp+HLCTCY53ZTjF4N0wVie6qmsjNU8QbJ5dBSQxemGtmu5pDNtsUBivV9An+AMNFrwrbNvlmnjlOb0f65I6l3wKuNTH7vzz243OwuvI10y4uTOFwWwsXme/9CTSrGKmkar4DbYQIU3ZjuDc+R2nNYxB9RqZSb8LwhBSn4uwFfYdy0pZ8jEWhr35COTxXqx8VQeF9dgGR/dEQllk+9mixTTdNVmAfVgK3trIzYDmGmV/VJKX9LHLexMoyrfL59lown4WdqvVanJCzxJC9v8C68k4MY8Oa6ylKarKyxAl3nEREV5OkKb5F0n1842THPUkzv/1QCwEhYpfKk4vkhol+9oj8I2gy74yx3K+uPrps1HxJzDVgNhAnMPI5yO0B5e6+D4y7mZK4xrg56JzedBtG0QHNbsytbejVWvhrdo31YZ9rFg6+KDwSRmBJLW/9DIis+6BL/up887pMpRyltCuver+dPcKYA05NeAunaGazzm9HTVyOFZlP5GAKhgV7Ko0gUG4CvxugynCbeqsD6e87OysgPkJiqJK4r8Fz6lT0CYdcdKu77+vkDbGnleh57JodyWyz8jmrKEBLBzD0jSAUa7EWSCeHf0+XOyydXMjfjLN8=
+    - GH_REPO: github.com/locomotivemtl/charcoal-core.git
 
 matrix:
   allow_failures:
-    - php: hhvm
-    - php: nightly
+  - php; 7.0
+  - php: hhvm
+  - php: nightly
 
 before_script:
   ## Init composer
   - composer selfupdate --quiet
   - composer install -n --dev
-  ## Install the PHPdoc binary
-  - pear channel-discover pear.phpdoc.org
-  - pear install phpdoc/phpDocumentor
-  - phpenv rehash
+
   ## Create temporary folders
   - mkdir -p build/logs
-  - mkdir -p build/docs
 
 script:
   ## Lint PHP Files
   - find {src,tests} -name '*.php' -print0 | xargs -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1
+
+  ## PHP Code sniffers
   - if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then ./vendor/bin/phpcs -ps --colors --standard=phpcs.xml src/; fi
+
   ## Run PHPUnit Tests
   - phpunit --configuration ./tests/phpunit.xml --coverage-text --coverage-clover build/logs/clover.xml
-  ## Generate phpdoc
-  - if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_PHP_VERSION" == "5.6" ]; then phpdoc -p -d ./src -t ./build/docs; fi
 
 after_script:
   - php vendor/bin/coveralls -v
+  - bash build/travis/phpdoc_ghpages.sh
+  - bash build/travis/apigen_ghpages.sh
+
+notifications:
+  slack: locomotivemtl:d9h8ZWwTZ6b3WUsSP9s26nb1
+  email: charcoal@locomotive.ca
