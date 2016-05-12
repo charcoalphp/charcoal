@@ -3,15 +3,10 @@
 namespace Charcoal\Model;
 
 // Dependencies from `PHP`
-use \ArrayAccess;
 use \InvalidArgumentException;
 
 // Module `charcoal-config` dependencies
 use \Charcoal\Config\AbstractConfig;
-
-// Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Loader\LoadableInterface;
-use \Charcoal\Loader\LoadableTrait;
 
 // Local namespace dependencies
 use \Charcoal\Model\MetadataInterface;
@@ -24,12 +19,8 @@ use \Charcoal\Model\MetadataLoader;
 * The `LoadableInterface` is also implemented, mostly through `LoadableTrait`.
 */
 abstract class AbstractMetadata extends AbstractConfig implements
-    MetadataInterface,
-    LoadableInterface,
-    ArrayAccess
+    MetadataInterface
 {
-    use LoadableTrait;
-
     /**
      * Holds the properties of this configuration object
      * @var array $properties
@@ -53,18 +44,5 @@ abstract class AbstractMetadata extends AbstractConfig implements
     public function properties()
     {
         return $this->properties;
-    }
-
-    /**
-    * @param array $data Optional.
-    * @return LoaderInterface
-    */
-    protected function createLoader(array $data = null)
-    {
-        $loader = new MetadataLoader();
-        if (is_array($data)) {
-            $loader->setData($data);
-        }
-        return $loader;
     }
 }

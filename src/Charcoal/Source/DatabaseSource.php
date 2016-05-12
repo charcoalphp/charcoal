@@ -10,9 +10,6 @@ use \InvalidArgumentException;
 use \PDO;
 use \PDOException;
 
-// Dependencies from `charcoal-app`
-use \Charcoal\App\App;
-
 // Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Model\ModelInterface;
 
@@ -31,6 +28,8 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
 {
     const DEFAULT_DB_HOSTNAME = 'localhost';
     const DEFAULT_DB_TYPE = 'mysql';
+
+    private $appConfig;
 
     /**
     * @var string $databaseIdent
@@ -51,15 +50,19 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     */
     private static $dbs = [];
 
+    public function __construct(array $data)
+    {
+        $this->appConfig = $data['config'];
+
+        parent::__construct($data);
+    }
+
     /**
      * @return ConfigInterface
      */
     private function appConfig()
     {
-        $app = App::instance();
-        $container = $app->getContainer();
-        $appConfig = $container['config'];
-        return $appConfig;
+        return $this->appConfig;
     }
 
     /**
@@ -110,7 +113,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     {
         if ($this->databaseConfig === null) {
             $appConfig = $this->appConfig();
-            $default = $appConfig->defaultDatabase();
+            $default = $appConfig['default_database'];
             return $appConfig->databaseConfig($default);
         }
         return $this->databaseConfig;
@@ -889,10 +892,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     */
     public function createConfig(array $data = null)
     {
-        $config = new DatabaseSourceConfig();
-        if (is_array($data)) {
-            $config->merge($data);
-        }
+        $config = new DatabaseSourceConfig($data);
         return $config;
     }
 }

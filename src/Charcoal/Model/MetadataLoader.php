@@ -5,8 +5,8 @@ namespace Charcoal\Model;
 // PHP dependencies
 use \InvalidArgumentException;
 
-// Module `charcoal-app` dependencies
-use \Charcoal\App\App;
+// Dependencies from `PSR-6`
+use \Psr\Cache\CacheItemPoolInterface;
 
 // Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Loader\FileLoader;
@@ -24,39 +24,38 @@ use \Charcoal\Loader\FileLoader;
 class MetadataLoader extends FileLoader
 {
     /**
+     * @var CacheItemPoolInterface $cachePool
+     */
+    private $cachePool;
+
+    /**
      * Return new MetadataLoader object.
      *
      * The application's metadata paths, if any, are merged with
      * the loader's search paths.
      *
+     * # Required dependencie
+     * - `config`
+     * - `cache`
+     *
+     * # Optional dependencies
+     * - `paths`
+     * - `base_path`
+     *
      * @param array $data The loader's dependencies.
      */
     public function __construct(array $data = null)
     {
-        $config   = App::instance()->config();
-        $basePath = $config->get('base_path');
-        $metadata = $config->get('metadata');
+        $config = $data['config'];
 
-        if (!is_array($metadata)) {
-            $metadata = [];
-        }
+        $basePath = $config['base_path'];
+        $metadataPaths = $config['metadata.paths'];
 
-        if ($config->has('metadata_path')) {
-            trigger_error(
-                '"metadata_path" is deprecated. Use "metadata.paths" instead.',
-                E_USER_DEPRECATED
-            );
-
-            if (!isset($metadata['paths'])) {
-                $metadata['paths'] = $config->get('metadata_path');
-            }
-        }
-
-        if (isset($metadata['paths'])) {
+        if (isset($metadataPaths)) {
             if (isset($data['paths'])) {
-                $data['paths'] = array_merge($metadata['paths'], $data['paths']);
+                $data['paths'] = array_merge($metadataPaths, $data['paths']);
             } else {
-                $data['paths'] = $metadata['paths'];
+                $data['paths'] = $metadataPaths;
             }
         }
 
@@ -64,7 +63,19 @@ class MetadataLoader extends FileLoader
             $data['base_path'] = $basePath;
         }
 
+        $this->setCachePool($data['cache']);
+
         parent::__construct($data);
+    }
+
+    /**
+     * @param CacheItemPoolInterface $cache A PSR-6 compliant cache pool instance.
+     * @return MetadataLoader Chainable
+     */
+    public function setCachePool($cache)
+    {
+        $this->cachePool = $cache;
+        return $this;
     }
 
     /**
@@ -74,9 +85,7 @@ class MetadataLoader extends FileLoader
      */
     protected function cachePool()
     {
-        $container = App::instance()->getContainer();
-
-        return $container['cache'];
+        return $this->cachePool;
     }
 
     /**

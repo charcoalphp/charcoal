@@ -57,9 +57,11 @@ trait DescribableTrait
     {
         if ($this->metadataLoader === null) {
             $this->logger->warning(
-                sprintf('Metadata loader was not set for %s', get_class($this))
+                sprintf('!! Metadata loader was not set for %s', get_class($this))
             );
             $this->metadataLoader = new MetadataLoader([
+                'config' => \Charcoal\App\App::instance()->getContainer()->config,
+                'cache'  => \Charcoal\App\App::instance()->getContainer()->cache,
                 'logger' => $this->logger
             ]);
         }

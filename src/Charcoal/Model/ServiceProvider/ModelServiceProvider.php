@@ -14,6 +14,7 @@ use \Charcoal\Loader\CollectionLoader;
 use \Charcoal\Model\MetadataLoader;
 use \Charcoal\Model\ModelBuilder;
 use \Charcoal\Model\ModelFactory;
+use \Charcoal\Source\SourceFactory;
 
 /**
 *
@@ -41,8 +42,22 @@ class ModelServiceProvider implements ServiceProviderInterface
         if (!isset($container['metadata/loader'])) {
             $container['metadata/loader'] = function (Container $container) {
                 return new MetadataLoader([
-                    'logger' => $container['logger']
+                    'logger' => $container['logger'],
+                    'config' => $container['config'],
+                    'cache'  => $container['cache']
                 ]);
+            };
+        }
+
+        if (!isset($container['source/factory'])) {
+            $container['source/factory'] = function (Container $container) {
+                $sourceFactory = new SourceFactory();
+                $sourceFactory->setArguments([
+                    'logger'    => $container['logger'],
+                    'cache'     => $container['cache'],
+                    'config'    => $container['config']
+                ]);
+                return $sourceFactory;
             };
         }
 
@@ -85,7 +100,8 @@ class ModelServiceProvider implements ServiceProviderInterface
                 'logger'            => $container['logger'],
                 'view'              => $container['view'],
                 'property_factory'  => $container['property/factory'],
-                'metadata_loader'   => $container['metadata/loader']
+                'metadata_loader'   => $container['metadata/loader'],
+                'source_factory'    => $container['source/factory']
             ];
         };
 

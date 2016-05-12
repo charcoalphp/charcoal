@@ -132,7 +132,9 @@ trait StorableTrait
     protected function sourceFactory()
     {
         if (!isset($this->sourceFactory)) {
-            $this->sourceFactory = new SourceFactory();
+            throw new Exception(
+                sprintf('Source factory is not set for "%s"', get_class($this))
+            );
         }
         return $this->sourceFactory;
     }

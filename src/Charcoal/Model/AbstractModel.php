@@ -471,9 +471,7 @@ abstract class AbstractModel extends AbstractEntity implements
 
         $source_type = isset($sourceConfig['type']) ? $sourceConfig['type'] : self::DEFAULT_SOURCE_TYPE;
         $source_factory = $this->sourceFactory();
-        $source = $source_factory->create($source_type, [
-            'logger'=>$this->logger
-        ]);
+        $source = $source_factory->create($source_type);
         $source->setModel($this);
 
         if ($data !== null) {
@@ -509,7 +507,7 @@ abstract class AbstractModel extends AbstractEntity implements
     public function createView(array $data = null)
     {
         $this->logger->warning('Obsolete method createView called.');
-        $view = new GenericVwiew([
+        $view = new GenericView([
             'logger'=>$this->logger
         ]);
         if ($data !== null) {
