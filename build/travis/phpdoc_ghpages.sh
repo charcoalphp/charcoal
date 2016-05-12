@@ -8,7 +8,7 @@
 # echo "TRAVIS_BRANCH: $TRAVIS_BRANCH"
 # echo "TRAVIS_BUILD_NUMBER: $TRAVIS_BUILD_NUMBER"
 
-if [ "$TRAVIS_REPO_SLUG" == "locomotivemtl/charcoal-config" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_PHP_VERSION" == "5.6" ]; then
+if [ "$TRAVIS_REPO_SLUG" == "locomotivemtl/charcoal-core" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_PHP_VERSION" == "5.6" ]; then
 
     echo -e "Publishing PHPDoc to Github Pages...\n"
 
@@ -53,7 +53,7 @@ if [ "$TRAVIS_REPO_SLUG" == "locomotivemtl/charcoal-config" ] && [ "$TRAVIS_PULL
     git push -fq origin gh-pages > /dev/null
 
     echo -e "Published PHPDoc to gh-pages.\n"
-    echo -e ">>> http://locomotivemtl.github.io/charcoal-config/docs/$TRAVIS_BRANCH/ \n"
+    echo -e ">>> http://locomotivemtl.github.io/charcoal-core/docs/$TRAVIS_BRANCH/ \n"
 
 fi
 
