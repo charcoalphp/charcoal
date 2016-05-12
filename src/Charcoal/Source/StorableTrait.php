@@ -2,6 +2,7 @@
 
 namespace Charcoal\Source;
 
+use \Exception;
 use \InvalidArgumentException;
 
 // Local namespace dependencies
@@ -127,6 +128,7 @@ trait StorableTrait
     }
 
     /**
+     * @throws Exception If the source factory was not previously set.
      * @return SourceFactory
      */
     protected function sourceFactory()

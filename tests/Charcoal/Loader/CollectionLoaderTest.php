@@ -2,8 +2,8 @@
 
 namespace Charcoal\Tests\Loader;
 
-use \Charcoal\Loader\CollectionLoader as CollectionLoader;
-use \Charcoal\Charcoal as Charcoal;
+use \Charcoal\Loader\CollectionLoader;
+use \Charcoal\Source\DatabaseSource;
 
 class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,9 +20,15 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
             'factory' => $factory
         ]);
 
+        $s = new DatabaseSource([
+            'logger'=>$GLOBALS['container']['logger'],
+            'config'=>$GLOBALS['container']['config']
+        ]);
+        $s->setTable('tests');
         $this->model = new \Charcoal\Model\Model([
             'logger' => new \Psr\Log\NullLogger()
         ]);
+        $this->model->setSource($s);
         $this->model->setMetadata(json_decode('
         {
             "properties":{

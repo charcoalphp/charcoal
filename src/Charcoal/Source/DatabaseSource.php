@@ -10,6 +10,8 @@ use \InvalidArgumentException;
 use \PDO;
 use \PDOException;
 
+use \Charcoal\Config\ConfigInterface;
+
 // Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Model\ModelInterface;
 
@@ -29,6 +31,9 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     const DEFAULT_DB_HOSTNAME = 'localhost';
     const DEFAULT_DB_TYPE = 'mysql';
 
+    /**
+     * @var ConfigInterface $appConfig
+     */
     private $appConfig;
 
     /**
@@ -50,6 +55,9 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     */
     private static $dbs = [];
 
+    /**
+     * @param array $data Class dependencies.
+     */
     public function __construct(array $data)
     {
         $this->appConfig = $data['config'];

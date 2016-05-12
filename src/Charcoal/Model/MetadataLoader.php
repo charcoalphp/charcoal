@@ -72,7 +72,7 @@ class MetadataLoader extends FileLoader
      * @param CacheItemPoolInterface $cache A PSR-6 compliant cache pool instance.
      * @return MetadataLoader Chainable
      */
-    public function setCachePool($cache)
+    public function setCachePool(CacheItemPoolInterface $cache)
     {
         $this->cachePool = $cache;
         return $this;
@@ -81,7 +81,7 @@ class MetadataLoader extends FileLoader
     /**
      * Retrieve the cache service provider.
      *
-     * @return \Stash\Pool
+     * @return CacheItemPoolInterface
      */
     protected function cachePool()
     {

@@ -7,10 +7,20 @@ use \Charcoal\Charcoal;
 
 class MetadataLoaderTest extends \PHPUnit_Framework_TestCase
 {
+    public $obj;
+
+    public function setUp()
+    {
+        $this->obj = new MetadataLoader([
+            'logger' => new \Psr\Log\NullLogger(),
+            'config' => $GLOBALS['container']['config'],
+            'cache'  => $GLOBALS['container']['cache']
+        ]);
+    }
 
     public function testContructor()
     {
-        $obj = new MetadataLoader();
+        $obj = $this->obj;
         $this->assertInstanceOf('\Charcoal\Model\MetadataLoader', $obj);
 
         $this->assertEquals([], $obj->paths());
@@ -19,7 +29,7 @@ class MetadataLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testSetIdent()
     {
-        $obj = new MetadataLoader();
+        $obj = $this->obj;
         $ret = $obj->setIdent('foo');
         $this->assertSame($ret, $obj);
         $this->assertEquals('foo', $obj->ident());
