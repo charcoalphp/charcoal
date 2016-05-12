@@ -217,16 +217,40 @@ $obj->renderTemplate('Hello {{world}}');
 
 would output: `"Hello world!"`
 
-#
 
 # Development
 
+To install the development environment:
+
+```shell
+$ composer install --prefer-source
+```
+
+Run tests with
+
+```shell
+$ composer test
+```
+
+## API documentation
+
+- The auto-generated `phpDocumentor` API documentation is available at [https://locomotivemtl.github.io/charcoal-view/docs/master/](https://locomotivemtl.github.io/charcoal-view/docs/master/)
+- The auto-generated `apigen` API documentation is available at [https://codedoc.pub/locomotivemtl/charcoal-view/master/](https://codedoc.pub/locomotivemtl/charcoal-view/master/index.html)
+
 ## Development dependencies
 
-- `npm`
-- `grunt` (install with `npm install grunt-cli`)
-- `composer`
-- `phpunit`
+- `phpunit/phpunit`
+- `squizlabs/php_codesniffer`
+- `satooshi/php-coveralls`
+
+## Continuous Integration
+
+| Service | Badge | Description |
+| ------- | ----- | ----------- |
+| [Travis](https://travis-ci.org/locomotivemtl/charcoal-view) | [![Build Status](https://travis-ci.org/locomotivemtl/charcoal-view.svg?branch=master)](https://travis-ci.org/locomotivemtl/charcoal-view) | Runs code sniff check and unit tests. Auto-generates API documentation. |
+| [Scrutinizer](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-view/) | [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-view/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-view/?branch=master) | Code quality checker. Also validates API documentation quality. |
+| [Coveralls](https://coveralls.io/github/locomotivemtl/charcoal-view) | [![Coverage Status](https://coveralls.io/repos/github/locomotivemtl/charcoal-view/badge.svg?branch=master)](https://coveralls.io/github/locomotivemtl/charcoal-view?branch=master) | Unit Tests code coverage. |
+| [Sensiolabs](https://insight.sensiolabs.com/projects/396d2f06-82ba-4c79-b8cc-762f1e8bda29) | [![SensioLabsInsight](https://insight.sensiolabs.com/projects/396d2f06-82ba-4c79-b8cc-762f1e8bda29/mini.png)](https://insight.sensiolabs.com/projects/396d2f06-82ba-4c79-b8cc-762f1e8bda29) | Another code quality checker, focused on PHP. |
 
 ## Coding Style
 
@@ -234,16 +258,11 @@ The Charcoal-View module follows the Charcoal coding-style:
 
 - [_PSR-1_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md)
 - [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
-- [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md), autoloading is therefore provided by _Composer_
-- [_phpDocumentor_](http://phpdoc.org/)
-	- Add DocBlocks for all classes, methods, and functions;
-	- For type-hinting, use `boolean` (instead of `bool`), `integer` (instead of `int`), `float` (instead of `double` or `real`);
-	- Omit the `@return` tag if the method does not return anything.
-- Naming conventions
-	- Read the [phpcs.xml](phpcs.xml) file for all the details.
+- [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md), autoloading is therefore provided by _Composer_.
+- [_phpDocumentor_](http://phpdoc.org/) comments.
+- Read the [phpcs.xml](phpcs.xml) file for all the details on code style.
 
-> Coding style validation / enforcement can be performed with `grunt phpcs`. An auto-fixer is also available with `grunt phpcbf`.
-
+> Coding style validation / enforcement can be performed with `composer phpcs`. An auto-fixer is also available with `composer phpcbf`.
 ## Authors
 
 - Mathieu Ducharme <mat@locomotive.ca>
@@ -260,3 +279,15 @@ _Released on 2016-02-04_
 
 - Initial release of `charcoal-view`.
 
+# License
+
+**The MIT License (MIT)**
+
+_Copyright © 2016 Locomotive inc._
+> See [Authors](#authors).
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

@@ -66,7 +66,7 @@ class ViewableTraitTest extends \PHPUnit_Framework_TestCase
         $obj = $this->obj;
 
         $view = new GenericView([
-            'logger'=>new \Monolog\Logger('charcoal.test')
+            'logger'=>new \Psr\Log\NullLogger()
         ]);
 
         $ret = $obj->setView($view);

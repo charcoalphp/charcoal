@@ -1,4 +1,5 @@
 language: php
+
 php:
   - 5.5
   - 5.6
@@ -8,7 +9,7 @@ php:
 
 env:
   global:
-    - secure: "m51ay1rZpv3EyRNyrk/irXjJezB0oTsC/LhvVOERmeiapKvshv0roCAzW16Zeh3Z5VfqAK0n1GU7ZlPtyASW1r7rU4+YRWz/2kwMvmPVGYinXfuOhcK8AVGb+WME7ObduwNXLr76N2OAifL2t2F/l0mdCshHhzxficjKlschrxHvX+kl7IUlDn9YK1IQi7UntVRkfgr9LBcbKo4D562vXauX2IVexOw7aRisdyOhWI8FVZXgoWwQvgEehOFNgmWGOOhGOORLvCNxOrHoKEYecdy5pPRVKl/+TEacLC9Z4svr5jM6+/MwE03XSnSy08UlwMVdJmmr47hbVY4DvFMiExjGAOnczFgDLB8gWpXjmHjtihQWoJbA5pF1DWdWEgX7iw/zNqgQ9SszDLlCrBYi4enXqZzvTgU71Zu51Dhxv/858poD2pnOmk/TYKHY2eD+Rp5sWM98n5WXxeVXC70Q0N1l3wYQ+RRlvXzc3B0GMfr/q+xzjqSnkzij16cNC+4tM4aHRC78p8ufenBX89YZ3XOP30K2jA0gCnEsk0j2egSzqpGuK/hTBZaAPAIHgShFcpuQ5UjcqZ0xcHy+cssasxEGzW1aEnjiFW564TmXMGdftBtxEBbPZcXOYh0KI/Mj2Vic4WBE5HJJRIcHxAag8VEskm48pUNy5VBK+JBhTW4="
+    - secure: "IY5z55E1ShH8NkTj16XZvL9GE+j5n8fxdo9S8lDoky3Z94zRqLcka60twbhPHKL6zXWS2OHhEjNOadmVujFprib8DsGh00EOV75lGRsW7SZCTHBmEj0JxasOajj5VGxAemqjJMpE3btqJUXp6PsBVRBaM32alswaoMVuvflQKZv9jrb+VsRoVaT9wAPD9wqQXb27/P2H5ad+7DxT6lua7PIgAtNl5p8wKv5+u+Q5acfPuvS5d5GOjA8S4IgKj5lidg1hOvpwWN0pEDJZnQILRVra9/0n+fAn0Y0aNfRMDETSoxKpXFCFL2xbDtGLedu7G146JsTVt1uCV37tO8vuosKc57FGF1tVVNmV5jMg5ackuaImQ+5SdftEznsbhXjRRWeTLvgtvCX33CRI7vddeXHm8UmOcpCfuHiDCt8jAS82yk6ivgoJd1SSnS1eSOzjh0JZ25ZGOwg3NGBewf3mtR/EnXb9LzmZLb13HGRVM3fTYTRQbJ7EovXLBMRfPXn45L7O8tVBPK1vFAe+Y+fw0ToXX2zpMUqUAcshxGoDJZdrU1veLnUOHvO2Q++6wmMWOATl085lGQm87o9XJzDjctgwP+2jQrvD7bvuHM75lrpekbF65tvM+OZhQIrFA0Gp4qfSarkH1B+8jwZzKrZ3D1HKO8+Hv9HQbYggOZQJ2nQ="
     - GH_REPO: github.com/locomotivemtl/charcoal-view.git
 
 matrix:
@@ -21,26 +22,24 @@ before_script:
   ## Init composer
   - composer selfupdate --quiet
   - composer install -n --dev
-  ## Install the PHPdoc binary
-  #- pear channel-discover pear.phpdoc.org
-  #- pear install phpdoc/phpDocumentor
-  #- phpenv rehash
+
   ## Create temporary folders
-  #- mkdir -p build/logs
-  #- mkdir -p build/docs
+  - mkdir -p build/logs
 
 script:
   ## Lint PHP Files
   - find {src,tests} -name '*.php' -print0 | xargs -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1
+
+  ## PHP Code Sniffer
   - if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then ./vendor/bin/phpcs -ps --colors --standard=phpcs.xml src/; fi
+
   ## Run PHPUnit Tests
   - phpunit --configuration ./tests/phpunit.xml --coverage-text --coverage-clover build/logs/clover.xml
-  ## Generate phpdoc
-  #- if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_PHP_VERSION" == "5.6" ]; then phpdoc -p -d ./src -t ./build/docs; fi
 
 after_script:
   - php vendor/bin/coveralls -v
-  #- bash build/travis/phpdoc_ghpages.sh
+  - bash build/travis/phpdoc_ghpages.sh
+  - bash build/travis/apigen_ghpages.sh
 
 notifications:
   slack: locomotivemtl:d9h8ZWwTZ6b3WUsSP9s26nb1
