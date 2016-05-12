@@ -24,8 +24,8 @@
     "ext-pdo": "*",
     "ext-mbstring": "*",
     "psr/log": "^1.0",
-    "locomotivemtl/charcoal-app": "dev-master",
-    "locomotivemtl/charcoal-config": "~0.5",
+    "locomotivemtl/charcoal-app": "~0.1",
+    "locomotivemtl/charcoal-config": "~0.6",
     "locomotivemtl/charcoal-property": "dev-master",
     "locomotivemtl/charcoal-factory": "~0.3",
     "locomotivemtl/charcoal-view": "~0.1",
@@ -35,7 +35,7 @@
     "monolog/monolog": "^1.13",
     "mustache/mustache": "^2.9.0",
     "phpunit/phpunit": "^4.8",
-    "slim/slim": "^3.0",
+    "slim/slim": "~3.4",
     "squizlabs/php_codesniffer": "^2.4"
   },
   "autoload": {

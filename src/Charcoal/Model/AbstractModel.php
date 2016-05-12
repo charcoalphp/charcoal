@@ -109,6 +109,10 @@ abstract class AbstractModel extends AbstractEntity implements
 
     }
 
+    /**
+     * @param Container $container Pimple DI Container.
+     * @return void
+     */
     public function setDependencies(Container $container)
     {
         $this->setLogger($container['logger']);

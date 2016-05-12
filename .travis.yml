@@ -8,7 +8,7 @@ php:
 
 env:
   global:
-    - secure: "m51ay1rZpv3EyRNyrk/irXjJezB0oTsC/LhvVOERmeiapKvshv0roCAzW16Zeh3Z5VfqAK0n1GU7ZlPtyASW1r7rU4+YRWz/2kwMvmPVGYinXfuOhcK8AVGb+WME7ObduwNXLr76N2OAifL2t2F/l0mdCshHhzxficjKlschrxHvX+kl7IUlDn9YK1IQi7UntVRkfgr9LBcbKo4D562vXauX2IVexOw7aRisdyOhWI8FVZXgoWwQvgEehOFNgmWGOOhGOORLvCNxOrHoKEYecdy5pPRVKl/+TEacLC9Z4svr5jM6+/MwE03XSnSy08UlwMVdJmmr47hbVY4DvFMiExjGAOnczFgDLB8gWpXjmHjtihQWoJbA5pF1DWdWEgX7iw/zNqgQ9SszDLlCrBYi4enXqZzvTgU71Zu51Dhxv/858poD2pnOmk/TYKHY2eD+Rp5sWM98n5WXxeVXC70Q0N1l3wYQ+RRlvXzc3B0GMfr/q+xzjqSnkzij16cNC+4tM4aHRC78p8ufenBX89YZ3XOP30K2jA0gCnEsk0j2egSzqpGuK/hTBZaAPAIHgShFcpuQ5UjcqZ0xcHy+cssasxEGzW1aEnjiFW564TmXMGdftBtxEBbPZcXOYh0KI/Mj2Vic4WBE5HJJRIcHxAag8VEskm48pUNy5VBK+JBhTW4="
+    - secure: "junCzJgs0wOv6JQQJ1Aax3/OS/LF0tiKESK98kQv1OBF3/QaWw8lPecZCK2FTQphfL1/nBXPXR//2MDZ6jny48mUZzDO1my0f+lU3gW2fUTlPD/ALV0UQSh5kHB9yDRpaGRX2z3+QARrwS0voIA2AkVv9qZWE7fl07XSCfHAyA4B5B7Ym6fWMqzUC9xynBJeqK8XUPB62ugqhRJauFNZrGauon17sVm205vnqEhEWl6q8afRz+wtUtQpK8YBCTciCq4dEukb/cnkP8E5a1slOx1AwndA14kWTlHPF3f3OEXHBnzjE62NDd118xzmGN1/9ejlQjnGVr1YB0+EPx1KncPUM0o8Jp+V3wv0ynpmSP92jSuC3XCB0QDScBGAN7pfIoUldsmHwe3mGXzBq7WnoaPyOKELAkfCSYitR2XIX8s+NgzCsqUDvuCyyHN7Rf7JJSvfnZPmJENGZrm3VqJ5s0VXHPIEK3vXXi0rfyddXEnBeIy/vqq8ckgp4jWN7f6DllIEfjRI4C3ougdfaobyNB37OmIVhsc3r+oS20C9Vgq8KFx6cyMa76BjGSBNr4Ir/EGPWLZ1wNEoevLE88ALVEyvx75vX/2yrwt0jYz+gQ3cfZudtodq8UIwff6vfRRKll++cfxBsqWJwlhWaGgdhxaKbA15xGLGRDbmRM96zQA="
     - GH_REPO: github.com/locomotivemtl/charcoal-core.git
 
 matrix:
@@ -21,30 +21,28 @@ matrix:
 before_script:
   ## Init composer
   - composer selfupdate --quiet
-  # see https://getcomposer.org/doc/articles/troubleshooting.md#package-not-found-on-travis-ci-org
   - COMPOSER_ROOT_VERSION=dev-master composer install -n --dev
-  ## Install the PHPdoc binary
-  - pear channel-discover pear.phpdoc.org
-  - if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_PHP_VERSION" == "5.6" ]; then pear install phpdoc/phpDocumentor; fi
-  - phpenv rehash
+
   ## Create unit-tests database
   - mysql -e 'create database charcoal_examples;'
+
   ## Create temporary folders
   - mkdir -p build/logs
-  - mkdir -p build/docs
 
 script:
   ## Lint PHP Files
   - find {src,tests} -name '*.php' -print0 | xargs -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1
+
+  ## PHP Code Sniffer
   - if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then ./vendor/bin/phpcs -ps --colors --standard=phpcs.xml src/; fi
+
   ## Run PHPUnit Tests
   - phpunit --configuration ./tests/phpunit.xml --coverage-text --coverage-clover build/logs/clover.xml
-  ## Generate phpdoc
-  - if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_PHP_VERSION" == "5.6" ]; then phpdoc -p -d ./src -t ./build/docs; fi
 
 after_script:
   - php vendor/bin/coveralls -v
-#  - bash build/travis/phpdoc_ghpages.sh
+  - bash build/travis/phpdoc_ghpages.sh
+  - bash build/travis/apigen_ghpages.sh
 
 notifications:
   slack: locomotivemtl:d9h8ZWwTZ6b3WUsSP9s26nb1

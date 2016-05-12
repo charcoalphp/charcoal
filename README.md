@@ -3,124 +3,85 @@ Charcoal Core
 
 [![Build Status](https://travis-ci.org/locomotivemtl/charcoal-core.svg?branch=master)](https://travis-ci.org/locomotivemtl/charcoal-core)
 
-
-The `charcoal-core` module contains abstract classes and interfaces as well as basic functionalities to create a Charcoal Project.
-It is typically used with [`charcoal-base`](https://github.com/locomotivemtl/charcoal-base), which contains more concrete classes (Action, Asset, Email, Module Objet, Property<sup>\[1\]</sup>, Template and Widget)
-
-1. Although the core Property concepts are defined in this module, most _useful_ property types can be found in `charcoal-base`.
+The `charcoal-core` module contains a few core charcoal namespaces: `\Charcoal\Loader`, `\Charcoal\Model`, `\Charcoal\Source` and `\Charcoal\Validator`.
 
 ## How to Install
 
-Except for development purposes, this module should never be run by itself or as a standalone. Therefore, the preferred way to install this module is to require it as a `composer` dependency in a project.
+The preferred (and only supported) way of installing _charcoal-core_ is with **composer**:
 
 ```shell
-$ composer require locomotivemtl/charcoal-core
+★ composer require locomotivemtl/charcoal-core
 ```
 
 ## Dependencies and Requirements
 
 Charcoal depends on:
 
-- **PHP** 5.5+
-	- with [_PHP Generators_](http://php.net/generators).
-	- [`slim`](http://www.slimframework.com/), [`mustache`](https://github.com/bobthecow/mustache.php), [`monolog`](https://github.com/Seldaek/monologm/) (see [`composer.json`](composer.json) for details)
-- **MySQL**
-	- with [_PDO_](http://php.net/pdo)
-	- Other databases are currently not supported
-- **Apache**
-	- with _mod_rewrite_
+- `PHP** 5.5+`
+- `ext-pdo`
+- `ext-mbstring`
+- `psr/log`
+- `locomotivemtl/charcoal-app`
+- `locomotivemtl/charcoal-config`
+- `locomotivemtl/charcoal-property`
+- `locomotivemtl/charcoal-view`
+- `locomotivemtl/charcoal-translation`
 
-## Build System(s)
+## Recommended modules
 
-Charcoal uses:
+For a complete, ready-to-use project, start from the [`boilerplate`](https://github.com/locomotivemtl/charcoal-project-boilerplate):
 
-- [**Composer**](http://getcomposer.org/) is the preferred way of installing Charcoal modules and projects.
-- [**Grunt**](http://gruntjs.com/) is used to build the assets from source and also to run various scripts (linters, unit tests) automatically.
-- [**NPM**](https://npmjs.com/) is needed for Bower and Grunt.
+```shell
+★ composer create-project locomotivemtl/charcoal-project-boilerplate
+```
 
-## Table of Contents
+# Development
 
-The core concepts (namespaces) defined in Charcoal Core are:
+To install the development environment:
 
-- `Core`, for core patterns, classes and traits.
-	- `IndexableInterface` / `IndexableTrait`:
-		-  Defines `set_id()`, `id()`, `set_key()` and `key()`.
-	- `StringFormat`: a helper class to format strings, mostly for final output within templates & widgets:
-		- `unicode()`, `strip_tags()`, `unaccents()` and `alphanumeric()`
-- `Loader`, for everything that can be loaded.
-	- Base loaders: `AbstractLoader`, `FileLoader`
-	- Extra interface: `LoadableInterface` / `LoadableTrait`
-- `Metadata`, for object definition through standardized metadata.
-	- Extra interfaces: `DescribableInterface` / `DescribableTrait` for objects
-- `Model`, for base domain model objects.
-	- Extra interface: `CategorizableInterface` / `CategorizableTrait`
-	- Extra interface: `CategoryInterface` / `CategoryTrait`
-	- Extra interface: `IndexableInterface` / `IndexableTrait` for models that can be loaded with `id()` (and `key()`)
-	- Extra interface: `RoutableInterface` / `RoutableTrait`
-- `Property`, the building blocks of models (through metadata)
-	- Only the core property concepts are defined in the `charcoal-core` module. Extra property types can be found in `charcoal-base`
-- `Source`, for storage (typically accessed with a Loader)
-	- Extra interface:
-- `Validator`, to validate objects / models.
-	- Extra interface: `ValidatableInterface` / `ValidatableTrait` for objects that can be validated with a validator.
+```shell
+★ composer install --prefer-source
+```
 
-## Development
+To run the tests:
 
-### Coding Style
+```shell
+★ composer test
+```
 
-All Charcoal modules follow the same coding style and `charcoal-core` is no exception. For PHP:
+## API documentation
 
-- [_PSR-1_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md), except for
-	- Method names MUST be declared in `snake_case`.
-- [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md), except for
-	- Property names MAY be prefixed with a single, or double, underscore to indicate protected or private visibility;
-	- Method names MAY be prefixed with a single, or double, underscore to indicate protected or private visibility.
+- The auto-generated `phpDocumentor` API documentation is available at [https://locomotivemtl.github.io/charcoal-core/docs/master/](https://locomotivemtl.github.io/charcoal-core/docs/master/)
+- The auto-generated `apigen` API documentation is available at [https://codedoc.pub/locomotivemtl/charcoal-core/master/](https://codedoc.pub/locomotivemtl/charcoal-core/master/index.html)
+
+## Development dependencies
+
+- `phpunit/phpunit`
+- `squizlabs/php_codesniffer`
+- `satooshi/php-coveralls`
+
+## Continuous Integration
+
+| Service | Badge | Description |
+| ------- | ----- | ----------- |
+| [Travis](https://travis-ci.org/locomotivemtl/charcoal-base) | [![Build Status](https://travis-ci.org/locomotivemtl/charcoal-core.svg?branch=master)](https://travis-ci.org/locomotivemtl/charcoal-core) | Runs code sniff check and unit tests. Auto-generates API documentation. |
+| [Scrutinizer](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-core/) | [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-core/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-core/?branch=master) | Code quality checker. Also validates API documentation quality. |
+| [Coveralls](https://coveralls.io/github/locomotivemtl/charcoal-core) | [![Coverage Status](https://coveralls.io/repos/github/locomotivemtl/charcoal-core/badge.svg?branch=master)](https://coveralls.io/github/locomotivemtl/charcoal-core?branch=master) | Unit Tests code coverage. |
+| [Sensiolabs](https://insight.sensiolabs.com/projects/ab15f6b0-2063-445e-81d7-2575b919b0ab) | [![SensioLabsInsight](https://insight.sensiolabs.com/projects/ab15f6b0-2063-445e-81d7-2575b919b0ab/mini.png)](https://insight.sensiolabs.com/projects/ab15f6b0-2063-445e-81d7-2575b919b0ab) | Another code quality checker, focused on PHP. |
+
+## Coding Style
+
+The charcoal-core module follows the Charcoal coding-style:
+
+- [_PSR-1_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md)
+- [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
 - [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md), autoloading is therefore provided by _Composer_.
-- [_phpDocumentor_](http://phpdoc.org/)
-	- Add DocBlocks for all classes, methods, and functions;
-	- For type-hinting, use `boolean` (instead of `bool`), `integer` (instead of `int`), `float` (instead of `double` or `real`);
-	- Omit the `@return` tag if the method does not return anything.
-- Naming conventions
-	- Use `snake_case`, not `camelCase`, for variable, option, parameter, argument, function, and method names;
-	- Prefix abstract classes with `Abstract`;
-	- Suffix interfaces with `Interface`;
-	- Suffix traits with `Trait`;
-	- Suffix exceptions with `Exception`;
-	- For type-hinting, use `int` (instead of `integer`) and `bool` (instead of `boolean`);
-	- For casting, use `int` (instead of `integer`) and `!!` (instead of `bool` or `boolean`);
-	- For arrays, use `[]` (instead of `array()`).
+- [_phpDocumentor_](http://phpdoc.org/) comments.
+- Read the [phpcs.xml](phpcs.xml) file for all the details on code style.
 
-Coding styles are  enforced with `grunt phpcs` ([_PHP Code Sniffer_](https://github.com/squizlabs/PHP_CodeSniffer)). The actual ruleset can be found in `phpcs.xml`.
+> Coding style validation / enforcement can be performed with `composer phpcs`. An auto-fixer is also available with `composer phpcbf`.
 
-> 👉 To fix minor coding style problems, run `grunt phpcbf` ([_PHP Code Beautifier and Fixer_](https://github.com/squizlabs/PHP_CodeSniffer)). This tool uses the same ruleset as *phpcs* to automatically correct coding standard violations.
 
-The main PHP structure follow the [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md) standard. Autoloading is therefore provided by _Composer_.
-
-For JavaScript, the following coding style is enforced:
-
-- **TBD**
-
-### Automated Checks
-
-Most quality checker tools can be run with _Grunt_. They are:
-
-- `grunt phpunit`, to run the Test Suite.
-- `grunt phpcs`, to ensure coding style compliance.
-- `grunt jsonlint`, to validate JSON files.
-
-All three tools can also be run from `grunt watch`.
-
-To ensure a clean code base, pre-commit git hooks should be installed on all development environments.
-
-### Continuous Integration
-
-- [Travis](https://travis-ci.org/)
-- [Scrutinizer](https://scrutinizer-ci.com/)
-- [Code Climate](https://codeclimate.com/)
-
-### Unit Tests
-
-Every class, method, and function should be covered by unit tests. PHP code can be tested with [_PHPUnit_](https://phpunit.de/) and JavaScript code with [_QUnit_](https://qunitjs.com/).
 
 ## Authors
 
@@ -132,5 +93,17 @@ Every class, method, and function should be covered by unit tests. PHP code can 
 
 ## TODOs
 
-- Translation (l10n) module
-- The main `Charcoal\Charcoal` class should be moved to `charcoal-base` and not used anywhere directly, if possible
+- Remove the dependency on charcoal-app
+
+# License
+
+**The MIT License (MIT)**
+
+_Copyright © 2016 Locomotive inc._
+> See [Authors](#authors).
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
