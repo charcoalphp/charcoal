@@ -30,6 +30,7 @@ class ModelServiceProvider implements ServiceProviderInterface
             $container['property/factory'] = function (Container $container) {
                 $propertyFactory = new PropertyFactory();
                 $propertyFactory->setArguments([
+                    'container'         => $container,
                     'logger'            => $container['logger'],
                     'metadata_loader'   => $container['metadata/loader']
                 ]);

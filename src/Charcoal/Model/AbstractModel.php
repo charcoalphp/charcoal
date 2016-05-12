@@ -12,6 +12,8 @@ use \Psr\Log\LoggerAwareInterface;
 use \Psr\Log\LoggerAwareTrait;
 use \Psr\Log\NullLogger;
 
+use \Pimple\Container;
+
 // Dependency from 'charcoal-config'
 use \Charcoal\Config\AbstractEntity;
 
@@ -101,6 +103,18 @@ abstract class AbstractModel extends AbstractEntity implements
         /** @todo Needs fix. Must be manually triggered after setting data for metadata to work */
         $this->metadata();
 
+        if (isset($data['container'])) {
+            $this->setDependencies($data['container']);
+        }
+
+    }
+
+    public function setDependencies(Container $container)
+    {
+        $this->setLogger($container['logger']);
+        $this->setPropertyFactory($container['property/factory']);
+        $this->setMetadataLoader($container['metadata/loader']);
+        $this->setView($container['view']);
     }
 
     /**
