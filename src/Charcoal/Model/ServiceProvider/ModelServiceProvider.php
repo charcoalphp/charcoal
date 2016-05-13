@@ -67,7 +67,14 @@ class ModelServiceProvider implements ServiceProviderInterface
         */
         $container['model/factory'] = function (Container $container) {
             $modelFactory = new ModelFactory();
-            $modelFactory->setArguments($container['model/dependencies']);
+            $modelFactory->setArguments([
+                'container'         => $container,
+                'logger'            => $container['logger'],
+                'view'              => $container['view'],
+                'property_factory'  => $container['property/factory'],
+                'metadata_loader'   => $container['metadata/loader'],
+                'source_factory'    => $container['source/factory']
+            ]);
             return $modelFactory;
         };
 
@@ -89,36 +96,5 @@ class ModelServiceProvider implements ServiceProviderInterface
                 'factory' => $container['model/factory']
             ]);
         });
-
-        /**
-         * @param Container $container
-         * @return array
-         */
-        $container['model/dependencies'] = function (Container $container) {
-            return [
-                'container'         => $container,
-                'logger'            => $container['logger'],
-                'view'              => $container['view'],
-                'property_factory'  => $container['property/factory'],
-                'metadata_loader'   => $container['metadata/loader'],
-                'source_factory'    => $container['source/factory']
-            ];
-        };
-
-        /**
-        * @param Container $container A container instance.
-        * @return MetadataLoader
-        */
-        $container['model/dependency/metadata/loader'] = function (Container $container) {
-            return $container['metadata/loader'];
-        };
-
-        /**
-        * @param Container $container A container instance.
-        * @return PropertyFactory
-        */
-        $container['model/dependency/property/factory'] = function (Container $container) {
-            return $container['property/factory'];
-        };
     }
 }
