@@ -6,7 +6,7 @@ namespace Charcoal\Email;
 use \InvalidArgumentException as InvalidArgumentException;
 
 // From `charcoal-core`
-use \Charcoal\Config\AbstractConfig as AbstractConfig;
+use \Charcoal\Config\AbstractConfig;
 
 /**
  * Email configuration.

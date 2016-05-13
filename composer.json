@@ -26,6 +26,7 @@
 		"locomotivemtl/charcoal-app": "~0.1"
 	},
 	"require-dev": {
+		"pimple/pimple": "~3.0",
 		"phpunit/phpunit": "^4.8",
 		"squizlabs/php_codesniffer": "^2.4",
 	    "satooshi/php-coveralls":"~1.0.1"
