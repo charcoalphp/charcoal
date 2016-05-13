@@ -57,7 +57,7 @@ trait DescribableTrait
     {
         if (!$this->metadataLoader) {
             throw new Exception(
-                sprintf('Metadata loader was not set for "%s"', $)
+                sprintf('Metadata loader was not set for "%s"', get_class($this))
             );
         }
         return $this->metadataLoader;
