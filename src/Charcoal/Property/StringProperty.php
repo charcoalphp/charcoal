@@ -45,11 +45,6 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
     private $allowEmpty;
 
     /**
-     * @var StringFormat $formatter
-     */
-    private $formatter;
-
-    /**
      * @return string
      */
     public function type()
@@ -230,18 +225,6 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
             $this->allowEmpty = self::DEFAULT_ALLOW_EMPTY;
         }
         return $this->allowEmpty;
-    }
-
-    /**
-     * @return StringFormat
-     */
-    public function formatter()
-    {
-        if ($this->formatter === null) {
-            $this->formatter = new StringFormat();
-        }
-        $this->formatter->set_string($this->val());
-        return $this->formatter;
     }
 
     /**
