@@ -79,9 +79,7 @@ abstract class AbstractModel extends AbstractEntity implements
     */
     public function __construct(array $data = null)
     {
-        if (!isset($data['logger'])) {
-            $data['logger'] = new NullLogger();
-        }
+        // LoggerAwareInterface dependencies
         $this->setLogger($data['logger']);
 
         // Optional DescribableInterface dependencies
@@ -91,10 +89,15 @@ abstract class AbstractModel extends AbstractEntity implements
         if (isset($data['metadata_loader'])) {
             $this->setMetadataLoader($data['metadata_loader']);
         }
+
         // Optional StorableInterface dependencies
+        if (isset($data['source'])) {
+             $this->setSource($data['source']);
+        }
         if (isset($data['source_factory'])) {
             $this->setSourceFactory($data['source_factory']);
         }
+
         // Optional ViewableInterface dependencies
         if (isset($data['view'])) {
             $this->setView($data['view']);
@@ -115,10 +118,7 @@ abstract class AbstractModel extends AbstractEntity implements
      */
     public function setDependencies(Container $container)
     {
-        $this->setLogger($container['logger']);
-        $this->setPropertyFactory($container['property/factory']);
-        $this->setMetadataLoader($container['metadata/loader']);
-        $this->setView($container['view']);
+        // This method is a stub. Reimplement in children method
     }
 
     /**
