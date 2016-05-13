@@ -55,15 +55,10 @@ trait DescribableTrait
      */
     protected function metadataLoader()
     {
-        if ($this->metadataLoader === null) {
-            $this->logger->warning(
-                sprintf('!! Metadata loader was not set for %s', get_class($this))
+        if (!$this->metadataLoader) {
+            throw new Exception(
+                sprintf('Metadata loader was not set for "%s"', $)
             );
-            $this->metadataLoader = new MetadataLoader([
-                'config' => \Charcoal\App\App::instance()->getContainer()->config,
-                'cache'  => \Charcoal\App\App::instance()->getContainer()->cache,
-                'logger' => $this->logger
-            ]);
         }
         return $this->metadataLoader;
     }
@@ -122,8 +117,9 @@ trait DescribableTrait
             $metadataIdent = $this->metadataIdent();
         }
 
+
         $metadataLoader = $this->metadataLoader();
-        $metadata = $metadataLoader->load($metadataIdent);
+        $metadata = $metadataLoader->load($metadataIdent, $this->createMetadata());
         $this->setMetadata($metadata);
 
         return $metadata;

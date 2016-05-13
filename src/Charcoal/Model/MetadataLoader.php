@@ -5,6 +5,10 @@ namespace Charcoal\Model;
 // PHP dependencies
 use \InvalidArgumentException;
 
+// Dependencies from PSR-3 (Logger)
+use \Psr\Log\LoggerAwareInterface;
+use \Psr\Log\LoggerAwareTrait;
+
 // Dependencies from `PSR-6`
 use \Psr\Cache\CacheItemPoolInterface;
 
@@ -21,12 +25,29 @@ use \Charcoal\Loader\FileLoader;
  * If `ident` is an actual class name, then it will also try to load all the JSON matching
  * the class' parents and interfaces.
  */
-class MetadataLoader extends FileLoader
+final class MetadataLoader implements LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
     /**
      * @var CacheItemPoolInterface $cachePool
      */
     private $cachePool;
+
+    /**
+     * The base path to prepend to any relative paths to search in.
+     *
+     * @var string $basePath
+     */
+    private $basePath = '';
+
+    /**
+     * The paths to search in.
+     *
+     * @var string $paths
+     */
+    private $paths = [];
+
 
     /**
      * Return new MetadataLoader object.
@@ -35,10 +56,8 @@ class MetadataLoader extends FileLoader
      * the loader's search paths.
      *
      * # Required dependencie
-     * - `config`
+     * - `logger`
      * - `cache`
-     *
-     * # Optional dependencies
      * - `paths`
      * - `base_path`
      *
@@ -46,90 +65,35 @@ class MetadataLoader extends FileLoader
      */
     public function __construct(array $data = null)
     {
-        $config = $data['config'];
-
-        $basePath = $config['base_path'];
-        $metadataPaths = $config['metadata.paths'];
-
-        if (isset($metadataPaths)) {
-            if (isset($data['paths'])) {
-                $data['paths'] = array_merge($metadataPaths, $data['paths']);
-            } else {
-                $data['paths'] = $metadataPaths;
-            }
-        }
-
-        if (!isset($data['base_path']) && $basePath) {
-            $data['base_path'] = $basePath;
-        }
-
+        $this->setLogger($data['logger']);
         $this->setCachePool($data['cache']);
-
-        parent::__construct($data);
-    }
-
-    /**
-     * @param CacheItemPoolInterface $cache A PSR-6 compliant cache pool instance.
-     * @return MetadataLoader Chainable
-     */
-    public function setCachePool(CacheItemPoolInterface $cache)
-    {
-        $this->cachePool = $cache;
-        return $this;
-    }
-
-    /**
-     * Retrieve the cache service provider.
-     *
-     * @return CacheItemPoolInterface
-     */
-    protected function cachePool()
-    {
-        return $this->cachePool;
-    }
-
-    /**
-     * Validate a resolved path.
-     *
-     * @param  string $path The path to validate.
-     * @return string
-     */
-    public function validatePath($path)
-    {
-        return (parent::validatePath($path) && is_dir($path));
+        $this->setBasePath($data['base_path']);
+        $this->setPaths($data['paths']);
     }
 
     /**
      * Load the metadata from JSON files.
      *
-     * @param string $ident Optional, set the ident to load.
+     * @param string            $ident    The metadata ident to load.
+     * @param MetadataInterface $metadata The metadata object to load into.
      * @return array
      */
-    public function load($ident = null)
+    public function load($ident, MetadataInterface $metadata)
     {
-        if ($ident !== null) {
-            $this->setIdent($ident);
+        $cacheItem = $this->cachePool()->getItem('metadata/object/'.$ident);
+
+        $obj = $cacheItem->get();
+        if ($cacheItem->isMiss()) {
+            $cacheItem->lock();
+
+            $data = $this->loadData($ident);
+            $metadata->setData($data);
+
+            $this->cachePool()->save($cacheItem->set($metadata));
+            $obj = $metadata;
         }
 
-        $ident = $this->ident();
-
-        $cachePool = $this->cachePool();
-        if ($cachePool) {
-            $cacheItem = $cachePool->getItem('metadata/'.$ident);
-
-            $metadata = $cacheItem->get();
-            if ($cacheItem->isMiss()) {
-                $cacheItem->lock();
-
-                $metadata = $this->loadData($ident);
-
-                $cachePool->save($cacheItem->set($metadata));
-            }
-        } else {
-            $metadata = $this->loadData($ident);
-        }
-
-        return $metadata;
+        return $obj;
     }
 
     /**
@@ -140,15 +104,12 @@ class MetadataLoader extends FileLoader
      */
     public function loadData($ident = null)
     {
-        if ($ident !== null) {
-            $this->setIdent($ident);
-        }
 
-        $hierarchy = $this->hierarchy();
+        $hierarchy = $this->hierarchy($ident);
 
         $metadata = [];
         foreach ($hierarchy as $id) {
-            $identData = self::loadIdent($id);
+            $identData = $this->loadIdent($id);
 
             if (is_array($identData)) {
                 $metadata = array_replace_recursive($metadata, $identData);
@@ -158,12 +119,155 @@ class MetadataLoader extends FileLoader
         return $metadata;
     }
 
+
     /**
+     * @param CacheItemPoolInterface $cache A PSR-6 compliant cache pool instance.
+     * @return MetadataLoader Chainable
+     */
+    private function setCachePool(CacheItemPoolInterface $cache)
+    {
+        $this->cachePool = $cache;
+        return $this;
+    }
+
+    /**
+     * @return CacheItemPoolInterface
+     */
+    private function cachePool()
+    {
+        return $this->cachePool;
+    }
+
+    /**
+     * Assign a base path for relative search paths.
+     *
+     * @param  string $basePath The base path to use.
+     * @throws InvalidArgumentException If the base path parameter is not a string.
+     * @return MetadataLoader Chainable
+     */
+    private function setBasePath($basePath)
+    {
+        if (!is_string($basePath)) {
+            throw new InvalidArgumentException(
+                'Base path must be a string'
+            );
+        }
+
+        $basePath = realpath($basePath);
+        $this->basePath = rtrim($basePath, '/\\').DIRECTORY_SEPARATOR;
+
+        return $this;
+    }
+
+    /**
+     * Retrieve the base path for relative search paths.
+     *
+     * @return string
+     */
+    private function basePath()
+    {
+        return $this->basePath;
+    }
+
+    /**
+     * Assign a list of paths.
+     *
+     * @param  string[] $paths The list of paths to add.
+     * @return self
+     */
+    private function setPaths(array $paths)
+    {
+        $this->paths = [];
+        $this->addPaths($paths);
+
+        return $this;
+    }
+
+    /**
+     * Retrieve the searchable paths.
+     *
+     * @return string[]
+     */
+    private function paths()
+    {
+        return $this->paths;
+    }
+
+    /**
+     * Append a list of paths.
+     *
+     * @param  string[] $paths The list of paths to add.
+     * @return self
+     */
+    private function addPaths(array $paths)
+    {
+        foreach ($paths as $path) {
+            $this->addPath($path);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Append a path.
+     *
+     * @param  string $path A file or directory path.
+     * @throws InvalidArgumentException If the path does not exist or is invalid.
+     * @return self
+     */
+    private function addPath($path)
+    {
+        $path = $this->resolvePath($path);
+
+        if ($this->validatePath($path)) {
+            $this->paths[] = $path;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Parse a relative path using the base path if needed.
+     *
+     * @param  string $path The path to resolve.
+     * @throws InvalidArgumentException If the path is invalid.
+     * @return string
+     */
+    private function resolvePath($path)
+    {
+        if (!is_string($path)) {
+            throw new InvalidArgumentException(
+                'Path needs to be a string'
+            );
+        }
+
+        $basePath = $this->basePath();
+        $path = ltrim($path, '/\\');
+
+        if ($basePath && strpos($path, $basePath) === false) {
+            $path = $basePath.$path;
+        }
+
+        return $path;
+    }
+
+    /**
+     * Validate a resolved path.
+     *
+     * @param  string $path The path to validate.
+     * @return string
+     */
+    private function validatePath($path)
+    {
+        return file_exists($path);
+    }
+
+    /**
+     * @param string $ident The metadata ident to load hierarchy from.
      * @return array
      */
-    private function hierarchy()
+    private function hierarchy($ident)
     {
-        $ident = $this->ident();
         $hierarchy = null;
 
         $classname = $this->identToClassname($ident);
@@ -206,13 +310,75 @@ class MetadataLoader extends FileLoader
     private function loadIdent($ident)
     {
         $name = $this->filenameFromIdent($ident);
-        $file = $this->firstMatchingFilename($name);
 
-        if ($file) {
-            return $this->loadJsonFile($file);
+        if (file_exists($name)) {
+            return $this->loadJsonFile($name);
+        }
+
+        $paths = $this->paths();
+
+        if (empty($paths)) {
+            return null;
+        }
+
+        foreach ($paths as $path) {
+            $file = $path.DIRECTORY_SEPARATOR.$name;
+            if (file_exists($file)) {
+                return $this->loadJsonFile($file);
+            }
         }
 
         return null;
+    }
+
+        /**
+     * Load the contents of a JSON file.
+     *
+     * @param  mixed $filename The file path to retrieve.
+     * @throws InvalidArgumentException If a JSON decoding error occurs.
+     * @return array|null
+     */
+    protected function loadJsonFile($filename)
+    {
+        $content = file_get_contents($filename);
+
+        if ($content === null) {
+            return null;
+        }
+
+        $data  = json_decode($content, true);
+        $error = json_last_error();
+
+        if ($error == JSON_ERROR_NONE) {
+            return $data;
+        }
+
+        switch ($error) {
+            case JSON_ERROR_NONE:
+                break;
+            case JSON_ERROR_DEPTH:
+                $issue = 'Maximum stack depth exceeded';
+                break;
+            case JSON_ERROR_STATE_MISMATCH:
+                $issue = 'Underflow or the modes mismatch';
+                break;
+            case JSON_ERROR_CTRL_CHAR:
+                $issue = 'Unexpected control character found';
+                break;
+            case JSON_ERROR_SYNTAX:
+                $issue = 'Syntax error, malformed JSON';
+                break;
+            case JSON_ERROR_UTF8:
+                $issue = 'Malformed UTF-8 characters, possibly incorrectly encoded';
+                break;
+            default:
+                $issue = 'Unknown error';
+                break;
+        }
+
+        throw new InvalidArgumentException(
+            sprintf('JSON %s could not be parsed: "%s"', $filename, $issue)
+        );
     }
 
     /**
@@ -235,7 +401,7 @@ class MetadataLoader extends FileLoader
      * @param string $ident The identifier to convert.
      * @return string
      */
-    protected function identToClassname($ident)
+    private function identToClassname($ident)
     {
         // Change "foo-bar" to "fooBar"
         $expl = explode('-', $ident);
@@ -268,61 +434,11 @@ class MetadataLoader extends FileLoader
      * @param string $classname The FQN to convert.
      * @return string
      */
-    protected function classnameToIdent($classname)
+    private function classnameToIdent($classname)
     {
         $ident = strtolower(preg_replace('/([a-z])([A-Z])/', '$1-$2', $classname));
         $ident = str_replace('\\', '/', strtolower($ident));
         $ident = ltrim($ident, '/');
         return $ident;
-    }
-
-    /**
-    * Rewrite the "array_merge_recursive" function to behave more like standard "array_merge"
-    * (overwrite values instead of appending them)
-    *
-    * From http:// www.php.net/manual/en/function.array-merge-recursive.php#104145
-    *
-    * @throws InvalidArgumentException If there isn't at least 2 arguments or any arguments are not an array.
-    * @return array Merged array
-    */
-    private static function arrayMerge()
-    {
-        $args = func_get_args();
-        if (func_num_args() < 2) {
-            throw new InvalidArgumentException(
-                'This function takes at least two parameters.'
-            );
-        }
-
-        $array_list = func_get_args();
-        $result = [];
-
-        while ($array_list) {
-            $current = array_shift($array_list);
-
-            /** @todo Convert objects to array? */
-            if (!is_array($current)) {
-                throw new InvalidArgumentException(
-                    'All parameters must be arrays.'
-                );
-            }
-            if (!$current) {
-                continue;
-            }
-
-            foreach ($current as $key => $value) {
-                if (is_string($key)) {
-                    if (is_array($value) && array_key_exists($key, $result) && is_array($result[$key])) {
-                        $result[$key] = call_user_func([__CLASS__, __FUNCTION__], $result[$key], $value);
-                    } else {
-                        $result[$key] = $value;
-                    }
-                } else {
-                    $result[] = $value;
-                }
-            }
-        }
-
-        return $result;
     }
 }

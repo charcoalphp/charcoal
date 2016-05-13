@@ -42,9 +42,11 @@ class ModelServiceProvider implements ServiceProviderInterface
         if (!isset($container['metadata/loader'])) {
             $container['metadata/loader'] = function (Container $container) {
                 return new MetadataLoader([
-                    'logger' => $container['logger'],
-                    'config' => $container['config'],
-                    'cache'  => $container['cache']
+                    'logger'    => $container['logger'],
+                    //'config'    => $container['config'],
+                    'cache'     => $container['cache'],
+                    'base_path' => $container['config']['base_path'],
+                    'paths'     => $container['config']['metadata.paths']
                 ]);
             };
         }
