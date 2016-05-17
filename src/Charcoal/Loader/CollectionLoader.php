@@ -253,7 +253,6 @@ class CollectionLoader implements LoggerAwareInterface
     {
         $model = $this->model();
         if (!is_array($properties) || empty($properties)) {
-            // @todo Load from
             $properties = [];
         }
 
@@ -452,7 +451,6 @@ class CollectionLoader implements LoggerAwareInterface
         // Unused.
         unset($ident);
 
-        /** @todo Filters, pagination, select, etc */
         $query = $this->source()->sqlLoad();
 
         return $this->loadFromQuery($query, $cb);

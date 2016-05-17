@@ -31,7 +31,9 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
         ]);
         $s->setTable('tests');
 
-        $obj = new AbstractModelClass();
+        $obj = new AbstractModelClass([
+            'logger' => $GLOBALS['container']['logger']
+        ]);
         $obj->setSource($s);
         $obj->setMetadata(
             [

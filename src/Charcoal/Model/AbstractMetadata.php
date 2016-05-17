@@ -2,15 +2,11 @@
 
 namespace Charcoal\Model;
 
-// Dependencies from `PHP`
-use \InvalidArgumentException;
-
 // Module `charcoal-config` dependencies
 use \Charcoal\Config\AbstractConfig;
 
 // Local namespace dependencies
 use \Charcoal\Model\MetadataInterface;
-use \Charcoal\Model\MetadataLoader;
 
 /**
 * An implementation, as abstract class, of `MetadataInterface`.

@@ -3,6 +3,7 @@
 namespace Charcoal\Model;
 
 use \ArrayAccess;
+use \Exception;
 use \InvalidArgumentException;
 
 use \Psr\Cache\CacheItemPoolInterface;
@@ -14,8 +15,10 @@ use \Charcoal\Factory\FactoryInterface;
  *
  * Use the magic methods to load automatically from __call and __get; this allows
  * for easy integration in templating engines like Mustache.
+ *
+ * > This object is immutable.
  */
-class ModelLoader implements ArrayAccess
+final class ModelLoader implements ArrayAccess
 {
     /**
      * @var string $objType
@@ -160,7 +163,8 @@ class ModelLoader implements ArrayAccess
             // Do not use cache;
             return $this->loadFromSource($ident);
         }
-        $cacheItem = $this->cachePool->getItem('model/'.$this->objType.'/'.$ident);
+        $cacheKey = 'model/loader/'.$this->objType.'/'.$ident;
+        $cacheItem = $this->cachePool->getItem($cacheKey);
 
         $obj = $cacheItem->get();
         if ($cacheItem->isMiss()) {

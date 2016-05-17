@@ -16,8 +16,8 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $factory = new \Charcoal\Model\ModelFactory();
         $this->obj = new CollectionLoader([
-            'logger' => new \Psr\Log\NullLogger(),
-            'factory' => $factory
+            'logger' => $GLOBALS['container']['logger'],
+            'factory' => $factory,
         ]);
 
         $s = new DatabaseSource([
@@ -25,8 +25,17 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
             'config'=>$GLOBALS['container']['config']
         ]);
         $s->setTable('tests');
+
+        $metadataLoader = new \Charcoal\Model\MetadataLoader([
+            'logger' => $GLOBALS['container']['logger'],
+            'cache' => new \Stash\Pool(),
+            'base_path' => '',
+            'paths' => []
+        ]);
+
         $this->model = new \Charcoal\Model\Model([
-            'logger' => new \Psr\Log\NullLogger()
+            'logger' => new \Psr\Log\NullLogger(),
+            'metadata_loader' => $metadataLoader
         ]);
         $this->model->setSource($s);
         $this->model->setMetadata(json_decode('
