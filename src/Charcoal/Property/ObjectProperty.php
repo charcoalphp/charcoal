@@ -7,8 +7,9 @@ use \InvalidArgumentException;
 
 use \Pimple\Container;
 
+use \Charcoal\Factory\FactoryInterface;
+
 use \Charcoal\Model\ModelInterface;
-use \Charcoal\Model\ModelFactory;
 use \Charcoal\Loader\CollectionLoader;
 use \Charcoal\Source\StorableInterface;
 use \Charcoal\Translation\TranslationConfig;
@@ -30,7 +31,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     static public $objectCache = [];
 
     /**
-     * @var ModelFactory $modelFactory
+     * @var FactoryInterface $modelFactory
      */
     private $modelFactory;
 
@@ -76,26 +77,24 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
-     * @param ModelFactory $factory The factory, to create model objects.
+     * @param FactoryInterface $factory The factory, to create model objects.
      * @return ObjectProperty Chainable
      */
-    public function setModelFactory(ModelFactory $factory)
+    public function setModelFactory(FactoryInterface $factory)
     {
         $this->modelFactory = $factory;
         return $this;
     }
 
     /**
-     * @return ModelFactory
+     * @return FactoryInterface
      */
     private function modelFactory()
     {
         if ($this->modelFactory === null) {
-            $this->logger->warning('Creating a new model factory for object property');
-            $this->modelFactory = new ModelFactory();
-            $this->modelFactory->setArguments([
-                'logger' => $this->logger
-            ]);
+            throw new Exception(
+                sprintf('Model factory not set on object property "%s".')
+            );
         }
         return $this->modelFactory;
     }
