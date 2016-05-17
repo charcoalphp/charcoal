@@ -62,7 +62,8 @@ class EmailServiceProvider implements ServiceProviderInterface
             $factory->setArguments([
                 'logger'    => $container['logger'],
                 'config'    => $container['email/config'],
-                'view'      => $container['email/view']
+                'view'      => $container['email/view'],
+                'template_factory' => $container['template/factory']
             ]);
             return $factory;
         };

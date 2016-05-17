@@ -17,6 +17,9 @@ use \PHPMailer\PHPMailer\PHPMailer;
 use \Charcoal\Config\ConfigurableInterface;
 use \Charcoal\Config\ConfigurableTrait;
 
+// Module `charcoal-factory` dependencies
+use \Charcoal\Factory\FactoryInterface;
+
 // Module `charcoal-view` dependencies
 use \Charcoal\View\GenericView;
 use \Charcoal\View\ViewableInterface;
@@ -142,6 +145,8 @@ class Email implements
      */
     private $phpMailer;
 
+    private $templateFactory;
+
     /**
      * Construct a new Email object.
      *
@@ -158,6 +163,20 @@ class Email implements
         if (isset($data['config'])) {
             $this->setConfig($data['config']);
         }
+        if (isset($data['template_factory'])) {
+            $this->setTemplateFactory($data['template_factory']);
+        }
+    }
+
+    public function setTemplateFactory(FactoryInterface $factory)
+    {
+        $this->templateFactory = $factory;
+        return $this;
+    }
+
+    public function templateFactory()
+    {
+        return $this->templateFactory;
     }
 
     /**
@@ -172,7 +191,6 @@ class Email implements
             $func = [$this, $this->setter($prop)];
             if (is_callable($func)) {
                 call_user_func($func, $val);
-                unset($data[$prop]);
             } else {
                 $this->{$prop} = $val;
             }
@@ -988,11 +1006,9 @@ class Email implements
             return [];
         }
 
-        $templateFactory = new TemplateFactory();
+        $templateFactory = clone($this->templateFactory());
         $templateFactory->setDefaultClass('charcoal/email/generic-email');
-        $template = $templateFactory->create($templateIdent, [
-            'logger' => $this->logger
-        ]);
+        $template = $templateFactory->create($templateIdent);
 
         $template->setData($this->templateData());
 
