@@ -221,7 +221,9 @@ abstract class AbstractQueueManager implements
      */
     public function loadQueueItems()
     {
-        $loader = new CollectionLoader();
+        $loader = new CollectionLoader([
+            'logger' => $this->logger
+        ]);
         $loader->setModel($this->queueItemProto());
         $loader->addFilter([
             'property' => 'processed',

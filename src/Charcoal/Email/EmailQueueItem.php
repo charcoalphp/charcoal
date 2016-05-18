@@ -5,6 +5,9 @@ namespace Charcoal\Email;
 use \Exception;
 use \InvalidArgumentException;
 
+// Module `pimple/pimple` dependencies
+use \Pimple\Container;
+
 // Module `charcoal-core` dependencies
 use \Charcoal\Model\AbstractModel;
 
@@ -72,6 +75,37 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      * @var string $campaign
      */
     private $campaign;
+
+    /**
+     * @var FactoryInterface $emailFactory
+     */
+    private $emailFactory;
+
+    /**
+     * @param Container $container Pimple DI container.
+     * @return void
+     */
+    public function setDependencies(Container $container)
+    {
+        $this->setEmailFactory($container['email/factory']);
+    }
+
+    /**
+     * @param FactoryInterface $factory The factory to create email objects.
+     */
+    protected function setEmailFactory(FactoryInterface $factory)
+    {
+        $this->emailFactory = $factory;
+        return $this;
+    }
+
+    /**
+     * @return FactoryInterface
+     */
+    protected function emailFactory()
+    {
+        return $this->emailFactory;
+    }
 
     /**
      * Get the primary key that uniquely identifies each queue item.
@@ -326,10 +360,7 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
             return null;
         }
 
-        $email = new Email([
-            'app'    => App::instance(),
-            'logger' => $this->logger
-        ]);
+        $email = $this->emailFactory()->create('email');
 
         $email->setData($this->data());
 
@@ -368,6 +399,7 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      * Hook called before saving the item.
      *
      * @return boolean
+     * @see \Charcoal\Email\Queue\QueueItemTrait::preSaveQueueItem()
      */
     public function preSave()
     {

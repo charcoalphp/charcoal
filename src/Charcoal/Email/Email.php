@@ -25,9 +25,6 @@ use \Charcoal\View\GenericView;
 use \Charcoal\View\ViewableInterface;
 use \Charcoal\View\ViewableTrait;
 
-// Module `charcoal-app` dependencies
-use \Charcoal\App\Template\TemplateFactory;
-
 // Intra module (`charcoal-email`) dependencies
 use \Charcoal\Email\Queue\QueueableInterface;
 use \Charcoal\Email\Queue\QueueableTrait;
@@ -141,11 +138,24 @@ class Email implements
     private $templateData = [];
 
     /**
-     * @var PHPMailer PHP Mailer instance.
+     * @var PHPMailer $phpMailer PHP Mailer instance.
      */
     private $phpMailer;
 
+    /**
+     * @var FactoryInterface $templateFactory
+     */
     private $templateFactory;
+
+    /**
+     * @var FactoryInterface $queueItemFactory
+     */
+    private $queueItemFactory;
+
+    /**
+     * @var FactoryInterface $logFactory
+     */
+    private $logFactory;
 
     /**
      * Construct a new Email object.
@@ -156,27 +166,65 @@ class Email implements
     {
         $this->phpMailer = new PHPMailer(true);
         $this->setLogger($data['logger']);
-
-        if (isset($data['view'])) {
-            $this->setView($data['view']);
-        }
-        if (isset($data['config'])) {
-            $this->setConfig($data['config']);
-        }
-        if (isset($data['template_factory'])) {
-            $this->setTemplateFactory($data['template_factory']);
-        }
+        $this->setView($data['view']);
+        $this->setConfig($data['config']);
+        $this->setTemplateFactory($data['template_factory']);
+        $this->setQueueItemFactory($data['queue_item_factory']);
+        $this->setLogFactory($data['log_factory']);
     }
 
-    public function setTemplateFactory(FactoryInterface $factory)
+    /**
+     * @param FactoryInterface $factory The factory to use to create email template objects.
+     * @return Email Chainable
+     */
+    protected function setTemplateFactory(FactoryInterface $factory)
     {
         $this->templateFactory = $factory;
         return $this;
     }
 
-    public function templateFactory()
+    /**
+     * @return FactoryInterface
+     */
+    protected function templateFactory()
     {
         return $this->templateFactory;
+    }
+
+    /**
+     * @param FactoryInterface $factory The factory to use to create email queue item objects.
+     * @return Email Chainable
+     */
+    protected function setQueueItemFactory(FactoryInterface $factory)
+    {
+        $this->queueItemFactory = $factory;
+        return $this;
+    }
+
+    /**
+     * @return FactoryInterface
+     */
+    protected function queueItemFactory()
+    {
+        return $this->queueItemFactory;
+    }
+
+    /**
+     * @param FactoryInterface $factory The factory to use to create log objects.
+     * @return Email Chainable
+     */
+    protected function setLogFactory(FactoryInterface $factory)
+    {
+        $this->logFactory = $factory;
+        return $this;
+    }
+
+    /**
+     * @return FactoryInterface
+     */
+    protected function logFactory()
+    {
+        return $this->logFactory;
     }
 
     /**
@@ -886,7 +934,7 @@ class Email implements
         $queueId    = $this->queueId();
 
         foreach ($recipients as $to) {
-            $queueItem = new EmailQueueItem();
+            $queueItem = $this->queueItemFactory()->create('charcoal/email/email-queue-item');
 
             $queueItem->setTo($to);
             $queueItem->setFrom($author);
@@ -932,9 +980,7 @@ class Email implements
         );
 
         foreach ($recipients as $to) {
-            $log = new EmailLog([
-                'logger' => $this->logger
-            ]);
+            $log = $this->logFactory()->create('charcoal/email/email-log');
 
             $log->setType('email');
             $log->setAction('send');

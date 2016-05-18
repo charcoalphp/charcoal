@@ -23,13 +23,13 @@
 		"php": ">=5.5.0",
 		"phpmailer/phpmailer": "~5.2",
 		"locomotivemtl/charcoal-config": "~0.6",
-		"locomotivemtl/charcoal-app": "~0.1"
+		"locomotivemtl/charcoal-app": "~0.2"
 	},
 	"require-dev": {
 		"pimple/pimple": "~3.0",
 		"phpunit/phpunit": "^4.8",
 		"squizlabs/php_codesniffer": "^2.4",
-	    "satooshi/php-coveralls":"~1.0.1"
+		"satooshi/php-coveralls":"~1.0.1"
 	},
 	"autoload": {
 		"psr-4": {
@@ -39,8 +39,8 @@
 	"scripts": {
 		"test": [
 			"@phplint",
-			"@phpunit",
-			"@phpcs"
+			"@phpcs",
+			"@phpunit"
 		],
 		"phplint": "find {src,tests} -name '*.php' -print0 | xargs -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1",
 		"phpunit": "php vendor/bin/phpunit --configuration tests/phpunit.xml --coverage-text",

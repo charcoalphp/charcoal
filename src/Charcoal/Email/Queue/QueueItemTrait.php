@@ -66,33 +66,6 @@ trait QueueItemTrait
     );
 
     /**
-     * Set the queue item's data.
-     *
-     * @param array $data The queue item data to set.
-     * @return QueueItemTrait Chainable
-     */
-    public function setQueueItemData(array $data)
-    {
-        if (isset($data['queue_id'])) {
-            $this->setQueueId($data['queue_id']);
-        }
-
-        if (isset($data['processed'])) {
-            $this->setProcessed($data['processed']);
-        }
-
-        if (isset($data['queued_date'])) {
-            $this->setQueuedDate($data['queue_date']);
-        }
-
-        if (isset($data['processed_date'])) {
-            $this->setProcessedDate($data['processed_date']);
-        }
-
-        return $this;
-    }
-
-    /**
      * Set the queue's ID.
      *
      * @param mixed $id The unique queue identifier.

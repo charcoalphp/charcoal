@@ -63,7 +63,9 @@ class EmailServiceProvider implements ServiceProviderInterface
                 'logger'    => $container['logger'],
                 'config'    => $container['email/config'],
                 'view'      => $container['email/view'],
-                'template_factory' => $container['template/factory']
+                'template_factory' => $container['template/factory'],
+                'queue_item_factory' => $container['model/factory'],
+                'log_factory' => $container['model/factory']
             ]);
             return $factory;
         };
@@ -73,12 +75,7 @@ class EmailServiceProvider implements ServiceProviderInterface
          * @return \Charcoal\Email\EmailInterface
          */
         $container['email'] = $container->factory(function (Container $container) {
-            $email = new Email([
-                'logger'    => $container['logger'],
-                'config'    => $container['email/config'],
-                'view'      => $container['email/view']
-            ]);
-            return $email;
+            return $container['email/factory']->create('email');
         });
     }
 }
