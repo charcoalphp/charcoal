@@ -8,6 +8,9 @@ use \InvalidArgumentException;
 // Module `pimple/pimple` dependencies
 use \Pimple\Container;
 
+// Module `charcoal/factory` dependencies
+use \Charcoal\Factory\FactoryInterface;
+
 // Module `charcoal-core` dependencies
 use \Charcoal\Model\AbstractModel;
 
