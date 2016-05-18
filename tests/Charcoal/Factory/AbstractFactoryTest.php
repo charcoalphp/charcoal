@@ -81,5 +81,4 @@ class AbstractFactoryTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('\InvalidArgumentException');
         $this->obj->create(false);
     }
-
 }

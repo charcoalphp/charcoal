@@ -32,7 +32,10 @@ class ResolverFactory extends AbstractFactory
      */
     private $resolverReplacements;
 
-    public function __construct($data = null)
+    /**
+     * @param array $data Factory arguments.
+     */
+    public function __construct(array $data = null)
     {
         parent::__construct($data);
 

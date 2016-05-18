@@ -20,7 +20,10 @@ class MapFactory extends AbstractFactory
      */
     private $map = [];
 
-    public function __construct($data=null)
+    /**
+     * @param array $data Factory arguments.
+     */
+    public function __construct(array $data = null)
     {
         parent::__construct($data);
 

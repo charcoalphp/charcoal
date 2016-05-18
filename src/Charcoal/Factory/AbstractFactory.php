@@ -50,7 +50,7 @@ abstract class AbstractFactory implements FactoryInterface
     /**
      * @param array $data Constructor dependencies.
      */
-    public function __construct(array $data=null)
+    public function __construct(array $data = null)
     {
         if (isset($data['arguments'])) {
             $this->setArguments($data['arguments']);
@@ -162,6 +162,10 @@ abstract class AbstractFactory implements FactoryInterface
      * - if it's not an array, it's passed as a single argument.
      * - if it's an associative array, it's passed as a sing argument.
      * - if it's a sequential (numeric keys) array, it's
+     *
+     * @param string $classname The FQN of the class to instanciate.
+     * @param mixed  $args      The constructor arguments.
+     * @return mixed The created object.
      */
     public function createClass($classname, $args)
     {
@@ -172,15 +176,14 @@ abstract class AbstractFactory implements FactoryInterface
             return new $classname($args);
         }
         if (count(array_filter(array_keys($args), 'is_string')) > 0) {
-
             return new $classname($args);
         } else {
             if (version_compare(PHP_VERSION, '5.6.0') >= 0) {
-                $obj = new $classname(...$args);
+                return new $classname(...$args);
             } else {
                 // PHP under 5.6 does not support argument unpacking.
                 $reflection = new \ReflectionClass($classname);
-                $obj = $reflection->newInstanceArgs($args);
+                return $reflection->newInstanceArgs($args);
             }
         }
     }
