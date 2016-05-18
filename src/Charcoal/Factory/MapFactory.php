@@ -20,6 +20,15 @@ class MapFactory extends AbstractFactory
      */
     private $map = [];
 
+    public function __construct($data=null)
+    {
+        parent::__construct($data);
+
+        if ($data['map']) {
+            $this->setMap($data['map']);
+        }
+    }
+
     /**
      * Add a class name to the available types _map_.
      *
@@ -79,7 +88,7 @@ class MapFactory extends AbstractFactory
      *
      * @param string $type The "type" of object to resolve (the object ident).
      * @throws InvalidArgumentException If the type parameter is not a string.
-     * @return string
+     * @return string The resolved class name (FQN).
      */
     public function resolve($type)
     {

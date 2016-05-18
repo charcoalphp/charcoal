@@ -17,7 +17,7 @@ class GenericFactory extends AbstractFactory
      *
      * @param string $type The "type" of object to resolve (the object ident).
      * @throws InvalidArgumentException If the type parameter is not a string.
-     * @return string
+     * @return string The resolved class name (FQN).
      */
     public function resolve($type)
     {

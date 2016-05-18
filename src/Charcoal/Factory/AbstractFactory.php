@@ -33,12 +33,12 @@ abstract class AbstractFactory implements FactoryInterface
     /**
      * @var array $arguments
      */
-    private $arguments = null;
+    private $arguments;
 
     /**
      * @var callable $callback
      */
-    private $callback = null;
+    private $callback;
 
     /**
      * Keeps loaded instances in memory, in `[$type => $instance]` format.
@@ -46,6 +46,25 @@ abstract class AbstractFactory implements FactoryInterface
      * @var array $instances
      */
     private $instances = [];
+
+    /**
+     * @param array $data Constructor dependencies.
+     */
+    public function __construct(array $data=null)
+    {
+        if (isset($data['arguments'])) {
+            $this->setArguments($data['arguments']);
+        }
+        if (isset($data['callback'])) {
+            $this->setCallback($data['callback']);
+        }
+        if (isset($data['base_class'])) {
+            $this->setBaseClass($data['base_class']);
+        }
+        if (isset($data['default_class'])) {
+            $this->setDefaultClass($data['default_class']);
+        }
+    }
 
     /**
      * Create a new instance of a class, by type.
@@ -90,6 +109,7 @@ abstract class AbstractFactory implements FactoryInterface
             if ($this->isResolvable($type) === false) {
                 $defaultClass = $this->defaultClass();
                 if ($defaultClass !== '') {
+                    $obj = $this->createClass($defaultClass, $args);
                     $obj = new $defaultClass($args);
                     if (isset($cb)) {
                         $cb($obj);
@@ -112,8 +132,7 @@ abstract class AbstractFactory implements FactoryInterface
             self::$resolved[$pool][$type] = $classname;
         }
 
-        $obj = new $classname($args);
-
+        $obj = $this->createClass($classname, $args);
 
         // Ensure base class is respected, if set.
         $baseClass = $this->baseClass();
@@ -132,6 +151,38 @@ abstract class AbstractFactory implements FactoryInterface
         }
 
         return $obj;
+    }
+
+    /**
+     * Create a class instance with given arguments.
+     *
+     * How the constructor arguments are passed depends on its type:
+     *
+     * - if null, no arguments are passed at all.
+     * - if it's not an array, it's passed as a single argument.
+     * - if it's an associative array, it's passed as a sing argument.
+     * - if it's a sequential (numeric keys) array, it's
+     */
+    public function createClass($classname, $args)
+    {
+        if ($args === null) {
+            return new $classname;
+        }
+        if (!is_array($args)) {
+            return new $classname($args);
+        }
+        if (count(array_filter(array_keys($args), 'is_string')) > 0) {
+
+            return new $classname($args);
+        } else {
+            if (version_compare(PHP_VERSION, '5.6.0') >= 0) {
+                $obj = new $classname(...$args);
+            } else {
+                // PHP under 5.6 does not support argument unpacking.
+                $reflection = new \ReflectionClass($classname);
+                $obj = $reflection->newInstanceArgs($args);
+            }
+        }
     }
 
     /**
@@ -282,7 +333,7 @@ abstract class AbstractFactory implements FactoryInterface
      * Resolve the class name from "type".
      *
      * @param string $type The "type" of object to resolve (the object ident).
-     * @return string
+     * @return string The resolved class name (FQN).
      */
     abstract public function resolve($type);
 

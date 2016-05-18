@@ -69,7 +69,7 @@ interface FactoryInterface
      * Get the class name (FQN) from "type".
      *
      * @param string $type The "type" of object to resolve (the object ident).
-     * @return string The FQN of the class to instanciate.
+     * @return string The resolved class name (FQN).
      */
     public function resolve($type);
 

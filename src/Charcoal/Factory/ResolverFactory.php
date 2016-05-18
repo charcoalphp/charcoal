@@ -25,12 +25,44 @@ class ResolverFactory extends AbstractFactory
     /**
      * @var array $resolverCapitals
      */
-    private $resolverCapitals = null;
+    private $resolverCapitals;
 
     /**
      * @var array $resolverReplacements
      */
-    private $resolverReplacements = null;
+    private $resolverReplacements;
+
+    public function __construct($data = null)
+    {
+        parent::__construct($data);
+
+        if (!isset($data['resolver_prefix'])) {
+            $data['resolver_prefix'] = '';
+        }
+        if (!isset($data['resolverSuffix'])) {
+            $data['resolver_suffix'] = '';
+        }
+        if (!isset($data['resolver_capitals'])) {
+            $data['resolver_capitals'] = [
+                '-',
+                '\\',
+                '/',
+                '.',
+                '_'
+            ];
+        }
+        if (!isset($data['resolver_replacements'])) {
+            $data['resolver_replacements'] = [
+                '-'=>'',
+                '/'=>'\\',
+                '.'=>'_'
+            ];
+        }
+        $this->setResolverPrefix($data['resolver_prefix']);
+        $this->setResolverSuffix($data['resolver_suffix']);
+        $this->setResolverCapitals($data['resolver_capitals']);
+        $this->setResolverReplacements($data['resolver_replacements']);
+    }
 
     /**
      * @param string $prefix The resolver prefix string.
@@ -95,15 +127,6 @@ class ResolverFactory extends AbstractFactory
      */
     public function resolverCapitals()
     {
-        if ($this->resolverCapitals === null) {
-            return [
-                '-',
-                '\\',
-                '/',
-                '.',
-                '_'
-            ];
-        }
         return $this->resolverCapitals;
     }
 
@@ -122,13 +145,6 @@ class ResolverFactory extends AbstractFactory
      */
     public function resolverReplacements()
     {
-        if ($this->resolverReplacements === null) {
-            return [
-                '-'=>'',
-                '/'=>'\\',
-                '.'=>'_'
-            ];
-        }
         return $this->resolverReplacements;
     }
 
@@ -137,7 +153,7 @@ class ResolverFactory extends AbstractFactory
      *
      * @param string $type The "type" of object to resolve (the object ident).
      * @throws InvalidArgumentException If the type parameter is not a string.
-     * @return string
+     * @return string The resolved class name (FQN).
      */
     public function resolve($type)
     {
