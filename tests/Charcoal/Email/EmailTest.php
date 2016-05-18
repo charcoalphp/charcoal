@@ -13,12 +13,8 @@ class EmailTest extends \PHPUnit_Framework_TestCase
 
     public function setup()
     {
-        // GLOBALS['app'] is defined in bootstrap file
-        $this->obj = new Email([
-            'app'    => $GLOBALS['app'],
-            'logger' => $GLOBALS['logger'],
-            'phpmailer' => null
-        ]);
+        /** GLOBALS['container'] is defined in bootstrap file */
+        $this->obj = $GLOBALS['container']['email/factory']->create('email');
     }
 
     public function testSetData()

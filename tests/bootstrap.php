@@ -9,7 +9,19 @@ $autoloader->add('Charcoal\\', __DIR__.'/src/');
 $autoloader->add('Charcoal\\Tests\\', __DIR__);
 
 $config = new AppConfig([
-    'base_path' => (dirname(__DIR__) . '/')
+    'base_path' => (dirname(__DIR__) . '/'),
+    'metadata' => [
+        'paths' => [
+            'metadata/',
+            'vendor/locomotivemtl/charcoal-app/metadata/',
+            'vendor/locomotivemtl/charcoal-property/metadata/',
+            'vendor/locomotivemtl/charcoal-base/metadata/'
+        ]
+    ],
+    'service_providers' => [
+        'charcoal/email/service-provider/email' => [],
+        'charcoal/model/service-provider/model' => []
+    ]
 ]);
 $GLOBALS['container'] = new AppContainer([
     'config' => $config
