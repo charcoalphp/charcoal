@@ -44,11 +44,6 @@ abstract class AbstractSource implements
     private $properties = [];
 
     /**
-    * @var array $propertiesOptions
-    */
-    private $propertiesOptions = [];
-
-    /**
     * Array of `Filter` objects
     * @var array $filters
     */
@@ -83,7 +78,6 @@ abstract class AbstractSource implements
     public function reset()
     {
         $this->properties = [];
-        $this->propertiesOptions = [];
         $this->filters = [];
         $this->orders = [];
         $this->pagination = null;
