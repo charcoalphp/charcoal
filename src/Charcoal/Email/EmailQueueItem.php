@@ -95,6 +95,7 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
 
     /**
      * @param FactoryInterface $factory The factory to create email objects.
+     * @return EmailQueueItem Chainable
      */
     protected function setEmailFactory(FactoryInterface $factory)
     {
