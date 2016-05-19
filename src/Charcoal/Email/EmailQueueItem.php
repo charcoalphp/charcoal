@@ -90,6 +90,7 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      */
     public function setDependencies(Container $container)
     {
+        parent::setDependencies($container);
         $this->setEmailFactory($container['email/factory']);
     }
 

@@ -84,8 +84,7 @@ class EmailTest extends \PHPUnit_Framework_TestCase
 
         $ret = $obj->setTo([
             'test@example.com',
-            'test2@example.com']
-        );
+            'test2@example.com']);
         $this->assertSame($ret, $obj);
         $this->assertEquals([
             'test@example.com',

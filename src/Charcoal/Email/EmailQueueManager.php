@@ -20,8 +20,6 @@ class EmailQueueManager extends AbstractQueueManager
      */
     public function queueItemProto()
     {
-        return new EmailQueueItem([
-            'logger' => $this->logger
-        ]);
+        return $this->queueItemFactory()->create('charcoal/email/email-queue-item');
     }
 }

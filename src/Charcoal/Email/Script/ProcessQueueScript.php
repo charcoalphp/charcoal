@@ -6,6 +6,8 @@ namespace Charcoal\Email\Script;
 use \Psr\Http\Message\RequestInterface;
 use \Psr\Http\Message\ResponseInterface;
 
+use \Pimple\Container;
+
 // Module `charcoal-app` dependencies
 use \Charcoal\App\Script\AbstractScript;
 use \Charcoal\App\Script\CronScriptInterface;
@@ -15,11 +17,18 @@ use \Charcoal\App\Script\CronScriptTrait;
 use \Charcoal\Email\EmailQueueManager;
 
 /**
+ * Process Email Queue script.
  *
+ * Can also be used as a cron script.
  */
 class ProcessQueueScript extends AbstractScript implements CronScriptInterface
 {
     use CronScriptTrait;
+
+    /**
+     * @var FactoryInterface $queueItemFactory
+     */
+    protected $queueItemFactory;
 
     /**
      * A copy of all sent message.
@@ -27,6 +36,16 @@ class ProcessQueueScript extends AbstractScript implements CronScriptInterface
      * @var array $sent
      */
     private $sent;
+
+    /**
+     * @param Container $container Pimple DI container.
+     * @return void
+     */
+    public function setDependencies(Container $container)
+    {
+        parent::setDependencies($container);
+        $this->queueItemFactory = $container['model/factory'];
+    }
 
     /**
      * Process all messages currently in queue.
@@ -59,7 +78,8 @@ class ProcessQueueScript extends AbstractScript implements CronScriptInterface
         };
 
         $queueManager = new EmailQueueManager([
-            'logger' => $this->logger
+            'logger' => $this->logger,
+            'queue_item_factory' => $this->queueItemFactory
         ]);
         $queueManager->setProcessedCallback($processedCallback);
         $queueManager->processQueue();

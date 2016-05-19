@@ -2,7 +2,6 @@
 
 namespace Charcoals\Tests\Email;
 
-
 class EmailAwareTraitTest extends \PHPUnit_Framework_TestCase
 {
     public $obj;
@@ -22,8 +21,8 @@ class EmailAwareTraitTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * @dataProvider emailToArrayProvider
-    */
+     * @dataProvider emailToArrayProvider
+     */
     public function testEmailToArray($val, $exp)
     {
         $method = $this->getMethod($this->obj, 'emailToArray');
@@ -35,11 +34,11 @@ class EmailAwareTraitTest extends \PHPUnit_Framework_TestCase
     {
         return [
             ['mat@locomotive.ca', ['email'=>'mat@locomotive.ca', 'name'=>'']],
-            ["Mathieu <mat@locomotive.ca>", ['email'=>'mat@locomotive.ca', 'name'=>'Mathieu']],
+            ['Mathieu <mat@locomotive.ca>', ['email'=>'mat@locomotive.ca', 'name'=>'Mathieu']],
             ["'Mathieu' <mat@locomotive.ca>", ['email'=>'mat@locomotive.ca', 'name'=>'Mathieu']],
             ['"Mathieu Mémo" <mat@locomotive.ca>', ['email'=>'mat@locomotive.ca', 'name'=>'Mathieu Mémo']],
             ['"M_athieu-Mémo" <mat@locomotive.ca>', ['email'=>'mat@locomotive.ca', 'name'=>'M_athieu-Mémo']],
-            ["Alertes Mathieu-Loco <alertes@loco-motive_123.ca>", ['email'=>'alertes@loco-motive_123.ca', 'name'=>'Alertes Mathieu-Loco']],
+            ['Alertes Mathieu-Loco <alertes@loco-motive_123.ca>', ['email'=>'alertes@loco-motive_123.ca', 'name'=>'Alertes Mathieu-Loco']],
             ['longtld@museum.com', ['email'=>'longtld@museum.com', 'name'=>'']]
         ];
     }

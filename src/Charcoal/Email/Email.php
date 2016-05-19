@@ -25,9 +25,11 @@ use \Charcoal\View\GenericView;
 use \Charcoal\View\ViewableInterface;
 use \Charcoal\View\ViewableTrait;
 
+// Module `charcoal-queue` dependencies
+use \Charcoal\Queue\QueueableInterface;
+use \Charcoal\Queue\QueueableTrait;
+
 // Intra module (`charcoal-email`) dependencies
-use \Charcoal\Email\Queue\QueueableInterface;
-use \Charcoal\Email\Queue\QueueableTrait;
 use \Charcoal\Email\EmailInterface;
 use \Charcoal\Email\EmailConfig;
 use \Charcoal\Email\EmailLog;
