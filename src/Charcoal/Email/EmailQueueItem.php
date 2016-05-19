@@ -374,7 +374,7 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
             if ($res === true) {
                 $this->setProcessed(true);
                 $this->setProcessedDate('now');
-                $this->update();
+                $this->update(['processed', 'processed_date']);
 
                 if ($successCallback !== null) {
                     $successCallback($this);
