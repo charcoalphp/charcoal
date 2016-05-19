@@ -2,12 +2,15 @@
 
 namespace Charcoal\Queue;
 
-// From `charcoal-core`
-use \Charcoal\Loader\CollectionLoader;
-
 // PSR-3 (logger) dependencies
 use \Psr\Log\LoggerAwareInterface;
 use \Psr\Log\LoggerAwareTrait;
+
+// From `charcoal-core`
+use \Charcoal\Loader\CollectionLoader;
+
+// From `charcoal-factory`
+use \Charcoal\Factory\FactoryInterface;
 
 /**
  * Abstract Queue Manager
@@ -82,6 +85,11 @@ abstract class AbstractQueueManager implements
     private $processedCallback;
 
     /**
+     * @var FactoryInterface $queueItemFactory
+     */
+    private $queueItemFactory;
+
+    /**
      * Construct new queue manager.
      *
      * @param array $data Dependencies and settings.
@@ -89,6 +97,25 @@ abstract class AbstractQueueManager implements
     public function __construct(array $data = [])
     {
         $this->setLogger($data['logger']);
+        $this->setQueueItemFactory($data['queue_item_factory']);
+    }
+
+    /**
+     * @param FactoryInterface $factory The factory used to create queue items.
+     * @return QueueItemInterface Chainable
+     */
+    protected function setQueueItemFactory(FactoryInterface $factory)
+    {
+        $this->queueItemFactory = $factory;
+        return $this;
+    }
+
+    /**
+     * @return FactoryInterface
+     */
+    protected function queueItemFactory()
+    {
+        return $this->queueItemFactory;
     }
 
     /**
@@ -221,7 +248,10 @@ abstract class AbstractQueueManager implements
      */
     public function loadQueueItems()
     {
-        $loader = new CollectionLoader([]);
+        $loader = new CollectionLoader([
+            'logger' => $this->logger,
+            'factory' => $this->queueItemFactory()
+        ]);
         $loader->setModel($this->queueItemProto());
         $loader->addFilter([
             'property' => 'processed',
