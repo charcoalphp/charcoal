@@ -1,21 +1,45 @@
 language: php
+
 php:
     - 5.5
     - 5.6
+    - 7.0
     - hhvm
     - nightly
+
+env:
+  global:
+    - secure: "nIqiRZI+x4iY2TS9qMaWjFUAhwyL0tPzowm0gW19X+ao3vPhQTbK7kfEw3mu1Um6nvrZzhkpaJ+IjhsuFbPscFmy9mkXdEtpjo6xB8vh59h+5BB+Zov9MO5ipMtIm/RjhqCA5cSwC8MMucifo6aPsPQkgxEakH0bqvcd1R4wXRQ0U2S9lngg9mOKNcPPs+8bLAgBsjV/iplPgFoTCoEnqU31+9FghHydT3CKfyObx3e8T3tLjMnPhH1wF/HIWuYe4Z/bypgIqLouT2HiYR2/6FZnTU3UabPcicwQavElDKAqCQLJaiZYfx+bnP11yoYE/bbBYerQaMcRTd/E7I2xvRzkWKl1l8JSWKbsi9D1hai8lkcSd3eF43TZRlb3mjKgqy5JITf04byEBt/009rSFfHK4+63ycwUbUSONcxFwW/iLulfeAbZaIMQ3B84U3wEX5nRHwpG9Te2Aidd3X1ZM/FvGsPOK9HbExk04VcP2C+VNKcZJxFWcuupCJK0p/MNnmBla+5Xs0HIwFW1LGv77S1J/+u99jAtMatWcPwu+XVwT4TPb0QOAGOOiWcogTX51nrRZqxPLFBqSxB85DbQRpMaa5osXgD/fhL0qVeDGb24gk25vk+ihFdQ/sugVn+RqvYRkDyol2XdTVU9udPXo53Lu8fxdAbtDsvUKzMfBoc="
+    - GH_REPO: github.com/locomotivemtl/charcoal-queue.git
 
 matrix:
     allow_failures:
         - php: hhvm
         - php: nightly
 
-before_install:
-    - sh -c "if [ $TRAVIS_PHP_VERSION != 'hhvm' ]; then pear install pear/PHP_CodeSniffer && phpenv rehash; fi"
-
 before_script:
-    - composer install
+  ## Init composer
+  - composer selfupdate --quiet
+  - COMPOSER_ROOT_VERSION=dev-master composer install -n --dev
+
+  ## Create temporary folders
+  - mkdir -p build/logs
 
 script:
-    - sh -c "if [ $TRAVIS_PHP_VERSION != 'hhvm' ]; then phpcs -ps --colors --standard=phpcs.xml src/; fi"
-    - phpunit --bootstrap ./tests/bootstrap.php --configuration ./tests/phpunit.xml --coverage-text
+  ## Lint PHP Files
+  - find {src,tests} -name '*.php' -print0 | xargs -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1
+
+  ## PHP Code Sniffer
+  - if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then ./vendor/bin/phpcs -ps --colors --standard=phpcs.xml src/; fi
+
+  ## Run PHPUnit Tests
+  - phpunit --configuration ./tests/phpunit.xml --coverage-text --coverage-clover build/logs/clover.xml
+
+after_script:
+  - php vendor/bin/coveralls -v
+  - bash build/travis/phpdoc_ghpages.sh
+  - bash build/travis/apigen_ghpages.sh
+
+notifications:
+  slack: locomotivemtl:d9h8ZWwTZ6b3WUsSP9s26nb1
+  email: charcoal@locomotive.ca
