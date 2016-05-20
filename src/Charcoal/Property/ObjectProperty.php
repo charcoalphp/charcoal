@@ -303,7 +303,11 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
 
         $names = [];
         foreach ($propertyValue as $objIdent) {
-            $obj = $this->loadObject($objIdent);
+            if ($objIdent instanceof ModelInterface) {
+                $obj = $objIdent;
+            } else {
+                $obj = $this->loadObject($objIdent);
+            }
             $names[] = $this->objPattern($obj);
         }
         return implode(', ', $names);
@@ -443,7 +447,9 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
         }
         $obj = $this->modelFactory()->create($this->objType());
         $obj->load($id);
-        $this->addObjectToCache($id, $obj);
+
+
+        $this->addObjectToCache($obj);
         return $obj;
     }
 
@@ -462,13 +468,12 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
-     * @param mixed          $id  Object id.
      * @param ModelInterface $obj Object to store.
      * @return void
      */
-    private function addObjectToCache($id, ModelInterface $obj)
+    private function addObjectToCache(ModelInterface $obj)
     {
         $objType = $this->objType();
-        static::$objectCache[$objType][$id] = $obj;
+        static::$objectCache[$objType][$obj->id()] = $obj;
     }
 }
