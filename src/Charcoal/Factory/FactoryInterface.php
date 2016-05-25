@@ -27,27 +27,9 @@ interface FactoryInterface
     public function get($type, array $args = null);
 
     /**
-     * If a base class is set, then it must be ensured that the created objects
-     * are `instanceof` this base class.
-     *
-     * @param string $classname The FQN of the class to set as base class.
-     * @return FactoryInterface
-     */
-    public function setBaseClass($classname);
-
-    /**
      * @return string
      */
     public function baseClass();
-
-    /**
-     * If a default class is set, then calling `get()` or `create()`
-     * an invalid type should return an object of this class instead of throwing an error.
-     *
-     * @param string $classname The FQN of the class to set as default class.
-     * @return FactoryInterface
-     */
-    public function setDefaultClass($classname);
 
     /**
      * @return string
@@ -55,15 +37,14 @@ interface FactoryInterface
     public function defaultClass();
 
     /**
-     * @param array $arguments The constructor arguments to be passed to the created object's initialization.
-     * @return AbstractFactory Chainable
-     */
-    public function setArguments(array $arguments);
-
-    /**
      * @return array
      */
     public function arguments();
+
+    /**
+     * @return callable|null
+     */
+    public function callback();
 
     /**
      * Get the class name (FQN) from "type".
