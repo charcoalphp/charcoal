@@ -5,6 +5,9 @@ namespace Charcoal\Property;
 use \Exception;
 use \InvalidArgumentException;
 
+// Module `charcoal-factory` dependencies
+use \Charcoal\Factory\FactoryInterface;
+
 // Local namespace dependency
 use \Charcoal\Property\PropertyFactory;
 
@@ -16,7 +19,7 @@ use \Charcoal\Property\PropertyFactory;
 trait DescribablePropertyTrait
 {
     /**
-     * @var PropertyFactory $propertyFactory
+     * @var FactoryInterface $propertyFactory
      */
     protected $propertyFactory = null;
 
@@ -26,10 +29,10 @@ trait DescribablePropertyTrait
     protected $properties;
 
     /**
-     * @param PropertyFactory $factory The property factory, used to create metadata properties.
+     * @param FactoryInterface $factory The property factory, used to create metadata properties.
      * @return DescribableInterface Chainable
      */
-    public function setPropertyFactory(PropertyFactory $factory)
+    public function setPropertyFactory(FactoryInterface $factory)
     {
         $this->propertyFactory = $factory;
 
@@ -39,7 +42,7 @@ trait DescribablePropertyTrait
     /**
      * Safe PropertyFactory getter. Create the factory if it does not exist.
      *
-     * @return PropertyFactory
+     * @return FactoryInterface
      */
     protected function propertyFactory()
     {
