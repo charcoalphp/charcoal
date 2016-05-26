@@ -1,7 +1,7 @@
 Charcoal Factory
 ================
 
-Factories create or build dynamic PHP objects.
+Factories **create** (or build) dynamic PHP objects. Factories can resolve a _type_ to a FQN and create instance of this class with an optional given set of arguments, while ensuring a default base class.
 
 [![Build Status](https://travis-ci.org/locomotivemtl/charcoal-factory.svg?branch=master)](https://travis-ci.org/locomotivemtl/charcoal-factory)
 
@@ -10,11 +10,20 @@ Factories create or build dynamic PHP objects.
 - How to install
 	- Dependencies
 - Factories
-	- About factories
+	- Usage
+	- The resolver
+	- Class map / aliases
 	- Ensuring a type of object
 	- Setting a default type of object
 	- Constructor arguments
 	- Executing an object callback
+- Development
+	- Development dependencies
+	- Continus integration
+	- Coding style
+	- Authors
+	- Changelog
+- License
 
 # How to install
 
@@ -34,79 +43,102 @@ The preferred (and only supported) way of installing _charcoal-factory_ is with 
 
 # Factories
 
-## About factories
+## Usage
 
-Factories have only one purpose: to create / instanciate new PHP objects. There is 2 different methods of object creation:
-
-- Typically, the `create` method instantiates an object, from a class ident.
-- Additionnally, the `get` method can be called to retrieve the last created instance.
+Factories have only one purpose: to **create** / instanciate new PHP objects. Factory options should be set directly from the constructor:
 
 ```php
-$factory = new \Charcoal\Factory\ResolverFactory();
+$factory = new \Charcoal\Factory\GenericFactory([
+	// Ensure the created object is a Charcoal Model
+	'base_class' => '\Charcoal\Model\ModelInterface',
 
-// Ensure the created object is a Charcoal Model
-$factory->setBaseClass('\Charcoal\Model\ModelInterface');
+	// An associative array of class map (aliases)
+	'map' => [
+		'foo' => '\My\Foo',
+		'bar' => '\My\Bar'
+	],
 
-// Create a "news" object (from the `charcoal-cms` module)
-$factory->create('charcoal/cms/news');
+	// Constructor arguments
+	'arguments' => [
+		$dep1,
+		$dep2
+	],
+
+	// Object callback
+	'callback' => function (&obj) {
+		$obj->do('foo');
+	}
+]);
+
+// Create a "\My\Custom\Baz" object with the given arguments + callbck
+$factory->create('\My\Custom\Baz');
+
+// Create a "\My\Foo" object (using the map of aliases)
+$factory->create('foo');
+
+// Create a "\My\Custom\FooBar" object with the default resolver
+$factory->create('my/custom/foo-bar');
 ```
 
-There are 3 default type of factory provided:
+Options (class dependencies) are:
 
-### `GenericFactory`
+| Name               | Type       | Default    | Description                            |
+| ------------------ | ---------- | ---------- | -------------------------------------- |
+| `base_class`       | _string_   | `''`   | Optional. A base class (or interface) to ensure a type of object.
+| `default_class`    | _string_   | `''`   | Optional. A default class, as fallback when the requested object is not resolvable.
+| `arguments`        | _array_    | `[]`   | Optional. Constructor arguments that will be passed along to created instances.
+| `callback`         | _Callable_ | `null` | Optional. A callback function that will be called upon object creation.
+| `resolver`         | _Callable_ | `null`<sup>[1]</sup> | Optional. A class resolver. If none is provided, a default will be used.
+| `resolver_options` | _array_    | `null` | Optional. Resolver options (prefix, suffix, capitals and replacements). This is ignored / unused if `resolver` is provided.
 
-Resolve the **class name** by using the requested **type** directly as the class name.
+<small>[1] When no resolver is provider a default `\Charcoal\Factory\GenericResolver` will be used.</small>
 
-### `MapFactory`
+## The resolver
 
-Resolve the **class name** from an associative array (_map_) with the requested **type** as key.
+The _type_ (class identifier) sent to the `create()` method can be parsed / resolved with a custom `Callable` resolver.
 
-### `ResolverFactory`
+If no `resolver` is passed to the constructor, a default `\Charcoal\Factory\GenericResolver` is used. This default resolver transforms, for example, `my/custom/foo-bar` into `\My\Custom\FooBar`.
 
-Resolves the **class name** from the `resolve()` method, which typically transform the requested **type** by:
+## Class map / aliases
+
+Class _aliases_ can be added by setting them in the Factory constructor:
+
+```php
+$factory = new GenericFactory([
+	'map' => [
+		'foo' => '\My\Foo',
+		'bar' => '\My\Bar'
+	]
+]);
+
+// Create a `\My\Foo` instance
+$obj = $factory->create('foo');
+```
 
 ## Ensuring a type of object
 
-Ensuring a type of object can be done by setting the `baseClass`, either forced in a class:
+Ensuring a type of object can be done by setting the `base_class` property.
+
+The recommended way of setting the base class is by setting it in the constructor:
 
 ```php
-class MyFactory extends AbstractFactory
-{
-	public function baseClass()
-	{
-		return '\My\Foo\BaseClassInterface`;
-	}
-}
-```
-
-Or, dynamically, with `setBaseClass()`:
-
-```php
-$factory = new ResolverFactory();
-$factory->setBaseClass('\My\Foo\BaseClassInterface');
+$factory = new GenericFactory([
+	'base_class' => '\My\Foo\BaseClassInterface'
+]);
 ```
 
 > 👉 Note that _Interfaces_ can also be used as a factory's base class.
 
 ## Setting a default type of object
 
-It is possible to set a default type of object (default class) by setting the `defaultClass`, either forced in a class:
+It is possible to set a default type of object (default class) by setting the `default_class` property.
+
+The recommended way of setting the default class is by setting it in the constructor:
 
 ```php
-class MyFactory extends AbstractFactory
-{
-	public function defaultClass()
-	{
-		return '\My\Foo\DefaultClassInterface`;
-	}
-}
-```
-
-Or, dynamically, with `setDefaultClass()`:
-
-```php
-$factory = new ResolverFactory();
-$factory->setDefaultClass('\My\Foo\DefaultClassInterface');
+$factory = new GenericFactory([
+	'default_class' => '\My\Foo\DefaultClassInterface'
+]);
 ```
 
 > ⚠ Setting a default class name changes the standard Factory behavior. When an invalid class name is used, instead of throwing an `Exception`, an object of the default class type will **always** be returned.
@@ -115,120 +147,42 @@ $factory->setDefaultClass('\My\Foo\DefaultClassInterface');
 
 It is possible to set "automatic" constructor arguments that will be passed to every created object.
 
-The easiest way to achieve this is by passing the arguments as the 2nd parameter of a factory's `create()` method.
+The recommended way of setting constructor arguments is by passing an array of arguments to the constructor:
 
 ```php
-$factory->create('foo/bar', [$args]);
-```
-
-Another way of providing constructor arguments to a factory is with the `setArguments()` method. Assume that the `\Foo\Bar` object have the following constructor:
-
-```php
-namespace \Foo;
-
-class Bar {
-	public function __constructor($dependencies)
-	{
-		$this->setFooDependency($dependencies['foo']);
-		$this->setBar($dependencies['bar']);
-	}
-}
-```
-
-Then the following code will create an object with proper constructor arguments.
-
-```
-$factory = new \Charcoal\Factory\MapFactory();
-$factory->setMap([
-	'obj' => '\Foo\Bar'
+$factory = new GenericFactory([
+	'arguments' => [
+		[
+			'logger' => $container['logger']
+		],
+		$secondArgument
+	]
 ]);
-$factory->setArguments([
-	'foo'=>new Dependency1(),
-	'bar'=>new Dependency2()
-]);
-$obj = $factory->create('obj');
 ```
 
 ## Executing an object callback
 
-It is possible to execute an object callback upon object instanciation by passing a `callable` object as the 3rd argument of the `create()` method. The callback should have the following signature:
+It is possible to execute an object callback upon object instanciation. A callback is any `Callable` that takes the newly created object by reference as its function parameter.
 
 ```php
 // $obj is the newly created object
-function callback($obj);
+function callback(&$obj);
 ```
 
-Example:
+The recommended way of adding an object callback is by passing a `Callable` to the constructor:
 
 ```php
-$factory = new GenericFactory();
-$factory->setBaseClass('\Foo\BarInterface');
-$factory->setArguments([
-	'logger'=>$container['logger']
+$factory = new GenericFactory([
+	'arguments' => [[
+		'logger' => $container['logger']
+	]],
+	'callback' => function (&$obj) {
+		$obj->foo('bar');
+		$obj->logger->debug('Objet instanciated from factory.');
+	}
 ]);
-// Create a new object with a callback.
-$factory->create('\Foo\Bar', null, function(\Foo\Bar $obj) {
-  // Outputs the newly created `\Foo\Bar` object
-	var_dump($obj);
-});
 ```
 
-Another way of providing a callback is with the `setCallback()` method:
-
-```php
-$factory = new GenericFactory();
-$factory->setCallback(function(\Foo\Bar $obj) {
-	// Outputs the newly created '\Foo\Bar' object
-	var_dump($obj);
-});
-```
-
-# The `AbstractFactory` API
-
-| Method                                 | Return value | Description |
-| -------------------------------------- | ------------ | ----------- |
-| `create(string $type [, array $args, callable $cb])` | _Object_     | Create a class from a "type" string. |
-| `get(string $type [, array $args])`    | _Object_     | Get returns the latest created class instance, or a new one if none exists. |
-| `setBase_class(string $classname)`    | _Chainable_  |             |
-| `baseClass()`                         | `string`     |             |
-| `setDefaultClass(string $classname)`  | _Chainable_  |             |
-| `defaultClass()`                      | `string`     |             |
-| `resolve(string $type)`               | `string`     | **abstract**, must be reimplemented in children classes. |
-| `isResolvable(string $type)`          | `boolean`    | **abstract**, must be reimplemented in children classes. |
-
-## The `MapFactory` additional API
-
-| Method                                       | Return value | Description |
-| -------------------------------------------- | ------------ | ----------- |
-| `addClass(string $type, string $class_name)` | _Chainable_  |             |
-| `setMap(array $map)`                         | _Chainable_  |             |
-| `map()`                                      | `array`      |             |
-
-## The `GenericFactory` additional API
-
-Because the `ClassNameFactory` uses the parameter directly, there is no additional methods for this type of class.
-
-The `resolve()` method simply returns its _type_ argument, and the `validate()` method simply ensures its _type_ argument is a valid (existing) class.
-
-## The `ResolverFactory` additional API
-
-The `ResolverFactory` resolves the classname from the class resolver options:
-
-- `resolverPrefix` `string` that will be prepended to the resolved class name.
-- `resolverSuffix` `string` that will be appended to the resolved class name.
-- `resolverCapitals` `array` of characters that will cause the next character to be capitalized.
-- `resolverReplacements` `array`
-
-| Method                                           | Return value | Description |
-| -----------------------------------------------| ------------ | ----------- |
-| `setResolverPrefix(string $prefix)`            | _Chainable_  |             |
-| `resolverPrefix()`                             | `string`     |             |
-| `setResolverSuffix(string $suffix)`            | _Chainable_  |             |
-| `resolverSuffix()`                             | `string`     |             |
-| `setResolveCcapitals(array $capitals)`         | _Chainable_  |             |
-| `resolverCapitals()`                           | `array`      |             |
-| `setResolverReplacements(array $replacements)` | _Chainable_  |             |
-| `resolverReplacements()`                       | `array`      |             |
 
 # Development
 

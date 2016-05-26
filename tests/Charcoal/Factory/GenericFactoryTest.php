@@ -17,20 +17,6 @@ class GenericFactoryTest extends \PHPUnit_Framework_TestCase
         $this->obj = new \Charcoal\Factory\GenericFactory();
     }
 
-    /**
-     * Asserts that the resolve method:
-     * - Simply returns the parameter, as is.
-     * - Throws an exception if the parameter is not a string
-     */
-    public function testResolve()
-    {
-        $ret = $this->obj->resolve('foo');
-        $this->assertEquals('foo', $ret);
-
-        $this->setExpectedException('\InvalidArgumentException');
-        $this->obj->resolve(false);
-    }
-
     public function testIsResolvable()
     {
         $this->assertTrue($this->obj->isResolvable('DateTime'));

@@ -18,15 +18,8 @@ interface FactoryInterface
     public function create($type, array $args = null, callable $cb = null);
 
     /**
-     * Get an instance of a class, by type.
+     * A base class name (or interface)
      *
-     * @param string $type The type (class ident).
-     * @param array  $args Constructor arguments.
-     * @return mixed
-     */
-    public function get($type, array $args = null);
-
-    /**
      * @return string
      */
     public function baseClass();
@@ -45,20 +38,4 @@ interface FactoryInterface
      * @return callable|null
      */
     public function callback();
-
-    /**
-     * Get the class name (FQN) from "type".
-     *
-     * @param string $type The "type" of object to resolve (the object ident).
-     * @return string The resolved class name (FQN).
-     */
-    public function resolve($type);
-
-    /**
-     * Returns wether a type is available (is valid).
-     *
-     * @param string $type The "type" of object to resolve (the object ident).
-     * @return boolean True if the type is available, false if not.
-     */
-    public function isResolvable($type);
 }

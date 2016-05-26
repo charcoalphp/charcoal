@@ -8,9 +8,22 @@ use \InvalidArgumentException;
 
 // Local namespace dependencies
 use \Charcoal\Factory\FactoryInterface;
+use \Charcoal\Factory\GenericResolver;
 
 /**
  * Full implementation, as Abstract class, of the FactoryInterface.
+ *
+ * ## Class dependencies:
+ *
+ * | Name               | Type       | Description                            |
+ * | ------------------ | ---------- | -------------------------------------- |
+ * | `base_class`       | _string_   | Optional. A base class (or interface) to ensure a type of object.
+ * | `default_class`    | _string_   | Optional. A default class, as fallback when the requested object is not resolvable.
+ * | `arguments`        | _array_    | Optional. Constructor arguments that will be passed along to created instances.
+ * | `callback`         | _Callable_ | Optional. A callback function that will be called upon object creation.
+ * | `resolver`         | _Callable_ | Optional. A class resolver. If none is provided, a default will be used.
+ * | `resolver_options` | _array_    | Optional. Resolver options (prefix, suffix, capitals and replacements). This is ignored / unused if `resolver` is provided.
+ *
  */
 abstract class AbstractFactory implements FactoryInterface
 {
@@ -48,21 +61,42 @@ abstract class AbstractFactory implements FactoryInterface
     private $instances = [];
 
     /**
+     * @var Callable $resolver
+     */
+    private $resolver;
+
+    /**
+     * The class map array holds available types, in `[$type => $className]` format.
+     * @var string[] $map
+     */
+    private $map = [];
+
+    /**
      * @param array $data Constructor dependencies.
      */
     public function __construct(array $data = null)
     {
+        if (isset($data['base_class'])) {
+            $this->setBaseClass($data['base_class']);
+        }
+        if (isset($data['default_class'])) {
+            $this->setDefaultClass($data['default_class']);
+        }
         if (isset($data['arguments'])) {
             $this->setArguments($data['arguments']);
         }
         if (isset($data['callback'])) {
             $this->setCallback($data['callback']);
         }
-        if (isset($data['base_class'])) {
-            $this->setBaseClass($data['base_class']);
+
+        if (!isset($data['resolver'])) {
+            $opts = isset($data['resolver_options']) ? $data['resolver_options'] : null;
+            $data['resolver'] = new GenericResolver($opts);
         }
-        if (isset($data['default_class'])) {
-            $this->setDefaultClass($data['default_class']);
+        $this->setResolver($data['resolver']);
+
+        if (isset($data['map'])) {
+            $this->setMap($data['map']);
         }
     }
 
@@ -77,7 +111,7 @@ abstract class AbstractFactory implements FactoryInterface
      *
      *
      * @param string   $type The type (class ident).
-     * @param array    $args Optional. The constructor arguments. Leave blank to use `$arguments` member.
+     * @param array    $args Optional. Constructor arguments (will override the arguments set on the class from constructor).
      * @param callable $cb   Optional. Object callback, called at creation. Leave blank to use `$callback` member.
      * @throws Exception If the base class is set and  the resulting instance is not of the base class.
      * @throws InvalidArgumentException If type argument is not a string or is not an available type.
@@ -167,7 +201,7 @@ abstract class AbstractFactory implements FactoryInterface
      * @param mixed  $args      The constructor arguments.
      * @return mixed The created object.
      */
-    public function createClass($classname, $args)
+    protected function createClass($classname, $args)
     {
         if ($args === null) {
             return new $classname;
@@ -178,13 +212,9 @@ abstract class AbstractFactory implements FactoryInterface
         if (count(array_filter(array_keys($args), 'is_string')) > 0) {
             return new $classname($args);
         } else {
-            if (version_compare(PHP_VERSION, '5.6.0') >= 0) {
-                return new $classname(...$args);
-            } else {
-                // PHP under 5.6 does not support argument unpacking.
-                $reflection = new \ReflectionClass($classname);
-                return $reflection->newInstanceArgs($args);
-            }
+            // Use argument unpacking (`return new $classname(...$args);`) when minimum PHP requirement is bumped to 5.6.
+            $reflection = new \ReflectionClass($classname);
+            return $reflection->newInstanceArgs($args);
         }
     }
 
@@ -213,12 +243,76 @@ abstract class AbstractFactory implements FactoryInterface
     }
 
     /**
+     * @param callable $resolver The class resolver instance to use.
+     * @return FactoryInterface Chainable
+     */
+    private function setResolver(callable $resolver)
+    {
+        $this->resolver = $resolver;
+        return $this;
+    }
+
+    /**
+     * @return callable
+     */
+    protected function resolver()
+    {
+        return $this->resolver;
+    }
+
+    /**
+     * Add multiple types, in a an array of `type` => `className`.
+     *
+     * @param string[] $map The map (key=>classname) to use.
+     * @return FactoryInterface Chainable
+     */
+    private function setMap(array $map)
+    {
+        // Resets (overwrites) map.
+        $this->map = [];
+        foreach ($map as $type => $className) {
+            $this->addClassToMap($type, $className);
+        }
+        return $this;
+    }
+
+    /**
+     * Get the map of all types in `[$type => $class]` format.
+     *
+     * @return string[]
+     */
+    protected function map()
+    {
+        return $this->map;
+    }
+
+    /**
+     * Add a class name to the available types _map_.
+     *
+     * @param string $type      The type (class ident).
+     * @param string $className The FQN of the class.
+     * @throws InvalidArgumentException If the $type parameter is not a striing or the $className class does not exist.
+     * @return FactoryInterface Chainable
+     */
+    protected function addClassToMap($type, $className)
+    {
+        if (!is_string($type)) {
+            throw new InvalidArgumentException(
+                'Type (class key) must be a string'
+            );
+        }
+
+        $this->map[$type] = $className;
+        return $this;
+    }
+
+    /**
      * If a base class is set, then it must be ensured that the created objects
      * are `instanceof` this base class.
      *
      * @param string $type The FQN of the class, or "type" of object, to set as base class.
      * @throws InvalidArgumentException If the class is not a string or is not an existing class / interface.
-     * @return FactoryInterface
+     * @return FactoryInterface Chainable
      */
     public function setBaseClass($type)
     {
@@ -261,7 +355,7 @@ abstract class AbstractFactory implements FactoryInterface
      *
      * @param string $type The FQN of the class, or "type" of object, to set as default class.
      * @throws InvalidArgumentException If the class name is not a string or not a valid class.
-     * @return FactoryInterface
+     * @return FactoryInterface Chainable
      */
     public function setDefaultClass($type)
     {
@@ -298,7 +392,7 @@ abstract class AbstractFactory implements FactoryInterface
 
     /**
      * @param array $arguments The constructor arguments to be passed to the created object's initialization.
-     * @return AbstractFactory Chainable
+     * @return FactoryInterface Chainable
      */
     public function setArguments(array $arguments)
     {
@@ -316,7 +410,7 @@ abstract class AbstractFactory implements FactoryInterface
 
     /**
      * @param callable $callback The object callback.
-     * @return AbstractFatory Chainable
+     * @return FactoryInterface Chainable
      */
     public function setCallback(callable $callback)
     {
@@ -332,19 +426,65 @@ abstract class AbstractFactory implements FactoryInterface
         return $this->callback;
     }
 
-    /**
-     * Resolve the class name from "type".
-     *
-     * @param string $type The "type" of object to resolve (the object ident).
-     * @return string The resolved class name (FQN).
-     */
-    abstract public function resolve($type);
+ /**
+  * The Generic factory resolves the class name from an exact FQN.
+  *
+  * @param string $type The "type" of object to resolve (the object ident).
+  * @throws InvalidArgumentException If the type parameter is not a string.
+  * @return string The resolved class name (FQN).
+  */
+    public function resolve($type)
+    {
+        if (!is_string($type)) {
+            throw new InvalidArgumentException(
+                'Can not resolve class ident: type must be a string'
+            );
+        }
+
+        $map = $this->map();
+        if (isset($map[$type])) {
+            $type = $map[$type];
+        }
+
+        if (class_exists($type)) {
+            return $type;
+        }
+
+        $resolver = $this->resolver();
+        $resolved = $resolver($type);
+        return $resolved;
+    }
 
     /**
-     * Returns wether a type is resolvable (is valid).
+     * Wether a `type` is resolvable. The Generic Factory simply checks if the _FQN_ `type` class exists.
      *
      * @param string $type The "type" of object to resolve (the object ident).
-     * @return boolean True if the type is available, false if not
+     * @throws InvalidArgumentException If the type parameter is not a string.
+     * @return boolean
      */
-    abstract public function isResolvable($type);
+    public function isResolvable($type)
+    {
+        if (!is_string($type)) {
+            throw new InvalidArgumentException(
+                'Can not check resolvable: type must be a string'
+            );
+        }
+
+        $map = $this->map();
+        if (isset($map[$type])) {
+            $type = $map[$type];
+        }
+
+        if (class_exists($type)) {
+            return true;
+        }
+
+        $resolver = $this->resolver();
+        $resolved = $resolver($type);
+        if (class_exists($resolved)) {
+            return true;
+        }
+
+        return false;
+    }
 }
