@@ -5,8 +5,10 @@ namespace Charcoal\Source;
 use \Exception;
 use \InvalidArgumentException;
 
+// Module `charcoal-factory` dependencies
+use \Charcoal\Factory\FactoryInterface;
+
 // Local namespace dependencies
-use \Charcoal\Source\SourceFactory;
 use \Charcoal\Source\SourceInterface;
 
 /**
@@ -25,7 +27,7 @@ trait StorableTrait
     protected $key = 'id';
 
     /**
-    * @var SourceFactory $sourceFactory
+    * @var FactoryInterface $sourceFactory
     */
     protected $sourceFactory;
 
@@ -118,10 +120,10 @@ trait StorableTrait
     }
 
     /**
-     * @param SourceFactory $factory The source factory, which is useful to create source.
+     * @param FactoryInterface $factory The source factory, which is useful to create source.
      * @return StorableInterface Chainable
      */
-    public function setSourceFactory(SourceFactory $factory)
+    public function setSourceFactory(FactoryInterface $factory)
     {
         $this->sourceFactory = $factory;
         return $this;
@@ -129,7 +131,7 @@ trait StorableTrait
 
     /**
      * @throws Exception If the source factory was not previously set.
-     * @return SourceFactory
+     * @return FactoryInterface
      */
     protected function sourceFactory()
     {

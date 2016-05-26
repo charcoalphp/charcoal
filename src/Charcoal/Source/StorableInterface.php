@@ -2,6 +2,9 @@
 
 namespace Charcoal\Source;
 
+// Module `charcoal-factory` dependencies
+use \Charcoal\Factory\FactoryInterface;
+
 // Local namespace dependencies
 use \Charcoal\Source\SourceFactory;
 use \Charcoal\Source\SourceInterface;
@@ -42,10 +45,10 @@ interface StorableInterface
     public function key();
 
     /**
-     * @param SourceFactory $factory The source factory, which is useful to create source.
+     * @param FactoryInterface $factory The source factory, which is useful to create source.
      * @return StorableInterface Chainable
      */
-    public function setSourceFactory(SourceFactory $factory);
+    public function setSourceFactory(FactoryInterface $factory);
 
     /**
     * Set the object's source.
