@@ -144,7 +144,6 @@ abstract class AbstractFactory implements FactoryInterface
                 $defaultClass = $this->defaultClass();
                 if ($defaultClass !== '') {
                     $obj = $this->createClass($defaultClass, $args);
-                    $obj = new $defaultClass($args);
                     if (isset($cb)) {
                         $cb($obj);
                     }
