@@ -2,8 +2,6 @@
 
 namespace Charcoal\Factory;
 
-use \InvalidArgumentException;
-
 // Local namespace dependencies
 use \Charcoal\Factory\AbstractFactory;
 

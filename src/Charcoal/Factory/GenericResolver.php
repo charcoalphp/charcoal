@@ -2,6 +2,8 @@
 
 namespace Charcoal\Factory;
 
+use \InvalidArgumentException;
+
 /**
  *
  */

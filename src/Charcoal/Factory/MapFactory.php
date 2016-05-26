@@ -2,8 +2,6 @@
 
 namespace Charcoal\Factory;
 
-// Dependencies from `PHP`
-use \InvalidArgumentException;
 
 // Local namespace dependencies
 use \Charcoal\Factory\AbstractFactory;
