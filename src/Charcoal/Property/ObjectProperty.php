@@ -9,6 +9,8 @@ use \Pimple\Container;
 
 use \Charcoal\Factory\FactoryInterface;
 
+use \Charcoal\View\ViewableInterface;
+
 use \Charcoal\Model\ModelInterface;
 use \Charcoal\Loader\CollectionLoader;
 use \Charcoal\Source\StorableInterface;
@@ -418,7 +420,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     protected function objPattern($obj)
     {
         $pattern = (string)$this->pattern();
-        if ($obj instanceof Viewable && $obj->view() !== null) {
+        if ($obj instanceof ViewableInterface && $obj->view() !== null) {
             return $obj->render($pattern);
         } else {
             $cb = function ($matches) use ($obj) {

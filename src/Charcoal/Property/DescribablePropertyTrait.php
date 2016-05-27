@@ -21,7 +21,7 @@ trait DescribablePropertyTrait
     /**
      * @var FactoryInterface $propertyFactory
      */
-    protected $propertyFactory = null;
+    protected $propertyFactory;
 
     /**
      * @var array $properties
