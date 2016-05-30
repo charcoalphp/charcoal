@@ -53,9 +53,10 @@ class EmailServiceProvider implements ServiceProviderInterface
          * @return \Charcoal\Factory\FactoryInterface
          */
         $container['email/factory'] = function(Container $container) {
-            $factory = new MapFactory();
-            $factory->setMap([
-                'email'=>'\Charcoal\Email\Email'
+            $factory = new MapFactory([
+                'map' => [
+                    'email'=>'\Charcoal\Email\Email'
+                ]
             ]);
             $factory->setBaseClass('\Charcoal\Email\EmailInterface');
             $factory->setDefaultClass('\Charcoal\Email\Email');
