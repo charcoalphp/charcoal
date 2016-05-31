@@ -9,9 +9,10 @@ use \Pimple\ServiceProviderInterface;
 use \PHPMailer\PHPMailer\PHPMailer;
 
 use \Charcoal\Email\Email;
+use \Charcoal\Email\EmailInterface;
 use \Charcoal\Email\EmailConfig;
 
-use \Charcoal\Factory\MapFactory;
+use \Charcoal\Factory\GenericFactory;
 
 /**
  * Email Service Provider
@@ -53,22 +54,21 @@ class EmailServiceProvider implements ServiceProviderInterface
          * @return \Charcoal\Factory\FactoryInterface
          */
         $container['email/factory'] = function(Container $container) {
-            $factory = new MapFactory([
+            return new GenericFactory([
                 'map' => [
-                    'email'=>'\Charcoal\Email\Email'
-                ]
+                    'email' => Email::class
+                ],
+                'base_class' => EmailInterface::class,
+                'default_class' => Email::class,
+                'arguments' => [[
+                    'logger'    => $container['logger'],
+                    'config'    => $container['email/config'],
+                    'view'      => $container['email/view'],
+                    'template_factory' => $container['template/factory'],
+                    'queue_item_factory' => $container['model/factory'],
+                    'log_factory' => $container['model/factory']
+                ]]
             ]);
-            $factory->setBaseClass('\Charcoal\Email\EmailInterface');
-            $factory->setDefaultClass('\Charcoal\Email\Email');
-            $factory->setArguments([
-                'logger'    => $container['logger'],
-                'config'    => $container['email/config'],
-                'view'      => $container['email/view'],
-                'template_factory' => $container['template/factory'],
-                'queue_item_factory' => $container['model/factory'],
-                'log_factory' => $container['model/factory']
-            ]);
-            return $factory;
         };
 
         /**
