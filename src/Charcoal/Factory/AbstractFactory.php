@@ -109,10 +109,9 @@ abstract class AbstractFactory implements FactoryInterface
      * It is possible to pass a callback method that will be executed upon object instanciation.
      * The callable should have a signature: `function($obj);` where $obj is the newly created object.
      *
-     *
      * @param string   $type The type (class ident).
      * @param array    $args Optional. Constructor arguments (will override the arguments set on the class from constructor).
-     * @param callable $cb   Optional. Object callback, called at creation. Leave blank to use `$callback` member.
+     * @param callable $cb   Optional. Object callback, called at creation. Will run in addition to the default callback, if any.
      * @throws Exception If the base class is set and  the resulting instance is not of the base class.
      * @throws InvalidArgumentException If type argument is not a string or is not an available type.
      * @return mixed The instance / object
@@ -132,10 +131,6 @@ abstract class AbstractFactory implements FactoryInterface
             $args = $this->arguments();
         }
 
-        if (!isset($cb)) {
-            $cb = $this->callback();
-        }
-
         $pool = get_called_class();
         if (isset(self::$resolved[$pool][$type])) {
             $classname = self::$resolved[$pool][$type];
@@ -144,9 +139,7 @@ abstract class AbstractFactory implements FactoryInterface
                 $defaultClass = $this->defaultClass();
                 if ($defaultClass !== '') {
                     $obj = $this->createClass($defaultClass, $args);
-                    if (isset($cb)) {
-                        $cb($obj);
-                    }
+                    $this->runCallbacks($obj, $cb);
                     return $obj;
                 } else {
                     throw new InvalidArgumentException(
@@ -179,11 +172,27 @@ abstract class AbstractFactory implements FactoryInterface
             );
         }
 
-        if (isset($cb)) {
-            $cb($obj);
-        }
+        $this->runCallbacks($obj, $cb);
 
         return $obj;
+    }
+
+    /**
+     * Run the callback(s) on the object, if applicable.
+     *
+     * @param mixed    $obj            The object to pass to callback(s).
+     * @param callable $customCallback An optional additional custom callback.
+     * @return void
+     */
+    private function runCallbacks(&$obj, callable $customCallback = null)
+    {
+        $factoryCallback = $this->callback();
+        if (isset($factoryCallback)) {
+            $factoryCallback($obj);
+        }
+        if (isset($customCallback)) {
+            $customCallback($obj);
+        }
     }
 
     /**

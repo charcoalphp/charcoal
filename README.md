@@ -80,7 +80,7 @@ $factory->create('foo');
 $factory->create('my/custom/foo-bar');
 ```
 
-Options (class dependencies) are:
+Constructor options (class dependencies) are:
 
 | Name               | Type       | Default    | Description                            |
 | ------------------ | ---------- | ---------- | -------------------------------------- |
@@ -91,7 +91,7 @@ Options (class dependencies) are:
 | `resolver`         | _Callable_ | `null`<sup>[1]</sup> | Optional. A class resolver. If none is provided, a default will be used.
 | `resolver_options` | _array_    | `null` | Optional. Resolver options (prefix, suffix, capitals and replacements). This is ignored / unused if `resolver` is provided.
 
-<small>[1] When no resolver is provider a default `\Charcoal\Factory\GenericResolver` will be used.</small>
+<small>[1] If no resolver is provided, a default `\Charcoal\Factory\GenericResolver` will be used.</small>
 
 ## The resolver
 
@@ -211,7 +211,7 @@ To run the scripts (phplint, phpcs and phpunit):
 | [Travis](https://travis-ci.org/locomotivemtl/charcoal-factory) | [![Build Status](https://travis-ci.org/locomotivemtl/charcoal-factory.svg?branch=master)](https://travis-ci.org/locomotivemtl/charcoal-factory) | Runs code sniff check and unit tests. Auto-generates API documentation. |
 | [Scrutinizer](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-factory/) | [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-factory/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-factory/?branch=master) | Code quality checker. Also validates API documentation quality. |
 | [Coveralls](https://coveralls.io/github/locomotivemtl/charcoal-factory) | [![Coverage Status](https://coveralls.io/repos/github/locomotivemtl/charcoal-factory/badge.svg?branch=master)](https://coveralls.io/github/locomotivemtl/charcoal-factory?branch=master) | Unit Tests code coverage. |
-| [Sensiolabs](https://insight.sensiolabs.com/projects/54058388-3b5d-47e3-8185-f001232d31f7) | [![SensioLabsInsight](https://insight.sensiolabs.com/projects/54058388-3b5d-47e3-8185-f001232d31f7/mini.png)](https://insight.sensiolabs.com/projects/54058388-3b5d-47e3-8185-f001232d31f7) | Another code quality checker, focused on PHP. |
+| [Sensiolabs](https://insight.sensiolabs.com/projects/0aec930b-d696-415a-b4ef-a15c1a56509e) | [![SensioLabsInsight](https://insight.sensiolabs.com/projects/0aec930b-d696-415a-b4ef-a15c1a56509e/mini.png)](https://insight.sensiolabs.com/projects/0aec930b-d696-415a-b4ef-a15c1a56509e) | Another code quality checker, focused on PHP. |
 
 ## Coding Style
 

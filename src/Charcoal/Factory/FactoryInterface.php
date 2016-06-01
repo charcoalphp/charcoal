@@ -3,7 +3,7 @@
 namespace Charcoal\Factory;
 
 /**
- *
+ * Factories instanciate (create) objects.
  */
 interface FactoryInterface
 {
