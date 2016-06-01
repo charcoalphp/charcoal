@@ -50,6 +50,7 @@ trait DescribableTrait
     /**
      * Safe MetdataLoader getter. Create the loader if it does not exist.
      *
+     * @throws Exception If the metadata loader was not set.
      * @return MetadataLoader
      */
     protected function metadataLoader()

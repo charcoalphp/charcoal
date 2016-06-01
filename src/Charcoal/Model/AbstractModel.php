@@ -186,8 +186,8 @@ abstract class AbstractModel extends AbstractEntity implements
         foreach ($properties as $propertyIdent => $property) {
             $fields = $property->fields();
 
-            foreach($fields as $k=>$f) {
-                if(is_string($k)) {
+            foreach ($fields as $k => $f) {
+                if (is_string($k)) {
                     $f_id = $f->ident();
                     $key = str_replace($propertyIdent.'_', '', $f_id);
                     if (isset($flatData[$f_id])) {
