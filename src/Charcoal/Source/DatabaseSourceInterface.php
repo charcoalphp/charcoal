@@ -8,31 +8,6 @@ namespace Charcoal\Source;
 interface DatabaseSourceInterface
 {
     /**
-    * @param string $databaseIdent The database identifiter.
-    * @return DatabaseSource Chainable
-    */
-    public function setDatabaseIdent($databaseIdent);
-
-    /**
-    * Get the current database ident.
-    * If null, then the project's default (from `Charcoal::config()` will be used.)
-    *
-    * @return string
-    */
-    public function databaseIdent();
-
-    /**
-    * @param  array $databaseConfig The database confguration.
-    * @return DatabaseSource Chainable
-    */
-    public function setDatabaseConfig(array $databaseConfig);
-
-    /**
-    * @return mixed
-    */
-    public function databaseConfig();
-
-    /**
     * Set the database's table to use.
     *
     * @param string $table The database table.
@@ -81,8 +56,7 @@ interface DatabaseSourceInterface
     public function tableIsEmpty();
 
     /**
-    * @param string $databaseIdent The database identifier to return. If null, use default.
     * @return \PDO
     */
-    public function db($databaseIdent = null);
+    public function db();
 }

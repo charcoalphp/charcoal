@@ -32,18 +32,9 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     const DEFAULT_DB_TYPE = 'mysql';
 
     /**
-     * @var ConfigInterface $appConfig
+     * @var PDO
      */
-    private $appConfig;
-
-    /**
-    * @var string $databaseIdent
-    */
-    private $databaseIdent;
-    /**
-    * @var DatabaseSourceConfig $databaseConfig
-    */
-    private $databaseConfig;
+    private $pdo;
 
     /**
     * @var string $table
@@ -53,78 +44,16 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     /**
     * @var array $dbs
     */
-    private static $dbs = [];
+    private static $db;
 
     /**
      * @param array $data Class dependencies.
      */
     public function __construct(array $data)
     {
-        $this->appConfig = $data['config'];
+        $this->pdo = $data['pdo'];
 
         parent::__construct($data);
-    }
-
-    /**
-     * @return ConfigInterface
-     */
-    private function appConfig()
-    {
-        return $this->appConfig;
-    }
-
-    /**
-    * @param string $databaseIdent The database identifier.
-    * @throws InvalidArgumentException If the ident argument is not a string.
-    * @return DatabaseSource Chainable
-    */
-    public function setDatabaseIdent($databaseIdent)
-    {
-        if (!is_string($databaseIdent)) {
-            throw new InvalidArgumentException(
-                'setDatabase() expects a string as database ident.'
-            );
-        }
-        $this->databaseIdent = $databaseIdent;
-        return $this;
-    }
-
-    /**
-    * Get the current database ident.
-    * If null, then the project's default (from `Charcoal::config()` will be used.)
-    *
-    * @return string
-    */
-    public function databaseIdent()
-    {
-        if ($this->databaseIdent === null) {
-            $appConfig = $this->appConfig();
-            return $appConfig['default_database'];
-        }
-        return $this->databaseIdent;
-    }
-
-    /**
-    * @param array $databaseConfig The database configuration.
-    * @return DatabaseSource Chainable
-    */
-    public function setDatabaseConfig(array $databaseConfig)
-    {
-        $this->databaseConfig = $databaseConfig;
-        return $this;
-    }
-
-    /**
-    * @return mixed
-    */
-    public function databaseConfig()
-    {
-        if ($this->databaseConfig === null) {
-            $appConfig = $this->appConfig();
-            $default = $appConfig['default_database'];
-            return $appConfig->databaseConfig($default);
-        }
-        return $this->databaseConfig;
     }
 
     /**
@@ -302,55 +231,12 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     }
 
     /**
-    * @param string $databaseIdent The database identifier. If null, use default.
-    * @throws Exception If the database is not set.
+    * @throws Exception If the database can not set.
     * @return PDO
     */
-    public function db($databaseIdent = null)
+    public function db()
     {
-        // If no database ident was passed in parameter, use the class database or the config databases
-        if ($databaseIdent === null) {
-            $databaseIdent = $this->databaseIdent();
-        }
-
-        // If the handle was already created, reuse from static $dbh variable
-        if (isset(self::$dbs[$databaseIdent])) {
-            return self::$dbs[$databaseIdent];
-        }
-
-        $dbConfig = $this->databaseConfig();
-
-        $db_hostname = (isset($dbConfig['hostname']) ? $dbConfig['hostname'] : self::DEFAULT_DB_HOSTNAME);
-        $db_type = (isset($dbConfig['type']) ? $dbConfig['type'] : self::DEFAULT_DB_TYPE);
-        /** @todo ... The other parameters are required. Really? */
-
-        try {
-            $database = $dbConfig['database'];
-            $username = $dbConfig['username'];
-            $password = $dbConfig['password'];
-
-            // Set UTf-8 compatibility by default. Disable it if it is set as such in config
-            $extra_opts = [PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'];
-            if (isset($dbConfig['disable_utf8']) && $dbConfig['disable_utf8']) {
-                $extra_opts = null;
-            }
-
-            $db = new PDO($db_type.':host='.$db_hostname.';dbname='.$database, $username, $password, $extra_opts);
-
-            // Set PDO options
-            $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            if ($db_type == 'mysql') {
-                $db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
-            }
-        } catch (PDOException $e) {
-            throw new Exception(
-                sprintf('Error setting up database: %s', $e->getMessage())
-            );
-        }
-
-        self::$dbs[$databaseIdent] = $db;
-
-        return self::$dbs[$databaseIdent];
+        return $this->pdo;
     }
 
     /**

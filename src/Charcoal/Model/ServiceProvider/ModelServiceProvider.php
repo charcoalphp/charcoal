@@ -139,7 +139,7 @@ class ModelServiceProvider implements ServiceProviderInterface
                     'arguments'     => [[
                         'logger'        => $container['logger'],
                         'cache'         => $container['cache'],
-                        'config'        => $container['config']
+                        'pdo'           => $container['database']
                     ]]
                 ]);
             };
