@@ -80,12 +80,11 @@ final class MetadataLoader implements LoggerAwareInterface
      */
     public function load($ident, MetadataInterface $metadata)
     {
-        $cacheItem = $this->cachePool()->getItem('metadata/object/'.$ident);
+        $cacheKey = str_replace('/', '.', 'metadata/object/'.$ident);
+        $cacheItem = $this->cachePool()->getItem($cacheKey);
 
         $obj = $cacheItem->get();
-        if ($cacheItem->isMiss()) {
-            $cacheItem->lock();
-
+        if (!$cacheItem->isHit()) {
             $data = $this->loadData($ident);
             $metadata->setData($data);
 
