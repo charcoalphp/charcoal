@@ -22,25 +22,25 @@ use \Charcoal\Source\SourceInterface;
 use \Charcoal\Source\DatabaseSource;
 
 /**
-* Model Service Providers.
-*
-* ##Container dependencies
-*
-* The following keys are expected to be set on the container
-* (from external sources / providers):
-*
-* - `cache` A PSR-6 compliant cache pool.
-* - `config` A charcoal app config (\Charcoal\Config\ConfigInterface)q
-* - `logger` A PSR-3 compliant logger.
-* - `view` A \Charcoal\View\ViewInterface instance
-*
-* ## Services
-*
-* The following services are registered on the container:
-*
-* - `model/factory` A \Charcoal\Factory\FactoryInterface factory to create models.
-* - `model/collection/loader` A collection loader (should not be used).
-*/
+ * Model Service Providers.
+ *
+ * ##Container dependencies
+ *
+ * The following keys are expected to be set on the container
+ * (from external sources / providers):
+ *
+ * - `cache` A PSR-6 compliant cache pool.
+ * - `config` A charcoal app config (\Charcoal\Config\ConfigInterface)q
+ * - `logger` A PSR-3 compliant logger.
+ * - `view` A \Charcoal\View\ViewInterface instance
+ *
+ * ## Services
+ *
+ * The following services are registered on the container:
+ *
+ * - `model/factory` A \Charcoal\Factory\FactoryInterface factory to create models.
+ * - `model/collection/loader` A collection loader (should not be used).
+ */
 class ModelServiceProvider implements ServiceProviderInterface
 {
     /**

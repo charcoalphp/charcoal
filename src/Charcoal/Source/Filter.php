@@ -9,8 +9,8 @@ use \InvalidArgumentException;
 use \Charcoal\Source\FilterInterface;
 
 /**
-*
-*/
+ *
+ */
 class Filter implements FilterInterface
 {
     const DEFAULT_OPERATOR = '=';
@@ -19,47 +19,47 @@ class Filter implements FilterInterface
     const DEFAULT_TABLE_NAME = 'objTable';
 
     /**
-    * @var string $property
-    */
+     * @var string $property
+     */
     protected $property;
     /**
-    * @var mixed $val
-    */
+     * @var mixed $val
+     */
     protected $val;
 
     /**
-    * @var string $operator
-    */
+     * @var string $operator
+     */
     protected $operator = self::DEFAULT_OPERATOR;
     /**
-    * @var string $func
-    */
+     * @var string $func
+     */
     protected $func = self::DEFAULT_FUNC;
     /**
-    * @var string $operand
-    */
+     * @var string $operand
+     */
     protected $operand = self::DEFAULT_OPERAND;
 
     /**
-    * @var string $tableName
-    */
+     * @var string $tableName
+     */
     protected $tableName = self::DEFAULT_TABLE_NAME;
 
     /**
-    * @var string $string
-    */
+     * @var string $string
+     */
     protected $string;
 
     /**
-    * Inactive filter should be skipped completely.
-    * @var boolean $active
-    */
+     * Inactive filter should be skipped completely.
+     * @var boolean $active
+     */
     protected $active;
 
     /**
-    * @param array|\ArrayAccess $data The filter data.
-    * @return Filter Chainable
-    */
+     * @param array|\ArrayAccess $data The filter data.
+     * @return Filter Chainable
+     */
     public function setData($data)
     {
         if (isset($data['property'])) {
@@ -90,10 +90,10 @@ class Filter implements FilterInterface
     }
 
     /**
-    * @param string $property The filter property.
-    * @throws InvalidArgumentException If the property argument is not a string.
-    * @return Filter (Chainable)
-    */
+     * @param string $property The filter property.
+     * @throws InvalidArgumentException If the property argument is not a string.
+     * @return Filter (Chainable)
+     */
     public function setProperty($property)
     {
         if (!is_string($property)) {
@@ -112,17 +112,17 @@ class Filter implements FilterInterface
     }
 
     /**
-    * @return string
-    */
+     * @return string
+     */
     public function property()
     {
         return $this->property;
     }
 
     /**
-    * @param mixed $val The filter value.
-    * @return Filter (Chainable)
-    */
+     * @param mixed $val The filter value.
+     * @return Filter (Chainable)
+     */
     public function setVal($val)
     {
         $this->val = $val;
@@ -130,18 +130,18 @@ class Filter implements FilterInterface
     }
 
     /**
-    * @return mixed
-    */
+     * @return mixed
+     */
     public function val()
     {
         return $this->val;
     }
 
     /**
-    * @param string $operator The filter operator.
-    * @throws InvalidArgumentException If the parameter is not a valid operator.
-    * @return Filter (Chainable)
-    */
+     * @param string $operator The filter operator.
+     * @throws InvalidArgumentException If the parameter is not a valid operator.
+     * @return Filter (Chainable)
+     */
     public function setOperator($operator)
     {
         if (!is_string($operator)) {
@@ -162,18 +162,18 @@ class Filter implements FilterInterface
     }
 
     /**
-    * @return string
-    */
+     * @return string
+     */
     public function operator()
     {
         return strtoupper($this->operator);
     }
 
     /**
-    * @param string $func The filter function.
-    * @throws InvalidArgumentException If the parameter is not a valid function.
-    * @return Filter (Chainable)
-    */
+     * @param string $func The filter function.
+     * @throws InvalidArgumentException If the parameter is not a valid function.
+     * @return Filter (Chainable)
+     */
     public function setFunc($func)
     {
         if (!is_string($func)) {
@@ -193,18 +193,18 @@ class Filter implements FilterInterface
     }
 
     /**
-    * @return string
-    */
+     * @return string
+     */
     public function func()
     {
         return $this->func;
     }
 
     /**
-    * @param string $operand The filter operand.
-    * @throws InvalidArgumentException If the parameter is not a valid operand.
-    * @return Filter (Chainable)
-    */
+     * @param string $operand The filter operand.
+     * @throws InvalidArgumentException If the parameter is not a valid operand.
+     * @return Filter (Chainable)
+     */
     public function setOperand($operand)
     {
         if (!is_string($operand)) {
@@ -225,18 +225,18 @@ class Filter implements FilterInterface
     }
 
     /**
-    * @return string
-    */
+     * @return string
+     */
     public function operand()
     {
         return strtoupper($this->operand);
     }
 
     /**
-    * @param string $tableName The filter table name.
-    * @throws InvalidArgumentException If the parameter is not a string.
-    * @return Filter (Chainable)
-    */
+     * @param string $tableName The filter table name.
+     * @throws InvalidArgumentException If the parameter is not a string.
+     * @return Filter (Chainable)
+     */
     public function setTableName($tableName)
     {
         if (!is_string($tableName)) {
@@ -250,18 +250,18 @@ class Filter implements FilterInterface
     }
 
     /**
-    * @return string
-    */
+     * @return string
+     */
     public function tableName()
     {
         return $this->tableName;
     }
 
     /**
-    * @param string $sql The custom filter SQL string.
-    * @throws InvalidArgumentException If the parameter is not a valid operand.
-    * @return Filter (Chainable)
-    */
+     * @param string $sql The custom filter SQL string.
+     * @throws InvalidArgumentException If the parameter is not a valid operand.
+     * @return Filter (Chainable)
+     */
     public function setString($sql)
     {
         if (!is_string($sql)) {
@@ -275,17 +275,17 @@ class Filter implements FilterInterface
     }
 
     /**
-    * @return string
-    */
+     * @return string
+     */
     public function string()
     {
         return $this->string;
     }
 
     /**
-    * @param boolean $active The active flag.
-    * @return Filter (Chainable)
-    */
+     * @param boolean $active The active flag.
+     * @return Filter (Chainable)
+     */
     public function setActive($active)
     {
         $this->active = !!$active;
@@ -293,8 +293,8 @@ class Filter implements FilterInterface
     }
 
     /**
-    * @return boolean
-    */
+     * @return boolean
+     */
     public function active()
     {
         return $this->active;
@@ -303,10 +303,10 @@ class Filter implements FilterInterface
 
 
     /**
-    * Supported operators
-    *
-    * @return array
-    */
+     * Supported operators
+     *
+     * @return array
+     */
     protected function validOperators()
     {
         $validOperators = [
@@ -324,10 +324,10 @@ class Filter implements FilterInterface
     }
 
     /**
-    * Supported operand types, uppercase
-    *
-    * @return array
-    */
+     * Supported operand types, uppercase
+     *
+     * @return array
+     */
     protected function validOperands()
     {
         $validOperands = [
@@ -340,9 +340,9 @@ class Filter implements FilterInterface
     }
 
     /**
-    * Supported functions, uppercase
-    * @return array
-    */
+     * Supported functions, uppercase
+     * @return array
+     */
     protected function validFunc()
     {
         $validFunctions = [

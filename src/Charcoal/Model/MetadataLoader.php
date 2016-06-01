@@ -331,12 +331,12 @@ final class MetadataLoader implements LoggerAwareInterface
     }
 
         /**
-     * Load the contents of a JSON file.
-     *
-     * @param  mixed $filename The file path to retrieve.
-     * @throws InvalidArgumentException If a JSON decoding error occurs.
-     * @return array|null
-     */
+         * Load the contents of a JSON file.
+         *
+         * @param  mixed $filename The file path to retrieve.
+         * @throws InvalidArgumentException If a JSON decoding error occurs.
+         * @return array|null
+         */
     protected function loadJsonFile($filename)
     {
         $content = file_get_contents($filename);

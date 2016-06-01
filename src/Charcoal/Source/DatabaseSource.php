@@ -24,8 +24,8 @@ use \Charcoal\Source\Database\DatabaseOrder;
 use \Charcoal\Source\Database\DatabasePagination;
 
 /**
-* Database Source, through PDO.
-*/
+ * Database Source, through PDO.
+ */
 class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
 {
     const DEFAULT_DB_HOSTNAME = 'localhost';
@@ -37,13 +37,13 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     private $pdo;
 
     /**
-    * @var string $table
-    */
+     * @var string $table
+     */
     private $table = null;
 
     /**
-    * @var array $dbs
-    */
+     * @var array $dbs
+     */
     private static $db;
 
     /**
@@ -57,12 +57,12 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     }
 
     /**
-    * Set the database's table to use.
-    *
-    * @param string $table The source table.
-    * @throws InvalidArgumentException If argument is not a string or alphanumeric/underscore.
-    * @return DatabaseSource Chainable
-    */
+     * Set the database's table to use.
+     *
+     * @param string $table The source table.
+     * @throws InvalidArgumentException If argument is not a string or alphanumeric/underscore.
+     * @return DatabaseSource Chainable
+     */
     public function setTable($table)
     {
         if (!is_string($table)) {
@@ -87,11 +87,11 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     }
 
     /**
-    * Get the database's current table.
-    *
-    * @throws Exception If the table was not set.
-    * @return string
-    */
+     * Get the database's current table.
+     *
+     * @throws Exception If the table was not set.
+     * @return string
+     */
     public function table()
     {
         if ($this->table === null) {
@@ -103,10 +103,10 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     }
 
     /**
-    * Create a table from a model's metadata.
-    *
-    * @return boolean Success / Failure
-    */
+     * Create a table from a model's metadata.
+     *
+     * @return boolean Success / Failure
+     */
     public function createTable()
     {
         if ($this->tableExists()) {
@@ -139,10 +139,10 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     }
 
     /**
-    * Alter an existing table to match the model's metadata.
-    *
-    * @return boolean Success / Failure
-    */
+     * Alter an existing table to match the model's metadata.
+     *
+     * @return boolean Success / Failure
+     */
     public function alterTable()
     {
         if (!$this->tableExists()) {
@@ -190,8 +190,8 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     }
 
     /**
-    * @return boolean
-    */
+     * @return boolean
+     */
     public function tableExists()
     {
         $q = 'SHOW TABLES LIKE \''.$this->table().'\'';
@@ -204,10 +204,10 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     }
 
     /**
-    * Get the table columns information.
-    *
-    * @return array
-    */
+     * Get the table columns information.
+     *
+     * @return array
+     */
     public function tableStructure()
     {
         $q = 'SHOW COLUMNS FROM `'.$this->table().'`';
@@ -218,10 +218,10 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     }
 
     /**
-    * Check wether the source table is empty (`true`) or not (`false`)
-    *
-    * @return boolean
-    */
+     * Check wether the source table is empty (`true`) or not (`false`)
+     *
+     * @return boolean
+     */
     public function tableIsEmpty()
     {
         $q = 'SELECT NULL FROM `'.$this->table().'` LIMIT 1';
@@ -231,22 +231,22 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     }
 
     /**
-    * @throws Exception If the database can not set.
-    * @return PDO
-    */
+     * @throws Exception If the database can not set.
+     * @return PDO
+     */
     public function db()
     {
         return $this->pdo;
     }
 
     /**
-    * Get all the fields of a model.
-    *
-    * @param ModelInterface $model      The model to get fields from.
-    * @param array|null     $properties Optional list of properties to get. If null, retrieve all (from metadata).
-    * @return array
-    * @todo Move this method in StorableTrait or AbstractModel
-    */
+     * Get all the fields of a model.
+     *
+     * @param ModelInterface $model      The model to get fields from.
+     * @param array|null     $properties Optional list of properties to get. If null, retrieve all (from metadata).
+     * @return array
+     * @todo Move this method in StorableTrait or AbstractModel
+     */
     private function getModelFields(ModelInterface $model, $properties = null)
     {
         //$metadata = $model->metadata();
@@ -272,10 +272,10 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     }
 
     /**
-    * @param mixed             $ident Ident can be any scalar value.
-    * @param StorableInterface $item  Optional item to load into.
-    * @return StorableInterface
-    */
+     * @param mixed             $ident Ident can be any scalar value.
+     * @param StorableInterface $item  Optional item to load into.
+     * @return StorableInterface
+     */
     public function loadItem($ident, StorableInterface $item = null)
     {
         $key = $this->model()->key();
@@ -358,10 +358,10 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     }
 
     /**
-    * @param StorableInterface|null $item Optional item to use as model.
-    * @see this->loadItemsFromQuery()
-    * @return array
-    */
+     * @param StorableInterface|null $item Optional item to use as model.
+     * @see this->loadItemsFromQuery()
+     * @return array
+     */
     public function loadItems(StorableInterface $item = null)
     {
         if ($item !== null) {
@@ -416,12 +416,12 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     }
 
     /**
-    * Save an item (create a new row) in storage.
-    *
-    * @param StorableInterface $item The object to save.
-    * @throws Exception If a database error occurs.
-    * @return mixed The created item ID, or false in case of an error.
-    */
+     * Save an item (create a new row) in storage.
+     *
+     * @param StorableInterface $item The object to save.
+     * @throws Exception If a database error occurs.
+     * @return mixed The created item ID, or false in case of an error.
+     */
     public function saveItem(StorableInterface $item)
     {
         if ($this->tableExists() === false) {
@@ -476,12 +476,12 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     }
 
     /**
-    * Update an item in storage.
-    *
-    * @param StorableInterface $item       The object to update.
-    * @param array             $properties The list of properties to update, if not all.
-    * @return boolean Success / Failure
-    */
+     * Update an item in storage.
+     *
+     * @param StorableInterface $item       The object to update.
+     * @param array             $properties The list of properties to update, if not all.
+     * @return boolean Success / Failure
+     */
     public function updateItem(StorableInterface $item, array $properties = null)
     {
         if ($item !== null) {
@@ -540,12 +540,12 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     }
 
     /**
-    * Delete an item from storage
-    *
-    * @param StorableInterface $item Optional item to delete. If none, the current model object will be used.
-    * @throws Exception If the item does not have an ID.
-    * @return boolean Success / Failure
-    */
+     * Delete an item from storage
+     *
+     * @param StorableInterface $item Optional item to delete. If none, the current model object will be used.
+     * @throws Exception If the item does not have an ID.
+     * @return boolean Success / Failure
+     */
     public function deleteItem(StorableInterface $item = null)
     {
         if ($item !== null) {
@@ -581,15 +581,15 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     }
 
     /**
-    * Execute a SQL query, with PDO, and returns the PDOStatement.
-    *
-    * If the query fails, this method will return false.
-    *
-    * @param string $q           The SQL query to executed.
-    * @param array  $binds       Optional. Query parameter binds.
-    * @param array  $binds_types Optional. Types of parameter bindings.
-    * @return PDOStatement|false The PDOStatement, or false in case of error
-    */
+     * Execute a SQL query, with PDO, and returns the PDOStatement.
+     *
+     * If the query fails, this method will return false.
+     *
+     * @param string $q           The SQL query to executed.
+     * @param array  $binds       Optional. Query parameter binds.
+     * @param array  $binds_types Optional. Types of parameter bindings.
+     * @return PDOStatement|false The PDOStatement, or false in case of error
+     */
     public function dbQuery($q, array $binds = [], array $binds_types = [])
     {
         $this->logger->debug($q, $binds);
@@ -615,9 +615,9 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     }
 
     /**
-    * @throws Exception If the source does not have a table defined.
-    * @return string
-    */
+     * @throws Exception If the source does not have a table defined.
+     * @return string
+     */
     public function sqlLoad()
     {
         $table = $this->table();
@@ -659,8 +659,8 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     }
 
     /**
-    * @return string
-    */
+     * @return string
+     */
     public function sqlSelect()
     {
         $properties = $this->properties();
@@ -681,9 +681,9 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     }
 
     /**
-    * @return string
-    * @todo 2016-02-19 Use bindings for filters value
-    */
+     * @return string
+     * @todo 2016-02-19 Use bindings for filters value
+     */
     public function sqlFilters()
     {
         $sql = '';
@@ -722,8 +722,8 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     }
 
     /**
-    * @return string
-    */
+     * @return string
+     */
     public function sqlOrders()
     {
         $sql = '';
@@ -742,16 +742,16 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     }
 
     /**
-    * @return string
-    */
+     * @return string
+     */
     public function sqlPagination()
     {
         return $this->pagination()->sql();
     }
 
     /**
-    * @return FilterInterface
-    */
+     * @return FilterInterface
+     */
     protected function createFilter()
     {
         $filter = new DatabaseFilter();
@@ -759,8 +759,8 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     }
 
     /**
-    * @return OrderInterface
-    */
+     * @return OrderInterface
+     */
     protected function createOrder()
     {
         $order = new DatabaseOrder();
@@ -768,8 +768,8 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     }
 
     /**
-    * @return PaginationInterface
-    */
+     * @return PaginationInterface
+     */
     protected function createPagination()
     {
         $pagination = new DatabasePagination();
@@ -777,13 +777,13 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     }
 
     /**
-    * ConfigurableTrait > createConfig()
-    *
-    * Overrides the method defined in AbstractSource to returns a `DatabaseSourceConfig` object.
-    *
-    * @param array $data Optional.
-    * @return DatabaseSourceConfig
-    */
+     * ConfigurableTrait > createConfig()
+     *
+     * Overrides the method defined in AbstractSource to returns a `DatabaseSourceConfig` object.
+     *
+     * @param array $data Optional.
+     * @return DatabaseSourceConfig
+     */
     public function createConfig(array $data = null)
     {
         $config = new DatabaseSourceConfig($data);

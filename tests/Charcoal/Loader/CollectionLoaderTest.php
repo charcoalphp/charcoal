@@ -19,12 +19,6 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $factory = new \Charcoal\Model\ModelFactory();
-        $this->obj = new CollectionLoader([
-            'logger' => new NullLogger(),
-            'factory' => $factory,
-        ]);
-
         $s = new DatabaseSource([
             'logger'=>new NullLogger(),
             'pdo' => $GLOBALS['pdo']
@@ -33,15 +27,29 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
 
         $metadataLoader = new \Charcoal\Model\MetadataLoader([
             'logger' => new NullLogger(),
-            'cache' => new VoidCachePool(),
-            'base_path' => '',
-            'paths' => []
+            'base_path' => __DIR__,
+            'paths' => ['metadata'],
+            'cache' => new VoidCachePool()
+        ]);
+
+        $factory = new \Charcoal\Factory\GenericFactory([
+            'arguments' => [[
+                'logger'=> new NullLogger(),
+                'metadata_loader' => $metadataLoader
+            ]]
+        ]);
+
+        $this->obj = new CollectionLoader([
+            'logger' => new NullLogger(),
+            'factory' => $factory,
         ]);
 
         $this->model = new \Charcoal\Model\Model([
             'logger' => new NullLogger(),
             'metadata_loader' => $metadataLoader
         ]);
+
+
         $this->model->setSource($s);
         $this->model->setMetadata(json_decode('
         {

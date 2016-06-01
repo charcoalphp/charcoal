@@ -41,21 +41,21 @@ use \Charcoal\Model\ModelMetadata;
 use \Charcoal\Model\ModelValidator;
 
 /**
-* An abstract class that implements most of `ModelInterface`.
-*
-* In addition to `ModelInterface`, the abstract model implements the following interfaces:
-*
-* - `DescribableInterface`
-* - `StorableInterface
-* - `ValidatableInterface`
-* - `ViewableInterface`.
-*
-* Those interfaces
-* are implemented (in parts, at least) with the `DescribableTrait`, `StorableTrait`,
-* `ValidatableTrait` and the `ViewableTrait`.
-*
-* The `JsonSerializable` interface is fully provided by the `DescribableTrait`.
-*/
+ * An abstract class that implements most of `ModelInterface`.
+ *
+ * In addition to `ModelInterface`, the abstract model implements the following interfaces:
+ *
+ * - `DescribableInterface`
+ * - `StorableInterface
+ * - `ValidatableInterface`
+ * - `ViewableInterface`.
+ *
+ * Those interfaces
+ * are implemented (in parts, at least) with the `DescribableTrait`, `StorableTrait`,
+ * `ValidatableTrait` and the `ViewableTrait`.
+ *
+ * The `JsonSerializable` interface is fully provided by the `DescribableTrait`.
+ */
 abstract class AbstractModel extends AbstractEntity implements
     ModelInterface,
     DescribableInterface,
@@ -75,8 +75,8 @@ abstract class AbstractModel extends AbstractEntity implements
     const DEFAULT_SOURCE_TYPE = 'database';
 
     /**
-    * @param array $data Dependencies.
-    */
+     * @param array $data Dependencies.
+     */
     public function __construct(array $data = null)
     {
         // LoggerAwareInterface dependencies
@@ -122,11 +122,11 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-    * Return the object data as an array
-    *
-    * @param array $propertyFilters Optional. Property filter.
-    * @return array
-    */
+     * Return the object data as an array
+     *
+     * @param array $propertyFilters Optional. Property filter.
+     * @return array
+     */
     public function data(array $propertyFilters = null)
     {
         $data = [];
@@ -142,7 +142,7 @@ abstract class AbstractModel extends AbstractEntity implements
      * Override's `\Charcoal\Config\AbstractEntity`'s `setData` method to take properties into consideration.
      *
      * Also add a special case, to merge values for l10n properties.
-    *
+     *
      * @param array|\Traversable $data The data to merge.
      * @return EntityInterface Chainable
      * @see \Charcoal\Config\AbstractEntity::offsetSet()
@@ -172,13 +172,13 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-    * Sets the data
-    *
-    * This function takes a 1-dimensional array and fill the object with its value.
-    *
-    * @param array $flatData The data, as a flat (1-dimension) array.
-    * @return AbstractModel Chainable
-    */
+     * Sets the data
+     *
+     * This function takes a 1-dimensional array and fill the object with its value.
+     *
+     * @param array $flatData The data, as a flat (1-dimension) array.
+     * @return AbstractModel Chainable
+     */
     public function setFlatData(array $flatData)
     {
         $data = [];
@@ -211,18 +211,18 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-    * @return array
-    * @todo Implement retrieval of flattened data
-    */
+     * @return array
+     * @todo Implement retrieval of flattened data
+     */
     public function flatData()
     {
         return [];
     }
 
     /**
-    * @param string $propertyIdent The property ident to get the value from.
-    * @return mixed
-    */
+     * @param string $propertyIdent The property ident to get the value from.
+     * @return mixed
+     */
     public function propertyValue($propertyIdent)
     {
         $getter = $this->getter($propertyIdent);
@@ -238,9 +238,9 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-    * @param array $properties Optional array of properties to save. If null, use all object's properties.
-    * @return boolean
-    */
+     * @param array $properties Optional array of properties to save. If null, use all object's properties.
+     * @return boolean
+     */
     public function saveProperties(array $properties = null)
     {
         if ($properties === null) {
@@ -264,15 +264,15 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-    * Load an object from the database from its l10n key $key.
-    * Also retrieve and return the actual language that matched.
-    *
-    * @param string $key   Key pointing a column's l10n base ident.
-    * @param mixed  $value Value to search in all languages.
-    * @param array  $langs List of languages (code, ex: "en") to check into.
-    * @throws Exception If the PDO query fails.
-    * @return string The matching language.
-    */
+     * Load an object from the database from its l10n key $key.
+     * Also retrieve and return the actual language that matched.
+     *
+     * @param string $key   Key pointing a column's l10n base ident.
+     * @param mixed  $value Value to search in all languages.
+     * @param array  $langs List of languages (code, ex: "en") to check into.
+     * @throws Exception If the PDO query fails.
+     * @return string The matching language.
+     */
     public function loadFromL10n($key, $value, array $langs)
     {
         $switch = [];
@@ -317,10 +317,10 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-    * StorableTrait > save(). Save an object current state to storage
-    *
-    * @return boolean
-    */
+     * StorableTrait > save(). Save an object current state to storage
+     *
+     * @return boolean
+     */
     public function save()
     {
         $pre = $this->preSave();
@@ -347,9 +347,9 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-    * @param array $properties Optional. Properties to update. If null use all of object's.
-    * @return mixed
-    */
+     * @param array $properties Optional. Properties to update. If null use all of object's.
+     * @return mixed
+     */
     public function update(array $properties = null)
     {
         $pre = $this->preUpdate();
@@ -374,73 +374,73 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-    * StorableTrait > preSave(). Save hook called before saving the model.
-    *
-    * @return boolean
-    */
+     * StorableTrait > preSave(). Save hook called before saving the model.
+     *
+     * @return boolean
+     */
     protected function preSave()
     {
         return true;
     }
 
     /**
-    * StorableTrait > postSave(). Save hook called after saving the model.
-    *
-    * @return boolean
-    */
+     * StorableTrait > postSave(). Save hook called after saving the model.
+     *
+     * @return boolean
+     */
     protected function postSave()
     {
         return true;
     }
 
     /**
-    * StorableTrait > preUpdate(). Update hook called before updating the model.
-    *
-    * @param string[] $properties Optional. The properties to update.
-    * @return boolean
-    */
+     * StorableTrait > preUpdate(). Update hook called before updating the model.
+     *
+     * @param string[] $properties Optional. The properties to update.
+     * @return boolean
+     */
     protected function preUpdate(array $properties = null)
     {
         return true;
     }
 
     /**
-    * StorableTrait > postUpdate(). Update hook called after updating the model.
-    *
-    * @param string[] $properties Optional. The properties to update.
-    * @return boolean
-    */
+     * StorableTrait > postUpdate(). Update hook called after updating the model.
+     *
+     * @param string[] $properties Optional. The properties to update.
+     * @return boolean
+     */
     protected function postUpdate(array $properties = null)
     {
         return true;
     }
 
     /**
-    * StorableTrait > preDelete(). Delete hook called before deleting the model.
-    *
-    * @return boolean
-    */
+     * StorableTrait > preDelete(). Delete hook called before deleting the model.
+     *
+     * @return boolean
+     */
     protected function preDelete()
     {
         return true;
     }
 
     /**
-    * StorableTrait > postDelete(). Delete hook called after deleting the model.
-    *
-    * @return boolean
-    */
+     * StorableTrait > postDelete(). Delete hook called after deleting the model.
+     *
+     * @return boolean
+     */
     protected function postDelete()
     {
         return true;
     }
 
     /**
-    * DescribableTrait > create_metadata().
-    *
-    * @param array $data Optional data to intialize the Metadata object with.
-    * @return MetadataInterface
-    */
+     * DescribableTrait > create_metadata().
+     *
+     * @param array $data Optional data to intialize the Metadata object with.
+     * @return MetadataInterface
+     */
     protected function createMetadata(array $data = null)
     {
         $metadata = new ModelMetadata();
@@ -451,12 +451,12 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-    * StorableInterface > createSource()
-    *
-    * @param array $data Optional source data.
-    * @throws Exception If the metadata source can not be found.
-    * @return SourceInterface
-    */
+     * StorableInterface > createSource()
+     *
+     * @param array $data Optional source data.
+     * @throws Exception If the metadata source can not be found.
+     * @return SourceInterface
+     */
     protected function createSource(array $data = null)
     {
         $metadata = $this->metadata();
@@ -469,9 +469,9 @@ abstract class AbstractModel extends AbstractEntity implements
             );
         }
 
-        $source_type = isset($sourceConfig['type']) ? $sourceConfig['type'] : self::DEFAULT_SOURCE_TYPE;
-        $source_factory = $this->sourceFactory();
-        $source = $source_factory->create($source_type);
+        $sourceType = isset($sourceConfig['type']) ? $sourceConfig['type'] : self::DEFAULT_SOURCE_TYPE;
+        $sourceFactory = $this->sourceFactory();
+        $source = $sourceFactory->create($sourceType);
         $source->setModel($this);
 
         if ($data !== null) {
@@ -486,11 +486,11 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-    * ValidatableInterface > create_validator().
-    *
-    * @param array $data Optional.
-    * @return ValidatorInterface
-    */
+     * ValidatableInterface > create_validator().
+     *
+     * @param array $data Optional.
+     * @return ValidatorInterface
+     */
     protected function createValidator(array $data = null)
     {
         $validator = new ModelValidator($this);
@@ -501,9 +501,9 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-    * @param array $data Optional. View data.
-    * @return ViewInterface
-    */
+     * @param array $data Optional. View data.
+     * @return ViewInterface
+     */
     public function createView(array $data = null)
     {
         $this->logger->warning('Obsolete method createView called.');
@@ -517,10 +517,10 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-    * Convert the current class name in "type-ident" format.
-    *
-    * @return string
-    */
+     * Convert the current class name in "type-ident" format.
+     *
+     * @return string
+     */
     public function objType()
     {
         $ident = preg_replace('/([a-z])([A-Z])/', '$1-$2', get_class($this));

@@ -16,13 +16,13 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * Assert that the `reset` method:
-    * - is chainable
-    * - clear the properties
-    * - clear the filters
-    * - clear the orders
-    * - @todo clear the pagination
-    */
+     * Assert that the `reset` method:
+     * - is chainable
+     * - clear the properties
+     * - clear the filters
+     * - clear the orders
+     * - @todo clear the pagination
+     */
     public function testReset()
     {
         $obj = $this->obj;
@@ -45,10 +45,10 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * Assert that the `setData` method:
-    * - is chainable
-    * - set the data (properties, filters, orders & pagination)
-    */
+     * Assert that the `setData` method:
+     * - is chainable
+     * - set the data (properties, filters, orders & pagination)
+     */
     public function testSetData()
     {
         $obj = $this->obj;
@@ -64,10 +64,10 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * Assert that the `setModel` method:
-    * - is chainable
-    * - set the model (retrievable with the `model` method)
-    */
+     * Assert that the `setModel` method:
+     * - is chainable
+     * - set the model (retrievable with the `model` method)
+     */
     public function testSetModel()
     {
         $obj = $this->obj;
@@ -93,11 +93,11 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * Assert that the `setProperties` method:
-    * - is chainable
-    * - set the properties
-    * - reset the properties, when called again
-    */
+     * Assert that the `setProperties` method:
+     * - is chainable
+     * - set the properties
+     * - reset the properties, when called again
+     */
     public function testSetProperties()
     {
         $obj = $this->obj;
@@ -132,11 +132,11 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * Assert that the `setFilters` method:
-    * - is chainable
-    * - set the filters member
-    * - reset the filters, when called again
-    */
+     * Assert that the `setFilters` method:
+     * - is chainable
+     * - set the filters member
+     * - reset the filters, when called again
+     */
     public function testSetFilters()
     {
         $filter1 = $this->getFilter1();
@@ -151,14 +151,14 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * Assert that the `addFilter` method:
-    * - is chainable
-    * - add the filter object to the filters
-    * - append the filter, when a filter already exists
-    * - create and add a filter object when passing an array
-    * - allow passing $property, $val, $options as 3 parameters
-    * - throws an exception when an invalid argument type is passed
-    */
+     * Assert that the `addFilter` method:
+     * - is chainable
+     * - add the filter object to the filters
+     * - append the filter, when a filter already exists
+     * - create and add a filter object when passing an array
+     * - allow passing $property, $val, $options as 3 parameters
+     * - throws an exception when an invalid argument type is passed
+     */
     public function testAddFilterObject()
     {
         $filter1 = $this->getFilter1();
@@ -187,11 +187,11 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * Assert that the `setOrders` method:
-    * - is chainable
-    * - set the orders member
-    * - reset the orders, when called again
-    */
+     * Assert that the `setOrders` method:
+     * - is chainable
+     * - set the orders member
+     * - reset the orders, when called again
+     */
     public function testSetOrders()
     {
         $order1 = $this->getOrder1();
@@ -206,14 +206,14 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * Assert that the `addOrder` method:
-    * - is chainable
-    * - add the order object to the orders
-    * - append the order, when a order already exists
-    * - create and add a order object when passing an array
-    * - allow passing $property, $val, $options as 3 parameters
-    * - throws an exception when an invalid argument type is passed
-    */
+     * Assert that the `addOrder` method:
+     * - is chainable
+     * - add the order object to the orders
+     * - append the order, when a order already exists
+     * - create and add a order object when passing an array
+     * - allow passing $property, $val, $options as 3 parameters
+     * - throws an exception when an invalid argument type is passed
+     */
     public function testAddOrderObject()
     {
         $order1 = $this->getOrder1();

@@ -53,8 +53,8 @@ class StorableTraitTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * @dataProvider providerInvalidKey
-    */
+     * @dataProvider providerInvalidKey
+     */
     public function testSetKeyNotAlphanumThrowsException($invalidKey)
     {
         $this->setExpectedException('\InvalidArgumentException');

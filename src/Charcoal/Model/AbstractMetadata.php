@@ -9,11 +9,11 @@ use \Charcoal\Config\AbstractConfig;
 use \Charcoal\Model\MetadataInterface;
 
 /**
-* An implementation, as abstract class, of `MetadataInterface`.
-*
-* This class also implements the `ArrayAccess`, so properties can be accessed with `[]`.
-* The `LoadableInterface` is also implemented, mostly through `LoadableTrait`.
-*/
+ * An implementation, as abstract class, of `MetadataInterface`.
+ *
+ * This class also implements the `ArrayAccess`, so properties can be accessed with `[]`.
+ * The `LoadableInterface` is also implemented, mostly through `LoadableTrait`.
+ */
 abstract class AbstractMetadata extends AbstractConfig implements
     MetadataInterface
 {
@@ -24,10 +24,10 @@ abstract class AbstractMetadata extends AbstractConfig implements
     protected $properties = [];
 
     /**
-    * @param array $properties The properties.
-    * @throws InvalidArgumentException If parameter is not an array.
-    * @return MetadataInterface Chainable
-    */
+     * @param array $properties The properties.
+     * @throws InvalidArgumentException If parameter is not an array.
+     * @return MetadataInterface Chainable
+     */
     public function setProperties(array $properties)
     {
         $this->properties = $properties;
@@ -35,8 +35,8 @@ abstract class AbstractMetadata extends AbstractConfig implements
     }
 
     /**
-    * @return array
-    */
+     * @return array
+     */
     public function properties()
     {
         return $this->properties;

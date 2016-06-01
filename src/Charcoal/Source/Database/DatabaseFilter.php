@@ -6,15 +6,15 @@ namespace Charcoal\Source\Database;
 use \Charcoal\Source\Filter;
 
 /**
-* The DatabaseFilter makes a Filter SQL-aware.
-*/
+ * The DatabaseFilter makes a Filter SQL-aware.
+ */
 class DatabaseFilter extends Filter
 {
     /**
-    * Get the filter's SQL string to append to a "WHERE" clause.
-    *
-    * @return string
-    */
+     * Get the filter's SQL string to append to a "WHERE" clause.
+     *
+     * @return string
+     */
     public function sql()
     {
         if ($this->string) {
@@ -75,8 +75,8 @@ class DatabaseFilter extends Filter
     }
 
     /**
-    * @return array
-    */
+     * @return array
+     */
     private function sqlFields()
     {
         $property = $this->property();

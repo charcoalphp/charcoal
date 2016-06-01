@@ -5,26 +5,26 @@ namespace Charcoal\Source;
 use \InvalidArgumentException as InvalidArgumentException;
 
 /**
-* Implementation, as concrete class, of the PaginationInterface.
-*/
+ * Implementation, as concrete class, of the PaginationInterface.
+ */
 class Pagination implements PaginationInterface
 {
     const DEFAULT_PAGE = 0;
     const DEFAULT_NUM_PER_PAGE = 0;
 
     /**
-    * @var integer $page
-    */
+     * @var integer $page
+     */
     protected $page = self::DEFAULT_PAGE;
     /**
-    * @var integer $numPerPage
-    */
+     * @var integer $numPerPage
+     */
     protected $numPerPage = self::DEFAULT_NUM_PER_PAGE;
 
     /**
-    * @param array|\ArrayAccess $data The pagination data (page, num_per_page).
-    * @return Pagination Chainable
-    */
+     * @param array|\ArrayAccess $data The pagination data (page, num_per_page).
+     * @return Pagination Chainable
+     */
     public function setData($data)
     {
         if (isset($data['page'])) {
@@ -37,10 +37,10 @@ class Pagination implements PaginationInterface
     }
 
     /**
-    * @param integer $page The current page. Start at 0.
-    * @throws InvalidArgumentException If the parameter is not numeric or < 0.
-    * @return Pagination (Chainable)
-    */
+     * @param integer $page The current page. Start at 0.
+     * @throws InvalidArgumentException If the parameter is not numeric or < 0.
+     * @return Pagination (Chainable)
+     */
     public function setPage($page)
     {
         if (!is_numeric($page)) {
@@ -59,18 +59,18 @@ class Pagination implements PaginationInterface
     }
 
     /**
-    * @return integer
-    */
+     * @return integer
+     */
     public function page()
     {
         return $this->page;
     }
 
     /**
-    * @param integer $num The number of results to retrieve, per page.
-    * @throws InvalidArgumentException If the parameter is not numeric or < 0.
-    * @return Pagination (Chainable)
-    */
+     * @param integer $num The number of results to retrieve, per page.
+     * @throws InvalidArgumentException If the parameter is not numeric or < 0.
+     * @return Pagination (Chainable)
+     */
     public function setNumPerPage($num)
     {
         if (!is_numeric($num)) {
@@ -90,16 +90,16 @@ class Pagination implements PaginationInterface
     }
 
     /**
-    * @return integer
-    */
+     * @return integer
+     */
     public function numPerPage()
     {
         return $this->numPerPage;
     }
 
     /**
-    * @return integer
-    */
+     * @return integer
+     */
     public function first()
     {
         $page = $this->page();
@@ -108,9 +108,9 @@ class Pagination implements PaginationInterface
     }
 
     /**
-    * Can be greater than the actual number of items in Storage
-    * @return integer
-    */
+     * Can be greater than the actual number of items in Storage
+     * @return integer
+     */
     public function last()
     {
         $first = $this->first();

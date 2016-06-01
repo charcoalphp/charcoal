@@ -49,8 +49,8 @@ class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * @dataProvider providerAscDesc
-    */
+     * @dataProvider providerAscDesc
+     */
     public function testSqlAscDesc($mode)
     {
         $obj = new DatabaseOrder();
@@ -62,8 +62,8 @@ class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * @dataProvider providerAscDesc
-    */
+     * @dataProvider providerAscDesc
+     */
     public function testSqlAscDescWithoutPropertyThrowsException($mode)
     {
         $this->setExpectedException('\DomainException');

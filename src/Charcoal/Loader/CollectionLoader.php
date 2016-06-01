@@ -153,7 +153,7 @@ class CollectionLoader implements LoggerAwareInterface
     public function model()
     {
         if (!isset($this->model)) {
-            throw new Exception('No model set.');
+            throw new Exception('No model set on collection loader.');
         }
 
         return $this->model;
@@ -251,7 +251,6 @@ class CollectionLoader implements LoggerAwareInterface
      */
     public function addKeyword($keyword, array $properties = null)
     {
-        $model = $this->model();
         if (!is_array($properties) || empty($properties)) {
             $properties = [];
         }

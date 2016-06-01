@@ -61,8 +61,8 @@ class OrderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * @dataProvider providerInvalidProperties
-    */
+     * @dataProvider providerInvalidProperties
+     */
     public function testSetInvalidPropertyThrowsException($property)
     {
         $this->setExpectedException('\InvalidArgumentException');
@@ -88,8 +88,8 @@ class OrderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * @dataProvider providerInvalidModes
-    */
+     * @dataProvider providerInvalidModes
+     */
     public function testSetInvalidModeThrowsException($mode)
     {
         $this->setExpectedException('\InvalidArgumentException');
@@ -117,7 +117,8 @@ class OrderTest extends \PHPUnit_Framework_TestCase
     public function testSetValuesByStringTrim()
     {
         $obj = new Order();
-        $obj->setValues('foo, bar, val'); // Spaces between values
+        $obj->setValues('foo, bar, val');
+// Spaces between values
 
         $this->assertEquals(['foo','bar','val'], $obj->values());
     }
@@ -131,8 +132,8 @@ class OrderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * @dataProvider providerInvalidValues
-    */
+     * @dataProvider providerInvalidValues
+     */
     public function testSetInvalidValuesThrowsException($values)
     {
         $this->setExpectedException('\InvalidArgumentException');
@@ -144,8 +145,8 @@ class OrderTest extends \PHPUnit_Framework_TestCase
 
 
     /**
-    * Invalid arguments for operator, func and operand
-    */
+     * Invalid arguments for operator, func and operand
+     */
     public function providerInvalidProperties()
     {
         $obj = new \StdClass();
@@ -165,8 +166,8 @@ class OrderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * Invalid arguments for operator, func and operand
-    */
+     * Invalid arguments for operator, func and operand
+     */
     public function providerInvalidModes()
     {
         $obj = new \StdClass();
@@ -187,20 +188,22 @@ class OrderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * Invalid arguments for operator, func and operand
-    */
+     * Invalid arguments for operator, func and operand
+     */
     public function providerInvalidValues()
     {
         $obj = new \StdClass();
         return [
-            [''], // empty strings are invalid
+            [''],
+// empty strings are invalid
             [null],
             [true],
             [false],
             [1],
             [0],
             [321],
-            [[]], // empty arrays are invalid
+            [[]],
+// empty arrays are invalid
             [$obj]
         ];
     }

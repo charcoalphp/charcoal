@@ -6,8 +6,8 @@ use \Charcoal\Validator\ValidatableInterface as ValidatableInterface;
 use \Charcoal\Validator\ValidatableTrait as ValidatableTrait;
 
 /**
-* Concrete implementation of AbstractValidator for Unit Tests.
-*/
+ * Concrete implementation of AbstractValidator for Unit Tests.
+ */
 class ValidatableClass implements ValidatableInterface
 {
     use ValidatableTrait;

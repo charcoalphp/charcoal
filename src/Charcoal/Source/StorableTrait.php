@@ -17,32 +17,32 @@ use \Charcoal\Source\SourceInterface;
 trait StorableTrait
 {
     /**
-    * @var mixed $id The object (unique) identifier
-    */
+     * @var mixed $id The object (unique) identifier
+     */
     protected $id;
 
     /**
-    * @var string $key The object key
-    */
+     * @var string $key The object key
+     */
     protected $key = 'id';
 
     /**
-    * @var FactoryInterface $sourceFactory
-    */
+     * @var FactoryInterface $sourceFactory
+     */
     protected $sourceFactory;
 
     /**
-    * @var SourceInterface $source
-    */
+     * @var SourceInterface $source
+     */
     private $source;
 
         /**
-    * Set the object's ID. The actual property set depends on `key()`
-    *
-    * @param mixed $id The object id (identifier / primary key value).
-    * @throws InvalidArgumentException If the argument is not scalar.
-    * @return StorableInterface Chainable
-    */
+         * Set the object's ID. The actual property set depends on `key()`
+         *
+         * @param mixed $id The object id (identifier / primary key value).
+         * @throws InvalidArgumentException If the argument is not scalar.
+         * @return StorableInterface Chainable
+         */
     public function setId($id)
     {
         if (!is_scalar($id)) {
@@ -65,11 +65,11 @@ trait StorableTrait
     }
 
     /**
-    * Get the object's (unique) ID. The actualy property get depends on `key()`
-    *
-    * @throws Exception If the set key is invalid.
-    * @return mixed
-    */
+     * Get the object's (unique) ID. The actualy property get depends on `key()`
+     *
+     * @throws Exception If the set key is invalid.
+     * @return mixed
+     */
     public function id()
     {
         $key = $this->key();
@@ -81,12 +81,12 @@ trait StorableTrait
     }
 
     /**
-    * Set the key property.
-    *
-    * @param string $key The object key, or identifier "name".
-    * @throws InvalidArgumentException If the argument is not scalar.
-    * @return StorableInterface Chainable
-    */
+     * Set the key property.
+     *
+     * @param string $key The object key, or identifier "name".
+     * @throws InvalidArgumentException If the argument is not scalar.
+     * @return StorableInterface Chainable
+     */
     public function setKey($key)
     {
         if (!is_string($key)) {
@@ -110,10 +110,10 @@ trait StorableTrait
     }
 
     /**
-    * Get the key property.
-    *
-    * @return string
-    */
+     * Get the key property.
+     *
+     * @return string
+     */
     public function key()
     {
         return $this->key;
@@ -144,11 +144,11 @@ trait StorableTrait
     }
 
     /**
-    * Set the object's source.
-    *
-    * @param SourceInterface $source The storable object's source.
-    * @return StorableInterface Chainable
-    */
+     * Set the object's source.
+     *
+     * @param SourceInterface $source The storable object's source.
+     * @return StorableInterface Chainable
+     */
     public function setSource(SourceInterface $source)
     {
         $this->source = $source;
@@ -156,10 +156,10 @@ trait StorableTrait
     }
 
     /**
-    * Get the object's source.
-    *
-    * @return SourceInterface
-    */
+     * Get the object's source.
+     *
+     * @return SourceInterface
+     */
     public function source()
     {
         if ($this->source === null) {
@@ -169,19 +169,19 @@ trait StorableTrait
     }
 
     /**
-    * Create the model's source, with the Source Factory.
-    *
-    * @param mixed $data Optional.
-    * @return SourceInterface
-    */
+     * Create the model's source, with the Source Factory.
+     *
+     * @param mixed $data Optional.
+     * @return SourceInterface
+     */
     abstract protected function createSource($data = null);
 
     /**
-    * Load an object from the database from its ID.
-    *
-    * @param mixed $id The identifier to load.
-    * @return StorableInterface Chainable
-    */
+     * Load an object from the database from its ID.
+     *
+     * @param mixed $id The identifier to load.
+     * @return StorableInterface Chainable
+     */
     public function load($id = null)
     {
         if ($id === null) {
@@ -192,12 +192,12 @@ trait StorableTrait
     }
 
     /**
-    * Load an object from the database from its key $key.
-    *
-    * @param string $key   Key pointing a column's name.
-    * @param mixed  $value Value of said column.
-    * @return StorableInterface Chainable.
-    */
+     * Load an object from the database from its key $key.
+     *
+     * @param string $key   Key pointing a column's name.
+     * @param mixed  $value Value of said column.
+     * @return StorableInterface Chainable.
+     */
     public function loadFrom($key = null, $value = null)
     {
         $this->source()->loadItemFromKey($key, $value, $this);
@@ -205,12 +205,12 @@ trait StorableTrait
     }
 
     /**
-    * Load an object from the database from a custom SQL query.
-    *
-    * @param string $query The SQL query.
-    * @param array  $binds Optional. The SQL query parameters.
-    * @return StorableInterface Chainable.
-    */
+     * Load an object from the database from a custom SQL query.
+     *
+     * @param string $query The SQL query.
+     * @param array  $binds Optional. The SQL query parameters.
+     * @return StorableInterface Chainable.
+     */
     public function loadFromQuery($query, array $binds = [])
     {
         $this->source()->loadItemFromQuery($query, $binds, $this);
@@ -218,10 +218,10 @@ trait StorableTrait
     }
 
     /**
-    * Save an object current state to storage
-    *
-    * @return boolean
-    */
+     * Save an object current state to storage
+     *
+     * @return boolean
+     */
     public function save()
     {
         $pre = $this->preSave();
@@ -234,11 +234,11 @@ trait StorableTrait
     }
 
     /**
-    * Update the object in storage to the current object state.
-    *
-    * @param array $properties If set, only update the properties specified in this array.
-    * @return boolean
-    */
+     * Update the object in storage to the current object state.
+     *
+     * @param array $properties If set, only update the properties specified in this array.
+     * @return boolean
+     */
     public function update(array $properties = null)
     {
         $pre = $this->preUpdate($properties);
@@ -252,10 +252,10 @@ trait StorableTrait
     }
 
     /**
-    * Delete an object from storage.
-    *
-    * @return boolean
-    */
+     * Delete an object from storage.
+     *
+     * @return boolean
+     */
     public function delete()
     {
         $pre = $this->preDelete();
@@ -268,34 +268,34 @@ trait StorableTrait
     }
 
     /**
-    * @return boolean
-    */
+     * @return boolean
+     */
     abstract protected function preSave();
 
     /**
-    * @return boolean
-    */
+     * @return boolean
+     */
     abstract protected function postSave();
 
     /**
-    * @param string[] $keys Optional. The list of keys to update.
-    * @return boolean
-    */
+     * @param string[] $keys Optional. The list of keys to update.
+     * @return boolean
+     */
     abstract protected function preUpdate(array $keys = null);
 
     /**
-    * @param string[] $keys Optional. The list of keys to update.
-    * @return boolean
-    */
+     * @param string[] $keys Optional. The list of keys to update.
+     * @return boolean
+     */
     abstract protected function postUpdate(array $keys = null);
 
     /**
-    * @return boolean
-    */
+     * @return boolean
+     */
     abstract protected function preDelete();
 
     /**
-    * @return boolean
-    */
+     * @return boolean
+     */
     abstract protected function postDelete();
 }

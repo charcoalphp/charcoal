@@ -13,15 +13,15 @@ use \Charcoal\Validator\ValidatorInterface as ValidatorInterface;
 trait ValidatableTrait
 {
     /**
-    * In-objet copy of the `ValidatorInterface` validator object
-    * @var ValidatorInterface $validator
-    */
+     * In-objet copy of the `ValidatorInterface` validator object
+     * @var ValidatorInterface $validator
+     */
     protected $validator;
 
     /**
-    * @param ValidatorInterface $validator The validator object to use for validation.
-    * @return ValidatableInterface Chainable
-    */
+     * @param ValidatorInterface $validator The validator object to use for validation.
+     * @return ValidatableInterface Chainable
+     */
     public function setValidator(ValidatorInterface $validator)
     {
         $this->validator = $validator;
@@ -29,8 +29,8 @@ trait ValidatableTrait
     }
 
     /**
-    * @return ValidatorInterface
-    */
+     * @return ValidatorInterface
+     */
     public function validator()
     {
         if ($this->validator === null) {
@@ -40,14 +40,14 @@ trait ValidatableTrait
     }
 
     /**
-    * @return ValidatorInterface
-    */
+     * @return ValidatorInterface
+     */
     abstract protected function createValidator();
 
     /**
-    * @param ValidatorInterface $v Optional. A custom validator object to use for validation. If null, use object's.
-    * @return boolean
-    */
+     * @param ValidatorInterface $v Optional. A custom validator object to use for validation. If null, use object's.
+     * @return boolean
+     */
     public function validate(ValidatorInterface &$v = null)
     {
         if ($v !== null) {

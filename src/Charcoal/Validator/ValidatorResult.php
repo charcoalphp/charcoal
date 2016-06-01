@@ -8,36 +8,36 @@ use \DateTimeInterface as DateTimeInterface;
 use \InvalidArgumentException as InvalidArgumentException;
 
 /**
-* A Validator Result object.
-*
-* @todo Change the visibility of the members to private. (Require custom encoder to output them)
-*/
+ * A Validator Result object.
+ *
+ * @todo Change the visibility of the members to private. (Require custom encoder to output them)
+ */
 class ValidatorResult
 {
     /**
-    * @var string $ident
-    */
+     * @var string $ident
+     */
     private $ident;
 
     /**
-    * Can be `notice`, `warning` or `error`
-    * @var string $level
-    */
+     * Can be `notice`, `warning` or `error`
+     * @var string $level
+     */
     private $level;
 
     /**
-    * @var string $message
-    */
+     * @var string $message
+     */
     private $message;
 
     /**
-    * @var DateTime $ts
-    */
+     * @var DateTime $ts
+     */
     private $ts;
 
     /**
-    * @param array|\ArrayAccess $data Optional data.
-    */
+     * @param array|\ArrayAccess $data Optional data.
+     */
     public function __construct($data = null)
     {
         $ts = new DateTime();
@@ -49,9 +49,9 @@ class ValidatorResult
     }
 
     /**
-    * @param array|\ArrayAccess $data The validator result data.
-    * @return ValidatorResult Chainable
-    */
+     * @param array|\ArrayAccess $data The validator result data.
+     * @return ValidatorResult Chainable
+     */
     public function setData($data)
     {
         if (isset($data['ident'])) {
@@ -70,10 +70,10 @@ class ValidatorResult
     }
 
     /**
-    * @param string $ident The result identigier.
-    * @throws InvalidArgumentException If parameter is not valid.
-    * @return ValidatorResult
-    */
+     * @param string $ident The result identigier.
+     * @throws InvalidArgumentException If parameter is not valid.
+     * @return ValidatorResult
+     */
     public function setIdent($ident)
     {
         if (!is_string($ident)) {
@@ -86,18 +86,18 @@ class ValidatorResult
     }
 
     /**
-    * @return string
-    */
+     * @return string
+     */
     public function ident()
     {
         return $this->ident;
     }
 
     /**
-    * @param string $level The validation level ('notice', 'warning' or 'error').
-    * @throws InvalidArgumentException If parameter is not a valid level.
-    * @return ValidatorResult
-    */
+     * @param string $level The validation level ('notice', 'warning' or 'error').
+     * @throws InvalidArgumentException If parameter is not a valid level.
+     * @return ValidatorResult
+     */
     public function setLevel($level)
     {
         if (!is_string($level)) {
@@ -115,18 +115,18 @@ class ValidatorResult
     }
 
     /**
-    * @return string
-    */
+     * @return string
+     */
     public function level()
     {
         return $this->level;
     }
 
     /**
-    * @param string $message The validation message.
-    * @throws InvalidArgumentException If parameter is not valid.
-    * @return ValidatorResult
-    */
+     * @param string $message The validation message.
+     * @throws InvalidArgumentException If parameter is not valid.
+     * @return ValidatorResult
+     */
     public function setMessage($message)
     {
         if (!is_string($message)) {
@@ -139,18 +139,18 @@ class ValidatorResult
     }
 
     /**
-    * @return string
-    */
+     * @return string
+     */
     public function message()
     {
         return $this->message;
     }
 
     /**
-    * @param string|DateTime $ts The datetime value.
-    * @throws InvalidArgumentException If parameter is not valid "datetime".
-    * @return ValidatorResult
-    */
+     * @param string|DateTime $ts The datetime value.
+     * @throws InvalidArgumentException If parameter is not valid "datetime".
+     * @return ValidatorResult
+     */
     public function setTs($ts)
     {
         if (is_string($ts)) {
@@ -166,8 +166,8 @@ class ValidatorResult
     }
 
     /**
-    * @return DateTime
-    */
+     * @return DateTime
+     */
     public function ts()
     {
         return $this->ts;

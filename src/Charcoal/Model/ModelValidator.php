@@ -5,13 +5,13 @@ namespace Charcoal\Model;
 use Charcoal\Validator\AbstractValidator as AbstractValidator;
 
 /**
-*
-*/
+ *
+ */
 class ModelValidator extends AbstractValidator
 {
     /**
-    * @return boolean
-    */
+     * @return boolean
+     */
     public function validate()
     {
         $model = $this->model;

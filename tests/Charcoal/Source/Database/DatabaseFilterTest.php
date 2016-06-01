@@ -15,8 +15,8 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * @dataProvider providerBasicOperators
-    */
+     * @dataProvider providerBasicOperators
+     */
     public function testSQLBasicOperators($operator)
     {
         $obj = new DatabaseFilter();
@@ -30,8 +30,8 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * @dataProvider providerNullStyleOperators
-    */
+     * @dataProvider providerNullStyleOperators
+     */
     public function testSQLNullStyleOperators($operator)
     {
         $obj = new DatabaseFilter();

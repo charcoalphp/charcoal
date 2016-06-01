@@ -21,10 +21,11 @@ class ModelLoaderTest extends \PHPUnit_Framework_TestCase
             'cache'  => new VoidCachePool()
         ]);
 
-        $factory = new \Charcoal\Model\ModelFactory;
-        $factory->setArguments([
-            'logger'=> new NullLogger(),
-            'metadata_loader' => $metadataLoader
+        $factory = new \Charcoal\Factory\GenericFactory([
+            'arguments' => [[
+                'logger'=> new NullLogger(),
+                'metadata_loader' => $metadataLoader
+            ]]
         ]);
 
         $this->obj = new ModelLoader([

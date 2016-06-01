@@ -89,8 +89,8 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * @dataProvider providerInvalidProperties
-    */
+     * @dataProvider providerInvalidProperties
+     */
     public function testSetInvalidPropertyThrowsException($property)
     {
         $this->setExpectedException('\InvalidArgumentException');
@@ -116,8 +116,8 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * @dataProvider providerValidOperators
-    */
+     * @dataProvider providerValidOperators
+     */
     public function testSetOperator($op)
     {
         $obj = new Filter();
@@ -145,8 +145,8 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * @dataProvider providerInvalidArguments
-    */
+     * @dataProvider providerInvalidArguments
+     */
     public function testSetInvalidOperatorThrowsException($op)
     {
         $this->setExpectedException('\InvalidArgumentException');
@@ -156,8 +156,8 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * @dataProvider providerValidFuncs
-    */
+     * @dataProvider providerValidFuncs
+     */
     public function testSetFunc($func)
     {
         $obj = new Filter();
@@ -175,8 +175,8 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * @dataProvider providerInvalidArguments
-    */
+     * @dataProvider providerInvalidArguments
+     */
     public function testSetInvalidFuncThrowsException($func)
     {
         $this->setExpectedException('\InvalidArgumentException');
@@ -186,8 +186,8 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * @dataProvider providerValidOperands
-    */
+     * @dataProvider providerValidOperands
+     */
     public function testSetOperandGetterUppercase($operand)
     {
         $obj = new Filter();
@@ -197,8 +197,8 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * @dataProvider providerInvalidArguments
-    */
+     * @dataProvider providerInvalidArguments
+     */
     public function testSetInvalidOperandThrowsException($op)
     {
         $this->setExpectedException('\InvalidArgumentException');
@@ -208,8 +208,8 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * @dataProvider providerValidFuncs
-    */
+     * @dataProvider providerValidFuncs
+     */
     public function testSetString($func)
     {
         $obj = new Filter();
@@ -248,8 +248,10 @@ class FilterTest extends \PHPUnit_Framework_TestCase
             ['LIKE'],
             ['IS NULL'],
             ['IS NOT NULL'],
-            ['is'], // lower case is valid
-            ['Is'], // Mixed case is also valid
+            ['is'],
+// lower case is valid
+            ['Is'],
+// Mixed case is also valid
             ['like'],
             ['Is Not NULL']
         ];
@@ -271,19 +273,22 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     {
         return [
             ['ABS'],
-            ['abs'], // lowercase is valid
-            ['Abs'] // Mixed case is also valid
+            ['abs'],
+// lowercase is valid
+            ['Abs']
+// Mixed case is also valid
         ];
     }
 
     /**
-    * Invalid arguments for operator, func and operand
-    */
+     * Invalid arguments for operator, func and operand
+     */
     public function providerInvalidProperties()
     {
         $obj = new \StdClass();
         return [
-            [''], // empty string is invalid
+            [''],
+// empty string is invalid
             [null],
             [true],
             [false],
@@ -298,8 +303,8 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * Invalid arguments for operator, func and operand
-    */
+     * Invalid arguments for operator, func and operand
+     */
     public function providerInvalidArguments()
     {
         $obj = new \StdClass();

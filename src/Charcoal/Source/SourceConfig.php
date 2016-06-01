@@ -9,18 +9,18 @@ use \InvalidArgumentException as InvalidArgumentException;
 use \Charcoal\Config\AbstractConfig as AbstractConfig;
 
 /**
-* Source Config
-*/
+ * Source Config
+ */
 class SourceConfig extends AbstractConfig
 {
     /**
-    * @var string $type
-    */
+     * @var string $type
+     */
     private $type;
 
     /**
-    * @return array
-    */
+     * @return array
+     */
     public function defaults()
     {
         return [
@@ -29,10 +29,10 @@ class SourceConfig extends AbstractConfig
     }
 
     /**
-    * @param string $type The type of source.
-    * @throws InvalidArgumentException If parameter is not a string.
-    * @return SourceConfig Chainable
-    */
+     * @param string $type The type of source.
+     * @throws InvalidArgumentException If parameter is not a string.
+     * @return SourceConfig Chainable
+     */
     public function setType($type)
     {
         if (!is_string($type)) {
@@ -45,8 +45,8 @@ class SourceConfig extends AbstractConfig
     }
 
     /**
-    * @return string
-    */
+     * @return string
+     */
     public function type()
     {
         return $this->type;

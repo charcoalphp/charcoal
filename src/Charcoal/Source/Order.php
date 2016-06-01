@@ -9,8 +9,8 @@ use \InvalidArgumentException;
 use \Charcoal\Source\OrderInterface;
 
 /**
-*
-*/
+ *
+ */
 class Order implements OrderInterface
 {
     const MODE_ASC = 'asc';
@@ -19,31 +19,31 @@ class Order implements OrderInterface
     const MODE_VALUES = 'values';
 
     /**
-    * @var string
-    */
+     * @var string
+     */
     protected $property;
 
     /**
-    * Can be 'asc', 'desc', 'rand' or 'values'
-    * @var string $mode
-    */
+     * Can be 'asc', 'desc', 'rand' or 'values'
+     * @var string $mode
+     */
     protected $mode;
 
     /**
-    * If $mode is "values"
-    * @var array $values
-    */
+     * If $mode is "values"
+     * @var array $values
+     */
     protected $values;
 
     /**
-    * @var boolean $active
-    */
+     * @var boolean $active
+     */
     protected $active = true;
 
     /**
-    * @param array|\ArrayAccess $data The order data.
-    * @return Order Chainable
-    */
+     * @param array|\ArrayAccess $data The order data.
+     * @return Order Chainable
+     */
     public function setData($data)
     {
         if (isset($data['property'])) {
@@ -63,10 +63,10 @@ class Order implements OrderInterface
     }
 
     /**
-    * @param string $property The order property.
-    * @throws InvalidArgumentException If the property argument is not a string.
-    * @return Order (Chainable)
-    */
+     * @param string $property The order property.
+     * @throws InvalidArgumentException If the property argument is not a string.
+     * @return Order (Chainable)
+     */
     public function setProperty($property)
     {
         if (!is_string($property)) {
@@ -85,18 +85,18 @@ class Order implements OrderInterface
     }
 
     /**
-    * @return string
-    */
+     * @return string
+     */
     public function property()
     {
         return $this->property;
     }
 
     /**
-    * @param string $mode The order mode.
-    * @throws InvalidArgumentException If the mode is not a string or invalid.
-    * @return Order Chainable
-    */
+     * @param string $mode The order mode.
+     * @throws InvalidArgumentException If the mode is not a string or invalid.
+     * @return Order Chainable
+     */
     public function setMode($mode)
     {
         if (!is_string($mode)) {
@@ -116,25 +116,25 @@ class Order implements OrderInterface
     }
 
     /**
-    * @return string
-    */
+     * @return string
+     */
     public function mode()
     {
         return $this->mode;
     }
 
     /**
-    * Set the values.
-    * Values are ignored if the mode is not "values"
-    *
-    * If the `$values` argument is a string, it will be split by ",".
-    * If it is an array, the values will be used as is.
-    * Otherwise, the function will throw an error
-    *
-    * @throws InvalidArgumentException If the parameter is not an array or a string.
-    * @param  string|array $values The order values.
-    * @return Order (Chainable)
-    */
+     * Set the values.
+     * Values are ignored if the mode is not "values"
+     *
+     * If the `$values` argument is a string, it will be split by ",".
+     * If it is an array, the values will be used as is.
+     * Otherwise, the function will throw an error
+     *
+     * @throws InvalidArgumentException If the parameter is not an array or a string.
+     * @param  string|array $values The order values.
+     * @return Order (Chainable)
+     */
     public function setValues($values)
     {
         if (is_string($values)) {
@@ -161,17 +161,17 @@ class Order implements OrderInterface
     }
 
     /**
-    * @return array
-    */
+     * @return array
+     */
     public function values()
     {
         return $this->values;
     }
 
     /**
-    * @param boolean $active The active flag.
-    * @return Order (Chainable)
-    */
+     * @param boolean $active The active flag.
+     * @return Order (Chainable)
+     */
     public function setActive($active)
     {
         $this->active = !!$active;
@@ -179,18 +179,18 @@ class Order implements OrderInterface
     }
 
     /**
-    * @return boolean
-    */
+     * @return boolean
+     */
     public function active()
     {
         return $this->active;
     }
 
     /**
-    * Supported operators
-    *
-    * @return array
-    */
+     * Supported operators
+     *
+     * @return array
+     */
     protected function validModes()
     {
         $validModes = [

@@ -23,8 +23,8 @@ use \Charcoal\Source\Pagination;
 use \Charcoal\Source\PaginationInterface;
 
 /**
-* Full implementation, as abstract class, of the SourceInterface.
-*/
+ * Full implementation, as abstract class, of the SourceInterface.
+ */
 abstract class AbstractSource implements
     SourceInterface,
     ConfigurableInterface,
@@ -34,47 +34,47 @@ abstract class AbstractSource implements
     use LoggerAwareTrait;
 
     /**
-    * @var ModelInterface $model
-    */
+     * @var ModelInterface $model
+     */
     private $model = null;
 
     /**
-    * @var array $properties
-    */
+     * @var array $properties
+     */
     private $properties = [];
 
     /**
-    * Array of `Filter` objects
-    * @var array $filters
-    */
+     * Array of `Filter` objects
+     * @var array $filters
+     */
     protected $filters = [];
 
     /**
-    * Array of `Order` object
-    * @var array $orders
-    */
+     * Array of `Order` object
+     * @var array $orders
+     */
     protected $orders = [];
 
     /**
-    * The `Pagination` object
-    * @var Pagination|null $pagination
-    */
+     * The `Pagination` object
+     * @var Pagination|null $pagination
+     */
     protected $pagination = null;
 
     /**
-    * @param array|\ArrayAccess $dependencies The class dependencies.
-    * @return void
-    */
+     * @param array|\ArrayAccess $dependencies The class dependencies.
+     * @return void
+     */
     public function __construct($dependencies)
     {
         $this->setLogger($dependencies['logger']);
     }
 
     /**
-    * Reset everything but the model.
-    *
-    * @return AbstractSource Chainable
-    */
+     * Reset everything but the model.
+     *
+     * @return AbstractSource Chainable
+     */
     public function reset()
     {
         $this->properties = [];
@@ -85,11 +85,11 @@ abstract class AbstractSource implements
     }
 
     /**
-    * Initialize the source's properties with an array of data.
-    *
-    * @param array|\ArrayAccess $data The source data.
-    * @return AbstractSource Chainable
-    */
+     * Initialize the source's properties with an array of data.
+     *
+     * @param array|\ArrayAccess $data The source data.
+     * @return AbstractSource Chainable
+     */
     public function setData($data)
     {
         foreach ($data as $prop => $val) {
@@ -105,11 +105,11 @@ abstract class AbstractSource implements
     }
 
     /**
-    * Set the source's Model.
-    *
-    * @param ModelInterface $model The source's model.
-    * @return AbstractSource Chainable
-    */
+     * Set the source's Model.
+     *
+     * @param ModelInterface $model The source's model.
+     * @return AbstractSource Chainable
+     */
     public function setModel(ModelInterface $model)
     {
         $this->model = $model;
@@ -117,11 +117,11 @@ abstract class AbstractSource implements
     }
 
     /**
-    * Return the source's Model.
-    *
-    * @throws Exception If not model was previously set.
-    * @return ModelInterface
-    */
+     * Return the source's Model.
+     *
+     * @throws Exception If not model was previously set.
+     * @return ModelInterface
+     */
     public function model()
     {
         if ($this->model === null) {
@@ -133,24 +133,24 @@ abstract class AbstractSource implements
     }
 
     /**
-    * @return boolean
-    */
+     * @return boolean
+     */
     public function hasModel()
     {
         return ($this->model !== null);
     }
 
     /**
-    * Set the properties of the source to fetch.
-    *
-    * This method accepts an array of property identifiers (property ident, as string)
-    * that will, if supported, be fetched from the source.
-    *
-    * If no properties are set, it is assumed that all the Model's properties are to be fetched.
-    *
-    * @param array $properties The properties.
-    * @return ColelectionLoader Chainable
-    */
+     * Set the properties of the source to fetch.
+     *
+     * This method accepts an array of property identifiers (property ident, as string)
+     * that will, if supported, be fetched from the source.
+     *
+     * If no properties are set, it is assumed that all the Model's properties are to be fetched.
+     *
+     * @param array $properties The properties.
+     * @return ColelectionLoader Chainable
+     */
     public function setProperties(array $properties)
     {
         $this->properties = [];
@@ -161,18 +161,18 @@ abstract class AbstractSource implements
     }
 
     /**
-    * @return array
-    */
+     * @return array
+     */
     public function properties()
     {
         return $this->properties;
     }
 
     /**
-    * @param string $property Property ident.
-    * @throws InvalidArgumentException If property is not a string or empty.
-    * @return CollectionLoader Chainable
-    */
+     * @param string $property Property ident.
+     * @throws InvalidArgumentException If property is not a string or empty.
+     * @return CollectionLoader Chainable
+     */
     public function addProperty($property)
     {
         if (!is_string($property)) {
@@ -190,9 +190,9 @@ abstract class AbstractSource implements
     }
 
     /**
-    * @param array $filters The filters to set.
-    * @return Collection Chainable
-    */
+     * @param array $filters The filters to set.
+     * @return Collection Chainable
+     */
     public function setFilters(array $filters)
     {
         $this->filters = [];
@@ -203,30 +203,30 @@ abstract class AbstractSource implements
     }
 
     /**
-    * @return array
-    */
+     * @return array
+     */
     public function filters()
     {
         return $this->filters;
     }
 
     /**
-    * Add a collection filter to the loader.
-    *
-    * There are 3 different ways of adding a filter:
-    * - as a `Filter` object, in which case it will be added directly.
-    *   - `addFilter($obj);`
-    * - as an array of options, which will be used to build the `Filter` object
-    *   - `addFilter(['property' => 'foo', 'val' => 42, 'operator' => '<=']);`
-    * - as 3 parameters: `property`, `val` and `options`
-    *   - `addFilter('foo', 42, ['operator' => '<=']);`
-    *
-    * @param string|array|Filter $param   The filter property, or a Filter object / array.
-    * @param mixed               $val     Optional: Only used if the first argument is a string.
-    * @param array               $options Optional: Only used if the first argument is a string.
-    * @throws InvalidArgumentException If property is not a string or empty.
-    * @return CollectionLoader (Chainable)
-    */
+     * Add a collection filter to the loader.
+     *
+     * There are 3 different ways of adding a filter:
+     * - as a `Filter` object, in which case it will be added directly.
+     *   - `addFilter($obj);`
+     * - as an array of options, which will be used to build the `Filter` object
+     *   - `addFilter(['property' => 'foo', 'val' => 42, 'operator' => '<=']);`
+     * - as 3 parameters: `property`, `val` and `options`
+     *   - `addFilter('foo', 42, ['operator' => '<=']);`
+     *
+     * @param string|array|Filter $param   The filter property, or a Filter object / array.
+     * @param mixed               $val     Optional: Only used if the first argument is a string.
+     * @param array               $options Optional: Only used if the first argument is a string.
+     * @throws InvalidArgumentException If property is not a string or empty.
+     * @return CollectionLoader (Chainable)
+     */
     public function addFilter($param, $val = null, array $options = null)
     {
         if ($param instanceof FilterInterface) {
@@ -269,8 +269,8 @@ abstract class AbstractSource implements
     }
 
     /**
-    * @return FilterInterface
-    */
+     * @return FilterInterface
+     */
     protected function createFilter()
     {
         $filter = new Filter();
@@ -278,9 +278,9 @@ abstract class AbstractSource implements
     }
 
     /**
-    * @param array $orders The orders to set.
-    * @return CollectionLoader Chainable
-    */
+     * @param array $orders The orders to set.
+     * @return CollectionLoader Chainable
+     */
     public function setOrders(array $orders)
     {
         $this->orders = [];
@@ -291,20 +291,20 @@ abstract class AbstractSource implements
     }
 
     /**
-    * @return array
-    */
+     * @return array
+     */
     public function orders()
     {
         return $this->orders;
     }
 
     /**
-    * @param string|array|Order $param        The order property, or an Order object / array.
-    * @param string             $mode         Optional.
-    * @param array              $orderOptions Optional.
-    * @throws InvalidArgumentException If the param argument is invalid.
-    * @return CollectionLoader Chainable
-    */
+     * @param string|array|Order $param        The order property, or an Order object / array.
+     * @param string             $mode         Optional.
+     * @param array              $orderOptions Optional.
+     * @throws InvalidArgumentException If the param argument is invalid.
+     * @return CollectionLoader Chainable
+     */
     public function addOrder($param, $mode = 'asc', array $orderOptions = null)
     {
         if ($param instanceof OrderInterface) {
@@ -331,8 +331,8 @@ abstract class AbstractSource implements
     }
 
     /**
-    * @return OrderInterface
-    */
+     * @return OrderInterface
+     */
     protected function createOrder()
     {
         $order = new Order();
@@ -340,10 +340,10 @@ abstract class AbstractSource implements
     }
 
     /**
-    * @param mixed $param The pagination object or array.
-    * @throws InvalidArgumentException If the argument is not an object or array.
-    * @return CollectionLoader Chainable
-    */
+     * @param mixed $param The pagination object or array.
+     * @throws InvalidArgumentException If the argument is not an object or array.
+     * @return CollectionLoader Chainable
+     */
     public function setPagination($param)
     {
         if ($param instanceof PaginationInterface) {
@@ -361,13 +361,13 @@ abstract class AbstractSource implements
     }
 
     /**
-    * Get the pagination object.
-    *
-    * If the pagination wasn't set previously, a new (default / blank) Pagination object will be created.
-    * (Always return a `PaginationInterface` object)
-    *
-    * @return Pagination
-    */
+     * Get the pagination object.
+     *
+     * If the pagination wasn't set previously, a new (default / blank) Pagination object will be created.
+     * (Always return a `PaginationInterface` object)
+     *
+     * @return Pagination
+     */
     public function pagination()
     {
         if ($this->pagination === null) {
@@ -377,8 +377,8 @@ abstract class AbstractSource implements
     }
 
     /**
-    * @return PaginationInterface
-    */
+     * @return PaginationInterface
+     */
     protected function createPagination()
     {
         $pagination = new Pagination();
@@ -386,10 +386,10 @@ abstract class AbstractSource implements
     }
 
     /**
-    * @param integer $page The page number.
-    * @throws InvalidArgumentException If the page argument is not numeric.
-    * @return CollectionLoader Chainable
-    */
+     * @param integer $page The page number.
+     * @throws InvalidArgumentException If the page argument is not numeric.
+     * @return CollectionLoader Chainable
+     */
     public function setPage($page)
     {
         if (!is_numeric($page)) {
@@ -402,18 +402,18 @@ abstract class AbstractSource implements
     }
 
     /**
-    * @return integer
-    */
+     * @return integer
+     */
     public function page()
     {
         return $this->pagination()->page();
     }
 
     /**
-    * @param integer $num The number of items to retrieve per page.
-    * @throws InvalidArgumentException If the num per page argument is not numeric.
-    * @return CollectionLoader Chainable
-    */
+     * @param integer $num The number of items to retrieve per page.
+     * @throws InvalidArgumentException If the num per page argument is not numeric.
+     * @return CollectionLoader Chainable
+     */
     public function setNumPerPage($num)
     {
         if (!is_numeric($num)) {
@@ -426,19 +426,19 @@ abstract class AbstractSource implements
     }
 
     /**
-    * @return integer
-    */
+     * @return integer
+     */
     public function numPerPage()
     {
         return $this->pagination()->numPerPage();
     }
 
     /**
-    * ConfigurableTrait > createConfig()
-    *
-    * @param array $data Optional.
-    * @return SourceConfig
-    */
+     * ConfigurableTrait > createConfig()
+     *
+     * @param array $data Optional.
+     * @return SourceConfig
+     */
     public function createConfig(array $data = null)
     {
         $config = new SourceConfig();
@@ -449,41 +449,41 @@ abstract class AbstractSource implements
     }
 
     /**
-    * @param mixed             $ident The ID of the item to load.
-    * @param StorableInterface $item  Optional item to load into.
-    * @return StorableInterface
-    */
+     * @param mixed             $ident The ID of the item to load.
+     * @param StorableInterface $item  Optional item to load into.
+     * @return StorableInterface
+     */
     abstract public function loadItem($ident, StorableInterface $item = null);
 
     /**
-    * @param StorableInterface|null $item The model to load items from.
-    * @return array
-    */
+     * @param StorableInterface|null $item The model to load items from.
+     * @return array
+     */
     abstract public function loadItems(StorableInterface $item = null);
 
     /**
-    * Save an item (create a new row) in storage.
-    *
-    * @param StorableInterface $item The object to save.
-    * @return mixed The created item ID, or false in case of an error.
-    */
+     * Save an item (create a new row) in storage.
+     *
+     * @param StorableInterface $item The object to save.
+     * @return mixed The created item ID, or false in case of an error.
+     */
     abstract public function saveItem(StorableInterface $item);
 
     /**
-    * Update an item in storage.
-    *
-    * @param StorableInterface $item       The object to update.
-    * @param array             $properties The list of properties to update, if not all.
-    * @return boolean Success / Failure
-    */
+     * Update an item in storage.
+     *
+     * @param StorableInterface $item       The object to update.
+     * @param array             $properties The list of properties to update, if not all.
+     * @return boolean Success / Failure
+     */
     abstract public function updateItem(StorableInterface $item, array $properties = null);
 
     /**
-    * Delete an item from storage
-    *
-    * @param StorableInterface $item Optional item to delete. If none, the current model object will be used..
-    * @return boolean Success / Failure
-    */
+     * Delete an item from storage
+     *
+     * @param StorableInterface $item Optional item to delete. If none, the current model object will be used..
+     * @return boolean Success / Failure
+     */
     abstract public function deleteItem(StorableInterface $item = null);
 
     /**

@@ -17,20 +17,20 @@ class ModelMetadata extends AbstractMetadata
     private $ident;
 
     /**
-    * @var array $Sources
-    */
+     * @var array $Sources
+     */
     private $sources;
 
     /**
-    * @var string $defaultSource
-    */
+     * @var string $defaultSource
+     */
     private $defaultSource;
 
     /**
-    * @param string $ident The object meta identifier.
-    * @throws InvalidArgumentException If ident is not a string.
-    * @return ModelMetadata Chainable
-    */
+     * @param string $ident The object meta identifier.
+     * @throws InvalidArgumentException If ident is not a string.
+     * @return ModelMetadata Chainable
+     */
     public function setIdent($ident)
     {
         if (!is_string($ident)) {
@@ -43,17 +43,17 @@ class ModelMetadata extends AbstractMetadata
     }
 
     /**
-    * @return string
-    */
+     * @return string
+     */
     public function ident()
     {
         return $this->ident;
     }
 
     /**
-    * @param array $sources The available sources for this model.
-    * @return ModelMetadata Chainable
-    */
+     * @param array $sources The available sources for this model.
+     * @return ModelMetadata Chainable
+     */
     public function setSources(array $sources)
     {
 
@@ -64,18 +64,18 @@ class ModelMetadata extends AbstractMetadata
     }
 
     /**
-    * @return array
-    */
+     * @return array
+     */
     public function sources()
     {
         return $this->sources;
     }
 
     /**
-    * @param string $sourceIdent The source identifier.
-    * @param mixed  $source      The source data.
-    * @return ModelMetadata Chainable
-    */
+     * @param string $sourceIdent The source identifier.
+     * @param mixed  $source      The source data.
+     * @return ModelMetadata Chainable
+     */
     public function addSource($sourceIdent, $source)
     {
         $this->sources[$sourceIdent] = $source;
@@ -83,19 +83,19 @@ class ModelMetadata extends AbstractMetadata
     }
 
     /**
-    * @param string $sourceIdent The source identifier to get.
-    * @return mixed
-    */
+     * @param string $sourceIdent The source identifier to get.
+     * @return mixed
+     */
     public function source($sourceIdent)
     {
         return $this->sources[$sourceIdent];
     }
 
     /**
-    * @param string $defaultSource The default source identifier.
-    * @throws InvalidArgumentException If the argument is not a string.
-    * @return ModelMetadata Chainable
-    */
+     * @param string $defaultSource The default source identifier.
+     * @throws InvalidArgumentException If the argument is not a string.
+     * @return ModelMetadata Chainable
+     */
     public function setDefaultSource($defaultSource)
     {
         if (!is_string($defaultSource)) {
@@ -108,8 +108,8 @@ class ModelMetadata extends AbstractMetadata
     }
 
     /**
-    * @return string
-    */
+     * @return string
+     */
     public function defaultSource()
     {
         return $this->defaultSource;

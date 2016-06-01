@@ -34,8 +34,8 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * @dataProvider providerInvalidParameters
-    */
+     * @dataProvider providerInvalidParameters
+     */
     public function testSetInvalidPageThrowsException($page)
     {
         $this->setExpectedException('\InvalidArgumentException');
@@ -61,8 +61,8 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * @dataProvider providerInvalidParameters
-    */
+     * @dataProvider providerInvalidParameters
+     */
     public function testSetInvalidNumPerPageThrowsException($num)
     {
         $this->setExpectedException('\InvalidArgumentException');
@@ -90,13 +90,14 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * Invalid arguments for page and numPerPage
-    */
+     * Invalid arguments for page and numPerPage
+     */
     public function providerInvalidParameters()
     {
         $obj = new \StdClass();
         return [
-            [''], // empty string is invalid
+            [''],
+// empty string is invalid
             [null],
             [true],
             [false],

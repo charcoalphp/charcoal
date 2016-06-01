@@ -6,13 +6,13 @@ namespace Charcoal\Model;
 use \Charcoal\Factory\ResolverFactory;
 
 /**
-*
-*/
+ *
+ */
 class ModelFactory extends ResolverFactory
 {
     /**
-    * @return string
-    */
+     * @return string
+     */
     public function baseClass()
     {
         return '\Charcoal\Model\ModelInterface';
