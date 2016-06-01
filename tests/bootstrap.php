@@ -4,6 +4,8 @@ use \Charcoal\App\App;
 use \Charcoal\App\AppConfig;
 use \Charcoal\App\AppContainer;
 
+use \Charcoal\Config\GenericConfig;
+
 use \Psr\Log\NullLogger;
 
 /** Composer autoloader for Charcoal's PSR4-compliant Unit Tests */
@@ -12,31 +14,14 @@ $autoloader->add('Charcoal\\', __DIR__.'/src/');
 $autoloader->add('Charcoal\\Tests\\', __DIR__);
 $autoloader->add('Charcoal\\Tests\\', __DIR__.'/Charcoal/');
 
-// Disable Logger
-$GLOBALS['container']['logger'] = function ($c) {
-    return new NullLogger();
-};
 
-$config = new AppConfig();
-$config->merge([
-    'base_path' => (dirname(__DIR__) . '/'),
-    'databases'=>[
-        'default'=>[
-            'database'=>'charcoal_examples',
-            'username'=>'root',
-            'password'=>''
-        ]
-    ],
-    'default_database'=>'default'
-]);
-$GLOBALS['container'] = new AppContainer([
-    'config' => $config,
-    'metadata' => [
-        'paths' => __DIR__.'/metadata/'
-    ]
+$dsn = 'mysql:host=localhost;dbname=charcoal_examples';
+$username = 'root';
+$password = '';
 
-]);
+$db = new PDO($dsn, $username, $password, [PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8']);
+$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
 
-// Charcoal / Slim is the main app
-$GLOBALS['app'] = App::instance($GLOBALS['container']);
-$GLOBALS['app']->setLogger(new \Psr\Log\NullLogger());
+
+$GLOBALS['pdo'] = $db;

@@ -70,7 +70,13 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
     {
         $obj = $this->obj;
         $model = new \Charcoal\Model\Model([
-            'logger' => new \Psr\Log\NullLogger()
+            'logger' => new \Psr\Log\NullLogger(),
+            'metadata_loader' => new \Charcoal\Model\MetadataLoader([
+                'base_path' => '',
+                'paths' => [],
+                'logger' => new \Psr\Log\NullLogger(),
+                'cache' => new \Stash\Pool()
+            ])
         ]);
         $ret = $obj->setModel($model);
         $this->assertSame($ret, $obj);

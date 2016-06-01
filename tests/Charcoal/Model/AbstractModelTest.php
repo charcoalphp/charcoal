@@ -2,8 +2,13 @@
 
 namespace Charcoal\Tests\Model;
 
+use \Psr\Log\NullLogger;
+
+use \Charcoal\Config\GenericConfig;
+
 use \Charcoal\Charcoal;
 use \Charcoal\Source\DatabaseSource;
+use \Charcoal\Model\MetadataLoader;
 
 class AbstractModelTest extends \PHPUnit_Framework_TestCase
 {
@@ -11,10 +16,9 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        $app = $GLOBALS['app'];
         $s = new DatabaseSource([
-            'logger'=>$GLOBALS['container']['logger'],
-            'config'=>$GLOBALS['container']['config']
+            'logger'=>new NullLogger(),
+            'pdo' => $GLOBALS['pdo']
         ]);
         $s->setTable('test');
         $q = 'DROP TABLE IF EXISTS `test`';
@@ -26,13 +30,19 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
     public function getObj()
     {
         $s = new DatabaseSource([
-            'logger'=>$GLOBALS['container']['logger'],
-            'config'=>$GLOBALS['container']['config']
+            'logger'=>new NullLogger(),
+            'pdo' => $GLOBALS['pdo']
         ]);
         $s->setTable('tests');
 
         $obj = new AbstractModelClass([
-            'logger' => $GLOBALS['container']['logger']
+            'logger' => new NullLogger(),
+            'metadata_loader' => new MetadataLoader([
+                'logger' => new NullLogger(),
+                'base_path' => __DIR__,
+                'paths' => ['metadata'],
+                'cache'  => new \Stash\Pool()
+            ])
         ]);
         $obj->setSource($s);
         $obj->setMetadata(

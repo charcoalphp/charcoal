@@ -13,7 +13,13 @@ class ModelValidatorTest extends \PHPUnit_Framework_TestCase
     protected function model()
     {
         return new Model([
-            'logger' => new \Psr\Log\NullLogger()
+            'logger' => new \Psr\Log\NullLogger(),
+            'metadata_loader' => new \Charcoal\Model\MetadataLoader([
+                'base_path' => '',
+                'paths' => [],
+                'logger' => new \Psr\Log\NullLogger(),
+                'cache' => new \Stash\Pool()
+            ])
         ]);
     }
 

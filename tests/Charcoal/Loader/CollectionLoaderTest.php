@@ -2,6 +2,11 @@
 
 namespace Charcoal\Tests\Loader;
 
+use \Psr\Log\NullLogger;
+use \Cache\Adapter\Void\VoidCachePool;
+
+use \Charcoal\Config\GenericConfig;
+
 use \Charcoal\Loader\CollectionLoader;
 use \Charcoal\Source\DatabaseSource;
 
@@ -16,25 +21,25 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $factory = new \Charcoal\Model\ModelFactory();
         $this->obj = new CollectionLoader([
-            'logger' => $GLOBALS['container']['logger'],
+            'logger' => new NullLogger(),
             'factory' => $factory,
         ]);
 
         $s = new DatabaseSource([
-            'logger'=>$GLOBALS['container']['logger'],
-            'config'=>$GLOBALS['container']['config']
+            'logger'=>new NullLogger(),
+            'pdo' => $GLOBALS['pdo']
         ]);
         $s->setTable('tests');
 
         $metadataLoader = new \Charcoal\Model\MetadataLoader([
-            'logger' => $GLOBALS['container']['logger'],
-            'cache' => new \Stash\Pool(),
+            'logger' => new NullLogger(),
+            'cache' => new VoidCachePool(),
             'base_path' => '',
             'paths' => []
         ]);
 
         $this->model = new \Charcoal\Model\Model([
-            'logger' => new \Psr\Log\NullLogger(),
+            'logger' => new NullLogger(),
             'metadata_loader' => $metadataLoader
         ]);
         $this->model->setSource($s);
@@ -60,8 +65,6 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
         }', true));
 
         $this->model->source()->createTable();
-
-
     }
 
     public function setData()
