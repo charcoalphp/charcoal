@@ -157,7 +157,7 @@ abstract class AbstractModel extends AbstractEntity implements
                 continue;
             }
             $property = $this->p($propIdent);
-            if ($property->l10n()) {
+            if ($property->l10n() && is_array($val)) {
                 $currentValue = json_decode(json_encode($this[$propIdent]), true);
                 if (is_array($currentValue)) {
                     $this[$propIdent] = array_merge($currentValue, $val);
@@ -352,7 +352,7 @@ abstract class AbstractModel extends AbstractEntity implements
      */
     public function update(array $properties = null)
     {
-        $pre = $this->preUpdate();
+        $pre = $this->preUpdate($properties);
         if ($pre === false) {
             return false;
         }
