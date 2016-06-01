@@ -60,7 +60,7 @@ trait DescribablePropertyTrait
      * Return an array of `PropertyInterface`
      *
      * @param array|null $filters Unused.
-     * @return void Yield, not return
+     * @return PropertyInterface[] Generator.
      */
     public function properties(array $filters = null)
     {
