@@ -13,6 +13,9 @@ class DatabasePagination extends Pagination
     /**
     * Get the pagination's SQL string (Full "LIMIT" subquery)
     *
+    * For example, for the pagination `{page:3,num_per_page:50}` the result
+    * would be: `' LIMIT 100, 50'`.
+    *
     * @return string
     */
     public function sql()

@@ -18,15 +18,18 @@ class ValidatorResult
     * @var string $ident
     */
     private $ident;
+
     /**
     * Can be `notice`, `warning` or `error`
     * @var string $level
     */
     private $level;
+
     /**
     * @var string $message
     */
     private $message;
+
     /**
     * @var DateTime $ts
     */
