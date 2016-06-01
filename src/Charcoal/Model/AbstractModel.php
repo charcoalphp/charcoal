@@ -185,19 +185,19 @@ abstract class AbstractModel extends AbstractEntity implements
         $properties = $this->properties();
         foreach ($properties as $propertyIdent => $property) {
             $fields = $property->fields();
-            if (count($fields) == 1) {
-                $f = $fields[0];
-                $f_id = $f->ident();
-                if (isset($flatData[$f_id])) {
-                    $data[$propertyIdent] = $flatData[$f_id];
-                    unset($flatData[$f_id]);
-                }
-            } else {
-                foreach ($fields as $f) {
+
+            foreach($fields as $k=>$f) {
+                if(is_string($k)) {
                     $f_id = $f->ident();
                     $key = str_replace($propertyIdent.'_', '', $f_id);
                     if (isset($flatData[$f_id])) {
                         $data[$propertyIdent][$key] = $flatData[$f_id];
+                        unset($flatData[$f_id]);
+                    }
+                } else {
+                    $f_id = $f->ident();
+                    if (isset($flatData[$f_id])) {
+                        $data[$propertyIdent] = $flatData[$f_id];
                         unset($flatData[$f_id]);
                     }
                 }
