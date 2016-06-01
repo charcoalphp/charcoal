@@ -257,7 +257,6 @@ class CollectionLoader implements LoggerAwareInterface
         }
 
         foreach ($properties as $property_ident) {
-            $prop = $model->p($property_ident);
             $val = ('%'.$keyword.'%');
             $this->addFilter([
                 'property' => $property_ident,

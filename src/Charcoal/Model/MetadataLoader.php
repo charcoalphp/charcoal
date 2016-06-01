@@ -44,7 +44,7 @@ final class MetadataLoader implements LoggerAwareInterface
     /**
      * The paths to search in.
      *
-     * @var string $paths
+     * @var string[] $paths
      */
     private $paths = [];
 

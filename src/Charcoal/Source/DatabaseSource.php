@@ -231,7 +231,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
                 // The key does not exist at all.
                 $q = 'ALTER TABLE `'.$this->table().'` ADD '.$field->sql();
                 $this->logger->debug($q);
-                $res = $this->db()->query($q);
+                $this->db()->query($q);
             } else {
                 // The key exists. Validate.
                 $col = $cols[$ident];
@@ -363,7 +363,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     */
     private function getModelFields(ModelInterface $model, $properties = null)
     {
-        $metadata = $model->metadata();
+        //$metadata = $model->metadata();
         if ($properties === null) {
             $properties = array_keys($model->metadata()->properties());
         } else {

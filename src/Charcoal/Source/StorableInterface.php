@@ -6,7 +6,6 @@ namespace Charcoal\Source;
 use \Charcoal\Factory\FactoryInterface;
 
 // Local namespace dependencies
-use \Charcoal\Source\SourceFactory;
 use \Charcoal\Source\SourceInterface;
 
 /**

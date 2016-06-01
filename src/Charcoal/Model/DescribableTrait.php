@@ -2,7 +2,6 @@
 
 namespace Charcoal\Model;
 
-use \Traversable;
 use \Exception;
 use \InvalidArgumentException;
 
@@ -33,7 +32,7 @@ trait DescribableTrait
     /**
      * Describable object needs to have a `setData()` method
      *
-     * @param array|Traversable $data The object's data.
+     * @param array|\Traversable $data The object's data.
      * @return DescribableInterface Chainable
      */
     abstract public function setData($data);

@@ -10,7 +10,6 @@ use \Pimple\ServiceProviderInterface;
 use \Charcoal\Factory\GenericFactory as Factory;
 
 // Module `charcoal-property` dependencies
-use \Charcoal\Property\PropertyFactory;
 use \Charcoal\Property\PropertyInterface;
 use \Charcoal\Property\GenericProperty;
 
