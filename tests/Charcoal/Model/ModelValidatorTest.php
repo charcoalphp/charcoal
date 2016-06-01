@@ -2,6 +2,9 @@
 
 namespace Charcoal\Tests\Model;
 
+use \Psr\Log\NullLogger;
+use \Cache\Adapter\Void\VoidCachePool;
+
 use \Charcoal\Model\ModelValidator as ModelValidator;
 use \Charcoal\Model\Model as Model;
 
@@ -13,12 +16,12 @@ class ModelValidatorTest extends \PHPUnit_Framework_TestCase
     protected function model()
     {
         return new Model([
-            'logger' => new \Psr\Log\NullLogger(),
+            'logger' => new NullLogger(),
             'metadata_loader' => new \Charcoal\Model\MetadataLoader([
                 'base_path' => '',
                 'paths' => [],
-                'logger' => new \Psr\Log\NullLogger(),
-                'cache' => new \Stash\Pool()
+                'logger' => new NullLogger(),
+                'cache' => new VoidCachePool()
             ])
         ]);
     }

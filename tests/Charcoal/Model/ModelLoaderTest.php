@@ -2,6 +2,9 @@
 
 namespace Charcoal\Tests\Metadata;
 
+use \Psr\Log\NullLogger;
+use \Cache\Adapter\Void\VoidCachePool;
+
 use \Charcoal\Model\ModelLoader;
 use \Charcoal\Charcoal;
 
@@ -12,23 +15,23 @@ class ModelLoaderTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $metadataLoader = new \Charcoal\Model\MetadataLoader([
-            'logger' => new \Psr\Log\NullLogger(),
+            'logger' => new NullLogger(),
             'base_path' => __DIR__,
             'paths' => ['metadata'],
-            'cache'  => new \Stash\Pool()
+            'cache'  => new VoidCachePool()
         ]);
 
         $factory = new \Charcoal\Model\ModelFactory;
         $factory->setArguments([
-            'logger'=> new \Psr\Log\NullLogger(),
+            'logger'=> new NullLogger(),
             'metadata_loader' => $metadataLoader
         ]);
 
         $this->obj = new ModelLoader([
             'obj_type' => 'charcoal/model/model',
             'factory' => $factory,
-            'logger' => new \Psr\Log\NullLogger(),
-            'cache'  => new \Stash\Pool()
+            'logger' => new NullLogger(),
+            'cache'  => new VoidCachePool()
         ]);
     }
 

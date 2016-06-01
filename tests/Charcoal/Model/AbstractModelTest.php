@@ -3,6 +3,7 @@
 namespace Charcoal\Tests\Model;
 
 use \Psr\Log\NullLogger;
+use \Cache\Adapter\Void\VoidCachePool;
 
 use \Charcoal\Config\GenericConfig;
 
@@ -41,7 +42,7 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
                 'logger' => new NullLogger(),
                 'base_path' => __DIR__,
                 'paths' => ['metadata'],
-                'cache'  => new \Stash\Pool()
+                'cache'  => new VoidCachePool()
             ])
         ]);
         $obj->setSource($s);

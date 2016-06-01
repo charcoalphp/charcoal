@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Source;
 
+use \Cache\Adapter\Void\VoidCachePool;
+
 class AbstractSourceTest extends \PHPUnit_Framework_TestCase
 {
     public $obj;
@@ -75,7 +77,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
                 'base_path' => '',
                 'paths' => [],
                 'logger' => new \Psr\Log\NullLogger(),
-                'cache' => new \Stash\Pool()
+                'cache' => new VoidCachePool()
             ])
         ]);
         $ret = $obj->setModel($model);
