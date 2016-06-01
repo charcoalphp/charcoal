@@ -369,9 +369,6 @@ class FileProperty extends AbstractProperty
         // Current ident
         $i = $this->ident();
 
-        // Current val
-        // IF multiple, val is an array
-        // Same if l10n, but by lang @todo (if necessary...)
         $val = $this->val();
 
         if (isset($_FILES[$i])
@@ -381,10 +378,10 @@ class FileProperty extends AbstractProperty
 
             if (is_array($file['name']) && $this->multiple() && $this->l10n()) {
                 $f = [];
-                foreach ($file['name'] as $lang => $val) {
+                foreach ($file['name'] as $lang => $langVal) {
                     $f[$lang] = [];
                     if (!$file['name'][$lang]) {
-                        $f[$lang] = '';
+                        $f[$lang] = isset($val[$lang]) ? $val[$lang] : '';
                         continue;
                     }
                     $k = 0;
@@ -418,11 +415,11 @@ class FileProperty extends AbstractProperty
                 // should be combined into one.
                 // Not sure how
                 $f = [];
-                foreach ($file['name'] as $lang => $val) {
+                foreach ($file['name'] as $lang => $langVal) {
                     $data = [];
 
                     if (!$file['name'][$lang]) {
-                        $f[$lang] = '';
+                        $f[$lang] = isset($val[$lang]) ? $val[$lang] : '';
                         continue;
                     }
                     $data['name']       = $file['name'][$lang];
@@ -453,8 +450,7 @@ class FileProperty extends AbstractProperty
                     return $f;
                 }
             }
-        } // @todo add L10n if necessary
-        elseif (preg_match('/^data:/', $val)) {
+        } elseif (preg_match('/^data:/', $val)) {
             $f = $this->dataUpload($val);
             $this->setVal($f);
             return $f;
