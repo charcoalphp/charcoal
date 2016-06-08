@@ -39,6 +39,11 @@ trait FormGroupTrait
     private $inputCallback = null;
 
     /**
+     * @var boolean $active
+     */
+    private $active = true;
+
+    /**
      * @var integer $priority
      */
     private $priority;
@@ -85,6 +90,24 @@ trait FormGroupTrait
     public function form()
     {
         return $this->form;
+    }
+
+    /**
+     * @param boolean $active The active flag.
+     * @return FormPropertyWidget Chainable
+     */
+    public function setActive($active)
+    {
+        $this->active = !!$active;
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function active()
+    {
+        return $this->active;
     }
 
     /**

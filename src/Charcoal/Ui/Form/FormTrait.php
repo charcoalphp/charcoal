@@ -225,13 +225,20 @@ trait FormTrait
 
         $groupCallback = isset($groupCallback) ? $groupCallback : $this->groupCallback;
         foreach ($groups as $group) {
+            if (!$group->active()) {
+                continue;
+            }
+
             if (!$group->l10nMode()) {
                 $group->setL10nMode($this->l10nMode());
             }
+
             if ($groupCallback) {
                 $groupCallback($group);
             }
+
             $GLOBALS['widget_template'] = $group->template();
+
             yield $group;
         }
 
