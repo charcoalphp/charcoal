@@ -1,0 +1,34 @@
+{
+  "name": "beneroch/charcoal-attachments",
+  "description": "Charcoal Attachments Module",
+  "homepage": "https://charcoal.locomotive.ca",
+  "license": "MIT",
+  "support": {
+    "source": "https://bitbucket.org/beneroch/charcoal-attachment"
+  },
+  "authors": [
+    {
+      "name": "Bene Roch",
+      "email": "ben@locomotive.ca"
+    },
+    {
+      "name": "Locomotive",
+      "homepage": "https://locomotive.ca"
+    }
+  ],
+  "minimum-stability": "dev",
+  "require": {
+    "locomotivemtl/charcoal-core": "dev-master",
+    "locomotivemtl/charcoal-base": "dev-master"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^4.8",
+    "squizlabs/php_codesniffer": "^2.4",
+    "satooshi/php-coveralls":"~1.0.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "Charcoal\\Attachment\\": "src/Charcoal/Attachment"
+    }
+  }
+}

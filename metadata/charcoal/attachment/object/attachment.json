@@ -1,0 +1,239 @@
+{
+	"properties":{
+		"id":{
+			"type":"id"
+		},
+		"position":{
+			"type":"number",
+			"label":"Position"
+		},
+		"active":{
+			"type":"boolean",
+			"label":{
+				"fr":"Actif",
+				"en":"Active"
+			}
+		},
+		"title":{
+			"type":"string",
+			"l10n":true,
+			"label":{
+				"fr":"Titre",
+				"en":"Title"
+			}
+		},
+		"subtitle":{
+			"type":"string",
+			"l10n":true,
+			"label":{
+				"fr":"Sous-Titre",
+				"en":"Sub-Title"
+			}
+		},
+		"description":{
+			"type":"text",
+			"l10n":true,
+			"label":{
+				"fr":"Description",
+				"en":"Description"
+			}
+		},
+		"keywords":{
+			"type":"string",
+			"label":{
+				"fr":"Mots-clés",
+				"en":"Keywords"
+			},
+			"multiple":true,
+			"l10n":true
+		},
+		"type":{
+			"type":"string",
+			"label":{
+				"fr":"Type",
+				"en":"Type"
+			}
+		},
+		"file":{
+			"type":"file",
+			"label":{
+				"fr":"Fichier",
+				"en":"File"
+			},
+			"upload_path":"uploads/attachments/",
+			"public_access":true
+		},
+		"file_size":{
+			"type":"string",
+			"label":{
+				"fr":"Taille du fichier",
+				"en":"File size"
+			}
+		},
+		"content_type":{
+			"type":"string",
+			"label":{
+				"fr":"Type de fichier",
+				"en":"Content Type"
+			}
+		},
+		"thumbnail":{
+			"type":"image",
+			"label":{
+				"fr":"Vignette du fichier",
+				"en":"File's Thumbnail"
+			},
+			"upload_path":"uploads/attachments/thumbs/",
+			"public_access":true
+		},
+		"embed":{
+			"type":"text",
+			"label":{
+				"fr":"Vidéo embed",
+				"en":"Embed Video"
+			},
+			"notes":{
+				"fr":"Tel que fourni par youtube ou viméo",
+				"en":"As provided by youtube or vimeo"
+			}
+		}
+	},
+
+	"data":{},
+
+	"sources":{
+		"default":{
+			"type":"database",
+			"table":"charcoal_attachments"
+		}
+	},
+	"default_source":"default",
+
+	"admin":{
+		"lists":{
+			"default":{
+				"properties":[
+					"title",
+					"subtitle",
+					"type",
+					"file"
+				],
+				"orders":{
+					"type":{
+						"property":"type",
+						"val":"asc"
+					}
+				}
+			}
+		},
+		"default_list":"default",
+
+		"forms":{
+			"default":{
+				"l10n_mode":"loop_inputs",
+				"groups":{
+					"info":{
+						"layout": {
+							"structure": [
+								{ "columns": [ 1, 1 ] },
+								{ "columns": [ 1 ] },
+								{ "columns": [ 1 ] },
+								{ "columns": [ 1 ] },
+								{ "columns": [ 1 ] },
+								{ "columns": [ 1, 1 ] },
+								{ "columns": [ 1, 1 ] }
+							]
+						},
+						"title":{
+							"fr":"Informations",
+							"en":"Informations"
+						},
+						"properties":[
+							"title",
+							"subtitle",
+							"description",
+							"keywords"
+						]
+					},
+					"media":{
+						"layout": {
+							"structure": [
+								{ "columns": [ 1 ] },
+								{ "columns": [ 1, 1 ] }
+							]
+						},
+						"title":{
+							"fr":"Média",
+							"en":"Media"
+						},
+						"properties":[
+							"file",
+							"thumbnail"
+						]
+					},
+					"taxo":{
+						"layout": {
+							"structure": [
+								{ "columns": [ 1 ] }
+							]
+						},
+						"title":{
+							"fr":"Taxonomie",
+							"en":"Taxonomy"
+						},
+						"properties":[
+							"active"
+						]
+					}
+
+				},
+				"sidebars":{
+					"actions":{}
+				}
+			}
+		},
+		"default_form":"default",
+
+		"dashboards":{
+			"edit":{
+				"title":{
+					"fr":"Attachements",
+					"en":"Edit attachment"
+				},
+				"layout": {
+					"structure": [
+						{ "columns": [ 1 ] }
+					]
+				},
+				"widgets": {
+					"form": {
+						"type": "charcoal/admin/widget/objectForm",
+						"form_ident": "default",
+						"obj_type": "charcoal/attachment/object/attachment"
+					}
+				}
+			},
+			"table":{
+				"title": {
+					"fr":"Liste des attachements",
+					"en":"Attachments list"
+				},
+				"layout": {
+					"structure": [
+						{ "columns": [ 1 ] }
+					]
+				},
+				"widgets": {
+					"form": {
+						"type": "charcoal/admin/widget/table",
+						"collection_ident": "default",
+						"obj_type": "charcoal/attachment/object/attachment"
+					}
+				}
+			}
+		},
+		"default_create_dashboard": "edit",
+		"default_edit_dashboard": "edit",
+		"default_collection_dashboard": "table"
+	}
+}
