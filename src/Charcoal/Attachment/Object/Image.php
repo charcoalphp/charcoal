@@ -2,14 +2,14 @@
 namespace Charcoal\Attachment\Object;
 
 // From Charcoal\Attachment
-use \Charcoal\Attachment\Object\Attachment;
+use \Charcoal\Attachment\Object\AbstractAttachment;
 
 /**
  * Image attachment
  * Uses a file input, title and description.
  *
  */
-class Image extends Attachment
+class Image extends AbstractAttachment
 {
 
 	/**

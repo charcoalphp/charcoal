@@ -209,7 +209,7 @@
 					"form": {
 						"type": "charcoal/admin/widget/objectForm",
 						"form_ident": "default",
-						"obj_type": "charcoal/attachment/object/attachment"
+						"obj_type": "charcoal/attachment/object/abstract-attachment"
 					}
 				}
 			},
@@ -227,7 +227,7 @@
 					"form": {
 						"type": "charcoal/admin/widget/table",
 						"collection_ident": "default",
-						"obj_type": "charcoal/attachment/object/attachment"
+						"obj_type": "charcoal/attachment/object/abstract-attachment"
 					}
 				}
 			}

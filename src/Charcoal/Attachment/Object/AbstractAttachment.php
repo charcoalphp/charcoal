@@ -11,7 +11,6 @@ use \Charcoal\Translation\TranslationString;
 
 // From Charcoal\Attachment
 // Actual available attachments.
-use \Charcoal\Attachment\Object\Attachment;
 use \Charcoal\Attachment\Object\File;
 use \Charcoal\Attachment\Object\Image;
 use \Charcoal\Attachment\Object\Text;
@@ -21,7 +20,7 @@ use \Charcoal\Attachment\Object\Video;
 /**
  *
  */
-class Attachment extends Content
+class AbstractAttachment extends Content
 {
     /**
      * File classes

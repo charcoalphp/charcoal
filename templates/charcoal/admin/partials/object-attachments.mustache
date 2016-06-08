@@ -1,0 +1,15 @@
+{{!
+	The object must be AttachableAware
+	Use the "#obj" avialble from the dashboard / ObjectContainerTrait
+
+	The OBJ has the `attachments` method (@see AttachableAwareTrait)
+}}
+<section id="object_attachments" class="row js-attachment-container js-attachment-sortable">
+	<div class="js-grid-container clearfix" style="min-height:100px;">
+	{{#obj}}
+		{{#attachments}}
+			{{>charcoal/admin/partials/attachment-preview}}
+		{{/attachments}}
+	{{/obj}}
+	</div>
+</section>

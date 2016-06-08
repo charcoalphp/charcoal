@@ -1,0 +1,36 @@
+
+{{#isImage}}
+<div class="col-xs-6 col-md-2">
+  	<a class="thumbnail js-attachment" href="object/edit?obj_type=charcoal/attachment/object/image&obj_id={{id}}" data-id="{{id}}" data-type="{{objType}}" target="_blank">
+		<img src="{{baseUrl}}{{file}}" height="50" alt="{{title}}">
+		{{title}}
+	</a>
+</div>
+{{/isImage}}
+
+{{#isFile}}
+<div class="col-xs-6 col-md-2">
+	<a href="object/edit?obj_type=charcoal/attachment/object/file&obj_id={{id}}" class="thumbnail js-attachment" data-id="{{id}}" data-type="{{objType}}" target="_blank">
+		<span class="glyphicon glyphicon-file"></span>
+		<span class="glyphicon-class">{{title}}</span>
+	</a>
+</div>
+{{/isFile}}
+
+{{#isVideo}}
+<div class="col-xs-6 col-md-2" style="overflow:hidden;">
+  	<a class="thumbnail js-attachment" href="object/edit?obj_type=charcoal/attachment/object/video&obj_id={{id}}" data-id="{{id}}" data-type="{{objType}}" style="overflow:hidden;" target="_blank">
+	{{&embed}}
+	</a>
+</div>
+{{/isVideo}}
+
+{{#isText}}
+<div class="col-xs-6 col-md-2">
+	<a href="object/edit?obj_type=charcoal/attachment/object/text&obj_id={{id}}" class="thumbnail js-attachment" data-id="{{id}}" data-type="{{objType}}" target="_blank">
+		<span class="glyphicon glyphicon-font"></span>
+		<span class="glyphicon-class">{{title}}</span>
+	</a>
+</div>
+{{/isText}}
+

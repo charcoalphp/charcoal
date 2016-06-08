@@ -1,0 +1,28 @@
+{{#hasObj}}
+
+<div id="{{widgetId}}">
+	<header>
+		<h2>{{title}}</h2>
+	</header>
+	{{>charcoal/admin/partials/object-attachments}}
+	{{>charcoal/admin/partials/attachment-tabs}}
+</div>
+
+{{#addJs}}
+<script>
+{{!
+	@see Charcoal.Admin.Widget_Attachment
+}}
+Charcoal.Admin.manager().add_widget({
+    id: '{{widgetId}}',
+    type: 'charcoal/admin/widget/attachment',
+    data: {
+        obj_type: '{{objType}}',
+        obj_id :  '{{objId}}' // Can be a string
+    },
+    widget_options: {{&widgetOptions}}
+});
+</script>
+{{/addJs}}
+
+{{/hasObj}}
