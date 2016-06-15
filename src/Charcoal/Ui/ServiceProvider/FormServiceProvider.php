@@ -5,12 +5,17 @@ namespace Charcoal\Ui\ServiceProvider;
 use \Pimple\Container;
 use \Pimple\ServiceProviderInterface;
 
+use \Charcoal\Factory\GenericFactory as Factory;
+
 use \Charcoal\Ui\Form\FormBuilder;
-use \Charcoal\Ui\Form\FormFactory;
+use \Charcoal\Ui\Form\FormInterface;
+use \Charcoal\Ui\Form\GenericForm;
 use \Charcoal\Ui\FormGroup\FormGroupBuilder;
-use \Charcoal\Ui\FormGroup\FormGroupFactory;
+use \Charcoal\Ui\FormGroup\FormGroupInterface;
+use \Charcoal\Ui\FormGroup\GenericFormGroup;
 use \Charcoal\Ui\FormInput\FormInputBuilder;
-use \Charcoal\Ui\FormInput\FormInputFactory;
+use \Charcoal\Ui\FormInput\FormInputInterface;
+use \Charcoal\Ui\FormInput\GenericFormInput;
 
 /**
  *
@@ -39,15 +44,17 @@ class FormServiceProvider implements ServiceProviderInterface
          * @return FormFactory
          */
         $container['form/factory'] = function(Container $container) {
-            $formFactory = new FormFactory();
-            $formFactory->setArguments([
-                'logger'             => $container['logger'],
-                'view'               => $container['view'],
-                'layout_builder'     => $container['layout/builder'],
-                'form_group_builder' => $container['form/group/builder']
+            return new Factory([
+                'base_class' => FormInterface::class,
+                'default_class' => GenericForm::class,
+                'arguments' => [[
+                    'logger'             => $container['logger'],
+                    'view'               => $container['view'],
+                    'layout_builder'     => $container['layout/builder'],
+                    'form_group_builder' => $container['form/group/builder']
 
+                ]]
             ]);
-            return $formFactory;
         };
 
         /**
@@ -72,14 +79,16 @@ class FormServiceProvider implements ServiceProviderInterface
          * @return FormGroupFactory
          */
         $container['form/group/factory'] = function(Container $container) {
-            $formGroupFactory = new FormGroupFactory();
-            $formGroupFactory->setArguments([
-                'logger'             => $container['logger'],
-                'view'               => $container['view'],
-                'layout_builder'     => $container['layout/builder'],
-                'form_input_builder' => $container['form/input/builder']
+            return new Factory([
+                'base_class' => FormGroupInterface::class,
+                'default_class' => GenericFormGroup::class,
+                'arguments' => [[
+                    'logger'             => $container['logger'],
+                    'view'               => $container['view'],
+                    'layout_builder'     => $container['layout/builder'],
+                    'form_input_builder' => $container['form/input/builder']
+                ]]
             ]);
-            return $formGroupFactory;
         };
 
         /**
@@ -104,7 +113,13 @@ class FormServiceProvider implements ServiceProviderInterface
          * @return FormInputFactory
          */
         $container['form/input/factory'] = function(Container $container) {
-            $formFactory = new FormInputFactory();
+            return new Factory([
+                'base_class' => FormInputInterface::class,
+                'default_class' => GenericFormInput::class,
+                'resolver_options' => [
+                    'suffix' => 'FormInput'
+                ]
+            ]);
             return $formFactory;
         };
 
