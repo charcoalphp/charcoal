@@ -24,7 +24,6 @@
     "ext-pdo": "*",
     "ext-mbstring": "*",
     "psr/log": "^1.0",
-    "psr/cache-implementation": "1.0.0",
     "locomotivemtl/charcoal-config": "~0.6",
     "locomotivemtl/charcoal-property": "dev-master",
     "locomotivemtl/charcoal-factory": "~0.4",
