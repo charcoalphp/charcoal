@@ -60,6 +60,13 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     private $proto;
 
     /**
+     * Store the collection loader for the current class.
+     *
+     * @var CollectionLoader
+     */
+    private $collectionLoader;
+
+    /**
      * @param Container $container A Pimple DI container.
      * @return void
      */
@@ -68,6 +75,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
         parent::setDependencies($container);
 
         $this->setModelFactory($container['model/factory']);
+        $this->setCollectionLoader($container['model/collection/loader']);
     }
 
     /**
@@ -100,6 +108,44 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
             );
         }
         return $this->modelFactory;
+    }
+
+    /**
+     * Set a model collection loader.
+     *
+     * @param CollectionLoader $loader The collection loader.
+     * @return self
+     */
+    protected function setCollectionLoader(CollectionLoader $loader)
+    {
+        $this->collectionLoader = $loader;
+
+        return $this;
+    }
+
+    /**
+     * Retrieve the model collection loader.
+     *
+     * @throws Exception If the collection loader was not previously set.
+     * @return CollectionLoader
+     */
+    protected function collectionLoader()
+    {
+        if (!isset($this->collectionLoader)) {
+            throw new Exception(
+                sprintf('Collection Loader is not defined for "%s"', get_class($this))
+            );
+        }
+
+        $proto  = $this->proto();
+        $loader = $this->collectionLoader;
+        $loader->setModel($proto);
+
+        if ($proto->hasProperty('active')) {
+            $loader->addFilter('active', true);
+        }
+
+        return $loader;
     }
 
     /**
@@ -349,17 +395,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      */
     public function choices()
     {
-        $proto = $this->proto();
-        $loader = new CollectionLoader([
-            'logger'    => $this->logger,
-            'factory'   => $this->modelFactory()
-        ]);
-        $loader->setModel($this->proto());
-
-        if ($proto->hasProperty('active')) {
-            $loader->addFilter('active', true);
-        }
-
+        $loader  = $this->collectionLoader();
         $choices = [];
         $objects = $loader->load();
         foreach ($objects as $c) {
