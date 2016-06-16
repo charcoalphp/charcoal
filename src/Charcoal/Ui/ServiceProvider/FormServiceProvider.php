@@ -41,7 +41,7 @@ class FormServiceProvider implements ServiceProviderInterface
     {
         /**
          * @param Container $container A Pimple DI container.
-         * @return FormFactory
+         * @return \Charcoal\Factory\FactoryInterface
          */
         $container['form/factory'] = function(Container $container) {
             return new Factory([
@@ -76,7 +76,7 @@ class FormServiceProvider implements ServiceProviderInterface
     {
         /**
          * @param Container $container A Pimple DI container.
-         * @return FormGroupFactory
+         * @return \Charcoal\Factory\FactoryInterface
          */
         $container['form/group/factory'] = function(Container $container) {
             return new Factory([
@@ -110,7 +110,7 @@ class FormServiceProvider implements ServiceProviderInterface
     {
         /**
          * @param Container $container A Pimple DI container.
-         * @return FormInputFactory
+         * @return \Charcoal\Factory\FactoryInterface
          */
         $container['form/input/factory'] = function(Container $container) {
             return new Factory([
@@ -120,7 +120,6 @@ class FormServiceProvider implements ServiceProviderInterface
                     'suffix' => 'FormInput'
                 ]
             ]);
-            return $formFactory;
         };
 
         /**
