@@ -128,19 +128,19 @@ class Attachment extends Content
 	 */
 	public function isImage()
 	{
-		return ($this->type() == Attachment::IMAGE_TYPE);
+		return (get_class($this) == Attachment::IMAGE_TYPE);
 	}
 	public function isVideo()
 	{
-		return ($this->type() == Attachment::VIDEO_TYPE);
+		return (get_class($this) == Attachment::VIDEO_TYPE);
 	}
 	public function isFile()
 	{
-		return ($this->type() == Attachment::FILE_TYPE);
+		return (get_class($this) == Attachment::FILE_TYPE);
 	}
 	public function isText()
 	{
-		return ($this->type() == Attachment::TEXT_TYPE);
+		return (get_class($this) == Attachment::TEXT_TYPE);
 	}
 
 

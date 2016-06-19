@@ -57,7 +57,8 @@ trait AttachmentAwareTrait
 
 		$attachment = $this->proto(Attachment::class);
 
-        if (!$attachment->source()->tableExists()) {
+
+        if (!$attachment->source()->tableExists() || !$join->source()->tableExists()) {
             return [];
         }
 
@@ -91,6 +92,7 @@ trait AttachmentAwareTrait
 		$collection = $loader->loadFromQuery($q);
 
 		$this->attachments = $collection;
+
 		return $this->attachments;
 	}
 
