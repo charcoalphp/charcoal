@@ -2,7 +2,7 @@
 namespace Charcoal\Attachment\Object;
 
 // From Charcoal\Attachment
-use \Charcoal\Attachment\Object\AbstractAttachment;
+use \Charcoal\Attachment\Object\Attachment;
 
 /**
  * File attachment
@@ -11,7 +11,7 @@ use \Charcoal\Attachment\Object\AbstractAttachment;
  * than the Image attachment, but is still basicly the same.
  *
  */
-class File extends AbstractAttachment
+class File extends Attachment
 {
 	/**
 	 * Generate thumbnail if necessary

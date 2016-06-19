@@ -20,7 +20,7 @@ use \Charcoal\Attachment\Object\Video;
 /**
  *
  */
-class AbstractAttachment extends Content
+class Attachment extends Content
 {
     /**
      * File classes

@@ -2,7 +2,7 @@
 namespace Charcoal\Attachment\Object;
 
 // From Charcoal\Attachment
-use \Charcoal\Attachment\Object\AbstractAttachment;
+use \Charcoal\Attachment\Object\Attachment;
 
 /**
  * Video Attachment
@@ -11,6 +11,6 @@ use \Charcoal\Attachment\Object\AbstractAttachment;
  * such as youtube, vimeo, etc.
  * It's all about the metadata.
  */
-class Video extends AbstractAttachment
+class Video extends Attachment
 {
 }

@@ -24,7 +24,7 @@ use \Charcoal\Translation\TranslationString;
 
 
 class AddAttachmentWidget extends AdminWidget implements
-	ObjectContainerInterface,
+	ObjectContainerInterface
 {
     use ObjectContainerTrait;
 

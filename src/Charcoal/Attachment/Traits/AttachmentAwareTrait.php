@@ -56,6 +56,11 @@ trait AttachmentAwareTrait
 		$joinTable = $join->source()->table();
 
 		$attachment = $this->proto(Attachment::class);
+
+        if (!$attachment->source()->tableExists()) {
+            return [];
+        }
+
 		$attachmentTable = $attachment->source()->table();
 
 		$obj = $this->proto($objType);

@@ -2,7 +2,7 @@
 namespace Charcoal\Attachment\Object;
 
 // From Charcoal\Attachment
-use \Charcoal\Attachment\Object\AbstractAttachment;
+use \Charcoal\Attachment\Object\Attachment;
 
 /**
  * Text attachment
@@ -11,6 +11,6 @@ use \Charcoal\Attachment\Object\AbstractAttachment;
  * Its all about the metadata.
  *
  */
-class Text extends AbstractAttachment
+class Text extends Attachment
 {
 }
