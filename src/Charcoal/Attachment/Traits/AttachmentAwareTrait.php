@@ -22,18 +22,6 @@ use \Charcoal\Attachment\Object\Video;
  */
 trait AttachmentAwareTrait
 {
-    /**
-     * Protos to be kept in an associative array.
-     * @var array $proto
-     */
-    protected $proto = [];
-
-    /**
-     * Collection loader
-     * @var CollectLoader $loader
-     */
-    protected $loader;
-
 	/**
 	 * Optimize.
 	 * @var Collection Mixed
@@ -52,10 +40,10 @@ trait AttachmentAwareTrait
 		$objType = $this->objType();
 		$id = $this->id();
 
-		$join = $this->proto(Join::class);
+		$join = $this->modelFactory()->get(Join::class);
 		$joinTable = $join->source()->table();
 
-		$attachment = $this->proto(Attachment::class);
+		$attachment = $this->modelFactory()->get(Attachment::class);
 
 
         if (!$attachment->source()->tableExists() || !$join->source()->tableExists()) {
@@ -64,7 +52,7 @@ trait AttachmentAwareTrait
 
 		$attachmentTable = $attachment->source()->table();
 
-		$obj = $this->proto($objType);
+		$obj = $this->modelFactory()->get($objType);
 		$objTable = $obj->source()->table();
 
 		$q = 'SELECT
@@ -87,7 +75,7 @@ trait AttachmentAwareTrait
 
 		$this->logger->debug($q);
 
-		$loader = $this->collection(Attachment::class);
+		$loader = $this->collectionLoader(Attachment::class);
 		$loader->setDynamicTypeField('type');
 		$collection = $loader->loadFromQuery($q);
 
@@ -126,7 +114,7 @@ trait AttachmentAwareTrait
 			return false;
 		}
 
-		$join = $this->obj(Join::class);
+		$join = $this->modelFactory()->create(Join::class);
 
 		$id = $this->id();
 		$objType = $this->objType();
@@ -145,43 +133,12 @@ trait AttachmentAwareTrait
  * UTILS
  */
     /**
-     * Returns a model prototype
-     * Not to be used when calling multiple object
-     * instances.
-     *
-     * @param  string $objType Class name.
-     * @return Object          A proto of the wanted object.
-     */
-    public function proto($objType)
-    {
-        if (isset($this->proto[$objType])) {
-            return $this->proto[$objType];
-        }
-        $this->proto[$objType] = $this->obj($objType);
-
-        return $this->proto[$objType];
-    }
-
-    /**
-     * Return new instance of objType no matter what
-     *
-     * @param  string   $objType
-     * @return Object   Object of the specified objType.
-     */
-    public function obj($objType)
-    {
-        $factory = $this->modelFactory();
-        $obj = $factory->create($objType);
-        return $obj;
-    }
-
-    /**
      * @param string $objType
      * @return CollectionLoader
      */
-    public function collection($objType)
+    public function collectionLoader($objType)
     {
-        $obj = $this->obj($objType);
+        $obj = $this->modelFactory()->create($objType);
         $loader = new CollectionLoader([
             'logger'=>$this->logger,
             'factory' => $this->modelFactory()
