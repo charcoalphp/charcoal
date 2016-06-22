@@ -2,9 +2,9 @@
 
 namespace Charcoal\Tests\View\Mustache;
 
-use \Charcoal\View\Mustache\GenericHelper;
+use \Charcoal\View\Mustache\Helpers\AssetsHelpers;
 
-class GenericHelperTest extends \PHPUnit_Framework_TestCase
+class AssetsHelpersTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var MustacheEngine
@@ -13,7 +13,7 @@ class GenericHelperTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->obj = new GenericHelper;
+        $this->obj = new AssetsHelpers();
     }
 
     public function testDefaults()

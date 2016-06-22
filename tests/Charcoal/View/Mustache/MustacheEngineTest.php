@@ -36,11 +36,11 @@ class MustacheEngineTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('mustache', $this->obj->type());
     }
 
-    public function testSetHelper()
+    public function testSetHelpers()
     {
-        $ret = $this->obj->setHelper([]);
+        $ret = $this->obj->setHelpers([]);
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals([], $this->obj->helper());
+        $this->assertEquals([], $this->obj->helpers());
     }
 
     public function testRender()

@@ -2,19 +2,12 @@
 
 namespace Charcoal\View\Mustache;
 
-use \ArrayIterator;
-use \IteratorAggregate;
-
 use \Mustache_LambdaHelper as LambdaHelper;
 
 /**
- * Default Mustache helpers for rendering.
- *
- * > Helpers can be global variables or objects, closures (e.g. for higher order sections),
- * > or any other valid Mustache context value.
- * — {@link https://github.com/bobthecow/mustache.php/wiki#helpers}
+ * Mustache helpers for rendering CSS and JavaScript.
  */
-class GenericHelper implements IteratorAggregate
+class AssetsHelpers implements HelpersInterface
 {
     /**
      * A string concatenation of inline `<script>` elements.
@@ -31,13 +24,6 @@ class GenericHelper implements IteratorAggregate
     private static $jsRequirements = [];
 
     /**
-     * An array of `<link>` elements referencing external style sheets.
-     *
-     * @var array $cssRequirements
-     */
-    private static $cssRequirements = [];
-
-    /**
      * A string concatenation of inline `<style>` elements.
      *
      * @var string $css;
@@ -45,17 +31,20 @@ class GenericHelper implements IteratorAggregate
     private static $css = '';
 
     /**
-     * Retrieve a traversable iterator.
+     * An array of `<link>` elements referencing external style sheets.
      *
-     * @see    IteratorAggregate::getIterator()
-     * @return Traversable
+     * @var array $cssRequirements
      */
-    public function getIterator()
+    private static $cssRequirements = [];
+
+    /**
+     * Retrieve the collection of helpers.
+     *
+     * @return array
+     */
+    public function toArray()
     {
-        return new ArrayIterator([
-            '_t' => function($txt) {
-                return $txt;
-            },
+        return [
             'addJs' => function($js, LambdaHelper $helper) {
                 return $this->addJs($js, $helper);
             },
@@ -80,7 +69,7 @@ class GenericHelper implements IteratorAggregate
             'cssRequirements' => function() {
                 return $this->cssRequirements();
             }
-        ]);
+        ];
     }
 
     /**
@@ -122,6 +111,8 @@ class GenericHelper implements IteratorAggregate
      */
     public function addJsRequirement($js)
     {
+        $js = trim($js);
+
         if (!in_array($js, self::$jsRequirements)) {
             self::$jsRequirements[] = $js;
         }
