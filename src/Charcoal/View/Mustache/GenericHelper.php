@@ -5,37 +5,50 @@ namespace Charcoal\View\Mustache;
 use \ArrayIterator;
 use \IteratorAggregate;
 
-use \Mustache_LambdaHelper;
+use \Mustache_LambdaHelper as LambdaHelper;
 
 /**
- * Default mustache render helper. Helpers are global functions available to all the templates.
+ * Default Mustache helpers for rendering.
+ *
+ * > Helpers can be global variables or objects, closures (e.g. for higher order sections),
+ * > or any other valid Mustache context value.
+ * — {@link https://github.com/bobthecow/mustache.php/wiki#helpers}
  */
 class GenericHelper implements IteratorAggregate
 {
     /**
+     * A string concatenation of inline `<script>` elements.
+     *
      * @var string $js
      */
-    static private $js = '';
+    private static $js = '';
 
     /**
+     * An array of `<script>` elements referencing external scripts.
+     *
      * @var array $jsRequirements
      */
-    static private $jsRequirements = [];
+    private static $jsRequirements = [];
 
     /**
+     * An array of `<link>` elements referencing external style sheets.
+     *
      * @var array $cssRequirements
      */
-    static private $cssRequirements = [];
-    /**
-     * @var string $css;
-     */
-    static private $css = '';
+    private static $cssRequirements = [];
 
     /**
-     * IteratorAggregate > getIterator
-     * Also ensure this class is `Traversable`
+     * A string concatenation of inline `<style>` elements.
      *
-     * @return ArrayIterator
+     * @var string $css;
+     */
+    private static $css = '';
+
+    /**
+     * Retrieve a traversable iterator.
+     *
+     * @see    IteratorAggregate::getIterator()
+     * @return Traversable
      */
     public function getIterator()
     {
@@ -43,26 +56,26 @@ class GenericHelper implements IteratorAggregate
             '_t' => function($txt) {
                 return $txt;
             },
-            'addJs' => function($js, Mustache_LambdaHelper $helper) {
+            'addJs' => function($js, LambdaHelper $helper) {
                 return $this->addJs($js, $helper);
             },
             'js' => function() {
                 return $this->js();
             },
-            'addJsRequirement' => function($jsRequirement) {
-                return $this->addJsRequirement($jsRequirement);
+            'addJsRequirement' => function($js) {
+                return $this->addJsRequirement($js);
             },
             'jsRequirements' => function() {
                 return $this->jsRequirements();
             },
-            'addCss' => function($css, Mustache_LambdaHelper $helper) {
+            'addCss' => function($css, LambdaHelper $helper) {
                 return $this->addCss($css, $helper);
             },
             'css' => function() {
                 return $this->css();
             },
-            'addCssRequirement' => function($cssRequirement) {
-                return $this->addCssRequirement($cssRequirement);
+            'addCssRequirement' => function($css) {
+                return $this->addCssRequirement($css);
             },
             'cssRequirements' => function() {
                 return $this->cssRequirements();
@@ -71,11 +84,15 @@ class GenericHelper implements IteratorAggregate
     }
 
     /**
-     * @param string                $js     The javascript to add.
-     * @param Mustache_LambdaHelper $helper Lambda helper.
+     * Enqueue (concatenate) inline JavaScript content.
+     *
+     * Must include `<script>` surrounding element.
+     *
+     * @param string       $js     The JavaScript to add.
+     * @param LambdaHelper $helper For rendering strings in the current context.
      * @return void
      */
-    public function addJs($js, Mustache_LambdaHelper $helper = null)
+    public function addJs($js, LambdaHelper $helper = null)
     {
         if ($helper !== null) {
             $js = $helper->render($js);
@@ -84,7 +101,7 @@ class GenericHelper implements IteratorAggregate
     }
 
     /**
-     * Get the saved js content and purge
+     * Get the saved inline JavaScript content and purge the store.
      *
      * @return string
      */
@@ -96,18 +113,22 @@ class GenericHelper implements IteratorAggregate
     }
 
     /**
-     * @param string $jsRequirement The js requirements.
+     * Enqueue an external JavaScript file.
+     *
+     * Must include `<script>` surrounding element.
+     *
+     * @param string $js The JavaScript requirements.
      * @return void
      */
-    public function addJsRequirement($jsRequirement)
+    public function addJsRequirement($js)
     {
-        if (!in_array($jsRequirement, self::$jsRequirements)) {
-            self::$jsRequirements[] = $jsRequirement;
+        if (!in_array($js, self::$jsRequirements)) {
+            self::$jsRequirements[] = $js;
         }
     }
 
     /**
-     * Ouput and reset JS requirements
+     * Get the JavaScript requirements and purge the store.
      *
      * @return string
      */
@@ -119,11 +140,15 @@ class GenericHelper implements IteratorAggregate
     }
 
     /**
-     * @param string                $css    The CSS string to add.
-     * @param Mustache_LambdaHelper $helper Lambda helper.
+     * Enqueue (concatenate) inline CSS content.
+     *
+     * Must include `<style>` surrounding element.
+     *
+     * @param string       $css    The CSS string to add.
+     * @param LambdaHelper $helper For rendering strings in the current context.
      * @return void
      */
-    public function addCss($css, Mustache_LambdaHelper $helper = null)
+    public function addCss($css, LambdaHelper $helper = null)
     {
         if ($helper !== null) {
             $css = $helper->render($css);
@@ -132,7 +157,7 @@ class GenericHelper implements IteratorAggregate
     }
 
     /**
-     * Get the saved css content and purge
+     * Get the saved inline CSS content and purge the store.
      *
      * @return string
      */
@@ -144,18 +169,22 @@ class GenericHelper implements IteratorAggregate
     }
 
     /**
-     * @param string $cssRequirement The CSS requirements.
+     * Enqueue an external CSS file.
+     *
+     * Must include `<link>` surrounding element.
+     *
+     * @param string $css The CSS requirements.
      * @return void
      */
-    public function addCssRequirement($cssRequirement)
+    public function addCssRequirement($css)
     {
-        if (!in_array($cssRequirement, self::$cssRequirements)) {
-            self::$cssRequirements[] = $cssRequirement;
+        if (!in_array($css, self::$cssRequirements)) {
+            self::$cssRequirements[] = $css;
         }
     }
 
     /**
-     * Ouput and reset CSS requirements
+     * Get the CSS requirements and purge the store.
      *
      * @return string
      */
