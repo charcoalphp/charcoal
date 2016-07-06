@@ -49,6 +49,28 @@
 			}
 		},
 		"default_list":"default",
+        "forms":{
+            "quick":{
+                "groups":{
+                    "main":{
+                        "layout": {
+                            "structure": [
+                                { "columns": [ 1 ] },
+                                { "columns": [ 1 ] }
+                            ]
+                        },
+                        "title":{
+                            "fr":"Fichier / Document",
+                            "en":"File / Document"
+                        },
+                        "properties":[
+                            "title",
+                            "file"
+                        ]
+                    }
+                }
+            }
+        },
 		"dashboards":{
 			"edit":{
 				"layout": {

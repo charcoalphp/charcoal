@@ -1,36 +1,36 @@
 
-{{#isImage}}
-<div class="col-xs-6 col-md-2">
-  	<a class="thumbnail js-attachment" href="object/edit?obj_type=charcoal/attachment/object/image&obj_id={{id}}" data-id="{{id}}" data-type="{{objType}}" target="_blank">
-		<img src="{{baseUrl}}{{file}}" height="50" alt="{{title}}">
-		{{title}}
-	</a>
-</div>
-{{/isImage}}
+<div class="col-xs-8 col-md-8">
 
-{{#isFile}}
-<div class="col-xs-6 col-md-2">
-	<a href="object/edit?obj_type=charcoal/attachment/object/file&obj_id={{id}}" class="thumbnail js-attachment" data-id="{{id}}" data-type="{{objType}}" target="_blank">
-		<span class="glyphicon glyphicon-file"></span>
-		<span class="glyphicon-class">{{title}}</span>
-	</a>
-</div>
-{{/isFile}}
+    <div class="col-xs-11 col-md-11">
+        <a class="thumbnail js-attachment"
+            href="object/edit?obj_type={{type}}&obj_id={{id}}"
+            data-id="{{id}}"
+            data-type="{{objType}}"
+            data-image="{{baseUrl}}{{file}}"
+            data-microtype="{{microType}}"
+            target="_blank">
 
-{{#isVideo}}
-<div class="col-xs-6 col-md-2" style="overflow:hidden;">
-  	<a class="thumbnail js-attachment" href="object/edit?obj_type=charcoal/attachment/object/video&obj_id={{id}}" data-id="{{id}}" data-type="{{objType}}" style="overflow:hidden;" target="_blank">
-	{{&embed}}
-	</a>
-</div>
-{{/isVideo}}
+        <span class="glyphicon {{glyphicon}}"></span>
 
-{{#isText}}
-<div class="col-xs-6 col-md-2">
-	<a href="object/edit?obj_type=charcoal/attachment/object/text&obj_id={{id}}" class="thumbnail js-attachment" data-id="{{id}}" data-type="{{objType}}" target="_blank">
-		<span class="glyphicon glyphicon-font"></span>
-		<span class="glyphicon-class">{{title}}</span>
-	</a>
-</div>
-{{/isText}}
+        {{#isVideo}}
+            <div class="js-embed hidden">{{&embed}}</div>
+        {{/isVideo}}
 
+            {{title}}
+
+        </a>
+    </div>
+    <div class="col-xs-1 col-md-1 js-attachment-actions">
+        <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                Actions
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <!--<li><a href="#" data-image="{{baseUrl}}{{file}}" data-type="{{type}}" data-microtype="{{microType}}" data-action="preview">Preview</a></li>
+                <li><a href="#" data-type="{{type}}" data-id="{{id}}" data-action="edit">Edit</a></li>-->
+                <li><a href="#" data-image="{{baseUrl}}{{file}}" data-type="{{type}}" data-id="{{id}}" data-action="delete">Delete</a></li>
+            </ul>
+        </div>
+    </div>
+</div>

@@ -19,7 +19,7 @@ use \Charcoal\Loader\CollectionLoader;
 // Actual available attachments.
 use \Charcoal\Attachment\Object\Join;
 
-class JoinAction extends AdminAction
+class RemoveJoinAction extends AdminAction
 {
     /**
      * @param RequestInterface  $request  A PSR-7 compatible Request instance.
@@ -30,21 +30,15 @@ class JoinAction extends AdminAction
     {
         $params = $request->getParams();
 
-        if (!isset($params['attachments']) || !isset($params['obj_id']) || !isset($params['obj_type']) || !isset($params['group'])) {
+        if (!isset($params['attachment_id']) || !isset($params['obj_id']) || !isset($params['obj_type']) || !isset($params['group'])) {
             $this->setSuccess(false);
             return $response;
         }
 
-        $attachments = $params['attachments'];
+        $attachmentId = $params['attachment_id'];
         $objId = $params['obj_id'];
         $objType = $params['obj_type'];
         $group = $params['group'];
-
-        // Need more attachments...
-        if (!count($attachments)) {
-            $this->setSuccess(false);
-            return $response;
-        }
 
         // Try loading the object
         try {
@@ -60,8 +54,6 @@ class JoinAction extends AdminAction
             $joinProto->source()->createTable();
         }
 
-        // Clean all previously attached object and start it NEW
-
         $loader = new CollectionLoader([
             'logger'=>$this->logger,
             'factory' => $this->modelFactory()
@@ -70,29 +62,15 @@ class JoinAction extends AdminAction
 
         $loader->addFilter('object_type', $objType)
             ->addFilter('object_id', $objId)
-            ->addFilter('group', $group)
-            ->addOrder('position', 'asc');
+            ->addFilter('attachment_id', $attachmentId)
+            ->addFilter('group', $group);
+
         $existing_joins = $loader->load();
 
+        // Should be just one, tho.
         foreach ($existing_joins as $j)
         {
             $j->delete();
-        }
-
-        $count = count($attachments);
-        $i = 0;
-        for (; $i<$count; $i++) {
-            $attachmentId = $attachments[$i]['attachment_id'];
-            $position = $attachments[$i]['position'];
-
-            $join = $this->modelFactory()->create(Join::class)
-                ->setObjectType($objType)
-                ->setObjectId($objId)
-                ->setAttachmentId($attachmentId)
-                ->setGroup($group)
-                ->setPosition($position);
-
-            $join->save();
         }
 
 

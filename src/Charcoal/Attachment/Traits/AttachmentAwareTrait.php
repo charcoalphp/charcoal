@@ -26,16 +26,20 @@ trait AttachmentAwareTrait
 	 * Optimize.
 	 * @var Collection Mixed
 	 */
-	protected $attachments;
+	protected $attachments = [];
 
 	/**
 	 * Attachments of the current object.
+     * @param string $group Group ident | null.
 	 * @return Collection MIXED.
 	 */
-	public function attachments()
+	public function attachments($group = null)
 	{
-		if ($this->attachments) {
-			return $this->attachments;
+        if ($group && isset($this->attachments[$group])) {
+            return $this->attachments[$group];
+        }
+		if (!$group && isset($this->attachments[0])) {
+			return $this->attachments[0];
 		}
 		$objType = $this->objType();
 		$id = $this->id();
@@ -70,7 +74,15 @@ trait AttachmentAwareTrait
 			AND
 				joined.object_id = \''.$id.'\'
 			AND
-				attachment.active = 1
+				attachment.active = 1';
+
+        if ($group) {
+            $q .= '
+            AND
+            joined.group = \''.$group.'\'';
+        }
+
+        $q .= '
 			ORDER BY joined.position';
 
 		$this->logger->debug($q);
@@ -79,9 +91,11 @@ trait AttachmentAwareTrait
 		$loader->setDynamicTypeField('type');
 		$collection = $loader->loadFromQuery($q);
 
-		$this->attachments = $collection;
+        $group = $group ?: 0;
 
-		return $this->attachments;
+		$this->attachments[$group] = $collection;
+
+		return $this->attachments[$group];
 	}
 
     /**
@@ -145,6 +159,23 @@ trait AttachmentAwareTrait
         ]);
         $loader->setModel($obj);
         return $loader;
+    }
+
+    /**
+     * Remove all joins linked to a specific attachment.
+     * @return boolean true.
+     */
+    public function removeJoins()
+    {
+        $loader = $this->collectionLoader(Join::class);
+        $loader->addFilter('object_type', $this->objType())->addFilter('object_id', $this->id());
+        $collection = $loader->load();
+
+        foreach ($collection as $o) {
+            $o->delete();
+        }
+
+        return true;
     }
 
 /**

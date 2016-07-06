@@ -1,44 +1,39 @@
 {{#hasObj}}
 
 <div id="{{widgetId}}">
-	<header>
-		<h2>{{title}}</h2>
-	</header>
+    <section class="o-section">
+    	<header>
+    		<h2>{{title}}</h2>
+            <div class="dropdown js-attachments-manager">
+                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                    Ajouter
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu js-attachments-manager">
+                    {{#attachmentTypes}}
+                    <li>
+                        <a href="{{baseUrl}}admin/object/edit?obj_type={{val}}" data-type="{{val}}" class="js-add-attachment" target="_blank">
+                            <span class="glyphicon-class">{{label}}</span>
+                        </a>
+                    </li>
+                    {{/attachmentTypes}}
+                </ul>
+            </div>
+    	</header>
+    </section>
+
 	{{>charcoal/admin/partials/object-attachments}}
 
-
-	<div class="row">
-		<section class="o-section">
-			<div class="tab-content js-attachments-manager">
-				{{#attachmentTypes}}
-				<div role="tabpanel" class="tab-pane active" id="{{ident}}">
-					<div class="col-xs-6 col-md-2">
-						<a href="{{baseUrl}}admin/object/edit?obj_type={{val}}" data-type="{{val}}" class="js-add-attachment" target="_blank">
-							<span class="glyphicon glyphicon-plus"></span>
-							<span class="glyphicon-class">{{label}}</span>
-						</a>
-					</div>
-				</div>
-				{{/attachmentTypes}}
-			</div>
-		</section>
-	</div>
-
-	<div class="js-templates hidden">
-		<div class="col-xs-6 col-md-2 js-template-image">
-		  	<a class="thumbnail js-attachment" href="#" data-id="{{id}}" data-type="{{objType}}">
-				<img src="" height="50" alt="">
-			</a>
-		</div>
-		<div class="col-xs-6 col-md-2 thumbnail js-template-video" style="overflow: hidden;">
-		  	<a class="thumbnail js-attachment" href="#" style="overflow:hidden;" target="_blank">
-			{{&embed}}
-			</a>
-		</div>
+	<div class="js-attachment-template hidden">
+	  	<a class="thumbnail js-attachment" href="#" data-id="{{id}}" data-type="{{objType}}">name</a>
 	</div>
 </div>
 
 <style>
+/**
+ * Sweet hack.
+ * Allows the sortable to apply on video as well.
+ */
 .js-attachment iframe {
 	pointer-events: none;
 	max-width: 100%;
@@ -52,10 +47,11 @@
 }}
 Charcoal.Admin.manager().add_widget({
     id: '{{widgetId}}',
-    type: 'charcoal/admin/widget/add-attachment',
+    type: 'charcoal/admin/widget/attachment',
     data: {
         obj_type: '{{objType}}',
-        obj_id :  '{{objId}}' // Can be a string
+        obj_id :  '{{objId}}', // Can be a string
+        group  :  '{{group}}'
     },
     widget_options: {{&widgetOptions}}
 });

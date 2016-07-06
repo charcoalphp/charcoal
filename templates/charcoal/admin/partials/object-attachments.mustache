@@ -4,12 +4,12 @@
 
 	The OBJ has the `attachments` method (@see AttachableAwareTrait)
 }}
-<section id="object_attachments" class="row js-attachment-container js-attachment-sortable">
+<section class="row js-attachment-container js-attachment-sortable">
 	<div class="js-grid-container clearfix" style="min-height:100px;">
-	{{#obj}}
+	{{!#obj}}
 		{{#attachments}}
 			{{>charcoal/admin/partials/attachment-preview}}
 		{{/attachments}}
-	{{/obj}}
+	{{!/obj}}
 	</div>
 </section>

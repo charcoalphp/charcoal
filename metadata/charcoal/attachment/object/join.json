@@ -18,6 +18,17 @@
 			"type":"string",
 			"label":"Attachment ID"
 		},
+        "group":{
+            "type":"string",
+            "label":{
+                "fr":"Groupe",
+                "en":"Group"
+            },
+            "notes":{
+                "fr":"Si laissé vide, le groupe sera automatiquement \"Generic\"",
+                "en":"If empty, the group will be set to \"Generic\""
+            }
+        },
 		"position":{
 			"type":"number"
 		}

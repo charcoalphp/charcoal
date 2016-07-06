@@ -40,6 +40,14 @@ class AddAttachmentWidget extends AdminWidget implements
      */
     protected $widgetFactory;
 
+    /**
+     * Group ident.
+     * The group is used to create multiple widget
+     * instance on the same page.
+     * @var string $group
+     */
+    protected $group;
+
 	/**
 	 * TranslationString
 	 * @see TranslationAwareTrait
@@ -48,11 +56,11 @@ class AddAttachmentWidget extends AdminWidget implements
 	protected $title;
 
 	/**
-	 * Attachments
+	 * attachableObjects
 	 * Option for the widget
 	 * @var Array
 	 */
-	protected $attachments;
+	protected $attachableObjects;
 
     /**
      * @param Container $container The DI container.
@@ -76,10 +84,15 @@ class AddAttachmentWidget extends AdminWidget implements
      */
 	public function attachmentTypes()
 	{
-		$attachments = $this->attachments();
+		$attachableObjects = $this->attachableObjects();
 		$out = [];
+
+        if (!$attachableObjects) {
+            return $out;
+        }
+
 		$i = 0;
-		foreach ($attachments as $k => $val)
+		foreach ($attachableObjects as $k => $val)
 		{
 			$i++;
 			$label = $val['label'];
@@ -94,6 +107,14 @@ class AddAttachmentWidget extends AdminWidget implements
 		return $out;
 	}
 
+
+    public function attachments()
+    {
+        $group = $this->group();
+
+        return $this->obj()->attachments($group);
+    }
+
 /**
  * SETTERS
  */
@@ -103,8 +124,22 @@ class AddAttachmentWidget extends AdminWidget implements
      */
     public function setData($data)
     {
+        // Kinda hacky, but works with the concept of form.
+        // Should work embeded in a form group or in a dashboard.
         $data = array_merge($_GET, $data);
         parent::setData($data);
+        return $this;
+    }
+
+    /**
+     * Attachment groups
+     * Prevents the join from deleting all non related attachments.
+     * @param string $ident Group ident.
+     * @return WidgetInterface Chainable.
+     */
+    public function setGroup($ident)
+    {
+        $this->group = $ident;
         return $this;
     }
 
@@ -159,16 +194,16 @@ class AddAttachmentWidget extends AdminWidget implements
      * Specificy the object as a KEY (ident) to whom you
      * can add filters, label and orders.
      *
-     * @param Array $attachments From the object metadata.
+     * @param Array $attachableObjects From the object metadata.
      */
-    public function setAttachments($attachments)
+    public function setAttachableObjects($attachableObjects)
     {
-        if (!$attachments) {
+        if (!$attachableObjects) {
             return false;
         }
 
         $out = [];
-        foreach ($attachments as $k => $opts) {
+        foreach ($attachableObjects as $k => $opts) {
             $label = '';
             $filters = [];
             $orders = [];
@@ -202,7 +237,7 @@ class AddAttachmentWidget extends AdminWidget implements
             ];
         }
 
-        $this->attachments = $out;
+        $this->attachableObjects = $out;
     }
 
 
@@ -228,6 +263,18 @@ class AddAttachmentWidget extends AdminWidget implements
     }
 
     /**
+     * Group ident.
+     * @return string Group ident.
+     */
+    public function group()
+    {
+        if (!$this->group) {
+            $this->group = 'generic';
+        }
+        return $this->group;
+    }
+
+    /**
      * Title
      *
      * @return [type] [description]
@@ -238,17 +285,17 @@ class AddAttachmentWidget extends AdminWidget implements
     }
 
     /**
-     * Parsed attachments
+     * Parsed attachableObjects
      * Data from the widget options, set with setData.
      *
      * @return Array              [description]
      */
-    public function attachments()
+    public function attachableObjects()
     {
-        if (!$this->attachments) {
+        if (!$this->attachableObjects) {
             return false;
         }
-        return $this->attachments;
+        return $this->attachableObjects;
     }
 
     /**
@@ -259,10 +306,11 @@ class AddAttachmentWidget extends AdminWidget implements
     public function widgetOptions()
     {
         $out = [
-            'attachments' => $this->attachments(),
+            'attachable_objects' => $this->attachableObjects(),
             'title' => $this->title(),
             'obj_type' => $this->obj()->objType(),
-            'obj_id' => $this->obj()->id()
+            'obj_id' => $this->obj()->id(),
+            'group' => $this->group()
         ];
 
         return json_encode($out, true);

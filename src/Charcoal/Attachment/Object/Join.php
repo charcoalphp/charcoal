@@ -25,6 +25,12 @@ class Join extends AbstractModel
 	 */
 	protected $attachmentId;
 
+    /**
+     * Group ident.
+     * @var string
+     */
+    protected $group;
+
 	/**
 	 * Position of the said attachment
 	 * Position should be set by objType and objId
@@ -52,6 +58,11 @@ class Join extends AbstractModel
 		$this->attachmentId = $id;
 		return $this;
 	}
+    public function setGroup($groupIdent)
+    {
+        $this->group = $groupIdent;
+        return $this;
+    }
 
     /**
      * @param integer $position The position (for ordering purpose).
@@ -88,6 +99,10 @@ class Join extends AbstractModel
 	{
 		return $this->attachmentId;
 	}
+    public function group()
+    {
+        return $this->group;
+    }
     /**
      * @return integer
      */

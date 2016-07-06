@@ -5,6 +5,7 @@ namespace Charcoal\Attachment\Object;
 // Dependencies from `charcoal-base`
 // Configurable, indexable
 use \Charcoal\Object\Content;
+use \Charcoal\Loader\CollectionLoader;
 
 // From Charcoal\Translation
 use \Charcoal\Translation\TranslationString;
@@ -15,6 +16,7 @@ use \Charcoal\Attachment\Object\File;
 use \Charcoal\Attachment\Object\Image;
 use \Charcoal\Attachment\Object\Text;
 use \Charcoal\Attachment\Object\Video;
+use \Charcoal\Attachment\Object\Join;
 
 
 /**
@@ -29,6 +31,19 @@ class Attachment extends Content
 	const IMAGE_TYPE = Image::class;
 	const VIDEO_TYPE = Video::class;
 	const TEXT_TYPE = Text::class;
+
+    /**
+     * Glyph icons from bootstrap.
+     * Array
+     * @var array $glyphs.
+     */
+    private $glyphs = [
+        'video'     => 'glyphicon-facetime-video',
+        'image'     => 'glyphicon-picture',
+        'file'      => 'glyphicon-file',
+        'text'      => 'glyphicon-font',
+        'gallery'   => 'glyphicon-duplicate'
+    ];
 
 	/**
 	 * Attachment ID
@@ -107,6 +122,23 @@ class Attachment extends Content
 	protected $lastModified;
 	protected $lastModifiedBy;
 
+    public function preDelete()
+    {
+        $id = $this->id();
+        $join = $this->modelFactory()->create(Join::class);
+        $loader = new CollectionLoader([
+                    'logger'=>$this->logger,
+                    'factory'=>$this->modelFactory()
+        ]);
+        $loader->setModel($join);
+        $collection = $loader->addFilter('attachment_id', $id)->load();
+        foreach ($collection as $c) {
+            $c->delete();
+        }
+
+        return parent::preDelete();
+    }
+
 	/**
 	 * Different depending on the type of attachment.
 	 *
@@ -119,6 +151,16 @@ class Attachment extends Content
 		}
 		return $this->type;
 	}
+
+    /**
+     * Unqualified class name.
+     * Returns only the end value of the current objType in lowercase.
+     * @return string ObjType without namespace.
+     */
+    public function microType()
+    {
+        return strtolower(str_replace(__NAMESPACE__ . '\\', '', get_class($this)));
+    }
 
 	/**
 	 * Type of file
@@ -142,6 +184,16 @@ class Attachment extends Content
 	{
 		return (get_class($this) == Attachment::TEXT_TYPE);
 	}
+
+    public function glyphicon()
+    {
+        $microType = $this->microType();
+        if (isset($this->glyphs[ $microType ])) {
+            return $this->glyphs[ $microType ];
+        }
+
+        return '';
+    }
 
 
 /**
