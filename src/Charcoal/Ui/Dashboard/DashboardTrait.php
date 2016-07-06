@@ -105,6 +105,9 @@ trait DashboardTrait
 
         $widgetCallback = isset($widgetCallback) ? $widgetCallback : $this->widgetCallback;
         foreach ($widgets as $widget) {
+            if (!$widget->active()) {
+                continue;
+            }
             if ($widgetCallback) {
                 $widgetCallback($widget);
             }

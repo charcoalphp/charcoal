@@ -22,6 +22,11 @@ use \Charcoal\View\ViewableInterface;
 interface UiItemInterface extends EntityInterface, ViewableInterface
 {
     /**
+     * @return boolean
+     */
+    public function active();
+
+    /**
      * @param string $template The UI item's template (identifier).
      * @return UiItemInterface Chainable
      */

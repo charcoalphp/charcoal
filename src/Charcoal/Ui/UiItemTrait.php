@@ -20,6 +20,11 @@ use \Charcoal\Ui\UiItemTrait;
 trait UiItemtrait
 {
     /**
+     * @param boolean $active
+     */
+    private $active = true;
+
+    /**
      * @var string $type
      */
     private $type;
@@ -82,6 +87,24 @@ trait UiItemtrait
      * @var boolean $showFooter
      */
     private $showFooter = true;
+
+    /**
+     * @param string $active The item active flag.
+     * @return UiItemInterface Chainable
+     */
+    public function setActive($active)
+    {
+        $this->active = !!$active;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function active()
+    {
+        return $this->active;
+    }
 
     /**
      * @param string $type The UI item type.
