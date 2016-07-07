@@ -364,7 +364,12 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
                 $obj = $objIdent;
             } else {
                 $obj = $this->loadObject($objIdent);
+
+                if ($obj === null) {
+                    continue;
+                }
             }
+
             $names[] = $this->objPattern($obj);
         }
         return implode(', ', $names);
@@ -451,19 +456,12 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
 
         $choices = [];
         $objects = $loader->load();
-        foreach ($objects as $c) {
-            $choice = [
-                'value'   => $c->id(),
-                'label'   => $this->objPattern($c),
-                'title'   => $this->objPattern($c),
-                'subtext' => ''
-            ];
+        foreach ($objects as $obj) {
+            $choice = $this->choice($obj);
 
-            if (is_callable([$c, 'icon'])) {
-                $choice['icon'] = $c->icon();
+            if ($choice !== null) {
+                $choices[$obj->id()] = $choice;
             }
-
-            $choices[$c->id()] = $choice;
         }
 
         return $choices;
@@ -477,33 +475,46 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      */
     public function hasChoice($choiceIdent)
     {
-        $c = $this->loadObject($choiceIdent);
-        return ($c->id() == $choiceIdent);
+        $obj = $this->loadObject($choiceIdent);
+
+        return ($obj instanceof ModelInterface && $obj->id() == $choiceIdent);
     }
 
     /**
      * Returns a choice structure for a given ident.
      *
-     * @param string $choiceIdent The choice ident to load.
+     * @param string|ModelInterface $choiceIdent The choice ident or object to format.
      * @return mixed The matching choice.
      */
     public function choice($choiceIdent)
     {
-        $c = $this->loadObject($choiceIdent);
+        if ($choiceIdent instanceof ModelInterface) {
+            $obj = $choiceIdent;
+        } else {
+            $obj = $this->loadObject($choiceIdent);
+
+            if ($obj === null) {
+                return null;
+            }
+        }
 
         $choice = [
-            'value'   => $c->id(),
-            'label'   => $this->objPattern($c),
-            'title'   => $this->objPattern($c),
-            'subtext' => '',
-            'icon'    => $c->icon()
+            'value' => $obj->id(),
+            'label' => $this->objPattern($obj),
+            'title' => $this->objPattern($obj)
         ];
+
+        if (is_callable([ $obj, 'icon' ])) {
+            $choice['icon'] = $obj->icon();
+        }
 
         return $choice;
     }
 
     /**
-     * @param string $obj The object to "render".
+     * Render the choice from the object.
+     *
+     * @param ModelInterface|ViewableInterface $obj The object or view to render as a label.
      * @return string
      */
     protected function objPattern($obj)
@@ -527,6 +538,10 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
+     * Retrieve an object by its ID.
+     *
+     * Loads the object from the cache store or from the storage source.
+     *
      * @param mixed $id Object id.
      * @return ModelInterface
      */
@@ -536,16 +551,38 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
         if ($cached !== null) {
             return $cached;
         }
-        $obj = $this->modelFactory()->create($this->objType());
-        $obj->load($id);
 
+        $obj = $this->loadObjectFromSource($type, $id);
 
-        $this->addObjectToCache($obj);
+        if ($obj !== null) {
+            $this->addObjectToCache($obj);
+        }
+
         return $obj;
     }
 
     /**
-     * @param mixed $id Object id.
+     * Retrieve an object from the storage source by its ID.
+     *
+     * @param mixed $id The object id.
+     * @return null|ModelInterface
+     */
+    private function loadObjectFromSource($id)
+    {
+        $obj = $this->modelFactory()->create($this->objType());
+        $obj->load($id);
+
+        if ($obj->id()) {
+            return $obj;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Retrieve an object from the cache store by its ID.
+     *
+     * @param mixed $id The object id.
      * @return null|ModelInterface
      */
     private function loadObjectFromCache($id)
@@ -559,12 +596,15 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
-     * @param ModelInterface $obj Object to store.
-     * @return void
+     * Add an object to the cache store.
+     *
+     * @param ModelInterface $obj The object to store.
+     * @return ObjectProperty Chainable
      */
     private function addObjectToCache(ModelInterface $obj)
     {
-        $objType = $this->objType();
-        static::$objectCache[$objType][$obj->id()] = $obj;
+        static::$objectCache[$this->objType()][$obj->id()] = $obj;
+
+        return $this;
     }
 }
