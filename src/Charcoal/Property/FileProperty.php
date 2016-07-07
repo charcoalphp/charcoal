@@ -565,14 +565,7 @@ class FileProperty extends AbstractProperty
             if ($this->overwrite() === true) {
                 return $target;
             } else {
-                // Can not overwrite. Must rename file. (@todo)
-                $info = pathinfo($filename);
-
-                $filename = $info['filename'].'-'.uniqid();
-                if (isset($info['extension']) && $info['extension']) {
-                    $filename .= '.'.$info['extension'];
-                }
-                $target = $dir.$filename;
+                $target = $dir.$this->generateUniqueFilename($filename);
             }
         }
 
@@ -594,6 +587,7 @@ class FileProperty extends AbstractProperty
         if (file_exists($file)) {
             return true;
         }
+
         if ($case_insensitive === false) {
             return false;
         }
@@ -618,7 +612,7 @@ class FileProperty extends AbstractProperty
     {
         // Remove blacklisted caharacters
         $blacklist = ['/', '\\', '\0', '*', ':', '?', '"', '<', '>', '|', '#', '&', '!', '`', ' '];
-        $filename = str_replace($blacklist, '_', $filename);
+        $filename  = str_replace($blacklist, '_', $filename);
 
         // Avoid hidden file
         $filename = ltrim($filename, '.');
@@ -627,11 +621,13 @@ class FileProperty extends AbstractProperty
     }
 
     /**
+     * Generate a new filename from the property.
+     *
      * @return string
      */
     public function generateFilename()
     {
-        $filename = $this->label().' '.date('Y-m-d H-i-s');
+        $filename  = $this->label().' '.date('Y-m-d H-i-s');
         $extension = $this->generateExtension();
 
         if ($extension) {
@@ -642,6 +638,28 @@ class FileProperty extends AbstractProperty
     }
 
     /**
+     * Generate a unique filename.
+     *
+     * @param string $filename The filename to alter.
+     * @return string
+     * @todo Improve this feature Can not overwrite. Must rename file.
+     */
+    public function generateUniqueFilename($filename)
+    {
+        $info = pathinfo($filename);
+
+        $filename = $info['filename'].'-'.uniqid();
+
+        if (isset($info['extension']) && $info['extension']) {
+            $filename .= '.'.$info['extension'];
+        }
+
+        return $filename;
+    }
+
+    /**
+     * Generate the file extension from the property's value.
+     *
      * @return string
      */
     public function generateExtension()
