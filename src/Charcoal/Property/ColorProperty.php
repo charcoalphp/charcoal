@@ -152,7 +152,6 @@ class ColorProperty extends AbstractProperty
         } else {
             return 'CHAR(7)';
         }
-
     }
 
     /**

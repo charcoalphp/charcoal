@@ -5,7 +5,7 @@ namespace Charcoal\Property;
 use \InvalidArgumentException;
 
 /**
- *
+ * Multi-Object Property holds references to external objects from different models.
  */
 class MultiObjectProperty extends AbstractProperty
 {
@@ -160,6 +160,6 @@ class MultiObjectProperty extends AbstractProperty
      */
     public function save()
     {
-        return;
+        return $this->val();
     }
 }

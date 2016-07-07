@@ -287,7 +287,6 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
         }
 
         return $valid;
-
     }
 
     /**

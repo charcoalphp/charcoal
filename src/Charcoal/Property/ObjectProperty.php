@@ -30,7 +30,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     /**
      * @var array $objectCache
      */
-    static public $objectCache = [];
+    public static $objectCache = [];
 
     /**
      * @var FactoryInterface $modelFactory
