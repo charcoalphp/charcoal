@@ -2,6 +2,7 @@
 
 namespace Charcoal\Tests\Property;
 
+use \InvalidArgumentException;
 use \Charcoal\Property\FileProperty;
 
 /**
@@ -24,7 +25,7 @@ class FilePropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('uploads/', $obj->uploadPath());
         $this->assertFalse($obj->overwrite());
         $this->assertEquals([], $obj->acceptedMimetypes());
-        $this->assertEquals(134220000, $obj->maxFilesize());
+        $this->assertEquals($obj->maxFilesizeAllowedByPhp(), $obj->maxFilesize());
     }
 
     public function testType()
@@ -36,14 +37,12 @@ class FilePropertyTest extends \PHPUnit_Framework_TestCase
     public function testSetData()
     {
         $obj = $this->obj;
-        $ret = $obj->setData(
-            [
-            'uploadPath'=>'uploads/foobar/',
-            'overwrite'=>true,
-            'acceptedMimetypes'=>['image/x-foobar'],
-            'maxFilesize'=>(32*1024*1024)
-            ]
-        );
+        $ret = $obj->setData([
+            'uploadPath'        => 'uploads/foobar/',
+            'overwrite'         => true,
+            'acceptedMimetypes' => ['image/x-foobar'],
+            'maxFilesize'       => (32*1024*1024)
+        ]);
         $this->assertSame($ret, $obj);
     }
 
@@ -116,10 +115,10 @@ class FilePropertyTest extends \PHPUnit_Framework_TestCase
     public function filenameProvider()
     {
         return [
-            ['foobar', 'foobar'],
-            ['<foo/bar*baz?x:y|z>', '_foo_bar_baz_x_y_z_'],
-            ['.htaccess', 'htaccess'],
-            ['../../etc/passwd', '_.._etc_passwd']
+            [ 'foobar', 'foobar' ],
+            [ '<foo/bar*baz?x:y|z>', '_foo_bar_baz_x_y_z_' ],
+            [ '.htaccess', 'htaccess' ],
+            [ '../../etc/passwd', '_.._etc_passwd' ]
         ];
     }
 

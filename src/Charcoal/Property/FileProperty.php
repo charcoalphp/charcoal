@@ -49,6 +49,8 @@ class FileProperty extends AbstractProperty
     private $publicPath;
 
     /**
+     * Whether existing destinations should be overwritten.
+     *
      * @var boolean
      */
     private $overwrite = false;
@@ -70,11 +72,9 @@ class FileProperty extends AbstractProperty
     /**
      * Maximum allowed file size, in bytes.
      *
-     * Defaults to 128M.
-     *
      * @var integer
      */
-    private $maxFilesize = 134220000;
+    private $maxFilesize;
 
     /**
      * Current file size, in bytes.
@@ -101,13 +101,12 @@ class FileProperty extends AbstractProperty
     {
         $this->basePath   = $container['config']['base_path'];
         $this->publicPath = $container['config']['public_path'];
-
     }
 
     /**
      * Set whether uploaded files should be publicly available.
      *
-     * @param boolean $public Should uploaded files be publicly available?
+     * @param boolean $public Whether uploaded files should be accessible (TRUE) or not (FALSE) from the web root.
      * @return self
      */
     public function setPublicAccess($public)
@@ -177,7 +176,7 @@ class FileProperty extends AbstractProperty
     /**
      * Set whether existing destinations should be overwritten.
      *
-     * @param boolean $overwrite Should the handler overwrite existing files?
+     * @param boolean $overwrite Whether existing destinations should be overwritten (TRUE) or not (FALSE).
      * @return self
      */
     public function setOverwrite($overwrite)
@@ -216,30 +215,6 @@ class FileProperty extends AbstractProperty
     }
 
     /**
-     * @param integer $size The maximum file size allowed, in bytes.
-     * @throws InvalidArgumentException If the size argument is not an integer.
-     * @return FileProperty Chainable
-     */
-    public function setMaxFilesize($size)
-    {
-        if (!is_int($size)) {
-            throw new InvalidArgumentException(
-                'Max filesize must be an integer, in bytes.'
-            );
-        }
-        $this->maxFilesize = $size;
-        return $this;
-    }
-
-    /**
-     * @return integer
-     */
-    public function maxFilesize()
-    {
-        return $this->maxFilesize;
-    }
-
-    /**
      * @param string $mimetype The file mimetype.
      * @throws InvalidArgumentException If the mimetype argument is not a string.
      * @return FileProperty Chainable
@@ -270,6 +245,90 @@ class FileProperty extends AbstractProperty
             $this->mimetype = $info->file($val);
         }
         return $this->mimetype;
+    }
+
+    /**
+     * Converts a php.ini notation for size to an integer.
+     *
+     * @param  mixed $size A php.ini notation for size.
+     * @throws InvalidArgumentException If the given parameter is invalid.
+     * @return integer Returns the size in bytes.
+     */
+    protected function parseIniSize($size)
+    {
+        if (is_numeric($size)) {
+            return $size;
+        }
+
+        if (!is_string($size)) {
+            throw new InvalidArgumentException(
+                'Size must be an integer (in bytes, e.g.: 1024) or a string (e.g.: 1M).'
+            );
+        }
+
+        $quant = 'bkmgtpezy';
+        $unit  = preg_replace('/[^'.$quant.']/i', '', $size);
+        $size  = preg_replace('/[^0-9\.]/', '', $size);
+
+        if ($unit) {
+            $size = ($size * pow(1024, stripos($quant, $unit[0])));
+        }
+
+        return round($size);
+    }
+
+    /**
+     * Set the maximium size accepted for an uploaded files.
+     *
+     * @param string|integer $size The maximum file size allowed, in bytes.
+     * @throws InvalidArgumentException If the size argument is not an integer.
+     * @return FileProperty Chainable
+     */
+    public function setMaxFilesize($size)
+    {
+        $this->maxFilesize = $this->parseIniSize($size);
+
+        return $this;
+    }
+
+    /**
+     * Retrieve the maximum size accepted for uploaded files.
+     *
+     * If null or 0, then no limit. Defaults to 128 MB.
+     *
+     * @return integer
+     */
+    public function maxFilesize()
+    {
+        if (!isset($this->maxFilesize)) {
+            return $this->maxFilesizeAllowedByPhp();
+        }
+
+        return $this->maxFilesize;
+    }
+
+    /**
+     * Retrieve the maximum size (in bytes) allowed for an uploaded file
+     * as configured in {@link http://php.net/manual/en/ini.php `php.ini`}.
+     *
+     * @param string|null $iniDirective If $iniDirective is provided, then it is filled with
+     *     the name of the PHP INI directive corresponding to the maximum size allowed.
+     * @return integer
+     */
+    public function maxFilesizeAllowedByPhp(&$iniDirective = null)
+    {
+        $post_max_size       = $this->parseIniSize(ini_get('post_max_size'));
+        $upload_max_filesize = $this->parseIniSize(ini_get('upload_max_filesize'));
+
+        if ($post_max_size < $upload_max_filesize) {
+            $iniDirective = 'post_max_size';
+
+            return $post_max_size;
+        } else {
+            $iniDirective = 'upload_max_filesize';
+
+            return $upload_max_filesize;
+        }
     }
 
     /**
