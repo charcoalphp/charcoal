@@ -62,11 +62,15 @@ Then, we need to add the necessary routes for the widgets in admin.json config f
     "actions":{
         "join":{
             "ident":"charcoal/admin/action/join",
-            "methods":[ "GET", "POST" ]
+            "methods":[ "POST" ]
+        },
+        "add-join":{
+            "ident":"charcoal/admin/action/add-join",
+            "methods":[ "POST" ]
         },
         "remove-join":{
             "ident":"charcoal/admin/action/remove-join",
-            "methods":[ "GET", "POST" ]
+            "methods":[ "POST" ]
         }
     }
 }

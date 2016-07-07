@@ -1,8 +1,7 @@
-
 <div class="col-xs-8 col-md-8">
 
     <div class="col-xs-11 col-md-11">
-        <a class="thumbnail js-attachment"
+        <a class="list-group-item js-attachment"
             href="object/edit?obj_type={{type}}&obj_id={{id}}"
             data-id="{{id}}"
             data-type="{{objType}}"
@@ -10,13 +9,27 @@
             data-microtype="{{microType}}"
             target="_blank">
 
-        <span class="glyphicon {{glyphicon}}"></span>
+            <h4 class="list-group-item-heading">
+                <span class="glyphicon {{glyphicon}}"></span>
+                {{title}}
+            </h4>
 
         {{#isVideo}}
             <div class="js-embed hidden">{{&embed}}</div>
         {{/isVideo}}
 
-            {{title}}
+
+        {{#isGallery}}
+            <ul class="media-list row">
+            {{#attachments}}
+                <li class="col-xs-2 col-md-2">
+                    <div class="media-left">
+                        <img class="media-object" src="{{baseUrl}}{{file}}" width="64" />
+                    </div>
+                </li>
+            {{/attachments}}
+            </ul>
+        {{/isGallery}}
 
         </a>
     </div>
@@ -28,8 +41,12 @@
             </button>
             <ul class="dropdown-menu">
                 <!--<li><a href="#" data-image="{{baseUrl}}{{file}}" data-type="{{type}}" data-microtype="{{microType}}" data-action="preview">Preview</a></li>
-                <li><a href="#" data-type="{{type}}" data-id="{{id}}" data-action="edit">Edit</a></li>-->
-                <li><a href="#" data-image="{{baseUrl}}{{file}}" data-type="{{type}}" data-id="{{id}}" data-action="delete">Delete</a></li>
+                -->
+                <li><a href="#" data-type="{{type}}" data-title="Éditer le fichier" data-id="{{id}}" data-action="edit">Éditer</a></li>
+                {{#isGallery}}
+                <li><a href="#" data-type="{{type}}" data-id="{{id}}" data-attachment="{{imageType}}" data-action="add-image">Ajouter une image</a></li>
+                {{/isGallery}}
+                <li><a href="#" data-image="{{baseUrl}}{{file}}" data-type="{{type}}" data-id="{{id}}" data-action="delete">Supprimer</a></li>
             </ul>
         </div>
     </div>
