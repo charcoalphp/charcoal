@@ -304,7 +304,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
         }
 
         if (!is_scalar($val)) {
-            return json_encode($val, true);
+            return json_encode($val);
         }
         return $val;
     }

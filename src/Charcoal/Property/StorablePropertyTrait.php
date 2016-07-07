@@ -101,7 +101,7 @@ trait StorablePropertyTrait
         }
 
         if (!is_scalar($val)) {
-            return json_encode($val, true);
+            return json_encode($val, JSON_UNESCAPED_UNICODE);
         }
         return $val;
     }
