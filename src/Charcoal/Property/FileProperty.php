@@ -2,15 +2,17 @@
 
 namespace Charcoal\Property;
 
-// Dependencies from `PHP`
 use \Exception;
 use \InvalidArgumentException;
 
-// Dependencies from `PHP` extensions
+// Dependencies from PHP extensions
 use \finfo;
 use \PDO;
 
-// Intra-Module `charcoal-property` dependencies
+// Dependency from Pimple
+use \Pimple\Container;
+
+// Intra-Module `charcoal-property` dependency
 use \Charcoal\Property\AbstractProperty;
 
 /**
@@ -18,48 +20,66 @@ use \Charcoal\Property\AbstractProperty;
  */
 class FileProperty extends AbstractProperty
 {
-
     /**
-     * Public access flag, wether the file should be accessible from web root or not.
-     * @var boolean $publicAccess
+     * Whether uploaded files should be accessible from the web root.
+     *
+     * @var boolean
      */
     private $publicAccess = false;
 
     /**
-     * The upload path is a {{patern}}.
-     * @var string $UploadPath
+     * The relative path to the storage directory.
+     *
+     * @var string
      */
     private $uploadPath = 'uploads/';
 
     /**
-     * @var boolean $overwrite
+     * The base path for the Charcoal installation.
+     *
+     * @var string
+     */
+    private $basePath;
+
+    /**
+     * The path to the public / web directory.
+     *
+     * @var string
+     */
+    private $publicPath;
+
+    /**
+     * @var boolean
      */
     private $overwrite = false;
 
     /**
-     * @var string[] $acceptedMimetypes
+     * Collection of accepted MIME types.
+     *
+     * @var string[]
      */
     private $acceptedMimetypes = [];
 
     /**
-     * Maximum allowed file size, in bytes.
-     * If null or 0, then no limit.
-     * Default to 128M
-     * @var integer $maxFilesize
-     */
-    private $maxFilesize = 134220000;
-
-    /**
      * Current file mimetype
      *
-     * @var string $mimetype
+     * @var string
      */
     private $mimetype;
 
     /**
+     * Maximum allowed file size, in bytes.
+     *
+     * Defaults to 128M.
+     *
+     * @var integer
+     */
+    private $maxFilesize = 134220000;
+
+    /**
      * Current file size, in bytes.
      *
-     * @var integer $Filesize
+     * @var integer
      */
     private $filesize;
 
@@ -72,41 +92,34 @@ class FileProperty extends AbstractProperty
     }
 
     /**
-     * @return string
+     * Inject dependencies from a DI Container.
+     *
+     * @param  Container $container A dependencies container instance.
+     * @return void
      */
-    protected function basePath()
+    public function setDependencies(Container $container)
     {
-        if (class_exists('\Charcoal\App\App')) {
-            $basePath = \Charcoal\App\App::instance()->config()->get('base_path');
-        } else {
-            $basePath = '';
-        }
-        $basePath = rtrim($basePath, '/').'/';
-        if ($this->publicAccess()) {
-            $basePath .= $this->publicPath();
-        }
-        return $basePath;
+        $this->basePath   = $container['config']['base_path'];
+        $this->publicPath = $container['config']['public_path'];
+
     }
 
     /**
-     * @return string
-     */
-    protected function publicPath()
-    {
-        return 'www/';
-    }
-
-    /**
-     * @param boolean $public The public access flag.
-     * @return FileProperty Chainable
+     * Set whether uploaded files should be publicly available.
+     *
+     * @param boolean $public Should uploaded files be publicly available?
+     * @return self
      */
     public function setPublicAccess($public)
     {
         $this->publicAccess = !!$public;
+
         return $this;
     }
 
     /**
+     * Determine if uploaded files should be publicly available.
+     *
      * @return boolean
      */
     public function publicAccess()
@@ -115,23 +128,45 @@ class FileProperty extends AbstractProperty
     }
 
     /**
-     * @param string $uploadPath The upload path, relative to project's root.
-     * @throws InvalidArgumentException If the upload path is not a string.
-     * @return FileProperty Chainable
+     * Retrieve the path to the storage directory.
+     *
+     * @return string
      */
-    public function setUploadPath($uploadPath)
+    protected function basePath()
     {
-        if (!is_string($uploadPath)) {
+        if ($this->publicAccess()) {
+            return $this->publicPath;
+        } else {
+            return $this->basePath;
+        }
+    }
+
+    /**
+     * Set the destination (directory) where uploaded files are stored.
+     *
+     * The path must be relative to the {@see self::basePath()},
+     *
+     * @param string $path The destination directory, relative to project's root.
+     * @throws InvalidArgumentException If the path is not a string.
+     * @return self
+     */
+    public function setUploadPath($path)
+    {
+        if (!is_string($path)) {
             throw new InvalidArgumentException(
                 'Upload path must be a string'
             );
         }
+
         // Sanitize upload path (force trailing slash)
-        $this->uploadPath = rtrim($uploadPath, '/').'/';
+        $this->uploadPath = rtrim($path, '/').'/';
+
         return $this;
     }
 
     /**
+     * Retrieve the destination for the uploaded file(s).
+     *
      * @return string
      */
     public function uploadPath()
@@ -140,21 +175,26 @@ class FileProperty extends AbstractProperty
     }
 
     /**
-     * @param boolean $overwrite The overwrite flag.
-     * @return FileProperty Chainable
+     * Set whether existing destinations should be overwritten.
+     *
+     * @param boolean $overwrite Should the handler overwrite existing files?
+     * @return self
      */
     public function setOverwrite($overwrite)
     {
         $this->overwrite = !!$overwrite;
+
         return $this;
     }
 
     /**
+     * Determine if existing destinations should be overwritten.
+     *
      * @return boolean
      */
     public function overwrite()
     {
-        return !!$this->overwrite;
+        return $this->overwrite;
     }
 
     /**
