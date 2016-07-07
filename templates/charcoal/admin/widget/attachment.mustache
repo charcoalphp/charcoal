@@ -1,9 +1,11 @@
-{{#hasObj}}
-
 <div id="{{widgetId}}">
     <section class="o-section">
         <header>
-            <h2>{{title}}</h2>
+            {{#title}}
+            <h2>{{.}}</h2>
+            {{/title}}
+
+            {{#hasObj}}
             <div class="dropdown js-attachments-manager">
                 <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
                     Ajouter
@@ -20,16 +22,28 @@
                     {{/attachmentTypes}}
                 </ul>
             </div>
+            {{/hasObj}}
+
+            {{^hasObj}}
+            <div class="alert alert-warning">
+                Vous devez créer votre objet avant de pouvoir y ajouter des fichiers joints.
+            </div>
+            {{/hasObj}}
+
+
         </header>
     </section>
 
+    {{#hasObj}}
     {{>charcoal/admin/partials/object-attachments}}
 
     <div class="js-attachment-template hidden">
         <a class="thumbnail js-attachment" href="#" data-id="{{id}}" data-type="{{objType}}">name</a>
     </div>
+    {{/hasObj}}
 </div>
 
+{{#hasObj}}
 <style>
 /**
  * Sweet hack.
