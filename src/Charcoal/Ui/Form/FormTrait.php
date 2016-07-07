@@ -187,6 +187,7 @@ trait FormTrait
 
         if (($group instanceof FormGroupInterface)) {
             $group->setForm($this);
+            $group->setIdent($groupIdent);
             $this->groups[$groupIdent] = $group;
         } elseif (is_array($group)) {
             $group['form'] = $this;
@@ -194,6 +195,7 @@ trait FormTrait
                 $group['type'] = $this->defaultGroupType();
             }
             $g = $this->formGroupBuilder()->build($group);
+            $g->setIdent($groupIdent);
             $this->groups[$groupIdent] = $g;
         } else {
             throw new InvalidArgumentException(
@@ -224,6 +226,8 @@ trait FormTrait
         uasort($groups, ['self', 'sortGroupsByPriority']);
 
         $groupCallback = isset($groupCallback) ? $groupCallback : $this->groupCallback;
+
+        $i = 1;
         foreach ($groups as $group) {
             if (!$group->active()) {
                 continue;
@@ -238,6 +242,11 @@ trait FormTrait
             }
 
             $GLOBALS['widget_template'] = $group->template();
+
+            if ($group->form()->isTab() && $i > 1) {
+                $group->isHidden = true;
+            }
+            $i++;
 
             yield $group;
         }
