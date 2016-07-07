@@ -28,34 +28,46 @@ use \Charcoal\Property\SelectablePropertyInterface;
 class ObjectProperty extends AbstractProperty implements SelectablePropertyInterface
 {
     /**
-     * @var array $objectCache
+     * A store of cached objects.
+     *
+     * @var ModelInterface[] $objectCache
      */
     public static $objectCache = [];
 
     /**
-     * @var FactoryInterface $modelFactory
-     */
-    private $modelFactory;
-
-    /**
-     * @var string $objType
+     * The object type to build the choices from.
+     *
+     * @var string
      */
     private $objType;
 
     /**
-     * @var string $pattern
+     * The pattern for rendering the choice as a label.
+     *
+     * @var string
      */
     private $pattern = '{{name}}';
 
     /**
-     * The available selectable choices map.
+     * The available selectable choices.
      *
-     * @var array $choices The internal choices
+     * This collection is built from selected {@see self::$objType}.
+     *
+     * @var array
      */
     protected $choices = [];
 
     /**
-     * @var ModelInterface $proto
+     * Store the factory instance for the current class.
+     *
+     * @var FactoryInterface
+     */
+    private $modelFactory;
+
+    /**
+     * Store a reference to the {@see self::$objType} model.
+     *
+     * @var ModelInterface
      */
     private $proto;
 
@@ -67,17 +79,23 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     private $collectionLoader;
 
     /**
+     * The rules for sorting the collection of objects.
+     *
      * @var array
      */
     protected $orders;
 
     /**
+     * The rules for filtering the collection of objects.
+     *
      * @var array
      */
     protected $filters;
 
     /**
-     * @param Container $container A Pimple DI container.
+     * Inject dependencies from a DI Container.
+     *
+     * @param  Container $container A dependencies container instance.
      * @return void
      */
     public function setDependencies(Container $container)
@@ -147,10 +165,11 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
             );
         }
 
-        $proto = $this->proto();
+        $proto  = $this->proto();
         $loader = $this->collectionLoader;
         $loader->setModel($proto);
 
+        /** @todo Remove this condition in favor of end-developer defining this condition in property definition. */
         if ($proto->hasProperty('active')) {
             $loader->addFilter('active', true);
         }
@@ -267,7 +286,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
             foreach ($val as $i => $v) {
                 if ($v instanceof StorableInterface) {
                     $out[] = $v->id();
-                } else if (strlen($v)) {
+                } elseif (strlen($v)) {
                     $out[] = $v;
                 }
             }
@@ -318,6 +337,8 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
+     * Retrieve a singleton of the {self::$objType} for prototyping.
+     *
      * @return ModelInterface
      */
     public function proto()
@@ -391,8 +412,8 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     /**
      * Add a choice to the available choices map.
      *
-     * @param string $choiceIdent The choice identifier (will be key / default ident).
-     * @param string|array $choice A string representing the choice label or a structure.
+     * @param string       $choiceIdent The choice identifier (will be key / default ident).
+     * @param string|array $choice      A string representing the choice label or a structure.
      * @return SelectablePropertyInterface Chainable.
      */
     public function addChoice($choiceIdent, $choice)
@@ -403,14 +424,21 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
-     * @param $orders
+     * Set the rules for sorting the collection of objects.
+     *
+     * @param  array $orders An array of orders.
+     * @return ObjectProperty Chainable
      */
-    public function setOrders($orders)
+    public function setOrders(array $orders)
     {
         $this->orders = $orders;
+
+        return $this;
     }
 
     /**
+     * Retrieve the rules for sorting the collection of objects.
+     *
      * @return array
      */
     public function orders()
@@ -419,21 +447,26 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
+     * Set the rules for filtering the collection of objects.
+     *
+     * @param  array $filters An array of filters.
+     * @return ObjectProperty Chainable
+     */
+    public function setFilters(array $filters)
+    {
+        $this->filters = $filters;
+
+        return $this;
+    }
+
+    /**
+     * Retrieve the rules for filtering the collection of objects.
+     *
      * @return array
      */
     public function filters()
     {
         return $this->filters;
-    }
-
-    /**
-     * @param array $filters
-     * @return ObjectProperty
-     */
-    public function setFilters($filters)
-    {
-        $this->filters = $filters;
-        return $this;
     }
 
     /**

@@ -12,9 +12,9 @@ use \Charcoal\Translation\TranslationString;
 trait SelectablePropertyTrait
 {
     /**
-     * The available selectable choices map.
+     * The available selectable choices.
      *
-     * @var array The internal choices
+     * @var array
      */
     protected $choices = [];
 
