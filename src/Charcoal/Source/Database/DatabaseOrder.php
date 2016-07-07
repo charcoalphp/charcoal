@@ -40,11 +40,25 @@ class DatabaseOrder extends Order
                     'Values can not be empty.'
                 );
             }
+
             if ($property == '') {
                 throw new DomainException(
                     'Property can not be empty.'
                 );
             }
+
+            $values = array_filter($values, 'is_scalar');
+            $values = array_map(
+                function ($val) {
+                    if (!is_numeric($val)) {
+                        $val = htmlspecialchars($val, ENT_QUOTES);
+                        $val = sprintf('"%s"', $val);
+                    }
+
+                    return $val;
+                },
+                $values
+            );
 
             return 'FIELD(`'.$property.'`, '.implode(',', $values).')';
         } else {
