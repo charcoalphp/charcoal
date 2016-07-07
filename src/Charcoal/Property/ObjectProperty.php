@@ -67,6 +67,16 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     private $collectionLoader;
 
     /**
+     * @var array
+     */
+    protected $orders;
+
+    /**
+     * @var array
+     */
+    protected $filters;
+
+    /**
      * @param Container $container A Pimple DI container.
      * @return void
      */
@@ -137,7 +147,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
             );
         }
 
-        $proto  = $this->proto();
+        $proto = $this->proto();
         $loader = $this->collectionLoader;
         $loader->setModel($proto);
 
@@ -237,7 +247,6 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
 
-
     /**
      * At this point, does nothing but return
      * the actual value. Other properties could
@@ -258,7 +267,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
             foreach ($val as $i => $v) {
                 if ($v instanceof StorableInterface) {
                     $out[] = $v->id();
-                } else {
+                } else if (strlen($v)) {
                     $out[] = $v;
                 }
             }
@@ -377,8 +386,8 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     /**
      * Add a choice to the available choices map.
      *
-     * @param string       $choiceIdent The choice identifier (will be key / default ident).
-     * @param string|array $choice      A string representing the choice label or a structure.
+     * @param string $choiceIdent The choice identifier (will be key / default ident).
+     * @param string|array $choice A string representing the choice label or a structure.
      * @return SelectablePropertyInterface Chainable.
      */
     public function addChoice($choiceIdent, $choice)
@@ -389,13 +398,57 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
+     * @param $orders
+     */
+    public function setOrders($orders)
+    {
+        $this->orders = $orders;
+    }
+
+    /**
+     * @return array
+     */
+    public function orders()
+    {
+        return $this->orders;
+    }
+
+    /**
+     * @return array
+     */
+    public function filters()
+    {
+        return $this->filters;
+    }
+
+    /**
+     * @param array $filters
+     * @return ObjectProperty
+     */
+    public function setFilters($filters)
+    {
+        $this->filters = $filters;
+        return $this;
+    }
+
+    /**
      * Get the choices array map.
      *
      * @return array
      */
     public function choices()
     {
-        $loader  = $this->collectionLoader();
+        $loader = $this->collectionLoader();
+        $orders = $this->orders();
+        if ($orders) {
+            $loader->setOrders($orders);
+        }
+
+        $filters = $this->filters();
+        if ($filters) {
+            $loader->setFilters($filters);
+        }
+
         $choices = [];
         $objects = $loader->load();
         foreach ($objects as $c) {
@@ -406,7 +459,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
                 'subtext' => ''
             ];
 
-            if (is_callable([ $c, 'icon' ])) {
+            if (is_callable([$c, 'icon'])) {
                 $choice['icon'] = $c->icon();
             }
 
