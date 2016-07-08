@@ -141,10 +141,51 @@ In this case, we set the group to "main". If none defined, the default group wil
 
 You can than access a perticular "group" attachments calling the object's method "attachments(group_ident)". In this case, `$object->attachments('main')` will return attachments associated with the widgets that has the group set to "main".
 
+## Attachment creation
+The one thing you need to know about the attachment is that it is all in a single table. You can't associate custom objects with other objects if they are not `attachments`.
+
+Then, how could you create new attachments? It all depends on what you want.
+
+### Adding or modifying properties
+IF you need to add properties to an existing attachment, you can always extend it. Let's say you want to change the editor options for the description field given with the attachments. The first step is to create a new object that will extend the existing one.
+```php
+/**
+ * Extended text class.
+ **/
+namespace My\Namespace;
+use Charcoal\Attachment\Object\Text as AttachmentText;
+
+class Text extends AttachmentText
+{
+}
+```
+Now that we have the extend, let's add to the JSON by creating a `my/namespace/text.json` file.
+```JSON
+{
+    "properties":{
+        "description":{
+            "editor_options":{
+                "style_formats":[],
+                "body_class":"s-wysiwyg",
+                "content_css":"../../../../../styles/main.css"
+            }
+        }
+    },
+    "data":{
+        "type":"my/namespace/text"
+    }
+```
+In that case, the editor options are changed to remove the base style formats, change the body class and add the appropriate css. The important part is to set the data type to the current object. This is used in live edit and delete features.
+
+If you added some extra properties, you can use the alter script to add them into the table.
+
+`vendor/bin/charcoal admin/object/table/alter --obj-type=my/namespace/text`
+
+
 ## Notes
 
 **Don't use "attachments" method directly in mustache template**. This will return ALL attachments without considering the group.
 
 Custom templates for the attachment preview in the backend widget is on the to-do list.
 
-Other actions such as quick edit and quick view are on the to-do list as well.
+Other actions such quick view are on the to-do list as well.
