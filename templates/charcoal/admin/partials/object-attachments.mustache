@@ -10,6 +10,12 @@
 		{{#attachments}}
 			{{>charcoal/admin/partials/attachment-preview}}
 		{{/attachments}}
+
+        {{^hasAttachments}}
+            <div class="alert alert-warning">
+                Aucun item n'a été lié à l'objet courant.
+            </div>
+        {{/hasAttachments}}
 	{{!/obj}}
 	</div>
 </section>

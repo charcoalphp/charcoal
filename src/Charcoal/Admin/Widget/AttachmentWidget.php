@@ -108,12 +108,23 @@ class AttachmentWidget extends AdminWidget implements
         return $out;
     }
 
-
+    /**
+     * Attachment by groups.
+     * @return Collection Attachments.
+     */
     public function attachments()
     {
         $group = $this->group();
-
         return $this->obj()->attachments($group);
+    }
+
+    /**
+     * Count of attachments as boolean
+     * @return boolean Has attachments or not.
+     */
+    public function hasAttachments()
+    {
+        return !!(count($this->attachments()));
     }
 
 /**
