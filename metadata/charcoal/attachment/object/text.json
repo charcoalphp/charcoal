@@ -50,7 +50,27 @@
 				"sidebars":{
 					"actions":{}
 				}
-			}
+			},
+            "quick":{
+                "groups":{
+                    "main":{
+                        "layout": {
+                            "structure": [
+                                { "columns": [ 1 ] },
+                                { "columns": [ 1 ] }
+                            ]
+                        },
+                        "title":{
+                            "fr":"Média",
+                            "en":"Media"
+                        },
+                        "properties":[
+                            "title",
+                            "description"
+                        ]
+                    }
+                }
+            }
 		},
 		"default_form":"text",
 		"lists":{
