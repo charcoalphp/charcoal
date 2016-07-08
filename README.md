@@ -26,7 +26,9 @@ Objects in the `charcoal-attachments` module extends AbstractModel (charcoal-bas
 - ***Attachment objects***
 	- AbstractAttachment - Attachment Base
 	- File
+	- Link
 	- Image
+	- Gallery (image)
 	- Text
 	- Video
 
@@ -109,7 +111,9 @@ Then, just add in the widget in the edit dashboard or the form like this:
 Available attachable objects as provided by the current modile are:
 
 - `charcoal/attachment/object/image`
+- `charcoal/attachment/object/gallery`
 - `charcoal/attachment/object/file`
+- `charcoal/attachment/object/link`
 - `charcoal/attachment/object/text`
 - `charcoal/attachment/object/video`
 

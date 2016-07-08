@@ -54,6 +54,17 @@
 				"en":"Type"
 			}
 		},
+        "link":{
+            "type":"string",
+            "label":{
+                "fr":"URL",
+                "en":"URL"
+            },
+            "notes":{
+                "fr":"Ex: https://locomotive.ca",
+                "en":"ie: https://locomotive.ca"
+            }
+        },
 		"file":{
 			"type":"file",
 			"label":{
