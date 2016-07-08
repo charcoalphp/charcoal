@@ -1,6 +1,7 @@
 <?php
 namespace Charcoal\Attachment\Object;
 
+use \ReflectionClass;
 
 // Dependencies from `charcoal-base`
 // Configurable, indexable
@@ -17,6 +18,7 @@ use \Charcoal\Attachment\Object\Image;
 use \Charcoal\Attachment\Object\Text;
 use \Charcoal\Attachment\Object\Video;
 use \Charcoal\Attachment\Object\Gallery;
+use \Charcoal\Attachment\Object\Link;
 use \Charcoal\Attachment\Object\Join;
 
 
@@ -29,6 +31,7 @@ class Attachment extends Content
      * File classes
      */
     const FILE_TYPE = File::class;
+    const LINK_TYPE = Link::class;
     const IMAGE_TYPE = Image::class;
     const VIDEO_TYPE = Video::class;
     const TEXT_TYPE = Text::class;
@@ -43,6 +46,7 @@ class Attachment extends Content
         'video'     => 'glyphicon-facetime-video',
         'image'     => 'glyphicon-picture',
         'file'      => 'glyphicon-file',
+        'link'      => 'glyphicon-file',
         'text'      => 'glyphicon-font',
         'gallery'   => 'glyphicon-duplicate'
     ];
@@ -161,7 +165,8 @@ class Attachment extends Content
      */
     public function microType()
     {
-        return strtolower(str_replace(__NAMESPACE__ . '\\', '', get_class($this)));
+        $reflect = new ReflectionClass($this);
+        return strtolower($reflect->getShortName());
     }
 
     /**
@@ -172,23 +177,27 @@ class Attachment extends Content
      */
     public function isImage()
     {
-        return (get_class($this) == Attachment::IMAGE_TYPE);
+        return ($this->microType() == 'image');
     }
     public function isVideo()
     {
-        return (get_class($this) == Attachment::VIDEO_TYPE);
+        return ($this->microType() == 'video');
     }
     public function isFile()
     {
-        return (get_class($this) == Attachment::FILE_TYPE);
+        return ($this->microType() == 'file');
     }
     public function isText()
     {
-        return (get_class($this) == Attachment::TEXT_TYPE);
+        return ($this->microType() == 'text');
     }
     public function isGallery()
     {
-        return (get_class($this) == Attachment::GALLERY_TYPE);
+        return ($this->microType() == 'gallery');
+    }
+    public function isLink()
+    {
+        return ($this->microType() == 'link');
     }
 
     public function imageType()

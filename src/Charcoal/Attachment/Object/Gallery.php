@@ -18,4 +18,13 @@ class Gallery extends Attachment implements
     AttachmentAwareInterface
 {
     use AttachmentAwareTrait;
+
+    /**
+     * From bootstrap. Glyphicon used to identify the attachment type.
+     * @return string Glypicon.
+     */
+    public function glyphicon()
+    {
+        return 'glyphicon-duplicate';
+    }
 }

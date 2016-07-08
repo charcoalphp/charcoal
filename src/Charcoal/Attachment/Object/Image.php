@@ -12,6 +12,15 @@ use \Charcoal\Attachment\Object\Attachment;
 class Image extends Attachment
 {
 
+    /**
+     * From bootstrap. Glyphicon used to identify the attachment type.
+     * @return string Glypicon.
+     */
+    public function glyphicon()
+    {
+        return 'glyphicon-picture';
+    }
+
 	/**
 	 * Generate thumbnail if necessary
 	 *

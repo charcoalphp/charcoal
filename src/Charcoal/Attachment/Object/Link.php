@@ -11,4 +11,12 @@ use \Charcoal\Attachment\Object\Attachment;
  */
 class Link extends Attachment
 {
+    /**
+     * From bootstrap. Glyphicon used to identify the attachment type.
+     * @return string Glypicon.
+     */
+    public function glyphicon()
+    {
+        return 'glyphicon-file';
+    }
 }
