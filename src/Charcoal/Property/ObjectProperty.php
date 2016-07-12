@@ -585,7 +585,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
             return $cached;
         }
 
-        $obj = $this->loadObjectFromSource($type, $id);
+        $obj = $this->loadObjectFromSource($id);
 
         if ($obj !== null) {
             $this->addObjectToCache($obj);
