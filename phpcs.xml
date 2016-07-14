@@ -12,7 +12,9 @@
 
 <!-- Include the whole PSR-2 standard -->
 
-    <rule ref="PSR2"/>
+    <rule ref="PSR2">
+        <exclude name="PSR2.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace"/>
+    </rule>
 
 <!-- Array Sniffs -->
 
@@ -99,7 +101,10 @@
     <!-- Checks to ensure that there are no comments after statements (on same line, after ;) -->
     <rule ref="Squiz.Commenting.PostStatementComment" />
     <!-- Variable commenting rules -->
-    <rule ref="Squiz.Commenting.VariableComment" />
+    <rule ref="Squiz.Commenting.VariableComment">
+        <exclude name="Squiz.Commenting.VariableComment.DuplicateVar"/>
+        <exclude name="Squiz.Commenting.VariableComment.Missing"/>
+    </rule>
 
 <!-- Control Structures Sniffs -->
 

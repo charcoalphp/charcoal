@@ -1,86 +1,83 @@
 <?php
-// Namespace
+
 namespace Charcoal\Admin\Widget;
 
 use ArrayIterator;
 
-// Dependencies from `pimple`
+// Dependencies from Pimple
 use \Pimple\Container;
 
-// From Charcoal\App
-use Charcoal\App\AppConfig;
+// Dependency from 'charcoal-factory'
+use \Charcoal\Factory\FactoryInterface;
 
-// From Charcoal\Core
+// Dependencies from 'charcoal-core'
 use \Charcoal\Loader\CollectionLoader;
 use \Charcoal\Model\ModelFactory;
 
-// From Charcoal\Admin
+// Dependencies from 'charcoal-admin'
 use \Charcoal\Admin\AdminWidget;
 use \Charcoal\Admin\Ui\ObjectContainerInterface;
 use \Charcoal\Admin\Ui\ObjectContainerTrait;
 
-// From Charcoal\Translation
+// Dependency from 'charcoal-translation'
 use \Charcoal\Translation\TranslationString;
 
-
+/**
+ *
+ */
 class AttachmentWidget extends AdminWidget implements
     ObjectContainerInterface
 {
     use ObjectContainerTrait;
 
     /**
-     * AppConfig
-     * @var Charcoal\App\AppConfig $appConfig
-     */
-    protected $appConfig;
-
-    /**
-     * WidgetFactory instance.
-     * @var FactoryInterface $widgetFactory;
+     * Store the factory instance for the current class.
+     *
+     * @var FactoryInterface
      */
     protected $widgetFactory;
 
     /**
-     * Group ident.
-     * The group is used to create multiple widget
-     * instance on the same page.
-     * @var string $group
+     * The group identifier.
+     *
+     * The group is used to create multiple widget instance on the same page.
+     *
+     * @var string
      */
     protected $group;
 
     /**
-     * TranslationString
-     * @see TranslationAwareTrait
-     * @var TranslationString $title
+     * The widget's title.
+     *
+     * @var TranslationString|string[]
      */
     protected $title;
 
     /**
-     * attachableObjects
-     * Option for the widget
-     * @var Array
+     * The widgets's available attachment types.
+     *
+     * @var array
      */
     protected $attachableObjects;
 
     /**
-     * @param Container $container The DI container.
+     * Inject dependencies from a DI Container.
+     *
+     * @param Container $container A dependencies container instance.
      * @return void
      */
     public function setDependencies(Container $container)
     {
         parent::setDependencies($container);
 
-        // Fill ObjectContainerInterface dependencies
         $this->setModelFactory($container['model/factory']);
-
         $this->setWidgetFactory($container['widget/factory']);
-        $this->setAppConfig($container['config']);
     }
 
     /**
-     * Attachment types with their collection
+     * Attachment types with their collections.
      *
-     * @return Array All attachment types
+     * @return array
      */
     public function attachmentTypes()
     {
@@ -92,15 +89,14 @@ class AttachmentWidget extends AdminWidget implements
         }
 
         $i = 0;
-        foreach ($attachableObjects as $k => $val)
-        {
+        foreach ($attachableObjects as $k => $val) {
             $i++;
             $label = $val['label'];
 
             $out[] = [
-                'ident' => $this->createIdent($k),
-                'label' => $label,
-                'val' => $k,
+                'ident'  => $this->createIdent($k),
+                'label'  => $label,
+                'val'    => $k,
                 'active' => ($i == 1)
             ];
         }
@@ -110,103 +106,155 @@ class AttachmentWidget extends AdminWidget implements
 
     /**
      * Attachment by groups.
-     * @return Collection Attachments.
+     *
+     * @return Collection
      */
     public function attachments()
     {
         $group = $this->group();
+
         return $this->obj()->attachments($group);
     }
 
     /**
-     * Count of attachments as boolean
-     * @return boolean Has attachments or not.
+     * Determine the number of attachments.
+     *
+     * @return boolean
      */
     public function hasAttachments()
     {
-        return !!(count($this->attachments()));
+        return !!count($this->attachments());
     }
 
-/**
- * SETTERS
- */
+
+
+// Setters
+// =============================================================================
+
     /**
-     * @param array|ArrayInterface $data The widget data.
-     * @return WidgetInterface Chainable.
+     * Set the widget's data.
+     *
+     * @param array|Traversable $data The widget data.
+     * @return self
      */
     public function setData($data)
     {
-        // Kinda hacky, but works with the concept of form.
-        // Should work embeded in a form group or in a dashboard.
+        /**
+         * @todo Kinda hacky, but works with the concept of form.
+         *     Should work embeded in a form group or in a dashboard.
+         */
         $data = array_merge($_GET, $data);
+
         parent::setData($data);
+
         return $this;
     }
 
     /**
-     * Attachment groups
-     * Prevents the join from deleting all non related attachments.
-     * @param string $ident Group ident.
-     * @return WidgetInterface Chainable.
+     * Set the widget's attachment grouping.
+     *
+     * Prevents the relationship from deleting all non related attachments.
+     *
+     * @param string $id The group identifier.
+     * @return self
      */
-    public function setGroup($ident)
+    public function setGroup($id)
     {
-        $this->group = $ident;
+        $this->group = $id;
+
         return $this;
     }
 
     /**
-     * Set widget factory
-     * @param FactoryInterface $factory WidgetFactory.
-     * @return WidgetInterface Chainable.
+     * Set an widget factory.
+     *
+     * @param FactoryInterface $factory The factory to create widgets.
+     * @return self
      */
-    public function setWidgetFactory($factory)
+    protected function setWidgetFactory(FactoryInterface $factory)
     {
         $this->widgetFactory = $factory;
+
         return $this;
     }
 
     /**
-     * Set app configurations.
-     * @param AppConfig $config Application configurations.
-     * @return WidgetInterface Chainable.
-     */
-    public function setAppConfig($config)
-    {
-        $this->appConfig = $config;
-        return $this;
-    }
-
-    /**
-     * Current Title as defined in the widget options
-     * Title is l10n
+     * Set the widget's title.
      *
-     * @param Mixed $title Title
+     * @param mixed $title The title for the current widget.
+     * @return self
      */
     public function setTitle($title)
     {
         $this->title = $this->translatable($title);
-        return $this;
-    }
 
-    public function setNumPerPage($num)
-    {
-        $this->numPerPage = $num;
-        return $this;
-    }
-    public function setPage($page)
-    {
-        $this->page = $page;
         return $this;
     }
 
     /**
-     * Set in the widget options
-     * Attachments must be attachable (@see AttachableInterface)
+     * Set how many attachments are displayed per page.
+     *
+     * @param integer $num The number of results to retrieve, per page.
+     * @throws InvalidArgumentException If the parameter is not numeric or < 0.
+     * @return self
+     */
+    public function setNumPerPage($num)
+    {
+        if (!is_numeric($num)) {
+            throw new InvalidArgumentException(
+                'Num-per-page needs to be numeric.'
+            );
+        }
+
+        $num = (int)$num;
+
+        if ($num < 0) {
+            throw new InvalidArgumentException(
+                'Num-per-page needs to be >= 0.'
+            );
+        }
+
+        $this->numPerPage = $num;
+
+        return $this;
+    }
+
+    /**
+     * Set the current page listing of attachments.
+     *
+     * @param integer $page The current page. Start at 0.
+     * @throws InvalidArgumentException If the parameter is not numeric or < 0.
+     * @return self
+     */
+    public function setPage($page)
+    {
+        if (!is_numeric($page)) {
+            throw new InvalidArgumentException(
+                'Page number needs to be numeric.'
+            );
+        }
+
+        $page = (int)$page;
+
+        if ($page < 0) {
+            throw new InvalidArgumentException(
+                'Page number needs to be >= 0.'
+            );
+        }
+
+        $this->page = $page;
+
+        return $this;
+    }
+
+    /**
+     * Set the widget's available attachment types.
+     *
      * Specificy the object as a KEY (ident) to whom you
      * can add filters, label and orders.
      *
-     * @param Array $attachableObjects From the object metadata.
+     * @param array|AttachableInterface[] $attachableObjects A list of available attachment types.
+     * @return self
      */
     public function setAttachableObjects($attachableObjects)
     {
@@ -216,11 +264,11 @@ class AttachmentWidget extends AdminWidget implements
 
         $out = [];
         foreach ($attachableObjects as $k => $opts) {
-            $label = '';
-            $filters = [];
-            $orders = [];
+            $label      = '';
+            $filters    = [];
+            $orders     = [];
             $numPerPage = 0;
-            $page = 1;
+            $page       = 1;
 
             if (isset($opts['label'])) {
                 $label = $this->translatable($opts['label']);
@@ -229,6 +277,7 @@ class AttachmentWidget extends AdminWidget implements
             if (isset($opts['filters'])) {
                 $filters = $opts['filters'];
             }
+
             if (isset($opts['orders'])) {
                 $orders = $opts['orders'];
             }
@@ -236,47 +285,51 @@ class AttachmentWidget extends AdminWidget implements
             if (isset($opts['num_per_page'])) {
                 $numPerPage = $opts['num_per_page'];
             }
+
             if (isset($opts['page'])) {
                 $page = $opts['page'];
             }
 
             $out[$k] = [
-                'label' => $label,
-                'filters' => $filters,
-                'orders' => $orders,
-                'page' => $page,
+                'label'      => $label,
+                'filters'    => $filters,
+                'orders'     => $orders,
+                'page'       => $page,
                 'numPerPage' => $numPerPage
             ];
         }
 
         $this->attachableObjects = $out;
+
+        return $this;
     }
 
 
-/**
- * GETTERS
- */
-    /**
-     * App configurations.
-     * @return AppConfig Application configurations.
-     */
-    public function appConfig()
-    {
-        return $this->appConfig;
-    }
+
+// Getters
+// =============================================================================
 
     /**
-     * WidgetFactory instance.
-     * @return FactoryInterface Widget factory.
+     * Retrieve the widget factory.
+     *
+     * @throws Exception If the widget factory was not previously set.
+     * @return FactoryInterface
      */
     public function widgetFactory()
     {
+        if (!isset($this->widgetFactory)) {
+            throw new Exception(
+                sprintf('Widget Factory is not defined for "%s"', get_class($this))
+            );
+        }
+
         return $this->widgetFactory;
     }
 
     /**
-     * Group ident.
-     * @return string Group ident.
+     * Retrieve the widget's attachment grouping.
+     *
+     * @return string
      */
     public function group()
     {
@@ -287,9 +340,9 @@ class AttachmentWidget extends AdminWidget implements
     }
 
     /**
-     * Title
+     * Retrieve the widget's title.
      *
-     * @return [type] [description]
+     * @return TranslationString|string[]
      */
     public function title()
     {
@@ -297,45 +350,47 @@ class AttachmentWidget extends AdminWidget implements
     }
 
     /**
-     * Parsed attachableObjects
-     * Data from the widget options, set with setData.
+     * Retrieve the widget's available attachment types.
      *
-     * @return Array              [description]
+     * @return array
      */
     public function attachableObjects()
     {
         if (!$this->attachableObjects) {
             return false;
         }
+
         return $this->attachableObjects;
     }
 
     /**
-     * From the object metadata. Output in the
-     * HTML for javascript purposes.
-     * @return Array Widget Options parsed.
+     * Retrieve the current widget's options as a JSON object.
+     *
+     * @return string A JSON string.
      */
     public function widgetOptions()
     {
         $out = [
             'attachable_objects' => $this->attachableObjects(),
-            'title' => $this->title(),
-            'obj_type' => $this->obj()->objType(),
-            'obj_id' => $this->obj()->id(),
-            'group' => $this->group()
+            'title'              => $this->title(),
+            'obj_type'           => $this->obj()->objType(),
+            'obj_id'             => $this->obj()->id(),
+            'group'              => $this->group()
         ];
 
         return json_encode($out, true);
     }
 
-/**
- * UTILS
- */
+
+
+// Utilities
+// =============================================================================
+
     /**
-     * Remove slashes to create a HTML friendly ID
+     * Generate an HTML-friendly identifier.
      *
-     * @param  String $string Expects an object type
-     * @return String         Ident
+     * @param  string $string A dirty string to filter.
+     * @return string
      */
     public function createIdent($string)
     {
@@ -343,23 +398,31 @@ class AttachmentWidget extends AdminWidget implements
     }
 
     /**
-     * TranslationString with the given text value.
-     * @see \Charcoal\Translation\TranslationString.
-     * @param  Mixed $txt Translatable text OR array.
-     * @return TranslationString      Translatable content using the current language.
+     * Parse the property value as a "L10N" value type.
+     *
+     * @param  mixed $val The value being localized.
+     * @return TranslationString|null
      */
-    public function translatable($txt)
+    public function translatable($val)
     {
-        return new TranslationString($txt);
+        if (
+            !isset($val) ||
+            (is_string($val) && !strlen(trim($val))) ||
+            (is_array($val) && !count(array_filter($val, 'strlen')))
+        ) {
+            return null;
+        }
+
+        return new TranslationString($val);
     }
 
     /**
-     * Check if the widget has a object.
-     * @return boolean Does the widget has a object?.
+     * Determine if the widget has an object assigned to it.
+     *
+     * @return boolean
      */
     public function hasObj()
     {
         return !!($this->obj()->id());
     }
-
 }

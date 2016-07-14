@@ -1,60 +1,57 @@
 <?php
+
 namespace Charcoal\Attachment\Object;
 
-// From Charcoal\Attachment
-use \Charcoal\Attachment\Object\Attachment;
-
 /**
- * File attachment
- * Usually PDFs, Doc, Docx, etc.
- * The file attachment is displayed differently
- * than the Image attachment, but is still basicly the same.
+ * File Attachment Type
  *
+ * For example: PDF, DOC, DOCX, etc. The file node is displayed differently
+ * than the Image node, but is still basicly the same.
  */
 class File extends Attachment
 {
     /**
-     * From bootstrap. Glyphicon used to identify the attachment type.
-     * @return string Glypicon.
+     * Generate a thumbnail from the MIME type of the uploaded file.
+     *
+     * @todo    Generate thumbnail from config or whatever. File nodes should have a placeholder defined.
+     * @used-by StorableTrait::preSave() For the "create" Event.
+     * @used-by StorableTrait::preUpdate() For the "update" Event.
+     * @return  boolean
      */
-    public function glyphicon()
+    public function generateThumbnail()
     {
-        return 'glyphicon-file';
+        return true;
     }
 
-	/**
-	 * Generate thumbnail if necessary
-	 *
-	 * @return Boolean 			Depends on parent function.
-	 */
-	public function preSave()
-	{
-		$this->generateThumbnail();
-		return parent::preSave();
-	}
 
-	/**
-	 * Generate thumbnail if necessary
-	 *
-	 * @param  Array 	$cfg   	This can happen.
-	 * @return Boolean 			Depends on parent function.
-	 */
-	public function preUpdate(array $properties = NULL)
-	{
-		$this->generateThumbnail();
-		return parent::preUpdate($properties);
-	}
+
+// Events
+// =============================================================================
 
     /**
-     * Thumbnail generation for files. This might be
-     * linked to the fileType.
-     * @return Boolean Success or failure.
+     * Event called before _creating_ the object.
+     *
+     * @see    Charcoal\Source\StorableTrait::preSave() For the "create" Event.
+     * @return boolean
      */
-	public function generateThumbnail()
-	{
-		// @todo Generate thumbnail from config or whatever.
-		// File attachments should have a placeholder defined.
+    public function preSave()
+    {
+        $this->generateThumbnail();
 
-		return true;
-	}
+        return parent::preSave();
+    }
+
+    /**
+     * Event called before _updating_ the object.
+     *
+     * @see    StorableTrait::preUpdate() For the "update" Event.
+     * @param  array $properties Optional. The list of properties to update.
+     * @return boolean
+     */
+    public function preUpdate(array $properties = null)
+    {
+        $this->generateThumbnail();
+
+        return parent::preUpdate($properties);
+    }
 }

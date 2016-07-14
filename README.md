@@ -1,6 +1,8 @@
 Charcoal Attachments
 ====================
 
+Adds support for working with relationships between models.
+
 ## How to install
 
 The preferred (and only supported) way of installing _charcoal-attachment is with **composer**:
@@ -15,8 +17,8 @@ The preferred (and only supported) way of installing _charcoal-attachment is wit
 - [`PHP 5.5+`](http://php.net)
 - [`locomotivemtl/charcoal-core`](https://github.com/locomotivemtl/charcoal-core)
 - [`locomotivemtl/charcoal-base`](https://github.com/locomotivemtl/charcoal-base)
-- [`locomotivemtl/charcoal-base`](https://github.com/locomotivemtl/charcoal-admin)
-- [`locomotivemtl/charcoal-base`](https://github.com/locomotivemtl/charcoal-ui)
+- [`locomotivemtl/charcoal-admin`](https://github.com/locomotivemtl/charcoal-admin)
+- [`locomotivemtl/charcoal-ui`](https://github.com/locomotivemtl/charcoal-ui)
 - [`locomotivemtl/charcoal-translation`](https://github.com/locomotivemtl/charcoal-translation)
 
 ## Objects

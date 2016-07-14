@@ -1,18 +1,23 @@
 <?php
+
 namespace Charcoal\Attachment\Object;
 
 use \ReflectionClass;
 
-// Dependencies from `charcoal-base`
-// Configurable, indexable
-use \Charcoal\Object\Content;
+use \Pimple\Container;
+
+// Dependency from 'charcoal-core'
 use \Charcoal\Loader\CollectionLoader;
 
-// From Charcoal\Translation
+// Dependency from 'charcoal-base'
+use \Charcoal\Object\Content;
+
+// Dependency from 'charcoal-translation'
 use \Charcoal\Translation\TranslationString;
 
-// From Charcoal\Attachment
-// Actual available attachments.
+// Local Dependencies
+use \Charcoal\Attachment\Interfaces\AttachableInterface;
+
 use \Charcoal\Attachment\Object\File;
 use \Charcoal\Attachment\Object\Image;
 use \Charcoal\Attachment\Object\Text;
@@ -21,65 +26,63 @@ use \Charcoal\Attachment\Object\Gallery;
 use \Charcoal\Attachment\Object\Link;
 use \Charcoal\Attachment\Object\Join;
 
-
 /**
  *
  */
-class Attachment extends Content
+class Attachment extends Content implements AttachableInterface
 {
     /**
-     * File classes
+     * Default attachment types
      */
-    const FILE_TYPE = File::class;
-    const LINK_TYPE = Link::class;
-    const IMAGE_TYPE = Image::class;
-    const VIDEO_TYPE = Video::class;
-    const TEXT_TYPE = Text::class;
+    const FILE_TYPE    = File::class;
+    const LINK_TYPE    = Link::class;
+    const IMAGE_TYPE   = Image::class;
+    const VIDEO_TYPE   = Video::class;
+    const TEXT_TYPE    = Text::class;
     const GALLERY_TYPE = Gallery::class;
 
     /**
-     * Glyph icons from bootstrap.
-     * Array
-     * @var array $glyphs.
+     * Glyphicons (from Bootstrap) for each of the default attachment types.
+     *
+     * @var array
      */
-    private $glyphs = [
-        'video'     => 'glyphicon-facetime-video',
-        'image'     => 'glyphicon-picture',
-        'file'      => 'glyphicon-file',
-        'link'      => 'glyphicon-file',
-        'text'      => 'glyphicon-font',
-        'gallery'   => 'glyphicon-duplicate'
+    protected $glyphs = [
+        'video'   => 'glyphicon-facetime-video',
+        'image'   => 'glyphicon-picture',
+        'file'    => 'glyphicon-file',
+        'link'    => 'glyphicon-file',
+        'text'    => 'glyphicon-font',
+        'gallery' => 'glyphicon-duplicate'
     ];
 
     /**
-     * Attachment ID
+     * A store of resolved attachment types.
      *
-     * @var integer $id ID
+     * @var array $resolved
+     */
+    protected static $resolved = [];
+
+    /**
+     * The attachment ID.
+     *
+     * @var integer
      */
     protected $id;
 
     /**
-     * Attachment type
-     * Could be:
-     * - Image
-     * - Text
-     * - Video
+     * The attachment type.
      *
-     * @var strin $type
+     * @var string
      */
     protected $type;
 
-
     /**
-     * Informations about the attachment
-     * Keywords for search purpose. Other
-     * general informations about the attachments
-     * - description, title, subtitle
+     * Generic information about the attachment.
      *
-     * @var string $title           l10n
-     * @var string $subtitle        l10n
-     * @var string $description     l10n
-     * @var string $keywords        l10n
+     * @var TranslationString|string[] $title       The title of the attachment.
+     * @var TranslationString|string[] $subtitle    The subtitle of the attachment.
+     * @var TranslationString|string[] $description The content of the attachment.
+     * @var TranslationString|string[] $keywords    Keywords finding the attachment.
      */
     protected $title;
     protected $subtitle;
@@ -87,222 +90,467 @@ class Attachment extends Content
     protected $keywords;
 
     /**
-     * File related
+     * File related attachments.
      *
-     * @var file    $file           The actual file.
-     * @var integer $fileSize       Size of the file.
-     * @var string  $contentType    Content type of file.
+     * @var file    $file     The path of an attached file.
+     * @var integer $fileSize The size of the attached file in bytes.
+     * @var string  $fileType The content type of the attached file.
      */
     protected $file;
     protected $fileSize;
-    protected $contentType;
+    protected $fileType;
 
     /**
-     * Auto-generated thumbnail when possible
+     * Path to a thumbnail of the attached file.
      *
-     * @var string/image
+     * Auto-generated thumbnail if the attached file is an image.
+     *
+     * @var string
      */
     protected $thumbnail;
 
     /**
-     * Embed video
+     * Embedded content.
      *
-     * @var text $embed
+     * @var string
      */
     protected $embed;
 
-
     /**
-     * Position of the attachment
+     * The attachment's position amongst other attachments.
      *
-     * @var Integer $position       Position.
+     * @var integer
      */
     protected $position;
 
     /**
-     * From CONTENT
+     * Store the collection loader for the current class.
+     *
+     * @var CollectionLoader
      */
-    protected $active;
-    protected $created;
-    protected $createdBy;
-    protected $lastModified;
-    protected $lastModifiedBy;
+    private $collectionLoader;
 
-    public function preDelete()
+    /**
+     * Inject dependencies from a DI Container.
+     *
+     * @param Container $container A dependencies container instance.
+     * @return void
+     */
+    public function setDependencies(Container $container)
     {
-        $id = $this->id();
-        $join = $this->modelFactory()->create(Join::class);
-        $loader = new CollectionLoader([
-                    'logger'=>$this->logger,
-                    'factory'=>$this->modelFactory()
-        ]);
-        $loader->setModel($join);
-        $collection = $loader->addFilter('attachment_id', $id)->load();
-        foreach ($collection as $c) {
-            $c->delete();
-        }
+        parent::setDependencies($container);
 
-        return parent::preDelete();
+        $this->setCollectionLoader($container['model/collection/loader']);
     }
 
     /**
-     * Different depending on the type of attachment.
+     * Retrieve the attachment type.
      *
-     * @return string OBjType.
+     * @return string
      */
     public function type()
     {
         if (!$this->type) {
             $this->type = $this->objType();
         }
+
         return $this->type;
     }
 
     /**
-     * Unqualified class name.
-     * Returns only the end value of the current objType in lowercase.
-     * @return string ObjType without namespace.
+     * Set the attachment type.
+     *
+     * @param  string $type The attachment type.
+     * @throws InvalidArgumentException If provided argument is not of type 'string'.
+     * @return string
      */
-    public function microType()
+    public function setType($type)
     {
-        $reflect = new ReflectionClass($this);
-        return strtolower($reflect->getShortName());
+        if (!is_string($type)) {
+            throw new InvalidArgumentException('Attachment type must be a string.');
+        }
+
+        $this->type = $type;
+
+        return $this;
     }
 
     /**
-     * Type of file
-     * Used in template as logic for display type
-     * Backend logic.
-     * @return boolean
+     * Retrieve the unqualified class name.
+     *
+     * @return string Returns the short name of the model's class, the part without the namespace.
      */
-    public function isImage()
+    public function microType()
     {
-        return ($this->microType() == 'image');
-    }
-    public function isVideo()
-    {
-        return ($this->microType() == 'video');
-    }
-    public function isFile()
-    {
-        return ($this->microType() == 'file');
-    }
-    public function isText()
-    {
-        return ($this->microType() == 'text');
-    }
-    public function isGallery()
-    {
-        return ($this->microType() == 'gallery');
-    }
-    public function isLink()
-    {
-        return ($this->microType() == 'link');
+        $classname = get_called_class();
+
+        if (!isset(static::$resolved[$classname])) {
+            $reflect = new ReflectionClass($this);
+
+            static::$resolved[$classname] = strtolower($reflect->getShortName());
+        }
+
+        return static::$resolved[$classname];
     }
 
+    /**
+     * Retrieve the image attachment type.
+     *
+     * @return string
+     */
     public function imageType()
     {
-        return Attachment::IMAGE_TYPE;
+        return self::IMAGE_TYPE;
     }
 
+    /**
+     * Retrieve the glyphicon for the current attachment type.
+     *
+     * @return string
+     */
     public function glyphicon()
     {
-        $microType = $this->microType();
-        if (isset($this->glyphs[ $microType ])) {
-            return $this->glyphs[ $microType ];
+        $type = $this->microType();
+
+        if (isset($this->glyphs[$type])) {
+            return $this->glyphs[$type];
         }
 
         return '';
     }
 
+    /**
+     * Determine if the attachment type is an image.
+     *
+     * @return boolean
+     */
+    public function isImage()
+    {
+        return ($this->microType() === self::IMAGE_TYPE);
+    }
 
-/**
- * SETTERS
- */
+    /**
+     * Determine if the attachment type is a video.
+     *
+     * @return boolean
+     */
+    public function isVideo()
+    {
+        return ($this->microType() === self::VIDEO_TYPE);
+    }
+
+    /**
+     * Determine if the attachment type is a file attachment.
+     *
+     * @return boolean
+     */
+    public function isFile()
+    {
+        return ($this->microType() === self::FILE_TYPE);
+    }
+
+    /**
+     * Determine if the attachment type is a text-area.
+     *
+     * @return boolean
+     */
+    public function isText()
+    {
+        return ($this->microType() === self::TEXT_TYPE);
+    }
+
+    /**
+     * Determine if the attachment type is an image gallery.
+     *
+     * @return boolean
+     */
+    public function isGallery()
+    {
+        return ($this->microType() === self::GALLERY_TYPE);
+    }
+
+    /**
+     * Determine if the attachment type is a link.
+     *
+     * @return boolean
+     */
+    public function isLink()
+    {
+        return ($this->microType() === self::LINK_TYPE);
+    }
+
+
+
+// Setters
+// =============================================================================
+
+    /**
+     * Set the attachment's title.
+     *
+     * @param  string|string[] $title The object title.
+     * @return self
+     */
     public function setTitle($title)
     {
         $this->title = $this->translatable($title);
-        return $this;
-    }
-    public function setSubtitle($subtitle)
-    {
-        $this->subtitle = $this->translatable($subtitle);
-        return $this;
-    }
-    public function setDescription($description)
-    {
-        $this->description = $this->translatable($description);
-        return $this;
-    }
-    public function setKeywords($keywords)
-    {
-        $this->keywords = $keywords;
-        return $this;
-    }
-    public function setType($type)
-    {
-        $this->type = $type;
-        return $this;
-    }
-    public function setFile($file)
-    {
-        $this->file = $file;
-        return $this;
-    }
-    public function setFileSize($fs)
-    {
-        $this->fileSize = $fs;
-        return $this;
-    }
-    public function setEmbed($embed)
-    {
-        $this->embed = $embed;
+
         return $this;
     }
 
-/**
- * GETTERS
- */
+    /**
+     * Set the attachment's sub-title.
+     *
+     * @param  string|string[] $title The object title.
+     * @return self
+     */
+    public function setSubtitle($title)
+    {
+        $this->subtitle = $this->translatable($title);
+
+        return $this;
+    }
+
+    /**
+     * Set the attachment's description.
+     *
+     * @param  string|string[] $description The description of the object.
+     * @return self
+     */
+    public function setDescription($description)
+    {
+        $this->description = $this->translatable($description);
+
+        return $this;
+    }
+
+    /**
+     * Set the attachment's keywords.
+     *
+     * @param  string|string[] $keywords One or more entries.
+     * @return self
+     */
+    public function setKeywords($keywords)
+    {
+        $this->keywords = $this->parseAsMultiple($keywords);
+
+        return $this;
+    }
+
+    /**
+     * Set the path to the attached file.
+     *
+     * @param string $path A path to an image.
+     * @return self
+     */
+    public function setFile($path)
+    {
+        $this->file = $path;
+
+        return $this;
+    }
+
+    /**
+     * Set the size of the attached file.
+     *
+     * @param integer|float $size A file size in bytes; the one of the attached.
+     * @throws InvalidArgumentException If provided argument is not of type 'integer' or 'float'.
+     * @return self
+     */
+    public function setFileSize($size)
+    {
+        if ($size === null) {
+            $this->fileSize = null;
+
+            return $this;
+        }
+
+        if (!is_numeric($size)) {
+            throw new InvalidArgumentException('File size must be an integer or a float.');
+        }
+
+        $this->fileSize = $size;
+
+        return $this;
+    }
+
+    /**
+     * Set the embed content.
+     *
+     * @param string $embed A URI or an HTML media element.
+     * @throws InvalidArgumentException If provided argument is not of type 'string'.
+     * @return self
+     */
+    public function setEmbed($embed)
+    {
+        if ($embed === null) {
+            $this->embed = null;
+
+            return $this;
+        }
+
+        if (!is_string($embed)) {
+            throw new InvalidArgumentException('Embedded content must be a string.');
+        }
+
+        $this->embed = $embed;
+
+        return $this;
+    }
+
+
+
+// Getters
+// =============================================================================
+
+    /**
+     * Retrieve the attachment's title.
+     *
+     * @return string|TranslationString
+     */
     public function title()
     {
         return $this->title;
     }
+
+    /**
+     * Retrieve the attachment's sub-title.
+     *
+     * @return string|TranslationString
+     */
     public function subtitle()
     {
         return $this->subtitle;
     }
+
+    /**
+     * Retrieve attachment's description.
+     *
+     * @return string|TranslationString
+     */
     public function description()
     {
         return $this->description;
     }
+
+    /**
+     * Retrieve the attachment's keywords.
+     *
+     * @return string[]
+     */
     public function keywords()
     {
         return $this->keywords;
     }
+
+    /**
+     * Retrieve the path to the attached file.
+     *
+     * @return string
+     */
     public function file()
     {
         return $this->file;
     }
+
+    /**
+     * Retrieve the attached file's size.
+     *
+     * @return integer Returns the size of the file in bytes, or FALSE in case of an error.
+     */
     public function fileSize()
     {
         return $this->fileSize;
     }
+
+    /**
+     * Retrieve the embed content.
+     *
+     * @return string
+     */
     public function embed()
     {
         return $this->embed;
     }
 
-/**
- * UTILS
- */
+
+
+// Events
+// =============================================================================
+
     /**
-     * TranslationString with the given text value.
-     * @see \Charcoal\Translation\TranslationString.
-     * @param  Mixed $txt Translatable text OR array.
-     * @return TranslationString      Translatable content using the current language.
+     * Event called before _deleting_ the attachment.
+     *
+     * @see    Charcoal\Source\StorableTrait::preDelete() For the "create" Event.
+     * @see    Charcoal\Attachment\Traits\AttachmentAwareTrait::removeJoins
+     * @return boolean
      */
-    public function translatable($txt)
+    public function preDelete()
     {
-        return new TranslationString($txt);
+        $attId = $this->id();
+        $joinProto = $this->modelFactory()->create(Join::class);
+        $loader = $this->collectionLoader();
+        $loader->setModel($joinProto);
+
+        $collection = $loader->addFilter('attachment_id', $attId)->load();
+
+        foreach ($collection as $obj) {
+            $obj->delete();
+        }
+
+        return parent::preDelete();
+    }
+
+
+
+// Utilities
+// =============================================================================
+
+    /**
+     * Parse the property value as a "L10N" value type.
+     *
+     * @param  mixed $val The value being localized.
+     * @return TranslationString|null
+     */
+    public function translatable($val)
+    {
+        if (
+            !isset($val) ||
+            (is_string($val) && !strlen(trim($val))) ||
+            (is_array($val) && !count(array_filter($val, 'strlen')))
+        ) {
+            return null;
+        }
+
+        return new TranslationString($val);
+    }
+
+    /**
+     * Set a model collection loader.
+     *
+     * @param CollectionLoader $loader The collection loader.
+     * @return self
+     */
+    protected function setCollectionLoader(CollectionLoader $loader)
+    {
+        $this->collectionLoader = $loader;
+
+        return $this;
+    }
+
+    /**
+     * Retrieve the model collection loader.
+     *
+     * @throws Exception If the collection loader was not previously set.
+     * @return CollectionLoader
+     */
+    public function collectionLoader()
+    {
+        if (!isset($this->collectionLoader)) {
+            throw new Exception(
+                sprintf('Collection Loader is not defined for "%s"', get_class($this))
+            );
+        }
+
+        return $this->collectionLoader;
     }
 }

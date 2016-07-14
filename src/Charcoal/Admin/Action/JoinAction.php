@@ -1,24 +1,28 @@
 <?php
+
 namespace Charcoal\Admin\Action;
 
 use \Exception;
 
+// Dependencies from Pimple
 use \Pimple\Container;
 
-// PSR-7 (http messaging) dependencies
+// Dependencies from PSR-7 (HTTP Messaging)
 use \Psr\Http\Message\RequestInterface;
 use \Psr\Http\Message\ResponseInterface;
 
-// From Charcoal\Admin
+// Dependency from 'charcoal-admin'
 use \Charcoal\Admin\AdminAction;
 
-// From Charcoal
+// Dependency from 'charcoal-core'
 use \Charcoal\Loader\CollectionLoader;
 
-// From Charcoal\Attachment
-// Actual available attachments.
+// Local Dependency
 use \Charcoal\Attachment\Object\Join;
 
+/**
+ * Join two objects
+ */
 class JoinAction extends AdminAction
 {
     /**
@@ -30,19 +34,26 @@ class JoinAction extends AdminAction
     {
         $params = $request->getParams();
 
-        if (!isset($params['attachments']) || !isset($params['obj_id']) || !isset($params['obj_type']) || !isset($params['group'])) {
+        if (
+            !isset($params['attachments']) ||
+            !isset($params['obj_id']) ||
+            !isset($params['obj_type']) ||
+            !isset($params['group'])
+        ) {
             $this->setSuccess(false);
+
             return $response;
         }
 
         $attachments = $params['attachments'];
-        $objId = $params['obj_id'];
-        $objType = $params['obj_type'];
-        $group = $params['group'];
+        $objId       = $params['obj_id'];
+        $objType     = $params['obj_type'];
+        $group       = $params['group'];
 
         // Need more attachments...
         if (!count($attachments)) {
             $this->setSuccess(false);
+
             return $response;
         }
 
@@ -50,8 +61,8 @@ class JoinAction extends AdminAction
         try {
             $obj = $this->modelFactory()->create($objType)->load($objId);
         } catch (Exception $e) {
-            // Invalid object
             $this->setSuccess(false);
+
             return $response;
         }
 
@@ -63,19 +74,19 @@ class JoinAction extends AdminAction
         // Clean all previously attached object and start it NEW
 
         $loader = new CollectionLoader([
-            'logger'=>$this->logger,
+            'logger'  => $this->logger,
             'factory' => $this->modelFactory()
         ]);
-        $loader->setModel($joinProto);
-
-        $loader->addFilter('object_type', $objType)
+        $loader
+            ->setModel($joinProto)
+            ->addFilter('object_type', $objType)
             ->addFilter('object_id', $objId)
             ->addFilter('group', $group)
             ->addOrder('position', 'asc');
+
         $existing_joins = $loader->load();
 
-        foreach ($existing_joins as $j)
-        {
+        foreach ($existing_joins as $j) {
             $j->delete();
         }
 
@@ -85,7 +96,8 @@ class JoinAction extends AdminAction
             $attachmentId = $attachments[$i]['attachment_id'];
             $position = $attachments[$i]['position'];
 
-            $join = $this->modelFactory()->create(Join::class)
+            $join = $this->modelFactory()->create(Join::class);
+            $join
                 ->setObjectType($objType)
                 ->setObjectId($objId)
                 ->setAttachmentId($attachmentId)
@@ -94,7 +106,6 @@ class JoinAction extends AdminAction
 
             $join->save();
         }
-
 
         $this->setSuccess(true);
 

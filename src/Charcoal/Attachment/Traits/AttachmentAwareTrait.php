@@ -1,10 +1,12 @@
 <?php
 namespace Charcoal\Attachment\Traits;
 
-// From Charcoal
+// Dependencies from 'charcoal-core'
+use \Charcoal\Model\ModelInterface;
 use \Charcoal\Loader\CollectionLoader;
 
-// From Charcoal\Attachment
+// Local Dependencies
+use \Charcoal\Attachment\Interfaces\AttachableInterface;
 use \Charcoal\Attachment\Object\Join;
 use \Charcoal\Attachment\Object\Attachment;
 use \Charcoal\Attachment\Object\File;
@@ -13,186 +15,201 @@ use \Charcoal\Attachment\Object\Text;
 use \Charcoal\Attachment\Object\Video;
 
 /**
- * AttachmentAwareTrait used on objects that can have
- * an attachment. This is the glue between the Join object
- * and the current object.
+ * Provides support for attachments to objects.
+ *
+ * Used by objects that can have an attachment to other objects.
+ * This is the glue between the {@see Join} object and the current object.
  *
  * Abstract method needs to be implemented.
- * @see AttachmentAwareInterface
+ *
+ * Implementation of {@see \Charcoal\Attachment\Interfaces\AttachmentAwareInterface}
+ *
+ * ## Required Services
+ *
+ * - "model/factory" — {@see \Charcoal\Model\ModelFactory}
+ * - "model/collection/loader" — {@see \Charcoal\Loader\CollectionLoader}
  */
 trait AttachmentAwareTrait
 {
-	/**
-	 * Optimize.
-	 * @var Collection Mixed
-	 */
-	protected $attachments = [];
+    /**
+     * Store a collection of node objects.
+     *
+     * @var Collection|Attachment[]
+     */
+    protected $attachments = [];
 
-	/**
-	 * Attachments of the current object.
-     * @param string $group Group ident | null.
-	 * @return Collection MIXED.
-	 */
-	public function attachments($group = null)
-	{
-        if ($group && isset($this->attachments[$group])) {
+    /**
+     * Retrieve the objects associated to the current object.
+     *
+     * @param  string|null $group Filter the attachments by a group identifier.
+     * @return Collection|Attachment[]
+     */
+    public function attachments($group = null)
+    {
+        if (!isset($group)) {
+            $group = 0;
+        }
+
+        if (isset($this->attachments[$group])) {
             return $this->attachments[$group];
         }
-		if (!$group && isset($this->attachments[0])) {
-			return $this->attachments[0];
-		}
-		$objType = $this->objType();
-		$id = $this->id();
 
-		$join = $this->modelFactory()->get(Join::class);
-		$joinTable = $join->source()->table();
+        $objType = $this->objType();
+        $objId   = $this->id();
 
-		$attachment = $this->modelFactory()->get(Attachment::class);
+        $joinProto = $this->modelFactory()->get(Join::class);
+        $joinTable = $joinProto->source()->table();
 
+        $attProto = $this->modelFactory()->get(Attachment::class);
+        $attTable = $attProto->source()->table();
 
-        if (!$attachment->source()->tableExists() || !$join->source()->tableExists()) {
+        if (!$attProto->source()->tableExists() || !$joinProto->source()->tableExists()) {
             return [];
         }
 
-		$attachmentTable = $attachment->source()->table();
+        $obj = $this->modelFactory()->get($objType);
+        $objTable = $obj->source()->table();
 
-		$obj = $this->modelFactory()->get($objType);
-		$objTable = $obj->source()->table();
-
-		$q = 'SELECT
-				attachment.*,
-				joined.attachment_id as attachment_id,
-				joined.position as position
-			FROM
-				`'.$attachmentTable.'` as attachment
-			LEFT JOIN
-				`'.$joinTable.'` as joined
-			ON
-				joined.attachment_id = attachment.id
-			WHERE
-				joined.object_type = \''.$objType.'\'
-			AND
-				joined.object_id = \''.$id.'\'
-			AND
-				attachment.active = 1';
+        $query = 'SELECT
+                attachment.*,
+                joined.attachment_id as attachment_id,
+                joined.position as position
+            FROM
+                `'.$attTable.'` as attachment
+            LEFT JOIN
+                `'.$joinTable.'` as joined
+            ON
+                joined.attachment_id = attachment.id
+            WHERE
+                joined.object_type = "'.$objType.'"
+            AND
+                joined.object_id = "'.$objId.'"
+            AND
+                attachment.active = 1';
 
         if ($group) {
-            $q .= '
+            $query .= '
             AND
-            joined.group = \''.$group.'\'';
+            joined.group = "'.$group.'"';
         }
 
-        $q .= '
-			ORDER BY joined.position';
+        $query .= '
+            ORDER BY joined.position';
 
-		$this->logger->debug($q);
+        $this->logger->debug($query);
 
-		$loader = $this->collectionLoader(Attachment::class);
-		$loader->setDynamicTypeField('type');
-		$collection = $loader->loadFromQuery($q);
+        $loader = $this->collectionLoader();
+        $loader->setModel($attProto);
+        $loader->setDynamicTypeField('type');
 
-        $group = $group ?: 0;
+        $collection = $loader->loadFromQuery($query);
 
-		$this->attachments[$group] = $collection;
+        $this->attachments[$group] = $collection;
 
-		return $this->attachments[$group];
-	}
-
-    /**
-     * Does the object has attachments or not? Returns
-     * a boolean with the number of attachments.
-     * @return boolean Num of attachments.
-     */
-	public function hasAttachments()
-	{
-		return !!($this->numAttachments());
-	}
+        return $this->attachments[$group];
+    }
 
     /**
-     * Number of attachments associated with the current object.
-     * Only a count on the attachments() method.
-     * @return Integer Number of attachments.
+     * Determine if the current object has any nodes.
+     *
+     * @return boolean Whether $this has any nodes (TRUE) or not (FALSE).
      */
-	public function numAttachments()
-	{
-		return count($this->attachments());
-	}
-
-    /**
-     * Add attachment to the current object.
-     * @param Attachment $attachment Attachment to be added.
-     */
-	public function addAttachment($attachment)
-	{
-		if (!$attachment) {
-			return false;
-		}
-
-		$join = $this->modelFactory()->create(Join::class);
-
-		$id = $this->id();
-		$objType = $this->objType();
-		$attachmentId = $attachment->id();
-
-		$join->setAttachmentId($attachmentId);
-		$join->setObjId($id);
-		$join->setObjType($objType);
-
-		$join->save();
-
-		return $this;
-	}
-
-/**
- * UTILS
- */
-    /**
-     * @param string $objType
-     * @return CollectionLoader
-     */
-    public function collectionLoader($objType)
+    public function hasAttachments()
     {
-        $obj = $this->modelFactory()->create($objType);
-        $loader = new CollectionLoader([
-            'logger'=>$this->logger,
-            'factory' => $this->modelFactory()
-        ]);
-        $loader->setModel($obj);
-        return $loader;
+        return !!($this->numAttachments());
+    }
+
+    /**
+     * Count the number of nodes associated to the current object.
+     *
+     * @return integer
+     */
+    public function numAttachments()
+    {
+        return count($this->attachments());
+    }
+
+    /**
+     * Attach an node to the current object.
+     *
+     * @param AttachableInterface|ModelInterface $attachment An attachment or object.
+     * @return boolean|self
+     */
+    public function addAttachment($attachment)
+    {
+        if (!$attachment instanceof AttachableInterface && !$attachment instanceof ModelInterface) {
+            return false;
+        }
+
+        $join = $this->modelFactory()->create(Join::class);
+
+        $objId   = $this->id();
+        $objType = $this->objType();
+        $attId   = $attachment->id();
+
+        $join->setAttachmentId($attId);
+        $join->setObjId($objId);
+        $join->setObjType($objType);
+
+        $join->save();
+
+        return $this;
     }
 
     /**
      * Remove all joins linked to a specific attachment.
-     * @return boolean true.
+     *
+     * @return boolean
      */
     public function removeJoins()
     {
-        $loader = $this->collectionLoader(Join::class);
-        $loader->addFilter('object_type', $this->objType())->addFilter('object_id', $this->id());
+        $joinProto = $this->modelFactory()->get(Join::class);
+
+        $loader = $this->collectionLoader();
+        $loader
+            ->setModel($joinProto)
+            ->addFilter('object_type', $this->objType())
+            ->addFilter('object_id', $this->id());
+
         $collection = $loader->load();
 
-        foreach ($collection as $o) {
-            $o->delete();
+        foreach ($collection as $obj) {
+            $obj->delete();
         }
 
         return true;
     }
 
-/**
- * ABSTRACTS
- */
+
+
+// Abstract Methods
+// =============================================================================
 
     /**
-     * Base.
-     * @return string   obj_type
-     * @return mixed    obj_id
+     * Retrieve the object's type identifier.
+     *
+     * @return string
      */
     abstract function objType();
+
+    /**
+     * Retrieve the object's unique ID.
+     *
+     * @return mixed
+     */
     abstract function id();
 
     /**
-     * Current modelFactory.
-     * @return FactoryInterface ModelFactory
+     * Retrieve the object model factory.
+     *
+     * @return \Charcoal\Factory\FactoryInterface
      */
-    abstract function modelFactory();
+    abstract public function modelFactory();
+
+    /**
+     * Retrieve the model collection loader.
+     *
+     * @return \Charcoal\Loader\CollectionLoader
+     */
+    abstract public function collectionLoader();
 }

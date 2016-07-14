@@ -1,150 +1,146 @@
 {
-	"properties":{
-		"description":{
-			"type":"html"
-		}
-	},
+  "properties": {
+    "description": {
+      "type": "html"
+    }
+  },
 
-	"data":{
-		"type":"charcoal/attachment/object/text"
-	},
+  "data": {
+    "type": "charcoal/attachment/object/text"
+  },
 
-	"default_source":"default",
+  "default_source": "default",
 
-	"admin":{
-		"forms":{
-			"text":{
-				"l10n_mode":"loop_inputs",
-				"groups":{
-					"info":{
-						"layout": {
-							"structure": [
-								{ "columns": [ 1, 1 ] },
-								{ "columns": [ 1 ] },
-								{ "columns": [ 1 ] }
-							]
-						},
-						"title":{
-							"fr":"Informations",
-							"en":"Informations"
-						},
-						"properties":[
-							"title",
-							"subtitle",
-							"description",
-							"keywords"
-						]
-					},
-					"taxo":{
-						"layout": {
-							"structure": [
-								{ "columns": [ 1 ] }
-							]
-						},
-						"properties":[
-							"active"
-						]
-					}
+  "admin": {
+    "forms": {
+      "text": {
+        "l10n_mode": "loop_inputs",
+        "groups": {
+          "info": {
+            "layout": {
+              "structure": [
+                { "columns": [ 1, 1 ] },
+                { "columns": [ 1 ] },
+                { "columns": [ 1 ] }
+              ]
+            },
+            "title": {
+              "fr": "Informations",
+              "en": "Informations"
+            },
+            "properties": [
+              "title",
+              "subtitle",
+              "description",
+              "keywords"
+            ]
+          },
+          "taxo": {
+            "layout": {
+              "structure": [
+                { "columns": [ 1 ] }
+              ]
+            },
+            "properties": [
+              "active"
+            ]
+          }
 
-				},
-				"sidebars":{
-					"actions":{}
-				}
-			},
-            "quick":{
-                "groups":{
-                    "main":{
-                        "layout": {
-                            "structure": [
-                                { "columns": [ 1 ] },
-                                { "columns": [ 1 ] }
-                            ]
-                        },
-                        "title":{
-                            "fr":"Média",
-                            "en":"Media"
-                        },
-                        "properties":[
-                            "title",
-                            "description"
-                        ]
-                    }
-                }
-            }
-		},
-		"default_form":"text",
-		"lists":{
-			"text":{
-				"properties":[
-					"title",
-					"subtitle",
-					"active"
-				],
-				"list_actions":[{
-					"label":"Nouveau bloc texte",
-					"ident":"create",
-					"url":"object/edit?obj_type=charcoal/attachment/object/text"
-				}],
-				"filters":{
-					"type":{
-						"property":"type",
-						"val":"charcoal/attachment/object/text"
-					}
-				}
-			},
-			"attachment":{
-				"properties":[
-					"title",
-					"subtitle"
-				],
-				"orders":{
-					"type":{
-						"property":"type",
-						"val":"asc"
-					}
-				},
-				"filters":{
-					"type":{
-						"property":"type",
-						"val":"charcoal/attachment/object/text"
-					}
-				}
-			}
-		},
-		"default_list":"text",
-		"dashboards":{
-			"edit":{
-				"layout": {
-					"structure": [
-						{ "columns": [ 1 ] }
-					]
-				},
-				"widgets": {
-					"form": {
-						"type": "charcoal/admin/widget/objectForm",
-						"form_ident": "text",
-						"obj_type": "charcoal/attachment/object/text"
-					}
-				}
-			},
-			"table":{
-				"title": {
-					"fr":"Liste des blocs texte",
-					"en":"Texts list"
-				},
-				"layout": {
-					"structure": [
-						{ "columns": [ 1 ] }
-					]
-				},
-				"widgets": {
-					"form": {
-						"type": "charcoal/admin/widget/table",
-						"collection_ident": "text",
-						"obj_type": "charcoal/attachment/object/text"
-					}
-				}
-			}
-		}
-	}
+        },
+        "sidebars": {
+          "actions": {}
+        }
+      },
+      "quick": {
+        "groups": {
+          "main": {
+            "layout": {
+              "structure": [
+                { "columns": [ 1 ] },
+                { "columns": [ 1 ] }
+              ]
+            },
+            "properties": [
+              "title",
+              "description"
+            ]
+          }
+        }
+      }
+    },
+    "default_form": "text",
+    "lists": {
+      "text": {
+        "properties": [
+          "title",
+          "subtitle",
+          "active"
+        ],
+        "list_actions": [{
+          "label": "Nouveau bloc texte",
+          "ident": "create",
+          "url": "object/edit?obj_type=charcoal/attachment/object/text"
+        }],
+        "filters": {
+          "type": {
+            "property": "type",
+            "val": "charcoal/attachment/object/text"
+          }
+        }
+      },
+      "attachment": {
+        "properties": [
+          "title",
+          "subtitle"
+        ],
+        "orders": {
+          "type": {
+            "property": "type",
+            "val": "asc"
+          }
+        },
+        "filters": {
+          "type": {
+            "property": "type",
+            "val": "charcoal/attachment/object/text"
+          }
+        }
+      }
+    },
+    "default_list": "text",
+    "dashboards": {
+      "edit": {
+        "layout": {
+          "structure": [
+            { "columns": [ 1 ] }
+          ]
+        },
+        "widgets": {
+          "form": {
+            "type": "charcoal/admin/widget/objectForm",
+            "form_ident": "text",
+            "obj_type": "charcoal/attachment/object/text"
+          }
+        }
+      },
+      "table": {
+        "title": {
+          "fr": "Liste des blocs texte",
+          "en": "Texts list"
+        },
+        "layout": {
+          "structure": [
+            { "columns": [ 1 ] }
+          ]
+        },
+        "widgets": {
+          "form": {
+            "type": "charcoal/admin/widget/table",
+            "collection_ident": "text",
+            "obj_type": "charcoal/attachment/object/text"
+          }
+        }
+      }
+    }
+  }
 }

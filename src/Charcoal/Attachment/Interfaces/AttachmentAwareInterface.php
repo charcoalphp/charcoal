@@ -3,16 +3,21 @@
 namespace Charcoal\Attachment\Interfaces;
 
 /**
- * Object can have attachment.
+ * Defines a object that can have attachments.
  */
 interface AttachmentAwareInterface
 {
     /**
-     * Obj type and objId.
-     * @return string   Current objType.
-     * @return mixed    Current ID.
+     * Retrieve the object's type identifier.
+     *
+     * @return string
      */
     public function objType();
-    public function id();
 
+    /**
+     * Retrieve the object's unique ID.
+     *
+     * @return mixed
+     */
+    public function id();
 }

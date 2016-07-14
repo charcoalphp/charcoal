@@ -14,7 +14,7 @@
                 <ul class="dropdown-menu js-attachments-manager">
                     {{#attachmentTypes}}
                     <li>
-                        <a href="{{baseUrl}}admin/object/edit?obj_type={{val}}" data-type="{{val}}" class="js-add-attachment" target="_blank">
+                        <a href="{{baseUrl}}admin/object/edit?obj_type={{val}}" data-type="{{val}}" data-title="{{label}}" class="js-add-attachment" target="_blank">
                         <span class="glyphicon {{glyphicon}}"></span>
                             <span class="glyphicon-class">{{label}}</span>
                         </a>

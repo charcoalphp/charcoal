@@ -1,59 +1,24 @@
 <?php
+
 namespace Charcoal\Attachment\Object;
 
-// From Charcoal\Attachment
-use \Charcoal\Attachment\Object\Attachment;
-
 /**
- * Image attachment
- * Uses a file input, title and description.
+ * Image Attachment Type
  *
+ * Uses a file input, title, and description.
  */
-class Image extends Attachment
+class Image extends File
 {
-
     /**
-     * From bootstrap. Glyphicon used to identify the attachment type.
-     * @return string Glypicon.
+     * Generate a thumbnail from the uploaded image.
+     *
+     * @todo    Generate thumbnail from the main image (or not.).
+     * @used-by StorableTrait::preSave() For the "create" Event.
+     * @used-by StorableTrait::preUpdate() For the "update" Event.
+     * @return  boolean
      */
-    public function glyphicon()
+    public function generateThumbnail()
     {
-        return 'glyphicon-picture';
+        return true;
     }
-
-	/**
-	 * Generate thumbnail if necessary
-	 *
-	 * @return Boolean 			Depends on parent function.
-	 */
-	public function preSave()
-	{
-		$this->generateThumbnail();
-		return parent::preSave();
-	}
-
-	/**
-	 * Generate thumbnail if necessary
-	 *
-	 * @param  Array 	$cfg   	This can happen.
-	 * @return Boolean 			Depends on parent function.
-	 */
-	public function preUpdate(array $properties = NULL)
-	{
-		$this->generateThumbnail();
-		return parent::preUpdate($properties);
-	}
-
-    /**
-     * Thumbnail generation for images. From
-     * the original image of the object.
-     * @todo Define the thumbnail generation pattern.
-     * @return Boolean Success or failure.
-     */
-	public function generateThumbnail()
-	{
-		// @todo Generate thumbnail from the main image (or not.).
-
-		return true;
-	}
 }

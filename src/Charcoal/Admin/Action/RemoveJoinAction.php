@@ -1,24 +1,28 @@
 <?php
+
 namespace Charcoal\Admin\Action;
 
 use \Exception;
 
+// Dependencies from Pimple
 use \Pimple\Container;
 
-// PSR-7 (http messaging) dependencies
+// Dependencies from PSR-7 (HTTP Messaging)
 use \Psr\Http\Message\RequestInterface;
 use \Psr\Http\Message\ResponseInterface;
 
-// From Charcoal\Admin
+// Dependency from 'charcoal-admin'
 use \Charcoal\Admin\AdminAction;
 
-// From Charcoal
+// Dependency from 'charcoal-core'
 use \Charcoal\Loader\CollectionLoader;
 
-// From Charcoal\Attachment
-// Actual available attachments.
+// Local Dependency
 use \Charcoal\Attachment\Object\Join;
 
+/**
+ * Disconnect two objects
+ */
 class RemoveJoinAction extends AdminAction
 {
     /**
@@ -30,22 +34,28 @@ class RemoveJoinAction extends AdminAction
     {
         $params = $request->getParams();
 
-        if (!isset($params['attachment_id']) || !isset($params['obj_id']) || !isset($params['obj_type']) || !isset($params['group'])) {
+        if (
+            !isset($params['attachment_id']) ||
+            !isset($params['obj_id']) ||
+            !isset($params['obj_type']) ||
+            !isset($params['group'])
+        ) {
             $this->setSuccess(false);
+
             return $response;
         }
 
         $attachmentId = $params['attachment_id'];
-        $objId = $params['obj_id'];
-        $objType = $params['obj_type'];
-        $group = $params['group'];
+        $objId        = $params['obj_id'];
+        $objType      = $params['obj_type'];
+        $group        = $params['group'];
 
         // Try loading the object
         try {
             $obj = $this->modelFactory()->create($objType)->load($objId);
         } catch (Exception $e) {
-            // Invalid object
             $this->setSuccess(false);
+
             return $response;
         }
 
@@ -55,12 +65,12 @@ class RemoveJoinAction extends AdminAction
         }
 
         $loader = new CollectionLoader([
-            'logger'=>$this->logger,
+            'logger'  => $this->logger,
             'factory' => $this->modelFactory()
         ]);
-        $loader->setModel($joinProto);
-
-        $loader->addFilter('object_type', $objType)
+        $loader
+            ->setModel($joinProto)
+            ->addFilter('object_type', $objType)
             ->addFilter('object_id', $objId)
             ->addFilter('attachment_id', $attachmentId)
             ->addFilter('group', $group);
@@ -68,11 +78,9 @@ class RemoveJoinAction extends AdminAction
         $existing_joins = $loader->load();
 
         // Should be just one, tho.
-        foreach ($existing_joins as $j)
-        {
+        foreach ($existing_joins as $j) {
             $j->delete();
         }
-
 
         $this->setSuccess(true);
 

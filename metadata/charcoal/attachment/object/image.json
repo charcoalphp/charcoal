@@ -1,124 +1,123 @@
 {
-	"properties":{
-		"description":{
-			"type":"html"
-		},
-		"file":{
-			"type":"image",
-			"upload_path":"uploads/attachments/images/",
-			"view_options": {
-				"charcoal/admin/property/display/image": {
-					"height": 50
-				}
-			}
-		}
-	},
+  "properties": {
+    "description": {
+      "type": "html"
+    },
+    "file": {
+      "type": "image",
+      "upload_path": "uploads/attachments/images/",
+      "view_options": {
+        "charcoal/admin/property/display/image": {
+          "height": 50
+        }
+      }
+    }
+  },
 
-	"data":{
-		"type":"charcoal/attachment/object/image"
-	},
+  "data": {
+    "type": "charcoal/attachment/object/image"
+  },
 
-	"default_source":"default",
+  "default_source": "default",
 
-	"admin":{
-		"lists":{
-			"default":{
-				"properties":[
-					"title",
-					"file",
-					"active"
-				],
-				"list_actions":[{
-					"label":"Nouvelle image",
-					"ident":"create",
-					"url":"object/edit?obj_type=charcoal/attachment/object/image"
-				}],
-				"filters":{
-					"type":{
-						"property":"type",
-						"val":"charcoal/attachment/object/image"
-					}
-				}
-			},
-			"attachment":{
-				"properties":[
-					"title",
-					"file"
-				],
-				"orders":{
-					"type":{
-						"property":"type",
-						"val":"asc"
-					}
-				},
-				"filters":{
-					"type":{
-						"property":"type",
-						"val":"charcoal/attachment/object/image"
-					}
-				}
-			}
-		},
-		"forms":{
-			"quick":{
-				"groups":{
-					"main":{
-						"layout": {
-							"structure": [
-								{ "columns": [ 1, 1 ] },
-								{ "columns": [ 1 ] },
-								{ "columns": [ 1 ] },
-								{ "columns": [ 1 ] }
-							]
-						},
-						"title":{
-							"fr":"Média",
-							"en":"Media"
-						},
-						"properties":[
-							"title",
-							"subtitle",
-							"description",
-							"file"
-						]
-					}
-				}
-			}
-		},
-		"default_list":"default",
-		"dashboards":{
-			"edit":{
-				"layout": {
-					"structure": [
-						{ "columns": [ 1 ] }
-					]
-				},
-				"widgets": {
-					"form": {
-						"type": "charcoal/admin/widget/objectForm",
-						"form_ident": "default",
-						"obj_type": "charcoal/attachment/object/image"
-					}
-				}
-			},
-			"table":{
-				"title": {
-					"fr":"Liste des images",
-					"en":"Images list"
-				},
-				"layout": {
-					"structure": [
-						{ "columns": [ 1 ] }
-					]
-				},
-				"widgets": {
-					"form": {
-						"type": "charcoal/admin/widget/table",
-						"collection_ident": "default",
-						"obj_type": "charcoal/attachment/object/image"
-					}
-				}
-			}
-		}
-	}
+  "admin": {
+    "lists": {
+      "default": {
+        "properties": [
+          "title",
+          "file",
+          "active"
+        ],
+        "list_actions": [{
+          "label": {
+            "en": "New Image",
+            "fr": "Nouvelle image"
+          },
+          "ident": "create",
+          "url": "object/edit?obj_type=charcoal/attachment/object/image"
+        }],
+        "filters": {
+          "type": {
+            "property": "type",
+            "val": "charcoal/attachment/object/image"
+          }
+        }
+      },
+      "attachment": {
+        "properties": [
+          "title",
+          "file"
+        ],
+        "orders": {
+          "type": {
+            "property": "type",
+            "val": "asc"
+          }
+        },
+        "filters": {
+          "type": {
+            "property": "type",
+            "val": "charcoal/attachment/object/image"
+          }
+        }
+      }
+    },
+    "forms": {
+      "quick": {
+        "groups": {
+          "main": {
+            "layout": {
+              "structure": [
+                { "columns": [ 1, 1 ] },
+                { "columns": [ 1 ] },
+                { "columns": [ 1 ] },
+                { "columns": [ 1 ] }
+              ]
+            },
+            "properties": [
+              "title",
+              "subtitle",
+              "description",
+              "file"
+            ]
+          }
+        }
+      }
+    },
+    "default_list": "default",
+    "dashboards": {
+      "edit": {
+        "layout": {
+          "structure": [
+            { "columns": [ 1 ] }
+          ]
+        },
+        "widgets": {
+          "form": {
+            "type": "charcoal/admin/widget/objectForm",
+            "form_ident": "default",
+            "obj_type": "charcoal/attachment/object/image"
+          }
+        }
+      },
+      "table": {
+        "title": {
+          "fr": "Liste des images",
+          "en": "Images list"
+        },
+        "layout": {
+          "structure": [
+            { "columns": [ 1 ] }
+          ]
+        },
+        "widgets": {
+          "form": {
+            "type": "charcoal/admin/widget/table",
+            "collection_ident": "default",
+            "obj_type": "charcoal/attachment/object/image"
+          }
+        }
+      }
+    }
+  }
 }
