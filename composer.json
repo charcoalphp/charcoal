@@ -19,7 +19,6 @@
   ],
   "minimum-stability": "dev",
   "require": {
-    "php": ">=5.6",
     "locomotivemtl/charcoal-core": "dev-master",
     "locomotivemtl/charcoal-base": "dev-master"
   },
