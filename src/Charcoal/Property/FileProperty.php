@@ -99,6 +99,8 @@ class FileProperty extends AbstractProperty
      */
     public function setDependencies(Container $container)
     {
+        parent::setDependencies($container);
+
         $this->basePath   = $container['config']['base_path'];
         $this->publicPath = $container['config']['public_path'];
     }

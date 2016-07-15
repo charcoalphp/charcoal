@@ -10,6 +10,7 @@ use \Serializable;
 // Dependencies from PSR-3 (Logger)
 use \Psr\Log\LoggerAwareInterface;
 use \Psr\Log\LoggerAwareTrait;
+use \Psr\Log\NullLogger;
 
 // Dependencies from 'pimple`'
 use \Pimple\Container;
@@ -150,7 +151,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     public function __construct(array $data = null)
     {
         if (!isset($data['logger'])) {
-            $data['logger'] = new \Psr\Log\NullLogger();
+            $data['logger'] = new NullLogger();
         }
         $this->setLogger($data['logger']);
 
@@ -158,6 +159,7 @@ abstract class AbstractProperty extends AbstractEntity implements
         if (isset($data['property_factory'])) {
             $this->setPropertyFactory($data['property_factory']);
         }
+
         if (isset($data['metadata_loader'])) {
             $this->setMetadataLoader($data['metadata_loader']);
         }
