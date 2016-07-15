@@ -226,7 +226,7 @@ class Attachment extends Content implements AttachableInterface
      */
     public function isImage()
     {
-        return ($this->microType() === self::IMAGE_TYPE);
+        return ($this->microType() === 'image');
     }
 
     /**
@@ -236,7 +236,7 @@ class Attachment extends Content implements AttachableInterface
      */
     public function isVideo()
     {
-        return ($this->microType() === self::VIDEO_TYPE);
+        return ($this->microType() === 'video');
     }
 
     /**
@@ -246,7 +246,7 @@ class Attachment extends Content implements AttachableInterface
      */
     public function isFile()
     {
-        return ($this->microType() === self::FILE_TYPE);
+        return ($this->microType() === 'file');
     }
 
     /**
@@ -256,7 +256,7 @@ class Attachment extends Content implements AttachableInterface
      */
     public function isText()
     {
-        return ($this->microType() === self::TEXT_TYPE);
+        return ($this->microType() === 'text');
     }
 
     /**
@@ -266,7 +266,7 @@ class Attachment extends Content implements AttachableInterface
      */
     public function isGallery()
     {
-        return ($this->microType() === self::GALLERY_TYPE);
+        return ($this->microType() === 'gallery');
     }
 
     /**
@@ -276,7 +276,7 @@ class Attachment extends Content implements AttachableInterface
      */
     public function isLink()
     {
-        return ($this->microType() === self::LINK_TYPE);
+        return ($this->microType() === 'link');
     }
 
 
