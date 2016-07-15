@@ -331,7 +331,7 @@ class Attachment extends Content implements AttachableInterface
      */
     public function setKeywords($keywords)
     {
-        $this->keywords = $this->parseAsMultiple($keywords);
+        $this->keywords = $keywords;
 
         return $this;
     }
