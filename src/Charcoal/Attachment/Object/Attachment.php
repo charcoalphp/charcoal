@@ -453,6 +453,18 @@ class Attachment extends Content implements AttachableInterface
     }
 
     /**
+     * Basename of the associated file.
+     * @return string Basename of file.
+     */
+    public function basename()
+    {
+        if (!$this->file()) {
+            return '';
+        }
+        return basename($this->file());
+    }
+
+    /**
      * Retrieve the attached file's size.
      *
      * @return integer Returns the size of the file in bytes, or FALSE in case of an error.
