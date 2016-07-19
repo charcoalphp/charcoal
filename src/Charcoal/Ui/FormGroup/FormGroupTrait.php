@@ -54,6 +54,11 @@ trait FormGroupTrait
     private $l10nMode;
 
     /**
+     * @var string $ident
+     */
+    private $ident;
+
+    /**
      * @param FormInputBuilder $builder The builder, to create customized form input objects.
      * @return FormGroupInterface Chainable
      */
@@ -151,6 +156,26 @@ trait FormGroupTrait
     public function l10nMode()
     {
         return $this->l10nMode;
+    }
+
+    /**
+     * Set the ident of the form group.
+     * @param string $ident Form group ident.
+     * @return FormGroupInterface Chainable
+     */
+    public function setIdent($ident)
+    {
+        $this->ident = $ident;
+        return $this;
+    }
+
+    /**
+     * Form group ident.
+     * @return string Form group ident.
+     */
+    public function ident()
+    {
+        return $this->ident;
     }
 
     /**
