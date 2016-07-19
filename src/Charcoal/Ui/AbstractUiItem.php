@@ -4,6 +4,11 @@ namespace Charcoal\Ui;
 
 use \InvalidArgumentException;
 
+// PSR-3 (logger) dependencies
+use \Psr\Log\LoggerAwareInterface;
+use \Psr\Log\LoggerAwareTrait;
+use \Psr\Log\NullLogger;
+
 // Module `pimple` dependencies
 use \Pimple\Container;
 
@@ -24,8 +29,11 @@ use \Charcoal\Ui\UiItemTrait;
 /**
  *
  */
-abstract class AbstractUiItem extends AbstractEntity implements UiItemInterface
+abstract class AbstractUiItem extends AbstractEntity implements
+    LoggerAwareInterface,
+    UiItemInterface
 {
+    use LoggerAwareTrait;
     use ViewableTrait;
     use UiItemTrait;
 
@@ -34,6 +42,11 @@ abstract class AbstractUiItem extends AbstractEntity implements UiItemInterface
      */
     public function __construct(array $data=null)
     {
+        if (!isset($data['logger'])) {
+            $data['logger'] = new NullLoger;
+        }
+        $this->setLogger($data['logger']);
+
         if (isset($data['container'])) {
             $this->setDependencies($data['container']);
         }
