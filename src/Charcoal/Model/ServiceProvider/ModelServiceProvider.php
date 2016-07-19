@@ -95,16 +95,15 @@ class ModelServiceProvider implements ServiceProviderInterface
              */
             $container['property/factory'] = function (Container $container) {
                 return new Factory([
-                    'base_class'        => PropertyInterface::class,
-                    'default_class'     => GenericProperty::class,
-                    'resolver_options'  => [
-                        'prefix'            => '\Charcoal\Property\\',
-                        'suffix'            => 'Property'
+                    'base_class'       => PropertyInterface::class,
+                    'default_class'    => GenericProperty::class,
+                    'resolver_options' => [
+                        'prefix' => '\Charcoal\Property\\',
+                        'suffix' => 'Property'
                     ],
-                    'arguments'         => [[
-                        'container'         => $container,
-                        'logger'            => $container['logger'],
-                        'metadata_loader'   => $container['metadata/loader']
+                    'arguments'     => [[
+                        'container' => $container,
+                        'logger'    => $container['logger']
                     ]]
                 ]);
             };
