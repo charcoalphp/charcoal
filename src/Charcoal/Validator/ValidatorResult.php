@@ -9,8 +9,6 @@ use \InvalidArgumentException as InvalidArgumentException;
 
 /**
  * A Validator Result object.
- *
- * @todo Change the visibility of the members to private. (Require custom encoder to output them)
  */
 class ValidatorResult
 {

@@ -84,12 +84,7 @@ class DatabaseFilter extends Filter
             /** @todo Load Property from associated model metadata. */
             return [$property];
         }
-        /*
-        $field = $this->field();
-        if($field) {
-        return [$field];
-        }
-        */
+
         return [];
     }
 }

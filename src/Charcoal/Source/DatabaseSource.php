@@ -249,11 +249,10 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
      */
     private function getModelFields(ModelInterface $model, $properties = null)
     {
-        //$metadata = $model->metadata();
         if ($properties === null) {
             $properties = array_keys($model->metadata()->properties());
         } else {
-            $properties = array_merge($properties, [$model->key()]);
+            $properties = array_merge($properties, [ $model->key() ]);
         }
 
         $fields = [];

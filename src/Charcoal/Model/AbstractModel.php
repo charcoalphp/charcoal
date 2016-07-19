@@ -109,7 +109,6 @@ abstract class AbstractModel extends AbstractEntity implements
         if (isset($data['container'])) {
             $this->setDependencies($data['container']);
         }
-
     }
 
     /**
@@ -331,10 +330,12 @@ abstract class AbstractModel extends AbstractEntity implements
         $this->saveProperties();
 
         // Invalid models can not be saved.
-        // $valid = $this->validate();
-        // if ($valid === false) {
-        //     return false;
-        // }
+        /*
+        $valid = $this->validate();
+        if ($valid === false) {
+            return false;
+        }
+        */
 
         $ret = $this->source()->saveItem($this);
         if ($ret === false) {
@@ -359,10 +360,12 @@ abstract class AbstractModel extends AbstractEntity implements
 
         $this->saveProperties();
 
-        // $valid = $this->validate();
-        // if ($valid === false) {
-        //     return false;
-        // }
+        /*
+        $valid = $this->validate();
+        if ($valid === false) {
+            return false;
+        }
+        */
 
         $ret = $this->source()->updateItem($this, $properties);
         if ($ret === false) {

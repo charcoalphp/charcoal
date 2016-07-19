@@ -3,7 +3,7 @@
 namespace Charcoal\Loader;
 
 use \InvalidArgumentException;
-use \Exception;
+use \RuntimeException;
 use \PDO;
 
 // Dependencies from PSR-3 (Logger)
@@ -11,13 +11,14 @@ use \Psr\Log\LoggerAwareInterface;
 use \Psr\Log\LoggerAwareTrait;
 use \Psr\Log\NullLogger;
 
-// Module `charcoal-factory` dependencies.
+// Dependency from 'charcoal-factory'
 use \Charcoal\Factory\FactoryInterface;
 
 // Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Model\ModelInterface;
 use \Charcoal\Model\ModelFactory;
 use \Charcoal\Model\Collection;
+use \Charcoal\Source\SourceInterface;
 
 // Local Dependencies
 use \Charcoal\Source\Database\DatabaseFilter;
@@ -118,13 +119,13 @@ class CollectionLoader implements LoggerAwareInterface
     /**
      * Retrieve the source to load objects from.
      *
-     * @throws Exception If no source has been defined.
+     * @throws RuntimeException If no source has been defined.
      * @return mixed
      */
     public function source()
     {
         if (!isset($this->source)) {
-            throw new Exception('No source set.');
+            throw new RuntimeException('No source set.');
         }
 
         return $this->source;
@@ -133,12 +134,13 @@ class CollectionLoader implements LoggerAwareInterface
     /**
      * Set the source to load objects from.
      *
-     * @param  mixed $source A data source.
+     * @param  SourceInterface $source A data source.
      * @return CollectionLoader Chainable
      */
-    public function setSource($source)
+    public function setSource(SourceInterface $source)
     {
         $source->reset();
+
         $this->source = $source;
 
         return $this;
@@ -147,13 +149,13 @@ class CollectionLoader implements LoggerAwareInterface
     /**
      * Retrieve the object model.
      *
-     * @throws Exception If no model has been defined.
+     * @throws RuntimeException If no model has been defined.
      * @return Model
      */
     public function model()
     {
         if (!isset($this->model)) {
-            throw new Exception('No model set on collection loader.');
+            throw new RuntimeException('The collection loader must have a model.');
         }
 
         return $this->model;
@@ -185,7 +187,9 @@ class CollectionLoader implements LoggerAwareInterface
                 'Dynamic type field must be a string'
             );
         }
+
         $this->dynamicTypeField = $field;
+
         return $this;
     }
 
@@ -457,7 +461,7 @@ class CollectionLoader implements LoggerAwareInterface
     /**
      * Get the total number of items for this collection query.
      *
-     * @throws Exception If the database connection fails.
+     * @throws RuntimeException If the database connection fails.
      * @return integer
      */
     public function loadCount()
@@ -466,7 +470,7 @@ class CollectionLoader implements LoggerAwareInterface
 
         $db = $this->source()->db();
         if (!$db) {
-            throw new Exception(
+            throw new RuntimeException(
                 'Could not instanciate a database connection.'
             );
         }
@@ -484,7 +488,7 @@ class CollectionLoader implements LoggerAwareInterface
      * @param  string   $query The actual query.
      * @param  callable $cb    Optional. Apply a callback to every entity of the collection.
      *                            Leave blank to use `$callback` member.
-     * @throws Exception If the database connection fails.
+     * @throws RuntimeException If the database connection fails.
      * @return CollectionLoader   Collection of items.
      */
     public function loadFromQuery($query, callable $cb = null)
@@ -492,7 +496,7 @@ class CollectionLoader implements LoggerAwareInterface
         $db = $this->source()->db();
 
         if (!$db) {
-            throw new Exception(
+            throw new RuntimeException(
                 'Could not instanciate a database connection.'
             );
         }
