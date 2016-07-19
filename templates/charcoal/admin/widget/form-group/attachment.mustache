@@ -1,0 +1,30 @@
+{{!--
+Attachment Widget, as Form Group
+================================
+
+`charcoal/admin/widget/form-group/attachment`
+
+--}}
+
+<fieldset>
+
+    {{#showHeader}}
+    <header class="o-header -border">
+        {{#showTitle}}
+        <h2>{{title}}</h2>
+        {{/showTitle}}
+
+        {{#showDescription}}
+            <span class="c-info" data-toggle="tooltip" data-placement="top" title="{{description}}">?</span>
+        {{/showDescription}}
+    </header>
+    {{/showHeader}}
+
+    {{!-- Include the attachment widget }}
+    {{>charcoal/admin/widget/attachment}}
+
+    {{#showNotes}}
+    <div class="help-block small">{{&notes}}</div>
+    {{/showNotes}}
+
+</fieldset>
