@@ -24,6 +24,8 @@ abstract class AbstractFormGroup extends AbstractUiItem implements
      */
     public function __construct($data)
     {
+        parent::__construct($data);
+
         if (isset($data['form'])) {
             $this->setForm($data['form']);
         }
