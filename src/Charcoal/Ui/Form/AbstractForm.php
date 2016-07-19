@@ -25,9 +25,10 @@ abstract class AbstractForm extends AbstractUiItem implements
      */
     public function __construct($data = null)
     {
-        $this->setFormGroupBuilder($data['form_group_builder']);
+        // Set up form group factory (to fulfill FormInterface)
+        $this->setFormGroupFactory($data['form_group_factory']);
 
-        // Set up layout builder (to fulfill LayoutAware Interface)
+        // Set up layout builder (to fulfill LayoutAwareInterface)
         $this->setLayoutBuilder($data['layout_builder']);
     }
 }

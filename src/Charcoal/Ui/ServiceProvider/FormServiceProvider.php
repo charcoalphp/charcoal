@@ -48,11 +48,11 @@ class FormServiceProvider implements ServiceProviderInterface
                 'base_class' => FormInterface::class,
                 'default_class' => GenericForm::class,
                 'arguments' => [[
+                    'container'          => $container,
                     'logger'             => $container['logger'],
                     'view'               => $container['view'],
                     'layout_builder'     => $container['layout/builder'],
-                    'form_group_builder' => $container['form/group/builder']
-
+                    'form_group_factory' => $container['form/group/factory']
                 ]]
             ]);
         };
@@ -80,25 +80,19 @@ class FormServiceProvider implements ServiceProviderInterface
          */
         $container['form/group/factory'] = function(Container $container) {
             return new Factory([
-                'base_class' => FormGroupInterface::class,
-                'default_class' => GenericFormGroup::class,
-                'arguments' => [[
-                    'logger'             => $container['logger'],
-                    'view'               => $container['view'],
-                    'layout_builder'     => $container['layout/builder'],
-                    'form_input_builder' => $container['form/input/builder']
-                ]]
+                'base_class'        => FormGroupInterface::class,
+                'default_class'     => GenericFormGroup::class,
+                'arguments'         => [[
+                    'container'             => $container,
+                    'logger'                => $container['logger'],
+                    'view'                  => $container['view'],
+                    'layout_builder'        => $container['layout/builder'],
+                    'form_input_builder'    => $container['form/input/builder']
+                ]],
+                'resolver_options'  => [
+                    'suffix'                => 'FormGroup'
+                ]
             ]);
-        };
-
-        /**
-         * @param Container $container A Pimple DI container.
-         * @return FormGroupBuilder
-         */
-        $container['form/group/builder'] = function(Container $container) {
-            $formGroupFactory = $container['form/group/factory'];
-            $formGroupBuilder = new FormGroupBuilder($formGroupFactory, $container);
-            return $formGroupBuilder;
         };
     }
 

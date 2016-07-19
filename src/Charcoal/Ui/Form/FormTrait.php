@@ -6,8 +6,10 @@ namespace Charcoal\Ui\Form;
 use \Exception;
 use \InvalidArgumentException;
 
+use \Charcoal\Factory\FactoryInterface;
+
+
 // Intra-module (`charcoal-ui`) dependencies
-use \Charcoal\Ui\FormGroup\FormGroupBuilder;
 use \Charcoal\Ui\FormGroup\FormGroupInterface;
 
 /**
@@ -43,40 +45,42 @@ trait FormTrait
     /**
      * @var MetadataInterface $metadata
      */
-    private $metadata = null;
+    private $metadata;
 
     /**
-     * @var FormGroupBuilder $formGroupBuilder
+     * @var FactoryInterface $formGroupFactory
      */
-    protected $formGroupBuilder = null;
+    protected $formGroupFactory;
+
 
     /**
      * @var callable $groupCallback
      */
-    private $groupCallback = null;
+    private $groupCallback;
+
 
     /**
-     * @param FormGroupBuilder $builder A builder, to create customized form gorup objects.
+     * @param FormGroupFactory $factory A factory, to create customized form gorup objects.
      * @return FormInterface Chainable
      */
-    public function setFormGroupBuilder(FormGroupBuilder $builder)
+    public function setFormGroupFactory(FactoryInterface $factory)
     {
-        $this->formGroupBuilder = $builder;
+        $this->formGroupFactory = $factory;
         return $this;
     }
 
     /**
-     * @throws Exception If the form group builder object was not set / injected.
-     * @return FormGroupBuilder
+     * @throws Exception If the form group factory object was not set / injected.
+     * @return FormGroupFactory
      */
-    protected function formGroupBuilder()
+    protected function formGroupFactory()
     {
-        if ($this->formGroupBuilder === null) {
+        if ($this->formGroupFactory === null) {
             throw new Exception(
-                'Form group builder was not set.'
+                'Form group factory was not set.'
             );
         }
-        return $this->formGroupBuilder;
+        return $this->formGroupFactory;
     }
 
     /**
@@ -189,11 +193,12 @@ trait FormTrait
             $group->setForm($this);
             $this->groups[$groupIdent] = $group;
         } elseif (is_array($group)) {
-            $group['form'] = $this;
             if (!isset($group['type'])) {
                 $group['type'] = $this->defaultGroupType();
             }
-            $g = $this->formGroupBuilder()->build($group);
+            $g = $this->formGroupFactory()->create($group['type']);
+            $g->setForm($this);
+            $g->setData($group);
             $this->groups[$groupIdent] = $g;
         } else {
             throw new InvalidArgumentException(
@@ -259,8 +264,6 @@ trait FormTrait
     {
         return count($this->groups);
     }
-
-
 
     /**
      * @param array $formData The (pre-populated) form data, as [$key=>$val] array.
