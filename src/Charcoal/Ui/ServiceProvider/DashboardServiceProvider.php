@@ -5,8 +5,11 @@ namespace Charcoal\Ui\ServiceProvider;
 use \Pimple\Container;
 use \Pimple\ServiceProviderInterface;
 
+use \Charcoal\Factory\GenericFactory as Factory;
+
 use \Charcoal\Ui\Dashboard\DashboardBuilder;
-use \Charcoal\Ui\Dashboard\DashboardFactory;
+use \Charcoal\Ui\Dashboard\DashboardInterface;
+use \Charcoal\Ui\Dashboard\GenericDashboard;
 
 /**
  *
@@ -33,13 +36,19 @@ class DashboardServiceProvider implements ServiceProviderInterface
          * @return LayoutFactory
          */
         $container['dashboard/factory'] = function (Container $container) {
-
-            $dashboardFactory = new DashboardFactory();
-            $dashboardFactory->setArguments([
-                'widget_builder' => $container['widget/builder'],
-                'layout_builder' => $container['layout/builder']
+            return new Factory([
+                'base_class'        => DashboardInterface::class,
+                'default_class'     => GenericDashboard::class,
+                'arguments'         => [[
+                    'container'             => $container,
+                    'logger'                => $container['logger'],
+                    'widget_builder' => $container['widget/builder'],
+                    'layout_builder' => $container['layout/builder']
+                ]],
+                'resolver_options'  => [
+                    'suffix'                => 'Dashboard'
+                ]
             ]);
-            return $dashboardFactory;
         };
 
         /**
