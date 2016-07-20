@@ -174,12 +174,38 @@ trait ViewableTrait
     }
 
     /**
+     * Set a view controller for the template's context.
+     *
+     * @param ViewableInterface|null $controller A view controller to use when rendering.
+     * @throws InvalidArgumentException If the controller is invalid.
+     * @return ViewableInterface Chainable
+     */
+    public function setViewController($controller)
+    {
+        if ($controller === null || $controller instanceof ViewableInterface) {
+            $this->viewController = $controller;
+        } else {
+            throw new InvalidArgumentException(
+                'View controller must be an instance of ViewableInterface or NULL.'
+            );
+        }
+
+        return $this;
+    }
+
+    /**
      * Retrieve a view controller for the template's context.
+     *
+     * If no controller has been defined, it will return itself.
      *
      * @return ViewableInterface
      */
     public function viewController()
     {
-        return $this;
+        if ($this->viewController === null) {
+            return $this;
+        }
+
+        return $this->viewController;
     }
 }
