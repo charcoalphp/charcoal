@@ -3,60 +3,80 @@
 namespace Charcoal\View;
 
 /**
- * Viewable objects have a view, and therefore can be rendered.
+ * Defines an object as viewable, and therefore can be rendered.
  */
 interface ViewableInterface
 {
-
     /**
+     * Render the viewable object.
+     *
      * @return string
      */
     public function __toString();
 
     /**
-     * Set the type of view engine to use for this view.
+     * Set the view engine type (identifier).
      *
-     * @param string $engineIdent The rendering engine (identifier).
+     * @param string $engineIdent The rendering engine identifier.
      * @return ViewableInterface Chainable
      */
     public function setTemplateEngine($engineIdent);
 
     /**
-     * @return string The template engine (`mustache`, `php`, `php-mustache` or `twig`)
+     * Retrieve the view engine type (identifier).
+     *
+     * @return string Returns either "mustache", "php", "php-mustache" or "twig".
      */
     public function templateEngine();
 
     /**
-     * @param string $ident The template ident for this viewable object.
+     * Set the viewable object's template identifier.
+     *
+     * Usually, a path to a file containing the template to be rendered at runtime.
+     *
+     * @param string $ident The template ID.
      * @return ViewableInterface Chainable
      */
     public function setTemplateIdent($ident);
 
     /**
+     * Retrieve the viewable object's template identifier.
+     *
      * @return string
      */
     public function templateIdent();
 
     /**
-     * @param ViewInterface $view The view instance to use to render.
+     * Set the renderable view.
+     *
+     * @param ViewInterface|array $view The view instance to use to render.
      * @return ViewableInterface Chainable
      */
     public function setView(ViewInterface $view);
 
     /**
+     * Retrieve the renderable view.
+     *
      * @return ViewInterface The object's View instance.
      */
     public function view();
 
     /**
-     * @param string $template The template to parse and render. If null, use the object's default.
+     * Render the template by the given identifier.
+     *
+     * Usually, a path to a file containing the template to be rendered at runtime.
+     *
+     * @param string $templateIdent The template to load, parse, and render.
+     *     If NULL, will use the object's previously set template identifier.
      * @return string The rendered template.
      */
-    public function render($template = null);
+    public function render($templateIdent = null);
 
     /**
-     * @param string $templateIdent The template ident to load and render.
+     * Render the given template from string.
+     *
+     * @param string $templateString The template  to render from string.
      * @return string The rendered template.
      */
-    public function renderTemplate($templateIdent);
+    public function renderTemplate($templateString);
 }
