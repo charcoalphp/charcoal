@@ -147,6 +147,22 @@ class CollectionLoader implements LoggerAwareInterface
     }
 
     /**
+     * Alias of {@see AbstractSource::reset()}
+     *
+     * Resets everything but the model and source.
+     *
+     * @return AbstractSource Chainable
+     */
+    public function reset()
+    {
+        if ($this->source) {
+            $this->source()->reset();
+        }
+
+        return $this;
+    }
+
+    /**
      * Retrieve the object model.
      *
      * @throws RuntimeException If no model has been defined.
@@ -164,12 +180,27 @@ class CollectionLoader implements LoggerAwareInterface
     /**
      * Set the model to use for the loaded objects.
      *
-     * @param  ModelInterface $model An object model.
+     * @param  string|ModelInterface $model An object model.
+     * @throws InvalidArgumentException If the given argument is not a model.
      * @return CollectionLoader CHainable
      */
-    public function setModel(ModelInterface $model)
+    public function setModel($model)
     {
+        if (is_string($model)) {
+            $model = $this->factory->get($model);
+        }
+
+        if (!$model instanceof ModelInterface) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'The model must be an instance of "%s"',
+                    ModelInterface::class
+                )
+            );
+        }
+
         $this->model = $model;
+
         $this->setSource($model->source());
 
         return $this;
