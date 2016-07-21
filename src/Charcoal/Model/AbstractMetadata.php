@@ -24,6 +24,8 @@ abstract class AbstractMetadata extends AbstractConfig implements
     protected $properties = [];
 
     /**
+     * Set the properties.
+     *
      * @param array $properties The properties.
      * @throws InvalidArgumentException If parameter is not an array.
      * @return MetadataInterface Chainable
@@ -35,10 +37,27 @@ abstract class AbstractMetadata extends AbstractConfig implements
     }
 
     /**
+     * Retrieve the properties.
+     *
      * @return array
      */
     public function properties()
     {
         return $this->properties;
+    }
+
+    /**
+     * Retrieve the given property.
+     *
+     * @param string $propertyIdent The property identifier.
+     * @return array|null
+     */
+    public function property($propertyIdent)
+    {
+        if (isset($this->properties[$propertyIdent])) {
+            return $this->properties[$propertyIdent];
+        } else {
+            return null;
+        }
     }
 }
