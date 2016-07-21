@@ -163,33 +163,39 @@ trait FormTrait
     }
 
     /**
-     * @param array $groups The groups structure.
+     * Set the object's form groups.
+     *
+     * @param array $groups A collection of group structures.
      * @return FormInterface Chainable
      */
     public function setGroups(array $groups)
     {
         $this->groups = [];
+
         foreach ($groups as $groupIdent => $group) {
             $this->addGroup($groupIdent, $group);
         }
+
         return $this;
     }
 
     /**
+     * Add a form group.
+     *
      * @param string                   $groupIdent The group identifier.
      * @param array|FormGroupInterface $group      The group object or structure.
-     * @throws InvalidArgumentException If the ident is not a string or the group not a valid object or structure.
+     * @throws InvalidArgumentException If the identifier is not a string or the group is invalid.
      * @return FormInterface Chainable
      */
     public function addGroup($groupIdent, $group)
     {
         if (!is_string($groupIdent)) {
             throw new InvalidArgumentException(
-                'Group ident must be a string'
+                'Group identifier must be a string'
             );
         }
 
-        if (($group instanceof FormGroupInterface)) {
+        if ($group instanceof FormGroupInterface) {
             $group->setForm($this);
             $group->setIdent($groupIdent);
             $this->groups[$groupIdent] = $group;
@@ -203,7 +209,7 @@ trait FormTrait
             $this->groups[$groupIdent] = $g;
         } else {
             throw new InvalidArgumentException(
-                'Group must be a Form Group object or an array of form group options'
+                'Group must be an instance of FormGroupInterface or an array of form group options'
             );
         }
 
@@ -211,6 +217,8 @@ trait FormTrait
     }
 
     /**
+     * Retrieve the default form group class name.
+     *
      * @return string
      */
     public function defaultGroupType()
@@ -219,17 +227,17 @@ trait FormTrait
     }
 
     /**
-     * Form Group generator.
+     * Retrieve the form groups.
      *
-     * @param callable $groupCallback Optional. Group callback.
-     * @return FormGroupInterface[]
+     * @param callable $groupCallback Optional callback applied to each form group.
+     * @return FormGroupInterface[]|Generator
      */
     public function groups(callable $groupCallback = null)
     {
         $groups = $this->groups;
         uasort($groups, ['self', 'sortGroupsByPriority']);
 
-        $groupCallback = isset($groupCallback) ? $groupCallback : $this->groupCallback;
+        $groupCallback = (isset($groupCallback) ? $groupCallback : $this->groupCallback);
 
         $i = 1;
         foreach ($groups as $group) {
@@ -254,10 +262,11 @@ trait FormTrait
 
             yield $group;
         }
-
     }
 
     /**
+     * Determine if the form has any groups.
+     *
      * @return boolean
      */
     public function hasGroups()
@@ -266,6 +275,25 @@ trait FormTrait
     }
 
     /**
+     * Determine if the form has a given group.
+     *
+     * @param string $groupIdent The group identifier to look up.
+     * @return boolean
+     */
+    public function hasGroup($groupIdent)
+    {
+        if (!is_string($groupIdent)) {
+            throw new InvalidArgumentException(
+                'Group identifier must be a string'
+            );
+        }
+
+        return isset($this->groups[$groupIdent]);
+    }
+
+    /**
+     * Count the number of form groups.
+     *
      * @return integer
      */
     public function numGroups()
