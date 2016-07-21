@@ -98,7 +98,7 @@ abstract class AbstractMenuItem extends AbstractUiItem implements MenuItemInterf
     {
         if (!is_string($ident)) {
             throw new InvalidArgumentException(
-                'Ident must a string'
+                'Menu item identifier must a string'
             );
         }
         $this->ident = $ident;
@@ -119,7 +119,10 @@ abstract class AbstractMenuItem extends AbstractUiItem implements MenuItemInterf
      */
     public function setLabel($label)
     {
-        $this->label = new TranslationString($label);
+        if (TranslationString::isTranslatable($label)) {
+            $this->label = new TranslationString($label);
+        }
+
         return $this;
     }
 

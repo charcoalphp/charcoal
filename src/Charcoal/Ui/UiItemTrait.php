@@ -157,7 +157,10 @@ trait UiItemtrait
      */
     public function setTitle($title)
     {
-        $this->title = new TranslationString($title);
+        if (TranslationString::isTranslatable($title)) {
+            $this->title = new TranslationString($title);
+        }
+
         return $this;
     }
 
@@ -177,7 +180,10 @@ trait UiItemtrait
      */
     public function setSubtitle($subtitle)
     {
-        $this->subtitle = new TranslationString($subtitle);
+        if (TranslationString::isTranslatable($subtitle)) {
+            $this->subtitle = new TranslationString($subtitle);
+        }
+
         return $this;
     }
 
@@ -195,7 +201,10 @@ trait UiItemtrait
      */
     public function setDescription($description)
     {
-        $this->description = new TranslationString($description);
+        if (TranslationString::isTranslatable($description)) {
+            $this->description = new TranslationString($description);
+        }
+
         return $this;
     }
 
@@ -213,7 +222,10 @@ trait UiItemtrait
      */
     public function setNotes($notes)
     {
-        $this->notes = new TranslationString($notes);
+        if (TranslationString::isTranslatable($notes)) {
+            $this->notes = new TranslationString($notes);
+        }
+
         return $this;
     }
 
