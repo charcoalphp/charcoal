@@ -36,13 +36,13 @@ trait StorableTrait
      */
     private $source;
 
-        /**
-         * Set the object's ID. The actual property set depends on `key()`
-         *
-         * @param mixed $id The object id (identifier / primary key value).
-         * @throws InvalidArgumentException If the argument is not scalar.
-         * @return StorableInterface Chainable
-         */
+    /**
+     * Set the object's ID. The actual property set depends on `key()`
+     *
+     * @param mixed $id The object id (identifier / primary key value).
+     * @throws InvalidArgumentException If the argument is not scalar.
+     * @return StorableInterface Chainable
+     */
     public function setId($id)
     {
         if (!is_scalar($id)) {

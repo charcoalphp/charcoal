@@ -112,7 +112,9 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-     * @param Container $container Pimple DI Container.
+     * Inject dependencies from a DI Container.
+     *
+     * @param Container $container A dependencies container instance.
      * @return void
      */
     public function setDependencies(Container $container)
@@ -121,7 +123,39 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-     * Return the object data as an array
+     * Set the object's ID from an associative array map (or any other Traversable).
+     *
+     * Useful for setting the object ID before the rest of the object's data.
+     *
+     * @param array|\Traversable $data The object data.
+     * @return array|\Traversable The object data without the pre-set ID.
+     */
+    public function setIdFromData($data)
+    {
+        $key = $this->key();
+        if (isset($data[$key])) {
+            $this->setId($data[$key]);
+            unset($data[$key]);
+        }
+
+        return $data;
+    }
+
+    /**
+     * Sets the object data, from an associative array map (or any other Traversable).
+     *
+     * @param array|\Traversable $data The entity data. Will call setters.
+     * @return AbstractModel Chainable
+     */
+    public function setData($data)
+    {
+        $data = $this->setIdFromData($data);
+
+        return parent::setData($data);
+    }
+
+    /**
+     * Return the object data as an array.
      *
      * @param array $propertyFilters Optional. Property filter.
      * @return array
@@ -148,10 +182,12 @@ abstract class AbstractModel extends AbstractEntity implements
      */
     public function mergeData($data)
     {
+        $data = $this->setIdFromData($data);
+
         foreach ($data as $propIdent => $val) {
             if (!$this->hasProperty($propIdent)) {
                 $this->logger->warning(
-                    sprintf('Can not set property "%s" on object; not defined in metadata.', $propIdent)
+                    sprintf('Cannot set property "%s" on object; not defined in metadata.', $propIdent)
                 );
                 continue;
             }
@@ -167,6 +203,7 @@ abstract class AbstractModel extends AbstractEntity implements
                 $this[$propIdent] = $val;
             }
         }
+
         return $this;
     }
 
@@ -180,6 +217,8 @@ abstract class AbstractModel extends AbstractEntity implements
      */
     public function setFlatData(array $flatData)
     {
+        $flatData = $this->setIdFromData($flatData);
+
         $data = [];
         $properties = $this->properties();
         foreach ($properties as $propertyIdent => $property) {
@@ -202,10 +241,12 @@ abstract class AbstractModel extends AbstractEntity implements
                 }
             }
         }
+
         $this->setData($data);
         if (!empty($flatData)) {
             $this->setData($flatData);
         }
+
         return $this;
     }
 
