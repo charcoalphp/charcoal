@@ -93,19 +93,19 @@ trait ViewableTrait
      *
      * Usually, a path to a file containing the template to be rendered at runtime.
      *
-     * @param string $ident The template ID.
-     * @throws InvalidArgumentException If the template ident is not a string.
+     * @param string $templateIdent The template ID.
+     * @throws InvalidArgumentException If the template identifier is not a string.
      * @return ViewableInterface Chainable
      */
-    public function setTemplateIdent($ident)
+    public function setTemplateIdent($templateIdent)
     {
-        if (!is_string($ident)) {
+        if (!is_string($templateIdent)) {
             throw new InvalidArgumentException(
                 'Template identifier must be a string.'
             );
         }
 
-        $this->templateIdent = $ident;
+        $this->templateIdent = $templateIdent;
 
         return $this;
     }
