@@ -292,7 +292,9 @@ class Attachment extends Content implements AttachableInterface
      */
     public function setTitle($title)
     {
-        $this->title = $this->translatable($title);
+        if (TranslationString::isTranslatable($title)) {
+            $this->title = new TranslationString($title);
+        }
 
         return $this;
     }
@@ -305,7 +307,9 @@ class Attachment extends Content implements AttachableInterface
      */
     public function setSubtitle($title)
     {
-        $this->subtitle = $this->translatable($title);
+        if (TranslationString::isTranslatable($title)) {
+            $this->subtitle = new TranslationString($title);
+        }
 
         return $this;
     }
@@ -318,7 +322,9 @@ class Attachment extends Content implements AttachableInterface
      */
     public function setDescription($description)
     {
-        $this->description = $this->translatable($description);
+        if (TranslationString::isTranslatable($description)) {
+            $this->description = new TranslationString($description);
+        }
 
         return $this;
     }
@@ -516,25 +522,6 @@ class Attachment extends Content implements AttachableInterface
 
 // Utilities
 // =============================================================================
-
-    /**
-     * Parse the property value as a "L10N" value type.
-     *
-     * @param  mixed $val The value being localized.
-     * @return TranslationString|null
-     */
-    public function translatable($val)
-    {
-        if (
-            !isset($val) ||
-            (is_string($val) && !strlen(trim($val))) ||
-            (is_array($val) && !count(array_filter($val, 'strlen')))
-        ) {
-            return null;
-        }
-
-        return new TranslationString($val);
-    }
 
     /**
      * Set a model collection loader.
