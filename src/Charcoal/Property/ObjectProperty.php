@@ -566,7 +566,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
                     return '';
                 }
             };
-            return preg_replace_callback('~{{(.*?)}}~i', $cb, $pattern);
+            return preg_replace_callback('~\{\{\s*(.*?)\s*\}\}~i', $cb, $pattern);
         }
     }
 
