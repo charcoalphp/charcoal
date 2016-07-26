@@ -32,7 +32,7 @@ trait DescribablePropertyTrait
      * @param FactoryInterface $factory The property factory, used to create metadata properties.
      * @return DescribableInterface Chainable
      */
-    public function setPropertyFactory(FactoryInterface $factory)
+    protected function setPropertyFactory(FactoryInterface $factory)
     {
         $this->propertyFactory = $factory;
 
@@ -44,7 +44,7 @@ trait DescribablePropertyTrait
      *
      * @return FactoryInterface
      */
-    protected function propertyFactory()
+    public function propertyFactory()
     {
         if ($this->propertyFactory === null) {
             $this->logger->warning(
