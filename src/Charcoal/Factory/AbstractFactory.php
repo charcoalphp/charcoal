@@ -165,8 +165,9 @@ abstract class AbstractFactory implements FactoryInterface
         if ($baseClass !== '' && !($obj instanceof $baseClass)) {
             throw new Exception(
                 sprintf(
-                    '%1$s: Object is not a valid "%2$s" class',
+                    '%1$s: Class "%2$s" must be an instance of "%3$s"',
                     get_called_class(),
+                    $classname,
                     $baseClass
                 )
             );
