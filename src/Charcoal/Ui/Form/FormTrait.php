@@ -200,9 +200,16 @@ trait FormTrait
             $group->setIdent($groupIdent);
             $this->groups[$groupIdent] = $group;
         } elseif (is_array($group)) {
+            if (isset($group['ident'])) {
+                $groupIdent = $group['ident'];
+            } else {
+                $group['ident'] = $groupIdent;
+            }
+
             if (!isset($group['type'])) {
                 $group['type'] = $this->defaultGroupType();
             }
+
             $g = $this->formGroupFactory()->create($group['type']);
             $g->setForm($this);
             $g->setData($group);
