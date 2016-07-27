@@ -312,6 +312,8 @@ abstract class AbstractProperty extends AbstractEntity implements
             } else {
                 $val = '';
             }
+        } elseif ($val instanceof TranslationString) {
+            $val = (string)$val;
         }
 
         /** Parse multiple values / ensure they are of array type. */

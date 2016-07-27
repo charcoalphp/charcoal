@@ -3,6 +3,7 @@
 namespace Charcoal\Property;
 
 use \Charcoal\Translation\TranslationConfig;
+use \Charcoal\Translation\TranslationString;
 
 use \Charcoal\Property\PropertyField;
 
@@ -68,9 +69,11 @@ trait StorablePropertyTrait
         if ($val === null) {
             return null;
         }
+
         if (is_scalar($val)) {
             return $this->storageVal($val);
         }
+
         if (isset($val[$fieldIdent])) {
             return $this->storageVal($val[$fieldIdent]);
         } else {
@@ -89,9 +92,14 @@ trait StorablePropertyTrait
         if ($val === null) {
             $val = $this->val();
         }
+
         if ($val === null) {
             // Do not json_encode NULL values
             return null;
+        }
+
+        if (!$this->l10n() && $val instanceof TranslationString) {
+            $val = (string)$val;
         }
 
         if ($this->multiple()) {
@@ -103,6 +111,7 @@ trait StorablePropertyTrait
         if (!is_scalar($val)) {
             return json_encode($val, JSON_UNESCAPED_UNICODE);
         }
+
         return $val;
     }
 
