@@ -17,7 +17,7 @@ use \Charcoal\Ui\UiItemTrait;
 /**
  * Ui Item Trait
  */
-trait UiItemtrait
+trait UiItemTrait
 {
     /**
      * @param boolean $active
