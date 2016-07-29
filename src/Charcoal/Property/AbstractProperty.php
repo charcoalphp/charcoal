@@ -236,37 +236,46 @@ abstract class AbstractProperty extends AbstractEntity implements
     }
 
     /**
-     * @param mixed $val The property (raw) value.
-     * @throws InvalidArgumentException If the value is invalid (null or not multiple when supposed to).
+     * Set the property's value.
+     *
+     * @param  mixed $val The property (raw) value.
+     * @throws InvalidArgumentException If the value is invalid (NULL or not multiple when supposed to).
      * @return PropertyInterface Chainable
      */
     public function setVal($val)
     {
-        if ($val === null) {
-            if ($this->allowNull()) {
+        if ($this->allowNull()) {
+            if ($val === null || $val === '') {
                 $this->val = null;
+
                 return $this;
-            } else {
-                throw new InvalidArgumentException(
-                    sprintf('Property "%s" value can not be null (Not allowed)', $this->ident())
-                );
             }
+        } elseif ($val === null) {
+            throw new InvalidArgumentException(
+                sprintf('Property "%s" value can not be NULL (not allowed)', $this->ident())
+            );
         }
+
         if ($this->multiple()) {
             if (is_string($val)) {
                 $val = explode($this->multipleSeparator(), $val);
             }
+
             if (!is_array($val)) {
                 throw new InvalidArgumentException(
-                    'Val is multiple so it must be a string (convertable to array by separator) or an array'
+                    'Value is multiple. It must be a string (convertable to array by separator) or an array'
                 );
             }
         }
+
         $this->val = $val;
+
         return $this;
     }
 
     /**
+     * Retrieve the property's value.
+     *
      * @return mixed
      */
     public function val()
@@ -275,13 +284,13 @@ abstract class AbstractProperty extends AbstractEntity implements
     }
 
     /**
-     * At this point, does nothing but return
-     * the actual value. Other properties could
-     * parse values such as ObjectProperty who
-     * could parse objects into object IDs.
+     * Parse the given value.
      *
-     * @param mixed $val Value to be parsed.
-     * @return mixed
+     * Note: the method returns the current value intact. Other properties can use this method to parse their values,
+     * such as {@see \Charcoal\Property\ObjectProperty::parseVal()} who could parse objects into object IDs.
+     *
+     * @param  mixed $val A value to be parsed.
+     * @return mixed Returns the parsed value.
      */
     public function parseVal($val = null)
     {
