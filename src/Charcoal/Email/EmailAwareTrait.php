@@ -56,13 +56,19 @@ trait EmailAwareTrait
      */
     protected function emailFromArray(array $arr)
     {
-        if (!isset($arr['email'])) {
+        if (isset($arr['address'])) {
+            $arr['email'] = $arr['address'];
+            unset($arr['address']);
+        }
+
+        if (!isset($arr['address'])) {
             throw new InvalidArgumentException(
-                'The array must contain at least the "email" key.'
+                'The array must contain at least the "address" key.'
             );
         }
 
         $email = filter_var($arr['email'], FILTER_SANITIZE_EMAIL);
+
         if (!isset($arr['name'])) {
             return $email;
         }
