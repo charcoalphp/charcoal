@@ -8,6 +8,7 @@ use \PDO;
 
 use \Charcoal\Core\StringFormat;
 use \Charcoal\Translation\TranslationConfig;
+use \Charcoal\Translation\TranslationString;
 
 use \Charcoal\Property\AbstractProperty;
 use \Charcoal\Property\SelectablePropertyInterface;
@@ -69,17 +70,16 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
 
         $propertyValue = $val;
 
-        if ($this->l10n() === true) {
+        if ($this->l10n()) {
             $translator = TranslationConfig::instance();
 
             $propertyValue = $propertyValue[$translator->currentLanguage()];
         }
 
-        if ($this->multiple() === true) {
+        if ($this->multiple()) {
             if (is_array($propertyValue)) {
                 $props = [];
                 foreach ($propertyValue as $pv) {
-                    ;
                     $props[] = $this->valLabel($pv);
                 }
                 $propertyValue = implode($this->multipleSeparator(), $props);
@@ -228,19 +228,27 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
-     * @todo Support l10n values
-     * @todo Support multiple values
-     * @throws Exception If val is not a string.
+     * Retrieve the length of the string.
+     *
+     * @todo Returns the string length based on the displayed value.
+     *     To be determined how to best handle multilingual and multiton values.
+     * @throws Exception If the value is not a string.
      * @return integer
      */
     public function length()
     {
-        $val = $this->val();
+        $val = $this->displayVal();
+
+        if ($val === null) {
+            return 0;
+        }
+
         if (!is_string($val)) {
             throw new Exception(
-                'Can not get string length: val is not a string'
+                'Unable to determine string length: value is not a string'
             );
         }
+
         return mb_strlen($val);
     }
 
@@ -261,7 +269,7 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
     {
         $val = $this->val();
 
-        if ($val === null) {
+        if ($val === null && $this->allowNull()) {
             return true;
         }
 
@@ -273,14 +281,14 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
         if (is_string($val)) {
             $valid = (mb_strlen($val) <= $maxLength);
             if (!$valid) {
-                $this->validator()->error('Max length error', 'maxLength');
+                $this->validator()->error('Maximum length error', 'maxLength');
             }
         } else {
             $valid = true;
             foreach ($val as $v) {
                 $valid = (mb_strlen($v) <= $maxLength);
                 if (!$valid) {
-                    $this->validator()->error('Max length error', 'maxLength');
+                    $this->validator()->error('Maximum length error', 'maxLength');
                     return $valid;
                 }
             }
@@ -296,6 +304,11 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
     public function validateMinLength()
     {
         $val = $this->val();
+
+        if ($val === null) {
+            return $this->allowNull();
+        }
+
         $minLength = $this->minLength();
         if ($minLength == 0) {
             return true;
@@ -306,9 +319,20 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
             return true;
         }
 
-        $valid = (mb_strlen($val) >= $minLength);
-        if (!$valid) {
-            $this->validator()->error('Min length error', 'minLength');
+        if (is_string($val)) {
+            $valid = (mb_strlen($val) >= $minLength);
+            if (!$valid) {
+                $this->validator()->error('Minimum length error', 'minLength');
+            }
+        } else {
+            $valid = true;
+            foreach ($val as $v) {
+                $valid = (mb_strlen($v) >= $minLength);
+                if (!$valid) {
+                    $this->validator()->error('Minimum length error', 'minLength');
+                    return $valid;
+                }
+            }
         }
 
         return $valid;
@@ -320,6 +344,7 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
     public function validateRegexp()
     {
         $val = $this->val();
+
         $regexp = $this->regexp();
         if ($regexp == '') {
             return true;
@@ -338,7 +363,9 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
      */
     public function validateAllowEmpty()
     {
-        if (($this->val() === '') && ($this->allowEmpty() === false)) {
+        $val = $this->val();
+
+        if (($val === null || $val === '') && !$this->allowEmpty()) {
             return false;
         } else {
             return true;

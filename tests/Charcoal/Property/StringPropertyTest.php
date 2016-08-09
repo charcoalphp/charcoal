@@ -12,16 +12,12 @@ class StringPropertyTest extends \PHPUnit_Framework_TestCase
 {
     public $obj;
 
-
     public function setUp()
     {
         mb_internal_encoding('UTF-8');
         $this->obj = new StringProperty();
     }
 
-    /**
-     * Hello world
-     */
     public function testConstructor()
     {
         $obj = $this->obj;
@@ -30,7 +26,6 @@ class StringPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(0, $obj->minLength());
         $this->assertEquals(255, $obj->maxLength());
         $this->assertEquals('', $obj->regexp());
-
     }
 
     public function testType()
@@ -43,10 +38,10 @@ class StringPropertyTest extends \PHPUnit_Framework_TestCase
     {
         $obj = $this->obj;
         $data = [
-            'min_length'=>5,
-            'max_length'=>42,
-            'regexp'=>'/[0-9]*/',
-            'allow_empty'=>false
+            'min_length'  => 5,
+            'max_length'  => 42,
+            'regexp'      => '/[0-9]*/',
+            'allow_empty' => false
         ];
         $ret = $obj->setData($data);
 
@@ -116,7 +111,6 @@ class StringPropertyTest extends \PHPUnit_Framework_TestCase
         $ret = $obj->setAllowEmpty(false);
         $this->assertSame($ret, $obj);
         $this->assertEquals(false, $obj->allowEmpty());
-
     }
 
     public function testLength()
@@ -133,26 +127,19 @@ class StringPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(3, $obj->length());
 
         $obj->setVal('é');
-        //$this->assertEquals(1, $obj->length());
-    }
-
-    public function testLengthWitoutValThrowsException()
-    {
-        $this->setExpectedException('\Exception');
-        $obj = $this->obj;
-        $obj->length();
+        $this->assertEquals(1, $obj->length());
     }
 
     public function testValidateMinLength()
     {
         $obj = $this->obj;
+
         $obj->setMinLength(5);
         $obj->setVal('1234');
         $this->assertNotTrue($obj->validateMinLength());
 
         $obj->setVal('12345');
         $this->assertTrue($obj->validateMinLength());
-
         $obj->setVal('123456789');
         $this->assertTrue($obj->validateMinLength());
     }
@@ -175,6 +162,7 @@ class StringPropertyTest extends \PHPUnit_Framework_TestCase
     public function testValidateMinLengthAllowEmpty()
     {
         $obj = $this->obj;
+        $obj->setAllowNull(false);
         $obj->setMinLength(5);
         $obj->setVal('');
 
@@ -188,6 +176,7 @@ class StringPropertyTest extends \PHPUnit_Framework_TestCase
     public function testValidateMinLengthWithoutValReturnsFalse()
     {
         $obj = $this->obj;
+        $obj->setAllowNull(false);
         $obj->setMinLength(5);
 
         $this->assertNotTrue($obj->validateMinLength());
