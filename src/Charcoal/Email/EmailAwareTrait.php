@@ -61,7 +61,7 @@ trait EmailAwareTrait
             unset($arr['address']);
         }
 
-        if (!isset($arr['address'])) {
+        if (!isset($arr['email'])) {
             throw new InvalidArgumentException(
                 'The array must contain at least the "address" key.'
             );

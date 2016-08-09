@@ -1000,7 +1000,6 @@ class Email implements
 
             $log->save();
         }
-
     }
 
     /**
@@ -1011,7 +1010,6 @@ class Email implements
      */
     protected function logQueue()
     {
-
     }
 
     /**
@@ -1085,7 +1083,6 @@ class Email implements
     {
         $setter = 'set_'.$key;
         return $this->camelize($setter);
-
     }
 
     /**

@@ -19,6 +19,8 @@ matrix:
     - php: nightly
 
 before_script:
+  ## Create Database
+  - mysql -e 'CREATE DATABASE charcoal_test;'
   ## Init composer
   - composer selfupdate --quiet
   - COMPOSER_ROOT_VERSION=dev-master composer install -n --dev
