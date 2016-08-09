@@ -19,43 +19,47 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $s = new DatabaseSource([
-            'logger'=>new NullLogger(),
-            'pdo' => $GLOBALS['pdo']
+        $logger = new NullLogger();
+        $cache  = new VoidCachePool();
+
+        $source = new DatabaseSource([
+            'logger' => $logger,
+            'pdo'    => $GLOBALS['pdo']
         ]);
-        $s->setTable('tests');
+        $source->setTable('tests');
 
         $metadataLoader = new \Charcoal\Model\MetadataLoader([
-            'logger' => new NullLogger(),
+            'logger'    => $logger,
+            'cache'     => $cache,
             'base_path' => __DIR__,
-            'paths' => ['metadata'],
-            'cache' => new VoidCachePool()
+            'paths'     => [ 'metadata' ]
         ]);
 
         $factory = new \Charcoal\Factory\GenericFactory([
             'arguments' => [[
-                'logger'=> new NullLogger(),
+                'logger'          => $logger,
                 'metadata_loader' => $metadataLoader
             ]]
         ]);
 
         $this->obj = new CollectionLoader([
-            'logger' => new NullLogger(),
+            'logger'  => $logger,
             'factory' => $factory,
         ]);
 
         $this->model = new \Charcoal\Model\Model([
-            'logger' => new NullLogger(),
+            'logger'          => $logger,
             'metadata_loader' => $metadataLoader
         ]);
 
+        $source->setModel($this->model);
 
-        $this->model->setSource($s);
+        $this->model->setSource($source);
         $this->model->setMetadata(json_decode('
         {
-            "properties":{
+            "properties": {
                 "id": {
-                    "type":"id"
+                    "type": "id"
                 },
                 "test": {
                     "type": "number"
@@ -64,12 +68,12 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
                     "type": "number"
                 }
             },
-            "sources":{
-                "default":{
-                    "table":"tests"
+            "sources": {
+                "default": {
+                    "table": "tests"
                 }
             },
-            "default_source":"default"
+            "default_source": "default"
         }', true));
 
         $this->model->source()->createTable();
@@ -98,12 +102,12 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testAll()
     {
-
         $loader = $this->obj;
-        $loader->setModel($this->model)
+        $loader
+            ->setModel($this->model)
             ->setProperties(['id', 'test'])
-            ->addFilter('test', 10, ['operator' => '<'])
-            ->addFilter('allo', 1, ['operator' => '>='])
+            ->addFilter('test', 10, [ 'operator' => '<' ])
+            ->addFilter('allo', 1, [ 'operator' => '>=' ])
             ->addOrder('test', 'asc')
             ->setPage(1)
             ->setNumPerPage(10);

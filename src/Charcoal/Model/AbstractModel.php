@@ -357,9 +357,11 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-     * StorableTrait > save(). Save an object current state to storage
+     * Save the object's current state to storage.
      *
+     * @see    Charcoal\Source\StorableTrait::save() For the "create" event.
      * @return boolean
+     * @todo   Enable model validation.
      */
     public function save()
     {
@@ -371,12 +373,12 @@ abstract class AbstractModel extends AbstractEntity implements
         $this->saveProperties();
 
         // Invalid models can not be saved.
-        /*
-        $valid = $this->validate();
-        if ($valid === false) {
-            return false;
+        if (!!false) {
+            $valid = $this->validate();
+            if ($valid === false) {
+                return false;
+            }
         }
-        */
 
         $ret = $this->source()->saveItem($this);
         if ($ret === false) {
@@ -389,8 +391,12 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-     * @param array $properties Optional. Properties to update. If null use all of object's.
+     * Update the object in storage with the current state.
+     *
+     * @see    Charcoal\Source\StorableTrait::update() For the "update" event.
+     * @param  array $properties Optional. The list of properties to update.
      * @return mixed
+     * @todo   Enable model validation.
      */
     public function update(array $properties = null)
     {
@@ -401,12 +407,13 @@ abstract class AbstractModel extends AbstractEntity implements
 
         $this->saveProperties();
 
-        /*
-        $valid = $this->validate();
-        if ($valid === false) {
-            return false;
+        // Invalid models can not be saved.
+        if (!!false) {
+            $valid = $this->validate();
+            if ($valid === false) {
+                return false;
+            }
         }
-        */
 
         $ret = $this->source()->updateItem($this, $properties);
         if ($ret === false) {
