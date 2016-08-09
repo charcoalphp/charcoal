@@ -40,10 +40,10 @@ abstract class AbstractUiItem extends AbstractEntity implements
     /**
      * @param array $data Constructor options.
      */
-    public function __construct(array $data=null)
+    public function __construct(array $data = null)
     {
         if (!isset($data['logger'])) {
-            $data['logger'] = new NullLoger;
+            $data['logger'] = new NullLogger();
         }
         $this->setLogger($data['logger']);
 
@@ -53,10 +53,13 @@ abstract class AbstractUiItem extends AbstractEntity implements
     }
 
     /**
-     * @param Container $container Pimple DI Container
+     * Inject dependencies from a DI Container.
+     *
+     * @param  Container $container A dependencies container instance.
+     * @return void
      */
     public function setDependencies(Container $container)
     {
-        // Void
+        // This method is a stub. Reimplement in children template classes.
     }
 }

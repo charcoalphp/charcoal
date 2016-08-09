@@ -6,8 +6,8 @@ namespace Charcoal\Ui\Form;
 use \Exception;
 use \InvalidArgumentException;
 
+// From 'charcoal-factory'
 use \Charcoal\Factory\FactoryInterface;
-
 
 // Intra-module (`charcoal-ui`) dependencies
 use \Charcoal\Ui\FormGroup\FormGroupInterface;
@@ -60,7 +60,7 @@ trait FormTrait
 
 
     /**
-     * @param FormGroupFactory $factory A factory, to create customized form gorup objects.
+     * @param FactoryInterface $factory A factory, to create customized form gorup objects.
      * @return FormInterface Chainable
      */
     public function setFormGroupFactory(FactoryInterface $factory)
@@ -71,7 +71,7 @@ trait FormTrait
 
     /**
      * @throws Exception If the form group factory object was not set / injected.
-     * @return FormGroupFactory
+     * @return FormInterface Chainable
      */
     protected function formGroupFactory()
     {
@@ -146,7 +146,7 @@ trait FormTrait
 
     /**
      * @param string $mode The l10n mode.
-     * @return FormGroupInterface Chainable
+     * @return FormInterface Chainable
      */
     public function setL10nMode($mode)
     {
@@ -242,7 +242,7 @@ trait FormTrait
     public function groups(callable $groupCallback = null)
     {
         $groups = $this->groups;
-        uasort($groups, ['self', 'sortGroupsByPriority']);
+        uasort($groups, [ $this, 'sortGroupsByPriority' ]);
 
         $groupCallback = (isset($groupCallback) ? $groupCallback : $this->groupCallback);
 
@@ -285,6 +285,7 @@ trait FormTrait
      * Determine if the form has a given group.
      *
      * @param string $groupIdent The group identifier to look up.
+     * @throws InvalidArgumentException If the group identifier is invalid.
      * @return boolean
      */
     public function hasGroup($groupIdent)

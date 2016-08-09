@@ -89,7 +89,6 @@ trait FormGroupTrait
     }
 
     /**
-     * Allow the form to public.
      * @return FormInterface
      */
     public function form()
@@ -99,7 +98,7 @@ trait FormGroupTrait
 
     /**
      * @param boolean $active The active flag.
-     * @return FormPropertyWidget Chainable
+     * @return FormGroupInterface Chainable
      */
     public function setActive($active)
     {
@@ -195,7 +194,7 @@ trait FormGroupTrait
      * @param string                   $inputIdent The input identifier.
      * @param array|FormInputInterface $input      The input object or structure.
      * @throws InvalidArgumentException If the ident argument is not a string or if the input is not valid.
-     * @return FormInterface Chainable
+     * @return FormGroupInterface Chainable
      */
     public function addInput($inputIdent, $input)
     {
@@ -225,7 +224,7 @@ trait FormGroupTrait
      * Form Input generator.
      *
      * @param callable $inputCallback Optional. Input callback.
-     * @return FormGroupInterface[]
+     * @return FormGroupInterface[]|Generator
      */
     public function inputs(callable $inputCallback = null)
     {
@@ -243,7 +242,6 @@ trait FormGroupTrait
             $GLOBALS['widget_template'] = $input->template();
             yield $input->ident() => $input;
         }
-
     }
 
     /**

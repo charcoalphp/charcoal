@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Ui\ServiceProvider;
 
+use \Psr\Log\NullLogger;
+
 use \Pimple\Container;
 
 use \Charcoal\Ui\ServiceProvider\DashboardServiceProvider;
@@ -16,9 +18,12 @@ class DashboardServiceProviderTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-
         $this->obj = new DashboardServiceProvider();
         $this->container = new Container();
+
+        $this->container['logger'] = function (Container $container) {
+            return new NullLogger();
+        };
 
         // Required depdendencies (stub)
         $this->container['widget/builder'] = function (Container $container) {
@@ -45,7 +50,7 @@ class DashboardServiceProviderTest extends \PHPUnit_Framework_TestCase
     {
         $this->container->register($this->obj);
         $factory = $this->container['dashboard/factory'];
-        $this->assertInstanceOf('\Charcoal\Ui\Dashboard\DashboardFactory', $factory);
+        $this->assertInstanceOf('\Charcoal\Factory\GenericFactory', $factory);
     }
 
     public function testDashboardBuilder()

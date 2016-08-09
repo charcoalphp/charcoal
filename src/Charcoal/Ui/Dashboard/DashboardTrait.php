@@ -12,7 +12,6 @@ use \Charcoal\Ui\UiItemInterface;
  */
 trait DashboardTrait
 {
-
     /**
      * @var UiItemInterface[] $widgets
      */
@@ -27,7 +26,6 @@ trait DashboardTrait
      * @var callable $widgetCallback
      */
     private $widgetCallback = null;
-
 
     /**
      * @param mixed $builder The builder to create customized widget objects.
@@ -96,12 +94,12 @@ trait DashboardTrait
      * Widgets generator.
      *
      * @param callable $widgetCallback Widget callback.
-     * @return void Is a generator of `WidgetInterface[]` objects.
+     * @return WidgetInterface[]|Generator
      */
     public function widgets(callable $widgetCallback = null)
     {
         $widgets = $this->widgets;
-        uasort($widgets, ['self', 'sortWidgetsByPriority']);
+        uasort($widgets, [ $this, 'sortWidgetsByPriority' ]);
 
         $widgetCallback = isset($widgetCallback) ? $widgetCallback : $this->widgetCallback;
         foreach ($widgets as $widget) {
@@ -114,7 +112,6 @@ trait DashboardTrait
             $GLOBALS['widget_template'] = $widget->template();
             yield $widget;
         }
-
     }
 
     /**

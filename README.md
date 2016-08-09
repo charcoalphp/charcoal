@@ -359,7 +359,6 @@ Service providers are provided in the `Charcoal\Ui\ServiceProvider` namespace fo
 	+ `form/factory`
 	+ `form/builder`
 	+ `form/group/factory`
-	+ `form/group/builder`
 	+ `form/input/factory`
 	+ `form/input/builder`
 - `\Charcoal\Ui\ServiceProvider\LayoutServiceProvider`

@@ -31,15 +31,15 @@ class GenericFormGroupTest extends \PHPUnit_Framework_TestCase
 
         $form = new GenericForm([
             'logger'             => $container['logger'],
-            'form_group_builder' => $container['form/group/builder'],
-            'layout_builder'     => $container['layout/builder']
+            'layout_builder'     => $container['layout/builder'],
+            'form_group_factory' => $container['form/group/factory']
         ]);
 
         $this->obj = new GenericFormGroup([
             'form'               => $form,
             'logger'             => $container['logger'],
-            'form_input_builder' => $container['form/input/builder'],
-            'layout_builder'     => $container['layout/builder']
+            'layout_builder'     => $container['layout/builder'],
+            'form_input_builder' => $container['form/input/builder']
         ]);
     }
 

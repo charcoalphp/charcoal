@@ -45,9 +45,9 @@ class FormServiceProvider implements ServiceProviderInterface
          */
         $container['form/factory'] = function(Container $container) {
             return new Factory([
-                'base_class' => FormInterface::class,
+                'base_class'    => FormInterface::class,
                 'default_class' => GenericForm::class,
-                'arguments' => [[
+                'arguments'     => [[
                     'container'          => $container,
                     'logger'             => $container['logger'],
                     'view'               => $container['view'],
@@ -80,17 +80,17 @@ class FormServiceProvider implements ServiceProviderInterface
          */
         $container['form/group/factory'] = function(Container $container) {
             return new Factory([
-                'base_class'        => FormGroupInterface::class,
-                'default_class'     => GenericFormGroup::class,
-                'arguments'         => [[
-                    'container'             => $container,
-                    'logger'                => $container['logger'],
-                    'view'                  => $container['view'],
-                    'layout_builder'        => $container['layout/builder'],
-                    'form_input_builder'    => $container['form/input/builder']
+                'base_class'    => FormGroupInterface::class,
+                'default_class' => GenericFormGroup::class,
+                'arguments'     => [[
+                    'container'          => $container,
+                    'logger'             => $container['logger'],
+                    'view'               => $container['view'],
+                    'layout_builder'     => $container['layout/builder'],
+                    'form_input_builder' => $container['form/input/builder']
                 ]],
-                'resolver_options'  => [
-                    'suffix'                => 'FormGroup'
+                'resolver_options' => [
+                    'suffix' => 'FormGroup'
                 ]
             ]);
         };
@@ -108,8 +108,8 @@ class FormServiceProvider implements ServiceProviderInterface
          */
         $container['form/input/factory'] = function(Container $container) {
             return new Factory([
-                'base_class' => FormInputInterface::class,
-                'default_class' => GenericFormInput::class,
+                'base_class'       => FormInputInterface::class,
+                'default_class'    => GenericFormInput::class,
                 'resolver_options' => [
                     'suffix' => 'FormInput'
                 ]

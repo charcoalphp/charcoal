@@ -33,11 +33,10 @@ class AbstractFormTest extends \PHPUnit_Framework_TestCase
 
 
         $this->logger = new \Psr\Log\NullLogger();
-//        $this->obj = new GenericForm([
         $this->obj = $this->getMockForAbstractClass('\Charcoal\Ui\Form\AbstractForm', [[
             'logger'             => $container['logger'],
             'layout_builder'     => $container['layout/builder'],
-            'form_group_builder' => $container['form/group/builder']
+            'form_group_factory' => $container['form/group/factory']
         ]]);
     }
 

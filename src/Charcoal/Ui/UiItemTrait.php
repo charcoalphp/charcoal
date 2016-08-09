@@ -20,7 +20,7 @@ use \Charcoal\Ui\UiItemTrait;
 trait UiItemTrait
 {
     /**
-     * @param boolean $active
+     * @var boolean $active
      */
     private $active = true;
 
@@ -237,10 +237,10 @@ trait UiItemTrait
         return $this->notes;
     }
 
-        /**
-         * @param boolean $show The show title flag.
-         * @return FormGroup Chainable
-         */
+    /**
+     * @param boolean $show The show title flag.
+     * @return UiItemInterface Chainable
+     */
     public function setShowTitle($show)
     {
         $this->showTitle = !!$show;
@@ -261,7 +261,7 @@ trait UiItemTrait
 
     /**
      * @param boolean $show The show subtitle flag.
-     * @return FormGroup Chainable
+     * @return UiItemInterface Chainable
      */
     public function setShowSubtitle($show)
     {
@@ -283,7 +283,7 @@ trait UiItemTrait
 
     /**
      * @param boolean $show The show description flag.
-     * @return FormGroup Chainable
+     * @return UiItemInterface Chainable
      */
     public function setShowDescription($show)
     {
@@ -305,7 +305,7 @@ trait UiItemTrait
 
     /**
      * @param boolean $show The show notes flag.
-     * @return FormGroup Chainable
+     * @return UiItemInterface Chainable
      */
     public function setShowNotes($show)
     {
@@ -329,7 +329,7 @@ trait UiItemTrait
 
     /**
      * @param boolean $show The show header flag.
-     * @return FormGroup Chainable
+     * @return UiItemInterface Chainable
      */
     public function setShowHeader($show)
     {
@@ -351,7 +351,7 @@ trait UiItemTrait
 
     /**
      * @param boolean $show The show footer flag.
-     * @return FormGroup Chainable
+     * @return UiItemInterface Chainable
      */
     public function setShowFooter($show)
     {

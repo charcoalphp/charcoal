@@ -2,6 +2,9 @@
 
 namespace Charcoal\Tests\Ui\Layout;
 
+/**
+ *
+ */
 class AbstractLayoutTest extends \PHPUnit_Framework_TestCase
 {
     public $obj;

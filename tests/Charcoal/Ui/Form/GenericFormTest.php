@@ -30,9 +30,9 @@ class GenericFormTest extends \PHPUnit_Framework_TestCase
         $container['view'] = null;
 
         $this->obj = new GenericForm([
-            'logger'=>$container['logger'],
-            'form_group_builder' => $container['form/group/builder'],
-            'layout_builder' => $container['layout/builder']
+            'logger'             => $container['logger'],
+            'layout_builder'     => $container['layout/builder'],
+            'form_group_factory' => $container['form/group/factory']
         ]);
     }
 
