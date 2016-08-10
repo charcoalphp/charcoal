@@ -363,6 +363,7 @@ trait FormTrait
      * Currently only supports "tab".
      *
      * @param string $mode Group display mode.
+     * @throws InvalidArgumentException If the display mode is not a string.
      * @return ObjectFormWidget Chainable.
      */
     public function setGroupDisplayMode($mode)
