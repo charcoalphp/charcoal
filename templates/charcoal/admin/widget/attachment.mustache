@@ -52,11 +52,15 @@
 }
 </style>
 
+{{# addJsRequirement }}
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+{{/ addJsRequirement }}
+
 {{#addJs}}
 <script>
 // Prevent bootstrap dialog from blocking focusin
 $(document).on('focusin', function(e) {
-    if ($(e.target).closest(".mce-window").length) {
+    if ($(e.target).closest('.mce-window').length) {
         e.stopImmediatePropagation();
     }
 });
