@@ -81,27 +81,6 @@ trait FormTrait
     private $groupCallback;
 
     /**
-     * Fetch metadata from the current request.
-     *
-     *
-     * @return array
-     */
-    public function dataFromRequest()
-    {
-        return array_intersect_key($_GET, array_flip($this->acceptedRequestData()));
-    }
-
-    /**
-     * Retrieve the accepted metadata from the current request.
-     *
-     * @return array
-     */
-    public function acceptedRequestData()
-    {
-        return [ 'next_url', 'form_data', 'l10n_mode', 'group_display_mode' ];
-    }
-
-    /**
      * @param FactoryInterface $factory A factory, to create customized form gorup objects.
      * @return FormInterface Chainable
      */
