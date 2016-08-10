@@ -18,46 +18,88 @@ use \Charcoal\Ui\FormGroup\FormGroupInterface;
 trait FormTrait
 {
     /**
-     * @var string $action
+     * The URI of a program that processes the form information.
+     *
+     * @var string
      */
     private $action = '';
 
     /**
-     * @var string $method
+     * The HTTP method that the browser uses to submit the form.
+     *
+     * @var string
      */
     private $method = 'post';
 
     /**
-     * @var string $l10nMode
+     * The form's display mode for multilingual fields.
+     *
+     * @var string
      */
     private $l10nMode = 'loop_inputs';
 
     /**
-     * @var FormGroupInterface[] $groups
+     * The form's display mode for groups.
+     *
+     * @var string
+     */
+    protected $groupDisplayMode;
+
+    /**
+     * The form's field groups.
+     *
+     * @var FormGroupInterface[]
      */
     protected $groups = [];
 
     /**
+     * The form's predefined data.
+     *
      * @var array $formData
      */
     private $formData = [];
 
     /**
-     * @var MetadataInterface $metadata
+     * Store the form's metadata instance.
+     *
+     * @var MetadataInterface
      */
     private $metadata;
 
     /**
-     * @var FactoryInterface $formGroupFactory
+     * Store the form's group factory instance.
+     *
+     * @var FactoryInterface
      */
     protected $formGroupFactory;
 
-
     /**
-     * @var callable $groupCallback
+     * Store the form's group callback.
+     *
+     * @var callable
      */
     private $groupCallback;
 
+    /**
+     * Fetch metadata from the current request.
+     *
+     *
+     * @return array
+     */
+    public function dataFromRequest()
+    {
+        return array_intersect_key($_GET, array_flip($this->acceptedRequestData()));
+    }
+
+    /**
+     * Retrieve the accepted metadata from the current request.
+     *
+     * @return array
+     */
+    public function acceptedRequestData()
+    {
+        return [ 'next_url', 'form_data', 'l10n_mode', 'group_display_mode' ];
+    }
 
     /**
      * @param FactoryInterface $factory A factory, to create customized form gorup objects.
@@ -214,9 +256,15 @@ trait FormTrait
             $g->setForm($this);
             $g->setData($group);
             $this->groups[$groupIdent] = $g;
+        } elseif ($group === false || $group === null) {
+            continue;
         } else {
             throw new InvalidArgumentException(
-                'Group must be an instance of FormGroupInterface or an array of form group options'
+                sprintf(
+                    'Group must be an instance of %s or an array of form group options, received %s',
+                    'FormGroupInterface',
+                    (is_object($group) ? get_class($group) : gettype($group))
+                )
             );
         }
 
@@ -262,7 +310,7 @@ trait FormTrait
 
             $GLOBALS['widget_template'] = $group->template();
 
-            if ($group->form()->isTab() && $i > 1) {
+            if ($this->isTabbable() && $i > 1) {
                 $group->isHidden = true;
             }
             $i++;
@@ -307,6 +355,51 @@ trait FormTrait
     public function numGroups()
     {
         return count($this->groups);
+    }
+
+    /**
+     * Set the widget's content group display mode.
+     *
+     * Currently only supports "tab".
+     *
+     * @param string $mode Group display mode.
+     * @return ObjectFormWidget Chainable.
+     */
+    public function setGroupDisplayMode($mode)
+    {
+        if (!is_string($mode)) {
+            throw new InvalidArgumentException(
+                'Display mode must be a string'
+            );
+        }
+
+        if ($mode === 'tabs') {
+            $mode = 'tab';
+        }
+
+        $this->groupDisplayMode = $mode;
+
+        return $this;
+    }
+
+    /**
+     * Retrieve the widget's content group display mode.
+     *
+     * @return string Group display mode.
+     */
+    public function groupDisplayMode()
+    {
+        return $this->groupDisplayMode;
+    }
+
+    /**
+     * Determine if content groups are to be displayed as tabbable panes.
+     *
+     * @return boolean
+     */
+    public function isTabbable()
+    {
+        return ( $this->groupDisplayMode() === 'tab' );
     }
 
     /**
