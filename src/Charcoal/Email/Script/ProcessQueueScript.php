@@ -13,6 +13,9 @@ use \Charcoal\App\Script\AbstractScript;
 use \Charcoal\App\Script\CronScriptInterface;
 use \Charcoal\App\Script\CronScriptTrait;
 
+// Module `charcoal-factory` dependencies
+use \Charcoal\Factory\FactoryInterface;
+
 // Local dependencies
 use \Charcoal\Email\EmailQueueManager;
 
@@ -28,7 +31,7 @@ class ProcessQueueScript extends AbstractScript implements CronScriptInterface
     /**
      * @var FactoryInterface $queueItemFactory
      */
-    protected $queueItemFactory;
+    private $queueItemFactory;
 
     /**
      * A copy of all sent message.
@@ -44,7 +47,15 @@ class ProcessQueueScript extends AbstractScript implements CronScriptInterface
     public function setDependencies(Container $container)
     {
         parent::setDependencies($container);
-        $this->queueItemFactory = $container['model/factory'];
+        $this->setQueueItemFactory($container['model/factory']);
+    }
+
+    /**
+     * @param FactoryInterface $factory The factory to create queue items.
+     */
+    private function setQueueItemFactory(FactoryInterface $factory)
+    {
+        $this->queueItemFactory = $factory;
     }
 
     /**
