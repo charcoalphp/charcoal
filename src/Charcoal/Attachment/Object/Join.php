@@ -39,11 +39,18 @@ class Join extends AbstractModel
     protected $group;
 
     /**
+     * Attachments are active by default
+     *
+     * @var boolean
+     */
+    protected $active = true;
+
+    /**
      * The attachment's position amongst other attachments.
      *
      * @var integer
      */
-    protected $position;
+    protected $position = 0;
 
 
 
@@ -154,6 +161,16 @@ class Join extends AbstractModel
         return $this;
     }
 
+    /**
+     * @param boolean $active The active flag.
+     * @return Content Chainable
+     */
+    public function setActive($active)
+    {
+        $this->active = !!$active;
+        return $this;
+    }
+
 
 
 // Getters
@@ -207,5 +224,13 @@ class Join extends AbstractModel
     public function position()
     {
         return $this->position;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function active()
+    {
+        return $this->active;
     }
 }
