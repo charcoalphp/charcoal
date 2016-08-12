@@ -99,6 +99,7 @@ class Attachment extends Content implements AttachableInterface
     protected $file;
     protected $fileSize;
     protected $fileType;
+    protected $link;
 
     /**
      * Path to a thumbnail of the attached file.
@@ -363,6 +364,19 @@ class Attachment extends Content implements AttachableInterface
     }
 
     /**
+     * Set the URL.
+     *
+     * @param string $link An external url.
+     * @return self
+     */
+    public function setLink($link)
+    {
+        $this->link = $link;
+
+        return $this;
+    }
+
+    /**
      * Set the size of the attached file.
      *
      * @param integer|float $size A file size in bytes; the one of the attached.
@@ -473,6 +487,16 @@ class Attachment extends Content implements AttachableInterface
     public function file()
     {
         return $this->file;
+    }
+
+    /**
+     * Retrieve the attached link.
+     *
+     * @return string
+     */
+    public function link()
+    {
+        return $this->link;
     }
 
     /**
