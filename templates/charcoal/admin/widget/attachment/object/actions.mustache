@@ -1,0 +1,22 @@
+<div class="dropdown">
+    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+        {{# showPreviews }}
+        <span class="glyphicon {{glyphicon}}">&nbsp;</span>
+        <span class="sr-only">Actions</span>
+        {{/ showPreviews }}
+        {{^ showPreviews }}
+        Actions
+        {{/ showPreviews }}
+        <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+        {{!--
+        <li><a href="#" data-image="[[baseUrl]][[file]]" data-type="[[type]]" data-microtype="[[microType]]" data-action="preview">Preview</a></li>
+        --}}
+        <li><a href="#" data-type="{{type}}" data-title="Éditer le fichier" data-id="{{id}}" data-action="edit">Éditer</a></li>
+        {{#isGallery}}
+        <li><a href="#" data-type="{{type}}" data-id="{{id}}" data-title="Image" data-attachment="{{imageType}}" data-action="add-image">Ajouter une image</a></li>
+        {{/isGallery}}
+        <li><a href="#" data-image="{{baseUrl}}{{file}}" data-type="{{type}}" data-id="{{id}}" data-action="delete">Supprimer</a></li>
+    </ul>
+</div>

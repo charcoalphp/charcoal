@@ -1,9 +1,8 @@
 {
   "data": {
-    "type": "charcoal/attachment/object/link"
+    "type": "charcoal/attachment/object/link",
+    "preview": "{{> charcoal/attachment/object/link }}"
   },
-
-  "default_source": "default",
 
   "admin": {
     "forms": {

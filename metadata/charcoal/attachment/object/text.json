@@ -1,15 +1,14 @@
 {
+  "data": {
+    "type": "charcoal/attachment/object/text",
+    "preview": "{{> charcoal/attachment/object/text }}"
+  },
+
   "properties": {
     "description": {
       "type": "html"
     }
   },
-
-  "data": {
-    "type": "charcoal/attachment/object/text"
-  },
-
-  "default_source": "default",
 
   "admin": {
     "forms": {

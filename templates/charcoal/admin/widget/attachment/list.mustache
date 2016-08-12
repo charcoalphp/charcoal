@@ -1,0 +1,19 @@
+{{!
+    The object must be AttachableAware
+    Use the "#obj" avialble from the dashboard / ObjectContainerTrait
+
+    The OBJ has the `attachments` method (@see AttachableAwareTrait)
+}}
+<section class="js-attachment-container js-attachment-sortable">
+    <div role="tablist"
+         id="{{ widgetId }}_accordion"
+         class="panel-group js-grid-container"
+         aria-multiselectable="false">
+    {{# attachments }}
+        {{> charcoal/admin/widget/attachment/object }}
+    {{/ attachments }}
+    {{^ hasAttachments }}
+    {{> charcoal/admin/widget/attachment/empty }}
+    {{/ hasAttachments }}
+    </div>
+</section>

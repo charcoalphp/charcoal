@@ -1,0 +1,14 @@
+{{!--
+    Attachable Preview \ Image
+    ==========================
+--}}
+<figure class="thumbnail col-md-3 col-xs-6">
+    {{# thumbnail }}
+        <img src="{{ baseUrl }}{{ . }}" />
+    {{/ thumbnail }}
+    {{^ thumbnail }}
+    {{# file }}
+        <img src="{{ baseUrl }}{{ . }}" />
+    {{/ file }}
+    {{/ thumbnail }}
+</figure>

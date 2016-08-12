@@ -77,6 +77,20 @@ class Attachment extends Content implements AttachableInterface
     protected $type;
 
     /**
+     * The attachment heading template.
+     *
+     * @var TranslationString|string|null
+     */
+    protected $heading;
+
+    /**
+     * The attachment preview template.
+     *
+     * @var TranslationString|string|null
+     */
+    protected $preview;
+
+    /**
      * Generic information about the attachment.
      *
      * @var TranslationString|string[] $title       The title of the attachment.
@@ -218,6 +232,90 @@ class Attachment extends Content implements AttachableInterface
         }
 
         return '';
+    }
+
+    /**
+     * Retrieve the attachment's heading template.
+     *
+     * @return string
+     */
+    public function heading()
+    {
+        if (!$this->heading) {
+            $this->heading = $this->title();
+        }
+
+        return $this->render((string)$this->heading);
+    }
+
+    /**
+     * Retrieve the attachment's heading as a raw value.
+     *
+     * @return string
+     */
+    public function rawHeading()
+    {
+        return $this->heading;
+    }
+
+    /**
+     * Set the attachment's heading template.
+     *
+     * @param  string $template The attachment heading.
+     * @throws InvalidArgumentException If provided argument is not of type 'string'.
+     * @return string
+     */
+    public function setHeading($template)
+    {
+        if (TranslationString::isTranslatable($template)) {
+            $this->heading = new TranslationString($template);
+        } else {
+            $this->heading = null;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Retrieve the attachment's preview template.
+     *
+     * @return string
+     */
+    public function preview()
+    {
+        if ($this->preview) {
+            return $this->render((string)$this->preview);
+        }
+
+        return '';
+    }
+
+    /**
+     * Retrieve the attachment's preview as a raw value.
+     *
+     * @return string
+     */
+    public function rawPreview()
+    {
+        return $this->preview;
+    }
+
+    /**
+     * Set the attachment's preview template.
+     *
+     * @param  string $template The attachment preview.
+     * @throws InvalidArgumentException If provided argument is not of type 'string'.
+     * @return string
+     */
+    public function setPreview($template)
+    {
+        if (TranslationString::isTranslatable($template)) {
+            $this->preview = new TranslationString($template);
+        } else {
+            $this->preview = null;
+        }
+
+        return $this;
     }
 
     /**

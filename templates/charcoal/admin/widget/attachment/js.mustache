@@ -1,0 +1,44 @@
+{{!--
+    Attachment Widget \ JS Component
+    ================================
+
+    @used-by `charcoal/admin/widget/attachment`
+--}}
+<style>
+/**
+ * Sweet hack.
+ * Allows the sortable to apply on video as well.
+ */
+.js-attachment iframe {
+    pointer-events: none;
+    max-width: 100%;
+}
+</style>
+
+{{# addJsRequirement }}
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+{{/ addJsRequirement }}
+
+{{#addJs}}
+<script>
+// Prevent bootstrap dialog from blocking focusin
+$(document).on('focusin', function(e) {
+    if ($(e.target).closest('.mce-window').length) {
+        e.stopImmediatePropagation();
+    }
+});
+{{!
+    @see Charcoal.Admin.Widget_Attachment
+}}
+Charcoal.Admin.manager().add_widget({
+    id: '{{widgetId}}',
+    type: 'charcoal/admin/widget/attachment',
+    data: {
+        obj_type: '{{objType}}',
+        obj_id :  '{{objId}}', // Can be a string
+        group  :  '{{group}}'
+    },
+    widget_options: {{&widgetOptions}}
+});
+</script>
+{{/addJs}}

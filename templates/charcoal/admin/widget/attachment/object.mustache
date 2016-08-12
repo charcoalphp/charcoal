@@ -1,0 +1,32 @@
+{{!--
+    Attachment Widget \ Single Object
+    =================================
+
+    @used-by `charcoal/admin/widget/attachment/list`
+--}}
+<article class="panel panel-default js-attachment"
+    data-id="{{ id }}"
+    data-type="{{ objType }}"
+    data-microtype="{{ microType }}">
+    <header role="tab" id="{{ widgetId }}_heading_{{ id }}" class="panel-heading">
+        <h4 class="panel-title">
+            <span class="glyphicon {{glyphicon}}"></span>
+            <a role="button"
+               href="#{{ widgetId }}_body_{{ id }}"
+               class="collapsed"
+               data-toggle="collapse"
+               data-parent="#{{ widgetId }}_accordion"
+               aria-controls="{{ widgetId }}_body_{{ id }}"
+               aria-expanded="false"
+               >{{& heading }}</a>
+        </h4>
+    </header>
+    <section id="{{ widgetId }}_body_{{ id }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="{{ widgetId }}_heading_{{ id }}">
+        <div class="panel-body">
+            {{> $widget_template }}
+        </div>
+    </section>
+    <aside class="panel-actions js-attachment-actions">
+        {{> charcoal/admin/widget/attachment/object/actions }}
+    </aside>
+</article>

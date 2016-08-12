@@ -1,4 +1,9 @@
 {
+  "data": {
+    "type": "charcoal/attachment/object/image",
+    "preview": "{{> charcoal/attachment/object/image }}"
+  },
+
   "properties": {
     "description": {
       "type": "html"
@@ -13,12 +18,6 @@
       }
     }
   },
-
-  "data": {
-    "type": "charcoal/attachment/object/image"
-  },
-
-  "default_source": "default",
 
   "admin": {
     "lists": {

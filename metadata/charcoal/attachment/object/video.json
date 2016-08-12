@@ -1,4 +1,9 @@
 {
+  "data": {
+    "type": "charcoal/attachment/object/video",
+    "preview": "{{> charcoal/attachment/object/embed }}"
+  },
+
   "properties": {
     "file": {
       "type": "image",
@@ -13,12 +18,6 @@
       "type": "html"
     }
   },
-
-  "data": {
-    "type": "charcoal/attachment/object/video"
-  },
-
-  "default_source": "default",
 
   "admin": {
     "forms": {

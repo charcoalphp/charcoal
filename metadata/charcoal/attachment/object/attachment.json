@@ -1,4 +1,8 @@
 {
+  "data": {
+    "preview": "{{ title }}"
+  },
+
   "properties": {
     "id": {
       "type": "id"
@@ -103,8 +107,6 @@
       }
     }
   },
-
-  "data": {},
 
   "sources": {
     "default": {

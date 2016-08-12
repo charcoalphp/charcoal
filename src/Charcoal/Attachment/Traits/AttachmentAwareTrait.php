@@ -1,9 +1,12 @@
 <?php
 namespace Charcoal\Attachment\Traits;
 
-// Dependencies from 'charcoal-core'
+// From 'charcoal-core'
 use \Charcoal\Model\ModelInterface;
 use \Charcoal\Loader\CollectionLoader;
+
+// From 'charcoal-admin'
+use \Charcoal\Admin\Widget\AttachmentWidget;
 
 // Local Dependencies
 use \Charcoal\Attachment\Interfaces\AttachableInterface;
@@ -39,6 +42,13 @@ trait AttachmentAwareTrait
     protected $attachments = [];
 
     /**
+     * Store the widget instance currently displaying attachments.
+     *
+     * @var AttachmentWidget
+     */
+    protected $attachmentWidget;
+
+    /**
      * Retrieve the objects associated to the current object.
      *
      * @param  string|null $group Filter the attachments by a group identifier.
@@ -66,9 +76,6 @@ trait AttachmentAwareTrait
         if (!$attProto->source()->tableExists() || !$joinProto->source()->tableExists()) {
             return [];
         }
-
-        $obj = $this->modelFactory()->get($objType);
-        $objTable = $obj->source()->table();
 
         $query = 'SELECT
                 attachment.*,
@@ -99,6 +106,23 @@ trait AttachmentAwareTrait
         $loader = $this->collectionLoader();
         $loader->setModel($attProto);
         $loader->setDynamicTypeField('type');
+
+        $widget = $this->attachmentWidget();
+        if ($widget instanceof AttachmentWidget) {
+            $callable = function ($att) {
+                $type = $att->type();
+                $attachables = $this->attachableObjects();
+
+                if (isset($attachables[$type]['data'])) {
+                    $att->setData($attachables[$type]['data']);
+                }
+
+                if (!$att->rawPreview()) {
+                    $att->setPreview($this->preview());
+                }
+            };
+            $loader->setCallback($callable->bindTo($widget));
+        }
 
         $collection = $loader->loadFromQuery($query);
 
@@ -176,6 +200,29 @@ trait AttachmentAwareTrait
         }
 
         return true;
+    }
+
+    /**
+     * Retrieve the attachment widget.
+     *
+     * @return AttachmentWidget
+     */
+    public function attachmentWidget()
+    {
+        return $this->attachmentWidget;
+    }
+
+    /**
+     * Set the attachment widget.
+     *
+     * @param  AttachmentWidget $widget The widget displaying attachments.
+     * @return string
+     */
+    public function setAttachmentWidget(AttachmentWidget $widget)
+    {
+        $this->attachmentWidget = $widget;
+
+        return $this;
     }
 
 

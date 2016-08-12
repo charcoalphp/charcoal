@@ -28,7 +28,9 @@ use \Charcoal\Translation\TranslationString;
 class AttachmentWidget extends AdminWidget implements
     ObjectContainerInterface
 {
-    use ObjectContainerTrait;
+    use ObjectContainerTrait {
+        ObjectContainerTrait::createOrLoadObj as createOrCloneOrLoadObj;
+    }
 
     /**
      * Store the factory instance for the current class.
@@ -54,6 +56,20 @@ class AttachmentWidget extends AdminWidget implements
     protected $title;
 
     /**
+     * The attachment preview.
+     *
+     * @var string
+     */
+    protected $preview;
+
+    /**
+     * Flag wether the attachment previews should be displayed.
+     *
+     * @var boolean
+     */
+    private $showPreviews = false;
+
+    /**
      * The widgets's available attachment types.
      *
      * @var array
@@ -75,6 +91,20 @@ class AttachmentWidget extends AdminWidget implements
     }
 
     /**
+     * Create or load the object.
+     *
+     * @return ModelInterface
+     */
+    protected function createOrLoadObj()
+    {
+        $obj = $this->createOrCloneOrLoadObj();
+
+        $obj->setAttachmentWidget($this);
+
+        return $obj;
+    }
+
+    /**
      * Attachment types with their collections.
      *
      * @return array
@@ -89,14 +119,14 @@ class AttachmentWidget extends AdminWidget implements
         }
 
         $i = 0;
-        foreach ($attachableObjects as $k => $val) {
+        foreach ($attachableObjects as $attType => $attMeta) {
             $i++;
-            $label = $val['label'];
+            $label = $attMeta['label'];
 
             $out[] = [
-                'ident'  => $this->createIdent($k),
+                'ident'  => $this->createIdent($attType),
                 'label'  => $label,
-                'val'    => $k,
+                'val'    => $attType,
                 'active' => ($i == 1)
             ];
         }
@@ -111,9 +141,13 @@ class AttachmentWidget extends AdminWidget implements
      */
     public function attachments()
     {
-        $group = $this->group();
+        $attachments = $this->obj()->attachments($this->group());
 
-        return $this->obj()->attachments($group);
+        foreach ($attachments as $attachment) {
+            $GLOBALS['widget_template'] = (string)$attachment->rawPreview();
+
+            yield $attachment;
+        }
     }
 
     /**
@@ -148,6 +182,47 @@ class AttachmentWidget extends AdminWidget implements
         parent::setData($data);
 
         return $this;
+    }
+
+    /**
+     * Set the attachment's default preview.
+     *
+     * @param  string $preview The attachment preview template.
+     * @throws InvalidArgumentException If provided argument is not of type 'string'.
+     * @return string
+     */
+    public function setPreview($preview)
+    {
+        if (TranslationString::isTranslatable($preview)) {
+            $this->preview = new TranslationString($preview);
+        } else {
+            $this->preview = null;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set whether to show previews of attached objects.
+     *
+     * @param boolean $show The show attachment previews flag.
+     * @return string
+     */
+    public function setShowPreviews($show)
+    {
+        $this->showPreviews = !!$show;
+
+        return $this;
+    }
+
+    /**
+     * Determine if the widget shows previews of attached objects.
+     *
+     * @return boolean
+     */
+    public function showPreviews()
+    {
+        return $this->showPreviews;
     }
 
     /**
@@ -186,7 +261,11 @@ class AttachmentWidget extends AdminWidget implements
      */
     public function setTitle($title)
     {
-        $this->title = $this->translatable($title);
+        if (TranslationString::isTranslatable($title)) {
+            $this->title = new TranslationString($title);
+        } else {
+            $this->title = null;
+        }
 
         return $this;
     }
@@ -263,39 +342,44 @@ class AttachmentWidget extends AdminWidget implements
         }
 
         $out = [];
-        foreach ($attachableObjects as $k => $opts) {
+        foreach ($attachableObjects as $attType => $attMeta) {
             $label      = '';
             $filters    = [];
             $orders     = [];
             $numPerPage = 0;
             $page       = 1;
+            $attOption  = [ 'label', 'filters', 'orders', 'num_per_page', 'page' ];
+            $attData    = array_diff_key($attMeta, $attOption);
 
-            if (isset($opts['label'])) {
-                $label = $this->translatable($opts['label']);
+            if (isset($attMeta['label'])) {
+                if (TranslationString::isTranslatable($attMeta['label'])) {
+                    $label = new TranslationString($attMeta['label']);
+                }
             }
 
-            if (isset($opts['filters'])) {
-                $filters = $opts['filters'];
+            if (isset($attMeta['filters'])) {
+                $filters = $attMeta['filters'];
             }
 
-            if (isset($opts['orders'])) {
-                $orders = $opts['orders'];
+            if (isset($attMeta['orders'])) {
+                $orders = $attMeta['orders'];
             }
 
-            if (isset($opts['num_per_page'])) {
-                $numPerPage = $opts['num_per_page'];
+            if (isset($attMeta['num_per_page'])) {
+                $numPerPage = $attMeta['num_per_page'];
             }
 
-            if (isset($opts['page'])) {
-                $page = $opts['page'];
+            if (isset($attMeta['page'])) {
+                $page = $attMeta['page'];
             }
 
-            $out[$k] = [
+            $out[$attType] = [
                 'label'      => $label,
                 'filters'    => $filters,
                 'orders'     => $orders,
                 'page'       => $page,
-                'numPerPage' => $numPerPage
+                'numPerPage' => $numPerPage,
+                'data'       => $attData
             ];
         }
 
@@ -324,6 +408,16 @@ class AttachmentWidget extends AdminWidget implements
         }
 
         return $this->widgetFactory;
+    }
+
+    /**
+     * Retrieve the attachment's default preview.
+     *
+     * @return string|null
+     */
+    public function preview()
+    {
+        return $this->preview;
     }
 
     /**
@@ -373,6 +467,7 @@ class AttachmentWidget extends AdminWidget implements
         $out = [
             'attachable_objects' => $this->attachableObjects(),
             'title'              => $this->title(),
+            'preview'            => $this->preview(),
             'obj_type'           => $this->obj()->objType(),
             'obj_id'             => $this->obj()->id(),
             'group'              => $this->group()
@@ -395,25 +490,6 @@ class AttachmentWidget extends AdminWidget implements
     public function createIdent($string)
     {
         return preg_replace('~/~', '-', $string);
-    }
-
-    /**
-     * Parse the property value as a "L10N" value type.
-     *
-     * @param  mixed $val The value being localized.
-     * @return TranslationString|null
-     */
-    public function translatable($val)
-    {
-        if (
-            !isset($val) ||
-            (is_string($val) && !strlen(trim($val))) ||
-            (is_array($val) && !count(array_filter($val, 'strlen')))
-        ) {
-            return null;
-        }
-
-        return new TranslationString($val);
     }
 
     /**

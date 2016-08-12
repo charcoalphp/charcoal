@@ -1,9 +1,8 @@
 {
   "data": {
-    "type": "charcoal/attachment/object/gallery"
+    "type": "charcoal/attachment/object/gallery",
+    "preview": "{{> charcoal/attachment/object/gallery }}"
   },
-
-  "default_source": "default",
 
   "admin": {
     "lists": {

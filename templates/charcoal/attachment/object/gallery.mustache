@@ -1,0 +1,20 @@
+{{!--
+    Attachable Preview \ Gallery
+    ============================
+--}}
+<ul class="row">
+{{# attachments }}
+    <li class="col-xs-2 col-md-2">
+        <figure class="thumbnail">
+            {{# thumbnail }}
+                <img src="{{ baseUrl }}{{ . }}" />
+            {{/ thumbnail }}
+            {{^ thumbnail }}
+            {{# file }}
+                <img src="{{ baseUrl }}{{ . }}" />
+            {{/ file }}
+            {{/ thumbnail }}
+        </figure>
+    </li>
+{{/ attachments }}
+</ul>
