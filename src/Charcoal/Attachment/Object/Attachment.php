@@ -118,13 +118,6 @@ class Attachment extends Content implements AttachableInterface
     protected $embed;
 
     /**
-     * External url style.
-     *
-     * @var string
-     */
-    protected $link;
-
-    /**
      * The attachment's position amongst other attachments.
      *
      * @var integer
@@ -425,17 +418,6 @@ class Attachment extends Content implements AttachableInterface
     }
 
 
-    /**
-     * [setLink description]
-     * @param [type] $link [description]
-     */
-    public function setLink($link)
-    {
-        $this->link = $link;
-        return $this;
-    }
-
-
 // Getters
 // =============================================================================
 
@@ -530,18 +512,6 @@ class Attachment extends Content implements AttachableInterface
     {
         return $this->embed;
     }
-
-
-    /**
-     * Retrieve the link.
-     *
-     * @return string
-     */
-    public function link()
-    {
-        return $this->link;
-    }
-
 
 
 // Events
