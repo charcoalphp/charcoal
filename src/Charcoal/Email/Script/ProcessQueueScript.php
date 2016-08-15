@@ -52,6 +52,7 @@ class ProcessQueueScript extends AbstractScript implements CronScriptInterface
 
     /**
      * @param FactoryInterface $factory The factory to create queue items.
+     * @return void
      */
     private function setQueueItemFactory(FactoryInterface $factory)
     {
