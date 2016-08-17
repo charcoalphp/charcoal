@@ -96,8 +96,6 @@ trait AttachmentAwareTrait
         $query .= '
             ORDER BY joined.position';
 
-        $this->logger->debug($query);
-
         $loader = $this->collectionLoader();
         $loader->setModel($attProto);
         $loader->setDynamicTypeField('type');
