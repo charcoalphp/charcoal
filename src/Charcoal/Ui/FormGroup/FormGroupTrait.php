@@ -15,48 +15,62 @@ use \Charcoal\Ui\FormInput\FormInputInterface;
 trait FormGroupTrait
 {
     /**
-     * @var FormInputInterface[] $inputs
-     */
-    private $inputs;
-
-    /**
-     * In-memory copy of the parent form widget.
-     * @var FormInterface $form
+     * Store a reference to the parent form widget.
+     *
+     * @var FormInterface
      */
     protected $form;
 
     /**
-     * @var FormInputBuilder $formInputBuilder
+     * The group's collection of fields.
+     *
+     * @var FormInputInterface[]
      */
-    protected $formInputBuilder;
+    private $inputs;
 
     /**
      * The input callback; called on every input.
+     *
      * Callable signature: `function(FormInputInterface $input)`
      *
-     * @var callable $itemCallback
+     * @var callable
      */
     private $inputCallback = null;
 
     /**
-     * @var boolean $active
+     * Store the builder instance for the current class.
+     *
+     * @var FormInputBuilder
      */
-    private $active = true;
+    protected $formInputBuilder;
 
     /**
-     * @var integer $priority
-     */
-    private $priority;
-
-    /**
-     * @var string $l10nMode
+     * The L10N display mode.
+     *
+     * @var string
      */
     private $l10nMode;
 
     /**
-     * @var string $ident
+     * The group's identifier.
+     *
+     * @var string
      */
     private $ident;
+
+    /**
+     * Whether the group is active.
+     *
+     * @var boolean
+     */
+    private $active = true;
+
+    /**
+     * The group's priority.
+     *
+     * @var integer
+     */
+    private $priority;
 
     /**
      * @param FormInputBuilder $builder The builder, to create customized form input objects.
@@ -97,49 +111,6 @@ trait FormGroupTrait
     }
 
     /**
-     * @param boolean $active The active flag.
-     * @return FormGroupInterface Chainable
-     */
-    public function setActive($active)
-    {
-        $this->active = !!$active;
-        return $this;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function active()
-    {
-        return $this->active;
-    }
-
-    /**
-     * @param integer $priority The priority, for ordering purpose.
-     * @throws InvalidArgumentException If the priority argument is not a number.
-     * @return FormGroupInterface Chainable
-     */
-    public function setPriority($priority)
-    {
-        if (!is_numeric($priority)) {
-            throw new InvalidArgumentException(
-                'Priority must be an integer'
-            );
-        }
-        $priority = (int)$priority;
-        $this->priority = $priority;
-        return $this;
-    }
-
-    /**
-     * @return integer
-     */
-    public function priority()
-    {
-        return $this->priority;
-    }
-
-    /**
      * @param string $mode The l10n mode.
      * @return FormGroupInterface Chainable
      */
@@ -155,26 +126,6 @@ trait FormGroupTrait
     public function l10nMode()
     {
         return $this->l10nMode;
-    }
-
-    /**
-     * Set the ident of the form group.
-     * @param string $ident Form group ident.
-     * @return FormGroupInterface Chainable
-     */
-    public function setIdent($ident)
-    {
-        $this->ident = $ident;
-        return $this;
-    }
-
-    /**
-     * Form group ident.
-     * @return string Form group ident.
-     */
-    public function ident()
-    {
-        return $this->ident;
     }
 
     /**
@@ -229,7 +180,7 @@ trait FormGroupTrait
     public function inputs(callable $inputCallback = null)
     {
         $groups = $this->groups;
-        uasort($groups, ['self', 'sortInputsByPriority']);
+        uasort($groups, [ 'self', 'sortInputsByPriority' ]);
 
         $inputCallback = isset($inputCallback) ? $inputCallback : $this->inputCallback;
         foreach ($inputs as $input) {
@@ -262,5 +213,82 @@ trait FormGroupTrait
     public function numInputs()
     {
         return count($this->inputs);
+    }
+
+    /**
+     * Set the identifier of the group.
+     *
+     * @param string $ident The group identifier.
+     * @return self
+     */
+    public function setIdent($ident)
+    {
+        $this->ident = $ident;
+
+        return $this;
+    }
+
+    /**
+     * Retrieve the idenfitier of the group.
+     *
+     * @return string
+     */
+    public function ident()
+    {
+        return $this->ident;
+    }
+
+
+    /**
+     * Set whether the group is active or not.
+     *
+     * @param  boolean $active The active flag.
+     * @return self
+     */
+    public function setActive($active)
+    {
+        $this->active = !!$active;
+
+        return $this;
+    }
+
+    /**
+     * Determine if the group is active or not.
+     *
+     * @return boolean
+     */
+    public function active()
+    {
+        return $this->active;
+    }
+
+    /**
+     * Set the group's priority or sorting index.
+     *
+     * @param  integer $priority An index, for sorting.
+     * @throws InvalidArgumentException If the priority is not an integer.
+     * @return self
+     */
+    public function setPriority($priority)
+    {
+        if (!is_numeric($priority)) {
+            throw new InvalidArgumentException(
+                'Priority must be an integer'
+            );
+        }
+
+        $this->priority = intval($priority);
+
+        return $this;
+    }
+
+    /**
+     * Retrieve the group's priority or sorting index.
+     *
+     * @return integer
+     */
+    public function priority()
+    {
+        return $this->priority;
     }
 }

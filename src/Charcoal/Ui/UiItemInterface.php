@@ -22,6 +22,16 @@ use \Charcoal\View\ViewableInterface;
 interface UiItemInterface extends EntityInterface, ViewableInterface
 {
     /**
+     * Set whether the item is active or not.
+     *
+     * @param boolean $active The active flag.
+     * @return UiItemInterface Chainable
+     */
+    public function setActive($active);
+
+    /**
+     * Determine if the item is active or not.
+     *
      * @return boolean
      */
     public function active();

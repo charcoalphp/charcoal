@@ -16,10 +16,12 @@ abstract class AbstractFormGroup extends AbstractUiItem implements
     FormGroupInterface,
     LayoutAwareInterface
 {
-    use LayoutAwareTrait;
     use FormGroupTrait;
+    use LayoutAwareTrait;
 
     /**
+     * Returns a new form group.
+     *
      * @param array|ArrayAccess $data The class depdendencies.
      */
     public function __construct($data)

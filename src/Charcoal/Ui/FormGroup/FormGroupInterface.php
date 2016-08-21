@@ -16,32 +16,19 @@ interface FormGroupInterface
     public function setInputCallback(callable $cb);
 
     /**
-     * @param FormInterface $form The parent form object.
+     * Set the form widget.
+     *
+     * @param FormInterface $form The related form widget.
      * @return FormGroupInterface Chainable
      */
     public function setForm(FormInterface $form);
 
     /**
-     * @param boolean $active The active flag.
-     * @return WidgetInterface Chainable
+     * Retrieve the form widget.
+     *
+     * @return FormInterface
      */
-    public function setActive($active);
-
-    /**
-     * @return boolean
-     */
-    public function active();
-
-    /**
-     * @param integer $priority Group priority, for sorting.
-     * @return FormGroupInterface Chainable
-     */
-    public function setPriority($priority);
-
-    /**
-     * @return integer
-     */
-    public function priority();
+    public function form();
 
     /**
      * @param string $mode The l10n mode.
@@ -84,4 +71,49 @@ interface FormGroupInterface
      * @return integer
      */
     public function numInputs();
+
+    /**
+     * Set the identifier of the group.
+     *
+     * @param string $ident Sidemenu group identifier.
+     * @return UiGroupingInterface Chainable
+     */
+    public function setIdent($ident);
+
+    /**
+     * Retrieve the idenfitier of the group.
+     *
+     * @return string
+     */
+    public function ident();
+
+    /**
+     * Set whether the group is active or not.
+     *
+     * @param  boolean $active The active flag.
+     * @return self
+     */
+    public function setActive($active);
+
+    /**
+     * Determine if the group is active or not.
+     *
+     * @return boolean
+     */
+    public function active();
+
+    /**
+     * Set the group's priority or sorting index.
+     *
+     * @param integer $priority An index, for sorting.
+     * @return UiGroupingInterface Chainable
+     */
+    public function setPriority($priority);
+
+    /**
+     * Retrieve the group's priority or sorting index.
+     *
+     * @return integer
+     */
+    public function priority();
 }
