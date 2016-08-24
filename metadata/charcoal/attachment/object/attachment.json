@@ -5,11 +5,11 @@
 
     "properties": {
         "id": {
-            "type": "id"
+            "type": "id",
+            "label": "ID"
         },
         "position": {
-            "type": "number",
-            "label": "Position"
+            "type": "number"
         },
         "active": {
             "type": "boolean",

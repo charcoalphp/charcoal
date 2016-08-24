@@ -1,101 +1,104 @@
 {
-  "data": {
-    "type": "charcoal/attachment/object/file",
-    "preview": "{{> charcoal/attachment/object/file }}"
-  },
+    "data": {
+        "type": "charcoal/attachment/object/file",
+        "preview": "{{> charcoal/attachment/object/file }}"
+    },
 
-  "admin": {
-    "lists": {
-      "default": {
-        "properties": [
-          "title",
-          "subtitle",
-          "file",
-          "active"
-        ],
-        "list_actions": [{
-          "label": "Nouveau fichier",
-          "ident": "create",
-          "url": "object/edit?obj_type=charcoal/attachment/object/file"
-        }],
-        "filters": {
-          "type": {
-            "property": "type",
-            "val": "charcoal/attachment/object/file"
-          }
-        }
-      },
-      "attachment": {
-        "properties": [
-          "title",
-          "file"
-        ],
-        "orders": {
-          "type": {
-            "property": "type",
-            "val": "asc"
-          }
-        },
-        "filters": {
-          "type": {
-            "property": "type",
-            "val": "charcoal/attachment/object/file"
-          }
-        }
-      }
-    },
-    "default_list": "default",
-    "forms": {
-      "quick": {
-        "groups": {
-          "main": {
-            "layout": {
-              "structure": [
-                { "columns": [ 1 ] },
-                { "columns": [ 1 ] }
-              ]
+    "admin": {
+        "lists": {
+            "default": {
+                "properties": [
+                    "title",
+                    "subtitle",
+                    "file",
+                    "active"
+                ],
+                "list_actions": [{
+                    "label": {
+                        "en": "New File",
+                        "fr": "Nouveau fichier"
+                    },
+                    "ident": "create",
+                    "url": "object/edit?obj_type=charcoal/attachment/object/file"
+                }],
+                "filters": {
+                    "type": {
+                        "property": "type",
+                        "val": "charcoal/attachment/object/file"
+                    }
+                }
             },
-            "properties": [
-              "title",
-              "file"
-            ]
-          }
-        }
-      }
-    },
-    "dashboards": {
-      "edit": {
-        "layout": {
-          "structure": [
-            { "columns": [ 1 ] }
-          ]
+            "attachment": {
+                "properties": [
+                    "title",
+                    "file"
+                ],
+                "orders": {
+                    "type": {
+                        "property": "type",
+                        "val": "asc"
+                    }
+                },
+                "filters": {
+                    "type": {
+                        "property": "type",
+                        "val": "charcoal/attachment/object/file"
+                    }
+                }
+            }
         },
-        "widgets": {
-          "form": {
-            "type": "charcoal/admin/widget/objectForm",
-            "form_ident": "default",
-            "obj_type": "charcoal/attachment/object/file"
-          }
-        }
-      },
-      "table": {
-        "title": {
-          "fr": "Liste des fichiers",
-          "en": "Files list"
+        "default_list": "default",
+        "forms": {
+            "quick": {
+                "groups": {
+                    "main": {
+                        "layout": {
+                            "structure": [
+                                { "columns": [ 1 ] },
+                                { "columns": [ 1 ] }
+                            ]
+                        },
+                        "properties": [
+                            "title",
+                            "file"
+                        ]
+                    }
+                }
+            }
         },
-        "layout": {
-          "structure": [
-            { "columns": [ 1 ] }
-          ]
-        },
-        "widgets": {
-          "form": {
-            "type": "charcoal/admin/widget/table",
-            "collection_ident": "default",
-            "obj_type": "charcoal/attachment/object/file"
-          }
+        "dashboards": {
+            "edit": {
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] }
+                    ]
+                },
+                "widgets": {
+                    "form": {
+                        "type": "charcoal/admin/widget/objectForm",
+                        "form_ident": "default",
+                        "obj_type": "charcoal/attachment/object/file"
+                    }
+                }
+            },
+            "table": {
+                "title": {
+                    "fr": "Liste des fichiers",
+                    "en": "List of Files"
+                },
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] }
+                    ]
+                },
+                "widgets": {
+                    "form": {
+                        "type": "charcoal/admin/widget/table",
+                        "collection_ident": "default",
+                        "obj_type": "charcoal/attachment/object/file"
+                    }
+                }
+            }
         }
-      }
     }
-  }
 }

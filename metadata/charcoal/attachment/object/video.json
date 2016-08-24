@@ -1,7 +1,6 @@
 {
     "data": {
-        "type": "charcoal/attachment/object/video",
-        "preview": "{{> charcoal/attachment/object/embed }}"
+        "type": "charcoal/attachment/object/video"
     },
 
     "admin": {
@@ -65,7 +64,7 @@
             "table": {
                 "title": {
                     "fr": "Liste des vidéos",
-                    "en": "Videos list"
+                    "en": "List of Videos"
                 },
                 "layout": {
                     "structure": [

@@ -3,14 +3,11 @@
         "type": "charcoal/attachment/object/gallery",
         "preview": "{{> charcoal/attachment/object/gallery }}"
     },
-    "attachments":{
-        "attachable_objects":{
-            "charcoal/attachment/object/image":{
-                "attachment_type":"charcoal/attachment/object/image",
-                "label":{
-                    "fr":"Image",
-                    "en":"Image"
-                }
+
+    "attachments": {
+        "attachable_objects": {
+            "charcoal/attachment/object/image": {
+                "label": "Image"
             }
         }
     },
@@ -24,8 +21,8 @@
                 ],
                 "list_actions": [{
                     "label": {
-                        "en": "New File",
-                        "fr": "Nouveau fichier"
+                        "en": "New Gallery",
+                        "fr": "Nouvelle galerie"
                     },
                     "ident": "create",
                     "url": "object/edit?obj_type=charcoal/attachment/object/gallery"
@@ -67,8 +64,8 @@
                             ]
                         },
                         "title": {
-                            "fr": "Galerie de photo",
-                            "en": "Picture Gallery"
+                            "fr": "Galerie",
+                            "en": "Gallery"
                         },
                         "properties": [
                             "title"
@@ -93,10 +90,7 @@
                         "obj_type": "charcoal/attachment/object/gallery"
                     },
                     "images": {
-                        "title": {
-                            "fr": "Images",
-                            "en": "Images"
-                        },
+                        "title": "Images",
                         "type": "charcoal/admin/widget/attachment",
                         "form_ident": "default",
                         "group": "inception-gallery",
@@ -110,8 +104,8 @@
             },
             "table": {
                 "title": {
-                    "fr": "Liste des fichiers",
-                    "en": "Files list"
+                    "fr": "Liste des galeries",
+                    "en": "List of Galleries"
                 },
                 "layout": {
                     "structure": [

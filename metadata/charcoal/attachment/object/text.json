@@ -76,7 +76,10 @@
                     "active"
                 ],
                 "list_actions": [{
-                    "label": "Nouveau bloc texte",
+                    "label": {
+                        "en": "New Text Zone",
+                        "fr": "Nouvelle zone de texte"
+                    },
                     "ident": "create",
                     "url": "object/edit?obj_type=charcoal/attachment/object/text"
                 }],
@@ -124,8 +127,8 @@
             },
             "table": {
                 "title": {
-                    "fr": "Liste des blocs texte",
-                    "en": "Texts list"
+                    "fr": "Liste des zones de texte",
+                    "en": "List of Text Zones"
                 },
                 "layout": {
                     "structure": [

@@ -1,134 +1,137 @@
 {
-  "data": {
-    "type": "charcoal/attachment/object/link",
-    "preview": "{{> charcoal/attachment/object/link }}"
-  },
-
-  "admin": {
-    "forms": {
-      "link": {
-        "l10n_mode": "loop_inputs",
-        "groups": {
-          "info": {
-            "layout": {
-              "structure": [
-                { "columns": [ 1, 1 ] },
-                { "columns": [ 1 ] },
-                { "columns": [ 1 ] }
-              ]
-            },
-            "title": "Informations",
-            "properties": [
-              "title",
-              "link"
-            ]
-          },
-          "taxo": {
-            "layout": {
-              "structure": [
-                { "columns": [ 1 ] }
-              ]
-            },
-            "properties": [
-              "active"
-            ]
-          }
-
-        },
-        "sidebars": {
-          "actions": {}
-        }
-      },
-      "quick": {
-        "groups": {
-          "main": {
-            "layout": {
-              "structure": [
-                { "columns": [ 1 ] },
-                { "columns": [ 1 ] }
-              ]
-            },
-            "properties": [
-              "title",
-              "link"
-            ]
-          }
-        }
-      }
+    "data": {
+        "type": "charcoal/attachment/object/link",
+        "preview": "{{> charcoal/attachment/object/link }}"
     },
-    "default_form": "link",
-    "lists": {
-      "link": {
-        "properties": [
-          "title",
-          "subtitle",
-          "active"
-        ],
-        "list_actions": [{
-          "label": "Nouveau bloc texte",
-          "ident": "create",
-          "url": "object/edit?obj_type=charcoal/attachment/object/link"
-        }],
-        "filters": {
-          "type": {
-            "property": "type",
-            "val": "charcoal/attachment/object/link"
-          }
-        }
-      },
-      "attachment": {
-        "properties": [
-          "title",
-          "subtitle"
-        ],
-        "orders": {
-          "type": {
-            "property": "type",
-            "val": "asc"
-          }
+
+    "admin": {
+        "forms": {
+            "link": {
+                "l10n_mode": "loop_inputs",
+                "groups": {
+                    "info": {
+                        "layout": {
+                            "structure": [
+                                { "columns": [ 1, 1 ] },
+                                { "columns": [ 1 ] },
+                                { "columns": [ 1 ] }
+                            ]
+                        },
+                        "title": "Informations",
+                        "properties": [
+                            "title",
+                            "link"
+                        ]
+                    },
+                    "taxo": {
+                        "layout": {
+                            "structure": [
+                                { "columns": [ 1 ] }
+                            ]
+                        },
+                        "properties": [
+                            "active"
+                        ]
+                    }
+
+                },
+                "sidebars": {
+                    "actions": {}
+                }
+            },
+            "quick": {
+                "groups": {
+                    "main": {
+                        "layout": {
+                            "structure": [
+                                { "columns": [ 1 ] },
+                                { "columns": [ 1 ] }
+                            ]
+                        },
+                        "properties": [
+                            "title",
+                            "link"
+                        ]
+                    }
+                }
+            }
         },
-        "filters": {
-          "type": {
-            "property": "type",
-            "val": "charcoal/attachment/object/link"
-          }
-        }
-      }
-    },
-    "default_list": "link",
-    "dashboards": {
-      "edit": {
-        "layout": {
-          "structure": [
-            { "columns": [ 1 ] }
-          ]
+        "default_form": "link",
+        "lists": {
+            "link": {
+                "properties": [
+                    "title",
+                    "subtitle",
+                    "active"
+                ],
+                "list_actions": [{
+                    "label": {
+                        "fr": "Nouveau lien",
+                        "en": "New Link"
+                    },
+                    "ident": "create",
+                    "url": "object/edit?obj_type=charcoal/attachment/object/link"
+                }],
+                "filters": {
+                    "type": {
+                        "property": "type",
+                        "val": "charcoal/attachment/object/link"
+                    }
+                }
+            },
+            "attachment": {
+                "properties": [
+                    "title",
+                    "subtitle"
+                ],
+                "orders": {
+                    "type": {
+                        "property": "type",
+                        "val": "asc"
+                    }
+                },
+                "filters": {
+                    "type": {
+                        "property": "type",
+                        "val": "charcoal/attachment/object/link"
+                    }
+                }
+            }
         },
-        "widgets": {
-          "form": {
-            "type": "charcoal/admin/widget/objectForm",
-            "form_ident": "link",
-            "obj_type": "charcoal/attachment/object/link"
-          }
+        "default_list": "link",
+        "dashboards": {
+            "edit": {
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] }
+                    ]
+                },
+                "widgets": {
+                    "form": {
+                        "type": "charcoal/admin/widget/objectForm",
+                        "form_ident": "link",
+                        "obj_type": "charcoal/attachment/object/link"
+                    }
+                }
+            },
+            "table": {
+                "title": {
+                    "fr": "Liste de liens",
+                    "en": "List of Links"
+                },
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] }
+                    ]
+                },
+                "widgets": {
+                    "form": {
+                        "type": "charcoal/admin/widget/table",
+                        "collection_ident": "link",
+                        "obj_type": "charcoal/attachment/object/link"
+                    }
+                }
+            }
         }
-      },
-      "table": {
-        "title": {
-          "fr": "Liste des blocs texte",
-          "en": "Texts list"
-        },
-        "layout": {
-          "structure": [
-            { "columns": [ 1 ] }
-          ]
-        },
-        "widgets": {
-          "form": {
-            "type": "charcoal/admin/widget/table",
-            "collection_ident": "link",
-            "obj_type": "charcoal/attachment/object/link"
-          }
-        }
-      }
     }
-  }
 }

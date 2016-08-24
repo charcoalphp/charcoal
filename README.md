@@ -14,25 +14,25 @@ The preferred (and only supported) way of installing _charcoal-attachment is wit
 
 ## Dependencies
 
-- [`PHP 5.5+`](http://php.net)
-- [`locomotivemtl/charcoal-core`](https://github.com/locomotivemtl/charcoal-core)
-- [`locomotivemtl/charcoal-base`](https://github.com/locomotivemtl/charcoal-base)
-- [`locomotivemtl/charcoal-admin`](https://github.com/locomotivemtl/charcoal-admin)
-- [`locomotivemtl/charcoal-ui`](https://github.com/locomotivemtl/charcoal-ui)
-- [`locomotivemtl/charcoal-translation`](https://github.com/locomotivemtl/charcoal-translation)
+-   [`PHP 5.5+`](http://php.net)
+-   [`locomotivemtl/charcoal-core`](https://github.com/locomotivemtl/charcoal-core)
+-   [`locomotivemtl/charcoal-base`](https://github.com/locomotivemtl/charcoal-base)
+-   [`locomotivemtl/charcoal-admin`](https://github.com/locomotivemtl/charcoal-admin)
+-   [`locomotivemtl/charcoal-ui`](https://github.com/locomotivemtl/charcoal-ui)
+-   [`locomotivemtl/charcoal-translation`](https://github.com/locomotivemtl/charcoal-translation)
 
 ## Objects
 
 Objects in the `charcoal-attachments` module extends AbstractModel (charcoal-base).
 
-- ***Attachment objects***
-	- AbstractAttachment - Attachment Base
-	- File
-	- Link
-	- Image
-	- Gallery (image)
-	- Text
-	- Video
+-   ***Attachment objects***
+    -   AbstractAttachment - Attachment Base
+    -   File
+    -   Link
+    -   Image
+    -   Gallery (image)
+    -   Text
+    -   Video
 
 ## Widgets
 
@@ -46,8 +46,8 @@ The setup is fairly easy, but you need to remember a few things in order for it 
 
 Add the views path and metadata path to the config file.
 ```json
-"metadata":{
-    "paths":[
+"metadata": {
+    "paths": [
         "...",
         "vendor/beneroch/charcoal-attachment/metadata/"
     ]
@@ -62,19 +62,19 @@ Add the views path and metadata path to the config file.
 
 Then, we need to add the necessary routes for the widgets in admin.json config file.
 ```json
-"routes":{
-    "actions":{
-        "join":{
-            "ident":"charcoal/admin/action/join",
-            "methods":[ "POST" ]
+"routes": {
+    "actions": {
+        "join": {
+            "ident": "charcoal/admin/action/join",
+            "methods": [ "POST" ]
         },
-        "add-join":{
-            "ident":"charcoal/admin/action/add-join",
-            "methods":[ "POST" ]
+        "add-join": {
+            "ident": "charcoal/admin/action/add-join",
+            "methods": [ "POST" ]
         },
-        "remove-join":{
-            "ident":"charcoal/admin/action/remove-join",
-            "methods":[ "POST" ]
+        "remove-join": {
+            "ident": "charcoal/admin/action/remove-join",
+            "methods": [ "POST" ]
         }
     }
 }
@@ -93,17 +93,17 @@ use \Charcoal\Attachment\Interfaces\AttachmentAwareInterface;
 Then, just add in the widget in the edit dashboard or the form like this:
 ```json
 "attachment": {
-    "title":{
-        "fr":"Documents",
-        "en":"Documents"
+    "title": {
+        "fr": "Documents",
+        "en": "Documents"
     },
     "type": "charcoal/admin/widget/attachment",
-    "group":"main",
-    "attachable_objects":{
-        "charcoal/attachment/object/file":{
-            "label":{
-                "fr":"Document / Fichier",
-                "en":"Document / File"
+    "group": "main",
+    "attachable_objects": {
+        "charcoal/attachment/object/file": {
+            "label": {
+                "fr": "Document / Fichier",
+                "en": "Document / File"
             }
         }
     }
@@ -112,12 +112,12 @@ Then, just add in the widget in the edit dashboard or the form like this:
 
 Available attachable objects as provided by the current modile are:
 
-- `charcoal/attachment/object/image`
-- `charcoal/attachment/object/gallery`
-- `charcoal/attachment/object/file`
-- `charcoal/attachment/object/link`
-- `charcoal/attachment/object/text`
-- `charcoal/attachment/object/video`
+-   `charcoal/attachment/object/image`
+-   `charcoal/attachment/object/gallery`
+-   `charcoal/attachment/object/file`
+-   `charcoal/attachment/object/link`
+-   `charcoal/attachment/object/text`
+-   `charcoal/attachment/object/video`
 
 To create a new attachment, you need to extend the base Attachment object `charcoal/attachment/object/attachment` and provide a "quick" form.
 
@@ -136,7 +136,7 @@ Attachment widget can be use more than once in a form. In order for it to work p
 ```json
 "attachment": {
     "type": "charcoal/admin/widget/attachment",
-    "group":"main"
+    "group": "main"
 }
 ```
 In this case, we set the group to "main". If none defined, the default group will be "generic". Without those ident, widgets won't be able to know which attachments are his.
@@ -164,17 +164,17 @@ class Text extends AttachmentText
 Now that we have the extend, let's add to the JSON by creating a `my/namespace/text.json` file.
 ```JSON
 {
-    "properties":{
-        "description":{
-            "editor_options":{
-                "style_formats":[],
-                "body_class":"s-wysiwyg",
-                "content_css":"../../../../../styles/main.css"
+    "properties": {
+        "description": {
+            "editor_options": {
+                "style_formats": [],
+                "body_class": "s-wysiwyg",
+                "content_css": "../../../../../styles/main.css"
             }
         }
     },
-    "data":{
-        "type":"my/namespace/text"
+    "data": {
+        "type": "my/namespace/text"
     }
 ```
 In that case, the editor options are changed to remove the base style formats, change the body class and add the appropriate css. The important part is to set the data type to the current object. This is used in live edit and delete features.

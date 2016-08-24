@@ -33,10 +33,7 @@
                                 { "columns": [ 1 ] }
                             ]
                         },
-                        "title": {
-                            "fr": "Informations",
-                            "en": "Informations"
-                        },
+                        "title": "Informations",
                         "properties": [
                             "title",
                             "subtitle",
@@ -138,7 +135,7 @@
             "table": {
                 "title": {
                     "fr": "Liste des média externe",
-                    "en": "Embedded Content List"
+                    "en": "List of Embedded Content"
                 },
                 "layout": {
                     "structure": [
