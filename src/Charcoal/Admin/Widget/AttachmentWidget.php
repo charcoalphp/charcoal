@@ -451,7 +451,7 @@ class AttachmentWidget extends AdminWidget implements
     public function attachableObjects()
     {
         if (!$this->attachableObjects) {
-            return false;
+            return [];
         }
 
         return $this->attachableObjects;

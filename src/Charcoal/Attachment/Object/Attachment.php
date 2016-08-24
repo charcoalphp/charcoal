@@ -24,6 +24,7 @@ use \Charcoal\Attachment\Object\Text;
 use \Charcoal\Attachment\Object\Video;
 use \Charcoal\Attachment\Object\Gallery;
 use \Charcoal\Attachment\Object\Link;
+use \Charcoal\Attachment\Object\Container as AttachmentContainer;
 use \Charcoal\Attachment\Object\Join;
 
 /**
@@ -40,6 +41,7 @@ class Attachment extends Content implements AttachableInterface
     const VIDEO_TYPE   = Video::class;
     const TEXT_TYPE    = Text::class;
     const GALLERY_TYPE = Gallery::class;
+    const CONTAINER_TYPE = AttachmentContainer::class;
 
     /**
      * Glyphicons (from Bootstrap) for each of the default attachment types.

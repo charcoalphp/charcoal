@@ -2,16 +2,15 @@
 
 namespace Charcoal\Attachment\Object;
 
-use \Charcoal\Attachment\Traits\AttachmentAwareTrait;
-use \Charcoal\Attachment\Interfaces\AttachmentAwareInterface;
+use \Charcoal\Attachment\Object\Container;
+
 
 /**
  * Gallery Attachment Type
  *
  * This type allows for nesting of additional attachment types.
  */
-class Gallery extends Attachment implements
-    AttachmentAwareInterface
+class Gallery extends Container
 {
-    use AttachmentAwareTrait;
+    // Gallery IS a container.
 }

@@ -14,9 +14,17 @@
         <li><a href="#" data-image="[[baseUrl]][[file]]" data-type="[[type]]" data-microtype="[[microType]]" data-action="preview">Preview</a></li>
         --}}
         <li><a href="#" data-type="{{type}}" data-title="Éditer le fichier" data-id="{{id}}" data-action="edit">Éditer</a></li>
-        {{#isGallery}}
-        <li><a href="#" data-type="{{type}}" data-id="{{id}}" data-title="Image" data-attachment="{{imageType}}" data-action="add-image">Ajouter une image</a></li>
-        {{/isGallery}}
+
+        {{#isAttachmentContainer}}
+            {{#attachableObjects}}
+            <li><a href="#" data-type="{{type}}" data-id="{{id}}" data-title="{{label}}" data-attachment="{{attachmentType}}" data-action="add-object">{{label}}</a></li>
+            {{/attachableObjects}}
+        {{/isAttachmentContainer}}
         <li><a href="#" data-image="{{baseUrl}}{{file}}" data-type="{{type}}" data-id="{{id}}" data-action="delete">Supprimer</a></li>
+        {{#isAttachmentContainer}}
+        <li>
+            <a href="object/edit?obj_type={{type}}&obj_id={{id}}" target="_blank">Modifier le contenu</a>
+        </li>
+        {{/isAttachmentContainer}}
     </ul>
 </div>
