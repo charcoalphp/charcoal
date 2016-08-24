@@ -7,7 +7,7 @@
 <section class="js-attachment-container js-attachment-sortable">
     <div role="tablist"
          id="{{ widgetId }}_accordion"
-         class="panel-group js-grid-container"
+         class="panel-group js-grid-container{{^ showAttachmentHeading }} js-attachment-preview-only{{/ showAttachmentHeading }}"
          aria-multiselectable="false">
     {{# attachments }}
         {{> charcoal/admin/widget/attachment/object }}

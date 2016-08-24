@@ -1,16 +1,26 @@
-<div class="dropdown js-attachments-manager">
-    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
-        Ajouter
-        <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu js-attachments-manager">
-        {{#attachmentTypes}}
-        <li>
-            <a href="{{baseUrl}}admin/object/edit?obj_type={{val}}" data-type="{{val}}" data-title="{{label}}" class="js-add-attachment" target="_blank">
-                <span class="glyphicon {{glyphicon}}"></span>
-                <span class="glyphicon-class">{{label}}</span>
-            </a>
-        </li>
-        {{/attachmentTypes}}
-    </ul>
+<div class="btn-toolbar" role="toolbar">
+    <div class="btn-group js-attachments-manager" role="group">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+            Ajouter
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu js-attachments-manager">
+            {{# attachmentTypes }}
+            <li>
+                <a href="{{baseUrl}}admin/object/edit?obj_type={{val}}" data-type="{{val}}" data-title="{{label}}" class="js-add-attachment" target="_blank">
+                    <span class="glyphicon {{glyphicon}}"></span>
+                    <span class="glyphicon-class">{{label}}</span>
+                </a>
+            </li>
+            {{/ attachmentTypes }}
+        </ul>
+    </div>
+    <div class="btn-group" role="group" aria-label="Toggle Attachment Previews">
+        <button type="button" class="btn btn-default js-attachments-expand" aria-label="Expand Previews">
+            <span class="glyphicon glyphicon-collapse-down"></span> Expand
+        </button>
+        <button type="button" class="btn btn-default js-attachments-collapse" aria-label="Close Previews">
+            <span class="glyphicon glyphicon-collapse-up"></span> Close
+        </button>
+    </div>
 </div>

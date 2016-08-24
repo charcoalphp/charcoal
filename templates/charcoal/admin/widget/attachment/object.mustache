@@ -13,14 +13,14 @@
     {{> charcoal/admin/widget/attachment/object/collapsible }}
     {{/ showAttachmentPreview }}
     {{^ showAttachmentPreview }}
-    <header id="{{ widgetId }}_heading_{{ id }}" class="panel-heading">
+    <header draggable="true" id="{{ widgetId }}_heading_{{ id }}" class="panel-heading">
         <h4 class="panel-title">
             <span class="glyphicon {{ glyphicon }}"></span>
             <a href="object/edit?obj_type={{ type }}&obj_id={{ id }}">{{& heading }}</a>
         </h4>
     </header>
     {{/ showAttachmentPreview }}
-    <aside class="panel-actions js-attachment-actions">
+    <aside class="panel-actions btn-toolbar js-attachment-actions" role="toolbar">
         {{> charcoal/admin/widget/attachment/object/actions }}
     </aside>
 </article>
