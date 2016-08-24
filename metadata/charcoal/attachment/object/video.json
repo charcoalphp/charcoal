@@ -1,155 +1,85 @@
 {
-  "data": {
-    "type": "charcoal/attachment/object/video",
-    "preview": "{{> charcoal/attachment/object/embed }}"
-  },
+    "data": {
+        "type": "charcoal/attachment/object/video",
+        "preview": "{{> charcoal/attachment/object/embed }}"
+    },
 
-  "properties": {
-    "file": {
-      "type": "image",
-      "upload_path": "uploads/attachments/images/",
-      "view_options": {
-        "charcoal/admin/property/display/image": {
-          "height": 50
+    "admin": {
+        "lists": {
+            "default": {
+                "properties": [
+                    "title",
+                    "file",
+                    "active"
+                ],
+                "list_actions": [{
+                    "label": {
+                        "en": "Nouveau Vidéo",
+                        "fr": "New Video"
+                    },
+                    "ident": "create",
+                    "url": "object/edit?obj_type=charcoal/attachment/object/video"
+                }],
+                "filters": {
+                    "type": {
+                        "property": "type",
+                        "val": "charcoal/attachment/object/video"
+                    }
+                }
+            },
+            "attachment": {
+                "properties": [
+                    "title",
+                    "embed"
+                ],
+                "orders": {
+                    "type": {
+                        "property": "type",
+                        "val": "asc"
+                    }
+                },
+                "filters": {
+                    "type": {
+                        "property": "type",
+                        "val": "charcoal/attachment/object/video"
+                    }
+                }
+            }
+        },
+        "default_list": "default",
+        "dashboards": {
+            "edit": {
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] }
+                    ]
+                },
+                "widgets": {
+                    "form": {
+                        "type": "charcoal/admin/widget/objectForm",
+                        "form_ident": "video",
+                        "obj_type": "charcoal/attachment/object/video"
+                    }
+                }
+            },
+            "table": {
+                "title": {
+                    "fr": "Liste des vidéos",
+                    "en": "Videos list"
+                },
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] }
+                    ]
+                },
+                "widgets": {
+                    "form": {
+                        "type": "charcoal/admin/widget/table",
+                        "collection_ident": "default",
+                        "obj_type": "charcoal/attachment/object/video"
+                    }
+                }
+            }
         }
-      }
-    },
-    "description": {
-      "type": "html"
     }
-  },
-
-  "admin": {
-    "forms": {
-      "video": {
-        "l10n_mode": "loop_inputs",
-        "groups": {
-          "info": {
-            "layout": {
-              "structure": [
-                { "columns": [ 1, 1 ] },
-                { "columns": [ 1 ] },
-                { "columns": [ 1 ] },
-                { "columns": [ 1 ] }
-              ]
-            },
-            "title": {
-              "fr": "Informations",
-              "en": "Informations"
-            },
-            "properties": [
-              "title",
-              "subtitle",
-              "embed",
-              "description",
-              "keywords"
-            ]
-          },
-          "taxo": {
-            "layout": {
-              "structure": [
-                { "columns": [ 1 ] }
-              ]
-            },
-            "properties": [
-              "active"
-            ]
-          }
-        },
-        "sidebars": {
-          "actions": {}
-        }
-      },
-      "quick": {
-        "groups": {
-          "main": {
-            "layout": {
-              "structure": [
-                { "columns": [ 1 ] },
-                { "columns": [ 1 ] }
-              ]
-            },
-            "properties": [
-              "title",
-              "embed"
-            ]
-          }
-        }
-      }
-    },
-    "default_form": "video",
-    "lists": {
-      "default": {
-        "properties": [
-          "title",
-          "file",
-          "active"
-        ],
-        "list_actions": [{
-          "label": "Nouveau Vidéo",
-          "ident": "create",
-          "url": "object/edit?obj_type=charcoal/attachment/object/video"
-        }],
-        "filters": {
-          "type": {
-            "property": "type",
-            "val": "charcoal/attachment/object/video"
-          }
-        }
-      },
-      "attachment": {
-        "properties": [
-          "title",
-          "embed"
-        ],
-        "orders": {
-          "type": {
-            "property": "type",
-            "val": "asc"
-          }
-        },
-        "filters": {
-          "type": {
-            "property": "type",
-            "val": "charcoal/attachment/object/video"
-          }
-        }
-      }
-    },
-    "default_list": "default",
-    "dashboards": {
-      "edit": {
-        "layout": {
-          "structure": [
-            { "columns": [ 1 ] }
-          ]
-        },
-        "widgets": {
-          "form": {
-            "type": "charcoal/admin/widget/objectForm",
-            "form_ident": "video",
-            "obj_type": "charcoal/attachment/object/video"
-          }
-        }
-      },
-      "table": {
-        "title": {
-          "fr": "Liste des vidéos",
-          "en": "Videos list"
-        },
-        "layout": {
-          "structure": [
-            { "columns": [ 1 ] }
-          ]
-        },
-        "widgets": {
-          "form": {
-            "type": "charcoal/admin/widget/table",
-            "collection_ident": "default",
-            "obj_type": "charcoal/attachment/object/video"
-          }
-        }
-      }
-    }
-  }
 }

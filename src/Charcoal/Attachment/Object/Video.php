@@ -9,6 +9,6 @@ namespace Charcoal\Attachment\Object;
  * by the provider (obviously) such as YouTube, Vimeo, etc.
  *
  */
-class Video extends Attachment
+class Video extends Embed
 {
 }
