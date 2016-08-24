@@ -243,11 +243,17 @@ class Attachment extends Content implements AttachableInterface
      */
     public function heading()
     {
-        if (!$this->heading) {
-            $this->heading = $this->title();
+        $heading = $this->render((string)$this->heading);
+
+        if (!$heading) {
+            $heading = sprintf(
+                '%1$s #%2$s',
+                ucfirst($this->microType()),
+                $this->id()
+            );
         }
 
-        return $this->render((string)$this->heading);
+        return $heading;
     }
 
     /**

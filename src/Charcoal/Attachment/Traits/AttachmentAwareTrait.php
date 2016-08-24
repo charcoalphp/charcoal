@@ -117,8 +117,12 @@ trait AttachmentAwareTrait
                     $att->setData($attachables[$type]['data']);
                 }
 
+                if (!$att->rawHeading()) {
+                    $att->setHeading($this->attachmentHeading());
+                }
+
                 if (!$att->rawPreview()) {
-                    $att->setPreview($this->preview());
+                    $att->setPreview($this->attachmentPreview());
                 }
             };
             $loader->setCallback($callable->bindTo($widget));
@@ -207,7 +211,7 @@ trait AttachmentAwareTrait
      *
      * @return AttachmentWidget
      */
-    public function attachmentWidget()
+    protected function attachmentWidget()
     {
         return $this->attachmentWidget;
     }
@@ -218,7 +222,7 @@ trait AttachmentAwareTrait
      * @param  AttachmentWidget $widget The widget displaying attachments.
      * @return string
      */
-    public function setAttachmentWidget(AttachmentWidget $widget)
+    protected function setAttachmentWidget(AttachmentWidget $widget)
     {
         $this->attachmentWidget = $widget;
 

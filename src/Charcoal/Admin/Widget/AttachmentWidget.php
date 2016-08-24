@@ -56,18 +56,32 @@ class AttachmentWidget extends AdminWidget implements
     protected $title;
 
     /**
-     * The attachment preview.
+     * The attachment heading (property or template).
      *
      * @var string
      */
-    protected $preview;
+    protected $attachmentHeading;
 
     /**
-     * Flag wether the attachment previews should be displayed.
+     * The attachment preview  (property or template).
+     *
+     * @var string
+     */
+    protected $attachmentPreview;
+
+    /**
+     * Flag wether the attachment heading should be displayed.
      *
      * @var boolean
      */
-    private $showPreviews = false;
+    private $showAttachmentHeading = true;
+
+    /**
+     * Flag wether the attachment preview should be displayed.
+     *
+     * @var boolean
+     */
+    private $showAttachmentPreview = false;
 
     /**
      * The widgets's available attachment types.
@@ -99,7 +113,9 @@ class AttachmentWidget extends AdminWidget implements
     {
         $obj = $this->createOrCloneOrLoadObj();
 
-        $obj->setAttachmentWidget($this);
+        $obj->setData([
+            'attachment_widget' => $this
+        ]);
 
         return $obj;
     }
@@ -185,44 +201,65 @@ class AttachmentWidget extends AdminWidget implements
     }
 
     /**
-     * Set the attachment's default preview.
+     * Set the attachment's default heading.
      *
-     * @param  string $preview The attachment preview template.
+     * @param  string $heading The attachment heading template.
      * @throws InvalidArgumentException If provided argument is not of type 'string'.
      * @return string
      */
-    public function setPreview($preview)
+    public function setAttachmentHeading($heading)
     {
-        if (TranslationString::isTranslatable($preview)) {
-            $this->preview = new TranslationString($preview);
+        if (TranslationString::isTranslatable($heading)) {
+            $this->attachmentHeading = new TranslationString($heading);
         } else {
-            $this->preview = null;
+            $this->attachmentHeading = null;
         }
 
         return $this;
     }
 
     /**
-     * Set whether to show previews of attached objects.
+     * Set the attachment's default preview.
      *
-     * @param boolean $show The show attachment previews flag.
+     * @param  string $preview The attachment preview template.
+     * @throws InvalidArgumentException If provided argument is not of type 'string'.
      * @return string
      */
-    public function setShowPreviews($show)
+    public function setAttachmentPreview($preview)
     {
-        $this->showPreviews = !!$show;
+        if (TranslationString::isTranslatable($preview)) {
+            $this->attachmentPreview = new TranslationString($preview);
+        } else {
+            $this->attachmentPreview = null;
+        }
 
         return $this;
     }
 
     /**
-     * Determine if the widget shows previews of attached objects.
+     * Set whether to show a heading for each attached object.
      *
-     * @return boolean
+     * @param boolean $show The show heading flag.
+     * @return string
      */
-    public function showPreviews()
+    public function setShowAttachmentHeading($show)
     {
-        return $this->showPreviews;
+        $this->showAttachmentHeading = !!$show;
+
+        return $this;
+    }
+
+    /**
+     * Set whether to show a preview for each attached object.
+     *
+     * @param boolean $show The show preview flag.
+     * @return string
+     */
+    public function setShowAttachmentPreview($show)
+    {
+        $this->showAttachmentPreview = !!$show;
+
+        return $this;
     }
 
     /**
@@ -411,13 +448,47 @@ class AttachmentWidget extends AdminWidget implements
     }
 
     /**
+     * Retrieve the attachment's default heading.
+     *
+     * @return string|null
+     */
+    public function attachmentHeading()
+    {
+        return $this->attachmentHeading;
+    }
+
+    /**
      * Retrieve the attachment's default preview.
      *
      * @return string|null
      */
-    public function preview()
+    public function attachmentPreview()
     {
-        return $this->preview;
+        return $this->attachmentPreview;
+    }
+
+    /**
+     * Determine if the widget displays a heading for each attached objects.
+     *
+     * @return boolean
+     */
+    public function showAttachmentHeading()
+    {
+        if (!$this->showAttachmentHeading && !$this->showAttachmentPreview()) {
+            return true;
+        }
+
+        return $this->showAttachmentHeading;
+    }
+
+    /**
+     * Determine if the widget displays a preview for each attached objects.
+     *
+     * @return boolean
+     */
+    public function showAttachmentPreview()
+    {
+        return $this->showAttachmentPreview;
     }
 
     /**
@@ -450,8 +521,14 @@ class AttachmentWidget extends AdminWidget implements
      */
     public function attachableObjects()
     {
-        if (!$this->attachableObjects) {
-            return [];
+        if ($this->attachableObjects === null) {
+            $metadata = $this->obj()->metadata();
+
+            if (isset($metadata['attachable_objects'])) {
+                $this->setAttachableObjects($attachables);
+            } else {
+                $this->attachableObjects = [];
+            }
         }
 
         return $this->attachableObjects;
@@ -464,16 +541,19 @@ class AttachmentWidget extends AdminWidget implements
      */
     public function widgetOptions()
     {
-        $out = [
-            'attachable_objects' => $this->attachableObjects(),
-            'title'              => $this->title(),
-            'preview'            => $this->preview(),
-            'obj_type'           => $this->obj()->objType(),
-            'obj_id'             => $this->obj()->id(),
-            'group'              => $this->group()
+        $options = [
+            'attachable_objects'      => $this->attachableObjects(),
+            'attachment_heading'      => $this->attachmentHeading(),
+            'attachment_preview'      => $this->attachmentPreview(),
+            'show_attachment_heading' => $this->showAttachmentHeading(),
+            'show_attachment_preview' => $this->showAttachmentPreview(),
+            'title'                   => $this->title(),
+            'obj_type'                => $this->obj()->objType(),
+            'obj_id'                  => $this->obj()->id(),
+            'group'                   => $this->group()
         ];
 
-        return json_encode($out, true);
+        return json_encode($options, true);
     }
 
 

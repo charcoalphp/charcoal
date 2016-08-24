@@ -1,0 +1,24 @@
+{{!--
+    Attachment Widget \ Collapsible Object
+    =================================
+
+    @used-by `charcoal/admin/widget/attachment/object`
+--}}
+<header role="tab" id="{{ widgetId }}_heading_{{ id }}" class="panel-heading{{^ showAttachmentHeading }} sr-only{{/ showAttachmentHeading }}">
+    <h4 class="panel-title">
+        <span class="glyphicon {{ glyphicon }}"></span>
+        <a role="button"
+           href="#{{ widgetId }}_body_{{ id }}"
+           {{^ showAttachmentHeading }}class="collapsed"{{/ showAttachmentHeading }}
+           data-toggle="collapse"
+           data-parent="#{{ widgetId }}_accordion"
+           aria-controls="{{ widgetId }}_body_{{ id }}"
+           aria-expanded="{{^ showAttachmentHeading }}true{{/ showAttachmentHeading }}{{# showAttachmentHeading }}false{{/ showAttachmentHeading }}"
+           >{{& heading }}</a>
+    </h4>
+</header>
+<section id="{{ widgetId }}_body_{{ id }}" class="panel-collapse collapse{{^ showAttachmentHeading }} in{{/ showAttachmentHeading }}" role="tabpanel" aria-labelledby="{{ widgetId }}_heading_{{ id }}">
+    <div class="panel-body">
+        {{> $widget_template }}
+    </div>
+</section>

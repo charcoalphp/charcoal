@@ -1,12 +1,12 @@
 <div class="dropdown">
     <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
-        {{# showPreviews }}
+        {{# showAttachmentHeading }}
+        Actions
+        {{/ showAttachmentHeading }}
+        {{^ showAttachmentHeading }}
         <span class="glyphicon {{glyphicon}}">&nbsp;</span>
         <span class="sr-only">Actions</span>
-        {{/ showPreviews }}
-        {{^ showPreviews }}
-        Actions
-        {{/ showPreviews }}
+        {{/ showAttachmentHeading }}
         <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">

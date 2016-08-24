@@ -40,7 +40,7 @@ trait AttachmentContainerTrait
      * Gets the attachments config from
      * the object metadata.
      *
-     * @return [type] [description]
+     * @return array
      */
     public function attachmentConfig()
     {
@@ -87,7 +87,6 @@ trait AttachmentContainerTrait
         return $this->attachableObjects;
     }
 
-
     /**
      * Returns true
      * @return boolean True.
@@ -97,8 +96,6 @@ trait AttachmentContainerTrait
         return true;
     }
 
-
-
     /**
      * Objects metadata.
      * Default behavior in Content class.
@@ -106,5 +103,4 @@ trait AttachmentContainerTrait
      * @return string
      */
     abstract function metadata();
-
 }
