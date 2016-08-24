@@ -23,6 +23,7 @@ use \Charcoal\Attachment\Object\Image;
 use \Charcoal\Attachment\Object\Text;
 use \Charcoal\Attachment\Object\Video;
 use \Charcoal\Attachment\Object\Gallery;
+use \Charcoal\Attachment\Object\Accordion;
 use \Charcoal\Attachment\Object\Link;
 use \Charcoal\Attachment\Object\Container as AttachmentContainer;
 use \Charcoal\Attachment\Object\Join;
@@ -35,12 +36,13 @@ class Attachment extends Content implements AttachableInterface
     /**
      * Default attachment types
      */
-    const FILE_TYPE    = File::class;
-    const LINK_TYPE    = Link::class;
-    const IMAGE_TYPE   = Image::class;
-    const VIDEO_TYPE   = Video::class;
-    const TEXT_TYPE    = Text::class;
-    const GALLERY_TYPE = Gallery::class;
+    const FILE_TYPE      = File::class;
+    const LINK_TYPE      = Link::class;
+    const IMAGE_TYPE     = Image::class;
+    const VIDEO_TYPE     = Video::class;
+    const TEXT_TYPE      = Text::class;
+    const GALLERY_TYPE   = Gallery::class;
+    const ACCORDION_TYPE = Accordion::class;
     const CONTAINER_TYPE = AttachmentContainer::class;
 
     /**
@@ -49,12 +51,13 @@ class Attachment extends Content implements AttachableInterface
      * @var array
      */
     protected $glyphs = [
-        'video'   => 'glyphicon-facetime-video',
-        'image'   => 'glyphicon-picture',
-        'file'    => 'glyphicon-file',
-        'link'    => 'glyphicon-file',
-        'text'    => 'glyphicon-font',
-        'gallery' => 'glyphicon-duplicate'
+        'video'     => 'glyphicon-facetime-video',
+        'image'     => 'glyphicon-picture',
+        'file'      => 'glyphicon-file',
+        'link'      => 'glyphicon-file',
+        'text'      => 'glyphicon-font',
+        'gallery'   => 'glyphicon-duplicate',
+        'accordion' => 'glyphicon-list'
     ];
 
     /**

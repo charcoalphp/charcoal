@@ -1,0 +1,14 @@
+{{!--
+    Attachable Preview \ Accordion
+    ==============================
+--}}
+{{# hasAttachments }}
+<ul class="list-group">
+{{# attachments }}
+    <li class="list-group-item"><span class="glyphicon {{ glyphicon }}"></span> {{& heading }}</li>
+{{/ attachments }}
+</ul>
+{{/ hasAttachments }}
+{{^ hasAttachments }}
+{{> charcoal/admin/widget/attachment/empty }}
+{{/ hasAttachments }}

@@ -1,0 +1,117 @@
+{
+    "data": {
+        "type": "charcoal/attachment/object/accordion",
+        "preview": "{{> charcoal/attachment/object/accordion }}"
+    },
+
+    "attachments": {
+        "attachable_objects": {
+            "charcoal/attachment/object/text": {
+                "label": {
+                    "en": "Text Zone",
+                    "fr": "Zone de texte"
+                }
+            },
+            "charcoal/attachment/object/image": {
+                "label": {
+                    "fr": "Image",
+                    "en": "Picture"
+                }
+            },
+            "charcoal/attachment/object/gallery": {
+                "label": {
+                    "fr": "Galerie d'images",
+                    "en": "Picture Gallery"
+                }
+            },
+            "charcoal/attachment/object/embed": {
+                "label": {
+                    "fr": "Embedded Media",
+                    "en": "Média Externe"
+                }
+            }
+        }
+    },
+
+    "admin": {
+        "forms": {
+            "quick": {
+                "group_display_mode": "tab",
+                "groups": {
+                    "body": {
+                        "title": {
+                            "fr": "Accordéon de contenu",
+                            "en": "Content Accordion"
+                        },
+                        "show_title": false,
+                        "properties": [
+                            "ident"
+                        ],
+                        "layout": {
+                            "structure": [
+                                { "columns": [ 1 ] },
+                                { "columns": [ 1 ] }
+                            ]
+                        }
+                    },
+                    "quick.auxiliary": {}
+                }
+            },
+            "default": {
+                "groups": {
+                    "body": {
+                        "title": {
+                            "fr": "Accordéon de contenu",
+                            "en": "Content Accordion"
+                        },
+                        "properties": [
+                            "title",
+                            "active",
+                            "description",
+                            "keywords"
+                        ],
+                        "layout": {
+                            "structure": [
+                                { "columns": [ 5, 1 ] },
+                                { "columns": [ 1 ] },
+                                { "columns": [ 1 ] },
+                                { "columns": [ 1 ] }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+
+        "form_groups": {
+            "contents": {
+                "title": {
+                    "fr": "Panneaux",
+                    "en": "Panels"
+                },
+                "type": "charcoal/admin/widget/form-group/attachment",
+                "template": "charcoal/admin/widget/form-group/attachment",
+                "group": "accordion",
+                "show_previews": false
+            }
+        },
+
+        "dashboards": {
+            "admin.edit": {
+                "title": {
+                    "en": "Edit Attachment",
+                    "fr": "Modifier l'attachement"
+                },
+                "widgets": {
+                    "form": {
+                        "type": "charcoal/admin/widget/objectForm",
+                        "form_ident": "default",
+                        "obj_type": "charcoal/attachment/object/accordion"
+                    }
+                }
+            }
+        },
+        "default_create_dashboard": "admin.edit",
+        "default_edit_dashboard": "admin.edit"
+    }
+}
