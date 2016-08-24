@@ -2,19 +2,22 @@
     Attachable Preview \ Gallery
     ============================
 --}}
-<ul class="row">
+{{# hasAttachments }}
+<ul class="gallery-list row">
 {{# attachments }}
-    <li class="col-xs-2 col-md-2">
-        <figure class="thumbnail">
-            {{# thumbnail }}
-                <img src="{{ baseUrl }}{{ . }}" />
-            {{/ thumbnail }}
-            {{^ thumbnail }}
-            {{# file }}
-                <img src="{{ baseUrl }}{{ . }}" />
-            {{/ file }}
-            {{/ thumbnail }}
-        </figure>
+    <li class="col-xs-3 col-md-3">
+    {{# thumbnail }}
+        <img class="thumbnail" src="{{ baseUrl }}{{ . }}" />
+    {{/ thumbnail }}
+    {{^ thumbnail }}
+    {{# file }}
+        <img class="thumbnail" src="{{ baseUrl }}{{ . }}" />
+    {{/ file }}
+    {{/ thumbnail }}
     </li>
 {{/ attachments }}
 </ul>
+{{/ hasAttachments }}
+{{^ hasAttachments }}
+{{> charcoal/admin/widget/attachment/empty }}
+{{/ hasAttachments }}
