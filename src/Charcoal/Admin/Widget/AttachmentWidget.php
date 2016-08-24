@@ -157,7 +157,7 @@ class AttachmentWidget extends AdminWidget implements
      */
     public function hasAttachments()
     {
-        return !!count($this->attachments());
+        return $this->obj->hasAttachments();
     }
 
 
