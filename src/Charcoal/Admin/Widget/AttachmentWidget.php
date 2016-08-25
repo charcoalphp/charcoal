@@ -58,14 +58,14 @@ class AttachmentWidget extends AdminWidget implements
     /**
      * The attachment heading (property or template).
      *
-     * @var string
+     * @var string[]|string
      */
     protected $attachmentHeading;
 
     /**
      * The attachment preview  (property or template).
      *
-     * @var string
+     * @var string[]|string
      */
     protected $attachmentPreview;
 
@@ -205,15 +205,11 @@ class AttachmentWidget extends AdminWidget implements
      *
      * @param  string $heading The attachment heading template.
      * @throws InvalidArgumentException If provided argument is not of type 'string'.
-     * @return string
+     * @return string[]|string
      */
     public function setAttachmentHeading($heading)
     {
-        if (TranslationString::isTranslatable($heading)) {
-            $this->attachmentHeading = new TranslationString($heading);
-        } else {
-            $this->attachmentHeading = null;
-        }
+        $this->attachmentHeading = $heading;
 
         return $this;
     }
@@ -223,15 +219,11 @@ class AttachmentWidget extends AdminWidget implements
      *
      * @param  string $preview The attachment preview template.
      * @throws InvalidArgumentException If provided argument is not of type 'string'.
-     * @return string
+     * @return string[]|string
      */
     public function setAttachmentPreview($preview)
     {
-        if (TranslationString::isTranslatable($preview)) {
-            $this->attachmentPreview = new TranslationString($preview);
-        } else {
-            $this->attachmentPreview = null;
-        }
+        $this->attachmentPreview = $preview;
 
         return $this;
     }
