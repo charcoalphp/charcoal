@@ -26,6 +26,15 @@
                 "en": "Title"
             }
         },
+        "categories":{
+            "type":"object",
+            "obj_type":"charcoal/attachment/object/category/generic",
+            "multiple":true,
+            "label":{
+                "fr":"Catégories",
+                "en":"Categories"
+            }
+        },
         "subtitle": {
             "type": "string",
             "l10n":true,

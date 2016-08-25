@@ -1,0 +1,50 @@
+{
+
+    "sources":{
+        "default":{
+            "table":"charcoal_attachment_categories"
+        }
+    },
+    "default_source":"default",
+    "admin": {
+        "forms": {
+            "default": {
+                "groups": {
+                    "body": {
+                        "title": {
+                            "fr": "Informations",
+                            "en": "Informations"
+                        },
+                        "properties": [
+                            "name",
+                            "active"
+                        ],
+                        "layout": {
+                            "structure": [
+                                { "columns": [ 5, 1 ] }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+
+        "dashboards": {
+            "admin.edit": {
+                "title": {
+                    "en": "Catégorie",
+                    "fr": "Category"
+                },
+                "widgets": {
+                    "form": {
+                        "type": "charcoal/admin/widget/objectForm",
+                        "form_ident": "default",
+                        "obj_type": "charcoal/attachment/object/category/generic"
+                    }
+                }
+            }
+        },
+        "default_create_dashboard": "admin.edit",
+        "default_edit_dashboard": "admin.edit"
+    }
+}
