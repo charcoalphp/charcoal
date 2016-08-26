@@ -1,7 +1,8 @@
 {
     "data": {
         "type": "charcoal/attachment/object/gallery",
-        "preview": "{{> charcoal/attachment/object/gallery }}"
+        "preview": "{{> charcoal/attachment/object/gallery }}",
+        "heading":"Galerie: {{title}}"
     },
 
     "attachments": {

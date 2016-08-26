@@ -1,6 +1,7 @@
 {
     "data": {
-        "preview": "{{ title }}"
+        "preview": "{{ title }}",
+        "heading":"Contenu relié: {{title}}"
     },
 
     "properties": {

@@ -1,6 +1,7 @@
 {
     "data": {
-        "type": "charcoal/attachment/object/video"
+        "type": "charcoal/attachment/object/video",
+        "heading":"Vidéo externe: {{title}}"
     },
 
     "admin": {
