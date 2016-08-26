@@ -59,13 +59,6 @@ trait FormGroupTrait
     private $ident;
 
     /**
-     * Whether the group is active.
-     *
-     * @var boolean
-     */
-    private $active = true;
-
-    /**
      * The group's priority.
      *
      * @var integer
@@ -236,30 +229,6 @@ trait FormGroupTrait
     public function ident()
     {
         return $this->ident;
-    }
-
-
-    /**
-     * Set whether the group is active or not.
-     *
-     * @param  boolean $active The active flag.
-     * @return self
-     */
-    public function setActive($active)
-    {
-        $this->active = !!$active;
-
-        return $this;
-    }
-
-    /**
-     * Determine if the group is active or not.
-     *
-     * @return boolean
-     */
-    public function active()
-    {
-        return $this->active;
     }
 
     /**

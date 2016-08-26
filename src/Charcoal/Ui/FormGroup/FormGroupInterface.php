@@ -88,15 +88,15 @@ interface FormGroupInterface
     public function ident();
 
     /**
-     * Set whether the group is active or not.
+     * Activates/deactivates the group.
      *
-     * @param  boolean $active The active flag.
-     * @return self
+     * @param boolean $active Activate (TRUE) or deactivate (FALSE) the group.
+     * @return UiItemInterface Chainable
      */
     public function setActive($active);
 
     /**
-     * Determine if the group is active or not.
+     * Determine if the group is active.
      *
      * @return boolean
      */

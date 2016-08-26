@@ -10,20 +10,11 @@ use \Charcoal\Config\AbstractEntity;
 // Module `charcoal-core` dependencies
 use \Charcoal\Translation\TranslationString;
 
-// Intra-module (`charcoal-ui`) dependencies
-use \Charcoal\Ui\UiItemInterface;
-use \Charcoal\Ui\UiItemTrait;
-
 /**
  * Ui Item Trait
  */
 trait UiItemTrait
 {
-    /**
-     * @var boolean $active
-     */
-    private $active = true;
-
     /**
      * @var string $type
      */
@@ -87,24 +78,6 @@ trait UiItemTrait
      * @var boolean $showFooter
      */
     private $showFooter = true;
-
-    /**
-     * @param string $active The item active flag.
-     * @return UiItemInterface Chainable
-     */
-    public function setActive($active)
-    {
-        $this->active = !!$active;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function active()
-    {
-        return $this->active;
-    }
 
     /**
      * @param string $type The UI item type.

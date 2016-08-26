@@ -4,30 +4,29 @@ namespace Charcoal\Ui;
 
 use \InvalidArgumentException;
 
-// PSR-3 (logger) dependencies
+// From PSR-3 (Logger)
 use \Psr\Log\LoggerAwareInterface;
 use \Psr\Log\LoggerAwareTrait;
 use \Psr\Log\NullLogger;
 
-// Module `pimple` dependencies
 use \Pimple\Container;
 
-// Module `charcoal-config` dependencies
+// From 'charcoal-config'
 use \Charcoal\Config\AbstractEntity;
 
-// Module `charcoal-core` dependencies
+// From 'charcoal-core'
 use \Charcoal\Translation\TranslationString;
 
-// Module `charcoal-view` dependencies
+// From 'charcoal-view'
 use \Charcoal\View\ViewableInterface;
 use \Charcoal\View\ViewableTrait;
 
-// Intra-module (`charcoal-ui`) dependencies
+// Intra-module ('charcoal-ui') dependencies
 use \Charcoal\Ui\UiItemInterface;
 use \Charcoal\Ui\UiItemTrait;
 
 /**
- *
+ * Basic UI Item
  */
 abstract class AbstractUiItem extends AbstractEntity implements
     LoggerAwareInterface,
@@ -38,7 +37,16 @@ abstract class AbstractUiItem extends AbstractEntity implements
     use UiItemTrait;
 
     /**
-     * @param array $data Constructor options.
+     * A UI item is active by default.
+     *
+     * @var boolean
+     */
+    private $active = true;
+
+    /**
+     * Return a new UI item.
+     *
+     * @param array|ArrayAccess $data The class depdendencies.
      */
     public function __construct(array $data = null)
     {
@@ -61,5 +69,28 @@ abstract class AbstractUiItem extends AbstractEntity implements
     public function setDependencies(Container $container)
     {
         // This method is a stub. Reimplement in children template classes.
+    }
+
+    /**
+     * Activates/deactivates the item.
+     *
+     * @param boolean $active Activate (TRUE) or deactivate (FALSE) the item.
+     * @return AbstractUiItem Chainable
+     */
+    public function setActive($active)
+    {
+        $this->active = !!$active;
+
+        return $this;
+    }
+
+    /**
+     * Determine if the item is active.
+     *
+     * @return boolean
+     */
+    public function active()
+    {
+        return $this->active;
     }
 }

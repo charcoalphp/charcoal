@@ -10,5 +10,4 @@ use \Charcoal\Ui\UiItemConfig;
  */
 class FormGroupConfig extends UiItemConfig
 {
-
 }

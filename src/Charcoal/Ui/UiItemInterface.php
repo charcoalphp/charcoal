@@ -2,19 +2,19 @@
 
 namespace Charcoal\Ui;
 
-// Module `charcoal-config` dependencies
+// From 'charcoal-config'
 use \Charcoal\Config\EntityInterface;
 
-// Module `charcoal-view` dependencies
+// From 'charcoal-view'
 use \Charcoal\View\ViewableInterface;
 
 /**
- * Basic UI Item Interface.
+ * Defines a UI Item
  *
- * -Also implements Entity Interface.
+ * - Also implements the Entity Interface.
  *   - for `ArrayAccess`, `Serializable` and `JsonSerializable`.
  *   - also add `keys()`, `data()`, `keys`, `delegates` and `separator`) methods.
- * -Also implements Viewable Interface.
+ * - Also implements the Viewable Interface.
  *   - add a required `view` dependency. Typically provided from DI container `['view']`.
  *   - also add `template_ident` property.
  *
@@ -22,15 +22,15 @@ use \Charcoal\View\ViewableInterface;
 interface UiItemInterface extends EntityInterface, ViewableInterface
 {
     /**
-     * Set whether the item is active or not.
+     * Activates/deactivates the item.
      *
-     * @param boolean $active The active flag.
+     * @param boolean $active Activate (TRUE) or deactivate (FALSE) the item.
      * @return UiItemInterface Chainable
      */
     public function setActive($active);
 
     /**
-     * Determine if the item is active or not.
+     * Determine if the item is active.
      *
      * @return boolean
      */
