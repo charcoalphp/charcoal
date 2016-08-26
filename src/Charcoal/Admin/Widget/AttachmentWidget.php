@@ -37,7 +37,14 @@ class AttachmentWidget extends AdminWidget implements
      *
      * @var FactoryInterface
      */
-    protected $widgetFactory;
+    private $widgetFactory;
+
+    /**
+     * The widget's title.
+     *
+     * @var TranslationString|string[]
+     */
+    private $title;
 
     /**
      * The group identifier.
@@ -47,13 +54,6 @@ class AttachmentWidget extends AdminWidget implements
      * @var string
      */
     protected $group;
-
-    /**
-     * The widget's title.
-     *
-     * @var TranslationString|string[]
-     */
-    protected $title;
 
     /**
      * The attachment heading (property or template).
@@ -89,13 +89,6 @@ class AttachmentWidget extends AdminWidget implements
      * @var array
      */
     protected $attachableObjects;
-
-    /**
-     * UiItemTrait...
-     *
-     * @var boolean
-     */
-    protected $showHeader = true;
 
     /**
      * Inject dependencies from a DI Container.
@@ -424,18 +417,6 @@ class AttachmentWidget extends AdminWidget implements
         return $this;
     }
 
-    /**
-     * UiItemTrait
-     * Default set to true
-     * @param Boolean $bool Show header or not.
-     * @return AttachmentWidget Chainable.
-     */
-    public function setShowHeader($bool)
-    {
-        $this->showHeader = $bool;
-        return $this;
-    }
-
 
 
 // Getters
@@ -565,16 +546,6 @@ class AttachmentWidget extends AdminWidget implements
         ];
 
         return json_encode($options, true);
-    }
-
-    /**
-     * UiItemTrait
-     * Default set to true
-     * @return Boolean $bool Show header or not.
-     */
-    public function showHeader()
-    {
-        return $this->showHeader;
     }
 
 
