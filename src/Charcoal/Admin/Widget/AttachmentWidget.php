@@ -91,6 +91,13 @@ class AttachmentWidget extends AdminWidget implements
     protected $attachableObjects;
 
     /**
+     * UiItemTrait...
+     *
+     * @var boolean
+     */
+    protected $showHeader = true;
+
+    /**
      * Inject dependencies from a DI Container.
      *
      * @param Container $container A dependencies container instance.
@@ -417,6 +424,18 @@ class AttachmentWidget extends AdminWidget implements
         return $this;
     }
 
+    /**
+     * UiItemTrait
+     * Default set to true
+     * @param Boolean $bool Show header or not.
+     * @return AttachmentWidget Chainable.
+     */
+    public function setShowHeader($bool)
+    {
+        $this->showHeader = $bool;
+        return $this;
+    }
+
 
 
 // Getters
@@ -548,6 +567,15 @@ class AttachmentWidget extends AdminWidget implements
         return json_encode($options, true);
     }
 
+    /**
+     * UiItemTrait
+     * Default set to true
+     * @return Boolean $bool Show header or not.
+     */
+    public function showHeader()
+    {
+        return $this->showHeader;
+    }
 
 
 // Utilities
