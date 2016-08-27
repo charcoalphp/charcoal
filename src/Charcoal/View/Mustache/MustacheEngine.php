@@ -95,8 +95,8 @@ class MustacheEngine extends AbstractEngine
      *
      * This method overwrites existing helpers.
      *
-     * @param mixed $... Variable list of helpers to merge.
-     *     An associative array of variables, objects, or closures.
+     * Method accepts a variable list of helpers to merge.
+     *
      * @return MustacheEngine Chainable
      */
     public function setHelpers()
@@ -112,8 +112,8 @@ class MustacheEngine extends AbstractEngine
     /**
      * Merge (replacing or adding) helpers.
      *
-     * @param mixed $... Variable list of helpers to merge.
-     *     An associative array of variables, objects, or closures.
+     * Method accepts a variable list of helpers to merge.
+     *
      * @return MustacheEngine Chainable
      */
     public function mergeHelpers()

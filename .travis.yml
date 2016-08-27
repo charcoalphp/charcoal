@@ -1,46 +1,46 @@
 language: php
 
 php:
-  - 5.5
-  - 5.6
-  - 7.0
-  - hhvm
-  - nightly
+    - 5.5
+    - 5.6
+    - 7.0
+    - hhvm
+    - nightly
 
 env:
-  global:
-    - secure: "ezDedEOUKWm26mbhUbSZONAXXCe92p6cQ88HhrVsUETW/6l3e4OqUCbQc3ifaJ/scY1ruB7WfoIuS9YS7Njhl61jWET7u/sGtA8lbrYHi7XhH3jivpTxpBTgriAssVlM3dlbAaflucXY4yryoLvWVl0tUazZu1f7Zyued98/doMBAfnUOPBi9c2UqCvpmRAFBJFgJg3ZrZ5bIVlCIj+aKCEBN/eUJlblA1v8YEhRP7kHtItRn2Lmxaarr3KivQlNR8IsVcrq2kOOozQ2sswaPGr+qDQ93kxFdEJK4VVnN1Pz+O4ELiZ5bAQZTFD6R0TjGGH2laB1ZWjE0xtLmZAQpm7EDWaXotQfDzDg5hoaZQ6lfYVvsLD6AiP4e+Iqeqvr7ddy6v3aTVLCJaUrqBufLMQHNBeVUmLV16JeN+727TCWn425Fh8LXFClHs+XnzDFvZsrT/PSf4XUOTM1F7SpPZtfSOIOBSgMfJFsX04tlz/4MEyPkZPHESNFdqTbltEXBTYXIYUjEZCnv5gbZ0eM+T3Wv9Aj3YAoB4aZur4jABWUftTG6qWiJKxCDwW9/cBubzm3hj+D+1UwneIsNurcKLiWoQBpbXc0nSW9fFG9jtMCvC5xsvfWFRQ4MnIvTpcZavmFACF+nQIFuyTq66iMNgzibDlZfmfTf/ifbjdlOsQ="
-    - GH_REPO: github.com/locomotivemtl/charcoal-view.git
+    global:
+        - secure: "ezDedEOUKWm26mbhUbSZONAXXCe92p6cQ88HhrVsUETW/6l3e4OqUCbQc3ifaJ/scY1ruB7WfoIuS9YS7Njhl61jWET7u/sGtA8lbrYHi7XhH3jivpTxpBTgriAssVlM3dlbAaflucXY4yryoLvWVl0tUazZu1f7Zyued98/doMBAfnUOPBi9c2UqCvpmRAFBJFgJg3ZrZ5bIVlCIj+aKCEBN/eUJlblA1v8YEhRP7kHtItRn2Lmxaarr3KivQlNR8IsVcrq2kOOozQ2sswaPGr+qDQ93kxFdEJK4VVnN1Pz+O4ELiZ5bAQZTFD6R0TjGGH2laB1ZWjE0xtLmZAQpm7EDWaXotQfDzDg5hoaZQ6lfYVvsLD6AiP4e+Iqeqvr7ddy6v3aTVLCJaUrqBufLMQHNBeVUmLV16JeN+727TCWn425Fh8LXFClHs+XnzDFvZsrT/PSf4XUOTM1F7SpPZtfSOIOBSgMfJFsX04tlz/4MEyPkZPHESNFdqTbltEXBTYXIYUjEZCnv5gbZ0eM+T3Wv9Aj3YAoB4aZur4jABWUftTG6qWiJKxCDwW9/cBubzm3hj+D+1UwneIsNurcKLiWoQBpbXc0nSW9fFG9jtMCvC5xsvfWFRQ4MnIvTpcZavmFACF+nQIFuyTq66iMNgzibDlZfmfTf/ifbjdlOsQ="
+        - GH_REPO: github.com/locomotivemtl/charcoal-view.git
 
 matrix:
-  allow_failures:
-    - php: 7.0
-    - php: hhvm
-    - php: nightly
+    allow_failures:
+        - php: 7.0
+        - php: hhvm
+        - php: nightly
 
 before_script:
-  ## Init composer
-  - composer selfupdate --quiet
-  - composer install -n --dev
+    ## Init composer
+    - composer selfupdate --quiet
+    - composer install -n --dev
 
-  ## Create temporary folders
-  - mkdir -p build/logs
+    ## Create temporary folders
+    - mkdir -p build/logs
 
 script:
-  ## Lint PHP Files
-  - find {src,tests} -name '*.php' -print0 | xargs -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1
+    ## Lint PHP Files
+    - find {src,tests} -name '*.php' -print0 | xargs -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1
 
-  ## PHP Code Sniffer
-  - if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then ./vendor/bin/phpcs -ps --colors --standard=phpcs.xml src/; fi
+    ## PHP Code Sniffer
+    - if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then ./vendor/bin/phpcs -ps --colors --standard=phpcs.xml src/; fi
 
-  ## Run PHPUnit Tests
-  - phpunit --configuration ./tests/phpunit.xml --coverage-text --coverage-clover build/logs/clover.xml
+    ## Run PHPUnit Tests
+    - phpunit --configuration ./tests/phpunit.xml --coverage-text --coverage-clover build/logs/clover.xml
 
 after_script:
-  - php vendor/bin/coveralls -v
-  - bash build/travis/phpdoc_ghpages.sh
-  - bash build/travis/apigen_ghpages.sh
+    - php vendor/bin/coveralls -v
+    - bash build/travis/phpdoc_ghpages.sh
+    - bash build/travis/apigen_ghpages.sh
 
 notifications:
-  slack: locomotivemtl:d9h8ZWwTZ6b3WUsSP9s26nb1
-  email: charcoal@locomotive.ca
+    slack: locomotivemtl:d9h8ZWwTZ6b3WUsSP9s26nb1
+    email: charcoal@locomotive.ca

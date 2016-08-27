@@ -2,7 +2,7 @@
 
 namespace Charcoal\Tests\View\Mustache;
 
-use \Charcoal\View\Mustache\Helpers\AssetsHelpers;
+use \Charcoal\View\Mustache\AssetsHelpers;
 
 class AssetsHelpersTest extends \PHPUnit_Framework_TestCase
 {
