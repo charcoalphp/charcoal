@@ -3,7 +3,7 @@
 namespace Charcoal\Ui\Form;
 
 /**
- * Form Interface
+ * Defines a form.
  */
 interface FormInterface
 {

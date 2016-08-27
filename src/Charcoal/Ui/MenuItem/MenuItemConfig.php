@@ -6,9 +6,8 @@ namespace Charcoal\Ui\MenuItem;
 use \Charcoal\Ui\UiItemConfig;
 
 /**
- * Menu Item Config
+ * A menu item configuration set.
  */
 class MenuItemConfig extends UiItemConfig
 {
-
 }

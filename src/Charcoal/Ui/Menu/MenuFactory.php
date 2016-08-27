@@ -5,7 +5,7 @@ namespace Charcoal\Ui\Menu;
 use \Charcoal\Factory\ResolverFactory;
 
 /**
- *
+ * Menu Factory
  */
 class MenuFactory extends ResolverFactory
 {

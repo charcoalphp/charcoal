@@ -2,15 +2,17 @@
 
 namespace Charcoal\Ui\FormInput;
 
-// Intra-module (`charcoal-ui`) dependencies
+// Intra-module (`charcoal-ui`) dependency
 use \Charcoal\Ui\FormGroup\FormGroupInterface;
 
 /**
- * Form Input Interface
+ * Defines a form input.
  */
 interface FormInputInterface
 {
     /**
+     * Set the form input's parent group.
+     *
      * @param FormGroupInterface $formGroup The parent form group object.
      * @return FormInputInterface Chainable
      */

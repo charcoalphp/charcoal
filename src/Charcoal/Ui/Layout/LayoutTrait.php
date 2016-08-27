@@ -5,7 +5,7 @@ namespace Charcoal\Ui\Layout;
 use \InvalidArgumentException;
 
 /**
- * Full implementation, as a Trait, of the LayoutInterface
+ * Provides an implementation of {@see \Charcoal\Ui\Layout\LayoutInterface}.
  */
 trait LayoutTrait
 {

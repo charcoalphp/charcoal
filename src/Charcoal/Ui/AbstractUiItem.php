@@ -26,7 +26,9 @@ use \Charcoal\Ui\UiItemInterface;
 use \Charcoal\Ui\UiItemTrait;
 
 /**
- * Basic UI Item
+ * An abstract UI Item.
+ *
+ * Abstract implementation of {@see \Charcoal\Ui\UiItemInterface}.
  */
 abstract class AbstractUiItem extends AbstractEntity implements
     LoggerAwareInterface,
@@ -46,7 +48,7 @@ abstract class AbstractUiItem extends AbstractEntity implements
     /**
      * Return a new UI item.
      *
-     * @param array|ArrayAccess $data The class depdendencies.
+     * @param array|\ArrayAccess $data The class depdendencies.
      */
     public function __construct(array $data = null)
     {
@@ -72,9 +74,9 @@ abstract class AbstractUiItem extends AbstractEntity implements
     }
 
     /**
-     * Activates/deactivates the item.
+     * Activates/deactivates the UI item.
      *
-     * @param boolean $active Activate (TRUE) or deactivate (FALSE) the item.
+     * @param boolean $active Activate (TRUE) or deactivate (FALSE) the UI item.
      * @return AbstractUiItem Chainable
      */
     public function setActive($active)
@@ -85,7 +87,7 @@ abstract class AbstractUiItem extends AbstractEntity implements
     }
 
     /**
-     * Determine if the item is active.
+     * Determine if the UI item is active.
      *
      * @return boolean
      */

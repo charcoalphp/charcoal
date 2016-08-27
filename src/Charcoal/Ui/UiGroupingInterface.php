@@ -3,7 +3,7 @@
 namespace Charcoal\Ui;
 
 /**
- * Basic UI Grouping Interface
+ * Defines a UI Grouping.
  */
 interface UiGroupingInterface extends UiItemInterface
 {

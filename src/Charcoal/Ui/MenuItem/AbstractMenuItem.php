@@ -13,7 +13,9 @@ use \Charcoal\Ui\Menu\MenuInterface;
 use \Charcoal\Ui\MenuItem\MenuItemInterface;
 
 /**
- * Default implementation of the MenuInterface, as an abstract class.
+ * A Basic Menu Item
+ *
+ * Abstract implementation of {@see \Charcoal\Ui\MenuItem\MenuItemInterface}.
  */
 abstract class AbstractMenuItem extends AbstractUiItem implements MenuItemInterface
 {
@@ -46,11 +48,13 @@ abstract class AbstractMenuItem extends AbstractUiItem implements MenuItemInterf
     /**
      * @var callable $childCallback
      */
-    private $childCallback = null;
+    private $childCallback;
 
-     /**
-      * @param array|ArrayAccess $data Class dependencies.
-      */
+    /**
+     * Return a new menu item.
+     *
+     * @param array|\ArrayAccess $data Class dependencies.
+     */
     public function __construct($data)
     {
         $this->setMenu($data['menu']);

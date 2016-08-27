@@ -2,13 +2,12 @@
 
 namespace Charcoal\Ui\Dashboard;
 
-// Intra-module (`charcoal-ui`) dependencies
+// Intra-module (`charcoal-ui`) dependency
 use \Charcoal\Ui\UiItemConfig;
 
 /**
- * Menu Item Config
+ * A dashboard configuration set.
  */
 class DashboardConfig extends UiItemConfig
 {
-
 }

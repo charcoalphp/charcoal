@@ -8,11 +8,10 @@ use \Charcoal\Ui\Layout\LayoutBuilder;
 use \Charcoal\Ui\Layout\LayoutInterface;
 
 /**
-* Full implementation, as trait, of the Layout Aware Interface.
-*/
+ * Provides an implementation of {@see \Charcoal\Ui\Layout\LayoutAwareInterface}.
+ */
 trait LayoutAwareTrait
 {
-
     /**
      * @var LayoutInterface $layout
      */
@@ -21,7 +20,7 @@ trait LayoutAwareTrait
     /**
      * @var LayoutBuilder $layoutBuilder
      */
-    protected $layoutBuilder = null;
+    protected $layoutBuilder;
 
     /**
      * @param LayoutBuilder $builder The layout builder, to create customized layout object(s).

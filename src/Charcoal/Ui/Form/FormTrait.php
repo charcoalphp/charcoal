@@ -2,7 +2,6 @@
 
 namespace Charcoal\Ui\Form;
 
-// Dependencies from `PHP`
 use \Exception;
 use \InvalidArgumentException;
 
@@ -13,7 +12,7 @@ use \Charcoal\Factory\FactoryInterface;
 use \Charcoal\Ui\FormGroup\FormGroupInterface;
 
 /**
- *
+ * Provides an implementation of {@see \Charcoal\Ui\Dashboard\DashboardInterface}.
  */
 trait FormTrait
 {
@@ -418,14 +417,16 @@ trait FormTrait
     }
 
     /**
-     * To be called with uasort()
+     * Static comparison function used by {@see uasort()}.
      *
-     * @param FormGroupInterface $a First group object to sort.
-     * @param FormGroupInterface $b Second group object to sort.
+     * @param  FormGroupInterface $a Form Group A.
+     * @param  FormGroupInterface $b Form Group B.
      * @return integer Sorting value: -1 or 1
      */
-    protected static function sortGroupsByPriority(FormGroupInterface $a, FormGroupInterface $b)
-    {
+    protected static function sortGroupsByPriority(
+        FormGroupInterface $a,
+        FormGroupInterface $b
+    ) {
         $a = $a->priority();
         $b = $b->priority();
 

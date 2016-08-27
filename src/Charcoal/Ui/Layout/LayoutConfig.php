@@ -6,9 +6,8 @@ namespace Charcoal\Ui\Layout;
 use \Charcoal\Ui\UiItemConfig;
 
 /**
- * Layout Config
+ * A layout configuration set.
  */
 class LayoutConfig extends UiItemConfig
 {
-
 }

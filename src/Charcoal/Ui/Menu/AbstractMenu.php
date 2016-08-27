@@ -11,27 +11,38 @@ use \Charcoal\Ui\MenuItem\MenuItemInterface;
 use \Charcoal\Ui\MenuItem\MenuItemBuilder;
 
 /**
- * Default implementation of the MenuInterface, as an abstract class.
+ * A Basic Menu
+ *
+ * Abstract implementation of {@see \Charcoal\Ui\Menu\MenuInterface}.
  */
-abstract class AbstractMenu extends AbstractUiItem implements MenuInterface
+abstract class AbstractMenu extends AbstractUiItem implements
+    MenuInterface
 {
     /**
-     * @var MenuItemInterface[] $items
+     * A collection menu items.
+     *
+     * @var MenuItemInterface[]
      */
     private $items = [];
 
     /**
-     * @var callable $itemCallback
+     * A callback applied to each menu item output by {@see self::items()}.
+     *
+     * @var callable
      */
-    private $itemCallback = null;
+    private $itemCallback;
 
     /**
+     * Store a menu builder instance.
+     *
      * @var MenuItemBuilder $menuItemBuilder
      */
-    private $menuItemBuilder = null;
+    private $menuItemBuilder;
 
     /**
-     * @param array|ArrayAccess $data Class dependencies.
+     * Return a new menu.
+     *
+     * @param array|\ArrayAccess $data Class dependencies.
      */
     public function __construct($data)
     {
@@ -131,14 +142,16 @@ abstract class AbstractMenu extends AbstractUiItem implements MenuInterface
     }
 
     /**
-     * To be called with uasort()
+     * Static comparison function used by {@see uasort()}.
      *
-     * @param MenuItemInterface $a First item to compare.
-     * @param MenuItemInterface $b Second item to compare.
+     * @param  MenuItemInterface $a Menu A.
+     * @param  MenuItemInterface $b Menu B.
      * @return integer Sorting value: -1, 0, or 1
      */
-    protected static function sortItemsByPriority(MenuItemInterface $a, MenuItemInterface $b)
-    {
+    protected static function sortItemsByPriority(
+        MenuItemInterface $a,
+        MenuItemInterface $b
+    ) {
         $a = $a->priority();
         $b = $b->priority();
 

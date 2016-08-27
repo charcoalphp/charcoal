@@ -1,49 +1,64 @@
 <?php
 
-namespace Charcoal\Ui\Dashboard;
+namespace Charcoal\Ui;
 
 use \InvalidArgumentException;
 
-// Module `charcoa-config` dependencies
+// From 'charcoa-config'
 use \Charcoal\Config\AbstractConfig;
 
 /**
- * Base UI Item config class
+ * A UI Item configuration set.
  */
 class UiItemConfig extends AbstractConfig
 {
     /**
-     * @var string $type
+     * The UI item type.
+     *
+     * @var string|null
      */
-    private $type = '';
+    private $type;
 
     /**
-     * @var string $template
+     * The UI item's template.
+     *
+     * @var string|null
      */
     private $template;
 
     /**
-     * @var string $controller
+     * The FQN of a view controller.
+     *
+     * @var string|null
      */
     private $controller;
 
     /**
-     * @param string $type The type of UI item / dashboard/ form / form group / menu / menu item / layout.
+     * Set the UI item type.
+     *
+     * The type of UI item (e.g., dashboard, layout, form, form group,
+     * field set, field, menu, menu item).
+     *
+     * @param string|null $type The UI item type.
      * @throws InvalidArgumentException If the type is not a string.
      * @return UiItemConfig Chainable
      */
     public function setType($type)
     {
-        if (!is_string($type)) {
+        if (is_string($type) || $type === null) {
+            $this->type = $type;
+        } else {
             throw new InvalidArgumentException(
-                'Can not set UI item config type: Type must be a string'
+                'Can not set UI item config type: Type must be a string or NULL'
             );
         }
-        $this->type = $type;
+
         return $this;
     }
 
     /**
+     * Retrieve the UI item type.
+     *
      * @return string
      */
     public function type()
@@ -52,62 +67,72 @@ class UiItemConfig extends AbstractConfig
     }
 
     /**
-     * @param string $template The UI item template identifier.
+     * Set the UI item's template.
+     *
+     * Usually, a path to a file containing the template to be rendered.
+     *
+     * @param string $template A template (identifier).
      * @throws InvalidArgumentException If the template is not a string.
-     * @return UiItemConfig Chainable
+     * @return UiItemInterface Chainable
      */
     public function setTemplate($template)
     {
         if (!is_string($template)) {
             throw new InvalidArgumentException(
-                'Can not set UI item config template: Template must be a string'
+                'The UI Item Config can not set the template, must be a string'
             );
         }
+
         $this->template = $template;
+
         return $this;
     }
 
     /**
-     * Get the template identifier.
-     * If it was not set, use `type()` as the template default value.
+     * Retrieve the UI item's template.
      *
-     * @return string
+     * @return string If unset, returns the UI item type.
      */
     public function template()
     {
         if ($this->template === null) {
             return $this->type();
         }
+
         return $this->template;
     }
 
     /**
-     * @param string $controller The UI item controller "type", or ident.
+     * Set the UI item's view controller "type" (identifier).
+     *
+     * @param string $controller The FQN of a view controller.
      * @throws InvalidArgumentException If the controller is not a string.
-     * @return UiItemConfig Chainable
+     * @return UiItemInterface Chainable
      */
     public function setController($controller)
     {
         if (!is_string($controller)) {
             throw new InvalidArgumentException(
-                'Can not set UI item config controller: Controller ust be a string'
+                'The UI Item Config can not set the view controller, must be a string'
             );
         }
+
         $this->controller = $controller;
+
         return $this;
     }
 
     /**
-     * Get the controller.
-     * If it was not set, use `type()` as the default controller value.
+     * Retrieve the UI item's view controller "type" (identifier).
      *
-     * @return string
+     * @return string If unset, returns the UI item type.
      */
     public function controller()
     {
         if ($this->controller === null) {
             return $this->type();
         }
+
         return $this->controller;
     }
 }

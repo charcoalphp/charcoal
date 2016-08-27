@@ -3,7 +3,7 @@
 namespace Charcoal\Ui\Menu;
 
 /**
- *
+ * Defines a menu.
  */
 interface MenuInterface
 {

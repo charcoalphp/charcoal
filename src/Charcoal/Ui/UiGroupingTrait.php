@@ -5,7 +5,7 @@ namespace Charcoal\Ui;
 use \InvalidArgumentException;
 
 /**
- * Ui Grouping Trait
+ * Provides an implementation of {@see \Charcoal\Ui\UiGroupingInterface}.
  */
 trait UiGroupingTrait
 {

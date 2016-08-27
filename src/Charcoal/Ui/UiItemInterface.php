@@ -9,7 +9,7 @@ use \Charcoal\Config\EntityInterface;
 use \Charcoal\View\ViewableInterface;
 
 /**
- * Defines a UI Item
+ * Defines a UI Item.
  *
  * - Also implements the Entity Interface.
  *   - for `ArrayAccess`, `Serializable` and `JsonSerializable`.
@@ -17,145 +17,202 @@ use \Charcoal\View\ViewableInterface;
  * - Also implements the Viewable Interface.
  *   - add a required `view` dependency. Typically provided from DI container `['view']`.
  *   - also add `template_ident` property.
- *
  */
 interface UiItemInterface extends EntityInterface, ViewableInterface
 {
     /**
-     * Activates/deactivates the item.
+     * Set the UI item type.
      *
-     * @param boolean $active Activate (TRUE) or deactivate (FALSE) the item.
+     * @param string|null $type The UI item type.
+     * @return UiItemInterface Chainable
+     */
+    public function setType($type);
+
+    /**
+     * Retrieve the UI item type.
+     *
+     * @return string
+     */
+    public function type();
+
+    /**
+     * Activates/deactivates the UI item.
+     *
+     * @param boolean $active Activate (TRUE) or deactivate (FALSE) the UI item.
      * @return UiItemInterface Chainable
      */
     public function setActive($active);
 
     /**
-     * Determine if the item is active.
+     * Determine if the UI item is active.
      *
      * @return boolean
      */
     public function active();
 
     /**
-     * @param string $template The UI item's template (identifier).
+     * Set the UI item's template.
+     *
+     * Usually, a path to a file containing the template to be rendered.
+     *
+     * @param string $template A template (identifier).
      * @return UiItemInterface Chainable
      */
     public function setTemplate($template);
 
     /**
+     * Retrieve the UI item's template.
+     *
      * @return string
      */
     public function template();
 
     /**
-     * @param mixed $title The group title.
+     * Set the UI item's title.
+     *
+     * @param mixed $title A title.
      * @return UiItemInterface Chainable
      */
     public function setTitle($title);
 
     /**
-     * Get the title. If unset, returns the label.
+     * Retrieve the title.
      *
-     * @return TranslationString
+     * @return TranslationString|string|null
      */
     public function title();
 
     /**
-     * @param mixed $subtitle The group subtitle.
+     * Set the UI item's sub-title.
+     *
+     * @param mixed $subtitle A sub-title.
      * @return UiItemInterface Chainable
      */
     public function setSubtitle($subtitle);
 
     /**
-     * @return TranslationString
+     * Retrieve the sub-title.
+     *
+     * @return TranslationString|string|null
      */
     public function subtitle();
 
     /**
-     * @param mixed $description The group description.
+     * Set the UI item's description.
+     *
+     * @param mixed $description A description.
      * @return UiItemInterface Chainable
      */
     public function setDescription($description);
 
     /**
-     * @return TranslationString
+     * Retrieve the description.
+     *
+     * @return TranslationString|string|null
      */
     public function description();
 
     /**
-     * @param mixed $notes The group notes.
+     * Set notes about the UI item.
+     *
+     * @param mixed $notes Notes.
      * @return UiItemInterface Chainable
      */
     public function setNotes($notes);
 
     /**
-     * @return TranslationString
+     * Retrieve the notes.
+     *
+     * @return TranslationString|string|null
      */
     public function notes();
 
     /**
-     * @param boolean $show The show title flag.
-     * @return FormGroup Chainable
+     * Show/hide the UI item's title.
+     *
+     * @param boolean $show Show (TRUE) or hide (FALSE) the title.
+     * @return UiItemInterface Chainable
      */
     public function setShowTitle($show);
 
     /**
+     * Determine if the title is to be displayed.
+     *
      * @return boolean
      */
     public function showTitle();
 
     /**
-     * @param boolean $show The show subtitle flag.
-     * @return FormGroup Chainable
+     * Show/hide the UI item's sub-title.
+     *
+     * @param boolean $show Show (TRUE) or hide (FALSE) the sub-title.
+     * @return UiItemInterface Chainable
      */
     public function setShowSubtitle($show);
 
     /**
+     * Determine if the sub-title is to be displayed.
+     *
      * @return boolean
      */
     public function showSubtitle();
 
     /**
-     * @param boolean $show The show description flag.
-     * @return FormGroup Chainable
+     * Show/hide the UI item's description.
+     *
+     * @param boolean $show Show (TRUE) or hide (FALSE) the description.
+     * @return UiItemInterface Chainable
      */
     public function setShowDescription($show);
 
     /**
+     * Determine if the description is to be displayed.
+     *
      * @return boolean
      */
     public function showDescription();
 
     /**
-     * @param boolean $show The show notes flag.
-     * @return FormGroup Chainable
+     * Show/hide the UI item's notes.
+     *
+     * @param boolean $show Show (TRUE) or hide (FALSE) the notes.
+     * @return UiItemInterface Chainable
      */
     public function setShowNotes($show);
 
     /**
-     * Ensure there are are notes to show, if notes are to be shown.
+     * Determine if the notes is to be displayed.
+     *
      * @return boolean
      */
     public function showNotes();
 
     /**
-     * @param boolean $show The show header flag.
-     * @return FormGroup Chainable
+     * Show/hide the UI item's header.
+     *
+     * @param boolean $show Show (TRUE) or hide (FALSE) the header.
+     * @return UiItemInterface Chainable
      */
     public function setShowHeader($show);
 
     /**
+     * Determine if the header is to be displayed.
+     *
      * @return boolean
      */
     public function showHeader();
 
     /**
-     * @param boolean $show The show footer flag.
-     * @return FormGroup Chainable
+     * Show/hide the UI item's footer.
+     *
+     * @param boolean $show Show (TRUE) or hide (FALSE) the footer.
+     * @return UiItemInterface Chainable
      */
     public function setShowFooter($show);
 
     /**
+     * Determine if the footer is to be displayed.
+     *
      * @return boolean
      */
     public function showFooter();

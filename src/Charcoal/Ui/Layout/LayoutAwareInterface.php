@@ -5,7 +5,10 @@ namespace Charcoal\Ui\Layout;
 use \Charcoal\Ui\Layout\LayoutBuilder;
 
 /**
- * Layout-aware interface manage UI items through a layout, which is created with a LayoutBuilder
+ * Defines a layout-aware entity.
+ *
+ * Manages UI items through the layout, which is created with
+ * a {@see LayoutBuilder}.
  */
 interface LayoutAwareInterface
 {

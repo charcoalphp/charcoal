@@ -5,7 +5,7 @@ namespace Charcoal\Ui\FormGroup;
 use \Charcoal\Ui\Form\FormInterface;
 
 /**
- * Form Group Interface
+ * Defines a form group.
  */
 interface FormGroupInterface
 {

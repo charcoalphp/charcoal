@@ -3,7 +3,7 @@
 namespace Charcoal\Ui\Layout;
 
 /**
- *
+ * Defines a layout.
  */
 interface LayoutInterface
 {

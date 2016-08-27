@@ -10,7 +10,7 @@ use \Charcoal\Ui\FormInput\FormInputBuilder;
 use \Charcoal\Ui\FormInput\FormInputInterface;
 
 /**
- *
+ * Provides an implementation of {@see \Charcoal\Ui\FormGroup\FormGroupInterface}.
  */
 trait FormGroupTrait
 {
@@ -35,7 +35,7 @@ trait FormGroupTrait
      *
      * @var callable
      */
-    private $inputCallback = null;
+    private $inputCallback;
 
     /**
      * Store the builder instance for the current class.

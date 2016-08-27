@@ -2,16 +2,21 @@
 
 namespace Charcoal\Ui\Dashboard;
 
+// Intra-module (`charcoal-ui`) dependency
 use \Charcoal\Ui\Dashboard\AbstractDashboard;
 
 /**
- * Generic, concrete Dashboard implementation.
+ * A Generic Dashboard
+ *
+ * Concreete implementation of {@see \Charcoal\Ui\Dashboard\DashboardInterface}.
  */
 class GenericDashboard extends AbstractDashboard
 {
-        /**
-         * @return string
-         */
+    /**
+     * Retrieve the dashboard type.
+     *
+     * @return string
+     */
     public function type()
     {
         return 'charcoal/ui/dashboard/generic';

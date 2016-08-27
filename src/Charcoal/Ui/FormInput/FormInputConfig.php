@@ -2,13 +2,12 @@
 
 namespace Charcoal\Ui\Dashboard;
 
-// Intra-module (`charcoal-ui`) dependencies
+// Intra-module (`charcoal-ui`) dependency
 use \Charcoal\Ui\UiItemConfig;
 
 /**
- * Form Input Config
+ * A form input configuration set.
  */
 class FormInputConfig extends UiItemConfig
 {
-
 }

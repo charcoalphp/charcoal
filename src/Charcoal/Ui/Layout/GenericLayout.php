@@ -5,12 +5,14 @@ namespace Charcoal\Ui\Layout;
 use \Charcoal\Ui\Layout\AbstractLayout;
 
 /**
- * Concrete layout class.
+ * A Generic Layout
+ *
+ * Concreete implementation of {@see \Charcoal\Ui\Layout\LayoutInterface}.
  */
 class GenericLayout extends AbstractLayout
 {
     /**
-     * Get the UI item's type.
+     * Retrieve the layout type.
      *
      * @return string
      */

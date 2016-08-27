@@ -5,11 +5,15 @@ namespace Charcoal\Ui\Form;
 use \Charcoal\Ui\Form\AbstractForm;
 
 /**
- * Generic, concrete Form implementation.
+ * A Generic Form
+ *
+ * Concreete implementation of {@see \Charcoal\Ui\Form\FormInterface}.
  */
 class GenericForm extends AbstractForm
 {
     /**
+     * Retrieve the form type.
+     *
      * @return string
      */
     public function type()

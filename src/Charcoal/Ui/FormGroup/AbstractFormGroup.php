@@ -10,7 +10,9 @@ use \Charcoal\Ui\Layout\LayoutAwareInterface;
 use \Charcoal\Ui\Layout\LayoutAwareTrait;
 
 /**
- * Default implementation of the FormGroupInterface, as an abstract class.
+ * A Basic Form Group
+ *
+ * Abstract implementation of {@see \Charcoal\Ui\FormGroup\FormGroupInterface}.
  */
 abstract class AbstractFormGroup extends AbstractUiItem implements
     FormGroupInterface,
@@ -22,7 +24,7 @@ abstract class AbstractFormGroup extends AbstractUiItem implements
     /**
      * Returns a new form group.
      *
-     * @param array|ArrayAccess $data The class depdendencies.
+     * @param array|\ArrayAccess $data The class depdendencies.
      */
     public function __construct($data)
     {
@@ -32,9 +34,10 @@ abstract class AbstractFormGroup extends AbstractUiItem implements
             $this->setForm($data['form']);
         }
 
+        /** Satisfies {@see \Charcoal\Ui\FormGroup\FormGroupTrait} */
         $this->setFormInputBuilder($data['form_input_builder']);
 
-        // Set up layout builder (to fulfill LayoutAware Interface)
+        /** Satisfies {@see \Charcoal\Ui\Layout\LayoutAwareInterface} */
         $this->setLayoutBuilder($data['layout_builder']);
     }
 }

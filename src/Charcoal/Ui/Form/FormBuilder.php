@@ -4,28 +4,39 @@ namespace Charcoal\Ui\Form;
 
 use \Pimple\Container;
 
+// From 'charcoal-factory'
 use \Charcoal\Factory\FactoryInterface;
 
 /**
- *
+ * Form Builder
  */
 class FormBuilder
 {
+    /**
+     * The default, concrete, form model.
+     *
+     * @const string
+     */
     const DEFAULT_TYPE = 'charcoal/ui/form/generic';
 
     /**
-     * @var FactoryInterface $factory
+     * Store the form factory instance.
+     *
+     * @var FactoryInterface
      */
     protected $factory;
 
     /**
-     * A Pimple dependency-injection container to fulfill the required services.
+     * Store the dependency-injection container to fulfill the required services.
+     *
      * @var Container $container
      */
     protected $container;
 
     /**
-     * @param FactoryInterface $factory An object factory.
+     * Return a new form builder.
+     *
+     * @param FactoryInterface $factory An form factory.
      */
     public function __construct(FactoryInterface $factory)
     {
@@ -33,8 +44,10 @@ class FormBuilder
     }
 
     /**
-     * @param array|\ArrayAccess $options The form group build options / config.
-     * @return FormGroupInterface
+     * Build and return a new form.
+     *
+     * @param  array|\ArrayAccess $options The form build options.
+     * @return DashboardInterface
      */
     public function build($options)
     {
@@ -42,6 +55,7 @@ class FormBuilder
 
         $obj = $this->factory->create($objType);
         $obj->setData($options);
+
         return $obj;
     }
 }

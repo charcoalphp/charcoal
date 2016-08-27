@@ -4,39 +4,52 @@ namespace Charcoal\Ui\Dashboard;
 
 use \Pimple\Container;
 
+// From 'charcoal-factory'
 use \Charcoal\Factory\FactoryInterface;
 
 /**
- *
+ * Dashboard Builder
  */
 class DashboardBuilder
 {
+    /**
+     * The default, concrete, dashboard model.
+     *
+     * @const string
+     */
     const DEFAULT_TYPE = 'charcoal/ui/dashboard/generic';
 
     /**
-     * @var FactoryInterface $factory
+     * Store the dashboard factory instance.
+     *
+     * @var FactoryInterface
      */
     protected $factory;
 
     /**
-     * A Pimple dependency-injection container to fulfill the required services.
+     * Store the dependency-injection container to fulfill the required services.
+     *
      * @var Container $container
      */
     protected $container;
 
     /**
-     * @param FactoryInterface $factory   An object factory.
+     * Return a new dashboard builder.
+     *
+     * @param FactoryInterface $factory   A dashboard factory.
      * @param Container        $container The DI container.
      */
     public function __construct(FactoryInterface $factory, Container $container)
     {
-        $this->factory = $factory;
+        $this->factory   = $factory;
         $this->container = $container;
     }
 
     /**
-     * @param array|\ArrayAccess $options The form group build options / config.
-     * @return FormGroupInterface
+     * Build and return a new dashboard.
+     *
+     * @param  array|\ArrayAccess $options The dashboard build options.
+     * @return DashboardInterface
      */
     public function build($options)
     {
@@ -44,6 +57,7 @@ class DashboardBuilder
 
         $obj = $this->factory->create($objType);
         $obj->setData($options);
+
         return $obj;
     }
 }

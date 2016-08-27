@@ -2,11 +2,11 @@
 
 namespace Charcoal\Ui\FormGroup;
 
-// Intra-module (`charcoal-ui`) dependencies
+// Intra-module (`charcoal-ui`) dependency
 use \Charcoal\Ui\UiItemConfig;
 
 /**
- * Form Group Config
+ * A form group configuration set.
  */
 class FormGroupConfig extends UiItemConfig
 {

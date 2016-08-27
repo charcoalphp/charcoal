@@ -4,38 +4,51 @@ namespace Charcoal\Ui\Menu;
 
 use \Pimple\Container;
 
+// From 'charcoal-factory'
 use \Charcoal\Factory\FactoryInterface;
 
 /**
- *
+ * Menu Builder
  */
 class MenuBuilder
 {
+    /**
+     * The default, concrete, menu model.
+     *
+     * @const string
+     */
     const DEFAULT_TYPE = 'charcoal/ui/menu/generic';
 
     /**
-     * @var FactoryInterface $factory
+     * Store the menu factory instance.
+     *
+     * @var FactoryInterface
      */
     protected $factory;
 
     /**
-     * A Pimple dependency-injection container
+     * Store the dependency-injection container to fulfill the required services.
+     *
      * @var Container $container
      */
     protected $container;
 
     /**
-     * @param FactoryInterface $factory   An object factory.
+     * Return a new menu builder.
+     *
+     * @param FactoryInterface $factory   A menu factory.
      * @param Container        $container The DI container.
      */
     public function __construct(FactoryInterface $factory, Container $container)
     {
-        $this->factory = $factory;
+        $this->factory   = $factory;
         $this->container = $container;
     }
 
     /**
-     * @param array|\ArrayAccess $options The form group build options / config.
+     * Build and return a new menu.
+     *
+     * @param  array|\ArrayAccess $options The menu build options.
      * @return MenuInterface
      */
     public function build($options)
@@ -44,11 +57,12 @@ class MenuBuilder
         $objType = isset($options['type']) ? $options['type'] : self::DEFAULT_TYPE;
 
         $obj = $this->factory->create($objType, [
-            'logger'    =>  $container['logger'],
-            'view'      =>  $container['view'],
+            'logger'            => $container['logger'],
+            'view'              => $container['view'],
             'menu_item_builder' => $container['menu/item/builder']
         ]);
         $obj->setData($options);
+
         return $obj;
     }
 }

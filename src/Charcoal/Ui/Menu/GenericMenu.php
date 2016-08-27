@@ -5,11 +5,15 @@ namespace Charcoal\Ui\Menu;
 use \Charcoal\Ui\Menu\AbstractMenu;
 
 /**
- * Generic, concrete Menu implementation.
+ * A Generic Menu
+ *
+ * Concreete implementation of {@see \Charcoal\Ui\Menu\MenuInterface}.
  */
 class GenericMenu extends AbstractMenu
 {
     /**
+     * Retrieve the menu type.
+     *
      * @return string
      */
     public function type()

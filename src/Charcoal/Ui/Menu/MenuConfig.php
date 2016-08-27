@@ -2,13 +2,12 @@
 
 namespace Charcoal\Ui\Menu;
 
-// Intra-module (`charcoal-ui`) dependencies
+// Intra-module (`charcoal-ui`) dependency
 use \Charcoal\Ui\UiItemConfig;
 
 /**
- * Menu Item Config
+ * A menu configuration set.
  */
 class MenuConfig extends UiItemConfig
 {
-
 }

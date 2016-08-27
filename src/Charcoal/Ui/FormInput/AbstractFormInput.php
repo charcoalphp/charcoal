@@ -7,22 +7,30 @@ use \Charcoal\Ui\AbstractUiItem;
 use \Charcoal\Ui\FormGroup\FormGroupInterface;
 
 /**
+ * A Basic Form Input
  *
+ * Abstract implementation of {@see \Charcoal\Ui\FormInput\FormInputInterface}.
  */
-abstract class AbstractFormInput extends AbstractUiItem implements FormInputInterface
+abstract class AbstractFormInput extends AbstractUiItem implements
+    FormInputInterface
 {
     /**
-     * @var FormGroupInterface $formGroup
+     * The form group the input belongs to.
+     *
+     * @var FormGroupInterface
      */
     protected $formGroup;
 
     /**
+     * Set the form input's parent group.
+     *
      * @param FormGroupInterface $formGroup The parent form group object.
      * @return FormInputInterface Chainable
      */
     public function setFormGroup(FormGroupInterface $formGroup)
     {
         $this->formGroup = $formGroup;
+
         return $this;
     }
 }

@@ -10,7 +10,9 @@ use \Charcoal\Ui\Layout\LayoutAwareTrait;
 use \Charcoal\Ui\UiItemInterface;
 
 /**
+ * A Basic Form
  *
+ * Abstract implementation of {@see \Charcoal\Ui\Form\FormInterface}.
  */
 abstract class AbstractForm extends AbstractUiItem implements
     FormInterface,
@@ -21,14 +23,16 @@ abstract class AbstractForm extends AbstractUiItem implements
     use FormTrait;
 
     /**
-     * @param array|ArrayAccess $data The class dependencies.
+     * Returns a new form.
+     *
+     * @param array|\ArrayAccess $data The class dependencies.
      */
     public function __construct($data = null)
     {
-        // Set up form group factory (to fulfill FormInterface)
+        /** Satisfies {@see \Charcoal\Ui\Form\FormTrait} */
         $this->setFormGroupFactory($data['form_group_factory']);
 
-        // Set up layout builder (to fulfill LayoutAwareInterface)
+        /** Satisfies {@see \Charcoal\Ui\Layout\LayoutAwareInterface} */
         $this->setLayoutBuilder($data['layout_builder']);
     }
 }

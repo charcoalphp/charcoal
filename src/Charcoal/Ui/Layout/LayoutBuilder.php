@@ -7,35 +7,47 @@ use \Pimple\Container;
 use \Charcoal\Factory\FactoryInterface;
 
 /**
- *
+ * Layout Builder
  */
 class LayoutBuilder
 {
+    /**
+     * The default, concrete, layout model.
+     *
+     * @const string
+     */
     const DEFAULT_TYPE = 'charcoal/ui/layout/generic';
 
     /**
-     * @var FactoryInterface $factory
+     * Store the layout factory instance.
+     *
+     * @var FactoryInterface
      */
     protected $factory;
 
     /**
-     * A Pimple dependency-injection container
+     * Store the dependency-injection container to fulfill the required services.
+     *
      * @var Container $container
      */
     protected $container;
 
     /**
-     * @param FactoryInterface $factory   An object factory.
+     * Return a new layout builder.
+     *
+     * @param FactoryInterface $factory   A layout factory.
      * @param Container        $container The DI container.
      */
     public function __construct(FactoryInterface $factory, Container $container)
     {
-        $this->factory = $factory;
+        $this->factory   = $factory;
         $this->container = $container;
     }
 
     /**
-     * @param array|\ArrayAccess $options The form group build options / config.
+     * Build and return a new layout.
+     *
+     * @param  array|\ArrayAccess $options The layout build options.
      * @return LayoutInterface
      */
     public function build($options)
@@ -44,10 +56,11 @@ class LayoutBuilder
         $objType = isset($options['type']) ? $options['type'] : self::DEFAULT_TYPE;
 
         $obj = $this->factory->create($objType, [
-            'logger'    =>  $container['logger'],
-            'view'      =>  $container['view']
+            'logger' => $container['logger'],
+            'view'   => $container['view']
         ]);
         $obj->setData($options);
+
         return $obj;
     }
 }

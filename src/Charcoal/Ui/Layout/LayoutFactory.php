@@ -5,7 +5,7 @@ namespace Charcoal\Ui\Layout;
 use \Charcoal\Factory\ResolverFactory;
 
 /**
- *
+ * Layout Factory
  */
 class LayoutFactory extends ResolverFactory
 {

@@ -4,97 +4,147 @@ namespace Charcoal\Ui\Dashboard;
 
 use \InvalidArgumentException;
 
-// Intra-module (`charcoal-ui`) dependencies
+// Intra-module (`charcoal-ui`) dependency
 use \Charcoal\Ui\UiItemInterface;
 
 /**
- * Full implementation of the Dashboard Interface, as abstract class.
+ * Provides an implementation of {@see \Charcoal\Ui\Dashboard\DashboardInterface}.
  */
 trait DashboardTrait
 {
     /**
-     * @var UiItemInterface[] $widgets
+     * A colletion of widgets.
+     *
+     * @var UiItemInterface[]
      */
-    private $widgets = null;
+    private $widgets;
 
     /**
-     * @var mixed $widgetBuilder
+     * Store a widget builder instance.
+     *
+     * @var object
      */
-    protected $widgetBuilder = null;
+    protected $widgetBuilder;
 
     /**
-     * @var callable $widgetCallback
+     * A callback applied to each widget output by {@see self::widgets()}.
+     *
+     * @var callable
      */
-    private $widgetCallback = null;
+    private $widgetCallback;
 
     /**
-     * @param mixed $builder The builder to create customized widget objects.
+     * Set a widget builder.
+     *
+     * @param  object $builder The builder to create customized widget objects.
+     * @throws InvalidArgumentException If the argument is not a widget builder.
      * @return DashboardInterface Chainable
      */
     protected function setWidgetBuilder($builder)
     {
-        $this->widgetBuilder = $builder;
+        if (is_object($builder)) {
+            $this->widgetBuilder = $builder;
+        } else {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'Argument must be a widget builder, %s given',
+                    (is_object($builder) ? get_class($builder) : gettype($builder))
+                )
+            );
+        }
+
         return $this;
     }
 
     /**
-     * @param callable $cb The widget callback.
+     * Set a callback to be applied to each widget output by {@see self::widgets()}.
+     *
+     * @param  callable|null $callable A callback to be applied to each widget
+     *     or NULL to disable the callback.
+     * @throws InvalidArgumentException If the argument is not callable or NULL.
      * @return DashboardInterface Chainable
      */
-    public function setWidgetCallback(callable $cb)
+    public function setWidgetCallback($callable)
     {
-        $this->widgetCallback = $cb;
+        if ($callable === null) {
+            $this->widgetCallback = null;
+
+            return $this;
+        }
+
+        if (is_callable($callable)) {
+            $this->widgetCallback = $callable;
+        } else {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'Argument must be callable or NULL, %s given',
+                    (is_object($callable) ? get_class($callable) : gettype($callable))
+                )
+            );
+        }
+
         return $this;
     }
 
     /**
-     * @param array $widgets The widgets.
+     * Set the dashboard's widgets.
+     *
+     * @param array $widgets A collection of widgets.
      * @return DashboardInterface Chainable
      */
     public function setWidgets(array $widgets)
     {
         $this->widgets = [];
+
         foreach ($widgets as $widgetIdent => $widget) {
             $this->addWidget($widgetIdent, $widget);
         }
+
         return $this;
     }
 
     /**
-     * @param string                $widgetIdent The widget identifier.
-     * @param WidgetInterface|array $widget      The widget object or structure.
-     * @throws InvalidArgumentException If the argument is not a widget object or structure.
+     * Add a widget to the dashboard.
+     *
+     * If a widget with the same $widgetIdent already exists, it will be overridden.
+     *
+     * @param  string                $widgetIdent The widget identifier.
+     * @param  UiItemInterface|array $widget      The widget object or structure.
+     * @throws InvalidArgumentException If the widget is invalid.
      * @return DashboardInterface Chainable
      */
     public function addWidget($widgetIdent, $widget)
     {
         if (!is_string($widgetIdent)) {
             throw new InvalidArgumentException(
-                'Widget ident needs to be a string'
+                'Widget identifier needs to be a string'
             );
         }
 
-        if (($widget instanceof UiItemInterface)) {
+        if ($widget instanceof UiItemInterface) {
             $this->widgets[$widgetIdent] = $widget;
         } elseif (is_array($widget)) {
             if (!isset($widget['ident'])) {
                 $widget['ident'] = $widgetIdent;
             }
+
             $w = $this->widgetBuilder->build($widget);
+
             $this->widgets[$widgetIdent] = $w;
         } else {
             throw new InvalidArgumentException(
                 'Can not add widget: Invalid Widget.'
             );
         }
+
         return $this;
     }
 
     /**
-     * Widgets generator.
+     * Retrieve the dashboard's widgets.
      *
-     * @param callable $widgetCallback Widget callback.
-     * @return WidgetInterface[]|Generator
+     * @param callable $widgetCallback A callback applied to each widget.
+     * @return UiItemInterface[]|Generator
      */
     public function widgets(callable $widgetCallback = null)
     {
@@ -106,23 +156,30 @@ trait DashboardTrait
             if (!$widget->active()) {
                 continue;
             }
+
             if ($widgetCallback) {
                 $widgetCallback($widget);
             }
+
             $GLOBALS['widget_template'] = $widget->template();
+
             yield $widget;
         }
     }
 
     /**
+     * Determine if the dashboard has any widgets.
+     *
      * @return boolean
      */
     public function hasWidgets()
     {
-        return (count($this->widgets) > 0);
+        return ($this->numWidgets() > 0);
     }
 
     /**
+     * Count the number of widgets attached to the dashboard.
+     *
      * @return integer
      */
     public function numWidgets()
@@ -131,11 +188,11 @@ trait DashboardTrait
     }
 
     /**
-     * To be called with uasort()
+     * Static comparison function used by {@see uasort()}.
      *
-     * @param mixed $a Widget a.
-     * @param mixed $b Widget b.
-     * @return integer Sorting value: -1, 0, or 1
+     * @param  mixed $a Widget A.
+     * @param  mixed $b Widget B.
+     * @return integer Sorting value: -1 or 1
      */
     protected static function sortWidgetsByPriority($a, $b)
     {

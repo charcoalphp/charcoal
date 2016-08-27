@@ -11,7 +11,9 @@ use \Charcoal\Ui\Dashboard\DashboardTrait;
 use \Charcoal\Ui\Layout\LayoutAwareTrait;
 
 /**
- * Full implementation of the Dashboard Interface, as abstract class.
+ * A Basic Dashboard
+ *
+ * Abstract implementation of {@see \Charcoal\Ui\Dashboard\DashboardInterface}.
  */
 abstract class AbstractDashboard extends AbstractUiItem implements
     DashboardInterface
@@ -20,13 +22,17 @@ abstract class AbstractDashboard extends AbstractUiItem implements
     use LayoutAwareTrait;
 
     /**
-     * @param array|ArrayAccess $data The class dependencies.
+     * Return a new dashboard.
+     *
+     * @param array|\ArrayAccess $data The class dependencies.
      */
     public function __construct($data = null)
     {
         $this->setWidgetBuilder($data['widget_builder']);
 
-        // Set up layout builder (to fulfill LayoutAware Interface)
+        /** Satisfies {@see \Charcoal\Ui\Layout\LayoutAwareInterface} */
         $this->setLayoutBuilder($data['layout_builder']);
+
+        parent::__construct($data);
     }
 }
