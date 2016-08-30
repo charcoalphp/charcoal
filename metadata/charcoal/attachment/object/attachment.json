@@ -72,8 +72,8 @@
             "type": "string",
             "label": "URL",
             "notes": {
-                "fr": "Ex: https://locomotive.ca",
-                "en": "ie: https://locomotive.ca"
+                "fr": "ex: <samp>https://locomotive.ca</samp>",
+                "en": "e.g.: <samp>https://locomotive.ca</samp>"
             }
         },
         "file": {

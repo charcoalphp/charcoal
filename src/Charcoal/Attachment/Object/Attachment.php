@@ -54,7 +54,7 @@ class Attachment extends Content implements AttachableInterface
         'video'     => 'glyphicon-facetime-video',
         'image'     => 'glyphicon-picture',
         'file'      => 'glyphicon-file',
-        'link'      => 'glyphicon-file',
+        'link'      => 'glyphicon-link',
         'text'      => 'glyphicon-font',
         'gallery'   => 'glyphicon-duplicate',
         'accordion' => 'glyphicon-list'
