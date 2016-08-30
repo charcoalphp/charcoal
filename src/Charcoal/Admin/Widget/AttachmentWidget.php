@@ -189,7 +189,7 @@ class AttachmentWidget extends AdminWidget implements
 
         if ($search === null) {
             $attr = [ 'href', 'link', 'url', 'src' ];
-            $uri  = [ '/', 'http', 'fax', 'file', 'ftp', 'geo', 'mailto', 'sip', 'tag', 'tel', 'urn' ];
+            $uri  = [ '/', 'data', 'fax', 'file', 'ftp', 'geo', 'http', 'mailto', 'sip', 'tag', 'tel', 'urn' ];
 
             $search = sprintf(
                 '(?<=%1$s=["\'])(?!%2$s)(\S+)(?=["\'])',
