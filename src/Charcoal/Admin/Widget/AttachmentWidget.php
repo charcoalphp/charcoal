@@ -2,24 +2,26 @@
 
 namespace Charcoal\Admin\Widget;
 
-use ArrayIterator;
+use \ArrayIterator;
 
-// Dependencies from Pimple
 use \Pimple\Container;
 
-// Dependency from 'charcoal-factory'
+// From 'bobthecow/mustache.php'
+use \Mustache_LambdaHelper as LambdaHelper;
+
+// From 'charcoal-factory'
 use \Charcoal\Factory\FactoryInterface;
 
-// Dependencies from 'charcoal-core'
+// From 'charcoal-core'
 use \Charcoal\Loader\CollectionLoader;
 use \Charcoal\Model\ModelFactory;
 
-// Dependencies from 'charcoal-admin'
+// From 'charcoal-admin'
 use \Charcoal\Admin\AdminWidget;
 use \Charcoal\Admin\Ui\ObjectContainerInterface;
 use \Charcoal\Admin\Ui\ObjectContainerTrait;
 
-// Dependency from 'charcoal-translation'
+// From 'charcoal-translation'
 use \Charcoal\Translation\TranslationString;
 
 /**
@@ -174,6 +176,41 @@ class AttachmentWidget extends AdminWidget implements
     public function hasAttachments()
     {
         return count(iterator_to_array($this->attachments()));
+    }
+
+    /**
+     * Retrieves a Closure that prepends relative URIs with the project's base URI.
+     *
+     * @return callable
+     */
+    public function withBaseUrl()
+    {
+        static $search;
+
+        if ($search === null) {
+            $attr = [ 'href', 'link', 'url', 'src' ];
+            $uri  = [ '/', 'http', 'fax', 'file', 'ftp', 'geo', 'mailto', 'sip', 'tag', 'tel', 'urn' ];
+
+            $search = sprintf(
+                '(?<=%1$s=["\'])(?!%2$s)(\S+)(?=["\'])',
+                implode('=["\']|', array_map('preg_quote', $attr)),
+                implode('|', array_map('preg_quote', $uri))
+            );
+        }
+
+        /**
+         * Prepend the project's base URI to all relative URIs in HTML attributes (e.g., src, href).
+         *
+         * @param  string       $text   Text to parse.
+         * @param  LambdaHelper $helper For rendering strings in the current context.
+         * @return string
+         */
+        return function ($text, LambdaHelper $helper) use ($search) {
+            $text = $helper->render($text);
+            $base = $helper->render('{{ baseUrl }}');
+
+            return preg_replace('~'.$search.'~', $base.'$1', $text);
+        };
     }
 
 
