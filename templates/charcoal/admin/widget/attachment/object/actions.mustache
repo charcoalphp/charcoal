@@ -13,18 +13,17 @@
         {{!--
         <li><a href="#" data-image="[[baseUrl]][[file]]" data-type="[[type]]" data-microtype="[[microType]]" data-action="preview">Preview</a></li>
         --}}
-        <li><a href="#" data-type="{{type}}" data-title="Éditer le fichier" data-id="{{id}}" data-action="edit">Éditer</a></li>
-
-        {{#isAttachmentContainer}}
-            {{#attachableObjects}}
-            <li><a href="#" data-type="{{type}}" data-id="{{id}}" data-title="{{label}}" data-attachment="{{attachmentType}}" data-action="add-object">{{label}}</a></li>
-            {{/attachableObjects}}
-        {{/isAttachmentContainer}}
-        <li><a href="#" data-image="{{baseUrl}}{{file}}" data-type="{{type}}" data-id="{{id}}" data-action="delete">Supprimer</a></li>
-        {{#isAttachmentContainer}}
-        <li>
-            <a href="object/edit?obj_type={{type}}&obj_id={{id}}" target="_blank">Modifier le contenu</a>
-        </li>
-        {{/isAttachmentContainer}}
+        <li><a href="object/edit?obj_type={{ type }}&obj_id={{ id }}" data-type="{{ type }}" data-title="{{ label }}" data-id="{{id}}" data-action="edit">Éditer</a></li>
+        {{# isAttachmentContainer }}
+        <li role="separator" class="divider"></li>
+        {{# attachableObjects }}
+        <li><a href="#" data-type="{{ type }}" data-id="{{ id }}" data-title="{{ label }}" data-attachment="{{ attachmentType }}" data-action="add-object">{{ label }}</a></li>
+        {{/ attachableObjects }}
+        <li role="separator" class="divider"></li>
+        {{/ isAttachmentContainer }}
+        <li><a href="object/delete?obj_type={{ type }}&obj_id={{ id }}" data-type="{{ type }}" data-id="{{ id }}" data-action="delete">Supprimer</a></li>
+        {{# isAttachmentContainer }}
+        <li><a href="object/edit?obj_type={{ type }}&obj_id={{ id }}" target="_blank">Modifier le contenu</a></li>
+        {{/ isAttachmentContainer }}
     </ul>
 </div>
