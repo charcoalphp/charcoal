@@ -2,7 +2,10 @@
     "data": {
         "type": "charcoal/attachment/object/embed",
         "preview": "{{> charcoal/attachment/object/embed }}",
-        "heading":"Média externe: {{title}}"
+        "heading": {
+            "fr": "Média externe{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}",
+            "en": "Embedded Media{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}"
+        }
     },
 
     "properties": {

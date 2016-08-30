@@ -1,7 +1,10 @@
 {
     "data": {
         "type": "charcoal/attachment/object/video",
-        "heading":"Vidéo externe: {{title}}"
+        "heading": {
+            "fr": "Vidéo{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}",
+            "en": "Video{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}"
+        }
     },
 
     "admin": {

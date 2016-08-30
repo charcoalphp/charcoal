@@ -2,7 +2,10 @@
     "data": {
         "type": "charcoal/attachment/object/gallery",
         "preview": "{{> charcoal/attachment/object/gallery }}",
-        "heading":"Galerie: {{title}}"
+        "heading": {
+            "fr": "Galerie{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}",
+            "en": "Gallery{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}"
+        }
     },
 
     "attachments": {

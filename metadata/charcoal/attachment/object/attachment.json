@@ -1,7 +1,10 @@
 {
     "data": {
         "preview": "{{ title }}",
-        "heading":"Contenu relié: {{title}}"
+        "heading": {
+            "fr": "Contenu relié{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}",
+            "en": "Related Content{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}"
+        }
     },
 
     "properties": {

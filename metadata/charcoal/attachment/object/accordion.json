@@ -2,7 +2,10 @@
     "data": {
         "type": "charcoal/attachment/object/accordion",
         "preview": "{{> charcoal/attachment/object/accordion }}",
-        "heading":"Accordéon: {{title}}"
+        "heading": {
+            "fr": "Accordéon{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}",
+            "en": "Accordion{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}"
+        }
     },
 
     "attachments": {

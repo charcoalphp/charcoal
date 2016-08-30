@@ -2,7 +2,10 @@
     "data": {
         "type": "charcoal/attachment/object/file",
         "preview": "{{> charcoal/attachment/object/file }}",
-        "heading":"Fichier: {{title}} - {{basename}}"
+        "heading": {
+            "fr": "Fichier{{# title }}: {{ . }} — {{/ title }}{{^ title }} #{{ id }} — {{/ title }}{{ basename }}",
+            "en": "File{{# title }}: {{ . }} — {{/ title }}{{^ title }} #{{ id }} — {{/ title }}{{ basename }}"
+        }
     },
 
     "admin": {
