@@ -21,6 +21,7 @@ use \Charcoal\Attachment\Interfaces\AttachableInterface;
 use \Charcoal\Attachment\Object\File;
 use \Charcoal\Attachment\Object\Image;
 use \Charcoal\Attachment\Object\Text;
+use \Charcoal\Attachment\Object\Embed;
 use \Charcoal\Attachment\Object\Video;
 use \Charcoal\Attachment\Object\Gallery;
 use \Charcoal\Attachment\Object\Accordion;
@@ -39,6 +40,7 @@ class Attachment extends Content implements AttachableInterface
     const FILE_TYPE      = File::class;
     const LINK_TYPE      = Link::class;
     const IMAGE_TYPE     = Image::class;
+    const EMBED_TYPE     = Embed::class;
     const VIDEO_TYPE     = Video::class;
     const TEXT_TYPE      = Text::class;
     const GALLERY_TYPE   = Gallery::class;
@@ -51,12 +53,14 @@ class Attachment extends Content implements AttachableInterface
      * @var array
      */
     protected $glyphs = [
-        'video'     => 'glyphicon-facetime-video',
+        'embed'     => 'glyphicon-blackboard',
+        'video'     => 'glyphicon-film',
         'image'     => 'glyphicon-picture',
         'file'      => 'glyphicon-file',
         'link'      => 'glyphicon-link',
         'text'      => 'glyphicon-font',
         'gallery'   => 'glyphicon-duplicate',
+        'container' => 'glyphicon-list',
         'accordion' => 'glyphicon-list'
     ];
 
@@ -340,6 +344,16 @@ class Attachment extends Content implements AttachableInterface
     }
 
     /**
+     * Determine if the attachment type is an embed object.
+     *
+     * @return boolean
+     */
+    public function isEmbed()
+    {
+        return ($this->microType() === 'embed');
+    }
+
+    /**
      * Determine if the attachment type is a video.
      *
      * @return boolean
@@ -377,6 +391,16 @@ class Attachment extends Content implements AttachableInterface
     public function isGallery()
     {
         return ($this->microType() === 'gallery');
+    }
+
+    /**
+     * Determine if the attachment type is an accordion.
+     *
+     * @return boolean
+     */
+    public function isAccordion()
+    {
+        return ($this->microType() === 'accordion');
     }
 
     /**
