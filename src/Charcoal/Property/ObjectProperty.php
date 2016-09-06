@@ -531,10 +531,11 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
             }
         }
 
+        $label  = $this->objPattern($obj);
         $choice = [
             'value' => $obj->id(),
-            'label' => $this->objPattern($obj),
-            'title' => $this->objPattern($obj)
+            'label' => $label,
+            'title' => $label
         ];
 
         if (is_callable([ $obj, 'icon' ])) {
