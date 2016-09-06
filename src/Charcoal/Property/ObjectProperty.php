@@ -186,7 +186,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     {
         if (!is_string($objType)) {
             throw new InvalidArgumentException(
-                'Can not set property\'s object type: "Obj type" needs to be a string'
+                'Can not set property\'s object type: "obj_type" needs to be a string'
             );
         }
         $this->objType = $objType;
@@ -201,7 +201,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     {
         if ($this->objType === null) {
             throw new Exception(
-                sprintf('No obj type defined. Invalid property "%s"', $this->ident())
+                sprintf('No object type ("obj_type") defined. Invalid property "%s"', $this->ident())
             );
         }
         return $this->objType;

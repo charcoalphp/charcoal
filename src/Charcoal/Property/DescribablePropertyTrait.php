@@ -65,7 +65,7 @@ trait DescribablePropertyTrait
     public function properties(array $filters = null)
     {
         $this->metadata();
-// Hack!
+        // Hack!
         $props = array_keys($this->metadata()->properties());
 
         if (empty($props)) {
@@ -76,7 +76,7 @@ trait DescribablePropertyTrait
             $property = $this->property($propertyIdent);
             $filtered = (int)$property->isFiltered($filters);
             // Get the property object of this definition
-            yield $propertyIdent => $this->property($propertyIdent);
+            yield $propertyIdent => $property;
         }
     }
 
@@ -121,6 +121,7 @@ trait DescribablePropertyTrait
 
         $factory  = $this->propertyFactory();
         $property = $factory->create($propertyMetadata['type']);
+        $property->metadata();
         $property->setIdent($propertyIdent);
         $property->setData($propertyMetadata);
 
