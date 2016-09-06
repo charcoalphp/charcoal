@@ -1,10 +1,11 @@
 {
-  "properties":{
-    "support_alpha":{
-      "type":"boolean"
+    "properties": {
+        "support_alpha": {
+            "type": "boolean"
+        }
+    },
+    "admin": {
+        "input_type": "charcoal/admin/property/input/color-picker",
+        "display_type": "charcoal/admin/property/display/color-swatch"
     }
-  },
-  "admin":{
-    "input_type":"charcoal/admin/property/input/color-picker"
-  }
 }
