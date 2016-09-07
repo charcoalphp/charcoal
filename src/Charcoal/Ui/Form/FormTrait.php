@@ -235,7 +235,7 @@ trait FormTrait
             $g->setData($group);
             $this->groups[$groupIdent] = $g;
         } elseif ($group === false || $group === null) {
-            continue;
+            return $this;
         } else {
             throw new InvalidArgumentException(
                 sprintf(
