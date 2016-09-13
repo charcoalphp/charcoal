@@ -82,11 +82,6 @@ trait DescribableTrait
             );
         }
 
-        // If the metadata contains "data", then automatically set the initial data to the value
-        if (isset($this->metadata['data']) && is_array($this->metadata['data'])) {
-            $this->setData($this->metadata['data']);
-        }
-
         // Chainable
         return $this;
     }
@@ -116,7 +111,6 @@ trait DescribableTrait
         if ($metadataIdent === null) {
             $metadataIdent = $this->metadataIdent();
         }
-
 
         $metadataLoader = $this->metadataLoader();
         $metadata = $metadataLoader->load($metadataIdent, $this->createMetadata());
