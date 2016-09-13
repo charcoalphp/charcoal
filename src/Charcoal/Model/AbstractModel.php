@@ -208,6 +208,15 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
+     * @return array
+     */
+    public function defaultData()
+    {
+        $metadata = $this->metadata();
+        return $metadata->defaultData();
+    }
+
+    /**
      * Sets the data
      *
      * This function takes a 1-dimensional array and fill the object with its value.

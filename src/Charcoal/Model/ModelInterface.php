@@ -32,6 +32,11 @@ interface ModelInterface
     /**
      * @return array
      */
+    public function defaultData();
+
+    /**
+     * @return array
+     */
     public function properties();
 
     /**
