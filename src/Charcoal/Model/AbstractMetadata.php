@@ -5,6 +5,9 @@ namespace Charcoal\Model;
 // Module `charcoal-config` dependencies
 use \Charcoal\Config\AbstractConfig;
 
+// Module `charcoal-property` dependencies
+use \Charcoal\Property\PropertyInterface;
+
 // Local namespace dependencies
 use \Charcoal\Model\MetadataInterface;
 
@@ -18,10 +21,38 @@ abstract class AbstractMetadata extends AbstractConfig implements
     MetadataInterface
 {
     /**
+     * @var array $defaultData
+     */
+    protected $defaultData = [];
+
+    /**
      * Holds the properties of this configuration object
      * @var array $properties
      */
     protected $properties = [];
+
+    /**
+     * @var PropertyInterface[]
+     */
+    protected $propertiesObjects;
+
+    /**
+     * @param array $defaultData
+     * @return MetadataInterface Chainable
+     */
+    public function setDefaultData(array $defaultData)
+    {
+        $this->defaultData = $defaultData;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function defaultData()
+    {
+        return $this->defaultData;
+    }
 
     /**
      * Set the properties.
@@ -60,4 +91,32 @@ abstract class AbstractMetadata extends AbstractConfig implements
             return null;
         }
     }
+
+    /**
+     * Set a property, as a PropertyInterface instance.
+     *
+     * @param string $propertyIdent The property indentifer.
+     * @param PropertyInterface $propertyObject The property, as object.
+     * @return MetadataInterface Chainable
+     */
+    public function setPropertyObject($propertyIdent, PropertyInterface $propertyObject)
+    {
+        $this->propertiesObjects[$propertyIdent] = $propertyObject;
+        return $this;
+    }
+
+    /**
+     * @param string The property (identifier) to return, as an object.
+     * @return PropertyInterface|null
+     */
+    public function propertyObject($propertyIdent)
+    {
+        if (!isset($this->propertiesObjects[$propertyIdent])) {
+            return null;
+        } else {
+            return $this->propertiesObjects[$propertyIdent];
+        }
+    }
+
+
 }
