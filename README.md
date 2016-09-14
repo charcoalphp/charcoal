@@ -10,12 +10,12 @@ This package provides easy hierarchical configuration container (for config stor
 
 ## Main features
 
-- [Load data from ini, json, php or yaml files.](#supported-file-formats)
-- [Customizable separator access.](#separators)
-- [Delegates (Chaining configurations).](#delegates)
-- [Array access.](#array-access)
-- [Implement Interop-Container.](#interoperability)
-- [Provide Configurable Interface](#configurable)
+-   [Load data from ini, json, php or yaml files.](#supported-file-formats)
+-   [Customizable separator access.](#separators)
+-   [Delegates (Chaining configurations).](#delegates)
+-   [Array access.](#array-access)
+-   [Implement Interop-Container.](#interoperability)
+-   [Provide Configurable Interface](#configurable)
 
 ## Supported file formats
 
@@ -47,9 +47,9 @@ For the JSON file (ex: `config/my-config.json`):
 
 ```json
 {
-	"example":{
-		"foo":"bar"
-	}
+    "example":{
+        "foo":"bar"
+    }
 }
 ```
 
@@ -90,7 +90,7 @@ For the PHP file:
 
 ```php
 $this['example'] = [
-	'foo'=>'bar'
+    'foo'=>'bar'
 ];
 ```
 
@@ -125,7 +125,7 @@ For the YAML file (ex: `config/my-config.yml`):
 
 ```yaml
 example:
-	foo: bar
+    foo: bar
 ```
 
 Loading this file into configuration would be:
@@ -153,10 +153,10 @@ The default separator is `.` (it can be retrieved with `separator()`) but it can
 $config = new \Charcoal\GenericConfig();
 $config->setSeparator('/'); // Default is "."
 $config->merge([
-	'foo', [
-		'baz'=>example,
-		'bar'=>42
-	]
+    'foo', [
+        'baz'=>example,
+        'bar'=>42
+    ]
 ]);
 // Ouput "42"
 echo $config->get('foo/bar');
@@ -170,7 +170,7 @@ If one or more delegates are added to a class, they will be used as _fallback_ w
 
 ```php
 $config = new \Charcoal\Config\GenericConfig([
-	'foo' => 'baz'
+    'foo' => 'baz'
 ]);
 
 // Returns `false`
@@ -180,7 +180,7 @@ $config->has('bar');
 echo $config->get('bar');
 
 $config2 = new \Charcoal\Config\GenericConfig([
-	'bar' => 42
+    'bar' => 42
 ]);
 
 $config->addDelegate($config2);
@@ -191,9 +191,9 @@ echo $config->get('bar');
 
 Delegates can be set with:
 
-- `setDelegates()` to set an array of delegates.
-- `addDelegate()` to add a config object at the end of the delegate list.
-- `prependDelegate()` to add a config object at the beginning of the delegate list.
+-   `setDelegates()` to set an array of delegates.
+-   `addDelegate()` to add a config object at the end of the delegate list.
+-   `prependDelegate()` to add a config object at the beginning of the delegate list.
 
 It is also possible to set delegates by passing them (as an array of ConfigInterface) to the constructor:
 
@@ -236,7 +236,7 @@ This interface requires the `get()` and `has()` methods:
 
 ```php
 $config = new \Charcoal\Config\GenericConfig([
-	'foobar'=>42
+    'foobar'=>42
 ]);
 
 // Returns `true`
@@ -269,16 +269,16 @@ use \Acme\Foo\FooConfig;
 
 class Foo implements ConfigurableInterface
 {
-	use ConfigurableTrait;
+    use ConfigurableTrait;
 
-	public function createConfig(array $data = null)
-	{
-		$config = new FooConfig();
-		if ($data !== null) {
-			$config->merge($data);
-		}
-		return $config;
-	}
+    public function createConfig(array $data = null)
+    {
+        $config = new FooConfig();
+        if ($data !== null) {
+            $config->merge($data);
+        }
+        return $config;
+    }
 }
 ```
 
@@ -287,9 +287,9 @@ The previous class could be use as such:
 ```php
 $foo = new Foo();
 $foo->setConfig([
-	'bar'=>[
-		'baz'=>42
-	]
+    'bar'=>[
+        'baz'=>42
+    ]
 ]);
 
 // echo 42
@@ -310,14 +310,14 @@ $ composer install --prefer-source
 
 ## API documentation
 
-- The auto-generated `phpDocumentor` API documentation is available at [https://locomotivemtl.github.io/charcoal-config/docs/master/](https://locomotivemtl.github.io/charcoal-config/docs/master/)
-- The auto-generated `apigen` API documentation is available at [https://codedoc.pub/locomotivemtl/charcoal-config/master/](https://codedoc.pub/locomotivemtl/charcoal-config/master/index.html)
+-   The auto-generated `phpDocumentor` API documentation is available at [https://locomotivemtl.github.io/charcoal-config/docs/master/](https://locomotivemtl.github.io/charcoal-config/docs/master/)
+-   The auto-generated `apigen` API documentation is available at [https://codedoc.pub/locomotivemtl/charcoal-config/master/](https://codedoc.pub/locomotivemtl/charcoal-config/master/index.html)
 
 ## Development dependencies
 
-- `phpunit/phpunit`
-- `squizlabs/php_codesniffer`
-- `satooshi/php-coveralls`
+-   `phpunit/phpunit`
+-   `squizlabs/php_codesniffer`
+-   `satooshi/php-coveralls`
 
 ## Continuous Integration
 
@@ -332,79 +332,79 @@ $ composer install --prefer-source
 
 The Charcoal-Config module follows the Charcoal coding-style:
 
-- [_PSR-1_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md)
-- [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
-- [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md), autoloading is therefore provided by _Composer_.
-- [_phpDocumentor_](http://phpdoc.org/) comments.
-- Read the [phpcs.xml](phpcs.xml) file for all the details on code style.
+-   [_PSR-1_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md)
+-   [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
+-   [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md), autoloading is therefore provided by _Composer_.
+-   [_phpDocumentor_](http://phpdoc.org/) comments.
+-   Read the [phpcs.xml](phpcs.xml) file for all the details on code style.
 
 > Coding style validation / enforcement can be performed with `composer phpcs`. An auto-fixer is also available with `composer phpcbf`.
 
 ## Authors
 
-- Mathieu Ducharme <mat@locomotive.ca>
+-   Mathieu Ducharme <mat@locomotive.ca>
 
 ## Changelog
 
 ### 0.6
 _Released on 2016-05-10_
 
-- Support for Yaml files.
+-   Support for Yaml files.
 
 ### 0.5.1
 _Released on 2016-05-09_
 
-- Minor internal changes.
+-   Minor internal changes.
 
 ### 0.5
 _Released on 2016-02-02_
 
-- Split the base config class into AbstractEntity.
-- AbstractEntity is the default data container that implements ArrayAccess, Container Interface and serialization.
+-   Split the base config class into AbstractEntity.
+-   AbstractEntity is the default data container that implements ArrayAccess, Container Interface and serialization.
 
 ### 0.4
 _Released on 2016-01-16_
 
 This release breaks compatibility.
 
-- Move to camelCase, for 100% PSR-1 compliance.
+-   Move to camelCase, for 100% PSR-1 compliance.
 
 ### 0.3
 _Released on 2016-01-15_
 
 This releases breaks compatibility
 
-- AbstractConfig constructor is now final.
-- `set_data()` has been renamed to `merge()`.
-- `merge()` (previously set_data) can now accept any `Traversable` objects, as well as array.
-- `default_data()` has been renamed to `defaults()`
-- Added a new `load_file()` method, to return the content of a config file.
-- Added the `keys()` method, to retrieve the list of keys of the config file.
-- Added the `data()` method, to retrieve the config as an array data, now that we have `keys()`.
-- Config now inherits `IteratorAggregate` / `Traversable` (made possible with `data()`).
-- Config is now `serializable` AND `jsonSerializable`.
-- Setter rules can be overridden in children classes (for PSR2-style setter, for example).
-- ConfigurableInterface / Trait `config()` method now accepts an optional `$key` argument.
+-   AbstractConfig constructor is now final.
+-   `set_data()` has been renamed to `merge()`.
+-   `merge()` (previously set_data) can now accept any `Traversable` objects, as well as array.
+-   `default_data()` has been renamed to `defaults()`
+-   Added a new `load_file()` method, to return the content of a config file.
+-   Added the `keys()` method, to retrieve the list of keys of the config file.
+-   Added the `data()` method, to retrieve the config as an array data, now that we have `keys()`.
+-   Config now inherits `IteratorAggregate` / `Traversable` (made possible with `data()`).
+-   Config is now `serializable` AND `jsonSerializable`.
+-   Setter rules can be overridden in children classes (for PSR2-style setter, for example).
+-   ConfigurableInterface / Trait `config()` method now accepts an optional `$key` argument.
 
 ### 0.2
 _Released on 2015-12-09_
 
-- Added the "delegates" feature.
-- Setting value with a separator now tries to set as array.
-- Implements the container-interop interface.
+-   Added the "delegates" feature.
+-   Setting value with a separator now tries to set as array.
+-   Implements the container-interop interface.
 
 ### 0.1.1
 _Released on 2015-12-02_
 
-- Removed the second argument for the constructor (currently unused).
-- Clearer error message on invalid JSON files.
-- Fix composer.json and the autoloader.
-- Various internal changes (PSR2 compliancy, _with psr1 exception_).
+-   Removed the second argument for the constructor (currently unused).
+-   Clearer error message on invalid JSON files.
+-   Fix composer.json and the autoloader.
+-   Various internal changes (PSR2 compliancy, _with psr1 exception_).
 
 ### 0.1
 _Released on 2015-08-25_
 
-- Initial release of `charcoal-config`
+-   Initial release of `charcoal-config`
 
 # License
 

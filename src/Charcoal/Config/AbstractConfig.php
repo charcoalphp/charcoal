@@ -213,6 +213,7 @@ abstract class AbstractConfig extends AbstractEntity implements
         if ($errCode == JSON_ERROR_NONE) {
             return $config;
         }
+
         // Handle JSON error
         switch ($errCode) {
             case JSON_ERROR_NONE:
@@ -240,7 +241,6 @@ abstract class AbstractConfig extends AbstractEntity implements
         throw new InvalidArgumentException(
             sprintf('JSON file "%s" could not be parsed: "%s"', $filename, $errMsg)
         );
-
     }
 
     /**

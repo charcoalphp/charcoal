@@ -1,51 +1,51 @@
 {
-  "name": "locomotivemtl/charcoal-config",
-  "description": "Configuration container for all things Charcoal",
-  "homepage": "http://locomotivemtl.github.io/charcoal-config/",
-  "license": "MIT",
-  "support": {
-    "issues": "https://github.com/locomotivemtl/charcoal-config/issues",
-    "source": "https://github.com/locomotivemtl/charcoal-config"
-  },
-  "authors": [
-    {
-      "name": "Mathieu Ducharme",
-      "email": "mat@locomotive.ca"
+    "name": "locomotivemtl/charcoal-config",
+    "description": "Configuration container for all things Charcoal",
+    "homepage": "http://locomotivemtl.github.io/charcoal-config/",
+    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/locomotivemtl/charcoal-config/issues",
+        "source": "https://github.com/locomotivemtl/charcoal-config"
     },
-    {
-      "name": "Locomotive",
-      "homepage": "https://locomotive.ca"
-    }
-  ],
-  "require": {
-    "php": ">=5.5.0",
-    "ext-json": "*",
-    "ext-spl": "*",
-    "container-interop/container-interop": "^1.1"
-  },
-  "require-dev": {
-    "symfony/yaml": "^3.0",
-    "phpunit/phpunit": "^4.8",
-    "squizlabs/php_codesniffer": "^2.4",
-    "satooshi/php-coveralls":"~1.0.1"
-  },
-  "suggest":{
-    "symfony/yaml":"To load and parse configuration files in yaml format."
-  },
-  "autoload": {
-    "psr-4": {
-      "Charcoal\\": "src/Charcoal/"
-    }
-  },
-  "scripts": {
-    "test": [
-      "@phplint",
-      "@phpcs",
-      "@phpunit"
+    "authors": [
+        {
+            "name": "Mathieu Ducharme",
+            "email": "mat@locomotive.ca"
+        },
+        {
+            "name": "Locomotive",
+            "homepage": "https://locomotive.ca"
+        }
     ],
-    "phplint": "find {src,tests} -name '*.php' -print0 | xargs -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1",
-    "phpunit": "php vendor/bin/phpunit --configuration tests/phpunit.xml --coverage-text",
-    "phpcs": "phpcs --config-set ignore_warnings_on_exit 1;php vendor/bin/phpcs -ps --colors --standard=phpcs.xml src/",
-    "phpcbf": "php vendor/bin/phpcbf -ps --colors --standard=phpcs.xml src/ tests/"
-  }
+    "require": {
+        "php": ">=5.5.0",
+        "ext-json": "*",
+        "ext-spl": "*",
+        "container-interop/container-interop": "^1.1"
+    },
+    "require-dev": {
+        "symfony/yaml": "^3.0",
+        "phpunit/phpunit": "^4.8",
+        "squizlabs/php_codesniffer": "^2.4",
+        "satooshi/php-coveralls": "~1.0.1"
+    },
+    "suggest": {
+        "symfony/yaml": "To load and parse configuration files in yaml format."
+    },
+    "autoload": {
+        "psr-4": {
+            "Charcoal\\": "src/Charcoal/"
+        }
+    },
+    "scripts": {
+        "test": [
+            "@phplint",
+            "@phpcs",
+            "@phpunit"
+        ],
+        "phplint": "find {src,tests} -name '*.php' -print0 | xargs -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1",
+        "phpunit": "php vendor/bin/phpunit --configuration tests/phpunit.xml --coverage-text",
+        "phpcs": "phpcs --config-set ignore_warnings_on_exit 1;php vendor/bin/phpcs -ps --colors --standard=phpcs.xml src/",
+        "phpcbf": "php vendor/bin/phpcbf -ps --colors --standard=phpcs.xml src/ tests/"
+    }
 }

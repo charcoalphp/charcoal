@@ -1,5 +1,5 @@
 {
-	"config":{
-		"test":"phpunit"
-	}
+    "config": {
+        "test": "phpunit"
+    }
 }
