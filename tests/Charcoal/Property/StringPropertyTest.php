@@ -222,12 +222,12 @@ class StringPropertyTest extends \PHPUnit_Framework_TestCase
     }
 
     /*public function testValidateMaxLengthWithoutValReturnsFalse()
-	{
-		$obj = $this->obj;
-		$obj->setMaxLength(5);
+    {
+        $obj = $this->obj;
+        $obj->setMaxLength(5);
 
-		$this->assertNotTrue($obj->validateMaxLength());
-	}*/
+        $this->assertNotTrue($obj->validateMaxLength());
+    }*/
 
     public function testValidateMaxLengthWithZeroMaxLengthReturnsTrue()
     {

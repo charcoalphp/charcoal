@@ -1,15 +1,15 @@
 {
-  "properties":{
-    "mode":{
-        "type":"string",
-        "choices":{
-            "auto-increment":{},
-            "uniqid":{},
-            "uuid":{}
+    "properties": {
+        "mode": {
+            "type": "string",
+            "choices": {
+                "auto-increment": {},
+                "uniqid": {},
+                "uuid": {}
+            }
         }
+    },
+    "admin": {
+        "input_type": "charcoal/admin/property/input/readonly"
     }
-  },
-	"admin":{
-		"input_type":"charcoal/admin/property/input/readonly"
-	}
 }

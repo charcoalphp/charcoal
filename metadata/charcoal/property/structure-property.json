@@ -1,7 +1,7 @@
 {
-    "properties":{
-        "metadata":{
-            "type":"structure"
+    "properties": {
+        "metadata": {
+            "type": "structure"
         }
     }
 }

@@ -1,19 +1,19 @@
 {
-  "properties":{
-    "min_length":{
-      "type":"number"
+    "properties": {
+        "min_length": {
+            "type": "number"
+        },
+        "max_length": {
+            "type": "number"
+        },
+        "regexp": {
+            "type": "string"
+        },
+        "allow_empty": {
+            "type": "boolean"
+        }
     },
-    "max_length":{
-      "type":"number"
-    },
-    "regexp":{
-      "type":"string"
-    },
-    "allow_empty":{
-      "type":"boolean"
+    "admin": {
+        "input_type": "charcoal/admin/property/input/text"
     }
-  },
-	"admin":{
-		"input_type":"charcoal/admin/property/input/text"
-	}
 }
