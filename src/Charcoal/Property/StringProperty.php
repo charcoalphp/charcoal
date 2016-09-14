@@ -233,7 +233,7 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
      */
     public function length()
     {
-        $val = $this->displayVal();
+        $val = $this->displayVal($this->val());
 
         if ($val === null) {
             return 0;

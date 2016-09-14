@@ -122,7 +122,7 @@ class DateTimeProperty extends AbstractProperty
         $val = $this->dateTimeVal($val);
 
         if ($val instanceof DateTimeInterface) {
-            return $this->val->format('Y-m-d H:i:s');
+            return $val->format('Y-m-d H:i:s');
         } else {
             if ($this->allowNull()) {
                 return null;

@@ -44,10 +44,6 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
     public function testDisplayVal()
     {
         $obj = $this->obj;
-        $this->assertEquals('False', $obj->displayVal());
-        $obj->setVal(true);
-        $this->assertEquals('True', $obj->displayVal());
-
         $obj->setTrueLabel('Oui');
         $obj->setFalseLabel('Non');
 

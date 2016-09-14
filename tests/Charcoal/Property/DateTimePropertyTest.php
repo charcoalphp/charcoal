@@ -13,13 +13,25 @@ use \Charcoal\Property\DateTimeProperty;
 class DateTimePropertyTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * @var DateTimeProperty $obj
+     */
+    public $obj;
+
+    /**
+     *
+     */
+    public function setUp()
+    {
+        $this->obj = new DateTimeProperty();
+    }
+
+    /**
      * Assert that the `type` method:
      * - returns "date-time"
      */
     public function testType()
     {
-        $obj = new DateTimeProperty();
-        $this->assertEquals('date-time', $obj->type());
+        $this->assertEquals('date-time', $this->obj->type());
     }
 
     /**
@@ -29,19 +41,17 @@ class DateTimePropertyTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetData()
     {
-        $obj = new DateTimeProperty();
-
-        $ret = $obj->setData([
+        $ret = $this->obj->setData([
             'min'=>'2015-01-01 00:00:00',
             'max'=>'2025-01-01 00:00:00',
             'format'=>'Y.m.d'
         ]);
 
-        $this->assertSame($ret, $obj);
+        $this->assertSame($ret, $this->obj);
 
-        $this->assertEquals(new DateTime('2015-01-01 00:00:00'), $obj->min());
-        $this->assertEquals(new DateTime('2025-01-01 00:00:00'), $obj->max());
-        $this->assertEquals('Y.m.d', $obj->format());
+        $this->assertEquals(new DateTime('2015-01-01 00:00:00'), $this->obj->min());
+        $this->assertEquals(new DateTime('2025-01-01 00:00:00'), $this->obj->max());
+        $this->assertEquals('Y.m.d', $this->obj->format());
     }
 
     /**
@@ -52,16 +62,15 @@ class DateTimePropertyTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetValWithNullValue()
     {
-        $obj = new DateTimeProperty();
-        $obj->setAllowNull(true);
+        $this->obj->setAllowNull(true);
 
-        $ret = $obj->setVal(null);
-        $this->assertSame($ret, $obj);
-        $this->assertEquals(null, $obj->val());
+        $ret = $this->obj->setVal(null);
+        $this->assertSame($ret, $this->obj);
+        $this->assertEquals(null, $this->obj->val());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->setAllowNull(false);
-        $obj->setVal(null);
+        $this->obj->setAllowNull(false);
+        $this->obj->setVal(null);
     }
 
     /**
@@ -72,44 +81,27 @@ class DateTimePropertyTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetVal()
     {
-        $obj = new DateTimeProperty();
-        $ret = $obj->setVal('2000-01-01 00:00:00');
-        $this->assertSame($ret, $obj);
-        $this->assertEquals(new DateTime('2000-01-01 00:00:00'), $obj->val());
+        $ret = $this->obj->setVal('2000-01-01 00:00:00');
+        $this->assertSame($ret, $this->obj);
+        $this->assertEquals(new DateTime('2000-01-01 00:00:00'), $this->obj->val());
 
         $dt = new DateTime('October 1st, 1984');
-        $ret = $obj->setVal($dt);
-        $this->assertSame($ret, $obj);
-        $this->assertEquals($dt, $obj->val());
+        $ret = $this->obj->setVal($dt);
+        $this->assertSame($ret, $this->obj);
+        $this->assertEquals($dt, $this->obj->val());
     }
 
     public function testStorageVal()
     {
-        $obj = new DateTimeProperty();
-
-        $obj->setVal('October 1st, 1984');
-        $this->assertEquals('1984-10-01 00:00:00', $obj->storageVal());
-
-        $obj->setVal(null);
-
-        $obj->setAllowNull(true);
-        $this->assertEquals(null, $obj->storageVal());
-
-        $obj->setAllowNull(false);
-        $this->setExpectedException('\Exception');
-        $obj->storageVal();
+        $this->assertEquals('1984-10-01 00:00:00', $this->obj->storageVal('October 1st, 1984'));
     }
 
     public function testDisplayVal()
     {
-        $obj = new DateTimeProperty();
-        $this->assertEquals('', $obj->displayVal());
+        $this->assertEquals('2015-10-01 15:00:00', $this->obj->displayVal('October 1st, 2015 15:00:00'));
 
-        $obj->setVal('October 1st, 2015 15:00:00');
-        $this->assertEquals('2015-10-01 15:00:00', $obj->displayVal());
-
-        $obj->setFormat('Y/m/d');
-        $this->assertEquals('2015/09/01', $obj->displayVal('September 1st, 2015'));
+        $this->obj->setFormat('Y/m/d');
+        $this->assertEquals('2015/09/01', $this->obj->displayVal('September 1st, 2015'));
     }
 
     /**
@@ -120,19 +112,17 @@ class DateTimePropertyTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetMultiple()
     {
-        $obj = new DateTimeProperty();
-        $ret = $obj->setMultiple(0);
-        $this->assertSame($ret, $obj);
+        $ret = $this->obj->setMultiple(0);
+        $this->assertSame($ret, $this->obj);
         $this->assertSame(false, $ret->multiple());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->setMultiple(1);
+        $this->obj->setMultiple(1);
     }
 
     public function testMultiple()
     {
-        $obj = new DateTimeProperty();
-        $this->assertSame(false, $obj->multiple());
+        $this->assertSame(false, $this->obj->multiple());
     }
 
     /**
@@ -144,25 +134,23 @@ class DateTimePropertyTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetMin()
     {
-        $obj = new DateTimeProperty();
-
         // Setting by string
-        $ret = $obj->setMin('2020-01-01 01:02:03');
-        $this->assertSame($ret, $obj);
-        $this->assertEquals(new DateTime('2020-01-01 01:02:03'), $obj->min());
+        $ret = $this->obj->setMin('2020-01-01 01:02:03');
+        $this->assertSame($ret, $this->obj);
+        $this->assertEquals(new DateTime('2020-01-01 01:02:03'), $this->obj->min());
 
         // Setting by DateTime
         $dt = new DateTime('today');
-        $ret = $obj->setMin($dt);
-        $this->assertSame($ret, $obj);
-        $this->assertEquals($dt, $obj->min());
+        $ret = $this->obj->setMin($dt);
+        $this->assertSame($ret, $this->obj);
+        $this->assertEquals($dt, $this->obj->min());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->setMin('foo');
+        $this->obj->setMin('foo');
 
         // Ensure setting a null value works
-        $obj->setMin(null);
-        $this->assertEquals(null, $obj->min());
+        $this->obj->setMin(null);
+        $this->assertEquals(null, $this->obj->min());
     }
 
     /**
@@ -173,18 +161,16 @@ class DateTimePropertyTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetMax()
     {
-        $obj = new DateTimeProperty();
-
-        $ret = $obj->setMax('2020-01-01 01:02:03');
-        $this->assertSame($ret, $obj);
-        $this->assertEquals(new DateTime('2020-01-01 01:02:03'), $obj->max());
+        $ret = $this->obj->setMax('2020-01-01 01:02:03');
+        $this->assertSame($ret, $this->obj);
+        $this->assertEquals(new DateTime('2020-01-01 01:02:03'), $this->obj->max());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->setMax('foo');
+        $this->obj->setMax('foo');
 
         // Ensure setting a null value works
-        $obj->setMax(null);
-        $this->assertEquals(null, $obj->max());
+        $this->obj->setMax(null);
+        $this->assertEquals(null, $this->obj->max());
     }
 
     /**
@@ -197,24 +183,22 @@ class DateTimePropertyTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetFormat()
     {
-        $obj = new DateTimeProperty();
-        $this->assertEquals('Y-m-d H:i:s', $obj->format());
+        $this->assertEquals('Y-m-d H:i:s', $this->obj->format());
 
-        $ret = $obj->setFormat('Y/m/d');
-        $this->assertSame($ret, $obj);
-        $this->assertEquals('Y/m/d', $obj->format());
+        $ret = $this->obj->setFormat('Y/m/d');
+        $this->assertSame($ret, $this->obj);
+        $this->assertEquals('Y/m/d', $this->obj->format());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->setFormat(null);
+        $this->obj->setFormat(null);
     }
 
     public function testSave()
     {
-        $obj = new DateTimeProperty();
-        $this->assertEquals(null, $obj->save());
+        $this->assertEquals(null, $this->obj->save());
 
-        $obj->setVal('2015-01-01');
-        $this->assertEquals(new DateTime('2015-01-01'), $obj->save());
+        $this->obj->setVal('2015-01-01');
+        $this->assertEquals(new DateTime('2015-01-01'), $this->obj->save());
     }
 
     /**
@@ -225,22 +209,21 @@ class DateTimePropertyTest extends \PHPUnit_Framework_TestCase
      */
     public function testValidateMin()
     {
-        $obj = new DateTimeProperty();
-        $this->assertTrue($obj->validateMin());
+        $this->assertTrue($this->obj->validateMin());
 
-        $obj->setMin('2015-01-01');
+        $this->obj->setMin('2015-01-01');
 
         // Equal
-        $obj->setVal('2015-01-01');
-        $this->assertTrue($obj->validateMin());
+        $this->obj->setVal('2015-01-01');
+        $this->assertTrue($this->obj->validateMin());
 
         // Bigger
-        $obj->setVal('2016-01-01');
-        $this->assertTrue($obj->validateMin());
+        $this->obj->setVal('2016-01-01');
+        $this->assertTrue($this->obj->validateMin());
 
         // Smaller
-        $obj->setVal('2014-01-01');
-        $this->assertNotTrue($obj->validateMin());
+        $this->obj->setVal('2014-01-01');
+        $this->assertNotTrue($this->obj->validateMin());
     }
 
     /**
@@ -251,39 +234,35 @@ class DateTimePropertyTest extends \PHPUnit_Framework_TestCase
      */
     public function testValidateMax()
     {
-        $obj = new DateTimeProperty();
-        $this->assertTrue($obj->validateMax());
+        $this->assertTrue($this->obj->validateMax());
 
-        $obj->setMax('2015-01-01');
+        $this->obj->setMax('2015-01-01');
 
         // Equal
-        $obj->setVal('2015-01-01');
-        $this->assertTrue($obj->validateMax());
+        $this->obj->setVal('2015-01-01');
+        $this->assertTrue($this->obj->validateMax());
 
         // Smaller
-        $obj->setVal('2014-01-01');
-        $this->assertTrue($obj->validateMax());
+        $this->obj->setVal('2014-01-01');
+        $this->assertTrue($this->obj->validateMax());
 
         // Bigger
-        $obj->setVal('2016-01-01');
-        $this->assertNotTrue($obj->validateMax());
+        $this->obj->setVal('2016-01-01');
+        $this->assertNotTrue($this->obj->validateMax());
     }
 
     public function testSqlExtra()
     {
-        $obj = new DateTimeProperty();
-        $this->assertSame('', $obj->sqlExtra());
+        $this->assertSame('', $this->obj->sqlExtra());
     }
 
     public function testSqlType()
     {
-        $obj = new DateTimeProperty();
-        $this->assertEquals('DATETIME', $obj->sqlType());
+        $this->assertEquals('DATETIME', $this->obj->sqlType());
     }
 
     public function testSqlPdoType()
     {
-        $obj = new DateTimeProperty();
-        $this->assertEquals(\PDO::PARAM_STR, $obj->sqlPdoType());
+        $this->assertEquals(\PDO::PARAM_STR, $this->obj->sqlPdoType());
     }
 }

@@ -10,282 +10,278 @@ use \Charcoal\Property\StringProperty;
  */
 class StringPropertyTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var StringProperty $obj
+     */
     public $obj;
 
+    /**
+     *
+     */
     public function setUp()
     {
         mb_internal_encoding('UTF-8');
         $this->obj = new StringProperty();
     }
 
+    /**
+     *
+     */
     public function testConstructor()
     {
-        $obj = $this->obj;
-        $this->assertInstanceOf('\Charcoal\Property\StringProperty', $obj);
+        $this->assertInstanceOf('\Charcoal\Property\StringProperty', $this->obj);
 
-        $this->assertEquals(0, $obj->minLength());
-        $this->assertEquals(255, $obj->maxLength());
-        $this->assertEquals('', $obj->regexp());
+        $this->assertEquals(0, $this->obj->minLength());
+        $this->assertEquals(255, $this->obj->maxLength());
+        $this->assertEquals('', $this->obj->regexp());
     }
 
     public function testType()
     {
-        $obj = $this->obj;
-        $this->assertEquals('string', $obj->type());
+        $this->assertEquals('string', $this->obj->type());
     }
 
     public function testSetData()
     {
-        $obj = $this->obj;
         $data = [
             'min_length'  => 5,
             'max_length'  => 42,
             'regexp'      => '/[0-9]*/',
             'allow_empty' => false
         ];
-        $ret = $obj->setData($data);
+        $ret = $this->obj->setData($data);
 
-        $this->assertSame($ret, $obj);
+        $this->assertSame($ret, $this->obj);
 
-        $this->assertEquals(5, $obj->minLength());
-        $this->assertEquals(42, $obj->maxLength());
-        $this->assertEquals('/[0-9]*/', $obj->regexp());
-        $this->assertEquals(false, $obj->allowEmpty());
+        $this->assertEquals(5, $this->obj->minLength());
+        $this->assertEquals(42, $this->obj->maxLength());
+        $this->assertEquals('/[0-9]*/', $this->obj->regexp());
+        $this->assertEquals(false, $this->obj->allowEmpty());
     }
 
     public function testSetMinLength()
     {
-        $obj = $this->obj;
-
-        $ret = $obj->setMinLength(5);
-        $this->assertSame($ret, $obj);
-        $this->assertEquals(5, $obj->minLength());
+        $ret = $this->obj->setMinLength(5);
+        $this->assertSame($ret, $this->obj);
+        $this->assertEquals(5, $this->obj->minLength());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->setMinLength('foo');
+        $this->obj->setMinLength('foo');
     }
 
     public function testSetMinLenghtNegativeThrowsException()
     {
-        $obj = $this->obj;
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->setMinLength(-1);
+        $this->obj->setMinLength(-1);
     }
 
     public function testSetMaxLength()
     {
-        $obj = $this->obj;
-
-        $ret = $obj->setMaxLength(5);
-        $this->assertSame($ret, $obj);
-        $this->assertEquals(5, $obj->maxLength());
+        $ret = $this->obj->setMaxLength(5);
+        $this->assertSame($ret, $this->obj);
+        $this->assertEquals(5, $this->obj->maxLength());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->setMaxLength('foo');
+        $this->obj->setMaxLength('foo');
     }
 
     public function testSetMaxLenghtNegativeThrowsException()
     {
-        $obj = $this->obj;
+
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->setMaxLength(-1);
+        $this->obj->setMaxLength(-1);
     }
 
     public function testSetRegexp()
     {
-        $obj = $this->obj;
-
-        $ret = $obj->setRegexp('[a-z]');
-        $this->assertSame($ret, $obj);
-        $this->assertEquals('[a-z]', $obj->regexp());
+        $ret = $this->obj->setRegexp('[a-z]');
+        $this->assertSame($ret, $this->obj);
+        $this->assertEquals('[a-z]', $this->obj->regexp());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->setRegexp(null);
+        $this->obj->setRegexp(null);
     }
 
     public function testSetAllowEmpty()
     {
-        $obj = $this->obj;
-        $this->assertEquals(true, $obj->allowEmpty());
+        $this->assertEquals(true, $this->obj->allowEmpty());
 
-        $ret = $obj->setAllowEmpty(false);
-        $this->assertSame($ret, $obj);
-        $this->assertEquals(false, $obj->allowEmpty());
+        $ret = $this->obj->setAllowEmpty(false);
+        $this->assertSame($ret, $this->obj);
+        $this->assertEquals(false, $this->obj->allowEmpty());
     }
 
     public function testLength()
     {
-        $obj = $this->obj;
+        $this->obj->setVal('');
+        $this->assertEquals(0, $this->obj->length());
 
-        $obj->setVal('');
-        $this->assertEquals(0, $obj->length());
+        $this->obj->setVal('a');
+        $this->assertEquals(1, $this->obj->length());
 
-        $obj->setVal('a');
-        $this->assertEquals(1, $obj->length());
+        $this->obj->setVal('foo');
+        $this->assertEquals(3, $this->obj->length());
 
-        $obj->setVal('foo');
-        $this->assertEquals(3, $obj->length());
-
-        $obj->setVal('é');
-        $this->assertEquals(1, $obj->length());
+        $this->obj->setVal('é');
+        $this->assertEquals(1, $this->obj->length());
     }
 
     public function testValidateMinLength()
     {
-        $obj = $this->obj;
 
-        $obj->setMinLength(5);
-        $obj->setVal('1234');
-        $this->assertNotTrue($obj->validateMinLength());
 
-        $obj->setVal('12345');
-        $this->assertTrue($obj->validateMinLength());
-        $obj->setVal('123456789');
-        $this->assertTrue($obj->validateMinLength());
+        $this->obj->setMinLength(5);
+        $this->obj->setVal('1234');
+        $this->assertNotTrue($this->obj->validateMinLength());
+
+        $this->obj->setVal('12345');
+        $this->assertTrue($this->obj->validateMinLength());
+        $this->obj->setVal('123456789');
+        $this->assertTrue($this->obj->validateMinLength());
     }
 
     public function testValidateMinLengthUTF8()
     {
-        $obj = $this->obj;
-        $obj->setMinLength(5);
 
-        $obj->setVal('Éçä˚');
-        $this->assertNotTrue($obj->validateMinLength());
+        $this->obj->setMinLength(5);
 
-        $obj->setVal('∂çäÇµ');
-        $this->assertTrue($obj->validateMinLength());
+        $this->obj->setVal('Éçä˚');
+        $this->assertNotTrue($this->obj->validateMinLength());
 
-        $obj->setVal('ß¨ˆ®©˜ßG');
-        $this->assertTrue($obj->validateMinLength());
+        $this->obj->setVal('∂çäÇµ');
+        $this->assertTrue($this->obj->validateMinLength());
+
+        $this->obj->setVal('ß¨ˆ®©˜ßG');
+        $this->assertTrue($this->obj->validateMinLength());
     }
 
     public function testValidateMinLengthAllowEmpty()
     {
-        $obj = $this->obj;
-        $obj->setAllowNull(false);
-        $obj->setMinLength(5);
-        $obj->setVal('');
 
-        $obj->setAllowEmpty(true);
-        $this->assertTrue($obj->validateMinLength());
+        $this->obj->setAllowNull(false);
+        $this->obj->setMinLength(5);
+        $this->obj->setVal('');
 
-        $obj->setAllowEmpty(false);
-        $this->assertNotTrue($obj->validateMinLength());
+        $this->obj->setAllowEmpty(true);
+        $this->assertTrue($this->obj->validateMinLength());
+
+        $this->obj->setAllowEmpty(false);
+        $this->assertNotTrue($this->obj->validateMinLength());
     }
 
     public function testValidateMinLengthWithoutValReturnsFalse()
     {
-        $obj = $this->obj;
-        $obj->setAllowNull(false);
-        $obj->setMinLength(5);
 
-        $this->assertNotTrue($obj->validateMinLength());
+        $this->obj->setAllowNull(false);
+        $this->obj->setMinLength(5);
+
+        $this->assertNotTrue($this->obj->validateMinLength());
     }
 
     public function testValidateMinLengthWithoutMinLengthReturnsTrue()
     {
-        $obj = $this->obj;
 
-        $this->assertTrue($obj->validateMinLength());
 
-        $obj->setVal('1234');
-        $this->assertTrue($obj->validateMinLength());
+        $this->assertTrue($this->obj->validateMinLength());
+
+        $this->obj->setVal('1234');
+        $this->assertTrue($this->obj->validateMinLength());
     }
 
     public function testValidateMaxLength()
     {
-        $obj = $this->obj;
-        $obj->setMaxLength(5);
-        $obj->setVal('1234');
-        $this->assertTrue($obj->validateMaxLength());
 
-        $obj->setVal('12345');
-        $this->assertTrue($obj->validateMaxLength());
+        $this->obj->setMaxLength(5);
+        $this->obj->setVal('1234');
+        $this->assertTrue($this->obj->validateMaxLength());
 
-        $obj->setVal('123456789');
-        $this->assertNotTrue($obj->validateMaxLength());
+        $this->obj->setVal('12345');
+        $this->assertTrue($this->obj->validateMaxLength());
+
+        $this->obj->setVal('123456789');
+        $this->assertNotTrue($this->obj->validateMaxLength());
     }
 
     public function testValidateMaxLengthUTF8()
     {
-        $obj = $this->obj;
-        $obj->setMaxLength(5);
 
-        $obj->setVal('Éçä˚');
-        $this->assertTrue($obj->validateMaxLength());
+        $this->obj->setMaxLength(5);
 
-        $obj->setVal('∂çäÇµ');
-        $this->assertTrue($obj->validateMaxLength());
+        $this->obj->setVal('Éçä˚');
+        $this->assertTrue($this->obj->validateMaxLength());
 
-        $obj->setVal('ß¨ˆ®©˜ßG');
-        $this->assertNotTrue($obj->validateMaxLength());
+        $this->obj->setVal('∂çäÇµ');
+        $this->assertTrue($this->obj->validateMaxLength());
+
+        $this->obj->setVal('ß¨ˆ®©˜ßG');
+        $this->assertNotTrue($this->obj->validateMaxLength());
     }
 
     /*public function testValidateMaxLengthWithoutValReturnsFalse()
     {
-        $obj = $this->obj;
-        $obj->setMaxLength(5);
 
-        $this->assertNotTrue($obj->validateMaxLength());
+        $this->obj->setMaxLength(5);
+
+        $this->assertNotTrue($this->obj->validateMaxLength());
     }*/
 
     public function testValidateMaxLengthWithZeroMaxLengthReturnsTrue()
     {
-        $obj = $this->obj;
-        $obj->setMaxLength(0);
 
-        $this->assertTrue($obj->validateMaxLength());
+        $this->obj->setMaxLength(0);
 
-        $obj->setVal('1234');
-        $this->assertTrue($obj->validateMaxLength());
+        $this->assertTrue($this->obj->validateMaxLength());
+
+        $this->obj->setVal('1234');
+        $this->assertTrue($this->obj->validateMaxLength());
     }
 
 
     public function testValidateRegexp()
     {
-        $obj = $this->obj;
-        $obj->setRegexp('/[0-9*]/');
 
-        $obj->setVal('123');
-        $this->assertTrue($obj->validateRegexp());
+        $this->obj->setRegexp('/[0-9*]/');
 
-        $obj->setVal('abc');
-        $this->assertNotTrue($obj->validateRegexp());
+        $this->obj->setVal('123');
+        $this->assertTrue($this->obj->validateRegexp());
+
+        $this->obj->setVal('abc');
+        $this->assertNotTrue($this->obj->validateRegexp());
     }
 
     public function testValidateRegexpEmptyRegexpReturnsTrue()
     {
-        $obj = $this->obj;
-        $this->assertTrue($obj->validateRegexp());
 
-        $obj->setVal('123');
-        $this->assertTrue($obj->validateRegexp());
+        $this->assertTrue($this->obj->validateRegexp());
+
+        $this->obj->setVal('123');
+        $this->assertTrue($this->obj->validateRegexp());
     }
 
     public function testSqlType()
     {
-        $obj = $this->obj;
-        $this->assertEquals('VARCHAR(255)', $obj->sqlType());
 
-        $obj->setMaxLength(20);
-        $this->assertEquals('VARCHAR(20)', $obj->sqlType());
+        $this->assertEquals('VARCHAR(255)', $this->obj->sqlType());
 
-        $obj->setMaxLength(256);
-        $this->assertEquals('TEXT', $obj->sqlType());
+        $this->obj->setMaxLength(20);
+        $this->assertEquals('VARCHAR(20)', $this->obj->sqlType());
+
+        $this->obj->setMaxLength(256);
+        $this->assertEquals('TEXT', $this->obj->sqlType());
     }
 
     public function testSqlTypeMultiple()
     {
-        $obj = $this->obj;
-        $this->assertEquals('VARCHAR(255)', $obj->sqlType());
 
-        $obj->setMultiple(true);
-        $this->assertEquals('TEXT', $obj->sqlType());
+        $this->assertEquals('VARCHAR(255)', $this->obj->sqlType());
+
+        $this->obj->setMultiple(true);
+        $this->assertEquals('TEXT', $this->obj->sqlType());
     }
 
     public function testSqlPdoType()
     {
-        $obj = $this->obj;
-        $this->assertEquals(\PDO::PARAM_STR, $obj->sqlPdoType());
+
+        $this->assertEquals(\PDO::PARAM_STR, $this->obj->sqlPdoType());
     }
 }
