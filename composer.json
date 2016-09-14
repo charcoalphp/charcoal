@@ -21,7 +21,8 @@
 	"minimum-stability": "dev",
 	"require": {
 		"php": ">=5.5.0",
-		"locomotivemtl/charcoal-core": "@dev",
+        "psr/log": "^1.0",
+		"locomotivemtl/charcoal-core": "^0.1",
 		"locomotivemtl/charcoal-factory":"~0.3"
 	},
 	"require-dev": {
