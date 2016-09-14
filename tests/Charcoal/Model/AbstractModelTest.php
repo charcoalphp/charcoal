@@ -75,7 +75,6 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->obj = $this->getObj();
-
     }
 
     public function testConstructor()
@@ -177,6 +176,5 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
         $obj->setData($data);
         $json = json_encode($obj);
         $this->assertEquals(json_encode($data), $json);
-
     }
 }

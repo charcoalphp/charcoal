@@ -37,12 +37,12 @@ interface MetadataInterface
     public function property($propertyIdent);
 
         /**
-     * Set a property, as a PropertyInterface instance.
-     *
-     * @param string $propertyIdent The property indentifer.
-     * @param PropertyInterface $propertyObject The property, as object.
-     * @return MetadataInterface Chainable
-     */
+         * Set a property, as a PropertyInterface instance.
+         *
+         * @param string            $propertyIdent  The property indentifer.
+         * @param PropertyInterface $propertyObject The property, as object.
+         * @return MetadataInterface Chainable
+         */
     public function setPropertyObject($propertyIdent, PropertyInterface $propertyObject);
 
     /**

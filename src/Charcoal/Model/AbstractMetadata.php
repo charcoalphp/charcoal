@@ -95,7 +95,7 @@ abstract class AbstractMetadata extends AbstractConfig implements
     /**
      * Set a property, as a PropertyInterface instance.
      *
-     * @param string $propertyIdent The property indentifer.
+     * @param string            $propertyIdent  The property indentifer.
      * @param PropertyInterface $propertyObject The property, as object.
      * @return MetadataInterface Chainable
      */
@@ -117,6 +117,4 @@ abstract class AbstractMetadata extends AbstractConfig implements
             return $this->propertiesObjects[$propertyIdent];
         }
     }
-
-
 }
