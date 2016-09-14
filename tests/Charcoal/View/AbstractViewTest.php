@@ -2,9 +2,6 @@
 
 namespace Charcoal\Tests\View;
 
-use \Charcoal\Model\Model as Model;
-use \Charcoal\Model\ModelMetadata as Metadata;
-
 class AbstractViewTest extends \PHPUnit_Framework_TestCase
 {
     /**
