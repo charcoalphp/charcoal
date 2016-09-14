@@ -305,7 +305,6 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     public function storageVal($val = null)
     {
         if ($val === null) {
-            $this->logger->warning('Calling storageVal without argument.');
             $val = $this->val();
         }
         if ($val === null) {
