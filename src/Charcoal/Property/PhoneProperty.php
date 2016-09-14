@@ -33,10 +33,6 @@ class PhoneProperty extends StringProperty
      */
     public function sanitize($val)
     {
-        if ($val === null) {
-            //$val = $this->val();
-        }
-
         return preg_replace('/[^0-9]/', '', $val);
     }
 

@@ -4,6 +4,7 @@ namespace Charcoal\Property;
 
 use \Exception;
 use \InvalidArgumentException;
+use \RuntimeException;
 
 // Module `charcoal-factory` dependencies
 use \Charcoal\Factory\FactoryInterface;
@@ -42,6 +43,7 @@ trait DescribablePropertyTrait
     /**
      * Safe PropertyFactory getter. Create the factory if it does not exist.
      *
+     * @throws RuntimeException If no property factory has been previously set.
      * @return FactoryInterface
      */
     public function propertyFactory()
@@ -58,10 +60,9 @@ trait DescribablePropertyTrait
     /**
      * Return an array of `PropertyInterface`
      *
-     * @param array|null $filters Unused.
      * @return PropertyInterface[] Generator.
      */
-    public function properties(array $filters = null)
+    public function properties()
     {
         // Hack: ensure metadata is loaded.
         $this->metadata();
@@ -128,10 +129,10 @@ trait DescribablePropertyTrait
         $property->setIdent($propertyIdent);
         $property->setData($propertyMetadata);
 
-        $propertyValue = $this->propertyValue($propertyIdent);
-        if ($propertyValue !== null) {
-            $property->setVal($propertyValue);
-        }
+        // $propertyValue = $this->propertyValue($propertyIdent);
+        // if ($propertyValue !== null) {
+        //     $property->setVal($propertyValue);
+        // }
 
         $metadata->setPropertyObject($propertyIdent, $property);
         return $property;
@@ -182,5 +183,4 @@ trait DescribablePropertyTrait
      * @return mixed
      */
     abstract protected function propertyValue($propertyIdent);
-
 }

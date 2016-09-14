@@ -81,7 +81,6 @@ class DateTimePropertyTest extends \PHPUnit_Framework_TestCase
         $ret = $obj->setVal($dt);
         $this->assertSame($ret, $obj);
         $this->assertEquals($dt, $obj->val());
-
     }
 
     public function testStorageVal()
@@ -164,7 +163,6 @@ class DateTimePropertyTest extends \PHPUnit_Framework_TestCase
         // Ensure setting a null value works
         $obj->setMin(null);
         $this->assertEquals(null, $obj->min());
-
     }
 
     /**
@@ -217,7 +215,6 @@ class DateTimePropertyTest extends \PHPUnit_Framework_TestCase
 
         $obj->setVal('2015-01-01');
         $this->assertEquals(new DateTime('2015-01-01'), $obj->save());
-
     }
 
     /**
@@ -244,7 +241,6 @@ class DateTimePropertyTest extends \PHPUnit_Framework_TestCase
         // Smaller
         $obj->setVal('2014-01-01');
         $this->assertNotTrue($obj->validateMin());
-
     }
 
     /**

@@ -35,7 +35,6 @@ class PhonePropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('5145559999', $obj->sanitize());
 
         $this->assertEquals('5145551234', $obj->sanitize('(514) 555-1234'));
-
     }
 
     public function testDisplayVal()

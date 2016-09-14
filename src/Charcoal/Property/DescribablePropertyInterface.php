@@ -2,9 +2,6 @@
 
 namespace Charcoal\Property;
 
-// Local namespace dependency
-use \Charcoal\Property\PropertyFactory;
-
 /**
  * Defines a model having attributes that allow the formatting of its data.
  *

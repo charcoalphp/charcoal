@@ -53,8 +53,6 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('Oui', $obj->displayVal(true));
         $this->assertEquals('Non', $obj->displayVal(false));
-
-
     }
 
     /**
@@ -178,7 +176,6 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
             ]
         ];
         $this->assertEquals($choices, $obj->choices());
-
     }
 
     /**
@@ -193,6 +190,5 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
 
         $obj->setVal(false);
         $this->assertNotTrue($obj->save());
-
     }
 }
