@@ -26,7 +26,7 @@ trait DescribablePropertyTrait
     /**
      * @var array $properties
      */
-    protected $properties;
+    protected $properties = [];
 
     /**
      * @param FactoryInterface $factory The property factory, used to create metadata properties.
@@ -47,10 +47,9 @@ trait DescribablePropertyTrait
     public function propertyFactory()
     {
         if ($this->propertyFactory === null) {
-            $this->logger->warning(
-                sprintf('Creating a property factory for describable %s', get_class($this))
+            throw new RuntimeException(
+                'Model does not have a property factory.'
             );
-            $this->propertyFactory = new PropertyFactory();
         }
 
         return $this->propertyFactory;
@@ -64,8 +63,9 @@ trait DescribablePropertyTrait
      */
     public function properties(array $filters = null)
     {
+        // Hack: ensure metadata is loaded.
         $this->metadata();
-        // Hack!
+
         $props = array_keys($this->metadata()->properties());
 
         if (empty($props)) {
@@ -73,10 +73,7 @@ trait DescribablePropertyTrait
         }
 
         foreach ($props as $propertyIdent) {
-            $property = $this->property($propertyIdent);
-            $filtered = (int)$property->isFiltered($filters);
-            // Get the property object of this definition
-            yield $propertyIdent => $property;
+            yield $propertyIdent => $this->property($propertyIdent);
         }
     }
 
@@ -97,6 +94,12 @@ trait DescribablePropertyTrait
         }
 
         $metadata = $this->metadata();
+        $propertyObject = $metadata->propertyObject($propertyIdent);
+        if ($propertyObject !== null) {
+            return $propertyObject;
+        }
+
+
         $props = $metadata->properties();
 
         if (empty($props)) {
@@ -125,11 +128,12 @@ trait DescribablePropertyTrait
         $property->setIdent($propertyIdent);
         $property->setData($propertyMetadata);
 
-        $property_value = $this->propertyValue($propertyIdent);
-        if ($property_value !== null) {
-            $property->setVal($property_value);
+        $propertyValue = $this->propertyValue($propertyIdent);
+        if ($propertyValue !== null) {
+            $property->setVal($propertyValue);
         }
 
+        $metadata->setPropertyObject($propertyIdent, $property);
         return $property;
     }
 
@@ -179,22 +183,4 @@ trait DescribablePropertyTrait
      */
     abstract protected function propertyValue($propertyIdent);
 
-    /**
-     * @todo Implement property filters.
-     * @param array $filters The filters to apply.
-     * @return boolean False if the object doesn't match any filter, true otherwise.
-     */
-    public function isFiltered(array $filters = null)
-    {
-        if ($filters === null) {
-            return false;
-        }
-
-        foreach ($filters as $filterIdent => $filterData) {
-            unset($filterIdent);
-            unset($filterData);
-        }
-
-        return false;
-    }
 }
