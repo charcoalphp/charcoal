@@ -250,8 +250,10 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     private function getModelFields(ModelInterface $model, $properties = null)
     {
         if ($properties === null) {
+            // No custom properties; use all (from model metadata)
             $properties = array_keys($model->metadata()->properties());
         } else {
+            // Ensure the key is always in the required fields.
             $properties = array_merge($properties, [ $model->key() ]);
         }
 
@@ -259,7 +261,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
         foreach ($properties as $propertyIdent) {
             $p = $model->p($propertyIdent);
             $v = $model->propertyValue($propertyIdent);
-            $p->setVal($v);
+            //$p->setVal($v);
             if (!$p || !$p->active()) {
                 continue;
             }
