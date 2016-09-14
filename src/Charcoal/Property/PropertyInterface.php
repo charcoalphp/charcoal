@@ -39,13 +39,13 @@ interface PropertyInterface
      * @param mixed $val Optional. The value to to convert for input.
      * @return string
      */
-    public function inputVal($val = null);
+    public function inputVal($val);
 
     /**
      * @param mixed $val Optional. The value to to convert for display.
      * @return string
      */
-    public function displayVal($val = null);
+    public function displayVal($val);
 
     /**
      * @param mixed $label The property label.

@@ -31,10 +31,10 @@ class PhoneProperty extends StringProperty
      * @param mixed $val Optional. The value to sanitize. If none provided, use `val()`.
      * @return string
      */
-    public function sanitize($val = null)
+    public function sanitize($val)
     {
         if ($val === null) {
-            $val = $this->val();
+            //$val = $this->val();
         }
 
         return preg_replace('/[^0-9]/', '', $val);
@@ -44,12 +44,8 @@ class PhoneProperty extends StringProperty
      * @param string $val Optional. The value to display. If none is provided, use `val()`.
      * @return string
      */
-    public function displayVal($val = null)
+    public function displayVal($val)
     {
-        if ($val === null) {
-            $val = $this->val();
-        }
-
         $val = $this->sanitize($val);
 
         if (strlen($val) == 10) {

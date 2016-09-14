@@ -58,12 +58,8 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
      * @return string
      * @see AbstractProperty::displayVal()
      */
-    public function displayVal($val = null)
+    public function displayVal($val)
     {
-        if ($val === null) {
-            $val = $this->val();
-        }
-
         if ($val === null) {
             return '';
         }

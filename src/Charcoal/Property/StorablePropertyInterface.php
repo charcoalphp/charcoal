@@ -22,7 +22,7 @@ interface StorablePropertyInterface
      * @param mixed $val Optional. The value to convert to storage value.
      * @return mixed
      */
-    public function storageVal($val = null);
+    public function storageVal($val);
 
     /**
      * @return string

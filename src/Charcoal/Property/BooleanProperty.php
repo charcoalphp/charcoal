@@ -34,12 +34,8 @@ class BooleanProperty extends AbstractProperty
      * @param mixed $val Optional. The value to display. If non provided, use `val()`.
      * @return string
      */
-    public function displayVal($val = null)
+    public function displayVal($val)
     {
-        if ($val === null) {
-            $val = $this->val();
-        }
-
         if ($val === true) {
             return $this->trueLabel();
         } else {

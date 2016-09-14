@@ -27,7 +27,7 @@ class StructureProperty extends AbstractProperty
     }
 
     /**
-     * AbstractProperty > set_val(). Ensure `DateTime` object in val.
+     * AbstractProperty > setVal(). Ensure `DateTime` object in val.
      *
      * @param string|array $val The value to set.
      * @throws InvalidArgumentException If the value is invalid.

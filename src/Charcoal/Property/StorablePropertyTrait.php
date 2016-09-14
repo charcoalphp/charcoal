@@ -88,12 +88,8 @@ trait StorablePropertyTrait
      * @param mixed $val Optional. The value to convert to storage value.
      * @return mixed
      */
-    public function storageVal($val = null)
+    public function storageVal($val)
     {
-        if ($val === null) {
-            $val = $this->val();
-        }
-
         if ($val === null) {
             // Do not json_encode NULL values
             return null;

@@ -292,7 +292,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      * @param  mixed $val A value to be parsed.
      * @return mixed Returns the parsed value.
      */
-    public function parseVal($val = null)
+    public function parseVal($val)
     {
         return $val;
     }
@@ -302,12 +302,8 @@ abstract class AbstractProperty extends AbstractEntity implements
      * @param   array $options Optional input options.
      * @return  string
      */
-    public function inputVal($val = null, array $options = [])
+    public function inputVal($val, array $options = [])
     {
-        if ($val === null) {
-            $val = $this->val();
-        }
-
         if ($val === null) {
             return '';
         }
@@ -344,12 +340,8 @@ abstract class AbstractProperty extends AbstractEntity implements
      * @param  array $options Optional display options.
      * @return string
      */
-    public function displayVal($val = null, array $options = [])
+    public function displayVal($val, array $options = [])
     {
-        if ($val === null) {
-            $val = $this->val();
-        }
-
         if ($val === null) {
             return '';
         }

@@ -275,7 +275,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      * @param mixed $val Value to be parsed.
      * @return mixed
      */
-    public function parseVal($val = null)
+    public function parseVal($val)
     {
         if ($val instanceof StorableInterface) {
             return $val->id();
@@ -302,11 +302,8 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      * @param mixed $val Optional. The value to convert to storage value.
      * @return mixed
      */
-    public function storageVal($val = null)
+    public function storageVal($val)
     {
-        if ($val === null) {
-            $val = $this->val();
-        }
         if ($val === null) {
             // Do not json_encode NULL values
             return null;
@@ -352,12 +349,8 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      * @param mixed $val Optional. The value to display.
      * @return string
      */
-    public function displayVal($val = null)
+    public function displayVal($val)
     {
-        if ($val === null) {
-            $val = $this->val();
-        }
-
         if ($val === null) {
             return '';
         }

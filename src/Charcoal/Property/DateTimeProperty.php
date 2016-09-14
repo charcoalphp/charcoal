@@ -100,13 +100,9 @@ class DateTimeProperty extends AbstractProperty
      * @throws Exception If the date/time is invalid.
      * @return string|null
      */
-    public function inputVal($val = null)
+    public function inputVal($val)
     {
-        if ($val === null) {
-            $val = $this->val();
-        } else {
-            $val = $this->dateTimeVal($val);
-        }
+        $val = $this->dateTimeVal($val);
 
         if ($val instanceof DateTimeInterface) {
             return $this->val->format('Y-m-d H:i:s');
@@ -124,13 +120,9 @@ class DateTimeProperty extends AbstractProperty
      * @throws Exception If the date/time is invalid.
      * @return string|null
      */
-    public function storageVal($val = null)
+    public function storageVal($val)
     {
-        if ($val === null) {
-            $val = $this->val();
-        } else {
-            $val = $this->dateTimeVal($val);
-        }
+        $val = $this->dateTimeVal($val);
 
         if ($val instanceof DateTimeInterface) {
             return $this->val->format('Y-m-d H:i:s');
@@ -152,13 +144,9 @@ class DateTimeProperty extends AbstractProperty
      * @todo   Adapt for l10n
      * @return string|null
      */
-    public function displayVal($val = null)
+    public function displayVal($val)
     {
-        if ($val === null) {
-            $val = $this->val();
-        } else {
-            $val = $this->dateTimeVal($val);
-        }
+        $val = $this->dateTimeVal($val);
 
         if ($val === null) {
             return '';

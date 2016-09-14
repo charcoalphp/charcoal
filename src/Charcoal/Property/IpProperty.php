@@ -180,12 +180,8 @@ class IpProperty extends AbstractProperty
      * @param mixed $val The value to convert to string.
      * @return string
      */
-    public function storageVal($val = null)
+    public function storageVal($val)
     {
-        if ($val === null) {
-            $val = $this->val();
-        }
-
         $mode = $this->storageMode();
 
         if ($mode === self::STORAGE_MODE_INT) {
