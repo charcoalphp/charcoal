@@ -9,9 +9,6 @@ use \RuntimeException;
 // Module `charcoal-factory` dependencies
 use \Charcoal\Factory\FactoryInterface;
 
-// Local namespace dependency
-use \Charcoal\Property\PropertyFactory;
-
 /**
  * Default implementation, as trait, of the {@see DescribablePropertyInterface}.
  *
