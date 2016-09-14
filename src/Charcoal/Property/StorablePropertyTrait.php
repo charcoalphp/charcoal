@@ -39,6 +39,7 @@ trait StorablePropertyTrait
                 $fields[$langCode] = $field;
             }
         } else {
+            $val = $this->val();
             $field = new PropertyField();
             $field->setData(
                 [
@@ -46,7 +47,7 @@ trait StorablePropertyTrait
                     'sqlType'    => $this->sqlType(),
                     'sqlPdoType' => $this->sqlPdoType(),
                     'extra'      => $this->sqlExtra(),
-                    'val'        => $this->storageVal(),
+                    'val'        => $this->storageVal($val),
                     'defaultVal' => null,
                     'allowNull'  => $this->allowNull(),
                     'comment'    => $this->label()
