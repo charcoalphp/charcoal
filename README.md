@@ -7,23 +7,23 @@ Factories **create** (or build) dynamic PHP objects. Factories can resolve a _ty
 
 # Table of contents
 
-- How to install
-	- Dependencies
-- Factories
-	- Usage
-	- The resolver
-	- Class map / aliases
-	- Ensuring a type of object
-	- Setting a default type of object
-	- Constructor arguments
-	- Executing an object callback
-- Development
-	- Development dependencies
-	- Continus integration
-	- Coding style
-	- Authors
-	- Changelog
-- License
+-   How to install
+    -   Dependencies
+-   Factories
+    -   Usage
+    -   The resolver
+    -   Class map / aliases
+    -   Ensuring a type of object
+    -   Setting a default type of object
+    -   Constructor arguments
+    -   Executing an object callback
+-   Development
+    -   Development dependencies
+    -   Continus integration
+    -   Coding style
+    -   Authors
+    -   Changelog
+-   License
 
 # How to install
 
@@ -35,8 +35,8 @@ The preferred (and only supported) way of installing _charcoal-factory_ is with 
 
 ## Dependencies
 
-- [`PHP 5.5+`](http://php.net)
-	- Older versions of PHP are deprecated, therefore not supported for charcoal-factory.
+-   [`PHP 5.5+`](http://php.net)
+    -   Older versions of PHP are deprecated, therefore not supported for charcoal-factory.
 
 > 👉 Development dependencies, which are optional when using charcoal-factory, are described in the [Development](#development) section of this README file.
 
@@ -49,25 +49,25 @@ Factories have only one purpose: to **create** / instanciate new PHP objects. Fa
 
 ```php
 $factory = new \Charcoal\Factory\GenericFactory([
-	// Ensure the created object is a Charcoal Model
-	'base_class' => '\Charcoal\Model\ModelInterface',
+    // Ensure the created object is a Charcoal Model
+    'base_class' => '\Charcoal\Model\ModelInterface',
 
-	// An associative array of class map (aliases)
-	'map' => [
-		'foo' => '\My\Foo',
-		'bar' => '\My\Bar'
-	],
+    // An associative array of class map (aliases)
+    'map' => [
+        'foo' => '\My\Foo',
+        'bar' => '\My\Bar'
+    ],
 
-	// Constructor arguments
-	'arguments' => [
-		$dep1,
-		$dep2
-	],
+    // Constructor arguments
+    'arguments' => [
+        $dep1,
+        $dep2
+    ],
 
-	// Object callback
-	'callback' => function (&obj) {
-		$obj->do('foo');
-	}
+    // Object callback
+    'callback' => function (&obj) {
+        $obj->do('foo');
+    }
 ]);
 
 // Create a "\My\Custom\Baz" object with the given arguments + callbck
@@ -105,10 +105,10 @@ Class _aliases_ can be added by setting them in the Factory constructor:
 
 ```php
 $factory = new GenericFactory([
-	'map' => [
-		'foo' => '\My\Foo',
-		'bar' => '\My\Bar'
-	]
+    'map' => [
+        'foo' => '\My\Foo',
+        'bar' => '\My\Bar'
+    ]
 ]);
 
 // Create a `\My\Foo` instance
@@ -123,7 +123,7 @@ The recommended way of setting the base class is by setting it in the constructo
 
 ```php
 $factory = new GenericFactory([
-	'base_class' => '\My\Foo\BaseClassInterface'
+    'base_class' => '\My\Foo\BaseClassInterface'
 ]);
 ```
 
@@ -137,7 +137,7 @@ The recommended way of setting the default class is by setting it in the constru
 
 ```php
 $factory = new GenericFactory([
-	'default_class' => '\My\Foo\DefaultClassInterface'
+    'default_class' => '\My\Foo\DefaultClassInterface'
 ]);
 ```
 
@@ -151,12 +151,12 @@ The recommended way of setting constructor arguments is by passing an array of a
 
 ```php
 $factory = new GenericFactory([
-	'arguments' => [
-		[
-			'logger' => $container['logger']
-		],
-		$secondArgument
-	]
+    'arguments' => [
+        [
+            'logger' => $container['logger']
+        ],
+        $secondArgument
+    ]
 ]);
 ```
 
@@ -173,13 +173,13 @@ The recommended way of adding an object callback is by passing a `Callable` to t
 
 ```php
 $factory = new GenericFactory([
-	'arguments' => [[
-		'logger' => $container['logger']
-	]],
-	'callback' => function (&$obj) {
-		$obj->foo('bar');
-		$obj->logger->debug('Objet instanciated from factory.');
-	}
+    'arguments' => [[
+        'logger' => $container['logger']
+    ]],
+    'callback' => function (&$obj) {
+        $obj->foo('bar');
+        $obj->logger->debug('Objet instanciated from factory.');
+    }
 ]);
 ```
 
@@ -200,9 +200,9 @@ To run the scripts (phplint, phpcs and phpunit):
 
 ## Development dependencies
 
-- `phpunit/phpunit`
-- `squizlabs/php_codesniffer`
-- `satooshi/php-coveralls`
+-   `phpunit/phpunit`
+-   `squizlabs/php_codesniffer`
+-   `satooshi/php-coveralls`
 
 ## Continuous Integration
 
@@ -217,37 +217,37 @@ To run the scripts (phplint, phpcs and phpunit):
 
 All Charcoal modules follow the same coding style and `charcoal-factory` is no exception. For PHP:
 
-- [_PSR-1_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md)
-- [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
-- [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md), autoloading is therefore provided by _Composer_
-- [_phpDocumentor_](http://phpdoc.org/)
-- Read the [phpcs.xml](phpcs.xml) file for all the details on code style.
+-   [_PSR-1_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md)
+-   [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
+-   [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md), autoloading is therefore provided by _Composer_
+-   [_phpDocumentor_](http://phpdoc.org/)
+-   Read the [phpcs.xml](phpcs.xml) file for all the details on code style.
 
 > Coding style validation / enforcement can be performed with `composer phpcs`. An auto-fixer is also available with `composer phpcbf`.
 
 ## Authors
 
-- Mathieu Ducharme <mat@locomotive.ca>
+-   Mathieu Ducharme <mat@locomotive.ca>
 
 ## Changelog
 
 ### 0.3.2
 
-- Split resolved classname "cache" by factory class.
+-   Split resolved classname "cache" by factory class.
 
 ### 0.3.1
 
 _Released 2016-03-22_
 
-- Keep resolved classname in memory. Can greatly speed things up if instancing many objects.
+-   Keep resolved classname in memory. Can greatly speed things up if instancing many objects.
 
 ### 0.3
 
 _Released 2016-01-28_
 
-- Add the `setArguments()` method to factories.
-- Add the `setCallback()` method to factories.
-- Execute the callback when using the default class too.
+-   Add the `setArguments()` method to factories.
+-   Add the `setCallback()` method to factories.
+-   Execute the callback when using the default class too.
 
 ### 0.2
 
@@ -255,16 +255,16 @@ _Released 2016-01-26_
 
 Minor (but BC-breaking) changes to Charcoal-Factory
 
-- Full PSR1 compliancy (All methods are now camel-case).
-- Add a callback argument to the `create()` method.
-- `create()` and `get()` are now `final` in the base abstract factory class.
-- Internal code, docs and tool improvements.
+-   Full PSR1 compliancy (All methods are now camel-case).
+-   Add a callback argument to the `create()` method.
+-   `create()` and `get()` are now `final` in the base abstract factory class.
+-   Internal code, docs and tool improvements.
 
 ### 0.1
 
 _Released 2015-11-25_
 
-- Initial release
+-   Initial release
 
 # License
 
