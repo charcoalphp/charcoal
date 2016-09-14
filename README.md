@@ -17,15 +17,15 @@ The preferred (and only supported) way of installing _charcoal-core_ is with **c
 
 Charcoal depends on:
 
-- `PHP** 5.5+`
-- `ext-pdo`
-- `ext-mbstring`
-- `psr/log`
-- `locomotivemtl/charcoal-app`
-- `locomotivemtl/charcoal-config`
-- `locomotivemtl/charcoal-property`
-- `locomotivemtl/charcoal-view`
-- `locomotivemtl/charcoal-translation`
+-   `PHP** 5.5+`
+-   `ext-pdo`
+-   `ext-mbstring`
+-   `psr/log`
+-   `locomotivemtl/charcoal-app`
+-   `locomotivemtl/charcoal-config`
+-   `locomotivemtl/charcoal-property`
+-   `locomotivemtl/charcoal-view`
+-   `locomotivemtl/charcoal-translation`
 
 ## Recommended modules
 
@@ -51,14 +51,14 @@ To run the tests:
 
 ## API documentation
 
-- The auto-generated `phpDocumentor` API documentation is available at [https://locomotivemtl.github.io/charcoal-core/docs/master/](https://locomotivemtl.github.io/charcoal-core/docs/master/)
-- The auto-generated `apigen` API documentation is available at [https://codedoc.pub/locomotivemtl/charcoal-core/master/](https://codedoc.pub/locomotivemtl/charcoal-core/master/index.html)
+-   The auto-generated `phpDocumentor` API documentation is available at [https://locomotivemtl.github.io/charcoal-core/docs/master/](https://locomotivemtl.github.io/charcoal-core/docs/master/)
+-   The auto-generated `apigen` API documentation is available at [https://codedoc.pub/locomotivemtl/charcoal-core/master/](https://codedoc.pub/locomotivemtl/charcoal-core/master/index.html)
 
 ## Development dependencies
 
-- `phpunit/phpunit`
-- `squizlabs/php_codesniffer`
-- `satooshi/php-coveralls`
+-   `phpunit/phpunit`
+-   `squizlabs/php_codesniffer`
+-   `satooshi/php-coveralls`
 
 ## Continuous Integration
 
@@ -73,11 +73,11 @@ To run the tests:
 
 The charcoal-core module follows the Charcoal coding-style:
 
-- [_PSR-1_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md)
-- [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
-- [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md), autoloading is therefore provided by _Composer_.
-- [_phpDocumentor_](http://phpdoc.org/) comments.
-- Read the [phpcs.xml](phpcs.xml) file for all the details on code style.
+-   [_PSR-1_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md)
+-   [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
+-   [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md), autoloading is therefore provided by _Composer_.
+-   [_phpDocumentor_](http://phpdoc.org/) comments.
+-   Read the [phpcs.xml](phpcs.xml) file for all the details on code style.
 
 > Coding style validation / enforcement can be performed with `composer phpcs`. An auto-fixer is also available with `composer phpcbf`.
 
@@ -85,15 +85,15 @@ The charcoal-core module follows the Charcoal coding-style:
 
 ## Authors
 
-- Mathieu Ducharme <mat@locomotive.ca>
+-   Mathieu Ducharme <mat@locomotive.ca>
 
 ## Changelog
 
-- Unreleased.
+-   Unreleased.
 
 ## TODOs
 
-- Remove the dependency on charcoal-app
+-   Remove the dependency on charcoal-app
 
 # License
 

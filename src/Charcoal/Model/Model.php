@@ -61,5 +61,4 @@ use \Charcoal\Model\AbstractModel;
  */
 class Model extends AbstractModel
 {
-
 }

@@ -1,56 +1,56 @@
 {
-  "project_name": "Boilerplate",
+    "project_name": "Boilerplate",
 
-  "admin_path": "admin",
+    "admin_path": "admin",
 
-  "dev_mode": false,
+    "dev_mode": false,
 
-  "databases": {
-    "unit_test": {
-      "username": "root",
-      "password": "",
-      "database": "charcoal_examples"
-    }
-  },
-  "default_database": "unit_test",
-
-  "locales": {
-    "languages": {
-      "en": {
-        "active": true,
-        "priority": 1
-      },
-      "fr": {
-        "active": true,
-        "priority": 2
-      }
+    "databases": {
+        "unit_test": {
+            "username": "root",
+            "password": "",
+            "database": "charcoal_examples"
+        }
     },
-    "default_language": "en"
-  },
+    "default_database": "unit_test",
 
-  "timezone": "America/Montreal",
+    "locales": {
+        "languages": {
+            "en": {
+                "active": true,
+                "priority": 1
+            },
+            "fr": {
+                "active": true,
+                "priority": 2
+            }
+        },
+        "default_language": "en"
+    },
 
-  "salt": "(*&0|}HIUW$Huihs$slls/ssd/",
+    "timezone": "America/Montreal",
 
-  "cache": {
-    "active": true,
-    "backend": "memcache",
-    "prefix": "boilerplate_"
-  },
+    "salt": "(*&0|}HIUW$Huihs$slls/ssd/",
 
-  "logger": {
-    "active": false,
-    "output": "file",
-    "levels": {
-      "query": true,
-      "info": true,
-      "debug": true,
-      "notice": true,
-      "warning": true,
-      "error": true,
-      "critical": true,
-      "alert": true,
-      "emergency": true
+    "cache": {
+        "active": true,
+        "backend": "memcache",
+        "prefix": "boilerplate_"
+    },
+
+    "logger": {
+        "active": false,
+        "output": "file",
+        "levels": {
+            "query": true,
+            "info": true,
+            "debug": true,
+            "notice": true,
+            "warning": true,
+            "error": true,
+            "critical": true,
+            "alert": true,
+            "emergency": true
+        }
     }
-  }
 }
