@@ -14,15 +14,15 @@ The preferred (and only supported) way of installing _charcoal-email_ is with **
 
 ## Dependencies
 
-- [`PHP 5.5+`](http://php.net)
-- [`phpmailer/phpmailer`](https://github.com/PHPMailer/PHPMailer)
-- [`locomotivemtl/charcoal-config`](https://github.com/locomotivemtl/charcoal-config)
-- [`locomotivemtl/charcoal-app`](https://github.com/locomotivemtl/charcoal-app)
+-   [`PHP 5.5+`](http://php.net)
+-   [`phpmailer/phpmailer`](https://github.com/PHPMailer/PHPMailer)
+-   [`locomotivemtl/charcoal-config`](https://github.com/locomotivemtl/charcoal-config)
+-   [`locomotivemtl/charcoal-app`](https://github.com/locomotivemtl/charcoal-app)
 
 ## Optional dependencies
 
-- [`pimple/pimple`](http://pimple.sensiolabs.org/)
-	+ Dependency injection Container (required for the [Service Provider](#service-provider))
+-   [`pimple/pimple`](http://pimple.sensiolabs.org/)
+    -   Dependency injection Container (required for the [Service Provider](#service-provider))
 
 > 👉 All optional depedencies are required for development. All other development dependencies, which are optional when using charcoal-email in a project, are described in the [Development](#development) section of this README file.
 
@@ -31,27 +31,27 @@ The preferred (and only supported) way of installing _charcoal-email_ is with **
 ```php
 $email = $container['email'];
 $email->setData([
-	'campaign' => 'Campaign identifier'
-	'to' => [
-		'recipient@example.com',
-		'"Some guy" <someguy@example.com>',
-		[
-			'name'=>'Other guy',
-			'email'=>'otherguy@example.com'
-		]
-	],
-	'bcc' => 'shadow@example.com'
-	'from' => '"Company inc." <company.inc@example.com>',
-	'reply_to' => [
-		'name' => 'Jack CEO',
-		'email' => 'jack@example.com'
-	],
-	'subject'=>$this->translator->trans('Email subject'),
-	'template_ident' => 'foo/email/default-email'
-	'attachments'=>[
-		'foo/bar.pdf',
-		'foo/baz.pdf'
-	]
+    'campaign' => 'Campaign identifier'
+    'to' => [
+        'recipient@example.com',
+        '"Some guy" <someguy@example.com>',
+        [
+            'name'  => 'Other guy',
+            'email' => 'otherguy@example.com'
+        ]
+    ],
+    'bcc' => 'shadow@example.com'
+    'from' => '"Company inc." <company.inc@example.com>',
+    'reply_to' => [
+        'name' => 'Jack CEO',
+        'email' => 'jack@example.com'
+    ],
+    'subject' => $this->translator->trans('Email subject'),
+    'template_ident' => 'foo/email/default-email'
+    'attachments' => [
+        'foo/bar.pdf',
+        'foo/baz.pdf'
+    ]
 ]);
 $email->send();
 
@@ -65,19 +65,19 @@ The entire email system can be configured from the main app config, in the `emai
 
 ```json
 {
-	"email": {
-		"smtp" : true,
-		"smtp_hostname": "smtp.example.com",
-		"smtp_port": 25,
-		"smtp_security": "tls",
-		"smtp_username": "user@example.com",
-		"smtp_password": "password",
+    "email": {
+        "smtp": true,
+        "smtp_hostname": "smtp.example.com",
+        "smtp_port": 25,
+        "smtp_security": "tls",
+        "smtp_username": "user@example.com",
+        "smtp_password": "password",
 
-		"default_from": "webproject@example.com",
-		"default_reply_to": "webproject@example.com",
-		"default_track": false,
-		"default_log": true
-	}
+        "default_from": "webproject@example.com",
+        "default_reply_to": "webproject@example.com",
+        "default_track": false,
+        "default_log": true
+    }
 }
 
 ```
@@ -87,7 +87,6 @@ The entire email system can be configured from the main app config, in the `emai
 All email services can be quickly register to a (`pimple`) container with `\Charcoal\Email\ServiceProvider\EmailServiceProvider`.
 
 **Provided services:**
-
 
 | Service       | Type                | Description |
 | ------------- | ------------------- | ----------- |
@@ -101,9 +100,9 @@ All email services can be quickly register to a (`pimple`) container with `\Char
 Also available are the following helpers:
 
 | Helper Service    | Type                | Description |
-| :---------------- | ------------------- | ----------- |
+| ----------------- | ------------------- | ----------- |
 | **email/config**  | `EmailConfig`<sup>3</sup> | Email configuration.
-| **email/view** 	| `ViewInterface`<sup>4</sup>   | The view object to render email templates (`$container['view']`).
+| **email/view**    | `ViewInterface`<sup>4</sup>   | The view object to render email templates (`$container['view']`).
 
 <sup>3</sup> `\Charcoal\Email\EmailConfig`.<br>
 <sup>4</sup> `\Charcoal\View\ViewInterface`.<br>
@@ -112,9 +111,9 @@ Also available are the following helpers:
 >
 > ```json
 > {
-> 	"service_providers":{
-> 		"charcoal/email/service-provider/email":{}
-> 	}
+>   "service_providers": {
+>       "charcoal/email/service-provider/email": {}
+>   }
 > }
 > ```
 
@@ -122,8 +121,8 @@ Also available are the following helpers:
 
 For the _email_ service provider to work properly, the following services are expected to e registerd on the same container:
 
-- `config`
-- `view`
+-   `config`
+-   `view`
 
 # Development
 
@@ -141,9 +140,9 @@ To run the scripts (phplint, phpcs and phpunit):
 
 ## Development dependencies
 
-- `phpunit/phpunit`
-- `squizlabs/php_codesniffer`
-- `satooshi/php-coveralls`
+-   `phpunit/phpunit`
+-   `squizlabs/php_codesniffer`
+-   `satooshi/php-coveralls`
 
 ## Continuous Integration
 
@@ -158,19 +157,19 @@ To run the scripts (phplint, phpcs and phpunit):
 
 The Charcoal-Email module follows the Charcoal coding-style:
 
-- [_PSR-1_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md)
-- [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
-- [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md), autoloading is therefore provided by _Composer_.
-- [_phpDocumentor_](http://phpdoc.org/) comments.
-- Read the [phpcs.xml](phpcs.xml) file for all the details on code style.
+-   [_PSR-1_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md)
+-   [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
+-   [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md), autoloading is therefore provided by _Composer_.
+-   [_phpDocumentor_](http://phpdoc.org/) comments.
+-   Read the [phpcs.xml](phpcs.xml) file for all the details on code style.
 
 > Coding style validation / enforcement can be performed with `composer phpcs`. An auto-fixer is also available with `composer phpcbf`.
 
 ## Authors
 
-- Mathieu Ducharme <mat@locomotive.ca>
-- Chauncey McAskill <chauncey@locomotive.ca>
-- Benjamin Roch <benjamin@locomotive.ca>
+-   Mathieu Ducharme <mat@locomotive.ca>
+-   Chauncey McAskill <chauncey@locomotive.ca>
+-   Benjamin Roch <benjamin@locomotive.ca>
 
 ## Changelog
 

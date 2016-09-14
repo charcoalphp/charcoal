@@ -1,52 +1,53 @@
 {
-	"name": "locomotivemtl/charcoal-email",
-	"description": "Email sending and queueing for Charcoal",
-	"keywords": [ "charcoal", "email", "queue", "phpmailer" ],
-	"homepage": "https://charcoal.locomotive.ca",
-	"license": "MIT",
-	"support": {
-		"issues": "https://github.com/locomotivemtl/charcoal-email/issues",
-		"source": "https://github.com/locomotivemtl/charcoal-email"
-	},
-	"authors": [
-		{
-			"name": "Mathieu Ducharme",
-			"email": "mat@locomotive.ca"
-		},
-		{
-			"name": "Locomotive",
-			"homepage": "https://locomotive.ca"
-		}
-	],
-	"minimum-stability":"dev",
-	"require": {
-		"php": ">=5.5.0",
-		"phpmailer/phpmailer": "~6.0",
-		"locomotivemtl/charcoal-config": "~0.6",
-		"locomotivemtl/charcoal-app": "~0.2",
-		"locomotivemtl/charcoal-queue":"~0.1"
-	},
-	"require-dev": {
-		"pimple/pimple": "~3.0",
-		"phpunit/phpunit": "^4.8",
-		"squizlabs/php_codesniffer": "^2.4",
-		"satooshi/php-coveralls":"~1.0.1",
-		"mustache/mustache": "~2.10"
-	},
-	"autoload": {
-		"psr-4": {
-			"Charcoal\\": "src/Charcoal"
-		}
-	},
-	"scripts": {
-		"test": [
-			"@phplint",
-			"@phpcs",
-			"@phpunit"
-		],
-		"phplint": "find {src,tests} -name '*.php' -print0 | xargs -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1",
-		"phpunit": "php vendor/bin/phpunit --configuration tests/phpunit.xml --coverage-text",
-		"phpcs": "php vendor/bin/phpcs -ps --colors --standard=phpcs.xml src/",
-		"phpcbf": "php vendor/bin/phpcbf -ps --colors --standard=phpcs.xml src/ tests/"
-	}
+    "name": "locomotivemtl/charcoal-email",
+    "description": "Email sending and queueing for Charcoal",
+    "keywords": [ "charcoal", "email", "queue", "phpmailer" ],
+    "homepage": "https://charcoal.locomotive.ca",
+    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/locomotivemtl/charcoal-email/issues",
+        "source": "https://github.com/locomotivemtl/charcoal-email"
+    },
+    "authors": [
+        {
+            "name": "Mathieu Ducharme",
+            "email": "mat@locomotive.ca"
+        },
+        {
+            "name": "Locomotive",
+            "homepage": "https://locomotive.ca"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.5.0",
+        "psr/log": "^1.0",
+        "phpmailer/phpmailer": "~6.0",
+        "locomotivemtl/charcoal-config": "~0.6",
+        "locomotivemtl/charcoal-app": "~0.2",
+        "locomotivemtl/charcoal-queue": "~0.1"
+    },
+    "require-dev": {
+        "pimple/pimple": "~3.0",
+        "phpunit/phpunit": "^4.8",
+        "squizlabs/php_codesniffer": "^2.4",
+        "satooshi/php-coveralls": "~1.0.1",
+        "mustache/mustache": "^2.11"
+    },
+    "autoload": {
+        "psr-4": {
+            "Charcoal\\": "src/Charcoal"
+        }
+    },
+    "scripts": {
+        "test": [
+            "@phplint",
+            "@phpcs",
+            "@phpunit"
+        ],
+        "phplint": "find {src,tests} -name '*.php' -print0 | xargs -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1",
+        "phpunit": "php vendor/bin/phpunit --configuration tests/phpunit.xml --coverage-text",
+        "phpcs": "php vendor/bin/phpcs -ps --colors --standard=phpcs.xml src/",
+        "phpcbf": "php vendor/bin/phpcbf -ps --colors --standard=phpcs.xml src/ tests/"
+    }
 }
