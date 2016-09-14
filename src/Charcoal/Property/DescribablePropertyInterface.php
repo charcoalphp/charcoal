@@ -34,10 +34,4 @@ interface DescribablePropertyInterface
      * @return array|PropertyInterface|null
      */
     public function p($propertyIdent = null);
-
-    /**
-     * @param array $filters The filters to apply.
-     * @return boolean False if the object doesn't match any filter, true otherwise.
-     */
-    public function isFiltered(array $filters = null);
 }
