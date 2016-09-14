@@ -8,9 +8,9 @@ php:
     - nightly
 
 env:
-  global:
-    - secure: "RiOs1JCoK7MELwMFPlQdh9zlmej2P9CcOvRtpPFO25fe4EjNbpN0OUgXwmBJMRzZjF2/jVsm8QKwW0QU5YxYWQxJeb2GLK4E6hpMyP/lQrSX6u05G9pm6u3jPz3kfBKT4tldu5CS4wcMU1d5zritn+Is3zaLGNkLKZVaPz1qgsYqY14l20c+ozvnnw6h4kXVXQY6yqHMZhk7Z9H2rnp/K53sRV0sItxuSe9MK5orE3/fWo/zafxIZ2w4Uda7DK+K60Pq8dMEiJXFh3hhE+MQFZpB7LP2ZyYxQXdynS4eNT5EnVPlNC0JNUoEYsvs99vp8EbSRMklHPtNqZENHKx06E7wsxghzDMMI7f8WcVLNcmJlEbUVhk7wgMg8fU88nvlqV1sRbf1pDW52M53/l6tS7XueF5DdiO+LUsjKDcNHfb3GIPaT7JSDGK67lMKJdBk++JusgffLPHh8Vb7nXZlKMKvuRJMATCcu2b8rxIyADpwZ15figZ8kj0Iqv7g6ksLOT/wQPRz38fp6Y+Of0l+kgW7StznaDLTyBry5JNJ80Y0ny9ne0jOb2F7SfwZl9hs24zg8l5/E2qDzq6qfHU8eK0ljxQ2jdfD1DYTBksyGQ6m4e+kP3nSEq43aiQm5NwXVZkCqIlsbuKxtVOCNwVwIqj7nUeot3HpTDqzWOr6oAo="
-    - GH_REPO: github.com/locomotivemtl/charcoal-queue.git
+    global:
+        - secure: "RiOs1JCoK7MELwMFPlQdh9zlmej2P9CcOvRtpPFO25fe4EjNbpN0OUgXwmBJMRzZjF2/jVsm8QKwW0QU5YxYWQxJeb2GLK4E6hpMyP/lQrSX6u05G9pm6u3jPz3kfBKT4tldu5CS4wcMU1d5zritn+Is3zaLGNkLKZVaPz1qgsYqY14l20c+ozvnnw6h4kXVXQY6yqHMZhk7Z9H2rnp/K53sRV0sItxuSe9MK5orE3/fWo/zafxIZ2w4Uda7DK+K60Pq8dMEiJXFh3hhE+MQFZpB7LP2ZyYxQXdynS4eNT5EnVPlNC0JNUoEYsvs99vp8EbSRMklHPtNqZENHKx06E7wsxghzDMMI7f8WcVLNcmJlEbUVhk7wgMg8fU88nvlqV1sRbf1pDW52M53/l6tS7XueF5DdiO+LUsjKDcNHfb3GIPaT7JSDGK67lMKJdBk++JusgffLPHh8Vb7nXZlKMKvuRJMATCcu2b8rxIyADpwZ15figZ8kj0Iqv7g6ksLOT/wQPRz38fp6Y+Of0l+kgW7StznaDLTyBry5JNJ80Y0ny9ne0jOb2F7SfwZl9hs24zg8l5/E2qDzq6qfHU8eK0ljxQ2jdfD1DYTBksyGQ6m4e+kP3nSEq43aiQm5NwXVZkCqIlsbuKxtVOCNwVwIqj7nUeot3HpTDqzWOr6oAo="
+        - GH_REPO: github.com/locomotivemtl/charcoal-queue.git
 
 matrix:
     allow_failures:
@@ -18,28 +18,28 @@ matrix:
         - php: nightly
 
 before_script:
-  ## Init composer
-  - composer selfupdate --quiet
-  - COMPOSER_ROOT_VERSION=dev-master composer install -n --dev
+    ## Init composer
+    - composer selfupdate --quiet
+    - COMPOSER_ROOT_VERSION=dev-master composer install -n --dev
 
-  ## Create temporary folders
-  - mkdir -p build/logs
+    ## Create temporary folders
+    - mkdir -p build/logs
 
 script:
-  ## Lint PHP Files
-  - find {src,tests} -name '*.php' -print0 | xargs -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1
+    ## Lint PHP Files
+    - find {src,tests} -name '*.php' -print0 | xargs -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1
 
-  ## PHP Code Sniffer
-  - if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then ./vendor/bin/phpcs -ps --colors --standard=phpcs.xml src/; fi
+    ## PHP Code Sniffer
+    - if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then ./vendor/bin/phpcs -ps --colors --standard=phpcs.xml src/; fi
 
-  ## Run PHPUnit Tests
-  - phpunit --configuration ./tests/phpunit.xml --coverage-text --coverage-clover build/logs/clover.xml
+    ## Run PHPUnit Tests
+    - phpunit --configuration ./tests/phpunit.xml --coverage-text --coverage-clover build/logs/clover.xml
 
 after_script:
-  - php vendor/bin/coveralls -v
-  - bash build/travis/phpdoc_ghpages.sh
-  - bash build/travis/apigen_ghpages.sh
+    - php vendor/bin/coveralls -v
+    - bash build/travis/phpdoc_ghpages.sh
+    - bash build/travis/apigen_ghpages.sh
 
 notifications:
-  slack: locomotivemtl:d9h8ZWwTZ6b3WUsSP9s26nb1
-  email: charcoal@locomotive.ca
+    slack: locomotivemtl:d9h8ZWwTZ6b3WUsSP9s26nb1
+    email: charcoal@locomotive.ca

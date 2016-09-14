@@ -11,7 +11,7 @@ composer require locomotivemtl/charcoal-queue`
 
 ## Dependencies
 
-- `locomotivemtl/charcoal-core` for the `CollectionLoader`
+-   `locomotivemtl/charcoal-core` for the `CollectionLoader`
 
 ## Queueing System
 
@@ -29,14 +29,14 @@ If for any reason the items need to be loaded, it can be done with `loadQueueIte
 
 There are 4 callbacks that can be defined:
 
-- `setProcessedCallback()`
-- `setItemCallback()`
-- `setItemSuccessCallbak()`
-- `setItemFailureCallback()`
+-   `setProcessedCallback()`
+-   `setItemCallback()`
+-   `setItemSuccessCallbak()`
+-   `setItemFailureCallback()`
 
 There are only 1 abstract method:
 
-- `queueItemProto()` which must returns a `QueueItemInterface` instance
+-   `queueItemProto()` which must returns a `QueueItemInterface` instance
 
 ## Queue Items
 
@@ -48,17 +48,17 @@ Items can be processed with `process($callback, $successCallback, $failureCallba
 
 The queue item properties are:
 
-- `queue_id`
-- `queue_item_data`
-- `queued_date`
-- `processing_date`
-- `processed_date`
-- `processed`
+-   `queue_id`
+-   `queue_item_data`
+-   `queued_date`
+-   `processing_date`
+-   `processed_date`
+-   `processed`
 
 ## Queuable Objects
 
 The `QueueableInterface` defines objects that can be queued. This interface is really simple and only provides:
 
-- `setQueueId()` which can be inherited from `QueueableTrait`
-- `queueId()` (`queue_id` getter) which can be inherited from `QueueableTrait`
-- `queue($ts = null)` which is abstract and must be written inside class which implement the queueable interface
+-   `setQueueId()` which can be inherited from `QueueableTrait`
+-   `queueId()` (`queue_id` getter) which can be inherited from `QueueableTrait`
+-   `queue($ts = null)` which is abstract and must be written inside class which implement the queueable interface
