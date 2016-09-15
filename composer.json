@@ -1,13 +1,10 @@
 {
     "name": "locomotivemtl/charcoal-email",
+    "type": "library",
     "description": "Email sending and queueing for Charcoal",
     "keywords": [ "charcoal", "email", "queue", "phpmailer" ],
     "homepage": "https://charcoal.locomotive.ca",
     "license": "MIT",
-    "support": {
-        "issues": "https://github.com/locomotivemtl/charcoal-email/issues",
-        "source": "https://github.com/locomotivemtl/charcoal-email"
-    },
     "authors": [
         {
             "name": "Mathieu Ducharme",
@@ -19,6 +16,11 @@
         }
     ],
     "minimum-stability": "dev",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.1.x-dev"
+        }
+    },
     "require": {
         "php": ">=5.5.0",
         "psr/log": "^1.0",
