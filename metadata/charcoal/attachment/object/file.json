@@ -1,4 +1,13 @@
 {
+    "default_data": {
+        "type": "charcoal/attachment/object/file",
+        "preview": "{{> charcoal/attachment/object/file }}",
+        "heading": {
+            "fr": "Fichier{{# title }}: {{ . }} — {{/ title }}{{^ title }} #{{ id }} — {{/ title }}{{ basename }}",
+            "en": "File{{# title }}: {{ . }} — {{/ title }}{{^ title }} #{{ id }} — {{/ title }}{{ basename }}"
+        }
+    },
+
     "data": {
         "type": "charcoal/attachment/object/file",
         "preview": "{{> charcoal/attachment/object/file }}",

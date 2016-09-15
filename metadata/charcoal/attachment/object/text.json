@@ -1,4 +1,12 @@
 {
+    "default_data": {
+        "type": "charcoal/attachment/object/text",
+        "preview": "{{> charcoal/attachment/object/text }}",
+        "heading": {
+            "fr": "Zone de texte{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}",
+            "en": "Text Zone{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}"
+        }
+    },
     "data": {
         "type": "charcoal/attachment/object/text",
         "preview": "{{> charcoal/attachment/object/text }}",

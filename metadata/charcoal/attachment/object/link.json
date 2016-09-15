@@ -1,4 +1,12 @@
 {
+    "default_data": {
+        "type": "charcoal/attachment/object/link",
+        "preview": "{{> charcoal/attachment/object/link }}",
+        "heading": {
+            "fr": "Lien externe{{# title }}: {{ . }} — {{/ title }}{{^ title }} #{{ id }} — {{/ title }}{{ link }}",
+            "en": "External Link{{# title }}: {{ . }} — {{/ title }}{{^ title }} #{{ id }} — {{/ title }}{{ link }}"
+        }
+    },
     "data": {
         "type": "charcoal/attachment/object/link",
         "preview": "{{> charcoal/attachment/object/link }}",

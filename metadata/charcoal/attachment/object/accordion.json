@@ -1,4 +1,12 @@
 {
+    "default_data": {
+        "type": "charcoal/attachment/object/accordion",
+        "preview": "{{> charcoal/attachment/object/accordion }}",
+        "heading": {
+            "fr": "Accordéon{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}",
+            "en": "Accordion{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}"
+        }
+    },
     "data": {
         "type": "charcoal/attachment/object/accordion",
         "preview": "{{> charcoal/attachment/object/accordion }}",

@@ -1,4 +1,11 @@
 {
+    "default_data": {
+        "type": "charcoal/attachment/object/video",
+        "heading": {
+            "fr": "Vidéo{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}",
+            "en": "Video{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}"
+        }
+    },
     "data": {
         "type": "charcoal/attachment/object/video",
         "heading": {

@@ -1,4 +1,12 @@
 {
+    "default_data": {
+        "type": "charcoal/attachment/object/embed",
+        "preview": "{{> charcoal/attachment/object/embed }}",
+        "heading": {
+            "fr": "Média externe{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}",
+            "en": "Embedded Media{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}"
+        }
+    },
     "data": {
         "type": "charcoal/attachment/object/embed",
         "preview": "{{> charcoal/attachment/object/embed }}",

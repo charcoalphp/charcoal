@@ -1,4 +1,11 @@
 {
+    "default_data": {
+        "preview": "{{ title }}",
+        "heading": {
+            "fr": "Contenu relié{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}",
+            "en": "Related Content{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}"
+        }
+    },
     "data": {
         "preview": "{{ title }}",
         "heading": {

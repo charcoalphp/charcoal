@@ -1,4 +1,12 @@
 {
+    "default_data": {
+        "type": "charcoal/attachment/object/gallery",
+        "preview": "{{> charcoal/attachment/object/gallery }}",
+        "heading": {
+            "fr": "Galerie{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}",
+            "en": "Gallery{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}"
+        }
+    },
     "data": {
         "type": "charcoal/attachment/object/gallery",
         "preview": "{{> charcoal/attachment/object/gallery }}",

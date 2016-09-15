@@ -1,4 +1,13 @@
 {
+    "default_data": {
+        "type": "charcoal/attachment/object/image",
+        "preview": "{{> charcoal/attachment/object/image }}",
+        "heading": {
+            "fr": "Image{{# title }}: {{ . }} — {{/ title }}{{^ title }} #{{ id }} — {{/ title }}{{ basename }}",
+            "en": "Picture{{# title }}: {{ . }} — {{/ title }}{{^ title }} #{{ id }} — {{/ title }}{{ basename }}"
+        }
+    },
+
     "data": {
         "type": "charcoal/attachment/object/image",
         "preview": "{{> charcoal/attachment/object/image }}",

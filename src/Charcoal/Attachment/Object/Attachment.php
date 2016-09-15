@@ -167,6 +167,19 @@ class Attachment extends Content implements AttachableInterface
         $this->setCollectionLoader($container['model/collection/loader']);
     }
 
+
+    /**
+     * Workaround to set data with defaultData
+     * @param [type] $data [description]
+     */
+    public function setData($data)
+    {
+        if (is_callable([ $this, 'defaultData' ])) {
+            parent::setData($this->defaultData());
+        }
+        return parent::setData($data);
+    }
+
     /**
      * Retrieve the attachment type.
      *
