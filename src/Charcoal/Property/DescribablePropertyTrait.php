@@ -94,6 +94,11 @@ trait DescribablePropertyTrait
         $metadata = $this->metadata();
         $propertyObject = $metadata->propertyObject($propertyIdent);
         if ($propertyObject !== null) {
+
+            $propertyValue = $this->propertyValue($propertyIdent);
+            if ($propertyValue !== null && $propertyIdent != $this->key()) {
+                $propertyObject->setVal($propertyValue);
+            }
             return $propertyObject;
         }
 
@@ -126,10 +131,10 @@ trait DescribablePropertyTrait
         $property->setIdent($propertyIdent);
         $property->setData($propertyMetadata);
 
-        // $propertyValue = $this->propertyValue($propertyIdent);
-        // if ($propertyValue !== null) {
-        //     $property->setVal($propertyValue);
-        // }
+        $propertyValue = $this->propertyValue($propertyIdent);
+        if ($propertyValue !== null && $propertyIdent != $this->key()) {
+            $property->setVal($propertyValue);
+        }
 
         $metadata->setPropertyObject($propertyIdent, $property);
         return $property;
