@@ -1,6 +1,8 @@
 {
     "name": "locomotivemtl/charcoal-view",
+    "type": "library",
     "description": "Charcoal View (templates)",
+    "keywords": [ "charcoal", "view", "templates", "mustache", "twig" ],
     "homepage": "https://charcoal.locomotive.ca",
     "license": "MIT",
     "authors": [
@@ -14,6 +16,11 @@
         }
     ],
     "minimum-stability": "dev",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.1.x-dev"
+        }
+    },
     "require": {
         "php": ">=5.5.0",
         "psr/log": "^1.0",
@@ -28,8 +35,8 @@
         "twig/twig": "^1.18"
     },
     "suggest": {
-        "mustache/mustache": "For (optional, but default) Mustache templating support",
-        "twig/twig": "For (optional) Twig templating support."
+        "mustache/mustache": "",
+        "twig/twig": ""
     },
     "autoload": {
         "psr-4": {
