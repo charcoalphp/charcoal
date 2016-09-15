@@ -224,13 +224,21 @@ abstract class AbstractQueueManager implements
         $failures = [];
         $skipped  = [];
         foreach ($queued as $q) {
-            $res = $q->process($this->itemCallback, $this->itemSuccessCallback, $this->itemFailureCallback);
-            if ($res === true) {
-                $success[] = $q;
-            } elseif ($res === false) {
+            try {
+                $res = $q->process($this->itemCallback, $this->itemSuccessCallback, $this->itemFailureCallback);
+                if ($res === true) {
+                    $success[] = $q;
+                } elseif ($res === false) {
+                    $failures[] = $q;
+                } else {
+                    $skipped[] = $q;
+                }
+            } catch (Exception $e) {
+                $this->logger->error(
+                    sprintf('Could not process a queue item: %s', $e->getMessage())
+                );
                 $failures[] = $q;
-            } else {
-                $skipped[] = $q;
+                continue;
             }
         }
 
