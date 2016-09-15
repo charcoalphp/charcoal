@@ -2,6 +2,8 @@
 
 namespace Charcoal\Queue;
 
+use \Exception;
+
 // PSR-3 (logger) dependencies
 use \Psr\Log\LoggerAwareInterface;
 use \Psr\Log\LoggerAwareTrait;
