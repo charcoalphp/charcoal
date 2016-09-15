@@ -1,12 +1,10 @@
 {
     "name": "locomotivemtl/charcoal-factory",
+    "type": "library",
     "description": "Charcoal object creation (Factory, AbstractFactory, Builder, Class Resolver)",
+    "keywords": [ "charcoal" ],
     "homepage": "https://charcoal.locomotive.ca",
     "license": "MIT",
-    "support": {
-        "issues": "https://github.com/locomotivemtl/charcoal-factory/issues",
-        "source": "https://github.com/locomotivemtl/charcoal-factory"
-    },
     "authors": [
         {
             "name": "Mathieu Ducharme",
@@ -17,6 +15,7 @@
             "homepage": "http://locomotive.ca"
         }
     ],
+    "minimum-stability": "dev",
     "require": {
         "php": ">=5.5.0"
     },
