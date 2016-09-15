@@ -1,12 +1,10 @@
 {
     "name": "locomotivemtl/charcoal-config",
+    "type": "library",
     "description": "Configuration container for all things Charcoal",
+    "keywords": [ "charcoal", "configuration", "json", "xml", "yml", "yaml", "ini" ],
     "homepage": "http://locomotivemtl.github.io/charcoal-config/",
     "license": "MIT",
-    "support": {
-        "issues": "https://github.com/locomotivemtl/charcoal-config/issues",
-        "source": "https://github.com/locomotivemtl/charcoal-config"
-    },
     "authors": [
         {
             "name": "Mathieu Ducharme",
@@ -17,6 +15,7 @@
             "homepage": "https://locomotive.ca"
         }
     ],
+    "minimum-stability": "dev",
     "require": {
         "php": ">=5.5.0",
         "ext-json": "*",
