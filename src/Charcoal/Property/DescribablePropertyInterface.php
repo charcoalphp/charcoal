@@ -2,30 +2,31 @@
 
 namespace Charcoal\Property;
 
+use \Charcoal\Model\DescribableInterface;
+
 /**
  * Defines a model having attributes that allow the formatting of its data.
- *
- * Complements {@see DescribableInterface}.
  */
-interface DescribablePropertyInterface
+interface DescribablePropertyInterface extends DescribableInterface
 {
     /**
-     * Get the list of properties, as array of `PropertyInterface`
+     * Retrieve the model's properties as a collection of `PropertyInterface` objects.
      *
      * @return array
      */
     public function properties();
 
     /**
-     * Get a single property
+     * Retrieve an instance of `PropertyInterface` for the given property.
      *
-     * @param string $propertyIdent The ident of the property to get.
+     * @param string $propertyIdent The property identifier to return.
      * @return PropertyInterface
      */
     public function property($propertyIdent);
 
     /**
-     * Alias of `property()` or `properties()`, depending if argument is set or not.
+     * Alias of {@see self::property()} and {@see self::properties()},
+     * depending if argument is set or not.
      *
      * @param mixed $propertyIdent Property ident, if null, return all properties.
      * @return array|PropertyInterface|null

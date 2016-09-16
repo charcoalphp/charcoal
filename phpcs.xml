@@ -90,6 +90,11 @@
     <rule ref="Squiz.Commenting.FunctionComment.ScalarTypeHintMissing">
         <severity>0</severity>
     </rule>
+    <!-- Ignore void return type for Generators -->
+    <rule ref="Squiz.Commenting.FunctionComment.InvalidReturnNotVoid">
+        <type>warning</type>
+        <message>A void return statement should only be used within a generator</message>
+    </rule>
     <!-- Verifies that a @throws tag exists for a function that throws exceptions -->
     <rule ref="Squiz.Commenting.FunctionCommentThrowTag" />
     <!-- Checks that there is adequate spacing between comments -->
