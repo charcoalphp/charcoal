@@ -308,11 +308,10 @@ abstract class AbstractSource implements
     public function addOrder($param, $mode = 'asc', array $orderOptions = null)
     {
         if ($param instanceof OrderInterface) {
-            $this->orders[] = $param;
+            $order = $param;
         } elseif (is_array($param)) {
             $order = $this->createOrder();
             $order->setData($param);
-            $this->orders[] = $order;
         } elseif (is_string($param)) {
             $order = $this->createOrder();
             $order->setProperty($param);
@@ -320,12 +319,29 @@ abstract class AbstractSource implements
             if (isset($orderOptions['values'])) {
                 $order->setValues($orderOptions['values']);
             }
-            $this->orders[] = $order;
         } else {
             throw new InvalidArgumentException(
                 'Parameter must be an OrderInterface object or a property ident.'
             );
         }
+
+        if ($this->hasModel()) {
+            $property = $order->property();
+            if ($property) {
+                $p = $this->model()->p($property);
+                if ($p && $p->l10n()) {
+                    $translator = TranslationConfig::instance();
+
+                    $ident = sprintf('%1$s_%2$s', $property, $translator->currentLanguage());
+                    $order->setProperty($ident);
+                }
+                if ($p && $p->multiple()) {
+                    $order->setOperator('FIND_IN_SET');
+                }
+            }
+        }
+
+        $this->orders[] = $order;
 
         return $this;
     }
