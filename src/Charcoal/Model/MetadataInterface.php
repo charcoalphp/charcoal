@@ -6,24 +6,30 @@ namespace Charcoal\Model;
 use \Charcoal\Property\PropertyInterface;
 
 /**
- * Metadata is typically used to describe an object.
+ * Defines a metadata container.
  *
- * Metadata
+ * Metadata is typically used to describe an object.
  */
 interface MetadataInterface
 {
     /**
-     * @param array $defaultData
+     * Set the object's default values.
+     *
+     * @param array $defaultData An associative array.
      * @return MetadataInterface Chainable
      */
     public function setDefaultData(array $defaultData);
 
     /**
+     * Retrieve the default values.
+     *
      * @return array
      */
     public function defaultData();
 
     /**
+     * Retrieve the properties.
+     *
      * @return array
      */
     public function properties();
@@ -37,7 +43,7 @@ interface MetadataInterface
     public function property($propertyIdent);
 
     /**
-     * Set a property, as a PropertyInterface instance.
+     * Assign an instance of {@see PropertyInterface} to the given property.
      *
      * @param string            $propertyIdent  The property indentifer.
      * @param PropertyInterface $propertyObject The property, as object.
@@ -46,7 +52,9 @@ interface MetadataInterface
     public function setPropertyObject($propertyIdent, PropertyInterface $propertyObject);
 
     /**
-     * @param string The property (identifier) to return, as an object.
+     * Retrieve the given property as an object.
+     *
+     * @param string $propertyIdent The property (identifier) to return, as an object.
      * @return PropertyInterface|null
      */
     public function propertyObject($propertyIdent);

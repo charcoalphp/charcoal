@@ -12,7 +12,9 @@ use \Charcoal\Property\PropertyInterface;
 use \Charcoal\Model\MetadataInterface;
 
 /**
- * An implementation, as abstract class, of `MetadataInterface`.
+ * A basic metadata container.
+ *
+ * Abstract implementation of {@see \Charcoal\Model\MetadataInterface}.
  *
  * This class also implements the `ArrayAccess`, so properties can be accessed with `[]`.
  * The `LoadableInterface` is also implemented, mostly through `LoadableTrait`.
@@ -21,23 +23,30 @@ abstract class AbstractMetadata extends AbstractConfig implements
     MetadataInterface
 {
     /**
-     * @var array $defaultData
+     * Holds the default values of this configuration object.
+     *
+     * @var array
      */
     protected $defaultData = [];
 
     /**
-     * Holds the properties of this configuration object
-     * @var array $properties
+     * Holds the properties of this configuration object.
+     *
+     * @var array
      */
     protected $properties = [];
 
     /**
+     * Stores the properties, as objects, of this configuration object.
+     *
      * @var PropertyInterface[]
      */
     protected $propertiesObjects;
 
     /**
-     * @param array $defaultData
+     * Set the object's default values.
+     *
+     * @param array $defaultData An associative array.
      * @return MetadataInterface Chainable
      */
     public function setDefaultData(array $defaultData)
@@ -47,6 +56,8 @@ abstract class AbstractMetadata extends AbstractConfig implements
     }
 
     /**
+     * Retrieve the default values.
+     *
      * @return array
      */
     public function defaultData()
@@ -57,7 +68,7 @@ abstract class AbstractMetadata extends AbstractConfig implements
     /**
      * Set the properties.
      *
-     * @param array $properties The properties.
+     * @param array $properties One or more properties.
      * @throws InvalidArgumentException If parameter is not an array.
      * @return MetadataInterface Chainable
      */
@@ -93,10 +104,10 @@ abstract class AbstractMetadata extends AbstractConfig implements
     }
 
     /**
-     * Set a property, as a PropertyInterface instance.
+     * Assign an instance of {@see PropertyInterface} to the given property.
      *
      * @param string            $propertyIdent  The property indentifer.
-     * @param PropertyInterface $propertyObject The property, as object.
+     * @param PropertyInterface $propertyObject The property, as an object.
      * @return MetadataInterface Chainable
      */
     public function setPropertyObject($propertyIdent, PropertyInterface $propertyObject)
@@ -106,7 +117,9 @@ abstract class AbstractMetadata extends AbstractConfig implements
     }
 
     /**
-     * @param string The property (identifier) to return, as an object.
+     * Retrieve the given property as an object.
+     *
+     * @param string $propertyIdent The property (identifier) to return, as an object.
      * @return PropertyInterface|null
      */
     public function propertyObject($propertyIdent)
