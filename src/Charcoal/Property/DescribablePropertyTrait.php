@@ -96,7 +96,7 @@ trait DescribablePropertyTrait
         $propertyObject = $metadata->propertyObject($propertyIdent);
         if ($propertyObject !== null) {
             $propertyValue = $this->propertyValue($propertyIdent);
-            if ($propertyValue !== null && $propertyIdent != $this->key()) {
+            if ($propertyValue !== null || $propertyIdent === $this->key()) {
                 $propertyObject->setVal($propertyValue);
             }
 
@@ -132,7 +132,7 @@ trait DescribablePropertyTrait
         $property->setData($propertyMetadata);
 
         $propertyValue = $this->propertyValue($propertyIdent);
-        if ($propertyValue !== null && $propertyIdent != $this->key()) {
+        if ($propertyValue !== null || $propertyIdent === $this->key()) {
             $property->setVal($propertyValue);
         }
 
