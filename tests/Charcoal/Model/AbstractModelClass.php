@@ -9,20 +9,9 @@ use \Charcoal\Model\AbstractModel as AbstractModel;
  */
 class AbstractModelClass extends AbstractModel
 {
-    public $foo;
-
     public $id;
 
-    public function id()
-    {
-        return $this->id;
-    }
-
-    public function setId($id)
-    {
-        $this->id = $id;
-        return $this;
-    }
+    public $foo;
 
     public function key()
     {

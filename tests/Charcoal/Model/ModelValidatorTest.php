@@ -2,11 +2,8 @@
 
 namespace Charcoal\Tests\Model;
 
-use \Psr\Log\NullLogger;
-use \Cache\Adapter\Void\VoidCachePool;
-
-use \Charcoal\Model\ModelValidator as ModelValidator;
-use \Charcoal\Model\Model as Model;
+use \Charcoal\Model\ModelValidator;
+use \Charcoal\Model\Model;
 
 class ModelValidatorTest extends \PHPUnit_Framework_TestCase
 {
@@ -15,15 +12,34 @@ class ModelValidatorTest extends \PHPUnit_Framework_TestCase
 
     protected function model()
     {
-        return new Model([
-            'logger' => new NullLogger(),
-            'metadata_loader' => new \Charcoal\Model\MetadataLoader([
-                'base_path' => '',
-                'paths' => [],
-                'logger' => new NullLogger(),
-                'cache' => new VoidCachePool()
-            ])
+        $logger = new \Psr\Log\NullLogger();
+        $cache  = new \Cache\Adapter\Void\VoidCachePool();
+
+        $metadataLoader = new \Charcoal\Model\MetadataLoader([
+            'logger'    => $logger,
+            'cache'     => $cache,
+            'base_path' => __DIR__,
+            'paths'     => [ 'metadata' ]
         ]);
+
+        $propertyFactory = new \Charcoal\Factory\GenericFactory([
+            'base_class'       => \Charcoal\Property\PropertyInterface::class,
+            'default_class'    => \Charcoal\Property\GenericProperty::class,
+            'resolver_options' => [
+                'prefix' => '\Charcoal\Property\\',
+                'suffix' => 'Property'
+            ]
+        ]);
+
+        $dependencies = [
+            'logger'           => $logger,
+            'property_factory' => $propertyFactory,
+            'metadata_loader'  => $metadataLoader
+        ];
+
+        $propertyFactory->setArguments($dependencies);
+
+        return new Model($dependencies);
     }
 
     public function testConstructor()

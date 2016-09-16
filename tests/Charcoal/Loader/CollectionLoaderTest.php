@@ -2,10 +2,9 @@
 
 namespace Charcoal\Tests\Loader;
 
-use \Psr\Log\NullLogger;
-use \Cache\Adapter\Void\VoidCachePool;
-
 use \Charcoal\Config\GenericConfig;
+
+use \Charcoal\Factory\GenericFactory as Factory;
 
 use \Charcoal\Loader\CollectionLoader;
 use \Charcoal\Source\DatabaseSource;
@@ -19,8 +18,8 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $logger = new NullLogger();
-        $cache  = new VoidCachePool();
+        $logger = new \Psr\Log\NullLogger();
+        $cache  = new \Cache\Adapter\Void\VoidCachePool();
 
         $source = new DatabaseSource([
             'logger' => $logger,
@@ -35,21 +34,35 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
             'paths'     => [ 'metadata' ]
         ]);
 
-        $factory = new \Charcoal\Factory\GenericFactory([
+        $factory = new Factory([
             'arguments' => [[
                 'logger'          => $logger,
                 'metadata_loader' => $metadataLoader
             ]]
         ]);
 
+        $propertyFactory = new Factory([
+            'base_class'       => \Charcoal\Property\PropertyInterface::class,
+            'default_class'    => \Charcoal\Property\GenericProperty::class,
+            'resolver_options' => [
+                'prefix' => '\Charcoal\Property\\',
+                'suffix' => 'Property'
+            ]
+        ]);
+
+        $dependencies = [
+            'logger'           => $logger,
+            'property_factory' => $propertyFactory,
+            'metadata_loader'  => $metadataLoader
+        ];
+
+        $propertyFactory->setArguments($dependencies);
+
+        $this->model = new \Charcoal\Model\Model($dependencies);
+
         $this->obj = new CollectionLoader([
             'logger'  => $logger,
             'factory' => $factory,
-        ]);
-
-        $this->model = new \Charcoal\Model\Model([
-            'logger'          => $logger,
-            'metadata_loader' => $metadataLoader
         ]);
 
         $source->setModel($this->model);

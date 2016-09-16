@@ -2,9 +2,6 @@
 
 namespace Charcoal\Tests\Model;
 
-use \Psr\Log\NullLogger;
-use \Cache\Adapter\Void\VoidCachePool;
-
 use \Charcoal\Config\GenericConfig;
 
 use \Charcoal\Charcoal;
@@ -17,35 +14,50 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        $s = new DatabaseSource([
-            'logger'=>new NullLogger(),
-            'pdo' => $GLOBALS['pdo']
-        ]);
-        $s->setTable('test');
-        $q = 'DROP TABLE IF EXISTS `test`';
-        $s->db()->query($q);
-
         include_once 'AbstractModelClass.php';
     }
 
     public function getObj()
     {
-        $s = new DatabaseSource([
-            'logger'=>new NullLogger(),
-            'pdo' => $GLOBALS['pdo']
-        ]);
-        $s->setTable('tests');
+        $logger = new \Psr\Log\NullLogger();
+        $cache  = new \Cache\Adapter\Void\VoidCachePool();
 
-        $obj = new AbstractModelClass([
-            'logger' => new NullLogger(),
-            'metadata_loader' => new MetadataLoader([
-                'logger' => new NullLogger(),
-                'base_path' => __DIR__,
-                'paths' => ['metadata'],
-                'cache'  => new VoidCachePool()
-            ])
+        $source = new DatabaseSource([
+            'logger' => $logger,
+            'pdo'    => $GLOBALS['pdo']
         ]);
-        $obj->setSource($s);
+        $source->setTable('test');
+        $source->db()->query('DROP TABLE IF EXISTS `test`');
+
+        $metadataLoader = new \Charcoal\Model\MetadataLoader([
+            'logger'    => $logger,
+            'cache'     => $cache,
+            'base_path' => __DIR__,
+            'paths'     => [ 'metadata' ]
+        ]);
+
+        $propertyFactory = new \Charcoal\Factory\GenericFactory([
+            'base_class'       => \Charcoal\Property\PropertyInterface::class,
+            'default_class'    => \Charcoal\Property\GenericProperty::class,
+            'resolver_options' => [
+                'prefix' => '\Charcoal\Property\\',
+                'suffix' => 'Property'
+            ]
+        ]);
+
+        $dependencies = [
+            'logger'           => $logger,
+            'property_factory' => $propertyFactory,
+            'metadata_loader'  => $metadataLoader
+        ];
+
+        $propertyFactory->setArguments($dependencies);
+
+        $obj = new AbstractModelClass($dependencies);
+
+        $source->setModel($obj);
+
+        $obj->setSource($source);
         $obj->setMetadata(
             [
                 'properties' => [
@@ -66,9 +78,11 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
             ]
         );
         $obj->source()->setModel($obj);
+
         if ($obj->source()->tableExists() === false) {
             $obj->source()->createTable();
         }
+
         return $obj;
     }
 
@@ -102,12 +116,10 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
     public function testSave()
     {
         $obj = $this->obj;
-        $obj->setData(
-            [
-                'id'  => 1,
-                'foo' => 'Test'
-            ]
-        );
+        $obj->setData([
+            'id'  => 1,
+            'foo' => 'Test'
+        ]);
         $ret = $obj->save();
 
         $this->assertEquals(1, $ret);
@@ -154,8 +166,8 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
     {
         $obj = $this->obj;
         $obj->setData([
-            'id'=>42,
-            'foo'=>'Bar'
+            'id'  => 42,
+            'foo' => 'Bar'
         ]);
         $serialized = serialize($obj);
         $this->assertEquals('C:39:"Charcoal\Tests\Model\AbstractModelClass":40:{a:2:{s:2:"id";i:42;s:3:"foo";s:3:"Bar";}}', $serialized);
@@ -170,8 +182,8 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
     {
         $obj = $this->obj;
         $data = [
-            'id'=>42,
-            'foo'=>'Bar'
+            'id'  => 42,
+            'foo' => 'Bar'
         ];
         $obj->setData($data);
         $json = json_encode($obj);
