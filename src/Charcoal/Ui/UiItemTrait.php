@@ -97,6 +97,13 @@ trait UiItemTrait
     private $showFooter = true;
 
     /**
+     * The icon ident from font-awesome library
+     *
+     * @var string
+     */
+    private $icon;
+
+    /**
      * Set the UI item type.
      *
      * @param string|null $type The UI item type.
@@ -430,5 +437,21 @@ trait UiItemTrait
         } else {
             return $this->showNotes();
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function icon()
+    {
+        return $this->icon;
+    }
+
+    /**
+     * @param string $icon
+     */
+    public function setIcon($icon)
+    {
+        $this->icon = $icon;
     }
 }
