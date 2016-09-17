@@ -440,6 +440,10 @@ trait UiItemTrait
     }
 
     /**
+     * Retrieve the path to the item's icon.
+     *
+     * @todo  [mcaskill 2016-09-16] Move this to a tab interface in charcoal-admin
+     *     so as to focus the icon getter/setter on being a Glyphicon.
      * @return string
      */
     public function icon()
@@ -448,10 +452,15 @@ trait UiItemTrait
     }
 
     /**
-     * @param string $icon
+     * Set the path to the item's icon associated with the object.
+     *
+     * @param string $icon A path to an image.
+     * @return UiItemInterface Chainable
      */
     public function setIcon($icon)
     {
         $this->icon = $icon;
+
+        return $this;
     }
 }

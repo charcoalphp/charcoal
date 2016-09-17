@@ -260,8 +260,4 @@ trait FormGroupTrait
     {
         return $this->priority;
     }
-
-
-
-
 }
