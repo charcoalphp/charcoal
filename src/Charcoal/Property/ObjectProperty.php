@@ -267,10 +267,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
 
 
     /**
-     * At this point, does nothing but return
-     * the actual value. Other properties could
-     * parse values such as ObjectProperty who
-     * could parse objects into object IDs.
+     * Always return IDs.
      *
      * @param mixed $val Value to be parsed.
      * @return mixed
@@ -281,7 +278,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
             return $val->id();
         }
 
-        if ($this->multiple()) {
+        if (is_array($val)) {
             $out = [];
             foreach ($val as $i => $v) {
                 if ($v instanceof StorableInterface) {
@@ -297,6 +294,20 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
+     * Set the property's value.
+     *
+     * @param  mixed $val The property (raw) value.
+     * @throws InvalidArgumentException If the value is invalid (NULL or not multiple when supposed to).
+     * @return PropertyInterface Chainable
+     */
+    public function setVal($val)
+    {
+        $val = $this->parseVal($val);
+
+        return parent::setVal($val);
+    }
+
+    /**
      * Get the property's value in a format suitable for storage.
      *
      * @param mixed $val Optional. The value to convert to storage value.
@@ -309,7 +320,6 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
             return null;
         }
 
-        // Get parsedVal
         $val = $this->parseVal($val);
 
         if ($this->multiple()) {
