@@ -383,14 +383,10 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
 
         $names = [];
         foreach ($propertyValue as $objIdent) {
-            if ($objIdent instanceof ModelInterface) {
-                $obj = $objIdent;
-            } else {
-                $obj = $this->loadObject($objIdent);
+            $obj = $this->loadObject($objIdent);
 
-                if ($obj === null) {
-                    continue;
-                }
+            if ($obj === null) {
+                continue;
             }
 
             $names[] = $this->objPattern($obj);
@@ -523,14 +519,10 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      */
     public function choice($choiceIdent)
     {
-        if ($choiceIdent instanceof ModelInterface) {
-            $obj = $choiceIdent;
-        } else {
-            $obj = $this->loadObject($choiceIdent);
+        $obj = $this->loadObject($choiceIdent);
 
-            if ($obj === null) {
-                return null;
-            }
+        if ($obj === null) {
+            return null;
         }
 
         $label  = $this->objPattern($obj);
@@ -581,8 +573,18 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      * @param mixed $id Object id.
      * @return ModelInterface
      */
-    private function loadObject($id)
+    protected function loadObject($id)
     {
+        if ($id instanceof ModelInterface) {
+            $obj = $id;
+
+            if (!isset(static::$objectCache[$obj->objType()][$obj->id()])) {
+                $this->addObjectToCache($obj);
+            }
+
+            return $obj;
+        }
+
         $cached = $this->loadObjectFromCache($id);
         if ($cached !== null) {
             return $cached;
