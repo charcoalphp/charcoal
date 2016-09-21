@@ -57,9 +57,20 @@ trait SelectablePropertyTrait
         }
 
         if (is_string($choice)) {
-            $choice = [ 'label' => new TranslationString($choice) ];
-        } elseif (isset($choice['label'])) {
-            $choice['label'] = new TranslationString($choice['label']);
+            $choice = [
+                'value' => $choiceIdent,
+                'label' => new TranslationString($choice)
+            ];
+        } else {
+            if (isset($choice['value'])) {
+                $choiceIdent = (string)$choice['value'];
+            } else {
+                $choice['value'] = $choiceIdent;
+            }
+
+            if (isset($choice['label'])) {
+                $choice['label'] = new TranslationString($choice['label']);
+            }
         }
 
         $this->choices[$choiceIdent] = $choice;
@@ -98,9 +109,11 @@ trait SelectablePropertyTrait
     {
         if (!isset($this->choices[$choiceIdent])) {
             return [
-                'label'=>''
+                'value' => $choiceIdent,
+                'label' => ''
             ];
         }
+
         return $this->choices[$choiceIdent];
     }
 }
