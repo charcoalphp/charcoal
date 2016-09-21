@@ -55,7 +55,7 @@
                             "fr": "Accordéon de contenu",
                             "en": "Content Accordion"
                         },
-                        "show_title": false,
+                        "show_header": false,
                         "properties": [
                             "ident"
                         ],
