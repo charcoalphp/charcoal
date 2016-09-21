@@ -155,6 +155,23 @@ class Attachment extends Content implements AttachableInterface
     private $collectionLoader;
 
     /**
+     * Return a new section object.
+     *
+     * @param array $data Dependencies.
+     */
+    public function __construct(array $data = null)
+    {
+        parent::__construct($data);
+
+        if (is_callable([ $this, 'defaultData' ])) {
+            $defaultData = $this->defaultData();
+            if ($defaultData) {
+                $this->setData($defaultData);
+            }
+        }
+    }
+
+    /**
      * Inject dependencies from a DI Container.
      *
      * @param Container $container A dependencies container instance.
@@ -165,19 +182,6 @@ class Attachment extends Content implements AttachableInterface
         parent::setDependencies($container);
 
         $this->setCollectionLoader($container['model/collection/loader']);
-    }
-
-
-    /**
-     * Workaround to set data with defaultData
-     * @param [type] $data [description]
-     */
-    public function setData($data)
-    {
-        if (is_callable([ $this, 'defaultData' ])) {
-            parent::setData($this->defaultData());
-        }
-        return parent::setData($data);
     }
 
     /**
