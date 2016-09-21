@@ -558,8 +558,8 @@ class AttachmentWidget extends AdminWidget implements
         if ($this->attachableObjects === null) {
             $metadata = $this->obj()->metadata();
 
-            if (isset($metadata['attachable_objects'])) {
-                $this->setAttachableObjects($attachables);
+            if (isset($metadata['attachments']['attachable_objects'])) {
+                $this->setAttachableObjects($metadata['attachments']['attachable_objects']);
             } else {
                 $this->attachableObjects = [];
             }
