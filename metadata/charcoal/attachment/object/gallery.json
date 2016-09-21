@@ -17,6 +17,7 @@
     },
 
     "attachments": {
+        "default_widget": "images",
         "attachable_objects": {
             "charcoal/attachment/object/image": {
                 "label": "Image"
@@ -105,7 +106,7 @@
                         "title": "Images",
                         "type": "charcoal/admin/widget/attachment",
                         "form_ident": "default",
-                        "group": "inception-gallery",
+                        "group": "gallery",
                         "attachable_objects": {
                             "charcoal/attachment/object/image": {
                                 "label": "Image"

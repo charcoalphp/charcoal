@@ -3,6 +3,8 @@
 namespace Charcoal\Admin\Widget;
 
 use \ArrayIterator;
+use \RuntimeException;
+use \InvalidArgumentException;
 
 use \Pimple\Container;
 
@@ -23,6 +25,9 @@ use \Charcoal\Admin\Ui\ObjectContainerTrait;
 
 // From 'charcoal-translation'
 use \Charcoal\Translation\TranslationString;
+
+// From 'beneroch/charcoal-attachments'
+use \Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
 
 /**
  *
@@ -468,7 +473,7 @@ class AttachmentWidget extends AdminWidget implements
     public function widgetFactory()
     {
         if (!isset($this->widgetFactory)) {
-            throw new Exception(
+            throw new RuntimeException(
                 sprintf('Widget Factory is not defined for "%s"', get_class($this))
             );
         }
@@ -528,7 +533,7 @@ class AttachmentWidget extends AdminWidget implements
     public function group()
     {
         if (!$this->group) {
-            $this->group = 'generic';
+            $this->group = AttachmentContainerInterface::DEFAULT_GROUPING;
         }
         return $this->group;
     }

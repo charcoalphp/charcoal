@@ -17,7 +17,7 @@
         {{# isAttachmentContainer }}
         <li role="separator" class="divider"></li>
         {{# attachableObjects }}
-        <li><a href="#" data-type="{{ type }}" data-id="{{ id }}" data-title="{{ label }}" data-attachment="{{ attachmentType }}" data-action="add-object">{{ label }}</a></li>
+        <li><a href="#" data-type="{{ type }}"{{# attachmentGroup }} data-group="{{ . }}"{{/ attachmentGroup }} data-id="{{ id }}" data-title="{{ label }}" data-attachment="{{ attachmentType }}" data-action="add-object">{{ label }}</a></li>
         {{/ attachableObjects }}
         <li role="separator" class="divider"></li>
         {{/ isAttachmentContainer }}

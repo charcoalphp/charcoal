@@ -8,6 +8,13 @@ namespace Charcoal\Attachment\Interfaces;
 interface AttachmentContainerInterface
 {
     /**
+     * The default grouping for contained attachments.
+     *
+     * @var string
+     */
+    const DEFAULT_GROUPING = 'generic';
+
+    /**
      * Gets the attachments config from
      * the object metadata.
      *

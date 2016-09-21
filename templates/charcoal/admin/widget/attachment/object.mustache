@@ -8,7 +8,8 @@
     id="{{ widgetId }}_{{ id }}"
     data-id="{{ id }}"
     data-type="{{ objType }}"
-    data-microtype="{{ microType }}">
+    data-microtype="{{ microType }}"
+    {{# attachmentGroup }} data-group="{{ . }}"{{/ attachmentGroup }}>
     {{# showAttachmentPreview }}
     {{> charcoal/admin/widget/attachment/object/collapsible }}
     {{/ showAttachmentPreview }}

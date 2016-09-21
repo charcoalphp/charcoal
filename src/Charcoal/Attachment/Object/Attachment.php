@@ -6,16 +6,16 @@ use \ReflectionClass;
 
 use \Pimple\Container;
 
-// Dependency from 'charcoal-core'
+// From 'charcoal-core'
 use \Charcoal\Loader\CollectionLoader;
 
-// Dependency from 'charcoal-base'
+// From 'charcoal-base'
 use \Charcoal\Object\Content;
 
-// Dependency from 'charcoal-translation'
+// From 'charcoal-translation'
 use \Charcoal\Translation\TranslationString;
 
-// Local Dependencies
+// From 'beneroch/charcoal-attachments'
 use \Charcoal\Attachment\Interfaces\AttachableInterface;
 
 use \Charcoal\Attachment\Object\File;

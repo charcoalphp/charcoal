@@ -1,14 +1,19 @@
 <?php
 namespace Charcoal\Attachment\Traits;
 
-// Dependencies from 'charcoal-core'
+use \UnexpectedValueException;
+
+// From 'charcoal-core'
 use \Charcoal\Model\ModelInterface;
 use \Charcoal\Loader\CollectionLoader;
 
+// From 'charcoal-translation'
 use \Charcoal\Translation\TranslationString;
 
-// Local Dependencies
+// From 'beneroch/charcoal-attachments'
+use \Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
 use \Charcoal\Attachment\Interfaces\AttachableInterface;
+
 use \Charcoal\Attachment\Object\Join;
 use \Charcoal\Attachment\Object\Attachment;
 use \Charcoal\Attachment\Object\File;
@@ -33,8 +38,28 @@ use \Charcoal\Attachment\Object\Video;
  */
 trait AttachmentContainerTrait
 {
+    /**
+     * The container's configuration.
+     *
+     * @var array
+     */
     protected $attachmentConfig;
+
+    /**
+     * The container's accepted attachment types.
+     *
+     * @var array
+     */
     protected $attachableObjects;
+
+    /**
+     * The container's group identifier.
+     *
+     * The group is used to create multiple widget instance on the same page.
+     *
+     * @var string
+     */
+    protected $group;
 
     /**
      * Alias of {@see \Charcoal\Source\StorableTrait::id()}
@@ -56,14 +81,65 @@ trait AttachmentContainerTrait
      */
     public function attachmentConfig()
     {
-        if ($this->attachmentConfig) {
-            return $this->attachmentConfig;
+        if ($this->attachmentConfig === null) {
+            $metadata = $this->metadata();
+            $this->attachmentConfig = (isset($metadata['attachments']) ? $metadata['attachments'] : []);
         }
 
-        $meta = $this->metadata();
-        $this->attachmentConfig = isset($meta['attachments']) ? $meta['attachments'] : [];
-
         return $this->attachmentConfig;
+    }
+
+    /**
+     * Retrieve the widget's attachment grouping.
+     *
+     * @return string
+     */
+    public function attachmentGroup()
+    {
+        if ($this->group === null) {
+            $cfg   = $this->attachmentConfig();
+            $group = AttachmentContainerInterface::DEFAULT_GROUPING;
+            if (isset($cfg['default_group'])) {
+                $group = $cfg['default_group'];
+            // If the 'default_group' is not set, search for it.
+            } elseif (isset($cfg['default_widget'])) {
+                $widget   = $cfg['default_widget'];
+                $metadata = $this->metadata();
+                $found    = false;
+                if (isset($metadata['admin']['form_groups'][$widget]['group'])) {
+                    $group = $metadata['admin']['form_groups'][$widget]['group'];
+                    $found = true;
+                }
+
+                if (!$found && isset($metadata['admin']['forms'])) {
+                    foreach ($metadata['admin']['forms'] as $form) {
+                        if (isset($form['groups'][$widget]['group'])) {
+                            $group = $form['groups'][$widget]['group'];
+                            $found = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!$found && isset($metadata['admin']['dashboards'])) {
+                    foreach ($metadata['admin']['dashboards'] as $dashboard) {
+                        if (isset($dashboard['widgets'][$widget]['group'])) {
+                            $group = $dashboard['widgets'][$widget]['group'];
+                            $found = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (!is_string($group)) {
+                throw new UnexpectedValueException('The attachment grouping must be a string.');
+            }
+
+            $this->group = $group;
+        }
+
+        return $this->group;
     }
 
     /**
@@ -77,25 +153,28 @@ trait AttachmentContainerTrait
             return $this->attachableObjects;
         }
 
+        $this->attachableObjects = [];
+
         $cfg = $this->attachmentConfig();
+        if (isset($cfg['attachable_objects'])) {
+            foreach ($cfg['attachable_objects'] as $attType => $attMeta) {
+                if (!isset($attMeta['attachment_type'])) {
+                    $attMeta['attachment_type'] = $attType;
+                }
 
-        if (!isset($cfg['attachable_objects'])) {
-            $this->attachableObjects = [];
-            return $this->attachableObjects;
-        }
+                // Alias
+                $attMeta['attachmentType'] = $attMeta['attachment_type'];
 
-        $out = [];
-        foreach ($cfg['attachable_objects'] as $ident => $val) {
-            if (!isset($val['attachment_type'])) {
-                $val['attachment_type'] = $ident;
+                if (isset($attMeta['label']) && TranslationString::isTranslatable($attMeta['label'])) {
+                    $attMeta['label'] = new TranslationString($attMeta['label']);
+                } else {
+                    $attMeta['label'] = ucfirst(basename($attType));
+                }
+
+                $this->attachableObjects[] = $attMeta;
             }
-
-            $val['attachmentType'] = $val['attachment_type'];
-            $val['label'] = isset($val['label']) ? new TranslationString($val['label']) : '';
-
-            $out[] = $val;
         }
-        $this->attachableObjects = $out;
+
         return $this->attachableObjects;
     }
 
