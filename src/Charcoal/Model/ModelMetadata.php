@@ -56,7 +56,6 @@ class ModelMetadata extends AbstractMetadata
      */
     public function setSources(array $sources)
     {
-
         foreach ($sources as $sourceIdent => $source) {
             $this->addSource($sourceIdent, $source);
         }

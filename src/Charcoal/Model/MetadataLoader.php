@@ -30,9 +30,25 @@ final class MetadataLoader implements LoggerAwareInterface
     use LoggerAwareTrait;
 
     /**
+     * The PSR-6 caching service.
+     *
      * @var CacheItemPoolInterface $cachePool
      */
     private $cachePool;
+
+    /**
+     * The cache of snake-cased words.
+     *
+     * @var array
+     */
+    private static $snakeCache = [];
+
+    /**
+     * The cache of camel-cased words.
+     *
+     * @var array
+     */
+    private static $camelCache = [];
 
     /**
      * The base path to prepend to any relative paths to search in.
@@ -103,7 +119,6 @@ final class MetadataLoader implements LoggerAwareInterface
      */
     public function loadData($ident = null)
     {
-
         $hierarchy = $this->hierarchy($ident);
 
         $metadata = [];
@@ -402,29 +417,39 @@ final class MetadataLoader implements LoggerAwareInterface
      */
     private function identToClassname($ident)
     {
+        $key = $ident;
+
+        if (isset(static::$camelCache[$key])) {
+            return static::$camelCache[$key];
+        }
+
         // Change "foo-bar" to "fooBar"
-        $expl = explode('-', $ident);
+        $parts = explode('-', $ident);
         array_walk(
-            $expl,
+            $parts,
             function(&$i) {
                 $i = ucfirst($i);
             }
         );
-        $ident = implode('', $expl);
+        $ident = implode('', $parts);
 
         // Change "/foo/bar" to "\Foo\Bar"
-        $class = str_replace('/', '\\', $ident);
-        $expl  = explode('\\', $class);
+        $classname = str_replace('/', '\\', $ident);
+        $parts     = explode('\\', $classname);
 
         array_walk(
-            $expl,
+            $parts,
             function(&$i) {
                 $i = ucfirst($i);
             }
         );
 
-        $class = '\\'.trim(implode('\\', $expl), '\\');
-        return $class;
+        $classname = /*'\\'.*/trim(implode('\\', $parts), '\\');
+
+        static::$camelCache[$key]       = $classname;
+        static::$snakeCache[$classname] = $key;
+
+        return $classname;
     }
 
     /**
@@ -435,9 +460,19 @@ final class MetadataLoader implements LoggerAwareInterface
      */
     private function classnameToIdent($classname)
     {
+        $key = trim($classname, '\\');
+
+        if (isset(static::$snakeCache[$key])) {
+            return static::$snakeCache[$key];
+        }
+
         $ident = strtolower(preg_replace('/([a-z])([A-Z])/', '$1-$2', $classname));
         $ident = str_replace('\\', '/', strtolower($ident));
         $ident = ltrim($ident, '/');
+
+        static::$snakeCache[$key]   = $ident;
+        static::$camelCache[$ident] = $key;
+
         return $ident;
     }
 }
