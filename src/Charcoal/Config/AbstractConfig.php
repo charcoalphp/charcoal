@@ -152,7 +152,7 @@ abstract class AbstractConfig extends AbstractEntity implements
     public function merge($data)
     {
         foreach ($data as $k => $v) {
-                $this[$k] = $v;
+            $this[$k] = $v;
         }
         return $this;
     }
