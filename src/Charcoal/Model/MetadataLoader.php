@@ -37,6 +37,13 @@ final class MetadataLoader implements LoggerAwareInterface
     private $cachePool;
 
     /**
+     * The cache of class/interface lineages.
+     *
+     * @var array
+     */
+    private static $hierarchyCache = [];
+
+    /**
      * The cache of snake-cased words.
      *
      * @var array
@@ -277,41 +284,47 @@ final class MetadataLoader implements LoggerAwareInterface
     }
 
     /**
-     * @param string $ident The metadata ident to load hierarchy from.
+     * Build a class/interface lineage from the given fully qualified class name (in snake case).
+     *
+     * @param  string $ident The FQCN (in snake-case) to load the hierarchy from.
      * @return array
      */
     private function hierarchy($ident)
     {
-        $hierarchy = null;
+        if (!is_string($ident)) {
+            return [];
+        }
+
+        if (isset(static::$hierarchyCache[$ident])) {
+            return static::$hierarchyCache[$ident];
+        }
 
         $classname = $this->identToClassname($ident);
 
-        if (class_exists($classname)) {
-            // If the object is a class, we use hierarchy from object ancestor classes
-            $ident_hierarchy = [$ident];
-
-            // Get interfaces
-            // class_implements returns parent classes interfaces at first
-            $implements = array_values(class_implements($classname));
-
-            foreach ($implements as $interface) {
-                $ident_hierarchy[] = $this->classnameToIdent($interface);
-            }
-
-            while ($classname = get_parent_class($classname)) {
-                $ident_hierarchy[] = $this->classnameToIdent($classname);
-            }
-
-            $ident_hierarchy = array_reverse($ident_hierarchy);
-        } else {
-            if (is_array($hierarchy) && !empty($hierarchy)) {
-                $hierarchy[] = $ident;
-                $ident_hierarchy = $hierarchy;
-            } else {
-                $ident_hierarchy = [$ident];
-            }
+        if (!class_exists($classname)) {
+            return [ $ident ];
         }
-        return $ident_hierarchy;
+
+        $classes   = array_values(class_parents($classname));
+        $classes   = array_reverse($classes);
+        $classes[] = $classname;
+
+        $hierarchy = [];
+        foreach ($classes as $class) {
+            $implements = array_values(class_implements($class));
+            $implements = array_reverse($implements);
+            foreach ($implements as $interface) {
+                $hierarchy[$this->classnameToIdent($interface)] = $interface;
+            }
+            $key = $this->classnameToIdent($class);
+            $hierarchy[$this->classnameToIdent($class)] = $class;
+        }
+
+        $hierarchy = array_keys($hierarchy);
+
+        static::$hierarchyCache[$ident] = $hierarchy;
+
+        return $hierarchy;
     }
 
     /**
@@ -444,7 +457,7 @@ final class MetadataLoader implements LoggerAwareInterface
             }
         );
 
-        $classname = /*'\\'.*/trim(implode('\\', $parts), '\\');
+        $classname = trim(implode('\\', $parts), '\\');
 
         static::$camelCache[$key]       = $classname;
         static::$snakeCache[$classname] = $key;
