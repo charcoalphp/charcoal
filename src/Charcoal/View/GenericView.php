@@ -2,6 +2,8 @@
 
 namespace Charcoal\View;
 
+use \Psr\Log\NullLogger;
+
 /**
  * Concrete implementation of a _View_ interface (extends `AbstractView`).
  *
@@ -20,8 +22,8 @@ class GenericView extends AbstractView
      */
     public function __construct(array $data)
     {
-        if (isset($data['logger'])) {
-            $data['logger'] = new \Psr\Log\NullLogger();
+        if (!isset($data['logger'])) {
+            $data['logger'] = new NullLogger();
         }
         $this->setLogger($data['logger']);
 
