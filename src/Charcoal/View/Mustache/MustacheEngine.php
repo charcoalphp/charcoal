@@ -2,7 +2,6 @@
 
 namespace Charcoal\View\Mustache;
 
-use \Exception;
 use \InvalidArgumentException;
 use \Traversable;
 
@@ -175,7 +174,9 @@ class MustacheEngine extends AbstractEngine
         } elseif ($helpers instanceof Traversable) {
             return iterator_to_array($helpers);
         } else {
-            throw new InvalidArgumentException('Unable to convert helpers. Must be an array or a traversable object.');
+            throw new InvalidArgumentException(
+                'Unable to convert helpers. Must be an array or a traversable object.'
+            );
         }
     }
 
