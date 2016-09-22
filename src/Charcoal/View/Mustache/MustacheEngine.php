@@ -4,6 +4,7 @@ namespace Charcoal\View\Mustache;
 
 use \Exception;
 use \InvalidArgumentException;
+use \Traversable;
 
 // Dependency from 'mustache/mustache'
 use \Mustache_Engine;
