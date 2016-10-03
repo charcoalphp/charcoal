@@ -52,27 +52,20 @@ class ModelServiceProvider implements ServiceProviderInterface
         $this->registerModelDependencies($container);
 
         /**
-        * @param Container $container A container instance.
-        * @return ModelFactory
-        */
+         * @param Container $container A container instance.
+         * @return ModelFactory
+         */
         $container['model/factory'] = function (Container $container) {
             return new ModelFactory([
-                'base_class'    => ModelInterface::class,
-                'arguments'     => [[
-                    'container'         => $container,
-                    'logger'            => $container['logger'],
-                    'view'              => $container['view'],
-                    'property_factory'  => $container['property/factory'],
-                    'metadata_loader'   => $container['metadata/loader'],
-                    'source_factory'    => $container['source/factory']
-                ]]
+                'base_class' => ModelInterface::class,
+                'arguments'  => [ $container['model/dependencies'] ]
             ]);
         };
 
         /**
-        * @param Container $container A container instance.
-        * @return CollectionLoader
-        */
+         * @param Container $container A container instance.
+         * @return CollectionLoader
+         */
         $container['model/collection/loader'] = $container->factory(function (Container $container) {
             return new CollectionLoader([
                 'logger'  => $container['logger'],
@@ -87,6 +80,24 @@ class ModelServiceProvider implements ServiceProviderInterface
      */
     protected function registerModelDependencies(Container $container)
     {
+        // The model dependencies might be already set from elsewhere; defines it if not.
+        if (!isset($container['model/dependencies'])) {
+            /**
+             * @param Container $container A container instance.
+             * @return array The model dependencies array.
+             */
+            $container['model/dependencies'] = function (Container $container) {
+                return [
+                    'container'        => $container,
+                    'logger'           => $container['logger'],
+                    'view'             => $container['view'],
+                    'property_factory' => $container['property/factory'],
+                    'metadata_loader'  => $container['metadata/loader'],
+                    'source_factory'   => $container['source/factory']
+                ];
+            };
+        }
+
         // The property factory might be already set from elsewhere; defines it if not.
         if (!isset($container['property/factory'])) {
             /**
@@ -101,7 +112,7 @@ class ModelServiceProvider implements ServiceProviderInterface
                         'prefix' => '\Charcoal\Property\\',
                         'suffix' => 'Property'
                     ],
-                    'arguments'     => [[
+                    'arguments' => [[
                         'container' => $container,
                         'logger'    => $container['logger']
                     ]]
@@ -131,14 +142,14 @@ class ModelServiceProvider implements ServiceProviderInterface
              */
             $container['source/factory'] = function (Container $container) {
                 return new Factory([
-                    'base_class'    => SourceInterface::class,
                     'map' => [
-                        'database'      => DatabaseSource::class
+                        'database' => DatabaseSource::class
                     ],
-                    'arguments'     => [[
-                        'logger'        => $container['logger'],
-                        'cache'         => $container['cache'],
-                        'pdo'           => $container['database']
+                    'base_class' => SourceInterface::class,
+                    'arguments'  => [[
+                        'logger' => $container['logger'],
+                        'cache'  => $container['cache'],
+                        'pdo'    => $container['database']
                     ]]
                 ]);
             };
