@@ -4,6 +4,8 @@ namespace Charcoal\Loader;
 
 use \InvalidArgumentException;
 use \RuntimeException;
+use \Traversable;
+use \ArrayAccess;
 use \PDO;
 
 // Dependencies from PSR-3 (Logger)
@@ -35,37 +37,46 @@ class CollectionLoader implements LoggerAwareInterface
     /**
      * The source to load objects from.
      *
-     * @var SourceInterface $source
+     * @var SourceInterface
      */
     private $source;
 
     /**
      * The model to load the collection from.
      *
-     * @var ModelInterface $model
+     * @var ModelInterface
      */
     private $model;
 
     /**
-     * The factory used to create new objects.
+     * Store the factory instance for the current class.
      *
-     * @var FactoryInterface $factory
+     * @var FactoryInterface
      */
     private $factory;
 
     /**
      * The callback routine applied to every object added to the collection.
      *
-     * @var callable $callback
+     * @var callable
      */
     private $callback;
 
     /**
-     * If
+     * The field which defines the data's model.
      *
-     * @var string $dynamicTypeField
+     * @var string
      */
     private $dynamicTypeField;
+
+    /**
+     * The class name of the collection to use.
+     *
+     * Must be a fully-qualified PHP namespace and an implementation of {@see ArrayAccess}.
+     *
+     * @var string
+     */
+    private $collectionClass = Collection::class;
 
     /**
      * Return a new CollectionLoader object.
@@ -79,21 +90,54 @@ class CollectionLoader implements LoggerAwareInterface
         }
 
         $this->setLogger($data['logger']);
-        $this->setFactory($data['factory']);
+
+        if (isset($data['model'])) {
+            $this->setModel($data['model']);
+        }
+
+        if (isset($data['factory'])) {
+            $this->setFactory($data['factory']);
+        }
+
+        if (isset($data['collection'])) {
+            $this->setCollectionClass($data['collection']);
+        }
     }
 
     /**
-     * @param FactoryInterface $factory The factory used to create new objects.
+     * Set an object model factory.
+     *
+     * @param FactoryInterface $factory The model factory, to create objects.
      * @return CollectionLoader Chainable
      */
     public function setFactory(FactoryInterface $factory)
     {
         $this->factory = $factory;
+
         return $this;
     }
 
     /**
-     * Set the loader data, from an associative array map (or any other Traversable).
+     * Retrieve the object model factory.
+     *
+     * @throws RuntimeException If the model factory was not previously set.
+     * @return FactoryInterface
+     */
+    protected function factory()
+    {
+        if (!isset($this->factory)) {
+            throw new RuntimeException(
+                sprintf('Model Factory is not defined for "%s"', get_class($this))
+            );
+        }
+
+        return $this->factory;
+    }
+
+    /**
+     * Set the loader data.
+     *
+     * From an associative array map (or any other {@see Traversable}).
      *
      * @param  array|Traversable $data Data to assign to the loader.
      * @return CollectionLoader Chainable
@@ -103,6 +147,7 @@ class CollectionLoader implements LoggerAwareInterface
         if (isset($data['filters']) && $data['filters']) {
             $this->setFilters($data['filters']);
         }
+
         foreach ($data as $key => $val) {
             $setter = $this->setter($key);
 
@@ -187,7 +232,7 @@ class CollectionLoader implements LoggerAwareInterface
     public function setModel($model)
     {
         if (is_string($model)) {
-            $model = $this->factory->get($model);
+            $model = $this->factory()->get($model);
         }
 
         if (!$model instanceof ModelInterface) {
@@ -477,7 +522,7 @@ class CollectionLoader implements LoggerAwareInterface
      * @param  callable    $cb    Optional. Apply a callback to every entity of the collection.
      *                            Leave blank to use `$callback` member.
      * @throws Exception If the database connection fails.
-     * @return Collection
+     * @return ArrayAccess|Traversable
      */
     public function load($ident = null, callable $cb = null)
     {
@@ -518,9 +563,9 @@ class CollectionLoader implements LoggerAwareInterface
      *
      * @param  string   $query The actual query.
      * @param  callable $cb    Optional. Apply a callback to every entity of the collection.
-     *                            Leave blank to use `$callback` member.
+     *    Leave blank to use `$callback` member.
      * @throws RuntimeException If the database connection fails.
-     * @return CollectionLoader   Collection of items.
+     * @return ArrayAccess|Traversable
      */
     public function loadFromQuery($query, callable $cb = null)
     {
@@ -537,7 +582,6 @@ class CollectionLoader implements LoggerAwareInterface
         }
 
         $this->logger->debug($query);
-        $collection = new Collection();
 
         $sth = $db->prepare($query);
         /** @todo Filter binds */
@@ -545,7 +589,7 @@ class CollectionLoader implements LoggerAwareInterface
         $sth->setFetchMode(PDO::FETCH_ASSOC);
 
         $modelObjType = $this->model()->objType();
-
+        $collection   = $this->createCollection();
         while ($objData = $sth->fetch()) {
             if ($this->dynamicTypeField && isset($objData[$this->dynamicTypeField])) {
                 $objType = $objData[$this->dynamicTypeField];
@@ -553,17 +597,70 @@ class CollectionLoader implements LoggerAwareInterface
                 $objType = $modelObjType;
             }
 
-            $obj = $this->factory->create($objType);
+            $obj = $this->factory()->create($objType);
             $obj->setFlatData($objData);
 
             if (isset($cb)) {
                 call_user_func_array($cb, [ &$obj ]);
             }
 
-            $collection->add($obj);
+            $collection[] = $obj;
         }
 
         return $collection;
+    }
+
+    /**
+     * Create a collection.
+     *
+     * @throws RuntimeException If the collection is invalid.
+     * @return ArrayAccess|Traversable
+     */
+    public function createCollection()
+    {
+        $collectClass = $this->collectionClass();
+        $collection   = new $collectClass;
+
+        if (!$collection instanceof ArrayAccess) {
+            throw new RuntimeException(
+                sprintf(
+                    'Collection [%s] must implement ArrayAccess.',
+                    $collectClass
+                )
+            );
+        }
+
+        return $collection;
+    }
+
+    /**
+     * Set the class name of the collection.
+     *
+     * @param  string $className The class name of the collection.
+     * @throws InvalidArgumentException If the class name is not a string.
+     * @return AbstractPropertyDisplay Chainable
+     */
+    public function setCollectionClass($className)
+    {
+        if (!is_string($className)) {
+            throw new InvalidArgumentException(
+                'Collection class name must be a string.'
+            );
+        }
+
+        $this->collectionClass = $className;
+
+        return $this;
+    }
+
+    /**
+     * Retrieve the class name of the collection.
+     *
+     * @return string
+     */
+    public function collectionClass()
+    {
+        return $this->collectionClass;
     }
 
     /**

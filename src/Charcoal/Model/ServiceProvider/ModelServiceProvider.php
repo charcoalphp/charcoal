@@ -68,10 +68,14 @@ class ModelServiceProvider implements ServiceProviderInterface
          */
         $container['model/collection/loader'] = $container->factory(function (Container $container) {
             return new CollectionLoader([
-                'logger'  => $container['logger'],
-                'factory' => $container['model/factory']
+                'logger'     => $container['logger'],
+                'factory'    => $container['model/factory'],
+                'collection' => $container['model/collection/class']
             ]);
         });
+
+        /** The default collection class name. */
+        $container['model/collection/class'] = \Charcoal\Model\Collection::class;
     }
 
     /**

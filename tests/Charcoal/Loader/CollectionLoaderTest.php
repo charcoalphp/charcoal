@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Loader;
 
+use \ArrayIterator;
+
 use \Charcoal\Config\GenericConfig;
 
 use \Charcoal\Factory\GenericFactory as Factory;
@@ -113,11 +115,35 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
     }
 
+    public function testDefaultCollection()
+    {
+        $loader = $this->obj;
+        $collection = $loader->createCollection();
+        $this->assertInstanceOf('\Charcoal\Model\Collection', $collection);
+    }
+
+    public function testCustomCollectionClass()
+    {
+        $loader = $this->obj;
+
+        $this->setExpectedException('\InvalidArgumentException');
+        $loader->setCollectionClass(false);
+
+        $loader->setCollectionClass(\IteratorIterator::class);
+        $this->setExpectedException('\RuntimeException');
+        $loader->createCollection();
+
+        $loader->setCollectionClass(ArrayIterator::class);
+        $collection = $loader->createCollection();
+        $this->assertInstanceOf('\ArrayIterator', $collection);
+    }
+
     public function testAll()
     {
         $loader = $this->obj;
         $loader
             ->setModel($this->model)
+            ->setCollectionClass(ArrayIterator::class)
             ->setProperties(['id', 'test'])
             ->addFilter('test', 10, [ 'operator' => '<' ])
             ->addFilter('allo', 1, [ 'operator' => '>=' ])
