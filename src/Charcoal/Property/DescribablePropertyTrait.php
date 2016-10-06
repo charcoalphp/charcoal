@@ -8,6 +8,9 @@ use \RuntimeException;
 // From 'charcoal-factory'
 use \Charcoal\Factory\FactoryInterface;
 
+// From 'charcoal-property'
+use \Charcoal\Property\PropertyInterface;
+
 /**
  * Provides an implementation of {@see DescribablePropertyInterface}, as a trait, for models.
  *
@@ -56,7 +59,7 @@ trait DescribablePropertyTrait
     }
 
     /**
-     * Retrieve the model's properties as a collection of `PropertyInterface` objects.
+     * Retrieve the model's properties as a collection of {@see PropertyInterface} objects.
      *
      * @return PropertyInterface[]|\Generator
      */
@@ -77,12 +80,12 @@ trait DescribablePropertyTrait
     }
 
     /**
-     * Retrieve an instance of `PropertyInterface` for the given property.
+     * Retrieve an instance of {@see PropertyInterface} for the given property.
      *
-     * @param string $propertyIdent The property identifier to return.
+     * @uses   DescribablePropertyTrait::createProperty() Called if the property has not been instantiated.
+     * @param  string $propertyIdent The property identifier to return.
      * @throws InvalidArgumentException If the $propertyIdent is not a string.
-     * @throws RuntimeException If the requested property is invalid.
-     * @return PropertyInterface The \Charcoal\Model\Property if found, null otherwise
+     * @return PropertyInterface The {@see PropertyInterface} if found, null otherwise
      */
     public function property($propertyIdent)
     {
@@ -93,17 +96,37 @@ trait DescribablePropertyTrait
         }
 
         $metadata = $this->metadata();
-        $propertyObject = $metadata->propertyObject($propertyIdent);
-        if ($propertyObject !== null) {
-            $propertyValue = $this->propertyValue($propertyIdent);
-            if ($propertyValue !== null || $propertyIdent === $this->key()) {
-                $propertyObject->setVal($propertyValue);
-            }
-
-            return $propertyObject;
+        $property = $metadata->propertyObject($propertyIdent);
+        if ($property === null) {
+            $property = $this->createProperty($propertyIdent);
+            $metadata->setPropertyObject($propertyIdent, $property);
         }
 
-        $props = $metadata->properties();
+        $propertyValue = $this->propertyValue($propertyIdent);
+        if ($propertyValue !== null || $propertyIdent === $this->key()) {
+            $property->setVal($propertyValue);
+        }
+
+        return $property;
+    }
+
+    /**
+     * Create an instance of {@see PropertyInterface} for the given property.
+     *
+     * @param  string $propertyIdent The property identifier to return.
+     * @throws InvalidArgumentException If the $propertyIdent is not a string.
+     * @throws RuntimeException If the requested property is invalid.
+     * @return PropertyInterface The {@see PropertyInterface} if found, null otherwise
+     */
+    protected function createProperty($propertyIdent)
+    {
+        if (!is_string($propertyIdent)) {
+            throw new InvalidArgumentException(
+                'Property Ident must be a string.'
+            );
+        }
+
+        $props = $this->metadata()->properties();
 
         if (empty($props)) {
             throw new RuntimeException(sprintf(
@@ -119,6 +142,7 @@ trait DescribablePropertyTrait
         }
 
         $propertyMetadata = $props[$propertyIdent];
+        $propertyMetadata = $this->filterPropertyMetadata($propertyMetadata, $propertyIdent);
         if (!isset($propertyMetadata['type'])) {
             throw new RuntimeException(
                 sprintf('Invalid %s property: %s (type is undefined).', get_class($this), $propertyIdent)
@@ -131,14 +155,19 @@ trait DescribablePropertyTrait
         $property->setIdent($propertyIdent);
         $property->setData($propertyMetadata);
 
-        $propertyValue = $this->propertyValue($propertyIdent);
-        if ($propertyValue !== null || $propertyIdent === $this->key()) {
-            $property->setVal($propertyValue);
-        }
-
-        $metadata->setPropertyObject($propertyIdent, $property);
-
         return $property;
+    }
+
+    /**
+     * Filter the given metadata.
+     *
+     * @param  mixed  $propertyMetadata The property data from the described object.
+     * @param  string $propertyIdent    The property identifier to return.
+     * @return mixed Return the filtered $propertyMetadata.
+     */
+    public function filterPropertyMetadata($propertyMetadata, $propertyIdent)
+    {
+        return $propertyMetadata;
     }
 
     /**
