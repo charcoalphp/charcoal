@@ -32,7 +32,7 @@ use \Charcoal\Model\AbstractModel;
  * To access the metadata, use `$this->metadata()`. To set metadata, use either
  *
  * # Properties
- * The Model Attributes are stored in `\Charcoal\Model\Property` objects. The properties are defined
+ * The Model Attributes are stored in {@see \Charcoal\Property\PropertyInterface} objects. The properties are defined
  * in the Model's `metadata` and can be accessed either with `p($ident)` to retrieve a property or with
  * `properties()` to get all properties.
  *
