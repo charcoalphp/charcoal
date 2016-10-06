@@ -501,7 +501,9 @@ class Attachment extends Content implements AttachableInterface
      */
     public function setFile($path)
     {
-        $this->file = $path;
+        if (TranslationString::isTranslatable($path)) {
+            $this->file = new TranslationString($path);
+        }
 
         return $this;
     }
@@ -514,7 +516,9 @@ class Attachment extends Content implements AttachableInterface
      */
     public function setLink($link)
     {
-        $this->link = $link;
+        if (TranslationString::isTranslatable($link)) {
+            $this->link = new TranslationString($link);
+        }
 
         return $this;
     }
@@ -614,7 +618,7 @@ class Attachment extends Content implements AttachableInterface
     /**
      * Retrieve the path to the attached file.
      *
-     * @return string
+     * @return string|TranslationString
      */
     public function file()
     {
@@ -624,7 +628,7 @@ class Attachment extends Content implements AttachableInterface
     /**
      * Retrieve the attached link.
      *
-     * @return string
+     * @return string|TranslationString
      */
     public function link()
     {
@@ -640,7 +644,7 @@ class Attachment extends Content implements AttachableInterface
         if (!$this->file()) {
             return '';
         }
-        return basename($this->file());
+        return basename(strval($this->file()));
     }
 
     /**
