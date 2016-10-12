@@ -26,9 +26,9 @@ class IdProperty extends AbstractProperty
      * The ID mode.
      *
      * One of:
-     * - `auto-increment` (default)
-     * - `uniq`
-     * - `uuid`
+     * - `auto-increment` (default). Database auto-increment.
+     * - `uniq`. Generated with php's `uniqid()`.
+     * - `uuid`. A (randomly-generated) universally unique identifier (RFC-4122 v4) .
      *
      * @var string $mode
      */
@@ -45,7 +45,7 @@ class IdProperty extends AbstractProperty
     }
 
     /**
-     * Ensure multiple can not be TRUE for ID property.
+     * Ensure multiple can not be TRUE for ID property (ID must be unique per object).
      *
      * @see    AbstractProperty::setMultiple()
      * @param  boolean $flag The multiple flag.
@@ -77,7 +77,7 @@ class IdProperty extends AbstractProperty
     }
 
     /**
-     * Ensure l10n can not be TRUE for ID property.
+     * Ensure l10n can not be TRUE for ID property (ID must be unique per object).
      *
      * @see    AbstractProperty::setL10n()
      * @param  boolean $flag The l10n, or "translatable" flag.
@@ -90,7 +90,7 @@ class IdProperty extends AbstractProperty
 
         if ($flag === true) {
             throw new InvalidArgumentException(
-                'The ID property is not translatable.'
+                'The ID property can not be translatable.'
             );
         }
 
@@ -125,18 +125,24 @@ class IdProperty extends AbstractProperty
     /**
      * Set the allowed ID mode.
      *
-     * @param string $mode The ID mode (auto-increment, uniqid or uuid).
+     * @param string|null $mode The ID mode ("auto-increment", "uniqid" or "uuid").
      * @throws InvalidArgumentException If the mode is not one of the 3 valid modes.
      * @return IdProperty Chainable
      */
     public function setMode($mode)
     {
+        // It is possible to set the mode to NULL, to reset to default mode.
+        if ($mode === null) {
+            $this->mode = null;
+            return $this;
+        }
+
         $availableModes = $this->availableModes();
 
         if (!in_array($mode, $availableModes)) {
             throw new InvalidArgumentException(
                 sprintf(
-                    'Invalid mode. Must be one of %s',
+                    'Invalid ID mode. Must be one of "%s"',
                     implode(', ', $availableModes)
                 )
             );
@@ -191,7 +197,7 @@ class IdProperty extends AbstractProperty
         $mode = $this->mode();
 
         if ($mode === self::MODE_AUTO_INCREMENT) {
-            // Auto-increment is handled at the database level (for now...)
+            // Auto-increment is handled at the database driver level (for now...)
             return null;
         } elseif ($mode === self::MODE_UNIQID) {
             return uniqid();
@@ -248,6 +254,10 @@ class IdProperty extends AbstractProperty
 
     /**
      * Get the SQL data type (Storage format).
+     *
+     * - For "auto-increment" ids, it is an integer.
+     * - For "uniqid" ids, it is a 13-char string.
+     * - For "uuid" id, it is a 36-char string.
      *
      * @return string The SQL type.
      * @see AbstractProperty::fields()

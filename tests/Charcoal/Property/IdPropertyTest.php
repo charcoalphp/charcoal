@@ -26,20 +26,34 @@ class IdPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testSetData()
     {
-        $obj = $this->obj;
-        $ret = $obj->setData(
+        $ret = $this->obj->setData(
             [
             'mode'=>'uniqid'
             ]
         );
-        $this->assertSame($ret, $obj);
-        $this->assertEquals('uniqid', $obj->mode());
+        $this->assertSame($ret, $this->obj);
+        $this->assertEquals('uniqid', $this->obj->mode());
     }
 
+    /**
+     * Asserts that the default mode:
+     * - Defaults to auto-increment
+     */
+    public function testDefaultMode()
+    {
+        $this->assertEquals(IdProperty::DEFAULT_MODE, $this->obj->mode());
+        $this->assertEquals('auto-increment', $this->obj->mode());
+    }
+
+    /**
+     * Asserts that the `setMode` method:
+     * - is chainable
+     * - properly sets the mode
+     * - throws an invalid argument exception for any string modes
+     */
     public function testSetMode()
     {
         $obj = $this->obj;
-        $this->assertEquals('auto-increment', $obj->mode());
 
         $ret = $obj->setMode('uuid');
         $this->assertSame($ret, $obj);
@@ -47,6 +61,18 @@ class IdPropertyTest extends \PHPUnit_Framework_TestCase
 
         $this->setExpectedException('\InvalidArgumentException');
         $obj->setMode('foo');
+    }
+
+    /**
+     * Asserts that calling the `setMode()` method with a NULL argument:
+     * - is chainable
+     * - properly resets the mode to detault
+     */
+    public function testSetModeNull()
+    {
+        $ret = $this->obj->setMode(null);
+        $this->assertSame($ret, $this->obj);
+        $this->assertEquals(IdProperty::DEFAULT_MODE, $this->obj->mode());
     }
 
     public function testMultipleCannotBeTrue()
