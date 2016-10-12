@@ -25,17 +25,6 @@ interface PropertyInterface
     public function ident();
 
     /**
-     * @param mixed $val The value.
-     * @return PropertyInterface Chainable
-     */
-    public function setVal($val);
-
-    /**
-     * @return mixed
-     */
-    public function val();
-
-    /**
      * @param mixed $val Optional. The value to to convert for input.
      * @return string
      */
