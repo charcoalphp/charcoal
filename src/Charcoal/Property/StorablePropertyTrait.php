@@ -12,11 +12,20 @@ use \Charcoal\Property\PropertyField;
  */
 trait StorablePropertyTrait
 {
+
     /**
-     * @return array
+     * @var PropertyField[] $fields
+     */
+    private $fields;
+
+    /**
+     * @return PropertyField[]
      */
     public function fields()
     {
+        if ($this->fields !== null) {
+            return $this->fields;
+        }
         $fields = [];
         if ($this->l10n()) {
             $translator = TranslationConfig::instance();
@@ -32,8 +41,7 @@ trait StorablePropertyTrait
                         'extra'      => $this->sqlExtra(),
                         'val'        => $this->fieldVal($langCode),
                         'defaultVal' => null,
-                        'allowNull'  => $this->allowNull(),
-                        'comment'    => $this->label()
+                        'allowNull'  => $this->allowNull()
                     ]
                 );
                 $fields[$langCode] = $field;
@@ -49,13 +57,13 @@ trait StorablePropertyTrait
                     'extra'      => $this->sqlExtra(),
                     'val'        => $this->storageVal($val),
                     'defaultVal' => null,
-                    'allowNull'  => $this->allowNull(),
-                    'comment'    => $this->label()
+                    'allowNull'  => $this->allowNull()
                 ]
             );
             $fields[] = $field;
         }
 
+        $this->fields = $fields;
         return $fields;
     }
 
@@ -63,7 +71,7 @@ trait StorablePropertyTrait
      * @param string $fieldIdent The property field identifier.
      * @return mixed
      */
-    public function fieldVal($fieldIdent)
+    protected function fieldVal($fieldIdent)
     {
         $val = $this->val();
 

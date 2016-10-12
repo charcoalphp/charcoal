@@ -13,12 +13,6 @@ interface StorablePropertyInterface
     public function fields();
 
     /**
-     * @param string $fieldIdent The property field identifier.
-     * @return mixed
-     */
-    public function fieldVal($fieldIdent);
-
-    /**
      * @param mixed $val Optional. The value to convert to storage value.
      * @return mixed
      */
