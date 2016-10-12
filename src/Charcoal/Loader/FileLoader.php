@@ -18,25 +18,25 @@ class FileLoader implements
     use LoggerAwareTrait;
 
     /**
-     * The base path to prepend to any relative paths to search in.
+     * The loader's identifier (for caching found paths).
      *
-     * @var string $basePath
+     * @var string
      */
-    private $basePath = '';
+    protected $ident;
 
     /**
      * The paths to search in.
      *
-     * @var string $paths
+     * @var string[]
      */
-    private $paths = [];
+    protected $paths = [];
 
     /**
-     * The loader's identifier (for caching found paths).
+     * The base path to prepend to any relative paths to search in.
      *
-     * @var string $ident
+     * @var string
      */
-    private $ident;
+    private $basePath = '';
 
     /**
      * Return new FileLoader object.
@@ -82,9 +82,8 @@ class FileLoader implements
         if (!is_string($ident)) {
             throw new InvalidArgumentException(
                 sprintf(
-                    '%1$s::%2$s() — Identifier must be a string.',
-                    __CLASS__,
-                    __FUNCTION__
+                    'Identifier for [%1$s] must be a string.',
+                    get_called_class()
                 )
             );
         }
@@ -321,7 +320,7 @@ class FileLoader implements
     {
         $path = $this->resolvePath($path);
 
-        if ($this->validatePath($path)) {
+        if ($path && $this->validatePath($path)) {
             $this->paths[] = $path;
         }
 
@@ -338,7 +337,7 @@ class FileLoader implements
     {
         $path = $this->resolvePath($path);
 
-        if ($this->validatePath($path)) {
+        if ($path && $this->validatePath($path)) {
             array_unshift($this->paths, $path);
         }
 
@@ -374,7 +373,7 @@ class FileLoader implements
      * Validate a resolved path.
      *
      * @param  string $path The path to validate.
-     * @return string
+     * @return boolean Returns TRUE if the path is valid otherwise FALSE.
      */
     public function validatePath($path)
     {
