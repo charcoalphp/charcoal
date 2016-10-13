@@ -5,7 +5,7 @@ namespace Charcoal\Property;
 use \InvalidArgumentException;
 use \PDO;
 
-use \Charcoal\Tranlsation\TranslationString;
+use \Charcoal\Translation\TranslationString;
 
 /**
  *
@@ -58,14 +58,26 @@ class PropertyField
      */
     public function setData(array $data)
     {
-        foreach ($data as $prop => $val) {
-            $func = [$this, 'set_'.$prop];
-            if (is_callable($func)) {
-                call_user_func($func, $val);
-                unset($data[$prop]);
-            } else {
-                $this->{$prop} = $val;
-            }
+        if (isset($data['ident'])) {
+            $this->setIdent($data['ident']);
+        }
+        if (isset($data['sqlType'])) {
+            $this->setSqlType($data['sqlType']);
+        }
+        if (isset($data['sqlPdoType'])) {
+            $this->setSqlPdoType($data['sqlPdoType']);
+        }
+        if (isset($data['extra'])) {
+            $this->setExtra($data['extra']);
+        }
+        if (isset($data['val'])) {
+            $this->setVal($data['val']);
+        }
+        if (isset($data['defaultVal'])) {
+            $this->setDefaultVal($data['defaultVal']);
+        }
+        if (isset($data['allowNull'])) {
+            $this->setAllowNull($data['allowNull']);
         }
 
         return $this;
