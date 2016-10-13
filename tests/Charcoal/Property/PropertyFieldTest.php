@@ -18,18 +18,37 @@ class PropertyFieldTest extends \PHPUnit_Framework_TestCase
 
     public function testSetIdent()
     {
-        $obj = $this->obj;
+        $ret = $this->obj->setIdent('foobar');
+        $this->assertSame($this->obj, $ret);
 
-        $ret = $obj->setIdent('foobar');
-        $this->assertSame($obj, $ret);
+        $this->assertEquals('foobar', $this->obj->ident());
 
-        $this->assertEquals('foobar', $obj->ident());
+        $this->setExpectedException('\InvalidArgumentException');
+        $this->obj->setIdent(null);
     }
 
     public function testSqlReturnsEmptyIfEmptyIdent()
     {
-        $obj = $this->obj;
-        $obj->setIdent('');
-        $this->assertEquals('', $obj->sql());
+        $this->obj->setIdent('');
+        $this->assertEquals('', $this->obj->sql());
+    }
+
+    public function testDefaultLabelIsNull()
+    {
+        $this->assertNull($this->obj->label());
+    }
+
+    public function testSetLabel()
+    {
+        $ret = $this->obj->setLabel('foo');
+        $this->assertSame($ret, $this->obj);
+        $this->assertEquals('foo', (string)$this->obj->label());
+    }
+
+    public function testSetSqlType()
+    {
+        $ret = $this->obj->setSqlType('foo');
+        $this->assertSame($ret, $this->obj);
+        $this->assertEquals('foo', $this->obj->sqlType());
     }
 }
