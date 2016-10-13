@@ -604,7 +604,9 @@ class CollectionLoader implements LoggerAwareInterface
                 call_user_func_array($cb, [ &$obj ]);
             }
 
-            $collection[] = $obj;
+            if ($obj instanceof ModelInterface) {
+                $collection[] = $obj;
+            }
         }
 
         return $collection;
