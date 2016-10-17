@@ -125,7 +125,14 @@ class Filter implements FilterInterface
      */
     public function setVal($val)
     {
+        if ($val instanceof \DateTimeInterface) {
+            $val = $val->format('Y-m-d H:i:s');
+        } elseif ($val instanceof \Charcoal\Property\DateTimeProperty) {
+            $val = $val->storageVal($this->val());
+        }
+
         $this->val = $val;
+
         return $this;
     }
 

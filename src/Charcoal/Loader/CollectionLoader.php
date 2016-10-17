@@ -196,7 +196,7 @@ class CollectionLoader implements LoggerAwareInterface
      *
      * Resets everything but the model and source.
      *
-     * @return AbstractSource Chainable
+     * @return CollectionLoader Chainable
      */
     public function reset()
     {
