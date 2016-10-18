@@ -91,16 +91,16 @@ class CollectionLoader implements LoggerAwareInterface
 
         $this->setLogger($data['logger']);
 
-        if (isset($data['model'])) {
-            $this->setModel($data['model']);
+        if (isset($data['collection'])) {
+            $this->setCollectionClass($data['collection']);
         }
 
         if (isset($data['factory'])) {
             $this->setFactory($data['factory']);
         }
 
-        if (isset($data['collection'])) {
-            $this->setCollectionClass($data['collection']);
+        if (isset($data['model'])) {
+            $this->setModel($data['model']);
         }
     }
 
