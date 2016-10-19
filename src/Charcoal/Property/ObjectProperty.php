@@ -265,7 +265,6 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
         return $key->sqlPdoType();
     }
 
-
     /**
      * Always return IDs.
      *
