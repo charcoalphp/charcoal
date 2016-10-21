@@ -2,212 +2,447 @@
 
 namespace Charcoal\Model;
 
-// Dependencies from `PHP`
-use \InvalidArgumentException;
-use \ArrayAccess;
+use \Closure;
+use \Traversable;
 use \ArrayIterator;
-use \Countable;
-use \IteratorAggregate;
+use \CachingIterator;
+use \LogicException;
+use \InvalidArgumentException;
 
 // Local namespace dependencies
 use \Charcoal\Model\CollectionInterface;
 use \Charcoal\Model\ModelInterface;
 
 /**
- * Model Collection. An Iterator of ModelInterface.
+ * A Model Collection
  *
- * Typically, the Model Collection will be used to hold the result of a "CollectionLoader".
+ * For iterating instances of {@see ModelInterface}.
  *
+ * Used by {@see \Charcoal\Loader\CollectionLoader} for storing results.
  */
-class Collection implements
-    CollectionInterface,
-    ArrayAccess,
-    Countable,
-    IteratorAggregate
+class Collection implements CollectionInterface
 {
     /**
-     * Array of (ordered) objects
-     * @var array $objects
+     * The objects contained in the collection.
+     *
+     * Stored as a dictionary indexed by each object's primary key.
+     * Ensures that each object gets loaded only once by keeping
+     * every loaded object in an associative array.
+     *
+     * @var ModelInterface[]
      */
     private $objects = [];
 
     /**
-     * Identity Map
+     * Create a new collection.
      *
-     * Ensures that each object gets loaded only once by keeping
-     * every loaded object in a map. Looks up objects using the
-     * map when referring to them.
-     * @var array $map
-     */
-    private $map = [];
-
-    /**
-     * ArrayAccess > offsetSet
-     *
-     * Note that collection does not support setting object to a specific key
-     * (The object's ID is always used for this).
-     *
-     * @param mixed $offset The array offset to set.
-     * @param mixed $value  The value to set.
-     * @throws InvalidArgumentException If the value is not a Object or offset is set.
+     * @param  ModelInterface[]|null $objs Array of objects to pre-populate this collection.
      * @return void
      */
-    public function offsetSet($offset, $value)
+    public function __construct($objs = null)
     {
-        if (!($value instanceof ModelInterface)) {
-            throw new InvalidArgumentException(
-                'Collection value must be a ModelInterface object.'
-            );
-        }
-        if ($offset === null) {
-            $this->objects[] = $value;
-            $this->map[$value->id()] = $value;
-        } else {
-            throw new InvalidArgumentException(
-                'Collection value can be set like an array.'
-            );
+        if ($objs) {
+            $this->merge($objs);
         }
     }
 
     /**
-     * ArrayAccess > offsetExists
+     * Retrieve the first object in the collection.
      *
-     * @param  mixed $offset The array offset to check.
+     * @return ModelInterface|null
+     */
+    public function first()
+    {
+        if (empty($this->objects)) {
+            return null;
+        }
+
+        return reset($this->objects);
+    }
+
+    /**
+     * Retrieve the last object in the collection.
+     *
+     * @return ModelInterface|null
+     */
+    public function last()
+    {
+        if (empty($this->objects)) {
+            return null;
+        }
+
+        return end($this->objects);
+    }
+
+    // Satisfies CollectionInterface
+    // =================================================================================================================
+
+    /**
+     * Merge the collection with the given objects.
+     *
+     * @param  ModelInterface[] $objs Array of objects to append to this collection.
+     * @throws InvalidArgumentException If the given array contains an unacceptable value.
+     * @return self
+     */
+    public function merge($objs)
+    {
+        $objs = $this->asArray($objs);
+
+        foreach ($objs as $obj) {
+            if (!$this->isAcceptable($obj)) {
+                throw new InvalidArgumentException(
+                    sprintf(
+                        'Must be an array of models, contains %s',
+                        (is_object($obj) ? get_class($obj) : gettype($obj))
+                    )
+                );
+            }
+
+            $this->objects[$obj->id()] = $obj;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Add an object to the collection.
+     *
+     * @param  ModelInterface $obj An acceptable object.
+     * @throws InvalidArgumentException If the given value is not acceptable.
+     * @return self
+     */
+    public function add($obj)
+    {
+        if (!$this->isAcceptable($obj)) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'Must be a model, received %s',
+                    (is_object($value) ? get_class($value) : gettype($value))
+                )
+            );
+        }
+
+        $this->objects[$obj->id()] = $obj;
+
+        return $this;
+    }
+
+    /**
+     * Retrieve the object by primary key.
+     *
+     * @param  mixed $key The primary key.
+     * @return ModelInterface|null The object or NULL if not in the collection.
+     */
+    public function get($key)
+    {
+        if ($this->isAcceptable($key)) {
+            $key = $key->id();
+        }
+
+        if ($this->has($key)) {
+            return $this->objects[$key];
+        }
+
+        return null;
+    }
+
+    /**
+     * Determine if an object exists in the collection by key.
+     *
+     * @param  mixed $key The primary key to lookup.
+     * @return boolean
+     */
+    public function has($key)
+    {
+        if ($this->isAcceptable($key)) {
+            $key = $key->id();
+        }
+
+        return array_key_exists($key, $this->objects);
+    }
+
+    /**
+     * Remove object from collection by primary key or array offset.
+     *
+     * @param  mixed $key The object primary key or array offset to remove.
+     * @throws InvalidArgumentException If the given key is not acceptable.
+     * @return self
+     */
+    public function remove($key)
+    {
+        if ($this->isAcceptable($key)) {
+            $key = $key->id();
+        }
+
+        unset($this->objects[$key]);
+
+        return $this;
+    }
+
+    /**
+     * Remove all objects from collection.
+     *
+     * @return self
+     */
+    public function clear()
+    {
+        $this->objects = [];
+
+        return $this;
+    }
+
+    /**
+     * Retrieve all objects in collection indexed by primary keys.
+     *
+     * @return ModelInterface[] An associative array of objects.
+     */
+    public function all()
+    {
+        return $this->objects;
+    }
+
+    /**
+     * Retrieve all objects in the collection indexed numerically.
+     *
+     * @return ModelInterface[] A sequential array of objects.
+     */
+    public function values()
+    {
+        return array_values($this->objects);
+    }
+
+    /**
+     * Retrieve the primary keys of the objects in the collection.
+     *
+     * @return array A sequential array of keys.
+     */
+    public function keys()
+    {
+        return array_keys($this->objects);
+    }
+
+    // Satisfies ArrayAccess
+    // =================================================================================================================
+
+    /**
+     * Alias of {@see CollectionInterface::has()}.
+     *
+     * @see    \ArrayAccess
+     * @param  mixed $offset The object primary key or array offset.
      * @return boolean
      */
     public function offsetExists($offset)
     {
         if (is_int($offset)) {
-            return isset($this->objects[$offset]);
-        } elseif (is_string($offset)) {
-            return isset($this->map[$offset]);
+            $offset  = $this->resolveOffset($offset);
+            $objects = array_values($this->objects);
+
+            return array_key_exists($offset, $objects);
+        }
+
+        return $this->has($offset);
+    }
+
+    /**
+     * Alias of {@see CollectionInterface::get()}.
+     *
+     * @see    \ArrayAccess
+     * @param  mixed $offset The object primary key or array offset.
+     * @return mixed The object or NULL if not in the collection.
+     */
+    public function offsetGet($offset)
+    {
+        if (is_int($offset)) {
+            $offset  = $this->resolveOffset($offset);
+            $objects = array_values($this->objects);
+            if (isset($objects[$offset])) {
+                return $objects[$offset];
+            }
+        }
+
+        return $this->get($offset);
+    }
+
+    /**
+     * Alias of {@see CollectionInterface::set()}.
+     *
+     * @see    \ArrayAccess
+     * @param  mixed $offset The object primary key or array offset.
+     * @param  mixed $value  The object.
+     * @throws LogicException Attempts to assign an offset.
+     * @return void
+     */
+    public function offsetSet($offset, $value)
+    {
+        if ($offset === null) {
+            $this->add($value);
+        } else {
+            throw new LogicException(
+                sprintf('Offsets are not accepted on the model collection, received %s.', $offset)
+            );
         }
     }
 
     /**
-     * ArrayAccess > offsetUnset
+     * Alias of {@see CollectionInterface::remove()}.
      *
-     * @param mixed $offset The array offset to unset.
-     * @throws InvalidArgumentException If the offset is not an integer or string.
+     * @see    \ArrayAccess
+     * @param  mixed $offset The object primary key or array offset.
      * @return void
      */
     public function offsetUnset($offset)
     {
         if (is_int($offset)) {
-            $id = $this->objects[$offset]->id();
-            unset($this->objects[$offset]);
-            unset($this->map[$id]);
-        } elseif (is_string($offset)) {
-            $pos = $this->pos($offset);
-            unset($this->map[$offset]);
-            unset($this->objects[$pos]);
-        } else {
-            throw new InvalidArgumentException(
-                'Offset should be either an integer or a string.'
-            );
+            $offset = $this->resolveOffset($offset);
+            $keys   = array_keys($this->objects);
+            if (isset($keys[$offset])) {
+                $offset = $keys[$offset];
+            }
         }
+
+        $this->remove($offset);
     }
 
     /**
-     * ArrayAccess > offsetGet
+     * Parse the array offset.
      *
-     * @param mixed $offset The array offset to get.
-     * @throws InvalidArgumentException If the offset is not an integer or string.
-     * @return mixed
+     * If offset is non-negative, the sequence will start at that offset in the collection.
+     * If offset is negative, the sequence will start that far from the end of the collection.
+     *
+     * @param  integer $offset The array offset.
+     * @return integer
      */
-    public function offsetGet($offset)
+    protected function resolveOffset($offset)
     {
         if (is_int($offset)) {
-            return (isset($this->objects[$offset]) ? $this->objects[$offset] : null);
-        } elseif (is_string($offset)) {
-            return (isset($this->map[$offset]) ? $this->map[$offset] : null);
-        } else {
-            throw new InvalidArgumentException(
-                'Offset should be either an integer or a string.'
-            );
+            if ($offset < 0) {
+                $offset = $this->count() - $offset;
+            }
         }
+
+        return $offset;
     }
 
-    /**
-     * IteratorAggregate > getIterator
-     *
-     * By implementint the IteratorAggregate interface, Collection lists can be
-     *
-     *
-     * @return mixed
-     */
-    public function getIterator()
-    {
-        if (empty($this->map)) {
-            // Empty object
-            return new ArrayIterator();
-        }
-        return new ArrayIterator($this->map);
-    }
+    // Satisfies Countable
+    // =================================================================================================================
 
     /**
-     * Countable > count
+     * Get number of objects in collection
      *
-     * By implementing the Countable interface, the PHP `count()` function
-     * can be called directly on a Collection.
-     *
-     * @return integer The number of objects in the Collection.
+     * @see    \Countable
+     * @return integer
      */
     public function count()
     {
         return count($this->objects);
     }
 
+    // Satisfies IteratorAggregate
+    // =================================================================================================================
+
     /**
-     * Get the ordered object array.
+     * Retrieve an external iterator.
      *
-     * @return array
+     * @see    \IteratorAggregate
+     * @return \ArrayIterator
      */
-    public function objects()
+    public function getIterator()
     {
-        return $this->objects;
+        return new ArrayIterator($this->objects);
     }
 
     /**
-     * Get the map array, with IDs as keys.
+     * Retrieve a cached iterator.
      *
-     * @return array
+     * @param  integer $flags Bitmask of flags.
+     * @return \CachingIterator
      */
-    public function map()
+    public function getCachingIterator($flags = CachingIterator::CALL_TOSTRING)
     {
-        return $this->map;
+        return new CachingIterator($this->getIterator(), $flags);
     }
 
-    /**
-     * Manually add an object to the list
-     *
-     * @param ModelInterface $obj The object to add.
-     * @return \Charcoal\Collection (Chainable)
-     */
-    public function add(ModelInterface $obj)
-    {
-        $this->objects[] = $obj;
-        $this->map[$obj->id()] = $obj;
-
-        // Chainable
-        return $this;
-    }
+    // Satisfies backwards-compatibility
+    // =================================================================================================================
 
     /**
-     * @param string|ModelInterface $key The key to retrieve the position from.
-     * @throws InvalidArgumentException If the offset is not a string.
-     * @return integer|boolean
+     * Retrieve the array offset from the given key.
+     * @deprecated
+     * @param  mixed $key The primary key to retrieve the offset from.
+     * @return integer Returns an array offset.
      */
     public function pos($key)
     {
-        if (is_string($key)) {
-            return array_search($key, array_keys($this->map));
-        } elseif ($key instanceof ModelInterface) {
-            return array_search($key->id(), array_keys($this->map));
-        } else {
-            throw new InvalidArgumentException(
-                'Key must be a string or an ModelInterface object.'
-            );
+        trigger_error('Collection::pos() is deprecated', E_USER_DEPRECATED);
+
+        return array_search($key, array_keys($this->objects));
+    }
+
+    /**
+     * Alias of {@see self::values()}
+     *
+     * @deprecated
+     * @return ModelInterface[]
+     */
+    public function objects()
+    {
+        return $this->values();
+    }
+
+    /**
+     * Alias of {@see self::all()}.
+     *
+     * @deprecated
+     * @return ModelInterface[]
+     */
+    public function map()
+    {
+        return $this->all();
+    }
+
+    // =================================================================================================================
+
+    /**
+     * Determine if the given value is acceptable for the collection.
+     *
+     * Note: Practical for specialized collections extending the base collection.
+     *
+     * @param  mixed $value The value being vetted.
+     * @return boolean
+     */
+    public function isAcceptable($value)
+    {
+        return ($value instanceof ModelInterface);
+    }
+
+    /**
+     * Get a base collection instance from this collection.
+     *
+     * Note: Practical for extended classes.
+     *
+     * @return Collection
+     */
+    public function toBase()
+    {
+        return new self($this);
+    }
+
+    /**
+     * Parse the given value into an array.
+     *
+     * @param  mixed $value The value being parsed.
+     * @return array
+     */
+    protected function asArray($value)
+    {
+        if (is_array($value)) {
+            return $value;
+        } elseif ($value instanceof self) {
+            return $value->all();
+        } elseif ($value instanceof Traversable) {
+            return iterator_to_array($value);
         }
+
+        return (array)$value;
     }
 }

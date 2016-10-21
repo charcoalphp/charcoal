@@ -58,14 +58,14 @@ class CollectionLoader implements LoggerAwareInterface
     /**
      * The callback routine applied to every object added to the collection.
      *
-     * @var callable
+     * @var callable|null
      */
     private $callback;
 
     /**
      * The field which defines the data's model.
      *
-     * @var string
+     * @var string|null
      */
     private $dynamicTypeField;
 
@@ -192,9 +192,7 @@ class CollectionLoader implements LoggerAwareInterface
     }
 
     /**
-     * Alias of {@see AbstractSource::reset()}
-     *
-     * Resets everything but the model and source.
+     * Reset everything but the model.
      *
      * @return CollectionLoader Chainable
      */
@@ -203,6 +201,9 @@ class CollectionLoader implements LoggerAwareInterface
         if ($this->source) {
             $this->source()->reset();
         }
+
+        $this->callback = null;
+        $this->dynamicTypeField = null;
 
         return $this;
     }
@@ -502,6 +503,7 @@ class CollectionLoader implements LoggerAwareInterface
     public function setCallback(callable $callback)
     {
         $this->callback = $callback;
+
         return $this;
     }
 
@@ -518,20 +520,20 @@ class CollectionLoader implements LoggerAwareInterface
     /**
      * Load a collection from source.
      *
-     * @param  string|null $ident Optional. A pre-defined list to use from the model.
-     * @param  callable    $cb    Optional. Apply a callback to every entity of the collection.
-     *                            Leave blank to use `$callback` member.
+     * @param  string|null $ident    Optional. A pre-defined list to use from the model.
+     * @param  callable    $callback Optional. Apply a callback to every entity of the collection.
+     *    Leave blank to use {@see CollectionLoader::callback()}.
      * @throws Exception If the database connection fails.
      * @return ArrayAccess|Traversable
      */
-    public function load($ident = null, callable $cb = null)
+    public function load($ident = null, callable $callback = null)
     {
         // Unused.
         unset($ident);
 
         $query = $this->source()->sqlLoad();
 
-        return $this->loadFromQuery($query, $cb);
+        return $this->loadFromQuery($query, $callback);
     }
 
     /**
@@ -561,13 +563,24 @@ class CollectionLoader implements LoggerAwareInterface
     /**
      * Load list from query.
      *
-     * @param  string   $query The actual query.
-     * @param  callable $cb    Optional. Apply a callback to every entity of the collection.
-     *    Leave blank to use `$callback` member.
+     * @param  string|array $query    The SQL query as a string or an array composed of the query,
+     *     parameter binds, and types of parameter bindings.
+     *     ```
+     *     $this->loadFromQuery([
+     *         'SELECT name, colour, calories FROM fruit WHERE calories < :calories AND colour = :colour',
+     *         [
+     *             'calories' => 150,
+     *             'colour'   => 'red'
+     *         ],
+     *         [ 'calories' => PDO::PARAM_INT ]
+     *     ]);
+     *     ```
+     * @param  callable     $callback Optional. Apply a callback to every entity of the collection.
+     *    Leave blank to use {@see CollectionLoader::callback()}.
      * @throws RuntimeException If the database connection fails.
      * @return ArrayAccess|Traversable
      */
-    public function loadFromQuery($query, callable $cb = null)
+    public function loadFromQuery($query, callable $callback = null)
     {
         $db = $this->source()->db();
 
@@ -577,15 +590,30 @@ class CollectionLoader implements LoggerAwareInterface
             );
         }
 
-        if ($cb === null) {
-            $cb = $this->callback();
+        if ($callback === null) {
+            $callback = $this->callback();
         }
 
-        $this->logger->debug($query);
-
-        $sth = $db->prepare($query);
         /** @todo Filter binds */
-        $sth->execute();
+        if (is_string($query)) {
+            $this->logger->debug($query);
+            $sth = $db->prepare($query);
+            $sth->execute();
+        } elseif (is_array($query)) {
+            list($query, $binds, $types) = array_pad($query, 3, []);
+            $this->logger->debug($query);
+            $sth = $this->source()->dbQuery($query, $binds, $types);
+        } else {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'The SQL query must be a string or an array: '.
+                    '[ string $query, array $binds, array $dataTypes ]; '.
+                    'received %s',
+                    is_object($query) ? get_class($query) : $query
+                )
+            );
+        }
+
         $sth->setFetchMode(PDO::FETCH_ASSOC);
 
         $modelObjType = $this->model()->objType();
@@ -600,8 +628,8 @@ class CollectionLoader implements LoggerAwareInterface
             $obj = $this->factory()->create($objType);
             $obj->setFlatData($objData);
 
-            if (isset($cb)) {
-                call_user_func_array($cb, [ &$obj ]);
+            if (isset($callback)) {
+                call_user_func_array($callback, [ &$obj ]);
             }
 
             if ($obj instanceof ModelInterface) {

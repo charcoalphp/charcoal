@@ -2,41 +2,79 @@
 
 namespace Charcoal\Model;
 
-// Intra-module (`charcoal-core`) dependencies
+// From 'charcoal-core'
 use \Charcoal\Model\ModelInterface;
 
 /**
- *
+ * Defines a model collection.
  */
-interface CollectionInterface
+interface CollectionInterface extends \ArrayAccess, \Countable, \IteratorAggregate
 {
     /**
-     * Get the ordered object array
+     * Merge the collection with the given objects.
      *
-     * @return array
+     * @param  ModelInterface[] $objs Array of objects to append to this collection.
+     * @return CollectionInterface
      */
-    public function objects();
+    public function merge($objs);
 
     /**
-     * Get the map array, with IDs as keys
+     * Add an object to the collection.
      *
-     * @return array
+     * @param  ModelInterface $obj An acceptable object.
+     * @return CollectionInterface
      */
-    public function map();
+    public function add($obj);
 
     /**
-     * Manually add an object to the list
+     * Retrieve the object by primary key.
      *
-     * @param ModelInterface $obj The object to add.
-     *
-     * @return \Charcoal\Collection (Chainable)
+     * @param  mixed $key The primary key.
+     * @return ModelInterface|null The object or NULL if not in the collection.
      */
-    public function add(ModelInterface $obj);
+    public function get($key);
 
     /**
-     * @param string|ModelInterface $key The key to retrieve.
-     * @throws InvalidArgumentException If the offset is not a string.
-     * @return integer|boolean
+     * Determine if an object exists in the collection by key.
+     *
+     * @param  string $key The primary key to lookup.
+     * @return boolean
      */
-    public function pos($key);
+    public function has($key);
+
+    /**
+     * Remove object from collection by primary key.
+     *
+     * @param  mixed $key The object primary key to remove.
+     * @return CollectionInterface
+     */
+    public function remove($key);
+
+    /**
+     * Remove all objects from collection.
+     *
+     * @return CollectionInterface
+     */
+    public function clear();
+
+    /**
+     * Retrieve all objects in collection indexed by primary keys.
+     *
+     * @return ModelInterface[] An associative array of objects.
+     */
+    public function all();
+
+    /**
+     * Retrieve all objects in the collection indexed numerically.
+     *
+     * @return ModelInterface[] A sequential array of objects.
+     */
+    public function values();
+
+    /**
+     * Retrieve the primary keys of the objects in the collection.
+     *
+     * @return array A sequential array of keys.
+     */
+    public function keys();
 }
