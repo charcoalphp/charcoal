@@ -210,12 +210,23 @@ class AttachmentWidget extends AdminWidget implements
          * @param  LambdaHelper $helper For rendering strings in the current context.
          * @return string
          */
-        return function ($text, LambdaHelper $helper) use ($search) {
+        $lambda = function ($text, LambdaHelper $helper) use ($search) {
             $text = $helper->render($text);
-            $base = $helper->render('{{ baseUrl }}');
 
-            return preg_replace('~'.$search.'~', $base.'$1', $text);
+            if (preg_match('~'.$search.'~i', $text)) {
+                $base = $helper->render('{{ baseUrl }}');
+                return preg_replace('~'.$search.'~i', $base.'$1', $text);
+            } elseif ($this->baseUrl instanceof \Psr\Http\Message\UriInterface) {
+                if ($text && strpos($text, ':') === false && !in_array($text[0], [ '/', '#', '?' ])) {
+                    return $this->baseUrl->withPath($text);
+                }
+            }
+
+            return $text;
         };
+        $lambda = $lambda->bindTo($this);
+
+        return $lambda;
     }
 
 
