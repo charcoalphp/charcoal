@@ -1,6 +1,8 @@
 <?php
 namespace Charcoal\Attachment\Traits;
 
+use \InvalidArgumentException;
+
 // From 'charcoal-core'
 use \Charcoal\Model\ModelInterface;
 use \Charcoal\Loader\CollectionLoader;
@@ -35,6 +37,13 @@ use \Charcoal\Attachment\Object\Video;
 trait AttachmentAwareTrait
 {
     /**
+     * A store of cached attachments, by ID.
+     *
+     * @var Attachment[] $attachmentCache
+     */
+    protected static $attachmentCache = [];
+
+    /**
      * Store a collection of node objects.
      *
      * @var Collection|Attachment[]
@@ -52,16 +61,31 @@ trait AttachmentAwareTrait
      * Retrieve the objects associated to the current object.
      *
      * @param  string|null $group Filter the attachments by a group identifier.
+     * @param  string|null $type  Filter the attachments by type.
+     * @throws InvalidArgumentException If the $group or $type is invalid.
      * @return Collection|Attachment[]
      */
-    public function attachments($group = null)
+    public function attachments($group = null, $type = null)
     {
-        if (!isset($group)) {
+        if ($group === null) {
             $group = 0;
+        } elseif (!is_string($group)) {
+            throw new InvalidArgumentException('The $group must be a string.');
         }
 
-        if (isset($this->attachments[$group])) {
-            return $this->attachments[$group];
+        if ($type === null) {
+            $type = 0;
+        } else {
+            if (!is_string($type)) {
+                throw new InvalidArgumentException('The $type must be a string.');
+            }
+
+            $type = preg_replace('/([a-z])([A-Z])/', '$1-$2', $type);
+            $type = strtolower(str_replace('\\', '/', $type));
+        }
+
+        if (isset($this->attachments[$group][$type])) {
+            return $this->attachments[$group][$type];
         }
 
         $objType = $this->objType();
@@ -77,27 +101,36 @@ trait AttachmentAwareTrait
             return [];
         }
 
-        $query = 'SELECT
+        $query = '
+            SELECT
                 attachment.*,
-                joined.attachment_id as attachment_id,
-                joined.position as position
+                joined.attachment_id AS attachment_id,
+                joined.position AS position
             FROM
-                `'.$attTable.'` as attachment
+                `'.$attTable.'` AS attachment
             LEFT JOIN
-                `'.$joinTable.'` as joined
+                `'.$joinTable.'` AS joined
             ON
                 joined.attachment_id = attachment.id
             WHERE
+                attachment.active = 1';
+
+        if ($type) {
+            $query .= '
+            AND
+                attachment.type = "'.$type.'"';
+        }
+
+        $query .= '
+            AND
                 joined.object_type = "'.$objType.'"
             AND
-                joined.object_id = "'.$objId.'"
-            AND
-                attachment.active = 1';
+                joined.object_id = "'.$objId.'"';
 
         if ($group) {
             $query .= '
             AND
-            joined.group = "'.$group.'"';
+                joined.group = "'.$group.'"';
         }
 
         $query .= '
@@ -110,11 +143,11 @@ trait AttachmentAwareTrait
         $widget = $this->attachmentWidget();
         if ($widget instanceof AttachmentWidget) {
             $callable = function ($att) {
-                $type = $att->type();
+                $kind = $att->type();
                 $attachables = $this->attachableObjects();
 
-                if (isset($attachables[$type]['data'])) {
-                    $att->setData($attachables[$type]['data']);
+                if (isset($attachables[$kind]['data'])) {
+                    $att->setData($attachables[$kind]['data']);
                 }
 
                 if (!$att->rawHeading()) {
@@ -130,9 +163,9 @@ trait AttachmentAwareTrait
 
         $collection = $loader->loadFromQuery($query);
 
-        $this->attachments[$group] = $collection;
+        $this->attachments[$group][$type] = $collection;
 
-        return $this->attachments[$group];
+        return $this->attachments[$group][$type];
     }
 
     /**
