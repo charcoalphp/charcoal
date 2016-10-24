@@ -251,14 +251,17 @@ abstract class AbstractSource implements
             $property = $filter->property();
             if ($property) {
                 $p = $this->model()->p($property);
-                if ($p && $p->l10n()) {
-                    $translator = TranslationConfig::instance();
+                if ($p) {
+                    if ($p->l10n()) {
+                        $translator = TranslationConfig::instance();
 
-                    $ident = sprintf('%1$s_%2$s', $property, $translator->currentLanguage());
-                    $filter->setProperty($ident);
-                }
-                if ($p && $p->multiple()) {
-                    $filter->setOperator('FIND_IN_SET');
+                        $ident = sprintf('%1$s_%2$s', $property, $translator->currentLanguage());
+                        $filter->setProperty($ident);
+                    }
+
+                    if ($p->multiple()) {
+                        $filter->setOperator('FIND_IN_SET');
+                    }
                 }
             }
         }
@@ -329,14 +332,13 @@ abstract class AbstractSource implements
             $property = $order->property();
             if ($property) {
                 $p = $this->model()->p($property);
-                if ($p && $p->l10n()) {
-                    $translator = TranslationConfig::instance();
+                if ($p) {
+                    if ($p->l10n()) {
+                        $translator = TranslationConfig::instance();
 
-                    $ident = sprintf('%1$s_%2$s', $property, $translator->currentLanguage());
-                    $order->setProperty($ident);
-                }
-                if ($p && $p->multiple()) {
-                    $order->setOperator('FIND_IN_SET');
+                        $ident = sprintf('%1$s_%2$s', $property, $translator->currentLanguage());
+                        $order->setProperty($ident);
+                    }
                 }
             }
         }

@@ -48,6 +48,10 @@ class DatabaseFilter extends Filter
 
             switch ($operator) {
                 case 'FIND_IN_SET':
+                    if (is_array($val)) {
+                        $val = implode(',', $val);
+                    }
+
                     $filter .= sprintf('%1$s(\'%2$s\', %3$s)', $operator, $val, $target);
                     break;
 
@@ -59,10 +63,10 @@ class DatabaseFilter extends Filter
                 case 'IN':
                 case 'NOT IN':
                     if (is_array($val)) {
-                        $val = '\''.implode('\',\'', $val).'\'';
+                        $val = implode('\',\'', $val);
                     }
 
-                    $filter .= sprintf('(%1$s %2$s (%3$s))', $target, $operator, $val);
+                    $filter .= sprintf('(%1$s %2$s (\'%3$s\'))', $target, $operator, $val);
                     break;
 
                 default:
