@@ -25,12 +25,12 @@ trait StorablePropertyTrait
      *
      * @return PropertyField[]
      */
-    public function fields()
+    public function fields($val)
     {
         if ($this->fields === null) {
-            $this->generateFields();
+            $this->generateFields($val);
         } else {
-            $this->updatedFields();
+            $this->updatedFields($val);
         }
 
         return $this->fields;
@@ -41,20 +41,20 @@ trait StorablePropertyTrait
      *
      * @return PropertyField[]
      */
-    protected function updatedFields()
+    protected function updatedFields($val)
     {
         if ($this->fields === null) {
-            $this->generateFields();
+            $this->generateFields($val);
         }
 
         if ($this->l10n()) {
             $translator = TranslationConfig::instance();
 
             foreach ($translator->availableLanguages() as $langCode) {
-                $this->fields[$langCode]->setVal($this->fieldVal($langCode));
+                $this->fields[$langCode]->setVal($this->fieldVal($langCode, $val));
             }
         } else {
-            $this->fields[0]->setVal($this->storageVal($this->val()));
+            $this->fields[0]->setVal($this->storageVal($val));
         }
 
         return $this->fields;
@@ -65,7 +65,7 @@ trait StorablePropertyTrait
      *
      * @return PropertyField[]
      */
-    protected function generateFields()
+    protected function generateFields($val)
     {
         $this->fields = [];
         if ($this->l10n()) {
@@ -79,14 +79,13 @@ trait StorablePropertyTrait
                     'sqlType'    => $this->sqlType(),
                     'sqlPdoType' => $this->sqlPdoType(),
                     'extra'      => $this->sqlExtra(),
-                    'val'        => $this->fieldVal($langCode),
+                    'val'        => $this->fieldVal($langCode, $val),
                     'defaultVal' => null,
                     'allowNull'  => $this->allowNull()
                 ]);
                 $this->fields[$langCode] = $field;
             }
         } else {
-            $val = $this->val();
             $field = new PropertyField();
             $field->setData([
                 'ident'      => $this->ident(),
@@ -109,9 +108,9 @@ trait StorablePropertyTrait
      * @param  string $fieldIdent The property field identifier.
      * @return mixed
      */
-    protected function fieldVal($fieldIdent)
+    protected function fieldVal($fieldIdent, $val)
     {
-        $val = $this->val();
+        //$val = $this->val();
 
         if ($val === null) {
             return null;
