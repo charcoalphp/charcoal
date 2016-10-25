@@ -261,7 +261,6 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
         foreach ($properties as $propertyIdent) {
             $p = $model->p($propertyIdent);
             $v = $model->propertyValue($propertyIdent);
-            $p->setVal($v);
             if (!$p || !$p->active()) {
                 continue;
             }

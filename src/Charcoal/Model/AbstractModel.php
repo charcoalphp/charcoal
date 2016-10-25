@@ -368,6 +368,8 @@ abstract class AbstractModel extends AbstractEntity implements
     /**
      * Save the object's current state to storage.
      *
+     * Overrides default StorableTrait save() method to also save properties.
+     *
      * @see    Charcoal\Source\StorableTrait::save() For the "create" event.
      * @return boolean
      * @todo   Enable model validation.
