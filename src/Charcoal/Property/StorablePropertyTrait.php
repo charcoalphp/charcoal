@@ -23,6 +23,7 @@ trait StorablePropertyTrait
     /**
      * Retrieve the property's storage fields.
      *
+     * @param  mixed $val The value to set as field value.
      * @return PropertyField[]
      */
     public function fields($val)
@@ -39,6 +40,7 @@ trait StorablePropertyTrait
     /**
      * Update the property's storage fields.
      *
+     * @param  mixed $val The value to set as field value.
      * @return PropertyField[]
      */
     private function updatedFields($val)
@@ -63,6 +65,7 @@ trait StorablePropertyTrait
     /**
      * Reset the property's storage fields.
      *
+     * @param  mixed $val The value to set as field value.
      * @return PropertyField[]
      */
     private function generateFields($val)
@@ -106,6 +109,7 @@ trait StorablePropertyTrait
      * Retrieve the value of the property's given storage field.
      *
      * @param  string $fieldIdent The property field identifier.
+     * @param  mixed  $val        The value to set as field value.
      * @return mixed
      */
     private function fieldVal($fieldIdent, $val)
