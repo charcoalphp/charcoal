@@ -433,6 +433,18 @@ class AttachmentWidget extends AdminWidget implements
             $attOption  = [ 'label', 'filters', 'orders', 'num_per_page', 'page' ];
             $attData    = array_diff_key($attMeta, $attOption);
 
+            // Disable an attachable model
+            if (isset($attMeta['active']) && !$attMeta['active']) {
+                continue;
+            }
+
+            // Useful for replacing a pre-defined attachment type
+            if (isset($attMeta['attachment_type'])) {
+                $attType = $attMeta['attachment_type'];
+            } else {
+                $attMeta['attachment_type'] = $attType;
+            }
+
             if (isset($attMeta['label'])) {
                 if (TranslationString::isTranslatable($attMeta['label'])) {
                     $label = new TranslationString($attMeta['label']);

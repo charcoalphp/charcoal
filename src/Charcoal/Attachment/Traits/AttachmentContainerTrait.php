@@ -158,7 +158,15 @@ trait AttachmentContainerTrait
         $cfg = $this->attachmentConfig();
         if (isset($cfg['attachable_objects'])) {
             foreach ($cfg['attachable_objects'] as $attType => $attMeta) {
-                if (!isset($attMeta['attachment_type'])) {
+                // Disable an attachable model
+                if (isset($attMeta['active']) && !$attMeta['active']) {
+                    continue;
+                }
+
+                // Useful for replacing a pre-defined attachment type
+                if (isset($attMeta['attachment_type'])) {
+                    $attType = $attMeta['attachment_type'];
+                } else {
                     $attMeta['attachment_type'] = $attType;
                 }
 
