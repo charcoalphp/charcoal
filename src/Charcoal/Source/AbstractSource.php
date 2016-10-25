@@ -87,10 +87,10 @@ abstract class AbstractSource implements
     /**
      * Initialize the source's properties with an array of data.
      *
-     * @param array|\ArrayAccess $data The source data.
+     * @param array $data The source data.
      * @return AbstractSource Chainable
      */
-    public function setData($data)
+    public function setData(array $data)
     {
         foreach ($data as $prop => $val) {
             $func = [$this, $this->setter($prop)];
