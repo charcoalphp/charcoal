@@ -41,7 +41,7 @@ trait StorablePropertyTrait
      *
      * @return PropertyField[]
      */
-    protected function updatedFields($val)
+    private function updatedFields($val)
     {
         if ($this->fields === null) {
             $this->generateFields($val);
@@ -65,7 +65,7 @@ trait StorablePropertyTrait
      *
      * @return PropertyField[]
      */
-    protected function generateFields($val)
+    private function generateFields($val)
     {
         $this->fields = [];
         if ($this->l10n()) {
@@ -108,7 +108,7 @@ trait StorablePropertyTrait
      * @param  string $fieldIdent The property field identifier.
      * @return mixed
      */
-    protected function fieldVal($fieldIdent, $val)
+    private function fieldVal($fieldIdent, $val)
     {
         //$val = $this->val();
 
