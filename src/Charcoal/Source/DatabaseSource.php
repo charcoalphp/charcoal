@@ -265,7 +265,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
             if (!$p || !$p->active()) {
                 continue;
             }
-            foreach ($p->fields() as $fieldIdent => $field) {
+            foreach ($p->fields($v) as $fieldIdent => $field) {
                 $fields[$field->ident()] = $field;
             }
         }
