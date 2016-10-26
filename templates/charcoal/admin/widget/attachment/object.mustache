@@ -4,22 +4,23 @@
 
     @used-by `charcoal/admin/widget/attachment/list`
 --}}
-<article class="panel panel-default js-attachment"
-    id="{{ widgetId }}_{{ id }}"
-    data-id="{{ id }}"
-    data-type="{{ objType }}"
-    data-microtype="{{ microType }}"
+<article
+        class="panel panel-default js-attachment {{# showAttachmentPreview }}content-preview {{/ showAttachmentPreview}}"
+        id="{{ widgetId }}_{{ id }}"
+        data-id="{{ id }}"
+        data-type="{{ objType }}"
+        data-microtype="{{ microType }}"
     {{# attachmentGroup }} data-group="{{ . }}"{{/ attachmentGroup }}>
     {{# showAttachmentPreview }}
-    {{> charcoal/admin/widget/attachment/object/collapsible }}
+        {{> charcoal/admin/widget/attachment/object/collapsible }}
     {{/ showAttachmentPreview }}
     {{^ showAttachmentPreview }}
-    <header draggable="true" id="{{ widgetId }}_heading_{{ id }}" class="panel-heading">
-        <h4 class="panel-title">
-            <span class="panel-title-icon glyphicon {{ glyphicon }}"></span>
-            <a href="object/edit?obj_type={{ type }}&obj_id={{ id }}">{{& heading }}</a>
-        </h4>
-    </header>
+        <header draggable="true" id="{{ widgetId }}_heading_{{ id }}" class="panel-heading">
+            <h4 class="panel-title">
+                <span class="panel-title-icon glyphicon {{ glyphicon }}"></span>
+                <a href="object/edit?obj_type={{ type }}&obj_id={{ id }}">{{& heading }}</a>
+            </h4>
+        </header>
     {{/ showAttachmentPreview }}
     <aside class="panel-actions btn-toolbar js-attachment-actions" role="toolbar">
         {{> charcoal/admin/widget/attachment/object/actions }}
