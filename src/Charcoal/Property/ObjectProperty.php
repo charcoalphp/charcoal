@@ -618,16 +618,16 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     private function modelLoader()
     {
         $objType = $this->objType();
-        if (isset(static::$modelLoaders[$objType])) {
-            return static::$modelLoaders[$objType];
+        if (isset(self::$modelLoaders[$objType])) {
+            return self::$modelLoaders[$objType];
         }
 
-        static::$modelLoaders[$objType] = new ModelLoader([
+        self::$modelLoaders[$objType] = new ModelLoader([
             'obj_type'  => $objType,
             'factory'   => $this->modelFactory(),
             'cache'     => $this->cachePool()
         ]);
 
-        return static::$modelLoaders[$objType];
+        return self::$modelLoaders[$objType];
     }
 }
