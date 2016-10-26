@@ -623,7 +623,12 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
             return $id;
         }
 
-        return $this->modelLoader()->load($id);
+        $obj = $this->modelLoader()->load($id);
+        if (!$obj->id()) {
+            return null;
+        } else {
+            return $obj;
+        }
     }
 
     /**
@@ -637,9 +642,10 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
         }
 
         self::$modelLoaders[$objType] = new ModelLoader([
-            'obj_type' => $objType,
-            'factory'  => $this->modelFactory(),
-            'cache'    => $this->cachePool()
+            'logger'    => $this->logger,
+            'obj_type'  => $objType,
+            'factory'   => $this->modelFactory(),
+            'cache'     => $this->cachePool()
         ]);
 
         return self::$modelLoaders[$objType];
