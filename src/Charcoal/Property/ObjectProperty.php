@@ -5,6 +5,8 @@ namespace Charcoal\Property;
 use \Exception;
 use \InvalidArgumentException;
 
+use \Psr\Cache\CacheItemPoolInterface;
+
 use \Pimple\Container;
 
 use \Charcoal\Factory\FactoryInterface;
@@ -12,6 +14,7 @@ use \Charcoal\Factory\FactoryInterface;
 use \Charcoal\View\ViewableInterface;
 
 use \Charcoal\Model\ModelInterface;
+use \Charcoal\Model\ModelLoader;
 use \Charcoal\Loader\CollectionLoader;
 use \Charcoal\Source\StorableInterface;
 use \Charcoal\Translation\TranslationConfig;
@@ -27,12 +30,6 @@ use \Charcoal\Property\SelectablePropertyInterface;
  */
 class ObjectProperty extends AbstractProperty implements SelectablePropertyInterface
 {
-    /**
-     * A store of cached objects.
-     *
-     * @var ModelInterface[] $objectCache
-     */
-    public static $objectCache = [];
 
     /**
      * The object type to build the choices from.
@@ -93,6 +90,16 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     protected $filters;
 
     /**
+     * @var CacheItemPoolInterface
+     */
+    private $cachePool;
+
+    /**
+     * @var ModelLoader[]
+     */
+    static private $modelLoaders = [];
+
+    /**
      * Inject dependencies from a DI Container.
      *
      * @param  Container $container A dependencies container instance.
@@ -104,6 +111,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
 
         $this->setModelFactory($container['model/factory']);
         $this->setCollectionLoader($container['model/collection/loader']);
+        $this->setCachePool($container['cache']);
     }
 
     /**
@@ -118,7 +126,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      * @param FactoryInterface $factory The factory, to create model objects.
      * @return ObjectProperty Chainable
      */
-    public function setModelFactory(FactoryInterface $factory)
+    private function setModelFactory(FactoryInterface $factory)
     {
         $this->modelFactory = $factory;
         return $this;
@@ -132,7 +140,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     {
         if ($this->modelFactory === null) {
             throw new Exception(
-                sprintf('Model factory not set on object property "%s".')
+                sprintf('Model factory not set on object property.')
             );
         }
         return $this->modelFactory;
@@ -144,7 +152,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      * @param CollectionLoader $loader The collection loader.
      * @return self
      */
-    protected function setCollectionLoader(CollectionLoader $loader)
+    private function setCollectionLoader(CollectionLoader $loader)
     {
         $this->collectionLoader = $loader;
 
@@ -157,7 +165,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      * @throws Exception If the collection loader was not previously set.
      * @return CollectionLoader
      */
-    protected function collectionLoader()
+    private function collectionLoader()
     {
         if (!isset($this->collectionLoader)) {
             throw new Exception(
@@ -175,6 +183,29 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
         }
 
         return $loader;
+    }
+
+    /**
+     * @param CacheItemPoolInterface $cachePool The PSR-6 Cache.
+     * @return void
+     */
+    private function setCachePool(CacheItemPoolInterface $cachePool)
+    {
+        $this->cachePool = $cachePool;
+    }
+
+    /**
+     * @throws Exception If the cache pool was not previously set.
+     * @return CacheItemPoolInterface;
+     */
+    private function cachePool()
+    {
+        if (!isset($this->cachePool)) {
+            throw new Exception(
+                'Cache pool was not set.'
+            );
+        }
+        return $this->cachePool;
     }
 
     /**
@@ -548,7 +579,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     {
         $pattern = (string)$this->pattern();
         if ($obj instanceof ViewableInterface && $obj->view() !== null) {
-            return $obj->render($pattern);
+            return $obj->renderTemplate($pattern);
         } else {
             $cb = function ($matches) use ($obj) {
                 $method = trim($matches[1]);
@@ -575,73 +606,28 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     protected function loadObject($id)
     {
         if ($id instanceof ModelInterface) {
-            $obj = $id;
-
-            if (!isset(static::$objectCache[$obj->objType()][$obj->id()])) {
-                $this->addObjectToCache($obj);
-            }
-
-            return $obj;
+            return $id;
         }
 
-        $cached = $this->loadObjectFromCache($id);
-        if ($cached !== null) {
-            return $cached;
-        }
-
-        $obj = $this->loadObjectFromSource($id);
-
-        if ($obj !== null) {
-            $this->addObjectToCache($obj);
-        }
-
-        return $obj;
+        return $this->modelLoader()->load($id);
     }
 
     /**
-     * Retrieve an object from the storage source by its ID.
-     *
-     * @param mixed $id The object id.
-     * @return null|ModelInterface
+     * @return ModelLoader
      */
-    private function loadObjectFromSource($id)
-    {
-        $obj = $this->modelFactory()->create($this->objType());
-        $obj->load($id);
-
-        if ($obj->id()) {
-            return $obj;
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Retrieve an object from the cache store by its ID.
-     *
-     * @param mixed $id The object id.
-     * @return null|ModelInterface
-     */
-    private function loadObjectFromCache($id)
+    private function modelLoader()
     {
         $objType = $this->objType();
-        if (isset(static::$objectCache[$objType][$id])) {
-            return static::$objectCache[$objType][$id];
-        } else {
-            return null;
+        if (isset(static::$modelLoaders[$objType])) {
+            return static::$modelLoaders[$objType];
         }
-    }
 
-    /**
-     * Add an object to the cache store.
-     *
-     * @param ModelInterface $obj The object to store.
-     * @return ObjectProperty Chainable
-     */
-    private function addObjectToCache(ModelInterface $obj)
-    {
-        static::$objectCache[$this->objType()][$obj->id()] = $obj;
+        static::$modelLoaders[$objType] = new ModelLoader([
+            'obj_type'  => $objType,
+            'factory'   => $this->modelFactory(),
+            'cache'     => $this->cachePool()
+        ]);
 
-        return $this;
+        return static::$modelLoaders[$objType];
     }
 }
