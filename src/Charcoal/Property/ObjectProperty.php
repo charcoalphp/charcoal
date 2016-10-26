@@ -129,6 +129,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     private function setModelFactory(FactoryInterface $factory)
     {
         $this->modelFactory = $factory;
+
         return $this;
     }
 
@@ -143,6 +144,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
                 sprintf('Model factory not set on object property.')
             );
         }
+
         return $this->modelFactory;
     }
 
@@ -165,7 +167,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      * @throws Exception If the collection loader was not previously set.
      * @return CollectionLoader
      */
-    private function collectionLoader()
+    protected function collectionLoader()
     {
         if (!isset($this->collectionLoader)) {
             throw new Exception(
@@ -205,6 +207,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
                 'Cache pool was not set.'
             );
         }
+
         return $this->cachePool;
     }
 
@@ -221,6 +224,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
             );
         }
         $this->objType = $objType;
+
         return $this;
     }
 
@@ -235,6 +239,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
                 sprintf('No object type ("obj_type") defined. Invalid property "%s"', $this->ident())
             );
         }
+
         return $this->objType;
     }
 
@@ -251,6 +256,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
             );
         }
         $this->pattern = $pattern;
+
         return $this;
     }
 
@@ -280,7 +286,8 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
         } else {
             // Read from proto's key
             $proto = $this->proto();
-            $key = $proto->p($proto->key());
+            $key   = $proto->p($proto->key());
+
             return $key->sqlType();
         }
     }
@@ -292,7 +299,8 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     {
         // Read from proto's key
         $proto = $this->proto();
-        $key = $proto->p($proto->key());
+        $key   = $proto->p($proto->key());
+
         return $key->sqlPdoType();
     }
 
@@ -361,6 +369,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
         if (!is_scalar($val)) {
             return json_encode($val);
         }
+
         return $val;
     }
 
@@ -382,6 +391,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
         if ($this->proto === null) {
             $this->proto = $this->modelFactory()->get($this->objType());
         }
+
         return $this->proto;
     }
 
@@ -421,6 +431,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
 
             $names[] = $this->objPattern($obj);
         }
+
         return implode(', ', $names);
     }
 
@@ -434,6 +445,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     {
         unset($choices);
         $this->logger->debug('Choices can not be set for object properties. They are auto-generated from objects.');
+
         return $this;
     }
 
@@ -448,6 +460,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     {
         unset($choiceIdent, $choice);
         $this->logger->debug('Choices can not be added for object properties. They are auto-generated from objects.');
+
         return $this;
     }
 
@@ -562,7 +575,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
             'title' => $label
         ];
 
-        if (is_callable([ $obj, 'icon' ])) {
+        if (is_callable([$obj, 'icon'])) {
             $choice['icon'] = $obj->icon();
         }
 
@@ -591,6 +604,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
                     return '';
                 }
             };
+
             return preg_replace_callback('~\{\{\s*(.*?)\s*\}\}~i', $cb, $pattern);
         }
     }
@@ -623,9 +637,9 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
         }
 
         self::$modelLoaders[$objType] = new ModelLoader([
-            'obj_type'  => $objType,
-            'factory'   => $this->modelFactory(),
-            'cache'     => $this->cachePool()
+            'obj_type' => $objType,
+            'factory'  => $this->modelFactory(),
+            'cache'    => $this->cachePool()
         ]);
 
         return self::$modelLoaders[$objType];
