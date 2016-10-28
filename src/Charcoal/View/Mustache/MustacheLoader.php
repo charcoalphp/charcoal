@@ -57,14 +57,14 @@ class MustacheLoader extends AbstractLoader implements
             }
         }
 
-        $this->logger->debug(
-            sprintf(
-                'No matching templates found for "%1$s": %2$s',
-                $ident,
-                $filename
-            ),
-            $searchPath
-        );
+        // $this->logger->debug(
+        //     sprintf(
+        //         'No matching templates found for "%1$s": %2$s',
+        //         $ident,
+        //         $filename
+        //     ),
+        //     $searchPath
+        // );
 
         return $ident;
     }
