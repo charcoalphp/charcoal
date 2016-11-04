@@ -102,11 +102,6 @@ trait DescribablePropertyTrait
             $metadata->setPropertyObject($propertyIdent, $property);
         }
 
-        $propertyValue = $this->propertyValue($propertyIdent);
-        if ($propertyValue !== null || $propertyIdent === $this->key()) {
-            $property->setVal($propertyValue);
-        }
-
         return $property;
     }
 
