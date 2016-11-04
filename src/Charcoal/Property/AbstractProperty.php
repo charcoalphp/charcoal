@@ -286,8 +286,9 @@ abstract class AbstractProperty extends AbstractEntity implements
     /**
      * Parse the given value.
      *
-     * Note: the method returns the current value intact. Other properties can use this method to parse their values,
-     * such as {@see \Charcoal\Property\ObjectProperty::parseVal()} who could parse objects into object IDs.
+     * > Note: the base method (defined here) returns the current value intact.
+     * > Other properties can reimplement this method to parse their values,
+     * > such as {@see \Charcoal\Property\ObjectProperty::parseVal()} who could parse objects into object IDs.
      *
      * @param  mixed $val A value to be parsed.
      * @return mixed Returns the parsed value.
@@ -693,19 +694,6 @@ abstract class AbstractProperty extends AbstractEntity implements
             return false;
         }
         return true;
-    }
-
-    /**
-     * @param string $propertyIdent The ident of the property to retrieve.
-     * @return mixed
-     */
-    protected function propertyValue($propertyIdent)
-    {
-        if (isset($this->{$propertyIdent})) {
-            return $this->{$propertyIdent};
-        } else {
-            return null;
-        }
     }
 
     /**

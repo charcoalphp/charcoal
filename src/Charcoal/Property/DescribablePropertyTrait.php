@@ -47,7 +47,7 @@ trait DescribablePropertyTrait
      * @throws RuntimeException If the property factory was not previously set.
      * @return FactoryInterface
      */
-    public function propertyFactory()
+    protected function propertyFactory()
     {
         if ($this->propertyFactory === null) {
             throw new RuntimeException(
@@ -212,12 +212,4 @@ trait DescribablePropertyTrait
 
         return isset($props[$propertyIdent]);
     }
-
-    /**
-     * Retrieve the value of the given property.
-     *
-     * @param string $propertyIdent The property identifier to retrieve the value for.
-     * @return mixed
-     */
-    abstract protected function propertyValue($propertyIdent);
 }
