@@ -10,7 +10,6 @@ use \Charcoal\Property\StringProperty;
  */
 class TextProperty extends StringProperty
 {
-
     /**
      * @return string
      */
@@ -20,6 +19,9 @@ class TextProperty extends StringProperty
     }
 
     /**
+     * String's default max length is overridden for the text property.
+     * (0 = no max length).
+     *
      * @return integer
      */
     public function defaultMaxLength()

@@ -80,13 +80,11 @@ class DateTimeProperty extends AbstractProperty
      * AbstractProperty > setVal(). Ensure `DateTime` object in val.
      *
      * @param string|DateTime $val The value to set.
-     * @throws InvalidArgumentException If the value is invalid.
-     * @return DateTimeProperty Chainable
+     * @return DateTime|null
      */
-    public function setVal($val)
+    public function parseVal($val)
     {
-        $this->val = $this->dateTimeVal($val);
-        return $this;
+        return $this->dateTimeVal($val);
     }
 
     /**
@@ -127,7 +125,9 @@ class DateTimeProperty extends AbstractProperty
             if ($this->allowNull()) {
                 return null;
             } else {
-                throw new Exception('Invalid date/time value');
+                throw new Exception(
+                    'Invalid date/time value'
+                );
             }
         }
     }
@@ -137,9 +137,8 @@ class DateTimeProperty extends AbstractProperty
      *
      * > Warning: Passing a value as a parameter sets this value in the objects (calls setVal())
      *
-     * @param mixed $val Optional.
-     * @todo   Adapt for l10n
-     * @return string|null
+     * @param mixed $val The value to display.
+     * @return string
      */
     public function displayVal($val)
     {
@@ -155,7 +154,7 @@ class DateTimeProperty extends AbstractProperty
     /**
      * @param mixed $val Value to convert to DateTime.
      * @throws InvalidArgumentException If the value is not a valid datetime.
-     * @return DateTime
+     * @return DateTime|null
      */
     private function dateTimeVal($val)
     {

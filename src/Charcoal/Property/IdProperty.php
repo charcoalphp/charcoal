@@ -181,6 +181,7 @@ class IdProperty extends AbstractProperty
 
         if (!$val) {
             $val = $this->autoGenerate();
+            // @TODO Can this setVal call be removed?
             $this->setVal($val);
         }
 

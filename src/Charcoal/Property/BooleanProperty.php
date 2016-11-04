@@ -152,15 +152,16 @@ class BooleanProperty extends AbstractProperty
      */
     public function choices()
     {
+        $val = $this->val();
         return [
             [
                 'label'    => 'True',
-                'selected' => !!($this->val()),
+                'selected' => !!$val,
                 'value'    => 1
             ],
             [
                 'label'    => 'False',
-                'selected' => !($this->val()),
+                'selected' => !$val,
                 'value'    => 0
             ]
         ];
