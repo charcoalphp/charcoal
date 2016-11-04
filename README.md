@@ -29,14 +29,13 @@ The basic property interface (API) requires / provides the following members:
 
 | Name           | (V) | Type                | Description
 | -------------- | :-: | ------------------- | -----------
-| **val**        |     | _mixed_             |  The actual property's data value.
+| **ident**      |     | _string_            | The property idenfifier (typically, its containing object matching property name).
 | **label**      |     | _TranslationString_ | ...
 | **l10n**       |     | _bool_              | If true, then the data should be stored in a l10n-aware structure (be translatable).s
 | **hidden**     |     | _bool_              |
 | **multiple**   |     | _bool_              | Multiple values can be held and stored, if true.
 | **required**   |  ✓  | _bool_              |
 | **unique**     |  ✓  | _bool_              |
-| **allow_null** |  ✓  | _bool_              |
 | **storable**   |     | _bool_              |
 | **active**     |     | _bool_              |
 <small>(V) indicates options used in validation</small>
@@ -45,12 +44,9 @@ The basic property interface (API) requires / provides the following members:
 
 ### Data retrieval
 
-The _raw_ data held in a property can be accessed with `setVal()` and `val()`.
-To get a string-safe, displaybale value, use `displayVal()`. To get the storage-ready format, use `storageSal()`.
-
-> ⚠ Even for string properties `val()` is not sure to return string values (a property can be multiple, or l10n, for example) so use `displayVal()` when working with displayable stirng is crucial.
-
-The `val()` value will be used for serialization and json serialization.
+- To get a normalized value, use the `parseVal($val)` method.
+- To get a string-safe, displaybale value, use `displayVal($val)`. 
+- To get the storage-ready format, use `storageVal($val)`. 
 
 ## Default validation
 
@@ -64,9 +60,9 @@ Validation is provided with a `Validator` object, from charcoal-core.
 
 Properties need 3 method to integrate with a SQL source:
 
--   `sql_extra()` _string_ Raw SQL string that will be appended to
--   `sql_type()` _string_ The SQL column type (ex: `VARCHAR(16)`)
--   `sql_pdo_type()` _integer_ The PDO column type (ex: `PDO::PARAM_STR`)
+-   `sqlExtra()` _string_ Raw SQL string that will be appended to
+-   `sqlType()` _string_ The SQL column type (ex: `VARCHAR(16)`)
+-   `sqlPdoType()` _integer_ The PDO column type (ex: `PDO::PARAM_STR`)
 
 >  Those methods are _abstract_ and therefore must be implemented in actual properties.
 
@@ -282,7 +278,7 @@ Object properties hold a reference to an external object of a certain type.
 
 ### Values
 
-The target's `identifer` (determined by its _obj-type_'s `key`, which is typically "id") is the only thing held in the value / stored in the database. When displayed (with `display_val()`), a string representation of the object should be rendered.
+The target's `identifer` (determined by its _obj-type_'s `key`, which is typically "id") is the only thing held in the value / stored in the database. When displayed (with `displayVal()`), a string representation of the object should be rendered.
 
 ### Object Property options
 
