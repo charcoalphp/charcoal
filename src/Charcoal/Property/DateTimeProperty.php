@@ -100,7 +100,7 @@ class DateTimeProperty extends AbstractProperty
         $val = $this->dateTimeVal($val);
 
         if ($val instanceof DateTimeInterface) {
-            return $this->val->format('Y-m-d H:i:s');
+            return $val->format('Y-m-d H:i:s');
         } elseif (is_string($val)) {
             return $val;
         } else {
@@ -362,24 +362,5 @@ class DateTimeProperty extends AbstractProperty
     public function sqlPdoType()
     {
         return PDO::PARAM_STR;
-    }
-
-    /**
-     * Json Serialize
-     *
-     * @return mixed
-     */
-    public function jsonSerialize()
-    {
-        $val = $this->val();
-        if ($val === null) {
-            return null;
-        }
-
-        if ($val instanceof DateTimeInterface) {
-            return $val->format(DateTime::ATOM);
-        } else {
-            return $val;
-        }
     }
 }
