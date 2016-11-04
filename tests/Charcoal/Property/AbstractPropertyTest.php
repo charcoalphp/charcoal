@@ -3,11 +3,14 @@
 namespace Charcoal\Tests\Property;
 
 /**
- * ## TODOs
- * - 2015-03-12:
+ *
  */
 class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * Object under Test
+     * @var AbstractProperty
+     */
     public $obj;
 
     public function setUp()

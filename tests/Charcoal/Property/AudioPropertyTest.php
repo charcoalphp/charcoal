@@ -19,16 +19,13 @@ class AudioPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testDefauls()
     {
-        $obj = $this->obj;
-
-        $this->assertEquals(0, $obj->minLength());
-        $this->assertEquals(0, $obj->maxLength());
+        $this->assertEquals(0, $this->obj->minLength());
+        $this->assertEquals(0, $this->obj->maxLength());
     }
 
     public function testType()
     {
-        $obj = $this->obj;
-        $this->assertEquals('audio', $obj->type());
+        $this->assertEquals('audio', $this->obj->type());
     }
 
     public function testSetData()
