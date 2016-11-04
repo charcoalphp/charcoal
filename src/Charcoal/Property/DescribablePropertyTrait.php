@@ -103,7 +103,7 @@ trait DescribablePropertyTrait
         }
 
         $propertyValue = $this->propertyValue($propertyIdent);
-        if ($propertyValue !== null || $propertyIdent === $this->key()) {
+        if ($propertyValue !== null || $property->allowNull() || $propertyIdent === $this->key()) {
             $property->setVal($propertyValue);
         }
 
