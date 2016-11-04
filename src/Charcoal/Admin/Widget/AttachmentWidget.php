@@ -198,8 +198,8 @@ class AttachmentWidget extends AdminWidget implements
 
             $search = sprintf(
                 '(?<=%1$s=["\'])(?!%2$s)(\S+)(?=["\'])',
-                implode('=["\']|', array_map('preg_quote', $attr)),
-                implode('|', array_map('preg_quote', $uri))
+                implode('=["\']|', array_map('preg_quote', $attr, [ '~' ])),
+                implode('|', array_map('preg_quote', $uri, [ '~' ]))
             );
         }
 
@@ -216,11 +216,11 @@ class AttachmentWidget extends AdminWidget implements
             if (preg_match('~'.$search.'~i', $text)) {
                 $base = $helper->render('{{ baseUrl }}');
                 return preg_replace('~'.$search.'~i', $base.'$1', $text);
-            } elseif ($this->baseUrl instanceof \Psr\Http\Message\UriInterface) {
+            }/* elseif ($this->baseUrl instanceof \Psr\Http\Message\UriInterface) {
                 if ($text && strpos($text, ':') === false && !in_array($text[0], [ '/', '#', '?' ])) {
                     return $this->baseUrl->withPath($text);
                 }
-            }
+            }*/
 
             return $text;
         };
