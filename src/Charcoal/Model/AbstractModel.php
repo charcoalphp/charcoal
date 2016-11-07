@@ -86,6 +86,9 @@ abstract class AbstractModel extends AbstractEntity implements
         if (isset($data['property_factory'])) {
             $this->setPropertyFactory($data['property_factory']);
         }
+        if (isset($data['metadata'])) {
+            $this->setMetadata($data['metadata']);
+        }
         if (isset($data['metadata_loader'])) {
             $this->setMetadataLoader($data['metadata_loader']);
         }
@@ -102,9 +105,6 @@ abstract class AbstractModel extends AbstractEntity implements
         if (isset($data['view'])) {
             $this->setView($data['view']);
         }
-
-        /** @todo Needs fix. Must be manually triggered after setting data for metadata to work */
-        $this->metadata();
 
         if (isset($data['container'])) {
             $this->setDependencies($data['container']);
