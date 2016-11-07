@@ -130,7 +130,7 @@ class BooleanProperty extends AbstractProperty
     /**
      * Get the SQL type (Storage format)
      *
-     * Stored as `TINYINT(1) UNSIGNED`
+     * Boolean properties are stored as `TINYINT(1) UNSIGNED`
      *
      * @return string The SQL type
      */
@@ -165,13 +165,5 @@ class BooleanProperty extends AbstractProperty
                 'value'    => 0
             ]
         ];
-    }
-
-    /**
-     * @return mixed
-     */
-    public function save()
-    {
-        return $this->val();
     }
 }

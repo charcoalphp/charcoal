@@ -131,19 +131,6 @@ class IpProperty extends AbstractProperty
     }
 
     /**
-     * Prepare the value for save.
-     *
-     * If no ID is set upon first save, then auto-generate it if necessary.
-     *
-     * @see Charcoal_Object::save()
-     * @return mixed
-     */
-    public function save()
-    {
-        return $this->val();
-    }
-
-    /**
      * Get the IP value as a long integer.
      *
      * @param mixed $val The value to convert (if necessary) to integer.

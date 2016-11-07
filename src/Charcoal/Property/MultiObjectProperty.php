@@ -154,12 +154,4 @@ class MultiObjectProperty extends AbstractProperty
     {
         return 0;
     }
-
-    /**
-     * @return mixed
-     */
-    public function save()
-    {
-        return $this->val();
-    }
 }

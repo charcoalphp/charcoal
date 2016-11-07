@@ -172,17 +172,12 @@ class IdProperty extends AbstractProperty
      *
      * If no ID is set upon first save, then auto-generate it if necessary.
      *
-     * @see Charcoal_Object::save()
      * @return mixed
      */
-    public function save()
+    public function save($val)
     {
-        $val = $this->val();
-
         if (!$val) {
             $val = $this->autoGenerate();
-            // @TODO Can this setVal call be removed?
-            $this->setVal($val);
         }
 
         return $val;

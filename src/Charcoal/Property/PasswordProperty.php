@@ -23,15 +23,13 @@ class PasswordProperty extends StringProperty
     /**
      * @return string
      */
-    public function save()
+    public function save($val)
     {
-        $password = $this->val();
-        $val = $this->val();
+        $password = $val;
 
         // Assuming the password_needs_rehash is set to true is the hash given isn't a hash
         if (password_needs_rehash($password, PASSWORD_DEFAULT)) {
             $val = password_hash($password, PASSWORD_DEFAULT);
-            $this->setVal($val);
         }
 
         return $val;

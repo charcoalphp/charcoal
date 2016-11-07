@@ -629,8 +629,6 @@ abstract class AbstractProperty extends AbstractEntity implements
         return $this->notes;
     }
 
-
-
     /**
      * The property's default validation methods/
      *
@@ -715,9 +713,14 @@ abstract class AbstractProperty extends AbstractEntity implements
     }
 
     /**
+     * @param mixed The value, at time of saving.
      * @return mixed
      */
-    abstract public function save();
+    public function save($val)
+    {
+        // By default, nothing to do
+        return $val;
+    }
 
     /**
      * @param string $type The display type.

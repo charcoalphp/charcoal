@@ -292,14 +292,6 @@ class DateTimeProperty extends AbstractProperty
     }
 
     /**
-     * @return mixed
-     */
-    public function save()
-    {
-        return $this->val();
-    }
-
-    /**
      * @return array
      */
     public function validationMethods()

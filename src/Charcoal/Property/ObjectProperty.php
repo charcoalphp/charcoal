@@ -360,14 +360,6 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
-     * @return mixed
-     */
-    public function save()
-    {
-        return $this->val();
-    }
-
-    /**
      * Retrieve a singleton of the {self::$objType} for prototyping.
      *
      * @return ModelInterface
@@ -498,6 +490,8 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
 
     /**
      * Get the choices array map.
+     *
+     * Required by `SelectablePropertyInterface`.
      *
      * @return array
      */

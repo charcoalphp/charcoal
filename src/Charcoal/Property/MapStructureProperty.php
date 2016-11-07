@@ -9,7 +9,7 @@ use \PDO;
 use \Charcoal\Property\AbstractProperty;
 
 /**
- * Audio Property.
+ * Map Structure Property.
  */
 class MapStructureProperty extends AbstractProperty
 {
@@ -45,13 +45,5 @@ class MapStructureProperty extends AbstractProperty
     public function sqlPdoType()
     {
         return PDO::PARAM_STR;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function save()
-    {
-        return $this->val();
     }
 }

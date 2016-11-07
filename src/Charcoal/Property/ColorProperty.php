@@ -161,14 +161,6 @@ class ColorProperty extends AbstractProperty
     }
 
     /**
-     * @return mixed
-     */
-    public function save()
-    {
-        return $this->val();
-    }
-
-    /**
      * @param string|array $val The color array or string to parse.
      * @return array The parsed `[r,g,b,a]` color array.
      */

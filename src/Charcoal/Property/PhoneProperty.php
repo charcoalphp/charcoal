@@ -6,6 +6,8 @@ use \Charcoal\Property\StringProperty;
 
 /**
  * Telephone Property
+ *
+ * Phone numbers.
  */
 class PhoneProperty extends StringProperty
 {
@@ -18,6 +20,8 @@ class PhoneProperty extends StringProperty
     }
 
     /**
+     * Set StringProperty's `defaultMaxLength` to 16 for phone numbers.
+     *
      * @return integer
      */
     public function defaultMaxLength()
