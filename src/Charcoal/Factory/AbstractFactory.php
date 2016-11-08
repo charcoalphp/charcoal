@@ -30,7 +30,7 @@ abstract class AbstractFactory implements FactoryInterface
     /**
      * @var array $resolved
      */
-    static protected $resolved = [];
+    protected $resolved = [];
 
     /**
      * If a base class is set, then it must be ensured that the
@@ -132,8 +132,8 @@ abstract class AbstractFactory implements FactoryInterface
         }
 
         $pool = get_called_class();
-        if (isset(self::$resolved[$pool][$type])) {
-            $classname = self::$resolved[$pool][$type];
+        if (isset($this->resolved[$pool][$type])) {
+            $classname = $this->resolved[$pool][$type];
         } else {
             if ($this->isResolvable($type) === false) {
                 $defaultClass = $this->defaultClass();
@@ -155,7 +155,7 @@ abstract class AbstractFactory implements FactoryInterface
 
             // Create the object from the type's class name.
             $classname = $this->resolve($type);
-            self::$resolved[$pool][$type] = $classname;
+            $this->resolved[$pool][$type] = $classname;
         }
 
         $obj = $this->createClass($classname, $args);
