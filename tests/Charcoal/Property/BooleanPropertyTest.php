@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Property;
 
+use \Psr\Log\NullLogger;
+
 use \Charcoal\Property\BooleanProperty as BooleanProperty;
 
 /**
@@ -17,7 +19,9 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->obj = new BooleanProperty();
+        $this->obj = new BooleanProperty([
+            'logger' => new NullLogger()
+        ]);
     }
 
     /**
@@ -169,10 +173,7 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
     {
         $obj = $this->obj;
 
-        $obj->setVal(true);
-        $this->assertTrue($obj->save());
-
-        $obj->setVal(false);
-        $this->assertNotTrue($obj->save());
+        $this->assertTrue($obj->save(true));
+        $this->assertNotTrue($obj->save(false));
     }
 }

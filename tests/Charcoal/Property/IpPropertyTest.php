@@ -4,6 +4,8 @@ namespace Charcoal\Tests\Property;
 
 use \PDO;
 
+use \Psr\Log\NullLogger;
+
 use \Charcoal\Property\IpProperty;
 
 /**
@@ -15,7 +17,9 @@ class IpPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->obj = new IpProperty();
+        $this->obj = new IpProperty([
+            'logger' => new NullLogger()
+        ]);
     }
 
     public function testType()

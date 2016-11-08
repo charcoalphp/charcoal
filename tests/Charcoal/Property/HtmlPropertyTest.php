@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Property;
 
+use \Psr\Log\NullLogger;
+
 use \Charcoal\Property\HtmlProperty;
 
 /**
@@ -13,7 +15,9 @@ class HtmlPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->obj = new HtmlProperty();
+        $this->obj = new HtmlProperty([
+            'logger' => new NullLogger()
+        ]);
     }
 
     public function testType()

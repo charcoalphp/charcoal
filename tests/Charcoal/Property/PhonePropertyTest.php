@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Property;
 
+use \Psr\Log\NullLogger;
+
 use \Charcoal\Property\PhoneProperty;
 
 /**
@@ -19,7 +21,9 @@ class PhonePropertyTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->obj = new PhoneProperty();
+        $this->obj = new PhoneProperty([
+            'logger' => new NullLogger()
+        ]);
     }
 
     /**

@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Property;
 
+use \Psr\Log\NullLogger;
+
 use \Charcoal\Property\LangProperty;
 
 /**
@@ -17,7 +19,9 @@ class LangPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->obj = new LangProperty();
+        $this->obj = new LangProperty([
+            'logger' => new NullLogger()
+        ]);
     }
 
     public function testType()

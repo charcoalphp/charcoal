@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Property;
 
+use \Psr\Log\NullLogger;
+
 use \Charcoal\Property\StringProperty;
 
 /**
@@ -21,7 +23,9 @@ class StringPropertyTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         mb_internal_encoding('UTF-8');
-        $this->obj = new StringProperty();
+        $this->obj = new StringProperty([
+            'logger' => new NullLogger()
+        ]);
     }
 
     /**

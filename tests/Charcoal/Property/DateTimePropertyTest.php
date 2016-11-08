@@ -4,6 +4,8 @@ namespace Charcoal\Tests\Property;
 
 use \DateTime;
 
+use \Psr\Log\NullLogger;
+
 use \Charcoal\Property\DateTimeProperty;
 
 /**
@@ -22,7 +24,9 @@ class DateTimePropertyTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->obj = new DateTimeProperty();
+        $this->obj = new DateTimeProperty([
+            'logger' => new NullLogger()
+        ]);
     }
 
     /**
@@ -195,10 +199,9 @@ class DateTimePropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testSave()
     {
-        $this->assertEquals(null, $this->obj->save());
+        $this->assertEquals(null, $this->obj->save(null));
 
-        $this->obj->setVal('2015-01-01');
-        $this->assertEquals(new DateTime('2015-01-01'), $this->obj->save());
+        $this->assertEquals(new DateTime('2015-01-01'), $this->obj->save('2015-01-01'));
     }
 
     /**

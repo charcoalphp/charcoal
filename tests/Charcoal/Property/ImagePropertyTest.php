@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Property;
 
+use \Psr\Log\NullLogger;
+
 use \Charcoal\Property\ImageProperty;
 
 /**
@@ -14,7 +16,9 @@ class ImagePropertyTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->obj = new ImageProperty();
+        $this->obj = new ImageProperty([
+            'logger' => new NullLogger()
+        ]);
     }
 
     public function testType()

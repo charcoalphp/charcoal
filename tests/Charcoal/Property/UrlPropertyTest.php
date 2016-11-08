@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Property;
 
+use \Psr\Log\NullLogger;
+
 use \Charcoal\Property\UrlProperty;
 
 /**
@@ -13,7 +15,9 @@ class UrlPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->obj = new UrlProperty();
+        $this->obj = new UrlProperty([
+            'logger' => new NullLogger()
+        ]);
     }
 
     /**

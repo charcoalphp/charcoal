@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Property;
 
+use \Psr\Log\NullLogger;
+
 use \Charcoal\Property\NumberProperty;
 
 /**
@@ -16,7 +18,9 @@ class NumberPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->obj = new NumberProperty();
+        $this->obj = new NumberProperty([
+            'logger' => new NullLogger()
+        ]);
     }
 
     public function testType()

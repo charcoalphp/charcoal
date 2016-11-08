@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Property;
 
+use \Psr\Log\NullLogger;
+
 use \Charcoal\Property\TextProperty;
 
 /**
@@ -14,7 +16,9 @@ class TextPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->obj = new TextProperty();
+        $this->obj = new TextProperty([
+            'logger' => new NullLogger()
+        ]);
     }
 
     /**

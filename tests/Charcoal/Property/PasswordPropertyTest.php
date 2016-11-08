@@ -2,7 +2,9 @@
 
 namespace Charcoal\Tests\Property;
 
-use \Charcoal\Property\PasswordProperty as PasswordProperty;
+use \Psr\Log\NullLogger;
+
+use \Charcoal\Property\PasswordProperty;
 
 /**
  * ## TODOs
@@ -12,7 +14,9 @@ class PasswordPropertyTest extends \PHPUnit_Framework_TestCase
 {
     public function testType()
     {
-        $obj = new PasswordProperty();
+        $obj = new PasswordProperty([
+            'logger' => new NullLogger()
+        ]);
         $this->assertEquals('password', $obj->type());
     }
 }
