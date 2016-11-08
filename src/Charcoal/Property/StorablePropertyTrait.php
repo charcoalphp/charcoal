@@ -114,8 +114,6 @@ trait StorablePropertyTrait
      */
     private function fieldVal($fieldIdent, $val)
     {
-        //$val = $this->val();
-
         if ($val === null) {
             return null;
         }
