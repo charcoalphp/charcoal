@@ -21,6 +21,7 @@ class PasswordProperty extends StringProperty
     }
 
     /**
+     * @param mixed $val The value, at time of saving.
      * @return string
      */
     public function save($val)

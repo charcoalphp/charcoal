@@ -463,6 +463,7 @@ class FileProperty extends AbstractProperty
     }
 
     /**
+     * @param mixed $val The value, at time of saving.
      * @return mixed
      */
     public function save($val)

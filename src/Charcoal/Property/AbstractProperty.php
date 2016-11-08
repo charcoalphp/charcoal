@@ -713,7 +713,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     }
 
     /**
-     * @param mixed The value, at time of saving.
+     * @param mixed $val The value, at time of saving.
      * @return mixed
      */
     public function save($val)
