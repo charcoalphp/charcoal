@@ -31,11 +31,11 @@ class StructureProperty extends AbstractProperty
      *
      * @param string|array $val The value to set.
      * @throws InvalidArgumentException If the value is invalid.
-     * @return DateTimeProperty Chainable
+     * @return array
      */
-    public function parseVal($val)
+    public function parseOne($val)
     {
-        if ($val === null) {
+        if ($val === null || $val === '') {
             if ($this->allowNull()) {
                 return null;
             } else {

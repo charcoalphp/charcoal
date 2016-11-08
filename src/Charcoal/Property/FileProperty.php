@@ -471,6 +471,7 @@ class FileProperty extends AbstractProperty
         // Current ident
         $i = $this->ident();
 
+        // Upload file, if in request.
         if (isset($_FILES[$i])
             && (isset($_FILES[$i]['name']) && $_FILES[$i]['name'])
             && (isset($_FILES[$i]['tmp_name']) && $_FILES[$i]['tmp_name'])) {

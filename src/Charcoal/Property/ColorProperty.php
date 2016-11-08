@@ -55,9 +55,9 @@ class ColorProperty extends AbstractProperty
      * @throws InvalidArgumentException If the value does not match property's options.
      * @return ColorProperty Chainable
      */
-    public function parseVal($val)
+    public function parseOne($val)
     {
-        if ($val === null) {
+        if ($val === null || $val === '') {
             if ($this->allowNull()) {
                 return null;
             } else {
@@ -66,23 +66,7 @@ class ColorProperty extends AbstractProperty
                 );
             }
         }
-        if ($this->multiple()) {
-            if (is_string($val)) {
-                $val = explode($this->multipleSeparator(), $val);
-            }
-            if (!is_array($val)) {
-                throw new InvalidArgumentException(
-                    'Val is multiple so it must be a string (convertable to array by separator) or an array'
-                );
-            }
-            $ret = [];
-            foreach ($val as $v) {
-                $ret[] = $this->colorVal($v);
-            }
-            return $ret;
-        } else {
-            return $this->colorVal($val);
-        }
+        return $this->colorVal($val);
     }
 
     /**

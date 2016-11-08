@@ -82,7 +82,7 @@ class DateTimeProperty extends AbstractProperty
      * @param string|DateTime $val The value to set.
      * @return DateTime|null
      */
-    public function parseVal($val)
+    public function parseOne($val)
     {
         return $this->dateTimeVal($val);
     }

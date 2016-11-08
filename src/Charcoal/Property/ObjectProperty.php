@@ -310,25 +310,13 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      * @param mixed $val Value to be parsed.
      * @return mixed
      */
-    public function parseVal($val)
+    public function parseOne($val)
     {
         if ($val instanceof StorableInterface) {
             return $val->id();
+        } else {
+            return $val;
         }
-
-        if (is_array($val)) {
-            $out = [];
-            foreach ($val as $i => $v) {
-                if ($v instanceof StorableInterface) {
-                    $out[] = $v->id();
-                } elseif (strlen($v)) {
-                    $out[] = $v;
-                }
-            }
-            $val = $out;
-        }
-
-        return $val;
     }
 
     /**

@@ -265,10 +265,10 @@ abstract class AbstractProperty extends AbstractEntity implements
      * @throws InvalidArgumentException If the value does not match property settings.
      * @return mixed Returns the parsed value.
      */
-    public function parseVal($val)
+    final public function parseVal($val)
     {
         if ($this->allowNull()) {
-            if ($val === null || $val === '') {
+            if ($val === null) {
                 return null;
             }
         } elseif ($val === null) {
@@ -287,8 +287,21 @@ abstract class AbstractProperty extends AbstractEntity implements
                     'Value is multiple. It must be a string (convertable to array by separator) or an array'
                 );
             }
+
+            $val = array_map([$this, 'parseOne'], $val);
+        } else {
+            $val = $this->parseOne($val);
         }
 
+        return $val;
+    }
+
+    /**
+     * @param mixed $val A single value to parse.
+     * @return mixed The parsed value.
+     */
+    public function parseOne($val)
+    {
         return $val;
     }
 
