@@ -55,12 +55,11 @@ class ColorProperty extends AbstractProperty
      * @throws InvalidArgumentException If the value does not match property's options.
      * @return ColorProperty Chainable
      */
-    public function setVal($val)
+    public function parseVal($val)
     {
         if ($val === null) {
             if ($this->allowNull()) {
-                $this->val = null;
-                return $this;
+                return null;
             } else {
                 throw new InvalidArgumentException(
                     'Val can not be null (Not allowed)'
@@ -80,11 +79,10 @@ class ColorProperty extends AbstractProperty
             foreach ($val as $v) {
                 $ret[] = $this->colorVal($v);
             }
-            $this->val = $ret;
+            return $ret;
         } else {
-            $this->val = $this->colorVal($val);
+            return $this->colorVal($val);
         }
-        return $this;
     }
 
     /**
@@ -160,14 +158,6 @@ class ColorProperty extends AbstractProperty
     public function sqlPdoType()
     {
         return PDO::PARAM_STR;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function save()
-    {
-        return $this->val();
     }
 
     /**

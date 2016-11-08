@@ -4,8 +4,6 @@ namespace Charcoal\Property;
 
 use \Exception;
 use \InvalidArgumentException;
-use \JsonSerializable;
-use \Serializable;
 
 // Dependencies from PSR-3 (Logger)
 use \Psr\Log\LoggerAwareInterface;
@@ -39,8 +37,6 @@ use \Charcoal\Property\StorablePropertyTrait;
  * An abstract class that implements the full `PropertyInterface`.
  */
 abstract class AbstractProperty extends AbstractEntity implements
-    JsonSerializable,
-    Serializable,
     PropertyInterface,
     DescribableInterface,
     DescribablePropertyInterface,
@@ -151,6 +147,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     public function __construct(array $data = null)
     {
         if (!isset($data['logger'])) {
+            trigger_error('Logger not set');
             $data['logger'] = new NullLogger();
         }
         $this->setLogger($data['logger']);
@@ -239,16 +236,40 @@ abstract class AbstractProperty extends AbstractEntity implements
      * Set the property's value.
      *
      * @param  mixed $val The property (raw) value.
-     * @throws InvalidArgumentException If the value is invalid (NULL or not multiple when supposed to).
      * @return PropertyInterface Chainable
      */
-    public function setVal($val)
+    final public function setVal($val)
+    {
+        $this->val = $this->parseVal($val);
+        return $this;
+    }
+
+    /**
+     * Retrieve the property's value.
+     *
+     * @return mixed
+     */
+    final public function val()
+    {
+        return $this->val;
+    }
+
+    /**
+     * Parse the given value.
+     *
+     * > Note: the base method (defined here) returns the current value intact.
+     * > Other properties can reimplement this method to parse their values,
+     * > such as {@see \Charcoal\Property\ObjectProperty::parseVal()} who could parse objects into object IDs.
+     *
+     * @param  mixed $val The value to be parsed (normalized).
+     * @throws InvalidArgumentException If the value does not match property settings.
+     * @return mixed Returns the parsed value.
+     */
+    public function parseVal($val)
     {
         if ($this->allowNull()) {
             if ($val === null || $val === '') {
-                $this->val = null;
-
-                return $this;
+                return null;
             }
         } elseif ($val === null) {
             throw new InvalidArgumentException(
@@ -268,32 +289,6 @@ abstract class AbstractProperty extends AbstractEntity implements
             }
         }
 
-        $this->val = $val;
-
-        return $this;
-    }
-
-    /**
-     * Retrieve the property's value.
-     *
-     * @return mixed
-     */
-    public function val()
-    {
-        return $this->val;
-    }
-
-    /**
-     * Parse the given value.
-     *
-     * Note: the method returns the current value intact. Other properties can use this method to parse their values,
-     * such as {@see \Charcoal\Property\ObjectProperty::parseVal()} who could parse objects into object IDs.
-     *
-     * @param  mixed $val A value to be parsed.
-     * @return mixed Returns the parsed value.
-     */
-    public function parseVal($val)
-    {
         return $val;
     }
 
@@ -634,8 +629,6 @@ abstract class AbstractProperty extends AbstractEntity implements
         return $this->notes;
     }
 
-
-
     /**
      * The property's default validation methods/
      *
@@ -696,19 +689,6 @@ abstract class AbstractProperty extends AbstractEntity implements
     }
 
     /**
-     * @param string $propertyIdent The ident of the property to retrieve.
-     * @return mixed
-     */
-    protected function propertyValue($propertyIdent)
-    {
-        if (isset($this->{$propertyIdent})) {
-            return $this->{$propertyIdent};
-        } else {
-            return null;
-        }
-    }
-
-    /**
      * @param array $data Optional. Metadata data.
      * @return PropertyMetadata
      */
@@ -733,40 +713,13 @@ abstract class AbstractProperty extends AbstractEntity implements
     }
 
     /**
+     * @param mixed $val The value, at time of saving.
      * @return mixed
      */
-    abstract public function save();
-
-    /**
-     * Serializable > serialize()
-     *
-     * @return string
-     */
-    public function serialize()
+    public function save($val)
     {
-        $data = $this->val();
-        return serialize($data);
-    }
-    /**
-     * Serializable > unsierialize()
-     *
-     * @param string $data Serialized data.
-     * @return void
-     */
-    public function unserialize($data)
-    {
-        $data = unserialize($data);
-        $this->setVal($data);
-    }
-
-    /**
-     * JsonSerializable > jsonSerialize()
-     *
-     * @return mixed
-     */
-    public function jsonSerialize()
-    {
-        return $this->val();
+        // By default, nothing to do
+        return $this->parseVal($val);
     }
 
     /**
@@ -787,12 +740,11 @@ abstract class AbstractProperty extends AbstractEntity implements
         if (!$this->displayType) {
             $meta = $this->metadata();
 
-            // text display outputs the val as text
-            $default = 'charcoal/admin/property/display/text';
-
             // This default would be defined in type-property.json (@see charcoal-property/metadata)
             if (isset($meta['admin']) && isset($meta['admin']['display_type'])) {
                 $default = $meta['admin']['display_type'];
+            } else {
+                $default = 'charcoal/admin/property/display/text';
             }
             $this->setDisplayType($default);
         }
@@ -804,7 +756,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      * @param string $ident The display ident (ex: charcoal/admin/property/display/text).
      * @return array Should ALWAYS be an array.
      */
-    public function viewOptions($ident = null)
+    final public function viewOptions($ident = null)
     {
         // No options defined
         if (!$this->viewOptions) {
@@ -831,7 +783,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      * @param array $viewOpts View options.
      * @return PropertyInterface Chainable
      */
-    public function setViewOptions(array $viewOpts = [])
+    final public function setViewOptions(array $viewOpts = [])
     {
         $this->viewOptions = $viewOpts;
         return $this;

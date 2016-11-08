@@ -3,6 +3,9 @@
 namespace Charcoal\Tests\Property;
 
 use \InvalidArgumentException;
+
+use \Psr\Log\NullLogger;
+
 use \Charcoal\Property\FileProperty;
 
 /**
@@ -15,7 +18,9 @@ class FilePropertyTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->obj = new FileProperty();
+        $this->obj = new FileProperty([
+            'logger' => new NullLogger()
+        ]);
     }
 
     public function testConstructor()

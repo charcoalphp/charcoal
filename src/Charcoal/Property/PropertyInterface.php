@@ -141,4 +141,10 @@ interface PropertyInterface
      * @return boolean
      */
     public function active();
+
+    /**
+     * @param mixed $val The value, at time of saving.
+     * @return mixed
+     */
+    public function save($val);
 }

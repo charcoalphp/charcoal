@@ -8,8 +8,7 @@ use \InvalidArgumentException;
 // Dependencies from `PHP` extensions
 use \PDO;
 
-
-// Module `charcoal-core` dependencies
+// Intra-module (`charcoal-property`) dependencies
 use \Charcoal\Property\AbstractProperty;
 
 /**
@@ -116,7 +115,7 @@ class IpProperty extends AbstractProperty
         ];
         if (!in_array($mode, $validModes)) {
             throw new InvalidArgumentException(
-                'Can not set storage mode: invalid mode.'
+                'Can not set IP storage mode: invalid mode.'
             );
         }
         $this->storageMode = $mode;
@@ -129,19 +128,6 @@ class IpProperty extends AbstractProperty
     public function storageMode()
     {
         return $this->storageMode;
-    }
-
-    /**
-     * Prepare the value for save.
-     *
-     * If no ID is set upon first save, then auto-generate it if necessary.
-     *
-     * @see Charcoal_Object::save()
-     * @return mixed
-     */
-    public function save()
-    {
-        return $this->val();
     }
 
     /**

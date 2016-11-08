@@ -76,12 +76,4 @@ class LangProperty extends AbstractProperty implements SelectablePropertyInterfa
 
         return $choices;
     }
-
-    /**
-     * @return mixed
-     */
-    public function save()
-    {
-        return $this->val();
-    }
 }

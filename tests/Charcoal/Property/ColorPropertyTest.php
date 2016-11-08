@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Property;
 
+use \Psr\Log\NullLogger;
+
 use \Charcoal\Property\ColorProperty;
 
 class ColorPropertyTest extends \PHPUnit_Framework_TestCase
@@ -10,7 +12,9 @@ class ColorPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->obj = new ColorProperty();
+        $this->obj = new ColorProperty([
+            'logger' => new NullLogger()
+        ]);
     }
 
     protected static function callMethod($obj, $name, array $args = null)

@@ -53,12 +53,4 @@ class NumberProperty extends AbstractProperty
     {
         return PDO::PARAM_STR;
     }
-
-    /**
-     * @return mixed
-     */
-    public function save()
-    {
-        return $this->val();
-    }
 }

@@ -463,14 +463,13 @@ class FileProperty extends AbstractProperty
     }
 
     /**
+     * @param mixed $val The value, at time of saving.
      * @return mixed
      */
-    public function save()
+    public function save($val)
     {
         // Current ident
         $i = $this->ident();
-
-        $val = $this->val();
 
         if (isset($_FILES[$i])
             && (isset($_FILES[$i]['name']) && $_FILES[$i]['name'])
@@ -534,7 +533,6 @@ class FileProperty extends AbstractProperty
             } else {
                 $f = $this->fileUpload($file);
             }
-            $this->setVal($f);
             return $f;
         }
 
@@ -547,17 +545,15 @@ class FileProperty extends AbstractProperty
             for (; $k<$total; $k++) {
                 if (preg_match('/^data:/', $val[$k])) {
                     $f[] = $this->dataUpload($val[$k]);
-                    $this->setVal($f);
                     return $f;
                 }
             }
         } elseif (preg_match('/^data:/', $val)) {
             $f = $this->dataUpload($val);
-            $this->setVal($f);
             return $f;
         }
 
-        return $this->val();
+        return $val;
     }
 
     /**

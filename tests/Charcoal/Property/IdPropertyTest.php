@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Property;
 
+use \Psr\Log\NullLogger;
+
 use \Charcoal\Property\IdProperty;
 
 /**
@@ -15,7 +17,9 @@ class IdPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->obj = new IdProperty();
+        $this->obj = new IdProperty([
+            'logger' => new NullLogger()
+        ]);
     }
 
     public function testType()
@@ -97,27 +101,24 @@ class IdPropertyTest extends \PHPUnit_Framework_TestCase
     {
         $obj = $this->obj;
         $obj->setMode('auto-increment');
-        $id = $obj->save();
-        $this->assertEquals($id, $obj->val());
-        $this->assertEquals('', $obj->val());
+        $id = $obj->save(null);
+        $this->assertEquals('', $id);
     }
 
     public function testSaveAndAutoGenerateUniqid()
     {
         $obj = $this->obj;
         $obj->setMode('uniqid');
-        $id = $obj->save();
-        $this->assertEquals($id, $obj->val());
-        $this->assertEquals(13, strlen($obj->val()));
+        $id = $obj->save(null);
+        $this->assertEquals(13, strlen($id));
     }
 
     public function testSaveAndAutoGenerateUuid()
     {
         $obj = $this->obj;
         $obj->setMode('uuid');
-        $id = $obj->save();
-        $this->assertEquals($id, $obj->val());
-        $this->assertEquals(36, strlen($obj->val()));
+        $id = $obj->save(null);
+        $this->assertEquals(36, strlen($id));
     }
 
     public function testSqlExtra()

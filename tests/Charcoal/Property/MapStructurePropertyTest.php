@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Property;
 
+use \Psr\Log\NullLogger;
+
 use \Charcoal\Property\MapStructureProperty;
 
 /**
@@ -17,7 +19,9 @@ class MapStructurePropertyTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->obj = new MapStructureProperty();
+        $this->obj = new MapStructureProperty([
+            'logger' => new NullLogger()
+        ]);
     }
 
     public function testType()

@@ -30,10 +30,12 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
      * @var int $minLength
      */
     private $minLength;
+
     /**
      * @var int $maxLength
      */
     private $maxLength;
+
     /**
      * Defines a validation regular expression for this string.
      * @var string $regexp
@@ -254,7 +256,12 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
     public function validationMethods()
     {
         $parentMethods = parent::validationMethods();
-        return array_merge($parentMethods, [ 'maxLength', 'minLength', 'regexp', 'allowEmpty' ]);
+        return array_merge($parentMethods, [
+            'maxLength',
+            'minLength',
+            'regexp',
+            'allowEmpty'
+        ]);
     }
 
     /**
@@ -405,13 +412,5 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
     public function sqlPdoType()
     {
         return PDO::PARAM_STR;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function save()
-    {
-        return $this->val();
     }
 }

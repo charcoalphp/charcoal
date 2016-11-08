@@ -2,17 +2,24 @@
 
 namespace Charcoal\Tests\Property;
 
+use \Psr\Log\NullLogger;
+
 /**
- * ## TODOs
- * - 2015-03-12:
+ *
  */
 class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * Object under Test
+     * @var AbstractProperty
+     */
     public $obj;
 
     public function setUp()
     {
-        $this->obj = $this->getMockForAbstractClass('\Charcoal\Property\AbstractProperty');
+        $this->obj = $this->getMockForAbstractClass('\Charcoal\Property\AbstractProperty', [[
+            'logger' => new NullLogger()
+        ]]);
     }
 
     public function testSetIdent()

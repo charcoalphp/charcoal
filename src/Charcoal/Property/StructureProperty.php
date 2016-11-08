@@ -27,18 +27,17 @@ class StructureProperty extends AbstractProperty
     }
 
     /**
-     * AbstractProperty > setVal(). Ensure `DateTime` object in val.
+     * AbstractProperty > setVal(). Ensure val is an array
      *
      * @param string|array $val The value to set.
      * @throws InvalidArgumentException If the value is invalid.
      * @return DateTimeProperty Chainable
      */
-    public function setVal($val)
+    public function parseVal($val)
     {
         if ($val === null) {
             if ($this->allowNull()) {
-                $this->val = null;
-                return $this;
+                return null;
             } else {
                 throw new InvalidArgumentException(
                     'Val can not be null (Not allowed)'
@@ -48,8 +47,7 @@ class StructureProperty extends AbstractProperty
         if (!is_array($val)) {
             $val = json_decode($val, true);
         }
-        $this->val = $val;
-        return $this;
+        return $val;
     }
 
     /**
@@ -75,13 +73,5 @@ class StructureProperty extends AbstractProperty
     public function sqlPdoType()
     {
         return PDO::PARAM_STR;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function save()
-    {
-        return $this->val();
     }
 }

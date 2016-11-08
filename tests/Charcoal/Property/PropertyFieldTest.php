@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Property;
 
+use \Psr\Log\NullLogger;
+
 use \Charcoal\Property\PropertyField;
 
 /**
@@ -13,7 +15,9 @@ class PropertyFieldTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->obj = new PropertyField();
+        $this->obj = new PropertyField([
+            'logger' => new NullLogger()
+        ]);
     }
 
     public function testSetIdent()

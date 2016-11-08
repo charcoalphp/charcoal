@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Model;
 
+use \Psr\Log\NullLogger;
+
 use \Charcoal\Property\PropertyFactory;
 use \Charcoal\Property\GenericProperty;
 
@@ -13,7 +15,7 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
     public function getObj()
     {
         return $this->factory->create('GenericProperty', [
-            'logger' => new \Psr\Log\NullLogger()
+            'logger' => new NullLogger()
         ]);
     }
 

@@ -80,13 +80,11 @@ class DateTimeProperty extends AbstractProperty
      * AbstractProperty > setVal(). Ensure `DateTime` object in val.
      *
      * @param string|DateTime $val The value to set.
-     * @throws InvalidArgumentException If the value is invalid.
-     * @return DateTimeProperty Chainable
+     * @return DateTime|null
      */
-    public function setVal($val)
+    public function parseVal($val)
     {
-        $this->val = $this->dateTimeVal($val);
-        return $this;
+        return $this->dateTimeVal($val);
     }
 
     /**
@@ -102,7 +100,7 @@ class DateTimeProperty extends AbstractProperty
         $val = $this->dateTimeVal($val);
 
         if ($val instanceof DateTimeInterface) {
-            return $this->val->format('Y-m-d H:i:s');
+            return $val->format('Y-m-d H:i:s');
         } elseif (is_string($val)) {
             return $val;
         } else {
@@ -127,7 +125,9 @@ class DateTimeProperty extends AbstractProperty
             if ($this->allowNull()) {
                 return null;
             } else {
-                throw new Exception('Invalid date/time value');
+                throw new Exception(
+                    'Invalid date/time value'
+                );
             }
         }
     }
@@ -137,9 +137,8 @@ class DateTimeProperty extends AbstractProperty
      *
      * > Warning: Passing a value as a parameter sets this value in the objects (calls setVal())
      *
-     * @param mixed $val Optional.
-     * @todo   Adapt for l10n
-     * @return string|null
+     * @param mixed $val The value to display.
+     * @return string
      */
     public function displayVal($val)
     {
@@ -155,7 +154,7 @@ class DateTimeProperty extends AbstractProperty
     /**
      * @param mixed $val Value to convert to DateTime.
      * @throws InvalidArgumentException If the value is not a valid datetime.
-     * @return DateTime
+     * @return DateTime|null
      */
     private function dateTimeVal($val)
     {
@@ -293,14 +292,6 @@ class DateTimeProperty extends AbstractProperty
     }
 
     /**
-     * @return mixed
-     */
-    public function save()
-    {
-        return $this->val();
-    }
-
-    /**
      * @return array
      */
     public function validationMethods()
@@ -363,24 +354,5 @@ class DateTimeProperty extends AbstractProperty
     public function sqlPdoType()
     {
         return PDO::PARAM_STR;
-    }
-
-    /**
-     * Json Serialize
-     *
-     * @return mixed
-     */
-    public function jsonSerialize()
-    {
-        $val = $this->val();
-        if ($val === null) {
-            return null;
-        }
-
-        if ($val instanceof DateTimeInterface) {
-            return $val->format(DateTime::ATOM);
-        } else {
-            return $val;
-        }
     }
 }

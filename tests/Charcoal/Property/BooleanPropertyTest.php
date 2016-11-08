@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Property;
 
+use \Psr\Log\NullLogger;
+
 use \Charcoal\Property\BooleanProperty as BooleanProperty;
 
 /**
@@ -17,16 +19,9 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->obj = new BooleanProperty();
-    }
-
-    /**
-     *
-     */
-    public function testConstructor()
-    {
-        $obj = $this->obj;
-        $this->assertInstanceOf('\Charcoal\Property\BooleanProperty', $obj);
+        $this->obj = new BooleanProperty([
+            'logger' => new NullLogger()
+        ]);
     }
 
     /**
@@ -34,25 +29,24 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
      */
     public function testType()
     {
-        $obj = $this->obj;
-        $this->assertEquals('boolean', $obj->type());
+        $this->assertEquals('boolean', $this->obj->type());
     }
 
     /**
-     *
+     * Assert that the boolean property 's `displayVal()` method:
+     * - return the proper label
      */
     public function testDisplayVal()
     {
-        $obj = $this->obj;
-        $obj->setTrueLabel('Oui');
-        $obj->setFalseLabel('Non');
+        $this->obj->setTrueLabel('Oui');
+        $this->obj->setFalseLabel('Non');
 
-        $this->assertEquals('Oui', $obj->displayVal(true));
-        $this->assertEquals('Non', $obj->displayVal(false));
+        $this->assertEquals('Oui', $this->obj->displayVal(true));
+        $this->assertEquals('Non', $this->obj->displayVal(false));
     }
 
     /**
-     * Assert that the `setMultiple()` method:
+     * Assert that the boolean property's `setMultiple()` method:
      * - set the multiple to false, if false or falsish value
      * - throws exception otherwise (truthish or invalid value)
      * - is chainable
@@ -62,19 +56,19 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
         $obj = $this->obj;
         $ret = $obj->setMultiple(0);
         $this->assertSame($ret, $obj);
-        $this->assertSame(false, $ret->multiple());
+        $this->assertFalse($ret->multiple());
 
         $this->setExpectedException('\InvalidArgumentException');
         $obj->setMultiple(1);
     }
 
     /**
-     *
+     * Asserts that the boolean property is multiple by default
      */
     public function testMultiple()
     {
         $obj = $this->obj;
-        $this->assertSame(false, $obj->multiple());
+        $this->assertFalse($obj->multiple());
     }
 
     /**
@@ -139,8 +133,7 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
      */
     public function testSqlType()
     {
-        $obj = $this->obj;
-        $this->assertEquals('TINYINT(1) UNSIGNED', $obj->sqlType());
+        $this->assertEquals('TINYINT(1) UNSIGNED', $this->obj->sqlType());
     }
 
     /**
@@ -148,8 +141,7 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
      */
     public function testSqlPdoType()
     {
-        $obj = $this->obj;
-        $this->assertEquals(\PDO::PARAM_BOOL, $obj->sqlPdoType());
+        $this->assertEquals(\PDO::PARAM_BOOL, $this->obj->sqlPdoType());
     }
 
     /**
@@ -181,10 +173,7 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
     {
         $obj = $this->obj;
 
-        $obj->setVal(true);
-        $this->assertTrue($obj->save());
-
-        $obj->setVal(false);
-        $this->assertNotTrue($obj->save());
+        $this->assertTrue($obj->save(true));
+        $this->assertNotTrue($obj->save(false));
     }
 }
