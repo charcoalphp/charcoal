@@ -1,14 +1,19 @@
 Charcoal Property
 =================
 
-Properties define object's metadata / definition.
+Properties define object's metadata. They provide the building blocks of the Model's definition.
+
+Properties are defined globally for objects (_charcoal models_) in its `metadata`. They provide properties definition, storage definition, validation definition.
+
+> The `metadata()` method is defined in `\Charcoal\Model\DescribableInterface`.
+> The `properties()` method is defined in `\Charcoal\Property\DescribablePropertyInterface`.
 
 # How to install
 
 The preferred (and only suppported) way of installing _charcoal-property_ is with **composer**:
 
 ```shell
-$ composer require locomotivemtl/charcoal-property
+★ composer require locomotivemtl/charcoal-property
 ```
 
 ## Dependencies
@@ -107,12 +112,12 @@ The boolean property adds the following concepts to the [basic property options]
 
 | Name            | (V) | Type                | Description
 | --------------- | :-: | ------------------- | -----------
-| **true_label**  |  ✓  | _DateTime_          | ...
-| **max**         |  ✓  | _DateTime_          | ...
+| **false_label** |  ✓  | _TranslationString_ | ...
+| **true_label**  |  ✓  | _TranslationString_ | ...
 | **format**      |     | _string_            |
 <small>(V) indicates options used in validation</small>
 
-> ⚠ Boolean properties can not be multiple. (`multiple()` will always return false). Calling `set_multiple(true)` will throw an exception
+> ⚠ Boolean properties can not be multiple. (`multiple()` will always return false). Calling `setMultiple(true)` on a `boolean` property will throw an exception.
 
 ## Color Property
 
@@ -145,7 +150,7 @@ The datetime property adds the following concepts to the [basic property options
 
 <small>(V) indicates options used in validation</small>
 
-> ⚠ DateTime properties can not be multiple. (`multiple()` will always return false). Calling `set_multiple(true)` will throw an exception
+> ⚠ DateTime properties can not be multiple. (`multiple()` will always return false). Calling `setMultiple(true)` on a `date-time` property will throw an exception.
 
 ## ID Property
 
@@ -165,6 +170,14 @@ The ID property adds the following concepts to the [basic property options](#bas
 | --------------- | :-: | ------------------- | -----------
 | **mode**        |     | _string_            | Can be `auto-increment`, `uniqid` or `uuid`. |
 
+> ⚠ Id properties can not be multiple. (`multiple()` will always return false). Calling `setMultiple(true)` on an `id` property will throw an exception.
+
+### ID Property custom save
+
+Upon `save($val)`, the ID property auto-generates and ID if its mode is `uniqid` or `uuid`.
+
+> Note: The `auto-increment` mode does not do anything on save; it relies on the storage engine / driver to implement auto-incrementation.
+
 ## IP Property
 
 The IP property holds an IP address. Only _IPv4_ addresses are supported for now.
@@ -173,6 +186,8 @@ There is 2 different storage modes for IP:
 
 -   `string` is the default mode. It stores the IP address like `192.168.1.1`.
 -   `int` stores the IP as a _signed long integer_.
+
+> ⚠ Ip properties can not be multiple. (`multiple()` will always return false). Calling `setMultiple(true)` on an `ip` property will throw an exception.
 
 ## File Property
 
@@ -203,6 +218,10 @@ The file property adds the following concepts to the [basic property options](#b
 -   `filesize()` and `setFilesize()`
 -   `dataUpload()`
 -   `fileUpload()`
+
+### File Property Custom Save
+
+Upon `save($val)`, the File property attempts to upload the file or create a file from data, if necessary. The uploaded file's path (_relative_) is returned.
 
 ### Specialized File properties
 
@@ -325,6 +344,10 @@ Password properties are specialized [string property](#string-property) that hol
 
 Encryption is performed with PHP's `password_hash` function.
 
+### Password Property Custom Save
+
+Upon `save($val)`, the Password property hashes (or rehashes) the password to be stored safely (encrypted).
+
 ## Phone String Property
 
 Phone properties are specialized [string property](#string-property) that holds a phone number.
@@ -338,6 +361,30 @@ Text properties are specialized [string property](#string-property) thay typical
 ## Map Structure Property
 
 Map structure properties hold complex map structure data, which can be points (markers), lines and / or polygons.
+
+## Properties table summary, for developers
+
+| Name         | Data type | Multiple | Custom Save | Custom Parse | 
+| ------------ | :-------: | :------: | :---------: | :----------: |
+| Audio        | mixed     |          |             |              |
+| Boolean      | bool      | **No**   |             |              |
+| Color        | string    |          |             | **Yes**      |
+| DateTime     | DateTime  | **No**   |             | **Yes**      |
+| File         | mixed     |          | **Yes**     |              |
+| Html         | string    |          |             |              |
+| Id           | mixed     | **No**   | **Yes**     |              |
+| Image        | mixed     |          |             |              |
+| Ip           | mixed     | **No**   |             |              |
+| Lang         | string    |          |             |              |
+| MapStructure | mixed     |          |             |              |
+| Number       | numeric   |          |             |              |
+| Object       | mixed     |          |             | **Yes**      |
+| Password     | string    |          | **Yes**     |              |
+| Phone        | string    |          |             |              |
+| String       | string    |          |             |              |
+| Structure    | mixed     |          |             | **Yes**      |
+| Text         | string    |          |             |              |
+| Url          | string    |          |             |              |
 
 # Development
 
@@ -355,8 +402,8 @@ Run the code checkers and unit tests with:
 
 ## API documentation
 
--   The auto-generated `phpDocumentor` API documentation is available at [https://locomotivemtl.github.io/charcoal-app/docs/master/](https://locomotivemtl.github.io/charcoal-app/docs/master/)
--   The auto-generated `apigen` API documentation is available at [https://locomotivemtl.github.io/charcoal-app/apigen/master/](https://locomotivemtl.github.io/charcoal-app/apigen/master/)
+-   The auto-generated `phpDocumentor` API documentation is available at [https://locomotivemtl.github.io/charcoal-property/docs/master/](https://locomotivemtl.github.io/charcoal-property/docs/master/)
+-   The auto-generated `apigen` API documentation is available at [https://locomotivemtl.github.io/charcoal-property/apigen/master/](https://locomotivemtl.github.io/charcoal-property/apigen/master/)
 
 ## Development dependencies
 
