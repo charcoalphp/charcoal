@@ -719,7 +719,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     public function save($val)
     {
         // By default, nothing to do
-        return $val;
+        return $this->parseVal($val);
     }
 
     /**
