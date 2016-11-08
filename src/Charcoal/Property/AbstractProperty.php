@@ -61,7 +61,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     protected $val;
 
     /**
-     * @var TranslationString $label
+     * @var TranslationString|string|null $label
      */
     private $label;
 
@@ -119,14 +119,14 @@ abstract class AbstractProperty extends AbstractEntity implements
     private $active = true;
 
     /**
-     * @var TranslationString $description
+     * @var TranslationString|string|null $description
      */
-    private $description = '';
+    private $description;
 
     /**
-     * @var TranslationString $_notes
+     * @var TranslationString|string|null $_notes
      */
-    private $notes = '';
+    private $notes;
 
     /**
      * @var array $viewOptions
@@ -362,18 +362,24 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     public function setLabel($label)
     {
-        $this->label = new TranslationString($label);
+        if (TranslationString::isTranslatable($label)) {
+            $this->label = new TranslationString($label);
+        } else {
+            $this->label = null;
+        }
+
         return $this;
     }
 
     /**
-     * @return string
+     * @return TranslationString|string|null
      */
     public function label()
     {
         if ($this->label === null) {
             return ucwords(str_replace(['.', '_'], ' ', $this->ident()));
         }
+
         return $this->label;
     }
 
@@ -599,12 +605,17 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     public function setDescription($description)
     {
-        $this->description = new TranslationString($description);
+        if (TranslationString::isTranslatable($description)) {
+            $this->description = new TranslationString($description);
+        } else {
+            $this->description = null;
+        }
+
         return $this;
     }
 
     /**
-     * @return TranslationString
+     * @return TranslationString|string|null
      */
     public function description()
     {
@@ -617,12 +628,17 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     public function setNotes($notes)
     {
-        $this->notes = new TranslationString($notes);
+        if (TranslationString::isTranslatable($notes)) {
+            $this->notes = new TranslationString($notes);
+        } else {
+            $this->notes = null;
+        }
+
         return $this;
     }
 
     /**
-     * @return TranslationString
+     * @return TranslationString|string|null
      */
     public function notes()
     {
