@@ -18,9 +18,14 @@
         }
     ],
     "minimum-stability": "dev",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.1.x-dev"
+        }
+    },
     "require": {
-        "locomotivemtl/charcoal-core": "~0.1",
-        "locomotivemtl/charcoal-base": "~0.1"
+        "locomotivemtl/charcoal-core": "~0.2",
+        "locomotivemtl/charcoal-base": "~0.2"
     },
     "require-dev": {
         "phpunit/phpunit": "^4.8",
