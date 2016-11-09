@@ -17,38 +17,29 @@
     "properties": {
         "id": {
             "type": "id",
+            "mode": "uniqid",
             "label": "ID"
-        },
-        "position": {
-            "type": "number"
-        },
-        "active": {
-            "type": "boolean",
-            "label": {
-                "fr": "Actif",
-                "en": "Active"
-            }
         },
         "title": {
             "type": "string",
-            "l10n":true,
+            "l10n": true,
             "label": {
                 "fr": "Titre",
                 "en": "Title"
             }
         },
-        "categories":{
-            "type":"object",
-            "obj_type":"charcoal/attachment/object/category/generic",
-            "multiple":true,
-            "label":{
-                "fr":"Catégories",
-                "en":"Categories"
+        "categories": {
+            "type": "object",
+            "obj_type": "charcoal/attachment/object/category/generic",
+            "multiple": true,
+            "label": {
+                "fr": "Catégories",
+                "en": "Categories"
             }
         },
         "subtitle": {
             "type": "string",
-            "l10n":true,
+            "l10n": true,
             "label": {
                 "fr": "Sous-Titre",
                 "en": "Sub-Title"
@@ -56,7 +47,7 @@
         },
         "description": {
             "type": "text",
-            "l10n":true,
+            "l10n": true,
             "label": {
                 "fr": "Description",
                 "en": "Description"
@@ -68,8 +59,8 @@
                 "fr": "Mots-clés",
                 "en": "Keywords"
             },
-            "multiple":true,
-            "l10n":true
+            "multiple": true,
+            "l10n": true
         },
         "type": {
             "type": "string",
@@ -90,7 +81,7 @@
                 "en": "File"
             },
             "upload_path": "uploads/attachments/",
-            "public_access":true
+            "public_access": true
         },
         "file_size": {
             "type": "string",
@@ -113,7 +104,7 @@
                 "en": "File's Thumbnail"
             },
             "upload_path": "uploads/attachments/thumbs/",
-            "public_access":true
+            "public_access": true
         },
         "embed": {
             "type": "text",

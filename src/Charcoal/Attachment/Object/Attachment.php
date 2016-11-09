@@ -72,13 +72,6 @@ class Attachment extends Content implements AttachableInterface
     protected static $resolved = [];
 
     /**
-     * The attachment ID.
-     *
-     * @var integer
-     */
-    protected $id;
-
-    /**
      * The attachment type.
      *
      * @var string
