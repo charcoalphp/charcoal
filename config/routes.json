@@ -1,0 +1,9 @@
+{
+    "routes": {
+        "scripts": {
+            "beneroch/attachment/migrate": {
+                "ident": "charcoal/attachment/script/migrate"
+            }
+        }
+    }
+}
