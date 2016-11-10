@@ -4,7 +4,6 @@ namespace Charcoal\Attachment\Object;
 
 use \Charcoal\Attachment\Object\Container;
 
-
 /**
  * Gallery Attachment Type
  *
@@ -12,5 +11,4 @@ use \Charcoal\Attachment\Object\Container;
  */
 class Gallery extends Container
 {
-    // Gallery IS a container.
 }

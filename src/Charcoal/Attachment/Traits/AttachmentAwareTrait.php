@@ -264,22 +264,22 @@ trait AttachmentAwareTrait
 
 
 
-// Abstract Methods
-// =============================================================================
+    // Abstract Methods
+    // =========================================================================
 
     /**
      * Retrieve the object's type identifier.
      *
      * @return string
      */
-    abstract function objType();
+    abstract public function objType();
 
     /**
      * Retrieve the object's unique ID.
      *
      * @return mixed
      */
-    abstract function id();
+    abstract public function id();
 
     /**
      * Retrieve the object model factory.

@@ -194,7 +194,8 @@ class AttachmentWidget extends AdminWidget implements
 
         if ($search === null) {
             $attr = [ 'href', 'link', 'url', 'src' ];
-            $uri  = [ '../', './', '/', 'data', 'fax', 'file', 'ftp', 'geo', 'http', 'mailto', 'sip', 'tag', 'tel', 'urn' ];
+            $uri  = [ '../', './', '/', 'data', 'fax', 'file', 'ftp', 'geo',
+                      'http', 'mailto', 'sip', 'tag', 'tel', 'urn' ];
 
             $search = sprintf(
                 '(?<=%1$s=["\'])(?!%2$s)(\S+)(?=["\'])',
@@ -216,11 +217,14 @@ class AttachmentWidget extends AdminWidget implements
             if (preg_match('~'.$search.'~i', $text)) {
                 $base = $helper->render('{{ baseUrl }}');
                 return preg_replace('~'.$search.'~i', $base.'$1', $text);
-            }/* elseif ($this->baseUrl instanceof \Psr\Http\Message\UriInterface) {
+            }
+            // @codingStandardsIgnoreStart
+            /* elseif ($this->baseUrl instanceof \Psr\Http\Message\UriInterface) {
                 if ($text && strpos($text, ':') === false && !in_array($text[0], [ '/', '#', '?' ])) {
                     return $this->baseUrl->withPath($text);
                 }
             }*/
+            // @codingStandardsIgnoreEnd
 
             return $text;
         };
@@ -490,7 +494,7 @@ class AttachmentWidget extends AdminWidget implements
     /**
      * Retrieve the widget factory.
      *
-     * @throws Exception If the widget factory was not previously set.
+     * @throws RuntimeException If the widget factory was not previously set.
      * @return FactoryInterface
      */
     public function widgetFactory()

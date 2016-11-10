@@ -74,8 +74,7 @@ trait AttachmentContainerTrait
     }
 
     /**
-     * Gets the attachments config from
-     * the object metadata.
+     * Retrieve the attachments configuration from this object's metadata.
      *
      * @return array
      */
@@ -92,6 +91,7 @@ trait AttachmentContainerTrait
     /**
      * Retrieve the widget's attachment grouping.
      *
+     * @throws UnexpectedValueException If the grouping is invalid.
      * @return string
      */
     public function attachmentGroup()
@@ -187,8 +187,9 @@ trait AttachmentContainerTrait
     }
 
     /**
-     * Returns true
-     * @return boolean True.
+     * Determine if this attachment is a container.
+     *
+     * @return boolean
      */
     public function isAttachmentContainer()
     {
@@ -197,9 +198,9 @@ trait AttachmentContainerTrait
 
     /**
      * Objects metadata.
-     * Default behavior in Content class.
      *
-     * @return string
+     * @see    \Charcoal\Model\DescribableInterface::metadata()
+     * @return \Charcoal\Model\MetadataInterface
      */
-    abstract function metadata();
+    abstract public function metadata();
 }

@@ -15,10 +15,9 @@ interface AttachmentContainerInterface
     const DEFAULT_GROUPING = 'generic';
 
     /**
-     * Gets the attachments config from
-     * the object metadata.
+     * Retrieve the attachments configuration from this object's metadata.
      *
-     * @return [type] [description]
+     * @return array
      */
     public function attachmentConfig();
 
@@ -30,9 +29,9 @@ interface AttachmentContainerInterface
     public function attachableObjects();
 
     /**
-     * Returns true
-     * @return boolean True.
+     * Determine if this attachment is a container.
+     *
+     * @return boolean
      */
     public function isAttachmentContainer();
-
 }
