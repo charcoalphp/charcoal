@@ -1,5 +1,8 @@
 # Package Managers
+# -------
 
+composer.phar
+composer.lock
 vendor/
 node_modules/
 bower_components/
@@ -9,11 +12,14 @@ bower_components/
 phpdoc/
 
 # Logging
+# -------
 
 *.log
+error_log
 logs/
 
-# Caches
+# Caching
+# -------
 
 build/docs/
 build/logs/
