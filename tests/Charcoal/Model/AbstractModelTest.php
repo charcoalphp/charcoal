@@ -6,7 +6,7 @@ use \Charcoal\Config\GenericConfig;
 
 use \Charcoal\Charcoal;
 use \Charcoal\Source\DatabaseSource;
-use \Charcoal\Model\MetadataLoader;
+use \Charcoal\Model\Service\MetadataLoader;
 
 class AbstractModelTest extends \PHPUnit_Framework_TestCase
 {
@@ -29,7 +29,7 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
         $source->setTable('test');
         $source->db()->query('DROP TABLE IF EXISTS `test`');
 
-        $metadataLoader = new \Charcoal\Model\MetadataLoader([
+        $metadataLoader = new MetadataLoader([
             'logger'    => $logger,
             'cache'     => $cache,
             'base_path' => __DIR__,

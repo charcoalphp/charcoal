@@ -15,7 +15,7 @@ class ModelValidatorTest extends \PHPUnit_Framework_TestCase
         $logger = new \Psr\Log\NullLogger();
         $cache  = new \Cache\Adapter\Void\VoidCachePool();
 
-        $metadataLoader = new \Charcoal\Model\MetadataLoader([
+        $metadataLoader = new \Charcoal\Model\Service\MetadataLoader([
             'logger'    => $logger,
             'cache'     => $cache,
             'base_path' => __DIR__,

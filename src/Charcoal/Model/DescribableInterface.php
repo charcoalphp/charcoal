@@ -5,7 +5,7 @@ namespace Charcoal\Model;
 use \Traversable;
 
 // Local namespace dependency
-use \Charcoal\Model\MetadataLoader;
+use \Charcoal\Model\Service\MetadataLoader;
 
 /**
  * Defines a model having metadata that allows the customization of objects.

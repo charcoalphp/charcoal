@@ -5,7 +5,7 @@ namespace Charcoal\Tests\Metadata;
 use \Psr\Log\NullLogger;
 use \Cache\Adapter\Void\VoidCachePool;
 
-use \Charcoal\Model\MetadataLoader;
+use \Charcoal\Model\Service\MetadataLoader;
 use \Charcoal\Charcoal;
 
 class MetadataLoaderTest extends \PHPUnit_Framework_TestCase

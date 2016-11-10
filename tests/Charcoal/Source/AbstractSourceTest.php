@@ -2,7 +2,15 @@
 
 namespace Charcoal\Tests\Source;
 
+use \Psr\Log\NullLogger;
+
 use \Cache\Adapter\Void\VoidCachePool;
+
+use \Charcoal\Source\AbstractSource;
+use \Charcoal\Source\Filter;
+use \Charcoal\Source\Order;
+use \Charcoal\Source\Pagination;
+use \Charcoal\Model\Service\MetadataLoader;
 
 class AbstractSourceTest extends \PHPUnit_Framework_TestCase
 {
@@ -10,7 +18,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->obj = $this->getMockForAbstractClass('\Charcoal\Source\AbstractSource', [[
+        $this->obj = $this->getMockForAbstractClass(AbstractSource::class, [[
             'logger' => new \Psr\Log\NullLogger()
         ]]);
     }
@@ -72,11 +80,11 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
     {
         $obj = $this->obj;
         $model = new \Charcoal\Model\Model([
-            'logger' => new \Psr\Log\NullLogger(),
-            'metadata_loader' => new \Charcoal\Model\MetadataLoader([
+            'logger' => new NullLogger(),
+            'metadata_loader' => new MetadataLoader([
                 'base_path' => '',
                 'paths' => [],
-                'logger' => new \Psr\Log\NullLogger(),
+                'logger' => new NullLogger(),
                 'cache' => new VoidCachePool()
             ])
         ]);
@@ -243,7 +251,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
 
     public function testSetPagination()
     {
-        $p = new \Charcoal\Source\Pagination();
+        $p = new Pagination();
         $obj = $this->obj;
 
         $ret = $obj->setPagination($p);
@@ -251,7 +259,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($p, $obj->pagination());
 
         $obj->setPagination(['page'=>3, 'num_per_page'=>120]);
-        $this->assertInstanceOf('\Charcoal\Source\Pagination', $obj->pagination());
+        $this->assertInstanceOf(Pagination::class, $obj->pagination());
         $this->assertEquals(3, $obj->page());
         $this->assertEquals(120, $obj->numPerPage());
 
@@ -263,7 +271,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
     {
         $obj = $this->obj;
         $p = $obj->pagination();
-        $this->assertInstanceOf('\Charcoal\Source\Pagination', $p);
+        $this->assertInstanceOf(Pagination::class, $p);
     }
 
     public function testSetPage()
@@ -281,7 +289,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
     public function testNumPerPage()
     {
         $obj = $this->obj;
-        $this->assertEquals(\Charcoal\Source\Pagination::DEFAULT_NUM_PER_PAGE, $obj->numPerPage());
+        $this->assertEquals(Pagination::DEFAULT_NUM_PER_PAGE, $obj->numPerPage());
         $ret = $obj->setNumPerPage(666);
         $this->assertSame($ret, $obj);
         $this->assertEquals(666, $obj->numPerPage());
@@ -300,7 +308,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
 
     public function getFilter1()
     {
-        $filter1 = new \Charcoal\Source\Filter();
+        $filter1 = new Filter();
         $filter1->setData([
             'property'=>'foo',
             'operator'=>'=',
@@ -311,7 +319,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
 
     public function getFilter2()
     {
-        $filter2 = new \Charcoal\Source\Filter();
+        $filter2 = new Filter();
         $filter2->setData([
             'property'=>'bar',
             'operator'=>'>',
@@ -322,7 +330,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
 
     public function getOrder1()
     {
-        $order1 = new \Charcoal\Source\Order();
+        $order1 = new Order();
         $order1->setData([
             'mode'=>'asc'
         ]);
@@ -331,7 +339,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
 
     public function getOrder2()
     {
-        $order2 = new \Charcoal\Source\Order();
+        $order2 = new Order();
         $order2->setData([
             'mode'=>'desc'
         ]);

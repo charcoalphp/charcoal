@@ -3,25 +3,34 @@
 namespace Charcoal\Tests\Metadata;
 
 use \Psr\Log\NullLogger;
+
 use \Cache\Adapter\Void\VoidCachePool;
 
-use \Charcoal\Model\ModelLoader;
-use \Charcoal\Charcoal;
+use \Charcoal\Factory\GenericFactory as Factory;
 
+use \Charcoal\Model\Service\ModelLoader;
+use \Charcoal\Model\Service\MetadataLoader;
+
+/**
+ *
+ */
 class ModelLoaderTest extends \PHPUnit_Framework_TestCase
 {
     public $obj;
 
+    /**
+     *
+     */
     public function setUp()
     {
-        $metadataLoader = new \Charcoal\Model\MetadataLoader([
+        $metadataLoader = new MetadataLoader([
             'logger' => new NullLogger(),
             'base_path' => __DIR__,
             'paths' => ['metadata'],
             'cache'  => new VoidCachePool()
         ]);
 
-        $factory = new \Charcoal\Factory\GenericFactory([
+        $factory = new Factory([
             'arguments' => [[
                 'logger'=> new NullLogger(),
                 'metadata_loader' => $metadataLoader
@@ -36,6 +45,9 @@ class ModelLoaderTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
+    /**
+     *
+     */
     public function testArrayAccess()
     {
         $obj = $this->obj;

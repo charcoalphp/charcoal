@@ -1,6 +1,6 @@
 <?php
 
-namespace Charcoal\Model;
+namespace Charcoal\Model\Service;
 
 // PHP dependencies
 use \InvalidArgumentException;
@@ -13,7 +13,7 @@ use \Psr\Log\LoggerAwareTrait;
 use \Psr\Cache\CacheItemPoolInterface;
 
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Loader\FileLoader;
+use \Charcoal\Model\MetadataInterface;
 
 /**
  * Load metadata from JSON file(s).
@@ -25,7 +25,7 @@ use \Charcoal\Loader\FileLoader;
  * If `ident` is an actual class name, then it will also try to load all the JSON matching
  * the class' parents and interfaces.
  */
-final class MetadataLoader implements LoggerAwareInterface
+class MetadataLoader implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 

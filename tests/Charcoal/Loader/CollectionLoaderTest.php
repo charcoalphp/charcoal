@@ -4,12 +4,18 @@ namespace Charcoal\Tests\Loader;
 
 use \ArrayIterator;
 
+use \Psr\Log\NullLogger;
+
+use \Cache\Adapter\Void\VoidCachePool;
+
 use \Charcoal\Config\GenericConfig;
 
 use \Charcoal\Factory\GenericFactory as Factory;
 
 use \Charcoal\Loader\CollectionLoader;
 use \Charcoal\Source\DatabaseSource;
+
+use \Charcoal\Model\Service\MetadataLoader;
 
 class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,8 +26,8 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $logger = new \Psr\Log\NullLogger();
-        $cache  = new \Cache\Adapter\Void\VoidCachePool();
+        $logger = new NullLogger();
+        $cache  = new VoidCachePool();
 
         $source = new DatabaseSource([
             'logger' => $logger,
@@ -29,7 +35,7 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
         ]);
         $source->setTable('tests');
 
-        $metadataLoader = new \Charcoal\Model\MetadataLoader([
+        $metadataLoader = new MetadataLoader([
             'logger'    => $logger,
             'cache'     => $cache,
             'base_path' => __DIR__,
