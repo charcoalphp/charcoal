@@ -3,6 +3,9 @@
         "scripts": {
             "beneroch/attachment/migrate": {
                 "ident": "charcoal/attachment/script/migrate"
+            },
+            "beneroch/attachment/cleanup": {
+                "ident": "charcoal/attachment/script/cleanup"
             }
         }
     }
