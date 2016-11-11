@@ -17,6 +17,7 @@ use \Charcoal\Property\AbstractProperty;
 class IdProperty extends AbstractProperty
 {
     const MODE_AUTO_INCREMENT = 'auto-increment';
+    const MODE_CUSTOM = 'custom';
     const MODE_UNIQID = 'uniqid';
     const MODE_UUID = 'uuid';
 
@@ -27,6 +28,7 @@ class IdProperty extends AbstractProperty
      *
      * One of:
      * - `auto-increment` (default). Database auto-increment.
+     * - `custom`. A user supplied unique identifier.
      * - `uniq`. Generated with php's `uniqid()`.
      * - `uuid`. A (randomly-generated) universally unique identifier (RFC-4122 v4) .
      *
@@ -117,6 +119,7 @@ class IdProperty extends AbstractProperty
     {
         return [
             self::MODE_AUTO_INCREMENT,
+            self::MODE_CUSTOM,
             self::MODE_UNIQID,
             self::MODE_UUID
         ];
@@ -125,8 +128,8 @@ class IdProperty extends AbstractProperty
     /**
      * Set the allowed ID mode.
      *
-     * @param string|null $mode The ID mode ("auto-increment", "uniqid" or "uuid").
-     * @throws InvalidArgumentException If the mode is not one of the 3 valid modes.
+     * @param string|null $mode The ID mode ("auto-increment", "custom", "uniqid" or "uuid").
+     * @throws InvalidArgumentException If the mode is not one of the 4 valid modes.
      * @return IdProperty Chainable
      */
     public function setMode($mode)
@@ -193,7 +196,7 @@ class IdProperty extends AbstractProperty
     {
         $mode = $this->mode();
 
-        if ($mode === self::MODE_AUTO_INCREMENT) {
+        if ($mode === self::MODE_AUTO_INCREMENT || $mode === self::MODE_CUSTOM) {
             // Auto-increment is handled at the database driver level (for now...)
             return null;
         } elseif ($mode === self::MODE_UNIQID) {
@@ -253,6 +256,7 @@ class IdProperty extends AbstractProperty
      * Get the SQL data type (Storage format).
      *
      * - For "auto-increment" ids, it is an integer.
+     * - For "custom" ids, it is a 255-varchar string.
      * - For "uniqid" ids, it is a 13-char string.
      * - For "uuid" id, it is a 36-char string.
      *
@@ -269,6 +273,8 @@ class IdProperty extends AbstractProperty
             return 'CHAR(13)';
         } elseif ($mode === self::MODE_UUID) {
             return 'CHAR(36)';
+        } elseif ($mode === self::MODE_CUSTOM) {
+            return 'VARCHAR(255)';
         }
     }
 
