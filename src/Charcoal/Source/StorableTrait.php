@@ -175,7 +175,7 @@ trait StorableTrait
      * @param mixed $data Optional.
      * @return SourceInterface
      */
-    abstract protected function createSource($data = null);
+    abstract protected function createSource();
 
     /**
      * Load an object from the database from its ID.

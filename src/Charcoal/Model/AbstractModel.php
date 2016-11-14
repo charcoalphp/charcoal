@@ -514,7 +514,7 @@ abstract class AbstractModel extends AbstractEntity implements
      * @throws Exception If the metadata source can not be found.
      * @return SourceInterface
      */
-    protected function createSource(array $data = null)
+    protected function createSource()
     {
         $metadata = $this->metadata();
         $defaultSource = $metadata->defaultSource();
@@ -531,13 +531,7 @@ abstract class AbstractModel extends AbstractEntity implements
         $source = $sourceFactory->create($sourceType);
         $source->setModel($this);
 
-        if ($data !== null) {
-            $data = array_merge_recursive($sourceConfig, $data);
-        } else {
-            $data = $sourceConfig;
-        }
-
-        $source->setData($data);
+        $source->setData($sourceConfig);
 
         return $source;
     }
