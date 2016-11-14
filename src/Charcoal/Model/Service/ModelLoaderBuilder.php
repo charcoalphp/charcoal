@@ -7,7 +7,7 @@ use \Psr\Cache\CacheItemPoolInterface;
 // Module `charcoal-factory` dependencies
 use \Charcoal\Factory\FactoryInterface;
 
-use \Charcoal\Model\ModelLoader;
+use \Charcoal\Model\Service\ModelLoader;
 
 /**
  * Model Loader Builder.
@@ -43,8 +43,8 @@ final class ModelLoaderBuilder
     public function build($objType, $objKey = null)
     {
         return new ModelLoader([
-            'factory' => $this->factory(),
-            'cache'     => $this->cachePool(),
+            'factory' => $this->factory,
+            'cache'     => $this->cachePool,
             'obj_type'  => $objType,
             'obj_key'   => $objKey
         ]);
