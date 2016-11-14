@@ -44,20 +44,6 @@ interface StorableInterface
     public function key();
 
     /**
-     * @param FactoryInterface $factory The source factory, which is useful to create source.
-     * @return StorableInterface Chainable
-     */
-    public function setSourceFactory(FactoryInterface $factory);
-
-    /**
-     * Set the object's source.
-     *
-     * @param SourceInterface $source The storable object's source.
-     * @return StorableInterface Chainable
-     */
-    public function setSource(SourceInterface $source);
-
-    /**
      * Get the object's source.
      *
      * @return SourceInterface

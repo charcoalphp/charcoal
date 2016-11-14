@@ -123,7 +123,7 @@ trait StorableTrait
      * @param FactoryInterface $factory The source factory, which is useful to create source.
      * @return StorableInterface Chainable
      */
-    public function setSourceFactory(FactoryInterface $factory)
+    protected function setSourceFactory(FactoryInterface $factory)
     {
         $this->sourceFactory = $factory;
         return $this;
@@ -148,6 +148,7 @@ trait StorableTrait
      *
      * @param SourceInterface $source The storable object's source.
      * @return StorableInterface Chainable
+     * @todo This method needs to go protected.
      */
     public function setSource(SourceInterface $source)
     {
@@ -229,8 +230,14 @@ trait StorableTrait
             return false;
         }
         $ret = $this->source()->saveItem($this);
-        $this->postSave();
-        return $ret;
+        if ($ret === false) {
+            return false;
+        }
+        $post = $this->postSave();
+        if ($post === false) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -242,13 +249,18 @@ trait StorableTrait
     public function update(array $properties = null)
     {
         $pre = $this->preUpdate($properties);
-        $this->saveProperties($properties);
         if ($pre === false) {
             return false;
         }
         $ret = $this->source()->updateItem($this, $properties);
-        $this->postUpdate($properties);
-        return $ret;
+        if ($ret === false) {
+            return false;
+        }
+        $post = $this->postUpdate($properties);
+        if ($post === false) {
+            return false;
+        }
+        return true;
     }
 
     /**
