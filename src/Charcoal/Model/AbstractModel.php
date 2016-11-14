@@ -132,7 +132,7 @@ abstract class AbstractModel extends AbstractEntity implements
      * @param array|\Traversable $data The object data.
      * @return array|\Traversable The object data without the pre-set ID.
      */
-    public function setIdFromData($data)
+    protected function setIdFromData($data)
     {
         $key = $this->key();
         if (isset($data[$key])) {
