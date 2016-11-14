@@ -32,6 +32,7 @@ use \Charcoal\Model\Service\ModelLoaderBuilder;
  *
  * - `cache` A PSR-6 compliant cache pool.
  * - `config` A charcoal app config (\Charcoal\Config\ConfigInterface)q
+ * - `database` A PDO database instance
  * - `logger` A PSR-3 compliant logger.
  * - `view` A \Charcoal\View\ViewInterface instance
  *
