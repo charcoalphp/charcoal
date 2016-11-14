@@ -502,13 +502,9 @@ abstract class AbstractModel extends AbstractEntity implements
      * @param array $data Optional data to intialize the Metadata object with.
      * @return MetadataInterface
      */
-    protected function createMetadata(array $data = null)
+    protected function createMetadata()
     {
-        $metadata = new ModelMetadata();
-        if ($data !== null) {
-            $metadata->setData($data);
-        }
-        return $metadata;
+        return new ModelMetadata();
     }
 
     /**
