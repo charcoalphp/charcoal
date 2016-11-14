@@ -18,7 +18,7 @@ use \Charcoal\Factory\FactoryInterface;
  *
  * > This object is immutable.
  */
-class ModelLoader implements ArrayAccess
+final class ModelLoader implements ArrayAccess
 {
     /**
      * @var string $objType

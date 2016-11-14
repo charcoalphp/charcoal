@@ -12,7 +12,7 @@ use \Charcoal\Model\Service\MetadataLoader;
 /**
  *
  */
-class ModelBuilder
+final class ModelBuilder
 {
     const DEFAULT_SOURCE_TYPE = 'database';
 

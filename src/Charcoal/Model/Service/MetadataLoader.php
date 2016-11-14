@@ -25,7 +25,7 @@ use \Charcoal\Model\MetadataInterface;
  * If `ident` is an actual class name, then it will also try to load all the JSON matching
  * the class' parents and interfaces.
  */
-class MetadataLoader implements LoggerAwareInterface
+final class MetadataLoader implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
