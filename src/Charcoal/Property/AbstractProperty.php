@@ -5,6 +5,8 @@ namespace Charcoal\Property;
 use \Exception;
 use \InvalidArgumentException;
 
+use \PDO;
+
 // Dependencies from PSR-3 (Logger)
 use \Psr\Log\LoggerAwareInterface;
 use \Psr\Log\LoggerAwareTrait;
@@ -139,6 +141,11 @@ abstract class AbstractProperty extends AbstractEntity implements
     protected $displayType;
 
     /**
+     * @var PDO
+     */
+    protected $pdo;
+
+    /**
      * Required dependencies:
      * - `logger` a PSR3-compliant logger.
      *
@@ -173,9 +180,20 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     public function setDependencies(Container $container)
     {
+        $this->setPdo($container['pdo']);
+
         // This method is a stub. Reimplement in children class.
         $this->setPropertyFactory($container['property/factory']);
         $this->setMetadataLoader($container['metadata/loader']);
+    }
+
+    /**
+     * @param PDO $pdo The database connection (PDO) instance.
+     * @return void
+     */
+    private function setPdo(PDO $pdo)
+    {
+        $this->pdo = $pdo;
     }
 
     /**
