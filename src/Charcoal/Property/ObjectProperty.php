@@ -14,7 +14,7 @@ use \Charcoal\Factory\FactoryInterface;
 use \Charcoal\View\ViewableInterface;
 
 use \Charcoal\Model\ModelInterface;
-use \Charcoal\Model\ModelLoader;
+use \Charcoal\Model\Service\ModelLoader;
 use \Charcoal\Loader\CollectionLoader;
 use \Charcoal\Source\StorableInterface;
 use \Charcoal\Translation\TranslationConfig;
