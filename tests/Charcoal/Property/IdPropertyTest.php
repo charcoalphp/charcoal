@@ -2,6 +2,10 @@
 
 namespace Charcoal\Tests\Property;
 
+use \PDO;
+
+use \Pimple\Container;
+
 use \Psr\Log\NullLogger;
 
 use \Charcoal\Property\IdProperty;
@@ -13,11 +17,26 @@ use \Charcoal\Property\IdProperty;
 class IdPropertyTest extends \PHPUnit_Framework_TestCase
 {
 
-    public $obj;
+    /**
+     * @var IdProperty
+     */
+    private $obj;
+
+    /**
+     * @var Container
+     */
+    private $container;
+
 
     public function setUp()
     {
+        $container = new Container();
+        $container['database'] = function (Container $container) {
+            $pdo = new PDO('sqlite::memory:');
+            return $pdo;
+        };
         $this->obj = new IdProperty([
+            'container' => $container,
             'logger' => new NullLogger()
         ]);
     }
@@ -138,7 +157,8 @@ class IdPropertyTest extends \PHPUnit_Framework_TestCase
         $obj = $this->obj;
         $obj->setMode('auto-increment');
         $ret = $obj->sqlType();
-        $this->assertEquals('INT(10) UNSIGNED', $ret);
+        //$this->assertEquals('INT(10) UNSIGNED', $ret);
+        $this->assertEquals('INT', $ret);
 
         $obj->setMode('uniqid');
         $ret = $obj->sqlType();
