@@ -183,7 +183,7 @@ abstract class AbstractModel extends AbstractEntity implements
         if (is_scalar($val)) {
             return $val;
         } elseif ($val instanceof DateTimeInterface) {
-            return (string)$val;
+            return $val->format('Y-m-d H:i:s');
         } else {
             return json_decode(json_encode($val), true);
         }
