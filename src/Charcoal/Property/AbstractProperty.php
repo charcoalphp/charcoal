@@ -180,7 +180,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     public function setDependencies(Container $container)
     {
-        $this->setPdo($container['pdo']);
+        $this->setPdo($container['database']);
 
         // This method is a stub. Reimplement in children class.
         $this->setPropertyFactory($container['property/factory']);
