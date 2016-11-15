@@ -577,7 +577,7 @@ class CollectionLoader implements LoggerAwareInterface
             );
         }
 
-        if (!isset($cb)) {
+        if ($cb === null) {
             $cb = $this->callback();
         }
 
