@@ -2,10 +2,9 @@
 
 namespace Charcoal\Model;
 
+use \DateTimeInterface;
 use \Exception;
 use \InvalidArgumentException;
-use \JsonSerializable;
-use \Serializable;
 
 use \PDO;
 

@@ -8,9 +8,6 @@ use \InvalidArgumentException;
 
 // Dependencies from `PHP` modules
 use \PDO;
-use \PDOException;
-
-use \Charcoal\Config\ConfigInterface;
 
 // Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Model\ModelInterface;

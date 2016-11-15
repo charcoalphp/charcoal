@@ -2,6 +2,8 @@
 
 namespace Charcoal\Model\Service;
 
+use \Exception;
+
 // Module `charcoal-factory` dependencies
 use \Charcoal\Factory\FactoryInterface;
 
@@ -124,12 +126,12 @@ final class ModelBuilder
     }
 
     /**
-     * @param MetadataInterface $metadata    The object metadata, where to find the object's source configuration.
+     * @param ModelMetadata     $metadata    The object metadata, where to find the object's source configuration.
      * @param string|null       $sourceIdent Optional. Custom source ident to load. If null, the default (from metadata) will be used.
      * @throws Exception If the source is not defined in the model's metadata.
      * @return SourceInterface
      */
-    private function createSource(MetadataInterface $metadata, $sourceIdent = null)
+    private function createSource(ModelMetadata $metadata, $sourceIdent = null)
     {
         if ($sourceIdent === null) {
             $sourceIdent = $metadata->defaultSource();

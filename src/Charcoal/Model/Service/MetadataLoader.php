@@ -316,7 +316,6 @@ final class MetadataLoader implements LoggerAwareInterface
             foreach ($implements as $interface) {
                 $hierarchy[$this->classnameToIdent($interface)] = $interface;
             }
-            $key = $this->classnameToIdent($class);
             $hierarchy[$this->classnameToIdent($class)] = $class;
         }
 

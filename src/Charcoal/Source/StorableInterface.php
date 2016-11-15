@@ -2,9 +2,6 @@
 
 namespace Charcoal\Source;
 
-// Module `charcoal-factory` dependencies
-use \Charcoal\Factory\FactoryInterface;
-
 // Local namespace dependencies
 use \Charcoal\Source\SourceInterface;
 
