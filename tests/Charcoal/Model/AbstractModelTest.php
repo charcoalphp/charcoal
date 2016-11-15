@@ -11,7 +11,11 @@ use \Charcoal\Config\GenericConfig;
 
 use \Charcoal\Factory\GenericFactory as Factory;
 
-use \Charcoal\Charcoal;
+use \Psr\Log\NullLogger;
+use \Cache\Adapter\Void\VoidCachePool;
+
+use \Charcoal\Factory\GenericFactory as Factory;
+
 use \Charcoal\Source\DatabaseSource;
 use \Charcoal\Model\Service\MetadataLoader;
 
@@ -67,7 +71,12 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
 
     private function getObj()
     {
+<<<<<<< 112884763fe5b8022027788782bfc963308f412a
         $container = $this->getContainer();
+=======
+        $logger = new NullLogger();
+        $cache  = new VoidCachePool();
+>>>>>>> Unit tests++
 
         $source = new DatabaseSource([
             'logger' => $container['logger'],
@@ -83,9 +92,32 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
             'metadata_loader'  => $container['metadata/loader']
         ]);
 
+<<<<<<< 112884763fe5b8022027788782bfc963308f412a
         $source->setModel($obj);
 
         $obj->setSource($source);
+=======
+        $propertyFactory = new Factory([
+            'base_class'       => \Charcoal\Property\PropertyInterface::class,
+            'default_class'    => \Charcoal\Property\GenericProperty::class,
+            'resolver_options' => [
+                'prefix' => '\Charcoal\Property\\',
+                'suffix' => 'Property'
+            ]
+        ]);
+
+        $dependencies = [
+            'logger'           => $logger,
+            'property_factory' => $propertyFactory,
+            'metadata_loader'  => $metadataLoader,
+            'source'           => $source
+        ];
+
+        $propertyFactory->setArguments($dependencies);
+
+        $obj = new AbstractModelClass($dependencies);
+
+>>>>>>> Unit tests++
         $obj->setMetadata(
             [
                 'properties' => [

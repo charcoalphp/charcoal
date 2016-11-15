@@ -5,7 +5,6 @@ use \Charcoal\Config\GenericConfig;
 /** Composer autoloader for Charcoal's PSR4-compliant Unit Tests */
 $autoloader = require dirname(__DIR__).'/vendor/autoload.php';
 $autoloader->add('Charcoal\\', __DIR__.'/src/');
-$autoloader->add('Charcoal\\Tests\\', __DIR__);
 $autoloader->add('Charcoal\\Tests\\', __DIR__.'/Charcoal/');
 
 $databaseConfig = [

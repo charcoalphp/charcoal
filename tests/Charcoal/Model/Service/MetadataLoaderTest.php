@@ -1,13 +1,15 @@
 <?php
 
-namespace Charcoal\Tests\Metadata;
+namespace Charcoal\Tests\Service;
 
 use \Psr\Log\NullLogger;
 use \Cache\Adapter\Void\VoidCachePool;
 
 use \Charcoal\Model\Service\MetadataLoader;
-use \Charcoal\Charcoal;
 
+/**
+ *
+ */
 class MetadataLoaderTest extends \PHPUnit_Framework_TestCase
 {
     public $obj;
@@ -24,7 +26,5 @@ class MetadataLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testLoadData()
     {
-        $data = $this->obj->loadData('test');
-        $this->assertEquals('string', $data['properties']['test']['type']);
     }
 }

@@ -5,6 +5,9 @@ namespace Charcoal\Tests\Model;
 use \Charcoal\Model\ModelValidator;
 use \Charcoal\Model\Model;
 
+/**
+ *
+ */
 class ModelValidatorTest extends \PHPUnit_Framework_TestCase
 {
     private $obj;

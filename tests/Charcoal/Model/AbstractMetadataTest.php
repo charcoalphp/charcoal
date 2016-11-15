@@ -2,13 +2,18 @@
 
 namespace Charcoal\Tests\Model;
 
+use \Charcoal\Model\AbstractMetadata;
+
+/**
+ *
+ */
 class AbstractMetadataTest extends \PHPUnit_Framework_TestCase
 {
     public $obj;
 
     public function setUp()
     {
-        $this->obj = $this->getMockForAbstractClass('\Charcoal\Model\AbstractMetadata');
+        $this->obj = $this->getMockForAbstractClass(AbstractMetadata::class);
     }
 
     public function testSetData()

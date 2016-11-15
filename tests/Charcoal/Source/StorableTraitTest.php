@@ -2,9 +2,6 @@
 
 namespace Charcoal\Tests\Source;
 
-use \Charcoal\Tests\Source\StorableClass;
-
-include __DIR__.'/StorableClass.php';
 
 class StorableTraitTest extends \PHPUnit_Framework_TestCase
 {
@@ -12,7 +9,7 @@ class StorableTraitTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->obj = new StorableClass();
+        $this->obj = $this->getMockForTrait('\Charcoal\Source\StorableTrait');
     }
 
     /**
@@ -51,6 +48,13 @@ class StorableTraitTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('\InvalidArgumentException');
         $this->obj->setKey(false);
     }
+
+    // public function testSetKeyAndId()
+    // {
+    //     $this->obj->setKey('foo');
+    //     $this->obj->setId('bar');
+    //     $this->assertEquals('bar', $this->obj->id());
+    // }
 
     /**
      * @dataProvider providerInvalidKey

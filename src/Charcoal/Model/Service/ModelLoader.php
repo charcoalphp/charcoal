@@ -6,8 +6,10 @@ use \ArrayAccess;
 use \Exception;
 use \InvalidArgumentException;
 
+// Dependencies from PSR-6 (Cache)
 use \Psr\Cache\CacheItemPoolInterface;
 
+// Module `charcoal-factory` dependencies
 use \Charcoal\Factory\FactoryInterface;
 
 /**

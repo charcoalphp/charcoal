@@ -6,15 +6,27 @@ use \Charcoal\Model\ModelMetadata;
 
 class ModelMetadataTest extends \PHPUnit_Framework_TestCase
 {
-    public function testContructor()
+
+    private $obj;
+
+    public function setUp()
     {
-        $obj = new ModelMetadata();
-        $this->assertInstanceOf('\Charcoal\Model\ModelMetadata', $obj);
+        $this->obj = new ModelMetadata();
+    }
+
+    public function testSetIdent()
+    {
+        $ret = $this->obj->setIdent('foo');
+        $this->assertSame($ret, $this->obj);
+        $this->assertEquals('foo', $this->obj->ident());
+
+        $this->setExpectedException('\Exception');
+        $this->obj->setIdent(false);
     }
 
     public function testArrayAccessGet()
     {
-        $obj = new ModelMetadata();
+        $obj = $this->obj;
         $obj->foo = 'bar';
 
         $this->assertEquals($obj->foo, $obj['foo']);
@@ -22,7 +34,7 @@ class ModelMetadataTest extends \PHPUnit_Framework_TestCase
 
     public function testArrayAccessSet()
     {
-        $obj = new ModelMetadata();
+        $obj = $this->obj;
         $obj['foo'] = 'bar';
 
         $this->assertEquals($obj->foo, $obj['foo']);
@@ -30,7 +42,7 @@ class ModelMetadataTest extends \PHPUnit_Framework_TestCase
 
     public function testArrayAccessUnset()
     {
-        $obj = new ModelMetadata();
+        $obj = $this->obj;
         $this->assertObjectNotHasAttribute('foo', $obj);
 
         $obj['foo'] = 'bar';
@@ -40,23 +52,23 @@ class ModelMetadataTest extends \PHPUnit_Framework_TestCase
         //$this->assertObjectNotHasAttribute('foo', $obj);
     }
 
-    public function testSetData()
+    public function testMerge()
     {
         $data = [
             'foo' => 'bar',
             'bar' => 'foo'
         ];
 
-        $obj = new ModelMetadata();
+        $obj = $this->obj;
         $obj->merge($data);
 
         $this->assertEquals($obj->foo, 'bar');
         $this->assertEquals($obj->bar, 'foo');
     }
 
-    public function testSetDataIsChainable()
+    public function testMergeIsChainable()
     {
-        $obj = new ModelMetadata();
+        $obj = $this->obj;
         $ret = $obj->merge([]);
 
         $this->assertSame($obj, $ret);
