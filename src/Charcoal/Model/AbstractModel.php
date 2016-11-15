@@ -380,9 +380,7 @@ abstract class AbstractModel extends AbstractEntity implements
             return false;
         }
 
-        $this->saveProperties();
-
-        // Invalid models can not be saved.
+        // Disabled: Invalid models can not be saved.
         if (!!false) {
             $valid = $this->validate();
             if ($valid === false) {
@@ -401,47 +399,13 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-     * Update the object in storage with the current state.
-     *
-     * @see    Charcoal\Source\StorableTrait::update() For the "update" event.
-     * @param  array $properties Optional. The list of properties to update.
-     * @return mixed
-     * @todo   Enable model validation.
-     */
-    public function update(array $properties = null)
-    {
-        $pre = $this->preUpdate($properties);
-        if ($pre === false) {
-            return false;
-        }
-
-        $this->saveProperties();
-
-        // Invalid models can not be saved.
-        if (!!false) {
-            $valid = $this->validate();
-            if ($valid === false) {
-                return false;
-            }
-        }
-
-        $ret = $this->source()->updateItem($this, $properties);
-        if ($ret === false) {
-            return false;
-        }
-
-        $this->postUpdate();
-        return $ret;
-    }
-
-    /**
      * StorableTrait > preSave(). Save hook called before saving the model.
      *
      * @return boolean
      */
     protected function preSave()
     {
-        return true;
+        return $this->saveProperties();
     }
 
     /**
@@ -462,7 +426,7 @@ abstract class AbstractModel extends AbstractEntity implements
      */
     protected function preUpdate(array $properties = null)
     {
-        return true;
+        return $this->saveProperties();
     }
 
     /**
@@ -497,9 +461,8 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-     * DescribableTrait > create_metadata().
+     * DescribableTrait > createMetadata().
      *
-     * @param array $data Optional data to intialize the Metadata object with.
      * @return MetadataInterface
      */
     protected function createMetadata()
