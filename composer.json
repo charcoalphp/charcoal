@@ -36,7 +36,8 @@
     "require-dev": {
         "phpunit/phpunit": "^4.8",
         "squizlabs/php_codesniffer": "^2.4",
-        "cache/void-adapter": "^0.3.0"
+        "cache/void-adapter": "^0.3.0",
+        "pimple/pimple": "^3.0"
     },
     "autoload": {
         "psr-4": {

@@ -2,11 +2,21 @@
 
 namespace Charcoal\Tests\Model;
 
+use \Psr\Log\NullLogger;
+use \Cache\Adapter\Void\VoidCachePool;
+
+use \Pimple\Container;
+
 use \Charcoal\Config\GenericConfig;
+
+use \Charcoal\Factory\GenericFactory as Factory;
 
 use \Charcoal\Charcoal;
 use \Charcoal\Source\DatabaseSource;
 use \Charcoal\Model\Service\MetadataLoader;
+
+use \Charcoal\Property\PropertyInterface;
+use \Charcoal\Property\GenericProperty;
 
 class AbstractModelTest extends \PHPUnit_Framework_TestCase
 {
@@ -17,43 +27,61 @@ class AbstractModelTest extends \PHPUnit_Framework_TestCase
         include_once 'AbstractModelClass.php';
     }
 
-    public function getObj()
+    private function getContainer()
     {
-        $logger = new \Psr\Log\NullLogger();
-        $cache  = new \Cache\Adapter\Void\VoidCachePool();
+        $container = new Container();
+
+        $container['logger'] = function (Container $container) {
+            return new NullLogger();
+        };
+        $container['cache'] = function (Container $container) {
+            return new VoidCachePool();
+        };
+        $container['pdo'] = function (Container $container) {
+            return $GLOBALS['pdo'];
+        };
+        $container['metadata/loader'] = function (Container $container) {
+            return new MetadataLoader([
+                'logger'    => $container['logger'],
+                'cache'     => $container['cache'],
+                'base_path' => __DIR__,
+                'paths'     => [ 'metadata' ]
+            ]);
+        };
+        $container['property/factory'] = function (Container $container) {
+            return new Factory([
+                'resolver_options' => [
+                    'prefix' => '\Charcoal\Property\\',
+                    'suffix' => 'Property'
+                ],
+                'arguments' => [[
+                    'container'        => $container,
+                    'logger'           => $container['logger'],
+                    'metadata_loader'  => $container['metadata/loader']
+                ]]
+            ]);
+        };
+
+        return $container;
+    }
+
+    private function getObj()
+    {
+        $container = $this->getContainer();
 
         $source = new DatabaseSource([
-            'logger' => $logger,
-            'pdo'    => $GLOBALS['pdo']
+            'logger' => $container['logger'],
+            'pdo'    => $container['pdo']
         ]);
         $source->setTable('test');
         $source->db()->query('DROP TABLE IF EXISTS `test`');
 
-        $metadataLoader = new MetadataLoader([
-            'logger'    => $logger,
-            'cache'     => $cache,
-            'base_path' => __DIR__,
-            'paths'     => [ 'metadata' ]
+        $obj = new AbstractModelClass([
+            'container'        => $container,
+            'logger'           => $container['logger'],
+            'property_factory' => $container['property/factory'],
+            'metadata_loader'  => $container['metadata/loader']
         ]);
-
-        $propertyFactory = new \Charcoal\Factory\GenericFactory([
-            'base_class'       => \Charcoal\Property\PropertyInterface::class,
-            'default_class'    => \Charcoal\Property\GenericProperty::class,
-            'resolver_options' => [
-                'prefix' => '\Charcoal\Property\\',
-                'suffix' => 'Property'
-            ]
-        ]);
-
-        $dependencies = [
-            'logger'           => $logger,
-            'property_factory' => $propertyFactory,
-            'metadata_loader'  => $metadataLoader
-        ];
-
-        $propertyFactory->setArguments($dependencies);
-
-        $obj = new AbstractModelClass($dependencies);
 
         $source->setModel($obj);
 
