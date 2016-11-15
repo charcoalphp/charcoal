@@ -4,8 +4,6 @@ namespace Charcoal\Tests\Property;
 
 use \PDO;
 
-use \Pimple\Container;
-
 use \Psr\Log\NullLogger;
 
 use \Charcoal\Property\IdProperty;
@@ -30,13 +28,9 @@ class IdPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $container = new Container();
-        $container['database'] = function (Container $container) {
-            $pdo = new PDO('sqlite::memory:');
-            return $pdo;
-        };
+
         $this->obj = new IdProperty([
-            'container' => $container,
+            'database' => new PDO('sqlite::memory:'),
             'logger' => new NullLogger()
         ]);
     }

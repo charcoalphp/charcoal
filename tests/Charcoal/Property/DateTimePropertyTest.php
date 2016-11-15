@@ -4,6 +4,8 @@ namespace Charcoal\Tests\Property;
 
 use \DateTime;
 
+use \PDO;
+
 use \Psr\Log\NullLogger;
 
 use \Charcoal\Property\DateTimeProperty;
@@ -25,6 +27,7 @@ class DateTimePropertyTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->obj = new DateTimeProperty([
+            'database' => new PDO('sqlite::memory:'),
             'logger' => new NullLogger()
         ]);
     }

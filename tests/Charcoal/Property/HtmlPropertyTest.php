@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Property;
 
+use \PDO;
+
 use \Psr\Log\NullLogger;
 
 use \Charcoal\Property\HtmlProperty;
@@ -16,6 +18,7 @@ class HtmlPropertyTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->obj = new HtmlProperty([
+            'database' => new PDO('sqlite::memory:'),
             'logger' => new NullLogger()
         ]);
     }

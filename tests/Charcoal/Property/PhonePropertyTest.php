@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Property;
 
+use \PDO;
+
 use \Psr\Log\NullLogger;
 
 use \Charcoal\Property\PhoneProperty;
@@ -22,6 +24,7 @@ class PhonePropertyTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->obj = new PhoneProperty([
+            'database' => new PDO('sqlite::memory:'),
             'logger' => new NullLogger()
         ]);
     }

@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Property;
 
+use \PDO;
+
 use \Psr\Log\NullLogger;
 
 use \Charcoal\Property\StringProperty;
@@ -24,6 +26,7 @@ class StringPropertyTest extends \PHPUnit_Framework_TestCase
     {
         mb_internal_encoding('UTF-8');
         $this->obj = new StringProperty([
+            'database' => new PDO('sqlite::memory:'),
             'logger' => new NullLogger()
         ]);
     }

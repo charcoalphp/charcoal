@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Property;
 
+use \PDO;
+
 use \Psr\Log\NullLogger;
 
 use \Charcoal\Property\ColorProperty;
@@ -13,6 +15,7 @@ class ColorPropertyTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->obj = new ColorProperty([
+            'database' => new PDO('sqlite::memory:'),
             'logger' => new NullLogger()
         ]);
     }

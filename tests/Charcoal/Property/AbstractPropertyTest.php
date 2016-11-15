@@ -2,7 +2,11 @@
 
 namespace Charcoal\Tests\Property;
 
+use \PDO;
+
 use \Psr\Log\NullLogger;
+
+use \Charcoal\Property\AbstractProperty;
 
 /**
  *
@@ -17,7 +21,8 @@ class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->obj = $this->getMockForAbstractClass('\Charcoal\Property\AbstractProperty', [[
+        $this->obj = $this->getMockForAbstractClass(AbstractProperty::class, [[
+            'database' => new PDO('sqlite::memory:'),
             'logger' => new NullLogger()
         ]]);
     }

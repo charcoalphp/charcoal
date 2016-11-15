@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Model;
 
+use \PDO;
+
 use \Psr\Log\NullLogger;
 
 use \Charcoal\Property\PropertyFactory;
@@ -15,6 +17,7 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
     public function getObj()
     {
         return $this->factory->create('GenericProperty', [
+            'database' => new PDO('sqlite::memory:'),
             'logger' => new NullLogger()
         ]);
     }

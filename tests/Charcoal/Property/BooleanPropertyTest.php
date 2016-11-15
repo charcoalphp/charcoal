@@ -6,8 +6,6 @@ use \PDO;
 
 use \Psr\Log\NullLogger;
 
-use \Pimple\Container;
-
 use \Charcoal\Property\BooleanProperty as BooleanProperty;
 
 /**
@@ -23,13 +21,8 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $container = new Container();
-        $container['database'] = function (Container $container) {
-            $pdo = new PDO('sqlite::memory:');
-            return $pdo;
-        };
         $this->obj = new BooleanProperty([
-            'container' => $container,
+            'database' => new PDO('sqlite::memory:'),
             'logger' => new NullLogger()
         ]);
     }

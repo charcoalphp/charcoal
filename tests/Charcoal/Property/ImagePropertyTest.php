@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Property;
 
+use \PDO;
+
 use \Psr\Log\NullLogger;
 
 use \Charcoal\Property\ImageProperty;
@@ -17,6 +19,7 @@ class ImagePropertyTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->obj = new ImageProperty([
+            'database' => new PDO('sqlite::memory:'),
             'logger' => new NullLogger()
         ]);
     }

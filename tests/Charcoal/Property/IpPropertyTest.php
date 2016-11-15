@@ -18,6 +18,7 @@ class IpPropertyTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->obj = new IpProperty([
+            'database' => new PDO('sqlite::memory:'),
             'logger' => new NullLogger()
         ]);
     }

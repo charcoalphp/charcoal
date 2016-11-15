@@ -4,6 +4,8 @@ namespace Charcoal\Tests\Property;
 
 use \InvalidArgumentException;
 
+use \PDO;
+
 use \Psr\Log\NullLogger;
 
 use \Charcoal\Property\FileProperty;
@@ -19,6 +21,7 @@ class FilePropertyTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->obj = new FileProperty([
+            'database' => new PDO('sqlite::memory:'),
             'logger' => new NullLogger()
         ]);
     }
