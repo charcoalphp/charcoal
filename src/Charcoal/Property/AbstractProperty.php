@@ -153,11 +153,8 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     public function __construct(array $data = null)
     {
-        if (!isset($data['logger'])) {
-            trigger_error('Logger not set');
-            $data['logger'] = new NullLogger();
-        }
         $this->setLogger($data['logger']);
+        $this->setPdo($data['database']);
 
         // Optional DescribableInterface dependencies
         if (isset($data['property_factory'])) {
@@ -180,7 +177,8 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     public function setDependencies(Container $container)
     {
-        $this->setPdo($container['database']);
+        $this->setPropertyFactory($container['property/factory']);
+        $this->setMetadataLoader($container['metadata/loader']);
     }
 
     /**
