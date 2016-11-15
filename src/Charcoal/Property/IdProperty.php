@@ -268,7 +268,12 @@ class IdProperty extends AbstractProperty
         $mode = $this->mode();
 
         if ($mode === self::MODE_AUTO_INCREMENT) {
-            return 'INT(10) UNSIGNED';
+            $dbDriver = $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
+            if ($dbDriver === 'sqlite') {
+                return 'INT';
+            } else {
+                return 'INT(10) UNSIGNED';
+            }
         } elseif ($mode === self::MODE_UNIQID) {
             return 'CHAR(13)';
         } elseif ($mode === self::MODE_UUID) {

@@ -136,7 +136,12 @@ class BooleanProperty extends AbstractProperty
      */
     public function sqlType()
     {
-        return 'TINYINT(1) UNSIGNED';
+        $dbDriver = $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
+        if ($dbDriver === 'sqlite') {
+            return 'INT';
+        } else {
+            return 'TINYINT(1) UNSIGNED';
+        }
     }
 
     /**
