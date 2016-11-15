@@ -168,9 +168,26 @@ abstract class AbstractModel extends AbstractEntity implements
         $properties = $this->properties($propertyFilters);
         foreach ($properties as $propertyIdent => $property) {
             // Ensure objects are properly encoded.
-            $data[$propertyIdent] = json_decode(json_encode($property), true);
+            $v = $this->propertyValue($propertyIdent);
+            $v = $this->serializedValue($v);
+            $data[$propertyIdent] = $v;
         }
         return $data;
+    }
+
+    /**
+     * @param mixed $val The value to serialize.
+     * @return mixed
+     */
+    private function serializedValue($val)
+    {
+        if (is_scalar($val)) {
+            return $val;
+        } elseif ($val instanceof DateTimeInterface) {
+            return (string)$val;
+        } else {
+            return json_decode(json_encode($val), true);
+        }
     }
 
     /**
