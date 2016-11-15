@@ -35,7 +35,7 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
         $container['cache'] = function (Container $container) {
             return new VoidCachePool();
         };
-        $container['pdo'] = function (Container $container) {
+        $container['database'] = function (Container $container) {
             return $GLOBALS['pdo'];
         };
         $container['metadata/loader'] = function (Container $container) {
@@ -55,6 +55,7 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
                 'arguments' => [[
                     'container'        => $container,
                     'logger'           => $container['logger'],
+                    'database'         => $container['database'],
                     'metadata_loader'  => $container['metadata/loader']
                 ]]
             ]);
@@ -67,7 +68,7 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
 
         $source = new DatabaseSource([
             'logger' => $container['logger'],
-            'pdo'    => $container['pdo']
+            'pdo'    => $container['database']
         ]);
         $source->setTable('tests');
 

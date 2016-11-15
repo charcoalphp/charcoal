@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Model;
 
+use \PDO;
+
 use \Charcoal\Model\ModelValidator;
 use \Charcoal\Model\Model;
 
@@ -36,6 +38,7 @@ class ModelValidatorTest extends \PHPUnit_Framework_TestCase
 
         $dependencies = [
             'logger'           => $logger,
+            'database'         => new PDO('sqlite::memory:'),
             'property_factory' => $propertyFactory,
             'metadata_loader'  => $metadataLoader
         ];
