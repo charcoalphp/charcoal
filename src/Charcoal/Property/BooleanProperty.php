@@ -31,7 +31,7 @@ class BooleanProperty extends AbstractProperty
     }
 
     /**
-     * @param $val A single value to parse.
+     * @param mixed $val A single value to parse.
      * @return boolean
      */
     public function parseOne($val)
