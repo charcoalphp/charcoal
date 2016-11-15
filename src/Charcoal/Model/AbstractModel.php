@@ -7,6 +7,8 @@ use \InvalidArgumentException;
 use \JsonSerializable;
 use \Serializable;
 
+use \PDO;
+
 // Dependencies from PSR-3 (Logger)
 use \Psr\Log\LoggerAwareInterface;
 use \Psr\Log\LoggerAwareTrait;
@@ -351,8 +353,7 @@ abstract class AbstractModel extends AbstractEntity implements
             throw new Exception('Error');
         }
 
-        $data = $sth->fetch(\PDO::FETCH_ASSOC);
-
+        $data = $sth->fetch(PDO::FETCH_ASSOC);
         $lang = $data['_lang'];
         unset($data['_lang']);
 
