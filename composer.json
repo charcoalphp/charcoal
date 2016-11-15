@@ -42,6 +42,11 @@
             "Charcoal\\": "src/Charcoal/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Charcoal\\Tests\\": "tests/Charcoal"
+        }
+    },
     "scripts": {
         "test": [
             "@phplint",
