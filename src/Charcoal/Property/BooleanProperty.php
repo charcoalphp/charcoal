@@ -31,6 +31,15 @@ class BooleanProperty extends AbstractProperty
     }
 
     /**
+     * @param $val A single value to parse.
+     * @return boolean
+     */
+    public function parseOne($val)
+    {
+        return !!$val;
+    }
+
+    /**
      * @param mixed $val Optional. The value to display. If non provided, use `val()`.
      * @return string
      */
@@ -128,7 +137,7 @@ class BooleanProperty extends AbstractProperty
     }
 
     /**
-     * Get the SQL type (Storage format)
+     * Get the SQL type (Storage format).
      *
      * Boolean properties are stored as `TINYINT(1) UNSIGNED`
      *
