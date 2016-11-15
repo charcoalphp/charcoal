@@ -5,8 +5,9 @@ namespace Charcoal\Tests\Loader;
 use \ArrayIterator;
 
 use \Psr\Log\NullLogger;
-
 use \Cache\Adapter\Void\VoidCachePool;
+
+use \Pimple\Container;
 
 use \Charcoal\Config\GenericConfig;
 
@@ -24,52 +25,68 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
     private $model;
     private $source;
 
+    private function getContainer()
+    {
+        $container = new Container();
+
+        $container['logger'] = function (Container $container) {
+            return new NullLogger();
+        };
+        $container['cache'] = function (Container $container) {
+            return new VoidCachePool();
+        };
+        $container['pdo'] = function (Container $container) {
+            return $GLOBALS['pdo'];
+        };
+        $container['metadata/loader'] = function (Container $container) {
+            return new MetadataLoader([
+                'logger'    => $container['logger'],
+                'cache'     => $container['cache'],
+                'base_path' => __DIR__,
+                'paths'     => [ 'metadata' ]
+            ]);
+        };
+        $container['property/factory'] = function (Container $container) {
+            return new Factory([
+                'resolver_options' => [
+                    'prefix' => '\Charcoal\Property\\',
+                    'suffix' => 'Property'
+                ],
+                'arguments' => [[
+                    'container'        => $container,
+                    'logger'           => $container['logger'],
+                    'metadata_loader'  => $container['metadata/loader']
+                ]]
+            ]);
+        };
+        return $container;
+    }
     public function setUp()
     {
-        $logger = new NullLogger();
-        $cache  = new VoidCachePool();
+        $container = $this->getContainer();
 
         $source = new DatabaseSource([
-            'logger' => $logger,
-            'pdo'    => $GLOBALS['pdo']
+            'logger' => $container['logger'],
+            'pdo'    => $container['pdo']
         ]);
         $source->setTable('tests');
 
-        $metadataLoader = new MetadataLoader([
-            'logger'    => $logger,
-            'cache'     => $cache,
-            'base_path' => __DIR__,
-            'paths'     => [ 'metadata' ]
-        ]);
-
         $factory = new Factory([
             'arguments' => [[
-                'logger'          => $logger,
-                'metadata_loader' => $metadataLoader
+                'logger'          => $container['logger'],
+                'metadata_loader' => $container['metadata/loader']
             ]]
         ]);
 
-        $propertyFactory = new Factory([
-            'base_class'       => \Charcoal\Property\PropertyInterface::class,
-            'default_class'    => \Charcoal\Property\GenericProperty::class,
-            'resolver_options' => [
-                'prefix' => '\Charcoal\Property\\',
-                'suffix' => 'Property'
-            ]
+        $this->model = new \Charcoal\Model\Model([
+            'container'        => $container,
+            'logger'           => $container['logger'],
+            'property_factory' => $container['property/factory'],
+            'metadata_loader'  => $container['metadata/loader']
         ]);
 
-        $dependencies = [
-            'logger'           => $logger,
-            'property_factory' => $propertyFactory,
-            'metadata_loader'  => $metadataLoader
-        ];
-
-        $propertyFactory->setArguments($dependencies);
-
-        $this->model = new \Charcoal\Model\Model($dependencies);
-
         $this->obj = new CollectionLoader([
-            'logger'  => $logger,
+            'logger'  => $container['logger'],
             'factory' => $factory,
         ]);
 
