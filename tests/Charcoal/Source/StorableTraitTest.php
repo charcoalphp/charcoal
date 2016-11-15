@@ -2,7 +2,6 @@
 
 namespace Charcoal\Tests\Source;
 
-
 class StorableTraitTest extends \PHPUnit_Framework_TestCase
 {
     public $obj;

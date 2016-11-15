@@ -20,8 +20,6 @@ use \Charcoal\Model\Service\ModelBuilder;
 use \Charcoal\Model\Service\ModelLoaderBuilder;
 use \Charcoal\Model\Service\MetadataLoader;
 
-
-
 /**
  *
  */
@@ -112,7 +110,5 @@ class ModelServiceProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testRegisterSetsPropertyFactory()
     {
-
     }
-
 }
