@@ -202,7 +202,6 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
         $dbDriver = $this->db()->getAttribute(PDO::ATTR_DRIVER_NAME);
         if ($dbDriver === 'sqlite') {
             $q = 'SELECT name FROM sqlite_master WHERE type=\'table\' AND name=\''.$this->table().'\';';
-
         } else {
             $q = 'SHOW TABLES LIKE \''.$this->table().'\'';
         }
@@ -221,11 +220,31 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
      */
     public function tableStructure()
     {
-        $q = 'SHOW COLUMNS FROM `'.$this->table().'`';
+        $dbDriver = $this->db()->getAttribute(PDO::ATTR_DRIVER_NAME);
+        if ($dbDriver === 'sqlite') {
+            $q = 'PRAGMA table_info(\''.$this->table().'\') ';
+        } else {
+            $q = 'SHOW COLUMNS FROM `'.$this->table().'`';
+        }
         $this->logger->debug($q);
         $res = $this->db()->query($q);
         $cols = $res->fetchAll((PDO::FETCH_GROUP|PDO::FETCH_UNIQUE|PDO::FETCH_ASSOC));
-        return $cols;
+        if ($dbDriver === 'sqlite') {
+            $ret = [];
+            foreach ($cols as $c) {
+                // Normalize SQLite's result (PRAGMA) with mysql's (SHOW COLUMNS)
+                $ret[$c['name']] = [
+                    'Type'      => $c['type'],
+                    'Null'      => !!$c['notnull'] ? 'NO' : 'YES',
+                    'Default'   => $c['dflt_value'],
+                    'Key'       => !!$c['pk'] ? 'PRI' : '',
+                    'Extra'     => ''
+                ];
+            }
+            return $ret;
+        } else {
+            return $cols;
+        }
     }
 
     /**
