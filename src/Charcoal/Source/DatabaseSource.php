@@ -114,6 +114,8 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
             return true;
         }
 
+        $dbDriver = $this->db()->getAttribute(PDO::ATTR_DRIVER_NAME);
+
         $model = $this->model();
         $metadata = $model->metadata();
         $fields = $this->getModelFields($model);
@@ -122,8 +124,6 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
             $fieldsSql[] = $field->sql();
         }
 
-        $engine = 'InnoDB';
-
         $q = 'CREATE TABLE  `'.$this->table().'` ('."\n";
         $q .= implode(',', $fieldsSql);
         $key = $model->key();
@@ -131,7 +131,12 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
             $q .= ', PRIMARY KEY (`'.$key.'`) '."\n";
         }
         /** @todo add indexes for all defined list constraints (yea... tough job...) */
-        $q .= ') ENGINE='.$engine.' DEFAULT CHARSET=utf8 COMMENT=\''.addslashes($metadata['name']).'\';';
+        if ($dbDriver === 'mysql') {
+            $engine = 'InnoDB';
+            $q .= ') ENGINE='.$engine.' DEFAULT CHARSET=utf8 COMMENT=\''.addslashes($metadata['name']).'\';';
+        } else {
+            $q .= ');';
+        }
         $this->logger->debug($q);
         $this->db()->query($q);
 
@@ -194,7 +199,13 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
      */
     public function tableExists()
     {
-        $q = 'SHOW TABLES LIKE \''.$this->table().'\'';
+        $dbDriver = $this->db()->getAttribute(PDO::ATTR_DRIVER_NAME);
+        if ($dbDriver === 'sqlite') {
+            $q = 'SELECT name FROM sqlite_master WHERE type=\'table\' AND name=\''.$this->table().'\';';
+
+        } else {
+            $q = 'SHOW TABLES LIKE \''.$this->table().'\'';
+        }
         $this->logger->debug($q);
         $res = $this->db()->query($q);
         $tableExists = $res->fetchColumn(0);
