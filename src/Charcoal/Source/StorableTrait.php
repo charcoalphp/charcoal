@@ -172,7 +172,6 @@ trait StorableTrait
     /**
      * Create the model's source, with the Source Factory.
      *
-     * @param mixed $data Optional.
      * @return SourceInterface
      */
     abstract protected function createSource();

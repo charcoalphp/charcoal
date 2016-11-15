@@ -442,6 +442,8 @@ abstract class AbstractModel extends AbstractEntity implements
      */
     protected function preUpdate(array $properties = null)
     {
+        // $properties is unused for now
+        unset($properties);
         return $this->saveProperties();
     }
 
@@ -453,6 +455,8 @@ abstract class AbstractModel extends AbstractEntity implements
      */
     protected function postUpdate(array $properties = null)
     {
+        // $properties is unused for now
+        unset($properties);
         return true;
     }
 
@@ -489,7 +493,6 @@ abstract class AbstractModel extends AbstractEntity implements
     /**
      * StorableInterface > createSource()
      *
-     * @param array $data Optional source data.
      * @throws Exception If the metadata source can not be found.
      * @return SourceInterface
      */
