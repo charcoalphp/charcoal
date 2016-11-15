@@ -163,6 +163,7 @@ class ModelServiceProvider implements ServiceProviderInterface
                     ],
                     'arguments' => [[
                         'container' => $container,
+                        'database'  => $container['database'],
                         'logger'    => $container['logger']
                     ]]
                 ]);
