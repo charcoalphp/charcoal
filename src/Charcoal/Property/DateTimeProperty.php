@@ -15,7 +15,7 @@ use \PDO;
 use \Charcoal\Property\AbstractProperty;
 
 /**
- * DateTime Property
+ * Date/Time Property
  */
 class DateTimeProperty extends AbstractProperty
 {
@@ -27,10 +27,12 @@ class DateTimeProperty extends AbstractProperty
      * @var DateTime $min
      */
     private $min = null;
+
     /**
      * @var DateTime $max
      */
     private $max = null;
+
     /**
      * @var string $format
      */
