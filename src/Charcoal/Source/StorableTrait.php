@@ -281,32 +281,50 @@ trait StorableTrait
     /**
      * @return boolean
      */
-    abstract protected function preSave();
+    protected function preSave()
+    {
+        return true;
+    }
 
     /**
      * @return boolean
      */
-    abstract protected function postSave();
+    protected function postSave()
+    {
+        return true;
+    }
 
     /**
      * @param string[] $keys Optional. The list of keys to update.
      * @return boolean
      */
-    abstract protected function preUpdate(array $keys = null);
+    protected function preUpdate(array $keys = null)
+    {
+        return true;
+    }
 
     /**
      * @param string[] $keys Optional. The list of keys to update.
      * @return boolean
      */
-    abstract protected function postUpdate(array $keys = null);
+    protected function postUpdate(array $keys = null)
+    {
+        return true;
+    }
 
     /**
      * @return boolean
      */
-    abstract protected function preDelete();
+    protected function preDelete()
+    {
+        return true;
+    }
 
     /**
      * @return boolean
      */
-    abstract protected function postDelete();
+    protected function postDelete()
+    {
+        return true;
+    }
 }

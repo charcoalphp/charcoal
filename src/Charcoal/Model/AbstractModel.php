@@ -270,6 +270,8 @@ abstract class AbstractModel extends AbstractEntity implements
         }
 
         $this->setData($data);
+
+        // Set remaining (non-property) data.
         if (!empty($flatData)) {
             $this->setData($flatData);
         }
@@ -425,16 +427,6 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-     * StorableTrait > postSave(). Save hook called after saving the model.
-     *
-     * @return boolean
-     */
-    protected function postSave()
-    {
-        return true;
-    }
-
-    /**
      * StorableTrait > preUpdate(). Update hook called before updating the model.
      *
      * @param string[] $properties Optional. The properties to update.
@@ -445,39 +437,6 @@ abstract class AbstractModel extends AbstractEntity implements
         // $properties is unused for now
         unset($properties);
         return $this->saveProperties();
-    }
-
-    /**
-     * StorableTrait > postUpdate(). Update hook called after updating the model.
-     *
-     * @param string[] $properties Optional. The properties to update.
-     * @return boolean
-     */
-    protected function postUpdate(array $properties = null)
-    {
-        // $properties is unused for now
-        unset($properties);
-        return true;
-    }
-
-    /**
-     * StorableTrait > preDelete(). Delete hook called before deleting the model.
-     *
-     * @return boolean
-     */
-    protected function preDelete()
-    {
-        return true;
-    }
-
-    /**
-     * StorableTrait > postDelete(). Delete hook called after deleting the model.
-     *
-     * @return boolean
-     */
-    protected function postDelete()
-    {
-        return true;
     }
 
     /**
