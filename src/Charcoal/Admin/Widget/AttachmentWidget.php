@@ -135,7 +135,7 @@ class AttachmentWidget extends AdminWidget implements
     public function attachmentTypes()
     {
         $attachableObjects = $this->attachableObjects();
-        $out = [];
+        $out               = [];
 
         if (!$attachableObjects) {
             return $out;
@@ -193,14 +193,14 @@ class AttachmentWidget extends AdminWidget implements
         static $search;
 
         if ($search === null) {
-            $attr = [ 'href', 'link', 'url', 'src' ];
-            $uri  = [ '../', './', '/', 'data', 'fax', 'file', 'ftp', 'geo',
-                      'http', 'mailto', 'sip', 'tag', 'tel', 'urn' ];
+            $attr = ['href', 'link', 'url', 'src'];
+            $uri  = ['../', './', '/', 'data', 'fax', 'file', 'ftp', 'geo',
+                'http', 'mailto', 'sip', 'tag', 'tel', 'urn'];
 
             $search = sprintf(
                 '(?<=%1$s=["\'])(?!%2$s)(\S+)(?=["\'])',
-                implode('=["\']|', array_map('preg_quote', $attr, [ '~' ])),
-                implode('|', array_map('preg_quote', $uri, [ '~' ]))
+                implode('=["\']|', array_map('preg_quote', $attr, ['~'])),
+                implode('|', array_map('preg_quote', $uri, ['~']))
             );
         }
 
@@ -216,6 +216,7 @@ class AttachmentWidget extends AdminWidget implements
 
             if (preg_match('~'.$search.'~i', $text)) {
                 $base = $helper->render('{{ baseUrl }}');
+
                 return preg_replace('~'.$search.'~i', $base.'$1', $text);
             }
             // @codingStandardsIgnoreStart
@@ -224,6 +225,7 @@ class AttachmentWidget extends AdminWidget implements
                     return $this->baseUrl->withPath($text);
                 }
             }*/
+
             // @codingStandardsIgnoreEnd
 
             return $text;
@@ -233,10 +235,43 @@ class AttachmentWidget extends AdminWidget implements
         return $lambda;
     }
 
+    /**
+     * Retrieves a Closure that prepends relative URIs with the project's base PATH.
+     *
+     * @return callable
+     */
+    public function pathWithBaseUrl()
+    {
+        /**
+         * Returns a Closure that provides a way to prepend the base URI.
+         *
+         * @var string       $text   Text to translate.
+         * @var LambdaHelper $helper For rendering strings in the current context.
+         *
+         * @return string
+         */
+        $lambda = function ($path, LambdaHelper $helper) {
+            $base = $helper->render('{{ baseUrl }}');
+            $path = $helper->render($path);
+
+            if (is_object($path) && method_exists($path, '__toString')) {
+                $path = strval($path);
+            }
+
+            if ($path && strpos($path, ':') === false && !in_array($path[0], ['/', '#', '?'])) {
+                return $base.$path;
+            }
+
+            return $path;
+        };
+        $lambda = $lambda->bindTo($this);
+
+        return $lambda;
+    }
 
 
-// Setters
-// =============================================================================
+    // Setters
+    // =============================================================================
 
     /**
      * Set the widget's data.
@@ -434,7 +469,7 @@ class AttachmentWidget extends AdminWidget implements
             $orders     = [];
             $numPerPage = 0;
             $page       = 1;
-            $attOption  = [ 'label', 'filters', 'orders', 'num_per_page', 'page' ];
+            $attOption  = ['label', 'filters', 'orders', 'num_per_page', 'page'];
             $attData    = array_diff_key($attMeta, $attOption);
 
             // Disable an attachable model
@@ -488,8 +523,8 @@ class AttachmentWidget extends AdminWidget implements
 
 
 
-// Getters
-// =============================================================================
+    // Getters
+    // =============================================================================
 
     /**
      * Retrieve the widget factory.
@@ -562,6 +597,7 @@ class AttachmentWidget extends AdminWidget implements
         if (!$this->group) {
             $this->group = AttachmentContainerInterface::DEFAULT_GROUPING;
         }
+
         return $this->group;
     }
 
@@ -606,8 +642,8 @@ class AttachmentWidget extends AdminWidget implements
             'attachable_objects'      => $this->attachableObjects(),
             'attachment_heading'      => $this->attachmentHeading(),
             'attachment_preview'      => $this->attachmentPreview(),
-            'show_attachment_heading' => ( $this->showAttachmentHeading() ? 1 : 0 ),
-            'show_attachment_preview' => ( $this->showAttachmentPreview() ? 1 : 0 ),
+            'show_attachment_heading' => ($this->showAttachmentHeading() ? 1 : 0),
+            'show_attachment_preview' => ($this->showAttachmentPreview() ? 1 : 0),
             'title'                   => $this->title(),
             'obj_type'                => $this->obj()->objType(),
             'obj_id'                  => $this->obj()->id(),
@@ -618,8 +654,8 @@ class AttachmentWidget extends AdminWidget implements
     }
 
 
-// Utilities
-// =============================================================================
+    // Utilities
+    // =============================================================================
 
     /**
      * Generate an HTML-friendly identifier.

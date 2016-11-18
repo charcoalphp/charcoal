@@ -153,13 +153,13 @@
                     "info": {
                         "layout": {
                             "structure": [
-                                { "columns": [ 1, 1 ] },
-                                { "columns": [ 1 ] },
-                                { "columns": [ 1 ] },
-                                { "columns": [ 1 ] },
-                                { "columns": [ 1 ] },
-                                { "columns": [ 1, 1 ] },
-                                { "columns": [ 1, 1 ] }
+                                {"columns": [1, 1]},
+                                {"columns": [1]},
+                                {"columns": [1]},
+                                {"columns": [1]},
+                                {"columns": [1]},
+                                {"columns": [1, 1]},
+                                {"columns": [1, 1]}
                             ]
                         },
                         "title": {
@@ -176,8 +176,8 @@
                     "media": {
                         "layout": {
                             "structure": [
-                                { "columns": [ 1 ] },
-                                { "columns": [ 1, 1 ] }
+                                {"columns": [1]},
+                                {"columns": [1, 1]}
                             ]
                         },
                         "title": {
@@ -192,7 +192,7 @@
                     "taxo": {
                         "layout": {
                             "structure": [
-                                { "columns": [ 1 ] }
+                                {"columns": [1]}
                             ]
                         },
                         "title": {
@@ -220,14 +220,13 @@
                 },
                 "layout": {
                     "structure": [
-                        { "columns": [ 1 ] }
+                        {"columns": [1]}
                     ]
                 },
                 "widgets": {
                     "form": {
                         "type": "charcoal/admin/widget/objectForm",
                         "form_ident": "default",
-                        "obj_type": "charcoal/attachment/object/abstract-attachment",
                         "group_display_mode": "tab"
                     }
                 }
@@ -239,14 +238,13 @@
                 },
                 "layout": {
                     "structure": [
-                        { "columns": [ 1 ] }
+                        {"columns": [1]}
                     ]
                 },
                 "widgets": {
                     "form": {
                         "type": "charcoal/admin/widget/table",
-                        "collection_ident": "default",
-                        "obj_type": "charcoal/attachment/object/abstract-attachment"
+                        "collection_ident": "default"
                     }
                 }
             }
