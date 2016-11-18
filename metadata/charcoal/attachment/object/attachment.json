@@ -151,6 +151,7 @@
                 "l10n_mode": "loop_inputs",
                 "groups": {
                     "info": {
+                        "priority": 100,
                         "layout": {
                             "structure": [
                                 {"columns": [1, 1]},
@@ -174,6 +175,7 @@
                         ]
                     },
                     "media": {
+                        "priority": 200,
                         "layout": {
                             "structure": [
                                 {"columns": [1]},
@@ -190,6 +192,7 @@
                         ]
                     },
                     "taxo": {
+                        "priority": 300,
                         "layout": {
                             "structure": [
                                 {"columns": [1]}
