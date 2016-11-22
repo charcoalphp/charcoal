@@ -115,8 +115,10 @@ final class ModelBuilder
     }
 
     /**
-     * @param string      $objType       The type of object to load. (A class name or object identifier).
-     * @param string|null $metadataIdent Optional. The metadata identifier to load. If null, it will be implied from objType.
+     * @param string      $objType       The type of object to load.
+     *     (A class name or object identifier).
+     * @param string|null $metadataIdent Optional. The metadata identifier to load.
+     *     If NULL, it will be implied from objType.
      * @return MetadataInterface
      */
     private function createMetadata($objType, $metadataIdent = null)
@@ -126,8 +128,10 @@ final class ModelBuilder
     }
 
     /**
-     * @param ModelMetadata $metadata    The object metadata, where to find the object's source configuration.
-     * @param string|null   $sourceIdent Optional. Custom source ident to load. If null, the default (from metadata) will be used.
+     * @param ModelMetadata $metadata    The object metadata, where to find the object's
+     *     source configuration.
+     * @param string|null   $sourceIdent Optional. Custom source ident to load.
+     *     If NULL, the default (from metadata) will be used.
      * @throws Exception If the source is not defined in the model's metadata.
      * @return SourceInterface
      */
