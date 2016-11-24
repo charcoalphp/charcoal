@@ -62,18 +62,6 @@ trait AttachmentContainerTrait
     protected $group;
 
     /**
-     * Alias of {@see \Charcoal\Source\StorableTrait::id()}
-     *
-     * Retrieve the container's (unique) ID; useful when templating the container's attachments.
-     *
-     * @return mixed
-     */
-    public function containerId()
-    {
-        return $this->id();
-    }
-
-    /**
      * Retrieve the attachments configuration from this object's metadata.
      *
      * @return array

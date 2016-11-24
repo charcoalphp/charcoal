@@ -12,12 +12,10 @@ use \Charcoal\Admin\Widget\AttachmentWidget;
 
 // Local Dependencies
 use \Charcoal\Attachment\Interfaces\AttachableInterface;
+use \Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
+
 use \Charcoal\Attachment\Object\Join;
 use \Charcoal\Attachment\Object\Attachment;
-use \Charcoal\Attachment\Object\File;
-use \Charcoal\Attachment\Object\Image;
-use \Charcoal\Attachment\Object\Text;
-use \Charcoal\Attachment\Object\Video;
 
 /**
  * Provides support for attachments to objects.
@@ -142,24 +140,35 @@ trait AttachmentAwareTrait
 
         $widget = $this->attachmentWidget();
         if ($widget instanceof AttachmentWidget) {
-            $callable = function ($att) {
+            $callable = function ($att) use ($widget) {
+                if ($this instanceof AttachableInterface) {
+                    $att->setContainerObj($this);
+                }
+
                 $kind = $att->type();
-                $attachables = $this->attachableObjects();
+                $attachables = $widget->attachableObjects();
 
                 if (isset($attachables[$kind]['data'])) {
                     $att->setData($attachables[$kind]['data']);
                 }
 
                 if (!$att->rawHeading()) {
-                    $att->setHeading($this->attachmentHeading());
+                    $att->setHeading($widget->attachmentHeading());
                 }
 
                 if (!$att->rawPreview()) {
-                    $att->setPreview($this->attachmentPreview());
+                    $att->setPreview($widget->attachmentPreview());
                 }
             };
-            $loader->setCallback($callable->bindTo($widget));
+        } else {
+            $callable = function ($att) {
+                if ($this instanceof AttachableInterface) {
+                    $att->setContainerObj($this);
+                }
+            };
         }
+
+        $loader->setCallback($callable->bindTo($this));
 
         $collection = $loader->loadFromQuery($query);
 

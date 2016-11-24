@@ -17,6 +17,7 @@ use \Charcoal\Translation\TranslationString;
 
 // From 'beneroch/charcoal-attachments'
 use \Charcoal\Attachment\Interfaces\AttachableInterface;
+use \Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
 
 use \Charcoal\Attachment\Object\File;
 use \Charcoal\Attachment\Object\Image;
@@ -70,6 +71,13 @@ class Attachment extends Content implements AttachableInterface
      * @var array $resolved
      */
     protected static $resolved = [];
+
+    /**
+     * The attachment's parent container instance.
+     *
+     * @var AttachmentContainerInterface|null
+     */
+    protected $containerObj;
 
     /**
      * The attachment type.
@@ -175,6 +183,81 @@ class Attachment extends Content implements AttachableInterface
         parent::setDependencies($container);
 
         $this->setCollectionLoader($container['model/collection/loader']);
+    }
+
+    /**
+     * Retrieve the attachment's container ID (if any).
+     *
+     * Useful when templating a container of nested attachments.
+     *
+     * @return mixed|null
+     */
+    public function containerId()
+    {
+        $container = $this->containerObj();
+        if ($container) {
+            return $container->id();
+        }
+
+        return null;
+    }
+
+    /**
+     * Determine if the attachment belongs to a container.
+     *
+     * @return boolean
+     */
+    public function hasContainerObj()
+    {
+        return boolval($this->containerObj);
+    }
+
+    /**
+     * Retrieve the attachment's container instance.
+     *
+     * @return AttachmentContainerInterface|null
+     */
+    public function containerObj()
+    {
+        return $this->containerObj;
+    }
+
+    /**
+     * Set the attachment's container instance.
+     *
+     * @param  AttachmentContainerInterface|null $obj The container object or NULL.
+     * @throws InvalidArgumentException If the given object is invalid.
+     * @return Attachment
+     */
+    public function setContainerObj($obj)
+    {
+        if ($obj === null) {
+            $this->containerObj = null;
+            return $this;
+        }
+
+        if (!$obj instanceof AttachmentContainerInterface) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'Container object must be an instance of %s; received %s',
+                    AttachmentContainerInterface::class,
+                    (is_object($obj) ? get_class($obj) : gettype($obj))
+                )
+            );
+        }
+
+        if (!$obj->id()) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'Container object must have an ID.',
+                    (is_object($obj) ? get_class($obj) : gettype($obj))
+                )
+            );
+        }
+
+        $this->containerObj = $obj;
+
+        return $this;
     }
 
     /**
@@ -421,6 +504,16 @@ class Attachment extends Content implements AttachableInterface
     public function isLink()
     {
         return ($this->microType() === 'link');
+    }
+
+    /**
+     * Determine if this attachment is a container.
+     *
+     * @return boolean
+     */
+    public function isAttachmentContainer()
+    {
+        return ($this instanceof AttachmentContainerInterface);
     }
 
 
@@ -674,7 +767,7 @@ class Attachment extends Content implements AttachableInterface
     public function preDelete()
     {
         $attId = $this->id();
-        $joinProto = $this->modelFactory()->create(Join::class);
+        $joinProto = $this->modelFactory()->get(Join::class);
         $loader = $this->collectionLoader();
         $loader->setModel($joinProto);
 
