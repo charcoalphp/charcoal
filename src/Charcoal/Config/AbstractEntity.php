@@ -267,6 +267,7 @@ abstract class AbstractEntity implements EntityInterface
             return $this->getWithSeparator($key);
         }
         $getter = $this->getter($key);
+
         if (is_callable([$this, $getter])) {
             return $this->{$getter}();
         } else {
@@ -303,6 +304,12 @@ abstract class AbstractEntity implements EntityInterface
             $this->setWithSeparator($key, $value);
         } else {
             $setter = $this->setter($key);
+
+            // Case: url.com?_=something
+            if ($setter === 'set') {
+                return ;
+            }
+
             if (is_callable([$this, $setter])) {
                 $this->{$setter}($value);
             } else {
