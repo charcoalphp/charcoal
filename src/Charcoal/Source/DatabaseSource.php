@@ -554,9 +554,12 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
             SET
                 '.implode(", \n\t", $updates).'
             WHERE
-                `'.$model->key().'`=:'.$model->key().'
-            LIMIT
-                1';
+                `'.$model->key().'`=:'.$model->key().'';
+
+        $dbDriver = $this->db()->getAttribute(PDO::ATTR_DRIVER_NAME);
+        if ($dbDriver == 'mysql') {
+            $q .= "\n".'LIMIT 1';
+        }
 
         $res = $this->dbQuery($q, $binds, $binds_types);
 
@@ -622,6 +625,9 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     {
         $this->logger->debug($q, $binds);
         $sth = $this->db()->prepare($q);
+        if (!$sth) {
+            return false;
+        }
         if (!empty($binds)) {
             foreach ($binds as $k => $v) {
                 if ($binds[$k] === null) {
