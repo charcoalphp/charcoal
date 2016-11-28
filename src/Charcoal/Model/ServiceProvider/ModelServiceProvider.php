@@ -15,6 +15,7 @@ use \Charcoal\Property\GenericProperty;
 
 // Intra-module (`charcoal-core`) dependencies
 use \Charcoal\Loader\CollectionLoader;
+use \Charcoal\Model\Collection;
 use \Charcoal\Model\ModelInterface;
 use \Charcoal\Source\SourceInterface;
 use \Charcoal\Source\DatabaseSource;
@@ -120,7 +121,7 @@ class ModelServiceProvider implements ServiceProviderInterface
         });
 
         /** The default collection class name. */
-        $container['model/collection/class'] = \Charcoal\Model\Collection::class;
+        $container['model/collection/class'] = Collection::class;
     }
 
     /**
