@@ -7,6 +7,20 @@
     },
     "default_source":"default",
     "admin": {
+        "lists":{
+            "default":{
+                "properties":[
+                    "name",
+                    "active"
+                ],
+                "list_actions":[{
+                    "label":"Nouvelle catégorie",
+                    "ident":"create",
+                    "url":"object/edit?obj_type=charcoal/attachment/object/category/generic"
+                }]
+            }
+        },
+        "default_list":"default",
         "forms": {
             "default": {
                 "groups": {
@@ -25,6 +39,9 @@
                             ]
                         }
                     }
+                },
+                "sidebars":{
+                    "actions":{}
                 }
             }
         },
@@ -42,9 +59,25 @@
                         "obj_type": "charcoal/attachment/object/category/generic"
                     }
                 }
+            },
+            "admin.table": {
+                "title": "Liste des catégories",
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] }
+                    ]
+                },
+                "widgets": {
+                    "table": {
+                        "type": "charcoal/admin/widget/table",
+                        "collection_ident": "default",
+                        "obj_type": "charcoal/attachment/object/category/generic"
+                    }
+                }
             }
         },
         "default_create_dashboard": "admin.edit",
-        "default_edit_dashboard": "admin.edit"
+        "default_edit_dashboard": "admin.edit",
+        "default_collection_dashboard": "admin.table"
     }
 }

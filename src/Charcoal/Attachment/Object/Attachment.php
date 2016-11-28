@@ -3,6 +3,7 @@
 namespace Charcoal\Attachment\Object;
 
 use \ReflectionClass;
+use \InvalidArgumentException;
 
 use \Pimple\Container;
 
@@ -29,6 +30,7 @@ use \Charcoal\Attachment\Object\Accordion;
 use \Charcoal\Attachment\Object\Link;
 use \Charcoal\Attachment\Object\Container as AttachmentContainer;
 use \Charcoal\Attachment\Object\Join;
+
 
 /**
  *
@@ -634,6 +636,16 @@ class Attachment extends Content implements AttachableInterface
     }
 
     /**
+     * File extension
+     * @param string $type File extension.
+     */
+    public function setFileType($type)
+    {
+        $this->fileType = $type;
+        return $this;
+    }
+
+    /**
      * Set the embed content.
      *
      * @param string $embed A URI or an HTML media element.
@@ -741,6 +753,15 @@ class Attachment extends Content implements AttachableInterface
     public function fileSize()
     {
         return $this->fileSize;
+    }
+
+    /**
+     * File type / extension
+     * @return string File extension.
+     */
+    public function fileType()
+    {
+        return $this->fileType;
     }
 
     /**
