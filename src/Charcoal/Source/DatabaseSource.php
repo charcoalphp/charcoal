@@ -594,9 +594,12 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
             DELETE FROM
                 `'.$this->table().'`
             WHERE
-                `'.$model->key().'` = :id
-            LIMIT
-                1';
+                `'.$model->key().'` = :id';
+
+        $dbDriver = $this->db()->getAttribute(PDO::ATTR_DRIVER_NAME);
+        if ($dbDriver == 'mysql') {
+            $q .= "\n".'LIMIT 1';
+        }
 
         $binds = [
             'id' => $model->id()
