@@ -135,7 +135,8 @@ class AttachmentWidget extends AdminWidget implements
     public function attachmentTypes()
     {
         $attachableObjects = $this->attachableObjects();
-        $out               = [];
+
+        $out = [];
 
         if (!$attachableObjects) {
             return $out;
@@ -147,6 +148,7 @@ class AttachmentWidget extends AdminWidget implements
             $label = $attMeta['label'];
 
             $out[] = [
+                'id'     => (isset($attMeta['att_id']) ? $attMeta['att_id'] : null),
                 'ident'  => $this->createIdent($attType),
                 'label'  => $label,
                 'val'    => $attType,
@@ -469,7 +471,7 @@ class AttachmentWidget extends AdminWidget implements
             $orders     = [];
             $numPerPage = 0;
             $page       = 1;
-            $attOption  = ['label', 'filters', 'orders', 'num_per_page', 'page'];
+            $attOption  = [ 'label', 'filters', 'orders', 'num_per_page', 'page' ];
             $attData    = array_diff_key($attMeta, $attOption);
 
             // Disable an attachable model
@@ -483,6 +485,9 @@ class AttachmentWidget extends AdminWidget implements
             } else {
                 $attMeta['attachment_type'] = $attType;
             }
+
+            // Useful for attaching a pre-existing attachment
+            $attId = (isset($attMeta['attachment_id']) ? $attMeta['attachment_id'] : null );
 
             if (isset($attMeta['label'])) {
                 if (TranslationString::isTranslatable($attMeta['label'])) {
@@ -507,6 +512,7 @@ class AttachmentWidget extends AdminWidget implements
             }
 
             $out[$attType] = [
+                'att_id'     => $attId,
                 'label'      => $label,
                 'filters'    => $filters,
                 'orders'     => $orders,
