@@ -179,11 +179,6 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
         $loader = $this->collectionLoader;
         $loader->setModel($proto);
 
-        /** @todo Remove this condition in favor of end-developer defining this condition in property definition. */
-        if ($proto->hasProperty('active')) {
-            $loader->addFilter('active', true);
-        }
-
         return $loader;
     }
 
