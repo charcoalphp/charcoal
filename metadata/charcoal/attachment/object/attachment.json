@@ -1,5 +1,6 @@
 {
     "default_data": {
+        "show_title": true,
         "preview": "{{ title }}",
         "heading": {
             "fr": "Contenu relié{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}",
@@ -7,6 +8,7 @@
         }
     },
     "data": {
+        "show_title": true,
         "preview": "{{ title }}",
         "heading": {
             "fr": "Contenu relié{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}",
@@ -26,6 +28,13 @@
             "label": {
                 "fr": "Titre",
                 "en": "Title"
+            }
+        },
+        "show_title": {
+            "type": "boolean",
+            "label": {
+                "en": "Show title on the website",
+                "fr": "Afficher le titre sur le site"
             }
         },
         "categories": {

@@ -103,6 +103,13 @@ class Attachment extends Content implements AttachableInterface
     protected $preview;
 
     /**
+     * Whether to show the title on the front-end.
+     *
+     * @var boolean
+     */
+    protected $showTitle = true;
+
+    /**
      * Generic information about the attachment.
      *
      * @var TranslationString|string[] $title       The title of the attachment.
@@ -524,6 +531,19 @@ class Attachment extends Content implements AttachableInterface
 // =============================================================================
 
     /**
+     * Show/hide the attachment's title on the front-end.
+     *
+     * @param  boolean $show Show (TRUE) or hide (FALSE) the title.
+     * @return UiItemInterface Chainable
+     */
+    public function setShowTitle($show)
+    {
+        $this->showTitle = !!$show;
+
+        return $this;
+    }
+
+    /**
      * Set the attachment's title.
      *
      * @param  string|string[] $title The object title.
@@ -533,6 +553,8 @@ class Attachment extends Content implements AttachableInterface
     {
         if (TranslationString::isTranslatable($title)) {
             $this->title = new TranslationString($title);
+        } else {
+            $this->title = null;
         }
 
         return $this;
@@ -548,6 +570,8 @@ class Attachment extends Content implements AttachableInterface
     {
         if (TranslationString::isTranslatable($title)) {
             $this->subtitle = new TranslationString($title);
+        } else {
+            $this->subtitle = null;
         }
 
         return $this;
@@ -563,6 +587,8 @@ class Attachment extends Content implements AttachableInterface
     {
         if (TranslationString::isTranslatable($description)) {
             $this->description = new TranslationString($description);
+        } else {
+            $this->description = null;
         }
 
         return $this;
@@ -591,6 +617,8 @@ class Attachment extends Content implements AttachableInterface
     {
         if (TranslationString::isTranslatable($path)) {
             $this->file = new TranslationString($path);
+        } else {
+            $this->file = null;
         }
 
         return $this;
@@ -606,6 +634,8 @@ class Attachment extends Content implements AttachableInterface
     {
         if (TranslationString::isTranslatable($link)) {
             $this->link = new TranslationString($link);
+        } else {
+            $this->link = null;
         }
 
         return $this;
@@ -642,6 +672,7 @@ class Attachment extends Content implements AttachableInterface
     public function setFileType($type)
     {
         $this->fileType = $type;
+
         return $this;
     }
 
@@ -672,6 +703,20 @@ class Attachment extends Content implements AttachableInterface
 
 // Getters
 // =============================================================================
+
+    /**
+     * Determine if the title is to be displayed on the front-end.
+     *
+     * @return boolean
+     */
+    public function showTitle()
+    {
+        if (is_bool($this->showTitle)) {
+            return $this->showTitle;
+        } else {
+            return !!$this->title();
+        }
+    }
 
     /**
      * Retrieve the attachment's title.
