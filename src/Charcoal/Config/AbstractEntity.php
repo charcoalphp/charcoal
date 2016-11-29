@@ -337,10 +337,10 @@ abstract class AbstractEntity implements EntityInterface
         unset($this->keys[$key]);
     }
 
-        /**
-         * @param string $key The key of the configuration item to fetch.
-         * @return mixed The item, if found, or null.
-         */
+    /**
+     * @param string $key The key of the configuration item to fetch.
+     * @return mixed The item, if found, or null.
+     */
     private function getInDelegates($key)
     {
         foreach ($this->delegates as $delegate) {

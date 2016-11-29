@@ -7,5 +7,4 @@ namespace Charcoal\Config;
  */
 class GenericConfig extends AbstractConfig
 {
-
 }

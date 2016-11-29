@@ -10,7 +10,6 @@ use \Charcoal\Config\EntityInterface;
  */
 interface ConfigInterface extends EntityInterface
 {
-
     /**
      * Get the configuration's available keys.
      *
