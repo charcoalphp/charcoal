@@ -164,13 +164,9 @@ class DateTimeProperty extends AbstractProperty
             (is_string($val) && ! strlen(trim($val))) ||
             (is_array($val) && ! count(array_filter($val, 'strlen')))
         ) {
-            if ($this->allowNull()) {
-                return null;
-            } else {
-                throw new InvalidArgumentException(
-                    'Val can not be null (Not allowed)'
-                );
-            }
+
+            return new DateTime();
+
         }
 
         if (is_string($val)) {
