@@ -164,9 +164,7 @@ class DateTimeProperty extends AbstractProperty
             (is_string($val) && ! strlen(trim($val))) ||
             (is_array($val) && ! count(array_filter($val, 'strlen')))
         ) {
-
-            return new DateTime();
-
+            return null;
         }
 
         if (is_string($val)) {
