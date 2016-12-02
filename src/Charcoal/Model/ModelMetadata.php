@@ -4,6 +4,7 @@ namespace Charcoal\Model;
 
 use \InvalidArgumentException;
 
+// From 'charcoal-core'
 use \Charcoal\Model\AbstractMetadata;
 
 /**
@@ -12,37 +13,53 @@ use \Charcoal\Model\AbstractMetadata;
 class ModelMetadata extends AbstractMetadata
 {
     /**
-     * @var string $Ident
+     * The metadata identifier.
+     *
+     * @var string
      */
     private $ident;
 
     /**
-     * @var array $Sources
+     * The model's sources.
+     *
+     * @var array
      */
     private $sources;
 
     /**
-     * @var string $defaultSource
+     * The model's default source.
+     *
+     * @var string
      */
     private $defaultSource;
 
     /**
-     * @param string $ident The object meta identifier.
-     * @throws InvalidArgumentException If ident is not a string.
-     * @return ModelMetadata Chainable
+     * Set the metadata identifier.
+     *
+     * @param  string $ident The metadata identifier.
+     * @throws InvalidArgumentException If identifier is not a string.
+     * @return StructureMetadata Chainable
      */
     public function setIdent($ident)
     {
         if (!is_string($ident)) {
             throw new InvalidArgumentException(
-                __CLASS__.'::'.__FUNCTION__.'Ident must be a string.'
+                sprintf(
+                    '[%s] Identifier must be a string; received %s',
+                    get_called_class(),
+                    (is_object($ident) ? get_class($ident) : gettype($ident))
+                )
             );
         }
+
         $this->ident = $ident;
+
         return $this;
     }
 
     /**
+     * Retrieve the metadata identifier.
+     *
      * @return string
      */
     public function ident()
