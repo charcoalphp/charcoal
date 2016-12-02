@@ -1,7 +1,10 @@
 {
-    "properties": {
-        "metadata": {
-            "type": "structure"
+    "admin": {
+        "input_type": "charcoal/admin/property/input/textarea",
+        "form_group": {
+            "type": "charcoal/admin/widget/form-group/structure",
+            "template": "charcoal/admin/widget/form-group/structure",
+            "storage_property": null
         }
     }
 }

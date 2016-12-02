@@ -2,19 +2,19 @@
 
 namespace Charcoal\Property;
 
-// Dependencies from `PHP` extensions
 use \PDO;
 
-// Local namespace dependencies
-use \Charcoal\Property\AbstractProperty;
+// From 'charcoal-property'
+use \Charcoal\Property\StructureProperty;
 
 /**
- * Map Structure Property.
+ * Map Structure Property
  */
-class MapStructureProperty extends AbstractProperty
+class MapStructureProperty extends StructureProperty
 {
-
     /**
+     * Retrieve the property's type identifier.
+     *
      * @return string
      */
     public function type()
@@ -22,28 +22,15 @@ class MapStructureProperty extends AbstractProperty
         return 'map-structure';
     }
 
-
     /**
-     * @return string
-     */
-    public function sqlExtra()
-    {
-        return '';
-    }
-
-    /**
+     * Retrieve the property's SQL data type (storage format).
+     *
+     * For a lack of better array support in mysql, data is stored as encoded JSON in a LONGTEXT.
+     *
      * @return string
      */
     public function sqlType()
     {
         return 'TEXT';
-    }
-
-    /**
-     * @return integer
-     */
-    public function sqlPdoType()
-    {
-        return PDO::PARAM_STR;
     }
 }
