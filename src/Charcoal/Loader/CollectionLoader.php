@@ -563,21 +563,25 @@ class CollectionLoader implements LoggerAwareInterface
     /**
      * Load list from query.
      *
+     * **Example — Binding values to $query**
+     *
+     * ```php
+     * $this->loadFromQuery([
+     *     'SELECT name, colour, calories FROM fruit WHERE calories < :calories AND colour = :colour',
+     *     [
+     *         'calories' => 150,
+     *         'colour'   => 'red'
+     *     ],
+     *     [ 'calories' => PDO::PARAM_INT ]
+     * ]);
+     * ```
+     *
      * @param  string|array $query    The SQL query as a string or an array composed of the query,
      *     parameter binds, and types of parameter bindings.
-     *     ```
-     *     $this->loadFromQuery([
-     *         'SELECT name, colour, calories FROM fruit WHERE calories < :calories AND colour = :colour',
-     *         [
-     *             'calories' => 150,
-     *             'colour'   => 'red'
-     *         ],
-     *         [ 'calories' => PDO::PARAM_INT ]
-     *     ]);
-     *     ```
      * @param  callable     $callback Optional. Apply a callback to every entity of the collection.
      *    Leave blank to use {@see CollectionLoader::callback()}.
      * @throws RuntimeException If the database connection fails.
+     * @throws InvalidArgumentException If the SQL string/set is invalid.
      * @return ArrayAccess|Traversable
      */
     public function loadFromQuery($query, callable $callback = null)

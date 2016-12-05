@@ -29,14 +29,14 @@ class Collection implements CollectionInterface
      * Ensures that each object gets loaded only once by keeping
      * every loaded object in an associative array.
      *
-     * @var ModelInterface[]
+     * @var object[]
      */
     private $objects = [];
 
     /**
      * Create a new collection.
      *
-     * @param  ModelInterface[]|null $objs Array of objects to pre-populate this collection.
+     * @param  array|Traversable|null $objs Array of objects to pre-populate this collection.
      * @return void
      */
     public function __construct($objs = null)
@@ -49,7 +49,7 @@ class Collection implements CollectionInterface
     /**
      * Retrieve the first object in the collection.
      *
-     * @return ModelInterface|null
+     * @return object|null
      */
     public function first()
     {
@@ -63,7 +63,7 @@ class Collection implements CollectionInterface
     /**
      * Retrieve the last object in the collection.
      *
-     * @return ModelInterface|null
+     * @return object|null
      */
     public function last()
     {
@@ -80,7 +80,7 @@ class Collection implements CollectionInterface
     /**
      * Merge the collection with the given objects.
      *
-     * @param  ModelInterface[] $objs Array of objects to append to this collection.
+     * @param  array|Traversable $objs Array of objects to append to this collection.
      * @throws InvalidArgumentException If the given array contains an unacceptable value.
      * @return self
      */
@@ -107,7 +107,7 @@ class Collection implements CollectionInterface
     /**
      * Add an object to the collection.
      *
-     * @param  ModelInterface $obj An acceptable object.
+     * @param  object $obj An acceptable object.
      * @throws InvalidArgumentException If the given value is not acceptable.
      * @return self
      */
@@ -131,7 +131,7 @@ class Collection implements CollectionInterface
      * Retrieve the object by primary key.
      *
      * @param  mixed $key The primary key.
-     * @return ModelInterface|null The object or NULL if not in the collection.
+     * @return object|null The object or NULL if not in the collection.
      */
     public function get($key)
     {
@@ -194,7 +194,7 @@ class Collection implements CollectionInterface
     /**
      * Retrieve all objects in collection indexed by primary keys.
      *
-     * @return ModelInterface[] An associative array of objects.
+     * @return object[] An associative array of objects.
      */
     public function all()
     {
@@ -204,7 +204,7 @@ class Collection implements CollectionInterface
     /**
      * Retrieve all objects in the collection indexed numerically.
      *
-     * @return ModelInterface[] A sequential array of objects.
+     * @return object[] A sequential array of objects.
      */
     public function values()
     {
@@ -316,7 +316,7 @@ class Collection implements CollectionInterface
     {
         if (is_int($offset)) {
             if ($offset < 0) {
-                $offset = $this->count() - $offset;
+                $offset = ($this->count() - $offset);
             }
         }
 
@@ -382,7 +382,7 @@ class Collection implements CollectionInterface
      * Alias of {@see self::values()}
      *
      * @deprecated
-     * @return ModelInterface[]
+     * @return object[]
      */
     public function objects()
     {
@@ -393,7 +393,7 @@ class Collection implements CollectionInterface
      * Alias of {@see self::all()}.
      *
      * @deprecated
-     * @return ModelInterface[]
+     * @return object[]
      */
     public function map()
     {

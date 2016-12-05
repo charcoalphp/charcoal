@@ -2,9 +2,6 @@
 
 namespace Charcoal\Model;
 
-// From 'charcoal-core'
-use \Charcoal\Model\ModelInterface;
-
 /**
  * Defines a model collection.
  */
@@ -13,7 +10,7 @@ interface CollectionInterface extends \ArrayAccess, \Countable, \IteratorAggrega
     /**
      * Merge the collection with the given objects.
      *
-     * @param  ModelInterface[] $objs Array of objects to append to this collection.
+     * @param  array|Traversable $objs Array of objects to append to this collection.
      * @return CollectionInterface
      */
     public function merge($objs);
@@ -21,7 +18,7 @@ interface CollectionInterface extends \ArrayAccess, \Countable, \IteratorAggrega
     /**
      * Add an object to the collection.
      *
-     * @param  ModelInterface $obj An acceptable object.
+     * @param  object $obj An acceptable object.
      * @return CollectionInterface
      */
     public function add($obj);
@@ -30,7 +27,7 @@ interface CollectionInterface extends \ArrayAccess, \Countable, \IteratorAggrega
      * Retrieve the object by primary key.
      *
      * @param  mixed $key The primary key.
-     * @return ModelInterface|null The object or NULL if not in the collection.
+     * @return object|null The object or NULL if not in the collection.
      */
     public function get($key);
 
@@ -60,14 +57,14 @@ interface CollectionInterface extends \ArrayAccess, \Countable, \IteratorAggrega
     /**
      * Retrieve all objects in collection indexed by primary keys.
      *
-     * @return ModelInterface[] An associative array of objects.
+     * @return object[] An associative array of objects.
      */
     public function all();
 
     /**
      * Retrieve all objects in the collection indexed numerically.
      *
-     * @return ModelInterface[] A sequential array of objects.
+     * @return object[] A sequential array of objects.
      */
     public function values();
 
