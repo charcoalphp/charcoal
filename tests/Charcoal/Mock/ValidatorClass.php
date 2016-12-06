@@ -1,13 +1,13 @@
 <?php
 
-namespace Charcoal\Tests\Validator;
+namespace Charcoal\Tests\Mock;
 
 use \Charcoal\Validator\AbstractValidator as AbstractValidator;
 
 /**
  * Concrete implementation of AbstractValidator for Unit Tests.
  */
-class AbstractValidatorClass extends AbstractValidator
+class ValidatorClass extends AbstractValidator
 {
     public function validate()
     {

@@ -1,12 +1,14 @@
 <?php
 
-use \Charcoal\Config\GenericConfig;
+# use \Charcoal\Config\GenericConfig;
 
-/** Composer autoloader for Charcoal's PSR4-compliant Unit Tests */
-$autoloader = require dirname(__DIR__).'/vendor/autoload.php';
-$autoloader->add('Charcoal\\', __DIR__.'/src/');
-$autoloader->add('Charcoal\\Tests\\', __DIR__.'/Charcoal/');
+date_default_timezone_set('UTC');
 
+/** @var \Composer\Autoload\ClassLoader $autoloader */
+$autoloader = require dirname(__DIR__) . '/vendor/autoload.php';
+# $autoloader->addPsr4('Charcoal\\Tests\\', __DIR__.'/Charcoal/');
+
+/*
 $databaseConfig = [
     'host'     => 'localhost',
     'database' => 'charcoal_test',
@@ -48,3 +50,4 @@ $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
 
 $GLOBALS['pdo'] = $db;
+*/

@@ -1,6 +1,6 @@
 <?php
 
-namespace Charcoal\Tests\Validator;
+namespace Charcoal\Tests\Mock;
 
 use \Charcoal\Validator\ValidatableInterface as ValidatableInterface;
 use \Charcoal\Validator\ValidatableTrait as ValidatableTrait;
@@ -16,8 +16,7 @@ class ValidatableClass implements ValidatableInterface
 
     public function createValidator($data = null)
     {
-        include_once 'AbstractValidatorClass.php';
-        $v = new AbstractValidatorClass();
+        $v = new ValidatorClass();
         if ($data !== null) {
             $v->setData($data);
         }

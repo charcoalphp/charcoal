@@ -4,20 +4,17 @@ namespace Charcoal\Tests\Validator;
 
 use \Charcoal\Validator\ValidatorResult as ValidatorResult;
 
-class AbstractValidatorTest extends \PHPUnit_Framework_TestCase
+use \Charcoal\Tests\Mock\ValidatorClass;
+use \Charcoal\Tests\Mock\ValidatableClass;
+
+class ValidatorTest extends \PHPUnit_Framework_TestCase
 {
     public $obj;
-
-    public static function setUpBeforeClass()
-    {
-        include_once 'AbstractValidatorClass.php';
-        include_once 'ValidatableClass.php';
-    }
 
     public function setUp()
     {
         $this->model = new ValidatableClass();
-        $this->obj = new AbstractValidatorClass($this->model);
+        $this->obj   = new ValidatorClass($this->model);
     }
 
     public function testConstructor()
@@ -54,7 +51,7 @@ class AbstractValidatorTest extends \PHPUnit_Framework_TestCase
     {
         $result = [
             'ident'   => 'bar',
-            'level'   => AbstractValidatorClass::ERROR,
+            'level'   => ValidatorClass::ERROR,
             'message' => 'foo'
         ];
 
@@ -74,7 +71,7 @@ class AbstractValidatorTest extends \PHPUnit_Framework_TestCase
     {
         $result = [
             'ident'   => 'bar',
-            'level'   => AbstractValidatorClass::ERROR,
+            'level'   => ValidatorClass::ERROR,
             'message' => 'foo'
         ];
 
@@ -83,19 +80,19 @@ class AbstractValidatorTest extends \PHPUnit_Framework_TestCase
 
         $obj->addResult($result);
         $result_obj = new ValidatorResult($result);
-        $this->assertEquals([AbstractValidatorClass::ERROR => [$result_obj]], $obj->results());
+        $this->assertEquals([ValidatorClass::ERROR => [$result_obj]], $obj->results());
     }
 
     public function testErrorResults()
     {
         $result = [
             'ident'   => 'bar',
-            'level'   => AbstractValidatorClass::ERROR,
+            'level'   => ValidatorClass::ERROR,
             'message' => 'foo'
         ];
         $result2 = [
             'ident'   => 'foo',
-            'level'   => AbstractValidatorClass::NOTICE,
+            'level'   => ValidatorClass::NOTICE,
             'message' => 'bar'
         ];
         $obj = $this->obj;
@@ -111,12 +108,12 @@ class AbstractValidatorTest extends \PHPUnit_Framework_TestCase
     {
         $result = [
             'ident'   => 'bar',
-            'level'   => AbstractValidatorClass::WARNING,
+            'level'   => ValidatorClass::WARNING,
             'message' => 'foo'
         ];
         $result2 = [
             'ident'   => 'foo',
-            'level'   => AbstractValidatorClass::NOTICE,
+            'level'   => ValidatorClass::NOTICE,
             'message' => 'bar'
         ];
         $obj = $this->obj;
@@ -132,12 +129,12 @@ class AbstractValidatorTest extends \PHPUnit_Framework_TestCase
     {
         $result = [
             'ident'   => 'bar',
-            'level'   => AbstractValidatorClass::NOTICE,
+            'level'   => ValidatorClass::NOTICE,
             'message' => 'foo'
         ];
         $result2 = [
             'ident'   => 'foo',
-            'level'   => AbstractValidatorClass::ERROR,
+            'level'   => ValidatorClass::ERROR,
             'message' => 'bar'
         ];
         $obj = $this->obj;
@@ -153,18 +150,18 @@ class AbstractValidatorTest extends \PHPUnit_Framework_TestCase
     {
         $result = [
             'ident'   => 'bar',
-            'level'   => AbstractValidatorClass::NOTICE,
+            'level'   => ValidatorClass::NOTICE,
             'message' => 'foo'
         ];
         $result2 = [
             'ident'   => 'foo',
-            'level'   => AbstractValidatorClass::ERROR,
+            'level'   => ValidatorClass::ERROR,
             'message' => 'bar'
         ];
         $result_obj = new ValidatorResult($result);
         $result2_obj = new ValidatorResult($result2);
         $obj = $this->obj;
-        $obj2 = new AbstractValidatorClass($this->model);
+        $obj2 = new ValidatorClass($this->model);
 
         $obj->addResult($result);
         $obj2->addResult($result2);
@@ -172,8 +169,8 @@ class AbstractValidatorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             [
-                AbstractValidatorClass::NOTICE => [$result_obj],
-                AbstractValidatorClass::ERROR => [$result2_obj]
+                ValidatorClass::NOTICE => [$result_obj],
+                ValidatorClass::ERROR => [$result2_obj]
             ],
             $obj->results()
         );

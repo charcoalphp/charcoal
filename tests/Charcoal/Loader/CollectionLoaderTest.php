@@ -20,48 +20,13 @@ use \Charcoal\Model\Service\MetadataLoader;
 
 class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
 {
+    use \Charcoal\Tests\ContainerIntegrationTrait;
+
     private $obj;
 
     private $model;
     private $source;
 
-    private function getContainer()
-    {
-        $container = new Container();
-
-        $container['logger'] = function (Container $container) {
-            return new NullLogger();
-        };
-        $container['cache'] = function (Container $container) {
-            return new VoidCachePool();
-        };
-        $container['database'] = function (Container $container) {
-            return $GLOBALS['pdo'];
-        };
-        $container['metadata/loader'] = function (Container $container) {
-            return new MetadataLoader([
-                'logger'    => $container['logger'],
-                'cache'     => $container['cache'],
-                'base_path' => __DIR__,
-                'paths'     => [ 'metadata' ]
-            ]);
-        };
-        $container['property/factory'] = function (Container $container) {
-            return new Factory([
-                'resolver_options' => [
-                    'prefix' => '\Charcoal\Property\\',
-                    'suffix' => 'Property'
-                ],
-                'arguments' => [[
-                    'container'        => $container,
-                    'logger'           => $container['logger'],
-                    'database'         => $container['database'],
-                    'metadata_loader'  => $container['metadata/loader']
-                ]]
-            ]);
-        };
-        return $container;
-    }
     public function setUp()
     {
         $container = $this->getContainer();

@@ -2,14 +2,11 @@
 
 namespace Charcoal\Tests\Validator;
 
+use \Charcoal\Tests\Mock\ValidatableClass;
+
 class ValidatableTraitTest extends \PHPUnit_Framework_TestCase
 {
     public $obj;
-
-    public static function setUpBeforeClass()
-    {
-        include_once 'ValidatableClass.php';
-    }
 
     public function setUp()
     {
@@ -19,6 +16,6 @@ class ValidatableTraitTest extends \PHPUnit_Framework_TestCase
     public function testConstructor()
     {
         $obj = $this->obj;
-        $this->assertInstanceOf('\Charcoal\Tests\Validator\ValidatableClass', $obj);
+        $this->assertInstanceOf(ValidatableClass::class, $obj);
     }
 }
