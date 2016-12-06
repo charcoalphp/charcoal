@@ -19,6 +19,11 @@ use \Charcoal\Model\ModelInterface;
  * For iterating instances of {@see ModelInterface}.
  *
  * Used by {@see \Charcoal\Loader\CollectionLoader} for storing results.
+ *
+ * The collection stores models by {@see \Charcoal\Source\StorableInterface their primary key}.
+ * If two objects share the same storable ID but hold disparate data, they are considered
+ * to be alike. Adding an object that shares the same ID as an object previously stored in
+ * the collection will replace the latter.
  */
 class Collection implements CollectionInterface
 {
@@ -31,7 +36,7 @@ class Collection implements CollectionInterface
      *
      * @var object[]
      */
-    private $objects = [];
+    protected $objects = [];
 
     /**
      * Create a new collection.
@@ -75,7 +80,7 @@ class Collection implements CollectionInterface
     }
 
     // Satisfies CollectionInterface
-    // =================================================================================================================
+    // =============================================================================================
 
     /**
      * Merge the collection with the given objects.
@@ -222,7 +227,7 @@ class Collection implements CollectionInterface
     }
 
     // Satisfies ArrayAccess
-    // =================================================================================================================
+    // =============================================================================================
 
     /**
      * Alias of {@see CollectionInterface::has()}.
@@ -324,7 +329,7 @@ class Collection implements CollectionInterface
     }
 
     // Satisfies Countable
-    // =================================================================================================================
+    // =============================================================================================
 
     /**
      * Get number of objects in collection
@@ -338,7 +343,7 @@ class Collection implements CollectionInterface
     }
 
     // Satisfies IteratorAggregate
-    // =================================================================================================================
+    // =============================================================================================
 
     /**
      * Retrieve an external iterator.
@@ -363,7 +368,7 @@ class Collection implements CollectionInterface
     }
 
     // Satisfies backwards-compatibility
-    // =================================================================================================================
+    // =============================================================================================
 
     /**
      * Retrieve the array offset from the given key.
@@ -403,7 +408,7 @@ class Collection implements CollectionInterface
         return $this->all();
     }
 
-    // =================================================================================================================
+    // =============================================================================================
 
     /**
      * Determine if the given value is acceptable for the collection.
@@ -416,6 +421,16 @@ class Collection implements CollectionInterface
     public function isAcceptable($value)
     {
         return ($value instanceof ModelInterface);
+    }
+
+    /**
+     * Determine if the collection is empty or not.
+     *
+     * @return boolean
+     */
+    public function isEmpty()
+    {
+        return empty($this->objects);
     }
 
     /**
