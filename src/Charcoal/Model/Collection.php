@@ -49,7 +49,7 @@ class Collection implements CollectionInterface
     /**
      * Retrieve the first object in the collection.
      *
-     * @return object|null
+     * @return object|null Returns the first object, or NULL if the collection is empty.
      */
     public function first()
     {
@@ -63,7 +63,7 @@ class Collection implements CollectionInterface
     /**
      * Retrieve the last object in the collection.
      *
-     * @return object|null
+     * @return object|null Returns the last object, or NULL if the collection is empty.
      */
     public function last()
     {
@@ -108,7 +108,7 @@ class Collection implements CollectionInterface
      * Add an object to the collection.
      *
      * @param  object $obj An acceptable object.
-     * @throws InvalidArgumentException If the given value is not acceptable.
+     * @throws InvalidArgumentException If the given object is not acceptable.
      * @return self
      */
     public function add($obj)
@@ -117,7 +117,7 @@ class Collection implements CollectionInterface
             throw new InvalidArgumentException(
                 sprintf(
                     'Must be a model, received %s',
-                    (is_object($value) ? get_class($value) : gettype($value))
+                    (is_object($obj) ? get_class($obj) : gettype($obj))
                 )
             );
         }
@@ -131,7 +131,7 @@ class Collection implements CollectionInterface
      * Retrieve the object by primary key.
      *
      * @param  mixed $key The primary key.
-     * @return object|null The object or NULL if not in the collection.
+     * @return object|null Returns the requested object or NULL if not in the collection.
      */
     public function get($key)
     {
@@ -162,9 +162,9 @@ class Collection implements CollectionInterface
     }
 
     /**
-     * Remove object from collection by primary key or array offset.
+     * Remove object from collection by primary key.
      *
-     * @param  mixed $key The object primary key or array offset to remove.
+     * @param  mixed $key The object primary key to remove.
      * @throws InvalidArgumentException If the given key is not acceptable.
      * @return self
      */
@@ -248,7 +248,7 @@ class Collection implements CollectionInterface
      *
      * @see    \ArrayAccess
      * @param  mixed $offset The object primary key or array offset.
-     * @return mixed The object or NULL if not in the collection.
+     * @return mixed Returns the requested object or NULL if not in the collection.
      */
     public function offsetGet($offset)
     {
@@ -310,13 +310,13 @@ class Collection implements CollectionInterface
      * If offset is negative, the sequence will start that far from the end of the collection.
      *
      * @param  integer $offset The array offset.
-     * @return integer
+     * @return integer Returns the resolved array offset.
      */
     protected function resolveOffset($offset)
     {
         if (is_int($offset)) {
             if ($offset < 0) {
-                $offset = ($this->count() - $offset);
+                $offset = ($this->count() - abs($offset));
             }
         }
 
@@ -367,6 +367,7 @@ class Collection implements CollectionInterface
 
     /**
      * Retrieve the array offset from the given key.
+     *
      * @deprecated
      * @param  mixed $key The primary key to retrieve the offset from.
      * @return integer Returns an array offset.
@@ -382,6 +383,7 @@ class Collection implements CollectionInterface
      * Alias of {@see self::values()}
      *
      * @deprecated
+     * @todo   Trigger deprecation error.
      * @return object[]
      */
     public function objects()
@@ -393,6 +395,7 @@ class Collection implements CollectionInterface
      * Alias of {@see self::all()}.
      *
      * @deprecated
+     * @todo   Trigger deprecation error.
      * @return object[]
      */
     public function map()
@@ -430,17 +433,22 @@ class Collection implements CollectionInterface
     /**
      * Parse the given value into an array.
      *
-     * @param  mixed $value The value being parsed.
+     * @link http://php.net/types.array#language.types.array.casting
+     *     If an object is converted to an array, the result is an array whose
+     *     elements are the object's properties.
+     * @param  mixed $value The value being converted.
      * @return array
      */
     protected function asArray($value)
     {
         if (is_array($value)) {
             return $value;
-        } elseif ($value instanceof self) {
+        } elseif ($value instanceof CollectionInterface) {
             return $value->all();
         } elseif ($value instanceof Traversable) {
             return iterator_to_array($value);
+        } elseif ($value instanceof ModelInterface) {
+            return [ $value ];
         }
 
         return (array)$value;
