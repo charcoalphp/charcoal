@@ -86,6 +86,7 @@ trait FormTrait
     public function setFormGroupFactory(FactoryInterface $factory)
     {
         $this->formGroupFactory = $factory;
+
         return $this;
     }
 
@@ -100,6 +101,7 @@ trait FormTrait
                 'Form group factory was not set.'
             );
         }
+
         return $this->formGroupFactory;
     }
 
@@ -110,6 +112,7 @@ trait FormTrait
     public function setGroupCallback(callable $cb)
     {
         $this->groupCallback = $cb;
+
         return $this;
     }
 
@@ -126,6 +129,7 @@ trait FormTrait
             );
         }
         $this->action = $action;
+
         return $this;
     }
 
@@ -153,6 +157,7 @@ trait FormTrait
             );
         }
         $this->method = $method;
+
         return $this;
     }
 
@@ -171,6 +176,7 @@ trait FormTrait
     public function setL10nMode($mode)
     {
         $this->l10nMode = $mode;
+
         return $this;
     }
 
@@ -268,13 +274,21 @@ trait FormTrait
     public function groups(callable $groupCallback = null)
     {
         $groups = $this->groups;
-        uasort($groups, [ $this, 'sortGroupsByPriority' ]);
+        uasort($groups, [$this, 'sortGroupsByPriority']);
 
         $groupCallback = (isset($groupCallback) ? $groupCallback : $this->groupCallback);
 
         $i = 1;
         foreach ($groups as $group) {
             if (!$group->active()) {
+                continue;
+            }
+
+            // Test formGroup vs. ACL roles
+            $authUser = $this->authenticator()->authenticate();
+            if (!$this->authorizer()->userAllowed($authUser, $group->requiredAclPermissions())) {
+                header('HTTP/1.0 403 Forbidden');
+                header('Location: '.$this->adminUrl().'login');
                 continue;
             }
 
@@ -378,7 +392,7 @@ trait FormTrait
      */
     public function isTabbable()
     {
-        return ( $this->groupDisplayMode() === 'tab' );
+        return ($this->groupDisplayMode() === 'tab');
     }
 
     /**
@@ -388,6 +402,7 @@ trait FormTrait
     public function setFormData(array $formData)
     {
         $this->formData = $formData;
+
         return $this;
     }
 
@@ -405,6 +420,7 @@ trait FormTrait
             );
         }
         $this->formData[$key] = $val;
+
         return $this;
     }
 

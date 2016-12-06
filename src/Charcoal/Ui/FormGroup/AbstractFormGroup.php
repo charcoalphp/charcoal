@@ -40,4 +40,20 @@ abstract class AbstractFormGroup extends AbstractUiItem implements
         /** Satisfies {@see \Charcoal\Ui\Layout\LayoutAwareInterface} */
         $this->setLayoutBuilder($data['layout_builder']);
     }
+
+    /**
+     * @param  array|\ArrayAccess $data Widget data.
+     * @return self
+     */
+    public function setData($data)
+    {
+        if (isset($data['permissions'])) {
+            $this->setRequiredAclPermissions($data['permissions']);
+            unset($data['permissions']);
+        }
+
+        parent::setData($data);
+
+        return $this;
+    }
 }

@@ -66,12 +66,20 @@ trait FormGroupTrait
     private $priority;
 
     /**
+     * The required Acl permissions fetch from form group.
+     *
+     * @var string[] $requiredAclPermissions
+     */
+    private $requiredAclPermissions = [];
+
+    /**
      * @param FormInputBuilder $builder The builder, to create customized form input objects.
      * @return FormGroupInterface Chainable
      */
     protected function setFormInputBuilder(FormInputBuilder $builder)
     {
         $this->formInputBuilder = $builder;
+
         return $this;
     }
 
@@ -82,6 +90,7 @@ trait FormGroupTrait
     public function setInputCallback(callable $cb)
     {
         $this->inputCallback = $cb;
+
         return $this;
     }
 
@@ -92,6 +101,7 @@ trait FormGroupTrait
     public function setForm(FormInterface $form)
     {
         $this->form = $form;
+
         return $this;
     }
 
@@ -110,6 +120,7 @@ trait FormGroupTrait
     public function setL10nMode($mode)
     {
         $this->l10nMode = $mode;
+
         return $this;
     }
 
@@ -122,6 +133,25 @@ trait FormGroupTrait
     }
 
     /**
+     * @return string[]
+     */
+    public function requiredAclPermissions()
+    {
+        return $this->requiredAclPermissions;
+    }
+
+    /**
+     * @param array $permissions The Acl permissions required pby the form group.
+     * @return self
+     */
+    public function setRequiredAclPermissions(array $permissions)
+    {
+        $this->requiredAclPermissions = $permissions;
+
+        return $this;
+    }
+
+    /**
      * @param array $inputs The group inputs.
      * @return FormGroupInterface Chainable
      */
@@ -131,6 +161,7 @@ trait FormGroupTrait
         foreach ($inputs as $inputIdent => $input) {
             $this->addInput($inputIdent, $input);
         }
+
         return $this;
     }
 
@@ -153,7 +184,7 @@ trait FormGroupTrait
             $input->setFormGroup($this);
             $this->inputs[$inputIdent] = $input;
         } elseif (is_array($input)) {
-            $g = $this->formInputBuilder->build($input);
+            $g                         = $this->formInputBuilder->build($input);
             $this->inputs[$inputIdent] = $g;
         } else {
             throw new InvalidArgumentException(
@@ -173,7 +204,7 @@ trait FormGroupTrait
     public function inputs(callable $inputCallback = null)
     {
         $groups = $this->groups;
-        uasort($groups, [ 'self', 'sortInputsByPriority' ]);
+        uasort($groups, ['self', 'sortInputsByPriority']);
 
         $inputCallback = isset($inputCallback) ? $inputCallback : $this->inputCallback;
         foreach ($inputs as $input) {
