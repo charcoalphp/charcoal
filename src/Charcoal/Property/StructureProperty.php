@@ -9,9 +9,11 @@ use \InvalidArgumentException;
 
 // From 'charcoal-core'
 use \Charcoal\Model\Model;
+use \Charcoal\Model\MetadataInterface;
 
 // From 'charcoal-property'
 use \Charcoal\Property\AbstractProperty;
+use \Charcoal\Property\Structure\StructureMetadata;
 
 /**
  * Structure Data Property
@@ -85,11 +87,37 @@ use \Charcoal\Property\AbstractProperty;
 class StructureProperty extends AbstractProperty
 {
     /**
-     * Store the property's structure.
+     * Track the state of loaded metadata for the structure.
+     *
+     * @var boolean
+     */
+    private $isStructureFinalized = false;
+
+    /**
+     * The metadata interfaces to use as the structure.
+     *
+     * These are paths (PSR-4) to import.
      *
      * @var array
      */
-    private $structureData = [];
+    private $structureInterfaces = [];
+
+    /**
+     * Store the property's structure.
+     *
+     * @var array|null
+     */
+    private $structureMetadata;
+
+    /**
+     * Store the property's "terminal" structure.
+     *
+     * This represents the value of "structure_metadata" key on a property definition.
+     * This should always be merged last, after the interfaces are imported.
+     *
+     * @var array|null
+     */
+    private $terminalStructureMetadata;
 
     /**
      * The class name of the "structure" collection to use.
@@ -158,40 +186,179 @@ class StructureProperty extends AbstractProperty
     }
 
     /**
+     * Retrieve the property's structure.
+     *
+     * @return string
+     */
+    public function structureMetadata()
+    {
+        if ($this->structureMetadata === null || $this->isStructureFinalized === false) {
+            $this->structureMetadata = $this->loadStructureMetadata();
+        }
+
+        return $this->structureMetadata;
+    }
+
+    /**
      * Set the property's structure.
      *
-     * @param  array|ArrayAccess $data The property's structure (fields, data).
+     * @param  MetadataInterface|array|null $data The property's structure (fields, data).
      * @throws InvalidArgumentException If the structure is invalid.
      * @return StructureProperty
      */
-    public function setStructureData($data)
+    public function setStructureMetadata($data)
     {
-        if (!is_array($data) && !($data instanceof ArrayAccess)) {
+        if ($data === null) {
+            $this->structureMetadata = $data;
+            $this->terminalStructureMetadata = $data;
+        } elseif (is_array($data)) {
+            $struct = $this->createStructureMetadata();
+            $struct->merge($data);
+
+            $this->structureMetadata = $struct;
+            $this->terminalStructureMetadata = $data;
+        } elseif ($data instanceof MetadataInterface) {
+            $this->structureMetadata = $data;
+            $this->terminalStructureMetadata = $data;
+        } else {
             throw new InvalidArgumentException(
                 sprintf(
-                    'Structure [%s] must implement ArrayAccess.',
-                    (is_object($data) ? get_class($data) : gettype($data))
+                    'Structure [%s] is invalid (must be array or an instance of %s).',
+                    (is_object($data) ? get_class($data) : gettype($data)),
+                    StructureMetadata::class
                 )
             );
         }
 
-        $this->structureData = $data;
+        $this->isStructureFinalized = false;
 
         return $this;
     }
 
     /**
-     * Retrieve the property's structure.
+     * Load the property's structure.
      *
-     * @return string
+     * @return MetadataInterface
      */
-    public function structureData()
+    protected function loadStructureMetadata()
     {
-        return $this->structureData;
+        $struct = $this->createStructureMetadata();
+
+        if ($this->isStructureFinalized === false) {
+            $this->isStructureFinalized = true;
+
+            $loader = $this->metadataLoader();
+            $paths  = $this->structureInterfaces();
+            if (!empty($paths)) {
+                foreach ($paths as $path) {
+                    $loader->load($path, $struct);
+                }
+            }
+        }
+
+        if ($this->terminalStructureMetadata) {
+            $struct->merge($this->terminalStructureMetadata);
+        }
+
+        return $struct;
     }
 
     /**
-     * Create a structure.
+     * Retrieve the metadata interfaces used by the property as a structure.
+     *
+     * @return array
+     */
+    public function structureInterfaces()
+    {
+        if (empty($this->structureInterfaces)) {
+            return $this->structureInterfaces;
+        }
+
+        return array_keys($this->structureInterfaces);
+    }
+
+    /**
+     * Set the given metadata interfaces for the property to use as a structure.
+     *
+     * @param  array $namespaces One or more metadata interfaces to use.
+     * @return StructureProperty
+     */
+    public function setStructureInterfaces(array $namespaces)
+    {
+        $this->structureInterfaces = [];
+
+        $this->addStructureInterfaces($namespaces);
+
+        return $this;
+    }
+
+    /**
+     * Add the given metadata interfaces for the property to use as a structure.
+     *
+     * @param  array $namespaces One or more metadata interfaces to use.
+     * @return StructureProperty
+     */
+    public function addStructureInterfaces(array $namespaces)
+    {
+        foreach ($namespaces as $namespace) {
+            $this->addStructureInterface($namespace);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Add the given metadata interfaces for the property to use as a structure.
+     *
+     * @param  string $namespace A metadata interface to use.
+     * @return StructureProperty
+     */
+    public function addStructureInterface($namespace)
+    {
+        if (!is_string($namespace)) {
+            throw new InvalidArgumentException(
+                'Structure path must to be a string'
+            );
+        }
+
+        $namespace = $this->parseStructureInterface($namespace);
+
+        $this->structureInterfaces[$namespace] = true;
+        $this->isStructureFinalized = false;
+
+        return $this;
+    }
+
+    /**
+     * Parse a metadata identifier from given interface.
+     *
+     * Change `\` and `.` to `/` and force lowercase
+     *
+     * @param  string $namespace A metadata interface to convert.
+     * @return string
+     */
+    protected function parseStructureInterface($namespace)
+    {
+        $ident = preg_replace('/([a-z])([A-Z])/', '$1-$2', $namespace);
+        $ident = strtolower(str_replace('\\', '/', $ident));
+
+        return $ident;
+    }
+
+    /**
+     * Create a metadata store for structures.
+     *
+     * Similar to {@see \Charcoal\Model\DescribableTrait::createMetadata()}.
+     *
+     * @return MetadataInterface
+     */
+    private function createStructureMetadata()
+    {
+        return new StructureMetadata();
+    }
+
+    /**
+     * Create a data-model structure.
      *
      * @throws RuntimeException If the structure is invalid.
      * @return ArrayAccess
@@ -214,7 +381,7 @@ class StructureProperty extends AbstractProperty
     }
 
     /**
-     * Set the class name of the structure.
+     * Set the class name of the data-model structure.
      *
      * @param  string $className The class name of the structure.
      * @throws InvalidArgumentException If the class name is not a string.
@@ -234,7 +401,7 @@ class StructureProperty extends AbstractProperty
     }
 
     /**
-     * Retrieve the class name of the structure.
+     * Retrieve the class name of the data-model structure.
      *
      * @return string
      */
@@ -263,7 +430,7 @@ class StructureProperty extends AbstractProperty
             $entries = [];
             foreach ($val as $entry) {
                 $struct = $this->createStructureModel();
-                $struct->setMetadata($this->structureData());
+                $struct->setMetadata($this->structureMetadata());
                 $struct->setData($entry);
 
                 $entries[] = $struct;
@@ -272,7 +439,7 @@ class StructureProperty extends AbstractProperty
             return $entries;
         } else {
             $struct = $this->createStructureModel();
-            $struct->setMetadata($this->structureData());
+            $struct->setMetadata($this->structureMetadata());
             $struct->setData($val);
 
             return $struct;

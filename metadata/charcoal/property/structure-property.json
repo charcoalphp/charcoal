@@ -1,4 +1,13 @@
 {
+    "properties": {
+        "structure_interfaces": {
+            "type": "string",
+            "multiple": true
+        },
+        "structure_metadata": {
+            "type": "structure"
+        }
+    },
     "admin": {
         "input_type": "charcoal/admin/property/input/textarea",
         "form_group": {
