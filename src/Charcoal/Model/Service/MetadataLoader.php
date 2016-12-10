@@ -41,7 +41,7 @@ final class MetadataLoader implements LoggerAwareInterface
      *
      * @var array
      */
-    private static $hierarchyCache = [];
+    private static $lineageCache = [];
 
     /**
      * The cache of snake-cased words.
@@ -249,49 +249,93 @@ final class MetadataLoader implements LoggerAwareInterface
     }
 
     /**
-     * Load the metadata for the given identifier.
+     * Load the metadata for the given identifier or interfaces.
      *
-     * @param  string            $ident    The metadata identifier to load.
-     * @param  MetadataInterface $metadata The metadata object to load into.
-     * @return array
+     * @param  string            $ident      The metadata identifier to load or
+     *     to use as the cache key if $interfaces is provided.
+     * @param  MetadataInterface $metadata   The metadata object to load into.
+     * @param  array|null        $interfaces One or more metadata identifiers to load.
+     * @throws InvalidArgumentException If the identifier is not a string.
+     * @return array Returns the cached metadata instance or if it's stale or empty,
+     *     loads a fresh copy of the data into $metadata and returns it;
      */
-    public function load($ident, MetadataInterface $metadata)
+    public function load($ident, MetadataInterface $metadata, array $interfaces = null)
     {
-        $cacheKey = str_replace('/', '.', 'metadata/object/'.$ident);
+        if (!is_string($ident)) {
+            throw new InvalidArgumentException(
+                'Metadata identifier must be a string'
+            );
+        }
+
+        if (is_array($interfaces) && empty($interfaces)) {
+            $interfaces = null;
+        }
+
+        $cacheKey  = str_replace('/', '.', 'metadata/object/'.$ident);
         $cacheItem = $this->cachePool()->getItem($cacheKey);
 
-        $obj = $cacheItem->get();
         if (!$cacheItem->isHit()) {
-            $data = $this->loadData($ident);
+            if ($interfaces === null) {
+                $data = $this->loadData($ident);
+            } else {
+                $data = $this->loadDataArray($interfaces);
+            }
             $metadata->setData($data);
 
             $this->cachePool()->save($cacheItem->set($metadata));
-            $obj = $metadata;
+
+            return $metadata;
         }
 
-        return $obj;
+        return $cacheItem->get();
     }
 
     /**
      * Fetch the metadata for the given identifier.
      *
      * @param  string $ident The metadata identifier to load.
+     * @throws InvalidArgumentException If the identifier is not a string.
      * @return array
      */
     public function loadData($ident)
     {
-        $hierarchy = $this->hierarchy($ident);
+        if (!is_string($ident)) {
+            throw new InvalidArgumentException(
+                'Metadata identifier must be a string'
+            );
+        }
 
-        $metadata = [];
-        foreach ($hierarchy as $id) {
-            $identData = $this->loadIdent($id);
+        $lineage = $this->hierarchy($ident);
+        $catalog = [];
+        foreach ($lineage as $id) {
+            $data = $this->loadFileFromIdent($id);
 
-            if (is_array($identData)) {
-                $metadata = array_replace_recursive($metadata, $identData);
+            if (is_array($data)) {
+                $catalog = array_replace_recursive($catalog, $data);
             }
         }
 
-        return $metadata;
+        return $catalog;
+    }
+
+    /**
+     * Fetch the metadata for the given identifiers.
+     *
+     * @param  array $idents One or more metadata identifiers to load.
+     * @return array
+     */
+    public function loadDataArray(array $idents)
+    {
+        $catalog = [];
+        foreach ($idents as $id) {
+            $data = $this->loadData($id);
+
+            if (is_array($data)) {
+                $catalog = array_replace_recursive($catalog, $data);
+            }
+        }
+
+        return $catalog;
     }
 
     /**
@@ -306,8 +350,34 @@ final class MetadataLoader implements LoggerAwareInterface
             return [];
         }
 
-        if (isset(static::$hierarchyCache[$ident])) {
-            return static::$hierarchyCache[$ident];
+        if (isset(static::$lineageCache[$ident])) {
+            return static::$lineageCache[$ident];
+        }
+
+        $classname = $this->identToClassname($ident);
+
+        return $this->classLineage($classname, $ident);
+    }
+
+    /**
+     * Build a class/interface lineage from the given PHP namespace.
+     *
+     * @param  string      $classname The FQCN to load the hierarchy from.
+     * @param  string|null $ident     Optional. The snake-cased $classname.
+     * @return array
+     */
+    private function classLineage($classname, $ident = null)
+    {
+        if (!is_string($classname)) {
+            return [];
+        }
+
+        if ($ident === null) {
+            $ident = $this->classnameToIdent($classname);
+        }
+
+        if (isset(static::$lineageCache[$ident])) {
+            return static::$lineageCache[$ident];
         }
 
         $classname = $this->identToClassname($ident);
@@ -332,7 +402,7 @@ final class MetadataLoader implements LoggerAwareInterface
 
         $hierarchy = array_keys($hierarchy);
 
-        static::$hierarchyCache[$ident] = $hierarchy;
+        static::$lineageCache[$ident] = $hierarchy;
 
         return $hierarchy;
     }
@@ -345,12 +415,25 @@ final class MetadataLoader implements LoggerAwareInterface
      * @param  string $ident The metadata identifier to fetch.
      * @return array|null
      */
-    private function loadIdent($ident)
+    private function loadFileFromIdent($ident)
     {
-        $name = $this->filenameFromIdent($ident);
+        $filename = $this->filenameFromIdent($ident);
 
-        if (file_exists($name)) {
-            return $this->loadJsonFile($name);
+        return $this->loadFile($filename);
+    }
+
+    /**
+     * Load a metadata file.
+     *
+     * Supported file types: JSON.
+     *
+     * @param  string $filename A supported metadata file.
+     * @return array|null
+     */
+    private function loadFile($filename)
+    {
+        if (file_exists($filename)) {
+            return $this->loadJsonFile($filename);
         }
 
         $paths = $this->paths();
@@ -359,8 +442,8 @@ final class MetadataLoader implements LoggerAwareInterface
             return null;
         }
 
-        foreach ($paths as $path) {
-            $file = $path.DIRECTORY_SEPARATOR.$name;
+        foreach ($paths as $basePath) {
+            $file = $basePath.DIRECTORY_SEPARATOR.$filename;
             if (file_exists($file)) {
                 return $this->loadJsonFile($file);
             }
