@@ -2,17 +2,17 @@
 
 namespace Charcoal\Model\Service;
 
-// PHP dependencies
+use \RuntimeException;
 use \InvalidArgumentException;
 
-// Dependencies from PSR-3 (Logger)
+// From PSR-3
 use \Psr\Log\LoggerAwareInterface;
 use \Psr\Log\LoggerAwareTrait;
 
-// Dependencies from `PSR-6`
+// From PSR-6
 use \Psr\Cache\CacheItemPoolInterface;
 
-// Intra-module (`charcoal-core`) dependencies
+// From 'charcoal-core'
 use \Charcoal\Model\MetadataInterface;
 
 /**
@@ -60,17 +60,16 @@ final class MetadataLoader implements LoggerAwareInterface
     /**
      * The base path to prepend to any relative paths to search in.
      *
-     * @var string $basePath
+     * @var string
      */
     private $basePath = '';
 
     /**
      * The paths to search in.
      *
-     * @var string[] $paths
+     * @var array
      */
     private $paths = [];
-
 
     /**
      * Return new MetadataLoader object.
@@ -84,7 +83,8 @@ final class MetadataLoader implements LoggerAwareInterface
      * - `paths`
      * - `base_path`
      *
-     * @param array $data The loader's dependencies.
+     * @param  array $data The loader's dependencies.
+     * @return void
      */
     public function __construct(array $data = null)
     {
@@ -95,67 +95,32 @@ final class MetadataLoader implements LoggerAwareInterface
     }
 
     /**
-     * Load the metadata from JSON files.
+     * Set the cache service.
      *
-     * @param string            $ident    The metadata ident to load.
-     * @param MetadataInterface $metadata The metadata object to load into.
-     * @return array
-     */
-    public function load($ident, MetadataInterface $metadata)
-    {
-        $cacheKey = str_replace('/', '.', 'metadata/object/'.$ident);
-        $cacheItem = $this->cachePool()->getItem($cacheKey);
-
-        $obj = $cacheItem->get();
-        if (!$cacheItem->isHit()) {
-            $data = $this->loadData($ident);
-            $metadata->setData($data);
-
-            $this->cachePool()->save($cacheItem->set($metadata));
-            $obj = $metadata;
-        }
-
-        return $obj;
-    }
-
-    /**
-     * Load the metadata from JSON files.
-     *
-     * @param string $ident Optional, set the ident to load.
-     * @return array
-     */
-    public function loadData($ident = null)
-    {
-        $hierarchy = $this->hierarchy($ident);
-
-        $metadata = [];
-        foreach ($hierarchy as $id) {
-            $identData = $this->loadIdent($id);
-
-            if (is_array($identData)) {
-                $metadata = array_replace_recursive($metadata, $identData);
-            }
-        }
-
-        return $metadata;
-    }
-
-
-    /**
-     * @param CacheItemPoolInterface $cache A PSR-6 compliant cache pool instance.
+     * @param  CacheItemPoolInterface $cache A PSR-6 compliant cache pool instance.
      * @return MetadataLoader Chainable
      */
     private function setCachePool(CacheItemPoolInterface $cache)
     {
         $this->cachePool = $cache;
+
         return $this;
     }
 
     /**
+     * Retrieve the cache service.
+     *
+     * @throws RuntimeException If the cache service was not previously set.
      * @return CacheItemPoolInterface
      */
     private function cachePool()
     {
+        if (!isset($this->cachePool)) {
+            throw new RuntimeException(
+                sprintf('Cache Pool is not defined for "%s"', get_class($this))
+            );
+        }
+
         return $this->cachePool;
     }
 
@@ -284,7 +249,53 @@ final class MetadataLoader implements LoggerAwareInterface
     }
 
     /**
-     * Build a class/interface lineage from the given fully qualified class name (in snake case).
+     * Load the metadata for the given identifier.
+     *
+     * @param  string            $ident    The metadata identifier to load.
+     * @param  MetadataInterface $metadata The metadata object to load into.
+     * @return array
+     */
+    public function load($ident, MetadataInterface $metadata)
+    {
+        $cacheKey = str_replace('/', '.', 'metadata/object/'.$ident);
+        $cacheItem = $this->cachePool()->getItem($cacheKey);
+
+        $obj = $cacheItem->get();
+        if (!$cacheItem->isHit()) {
+            $data = $this->loadData($ident);
+            $metadata->setData($data);
+
+            $this->cachePool()->save($cacheItem->set($metadata));
+            $obj = $metadata;
+        }
+
+        return $obj;
+    }
+
+    /**
+     * Fetch the metadata for the given identifier.
+     *
+     * @param  string $ident The metadata identifier to load.
+     * @return array
+     */
+    public function loadData($ident)
+    {
+        $hierarchy = $this->hierarchy($ident);
+
+        $metadata = [];
+        foreach ($hierarchy as $id) {
+            $identData = $this->loadIdent($id);
+
+            if (is_array($identData)) {
+                $metadata = array_replace_recursive($metadata, $identData);
+            }
+        }
+
+        return $metadata;
+    }
+
+    /**
+     * Build a class/interface lineage from the given snake-cased namespace.
      *
      * @param  string $ident The FQCN (in snake-case) to load the hierarchy from.
      * @return array
@@ -327,10 +338,11 @@ final class MetadataLoader implements LoggerAwareInterface
     }
 
     /**
-     * Get an "ident" (file) from all search path and merge the content
+     * Load a metadata file from the given metdata identifier.
      *
-     * @param string $ident The identifier from which to retrieve a file.
-     * @throws InvalidArgumentException If a JSON decoding error occurs.
+     * The file is converted to JSON, the only supported format.
+     *
+     * @param  string $ident The metadata identifier to fetch.
      * @return array|null
      */
     private function loadIdent($ident)
@@ -357,13 +369,13 @@ final class MetadataLoader implements LoggerAwareInterface
         return null;
     }
 
-        /**
-         * Load the contents of a JSON file.
-         *
-         * @param  mixed $filename The file path to retrieve.
-         * @throws InvalidArgumentException If a JSON decoding error occurs.
-         * @return array|null
-         */
+    /**
+     * Load the contents of a JSON file.
+     *
+     * @param  mixed $filename The file path to retrieve.
+     * @throws InvalidArgumentException If a JSON decoding error occurs.
+     * @return array|null
+     */
     protected function loadJsonFile($filename)
     {
         $content = file_get_contents($filename);
@@ -408,9 +420,9 @@ final class MetadataLoader implements LoggerAwareInterface
     }
 
     /**
-     * Convert an identifier to a file path.
+     * Convert a snake-cased namespace to a file path.
      *
-     * @param string $ident The identifier to convert.
+     * @param  string $ident The identifier to convert.
      * @return string
      */
     private function filenameFromIdent($ident)
@@ -422,10 +434,10 @@ final class MetadataLoader implements LoggerAwareInterface
     }
 
     /**
-     * Convert an identifier to a FQN.
+     * Convert a snake-cased namespace to CamelCase.
      *
-     * @param string $ident The identifier to convert.
-     * @return string
+     * @param  string $ident The namespace to convert.
+     * @return string Returns a valid PHP namespace.
      */
     private function identToClassname($ident)
     {
@@ -465,10 +477,10 @@ final class MetadataLoader implements LoggerAwareInterface
     }
 
     /**
-     * Convert a FQN to an identifier.
+     * Convert a CamelCase namespace to snake-case.
      *
-     * @param string $classname The FQN to convert.
-     * @return string
+     * @param  string $classname The namespace to convert.
+     * @return string Returns a snake-cased namespace.
      */
     private function classnameToIdent($classname)
     {
