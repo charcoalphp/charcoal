@@ -20,6 +20,13 @@ class StructureMetadata extends AbstractMetadata
     private $ident;
 
     /**
+     * Store the admin module config.
+     *
+     * @var array
+     */
+    private $admin = [];
+
+    /**
      * Set the metadata identifier.
      *
      * @param  string $ident The metadata identifier.
@@ -56,5 +63,65 @@ class StructureMetadata extends AbstractMetadata
     public function ident()
     {
         return $this->ident;
+    }
+
+    /**
+     * Set the object's default values.
+     *
+     * @param  array $data An associative array.
+     * @return StructureMetadata
+     */
+    public function setDefaultData(array $data)
+    {
+        foreach ($data as $key => $val) {
+            $this->defaultData[$key] = $val;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the properties.
+     *
+     * @param  array $properties One or more properties.
+     * @return StructureMetadata
+     */
+    public function setProperties(array $properties)
+    {
+        foreach ($properties as $propertyIdent => $propertyMetadata) {
+            if (isset($this->properties[$propertyIdent])) {
+                $this->properties[$propertyIdent] = array_replace_recursive(
+                    $this->properties[$propertyIdent],
+                    $propertyMetadata
+                );
+            } else {
+                $this->properties[$propertyIdent] = $propertyMetadata;
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Retrieve the admin module's metadata.
+     *
+     * @return array
+     */
+    public function admin()
+    {
+        return $this->admin;
+    }
+
+    /**
+     * Set the admin module's metadata.
+     *
+     * @param  array $data Metadata.
+     * @return StructureMetadata
+     */
+    public function setAdmin(array $data)
+    {
+        $this->admin = array_replace_recursive($this->admin, $data);
+
+        return $this;
     }
 }

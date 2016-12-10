@@ -250,9 +250,8 @@ class StructureProperty extends AbstractProperty
             $loader = $this->metadataLoader();
             $paths  = $this->structureInterfaces();
             if (!empty($paths)) {
-                foreach ($paths as $path) {
-                    $loader->load($path, $struct);
-                }
+                $ident  = sprintf('property/structure/%s', $this->ident());
+                $struct = $loader->load($ident, $struct, $paths);
             }
         }
 
@@ -280,14 +279,14 @@ class StructureProperty extends AbstractProperty
     /**
      * Set the given metadata interfaces for the property to use as a structure.
      *
-     * @param  array $namespaces One or more metadata interfaces to use.
+     * @param  array $interfaces One or more metadata interfaces to use.
      * @return StructureProperty
      */
-    public function setStructureInterfaces(array $namespaces)
+    public function setStructureInterfaces(array $interfaces)
     {
         $this->structureInterfaces = [];
 
-        $this->addStructureInterfaces($namespaces);
+        $this->addStructureInterfaces($interfaces);
 
         return $this;
     }
@@ -295,13 +294,13 @@ class StructureProperty extends AbstractProperty
     /**
      * Add the given metadata interfaces for the property to use as a structure.
      *
-     * @param  array $namespaces One or more metadata interfaces to use.
+     * @param  array $interfaces One or more metadata interfaces to use.
      * @return StructureProperty
      */
-    public function addStructureInterfaces(array $namespaces)
+    public function addStructureInterfaces(array $interfaces)
     {
-        foreach ($namespaces as $namespace) {
-            $this->addStructureInterface($namespace);
+        foreach ($interfaces as $interface) {
+            $this->addStructureInterface($interface);
         }
 
         return $this;
@@ -310,20 +309,21 @@ class StructureProperty extends AbstractProperty
     /**
      * Add the given metadata interfaces for the property to use as a structure.
      *
-     * @param  string $namespace A metadata interface to use.
+     * @param  string $interface A metadata interface to use.
+     * @throws InvalidArgumentException If the interface is not a string.
      * @return StructureProperty
      */
-    public function addStructureInterface($namespace)
+    public function addStructureInterface($interface)
     {
-        if (!is_string($namespace)) {
+        if (!is_string($interface)) {
             throw new InvalidArgumentException(
-                'Structure path must to be a string'
+                'Structure interface must to be a string'
             );
         }
 
-        $namespace = $this->parseStructureInterface($namespace);
+        $interface = $this->parseStructureInterface($interface);
 
-        $this->structureInterfaces[$namespace] = true;
+        $this->structureInterfaces[$interface] = true;
         $this->isStructureFinalized = false;
 
         return $this;
@@ -334,12 +334,12 @@ class StructureProperty extends AbstractProperty
      *
      * Change `\` and `.` to `/` and force lowercase
      *
-     * @param  string $namespace A metadata interface to convert.
+     * @param  string $interface A metadata interface to convert.
      * @return string
      */
-    protected function parseStructureInterface($namespace)
+    protected function parseStructureInterface($interface)
     {
-        $ident = preg_replace('/([a-z])([A-Z])/', '$1-$2', $namespace);
+        $ident = preg_replace('/([a-z])([A-Z])/', '$1-$2', $interface);
         $ident = strtolower(str_replace('\\', '/', $ident));
 
         return $ident;
