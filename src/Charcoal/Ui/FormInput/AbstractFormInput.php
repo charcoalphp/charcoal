@@ -33,4 +33,14 @@ abstract class AbstractFormInput extends AbstractUiItem implements
 
         return $this;
     }
+
+    /**
+     * Retrieve the input's parent group.
+     *
+     * @return FormGroupInterface
+     */
+    public function formGroup()
+    {
+        return $this->formGroup;
+    }
 }

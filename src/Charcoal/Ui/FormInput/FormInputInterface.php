@@ -17,4 +17,11 @@ interface FormInputInterface
      * @return FormInputInterface Chainable
      */
     public function setFormGroup(FormGroupInterface $formGroup);
+
+    /**
+     * Retrieve the input's parent group.
+     *
+     * @return FormGroupInterface
+     */
+    public function formGroup();
 }
