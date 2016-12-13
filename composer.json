@@ -1,7 +1,7 @@
 {
     "name": "locomotivemtl/charcoal-image",
     "description": "PHP Image manipulation library",
-    "keywords":["php", "image", "imagick", "gd", "imagemagick", "charcoal", "locomotive"],
+    "keywords":[ "php", "image", "imagick", "gd", "imagemagick", "charcoal", "locomotive" ],
     "license": "MIT",
     "authors": [
         {
@@ -26,8 +26,16 @@
             "Charcoal\\": "src/Charcoal"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Charcoal\\Tests\\": "tests/Charcoal"
+        }
+    },
     "scripts": {
         "test": [
+            "@tests"
+        ],
+        "tests": [
             "@phplint",
             "@phpcs",
             "@phpunit"

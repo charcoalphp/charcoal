@@ -25,6 +25,5 @@ class ImagickMaskEffect extends AbstractMaskEffect
         throw new Exception(
             'Mask effect is not (yet) supported with imagick driver.'
         );
-
     }
 }
