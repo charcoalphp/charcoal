@@ -2,7 +2,7 @@
 
 namespace Charcoal\Property;
 
-use \Exception;
+use \RuntimeException;
 use \InvalidArgumentException;
 
 use \Psr\Cache\CacheItemPoolInterface;
@@ -30,13 +30,19 @@ use \Charcoal\Property\SelectablePropertyInterface;
  */
 class ObjectProperty extends AbstractProperty implements SelectablePropertyInterface
 {
-
     /**
      * The object type to build the choices from.
      *
      * @var string
      */
     private $objType;
+
+    /**
+     * Store a reference to the {@see self::$objType} model.
+     *
+     * @var ModelInterface
+     */
+    private $proto;
 
     /**
      * The pattern for rendering the choice as a label.
@@ -53,20 +59,6 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      * @var array
      */
     protected $choices = [];
-
-    /**
-     * Store the factory instance for the current class.
-     *
-     * @var FactoryInterface
-     */
-    private $modelFactory;
-
-    /**
-     * Store a reference to the {@see self::$objType} model.
-     *
-     * @var ModelInterface
-     */
-    private $proto;
 
     /**
      * Store the collection loader for the current class.
@@ -90,14 +82,25 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     protected $filters;
 
     /**
+     * Store the PSR-6 caching service.
+     *
      * @var CacheItemPoolInterface
      */
     private $cachePool;
 
     /**
+     * Store all model loaders.
+     *
      * @var ModelLoader[]
      */
-    static private $modelLoaders = [];
+    private static $modelLoaders = [];
+
+    /**
+     * Store the factory instance for the current class.
+     *
+     * @var FactoryInterface
+     */
+    private $modelFactory;
 
     /**
      * Inject dependencies from a DI Container.
@@ -123,10 +126,12 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
-     * @param FactoryInterface $factory The factory, to create model objects.
-     * @return ObjectProperty Chainable
+     * Set an object model factory.
+     *
+     * @param FactoryInterface $factory The model factory, to create objects.
+     * @return self
      */
-    private function setModelFactory(FactoryInterface $factory)
+    protected function setModelFactory(FactoryInterface $factory)
     {
         $this->modelFactory = $factory;
 
@@ -134,14 +139,16 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
-     * @throws Exception If the model factory is not set.
+     * Retrieve the object model factory.
+     *
+     * @throws RuntimeException If the model factory was not previously set.
      * @return FactoryInterface
      */
-    private function modelFactory()
+    public function modelFactory()
     {
-        if ($this->modelFactory === null) {
-            throw new Exception(
-                sprintf('Model factory not set on object property.')
+        if (!isset($this->modelFactory)) {
+            throw new RuntimeException(
+                sprintf('Model Factory is not defined for "%s"', get_class($this))
             );
         }
 
@@ -183,23 +190,29 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
-     * @param CacheItemPoolInterface $cachePool The PSR-6 Cache.
-     * @return void
+     * Set the cache service.
+     *
+     * @param  CacheItemPoolInterface $cache A PSR-6 compliant cache pool instance.
+     * @return MetadataLoader Chainable
      */
-    private function setCachePool(CacheItemPoolInterface $cachePool)
+    private function setCachePool(CacheItemPoolInterface $cache)
     {
-        $this->cachePool = $cachePool;
+        $this->cachePool = $cache;
+
+        return $this;
     }
 
     /**
-     * @throws Exception If the cache pool was not previously set.
-     * @return CacheItemPoolInterface;
+     * Retrieve the cache service.
+     *
+     * @throws RuntimeException If the cache service was not previously set.
+     * @return CacheItemPoolInterface
      */
     private function cachePool()
     {
         if (!isset($this->cachePool)) {
-            throw new Exception(
-                'Cache pool was not set.'
+            throw new RuntimeException(
+                sprintf('Cache Pool is not defined for "%s"', get_class($this))
             );
         }
 
@@ -207,7 +220,9 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
-     * @param string $objType The object type.
+     * Set the object type to build the choices from.
+     *
+     * @param  string $objType The object type.
      * @throws InvalidArgumentException If the object type is not a string.
      * @return ObjectPropertyChainable
      */
@@ -215,24 +230,28 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     {
         if (!is_string($objType)) {
             throw new InvalidArgumentException(
-                'Can not set property\'s object type: "obj_type" needs to be a string'
+                'Property object type ("obj_type") must be a string.'
             );
         }
+
         $this->objType = $objType;
 
         return $this;
     }
 
     /**
-     * @throws Exception If the object type was not previously set.
+     * Retrieve the object type to build the choices from.
+     *
+     * @throws RuntimeException If the object type was not previously set.
      * @return string
      */
     public function objType()
     {
         if ($this->objType === null) {
-            throw new Exception(
-                sprintf('No object type ("obj_type") defined. Invalid property "%s"', $this->ident())
-            );
+            throw new RuntimeException(sprintf(
+                'Missing object type ("obj_type"). Invalid property "%s".',
+                $this->ident()
+            ));
         }
 
         return $this->objType;
