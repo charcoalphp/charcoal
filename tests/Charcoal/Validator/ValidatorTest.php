@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Validator;
 
+use \DateTime;
+
 use \Charcoal\Validator\ValidatorResult as ValidatorResult;
 
 use \Charcoal\Tests\Mock\ValidatorClass;
@@ -59,14 +61,17 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $ret = $obj->addResult($result);
         $this->assertSame($ret, $obj);
 
-        $result_obj = new ValidatorResult($result);
-        $ret = $obj->addResult($result_obj);
+        $resultObj = new ValidatorResult($result);
+        $ret = $obj->addResult($resultObj);
         $this->assertSame($ret, $obj);
 
         $this->setExpectedException('\InvalidArgumentException');
         $obj->addResult(false);
     }
 
+    /**
+     * @group time-sensitive
+     */
     public function testResults()
     {
         $result = [
@@ -79,13 +84,21 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([], $obj->results());
 
         $obj->addResult($result);
-        $result_obj = new ValidatorResult($result);
-        $this->assertEquals([ValidatorClass::ERROR => [$result_obj]], $obj->results());
+
+        $expectedResult = new ValidatorResult($result);
+        $expectedResult->setTs($expectedResult->ts()->format(DateTime::ATOM));
+
+        $actualResult = $obj->results();
+        $actualResult[ValidatorClass::ERROR][0]->setTs(
+            $actualResult[ValidatorClass::ERROR][0]->ts()->format(DateTime::ATOM)
+        );
+
+        $this->assertEquals([ ValidatorClass::ERROR => [ $expectedResult ] ], $actualResult);
     }
 
     public function testErrorResults()
     {
-        $result = [
+        $result1 = [
             'ident'   => 'bar',
             'level'   => ValidatorClass::ERROR,
             'message' => 'foo'
@@ -95,18 +108,27 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             'level'   => ValidatorClass::NOTICE,
             'message' => 'bar'
         ];
+
         $obj = $this->obj;
         $this->assertEquals([], $obj->errorResults());
 
-        $obj->addResult($result);
+        $obj->addResult($result1);
         $obj->addResult($result2);
-        $result_obj = new ValidatorResult($result);
-        $this->assertEquals([$result_obj], $obj->errorResults());
+
+        $expectedResult = new ValidatorResult($result1);
+        $expectedResult->setTs($expectedResult->ts()->format(DateTime::ATOM));
+
+        $actualResult = $obj->errorResults();
+        $actualResult[0]->setTs(
+            $actualResult[0]->ts()->format(DateTime::ATOM)
+        );
+
+        $this->assertEquals([ $expectedResult ], $actualResult);
     }
 
     public function testWarningResults()
     {
-        $result = [
+        $result1 = [
             'ident'   => 'bar',
             'level'   => ValidatorClass::WARNING,
             'message' => 'foo'
@@ -116,18 +138,27 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             'level'   => ValidatorClass::NOTICE,
             'message' => 'bar'
         ];
+
         $obj = $this->obj;
         $this->assertEquals([], $obj->warningResults());
 
-        $obj->addResult($result);
+        $obj->addResult($result1);
         $obj->addResult($result2);
-        $result_obj = new ValidatorResult($result);
-        $this->assertEquals([$result_obj], $obj->warningResults());
+
+        $expectedResult = new ValidatorResult($result1);
+        $expectedResult->setTs($expectedResult->ts()->format(DateTime::ATOM));
+
+        $actualResult = $obj->warningResults();
+        $actualResult[0]->setTs(
+            $actualResult[0]->ts()->format(DateTime::ATOM)
+        );
+
+        $this->assertEquals([ $expectedResult ], $actualResult);
     }
 
     public function testNoticeResults()
     {
-        $result = [
+        $result1 = [
             'ident'   => 'bar',
             'level'   => ValidatorClass::NOTICE,
             'message' => 'foo'
@@ -137,18 +168,27 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             'level'   => ValidatorClass::ERROR,
             'message' => 'bar'
         ];
+
         $obj = $this->obj;
         $this->assertEquals([], $obj->noticeResults());
 
-        $obj->addResult($result);
+        $obj->addResult($result1);
         $obj->addResult($result2);
-        $result_obj = new ValidatorResult($result);
-        $this->assertEquals([$result_obj], $obj->noticeResults());
+
+        $expectedResult = new ValidatorResult($result1);
+        $expectedResult->setTs($expectedResult->ts()->format(DateTime::ATOM));
+
+        $actualResult = $obj->noticeResults();
+        $actualResult[0]->setTs(
+            $actualResult[0]->ts()->format(DateTime::ATOM)
+        );
+
+        $this->assertEquals([ $expectedResult ], $actualResult);
     }
 
     public function testMerge()
     {
-        $result = [
+        $result1 = [
             'ident'   => 'bar',
             'level'   => ValidatorClass::NOTICE,
             'message' => 'foo'
@@ -158,21 +198,35 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             'level'   => ValidatorClass::ERROR,
             'message' => 'bar'
         ];
-        $result_obj = new ValidatorResult($result);
-        $result2_obj = new ValidatorResult($result2);
-        $obj = $this->obj;
+
+        $resultObj1 = new ValidatorResult($result1);
+        $resultObj2 = new ValidatorResult($result2);
+
+        $obj1 = $this->obj;
         $obj2 = new ValidatorClass($this->model);
 
-        $obj->addResult($result);
+        $obj1->addResult($result1);
         $obj2->addResult($result2);
-        $obj->merge($obj2);
+        $obj1->merge($obj2);
+
+        $resultObj1->setTs($resultObj1->ts()->format(DateTime::ATOM));
+        $resultObj2->setTs($resultObj2->ts()->format(DateTime::ATOM));
+
+        $actualResult = $obj1->results();
+        foreach ($actualResult as $resultCategory => $results) {
+            foreach ($results as $i => $result) {
+                $actualResult[$resultCategory][$i]->setTs(
+                    $result->ts()->format(DateTime::ATOM)
+                );
+            }
+        }
 
         $this->assertEquals(
             [
-                ValidatorClass::NOTICE => [$result_obj],
-                ValidatorClass::ERROR => [$result2_obj]
+                ValidatorClass::NOTICE => [ $resultObj1 ],
+                ValidatorClass::ERROR  => [ $resultObj2 ]
             ],
-            $obj->results()
+            $actualResult
         );
     }
 }
