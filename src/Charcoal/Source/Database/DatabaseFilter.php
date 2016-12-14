@@ -2,7 +2,7 @@
 
 namespace Charcoal\Source\Database;
 
-// Local parent namespace dependencies
+// From 'charcoal-core'
 use \Charcoal\Source\Filter;
 
 /**
@@ -11,15 +11,17 @@ use \Charcoal\Source\Filter;
 class DatabaseFilter extends Filter
 {
     /**
-     * Get the filter's SQL string to append to a "WHERE" clause.
+     * Retrieve the Filter's SQL string to append to a WHERE clause.
      *
      * @return string
      */
     public function sql()
     {
-        if ($this->string) {
-            return $this->string;
+        $raw = $this->string();
+        if ($raw) {
+            return $raw;
         }
+
         $fields = $this->sqlFields();
         if (empty($fields)) {
             return '';
@@ -44,7 +46,6 @@ class DatabaseFilter extends Filter
             } else {
                 $target = sprintf('%1$s.%2$s', $tableName, $field);
             }
-
 
             switch ($operator) {
                 case 'FIND_IN_SET':

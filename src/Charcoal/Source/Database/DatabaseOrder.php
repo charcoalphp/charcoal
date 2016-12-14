@@ -2,11 +2,11 @@
 
 namespace Charcoal\Source\Database;
 
-// Dependencies from `PHP`
 use \DomainException;
 
-// Local parent namespace dependencies
+// From 'charcoal-core'
 use \Charcoal\Source\Order;
+use \Charcoal\Source\Database\DatabaseFilter;
 
 /**
  * The DatabaseOrder makes a Order SQL-aware.
@@ -14,60 +14,93 @@ use \Charcoal\Source\Order;
 class DatabaseOrder extends Order
 {
     /**
-     * Get the order's SQL string to append to an "ORDER BY" subquery.
-     *
-     * There are 4 modes of "Order":
-     * - `asc` to order in ascending (A-Z / 0-9) order.
-     * - `desc` to order in descending (Z-A / 9-0) order.
-     * - `rand` to order in a random fashion.
-     * - `values` to order by a defined array of properties.
+     * Retrieve the Order's SQL string to append to an ORDER BY clause.
      *
      * @throws DomainException If any required property is empty.
      * @return string
      */
     public function sql()
     {
-        $property = $this->property();
         $mode = $this->mode();
+        switch ($mode) {
+            case self::MODE_RANDOM:
+                return $this->byRandom();
 
-        if ($mode == 'rand') {
-            return 'RAND()';
+            case self::MODE_VALUES:
+                return $this->byValues();
+
+            case self::MODE_CUSTOM:
+                return $this->byCustom();
         }
-        if ($mode == 'values') {
-            $values = $this->values();
-            if (empty($values)) {
-                throw new DomainException(
-                    'Values can not be empty.'
-                );
-            }
 
-            if ($property == '') {
-                throw new DomainException(
-                    'Property can not be empty.'
-                );
-            }
-
-            $values = array_filter($values, 'is_scalar');
-            $values = array_map(
-                function ($val) {
-                    if (!is_numeric($val)) {
-                        $val = htmlspecialchars($val, ENT_QUOTES);
-                        $val = sprintf('"%s"', $val);
-                    }
-
-                    return $val;
-                },
-                $values
+        $property = $this->property();
+        if (empty($property)) {
+            throw new DomainException(
+                'Property can not be empty.'
             );
-
-            return 'FIELD(`'.$property.'`, '.implode(',', $values).')';
-        } else {
-            if ($property == '') {
-                throw new DomainException(
-                    'Property can not be empty.'
-                );
-            }
-            return '`'.$property.'` '.$mode;
         }
+
+        return sprintf('`%1$s` %2$s', $property, $mode);
+    }
+
+    /**
+     * Retrieve the ORDER BY clause for the {@see self::MODE_RANDOM} mode.
+     *
+     * @return string
+     */
+    private function byRandom()
+    {
+        return 'RAND()';
+    }
+
+    /**
+     * Retrieve the ORDER BY clause for the {@see self::MODE_CUSTOM} mode.
+     *
+     * @return string
+     */
+    private function byCustom()
+    {
+        $sql = $this->string();
+        if ($sql) {
+            return $sql;
+        }
+    }
+
+    /**
+     * Retrieve the ORDER BY clause for the {@see self::MODE_VALUES} mode.
+     *
+     * @throws DomainException If any required property or values is empty.
+     * @return string
+     */
+    private function byValues()
+    {
+        $values = $this->values();
+        if (empty($values)) {
+            throw new DomainException(
+                'Values can not be empty.'
+            );
+        }
+
+        $property = $this->property();
+        if (empty($property)) {
+            throw new DomainException(
+                'Property can not be empty.'
+            );
+        }
+
+        $values = array_filter($values, 'is_scalar');
+        $values = array_map(
+            function ($val) {
+                if (!is_numeric($val)) {
+                    $val = htmlspecialchars($val, ENT_QUOTES);
+                    $val = sprintf('"%s"', $val);
+                }
+
+                return $val;
+            },
+            $values
+        );
+
+        return sprintf('FIELD(`%1$s`, %2$s)', $property, implode(',', $values));
     }
 }

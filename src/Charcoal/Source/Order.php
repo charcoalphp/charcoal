@@ -2,14 +2,20 @@
 
 namespace Charcoal\Source;
 
-// Dependencies from `PHP`
 use \InvalidArgumentException;
 
-// Local namespace dependencies
+// From 'charcoal-core'
 use \Charcoal\Source\OrderInterface;
 
 /**
+ * Order
  *
+ * Available modes:
+ * - `asc` to order in ascending (A-Z / 0-9) order.
+ * - `desc` to order in descending (Z-A / 9-0) order.
+ * - `rand` to order in a random fashion.
+ * - `values` to order by a defined array of properties.
+ * - `custom` to order by a custom SQL string.
  */
 class Order implements OrderInterface
 {
@@ -17,26 +23,40 @@ class Order implements OrderInterface
     const MODE_DESC = 'desc';
     const MODE_RANDOM = 'rand';
     const MODE_VALUES = 'values';
+    const MODE_CUSTOM = 'custom';
 
     /**
+     * The model property (SQL column).
+     *
      * @var string
      */
     protected $property;
 
     /**
-     * Can be 'asc', 'desc', 'rand' or 'values'
-     * @var string $mode
+     * The sort mode.
+     *
+     * @var string
      */
     protected $mode;
 
     /**
-     * If $mode is "values"
-     * @var array $values
+     * The values when {@see self::$mode} is {@see self::MODE_VALUES}.
+     *
+     * @var array
      */
     protected $values;
 
     /**
-     * @var boolean $active
+     * Raw SQL clause when {@see self::$mode} is {@see self::MODE_CUSTOM}.
+     *
+     * @var string
+     */
+    protected $string;
+
+    /**
+     * Whether the order is active.
+     *
+     * @var boolean
      */
     protected $active = true;
 
@@ -49,12 +69,23 @@ class Order implements OrderInterface
         if (isset($data['property'])) {
             $this->setProperty($data['property']);
         }
+
         if (isset($data['mode'])) {
             $this->setMode($data['mode']);
         }
+
         if (isset($data['values'])) {
             $this->setValues($data['values']);
         }
+
+        if (isset($data['string'])) {
+            $this->setString($data['string']);
+
+            if (!isset($data['mode'])) {
+                $this->setMode(self::MODE_CUSTOM);
+            }
+        }
+
         if (isset($data['active'])) {
             $this->setActive($data['active']);
         }
@@ -169,6 +200,32 @@ class Order implements OrderInterface
     }
 
     /**
+     * @param  string $sql The custom order SQL string.
+     * @throws InvalidArgumentException If the parameter is not a valid operand.
+     * @return Order (Chainable)
+     */
+    public function setString($sql)
+    {
+        if (!is_string($sql)) {
+            throw new InvalidArgumentException(
+                'Custom SQL clause should be a string.'
+            );
+        }
+
+        $this->string = $sql;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function string()
+    {
+        return $this->string;
+    }
+
+    /**
      * @param boolean $active The active flag.
      * @return Order (Chainable)
      */
@@ -187,7 +244,7 @@ class Order implements OrderInterface
     }
 
     /**
-     * Supported operators
+     * Supported modes
      *
      * @return array
      */
@@ -197,7 +254,8 @@ class Order implements OrderInterface
             self::MODE_DESC,
             self::MODE_ASC,
             self::MODE_RANDOM,
-            self::MODE_VALUES
+            self::MODE_VALUES,
+            self::MODE_CUSTOM
         ];
 
         return $validModes;

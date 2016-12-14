@@ -2,14 +2,13 @@
 
 namespace Charcoal\Source;
 
-// Dependencies from `PHP`
 use \InvalidArgumentException;
 
-// Local namespace dependencies
+// From 'charcoal-core'
 use \Charcoal\Source\FilterInterface;
 
 /**
- *
+ * Filter
  */
 class Filter implements FilterInterface
 {
@@ -46,7 +45,9 @@ class Filter implements FilterInterface
     protected $tableName = self::DEFAULT_TABLE_NAME;
 
     /**
-     * @var string $string
+     * Raw SQL clause.
+     *
+     * @var string
      */
     protected $string;
 
@@ -65,27 +66,35 @@ class Filter implements FilterInterface
         if (isset($data['property'])) {
             $this->setProperty($data['property']);
         }
+
         if (isset($data['val'])) {
             $this->setVal($data['val']);
         }
+
         if (isset($data['operator'])) {
             $this->setOperator($data['operator']);
         }
+
         if (isset($data['func'])) {
             $this->setFunc($data['func']);
         }
+
         if (isset($data['operand'])) {
             $this->setOperand($data['operand']);
         }
+
         if (isset($data['table_name'])) {
             $this->setTableName($data['table_name']);
         }
+
         if (isset($data['string'])) {
             $this->setString($data['string']);
         }
+
         if (isset($data['active'])) {
             $this->setActive($data['active']);
         }
+
         return $this;
     }
 
@@ -265,7 +274,7 @@ class Filter implements FilterInterface
     }
 
     /**
-     * @param string $sql The custom filter SQL string.
+     * @param  string $sql The custom filter SQL string.
      * @throws InvalidArgumentException If the parameter is not a valid operand.
      * @return Filter (Chainable)
      */
@@ -273,11 +282,12 @@ class Filter implements FilterInterface
     {
         if (!is_string($sql)) {
             throw new InvalidArgumentException(
-                'String should be a string.'
+                'Custom SQL clause should be a string.'
             );
         }
 
         $this->string = $sql;
+
         return $this;
     }
 
