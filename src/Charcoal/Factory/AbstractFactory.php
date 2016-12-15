@@ -79,12 +79,15 @@ abstract class AbstractFactory implements FactoryInterface
         if (isset($data['base_class'])) {
             $this->setBaseClass($data['base_class']);
         }
+
         if (isset($data['default_class'])) {
             $this->setDefaultClass($data['default_class']);
         }
+
         if (isset($data['arguments'])) {
             $this->setArguments($data['arguments']);
         }
+
         if (isset($data['callback'])) {
             $this->setCallback($data['callback']);
         }
@@ -93,6 +96,7 @@ abstract class AbstractFactory implements FactoryInterface
             $opts = isset($data['resolver_options']) ? $data['resolver_options'] : null;
             $data['resolver'] = new GenericResolver($opts);
         }
+
         $this->setResolver($data['resolver']);
 
         if (isset($data['map'])) {
@@ -435,13 +439,13 @@ abstract class AbstractFactory implements FactoryInterface
         return $this->callback;
     }
 
- /**
-  * The Generic factory resolves the class name from an exact FQN.
-  *
-  * @param string $type The "type" of object to resolve (the object ident).
-  * @throws InvalidArgumentException If the type parameter is not a string.
-  * @return string The resolved class name (FQN).
-  */
+    /**
+     * The Generic factory resolves the class name from an exact FQN.
+     *
+     * @param string $type The "type" of object to resolve (the object ident).
+     * @throws InvalidArgumentException If the type parameter is not a string.
+     * @return string The resolved class name (FQN).
+     */
     public function resolve($type)
     {
         if (!is_string($type)) {

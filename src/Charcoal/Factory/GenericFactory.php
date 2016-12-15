@@ -10,5 +10,4 @@ use \Charcoal\Factory\AbstractFactory;
  */
 class GenericFactory extends AbstractFactory
 {
-
 }
