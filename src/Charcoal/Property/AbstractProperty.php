@@ -447,17 +447,32 @@ abstract class AbstractProperty extends AbstractEntity implements
     }
 
     /**
-     * @param boolean $multiple The multiple flag.
+     * Set whether this property accepts multiple values or a single value.
+     *
+     * @param  boolean $multiple The multiple flag.
      * @return PropertyInterface Chainable
      */
     public function setMultiple($multiple)
     {
+        if (!is_bool($multiple)) {
+            if (is_array($multiple)) {
+                $this->setMultipleOptions($multiple);
+            } elseif (is_int($multiple)) {
+                $this->setMultipleOptions([
+                    'min' => $multiple,
+                    'max' => $multiple
+                ]);
+            }
+        }
+
         $this->multiple = !!$multiple;
         return $this;
     }
 
     /**
-     * The multiple flags sets the property as being "repeatable", or allow to represent an array of multiple values.
+     * Determine if this property accepts multiple values or a single value.
+     *
+     * The multiple flag sets the property as being "repeatable", or allow to represent an array of multiple values.
      *
      * ## Notes
      * - The multiple flag can be forced to false (or true) in implementing property class.
@@ -492,18 +507,30 @@ abstract class AbstractProperty extends AbstractEntity implements
     /**
      * The options defining the property behavior when the multiple flag is set to true.
      *
+     * @see    self::defaultMultipleOptions
+     * @param  string|null $key Optional setting to retrieve from the options.
      * @return array
-     * @see self::defaultMultipleOptions
      */
-    public function multipleOptions()
+    public function multipleOptions($key = null)
     {
         if ($this->multipleOptions === null) {
-            return $this->defaultMultipleOptions();
+            $this->multipleOptions = $this->defaultMultipleOptions();
         }
+
+        if (is_string($key)) {
+            if (isset($this->multipleOptions[$key])) {
+                return $this->multipleOptions[$key];
+            } else {
+                return null;
+            }
+        }
+
         return $this->multipleOptions;
     }
 
     /**
+     * Retrieve the default settings for a multi-value property.
+     *
      * @return array
      */
     public function defaultMultipleOptions()
@@ -516,12 +543,13 @@ abstract class AbstractProperty extends AbstractEntity implements
     }
 
     /**
+     * Retrieve the value delimiter for a multi-value property.
+     *
      * @return string
      */
     public function multipleSeparator()
     {
-        $multipleOptions = $this->multipleOptions();
-        return $multipleOptions['separator'];
+        return $this->multipleOptions('separator');
     }
 
     /**
