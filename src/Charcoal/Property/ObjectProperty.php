@@ -5,20 +5,28 @@ namespace Charcoal\Property;
 use \RuntimeException;
 use \InvalidArgumentException;
 
+// From PSR-6
 use \Psr\Cache\CacheItemPoolInterface;
 
+// From Pimple
 use \Pimple\Container;
 
-use \Charcoal\Factory\FactoryInterface;
-
-use \Charcoal\View\ViewableInterface;
-
+// From 'charcoal-core'
+use \Charcoal\Loader\CollectionLoader;
 use \Charcoal\Model\ModelInterface;
 use \Charcoal\Model\Service\ModelLoader;
-use \Charcoal\Loader\CollectionLoader;
 use \Charcoal\Source\StorableInterface;
+
+// From 'charcoal-factory'
+use \Charcoal\Factory\FactoryInterface;
+
+// From 'charcoal-view'
+use \Charcoal\View\ViewableInterface;
+
+// From 'charcoal-translation'
 use \Charcoal\Translation\TranslationConfig;
 
+// From 'charcoal-property'
 use \Charcoal\Property\AbstractProperty;
 use \Charcoal\Property\SelectablePropertyInterface;
 
@@ -171,13 +179,13 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     /**
      * Retrieve the model collection loader.
      *
-     * @throws Exception If the collection loader was not previously set.
+     * @throws RuntimeException If the collection loader was not previously set.
      * @return CollectionLoader
      */
     protected function collectionLoader()
     {
         if (!isset($this->collectionLoader)) {
-            throw new Exception(
+            throw new RuntimeException(
                 sprintf('Collection Loader is not defined for "%s"', get_class($this))
             );
         }
@@ -499,7 +507,15 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      */
     public function choices()
     {
+        $choices = [];
+
+        $proto = $this->proto();
+        if (!$proto->source()->tableExists()) {
+            return $choices;
+        }
+
         $loader = $this->collectionLoader();
+
         $orders = $this->orders();
         if ($orders) {
             $loader->setOrders($orders);
@@ -510,7 +526,6 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
             $loader->setFilters($filters);
         }
 
-        $choices = [];
         $objects = $loader->load();
         foreach ($objects as $obj) {
             $choice = $this->choice($obj);
