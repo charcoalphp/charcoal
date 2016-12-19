@@ -26,7 +26,7 @@
         "subject": {
             "type": "string"
         },
-        "send_ts": {
+        "send_date": {
             "type": "date-time"
         },
         "ip": {
@@ -57,7 +57,7 @@
                     "en": "Email logs"
                 },
                 "properties": [
-                    "send_ts",
+                    "send_date",
                     "from",
                     "to",
                     "subject"
@@ -75,7 +75,7 @@
                     },
                     "infos": {
                         "properties": [
-                            "send_ts",
+                            "send_date",
                             "from",
                             "to",
                             "subject",
@@ -101,7 +101,7 @@
                     "form": {
                         "type": "charcoal/admin/widget/objectForm",
                         "form_ident": "email_logs",
-                        "obj_type": "charcoal/app/email/emaillog"
+                        "obj_type": "charcoal/app/email/email-log"
                     }
                 }
             },
@@ -115,7 +115,7 @@
                     "form": {
                         "type": "charcoal/admin/widget/table",
                         "collection_ident": "email_logs",
-                        "obj_type": "charcoal/app/email/emaillog"
+                        "obj_type": "charcoal/app/email/email-log"
                     }
                 }
             }
