@@ -21,6 +21,7 @@ use \Charcoal\Source\StorableInterface;
 use \Charcoal\Factory\FactoryInterface;
 
 // From 'charcoal-view'
+use \Charcoal\View\ViewInterface;
 use \Charcoal\View\ViewableInterface;
 
 // From 'charcoal-translation'
@@ -274,9 +275,10 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     {
         if (!is_string($pattern)) {
             throw new InvalidArgumentException(
-                'Can not set property object pattern, needs to be a string.'
+                'The render pattern must be a string.'
             );
         }
+
         $this->pattern = $pattern;
 
         return $this;
@@ -395,7 +397,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
         }
 
         if ($val instanceof ModelInterface) {
-            $propertyVal = $this->objPattern($val);
+            $propertyVal = $this->renderObjPattern($val);
 
             if (empty($propertyVal) && !is_numeric($propertyVal)) {
                 $propertyVal = $obj->id();
@@ -426,11 +428,11 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
         $values = [];
         foreach ($propertyValue as $val) {
             if ($val instanceof ModelInterface) {
-                $label = $this->objPattern($val);
+                $label = $this->renderObjPattern($val);
             } else {
                 $obj = $this->loadObject($val);
                 if (is_object($obj)) {
-                    $label = $this->objPattern($obj);
+                    $label = $this->renderObjPattern($obj);
                 }
             }
 
@@ -590,7 +592,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
             return null;
         }
 
-        $label  = $this->objPattern($obj);
+        $label  = $this->renderObjPattern($obj);
         $choice = [
             'value' => $obj->id(),
             'label' => $label,
@@ -605,29 +607,42 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
-     * Render the choice from the object.
+     * Render the given object.
      *
-     * @param ModelInterface|ViewableInterface $obj The object or view to render as a label.
+     * @param  ModelInterface|ViewableInterface $obj     The object or view to render as a label.
+     * @param  string|null                      $pattern Optional. The render pattern to render.
+     * @throws InvalidArgumentException If the pattern is not a string.
      * @return string
      */
-    protected function objPattern($obj)
+    protected function renderObjPattern($obj, $pattern = null)
     {
-        $pattern = (string)$this->pattern();
-        if ($obj instanceof ViewableInterface && $obj->view() !== null) {
+        if ($pattern === null) {
+            $pattern = $this->pattern();
+        }
+
+        if (!is_string($pattern)) {
+            throw new InvalidArgumentException(
+                'The render pattern must be a string.'
+            );
+        }
+
+        if ($pattern === '') {
+            return '';
+        }
+
+        if (strpos($pattern, '{{') === false) {
+            return (string)$obj[$pattern];
+        }
+
+        if (($obj instanceof ViewableInterface) && ($obj->view() instanceof ViewInterface)) {
             return $obj->renderTemplate($pattern);
         } else {
-            $cb = function ($matches) use ($obj) {
-                $method = trim($matches[1]);
-                if (method_exists($obj, $method)) {
-                    return call_user_func([$obj, $method]);
-                } elseif (isset($obj[$method])) {
-                    return $obj[$method];
-                } else {
-                    return '';
-                }
+            $callback = function ($matches) use ($obj) {
+                $prop = trim($matches[1]);
+                return (string)$obj[$prop];
             };
 
-            return preg_replace_callback('~\{\{\s*(.*?)\s*\}\}~i', $cb, $pattern);
+            return preg_replace_callback('~\{\{\s*(.*?)\s*\}\}~i', $callback, $pattern);
         }
     }
 
