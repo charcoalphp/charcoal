@@ -384,43 +384,68 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
-     * @param mixed $val Optional. The value to display.
+     * @param  mixed $val     The value to to convert for display.
+     * @param  array $options Optional display options.
      * @return string
      */
-    public function displayVal($val)
+    public function displayVal($val, array $options = [])
     {
         if ($val === null) {
             return '';
         }
 
-        $propertyValue = $val;
+        if ($val instanceof ModelInterface) {
+            $propertyVal = $this->objPattern($val);
 
-        if ($this->l10n() === true) {
-            $translator = TranslationConfig::instance();
+            if (empty($propertyVal) && !is_numeric($propertyVal)) {
+                $propertyVal = $obj->id();
+            }
 
-            $propertyValue = $propertyValue[$translator->currentLanguage()];
+            return $propertyVal;
         }
 
-        if ($this->multiple() === true) {
-            if (!is_array($propertyValue)) {
-                $propertyValue = explode($this->multipleSeparator(), $propertyValue);
+        if ($this->l10n()) {
+            $propertyValue = $this->l10nVal($val, $options);
+            if ($propertyValue === null) {
+                return '';
             }
         } else {
-            $propertyValue = [$propertyValue];
+            $propertyValue = $val;
         }
 
-        $names = [];
-        foreach ($propertyValue as $objIdent) {
-            $obj = $this->loadObject($objIdent);
+        $separator = $this->multipleSeparator();
 
-            if ($obj === null) {
-                continue;
+        if ($this->multiple()) {
+            if (!is_array($propertyValue)) {
+                $propertyValue = explode($separator, $propertyValue);
+            }
+        } else {
+            $propertyValue = (array)$propertyValue;
+        }
+
+        $values = [];
+        foreach ($propertyValue as $val) {
+            if ($val instanceof ModelInterface) {
+                $label = $this->objPattern($val);
+            } else {
+                $obj = $this->loadObject($val);
+                if (is_object($obj)) {
+                    $label = $this->objPattern($obj);
+                }
             }
 
-            $names[] = $this->objPattern($obj);
+            if (empty($label) && !is_numeric($label)) {
+                $label = $val;
+            }
+
+            $values[] = $label;
         }
 
-        return implode(', ', $names);
+        if ($separator === ',') {
+            $separator = ', ';
+        }
+
+        return implode($separator, $values);
     }
 
     /**

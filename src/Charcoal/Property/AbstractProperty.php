@@ -25,6 +25,7 @@ use \Charcoal\Validator\ValidatableInterface;
 use \Charcoal\Validator\ValidatableTrait;
 
 // Dependency from 'charcoal-translation'
+use \Charcoal\Translation\TranslationConfig;
 use \Charcoal\Translation\TranslationString;
 
 // Local namespace dependencies
@@ -356,7 +357,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     }
 
     /**
-     * @param  mixed $val     Optional. The value to to convert for display.
+     * @param  mixed $val     The value to to convert for display.
      * @param  array $options Optional display options.
      * @return string
      */
@@ -366,19 +367,54 @@ abstract class AbstractProperty extends AbstractEntity implements
             return '';
         }
 
-        $propertyValue = $val;
-
         if ($this->l10n()) {
-            $lang = isset($options['lang']) ? $options['lang'] : '';
-            $propertyValue = (isset($propertyValue[$lang]) ? $propertyValue[$lang] : '');
+            $propertyValue = $this->l10nVal($val, $options);
+            if ($propertyValue === null) {
+                return '';
+            }
+        } else {
+            $propertyValue = $val;
         }
 
         if ($this->multiple()) {
-            if (is_array($propertyValue)) {
-                $propertyValue = implode($this->multipleSeparator(), $propertyValue);
+            $separator = $this->multipleSeparator();
+            if (!is_array($propertyValue)) {
+                $propertyValue = explode($separator, $propertyValue);
+            }
+
+            if ($separator === ',') {
+                $separator = ', ';
+            }
+
+            $propertyValue = implode($separator, $values);
+        }
+
+        return (string)$propertyValue;
+    }
+
+    /**
+     * Attempt to get the multilingual value in the requested language.
+     *
+     * @param  mixed $val  The multilingual value to lookup.
+     * @param  mixed $lang The language to return the value in.
+     * @return string|null
+     */
+    protected function l10nVal($val, $lang = null)
+    {
+        if (!is_string($lang)) {
+            if (is_array($lang) && isset($lang['lang'])) {
+                $lang = $lang['lang'];
+            } else {
+                $trans = TranslationConfig::instance();
+                $lang  = $trans->currentLanguage();
             }
         }
-        return (string)$propertyValue;
+
+        if (isset($val[$lang])) {
+            return $val[$lang];
+        } else {
+            return null;
+        }
     }
 
     /**

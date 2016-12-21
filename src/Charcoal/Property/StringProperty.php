@@ -56,36 +56,45 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
-     * @param mixed $val Optional. The value to display. If null/unset, use `val()`.
+     * @param  mixed $val     The value to to convert for display.
+     * @param  array $options Optional display options.
      * @return string
-     * @see AbstractProperty::displayVal()
      */
-    public function displayVal($val)
+    public function displayVal($val, array $options = [])
     {
         if ($val === null) {
             return '';
         }
 
-        $propertyValue = $val;
-
         if ($this->l10n()) {
-            $translator = TranslationConfig::instance();
-
-            $propertyValue = $propertyValue[$translator->currentLanguage()];
+            $propertyValue = $this->l10nVal($val, $options);
+            if ($propertyValue === null) {
+                return '';
+            }
+        } else {
+            $propertyValue = $val;
         }
 
         if ($this->multiple()) {
-            if (is_array($propertyValue)) {
-                $props = [];
-                foreach ($propertyValue as $pv) {
-                    $props[] = $this->valLabel($pv);
-                }
-                $propertyValue = implode($this->multipleSeparator(), $props);
+            $separator = $this->multipleSeparator();
+            if (!is_array($propertyValue)) {
+                $propertyValue = explode($separator, $propertyValue);
             }
+
+            $values = [];
+            foreach ($propertyValue as $val) {
+                $values[] = $this->valLabel($val);
+            }
+
+            if ($separator === ',') {
+                $separator = ', ';
+            }
+
+            $propertyValue = implode($separator, $values);
         } else {
-            $propertyValue = (string)$propertyValue;
-            $propertyValue = $this->valLabel($propertyValue);
+            $propertyValue = $this->valLabel((string)$propertyValue);
         }
+
         return $propertyValue;
     }
 
