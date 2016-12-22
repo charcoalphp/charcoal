@@ -400,7 +400,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
             $propertyVal = $this->renderObjPattern($val);
 
             if (empty($propertyVal) && !is_numeric($propertyVal)) {
-                $propertyVal = $obj->id();
+                $propertyVal = $val->id();
             }
 
             return $propertyVal;
