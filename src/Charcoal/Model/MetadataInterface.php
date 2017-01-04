@@ -5,12 +5,15 @@ namespace Charcoal\Model;
 // Module `charcoal-property` dependencies
 use \Charcoal\Property\PropertyInterface;
 
+// Module `charcoal-config` depeendencies
+use \Charcoal\Config\ConfigInterface;
+
 /**
  * Defines a metadata container.
  *
  * Metadata is typically used to describe an object.
  */
-interface MetadataInterface
+interface MetadataInterface extends ConfigInterface
 {
     /**
      * Set the object's default values.
