@@ -19,4 +19,5 @@ logs/
 build/docs/
 build/logs/
 mustache_cache/
+twig_cache/
 tmp/
