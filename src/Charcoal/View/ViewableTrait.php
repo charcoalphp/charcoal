@@ -15,13 +15,6 @@ use \Charcoal\View\ViewInterface;
 trait ViewableTrait
 {
     /**
-     * The templating engine used by the {@see self::$view}.
-     *
-     * @var string
-     */
-    private $templateEngine;
-
-    /**
      * The object's template identifier.
      *
      * @var string
@@ -50,42 +43,6 @@ trait ViewableTrait
     public function __toString()
     {
         return $this->render();
-    }
-
-    /**
-     * Set the view engine type (identifier).
-     *
-     * @param string $engineIdent The rendering engine identifier.
-     * @throws InvalidArgumentException If the engine identifier is not a string.
-     * @return ViewableInterface Chainable
-     */
-    public function setTemplateEngine($engineIdent)
-    {
-        if (!is_string($engineIdent)) {
-            throw new InvalidArgumentException(
-                'Templating engine must be a string.'
-            );
-        }
-
-        $this->templateEngine = $engineIdent;
-
-        return $this;
-    }
-
-    /**
-     * Retrieve the view engine type (identifier).
-     *
-     * Will use the view's default engine if no identifier was set.
-     *
-     * @return string Returns either "mustache", "php", "php-mustache" or "twig".
-     */
-    public function templateEngine()
-    {
-        if ($this->templateEngine === null) {
-            $this->templateEngine = AbstractView::DEFAULT_ENGINE;
-        }
-
-        return $this->templateEngine;
     }
 
     /**
@@ -176,19 +133,19 @@ trait ViewableTrait
     /**
      * Set a view controller for the template's context.
      *
-     * @param ViewableInterface|null $controller A view controller to use when rendering.
+     * @param ViewableInterface|object|array|null $controller A view controller to use when rendering.
      * @throws InvalidArgumentException If the controller is invalid.
      * @return ViewableInterface Chainable
      */
     public function setViewController($controller)
     {
-        if ($controller === null || $controller instanceof ViewableInterface) {
-            $this->viewController = $controller;
-        } else {
+        if (is_scalar($controller) || is_resource($controller)) {
             throw new InvalidArgumentException(
-                'View controller must be an instance of ViewableInterface or NULL.'
+                'View controller must be an object, null or an array'
             );
         }
+
+        $this->viewController = $controller;
 
         return $this;
     }
