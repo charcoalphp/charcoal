@@ -19,25 +19,6 @@ class TwigEngine extends AbstractEngine
     private $twig;
 
     /**
-     * Build the object with an array of dependencies.
-     *
-     * ## Optional parameters:
-     * - `loader` a Loader object
-     * - `logger` a PSR logger
-     *
-     * @param array $data The dependencies.
-     */
-    public function __construct(array $data)
-    {
-
-        $this->setLogger($data['logger']);
-
-        if (isset($data['loader'])) {
-            $this->setLoader($data['loader']);
-        }
-    }
-
-    /**
      * @return string
      */
     public function type()

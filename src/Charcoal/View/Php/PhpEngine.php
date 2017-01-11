@@ -13,18 +13,6 @@ use \Charcoal\View\AbstractEngine;
 class PhpEngine extends AbstractEngine
 {
     /**
-     * @param array $data Dependencies.
-     */
-    public function __construct(array $data)
-    {
-        $this->setLogger($data['logger']);
-
-        if (isset($data['loader'])) {
-            $this->setLoader($data['loader']);
-        }
-    }
-
-    /**
      * @return string
      */
     public function type()

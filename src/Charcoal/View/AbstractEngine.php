@@ -40,11 +40,32 @@ abstract class AbstractEngine implements
      */
     abstract public function type();
 
+
+    /**
+     * Build the object with an array of dependencies.
+     *
+     * ## Required parameters:
+     * - `logger` a PSR-3 logger
+     *
+     * ## Optional parameters:
+     * - `loader` a Loader object
+     *
+     * @param array $data Engine dependencie.
+     */
+    public function __construct(array $data)
+    {
+        $this->setLogger($data['logger']);
+
+        if (isset($data['loader'])) {
+            $this->setLoader($data['loader']);
+        }
+    }
+
     /**
      * @param LoaderInterface $loader A loader instance.
      * @return EngineInterface Chainable
      */
-    public function setLoader(LoaderInterface $loader)
+    private function setLoader(LoaderInterface $loader)
     {
         $this->loader = $loader;
         return $this;

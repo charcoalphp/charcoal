@@ -17,15 +17,4 @@ class PhpMustacheEngine extends MustacheEngine
     {
         return 'php-mustache';
     }
-
-    /**
-     * @return PhpLoader
-     */
-    public function createLoader()
-    {
-        $loader = new PhpLoader([
-            'search_path'=>[]
-        ]);
-        return $loader;
-    }
 }
