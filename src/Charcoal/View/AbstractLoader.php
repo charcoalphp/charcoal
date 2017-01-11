@@ -27,7 +27,7 @@ abstract class AbstractLoader implements
     private $basePath = '';
 
     /**
-     * @var string[] $path
+     * @var string[] $paths
      */
     private $paths = [];
 
@@ -39,19 +39,11 @@ abstract class AbstractLoader implements
      *
      * @param array $data The class dependencies map.
      */
-    final public function __construct(array $data = null)
+    public function __construct(array $data = null)
     {
-        if (isset($data['logger'])) {
-            $this->setLogger($data['logger']);
-        }
-
-        if (isset($data['base_path'])) {
-            $this->setBasePath($data['base_path']);
-        }
-
-        if (isset($data['paths'])) {
-            $this->setPaths($data['paths']);
-        }
+        $this->setLogger($data['logger']);
+        $this->setBasePath($data['base_path']);
+        $this->setPaths($data['paths']);
     }
 
     /**
@@ -59,7 +51,7 @@ abstract class AbstractLoader implements
      * @throws InvalidArgumentException If the base path parameter is not a string.
      * @return LoaderInterface Chainable
      */
-    public function setBasePath($basePath)
+    private function setBasePath($basePath)
     {
         if (!is_string($basePath)) {
             throw new InvalidArgumentException(
@@ -74,7 +66,7 @@ abstract class AbstractLoader implements
     /**
      * @return string
      */
-    public function basePath()
+    protected function basePath()
     {
         return $this->basePath;
     }
@@ -83,7 +75,7 @@ abstract class AbstractLoader implements
      * @see FileLoader::path()
      * @return string[]
      */
-    public function paths()
+    protected function paths()
     {
         return $this->paths;
     }
@@ -92,7 +84,7 @@ abstract class AbstractLoader implements
      * @param string[] $paths The list of path to add.
      * @return LoaderInterface Chainable
      */
-    public function setPaths(array $paths)
+    private function setPaths(array $paths)
     {
         $this->paths = [];
 
@@ -107,21 +99,9 @@ abstract class AbstractLoader implements
      * @param string $path The path to add to the load.
      * @return LoaderInterface Chainable
      */
-    public function addPath($path)
+    private function addPath($path)
     {
         $this->paths[] = $this->resolvePath($path);
-
-        return $this;
-    }
-
-    /**
-     * @param string $path The path to add (prepend) to the load.
-     * @return LoaderInterface Chainable
-     */
-    public function prependPath($path)
-    {
-        $path = $this->resolvePath($path);
-        array_unshift($this->paths, $path);
 
         return $this;
     }

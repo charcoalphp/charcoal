@@ -8,6 +8,15 @@ namespace Charcoal\View;
 interface ViewInterface
 {
     /**
+     * Load a template (from identifier).
+     *
+     * @param string $templateIdent The template identifier to load..
+     * @throws InvalidArgumentException If the template ident is not a string.
+     * @return string
+     */
+    public function loadTemplate($templateIdent);
+
+    /**
      * Load a template (from identifier) and render it.
      *
      * @param string $templateIdent The template identifier, to load and render.
