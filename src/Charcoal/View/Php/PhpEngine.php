@@ -1,6 +1,6 @@
 <?php
 
-namespace Charcoal\View\Engine;
+namespace Charcoal\View\Php;
 
 use \InvalidArgumentException;
 
@@ -13,50 +13,11 @@ use \Charcoal\View\AbstractEngine;
 class PhpEngine extends AbstractEngine
 {
     /**
-     * @param array $data Dependencies.
-     */
-    public function __construct(array $data)
-    {
-        $this->setLogger($data['logger']);
-
-        if (isset($data['loader'])) {
-            $this->setLoader($data['loader']);
-        }
-    }
-
-    /**
      * @return string
      */
     public function type()
     {
         return 'php';
-    }
-
-    /**
-     * @param string $templateIdent The template identifier to load and render.
-     * @param mixed  $context       The rendering context.
-     * @throws InvalidArgumentException If the template ident is not a string.
-     * @return string The rendered template string.
-     */
-    public function render($templateIdent, $context)
-    {
-        if (!is_string($templateIdent)) {
-            throw new InvalidArgumentException(
-                'Render method called with invalid templateIdent parameter (not a string).'
-            );
-        }
-
-        // Prevents leaking global variable by forcing anonymous scope
-        $render = function($templateIdent, $context) {
-            extract($context);
-            include $templateIdent;
-        };
-
-        ob_start();
-        $render($templateIdent, $context);
-        $output = ob_get_clean();
-
-        return $output;
     }
 
     /**
@@ -66,6 +27,16 @@ class PhpEngine extends AbstractEngine
      */
     public function renderTemplate($templateString, $context)
     {
-        return $templateString;
+        // Prevents leaking global variable by forcing anonymous scope
+        $render = function($templateString, $context) {
+            extract($context);
+            return eval('?>'.$templateString);
+        };
+
+        ob_start();
+        $render($templateString, $context);
+        $output = ob_get_clean();
+
+        return $output;
     }
 }

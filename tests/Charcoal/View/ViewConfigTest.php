@@ -2,20 +2,28 @@
 
 namespace Charcoal\Tests\View\Mustache;
 
-use \Charcoal\View\ViewConfig;
+use PHPUnit_Framework_TestCase;
 
-class ViewConfigTest extends \PHPUnit_Framework_TestCase
+use Charcoal\View\ViewConfig;
+
+class ViewConfigTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var MustacheEngine
      */
     private $obj;
 
+    /**
+     *
+     */
     public function setUp()
     {
         $this->obj = new ViewConfig();
     }
 
+    /**
+     *
+     */
     public function testDefaults()
     {
         $this->assertEquals('.', $this->obj->separator());
@@ -27,6 +35,9 @@ class ViewConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('mustache', $this->obj['default_engine']);
     }
 
+    /**
+     *
+     */
     public function testSetPaths()
     {
         $ret = $this->obj->setPaths(['foo', 'bar']);
@@ -38,6 +49,9 @@ class ViewConfigTest extends \PHPUnit_Framework_TestCase
         $this->obj->setPaths([false]);
     }
 
+    /**
+     *
+     */
     public function testSetEngines()
     {
         $ret = $this->obj->setEngines(['foo'=>[]]);
@@ -49,6 +63,9 @@ class ViewConfigTest extends \PHPUnit_Framework_TestCase
         $this->obj->addEngine(false, []);
     }
 
+    /**
+     *
+     */
     public function testEngine()
     {
         $this->assertEquals([], $this->obj->engine('mustache'));
@@ -61,18 +78,27 @@ class ViewConfigTest extends \PHPUnit_Framework_TestCase
         $this->obj->engine(false);
     }
 
+    /**
+     *
+     */
     public function testEngineDefaultEngine()
     {
         $this->obj->addEngine('mustache', ['foo'=>'bar']);
         $this->assertEquals(['foo'=>'bar'], $this->obj->engine());
     }
 
+    /**
+     *
+     */
     public function testEngineInvalid()
     {
         $this->setExpectedException('\InvalidArgumentException');
         $this->obj->engine('foobar');
     }
 
+    /**
+     *
+     */
     public function testSetDefaultEngine()
     {
         $ret = $this->obj->setDefaultEngine('php');

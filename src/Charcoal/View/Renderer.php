@@ -19,9 +19,9 @@ use \Charcoal\View\ViewInterface;
 class Renderer
 {
     /**
-     * @var ViewInterface $view
+     * @var ViewInterface
      */
-    protected $view;
+    private $view;
 
     /**
      * @param array $data The constructor dependencies.
@@ -35,7 +35,7 @@ class Renderer
      * @param ViewInterface $view The view instance to use.
      * @return Renderer Chainable
      */
-    public function setView(ViewInterface $view)
+    private function setView(ViewInterface $view)
     {
         $this->view = $view;
         return $this;

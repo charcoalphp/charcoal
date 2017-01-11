@@ -2,88 +2,24 @@
 
 namespace Charcoal\View\Twig;
 
-use \InvalidArgumentException;
-use \Exception;
+use Exception;
+use InvalidArgumentException;
 
 // From `twig/twig`
-use \Twig_LoaderInterface;
+use Twig_LoaderInterface;
+use Twig_Source;
 
 // Parent namespace dependencies
-use \Charcoal\View\AbstractLoader;
-use \Charcoal\View\LoaderInterface;
+use Charcoal\View\AbstractLoader;
+use Charcoal\View\LoaderInterface;
 
 /**
- *
+ * The Charcoal View Twig Loader implements both Twig_LoaderInterface and its own LoaderInterface.
  */
 class TwigLoader extends AbstractLoader implements
     LoaderInterface,
     Twig_LoaderInterface
 {
-    /**
-     * AbstractLoader > load()
-     *
-     * @param string $ident The template identifier to load.
-     * @throws Exception If the target template file is empty.
-     * @return string
-     */
-    public function load($ident)
-    {
-        $file = $this->findTemplateFile($ident);
-
-        $file_content = file_get_contents($file);
-        if ($file_content == '') {
-            throw new Exception(
-                sprintf('Can not load template %s (empty file)', $ident)
-            );
-        }
-
-        return $file_content;
-    }
-
-    /**
-     * @param string $ident The template identifier to load.
-     * @throws InvalidArgumentException If the ident parameter is not a string or is an invalid template.
-     * @throws Exception If no template could be found.
-     * @return sring The matching template file name (full path).
-     */
-    public function findTemplateFile($ident)
-    {
-        if (!is_string($ident)) {
-            throw new InvalidArgumentException(
-                'Template ident must be a string'
-            );
-        }
-
-        // Handle dynamic template hack.
-        if ($ident === '$widgetTemplate') {
-            $ident = (isset($GLOBALS['widgetTemplate']) ? $GLOBALS['widgetTemplate'] : null);
-            if (!is_string($ident)) {
-                throw new InvalidArgumentException(
-                    'Can not find template (invalid $widgetTemplate).'
-                );
-            }
-        }
-
-        $filename = $this->filenameFromIdent($ident);
-        $search_path = $this->paths();
-        foreach ($search_path as $path) {
-            $f = realpath($path).'/'.$filename;
-            if (file_exists($f)) {
-                $this->logger->debug('Found matching template: '.$f);
-                return $f;
-            }
-        }
-
-        $log = sprintf(
-            'No matching templates found for "%1$s": %2$s',
-            $ident,
-            $filename
-        );
-
-        $this->logger->debug($log, $search_path);
-
-        throw new Exception($log);
-    }
 
     /**
      * Convert an identifier to a file path.
@@ -91,25 +27,12 @@ class TwigLoader extends AbstractLoader implements
      * @param string $ident The identifier to convert.
      * @return string
      */
-    public function filenameFromIdent($ident)
+    protected function filenameFromIdent($ident)
     {
         $filename = str_replace([ '\\' ], '.', $ident);
         $filename .= '.twig';
 
         return $filename;
-    }
-
-    /**
-     * Convert a FQN to an identifier.
-     *
-     * @param string $classname The FQN to convert.
-     * @return string
-     */
-    public function classnameToIdent($classname)
-    {
-        $ident = str_replace('\\', '/', strtolower($classname));
-        $ident = ltrim($ident, '/');
-        return $ident;
     }
 
     /**
@@ -122,8 +45,35 @@ class TwigLoader extends AbstractLoader implements
      */
     public function getSource($name)
     {
+        return $this->load($name);
+    }
+
+    /**
+     * Twig_LoaderInterface > getSourceContext()
+     *
+     * Gets the source code of a template, given its name.
+     * For Twig 2.x
+     *
+     * @param  string $name The name of the template to load.
+     * @return Twig_Source The template source object.
+     */
+    public function getSourceContext($name)
+    {
         $source = $this->load($name);
-        return $source;
+        return new Twig_Source($source, $name);
+    }
+
+    /**
+     * Twig_LoaderInterface > exists()
+     *
+     * For Twig 2.x
+     *
+     * @param  string $name The name of the template to load.
+     * @return boolean
+     */
+    public function exists($name)
+    {
+        return !!$this->findTemplateFile($name);
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace Charcoal\Tests\App\ServiceProvider;
+namespace Charcoal\Tests\View;
 
 use PHPUnit_Framework_TestCase;
 

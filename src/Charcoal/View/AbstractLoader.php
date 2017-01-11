@@ -27,7 +27,7 @@ abstract class AbstractLoader implements
     private $basePath = '';
 
     /**
-     * @var string[] $path
+     * @var string[] $paths
      */
     private $paths = [];
 
@@ -39,19 +39,104 @@ abstract class AbstractLoader implements
      *
      * @param array $data The class dependencies map.
      */
-    final public function __construct(array $data = null)
+    public function __construct(array $data = null)
     {
-        if (isset($data['logger'])) {
-            $this->setLogger($data['logger']);
+        $this->setLogger($data['logger']);
+        $this->setBasePath($data['base_path']);
+        $this->setPaths($data['paths']);
+    }
+
+    /**
+     * Load a template content
+     *
+     * @param string $ident The template ident to load and render.
+     * @return string
+     */
+    public function load($ident)
+    {
+        $file = $this->findTemplateFile($ident);
+        if (!$file) {
+            return $ident;
         }
 
-        if (isset($data['base_path'])) {
-            $this->setBasePath($data['base_path']);
+        return file_get_contents($file);
+    }
+
+    /**
+     * @return string
+     */
+    protected function basePath()
+    {
+        return $this->basePath;
+    }
+
+    /**
+     * @see FileLoader::path()
+     * @return string[]
+     */
+    protected function paths()
+    {
+        return $this->paths;
+    }
+
+    /**
+     * Get the template file (full path + filename) to load from an ident.
+     *
+     * This method first generates the filename for an identifier and search for it in all of the loader's paths.
+     *
+     * @param string $ident The template identifier to load.
+     * @throws InvalidArgumentException If the template ident is not a string.
+     * @return string|null The full path + filename of the found template. Null if nothing was found.
+     */
+    protected function findTemplateFile($ident)
+    {
+        if (!is_string($ident)) {
+            throw new InvalidArgumentException(
+                'Template ident must be a string'
+            );
         }
 
-        if (isset($data['paths'])) {
-            $this->setPaths($data['paths']);
+        // Handle dynamic template hack.
+        if ($ident === '$widget_template') {
+            $ident = (isset($GLOBALS['widget_template']) ? $GLOBALS['widget_template'] : null);
+            if (!is_string($ident)) {
+                throw new InvalidArgumentException(
+                    'Template ident (dynamic, from \$widget_templatee) must be a string'
+                );
+            }
         }
+
+        $filename = $this->filenameFromIdent($ident);
+        $searchPath = $this->paths();
+        foreach ($searchPath as $path) {
+            $f = realpath($path).'/'.strtolower($filename);
+            if (file_exists($f)) {
+                return $f;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param string $ident The template identifier to convert to a filename.
+     * @return string
+     */
+    abstract protected function filenameFromIdent($ident);
+
+    /**
+     * @param string[] $paths The list of path to add.
+     * @return LoaderInterface Chainable
+     */
+    private function setPaths(array $paths)
+    {
+        $this->paths = [];
+
+        foreach ($paths as $path) {
+            $this->addPath($path);
+        }
+
+        return $this;
     }
 
     /**
@@ -59,7 +144,7 @@ abstract class AbstractLoader implements
      * @throws InvalidArgumentException If the base path parameter is not a string.
      * @return LoaderInterface Chainable
      */
-    public function setBasePath($basePath)
+    private function setBasePath($basePath)
     {
         if (!is_string($basePath)) {
             throw new InvalidArgumentException(
@@ -72,56 +157,12 @@ abstract class AbstractLoader implements
     }
 
     /**
-     * @return string
-     */
-    public function basePath()
-    {
-        return $this->basePath;
-    }
-
-    /**
-     * @see FileLoader::path()
-     * @return string[]
-     */
-    public function paths()
-    {
-        return $this->paths;
-    }
-
-    /**
-     * @param string[] $paths The list of path to add.
-     * @return LoaderInterface Chainable
-     */
-    public function setPaths(array $paths)
-    {
-        $this->paths = [];
-
-        foreach ($paths as $path) {
-            $this->addPath($path);
-        }
-
-        return $this;
-    }
-
-    /**
      * @param string $path The path to add to the load.
      * @return LoaderInterface Chainable
      */
-    public function addPath($path)
+    private function addPath($path)
     {
         $this->paths[] = $this->resolvePath($path);
-
-        return $this;
-    }
-
-    /**
-     * @param string $path The path to add (prepend) to the load.
-     * @return LoaderInterface Chainable
-     */
-    public function prependPath($path)
-    {
-        $path = $this->resolvePath($path);
-        array_unshift($this->paths, $path);
 
         return $this;
     }
@@ -131,7 +172,7 @@ abstract class AbstractLoader implements
      * @throws InvalidArgumentException If the path argument is not a string.
      * @return string
      */
-    public function resolvePath($path)
+    private function resolvePath($path)
     {
         if (!is_string($path)) {
             throw new InvalidArgumentException(
@@ -147,10 +188,4 @@ abstract class AbstractLoader implements
 
         return $path;
     }
-
-    /**
-     * @param string $ident The template identifier to load.
-     * @return string
-     */
-    abstract public function load($ident);
 }

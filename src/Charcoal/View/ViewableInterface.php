@@ -15,21 +15,6 @@ interface ViewableInterface
     public function __toString();
 
     /**
-     * Set the view engine type (identifier).
-     *
-     * @param string $engineIdent The rendering engine identifier.
-     * @return ViewableInterface Chainable
-     */
-    public function setTemplateEngine($engineIdent);
-
-    /**
-     * Retrieve the view engine type (identifier).
-     *
-     * @return string Returns either "mustache", "php", "php-mustache" or "twig".
-     */
-    public function templateEngine();
-
-    /**
      * Set the viewable object's template identifier.
      *
      * Usually, a path to a file containing the template to be rendered at runtime.

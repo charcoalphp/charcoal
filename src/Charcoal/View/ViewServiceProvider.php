@@ -3,32 +3,34 @@
 namespace Charcoal\View;
 
 // Pimple dependencies
-use \Pimple\ServiceProviderInterface;
-use \Pimple\Container;
+use Pimple\ServiceProviderInterface;
+use Pimple\Container;
 
 // Module `charcoal-view` dependencies
-use \Charcoal\View\GenericView;
-use \Charcoal\View\Mustache\MustacheEngine;
-use \Charcoal\View\Mustache\MustacheLoader;
-use \Charcoal\View\Php\PhpEngine;
-use \Charcoal\View\Php\PhpLoader;
-use \Charcoal\View\PhpMustache\PhpMustacheEngine;
-use \Charcoal\View\Twig\TwigEngine;
-use \Charcoal\View\Twig\TwigLoader;
-use \Charcoal\View\Renderer;
-use \Charcoal\View\ViewConfig;
-use \Charcoal\View\ViewInterface;
+use Charcoal\View\GenericView;
+use Charcoal\View\Mustache\MustacheEngine;
+use Charcoal\View\Mustache\MustacheLoader;
+use Charcoal\View\Php\PhpEngine;
+use Charcoal\View\Php\PhpLoader;
+use Charcoal\View\PhpMustache\PhpMustacheEngine;
+use Charcoal\View\Twig\TwigEngine;
+use Charcoal\View\Twig\TwigLoader;
+use Charcoal\View\Renderer;
+use Charcoal\View\ViewConfig;
+use Charcoal\View\ViewInterface;
 
 /**
  * View Service Provider
  *
  * ## Requirements / Dependencies
+ *
  * - `config`
  *   - The global / base app config (`ConfigInterface`).
  * - `logger`
  *   - A PSR-3 loger.
  *
  * ## Services
+ *
  * - `view/config`
  *   - The global view config (`ViewConfig`).
  * - `view`
@@ -37,8 +39,12 @@ use \Charcoal\View\ViewInterface;
  *   - A PSR-7 renderer using the default `view` object.
  *
  * ## Helpers
+ *
  * - `view/engine`
  *   - The default `EngineInterface` object, determined by `view/config`.
+ * - `view/loader`
+ *   - The defailt `LoaderInterface` object, determined by `view/config`
+ *
  */
 class ViewServiceProvider implements ServiceProviderInterface
 {
@@ -158,15 +164,6 @@ class ViewServiceProvider implements ServiceProviderInterface
 
         /**
          * @param Container $container A container instance.
-         * @return PhpMustacheEngine
-         */
-        $container['view/engine/php-mustache'] = function (Container $container) {
-            $engineOptions = $container['view/engine/dependencies'];
-            return new PhpMustacheEngine($engineOptions);
-        };
-
-        /**
-         * @param Container $container A container instance.
          * @return TwigEngine
          */
         $container['view/engine/twig'] = function (Container $container) {
@@ -201,11 +198,10 @@ class ViewServiceProvider implements ServiceProviderInterface
          * @return ViewInterface
          */
         $container['view'] = function (Container $container) {
-            $view = new GenericView([
-                'logger' => $container['logger']
+            return new GenericView([
+                'logger' => $container['logger'],
+                'engine' => $container['view/engine']
             ]);
-            $view->setEngine($container['view/engine']);
-            return $view;
         };
 
         /**
@@ -215,10 +211,9 @@ class ViewServiceProvider implements ServiceProviderInterface
          * @return Renderer
          */
         $container['view/renderer'] = function (Container $container) {
-            $renderer = new Renderer([
+            return new Renderer([
                 'view' => $container['view']
             ]);
-            return $renderer;
         };
     }
 }

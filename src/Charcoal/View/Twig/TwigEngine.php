@@ -19,25 +19,6 @@ class TwigEngine extends AbstractEngine
     private $twig;
 
     /**
-     * Build the object with an array of dependencies.
-     *
-     * ## Optional parameters:
-     * - `loader` a Loader object
-     * - `logger` a PSR logger
-     *
-     * @param array $data The dependencies.
-     */
-    public function __construct(array $data)
-    {
-
-        $this->setLogger($data['logger']);
-
-        if (isset($data['loader'])) {
-            $this->setLoader($data['loader']);
-        }
-    }
-
-    /**
      * @return string
      */
     public function type()
@@ -77,7 +58,7 @@ class TwigEngine extends AbstractEngine
      */
     public function render($templateIdent, $context)
     {
-        return $this->twig()->render($templateIdent, ['data'=>$context]);
+        return $this->twig()->render($templateIdent, $context);
     }
 
     /**
@@ -87,6 +68,7 @@ class TwigEngine extends AbstractEngine
      */
     public function renderTemplate($templateString, $context)
     {
-        return $this->twig()->render($templateString, ['data'=>$context]);
+        $template = $this->twig()->createTemplate($templateString);
+        return $template->render($context);
     }
 }
