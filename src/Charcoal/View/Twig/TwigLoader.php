@@ -53,11 +53,11 @@ class TwigLoader extends AbstractLoader implements
      * Twig_LoaderInterface > exists()
      *
      * @param  string $name The name of the template to load.
-     * @return bool
+     * @return boolean
      */
     public function exists($name)
     {
-        return !!findTemplateFile($name);
+        return !!$this->findTemplateFile($name);
     }
 
     /**

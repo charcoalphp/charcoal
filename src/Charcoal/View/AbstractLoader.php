@@ -124,7 +124,7 @@ abstract class AbstractLoader implements
      */
     abstract protected function filenameFromIdent($ident);
 
-        /**
+    /**
      * @param string[] $paths The list of path to add.
      * @return LoaderInterface Chainable
      */
