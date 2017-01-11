@@ -41,11 +41,6 @@ abstract class AbstractView implements
     private $engine;
 
     /**
-     * @var mixed $context
-     */
-    private $context;
-
-    /**
      * Build the object with an array of dependencies.
      *
      * ## Parameters:
@@ -158,28 +153,6 @@ abstract class AbstractView implements
     }
 
     /**
-     * Set the rendering context ("view controller").
-     *
-     * @param mixed $context The context / view controller to render the template with.
-     * @return AbstractView Chainable
-     */
-    public function setContext($context)
-    {
-        $this->context = $context;
-        return $this;
-    }
-
-    /**
-     * Get the rendering context ("view controller").
-     *
-     * @return mixed
-     */
-    public function context()
-    {
-        return $this->context;
-    }
-
-    /**
      * Load a template (from identifier) and render it.
      *
      * @param string $templateIdent The template identifier, to load and render.
@@ -190,9 +163,6 @@ abstract class AbstractView implements
     {
         if ($templateIdent === null) {
             $templateIdent = $this->templateIdent();
-        }
-        if ($context === null) {
-            $context = $this->context();
         }
         return $this->engine()->render($templateIdent, $context);
     }
@@ -208,9 +178,6 @@ abstract class AbstractView implements
     {
         if ($templateString === null) {
             $templateString = $this->template();
-        }
-        if ($context === null) {
-            $context = $this->context();
         }
         return $this->engine()->render($templateString, $context);
     }
