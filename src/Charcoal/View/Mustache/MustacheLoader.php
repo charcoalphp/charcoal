@@ -20,79 +20,16 @@ class MustacheLoader extends AbstractLoader implements
     LoaderInterface
 {
     /**
-     * @see AbstractLoader::load()
-     * @param string $ident The template identifier to load.
-     * @throws InvalidArgumentException If the template ident parameter is not a string.
-     * @return string
-     */
-    public function load($ident)
-    {
-        if (!is_string($ident)) {
-            throw new InvalidArgumentException(
-                'Template ident must be a string'
-            );
-        }
-
-        // Handle dynamic template hack. @todo rename to $mustache_template
-        if ($ident === '$widget_template') {
-            $ident = (isset($GLOBALS['widget_template']) ? $GLOBALS['widget_template'] : null);
-            if (!is_string($ident)) {
-                throw new InvalidArgumentException(
-                    'Template ident (dynamic, from \$widget_templatee) must be a string'
-                );
-            }
-        }
-
-        $filename = $this->filenameFromIdent($ident);
-        $searchPath = $this->paths();
-        foreach ($searchPath as $path) {
-            $f = realpath($path).'/'.strtolower($filename);
-            if (!file_exists($f)) {
-                continue;
-            }
-
-            $fileContent = file_get_contents($f);
-            if ($fileContent !== '') {
-                return $fileContent;
-            }
-        }
-
-        // $this->logger->debug(
-        //     sprintf(
-        //         'No matching templates found for "%1$s": %2$s',
-        //         $ident,
-        //         $filename
-        //     ),
-        //     $searchPath
-        // );
-
-        return $ident;
-    }
-
-    /**
      * Convert an identifier to a file path.
      *
-     * @param string $ident The identifier to convert.
+     * @param string $ident The template identifier to convert to a filename.
      * @return string
      */
-    public function filenameFromIdent($ident)
+    protected function filenameFromIdent($ident)
     {
         $filename  = str_replace([ '\\' ], '.', $ident);
         $filename .= '.mustache';
 
         return $filename;
-    }
-
-    /**
-     * Convert a FQN to an identifier.
-     *
-     * @param string $classname The FQN to convert.
-     * @return string
-     */
-    public function classnameToIdent($classname)
-    {
-        $ident = str_replace('\\', '/', strtolower($classname));
-        $ident = ltrim($ident, '/');
-        return $ident;
     }
 }

@@ -37,7 +37,6 @@ abstract class AbstractEngine implements
      */
     abstract public function type();
 
-
     /**
      * Build the object with an array of dependencies.
      *
