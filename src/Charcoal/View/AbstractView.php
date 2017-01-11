@@ -192,7 +192,7 @@ abstract class AbstractView implements
     /**
      * Render a template (from string).
      *
-     * @param string $templateString The full template string to render. If none specified, used
+     * @param string $templateString The full template string to render.
      * @param mixed  $context        The view controller (rendering context).
      * @return string
      */

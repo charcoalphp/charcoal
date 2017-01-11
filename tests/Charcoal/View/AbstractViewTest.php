@@ -55,11 +55,6 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
         $obj->setContext($ctx);
         $this->assertEquals('Hello World!', $obj->renderTemplate());
 
-        ob_start();
-        echo $obj;
-        $output = ob_get_clean();
-        $this->assertEquals('Hello World!', $output);
-
         $this->assertEquals('Hello', $obj->render('Hello'));
         $this->assertEquals('Hello Foo!', $obj->render('Hello {{bar}}', ['bar' => 'Foo!']));
     }
