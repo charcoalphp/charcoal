@@ -32,7 +32,8 @@
         "squizlabs/php_codesniffer": "^2.4",
         "satooshi/php-coveralls":"^1.0",
         "mustache/mustache": "^2.11",
-        "twig/twig": "^1.18"
+        "twig/twig": "^1.18",
+        "pimple/pimple": "^3.0"
     },
     "suggest": {
         "mustache/mustache": "",
