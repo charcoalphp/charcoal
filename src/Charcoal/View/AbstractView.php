@@ -57,33 +57,27 @@ abstract class AbstractView implements
     public function __construct(array $data)
     {
         $this->setLogger($data['logger']);
+        $this->setEngine($data['engine']);
     }
 
     /**
      * Set the engine (`EngineInterface`) dependency.
      *
      * @param EngineInterface $engine The rendering engine.
-     * @return ViewInterface Chainable
+     * @return void
      */
-    public function setEngine(EngineInterface $engine)
+    private function setEngine(EngineInterface $engine)
     {
         $this->engine = $engine;
-        return $this;
     }
 
     /**
      * Get the view's rendering engine instance.
      *
-     * @throws Exception If the engine is accessed before it was properly set.
      * @return EngineInterface
      */
-    public function engine()
+    protected function engine()
     {
-        if (!isset($this->engine)) {
-            throw new Exception(
-                'Engine must first be set on view, with `setEngine()`'
-            );
-        }
         return $this->engine;
     }
 
