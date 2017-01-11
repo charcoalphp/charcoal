@@ -11,7 +11,11 @@ use Charcoal\View\AbstractView;
 use Charcoal\View\GenericView;
 use Charcoal\View\Mustache\MustacheLoader;
 use Charcoal\View\Mustache\MustacheEngine;
+use Charcoal\View\ViewableTrait as MockTrait;
 
+/**
+ *
+ */
 class ViewableTraitTest extends PHPUnit_Framework_TestCase
 {
     /**
@@ -31,22 +35,26 @@ class ViewableTraitTest extends PHPUnit_Framework_TestCase
     {
         $logger = new NullLogger();
         $loader = new MustacheLoader([
-            'logger'=>$logger
+            'logger'    => $logger,
+            'base_path' => __DIR__,
+            'paths'     => ['Mustache/templates']
         ]);
         $engine = new MustacheEngine([
-            'logger'=>$logger,
-            'loader'=>$loader
+            'logger'    => $logger,
+            'loader'    => $loader
         ]);
         $genericView = new GenericView([
-            'logger'=>$logger,
-            'engine'=>$engine
+            'logger'    => $logger,
+            'engine'    => $engine
         ]);
 
-        $mock = $this->getMockForTrait('\Charcoal\View\ViewableTrait');
+        $mock = $this->getMockForTrait(MockTrait::class);
+
         $mock->setView($genericView);
+        $this->assertSame($genericView, $mock->view());
+
         $mock->foo = 'bar';
         $this->obj = $mock;
-
     }
 
     /**
@@ -65,30 +73,47 @@ class ViewableTraitTest extends PHPUnit_Framework_TestCase
         $obj->setTemplateIdent(false);
     }
 
-    /**
-     *
-     */
-    // public function testSetView()
-    // {
-    //     $obj = $this->obj;
-
-    //     $view = new GenericView([
-    //         'logger'=>new \Psr\Log\NullLogger()
-    //     ]);
-
-    //     $ret = $obj->setView($view);
-    //     $this->assertSame($ret, $obj);
-    //     $this->assertEquals($view, $obj->view());
-    // }
-
-    /**
-     *
-     */
-    public function testRenderAndDisplay()
+    public function testRenderWithTemplateIdent()
     {
-        $obj = $this->obj;
-        $obj->foo = 'bar';
-        $ret = $obj->renderTemplate('Hello {{foo}}');
+        $this->obj->foo = 'bar';
+        $ret = $this->obj->render('foo');
+        $this->assertEquals('Hello bar', trim($ret));
+    }
+
+    public function testRender()
+    {
+        $this->obj->setTemplateIdent('foo');
+        $this->obj->foo = 'bar';
+        $ret = $this->obj->render();
+        $this->assertEquals('Hello bar', trim($ret));
+    }
+
+    /**
+     *
+     */
+    public function testRenderTemplate()
+    {
+        $this->obj->foo = 'bar';
+        $ret = $this->obj->renderTemplate('Hello {{foo}}');
         $this->assertEquals('Hello bar', $ret);
+    }
+
+    public function testToString()
+    {
+        $this->obj->setTemplateIdent('foo');
+        $this->obj->foo = 'bar';
+        $this->assertEquals('Hello bar', trim((string)$this->obj));
+    }
+
+    public function testSetViewController()
+    {
+        $this->assertSame($this->obj, $this->obj->viewController());
+
+        $ret = $this->obj->setViewController([]);
+        $this->assertSame($ret, $this->obj);
+        $this->assertEquals([], $this->obj->viewController());
+
+        $this->setExpectedException('\InvalidArgumentException');
+        $this->obj->setViewController('foo');
     }
 }

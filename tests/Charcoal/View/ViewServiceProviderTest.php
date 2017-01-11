@@ -1,12 +1,12 @@
 <?php
 
-namespace Charcoal\Tests\App\ServiceProvider;
+namespace Charcoal\Tests\View;
 
 use PHPUnit_Framework_TestCase;
 
 use Pimple\Container;
 
-use Charcoal\App\ServiceProvider\ViewServiceProvider;
+use Charcoal\View\ViewServiceProvider;
 
 /**
  *

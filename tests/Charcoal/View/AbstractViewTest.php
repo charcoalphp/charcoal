@@ -2,9 +2,21 @@
 
 namespace Charcoal\Tests\View;
 
-class AbstractViewTest extends \PHPUnit_Framework_TestCase
+use PHPUnit_Framework_TestCase;
+
+use Psr\Log\NullLogger;
+
+use Charcoal\View\Mustache\MustacheLoader;
+use Charcoal\View\Mustache\MustacheEngine;
+use Charcoal\View\AbstractView;
+
+/**
+ *
+ */
+class AbstractViewTest extends PHPUnit_Framework_TestCase
 {
     /**
+     * Instance of object under test
      * @var AbstractViewClass $obj
      */
     public $obj;
@@ -14,54 +26,20 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->logger = new \Psr\Log\NullLogger();
-        $loader = new \Charcoal\View\Mustache\MustacheLoader([
-            'logger'=>$this->logger
+        $logger = new NullLogger();
+        $loader = new MustacheLoader([
+            'logger'=>$logger,
+            'base_path'=>__DIR__,
+            'paths'=>['Mustache/templates']
         ]);
-        $engine = new \Charcoal\View\Mustache\MustacheEngine([
-            'logger'=>$this->logger,
+        $engine = new MustacheEngine([
+            'logger'=>$logger,
             'loader'=>$loader
         ]);
-        $this->obj = $this->getMockForAbstractClass('\Charcoal\View\AbstractView');
-        $this->obj->setLogger($this->logger);
-        $this->obj->setEngine($engine);
-    }
-
-
-
-    /**
-     *
-     */
-    public function testConstructor()
-    {
-        $obj = $this->obj;
-        $this->assertInstanceOf('\Charcoal\View\AbstractView', $obj);
-    }
-
-    /**
-     * Asserts that the render() method:
-     * - Can be used without parameters
-     * - Can be used only with the template parameter
-     * - Can be used with a template and a context parameter
-     * - Is called when casting to string
-     */
-    public function testRender()
-    {
-        $obj = $this->obj;
-        $tpl = 'Hello {{who}}';
-        $ctx = ['who' => 'World!'];
-
-        $obj->setTemplate($tpl);
-        $obj->setContext($ctx);
-        $this->assertEquals('Hello World!', $obj->renderTemplate());
-
-        ob_start();
-        echo $obj;
-        $output = ob_get_clean();
-        $this->assertEquals('Hello World!', $output);
-
-        $this->assertEquals('Hello', $obj->render('Hello'));
-        $this->assertEquals('Hello Foo!', $obj->render('Hello {{bar}}', ['bar' => 'Foo!']));
+        $this->obj = $this->getMockForAbstractClass(AbstractView::class, [[
+            'logger' => $logger,
+            'engine' => $engine
+        ]]);
     }
 
     /**
@@ -69,17 +47,16 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
      */
     public function testRenderTemplate()
     {
-        $loader = new \Charcoal\View\Mustache\MustacheLoader([
-            'logger'=>$this->logger
-        ]);
-        $loader->addPath(__DIR__.'/Mustache/templates');
+        $this->assertEquals('Hello', $this->obj->renderTemplate('Hello'));
+        $this->assertEquals('Hello Foo!', $this->obj->renderTemplate('Hello {{bar}}', ['bar' => 'Foo!']));
+        $this->assertEquals('Hello ', $this->obj->renderTemplate('Hello {{bar}}', ['baz' => 'Foo!']));
+    }
 
-        $engine = new \Charcoal\View\Mustache\MustacheEngine([
-            'logger'=>$this->logger,
-            'loader'=>$loader
-        ]);
-
-        $this->obj->setEngine($engine);
+    /**
+     *
+     */
+    public function testRender()
+    {
         $this->assertEquals('Hello Charcoal', trim($this->obj->render('foo', ['foo'=>'Charcoal'])));
     }
 
@@ -88,17 +65,6 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
      */
     public function testRenderTemplateHelper()
     {
-        $loader = new \Charcoal\View\Mustache\MustacheLoader([
-            'logger'=>$this->logger
-        ]);
-        $loader->addPath(__DIR__.'/Mustache/templates');
-
-        $engine = new \Charcoal\View\Mustache\MustacheEngine([
-            'logger'=>$this->logger,
-            'loader'=>$loader
-        ]);
-
-        $this->obj->setEngine($engine);
 
         $expected = trim('
 <div>
@@ -112,5 +78,16 @@ class AbstractViewTest extends \PHPUnit_Framework_TestCase
 </script>');
 
         $this->assertEquals($expected, trim($this->obj->renderTemplate('helpers', ['foo'=>'Charcoal'])));
+    }
+
+    public function testLoadTemplateInvalidStringThrowsException()
+    {
+        $this->setExpectedException('\InvalidArgumentException');
+        $this->obj->loadTemplate(false);
+    }
+
+    public function testLoadTemplateEmptyStringReturnsEmpty()
+    {
+        $this->assertEquals('', $this->obj->loadTemplate(''));
     }
 }

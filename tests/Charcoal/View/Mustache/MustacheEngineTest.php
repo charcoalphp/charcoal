@@ -2,33 +2,34 @@
 
 namespace Charcoal\Tests\View\Mustache;
 
-use \Charcoal\View\Mustache\MustacheEngine;
-use \Charcoal\View\Mustache\MustacheLoader;
+use PHPUnit_Framework_TestCase;
+
+use Psr\Log\NullLogger;
+
+use Charcoal\View\Mustache\MustacheEngine;
+use Charcoal\View\Mustache\MustacheLoader;
 
 /**
  *
  */
-class MustacheEngineTest extends \PHPUnit_Framework_TestCase
+class MustacheEngineTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var MustacheEngine
      */
     private $obj;
 
-    private function getLoader()
-    {
-        $loader = new MustacheLoader([
-            'logger'=>new \Psr\Log\NullLogger()
-        ]);
-        $loader->addPath(__DIR__.'/templates');
-        return $loader;
-    }
-
     public function setUp()
     {
+        $logger = new NullLogger();
+        $loader = new MustacheLoader([
+            'logger'    => $logger,
+            'base_path' => __DIR__,
+            'paths'     => ['templates']
+        ]);
         $this->obj = new MustacheEngine([
-            'logger'=>new \Psr\Log\NullLogger(),
-
+            'logger' => $logger,
+            'loader' => $loader
         ]);
     }
     public function testType()
@@ -45,13 +46,11 @@ class MustacheEngineTest extends \PHPUnit_Framework_TestCase
 
     public function testRender()
     {
-        $this->obj->setLoader($this->getLoader());
         $this->assertEquals('Hello Charcoal', trim($this->obj->render('foo', ['foo'=>'Charcoal'])));
     }
 
     public function testRenderTemplate()
     {
-        $this->obj->setLoader($this->getLoader());
         $this->assertEquals('Hello World!', trim($this->obj->renderTemplate('Hello {{bar}}', ['bar'=>'World!'])));
     }
 }
