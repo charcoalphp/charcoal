@@ -10,15 +10,8 @@ use \InvalidArgumentException;
 use \Psr\Log\LoggerAwareInterface;
 use \Psr\Log\LoggerAwareTrait;
 
-// Module `charcoal-config` dependencies
-use \Charcoal\Config\ConfigurableInterface;
-use \Charcoal\Config\ConfigurableTrait;
-
-// Local namespace dependencies
-use \Charcoal\View\Mustache\MustacheEngine;
-use \Charcoal\View\Php\PhpEngine;
-use \Charcoal\View\PhpMustache\PhpMustacheEngine;
-use \Charcoal\View\Twig\TwigEngine;
+// Local namespace dependencie
+use \Charcoal\View\EngineInterface;
 use \Charcoal\View\ViewInterface;
 
 /**
@@ -27,12 +20,10 @@ use \Charcoal\View\ViewInterface;
  * Also implements the `ConfigurableInterface`
  */
 abstract class AbstractView implements
-    ConfigurableInterface,
     LoggerAwareInterface,
     ViewInterface
 {
     use LoggerAwareTrait;
-    use ConfigurableTrait;
 
     /**
      * @var string $templateIdent
@@ -53,31 +44,6 @@ abstract class AbstractView implements
      * @var mixed $context
      */
     private $context;
-
-    /**
-     * A view object can simply be echoed to be rendered.
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->renderTemplate();
-    }
-
-    /**
-     * > ConfigurableTrait . createConfig()
-     *
-     * @param array $data Optional config data.
-     * @return ViewConfig
-     */
-    public function createConfig(array $data = null)
-    {
-        $config = new ViewConfig();
-        if ($data !== null) {
-            $config->merge($data);
-        }
-        return $config;
-    }
 
     /**
      * Set the engine (`EngineInterface`) dependency.
@@ -206,6 +172,8 @@ abstract class AbstractView implements
     }
 
     /**
+     * Load a template (from identifier) and render it.
+     *
      * @param string $templateIdent The template identifier, to load and render.
      * @param mixed  $context       The view controller (rendering context).
      * @return string
@@ -222,7 +190,9 @@ abstract class AbstractView implements
     }
 
     /**
-     * @param string $templateString The full template string to render.
+     * Render a template (from string).
+     *
+     * @param string $templateString The full template string to render. If none specified, used
      * @param mixed  $context        The view controller (rendering context).
      * @return string
      */

@@ -26,9 +26,5 @@ class GenericView extends AbstractView
             $data['logger'] = new NullLogger();
         }
         $this->setLogger($data['logger']);
-
-        if (isset($data['config'])) {
-            $this->setConfig($data['config']);
-        }
     }
 }
