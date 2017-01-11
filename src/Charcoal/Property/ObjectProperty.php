@@ -427,6 +427,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
 
         $values = [];
         foreach ($propertyValue as $val) {
+            $label = null;
             if ($val instanceof ModelInterface) {
                 $label = $this->renderObjPattern($val);
             } else {
