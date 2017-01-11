@@ -46,6 +46,20 @@ abstract class AbstractView implements
     private $context;
 
     /**
+     * Build the object with an array of dependencies.
+     *
+     * ## Parameters:
+     * - `logger` a PSR-3 logger
+     *
+     * @param array $data View class dependencies.
+     * @throws InvalidArgumentException If required parameters are missing.
+     */
+    public function __construct(array $data)
+    {
+        $this->setLogger($data['logger']);
+    }
+
+    /**
      * Set the engine (`EngineInterface`) dependency.
      *
      * @param EngineInterface $engine The rendering engine.

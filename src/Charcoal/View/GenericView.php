@@ -10,21 +10,5 @@ use \Psr\Log\NullLogger;
  */
 class GenericView extends AbstractView
 {
-    /**
-     * Build the object with an array of dependencies.
-     *
-     * ## Optional parameters:
-     * - `logger` a PSR-3 logger
-     * - `config` a ViewConfig object
-     *
-     * @param array $data View class dependencies.
-     * @throws InvalidArgumentException If required parameters are missing.
-     */
-    public function __construct(array $data)
-    {
-        if (!isset($data['logger'])) {
-            $data['logger'] = new NullLogger();
-        }
-        $this->setLogger($data['logger']);
-    }
+    // AbstractView is everything we need for now...
 }
