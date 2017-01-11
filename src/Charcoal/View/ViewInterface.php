@@ -14,7 +14,7 @@ interface ViewInterface
      * @param mixed  $context       The view controller (rendering context).
      * @return string
      */
-    public function render($templateIdent = null, $context = null);
+    public function render($templateIdent, $context = null);
 
     /**
      * Render a template (from string).
@@ -23,5 +23,5 @@ interface ViewInterface
      * @param mixed  $context        The view controller (rendering context).
      * @return string
      */
-    public function renderTemplate($templateString = null, $context = null);
+    public function renderTemplate($templateString, $context = null);
 }

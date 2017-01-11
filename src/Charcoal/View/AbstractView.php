@@ -26,16 +26,6 @@ abstract class AbstractView implements
     use LoggerAwareTrait;
 
     /**
-     * @var string $templateIdent
-     */
-    private $templateIdent;
-
-    /**
-     * @var string $template
-     */
-    private $template;
-
-    /**
      * @var EngineInterface $engine
      */
     private $engine;
@@ -76,70 +66,14 @@ abstract class AbstractView implements
         return $this->engine;
     }
 
-    /**
-     * @param string $templateIdent The template ident.
-     * @throws InvalidArgumentException If the provided argument is not a string.
-     * @return AbstractView Chainable
-     */
-    public function setTemplateIdent($templateIdent)
-    {
-        if (!is_string($templateIdent)) {
-            throw new InvalidArgumentException(
-                'Template ident must be a string.'
-            );
-        }
-
-        $this->templateIdent = $templateIdent;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function templateIdent()
-    {
-        return $this->templateIdent;
-    }
-
-    /**
-     * @param string $template The template string.
-     * @throws InvalidArgumentException If the provided argument is not a string.
-     * @return AbstractView Chainable
-     */
-    public function setTemplate($template)
-    {
-        if (!is_string($template)) {
-            throw new InvalidArgumentException(
-                'Template must be a string.'
-            );
-        }
-
-        $this->template = $template;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function template()
-    {
-        if ($this->template === null) {
-            return $this->loadTemplate();
-        }
-
-        return $this->template;
-    }
 
     /**
      * @param string $templateIdent The template identifier to load..
      * @throws InvalidArgumentException If the template ident is not a string.
      * @return string
      */
-    public function loadTemplate($templateIdent = null)
+    public function loadTemplate($templateIdent)
     {
-        if ($templateIdent === null) {
-            $templateIdent = $this->templateIdent();
-        }
         if (!is_string($templateIdent)) {
             throw new InvalidArgumentException(
                 'Template ident must be a string'
@@ -148,8 +82,7 @@ abstract class AbstractView implements
         if (!$templateIdent) {
             return '';
         }
-        $template = $this->engine()->loadTemplate($templateIdent);
-        return $template;
+        return $this->engine()->loadTemplate($templateIdent);
     }
 
     /**
@@ -159,26 +92,20 @@ abstract class AbstractView implements
      * @param mixed  $context       The view controller (rendering context).
      * @return string
      */
-    public function render($templateIdent = null, $context = null)
+    public function render($templateIdent, $context = null)
     {
-        if ($templateIdent === null) {
-            $templateIdent = $this->templateIdent();
-        }
         return $this->engine()->render($templateIdent, $context);
     }
 
     /**
      * Render a template (from string).
      *
-     * @param string $templateString The full template string to render. If none specified, used
+     * @param string $templateString The full template string to render.
      * @param mixed  $context        The view controller (rendering context).
      * @return string
      */
-    public function renderTemplate($templateString = null, $context = null)
+    public function renderTemplate($templateString, $context = null)
     {
-        if ($templateString === null) {
-            $templateString = $this->template();
-        }
         return $this->engine()->render($templateString, $context);
     }
 }
