@@ -58,7 +58,7 @@ class TwigEngine extends AbstractEngine
      */
     public function render($templateIdent, $context)
     {
-        return $this->twig()->render($templateIdent, ['data'=>$context]);
+        return $this->twig()->render($templateIdent, $context);
     }
 
     /**
@@ -68,6 +68,7 @@ class TwigEngine extends AbstractEngine
      */
     public function renderTemplate($templateString, $context)
     {
-        return $this->twig()->render($templateString, ['data'=>$context]);
+        $template = $this->twig()->createTemplate($templateString);
+        return $template->render($context);
     }
 }
