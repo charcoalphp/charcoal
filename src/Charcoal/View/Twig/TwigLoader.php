@@ -43,6 +43,20 @@ class TwigLoader extends AbstractLoader implements
      * @param  string $name The name of the template to load.
      * @return string The template source code.
      */
+    public function getSource($name)
+    {
+        return $this->load($name);
+    }
+
+    /**
+     * Twig_LoaderInterface > getSourceContext()
+     *
+     * Gets the source code of a template, given its name.
+     * For Twig 2.x
+     *
+     * @param  string $name The name of the template to load.
+     * @return Twig_Source The template source object.
+     */
     public function getSourceContext($name)
     {
         $source = $this->load($name);
@@ -51,6 +65,8 @@ class TwigLoader extends AbstractLoader implements
 
     /**
      * Twig_LoaderInterface > exists()
+     *
+     * For Twig 2.x
      *
      * @param  string $name The name of the template to load.
      * @return boolean
