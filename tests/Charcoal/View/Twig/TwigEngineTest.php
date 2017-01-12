@@ -40,13 +40,13 @@ class TwigEngineTest extends PHPUnit_Framework_TestCase
 
     public function testRender()
     {
-        $this->assertEquals('Hello Charcoal', trim($this->obj->render('foo', ['bar'=>'Charcoal'])));
+        $this->assertEquals('Hello Charcoal', trim($this->obj->render('foo', ['foo'=>'Charcoal'])));
     }
 
     public function testRenderTemplate()
     {
-        $template = 'Hello {{ bar }}';
-        $context = ['bar'=>'World!'];
+        $template = 'Hello {{ foo }}';
+        $context = ['foo'=>'World!'];
         $this->assertEquals('Hello World!', trim($this->obj->renderTemplate($template, $context)));
     }
 }

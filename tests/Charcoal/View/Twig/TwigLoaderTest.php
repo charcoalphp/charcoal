@@ -6,6 +6,8 @@ use PHPUnit_Framework_TestCase;
 
 use Psr\Log\NullLogger;
 
+use Twig_Source;
+
 use Charcoal\View\Twig\TwigLoader;
 
 /**
@@ -36,6 +38,26 @@ class TwigLoaderTest extends PHPUnit_Framework_TestCase
 
         $this->setExpectedException('\InvalidArgumentException');
         $this->obj->load(false);
+    }
+
+    public function testGetSource()
+    {
+        $ret = $this->obj->getSource('foo');
+
+        $expected = file_get_contents(__DIR__.'/templates/foo.twig');
+        $this->assertEquals($expected, $ret);
+    }
+
+    public function testGetSourceContext()
+    {
+        $name = 'foo';
+        $ret = $this->obj->getSourceContext($name);
+
+        $source = file_get_contents(__DIR__.'/templates/'.$name.'.twig');
+        $expected = new Twig_source($source, $name);
+        $this->assertEquals($expected, $ret);
+
+
     }
 
     public function testLoadDynamic()

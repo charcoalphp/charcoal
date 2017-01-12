@@ -2,18 +2,18 @@
 
 namespace Charcoal\View\Mustache;
 
-use \InvalidArgumentException;
-use \Traversable;
+use InvalidArgumentException;
+use Traversable;
 
 // Dependency from 'mustache/mustache'
-use \Mustache_Engine;
+use Mustache_Engine;
 
 // Intra-module (`charcoal-view`) depentencies
-use \Charcoal\View\AbstractEngine;
+use Charcoal\View\AbstractEngine;
 
-use \Charcoal\View\Mustache\GenericHelpers;
-use \Charcoal\View\Mustache\AssetsHelpers;
-use \Charcoal\View\Mustache\HelpersInterface;
+use Charcoal\View\Mustache\GenericHelpers;
+use Charcoal\View\Mustache\AssetsHelpers;
+use Charcoal\View\Mustache\HelpersInterface;
 
 /**
  * Mustache view rendering engine.
