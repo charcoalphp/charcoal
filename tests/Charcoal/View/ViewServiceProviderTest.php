@@ -6,6 +6,8 @@ use PHPUnit_Framework_TestCase;
 
 use Psr\Log\NullLogger;
 
+use Slim\Http\Response;
+
 use Pimple\Container;
 
 use Charcoal\View\ViewServiceProvider;
@@ -47,6 +49,11 @@ class ViewServiceProviderTest extends PHPUnit_Framework_TestCase
 
         $ret = $container['view']->render('foo', ['foo'=>'Bar']);
         $this->assertEquals('Hello Bar', trim($ret));
+
+        $response = new Response();
+        $ret = $container['view/renderer']->render($response, 'foo', ['foo'=>'Baz']);
+        $this->assertEquals('Hello Baz', trim((string)$ret->getBody()));
+
     }
 
     public function testProviderMustache()
@@ -66,6 +73,10 @@ class ViewServiceProviderTest extends PHPUnit_Framework_TestCase
 
         $ret = $container['view']->render('foo', ['foo'=>'Bar']);
         $this->assertEquals('Hello Bar', trim($ret));
+
+        $response = new Response();
+        $ret = $container['view/renderer']->render($response, 'foo', ['foo'=>'Baz']);
+        $this->assertEquals('Hello Baz', trim((string)$ret->getBody()));
     }
 
     public function testProviderPhp()
@@ -85,5 +96,9 @@ class ViewServiceProviderTest extends PHPUnit_Framework_TestCase
 
         $ret = $container['view']->render('foo', ['foo'=>'Bar']);
         $this->assertEquals('Hello Bar', trim($ret));
+
+        $response = new Response();
+        $ret = $container['view/renderer']->render($response, 'foo', ['foo'=>'Baz']);
+        $this->assertEquals('Hello Baz', trim((string)$ret->getBody()));
     }
 }
