@@ -2,8 +2,6 @@
 
 namespace Charcoal\View\Php;
 
-use \InvalidArgumentException;
-
 // Intra-module (`charcoal-view`) depentencies
 use \Charcoal\View\AbstractEngine;
 

@@ -2,9 +2,6 @@
 
 namespace Charcoal\View\Mustache;
 
-// PHP Dependencies
-use \InvalidArgumentException;
-
 // 3rd-party libraries (`mustache/mustache`) dependencies
 use \Mustache_Loader;
 

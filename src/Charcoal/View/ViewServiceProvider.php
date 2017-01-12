@@ -12,7 +12,6 @@ use Charcoal\View\Mustache\MustacheEngine;
 use Charcoal\View\Mustache\MustacheLoader;
 use Charcoal\View\Php\PhpEngine;
 use Charcoal\View\Php\PhpLoader;
-use Charcoal\View\PhpMustache\PhpMustacheEngine;
 use Charcoal\View\Twig\TwigEngine;
 use Charcoal\View\Twig\TwigLoader;
 use Charcoal\View\Renderer;

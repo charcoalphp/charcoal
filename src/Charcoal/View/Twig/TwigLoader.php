@@ -2,9 +2,6 @@
 
 namespace Charcoal\View\Twig;
 
-use Exception;
-use InvalidArgumentException;
-
 // From `twig/twig`
 use Twig_LoaderInterface;
 use Twig_Source;
