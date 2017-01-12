@@ -1,9 +1,9 @@
 Charcoal View
 =============
 
-The `Charcoal\View` module provides everything needed to render templates and add renderer to objects.
+The `Charcoal\View` module (`locomotivemtl/charcoal-view`) provides everything needed to render templates and add renderer to objects.
 
-It is a thin layer on top of various _rendering engines_, such as **mustache** or **twig**.
+It is a thin layer on top of various _rendering engines_, such as **mustache** or **twig** that can be used either as a _View_ component with any frameworks, as PSR-7 renderer for such frameworks (such as Slim) 
 
 It is the default view layer for `charcoal-app` projects.
 
@@ -14,14 +14,16 @@ It is the default view layer for `charcoal-app` projects.
 
 -   [How to install](#how-to-install)
     -   [Dependencies](#dependencies)
--   [Usage](#usage)
+-   [Basic Usage](#basic-usage)
+    -   [Using the Renderer, with Slim](#using-the-renderer-with-slim)   
 -   [Module components](#module-components)
-    -   Views
-        -   Generic View
-    -   View Engines
-    -   Loaders
-        -   Templates
-    -   Viewable Interface and Trait
+    -   [Views](#views)
+        -   [Generic View](#generic-view)
+    -   [View Engines](#view-engines)
+    -   [Loaders](#loaders)
+        -   [Templates](#templates)
+    -   [Viewable Interface and Trait](#viewable-interface-and-trait)
+    -   [View Service Provider](#view-service-provider)
 -   [Development](#development)
     -   [Development dependencies](#development-dependencies)
     -   [Coding Style](#coding-style)
@@ -35,10 +37,16 @@ The preferred (and only supported) way of installing charcoal-view is with **com
 ```shell
 $ composer require locomotivemtl/charcoal-view
 ```
+To install a full Charcoal project, which includes `charcoal-view`:
+
+```shell
+$ composer create-project locomotivemtl/charcoal-project-boilerplate:@dev --prefer-source
+```
+
 
 ## Dependencies
 
--   `PHP 5.5+`
+-   `PHP 5.6+`
     -   Older versions of PHP are deprecated, therefore not supported.
 -   [`psr/log`](http://www.php-fig.org/psr/psr-3/)
     -   A PSR-3 compliant logger should be provided to the various services / classes.
@@ -54,57 +62,94 @@ $ composer require locomotivemtl/charcoal-view
     -   All default charcoal modules use mustache templates.
 -   [`twig/twig`](http://twig.sensiolabs.org/)
     -   Twig can also be used as a rendering engine for the view.
+-   [`pimple/pimple`](http://pimple.sensiolabs.org/)
+    -   Dependencies management can be done with a Pimple ServiceProvider (`\Charcoal\View\ViewServiceProvider`)
 
 > 👉 Development dependencies are described in the _Development_ section of this README file.
 
-# Usage
+# Basic Usage
+
+A `View` can be used to render any template (which can be loaded from the engine) with any object (or array) as context.
 
 ```php
-$engine = new \Charcoal\View\Mustache\MustacheEngine([
-    'logger' => $logger, // PSR-3 logger
-    'loader' => // ...
-]);
-$view = new \Charcoal\View\GenericView();
-$view->setEngine($engine)
+use Charcoal\View\Mustache\MustacheLoader;
+use Charcoal\View\Mustache\MustacheEngine;
+use Charcoal\View\GenericView;
 
-$context = new \Foo\Bar\ContextData();
+$loader = new MustacheLoader([
+    'logger'=>$logger,
+    'base_path'=>__DIR__,
+    'paths'=>[
+        'templates',
+        'views
+    ]
+]);
+
+$engine = new MustacheEngine([
+    'logger' => $logger, // PSR-3 logger
+    'loader' => $loader
+]);
+
+$view = new ]GenericView([
+    ' logger' => $logger,
+    'engine'  => $engine
+]);
 
 echo $view->render('foo/bar/template', $context);
+
+// A template string can also be used directly
+$str = 'My name is {{what}}';
+echo $view->renderTemplate($str, $context);
+```
+
+## Basic Usage, with service provider
+
+All this bootstrapping code can be avoided by using the `ViewServiceProvider`. This provider expects a `config` object
+
+```php
+use Pimple\Container;
+use Charcoal\View\ViewServiceProvider;
+
+$container = new Container([
+    'logger' => $logger,
+    'base_path' => __DIR__,
+    'view' = [
+        'default_engine' -> 'mustache',
+        'paths' => [
+            'views',
+            'templates'
+        ]
+    ]
+]);
+$container->register(new ViewServiceProvider());
+
+echo $container['view']->render('foo/bar/template', $context);
 ```
 
 > 👉 The default view engine, used in those examples, would be _mustache_.
 
-Using renderer, with a PSR7 framework (in this example, Slim 3):
+## Using the Renderer, with slim
+
+A view can also be implicitely used as a rendering service. Using the `renderer`, with a PSR7 framework (in this example, Slim 3):
 
 ```php
-use \Charcoal\View\GenericView;
-use \Charcoal\View\Renderer;
+use Charcoal\View\ViewServiceProvider;
 
 include 'vendor/autoload.php';
 
 $app = new \Slim\App();
 $container = $app->getContainer();
-
-$container['view_config'] = function($c) {
-    $config = new \Charcoal\View\ViewConfig();
-    return $config;
-};
-$container['view'] = function($c) {
-    return new GenericView([
-        'config' => $c['view_config'],
-        'logger' => $c['logger']
-    ]);
-};
-$container['renderer'] = function($c) {
-    return new Renderer($c['view']);
-};
+$container->register(new ServiceProvider());
 
 $app->get('/hello/{name}', function ($request, $response, $args) {
+    // This will render the "hello" template
     return $this->renderer->render($response, 'hello', $args);
 });
 
 $app->run();
 ```
+
+> Just like the view, it is possible to simply register all dependencies on a Pimple container (with the `ViewServiceProvider`) to avoid all this bootstrapping code. The renderer is available as `$container['view/renderer']`.
 
 # Module components
 
@@ -129,52 +174,32 @@ The abstract class `Charcoal\View\AbstractView` fully implements the `ViewInterf
 
 As convenience, the `\Charcoal\View\GenericView` class implements the full interface by extending the `AbstractView` base class.
 
-```php
-use \Charcoal\View\GenericView;
-
-// Using with a loader / template ident
-$view = new GenericView([
-    'engine_type' => 'mustache'
-]);
-$context = new \Foo\Bar\ModelController();
-echo $view->render('example/foo/bar', $context);
-
-// Using with a template string, directly
-$view = new GenericView([
-    'engine_type' => 'mustache'
-]);
-$template = '<p>Hello {{world}}</p>';
-$context  = [
-    'world' => 'World!'
-];
-echo $view->render($template, $context);
-```
-
 ## View Engines
 
 Charcoal _views_ support different templating Engines_, which are responsible for loading the appropriate template (through a _loader_) and render a template with a given context according to its internal rules. Every view engines should implement `\Charcoal\View\EngineInterface`.
 
-There are 4 engines available by default:
+There are 3 engines available by default:
 
 -   `mustache` (**default**)
 -   `php`
--   `php-mustache`, the mustache templating engine with a PHP template loader. (Files are parsed with PHP before being used as a mustache templates).
 -   `twig`
 
 ## Loaders
+
+A `Loader` service is attached to every engine. Its function is to load a given template content
 
 ### Templates
 
 Templates are simply files, stored on the filesystem, containing the main view (typically, HTML code + templating tags, but can be kind of text data).
 
 -   For the *mustache* engine, they are `.mustache` files.
--   For the *php* and *php-mustache* engines, they are `.php` files.
+-   For the *php* engine, they are `.php` files.
 
 Templates are loaded with template _loaders_. Loaders implement the `Charcoal\View\LoaderInterface` and simply tries to match an identifier (passed as argument to the `load()` method) to a file on the filesystem.
 
-Calling `$view->render($templateIdent, $ctx)` will automatically use the engine's `Loader` object to find the template `$templateIdent`.
+Calling `$view->render($templateIdent, $context)` will automatically use the engine's `Loader` object to find the template `$templateIdent`.
 
-Otherwise, calling `$view->renderTemplate($templateString, $ctx)` expects an already-loaded template string as parameter.
+Otherwise, calling `$view->renderTemplate($templateString, $context)` expects an already-loaded template string as parameter.
 
 ## Viewable Interface and Trait
 
@@ -218,6 +243,42 @@ $obj->renderTemplate('Hello {{world}}');
 
 would output: `"Hello world!"`
 
+## View Service Provider
+
+As seen in the various examples above, it is recommended to use the `ViewServiceProvider` to set up the various dependencies, according to a `config`, on a `Pimple` container.
+
+The Service Provider adds the following service to a container:
+
+- `view`
+- `view/renderer`
+
+Other services are:
+
+- `view/config`
+- `view/engine`
+- `view/loader`
+
+The `ViewServiceProvider` expects the following services / keys to be set on the container:
+
+- `logger` A PSR-3 logger
+- `config` Application configuration. Container a "view" config.
+
+### The View Config
+
+Most service options can be set dynamically from a configuration object:
+
+```json
+{
+    "base_path":"/",
+    "view": {
+        "engine":"mustache",
+        "paths":[
+            "templates",
+            "views"
+        ]
+    }
+}
+
 # Development
 
 To install the development environment:
@@ -242,6 +303,9 @@ $ composer test
 -   `phpunit/phpunit`
 -   `squizlabs/php_codesniffer`
 -   `satooshi/php-coveralls`
+-   `pimple/pimple`
+-   `mustache/mustache`
+-   `twig/twig`
 
 ## Continuous Integration
 
