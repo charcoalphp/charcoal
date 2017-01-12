@@ -50,11 +50,6 @@ class AbstractViewTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('Hello', $this->obj->renderTemplate('Hello'));
         $this->assertEquals('Hello Foo!', $this->obj->renderTemplate('Hello {{bar}}', ['bar' => 'Foo!']));
         $this->assertEquals('Hello ', $this->obj->renderTemplate('Hello {{bar}}', ['baz' => 'Foo!']));
-
-
-        $this->assertEquals('Hello', $obj->render('Hello'));
-        $this->assertEquals('Hello Foo!', $obj->render('Hello {{bar}}', ['bar' => 'Foo!']));
-
     }
 
     /**
