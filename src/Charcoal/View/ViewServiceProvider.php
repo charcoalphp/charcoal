@@ -158,6 +158,7 @@ class ViewServiceProvider implements ServiceProviderInterface
          */
         $container['view/engine/php'] = function (Container $container) {
             $engineOptions = $container['view/engine/dependencies'];
+            $engineOptions['loader'] = $container['view/loader/php'];
             return new PhpEngine($engineOptions);
         };
 
