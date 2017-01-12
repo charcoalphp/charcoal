@@ -55,7 +55,7 @@ abstract class AbstractLoader implements
     public function load($ident)
     {
         $file = $this->findTemplateFile($ident);
-        if (!$file) {
+        if ($file === null) {
             return $ident;
         }
 
