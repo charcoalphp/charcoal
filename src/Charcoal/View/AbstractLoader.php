@@ -54,6 +54,16 @@ abstract class AbstractLoader implements
      */
     public function load($ident)
     {
+        // Handle dynamic template hack.
+        if ($ident === '$widget_template') {
+            $ident = (isset($GLOBALS['widget_template']) ? $GLOBALS['widget_template'] : null);
+            if (!is_string($ident)) {
+                throw new InvalidArgumentException(
+                    'Dynamic template ident (from "$widget_template") must be a string'
+                );
+            }
+        }
+
         $file = $this->findTemplateFile($ident);
         if ($file === null) {
             return $ident;
@@ -94,16 +104,6 @@ abstract class AbstractLoader implements
             throw new InvalidArgumentException(
                 'Template ident must be a string'
             );
-        }
-
-        // Handle dynamic template hack.
-        if ($ident === '$widget_template') {
-            $ident = (isset($GLOBALS['widget_template']) ? $GLOBALS['widget_template'] : null);
-            if (!is_string($ident)) {
-                throw new InvalidArgumentException(
-                    'Template ident (dynamic, from \$widget_templatee) must be a string'
-                );
-            }
         }
 
         $filename = $this->filenameFromIdent($ident);
