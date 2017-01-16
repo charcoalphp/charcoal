@@ -22,8 +22,8 @@ class MapStructurePropertyTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->obj = new MapStructureProperty([
-            'database' => new PDO('sqlite::memory:'),
-            'logger' => new NullLogger()
+            'database'  => new PDO('sqlite::memory:'),
+            'logger'    => new NullLogger()
         ]);
     }
 

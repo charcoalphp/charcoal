@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Model;
 
+use PHPUnit_Framework_TestCase;
+
 use \PDO;
 
 use \Psr\Log\NullLogger;
@@ -9,14 +11,14 @@ use \Psr\Log\NullLogger;
 use \Charcoal\Property\PropertyFactory;
 use \Charcoal\Property\GenericProperty;
 
-class PropertyTest extends \PHPUnit_Framework_TestCase
+class PropertyTest extends PHPUnit_Framework_TestCase
 {
     public $factory;
     public $obj;
 
     public function getObj()
     {
-        return $this->factory->create('GenericProperty', [
+        return $this->factory->create(GenericProperty::class, [
             'database' => new PDO('sqlite::memory:'),
             'logger' => new NullLogger()
         ]);
@@ -28,11 +30,9 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
         $this->obj       = $this->getObj();
     }
 
-    public function testConstructor()
+    public function testDefaultValues()
     {
         $obj = $this->obj;
-
-        $this->assertInstanceOf('\Charcoal\Property\GenericProperty', $obj);
 
         // Check default Value
         $this->assertEquals(false, $obj->l10n());

@@ -2,11 +2,11 @@
 
 namespace Charcoal\Tests\Property;
 
-use \PDO;
+use PDO;
 
-use \Psr\Log\NullLogger;
+use Psr\Log\NullLogger;
 
-use \Charcoal\Property\BooleanProperty as BooleanProperty;
+use Charcoal\Property\BooleanProperty;
 
 /**
  * ## TODOs
@@ -22,8 +22,8 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->obj = new BooleanProperty([
-            'database' => new PDO('sqlite::memory:'),
-            'logger' => new NullLogger()
+            'database'  => new PDO('sqlite::memory:'),
+            'logger'    => new NullLogger()
         ]);
     }
 
@@ -46,6 +46,12 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('Oui', $this->obj->displayVal(true));
         $this->assertEquals('Non', $this->obj->displayVal(false));
+
+        $this->obj['true_label'] = 'Yes';
+        $this->obj['false_label'] = 'No';
+
+        $this->assertEquals('Yes', $this->obj->displayVal(true));
+        $this->assertEquals('No', $this->obj->displayVal(false));
     }
 
     /**
@@ -102,9 +108,6 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
 
         $this->assertEquals('foo', $obj->trueLabel());
-
-        //$this->setExpectedException('\InvalidArgumentException');
-        //$obj->setTrueLabel(false);
     }
 
     /**
@@ -117,9 +120,6 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
 
         $this->assertEquals('foo', $obj->falseLabel());
-
-        //$this->setExpectedException('\InvalidArgumentException');
-        //$obj->setFalseLabel(false);
     }
 
     /**
@@ -145,7 +145,7 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
      */
     public function testSqlPdoType()
     {
-        $this->assertEquals(\PDO::PARAM_BOOL, $this->obj->sqlPdoType());
+        $this->assertEquals(PDO::PARAM_BOOL, $this->obj->sqlPdoType());
     }
 
     /**
@@ -175,9 +175,7 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
      */
     public function testSave()
     {
-        $obj = $this->obj;
-
-        $this->assertTrue($obj->save(true));
-        $this->assertNotTrue($obj->save(false));
+        $this->assertTrue($this->obj->save(true));
+        $this->assertFalse($this->obj->save(false));
     }
 }

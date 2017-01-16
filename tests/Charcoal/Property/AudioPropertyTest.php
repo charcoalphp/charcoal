@@ -2,25 +2,27 @@
 
 namespace Charcoal\Tests\Property;
 
-use \PDO;
+use PHPUnit_Framework_TestCase;
 
-use \Psr\Log\NullLogger;
+use PDO;
 
-use \Charcoal\Property\AudioProperty;
+use Psr\Log\NullLogger;
+
+use Charcoal\Property\AudioProperty;
 
 /**
  * ## TODOs
  * - 2015-03-12:
  */
-class AudioPropertyTest extends \PHPUnit_Framework_TestCase
+class AudioPropertyTest extends PHPUnit_Framework_TestCase
 {
     public $obj;
 
     public function setUp()
     {
         $this->obj = new AudioProperty([
-            'database' => new PDO('sqlite::memory:'),
-            'logger' => new NullLogger()
+            'database'  => new PDO('sqlite::memory:'),
+            'logger'    => new NullLogger()
         ]);
     }
 
@@ -49,30 +51,49 @@ class AudioPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(500, $obj->maxLength());
     }
 
-    public function testSetMinLength()
+     public function testSetDataSnakecase()
     {
         $obj = $this->obj;
-
-        $ret = $obj->setMinLength(5);
+        $data = [
+            'min_length' => 20,
+            'max_length' => 500
+        ];
+        $ret = $obj->setData($data);
         $this->assertSame($ret, $obj);
 
-        $this->assertEquals(5, $obj->minLength());
+        $this->assertEquals(20, $obj->minLength());
+        $this->assertEquals(500, $obj->maxLength());
+    }
+
+    public function testSetMinLength()
+    {
+        $ret = $this->obj->setMinLength(5);
+        $this->assertSame($ret, $this->obj);
+
+        $this->assertEquals(5, $this->obj->minLength());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->setMinLength(false);
+        $this->obj->setMinLength(false);
     }
 
     public function testSetMaxLength()
     {
-        $obj = $this->obj;
+        $ret = $this->obj->setMaxLength(5);
+        $this->assertSame($ret, $this->obj);
 
-        $ret = $obj->setMaxLength(5);
-        $this->assertSame($ret, $obj);
-
-        $this->assertEquals(5, $obj->maxLength());
+        $this->assertEquals(5, $this->obj->maxLength());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->setMaxLength(false);
+        $this->obj->setMaxLength(false);
+    }
+
+    public function testAcceptedMimetypes()
+    {
+        $ret = $this->obj->acceptedMimetypes();
+        $this->assertContains('audio/mp3', $ret);
+        $this->assertContains('audio/mpeg', $ret);
+        $this->assertContains('audio/wav', $ret);
+        $this->assertContains('audio/x-wav', $ret);
     }
 
     /**
@@ -80,14 +101,15 @@ class AudioPropertyTest extends \PHPUnit_Framework_TestCase
      */
     public function testGenerateExtension($mime, $ext)
     {
-        $obj = $this->obj;
-        $obj->setMimetype($mime);
-        $this->assertEquals($ext, $obj->generateExtension());
+        $this->obj->setMimetype($mime);
+        $this->assertEquals($mime, $this->obj['mimetype']);
+        $this->assertEquals($ext, $this->obj->generateExtension());
     }
 
     public function mimeExtensionProvider()
     {
         return [
+            ['audio/mp3', 'mp3'],
             ['audio/mpeg', 'mp3'],
             ['audio/wav', 'wav'],
             ['audio/x-wav', 'wav']

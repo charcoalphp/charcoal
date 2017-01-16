@@ -2,7 +2,7 @@
 
 namespace Charcoal\Property;
 
-use \Charcoal\Property\StringProperty;
+use Charcoal\Property\StringProperty;
 
 /**
  * Telephone Property

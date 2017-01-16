@@ -2,27 +2,34 @@
 
 namespace Charcoal\Tests\Property;
 
-use \PDO;
+use PHPUnit_Framework_TestCase;
 
-use \Psr\Log\NullLogger;
+use ReflectionClass;
 
-use \Charcoal\Property\ColorProperty;
+use PDO;
 
-class ColorPropertyTest extends \PHPUnit_Framework_TestCase
+use Psr\Log\NullLogger;
+
+use Charcoal\Property\ColorProperty;
+
+/**
+ *
+ */
+class ColorPropertyTest extends PHPUnit_Framework_TestCase
 {
     public $obj;
 
     public function setUp()
     {
         $this->obj = new ColorProperty([
-            'database' => new PDO('sqlite::memory:'),
-            'logger' => new NullLogger()
+            'database'  => new PDO('sqlite::memory:'),
+            'logger'    => new NullLogger()
         ]);
     }
 
     protected static function callMethod($obj, $name, array $args = null)
     {
-        $class = new \ReflectionClass($obj);
+        $class = new ReflectionClass($obj);
         $method = $class->getMethod($name);
         $method->setAccessible(true);
         return $method->invokeArgs($obj, $args);
@@ -33,20 +40,23 @@ class ColorPropertyTest extends \PHPUnit_Framework_TestCase
      */
     public function testDefaults()
     {
-        $obj = $this->obj;
-        $this->assertInstanceOf('\Charcoal\Property\ColorProperty', $obj);
-
-        $this->assertEquals(false, $obj->supportAlpha());
+        $this->assertEquals(false, $this->obj->supportAlpha());
     }
 
     public function testSetSupportAlpha()
     {
-        $obj = $this->obj;
+        $ret = $this->obj->setSupportAlpha(true);
+        $this->assertSame($ret, $this->obj);
+        $this->assertEquals(true, $this->obj->supportAlpha());
 
-        $ret = $obj->setSupportAlpha(true);
-        $this->assertSame($ret, $obj);
+        $this->obj->setSupportAlpha(0);
+        $this->assertFalse($this->obj->supportAlpha());
 
-        $this->assertEquals(true, $obj->supportAlpha());
+        $this->obj['support_alpha'] = true;
+        $this->assertTrue($this->obj->supportAlpha());
+
+        $this->obj->set('support_alpha', false);
+        $this->assertFalse($this->obj['support_alpha']);
     }
 
     /**

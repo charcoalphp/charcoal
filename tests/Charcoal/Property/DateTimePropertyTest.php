@@ -27,8 +27,8 @@ class DateTimePropertyTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->obj = new DateTimeProperty([
-            'database' => new PDO('sqlite::memory:'),
-            'logger' => new NullLogger()
+            'database'  => new PDO('sqlite::memory:'),
+            'logger'    => new NullLogger()
         ]);
     }
 
@@ -152,6 +152,12 @@ class DateTimePropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $this->obj);
         $this->assertEquals($dt, $this->obj->min());
 
+        $this->obj['min'] = 'today';
+        $this->assertEquals($dt, $this->obj->min());
+
+        $this->obj->set('min', 'today');
+        $this->assertEquals($dt, $this->obj['min']);
+
         $this->setExpectedException('\InvalidArgumentException');
         $this->obj->setMin('foo');
 
@@ -171,6 +177,18 @@ class DateTimePropertyTest extends \PHPUnit_Framework_TestCase
         $ret = $this->obj->setMax('2020-01-01 01:02:03');
         $this->assertSame($ret, $this->obj);
         $this->assertEquals(new DateTime('2020-01-01 01:02:03'), $this->obj->max());
+
+        // Setting by DateTime
+        $dt = new DateTime('today');
+        $ret = $this->obj->setMax($dt);
+        $this->assertSame($ret, $this->obj);
+        $this->assertEquals($dt, $this->obj->max());
+
+        $this->obj['max'] = 'today';
+        $this->assertEquals($dt, $this->obj->max());
+
+        $this->obj->set('max', 'today');
+        $this->assertEquals($dt, $this->obj['max']);
 
         $this->setExpectedException('\InvalidArgumentException');
         $this->obj->setMax('foo');
@@ -195,6 +213,12 @@ class DateTimePropertyTest extends \PHPUnit_Framework_TestCase
         $ret = $this->obj->setFormat('Y/m/d');
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('Y/m/d', $this->obj->format());
+
+        $this->obj['format'] = 'd-m-Y';
+        $this->assertEquals('d-m-Y', $this->obj->format());
+
+        $this->obj->set('format', 'Y');
+        $this->assertEquals('Y', $this->obj['format']);
 
         $this->setExpectedException('\InvalidArgumentException');
         $this->obj->setFormat(null);

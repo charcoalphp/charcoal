@@ -2,25 +2,29 @@
 
 namespace Charcoal\Tests\Property;
 
-use \PDO;
+use PHPUnit_Framework_TestCase;
 
-use \Psr\Log\NullLogger;
-use \Cache\Adapter\Void\VoidCachePool;
+use PDO;
 
-use \Pimple\Container;
+use Psr\Log\NullLogger;
+use Cache\Adapter\Void\VoidCachePool;
 
-use \Charcoal\Factory\GenericFactory as Factory;
+use Pimple\Container;
 
-use \Charcoal\Model\Service\MetadataLoader;
-use \Charcoal\Source\DatabaseSource;
+use Charcoal\Factory\GenericFactory as Factory;
 
-use \Charcoal\Property\ObjectProperty;
+use Charcoal\Loader\CollectionLoader;
+
+use Charcoal\Model\Service\MetadataLoader;
+use Charcoal\Source\DatabaseSource;
+
+use Charcoal\Property\ObjectProperty;
 
 /**
  * ## TODOs
  * - 2015-03-12:
  */
-class ObjectPropertyTest extends \PHPUnit_Framework_TestCase
+class ObjectPropertyTest extends PHPUnit_Framework_TestCase
 {
     public $obj;
 
@@ -28,7 +32,7 @@ class ObjectPropertyTest extends \PHPUnit_Framework_TestCase
     {
         $container = new Container;
         $container['metadata/loader'] = function (Container $container) {
-            return new \Charcoal\Model\Service\MetadataLoader([
+            return new MetadataLoader([
                 'logger' => new NullLogger(),
                 'base_path' => realpath(__DIR__.'/../../../'),
                     'paths' => [
@@ -72,7 +76,7 @@ class ObjectPropertyTest extends \PHPUnit_Framework_TestCase
             ]);
         };
         $container['model/collection/loader'] = function (Container $container) {
-            return new \Charcoal\Loader\CollectionLoader([
+            return new CollectionLoader([
                 'logger' => new NullLogger(),
                 'cache' => new VoidCachePool()
             ]);

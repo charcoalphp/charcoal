@@ -18,8 +18,8 @@ class EmailPropertyTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->obj = new EmailProperty([
-            'database' => new PDO('sqlite::memory:'),
-            'logger' => new NullLogger()
+            'database'  => new PDO('sqlite::memory:'),
+            'logger'    => new NullLogger()
         ]);
     }
 
@@ -33,6 +33,9 @@ class EmailPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testMaxLength()
     {
+        $this->assertEquals(254, $this->obj->maxLength());
+
+        $this->obj->setMaxLength(100);
         $this->assertEquals(254, $this->obj->maxLength());
     }
 

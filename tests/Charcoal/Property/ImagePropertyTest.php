@@ -2,11 +2,11 @@
 
 namespace Charcoal\Tests\Property;
 
-use \PDO;
+use PDO;
 
-use \Psr\Log\NullLogger;
+use Psr\Log\NullLogger;
 
-use \Charcoal\Property\ImageProperty;
+use Charcoal\Property\ImageProperty;
 
 /**
  * ## TODOs
@@ -19,8 +19,8 @@ class ImagePropertyTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->obj = new ImageProperty([
-            'database' => new PDO('sqlite::memory:'),
-            'logger' => new NullLogger()
+            'database'  => new PDO('sqlite::memory:'),
+            'logger'    => new NullLogger()
         ]);
     }
 
@@ -34,6 +34,12 @@ class ImagePropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([], $this->obj->effects());
         $ret = $this->obj->setEffects([['type'=>'blur', 'sigma'=>'1']]);
         $this->assertSame($ret, $this->obj);
+
+        $this->obj['effects'] = [['type'=>'blur', 'sigma'=>'1'], ['type'=>'revert']];
+        $this->assertEquals(2, count($this->obj->effects()));
+
+        $this->obj->set('effects', [['type'=>'blur', 'sigma'=>'1']]);
+        $this->assertEquals(1, count($this->obj['effects']));
 
         $this->assertEquals(1, count($this->obj->effects()));
     }

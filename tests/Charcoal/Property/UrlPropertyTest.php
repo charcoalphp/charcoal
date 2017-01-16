@@ -2,11 +2,11 @@
 
 namespace Charcoal\Tests\Property;
 
-use \PDO;
+use PDO;
 
-use \Psr\Log\NullLogger;
+use Psr\Log\NullLogger;
 
-use \Charcoal\Property\UrlProperty;
+use Charcoal\Property\UrlProperty;
 
 /**
  *
@@ -18,8 +18,8 @@ class UrlPropertyTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->obj = new UrlProperty([
-            'database' => new PDO('sqlite::memory:'),
-            'logger' => new NullLogger()
+            'database'  => new PDO('sqlite::memory:'),
+            'logger'    => new NullLogger()
         ]);
     }
 

@@ -2,11 +2,11 @@
 
 namespace Charcoal\Tests\Property;
 
-use \PDO;
+use PDO;
 
-use \Psr\Log\NullLogger;
+use Psr\Log\NullLogger;
 
-use \Charcoal\Property\IdProperty;
+use Charcoal\Property\IdProperty;
 
 /**
  * ## TODOs
@@ -70,14 +70,18 @@ class IdPropertyTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetMode()
     {
-        $obj = $this->obj;
+        $ret = $this->obj->setMode('uuid');
+        $this->assertSame($ret, $this->obj);
+        $this->assertEquals('uuid', $this->obj->mode());
 
-        $ret = $obj->setMode('uuid');
-        $this->assertSame($ret, $obj);
-        $this->assertEquals('uuid', $obj->mode());
+        $this->obj['mode'] = 'auto-increment';
+        $this->assertEquals('auto-increment', $this->obj->mode());
+
+        $this->obj->set('mode', 'uniqid');
+        $this->assertEquals('uniqid', $this->obj['mode']);
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->setMode('foo');
+        $this->obj->setMode('foo');
     }
 
     /**

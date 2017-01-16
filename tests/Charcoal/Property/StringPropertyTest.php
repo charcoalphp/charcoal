@@ -2,17 +2,18 @@
 
 namespace Charcoal\Tests\Property;
 
-use \PDO;
+use PHPUnit_Framework_TestCase;
 
-use \Psr\Log\NullLogger;
+use PDO;
 
-use \Charcoal\Property\StringProperty;
+use Psr\Log\NullLogger;
+
+use Charcoal\Property\StringProperty;
 
 /**
- * ## TODOs
- * - 2015-03-12:
+ *
  */
-class StringPropertyTest extends \PHPUnit_Framework_TestCase
+class StringPropertyTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var StringProperty $obj
@@ -26,8 +27,8 @@ class StringPropertyTest extends \PHPUnit_Framework_TestCase
     {
         mb_internal_encoding('UTF-8');
         $this->obj = new StringProperty([
-            'database' => new PDO('sqlite::memory:'),
-            'logger' => new NullLogger()
+            'database'  => new PDO('sqlite::memory:'),
+            'logger'    => new NullLogger()
         ]);
     }
 
@@ -72,6 +73,12 @@ class StringPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $this->obj);
         $this->assertEquals(5, $this->obj->minLength());
 
+        $this->obj['min_length'] = 10;
+        $this->assertEquals(10, $this->obj->minLength());
+
+        $this->obj->set('min_length', 30);
+        $this->assertEquals(30, $this->obj['min_length']);
+
         $this->setExpectedException('\InvalidArgumentException');
         $this->obj->setMinLength('foo');
     }
@@ -87,6 +94,12 @@ class StringPropertyTest extends \PHPUnit_Framework_TestCase
         $ret = $this->obj->setMaxLength(5);
         $this->assertSame($ret, $this->obj);
         $this->assertEquals(5, $this->obj->maxLength());
+
+        $this->obj['max_length'] = 10;
+        $this->assertEquals(10, $this->obj->maxLength());
+
+        $this->obj->set('max_length', 30);
+        $this->assertEquals(30, $this->obj['max_length']);
 
         $this->setExpectedException('\InvalidArgumentException');
         $this->obj->setMaxLength('foo');
@@ -105,6 +118,12 @@ class StringPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('[a-z]', $this->obj->regexp());
 
+        $this->obj['regexp'] = '[_]';
+        $this->assertEquals('[_]', $this->obj->regexp());
+
+        $this->obj->set('regexp', '[A-Z]');
+        $this->assertEquals('[A-Z]', $this->obj['regexp']);
+
         $this->setExpectedException('\InvalidArgumentException');
         $this->obj->setRegexp(null);
     }
@@ -116,6 +135,12 @@ class StringPropertyTest extends \PHPUnit_Framework_TestCase
         $ret = $this->obj->setAllowEmpty(false);
         $this->assertSame($ret, $this->obj);
         $this->assertEquals(false, $this->obj->allowEmpty());
+
+        $this->obj['allow_empty'] = true;
+        $this->assertTrue($this->obj->allowEmpty());
+
+        $this->obj->set('allow_empty', false);
+        $this->assertFalse($this->obj['allow_empty']);
     }
 
     public function testLength()
@@ -135,8 +160,6 @@ class StringPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testValidateMinLength()
     {
-
-
         $this->obj->setMinLength(5);
         $this->obj->setVal('1234');
         $this->assertNotTrue($this->obj->validateMinLength());
@@ -149,7 +172,6 @@ class StringPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testValidateMinLengthUTF8()
     {
-
         $this->obj->setMinLength(5);
 
         $this->obj->setVal('Éçä˚');
@@ -164,7 +186,6 @@ class StringPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testValidateMinLengthAllowEmpty()
     {
-
         $this->obj->setAllowNull(false);
         $this->obj->setMinLength(5);
         $this->obj->setVal('');
@@ -178,7 +199,6 @@ class StringPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testValidateMinLengthWithoutValReturnsFalse()
     {
-
         $this->obj->setAllowNull(false);
         $this->obj->setMinLength(5);
 
@@ -187,8 +207,6 @@ class StringPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testValidateMinLengthWithoutMinLengthReturnsTrue()
     {
-
-
         $this->assertTrue($this->obj->validateMinLength());
 
         $this->obj->setVal('1234');
@@ -197,7 +215,6 @@ class StringPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testValidateMaxLength()
     {
-
         $this->obj->setMaxLength(5);
         $this->obj->setVal('1234');
         $this->assertTrue($this->obj->validateMaxLength());

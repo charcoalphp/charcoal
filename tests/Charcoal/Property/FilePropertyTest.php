@@ -2,27 +2,28 @@
 
 namespace Charcoal\Tests\Property;
 
-use \InvalidArgumentException;
+use PHPUnit_Framework_TestCase;
 
-use \PDO;
+use InvalidArgumentException;
 
-use \Psr\Log\NullLogger;
+use PDO;
 
-use \Charcoal\Property\FileProperty;
+use Psr\Log\NullLogger;
+
+use Charcoal\Property\FileProperty;
 
 /**
- * ## TODOs
- * - 2015-03-12:
+ *
  */
-class FilePropertyTest extends \PHPUnit_Framework_TestCase
+class FilePropertyTest extends PHPUnit_Framework_TestCase
 {
     public $obj;
 
     public function setUp()
     {
         $this->obj = new FileProperty([
-            'database' => new PDO('sqlite::memory:'),
-            'logger' => new NullLogger()
+            'database'  => new PDO('sqlite::memory:'),
+            'logger'    => new NullLogger()
         ]);
     }
 
@@ -36,6 +37,9 @@ class FilePropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($obj->maxFilesizeAllowedByPhp(), $obj->maxFilesize());
     }
 
+    /**
+     * Asserts that the `type()` method is "file".
+     */
     public function testType()
     {
         $obj = $this->obj;
@@ -54,12 +58,25 @@ class FilePropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
     }
 
+    /**
+     * Asserts that the uploadPath method
+     * - defaults to 'uploads/'
+     * - always append a "/"
+     */
     public function testSetUploadPath()
     {
         $obj = $this->obj;
+        $this->assertEquals('uploads/', $this->obj->uploadPath());
+
         $ret = $obj->setUploadPath('foobar');
         $this->assertSame($ret, $obj);
         $this->assertEquals('foobar/', $obj->uploadPath());
+
+        $this->obj['upload_path'] = 'foo';
+        $this->assertEquals('foo/', $obj->uploadPath());
+
+        $this->obj->set('upload_path', 'bar');
+        $this->assertEquals('bar/', $obj['upload_path']);
 
         $this->setExpectedException('\InvalidArgumentException');
         $obj->setUploadPath(42);
@@ -67,10 +84,15 @@ class FilePropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testSetOverwrite()
     {
-        $obj = $this->obj;
-        $ret = $obj->setOverwrite(true);
-        $this->assertSame($ret, $obj);
-        $this->assertTrue($obj->overwrite());
+        $ret = $this->obj->setOverwrite(true);
+        $this->assertSame($ret, $this->obj);
+        $this->assertTrue($this->obj->overwrite());
+
+        $this->obj['overwrite'] = false;
+        $this->assertFalse($this->obj->overwrite());
+
+        $this->obj->set('overwrite', true);
+        $this->assertTrue($this->obj['overwrite']);
     }
 
     public function testVaidationMethods()

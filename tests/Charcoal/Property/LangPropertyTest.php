@@ -2,16 +2,18 @@
 
 namespace Charcoal\Tests\Property;
 
-use \PDO;
+use PHPUnit_Framework_TestCase;
 
-use \Psr\Log\NullLogger;
+use PDO;
 
-use \Charcoal\Property\LangProperty;
+use Psr\Log\NullLogger;
+
+use Charcoal\Property\LangProperty;
 
 /**
  * Lang Property Test
  */
-class LangPropertyTest extends \PHPUnit_Framework_TestCase
+class LangPropertyTest extends PHPUnit_Framework_TestCase
 {
     /**
      * Object under test
@@ -22,8 +24,8 @@ class LangPropertyTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->obj = new LangProperty([
-            'database' => new PDO('sqlite::memory:'),
-            'logger' => new NullLogger()
+            'database'  => new PDO('sqlite::memory:'),
+            'logger'    => new NullLogger()
         ]);
     }
 
@@ -44,6 +46,11 @@ class LangPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('TEXT', $this->obj->sqlType());
         $this->obj->setMultiple(false);
         $this->assertEquals('CHAR(2)', $this->obj->sqlType());
+    }
+
+    public function testSqlPdoType()
+    {
+        $this->assertEquals(PDO::PARAM_BOOL, $this->obj->sqlPdoType());
     }
 
     public function testChoices()

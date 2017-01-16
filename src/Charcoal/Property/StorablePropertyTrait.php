@@ -173,4 +173,24 @@ trait StorablePropertyTrait
      * @return integer
      */
     abstract public function sqlPdoType();
+
+    /**
+     * @return string
+     */
+    abstract public function ident();
+
+    /**
+     * @return boolean
+     */
+    abstract public function l10n();
+
+    /**
+     * @return boolean
+     */
+    abstract public function multiple();
+
+    /**
+     * @return boolean
+     */
+    abstract public function allowNull();
 }

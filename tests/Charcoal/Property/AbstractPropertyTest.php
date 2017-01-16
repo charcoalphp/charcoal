@@ -34,6 +34,12 @@ class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('foobar', $this->obj->ident());
 
+        $this->obj['ident'] = 'baz';
+        $this->assertEquals('baz', $this->obj->ident());
+
+        $this->obj->set('ident', 'example');
+        $this->assertEquals('example', $this->obj['ident']);
+
         $this->setExpectedException('\InvalidArgumentException');
         $this->obj->setIdent([]);
     }
@@ -46,6 +52,31 @@ class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
 
         $ret = $this->obj->inputVal(['foo'=>'bar']);
         $this->assertEquals('{"foo":"bar"}', str_replace(["\n", "\r", "\t", ' '], '', $ret));
+    }
+
+    /**
+     * Asserts that the basic displayVal method:
+     * - returns an empty string if the value is null
+     * - returns the string as is (when not l10n / multiple)
+     */
+    public function testDisplayVal()
+    {
+        $this->assertFalse($this->obj['multiple']);
+        $this->assertFalse($this->obj['l10n']);
+
+        $this->assertEquals('', $this->obj->displayVal(null));
+        $this->assertEquals('foo', $this->obj->displayVal('foo'));
+    }
+
+    public function testDisplayValL10n()
+    {
+        $this->obj['l10n'] = true;
+
+        $this->assertFalse($this->obj['multiple']);
+        $this->assertTrue($this->obj['l10n']);
+
+        $this->assertEquals('', $this->obj->displayVal(null));
+        //$this->assertEquals('foo', $this->obj->displayVal(['fr'=>'foo']));
     }
 
     public function testSetInputValL10n()
@@ -71,6 +102,15 @@ class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
         $ret = $this->obj->setL10n(true);
         $this->assertSame($ret, $this->obj);
         $this->assertTrue($this->obj->l10n());
+
+        $this->obj->setL10n(0);
+        $this->assertFalse($this->obj->l10n());
+
+        $this->obj['l10n'] = true;
+        $this->assertTrue($this->obj->l10n());
+
+        $this->obj->set('l10n', false);
+        $this->assertFalse($this->obj['l10n']);
     }
 
     public function testSetHidden()
@@ -80,6 +120,15 @@ class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
         $ret = $this->obj->setHidden(true);
         $this->assertSame($ret, $this->obj);
         $this->assertTrue($this->obj->hidden());
+
+        $this->obj->setHidden(0);
+        $this->assertFalse($this->obj->hidden());
+
+        $this->obj['hidden'] = true;
+        $this->assertTrue($this->obj->hidden());
+
+        $this->obj->set('hidden', false);
+        $this->assertFalse($this->obj['hidden']);
     }
 
     public function testSetMultiple()
@@ -89,6 +138,15 @@ class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
         $ret = $this->obj->setMultiple(true);
         $this->assertSame($ret, $this->obj);
         $this->assertTrue($this->obj->multiple());
+
+        $this->obj->setMultiple(0);
+        $this->assertFalse($this->obj->multiple());
+
+        $this->obj['multiple'] = true;
+        $this->assertTrue($this->obj->multiple());
+
+        $this->obj->set('multiple', false);
+        $this->assertFalse($this->obj['multiple']);
     }
 
     public function testMultipleSeparator()
@@ -108,6 +166,15 @@ class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
         $ret = $this->obj->setRequired(true);
         $this->assertSame($ret, $this->obj);
         $this->assertTrue($this->obj->required());
+
+        $this->obj->setRequired(0);
+        $this->assertFalse($this->obj->required());
+
+        $this->obj['required'] = true;
+        $this->assertTrue($this->obj->required());
+
+        $this->obj->set('required', false);
+        $this->assertFalse($this->obj['required']);
     }
 
     public function testSetUnique()
@@ -117,6 +184,15 @@ class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
         $ret = $this->obj->setUnique(true);
         $this->assertSame($ret, $this->obj);
         $this->assertTrue($this->obj->unique());
+
+        $this->obj->setUnique(0);
+        $this->assertFalse($this->obj->unique());
+
+        $this->obj['unique'] = true;
+        $this->assertTrue($this->obj->unique());
+
+        $this->obj->set('unique', false);
+        $this->assertFalse($this->obj['unique']);
     }
 
     public function testSetAllowNull()
@@ -126,6 +202,15 @@ class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
         $ret = $this->obj->setAllowNull(false);
         $this->assertSame($ret, $this->obj);
         $this->assertFalse($this->obj->allowNull());
+
+        $this->obj->setAllowNull(0);
+        $this->assertFalse($this->obj->allowNull());
+
+        $this->obj['allow_null'] = true;
+        $this->assertTrue($this->obj->allowNull());
+
+        $this->obj->set('allow_null', false);
+        $this->assertFalse($this->obj['allow_null']);
     }
 
     public function testSetStorable()
@@ -135,5 +220,14 @@ class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
         $ret = $this->obj->setStorable(false);
         $this->assertSame($ret, $this->obj);
         $this->assertFalse($this->obj->storable());
+
+        $this->obj->setStorable(0);
+        $this->assertFalse($this->obj->storable());
+
+        $this->obj['storable'] = true;
+        $this->assertTrue($this->obj->storable());
+
+        $this->obj->set('storable', false);
+        $this->assertFalse($this->obj['storable']);
     }
 }
