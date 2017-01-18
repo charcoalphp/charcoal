@@ -55,11 +55,6 @@ abstract class AbstractUser extends Content implements
     private $email;
 
     /**
-     * @var boolean
-     */
-    private $active = true;
-
-    /**
      * @var string[]
      */
     private $roles = [];
@@ -179,23 +174,6 @@ abstract class AbstractUser extends Content implements
     public function password()
     {
         return $this->password;
-    }
-
-    /**
-     * @param boolean $active The active flag.
-     * @return UserInterface Chainable
-     */
-    public function setActive($active)
-    {
-        $this->active = !!$active;
-        return $this;
-    }
-    /**
-     * @return boolean
-     */
-    public function active()
-    {
-        return $this->active;
     }
 
     /**
