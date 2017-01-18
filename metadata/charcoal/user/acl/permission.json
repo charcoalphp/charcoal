@@ -1,0 +1,30 @@
+{
+    "properties": {
+        "ident": {
+            "type": "string",
+            "unique": true,
+            "label": {
+                "en": "Identifier",
+                "fr": "Identifiant"
+            }
+        },
+        "name": {
+            "type": "string",
+            "l10n": true,
+            "label": {
+                "en": "Name",
+                "fr": "Nom"
+            }
+        },
+        "category": {
+            "obj_type": "charcoal/user/acl/permission-category"
+        }
+    },
+
+    "key": "ident",
+
+    "sources": {
+        "default": "charcoal_user_permissions"
+    },
+    "default_source": "default"
+}

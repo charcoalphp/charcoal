@@ -1,0 +1,16 @@
+{
+    "properties": {
+        "id": {
+            "type": "id"
+        }
+    },
+
+    "category_item_type": "charcoal/user/acl/permission",
+
+    "sources": {
+        "default": {
+            "table": "charcoal_user_permissions_categories"
+        }
+    },
+    "default_source": "default"
+}
