@@ -49,7 +49,8 @@ abstract class AbstractLoader implements
     /**
      * Load a template content
      *
-     * @param string $ident The template ident to load and render.
+     * @param  string $ident The template ident to load and render.
+     * @throws InvalidArgumentException If the dynamic template identifier is not a string.
      * @return string
      */
     public function load($ident)
