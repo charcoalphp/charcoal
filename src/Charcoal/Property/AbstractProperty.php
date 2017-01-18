@@ -74,7 +74,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     private $l10n = false;
 
     /**
-     * @var boolean $hidden;
+     * @var boolean $hidden ;
      */
     private $hidden = false;
 
@@ -233,6 +233,7 @@ abstract class AbstractProperty extends AbstractEntity implements
             );
         }
         $this->ident = $ident;
+
         return $this;
     }
 
@@ -254,6 +255,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     final public function setVal($val)
     {
         $this->val = $this->parseVal($val);
+
         return $this;
     }
 
@@ -301,7 +303,7 @@ abstract class AbstractProperty extends AbstractEntity implements
                 );
             }
 
-            $val = array_map([$this, 'parseOne'], $val);
+            $val = array_map([ $this, 'parseOne' ], $val);
         } else {
             $val = $this->parseOne($val);
         }
@@ -376,8 +378,9 @@ abstract class AbstractProperty extends AbstractEntity implements
             $propertyValue = $val;
         }
 
+        $separator = $this->multipleSeparator();
+
         if ($this->multiple()) {
-            $separator = $this->multipleSeparator();
             if (!is_array($propertyValue)) {
                 $propertyValue = explode($separator, $propertyValue);
             }
@@ -385,8 +388,10 @@ abstract class AbstractProperty extends AbstractEntity implements
             if ($separator === ',') {
                 $separator = ', ';
             }
+        }
 
-            $propertyValue = implode($separator, $values);
+        if (is_array($propertyValue)) {
+            $propertyValue = implode($separator, $propertyValue);
         }
 
         return (string)$propertyValue;
@@ -406,7 +411,7 @@ abstract class AbstractProperty extends AbstractEntity implements
                 $lang = $lang['lang'];
             } else {
                 $trans = TranslationConfig::instance();
-                $lang  = $trans->currentLanguage();
+                $lang = $trans->currentLanguage();
             }
         }
 
@@ -438,7 +443,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     public function label()
     {
         if ($this->label === null) {
-            return ucwords(str_replace(['.', '_'], ' ', $this->ident()));
+            return ucwords(str_replace([ '.', '_' ], ' ', $this->ident()));
         }
 
         return $this->label;
@@ -451,6 +456,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     public function setL10n($l10n)
     {
         $this->l10n = !!$l10n;
+
         return $this;
     }
 
@@ -471,6 +477,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     public function setHidden($hidden)
     {
         $this->hidden = !!$hidden;
+
         return $this;
     }
 
@@ -502,6 +509,7 @@ abstract class AbstractProperty extends AbstractEntity implements
         }
 
         $this->multiple = !!$multiple;
+
         return $this;
     }
 
@@ -537,6 +545,7 @@ abstract class AbstractProperty extends AbstractEntity implements
         // The options are always merged with the defaults, to ensure minimum required array structure.
         $options = array_merge($this->defaultMultipleOptions(), $multipleOptions);
         $this->multipleOptions = $options;
+
         return $this;
     }
 
@@ -595,6 +604,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     public function setAllowNull($allow)
     {
         $this->allowNull = !!$allow;
+
         return $this;
     }
 
@@ -618,6 +628,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     public function setRequired($required)
     {
         $this->required = !!$required;
+
         return $this;
     }
 
@@ -641,6 +652,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     public function setUnique($unique)
     {
         $this->unique = !!$unique;
+
         return $this;
     }
 
@@ -659,6 +671,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     public function setActive($active)
     {
         $this->active = !!$active;
+
         return $this;
     }
 
@@ -677,6 +690,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     public function setStorable($storable)
     {
         $this->storable = !!$storable;
+
         return $this;
     }
 
@@ -762,6 +776,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     {
         if ($this->required() && !$this->val()) {
             $this->validator()->error('Value is required.', 'required');
+
             return false;
         }
 
@@ -788,8 +803,10 @@ abstract class AbstractProperty extends AbstractEntity implements
     {
         if (!$this->allowNull() && $this->val() === null) {
             $this->validator()->error('Value can not be null.', 'allowNull');
+
             return false;
         }
+
         return true;
     }
 
@@ -803,6 +820,7 @@ abstract class AbstractProperty extends AbstractEntity implements
         if ($data !== null) {
             $metadata->setData($data);
         }
+
         return $metadata;
     }
 
@@ -814,6 +832,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     protected function createValidator()
     {
         $validator = new PropertyValidator($this);
+
         return $validator;
     }
 
@@ -834,6 +853,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     public function setDisplayType($type)
     {
         $this->displayType = $type;
+
         return $this;
     }
 
@@ -853,6 +873,7 @@ abstract class AbstractProperty extends AbstractEntity implements
             }
             $this->setDisplayType($default);
         }
+
         return $this->displayType;
     }
 
@@ -891,6 +912,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     final public function setViewOptions(array $viewOpts = [])
     {
         $this->viewOptions = $viewOpts;
+
         return $this;
     }
 }
