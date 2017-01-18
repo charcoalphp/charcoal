@@ -66,7 +66,7 @@ abstract class AbstractLoader implements
         }
 
         $file = $this->findTemplateFile($ident);
-        if ($file === null) {
+        if ($file === null || $file === '') {
             return $ident;
         }
 
