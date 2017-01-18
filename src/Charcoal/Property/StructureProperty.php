@@ -7,9 +7,15 @@ use \ArrayAccess;
 use \RuntimeException;
 use \InvalidArgumentException;
 
+// From Pimple
+use \Pimple\Container;
+
 // From 'charcoal-core'
 use \Charcoal\Model\Model;
 use \Charcoal\Model\MetadataInterface;
+
+// From 'charcoal-factory'
+use \Charcoal\Factory\FactoryInterface;
 
 // From 'charcoal-property'
 use \Charcoal\Property\AbstractProperty;
@@ -129,6 +135,13 @@ class StructureProperty extends AbstractProperty
     private $structureModelClass = Model::class;
 
     /**
+     * Store the factory instance.
+     *
+     * @var FactoryInterface
+     */
+    protected $modelFactory;
+
+    /**
      * Return a new Structure Property object.
      *
      * @param array|ArrayAccess $data The property's dependencies.
@@ -142,6 +155,49 @@ class StructureProperty extends AbstractProperty
         }
     }
 
+    /**
+     * Inject dependencies from a DI Container.
+     *
+     * @param  Container $container A dependencies container instance.
+     * @return void
+     */
+    public function setDependencies(Container $container)
+    {
+        parent::setDependencies($container);
+
+        $this->setModelFactory($container['model/factory']);
+    }
+
+
+    /**
+     * Set an object model factory.
+     *
+     * @param FactoryInterface $factory The model factory, to create objects.
+     * @return self
+     */
+    protected function setModelFactory(FactoryInterface $factory)
+    {
+        $this->modelFactory = $factory;
+
+        return $this;
+    }
+
+    /**
+     * Retrieve the object model factory.
+     *
+     * @throws RuntimeException If the model factory was not previously set.
+     * @return FactoryInterface
+     */
+    public function modelFactory()
+    {
+        if (!isset($this->modelFactory)) {
+            throw new RuntimeException(
+                sprintf('Model Factory is not defined for "%s"', get_class($this))
+            );
+        }
+
+        return $this->modelFactory;
+    }
     /**
      * Retrieve the property's type identifier.
      *
@@ -360,13 +416,14 @@ class StructureProperty extends AbstractProperty
     /**
      * Create a data-model structure.
      *
+     * @todo   Add support for simple ArrayAccess models.
      * @throws RuntimeException If the structure is invalid.
      * @return ArrayAccess
      */
     private function createStructureModel()
     {
         $structClass = $this->structureModelClass();
-        $structure   = new $structClass;
+        $structure   = $this->modelFactory()->create($structClass);
 
         if (!$structure instanceof ArrayAccess) {
             throw new RuntimeException(

@@ -103,6 +103,24 @@ class StructureMetadata extends AbstractMetadata
     }
 
     /**
+     * Determine if the structure has the given property.
+     *
+     * @param  string $propertyIdent The property identifier to lookup.
+     * @throws InvalidArgumentException If the identifier argument is not a string.
+     * @return boolean
+     */
+    public function hasProperty($propertyIdent)
+    {
+        if (!is_string($propertyIdent)) {
+            throw new InvalidArgumentException(
+                'Property Ident must be a string.'
+            );
+        }
+
+        return isset($this->properties[$propertyIdent]);
+    }
+
+    /**
      * Retrieve the admin module's metadata.
      *
      * @return array
