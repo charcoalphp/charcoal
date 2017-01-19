@@ -573,18 +573,29 @@ class FileProperty extends AbstractProperty
             $k = 0;
             $total = count($val);
             $f = [];
-            for (; $k<$total; $k++) {
-                if (preg_match('/^data:/', $val[$k])) {
-                    $f[] = $this->dataUpload($val[$k]);
-                    return $f;
+            foreach ($val as $v) {
+                if ($this->isDataUri($v)) {
+                    $f[] = $this->dataUpload($v);
                 }
             }
-        } elseif (preg_match('/^data:/', $val)) {
+            return $f;
+        } elseif ($this->isDataUri($val)) {
             $f = $this->dataUpload($val);
             return $f;
         }
 
         return $val;
+    }
+
+    /**
+     * Determine if the given value is a data URI.
+     *
+     * @param  string $val The value to check.
+     * @return string
+     */
+    public function isDataUri($val)
+    {
+        return preg_match('/^data:/i', $val);
     }
 
     /**
@@ -696,6 +707,9 @@ class FileProperty extends AbstractProperty
                 return $target;
             } else {
                 $target = $dir.$this->generateUniqueFilename($filename);
+                while ($this->fileExists($target)) {
+                    $target = $dir.$this->generateUniqueFilename($filename);
+                }
             }
         }
 
@@ -889,11 +903,21 @@ class FileProperty extends AbstractProperty
      *
      * @param  string $filename The filename to alter.
      * @return string
-     * @todo Improve this feature Can not overwrite. Must rename file.
      */
     public function generateUniqueFilename($filename)
     {
-        $info = pathinfo($filename);
+        if (!is_string($filename) && !is_array($filename)) {
+            throw new InvalidArgumentException(sprintf(
+                'The target must be a string or an array from [pathfino()], received %s',
+                (is_object($filename) ? get_class($filename) : gettype($filename))
+            ));
+        }
+
+        if (is_string($filename)) {
+            $info = pathinfo($filename);
+        } else {
+            $info = $filename;
+        }
 
         $filename = $info['filename'].'-'.uniqid();
 
