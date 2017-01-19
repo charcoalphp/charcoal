@@ -4,6 +4,7 @@ namespace Charcoal\Image\Imagemagick;
 
 use \Exception;
 use \InvalidArgumentException;
+use \OutOfBoundsException;
 
 use \Charcoal\Image\AbstractImage;
 
@@ -15,7 +16,6 @@ use \Charcoal\Image\AbstractImage;
  */
 class ImagemagickImage extends AbstractImage
 {
-
     /**
      * The temporary file location
      * @var string $tmpFile
@@ -26,10 +26,17 @@ class ImagemagickImage extends AbstractImage
      * @var string $mogrifyCmd
      */
     private $mogrifyCmd;
+
     /**
      * @var string $convertCmd
      */
     private $convertCmd;
+
+    /**
+     * @var string $compositeCmd
+     */
+    private $compositeCmd;
+
     /**
      * @var string $identifyCmd
      */
@@ -180,17 +187,38 @@ class ImagemagickImage extends AbstractImage
     }
 
     /**
-     * Try (as best as possible) to find a command name.
+     * Find a command.
+     *
+     * Try (as best as possible) to find a command name:
+     *
      * - With `type -p`
      * - Or else, with `where`
      * - Or else, with `which`
      *
-     * @param string $cmdName The command name to find.
-     * @throws Exception If the command can not be found.
+     * @param  string $cmdName The command name to find.
+     * @throws InvalidArgumentException If the given command name is not a string.
+     * @throws OutOfBoundsException If the command is unsupported or can not be found.
      * @return string
      */
     protected function findCmd($cmdName)
     {
+        if (!is_string($cmdName)) {
+            throw new InvalidArgumentException(sprintf(
+                'Target image must be a string, received %s',
+                (is_object($cmdName) ? get_class($cmdName) : gettype($cmdName))
+            ));
+        }
+
+        if (!in_array($cmdName, $this->availableCommands())) {
+            if (!is_string($cmdName)) {
+                $cmdName = (is_object($cmdName) ? get_class($cmdName) : gettype($cmdName));
+            }
+            throw new OutOfBoundsException(sprintf(
+                'Unsupported command "%s" provided',
+                $cmdName
+            ));
+        }
+
         $cmd = exec('type -p '.$cmdName);
         $cmd = str_replace($cmdName.' is ', '', $cmd);
 
@@ -203,12 +231,64 @@ class ImagemagickImage extends AbstractImage
         }
 
         if (!$cmd) {
-            throw new Exception(
-                sprintf('Can not find imagemagick\'s "%s" command.', $cmdName)
-            );
+            throw new OutOfBoundsException(sprintf(
+                'Can not find ImageMagick\'s "%s" command.',
+                $cmdName
+            ));
         }
 
         return $cmd;
+    }
+
+    /**
+     * Retrieve the list of available commands.
+     *
+     * @return array
+     */
+    public function availableCommands()
+    {
+        return [ 'mogrify', 'convert', 'composite', 'identify' ];
+    }
+
+    /**
+     * Retrieve the list of available commands.
+     *
+     * @param  string $name The name of an available command.
+     * @throws InvalidArgumentException If the name is not a string.
+     * @throws OutOfBoundsException If the name is unsupported.
+     * @return array
+     */
+    public function cmd($name)
+    {
+        if (!is_string($cmdName)) {
+            throw new InvalidArgumentException(sprintf(
+                'Target image must be a string, received %s',
+                (is_object($cmdName) ? get_class($cmdName) : gettype($cmdName))
+            ));
+        }
+
+        switch ($name) {
+            case 'mogrify':
+                return $this->mogrifyCmd();
+
+            case 'convert':
+                return $this->convertCmd();
+
+            case 'composite':
+                return $this->compositeCmd();
+
+            case 'identify':
+                return $this->identifyCmd();
+
+            default:
+                if (!is_string($name)) {
+                    $name = (is_object($name) ? get_class($name) : gettype($name));
+                }
+                throw new OutOfBoundsException(sprintf(
+                    'Unsupported command "%s" provided',
+                    $name
+                ));
+        }
     }
 
     /**
@@ -233,6 +313,18 @@ class ImagemagickImage extends AbstractImage
         }
         $this->convertCmd = $this->findCmd('convert');
         return $this->convertCmd;
+    }
+
+    /**
+     * @return string The full path of the composite command.
+     */
+    public function compositeCmd()
+    {
+        if ($this->compositeCmd !== null) {
+            return $this->compositeCmd;
+        }
+        $this->compositeCmd = $this->findCmd('composite');
+        return $this->compositeCmd;
     }
 
     /**
@@ -317,22 +409,29 @@ class ImagemagickImage extends AbstractImage
     }
 
     /**
-     * @param string $cmd The command to run.
+     * @param  string      $params The $cmd's arguments and options.
+     * @param  string|null $cmd    The command to run.
      * @throws Exception If the tmp file was not properly set.
      * @return ImagemagickImage Chainable
      */
-    public function applyCmd($cmd)
+    public function applyCmd($params, $cmd = null)
     {
+        if ($cmd === null) {
+            $cmd = $this->mogrifyCmd();
+        } else {
+            $cmd = $this->cmd($cmd);
+        }
+
         if (!file_exists($this->tmp())) {
             throw new Exception(
                 'No file currently set as tmp file, commands can not be executed.'
             );
         }
-        $mogrify = $this->mogrifyCmd();
-        $this->exec($mogrify.' '.$cmd.' '.$this->tmp());
+
+        $this->exec($cmd.' '.$params.' '.$this->tmp());
+
         return $this;
     }
-
 
     /**
      * Convert a gravity name (string) to an `Imagick::GRAVITY_*` constant (integer)

@@ -36,11 +36,20 @@ class ImagemagickWatermarkEffect extends AbstractWatermarkEffect
         }
 
         $gravity = $this->image()->imagemagickGravity($this->gravity());
-        $cmd =  '-gravity '.$gravity.' ';
-        $cmd .= '-geometry +'.$this->x().'+'.$this->y().' ';
-        $cmd .= '-draw "image Multiply 0,0 '.$width.','.$height.' ';
-        $cmd .= '\''.$watermark.'\'"';
-        $this->image()->applyCmd($cmd);
+        $params  = [ '-gravity '.$gravity ];
+
+        $cmd = null;
+        if ($this->compositeCmd()) {
+            $cmd = 'composite';
+            $params[] = '-watermark 100% '.$watermark.' '.$this->tmp();
+        } else {
+            $params[] = '-geometry +'.$this->x().'+'.$this->y();
+            $params[] = '-draw "image Multiply 0,0 '.$width.','.$height;
+            $params[] = '\''.$watermark.'\'"';
+        }
+
+        $this->image()->applyCmd(implode(' ', $params), $cmd);
+
         return $this;
     }
 }
