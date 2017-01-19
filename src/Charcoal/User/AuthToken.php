@@ -123,7 +123,7 @@ class AuthToken extends AbstractModel
     }
 
     /**
-     * @param DateTime|string|null $expiry The date/time at object's creation.
+     * @param DateTimeInterface|string|null $expiry The date/time at object's creation.
      * @throws InvalidArgumentException If the date/time is invalid.
      * @return Content Chainable
      */
@@ -154,7 +154,7 @@ class AuthToken extends AbstractModel
     }
 
     /**
-     * @param DateTime|string|null $created The date/time at object's creation.
+     * @param DateTimeInterface|string|null $created The date/time at object's creation.
      * @throws InvalidArgumentException If the date/time is invalid.
      * @return Content Chainable
      */
@@ -177,7 +177,7 @@ class AuthToken extends AbstractModel
     }
 
     /**
-     * @return DateTime|null
+     * @return DateTimeInterface|null
      */
     public function created()
     {
@@ -185,7 +185,7 @@ class AuthToken extends AbstractModel
     }
 
     /**
-     * @param DateTime|string|null $lastModified The last modified date/time.
+     * @param DateTimeInterface|string|null $lastModified The last modified date/time.
      * @throws InvalidArgumentException If the date/time is invalid.
      * @return Content Chainable
      */
@@ -208,7 +208,7 @@ class AuthToken extends AbstractModel
     }
 
     /**
-     * @return DateTime
+     * @return DateTimeInterface|null
      */
     public function lastModified()
     {

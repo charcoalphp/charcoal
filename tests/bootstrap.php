@@ -20,9 +20,6 @@ $config = new AppConfig([
 $GLOBALS['container'] = new AppContainer([
     'config' => $config,
     'cache'  => new \Stash\Pool(),
-    'logger' => new \Psr\Log\NullLogger()
+    'logger' => new \Psr\Log\NullLogger(),
+    'database' => new \PDO('sqlite::memory:')
 ]);
-
-// Charcoal / Slim is the main app
-$GLOBALS['app'] = App::instance($GLOBALS['container']);
-$GLOBALS['app']->setLogger(new \Psr\Log\NullLogger());

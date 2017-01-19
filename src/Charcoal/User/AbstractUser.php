@@ -61,7 +61,7 @@ abstract class AbstractUser extends Content implements
 
     /**
      * The date of the latest (successful) login
-     * @var DateTime|null
+     * @var DateTimeInterface|null
      */
     private $lastLoginDate;
 
@@ -72,7 +72,7 @@ abstract class AbstractUser extends Content implements
 
     /**
      * The date of the latest password change
-     * @var DateTime|null
+     * @var DateTimeInterface|null
      */
     private $lastPasswordDate;
 
@@ -195,7 +195,7 @@ abstract class AbstractUser extends Content implements
                 'Roles must be a comma-separated string or an array'
             );
         }
-        $this->roles = $roles;
+        $this->roles = array_map('trim', $roles);
         return $this;
     }
 

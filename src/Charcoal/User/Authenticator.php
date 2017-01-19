@@ -106,13 +106,11 @@ class Authenticator implements LoggerAwareInterface
      * Set a user model factory.
      *
      * @param FactoryInterface $factory The factory used to create new user instances.
-     * @return AdminAuthenticator Chainable
+     * @return void
      */
     private function setUserFactory(FactoryInterface $factory)
     {
         $this->userFactory = $factory;
-
-        return $this;
     }
 
     /**
@@ -123,12 +121,6 @@ class Authenticator implements LoggerAwareInterface
      */
     protected function userFactory()
     {
-        if (!isset($this->userFactory)) {
-            throw new RuntimeException(
-                sprintf('User Factory is not defined for "%s"', get_class($this))
-            );
-        }
-
         return $this->userFactory;
     }
 
@@ -137,7 +129,7 @@ class Authenticator implements LoggerAwareInterface
      *
      * @param string $type The auth-token object type.
      * @throws InvalidArgumentException If the token object type parameter is not a string.
-     * @return AdminAuthenticator Chainable
+     * @return void
      */
     private function setTokenType($type)
     {
@@ -148,8 +140,6 @@ class Authenticator implements LoggerAwareInterface
         }
 
         $this->tokenType = $type;
-
-        return $this;
     }
 
     /**
@@ -166,13 +156,11 @@ class Authenticator implements LoggerAwareInterface
      * Set a model factory for token-based authentication.
      *
      * @param FactoryInterface $factory The factory used to create new auth-token instances.
-     * @return AdminAuthenticator Chainable
+     * @return void
      */
     private function setTokenFactory(FactoryInterface $factory)
     {
         $this->tokenFactory = $factory;
-
-        return $this;
     }
 
     /**
@@ -183,12 +171,6 @@ class Authenticator implements LoggerAwareInterface
      */
     protected function tokenFactory()
     {
-        if (!isset($this->tokenFactory)) {
-            throw new RuntimeException(
-                sprintf('Token Factory is not defined for "%s"', get_class($this))
-            );
-        }
-
         return $this->tokenFactory;
     }
 
