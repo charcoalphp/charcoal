@@ -217,36 +217,63 @@ class FileProperty extends AbstractProperty
     }
 
     /**
-     * @param string $mimetype The file mimetype.
-     * @throws InvalidArgumentException If the mimetype argument is not a string.
+     * Set the MIME type.
+     *
+     * @param  string $type The file MIME type.
+     * @throws InvalidArgumentException If the MIME type argument is not a string.
      * @return FileProperty Chainable
      */
-    public function setMimetype($mimetype)
+    public function setMimetype($type)
     {
-        if (!is_string($mimetype)) {
+        if ($type === null || $type === false) {
+            $this->mimetype = null;
+            return $this;
+        }
+
+        if (!is_string($type)) {
             throw new InvalidArgumentException(
                 'Mimetype must be a string'
             );
         }
-        $this->mimetype = $mimetype;
+
+        $this->mimetype = $type;
+
         return $this;
     }
 
     /**
+     * Retrieve the MIME type.
+     *
      * @return string
      */
     public function mimetype()
     {
         if (!$this->mimetype) {
-            // Get mimetype from file
             $val = $this->val();
+
             if (!$val) {
                 return '';
             }
-            $info = new finfo(FILEINFO_MIME_TYPE);
-            $this->mimetype = $info->file($val);
+
+            $this->setMimetype($this->mimetypeFor($val));
         }
+
         return $this->mimetype;
+    }
+
+    /**
+     * Extract the MIME type from the given file.
+     *
+     * @uses   finfo
+     * @param  string $file The file to check.
+     * @return string|false Returns a textual description of the contents of the given file,
+     *     or FALSE if an error occurred.
+     */
+    public function mimetypeFor($file)
+    {
+        $info = new finfo(FILEINFO_MIME_TYPE);
+
+        return $info->file($val);
     }
 
     /**
