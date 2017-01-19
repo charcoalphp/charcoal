@@ -1,4 +1,12 @@
 {
+    "properties": {
+        "effects": {
+            "type": "structure"
+        },
+        "apply_effects": {
+            "type": "string"
+        }
+    },
     "admin": {
         "input_type": "charcoal/admin/property/input/image",
         "display_type": "charcoal/admin/property/display/image"

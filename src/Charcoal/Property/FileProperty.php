@@ -931,10 +931,15 @@ class FileProperty extends AbstractProperty
     /**
      * Generate the file extension from the property's value.
      *
-     * @return string
+     * @param  string $file The file to parse.
+     * @return string The extension based on the MIME type.
      */
-    public function generateExtension()
+    public function generateExtension($file = null)
     {
+        if ($file === null) {
+            $file = $this->val();
+        }
+
         return '';
     }
 }
