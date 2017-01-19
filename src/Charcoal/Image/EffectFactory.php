@@ -2,12 +2,12 @@
 
 namespace Charcoal\Image;
 
-// Dependencies from `charcoal-factory` module
-use \Charcoal\Factory\ResolverFactory;
+// From 'charcoal-factory'
+use \Charcoal\Factory\AbstractFactory;
 
 /**
  *
  */
-class EffectFactory extends ResolverFactory
+class EffectFactory extends AbstractFactory
 {
 }

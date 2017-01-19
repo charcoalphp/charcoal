@@ -47,9 +47,9 @@ abstract class AbstractEffect implements EffectInterface
     public function setData(array $data)
     {
         foreach ($data as $key => $val) {
-            $f = [$this, $this->setter($key)];
-            if (is_callable($f)) {
-                call_user_func($f, $val);
+            $method = [ $this, $this->setter($key) ];
+            if (is_callable($method)) {
+                call_user_func($method, $val);
             }
         }
         return $this;

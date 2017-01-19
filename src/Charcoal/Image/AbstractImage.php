@@ -83,7 +83,7 @@ abstract class AbstractImage implements ImageInterface
         if (isset($data['source']) && $data['source'] !== null) {
             $this->setSource($data['source']);
         }
-        if (isset($data['target']) && $data['target'] !==null) {
+        if (isset($data['target']) && $data['target'] !== null) {
             $this->setTarget($data['target']);
         }
         if (isset($data['effects']) && $data['effects'] !== null) {
