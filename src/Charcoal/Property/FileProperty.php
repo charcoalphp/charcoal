@@ -319,17 +319,17 @@ class FileProperty extends AbstractProperty
      */
     public function maxFilesizeAllowedByPhp(&$iniDirective = null)
     {
-        $post_max_size       = $this->parseIniSize(ini_get('post_max_size'));
-        $upload_max_filesize = $this->parseIniSize(ini_get('upload_max_filesize'));
+        $postMaxSize       = $this->parseIniSize(ini_get('post_max_size'));
+        $uploadMaxFilesize = $this->parseIniSize(ini_get('upload_max_filesize'));
 
-        if ($post_max_size < $upload_max_filesize) {
+        if ($postMaxSize < $uploadMaxFilesize) {
             $iniDirective = 'post_max_size';
 
-            return $post_max_size;
+            return $postMaxSize;
         } else {
             $iniDirective = 'upload_max_filesize';
 
-            return $upload_max_filesize;
+            return $uploadMaxFilesize;
         }
     }
 
@@ -371,7 +371,7 @@ class FileProperty extends AbstractProperty
     public function validationMethods()
     {
         $parentMethods = parent::validationMethods();
-        return array_merge($parentMethods, ['accepted_mimetypes', 'max_filesize']);
+        return array_merge($parentMethods, [ 'accepted_mimetypes', 'max_filesize' ]);
     }
 
     /**
@@ -494,6 +494,7 @@ class FileProperty extends AbstractProperty
                         $data['error']      = $file['error'][$lang][$k];
                         $data['type']       = $file['type'][$lang][$k];
                         $data['size']       = $file['size'][$lang][$k];
+
                         $f[$lang][] = $this->fileUpload($data);
                     }
                 }
@@ -508,6 +509,7 @@ class FileProperty extends AbstractProperty
                     $data['error']      = $file['error'][$k];
                     $data['type']       = $file['type'][$k];
                     $data['size']       = $file['size'][$k];
+
                     $f[] = $this->fileUpload($data);
                 }
             } elseif (is_array($file['name']) && $this->l10n()) {
@@ -534,6 +536,7 @@ class FileProperty extends AbstractProperty
             } else {
                 $f = $this->fileUpload($file);
             }
+
             return $f;
         }
 
@@ -558,7 +561,7 @@ class FileProperty extends AbstractProperty
     }
 
     /**
-     * Upload to filesystem, from data: content.
+     * Upload to filesystem, from data URI.
      *
      * @param string $fileData The file data, raw.
      * @throws Exception If data content decoding fails.
@@ -566,23 +569,23 @@ class FileProperty extends AbstractProperty
      */
     public function dataUpload($fileData)
     {
-        $file_content = file_get_contents($fileData);
-        if ($file_content === false) {
+        $fileContent = file_get_contents($fileData);
+        if ($fileContent === false) {
             throw new Exception(
                 'File content could not be decoded.'
             );
         }
 
         $info = new finfo(FILEINFO_MIME_TYPE);
-        $this->setMimetype($info->buffer($file_content));
-        $this->setFilesize(strlen($file_content));
+        $this->setMimetype($info->buffer($fileContent));
+        $this->setFilesize(strlen($fileContent));
         if (!$this->validateAcceptedMimetypes() || !$this->validateMaxFilesize()) {
             return '';
         }
 
         $target = $this->uploadTarget();
 
-        $ret = file_put_contents($target, $file_content);
+        $ret = file_put_contents($target, $fileContent);
         if ($ret === false) {
             return '';
         } else {
@@ -594,6 +597,8 @@ class FileProperty extends AbstractProperty
     }
 
     /**
+     * Upload to filesystem.
+     *
      * @param array $fileData The file data (from $_FILES, typically).
      * @throws InvalidArgumentException If the FILES data argument is missing `name` or `tmp_name`.
      * @return string
@@ -676,17 +681,17 @@ class FileProperty extends AbstractProperty
      * PHP builtin's `file_exists` is only case-insensitive on case-insensitive filesystem (such as windows)
      * This method allows to have the same validation across different platforms / filesystem.
      *
-     * @param string  $file             The full file to check.
-     * @param boolean $case_insensitive Optional. Case insensitive flag.
+     * @param string  $file            The full file to check.
+     * @param boolean $caseInsensitive Optional. Case insensitive flag.
      * @return boolean
      */
-    public function fileExists($file, $case_insensitive = true)
+    public function fileExists($file, $caseInsensitive = true)
     {
         if (file_exists($file)) {
             return true;
         }
 
-        if ($case_insensitive === false) {
+        if ($caseInsensitive === false) {
             return false;
         }
 
@@ -738,7 +743,7 @@ class FileProperty extends AbstractProperty
     /**
      * Generate a unique filename.
      *
-     * @param string $filename The filename to alter.
+     * @param  string $filename The filename to alter.
      * @return string
      * @todo Improve this feature Can not overwrite. Must rename file.
      */
