@@ -751,6 +751,123 @@ class FileProperty extends AbstractProperty
     }
 
     /**
+     * Render the given file to the given pattern.
+     *
+     * This method does not rename the given path.
+     *
+     * @uses   strtr() To replace tokens in the form `{{foobar}}`.
+     * @param  string         $from The string being rendered.
+     * @param  string         $to   The pattern replacing $from.
+     * @param  array|callable $args Extra rename tokens.
+     * @throws InvalidArgumentException If the given arguments are invalid.
+     * @throws UnexpectedValueException If the renaming failed.
+     * @return string Returns the rendered target.
+     */
+    public function renderFileRenamePattern($from, $to, $args = null)
+    {
+        if (!is_string($from)) {
+            throw new InvalidArgumentException(sprintf(
+                'The target to rename must be a string, received %s',
+                (is_object($from) ? get_class($from) : gettype($from))
+            ));
+        }
+
+        if (!is_string($to)) {
+            throw new InvalidArgumentException(sprintf(
+                'The rename pattern must be a string, received %s',
+                (is_object($to) ? get_class($to) : gettype($to))
+            ));
+        }
+
+        $info = pathinfo($from);
+        $args = $this->renamePatternArgs($info, $args);
+
+        $to = strtr($to, $args);
+        if (strpos($to, '{{') !== false) {
+            preg_match_all('~\{\{\s*(.*?)\s*\}\}~i', $to, $matches);
+
+            throw new UnexpectedValueException(sprintf(
+                'The rename pattern failed. Leftover tokens found: %s',
+                implode(', ', $matches[1])
+            ));
+        }
+
+        $to = str_replace($info['basename'], $to, $from);
+
+        return $to;
+    }
+
+    /**
+     * Retrieve the rename pattern tokens for the given file.
+     *
+     * @param  string|array   $path The string to be parsed or an associative array of information about the file.
+     * @param  array|callable $args Extra rename tokens.
+     * @throws InvalidArgumentException If the given arguments are invalid.
+     * @return string Returns the rendered target.
+     */
+    public function renamePatternArgs($path, $args = null)
+    {
+        if (!is_string($path) && !is_array($path)) {
+            throw new InvalidArgumentException(sprintf(
+                'The target must be a string or an array from [pathfino()], received %s',
+                (is_object($path) ? get_class($path) : gettype($path))
+            ));
+        }
+
+        if (is_string($path)) {
+            $info = pathinfo($path);
+        } else {
+            $info = $path;
+        }
+
+        if (!isset($info['basename']) || $info['basename'] === '') {
+            throw new UnexpectedValueException(
+                'The basename is missing from the target'
+            );
+        }
+
+        if (!isset($info['filename']) || $info['filename'] === '') {
+            throw new UnexpectedValueException(
+                'The filename is missing from the target'
+            );
+        }
+
+        $defaults = [
+            '{{property}}'  => $this->ident(),
+            '{{label}}'     => $this->label(),
+            '{{extension}}' => $info['extension'],
+            '{{basename}}'  => $info['basename'],
+            '{{filename}}'  => $info['filename']
+        ];
+
+        if ($args === null) {
+            $args = $defaults;
+        } else {
+            if (is_callable($args)) {
+                /**
+                 * Rename Arguments Callback Routine
+                 *
+                 * @param  array             $info Information about the file path from {@see pathinfo()}.
+                 * @param  PropertyInterface $prop The related image property.
+                 * @return array
+                 */
+                $args = $args($info, $this);
+            }
+
+            if (is_array($args)) {
+                $args = array_replace($defaults, $args);
+            } else {
+                throw new InvalidArgumentException(sprintf(
+                    'Arguments must be an array or a callable that returns an array, received %s',
+                    (is_object($args) ? get_class($args) : gettype($args))
+                ));
+            }
+        }
+
+        return $args;
+    }
+
+    /**
      * Generate a new filename from the property.
      *
      * @return string
