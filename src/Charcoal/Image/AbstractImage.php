@@ -36,21 +36,21 @@ abstract class AbstractImage implements ImageInterface
 
 
     /**
-     * Magic call function
-     * Tries to load the effect of the called method name.
+     * Magic: Attempt to load the effect of the called method name.
      *
-     * For example, $img->blur(['sigma'=>15]); would create a "Blur" effect.
+     * Example, `$img->blur([ 'sigma' => 15 ]);` would create a "Blur" effect.
      *
-     * @param string $fxType The effect type.
-     * @param array  $data   The effect options.
+     * @param  string $fxType The effect type.
+     * @param  array  $data   The effect options.
      * @return ImageInterface Chainable
      */
     public function __call($fxType, array $data)
     {
-        $fxData = $data;
-        $fxData['type'] = $fxType;
-        $fx = $this->createEffect($fxData);
+        $data['type'] = $fxType;
+
+        $fx = $this->createEffect($data);
         $fx->process();
+
         return $this;
     }
 

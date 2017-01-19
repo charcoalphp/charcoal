@@ -104,7 +104,7 @@ class ImagickImage extends AbstractImage
     {
         if ($target !== null && !is_string($target)) {
             throw new InvalidArgumentException(
-                'Target must be a string'
+                'Target must be a string (file path)'
             );
         }
         $target = ($target) ? $target : $this->target();

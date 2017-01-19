@@ -199,7 +199,7 @@ class ImagemagickImage extends AbstractImage
         }
 
         if (!$cmd) {
-            exec('which mogrify');
+            $cmd = exec('which '.$cmdName);
         }
 
         if (!$cmd) {

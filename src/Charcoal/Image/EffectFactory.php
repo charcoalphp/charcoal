@@ -10,5 +10,4 @@ use \Charcoal\Factory\ResolverFactory;
  */
 class EffectFactory extends ResolverFactory
 {
-
 }

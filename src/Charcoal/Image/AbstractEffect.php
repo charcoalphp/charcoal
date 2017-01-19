@@ -72,6 +72,7 @@ abstract class AbstractEffect implements EffectInterface
         $setter = 'set_'.$key;
         return $this->camelize($setter);
     }
+
     /**
      * Transform a snake_case string to camelCase.
      *
