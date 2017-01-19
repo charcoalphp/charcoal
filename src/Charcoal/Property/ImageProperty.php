@@ -73,7 +73,8 @@ class ImageProperty extends FileProperty
             'image/jpeg',
             'image/pjpeg',
             'image/png',
-            'image/svg+xml'
+            'image/svg+xml',
+            'image/webp'
         ];
     }
 
@@ -102,6 +103,10 @@ class ImageProperty extends FileProperty
 
             case 'image/svg+xml':
                 $ext = 'svg';
+                break;
+
+            case 'image/webp':
+                $ext = 'webp';
                 break;
         }
         return $ext;
