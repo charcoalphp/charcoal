@@ -19,6 +19,7 @@ class AbstractResizeEffectTest extends \PHPUnit_Framework_Testcase
         $obj = $this->obj;
 
         $this->assertEquals('auto', $obj->mode());
+        $this->assertEquals(null, $obj->size());
         $this->assertEquals(0, $obj->width());
         $this->assertEquals(0, $obj->height());
         $this->assertEquals('center', $obj->gravity());
@@ -29,19 +30,19 @@ class AbstractResizeEffectTest extends \PHPUnit_Framework_Testcase
     public function testSetData()
     {
         $obj = $this->obj;
-        $ret = $obj->setData(
-            [
-            'mode'=>'exact',
-            'width'=>100,
-            'height'=>50,
-            'gravity'=>'e',
-            'backgroundColor'=>'red',
-            'adaptive'=>true
-            ]
-        );
+        $ret = $obj->setData([
+            'mode'             => 'exact',
+            'size'             => '50%',
+            'width'            => 100,
+            'height'           => 50,
+            'gravity'          => 'e',
+            'background_color' => 'red',
+            'adaptive'         => true
+        ]);
         $this->assertSame($ret, $obj);
 
         $this->assertEquals('exact', $obj->mode());
+        $this->assertEquals('50%', $obj->size());
         $this->assertEquals(100, $obj->width());
         $this->assertEquals(50, $obj->height());
         $this->assertEquals('e', $obj->gravity());
@@ -58,6 +59,33 @@ class AbstractResizeEffectTest extends \PHPUnit_Framework_Testcase
 
         $this->setExpectedException('\InvalidArgumentException');
         $obj->setMode('foobar');
+    }
+
+    public function testSetSize()
+    {
+        $obj = $this->obj;
+
+        $ret = $obj->setSize('50%');
+        $this->assertSame($ret, $obj);
+
+        $this->assertEquals('50%', $obj->size());
+
+        $ret = $obj->setSize(400);
+        $this->assertEquals(400, $obj->size());
+
+        $ret = $obj->setSize(null);
+        $this->assertEquals(null, $obj->size());
+    }
+
+    public function testSetSizeException()
+    {
+        $obj = $this->obj;
+
+        $this->setExpectedException('\InvalidArgumentException');
+        $obj->setSize(-1);
+
+        $this->setExpectedException('\InvalidArgumentException');
+        $obj->setSize([ 'foo', 'bar' ]);
     }
 
     public function testSetWidth()

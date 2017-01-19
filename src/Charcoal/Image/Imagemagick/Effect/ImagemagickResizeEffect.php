@@ -22,11 +22,6 @@ class ImagemagickResizeEffect extends AbstractResizeEffect
      */
     protected function doResize($width, $height, $bestFit = false)
     {
-        $cmd = [
-            '-gravity "'.$this->gravity().'"',
-            '-background "'.$this->backgroundColor().'"'
-        ];
-
         if ($this->adaptive()) {
             $option = '-adaptive-resize';
         } else {
@@ -35,17 +30,22 @@ class ImagemagickResizeEffect extends AbstractResizeEffect
 
         $size = $this->size();
         if ($size) {
-            $cmd[] = $option.' '.$size;
+            $params = [ $option.' '.$size ];
         } else {
+            $params = [
+                '-gravity "'.$this->gravity().'"',
+                '-background "'.$this->backgroundColor().'"'
+            ];
+
             $size = $width.'x'.$height;
             if ($bestFit) {
-                $cmd[] = $option.' '.$size.'^';
-                $cmd[] = '-extent '.$size;
+                $params[] = $option.' '.$size.'^';
+                $params[] = '-extent '.$size;
             } else {
-                $cmd[] = $option.' '.$size;
+                $params[] = $option.' '.$size;
             }
         }
 
-        $this->image()->applyCmd(implode(' ', $cmd));
+        $this->image()->applyCmd(implode(' ', $params));
     }
 }

@@ -110,7 +110,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
      */
     public function setSize($size)
     {
-        if ($size !== null && !is_string($size) && (!is_numeric($width) || ($width < 0))) {
+        if ($size !== null && !is_string($size) && (!is_numeric($size) || ($size < 0))) {
             throw new InvalidArgumentException(
                 'Size must be a valid scale'
             );
@@ -323,7 +323,6 @@ abstract class AbstractResizeEffect extends AbstractEffect
         return $this->backgroundColor;
     }
 
-
     /**
      * @param boolean $adaptive The adaptative resize flag.
      * @return AbstractRotateEffect Chainable
@@ -379,6 +378,12 @@ abstract class AbstractResizeEffect extends AbstractEffect
         $mode = $this->mode();
         if ($mode == 'auto') {
             $mode = $this->autoMode();
+        }
+
+        $size = $this->size();
+        if ($size) {
+            $this->doResize(0, 0, false);
+            return $this;
         }
 
         if ($mode == 'none') {
