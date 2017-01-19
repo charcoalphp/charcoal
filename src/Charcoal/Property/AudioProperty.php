@@ -97,24 +97,34 @@ class AudioProperty extends FileProperty
     }
 
     /**
-     * @return string
+     * Generate the file extension from the property's value.
+     *
+     * @param  string $file The file to parse.
+     * @return string The extension based on the MIME type.
      */
-    public function generateExtension()
+    public function generateExtension($file = null)
     {
-        $mimetype = $this->mimetype();
+        if (is_string($file)) {
+            if (in_array($file, $this->acceptedMimetypes())) {
+                $mime = $file;
+            } else {
+                $mime = $this->mimetypeFor($file);
+            }
+        } else {
+            $mime = $this->mimetype();
+        }
 
-        $ext = '';
-        switch ($mimetype) {
+        switch ($mime) {
             case 'audio/mp3':
             case 'audio/mpeg':
-                $ext = 'mp3';
-                break;
+                return 'mp3';
 
             case 'audio/wav':
             case 'audio/x-wav':
-                $ext = 'wav';
-                break;
+                return 'wav';
+
+            default:
+                return '';
         }
-        return $ext;
     }
 }

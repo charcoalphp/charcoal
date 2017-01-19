@@ -266,14 +266,12 @@ class FileProperty extends AbstractProperty
      *
      * @uses   finfo
      * @param  string $file The file to check.
-     * @return string|false Returns a textual description of the contents of the given file,
-     *     or FALSE if an error occurred.
+     * @return string|false Returns the given file's MIME type or FALSE if an error occurred.
      */
     public function mimetypeFor($file)
     {
         $info = new finfo(FILEINFO_MIME_TYPE);
-
-        return $info->file($val);
+        return $info->file($file);
     }
 
     /**
@@ -817,6 +815,7 @@ class FileProperty extends AbstractProperty
      * @param  string|array   $path The string to be parsed or an associative array of information about the file.
      * @param  array|callable $args Extra rename tokens.
      * @throws InvalidArgumentException If the given arguments are invalid.
+     * @throws UnexpectedValueException If the given path is invalid.
      * @return string Returns the rendered target.
      */
     public function renamePatternArgs($path, $args = null)
@@ -902,6 +901,7 @@ class FileProperty extends AbstractProperty
      * Generate a unique filename.
      *
      * @param  string $filename The filename to alter.
+     * @throws InvalidArgumentException If the given filename is invalid.
      * @return string
      */
     public function generateUniqueFilename($filename)
@@ -938,6 +938,12 @@ class FileProperty extends AbstractProperty
     {
         if ($file === null) {
             $file = $this->val();
+        } elseif (is_string($file)) {
+            if (in_array($file, $this->acceptedMimetypes())) {
+                $mime = $file;
+            } else {
+                $mime = $this->mimetypeFor($file);
+            }
         }
 
         return '';

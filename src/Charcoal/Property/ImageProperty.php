@@ -115,6 +115,7 @@ class ImageProperty extends FileProperty
      * Set the name of the property's image processing driver.
      *
      * @param  string $type The processing engine.
+     * @throws InvalidArgumentException If the drive type is not a string.
      * @return ImageProperty Chainable
      */
     private function setDriverType($type)
@@ -149,6 +150,7 @@ class ImageProperty extends FileProperty
      * Set whether effects should be applied.
      *
      * @param  mixed $event When to apply affects.
+     * @throws OutOfBoundsException If the effects event does not exist.
      * @return ImageProperty Chainable
      */
     public function setApplyEffects($event)
@@ -167,8 +169,8 @@ class ImageProperty extends FileProperty
             if (!is_string($event)) {
                 $event = (is_object($event) ? get_class($event) : gettype($event));
             }
-            throw new InvalidArgumentException(sprintf(
-                'Unsupported image property method "%s" provided',
+            throw new OutOfBoundsException(sprintf(
+                'Unsupported image property event "%s" provided',
                 $event
             ));
         }
@@ -182,7 +184,7 @@ class ImageProperty extends FileProperty
      * Determine if effects should be applied.
      *
      * @param  string|boolean $event A specific event to check or a global flag to set.
-     * @throws OutOfBoundsException If the requested event does not exist.
+     * @throws OutOfBoundsException If the effects event does not exist.
      * @return mixed If an $event is provided, returns TRUE or FALSE if the property applies
      *     effects for the given event. Otherwise, returns the property's condition on effects.
      */
@@ -193,8 +195,8 @@ class ImageProperty extends FileProperty
                 if (!is_string($event)) {
                     $event = (is_object($event) ? get_class($event) : gettype($event));
                 }
-                throw new InvalidArgumentException(sprintf(
-                    'Unsupported image property method "%s" provided',
+                throw new OutOfBoundsException(sprintf(
+                    'Unsupported image property event "%s" provided',
                     $event
                 ));
             }
@@ -428,7 +430,11 @@ class ImageProperty extends FileProperty
     public function generateExtension($file = null)
     {
         if (is_string($file)) {
-            $mime = $this->mimetypeFor($file);
+            if (in_array($file, $this->acceptedMimetypes())) {
+                $mime = $file;
+            } else {
+                $mime = $this->mimetypeFor($file);
+            }
         } else {
             $mime = $this->mimetype();
         }
