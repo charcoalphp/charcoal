@@ -18,9 +18,15 @@ abstract class AbstractResizeEffect extends AbstractEffect
     private $mode = 'auto';
 
     /**
+     * @var mixed $size
+     */
+    private $size;
+
+    /**
      * @var integer $width
      */
     private $width = 0;
+
     /**
      * @var integer $height
      */
@@ -96,6 +102,36 @@ abstract class AbstractResizeEffect extends AbstractEffect
     }
 
     /**
+     * Set a complex resize value.
+     *
+     * @param  mixed $size The size.
+     * @throws InvalidArgumentException If the size argument is not valid.
+     * @return Rotate Chainable
+     */
+    public function setSize($size)
+    {
+        if ($size !== null && !is_string($size) && (!is_numeric($width) || ($width < 0))) {
+            throw new InvalidArgumentException(
+                'Size must be a valid scale'
+            );
+        }
+
+        $this->size = $size;
+
+        return $this;
+    }
+
+    /**
+     * Retrieve the complex resize value.
+     *
+     * @return mixed
+     */
+    public function size()
+    {
+        return $this->size;
+    }
+
+    /**
      * @param integer $width The target resize width.
      * @throws InvalidArgumentException If the width argument is not numeric or lower than 0.
      * @return Rotate Chainable
@@ -104,7 +140,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
     {
         if (!is_numeric($width) || ($width < 0)) {
             throw new InvalidArgumentException(
-                'Width must be a a positive integer'
+                'Width must be a positive integer'
             );
         }
         $this->width = (int)$width;
@@ -152,7 +188,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
     {
         if (!is_numeric($minWidth) || ($minWidth < 0)) {
             throw new InvalidArgumentException(
-                'Min Width must be a a positive integer'
+                'Min Width must be a positive integer'
             );
         }
         $this->minWidth = (int)$minWidth;
@@ -200,7 +236,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
     {
         if (!is_numeric($maxWidth) || ($maxWidth < 0)) {
             throw new InvalidArgumentException(
-                'Max Width must be a a positive integer'
+                'Max Width must be a positive integer'
             );
         }
         $this->maxWidth = (int)$maxWidth;
@@ -350,7 +386,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
             return $this;
         }
 
-        $imageWidth = $this->image()->width();
+        $imageWidth  = $this->image()->width();
         $imageHeight = $this->image()->height();
 
         switch ($mode) {
