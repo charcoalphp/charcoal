@@ -8,7 +8,8 @@ use \InvalidArgumentException;
 use \Charcoal\Factory\AbstractFactory;
 
 /**
- * The Resolver Factory resolves the **class name**  by different configurably methods applied to the **type**.
+ * The Resolver Factory resolves the **class name** by different configurably
+ * methods applied to the **type**.
  */
 class ResolverFactory extends AbstractFactory
 {
