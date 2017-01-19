@@ -168,4 +168,10 @@ class ObjectPropertyTest extends PHPUnit_Framework_TestCase
             ->will($this->returnValue('foo'));
         $this->assertEquals('foo', $this->obj->parseOne($mock));
     }
+
+    public function testStorageVal()
+    {
+        $this->assertNull($this->obj->storageVal(''));
+        $this->assertNull($this->obj->storageVal(null));
+    }
 }
