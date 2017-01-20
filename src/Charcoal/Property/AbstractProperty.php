@@ -341,6 +341,8 @@ abstract class AbstractProperty extends AbstractEntity implements
             if ($propertyValue === null) {
                 return '';
             }
+        } elseif ($val instanceof TranslationString) {
+            $propertyValue = $val->fallback();
         } else {
             $propertyValue = $val;
         }
@@ -376,6 +378,8 @@ abstract class AbstractProperty extends AbstractEntity implements
             if ($propertyValue === null) {
                 return '';
             }
+        } elseif ($val instanceof TranslationString) {
+            $propertyValue = $val->fallback();
         } else {
             $propertyValue = $val;
         }

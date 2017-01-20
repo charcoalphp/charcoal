@@ -488,6 +488,8 @@ class StructureProperty extends AbstractProperty
             if ($propertyValue === null) {
                 return '';
             }
+        } elseif ($val instanceof TranslationString) {
+            $propertyValue = $val->fallback();
         } else {
             $propertyValue = $val;
         }
