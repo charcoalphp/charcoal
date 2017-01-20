@@ -417,8 +417,7 @@ class FileProperty extends AbstractProperty
             if (!$val) {
                 return true;
             }
-            $info = new finfo(FILEINFO_MIME_TYPE);
-            $mimetype = $info->file($val);
+            $mimetype = $this->mimetypeFor($val);
         }
         $valid = false;
         foreach ($acceptedMimetypes as $m) {
@@ -591,7 +590,7 @@ class FileProperty extends AbstractProperty
      * @param  string $val The value to check.
      * @return string
      */
-    public function isDataUri($val)
+    protected function isDataUri($val)
     {
         return preg_match('/^data:/i', $val);
     }
@@ -818,7 +817,7 @@ class FileProperty extends AbstractProperty
      * @throws UnexpectedValueException If the given path is invalid.
      * @return string Returns the rendered target.
      */
-    public function renamePatternArgs($path, $args = null)
+    private function renamePatternArgs($path, $args = null)
     {
         if (!is_string($path) && !is_array($path)) {
             throw new InvalidArgumentException(sprintf(
@@ -900,7 +899,7 @@ class FileProperty extends AbstractProperty
     /**
      * Generate a unique filename.
      *
-     * @param  string $filename The filename to alter.
+     * @param  string|array $filename The filename to alter.
      * @throws InvalidArgumentException If the given filename is invalid.
      * @return string
      */
