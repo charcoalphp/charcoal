@@ -10,6 +10,11 @@
         }
     ],
     "minimum-stability": "dev",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.1.x-dev"
+        }
+    },
     "require": {
         "php": ">=5.6.0",
         "psr/log": "^1.0",
@@ -27,16 +32,19 @@
         "zendframework/zend-permissions-acl": "^2.6",
         "cache/void-adapter": "^0.3.1"
     },
-    "suggest":{
-        "zendframework/zend-permissions-acl":"To add ACL to users."
+    "suggest": {
+        "zendframework/zend-permissions-acl": "To add ACL to users."
     },
     "autoload": {
         "psr-4": {
-            "Charcoal\\": "src/Charcoal"
+            "Charcoal\\User\\": "src/Charcoal/User"
         }
     },
     "scripts": {
         "test": [
+            "@tests"
+        ],
+        "tests": [
             "@phplint",
             "@phpcs",
             "@phpunit"
