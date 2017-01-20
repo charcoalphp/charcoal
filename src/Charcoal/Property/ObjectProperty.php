@@ -351,7 +351,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      */
     public function storageVal($val)
     {
-        if ($val === null || $val == '') {
+        if ($val === null || $val === '') {
             // Do not json_encode NULL values
             return null;
         }
