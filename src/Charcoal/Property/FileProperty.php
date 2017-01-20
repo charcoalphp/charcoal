@@ -714,17 +714,21 @@ class FileProperty extends AbstractProperty
     }
 
     /**
-     * This function checks if a file exist, by default in a case-insensitive manner.
+     * Checks whether a file or directory exists.
      *
-     * PHP builtin's `file_exists` is only case-insensitive on case-insensitive filesystem (such as windows)
+     * PHP built-in's `file_exists` is only case-insensitive on case-insensitive filesystem (such as Windows)
      * This method allows to have the same validation across different platforms / filesystem.
      *
-     * @param string  $file            The full file to check.
-     * @param boolean $caseInsensitive Optional. Case insensitive flag.
+     * @param  string  $file            The full file to check.
+     * @param  boolean $caseInsensitive Case-insensitive by default.
      * @return boolean
      */
     public function fileExists($file, $caseInsensitive = true)
     {
+        if (!$this->isAbsolutePath($file)) {
+            $file = $this->basePath().$file;
+        }
+
         if (file_exists($file)) {
             return true;
         }
@@ -741,6 +745,26 @@ class FileProperty extends AbstractProperty
         }
 
         return false;
+    }
+
+    /**
+     * Determine if the given file path is am absolute path.
+     *
+     * Note: Adapted from symfony\filesystem.
+     *
+     * @see https://github.com/symfony/symfony/blob/v3.2.2/LICENSE
+     *
+     * @param  string $file A file path.
+     * @return boolean Returns TRUE if the given path is absolute. Otherwise, returns FALSE.
+     */
+    protected function isAbsolutePath($file)
+    {
+        return strspn($file, '/\\', 0, 1)
+            || (strlen($file) > 3
+                && ctype_alpha($file[0])
+                && substr($file, 1, 1) === ':'
+                && strspn($file, '/\\', 2, 1))
+            || null !== parse_url($file, PHP_URL_SCHEME);
     }
 
     /**

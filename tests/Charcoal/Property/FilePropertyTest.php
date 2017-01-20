@@ -2,14 +2,17 @@
 
 namespace Charcoal\Tests\Property;
 
-use PHPUnit_Framework_TestCase;
-
+use PDO;
+use ReflectionClass;
 use InvalidArgumentException;
 
-use PDO;
+// From PHP Unit
+use PHPUnit_Framework_TestCase;
 
+// From PSR-3
 use Psr\Log\NullLogger;
 
+// From 'charcoal-property'
 use Charcoal\Property\FileProperty;
 
 /**
@@ -25,6 +28,14 @@ class FilePropertyTest extends PHPUnit_Framework_TestCase
             'database'  => new PDO('sqlite::memory:'),
             'logger'    => new NullLogger()
         ]);
+    }
+
+    public static function getMethod($obj, $name)
+    {
+        $class = new ReflectionClass($obj);
+        $method = $class->getMethod($name);
+        $method->setAccessible(true);
+        return $method;
     }
 
     public function testConstructor()
@@ -131,6 +142,33 @@ class FilePropertyTest extends PHPUnit_Framework_TestCase
         // $this->assertTrue($obj->fileExists(strtoupper(__FILE__), true));
 
         $this->assertFalse($obj->fileExists('foobar/baz/42'));
+    }
+
+    /**
+     * @dataProvider providePathsForIsAbsolutePath
+     */
+    public function testIsAbsolutePath($path, $expectedResult)
+    {
+        $method = self::getMethod($this->obj, 'isAbsolutePath');
+        $result = $method->invoke($this->obj, $path);
+
+        $this->assertEquals($expectedResult, $result);
+    }
+
+    /**
+     * @return array
+     */
+    public function providePathsForIsAbsolutePath()
+    {
+        return [
+            [ '/var/lib', true ],
+            [ 'c:\\\\var\\lib', true ],
+            [ '\\var\\lib', true ],
+            [ 'var/lib', false ],
+            [ '../var/lib', false ],
+            [ '', false ],
+            [ null, false ],
+        ];
     }
 
     /**
