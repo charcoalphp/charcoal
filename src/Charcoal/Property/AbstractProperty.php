@@ -331,31 +331,32 @@ abstract class AbstractProperty extends AbstractEntity implements
             return '';
         }
 
+        if (is_string($val)) {
+            return $val;
+        }
+
         /** Parse multilingual values */
         if ($this->l10n()) {
-            $lang = isset($options['lang']) ? $options['lang'] : '';
-
-            if (isset($val[$lang])) {
-                $val = $val[$lang];
-            } else {
-                $val = '';
+            $propertyValue = $this->l10nVal($val, $options);
+            if ($propertyValue === null) {
+                return '';
             }
-        } elseif ($val instanceof TranslationString) {
-            $val = (string)$val;
+        } else {
+            $propertyValue = $val;
         }
 
         /** Parse multiple values / ensure they are of array type. */
         if ($this->multiple()) {
-            if (is_array($val)) {
-                $val = implode($this->multipleSeparator(), $val);
+            if (is_array($propertyValue)) {
+                $propertyValue = implode($this->multipleSeparator(), $propertyValue);
             }
         }
 
-        if (!is_scalar($val)) {
-            $val = json_encode($val, JSON_PRETTY_PRINT);
+        if (!is_scalar($propertyValue)) {
+            $propertyValue = json_encode($propertyValue, JSON_PRETTY_PRINT);
         }
 
-        return $val;
+        return (string)$propertyValue;
     }
 
     /**
@@ -365,10 +366,11 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     public function displayVal($val, array $options = [])
     {
-        if ($val === null) {
+        if ($val === null || $val === '') {
             return '';
         }
 
+        /** Parse multilingual values */
         if ($this->l10n()) {
             $propertyValue = $this->l10nVal($val, $options);
             if ($propertyValue === null) {
@@ -380,6 +382,7 @@ abstract class AbstractProperty extends AbstractEntity implements
 
         $separator = $this->multipleSeparator();
 
+        /** Parse multiple values / ensure they are of array type. */
         if ($this->multiple()) {
             if (!is_array($propertyValue)) {
                 $propertyValue = explode($separator, $propertyValue);

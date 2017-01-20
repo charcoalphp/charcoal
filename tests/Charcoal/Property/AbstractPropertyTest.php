@@ -44,16 +44,6 @@ class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
         $this->obj->setIdent([]);
     }
 
-    public function testSetInputVal()
-    {
-        $this->assertEquals('', $this->obj->inputVal(null));
-
-        $this->assertEquals('foo', $this->obj->inputVal('foo'));
-
-        $ret = $this->obj->inputVal(['foo'=>'bar']);
-        $this->assertEquals('{"foo":"bar"}', str_replace(["\n", "\r", "\t", ' '], '', $ret));
-    }
-
     /**
      * Asserts that the basic displayVal method:
      * - returns an empty string if the value is null
@@ -77,6 +67,16 @@ class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('', $this->obj->displayVal(null));
         //$this->assertEquals('foo', $this->obj->displayVal(['fr'=>'foo']));
+    }
+
+    public function testSetInputVal()
+    {
+        $this->assertEquals('', $this->obj->inputVal(null));
+
+        $this->assertEquals('foo', $this->obj->inputVal('foo'));
+
+        $ret = $this->obj->inputVal([ 'foo' => 'bar' ]);
+        $this->assertEquals('{"foo":"bar"}', str_replace([ "\n", "\r", "\t", ' ' ], '', $ret));
     }
 
     public function testSetInputValL10n()
