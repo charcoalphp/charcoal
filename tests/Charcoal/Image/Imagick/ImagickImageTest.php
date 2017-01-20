@@ -32,7 +32,6 @@ class ImagickImageTest extends \PHPUnit_Framework_Testcase
 
     public function testCreate()
     {
-        error_log(get_called_class().'::'.__FUNCTION__);
         $obj = $this->createImage();
         $ret = $obj->create(1, 1);
         $this->assertSame($ret, $obj);
