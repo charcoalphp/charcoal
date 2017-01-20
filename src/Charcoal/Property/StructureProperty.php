@@ -468,6 +468,34 @@ class StructureProperty extends AbstractProperty
     }
 
     /**
+     * @param   mixed $val     Optional. The value to to convert for input.
+     * @param   array $options Optional input options.
+     * @return  string
+     */
+    public function inputVal($val, array $options = [])
+    {
+        if ($val === null) {
+            return '';
+        }
+
+        if (is_string($val)) {
+            return $val;
+        }
+
+        /** Parse multilingual values */
+        if ($this->l10n()) {
+            $propertyValue = $this->l10nVal($val, $options);
+            if ($propertyValue === null) {
+                return '';
+            }
+        } else {
+            $propertyValue = $val;
+        }
+
+        return json_encode($propertyValue, JSON_PRETTY_PRINT);
+    }
+
+    /**
      * Convert the given value into a structure.
      *
      * @param  mixed $val     The value to "structurize".
