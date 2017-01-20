@@ -25,12 +25,15 @@
     },
     "require": {
         "locomotivemtl/charcoal-core": "~0.2",
-        "locomotivemtl/charcoal-base": "~0.2"
+        "locomotivemtl/charcoal-object": "~0.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^4.8",
         "squizlabs/php_codesniffer": "^2.4",
         "satooshi/php-coveralls":"~1.0"
+    },
+    "suggest": {
+        "locomotivemtl/charcoal-admin": "To use the attachment widgets, actions, and scripts."
     },
     "autoload": {
         "psr-4": {
