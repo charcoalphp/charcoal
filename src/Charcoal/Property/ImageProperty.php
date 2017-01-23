@@ -330,10 +330,14 @@ class ImageProperty extends FileProperty
      * @param  array               $effects The effects to apply on the target.
      * @param  ImageInterface|null $image   Optional. The image for processing.
      * @throws InvalidArgumentException If the $value is not a string.
-     * @return mixed Returns the processed target.
+     * @return mixed Returns the processed target or NULL.
      */
     private function processEffectsOne($value, array $effects = null, ImageInterface $image = null)
     {
+        if ($value === null || $value === '') {
+            return null;
+        }
+
         if (!is_string($value)) {
             throw new InvalidArgumentException(sprintf(
                 'Target image must be a string, received %s',
