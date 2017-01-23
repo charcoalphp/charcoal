@@ -111,15 +111,19 @@ class ImagemagickImage extends AbstractImage
                 'Source must be a string (file path)'
             );
         }
+
         $source = ($source) ? $source : $this->source();
         $this->resetTmp();
         if (!file_exists($source)) {
-            throw new Exception(
-                sprintf('File "%s" does not exist', $source)
-            );
+            if (null === parse_url($source, PHP_URL_HOST)) {
+                throw new Exception(
+                    sprintf('File "%s" does not exist', $source)
+                );
+            }
         }
-        $tmp = $this->tmp();
-        copy($source, $tmp);
+
+        copy($source, $this->tmp());
+
         return $this;
     }
 
@@ -139,13 +143,16 @@ class ImagemagickImage extends AbstractImage
                 'Target must be a string (file path)'
             );
         }
+
         $target = ($target) ? $target : $this->target();
         if (!is_writable(dirname($target))) {
             throw new Exception(
                 sprintf('Target "%s" is not writable', $target)
             );
         }
+
         copy($this->tmp(), $target);
+
         return $this;
     }
 

@@ -87,8 +87,15 @@ class ImagickImage extends AbstractImage
                 'Source must be a string'
             );
         }
+
         $source = ($source) ? $source : $this->source();
-        $this->imagick()->readImage($source);
+        if (parse_url($source, PHP_URL_HOST)) {
+            $handle = fopen($source, 'rb');
+            $this->imagick()->readImageFile($handle);
+        } else {
+            $this->imagick()->readImage($source);
+        }
+
         return $this;
     }
 
@@ -107,13 +114,13 @@ class ImagickImage extends AbstractImage
                 'Target must be a string (file path)'
             );
         }
-        $target = ($target) ? $target : $this->target();
 
+        $target  = ($target) ? $target : $this->target();
         $fileExt = pathinfo($target, PATHINFO_EXTENSION);
 
         $this->imagick()->setImageFormat($fileExt);
-
         $this->imagick()->writeImage($target);
+
         return $this;
     }
 
