@@ -350,7 +350,7 @@ class ImagemagickImage extends AbstractImage
             return $this->tmpFile;
         }
 
-        $this->tmpFile = sys_get_temp_dir().'/'.uniqid().'.png';
+        $this->tmpFile = rtrim(sys_get_temp_dir(), '/\\').DIRECTORY_SEPARATOR.'charcoal_image_'.uniqid();
         return $this->tmpFile;
     }
 
