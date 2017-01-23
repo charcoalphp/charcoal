@@ -355,6 +355,11 @@ class ImageProperty extends FileProperty
             // @todo Save original file here
             $image->open($value);
 
+            $target = null;
+            if (null !== parse_url($value, PHP_URL_HOST)) {
+                $target = $this->uploadPath().pathinfo($value, PATHINFO_BASENAME);
+            }
+
             foreach ($effects as $fxGroup) {
                 if ($fxGroup['save']) {
                     $rename = $fxGroup['rename'];
@@ -366,13 +371,13 @@ class ImageProperty extends FileProperty
 
                     if ($rename || $copy) {
                         if ($copy) {
-                            $copy   = $this->renderFileRenamePattern($value, $copy);
+                            $copy   = $this->renderFileRenamePattern(($target ?: $value), $copy);
                             $exists = $this->fileExists($basePath.$copy);
                             $doCopy = ($copy && ($this->overwrite() || !$exists));
                         }
 
                         if ($rename) {
-                            $value    = $this->renderFileRenamePattern($value, $rename);
+                            $value    = $this->renderFileRenamePattern(($target ?: $value), $rename);
                             $exists   = $this->fileExists($basePath.$value);
                             $doRename = ($value && ($this->overwrite() || !$exists));
                         }
@@ -395,7 +400,7 @@ class ImageProperty extends FileProperty
                                 $image->save($value);
                             }
                         } else {
-                            $image->save();
+                            $image->save($target);
                         }
                     }
                 }
