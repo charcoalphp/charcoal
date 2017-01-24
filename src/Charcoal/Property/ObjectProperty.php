@@ -47,13 +47,6 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     private $objType;
 
     /**
-     * Store a reference to the {@see self::$objType} model.
-     *
-     * @var ModelInterface
-     */
-    private $proto;
-
-    /**
      * The pattern for rendering the choice as a label.
      *
      * @var string
@@ -378,11 +371,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      */
     public function proto()
     {
-        if ($this->proto === null) {
-            $this->proto = $this->modelFactory()->get($this->objType());
-        }
-
-        return $this->proto;
+        return $this->modelFactory()->get($this->objType());
     }
 
     /**
@@ -559,7 +548,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
             $choice = $this->choice($obj);
 
             if ($choice !== null) {
-                $choices[$obj->id()] = $choice;
+                $choices[$choice['value']] = $choice;
             }
         }
 
