@@ -103,7 +103,8 @@ class Collection implements CollectionInterface
                 );
             }
 
-            $this->objects[$obj->id()] = $obj;
+            $key = $this->modelKey($obj);
+            $this->objects[$key] = $obj;
         }
 
         return $this;
@@ -127,7 +128,8 @@ class Collection implements CollectionInterface
             );
         }
 
-        $this->objects[$obj->id()] = $obj;
+        $key = $this->modelKey($obj);
+        $this->objects[$key] = $obj;
 
         return $this;
     }
@@ -141,7 +143,7 @@ class Collection implements CollectionInterface
     public function get($key)
     {
         if ($this->isAcceptable($key)) {
-            $key = $key->id();
+            $key = $this->modelKey($key);
         }
 
         if ($this->has($key)) {
@@ -160,7 +162,7 @@ class Collection implements CollectionInterface
     public function has($key)
     {
         if ($this->isAcceptable($key)) {
-            $key = $key->id();
+            $key = $this->modelKey($key);
         }
 
         return array_key_exists($key, $this->objects);
@@ -176,7 +178,7 @@ class Collection implements CollectionInterface
     public function remove($key)
     {
         if ($this->isAcceptable($key)) {
-            $key = $key->id();
+            $key = $this->modelKey($key);
         }
 
         unset($this->objects[$key]);
@@ -421,6 +423,29 @@ class Collection implements CollectionInterface
     public function isAcceptable($value)
     {
         return ($value instanceof ModelInterface);
+    }
+
+    /**
+     * Convert a given object into a model identifier.
+     *
+     * Note: Practical for specialized collections extending the base collection.
+     *
+     * @param  object $obj An acceptable object.
+     * @throws InvalidArgumentException If the given object is not acceptable.
+     * @return boolean
+     */
+    protected function modelKey($obj)
+    {
+        if (!$this->isAcceptable($obj)) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'Must be a model, received %s',
+                    (is_object($obj) ? get_class($obj) : gettype($obj))
+                )
+            );
+        }
+
+        return $obj->id();
     }
 
     /**
