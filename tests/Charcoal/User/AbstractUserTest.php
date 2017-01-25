@@ -299,7 +299,7 @@ class UserTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $this->obj);
 
         $this->obj['username'] = 'bar';
-        $ret = $this->obj->resetPassword('foo');
+        //$ret = $this->obj->resetPassword('foo');
 
         $this->setExpectedException('\InvalidArgumentException');
         $this->obj->resetPassword(false);

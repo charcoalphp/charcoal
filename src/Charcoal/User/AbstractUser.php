@@ -526,7 +526,6 @@ abstract class AbstractUser extends Content implements
 
         // Inactive users can not authenticate
         if (!$user->id() || !$user->username() || !$user->active()) {
-            // @todo log error
             return null;
         }
 
