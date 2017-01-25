@@ -14,6 +14,8 @@ use \Charcoal\Factory\FactoryInterface;
 use \Charcoal\App\AppConfig;
 
 use \Charcoal\View\GenericView;
+use \Charcoal\View\Php\PhpEngine;
+use \Charcoal\View\Php\PhpLoader;
 
 use \Charcoal\Model\ServiceProvider\ModelServiceProvider;
 use \Charcoal\Model\Service\ModelBuilder;
@@ -52,19 +54,28 @@ class ModelServiceProviderTest extends \PHPUnit_Framework_TestCase
     {
         $container = new Container();
 
-        $container['cache']     = new VoidCachePool();
-        $container['config']    = new AppConfig([
-            'metadata' =>   [
-                'paths' =>      []
+        $container['cache']  = new VoidCachePool();
+        $container['config'] = new AppConfig([
+            'metadata'  => [
+                'paths' => []
             ]
         ]);
-        $container['database']  = new PDO('sqlite::memory:');
-        $container['logger']    = new NullLogger();
-        $container['view']      = new GenericView([
-            'logger' => new NullLogger(),
-            'config' => [
+        $container['database'] = new PDO('sqlite::memory:');
+        $container['logger']   = new NullLogger();
 
-            ]
+        $container['view/loader'] = new PhpLoader([
+            'logger'    => $container['logger'],
+            'base_path' => dirname(__DIR__),
+            'paths'     => [ 'views' ]
+        ]);
+        $container['view/engine'] = new PhpEngine([
+            'logger' => $container['logger'],
+            'loader' => $container['view/loader']
+        ]);
+
+        $container['view'] = new GenericView([
+            'logger' => $container['logger'],
+            'engine' => $container['view/engine']
         ]);
         return $container;
     }
