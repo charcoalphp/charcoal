@@ -355,11 +355,11 @@ class AuthToken extends AbstractModel
 
         if ($this->username) {
             $table = $this->source()->table();
-            $q = '
+            $q = sprintf('
             delete from
-                '.$table.'
+                `%s`
             where
-                username = :username';
+                username = :username', $table);
             $this->source()->dbQuery($q, [
                 'username'=>$this->username()
             ]);

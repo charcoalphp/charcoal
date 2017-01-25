@@ -57,7 +57,7 @@ class Manager implements LoggerAwareInterface
         // Quick-and-dirty sanitization
         $table = preg_replace('/[^A-Za-z0-9_]/', '', $table);
 
-        $q = '
+        $q = sprintf('
             SELECT
                 `ident`,
                 `parent`,
@@ -65,9 +65,9 @@ class Manager implements LoggerAwareInterface
                 `allowed`,
                 `superuser`
             FROM
-                `'.$table.'`
+                `%s`
             ORDER BY
-                `position` ASC';
+                `position` ASC', $table);
 
         $this->logger->debug($q);
 
