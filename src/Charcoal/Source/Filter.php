@@ -134,13 +134,7 @@ class Filter implements FilterInterface
      */
     public function setVal($val)
     {
-        if ($val instanceof \DateTimeInterface) {
-            $val = $val->format('Y-m-d H:i:s');
-        } elseif ($val instanceof \Charcoal\Property\DateTimeProperty) {
-            $val = $val->storageVal($this->val());
-        }
-
-        $this->val = $val;
+        $this->val = $this->parseVal($val);
 
         return $this;
     }
@@ -151,6 +145,29 @@ class Filter implements FilterInterface
     public function val()
     {
         return $this->val;
+    }
+
+    /**
+     * Parse the given value.
+     *
+     * @param  mixed $val The value to be parsed (normalized).
+     * @return mixed Returns the parsed value.
+     */
+    public function parseVal($val)
+    {
+        if ($val instanceof \DateTimeInterface) {
+            $val = $val->format('Y-m-d H:i:s');
+        } elseif ($val instanceof \Charcoal\Property\DateTimeProperty) {
+            $val = $val->storageVal($this->val());
+        } elseif (is_string($val)) {
+            if ($val === 'true') {
+                $val = true;
+            } elseif ($val === 'false') {
+                $val = false;
+            }
+        }
+
+        return $val;
     }
 
     /**

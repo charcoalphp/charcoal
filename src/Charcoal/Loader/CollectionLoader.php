@@ -332,10 +332,10 @@ class CollectionLoader implements LoggerAwareInterface
             $properties = [];
         }
 
-        foreach ($properties as $property_ident) {
+        foreach ($properties as $propertyIdent) {
             $val = ('%'.$keyword.'%');
             $this->addFilter([
-                'property' => $property_ident,
+                'property' => $propertyIdent,
                 'val'      => $val,
                 'operator' => 'LIKE',
                 'operand'  => 'OR'
