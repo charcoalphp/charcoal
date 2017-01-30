@@ -51,8 +51,8 @@ class AssetsHelpers implements HelpersInterface
             'js' => function() {
                 return $this->js();
             },
-            'addJsRequirement' => function($js) {
-                return $this->addJsRequirement($js);
+            'addJsRequirement' => function($js, LambdaHelper $helper) {
+                return $this->addJsRequirement($js, $helper);
             },
             'jsRequirements' => function() {
                 return $this->jsRequirements();
@@ -63,8 +63,8 @@ class AssetsHelpers implements HelpersInterface
             'css' => function() {
                 return $this->css();
             },
-            'addCssRequirement' => function($css) {
-                return $this->addCssRequirement($css);
+            'addCssRequirement' => function($css, LambdaHelper $helper) {
+                return $this->addCssRequirement($css, $helper);
             },
             'cssRequirements' => function() {
                 return $this->cssRequirements();
@@ -106,15 +106,21 @@ class AssetsHelpers implements HelpersInterface
      *
      * Must include `<script>` surrounding element.
      *
-     * @param string $js The JavaScript requirements.
+     * @param string       $js     The JavaScript to add.
+     * @param LambdaHelper $helper For rendering strings in the current context.
      * @return void
      */
-    public function addJsRequirement($js)
+    public function addJsRequirement($js, LambdaHelper $helper = null)
     {
-        $js = trim($js);
+        $js  = trim($js);
+        $key = md5($js);
 
-        if (!in_array($js, self::$jsRequirements)) {
-            self::$jsRequirements[] = $js;
+        if (!isset(self::$jsRequirements[$key])) {
+            if ($helper !== null) {
+                $js = $helper->render($js);
+            }
+
+            self::$jsRequirements[$key] = $js;
         }
     }
 
@@ -162,15 +168,23 @@ class AssetsHelpers implements HelpersInterface
     /**
      * Enqueue an external CSS file.
      *
-     * Must include `<link>` surrounding element.
+     * Must include `<link />` or surrounding `<style>` element.
      *
-     * @param string $css The CSS requirements.
+     * @param string       $css    The CSS requirements.
+     * @param LambdaHelper $helper For rendering strings in the current context.
      * @return void
      */
-    public function addCssRequirement($css)
+    public function addCssRequirement($css, LambdaHelper $helper = null)
     {
-        if (!in_array($css, self::$cssRequirements)) {
-            self::$cssRequirements[] = $css;
+        $css = trim($css);
+        $key = md5($css);
+
+        if (!isset(self::$cssRequirements[$key])) {
+            if ($helper !== null) {
+                $css = $helper->render($css);
+            }
+
+            self::$cssRequirements[$key] = $css;
         }
     }
 
