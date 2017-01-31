@@ -17,7 +17,7 @@ class Role extends AbstractModel
     const SEPARATOR = ',';
 
     /**
-     * @var string $ident
+     * @var string|null $ident
      */
     public $ident;
 
@@ -61,12 +61,15 @@ class Role extends AbstractModel
      */
     public function __toString()
     {
-        return (string)$this->ident;
+        if ($this->ident === null) {
+            return '';
+        }
+        return $this->ident;
     }
 
     /**
-     * @param string $parent Role's parent.
-     * @return AclRole Chainable
+     * @param string|Role $parent Role's parent.
+     * @return Role Chainable
      */
     public function setParent($parent)
     {
@@ -85,7 +88,7 @@ class Role extends AbstractModel
     /**
      * @param string[]|string|null $allowed The allowed permissions for this role.
      * @throws InvalidArgumentException If the passed arguments is not an array, null, or a comma-separated string.
-     * @return AclRole Chainable
+     * @return Role Chainable
      */
     public function setAllowed($allowed)
     {
@@ -118,7 +121,7 @@ class Role extends AbstractModel
     /**
      * @param string[]|string|null $denied The denied permissions for this role.
      * @throws InvalidArgumentException If the passed arguments is not an array, null, or a comma-separated string.
-     * @return AclRole Chainable
+     * @return Role Chainable
      */
     public function setDenied($denied)
     {
@@ -150,7 +153,7 @@ class Role extends AbstractModel
 
     /**
      * @param boolean $isSuper The superuser flag.
-     * @return AclRole Chainable
+     * @return Role Chainable
      */
     public function setSuperuser($isSuper)
     {
@@ -167,8 +170,8 @@ class Role extends AbstractModel
     }
 
     /**
-     * @param integer $position The role's ordering position.
-     * @return AclRole Chainable
+     * @param integer|string|null $position The role's ordering position.
+     * @return Role Chainable
      */
     public function setPosition($position)
     {

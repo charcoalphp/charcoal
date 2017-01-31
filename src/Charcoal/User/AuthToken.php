@@ -35,19 +35,19 @@ class AuthToken extends AbstractModel
     private $username;
 
     /**
-     * @var DatetimeInterface
+     * @var DateTimeInterface|null
      */
     private $expiry;
 
     /**
      * Token creation date (set automatically on save)
-     * @var DateTimeInterface
+     * @var DateTimeInterface|null
      */
     private $created;
 
     /**
      * Token last modified date (set automatically on save and update)
-     * @var DateTimeInterface
+     * @var DateTimeInterface|null
      */
     private $lastModified;
 
@@ -101,7 +101,7 @@ class AuthToken extends AbstractModel
      *
      * @param string $username The username (also the login name).
      * @throws InvalidArgumentException If the username is not a string.
-     * @return User Chainable
+     * @return AuthToken Chainable
      */
     public function setUsername($username)
     {
@@ -125,7 +125,7 @@ class AuthToken extends AbstractModel
     /**
      * @param DateTimeInterface|string|null $expiry The date/time at object's creation.
      * @throws InvalidArgumentException If the date/time is invalid.
-     * @return Content Chainable
+     * @return AuthToken Chainable
      */
     public function setExpiry($expiry)
     {
@@ -156,7 +156,7 @@ class AuthToken extends AbstractModel
     /**
      * @param DateTimeInterface|string|null $created The date/time at object's creation.
      * @throws InvalidArgumentException If the date/time is invalid.
-     * @return Content Chainable
+     * @return AuthToken Chainable
      */
     public function setCreated($created)
     {
@@ -187,7 +187,7 @@ class AuthToken extends AbstractModel
     /**
      * @param DateTimeInterface|string|null $lastModified The last modified date/time.
      * @throws InvalidArgumentException If the date/time is invalid.
-     * @return Content Chainable
+     * @return AuthToken Chainable
      */
     public function setLastModified($lastModified)
     {
@@ -278,7 +278,7 @@ class AuthToken extends AbstractModel
     }
 
     /**
-     * @return array `['ident'=>'', 'token'=>'']
+     * @return array|null `['ident'=>'', 'token'=>'']
      */
     public function getTokenDataFromCookie()
     {
@@ -370,7 +370,7 @@ class AuthToken extends AbstractModel
      * DescribableTrait > create_metadata().
      *
      * @param array $data Optional data to intialize the Metadata object with.
-     * @return MetadataInterface
+     * @return AuthTokenMetadata
      */
     protected function createMetadata(array $data = null)
     {

@@ -22,7 +22,7 @@ class Permission extends AbstractModel implements CategorizableInterface
     use CategorizableTrait;
 
     /**
-     * @var string $ident
+     * @var string|null $ident
      */
     private $ident;
 
@@ -38,7 +38,10 @@ class Permission extends AbstractModel implements CategorizableInterface
      */
     public function __toString()
     {
-        return (string)$this->ident;
+        if ($this->ident === null) {
+            return '';
+        }
+        return $this->ident;
     }
 
     /**

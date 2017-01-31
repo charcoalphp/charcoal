@@ -22,7 +22,7 @@ class PermissionCategory extends Content implements CategoryInterface
 
     /**
      * @param mixed $name The news category name (localized).
-     * @return NewsCategory Chainable
+     * @return PermissionCategory Chainable
      */
     public function setName($name)
     {

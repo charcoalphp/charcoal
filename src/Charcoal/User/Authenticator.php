@@ -77,7 +77,7 @@ class Authenticator implements LoggerAwareInterface
      *
      * @param string $type The user object type.
      * @throws InvalidArgumentException If the user object type parameter is not a string.
-     * @return AdminAuthenticator Chainable
+     * @return Authenticator Chainable
      */
     private function setUserType($type)
     {

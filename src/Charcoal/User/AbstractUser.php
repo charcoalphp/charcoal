@@ -66,7 +66,7 @@ abstract class AbstractUser extends Content implements
     private $lastLoginDate;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $lastLoginIp;
 
@@ -77,14 +77,14 @@ abstract class AbstractUser extends Content implements
     private $lastPasswordDate;
 
     /**
-     * @var string $lastPasswordIp
+     * @var string|null $lastPasswordIp
      */
     private $lastPasswordIp;
 
     /**
      * If the login token is set (not empty), then the user should be prompted to
      * reset his password after login / enter the token to continue
-     * @var string $loginToken
+     * @var string|null $loginToken
      */
     private $loginToken = '';
 
@@ -103,7 +103,7 @@ abstract class AbstractUser extends Content implements
      *
      * @param string $username The username (also the login name).
      * @throws InvalidArgumentException If the username is not a string.
-     * @return User Chainable
+     * @return UserInterface Chainable
      */
     public function setUsername($username)
     {
@@ -127,7 +127,7 @@ abstract class AbstractUser extends Content implements
     /**
      * @param string $email The user email.
      * @throws InvalidArgumentException If the email is not a string.
-     * @return User Chainable
+     * @return UserInterface Chainable
      */
     public function setEmail($email)
     {
@@ -179,7 +179,7 @@ abstract class AbstractUser extends Content implements
     /**
      * @param string|string[]|null $roles The ACL roles this user belongs to.
      * @throws InvalidArgumentException If the roles argument is invalid.
-     * @return AbstractUser Chainable
+     * @return UserInterface Chainable
      */
     public function setRoles($roles)
     {
@@ -210,7 +210,7 @@ abstract class AbstractUser extends Content implements
     /**
      * @param string|DateTimeInterface|null $lastLoginDate The last login date.
      * @throws InvalidArgumentException If the ts is not a valid date/time.
-     * @return AbstractUser Chainable
+     * @return UserInterface Chainable
      */
     public function setLastLoginDate($lastLoginDate)
     {

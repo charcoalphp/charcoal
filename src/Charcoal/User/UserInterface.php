@@ -53,6 +53,18 @@ interface UserInterface extends ContentInterface
     public function password();
 
     /**
+     * @param string|string[]|null $roles The ACL roles this user belongs to.
+     * @throws InvalidArgumentException If the roles argument is invalid.
+     * @return UserInterface Chainable
+     */
+    public function setRoles($roles);
+
+    /**
+     * @return string[]
+     */
+    public function roles();
+
+    /**
      * @param boolean $active The active flag.
      * @return UserInterface Chainable
      */
@@ -64,13 +76,13 @@ interface UserInterface extends ContentInterface
     public function active();
 
     /**
-     * @param string|DateTime $ts The last login date.
+     * @param string|\DateTimeInterface $ts The last login date.
      * @return UserInterface Chainable
      */
     public function setLastLoginDate($ts);
 
     /**
-     * @return DateTime
+     * @return \DateTimeInterface|null
      */
     public function lastLoginDate();
 
@@ -87,13 +99,13 @@ interface UserInterface extends ContentInterface
     public function lastLoginIp();
 
     /**
-     * @param string|DateTime $ts The last password date.
+     * @param string|\DateTimeInterface $ts The last password date.
      * @return UserInterface Chainable
      */
     public function setLastPasswordDate($ts);
 
     /**
-     * @return DateTime
+     * @return \DateTimeInterface|null
      */
     public function lastPasswordDate();
 
