@@ -65,7 +65,6 @@ class AssetsHelpers implements HelpersInterface
             },
             'addCssRequirement' => function($css, LambdaHelper $helper) {
                 $this->addCssRequirement($css, $helper);
-
             },
             'cssRequirements' => function() {
                 return $this->cssRequirements();
