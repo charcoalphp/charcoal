@@ -46,25 +46,26 @@ class AssetsHelpers implements HelpersInterface
     {
         return [
             'addJs' => function($js, LambdaHelper $helper) {
-                return $this->addJs($js, $helper);
+                $this->addJs($js, $helper);
             },
             'js' => function() {
                 return $this->js();
             },
             'addJsRequirement' => function($js, LambdaHelper $helper) {
-                return $this->addJsRequirement($js, $helper);
+                $this->addJsRequirement($js, $helper);
             },
             'jsRequirements' => function() {
                 return $this->jsRequirements();
             },
             'addCss' => function($css, LambdaHelper $helper) {
-                return $this->addCss($css, $helper);
+                $this->addCss($css, $helper);
             },
             'css' => function() {
                 return $this->css();
             },
             'addCssRequirement' => function($css, LambdaHelper $helper) {
-                return $this->addCssRequirement($css, $helper);
+                $this->addCssRequirement($css, $helper);
+
             },
             'cssRequirements' => function() {
                 return $this->cssRequirements();
