@@ -456,8 +456,10 @@ abstract class AbstractUser extends Content implements
             return false;
         }
 
-        $_SESSION[static::sessionKey()] = null;
-        unset($_SESSION[static::sessionKey()]);
+        $key = static::sessionKey();
+
+        $_SESSION[$key] = null;
+        unset($_SESSION[$key], static::$authenticatedUser[$key]);
 
         return true;
     }
