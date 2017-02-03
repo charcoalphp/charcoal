@@ -278,10 +278,10 @@ class AttachmentWidget extends AdminWidget implements
     /**
      * Set the widget's data.
      *
-     * @param array|Traversable $data The widget data.
+     * @param array $data The widget data.
      * @return self
      */
-    public function setData($data)
+    public function setData(array $data)
     {
         /**
          * @todo Kinda hacky, but works with the concept of form.
