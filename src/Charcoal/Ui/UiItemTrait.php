@@ -420,7 +420,7 @@ trait UiItemTrait
      */
     public function setShowFooter($show)
     {
-        $this->showFooger = !!$show;
+        $this->showFooter = !!$show;
 
         return $this;
     }
