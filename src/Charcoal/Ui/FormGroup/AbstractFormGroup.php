@@ -42,10 +42,10 @@ abstract class AbstractFormGroup extends AbstractUiItem implements
     }
 
     /**
-     * @param  array|\ArrayAccess $data Widget data.
+     * @param  array $data Widget data.
      * @return self
      */
-    public function setData($data)
+    public function setData(array $data)
     {
         if (isset($data['permissions'])) {
             $this->setRequiredAclPermissions($data['permissions']);
