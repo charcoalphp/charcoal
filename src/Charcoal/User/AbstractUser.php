@@ -37,7 +37,8 @@ abstract class AbstractUser extends Content implements
 
     /**
      * The username should be unique and mandatory.
-     * It is also used as login name and main identifier (key).
+     *
+     * It is also used as the login name and main identifier (key).
      *
      * @var string
      */
@@ -45,52 +46,65 @@ abstract class AbstractUser extends Content implements
 
     /**
      * The password is stored encrypted in the (database) storage.
-     * @var string $password
+     *
+     * @var string
      */
     private $password;
 
     /**
+     * The email address associated with the account.
+     *
      * @var string
      */
     private $email;
 
     /**
+     * Roles define a set of tasks a user is allowed or denied from performing.
+     *
      * @var string[]
      */
     private $roles = [];
 
     /**
-     * The date of the latest (successful) login
+     * The timestamp of the latest (successful) login.
+     *
      * @var DateTimeInterface|null
      */
     private $lastLoginDate;
 
     /**
+     * The IP address during the latest (successful) login.
+     *
      * @var string|null
      */
     private $lastLoginIp;
 
     /**
-     * The date of the latest password change
+     * The timestamp of the latest password change.
+     *
      * @var DateTimeInterface|null
      */
     private $lastPasswordDate;
 
     /**
-     * @var string|null $lastPasswordIp
+     * The IP address during the latest password change.
+     *
+     * @var string|nul
      */
     private $lastPasswordIp;
 
     /**
-     * If the login token is set (not empty), then the user should be prompted to
-     * reset his password after login / enter the token to continue
-     * @var string|null $loginToken
+     * Tracks the password reset token.
+     *
+     * If the token is set (not empty), then the user should be prompted
+     * to reset his password after login / enter the token to continue.
+     *
+     * @var string|null
      */
     private $loginToken = '';
 
     /**
-     * IndexableTrait > key()
-     *
+     * @see    \Charcoal\Source\StorableTrait::key()
      * @return string
      */
     public function key()
@@ -101,7 +115,7 @@ abstract class AbstractUser extends Content implements
     /**
      * Force a lowercase username
      *
-     * @param string $username The username (also the login name).
+     * @param  string $username The username (also the login name).
      * @throws InvalidArgumentException If the username is not a string.
      * @return UserInterface Chainable
      */
@@ -112,7 +126,9 @@ abstract class AbstractUser extends Content implements
                 'Set user username: Username must be a string'
             );
         }
+
         $this->username = mb_strtolower($username);
+
         return $this;
     }
 
@@ -125,7 +141,7 @@ abstract class AbstractUser extends Content implements
     }
 
     /**
-     * @param string $email The user email.
+     * @param  string $email The user email.
      * @throws InvalidArgumentException If the email is not a string.
      * @return UserInterface Chainable
      */
@@ -136,7 +152,9 @@ abstract class AbstractUser extends Content implements
                 'Set user email: Email must be a string'
             );
         }
+
         $this->email = $email;
+
         return $this;
     }
 
@@ -149,7 +167,7 @@ abstract class AbstractUser extends Content implements
     }
 
     /**
-     * @param string|null $password The user password. Encrypted in storage.
+     * @param  string|null $password The user password. Encrypted in storage.
      * @throws InvalidArgumentException If the password is not a string (or null, to reset).
      * @return UserInterface Chainable
      */
@@ -177,25 +195,29 @@ abstract class AbstractUser extends Content implements
     }
 
     /**
-     * @param string|string[]|null $roles The ACL roles this user belongs to.
+     * @param  string|string[]|null $roles The ACL roles this user belongs to.
      * @throws InvalidArgumentException If the roles argument is invalid.
      * @return UserInterface Chainable
      */
     public function setRoles($roles)
     {
-        if ($roles === null) {
+        if (empty($roles) && !is_numeric($roles)) {
             $this->roles = [];
             return $this;
         }
+
         if (is_string($roles)) {
             $roles = explode(',', $roles);
         }
+
         if (!is_array($roles)) {
             throw new InvalidArgumentException(
                 'Roles must be a comma-separated string or an array'
             );
         }
-        $this->roles = array_map('trim', $roles);
+
+        $this->roles = array_filter(array_map('trim', $roles), 'strlen');
+
         return $this;
     }
 
@@ -208,7 +230,7 @@ abstract class AbstractUser extends Content implements
     }
 
     /**
-     * @param string|DateTimeInterface|null $lastLoginDate The last login date.
+     * @param  string|DateTimeInterface|null $lastLoginDate The last login date.
      * @throws InvalidArgumentException If the ts is not a valid date/time.
      * @return UserInterface Chainable
      */
@@ -218,21 +240,26 @@ abstract class AbstractUser extends Content implements
             $this->lastLoginDate = null;
             return $this;
         }
+
         if (is_string($lastLoginDate)) {
             try {
                 $lastLoginDate = new DateTime($lastLoginDate);
             } catch (Exception $e) {
-                throw new InvalidArgumentException(
-                    sprintf('Invalid login date (%s)', $e->getMessage())
-                );
+                throw new InvalidArgumentException(sprintf(
+                    'Invalid login date (%s)',
+                    $e->getMessage()
+                ));
             }
         }
+
         if (!($lastLoginDate instanceof DateTimeInterface)) {
             throw new InvalidArgumentException(
                 'Invalid "Last Login Date" value. Must be a date/time string or a DateTime object.'
             );
         }
+
         $this->lastLoginDate = $lastLoginDate;
+
         return $this;
     }
 
@@ -245,7 +272,7 @@ abstract class AbstractUser extends Content implements
     }
 
     /**
-     * @param string|integer|null $ip The last login IP address.
+     * @param  string|integer|null $ip The last login IP address.
      * @throws InvalidArgumentException If the IP is not an IP string, an integer, or null.
      * @return UserInterface Chainable
      */
@@ -255,19 +282,25 @@ abstract class AbstractUser extends Content implements
             $this->lastLoginIp = null;
             return $this;
         }
+
         if (is_int($ip)) {
             $ip = long2ip($ip);
         }
+
         if (!is_string($ip)) {
             throw new InvalidArgumentException(
                 'Invalid IP address'
             );
         }
+
         $this->lastLoginIp = $ip;
+
         return $this;
     }
+
     /**
      * Get the last login IP in x.x.x.x format
+     *
      * @return string
      */
     public function lastLoginIp()
@@ -276,7 +309,7 @@ abstract class AbstractUser extends Content implements
     }
 
     /**
-     * @param string|DateTimeInterface|null $lastPasswordDate The last password date.
+     * @param  string|DateTimeInterface|null $lastPasswordDate The last password date.
      * @throws InvalidArgumentException If the passsword date is not a valid DateTime.
      * @return UserInterface Chainable
      */
@@ -286,21 +319,26 @@ abstract class AbstractUser extends Content implements
             $this->lastPasswordDate = null;
             return $this;
         }
+
         if (is_string($lastPasswordDate)) {
             try {
                 $lastPasswordDate = new DateTime($lastPasswordDate);
             } catch (Exception $e) {
-                throw new InvalidArgumentException(
-                    sprintf('Invalid last password date (%s)', $e->getMessage())
-                );
+                throw new InvalidArgumentException(sprintf(
+                    'Invalid last password date (%s)',
+                    $e->getMessage()
+                ));
             }
         }
+
         if (!($lastPasswordDate instanceof DateTimeInterface)) {
             throw new InvalidArgumentException(
                 'Invalid "Last Password Date" value. Must be a date/time string or a DateTime object.'
             );
         }
+
         $this->lastPasswordDate = $lastPasswordDate;
+
         return $this;
     }
 
@@ -313,7 +351,7 @@ abstract class AbstractUser extends Content implements
     }
 
     /**
-     * @param integer|string|null $ip The last password IP.
+     * @param  integer|string|null $ip The last password IP.
      * @throws InvalidArgumentException If the IP is not null, an integer or an IP string.
      * @return UserInterface Chainable
      */
@@ -323,17 +361,22 @@ abstract class AbstractUser extends Content implements
             $this->lastPasswordIp = null;
             return $this;
         }
+
         if (is_int($ip)) {
             $ip = long2ip($ip);
         }
+
         if (!is_string($ip)) {
             throw new InvalidArgumentException(
                 'Invalid IP address'
             );
         }
+
         $this->lastPasswordIp = $ip;
+
         return $this;
     }
+
     /**
      * Get the last password change IP in x.x.x.x format
      *
@@ -345,7 +388,7 @@ abstract class AbstractUser extends Content implements
     }
 
     /**
-     * @param string $token The login token.
+     * @param  string $token The login token.
      * @throws InvalidArgumentException If the token is not a string.
      * @return UserInterface Chainable
      */
@@ -355,12 +398,15 @@ abstract class AbstractUser extends Content implements
             $this->loginToken = null;
             return $this;
         }
+
         if (!is_string($token)) {
             throw new InvalidArgumentException(
                 'Login Token must be a string'
             );
         }
+
         $this->loginToken = $token;
+
         return $this;
     }
 
@@ -383,7 +429,9 @@ abstract class AbstractUser extends Content implements
                 'Can not set auth user; no user ID'
             );
         }
+
         $_SESSION[static::sessionKey()] = $this->id();
+
         return $this;
     }
 
@@ -405,7 +453,8 @@ abstract class AbstractUser extends Content implements
         if ($ip) {
             $this->setLastLoginIp($ip);
         }
-        $this->update(['last_login_ip', 'last_login_date']);
+
+        $this->update([ 'last_login_ip', 'last_login_date' ]);
 
         $this->saveToSession();
 
@@ -492,7 +541,7 @@ abstract class AbstractUser extends Content implements
         }
 
         if ($this->id()) {
-            $this->update(['password', 'last_password_date', 'last_password_ip']);
+            $this->update([ 'password', 'last_password_date', 'last_password_ip' ]);
         }
 
         return $this;
@@ -503,7 +552,7 @@ abstract class AbstractUser extends Content implements
      *
      * Return null if there is no current user in logged into
      *
-     * @param FactoryInterface $factory The factory to create the user object with.
+     * @param  FactoryInterface $factory The factory to create the user object with.
      * @throws Exception If the user from session is invalid.
      * @return UserInterface|null
      */
