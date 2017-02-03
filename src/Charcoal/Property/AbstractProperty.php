@@ -581,6 +581,16 @@ abstract class AbstractProperty extends AbstractEntity implements
     }
 
     /**
+     * Output the property multiple options as json.
+     *
+     * @return string
+     */
+    public function multipleOptionsAsJson()
+    {
+        return json_encode($this->multipleOptions());
+    }
+
+    /**
      * Retrieve the default settings for a multi-value property.
      *
      * @return array
