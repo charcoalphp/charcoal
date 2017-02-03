@@ -260,6 +260,7 @@ abstract class AbstractConfig extends AbstractEntity implements
      * Add a YAML file to the configuration
      *
      * @param string $filename A YAML configuration file.
+     * @throws InvalidArgumentException If the YAML file can not correctly be parsed into an array.
      * @return AbstractConfig Chainable
      */
     private function loadYamlFile($filename)
@@ -267,6 +268,11 @@ abstract class AbstractConfig extends AbstractEntity implements
         $parser = new YamlParser();
         $fileContent = file_get_contents($filename);
         $config = $parser->parse($fileContent);
+        if (!is_array($config)) {
+            throw new InvalidArgumentException(
+                sprintf('YAML file "%s" could not be parsed (invalid yaml)', $filename)
+            );
+        }
         return $config;
     }
 }
