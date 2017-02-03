@@ -159,7 +159,7 @@ class ModelServiceProvider implements ServiceProviderInterface
                     'base_class'       => PropertyInterface::class,
                     'default_class'    => GenericProperty::class,
                     'resolver_options' => [
-                        'prefix' => '\Charcoal\Property\\',
+                        'prefix' => '\\Charcoal\\Property\\',
                         'suffix' => 'Property'
                     ],
                     'arguments' => [[
