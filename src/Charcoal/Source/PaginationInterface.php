@@ -8,10 +8,10 @@ namespace Charcoal\Source;
 interface PaginationInterface
 {
     /**
-     * @param array|\ArrayAcess $data The pagination data (page, num_per_page).
+     * @param array $data The pagination data (page, num_per_page).
      * @return Pagination Chainable
      */
-    public function setData($data);
+    public function setData(array $data);
 
     /**
      * @param integer $page The current page. Starts at 0.

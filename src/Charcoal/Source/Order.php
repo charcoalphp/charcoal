@@ -61,10 +61,10 @@ class Order implements OrderInterface
     protected $active = true;
 
     /**
-     * @param array|\ArrayAccess $data The order data.
+     * @param array $data The order data.
      * @return Order Chainable
      */
-    public function setData($data)
+    public function setData(array $data)
     {
         if (isset($data['property'])) {
             $this->setProperty($data['property']);

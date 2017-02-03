@@ -81,9 +81,9 @@ class CollectionLoader implements LoggerAwareInterface
     /**
      * Return a new CollectionLoader object.
      *
-     * @param array|\ArrayAccess $data The loader's dependencies.
+     * @param array $data The loader's dependencies.
      */
-    public function __construct($data)
+    public function __construct(array $data)
     {
         if (!isset($data['logger'])) {
             $data['logger'] = new NullLogger();

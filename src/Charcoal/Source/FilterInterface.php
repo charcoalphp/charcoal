@@ -5,10 +5,10 @@ namespace Charcoal\Source;
 interface FilterInterface
 {
     /**
-     * @param array|\ArrayAccess $data The filter data.
+     * @param array $data The filter data.
      * @return Filter Chainable
      */
-    public function setData($data);
+    public function setData(array $data);
 
     /**
      * @param boolean $active The active flag.

@@ -145,10 +145,10 @@ abstract class AbstractModel extends AbstractEntity implements
     /**
      * Sets the object data, from an associative array map (or any other Traversable).
      *
-     * @param array|\Traversable $data The entity data. Will call setters.
+     * @param array $data The entity data. Will call setters.
      * @return AbstractModel Chainable
      */
-    public function setData($data)
+    public function setData(array $data)
     {
         $data = $this->setIdFromData($data);
 

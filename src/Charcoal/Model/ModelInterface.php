@@ -8,10 +8,10 @@ namespace Charcoal\Model;
 interface ModelInterface
 {
     /**
-     * @param array|\ArrayAccess $data The model data.
+     * @param array $data The model data.
      * @return ModelInterface Chainable
      */
-    public function setData($data);
+    public function setData(array $data);
 
     /**
      * @return array

@@ -58,10 +58,10 @@ class Filter implements FilterInterface
     protected $active;
 
     /**
-     * @param array|\ArrayAccess $data The filter data.
+     * @param array $data The filter data.
      * @return Filter Chainable
      */
-    public function setData($data)
+    public function setData(array $data)
     {
         if (isset($data['property'])) {
             $this->setProperty($data['property']);

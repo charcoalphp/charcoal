@@ -32,10 +32,10 @@ trait DescribableTrait
     /**
      * Describable object needs to have a `setData()` method
      *
-     * @param array|\Traversable $data The object's data.
+     * @param array $data The object's data.
      * @return DescribableInterface Chainable
      */
-    abstract public function setData($data);
+    abstract public function setData(array $data);
 
     /**
      * @param MetadataLoader $loader The loader instance, used to load metadata.

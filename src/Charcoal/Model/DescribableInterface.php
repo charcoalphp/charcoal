@@ -13,10 +13,10 @@ use \Charcoal\Model\Service\MetadataLoader;
 interface DescribableInterface
 {
     /**
-     * @param array|Traversable $data The object data.
+     * @param array $data The object data.
      * @return DescribableInterface Chainable
      */
-    public function setData($data);
+    public function setData(array $data);
 
     /**
      * @param MetadataLoader $loader The loader instance, used to load metadata.

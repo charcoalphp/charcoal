@@ -22,10 +22,10 @@ class Pagination implements PaginationInterface
     protected $numPerPage = self::DEFAULT_NUM_PER_PAGE;
 
     /**
-     * @param array|\ArrayAccess $data The pagination data (page, num_per_page).
+     * @param array $data The pagination data (page, num_per_page).
      * @return Pagination Chainable
      */
-    public function setData($data)
+    public function setData(array $data)
     {
         if (isset($data['page'])) {
             $this->setPage($data['page']);

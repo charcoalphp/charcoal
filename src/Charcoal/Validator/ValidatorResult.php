@@ -47,10 +47,10 @@ class ValidatorResult
     }
 
     /**
-     * @param array|\ArrayAccess $data The validator result data.
+     * @param array $data The validator result data.
      * @return ValidatorResult Chainable
      */
-    public function setData($data)
+    public function setData(array $data)
     {
         if (isset($data['ident'])) {
             $this->setIdent($data['ident']);
