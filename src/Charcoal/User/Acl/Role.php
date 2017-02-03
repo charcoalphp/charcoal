@@ -148,7 +148,7 @@ class Role extends AbstractModel
      */
     public function denied()
     {
-        return $this->denied();
+        return $this->denied;
     }
 
     /**
