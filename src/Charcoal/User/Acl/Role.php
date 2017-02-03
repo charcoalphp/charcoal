@@ -68,6 +68,14 @@ class Role extends AbstractModel
     }
 
     /**
+     * @return string
+     */
+    public function key()
+    {
+        return 'ident';
+    }
+
+    /**
      * @param string|Role $parent Role's parent.
      * @return Role Chainable
      */

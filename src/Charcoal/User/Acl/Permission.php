@@ -45,6 +45,14 @@ class Permission extends AbstractModel implements CategorizableInterface
     }
 
     /**
+     * @return string
+     */
+    public function key()
+    {
+        return 'ident';
+    }
+
+    /**
      * @param string $ident The permission identifier.
      * @throws InvalidArgumentException If the ident is not a string.
      * @return Permission Chainable

@@ -22,6 +22,24 @@ class PermissionTest extends PHPUnit_Framework_TestCase
         ]);
     }
 
+    public function testToString()
+    {
+        $this->assertEquals('', (string)$this->obj);
+        $this->obj->ident = 'foobar';
+        $this->assertEquals('foobar', (string)$this->obj);
+
+        $this->obj['ident'] = 'foo';
+        $this->assertEquals('foo', (string)$this->obj);
+    }
+
+    /**
+     * Assert that the object's key is the "ident" property.
+     */
+    public function testKey()
+    {
+        $this->assertEquals('ident', $this->obj->key());
+    }
+
     public function testSetIdent()
     {
         $ret = $this->obj->setIdent('foobar');

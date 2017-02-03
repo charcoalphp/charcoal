@@ -1,8 +1,15 @@
 <?php
 
-use \Charcoal\App\App;
-use \Charcoal\App\AppConfig;
-use \Charcoal\App\AppContainer;
+use PDO;
+
+use Cache\Adapter\Void\VoidCachePool;
+
+use Psr\Log\NullLogger;
+
+use Charcoal\App\App;
+use Charcoal\App\AppConfig;
+use Charcoal\App\AppContainer;
+
 
 // Composer autoloader for Charcoal's psr4-compliant Unit Tests
 $autoloader = require __DIR__.'/../vendor/autoload.php';
@@ -19,7 +26,7 @@ $config = new AppConfig([
 ]);
 $GLOBALS['container'] = new AppContainer([
     'config' => $config,
-    'cache'  => new \Stash\Pool(),
-    'logger' => new \Psr\Log\NullLogger(),
-    'database' => new \PDO('sqlite::memory:')
+    'cache'  => new VoidCachePool(),
+    'logger' => new NullLogger(),
+    'database' => new PDO('sqlite::memory:')
 ]);
