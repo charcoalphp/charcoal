@@ -129,11 +129,11 @@ abstract class AbstractEntity implements EntityInterface
      *
      * This function takes an array and fill the property with its value.
      *
-     * @param array|\Traversable $data The entity data. Will call setters.
+     * @param array $data The entity data. Will call setters.
      * @return EntityInterface Chainable
      * @see self::offsetSet()
      */
-    public function setData($data)
+    public function setData(array $data)
     {
         foreach ($data as $prop => $val) {
             $this[$prop] = $val;

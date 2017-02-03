@@ -34,10 +34,10 @@ interface EntityInterface extends
      *
      * This function takes an array and fill the property with its value.
      *
-     * @param array|\Traversable $data The entity data.
+     * @param array $data The entity data.
      * @return EntityInterface Chainable
      */
-    public function setData($data);
+    public function setData(array $data);
 
     /**
      * Returns true if the container can return an entry for the given identifier.
