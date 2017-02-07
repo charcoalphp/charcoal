@@ -40,7 +40,7 @@ class LocalesManagerTest extends PHPUnit_Framework_TestCase
             ],
             'default_language'=>'bar'
         ]);
-        $this->assertEquals('bar', $this->obj->currentLanguage());
+        $this->assertEquals('bar', $this->obj->currentLocale());
     }
 
     public function testConstructorInvalidDefaultLanguageThrowsException()
@@ -72,22 +72,22 @@ class LocalesManagerTest extends PHPUnit_Framework_TestCase
         $this->assertArrayNotHasKey('baz', $locales);
     }
 
-    public function testLanguages()
+    public function testAvailableLocales()
     {
-        $this->assertEquals(['foo','bar'], $this->obj->languages());
+        $this->assertEquals(['foo','bar'], $this->obj->availableLocales());
     }
 
-    public function testSetCurrentLanguage()
+    public function testSetCurrentLocale()
     {
-        $this->assertEquals('foo', $this->obj->currentLanguage());
+        $this->assertEquals('foo', $this->obj->currentLocale());
 
-        $this->obj->setCurrentLanguage('bar');
-        $this->assertEquals('bar', $this->obj->currentLanguage());
+        $this->obj->setCurrentLocale('bar');
+        $this->assertEquals('bar', $this->obj->currentLocale());
 
-        $this->obj->setCurrentLanguage(null);
-        $this->assertEquals('foo', $this->obj->currentLanguage());
+        $this->obj->setCurrentLocale(null);
+        $this->assertEquals('foo', $this->obj->currentLocale());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $this->obj->setCurrentLanguage('foobazbar');
+        $this->obj->setCurrentLocale('foobazbar');
     }
 }

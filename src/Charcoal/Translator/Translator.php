@@ -28,7 +28,7 @@ class Translator extends SymfonyTranslator
         $this->setManager($data['manager']);
 
         $defaults = [
-            'locale'            => $this->manager->currentLanguage(),
+            'locale'            => $this->manager->currentLocale(),
             'message_selector'  => null,
             'cache_dir'         => null,
             'debug'             => false
@@ -55,7 +55,7 @@ class Translator extends SymfonyTranslator
             return null;
         }
         $translation = new Translation($val, $this->manager);
-        foreach ($this->manager->languages() as $lang) {
+        foreach ($this->availableLocales() as $lang) {
             if (!isset($translation[$lang]) || $translation[$lang] == $val) {
                 $translation[$lang] = $this->trans($val, [], null, $lang);
             }
@@ -80,15 +80,32 @@ class Translator extends SymfonyTranslator
     }
 
     /**
+     * @return string[]
+     */
+    public function locales()
+    {
+        return $this->manager->locales();
+    }
+
+    /**
+     * @return string[]
+     */
+    public function availableLocales()
+    {
+        return $this->manager->availableLocales();
+    }
+
+        /**
      * Ensure that the `setLocale()` method also changes the locales manager's language.
      *
+     * @see SymfonyTranslator::setLocale()
      * @param string $locale The locale ident (language) to set.
      * @return void
      */
     public function setLocale($locale)
     {
         parent::setLocale($locale);
-        $this->manager->setCurrentLanguage($locale);
+        $this->manager->setCurrentLocale($locale);
     }
 
     /**

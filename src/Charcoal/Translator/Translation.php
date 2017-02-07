@@ -47,7 +47,7 @@ class Translation implements
      */
     public function __toString()
     {
-        $lang = $this->manager->currentLanguage();
+        $lang = $this->manager->currentLocale();
         return $this->val[$lang];
     }
 
@@ -172,7 +172,7 @@ class Translation implements
                 $this->addVal($lang, (string)$l10n);
             }
         } elseif (is_string($val)) {
-            $lang = $this->manager->currentLanguage();
+            $lang = $this->manager->currentLocale();
 
             $this->val[$lang] = $val;
         } else {

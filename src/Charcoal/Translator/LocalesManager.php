@@ -27,7 +27,7 @@ class LocalesManager
     /**
      * @var string|null
      */
-    private $currentLanguage;
+    private $currentLocale;
 
     /**
      * Create the Locales Manager with locales and optional options.
@@ -79,7 +79,7 @@ class LocalesManager
      *
      * @return string[]
      */
-    public function languages()
+    public function availableLocales()
     {
         return $this->languages;
     }
@@ -89,18 +89,18 @@ class LocalesManager
      * @throws InvalidArgumentException If the language is invalid.
      * @return void
      */
-    public function setCurrentLanguage($lang)
+    public function setCurrentLocale($lang)
     {
         if ($lang === null) {
-            $this->currentLanguage = null;
+            $this->currentLocale = null;
             return;
         }
-        if (!$this->hasLanguage($lang)) {
+        if (!$this->hasLocale($lang)) {
             throw new InvalidArgumentException(
-                sprintf('Invalid language. Must be one of "%s"', implode(', ', $this->languages()))
+                sprintf('Invalid language. Must be one of "%s"', implode(', ', $this->availableLocales()))
             );
         }
-        $this->currentLanguage = $lang;
+        $this->currentLocale = $lang;
     }
 
     /**
@@ -108,21 +108,21 @@ class LocalesManager
      *
      * @return string
      */
-    public function currentLanguage()
+    public function currentLocale()
     {
-        if ($this->currentLanguage === null) {
+        if ($this->currentLocale === null) {
             return $this->defaultLanguage;
         }
-        return $this->currentLanguage;
+        return $this->currentLocale;
     }
 
     /**
      * @param string $lang The language (code) to check.
      * @return boolean
      */
-    public function hasLanguage($lang)
+    public function hasLocale($lang)
     {
-        return in_array($lang, $this->languages());
+        return in_array($lang, $this->availableLocales());
     }
 
     /**

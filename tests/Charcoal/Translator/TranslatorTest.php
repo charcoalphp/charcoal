@@ -99,7 +99,19 @@ class TranslatorTest extends PHPUnit_Framework_TestCase
     public function testSetLocaleSetLanguageManagerCurrentLanguage()
     {
         $this->obj->setLocale('bar');
-        $this->assertEquals('bar', $this->languageManager->currentLanguage());
+        $this->assertEquals('bar', $this->languageManager->currentLocale());
+    }
+
+    public function testLocales()
+    {
+        $this->assertArrayHasKey('foo', $this->obj->locales());
+        $this->assertArrayHasKey('bar', $this->obj->locales());
+        $this->assertArrayNotHasKey('baz', $this->obj->locales());
+    }
+
+    public function testAvailableLocales()
+    {
+        $this->assertEquals(['foo', 'bar'], $this->obj->availableLocales());
     }
 
     /**
