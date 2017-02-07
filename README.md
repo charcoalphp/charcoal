@@ -157,10 +157,10 @@ To run the scripts (phplint, phpcs and phpunit):
 
 | Service | Badge | Description |
 | ------- | ----- | ----------- |
-| [Travis](https://travis-ci.org/locomotivemtl/charcoal-translator) | [![Build Status](https://travis-ci.org/locomotivemtl/charcoal-translator.svg?branch=master)](https://travis-ci.org/locomotivemtl/charcoal-object) | Runs code sniff check and unit tests. Auto-generates API documentation. |
+| [Travis](https://travis-ci.org/locomotivemtl/charcoal-translator) | [![Build Status](https://travis-ci.org/locomotivemtl/charcoal-translator.svg?branch=master)](https://travis-ci.org/locomotivemtl/charcoal-translator) | Runs code sniff check and unit tests. Auto-generates API documentation. |
 | [Scrutinizer](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-translator/) | [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-translator/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-translator/?branch=master) | Code quality checker. Also validates API documentation quality. |
 | [Coveralls](https://coveralls.io/github/locomotivemtl/charcoal-translator) | [![Coverage Status](https://coveralls.io/repos/github/locomotivemtl/charcoal-translator/badge.svg?branch=master)](https://coveralls.io/github/locomotivemtl/charcoal-translator?branch=master) | Unit Tests code coverage. |
-| [Sensiolabs](https://insight.sensiolabs.com/projects/5ef771c49-8c05-448b-a112-069737b380dc) | [![SensioLabsInsight](https://insight.sensiolabs.com/projects/ef771c49-8c05-448b-a112-069737b380dc/mini.png)](https://insight.sensiolabs.com/projects/ef771c49-8c05-448b-a112-069737b380dc) | Another code quality checker, focused on PHP. |
+| [Sensiolabs](https://insight.sensiolabs.com/projects/2758c820-e73a-4d0e-b746-552a3e3a92fa) | [![SensioLabsInsight](https://insight.sensiolabs.com/projects/2758c820-e73a-4d0e-b746-552a3e3a92fa/mini.png)](https://insight.sensiolabs.com/projects/2758c820-e73a-4d0e-b746-552a3e3a92fa) | Another code quality checker, focused on PHP. |
 
 ## Coding Style
 
