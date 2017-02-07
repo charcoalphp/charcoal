@@ -19,7 +19,8 @@ class UrlPropertyTest extends \PHPUnit_Framework_TestCase
     {
         $this->obj = new UrlProperty([
             'database'  => new PDO('sqlite::memory:'),
-            'logger'    => new NullLogger()
+            'logger'    => new NullLogger(),
+            'translator' => $GLOBALS['translator']
         ]);
     }
 

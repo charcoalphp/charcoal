@@ -2,8 +2,7 @@
 
 namespace Charcoal\Property;
 
-use \Charcoal\Translation\TranslationConfig;
-use \Charcoal\Translation\TranslationString;
+use \Charcoal\Translator\Translation;
 
 use \Charcoal\Property\PropertyField;
 
@@ -50,9 +49,7 @@ trait StorablePropertyTrait
         }
 
         if ($this->l10n()) {
-            $translator = TranslationConfig::instance();
-
-            foreach ($translator->availableLanguages() as $langCode) {
+            foreach ($this->translator()->availableLocales() as $langCode) {
                 $this->fields[$langCode]->setVal($this->fieldVal($langCode, $val));
             }
         } else {
@@ -72,11 +69,11 @@ trait StorablePropertyTrait
     {
         $this->fields = [];
         if ($this->l10n()) {
-            $translator = TranslationConfig::instance();
-
-            foreach ($translator->availableLanguages() as $langCode) {
+            foreach ($this->translator()->availableLocales() as $langCode) {
                 $ident = sprintf('%1$s_%2$s', $this->ident(), $langCode);
-                $field = new PropertyField();
+                $field = new PropertyField([
+                    'translator' => $this->translator()
+                ]);
                 $field->setData([
                     'ident'      => $ident,
                     'sqlType'    => $this->sqlType(),
@@ -89,7 +86,9 @@ trait StorablePropertyTrait
                 $this->fields[$langCode] = $field;
             }
         } else {
-            $field = new PropertyField();
+            $field = new PropertyField([
+                'translator' => $this->translator()
+            ]);
             $field->setData([
                 'ident'      => $this->ident(),
                 'sqlType'    => $this->sqlType(),
@@ -142,7 +141,7 @@ trait StorablePropertyTrait
             return null;
         }
 
-        if (!$this->l10n() && $val instanceof TranslationString) {
+        if (!$this->l10n() && $val instanceof Translation) {
             $val = (string)$val;
         }
 
@@ -193,4 +192,9 @@ trait StorablePropertyTrait
      * @return boolean
      */
     abstract public function allowNull();
+
+    /**
+     * @return \Charcoal\Translator\Translator
+     */
+    abstract protected function translator();
 }

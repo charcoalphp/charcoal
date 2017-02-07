@@ -23,7 +23,8 @@ class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
     {
         $this->obj = $this->getMockForAbstractClass(AbstractProperty::class, [[
             'database' => new PDO('sqlite::memory:'),
-            'logger' => new NullLogger()
+            'logger' => new NullLogger(),
+            'translator' => $GLOBALS['translator']
         ]]);
     }
 

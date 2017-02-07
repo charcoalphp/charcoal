@@ -16,7 +16,8 @@ class PropertyFieldTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->obj = new PropertyField([
-            'logger' => new NullLogger()
+            'logger' => new NullLogger(),
+            'translator' => $GLOBALS['translator']
         ]);
     }
 

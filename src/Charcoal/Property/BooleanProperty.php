@@ -6,7 +6,6 @@ use \InvalidArgumentException;
 use \PDO;
 
 use \Charcoal\Property\AbstractProperty;
-use \Charcoal\Translation\TranslationString;
 
 /**
  * Boolean Property
@@ -14,11 +13,14 @@ use \Charcoal\Translation\TranslationString;
 class BooleanProperty extends AbstractProperty
 {
     /**
-     * @var TranslationString $trueLabel The label, for "true".
+     * The label, for "true".
+     * @var \Charcoal\Translator\Translation
      */
     private $trueLabel;
+
     /**
-     * @var TranslationString $falseLabel The label, for "false"
+     * The label, for "false".
+     * @var \Charcoal\Translator\Translation
      */
     private $falseLabel;
 
@@ -90,7 +92,7 @@ class BooleanProperty extends AbstractProperty
      */
     public function setTrueLabel($label)
     {
-        $this->trueLabel = new TranslationString($label);
+        $this->trueLabel = $this->translator()->translation($label);
         return $this;
     }
 
@@ -112,7 +114,7 @@ class BooleanProperty extends AbstractProperty
      */
     public function setFalseLabel($label)
     {
-        $this->falseLabel = $label;
+        $this->falseLabel = $this->translator()->translation($label);
         return $this;
     }
 

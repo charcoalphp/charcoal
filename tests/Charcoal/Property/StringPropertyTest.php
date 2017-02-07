@@ -28,7 +28,8 @@ class StringPropertyTest extends PHPUnit_Framework_TestCase
         mb_internal_encoding('UTF-8');
         $this->obj = new StringProperty([
             'database'  => new PDO('sqlite::memory:'),
-            'logger'    => new NullLogger()
+            'logger'    => new NullLogger(),
+            'translator' => $GLOBALS['translator']
         ]);
     }
 

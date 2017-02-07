@@ -20,7 +20,8 @@ class TextPropertyTest extends \PHPUnit_Framework_TestCase
     {
         $this->obj = new TextProperty([
             'database'  => new PDO('sqlite::memory:'),
-            'logger'    => new NullLogger()
+            'logger'    => new NullLogger(),
+            'translator' => $GLOBALS['translator']
         ]);
     }
 

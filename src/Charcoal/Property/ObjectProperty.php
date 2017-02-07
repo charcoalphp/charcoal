@@ -24,9 +24,6 @@ use \Charcoal\Factory\FactoryInterface;
 use \Charcoal\View\ViewInterface;
 use \Charcoal\View\ViewableInterface;
 
-// From 'charcoal-translation'
-use \Charcoal\Translation\TranslationConfig;
-
 // From 'charcoal-property'
 use \Charcoal\Property\AbstractProperty;
 use \Charcoal\Property\SelectablePropertyInterface;

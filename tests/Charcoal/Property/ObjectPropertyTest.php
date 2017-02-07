@@ -31,6 +31,7 @@ class ObjectPropertyTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         $container = new Container;
+        $container['translator'] = $GLOBALS['translator'];
         $container['metadata/loader'] = function (Container $container) {
             return new MetadataLoader([
                 'logger' => new NullLogger(),
@@ -71,7 +72,8 @@ class ObjectPropertyTest extends PHPUnit_Framework_TestCase
                     'logger'            => new NullLogger(),
                     'metadata_loader'   => $container['metadata/loader'],
                     'source_factory'    => $container['source/factory'],
-                    'property_factory'  => $container['property/factory']
+                    'property_factory'  => $container['property/factory'],
+                    'caontainer'        => $container
                 ]]
             ]);
         };
@@ -88,7 +90,8 @@ class ObjectPropertyTest extends PHPUnit_Framework_TestCase
         $this->obj = new ObjectProperty([
             'container' => $container,
             'database' => new PDO('sqlite::memory:'),
-            'logger' => new NullLogger()
+            'logger' => new NullLogger(),
+            'translator' => $GLOBALS['translator']
         ]);
     }
 

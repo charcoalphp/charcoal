@@ -7,8 +7,6 @@ use \InvalidArgumentException;
 use \PDO;
 
 use \Charcoal\Core\StringFormat;
-use \Charcoal\Translation\TranslationConfig;
-use \Charcoal\Translation\TranslationString;
 
 use \Charcoal\Property\AbstractProperty;
 use \Charcoal\Property\SelectablePropertyInterface;

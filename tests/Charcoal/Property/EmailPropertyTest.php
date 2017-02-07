@@ -19,7 +19,8 @@ class EmailPropertyTest extends \PHPUnit_Framework_TestCase
     {
         $this->obj = new EmailProperty([
             'database'  => new PDO('sqlite::memory:'),
-            'logger'    => new NullLogger()
+            'logger'    => new NullLogger(),
+            'translator' => $GLOBALS['translator']
         ]);
     }
 

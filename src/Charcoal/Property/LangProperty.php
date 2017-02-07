@@ -4,8 +4,6 @@ namespace Charcoal\Property;
 
 use \PDO;
 
-use \Charcoal\Translation\TranslationConfig;
-
 use \Charcoal\Property\SelectablePropertyInterface;
 use \Charcoal\Property\SelectablePropertyTrait;
 
@@ -59,18 +57,17 @@ class LangProperty extends AbstractProperty implements SelectablePropertyInterfa
      */
     public function choices()
     {
-        $translator = TranslationConfig::instance();
-
         $choices = [];
-        foreach ($translator->languages() as $langCode => $langObj) {
-            $label = (string)$langObj->name();
-            if (empty($label)) {
-                $label = (string)$langObj;
+        foreach ($this->translator()->locales() as $locale => $localeConfig) {
+            if (isset($localeConfig['name'])) {
+                $label = $this->translator()->translation($localeConfig['name']);
+            } else {
+                $label = $this->translator()->translation('locale.'.$locale);
             }
             $choices[] = [
                 'label'    => $label,
-                'selected' => ($this->val() === $langCode),
-                'value'    => $langCode
+                'selected' => ($this->val() === $locale),
+                'value'    => $locale
             ];
         }
 

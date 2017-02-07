@@ -10,8 +10,8 @@ use \UnexpectedValueException;
 use \Charcoal\Image\ImageFactory;
 use \Charcoal\Image\ImageInterface;
 
-// From 'charcoal-translation'
-use \Charcoal\Translation\TranslationString;
+// From 'charccoal-translation'
+use \Charcoal\Translator\Translation;
 
 // Local namespace dependencies
 use \Charcoal\Property\FileProperty;
@@ -298,8 +298,8 @@ class ImageProperty extends FileProperty
     {
         $value = $this->parseVal($value);
 
-        if ($value instanceof TranslationString) {
-            $value = $value->all();
+        if ($value instanceof Translation) {
+            $value = $value->data();
         }
 
         if ($effects === null) {

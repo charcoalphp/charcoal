@@ -17,6 +17,9 @@ use \Charcoal\Model\MetadataInterface;
 // From 'charcoal-factory'
 use \Charcoal\Factory\FactoryInterface;
 
+// From 'charcoal-translation'
+use \Charcoal\Translator\Translation;
+
 // From 'charcoal-property'
 use \Charcoal\Property\AbstractProperty;
 use \Charcoal\Property\Structure\StructureMetadata;
@@ -488,8 +491,8 @@ class StructureProperty extends AbstractProperty
             if ($propertyValue === null) {
                 return '';
             }
-        } elseif ($val instanceof TranslationString) {
-            $propertyValue = $val->fallback();
+        } elseif ($val instanceof Translation) {
+            $propertyValue = (string)$val;
         } else {
             $propertyValue = $val;
         }

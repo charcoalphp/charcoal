@@ -2,23 +2,26 @@
 
 namespace Charcoal\Property;
 
-use \InvalidArgumentException;
-use \PDO;
+use InvalidArgumentException;
 
-use \Charcoal\Translation\TranslationString;
+use PDO;
+
+use Charcoal\Translator\TranslatorAwareTrait;
 
 /**
  *
  */
 class PropertyField
 {
+    use TranslatorAwareTrait;
+
     /**
      * @var string $ident
      */
     private $ident;
 
     /**
-     * @var TranslationString $Label
+     * @var \Charcoal\Translator\Translation $Label
      */
     private $label;
 
@@ -51,6 +54,14 @@ class PropertyField
      * @var boolean $_allowNull
      */
     private $allowNull;
+
+    /**
+     * @param array $data Constructor options.
+     */
+    public function __construct(array $data)
+    {
+        $this->setTranslator($data['translator']);
+    }
 
     /**
      * @param array $data The field data.
@@ -113,7 +124,7 @@ class PropertyField
      */
     public function setLabel($label)
     {
-        $this->label = new TranslationString($label);
+        $this->label = $this->translator()->translation($label);
         return $this;
     }
 

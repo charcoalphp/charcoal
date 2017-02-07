@@ -25,8 +25,8 @@ use \Charcoal\Validator\ValidatableInterface;
 use \Charcoal\Validator\ValidatableTrait;
 
 // Dependency from 'charcoal-translation'
-use \Charcoal\Translation\TranslationConfig;
-use \Charcoal\Translation\TranslationString;
+use \Charcoal\Translator\TranslatorAwareTrait;
+use \Charcoal\Translator\Translation;
 
 // Local namespace dependencies
 use \Charcoal\Property\DescribablePropertyInterface;
@@ -51,6 +51,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     use DescribableTrait;
     use DescribablePropertyTrait;
     use StorablePropertyTrait;
+    use TranslatorAwareTrait;
     use ValidatableTrait;
 
     /**
@@ -64,7 +65,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     protected $val;
 
     /**
-     * @var TranslationString|string|null $label
+     * @var Translation|null $label
      */
     private $label;
 
@@ -122,12 +123,12 @@ abstract class AbstractProperty extends AbstractEntity implements
     private $active = true;
 
     /**
-     * @var TranslationString|string|null $description
+     * @var Translation|null $description
      */
     private $description;
 
     /**
-     * @var TranslationString|string|null $_notes
+     * @var Translation|null $notes
      */
     private $notes;
 
@@ -156,6 +157,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     {
         $this->setLogger($data['logger']);
         $this->setPdo($data['database']);
+        $this->setTranslator($data['translator']);
 
         // Optional DescribableInterface dependencies
         if (isset($data['property_factory'])) {
@@ -341,8 +343,8 @@ abstract class AbstractProperty extends AbstractEntity implements
             if ($propertyValue === null) {
                 return '';
             }
-        } elseif ($val instanceof TranslationString) {
-            $propertyValue = $val->fallback();
+        } elseif ($val instanceof Translation) {
+            $propertyValue = (string)$val;
         } else {
             $propertyValue = $val;
         }
@@ -378,8 +380,8 @@ abstract class AbstractProperty extends AbstractEntity implements
             if ($propertyValue === null) {
                 return '';
             }
-        } elseif ($val instanceof TranslationString) {
-            $propertyValue = $val->fallback();
+        } elseif ($val instanceof Translation) {
+            $propertyValue = (string)$val;
         } else {
             $propertyValue = $val;
         }
@@ -417,8 +419,7 @@ abstract class AbstractProperty extends AbstractEntity implements
             if (is_array($lang) && isset($lang['lang'])) {
                 $lang = $lang['lang'];
             } else {
-                $trans = TranslationConfig::instance();
-                $lang = $trans->currentLanguage();
+                $lang = $this->translator()->getLocale();
             }
         }
 
@@ -435,17 +436,13 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     public function setLabel($label)
     {
-        if (TranslationString::isTranslatable($label)) {
-            $this->label = new TranslationString($label);
-        } else {
-            $this->label = null;
-        }
+        $this->label = $this->translator()->translation($label);
 
         return $this;
     }
 
     /**
-     * @return TranslationString|string|null
+     * @return Translation
      */
     public function label()
     {
@@ -725,17 +722,12 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     public function setDescription($description)
     {
-        if (TranslationString::isTranslatable($description)) {
-            $this->description = new TranslationString($description);
-        } else {
-            $this->description = null;
-        }
-
+        $this->description = $this->translator()->translation($description);
         return $this;
     }
 
     /**
-     * @return TranslationString|string|null
+     * @return Translation
      */
     public function description()
     {
@@ -748,17 +740,12 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     public function setNotes($notes)
     {
-        if (TranslationString::isTranslatable($notes)) {
-            $this->notes = new TranslationString($notes);
-        } else {
-            $this->notes = null;
-        }
-
+        $this->notes = $this->translator()->translation($notes);
         return $this;
     }
 
     /**
-     * @return TranslationString|string|null
+     * @return Translation
      */
     public function notes()
     {

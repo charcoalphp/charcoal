@@ -19,12 +19,22 @@ class StorablePropertyTraitTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->obj = $this->getMockForTrait(StorablePropertyTrait::class
-        );
+        $this->obj = $this->getMockForTrait(StorablePropertyTrait::class);
 
-        $this->obj->expects($this->any())->method('l10n')->will($this->returnValue(false));
+        $this->obj
+            ->expects($this->any())
+            ->method('l10n')
+            ->will($this->returnValue(false));
 
-        $this->obj->expects($this->any())->method('multiple')->will($this->returnValue(false));
+        $this->obj
+            ->expects($this->any())
+            ->method('multiple')
+            ->will($this->returnValue(false));
+
+        $this->obj
+            ->expects($this->any())
+            ->method('translator')
+            ->will($this->returnValue($GLOBALS['translator']));
     }
 
     public function testFields()

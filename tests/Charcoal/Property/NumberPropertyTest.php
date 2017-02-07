@@ -22,7 +22,8 @@ class NumberPropertyTest extends \PHPUnit_Framework_TestCase
     {
         $this->obj = new NumberProperty([
             'database'  => new PDO('sqlite::memory:'),
-            'logger'    => new NullLogger()
+            'logger'    => new NullLogger(),
+            'translator' => $GLOBALS['translator']
         ]);
     }
 

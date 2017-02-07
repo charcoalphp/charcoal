@@ -22,7 +22,8 @@ class AudioPropertyTest extends PHPUnit_Framework_TestCase
     {
         $this->obj = new AudioProperty([
             'database'  => new PDO('sqlite::memory:'),
-            'logger'    => new NullLogger()
+            'logger'    => new NullLogger(),
+            'translator' => $GLOBALS['translator']
         ]);
     }
 
@@ -51,12 +52,12 @@ class AudioPropertyTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(500, $obj->maxLength());
     }
 
-     public function testSetDataSnakecase()
+    public function testSetDataSnakecase()
     {
         $obj = $this->obj;
         $data = [
-            'min_length' => 20,
-            'max_length' => 500
+          'min_length' => 20,
+          'max_length' => 500
         ];
         $ret = $obj->setData($data);
         $this->assertSame($ret, $obj);

@@ -23,7 +23,8 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
     {
         $this->obj = new BooleanProperty([
             'database'  => new PDO('sqlite::memory:'),
-            'logger'    => new NullLogger()
+            'logger'    => new NullLogger(),
+            'translator' => $GLOBALS['translator']
         ]);
     }
 
