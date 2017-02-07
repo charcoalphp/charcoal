@@ -25,11 +25,6 @@ class LocalesManager
     private $defaultLanguage;
 
     /**
-     * @var string[]
-     */
-    private $fallbackLanguages;
-
-    /**
      * @var string|null
      */
     private $currentLanguage;
@@ -66,12 +61,6 @@ class LocalesManager
             $this->defaultLanguage = $data['default_language'];
         } else {
             $this->defaultLanguage = $this->languages[0];
-        }
-
-        if (isset($data['fallback_languages'])) {
-            $this->fallbackLanguages = $data['fallback_languages'];
-        } else {
-            $this->fallbackLanguages = [$this->defaultLanguage];
         }
     }
 
