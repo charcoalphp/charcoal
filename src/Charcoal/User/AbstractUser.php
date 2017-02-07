@@ -558,15 +558,17 @@ abstract class AbstractUser extends Content implements
      */
     public static function getAuthenticated(FactoryInterface $factory)
     {
-        if (isset(static::$authenticatedUser[static::sessionKey()])) {
-            return static::$authenticatedUser[static::sessionKey()];
+        $key = static::sessionKey();
+
+        if (isset(static::$authenticatedUser[$key])) {
+            return static::$authenticatedUser[$key];
         }
 
-        if (!isset($_SESSION[static::sessionKey()])) {
+        if (!isset($_SESSION[$key])) {
             return null;
         }
 
-        $userId = $_SESSION[static::sessionKey()];
+        $userId = $_SESSION[$key];
         if (!$userId) {
             return null;
         }
@@ -580,7 +582,8 @@ abstract class AbstractUser extends Content implements
             return null;
         }
 
-        static::$authenticatedUser[static::sessionKey()] = $user;
+        static::$authenticatedUser[$key] = $user;
+
         return $user;
     }
 }
