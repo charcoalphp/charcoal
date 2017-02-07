@@ -1,0 +1,166 @@
+<?php
+
+namespace Charcoal\Translator;
+
+use InvalidArgumentException;
+
+/**
+ *
+ */
+class LocalesManager
+{
+    /**
+     * @var array
+     */
+    private $locales;
+
+    /**
+     * @var string[]
+     */
+    private $languages;
+
+    /**
+     * @var string
+     */
+    private $defaultLanguage;
+
+    /**
+     * @var string[]
+     */
+    private $fallbackLanguages;
+
+    /**
+     * @var string|null
+     */
+    private $currentLanguage;
+
+    /**
+     * Create the Locales Manager with locales and optional options.
+     *
+     * Required parameters:
+     * - **locales** (`array`)
+     *
+     * Optional parameters:
+     * - **default_language** (`string`)
+     *   - If none is set, the first language (from _locales_) will be used
+     * - **fallback_languages** (`string[]`)
+     *   - If none is set, then the default language will be used.
+     *
+     * @param array $data Constructor dependencies.
+     * @throws InvalidArgumentException If the default language is not a valid language.
+     */
+    public function __construct(array $data)
+    {
+        $this->setLocales($data['locales']);
+        $this->languages = array_keys($this->locales);
+
+        if (isset($data['default_language'])) {
+            if (!in_array($data['default_language'], $this->languages)) {
+                throw new InvalidArgumentException(
+                    sprintf(
+                        'Default language is not a valid language. Must be one of "%s"',
+                        implode(', ', $this->languages)
+                    )
+                );
+            }
+            $this->defaultLanguage = $data['default_language'];
+        } else {
+            $this->defaultLanguage = $this->languages[0];
+        }
+
+        if (isset($data['fallback_languages'])) {
+            $this->fallbackLanguages = $data['fallback_languages'];
+        } else {
+            $this->fallbackLanguages = [$this->defaultLanguage];
+        }
+    }
+
+    /**
+     * Retrieve the available locales information.
+     *
+     * @return array;
+     */
+    public function locales()
+    {
+        return $this->locales;
+    }
+
+    /**
+     * Retrieve the available languages (locale codes).
+     *
+     * @return string[]
+     */
+    public function languages()
+    {
+        return $this->languages;
+    }
+
+    /**
+     * @param string|null $lang The current language (ident).
+     * @throws InvalidArgumentException If the language is invalid.
+     * @return void
+     */
+    public function setCurrentLanguage($lang)
+    {
+        if ($lang === null) {
+            $this->currentLanguage = null;
+            return;
+        }
+        if (!$this->hasLanguage($lang)) {
+            throw new InvalidArgumentException(
+                sprintf('Invalid language. Must be one of "%s"', implode(', ', $this->languages()))
+            );
+        }
+        $this->currentLanguage = $lang;
+    }
+
+    /**
+     * Retrieve the current language
+     *
+     * @return string
+     */
+    public function currentLanguage()
+    {
+        if ($this->currentLanguage === null) {
+            return $this->defaultLanguage;
+        }
+        return $this->currentLanguage;
+    }
+
+    /**
+     * @param string $lang The language (code) to check.
+     * @return boolean
+     */
+    public function hasLanguage($lang)
+    {
+        return in_array($lang, $this->languages());
+    }
+
+    /**
+     * Ensure that explicitely inactive locales are skipped.
+     * Also ensure that the required values are set on the locales configuration structure.
+     * This method is only called from the constructor.
+     *
+     * @param array $locales The locales configuration structure.
+     * @throws InvalidArgumentException If there are no active locales.
+     * @return void
+     */
+    private function setLocales(array $locales)
+    {
+        $this->locales = [];
+        foreach ($locales as $language => $locale) {
+            if (isset($locale['active']) && !$locale['active']) {
+                continue;
+            }
+            if (!isset($locale['locale'])) {
+                $locale['locale'] = $language;
+            }
+            $this->locales[$language] = $locale;
+        }
+        if (empty($this->locales)) {
+            throw new InvalidArgumentException(
+                'Locales can not be empty.'
+            );
+        }
+    }
+}
