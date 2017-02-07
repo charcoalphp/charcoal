@@ -12,11 +12,13 @@ use Charcoal\Config\AbstractConfig;
 class TranslatorConfig extends AbstractConfig
 {
     /**
+     * Available resource loaders.
      * @var string[]
      */
     private $loaders;
 
     /**
+     * Translation resources paths.
      * @var string[]
      */
     private $paths;
@@ -51,22 +53,14 @@ class TranslatorConfig extends AbstractConfig
 
     /**
      * @param string[] $loaders The list of active loaders.
+     * @throws InvalidArgumentException If the loader is invalid.
      * @return TranslatorConfig Chainable
      */
     public function setLoaders(array $loaders)
     {
-        $availableLoaders = [
-            'csv',
-            'json',
-            'mo',
-            'php',
-            'po',
-            'xliff',
-            'yaml'
-        ];
         $this->loaders = [];
         foreach ($loaders as $loader) {
-            if (!in_array($loader, $availableLoaders)) {
+            if (!in_array($loader, $this->availableLoaders())) {
                 throw new InvalidArgumentException(
                     sprintf('Loader "%s" is not a valid loader.', $loader)
                 );
@@ -85,8 +79,8 @@ class TranslatorConfig extends AbstractConfig
     }
 
     /**
-     * @param string[] $paths
-     * @throws InvalidArgumentException if the path is not a string.
+     * @param string[] $paths The "paths" (search pattern) to look into for translation resources.
+     * @throws InvalidArgumentException If the path is not a string.
      * @return TranslatorConfig Chainable
      */
     public function setPaths(array $paths)
@@ -112,7 +106,7 @@ class TranslatorConfig extends AbstractConfig
     }
 
     /**
-     * @param boolean $debug
+     * @param boolean $debug The debug flag.
      * @return TranslatorConfig Chainable
      */
     public function setDebug($debug)
@@ -151,5 +145,21 @@ class TranslatorConfig extends AbstractConfig
     public function cacheDir()
     {
         return $this->cacheDir;
+    }
+
+    /**
+     * @return array
+     */
+    private function availableLoaders()
+    {
+        return [
+            'csv',
+            'json',
+            'mo',
+            'php',
+            'po',
+            'xliff',
+            'yaml'
+        ];
     }
 }

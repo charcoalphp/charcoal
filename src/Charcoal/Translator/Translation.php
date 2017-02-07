@@ -3,7 +3,6 @@
 namespace Charcoal\Translator;
 
 use ArrayAccess;
-use Exception;
 use InvalidArgumentException;
 use JsonSerializable;
 
@@ -33,7 +32,7 @@ class Translation implements
 
     /**
      * @param Translation|array|string $val     The translation values.
-     * @param LocalesManager                    $manager A LocalesManager instance.
+     * @param LocalesManager           $manager A LocalesManager instance.
      */
     public function __construct($val, LocalesManager $manager)
     {
@@ -56,8 +55,6 @@ class Translation implements
      * Get the array of translations in all languages.
      *
      * @return string[]
-     *
-     * @todo Add support for retrieving a subset of translations.
      */
     public function data()
     {
