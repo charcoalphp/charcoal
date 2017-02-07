@@ -4,15 +4,18 @@ namespace Charcoal\User\Acl;
 
 use InvalidArgumentException;
 
+// From 'pimple/pimple'
+use Pimple\Container;
+
 // From 'charcoal-core'
 use Charcoal\Model\AbstractModel;
+
+// From 'charcoal-translation'
+use Charcoal\Translator\TranslatorAwareTrait;
 
 // From 'charcoal-object'
 use Charcoal\Object\CategorizableInterface;
 use Charcoal\Object\CategorizableTrait;
-
-// From 'charcoal-translation'
-use Charcoal\Translation\TranslationString;
 
 /**
  * A permission is a simple string, that can be read with additional data (name + category) from storage.
@@ -20,14 +23,15 @@ use Charcoal\Translation\TranslationString;
 class Permission extends AbstractModel implements CategorizableInterface
 {
     use CategorizableTrait;
+    use TranslatorAwareTrait;
 
     /**
-     * @var string|null $ident
+     * @var string|null
      */
     private $ident;
 
     /**
-     * @var TranslationString $name
+     * @var \Charcoal\Translator\Translation|null
      */
     private $name;
 
@@ -42,6 +46,16 @@ class Permission extends AbstractModel implements CategorizableInterface
             return '';
         }
         return $this->ident;
+    }
+
+    /**
+     * @param Container $container Pimple DI container.
+     * @return void
+     */
+    public function setDependencies(Container $container)
+    {
+        parent::setDependencies($container);
+        $this->setTranslator($container['translator']);
     }
 
     /**
@@ -82,12 +96,12 @@ class Permission extends AbstractModel implements CategorizableInterface
      */
     public function setName($name)
     {
-        $this->name = new TranslationString($name);
+        $this->name = $this->translator()->translation($name);
         return $this;
     }
 
     /**
-     * @return TranslationString
+     * @return \Charcoal\Translator\Translation|null
      */
     public function name()
     {

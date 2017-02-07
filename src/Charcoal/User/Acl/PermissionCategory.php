@@ -2,10 +2,6 @@
 
 namespace Charcoal\User\Acl;
 
-// From 'charcoal-translation'
-use Charcoal\Translation\TranslationString;
-
-// From 'charcoal-object'
 use Charcoal\Object\Content;
 use Charcoal\Object\CategoryInterface;
 use Charcoal\Object\CategoryTrait;
@@ -18,7 +14,7 @@ class PermissionCategory extends Content implements CategoryInterface
     use CategoryTrait;
 
     /**
-     * @var TranslationString|null
+     * @var \Charcoal\Translator\Translation|null
      */
     private $name;
 
@@ -28,12 +24,12 @@ class PermissionCategory extends Content implements CategoryInterface
      */
     public function setName($name)
     {
-        $this->name = new TranslationString($name);
+        $this->name = $this->translator()->translation($name);
         return $this;
     }
 
     /**
-     * @return TranslationString|null
+     * @return \Charcoal\Translator\Translation|null
      */
     public function name()
     {
