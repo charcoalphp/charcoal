@@ -4,14 +4,14 @@ namespace Charcoal\User;
 
 use InvalidArgumentException;
 
-// Dependencies from `zendframework/zend-permissions`
+// From 'zendframework/zend-permissions'
 use Zend\Permissions\Acl\Acl;
 
-// Dependencies from 'PSR-3' (Logging)
+// From PSR-3
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 
-// Intra-module (`charcoal-base`) dependencies
+// From 'charcoal-user'
 use Charcoal\User\UserInterface;
 
 /**
@@ -111,9 +111,11 @@ class Authorizer implements LoggerAwareInterface
         foreach ($aclRoles as $aclRole) {
             foreach ($aclPermissions as $aclPermission) {
                 if (!$acl->isAllowed($aclRole, $aclResource, $aclPermission)) {
-                    $this->logger->error(
-                        sprintf('Role "%s" is not allowed permission "%s"', $aclRole, $aclPermission)
-                    );
+                    $this->logger->error(sprintf(
+                        'Role "%s" is not allowed permission "%s"',
+                        $aclRole,
+                        $aclPermission
+                    ));
                     return false;
                 }
             }

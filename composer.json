@@ -40,6 +40,11 @@
             "Charcoal\\User\\": "src/Charcoal/User"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Charcoal\\User\\Tests\\": "tests/Charcoal/User"
+        }
+    },
     "scripts": {
         "test": [
             "@tests"

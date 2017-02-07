@@ -4,7 +4,7 @@ namespace Charcoal\User\Acl;
 
 use InvalidArgumentException;
 
-// Dependency from 'charcoal-core'
+// From 'charcoal-core'
 use Charcoal\Model\AbstractModel;
 
 /**

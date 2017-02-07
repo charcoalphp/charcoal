@@ -5,11 +5,11 @@ namespace Charcoal\User;
 use InvalidArgumentException;
 use RuntimeException;
 
-// Dependencies from PSR-3 (Logging)
+// From PSR-3
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 
-// Dependency from 'charcoal-factory'
+// From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 
 /**
@@ -242,9 +242,11 @@ class Authenticator implements LoggerAwareInterface
         // Validate password
         if (password_verify($password, $u->password())) {
             if (password_needs_rehash($u->password(), PASSWORD_DEFAULT)) {
-                $this->logger->notice(
-                    sprintf('Rehashing password for user "%s" (%s)', $u->username(), $this->userType())
-                );
+                $this->logger->notice(sprintf(
+                    'Rehashing password for user "%s" (%s)',
+                    $u->username(),
+                    $this->userType()
+                ));
                 $hash = password_hash($password, PASSWORD_DEFAULT);
                 $u->setPassword($hash);
                 $u->update(['password']);
@@ -254,9 +256,7 @@ class Authenticator implements LoggerAwareInterface
 
             return $u;
         } else {
-            $this->logger->warning(
-                sprintf('Invalid login attempt for user: invalid password.')
-            );
+            $this->logger->warning('Invalid login attempt for user: invalid password.');
 
             return null;
         }

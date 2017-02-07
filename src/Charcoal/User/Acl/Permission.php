@@ -4,14 +4,14 @@ namespace Charcoal\User\Acl;
 
 use InvalidArgumentException;
 
-// Module `charcoal-core` dependencies
+// From 'charcoal-core'
 use Charcoal\Model\AbstractModel;
 
-// Module `charcoal-base` dependencies
+// From 'charcoal-object'
 use Charcoal\Object\CategorizableInterface;
 use Charcoal\Object\CategorizableTrait;
 
-// Module `charcoal-translation` dependencies
+// From 'charcoal-translation'
 use Charcoal\Translation\TranslationString;
 
 /**

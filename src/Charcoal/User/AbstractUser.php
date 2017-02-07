@@ -2,23 +2,22 @@
 
 namespace Charcoal\User;
 
-// Dependencies from `PHP`
 use DateTime;
 use DateTimeInterface;
 use Exception;
 use InvalidArgumentException;
 
-// Module `charcoal-factory` dependencies
+// From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 
-// Module `charcoal-config` dependencies
+// From 'charcoal-config'
 use Charcoal\Config\ConfigurableInterface;
 use Charcoal\Config\ConfigurableTrait;
 
-// Module `charcoal-base` dependencies
+// From 'charcoal-object'
 use Charcoal\Object\Content;
 
-// Local namespace (charcoal-base) dependencies
+// From 'charcoal-user'
 use Charcoal\User\UserInterface;
 
 /**
@@ -248,7 +247,7 @@ abstract class AbstractUser extends Content implements
                 throw new InvalidArgumentException(sprintf(
                     'Invalid login date (%s)',
                     $e->getMessage()
-                ));
+                ), 0, $e);
             }
         }
 
@@ -327,7 +326,7 @@ abstract class AbstractUser extends Content implements
                 throw new InvalidArgumentException(sprintf(
                     'Invalid last password date (%s)',
                     $e->getMessage()
-                ));
+                ), 0, $e);
             }
         }
 

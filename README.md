@@ -109,7 +109,7 @@ To set up ACL, it is highly recommended to use the `\Charcoal\User\Acl\Manager`.
 use Zend\Permissions\Acl\Acl;
 use Zend\Permissions\Acl\Resource\GenericResource as AclResource;
 
-// Dependencies from `charcoal-base`
+// Dependencies from `charcoal-user`
 use Charcoal\User\Acl\Manager as AclManager;
 
 $acl = new Acl();

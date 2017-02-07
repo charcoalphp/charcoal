@@ -2,47 +2,54 @@
 
 namespace Charcoal\User\Tests;
 
+// From PHPUnit
 use PHPUnit_Framework_TestCase;
 
-use Psr\Log\NullLogger;
-use Cache\Adapter\Void\VoidCachePool;
+// From Pimple
+use Pimple\Container;
 
-use Charcoal\Model\Service\MetadataLoader;
-
-use Charcoal\Factory\GenericFactory as Factory;
-
+// From 'charcoal-user'
 use Charcoal\User\Authenticator;
+use Charcoal\User\AuthToken;
+use Charcoal\User\GenericUser as User;
+use Charcoal\User\Tests\ContainerProvider;
 
+/**
+ *
+ */
 class AuthenticatorTest extends PHPUnit_Framework_TestCase
 {
-    public $obj;
+    /**
+     * Tested Class.
+     *
+     * @var Authenticator
+     */
+    private $obj;
 
+    /**
+     * Store the service container.
+     *
+     * @var Container
+     */
+    private $container;
+
+    /**
+     * Set up the test.
+     */
     public function setUp()
     {
-        $logger = new NullLogger();
+        if (session_id()) {
+            session_unset();
+        }
 
-        $metadataLoader = new MetadataLoader([
-            'logger'    => $logger,
-            'base_path' => realpath(__DIR__.'/../../..'),
-            'paths'     => ['metadata'],
-            //'config'    => new AppConfig(),
-            'cache'     => new VoidCachePool()
-        ]);
-
-        $factory = new Factory([
-            'arguments' => [[
-                'logger'=> $logger,
-                'metadata_loader' => $metadataLoader,
-                'source_factory'  => new Factory([])
-            ]]
-        ]);
+        $container = $this->container();
 
         $this->obj = new Authenticator([
-            'logger'            => $logger,
-            'user_type'         => 'charcoal/user/generic-user',
-            'user_factory'      => $factory,
-            'token_type'        => 'charcoal/user/auth-token',
-            'token_factory'     => $factory
+            'logger'        => $container['logger'],
+            'user_type'     => User::class,
+            'user_factory'  => $container['model/factory'],
+            'token_type'    => AuthToken::class,
+            'token_factory' => $container['model/factory']
         ]);
     }
 
@@ -79,5 +86,24 @@ class AuthenticatorTest extends PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('\InvalidArgumentException');
         $this->obj->authenticateByPassword('test', 'password');
+    }
+
+    /**
+     * Set up the service container.
+     *
+     * @return Container
+     */
+    private function container()
+    {
+        if ($this->container === null) {
+            $container = new Container();
+            $containerProvider = new ContainerProvider();
+            $containerProvider->registerBaseServices($container);
+            $containerProvider->registerModelFactory($container);
+
+            $this->container = $container;
+        }
+
+        return $this->container;
     }
 }

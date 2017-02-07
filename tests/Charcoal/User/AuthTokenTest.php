@@ -2,57 +2,52 @@
 
 namespace Charcoal\User\Tests;
 
-use PHPUnit_Framework_TestCase;
-
 use DateTime;
 
-use Psr\Log\NullLogger;
+// From PHPUnit
+use PHPUnit_Framework_TestCase;
 
-use Charcoal\Model\Service\MetadataLoader;
+// From Pimple
+use Pimple\Container;
 
+// From 'charcoal-user'
 use Charcoal\User\AuthToken;
+use Charcoal\User\Tests\ContainerProvider;
 
 /**
  *
  */
 class AuthTokenTest extends PHPUnit_Framework_TestCase
 {
-    public $obj;
+    /**
+     * Tested Class.
+     *
+     * @var AuthToken
+     */
+    private $obj;
 
     /**
+     * Store the service container.
      *
+     * @var Container
+     */
+    private $container;
+
+    /**
+     * Set up the test.
      */
     public function setUp()
     {
-        mb_internal_encoding('UTF-8');
+        $container = $this->container();
 
-        $container = $GLOBALS['container'];
-
-        $metadataLoader = new MetadataLoader([
-            'logger'    => new NullLogger(),
-            'base_path' => __DIR__,
-            'paths'     => ['metadata'],
-            'config'    => $GLOBALS['container']['config'],
-            'cache'     => $GLOBALS['container']['cache']
-        ]);
-
-        $this->obj = new AuthToken([
-            'logger'            => new NullLogger(),
-            'metadata_loader'   => $metadataLoader
-        ]);
+        $this->obj = $container['model/factory']->create(AuthToken::class);
     }
 
-    /**
-     *
-     */
     public function testSetKeyIsIdent()
     {
         $this->assertEquals('ident', $this->obj->key());
     }
 
-    /**
-     *
-     */
     public function testSetIdent()
     {
         $ret = $this->obj->setIdent('foo');
@@ -60,9 +55,6 @@ class AuthTokenTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $this->obj->ident());
     }
 
-    /**
-     *
-     */
     public function testSetToken()
     {
         $ret = $this->obj->setToken('foo');
@@ -70,9 +62,6 @@ class AuthTokenTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $this->obj->token());
     }
 
-    /**
-     *
-     */
     public function testSetUsername()
     {
         $ret = $this->obj->setUsername('foo');
@@ -83,18 +72,12 @@ class AuthTokenTest extends PHPUnit_Framework_TestCase
         $this->obj->setUsername([]);
     }
 
-    /**
-     *
-     */
     public function testSetUsernameIsLowercase()
     {
         $this->obj->setUsername('FÔOBÄR');
         $this->assertEquals('fôobär', $this->obj->username());
     }
 
-    /**
-     *
-     */
     public function testSetExpiry()
     {
         $date = new DateTime('tomorrow');
@@ -106,9 +89,6 @@ class AuthTokenTest extends PHPUnit_Framework_TestCase
         $this->obj->setExpiry('fsdjkfsadg');
     }
 
-    /**
-     *
-     */
     public function testSetCreated()
     {
         $date = new DateTime('tomorrow');
@@ -120,9 +100,6 @@ class AuthTokenTest extends PHPUnit_Framework_TestCase
         $this->obj->setCreated('fsdjkfsadg');
     }
 
-    /**
-     *
-     */
     public function testSetLastModified()
     {
         $date = new DateTime('tomorrow');
@@ -132,5 +109,24 @@ class AuthTokenTest extends PHPUnit_Framework_TestCase
 
         $this->setExpectedException('\Exception');
         $this->obj->setLastModified('fsdjkfsadg');
+    }
+
+    /**
+     * Set up the service container.
+     *
+     * @return Container
+     */
+    private function container()
+    {
+        if ($this->container === null) {
+            $container = new Container();
+            $containerProvider = new ContainerProvider();
+            $containerProvider->registerBaseServices($container);
+            $containerProvider->registerModelFactory($container);
+
+            $this->container = $container;
+        }
+
+        return $this->container;
     }
 }

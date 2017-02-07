@@ -6,10 +6,10 @@ use DateTime;
 use DateTimeInterface;
 use InvalidArgumentException;
 
-// Dependency from 'charcoal-core'
+// From 'charcoal-core'
 use Charcoal\Model\AbstractModel;
 
-// Local depdendency
+// From 'charcoal-user'
 use Charcoal\User\AuthTokenMetadata;
 
 /**
@@ -17,7 +17,6 @@ use Charcoal\User\AuthTokenMetadata;
  */
 class AuthToken extends AbstractModel
 {
-
     /**
      * @var string
      */
@@ -319,7 +318,10 @@ class AuthToken extends AbstractModel
     {
         $this->load($ident);
         if (!$this->ident()) {
-            $this->logger->warning(sprintf('Auth token not found: "%s"', $ident));
+            $this->logger->warning(sprintf(
+                'Auth token not found: "%s"',
+                $ident
+            ));
             return '';
         }
 
@@ -356,12 +358,12 @@ class AuthToken extends AbstractModel
         if ($this->username) {
             $table = $this->source()->table();
             $q = sprintf('
-            delete from
-                `%s`
-            where
-                username = :username', $table);
+                DELETE FROM
+                    `%s`
+                WHERE
+                    username = :username', $table);
             $this->source()->dbQuery($q, [
-                'username'=>$this->username()
+                'username' => $this->username()
             ]);
         }
     }

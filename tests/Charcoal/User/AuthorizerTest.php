@@ -2,44 +2,95 @@
 
 namespace Charcoal\User\Tests;
 
-use \Psr\Log\NullLogger;
+// From PHPUnit
+use PHPUnit_Framework_TestCase;
 
-// Depentendies from phpunit
-use \PHPUnit_Framework_TestCase as TestCase;
+// From Pimple
+use Pimple\Container;
 
-// Dependencies from `zendframework/zend-permissions`
-use \Zend\Permissions\Acl\Acl;
-use \Zend\Permissions\Acl\Role\GenericRole as Role;
-use \Zend\Permissions\Acl\Resource\GenericResource as Resource;
+// From 'zendframework/zend-permissions'
+use Zend\Permissions\Acl\Acl;
+use Zend\Permissions\Acl\Role\GenericRole as Role;
+use Zend\Permissions\Acl\Resource\GenericResource as Resource;
 
-use \Charcoal\User\Authorizer;
+// From 'charcoal-user'
+use Charcoal\User\Authorizer;
+use Charcoal\User\Tests\ContainerProvider;
 
 /**
  *
  */
-class AuthorizerTest extends TestCase
+class AuthorizerTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * Tested Class.
+     *
+     * @var Authorizer
+     */
+    private $obj;
+
+    /**
+     * Store the ACL manager.
+     *
+     * @var Acl
+     */
+    private $acl;
+
+    /**
+     * Store the service container.
+     *
+     * @var Container
+     */
+    private $container;
+
+    /**
+     * Set up the test.
+     */
+    public function setUp()
+    {
+        $container = $this->container();
+
+        $this->acl = $container['acl'];
+        $this->obj = new Authorizer([
+            'logger'    => $container['logger'],
+            'acl'       => $container['acl'],
+            'resource'  => 'test'
+        ]);
+    }
 
     public function testRolesAllowed()
     {
-        $acl = new Acl();
+        $acl = $this->acl;
         $acl->addResource('test');
 
-        $this->obj = new Authorizer([
-            'logger'            => new NullLogger(),
-            'acl'               => $acl,
-            'resource'          => 'test'
-        ]);
-
         $acl->addRole('foo');
-        $this->assertFalse($this->obj->rolesAllowed(['foo'], ['bar']));
+        $this->assertFalse($this->obj->rolesAllowed([ 'foo' ], [ 'bar' ]));
 
         $acl->allow('foo', 'test', 'bar');
-        $this->assertTrue($this->obj->rolesAllowed(['foo'], ['bar']));
+        $this->assertTrue($this->obj->rolesAllowed([ 'foo' ], [ 'bar' ]));
 
-        $this->assertFalse($this->obj->rolesAllowed([null], ['bar']));
+        $this->assertFalse($this->obj->rolesAllowed([ null ], [ 'bar' ]));
 
         $acl->allow(null, 'test');
-        $this->assertTrue($this->obj->rolesAllowed([null], ['bar']));
+        $this->assertTrue($this->obj->rolesAllowed([ null ], [ 'bar' ]));
+    }
+
+    /**
+     * Set up the service container.
+     *
+     * @return Container
+     */
+    private function container()
+    {
+        if ($this->container === null) {
+            $container = new Container();
+            $containerProvider = new ContainerProvider();
+            $containerProvider->registerBaseServices($container);
+            $containerProvider->registerAcl($container);
+
+            $this->container = $container;
+        }
+
+        return $this->container;
     }
 }

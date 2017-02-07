@@ -2,30 +2,49 @@
 
 namespace Charcoal\User\Tests\Acl;
 
+// From PHPUnit
 use PHPUnit_Framework_TestCase;
 
-use Psr\Log\NullLogger;
+// From Pimple
+use Pimple\Container;
 
+// From 'charcoal-user'
 use Charcoal\User\Acl\Permission;
+use Charcoal\User\Tests\ContainerProvider;
 
 /**
  *
  */
 class PermissionTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * Tested Class.
+     *
+     * @var Permission
+     */
     private $obj;
 
+    /**
+     * Store the service container.
+     *
+     * @var Container
+     */
+    private $container;
+
+    /**
+     * Set up the test.
+     */
     public function setUp()
     {
-        $this->obj = new Permission([
-            'logger' => new NullLogger()
-        ]);
+        $container = $this->container();
+
+        $this->obj = $container['model/factory']->create(Permission::class);
     }
 
     public function testToString()
     {
         $this->assertEquals('', (string)$this->obj);
-        $this->obj->ident = 'foobar';
+        $this->obj->setIdent('foobar');
         $this->assertEquals('foobar', (string)$this->obj);
 
         $this->obj['ident'] = 'foo';
@@ -63,5 +82,24 @@ class PermissionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('foobar', (string)$this->obj);
         $this->obj->setIdent('baz');
         $this->assertEquals('baz', (string)$this->obj);
+    }
+
+    /**
+     * Set up the service container.
+     *
+     * @return Container
+     */
+    private function container()
+    {
+        if ($this->container === null) {
+            $container = new Container();
+            $containerProvider = new ContainerProvider();
+            $containerProvider->registerBaseServices($container);
+            $containerProvider->registerModelFactory($container);
+
+            $this->container = $container;
+        }
+
+        return $this->container;
     }
 }

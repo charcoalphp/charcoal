@@ -2,46 +2,46 @@
 
 namespace Charcoal\User\Tests;
 
-use PHPUnit_Framework_TestCase;
-
 use DateTime;
 
-use Psr\Log\NullLogger;
+// From PHPUnit
+use PHPUnit_Framework_TestCase;
 
-use Charcoal\Model\Service\MetadataLoader;
+// From Pimple
+use Pimple\Container;
 
+// From 'charcoal-user'
 use Charcoal\User\AbstractUser;
-use Charcoal\User\GenericUser;
+use Charcoal\User\GenericUser as User;
+use Charcoal\User\Tests\ContainerProvider;
 
 /**
  *
  */
-class UserTest extends \PHPUnit_Framework_TestCase
+class AbstractUserTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Instance of object under test
+     * Tested Class.
+     *
+     * @var AbstractUser
      */
-    public $obj;
+    private $obj;
 
     /**
+     * Store the service container.
      *
+     * @var Container
+     */
+    private $container;
+
+    /**
+     * Set up the test.
      */
     public function setUp()
     {
-        $container = $GLOBALS['container'];
+        $container = $this->container();
 
-        $metadataLoader = new MetadataLoader([
-            'logger'    => new NullLogger(),
-            'base_path' => __DIR__,
-            'paths'     => ['metadata'],
-            'config'    => $GLOBALS['container']['config'],
-            'cache'     => $GLOBALS['container']['cache']
-        ]);
-
-        $this->obj = $this->getMockForAbstractClass(AbstractUser::class, [[
-            'logger'            => $container['logger'],
-            'metadata_loader'   => $metadataLoader
-        ]]);
+        $this->obj = $container['model/factory']->create(User::class);
     }
 
     public function testKey()
@@ -66,13 +66,11 @@ class UserTest extends \PHPUnit_Framework_TestCase
     {
         $obj = $this->obj;
         $ret = $obj->setData([
-            'username'=>'Foo',
-            'email'=>'test@example.com',
-            'roles'=>[
-                'foo', 'bar'
-            ],
-            'loginToken'=>'token',
-            'active'=>false
+            'username'   => 'Foo',
+            'email'      => 'test@example.com',
+            'roles'      => [ 'foo', 'bar' ],
+            'loginToken' => 'token',
+            'active'     => false
         ]);
         $this->assertSame($ret, $obj);
         $this->assertEquals('foo', $obj->username());
@@ -89,9 +87,6 @@ class UserTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($obj->password())
     }*/
 
-    /**
-     *
-     */
     public function testSetUsername()
     {
         $ret = $this->obj->setUsername('Foobar');
@@ -116,9 +111,6 @@ class UserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->obj->id(), $this->obj->username());
     }
 
-    /**
-     *
-     */
     public function testSetEmail()
     {
         $ret = $this->obj->setEmail('test@example.com');
@@ -135,9 +127,6 @@ class UserTest extends \PHPUnit_Framework_TestCase
         $this->obj->setEmail(false);
     }
 
-    /**
-     *
-     */
     public function testSetRoles()
     {
         $ret = $this->obj->setRoles(null);
@@ -151,12 +140,9 @@ class UserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['foobar', 'baz'], $this->obj->roles());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $this->obj->setRoles(false);
+        $this->obj->setRoles(42);
     }
 
-    /**
-     *
-     */
     public function testSetLastLoginDate()
     {
         $ret = $this->obj->setLastLoginDate('today');
@@ -182,9 +168,6 @@ class UserTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    /**
-     *
-     */
     public function testSetLastLoginIp()
     {
         $ret = $this->obj->setLastLoginIp('8.8.8.8');
@@ -207,9 +190,6 @@ class UserTest extends \PHPUnit_Framework_TestCase
         $this->obj->setLastLoginIp(false);
     }
 
-    /**
-     *
-     */
     public function testSetLastPasswordDate()
     {
         $ret = $this->obj->setLastPasswordDate('today');
@@ -234,9 +214,6 @@ class UserTest extends \PHPUnit_Framework_TestCase
         $this->obj->setLastPasswordDate(false);
     }
 
-    /**
-     *
-     */
     public function testSetLastPasswordIp()
     {
         $ret = $this->obj->setLastPasswordIp('8.8.8.8');
@@ -287,7 +264,7 @@ class UserTest extends \PHPUnit_Framework_TestCase
 
     public function testSaveToSession()
     {
-        $sessionKey = GenericUser::sessionKey();
+        $sessionKey = User::sessionKey();
         $this->obj['username'] = 'foo';
         //$this->obj->saveToSession();
         //$this->assertEquals($_SESSION[$sessionKey], $this->obj['username']);
@@ -303,5 +280,24 @@ class UserTest extends \PHPUnit_Framework_TestCase
 
         $this->setExpectedException('\InvalidArgumentException');
         $this->obj->resetPassword(false);
+    }
+
+    /**
+     * Set up the service container.
+     *
+     * @return Container
+     */
+    private function container()
+    {
+        if ($this->container === null) {
+            $container = new Container();
+            $containerProvider = new ContainerProvider();
+            $containerProvider->registerBaseServices($container);
+            $containerProvider->registerModelFactory($container);
+
+            $this->container = $container;
+        }
+
+        return $this->container;
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Charcoal\User;
 
-// Dependency from 'charcoal-core'
+// From 'charcoal-object'
 use Charcoal\Object\ContentInterface;
 
 /**

@@ -2,24 +2,43 @@
 
 namespace Charcoal\User\Tests\Acl;
 
+// From PHPUnit
 use PHPUnit_Framework_TestCase;
 
-use Psr\Log\NullLogger;
+// From Pimple
+use Pimple\Container;
 
+// From 'charcoal-user'
 use Charcoal\User\Acl\Role;
+use Charcoal\User\Tests\ContainerProvider;
 
 /**
  *
  */
 class RoleTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * Tested Class.
+     *
+     * @var Role
+     */
     private $obj;
 
+    /**
+     * Store the service container.
+     *
+     * @var Container
+     */
+    private $container;
+
+    /**
+     * Set up the test.
+     */
     public function setUp()
     {
-        $this->obj = new Role([
-            'logger' => new NullLogger()
-        ]);
+        $container = $this->container();
+
+        $this->obj = $container['model/factory']->create(Role::class);
     }
 
     public function testToString()
@@ -64,5 +83,24 @@ class RoleTest extends PHPUnit_Framework_TestCase
         $ret = $this->obj->setSuperuser(1);
         $this->assertSame($ret, $this->obj);
         $this->assertTrue($this->obj->superuser());
+    }
+
+    /**
+     * Set up the service container.
+     *
+     * @return Container
+     */
+    private function container()
+    {
+        if ($this->container === null) {
+            $container = new Container();
+            $containerProvider = new ContainerProvider();
+            $containerProvider->registerBaseServices($container);
+            $containerProvider->registerModelFactory($container);
+
+            $this->container = $container;
+        }
+
+        return $this->container;
     }
 }

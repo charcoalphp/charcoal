@@ -4,7 +4,7 @@ namespace Charcoal\User;
 
 use InvalidArgumentException;
 
-// From `charcoal-core`
+// From 'charcoal-core'
 use Charcoal\Model\ModelMetadata;
 
 /**

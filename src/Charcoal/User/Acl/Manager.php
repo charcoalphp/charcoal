@@ -2,15 +2,14 @@
 
 namespace Charcoal\User\Acl;
 
-// Dependencies from `ext-pdo`
 use PDO;
 use PDOException;
 
-// Dependencies from 'PSR-3' (Logging)
+// From PSR-3
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 
-// Dependencies from `zendframework/zend-permissions`
+// From 'zendframework/zend-permissions'
 use Zend\Permissions\Acl\Acl;
 use Zend\Permissions\Acl\Role\GenericRole;
 

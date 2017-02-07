@@ -2,17 +2,31 @@
 
 namespace Charcoal\Tests\User;
 
+// From PHPUnit
 use PHPUnit_Framework_TestCase;
 
+// From Pimple
+use Pimple\Container;
+
+// From 'charcoal-user'
 use Charcoal\User\AuthTokenMetadata;
+use Charcoal\User\Tests\ContainerProvider;
 
 /**
  *
  */
 class AuthTokenMetadataTest extends PHPUnit_Framework_TestCase
 {
-    public $obj;
+    /**
+     * Tested Class.
+     *
+     * @var AuthTokenMetadata
+     */
+    private $obj;
 
+    /**
+     * Set up the test.
+     */
     public function setUp()
     {
         $this->obj = new AuthTokenMetadata();
