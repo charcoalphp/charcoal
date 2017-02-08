@@ -24,22 +24,27 @@ class TranslatorServiceProviderTest extends PHPUnit_Framework_TestCase
         $this->obj = new TranslatorServiceProvider();
         $this->container = new Container();
         $this->container['config'] = [
-            'locales'=> [
+            'base_path' => realpath(__DIR__.'/../../..'),
+            'locales'   => [
                 'languages' => [
-                    'foo' => ['locale'=>'foo-FOO'],
-                    'bar' => ['locale'=>'bar-BAR']
+                    'foo' => [ 'locale' => 'foo-FOO' ],
+                    'bar' => [ 'locale' => 'bar-BAR' ]
                 ],
-                'default_language'=>'foo',
-                'fallback_languages'=>['foo']
+                'default_language'   => 'foo',
+                'fallback_languages' => [ 'foo' ]
             ],
             'translator' => [
-                'loaders' =>[
+                'loaders' => [
                     'csv',
+                    'dat',
+                    'res',
+                    'ini',
+                    'json',
                     'mo',
                     'php',
                     'po',
+                    'qt',
                     'xliff',
-                    'json',
                     'yaml'
                 ],
                 'paths' => [
@@ -57,22 +62,22 @@ class TranslatorServiceProviderTest extends PHPUnit_Framework_TestCase
     {
         $this->assertFalse(isset($this->container['foofoobarbarbaz']));
         $this->assertTrue(isset($this->container['locales/config']));
-        $this->assertTrue(isset($this->container['locales/languages']));
+        $this->assertTrue(isset($this->container['locales/available-languages']));
         $this->assertTrue(isset($this->container['locales/default-language']));
         $this->assertTrue(isset($this->container['locales/browser-language']));
         $this->assertTrue(isset($this->container['translator/message-selector']));
         $this->assertTrue(isset($this->container['translator']));
     }
 
-    public function testLanguages()
+    public function testAvailableLanguages()
     {
-        $languages = $this->container['locales/languages'];
+        $languages = $this->container['locales/available-languages'];
         $this->assertContains('foo', $languages);
     }
 
-    public function testLocales()
+    public function testLanguages()
     {
-        $languages = $this->container['locales/locales'];
+        $languages = $this->container['locales/languages'];
         $this->assertArrayHasKey('foo', $languages);
     }
 

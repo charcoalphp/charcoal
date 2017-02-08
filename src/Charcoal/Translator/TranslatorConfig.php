@@ -39,10 +39,10 @@ class TranslatorConfig extends AbstractConfig
     public function defaults()
     {
         return [
-            'loaders'   => [
+            'loaders' => [
                 'csv'
             ],
-            'paths'     => [
+            'paths' => [
                 'translations/'
             ],
             'debug'     => false,
@@ -61,9 +61,10 @@ class TranslatorConfig extends AbstractConfig
         $this->loaders = [];
         foreach ($loaders as $loader) {
             if (!in_array($loader, $this->availableLoaders())) {
-                throw new InvalidArgumentException(
-                    sprintf('Loader "%s" is not a valid loader.', $loader)
-                );
+                throw new InvalidArgumentException(sprintf(
+                    'Loader "%s" is not a valid loader.',
+                    $loader
+                ));
             }
             $this->loaders[] = $loader;
         }
@@ -154,10 +155,14 @@ class TranslatorConfig extends AbstractConfig
     {
         return [
             'csv',
+            'dat',
+            'res',
+            'ini',
             'json',
             'mo',
             'php',
             'po',
+            'qt',
             'xliff',
             'yaml'
         ];

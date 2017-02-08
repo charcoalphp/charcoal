@@ -7,9 +7,13 @@ use Pimple\ServiceProviderInterface;
 
 use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\Loader\CsvFileLoader;
+use Symfony\Component\Translation\Loader\IcuDatFileLoader;
+use Symfony\Component\Translation\Loader\IcuResFileLoader;
+use Symfony\Component\Translation\Loader\IniFileLoader;
 use Symfony\Component\Translation\Loader\MoFileLoader;
 use Symfony\Component\Translation\Loader\PhpFileLoader;
 use Symfony\Component\Translation\Loader\PoFileLoader;
+use Symfony\Component\Translation\Loader\QtFileLoader;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Component\Translation\Loader\JsonFileLoader;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
@@ -94,8 +98,8 @@ class TranslatorServiceProvider implements ServiceProviderInterface
             if (!isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
                 return null;
             }
-            $availableLanguages = $container['locales/languages'];
-            $acceptedLanguages = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+            $availableLanguages = $container['locales/available-languages'];
+            $acceptedLanguages  = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
             foreach ($acceptedLanguages as $acceptedLang) {
                 $lang = explode(';', $acceptedLang);
                 if (in_array($lang[0], $availableLanguages)) {
