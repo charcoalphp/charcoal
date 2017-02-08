@@ -35,6 +35,11 @@ class Translator extends SymfonyTranslator
         ];
         $data = array_merge($defaults, $data);
 
+        // If symfony-config is not installed, DON'T use cache.
+        if (!class_exists('\Symfony\Component\Config\ConfigCacheFactory')) {
+            $data['cache_dir'] = null;
+        }
+
         parent::__construct(
             $data['locale'],
             $data['message_selector'],
