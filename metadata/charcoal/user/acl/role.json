@@ -7,6 +7,10 @@
             "type": "object",
             "obj_type": "charcoal/user/acl/role"
         },
+        "name": {
+            "type":"string",
+            "l10n":true
+        },
         "allowed": {
             "type": "string",
             "multiple": true,

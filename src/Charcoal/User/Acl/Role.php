@@ -4,6 +4,10 @@ namespace Charcoal\User\Acl;
 
 use InvalidArgumentException;
 
+use Pimple\Container;
+
+use Charcoal\Translator\TranslatorAwareTrait;
+
 // From 'charcoal-core'
 use Charcoal\Model\AbstractModel;
 
@@ -14,6 +18,8 @@ use Charcoal\Model\AbstractModel;
  */
 class Role extends AbstractModel
 {
+    use TranslatorAwareTrait;
+
     const SEPARATOR = ',';
 
     /**
@@ -29,6 +35,13 @@ class Role extends AbstractModel
      * @var string $parent
      */
     public $parent;
+
+    /**
+     * The user-friendly name.
+     *
+     * @var \Charcoal\Translator\Translation
+     */
+    public $name;
 
     /**
      * List of explicitely allowed permissions.
@@ -65,6 +78,16 @@ class Role extends AbstractModel
             return '';
         }
         return $this->ident;
+    }
+
+    /**
+     * @param Container $container Pimple DI container.
+     * @return void
+     */
+    public function setDependencies(Container $container)
+    {
+        parent::setDependencies($container);
+        $this->setTranslator($container['translator']);
     }
 
     /**
