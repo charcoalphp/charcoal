@@ -62,7 +62,7 @@ class Translator extends SymfonyTranslator
         $translation = new Translation($val, $this->manager);
         foreach ($this->availableLocales() as $lang) {
             if (!isset($translation[$lang]) || $translation[$lang] == $val) {
-                $translation[$lang] = $this->trans($val, [], null, $lang);
+                $translation[$lang] = $this->trans((string)$translation, [], null, $lang);
             }
         }
         return $translation;
