@@ -47,7 +47,7 @@ class TranslatorHelpers implements HelpersInterface
         return [
             '_t' => function ($text, LambdaHelper $helper) {
                 if ($this->translator) {
-                    $text = $this->translator()->trans($text);
+                    $text = $this->translator->trans($text);
                 }
 
                 /** @var string Render any Mustache tags in the translation. */
