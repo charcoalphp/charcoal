@@ -2,13 +2,20 @@
 
 namespace Charcoal\Tests\Ui;
 
+use Pimple\Container;
+
 class AbstractUiTest extends \PHPUnit_Framework_TestCase
 {
     public $obj;
 
     public function setUp()
     {
-        $this->obj = $this->getMockForAbstractClass('\Charcoal\Ui\AbstractUiItem');
+        $container = new Container;
+        $container['translator'] = $GLOBALS['translator'];
+
+        $this->obj = $this->getMockForAbstractClass('\Charcoal\Ui\AbstractUiItem', [[
+            'container' => $container
+        ]]);
     }
 
     public function testSetType()

@@ -3,10 +3,10 @@
 namespace Charcoal\Ui;
 
 // From 'charcoal-config'
-use \Charcoal\Config\EntityInterface;
+use Charcoal\Config\EntityInterface;
 
 // From 'charcoal-view'
-use \Charcoal\View\ViewableInterface;
+use Charcoal\View\ViewableInterface;
 
 /**
  * Defines a UI Item.
@@ -78,7 +78,7 @@ interface UiItemInterface extends EntityInterface, ViewableInterface
     /**
      * Retrieve the title.
      *
-     * @return TranslationString|string|null
+     * @return \Charcoal\Translator\Translation|null
      */
     public function title();
 
@@ -93,7 +93,7 @@ interface UiItemInterface extends EntityInterface, ViewableInterface
     /**
      * Retrieve the sub-title.
      *
-     * @return TranslationString|string|null
+     * @return \Charcoal\Translator\Translation|null
      */
     public function subtitle();
 
@@ -108,7 +108,7 @@ interface UiItemInterface extends EntityInterface, ViewableInterface
     /**
      * Retrieve the description.
      *
-     * @return TranslationString|string|null
+     * @return \Charcoal\Translator\Translation|null
      */
     public function description();
 
@@ -123,7 +123,7 @@ interface UiItemInterface extends EntityInterface, ViewableInterface
     /**
      * Retrieve the notes.
      *
-     * @return TranslationString|string|null
+     * @return \Charcoal\Translator\Translation|null
      */
     public function notes();
 

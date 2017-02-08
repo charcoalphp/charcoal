@@ -2,10 +2,7 @@
 
 namespace Charcoal\Ui;
 
-use \InvalidArgumentException;
-
-// From 'charcoal-core'
-use \Charcoal\Translation\TranslationString;
+use InvalidArgumentException;
 
 /**
  * Provides an implementation of {@see \Charcoal\Ui\UiItemInterface}.
@@ -29,28 +26,28 @@ trait UiItemTrait
     /**
      * The UI item's title.
      *
-     * @var TranslationString|string|null
+     * @var \Charcoal\Translator\Translation
      */
     private $title = '';
 
     /**
      * The UI item's sub-title.
      *
-     * @var TranslationString|string|null
+     * @var \Charcoal\Translator\Translation
      */
     private $subtitle = '';
 
     /**
      * The UI item's description.
      *
-     * @var TranslationString|string|null
+     * @var \Charcoal\Translator\Translation
      */
     private $description = '';
 
     /**
      * The UI item's notes.
      *
-     * @var TranslationString|string|null
+     * @var \Charcoal\Translator\Translation
      */
     private $notes = '';
 
@@ -177,19 +174,14 @@ trait UiItemTrait
      */
     public function setTitle($title)
     {
-        if (TranslationString::isTranslatable($title)) {
-            $this->title = new TranslationString($title);
-        } else {
-            $this->title = null;
-        }
-
+        $this->title = $this->translator()->translation($title);
         return $this;
     }
 
     /**
      * Retrieve the title.
      *
-     * @return TranslationString|string|null
+     * @return \Charcoal\Translator\Translation|null
      */
     public function title()
     {
@@ -204,19 +196,14 @@ trait UiItemTrait
      */
     public function setSubtitle($subtitle)
     {
-        if (TranslationString::isTranslatable($subtitle)) {
-            $this->subtitle = new TranslationString($subtitle);
-        } else {
-            $this->subtitle = null;
-        }
-
+        $this->subtitle = $this->translator()->translation($subtitle);
         return $this;
     }
 
     /**
      * Retrieve the sub-title.
      *
-     * @return TranslationString|string|null
+     * @return \Charcoal\Translator\Translation|null
      */
     public function subtitle()
     {
@@ -231,19 +218,14 @@ trait UiItemTrait
      */
     public function setDescription($description)
     {
-        if (TranslationString::isTranslatable($description)) {
-            $this->description = new TranslationString($description);
-        } else {
-            $this->description = null;
-        }
-
+        $this->description = $this->translator()->translation($description);
         return $this;
     }
 
     /**
      * Retrieve the description.
      *
-     * @return TranslationString|string|null
+     * @return \Charcoal\Translator\Translation|null
      */
     public function description()
     {
@@ -258,19 +240,14 @@ trait UiItemTrait
      */
     public function setNotes($notes)
     {
-        if (TranslationString::isTranslatable($notes)) {
-            $this->notes = new TranslationString($notes);
-        } else {
-            $this->notes = null;
-        }
-
+        $this->notes = $this->translator()->translation($notes);
         return $this;
     }
 
     /**
      * Retrieve the notes.
      *
-     * @return TranslationString|string|null
+     * @return \Charcoal\Translator\Translation|null
      */
     public function notes()
     {
@@ -463,4 +440,9 @@ trait UiItemTrait
 
         return $this;
     }
+
+    /**
+     * @return \Charcoal\Translator\Translator
+     */
+    abstract protected function translator();
 }

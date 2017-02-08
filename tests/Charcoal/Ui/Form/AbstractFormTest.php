@@ -2,6 +2,7 @@
 
 namespace Charcoal\Tests\Ui\Form;
 
+
 use \Charcoal\Ui\Form\GenericForm;
 use \Charcoal\Ui\FormGroup\FormGroupBuilder;
 
@@ -28,6 +29,7 @@ class AbstractFormTest extends \PHPUnit_Framework_TestCase
 
         $container['logger'] = new \Psr\Log\NullLogger();
         $container['view'] = null;
+        $container['translator'] = $GLOBALS['translator'];
 
         $this->container = $container;
 
@@ -36,7 +38,8 @@ class AbstractFormTest extends \PHPUnit_Framework_TestCase
         $this->obj = $this->getMockForAbstractClass('\Charcoal\Ui\Form\AbstractForm', [[
             'logger'             => $container['logger'],
             'layout_builder'     => $container['layout/builder'],
-            'form_group_factory' => $container['form/group/factory']
+            'form_group_factory' => $container['form/group/factory'],
+            'container'          => $container
         ]]);
     }
 

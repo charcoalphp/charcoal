@@ -2,7 +2,7 @@
 
 namespace Charcoal\Ui;
 
-use \InvalidArgumentException;
+use InvalidArgumentException;
 
 /**
  * Provides an implementation of {@see \Charcoal\Ui\UiGroupingInterface}.

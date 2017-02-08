@@ -2,10 +2,10 @@
 
 namespace Charcoal\Ui;
 
-use \InvalidArgumentException;
+use InvalidArgumentException;
 
 // From 'charcoa-config'
-use \Charcoal\Config\AbstractConfig;
+use Charcoal\Config\AbstractConfig;
 
 /**
  * A UI Item configuration set.

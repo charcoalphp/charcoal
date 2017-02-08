@@ -2,15 +2,12 @@
 
 namespace Charcoal\Ui\MenuItem;
 
-use \InvalidArgumentException;
-
-// Module `charcoal-translation` dependencies
-use \Charcoal\Translation\TranslationString;
+use InvalidArgumentException;
 
 // Intra-module (`charcoal-ui`) dependencies
-use \Charcoal\Ui\AbstractUiItem;
-use \Charcoal\Ui\Menu\MenuInterface;
-use \Charcoal\Ui\MenuItem\MenuItemInterface;
+use Charcoal\Ui\AbstractUiItem;
+use Charcoal\Ui\Menu\MenuInterface;
+use Charcoal\Ui\MenuItem\MenuItemInterface;
 
 /**
  * A Basic Menu Item
@@ -31,7 +28,7 @@ abstract class AbstractMenuItem extends AbstractUiItem implements MenuItemInterf
     protected $ident;
 
     /**
-     * @var TranslationString $label
+     * @var \Charcoal\Translator\Translation|null $label
      */
     protected $label;
 
@@ -123,10 +120,7 @@ abstract class AbstractMenuItem extends AbstractUiItem implements MenuItemInterf
      */
     public function setLabel($label)
     {
-        if (TranslationString::isTranslatable($label)) {
-            $this->label = new TranslationString($label);
-        }
-
+        $this->label = $this->translator()->translation($label);
         return $this;
     }
 

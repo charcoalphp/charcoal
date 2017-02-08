@@ -2,28 +2,28 @@
 
 namespace Charcoal\Ui;
 
-use \InvalidArgumentException;
+use InvalidArgumentException;
 
 // From PSR-3 (Logger)
-use \Psr\Log\LoggerAwareInterface;
-use \Psr\Log\LoggerAwareTrait;
-use \Psr\Log\NullLogger;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
+use Psr\Log\NullLogger;
 
-use \Pimple\Container;
+use Pimple\Container;
 
 // From 'charcoal-config'
-use \Charcoal\Config\AbstractEntity;
+use Charcoal\Config\AbstractEntity;
 
-// From 'charcoal-core'
-use \Charcoal\Translation\TranslationString;
+// From 'charcoal-translator'
+use Charcoal\Translator\TranslatorAwareTrait;
 
 // From 'charcoal-view'
-use \Charcoal\View\ViewableInterface;
-use \Charcoal\View\ViewableTrait;
+use Charcoal\View\ViewableInterface;
+use Charcoal\View\ViewableTrait;
 
 // Intra-module ('charcoal-ui') dependencies
-use \Charcoal\Ui\UiItemInterface;
-use \Charcoal\Ui\UiItemTrait;
+use Charcoal\Ui\UiItemInterface;
+use Charcoal\Ui\UiItemTrait;
 
 /**
  * An abstract UI Item.
@@ -35,8 +35,9 @@ abstract class AbstractUiItem extends AbstractEntity implements
     UiItemInterface
 {
     use LoggerAwareTrait;
-    use ViewableTrait;
+    use TranslatorAwareTrait;
     use UiItemTrait;
+    use ViewableTrait;
 
     /**
      * A UI item is active by default.
@@ -70,7 +71,7 @@ abstract class AbstractUiItem extends AbstractEntity implements
      */
     public function setDependencies(Container $container)
     {
-        // This method is a stub. Reimplement in children template classes.
+        $this->setTranslator($container['translator']);
     }
 
     /**

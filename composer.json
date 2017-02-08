@@ -26,7 +26,7 @@
         "psr/log": "^1.0",
         "locomotivemtl/charcoal-config": "~0.7",
         "locomotivemtl/charcoal-factory": "~0.4",
-        "locomotivemtl/charcoal-translation": "~0.1",
+        "locomotivemtl/charcoal-translator": "~0.1",
         "locomotivemtl/charcoal-view": "~0.1"
     },
     "require-dev": {
