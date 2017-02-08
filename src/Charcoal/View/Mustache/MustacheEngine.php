@@ -11,8 +11,6 @@ use Mustache_Engine;
 // Intra-module (`charcoal-view`) depentencies
 use Charcoal\View\AbstractEngine;
 
-use Charcoal\View\Mustache\GenericHelpers;
-use Charcoal\View\Mustache\AssetsHelpers;
 use Charcoal\View\Mustache\HelpersInterface;
 
 /**
@@ -23,9 +21,9 @@ class MustacheEngine extends AbstractEngine
     /**
      * A collection of helpers.
      *
-     * @var HelpersCollection|HelpersInterface[] $helpers
+     * @var array
      */
-    private $helpers;
+    private $helpers = [];
 
     /**
      * The renderering framework.
@@ -40,6 +38,20 @@ class MustacheEngine extends AbstractEngine
     public function type()
     {
         return 'mustache';
+    }
+
+    /**
+     * Build the Mustache Engine with an array of dependencies.
+     *
+     * @param array $data Engine dependencie.
+     */
+    public function __construct(array $data)
+    {
+        parent::__construct($data);
+
+        if (isset($data['helpers'])) {
+            $this->setHelpers($data['helpers']);
+        }
     }
 
     /**
@@ -73,37 +85,68 @@ class MustacheEngine extends AbstractEngine
     /**
      * Set the engine's helpers.
      *
-     * This method overwrites existing helpers.
-     *
-     * Method accepts a variable list of helpers to merge.
-     *
+     * @param  array|Traversable|HelpersInterface $helpers Mustache helpers.
+     * @throws InvalidArgumentException If the given helper(s) are invalid.
      * @return MustacheEngine Chainable
      */
-    public function setHelpers()
+    public function setHelpers($helpers)
     {
-        $helpers = func_get_args();
-        $helpers = array_map([ $this, 'arrayableHelpers' ], $helpers);
+        if ($helpers instanceof HelpersInterface) {
+            $helpers = $helpers->toArray();
+        }
 
-        $this->helpers = call_user_func_array('array_merge', $helpers);
+        if (!is_array($helpers) && !$helpers instanceof Traversable) {
+            throw new InvalidArgumentException(sprintf(
+                'setHelpers expects an array of helpers, received %s',
+                (is_object($helpers) ? get_class($helpers) : gettype($helpers))
+            ));
+        }
+
+        $this->helpers = [];
+        foreach ($helpers as $name => $helper) {
+            $this->addHelper($name, $helper);
+        }
 
         return $this;
     }
 
     /**
-     * Merge (replacing or adding) helpers.
+     * Merge (replacing or adding) the engine's helpers.
      *
-     * Method accepts a variable list of helpers to merge.
-     *
+     * @param  array|Traversable|HelpersInterface $helpers Mustache helpers.
+     * @throws InvalidArgumentException If the given helper(s) are invalid.
      * @return MustacheEngine Chainable
      */
-    public function mergeHelpers()
+    public function mergeHelpers($helpers)
     {
-        $helpers = func_get_args();
-        $helpers = array_map([ $this, 'arrayableHelpers' ], $helpers);
+        if ($helpers instanceof HelpersInterface) {
+            $helpers = $helpers->toArray();
+        }
 
-        array_unshift($helpers, $this->helpers());
+        if (!is_array($helpers) && !$helpers instanceof Traversable) {
+            throw new InvalidArgumentException(sprintf(
+                'mergeHelpers expects an array of helpers, received %s',
+                (is_object($helpers) ? get_class($helpers) : gettype($helpers))
+            ));
+        }
 
-        $this->helpers = call_user_func_array('array_merge', $helpers);
+        foreach ($helpers as $name => $helper) {
+            $this->addHelper($name, $helper);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Add a helper.
+     *
+     * @param  string $name   The tag name.
+     * @param  mixed  $helper The tag value.
+     * @return MustacheEngine Chainable
+     */
+    public function addHelper($name, $helper)
+    {
+        $this->helpers[$name] = $helper;
 
         return $this;
     }
@@ -115,49 +158,7 @@ class MustacheEngine extends AbstractEngine
      */
     public function helpers()
     {
-        if ($this->helpers === null) {
-            $this->setHelpers($this->createHelpers());
-        }
-
         return $this->helpers;
-    }
-
-    /**
-     * Retrieve the engine's default helpers.
-     *
-     * @return array
-     */
-    protected function createHelpers()
-    {
-        $generic = new GenericHelpers();
-        $assets  = new AssetsHelpers();
-
-        return array_merge(
-            $this->arrayableHelpers($generic),
-            $this->arrayableHelpers($assets)
-        );
-    }
-
-    /**
-     * Parse array of helpers from HelpersInterface or Arrayable.
-     *
-     * @param mixed $helpers An arrayable variable to parse.
-     * @throws InvalidArgumentException If the helpers are not arrayable.
-     * @return array
-     */
-    private function arrayableHelpers($helpers)
-    {
-        if (is_array($helpers)) {
-            return $helpers;
-        } elseif ($helpers instanceof HelpersInterface) {
-            return $helpers->toArray();
-        } elseif ($helpers instanceof Traversable) {
-            return iterator_to_array($helpers);
-        } else {
-            throw new InvalidArgumentException(
-                'Unable to convert helpers. Must be an array or a traversable object.'
-            );
-        }
     }
 
     /**

@@ -8,6 +8,8 @@ use Psr\Log\NullLogger;
 
 use Charcoal\View\Mustache\MustacheLoader;
 use Charcoal\View\Mustache\MustacheEngine;
+use Charcoal\View\Mustache\AssetsHelpers;
+use Charcoal\View\Mustache\TranslatorHelpers;
 use Charcoal\View\AbstractView;
 
 /**
@@ -16,25 +18,30 @@ use Charcoal\View\AbstractView;
 class AbstractViewTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * Instance of object under test
-     * @var AbstractViewClass $obj
+     * Tested Class.
+     *
+     * @var AbstractView
      */
     public $obj;
 
     /**
-     *
+     * Set up the test.
      */
     public function setUp()
     {
         $logger = new NullLogger();
         $loader = new MustacheLoader([
-            'logger'=>$logger,
-            'base_path'=>__DIR__,
-            'paths'=>['Mustache/templates']
+            'logger'    => $logger,
+            'base_path' => __DIR__,
+            'paths'     => [ 'Mustache/templates' ]
         ]);
+
+        $assets = new AssetsHelpers();
+        $i18n   = new TranslatorHelpers();
         $engine = new MustacheEngine([
-            'logger'=>$logger,
-            'loader'=>$loader
+            'logger'  => $logger,
+            'loader'  => $loader,
+            'helpers' => array_merge($assets->toArray(), $i18n->toArray())
         ]);
         $this->obj = $this->getMockForAbstractClass(AbstractView::class, [[
             'logger' => $logger,
@@ -57,7 +64,7 @@ class AbstractViewTest extends PHPUnit_Framework_TestCase
      */
     public function testRender()
     {
-        $this->assertEquals('Hello Charcoal', trim($this->obj->render('foo', ['foo'=>'Charcoal'])));
+        $this->assertEquals('Hello Charcoal', trim($this->obj->render('foo', [ 'foo' => 'Charcoal' ])));
     }
 
     /**
@@ -77,7 +84,7 @@ class AbstractViewTest extends PHPUnit_Framework_TestCase
     window.alert(\'Charcoal Unit Tests\');
 </script>');
 
-        $this->assertEquals($expected, trim($this->obj->renderTemplate('helpers', ['foo'=>'Charcoal'])));
+        $this->assertEquals($expected, trim($this->obj->renderTemplate('helpers', [ 'foo' => 'Charcoal' ])));
     }
 
     public function testLoadTemplateInvalidStringThrowsException()

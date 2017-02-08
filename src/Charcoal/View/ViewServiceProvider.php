@@ -10,6 +10,8 @@ use Pimple\Container;
 use Charcoal\View\GenericView;
 use Charcoal\View\Mustache\MustacheEngine;
 use Charcoal\View\Mustache\MustacheLoader;
+use Charcoal\View\Mustache\AssetsHelpers;
+use Charcoal\View\Mustache\TranslatorHelpers;
 use Charcoal\View\Php\PhpEngine;
 use Charcoal\View\Php\PhpLoader;
 use Charcoal\View\Twig\TwigEngine;
@@ -61,6 +63,9 @@ class ViewServiceProvider implements ServiceProviderInterface
         $this->registerViewConfig($container);
         $this->registerLoaderServices($container);
         $this->registerEngineServices($container);
+        $this->registerMustacheTemplatingServices($container);
+        # $this->registerPhpTemplatingServices($container);
+        # $this->registerTwigTemplatingServices($container);
         $this->registerViewServices($container);
     }
 
@@ -148,7 +153,8 @@ class ViewServiceProvider implements ServiceProviderInterface
          */
         $container['view/engine/mustache'] = function (Container $container) {
             $engineOptions = $container['view/engine/dependencies'];
-            $engineOptions['loader'] = $container['view/loader/mustache'];
+            $engineOptions['loader']  = $container['view/loader/mustache'];
+            $engineOptions['helpers'] = $container['view/mustache/helpers'];
             return new MustacheEngine($engineOptions);
         };
 
@@ -182,6 +188,31 @@ class ViewServiceProvider implements ServiceProviderInterface
             $viewConfig = $container['view/config'];
             $type = $viewConfig['default_engine'];
             return $container['view/engine/'.$type];
+        };
+    }
+
+    /**
+     * @param Container $container The DI container.
+     * @return void
+     */
+    protected function registerMustacheTemplatingServices(Container $container)
+    {
+        /**
+         * Add global helpers to the Mustache Engine.
+         *
+         * @param Container $container A container instance.
+         * @return array
+         */
+        $container['view/mustache/helpers'] = function (Container $container) {
+            $deps = [];
+            if (isset($container['translator'])) {
+                $deps['translator'] = $container['translator'];
+            }
+
+            $assets = new AssetsHelpers();
+            $i18n   = new TranslatorHelpers($deps);
+
+            return array_merge($assets->toArray(), $i18n->toArray());
         };
     }
 

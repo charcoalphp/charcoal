@@ -63,7 +63,7 @@ class ViewServiceProviderTest extends PHPUnit_Framework_TestCase
             'config' => [
                 'base_path' => __DIR__,
                 'view' => [
-                    'paths' => ['Mustache/templates'],
+                    'paths' => [ 'Mustache/templates' ],
                     'default_engine' => 'mustache'
                 ]
             ]
@@ -71,7 +71,7 @@ class ViewServiceProviderTest extends PHPUnit_Framework_TestCase
         $provider = new ViewServiceProvider();
         $provider->register($container);
 
-        $ret = $container['view']->render('foo', ['foo'=>'Bar']);
+        $ret = $container['view']->render('foo', [ 'foo' => 'Bar' ]);
         $this->assertEquals('Hello Bar', trim($ret));
 
         $response = new Response();
