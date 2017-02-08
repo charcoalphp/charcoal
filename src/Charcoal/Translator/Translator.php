@@ -8,16 +8,26 @@ use Charcoal\Translator\LocalesManager;
 use Charcoal\Translator\Translation;
 
 /**
- * Extends the symfony translator to allow returned values in a "Translation" oject,
- * containing localizations for all locales.
+ * Charcoal Translator.
  *
+ * Extends the Symfony translator to allow returned values in a "Translation" oject,
+ * containing localizations for all locales.
  */
 class Translator extends SymfonyTranslator
 {
     /**
+     * The locales manager.
+     *
      * @var LocalesManager
      */
     private $manager;
+
+    /**
+     * The loaded domains.
+     *
+     * @var string[]
+     */
+    private $domains = [ 'messages' ];
 
     /**
      * @param array $data Constructor data.
@@ -49,9 +59,38 @@ class Translator extends SymfonyTranslator
     }
 
     /**
+     * Adds a resource.
+     *
+     * @see    SymfonyTranslator::addResource() Keep track of the translation domains.
+     * @param  string      $format   The name of the loader (@see addLoader()).
+     * @param  mixed       $resource The resource name.
+     * @param  string      $locale   The locale.
+     * @param  string|null $domain   The domain.
+     * @return void
+     */
+    public function addResource($format, $resource, $locale, $domain = null)
+    {
+        if (null !== $domain) {
+            $this->domains[] = $domain;
+        }
+
+        parent::addResource($format, $resource, $locale, $domain);
+    }
+
+    /**
+     * Retrieve the loaded domains.
+     *
+     * @return string[]
+     */
+    public function availableDomains()
+    {
+        return $this->domains;
+    }
+
+    /**
      * Get a translation object from a (mixed) value.
      *
-     * @param mixed $val The string or translation-object to retrieve.
+     * @param  mixed $val The string or translation-object to retrieve.
      * @return Translation|null
      */
     public function translation($val)
@@ -71,7 +110,7 @@ class Translator extends SymfonyTranslator
     /**
      * Get a translated string from a (mixed) value.
      *
-     * @param mixed $val The string or translation-object to retrieve.
+     * @param  mixed $val The string or translation-object to retrieve.
      * @return string
      */
     public function translate($val)
@@ -85,7 +124,9 @@ class Translator extends SymfonyTranslator
     }
 
     /**
-     * @return string[]
+     * Retrieve the available locales information.
+     *
+     * @return array
      */
     public function locales()
     {
@@ -93,6 +134,8 @@ class Translator extends SymfonyTranslator
     }
 
     /**
+     * Retrieve the available locales (language codes).
+     *
      * @return string[]
      */
     public function availableLocales()
@@ -100,21 +143,24 @@ class Translator extends SymfonyTranslator
         return $this->manager->availableLocales();
     }
 
-        /**
-         * Ensure that the `setLocale()` method also changes the locales manager's language.
-         *
-         * @see SymfonyTranslator::setLocale()
-         * @param string $locale The locale ident (language) to set.
-         * @return void
-         */
+    /**
+     * Sets the current locale.
+     *
+     * @see    SymfonyTranslator::setLocale() Ensure that the method also changes the locales manager's language.
+     * @param  string $locale The locale.
+     * @return void
+     */
     public function setLocale($locale)
     {
         parent::setLocale($locale);
+
         $this->manager->setCurrentLocale($locale);
     }
 
     /**
-     * @param LocalesManager $manager The Locales manager.
+     * Set the locales manager.
+     *
+     * @param  LocalesManager $manager The locales manager.
      * @return void
      */
     private function setManager(LocalesManager $manager)
@@ -123,7 +169,9 @@ class Translator extends SymfonyTranslator
     }
 
     /**
-     * @param mixed $val The value to be checked.
+     * Determine if the value is translatable.
+     *
+     * @param  mixed $val The value to be checked.
      * @return boolean
      */
     private function isValidTranslation($val)

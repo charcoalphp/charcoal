@@ -67,7 +67,7 @@ class LocalesManager
     /**
      * Retrieve the available locales information.
      *
-     * @return array;
+     * @return array
      */
     public function locales()
     {
@@ -75,7 +75,7 @@ class LocalesManager
     }
 
     /**
-     * Retrieve the available languages (locale codes).
+     * Retrieve the available locales (language codes).
      *
      * @return string[]
      */
