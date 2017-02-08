@@ -101,12 +101,12 @@ class Translator extends SymfonyTranslator
     }
 
         /**
-     * Ensure that the `setLocale()` method also changes the locales manager's language.
-     *
-     * @see SymfonyTranslator::setLocale()
-     * @param string $locale The locale ident (language) to set.
-     * @return void
-     */
+         * Ensure that the `setLocale()` method also changes the locales manager's language.
+         *
+         * @see SymfonyTranslator::setLocale()
+         * @param string $locale The locale ident (language) to set.
+         * @return void
+         */
     public function setLocale($locale)
     {
         parent::setLocale($locale);
