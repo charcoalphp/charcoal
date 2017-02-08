@@ -13,22 +13,35 @@ class TranslatorConfig extends AbstractConfig
 {
     /**
      * Available resource loaders.
+     *
      * @var string[]
      */
     private $loaders;
 
     /**
-     * Translation resources paths.
+     * Translation resource paths.
+     *
      * @var string[]
      */
     private $paths;
 
     /**
+     * Mapping of domains/locales/messages.
+     *
+     * @var array
+     */
+    private $translations;
+
+    /**
+     * Debug mode.
+     *
      * @var boolean
      */
     private $debug;
 
     /**
+     * The directory to use for the cache.
+     *
      * @var string
      */
     private $cacheDir;
@@ -45,11 +58,11 @@ class TranslatorConfig extends AbstractConfig
             'paths' => [
                 'translations/'
             ],
-            'debug'     => false,
-            'cache_dir' => 'translator_cache'
+            'translations' => [],
+            'debug'        => false,
+            'cache_dir'    => 'translator_cache'
         ];
     }
-
 
     /**
      * @param string[] $loaders The list of active loaders.
@@ -104,6 +117,58 @@ class TranslatorConfig extends AbstractConfig
     public function paths()
     {
         return $this->paths;
+    }
+
+    /**
+     * Set mapping of additional translations.
+     *
+     * Expects:
+     * ```json
+     * {
+     *     "<domain>": {
+     *        "<locale>": {
+     *            "<translation-key>": "translation"
+     *        }
+     *     }
+     * }
+     * ```
+     *
+     * @param  array $translations Mapping of domains/locales/messages.
+     * @throws InvalidArgumentException If the path is not a string.
+     * @return TranslatorConfig Chainable
+     */
+    public function setTranslations(array $translations)
+    {
+        $this->translations = [];
+        foreach ($translations as $domain => $data) {
+            if (!is_array($data)) {
+                throw new InvalidArgumentException(
+                    'Translator translations must be a 3-level array'
+                );
+            }
+
+            foreach ($data as $locale => $messages) {
+                if (!is_array($messages)) {
+                    throw new InvalidArgumentException(
+                        'Translator translations must be a 3-level array'
+                    );
+                }
+            }
+        }
+
+        $this->translations = $translations;
+
+        return $this;
+    }
+
+    /**
+     * Retrieve mapping of additional translations.
+     *
+     * @return array
+     */
+    public function translations()
+    {
+        return $this->translations;
     }
 
     /**

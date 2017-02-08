@@ -151,10 +151,12 @@ class TranslatorServiceProvider implements ServiceProviderInterface
         };
 
         /**
+         * @param  Container $container Pimple DI container.
          * @return array
          */
-        $container['translator/translations'] = function () {
-            return [];
+        $container['translator/translations'] = function (Container $container) {
+            $translatorConfig = $container['translator/config'];
+            return $translatorConfig['translations'];
         };
 
         /**
