@@ -157,6 +157,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     {
         $this->setLogger($data['logger']);
         $this->setPdo($data['database']);
+        $this->setTranslator($data['translator']);
 
         // Optional DescribableInterface dependencies
         if (isset($data['property_factory'])) {
@@ -179,7 +180,6 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     public function setDependencies(Container $container)
     {
-        $this->setTranslator($container['translator']);
         $this->setPropertyFactory($container['property/factory']);
         $this->setMetadataLoader($container['metadata/loader']);
     }
