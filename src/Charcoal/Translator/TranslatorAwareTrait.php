@@ -35,7 +35,7 @@ trait TranslatorAwareTrait
     {
         if ($this->translator === null) {
             throw new Exception(
-                'Translator'
+                'Translator has not been set on this object.'
             );
         }
         return $this->translator;
