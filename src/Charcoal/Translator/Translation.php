@@ -48,7 +48,11 @@ class Translation implements
     public function __toString()
     {
         $lang = $this->manager->currentLocale();
-        return $this->val[$lang];
+        if (isset($this->val[$lang])) {
+            return $this->val[$lang];
+        } else {
+            return '';
+        }
     }
 
     /**
