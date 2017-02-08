@@ -163,7 +163,7 @@ class Role extends AbstractModel
 
         if (is_string($denied)) {
             $denied = explode(self::SEPARATOR, $denied);
-            $denied = array_walk('trim', $denied);
+            $denied = array_map('trim', $denied);
         }
         if (!is_array($denied)) {
             throw new InvalidArgumentException(
