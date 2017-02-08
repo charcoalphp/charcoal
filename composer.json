@@ -32,6 +32,9 @@
     },
     "scripts": {
         "test": [
+            "@tests"
+        ],
+        "tests": [
             "@phplint",
             "@phpcs",
             "@phpunit"

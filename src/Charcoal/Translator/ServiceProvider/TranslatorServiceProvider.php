@@ -24,7 +24,10 @@ use Charcoal\Translator\Translator;
 use Charcoal\Translator\TranslatorConfig;
 
 /**
+ * Translation Service Provider
  *
+ * Provides a service for translating your application into different languages,
+ * and manage the target locale of a Charcoal application.
  */
 class TranslatorServiceProvider implements ServiceProviderInterface
 {

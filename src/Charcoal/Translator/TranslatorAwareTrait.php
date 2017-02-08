@@ -2,7 +2,7 @@
 
 namespace Charcoal\Translator;
 
-use Exception;
+use RuntimeException;
 
 use Charcoal\Translator\Translator;
 
@@ -28,13 +28,13 @@ trait TranslatorAwareTrait
     }
 
     /**
-     * @throws Exception If the translator is accessed before having been set.
+     * @throws RuntimeException If the translator is accessed before having been set.
      * @return Translator
      */
     protected function translator()
     {
         if ($this->translator === null) {
-            throw new Exception(
+            throw new RuntimeException(
                 'Translator has not been set on this object.'
             );
         }
