@@ -50,13 +50,17 @@ class LocalesManager
         $this->languages = array_keys($this->locales);
 
         if (isset($data['default_language'])) {
-            if (!in_array($data['default_language'], $this->languages)) {
-                throw new InvalidArgumentException(
-                    sprintf(
-                        'Default language is not a valid language. Must be one of "%s"',
-                        implode(', ', $this->languages)
-                    )
-                );
+            if (!$this->hasLocale($data['default_language'])) {
+                $lang = $data['default_language'];
+                if (!is_string($lang)) {
+                    $lang = is_object($lang) ? get_class($lang) : gettype($lang);
+                }
+
+                throw new InvalidArgumentException(sprintf(
+                    'Unsupported default language; must be one of "%s", received %s',
+                    implode(', ', $this->languages),
+                    $lang
+                ));
             }
             $this->defaultLanguage = $data['default_language'];
         } else {
@@ -96,9 +100,15 @@ class LocalesManager
             return;
         }
         if (!$this->hasLocale($lang)) {
-            throw new InvalidArgumentException(
-                sprintf('Invalid language. Must be one of "%s"', implode(', ', $this->availableLocales()))
-            );
+            if (!is_string($lang)) {
+                $lang = is_object($lang) ? get_class($lang) : gettype($lang);
+            }
+
+            throw new InvalidArgumentException(sprintf(
+                'Unsupported language; must be one of "%s", received %s',
+                implode(', ', $this->availableLocales()),
+                $lang
+            ));
         }
         $this->currentLocale = $lang;
     }

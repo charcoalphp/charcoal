@@ -74,9 +74,10 @@ class Translation implements
     public function offsetExists($lang)
     {
         if (!is_string($lang)) {
-            throw new InvalidArgumentException(
-                sprintf('Translation key must be a string. (%s given)', gettype($lang))
-            );
+            throw new InvalidArgumentException(sprintf(
+                'Invalid language; must be a string, received %s',
+                (is_object($lang) ? get_class($lang) : gettype($lang))
+            ));
         }
 
         return !empty($this->val[$lang]);
@@ -92,9 +93,10 @@ class Translation implements
     public function offsetGet($lang)
     {
         if (!is_string($lang)) {
-            throw new InvalidArgumentException(
-                sprintf('Translation key must be a string. (%s given)', gettype($lang))
-            );
+            throw new InvalidArgumentException(sprintf(
+                'Invalid language; must be a string, received %s',
+                (is_object($lang) ? get_class($lang) : gettype($lang))
+            ));
         }
 
         return $this->val[$lang];
@@ -110,15 +112,17 @@ class Translation implements
     public function offsetSet($lang, $val)
     {
         if (!is_string($lang)) {
-            throw new InvalidArgumentException(
-                sprintf('Translation key must be a string. (%s given)', gettype($lang))
-            );
+            throw new InvalidArgumentException(sprintf(
+                'Invalid language; must be a string, received %s',
+                (is_object($lang) ? get_class($lang) : gettype($lang))
+            ));
         }
 
         if (!is_string($val)) {
-            throw new InvalidArgumentException(
-                'Localized value must be a string.'
-            );
+            throw new InvalidArgumentException(sprintf(
+                'Translation must be a string, received %s',
+                (is_object($val) ? get_class($val) : gettype($val))
+            ));
         }
 
         $this->val[$lang] = $val;
@@ -133,9 +137,10 @@ class Translation implements
     public function offsetUnset($lang)
     {
         if (!is_string($lang)) {
-            throw new InvalidArgumentException(
-                sprintf('Translation key must be a string. (%s given)', gettype($lang))
-            );
+            throw new InvalidArgumentException(sprintf(
+                'Invalid language; must be a string, received %s',
+                (is_object($lang) ? get_class($lang) : gettype($lang))
+            ));
         }
 
         unset($this->val[$lang]);
@@ -164,7 +169,7 @@ class Translation implements
      *       be a hash in the `lang` => `string` format.
      *     - string: The value will be assigned to the current language.
      * @return self
-     * @throws InvalidArgumentException If value is invalid.
+     * @throws InvalidArgumentException If language or value are invalid.
      */
     private function setVal($val)
     {
@@ -173,7 +178,14 @@ class Translation implements
         } elseif (is_array($val)) {
             $this->val = [];
             foreach ($val as $lang => $l10n) {
-                $this->addVal($lang, (string)$l10n);
+                if (!is_string($lang)) {
+                    throw new InvalidArgumentException(sprintf(
+                        'Invalid language; must be a string, received %s',
+                        (is_object($lang) ? get_class($lang) : gettype($lang))
+                    ));
+                }
+
+                $this->val[$lang] = (string)$l10n;
             }
         } elseif (is_string($val)) {
             $lang = $this->manager->currentLocale();
@@ -184,30 +196,6 @@ class Translation implements
                 'Invalid localized value.'
             );
         }
-        return $this;
-    }
-
-    /**
-     * Add a translation value to a specified and available language.
-     *
-     * @param  string $lang A language identifier.
-     * @param  string $val  The translation to be added.
-     * @return Translation Chainable
-     * @throws InvalidArgumentException If the language or value is invalid.
-     */
-    private function addVal($lang, $val)
-    {
-        if (!is_string($lang)) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    'Invalid language, received %s',
-                    (is_object($lang) ? get_class($lang) : gettype($lang))
-                )
-            );
-        }
-
-        $this->val[$lang] = $val;
-
         return $this;
     }
 }

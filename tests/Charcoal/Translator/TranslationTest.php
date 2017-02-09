@@ -15,38 +15,35 @@ class TranslationTest extends PHPUnit_Framework_TestCase
         return new LocalesManager([
             'locales' => [
                 'foo' => [
-                    'locale'=>'foo_FOO.UTF8'
+                    'locale' => 'foo_FOO.UTF8'
                 ],
                 'bar' => [
-                    'locale'=>'bar_BAR.UTF8'
+                    'locale' => 'bar_BAR.UTF8'
                 ]
             ],
-            'default_language'=>'foo',
-            'fallback_languages' => ['foo']
+            'default_language'   => 'foo',
+            'fallback_languages' => [ 'foo' ]
 
         ]);
     }
 
-    /**
-     *
-     */
     public function testConstructorWithStringParam()
     {
         $obj = new Translation('foobar', $this->languageManager());
         $this->assertEquals('foobar', (string)$obj);
         $this->assertEquals('foobar', $obj['foo']);
-        $this->assertEquals(['foo'=>'foobar'], $obj->data());
+        $this->assertEquals([ 'foo' => 'foobar' ], $obj->data());
         $this->assertTrue(isset($obj['foo']));
         $this->assertFalse(isset($obj['bar']));
     }
 
     public function testConstructorWithArrayParam()
     {
-        $obj = new Translation(['foo'=>'foobar', 'bar'=>'barfoo'], $this->languageManager());
+        $obj = new Translation([ 'foo' => 'foobar', 'bar' => 'barfoo' ], $this->languageManager());
         $this->assertEquals('foobar', (string)$obj);
         $this->assertEquals('foobar', $obj['foo']);
         $this->assertEquals('barfoo', $obj['bar']);
-        $this->assertEquals(['foo'=>'foobar', 'bar'=>'barfoo'], $obj->data());
+        $this->assertEquals([ 'foo' => 'foobar', 'bar' => 'barfoo' ], $obj->data());
         $this->assertTrue(isset($obj['foo']));
         $this->assertTrue(isset($obj['bar']));
         $this->assertFalse(isset($obj['baz']));
@@ -54,13 +51,13 @@ class TranslationTest extends PHPUnit_Framework_TestCase
 
     public function testConstructorWithObjectParam()
     {
-        $trans = new Translation(['foo'=>'foobar', 'bar'=>'barfoo'], $this->languageManager());
+        $trans = new Translation([ 'foo' => 'foobar', 'bar' => 'barfoo' ], $this->languageManager());
         $obj = new Translation($trans, $this->languageManager());
 
         $this->assertEquals('foobar', (string)$obj);
         $this->assertEquals('foobar', $obj['foo']);
         $this->assertEquals('barfoo', $obj['bar']);
-        $this->assertEquals(['foo'=>'foobar', 'bar'=>'barfoo'], $obj->data());
+        $this->assertEquals([ 'foo' => 'foobar', 'bar' => 'barfoo'], $obj->data());
         $this->assertTrue(isset($obj['foo']));
         $this->assertTrue(isset($obj['bar']));
         $this->assertFalse(isset($obj['baz']));
@@ -123,17 +120,16 @@ class TranslationTest extends PHPUnit_Framework_TestCase
         unset($obj[0]);
     }
 
-
     public function testInvalidValueThrowsException()
     {
         $this->setExpectedException('\InvalidArgumentException');
-        $obj = new Translation(['foo'], $this->languageManager());
+        $obj = new Translation([ 'foo' ], $this->languageManager());
     }
 
     public function testJsonSerialize()
     {
         $obj = new Translation('foobar', $this->languageManager());
         $ret = json_encode($obj);
-        $this->assertEquals(['foo'=>'foobar'], json_decode($ret, true));
+        $this->assertEquals([ 'foo' => 'foobar' ], json_decode($ret, true));
     }
 }
