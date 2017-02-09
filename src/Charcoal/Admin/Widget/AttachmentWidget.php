@@ -2,32 +2,33 @@
 
 namespace Charcoal\Admin\Widget;
 
-use \ArrayIterator;
-use \RuntimeException;
-use \InvalidArgumentException;
+use ArrayIterator;
+use RuntimeException;
+use InvalidArgumentException;
 
-use \Pimple\Container;
+// From Pimple
+use Pimple\Container;
 
 // From 'bobthecow/mustache.php'
-use \Mustache_LambdaHelper as LambdaHelper;
+use Mustache_LambdaHelper as LambdaHelper;
 
 // From 'charcoal-factory'
-use \Charcoal\Factory\FactoryInterface;
+use Charcoal\Factory\FactoryInterface;
 
 // From 'charcoal-core'
-use \Charcoal\Loader\CollectionLoader;
-use \Charcoal\Model\ModelFactory;
+use Charcoal\Loader\CollectionLoader;
+use Charcoal\Model\ModelFactory;
 
 // From 'charcoal-admin'
-use \Charcoal\Admin\AdminWidget;
-use \Charcoal\Admin\Ui\ObjectContainerInterface;
-use \Charcoal\Admin\Ui\ObjectContainerTrait;
+use Charcoal\Admin\AdminWidget;
+use Charcoal\Admin\Ui\ObjectContainerInterface;
+use Charcoal\Admin\Ui\ObjectContainerTrait;
 
-// From 'charcoal-translation'
-use \Charcoal\Translation\TranslationString;
+// From 'charcoal-translator'
+use Charcoal\Translator\Translation;
 
 // From 'beneroch/charcoal-attachments'
-use \Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
+use Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
 
 /**
  *
@@ -49,7 +50,7 @@ class AttachmentWidget extends AdminWidget implements
     /**
      * The widget's title.
      *
-     * @var TranslationString|string[]
+     * @var Translation|string|null
      */
     private $title;
 
@@ -65,14 +66,14 @@ class AttachmentWidget extends AdminWidget implements
     /**
      * The attachment heading (property or template).
      *
-     * @var string[]|string
+     * @var Translation|string|null
      */
     protected $attachmentHeading;
 
     /**
      * The attachment preview  (property or template).
      *
-     * @var string[]|string
+     * @var Translation|string|null
      */
     protected $attachmentPreview;
 
@@ -107,7 +108,6 @@ class AttachmentWidget extends AdminWidget implements
     {
         parent::setDependencies($container);
 
-        $this->setModelFactory($container['model/factory']);
         $this->setWidgetFactory($container['widget/factory']);
     }
 
@@ -195,14 +195,14 @@ class AttachmentWidget extends AdminWidget implements
         static $search;
 
         if ($search === null) {
-            $attr = ['href', 'link', 'url', 'src'];
-            $uri  = ['../', './', '/', 'data', 'fax', 'file', 'ftp', 'geo',
-                'http', 'mailto', 'sip', 'tag', 'tel', 'urn'];
+            $attr = [ 'href', 'link', 'url', 'src' ];
+            $uri  = [ '../', './', '/', 'data', 'fax', 'file', 'ftp', 'geo',
+                'http', 'mailto', 'sip', 'tag', 'tel', 'urn' ];
 
             $search = sprintf(
                 '(?<=%1$s=["\'])(?!%2$s)(\S+)(?=["\'])',
-                implode('=["\']|', array_map('preg_quote', $attr, ['~'])),
-                implode('|', array_map('preg_quote', $uri, ['~']))
+                implode('=["\']|', array_map('preg_quote', $attr, [ '~' ])),
+                implode('|', array_map('preg_quote', $uri, [ '~' ]))
             );
         }
 
@@ -260,7 +260,7 @@ class AttachmentWidget extends AdminWidget implements
                 $path = strval($path);
             }
 
-            if ($path && strpos($path, ':') === false && !in_array($path[0], ['/', '#', '?'])) {
+            if ($path && strpos($path, ':') === false && !in_array($path[0], [ '/', '#', '?' ])) {
                 return $base.$path;
             }
 
@@ -299,7 +299,7 @@ class AttachmentWidget extends AdminWidget implements
      *
      * @param  string $heading The attachment heading template.
      * @throws InvalidArgumentException If provided argument is not of type 'string'.
-     * @return string[]|string
+     * @return self
      */
     public function setAttachmentHeading($heading)
     {
@@ -313,7 +313,7 @@ class AttachmentWidget extends AdminWidget implements
      *
      * @param  string $preview The attachment preview template.
      * @throws InvalidArgumentException If provided argument is not of type 'string'.
-     * @return string[]|string
+     * @return self
      */
     public function setAttachmentPreview($preview)
     {
@@ -325,8 +325,8 @@ class AttachmentWidget extends AdminWidget implements
     /**
      * Set whether to show a heading for each attached object.
      *
-     * @param boolean $show The show heading flag.
-     * @return string
+     * @param  boolean $show The show heading flag.
+     * @return self
      */
     public function setShowAttachmentHeading($show)
     {
@@ -338,8 +338,8 @@ class AttachmentWidget extends AdminWidget implements
     /**
      * Set whether to show a preview for each attached object.
      *
-     * @param boolean $show The show preview flag.
-     * @return string
+     * @param  boolean $show The show preview flag.
+     * @return self
      */
     public function setShowAttachmentPreview($show)
     {
@@ -353,7 +353,7 @@ class AttachmentWidget extends AdminWidget implements
      *
      * Prevents the relationship from deleting all non related attachments.
      *
-     * @param string $id The group identifier.
+     * @param  string $id The group identifier.
      * @return self
      */
     public function setGroup($id)
@@ -379,16 +379,12 @@ class AttachmentWidget extends AdminWidget implements
     /**
      * Set the widget's title.
      *
-     * @param mixed $title The title for the current widget.
+     * @param  mixed $title The title for the current widget.
      * @return self
      */
     public function setTitle($title)
     {
-        if (TranslationString::isTranslatable($title)) {
-            $this->title = new TranslationString($title);
-        } else {
-            $this->title = null;
-        }
+        $this->title = $this->translator()->translation($title);
 
         return $this;
     }
@@ -396,7 +392,7 @@ class AttachmentWidget extends AdminWidget implements
     /**
      * Set how many attachments are displayed per page.
      *
-     * @param integer $num The number of results to retrieve, per page.
+     * @param  integer $num The number of results to retrieve, per page.
      * @throws InvalidArgumentException If the parameter is not numeric or < 0.
      * @return self
      */
@@ -455,7 +451,7 @@ class AttachmentWidget extends AdminWidget implements
      * Specificy the object as a KEY (ident) to whom you
      * can add filters, label and orders.
      *
-     * @param array|AttachableInterface[] $attachableObjects A list of available attachment types.
+     * @param  array|AttachableInterface[] $attachableObjects A list of available attachment types.
      * @return self
      */
     public function setAttachableObjects($attachableObjects)
@@ -490,9 +486,7 @@ class AttachmentWidget extends AdminWidget implements
             $attId = (isset($attMeta['attachment_id']) ? $attMeta['attachment_id'] : null );
 
             if (isset($attMeta['label'])) {
-                if (TranslationString::isTranslatable($attMeta['label'])) {
-                    $label = new TranslationString($attMeta['label']);
-                }
+                $label = $this->translator()->translation($attMeta['label']);
             }
 
             if (isset($attMeta['filters'])) {
@@ -552,7 +546,7 @@ class AttachmentWidget extends AdminWidget implements
     /**
      * Retrieve the attachment's default heading.
      *
-     * @return string|null
+     * @return Translation|string|null
      */
     public function attachmentHeading()
     {
@@ -562,7 +556,7 @@ class AttachmentWidget extends AdminWidget implements
     /**
      * Retrieve the attachment's default preview.
      *
-     * @return string|null
+     * @return Translation|string|null
      */
     public function attachmentPreview()
     {
@@ -610,7 +604,7 @@ class AttachmentWidget extends AdminWidget implements
     /**
      * Retrieve the widget's title.
      *
-     * @return TranslationString|string[]
+     * @return Translation|string|null
      */
     public function title()
     {

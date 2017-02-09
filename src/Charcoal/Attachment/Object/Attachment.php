@@ -2,35 +2,35 @@
 
 namespace Charcoal\Attachment\Object;
 
-use \ReflectionClass;
-use \InvalidArgumentException;
+use ReflectionClass;
+use InvalidArgumentException;
 
-use \Pimple\Container;
+// From Pimple
+use Pimple\Container;
 
 // From 'charcoal-core'
-use \Charcoal\Loader\CollectionLoader;
+use Charcoal\Loader\CollectionLoader;
 
-// From 'charcoal-base'
-use \Charcoal\Object\Content;
+// From 'charcoal-object'
+use Charcoal\Object\Content;
 
-// From 'charcoal-translation'
-use \Charcoal\Translation\TranslationString;
+// From 'charcoal-translator'
+use Charcoal\Translator\Translation;
 
 // From 'beneroch/charcoal-attachments'
-use \Charcoal\Attachment\Interfaces\AttachableInterface;
-use \Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
+use Charcoal\Attachment\Interfaces\AttachableInterface;
+use Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
 
-use \Charcoal\Attachment\Object\File;
-use \Charcoal\Attachment\Object\Image;
-use \Charcoal\Attachment\Object\Text;
-use \Charcoal\Attachment\Object\Embed;
-use \Charcoal\Attachment\Object\Video;
-use \Charcoal\Attachment\Object\Gallery;
-use \Charcoal\Attachment\Object\Accordion;
-use \Charcoal\Attachment\Object\Link;
-use \Charcoal\Attachment\Object\Container as AttachmentContainer;
-use \Charcoal\Attachment\Object\Join;
-
+use Charcoal\Attachment\Object\File;
+use Charcoal\Attachment\Object\Image;
+use Charcoal\Attachment\Object\Text;
+use Charcoal\Attachment\Object\Embed;
+use Charcoal\Attachment\Object\Video;
+use Charcoal\Attachment\Object\Gallery;
+use Charcoal\Attachment\Object\Accordion;
+use Charcoal\Attachment\Object\Link;
+use Charcoal\Attachment\Object\Container as AttachmentContainer;
+use Charcoal\Attachment\Object\Join;
 
 /**
  *
@@ -91,14 +91,14 @@ class Attachment extends Content implements AttachableInterface
     /**
      * The attachment heading template.
      *
-     * @var TranslationString|string|null
+     * @var Translation|string|null
      */
     protected $heading;
 
     /**
      * The attachment preview template.
      *
-     * @var TranslationString|string|null
+     * @var Translation|string|null
      */
     protected $preview;
 
@@ -112,10 +112,10 @@ class Attachment extends Content implements AttachableInterface
     /**
      * Generic information about the attachment.
      *
-     * @var TranslationString|string[] $title       The title of the attachment.
-     * @var TranslationString|string[] $subtitle    The subtitle of the attachment.
-     * @var TranslationString|string[] $description The content of the attachment.
-     * @var TranslationString|string[] $keywords    Keywords finding the attachment.
+     * @var Translation|string|null $title       The title of the attachment.
+     * @var Translation|string|null $subtitle    The subtitle of the attachment.
+     * @var Translation|string|null $description The content of the attachment.
+     * @var Translation|string|null $keywords    Keywords finding the attachment.
      */
     protected $title;
     protected $subtitle;
@@ -139,14 +139,14 @@ class Attachment extends Content implements AttachableInterface
      *
      * Auto-generated thumbnail if the attached file is an image.
      *
-     * @var string
+     * @var Translation|string|null
      */
     protected $thumbnail;
 
     /**
      * Embedded content.
      *
-     * @var string
+     * @var Translation|string|null
      */
     protected $embed;
 
@@ -184,7 +184,7 @@ class Attachment extends Content implements AttachableInterface
     /**
      * Inject dependencies from a DI Container.
      *
-     * @param Container $container A dependencies container instance.
+     * @param  Container $container A dependencies container instance.
      * @return void
      */
     public function setDependencies(Container $container)
@@ -246,22 +246,18 @@ class Attachment extends Content implements AttachableInterface
         }
 
         if (!$obj instanceof AttachmentContainerInterface) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    'Container object must be an instance of %s; received %s',
-                    AttachmentContainerInterface::class,
-                    (is_object($obj) ? get_class($obj) : gettype($obj))
-                )
-            );
+            throw new InvalidArgumentException(sprintf(
+                'Container object must be an instance of %s; received %s',
+                AttachmentContainerInterface::class,
+                (is_object($obj) ? get_class($obj) : gettype($obj))
+            ));
         }
 
         if (!$obj->id()) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    'Container object must have an ID.',
-                    (is_object($obj) ? get_class($obj) : gettype($obj))
-                )
-            );
+            throw new InvalidArgumentException(sprintf(
+                'Container object must have an ID.',
+                (is_object($obj) ? get_class($obj) : gettype($obj))
+            ));
         }
 
         $this->containerObj = $obj;
@@ -348,7 +344,7 @@ class Attachment extends Content implements AttachableInterface
     /**
      * Retrieve the attachment's heading template.
      *
-     * @return string
+     * @return Translation|string|null
      */
     public function heading()
     {
@@ -368,7 +364,7 @@ class Attachment extends Content implements AttachableInterface
     /**
      * Retrieve the attachment's heading as a raw value.
      *
-     * @return string
+     * @return Translation|string|null
      */
     public function rawHeading()
     {
@@ -379,16 +375,11 @@ class Attachment extends Content implements AttachableInterface
      * Set the attachment's heading template.
      *
      * @param  string $template The attachment heading.
-     * @throws InvalidArgumentException If provided argument is not of type 'string'.
-     * @return string
+     * @return Attachment Chainable
      */
     public function setHeading($template)
     {
-        if (TranslationString::isTranslatable($template)) {
-            $this->heading = new TranslationString($template);
-        } else {
-            $this->heading = null;
-        }
+        $this->heading = $this->translator()->translation($template);
 
         return $this;
     }
@@ -396,7 +387,7 @@ class Attachment extends Content implements AttachableInterface
     /**
      * Retrieve the attachment's preview template.
      *
-     * @return string
+     * @return Translation|string|null
      */
     public function preview()
     {
@@ -410,7 +401,7 @@ class Attachment extends Content implements AttachableInterface
     /**
      * Retrieve the attachment's preview as a raw value.
      *
-     * @return string
+     * @return Translation|string|null
      */
     public function rawPreview()
     {
@@ -421,16 +412,11 @@ class Attachment extends Content implements AttachableInterface
      * Set the attachment's preview template.
      *
      * @param  string $template The attachment preview.
-     * @throws InvalidArgumentException If provided argument is not of type 'string'.
-     * @return string
+     * @return Attachment Chainable
      */
     public function setPreview($template)
     {
-        if (TranslationString::isTranslatable($template)) {
-            $this->preview = new TranslationString($template);
-        } else {
-            $this->preview = null;
-        }
+        $this->preview = $this->translator()->translation($template);
 
         return $this;
     }
@@ -546,16 +532,12 @@ class Attachment extends Content implements AttachableInterface
     /**
      * Set the attachment's title.
      *
-     * @param  string|string[] $title The object title.
+     * @param  string $title The object title.
      * @return self
      */
     public function setTitle($title)
     {
-        if (TranslationString::isTranslatable($title)) {
-            $this->title = new TranslationString($title);
-        } else {
-            $this->title = null;
-        }
+        $this->title = $this->translator()->translation($title);
 
         return $this;
     }
@@ -563,16 +545,12 @@ class Attachment extends Content implements AttachableInterface
     /**
      * Set the attachment's sub-title.
      *
-     * @param  string|string[] $title The object title.
+     * @param  string $title The object title.
      * @return self
      */
     public function setSubtitle($title)
     {
-        if (TranslationString::isTranslatable($title)) {
-            $this->subtitle = new TranslationString($title);
-        } else {
-            $this->subtitle = null;
-        }
+        $this->subtitle = $this->translator()->translation($title);
 
         return $this;
     }
@@ -580,16 +558,12 @@ class Attachment extends Content implements AttachableInterface
     /**
      * Set the attachment's description.
      *
-     * @param  string|string[] $description The description of the object.
+     * @param  string $description The description of the object.
      * @return self
      */
     public function setDescription($description)
     {
-        if (TranslationString::isTranslatable($description)) {
-            $this->description = new TranslationString($description);
-        } else {
-            $this->description = null;
-        }
+        $this->description = $this->translator()->translation($description);
 
         return $this;
     }
@@ -610,16 +584,12 @@ class Attachment extends Content implements AttachableInterface
     /**
      * Set the path to the attached file.
      *
-     * @param string $path A path to an image.
+     * @param  string $path A path to an image.
      * @return self
      */
     public function setFile($path)
     {
-        if (TranslationString::isTranslatable($path)) {
-            $this->file = new TranslationString($path);
-        } else {
-            $this->file = null;
-        }
+        $this->file = $this->translator()->translation($path);
 
         return $this;
     }
@@ -627,16 +597,12 @@ class Attachment extends Content implements AttachableInterface
     /**
      * Set the URL.
      *
-     * @param string $link An external url.
+     * @param  string $link An external url.
      * @return self
      */
     public function setLink($link)
     {
-        if (TranslationString::isTranslatable($link)) {
-            $this->link = new TranslationString($link);
-        } else {
-            $this->link = null;
-        }
+        $this->link = $this->translator()->translation($link);
 
         return $this;
     }
@@ -644,7 +610,7 @@ class Attachment extends Content implements AttachableInterface
     /**
      * Set the size of the attached file.
      *
-     * @param integer|float $size A file size in bytes; the one of the attached.
+     * @param  integer|float $size A file size in bytes; the one of the attached.
      * @throws InvalidArgumentException If provided argument is not of type 'integer' or 'float'.
      * @return self
      */
@@ -666,8 +632,10 @@ class Attachment extends Content implements AttachableInterface
     }
 
     /**
-     * File extension
-     * @param string $type File extension.
+     * Set file extension.
+     *
+     * @param  string $type File extension.
+     * @return self
      */
     public function setFileType($type)
     {
@@ -679,23 +647,13 @@ class Attachment extends Content implements AttachableInterface
     /**
      * Set the embed content.
      *
-     * @param string $embed A URI or an HTML media element.
+     * @param  string $embed A URI or an HTML media element.
      * @throws InvalidArgumentException If provided argument is not of type 'string'.
      * @return self
      */
     public function setEmbed($embed)
     {
-        if ($embed === null) {
-            $this->embed = null;
-
-            return $this;
-        }
-
-        if (!is_string($embed)) {
-            throw new InvalidArgumentException('Embedded content must be a string.');
-        }
-
-        $this->embed = $embed;
+        $this->embed = $this->translator()->translation($embed);
 
         return $this;
     }
@@ -721,7 +679,7 @@ class Attachment extends Content implements AttachableInterface
     /**
      * Retrieve the attachment's title.
      *
-     * @return string|TranslationString
+     * @return Translation|string|null
      */
     public function title()
     {
@@ -731,7 +689,7 @@ class Attachment extends Content implements AttachableInterface
     /**
      * Retrieve the attachment's sub-title.
      *
-     * @return string|TranslationString
+     * @return Translation|string|null
      */
     public function subtitle()
     {
@@ -741,7 +699,7 @@ class Attachment extends Content implements AttachableInterface
     /**
      * Retrieve attachment's description.
      *
-     * @return string|TranslationString
+     * @return Translation|string|null
      */
     public function description()
     {
@@ -761,7 +719,7 @@ class Attachment extends Content implements AttachableInterface
     /**
      * Retrieve the path to the attached file.
      *
-     * @return string|TranslationString
+     * @return Translation|string|null
      */
     public function file()
     {
@@ -771,7 +729,7 @@ class Attachment extends Content implements AttachableInterface
     /**
      * Retrieve the attached link.
      *
-     * @return string|TranslationString
+     * @return Translation|string|null
      */
     public function link()
     {
@@ -787,6 +745,7 @@ class Attachment extends Content implements AttachableInterface
         if (!$this->file()) {
             return '';
         }
+
         return basename(strval($this->file()));
     }
 
@@ -854,7 +813,7 @@ class Attachment extends Content implements AttachableInterface
     /**
      * Set a model collection loader.
      *
-     * @param CollectionLoader $loader The collection loader.
+     * @param  CollectionLoader $loader The collection loader.
      * @return self
      */
     protected function setCollectionLoader(CollectionLoader $loader)
@@ -873,9 +832,10 @@ class Attachment extends Content implements AttachableInterface
     public function collectionLoader()
     {
         if (!isset($this->collectionLoader)) {
-            throw new Exception(
-                sprintf('Collection Loader is not defined for "%s"', get_class($this))
-            );
+            throw new Exception(sprintf(
+                'Collection Loader is not defined for "%s"',
+                get_class($this)
+            ));
         }
 
         return $this->collectionLoader;

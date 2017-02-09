@@ -1,25 +1,23 @@
 <?php
+
 namespace Charcoal\Attachment\Traits;
 
-use \UnexpectedValueException;
+use UnexpectedValueException;
 
 // From 'charcoal-core'
-use \Charcoal\Model\ModelInterface;
-use \Charcoal\Loader\CollectionLoader;
-
-// From 'charcoal-translation'
-use \Charcoal\Translation\TranslationString;
+use Charcoal\Model\ModelInterface;
+use Charcoal\Loader\CollectionLoader;
 
 // From 'beneroch/charcoal-attachments'
-use \Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
-use \Charcoal\Attachment\Interfaces\AttachableInterface;
+use Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
+use Charcoal\Attachment\Interfaces\AttachableInterface;
 
-use \Charcoal\Attachment\Object\Join;
-use \Charcoal\Attachment\Object\Attachment;
-use \Charcoal\Attachment\Object\File;
-use \Charcoal\Attachment\Object\Image;
-use \Charcoal\Attachment\Object\Text;
-use \Charcoal\Attachment\Object\Video;
+use Charcoal\Attachment\Object\Join;
+use Charcoal\Attachment\Object\Attachment;
+use Charcoal\Attachment\Object\File;
+use Charcoal\Attachment\Object\Image;
+use Charcoal\Attachment\Object\Text;
+use Charcoal\Attachment\Object\Video;
 
 /**
  * Provides support for attachments to objects.
@@ -35,6 +33,7 @@ use \Charcoal\Attachment\Object\Video;
  *
  * - "model/factory" — {@see \Charcoal\Model\ModelFactory}
  * - "model/collection/loader" — {@see \Charcoal\Loader\CollectionLoader}
+ * - "translator" — {@see \Charcoal\Translator\Translator}
  */
 trait AttachmentContainerTrait
 {
@@ -161,8 +160,8 @@ trait AttachmentContainerTrait
                 // Alias
                 $attMeta['attachmentType'] = $attMeta['attachment_type'];
 
-                if (isset($attMeta['label']) && TranslationString::isTranslatable($attMeta['label'])) {
-                    $attMeta['label'] = new TranslationString($attMeta['label']);
+                if (isset($attMeta['label'])) {
+                    $attMeta['label'] = $this->translator()->translation($attMeta['label']);
                 } else {
                     $attMeta['label'] = ucfirst(basename($attType));
                 }
@@ -191,4 +190,12 @@ trait AttachmentContainerTrait
      * @return \Charcoal\Model\MetadataInterface
      */
     abstract public function metadata();
+
+    /**
+     * Retrieve the translator service.
+     *
+     * @see    \Charcoal\Translator\TranslatorAwareTrait
+     * @return \Charcoal\Translator\Translator
+     */
+    abstract protected function translator();
 }

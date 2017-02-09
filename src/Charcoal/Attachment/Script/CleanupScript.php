@@ -2,32 +2,32 @@
 
 namespace Charcoal\Attachment\Script;
 
-use \PDO;
-use \Exception;
+use PDO;
+use Exception;
 
 // From Pimple
-use \Pimple\Container;
+use Pimple\Container;
 
 // From PSR-7
-use \Psr\Http\Message\RequestInterface;
-use \Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 // From 'charcoal-core'
-use \Charcoal\Model\ModelInterface;
+use Charcoal\Model\ModelInterface;
 
 // From 'charcoal-app'
-use \Charcoal\App\Script\AbstractScript;
+use Charcoal\App\Script\AbstractScript;
 
 // From 'beneroch/charcoal-attachment'
-use \Charcoal\Attachment\Interfaces\AttachableInterface;
-use \Charcoal\Attachment\Object\Attachment;
-use \Charcoal\Attachment\Object\Join;
+use Charcoal\Attachment\Interfaces\AttachableInterface;
+use Charcoal\Attachment\Object\Attachment;
+use Charcoal\Attachment\Object\Join;
 
 // From 'beneroch/charcoal-utils'
-use \Utils\Support\Traits\ConfigAwareTrait;
-use \Utils\Support\Traits\ModelAwareTrait;
-use \Utils\Support\Interfaces\ConfigAwareInterface;
-use \Utils\Support\Interfaces\ModelAwareInterface;
+use Utils\Support\Traits\ConfigAwareTrait;
+use Utils\Support\Traits\ModelAwareTrait;
+use Utils\Support\Interfaces\ConfigAwareInterface;
+use Utils\Support\Interfaces\ModelAwareInterface;
 
 /**
  * Remove unassociated attachments
@@ -271,7 +271,6 @@ class CleanupScript extends AbstractScript implements
                         [ 'objType' => $model ]
                     );
                     */
-
                 } elseif (is_string($model)) {
                     $sql  = 'SELECT p.* FROM `%pivotTable` AS p WHERE p.`%sourceType` = :objType;';
                     $rows = $source->dbQuery(

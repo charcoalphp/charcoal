@@ -2,8 +2,8 @@
 
 namespace Charcoal\Attachment\Object;
 
-// Dependency from 'charcoal-core'
-use \Charcoal\Model\AbstractModel;
+// From 'charcoal-core'
+use Charcoal\Model\AbstractModel;
 
 /**
  * Relationship table to join attachments and objects.

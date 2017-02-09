@@ -2,38 +2,40 @@
 
 namespace Charcoal\Attachment\Object\Category;
 
-// Module `charcoal-base` dependencies
-use \Charcoal\Object\Content;
-use \Charcoal\Object\CategoryInterface;
-use \Charcoal\Object\CategoryTrait;
-
-// Module `charcoal-translation` dependencies
-use \Charcoal\Translation\TranslationString;
+// From 'charcoal-object'
+use Charcoal\Object\Content;
+use Charcoal\Object\CategoryInterface;
+use Charcoal\Object\CategoryTrait;
 
 /**
- * Saint-Constant News Category, based on charcoal-object's category.
+ * Attachment Category
+ *
+ * Based on 'locomotivemtl/charcoal-object''s category.
  */
 class Generic extends Content implements CategoryInterface
 {
     use CategoryTrait;
 
     /**
-     * @var TranslationString $name
+     * The name of the category.
+     *
+     * @var \Charcoal\Translator\Translation|string|null
      */
     private $name;
 
     /**
-     * @param mixed $name The news category name (localized).
+     * @param  string $name The attachment category name.
      * @return NewsCategory Chainable
      */
     public function setName($name)
     {
-        $this->name = new TranslationString($name);
+        $this->name = $this->translator()->translation($name);
+
         return $this;
     }
 
     /**
-     * @return TranslationString
+     * @return \Charcoal\Translator\Translation|string|null
      */
     public function name()
     {

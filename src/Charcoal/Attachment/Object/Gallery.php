@@ -2,7 +2,8 @@
 
 namespace Charcoal\Attachment\Object;
 
-use \Charcoal\Attachment\Object\Container;
+// From 'beneroch/charcoal-attachments'
+use Charcoal\Attachment\Object\Container;
 
 /**
  * Gallery Attachment Type

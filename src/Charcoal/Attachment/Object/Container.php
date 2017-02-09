@@ -2,11 +2,12 @@
 
 namespace Charcoal\Attachment\Object;
 
-use \Charcoal\Attachment\Traits\AttachmentAwareTrait;
-use \Charcoal\Attachment\Interfaces\AttachmentAwareInterface;
+// From 'beneroch/charcoal-attachments'
+use Charcoal\Attachment\Traits\AttachmentAwareTrait;
+use Charcoal\Attachment\Interfaces\AttachmentAwareInterface;
 
-use \Charcoal\Attachment\Traits\AttachmentContainerTrait;
-use \Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
+use Charcoal\Attachment\Traits\AttachmentContainerTrait;
+use Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
 
 /**
  * Gallery Attachment Type

@@ -1,21 +1,22 @@
 <?php
+
 namespace Charcoal\Attachment\Traits;
 
-use \InvalidArgumentException;
+use InvalidArgumentException;
 
 // From 'charcoal-core'
-use \Charcoal\Model\ModelInterface;
-use \Charcoal\Loader\CollectionLoader;
+use Charcoal\Model\ModelInterface;
+use Charcoal\Loader\CollectionLoader;
 
 // From 'charcoal-admin'
-use \Charcoal\Admin\Widget\AttachmentWidget;
+use Charcoal\Admin\Widget\AttachmentWidget;
 
-// Local Dependencies
-use \Charcoal\Attachment\Interfaces\AttachableInterface;
-use \Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
+// From 'beneroch/charcoal-attachments'
+use Charcoal\Attachment\Interfaces\AttachableInterface;
+use Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
 
-use \Charcoal\Attachment\Object\Join;
-use \Charcoal\Attachment\Object\Attachment;
+use Charcoal\Attachment\Object\Join;
+use Charcoal\Attachment\Object\Attachment;
 
 /**
  * Provides support for attachments to objects.
@@ -113,7 +114,7 @@ trait AttachmentAwareTrait
             ON
                 joined.attachment_id = attachment.id
             WHERE
-                1=1';
+                1 = 1';
 
         // Disable `active` check in admin
         if (!$widget instanceof AttachmentWidget) {

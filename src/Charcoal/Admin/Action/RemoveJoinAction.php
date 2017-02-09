@@ -2,23 +2,23 @@
 
 namespace Charcoal\Admin\Action;
 
-use \Exception;
+use Exception;
 
-// Dependencies from Pimple
-use \Pimple\Container;
+// From Pimple
+use Pimple\Container;
 
-// Dependencies from PSR-7 (HTTP Messaging)
-use \Psr\Http\Message\RequestInterface;
-use \Psr\Http\Message\ResponseInterface;
+// From PSR-7 (HTTP Messaging)
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
-// Dependency from 'charcoal-admin'
-use \Charcoal\Admin\AdminAction;
+// From 'charcoal-admin'
+use Charcoal\Admin\AdminAction;
 
-// Dependency from 'charcoal-core'
-use \Charcoal\Loader\CollectionLoader;
+// From 'charcoal-core'
+use Charcoal\Loader\CollectionLoader;
 
-// Local Dependency
-use \Charcoal\Attachment\Object\Join;
+// From 'beneroch/charcoal-attachments'
+use Charcoal\Attachment\Object\Join;
 
 /**
  * Disconnect two objects

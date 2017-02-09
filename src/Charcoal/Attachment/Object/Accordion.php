@@ -2,6 +2,7 @@
 
 namespace Charcoal\Attachment\Object;
 
+// From 'beneroch/charcoal-attachments'
 use Charcoal\Attachment\Object\Container;
 
 /**
