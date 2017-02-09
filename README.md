@@ -285,7 +285,7 @@ The audio property adds the following concepts to the [file property options](#f
 
 Language properties hold a language value.
 
-> The `LangProperty` implements the `SelectablePropertyInterface`, but hardcode its `choices()` method to return the active language (from `[charcoal-translation](https://github.com/locomotivemtl/charcoal-translation)`).
+> The `LangProperty` implements the `SelectablePropertyInterface`, but hardcode its `choices()` method to return the active language (from `[charcoal-translator](https://github.com/locomotivemtl/charcoal-translator)`).
 
 ## Number Property
 

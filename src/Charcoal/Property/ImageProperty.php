@@ -10,7 +10,7 @@ use \UnexpectedValueException;
 use \Charcoal\Image\ImageFactory;
 use \Charcoal\Image\ImageInterface;
 
-// From 'charccoal-translation'
+// From 'charccoal-translator'
 use \Charcoal\Translator\Translation;
 
 // Local namespace dependencies

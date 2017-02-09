@@ -24,9 +24,9 @@ use \Charcoal\Model\DescribableTrait;
 use \Charcoal\Validator\ValidatableInterface;
 use \Charcoal\Validator\ValidatableTrait;
 
-// Dependency from 'charcoal-translation'
-use \Charcoal\Translator\TranslatorAwareTrait;
+// Dependency from 'charcoal-translator'
 use \Charcoal\Translator\Translation;
+use \Charcoal\Translator\TranslatorAwareTrait;
 
 // Local namespace dependencies
 use \Charcoal\Property\DescribablePropertyInterface;

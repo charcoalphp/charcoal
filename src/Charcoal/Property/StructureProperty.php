@@ -17,7 +17,7 @@ use \Charcoal\Model\MetadataInterface;
 // From 'charcoal-factory'
 use \Charcoal\Factory\FactoryInterface;
 
-// From 'charcoal-translation'
+// From 'charcoal-translator'
 use \Charcoal\Translator\Translation;
 
 // From 'charcoal-property'
