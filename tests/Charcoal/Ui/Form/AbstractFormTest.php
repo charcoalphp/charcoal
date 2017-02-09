@@ -2,7 +2,6 @@
 
 namespace Charcoal\Tests\Ui\Form;
 
-
 use \Charcoal\Ui\Form\GenericForm;
 use \Charcoal\Ui\FormGroup\FormGroupBuilder;
 
@@ -48,7 +47,6 @@ class AbstractFormTest extends \PHPUnit_Framework_TestCase
         $obj = $this->obj;
         $cb = function($o) {
             return 'foo';
-
         };
         $ret = $obj->setGroupCallback($cb);
         $this->assertSame($ret, $obj);

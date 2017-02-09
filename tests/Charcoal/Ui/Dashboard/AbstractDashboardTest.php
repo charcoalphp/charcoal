@@ -73,11 +73,9 @@ class AbstractDashboardTest extends \PHPUnit_Framework_TestCase
         $obj = $this->obj;
         $cb = function($o) {
             return 'foo';
-
         };
         $ret = $obj->setWidgetCallback($cb);
         $this->assertSame($ret, $obj);
-
     }
 
     /**
@@ -146,7 +144,6 @@ class AbstractDashboardTest extends \PHPUnit_Framework_TestCase
         foreach ($widgets as $w) {
             $this->assertInstanceOf('\Charcoal\Ui\UiItemInterface', $w);
         }
-
     }
 
     public function testWidgetsCallback()
@@ -165,7 +162,6 @@ class AbstractDashboardTest extends \PHPUnit_Framework_TestCase
         foreach ($widgets as $w) {
             $this->assertEquals($w['foo'], 'bar');
         }
-
     }
 
     public function testHasWidgets()

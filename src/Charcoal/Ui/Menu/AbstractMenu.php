@@ -92,15 +92,15 @@ abstract class AbstractMenu extends AbstractUiItem implements
         if (is_array($item)) {
             $item['menu'] = $this;
             $i = $this->menuItemBuilder->build($item);
-            $this->items[] = $i;
+            $item = $i;
         } elseif ($item instanceof MenuItemInterface) {
             $item->setMenu($this);
-            $this->items[] = $item;
         } else {
             throw new InvalidArgumentException(
                 'Item must be an array of menu item options or a MenuItem object'
             );
         }
+        $this->items[] = $item;
         return $this;
     }
 

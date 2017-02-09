@@ -99,7 +99,6 @@ class AbstractLayoutTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame($ret, $obj);
         $this->assertEquals($res, $obj->structure());
-
     }
 
     public function testNumRows()

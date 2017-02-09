@@ -133,25 +133,6 @@ trait FormGroupTrait
     }
 
     /**
-     * @return string[]
-     */
-    public function requiredAclPermissions()
-    {
-        return $this->requiredAclPermissions;
-    }
-
-    /**
-     * @param array $permissions The Acl permissions required pby the form group.
-     * @return self
-     */
-    public function setRequiredAclPermissions(array $permissions)
-    {
-        $this->requiredAclPermissions = $permissions;
-
-        return $this;
-    }
-
-    /**
      * @param array $inputs The group inputs.
      * @return FormGroupInterface Chainable
      */

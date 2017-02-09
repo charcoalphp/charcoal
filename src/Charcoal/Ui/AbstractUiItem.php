@@ -17,6 +17,10 @@ use Charcoal\Config\AbstractEntity;
 // From 'charcoal-translator'
 use Charcoal\Translator\TranslatorAwareTrait;
 
+// From 'charcoal-user'
+use Charcoal\User\AuthAwareInterface;
+use Charcoal\User\AuthAwareTrait;
+
 // From 'charcoal-view'
 use Charcoal\View\ViewableInterface;
 use Charcoal\View\ViewableTrait;
@@ -31,9 +35,11 @@ use Charcoal\Ui\UiItemTrait;
  * Abstract implementation of {@see \Charcoal\Ui\UiItemInterface}.
  */
 abstract class AbstractUiItem extends AbstractEntity implements
+    AuthAwareInterface,
     LoggerAwareInterface,
     UiItemInterface
 {
+    use AuthAwareTrait;
     use LoggerAwareTrait;
     use TranslatorAwareTrait;
     use UiItemTrait;
@@ -72,6 +78,7 @@ abstract class AbstractUiItem extends AbstractEntity implements
     public function setDependencies(Container $container)
     {
         $this->setTranslator($container['translator']);
+        $this->setAuthDependencies($container);
     }
 
     /**

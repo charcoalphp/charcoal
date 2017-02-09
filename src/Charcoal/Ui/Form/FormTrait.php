@@ -239,7 +239,8 @@ trait FormTrait
             $g = $this->formGroupFactory()->create($group['type']);
             $g->setForm($this);
             $g->setData($group);
-            $this->groups[$groupIdent] = $g;
+
+            $group = $g;
         } elseif ($group === false || $group === null) {
             return $this;
         } else {
@@ -251,6 +252,8 @@ trait FormTrait
                 )
             );
         }
+
+        $this->groups[$groupIdent] = $g;
 
         return $this;
     }
@@ -285,10 +288,7 @@ trait FormTrait
             }
 
             // Test formGroup vs. ACL roles
-            $authUser = $this->authenticator()->authenticate();
-            if (!$this->authorizer()->userAllowed($authUser, $group->requiredAclPermissions())) {
-                header('HTTP/1.0 403 Forbidden');
-                header('Location: '.$this->adminUrl().'login');
+            if ($group->isAuthorized() === false) {
                 continue;
             }
 

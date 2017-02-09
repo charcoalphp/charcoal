@@ -49,7 +49,6 @@ class AbstractFormGroupTest extends \PHPUnit_Framework_TestCase
         $obj = $this->obj;
         $cb = function($o) {
             return 'foo';
-
         };
         $ret = $obj->setInputCallback($cb);
         $this->assertSame($ret, $obj);
