@@ -2,8 +2,10 @@
 
 namespace Charcoal\Translator;
 
+// From 'symfony/translation'
 use Symfony\Component\Translation\Translator as SymfonyTranslator;
 
+// From 'charcoal-translator'
 use Charcoal\Translator\LocalesManager;
 use Charcoal\Translator\Translation;
 
@@ -31,7 +33,6 @@ class Translator extends SymfonyTranslator
 
     /**
      * @param array $data Constructor data.
-     * @return
      */
     public function __construct(array $data)
     {
@@ -88,38 +89,112 @@ class Translator extends SymfonyTranslator
     }
 
     /**
-     * Get a translation object from a (mixed) value.
+     * Retrieve a translation object from a (mixed) message.
      *
-     * @param  mixed $val The string or translation-object to retrieve.
-     * @return Translation|null
+     * @uses   SymfonyTranslator::trans()
+     * @param  mixed       $val        The string or translation-object to retrieve.
+     * @param  array       $parameters An array of parameters for the message.
+     * @param  string|null $domain     The domain for the message or NULL to use the default.
+     * @return Translation|null The translation object or NULL if the value is not translatable.
      */
-    public function translation($val)
+    public function translation($val, array $parameters = [], $domain = null)
     {
         if ($this->isValidTranslation($val) === false) {
             return null;
         }
+
         $translation = new Translation($val, $this->manager);
         foreach ($this->availableLocales() as $lang) {
             if (!isset($translation[$lang]) || $translation[$lang] == $val) {
-                $translation[$lang] = $this->trans((string)$translation, [], null, $lang);
+                $translation[$lang] = $this->trans((string)$translation, $parameters, $domain, $lang);
             }
         }
+
         return $translation;
     }
 
     /**
-     * Get a translated string from a (mixed) value.
+     * Translates the given (mixed) message.
      *
-     * @param  mixed $val The string or translation-object to retrieve.
-     * @return string
+     * @uses   SymfonyTranslator::trans()
+     * @uses   Translator::translation()
+     * @param  mixed       $val        The string or translation-object to retrieve.
+     * @param  array       $parameters An array of parameters for the message.
+     * @param  string|null $domain     The domain for the message or NULL to use the default.
+     * @param  string|null $locale     The locale or NULL to use the default.
+     * @return string The translated string
      */
-    public function translate($val)
+    public function translate($val, array $parameters = [], $domain = null, $locale = null)
     {
+        if ($val instanceof Translation) {
+            return strtr($val[$locale], $parameters);
+        }
+
+        if (is_object($val) && method_exists($val, '__toString')) {
+            $val = (string)$val;
+        }
+
         if (is_string($val)) {
-            return $this->trans($val);
+            return $this->trans($val, $parameters, $domain, $locale);
         } else {
-            $translation = $this->translation($val);
-            return (string)$translation;
+            $translation = $this->translation($val, $parameters, $domain);
+            return $translation[$locale];
+        }
+    }
+
+    /**
+     * Retrieve a translation object from a (mixed) message by choosing a translation according to a number.
+     *
+     * @uses   SymfonyTranslator::transChoice()
+     * @param  mixed       $val        The string or translation-object to retrieve.
+     * @param  integer     $number     The number to use to find the indice of the message.
+     * @param  array       $parameters An array of parameters for the message.
+     * @param  string|null $domain     The domain for the message or NULL to use the default.
+     * @return Translation|null The translation object or NULL if the value is not translatable.
+     */
+    public function translationChoice($val, $number, array $parameters = [], $domain = null)
+    {
+        if ($this->isValidTranslation($val) === false) {
+            return null;
+        }
+
+        $translation = new Translation($val, $this->manager);
+        foreach ($this->availableLocales() as $lang) {
+            if (!isset($translation[$lang]) || $translation[$lang] == $val) {
+                $translation[$lang] = $this->transChoice((string)$translation, $number, $parameters, $domain, $lang);
+            }
+        }
+
+        return $translation;
+    }
+
+    /**
+     * Translates the given (mixed) choice message by choosing a translation according to a number.
+     *
+     * @uses   SymfonyTranslator::transChoice()
+     * @uses   Translator::translationChoice()
+     * @param  mixed       $val        The string or translation-object to retrieve.
+     * @param  integer     $number     The number to use to find the indice of the message.
+     * @param  array       $parameters An array of parameters for the message.
+     * @param  string|null $domain     The domain for the message or NULL to use the default.
+     * @param  string|null $locale     The locale or NULL to use the default.
+     * @return string The translated string
+     */
+    public function translateChoice($val, $number, array $parameters = [], $domain = null, $locale = null)
+    {
+        if ($val instanceof Translation) {
+            return strtr($val[$locale], $parameters);
+        }
+
+        if (is_object($val) && method_exists($val, '__toString')) {
+            $val = (string)$val;
+        }
+
+        if (is_string($val)) {
+            return $this->transChoice($val, $number, $parameters, $domain, $locale);
+        } else {
+            $translation = $this->translationChoice($val, $number, $parameters, $domain);
+            return $translation[$locale];
         }
     }
 

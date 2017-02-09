@@ -99,6 +99,7 @@ class LocalesManager
             $this->currentLocale = null;
             return;
         }
+
         if (!$this->hasLocale($lang)) {
             if (!is_string($lang)) {
                 $lang = is_object($lang) ? get_class($lang) : gettype($lang);
@@ -110,6 +111,7 @@ class LocalesManager
                 $lang
             ));
         }
+
         $this->currentLocale = $lang;
     }
 
