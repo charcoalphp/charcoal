@@ -126,6 +126,9 @@ class Translator extends SymfonyTranslator
      */
     public function translate($val, array $parameters = [], $domain = null, $locale = null)
     {
+        if ($locale === null) {
+            $locale = $this->getLocale();
+        }
         if ($val instanceof Translation) {
             return strtr($val[$locale], $parameters);
         }
