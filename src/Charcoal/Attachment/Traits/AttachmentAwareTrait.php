@@ -99,6 +99,8 @@ trait AttachmentAwareTrait
             return [];
         }
 
+        $widget = $this->attachmentWidget();
+
         $query = '
             SELECT
                 attachment.*,
@@ -111,7 +113,14 @@ trait AttachmentAwareTrait
             ON
                 joined.attachment_id = attachment.id
             WHERE
+                1=1';
+
+        // Disable `active` check in admin
+        if (!$widget instanceof AttachmentWidget) {
+            $query .= '
+            AND
                 attachment.active = 1';
+        }
 
         if ($type) {
             $query .= '
@@ -138,7 +147,6 @@ trait AttachmentAwareTrait
         $loader->setModel($attProto);
         $loader->setDynamicTypeField('type');
 
-        $widget = $this->attachmentWidget();
         if ($widget instanceof AttachmentWidget) {
             $callable = function ($att) use ($widget) {
                 if ($this instanceof AttachableInterface) {

@@ -5,7 +5,7 @@
     @used-by `charcoal/admin/widget/attachment/list`
 --}}
 <article
-        class="panel panel-default js-attachment {{# showAttachmentPreview }}content-preview {{/ showAttachmentPreview}}"
+        class="panel {{# active }}panel-default{{/ active}}{{^ active }}panel-danger{{/ active}} js-attachment {{# showAttachmentPreview }}content-preview {{/ showAttachmentPreview}}"
         id="{{ widgetId }}_{{ id }}"
         data-id="{{ id }}"
         data-type="{{ objType }}"
@@ -18,7 +18,7 @@
         <header draggable="true" id="{{ widgetId }}_heading_{{ id }}" class="panel-heading">
             <h4 class="panel-title">
                 <span class="panel-title-icon glyphicon {{ glyphicon }}"></span>
-                <a href="object/edit?obj_type={{ type }}&obj_id={{ id }}">{{& heading }}</a>
+                <a href="object/edit?obj_type={{ type }}&obj_id={{ id }}">{{& heading }}{{^ active }}&mdash; <em>Désactivé</em>{{/ active}}</a>
             </h4>
         </header>
     {{/ showAttachmentPreview }}

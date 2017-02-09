@@ -1,10 +1,10 @@
 <div class="btn-group" role="group">
-    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+    <button class="btn {{# active }}btn-primary{{/ active }}{{^ active }}btn-danger{{/ active }} dropdown-toggle" type="button" data-toggle="dropdown">
         {{# showAttachmentHeading }}
         Actions
         {{/ showAttachmentHeading }}
         {{^ showAttachmentHeading }}
-        <span class="glyphicon {{glyphicon}}">&nbsp;</span>
+        <span class="glyphicon {{ glyphicon }}">&nbsp;</span>
         <span class="sr-only">Actions</span>
         {{/ showAttachmentHeading }}
         <span class="caret"></span>

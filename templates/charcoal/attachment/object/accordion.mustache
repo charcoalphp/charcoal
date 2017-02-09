@@ -5,7 +5,7 @@
 {{# hasAttachments }}
 <ul class="list-group">
 {{# attachments }}
-    <li class="list-group-item u-truncate"><span class="list-group-item-icon glyphicon {{ glyphicon }}"></span> {{& heading }}</li>
+    <li class="list-group-item u-truncate{{^ active }} alert-danger{{/ active}}"><span class="list-group-item-icon glyphicon {{ glyphicon }}"></span> {{& heading }}{{^ active }}&mdash; <em>Désactivé</em>{{/ active}}</li>
 {{/ attachments }}
 </ul>
 {{/ hasAttachments }}
