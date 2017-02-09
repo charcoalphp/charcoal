@@ -59,7 +59,8 @@ class MenuBuilder
         $obj = $this->factory->create($objType, [
             'logger'            => $container['logger'],
             'view'              => $container['view'],
-            'menu_item_builder' => $container['menu/item/builder']
+            'menu_item_builder' => $container['menu/item/builder'],
+            'container'         => $container
         ]);
         $obj->setData($options);
 

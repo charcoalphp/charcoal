@@ -59,7 +59,8 @@ class MenuItemBuilder
             'menu'              => $options['menu'],
             'logger'            => $container['logger'],
             'view'              => $container['view'],
-            'menu_item_builder' => $container['menu/item/builder']
+            'menu_item_builder' => $container['menu/item/builder'],
+            'container'         => $container
         ]);
         $obj->setData($options);
 
