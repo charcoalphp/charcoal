@@ -251,7 +251,7 @@ class Translator extends SymfonyTranslator
      */
     private function isValidTranslation($val)
     {
-        if ($val === null) {
+        if (empty($val) && !is_numeric($val)) {
             return false;
         }
 
@@ -267,8 +267,8 @@ class Translator extends SymfonyTranslator
             return !!array_filter(
                 $val,
                 function ($v, $k) {
-                    if (is_string($k) && is_string($v)) {
-                        if (strlen($k) > 0) {
+                    if (is_string($k) && strlen($k) > 0) {
+                        if (is_string($v) && strlen($v) > 0) {
                             return true;
                         }
                     }
