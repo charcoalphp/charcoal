@@ -129,6 +129,13 @@ class StructureProperty extends AbstractProperty
     private $terminalStructureMetadata;
 
     /**
+     * Store the property's model prototype.
+     *
+     * @var ModelInterface|null
+     */
+    private $structurePrototype;
+
+    /**
      * The class name of the "structure" collection to use.
      *
      * Must be a fully-qualified PHP namespace and an implementation of {@see ArrayAccess}.
@@ -194,9 +201,9 @@ class StructureProperty extends AbstractProperty
     public function modelFactory()
     {
         if (!isset($this->modelFactory)) {
-            throw new RuntimeException(
-                sprintf('Model Factory is not defined for "%s"', get_class($this))
-            );
+            throw new RuntimeException(sprintf(
+                'Model Factory is not defined for "%s"', get_class($this)
+            ));
         }
 
         return $this->modelFactory;
@@ -280,13 +287,11 @@ class StructureProperty extends AbstractProperty
             $this->structureMetadata = $data;
             $this->terminalStructureMetadata = $data;
         } else {
-            throw new InvalidArgumentException(
-                sprintf(
-                    'Structure [%s] is invalid (must be array or an instance of %s).',
-                    (is_object($data) ? get_class($data) : gettype($data)),
-                    StructureMetadata::class
-                )
-            );
+            throw new InvalidArgumentException(sprintf(
+                'Structure [%s] is invalid (must be array or an instance of %s).',
+                (is_object($data) ? get_class($data) : gettype($data)),
+                StructureMetadata::class
+            ));
         }
 
         $this->isStructureFinalized = false;
@@ -429,15 +434,30 @@ class StructureProperty extends AbstractProperty
         $structure   = $this->modelFactory()->create($structClass);
 
         if (!$structure instanceof ArrayAccess) {
-            throw new RuntimeException(
-                sprintf(
-                    'Structure [%s] must implement ArrayAccess.',
-                    $structClass
-                )
-            );
+            throw new RuntimeException(sprintf(
+                'Structure [%s] must implement ArrayAccess.',
+                $structClass
+            ));
         }
 
         return $structure;
+    }
+
+    /**
+     * Retrieve a singleton of the structure model for prototyping.
+     *
+     * @return ModelInterface
+     */
+    public function structureProto()
+    {
+        if ($this->structurePrototype === null) {
+            $model = $this->createStructureModel();
+            $model->setMetadata($this->structureMetadata());
+
+            $this->structurePrototype = $model;
+        }
+
+        return $this->structurePrototype;
     }
 
     /**
@@ -519,20 +539,20 @@ class StructureProperty extends AbstractProperty
         if ($this->multiple()) {
             $entries = [];
             foreach ($val as $entry) {
-                $struct = $this->createStructureModel();
-                $struct->setMetadata($this->structureMetadata());
-                $struct->setData($entry);
+                $model = $this->createStructureModel();
+                $model->setMetadata($this->structureMetadata());
+                $model->setData($entry);
 
-                $entries[] = $struct;
+                $entries[] = $model;
             }
 
             return $entries;
         } else {
-            $struct = $this->createStructureModel();
-            $struct->setMetadata($this->structureMetadata());
-            $struct->setData($val);
+            $model = $this->createStructureModel();
+            $model->setMetadata($this->structureMetadata());
+            $model->setData($val);
 
-            return $struct;
+            return $model;
         }
     }
 
