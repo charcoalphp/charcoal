@@ -149,12 +149,12 @@ trait AuthAwareTrait
      */
     public function hasPermissions($permissions)
     {
-        if ($permissions === null || empty($permissions)) {
-            return true;
-        }
         $authUser = $this->authenticator()->authenticate();
         if (!$authUser) {
             return false;
+        }
+        if ($permissions === null || empty($permissions)) {
+            return true;
         }
         $authorized = $this->authorizer()->userAllowed($authUser, $permissions);
         return $authorized;
