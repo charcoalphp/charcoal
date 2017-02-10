@@ -15,8 +15,8 @@ interface AuthAwareInterface
     public function isAuthorized();
 
     /**
-     * @param array $permissions The list of required permissions to check.
+     * @param array|null $permissions The list of required permissions to check.
      * @return boolean
      */
-    public function hasPermissions(array $permissions);
+    public function hasPermissions($permissions);
 }

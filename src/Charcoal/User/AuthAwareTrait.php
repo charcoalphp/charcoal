@@ -29,7 +29,7 @@ trait AuthAwareTrait
     /**
      * @var string[]
      */
-    private $requiredAclPermissions = [];
+    private $requiredAclPermissions;
 
     /**
      * @param  Container $container The DI container.
@@ -111,7 +111,7 @@ trait AuthAwareTrait
     protected function setRequiredAclPermissions($permissions)
     {
         if ($permissions === null || !$permissions) {
-            $this->permissions = [];
+            $this->permissions = null;
             return $this;
         }
         if (is_string($permissions)) {
@@ -128,7 +128,7 @@ trait AuthAwareTrait
     }
 
     /**
-     * @return string[]
+     * @return string[]|null
      */
     protected function requiredAclPermissions()
     {
@@ -144,12 +144,12 @@ trait AuthAwareTrait
     }
 
     /**
-     * @param array $permissions The list of required permissions to check.
+     * @param array|null $permissions The list of required permissions to check.
      * @return boolean
      */
-    public function hasPermissions(array $permissions)
+    public function hasPermissions($permissions)
     {
-        if (empty($permissions)) {
+        if ($permissions === null || empty($permissions)) {
             return true;
         }
         $authUser = $this->authenticator()->authenticate();
@@ -159,4 +159,5 @@ trait AuthAwareTrait
         $authorized = $this->authorizer()->userAllowed($authUser, $permissions);
         return $authorized;
     }
+
 }
