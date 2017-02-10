@@ -159,5 +159,4 @@ trait AuthAwareTrait
         $authorized = $this->authorizer()->userAllowed($authUser, $permissions);
         return $authorized;
     }
-
 }
