@@ -84,6 +84,13 @@ class FileProperty extends AbstractProperty
     private $filesize;
 
     /**
+     * The filesystem to use while uploading a file.
+     *
+     * @var string
+     */
+    private $filesystem = 'public';
+
+    /**
      * @return string
      */
     public function type()
@@ -101,7 +108,7 @@ class FileProperty extends AbstractProperty
     {
         parent::setDependencies($container);
 
-        $this->basePath   = $container['config']['base_path'];
+        $this->basePath = $container['config']['base_path'];
         $this->publicPath = $container['config']['public_path'];
     }
 
@@ -205,6 +212,7 @@ class FileProperty extends AbstractProperty
     public function setAcceptedMimetypes(array $mimetypes)
     {
         $this->acceptedMimetypes = $mimetypes;
+
         return $this;
     }
 
@@ -227,6 +235,7 @@ class FileProperty extends AbstractProperty
     {
         if ($type === null || $type === false) {
             $this->mimetype = null;
+
             return $this;
         }
 
@@ -271,6 +280,7 @@ class FileProperty extends AbstractProperty
     public function mimetypeFor($file)
     {
         $info = new finfo(FILEINFO_MIME_TYPE);
+
         return $info->file($file);
     }
 
@@ -294,8 +304,8 @@ class FileProperty extends AbstractProperty
         }
 
         $quant = 'bkmgtpezy';
-        $unit  = preg_replace('/[^'.$quant.']/i', '', $size);
-        $size  = preg_replace('/[^0-9\.]/', '', $size);
+        $unit = preg_replace('/[^'.$quant.']/i', '', $size);
+        $size = preg_replace('/[^0-9\.]/', '', $size);
 
         if ($unit) {
             $size = ($size * pow(1024, stripos($quant, $unit[0])));
@@ -339,12 +349,12 @@ class FileProperty extends AbstractProperty
      * as configured in {@link http://php.net/manual/en/ini.php `php.ini`}.
      *
      * @param string|null $iniDirective If $iniDirective is provided, then it is filled with
-     *     the name of the PHP INI directive corresponding to the maximum size allowed.
+     *                                  the name of the PHP INI directive corresponding to the maximum size allowed.
      * @return integer
      */
     public function maxFilesizeAllowedByPhp(&$iniDirective = null)
     {
-        $postMaxSize       = $this->parseIniSize(ini_get('post_max_size'));
+        $postMaxSize = $this->parseIniSize(ini_get('post_max_size'));
         $uploadMaxFilesize = $this->parseIniSize(ini_get('upload_max_filesize'));
 
         if ($postMaxSize < $uploadMaxFilesize) {
@@ -371,6 +381,7 @@ class FileProperty extends AbstractProperty
             );
         }
         $this->filesize = $size;
+
         return $this;
     }
 
@@ -387,6 +398,7 @@ class FileProperty extends AbstractProperty
                 $this->filesize = filesize($val);
             }
         }
+
         return $this->filesize;
     }
 
@@ -396,6 +408,7 @@ class FileProperty extends AbstractProperty
     public function validationMethods()
     {
         $parentMethods = parent::validationMethods();
+
         return array_merge($parentMethods, [ 'accepted_mimetypes', 'max_filesize' ]);
     }
 
@@ -498,7 +511,8 @@ class FileProperty extends AbstractProperty
         // Upload file, if in request.
         if (isset($_FILES[$i])
             && (isset($_FILES[$i]['name']) && $_FILES[$i]['name'])
-            && (isset($_FILES[$i]['tmp_name']) && $_FILES[$i]['tmp_name'])) {
+            && (isset($_FILES[$i]['tmp_name']) && $_FILES[$i]['tmp_name'])
+        ) {
             $file = $_FILES[$i];
 
             if (is_array($file['name']) && $this->multiple() && $this->l10n()) {
@@ -513,11 +527,11 @@ class FileProperty extends AbstractProperty
                     $total = count($file['name'][$lang]);
                     for (; $k < $total; $k++) {
                         $data = [];
-                        $data['name']       = $file['name'][$lang][$k];
-                        $data['tmp_name']   = $file['tmp_name'][$lang][$k];
-                        $data['error']      = $file['error'][$lang][$k];
-                        $data['type']       = $file['type'][$lang][$k];
-                        $data['size']       = $file['size'][$lang][$k];
+                        $data['name'] = $file['name'][$lang][$k];
+                        $data['tmp_name'] = $file['tmp_name'][$lang][$k];
+                        $data['error'] = $file['error'][$lang][$k];
+                        $data['type'] = $file['type'][$lang][$k];
+                        $data['size'] = $file['size'][$lang][$k];
 
                         $f[$lang][] = $this->fileUpload($data);
                     }
@@ -526,13 +540,13 @@ class FileProperty extends AbstractProperty
                 $f = [];
                 $k = 0;
                 $total = count($file['name']);
-                for (; $k< $total; $k++) {
+                for (; $k < $total; $k++) {
                     $data = [];
-                    $data['name']       = $file['name'][$k];
-                    $data['tmp_name']   = $file['tmp_name'][$k];
-                    $data['error']      = $file['error'][$k];
-                    $data['type']       = $file['type'][$k];
-                    $data['size']       = $file['size'][$k];
+                    $data['name'] = $file['name'][$k];
+                    $data['tmp_name'] = $file['tmp_name'][$k];
+                    $data['error'] = $file['error'][$k];
+                    $data['type'] = $file['type'][$k];
+                    $data['size'] = $file['size'][$k];
 
                     $f[] = $this->fileUpload($data);
                 }
@@ -549,11 +563,11 @@ class FileProperty extends AbstractProperty
                         $f[$lang] = isset($val[$lang]) ? $val[$lang] : '';
                         continue;
                     }
-                    $data['name']       = $file['name'][$lang];
-                    $data['tmp_name']   = $file['tmp_name'][$lang];
-                    $data['error']      = $file['error'][$lang];
-                    $data['type']       = $file['type'][$lang];
-                    $data['size']       = $file['size'][$lang];
+                    $data['name'] = $file['name'][$lang];
+                    $data['tmp_name'] = $file['tmp_name'][$lang];
+                    $data['error'] = $file['error'][$lang];
+                    $data['type'] = $file['type'][$lang];
+                    $data['size'] = $file['size'][$lang];
 
                     $f[$lang] = $this->fileUpload($data);
                 }
@@ -575,9 +589,11 @@ class FileProperty extends AbstractProperty
                     $f[] = $this->dataUpload($v);
                 }
             }
+
             return $f;
         } elseif ($this->isDataUri($val)) {
             $f = $this->dataUpload($val);
+
             return $f;
         }
 
@@ -661,6 +677,7 @@ class FileProperty extends AbstractProperty
 
         if ($ret === false) {
             $this->logger->warning(sprintf('Could not upload file %s', $target));
+
             return '';
         } else {
             $this->logger->notice(sprintf('File %s uploaded succesfully', $target));
@@ -687,7 +704,7 @@ class FileProperty extends AbstractProperty
             // @todo: Feedback
             $this->logger->debug(
                 'Path does not exist. Attempting to create path '.$dir.'.',
-                [get_called_class().'::'.__FUNCTION__]
+                [ get_called_class().'::'.__FUNCTION__ ]
             );
             mkdir($dir, 0777, true);
         }
@@ -776,8 +793,8 @@ class FileProperty extends AbstractProperty
     public function sanitizeFilename($filename)
     {
         // Remove blacklisted caharacters
-        $blacklist = ['/', '\\', '\0', '*', ':', '?', '"', '<', '>', '|', '#', '&', '!', '`', ' '];
-        $filename  = str_replace($blacklist, '_', $filename);
+        $blacklist = [ '/', '\\', '\0', '*', ':', '?', '"', '<', '>', '|', '#', '&', '!', '`', ' ' ];
+        $filename = str_replace($blacklist, '_', $filename);
 
         // Avoid hidden file
         $filename = ltrim($filename, '.');
@@ -910,7 +927,7 @@ class FileProperty extends AbstractProperty
      */
     public function generateFilename()
     {
-        $filename  = $this->label().' '.date('Y-m-d H-i-s');
+        $filename = $this->label().' '.date('Y-m-d H-i-s');
         $extension = $this->generateExtension();
 
         if ($extension) {
@@ -970,5 +987,24 @@ class FileProperty extends AbstractProperty
         }
 
         return '';
+    }
+
+    /**
+     * @return string
+     */
+    public function filesystem()
+    {
+        return $this->filesystem;
+    }
+
+    /**
+     * @param string $filesystem The file system.
+     * @return self
+     */
+    public function setFilesystem($filesystem)
+    {
+        $this->filesystem = $filesystem;
+
+        return $this;
     }
 }
