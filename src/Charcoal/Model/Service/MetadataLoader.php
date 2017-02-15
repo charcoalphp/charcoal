@@ -271,7 +271,7 @@ final class MetadataLoader implements LoggerAwareInterface
             $interfaces = null;
         }
 
-        $cacheKey  = str_replace('/', '.', 'metadata/object/'.$ident);
+        $cacheKey  = 'metadata/'.str_replace('/', '.', $ident);
         $cacheItem = $this->cachePool()->getItem($cacheKey);
 
         if (!$cacheItem->isHit()) {

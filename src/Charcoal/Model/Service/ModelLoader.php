@@ -165,13 +165,12 @@ final class ModelLoader implements ArrayAccess
             // Do not use cache;
             return $this->loadFromSource($ident);
         }
-        $cacheKey = str_replace('/', '.', 'model/loader/'.$this->objType.'/'.$ident);
+        $cacheKey = 'objects/'.str_replace('/', '.', $this->objType.'.'.$ident);
         $cacheItem = $this->cachePool->getItem($cacheKey);
 
         $obj = $cacheItem->get();
         if (!$cacheItem->isHit()) {
             $obj = $this->loadFromSource($ident);
-
             $this->cachePool->save($cacheItem->set($obj));
         }
         return $obj;
