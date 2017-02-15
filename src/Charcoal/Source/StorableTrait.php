@@ -48,7 +48,8 @@ trait StorableTrait
         if (!is_scalar($id)) {
             throw new InvalidArgumentException(
                 sprintf(
-                    'ID must be a scalar (integer, float, string, or boolean); received %s',
+                    'ID for "%s" must be a scalar (integer, float, string, or boolean); received %s',
+                    get_class($this),
                     (is_object($id) ? get_class($id) : gettype($id))
                 )
             );
