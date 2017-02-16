@@ -3,7 +3,7 @@
 namespace Charcoal\Property;
 
 // Local namespace dependencies
-use \Charcoal\Property\StringProperty;
+use Charcoal\Property\StringProperty;
 
 /**
  * HTML Property.
@@ -12,6 +12,13 @@ use \Charcoal\Property\StringProperty;
  */
 class HtmlProperty extends StringProperty
 {
+
+    /**
+     * The available filesystems (used in TinyMCE's elFinder media manager).
+     *
+     * @var string
+     */
+    private $filesystem = '';
 
     /**
      * @return string
@@ -39,5 +46,24 @@ class HtmlProperty extends StringProperty
     public function sqlType()
     {
         return 'TEXT';
+    }
+
+    /**
+     * @return string
+     */
+    public function filesystem()
+    {
+        return $this->filesystem;
+    }
+
+    /**
+     * @param string $filesystem The file system.
+     * @return self
+     */
+    public function setFilesystem($filesystem)
+    {
+        $this->filesystem = $filesystem;
+
+        return $this;
     }
 }
