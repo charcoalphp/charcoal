@@ -16,6 +16,7 @@
         }
     ],
     "minimum-stability": "dev",
+    "prefer-stable":true,
     "extra": {
         "branch-alias": {
             "dev-master": "0.1.x-dev"
@@ -27,7 +28,7 @@
         "locomotivemtl/charcoal-config": "~0.7",
         "locomotivemtl/charcoal-factory": "~0.4",
         "locomotivemtl/charcoal-translator": "~0.1",
-        "locomotivemtl/charcoal-view": "~0.1",
+        "locomotivemtl/charcoal-view": "~0.2",
         "locomotivemtl/charcoal-user": "^0.1.1"
     },
     "require-dev": {
