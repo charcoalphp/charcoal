@@ -3,11 +3,15 @@
     ==============================
 --}}
 {{# hasAttachments }}
-<ul class="list-group">
-{{# attachments }}
-    <li class="list-group-item u-truncate{{^ active }} alert-danger{{/ active}}"><span class="list-group-item-icon glyphicon {{ glyphicon }}"></span> {{& heading }}{{^ active }}&mdash; <em>Désactivé</em>{{/ active}}</li>
-{{/ attachments }}
-</ul>
+    <ul class="list-group">
+    {{# attachments }}
+        <li class="list-group-item u-truncate{{^ active }} alert-danger{{/ active}}">
+            <span class="list-group-item-icon glyphicon {{ glyphicon }}"></span>
+            {{& heading }}{{^ active }}&mdash; <em>Désactivé</em>{{/ active}}
+            {{> charcoal/attachment/object/partial/modify-button }}
+        </li>
+    {{/ attachments }}
+    </ul>
 {{/ hasAttachments }}
 {{^ hasAttachments }}
 {{> charcoal/admin/widget/attachment/empty }}
