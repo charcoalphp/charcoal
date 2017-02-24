@@ -78,6 +78,8 @@ abstract class AbstractUiItem extends AbstractEntity implements
     public function setDependencies(Container $container)
     {
         $this->setTranslator($container['translator']);
+        $this->setAuthenticator($container['authenticator']);
+        $this->setAuthorizer($container['authorizer']);
     }
 
     /**
