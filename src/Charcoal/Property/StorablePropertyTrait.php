@@ -73,10 +73,7 @@ trait StorablePropertyTrait
         if ($this->l10n()) {
             foreach ($this->translator()->availableLocales() as $langCode) {
                 $ident = sprintf('%1$s_%2$s', $this->ident(), $langCode);
-                $field = new PropertyField([
-                    'translator' => $this->translator()
-                ]);
-                $field->setData([
+                $field = $this->createPropertyField([
                     'ident'      => $ident,
                     'sqlType'    => $this->sqlType(),
                     'sqlPdoType' => $this->sqlPdoType(),
@@ -88,10 +85,7 @@ trait StorablePropertyTrait
                 $this->fields[$langCode] = $field;
             }
         } else {
-            $field = new PropertyField([
-                'translator' => $this->translator()
-            ]);
-            $field->setData([
+            $field = $this->createPropertyField([
                 'ident'      => $this->ident(),
                 'sqlType'    => $this->sqlType(),
                 'sqlPdoType' => $this->sqlPdoType(),
@@ -158,6 +152,23 @@ trait StorablePropertyTrait
         }
 
         return $val;
+    }
+
+    /**
+     * @param  array $data Optional. Field data.
+     * @return PropertyField
+     */
+    protected function createPropertyField(array $data = null)
+    {
+        $field = new PropertyField([
+            'translator' => $this->translator()
+        ]);
+
+        if ($data !== null) {
+            $field->setData($data);
+        }
+
+        return $field;
     }
 
     /**

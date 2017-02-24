@@ -103,7 +103,7 @@ class PropertyField
     {
         if (!is_string($ident)) {
             throw new InvalidArgumentException(
-                'Ident must be a string.'
+                'Identifier must be a string.'
             );
         }
         $this->ident = $ident;
@@ -145,7 +145,7 @@ class PropertyField
     {
         if (!is_string($sqlType)) {
             throw new InvalidArgumentException(
-                'Sql Type must be a string.'
+                'SQL Type must be a string.'
             );
         }
         $this->sqlType = $sqlType;
@@ -279,8 +279,8 @@ class PropertyField
         }
 
         $sqlType = $this->sqlType();
-        $null = (($this->allowNull() === false) ? ' NOT NULL ' : '');
-        $extra = $this->extra() ? ' '.$this->extra().' ' : '';
+        $null    = (($this->allowNull() === false) ? ' NOT NULL ' : '');
+        $extra   = $this->extra() ? ' '.$this->extra().' ' : '';
         $default = ($this->defaultVal() ? ' DEFAULT \''.addslashes($this->defaultVal()).'\' ' : '');
         $comment = ($this->label() ? ' COMMENT \''.addslashes($this->label()).'\' ' : '');
 
