@@ -2,15 +2,9 @@
 
 namespace Charcoal\Tests\Ui\Dashboard;
 
-// PSR-3 logger test dependencies
-use \Psr\Log\NullLogger;
-
-// Pimple test dependencies
-use \Pimple\Container;
-
-// Tested module (`charcoal-ui`) test dependencies
+// From 'charcoal-ui'
 use \Charcoal\Ui\UiItemInterface;
-use \Charcoal\Ui\Dashboard\GenericDashboard;
+use \Charcoal\Ui\Dashboard\AbstractDashboard;
 use \Charcoal\Ui\DashboardGroup\DashboardGroupBuilder;
 use \Charcoal\Ui\ServiceProvider\DashboardServiceProvider;
 use \Charcoal\Ui\ServiceProvider\LayoutServiceProvider;
@@ -18,7 +12,7 @@ use \Charcoal\Ui\ServiceProvider\FormServiceProvider;
 
 class AbstractDashboardTest extends \PHPUnit_Framework_TestCase
 {
-    public $container;
+    use \Charcoal\Tests\Ui\ContainerIntegrationTrait;
 
     /**
      * @var AbstractViewClass $obj
@@ -26,28 +20,18 @@ class AbstractDashboardTest extends \PHPUnit_Framework_TestCase
     public $obj;
 
     /**
-     * @var \Psr\Log\NullLogger $logger
-     */
-    public $logger;
-
-    /**
      *
      */
     public function setUp()
     {
-        $container = new Container();
+        $container = $this->getContainer();
         $container->register(new DashboardServiceProvider());
         $container->register(new LayoutServiceProvider());
         $container->register(new FormServiceProvider());
 
-        // Fulfills the services dependencies on `logger` and `view`.
-        $container['logger'] = new NullLogger();
         $container['view'] = null;
 
-
-        $this->container = $container;
-
-        $this->obj = $this->getMockForAbstractClass('\Charcoal\Ui\Dashboard\AbstractDashboard', [[
+        $this->obj = $this->getMockForAbstractClass(AbstractDashboard::class, [[
             'logger'         => $container['logger'],
             'layout_builder' => $container['layout/builder'],
             'widget_builder' => $container['form/builder']
@@ -88,11 +72,13 @@ class AbstractDashboardTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetLayout()
     {
+        $container = $this->getContainer();
+
         $obj = $this->obj;
         $this->assertNull($obj->layout());
 
         $exampleLayout = $this->exampleLayout();
-        $layout = $this->container['layout/builder']->build($exampleLayout);
+        $layout = $container['layout/builder']->build($exampleLayout);
 
         $ret = $obj->setLayout($layout);
         $this->assertSame($ret, $obj);
@@ -142,7 +128,7 @@ class AbstractDashboardTest extends \PHPUnit_Framework_TestCase
         $widgets = $obj->widgets();
         $num = 0;
         foreach ($widgets as $w) {
-            $this->assertInstanceOf('\Charcoal\Ui\UiItemInterface', $w);
+            $this->assertInstanceOf(UiItemInterface::class, $w);
         }
     }
 

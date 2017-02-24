@@ -2,31 +2,28 @@
 
 namespace Charcoal\Tests\Ui;
 
-use \Charcoal\Ui\Form\GenericForm;
+use Charcoal\Ui\Form\GenericForm;
+use Charcoal\Ui\ServiceProvider\FormServiceProvider;
+use Charcoal\Ui\ServiceProvider\LayoutServiceProvider;
 
 class GenericFormTest extends \PHPUnit_Framework_TestCase
 {
+    use \Charcoal\Tests\Ui\ContainerIntegrationTrait;
+
     /**
      * @var AbstractViewClass $obj
      */
     public $obj;
 
     /**
-     * @var \Psr\Log\NullLogger $logger
-     */
-    public $logger;
-
-    /**
      *
      */
     public function setUp()
     {
+        $container = $this->getContainer();
+        $container->register(new FormServiceProvider());
+        $container->register(new LayoutServiceProvider());
 
-        $container = new \Pimple\Container();
-        $container->register(new \Charcoal\Ui\ServiceProvider\FormServiceProvider());
-        $container->register(new \Charcoal\Ui\ServiceProvider\LayoutServiceProvider());
-
-        $container['logger'] = new \Psr\Log\NullLogger();
         $container['view'] = null;
 
         $this->obj = new GenericForm([
@@ -38,6 +35,6 @@ class GenericFormTest extends \PHPUnit_Framework_TestCase
 
     public function testConstructor()
     {
-        $this->assertInstanceOf('\Charcoal\Ui\Form\GenericForm', $this->obj);
+        $this->assertInstanceOf(GenericForm::class, $this->obj);
     }
 }

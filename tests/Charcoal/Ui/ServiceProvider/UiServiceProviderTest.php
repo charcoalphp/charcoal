@@ -2,8 +2,10 @@
 
 namespace Charcoal\Tests\Ui\ServiceProvider;
 
+// From Pimple
 use \Pimple\Container;
 
+// From 'charcoal-ui'
 use \Charcoal\Ui\ServiceProvider\UiServiceProvider;
 
 /**

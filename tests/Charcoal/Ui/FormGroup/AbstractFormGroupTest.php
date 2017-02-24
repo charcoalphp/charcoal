@@ -2,15 +2,16 @@
 
 namespace Charcoal\Tests\Ui\Form;
 
-use \Charcoal\Ui\Form\GenericForm;
-use \Charcoal\Ui\FormGroup\FormGroupBuilder;
+use Charcoal\Ui\FormGroup\AbstractFormGroup;
+use Charcoal\Ui\ServiceProvider\FormServiceProvider;
+use Charcoal\Ui\ServiceProvider\LayoutServiceProvider;
 
 /**
  *
  */
 class AbstractFormGroupTest extends \PHPUnit_Framework_TestCase
 {
-    public $container;
+    use \Charcoal\Tests\Ui\ContainerIntegrationTrait;
 
     /**
      * @var AbstractViewClass $obj
@@ -22,20 +23,17 @@ class AbstractFormGroupTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $container = new \Pimple\Container();
-        $container->register(new \Charcoal\Ui\ServiceProvider\FormServiceProvider());
-        $container->register(new \Charcoal\Ui\ServiceProvider\LayoutServiceProvider());
+        $container = $this->getContainer();
+        $container->register(new FormServiceProvider());
+        $container->register(new LayoutServiceProvider());
 
-        $container['logger'] = new \Psr\Log\NullLogger();
         $container['view'] = null;
 
-        $this->container = $container;
-
         $form = $container['form/builder']->build([
-            'type'=>null
+            'type' => null
         ]);
 
-        $this->obj = $this->getMockForAbstractClass('\Charcoal\Ui\FormGroup\AbstractFormGroup', [[
+        $this->obj = $this->getMockForAbstractClass(AbstractFormGroup::class, [[
             'form'               => $form,
             'logger'             => $container['logger'],
             'view'               => $container['view'],
@@ -58,7 +56,7 @@ class AbstractFormGroupTest extends \PHPUnit_Framework_TestCase
     {
         $obj = $this->obj;
         $ret = $obj->setInputs([
-            'test'=>[]
+            'test' => []
         ]);
         $this->assertSame($ret, $obj);
     }
@@ -90,7 +88,7 @@ class AbstractFormGroupTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($obj->hasInputs());
 
         $ret = $obj->setInputs([
-            'test'=>[]
+            'test' => []
         ]);
 
         $this->assertTrue($obj->hasInputs());
@@ -102,8 +100,8 @@ class AbstractFormGroupTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(0, $obj->numInputs());
 
         $ret = $obj->setInputs([
-            'test'=>[],
-            'foobar'=>[]
+            'test'   => [],
+            'foobar' => []
         ]);
 
          $this->assertEquals(2, $obj->numInputs());

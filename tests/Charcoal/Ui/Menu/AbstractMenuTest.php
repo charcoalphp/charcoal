@@ -2,30 +2,26 @@
 
 namespace Charcoal\Tests\Ui\Layout;
 
-// PSR-3 logger test dependencies
-use \Psr\Log\NullLogger;
-
-// Pimple test dependencies
-use \Pimple\Container;
-
-use \Charcoal\Ui\ServiceProvider\MenuServiceProvider;
+use Charcoal\Ui\Menu\AbstractMenu;
+use Charcoal\Ui\ServiceProvider\MenuServiceProvider;
 
 class AbstractMenuTest extends \PHPUnit_Framework_TestCase
 {
+    use \Charcoal\Tests\Ui\ContainerIntegrationTrait;
+
     public $obj;
 
     public function setUp()
     {
-        $container = new Container();
+        $container = $this->getContainer();
         $container->register(new MenuServiceProvider());
 
-        $container['logger'] = new NullLogger();
         $container['view'] = null;
 
-        $this->obj = $this->getMockForAbstractClass('\Charcoal\Ui\Menu\AbstractMenu', [[
-                'view'              => $container['view'],
-                'menu_item_builder' => $container['menu/item/builder']
-            ]]);
+        $this->obj = $this->getMockForAbstractClass(AbstractMenu::class, [[
+            'view'              => $container['view'],
+            'menu_item_builder' => $container['menu/item/builder']
+        ]]);
     }
 
     public function testHasItems()
@@ -34,7 +30,7 @@ class AbstractMenuTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($obj->hasItems());
 
         $ret = $obj->setItems([
-            'test'=>[]
+            'test' => []
         ]);
 
         $this->assertTrue($obj->hasItems());
@@ -46,8 +42,8 @@ class AbstractMenuTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(0, $obj->numItems());
 
         $ret = $obj->setItems([
-            'test'=>[],
-            'foobar'=>[]
+            'test'   => [],
+            'foobar' => []
         ]);
 
          $this->assertEquals(2, $obj->numItems());

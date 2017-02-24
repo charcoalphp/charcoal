@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Ui\Layout;
 
+use Charcoal\Ui\Layout\AbstractLayout;
+
 /**
  *
  */
@@ -11,7 +13,7 @@ class AbstractLayoutTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->obj = $this->getMockForAbstractClass('\Charcoal\Ui\Layout\AbstractLayout');
+        $this->obj = $this->getMockForAbstractClass(AbstractLayout::class);
     }
 
     /**
@@ -44,15 +46,15 @@ class AbstractLayoutTest extends \PHPUnit_Framework_TestCase
     public function testSetData()
     {
         $struct = [[
-            'columns'=>[1]
+            'columns' => [ 1 ]
         ]];
         $computed = [
-            'columns'=>[1]
+            'columns' => [ 1 ]
         ];
 
         $obj = $this->obj;
         $ret = $obj->setData([
-            'structure'=>$struct
+            'structure' => $struct
         ]);
         $this->assertSame($ret, $obj);
         //$this->assertEquals($computed, $obj->structure());
@@ -65,32 +67,32 @@ class AbstractLayoutTest extends \PHPUnit_Framework_TestCase
 
         $struct = [
             [
-                'columns'=>[1,2],
+                'columns' => [ 1, 2 ],
             ],
             [
-                'columns'=>[1]
+                'columns' => [ 1 ]
             ],
             [
-                'columns'=>[1,1,1,1],
-                'loop'=>3
+                'columns' => [ 1, 1, 1, 1 ],
+                'loop'    => 3
             ]
         ];
 
         $res = [
             [
-                'columns'=>[1,2],
+                'columns' => [ 1, 2 ],
             ],
             [
-                'columns'=>[1]
+                'columns' => [ 1 ]
             ],
             [
-                'columns'=>[1,1,1,1]
+                'columns' => [ 1, 1, 1, 1 ]
             ],
             [
-                'columns'=>[1,1,1,1]
+                'columns' => [ 1, 1, 1, 1 ]
             ],
             [
-                'columns'=>[1,1,1,1]
+                'columns' => [ 1, 1, 1, 1 ]
             ]
         ];
 
@@ -106,9 +108,9 @@ class AbstractLayoutTest extends \PHPUnit_Framework_TestCase
         $obj = $this->obj;
         $this->assertEquals(0, $obj->numRows());
         $obj->setStructure([
-            ['columns'=>[1]],
-            ['columns'=>[1,2]],
-            ['columns'=>[2,1]]
+            [ 'columns' => [ 1 ] ],
+            [ 'columns' => [ 1, 2 ] ],
+            [ 'columns' => [ 2, 1 ] ]
         ]);
         $this->assertEquals(3, $obj->numRows());
     }
@@ -118,9 +120,9 @@ class AbstractLayoutTest extends \PHPUnit_Framework_TestCase
         $obj = $this->obj;
         $this->assertNull($obj->rowIndex());
         $obj->setStructure([
-            ['columns'=>[1]],
-            ['columns'=>[1,2]],
-            ['columns'=>[2,1]]
+            [ 'columns' => [ 1 ] ],
+            [ 'columns' => [ 1, 2 ] ],
+            [ 'columns' => [ 2, 1 ] ]
         ]);
         $this->assertEquals(0, $obj->rowIndex(0));
         $this->assertEquals(1, $obj->rowIndex(1));
@@ -135,15 +137,15 @@ class AbstractLayoutTest extends \PHPUnit_Framework_TestCase
         $obj = $this->obj;
         $this->assertNull($obj->rowData());
         $obj->setStructure([
-            ['columns'=>[1]],
-            ['columns'=>[1,2]],
-            ['columns'=>[2,1]]
+            [ 'columns' => [ 1 ] ],
+            [ 'columns' => [ 1, 2 ] ],
+            [ 'columns' => [ 2, 1 ] ]
         ]);
-        $this->assertEquals(['columns'=>[1]], $obj->rowData(0));
-        $this->assertEquals(['columns'=>[1,2]], $obj->rowData(1));
-        $this->assertEquals(['columns'=>[1,2]], $obj->rowData(2));
-        $this->assertEquals(['columns'=>[2,1]], $obj->rowData(3));
-        $this->assertEquals(['columns'=>[2,1]], $obj->rowData(4));
+        $this->assertEquals([ 'columns' => [ 1 ] ], $obj->rowData(0));
+        $this->assertEquals([ 'columns' => [ 1, 2 ] ], $obj->rowData(1));
+        $this->assertEquals([ 'columns' => [ 1, 2 ] ], $obj->rowData(2));
+        $this->assertEquals([ 'columns' => [ 2, 1 ] ], $obj->rowData(3));
+        $this->assertEquals([ 'columns' => [ 2, 1 ] ], $obj->rowData(4));
         $this->assertNull($obj->rowData(5));
     }
 
@@ -152,9 +154,9 @@ class AbstractLayoutTest extends \PHPUnit_Framework_TestCase
         $obj = $this->obj;
         $this->assertNull($obj->rowNumColumns());
         $obj->setStructure([
-            ['columns'=>[1]],
-            ['columns'=>[1,2]],
-            ['columns'=>[2,2]]
+            [ 'columns' => [ 1 ] ],
+            [ 'columns' => [ 1, 2 ] ],
+            [ 'columns' => [ 2, 2 ] ]
         ]);
         $this->assertEquals(1, $obj->rowNumColumns(0));
         $this->assertEquals(3, $obj->rowNumColumns(1));
@@ -169,9 +171,9 @@ class AbstractLayoutTest extends \PHPUnit_Framework_TestCase
         $obj = $this->obj;
         $this->assertNull($obj->rowNumCells());
         $obj->setStructure([
-            ['columns'=>[1]],
-            ['columns'=>[1,2]],
-            ['columns'=>[2,2]]
+            [ 'columns' => [ 1 ] ],
+            [ 'columns' => [ 1, 2 ] ],
+            [ 'columns' => [ 2, 2 ] ]
         ]);
         $this->assertEquals(1, $obj->rowNumCells(0));
         $this->assertEquals(2, $obj->rowNumCells(1));
@@ -186,9 +188,9 @@ class AbstractLayoutTest extends \PHPUnit_Framework_TestCase
         $obj = $this->obj;
         $this->assertNull($obj->rowFirstCellIndex());
         $obj->setStructure([
-            ['columns'=>[1]],
-            ['columns'=>[1,2]],
-            ['columns'=>[2,2]]
+            [ 'columns' => [ 1 ] ],
+            [ 'columns' => [ 1, 2 ] ],
+            [ 'columns' => [ 2, 2 ] ]
         ]);
         $this->assertEquals(0, $obj->rowFirstCellIndex(0));
         $this->assertEquals(1, $obj->rowFirstCellIndex(1));
@@ -203,9 +205,9 @@ class AbstractLayoutTest extends \PHPUnit_Framework_TestCase
         $obj = $this->obj;
         //$this->assertNull($obj->cellRowIndex());
         $obj->setStructure([
-            ['columns'=>[1]],
-            ['columns'=>[1,2]],
-            ['columns'=>[2,2]]
+            [ 'columns' => [ 1 ] ],
+            [ 'columns' => [ 1, 2 ] ],
+            [ 'columns' => [ 2, 2 ] ]
         ]);
         $this->assertEquals(0, $obj->cellRowIndex(0));
         $this->assertEquals(0, $obj->cellRowIndex(1));
@@ -220,9 +222,9 @@ class AbstractLayoutTest extends \PHPUnit_Framework_TestCase
         $obj = $this->obj;
         $this->assertEquals(0, $obj->numCellsTotal());
         $obj->setStructure([
-            ['columns'=>[1]],
-            ['columns'=>[1,2]],
-            ['columns'=>[2,2]]
+            [ 'columns' => [ 1 ] ],
+            [ 'columns' => [ 1, 2 ] ],
+            [ 'columns' => [ 2, 2 ] ]
         ]);
         $this->assertEquals(5, $obj->numCellsTotal());
     }
@@ -232,9 +234,9 @@ class AbstractLayoutTest extends \PHPUnit_Framework_TestCase
         $obj = $this->obj;
         $this->assertNull($obj->cellSpan());
         $obj->setStructure([
-            ['columns'=>[1]],
-            ['columns'=>[1,2]],
-            ['columns'=>[2,2]]
+            [ 'columns' => [ 1 ] ],
+            [ 'columns' => [ 1, 2 ] ],
+            [ 'columns' => [ 2, 2 ] ]
         ]);
         $this->assertEquals(1, $obj->cellSpan(0));
         $this->assertEquals(1, $obj->cellSpan(1));
@@ -249,9 +251,9 @@ class AbstractLayoutTest extends \PHPUnit_Framework_TestCase
         $obj = $this->obj;
         $this->assertNull($obj->cellSpanBy12());
         $obj->setStructure([
-            ['columns'=>[1]],
-            ['columns'=>[1,2]],
-            ['columns'=>[3,1]]
+            [ 'columns' => [ 1 ] ],
+            [ 'columns' => [ 1, 2 ] ],
+            [ 'columns' => [ 3, 1 ] ]
         ]);
         $this->assertEquals(12, $obj->cellSpanBy12(0));
         $this->assertEquals(4, $obj->cellSpanBy12(1));
@@ -266,9 +268,9 @@ class AbstractLayoutTest extends \PHPUnit_Framework_TestCase
         $obj = $this->obj;
         //$this->assertNull($obj->cellStartsRow());
         $obj->setStructure([
-            ['columns'=>[1]],
-            ['columns'=>[1,2]],
-            ['columns'=>[3,1]]
+            [ 'columns' => [ 1 ] ],
+            [ 'columns' => [ 1, 2 ] ],
+            [ 'columns' => [ 3, 1 ] ]
         ]);
         $this->assertEquals(true, $obj->cellStartsRow(0));
         $this->assertEquals(true, $obj->cellStartsRow(1));
@@ -283,9 +285,9 @@ class AbstractLayoutTest extends \PHPUnit_Framework_TestCase
         $obj = $this->obj;
         //$this->assertNull($obj->cellStartsRow());
         $obj->setStructure([
-            ['columns'=>[1]],
-            ['columns'=>[1,2]],
-            ['columns'=>[3,1]]
+            [ 'columns' => [ 1 ] ],
+            [ 'columns' => [ 1, 2 ] ],
+            [ 'columns' => [ 3, 1 ] ]
         ]);
         $this->assertEquals(true, $obj->cellEndsRow(0));
         $this->assertEquals(false, $obj->cellEndsRow(1));

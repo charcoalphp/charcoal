@@ -2,20 +2,38 @@
 
 namespace Charcoal\Tests\Ui;
 
-use Pimple\Container;
+use ReflectionClass;
 
-class AbstractUiTest extends \PHPUnit_Framework_TestCase
+// From 'charcoal-ui'
+use Charcoal\Ui\AbstractUiItem;
+
+/**
+ *
+ */
+class AbstractUiItemTest extends \PHPUnit_Framework_TestCase
 {
+    use \Charcoal\Tests\Ui\ContainerIntegrationTrait;
+
     public $obj;
 
     public function setUp()
     {
-        $container = new Container;
-        $container['translator'] = $GLOBALS['translator'];
+        $container = $this->getContainer();
 
-        $this->obj = $this->getMockForAbstractClass('\Charcoal\Ui\AbstractUiItem', [[
+        $this->obj = $this->getMockForAbstractClass(AbstractUiItem::class, [[
             'container' => $container
         ]]);
+
+        $setAuthDependencies = self::getMethod($this->obj, 'setAuthDependencies');
+        $setAuthDependencies->invoke($this->obj, $container);
+    }
+
+    public static function getMethod($obj, $name)
+    {
+        $class = new ReflectionClass($obj);
+        $method = $class->getMethod($name);
+        $method->setAccessible(true);
+        return $method;
     }
 
     public function testSetType()

@@ -2,10 +2,13 @@
 
 namespace Charcoal\Tests\Ui\ServiceProvider;
 
+// From PSR-3
 use \Psr\Log\NullLogger;
 
+// From Pimple
 use \Pimple\Container;
 
+// From 'charcoal-ui'
 use \Charcoal\Ui\ServiceProvider\DashboardServiceProvider;
 
 /**
