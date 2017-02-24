@@ -40,13 +40,13 @@ class Attachment extends Content implements AttachableInterface
     /**
      * Default attachment types
      */
-    const FILE_TYPE      = File::class;
-    const LINK_TYPE      = Link::class;
-    const IMAGE_TYPE     = Image::class;
-    const EMBED_TYPE     = Embed::class;
-    const VIDEO_TYPE     = Video::class;
-    const TEXT_TYPE      = Text::class;
-    const GALLERY_TYPE   = Gallery::class;
+    const FILE_TYPE = File::class;
+    const LINK_TYPE = Link::class;
+    const IMAGE_TYPE = Image::class;
+    const EMBED_TYPE = Embed::class;
+    const VIDEO_TYPE = Video::class;
+    const TEXT_TYPE = Text::class;
+    const GALLERY_TYPE = Gallery::class;
     const ACCORDION_TYPE = Accordion::class;
     const CONTAINER_TYPE = AttachmentContainer::class;
 
@@ -108,6 +108,11 @@ class Attachment extends Content implements AttachableInterface
      * @var boolean
      */
     protected $showTitle = true;
+
+    /**
+     * @var string|string[]
+     */
+    protected $categories;
 
     /**
      * Generic information about the attachment.
@@ -242,6 +247,7 @@ class Attachment extends Content implements AttachableInterface
     {
         if ($obj === null) {
             $this->containerObj = null;
+
             return $this;
         }
 
@@ -513,8 +519,8 @@ class Attachment extends Content implements AttachableInterface
 
 
 
-// Setters
-// =============================================================================
+    // Setters
+    // =============================================================================
 
     /**
      * Show/hide the attachment's title on the front-end.
@@ -589,7 +595,7 @@ class Attachment extends Content implements AttachableInterface
      */
     public function setFile($path)
     {
-        $this->file = $this->translator()->translation($path);
+        $this->file = $path;
 
         return $this;
     }
@@ -602,7 +608,7 @@ class Attachment extends Content implements AttachableInterface
      */
     public function setLink($link)
     {
-        $this->link = $this->translator()->translation($link);
+        $this->link = $link;
 
         return $this;
     }
@@ -658,9 +664,19 @@ class Attachment extends Content implements AttachableInterface
         return $this;
     }
 
+    /**
+     * @param string|\string[] $categories Category elements.
+     * @return self
+     */
+    public function setCategories($categories)
+    {
+        $this->categories = $categories;
 
-// Getters
-// =============================================================================
+        return $this;
+    }
+
+    // Getters
+    // =============================================================================
 
     /**
      * Determine if the title is to be displayed on the front-end.
@@ -778,9 +794,16 @@ class Attachment extends Content implements AttachableInterface
         return $this->embed;
     }
 
+    /**
+     * @return string|\string[]
+     */
+    public function categories()
+    {
+        return $this->categories;
+    }
 
-// Events
-// =============================================================================
+    // Events
+    // =============================================================================
 
     /**
      * Event called before _deleting_ the attachment.
@@ -807,8 +830,8 @@ class Attachment extends Content implements AttachableInterface
 
 
 
-// Utilities
-// =============================================================================
+    // Utilities
+    // =============================================================================
 
     /**
      * Set a model collection loader.
