@@ -12,47 +12,28 @@ use \Charcoal\Model\Model;
  */
 class ModelValidatorTest extends \PHPUnit_Framework_TestCase
 {
+    use \Charcoal\Tests\ContainerIntegrationTrait;
+
     private $obj;
     private $model;
 
     protected function model()
     {
-        $logger = new \Psr\Log\NullLogger();
-        $cache  = new \Cache\Adapter\Void\VoidCachePool();
+        $container = $this->getContainer();
 
-        $metadataLoader = new \Charcoal\Model\Service\MetadataLoader([
-            'logger'    => $logger,
-            'cache'     => $cache,
-            'base_path' => __DIR__,
-            'paths'     => [ 'metadata' ]
+        return new Model([
+            'container'        => $container,
+            'logger'           => $container['logger'],
+            'property_factory' => $container['property/factory'],
+            'metadata_loader'  => $container['metadata/loader']
         ]);
-
-        $propertyFactory = new \Charcoal\Factory\GenericFactory([
-            'base_class'       => \Charcoal\Property\PropertyInterface::class,
-            'default_class'    => \Charcoal\Property\GenericProperty::class,
-            'resolver_options' => [
-                'prefix' => '\Charcoal\Property\\',
-                'suffix' => 'Property'
-            ]
-        ]);
-
-        $dependencies = [
-            'logger'           => $logger,
-            'database'         => new PDO('sqlite::memory:'),
-            'property_factory' => $propertyFactory,
-            'metadata_loader'  => $metadataLoader
-        ];
-
-        $propertyFactory->setArguments($dependencies);
-
-        return new Model($dependencies);
     }
 
     public function testConstructor()
     {
         $model = $this->model();
         $obj = new ModelValidator($model);
-        $this->assertInstanceOf('\Charcoal\Model\ModelValidator', $obj);
+        $this->assertInstanceOf(ModelValidator::class, $obj);
     }
 
     public function testValidateModel()

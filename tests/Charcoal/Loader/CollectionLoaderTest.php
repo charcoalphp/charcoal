@@ -4,9 +4,6 @@ namespace Charcoal\Tests\Loader;
 
 use \ArrayIterator;
 
-use \Psr\Log\NullLogger;
-use \Cache\Adapter\Void\VoidCachePool;
-
 use \Pimple\Container;
 
 use \Charcoal\Config\GenericConfig;

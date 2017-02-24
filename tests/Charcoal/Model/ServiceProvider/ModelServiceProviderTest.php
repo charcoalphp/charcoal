@@ -4,19 +4,35 @@ namespace Charcoal\Tests\Model\ServiceProvider;
 
 use \PDO;
 
+// From PSR-3
 use \Psr\Log\NullLogger;
+
+// From 'cache/void-adapter' (PSR-6)
 use \Cache\Adapter\Void\VoidCachePool;
 
+// From 'tedivm/stash' (PSR-6)
+use \Stash\Pool;
+use \Stash\Driver\Ephemeral;
+
+// From Pimple
 use \Pimple\Container;
 
+// From 'charcoal-factory'
 use \Charcoal\Factory\FactoryInterface;
 
+// From 'charcoal-app'
 use \Charcoal\App\AppConfig;
 
+// From 'charcoal-view'
 use \Charcoal\View\GenericView;
 use \Charcoal\View\Php\PhpEngine;
 use \Charcoal\View\Php\PhpLoader;
 
+// From 'charcoal-translator'
+use Charcoal\Translator\LocalesManager;
+use Charcoal\Translator\Translator;
+
+// From 'charcoal-core'
 use \Charcoal\Model\ServiceProvider\ModelServiceProvider;
 use \Charcoal\Model\Service\ModelBuilder;
 use \Charcoal\Model\Service\ModelLoaderBuilder;
@@ -48,13 +64,14 @@ class ModelServiceProviderTest extends \PHPUnit_Framework_TestCase
      * - logger
      * - view
      *
+     * @todo   Use ContainerIntegrationTrait?
      * @return Container
      */
     private function container()
     {
         $container = new Container();
 
-        $container['cache']  = new VoidCachePool();
+        $container['cache']  = new Pool(new Ephemeral());
         $container['config'] = new AppConfig([
             'metadata'  => [
                 'paths' => []
@@ -68,6 +85,7 @@ class ModelServiceProviderTest extends \PHPUnit_Framework_TestCase
             'base_path' => dirname(__DIR__),
             'paths'     => [ 'views' ]
         ]);
+
         $container['view/engine'] = new PhpEngine([
             'logger' => $container['logger'],
             'loader' => $container['view/loader']
@@ -77,6 +95,16 @@ class ModelServiceProviderTest extends \PHPUnit_Framework_TestCase
             'logger' => $container['logger'],
             'engine' => $container['view/engine']
         ]);
+
+        $container['language/manager'] = new LocalesManager([
+            'locales' => [
+                'en' => [ 'locale' => 'en-US' ]
+            ]
+        ]);
+        $container['translator'] = new Translator([
+            'manager' => $container['language/manager']
+        ]);
+
         return $container;
     }
 

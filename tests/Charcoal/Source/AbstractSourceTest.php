@@ -2,10 +2,6 @@
 
 namespace Charcoal\Tests\Source;
 
-use \Psr\Log\NullLogger;
-
-use \Cache\Adapter\Void\VoidCachePool;
-
 use \Charcoal\Source\AbstractSource;
 use \Charcoal\Source\Filter;
 use \Charcoal\Source\Order;
@@ -14,12 +10,16 @@ use \Charcoal\Model\Service\MetadataLoader;
 
 class AbstractSourceTest extends \PHPUnit_Framework_TestCase
 {
+    use \Charcoal\Tests\ContainerIntegrationTrait;
+
     public $obj;
 
     public function setUp()
     {
+        $container = $this->getContainer();
+
         $this->obj = $this->getMockForAbstractClass(AbstractSource::class, [[
-            'logger' => new \Psr\Log\NullLogger()
+            'logger' => $container['logger']
         ]]);
     }
 
@@ -36,12 +36,12 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
         $obj = $this->obj;
         $filter = $this->getFilter1();
         $order = $this->getOrder1();
-        $pagination = ['page'=>3, 'num_per_page'=>120];
+        $pagination = ['page' => 3, 'num_per_page' => 120];
         $obj->setData([
-            'properties'=>['foo'],
-            'filters'=>[$filter],
-            'orders'=>[$order],
-            'pagination'=>$pagination
+            'properties' => [ 'foo' ],
+            'filters'    => [$filter],
+            'orders'     => [$order],
+            'pagination' => $pagination
         ]);
         $ret = $obj->reset();
         $this->assertSame($ret, $obj);
@@ -61,10 +61,10 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
     {
         $obj = $this->obj;
         $ret = $obj->setData([
-            'properties'=>['foo'],
-            'filters'=>[],
-            'orders'=>[],
-            'pagination'=>[]
+            'properties' => [ 'foo' ],
+            'filters'    => [],
+            'orders'     => [],
+            'pagination' => []
         ]);
         $this->assertSame($ret, $obj);
 
@@ -78,14 +78,16 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetModel()
     {
+        $container = $this->getContainer();
+
         $obj = $this->obj;
         $model = new \Charcoal\Model\Model([
-            'logger' => new NullLogger(),
+            'logger'          => $container['logger'],
             'metadata_loader' => new MetadataLoader([
-                'base_path' => '',
-                'paths' => [],
-                'logger' => new NullLogger(),
-                'cache' => new VoidCachePool()
+                'base_path'   => '',
+                'paths'       => [],
+                'logger'      => $container['logger'],
+                'cache'       => $container['cache']
             ])
         ]);
         $ret = $obj->setModel($model);

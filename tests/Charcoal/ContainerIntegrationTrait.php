@@ -25,6 +25,7 @@ trait ContainerIntegrationTrait
         $container = new Container();
 
         $provider->registerBaseServices($container);
+        $provider->registerTranslator($container);
         $provider->registerMetadataLoader($container);
         $provider->registerSourceFactory($container);
         $provider->registerPropertyFactory($container);
