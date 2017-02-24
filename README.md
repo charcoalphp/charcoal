@@ -17,15 +17,15 @@ The preferred (and only supported) way of installing _charcoal-core_ is with **c
 
 Charcoal depends on:
 
--   `PHP** 5.5+`
+-   `PHP** 5.6+`
 -   `ext-pdo`
 -   `ext-mbstring`
 -   `psr/log`
--   `locomotivemtl/charcoal-app`
+-   `psr/cache`
 -   `locomotivemtl/charcoal-config`
+-   `locomotivemtl/charcoal-factory`
 -   `locomotivemtl/charcoal-property`
 -   `locomotivemtl/charcoal-view`
--   `locomotivemtl/charcoal-translation`
 
 ## Recommended modules
 
@@ -99,7 +99,7 @@ The charcoal-core module follows the Charcoal coding-style:
 
 **The MIT License (MIT)**
 
-_Copyright © 2016 Locomotive inc._
+_Copyright © 2017 Locomotive inc._
 > See [Authors](#authors).
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:

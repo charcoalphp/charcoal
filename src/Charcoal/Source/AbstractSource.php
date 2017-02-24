@@ -2,25 +2,28 @@
 
 namespace Charcoal\Source;
 
-use \Exception;
-use \InvalidArgumentException;
+use Exception;
+use InvalidArgumentException;
 
-use \Psr\Log\LoggerAwareInterface;
-use \Psr\Log\LoggerAwareTrait;
+// From PSR-3
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 
-use \Charcoal\Config\ConfigurableInterface;
-use \Charcoal\Config\ConfigurableTrait;
-use \Charcoal\Translation\TranslationConfig;
-use \Charcoal\Model\ModelInterface;
+// From 'charcoal-config'
+use Charcoal\Config\ConfigurableInterface;
+use Charcoal\Config\ConfigurableTrait;
 
-use \Charcoal\Source\SourceConfig;
-use \Charcoal\Source\SourceInterface;
-use \Charcoal\Source\Filter;
-use \Charcoal\Source\FilterInterface;
-use \Charcoal\Source\Order;
-use \Charcoal\Source\OrderInterface;
-use \Charcoal\Source\Pagination;
-use \Charcoal\Source\PaginationInterface;
+// From 'charcoal-core'
+use Charcoal\Model\ModelInterface;
+
+use Charcoal\Source\SourceConfig;
+use Charcoal\Source\SourceInterface;
+use Charcoal\Source\Filter;
+use Charcoal\Source\FilterInterface;
+use Charcoal\Source\Order;
+use Charcoal\Source\OrderInterface;
+use Charcoal\Source\Pagination;
+use Charcoal\Source\PaginationInterface;
 
 /**
  * Full implementation, as abstract class, of the SourceInterface.
@@ -253,10 +256,7 @@ abstract class AbstractSource implements
                 $p = $this->model()->p($property);
                 if ($p) {
                     if ($p->l10n()) {
-                        $translator = TranslationConfig::instance();
-
-                        $ident = sprintf('%1$s_%2$s', $property, $translator->currentLanguage());
-                        $filter->setProperty($ident);
+                        $filter->setProperty($p->l10nIdent());
                     }
 
                     if ($p->multiple()) {
@@ -334,10 +334,7 @@ abstract class AbstractSource implements
                 $p = $this->model()->p($property);
                 if ($p) {
                     if ($p->l10n()) {
-                        $translator = TranslationConfig::instance();
-
-                        $ident = sprintf('%1$s_%2$s', $property, $translator->currentLanguage());
-                        $order->setProperty($ident);
+                        $order->setProperty($p->l10nIdent());
                     }
                 }
             }
