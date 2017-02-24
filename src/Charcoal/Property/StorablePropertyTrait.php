@@ -72,7 +72,7 @@ trait StorablePropertyTrait
         $this->fields = [];
         if ($this->l10n()) {
             foreach ($this->translator()->availableLocales() as $langCode) {
-                $ident = sprintf('%1$s_%2$s', $this->ident(), $langCode);
+                $ident = $this->l10nIdent($langCode);
                 $field = $this->createPropertyField([
                     'ident'      => $ident,
                     'sqlType'    => $this->sqlType(),

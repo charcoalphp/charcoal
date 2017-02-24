@@ -14,5 +14,5 @@ $GLOBALS['locales_manager'] = new LocalesManager([
 ]);
 
 $GLOBALS['translator'] = new Translator([
-    'manager'=>$GLOBALS['locales_manager']
+    'manager' => $GLOBALS['locales_manager']
 ]);

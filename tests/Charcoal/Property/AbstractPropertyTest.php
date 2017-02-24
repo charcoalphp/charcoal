@@ -22,15 +22,16 @@ class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->obj = $this->getMockForAbstractClass(AbstractProperty::class, [[
-            'database' => new PDO('sqlite::memory:'),
-            'logger' => new NullLogger(),
+            'database'   => new PDO('sqlite::memory:'),
+            'logger'     => new NullLogger(),
             'translator' => $GLOBALS['translator']
         ]]);
     }
 
-    public function testSetIdent()
+    public function testIdent()
     {
         $this->assertEquals('', $this->obj->ident());
+
         $ret = $this->obj->setIdent('foobar');
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('foobar', $this->obj->ident());
@@ -43,6 +44,27 @@ class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
 
         $this->setExpectedException('\InvalidArgumentException');
         $this->obj->setIdent([]);
+    }
+
+    public function testL10nIdent()
+    {
+        $this->obj['l10n'] = false;
+        $this->setExpectedException('\LogicException');
+        $this->obj->l10nIdent();
+
+        $this->obj['l10n'] = true;
+        $this->obj->setIdent('');
+        $this->setExpectedException('\RuntimeException');
+        $this->obj->l10nIdent();
+
+        $this->obj->setIdent('foobar');
+
+        $this->assertEquals('foobar_en', $this->obj->l10nIdent());
+        $this->assertEquals('foobar_fr', $this->obj->l10nIdent('fr'));
+        $this->assertEquals('foobar_en', $this->obj->l10nIdent(null));
+
+        $this->setExpectedException('\InvalidArgumentException');
+        $this->obj->l10nIdent(false);
     }
 
     /**

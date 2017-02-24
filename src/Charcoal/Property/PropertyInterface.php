@@ -14,15 +14,27 @@ interface PropertyInterface
     public function type();
 
     /**
-     * @param string $ident The property identifier.
+     * Set the property's identifier.
+     *
+     * @param  string $ident The property identifier.
      * @return PropertyInterface Chainable
      */
     public function setIdent($ident);
 
     /**
+     * Retrieve the property's identifier.
+     *
      * @return string
      */
     public function ident();
+
+    /**
+     * Retrieve the property's localized identifier.
+     *
+     * @param  string|null $lang The language code to return the identifier with.
+     * @return string
+     */
+    public function l10nIdent($lang = null);
 
     /**
      * @param mixed $val Optional. The value to to convert for input.

@@ -3,6 +3,8 @@
 namespace Charcoal\Property;
 
 use \Exception;
+use \LogicException;
+use \RuntimeException;
 use \InvalidArgumentException;
 
 use \PDO;
@@ -223,8 +225,10 @@ abstract class AbstractProperty extends AbstractEntity implements
     abstract public function type();
 
     /**
-     * @param string $ident The property identifier.
-     * @throws InvalidArgumentException  If the ident parameter is not a string.
+     * Set the property's identifier.
+     *
+     * @param  string $ident The property identifier.
+     * @throws InvalidArgumentException  If the identifier is not a string.
      * @return PropertyInterface Chainable
      */
     public function setIdent($ident)
@@ -240,12 +244,41 @@ abstract class AbstractProperty extends AbstractEntity implements
     }
 
     /**
-     * @throws Exception If trying to access getter before setter.
+     * Retrieve the property's identifier.
+     *
      * @return string
      */
     public function ident()
     {
         return $this->ident;
+    }
+
+    /**
+     * Retrieve the property's localized identifier.
+     *
+     * @param  string|null $lang The language code to return the identifier with.
+     * @throws LogicException If the property is not multilingual.
+     * @throws RuntimeException If the property has no identifier.
+     * @throws InvalidArgumentException If the language code is invalid.
+     * @return string
+     */
+    public function l10nIdent($lang = null)
+    {
+        if (!$this->l10n()) {
+            throw new LogicException('Property is not multilingual');
+        }
+
+        if ($this->ident === '') {
+            throw new RuntimeException('Missing Property Identifier');
+        }
+
+        if ($lang === null) {
+            $lang = $this->translator()->getLocale();
+        } elseif (!is_string($lang)) {
+            throw new InvalidArgumentException('Language must be a string');
+        }
+
+        return sprintf('%1$s_%2$s', $this->ident, $lang);
     }
 
     /**

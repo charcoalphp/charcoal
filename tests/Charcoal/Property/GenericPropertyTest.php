@@ -19,16 +19,16 @@ class PropertyTest extends PHPUnit_Framework_TestCase
     public function getObj()
     {
         return $this->factory->create(GenericProperty::class, [
-            'database' => new PDO('sqlite::memory:'),
-            'logger' => new NullLogger(),
+            'database'   => new PDO('sqlite::memory:'),
+            'logger'     => new NullLogger(),
             'translator' => $GLOBALS['translator']
         ]);
     }
 
     public function setUp()
     {
-        $this->factory   = new PropertyFactory();
-        $this->obj       = $this->getObj();
+        $this->factory = new PropertyFactory();
+        $this->obj     = $this->getObj();
     }
 
     public function testDefaultValues()
