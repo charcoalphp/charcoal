@@ -2,11 +2,7 @@
 
 namespace Charcoal\Tests\Property;
 
-use \PDO;
-
-use \Psr\Log\NullLogger;
-
-use \Charcoal\Property\PasswordProperty;
+use Charcoal\Property\PasswordProperty;
 
 /**
  * ## TODOs
@@ -14,12 +10,16 @@ use \Charcoal\Property\PasswordProperty;
  */
 class PasswordPropertyTest extends \PHPUnit_Framework_TestCase
 {
-    public function testType()
+    use \Charcoal\Tests\Property\ContainerIntegrationTrait;
+
+	public function testType()
     {
+        $container = $this->getContainer();
+
         $obj = new PasswordProperty([
-            'database' => new PDO('sqlite::memory:'),
-            'logger' => new NullLogger(),
-            'translator' => $GLOBALS['translator']
+            'database'   => $container['database'],
+            'logger'     => $container['logger'],
+            'translator' => $container['translator']
         ]);
         $this->assertEquals('password', $obj->type());
     }

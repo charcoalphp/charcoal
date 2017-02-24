@@ -2,10 +2,6 @@
 
 namespace Charcoal\Tests\Property;
 
-use PDO;
-
-use Psr\Log\NullLogger;
-
 use Charcoal\Property\NumberProperty;
 
 /**
@@ -13,6 +9,8 @@ use Charcoal\Property\NumberProperty;
  */
 class NumberPropertyTest extends \PHPUnit_Framework_TestCase
 {
+    use \Charcoal\Tests\Property\ContainerIntegrationTrait;
+
     /**
      * @var NumberProperty $obj
      */
@@ -20,10 +18,12 @@ class NumberPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        $container = $this->getContainer();
+
         $this->obj = new NumberProperty([
-            'database'  => new PDO('sqlite::memory:'),
-            'logger'    => new NullLogger(),
-            'translator' => $GLOBALS['translator']
+            'database'   => $container['database'],
+            'logger'     => $container['logger'],
+            'translator' => $container['translator']
         ]);
     }
 

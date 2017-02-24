@@ -25,10 +25,10 @@
         "php": ">=5.6.0",
         "ext-pdo": "*",
         "psr/log": "^1.0",
-        "locomotivemtl/charcoal-image": "~0.3",
         "locomotivemtl/charcoal-config": "~0.6",
-        "locomotivemtl/charcoal-factory": "~0.3",
         "locomotivemtl/charcoal-core": "^0.2",
+        "locomotivemtl/charcoal-factory": "~0.3",
+        "locomotivemtl/charcoal-image": "~0.3",
         "locomotivemtl/charcoal-translator": "~0.1"
     },
     "require-dev": {

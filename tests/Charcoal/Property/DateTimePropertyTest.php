@@ -2,13 +2,11 @@
 
 namespace Charcoal\Tests\Property;
 
-use \DateTime;
+use PDO;
+use DateTime;
 
-use \PDO;
-
-use \Psr\Log\NullLogger;
-
-use \Charcoal\Property\DateTimeProperty;
+// From 'charcoal-property'
+use Charcoal\Property\DateTimeProperty;
 
 /**
  * ## TODOs
@@ -16,6 +14,8 @@ use \Charcoal\Property\DateTimeProperty;
  */
 class DateTimePropertyTest extends \PHPUnit_Framework_TestCase
 {
+    use \Charcoal\Tests\Property\ContainerIntegrationTrait;
+
     /**
      * @var DateTimeProperty $obj
      */
@@ -26,10 +26,12 @@ class DateTimePropertyTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
+        $container = $this->getContainer();
+
         $this->obj = new DateTimeProperty([
-            'database'  => new PDO('sqlite::memory:'),
-            'logger'    => new NullLogger(),
-            'translator' => $GLOBALS['translator']
+            'database'   => $container['database'],
+            'logger'     => $container['logger'],
+            'translator' => $container['translator']
         ]);
     }
 
@@ -294,6 +296,6 @@ class DateTimePropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testSqlPdoType()
     {
-        $this->assertEquals(\PDO::PARAM_STR, $this->obj->sqlPdoType());
+        $this->assertEquals(PDO::PARAM_STR, $this->obj->sqlPdoType());
     }
 }

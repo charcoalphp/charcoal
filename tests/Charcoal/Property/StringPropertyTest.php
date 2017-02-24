@@ -2,19 +2,18 @@
 
 namespace Charcoal\Tests\Property;
 
-use PHPUnit_Framework_TestCase;
-
 use PDO;
 
-use Psr\Log\NullLogger;
-
+// From 'charcoal-property'
 use Charcoal\Property\StringProperty;
 
 /**
  *
  */
-class StringPropertyTest extends PHPUnit_Framework_TestCase
+class StringPropertyTest extends \PHPUnit_Framework_TestCase
 {
+    use \Charcoal\Tests\Property\ContainerIntegrationTrait;
+
     /**
      * @var StringProperty $obj
      */
@@ -25,11 +24,12 @@ class StringPropertyTest extends PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        mb_internal_encoding('UTF-8');
+        $container = $this->getContainer();
+
         $this->obj = new StringProperty([
-            'database'  => new PDO('sqlite::memory:'),
-            'logger'    => new NullLogger(),
-            'translator' => $GLOBALS['translator']
+            'database'   => $container['database'],
+            'logger'     => $container['logger'],
+            'translator' => $container['translator']
         ]);
     }
 
@@ -307,6 +307,6 @@ class StringPropertyTest extends PHPUnit_Framework_TestCase
     public function testSqlPdoType()
     {
 
-        $this->assertEquals(\PDO::PARAM_STR, $this->obj->sqlPdoType());
+        $this->assertEquals(PDO::PARAM_STR, $this->obj->sqlPdoType());
     }
 }

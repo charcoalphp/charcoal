@@ -2,26 +2,27 @@
 
 namespace Charcoal\Tests\Model;
 
-use PHPUnit_Framework_TestCase;
+use Charcoal\Property\PropertyFactory;
+use Charcoal\Property\GenericProperty;
 
-use \PDO;
-
-use \Psr\Log\NullLogger;
-
-use \Charcoal\Property\PropertyFactory;
-use \Charcoal\Property\GenericProperty;
-
-class PropertyTest extends PHPUnit_Framework_TestCase
+/**
+ *
+ */
+class PropertyTest extends \PHPUnit_Framework_TestCase
 {
+    use \Charcoal\Tests\Property\ContainerIntegrationTrait;
+
     public $factory;
     public $obj;
 
     public function getObj()
     {
+        $container = $this->getContainer();
+
         return $this->factory->create(GenericProperty::class, [
-            'database'   => new PDO('sqlite::memory:'),
-            'logger'     => new NullLogger(),
-            'translator' => $GLOBALS['translator']
+            'database'   => $container['database'],
+            'logger'     => $container['logger'],
+            'translator' => $container['translator']
         ]);
     }
 

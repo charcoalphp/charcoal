@@ -2,20 +2,12 @@
 
 namespace Charcoal\Tests\Property;
 
-use PHPUnit_Framework_TestCase;
-
-use InvalidArgumentException;
-
-use PDO;
-
-use Psr\Log\NullLogger;
-
 use Charcoal\Property\PropertyMetadata;
 
 /**
  *
  */
-class PropertyMetadataTest extends PHPUnit_Framework_TestCase
+class PropertyMetadataTest extends \PHPUnit_Framework_TestCase
 {
     public $obj;
 

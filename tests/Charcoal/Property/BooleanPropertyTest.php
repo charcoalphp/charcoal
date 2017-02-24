@@ -4,8 +4,7 @@ namespace Charcoal\Tests\Property;
 
 use PDO;
 
-use Psr\Log\NullLogger;
-
+// From 'charcoal-property'
 use Charcoal\Property\BooleanProperty;
 
 /**
@@ -14,6 +13,8 @@ use Charcoal\Property\BooleanProperty;
  */
 class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
 {
+    use \Charcoal\Tests\Property\ContainerIntegrationTrait;
+
     public $obj;
 
     /**
@@ -21,10 +22,12 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
+        $container = $this->getContainer();
+
         $this->obj = new BooleanProperty([
-            'database'  => new PDO('sqlite::memory:'),
-            'logger'    => new NullLogger(),
-            'translator' => $GLOBALS['translator']
+            'database'   => $container['database'],
+            'logger'     => $container['logger'],
+            'translator' => $container['translator']
         ]);
     }
 

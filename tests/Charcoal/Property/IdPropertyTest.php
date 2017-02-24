@@ -4,8 +4,7 @@ namespace Charcoal\Tests\Property;
 
 use PDO;
 
-use Psr\Log\NullLogger;
-
+// From 'charcoal-property'
 use Charcoal\Property\IdProperty;
 
 /**
@@ -14,6 +13,7 @@ use Charcoal\Property\IdProperty;
  */
 class IdPropertyTest extends \PHPUnit_Framework_TestCase
 {
+    use \Charcoal\Tests\Property\ContainerIntegrationTrait;
 
     /**
      * @var IdProperty
@@ -28,11 +28,12 @@ class IdPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        $container = $this->getContainer();
 
         $this->obj = new IdProperty([
-            'database' => new PDO('sqlite::memory:'),
-            'logger' => new NullLogger(),
-            'translator' => $GLOBALS['translator']
+            'database'   => $container['database'],
+            'logger'     => $container['logger'],
+            'translator' => $container['translator']
         ]);
     }
 
@@ -173,14 +174,14 @@ class IdPropertyTest extends \PHPUnit_Framework_TestCase
         $obj = $this->obj;
         $obj->setMode('auto-increment');
         $ret = $obj->sqlPdoType();
-        $this->assertEquals(\PDO::PARAM_INT, $ret);
+        $this->assertEquals(PDO::PARAM_INT, $ret);
 
         $obj->setMode('uniqid');
         $ret = $obj->sqlPdoType();
-        $this->assertEquals(\PDO::PARAM_STR, $ret);
+        $this->assertEquals(PDO::PARAM_STR, $ret);
 
         $obj->setMode('uuid');
         $ret = $obj->sqlPdoType();
-        $this->assertEquals(\PDO::PARAM_STR, $ret);
+        $this->assertEquals(PDO::PARAM_STR, $ret);
     }
 }

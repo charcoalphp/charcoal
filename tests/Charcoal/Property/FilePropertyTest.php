@@ -2,15 +2,7 @@
 
 namespace Charcoal\Tests\Property;
 
-use PDO;
 use ReflectionClass;
-use InvalidArgumentException;
-
-// From PHP Unit
-use PHPUnit_Framework_TestCase;
-
-// From PSR-3
-use Psr\Log\NullLogger;
 
 // From 'charcoal-property'
 use Charcoal\Property\FileProperty;
@@ -18,16 +10,20 @@ use Charcoal\Property\FileProperty;
 /**
  *
  */
-class FilePropertyTest extends PHPUnit_Framework_TestCase
+class FilePropertyTest extends \PHPUnit_Framework_TestCase
 {
+    use \Charcoal\Tests\Property\ContainerIntegrationTrait;
+
     public $obj;
 
     public function setUp()
     {
+        $container = $this->getContainer();
+
         $this->obj = new FileProperty([
-            'database'  => new PDO('sqlite::memory:'),
-            'logger'    => new NullLogger(),
-            'translator' => $GLOBALS['translator']
+            'database'   => $container['database'],
+            'logger'     => $container['logger'],
+            'translator' => $container['translator']
         ]);
     }
 

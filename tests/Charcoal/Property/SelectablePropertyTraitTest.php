@@ -2,50 +2,58 @@
 
 namespace Charcoal\Tests\Property;
 
-use PHPUnit_Framework_TestCase;
+// From 'charcoal-translator'
+use Charcoal\Translator\Translation;
 
-use \Charcoal\Translator\Translation;
-
+// From 'charcoal-property'
 use Charcoal\Property\SelectablePropertyTrait;
 
 /**
  *
  */
-class SelectablePropertyTraitTest extends PHPUnit_Framework_TestCase
+class SelectablePropertyTraitTest extends \PHPUnit_Framework_TestCase
 {
+    use \Charcoal\Tests\Property\ContainerIntegrationTrait;
+
     private $obj;
 
     public function setUp()
     {
+        $container = $this->getContainer();
+
         $this->obj = $this->getMockForTrait(SelectablePropertyTrait::class);
         $this->obj
             ->expects($this->any())
             ->method('translator')
-            ->will($this->returnValue($GLOBALS['translator']));
+            ->will($this->returnValue($container['translator']));
     }
 
     public function testSetChoices()
     {
+        $container = $this->getContainer();
+        $locales   = $container['language/manager'];
+        $locales->setCurrentLocale($locales->currentLocale());
+
         $this->assertEquals([], $this->obj->choices());
 
         $this->assertFalse($this->obj->hasChoice('foo'));
         $this->assertFalse($this->obj->hasChoice('bar'));
 
         $ret = $this->obj->choice('foo');
-        $this->assertEquals(['value'=>'foo', 'label'=>''], $ret);
+        $this->assertEquals(['value' => 'foo', 'label' => ''], $ret);
 
         $choices = [
-            'foo'=>'bar',
-            'bar'=>'baz'
+            'foo' => 'bar',
+            'bar' => 'baz'
         ];
         $expected = [
             'foo' => [
                 'value' => 'foo',
-                'label' => new Translation('bar', $GLOBALS['locales_manager'])
+                'label' => new Translation('bar', $locales)
             ],
             'bar' => [
-                'value' =>'bar',
-                'label' => new Translation('baz', $GLOBALS['locales_manager'])
+                'value' => 'bar',
+                'label' => new Translation('baz', $locales)
             ]
         ];
         $ret = $this->obj->setChoices($choices);

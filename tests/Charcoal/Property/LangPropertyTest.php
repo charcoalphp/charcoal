@@ -2,19 +2,18 @@
 
 namespace Charcoal\Tests\Property;
 
-use PHPUnit_Framework_TestCase;
-
 use PDO;
 
-use Psr\Log\NullLogger;
-
+// From 'charcoal-property'
 use Charcoal\Property\LangProperty;
 
 /**
  * Lang Property Test
  */
-class LangPropertyTest extends PHPUnit_Framework_TestCase
+class LangPropertyTest extends \PHPUnit_Framework_TestCase
 {
+    use \Charcoal\Tests\Property\ContainerIntegrationTrait;
+
     /**
      * Object under test
      * @var LangProperty
@@ -23,10 +22,12 @@ class LangPropertyTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        $container = $this->getContainer();
+
         $this->obj = new LangProperty([
-            'database'  => new PDO('sqlite::memory:'),
-            'logger'    => new NullLogger(),
-            'translator' => $GLOBALS['translator']
+            'database'   => $container['database'],
+            'logger'     => $container['logger'],
+            'translator' => $container['translator']
         ]);
     }
 

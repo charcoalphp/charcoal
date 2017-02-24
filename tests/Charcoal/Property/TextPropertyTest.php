@@ -2,10 +2,6 @@
 
 namespace Charcoal\Tests\Property;
 
-use PDO;
-
-use Psr\Log\NullLogger;
-
 use Charcoal\Property\TextProperty;
 
 /**
@@ -14,14 +10,18 @@ use Charcoal\Property\TextProperty;
  */
 class TextPropertyTest extends \PHPUnit_Framework_TestCase
 {
+    use \Charcoal\Tests\Property\ContainerIntegrationTrait;
+
     public $obj;
 
     public function setUp()
     {
+        $container = $this->getContainer();
+
         $this->obj = new TextProperty([
-            'database'  => new PDO('sqlite::memory:'),
-            'logger'    => new NullLogger(),
-            'translator' => $GLOBALS['translator']
+            'database'   => $container['database'],
+            'logger'     => $container['logger'],
+            'translator' => $container['translator']
         ]);
     }
 

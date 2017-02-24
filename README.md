@@ -17,16 +17,20 @@ The preferred (and only suppported) way of installing _charcoal-property_ is wit
 ```
 
 ## Dependencies
+
 -   [`PHP 5.5+`](http:///php.net)
 -   [`psr/log`](http://www.php-fig.org/psr/psr-3/)
     -   A PSR-3 compliant logger should be provided to the various services / classes.
 -   [`locomotivemtl/charcoal-config`](https://github.com/locomotivemtl/charcoal-config)
     -   Properties configuration and metadata.
 -   [`locomotivemtl/charcoal-core`](https://github.com/locomotivemtl/charcoal-core)
-    -   Required for l10n / translation features.
     -   Also required for validator, model and more.
 -   [`locomotivemtl/charcoal-factory`](https://github.com/locomotivemtl/charcoal-fatory)
     -   Dynamic object creation is provided with charcoal factories.
+-   [`locomotivemtl/charcoal-image`](https://github.com/locomotivemtl/charcoal-image)
+    -   For image manipulation.
+-   [`locomotivemtl/charcoal-translator`](https://github.com/locomotivemtl/charcoal-translator)
+    -   For localization.
 
 # Property options
 
@@ -35,7 +39,7 @@ The basic property interface (API) requires / provides the following members:
 | Name           | (V) | Type                | Description
 | -------------- | :-: | ------------------- | -----------
 | **ident**      |     | _string_            | The property idenfifier (typically, its containing object matching property name).
-| **label**      |     | _TranslationString_ | ...
+| **label**      |     | _Translation_       | ...
 | **l10n**       |     | _bool_              | If true, then the data should be stored in a l10n-aware structure (be translatable).s
 | **hidden**     |     | _bool_              |
 | **multiple**   |     | _bool_              | Multiple values can be held and stored, if true.
@@ -50,8 +54,8 @@ The basic property interface (API) requires / provides the following members:
 ### Data retrieval
 
 - To get a normalized value, use the `parseVal($val)` method.
-- To get a string-safe, displaybale value, use `displayVal($val)`. 
-- To get the storage-ready format, use `storageVal($val)`. 
+- To get a string-safe, displaybale value, use `displayVal($val)`.
+- To get the storage-ready format, use `storageVal($val)`.
 
 ## Default validation
 
@@ -112,8 +116,8 @@ The boolean property adds the following concepts to the [basic property options]
 
 | Name            | (V) | Type                | Description
 | --------------- | :-: | ------------------- | -----------
-| **false_label** |  ✓  | _TranslationString_ | ...
-| **true_label**  |  ✓  | _TranslationString_ | ...
+| **false_label** |  ✓  | _Translation_       | ...
+| **true_label**  |  ✓  | _Translation_       | ...
 | **format**      |     | _string_            |
 <small>(V) indicates options used in validation</small>
 
@@ -364,7 +368,7 @@ Map structure properties hold complex map structure data, which can be points (m
 
 ## Properties table summary, for developers
 
-| Name         | Data type | Multiple | Custom Save | Custom Parse | 
+| Name         | Data type | Multiple | Custom Save | Custom Parse |
 | ------------ | :-------: | :------: | :---------: | :----------: |
 | Audio        | mixed     |          |             |              |
 | Boolean      | bool      | **No**   |             |              |

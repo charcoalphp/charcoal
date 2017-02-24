@@ -2,22 +2,24 @@
 
 namespace Charcoal\Tests\Property;
 
-use \Psr\Log\NullLogger;
-
-use \Charcoal\Property\PropertyField;
+use Charcoal\Property\PropertyField;
 
 /**
  *
  */
 class PropertyFieldTest extends \PHPUnit_Framework_TestCase
 {
+    use \Charcoal\Tests\Property\ContainerIntegrationTrait;
+
     public $obj;
 
     public function setUp()
     {
+        $container = $this->getContainer();
+
         $this->obj = new PropertyField([
-            'logger' => new NullLogger(),
-            'translator' => $GLOBALS['translator']
+            'logger'     => $container['logger'],
+            'translator' => $container['translator']
         ]);
     }
 

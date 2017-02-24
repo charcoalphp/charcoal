@@ -2,17 +2,15 @@
 
 namespace Charcoal\Tests\Property;
 
-use \PDO;
-
-use \Psr\Log\NullLogger;
-
-use \Charcoal\Property\AbstractProperty;
+use Charcoal\Property\AbstractProperty;
 
 /**
  *
  */
 class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
 {
+    use \Charcoal\Tests\Property\ContainerIntegrationTrait;
+
     /**
      * Object under Test
      * @var AbstractProperty
@@ -21,10 +19,12 @@ class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        $container = $this->getContainer();
+
         $this->obj = $this->getMockForAbstractClass(AbstractProperty::class, [[
-            'database'   => new PDO('sqlite::memory:'),
-            'logger'     => new NullLogger(),
-            'translator' => $GLOBALS['translator']
+            'database'   => $container['database'],
+            'logger'     => $container['logger'],
+            'translator' => $container['translator']
         ]]);
     }
 
