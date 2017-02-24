@@ -50,10 +50,10 @@ class AuthorizerTest extends PHPUnit_Framework_TestCase
     {
         $container = $this->container();
 
-        $this->acl = $container['acl'];
+        $this->acl = new Acl();
         $this->obj = new Authorizer([
             'logger'    => $container['logger'],
-            'acl'       => $container['acl'],
+            'acl'       => $this->acl,
             'resource'  => 'test'
         ]);
     }
@@ -86,7 +86,6 @@ class AuthorizerTest extends PHPUnit_Framework_TestCase
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerBaseServices($container);
-            $containerProvider->registerAcl($container);
 
             $this->container = $container;
         }

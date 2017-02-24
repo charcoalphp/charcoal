@@ -115,7 +115,6 @@ class ManagerTest extends PHPUnit_Framework_TestCase
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerBaseServices($container);
-            $containerProvider->registerAcl($container);
 
             $this->container = $container;
         }

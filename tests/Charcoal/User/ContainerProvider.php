@@ -14,9 +14,6 @@ use Cache\Adapter\Void\VoidCachePool;
 use Stash\Pool;
 use Stash\Driver\Ephemeral;
 
-// From 'zendframework/zend-permissions'
-use Zend\Permissions\Acl\Acl;
-
 // From Pimple
 use Pimple\Container;
 
@@ -215,19 +212,6 @@ class ContainerProvider
     }
 
     /**
-     * Setup the framework's ACL manager.
-     *
-     * @param  Container $container A DI container.
-     * @return void
-     */
-    public function registerAcl(Container $container)
-    {
-        $container['acl'] = function (Container $container) {
-            return new Acl();
-        };
-    }
-
-    /**
      * Setup the framework's Translator.
      *
      * @param  Container $container A DI container.
@@ -238,7 +222,7 @@ class ContainerProvider
         $container['language/manager'] = function (Container $container) {
             return new LocalesManager([
                 'locales' => [
-                    'en'=>['locale'=>'en-US']
+                    'en' => [ 'locale' => 'en-US' ]
                 ]
             ]);
         };
