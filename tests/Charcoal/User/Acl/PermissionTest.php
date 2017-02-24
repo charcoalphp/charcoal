@@ -38,7 +38,10 @@ class PermissionTest extends PHPUnit_Framework_TestCase
     {
         $container = $this->container();
 
-        $this->obj = $container['model/factory']->create(Permission::class);
+        $this->obj = new Permission([
+            'container' => $container,
+            'logger'    => $container['logger']
+        ]);
     }
 
     public function testToString()

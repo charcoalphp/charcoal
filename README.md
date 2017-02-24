@@ -114,17 +114,17 @@ use Charcoal\User\Acl\Manager as AclManager;
 
 $acl = new Acl();
 
- // Add admin resource for ACL
+ // Add resource for ACL
 $acl->addResource(new AclResource($resourceName));
 
 $aclManager = new AclManager([
-    'logger'    => $logger
+    'logger' => $logger
 ]);
 $aclManager->loadPermissions($acl, $config['acl.permissions'], $resourceName);
-            
+
 $authorizer = new Authorizer([
-    'logger' => $logger,
-    'acl' => $acl,
+    'logger'   => $logger,
+    'acl'      => $acl,
     'resource' => $resourceName
 ]);
 

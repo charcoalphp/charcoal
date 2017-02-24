@@ -37,8 +37,8 @@ trait AuthAwareTrait
      */
     protected function setAuthDependencies(Container $container)
     {
-        $this->setAuthenticator($container['admin/authenticator']);
-        $this->setAuthorizer($container['admin/authorizer']);
+        $this->setAuthenticator($container['authenticator']);
+        $this->setAuthorizer($container['authorizer']);
     }
 
     /**

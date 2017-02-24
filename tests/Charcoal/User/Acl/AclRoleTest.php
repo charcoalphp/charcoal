@@ -38,7 +38,10 @@ class RoleTest extends PHPUnit_Framework_TestCase
     {
         $container = $this->container();
 
-        $this->obj = $container['model/factory']->create(Role::class);
+        $this->obj = new Role([
+            'container' => $container,
+            'logger'    => $container['logger']
+        ]);
     }
 
     public function testToString()

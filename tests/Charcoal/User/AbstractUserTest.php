@@ -12,7 +12,7 @@ use Pimple\Container;
 
 // From 'charcoal-user'
 use Charcoal\User\AbstractUser;
-use Charcoal\User\GenericUser as User;
+use Charcoal\User\UserInterface;
 use Charcoal\User\Tests\ContainerProvider;
 
 /**
@@ -23,7 +23,7 @@ class AbstractUserTest extends \PHPUnit_Framework_TestCase
     /**
      * Tested Class.
      *
-     * @var AbstractUser
+     * @var UserInterface
      */
     private $obj;
 
@@ -39,9 +39,33 @@ class AbstractUserTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
+        if (session_id()) {
+            session_unset();
+        }
+
         $container = $this->container();
 
-        $this->obj = $container['model/factory']->create(User::class);
+        $this->obj = $this->getMockForAbstractClass(
+            AbstractUser::class,
+            [
+                [
+                    # 'container'        => $container,
+                    'logger'           => $container['logger'],
+                    'translator'       => $container['translator'],
+                    # 'property_factory' => $container['property/factory'],
+                    # 'metadata_loader'  => $container['metadata/loader']
+                ]
+            ],
+            '',
+            true,
+            true,
+            true,
+            [ 'sessionKey' ]
+        );
+
+        $this->obj->expects($this->any())
+            ->method('sessionKey')
+            ->will($this->returnValue('charcoal.user'));
     }
 
     public function testKey()
@@ -260,14 +284,6 @@ class AbstractUserTest extends \PHPUnit_Framework_TestCase
     {
         $this->obj->loginFailed('foo');
         $this->assertEquals('', $this->obj->username());
-    }
-
-    public function testSaveToSession()
-    {
-        $sessionKey = User::sessionKey();
-        $this->obj['username'] = 'foo';
-        //$this->obj->saveToSession();
-        //$this->assertEquals($_SESSION[$sessionKey], $this->obj['username']);
     }
 
     public function testResetPassword()

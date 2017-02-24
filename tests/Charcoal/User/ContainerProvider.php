@@ -10,6 +10,10 @@ use Psr\Log\NullLogger;
 // From 'cache/void-adapter' (PSR-6)
 use Cache\Adapter\Void\VoidCachePool;
 
+// From 'tedivm/stash' (PSR-6)
+use Stash\Pool;
+use Stash\Driver\Ephemeral;
+
 // From 'zendframework/zend-permissions'
 use Zend\Permissions\Acl\Acl;
 
@@ -28,9 +32,6 @@ use Charcoal\Model\Service\MetadataLoader;
 use Charcoal\Loader\CollectionLoader;
 use Charcoal\Source\DatabaseSource;
 
-// From 'charcoal-app'
-use Charcoal\App\AppConfig;
-
 // From 'charcoal-user'
 use Charcoal\User\Authenticator;
 use Charcoal\User\Authorizer;
@@ -48,24 +49,10 @@ class ContainerProvider
      */
     public function registerBaseServices(Container $container)
     {
-        $this->registerConfig($container);
         $this->registerDatabase($container);
         $this->registerLogger($container);
         $this->registerCache($container);
         $this->registerTranslator($container);
-    }
-
-    /**
-     * Setup the application configset.
-     *
-     * @param  Container $container A DI container.
-     * @return void
-     */
-    public function registerConfig(Container $container)
-    {
-        $container['config'] = function (Container $container) {
-            return new AppConfig();
-        };
     }
 
     /**
@@ -107,7 +94,7 @@ class ContainerProvider
     public function registerCache(Container $container)
     {
         $container['cache'] = function ($container) {
-            return new VoidCachePool();
+            return new Pool(new Ephemeral());
         };
     }
 

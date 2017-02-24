@@ -38,7 +38,10 @@ class PermissionCategoryTest extends PHPUnit_Framework_TestCase
     {
         $container = $this->container();
 
-        $this->obj = $container['model/factory']->create(PermissionCategory::class);
+        $this->obj = new PermissionCategory([
+            'container' => $container,
+            'logger'    => $container['logger']
+        ]);
     }
 
     public function testSetName()

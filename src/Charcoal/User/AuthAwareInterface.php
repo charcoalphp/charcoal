@@ -5,7 +5,7 @@ namespace Charcoal\User;
 /**
  * Defines a class with authentication capabilities.
  *
- * Implementation, as trait, provided by {@see \Charcoal\Admin\User\AuthAwareTrait}.
+ * Implementation, as trait, provided by {@see \Charcoal\User\AuthAwareTrait}.
  */
 interface AuthAwareInterface
 {
