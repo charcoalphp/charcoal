@@ -25,9 +25,6 @@ use Charcoal\Source\DatabaseSource;
 use Charcoal\Translator\LocalesManager;
 use Charcoal\Translator\Translator;
 
-// From 'charcoal-app'
-use Charcoal\App\AppConfig;
-
 /**
  * Service Container for Unit Tests
  */
@@ -55,9 +52,9 @@ class ContainerProvider
      */
     public function registerConfig(Container $container)
     {
-        $container['config'] = function (Container $container) {
-            return new AppConfig();
-        };
+        $container['config'] = [
+            'base_path' => realpath(__DIR__.'/../../..')
+        ];
     }
 
     /**
