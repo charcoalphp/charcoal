@@ -2,6 +2,7 @@
 
 namespace Charcoal\User;
 
+use InvalidArgumentException;
 use RuntimeException;
 
 // From Pimple
