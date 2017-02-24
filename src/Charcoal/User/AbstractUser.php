@@ -88,7 +88,7 @@ abstract class AbstractUser extends Content implements
     /**
      * The IP address during the latest password change.
      *
-     * @var string|nul
+     * @var string|null
      */
     private $lastPasswordIp;
 
