@@ -26,30 +26,34 @@ class AuthServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $container)
     {
-        /**
-         * @param  Container $container The Pimple DI Container.
-         * @return Authenticator
-         */
-        $container['authenticator'] = function (Container $container) {
-            return new Authenticator([
-                'logger'        => $container['logger'],
-                'user_type'     => User::class,
-                'user_factory'  => $container['model/factory'],
-                'token_type'    => AuthToken::class,
-                'token_factory' => $container['model/factory']
-            ]);
-        };
+        if (!isset($container['authenticator'])) {
+            /**
+             * @param  Container $container The Pimple DI Container.
+             * @return Authenticator
+             */
+            $container['authenticator'] = function (Container $container) {
+                return new Authenticator([
+                    'logger'        => $container['logger'],
+                    'user_type'     => User::class,
+                    'user_factory'  => $container['model/factory'],
+                    'token_type'    => AuthToken::class,
+                    'token_factory' => $container['model/factory']
+                ]);
+            };
+        }
 
-        /**
-         * @param  Container $container The Pimple DI container.
-         * @return Authorizer
-         */
-        $container['authorizer'] = function (Container $container) {
-            return new Authorizer([
-                'logger'    => $container['logger'],
-                'acl'       => new Acl(),
-                'resource'  => 'charcoal'
-            ]);
-        };
+        if (!isset($container['authorizer'])) {
+            /**
+             * @param  Container $container The Pimple DI container.
+             * @return Authorizer
+             */
+            $container['authorizer'] = function (Container $container) {
+                return new Authorizer([
+                    'logger'    => $container['logger'],
+                    'acl'       => new Acl(),
+                    'resource'  => 'charcoal'
+                ]);
+            };
+        }
     }
 }
