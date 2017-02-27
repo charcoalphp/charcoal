@@ -14,12 +14,15 @@ trait TranslatorAwareTrait
 {
     /**
      * The Translator service.
+     *
      * @var Translator
      */
     private $translator;
 
     /**
-     * @param Translator $translator The Translator service.
+     * Set the translator service.
+     *
+     * @param  Translator $translator The Translator service.
      * @return void
      */
     protected function setTranslator(Translator $translator)
@@ -28,6 +31,8 @@ trait TranslatorAwareTrait
     }
 
     /**
+     * Retrieve the translator service.
+     *
      * @throws RuntimeException If the translator is accessed before having been set.
      * @return Translator
      */

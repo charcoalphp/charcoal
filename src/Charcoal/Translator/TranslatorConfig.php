@@ -7,7 +7,10 @@ use InvalidArgumentException;
 use Charcoal\Config\AbstractConfig;
 
 /**
+ * Translator Configset
  *
+ * Stores the translator's settings, catalogs to be loaded,
+ * catalog loaders, and extra translations.
  */
 class TranslatorConfig extends AbstractConfig
 {
@@ -65,7 +68,7 @@ class TranslatorConfig extends AbstractConfig
     }
 
     /**
-     * @param string[] $loaders The list of active loaders.
+     * @param  string[] $loaders The list of active loaders.
      * @throws InvalidArgumentException If the loader is invalid.
      * @return TranslatorConfig Chainable
      */
@@ -93,7 +96,7 @@ class TranslatorConfig extends AbstractConfig
     }
 
     /**
-     * @param string[] $paths The "paths" (search pattern) to look into for translation resources.
+     * @param  string[] $paths The "paths" (search pattern) to look into for translation resources.
      * @throws InvalidArgumentException If the path is not a string.
      * @return TranslatorConfig Chainable
      */
@@ -190,7 +193,7 @@ class TranslatorConfig extends AbstractConfig
     }
 
     /**
-     * @param string $cacheDir The cache directory.
+     * @param  string $cacheDir The cache directory.
      * @throws InvalidArgumentException If the cache dir argument is not a string.
      * @return TranslatorConfig Chainable
      */

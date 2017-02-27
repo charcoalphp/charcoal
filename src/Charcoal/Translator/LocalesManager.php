@@ -5,7 +5,10 @@ namespace Charcoal\Translator;
 use InvalidArgumentException;
 
 /**
+ * Locales Manager
  *
+ * The manager handles the collection of available languages, their configuration structures,
+ * the order of fallbacks, the default language, and tracks the current language.
  */
 class LocalesManager
 {
@@ -22,7 +25,7 @@ class LocalesManager
     /**
      * @var string
      */
-    private $defaultLanguage;
+    private $defaultLocale;
 
     /**
      * @var string|null
@@ -41,7 +44,7 @@ class LocalesManager
      * - **fallback_languages** (`string[]`)
      *   - If none is set, then the default language will be used.
      *
-     * @param array $data Constructor dependencies.
+     * @param  array $data Constructor dependencies.
      * @throws InvalidArgumentException If the default language is not a valid language.
      */
     public function __construct(array $data)
@@ -62,9 +65,9 @@ class LocalesManager
                     $lang
                 ));
             }
-            $this->defaultLanguage = $data['default_language'];
+            $this->defaultLocale = $data['default_language'];
         } else {
-            $this->defaultLanguage = $this->languages[0];
+            $this->defaultLocale = $this->languages[0];
         }
     }
 
@@ -89,7 +92,9 @@ class LocalesManager
     }
 
     /**
-     * @param string|null $lang The current language (ident).
+     * Set the current language.
+     *
+     * @param  string|null $lang The current language code.
      * @throws InvalidArgumentException If the language is invalid.
      * @return void
      */
@@ -116,20 +121,22 @@ class LocalesManager
     }
 
     /**
-     * Retrieve the current language
+     * Retrieve the current language.
      *
      * @return string
      */
     public function currentLocale()
     {
         if ($this->currentLocale === null) {
-            return $this->defaultLanguage;
+            return $this->defaultLocale;
         }
         return $this->currentLocale;
     }
 
     /**
-     * @param string $lang The language (code) to check.
+     * Determine if a locale is available.
+     *
+     * @param  string $lang The language code to check.
      * @return boolean
      */
     public function hasLocale($lang)
@@ -138,11 +145,14 @@ class LocalesManager
     }
 
     /**
-     * Ensure that explicitely inactive locales are skipped.
-     * Also ensure that the required values are set on the locales configuration structure.
+     * Set the available languages.
+     *
+     * Ensure that explicitely inactive locales are excluded and that the required
+     * values are set on the locales configuration structure.
+     *
      * This method is only called from the constructor.
      *
-     * @param array $locales The locales configuration structure.
+     * @param  array $locales The locales configuration structure.
      * @throws InvalidArgumentException If there are no active locales.
      * @return void
      */

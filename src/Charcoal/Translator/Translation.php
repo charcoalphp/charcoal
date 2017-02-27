@@ -9,16 +9,17 @@ use JsonSerializable;
 use Charcoal\Translator\LocalesManager;
 
 /**
- * A translation object holds a translation in all available locales.
+ * A translation object holds a localized message in all available locales.
  *
- * Available locales and locales management is provided with a locales manager.
+ * Available locales is provided with a locales manager.
  */
 class Translation implements
     ArrayAccess,
     JsonSerializable
 {
     /**
-     * The object's translations
+     * The object's translations.
+     *
      * Stored as a `[ $lang => $val ]` hash.
      *
      * @var string[]

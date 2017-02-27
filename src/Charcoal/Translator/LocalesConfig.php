@@ -7,7 +7,10 @@ use InvalidArgumentException;
 use Charcoal\Config\AbstractConfig;
 
 /**
+ * Locales Configset
  *
+ * Stores the collection of available languages, their configuration structures,
+ * the order of fallbacks, and the default language.
  */
 class LocalesConfig extends AbstractConfig
 {
@@ -42,7 +45,7 @@ class LocalesConfig extends AbstractConfig
                     'locale' => 'en-US'
                 ]
             ],
-            'default_language' => 'en',
+            'default_language'   => 'en',
             'fallback_languages' => [
                 'en'
             ],
@@ -51,7 +54,7 @@ class LocalesConfig extends AbstractConfig
     }
 
     /**
-     * @param array $languages The languages configuration.
+     * @param  array $languages The languages configuration.
      * @return LocalesConfig Chainable
      */
     public function setLanguages(array $languages)
@@ -69,7 +72,7 @@ class LocalesConfig extends AbstractConfig
     }
 
     /**
-     * @param boolean $lang The default language (ident).
+     * @param  boolean $lang The default language (ident).
      * @throws InvalidArgumentException If the default language is not a string.
      * @return LocalesConfig Chainable
      */
@@ -93,12 +96,12 @@ class LocalesConfig extends AbstractConfig
     }
 
     /**
-     * @param array $fallbackLanguages The fallback languages, used when a translation is not set in a language.
+     * @param  array $languages The fallback languages, used when a translation is not set in a language.
      * @return LocalesConfig Chainable
      */
-    public function setFallbackLanguages(array $fallbackLanguages)
+    public function setFallbackLanguages(array $languages)
     {
-        $this->fallbackLanguages = $fallbackLanguages;
+        $this->fallbackLanguages = $languages;
         return $this;
     }
 
@@ -111,7 +114,7 @@ class LocalesConfig extends AbstractConfig
     }
 
     /**
-     * @param boolean $autoDetect The auto-detect flag.
+     * @param  boolean $autoDetect The auto-detect flag.
      * @return LocalesConfig Chainable
      */
     public function setAutoDetect($autoDetect)
