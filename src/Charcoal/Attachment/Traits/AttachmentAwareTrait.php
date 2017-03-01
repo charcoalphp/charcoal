@@ -210,9 +210,10 @@ trait AttachmentAwareTrait
      * Attach an node to the current object.
      *
      * @param AttachableInterface|ModelInterface $attachment An attachment or object.
+     * @param string $group Attachment group, defaults to contents.
      * @return boolean|self
      */
-    public function addAttachment($attachment)
+    public function addAttachment($attachment, $group='contents')
     {
         if (!$attachment instanceof AttachableInterface && !$attachment instanceof ModelInterface) {
             return false;
@@ -225,8 +226,9 @@ trait AttachmentAwareTrait
         $attId   = $attachment->id();
 
         $join->setAttachmentId($attId);
-        $join->setObjId($objId);
-        $join->setObjType($objType);
+        $join->setObjectId($objId);
+        $join->setGroup($group);
+        $join->setObjectType($objType);
 
         $join->save();
 
@@ -278,6 +280,69 @@ trait AttachmentAwareTrait
         $this->attachmentWidget = $widget;
 
         return $this;
+    }
+
+    /**
+     * Available attachment obj_type related to the current object.
+     * This goes throught the entire forms / form groups, starting from the
+     * dashboard widgets.
+     * Returns an array of object classes by group
+     * [
+     *    group : [
+     *        'object\type',
+     *        'object\type2',
+     *        'object\type3'
+     *    ]
+     * ]
+     * @return array Attachment obj_types.
+     */
+    public function attachmentObjTypes()
+    {
+        $defaultEditDashboard = $this->metadata()->get('admin.default_edit_dashboard');
+        $dashboards = $this->metadata()->get('admin.dashboards');
+        $editDashboard = $dashboards[$defaultEditDashboard];
+        $widgets = $editDashboard['widgets'];
+
+        $formIdent = '';
+        foreach ($widgets as $ident => $val) {
+            if ($val['type'] == 'charcoal/admin/widget/objectForm') {
+                $formIdent = $val['form_ident'];
+            }
+        }
+
+        if (!$formIdent) {
+            // No good!
+            return [];
+        }
+
+        // Current form
+        $form = $this->metadata()->get('admin.forms.' . $formIdent);
+
+        // Setted form gruops
+        $formGroups = $this->metadata()->get('admin.form_groups');
+
+        // Current form groups
+        $groups = $form['groups'];
+
+        $attachmentObjects = [];
+        foreach ($groups as $groupIdent => $group) {
+            if (isset($formGroups[$groupIdent])) {
+                $group = array_replace_recursive(
+                    $formGroups[$groupIdent],
+                    $group
+                );
+            }
+
+            if (isset($group['attachable_objects'])) {
+                $attachmentObjects[$group['group']] = [];
+                foreach ($group['attachable_objects'] as $type => $content) {
+                    $attachmentObjects[$group['group']][] = $type;
+                }
+            }
+
+        }
+
+        return $attachmentObjects;
     }
 
 

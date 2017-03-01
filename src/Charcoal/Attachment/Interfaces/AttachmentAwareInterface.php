@@ -20,4 +20,20 @@ interface AttachmentAwareInterface
      * @return mixed
      */
     public function id();
+
+    /**
+     * Attach an node to the current object.
+     *
+     * @param AttachableInterface|ModelInterface $attachment An attachment or object.
+     * @param string $group Attachment group, defaults to contents.
+     * @return boolean|self
+     */
+    public function addAttachment($attachment, $group='contents');
+
+    /**
+     * Retrieve the object's available attachment object types.
+     *
+     * @return array
+     */
+    public function attachmentObjTypes();
 }
