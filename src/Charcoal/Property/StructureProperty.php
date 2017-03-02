@@ -524,24 +524,45 @@ class StructureProperty extends AbstractProperty
     /**
      * Convert the given value into a structure.
      *
+     * Options:
+     * - `default_data` (_boolean_|_array_) — If TRUE, the default data defined
+     *   in the structure's metadata is merged. If an array, that is merged.
+     *
      * @param  mixed $val     The value to "structurize".
      * @param  array $options Optional structure options.
      * @return ModelInterface|ModelInterface[]
      */
     public function structureVal($val, array $options = [])
     {
-        /** @todo Find a use for this */
-        unset($options);
-
         if ($val === null) {
             return null;
+        }
+
+        $metadata = $this->structureMetadata();
+
+        $defaultData = [];
+        if (isset($options['default_data'])) {
+            if (is_bool($options['default_data'])) {
+                $withDefaultData = $options['default_data'];
+                if ($withDefaultData) {
+                    $defaultData = $metadata->defaultData();
+                }
+            } elseif (is_array($options['default_data'])) {
+                $withDefaultData = true;
+                $defaultData     = $options['default_data'];
+            }
         }
 
         if ($this->multiple()) {
             $entries = [];
             foreach ($val as $entry) {
                 $model = $this->createStructureModel();
-                $model->setMetadata($this->structureMetadata());
+                $model->setMetadata($metadata);
+
+                if ($defaultData) {
+                    $model->setData($defaultData);
+                }
+
                 $model->setData($entry);
 
                 $entries[] = $model;
@@ -550,7 +571,12 @@ class StructureProperty extends AbstractProperty
             return $entries;
         } else {
             $model = $this->createStructureModel();
-            $model->setMetadata($this->structureMetadata());
+            $model->setMetadata($metadata);
+
+            if ($defaultData) {
+                $model->setData($defaultData);
+            }
+
             $model->setData($val);
 
             return $model;
