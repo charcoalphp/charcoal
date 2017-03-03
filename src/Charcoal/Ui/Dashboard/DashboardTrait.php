@@ -2,10 +2,13 @@
 
 namespace Charcoal\Ui\Dashboard;
 
-use \InvalidArgumentException;
+use InvalidArgumentException;
 
-// Intra-module (`charcoal-ui`) dependency
-use \Charcoal\Ui\UiItemInterface;
+// From 'charcoal-user'
+use Charcoal\User\AuthAwareInterface;
+
+// From 'charcoal-ui'
+use Charcoal\Ui\UiItemInterface;
 
 /**
  * Provides an implementation of {@see \Charcoal\Ui\Dashboard\DashboardInterface}.
@@ -153,6 +156,10 @@ trait DashboardTrait
 
         $widgetCallback = isset($widgetCallback) ? $widgetCallback : $this->widgetCallback;
         foreach ($widgets as $widget) {
+            if (isset($widget['permissions']) && $this instanceof AuthAwareInterface) {
+                $widget->setActive($this->hasPermissions($widget['permissions']));
+            }
+
             if (!$widget->active()) {
                 continue;
             }
