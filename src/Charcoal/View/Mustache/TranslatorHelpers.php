@@ -126,7 +126,7 @@ class TranslatorHelpers implements HelpersInterface
      *
      * Required by Mustache.
      *
-     * @param  string  $macro A domain, locale, or number.
+     * @param  string $macro A domain, locale, or number.
      * @return boolean
      */
     public function __isset($macro)

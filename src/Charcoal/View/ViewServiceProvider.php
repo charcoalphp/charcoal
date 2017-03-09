@@ -197,13 +197,19 @@ class ViewServiceProvider implements ServiceProviderInterface
      */
     protected function registerMustacheTemplatingServices(Container $container)
     {
+        if (!isset($container['view/mustache/helpers'])) {
+            $container['view/mustache/helpers'] = function () {
+                return [];
+            };
+        }
+
         /**
          * Add global helpers to the Mustache Engine.
          *
          * @param Container $container A container instance.
          * @return array
          */
-        $container['view/mustache/helpers'] = function (Container $container) {
+        $container->extend('view/mustache/helpers', function (array $helpers, Container $container) {
             $deps = [];
             if (isset($container['translator'])) {
                 $deps['translator'] = $container['translator'];
@@ -212,8 +218,8 @@ class ViewServiceProvider implements ServiceProviderInterface
             $assets = new AssetsHelpers();
             $i18n   = new TranslatorHelpers($deps);
 
-            return array_merge($assets->toArray(), $i18n->toArray());
-        };
+            return array_merge($helpers, $assets->toArray(), $i18n->toArray());
+        });
     }
 
     /**
