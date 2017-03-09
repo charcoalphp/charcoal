@@ -58,14 +58,17 @@ class TranslationParserScript extends AdminScript
      */
     protected $locales;
 
-
     /**
-     * {@inheritDoc}
+     * Inject dependencies from a DI Container.
+     *
+     * @param  Container $container A dependencies container instance.
+     * @return void
      */
     public function setDependencies(Container $container)
     {
         $this->appConfig = $container['config'];
         $this->setTranslator($container['translator']);
+
         parent::setDependencies($container);
     }
 
@@ -150,7 +153,7 @@ class TranslationParserScript extends AdminScript
         $filePath = str_replace('/', DIRECTORY_SEPARATOR, $base.$output);
 
         $this->climate()->backgroundGreen()->out(
-            'Make sure to include <light_green>' . $filePath . '</light_green> in your <light_green>translator/paths</light_green> configurations.'
+            'Make sure to include <light_green>'.$filePath.'</light_green> in your <light_green>translator/paths</light_green> configurations.'
         );
 
         return $response;
@@ -158,21 +161,21 @@ class TranslationParserScript extends AdminScript
 
     /**
      * Give feedback about what's going on.
-     * @return self Chainable.
+     *
+     * @return self.
      */
     protected function displayInformations()
     {
         $this->climate()->underline()->out(
-            'Initializing translations parser script...'
-        );
-
-
-        $this->climate()->green()->out(
-            'CSV file output: <white>' . $this->filePath() . '</white>'
+            'Initializing translations parser script…'
         );
 
         $this->climate()->green()->out(
-            'CSV file names: <white>' . $this->domain().'.{locale}.csv</white>'
+            'CSV file output: <white>'.$this->filePath().'</white>'
+        );
+
+        $this->climate()->green()->out(
+            'CSV file names: <white>'.$this->domain().'.{locale}.csv</white>'
         );
 
         $this->climate()->green()->out(
@@ -233,8 +236,9 @@ class TranslationParserScript extends AdminScript
     }
 
     /**
-     * Domain which is the csv file name prefix
-     * @return string domain.
+     * Domain which is the csv file name prefix.
+     *
+     * @return string
      */
     public function domain()
     {
@@ -243,26 +247,23 @@ class TranslationParserScript extends AdminScript
 
     /**
      * Regex to match in files.
-     * @param  string $type File type (mustache|php)
-     * @return string       Regex string.
+     *
+     * @param  string $type File type (Mustache, PHP).
+     * @return string Regex string.
      */
     public function regEx($type)
     {
         switch ($type) {
-            case 'php' :
-                $regex = '/([^\d\wA-Za-z])_t\(\s*\n*\r*(["\'])(?<text>(.|\n|\r|\n\r)*?)\2\s*\n*\r*\)/i';
-            break;
+            case 'php':
+                return '/([^\d\wA-Za-z])_t\(\s*\n*\r*(["\'])(?<text>(.|\n|\r|\n\r)*?)\2\s*\n*\r*\)/i';
 
-            case 'mustache' :
-                $regex = '/{{\s*#\s*_t\s*}}((.|\n|\r|\n\r)*?){{\s*\/\s*_t\s*}}/i';
-            break;
+            case 'ms':
+            case 'mustache':
+                return '/{{\s*#\s*_t\s*}}((.|\n|\r|\n\r)*?){{\s*\/\s*_t\s*}}/i';
 
             default:
-                $regex = '/{{\s*#\s*_t\s*}}((.|\n|\r|\n\r)*?){{\s*\/\s*_t\s*}}/i';
-            break;
+                return '/{{\s*#\s*_t\s*}}((.|\n|\r|\n\r)*?){{\s*\/\s*_t\s*}}/i';
         }
-
-        return $regex;
     }
 
     /**
@@ -283,14 +284,14 @@ class TranslationParserScript extends AdminScript
      *        'string' => 'translation'
      *    ]
      * ]
-     * @return array        Translations.
+     * @return array Translations.
      */
     public function getTranslations()
     {
         $path = $this->path();
 
         if ($path) {
-            $this->climate()->green()->out('Parsing files in <white>' . $path .'</white>');
+            $this->climate()->green()->out('Parsing files in <white>'.$path.'</white>');
             $translations = $this->getTranslationsFromPath($path, 'mustache');
             return $translations;
         }
@@ -298,7 +299,7 @@ class TranslationParserScript extends AdminScript
 
         $translations = [];
         foreach ($paths as $p) {
-            $this->climate()->green()->out('Parsing files in <white>' . $p .'</white>');
+            $this->climate()->green()->out('Parsing files in <white>'.$p.'</white>');
             $translations = array_merge_recursive($translations, $this->getTranslationsFromPath($p, 'mustache'));
         }
 
@@ -307,13 +308,12 @@ class TranslationParserScript extends AdminScript
 
     /**
      * Get all translations in given path for the given file extension (mustache | php).
-     * @param  string $path The path.
+     * @param  string $path     The path.
      * @param  string $fileType The file extension|type.
-     * @return array        Translations.
+     * @return array Translations.
      */
     public function getTranslationsFromPath($path, $fileType)
     {
-
         // remove vendor/locomotivemtl/charcoal-app
         $base = $this->appConfig->get('base_path');
         $glob = $this->globRecursive($base.$path.'*.'.$fileType);
@@ -351,7 +351,7 @@ class TranslationParserScript extends AdminScript
         }
 
         $this->climate()->out('.');
-        $this->climate()->green()->out('Translations parsed from ' . $path);
+        $this->climate()->green()->out('Translations parsed from '.$path);
         return $translations;
     }
 
@@ -414,14 +414,14 @@ class TranslationParserScript extends AdminScript
     }
 
     /**
-     * @param array $translations The translations to save in CSV.
-     * @return TranslateScript Chainable
+     * @param  array $translations The translations to save in CSV.
+     * @return self
      */
     public function toCSV(array $translations)
     {
         if (!count($translations)) {
             $this->climate()->error('
-                There was no translations in the provided path ('. $this->path() .')
+                There was no translations in the provided path ('.$this->path().')
                 with the given recursive level ('.$this->maxRecursiveLevel().')
             ');
             return $this;
