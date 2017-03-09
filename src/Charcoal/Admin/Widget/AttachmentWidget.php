@@ -204,93 +204,6 @@ class AttachmentWidget extends AdminWidget implements
         return count(iterator_to_array($this->attachments()));
     }
 
-    /**
-     * Retrieves a Closure that prepends relative URIs with the project's base URI.
-     *
-     * @return callable
-     */
-    public function withBaseUrl()
-    {
-        static $search;
-
-        if ($search === null) {
-            $attr = [ 'href', 'link', 'url', 'src' ];
-            $uri = [ '../', './', '/', 'data', 'fax', 'file', 'ftp', 'geo',
-                'http', 'mailto', 'sip', 'tag', 'tel', 'urn' ];
-
-            $search = sprintf(
-                '(?<=%1$s=["\'])(?!%2$s)(\S+)(?=["\'])',
-                implode('=["\']|', array_map('preg_quote', $attr, [ '~' ])),
-                implode('|', array_map('preg_quote', $uri, [ '~' ]))
-            );
-        }
-
-        /**
-         * Prepend the project's base URI to all relative URIs in HTML attributes (e.g., src, href).
-         *
-         * @param  string       $text   Text to parse.
-         * @param  LambdaHelper $helper For rendering strings in the current context.
-         * @return string
-         */
-        $lambda = function ($text, LambdaHelper $helper) use ($search) {
-            $text = $helper->render($text);
-
-            if (preg_match('~'.$search.'~i', $text)) {
-                $base = $helper->render('{{ baseUrl }}');
-
-                return preg_replace('~'.$search.'~i', $base.'$1', $text);
-            }
-            // @codingStandardsIgnoreStart
-            /* elseif ($this->baseUrl instanceof \Psr\Http\Message\UriInterface) {
-                if ($text && strpos($text, ':') === false && !in_array($text[0], [ '/', '#', '?' ])) {
-                    return $this->baseUrl->withPath($text);
-                }
-            }*/
-
-            // @codingStandardsIgnoreEnd
-
-            return $text;
-        };
-        $lambda = $lambda->bindTo($this);
-
-        return $lambda;
-    }
-
-    /**
-     * Retrieves a Closure that prepends relative URIs with the project's base PATH.
-     *
-     * @return callable
-     */
-    public function pathWithBaseUrl()
-    {
-        /**
-         * Returns a Closure that provides a way to prepend the base URI.
-         *
-         * @var string       $text   Text to translate.
-         * @var LambdaHelper $helper For rendering strings in the current context.
-         *
-         * @return string
-         */
-        $lambda = function ($path, LambdaHelper $helper) {
-            $base = $helper->render('{{ baseUrl }}');
-            $path = $helper->render($path);
-
-            if (is_object($path) && method_exists($path, '__toString')) {
-                $path = strval($path);
-            }
-
-            if ($path && strpos($path, ':') === false && !in_array($path[0], [ '/', '#', '?' ])) {
-                return $base.$path;
-            }
-
-            return $path;
-        };
-        $lambda = $lambda->bindTo($this);
-
-        return $lambda;
-    }
-
-
     // Setters
     // =========================================================================
 
@@ -572,9 +485,10 @@ class AttachmentWidget extends AdminWidget implements
     public function widgetFactory()
     {
         if (!isset($this->widgetFactory)) {
-            throw new RuntimeException(
-                sprintf('Widget Factory is not defined for "%s"', get_class($this))
-            );
+            throw new RuntimeException(sprintf(
+                'Widget Factory is not defined for "%s"',
+                get_class($this)
+            ));
         }
 
         return $this->widgetFactory;

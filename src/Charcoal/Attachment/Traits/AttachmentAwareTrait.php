@@ -170,6 +170,8 @@ trait AttachmentAwareTrait
                     $att->setPreview($widget->attachmentPreview());
                 }
 
+                $att->isPresentable(true);
+
                 if ($callback !== null) {
                     call_user_func_array($callback, [ &$att ]);
                 }
@@ -179,6 +181,8 @@ trait AttachmentAwareTrait
                 if ($this instanceof AttachableInterface) {
                     $att->setContainerObj($this);
                 }
+
+                $att->isPresentable(true);
 
                 if ($callback !== null) {
                     call_user_func_array($callback, [ &$att ]);

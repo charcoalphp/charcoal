@@ -11,6 +11,16 @@ namespace Charcoal\Attachment\Object;
 class File extends Attachment
 {
     /**
+     * Alias of {@see Attachment::file()}.
+     *
+     * @return string|null
+     */
+    public function src()
+    {
+        return $this->createAbsoluteUrl($this->file());
+    }
+
+    /**
      * Generate a thumbnail from the MIME type of the uploaded file.
      *
      * @todo    Generate thumbnail from config or whatever. File nodes should have a placeholder defined.

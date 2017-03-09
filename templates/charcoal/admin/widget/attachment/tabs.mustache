@@ -15,13 +15,13 @@
 <div class="row">
 	<section class="o-section">
 		<ul class="nav nav-tabs">
-			{{#attachmentTypes}}
-				<li role="presentation"{{#active}} class="active"{{/active}}><a href="#{{ident}}" aria-controls="{{ident}}" role="tab" data-toggle="tab">{{label}}</a></li>
-			{{/attachmentTypes}}
+		{{#attachmentTypes}}
+			<li role="presentation"{{#active}} class="active"{{/active}}><a href="#{{ident}}" aria-controls="{{ident}}" role="tab" data-toggle="tab">{{label}}</a></li>
+		{{/attachmentTypes}}
 		</ul>
 
 		<div class="tab-content js-attachments-manager">
-			{{#attachmentTypes}}
+		{{#attachmentTypes}}
 			<div role="tabpanel" class="tab-pane{{#active}} active{{/active}}" id="{{ident}}">
 				<div class="row js-attachment-sortable" style="min-height:100px;">
 				{{#table}}
@@ -35,7 +35,7 @@
 					</a>
 				</div>
 			</div>
-			{{/attachmentTypes}}
+		{{/attachmentTypes}}
 		</div>
 	</section>
 </div>

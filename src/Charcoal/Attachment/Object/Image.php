@@ -10,6 +10,22 @@ namespace Charcoal\Attachment\Object;
 class Image extends File
 {
     /**
+     * Alias of {@see Attachment::thumbnail()} and {@see Attachment::file()}.
+     *
+     * @return string|null
+     */
+    public function src()
+    {
+        $src = $this->thumbnail();
+
+        if (!$src) {
+            $src = $this->file();
+        }
+
+        return $this->createAbsoluteUrl($src);
+    }
+
+    /**
      * Generate a thumbnail from the uploaded image.
      *
      * @todo    Generate thumbnail from the main image (or not.).

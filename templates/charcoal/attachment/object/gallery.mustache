@@ -14,14 +14,9 @@
                    data-id="{{ attachment_id }}"
                    data-title="{{# _t }}Edit{{/ _t }}"
                    data-action="edit">
-                    {{# thumbnail }}
-                        <img src="{{ baseUrl }}{{ . }}"/>
-                    {{/ thumbnail }}
-                    {{^ thumbnail }}
-                        {{# file }}
-                            <img class="thumbnail" src="{{ baseUrl }}{{ . }}"/>
-                        {{/ file }}
-                    {{/ thumbnail }}
+                    {{# src }}
+                        <img src="{{ . }}"/>
+                    {{/ src }}
                 </a>
             </li>
         {{/ attachments }}

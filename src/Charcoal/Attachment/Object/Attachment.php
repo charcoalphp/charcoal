@@ -3,7 +3,11 @@
 namespace Charcoal\Attachment\Object;
 
 use ReflectionClass;
+use RuntimeException;
 use InvalidArgumentException;
+
+// From PSR-7
+use Psr\Http\Message\UriInterface;
 
 // From Pimple
 use Pimple\Container;
@@ -40,13 +44,13 @@ class Attachment extends Content implements AttachableInterface
     /**
      * Default attachment types
      */
-    const FILE_TYPE = File::class;
-    const LINK_TYPE = Link::class;
-    const IMAGE_TYPE = Image::class;
-    const EMBED_TYPE = Embed::class;
-    const VIDEO_TYPE = Video::class;
-    const TEXT_TYPE = Text::class;
-    const GALLERY_TYPE = Gallery::class;
+    const FILE_TYPE      = File::class;
+    const LINK_TYPE      = Link::class;
+    const IMAGE_TYPE     = Image::class;
+    const EMBED_TYPE     = Embed::class;
+    const VIDEO_TYPE     = Video::class;
+    const TEXT_TYPE      = Text::class;
+    const GALLERY_TYPE   = Gallery::class;
     const ACCORDION_TYPE = Accordion::class;
     const CONTAINER_TYPE = AttachmentContainer::class;
 
@@ -66,20 +70,6 @@ class Attachment extends Content implements AttachableInterface
         'container' => 'glyphicon-list',
         'accordion' => 'glyphicon-list'
     ];
-
-    /**
-     * A store of resolved attachment types.
-     *
-     * @var array $resolved
-     */
-    protected static $resolved = [];
-
-    /**
-     * The attachment's parent container instance.
-     *
-     * @var AttachmentContainerInterface|null
-     */
-    protected $containerObj;
 
     /**
      * The attachment type.
@@ -163,6 +153,34 @@ class Attachment extends Content implements AttachableInterface
     protected $position;
 
     /**
+     * The base URI.
+     *
+     * @var UriInterface|null
+     */
+    private $baseUrl;
+
+    /**
+     * Whether the attachment acts like a presenter (TRUE) or data model (FALSE).
+     *
+     * @var boolean
+     */
+    private $presentable = false;
+
+    /**
+     * The attachment's parent container instance.
+     *
+     * @var AttachmentContainerInterface|null
+     */
+    protected $containerObj;
+
+    /**
+     * A store of resolved attachment types.
+     *
+     * @var array
+     */
+    protected static $resolvedType = [];
+
+    /**
      * Store the collection loader for the current class.
      *
      * @var CollectionLoader
@@ -196,7 +214,23 @@ class Attachment extends Content implements AttachableInterface
     {
         parent::setDependencies($container);
 
+        $this->setBaseUrl($container['base-url']);
         $this->setCollectionLoader($container['model/collection/loader']);
+    }
+
+    /**
+     * Determine if the model is for presentation or editing.
+     *
+     * @param  boolean $presenter The presenter flag.
+     * @return boolean Returns TRUE if model is used for presentation; FALSE for editing.
+     */
+    public function isPresentable($presenter = null)
+    {
+        if (is_bool($presenter)) {
+            $this->presentable = $presenter;
+        }
+
+        return $this->presentable;
     }
 
     /**
@@ -312,13 +346,13 @@ class Attachment extends Content implements AttachableInterface
     {
         $classname = get_called_class();
 
-        if (!isset(static::$resolved[$classname])) {
+        if (!isset(static::$resolvedType[$classname])) {
             $reflect = new ReflectionClass($this);
 
-            static::$resolved[$classname] = strtolower($reflect->getShortName());
+            static::$resolvedType[$classname] = strtolower($reflect->getShortName());
         }
 
-        return static::$resolved[$classname];
+        return static::$resolvedType[$classname];
     }
 
     /**
@@ -570,6 +604,12 @@ class Attachment extends Content implements AttachableInterface
     {
         $this->description = $this->translator()->translation($description);
 
+        if ($this->isPresentable()) {
+            foreach ($this->description->data() as $lang => $trans) {
+                $this->description[$lang] = $this->resolveUrls($trans);
+            }
+        }
+
         return $this;
     }
 
@@ -587,9 +627,22 @@ class Attachment extends Content implements AttachableInterface
     }
 
     /**
-     * Set the path to the attached file.
+     * Set the path to the thumbnail associated with the object.
      *
      * @param  string $path A path to an image.
+     * @return self
+     */
+    public function setThumbnail($path)
+    {
+        $this->thumbnail = $path;
+
+        return $this;
+    }
+
+    /**
+     * Set the path to the attached file.
+     *
+     * @param  string $path A path to a file.
      * @return self
      */
     public function setFile($path)
@@ -732,6 +785,16 @@ class Attachment extends Content implements AttachableInterface
     }
 
     /**
+     * Retrieve the path to the thumbnail associated with the object.
+     *
+     * @return string|null
+     */
+    public function thumbnail()
+    {
+        return $this->thumbnail;
+    }
+
+    /**
      * Retrieve the path to the attached file.
      *
      * @return Translation|string|null
@@ -827,10 +890,115 @@ class Attachment extends Content implements AttachableInterface
         return parent::preDelete();
     }
 
-
-
     // Utilities
     // =============================================================================
+
+    /**
+     * Set the base URI of the project.
+     *
+     * @see    \Charcoal\Admin\Support\setBaseUrl::baseUrl()
+     * @param  UriInterface $uri The base URI.
+     * @return self
+     */
+    protected function setBaseUrl(UriInterface $uri)
+    {
+        $this->baseUrl = $uri;
+
+        return $this;
+    }
+
+    /**
+     * Retrieve the base URI of the project.
+     *
+     * @throws RuntimeException If the base URI is missing.
+     * @return UriInterface|null
+     */
+    public function baseUrl()
+    {
+        if (!isset($this->baseUrl)) {
+            throw new RuntimeException(sprintf(
+                'The base URI is not defined for [%s]',
+                get_class($this)
+            ));
+        }
+
+        return $this->baseUrl;
+    }
+
+    /**
+     * Prepend the base URI to the given path.
+     *
+     * @param  string $uri A URI path to wrap.
+     * @return UriInterface|null
+     */
+    protected function createAbsoluteUrl($uri)
+    {
+        if (!isset($uri)) {
+            return null;
+        }
+
+        $uri = strval($uri);
+        if ($this->isRelativeUri($uri)) {
+            $parts = parse_url($uri);
+            $path  = isset($parts['path']) ? $parts['path'] : '';
+            $query = isset($parts['query']) ? $parts['query'] : '';
+            $hash  = isset($parts['fragment']) ? $parts['fragment'] : '';
+
+            return $this->baseUrl()->withPath($path)->withQuery($query)->withFragment($hash);
+        }
+
+        return $uri;
+    }
+
+    /**
+     * Prepend the base URI to the given path.
+     *
+     * @param  string $text A string to parse relative URIs.
+     * @return UriInterface|null
+     */
+    protected function resolveUrls($text)
+    {
+        static $search;
+
+        if ($search === null) {
+            $attr   = [ 'href', 'link', 'url', 'src' ];
+            $scheme = [ '../', './', '/', 'data', 'mailto', 'http' ];
+
+            $search = sprintf(
+                '(?<=%1$s=["\'])(?!%2$s)(\S+)(?=["\'])',
+                implode('=["\']|', array_map('preg_quote', $attr, [ '~' ])),
+                implode('|', array_map('preg_quote', $uri, [ '~' ]))
+            );
+        }
+
+        $text = preg_replace_callback(
+            '~'.$search.'~i',
+            function ($matches) {
+                return $this->createAbsoluteUrl($matches[1]);
+            },
+            $text
+        );
+
+        return $text;
+    }
+
+    /**
+     * Determine if the given URI is relative.
+     *
+     * @see    \Charcoal\Admin\Support\BaseUrlTrait::isRelativeUri()
+     * @param  string $uri A URI path to test.
+     * @return boolean
+     */
+    protected function isRelativeUri($uri)
+    {
+        if ($uri && !parse_url($uri, PHP_URL_SCHEME)) {
+            if (!in_array($uri[0], [ '/', '#', '?' ])) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     /**
      * Set a model collection loader.
