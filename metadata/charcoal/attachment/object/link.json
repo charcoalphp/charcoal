@@ -2,18 +2,7 @@
     "default_data": {
         "type": "charcoal/attachment/object/link",
         "preview": "{{> charcoal/attachment/object/link }}",
-        "heading": {
-            "fr": "Lien externe{{# title }}: {{ . }} — {{/ title }}{{^ title }} #{{ id }} — {{/ title }}{{ link }}",
-            "en": "External Link{{# title }}: {{ . }} — {{/ title }}{{^ title }} #{{ id }} — {{/ title }}{{ link }}"
-        }
-    },
-    "data": {
-        "type": "charcoal/attachment/object/link",
-        "preview": "{{> charcoal/attachment/object/link }}",
-        "heading": {
-            "fr": "Lien externe{{# title }}: {{ . }} — {{/ title }}{{^ title }} #{{ id }} — {{/ title }}{{ link }}",
-            "en": "External Link{{# title }}: {{ . }} — {{/ title }}{{^ title }} #{{ id }} — {{/ title }}{{ link }}"
-        }
+        "heading": "{{# _t }}External Link{{/ _t }}{{# title }}: {{ . }} — {{/ title }}{{^ title }} #{{ id }} — {{/ title }}{{ link }}"
     },
 
     "admin": {
@@ -29,7 +18,7 @@
                                 { "columns": [ 1 ] }
                             ]
                         },
-                        "title": "Informations",
+                        "title": "Information",
                         "properties": [
                             "title",
                             "link"
@@ -77,10 +66,7 @@
                     "active"
                 ],
                 "list_actions": [{
-                    "label": {
-                        "fr": "Nouveau lien",
-                        "en": "New Link"
-                    },
+                    "label": "New Link",
                     "ident": "create",
                     "url": "object/edit?obj_type=charcoal/attachment/object/link"
                 }],
@@ -127,10 +113,7 @@
                 }
             },
             "table": {
-                "title": {
-                    "fr": "Liste de liens",
-                    "en": "List of Links"
-                },
+                "title": "List of Links",
                 "layout": {
                     "structure": [
                         { "columns": [ 1 ] }

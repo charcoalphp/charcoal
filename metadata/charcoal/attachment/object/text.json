@@ -2,18 +2,7 @@
     "default_data": {
         "type": "charcoal/attachment/object/text",
         "preview": "{{> charcoal/attachment/object/text }}",
-        "heading": {
-            "fr": "Zone de texte{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}",
-            "en": "Text Zone{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}"
-        }
-    },
-    "data": {
-        "type": "charcoal/attachment/object/text",
-        "preview": "{{> charcoal/attachment/object/text }}",
-        "heading": {
-            "fr": "Zone de texte{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}",
-            "en": "Text Zone{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}"
-        }
+        "heading": "{{# _t }}Text Zone{{/ _t }}{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}"
     },
 
     "properties": {
@@ -35,10 +24,7 @@
                                 { "columns": [ 1 ] }
                             ]
                         },
-                        "title": {
-                            "fr": "Informations",
-                            "en": "Informations"
-                        },
+                        "title": "Information",
                         "properties": [
                             "title",
                             "subtitle",
@@ -88,10 +74,7 @@
                     "active"
                 ],
                 "list_actions": [{
-                    "label": {
-                        "en": "New Text Zone",
-                        "fr": "Nouvelle zone de texte"
-                    },
+                    "label": "New Text Zone",
                     "ident": "create",
                     "url": "object/edit?obj_type=charcoal/attachment/object/text"
                 }],
@@ -138,10 +121,7 @@
                 }
             },
             "table": {
-                "title": {
-                    "fr": "Liste des zones de texte",
-                    "en": "List of Text Zones"
-                },
+                "title": "List of Text Zones",
                 "layout": {
                     "structure": [
                         { "columns": [ 1 ] }

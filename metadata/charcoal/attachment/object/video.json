@@ -1,17 +1,7 @@
 {
     "default_data": {
         "type": "charcoal/attachment/object/video",
-        "heading": {
-            "fr": "Vidéo{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}",
-            "en": "Video{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}"
-        }
-    },
-    "data": {
-        "type": "charcoal/attachment/object/video",
-        "heading": {
-            "fr": "Vidéo{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}",
-            "en": "Video{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}"
-        }
+        "heading": "{{# _t }}Video{{/ _t }}{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}"
     },
 
     "admin": {
@@ -23,10 +13,7 @@
                     "active"
                 ],
                 "list_actions": [{
-                    "label": {
-                        "en": "Nouveau Vidéo",
-                        "fr": "New Video"
-                    },
+                    "label": "New Video",
                     "ident": "create",
                     "url": "object/edit?obj_type=charcoal/attachment/object/video"
                 }],
@@ -73,10 +60,7 @@
                 }
             },
             "table": {
-                "title": {
-                    "fr": "Liste des vidéos",
-                    "en": "List of Videos"
-                },
+                "title": "List of Videos",
                 "layout": {
                     "structure": [
                         { "columns": [ 1 ] }

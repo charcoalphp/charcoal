@@ -18,7 +18,7 @@
         <header draggable="true" id="{{ widgetId }}_heading_{{ id }}" class="panel-heading">
             <h4 class="panel-title">
                 <span class="panel-title-icon glyphicon {{ glyphicon }}"></span>
-                <a href="object/edit?obj_type={{ type }}&obj_id={{ id }}">{{& heading }}{{^ active }}&mdash; <em>Désactivé</em>{{/ active}}</a>
+                <a href="object/edit?obj_type={{ type }}&obj_id={{ id }}">{{& heading }}{{^ active }}&mdash; <em>{{# _t }}Disabled{{/ _t }}</em>{{/ active}}</a>
             </h4>
         </header>
     {{/ showAttachmentPreview }}

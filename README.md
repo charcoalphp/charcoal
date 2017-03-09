@@ -11,7 +11,6 @@ The preferred (and only supported) way of installing _charcoal-attachment is wit
 ★ composer require beneroch/charcoal-attachment
 ```
 
-
 ## Dependencies
 
 -   [`PHP 5.5+`](http://php.net)
@@ -57,6 +56,12 @@ Add the views path and metadata path to the config file.
         "...",
         "vendor/beneroch/charcoal-attachment/templates/"
     ]
+},
+"translations": {
+    "paths": [
+        "...",
+        "vendor/beneroch/charcoal-attachment/translations/"
+    ]
 }
 ```
 
@@ -80,8 +85,6 @@ Then, we need to add the necessary routes for the widgets in admin.json config f
 }
 ```
 
-
-
 ### Usage
 
 You need to make your object(s) "Attachment Aware", so that it knows it can have attachments. To do that, use/implement attachmentAware:
@@ -93,18 +96,12 @@ use \Charcoal\Attachment\Interfaces\AttachmentAwareInterface;
 Then, just add in the widget in the edit dashboard or the form like this:
 ```json
 "attachment": {
-    "title": {
-        "fr": "Documents",
-        "en": "Documents"
-    },
+    "title": "Documents",
     "type": "charcoal/admin/widget/attachment",
     "group": "main",
     "attachable_objects": {
         "charcoal/attachment/object/file": {
-            "label": {
-                "fr": "Document / Fichier",
-                "en": "Document / File"
-            }
+            "label": "Document / File"
         }
     }
 }
@@ -132,24 +129,30 @@ public function preDelete()
 ```
 
 ## Documentation
+
 Attachment widget can be use more than once in a form. In order for it to work properly, you need to define a group ident `group` different for each instanciated widgets.
+
 ```json
 "attachment": {
     "type": "charcoal/admin/widget/attachment",
     "group": "main"
 }
 ```
+
 In this case, we set the group to "main". If none defined, the default group will be "generic". Without those ident, widgets won't be able to know which attachments are his.
 
 You can than access a perticular "group" attachments calling the object's method "attachments(group_ident)". In this case, `$object->attachments('main')` will return attachments associated with the widgets that has the group set to "main".
 
 ## Attachment creation
+
 The one thing you need to know about the attachment is that it is all in a single table. You can't associate custom objects with other objects if they are not `attachments`.
 
 Then, how could you create new attachments? It all depends on what you want.
 
 ### Adding or modifying properties
+
 IF you need to add properties to an existing attachment, you can always extend it. Let's say you want to change the editor options for the description field given with the attachments. The first step is to create a new object that will extend the existing one.
+
 ```php
 /**
  * Extended text class.
@@ -161,7 +164,9 @@ class Text extends AttachmentText
 {
 }
 ```
+
 Now that we have the extend, let's add to the JSON by creating a `my/namespace/text.json` file.
+
 ```JSON
 {
     "properties": {
@@ -177,12 +182,12 @@ Now that we have the extend, let's add to the JSON by creating a `my/namespace/t
         "type": "my/namespace/text"
     }
 ```
+
 In that case, the editor options are changed to remove the base style formats, change the body class and add the appropriate css. The important part is to set the data type to the current object. This is used in live edit and delete features.
 
 If you added some extra properties, you can use the alter script to add them into the table.
 
 `vendor/bin/charcoal admin/object/table/alter --obj-type=my/namespace/text`
-
 
 ## Notes
 

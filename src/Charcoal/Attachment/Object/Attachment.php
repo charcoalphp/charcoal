@@ -357,11 +357,10 @@ class Attachment extends Content implements AttachableInterface
         $heading = $this->render((string)$this->heading);
 
         if (!$heading) {
-            $heading = sprintf(
-                '%1$s #%2$s',
-                ucfirst($this->microType()),
-                $this->id()
-            );
+            $heading = $this->translator()->translation('{{ objType }} #{{ id }}', [
+                '{{ objType }}' => ucfirst($this->microType()),
+                '{{ id }}'      => $this->id()
+            ]);
         }
 
         return $heading;

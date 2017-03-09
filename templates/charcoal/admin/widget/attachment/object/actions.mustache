@@ -1,19 +1,19 @@
 <div class="btn-group" role="group">
     <button class="btn {{# active }}btn-primary{{/ active }}{{^ active }}btn-danger{{/ active }} dropdown-toggle" type="button" data-toggle="dropdown">
         {{# showAttachmentHeading }}
-        Actions
+        <span class="btn-label">{{# _t }}Actions{{/ _t }}</span>
         {{/ showAttachmentHeading }}
         {{^ showAttachmentHeading }}
         <span class="glyphicon {{ glyphicon }}">&nbsp;</span>
-        <span class="sr-only">Actions</span>
+        <span class="sr-only">{{# _t }}Actions{{/ _t }}</span>
         {{/ showAttachmentHeading }}
         <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
         {{!--
-        <li><a href="#" data-image="[[baseUrl]][[file]]" data-type="[[type]]" data-microtype="[[microType]]" data-action="preview">Preview</a></li>
+        <li><a href="#" data-image="[[src]]" data-type="[[type]]" data-microtype="[[microType]]" data-action="preview">Preview</a></li>
         --}}
-        <li><a href="object/edit?obj_type={{ type }}&obj_id={{ id }}" data-type="{{ type }}" data-title="Éditer" data-id="{{id}}" data-action="edit">Éditer</a></li>
+        <li><a href="object/edit?obj_type={{ type }}&obj_id={{ id }}" data-type="{{ type }}" data-title="{{# _t }}Edit{{/ _t }}" data-id="{{id}}" data-action="edit">{{# _t }}Edit{{/ _t }}</a></li>
         {{# isAttachmentContainer }}
         <li role="separator" class="divider"></li>
         {{# attachableObjects }}
@@ -21,9 +21,9 @@
         {{/ attachableObjects }}
         <li role="separator" class="divider"></li>
         {{/ isAttachmentContainer }}
-        <li><a href="object/delete?obj_type={{ type }}&obj_id={{ id }}" data-type="{{ type }}" data-id="{{ id }}" data-action="delete">Supprimer</a></li>
+        <li><a href="object/delete?obj_type={{ type }}&obj_id={{ id }}" data-type="{{ type }}" data-id="{{ id }}" data-action="delete">{{# _t }}Remove{{/ _t }}</a></li>
         {{# isAttachmentContainer }}
-        <li><a href="object/edit?obj_type={{ type }}&obj_id={{ id }}" target="_blank">Modifier le contenu</a></li>
+        <li><a href="object/edit?obj_type={{ type }}&obj_id={{ id }}" target="_blank">{{# _t }}Edit Content{{/ _t }}</a></li>
         {{/ isAttachmentContainer }}
     </ul>
 </div>

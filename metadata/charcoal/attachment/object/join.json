@@ -6,24 +6,15 @@
         },
         "active": {
             "type": "boolean",
-            "label": {
-                "en": "Active",
-                "fr": "Actif"
-            }
+            "label": "Active"
         },
         "object_type": {
             "type": "string",
-            "label": {
-                "en": "Object Type",
-                "fr": "Type de l'objet"
-            }
+            "label": "Object Type"
         },
         "object_id": {
             "type": "string",
-            "label": {
-                "en": "Object ID",
-                "fr": "ID de l'objet"
-            }
+            "label": "Object ID"
         },
         "attachment_id": {
             "type": "string",
@@ -34,17 +25,12 @@
         },
         "group": {
             "type": "string",
-            "label": {
-                "fr": "Groupe",
-                "en": "Group"
-            },
-            "notes": {
-                "fr": "Si laissé vide, le groupe sera automatiquement \"Generic\"",
-                "en": "If empty, the group will be set to \"Generic\""
-            }
+            "label": "Group",
+            "notes": "If empty, the group will be set to \"Generic\""
         },
         "position": {
-            "type": "number"
+            "type": "number",
+            "label": "Position"
         }
     },
 

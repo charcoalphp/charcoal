@@ -2,18 +2,12 @@
     "default_data": {
         "show_title": true,
         "preview": "{{ title }}",
-        "heading": {
-            "fr": "Contenu relié{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}",
-            "en": "Related Content{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}"
-        }
+        "heading": "{{# _t }}Related Content{{/ _t }}{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}"
     },
     "data": {
         "show_title": true,
         "preview": "{{ title }}",
-        "heading": {
-            "fr": "Contenu relié{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}",
-            "en": "Related Content{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}"
-        }
+        "heading": "{{# _t }}Related Content{{/ _t }}{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}"
     },
 
     "properties": {
@@ -25,49 +19,31 @@
         "title": {
             "type": "string",
             "l10n": true,
-            "label": {
-                "fr": "Titre",
-                "en": "Title"
-            }
+            "label": "Title"
         },
         "show_title": {
             "type": "boolean",
-            "label": {
-                "en": "Show title on the website",
-                "fr": "Afficher le titre sur le site"
-            }
+            "label": "Show title on the website"
         },
         "categories": {
             "type": "object",
             "obj_type": "charcoal/attachment/object/category/generic",
             "multiple": true,
-            "label": {
-                "fr": "Catégories",
-                "en": "Categories"
-            }
+            "label": "Categories"
         },
         "subtitle": {
             "type": "string",
             "l10n": true,
-            "label": {
-                "fr": "Sous-Titre",
-                "en": "Sub-Title"
-            }
+            "label": "Sub-Title"
         },
         "description": {
             "type": "text",
             "l10n": true,
-            "label": {
-                "fr": "Description",
-                "en": "Description"
-            }
+            "label": "Description"
         },
         "keywords": {
             "type": "string",
-            "label": {
-                "fr": "Mots-clés",
-                "en": "Keywords"
-            },
+            "label": "Keywords",
             "multiple": true,
             "l10n": true
         },
@@ -78,53 +54,32 @@
         "link": {
             "type": "string",
             "label": "URL",
-            "notes": {
-                "fr": "ex: <samp>https://locomotive.ca</samp>",
-                "en": "e.g.: <samp>https://locomotive.ca</samp>"
-            }
+            "notes": "e.g.: <samp>https://locomotive.ca</samp>"
         },
         "file": {
             "type": "file",
-            "label": {
-                "fr": "Fichier",
-                "en": "File"
-            },
+            "label": "File",
             "upload_path": "uploads/attachments/",
             "public_access": true
         },
         "file_size": {
             "type": "string",
-            "label": {
-                "fr": "Taille du fichier",
-                "en": "File size"
-            }
+            "label": "File Size"
         },
         "file_type": {
             "type": "string",
-            "label": {
-                "fr": "Type de fichier",
-                "en": "File Type"
-            }
+            "label": "File Type"
         },
         "thumbnail": {
             "type": "image",
-            "label": {
-                "fr": "Vignette du fichier",
-                "en": "File's Thumbnail"
-            },
+            "label": "File's Thumbnail",
             "upload_path": "uploads/attachments/thumbs/",
             "public_access": true
         },
         "embed": {
             "type": "text",
-            "label": {
-                "fr": "Vidéo embed",
-                "en": "Embed Video"
-            },
-            "notes": {
-                "fr": "Tel que fourni par youtube ou viméo",
-                "en": "As provided by youtube or vimeo"
-            }
+            "label": "Embed Video",
+            "notes": "As provided by YouTube or Vimeo"
         }
     },
 
@@ -172,10 +127,7 @@
                                 {"columns": [1, 1]}
                             ]
                         },
-                        "title": {
-                            "fr": "Informations",
-                            "en": "Informations"
-                        },
+                        "title": "Information",
                         "properties": [
                             "title",
                             "subtitle",
@@ -191,10 +143,7 @@
                                 {"columns": [1, 1]}
                             ]
                         },
-                        "title": {
-                            "fr": "Média",
-                            "en": "Media"
-                        },
+                        "title": "Media",
                         "properties": [
                             "file",
                             "thumbnail"
@@ -207,10 +156,7 @@
                                 {"columns": [1]}
                             ]
                         },
-                        "title": {
-                            "fr": "Taxonomie",
-                            "en": "Taxonomy"
-                        },
+                        "title": "Taxonomy",
                         "properties": [
                             "active"
                         ]
@@ -226,10 +172,7 @@
 
         "dashboards": {
             "edit": {
-                "title": {
-                    "fr": "Attachements",
-                    "en": "Edit attachment"
-                },
+                "title": "Edit Attachment",
                 "layout": {
                     "structure": [
                         {"columns": [1]}
@@ -244,10 +187,7 @@
                 }
             },
             "table": {
-                "title": {
-                    "fr": "Liste des attachements",
-                    "en": "Attachments list"
-                },
+                "title": "List of Attachments",
                 "layout": {
                     "structure": [
                         {"columns": [1]}

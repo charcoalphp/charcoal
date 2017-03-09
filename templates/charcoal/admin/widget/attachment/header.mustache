@@ -1,7 +1,7 @@
 <div class="btn-toolbar" role="toolbar">
     <div class="btn-group js-attachments-manager" role="group">
         <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
-            Ajouter
+            <span class="btn-label">{{# _t }}Add{{/ _t }}</span>
             <span class="caret"></span>
         </button>
         <ul class="dropdown-menu js-attachments-manager">
@@ -16,12 +16,12 @@
         </ul>
     </div>
     {{# showAttachmentPreview }}
-    <div class="btn-group" role="group" aria-label="Toggle Attachment Previews">
-        <button type="button" class="btn btn-default js-attachments-expand" aria-label="Expand Previews">
-            <span class="glyphicon glyphicon-collapse-down"></span> Expand
+    <div class="btn-group" role="group" aria-label="{{# _t }}Toggle Content Previews{{/ _t }}">
+        <button type="button" class="btn btn-default js-attachments-expand" aria-label="{{# _t }}Expand Previews{{/ _t }}">
+            <span class="glyphicon glyphicon-collapse-down"></span> {{# _t }}Expand{{/ _t }}
         </button>
-        <button type="button" class="btn btn-default js-attachments-collapse" aria-label="Close Previews">
-            <span class="glyphicon glyphicon-collapse-up"></span> Close
+        <button type="button" class="btn btn-default js-attachments-collapse" aria-label="{{# _t }}Close Previews{{/ _t }}">
+            <span class="glyphicon glyphicon-collapse-up"></span> {{# _t }}Close{{/ _t }}
         </button>
     </div>
     {{/ showAttachmentPreview }}

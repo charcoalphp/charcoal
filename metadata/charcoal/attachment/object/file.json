@@ -2,19 +2,13 @@
     "default_data": {
         "type": "charcoal/attachment/object/file",
         "preview": "{{> charcoal/attachment/object/file }}",
-        "heading": {
-            "fr": "Fichier{{# title }}: {{ . }} — {{/ title }}{{^ title }} #{{ id }} — {{/ title }}{{ basename }}",
-            "en": "File{{# title }}: {{ . }} — {{/ title }}{{^ title }} #{{ id }} — {{/ title }}{{ basename }}"
-        }
+        "heading": "{{# _t }}File{{/ _t }}{{# title }}: {{ . }} — {{/ title }}{{^ title }} #{{ id }} — {{/ title }}{{ basename }}"
     },
 
     "data": {
         "type": "charcoal/attachment/object/file",
         "preview": "{{> charcoal/attachment/object/file }}",
-        "heading": {
-            "fr": "Fichier{{# title }}: {{ . }} — {{/ title }}{{^ title }} #{{ id }} — {{/ title }}{{ basename }}",
-            "en": "File{{# title }}: {{ . }} — {{/ title }}{{^ title }} #{{ id }} — {{/ title }}{{ basename }}"
-        }
+        "heading": "{{# _t }}File{{/ _t }}{{# title }}: {{ . }} — {{/ title }}{{^ title }} #{{ id }} — {{/ title }}{{ basename }}"
     },
 
     "admin": {
@@ -27,10 +21,7 @@
                     "active"
                 ],
                 "list_actions": [{
-                    "label": {
-                        "en": "New File",
-                        "fr": "Nouveau fichier"
-                    },
+                    "label": "New File",
                     "ident": "create",
                     "url": "object/edit?obj_type=charcoal/attachment/object/file"
                 }],

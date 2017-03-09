@@ -2,45 +2,27 @@
     "default_data": {
         "type": "charcoal/attachment/object/accordion",
         "preview": "{{> charcoal/attachment/object/accordion }}",
-        "heading": {
-            "fr": "Accordéon{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}",
-            "en": "Accordion{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}"
-        }
+        "heading": "{{# _t }}Accordion{{/ _t }}{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}"
     },
     "data": {
         "type": "charcoal/attachment/object/accordion",
         "preview": "{{> charcoal/attachment/object/accordion }}",
-        "heading": {
-            "fr": "Accordéon{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}",
-            "en": "Accordion{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}"
-        }
+        "heading": "{{# _t }}Accordion{{/ _t }}{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}"
     },
 
     "attachments": {
         "attachable_objects": {
             "charcoal/attachment/object/text": {
-                "label": {
-                    "en": "Text Zone",
-                    "fr": "Zone de texte"
-                }
+                "label": "Text Zone"
             },
             "charcoal/attachment/object/image": {
-                "label": {
-                    "fr": "Image",
-                    "en": "Picture"
-                }
+                "label": "Picture"
             },
             "charcoal/attachment/object/gallery": {
-                "label": {
-                    "fr": "Galerie d'images",
-                    "en": "Picture Gallery"
-                }
+                "label": "Picture Gallery"
             },
             "charcoal/attachment/object/embed": {
-                "label": {
-                    "fr": "Média Externe",
-                    "en": "Embedded Media"
-                }
+                "label": "Embedded Media"
             }
         }
     },
@@ -51,10 +33,7 @@
                 "group_display_mode": "tab",
                 "groups": {
                     "body": {
-                        "title": {
-                            "fr": "Accordéon de contenu",
-                            "en": "Content Accordion"
-                        },
+                        "title": "Content Accordion",
                         "show_header": false,
                         "properties": [
                             "ident"
@@ -72,10 +51,7 @@
             "default": {
                 "groups": {
                     "body": {
-                        "title": {
-                            "fr": "Accordéon de contenu",
-                            "en": "Content Accordion"
-                        },
+                        "title": "Content Accordion",
                         "properties": [
                             "title",
                             "active",
@@ -97,10 +73,7 @@
 
         "form_groups": {
             "contents": {
-                "title": {
-                    "fr": "Panneaux",
-                    "en": "Panels"
-                },
+                "title": "Panels",
                 "type": "charcoal/admin/widget/form-group/attachment",
                 "template": "charcoal/admin/widget/form-group/attachment",
                 "group": "accordion",
@@ -110,10 +83,7 @@
 
         "dashboards": {
             "admin.edit": {
-                "title": {
-                    "en": "Edit Attachment",
-                    "fr": "Modifier l'attachement"
-                },
+                "title": "Edit Attachment",
                 "widgets": {
                     "form": {
                         "type": "charcoal/admin/widget/objectForm",

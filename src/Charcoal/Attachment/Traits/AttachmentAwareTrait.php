@@ -209,11 +209,11 @@ trait AttachmentAwareTrait
     /**
      * Attach an node to the current object.
      *
-     * @param AttachableInterface|ModelInterface $attachment An attachment or object.
-     * @param string $group Attachment group, defaults to contents.
+     * @param  AttachableInterface|ModelInterface $attachment An attachment or object.
+     * @param  string                             $group      Attachment group, defaults to contents.
      * @return boolean|self
      */
-    public function addAttachment($attachment, $group='contents')
+    public function addAttachment($attachment, $group = 'contents')
     {
         if (!$attachment instanceof AttachableInterface && !$attachment instanceof ModelInterface) {
             return false;
@@ -316,7 +316,7 @@ trait AttachmentAwareTrait
         }
 
         // Current form
-        $form = $this->metadata()->get('admin.forms.' . $formIdent);
+        $form = $this->metadata()->get('admin.forms.'.$formIdent);
 
         // Setted form gruops
         $formGroups = $this->metadata()->get('admin.form_groups');
@@ -339,7 +339,6 @@ trait AttachmentAwareTrait
                     $attachmentObjects[$group['group']][] = $type;
                 }
             }
-
         }
 
         return $attachmentObjects;

@@ -2,19 +2,7 @@
     "default_data": {
         "type": "charcoal/attachment/object/image",
         "preview": "{{> charcoal/attachment/object/image }}",
-        "heading": {
-            "fr": "Image{{# title }}: {{ . }} — {{/ title }}{{^ title }} #{{ id }} — {{/ title }}{{ basename }}",
-            "en": "Picture{{# title }}: {{ . }} — {{/ title }}{{^ title }} #{{ id }} — {{/ title }}{{ basename }}"
-        }
-    },
-
-    "data": {
-        "type": "charcoal/attachment/object/image",
-        "preview": "{{> charcoal/attachment/object/image }}",
-        "heading": {
-            "fr": "Image{{# title }}: {{ . }} — {{/ title }}{{^ title }} #{{ id }} — {{/ title }}{{ basename }}",
-            "en": "Picture{{# title }}: {{ . }} — {{/ title }}{{^ title }} #{{ id }} — {{/ title }}{{ basename }}"
-        }
+        "heading": "{{# _t }}Picture{{/ _t }}{{# title }}: {{ . }} — {{/ title }}{{^ title }} #{{ id }} — {{/ title }}{{ basename }}"
     },
 
     "properties": {
@@ -41,10 +29,7 @@
                     "active"
                 ],
                 "list_actions": [{
-                    "label": {
-                        "en": "New Image",
-                        "fr": "Nouvelle image"
-                    },
+                    "label": "New Image",
                     "ident": "create",
                     "url": "object/edit?obj_type=charcoal/attachment/object/image"
                 }],
@@ -113,10 +98,7 @@
                 }
             },
             "table": {
-                "title": {
-                    "fr": "Liste des images",
-                    "en": "List of Images"
-                },
+                "title": "List of Images",
                 "layout": {
                     "structure": [
                         { "columns": [ 1 ] }

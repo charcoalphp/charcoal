@@ -24,11 +24,11 @@ interface AttachmentAwareInterface
     /**
      * Attach an node to the current object.
      *
-     * @param AttachableInterface|ModelInterface $attachment An attachment or object.
-     * @param string $group Attachment group, defaults to contents.
+     * @param  AttachableInterface|ModelInterface $attachment An attachment or object.
+     * @param  string                             $group      Attachment group, defaults to contents.
      * @return boolean|self
      */
-    public function addAttachment($attachment, $group='contents');
+    public function addAttachment($attachment, $group = 'contents');
 
     /**
      * Retrieve the object's available attachment object types.

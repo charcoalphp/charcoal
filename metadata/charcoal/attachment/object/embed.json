@@ -2,18 +2,12 @@
     "default_data": {
         "type": "charcoal/attachment/object/embed",
         "preview": "{{> charcoal/attachment/object/embed }}",
-        "heading": {
-            "fr": "Média externe{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}",
-            "en": "Embedded Media{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}"
-        }
+        "heading": "{{# _t }}Embedded Media{{/ _t }}{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}"
     },
     "data": {
         "type": "charcoal/attachment/object/embed",
         "preview": "{{> charcoal/attachment/object/embed }}",
-        "heading": {
-            "fr": "Média externe{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}",
-            "en": "Embedded Media{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}"
-        }
+        "heading": "{{# _t }}Embedded Media{{/ _t }}{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}"
     },
 
     "properties": {
@@ -45,7 +39,7 @@
                                 { "columns": [ 1 ] }
                             ]
                         },
-                        "title": "Informations",
+                        "title": "Information",
                         "properties": [
                             "title",
                             "subtitle",
@@ -95,10 +89,7 @@
                     "active"
                 ],
                 "list_actions": [{
-                    "label": {
-                        "en": "Nouveau média externe",
-                        "fr": "New embedded content"
-                    },
+                    "label": "New Embedded Media",
                     "ident": "create",
                     "url": "object/edit?obj_type=charcoal/attachment/object/embed"
                 }],
@@ -145,10 +136,7 @@
                 }
             },
             "table": {
-                "title": {
-                    "fr": "Liste des média externe",
-                    "en": "List of Embedded Content"
-                },
+                "title": "List of Embedded Media",
                 "layout": {
                     "structure": [
                         { "columns": [ 1 ] }

@@ -1,57 +1,51 @@
 {
-
-    "sources":{
-        "default":{
-            "table":"charcoal_attachment_categories"
+    "sources": {
+        "default": {
+            "table": "charcoal_attachment_categories"
         }
     },
-    "default_source":"default",
+    "default_source": "default",
+
     "admin": {
-        "lists":{
-            "default":{
-                "properties":[
+        "lists": {
+            "default": {
+                "properties": [
                     "name",
                     "active"
                 ],
-                "list_actions":[{
-                    "label":"Nouvelle catégorie",
-                    "ident":"create",
-                    "url":"object/edit?obj_type=charcoal/attachment/object/category/generic"
+                "list_actions": [{
+                    "label": "New Category",
+                    "ident": "create",
+                    "url": "object/edit?obj_type=charcoal/attachment/object/category/generic"
                 }]
             }
         },
-        "default_list":"default",
+        "default_list": "default",
         "forms": {
             "default": {
                 "groups": {
                     "body": {
-                        "title": {
-                            "fr": "Informations",
-                            "en": "Informations"
-                        },
+                        "title": "Information",
                         "properties": [
                             "name",
                             "active"
                         ],
                         "layout": {
-                            "structure": [
-                                { "columns": [ 5, 1 ] }
-                            ]
+                            "structure": [{
+                                "columns": [5, 1]
+                            }]
                         }
                     }
                 },
-                "sidebars":{
-                    "actions":{}
+                "sidebars": {
+                    "actions": {}
                 }
             }
         },
 
         "dashboards": {
             "admin.edit": {
-                "title": {
-                    "en": "Catégorie",
-                    "fr": "Category"
-                },
+                "title": "Category",
                 "widgets": {
                     "form": {
                         "type": "charcoal/admin/widget/objectForm",
@@ -61,11 +55,11 @@
                 }
             },
             "admin.table": {
-                "title": "Liste des catégories",
+                "title": "List of Categories",
                 "layout": {
-                    "structure": [
-                        { "columns": [ 1 ] }
-                    ]
+                    "structure": [{
+                        "columns": [1]
+                    }]
                 },
                 "widgets": {
                     "table": {

@@ -14,7 +14,7 @@
            data-parent="#{{ widgetId }}_accordion"
            aria-controls="{{ widgetId }}_body_{{ id }}"
            aria-expanded="{{^ showAttachmentHeading }}true{{/ showAttachmentHeading }}{{# showAttachmentHeading }}false{{/ showAttachmentHeading }}"
-           >{{& heading }}{{^ active }}&mdash; <em>Désactivé</em>{{/ active}}</a>
+           >{{& heading }}{{^ active }}&mdash; <em>{{# _t }}Disabled{{/ _t }}</em>{{/ active}}</a>
     </h4>
 </header>
 <section id="{{ widgetId }}_body_{{ id }}" class="panel-collapse collapse{{^ showAttachmentHeading }} in{{/ showAttachmentHeading }}" role="tabpanel" aria-labelledby="{{ widgetId }}_heading_{{ id }}">
