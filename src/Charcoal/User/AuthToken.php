@@ -316,6 +316,10 @@ class AuthToken extends AbstractModel
      */
     public function getUsernameFromToken($ident, $token)
     {
+        if (!$this->source()->tableExists()) {
+            return '';
+        }
+
         $this->load($ident);
         if (!$this->ident()) {
             $this->logger->warning(sprintf(
