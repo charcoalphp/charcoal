@@ -265,11 +265,11 @@ class TranslationParserScript extends AdminScript
 
             case 'mustache' :
                 $tag = $this->mustacheTag();
-                $regex = '/{{\s*#\s*'.$tag.'\s*}}(?<text>(.|\n|\r|\n\r)*?){{\s*\/\s*'.$tag.'\s*}}/i';
+                $regex = '/({{|\[\[)\s*#\s*'.$tag.'\s*(}}|\]\])(?<text>(.|\n|\r|\n\r)*?)({{|\[\[)\s*\/\s*'.$tag.'\s*(}}|\]\])/i';
             break;
 
             default:
-                $regex = '/{{\s*#\s*_t\s*}}(?<text>(.|\n|\r|\n\r)*?){{\s*\/\s*_t\s*}}/i';
+                $regex = '/({{|\[\[)\s*#\s*_t\s*(}}|\]\])(?<text>(.|\n|\r|\n\r)*?)({{|\[\[)\s*\/\s*_t\s*(}}|\]\])/i';
             break;
         }
 
