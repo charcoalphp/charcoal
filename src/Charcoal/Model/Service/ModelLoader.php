@@ -6,14 +6,11 @@ use \ArrayAccess;
 use \Exception;
 use \InvalidArgumentException;
 
-// Dependencies from PSR-6 (Cache)
-use \Psr\Cache\CacheItemPoolInterface;
-
 // Module `charcoal-factory` dependencies
 use \Charcoal\Factory\FactoryInterface;
 
 /**
- * Load a single model from its source, of from cache.
+ * Load a single model from its source.
  *
  * Use the magic methods to load automatically from __call and __get; this allows
  * for easy integration in templating engines like Mustache.
@@ -38,18 +35,12 @@ final class ModelLoader implements ArrayAccess
     private $factory;
 
     /**
-     * @var CacheItemPoolInterface $cachePool
-     */
-    private $cachePool;
-
-    /**
      * Construct a Model Loader with the dependencies
      *
      * # Required dependencies
      *
      * - `obj_type`
      * - `factory`
-     * - `cache`
      *
      * # Optional dependencies
      * - `obj_key`
@@ -60,7 +51,6 @@ final class ModelLoader implements ArrayAccess
     {
         $this->setObjType($data['obj_type']);
         $this->setFactory($data['factory']);
-        $this->setCachePool($data['cache']);
 
         if (isset($data['obj_key'])) {
             $this->setObjKey($data['obj_key']);
@@ -156,24 +146,11 @@ final class ModelLoader implements ArrayAccess
 
     /**
      * @param string  $ident    The object ident to load.
-     * @param boolean $useCache Optional (default to true). Set to false to force a reload (skip cache).
      * @return \Charcoal\Model\ModelInterface
      */
-    public function load($ident, $useCache = true)
+    public function load($ident)
     {
-        if (!$useCache) {
-            // Do not use cache;
-            return $this->loadFromSource($ident);
-        }
-        $cacheKey = 'objects/'.str_replace('/', '.', $this->objType.'.'.$ident);
-        $cacheItem = $this->cachePool->getItem($cacheKey);
-
-        $obj = $cacheItem->get();
-        if (!$cacheItem->isHit()) {
-            $obj = $this->loadFromSource($ident);
-            $this->cachePool->save($cacheItem->set($obj));
-        }
-        return $obj;
+        return $this->loadFromSource($ident);
     }
 
     /**
@@ -232,16 +209,6 @@ final class ModelLoader implements ArrayAccess
     private function setFactory(FactoryInterface $factory)
     {
         $this->factory = $factory;
-        return $this;
-    }
-
-    /**
-     * @param CacheItemPoolInterface $cachePool The PSR-6 compliant cache pool.
-     * @return ModelLoader Chainable
-     */
-    private function setCachePool(CacheItemPoolInterface $cachePool)
-    {
-        $this->cachePool = $cachePool;
         return $this;
     }
 }

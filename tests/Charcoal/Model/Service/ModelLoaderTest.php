@@ -37,8 +37,7 @@ class ModelLoaderTest extends \PHPUnit_Framework_TestCase
         $this->obj = new ModelLoader([
             'obj_type' => 'charcoal/model/model',
             'factory'  => $factory,
-            'logger'   => $container['logger'],
-            'cache'    => $container['cache']
+            'logger'   => $container['logger']
         ]);
     }
 
