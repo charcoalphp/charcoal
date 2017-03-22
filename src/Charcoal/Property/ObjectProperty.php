@@ -372,6 +372,38 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
+     * @param   mixed $val     Optional. The value to to convert for input.
+     * @param   array $options Optional input options.
+     * @return  string
+     */
+    public function inputVal($val, array $options = [])
+    {
+        unset($options);
+
+        if ($val === null) {
+            return '';
+        }
+
+        if (is_string($val)) {
+            return $val;
+        }
+
+        $val = $this->parseVal($val);
+
+        if ($this->multiple()) {
+            if (is_array($val)) {
+                $val = implode($this->multipleSeparator(), $val);
+            }
+        }
+
+        if (!is_scalar($val)) {
+            return json_encode($val);
+        }
+
+        return $val;
+    }
+
+    /**
      * @param  mixed $val     The value to to convert for display.
      * @param  array $options Optional display options.
      * @return string
