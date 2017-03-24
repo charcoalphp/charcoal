@@ -3,6 +3,7 @@
 namespace Charcoal\Admin\Widget;
 
 use ArrayIterator;
+use Charcoal\Config\ConfigInterface;
 use RuntimeException;
 use InvalidArgumentException;
 
@@ -99,6 +100,17 @@ class AttachmentWidget extends AdminWidget implements
     protected $attachableObjects;
 
     /**
+     * The cms configuration container.
+     *
+     * It can be a static config set from the DIC (e.g.:
+     * {@see \Charcoal\App\StaticConfig `$container['config']`}) or a
+     * {@see SupportTrait::dynamicConfig() dynamic configset} from the database.
+     *
+     * @var array|\ArrayAccess|ConfigInterface;
+     */
+    protected $cmsConfig = [];
+
+    /**
      * Inject dependencies from a DI Container.
      *
      * @param Container $container A dependencies container instance.
@@ -109,6 +121,7 @@ class AttachmentWidget extends AdminWidget implements
         parent::setDependencies($container);
 
         $this->setWidgetFactory($container['widget/factory']);
+        $this->setCmsConfig($container['cms/config']);
     }
 
     /**
@@ -452,11 +465,18 @@ class AttachmentWidget extends AdminWidget implements
      * can add filters, label and orders.
      *
      * @param  array|AttachableInterface[] $attachableObjects A list of available attachment types.
-     * @return self
+     * @return self|boolean
      */
     public function setAttachableObjects($attachableObjects)
     {
-        if (!$attachableObjects) {
+        if (is_string($attachableObjects)) {
+            $attachableFromCms = $this->cmsConfig()->get('attachable_objects');
+            if ($attachableFromCms && isset($attachableFromCms[$attachableObjects])) {
+                $attachableObjects = $attachableFromCms[$attachableObjects];
+            }
+        }
+
+        if (!$attachableObjects || is_string($attachableObjects)) {
             return false;
         }
 
@@ -521,7 +541,18 @@ class AttachmentWidget extends AdminWidget implements
         return $this;
     }
 
+    /**
+     * The cms configuration container.
+     *
+     * @param array|\ArrayAccess|ConfigInterface $cmsConfig The cms config.
+     * @return self
+     */
+    public function setCmsConfig($cmsConfig)
+    {
+        $this->cmsConfig = $cmsConfig;
 
+        return $this;
+    }
 
     // Getters
     // =============================================================================
@@ -618,16 +649,6 @@ class AttachmentWidget extends AdminWidget implements
      */
     public function attachableObjects()
     {
-        if ($this->attachableObjects === null) {
-            $metadata = $this->obj()->metadata();
-
-            if (isset($metadata['attachments']['attachable_objects'])) {
-                $this->setAttachableObjects($metadata['attachments']['attachable_objects']);
-            } else {
-                $this->attachableObjects = [];
-            }
-        }
-
         return $this->attachableObjects;
     }
 
@@ -653,6 +674,13 @@ class AttachmentWidget extends AdminWidget implements
         return json_encode($options, true);
     }
 
+    /**
+     * @return array|\ArrayAccess|ConfigInterface
+     */
+    public function cmsConfig()
+    {
+        return $this->cmsConfig;
+    }
 
     // Utilities
     // =============================================================================
