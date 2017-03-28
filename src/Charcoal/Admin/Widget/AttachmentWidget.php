@@ -100,15 +100,15 @@ class AttachmentWidget extends AdminWidget implements
     protected $attachableObjects;
 
     /**
-     * The cms configuration container.
+     * The application's configuration container.
      *
      * It can be a static config set from the DIC (e.g.:
      * {@see \Charcoal\App\StaticConfig `$container['config']`}) or a
      * {@see SupportTrait::dynamicConfig() dynamic configset} from the database.
      *
-     * @var array|\ArrayAccess|ConfigInterface;
+     * @var array|\ArrayAccess
      */
-    protected $cmsConfig = [];
+    protected $appConfig = [];
 
     /**
      * Inject dependencies from a DI Container.
@@ -121,7 +121,7 @@ class AttachmentWidget extends AdminWidget implements
         parent::setDependencies($container);
 
         $this->setWidgetFactory($container['widget/factory']);
-        $this->setCmsConfig($container['cms/config']);
+        $this->setAppConfig($container['config']);
     }
 
     /**
@@ -175,7 +175,7 @@ class AttachmentWidget extends AdminWidget implements
     /**
      * Attachment by groups.
      *
-     * @return Collection
+     * @return \Generator
      */
     public function attachments()
     {
@@ -209,7 +209,7 @@ class AttachmentWidget extends AdminWidget implements
 
         if ($search === null) {
             $attr = [ 'href', 'link', 'url', 'src' ];
-            $uri  = [ '../', './', '/', 'data', 'fax', 'file', 'ftp', 'geo',
+            $uri = [ '../', './', '/', 'data', 'fax', 'file', 'ftp', 'geo',
                 'http', 'mailto', 'sip', 'tag', 'tel', 'urn' ];
 
             $search = sprintf(
@@ -470,9 +470,9 @@ class AttachmentWidget extends AdminWidget implements
     public function setAttachableObjects($attachableObjects)
     {
         if (is_string($attachableObjects)) {
-            $attachableFromCms = $this->cmsConfig()->get('attachable_objects');
-            if ($attachableFromCms && isset($attachableFromCms[$attachableObjects])) {
-                $attachableObjects = $attachableFromCms[$attachableObjects];
+            $attachableFromConfig = $this->appConfig()->get('attachable_objects');
+            if ($attachableFromConfig && isset($attachableFromConfig[$attachableObjects])) {
+                $attachableObjects = $attachableFromConfig[$attachableObjects];
             }
         }
 
@@ -482,13 +482,13 @@ class AttachmentWidget extends AdminWidget implements
 
         $out = [];
         foreach ($attachableObjects as $attType => $attMeta) {
-            $label      = '';
-            $filters    = [];
-            $orders     = [];
+            $label = '';
+            $filters = [];
+            $orders = [];
             $numPerPage = 0;
-            $page       = 1;
-            $attOption  = [ 'label', 'filters', 'orders', 'num_per_page', 'page' ];
-            $attData    = array_diff_key($attMeta, $attOption);
+            $page = 1;
+            $attOption = [ 'label', 'filters', 'orders', 'num_per_page', 'page' ];
+            $attData = array_diff_key($attMeta, $attOption);
 
             // Disable an attachable model
             if (isset($attMeta['active']) && !$attMeta['active']) {
@@ -503,7 +503,7 @@ class AttachmentWidget extends AdminWidget implements
             }
 
             // Useful for attaching a pre-existing attachment
-            $attId = (isset($attMeta['attachment_id']) ? $attMeta['attachment_id'] : null );
+            $attId = (isset($attMeta['attachment_id']) ? $attMeta['attachment_id'] : null);
 
             if (isset($attMeta['label'])) {
                 $label = $this->translator()->translation($attMeta['label']);
@@ -542,14 +542,14 @@ class AttachmentWidget extends AdminWidget implements
     }
 
     /**
-     * The cms configuration container.
+     * The app configuration container.
      *
-     * @param array|\ArrayAccess|ConfigInterface $cmsConfig The cms config.
+     * @param array|\ArrayAccess|ConfigInterface $appConfig The app config.
      * @return self
      */
-    public function setCmsConfig($cmsConfig)
+    public function setAppConfig($appConfig)
     {
-        $this->cmsConfig = $cmsConfig;
+        $this->appConfig = $appConfig;
 
         return $this;
     }
@@ -677,9 +677,9 @@ class AttachmentWidget extends AdminWidget implements
     /**
      * @return array|\ArrayAccess|ConfigInterface
      */
-    public function cmsConfig()
+    public function appConfig()
     {
-        return $this->cmsConfig;
+        return $this->appConfig;
     }
 
     // Utilities
