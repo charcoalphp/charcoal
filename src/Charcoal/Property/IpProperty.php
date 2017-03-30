@@ -2,14 +2,11 @@
 
 namespace Charcoal\Property;
 
-// Dependencies from `PHP`
-use \InvalidArgumentException;
+use PDO;
+use InvalidArgumentException;
 
-// Dependencies from `PHP` extensions
-use \PDO;
-
-// Intra-module (`charcoal-property`) dependencies
-use \Charcoal\Property\AbstractProperty;
+// From 'charcoal-property'
+use Charcoal\Property\AbstractProperty;
 
 /**
  * IP Property (IPv4).

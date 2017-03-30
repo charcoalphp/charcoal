@@ -2,11 +2,10 @@
 
 namespace Charcoal\Property;
 
-// Dependencies from `PHP`
-use \PDO;
+use PDO;
 
-// Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Property\AbstractProperty;
+// From 'charcoal-property'
+use Charcoal\Property\AbstractProperty;
 
 /**
  * The most basic (generic) property possible, from abstract.

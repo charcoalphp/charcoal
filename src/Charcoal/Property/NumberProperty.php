@@ -2,11 +2,10 @@
 
 namespace Charcoal\Property;
 
-// Dependencies from `PHP` extensions
-use \PDO;
+use PDO;
 
-// Module `charcoal-core` dependencies
-use \Charcoal\Property\AbstractProperty;
+// From 'charcoal-property'
+use Charcoal\Property\AbstractProperty;
 
 /**
  * Number Property

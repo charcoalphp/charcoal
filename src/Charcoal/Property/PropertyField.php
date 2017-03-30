@@ -2,10 +2,10 @@
 
 namespace Charcoal\Property;
 
+use PDO;
 use InvalidArgumentException;
 
-use PDO;
-
+// From 'charcoal-translator'
 use Charcoal\Translator\TranslatorAwareTrait;
 
 /**

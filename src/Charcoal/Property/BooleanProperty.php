@@ -2,10 +2,11 @@
 
 namespace Charcoal\Property;
 
-use \InvalidArgumentException;
-use \PDO;
+use PDO;
+use InvalidArgumentException;
 
-use \Charcoal\Property\AbstractProperty;
+// From 'charcoal-property'
+use Charcoal\Property\AbstractProperty;
 
 /**
  * Boolean Property

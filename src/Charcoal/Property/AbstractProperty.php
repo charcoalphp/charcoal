@@ -2,41 +2,40 @@
 
 namespace Charcoal\Property;
 
-use \Exception;
-use \LogicException;
-use \RuntimeException;
-use \InvalidArgumentException;
+use PDO;
+use Exception;
+use LogicException;
+use RuntimeException;
+use InvalidArgumentException;
 
-use \PDO;
+// From PSR-3
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
+use Psr\Log\NullLogger;
 
-// Dependencies from PSR-3 (Logger)
-use \Psr\Log\LoggerAwareInterface;
-use \Psr\Log\LoggerAwareTrait;
-use \Psr\Log\NullLogger;
+// From Pimple
+use Pimple\Container;
 
-// Dependencies from 'pimple`'
-use \Pimple\Container;
+// From 'charcoal-config'
+use Charcoal\Config\AbstractEntity;
 
-// Dependencies from 'charcoal-config'
-use \Charcoal\Config\AbstractEntity;
+// From 'charcoal-core'
+use Charcoal\Model\DescribableInterface;
+use Charcoal\Model\DescribableTrait;
+use Charcoal\Validator\ValidatableInterface;
+use Charcoal\Validator\ValidatableTrait;
 
-// Dependencies from 'charcoal-core'
-use \Charcoal\Model\DescribableInterface;
-use \Charcoal\Model\DescribableTrait;
-use \Charcoal\Validator\ValidatableInterface;
-use \Charcoal\Validator\ValidatableTrait;
+// From 'charcoal-translator'
+use Charcoal\Translator\Translation;
+use Charcoal\Translator\TranslatorAwareTrait;
 
-// Dependency from 'charcoal-translator'
-use \Charcoal\Translator\Translation;
-use \Charcoal\Translator\TranslatorAwareTrait;
-
-// Local namespace dependencies
-use \Charcoal\Property\DescribablePropertyInterface;
-use \Charcoal\Property\DescribablePropertyTrait;
-use \Charcoal\Property\PropertyInterface;
-use \Charcoal\Property\PropertyValidator;
-use \Charcoal\Property\StorablePropertyInterface;
-use \Charcoal\Property\StorablePropertyTrait;
+// From 'charcoal-property'
+use Charcoal\Property\DescribablePropertyInterface;
+use Charcoal\Property\DescribablePropertyTrait;
+use Charcoal\Property\PropertyInterface;
+use Charcoal\Property\PropertyValidator;
+use Charcoal\Property\StorablePropertyInterface;
+use Charcoal\Property\StorablePropertyTrait;
 
 /**
  * An abstract class that implements the full `PropertyInterface`.

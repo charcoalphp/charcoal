@@ -2,19 +2,19 @@
 
 namespace Charcoal\Property;
 
-use \InvalidArgumentException;
-use \OutOfBoundsException;
-use \UnexpectedValueException;
+use InvalidArgumentException;
+use OutOfBoundsException;
+use UnexpectedValueException;
 
 // From 'charcoal-image'
-use \Charcoal\Image\ImageFactory;
-use \Charcoal\Image\ImageInterface;
+use Charcoal\Image\ImageFactory;
+use Charcoal\Image\ImageInterface;
 
 // From 'charccoal-translator'
-use \Charcoal\Translator\Translation;
+use Charcoal\Translator\Translation;
 
-// Local namespace dependencies
-use \Charcoal\Property\FileProperty;
+// From 'charcoal-property'
+use Charcoal\Property\FileProperty;
 
 /**
  * Image Property.

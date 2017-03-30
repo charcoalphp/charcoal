@@ -2,10 +2,10 @@
 
 namespace Charcoal\Property\Structure;
 
-use \InvalidArgumentException;
+use InvalidArgumentException;
 
 // From 'charcoal-core'
-use \Charcoal\Model\AbstractMetadata;
+use Charcoal\Model\AbstractMetadata;
 
 /**
  *

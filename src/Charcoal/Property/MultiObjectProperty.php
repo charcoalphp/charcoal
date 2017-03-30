@@ -2,7 +2,7 @@
 
 namespace Charcoal\Property;
 
-use \InvalidArgumentException;
+use InvalidArgumentException;
 
 /**
  * Multi-Object Property holds references to external objects from different models.

@@ -2,8 +2,8 @@
 
 namespace Charcoal\Property;
 
-// Moule `charcoal-factory` dependencies
-use \Charcoal\Factory\ResolverFactory;
+// From 'charcoal-factory'
+use Charcoal\Factory\ResolverFactory;
 
 /**
  *

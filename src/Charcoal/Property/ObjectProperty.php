@@ -2,31 +2,31 @@
 
 namespace Charcoal\Property;
 
-use \RuntimeException;
-use \InvalidArgumentException;
+use RuntimeException;
+use InvalidArgumentException;
 
 // From PSR-6
-use \Psr\Cache\CacheItemPoolInterface;
+use Psr\Cache\CacheItemPoolInterface;
 
 // From Pimple
-use \Pimple\Container;
+use Pimple\Container;
 
 // From 'charcoal-core'
-use \Charcoal\Loader\CollectionLoader;
-use \Charcoal\Model\ModelInterface;
-use \Charcoal\Model\Service\ModelLoader;
-use \Charcoal\Source\StorableInterface;
+use Charcoal\Loader\CollectionLoader;
+use Charcoal\Model\ModelInterface;
+use Charcoal\Model\Service\ModelLoader;
+use Charcoal\Source\StorableInterface;
 
 // From 'charcoal-factory'
-use \Charcoal\Factory\FactoryInterface;
+use Charcoal\Factory\FactoryInterface;
 
 // From 'charcoal-view'
-use \Charcoal\View\ViewInterface;
-use \Charcoal\View\ViewableInterface;
+use Charcoal\View\ViewInterface;
+use Charcoal\View\ViewableInterface;
 
 // From 'charcoal-property'
-use \Charcoal\Property\AbstractProperty;
-use \Charcoal\Property\SelectablePropertyInterface;
+use Charcoal\Property\AbstractProperty;
+use Charcoal\Property\SelectablePropertyInterface;
 
 /**
  * Object Property holds a reference to an external object.
@@ -157,7 +157,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     /**
      * Set a model collection loader.
      *
-     * @param CollectionLoader $loader The collection loader.
+     * @param  CollectionLoader $loader The collection loader.
      * @return self
      */
     private function setCollectionLoader(CollectionLoader $loader)
@@ -175,7 +175,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      */
     protected function collectionLoader()
     {
-        if (!isset($this->collectionLoader)) {
+        if ($this->collectionLoader === null) {
             throw new RuntimeException(
                 sprintf('Collection Loader is not defined for "%s"', get_class($this))
             );

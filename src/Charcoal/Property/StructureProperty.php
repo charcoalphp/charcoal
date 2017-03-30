@@ -2,27 +2,27 @@
 
 namespace Charcoal\Property;
 
-use \PDO;
-use \ArrayAccess;
-use \RuntimeException;
-use \InvalidArgumentException;
+use PDO;
+use ArrayAccess;
+use RuntimeException;
+use InvalidArgumentException;
 
 // From Pimple
-use \Pimple\Container;
+use Pimple\Container;
 
 // From 'charcoal-core'
-use \Charcoal\Model\Model;
-use \Charcoal\Model\MetadataInterface;
+use Charcoal\Model\Model;
+use Charcoal\Model\MetadataInterface;
 
 // From 'charcoal-factory'
-use \Charcoal\Factory\FactoryInterface;
+use Charcoal\Factory\FactoryInterface;
 
 // From 'charcoal-translator'
-use \Charcoal\Translator\Translation;
+use Charcoal\Translator\Translation;
 
 // From 'charcoal-property'
-use \Charcoal\Property\AbstractProperty;
-use \Charcoal\Property\Structure\StructureMetadata;
+use Charcoal\Property\AbstractProperty;
+use Charcoal\Property\Structure\StructureMetadata;
 
 /**
  * Structure Data Property

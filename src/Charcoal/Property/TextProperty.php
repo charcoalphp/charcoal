@@ -2,8 +2,8 @@
 
 namespace Charcoal\Property;
 
-// Local namespace dependencies
-use \Charcoal\Property\StringProperty;
+// From 'charcoal-property'
+use Charcoal\Property\StringProperty;
 
 /**
  * Text Property. Longer strings.

@@ -2,7 +2,8 @@
 
 namespace Charcoal\Property;
 
-use \Charcoal\Model\DescribableInterface;
+// From 'charcoal-core'
+use Charcoal\Model\DescribableInterface;
 
 /**
  * Defines a model having attributes that allow the formatting of its data.

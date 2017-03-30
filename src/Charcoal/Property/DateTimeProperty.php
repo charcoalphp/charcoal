@@ -2,17 +2,14 @@
 
 namespace Charcoal\Property;
 
-// Dependencies from `PHP`
-use \DateTime;
-use \DateTimeInterface;
-use \Exception;
-use \InvalidArgumentException;
+use PDO;
+use DateTime;
+use DateTimeInterface;
+use Exception;
+use InvalidArgumentException;
 
-// Dependencies from `PHP` extensions
-use \PDO;
-
-// Module `charcoal-core` dependencies
-use \Charcoal\Property\AbstractProperty;
+// From 'charcoal-property'
+use Charcoal\Property\AbstractProperty;
 
 /**
  * Date/Time Property

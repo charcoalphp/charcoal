@@ -2,14 +2,14 @@
 
 namespace Charcoal\Property;
 
-use \InvalidArgumentException;
-use \RuntimeException;
+use InvalidArgumentException;
+use RuntimeException;
 
 // From 'charcoal-factory'
-use \Charcoal\Factory\FactoryInterface;
+use Charcoal\Factory\FactoryInterface;
 
 // From 'charcoal-property'
-use \Charcoal\Property\PropertyInterface;
+use Charcoal\Property\PropertyInterface;
 
 /**
  * Provides an implementation of {@see DescribablePropertyInterface}, as a trait, for models.

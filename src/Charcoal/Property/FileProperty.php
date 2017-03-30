@@ -2,18 +2,16 @@
 
 namespace Charcoal\Property;
 
-use \Exception;
-use \InvalidArgumentException;
+use finfo;
+use PDO;
+use Exception;
+use InvalidArgumentException;
 
-// Dependencies from PHP extensions
-use \finfo;
-use \PDO;
+// From Pimple
+use Pimple\Container;
 
-// Dependency from Pimple
-use \Pimple\Container;
-
-// Intra-Module `charcoal-property` dependency
-use \Charcoal\Property\AbstractProperty;
+// From 'charcoal-property'
+use Charcoal\Property\AbstractProperty;
 
 /**
  * File Property

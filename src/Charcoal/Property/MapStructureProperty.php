@@ -2,10 +2,10 @@
 
 namespace Charcoal\Property;
 
-use \PDO;
+use PDO;
 
 // From 'charcoal-property'
-use \Charcoal\Property\StructureProperty;
+use Charcoal\Property\StructureProperty;
 
 /**
  * Map Structure Property

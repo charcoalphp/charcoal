@@ -2,10 +2,12 @@
 
 namespace Charcoal\Property;
 
-use \PDO;
+use PDO;
 
-use \Charcoal\Property\SelectablePropertyInterface;
-use \Charcoal\Property\SelectablePropertyTrait;
+// From 'charcoal-property'
+use Charcoal\Property\AbstractProperty;
+use Charcoal\Property\SelectablePropertyInterface;
+use Charcoal\Property\SelectablePropertyTrait;
 
 /**
  * Language property

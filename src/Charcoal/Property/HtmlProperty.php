@@ -2,7 +2,7 @@
 
 namespace Charcoal\Property;
 
-// Local namespace dependencies
+// From 'charcoal-property'
 use Charcoal\Property\StringProperty;
 
 /**

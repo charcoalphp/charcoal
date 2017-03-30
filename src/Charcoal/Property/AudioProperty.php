@@ -2,11 +2,10 @@
 
 namespace Charcoal\Property;
 
-// Dependencies from `PHP`
-use \InvalidArgumentException;
+use InvalidArgumentException;
 
-// Local namespace dependencies
-use \Charcoal\Property\FileProperty;
+// From 'charcoal-property'
+use Charcoal\Property\FileProperty;
 
 /**
  * Audio Property.

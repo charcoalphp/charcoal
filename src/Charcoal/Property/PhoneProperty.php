@@ -2,6 +2,7 @@
 
 namespace Charcoal\Property;
 
+// From 'charcoal-property'
 use Charcoal\Property\StringProperty;
 
 /**

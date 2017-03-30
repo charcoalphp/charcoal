@@ -2,7 +2,7 @@
 
 namespace Charcoal\Property;
 
-use \InvalidArgumentException;
+use InvalidArgumentException;
 
 /**
 * Fully implements, as a Trait, the SelectablePropertyInterface.

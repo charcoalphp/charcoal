@@ -2,15 +2,15 @@
 
 namespace Charcoal\Property;
 
-use \Exception;
-use \InvalidArgumentException;
-use \PDO;
+use PDO;
 
-use \Charcoal\Core\StringFormat;
+use Exception;
+use InvalidArgumentException;
 
-use \Charcoal\Property\AbstractProperty;
-use \Charcoal\Property\SelectablePropertyInterface;
-use \Charcoal\Property\SelectablePropertyTrait;
+// From 'charcoal-property'
+use Charcoal\Property\AbstractProperty;
+use Charcoal\Property\SelectablePropertyInterface;
+use Charcoal\Property\SelectablePropertyTrait;
 
 /**
  * String Property

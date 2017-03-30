@@ -2,7 +2,8 @@
 
 namespace Charcoal\Property;
 
-use \Charcoal\Property\StringProperty;
+// From 'charcoal-property'
+use Charcoal\Property\StringProperty;
 
 /**
  * URL Property
