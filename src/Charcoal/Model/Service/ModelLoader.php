@@ -145,7 +145,7 @@ final class ModelLoader implements ArrayAccess
     }
 
     /**
-     * @param string  $ident    The object ident to load.
+     * @param string $ident The object ident to load.
      * @return \Charcoal\Model\ModelInterface
      */
     public function load($ident)

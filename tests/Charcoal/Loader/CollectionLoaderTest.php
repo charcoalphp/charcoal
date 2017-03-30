@@ -2,18 +2,21 @@
 
 namespace Charcoal\Tests\Loader;
 
-use \ArrayIterator;
+use ArrayIterator;
 
-use \Pimple\Container;
+// From Pimple
+use Pimple\Container;
 
-use \Charcoal\Config\GenericConfig;
+// From 'charcoal-config'
+use Charcoal\Config\GenericConfig;
 
-use \Charcoal\Factory\GenericFactory as Factory;
+// From 'charcoal-factory'
+use Charcoal\Factory\GenericFactory as Factory;
 
-use \Charcoal\Loader\CollectionLoader;
-use \Charcoal\Source\DatabaseSource;
-
-use \Charcoal\Model\Service\MetadataLoader;
+// From 'charcoal-core'
+use Charcoal\Loader\CollectionLoader;
+use Charcoal\Model\Service\MetadataLoader;
+use Charcoal\Source\DatabaseSource;
 
 class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
 {
@@ -127,15 +130,16 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
     public function testAll()
     {
         $loader = $this->obj;
-        $loader
-            ->setModel($this->model)
-            ->setCollectionClass(ArrayIterator::class)
-            ->setProperties(['id', 'test'])
-            ->addFilter('test', 10, [ 'operator' => '<' ])
-            ->addFilter('allo', 1, [ 'operator' => '>=' ])
-            ->addOrder('test', 'asc')
-            ->setPage(1)
-            ->setNumPerPage(10);
+        $loader->setModel($this->model)
+               ->setCollectionClass(ArrayIterator::class)
+               ->setProperties(['id', 'test'])
+               ->addFilter('test', 10, [ 'operator' => '<' ])
+               ->addFilter('allo', 1, [ 'operator' => '>=' ])
+               ->addOrder('test', 'asc')
+               ->setPage(1)
+               ->setNumPerPage(10);
+
+        $this->assertTrue($loader->hasModel());
 
         $collection = $loader->load();
 

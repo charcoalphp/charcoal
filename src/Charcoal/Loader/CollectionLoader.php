@@ -125,7 +125,7 @@ class CollectionLoader implements LoggerAwareInterface
      */
     protected function factory()
     {
-        if (!isset($this->factory)) {
+        if ($this->factory === null) {
             throw new RuntimeException(
                 sprintf('Model Factory is not defined for "%s"', get_class($this))
             );
@@ -165,7 +165,7 @@ class CollectionLoader implements LoggerAwareInterface
      */
     public function source()
     {
-        if (!isset($this->source)) {
+        if ($this->source === null) {
             throw new RuntimeException('No source set.');
         }
 
@@ -212,11 +212,21 @@ class CollectionLoader implements LoggerAwareInterface
      */
     public function model()
     {
-        if (!isset($this->model)) {
+        if ($this->model === null) {
             throw new RuntimeException('The collection loader must have a model.');
         }
 
         return $this->model;
+    }
+
+    /**
+     * Determine if the loader has an object model.
+     *
+     * @return boolean
+     */
+    public function hasModel()
+    {
+        return !!$this->model;
     }
 
     /**
