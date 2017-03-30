@@ -2,30 +2,23 @@
 
 namespace Charcoal\Loader;
 
-use \InvalidArgumentException;
-use \RuntimeException;
-use \Traversable;
-use \ArrayAccess;
-use \PDO;
+use InvalidArgumentException;
+use RuntimeException;
+use ArrayAccess;
+use PDO;
 
-// Dependencies from PSR-3 (Logger)
-use \Psr\Log\LoggerAwareInterface;
-use \Psr\Log\LoggerAwareTrait;
-use \Psr\Log\NullLogger;
+// From PSR-3
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
+use Psr\Log\NullLogger;
 
-// Dependency from 'charcoal-factory'
-use \Charcoal\Factory\FactoryInterface;
+// From 'charcoal-factory'
+use Charcoal\Factory\FactoryInterface;
 
-// Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Model\ModelInterface;
-use \Charcoal\Model\ModelFactory;
-use \Charcoal\Model\Collection;
-use \Charcoal\Source\SourceInterface;
-
-// Local Dependencies
-use \Charcoal\Source\Database\DatabaseFilter;
-use \Charcoal\Source\Database\DatabaseOrder;
-use \Charcoal\Source\Database\DatabasePagination;
+// From 'charcoal-core'
+use Charcoal\Model\ModelInterface;
+use Charcoal\Model\Collection;
+use Charcoal\Source\SourceInterface;
 
 /**
  * Object Collection Loader
@@ -137,12 +130,10 @@ class CollectionLoader implements LoggerAwareInterface
     /**
      * Set the loader data.
      *
-     * From an associative array map (or any other {@see Traversable}).
-     *
-     * @param  array|Traversable $data Data to assign to the loader.
+     * @param  array $data Data to assign to the loader.
      * @return CollectionLoader Chainable
      */
-    public function setData($data)
+    public function setData(array $data)
     {
         foreach ($data as $key => $val) {
             $setter = $this->setter($key);
@@ -530,7 +521,7 @@ class CollectionLoader implements LoggerAwareInterface
      * @param  callable    $callback Optional. Apply a callback to every entity of the collection.
      *    Leave blank to use {@see CollectionLoader::callback()}.
      * @throws Exception If the database connection fails.
-     * @return ArrayAccess|Traversable
+     * @return array|ArrayAccess
      */
     public function load($ident = null, callable $callback = null)
     {
@@ -588,7 +579,7 @@ class CollectionLoader implements LoggerAwareInterface
      *    Leave blank to use {@see CollectionLoader::callback()}.
      * @throws RuntimeException If the database connection fails.
      * @throws InvalidArgumentException If the SQL string/set is invalid.
-     * @return ArrayAccess|Traversable
+     * @return array|ArrayAccess
      */
     public function loadFromQuery($query, callable $callback = null)
     {
@@ -651,24 +642,33 @@ class CollectionLoader implements LoggerAwareInterface
     }
 
     /**
-     * Create a collection.
+     * Create a collection class or array.
      *
-     * @throws RuntimeException If the collection is invalid.
-     * @return ArrayAccess|Traversable
+     * @throws RuntimeException If the collection class is invalid.
+     * @return array|ArrayAccess
      */
     public function createCollection()
     {
         $collectClass = $this->collectionClass();
-        $collection   = new $collectClass;
-
-        if (!$collection instanceof ArrayAccess) {
-            throw new RuntimeException(
-                sprintf(
-                    'Collection [%s] must implement ArrayAccess.',
-                    $collectClass
-                )
-            );
+        if ($collectClass === 'array') {
+            return [];
         }
+
+        if (!class_exists($collectClass)) {
+            throw new RuntimeException(sprintf(
+                'Collection class [%s] does not exist.',
+                $collectClass
+            ));
+        }
+
+        if (!is_subclass_of($collectClass, ArrayAccess::class)) {
+            throw new RuntimeException(sprintf(
+                'Collection class [%s] must implement ArrayAccess.',
+                $collectClass
+            ));
+        }
+
+        $collection = new $collectClass;
 
         return $collection;
     }

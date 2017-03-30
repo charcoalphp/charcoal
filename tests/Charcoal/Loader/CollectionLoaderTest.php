@@ -125,6 +125,10 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
         $loader->setCollectionClass(ArrayIterator::class);
         $collection = $loader->createCollection();
         $this->assertInstanceOf('\ArrayIterator', $collection);
+
+        $loader->setCollectionClass('array');
+        $collection = $loader->createCollection();
+        $this->assertInternalType('array', $collection);
     }
 
     public function testAll()
