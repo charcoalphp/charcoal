@@ -322,6 +322,8 @@ class AttachmentWidget extends AdminWidget implements
          */
         $data = array_merge($_GET, $data);
 
+        parent::setData($data);
+
         /** Merge any available presets */
         $data = $this->mergePresets($data);
 
@@ -391,12 +393,20 @@ class AttachmentWidget extends AdminWidget implements
      *
      * Prevents the relationship from deleting all non related attachments.
      *
-     * @param  string $id The group identifier.
+     * @param  string $group The group identifier.
+     * @throws InvalidArgumentException If the group key is invalid.
      * @return self
      */
-    public function setGroup($id)
+    public function setGroup($group)
     {
-        $this->group = $id;
+        if (!is_string($group) && !is_null($group)) {
+            throw new InvalidArgumentException(sprintf(
+                'Attachment group must be string, received %s',
+                is_object($group) ? get_class($group) : gettype($group)
+            ));
+        }
+
+        $this->group = $group;
 
         return $this;
     }
@@ -719,7 +729,7 @@ class AttachmentWidget extends AdminWidget implements
             $data['attachable_objects'] = $this->mergePresetAttachableObjects($data['attachable_objects']);
         }
 
-        if (isset($widgetData['ident'])) {
+        if (isset($data['preset'])) {
             $data = $this->mergePresetWidget($data);
         }
 
@@ -734,11 +744,15 @@ class AttachmentWidget extends AdminWidget implements
      */
     private function mergePresetWidget(array $data)
     {
-        if (!isset($data['ident']) || !is_string($data['ident'])) {
+        if (!isset($data['preset']) || !is_string($data['preset'])) {
             return $data;
         }
 
-        $widgetIdent   = $data['ident'];
+        $widgetIdent = $data['preset'];
+        if ($this->hasObj()) {
+            $widgetIdent = $this->obj()->render($widgetIdent);
+        }
+
         $presetWidgets = $this->config('widgets');
         if (!isset($presetWidgets[$widgetIdent])) {
             return $data;
@@ -749,20 +763,24 @@ class AttachmentWidget extends AdminWidget implements
             $widgetData['attachable_objects'] = $this->mergePresetAttachableObjects($widgetData['attachable_objects']);
         }
 
-        return array_merge_recursive($widgetData, $data);
+        return array_replace_recursive($widgetData, $data);
     }
 
     /**
      * Parse the given data and merge the preset attachment types.
      *
-     * @param  array $data The attachable objects data.
+     * @param  string|array $data The attachable objects data.
      * @throws InvalidArgumentException If the attachment type or structure is invalid.
      * @return array Returns the merged attachable objects data.
      */
-    private function mergePresetAttachableObjects(array $data)
+    private function mergePresetAttachableObjects($data)
     {
         if (is_string($data)) {
-            $groupIdent   = $data['attachable_objects'];
+            $groupIdent = $data;
+            if ($this->hasObj()) {
+                $groupIdent = $this->obj()->render($groupIdent);
+            }
+
             $presetGroups = $this->config('groups');
             if (isset($presetGroups[$groupIdent])) {
                 $data = $presetGroups[$groupIdent];
@@ -792,7 +810,7 @@ class AttachmentWidget extends AdminWidget implements
                 }
 
                 if (isset($presetTypes[$attType])) {
-                    $attStruct = array_merge_recursive(
+                    $attStruct = array_replace_recursive(
                         $presetTypes[$attType],
                         $attStruct
                     );

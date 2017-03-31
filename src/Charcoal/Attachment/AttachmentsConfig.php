@@ -12,7 +12,6 @@ use Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
 
 /**
  * Attachments Configset
- *
  */
 class AttachmentsConfig extends AbstractConfig
 {
