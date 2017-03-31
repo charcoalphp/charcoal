@@ -20,10 +20,11 @@
     "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
-            "dev-master": "0.2.x-dev"
+            "dev-master": "0.3.x-dev"
         }
     },
     "require": {
+        "locomotivemtl/charcoal-config": "^0.7.0",
         "locomotivemtl/charcoal-core": "~0.2",
         "locomotivemtl/charcoal-object": "~0.1",
         "locomotivemtl/charcoal-translator": "~0.1"

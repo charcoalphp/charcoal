@@ -3,7 +3,6 @@
 namespace Charcoal\Admin\Widget;
 
 use ArrayIterator;
-use Charcoal\Config\ConfigInterface;
 use RuntimeException;
 use InvalidArgumentException;
 
@@ -13,6 +12,10 @@ use Pimple\Container;
 // From 'bobthecow/mustache.php'
 use Mustache_LambdaHelper as LambdaHelper;
 
+// From 'charcoal-config'
+use Charcoal\Config\ConfigurableInterface;
+use Charcoal\Config\ConfigurableTrait;
+
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 
@@ -20,33 +23,29 @@ use Charcoal\Factory\FactoryInterface;
 use Charcoal\Loader\CollectionLoader;
 use Charcoal\Model\ModelFactory;
 
+// From 'charcoal-translator'
+use Charcoal\Translator\Translation;
+
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminWidget;
 use Charcoal\Admin\Ui\ObjectContainerInterface;
 use Charcoal\Admin\Ui\ObjectContainerTrait;
 
-// From 'charcoal-translator'
-use Charcoal\Translator\Translation;
-
 // From 'beneroch/charcoal-attachments'
+use Charcoal\Attachment\AttachmentsConfig;
 use Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
 
 /**
  *
  */
 class AttachmentWidget extends AdminWidget implements
+    ConfigurableInterface,
     ObjectContainerInterface
 {
+    use ConfigurableTrait;
     use ObjectContainerTrait {
         ObjectContainerTrait::createOrLoadObj as createOrCloneOrLoadObj;
     }
-
-    /**
-     * Store the factory instance for the current class.
-     *
-     * @var FactoryInterface
-     */
-    private $widgetFactory;
 
     /**
      * The widget's title.
@@ -100,15 +99,18 @@ class AttachmentWidget extends AdminWidget implements
     protected $attachableObjects;
 
     /**
-     * The application's configuration container.
+     * Track the state of data merging.
      *
-     * It can be a static config set from the DIC (e.g.:
-     * {@see \Charcoal\App\StaticConfig `$container['config']`}) or a
-     * {@see SupportTrait::dynamicConfig() dynamic configset} from the database.
-     *
-     * @var array|\ArrayAccess
+     * @var boolean
      */
-    protected $appConfig = [];
+    private $isMergingData = false;
+
+    /**
+     * Store the factory instance for the current class.
+     *
+     * @var FactoryInterface
+     */
+    private $widgetFactory;
 
     /**
      * Inject dependencies from a DI Container.
@@ -121,7 +123,24 @@ class AttachmentWidget extends AdminWidget implements
         parent::setDependencies($container);
 
         $this->setWidgetFactory($container['widget/factory']);
-        $this->setAppConfig($container['config']);
+
+        if (isset($container['attachments/config'])) {
+            $this->setConfig($container['attachments/config']);
+        } elseif (isset($container['config']['attachments'])) {
+            $this->setConfig($container['config']['attachments']);
+        }
+    }
+
+    /**
+     * Retrieve a new AttachmentsConfig instance for the wdget.
+     *
+     * @see    ConfigurableTrait::createConfig()
+     * @param  mixed $data Optional data to pass to the new configset.
+     * @return AttachmentsConfig
+     */
+    protected function createConfig($data = null)
+    {
+        return new AttachmentsConfig($data);
     }
 
     /**
@@ -296,13 +315,19 @@ class AttachmentWidget extends AdminWidget implements
      */
     public function setData(array $data)
     {
+        $this->isMergingData = true;
         /**
          * @todo Kinda hacky, but works with the concept of form.
          *     Should work embeded in a form group or in a dashboard.
          */
         $data = array_merge($_GET, $data);
 
+        /** Merge any available presets */
+        $data = $this->mergePresets($data);
+
         parent::setData($data);
+
+        $this->isMergingData = false;
 
         return $this;
     }
@@ -469,26 +494,23 @@ class AttachmentWidget extends AdminWidget implements
      */
     public function setAttachableObjects($attachableObjects)
     {
-        if (is_string($attachableObjects)) {
-            $attachableFromConfig = $this->appConfig()->get('attachable_objects');
-            if ($attachableFromConfig && isset($attachableFromConfig[$attachableObjects])) {
-                $attachableObjects = $attachableFromConfig[$attachableObjects];
-            }
+        if (!$this->isMergingData) {
+            $attachableObjects = $this->mergePresetAttachableObjects($attachableObjects);
         }
 
-        if (!$attachableObjects || is_string($attachableObjects)) {
+        if (empty($attachableObjects) || is_string($attachableObjects)) {
             return false;
         }
 
         $out = [];
         foreach ($attachableObjects as $attType => $attMeta) {
-            $label = '';
-            $filters = [];
-            $orders = [];
+            $label      = '';
+            $filters    = [];
+            $orders     = [];
             $numPerPage = 0;
-            $page = 1;
-            $attOption = [ 'label', 'filters', 'orders', 'num_per_page', 'page' ];
-            $attData = array_diff_key($attMeta, $attOption);
+            $page       = 1;
+            $attOption  = [ 'label', 'filters', 'orders', 'num_per_page', 'page' ];
+            $attData    = array_diff_key($attMeta, $attOption);
 
             // Disable an attachable model
             if (isset($attMeta['active']) && !$attMeta['active']) {
@@ -537,19 +559,6 @@ class AttachmentWidget extends AdminWidget implements
         }
 
         $this->attachableObjects = $out;
-
-        return $this;
-    }
-
-    /**
-     * The app configuration container.
-     *
-     * @param array|\ArrayAccess|ConfigInterface $appConfig The app config.
-     * @return self
-     */
-    public function setAppConfig($appConfig)
-    {
-        $this->appConfig = $appConfig;
 
         return $this;
     }
@@ -674,14 +683,6 @@ class AttachmentWidget extends AdminWidget implements
         return json_encode($options, true);
     }
 
-    /**
-     * @return array|\ArrayAccess|ConfigInterface
-     */
-    public function appConfig()
-    {
-        return $this->appConfig;
-    }
-
     // Utilities
     // =============================================================================
 
@@ -704,5 +705,105 @@ class AttachmentWidget extends AdminWidget implements
     public function hasObj()
     {
         return !!($this->obj()->id());
+    }
+
+    /**
+     * Parse the given data and recursively merge presets from attachments config.
+     *
+     * @param  array $data The widget data.
+     * @return array Returns the merged widget data.
+     */
+    protected function mergePresets(array $data)
+    {
+        if (isset($data['attachable_objects'])) {
+            $data['attachable_objects'] = $this->mergePresetAttachableObjects($data['attachable_objects']);
+        }
+
+        if (isset($widgetData['ident'])) {
+            $data = $this->mergePresetWidget($data);
+        }
+
+        return $data;
+    }
+
+    /**
+     * Parse the given data and merge the widget preset.
+     *
+     * @param  array $data The widget data.
+     * @return array Returns the merged widget data.
+     */
+    private function mergePresetWidget(array $data)
+    {
+        if (!isset($data['ident']) || !is_string($data['ident'])) {
+            return $data;
+        }
+
+        $widgetIdent   = $data['ident'];
+        $presetWidgets = $this->config('widgets');
+        if (!isset($presetWidgets[$widgetIdent])) {
+            return $data;
+        }
+
+        $widgetData = $presetWidgets[$widgetIdent];
+        if (isset($widgetData['attachable_objects'])) {
+            $widgetData['attachable_objects'] = $this->mergePresetAttachableObjects($widgetData['attachable_objects']);
+        }
+
+        return array_merge_recursive($widgetData, $data);
+    }
+
+    /**
+     * Parse the given data and merge the preset attachment types.
+     *
+     * @param  array $data The attachable objects data.
+     * @throws InvalidArgumentException If the attachment type or structure is invalid.
+     * @return array Returns the merged attachable objects data.
+     */
+    private function mergePresetAttachableObjects(array $data)
+    {
+        if (is_string($data)) {
+            $groupIdent   = $data['attachable_objects'];
+            $presetGroups = $this->config('groups');
+            if (isset($presetGroups[$groupIdent])) {
+                $data = $presetGroups[$groupIdent];
+            }
+        }
+
+        if (is_array($data)) {
+            $presetTypes = $this->config('attachables');
+            $attachables = [];
+            foreach ($data as $attType => $attStruct) {
+                if (is_string($attStruct)) {
+                    $attType   = $attStruct;
+                    $attStruct = [];
+                }
+
+                if (!is_string($attType)) {
+                    throw new InvalidArgumentException(
+                        'The attachment type must be a string'
+                    );
+                }
+
+                if (!is_array($attStruct)) {
+                    throw new InvalidArgumentException(sprintf(
+                        'The attachment structure for "%s" must be an array',
+                        $attType
+                    ));
+                }
+
+                if (isset($presetTypes[$attType])) {
+                    $attStruct = array_merge_recursive(
+                        $presetTypes[$attType],
+                        $attStruct
+                    );
+                }
+
+                $attachables[$attType] = $attStruct;
+            }
+
+            $data = $attachables;
+        }
+
+        return $data;
     }
 }
