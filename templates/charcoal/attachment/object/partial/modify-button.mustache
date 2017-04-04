@@ -1,7 +1,12 @@
-<span class="js-attachment-actions">
-<a class="list-group-item-icon -right " href="#" data-type="{{obj_type}}" data-group="{{attachmentGroup}}"
-   data-attachment="{{obj_type}}" data-title="{{# _t }}Edit{{/ _t }}" data-id="{{ attachment_id }}"
-   data-action="edit">
-    <span class="glyphicon glyphicon-pencil"></span>
-</a>
+<span class="list-group-item-actions js-attachment-actions">
+    <a class="list-group-item-action list-group-item-icon"
+       href="object/edit?obj_type={{ obj_type }}&obj_id={{ attachment_id }}"
+       data-type="{{obj_type}}"
+       data-group="{{attachmentGroup}}"
+       data-attachment="{{obj_type}}"
+       data-title="{{# _t }}Edit{{/ _t }}"
+       data-id="{{ attachment_id }}"
+       data-action="edit">
+        <span class="glyphicon glyphicon-pencil"></span>
+    </a>
 </span>
