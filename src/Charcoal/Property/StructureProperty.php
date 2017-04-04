@@ -468,7 +468,7 @@ class StructureProperty extends AbstractProperty
      * @throws InvalidArgumentException If the class name is not a string.
      * @return StructureProperty
      */
-    private function setStructureModelClass($className)
+    protected function setStructureModelClass($className)
     {
         if (!is_string($className)) {
             throw new InvalidArgumentException(
@@ -486,7 +486,7 @@ class StructureProperty extends AbstractProperty
      *
      * @return string
      */
-    private function structureModelClass()
+    public function structureModelClass()
     {
         return $this->structureModelClass;
     }
