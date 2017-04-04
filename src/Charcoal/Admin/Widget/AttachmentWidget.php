@@ -14,7 +14,6 @@ use Mustache_LambdaHelper as LambdaHelper;
 
 // From 'charcoal-config'
 use Charcoal\Config\ConfigurableInterface;
-use Charcoal\Config\ConfigurableTrait;
 
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
@@ -32,8 +31,8 @@ use Charcoal\Admin\Ui\ObjectContainerInterface;
 use Charcoal\Admin\Ui\ObjectContainerTrait;
 
 // From 'beneroch/charcoal-attachments'
-use Charcoal\Attachment\AttachmentsConfig;
 use Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
+use Charcoal\Attachment\Traits\ConfigurableAttachmentsTrait;
 
 /**
  *
@@ -42,7 +41,7 @@ class AttachmentWidget extends AdminWidget implements
     ConfigurableInterface,
     ObjectContainerInterface
 {
-    use ConfigurableTrait;
+    use ConfigurableAttachmentsTrait;
     use ObjectContainerTrait {
         ObjectContainerTrait::createOrLoadObj as createOrCloneOrLoadObj;
     }
@@ -129,18 +128,6 @@ class AttachmentWidget extends AdminWidget implements
         } elseif (isset($container['config']['attachments'])) {
             $this->setConfig($container['config']['attachments']);
         }
-    }
-
-    /**
-     * Retrieve a new AttachmentsConfig instance for the wdget.
-     *
-     * @see    ConfigurableTrait::createConfig()
-     * @param  mixed $data Optional data to pass to the new configset.
-     * @return AttachmentsConfig
-     */
-    protected function createConfig($data = null)
-    {
-        return new AttachmentsConfig($data);
     }
 
     /**
@@ -305,7 +292,7 @@ class AttachmentWidget extends AdminWidget implements
 
 
     // Setters
-    // =============================================================================
+    // =========================================================================
 
     /**
      * Set the widget's data.
@@ -574,7 +561,7 @@ class AttachmentWidget extends AdminWidget implements
     }
 
     // Getters
-    // =============================================================================
+    // =========================================================================
 
     /**
      * Retrieve the widget factory.
@@ -694,7 +681,7 @@ class AttachmentWidget extends AdminWidget implements
     }
 
     // Utilities
-    // =============================================================================
+    // =========================================================================
 
     /**
      * Generate an HTML-friendly identifier.
@@ -705,16 +692,6 @@ class AttachmentWidget extends AdminWidget implements
     public function createIdent($string)
     {
         return preg_replace('~/~', '-', $string);
-    }
-
-    /**
-     * Determine if the widget has an object assigned to it.
-     *
-     * @return boolean
-     */
-    public function hasObj()
-    {
-        return !!($this->obj()->id());
     }
 
     /**
@@ -764,64 +741,5 @@ class AttachmentWidget extends AdminWidget implements
         }
 
         return array_replace_recursive($widgetData, $data);
-    }
-
-    /**
-     * Parse the given data and merge the preset attachment types.
-     *
-     * @param  string|array $data The attachable objects data.
-     * @throws InvalidArgumentException If the attachment type or structure is invalid.
-     * @return array Returns the merged attachable objects data.
-     */
-    private function mergePresetAttachableObjects($data)
-    {
-        if (is_string($data)) {
-            $groupIdent = $data;
-            if ($this->hasObj()) {
-                $groupIdent = $this->obj()->render($groupIdent);
-            }
-
-            $presetGroups = $this->config('groups');
-            if (isset($presetGroups[$groupIdent])) {
-                $data = $presetGroups[$groupIdent];
-            }
-        }
-
-        if (is_array($data)) {
-            $presetTypes = $this->config('attachables');
-            $attachables = [];
-            foreach ($data as $attType => $attStruct) {
-                if (is_string($attStruct)) {
-                    $attType   = $attStruct;
-                    $attStruct = [];
-                }
-
-                if (!is_string($attType)) {
-                    throw new InvalidArgumentException(
-                        'The attachment type must be a string'
-                    );
-                }
-
-                if (!is_array($attStruct)) {
-                    throw new InvalidArgumentException(sprintf(
-                        'The attachment structure for "%s" must be an array',
-                        $attType
-                    ));
-                }
-
-                if (isset($presetTypes[$attType])) {
-                    $attStruct = array_replace_recursive(
-                        $presetTypes[$attType],
-                        $attStruct
-                    );
-                }
-
-                $attachables[$attType] = $attStruct;
-            }
-
-            $data = $attachables;
-        }
-
-        return $data;
     }
 }

@@ -22,7 +22,7 @@ interface AttachmentAwareInterface
     public function id();
 
     /**
-     * Attach an node to the current object.
+     * Attach a node to the current object.
      *
      * @param  AttachableInterface|ModelInterface $attachment An attachment or object.
      * @param  string                             $group      Attachment group, defaults to contents.

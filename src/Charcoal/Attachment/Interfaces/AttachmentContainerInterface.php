@@ -19,7 +19,7 @@ interface AttachmentContainerInterface
      *
      * @return array
      */
-    public function attachmentConfig();
+    public function attachmentsMetadata();
 
     /**
      * Returns attachable objects

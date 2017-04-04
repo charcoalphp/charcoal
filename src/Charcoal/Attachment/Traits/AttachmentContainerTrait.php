@@ -38,11 +38,11 @@ use Charcoal\Attachment\Object\Video;
 trait AttachmentContainerTrait
 {
     /**
-     * The container's configuration.
+     * The container's attachable metadata.
      *
      * @var array
      */
-    protected $attachmentConfig;
+    protected $attachmentsMetadata;
 
     /**
      * The container's accepted attachment types.
@@ -65,14 +65,18 @@ trait AttachmentContainerTrait
      *
      * @return array
      */
-    public function attachmentConfig()
+    public function attachmentsMetadata()
     {
-        if ($this->attachmentConfig === null) {
+        if ($this->attachmentsMetadata === null) {
+            $this->attachmentsMetadata = [];
+
             $metadata = $this->metadata();
-            $this->attachmentConfig = (isset($metadata['attachments']) ? $metadata['attachments'] : []);
+            if (isset($metadata['attachments'])) {
+                $this->attachmentsMetadata = $this->mergePresets($metadata['attachments']);
+            }
         }
 
-        return $this->attachmentConfig;
+        return $this->attachmentsMetadata;
     }
 
     /**
@@ -84,13 +88,13 @@ trait AttachmentContainerTrait
     public function attachmentGroup()
     {
         if ($this->group === null) {
-            $cfg   = $this->attachmentConfig();
-            $group = AttachmentContainerInterface::DEFAULT_GROUPING;
-            if (isset($cfg['default_group'])) {
-                $group = $cfg['default_group'];
+            $config = $this->attachmentsMetadata();
+            $group  = AttachmentContainerInterface::DEFAULT_GROUPING;
+            if (isset($config['default_group'])) {
+                $group = $config['default_group'];
             // If the 'default_group' is not set, search for it.
-            } elseif (isset($cfg['default_widget'])) {
-                $widget   = $cfg['default_widget'];
+            } elseif (isset($config['default_widget'])) {
+                $widget   = $config['default_widget'];
                 $metadata = $this->metadata();
                 $found    = false;
                 if (isset($metadata['admin']['form_groups'][$widget]['group'])) {
@@ -136,37 +140,35 @@ trait AttachmentContainerTrait
      */
     public function attachableObjects()
     {
-        if ($this->attachableObjects) {
-            return $this->attachableObjects;
-        }
+        if ($this->attachableObjects === null) {
+            $this->attachableObjects = [];
 
-        $this->attachableObjects = [];
+            $config = $this->attachmentsMetadata();
+            if (isset($config['attachable_objects'])) {
+                foreach ($config['attachable_objects'] as $attType => $attMeta) {
+                    // Disable an attachable model
+                    if (isset($attMeta['active']) && !$attMeta['active']) {
+                        continue;
+                    }
 
-        $cfg = $this->attachmentConfig();
-        if (isset($cfg['attachable_objects'])) {
-            foreach ($cfg['attachable_objects'] as $attType => $attMeta) {
-                // Disable an attachable model
-                if (isset($attMeta['active']) && !$attMeta['active']) {
-                    continue;
+                    // Useful for replacing a pre-defined attachment type
+                    if (isset($attMeta['attachment_type'])) {
+                        $attType = $attMeta['attachment_type'];
+                    } else {
+                        $attMeta['attachment_type'] = $attType;
+                    }
+
+                    // Alias
+                    $attMeta['attachmentType'] = $attMeta['attachment_type'];
+
+                    if (isset($attMeta['label'])) {
+                        $attMeta['label'] = $this->translator()->translation($attMeta['label']);
+                    } else {
+                        $attMeta['label'] = ucfirst(basename($attType));
+                    }
+
+                    $this->attachableObjects[] = $attMeta;
                 }
-
-                // Useful for replacing a pre-defined attachment type
-                if (isset($attMeta['attachment_type'])) {
-                    $attType = $attMeta['attachment_type'];
-                } else {
-                    $attMeta['attachment_type'] = $attType;
-                }
-
-                // Alias
-                $attMeta['attachmentType'] = $attMeta['attachment_type'];
-
-                if (isset($attMeta['label'])) {
-                    $attMeta['label'] = $this->translator()->translation($attMeta['label']);
-                } else {
-                    $attMeta['label'] = ucfirst(basename($attType));
-                }
-
-                $this->attachableObjects[] = $attMeta;
             }
         }
 
