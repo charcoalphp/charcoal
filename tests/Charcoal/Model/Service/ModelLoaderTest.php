@@ -2,10 +2,11 @@
 
 namespace Charcoal\Tests\Model\Service;
 
-use \Charcoal\Factory\GenericFactory as Factory;
+// From 'charcoal-factory'
+use Charcoal\Factory\GenericFactory as Factory;
 
-use \Charcoal\Model\Service\MetadataLoader;
-use \Charcoal\Model\Service\ModelLoader;
+// From 'charcoal-core'
+use Charcoal\Model\Service\ModelLoader;
 
 /**
  *
@@ -14,30 +15,32 @@ class ModelLoaderTest extends \PHPUnit_Framework_TestCase
 {
     use \Charcoal\Tests\ContainerIntegrationTrait;
 
+    /**
+     * Tested Class.
+     *
+     * @var ModelLoader
+     */
     public $obj;
 
+    /**
+     * Set up the test.
+     */
     public function setUp()
     {
         $container = $this->getContainer();
 
-        $metadataLoader = new MetadataLoader([
-            'logger'    => $container['logger'],
-            'cache'     => $container['cache'],
-            'base_path' => __DIR__,
-            'paths'     => [ 'metadata' ]
-        ]);
-
         $factory = new Factory([
             'arguments' => [[
                 'logger'          => $container['logger'],
-                'metadata_loader' => $metadataLoader
+                'metadata_loader' => $container['metadata/loader']
             ]]
         ]);
 
         $this->obj = new ModelLoader([
             'obj_type' => 'charcoal/model/model',
             'factory'  => $factory,
-            'logger'   => $container['logger']
+            'logger'   => $container['logger'],
+            'cache'    => $container['cache']
         ]);
     }
 

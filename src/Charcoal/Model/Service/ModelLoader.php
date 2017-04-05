@@ -2,15 +2,22 @@
 
 namespace Charcoal\Model\Service;
 
-use \ArrayAccess;
-use \Exception;
-use \InvalidArgumentException;
+use ArrayAccess;
+use Exception;
+use LogicException;
+use InvalidArgumentException;
 
-// Module `charcoal-factory` dependencies
-use \Charcoal\Factory\FactoryInterface;
+// From PSR-6
+use Psr\Cache\CacheItemPoolInterface;
+
+// From 'charcoal-factory'
+use Charcoal\Factory\FactoryInterface;
+
+// From 'charcoal-core'
+use Charcoal\Model\ModelInterface;
 
 /**
- * Load a single model from its source.
+ * Load a single model from its source, of from cache.
  *
  * Use the magic methods to load automatically from __call and __get; this allows
  * for easy integration in templating engines like Mustache.
@@ -20,99 +27,139 @@ use \Charcoal\Factory\FactoryInterface;
 final class ModelLoader implements ArrayAccess
 {
     /**
-     * @var string $objType
+     * The object type.
+     *
+     * The base model (FQCN) to load objects of.
+     *
+     * @var string
      */
     private $objType;
 
     /**
-     * @var string $objKey
+     * The object key.
+     *
+     * The model property name, or SQL column name, to load objects by.
+     *
+     * @var string
      */
     private $objKey;
 
     /**
-     * @var FactoryInterface $factory
+     * The model factory.
+     *
+     * @var FactoryInterface
      */
     private $factory;
 
     /**
+     * The PSR-6 caching service.
+     *
+     * @var CacheItemPoolInterface
+     */
+    private $cachePool;
+
+    /**
      * Construct a Model Loader with the dependencies
      *
-     * # Required dependencies
+     * # Required Dependencies
      *
      * - `obj_type`
      * - `factory`
+     * - `cache`
      *
-     * # Optional dependencies
+     * # Optional Dependencies
+     *
      * - `obj_key`
      *
-     * @param array $data Class dependencies.
+     * @param array $data Loader dependencies.
      */
     public function __construct(array $data)
     {
         $this->setObjType($data['obj_type']);
         $this->setFactory($data['factory']);
+        $this->setCachePool($data['cache']);
 
         if (isset($data['obj_key'])) {
             $this->setObjKey($data['obj_key']);
         }
     }
 
+    // Magic Methods
+    // =============================================================================================
+
     /**
-     * @param string $ident The object ident to load.
-     * @param mixed  $args  Unused, method arguments.
-     * @return \Charcoal\Model\ModelInterface
+     * Retrieve an object by its key.
+     *
+     * @param  string|integer $ident The object identifier to load.
+     * @param  mixed          $args  Unused; Method arguments.
+     * @return ModelInterface
      */
     public function __call($ident, $args = null)
     {
         unset($args);
+
         return $this->load($ident);
     }
 
     /**
-     * @param string $ident The object ident to load.
-     * @return \Charcoal\Model\ModelInterface
+     * Retrieve an object by its key.
+     *
+     * @param  string|integer $ident The object identifier to load.
+     * @return ModelInterface
      */
     public function __get($ident)
     {
         return $this->load($ident);
     }
 
-
     /**
-     * @param string $ident The object ident to load.
+     * Determine if an object exists by its key.
+     *
+     * @todo   Needs implementation
+     * @param  string $ident The object identifier to lookup.
      * @return boolean
      */
     public function __isset($ident)
     {
-        // TODO
         return true;
     }
 
     /**
-     * @param string $ident The object ident to unset.
-     * @throws Exception This method should never be called.
+     * Remove an object by its key.
+     *
+     * @param  string|integer $ident The object identifier to remove.
+     * @throws LogicException This method should never be called.
      * @return void
      */
     public function __unset($ident)
     {
-        throw new Exception(
+        throw new LogicException(
             'Can not unset value on a loader'
         );
     }
 
+    // Satisfies ArrayAccess
+    // =============================================================================================
+
     /**
-     * @param string $ident The object ident to verify.
+     * Determine if an object exists by its key.
+     *
+     * @todo   Needs implementation
+     * @see    ArrayAccess::offsetExists
+     * @param  string $ident The object identifier to lookup.
      * @return boolean
      */
     public function offsetExists($ident)
     {
-        // TODO
         return true;
     }
 
     /**
-     * @param string $ident The object ident to load.
-     * @return \Charcoal\Model\ModelInterface
+     * Retrieve an object by its key.
+     *
+     * @see    ArrayAccess::offsetGet
+     * @param  string|integer $ident The object identifier to load.
+     * @return ModelInterface
      */
     public function offsetGet($ident)
     {
@@ -120,44 +167,80 @@ final class ModelLoader implements ArrayAccess
     }
 
     /**
-     * @param string $ident The object ident to set.
-     * @param mixed  $val   The value to set.
-     * @throws Exception This method should never be called.
+     * Add an object.
+     *
+     * @see    ArrayAccess::offsetSet
+     * @param  string|integer $ident The $object identifier.
+     * @param  mixed          $obj   The object to add.
+     * @throws LogicException This method should never be called.
      * @return void
      */
-    public function offsetSet($ident, $val)
+    public function offsetSet($ident, $obj)
     {
-        throw new Exception(
+        throw new LogicException(
             'Can not set value on a loader'
         );
     }
 
     /**
-     * @param string $ident The object ident to unset.
-     * @throws Exception This method should never be called.
+     * Remove an object by its key.
+     *
+     * @see    ArrayAccess::offsetUnset()
+     * @param  string|integer $ident The object identifier to remove.
+     * @throws LogicException This method should never be called.
      * @return void
      */
     public function offsetUnset($ident)
     {
-        throw new Exception(
+        throw new LogicException(
             'Can not unset value on a loader'
         );
     }
 
+    // =============================================================================================
+
     /**
-     * @param string $ident The object ident to load.
-     * @return \Charcoal\Model\ModelInterface
+     * Retrieve an object, by its key, from its source or from the cache.
+     *
+     * When the cache is enabled, only the object's _data_ is stored. This prevents issues
+     * when unserializing a class that might have dependencies.
+     *
+     * @param  string|integer $ident     The object identifier to load.
+     * @param  boolean        $useCache  If FALSE, ignore the cached object. Defaults to TRUE.
+     * @param  boolean        $reloadObj If TRUE, refresh the cached object. Defaults to FALSE.
+     * @return ModelInterface
      */
-    public function load($ident)
+    public function load($ident, $useCache = true, $reloadObj = false)
     {
-        return $this->loadFromSource($ident);
+        if (!$useCache) {
+            return $this->loadFromSource($ident);
+        }
+
+        $cacheKey  = $this->cacheKey($ident);
+        $cacheItem = $this->cachePool->getItem($cacheKey);
+
+        if (!$reloadObj) {
+            $objData = $cacheItem->get();
+            if ($cacheItem->isHit()) {
+                $obj = $this->factory->create($this->objType);
+                $obj->setData($objData);
+
+                return $obj;
+            }
+        }
+
+        $obj = $this->loadFromSource($ident);
+        $objData = $obj->data();
+        $this->cachePool->save($cacheItem->set($objData));
+
+        return $obj;
     }
 
     /**
-     * Load an objet from soure
+     * Load an objet from its soure.
      *
-     * @param mixed $ident The object ident to load.
-     * @return \Charcoal\Model\ModelInterface
+     * @param  string|integer $ident The object identifier to load.
+     * @return ModelInterface
      */
     private function loadFromSource($ident)
     {
@@ -167,12 +250,33 @@ final class ModelLoader implements ArrayAccess
         } else {
             $obj->load($ident);
         }
+
         return $obj;
     }
 
     /**
-     * @param string $objType The object type to load with this loader.
-     * @throws InvalidArgumentException If the obj type is not a string.
+     * Generate a cache key.
+     *
+     * @param  string|integer $ident The object identifier to load.
+     * @return string
+     */
+    private function cacheKey($ident)
+    {
+        if ($this->objKey === null) {
+            $model = $this->factory->get($this->objType);
+            $this->setObjKey($model->key());
+        }
+
+        $cacheKey = 'objects/'.str_replace('/', '.', $this->objType.'.'.$this->objKey.'.'.$ident);
+
+        return $cacheKey;
+    }
+
+    /**
+     * Set the object type.
+     *
+     * @param  string $objType The object type to load with this loader.
+     * @throws InvalidArgumentException If the object type is not a string.
      * @return ModelLoader Chainable
      */
     private function setObjType($objType)
@@ -182,33 +286,56 @@ final class ModelLoader implements ArrayAccess
                 'Can not set model loader object type: not a string'
             );
         }
+
         $this->objType = $objType;
         return $this;
     }
 
     /**
-     * @param string $objKey The object key to use for laoding.
-     * @throws InvalidArgumentException If the obj key is not a string.
+     * Set the object key.
+     *
+     * @param  string $objKey The object key to use for laoding.
+     * @throws InvalidArgumentException If the object key is not a string.
      * @return ModelLoader Chainable
      */
     private function setObjKey($objKey)
     {
+        if (empty($objKey) && !is_numeric($objKey)) {
+            $this->objKey = null;
+            return $this;
+        }
+
         if (!is_string($objKey)) {
             throw new InvalidArgumentException(
                 'Can not set model loader object type: not a string'
             );
         }
+
         $this->objKey = $objKey;
         return $this;
     }
 
     /**
-     * @param FactoryInterface $factory The factory to use to create models.
+     * Set the model factory.
+     *
+     * @param  FactoryInterface $factory The factory to create models.
      * @return ModelLoader Chainable
      */
     private function setFactory(FactoryInterface $factory)
     {
         $this->factory = $factory;
+        return $this;
+    }
+
+    /**
+     * Set the cache pool handler.
+     *
+     * @param  CacheItemPoolInterface $cachePool A PSR-6 compatible cache pool.
+     * @return ModelLoader Chainable
+     */
+    private function setCachePool(CacheItemPoolInterface $cachePool)
+    {
+        $this->cachePool = $cachePool;
         return $this;
     }
 }
