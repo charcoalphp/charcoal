@@ -8,11 +8,12 @@ use \InvalidArgumentException;
 // From 'charcoal-factory'
 use \Charcoal\Factory\FactoryInterface;
 
-// Intra-module (`charcoal-ui`) dependencies
+// From 'charcoal-ui'
+use \Charcoal\Ui\Form\FormInterface;
 use \Charcoal\Ui\FormGroup\FormGroupInterface;
 
 /**
- * Provides an implementation of {@see \Charcoal\Ui\Dashboard\DashboardInterface}.
+ * Provides an implementation of {@see FormInterface}.
  */
 trait FormTrait
 {
@@ -208,13 +209,17 @@ trait FormTrait
     /**
      * Add a form group.
      *
-     * @param string                   $groupIdent The group identifier.
-     * @param array|FormGroupInterface $group      The group object or structure.
+     * @param  string                   $groupIdent The group identifier.
+     * @param  array|FormGroupInterface $group      The group object or structure.
      * @throws InvalidArgumentException If the identifier is not a string or the group is invalid.
      * @return FormInterface Chainable
      */
     public function addGroup($groupIdent, $group)
     {
+        if ($group === false || $group === null) {
+            return $this;
+        }
+
         if (!is_string($groupIdent)) {
             throw new InvalidArgumentException(
                 'Group identifier must be a string'
@@ -222,40 +227,78 @@ trait FormTrait
         }
 
         if ($group instanceof FormGroupInterface) {
-            $group->setForm($this);
-            $group->setIdent($groupIdent);
-            $this->groups[$groupIdent] = $group;
+            $group = $this->updateFormGroup($group, null, $groupIdent);
         } elseif (is_array($group)) {
-            if (isset($group['ident'])) {
-                $groupIdent = $group['ident'];
+            $data = $group;
+
+            if (isset($data['ident'])) {
+                $groupIdent = $data['ident'];
             } else {
-                $group['ident'] = $groupIdent;
+                $data['ident'] = $groupIdent;
             }
 
-            if (!isset($group['type'])) {
-                $group['type'] = $this->defaultGroupType();
-            }
-
-            $g = $this->formGroupFactory()->create($group['type']);
-            $g->setForm($this);
-            $g->setData($group);
-
-            $group = $g;
-        } elseif ($group === false || $group === null) {
-            return $this;
+            $group = $this->createFormGroup($data);
         } else {
-            throw new InvalidArgumentException(
-                sprintf(
-                    'Group must be an instance of %s or an array of form group options, received %s',
-                    'FormGroupInterface',
-                    (is_object($group) ? get_class($group) : gettype($group))
-                )
-            );
+            throw new InvalidArgumentException(sprintf(
+                'Group must be an instance of %s or an array of form group options, received %s',
+                'FormGroupInterface',
+                (is_object($group) ? get_class($group) : gettype($group))
+            ));
         }
 
-        $this->groups[$groupIdent] = $g;
+        $this->groups[$groupIdent] = $group;
 
         return $this;
+    }
+
+    /**
+     * Create a new form group widget.
+     *
+     * @param  array|null $data Optional. The form group data to set.
+     * @return FormPropertyWidget
+     */
+    protected function createFormGroup(array $data = null)
+    {
+        if (isset($data['type'])) {
+            $type = $data['type'];
+        } else {
+            $type = $this->defaultGroupType();
+        }
+
+        $group = $this->formGroupFactory()->create($type);
+        $group->setForm($this);
+
+        if ($data !== null) {
+            $group->setData($data);
+        }
+
+        return $group;
+    }
+
+    /**
+     * Update the given form group widget.
+     *
+     * @param  FormGroupInterface $group      The form group to update.
+     * @param  array|null         $groupData  Optional. The new group data to apply.
+     * @param  string|null        $groupIdent Optional. The new group identifier.
+     * @return FormPropertyWidget
+     */
+    protected function updateFormGroup(
+        FormGroupInterface $group,
+        array $groupData = null,
+        $groupIdent = null
+    ) {
+        $group->setForm($this);
+
+        if ($groupData !== null) {
+            $group->setData($groupData);
+        }
+
+        if ($groupIdent !== null) {
+            $group->setIdent($groupIdent);
+        }
+
+        return $group;
     }
 
     /**
