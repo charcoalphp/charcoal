@@ -5,6 +5,7 @@ namespace Charcoal\Loader;
 use InvalidArgumentException;
 use RuntimeException;
 use ArrayAccess;
+use Traversable;
 use PDO;
 
 // From PSR-3
@@ -554,6 +555,7 @@ class CollectionLoader implements LoggerAwareInterface
         $sth = $db->prepare($query);
         $sth->execute();
         $res = $sth->fetchColumn(0);
+
         return (int)$res;
     }
 
@@ -591,10 +593,6 @@ class CollectionLoader implements LoggerAwareInterface
             );
         }
 
-        if ($callback === null) {
-            $callback = $this->callback();
-        }
-
         /** @todo Filter binds */
         if (is_string($query)) {
             $this->logger->debug($query);
@@ -605,21 +603,37 @@ class CollectionLoader implements LoggerAwareInterface
             $this->logger->debug($query);
             $sth = $this->source()->dbQuery($query, $binds, $types);
         } else {
-            throw new InvalidArgumentException(
-                sprintf(
-                    'The SQL query must be a string or an array: '.
-                    '[ string $query, array $binds, array $dataTypes ]; '.
-                    'received %s',
-                    is_object($query) ? get_class($query) : $query
-                )
-            );
+            throw new InvalidArgumentException(sprintf(
+                'The SQL query must be a string or an array: '.
+                '[ string $query, array $binds, array $dataTypes ]; '.
+                'received %s',
+                is_object($query) ? get_class($query) : $query
+            ));
         }
 
         $sth->setFetchMode(PDO::FETCH_ASSOC);
 
+        return $this->processCollection($sth, $callback);
+    }
+
+    /**
+     * Process the collection of raw data.
+     *
+     * @param  array|Traversable $results  The raw result set.
+     * @param  callable          $callback Optional. Apply a callback to every entity of the collection.
+     *    Leave blank to use {@see CollectionLoader::callback()}.
+     * @throws InvalidArgumentException If the SQL string/set is invalid.
+     * @return array|ArrayAccess
+     */
+    protected function processCollection($results, callable $callback = null)
+    {
+        if ($callback === null) {
+            $callback = $this->callback();
+        }
+
         $modelObjType = $this->model()->objType();
         $collection   = $this->createCollection();
-        while ($objData = $sth->fetch()) {
+        foreach ($results as $objData) {
             if ($this->dynamicTypeField && isset($objData[$this->dynamicTypeField])) {
                 $objType = $objData[$this->dynamicTypeField];
             } else {
