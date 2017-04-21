@@ -255,7 +255,7 @@ trait FormTrait
      * Create a new form group widget.
      *
      * @param  array|null $data Optional. The form group data to set.
-     * @return FormPropertyWidget
+     * @return FormGroupInterface
      */
     protected function createFormGroup(array $data = null)
     {
@@ -281,7 +281,7 @@ trait FormTrait
      * @param  FormGroupInterface $group      The form group to update.
      * @param  array|null         $groupData  Optional. The new group data to apply.
      * @param  string|null        $groupIdent Optional. The new group identifier.
-     * @return FormPropertyWidget
+     * @return FormGroupInterface
      */
     protected function updateFormGroup(
         FormGroupInterface $group,
