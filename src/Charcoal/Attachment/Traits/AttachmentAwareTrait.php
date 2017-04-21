@@ -59,12 +59,13 @@ trait AttachmentAwareTrait
     /**
      * Retrieve the objects associated to the current object.
      *
-     * @param  string|null $group Filter the attachments by a group identifier.
-     * @param  string|null $type  Filter the attachments by type.
+     * @param  string|null   $group    Filter the attachments by a group identifier.
+     * @param  string|null   $type     Filter the attachments by type.
+     * @param  callable|null $callback Optional routine to apply to every attachment.
      * @throws InvalidArgumentException If the $group or $type is invalid.
      * @return Collection|Attachment[]
      */
-    public function attachments($group = null, $type = null)
+    public function attachments($group = null, $type = null, callable $callback = null)
     {
         if ($group === null) {
             $group = 0;
@@ -149,7 +150,7 @@ trait AttachmentAwareTrait
         $loader->setDynamicTypeField('type');
 
         if ($widget instanceof AttachmentWidget) {
-            $callable = function ($att) use ($widget) {
+            $callable = function ($att) use ($widget, $callback) {
                 if ($this instanceof AttachableInterface) {
                     $att->setContainerObj($this);
                 }
@@ -168,11 +169,19 @@ trait AttachmentAwareTrait
                 if (!$att->rawPreview()) {
                     $att->setPreview($widget->attachmentPreview());
                 }
+
+                if ($callback !== null) {
+                    call_user_func_array($callback, [ &$att ]);
+                }
             };
         } else {
-            $callable = function ($att) {
+            $callable = function ($att) use ($callback) {
                 if ($this instanceof AttachableInterface) {
                     $att->setContainerObj($this);
+                }
+
+                if ($callback !== null) {
+                    call_user_func_array($callback, [ &$att ]);
                 }
             };
         }
