@@ -600,7 +600,6 @@ class CollectionLoader implements LoggerAwareInterface
             $sth->execute();
         } elseif (is_array($query)) {
             list($query, $binds, $types) = array_pad($query, 3, []);
-            $this->logger->debug($query);
             $sth = $this->source()->dbQuery($query, $binds, $types);
         } else {
             throw new InvalidArgumentException(sprintf(
@@ -639,6 +638,7 @@ class CollectionLoader implements LoggerAwareInterface
             } else {
                 $objType = $modelObjType;
             }
+
 
             $obj = $this->factory()->create($objType);
             $obj->setFlatData($objData);
