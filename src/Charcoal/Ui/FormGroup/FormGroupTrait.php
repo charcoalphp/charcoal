@@ -73,6 +73,13 @@ trait FormGroupTrait
     private $requiredAclPermissions = [];
 
     /**
+     * Class or Classes for tab form group.
+     *
+     * @var string|string[]
+     */
+    private $tabCssClasses;
+
+    /**
      * @param FormInputBuilder $builder The builder, to create customized form input objects.
      * @return FormGroupInterface Chainable
      */
@@ -271,5 +278,30 @@ trait FormGroupTrait
     public function priority()
     {
         return $this->priority;
+    }
+
+    /**
+     * @param string|\string[] $classes Class or Classes for tab form group.
+     * @return self
+     */
+    public function setTabCssClasses($classes)
+    {
+        if (is_string($classes)) {
+            $this->tabCssClasses = $classes;
+        }
+
+        if (is_array($classes)) {
+            $this->tabCssClasses = implode(' ', $classes);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return string|\string[]
+     */
+    public function tabCssClasses()
+    {
+        return $this->tabCssClasses;
     }
 }
