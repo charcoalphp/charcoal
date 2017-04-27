@@ -967,7 +967,7 @@ class Attachment extends Content implements AttachableInterface
             $search = sprintf(
                 '(?<=%1$s=["\'])(?!%2$s)(\S+)(?=["\'])',
                 implode('=["\']|', array_map('preg_quote', $attr, [ '~' ])),
-                implode('|', array_map('preg_quote', $uri, [ '~' ]))
+                implode('|', array_map('preg_quote', $scheme, [ '~' ]))
             );
         }
 
