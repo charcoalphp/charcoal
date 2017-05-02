@@ -8,6 +8,7 @@ Charcoal Translator
 - [The Translation Object](#the-translation-object)
 - [The Translator Service](#the-translator-service)
 - [The Locales Manager](#the-locales-manager)
+- [The Parser Script](#the-parser-script)
 - [Configuration](#configuration)
 - [Service Provider](#service-provider)
 - Helpers
@@ -70,6 +71,18 @@ The Translator Service (`\Charcoal\Translator\Translator`) extends the Symfony T
 ## The Locales Manager
 
 The locales manager (`\Charcoal\Translator\LocalesManager`) is used to manage available locales / languages and keep track of current language.
+
+## The Parser Script
+
+The parser script (`\Charcoal\Translator\Script\TranslationParserScript`) is used to scraper file that contains translatable content. Add the following route to your application configuration:
+
+```json
+"scripts": {
+    "charcoal/translator/parse":{
+        "ident": "charcoal/translator/script/translation-parser"
+    }
+}
+```
 
 ## Configuration
 
