@@ -74,25 +74,27 @@ trait StorablePropertyTrait
             foreach ($this->translator()->availableLocales() as $langCode) {
                 $ident = $this->l10nIdent($langCode);
                 $field = $this->createPropertyField([
-                    'ident'      => $ident,
-                    'sqlType'    => $this->sqlType(),
-                    'sqlPdoType' => $this->sqlPdoType(),
-                    'extra'      => $this->sqlExtra(),
-                    'val'        => $this->fieldVal($langCode, $val),
-                    'defaultVal' => null,
-                    'allowNull'  => $this->allowNull()
+                    'ident'       => $ident,
+                    'sqlType'     => $this->sqlType(),
+                    'sqlPdoType'  => $this->sqlPdoType(),
+                    'sqlEncoding' => $this->sqlEncoding(),
+                    'extra'       => $this->sqlExtra(),
+                    'val'         => $this->fieldVal($langCode, $val),
+                    'defaultVal'  => null,
+                    'allowNull'   => $this->allowNull()
                 ]);
                 $this->fields[$langCode] = $field;
             }
         } else {
             $field = $this->createPropertyField([
-                'ident'      => $this->ident(),
-                'sqlType'    => $this->sqlType(),
-                'sqlPdoType' => $this->sqlPdoType(),
-                'extra'      => $this->sqlExtra(),
-                'val'        => $this->storageVal($val),
-                'defaultVal' => null,
-                'allowNull'  => $this->allowNull()
+                'ident'       => $this->ident(),
+                'sqlType'     => $this->sqlType(),
+                'sqlPdoType'  => $this->sqlPdoType(),
+                'sqlEncoding' => $this->sqlEncoding(),
+                'extra'       => $this->sqlExtra(),
+                'val'         => $this->storageVal($val),
+                'defaultVal'  => null,
+                'allowNull'   => $this->allowNull()
             ]);
             $this->fields[] = $field;
         }
@@ -170,6 +172,11 @@ trait StorablePropertyTrait
 
         return $field;
     }
+
+    /**
+     * @return string
+     */
+    abstract public function sqlEncoding();
 
     /**
      * @return string

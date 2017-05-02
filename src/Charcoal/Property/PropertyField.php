@@ -38,6 +38,11 @@ class PropertyField
     /**
      * @var string
      */
+    private $sqlEncoding;
+
+    /**
+     * @var string
+     */
     private $extra;
 
     /**
@@ -77,6 +82,9 @@ class PropertyField
         }
         if (isset($data['sqlPdoType'])) {
             $this->setSqlPdoType($data['sqlPdoType']);
+        }
+        if (isset($data['sqlEncoding'])) {
+            $this->setSqlEncoding($data['sqlEncoding']);
         }
         if (isset($data['extra'])) {
             $this->setExtra($data['extra']);
@@ -215,6 +223,33 @@ class PropertyField
     }
 
     /**
+     * @param string $encoding The encoding and collation.
+     * @throws InvalidArgumentException If the encoding is not a string.
+     * @return PropertyField Chainable
+     */
+    public function setSqlEncoding($encoding)
+    {
+        if (!is_string($encoding)) {
+            throw new InvalidArgumentException(
+                'Encoding must be a string.'
+            );
+        }
+        $this->sqlEncoding = $encoding;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function sqlEncoding()
+    {
+        if (!$this->sqlEncoding === null) {
+            return '';
+        }
+        return $this->sqlEncoding;
+    }
+
+    /**
      * @param mixed $val The field value.
      * @return PropertyField Chainable
      */
@@ -278,12 +313,13 @@ class PropertyField
             return '';
         }
 
-        $sqlType = $this->sqlType();
-        $null    = (($this->allowNull() === false) ? ' NOT NULL ' : '');
-        $extra   = $this->extra() ? ' '.$this->extra().' ' : '';
-        $default = ($this->defaultVal() ? ' DEFAULT \''.addslashes($this->defaultVal()).'\' ' : '');
-        $comment = ($this->label() ? ' COMMENT \''.addslashes($this->label()).'\' ' : '');
+        $sqlType     = $this->sqlType();
+        $null        = (($this->allowNull() === false) ? ' NOT NULL ' : '');
+        $extra       = $this->extra() ? ' '.$this->extra().' ' : '';
+        $sqlEncoding = $this->sqlEncoding() ? ' '.$this->sqlEncoding().' ' : '';
+        $default     = ($this->defaultVal() ? ' DEFAULT \''.addslashes($this->defaultVal()).'\' ' : '');
+        $comment     = ($this->label() ? ' COMMENT \''.addslashes($this->label()).'\' ' : '');
 
-        return '`'.$ident.'` '.$sqlType.$null.$extra.$default.$comment;
+        return '`'.$ident.'` '.$sqlType.$null.$extra.$sqlEncoding.$default.$comment;
     }
 }

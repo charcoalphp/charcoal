@@ -22,6 +22,11 @@ interface StorablePropertyInterface
     /**
      * @return string
      */
+    public function sqlEncoding();
+
+    /**
+     * @return string
+     */
     public function sqlExtra();
 
     /**

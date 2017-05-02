@@ -67,8 +67,9 @@ Validation is provided with a `Validator` object, from charcoal-core.
 
 ## Source and storage methods
 
-Properties need 3 method to integrate with a SQL source:
+Properties need 4 method to integrate with a SQL source:
 
+-   `sqlEncoding()` _string_ The SQL column encoding & collation (ex: `utf8mb4`)
 -   `sqlExtra()` _string_ Raw SQL string that will be appended to
 -   `sqlType()` _string_ The SQL column type (ex: `VARCHAR(16)`)
 -   `sqlPdoType()` _integer_ The PDO column type (ex: `PDO::PARAM_STR`)
