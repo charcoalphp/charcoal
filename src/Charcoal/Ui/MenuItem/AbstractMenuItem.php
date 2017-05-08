@@ -212,6 +212,7 @@ abstract class AbstractMenuItem extends AbstractUiItem implements MenuItemInterf
             }
             $GLOBALS['widget_template'] = $item->template();
             yield $child->ident() => $child;
+            $GLOBALS['widget_template'] = '';
         }
     }
 

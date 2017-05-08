@@ -122,6 +122,7 @@ abstract class AbstractMenu extends AbstractUiItem implements
             }
             $GLOBALS['widget_template'] = $item->template();
             yield $item->ident() => $item;
+            $GLOBALS['widget_template'] = '';
         }
     }
 

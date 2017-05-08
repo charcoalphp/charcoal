@@ -204,6 +204,7 @@ trait FormGroupTrait
             }
             $GLOBALS['widget_template'] = $input->template();
             yield $input->ident() => $input;
+            $GLOBALS['widget_template'] = '';
         }
     }
 

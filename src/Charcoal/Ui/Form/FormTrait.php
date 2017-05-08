@@ -351,6 +351,8 @@ trait FormTrait
             $i++;
 
             yield $group;
+
+            $GLOBALS['widget_template'] = '';
         }
     }
 
