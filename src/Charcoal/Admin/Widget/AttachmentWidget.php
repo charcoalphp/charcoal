@@ -191,6 +191,8 @@ class AttachmentWidget extends AdminWidget implements
             $GLOBALS['widget_template'] = (string)$attachment->rawPreview();
 
             yield $attachment;
+
+            $GLOBALS['widget_template'] = '';
         }
     }
 
