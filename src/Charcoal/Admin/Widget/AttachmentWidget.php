@@ -301,7 +301,7 @@ class AttachmentWidget extends AdminWidget implements
      */
     public function setGroup($group)
     {
-        if (!is_string($group) && !is_null($group)) {
+        if (!is_string($group) && $group !== null) {
             throw new InvalidArgumentException(sprintf(
                 'Attachment group must be string, received %s',
                 is_object($group) ? get_class($group) : gettype($group)

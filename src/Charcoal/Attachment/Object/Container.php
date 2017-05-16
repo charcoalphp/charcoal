@@ -2,6 +2,9 @@
 
 namespace Charcoal\Attachment\Object;
 
+// From Pimple
+use Pimple\Container;
+
 // From 'charcoal-config'
 use Charcoal\Config\ConfigurableInterface;
 
@@ -32,7 +35,7 @@ class Container extends Attachment implements
      * @param  Container $container A dependencies container instance.
      * @return void
      */
-    public function setDependencies(\Pimple\Container $container)
+    public function setDependencies(Container $container)
     {
         parent::setDependencies($container);
 
