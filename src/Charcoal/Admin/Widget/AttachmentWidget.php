@@ -63,6 +63,13 @@ class AttachmentWidget extends AdminWidget implements
     protected $group;
 
     /**
+     * Whether the widget is editable or only viewable.
+     *
+     * @var boolean
+     */
+    private $readOnly = false;
+
+    /**
      * The attachment heading (property or template).
      *
      * @var Translation|string|null
@@ -314,6 +321,19 @@ class AttachmentWidget extends AdminWidget implements
     }
 
     /**
+     * Set whether the widget is read-only.
+     *
+     * @param  boolean $readOnly The read-only flag.
+     * @return self
+     */
+    public function setReadOnly($readOnly)
+    {
+        $this->readOnly = !!$readOnly;
+
+        return $this;
+    }
+
+    /**
      * Set an widget factory.
      *
      * @param FactoryInterface $factory The factory to create widgets.
@@ -552,6 +572,16 @@ class AttachmentWidget extends AdminWidget implements
         }
 
         return $this->group;
+    }
+
+    /**
+     * Determine if the widget is read-only.
+     *
+     * @return boolean
+     */
+    public function readOnly()
+    {
+        return $this->readOnly;
     }
 
     /**

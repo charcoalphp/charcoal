@@ -1,4 +1,5 @@
 <div class="btn-toolbar" role="toolbar">
+    {{^ readOnly }}
     <div class="btn-group js-attachments-manager" role="group">
         <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
             <span class="btn-label">{{# _t }}Add{{/ _t }}</span>
@@ -15,6 +16,7 @@
             {{/ attachmentTypes }}
         </ul>
     </div>
+    {{/ readOnly }}
     {{# showAttachmentPreview }}
     <div class="btn-group" role="group" aria-label="{{# _t }}Toggle Content Previews{{/ _t }}">
         <button type="button" class="btn btn-default js-attachments-expand" aria-label="{{# _t }}Expand Previews{{/ _t }}">

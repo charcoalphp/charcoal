@@ -1,5 +1,11 @@
 <div class="btn-group" role="group">
-    <button class="btn {{# active }}btn-primary{{/ active }}{{^ active }}btn-danger{{/ active }} dropdown-toggle" type="button" data-toggle="dropdown">
+    {{# readOnly }}
+    <button type="button" class="btn btn-default" disabled>
+        <span class="glyphicon {{ glyphicon }}"></span>
+    </button>
+    {{/ readOnly }}
+    {{^ readOnly }}
+    <button type="button" class="btn {{# active }}btn-primary{{/ active }}{{^ active }}btn-danger{{/ active }} dropdown-toggle" data-toggle="dropdown">
         {{# showAttachmentHeading }}
         <span class="btn-label">{{# _t }}Actions{{/ _t }}</span>
         {{/ showAttachmentHeading }}
@@ -26,4 +32,5 @@
         <li><a href="object/edit?obj_type={{ type }}&obj_id={{ id }}" target="_blank">{{# _t }}Edit Content{{/ _t }}</a></li>
         {{/ isAttachmentContainer }}
     </ul>
+    {{/ readOnly }}
 </div>
