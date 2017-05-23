@@ -18,13 +18,14 @@
         }
     ],
     "minimum-stability": "dev",
+    "prefer-stable": true,
     "extra": {
         "branch-alias": {
-            "dev-master": "0.4.x-dev"
+            "dev-master": "0.5.x-dev"
         }
     },
     "require": {
-        "locomotivemtl/charcoal-config": "^0.7.0",
+        "locomotivemtl/charcoal-config": "^0.7",
         "locomotivemtl/charcoal-core": "~0.2",
         "locomotivemtl/charcoal-object": "~0.1",
         "locomotivemtl/charcoal-translator": "~0.1"
