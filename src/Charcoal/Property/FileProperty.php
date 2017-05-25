@@ -6,6 +6,7 @@ use finfo;
 use PDO;
 use Exception;
 use InvalidArgumentException;
+use UnexpectedValueException;
 
 // From Pimple
 use Pimple\Container;

@@ -4,7 +4,6 @@ namespace Charcoal\Property;
 
 use InvalidArgumentException;
 use OutOfBoundsException;
-use UnexpectedValueException;
 
 // From 'charcoal-image'
 use Charcoal\Image\ImageFactory;
@@ -461,12 +460,10 @@ class ImageProperty extends FileProperty
                 return 'png';
 
             case 'image/svg+xml':
-                $ext = 'svg';
-                break;
+                return 'svg';
 
             case 'image/webp':
-                $ext = 'webp';
-                break;
+                return 'webp';
         }
     }
 

@@ -2,8 +2,6 @@
 
 namespace Charcoal\Property;
 
-use PDO;
-
 // From 'charcoal-property'
 use Charcoal\Property\StructureProperty;
 
