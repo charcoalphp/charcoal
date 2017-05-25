@@ -236,6 +236,6 @@ class LangProperty extends AbstractProperty implements SelectablePropertyInterfa
      */
     public function sqlPdoType()
     {
-        return PDO::PARAM_BOOL;
+        return PDO::PARAM_STR;
     }
 }

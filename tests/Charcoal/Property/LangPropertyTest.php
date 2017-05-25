@@ -60,7 +60,7 @@ class LangPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testSqlPdoType()
     {
-        $this->assertEquals(PDO::PARAM_BOOL, $this->obj->sqlPdoType());
+        $this->assertEquals(PDO::PARAM_STR, $this->obj->sqlPdoType());
     }
 
     public function testChoices()
