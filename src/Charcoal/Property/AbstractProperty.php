@@ -24,6 +24,7 @@ use Charcoal\Model\DescribableInterface;
 use Charcoal\Model\DescribableTrait;
 use Charcoal\Validator\ValidatableInterface;
 use Charcoal\Validator\ValidatableTrait;
+use Charcoal\Validator\ValidatorInterface;
 
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
