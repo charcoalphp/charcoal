@@ -40,7 +40,7 @@ class SelectablePropertyTraitTest extends \PHPUnit_Framework_TestCase
     public function translation($val)
     {
         $container = $this->getContainer();
-        $locales   = $container['language/manager'];
+        $locales   = $container['locales/manager'];
 
         return new Translation($val, $locales);
     }

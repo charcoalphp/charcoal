@@ -11,8 +11,8 @@ use Psr\Log\NullLogger;
 use Cache\Adapter\Void\VoidCachePool;
 
 // From 'tedivm/stash' (PSR-6)
-use \Stash\Pool;
-use \Stash\Driver\Ephemeral;
+use Stash\Pool;
+use Stash\Driver\Ephemeral;
 
 // From Pimple
 use Pimple\Container;
@@ -154,7 +154,7 @@ class ContainerProvider
      */
     public function registerTranslator(Container $container)
     {
-        $container['language/manager'] = function (Container $container) {
+        $container['locales/manager'] = function (Container $container) {
             $manager = new LocalesManager([
                 'locales' => [
                     'en' => [ 'locale' => 'en-US' ]
@@ -168,7 +168,7 @@ class ContainerProvider
 
         $container['translator'] = function (Container $container) {
             return new Translator([
-                'manager' => $container['language/manager']
+                'manager' => $container['locales/manager']
             ]);
         };
     }
@@ -181,7 +181,7 @@ class ContainerProvider
      */
     public function registerMultilingualTranslator(Container $container)
     {
-        $container['language/manager'] = function (Container $container) {
+        $container['locales/manager'] = function (Container $container) {
             $manager = new LocalesManager([
                 'locales' => [
                     'en'  => [
@@ -218,7 +218,7 @@ class ContainerProvider
 
         $container['translator'] = function (Container $container) {
             $translator = new Translator([
-                'manager' => $container['language/manager']
+                'manager' => $container['locales/manager']
             ]);
 
             $translator->addLoader('array', new ArrayLoader());
