@@ -866,7 +866,7 @@ class Email implements
             $bcc = $this->bcc();
             foreach ($bcc as $bccRecipient) {
                 $bccArr = $this->emailToArray($bccRecipient);
-                $mail->addBCC($bccArr['email'], $cc['name']);
+                $mail->addBCC($bccArr['email'], $bccArr['name']);
             }
 
             // Setting attachment(s), if required.
