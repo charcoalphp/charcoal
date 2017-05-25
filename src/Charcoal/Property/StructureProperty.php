@@ -386,10 +386,12 @@ class StructureProperty extends AbstractProperty
             );
         }
 
-        $interface = $this->parseStructureInterface($interface);
+        if (!empty($interface)) {
+            $interface = $this->parseStructureInterface($interface);
 
-        $this->structureInterfaces[$interface] = true;
-        $this->isStructureFinalized = false;
+            $this->structureInterfaces[$interface] = true;
+            $this->isStructureFinalized = false;
+        }
 
         return $this;
     }
