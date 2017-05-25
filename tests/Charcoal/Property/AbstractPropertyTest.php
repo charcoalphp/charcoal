@@ -258,4 +258,16 @@ class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertInternalType('array', $this->obj->validationMethods());
     }
+
+    public function testSetSqlEncoding()
+    {
+        $this->assertEquals('', $this->obj->sqlEncoding());
+        $ret = $this->obj->setSqlEncoding('utf8mb4');
+        $this->assertSame($ret, $this->obj);
+
+        $this->assertEquals('CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci', $this->obj->sqlEncoding());
+
+        $this->setExpectedException('\InvalidArgumentException');
+        $this->obj->setSqlEncoding(false);
+    }
 }
