@@ -20,12 +20,6 @@ class IdPropertyTest extends \PHPUnit_Framework_TestCase
      */
     private $obj;
 
-    /**
-     * @var Container
-     */
-    private $container;
-
-
     public function setUp()
     {
         $container = $this->getContainer();

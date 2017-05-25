@@ -16,10 +16,44 @@ use Charcoal\Tests\Property\ContainerProvider;
 trait ContainerIntegrationTrait
 {
     /**
-     * @see    ContainerProvider
+     * @var Container
+     */
+    private $container;
+
+    /**
+     * @var ContainerProvider
+     */
+    private $containerProvider;
+
+    /**
      * @return Container
      */
-    private function getContainer()
+    protected function getContainer()
+    {
+        if ($this->container === null) {
+            $this->setupContainer();
+        }
+
+        return $this->container;
+    }
+
+    /**
+     * @return ContainerProvider
+     */
+    protected function getContainerProvider()
+    {
+        if ($this->containerProvider === null) {
+            $this->setupContainer();
+        }
+
+        return $this->containerProvider;
+    }
+
+    /**
+     * @see    ContainerProvider
+     * @return void
+     */
+    private function setupContainer()
     {
         $provider  = new ContainerProvider();
         $container = new Container();
@@ -32,6 +66,7 @@ trait ContainerIntegrationTrait
         $provider->registerModelFactory($container);
         $provider->registerModelCollectionLoader($container);
 
-        return $container;
+        $this->container = $container;
+        $this->containerProvider = $provider;
     }
 }

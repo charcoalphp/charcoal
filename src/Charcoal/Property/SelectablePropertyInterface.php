@@ -3,28 +3,28 @@
 namespace Charcoal\Property;
 
 /**
- * Selectable properties provide choices.
- *
- * Choices are :
- * - `value`
- * - `label`
- * - `title`
- * - `subtext`
- * - `icon`
- * - `selected`
+ * Defines a property providing options to choose from.
  */
 interface SelectablePropertyInterface
 {
     /**
-     * Explicitely set the selectable choices (to the array map).
+     * Set the available choices.
      *
-     * @param array $choices The array of choice structures.
+     * @param  array $choices One or more choice structures.
      * @return SelectablePropertyInterface Chainable.
      */
     public function setChoices(array $choices);
 
     /**
-     * Add a choice to the available choices map.
+     * Merge the available choices.
+     *
+     * @param  array $choices One or more choice structures.
+     * @return SelectablePropertyInterface Chainable.
+     */
+    public function addChoices(array $choices);
+
+    /**
+     * Add a choice to the available choices.
      *
      * @param string       $choiceIdent The choice identifier (will be key / default ident).
      * @param string|array $choice      A string representing the choice label or a structure.
@@ -33,25 +33,40 @@ interface SelectablePropertyInterface
     public function addChoice($choiceIdent, $choice);
 
     /**
-     * Get the choices array map.
+     * Determine if choices are available.
+     *
+     * @return boolean
+     */
+    public function hasChoices();
+
+    /**
+     * Retrieve the available choice structures.
      *
      * @return array
      */
     public function choices();
 
     /**
-     * Returns wether a given choice_ident exists or not.
+     * Determine if the given choice is available.
      *
-     * @param string $choiceIdent The choice ident.
-     * @return boolean True / false wether the choice exists or not.
+     * @param  string $choiceIdent The choice identifier to lookup.
+     * @return boolean
      */
     public function hasChoice($choiceIdent);
 
     /**
-     * Returns a choice structure for a given ident.
+     * Retrieve the structure for a given choice.
      *
-     * @param string $choiceIdent The choice ident to load.
+     * @param  string $choiceIdent The choice identifier to lookup.
      * @return mixed The matching choice.
      */
     public function choice($choiceIdent);
+
+    /**
+     * Retrieve the label for a given choice.
+     *
+     * @param  mixed $choiceIdent The choice identifier to lookup.
+     * @return string|null Returns the label. Otherwise, returns the raw value.
+     */
+    public function choiceLabel($choiceIdent);
 }

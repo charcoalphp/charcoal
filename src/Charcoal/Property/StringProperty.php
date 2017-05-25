@@ -3,9 +3,10 @@
 namespace Charcoal\Property;
 
 use PDO;
-
-use Exception;
 use InvalidArgumentException;
+
+// From 'charcoal-translator'
+use Charcoal\Translator\Translation;
 
 // From 'charcoal-property'
 use Charcoal\Property\AbstractProperty;
@@ -25,23 +26,30 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
     const DEFAULT_ALLOW_EMPTY = true;
 
     /**
-     * @var int $minLength
+     * The minimum number of characters allowed.
+     *
+     * @var integer
      */
     private $minLength;
 
     /**
-     * @var int $maxLength
+     * The maximum number of characters allowed.
+     *
+     * @var integer
      */
     private $maxLength;
 
     /**
-     * Defines a validation regular expression for this string.
-     * @var string $regexp
+     * The regular expression the value is checked against.
+     *
+     * @var string
      */
     private $regexp;
 
     /**
-     * @var boolean $allowEmpty
+     * Whether the value is allowed to be empty.
+     *
+     * @var boolean
      */
     private $allowEmpty;
 
@@ -54,66 +62,76 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
+     * Format the given value for display.
+     *
      * @param  mixed $val     The value to to convert for display.
      * @param  array $options Optional display options.
      * @return string
      */
     public function displayVal($val, array $options = [])
     {
-        if ($val === null) {
+        if ($val === null || $val === '') {
             return '';
         }
 
+        /** Parse multilingual values */
         if ($this->l10n()) {
             $propertyValue = $this->l10nVal($val, $options);
             if ($propertyValue === null) {
                 return '';
             }
+        } elseif ($val instanceof Translation) {
+            $propertyValue = (string)$val;
         } else {
             $propertyValue = $val;
         }
 
+        $separator = $this->multipleSeparator();
+
+        /** Parse multiple values / ensure they are of array type. */
         if ($this->multiple()) {
-            $separator = $this->multipleSeparator();
             if (!is_array($propertyValue)) {
                 $propertyValue = explode($separator, $propertyValue);
             }
+        }
 
-            $values = [];
-            foreach ($propertyValue as $val) {
-                $values[] = $this->valLabel($val);
+        if ($separator === ',') {
+            $separator = ', ';
+        }
+
+        if (is_array($propertyValue)) {
+            foreach ($propertyValue as &$value) {
+                $value = (string)$this->valLabel($value, $options);
             }
-
-            if ($separator === ',') {
-                $separator = ', ';
-            }
-
-            $propertyValue = implode($separator, $values);
+            $propertyValue = implode($separator, $propertyValue);
         } else {
-            $propertyValue = $this->valLabel((string)$propertyValue);
+            $propertyValue = (string)$this->valLabel($propertyValue, $options);
         }
 
         return $propertyValue;
     }
 
     /**
-     * Attempt to get the label from choices. Otherwise, return the raw value.
+     * Attempts to return the label for a given choice.
      *
-     * @param string $val The value to retrieve the label of.
-     * @return string
+     * @param  string $val  The value to retrieve the label of.
+     * @param  mixed  $lang The language to return the label in.
+     * @return string Returns the label. Otherwise, returns the raw value.
      */
-    protected function valLabel($val)
+    protected function valLabel($val, $lang = null)
     {
-        if ($this->hasChoice($val)) {
+        if (is_string($val) && $this->hasChoice($val)) {
             $choice = $this->choice($val);
-            return $choice['label'];
+            return $this->l10nVal($choice['label'], $lang);
         } else {
             return $val;
         }
     }
 
     /**
-     * @param integer $maxLength The max length allowed.
+     * Set the maximum number of characters allowed.
+     *
+     * @param  integer $maxLength The max length allowed.
      * @throws InvalidArgumentException If the parameter is not an integer or < 0.
      * @return StringProperty Chainable
      */
@@ -124,16 +142,21 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
                 'Max length must be an integer.'
             );
         }
+
         if ($maxLength < 0) {
             throw new InvalidArgumentException(
                 'Max length must be a positive integer (>=0).'
             );
         }
+
         $this->maxLength = $maxLength;
+
         return $this;
     }
 
     /**
+     * Retrieve the maximum number of characters allowed.
+     *
      * @return integer
      */
     public function maxLength()
@@ -141,18 +164,23 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
         if ($this->maxLength === null) {
             $this->maxLength = $this->defaultMaxLength();
         }
+
         return $this->maxLength;
     }
 
     /**
+     * Retrieve the default maximum number of characters allowed.
+     *
      * @return integer
      */
     public function defaultMaxLength()
     {
-        return 255;
+        return self::DEFAULT_MAX_LENGTH;
     }
 
     /**
+     * Set the minimum number of characters allowed.
+     *
      * @param integer $minLength The minimum length allowed.
      * @throws InvalidArgumentException If the parameter is not an integer or < 0.
      * @return StringProperty Chainable
@@ -164,28 +192,46 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
                 'Min length must be an integer.'
             );
         }
+
         if ($minLength < 0) {
             throw new InvalidArgumentException(
                 'Min length must be a positive integer (>=0).'
             );
         }
+
         $this->minLength = $minLength;
+
         return $this;
     }
 
     /**
+     * Retrieve the minimum number of characters allowed.
+     *
      * @return integer
      */
     public function minLength()
     {
         if ($this->minLength === null) {
-            $this->minLength = self::DEFAULT_MIN_LENGTH;
+            $this->minLength = $this->defaultMinLength();
         }
+
         return $this->minLength;
     }
 
     /**
-     * @param string $regexp The allowed regular expression.
+     * Retrieve the default minimum number of characters allowed.
+     *
+     * @return integer
+     */
+    public function defaultMinLength()
+    {
+        return 0;
+    }
+
+    /**
+     * Set the regular expression to check the value against.
+     *
+     * @param  string $regexp A regular expression.
      * @throws InvalidArgumentException If the parameter is not a string.
      * @return StringProperty Chainable
      */
@@ -196,11 +242,15 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
                 'Regular expression must be a string.'
             );
         }
+
         $this->regexp = $regexp;
+
         return $this;
     }
 
     /**
+     * Retrieve the regular expression to check the value against.
+     *
      * @return string
      */
     public function regexp()
@@ -208,20 +258,26 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
         if ($this->regexp === null) {
             $this->regexp = self::DEFAULT_REGEXP;
         }
+
         return $this->regexp;
     }
 
     /**
-     * @param boolean $allowEmpty The allow empty flag.
+     * Set whether the value is allowed to be empty.
+     *
+     * @param  boolean $allowEmpty The allow empty flag.
      * @return StringProperty Chainable
      */
     public function setAllowEmpty($allowEmpty)
     {
         $this->allowEmpty = !!$allowEmpty;
+
         return $this;
     }
 
     /**
+     * Determine if the value is allowed to be empty.
+     *
      * @return boolean
      */
     public function allowEmpty()
@@ -229,40 +285,36 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
         if ($this->allowEmpty === null) {
             $this->allowEmpty = self::DEFAULT_ALLOW_EMPTY;
         }
+
         return $this->allowEmpty;
     }
 
     /**
      * Retrieve the length of the string.
      *
-     * @todo Returns the string length based on the displayed value.
-     *     To be determined how to best handle multilingual and multiton values.
-     * @throws Exception If the value is not a string.
+     * Note:
+     * 1. If the property is multilingual, the value for the current locale is evaluated.
+     * 2. If the property is a multiton, all values are counted together.
+     *
+     * @todo   Support `multiple` / `l10n`
      * @return integer
      */
     public function length()
     {
         $val = $this->displayVal($this->val());
 
-        if ($val === null) {
-            return 0;
-        }
-
-        if (!is_string($val)) {
-            throw new Exception(
-                'Unable to determine string length: value is not a string'
-            );
-        }
-
         return mb_strlen($val);
     }
 
     /**
-     * @return array
+     * The property's default validation methods.
+     *
+     * @return stringp[]
      */
     public function validationMethods()
     {
         $parentMethods = parent::validationMethods();
+
         return array_merge($parentMethods, [
             'maxLength',
             'minLength',
@@ -272,8 +324,10 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
+     * Validate if the property's value exceeds the maximum length.
+     *
+     * @todo   Support `multiple` / `l10n`
      * @return boolean
-     * @todo Support `multiple` / `l10n`
      */
     public function validateMaxLength()
     {
@@ -308,8 +362,10 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
+     * Validate if the property's value satisfies the minimum length.
+     *
+     * @todo   Support `multiple` / `l10n`
      * @return boolean
-     * @todo Support `multiple` / `l10n`
      */
     public function validateMinLength()
     {
@@ -349,6 +405,8 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
+     * Validate if the property's value matches the regular expression.
+     *
      * @return boolean
      */
     public function validateRegexp()
@@ -369,6 +427,8 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
+     * Validate if the property's value is allowed to be empty.
+     *
      * @return boolean
      */
     public function validateAllowEmpty()

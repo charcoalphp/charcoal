@@ -4,9 +4,12 @@ namespace Charcoal\Property;
 
 use InvalidArgumentException;
 
+// From 'charcoal-translator'
+use Charcoal\Translator\Translation;
+
 /**
-* Fully implements, as a Trait, the SelectablePropertyInterface.
-*/
+ * Provides an implementation of {@see \Charcoal\Property\SelectablePropertyInterface}.
+ */
 trait SelectablePropertyTrait
 {
     /**
@@ -17,59 +20,46 @@ trait SelectablePropertyTrait
     protected $choices = [];
 
     /**
-     * Explicitely set the selectable choices (to the array map).
+     * Set the available choices.
      *
-     * @param array $choices The array of choice structures.
+     * @param  array $choices One or more choice structures.
      * @return SelectablePropertyInterface Chainable.
      */
     public function setChoices(array $choices)
     {
         $this->choices = [];
-        foreach ($choices as $choiceIdent => $choice) {
-            $c = (string)$choiceIdent;
-            $this->addChoice($c, $choice);
-        }
+
+        $this->addChoices($choices);
+
         return $this;
     }
 
     /**
-     * Add a choice to the available choices map.
+     * Merge the available choices.
      *
-     * @param string       $choiceIdent The choice identifier (will be key / default ident).
-     * @param string|array $choice      A string representing the choice label or a structure.
-     * @throws InvalidArgumentException If the choice identifier is not a string.
+     * @param  array $choices One or more choice structures.
+     * @return SelectablePropertyInterface Chainable.
+     */
+    public function addChoices(array $choices)
+    {
+        foreach ($choices as $choiceIdent => $choice) {
+            $this->addChoice((string)$choiceIdent, $choice);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Add a choice to the available choices.
+     *
+     * @param  string       $choiceIdent The choice identifier (will be key / default ident).
+     * @param  string|array $choice      A string representing the choice label or a structure.
      * @return SelectablePropertyInterface Chainable.
      */
     public function addChoice($choiceIdent, $choice)
     {
-        if (!is_string($choiceIdent)) {
-            throw new InvalidArgumentException(
-                'Choice identifier must be a string.'
-            );
-        }
-
-        if (!is_array($choice) && !is_string($choice)) {
-            throw new InvalidArgumentException(
-                'Choice must be a string or an array.'
-            );
-        }
-
-        if (is_string($choice)) {
-            $choice = [
-                'value' => $choiceIdent,
-                'label' => $this->translator()->translation($choice)
-            ];
-        } else {
-            if (isset($choice['value'])) {
-                $choiceIdent = (string)$choice['value'];
-            } else {
-                $choice['value'] = $choiceIdent;
-            }
-
-            if (isset($choice['label'])) {
-                $choice['label'] = $this->translator()->translation($choice['label']);
-            }
-        }
+        $choice = $this->parseChoice($choice, (string)$choiceIdent);
+        $choiceIdent = $choice['value'];
 
         $this->choices[$choiceIdent] = $choice;
 
@@ -77,7 +67,17 @@ trait SelectablePropertyTrait
     }
 
     /**
-     * Get the choices array map.
+     * Determine if choices are available.
+     *
+     * @return boolean
+     */
+    public function hasChoices()
+    {
+        return !!$this->choices;
+    }
+
+    /**
+     * Retrieve the available choice structures.
      *
      * @return array
      */
@@ -87,10 +87,10 @@ trait SelectablePropertyTrait
     }
 
     /**
-     * Returns wether a given choiceIdent exists or not.
+     * Determine if the given choice is available.
      *
-     * @param string $choiceIdent The choice ident.
-     * @return boolean True / false wether the choice exists or not.
+     * @param  string $choiceIdent The choice identifier to lookup.
+     * @return boolean
      */
     public function hasChoice($choiceIdent)
     {
@@ -98,9 +98,9 @@ trait SelectablePropertyTrait
     }
 
     /**
-     * Returns a choice structure for a given ident.
+     * Retrieve the structure for a given choice.
      *
-     * @param string $choiceIdent The choice ident to load.
+     * @param  string $choiceIdent The choice identifier to lookup.
      * @return mixed The matching choice.
      */
     public function choice($choiceIdent)
@@ -113,6 +113,104 @@ trait SelectablePropertyTrait
         }
 
         return $this->choices[$choiceIdent];
+    }
+
+    /**
+     * Retrieve the label for a given choice.
+     *
+     * @param  string|array $choice The choice identifier to lookup.
+     * @throws InvalidArgumentException If the choice is invalid.
+     * @return string|null Returns the label. Otherwise, returns the raw value.
+     */
+    public function choiceLabel($choice)
+    {
+        if ($choice === null) {
+            return null;
+        }
+
+        if (is_array($choice)) {
+            if (isset($choice['label'])) {
+                return $choice['label'];
+            } elseif (isset($choice['value'])) {
+                return $choice['value'];
+            } else {
+                throw new InvalidArgumentException(
+                    'Choice structure must contain a "label" or "value".'
+                );
+            }
+        }
+
+        if (!is_string($choice)) {
+            throw new InvalidArgumentException(
+                'Choice identifier must be a string.'
+            );
+        }
+
+        if ($this->hasChoice($choice)) {
+            $choice = $this->choice($choice);
+            return $choice['label'];
+        } else {
+            return $choice;
+        }
+    }
+
+    /**
+     * Parse the given values into choice structures.
+     *
+     * @param  array $choices One or more values to format.
+     * @return array Returns a collection of choice structures.
+     */
+    protected function parseChoices(array $choices)
+    {
+        $parsed = [];
+        foreach ($choices as $choiceIdent => $choice) {
+            $choice = $this->parseChoice($choice, (string)$choiceIdent);
+            $choiceIdent = $choice['value'];
+
+            $parsed[$choiceIdent] = $choice;
+        }
+
+        return $parsed;
+    }
+
+    /**
+     * Parse the given value into a choice structure.
+     *
+     * @param  string|array $choice      A string representing the choice label or a structure.
+     * @param  string       $choiceIdent The choice identifier (will be key / default ident).
+     * @throws InvalidArgumentException If the choice identifier is not a string.
+     * @return array Returns a choice structure.
+     */
+    protected function parseChoice($choice, $choiceIdent)
+    {
+        if (!is_string($choiceIdent)) {
+            throw new InvalidArgumentException(
+                'Choice identifier must be a string.'
+            );
+        }
+
+        if (is_string($choice) || $choice instanceof Translation) {
+            $choice = [
+                'value' => $choiceIdent,
+                'label' => $this->translator()->translation($choice)
+            ];
+        } elseif (is_array($choice)) {
+            if (!isset($choice['value'])) {
+                $choice['value'] = $choiceIdent;
+            }
+
+            if (!isset($choice['label'])) {
+                $choice['label'] = $this->translator()->translation($choice['value']);
+            } elseif (!($choice['label'] instanceof Translation)) {
+                $choice['label'] = $this->translator()->translation($choice['label']);
+            }
+        } else {
+            throw new InvalidArgumentException(
+                'Choice must be a string or an array.'
+            );
+        }
+
+        return $choice;
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace Charcoal\Property;
 
+use Traversable;
 use RuntimeException;
 use InvalidArgumentException;
 
@@ -21,8 +22,10 @@ use Charcoal\Source\StorableInterface;
 use Charcoal\Factory\FactoryInterface;
 
 // From 'charcoal-view'
-use Charcoal\View\ViewInterface;
 use Charcoal\View\ViewableInterface;
+
+// From 'charcoal-translator'
+use Charcoal\Translator\Translation;
 
 // From 'charcoal-property'
 use Charcoal\Property\AbstractProperty;
@@ -67,16 +70,23 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     private $collectionLoader;
 
     /**
+     * The rules for pagination the collection of objects.
+     *
+     * @var array|null
+     */
+    protected $pagination;
+
+    /**
      * The rules for sorting the collection of objects.
      *
-     * @var array
+     * @var array|null
      */
     protected $orders;
 
     /**
      * The rules for filtering the collection of objects.
      *
-     * @var array
+     * @var array|null
      */
     protected $filters;
 
@@ -92,7 +102,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      *
      * @var ModelLoader[]
      */
-    private static $modelLoaders = [];
+    protected static $modelLoaders = [];
 
     /**
      * Store the factory instance for the current class.
@@ -127,10 +137,10 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     /**
      * Set an object model factory.
      *
-     * @param FactoryInterface $factory The model factory, to create objects.
-     * @return self
+     * @param  FactoryInterface $factory The model factory, to create objects.
+     * @return ObjectProperty Chainable
      */
-    protected function setModelFactory(FactoryInterface $factory)
+    private function setModelFactory(FactoryInterface $factory)
     {
         $this->modelFactory = $factory;
 
@@ -143,12 +153,13 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      * @throws RuntimeException If the model factory was not previously set.
      * @return FactoryInterface
      */
-    public function modelFactory()
+    protected function modelFactory()
     {
         if (!isset($this->modelFactory)) {
-            throw new RuntimeException(
-                sprintf('Model Factory is not defined for "%s"', get_class($this))
-            );
+            throw new RuntimeException(sprintf(
+                'Model Factory is not defined for "%s"',
+                get_class($this)
+            ));
         }
 
         return $this->modelFactory;
@@ -176,14 +187,42 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     protected function collectionLoader()
     {
         if ($this->collectionLoader === null) {
-            throw new RuntimeException(
-                sprintf('Collection Loader is not defined for "%s"', get_class($this))
-            );
+            throw new RuntimeException(sprintf(
+                'Collection Loader is not defined for "%s"',
+                get_class($this)
+            ));
         }
 
-        $proto  = $this->proto();
-        $loader = $this->collectionLoader;
-        $loader->setModel($proto);
+        return $this->collectionLoader;
+    }
+
+    /**
+     * Retrieve the prepared model collection loader.
+     *
+     * @return CollectionLoader
+     */
+    protected function collectionModelLoader()
+    {
+        $loader = $this->collectionLoader();
+
+        if (!$loader->hasModel()) {
+            $loader->setModel($this->proto());
+
+            $pagination = $this->pagination();
+            if (!empty($pagination)) {
+                $loader->setPagination($pagination);
+            }
+
+            $orders = $this->orders();
+            if (!empty($orders)) {
+                $loader->setOrders($orders);
+            }
+
+            $filters = $this->filters();
+            if (!empty($filters)) {
+                $loader->setFilters($filters);
+            }
+        }
 
         return $loader;
     }
@@ -192,7 +231,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      * Set the cache service.
      *
      * @param  CacheItemPoolInterface $cache A PSR-6 compliant cache pool instance.
-     * @return MetadataLoader Chainable
+     * @return ObjectProperty Chainable
      */
     private function setCachePool(CacheItemPoolInterface $cache)
     {
@@ -207,12 +246,13 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      * @throws RuntimeException If the cache service was not previously set.
      * @return CacheItemPoolInterface
      */
-    private function cachePool()
+    protected function cachePool()
     {
         if (!isset($this->cachePool)) {
-            throw new RuntimeException(
-                sprintf('Cache Pool is not defined for "%s"', get_class($this))
-            );
+            throw new RuntimeException(sprintf(
+                'Cache Pool is not defined for "%s"',
+                get_class($this)
+            ));
         }
 
         return $this->cachePool;
@@ -223,7 +263,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      *
      * @param  string $objType The object type.
      * @throws InvalidArgumentException If the object type is not a string.
-     * @return ObjectPropertyChainable
+     * @return ObjectProperty Chainable
      */
     public function setObjType($objType)
     {
@@ -257,7 +297,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
-     * @param string $pattern The render pattern.
+     * @param  string $pattern The render pattern.
      * @throws InvalidArgumentException If the pattern is not a string.
      * @return ObjectProperty Chainable
      */
@@ -321,7 +361,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     /**
      * Always return IDs.
      *
-     * @param mixed $val Value to be parsed.
+     * @param  mixed $val Value to be parsed.
      * @return mixed
      */
     public function parseOne($val)
@@ -336,7 +376,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     /**
      * Get the property's value in a format suitable for storage.
      *
-     * @param mixed $val Optional. The value to convert to storage value.
+     * @param  mixed $val Optional. The value to convert to storage value.
      * @return mixed
      */
     public function storageVal($val)
@@ -372,9 +412,9 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
-     * @param   mixed $val     Optional. The value to to convert for input.
-     * @param   array $options Optional input options.
-     * @return  string
+     * @param  mixed $val     Optional. The value to to convert for input.
+     * @param  array $options Optional input options.
+     * @return string
      */
     public function inputVal($val, array $options = [])
     {
@@ -414,8 +454,20 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
             return '';
         }
 
+        if (isset($options['pattern'])) {
+            $pattern = $options['pattern'];
+        } else {
+            $pattern = null;
+        }
+
+        if (isset($options['lang'])) {
+            $lang = $options['lang'];
+        } else {
+            $lang = null;
+        }
+
         if ($val instanceof ModelInterface) {
-            $propertyVal = $this->renderObjPattern($val);
+            $propertyVal = $this->renderObjPattern($val, $pattern, $lang);
 
             if (empty($propertyVal) && !is_numeric($propertyVal)) {
                 $propertyVal = $val->id();
@@ -424,17 +476,21 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
             return $propertyVal;
         }
 
+        /** Parse multilingual values */
         if ($this->l10n()) {
             $propertyValue = $this->l10nVal($val, $options);
             if ($propertyValue === null) {
                 return '';
             }
+        } elseif ($val instanceof Translation) {
+            $propertyValue = (string)$val;
         } else {
             $propertyValue = $val;
         }
 
         $separator = $this->multipleSeparator();
 
+        /** Parse multiple values / ensure they are of array type. */
         if ($this->multiple()) {
             if (!is_array($propertyValue)) {
                 $propertyValue = explode($separator, $propertyValue);
@@ -443,15 +499,19 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
             $propertyValue = (array)$propertyValue;
         }
 
+        if ($separator === ',') {
+            $separator = ', ';
+        }
+
         $values = [];
         foreach ($propertyValue as $val) {
             $label = null;
             if ($val instanceof ModelInterface) {
-                $label = $this->renderObjPattern($val);
+                $label = $this->renderObjPattern($val, $pattern, $lang);
             } else {
                 $obj = $this->loadObject($val);
                 if (is_object($obj)) {
-                    $label = $this->renderObjPattern($obj);
+                    $label = $this->renderObjPattern($obj, $pattern, $lang);
                 }
             }
 
@@ -462,40 +522,82 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
             $values[] = $label;
         }
 
-        if ($separator === ',') {
-            $separator = ', ';
-        }
-
         return implode($separator, $values);
     }
 
     /**
-     * Fulfills the SelectableProperty interface, but does nothing.
+     * Set the available choices.
      *
-     * @param array $choices The array of choice structures.
-     * @return SelectablePropertyInterface Chainable.
+     * @param  array $choices One or more choice structures.
+     * @return ObjectProperty Chainable
      */
     public function setChoices(array $choices)
     {
         unset($choices);
-        $this->logger->debug('Choices can not be set for object properties. They are auto-generated from objects.');
+
+        $this->logger->debug(
+            'Choices can not be set for object properties. They are auto-generated from objects.'
+        );
 
         return $this;
     }
 
     /**
-     * Add a choice to the available choices map.
+     * Merge the available choices.
      *
-     * @param string       $choiceIdent The choice identifier (will be key / default ident).
-     * @param string|array $choice      A string representing the choice label or a structure.
-     * @return SelectablePropertyInterface Chainable.
+     * @param  array $choices One or more choice structures.
+     * @return ObjectProperty Chainable
+     */
+    public function addChoices(array $choices)
+    {
+        unset($choices);
+
+        $this->logger->debug(
+            'Choices can not be added for object properties. They are auto-generated from objects.'
+        );
+
+        return $this;
+    }
+
+    /**
+     * Add a choice to the available choices.
+     *
+     * @param  string       $choiceIdent The choice identifier (will be key / default ident).
+     * @param  string|array $choice      A string representing the choice label or a structure.
+     * @return ObjectProperty Chainable
      */
     public function addChoice($choiceIdent, $choice)
     {
         unset($choiceIdent, $choice);
-        $this->logger->debug('Choices can not be added for object properties. They are auto-generated from objects.');
+
+        $this->logger->debug(
+            'Choices can not be added for object properties. They are auto-generated from objects.'
+        );
 
         return $this;
+    }
+
+    /**
+     * Set the rules for pagination the collection of objects.
+     *
+     * @param  array $pagination Pagination settings.
+     * @return ObjectProperty Chainable
+     */
+    public function setPagination(array $pagination)
+    {
+        $this->pagination = $pagination;
+
+        return $this;
+    }
+
+    /**
+     * Retrieve the rules for pagination the collection of objects.
+     *
+     * @return array|null
+     */
+    public function pagination()
+    {
+        return $this->pagination;
     }
 
     /**
@@ -514,7 +616,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     /**
      * Retrieve the rules for sorting the collection of objects.
      *
-     * @return array
+     * @return array|null
      */
     public function orders()
     {
@@ -537,7 +639,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     /**
      * Retrieve the rules for filtering the collection of objects.
      *
-     * @return array
+     * @return array|null
      */
     public function filters()
     {
@@ -545,50 +647,44 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
-     * Get the choices array map.
+     * Determine if choices are available.
      *
-     * Required by `SelectablePropertyInterface`.
+     * @return boolean
+     */
+    public function hasChoices()
+    {
+        if (!$this->proto()->source()->tableExists()) {
+            return false;
+        }
+
+        return ($this->collectionModelLoader()->loadCount() > 0);
+    }
+
+    /**
+     * Retrieve the available choice structures.
      *
+     * @see    SelectablePropertyInterface::choices()
      * @return array
      */
     public function choices()
     {
-        $choices = [];
-
         $proto = $this->proto();
         if (!$proto->source()->tableExists()) {
-            return $choices;
+            return [];
         }
 
-        $loader = $this->collectionLoader();
-
-        $orders = $this->orders();
-        if ($orders) {
-            $loader->setOrders($orders);
-        }
-
-        $filters = $this->filters();
-        if ($filters) {
-            $loader->setFilters($filters);
-        }
-
-        $objects = $loader->load();
-        foreach ($objects as $obj) {
-            $choice = $this->choice($obj);
-
-            if ($choice !== null) {
-                $choices[$choice['value']] = $choice;
-            }
-        }
+        $objects = $this->collectionModelLoader()->load();
+        $choices = $this->parseChoices($objects);
 
         return $choices;
     }
 
     /**
-     * Returns wether a given choiceIdent exists or not.
+     * Determine if the given choice is available.
      *
-     * @param string $choiceIdent The choice identifier.
-     * @return boolean True / false wether the choice exists or not.
+     * @see    SelectablePropertyInterface::hasChoice()
+     * @param  string $choiceIdent The choice identifier to lookup.
+     * @return boolean
      */
     public function hasChoice($choiceIdent)
     {
@@ -598,9 +694,12 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
-     * Returns a choice structure for a given ident.
+     * Retrieve the structure for a given choice.
      *
-     * @param string|ModelInterface $choiceIdent The choice ident or object to format.
+     * The method can be used to format an object into a choice structure.
+     *
+     * @see    SelectablePropertyInterface::choice()
+     * @param  string $choiceIdent The choice identifier to lookup or object to format.
      * @return mixed The matching choice.
      */
     public function choice($choiceIdent)
@@ -611,6 +710,44 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
             return null;
         }
 
+        $choice = $this->parseChoice($obj);
+
+        return $choice;
+    }
+
+    /**
+     * Parse the given objects into choice structures.
+     *
+     * @param  ModelInterface[]|Traversable $objs One or more objects to format.
+     * @throws InvalidArgumentException If the collection of objects is not iterable.
+     * @return array Returns a collection of choice structures.
+     */
+    protected function parseChoices($objs)
+    {
+        if (!is_array($objs) && !$objs instanceof Traversable) {
+            throw new InvalidArgumentException('Must be iterable');
+        }
+
+        $parsed = [];
+        foreach ($objs as $choice) {
+            $choice = $this->parseChoice($choice);
+            if ($choice !== null) {
+                $choiceIdent = $choice['value'];
+                $parsed[$choiceIdent] = $choice;
+            }
+        }
+
+        return $parsed;
+    }
+
+    /**
+     * Parse the given value into a choice structure.
+     *
+     * @param  ModelInterface $obj An object to format.
+     * @return array Returns a choice structure.
+     */
+    protected function parseChoice(ModelInterface $obj)
+    {
         $label  = $this->renderObjPattern($obj);
         $choice = [
             'value' => $obj->id(),
@@ -618,6 +755,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
             'title' => $label
         ];
 
+        /** @todo Move to {@see \Charcoal\Admin\Property\AbstractSelectableInput::choiceObjMap()} */
         if (is_callable([$obj, 'icon'])) {
             $choice['icon'] = $obj->icon();
         }
@@ -626,20 +764,55 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
+     * Retrieve the label for a given choice.
+     *
+     * @see    SelectablePropertyInterface::choiceLabel()
+     * @param  string|array|ModelInterface $choice The choice identifier to lookup.
+     * @throws InvalidArgumentException If the choice is invalid.
+     * @return string|null Returns the label. Otherwise, returns the raw value.
+     */
+    public function choiceLabel($choice)
+    {
+        if ($choice === null) {
+            return null;
+        }
+
+        if (is_array($choice)) {
+            if (isset($choice['label'])) {
+                return $choice['label'];
+            } elseif (isset($choice['value'])) {
+                return $choice['value'];
+            } else {
+                throw new InvalidArgumentException(
+                    'Choice structure must contain a "label" or "value".'
+                );
+            }
+        }
+
+        $obj = $this->loadObject($choice);
+
+        if ($obj === null) {
+            return $choice;
+        }
+
+        return $this->renderObjPattern($obj);
+    }
+
+    /**
      * Render the given object.
      *
-     * @param  ModelInterface|ViewableInterface $obj     The object or view to render as a label.
-     * @param  string|null                      $pattern Optional. The render pattern to render.
+     * @see    Move to \Charcoal\Admin\Property\AbstractSelectableInput::choiceObjMap()
+     * @param  ModelInterface $obj     The object or view to render as a label.
+     * @param  string|null    $pattern Optional. The render pattern to render.
+     * @param  string|null    $lang    The language to return the value in.
      * @throws InvalidArgumentException If the pattern is not a string.
      * @return string
      */
-    protected function renderObjPattern($obj, $pattern = null)
+    protected function renderObjPattern(ModelInterface $obj, $pattern = null, $lang = null)
     {
         if ($pattern === null) {
             $pattern = $this->pattern();
-        }
-
-        if (!is_string($pattern)) {
+        } elseif (!is_string($pattern)) {
             throw new InvalidArgumentException(
                 'The render pattern must be a string.'
             );
@@ -649,20 +822,33 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
             return '';
         }
 
-        if (strpos($pattern, '{{') === false) {
-            return (string)$obj[$pattern];
+        if ($lang === null) {
+            $lang = $this->translator()->getLocale();
+        } elseif (!is_string($lang)) {
+            throw new InvalidArgumentException(
+                'The language to render as must be a string.'
+            );
         }
 
-        if (($obj instanceof ViewableInterface) && ($obj->view() instanceof ViewInterface)) {
-            return $obj->renderTemplate($pattern);
+        $origLang = $this->translator()->getLocale();
+        $this->translator()->setLocale($lang);
+
+        if (strpos($pattern, '{{') === false) {
+            $output = (string)$obj[$pattern];
+        } elseif (($obj instanceof ViewableInterface) && $obj->view()) {
+            $output = $obj->renderTemplate($pattern);
         } else {
-            $callback = function ($matches) use ($obj) {
+            $callback = function($matches) use ($obj) {
                 $prop = trim($matches[1]);
                 return (string)$obj[$prop];
             };
 
-            return preg_replace_callback('~\{\{\s*(.*?)\s*\}\}~i', $callback, $pattern);
+            $output = preg_replace_callback('~\{\{\s*(.*?)\s*\}\}~i', $callback, $pattern);
         }
+
+        $this->translator()->setLocale($origLang);
+
+        return $output;
     }
 
     /**
@@ -670,16 +856,16 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      *
      * Loads the object from the cache store or from the storage source.
      *
-     * @param mixed $id Object id.
+     * @param  mixed $objId Object id.
      * @return ModelInterface
      */
-    protected function loadObject($id)
+    protected function loadObject($objId)
     {
-        if ($id instanceof ModelInterface) {
-            return $id;
+        if ($objId instanceof ModelInterface) {
+            return $objId;
         }
 
-        $obj = $this->modelLoader()->load($id);
+        $obj = $this->modelLoader()->load($objId);
         if (!$obj->id()) {
             return null;
         } else {
@@ -688,11 +874,22 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
+     * Retrieve the model loader.
+     *
+     * @param  string $objType The object type.
+     * @throws InvalidArgumentException If the object type is invalid.
      * @return ModelLoader
      */
-    private function modelLoader()
+    protected function modelLoader($objType = null)
     {
-        $objType = $this->objType();
+        if ($objType === null) {
+            $objType = $this->objType();
+        } elseif (!is_string($objType)) {
+            throw new InvalidArgumentException(
+                'Object type must be a string.'
+            );
+        }
+
         if (isset(self::$modelLoaders[$objType])) {
             return self::$modelLoaders[$objType];
         }

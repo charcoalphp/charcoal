@@ -253,4 +253,9 @@ class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
         $this->obj->set('storable', false);
         $this->assertFalse($this->obj['storable']);
     }
+
+    public function testValidationMethods()
+    {
+        $this->assertInternalType('array', $this->obj->validationMethods());
+    }
 }
