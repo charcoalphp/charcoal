@@ -522,7 +522,7 @@ class CollectionLoader implements LoggerAwareInterface
      * @param  callable    $callback Optional. Apply a callback to every entity of the collection.
      *    Leave blank to use {@see CollectionLoader::callback()}.
      * @throws Exception If the database connection fails.
-     * @return array|ArrayAccess
+     * @return ModelInterface[]|ArrayAccess
      */
     public function load($ident = null, callable $callback = null)
     {
@@ -581,7 +581,7 @@ class CollectionLoader implements LoggerAwareInterface
      *    Leave blank to use {@see CollectionLoader::callback()}.
      * @throws RuntimeException If the database connection fails.
      * @throws InvalidArgumentException If the SQL string/set is invalid.
-     * @return array|ArrayAccess
+     * @return ModelInterface[]|ArrayAccess
      */
     public function loadFromQuery($query, callable $callback = null)
     {
@@ -618,11 +618,11 @@ class CollectionLoader implements LoggerAwareInterface
     /**
      * Process the collection of raw data.
      *
-     * @param  array|Traversable $results  The raw result set.
-     * @param  callable          $callback Optional. Apply a callback to every entity of the collection.
+     * @param  ModelInterface[]|Traversable $results  The raw result set.
+     * @param  callable                     $callback Optional. Apply a callback to every entity of the collection.
      *    Leave blank to use {@see CollectionLoader::callback()}.
      * @throws InvalidArgumentException If the SQL string/set is invalid.
-     * @return array|ArrayAccess
+     * @return ModelInterface[]|ArrayAccess
      */
     protected function processCollection($results, callable $callback = null)
     {

@@ -457,14 +457,15 @@ abstract class AbstractModel extends AbstractEntity implements
      */
     protected function createSource()
     {
-        $metadata = $this->metadata();
+        $metadata      = $this->metadata();
         $defaultSource = $metadata->defaultSource();
-        $sourceConfig = $metadata->source($defaultSource);
+        $sourceConfig  = $metadata->source($defaultSource);
 
         if (!$sourceConfig) {
-            throw new Exception(
-                sprintf('Can not create %s source: invalid metadata.', get_class($this))
-            );
+            throw new Exception(sprintf(
+                'Can not create source for [%s]: invalid metadata.',
+                get_class($this)
+            ));
         }
 
         $sourceType = isset($sourceConfig['type']) ? $sourceConfig['type'] : self::DEFAULT_SOURCE_TYPE;
