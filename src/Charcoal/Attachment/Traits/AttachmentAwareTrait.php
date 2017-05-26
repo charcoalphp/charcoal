@@ -190,9 +190,7 @@ trait AttachmentAwareTrait
             };
         }
 
-        $loader->setCallback($callable->bindTo($this));
-
-        $collection = $loader->loadFromQuery($query);
+        $collection = $loader->loadFromQuery($query, $callable->bindTo($this));
 
         $this->attachments[$group][$type] = $collection;
 
