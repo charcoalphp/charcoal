@@ -24,6 +24,16 @@ trait UiItemTrait
     private $template;
 
     /**
+     * The UI item's icon.
+     *
+     * Note: Only icons from the {@link http://fontawesome.io/ Font Awesome}
+     * library are supported.
+     *
+     * @var string|null
+     */
+    private $icon;
+
+    /**
      * The UI item's title.
      *
      * @var \Charcoal\Translator\Translation
@@ -80,6 +90,13 @@ trait UiItemTrait
     private $showNotes = true;
 
     /**
+     * The icon is displayed by default.
+     *
+     * @var boolean
+     */
+    private $showIcon = true;
+
+    /**
      * The header is displayed by default.
      *
      * @var boolean
@@ -92,13 +109,6 @@ trait UiItemTrait
      * @var boolean
      */
     private $showFooter = true;
-
-    /**
-     * The icon ident from font-awesome library
-     *
-     * @var string
-     */
-    private $icon;
 
     /**
      * Set the UI item type.
@@ -255,6 +265,31 @@ trait UiItemTrait
     }
 
     /**
+     * Retrieve the path to the item's icon.
+     *
+     * @todo  [mcaskill 2016-09-16] Move this to a tab interface in charcoal-admin
+     *     so as to focus the icon getter/setter on being a Glyphicon.
+     * @return string
+     */
+    public function icon()
+    {
+        return $this->icon;
+    }
+
+    /**
+     * Set the path to the item's icon associated with the object.
+     *
+     * @param  string $icon A path to an image.
+     * @return UiItemInterface Chainable
+     */
+    public function setIcon($icon)
+    {
+        $this->icon = $icon;
+
+        return $this;
+    }
+
+    /**
      * Show/hide the UI item's title.
      *
      * @param boolean $show Show (TRUE) or hide (FALSE) the title.
@@ -363,6 +398,33 @@ trait UiItemTrait
     }
 
     /**
+     * Show/hide the UI item's icon.
+     *
+     * @param boolean $show Show (TRUE) or hide (FALSE) the icon.
+     * @return UiItemInterface Chainable
+     */
+    public function setShowIcon($show)
+    {
+        $this->showIcon = !!$show;
+
+        return $this;
+    }
+
+    /**
+     * Determine if the icon is to be displayed.
+     *
+     * @return boolean If TRUE or unset, check if there is an icon.
+     */
+    public function showIcon()
+    {
+        if ($this->showIcon === false) {
+            return false;
+        } else {
+            return !!$this->icon();
+        }
+    }
+
+    /**
      * Show/hide the UI item's header.
      *
      * @param boolean $show Show (TRUE) or hide (FALSE) the header.
@@ -414,31 +476,6 @@ trait UiItemTrait
         } else {
             return $this->showNotes();
         }
-    }
-
-    /**
-     * Retrieve the path to the item's icon.
-     *
-     * @todo  [mcaskill 2016-09-16] Move this to a tab interface in charcoal-admin
-     *     so as to focus the icon getter/setter on being a Glyphicon.
-     * @return string
-     */
-    public function icon()
-    {
-        return $this->icon;
-    }
-
-    /**
-     * Set the path to the item's icon associated with the object.
-     *
-     * @param string $icon A path to an image.
-     * @return UiItemInterface Chainable
-     */
-    public function setIcon($icon)
-    {
-        $this->icon = $icon;
-
-        return $this;
     }
 
     /**
