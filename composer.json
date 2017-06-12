@@ -1,12 +1,8 @@
 {
-    "name": "beneroch/charcoal-attachment",
+    "name": "locomotivemtl/charcoal-attachment",
     "description": "Charcoal Attachments Module",
     "homepage": "https://charcoal.locomotive.ca",
     "license": "MIT",
-    "support": {
-        "issues": "https://bitbucket.org/beneroch/charcoal-attachment/issues",
-        "source": "https://bitbucket.org/beneroch/charcoal-attachment"
-    },
     "authors": [
         {
             "name": "Bene Roch",
