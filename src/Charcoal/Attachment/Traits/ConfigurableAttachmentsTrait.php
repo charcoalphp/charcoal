@@ -97,6 +97,10 @@ trait ConfigurableAttachmentsTrait
             $data['attachable_objects'] = $this->mergePresetAttachableObjects($data['attachable_objects']);
         }
 
+        if (isset($data['default_attachable_objects'])) {
+            $data['attachable_objects'] = $this->mergePresetAttachableObjects($data['default_attachable_objects']);
+        }
+
         return $data;
     }
 

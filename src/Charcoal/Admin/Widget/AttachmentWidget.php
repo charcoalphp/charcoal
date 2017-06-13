@@ -662,6 +662,10 @@ class AttachmentWidget extends AdminWidget implements
             $data['attachable_objects'] = $this->mergePresetAttachableObjects($data['attachable_objects']);
         }
 
+        if (isset($data['default_attachable_objects'])) {
+            $data['attachable_objects'] = $this->mergePresetAttachableObjects($data['default_attachable_objects']);
+        }
+
         if (isset($data['preset'])) {
             $data = $this->mergePresetWidget($data);
         }
@@ -694,6 +698,11 @@ class AttachmentWidget extends AdminWidget implements
         $widgetData = $presetWidgets[$widgetIdent];
         if (isset($widgetData['attachable_objects'])) {
             $widgetData['attachable_objects'] = $this->mergePresetAttachableObjects($widgetData['attachable_objects']);
+        }
+
+        $widgetData = $presetWidgets[$widgetIdent];
+        if (isset($widgetData['default_attachable_objects'])) {
+            $widgetData['attachable_objects'] = $this->mergePresetAttachableObjects($widgetData['default_attachable_objects']);
         }
 
         return array_replace_recursive($widgetData, $data);
