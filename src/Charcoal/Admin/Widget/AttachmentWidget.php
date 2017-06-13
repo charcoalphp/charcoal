@@ -154,7 +154,17 @@ class AttachmentWidget extends AdminWidget implements
     }
 
     /**
-     * Attachment types with their collections.
+     * Determine if the widget has any attachment types.
+     *
+     * @return boolean
+     */
+    public function hasAttachmentTypes()
+    {
+        return !empty($this->attachableObjects());
+    }
+
+    /**
+     * Retrieve the attachment types with their collections.
      *
      * @return array
      */
