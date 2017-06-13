@@ -518,20 +518,21 @@ class CollectionLoader implements LoggerAwareInterface
     /**
      * Load a collection from source.
      *
-     * @param  string|null $ident    Optional. A pre-defined list to use from the model.
-     * @param  callable    $callback Optional. Apply a callback to every entity of the collection.
+     * @param  string|null   $ident    Optional. A pre-defined list to use from the model.
+     * @param  callable|null $callback Process each entity after applying raw data.
      *    Leave blank to use {@see CollectionLoader::callback()}.
+     * @param  callable|null $before   Process each entity before applying raw data.
      * @throws Exception If the database connection fails.
      * @return ModelInterface[]|ArrayAccess
      */
-    public function load($ident = null, callable $callback = null)
+    public function load($ident = null, callable $callback = null, callable $before = null)
     {
         // Unused.
         unset($ident);
 
         $query = $this->source()->sqlLoad();
 
-        return $this->loadFromQuery($query, $callback);
+        return $this->loadFromQuery($query, $callback, $before);
     }
 
     /**
@@ -575,15 +576,16 @@ class CollectionLoader implements LoggerAwareInterface
      * ]);
      * ```
      *
-     * @param  string|array $query    The SQL query as a string or an array composed of the query,
+     * @param  string|array  $query    The SQL query as a string or an array composed of the query,
      *     parameter binds, and types of parameter bindings.
-     * @param  callable     $callback Optional. Apply a callback to every entity of the collection.
+     * @param  callable|null $callback Process each entity after applying raw data.
      *    Leave blank to use {@see CollectionLoader::callback()}.
+     * @param  callable|null $before   Process each entity before applying raw data.
      * @throws RuntimeException If the database connection fails.
      * @throws InvalidArgumentException If the SQL string/set is invalid.
      * @return ModelInterface[]|ArrayAccess
      */
-    public function loadFromQuery($query, callable $callback = null)
+    public function loadFromQuery($query, callable $callback = null, callable $before = null)
     {
         $db = $this->source()->db();
 
@@ -612,40 +614,27 @@ class CollectionLoader implements LoggerAwareInterface
 
         $sth->setFetchMode(PDO::FETCH_ASSOC);
 
-        return $this->processCollection($sth, $callback);
+        if ($callback === null) {
+            $callback = $this->callback();
+        }
+
+        return $this->processCollection($sth, $before, $callback);
     }
 
     /**
      * Process the collection of raw data.
      *
-     * @param  ModelInterface[]|Traversable $results  The raw result set.
-     * @param  callable                     $callback Optional. Apply a callback to every entity of the collection.
-     *    Leave blank to use {@see CollectionLoader::callback()}.
-     * @throws InvalidArgumentException If the SQL string/set is invalid.
+     * @param  mixed[]|Traversable $results The raw result set.
+     * @param  callable|null       $before  Process each entity before applying raw data.
+     * @param  callable|null       $after   Process each entity after applying raw data.
      * @return ModelInterface[]|ArrayAccess
      */
-    protected function processCollection($results, callable $callback = null)
+    protected function processCollection($results, callable $before = null, callable $after = null)
     {
-        if ($callback === null) {
-            $callback = $this->callback();
-        }
-
         $modelObjType = $this->model()->objType();
         $collection   = $this->createCollection();
         foreach ($results as $objData) {
-            if ($this->dynamicTypeField && isset($objData[$this->dynamicTypeField])) {
-                $objType = $objData[$this->dynamicTypeField];
-            } else {
-                $objType = $modelObjType;
-            }
-
-
-            $obj = $this->factory()->create($objType);
-            $obj->setFlatData($objData);
-
-            if (isset($callback)) {
-                call_user_func_array($callback, [ &$obj ]);
-            }
+            $obj = $this->processModel($objData, $before, $after);
 
             if ($obj instanceof ModelInterface) {
                 $collection[] = $obj;
@@ -653,6 +642,37 @@ class CollectionLoader implements LoggerAwareInterface
         }
 
         return $collection;
+    }
+
+    /**
+     * Process the raw data for one model.
+     *
+     * @param  mixed         $objData The raw dataset.
+     * @param  callable|null $before  Process each entity before applying raw data.
+     * @param  callable|null $after   Process each entity after applying raw data.
+     * @return ModelInterface|ArrayAccess|null
+     */
+    protected function processModel($objData, callable $before = null, callable $after = null)
+    {
+        if ($this->dynamicTypeField && isset($objData[$this->dynamicTypeField])) {
+            $objType = $objData[$this->dynamicTypeField];
+        } else {
+            $objType = $this->model()->objType();
+        }
+
+        $obj = $this->factory()->create($objType);
+
+        if ($before !== null) {
+            call_user_func_array($before, [ &$obj ]);
+        }
+
+        $obj->setFlatData($objData);
+
+        if ($after !== null) {
+            call_user_func_array($after, [ &$obj ]);
+        }
+
+        return $obj;
     }
 
     /**
