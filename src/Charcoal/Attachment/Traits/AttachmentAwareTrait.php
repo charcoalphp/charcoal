@@ -59,14 +59,19 @@ trait AttachmentAwareTrait
     /**
      * Retrieve the objects associated to the current object.
      *
-     * @param  string|null   $group    Filter the attachments by a group identifier.
-     * @param  string|null   $type     Filter the attachments by type.
-     * @param  callable|null $callback Optional routine to apply to every attachment.
+     * @param  string|null   $group  Filter the attachments by a group identifier.
+     * @param  string|null   $type   Filter the attachments by type.
+     * @param  callable|null $before Process each attachment before applying data.
+     * @param  callable|null $after  Process each attachment after applying data.
      * @throws InvalidArgumentException If the $group or $type is invalid.
      * @return Collection|Attachment[]
      */
-    public function attachments($group = null, $type = null, callable $callback = null)
-    {
+    public function attachments(
+        $group = null,
+        $type = null,
+        callable $before = null,
+        callable $after = null
+    ) {
         if ($group === null) {
             $group = 0;
         } elseif (!is_string($group)) {
@@ -150,7 +155,7 @@ trait AttachmentAwareTrait
         $loader->setDynamicTypeField('type');
 
         if ($widget instanceof AttachmentWidget) {
-            $callable = function ($att) use ($widget, $callback) {
+            $callable = function (&$att) use ($widget, $before) {
                 if ($this instanceof AttachableInterface) {
                     $att->setContainerObj($this);
                 }
@@ -172,25 +177,25 @@ trait AttachmentAwareTrait
 
                 $att->isPresentable(true);
 
-                if ($callback !== null) {
-                    call_user_func_array($callback, [ &$att ]);
+                if ($before !== null) {
+                    call_user_func_array($before, [ &$att ]);
                 }
             };
         } else {
-            $callable = function ($att) use ($callback) {
+            $callable = function (&$att) use ($before) {
                 if ($this instanceof AttachableInterface) {
                     $att->setContainerObj($this);
                 }
 
                 $att->isPresentable(true);
 
-                if ($callback !== null) {
-                    call_user_func_array($callback, [ &$att ]);
+                if ($before !== null) {
+                    call_user_func_array($before, [ &$att ]);
                 }
             };
         }
 
-        $collection = $loader->loadFromQuery($query, $callable->bindTo($this));
+        $collection = $loader->loadFromQuery($query, $after, $callable->bindTo($this));
 
         $this->attachments[$group][$type] = $collection;
 
