@@ -55,23 +55,6 @@ class Attachment extends Content implements AttachableInterface
     const CONTAINER_TYPE = AttachmentContainer::class;
 
     /**
-     * Glyphicons (from Bootstrap) for each of the default attachment types.
-     *
-     * @var array
-     */
-    protected $glyphs = [
-        'embed'     => 'glyphicon-blackboard',
-        'video'     => 'glyphicon-film',
-        'image'     => 'glyphicon-picture',
-        'file'      => 'glyphicon-file',
-        'link'      => 'glyphicon-link',
-        'text'      => 'glyphicon-font',
-        'gallery'   => 'glyphicon-duplicate',
-        'container' => 'glyphicon-list',
-        'accordion' => 'glyphicon-list'
-    ];
-
-    /**
      * The attachment type.
      *
      * @var string
@@ -366,22 +349,6 @@ class Attachment extends Content implements AttachableInterface
     }
 
     /**
-     * Retrieve the glyphicon for the current attachment type.
-     *
-     * @return string
-     */
-    public function glyphicon()
-    {
-        $type = $this->microType();
-
-        if (isset($this->glyphs[$type])) {
-            return $this->glyphs[$type];
-        }
-
-        return '';
-    }
-
-    /**
      * Retrieve the attachment's heading template.
      *
      * @return Translation|string|null
@@ -549,8 +516,6 @@ class Attachment extends Content implements AttachableInterface
     {
         return ($this instanceof AttachmentContainerInterface);
     }
-
-
 
     // Setters
     // =============================================================================

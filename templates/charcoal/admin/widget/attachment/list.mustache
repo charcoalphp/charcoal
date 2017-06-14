@@ -4,10 +4,10 @@
 
     The OBJ has the `attachments` method (@see AttachableAwareTrait)
 }}
-<section class="c-attachments_container js-attachment-container{{^ readOnly }} js-attachment-sortable{{/ readOnly }}">
+<section class="c-attachments_container js-attachment-container{{^ attachmentOptions.read_only }} js-attachment-sortable{{/ attachmentOptions.read_only }}">
     <div role="tablist"
          id="{{ widgetId }}_accordion"
-         class="panel-group js-grid-container{{^ showAttachmentHeading }} js-attachment-preview-only{{/ showAttachmentHeading }}"
+         class="panel-group js-grid-container{{^ attachmentOptions.show_header }} js-attachment-preview-only{{/ attachmentOptions.show_header }}"
          aria-multiselectable="false">
     {{# attachments }}
         {{> charcoal/admin/widget/attachment/object }}
