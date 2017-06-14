@@ -12,8 +12,8 @@ use \Charcoal\Factory\FactoryInterface;
 use \Charcoal\Source\SourceInterface;
 
 /**
-* Full implementation, as trait, of the StorableInterface
-*/
+ * Full implementation, as trait, of the StorableInterface
+ */
 trait StorableTrait
 {
     /**
@@ -227,14 +227,29 @@ trait StorableTrait
     {
         $pre = $this->preSave();
         if ($pre === false) {
+            $this->logger()->error(sprintf(
+                'Can not save object (%s:%s). The preSave() method failed.',
+                $this->objType(),
+                $this->id()
+            ));
             return false;
         }
         $ret = $this->source()->saveItem($this);
         if ($ret === false) {
+            $this->logger()->error(sprintf(
+                'Can not save object (%s:%s). The source\'s saveItem() method failed.',
+                $this->objType(),
+                $this->id()
+            ));
             return false;
         }
         $post = $this->postSave();
         if ($post === false) {
+            $this->logger()->warning(sprintf(
+                'Although the object (%s:%s) was saved, the postSave() method had an error. Expect problems later.',
+                $this->objType(),
+                $this->id()
+            ));
             return false;
         }
         return true;
@@ -250,14 +265,29 @@ trait StorableTrait
     {
         $pre = $this->preUpdate($properties);
         if ($pre === false) {
+            $this->logger()->error(sprintf(
+                'Can not update object (%s:%s). The preUpdate() method failed.',
+                $this->objType(),
+                $this->id()
+            ));
             return false;
         }
         $ret = $this->source()->updateItem($this, $properties);
         if ($ret === false) {
+            $this->logger()->error(sprintf(
+                'Can not update object (%s:%s). The source\'s updateItem() method failed.',
+                $this->objType(),
+                $this->id()
+            ));
             return false;
         }
         $post = $this->postUpdate($properties);
         if ($post === false) {
+            $this->logger()->warning(sprintf(
+                'Although the object (%s:%s) was updated, the postUpdate() method had an error. Expect problems later.',
+                $this->objType(),
+                $this->id()
+            ));
             return false;
         }
         return true;
@@ -272,11 +302,32 @@ trait StorableTrait
     {
         $pre = $this->preDelete();
         if ($pre === false) {
+            $this->logger()->error(sprintf(
+                'Can not update object (%s:%s). The preUpdate() method failed.',
+                $this->objType(),
+                $this->id()
+            ));
             return false;
         }
         $ret = $this->source()->deleteItem($this);
-        $this->postDelete();
-        return $ret;
+        if ($ret === false) {
+            $this->logger()->error(sprintf(
+                'Can not delete object (%s:%s). The source\'s deleteItem() method failed.',
+                $this->objType(),
+                $this->id()
+            ));
+            return false;
+        }
+        $del = $this->postDelete();
+        if ($del === false) {
+            $this->logger()->warning(sprintf(
+                'Although the object (%s:%s) was deleted, the postDelete() method had an error. Expect problems later.',
+                $this->objType(),
+                $this->id()
+            ));
+            return false;
+        }
+        return true;
     }
 
     /**
