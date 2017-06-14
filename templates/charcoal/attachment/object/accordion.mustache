@@ -6,7 +6,9 @@
     <ul class="list-group">
     {{# attachments }}
         <li class="list-group-item u-truncate{{^ active }} alert-danger{{/ active}}">
-            <span class="list-group-item-icon glyphicon {{ glyphicon }}"></span>
+            {{# attachmentType }}
+            <span class="list-group-item-icon {{ faIcon }}"></span>
+            {{/ attachmentType }}
             <span class="list-group-item-label">{{& heading }}{{^ active }} &mdash; <span class="small">{{# _t }}Disabled{{/ _t }}</span>{{/ active }}</span>
             {{> charcoal/attachment/object/partial/modify-button }}
         </li>

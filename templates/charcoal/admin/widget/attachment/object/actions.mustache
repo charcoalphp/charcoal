@@ -1,18 +1,28 @@
 <div class="btn-group" role="group">
-    {{# readOnly }}
-    <button type="button" class="btn btn-default" disabled>
-        <span class="glyphicon {{ glyphicon }}"></span>
-    </button>
-    {{/ readOnly }}
-    {{^ readOnly }}
+    {{# attachmentOptions.read_only }}
+        {{# attachmentOptions.show_icon }}
+        {{# attachmentType }}
+        {{# showIcon }}
+        <button type="button" class="btn btn-default" disabled>
+            <span class="{{ faIcon }}"></span>
+        </button>
+        {{/ showIcon }}
+        {{/ attachmentType }}
+        {{/ attachmentOptions.show_icon }}
+    {{/ attachmentOptions.read_only }}
+    {{^ attachmentOptions.read_only }}
     <button type="button" class="btn {{# active }}btn-primary{{/ active }}{{^ active }}btn-danger{{/ active }} dropdown-toggle" data-toggle="dropdown">
-        {{# showAttachmentHeading }}
+        {{# attachmentOptions.show_header }}
         <span class="btn-label">{{# _t }}Actions{{/ _t }}</span>
-        {{/ showAttachmentHeading }}
-        {{^ showAttachmentHeading }}
-        <span class="glyphicon {{ glyphicon }}">&nbsp;</span>
+        {{/ attachmentOptions.show_header }}
+        {{^ attachmentOptions.show_header }}
+            {{# attachmentType }}
+            {{# showIcon }}
+            <span class="{{ faIcon }}">&nbsp;</span>
+            {{/ showIcon }}
+            {{/ attachmentType }}
         <span class="sr-only">{{# _t }}Actions{{/ _t }}</span>
-        {{/ showAttachmentHeading }}
+        {{/ attachmentOptions.show_header }}
         <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
@@ -32,5 +42,5 @@
         <li><a href="object/edit?obj_type={{ type }}&obj_id={{ id }}" target="_blank">{{# _t }}Edit Content{{/ _t }}</a></li>
         {{/ isAttachmentContainer }}
     </ul>
-    {{/ readOnly }}
+    {{/ attachmentOptions.read_only }}
 </div>

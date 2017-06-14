@@ -3,6 +3,7 @@
 namespace Charcoal\Admin\Widget;
 
 use ArrayIterator;
+use Charcoal\Model\ModelInterface;
 use RuntimeException;
 use InvalidArgumentException;
 
@@ -20,7 +21,6 @@ use Charcoal\Factory\FactoryInterface;
 
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
-use Charcoal\Model\ModelFactory;
 
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
@@ -63,41 +63,6 @@ class AttachmentWidget extends AdminWidget implements
     protected $group;
 
     /**
-     * Whether the widget is editable or only viewable.
-     *
-     * @var boolean
-     */
-    private $readOnly = false;
-
-    /**
-     * The attachment heading (property or template).
-     *
-     * @var Translation|string|null
-     */
-    protected $attachmentHeading;
-
-    /**
-     * The attachment preview  (property or template).
-     *
-     * @var Translation|string|null
-     */
-    protected $attachmentPreview;
-
-    /**
-     * Flag wether the attachment heading should be displayed.
-     *
-     * @var boolean
-     */
-    private $showAttachmentHeading = true;
-
-    /**
-     * Flag wether the attachment preview should be displayed.
-     *
-     * @var boolean
-     */
-    private $showAttachmentPreview = false;
-
-    /**
      * The widgets's available attachment types.
      *
      * @var array
@@ -117,6 +82,30 @@ class AttachmentWidget extends AdminWidget implements
      * @var FactoryInterface
      */
     private $widgetFactory;
+
+    /**
+     * Font-awesome icons for each of the default attachment types.
+     *
+     * @var array
+     */
+    protected $defaultIcons = [
+        'embed'     => 'window-maximize',
+        'video'     => 'video-camera',
+        'image'     => 'picture-o',
+        'file'      => 'file',
+        'link'      => 'link',
+        'text'      => 'paragraph',
+        'gallery'   => 'camera',
+        'container' => 'object-group',
+        'accordion' => 'list',
+        'quote'     => 'quote-right',
+        'resources' => 'paperclip'
+    ];
+
+    /**
+     * @var array
+     */
+    private $attachmentOptions;
 
     /**
      * Inject dependencies from a DI Container.
@@ -184,11 +173,13 @@ class AttachmentWidget extends AdminWidget implements
             $label = $attMeta['label'];
 
             $out[] = [
-                'id'     => (isset($attMeta['att_id']) ? $attMeta['att_id'] : null),
-                'ident'  => $this->createIdent($attType),
-                'label'  => $label,
-                'val'    => $attType,
-                'active' => ($i == 1)
+                'id'       => (isset($attMeta['att_id']) ? $attMeta['att_id'] : null),
+                'ident'    => $this->createIdent($attType),
+                'skipForm' => $attMeta['skip_form'],
+                'faIcon'   => $attMeta['faIcon'],
+                'label'    => $label,
+                'val'      => $attType,
+                'active'   => ($i == 1)
             ];
         }
 
@@ -202,10 +193,17 @@ class AttachmentWidget extends AdminWidget implements
      */
     public function attachments()
     {
-        $attachments = $this->obj()->attachments($this->group());
+        $attachableObjects = $this->attachableObjects();
+        $attachments       = $this->obj()->attachments($this->group());
 
         foreach ($attachments as $attachment) {
             $GLOBALS['widget_template'] = (string)$attachment->rawPreview();
+
+            if (isset($attachableObjects[$attachment->objType()])) {
+                $attachment->attachmentType = $attachableObjects[$attachment->objType()];
+            } else {
+                $attachment->attachmentType = [];
+            }
 
             yield $attachment;
 
@@ -221,6 +219,112 @@ class AttachmentWidget extends AdminWidget implements
     public function hasAttachments()
     {
         return count(iterator_to_array($this->attachments()));
+    }
+
+    /**
+     * The default set of settings for attachment widget.
+     *
+     * @return array
+     */
+    public function defaultAttachmentOptions()
+    {
+        return [
+            'header'       => null,
+            'preview'      => null,
+            'show_header'  => true,
+            'show_preview' => false,
+            'show_icon'    => true,
+            'read_only'    => false
+        ];
+    }
+
+    /**
+     * Add (or replace) an attachment options.
+     *
+     * @param string $key The setting to add/replace.
+     * @param mixed  $val The settings's value to apply.
+     * @throws InvalidArgumentException If the identifier is not a string.
+     * @return self
+     */
+    public function addAttachmentOption($key, $val)
+    {
+        if (!is_string($key)) {
+            throw new InvalidArgumentException(
+                'Setting key must be a string.'
+            );
+        }
+
+        // Make sure default options are loaded.
+        if ($this->attachmentOptions === null) {
+            $this->attachmentOptions();
+        }
+
+        $this->attachmentOptions[$key] = $val;
+
+        return $this;
+    }
+
+    /**
+     * Add (or replace) an attachment options.
+     *
+     * @param string $key The setting to get.
+     * @throws InvalidArgumentException If the identifier is not a string.
+     * @return mixed|null
+     */
+    public function attachmentOption($key)
+    {
+        if (!is_string($key)) {
+            throw new InvalidArgumentException(
+                'Setting key must be a string.'
+            );
+        }
+
+        // Make sure default options are loaded.
+        if ($this->attachmentOptions === null) {
+            $this->attachmentOptions();
+        }
+
+        if (isset($this->attachmentOptions[$key])) {
+            return $this->attachmentOptions[$key];
+        }
+
+        return null;
+    }
+
+    /**
+     * Merge (replacing or adding) attachment options.
+     *
+     * @param array $settings The attachment options.
+     * @return self
+     */
+    public function mergeAttachmentOptions(array $settings)
+    {
+        // Make sure default options are loaded.
+        if ($this->attachmentOptions === null) {
+            $this->attachmentOptions();
+        }
+
+        $this->attachmentOptions = array_merge(
+            $this->attachmentOptions,
+            $this->parseAttachmentOptions($settings)
+        );
+
+        return $this;
+    }
+
+    /**
+     * @param array $settings The Attachment options.
+     * @return array Returns the parsed options.
+     */
+    protected function parseAttachmentOptions(array $settings)
+    {
+        if (isset($settings['show_header']) && isset($settings['show_preview'])) {
+            if (!$settings['show_header'] && !$settings['show_preview']) {
+                $settings['show_header'] = true;
+            }
+        }
+
+        return $settings;
     }
 
     // Setters
@@ -254,55 +358,17 @@ class AttachmentWidget extends AdminWidget implements
     }
 
     /**
-     * Set the attachment's default heading.
+     * Set the attachment widget settings.
      *
-     * @param  string $heading The attachment heading template.
-     * @throws InvalidArgumentException If provided argument is not of type 'string'.
+     * @param array $settings Attachments options array.
      * @return self
      */
-    public function setAttachmentHeading($heading)
+    public function setAttachmentOptions(array $settings)
     {
-        $this->attachmentHeading = $heading;
-
-        return $this;
-    }
-
-    /**
-     * Set the attachment's default preview.
-     *
-     * @param  string $preview The attachment preview template.
-     * @throws InvalidArgumentException If provided argument is not of type 'string'.
-     * @return self
-     */
-    public function setAttachmentPreview($preview)
-    {
-        $this->attachmentPreview = $preview;
-
-        return $this;
-    }
-
-    /**
-     * Set whether to show a heading for each attached object.
-     *
-     * @param  boolean $show The show heading flag.
-     * @return self
-     */
-    public function setShowAttachmentHeading($show)
-    {
-        $this->showAttachmentHeading = !!$show;
-
-        return $this;
-    }
-
-    /**
-     * Set whether to show a preview for each attached object.
-     *
-     * @param  boolean $show The show preview flag.
-     * @return self
-     */
-    public function setShowAttachmentPreview($show)
-    {
-        $this->showAttachmentPreview = !!$show;
+        $this->attachmentOptions = array_merge(
+            $this->defaultAttachmentOptions(),
+            $this->parseAttachmentOptions($settings)
+        );
 
         return $this;
     }
@@ -326,19 +392,6 @@ class AttachmentWidget extends AdminWidget implements
         }
 
         $this->group = $group;
-
-        return $this;
-    }
-
-    /**
-     * Set whether the widget is read-only.
-     *
-     * @param  boolean $readOnly The read-only flag.
-     * @return self
-     */
-    public function setReadOnly($readOnly)
-    {
-        $this->readOnly = !!$readOnly;
 
         return $this;
     }
@@ -451,7 +504,10 @@ class AttachmentWidget extends AdminWidget implements
             $orders     = [];
             $numPerPage = 0;
             $page       = 1;
-            $attOption  = [ 'label', 'filters', 'orders', 'num_per_page', 'page' ];
+            $skipForm   = false;
+            $faIcon     = '';
+            $showIcon   = true;
+            $attOption  = ['label', 'filters', 'orders', 'num_per_page', 'page'];
             $attData    = array_diff_key($attMeta, $attOption);
 
             // Disable an attachable model
@@ -489,9 +545,29 @@ class AttachmentWidget extends AdminWidget implements
                 $page = $attMeta['page'];
             }
 
+            if (isset($attMeta['skip_form'])) {
+                $skipForm = $attMeta['skip_form'];
+            }
+
+            if (isset($attMeta['fa_icon']) && !empty($attMeta['fa_icon'])) {
+                $faIcon = 'fa fa-'.$attMeta['fa_icon'];
+            } else {
+                $attParts = explode('/', $attType);
+                if (isset($this->defaultIcons[end($attParts)])) {
+                    $faIcon = 'fa fa-'.$this->defaultIcons[end($attParts)];
+                }
+            }
+
+            if (isset($attMeta['show_icon'])) {
+                $showIcon = !!$attMeta['show_icon'];
+            }
+
             $out[$attType] = [
                 'att_id'     => $attId,
                 'label'      => $label,
+                'skip_form'  => $skipForm,
+                'faIcon'     => $faIcon,
+                'showIcon'   => $showIcon,
                 'filters'    => $filters,
                 'orders'     => $orders,
                 'page'       => $page,
@@ -527,47 +603,17 @@ class AttachmentWidget extends AdminWidget implements
     }
 
     /**
-     * Retrieve the attachment's default heading.
+     * Retrieve the attachment options.
      *
-     * @return Translation|string|null
+     * @return array
      */
-    public function attachmentHeading()
+    public function attachmentOptions()
     {
-        return $this->attachmentHeading;
-    }
-
-    /**
-     * Retrieve the attachment's default preview.
-     *
-     * @return Translation|string|null
-     */
-    public function attachmentPreview()
-    {
-        return $this->attachmentPreview;
-    }
-
-    /**
-     * Determine if the widget displays a heading for each attached objects.
-     *
-     * @return boolean
-     */
-    public function showAttachmentHeading()
-    {
-        if (!$this->showAttachmentHeading && !$this->showAttachmentPreview()) {
-            return true;
+        if ($this->attachmentOptions === null) {
+            $this->attachmentOptions = $this->defaultAttachmentOptions();
         }
 
-        return $this->showAttachmentHeading;
-    }
-
-    /**
-     * Determine if the widget displays a preview for each attached objects.
-     *
-     * @return boolean
-     */
-    public function showAttachmentPreview()
-    {
-        return $this->showAttachmentPreview;
+        return $this->attachmentOptions;
     }
 
     /**
@@ -582,16 +628,6 @@ class AttachmentWidget extends AdminWidget implements
         }
 
         return $this->group;
-    }
-
-    /**
-     * Determine if the widget is read-only.
-     *
-     * @return boolean
-     */
-    public function readOnly()
-    {
-        return $this->readOnly;
     }
 
     /**
@@ -623,10 +659,10 @@ class AttachmentWidget extends AdminWidget implements
     {
         $options = [
             'attachable_objects'      => $this->attachableObjects(),
-            'attachment_heading'      => $this->attachmentHeading(),
-            'attachment_preview'      => $this->attachmentPreview(),
-            'show_attachment_heading' => ($this->showAttachmentHeading() ? 1 : 0),
-            'show_attachment_preview' => ($this->showAttachmentPreview() ? 1 : 0),
+            'attachment_heading'      => $this->attachmentOption('header'),
+            'attachment_preview'      => $this->attachmentOption('preview'),
+            'show_attachment_heading' => ($this->attachmentOption('show_header') ? 1 : 0),
+            'show_attachment_preview' => ($this->attachmentOption('show_preview') ? 1 : 0),
             'title'                   => $this->title(),
             'obj_type'                => $this->obj()->objType(),
             'obj_id'                  => $this->obj()->id(),

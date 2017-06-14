@@ -5,23 +5,27 @@
     @used-by `charcoal/admin/widget/attachment/list`
 --}}
 <article
-        class="panel {{# active }}panel-default{{/ active}}{{^ active }}panel-danger{{/ active}} js-attachment{{# showAttachmentPreview }} content-preview{{/ showAttachmentPreview}}"
+        class="panel {{# active }}panel-default{{/ active}}{{^ active }}panel-danger{{/ active}} js-attachment{{# attachmentOptions.show_preview }} content-preview{{/ attachmentOptions.show_preview}}"
         id="{{ widgetId }}_{{ id }}"
         data-id="{{ id }}"
         data-type="{{ objType }}"
         data-microtype="{{ microType }}"
     {{# attachmentGroup }} data-group="{{ . }}"{{/ attachmentGroup }}>
-    {{# showAttachmentPreview }}
+    {{# attachmentOptions.show_preview }}
         {{> charcoal/admin/widget/attachment/object/collapsible }}
-    {{/ showAttachmentPreview }}
-    {{^ showAttachmentPreview }}
+    {{/ attachmentOptions.show_preview }}
+    {{^ attachmentOptions.show_preview }}
         <header{{^ readOnly }} draggable="true"{{/ readOnly }} id="{{ widgetId }}_heading_{{ id }}" class="panel-heading">
             <h4 class="panel-title">
-                <span class="panel-title-icon glyphicon {{ glyphicon }}"></span>
+                {{# attachmentType }}
+                    {{# showIcon }}
+                        <span class="panel-title-icon {{ faIcon }}"></span>
+                    {{/ showIcon }}
+                {{/ attachmentType }}
                 <a href="object/edit?obj_type={{ type }}&obj_id={{ id }}">{{& heading }}{{^ active }}&mdash; <span class="small">{{# _t }}Disabled{{/ _t }}</span>{{/ active }}</a>
             </h4>
         </header>
-    {{/ showAttachmentPreview }}
+    {{/ attachmentOptions.show_preview }}
     <aside class="panel-actions panel-actions-float btn-toolbar js-attachment-actions" role="toolbar">
         {{> charcoal/admin/widget/attachment/object/actions }}
     </aside>
