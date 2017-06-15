@@ -13,11 +13,18 @@ The preferred (and only supported) way of installing _charcoal-core_ is with **c
 ★ composer require locomotivemtl/charcoal-core
 ```
 
+For a complete, ready-to-use project, start from the [`boilerplate`](https://github.com/locomotivemtl/charcoal-project-boilerplate):
+
+```shell
+★ composer create-project locomotivemtl/charcoal-project-boilerplate:@dev --prefer-source
+```
+
 ## Dependencies and Requirements
 
 Charcoal depends on:
 
 -   `PHP** 5.6+`
+    - `PHP 7` is recommended, for performance and security.
 -   `ext-pdo`
 -   `ext-mbstring`
 -   `psr/log`
@@ -27,13 +34,18 @@ Charcoal depends on:
 -   `locomotivemtl/charcoal-property`
 -   `locomotivemtl/charcoal-view`
 
-## Recommended modules
 
-For a complete, ready-to-use project, start from the [`boilerplate`](https://github.com/locomotivemtl/charcoal-project-boilerplate):
+# Loader
 
-```shell
-★ composer create-project locomotivemtl/charcoal-project-boilerplate
-```
+# Model
+
+# Source
+
+# Validator
+
+The validator namespace is obsolete and should not be used.
+Its usage is currently being removed from everywhere in charcoal.
+
 
 # Development
 

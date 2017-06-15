@@ -26,7 +26,6 @@ use Charcoal\Source\Pagination;
 use Charcoal\Source\PaginationInterface;
 
 /**
-/**
  * Full implementation, as abstract class, of the SourceInterface.
  */
 abstract class AbstractSource implements
