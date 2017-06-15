@@ -2,10 +2,10 @@
 
 namespace Charcoal\Source;
 
-use \InvalidArgumentException;
+use InvalidArgumentException;
 
 // From 'charcoal-core'
-use \Charcoal\Source\OrderInterface;
+use Charcoal\Source\OrderInterface;
 
 /**
  * Order

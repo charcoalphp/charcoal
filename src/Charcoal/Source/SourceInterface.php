@@ -3,8 +3,9 @@
 namespace Charcoal\Source;
 
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Model\ModelInterface;
-use \Charcoal\Source\StorableInterface;
+use Charcoal\Model\ModelInterface;
+
+use Charcoal\Source\StorableInterface;
 
 /**
  * @todo Implement SourceInterface.
@@ -100,7 +101,7 @@ interface SourceInterface
 
     /**
      * @param array $orders The orders.
-     * @return CollectionLoader Chainable
+     * @return SourceInterface Chainable
      */
     public function setOrders(array $orders);
 
@@ -113,24 +114,24 @@ interface SourceInterface
      * @param string|array|Order $param   The order parameter. May the "order property" or an array / object.
      * @param string             $mode    Optional. Mode, only used if the first argument is a string.
      * @param array              $options Optional. Options, only user if the first argument is a string.
-     * @return CollectionLoader Chainable
+     * @return SourceInterface Chainable
      */
     public function addOrder($param, $mode = 'asc', array $options = null);
 
     /**
      * @param mixed $param The pagination information.
-     * @return CollectionLoader Chainable
+     * @return SourceInterface Chainable
      */
     public function setPagination($param);
 
     /**
-     * @return Pagination
+     * @return PaginationInterface
      */
     public function pagination();
 
     /**
      * @param integer $page The page number. Starts with 0.
-     * @return CollectionLoader Chainable
+     * @return SourceInterface Chainable
      */
     public function setPage($page);
 

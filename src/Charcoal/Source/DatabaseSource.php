@@ -3,22 +3,22 @@
 namespace Charcoal\Source;
 
 // Dependencies from `PHP`
-use \Exception;
-use \InvalidArgumentException;
+use Exception;
+use InvalidArgumentException;
 
 // Dependencies from `PHP` modules
-use \PDO;
+use PDO;
 
 // Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Model\ModelInterface;
+use Charcoal\Model\ModelInterface;
 
 // Local namespace dependencies
-use \Charcoal\Source\AbstractSource;
-use \Charcoal\Source\DatabaseSourceConfig;
-use \Charcoal\Source\DatabaseSourceInterface;
-use \Charcoal\Source\Database\DatabaseFilter;
-use \Charcoal\Source\Database\DatabaseOrder;
-use \Charcoal\Source\Database\DatabasePagination;
+use Charcoal\Source\AbstractSource;
+use Charcoal\Source\DatabaseSourceConfig;
+use Charcoal\Source\DatabaseSourceInterface;
+use Charcoal\Source\Database\DatabaseFilter;
+use Charcoal\Source\Database\DatabaseOrder;
+use Charcoal\Source\Database\DatabasePagination;
 
 /**
  * Database Source, through PDO.

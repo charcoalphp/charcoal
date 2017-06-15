@@ -2,7 +2,7 @@
 
 namespace Charcoal\Source;
 
-use \InvalidArgumentException as InvalidArgumentException;
+use InvalidArgumentException;
 
 /**
  * Implementation, as concrete class, of the PaginationInterface.

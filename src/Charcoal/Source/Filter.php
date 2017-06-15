@@ -2,10 +2,10 @@
 
 namespace Charcoal\Source;
 
-use \InvalidArgumentException;
+use InvalidArgumentException;
 
 // From 'charcoal-core'
-use \Charcoal\Source\FilterInterface;
+use Charcoal\Source\FilterInterface;
 
 /**
  * Filter

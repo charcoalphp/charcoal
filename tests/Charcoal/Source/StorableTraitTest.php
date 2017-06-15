@@ -2,13 +2,27 @@
 
 namespace Charcoal\Tests\Source;
 
-class StorableTraitTest extends \PHPUnit_Framework_TestCase
+use PHPUnit_Framework_TestCase;
+
+use Psr\Log\NullLogger;
+
+use Charcoal\Tests\Mock\StorableMock;
+use Charcoal\Tests\Mock\SourceMock;
+
+class StorableTraitTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @var StorableMock
+     */
     public $obj;
+
+    /**
+     *
+     */
 
     public function setUp()
     {
-        $this->obj = $this->getMockForTrait('\Charcoal\Source\StorableTrait');
+        $this->obj = new StorableMock();
     }
 
     /**
@@ -77,5 +91,45 @@ class StorableTraitTest extends \PHPUnit_Framework_TestCase
             ['#not'],
             ['^']
         ];
+    }
+
+    public function testSetSource()
+    {
+        $source = $this->source();
+        $res = $this->obj->setSource($source);
+        $this->assertSame($this->obj, $res);
+        $this->assertSame($source, $this->obj->source());
+    }
+
+    public function testSave()
+    {
+        $source = $this->source();
+        $this->obj->setSource($source);
+        $res = $this->obj->save();
+        $this->assertEquals(true, $res);
+    }
+
+    public function testUpdate()
+    {
+        $source = $this->source();
+        $this->obj->setSource($source);
+        $res = $this->obj->update();
+        $this->assertEquals(true, $res);
+    }
+
+    public function testDelete()
+    {
+        $source = $this->source();
+        $this->obj->setSource($source);
+        $res = $this->obj->delete();
+        $this->assertEquals(true, $res);
+    }
+
+    private function source()
+    {
+        $logger = new NullLogger();
+        return new SourceMock([
+            'logger' => $logger
+        ]);
     }
 }

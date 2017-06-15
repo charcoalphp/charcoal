@@ -2,10 +2,10 @@
 
 namespace Charcoal\Source;
 
-use \InvalidArgumentException;
+use InvalidArgumentException;
 
 // Dependency from 'charcoal-config'
-use \Charcoal\Config\AbstractConfig as AbstractConfig;
+use Charcoal\Config\AbstractConfig;
 
 /**
  * Source Config

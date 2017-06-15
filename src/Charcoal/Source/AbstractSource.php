@@ -26,6 +26,7 @@ use Charcoal\Source\Pagination;
 use Charcoal\Source\PaginationInterface;
 
 /**
+/**
  * Full implementation, as abstract class, of the SourceInterface.
  */
 abstract class AbstractSource implements
@@ -174,7 +175,7 @@ abstract class AbstractSource implements
     /**
      * @param string $property Property ident.
      * @throws InvalidArgumentException If property is not a string or empty.
-     * @return CollectionLoader Chainable
+     * @return SourceInterface Chainable
      */
     public function addProperty($property)
     {
@@ -194,7 +195,7 @@ abstract class AbstractSource implements
 
     /**
      * @param array $filters The filters to set.
-     * @return Collection Chainable
+     * @return SourceInterface Chainable
      */
     public function setFilters(array $filters)
     {
@@ -228,7 +229,7 @@ abstract class AbstractSource implements
      * @param mixed               $val     Optional: Only used if the first argument is a string.
      * @param array               $options Optional: Only used if the first argument is a string.
      * @throws InvalidArgumentException If property is not a string or empty.
-     * @return CollectionLoader (Chainable)
+     * @return SourceInterface (Chainable)
      */
     public function addFilter($param, $val = null, array $options = null)
     {
@@ -306,7 +307,7 @@ abstract class AbstractSource implements
      * @param string             $mode         Optional.
      * @param array              $orderOptions Optional.
      * @throws InvalidArgumentException If the param argument is invalid.
-     * @return CollectionLoader Chainable
+     * @return SourceInterface Chainable
      */
     public function addOrder($param, $mode = 'asc', array $orderOptions = null)
     {
@@ -357,7 +358,7 @@ abstract class AbstractSource implements
     /**
      * @param mixed $param The pagination object or array.
      * @throws InvalidArgumentException If the argument is not an object or array.
-     * @return CollectionLoader Chainable
+     * @return SourceInterface Chainable
      */
     public function setPagination($param)
     {
@@ -381,7 +382,7 @@ abstract class AbstractSource implements
      * If the pagination wasn't set previously, a new (default / blank) Pagination object will be created.
      * (Always return a `PaginationInterface` object)
      *
-     * @return Pagination
+     * @return PaginationInterface
      */
     public function pagination()
     {
