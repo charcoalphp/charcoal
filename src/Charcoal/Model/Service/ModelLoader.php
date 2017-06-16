@@ -230,7 +230,7 @@ final class ModelLoader implements ArrayAccess
         }
 
         $obj = $this->loadFromSource($ident);
-        $objData = $obj->data();
+        $objData = ($obj->id() ? $obj->data() : []);
         $this->cachePool->save($cacheItem->set($objData));
 
         return $obj;
