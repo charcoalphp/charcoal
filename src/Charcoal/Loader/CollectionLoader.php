@@ -631,7 +631,6 @@ class CollectionLoader implements LoggerAwareInterface
      */
     protected function processCollection($results, callable $before = null, callable $after = null)
     {
-        $modelObjType = $this->model()->objType();
         $collection   = $this->createCollection();
         foreach ($results as $objData) {
             $obj = $this->processModel($objData, $before, $after);
@@ -657,7 +656,7 @@ class CollectionLoader implements LoggerAwareInterface
         if ($this->dynamicTypeField && isset($objData[$this->dynamicTypeField])) {
             $objType = $objData[$this->dynamicTypeField];
         } else {
-            $objType = $this->model()->objType();
+            $objType = get_class($this->model());
         }
 
         $obj = $this->factory()->create($objType);
