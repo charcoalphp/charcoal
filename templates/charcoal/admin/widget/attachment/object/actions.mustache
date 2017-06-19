@@ -2,11 +2,9 @@
     {{# attachmentOptions.read_only }}
         {{# attachmentOptions.show_icon }}
         {{# attachmentType }}
-        {{# showIcon }}
         <button type="button" class="btn btn-default" disabled>
             <span class="{{ faIcon }}"></span>
         </button>
-        {{/ showIcon }}
         {{/ attachmentType }}
         {{/ attachmentOptions.show_icon }}
     {{/ attachmentOptions.read_only }}
@@ -16,11 +14,11 @@
         <span class="btn-label">{{# _t }}Actions{{/ _t }}</span>
         {{/ attachmentOptions.show_header }}
         {{^ attachmentOptions.show_header }}
+            {{# attachmentOptions.show_icon }}
             {{# attachmentType }}
-            {{# showIcon }}
             <span class="{{ faIcon }}">&nbsp;</span>
-            {{/ showIcon }}
             {{/ attachmentType }}
+            {{/ attachmentOptions.show_icon }}
         <span class="sr-only">{{# _t }}Actions{{/ _t }}</span>
         {{/ attachmentOptions.show_header }}
         <span class="caret"></span>
@@ -36,9 +34,7 @@
         <li><a href="#" data-type="{{ type }}"{{# attachmentGroup }} data-group="{{ . }}"{{/ attachmentGroup }} data-id="{{ id }}" data-title="{{ label }}" data-attachment="{{ attachmentType }}" data-action="add-object">
             {{# attachmentOptions.show_icon }}
                 {{# attachmentType }}
-                    {{# showIcon }}
-                        <span class="{{ faIcon }}">&nbsp;</span>
-                    {{/ showIcon }}
+                    <span class="{{ faIcon }}">&nbsp;</span>
                 {{/ attachmentType }}
             {{/ attachmentOptions.show_icon }}
             {{ label }}

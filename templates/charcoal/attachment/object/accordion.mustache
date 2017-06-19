@@ -7,7 +7,9 @@
     {{# attachments }}
         <li class="list-group-item u-truncate{{^ active }} alert-danger{{/ active}}">
             {{# attachmentType }}
+            {{# attachmentOptions.show_icon }}
             <span class="list-group-item-icon {{ faIcon }}"></span>
+            {{/ attachmentOptions.show_icon }}
             {{/ attachmentType }}
             <span class="list-group-item-label">{{& heading }}{{^ active }} &mdash; <span class="small">{{# _t }}Disabled{{/ _t }}</span>{{/ active }}</span>
             {{> charcoal/attachment/object/partial/modify-button }}

@@ -11,9 +11,7 @@
             <li>
                 <a href="{{baseUrl}}admin/object/edit?obj_type={{val}}{{# id }}&obj_id={{ . }}{{/ id }}" data-type="{{val}}"{{# id }} data-id="{{ . }}"{{/ id }} data-title="{{label}}" data-skip-form="{{skipForm}}" class="js-add-attachment" target="_blank">
                     {{# attachmentOptions.show_icon }}
-                    {{# showIcon }}
                     <span class="{{faIcon}}"></span>
-                    {{/ showIcon }}
                     {{/ attachmentOptions.show_icon }}
                     <span class="glyphicon-class">{{label}}</span>
                 </a>

@@ -18,9 +18,9 @@
         <header{{^ readOnly }} draggable="true"{{/ readOnly }} id="{{ widgetId }}_heading_{{ id }}" class="panel-heading">
             <h4 class="panel-title">
                 {{# attachmentType }}
-                    {{# showIcon }}
+                    {{# attachmentOptions.show_icon }}
                         <span class="panel-title-icon {{ faIcon }}"></span>
-                    {{/ showIcon }}
+                    {{/ attachmentOptions.show_icon }}
                 {{/ attachmentType }}
                 <a href="object/edit?obj_type={{ type }}&obj_id={{ id }}">{{& heading }}{{^ active }}&mdash; <span class="small">{{# _t }}Disabled{{/ _t }}</span>{{/ active }}</a>
             </h4>
