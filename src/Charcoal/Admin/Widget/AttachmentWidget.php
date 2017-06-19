@@ -659,10 +659,7 @@ class AttachmentWidget extends AdminWidget implements
     {
         $options = [
             'attachable_objects'      => $this->attachableObjects(),
-            'attachment_heading'      => $this->attachmentOption('header'),
-            'attachment_preview'      => $this->attachmentOption('preview'),
-            'show_attachment_heading' => ($this->attachmentOption('show_header') ? 1 : 0),
-            'show_attachment_preview' => ($this->attachmentOption('show_preview') ? 1 : 0),
+            'attachment_options'      => $this->attachmentOptions(),
             'title'                   => $this->title(),
             'obj_type'                => $this->obj()->objType(),
             'obj_id'                  => $this->obj()->id(),
