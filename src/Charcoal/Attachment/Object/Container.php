@@ -25,7 +25,9 @@ class Container extends Attachment implements
     AttachmentContainerInterface,
     ConfigurableInterface
 {
-    use AttachmentAwareTrait;
+    use AttachmentAwareTrait {
+        AttachmentAwareTrait::attachments as getAttachments;
+    }
     use AttachmentContainerTrait;
     use ConfigurableAttachmentsTrait;
 
@@ -43,6 +45,36 @@ class Container extends Attachment implements
             $this->setConfig($container['attachments/config']);
         } elseif (isset($container['config']['attachments'])) {
             $this->setConfig($container['config']['attachments']);
+        }
+    }
+
+    /**
+     * Retrieve the objects associated to the current object.
+     *
+     * @param  string|null   $group  Filter the attachments by a group identifier.
+     * @param  string|null   $type   Filter the attachments by type.
+     * @param  callable|null $before Process each attachment before applying data.
+     * @param  callable|null $after  Process each attachment after applying data.
+     * @throws InvalidArgumentException If the $group or $type is invalid.
+     * @return Collection|Attachment[]
+     */
+    public function attachments(
+        $group = null,
+        $type = null,
+        callable $before = null,
+        callable $after = null
+    ) {
+        $attachableObjects = $this->attachableObjects();
+        $attachments       = $this->getAttachments($group, $type, $before, $after);
+
+        foreach ($attachments as $attachment) {
+            if (isset($attachableObjects[$attachment->objType()])) {
+                $attachment->attachmentType = $attachableObjects[$attachment->objType()];
+            } else {
+                $attachment->attachmentType = [];
+            }
+
+            yield $attachment;
         }
     }
 }

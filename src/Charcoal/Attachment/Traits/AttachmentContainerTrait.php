@@ -134,6 +134,16 @@ trait AttachmentContainerTrait
     }
 
     /**
+     * Retrieve the attachment types with their collections.
+     *
+     * @return array
+     */
+    public function attachmentTypes()
+    {
+        return array_values($this->attachableObjects());
+    }
+
+    /**
      * Returns attachable objects
      *
      * @return array Attachable Objects
@@ -167,7 +177,20 @@ trait AttachmentContainerTrait
                         $attMeta['label'] = ucfirst(basename($attType));
                     }
 
-                    $this->attachableObjects[] = $attMeta;
+                    $faIcon = '';
+                    if (isset($attMeta['fa_icon']) && !empty($attMeta['fa_icon'])) {
+                        $faIcon = 'fa fa-'.$attMeta['fa_icon'];
+                    } elseif ($this->attachmentWidget()) {
+                        $attParts = explode('/', $attType);
+                        $defaultIcons = $this->attachmentWidget()->defaultIcons();
+                        if (isset($defaultIcons[end($attParts)])) {
+                            $faIcon = 'fa fa-'.$defaultIcons[end($attParts)];
+                        }
+                    }
+
+                    $attMeta['faIcon'] = $faIcon;
+
+                    $this->attachableObjects[$attType] = $attMeta;
                 }
             }
         }

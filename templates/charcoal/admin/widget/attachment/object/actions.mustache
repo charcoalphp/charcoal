@@ -32,9 +32,18 @@
         <li><a href="object/edit?obj_type={{ type }}&obj_id={{ id }}" data-type="{{ type }}" data-title="{{# _t }}Edit{{/ _t }}" data-id="{{id}}" data-action="edit">{{# _t }}Edit{{/ _t }}</a></li>
         {{# isAttachmentContainer }}
         <li role="separator" class="divider"></li>
-        {{# attachableObjects }}
-        <li><a href="#" data-type="{{ type }}"{{# attachmentGroup }} data-group="{{ . }}"{{/ attachmentGroup }} data-id="{{ id }}" data-title="{{ label }}" data-attachment="{{ attachmentType }}" data-action="add-object">{{ label }}</a></li>
-        {{/ attachableObjects }}
+        {{# attachmentTypes }}
+        <li><a href="#" data-type="{{ type }}"{{# attachmentGroup }} data-group="{{ . }}"{{/ attachmentGroup }} data-id="{{ id }}" data-title="{{ label }}" data-attachment="{{ attachmentType }}" data-action="add-object">
+            {{# attachmentOptions.show_icon }}
+                {{# attachmentType }}
+                    {{# showIcon }}
+                        <span class="{{ faIcon }}">&nbsp;</span>
+                    {{/ showIcon }}
+                {{/ attachmentType }}
+            {{/ attachmentOptions.show_icon }}
+            {{ label }}
+        </a></li>
+        {{/ attachmentTypes }}
         <li role="separator" class="divider"></li>
         {{/ isAttachmentContainer }}
         <li><a href="object/delete?obj_type={{ type }}&obj_id={{ id }}" data-type="{{ type }}" data-id="{{ id }}" data-action="delete">{{# _t }}Remove{{/ _t }}</a></li>

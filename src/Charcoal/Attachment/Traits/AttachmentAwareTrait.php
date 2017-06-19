@@ -2,6 +2,7 @@
 
 namespace Charcoal\Attachment\Traits;
 
+use Charcoal\Attachment\Interfaces\AttachmentAwareInterface;
 use InvalidArgumentException;
 
 // From 'charcoal-core'
@@ -158,6 +159,10 @@ trait AttachmentAwareTrait
             $callable = function (&$att) use ($widget, $before) {
                 if ($this instanceof AttachableInterface) {
                     $att->setContainerObj($this);
+                }
+
+                if ($att instanceof AttachmentAwareInterface) {
+                    $att['attachment_widget'] = $widget;
                 }
 
                 $kind = $att->type();
@@ -359,8 +364,6 @@ trait AttachmentAwareTrait
 
         return $attachmentObjects;
     }
-
-
 
     // Abstract Methods
     // =========================================================================

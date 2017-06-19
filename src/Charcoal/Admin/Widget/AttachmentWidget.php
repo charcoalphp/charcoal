@@ -669,6 +669,14 @@ class AttachmentWidget extends AdminWidget implements
         return json_encode($options, true);
     }
 
+    /**
+     * @return array
+     */
+    public function defaultIcons()
+    {
+        return $this->defaultIcons;
+    }
+
     // Utilities
     // =========================================================================
 
