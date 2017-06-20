@@ -3,6 +3,7 @@
 namespace Charcoal\Translator;
 
 use ArrayAccess;
+use DomainException;
 use InvalidArgumentException;
 use JsonSerializable;
 
@@ -82,15 +83,15 @@ class Translation implements
             ));
         }
 
-        return !empty($this->val[$lang]);
+        return isset($this->val[$lang]);
     }
 
     /**
-     * @see    ArrayAccess::offsetGet()
      * @param  string $lang A language identifier.
      * @return string A translated string.
      * @see    ArrayAccess::offsetGet()
      * @throws InvalidArgumentException If array key isn't a string.
+     * @throws DomainException If the array key is not found.
      */
     public function offsetGet($lang)
     {
@@ -101,15 +102,22 @@ class Translation implements
             ));
         }
 
+        if (!isset($this->val[$lang])) {
+            throw new DomainException(sprintf(
+                'Translation for "%s" is not defined.',
+                $lang
+            ));
+        }
+
         return $this->val[$lang];
     }
 
     /**
      * @param  string $lang A language identifier.
      * @param  string $val  A translation value.
-     * @throws InvalidArgumentException If array key isn't a string.
-     * @see    ArrayAccess::offsetSet()
      * @return void
+     * @see    ArrayAccess::offsetSet()
+     * @throws InvalidArgumentException If array key isn't a string.
      */
     public function offsetSet($lang, $val)
     {
@@ -132,9 +140,9 @@ class Translation implements
 
     /**
      * @param  string $lang A language identifier.
-     * @throws InvalidArgumentException If array key isn't a string.
-     * @see    ArrayAccess::offsetUnset()
      * @return void
+     * @see    ArrayAccess::offsetUnset()
+     * @throws InvalidArgumentException If array key isn't a string.
      */
     public function offsetUnset($lang)
     {
@@ -151,8 +159,8 @@ class Translation implements
     /**
      * Retrieve translations that can be serialized natively by json_encode().
      *
-     * @see    JsonSerializable::jsonSerialize()
      * @return string[]
+     * @see    JsonSerializable::jsonSerialize()
      */
     public function jsonSerialize()
     {
@@ -198,6 +206,7 @@ class Translation implements
                 'Invalid localized value.'
             );
         }
+
         return $this;
     }
 }
