@@ -77,7 +77,7 @@ class TranslatorTest extends PHPUnit_Framework_TestCase
     public function testTranslate($expected, $id, $translation, $parameters, $locale, $domain)
     {
         # $this->obj->setLocale('en');
-        $this->obj->addResource('array', [ (string) $id => $translation ], $locale, $domain);
+        $this->obj->addResource('array', [ (string)$id => $translation ], $locale, $domain);
 
         $this->assertEquals($expected, $this->obj->translate($id, $parameters, $domain, $locale));
     }
@@ -96,7 +96,7 @@ class TranslatorTest extends PHPUnit_Framework_TestCase
     public function testTranslateChoice($expected, $id, $translation, $number, $parameters, $locale, $domain)
     {
         # $this->obj->setLocale('en');
-        $this->obj->addResource('array', [ (string) $id => $translation ], $locale, $domain);
+        $this->obj->addResource('array', [ (string)$id => $translation ], $locale, $domain);
 
         $this->assertEquals($expected, $this->obj->translateChoice($id, $number, $parameters, $domain, $locale));
     }

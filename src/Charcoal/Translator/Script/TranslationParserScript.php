@@ -160,7 +160,7 @@ class TranslationParserScript extends AdminScript
         $filePath = str_replace('/', DIRECTORY_SEPARATOR, $base.$output);
 
         $this->climate()->backgroundGreen()->out(
-            'Make sure to include <light_green>' . $filePath . '</light_green> in your <light_green>translator/paths</light_green> configurations.'
+            'Make sure to include <light_green>'.$filePath.'</light_green> in your <light_green>translator/paths</light_green> configurations.'
         );
 
         return $response;
@@ -177,11 +177,11 @@ class TranslationParserScript extends AdminScript
         );
 
         $this->climate()->green()->out(
-            'CSV file output: <white>' . $this->filePath() . '</white>'
+            'CSV file output: <white>'.$this->filePath().'</white>'
         );
 
         $this->climate()->green()->out(
-            'CSV file names: <white>' . $this->domain().'.{locale}.csv</white>'
+            'CSV file names: <white>'.$this->domain().'.{locale}.csv</white>'
         );
 
         $this->climate()->green()->out(
@@ -258,19 +258,19 @@ class TranslationParserScript extends AdminScript
     public function regEx($type)
     {
         switch ($type) {
-            case 'php' :
+            case 'php':
                 $f = $this->phpFunction();
                 $regex = '/->'.$f.'\(\s*\n*\r*(["\'])(?<text>(.|\n|\r|\n\r)*?)\s*\n*\r*\1\)/i';
-            break;
+                break;
 
-            case 'mustache' :
+            case 'mustache':
                 $tag = $this->mustacheTag();
                 $regex = '/({{|\[\[)\s*#\s*'.$tag.'\s*(}}|\]\])(?<text>(.|\n|\r|\n\r)*?)({{|\[\[)\s*\/\s*'.$tag.'\s*(}}|\]\])/i';
-            break;
+                break;
 
             default:
                 $regex = '/({{|\[\[)\s*#\s*_t\s*(}}|\]\])(?<text>(.|\n|\r|\n\r)*?)({{|\[\[)\s*\/\s*_t\s*(}}|\]\])/i';
-            break;
+                break;
         }
 
         return $regex;
@@ -301,7 +301,7 @@ class TranslationParserScript extends AdminScript
         $path = $this->path();
 
         if ($path) {
-            $this->climate()->green()->out('Parsing files in <white>' . $path .'</white>');
+            $this->climate()->green()->out('Parsing files in <white>'.$path.'</white>');
             $translations = $this->getTranslationsFromPath($path, 'mustache');
             $translations = array_merge($translations, $this->getTranslationsFromPath($path, 'php'));
             return $translations;
@@ -311,7 +311,7 @@ class TranslationParserScript extends AdminScript
 
         $translations = [];
         foreach ($paths as $p) {
-            $this->climate()->green()->out('Parsing files in <white>' . $p .'</white>');
+            $this->climate()->green()->out('Parsing files in <white>'.$p.'</white>');
             $translations = array_merge_recursive($translations, $this->getTranslationsFromPath($p, 'mustache'));
             $translations = array_merge_recursive($translations, $this->getTranslationsFromPath($p, 'php'));
         }
@@ -321,7 +321,7 @@ class TranslationParserScript extends AdminScript
 
     /**
      * Get all translations in given path for the given file extension (mustache | php).
-     * @param  string $path The path.
+     * @param  string $path     The path.
      * @param  string $fileType The file extension|type.
      * @return array        Translations.
      */
@@ -371,7 +371,7 @@ class TranslationParserScript extends AdminScript
             }
         }
         $this->climate()->out('.');
-        $this->climate()->green()->out('Translations parsed from ' . $path);
+        $this->climate()->green()->out('Translations parsed from '.$path);
         return $translations;
     }
 
@@ -445,7 +445,7 @@ class TranslationParserScript extends AdminScript
     {
         if (!count($translations)) {
             $this->climate()->error('
-                There was no translations in the provided path ('. $this->path() .')
+                There was no translations in the provided path ('.$this->path().')
                 with the given recursive level ('.$this->maxRecursiveLevel().')
             ');
             return $this;

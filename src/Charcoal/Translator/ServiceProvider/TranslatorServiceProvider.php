@@ -22,6 +22,7 @@ use Charcoal\Translator\LocalesConfig;
 use Charcoal\Translator\LocalesManager;
 use Charcoal\Translator\Translator;
 use Charcoal\Translator\TranslatorConfig;
+use Charcoal\Translator\Middleware\LanguageMiddleware;
 
 /**
  * Translation Service Provider
@@ -39,6 +40,7 @@ class TranslatorServiceProvider implements ServiceProviderInterface
     {
         $this->registerLocales($container);
         $this->registerTranslator($container);
+        $this->registerMiddleware($container);
     }
 
     /**
@@ -123,7 +125,7 @@ class TranslatorServiceProvider implements ServiceProviderInterface
 
         /**
          * @param  Container $container Pimple DI container.
-         * @return array
+         * @return LocalesManager
          */
         $container['locales/manager'] = function (Container $container) {
             return new LocalesManager([
@@ -295,6 +297,32 @@ class TranslatorServiceProvider implements ServiceProviderInterface
          */
         $container['translator/loader/file/yaml'] = function() {
             return new YamlFileLoader();
+        };
+    }
+
+    /**
+     * @param  Container $container Pimple DI container.
+     * @return void
+     */
+    private function registerMiddleware(Container $container)
+    {
+        /**
+         * @param Container $container
+         * @return LanguageMiddleware
+         */
+        $container['middlewares/charcoal/translator/middleware/language'] = function (Container $container) {
+            $middlewareConfig = $container['config']['middlewares']['charcoal/translator/middleware/language'];
+            $middlewareConfig = array_replace(
+                [
+                    'default_language'  => $container['translator']->getLocale()
+                ],
+                $middlewareConfig,
+                [
+                    'translator'        => $container['translator'],
+                    'browser_language'  => $container['locales/browser-language']
+                ]
+            );
+            return new LanguageMiddleware($middlewareConfig);
         };
     }
 }
