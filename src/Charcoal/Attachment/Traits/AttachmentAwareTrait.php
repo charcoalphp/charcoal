@@ -12,7 +12,7 @@ use Charcoal\Loader\CollectionLoader;
 // From 'charcoal-admin'
 use Charcoal\Admin\Widget\AttachmentWidget;
 
-// From 'beneroch/charcoal-attachments'
+// From 'locomotivemtl/charcoal-attachments'
 use Charcoal\Attachment\Interfaces\AttachableInterface;
 use Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
 

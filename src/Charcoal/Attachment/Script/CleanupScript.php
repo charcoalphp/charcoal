@@ -18,12 +18,12 @@ use Charcoal\Model\ModelInterface;
 // From 'charcoal-app'
 use Charcoal\App\Script\AbstractScript;
 
-// From 'beneroch/charcoal-attachment'
+// From 'locomotivemtl/charcoal-attachment'
 use Charcoal\Attachment\Interfaces\AttachableInterface;
 use Charcoal\Attachment\Object\Attachment;
 use Charcoal\Attachment\Object\Join;
 
-// From 'beneroch/charcoal-utils'
+// From 'locomotivemtl/charcoal-utils'
 use Utils\Support\Traits\ConfigAwareTrait;
 use Utils\Support\Traits\ModelAwareTrait;
 use Utils\Support\Interfaces\ConfigAwareInterface;
@@ -117,7 +117,7 @@ class CleanupScript extends AbstractScript implements
         parent::init();
 
         $this->setDescription(
-            'The <underline>beneroch/attachment/prune</underline> script '.
+            'The <underline>locomotivemtl/attachment/prune</underline> script '.
             'removes all unassociated attachments.'
         );
     }

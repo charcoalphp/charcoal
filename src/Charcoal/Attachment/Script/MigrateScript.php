@@ -22,7 +22,7 @@ use Charcoal\Property\PropertyInterface;
 // From 'charcoal-admin'
 use Charcoal\Admin\Script\Object\Table\AlterPrimaryKeyScript;
 
-// From 'beneroch/charcoal-attachments'
+// From 'locomotivemtl/charcoal-attachments'
 use Charcoal\Attachment\Object\Attachment;
 use Charcoal\Attachment\Object\Join;
 
@@ -48,7 +48,7 @@ class MigrateScript extends AlterPrimaryKeyScript
         $this->setArguments($this->defaultArguments());
 
         $this->setDescription(
-            'The <underline>beneroch/attachment/migrate</underline> script '.
+            'The <underline>locomotivemtl/attachment/migrate</underline> script '.
             'upgrades the attachments SQL tables from 0.1 to 0.2; '.
             'Auto-incremented IDs are replaced with generated unique IDs.'
         );

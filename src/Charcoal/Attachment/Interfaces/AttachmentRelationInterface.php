@@ -2,7 +2,7 @@
 
 namespace Charcoal\Attachment\Interfaces;
 
-// From 'beneroch/charcoal-attachments'
+// From 'locomotivemtl/charcoal-attachments'
 use Charcoal\Attachment\Object\Join;
 
 /**

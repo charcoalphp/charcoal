@@ -21,7 +21,7 @@ use Charcoal\Object\Content;
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
 
-// From 'beneroch/charcoal-attachments'
+// From 'locomotivemtl/charcoal-attachments'
 use Charcoal\Attachment\Interfaces\AttachableInterface;
 use Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
 

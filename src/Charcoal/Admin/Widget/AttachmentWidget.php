@@ -30,7 +30,7 @@ use Charcoal\Admin\AdminWidget;
 use Charcoal\Admin\Ui\ObjectContainerInterface;
 use Charcoal\Admin\Ui\ObjectContainerTrait;
 
-// From 'beneroch/charcoal-attachments'
+// From 'locomotivemtl/charcoal-attachments'
 use Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
 use Charcoal\Attachment\Traits\ConfigurableAttachmentsTrait;
 

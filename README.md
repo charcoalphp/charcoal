@@ -8,12 +8,13 @@ Adds support for working with relationships between models.
 The preferred (and only supported) way of installing _charcoal-attachment is with **composer**:
 
 ```shell
-★ composer require beneroch/charcoal-attachment
+★ composer require locomotivemtl/charcoal-attachment
 ```
 
 ## Dependencies
 
 -   [`PHP 5.5+`](http://php.net)
+    - `PHP 7` is recommended, for security and performatnce reasons.
 -   [`locomotivemtl/charcoal-core`](https://github.com/locomotivemtl/charcoal-core)
 -   [`locomotivemtl/charcoal-base`](https://github.com/locomotivemtl/charcoal-base)
 -   [`locomotivemtl/charcoal-admin`](https://github.com/locomotivemtl/charcoal-admin)
@@ -48,19 +49,19 @@ Add the views path and metadata path to the config file.
 "metadata": {
     "paths": [
         "...",
-        "vendor/beneroch/charcoal-attachment/metadata/"
+        "vendor/locomotivemtl/charcoal-attachment/metadata/"
     ]
 },
 "view": {
     "paths": [
         "...",
-        "vendor/beneroch/charcoal-attachment/templates/"
+        "vendor/locomotivemtl/charcoal-attachment/templates/"
     ]
 },
 "translations": {
     "paths": [
         "...",
-        "vendor/beneroch/charcoal-attachment/translations/"
+        "vendor/locomotivemtl/charcoal-attachment/translations/"
     ]
 }
 ```

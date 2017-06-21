@@ -8,7 +8,7 @@ use UnexpectedValueException;
 use Charcoal\Model\ModelInterface;
 use Charcoal\Loader\CollectionLoader;
 
-// From 'beneroch/charcoal-attachments'
+// From 'locomotivemtl/charcoal-attachments'
 use Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
 use Charcoal\Attachment\Interfaces\AttachableInterface;
 

@@ -8,7 +8,7 @@ use Pimple\Container as PimpleContainer;
 // From 'charcoal-config'
 use Charcoal\Config\ConfigurableInterface;
 
-// From 'beneroch/charcoal-attachments'
+// From 'locomotivemtl/charcoal-attachments'
 use Charcoal\Attachment\Interfaces\AttachmentAwareInterface;
 use Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
 use Charcoal\Attachment\Traits\AttachmentAwareTrait;

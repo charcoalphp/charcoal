@@ -17,7 +17,7 @@ use Charcoal\Admin\AdminAction;
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
 
-// From 'beneroch/charcoal-attachments'
+// From 'locomotivemtl/charcoal-attachments'
 use Charcoal\Attachment\Object\Join;
 
 /**

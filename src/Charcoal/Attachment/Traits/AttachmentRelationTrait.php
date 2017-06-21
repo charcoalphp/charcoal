@@ -2,7 +2,9 @@
 
 namespace Charcoal\Attachment\Traits;
 
-// From 'beneroch/charcoal-attachments'
+use InvalidArgumentException;
+
+// From 'locomotivemtl/charcoal-attachments'
 use Charcoal\Attachment\Interfaces\AttachableInterface;
 use Charcoal\Attachment\Interfaces\AttachmentAwareInterface;
 use Charcoal\Attachment\Interfaces\AttachmentContainerInterface;

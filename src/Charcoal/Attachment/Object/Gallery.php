@@ -2,7 +2,7 @@
 
 namespace Charcoal\Attachment\Object;
 
-// From 'beneroch/charcoal-attachments'
+// From 'locomotivemtl/charcoal-attachments'
 use Charcoal\Attachment\Object\Container;
 
 /**

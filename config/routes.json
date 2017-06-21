@@ -1,10 +1,10 @@
 {
     "routes": {
         "scripts": {
-            "beneroch/attachment/migrate": {
+            "locomotivemtl/attachment/migrate": {
                 "ident": "charcoal/attachment/script/migrate"
             },
-            "beneroch/attachment/cleanup": {
+            "locomotivemtl/attachment/cleanup": {
                 "ident": "charcoal/attachment/script/cleanup"
             }
         }
