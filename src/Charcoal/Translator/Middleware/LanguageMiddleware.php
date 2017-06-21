@@ -15,7 +15,6 @@ use Charcoal\Translator\TranslatorAwareTrait;
 
 /**
  * Class LanguageMiddleware
- * @package Charcoal\App\Middleware
  */
 class LanguageMiddleware
 {

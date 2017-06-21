@@ -60,7 +60,8 @@ class TranslationParserScript extends AdminScript
 
 
     /**
-     * {@inheritDoc}
+     * @param Container $container Pimple DI container.
+     * @return void
      */
     public function setDependencies(Container $container)
     {
@@ -252,7 +253,8 @@ class TranslationParserScript extends AdminScript
 
     /**
      * Regex to match in files.
-     * @param  string $type File type (mustache|php)
+     *
+     * @param  string $type File type (mustache|php).
      * @return string       Regex string.
      */
     public function regEx($type)
