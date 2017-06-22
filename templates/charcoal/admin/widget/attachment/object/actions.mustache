@@ -27,7 +27,9 @@
         {{!--
         <li><a href="#" data-image="[[src]]" data-type="[[type]]" data-microtype="[[microType]]" data-action="preview">Preview</a></li>
         --}}
-        <li><a href="object/edit?obj_type={{ type }}&obj_id={{ id }}" data-type="{{ type }}" data-title="{{# _t }}Edit{{/ _t }}" data-id="{{id}}" data-action="edit">{{# _t }}Edit{{/ _t }}</a></li>
+        {{# attachmentType }}
+        <li><a href="object/edit?obj_type={{ type }}&obj_id={{ id }}" class="{{# locked }}disabled{{/ locked }}" data-type="{{ type }}" data-title="{{# _t }}Edit{{/ _t }}" data-id="{{id}}" data-action="edit">{{# _t }}Edit{{/ _t }}</a></li>
+        {{/ attachmentType }}
         {{# isAttachmentContainer }}
         <li role="separator" class="divider"></li>
         {{# attachmentTypes }}

@@ -179,6 +179,7 @@ class AttachmentWidget extends AdminWidget implements
                 'faIcon'   => $attMeta['faIcon'],
                 'label'    => $label,
                 'val'      => $attType,
+                'locked'   => $attMeta['locked'],
                 'active'   => ($i == 1)
             ];
         }
@@ -202,7 +203,7 @@ class AttachmentWidget extends AdminWidget implements
             if (isset($attachableObjects[$attachment->objType()])) {
                 $attachment->attachmentType = $attachableObjects[$attachment->objType()];
             } else {
-                $attachment->attachmentType = [];
+                continue;
             }
 
             yield $attachment;
@@ -233,8 +234,8 @@ class AttachmentWidget extends AdminWidget implements
             'preview'      => null,
             'show_header'  => true,
             'show_preview' => false,
-            'show_icon'    => true,
-            'read_only'    => false
+            'read_only'    => false,
+            'show_icon'    => true
         ];
     }
 
@@ -507,12 +508,18 @@ class AttachmentWidget extends AdminWidget implements
             $skipForm   = false;
             $faIcon     = '';
             $showIcon   = true;
+            $locked     = false;
             $attOption  = ['label', 'filters', 'orders', 'num_per_page', 'page'];
             $attData    = array_diff_key($attMeta, $attOption);
 
             // Disable an attachable model
-            if (isset($attMeta['active']) && !$attMeta['active']) {
-                continue;
+            if (isset($attMeta['active'])) {
+                if (is_string($attMeta['active'])) {
+                    $attMeta['active'] = $this->obj()->render($attMeta['active']);
+                }
+                if (!$attMeta['active']) {
+                    continue;
+                }
             }
 
             // Useful for replacing a pre-defined attachment type
@@ -562,6 +569,14 @@ class AttachmentWidget extends AdminWidget implements
                 $showIcon = !!$attMeta['show_icon'];
             }
 
+            if (isset($attMeta['locked'])) {
+                $locked = $attMeta['locked'];
+
+                if (is_string($locked)) {
+                    $locked = $this->obj()->render($locked);
+                }
+            }
+
             $out[$attType] = [
                 'att_id'     => $attId,
                 'label'      => $label,
@@ -572,6 +587,7 @@ class AttachmentWidget extends AdminWidget implements
                 'orders'     => $orders,
                 'page'       => $page,
                 'numPerPage' => $numPerPage,
+                'locked'     => $locked,
                 'data'       => $attData
             ];
         }
@@ -658,12 +674,12 @@ class AttachmentWidget extends AdminWidget implements
     public function widgetOptions()
     {
         $options = [
-            'attachable_objects'      => $this->attachableObjects(),
-            'attachment_options'      => $this->attachmentOptions(),
-            'title'                   => $this->title(),
             'obj_type'                => $this->obj()->objType(),
             'obj_id'                  => $this->obj()->id(),
-            'group'                   => $this->group()
+            'group'                   => $this->group(),
+            'attachment_options'      => $this->attachmentOptions(),
+            'attachable_objects'      => $this->attachableObjects(),
+            'title'                   => $this->title()
         ];
 
         return json_encode($options, true);
