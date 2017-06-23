@@ -2,11 +2,10 @@
 
 namespace Charcoal\Source\Database;
 
-use \DomainException;
+use DomainException;
 
 // From 'charcoal-core'
-use \Charcoal\Source\Order;
-use \Charcoal\Source\Database\DatabaseFilter;
+use Charcoal\Source\Order;
 
 /**
  * The DatabaseOrder makes a Order SQL-aware.

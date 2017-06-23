@@ -3,7 +3,6 @@
 namespace Charcoal\Model\Service;
 
 use ArrayAccess;
-use Exception;
 use LogicException;
 use InvalidArgumentException;
 

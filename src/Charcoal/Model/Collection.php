@@ -2,16 +2,15 @@
 
 namespace Charcoal\Model;
 
-use \Closure;
-use \Traversable;
-use \ArrayIterator;
-use \CachingIterator;
-use \LogicException;
-use \InvalidArgumentException;
+use Traversable;
+use ArrayIterator;
+use CachingIterator;
+use LogicException;
+use InvalidArgumentException;
 
 // Local namespace dependencies
-use \Charcoal\Model\CollectionInterface;
-use \Charcoal\Model\ModelInterface;
+use Charcoal\Model\CollectionInterface;
+use Charcoal\Model\ModelInterface;
 
 /**
  * A Model Collection
