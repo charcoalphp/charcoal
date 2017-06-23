@@ -4,6 +4,7 @@ namespace Charcoal\Attachment\Script;
 
 use PDO;
 use Exception;
+use InvalidArgumentException;
 
 // From Pimple
 use Pimple\Container;

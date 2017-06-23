@@ -2,6 +2,7 @@
 
 namespace Charcoal\Attachment\Object;
 
+use Exception;
 use ReflectionClass;
 use RuntimeException;
 use InvalidArgumentException;
