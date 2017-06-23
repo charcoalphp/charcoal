@@ -109,19 +109,19 @@ trait AttachmentAwareTrait
 
         $widget = $this->attachmentWidget();
 
-        $query = '
+        $query = sprintf('
             SELECT
                 attachment.*,
                 joined.attachment_id AS attachment_id,
                 joined.position AS position
             FROM
-                `'.$attTable.'` AS attachment
+                `%s` AS attachment
             LEFT JOIN
-                `'.$joinTable.'` AS joined
+                `%s` AS joined
             ON
                 joined.attachment_id = attachment.id
             WHERE
-                1 = 1';
+                1 = 1', $attTable, $joinTable);
 
         // Disable `active` check in admin
         if (!$widget instanceof AttachmentWidget) {
@@ -131,21 +131,21 @@ trait AttachmentAwareTrait
         }
 
         if ($type) {
-            $query .= '
+            $query .= sprintf('
             AND
-                attachment.type = "'.$type.'"';
+                attachment.type = "%s"', $type);
         }
 
-        $query .= '
+        $query .= sprintf('
             AND
-                joined.object_type = "'.$objType.'"
+                joined.object_type = "%s"
             AND
-                joined.object_id = "'.$objId.'"';
+                joined.object_id = "%s"', $objType, $objId);
 
         if ($group) {
-            $query .= '
+            $query .= sprintf('
             AND
-                joined.group = "'.$group.'"';
+                joined.group = %s$"', $group);
         }
 
         $query .= '
