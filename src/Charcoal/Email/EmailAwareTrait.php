@@ -77,4 +77,3 @@ trait EmailAwareTrait
         return sprintf('"%s" <%s>', $name, $email);
     }
 }
-
