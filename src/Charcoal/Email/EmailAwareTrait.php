@@ -3,7 +3,7 @@
 namespace Charcoal\Email;
 
 // From `PHP`
-use \InvalidArgumentException;
+use InvalidArgumentException;
 
 /**
  * For objects that are or interact with emails.
@@ -77,3 +77,4 @@ trait EmailAwareTrait
         return sprintf('"%s" <%s>', $name, $email);
     }
 }
+

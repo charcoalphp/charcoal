@@ -36,7 +36,6 @@ class EmailConfigTest extends \PHPUnit_Framework_TestCase
         $ret = $obj->setSmtp(true);
         $this->assertSame($ret, $obj);
         $this->assertEquals(true, $obj->smtp());
-
     }
 
     public function testSetDefaultFrom()
@@ -87,6 +86,5 @@ class EmailConfigTest extends \PHPUnit_Framework_TestCase
         $ret = $obj->setDefaultTrack(true);
         $this->assertSame($ret, $obj);
         $this->assertEquals(true, $obj->defaultTrack());
-
     }
 }

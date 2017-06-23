@@ -302,7 +302,6 @@ class EmailTest extends \PHPUnit_Framework_TestCase
 
         $obj->setLog(false);
         $this->assertNotTrue($obj->log());
-
     }
 
     public function testSetTrack()
@@ -317,6 +316,5 @@ class EmailTest extends \PHPUnit_Framework_TestCase
 
         $obj->setTrack(false);
         $this->assertNotTrue($obj->track());
-
     }
 }
