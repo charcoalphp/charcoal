@@ -2,9 +2,6 @@
 
 namespace Charcoal\View\Mustache;
 
-use Closure;
-use InvalidArgumentException;
-
 // From 'mustache/mustache'
 use Mustache_LambdaHelper as LambdaHelper;
 
@@ -62,7 +59,6 @@ class TranslatorHelpers implements HelpersInterface
     /**
      * Retrieve the helpers.
      *
-     * @todo   Implement plural translations.
      * @return array
      */
     public function toArray()

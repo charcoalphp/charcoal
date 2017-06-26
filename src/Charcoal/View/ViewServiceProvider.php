@@ -64,8 +64,6 @@ class ViewServiceProvider implements ServiceProviderInterface
         $this->registerLoaderServices($container);
         $this->registerEngineServices($container);
         $this->registerMustacheTemplatingServices($container);
-        # $this->registerPhpTemplatingServices($container);
-        # $this->registerTwigTemplatingServices($container);
         $this->registerViewServices($container);
     }
 
