@@ -7,7 +7,6 @@ use InvalidArgumentException;
 
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
-use Charcoal\Loader\CollectionLoader;
 
 // From 'charcoal-admin'
 use Charcoal\Admin\Widget\AttachmentWidget;

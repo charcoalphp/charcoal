@@ -2,13 +2,6 @@
 
 namespace Charcoal\Attachment\Script;
 
-use PDO;
-use PDOStatement;
-
-use Countable;
-use Traversable;
-use Exception;
-use RuntimeException;
 use InvalidArgumentException;
 
 // From 'charcoal-core'
@@ -17,7 +10,6 @@ use Charcoal\Model\ModelInterface;
 // From 'charcoal-property'
 use Charcoal\Property\IdProperty;
 use Charcoal\Property\PropertyField;
-use Charcoal\Property\PropertyInterface;
 
 // From 'charcoal-admin'
 use Charcoal\Admin\Script\Object\Table\AlterPrimaryKeyScript;

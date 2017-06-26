@@ -4,9 +4,6 @@ namespace Charcoal\Admin\Action;
 
 use Exception;
 
-// From Pimple
-use Pimple\Container;
-
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;

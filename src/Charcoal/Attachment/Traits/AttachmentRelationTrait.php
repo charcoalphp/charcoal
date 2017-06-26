@@ -9,7 +9,6 @@ use Charcoal\Attachment\Interfaces\AttachableInterface;
 use Charcoal\Attachment\Interfaces\AttachmentAwareInterface;
 use Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
 use Charcoal\Attachment\Interfaces\JoinInterface;
-use Charcoal\Attachment\Object\Attachment;
 use Charcoal\Attachment\Object\Join;
 
 /**

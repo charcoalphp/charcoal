@@ -4,20 +4,9 @@ namespace Charcoal\Attachment\Traits;
 
 use UnexpectedValueException;
 
-// From 'charcoal-core'
-use Charcoal\Model\ModelInterface;
-use Charcoal\Loader\CollectionLoader;
-
 // From 'locomotivemtl/charcoal-attachments'
 use Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
-use Charcoal\Attachment\Interfaces\AttachableInterface;
 
-use Charcoal\Attachment\Object\Join;
-use Charcoal\Attachment\Object\Attachment;
-use Charcoal\Attachment\Object\File;
-use Charcoal\Attachment\Object\Image;
-use Charcoal\Attachment\Object\Text;
-use Charcoal\Attachment\Object\Video;
 
 /**
  * Provides support for attachments to objects.

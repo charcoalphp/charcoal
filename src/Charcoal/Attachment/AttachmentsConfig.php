@@ -7,9 +7,6 @@ use InvalidArgumentException;
 // From 'charcoal-config'
 use Charcoal\Config\AbstractConfig;
 
-// From 'charcoal-attachment'
-use Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
-
 /**
  * Attachments Configset
  */
