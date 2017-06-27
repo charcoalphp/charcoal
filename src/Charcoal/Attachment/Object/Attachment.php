@@ -600,7 +600,7 @@ class Attachment extends Content implements AttachableInterface
      */
     public function setThumbnail($path)
     {
-        $this->thumbnail = $path;
+        $this->thumbnail = $this->translator()->translation($path);
 
         return $this;
     }
@@ -613,7 +613,7 @@ class Attachment extends Content implements AttachableInterface
      */
     public function setFile($path)
     {
-        $this->file = $path;
+        $this->file = $this->translator()->translation($path);
 
         return $this;
     }
@@ -626,7 +626,7 @@ class Attachment extends Content implements AttachableInterface
      */
     public function setLink($link)
     {
-        $this->link = $link;
+        $this->link = $this->translator()->translation($link);
 
         return $this;
     }

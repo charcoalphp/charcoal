@@ -43,9 +43,9 @@
         },
         "keywords": {
             "type": "string",
-            "label": "Keywords",
             "multiple": true,
-            "l10n": true
+            "l10n": true,
+            "label": "Keywords"
         },
         "type": {
             "type": "string",
@@ -53,11 +53,13 @@
         },
         "link": {
             "type": "string",
+            "l10n": true,
             "label": "URL",
             "notes": "e.g.: <samp>https://locomotive.ca</samp>"
         },
         "file": {
             "type": "file",
+            "l10n": true,
             "label": "File",
             "upload_path": "uploads/attachments/",
             "public_access": true
@@ -72,12 +74,14 @@
         },
         "thumbnail": {
             "type": "image",
+            "l10n": true,
             "label": "File's Thumbnail",
             "upload_path": "uploads/attachments/thumbs/",
             "public_access": true
         },
         "embed": {
             "type": "text",
+            "l10n": true,
             "label": "Embed Video",
             "notes": "As provided by YouTube or Vimeo"
         }
