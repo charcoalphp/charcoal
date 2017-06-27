@@ -30,25 +30,27 @@ In addition from the default metadata provided by `Content`, the following prope
 
 **Standard properties** (used by all attachments objects):
 
-| Property        | Type | Description |
-| --------------- | ---- | ----------- |
-| **id**          | `id` | A uniqid, for referencing. |
+| Property        | Type      | Description |
+| --------------- | --------- | ----------- |
+| **id**          | `id`      | A uniqid, for referencing. |
 | **title**       | `string` (l10n) | 
 | **show_title**  | `boolean` |
 | **categorie**   | `object (multiple) | By default, categories are `charcoal/attachment/object/category/generic` objects.
 | **subtitle**    | `string` (l10n) |
 | **description** | `text` (l10n) |
 | **keywords**    | `string` (l10n, multiple) | Typically used for searching purpose. |
-| **type**        | `string` |
+| **type**        | `string`  |
 
 **Specialized properties** which can be used differently, depending on context:
 
-| **link**        | `string` | URL. |
-| **file**        | `file`   | Uploadable file, or "document". |
-| **file_size**   | `string` | The uploaded file size, in bytes (auto-generated). |
-| **file_type**   | `string` | The uploaded file mimetype (auto-generated).
-| **thumbnail**   | `image`  | 
-| **embed**       | `text` | Typically a video. |
+| Property        | Type      | Description |
+| --------------- | --------- | ----------- |
+| **link**        | `string` (l10n) | URL. |
+| **file**        | `file` (l10n)   | Uploadable file, or "document". |
+| **file_size**   | `string`  | The uploaded file size, in bytes (auto-generated). |
+| **file_type**   | `string`  | The uploaded file mimetype (auto-generated).
+| **thumbnail**   | `image` (l10n)  | 
+| **embed**       | `text` (l10n)   | Typically a video. |
 
 All attachments are assumed to have a `title`, `subtitle`, `description` and `keywords`. Some attachments also 
 
