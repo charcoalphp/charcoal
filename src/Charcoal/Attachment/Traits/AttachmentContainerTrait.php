@@ -7,7 +7,6 @@ use UnexpectedValueException;
 // From 'locomotivemtl/charcoal-attachments'
 use Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
 
-
 /**
  * Provides support for attachments to objects.
  *

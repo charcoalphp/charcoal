@@ -22,7 +22,7 @@
                         <span class="panel-title-icon {{ faIcon }}"></span>
                     {{/ attachmentOptions.show_icon }}
                 {{/ attachmentType }}
-                <a href="object/edit?obj_type={{ type }}&obj_id={{ id }}">{{& heading }}{{^ active }}&mdash; <span class="small">{{# _t }}Disabled{{/ _t }}</span>{{/ active }}</a>
+                <a href="object/edit?obj_type={{ type }}&obj_id={{ id }}">{{& heading }}{{^ active }} <span class="small">&mdash; {{# _t }}Disabled{{/ _t }}</span>{{/ active }}</a>
             </h4>
         </header>
     {{/ attachmentOptions.show_preview }}

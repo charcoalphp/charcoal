@@ -11,7 +11,7 @@
             <span class="list-group-item-icon {{ faIcon }}"></span>
             {{/ attachmentOptions.show_icon }}
             {{/ attachmentType }}
-            <span class="list-group-item-label">{{& heading }}{{^ active }} &mdash; <span class="small">{{# _t }}Disabled{{/ _t }}</span>{{/ active }}</span>
+            <span class="list-group-item-label">{{& heading }}{{^ active }} <span class="small">&mdash; {{# _t }}Disabled{{/ _t }}</span>{{/ active }}</span>
             {{> charcoal/attachment/object/partial/modify-button }}
         </li>
     {{/ attachments }}
