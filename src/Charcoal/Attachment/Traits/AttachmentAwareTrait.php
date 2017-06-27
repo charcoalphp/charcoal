@@ -144,7 +144,7 @@ trait AttachmentAwareTrait
         if ($group) {
             $query .= sprintf('
             AND
-                joined.group = %s$"', $group);
+                joined.group = "%s"', $group);
         }
 
         $query .= '
