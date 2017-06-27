@@ -188,6 +188,7 @@ class LanguageMiddleware
      */
     private function getLanguageFromPath(RequestInterface $request)
     {
+        $path = $request->getRequestTarget();
         if (preg_match($this->pathRegexp, $path, $matches)) {
             $lang = $matches[0];
         } else {
@@ -262,20 +263,29 @@ class LanguageMiddleware
     private function setLocale($lang)
     {
         $translator = $this->translator();
-
         $available  = $translator->locales();
         $fallbacks  = $translator->getFallbackLocales();
-        array_unshift($fallbacks, $translator->getLocale());
-        array_unique($fallbacks);
+
+        array_unshift($fallbacks, $lang);
+        $fallbacks = array_unique($fallbacks);
+
         $locales = [];
         foreach ($fallbacks as $code) {
             if (isset($available[$code])) {
-                $locale = (array)$available[$code]['locale'];
-                array_push($locales, ...$locale);
+                $locale = $available[$code];
+                if (isset($locale['locales'])) {
+                    $choices = (array)$locale['locales'];
+                    array_push($locales, ...$choices);
+                } elseif (isset($locale['locale'])) {
+                    array_push($locales, $locale['locale']);
+                }
             }
         }
+
+        $locales = array_unique($locales);
+
         if ($locales) {
-            setlocale(LC_ALL, ...$locales);
+            setlocale(LC_ALL, $locales);
         }
     }
 }
