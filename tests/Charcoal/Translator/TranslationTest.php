@@ -2,9 +2,10 @@
 
 namespace Charcoal\Tests\Translation;
 
+// From PHPUnit
 use PHPUnit_Framework_TestCase;
 
-// Local Dependencies
+// From `charcoal-translator`
 use Charcoal\Translator\LocalesManager;
 use Charcoal\Translator\Translation;
 

@@ -6,6 +6,7 @@ use ArrayAccess;
 use InvalidArgumentException;
 use JsonSerializable;
 
+// From `charcoal-translator`
 use Charcoal\Translator\LocalesManager;
 
 /**

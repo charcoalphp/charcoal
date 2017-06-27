@@ -2,6 +2,7 @@
 
 namespace Charcoal\Tests\Translator;
 
+// From PHPUnit
 use PHPUnit_Framework_TestCase;
 
 // From 'symfony/translation'

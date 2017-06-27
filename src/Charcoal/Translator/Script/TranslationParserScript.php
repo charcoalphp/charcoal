@@ -1,15 +1,17 @@
 <?php
 namespace Charcoal\Translator\Script;
 
+// From Pimple
 use Pimple\Container;
 
-// PSR-7 (http messaging) dependencies
+// From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-// Intra-module (`charcoal-admin`) dependencies
+// From `charcoal-admin`
 use Charcoal\Admin\AdminScript;
 
+// From `charcoal-translator`
 use Charcoal\Translator\TranslatorAwareTrait;
 
 /**

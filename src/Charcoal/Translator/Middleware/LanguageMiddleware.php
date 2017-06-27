@@ -2,14 +2,14 @@
 
 namespace Charcoal\Translator\Middleware;
 
-// Dependencies from 'PSR-7' (HTTP Messaging)
+// From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-// Dependencies from 'pimple/pimple'
+// From Pimple
 use Pimple\Container;
 
-// Dependencies from `charcoal-translator`
+// From `charcoal-translator`
 use Charcoal\Translator\LocalesManager;
 use Charcoal\Translator\TranslatorAwareTrait;
 

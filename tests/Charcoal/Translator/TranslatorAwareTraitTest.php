@@ -2,11 +2,12 @@
 
 namespace Charcoal\Tests\Translator;
 
-use PHPUnit_Framework_TestCase;
-
 use ReflectionClass;
 
-// Local Dependencies
+// From PHPUnit
+use PHPUnit_Framework_TestCase;
+
+// From `charcoal-translator`
 use Charcoal\Translator\TranslatorAwareTrait;
 
 /**

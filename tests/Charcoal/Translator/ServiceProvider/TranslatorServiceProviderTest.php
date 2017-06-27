@@ -2,11 +2,13 @@
 
 namespace Charcoal\Tests\Translation\ServiceProvider;
 
+// From PHPUnit
 use PHPUnit_Framework_TestCase;
 
+// From Pimple
 use Pimple\Container;
 
-// Local Dependencies
+// From `charcoal-translator`
 use Charcoal\Translator\ServiceProvider\TranslatorServiceProvider;
 use Charcoal\Translator\LocalesManager;
 use Charcoal\Translator\Translator;

@@ -2,9 +2,11 @@
 
 namespace Charcoal\Translator\ServiceProvider;
 
+// From Pimple
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 
+// From 'symfony/translation'
 use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\Loader\CsvFileLoader;
 use Symfony\Component\Translation\Loader\IcuDatFileLoader;
@@ -18,6 +20,7 @@ use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Component\Translation\Loader\JsonFileLoader;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 
+// From `charcoal-translator`
 use Charcoal\Translator\LocalesConfig;
 use Charcoal\Translator\LocalesManager;
 use Charcoal\Translator\Translator;
