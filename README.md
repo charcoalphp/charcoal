@@ -1,7 +1,8 @@
-Charcoal Attachments
-====================
+Charcoal Attachment
+===================
 
-Adds support for working with relationships between models.
+Attachments add support for working with relationships between models. Also provided are a usable set of basic attachments:
+Document, Embed, Image, Gallery, Link Video, amongst others.
 
 ## How to install
 
@@ -13,8 +14,8 @@ The preferred (and only supported) way of installing _charcoal-attachment is wit
 
 ## Dependencies
 
--   [`PHP 5.5+`](http://php.net)
-    - `PHP 7` is recommended, for security and performatnce reasons.
+-   [`PHP 5.6+`](http://php.net)
+    - `PHP 7` is recommended, for security and performance reasons.
 -   [`locomotivemtl/charcoal-core`](https://github.com/locomotivemtl/charcoal-core)
 -   [`locomotivemtl/charcoal-base`](https://github.com/locomotivemtl/charcoal-base)
 -   [`locomotivemtl/charcoal-admin`](https://github.com/locomotivemtl/charcoal-admin)
@@ -23,16 +24,64 @@ The preferred (and only supported) way of installing _charcoal-attachment is wit
 
 ## Objects
 
-Objects in the `charcoal-attachments` module extends AbstractModel (charcoal-base).
+Objects in the `charcoal-attachments` module extends `Content`, from `charcoal-object`, which is an `AbstractModel`, from `charcoal-core`.
 
--   ***Attachment objects***
-    -   AbstractAttachment - Attachment Base
-    -   File
-    -   Link
-    -   Image
-    -   Gallery (image)
-    -   Text
-    -   Video
+In addition from the default metadata provided by `Content`, the following properties are default for all `Attachment` objects:
+
+**Standard properties** (used by all attachments objects):
+
+| Property        | Type | Description |
+| --------------- | ---- | ----------- |
+| **id**          | `id` | A uniqid, for referencing. |
+| **title**       | `string` (l10n) | 
+| **show_title**  | `boolean` |
+| **categorie**   | `object (multiple) | By default, categories are `charcoal/attachment/object/category/generic` objects.
+| **subtitle**    | `string` (l10n) |
+| **description** | `text` (l10n) |
+| **keywords**    | `string` (l10n, multiple) | Typically used for searching purpose. |
+| **type**        | `string` |
+
+**Specialized properties** which can be used differently, depending on context:
+
+| **link**        | `string` | URL. |
+| **file**        | `file`   | Uploadable file, or "document". |
+| **file_size**   | `string` | The uploaded file size, in bytes (auto-generated). |
+| **file_type**   | `string` | The uploaded file mimetype (auto-generated).
+| **thumbnail**   | `image`  | 
+| **embed**       | `text` | Typically a video. |
+
+All attachments are assumed to have a `title`, `subtitle`, `description` and `keywords`. Some attachments also 
+
+> Read the [`charcoal-object`](https://github.com/locomotivemtl/charcoal-object) documentation for the other default properties provided by the `Content` object (and `RevisionableInterface`).
+
+> Read the [`charcoal-core`](https://github.com/locomotivemtl/charcoal-core) documention for the other default properties provided by `AbstractModel` (and `DescribableInterface` and `StorableInterface`). 
+
+
+### Type of Attachment objects
+
+-   **Accordion**
+    - A `Container` (grouping) attachment, used for accordion type of display.
+    - By default, support `text`, `image`, `gallery` and `embed` attachments.
+-   **Attachment**
+    - The most generic attachment, can be anything.
+-   **Container**
+    - Base "grouping" attachment.
+-   **Embed**
+    - Embedded content, typically video embed code.
+    - Force the `file` property to be an `image`, and `description` to be `html`.
+-   **File**
+    - An uploadable _Document_.
+-   **Link**
+    - A URL (link to a resource).
+-   **Image**
+    - An uploadable image
+    - Force the `file` property to be an `image`.
+-   **Gallery**
+    - A `Container` (grouping) attachment, used for a gallery of multiple images.
+    - Is limited to `image` attachments.
+-   **Text**
+    - Text (HTML) content.
+-   **Video**
 
 ## Widgets
 
@@ -197,3 +246,58 @@ If you added some extra properties, you can use the alter script to add them int
 Custom templates for the attachment preview in the backend widget is on the to-do list.
 
 Other actions such quick view are on the to-do list as well.
+
+For a complete project example using `charcoal-attachment`, see the [charcoal-project-boilerplate](https://github.com/locomotivemtl/charcoal-project-boilerplate).
+
+
+# Development
+
+To install the development environment:
+
+```shell
+★ composer install --prefer-source
+```
+
+Run the code checkers and unit tests with:
+
+```shell
+★ composer test
+```
+
+## API documentation
+
+-   The auto-generated `phpDocumentor` API documentation is available at [https://locomotivemtl.github.io/charcoal-attachment/docs/master/](https://locomotivemtl.github.io/charcoal-attachment/docs/master/)
+-   The auto-generated `apigen` API documentation is available at [https://locomotivemtl.github.io/charcoal-attachment/apigen/master/](https://locomotivemtl.github.io/charcoal-attachment/apigen/master/)
+
+## Development dependencies
+
+-   `phpunit/phpunit`
+-   `squizlabs/php_codesniffer`
+-   `satooshi/php-coveralls`
+
+## Continuous Integration
+
+| Service | Badge | Description |
+| ------- | ----- | ----------- |
+| [Travis](https://travis-ci.org/locomotivemtl/charcoal-attachment) | [![Build Status](https://travis-ci.org/locomotivemtl/charcoal-attachment.svg?branch=master)](https://travis-ci.org/locomotivemtl/charcoal-attachment) | Runs code sniff check and unit tests. Auto-generates API documentaation. |
+| [Scrutinizer](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-attachment/) | [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-attachment/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-attachment/?branch=master) | Code quality checker. Also validates API documentation quality. |
+| [Coveralls](https://coveralls.io/github/locomotivemtl/charcoal-attachment) | [![Coverage Status](https://coveralls.io/repos/github/locomotivemtl/charcoal-attachment/badge.svg?branch=master)](https://coveralls.io/github/locomotivemtl/charcoal-attachment?branch=master) | Unit Tests code coverage. |
+| [Sensiolabs](https://insight.sensiolabs.com/projects/09876d95-da9d-4c23-896f-904be3368c99) | [![SensioLabsInsight](https://insight.sensiolabs.com/projects/09876d95-da9d-4c23-896f-904be3368c99/mini.png)](https://insight.sensiolabs.com/projects/09876d95-da9d-4c23-896f-904be3368c99) | Another code quality checker, focused on PHP. |
+
+## Coding Style
+
+The Charcoal-Attachment module follows the Charcoal coding-style:
+
+-   [_PSR-1_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md)
+-   [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
+-   [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md), autoloading is therefore provided by _Composer_.
+-   [_phpDocumentor_](http://phpdoc.org/) comments.
+-   Read the [phpcs.xml](phpcs.xml) file for all the details on code style.
+
+> Coding style validation / enforcement can be performed with `composer phpcs`. An auto-fixer is also available with `composer phpcbf`.
+
+## Authors
+
+-   Mathieu Ducharme <mat@locomotive.ca>
+-   Chauncey McAskill <chauncey@locomotive.ca>
+-   Benjamin Roch <benjamin@locomotive.ca>
