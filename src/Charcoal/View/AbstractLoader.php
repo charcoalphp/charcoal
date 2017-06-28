@@ -67,9 +67,9 @@ abstract class AbstractLoader implements
             $ident = $this->dynamicTemplate(substr($ident, 1));
 
             // Legacy dynamic template hack
-            if (!$ident && $tryLegacy) {
+            if ($tryLegacy) {
                 $this->logger->warning('The GLOBALS $widget_template hack will be obsolete soon. Use setDynamicTemplate() instead.');
-                $ident = (isset($GLOBALS['widget_template']) ? $GLOBALS['widget_template'] : null);
+                $ident = (isset($GLOBALS['widget_template']) && $GLOBALS['widget_template']) ? $GLOBALS['widget_template'] : $ident;
                 if (!is_string($ident)) {
                     throw new InvalidArgumentException(
                         'Dynamic template ident (from "$widget_template") must be a string'
@@ -221,6 +221,11 @@ abstract class AbstractLoader implements
             throw new InvalidArgumentException(
                 'Can not set dynamic template. Must be a a string, or null.'
             );
+        }
+
+        // Legacy dynamic template hack
+        if ($varName === 'widget_template') {
+            $GLOBALS['widget_template'] = $templateIdent;
         }
 
         $this->dynamicTemplates[$varName] = $templateIdent;
