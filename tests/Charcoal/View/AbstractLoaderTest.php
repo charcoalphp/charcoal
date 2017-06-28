@@ -61,4 +61,28 @@ class AbstractLoaderTest extends PHPUnit_Framework_TestCase
             'paths'     => [false]
         ]]);
     }
+
+    public function testDynamicTemplateInvalidVarName()
+    {
+        $this->setExpectedException('\InvalidArgumentException');
+        $this->obj->dynamicTemplate(null);
+    }
+
+    public function testSetDynamicTemplateInvalidVarName()
+    {
+        $this->setExpectedException('\InvalidArgumentException');
+        $this->obj->setDynamicTemplate(null, 'foo');
+    }
+
+    public function testSetDynamicTemplate()
+    {
+        $this->assertNull($this->obj->setDynamicTemplate('dynamic', 'foo'));
+        $this->assertEquals('foo', $this->obj->dynamicTemplate('dynamic'));
+    }
+
+    public function testSetDynamicTemplateInvalidTemplateIdent()
+    {
+        $this->setExpectedException('\InvalidArgumentException');
+        $this->obj->setDynamicTemplate('foo', []);
+    }
 }

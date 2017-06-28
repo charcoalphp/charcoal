@@ -116,4 +116,10 @@ class ViewableTraitTest extends PHPUnit_Framework_TestCase
         $this->setExpectedException('\InvalidArgumentException');
         $this->obj->setViewController('foo');
     }
+
+
+    public function testSetDynamicTemplate()
+    {
+        $this->assertNull($this->obj->setDynamicTemplate('foo', 'bar'));
+    }
 }

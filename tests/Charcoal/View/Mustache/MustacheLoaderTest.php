@@ -27,29 +27,50 @@ class MustacheLoaderTest extends PHPUnit_Framework_TestCase
         ]);
     }
 
-    public function testLoad()
+    /**
+     * @dataProvider templateProvider
+     */
+    public function testLoad($template)
     {
-        $ret = $this->obj->load('foo');
+        $ret = $this->obj->load($template);
 
-        $expected = file_get_contents(__DIR__.'/templates/foo.mustache');
+        $expected = file_get_contents(__DIR__.'/templates/'.$template.'.mustache');
         $this->assertEquals($expected, $ret);
 
         $this->setExpectedException('\InvalidArgumentException');
         $this->obj->load(false);
     }
 
-    public function testLoadDynamic()
+    /**
+     * @dataProvider templateProvider
+     */
+    public function testLoadDynamicLegacy($template)
     {
 
-        $GLOBALS['widget_template'] = 'foo';
+        $GLOBALS['widget_template'] = $template;
         $ret = $this->obj->load('$widget_template');
 
-        $expected = file_get_contents(__DIR__.'/templates/foo.mustache');
+        $expected = file_get_contents(__DIR__.'/templates/'.$template.'.mustache');
         $this->assertEquals($expected, $ret);
+    }
 
+    public function testLoadDynamicLegacyInvalidException()
+    {
         $this->setExpectedException('\InvalidArgumentException');
         $GLOBALS['widget_template'] = false;
         $ret = $this->obj->load('$widget_template');
+    }
+
+    /**
+     * @dataProvider templateProvider
+     */
+    public function testLoadDynamic($template)
+    {
+        $this->obj->setDynamicTemplate('dynamic', $template);
+        $ret = $this->obj->load('$dynamic');
+
+        $expected = file_get_contents(__DIR__.'/templates/'.$template.'.mustache');
+        $this->assertEquals($expected, $ret);
     }
 
     public function testLoadNotExisting()
@@ -64,4 +85,12 @@ class MustacheLoaderTest extends PHPUnit_Framework_TestCase
     //     $this->assertEquals('foo/bar.mustache', $this->obj->filenameFromIdent('foo/bar'));
     //     $this->assertEquals('Foo.Bar.mustache', $this->obj->filenameFromIdent('Foo\Bar'));
     // }
+
+    public function templateProvider()
+    {
+        return [
+            ['foo'],
+            ['helpers']
+        ];
+    }
 }

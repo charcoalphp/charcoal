@@ -97,4 +97,11 @@ class AbstractViewTest extends PHPUnit_Framework_TestCase
     {
         $this->assertEquals('', $this->obj->loadTemplate(''));
     }
+
+    public function testSetDynamicTemplate()
+    {
+        $this->obj->setDynamicTemplate('dynamic', 'foo');
+        $ret = $this->obj->renderTemplate('{{> $dynamic }}', ['foo'=>'Dynamic']);
+        $this->assertEquals('Hello Dynamic', trim($ret));
+    }
 }

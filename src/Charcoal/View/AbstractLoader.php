@@ -204,8 +204,8 @@ abstract class AbstractLoader implements
     }
 
     /**
-     * @param string      $varName       The name of the variable to set this template unto.
-     * @param string|null $templateIdent The "dynamic template" to set. null to clear.
+     * @param string $varName       The name of the variable to set this template unto.
+     * @param string $templateIdent The "dynamic template" to set. null to clear.
      * @throws InvalidArgumentException If var name is not a string or if the template is not a string (and not null).
      * @return void
      */
@@ -215,11 +215,6 @@ abstract class AbstractLoader implements
             throw new InvalidArgumentException(
                 'Can not set dynamic template: var name is not a string.'
             );
-        }
-
-        if ($templateIdent === null) {
-            $this->dynamicTemplates[$varName] = null;
-            return;
         }
 
         if (!is_string($templateIdent)) {

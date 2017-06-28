@@ -45,4 +45,9 @@ class AbstractEngineTest extends PHPUnit_Framework_TestCase
         $expected = file_get_contents(__DIR__.'/Mustache/templates/foo.mustache');
         $this->assertEquals($expected, $this->obj->loadTemplate('foo'));
     }
+
+    public function testSetDynamicTemplate()
+    {
+        $this->assertNull($this->obj->setDynamicTemplate('foo', 'bar'));
+    }
 }
