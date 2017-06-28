@@ -2,7 +2,10 @@
 
 namespace Charcoal\Translator;
 
+use RuntimeException;
+
 // From 'symfony/translation'
+use Symfony\Component\Translation\MessageSelector;
 use Symfony\Component\Translation\Translator as SymfonyTranslator;
 
 // From 'charcoal-translator'
@@ -25,6 +28,13 @@ class Translator extends SymfonyTranslator
     private $manager;
 
     /**
+     * The message selector.
+     *
+     * @var MessageSelector
+     */
+    private $selector;
+
+    /**
      * The loaded domains.
      *
      * @var string[]
@@ -38,11 +48,13 @@ class Translator extends SymfonyTranslator
     {
         $this->setManager($data['manager']);
 
+        // Ensure Charcoal has control of the message selector.
+        $this->setSelector($data['message_selector']);
+
         $defaults = [
-            'locale'            => $this->manager->currentLocale(),
-            'message_selector'  => null,
-            'cache_dir'         => null,
-            'debug'             => false
+            'locale'    => $this->manager()->currentLocale(),
+            'cache_dir' => null,
+            'debug'     => false
         ];
         $data = array_merge($defaults, $data);
 
@@ -103,7 +115,7 @@ class Translator extends SymfonyTranslator
             return null;
         }
 
-        $translation = new Translation($val, $this->manager);
+        $translation = new Translation($val, $this->manager());
         foreach ($this->availableLocales() as $lang) {
             if (!isset($translation[$lang]) || $translation[$lang] == $val) {
                 $translation[$lang] = $this->trans((string)$translation, $parameters, $domain, $lang);
@@ -162,10 +174,19 @@ class Translator extends SymfonyTranslator
             return null;
         }
 
-        $translation = new Translation($val, $this->manager);
+        $parameters = array_merge([
+            '%count%' => $number,
+        ], $parameters);
+
+        $translation = new Translation($val, $this->manager());
         foreach ($this->availableLocales() as $lang) {
             if (!isset($translation[$lang]) || $translation[$lang] == $val) {
                 $translation[$lang] = $this->transChoice((string)$translation, $number, $parameters, $domain, $lang);
+            } else {
+                $translation[$lang] = strtr(
+                    $this->selector()->choose($translation[$lang], (int)$number, $lang),
+                    $parameters
+                );
             }
         }
 
@@ -191,7 +212,14 @@ class Translator extends SymfonyTranslator
         }
 
         if ($val instanceof Translation) {
-            return strtr($val[$locale], $parameters);
+            $parameters = array_merge([
+                '%count%' => $number,
+            ], $parameters);
+
+            return strtr(
+                $this->selector()->choose($val[$locale], (int)$number, $locale),
+                $parameters
+            );
         }
 
         if (is_object($val) && method_exists($val, '__toString')) {
@@ -213,7 +241,7 @@ class Translator extends SymfonyTranslator
      */
     public function locales()
     {
-        return $this->manager->locales();
+        return $this->manager()->locales();
     }
 
     /**
@@ -223,7 +251,7 @@ class Translator extends SymfonyTranslator
      */
     public function availableLocales()
     {
-        return $this->manager->availableLocales();
+        return $this->manager()->availableLocales();
     }
 
     /**
@@ -237,7 +265,7 @@ class Translator extends SymfonyTranslator
     {
         parent::setLocale($locale);
 
-        $this->manager->setCurrentLocale($locale);
+        $this->manager()->setCurrentLocale($locale);
     }
 
     /**
@@ -252,12 +280,46 @@ class Translator extends SymfonyTranslator
     }
 
     /**
+     * Retrieve the locales manager.
+     *
+     * @return LocalesManager
+     */
+    protected function manager()
+    {
+        return $this->manager;
+    }
+
+    /**
+     * Set the message selector.
+     *
+     * The {@see SymfonyTranslator} keeps the message selector private (as of 3.3.2),
+     * thus we must explicitly require it in this class to guarantee access.
+     *
+     * @param  MessageSelector $selector The selector.
+     * @return void
+     */
+    public function setSelector(MessageSelector $selector)
+    {
+        $this->selector = $selector;
+    }
+
+    /**
+     * Retrieve the message selector.
+     *
+     * @return MessageSelector
+     */
+    protected function selector()
+    {
+        return $this->selector;
+    }
+
+    /**
      * Determine if the value is translatable.
      *
      * @param  mixed $val The value to be checked.
      * @return boolean
      */
-    private function isValidTranslation($val)
+    protected function isValidTranslation($val)
     {
         if (empty($val) && !is_numeric($val)) {
             return false;

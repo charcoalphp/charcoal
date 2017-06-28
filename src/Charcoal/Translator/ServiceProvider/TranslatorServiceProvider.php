@@ -19,6 +19,7 @@ use Symfony\Component\Translation\Loader\QtFileLoader;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Component\Translation\Loader\JsonFileLoader;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
+use Symfony\Component\Translation\MessageSelector;
 
 // From `charcoal-translator`
 use Charcoal\Translator\LocalesConfig;
@@ -168,7 +169,7 @@ class TranslatorServiceProvider implements ServiceProviderInterface
          * @return MessageSelector
          */
         $container['translator/message-selector'] = function () {
-            return null;
+            return new MessageSelector();
         };
 
         /**
