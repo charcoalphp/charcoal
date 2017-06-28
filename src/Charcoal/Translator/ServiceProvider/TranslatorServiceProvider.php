@@ -177,7 +177,6 @@ class TranslatorServiceProvider implements ServiceProviderInterface
          * @return Translator
          */
         $container['translator'] = function (Container $container) {
-
             $translatorConfig = $container['translator/config'];
             $translator = new Translator([
                 'manager'           => $container['locales/manager'],
@@ -189,6 +188,7 @@ class TranslatorServiceProvider implements ServiceProviderInterface
             $translator->setFallbackLocales($container['locales/fallback-languages']);
 
             $translator->addLoader('array', $container['translator/loader/array']);
+
             foreach ($translatorConfig['loaders'] as $loader) {
                 $translator->addLoader($loader, $container['translator/loader/file/'.$loader]);
                 foreach ($translatorConfig['paths'] as $path) {
@@ -199,7 +199,7 @@ class TranslatorServiceProvider implements ServiceProviderInterface
                     $files = glob($path.'/*.'.$loader);
                     foreach ($files as $f) {
                         $names = explode('.', basename($f));
-                        if (count($names) < 2) {
+                        if (count($names) < 3) {
                             continue;
                         }
                         $lang = $names[1];
