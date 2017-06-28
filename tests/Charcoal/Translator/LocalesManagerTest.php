@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Translator;
 
+use InvalidArgumentException;
+
 // From PHPUnit
 use PHPUnit_Framework_TestCase;
 
@@ -14,20 +16,24 @@ use Charcoal\Translator\LocalesManager;
 class LocalesManagerTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * Object under test.
-     * @var LanguageConfig
+     * Tested Class.
+     *
+     * @var LocalesManager
      */
     private $obj;
 
+    /**
+     * Set up the test.
+     */
     public function setUp()
     {
         $this->obj = new LocalesManager([
             'locales' => [
                 'foo' => [],
                 'bar' => [],
-                'baz' => ['active'=>false]
+                'baz' => [ 'active' => false ]
             ],
-            'fallback_languages'=>['foo', 'bar']
+            'fallback_languages' => [ 'foo', 'bar' ]
         ]);
     }
 
@@ -37,27 +43,38 @@ class LocalesManagerTest extends PHPUnit_Framework_TestCase
             'locales' => [
                 'foo' => [],
                 'bar' => [],
-                'baz' => ['active'=>false]
+                'baz' => [ 'active' => false ]
             ],
-            'default_language'=>'bar'
+            'default_language' => 'bar'
         ]);
         $this->assertEquals('bar', $this->obj->currentLocale());
     }
 
-    public function testConstructorInvalidDefaultLanguageThrowsException()
+    public function testConstructorDefaultLanguageWithInvalidType()
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
         $obj = new LocalesManager([
             'locales' => [
                 'foo' => []
             ],
-            'default_language'=>'bar'
+            'default_language' => false
         ]);
     }
 
-    public function testConstructorNoActiveLocalesThrowsException()
+    public function testConstructorDefaultLanguageWithInvalidLocale()
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
+        $obj = new LocalesManager([
+            'locales' => [
+                'foo' => []
+            ],
+            'default_language' => 'bar'
+        ]);
+    }
+
+    public function testConstructorWithoutActiveLocales()
+    {
+        $this->setExpectedException(InvalidArgumentException::class);
         $obj = new LocalesManager([
             'locales' => []
         ]);
@@ -75,7 +92,7 @@ class LocalesManagerTest extends PHPUnit_Framework_TestCase
 
     public function testAvailableLocales()
     {
-        $this->assertEquals(['foo','bar'], $this->obj->availableLocales());
+        $this->assertEquals([ 'foo', 'bar' ], $this->obj->availableLocales());
     }
 
     public function testSetCurrentLocale()
@@ -87,8 +104,17 @@ class LocalesManagerTest extends PHPUnit_Framework_TestCase
 
         $this->obj->setCurrentLocale(null);
         $this->assertEquals('foo', $this->obj->currentLocale());
+    }
 
-        $this->setExpectedException('\InvalidArgumentException');
-        $this->obj->setCurrentLocale('foobazbar');
+    public function testSetCurrentLocaleWithInvalidType()
+    {
+        $this->setExpectedException(InvalidArgumentException::class);
+        $this->obj->setCurrentLocale(false);
+    }
+
+    public function testSetCurrentLocaleWithInvalidLocale()
+    {
+        $this->setExpectedException(InvalidArgumentException::class);
+        $this->obj->setCurrentLocale('qux');
     }
 }

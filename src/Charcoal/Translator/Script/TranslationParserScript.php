@@ -22,44 +22,49 @@ class TranslationParserScript extends AdminScript
     use TranslatorAwareTrait;
 
     /**
-     * App configurations from dependencies
      * @var AppConfig
      */
     private $appConfig;
 
     /**
-     * @var string $fileType
+     * @var string
      */
     protected $fileType;
 
     /**
-     * Output file
-     * @var string $output
+     * Output File.
+     *
+     * @var string
      */
     protected $output;
 
     /**
-     * @var array $paths
+     * Paths to search.
+     *
+     * @var array
      */
     protected $paths;
 
     /**
-     * @var string $path
+     * Path to translations.
+     *
+     * @var string
      */
     protected $path;
 
     /**
-     * Path where the CSV file will be
-     * Full path with base path.
+     * Path for the CSV file to store.
+     *
+     * Noe: Full path with base path.
+     *
      * @var string
      */
     protected $filePath;
 
     /**
-     * @var array $locales
+     * @var array
      */
     protected $locales;
-
 
     /**
      * @param Container $container Pimple DI container.
@@ -148,7 +153,6 @@ class TranslationParserScript extends AdminScript
         unset($request);
 
         // Parse arguments
-        $this->climate()->arguments->parse();
         $this->displayInformations();
 
         // Get translations
@@ -332,8 +336,8 @@ class TranslationParserScript extends AdminScript
     public function getTranslationsFromPath($path, $fileType)
     {
         // remove vendor/locomotivemtl/charcoal-app
-        $base = $this->appConfig->get('base_path');
-        $glob = $this->globRecursive($base.$path.'*.'.$fileType);
+        $base  = $this->appConfig->get('base_path');
+        $glob  = $this->globRecursive($base.$path.'*.'.$fileType);
         $regex = $this->regEx($fileType);
 
         $translations = [];
@@ -355,7 +359,6 @@ class TranslationParserScript extends AdminScript
 
             if (preg_match($regex, $text)) {
                 preg_match_all($regex, $text, $array);
-
 
                 $i = 0;
                 $t = count($array[$index]);
@@ -402,7 +405,7 @@ class TranslationParserScript extends AdminScript
 
     /**
      * Custom path
-     * @return [type] [description]
+     * @return string
      */
     public function path()
     {
@@ -420,8 +423,7 @@ class TranslationParserScript extends AdminScript
         if (!$this->paths) {
             $this->paths = $this->appConfig->get('view.paths');
 
-            // Hardcoded
-            // @todo change this
+            /** @todo Hardcoded; Change this! */
             $this->paths[] = 'src/';
         }
         return $this->paths;
@@ -480,7 +482,6 @@ class TranslationParserScript extends AdminScript
             }
             fclose($file);
         }
-
 
         return $this;
     }

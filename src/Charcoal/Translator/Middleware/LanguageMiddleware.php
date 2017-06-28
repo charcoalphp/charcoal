@@ -3,6 +3,7 @@
 namespace Charcoal\Translator\Middleware;
 
 // From PSR-7
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -40,7 +41,6 @@ class LanguageMiddleware
      */
     private $usePath;
 
-
     /**
      * @var string
      */
@@ -57,7 +57,7 @@ class LanguageMiddleware
     private $useSession;
 
     /**
-     * @var string
+     * @var string[]
      */
     private $sessionKey;
 
@@ -67,10 +67,9 @@ class LanguageMiddleware
     private $useParams;
 
     /**
-     * @var string
+     * @var string[]
      */
     private $paramKey;
-
 
     /**
      * @param array $data The middleware options.
@@ -89,7 +88,7 @@ class LanguageMiddleware
             'excluded_path' => [
                 '~^/admin\b~'
             ],
-            'path_regexp'   => '~^/(fr|en|es)\b~',
+            'path_regexp'   => '~^/([a-z]{2})\b~',
 
             'use_params'    => false,
             'param_key'     => 'current_language',
@@ -104,35 +103,34 @@ class LanguageMiddleware
         $data = array_replace($defaults, $data);
 
         $this->defaultLanguage = $data['default_language'];
-
         $this->browserLanguage = $data['browser_language'];
 
-        $this->usePath = !!$data['use_path'];
+        $this->usePath      = !!$data['use_path'];
         $this->includedPath = $data['included_path'];
         $this->excludedPath = $data['excluded_path'];
-        $this->pathRegexp = $data['path_regexp'];
+        $this->pathRegexp   = $data['path_regexp'];
 
-        $this->useParams = !!$data['use_params'];
-        $this->paramKey = $data['param_key'];
+        $this->useParams    = !!$data['use_params'];
+        $this->paramKey     = (array)$data['param_key'];
 
-        $this->useSession = !!$data['use_session'];
-        $this->sessionKey = $data['session_key'];
+        $this->useSession   = !!$data['use_session'];
+        $this->sessionKey   = (array)$data['session_key'];
 
-        $this->useBrowser = !!$data['use_browser'];
+        $this->useBrowser   = !!$data['use_browser'];
 
-        $this->setLocale = !!$data['set_locale'];
+        $this->setLocale    = !!$data['set_locale'];
     }
 
     /**
-     * @param RequestInterface  $request  The PSR-7 HTTP request.
-     * @param ResponseInterface $response The PSR-7 HTTP response.
-     * @param callable          $next     The next middleware callable in the stack.
+     * @param  RequestInterface  $request  The PSR-7 HTTP request.
+     * @param  ResponseInterface $response The PSR-7 HTTP response.
+     * @param  callable          $next     The next middleware callable in the stack.
      * @return ResponseInterface
      */
     public function __invoke(RequestInterface $request, ResponseInterface $response, callable $next)
     {
         // Test if path is excluded from middleware.
-        $uri = $request->getUri();
+        $uri  = $request->getUri();
         $path = $uri->getPath();
         foreach ($this->excludedPath as $excluded) {
             if (preg_match($excluded, $path)) {
@@ -142,11 +140,12 @@ class LanguageMiddleware
 
         $language = $this->getLanguage($request);
         $this->setLanguage($language);
+
         return $next($request, $response);
     }
 
     /**
-     * @param RequestInterface $request The PSR-7 HTTP request.
+     * @param  RequestInterface $request The PSR-7 HTTP request.
      * @return null|string
      */
     private function getLanguage(RequestInterface $request)
@@ -183,14 +182,14 @@ class LanguageMiddleware
     }
 
     /**
-     * @param RequestInterface $request The PSR-7 HTTP request.
+     * @param  RequestInterface $request The PSR-7 HTTP request.
      * @return null|string
      */
     private function getLanguageFromPath(RequestInterface $request)
     {
         $path = $request->getRequestTarget();
         if (preg_match($this->pathRegexp, $path, $matches)) {
-            $lang = $matches[0];
+            $lang = $matches[1];
         } else {
             return '';
         }
@@ -203,19 +202,22 @@ class LanguageMiddleware
     }
 
     /**
-     * @param RequestInterface $request The PSR-7 HTTP request.
+     * @param  RequestInterface $request The PSR-7 HTTP request.
      * @return string
      */
     private function getLanguageFromParams(RequestInterface $request)
     {
-        $params = $request->getParams();
-        $key = $this->paramKey;
-        if (isset($params[$key]) && in_array($params[$key], $this->translator()->availableLocales())) {
-            $lang = $params[$key];
-            return $params[$key];
-        } else {
-            return '';
+        if ($request instanceof ServerRequestInterface) {
+            $locales = $this->translator()->availableLocales();
+            $params  = $request->getQueryParams();
+            foreach ($this->paramKey as $key) {
+                if (isset($params[$key]) && in_array($params[$key], $locales)) {
+                    return $params[$key];
+                }
+            }
         }
+
+        return '';
     }
 
     /**
@@ -224,11 +226,13 @@ class LanguageMiddleware
     private function getLanguageFromSession()
     {
         $locales = $this->translator()->availableLocales();
-        if (isset($_SESSION[$this->sessionKey]) && in_array($_SESSION[$this->sessionKey], $locales)) {
-            return $_SESSION[$this->sessionKey];
-        } else {
-            return '';
+        foreach ($this->sessionKey as $key) {
+            if (isset($_SESSION[$key]) && in_array($_SESSION[$key], $locales)) {
+                return $_SESSION[$key];
+            }
         }
+
+        return '';
     }
 
     /**
@@ -240,7 +244,7 @@ class LanguageMiddleware
     }
 
     /**
-     * @param string $lang The language code to set.
+     * @param  string $lang The language code to set.
      * @return void
      */
     private function setLanguage($lang)
@@ -248,7 +252,9 @@ class LanguageMiddleware
         $this->translator()->setLocale($lang);
 
         if ($this->useSession === true) {
-            $_SESSION[$this->sessionKey] = $this->translator()->getLocale();
+            foreach ($this->sessionKey as $key) {
+                $_SESSION[$key] = $this->translator()->getLocale();
+            }
         }
 
         if ($this->setLocale === true) {
@@ -257,7 +263,7 @@ class LanguageMiddleware
     }
 
     /**
-     * @param string $lang The language code to set.
+     * @param  string $lang The language code to set.
      * @return void
      */
     private function setLocale($lang)

@@ -74,7 +74,7 @@ The locales manager (`\Charcoal\Translator\LocalesManager`) is used to manage av
 
 ## The Parser Script
 
-The parser script (`\Charcoal\Translator\Script\TranslationParserScript`) is used to scraper file that contains translatable content. Add the following route to your application configuration:
+The parser script (`\Charcoal\Translator\Script\TranslationParserScript`) is used to scrape files that contain translatable content. Add the following route to your application configuration:
 
 ```json
 "scripts": {

@@ -111,8 +111,9 @@ class TranslatorServiceProvider implements ServiceProviderInterface
             $acceptedLanguages  = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
             foreach ($acceptedLanguages as $acceptedLang) {
                 $lang = explode(';', $acceptedLang);
-                if (in_array($lang[0], $availableLanguages)) {
-                    return $lang[0];
+                $lang = trim($lang[0]);
+                if (in_array($lang, $availableLanguages)) {
+                    return $lang;
                 }
             }
             return null;

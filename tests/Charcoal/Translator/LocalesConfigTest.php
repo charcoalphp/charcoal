@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Translator;
 
+use InvalidArgumentException;
+
 // From PHPUnit
 use PHPUnit_Framework_TestCase;
 
@@ -14,11 +16,15 @@ use Charcoal\Translator\LocalesConfig;
 class LocalesConfigTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * Object under test.
-     * @var LanguageConfig
+     * Tested Class.
+     *
+     * @var LocalesConfig
      */
     private $obj;
 
+    /**
+     * Set up the test.
+     */
     public function setUp()
     {
         $this->obj = new LocalesConfig();
@@ -61,7 +67,7 @@ class LocalesConfigTest extends PHPUnit_Framework_TestCase
         $this->obj['default_language'] = 'bar';
         $this->assertEquals('bar', $this->obj['default_language']);
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
         $this->obj->setDefaultLanguage(false);
     }
 

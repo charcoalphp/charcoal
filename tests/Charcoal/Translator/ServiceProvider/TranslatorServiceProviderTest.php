@@ -9,6 +9,7 @@ use PHPUnit_Framework_TestCase;
 use Pimple\Container;
 
 // From `charcoal-translator`
+use Charcoal\Translator\Middleware\LanguageMiddleware;
 use Charcoal\Translator\ServiceProvider\TranslatorServiceProvider;
 use Charcoal\Translator\LocalesManager;
 use Charcoal\Translator\Translator;
@@ -18,9 +19,23 @@ use Charcoal\Translator\Translator;
  */
 class TranslatorServiceProviderTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * Tested Class.
+     *
+     * @var TranslatorServiceProvider
+     */
     private $obj;
+
+    /**
+     * Service Container.
+     *
+     * @var Container
+     */
     private $container;
 
+    /**
+     * Set up the test.
+     */
     public function setUp()
     {
         $this->obj = new TranslatorServiceProvider();
@@ -29,11 +44,11 @@ class TranslatorServiceProviderTest extends PHPUnit_Framework_TestCase
             'base_path' => realpath(__DIR__.'/../../..'),
             'locales'   => [
                 'languages' => [
-                    'foo' => [ 'locale' => 'foo-FOO' ],
-                    'bar' => [ 'locale' => 'bar-BAR' ]
+                    'en' => [ 'locale' => 'en-US' ],
+                    'fr' => [ 'locale' => 'fr-FR' ]
                 ],
-                'default_language'   => 'foo',
-                'fallback_languages' => [ 'foo' ]
+                'default_language'   => 'en',
+                'fallback_languages' => [ 'en' ]
             ],
             'translator' => [
                 'loaders' => [
@@ -50,14 +65,40 @@ class TranslatorServiceProviderTest extends PHPUnit_Framework_TestCase
                     'yaml'
                 ],
                 'paths' => [
-                    'translations/'
+                    '/fixtures/translations',
+                    '/fixtures/foobar'
+                ],
+                'translations' => [
+                    'messages' => [
+                        'en' => [
+                            'foo' => 'FOO'
+                        ],
+                        'fr' => [
+                            'foo' => 'OOF'
+                        ]
+                    ]
                 ],
                 'debug' => false,
                 'cache_dir' => 'translator_cache'
+            ],
+            'middlewares' => [
+                'charcoal/translator/middleware/language' => []
             ]
         ];
 
         $this->container->register($this->obj);
+    }
+
+    protected function resetDefaultLanguage()
+    {
+        static $raw;
+
+        if ($raw === null) {
+            $raw = $this->container->raw('locales/default-language');
+        }
+
+        unset($this->container['locales/default-language']);
+        $this->container['locales/default-language'] = $raw;
     }
 
     public function testKeys()
@@ -69,24 +110,25 @@ class TranslatorServiceProviderTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(isset($this->container['locales/browser-language']));
         $this->assertTrue(isset($this->container['translator/message-selector']));
         $this->assertTrue(isset($this->container['translator']));
+        $this->assertTrue(isset($this->container['middlewares/charcoal/translator/middleware/language']));
     }
 
     public function testAvailableLanguages()
     {
         $languages = $this->container['locales/available-languages'];
-        $this->assertContains('foo', $languages);
+        $this->assertContains('en', $languages);
     }
 
     public function testLanguages()
     {
         $languages = $this->container['locales/languages'];
-        $this->assertArrayHasKey('foo', $languages);
+        $this->assertArrayHasKey('en', $languages);
     }
 
     public function testDefaultLanguage()
     {
         $defaultLanguage = $this->container['locales/default-language'];
-        $this->assertEquals('foo', $defaultLanguage);
+        $this->assertEquals('en', $defaultLanguage);
     }
 
     public function testBrowserLanguageIsNullWithoutHttp()
@@ -97,9 +139,9 @@ class TranslatorServiceProviderTest extends PHPUnit_Framework_TestCase
 
     public function testBrowserLanguage()
     {
-        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'bar';
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'fr';
         $browserLanguage = $this->container['locales/browser-language'];
-        $this->assertEquals('bar', $browserLanguage);
+        $this->assertEquals('fr', $browserLanguage);
     }
 
     public function testBrowserLanguageIsNullIfInvalidHttp()
@@ -109,10 +151,35 @@ class TranslatorServiceProviderTest extends PHPUnit_Framework_TestCase
         $this->assertNull($browserLanguage);
     }
 
+    public function testDetectedLanguageIsNullWithoutHttp()
+    {
+        $this->container['locales/config']->setAutoDetect(true);
+
+        $this->resetDefaultLanguage();
+
+        $defaultLanguage = $this->container['locales/default-language'];
+        $this->assertEquals('en', $defaultLanguage);
+
+        $this->container['locales/config']->setAutoDetect(false);
+    }
+
+    public function testDetectedLanguage()
+    {
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'fr';
+        $this->container['locales/config']->setAutoDetect(true);
+
+        $this->resetDefaultLanguage();
+
+        $defaultLanguage = $this->container['locales/default-language'];
+        $this->assertEquals('fr', $defaultLanguage);
+
+        $this->container['locales/config']->setAutoDetect(false);
+    }
+
     public function testFallbackLanguages()
     {
         $fallbackLanguages = $this->container['locales/fallback-languages'];
-        $this->assertEquals(['foo'], $fallbackLanguages);
+        $this->assertEquals([ 'en' ], $fallbackLanguages);
     }
 
     public function testLanguageManager()
@@ -125,5 +192,11 @@ class TranslatorServiceProviderTest extends PHPUnit_Framework_TestCase
     {
         $translator = $this->container['translator'];
         $this->assertInstanceOf(Translator::class, $translator);
+    }
+
+    public function testMiddleware()
+    {
+        $middleware = $this->container['middlewares/charcoal/translator/middleware/language'];
+        $this->assertInstanceOf(LanguageMiddleware::class, $middleware);
     }
 }
