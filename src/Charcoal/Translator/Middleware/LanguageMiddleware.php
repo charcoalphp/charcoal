@@ -110,7 +110,7 @@ class LanguageMiddleware
         $this->browserLanguage = $data['browser_language'];
 
         $this->usePath      = !!$data['use_path'];
-        $this->excludedPath = $data['excluded_path'];
+        $this->excludedPath = (array)$data['excluded_path'];
         $this->pathRegexp   = $data['path_regexp'];
 
         $this->useParams    = !!$data['use_params'];
