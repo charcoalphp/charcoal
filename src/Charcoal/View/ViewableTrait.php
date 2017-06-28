@@ -3,10 +3,10 @@
 namespace Charcoal\View;
 
 // Dependencies from `PHP`
-use \InvalidArgumentException;
+use InvalidArgumentException;
 
 // Local namespace dependencies
-use \Charcoal\View\ViewInterface;
+use Charcoal\View\ViewInterface;
 
 /**
  * Implementation, as trait, of the {@see \Charcoal\View\ViewableInterface}.
@@ -163,5 +163,15 @@ trait ViewableTrait
         }
 
         return $this->viewController;
+    }
+
+    /**
+     * @param string      $varName       The name of the variable to set this template unto.
+     * @param string|null $templateIdent The "dynamic template" to set. null to clear.
+     * @return void
+     */
+    public function setDynamicTemplate($varName, $templateIdent)
+    {
+        $this->view()->setDynamicTemplate($varName, $templateIdent);
     }
 }

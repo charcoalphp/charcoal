@@ -1,7 +1,7 @@
 {
     "name": "locomotivemtl/charcoal-view",
     "type": "library",
-    "description": "Charcoal View (templates)",
+    "description": "Charcoal View (templates rendering and tools)",
     "keywords": [ "charcoal", "view", "templates", "mustache", "twig" ],
     "homepage": "https://charcoal.locomotive.ca",
     "license": "MIT",
@@ -38,7 +38,7 @@
         "slim/slim": "^3.7"
     },
     "suggest": {
-        "mustache/mustache": "Mustache is suggest as default templating engine.",
+        "mustache/mustache": "Mustache is suggested as the default templating engine.",
         "twig/twig": "Twig is a second templating engine option, offering more features but not as integrated within Charcoal."
     },
     "autoload": {

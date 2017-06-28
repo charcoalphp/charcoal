@@ -3,14 +3,14 @@
 namespace Charcoal\View;
 
 // PHP Dependencies
-use \InvalidArgumentException;
+use InvalidArgumentException;
 
 // PSR-3 (logger) dependencies
-use \Psr\Log\LoggerAwareInterface;
-use \Psr\Log\LoggerAwareTrait;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 
 // Local namespace dependencies
-use \Charcoal\View\LoaderInterface;
+use Charcoal\View\LoaderInterface;
 
 /**
  * Base template loader.
@@ -22,14 +22,19 @@ abstract class AbstractLoader implements
     use LoggerAwareTrait;
 
     /**
-     * @var string $basePath
+     * @var string
      */
     private $basePath = '';
 
     /**
-     * @var string[] $paths
+     * @var string[]
      */
     private $paths = [];
+
+    /**
+     * @var array
+     */
+    private $dynamicTemplates = [];
 
     /**
      * Default constructor, if none is provided by the concrete class implementations.
@@ -55,13 +60,21 @@ abstract class AbstractLoader implements
      */
     public function load($ident)
     {
-        // Handle dynamic template hack.
-        if ($ident === '$widget_template') {
-            $ident = (isset($GLOBALS['widget_template']) ? $GLOBALS['widget_template'] : null);
-            if (!is_string($ident)) {
-                throw new InvalidArgumentException(
-                    'Dynamic template ident (from "$widget_template") must be a string'
-                );
+        // Handle dynamic template
+        if (substr($ident, 0, 1) === '$') {
+            $tryLegacy = ($ident === '$widget_template');
+
+            $ident = $this->dynamicTemplate(substr($ident, 1));
+
+            // Legacy dynamic template hack
+            if (!$ident && $tryLegacy) {
+                $this->logger->warning('The GLOBALS $widget_template hack will be obsolete soon. Use setDynamicTemplate() instead.');
+                $ident = (isset($GLOBALS['widget_template']) ? $GLOBALS['widget_template'] : null);
+                if (!is_string($ident)) {
+                    throw new InvalidArgumentException(
+                        'Dynamic template ident (from "$widget_template") must be a string'
+                    );
+                }
             }
         }
 
@@ -188,5 +201,53 @@ abstract class AbstractLoader implements
         }
 
         return $path;
+    }
+
+    /**
+     * @param string      $varName       The name of the variable to set this template unto.
+     * @param string|null $templateIdent The "dynamic template" to set. null to clear.
+     * @throws InvalidArgumentException If var name is not a string or if the template is not a string (and not null).
+     * @return void
+     */
+    public function setDynamicTemplate($varName, $templateIdent)
+    {
+        if (!is_string($varName)) {
+            throw new InvalidArgumentException(
+                'Can not set dynamic template: var name is not a string.'
+            );
+        }
+
+        if ($templateIdent === null) {
+            $this->dynamicTemplates[$varName] = null;
+            return;
+        }
+
+        if (!is_string($templateIdent)) {
+            throw new InvalidArgumentException(
+                'Can not set dynamic template. Must be a a string, or null.'
+            );
+        }
+
+        $this->dynamicTemplates[$varName] = $templateIdent;
+    }
+
+    /**
+     * @param string $varName The name of the variable to get template ident from.
+     * @throws InvalidArgumentException If the var name is not a string.
+     * @return string
+     */
+    public function dynamicTemplate($varName)
+    {
+        if (!is_string($varName)) {
+            throw new InvalidArgumentException(
+                'Can not get dynamic template: var name is not a string.'
+            );
+        }
+
+        if (!isset($this->dynamicTemplates[$varName])) {
+            return '';
+        }
+
+        return $this->dynamicTemplates[$varName];
     }
 }

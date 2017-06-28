@@ -3,16 +3,16 @@
 namespace Charcoal\View;
 
 // Dependencies from `PHP`
-use \Exception;
-use \InvalidArgumentException;
+use Exception;
+use InvalidArgumentException;
 
 // PSR-3 (logger) dependencies
-use \Psr\Log\LoggerAwareInterface;
-use \Psr\Log\LoggerAwareTrait;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 
 // Local namespace dependencie
-use \Charcoal\View\EngineInterface;
-use \Charcoal\View\ViewInterface;
+use Charcoal\View\EngineInterface;
+use Charcoal\View\ViewInterface;
 
 /**
  * Base abstract class for _View_ interfaces, implements `ViewInterface`.
@@ -109,5 +109,15 @@ abstract class AbstractView implements
     public function renderTemplate($templateString, $context = null)
     {
         return $this->engine()->render($templateString, $context);
+    }
+
+    /**
+     * @param string      $varName       The name of the variable to set this template unto.
+     * @param string|null $templateIdent The "dynamic template" to set. null to clear.
+     * @return void
+     */
+    public function setDynamicTemplate($varName, $templateIdent)
+    {
+        $this->engine->setDynamicTemplate($varName, $templateIdent);
     }
 }

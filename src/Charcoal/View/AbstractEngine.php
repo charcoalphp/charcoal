@@ -3,12 +3,12 @@
 namespace Charcoal\View;
 
 // PSR-3 (logger) dependencies
-use \Psr\Log\LoggerAwareInterface;
-use \Psr\Log\LoggerAwareTrait;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 
 // Local namespace dependencies
-use \Charcoal\View\EngineInterface;
-use \Charcoal\View\LoaderInterface;
+use Charcoal\View\EngineInterface;
+use Charcoal\View\LoaderInterface;
 
 /**
  * Default implementation, as abstract class, of the `EngineInterface`.
@@ -28,7 +28,7 @@ abstract class AbstractEngine implements
     use LoggerAwareTrait;
 
     /**
-     * @var LoaderInterface $loader
+     * @var LoaderInterface
      */
     private $loader;
 
@@ -99,4 +99,14 @@ abstract class AbstractEngine implements
      * @return string The rendered template string.
      */
     abstract public function renderTemplate($templateString, $context);
+
+    /**
+     * @param string      $varName       The name of the variable to set this template unto.
+     * @param string|null $templateIdent The "dynamic template" to set. null to clear.
+     * @return void
+     */
+    public function setDynamicTemplate($varName, $templateIdent)
+    {
+        $this->loader->setDynamicTemplate($varName, $templateIdent);
+    }
 }

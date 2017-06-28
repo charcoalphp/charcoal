@@ -29,7 +29,6 @@ class ViewServiceProviderTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(isset($container['view/engine']));
         $this->assertTrue(isset($container['view/renderer']));
         $this->assertTrue(isset($container['view']));
-
     }
 
     public function testProviderTwig()
@@ -53,7 +52,6 @@ class ViewServiceProviderTest extends PHPUnit_Framework_TestCase
         $response = new Response();
         $ret = $container['view/renderer']->render($response, 'foo', ['foo'=>'Baz']);
         $this->assertEquals('Hello Baz', trim((string)$ret->getBody()));
-
     }
 
     public function testProviderMustache()

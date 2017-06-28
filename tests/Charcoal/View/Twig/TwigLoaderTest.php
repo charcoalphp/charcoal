@@ -58,8 +58,6 @@ class TwigLoaderTest extends PHPUnit_Framework_TestCase
         $source = file_get_contents(__DIR__.'/templates/'.$name.'.twig');
         $expected = new Twig_source($source, $name);
         $this->assertEquals($expected, $ret);
-
-
     }
 
     public function testLoadDynamic()

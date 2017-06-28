@@ -6,7 +6,7 @@ namespace Charcoal\View;
 use Psr\Http\Message\ResponseInterface;
 
 // Local namespace dependencies
-use \Charcoal\View\ViewInterface;
+use Charcoal\View\ViewInterface;
 
 /**
  * Provides a PSR-7 renderer that uses a Charcoal View.

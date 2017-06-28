@@ -2,10 +2,10 @@
 
 namespace Charcoal\View;
 
-use \InvalidArgumentException;
+use InvalidArgumentException;
 
 // Module `charcoal-config` dependencies
-use \Charcoal\Config\AbstractConfig;
+use Charcoal\Config\AbstractConfig;
 
 /**
  * View configuration.
