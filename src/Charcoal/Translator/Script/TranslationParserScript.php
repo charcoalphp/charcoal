@@ -383,6 +383,7 @@ class TranslationParserScript extends AdminScript
     }
 
     /**
+     * @todo  Added support for max depth.
      * @param string  $pattern The pattern to search.
      * @param integer $flags   The glob flags.
      * @return array
@@ -390,7 +391,7 @@ class TranslationParserScript extends AdminScript
      */
     public function globRecursive($pattern, $flags = 0)
     {
-        $max = $this->maxRecursiveLevel();
+        // $max = $this->maxRecursiveLevel();
         $i = 1;
         $files = glob($pattern, $flags);
         foreach (glob(dirname($pattern).'/*', (GLOB_ONLYDIR|GLOB_NOSORT)) as $dir) {

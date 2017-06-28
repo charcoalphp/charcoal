@@ -72,6 +72,11 @@ class LanguageMiddleware
     private $paramKey;
 
     /**
+     * @var boolean
+     */
+    private $setLocale;
+
+    /**
      * @param array $data The middleware options.
      */
     public function __construct(array $data)
@@ -84,7 +89,6 @@ class LanguageMiddleware
             'browser_language' => null,
 
             'use_path'      => true,
-            'included_path' => null,
             'excluded_path' => [
                 '~^/admin\b~'
             ],
@@ -106,7 +110,6 @@ class LanguageMiddleware
         $this->browserLanguage = $data['browser_language'];
 
         $this->usePath      = !!$data['use_path'];
-        $this->includedPath = $data['included_path'];
         $this->excludedPath = $data['excluded_path'];
         $this->pathRegexp   = $data['path_regexp'];
 
