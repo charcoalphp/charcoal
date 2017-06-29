@@ -49,6 +49,9 @@ class Translator extends SymfonyTranslator
         $this->setManager($data['manager']);
 
         // Ensure Charcoal has control of the message selector.
+        if (!isset($data['message_selector'])) {
+            $data['message_selector'] = new MessageSelector();
+        }
         $this->setSelector($data['message_selector']);
 
         $defaults = [
