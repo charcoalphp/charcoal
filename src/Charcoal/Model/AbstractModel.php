@@ -434,9 +434,7 @@ abstract class AbstractModel extends AbstractEntity implements
      */
     protected function preUpdate(array $properties = null)
     {
-        // $properties is unused for now
-        unset($properties);
-        return $this->saveProperties();
+        return $this->saveProperties($properties);
     }
 
     /**

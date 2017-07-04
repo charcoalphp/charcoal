@@ -3,43 +3,64 @@
 namespace Charcoal\Tests\Model;
 
 // From 'charcoal-core'
-use \Charcoal\Model\AbstractModel;
-use \Charcoal\Model\ModelInterface;
-use \Charcoal\Model\Model;
+use Charcoal\Model\AbstractModel;
+use Charcoal\Model\ModelInterface;
+use Charcoal\Model\Model;
 
 class ModelTest extends \PHPUnit_Framework_TestCase
 {
     use \Charcoal\Tests\ContainerIntegrationTrait;
 
+    /**
+     * Tested Class.
+     *
+     * @var Model
+     */
     public $obj;
 
-    private function createModel()
+    /**
+     * Retrieve the model's mock metadata.
+     *
+     * @return array
+     */
+    private function getModelMetadata()
     {
-        $container = $this->getContainer();
-
-        $obj = $container['model/factory']->create(Model::class);
-        $obj->foo = null;
-        $obj->setMetadata([
+        return [
             'properties' => [
                 'id' => [
                     'type' => 'id'
                 ],
-                'foo' => [
+                'name' => [
+                    'type' => 'string'
+                ],
+                'role' => [
                     'type' => 'string'
                 ]
             ],
             'key' => 'id',
             'sources' => [
                 'default' => [
-                    'table' => 'test'
+                    'table' => 'charcoal_models'
                 ]
             ],
             'default_source' => 'default'
-        ]);
+        ];
+    }
+
+    /**
+     * Create a new model instance.
+     *
+     * @return ModelInterface
+     */
+    private function createModel()
+    {
+        $container = $this->getContainer();
+
+        $obj = $container['model/factory']->create(Model::class);
+        $obj->setMetadata($this->getModelMetadata());
 
         $src = $obj->source();
-        $src->setTable('test');
-        $src->db()->query('DROP TABLE IF EXISTS `test`');
+        $src->setTable('charcoal_models');
 
         if ($src->tableExists() === false) {
             $src->createTable();
@@ -48,9 +69,65 @@ class ModelTest extends \PHPUnit_Framework_TestCase
         return $obj;
     }
 
+    /**
+     * Drop the SQL table.
+     *
+     * @return void
+     */
+    private function dropTable()
+    {
+        $container = $this->getContainer();
+
+        $container['database']->query('DROP TABLE IF EXISTS `charcoal_models`;');
+    }
+
+    /**
+     * Retrieve the model's mock object data.
+     *
+     * @return array
+     */
+    private function getHuxleyData()
+    {
+        return [
+            'id'   => 1,
+            'name' => 'Huxley',
+            'role' => 'Novelist'
+        ];
+    }
+
+    /**
+     * Quickly save an object.
+     *
+     * @return integer The saved object ID.
+     */
+    private function saveHuxley()
+    {
+        $obj = $this->obj;
+        $obj->setData($this->getHuxleyData());
+
+        return $obj->save();
+    }
+
+    /**
+     * Set up the test.
+     *
+     * Create the SQL table for the test, dropping any existing table.
+     */
     public function setUp()
     {
+        $this->dropTable();
+
         $this->obj = $this->createModel();
+    }
+
+    /**
+     * Tear down the test.
+     *
+     * Drop any existing SQL table.
+     */
+    public function tearDown()
+    {
+        $this->dropTable();
     }
 
     public function testConstructor()
@@ -64,93 +141,106 @@ class ModelTest extends \PHPUnit_Framework_TestCase
     public function testSetData()
     {
         $obj = $this->obj;
-        $ret = $obj->setData(['foo' => 'bar']);
+        $ret = $obj->setData([ 'name' => 'Orwell' ]);
+
         $this->assertSame($ret, $obj);
-        $this->assertEquals('bar', $obj->foo);
+        $this->assertEquals('Orwell', $obj->name);
     }
 
     public function testSetFlatData()
     {
         $obj = $this->obj;
-        $ret = $obj->setFlatData(['foo' => 'baz']);
+        $ret = $obj->setFlatData([ 'name' => 'Clarke' ]);
+
         $this->assertSame($ret, $obj);
-        $this->assertEquals('baz', $obj->foo);
+        $this->assertEquals('Clarke', $obj->name);
     }
 
     public function testSave()
     {
-        $obj = $this->obj;
-        $obj->setData([
-            'id'  => 1,
-            'foo' => 'Test'
-        ]);
-        $ret = $obj->save();
+        $ret = $this->saveHuxley();
 
         $this->assertEquals(1, $ret);
     }
 
-    // public function testLoad()
-    // {
-    //     $obj = $this->obj;
-    //     $ret = $obj->load(1);
-    //     // var_dump($ret);
-    //     $this->assertEquals('Test', $obj->foo);
-    // }
+    public function testLoad()
+    {
+        $ret = $this->saveHuxley();
 
-    // public function testUpdate()
-    // {
-    //     $obj = $this->obj;
-    //     $obj->setData(
-    //         [
-    //             'id'  => 1,
-    //             'foo' => 'Foobar'
-    //         ]
-    //     );
-    //     $ret = $obj->update();
-    //     $this->assertTrue($ret);
+        $obj1 = $this->createModel();
+        $obj1->load(1);
 
-    //     $obj2 = $this->createModel();
-    //     $obj2->load(1);
-    //     $this->assertEquals('Foobar', $obj2['foo']);
-    // }
+        $this->assertEquals($this->getHuxleyData(), $obj1->data());
+    }
+
+    public function testUpdate()
+    {
+        $ret = $this->saveHuxley();
+
+        $obj = $this->obj;
+        $obj->setData([
+            'name' => 'Bradbury',
+            'role' => 'Screenwriter'
+        ]);
+        $ret = $obj->update([ 'name' ]);
+        $this->assertTrue($ret);
+
+        $obj1 = $this->createModel();
+        $obj1->load(1);
+
+        $this->assertEquals('Bradbury', $obj1['name']);
+        $this->assertEquals('Novelist', $obj1['role']);
+
+        $ret = $obj->update();
+        $this->assertTrue($ret);
+
+        $obj2 = $this->createModel();
+        $obj2->load(1);
+
+        $this->assertEquals('Bradbury', $obj2['name']);
+        $this->assertEquals('Screenwriter', $obj2['role']);
+    }
 
     public function testDelete()
     {
+        $ret = $this->saveHuxley();
+
         $obj = $this->obj;
-        $obj->setData(
-            [
-                'id' => 1
-            ]
-        );
         $ret = $obj->delete();
         $this->assertTrue($ret);
+
+        $obj1 = $this->createModel();
+        $obj1->load(1);
+        $this->assertEquals(null, $obj1['id']);
     }
 
     public function testSerializeUnserialize()
     {
-        $obj = $this->obj;
-        $obj->setData([
-            'id'  => 42,
-            'foo' => 'Bar'
-        ]);
+        $obj  = $this->obj;
+        $data = $this->getHuxleyData();
+
+        $obj->setData($data);
+
         $serialized = serialize($obj);
-        $this->assertEquals('C:20:"Charcoal\Model\Model":40:{a:2:{s:2:"id";i:42;s:3:"foo";s:3:"Bar";}}', $serialized);
+        $this->assertEquals(
+            'C:20:"Charcoal\Model\Model":69:{a:3:{s:2:"id";i:1;s:4:"name";s:6:"Huxley";s:4:"role";s:8:"Novelist";}}',
+            serialize($obj)
+        );
+
         $obj2 = unserialize($serialized);
 
-        //$this->assertEquals($obj, $obj2);
-        $this->assertEquals(42, $obj2['id']);
-        $this->assertEquals('Bar', $obj2['foo']);
+        $this->assertInstanceOf(Model::class, $obj2);
+        $this->assertEquals(1, $obj2['id']);
+        $this->assertEquals('Huxley', $obj2['name']);
     }
 
     public function testJsonSerialize()
     {
-        $obj = $this->obj;
-        $data = [
-            'id'  => 42,
-            'foo' => 'Bar'
-        ];
+        $obj  = $this->obj;
+        $data = $this->getHuxleyData();
+
         $obj->setData($data);
-        $json = json_encode($obj);
-        $this->assertEquals(json_encode($data), $json);
+
+        $this->assertEquals(json_encode($data), json_encode($obj));
     }
 }
