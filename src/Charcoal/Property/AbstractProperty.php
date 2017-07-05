@@ -328,20 +328,24 @@ abstract class AbstractProperty extends AbstractEntity implements
                 return null;
             }
         } elseif ($val === null) {
-            throw new InvalidArgumentException(
-                sprintf('Property "%s" value can not be NULL (not allowed)', $this->ident())
-            );
+            throw new InvalidArgumentException(sprintf(
+                'Property "%s" value can not be NULL (not allowed)',
+                $this->ident()
+            ));
         }
 
         if ($this->multiple()) {
             if (is_string($val)) {
                 $val = explode($this->multipleSeparator(), $val);
+            } else {
+                $val = (array)$val;
             }
 
             if (!is_array($val)) {
-                throw new InvalidArgumentException(
-                    'Value is multiple. It must be a string (convertable to array by separator) or an array'
-                );
+                throw new InvalidArgumentException(sprintf(
+                    'Value is multiple. It must be an array or a delimited string, received "%s"',
+                    is_object($val) ? get_class($val) : gettype($val)
+                ));
             }
 
             $val = array_map([ $this, 'parseOne' ], $val);
