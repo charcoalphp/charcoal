@@ -19,16 +19,4 @@ class MapStructureProperty extends StructureProperty
     {
         return 'map-structure';
     }
-
-    /**
-     * Retrieve the property's SQL data type (storage format).
-     *
-     * For a lack of better array support in mysql, data is stored as encoded JSON in a LONGTEXT.
-     *
-     * @return string
-     */
-    public function sqlType()
-    {
-        return 'TEXT';
-    }
 }

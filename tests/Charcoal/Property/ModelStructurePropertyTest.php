@@ -2,17 +2,17 @@
 
 namespace Charcoal\Tests\Property;
 
-use Charcoal\Property\StructureProperty;
+use Charcoal\Property\ModelStructureProperty;
 
 /**
  *
  */
-class StructurePropertyTest extends \PHPUnit_Framework_TestCase
+class ModelStructurePropertyTest extends \PHPUnit_Framework_TestCase
 {
     use \Charcoal\Tests\Property\ContainerIntegrationTrait;
 
     /**
-     * @var StructureProperty $obj
+     * @var ModelStructureProperty $obj
      */
     public $obj;
 
@@ -20,7 +20,7 @@ class StructurePropertyTest extends \PHPUnit_Framework_TestCase
     {
         $container = $this->getContainer();
 
-        $this->obj = new StructureProperty([
+        $this->obj = new ModelStructureProperty([
             'database'   => $container['database'],
             'logger'     => $container['logger'],
             'translator' => $container['translator']
@@ -29,6 +29,6 @@ class StructurePropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testType()
     {
-        $this->assertEquals('structure', $this->obj->type());
+        $this->assertEquals('model-structure', $this->obj->type());
     }
 }

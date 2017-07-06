@@ -30,7 +30,6 @@ class MapStructurePropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testType()
     {
-        $obj = $this->obj;
-        $this->assertEquals('map-structure', $obj->type());
+        $this->assertEquals('map-structure', $this->obj->type());
     }
 }

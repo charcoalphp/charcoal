@@ -145,8 +145,8 @@ class PropertyField
     }
 
     /**
-     * @param string $sqlType The field sql column type.
-     * @throws InvalidArgumentException If the sql type is not a string.
+     * @param string $sqlType The field SQL column type.
+     * @throws InvalidArgumentException If the SQL type is not a string.
      * @return PropertyField Chainable
      */
     public function setSqlType($sqlType)
