@@ -2,6 +2,8 @@
 
 namespace Charcoal\Config;
 
+use \Traversable;
+
 // Local namespace dependencies
 use \Charcoal\Config\EntityInterface;
 
