@@ -31,7 +31,7 @@
         "pimple/pimple": "^3.0",
         "locomotivemtl/charcoal-config": "~0.7",
         "locomotivemtl/charcoal-factory": "~0.4",
-        "locomotivemtl/charcoal-property": "~0.4.3",
+        "locomotivemtl/charcoal-property": "~0.4",
         "locomotivemtl/charcoal-view": "~0.2"
     },
     "require-dev": {
@@ -41,7 +41,7 @@
         "cache/void-adapter": "^0.3.0",
         "tedivm/stash": "~0.14",
         "mockery/mockery": "^0.9.6",
-        "locomotivemtl/charcoal-app": "^0.3"
+        "locomotivemtl/charcoal-app": "^0.4"
     },
     "autoload": {
         "psr-4": {
