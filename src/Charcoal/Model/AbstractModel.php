@@ -178,7 +178,7 @@ abstract class AbstractModel extends AbstractEntity implements
      * @param mixed $val The value to serialize.
      * @return mixed
      */
-    private function serializedValue($val)
+    protected function serializedValue($val)
     {
         if (is_scalar($val)) {
             return $val;
