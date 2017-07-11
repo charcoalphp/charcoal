@@ -228,7 +228,7 @@ abstract class AbstractEntity implements EntityInterface
     {
         if (is_numeric($key)) {
             throw new InvalidArgumentException(
-                'Config array access only supports non-numeric keys.'
+                'Entity array access only supports non-numeric keys.'
             );
         }
 
@@ -260,7 +260,7 @@ abstract class AbstractEntity implements EntityInterface
     {
         if (is_numeric($key)) {
             throw new InvalidArgumentException(
-                'Config array access only supports non-numeric keys.'
+                'Entity array access only supports non-numeric keys.'
             );
         }
         if ($this->separator && strstr($key, $this->separator)) {
@@ -296,7 +296,7 @@ abstract class AbstractEntity implements EntityInterface
     {
         if (is_numeric($key)) {
             throw new InvalidArgumentException(
-                'Config array access only supports non-numeric keys.'
+                'Entity array access only supports non-numeric keys.'
             );
         }
 
@@ -330,7 +330,7 @@ abstract class AbstractEntity implements EntityInterface
     {
         if (is_numeric($key)) {
             throw new InvalidArgumentException(
-                'Config array access only supports non-numeric keys.'
+                'Entity array access only supports non-numeric keys.'
             );
         }
         $this[$key] = null;
