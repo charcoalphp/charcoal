@@ -256,7 +256,7 @@ final class MetadataLoader implements LoggerAwareInterface
      * @param  MetadataInterface $metadata   The metadata object to load into.
      * @param  array|null        $interfaces One or more metadata identifiers to load.
      * @throws InvalidArgumentException If the identifier is not a string.
-     * @return array Returns the cached metadata instance or if it's stale or empty,
+     * @return MetadataInterface Returns the cached metadata instance or if it's stale or empty,
      *     loads a fresh copy of the data into $metadata and returns it;
      */
     public function load($ident, MetadataInterface $metadata, array $interfaces = null)
@@ -382,7 +382,7 @@ final class MetadataLoader implements LoggerAwareInterface
 
         $classname = $this->identToClassname($ident);
 
-        if (!class_exists($classname)) {
+        if (!class_exists($classname) && !interface_exists($classname)) {
             return [ $ident ];
         }
 
@@ -395,9 +395,9 @@ final class MetadataLoader implements LoggerAwareInterface
             $implements = array_values(class_implements($class));
             $implements = array_reverse($implements);
             foreach ($implements as $interface) {
-                $hierarchy[$this->classnameToIdent($interface)] = $interface;
+                $hierarchy[$this->classnameToIdent($interface)] = 1;
             }
-            $hierarchy[$this->classnameToIdent($class)] = $class;
+            $hierarchy[$this->classnameToIdent($class)] = 1;
         }
 
         $hierarchy = array_keys($hierarchy);
