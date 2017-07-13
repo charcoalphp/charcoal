@@ -15,9 +15,9 @@ use \Charcoal\Image\Effect\AbstractResizeEffect;
 class ImagemagickResizeEffect extends AbstractResizeEffect
 {
     /**
-     * @param integer $width   The target width.
-     * @param integer $height  The target height.
-     * @param boolean $bestFit The "best_fit" flag.
+     * @param  integer $width   The target width.
+     * @param  integer $height  The target height.
+     * @param  boolean $bestFit The "best_fit" flag.
      * @return void
      */
     protected function doResize($width, $height, $bestFit = false)
@@ -32,10 +32,22 @@ class ImagemagickResizeEffect extends AbstractResizeEffect
         if ($size) {
             $params = [ $option.' '.$size ];
         } else {
+            if ($width === 0 && $height === 0) {
+                return;
+            }
+
             $params = [
                 '-gravity "'.$this->gravity().'"',
                 '-background "'.$this->backgroundColor().'"'
             ];
+
+            if ($width === 0) {
+                $width = '';
+            }
+
+            if ($height === 0) {
+                $height = '';
+            }
 
             $size = $width.'x'.$height;
             if ($bestFit) {
