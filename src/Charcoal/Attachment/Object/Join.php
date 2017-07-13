@@ -155,7 +155,7 @@ class Join extends AbstractModel implements
             $this->isSourceObjectResolved = true;
 
             try {
-                $model = $this->modelFactory()->create($pivot->objectType())->load($pivot->objectId());
+                $model = $this->modelFactory()->create($this->objectType())->load($this->objectId());
                 if ($model->id()) {
                     $this->sourceObject = $model;
                 }
@@ -182,7 +182,7 @@ class Join extends AbstractModel implements
             $this->isRelatedObjectResolved = true;
 
             try {
-                $model = $this->modelFactory()->create(Attachment::class)->load($pivot->attachmentId());
+                $model = $this->modelFactory()->create(Attachment::class)->load($this->attachmentId());
                 if ($model->id()) {
                     $this->relatedObject = $model;
 
