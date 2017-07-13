@@ -16,23 +16,41 @@ abstract class AbstractCropEffect extends AbstractEffect
      * @var integer $x
      */
     private $x = 0;
+
     /**
      * @var integer $y
      */
     private $y = 0;
+
     /**
      * @var integer $width
      */
     private $width = 0;
+
     /**
      * @var integer $height
      */
     private $height = 0;
 
     /**
-     * @param integer $width The crop width.
+     * @var mixed $geometry
+     */
+    private $geometry;
+
+    /**
+     * @var string $gravity
+     */
+    private $gravity = 'center';
+
+    /**
+     * @var boolean $repage
+     */
+    private $repage = false;
+
+    /**
+     * @param  integer $width The crop width.
      * @throws InvalidArgumentException If the width argument is not valid.
-     * @return Rotate Chainable
+     * @return AbstractCropEffect
      */
     public function setWidth($width)
     {
@@ -46,7 +64,7 @@ abstract class AbstractCropEffect extends AbstractEffect
     }
 
     /**
-     * @return float
+     * @return integer
      */
     public function width()
     {
@@ -54,9 +72,9 @@ abstract class AbstractCropEffect extends AbstractEffect
     }
 
     /**
-     * @param integer $height The crop height.
+     * @param  integer $height The crop height.
      * @throws InvalidArgumentException If the height argument is not valid.
-     * @return $this Chainable
+     * @return AbstractCropEffect
      */
     public function setHeight($height)
     {
@@ -70,7 +88,7 @@ abstract class AbstractCropEffect extends AbstractEffect
     }
 
     /**
-     * @return float
+     * @return integer
      */
     public function height()
     {
@@ -80,9 +98,9 @@ abstract class AbstractCropEffect extends AbstractEffect
     /**
      * The X coordinate of the cropped region's top left corner
      *
-     * @param integer $x The x-position (in pixel) of the crop.
+     * @param  integer $x The x-position (in pixel) of the crop.
      * @throws InvalidArgumentException If the x argument is not valid.
-     * @return $this Chainable
+     * @return AbstractCropEffect
      */
     public function setX($x)
     {
@@ -96,7 +114,7 @@ abstract class AbstractCropEffect extends AbstractEffect
     }
 
     /**
-     * @return float
+     * @return integer
      */
     public function x()
     {
@@ -106,9 +124,9 @@ abstract class AbstractCropEffect extends AbstractEffect
     /**
      * The Y coordinate of the cropped region's top left corner
      *
-     * @param integer $y The y-position (in pixel) of the crop.
+     * @param  integer $y The y-position (in pixel) of the crop.
      * @throws InvalidArgumentException If the y argumnet is not valid.
-     * @return $this Chainable
+     * @return AbstractCropEffect
      */
     public function setY($y)
     {
@@ -122,7 +140,7 @@ abstract class AbstractCropEffect extends AbstractEffect
     }
 
     /**
-     * @return float
+     * @return integer
      */
     public function y()
     {
@@ -130,8 +148,78 @@ abstract class AbstractCropEffect extends AbstractEffect
     }
 
     /**
-     * @param array $data The effect data.
-     * @return AbstractResizeEffect Chainable
+     * Set a complex geometry value.
+     *
+     * @param  mixed $geometry The image geometry.
+     * @throws InvalidArgumentException If the geometry argument is not valid.
+     * @return AbstractCropEffect
+     */
+    public function setGeometry($geometry)
+    {
+        if ($geometry !== null && !is_string($geometry) && !is_numeric($geometry)) {
+            throw new InvalidArgumentException(
+                'Geometry must be a valid crop'
+            );
+        }
+        $this->geometry = $geometry;
+        return $this;
+    }
+
+    /**
+     * Retrieve the complex geometry value.
+     *
+     * @return mixed
+     */
+    public function geometry()
+    {
+        return $this->geometry;
+    }
+
+    /**
+     * @param  string $gravity The crop gravity.
+     * @throws InvalidArgumentException If the argument is not a valid gravity name.
+     * @return AbstractCropEffect
+     */
+    public function setGravity($gravity)
+    {
+        if (!in_array($gravity, $this->image()->availableGravities())) {
+            throw new InvalidArgumentException(
+                'Gravity is not valid'
+            );
+        }
+        $this->gravity = $gravity;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function gravity()
+    {
+        return $this->gravity;
+    }
+
+    /**
+     * @param  boolean $repage The repage image flag.
+     * @return AbstractCropEffect
+     */
+    public function setRepage($repage)
+    {
+        $this->repage = !!$repage;
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function repage()
+    {
+        return $this->repage;
+    }
+
+    /**
+     * @param  array $data The effect data.
+     * @return AbstractCropEffect
      */
     public function process(array $data = null)
     {
@@ -139,9 +227,14 @@ abstract class AbstractCropEffect extends AbstractEffect
             $this->setData($data);
         }
 
+        if ($this->geometry()) {
+            $this->doCrop(0, 0, 0, 0);
+            return $this;
+        }
+
         $y = $this->y();
         $x = $this->x();
-        $width = $this->width();
+        $width  = $this->width();
         $height = $this->height();
 
         $this->doCrop($width, $height, $x, $y);
@@ -150,10 +243,10 @@ abstract class AbstractCropEffect extends AbstractEffect
     }
 
     /**
-     * @param integer $width  The crop width.
-     * @param integer $height The crop height.
-     * @param integer $x      The x-position (in pixel) of the crop.
-     * @param integer $y      The y-position (in pixel) of the crop.
+     * @param  integer $width  The crop width.
+     * @param  integer $height The crop height.
+     * @param  integer $x      The x-position (in pixel) of the crop.
+     * @param  integer $y      The y-position (in pixel) of the crop.
      * @return void
      */
     abstract protected function doCrop($width, $height, $x, $y);
