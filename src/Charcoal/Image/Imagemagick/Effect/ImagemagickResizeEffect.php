@@ -30,7 +30,7 @@ class ImagemagickResizeEffect extends AbstractResizeEffect
 
         $size = $this->size();
         if ($size) {
-            $params = [ $option.' '.$size ];
+            $params = [ $option.' "'.$size.'"' ];
         } else {
             if ($width === 0 && $height === 0) {
                 return;
@@ -51,7 +51,7 @@ class ImagemagickResizeEffect extends AbstractResizeEffect
 
             $size = $width.'x'.$height;
             if ($bestFit) {
-                $params[] = $option.' '.$size.'^';
+                $params[] = $option.' "'.$size.'^"';
                 $params[] = '-extent '.$size;
             } else {
                 $params[] = $option.' '.$size;
