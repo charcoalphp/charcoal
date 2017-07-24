@@ -206,6 +206,18 @@ abstract class AbstractSource implements
     }
 
     /**
+     * @param array $filters The filters to add.
+     * @return SourceInterface Chainable
+     */
+    public function addFilters(array $filters)
+    {
+        foreach ($filters as $f) {
+            $this->addFilter($f);
+        }
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function filters()
@@ -282,11 +294,23 @@ abstract class AbstractSource implements
 
     /**
      * @param array $orders The orders to set.
-     * @return CollectionLoader Chainable
+     * @return AbstractSource Chainable
      */
     public function setOrders(array $orders)
     {
         $this->orders = [];
+        foreach ($orders as $o) {
+            $this->addOrder($o);
+        }
+        return $this;
+    }
+
+    /**
+     * @param array $orders The orders to add.
+     * @return AbstractSource Chainable
+     */
+    public function addOrders(array $orders)
+    {
         foreach ($orders as $o) {
             $this->addOrder($o);
         }
@@ -403,7 +427,7 @@ abstract class AbstractSource implements
     /**
      * @param integer $page The page number.
      * @throws InvalidArgumentException If the page argument is not numeric.
-     * @return CollectionLoader Chainable
+     * @return AbstractSource Chainable
      */
     public function setPage($page)
     {
@@ -427,7 +451,7 @@ abstract class AbstractSource implements
     /**
      * @param integer $num The number of items to retrieve per page.
      * @throws InvalidArgumentException If the num per page argument is not numeric.
-     * @return CollectionLoader Chainable
+     * @return AbstractSource Chainable
      */
     public function setNumPerPage($num)
     {

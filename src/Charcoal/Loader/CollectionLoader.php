@@ -371,6 +371,21 @@ class CollectionLoader implements LoggerAwareInterface
     }
 
     /**
+     * Alias of {@see SourceInterface::addFilters()}
+     *
+     * @param  array $filters An array of filters.
+     * @return Collection Chainable
+     */
+    public function addFilters(array $filters)
+    {
+        foreach ($filters as $f) {
+            $this->addFilter($f);
+        }
+
+        return $this;
+    }
+
+    /**
      * Alias of {@see SourceInterface::addFilter()}
      *
      * @param  string|array|Filter $param   A property identifier, filter array, or Filter object.
@@ -404,6 +419,21 @@ class CollectionLoader implements LoggerAwareInterface
     public function setOrders(array $orders)
     {
         $this->source()->setOrders($orders);
+
+        return $this;
+    }
+
+    /**
+     * Alias of {@see SourceInterface::addOrders()}
+     *
+     * @param  array $orders An array of orders.
+     * @return Collection Chainable
+     */
+    public function addOrders(array $orders)
+    {
+        foreach ($orders as $o) {
+            $this->addOrder($o);
+        }
 
         return $this;
     }
