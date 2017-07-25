@@ -3,10 +3,10 @@
 namespace Charcoal\View\Twig;
 
 // 3rd-party libraries (`twigphp/twig`) dependencies
-use \Twig_Environment;
+use Twig_Environment;
 
 // Intra-module (`charcoal-view`) depentencies
-use \Charcoal\View\AbstractEngine;
+use Charcoal\View\AbstractEngine;
 
 /**
  *
@@ -58,7 +58,8 @@ class TwigEngine extends AbstractEngine
      */
     public function render($templateIdent, $context)
     {
-        return $this->twig()->render($templateIdent, $context);
+        $arrayContext = json_decode(json_encode($context), true);
+        return $this->twig()->render($templateIdent, $arrayContext);
     }
 
     /**
@@ -69,6 +70,7 @@ class TwigEngine extends AbstractEngine
     public function renderTemplate($templateString, $context)
     {
         $template = $this->twig()->createTemplate($templateString);
-        return $template->render($context);
+        $arrayContext = json_decode(json_encode($context), true);
+        return $template->render($arrayContext);
     }
 }

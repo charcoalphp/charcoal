@@ -42,9 +42,7 @@ abstract class AbstractEngine implements
      *
      * ## Required parameters:
      * - `logger` a PSR-3 logger
-     *
-     * ## Optional parameters:
-     * - `loader` a Loader object
+     * - `loader` a Loader object, to load templates.
      *
      * @param array $data Engine dependencie.
      */
@@ -83,6 +81,8 @@ abstract class AbstractEngine implements
     }
 
     /**
+     * Render a template (from ident) with a given context.
+     *
      * @param string $templateIdent The template identifier to load and render.
      * @param mixed  $context       The rendering context.
      * @return string The rendered template string.
