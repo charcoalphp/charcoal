@@ -565,16 +565,24 @@ class ModelStructureProperty extends StructureProperty
         $val = parent::save($val);
 
         if ($this->multiple()) {
-            $objs = (array)$this->structureVal($val);
-            $val  = [];
-            foreach ($objs as $obj) {
-                $obj->saveProperties();
-                $val[] = $obj->data();
+            $proto = $this->structureProto();
+            if ($proto instanceof ModelInterface) {
+                $objs = (array)$this->structureVal($val);
+                $val  = [];
+                if (!empty($objs)) {
+                    $val  = [];
+                    foreach ($objs as $obj) {
+                        $obj->saveProperties();
+                        $val[] = $obj->data();
+                    }
+                }
             }
         } else {
             $obj = $this->structureVal($val);
-            $obj->saveProperties();
-            $val = $obj->data();
+            if ($obj instanceof ModelInterface) {
+                $obj->saveProperties();
+                $val = $obj->data();
+            }
         }
 
         return $val;
