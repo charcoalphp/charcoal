@@ -264,7 +264,12 @@ class ImageProperty extends FileProperty
             $blueprint = [ 'effects' => [], 'save' => true, 'rename' => null, 'copy' => null ];
             $fxGroup   = $blueprint;
             foreach ($effects as $effect) {
-                if (isset($effect['type']) && $effect['type'] === 'save') {
+                if (isset($effect['type']) && $effect['type'] === 'condition') {
+                    $grouped[] = array_merge(
+                        [ 'condition' => null, 'ignore' => null, 'extension' => null, 'mimetype' => null ],
+                        $effect
+                    );
+                } elseif (isset($effect['type']) && $effect['type'] === 'save') {
                     if (isset($effect['rename'])) {
                         $fxGroup['rename'] = $effect['rename'];
                     }
@@ -364,7 +369,37 @@ class ImageProperty extends FileProperty
             }
 
             foreach ($effects as $fxGroup) {
-                if ($fxGroup['save']) {
+                if (isset($fxGroup['type']) && !empty($fxGroup['condition'])) {
+                    if ($fxGroup['condition'] === 'ignore') {
+                        switch ($fxGroup['ignore']) {
+                            case 'extension':
+                                $type = pathinfo($value, PATHINFO_EXTENSION);
+                                if (in_array($type, (array)$fxGroup['extension'])) {
+                                    break 2;
+                                }
+                                break;
+
+                            case 'mimetype':
+                                $type = $this->mimetypeFor($value);
+                                if (in_array($type, (array)$fxGroup['mimetype'])) {
+                                    break 2;
+                                }
+                                break;
+                        }
+                    } else {
+                        if (is_string($fxGroup['condition'])) {
+                            $this->logger->warning(sprintf(
+                                '[Image Property] Unsupported conditional effect: \'%s\'',
+                                $fxGroup['condition']
+                            ));
+                        } else {
+                            $this->logger->warning(sprintf(
+                                '[Image Property] Invalid conditional effect: \'%s\'',
+                                gettype($fxGroup['condition'])
+                            ));
+                        }
+                    }
+                } elseif ($fxGroup['save']) {
                     $rename = $fxGroup['rename'];
                     $copy   = $fxGroup['copy'];
 
