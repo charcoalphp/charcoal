@@ -122,6 +122,11 @@ class Translator extends SymfonyTranslator
         foreach ($this->availableLocales() as $lang) {
             if (!isset($translation[$lang]) || $translation[$lang] == $val) {
                 $translation[$lang] = $this->trans((string)$translation, $parameters, $domain, $lang);
+            } else {
+                $translation[$lang] = strtr(
+                    $translation[$lang],
+                    $parameters
+                );
             }
         }
 
