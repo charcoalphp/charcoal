@@ -101,7 +101,50 @@ trait ConfigurableAttachmentsTrait
             $data['attachable_objects'] = $this->mergePresetAttachableObjects($data['default_attachable_objects']);
         }
 
+        if (isset($data['preset'])) {
+            $data = $this->mergePresetWidget($data);
+        }
+
         return $data;
+    }
+
+    /**
+     * Parse the given data and merge the widget preset.
+     *
+     * @param  array $data The widget data.
+     * @return array Returns the merged widget data.
+     */
+    private function mergePresetWidget(array $data)
+    {
+        if (!isset($data['preset']) || !is_string($data['preset'])) {
+            return $data;
+        }
+
+        $widgetIdent = $data['preset'];
+
+        if ($this instanceof ObjectContainerInterface) {
+            if ($this->hasObj()) {
+                $widgetIdent = $this->obj()->render($widgetIdent);
+            }
+        } elseif ($this instanceof ModelInterface) {
+            $widgetIdent = $this->render($widgetIdent);
+        }
+
+        $presetWidgets = $this->config('widgets');
+        if (!isset($presetWidgets[$widgetIdent])) {
+            return $data;
+        }
+
+        $widgetData = $presetWidgets[$widgetIdent];
+        if (isset($widgetData['attachable_objects'])) {
+            $widgetData['attachable_objects'] = $this->mergePresetAttachableObjects($widgetData['attachable_objects']);
+        }
+
+        if (isset($widgetData['default_attachable_objects'])) {
+            $widgetData['attachable_objects'] = $this->mergePresetAttachableObjects($widgetData['default_attachable_objects']);
+        }
+
+        return array_replace_recursive($widgetData, $data);
     }
 
     /**

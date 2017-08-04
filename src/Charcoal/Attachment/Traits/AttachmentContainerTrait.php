@@ -78,7 +78,11 @@ trait AttachmentContainerTrait
         if ($this->group === null) {
             $config = $this->attachmentsMetadata();
             $group  = AttachmentContainerInterface::DEFAULT_GROUPING;
-            if (isset($config['default_group'])) {
+
+            if (isset($config['group'])) {
+                $group = $config['group'];
+                // If the 'default_group' is not set, search for it.
+            } elseif (isset($config['default_group'])) {
                 $group = $config['default_group'];
             // If the 'default_group' is not set, search for it.
             } elseif (isset($config['default_widget'])) {
