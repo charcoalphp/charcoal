@@ -220,6 +220,27 @@ trait FormTrait
             return $this;
         }
 
+        $group = $this->parseFormGroup($groupIdent, $group);
+
+        if (isset($group['ident'])) {
+            $groupIdent = $group['ident'];
+        }
+
+        $this->groups[$groupIdent] = $group;
+
+        return $this;
+    }
+
+    /**
+     * Parse a form group.
+     *
+     * @param  string                   $groupIdent The group identifier.
+     * @param  array|FormGroupInterface $group      The group object or structure.
+     * @throws InvalidArgumentException If the identifier is not a string or the group is invalid.
+     * @return FormGroupInterface
+     */
+    protected function parseFormGroup($groupIdent, $group)
+    {
         if (!is_string($groupIdent)) {
             throw new InvalidArgumentException(
                 'Group identifier must be a string'
@@ -231,9 +252,7 @@ trait FormTrait
         } elseif (is_array($group)) {
             $data = $group;
 
-            if (isset($data['ident'])) {
-                $groupIdent = $data['ident'];
-            } else {
+            if (!isset($data['ident'])) {
                 $data['ident'] = $groupIdent;
             }
 
@@ -246,9 +265,7 @@ trait FormTrait
             ));
         }
 
-        $this->groups[$groupIdent] = $group;
-
-        return $this;
+        return $group;
     }
 
     /**
