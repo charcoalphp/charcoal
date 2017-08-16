@@ -40,7 +40,6 @@ class PhpLoaderTest extends PHPUnit_Framework_TestCase
 
     public function testLoadDynamic()
     {
-
         $GLOBALS['widget_template'] = 'foo';
         $ret = $this->obj->load('$widget_template');
 
@@ -48,7 +47,7 @@ class PhpLoaderTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $ret);
 
         $this->setExpectedException('\InvalidArgumentException');
-        $GLOBALS['widget_template'] = false;
+        $GLOBALS['widget_template'] = 1;
         $ret = $this->obj->load('$widget_template');
     }
 

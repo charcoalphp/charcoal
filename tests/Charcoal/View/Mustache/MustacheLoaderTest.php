@@ -46,7 +46,6 @@ class MustacheLoaderTest extends PHPUnit_Framework_TestCase
      */
     public function testLoadDynamicLegacy($template)
     {
-
         $GLOBALS['widget_template'] = $template;
         $ret = $this->obj->load('$widget_template');
 
@@ -57,7 +56,7 @@ class MustacheLoaderTest extends PHPUnit_Framework_TestCase
     public function testLoadDynamicLegacyInvalidException()
     {
         $this->setExpectedException('\InvalidArgumentException');
-        $GLOBALS['widget_template'] = false;
+        $GLOBALS['widget_template'] = 1;
         $ret = $this->obj->load('$widget_template');
     }
 
