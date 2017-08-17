@@ -85,4 +85,18 @@ class AbstractLoaderTest extends PHPUnit_Framework_TestCase
         $this->setExpectedException('\InvalidArgumentException');
         $this->obj->setDynamicTemplate('foo', []);
     }
+
+    public function testRemoveDynamicTemplate()
+    {
+        $this->obj->setDynamicTemplate('foo', null);
+        $this->obj->removeDynamicTemplate('foo');
+
+        $this->setExpectedException('\InvalidArgumentException');
+        $this->obj->removeDynamicTemplate(null);
+    }
+
+    public function testClearDynamicTemplate()
+    {
+        $this->obj->clearDynamicTemplates();
+    }
 }

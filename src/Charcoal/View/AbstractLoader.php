@@ -54,6 +54,7 @@ abstract class AbstractLoader implements
     /**
      * Load a template content
      *
+     * @deprecated $GLOBALS['widget_template']
      * @param  string $ident The template ident to load and render.
      * @throws InvalidArgumentException If the dynamic template identifier is not a string.
      * @return string
@@ -68,7 +69,9 @@ abstract class AbstractLoader implements
 
             // Legacy dynamic template hack
             if ($tryLegacy) {
-                $this->logger->warning('The GLOBALS $widget_template hack will be obsolete soon. Use setDynamicTemplate() instead.');
+                $this->logger->warning(
+                    'The $GLOBALS[\'widget_template\'] hack will be obsolete soon. Use setDynamicTemplate() instead.'
+                );
                 $ident = empty($GLOBALS['widget_template']) ? $ident : $GLOBALS['widget_template'];
                 if (!is_string($ident)) {
                     throw new InvalidArgumentException(
@@ -204,9 +207,11 @@ abstract class AbstractLoader implements
     }
 
     /**
-     * @param string $varName       The name of the variable to set this template unto.
-     * @param string $templateIdent The "dynamic template" to set. null to clear.
-     * @throws InvalidArgumentException If var name is not a string or if the template is not a string (and not null).
+     * @deprecated $GLOBALS['widget_template']
+     * @param string      $varName       The name of the variable to set this template unto.
+     * @param string|null $templateIdent The "dynamic template" to set or NULL to clear.
+     * @throws InvalidArgumentException If var name is not a string
+     *     or if the template is not a string (and not null).
      * @return void
      */
     public function setDynamicTemplate($varName, $templateIdent)
@@ -215,6 +220,11 @@ abstract class AbstractLoader implements
             throw new InvalidArgumentException(
                 'Can not set dynamic template: var name is not a string.'
             );
+        }
+
+        if ($templateIdent === null) {
+            $this->removeDynamicTemplate($varName);
+            return;
         }
 
         if (!is_string($templateIdent)) {
@@ -249,5 +259,39 @@ abstract class AbstractLoader implements
         }
 
         return $this->dynamicTemplates[$varName];
+    }
+
+    /**
+     * @deprecated $GLOBALS['widget_template']
+     * @param string $varName The name of the variable to remove.
+     * @throws InvalidArgumentException If var name is not a string.
+     * @return void
+     */
+    public function removeDynamicTemplate($varName)
+    {
+        if (!is_string($varName)) {
+            throw new InvalidArgumentException(
+                'Can not set dynamic template: var name is not a string.'
+            );
+        }
+
+        // Legacy dynamic template hack
+        if ($varName === 'widget_template') {
+            $GLOBALS['widget_template'] = null;
+        }
+
+        unset($this->dynamicTemplates[$varName]);
+    }
+
+    /**
+     * @deprecated $GLOBALS['widget_template']
+     * @return void
+     */
+    public function clearDynamicTemplates()
+    {
+        // Legacy dynamic template hack
+        $GLOBALS['widget_template'] = null;
+
+        $this->dynamicTemplates = [];
     }
 }
