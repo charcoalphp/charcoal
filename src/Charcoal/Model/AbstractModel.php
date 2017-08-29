@@ -204,11 +204,13 @@ abstract class AbstractModel extends AbstractEntity implements
 
         foreach ($data as $propIdent => $val) {
             if (!$this->hasProperty($propIdent)) {
-                $this->logger->warning(
-                    sprintf('Cannot set property "%s" on object; not defined in metadata.', $propIdent)
-                );
+                $this->logger->warning(sprintf(
+                    'Cannot set property "%s" on object; not defined in metadata.',
+                    $propIdent
+                ));
                 continue;
             }
+
             $property = $this->p($propIdent);
             if ($property->l10n() && is_array($val)) {
                 $currentValue = json_decode(json_encode($this[$propIdent]), true);
@@ -250,20 +252,19 @@ abstract class AbstractModel extends AbstractEntity implements
         $properties = $this->properties();
         foreach ($properties as $propertyIdent => $property) {
             $fields = $property->fields(null);
-
             foreach ($fields as $k => $f) {
                 if (is_string($k)) {
-                    $f_id = $f->ident();
-                    $key = str_replace($propertyIdent.'_', '', $f_id);
-                    if (isset($flatData[$f_id])) {
-                        $data[$propertyIdent][$key] = $flatData[$f_id];
-                        unset($flatData[$f_id]);
+                    $fid = $f->ident();
+                    $key = str_replace($propertyIdent.'_', '', $fid);
+                    if (isset($flatData[$fid])) {
+                        $data[$propertyIdent][$key] = $flatData[$fid];
+                        unset($flatData[$fid]);
                     }
                 } else {
-                    $f_id = $f->ident();
-                    if (isset($flatData[$f_id])) {
-                        $data[$propertyIdent] = $flatData[$f_id];
-                        unset($flatData[$f_id]);
+                    $fid = $f->ident();
+                    if (isset($flatData[$fid])) {
+                        $data[$propertyIdent] = $flatData[$fid];
+                        unset($flatData[$fid]);
                     }
                 }
             }
@@ -499,7 +500,7 @@ abstract class AbstractModel extends AbstractEntity implements
     {
         $this->logger->warning('Obsolete method createView called.');
         $view = new GenericView([
-            'logger'=>$this->logger
+            'logger' => $this->logger
         ]);
         if ($data !== null) {
             $view->setData($data);
