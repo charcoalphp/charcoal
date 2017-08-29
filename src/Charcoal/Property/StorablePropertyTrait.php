@@ -13,11 +13,10 @@ use Charcoal\Property\PropertyField;
  */
 trait StorablePropertyTrait
 {
-
     /**
      * Store of the property's storage fields.
      *
-     * @var PropertyField[]
+     * @var PropertyField[]|null
      */
     private $fields;
 
@@ -29,7 +28,7 @@ trait StorablePropertyTrait
      */
     public function fields($val)
     {
-        if ($this->fields === null) {
+        if (empty($this->fields)) {
             $this->generateFields($val);
         } else {
             $this->updatedFields($val);
@@ -46,7 +45,7 @@ trait StorablePropertyTrait
      */
     private function updatedFields($val)
     {
-        if ($this->fields === null) {
+        if (empty($this->fields)) {
             $this->generateFields($val);
         }
 
