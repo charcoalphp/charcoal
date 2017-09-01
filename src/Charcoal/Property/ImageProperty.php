@@ -284,7 +284,12 @@ class ImageProperty extends FileProperty
                     $fxGroup['effects'][] = $effect;
                 }
             }
+
+            if (empty($grouped)) {
+                $grouped[] = $fxGroup;
+            }
         }
+
 
         return $grouped;
     }
@@ -438,7 +443,7 @@ class ImageProperty extends FileProperty
                                 $image->save($value);
                             }
                         } else {
-                            $image->save($target);
+                            $image->save($target ?: $value);
                         }
                     }
                 }
