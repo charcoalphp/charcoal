@@ -73,8 +73,8 @@ class Container extends Attachment implements
             } else {
                 $attachment->attachmentType = [];
             }
-
-            yield $attachment;
         }
+
+        return $attachments;
     }
 }

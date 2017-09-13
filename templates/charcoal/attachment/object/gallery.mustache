@@ -6,7 +6,7 @@
     <ul class="gallery-list row">
         {{# attachments }}
             <li class="col-xs-3 col-md-3 js-attachment-actions">
-                <a class="thumbnail"
+                <a class="thumbnail{{^ active }} panel-danger{{/ active }}"
                    href="object/edit?obj_type={{ obj_type }}&obj_id={{ attachment_id }}"
                    data-type="{{ obj_type }}"
                    data-group="{{ attachmentGroup }}"
