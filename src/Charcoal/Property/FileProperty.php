@@ -754,9 +754,12 @@ class FileProperty extends AbstractProperty
         }
 
         $files = glob(dirname($file).DIRECTORY_SEPARATOR.'*', GLOB_NOSORT);
-        foreach ($files as $f) {
-            if (preg_match("#{$file}#i", preg_quote($f))) {
-                return true;
+        if ($files) {
+            $pattern = preg_quote($file, '#');
+            foreach ($files as $f) {
+                if (preg_match("#{$pattern}#i", $f)) {
+                    return true;
+                }
             }
         }
 
