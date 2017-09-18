@@ -54,6 +54,13 @@ class AttachmentWidget extends AdminWidget implements
     private $title;
 
     /**
+     * The widget's active lang.
+     *
+     * @var string $lang
+     */
+    protected $lang;
+
+    /**
      * The group identifier.
      *
      * The group is used to create multiple widget instance on the same page.
@@ -63,7 +70,7 @@ class AttachmentWidget extends AdminWidget implements
     protected $group;
 
     /**
-     * The widgets's available attachment types.
+     * The widget's available attachment types.
      *
      * @var array
      */
@@ -355,6 +362,32 @@ class AttachmentWidget extends AdminWidget implements
 
         $this->isMergingData = false;
 
+        if ($this->lang()) {
+            $this->translator()->setLocale($this->lang());
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the origin language.
+     *
+     * @param  string $lang The language code.
+     * @throws InvalidArgumentException If the argument is not a string.
+     * @return UserDataInterface Chainable
+     */
+    public function setLang($lang)
+    {
+        if ($lang !== null) {
+            if (!is_string($lang)) {
+                throw new InvalidArgumentException(
+                    'Language must be a string'
+                );
+            }
+        }
+
+        $this->lang = $lang;
+
         return $this;
     }
 
@@ -619,6 +652,16 @@ class AttachmentWidget extends AdminWidget implements
     }
 
     /**
+     * Retrieve the language.
+     *
+     * @return string
+     */
+    public function lang()
+    {
+        return $this->lang;
+    }
+
+    /**
      * Retrieve the attachment options.
      *
      * @return array
@@ -674,12 +717,13 @@ class AttachmentWidget extends AdminWidget implements
     public function widgetOptions()
     {
         $options = [
-            'obj_type'                => $this->obj()->objType(),
-            'obj_id'                  => $this->obj()->id(),
-            'group'                   => $this->group(),
-            'attachment_options'      => $this->attachmentOptions(),
-            'attachable_objects'      => $this->attachableObjects(),
-            'title'                   => $this->title()
+            'obj_type'           => $this->obj()->objType(),
+            'obj_id'             => $this->obj()->id(),
+            'group'              => $this->group(),
+            'attachment_options' => $this->attachmentOptions(),
+            'attachable_objects' => $this->attachableObjects(),
+            'title'              => $this->title(),
+            'lang'               => $this->translator()->getLocale()
         ];
 
         return json_encode($options, true);
