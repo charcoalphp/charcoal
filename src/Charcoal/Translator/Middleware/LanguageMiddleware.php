@@ -83,28 +83,7 @@ class LanguageMiddleware
     {
         $this->setTranslator($data['translator']);
 
-        $defaults = [
-            'default_language' => null,
-
-            'browser_language' => null,
-
-            'use_path'      => true,
-            'excluded_path' => [
-                '~^/admin\b~'
-            ],
-            'path_regexp'   => '~^/([a-z]{2})\b~',
-
-            'use_params'    => false,
-            'param_key'     => 'current_language',
-
-            'use_session'   => true,
-            'session_key'   => 'current_language',
-
-            'use_browser'   => true,
-
-            'set_locale'    => true
-        ];
-        $data = array_replace($defaults, $data);
+        $data = array_replace($this->defaults(), $data);
 
         $this->defaultLanguage = $data['default_language'];
         $this->browserLanguage = $data['browser_language'];
@@ -122,6 +101,33 @@ class LanguageMiddleware
         $this->useBrowser   = !!$data['use_browser'];
 
         $this->setLocale    = !!$data['set_locale'];
+    }
+
+    /**
+     * Default middleware options.
+     *
+     * @return array
+     */
+    public function defaults()
+    {
+        return [
+            'default_language' => null,
+            'browser_language' => null,
+
+            'use_path'         => true,
+            'excluded_path'    => [ '~^/admin\b~' ],
+            'path_regexp'      => '~^/([a-z]{2})\b~',
+
+            'use_params'       => false,
+            'param_key'        => 'current_language',
+
+            'use_session'      => true,
+            'session_key'      => 'current_language',
+
+            'use_browser'      => true,
+
+            'set_locale'       => true
+        ];
     }
 
     /**
