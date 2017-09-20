@@ -115,8 +115,8 @@ class LanguageMiddleware
             'browser_language' => null,
 
             'use_path'         => true,
-            'excluded_path'    => [ '~^/admin\b~' ],
-            'path_regexp'      => '~^/([a-z]{2})\b~',
+            'excluded_path'    => [ '^/admin\b' ],
+            'path_regexp'      => '^/([a-z]{2})\b',
 
             'use_params'       => false,
             'param_key'        => 'current_language',
@@ -142,7 +142,7 @@ class LanguageMiddleware
         $uri  = $request->getUri();
         $path = $uri->getPath();
         foreach ($this->excludedPath as $excluded) {
-            if (preg_match($excluded, $path)) {
+            if (preg_match('@'.$excluded.'@', $path)) {
                 return $next($request, $response);
             }
         }
@@ -197,7 +197,7 @@ class LanguageMiddleware
     private function getLanguageFromPath(RequestInterface $request)
     {
         $path = $request->getRequestTarget();
-        if (preg_match($this->pathRegexp, $path, $matches)) {
+        if (preg_match('@'.$this->pathRegexp.'@', $path, $matches)) {
             $lang = $matches[1];
         } else {
             return '';
