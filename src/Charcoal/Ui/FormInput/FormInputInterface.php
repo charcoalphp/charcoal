@@ -3,7 +3,7 @@
 namespace Charcoal\Ui\FormInput;
 
 // Intra-module (`charcoal-ui`) dependency
-use \Charcoal\Ui\FormGroup\FormGroupInterface;
+use Charcoal\Ui\FormGroup\FormGroupInterface;
 
 /**
  * Defines a form input.

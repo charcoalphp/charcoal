@@ -2,7 +2,7 @@
 
 namespace Charcoal\Ui\FormGroup;
 
-use \Charcoal\Ui\FormGroup\AbstractFormGroup;
+use Charcoal\Ui\FormGroup\AbstractFormGroup;
 
 /**
  * A Generic Form Group

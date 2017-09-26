@@ -3,8 +3,8 @@
 namespace Charcoal\Ui\Dashboard;
 
 // Intra-module (`charcoal-ui`) dependencies
-use \Charcoal\Ui\UiItemInterface;
-use \Charcoal\Ui\Layout\LayoutAwareInterface;
+use Charcoal\Ui\UiItemInterface;
+use Charcoal\Ui\Layout\LayoutAwareInterface;
 
 /**
  * Defines a dashboard.

@@ -45,12 +45,6 @@ abstract class AbstractUiItem extends AbstractEntity implements
     use UiItemTrait;
     use ViewableTrait;
 
-    /**
-     * A UI item is active by default.
-     *
-     * @var boolean
-     */
-    private $active = true;
 
     /**
      * Return a new UI item.
@@ -80,28 +74,5 @@ abstract class AbstractUiItem extends AbstractEntity implements
         $this->setTranslator($container['translator']);
         $this->setAuthenticator($container['authenticator']);
         $this->setAuthorizer($container['authorizer']);
-    }
-
-    /**
-     * Activates/deactivates the UI item.
-     *
-     * @param boolean $active Activate (TRUE) or deactivate (FALSE) the UI item.
-     * @return AbstractUiItem Chainable
-     */
-    public function setActive($active)
-    {
-        $this->active = !!$active;
-
-        return $this;
-    }
-
-    /**
-     * Determine if the UI item is active.
-     *
-     * @return boolean
-     */
-    public function active()
-    {
-        return $this->active;
     }
 }

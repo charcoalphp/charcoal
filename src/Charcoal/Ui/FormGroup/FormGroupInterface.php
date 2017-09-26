@@ -2,7 +2,7 @@
 
 namespace Charcoal\Ui\FormGroup;
 
-use \Charcoal\Ui\Form\FormInterface;
+use Charcoal\Ui\Form\FormInterface;
 
 /**
  * Defines a form group.
@@ -76,7 +76,7 @@ interface FormGroupInterface
      * Set the identifier of the group.
      *
      * @param string $ident Sidemenu group identifier.
-     * @return UiGroupingInterface Chainable
+     * @return FormGroupInterface Chainable
      */
     public function setIdent($ident);
 
@@ -86,34 +86,4 @@ interface FormGroupInterface
      * @return string
      */
     public function ident();
-
-    /**
-     * Activates/deactivates the group.
-     *
-     * @param boolean $active Activate (TRUE) or deactivate (FALSE) the group.
-     * @return UiItemInterface Chainable
-     */
-    public function setActive($active);
-
-    /**
-     * Determine if the group is active.
-     *
-     * @return boolean
-     */
-    public function active();
-
-    /**
-     * Set the group's priority or sorting index.
-     *
-     * @param integer $priority An index, for sorting.
-     * @return UiGroupingInterface Chainable
-     */
-    public function setPriority($priority);
-
-    /**
-     * Retrieve the group's priority or sorting index.
-     *
-     * @return integer
-     */
-    public function priority();
 }

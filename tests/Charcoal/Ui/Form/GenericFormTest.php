@@ -33,8 +33,8 @@ class GenericFormTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
-    public function testConstructor()
+    public function testType()
     {
-        $this->assertInstanceOf(GenericForm::class, $this->obj);
+        $this->assertEquals('charcoal/ui/form/generic', $this->obj->type());
     }
 }

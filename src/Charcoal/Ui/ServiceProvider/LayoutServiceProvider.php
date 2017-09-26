@@ -2,11 +2,11 @@
 
 namespace Charcoal\Ui\ServiceProvider;
 
-use \Pimple\Container;
-use \Pimple\ServiceProviderInterface;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
-use \Charcoal\Ui\Layout\LayoutBuilder;
-use \Charcoal\Ui\Layout\LayoutFactory;
+use Charcoal\Ui\Layout\LayoutBuilder;
+use Charcoal\Ui\Layout\LayoutFactory;
 
 /**
  *

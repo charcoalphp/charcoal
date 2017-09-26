@@ -39,39 +39,36 @@ class AbstractFormTest extends \PHPUnit_Framework_TestCase
 
     public function testSetGroupCallback()
     {
-        $obj = $this->obj;
         $cb = function($o) {
             return 'foo';
         };
-        $ret = $obj->setGroupCallback($cb);
-        $this->assertSame($ret, $obj);
+        $ret = $this->obj->setGroupCallback($cb);
+        $this->assertSame($ret, $this->obj);
     }
 
     public function testSetAction()
     {
-        $obj = $this->obj;
-        $this->assertEquals('', $obj->action());
-        $ret = $obj->setAction('foo/bar');
-        $this->assertSame($ret, $obj);
-        $this->assertEquals('foo/bar', $obj->action());
+        $this->assertEquals('', $this->obj->action());
+        $ret = $this->obj->setAction('foo/bar');
+        $this->assertSame($ret, $this->obj);
+        $this->assertEquals('foo/bar', $this->obj->action());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->setAction(false);
+        $this->obj->setAction(false);
     }
 
     public function testSetMethod()
     {
-        $obj = $this->obj;
         //$this->assertEquals('post', $obj->method());
-        $ret = $obj->setMethod('get');
-        $this->assertSame($ret, $obj);
+        $ret = $this->obj->setMethod('get');
+        $this->assertSame($ret, $this->obj);
         //$this->assertEquals('get', $obj->method());
 
-        $obj->setMethod('POST');
+        $this->obj->setMethod('POST');
         //$this->assertEquals('post', $obj->method());
 
         $this->setExpectedException('\InvalidArgumentException');
-        $obj->setMethod('foobar');
+        $this->obj->setMethod('foobar');
     }
 
     public function testSetL10nMode()
@@ -83,38 +80,41 @@ class AbstractFormTest extends \PHPUnit_Framework_TestCase
 
     public function testSetGroup()
     {
-        $obj = $this->obj;
-        $ret = $obj->setGroups([
+        $ret = $this->obj->setGroups([
             'test' => []
         ]);
-        $this->assertSame($ret, $obj);
+        $this->assertSame($ret, $this->obj);
 
-        $this->assertEquals(1, count($obj->groups()));
+        $this->assertEquals(1, count($this->obj->groups()));
+    }
+
+    public function testAddGroup()
+    {
+        $ret = $this->obj->addGroup('ident', []);
+        $this->assertSame($ret, $this->obj);
     }
 
     public function testHasGroups()
     {
-        $obj = $this->obj;
-        $this->assertFalse($obj->hasGroups());
+        $this->assertFalse($this->obj->hasGroups());
 
-        $ret = $obj->setGroups([
+        $ret = $this->obj->setGroups([
             'test' => []
         ]);
 
-        $this->assertTrue($obj->hasGroups());
+        $this->assertTrue($this->obj->hasGroups());
     }
 
     public function testNumGroups()
     {
-        $obj = $this->obj;
-        $this->assertEquals(0, $obj->numGroups());
+        $this->assertEquals(0, $this->obj->numGroups());
 
-        $ret = $obj->setGroups([
+        $ret = $this->obj->setGroups([
             'test'   => [],
             'foobar' => []
         ]);
 
-         $this->assertEquals(2, $obj->numGroups());
+         $this->assertEquals(2, $this->obj->numGroups());
     }
 
     public function testSetFormData()

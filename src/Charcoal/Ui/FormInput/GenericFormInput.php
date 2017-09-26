@@ -2,7 +2,7 @@
 
 namespace Charcoal\Ui\FormInput;
 
-use \Charcoal\Ui\FormInput\AbstractFormInput;
+use Charcoal\Ui\FormInput\AbstractFormInput;
 
 /**
  * A Generic Form Input

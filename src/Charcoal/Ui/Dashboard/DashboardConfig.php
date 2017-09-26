@@ -3,7 +3,7 @@
 namespace Charcoal\Ui\Dashboard;
 
 // Intra-module (`charcoal-ui`) dependency
-use \Charcoal\Ui\UiItemConfig;
+use Charcoal\Ui\UiItemConfig;
 
 /**
  * A dashboard configuration set.

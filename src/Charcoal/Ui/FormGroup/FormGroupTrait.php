@@ -2,12 +2,12 @@
 
 namespace Charcoal\Ui\FormGroup;
 
-use \InvalidArgumentException;
+use InvalidArgumentException;
 
 // Intra-module (`charcoal-ui`) dependencies
-use \Charcoal\Ui\Form\FormInterface;
-use \Charcoal\Ui\FormInput\FormInputBuilder;
-use \Charcoal\Ui\FormInput\FormInputInterface;
+use Charcoal\Ui\Form\FormInterface;
+use Charcoal\Ui\FormInput\FormInputBuilder;
+use Charcoal\Ui\FormInput\FormInputInterface;
 
 /**
  * Provides an implementation of {@see \Charcoal\Ui\FormGroup\FormGroupInterface}.
@@ -57,13 +57,6 @@ trait FormGroupTrait
      * @var string
      */
     private $ident;
-
-    /**
-     * The group's priority.
-     *
-     * @var integer
-     */
-    private $priority;
 
     /**
      * The required Acl permissions fetch from form group.
@@ -192,7 +185,7 @@ trait FormGroupTrait
     public function inputs(callable $inputCallback = null)
     {
         $groups = $this->groups;
-        uasort($groups, ['self', 'sortInputsByPriority']);
+        uasort($groups, ['self', 'sortItemsByPriority']);
 
         $inputCallback = isset($inputCallback) ? $inputCallback : $this->inputCallback;
         foreach ($inputs as $input) {
@@ -249,36 +242,6 @@ trait FormGroupTrait
     public function ident()
     {
         return $this->ident;
-    }
-
-    /**
-     * Set the group's priority or sorting index.
-     *
-     * @param  integer $priority An index, for sorting.
-     * @throws InvalidArgumentException If the priority is not an integer.
-     * @return self
-     */
-    public function setPriority($priority)
-    {
-        if (!is_numeric($priority)) {
-            throw new InvalidArgumentException(
-                'Priority must be an integer'
-            );
-        }
-
-        $this->priority = intval($priority);
-
-        return $this;
-    }
-
-    /**
-     * Retrieve the group's priority or sorting index.
-     *
-     * @return integer
-     */
-    public function priority()
-    {
-        return $this->priority;
     }
 
     /**

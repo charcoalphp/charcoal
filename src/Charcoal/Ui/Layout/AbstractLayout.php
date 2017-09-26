@@ -3,11 +3,11 @@
 namespace Charcoal\Ui\Layout;
 
 // From 'charcoal-config'
-use \Charcoal\Config\AbstractEntity;
+use Charcoal\Config\AbstractEntity;
 
 // Intra-module (`charcoal-ui`) dependencies
-use \Charcoal\Ui\Layout\LayoutInterface;
-use \Charcoal\Ui\Layout\LayoutTrait;
+use Charcoal\Ui\Layout\LayoutInterface;
+use Charcoal\Ui\Layout\LayoutTrait;
 
 /**
  * A Basic Layout

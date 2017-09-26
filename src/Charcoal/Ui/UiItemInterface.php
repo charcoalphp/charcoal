@@ -21,21 +21,6 @@ use Charcoal\View\ViewableInterface;
 interface UiItemInterface extends EntityInterface, ViewableInterface
 {
     /**
-     * Set the UI item type.
-     *
-     * @param string|null $type The UI item type.
-     * @return UiItemInterface Chainable
-     */
-    public function setType($type);
-
-    /**
-     * Retrieve the UI item type.
-     *
-     * @return string
-     */
-    public function type();
-
-    /**
      * Activates/deactivates the UI item.
      *
      * @param boolean $active Activate (TRUE) or deactivate (FALSE) the UI item.
@@ -49,6 +34,36 @@ interface UiItemInterface extends EntityInterface, ViewableInterface
      * @return boolean
      */
     public function active();
+
+    /**
+     * Set the group's priority or sorting index.
+     *
+     * @param integer $priority An index, for sorting.
+     * @return UiGroupingInterface Chainable
+     */
+    public function setPriority($priority);
+
+    /**
+     * Retrieve the group's priority or sorting index.
+     *
+     * @return integer
+     */
+    public function priority();
+
+    /**
+     * Set the UI item type.
+     *
+     * @param string|null $type The UI item type.
+     * @return UiItemInterface Chainable
+     */
+    public function setType($type);
+
+    /**
+     * Retrieve the UI item type.
+     *
+     * @return string
+     */
+    public function type();
 
     /**
      * Set the UI item's template.
@@ -66,6 +81,8 @@ interface UiItemInterface extends EntityInterface, ViewableInterface
      * @return string
      */
     public function template();
+
+
 
     /**
      * Set the UI item's title.

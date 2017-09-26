@@ -2,7 +2,10 @@
 
 namespace Charcoal\Ui\MenuItem;
 
-use \Charcoal\Factory\ResolverFactory;
+use Charcoal\Factory\ResolverFactory;
+
+use Charcoal\Ui\MenuItem\MenuItemInterface;
+use Charcoal\Ui\MenuItem\GenericMenuItem;
 
 /**
  * Menu Item Factory
@@ -14,7 +17,7 @@ class MenuItemFactory extends ResolverFactory
      */
     public function baseClass()
     {
-        return '\Charcoal\Ui\MenuItem\MenuItemInterface';
+        return MenuItemInterface::class;
     }
 
     /**
@@ -22,7 +25,7 @@ class MenuItemFactory extends ResolverFactory
      */
     public function defaultClass()
     {
-        return '\Charcoal\Ui\MenuItem\GenericMenuItem';
+        return GenericMenuItem::class;
     }
 
     /**

@@ -152,7 +152,7 @@ trait DashboardTrait
     public function widgets(callable $widgetCallback = null)
     {
         $widgets = $this->widgets;
-        uasort($widgets, [ $this, 'sortWidgetsByPriority' ]);
+        uasort($widgets, [ $this, 'sortItemsByPriority' ]);
 
         $widgetCallback = isset($widgetCallback) ? $widgetCallback : $this->widgetCallback;
         foreach ($widgets as $widget) {
@@ -194,20 +194,5 @@ trait DashboardTrait
     public function numWidgets()
     {
         return count($this->widgets);
-    }
-
-    /**
-     * Static comparison function used by {@see uasort()}.
-     *
-     * @param  mixed $a Widget A.
-     * @param  mixed $b Widget B.
-     * @return integer Sorting value: -1 or 1
-     */
-    protected static function sortWidgetsByPriority($a, $b)
-    {
-        $a = $a->priority();
-        $b = $b->priority();
-
-        return ($a < $b) ? (-1) : 1;
     }
 }

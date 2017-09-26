@@ -2,7 +2,10 @@
 
 namespace Charcoal\Ui\Layout;
 
-use \Charcoal\Factory\ResolverFactory;
+use Charcoal\Factory\ResolverFactory;
+
+use Charcoal\Ui\Layout\LayoutInterface;
+use Charcoal\Ui\Layout\GenericLayout;
 
 /**
  * Layout Factory
@@ -14,7 +17,7 @@ class LayoutFactory extends ResolverFactory
      */
     public function baseClass()
     {
-        return '\Charcoal\Ui\Layout\LayoutInterface';
+        return LayoutInterface::class;
     }
 
     /**
@@ -22,7 +25,7 @@ class LayoutFactory extends ResolverFactory
      */
     public function defaultClass()
     {
-        return '\Charcoal\Ui\Layout\GenericLayout';
+        return GenericLayout::class;
     }
 
     /**

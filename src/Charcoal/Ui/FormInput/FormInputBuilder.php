@@ -2,10 +2,10 @@
 
 namespace Charcoal\Ui\FormInput;
 
-use \Pimple\Container;
+use Pimple\Container;
 
 // From 'charcoal-factory'
-use \Charcoal\Factory\FactoryInterface;
+use Charcoal\Factory\FactoryInterface;
 
 /**
  * Form Input Builder

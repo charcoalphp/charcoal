@@ -2,14 +2,14 @@
 
 namespace Charcoal\Ui\ServiceProvider;
 
-use \Pimple\Container;
-use \Pimple\ServiceProviderInterface;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
-use \Charcoal\Factory\GenericFactory as Factory;
+use Charcoal\Factory\GenericFactory as Factory;
 
-use \Charcoal\Ui\Dashboard\DashboardBuilder;
-use \Charcoal\Ui\Dashboard\DashboardInterface;
-use \Charcoal\Ui\Dashboard\GenericDashboard;
+use Charcoal\Ui\Dashboard\DashboardBuilder;
+use Charcoal\Ui\Dashboard\DashboardInterface;
+use Charcoal\Ui\Dashboard\GenericDashboard;
 
 /**
  *

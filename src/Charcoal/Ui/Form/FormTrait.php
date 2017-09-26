@@ -2,15 +2,15 @@
 
 namespace Charcoal\Ui\Form;
 
-use \Exception;
-use \InvalidArgumentException;
+use Exception;
+use InvalidArgumentException;
 
 // From 'charcoal-factory'
-use \Charcoal\Factory\FactoryInterface;
+use Charcoal\Factory\FactoryInterface;
 
 // From 'charcoal-ui'
-use \Charcoal\Ui\Form\FormInterface;
-use \Charcoal\Ui\FormGroup\FormGroupInterface;
+use Charcoal\Ui\Form\FormInterface;
+use Charcoal\Ui\FormGroup\FormGroupInterface;
 
 /**
  * Provides an implementation of {@see FormInterface}.
@@ -337,7 +337,7 @@ trait FormTrait
     public function groups(callable $groupCallback = null)
     {
         $groups = $this->groups;
-        uasort($groups, [$this, 'sortGroupsByPriority']);
+        uasort($groups, [$this, 'sortItemsByPriority']);
 
         $groupCallback = (isset($groupCallback) ? $groupCallback : $this->groupCallback);
 
@@ -492,22 +492,5 @@ trait FormTrait
     public function formData()
     {
         return $this->formData;
-    }
-
-    /**
-     * Static comparison function used by {@see uasort()}.
-     *
-     * @param  FormGroupInterface $a Form Group A.
-     * @param  FormGroupInterface $b Form Group B.
-     * @return integer Sorting value: -1 or 1
-     */
-    protected static function sortGroupsByPriority(
-        FormGroupInterface $a,
-        FormGroupInterface $b
-    ) {
-        $a = $a->priority();
-        $b = $b->priority();
-
-        return ($a < $b) ? (-1) : 1;
     }
 }

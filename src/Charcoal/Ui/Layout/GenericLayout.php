@@ -2,7 +2,7 @@
 
 namespace Charcoal\Ui\Layout;
 
-use \Charcoal\Ui\Layout\AbstractLayout;
+use Charcoal\Ui\Layout\AbstractLayout;
 
 /**
  * A Generic Layout

@@ -3,11 +3,11 @@
 namespace Charcoal\Ui\FormGroup;
 
 // Intra-module (`charcoal-ui`) dependencies
-use \Charcoal\Ui\AbstractUiItem;
-use \Charcoal\Ui\FormGroup\FormGroupInterface;
-use \Charcoal\Ui\FormGroup\FormGroupTrait;
-use \Charcoal\Ui\Layout\LayoutAwareInterface;
-use \Charcoal\Ui\Layout\LayoutAwareTrait;
+use Charcoal\Ui\AbstractUiItem;
+use Charcoal\Ui\FormGroup\FormGroupInterface;
+use Charcoal\Ui\FormGroup\FormGroupTrait;
+use Charcoal\Ui\Layout\LayoutAwareInterface;
+use Charcoal\Ui\Layout\LayoutAwareTrait;
 
 /**
  * A Basic Form Group

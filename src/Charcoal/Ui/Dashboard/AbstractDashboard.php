@@ -2,13 +2,13 @@
 
 namespace Charcoal\Ui\Dashboard;
 
-use \InvalidArgumentException;
+use InvalidArgumentException;
 
 // Intra-module (`charcoal-ui`) dependencies
-use \Charcoal\Ui\AbstractUiItem;
-use \Charcoal\Ui\Dashboard\DashboardInterface;
-use \Charcoal\Ui\Dashboard\DashboardTrait;
-use \Charcoal\Ui\Layout\LayoutAwareTrait;
+use Charcoal\Ui\AbstractUiItem;
+use Charcoal\Ui\Dashboard\DashboardInterface;
+use Charcoal\Ui\Dashboard\DashboardTrait;
+use Charcoal\Ui\Layout\LayoutAwareTrait;
 
 /**
  * A Basic Dashboard

@@ -2,20 +2,20 @@
 
 namespace Charcoal\Ui\ServiceProvider;
 
-use \Pimple\Container;
-use \Pimple\ServiceProviderInterface;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
-use \Charcoal\Factory\GenericFactory as Factory;
+use Charcoal\Factory\GenericFactory as Factory;
 
-use \Charcoal\Ui\Form\FormBuilder;
-use \Charcoal\Ui\Form\FormInterface;
-use \Charcoal\Ui\Form\GenericForm;
-use \Charcoal\Ui\FormGroup\FormGroupBuilder;
-use \Charcoal\Ui\FormGroup\FormGroupInterface;
-use \Charcoal\Ui\FormGroup\GenericFormGroup;
-use \Charcoal\Ui\FormInput\FormInputBuilder;
-use \Charcoal\Ui\FormInput\FormInputInterface;
-use \Charcoal\Ui\FormInput\GenericFormInput;
+use Charcoal\Ui\Form\FormBuilder;
+use Charcoal\Ui\Form\FormInterface;
+use Charcoal\Ui\Form\GenericForm;
+use Charcoal\Ui\FormGroup\FormGroupBuilder;
+use Charcoal\Ui\FormGroup\FormGroupInterface;
+use Charcoal\Ui\FormGroup\GenericFormGroup;
+use Charcoal\Ui\FormInput\FormInputBuilder;
+use Charcoal\Ui\FormInput\FormInputInterface;
+use Charcoal\Ui\FormInput\GenericFormInput;
 
 /**
  *

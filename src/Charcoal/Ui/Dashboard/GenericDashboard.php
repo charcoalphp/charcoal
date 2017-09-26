@@ -3,7 +3,7 @@
 namespace Charcoal\Ui\Dashboard;
 
 // Intra-module (`charcoal-ui`) dependency
-use \Charcoal\Ui\Dashboard\AbstractDashboard;
+use Charcoal\Ui\Dashboard\AbstractDashboard;
 
 /**
  * A Generic Dashboard

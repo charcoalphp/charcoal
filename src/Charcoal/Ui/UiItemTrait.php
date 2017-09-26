@@ -4,11 +4,26 @@ namespace Charcoal\Ui;
 
 use InvalidArgumentException;
 
+use Charcoal\Ui\UiItemInterface;
+
 /**
  * Provides an implementation of {@see \Charcoal\Ui\UiItemInterface}.
  */
 trait UiItemTrait
 {
+
+    /**
+     * @var boolean
+     */
+    private $active = true;
+
+    /**
+     * The UI item's sorting index.
+     *
+     * @var integer
+     */
+    private $priority = 0;
+
     /**
      * The UI item type.
      *
@@ -111,10 +126,33 @@ trait UiItemTrait
     private $showFooter = true;
 
     /**
+     * Activates/deactivates the UI item.
+     *
+     * @param boolean $active Activate (TRUE) or deactivate (FALSE) the UI item.
+     * @return AbstractUiItem Chainable
+     */
+    public function setActive($active)
+    {
+        $this->active = !!$active;
+
+        return $this;
+    }
+
+    /**
+     * Determine if the UI item is active.
+     *
+     * @return boolean
+     */
+    public function active()
+    {
+        return $this->active;
+    }
+
+    /**
      * Set the UI item type.
      *
      * @param string|null $type The UI item type.
-     * @throws InvalidArgumentException If the type is not a string.
+     * @throws InvalidArgumentException If the type is not a string (or null).
      * @return UiItemInterface Chainable
      */
     public function setType($type)
@@ -133,10 +171,15 @@ trait UiItemTrait
     /**
      * Retrieve the UI item type.
      *
+     * If it is not explicitely set (or null), then return the object's FQN.
+     *
      * @return string
      */
     public function type()
     {
+        if ($this->type === null) {
+            return static::class;
+        }
         return $this->type;
     }
 
@@ -175,6 +218,37 @@ trait UiItemTrait
 
         return $this->template;
     }
+
+    /**
+     * Set the group's priority or sorting index.
+     *
+     * @param  integer|mixed $priority An index, for sorting.
+     * @throws InvalidArgumentException If the priority is not an integer / numeric.
+     * @return self
+     */
+    public function setPriority($priority)
+    {
+        if (!is_numeric($priority)) {
+            throw new InvalidArgumentException(
+                'Priority must be an integer'
+            );
+        }
+
+        $this->priority = intval($priority);
+
+        return $this;
+    }
+
+    /**
+     * Retrieve the group's priority or sorting index.
+     *
+     * @return integer
+     */
+    public function priority()
+    {
+        return $this->priority;
+    }
+
 
     /**
      * Set the UI item's title.
@@ -479,6 +553,26 @@ trait UiItemTrait
     }
 
     /**
+     * Static comparison function used by {@see uasort()}.
+     *
+     * @param  UiItemInterface $a Widget A.
+     * @param  UiItemInterface $b Widget B.
+     * @return integer Sorting value: -1 or 1
+     */
+    protected static function sortItemsByPriority(UiItemInterface $a, UiItemInterface $b)
+    {
+        $priorityA = $a->priority();
+        $priorityB = $b->priority();
+
+        if ($priorityA === $priorityB) {
+            return 0;
+        }
+        return ($priorityA < $priorityB) ? (-1) : 1;
+    }
+
+    /**
+     * All UI objects are translatable, therefore are `translator`-aware.
+     *
      * @return \Charcoal\Translator\Translator
      */
     abstract protected function translator();
