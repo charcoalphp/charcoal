@@ -6,6 +6,7 @@ use PDO;
 use InvalidArgumentException;
 
 // From 'charcoal-translator'
+use Charcoal\Translator\Translation;
 use Charcoal\Translator\TranslatorAwareTrait;
 
 /**
@@ -16,12 +17,12 @@ class PropertyField
     use TranslatorAwareTrait;
 
     /**
-     * @var string $ident
+     * @var string
      */
     private $ident;
 
     /**
-     * @var \Charcoal\Translator\Translation $Label
+     * @var Translation
      */
     private $label;
 
@@ -46,17 +47,17 @@ class PropertyField
     private $extra;
 
     /**
-     * @var mixed $Val
+     * @var mixed
      */
     private $val;
 
     /**
-     * @var mixed $_defaultVal
+     * @var mixed
      */
     private $defaultVal;
 
     /**
-     * @var boolean $_allowNull
+     * @var boolean
      */
     private $allowNull;
 
@@ -69,13 +70,16 @@ class PropertyField
     }
 
     /**
-     * @param array $data The field data.
+     * @param  array $data The field data.
      * @return PropertyField Chainable
      */
     public function setData(array $data)
     {
         if (isset($data['ident'])) {
             $this->setIdent($data['ident']);
+        }
+        if (isset($data['label'])) {
+            $this->setLabel($data['label']);
         }
         if (isset($data['sqlType'])) {
             $this->setSqlType($data['sqlType']);
@@ -103,7 +107,7 @@ class PropertyField
     }
 
     /**
-     * @param string $ident The field identifier.
+     * @param  string $ident The field identifier.
      * @throws InvalidArgumentException If the identifier is not a string.
      * @return PropertyField Chainable
      */
@@ -119,7 +123,7 @@ class PropertyField
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function ident()
     {
@@ -127,7 +131,7 @@ class PropertyField
     }
 
     /**
-     * @param mixed $label The field label.
+     * @param  mixed $label The field label.
      * @return PropertyField Chainable
      */
     public function setLabel($label)
@@ -137,7 +141,7 @@ class PropertyField
     }
 
     /**
-     * @return mixed
+     * @return Translation|null
      */
     public function label()
     {
@@ -145,7 +149,7 @@ class PropertyField
     }
 
     /**
-     * @param string $sqlType The field SQL column type.
+     * @param  string $sqlType The field SQL column type.
      * @throws InvalidArgumentException If the SQL type is not a string.
      * @return PropertyField Chainable
      */
@@ -161,7 +165,7 @@ class PropertyField
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function sqlType()
     {
@@ -169,7 +173,7 @@ class PropertyField
     }
 
     /**
-     * @param integer $sqlPdoType The field PDO type.
+     * @param  integer $sqlPdoType The field PDO type.
      * @throws InvalidArgumentException If the PDO type is not an integer.
      * @return PropertyField Chainable
      */
@@ -192,11 +196,12 @@ class PropertyField
         if ($this->val() === null) {
             return PDO::PARAM_NULL;
         }
+
         return $this->sqlPdoType;
     }
 
     /**
-     * @param string $extra The extra.
+     * @param  string $extra The extra.
      * @throws InvalidArgumentException If the extra is not a string.
      * @return PropertyField Chainable
      */
@@ -212,18 +217,15 @@ class PropertyField
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function extra()
     {
-        if (!$this->extra === null) {
-            return '';
-        }
         return $this->extra;
     }
 
     /**
-     * @param string $encoding The encoding and collation.
+     * @param  string $encoding The encoding and collation.
      * @throws InvalidArgumentException If the encoding is not a string.
      * @return PropertyField Chainable
      */
@@ -239,18 +241,15 @@ class PropertyField
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function sqlEncoding()
     {
-        if (!$this->sqlEncoding === null) {
-            return '';
-        }
         return $this->sqlEncoding;
     }
 
     /**
-     * @param mixed $val The field value.
+     * @param  mixed $val The field value.
      * @return PropertyField Chainable
      */
     public function setVal($val)
@@ -268,7 +267,7 @@ class PropertyField
     }
 
     /**
-     * @param mixed $defaultVal The default field value.
+     * @param  mixed $defaultVal The default field value.
      * @return PropertyField Chainable
      */
     public function setDefaultVal($defaultVal)
@@ -286,7 +285,7 @@ class PropertyField
     }
 
     /**
-     * @param boolean $allowNull The field allow null flag.
+     * @param  boolean $allowNull The field allow null flag.
      * @return PropertyField Chainable
      */
     public function setAllowNull($allowNull)
@@ -313,13 +312,37 @@ class PropertyField
             return '';
         }
 
-        $sqlType     = $this->sqlType();
-        $null        = (($this->allowNull() === false) ? ' NOT NULL ' : '');
-        $extra       = $this->extra() ? ' '.$this->extra().' ' : '';
-        $sqlEncoding = $this->sqlEncoding() ? ' '.$this->sqlEncoding().' ' : '';
-        $default     = ($this->defaultVal() ? ' DEFAULT \''.addslashes($this->defaultVal()).'\' ' : '');
-        $comment     = ($this->label() ? ' COMMENT \''.addslashes($this->label()).'\' ' : '');
+        $parts = [ sprintf('`%s`', $ident) ];
 
-        return '`'.$ident.'` '.$sqlType.$null.$extra.$sqlEncoding.$default.$comment;
+        $dataType = $this->sqlType();
+        if ($dataType) {
+            $parts[] = $dataType;
+        }
+
+        if ($this->allowNull() === false) {
+            $parts[] = 'NOT NULL';
+        }
+
+        $extra = $this->extra();
+        if ($extra) {
+            $parts[] = $extra;
+        }
+
+        $encoding = $this->sqlEncoding();
+        if ($encoding) {
+            $parts[] = $encoding;
+        }
+
+        $default = $this->defaultVal();
+        if ($default) {
+            $parts[] = sprintf('DEFAULT \'%s\'', addslashes($default));
+        }
+
+        $comment = $this->label();
+        if ($comment) {
+            $parts[] = sprintf('COMMENT \'%s\'', addslashes($comment));
+        }
+
+        return implode(' ', $parts);
     }
 }
