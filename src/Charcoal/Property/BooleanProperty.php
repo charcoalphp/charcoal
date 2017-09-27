@@ -5,6 +5,9 @@ namespace Charcoal\Property;
 use PDO;
 use InvalidArgumentException;
 
+// From 'charcoal-translation'
+use Charcoal\Translator\Translation;
+
 // From 'charcoal-property'
 use Charcoal\Property\AbstractProperty;
 
@@ -14,14 +17,16 @@ use Charcoal\Property\AbstractProperty;
 class BooleanProperty extends AbstractProperty
 {
     /**
-     * The label, for "true".
-     * @var \Charcoal\Translator\Translation
+     * The label for "true".
+     *
+     * @var Translation
      */
     private $trueLabel;
 
     /**
-     * The label, for "false".
-     * @var \Charcoal\Translator\Translation
+     * The label for "false".
+     *
+     * @var Translation
      */
     private $falseLabel;
 
@@ -43,16 +48,27 @@ class BooleanProperty extends AbstractProperty
     }
 
     /**
-     * @param mixed $val Optional. The value to display. If non provided, use `val()`.
+     * @param  mixed $val     The value to to convert for display.
+     * @param  array $options Optional display options.
      * @return string
      */
-    public function displayVal($val)
+    public function displayVal($val, array $options = [])
     {
         if ($val === true) {
-            return $this->trueLabel();
+            if (isset($options['true_label'])) {
+                $label = $options['true_label'];
+            } else {
+                $label = $this->trueLabel();
+            }
         } else {
-            return $this->falseLabel();
+            if (isset($options['false_label'])) {
+                $label = $options['false_label'];
+            } else {
+                $label = $this->falseLabel();
+            }
         }
+
+        return $this->translator()->translate($label);
     }
 
     /**
@@ -98,7 +114,7 @@ class BooleanProperty extends AbstractProperty
     }
 
     /**
-     * @return mixed
+     * @return Translation
      */
     public function trueLabel()
     {
@@ -120,7 +136,7 @@ class BooleanProperty extends AbstractProperty
     }
 
     /**
-     * @return mixed
+     * @return Translation
      */
     public function falseLabel()
     {

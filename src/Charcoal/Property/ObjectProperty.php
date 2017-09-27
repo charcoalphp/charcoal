@@ -413,7 +413,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
 
     /**
      * @param  mixed $val     Optional. The value to to convert for input.
-     * @param  array $options Optional input options.
+     * @param  array $options Unused input options.
      * @return string
      */
     public function inputVal($val, array $options = [])

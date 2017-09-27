@@ -136,18 +136,24 @@ class DateTimeProperty extends AbstractProperty
      *
      * > Warning: Passing a value as a parameter sets this value in the objects (calls setVal())
      *
-     * @param mixed $val The value to display.
+     * @param  mixed $val     The value to to convert for display.
+     * @param  array $options Optional display options.
      * @return string
      */
-    public function displayVal($val)
+    public function displayVal($val, array $options = [])
     {
         $val = $this->dateTimeVal($val);
-
-        if ($val === null) {
+        if ($val === null || $val === '') {
             return '';
         }
 
-        return $val->format($this->format());
+        if (isset($options['format'])) {
+            $format = $options['format'];
+        } else {
+            $format = $this->format();
+        }
+
+        return $val->format($format);
     }
 
     /**

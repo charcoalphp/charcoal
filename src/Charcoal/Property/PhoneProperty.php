@@ -42,11 +42,14 @@ class PhoneProperty extends StringProperty
     }
 
     /**
-     * @param string $val Optional. The value to display. If none is provided, use `val()`.
+     * @param  mixed $val     The value to to convert for display.
+     * @param  array $options Unused display options.
      * @return string
      */
-    public function displayVal($val)
+    public function displayVal($val, array $options = [])
     {
+        unset($options);
+
         $val = $this->sanitize($val);
 
         if (strlen($val) == 10) {
