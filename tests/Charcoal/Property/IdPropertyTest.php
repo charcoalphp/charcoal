@@ -3,6 +3,8 @@
 namespace Charcoal\Tests\Property;
 
 use PDO;
+use DomainException;
+use InvalidArgumentException;
 
 // From 'charcoal-property'
 use Charcoal\Property\IdProperty;
@@ -35,7 +37,6 @@ class IdPropertyTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals('id', $this->obj->type());
     }
-
 
     public function testSetData()
     {
@@ -76,7 +77,7 @@ class IdPropertyTest extends \PHPUnit_Framework_TestCase
         $this->obj->set('mode', 'uniqid');
         $this->assertEquals('uniqid', $this->obj['mode']);
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
         $this->obj->setMode('foo');
     }
 
@@ -97,7 +98,7 @@ class IdPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->obj->multiple());
 
         $this->assertSame($this->obj, $this->obj->setMultiple(false));
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
         $this->obj->setMultiple(true);
     }
 
@@ -106,7 +107,7 @@ class IdPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->obj->l10n());
 
         $this->assertSame($this->obj, $this->obj->setL10n(false));
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
         $this->obj->setL10n(true);
     }
 
@@ -148,6 +149,8 @@ class IdPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testSqlType()
     {
+        $container = $this->getContainer();
+
         $obj = $this->obj;
         $obj->setMode('auto-increment');
         $ret = $obj->sqlType();
@@ -161,6 +164,10 @@ class IdPropertyTest extends \PHPUnit_Framework_TestCase
         $obj->setMode('uuid');
         $ret = $obj->sqlType();
         $this->assertEquals('CHAR(36)', $ret);
+
+        $obj->setMode('custom');
+        $ret = $obj->sqlType();
+        $this->assertEquals('VARCHAR(255)', $ret);
     }
 
     public function testSqlPdoType()
@@ -175,6 +182,10 @@ class IdPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(PDO::PARAM_STR, $ret);
 
         $obj->setMode('uuid');
+        $ret = $obj->sqlPdoType();
+        $this->assertEquals(PDO::PARAM_STR, $ret);
+
+        $obj->setMode('custom');
         $ret = $obj->sqlPdoType();
         $this->assertEquals(PDO::PARAM_STR, $ret);
     }

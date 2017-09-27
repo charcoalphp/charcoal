@@ -140,12 +140,10 @@ class IdProperty extends AbstractProperty
         $availableModes = $this->availableModes();
 
         if (!in_array($mode, $availableModes)) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    'Invalid ID mode. Must be one of "%s"',
-                    implode(', ', $availableModes)
-                )
-            );
+            throw new InvalidArgumentException(sprintf(
+                'Invalid ID mode. Must be one of "%s"',
+                implode(', ', $availableModes)
+            ));
         }
 
         $this->mode = $mode;
@@ -187,20 +185,23 @@ class IdProperty extends AbstractProperty
     /**
      * Auto-generate a value upon first save.
      *
-     * @return string
+     * Note: {@see self::MODE_AUTO_INCREMENT} is handled at the database driver level
+     * (for now...) and {@see self::MODE_CUSTOM} si self-explanatory.
+     *
+     * @throws DomainException If the mode does not have a value generator.
+     * @return string|null
      */
     public function autoGenerate()
     {
         $mode = $this->mode();
 
-        if ($mode === self::MODE_AUTO_INCREMENT || $mode === self::MODE_CUSTOM) {
-            // Auto-increment is handled at the database driver level (for now...)
-            return null;
-        } elseif ($mode === self::MODE_UNIQID) {
+        if ($mode === self::MODE_UNIQID) {
             return uniqid();
         } elseif ($mode === self::MODE_UUID) {
             return $this->generateUuid();
         }
+
+        return null;
     }
 
     /**
