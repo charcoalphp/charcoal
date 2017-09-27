@@ -46,7 +46,7 @@ trait StorablePropertyTrait
     private function updatedFields($val)
     {
         if (empty($this->fields)) {
-            $this->generateFields($val);
+            return $this->generateFields($val);
         }
 
         if ($this->l10n()) {
@@ -217,6 +217,12 @@ trait StorablePropertyTrait
     abstract public function ident();
 
     /**
+     * @param  string|null $lang The language code to return the identifier with.
+     * @return string
+     */
+    abstract public function l10nIdent($lang = null);
+
+    /**
      * @return boolean
      */
     abstract public function l10n();
@@ -225,6 +231,11 @@ trait StorablePropertyTrait
      * @return boolean
      */
     abstract public function multiple();
+
+    /**
+     * @return string
+     */
+    abstract public function multipleSeparator();
 
     /**
      * @return boolean
