@@ -14,6 +14,11 @@ interface StorablePropertyInterface
     public function fields($val);
 
     /**
+     * @return array
+     */
+    public function fieldNames();
+
+    /**
      * @param mixed $val Optional. The value to convert to storage value.
      * @return mixed
      */

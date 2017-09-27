@@ -102,6 +102,25 @@ trait StorablePropertyTrait
     }
 
     /**
+     * Retrieve the property's storage field names.
+     *
+     * @return string[]
+     */
+    public function fieldNames()
+    {
+        $fields = [];
+        if ($this->l10n()) {
+            foreach ($this->translator()->availableLocales() as $langCode) {
+                $fields[$langCode] = $this->l10nIdent($langCode);
+            }
+        } else {
+            $fields[] = $this->ident();
+        }
+
+        return $fields;
+    }
+
+    /**
      * Retrieve the value of the property's given storage field.
      *
      * @param  string $fieldIdent The property field identifier.
