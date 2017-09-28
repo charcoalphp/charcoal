@@ -17,6 +17,9 @@ use Stash\Driver\Ephemeral;
 // From Pimple
 use Pimple\Container;
 
+// From 'symfony/translator'
+use Symfony\Component\Translation\Loader\ArrayLoader;
+
 // From 'charcoal-factory'
 use Charcoal\Factory\GenericFactory as Factory;
 
@@ -127,6 +130,64 @@ class ContainerProvider
             return new Translator([
                 'manager' => $container['locales/manager']
             ]);
+        };
+    }
+
+    /**
+     * Setup the application's translator service.
+     *
+     * @param  Container $container A DI container.
+     * @return void
+     */
+    public function registerMultilingualTranslator(Container $container)
+    {
+        $container['locales/manager'] = function (Container $container) {
+            $manager = new LocalesManager([
+                'locales' => [
+                    'en'  => [
+                        'locale' => 'en-US',
+                        'name'   => [
+                            'en' => 'English',
+                            'fr' => 'Anglais',
+                            'es' => 'Inglés'
+                        ]
+                    ],
+                    'fr' => [
+                        'locale' => 'fr-CA',
+                        'name'   => [
+                            'en' => 'French',
+                            'fr' => 'Français',
+                            'es' => 'Francés'
+                        ]
+                    ],
+                    'de' => [
+                        'locale' => 'de-DE'
+                    ],
+                    'es' => [
+                        'locale' => 'es-MX'
+                    ]
+                ],
+                'default_language'   => 'en',
+                'fallback_languages' => [ 'en' ]
+            ]);
+
+            $manager->setCurrentLocale($manager->currentLocale());
+
+            return $manager;
+        };
+
+        $container['translator'] = function (Container $container) {
+            $translator = new Translator([
+                'manager' => $container['locales/manager']
+            ]);
+
+            $translator->addLoader('array', new ArrayLoader());
+            $translator->addResource('array', [ 'locale.de' => 'German'   ], 'en', 'messages');
+            $translator->addResource('array', [ 'locale.de' => 'Allemand' ], 'fr', 'messages');
+            $translator->addResource('array', [ 'locale.de' => 'Deutsch'  ], 'es', 'messages');
+            $translator->addResource('array', [ 'locale.de' => 'Alemán'   ], 'de', 'messages');
+
+            return $translator;
         };
     }
 

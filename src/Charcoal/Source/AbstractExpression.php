@@ -228,6 +228,57 @@ abstract class AbstractExpression implements
     }
 
     /**
+     * Quote the given field name.
+     *
+     * @param  string      $identifier The field name.
+     * @param  string|null $tableName  If provided, the table name is prepended to the $identifier.
+     * @throws InvalidArgumentException If the parameters are not string.
+     * @return string
+     */
+    public static function quoteIdentifier($identifier, $tableName = null)
+    {
+        if ($identifier === null || $identifier === '') {
+            return '';
+        }
+
+        if (!is_string($identifier)) {
+            throw new InvalidArgumentException(sprintf(
+                'Field Name must be a string, received %s',
+                is_object($identifier) ? get_class($identifier) : gettype($identifier)
+            ));
+        }
+
+        if ($tableName !== null) {
+            if (!is_string($tableName)) {
+                throw new InvalidArgumentException(sprintf(
+                    'Table Name must be a string, received %s',
+                    is_object($tableName) ? get_class($tableName) : gettype($tableName)
+                ));
+            }
+
+            if ($tableName === '') {
+                throw new InvalidArgumentException(
+                    'Table Name can not be empty.'
+                );
+            }
+
+            if ($identifier === '*') {
+                $template = '%1$s.*';
+            } else {
+                $template = '%1$s.`%2$s`';
+            }
+
+            return sprintf($template, $tableName, $identifier);
+        }
+
+        if ($identifier === '*') {
+            return $identifier;
+        } else {
+            return sprintf('`%1$s`', $identifier);
+        }
+    }
+
+    /**
      * @see    JsonSerializable
      * @return array
      */

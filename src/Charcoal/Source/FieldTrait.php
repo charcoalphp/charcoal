@@ -8,6 +8,9 @@ use InvalidArgumentException;
 use Charcoal\Property\PropertyInterface;
 use Charcoal\Property\StorablePropertyInterface;
 
+// From 'charcoal-core'
+use Charcoal\Source\AbstractExpression as Expression;
+
 /**
  * Contains the field property.
  */
@@ -141,6 +144,25 @@ trait FieldTrait
     }
 
     /**
+     * Determine if the model property has any fields.
+     *
+     * @return boolean
+     */
+    public function hasFields()
+    {
+        if ($this->hasProperty()) {
+            $property = $this->property();
+            if ($property instanceof StorablePropertyInterface) {
+                return (count($property->fieldNames()) > 0);
+            } else {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Retrieve the model property's field names.
      *
      * @todo Load Property from associated model metadata.
@@ -183,9 +205,10 @@ trait FieldTrait
     public function fieldIdentifiers()
     {
         $identifiers = [];
+        $tableName   = $this->tableName();
         $fieldNames  = $this->fieldNames();
         foreach ($fieldNames as $fieldName) {
-            $identifiers[] = $this->quoteIdentifier($fieldName);
+            $identifiers[] = Expression::quoteIdentifier($fieldName, $tableName);
         }
 
         return $identifiers;
@@ -194,48 +217,13 @@ trait FieldTrait
     /**
      * Retrieve the fully-qualified field name.
      *
-     * @return string|null
+     * @return string
      */
     public function fieldIdentifier()
     {
-        return $this->quoteIdentifier($this->fieldName());
-    }
-
-    /**
-     * Quote the given field name.
-     *
-     * @param  string $identifier The field name.
-     * @throws InvalidArgumentException If the parameter is not a string.
-     * @return string
-     */
-    protected function quoteIdentifier($identifier)
-    {
-        if ($identifier === null || $identifier === '') {
-            return '';
-        }
-
-        if (!is_string($identifier)) {
-            throw new InvalidArgumentException(sprintf(
-                'Field Name must be a string, received %s',
-                is_object($identifier) ? get_class($identifier) : gettype($identifier)
-            ));
-        }
-
         $tableName = $this->tableName();
-        if ($tableName) {
-            if ($identifier === '*') {
-                $template = '%1$s.*';
-            } else {
-                $template = '%1$s.`%2$s`';
-            }
+        $fieldName = $this->fieldName();
 
-            return sprintf($template, $tableName, $identifier);
-        }
-
-        if ($identifier === '*') {
-            return $identifier;
-        } else {
-            return sprintf('`%1$s`', $identifier);
-        }
+        return Expression::quoteIdentifier($fieldName, $tableName);
     }
 }

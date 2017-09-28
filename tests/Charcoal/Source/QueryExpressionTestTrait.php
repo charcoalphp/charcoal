@@ -3,6 +3,7 @@
 namespace Charcoal\Tests\Source;
 
 use DateTime;
+use InvalidArgumentException;
 
 // From 'charcoal-core'
 use Charcoal\Source\AbstractExpression;
@@ -86,6 +87,70 @@ trait QueryExpressionTestTrait
             'Date/Time Object'       => [ $time, '1995-06-08 00:00:00' ],
             'Date/Time Property'     => [ $prop, '2004-07-13 00:00:00' ],
         ];
+    }
+
+    /**
+     * Test field quoting.
+     *
+     * @dataProvider provideQuotableIdentifiers
+     *
+     * @param mixed $fieldName The field name.
+     * @param mixed $tableName The table name.
+     * @param mixed $expected  The expected identifier.
+     */
+    public function testQuoteIdentifier($fieldName, $tableName, $expected)
+    {
+        $obj = $this->createExpression();
+
+        $this->assertEquals($expected, $obj::quoteIdentifier($fieldName, $tableName, $expected));
+    }
+
+    /**
+     * Provide data for field quoting.
+     *
+     * @used-by self::testQuoteIdentifier()
+     * @return  array
+     */
+    public function provideQuotableIdentifiers()
+    {
+        return [
+            [ null,   null,   ''          ],
+            [ '',     null,   ''          ],
+            [ '*',    null,   '*'         ],
+            [ 'col',  null,   '`col`'     ],
+            [ '*',    'tbl',  'tbl.*'     ],
+            [ 'col',  'tbl',  'tbl.`col`' ],
+        ];
+    }
+
+    /**
+     * Test field quoting with invalid field name.
+     */
+    public function testQuoteIdentifierWithInvalidFieldName()
+    {
+        $this->setExpectedException(InvalidArgumentException::class);
+        $obj = $this->createExpression();
+        $obj::quoteIdentifier([]);
+    }
+
+    /**
+     * Test field quoting with blank table name.
+     */
+    public function testQuoteIdentifierWithBlankTableName()
+    {
+        $this->setExpectedException(InvalidArgumentException::class);
+        $obj = $this->createExpression();
+        $obj::quoteIdentifier('foo', '');
+    }
+
+    /**
+     * Test field quoting with invalid table name.
+     */
+    public function testQuoteIdentifierWithInvalidTableName()
+    {
+        $this->setExpectedException(InvalidArgumentException::class);
+        $obj = $this->createExpression();
+        $obj::quoteIdentifier('foo', []);
     }
 
     /**
