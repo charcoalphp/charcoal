@@ -29,7 +29,7 @@ class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
         $obj->setValues('1,2,3');
 
         $sql = $obj->sql();
-        $this->assertEquals('FIELD(`test`, 1,2,3)', $sql);
+        $this->assertEquals('FIELD(objTable.`test`, 1,2,3)', $sql);
     }
 
     public function testSqlValuesModeWithoutPropertyThrowException()
@@ -64,20 +64,7 @@ class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
         $obj->setMode($mode);
 
         $sql = $obj->sql();
-        $this->assertEquals('`test` '.$mode, $sql);
-    }
-
-    /**
-     * @dataProvider providerAscDesc
-     */
-    public function testSqlAscDescWithoutPropertyThrowsException($mode)
-    {
-        $this->setExpectedException(DomainException::class);
-
-        $obj = new DatabaseOrder();
-        $obj->setMode($mode);
-
-        $sql = $obj->sql();
+        $this->assertEquals('objTable.`test` '.strtoupper($mode), $sql);
     }
 
     public function providerAscDesc()

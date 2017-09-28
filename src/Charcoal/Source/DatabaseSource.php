@@ -24,6 +24,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
 {
     const DEFAULT_DB_HOSTNAME = 'localhost';
     const DEFAULT_DB_TYPE     = 'mysql';
+    const DEFAULT_TABLE_ALIAS = 'objTable';
 
     /**
      * @var PDO
@@ -659,7 +660,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
         }
 
         $selects = $this->sqlSelect();
-        $tables  = '`'.$table.'` AS objTable';
+        $tables  = '`'.$table.'` AS `'.self::DEFAULT_TABLE_ALIAS.'`';
         $filters = $this->sqlFilters();
         $orders  = $this->sqlOrders();
         $limits  = $this->sqlPagination();
@@ -683,7 +684,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
             );
         }
 
-        $tables = '`'.$table.'` AS objTable';
+        $tables  = '`'.$table.'` AS `'.self::DEFAULT_TABLE_ALIAS.'`';
         $filters = $this->sqlFilters();
         $q = 'SELECT COUNT(*) FROM '.$tables.$filters;
         return $q;
@@ -696,13 +697,13 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     {
         $properties = $this->properties();
         if (empty($properties)) {
-            return 'objTable.*';
+            return self::DEFAULT_TABLE_ALIAS.'.*';
         }
 
         $sql = '';
         $propsSql = [];
         foreach ($properties as $p) {
-            $propsSql[] = 'objTable.`'.$p.'`';
+            $propsSql[] = self::DEFAULT_TABLE_ALIAS.'.`'.$p.'`';
         }
         if (!empty($propsSql)) {
             $sql = implode(', ', $propsSql);
@@ -777,11 +778,17 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
      */
     public function sqlPagination()
     {
-        return $this->pagination()->sql();
+        $sql = $this->pagination()->sql();
+
+        if ($sql) {
+            $sql = ' '.$sql;
+        }
+
+        return $sql;
     }
 
     /**
-     * @return FilterInterface
+     * @return DatabaseFilter
      */
     protected function createFilter()
     {
@@ -790,7 +797,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     }
 
     /**
-     * @return OrderInterface
+     * @return DatabaseOrder
      */
     protected function createOrder()
     {
@@ -799,7 +806,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     }
 
     /**
-     * @return PaginationInterface
+     * @return DatabasePagination
      */
     protected function createPagination()
     {

@@ -13,6 +13,9 @@ use Psr\Log\LoggerAwareTrait;
 use Charcoal\Config\ConfigurableInterface;
 use Charcoal\Config\ConfigurableTrait;
 
+// From 'charcoal-property'
+use Charcoal\Property\PropertyInterface;
+
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
 
@@ -266,15 +269,21 @@ abstract class AbstractSource implements
         }
 
         if ($this->hasModel()) {
-            $property = $filter->property();
-            if ($property) {
-                $p = $this->model()->p($property);
-                if ($p) {
-                    if ($p->l10n()) {
-                        $filter->setProperty($p->l10nIdent());
+            $model = $this->model();
+
+            if ($filter->hasProperty()) {
+                $property = $filter->property();
+                if (is_string($property) && $model->hasProperty($property)) {
+                    $property = $model->property($property);
+                    $filter->setProperty($property);
+                }
+
+                if ($property instanceof PropertyInterface) {
+                    if ($property->l10n()) {
+                        $filter->setProperty($property->l10nIdent());
                     }
 
-                    if ($p->multiple()) {
+                    if ($property->multiple()) {
                         $filter->setOperator('FIND_IN_SET');
                     }
                 }
@@ -356,12 +365,18 @@ abstract class AbstractSource implements
         }
 
         if ($this->hasModel()) {
-            $property = $order->property();
-            if ($property) {
-                $p = $this->model()->p($property);
-                if ($p) {
-                    if ($p->l10n()) {
-                        $order->setProperty($p->l10nIdent());
+            $model = $this->model();
+
+            if ($order->hasProperty()) {
+                $property = $order->property();
+                if (is_string($property) && $model->hasProperty($property)) {
+                    $property = $model->property($property);
+                    $order->setProperty($property);
+                }
+
+                if ($property instanceof PropertyInterface) {
+                    if ($property->l10n()) {
+                        $order->setProperty($property->l10nIdent());
                     }
                 }
             }

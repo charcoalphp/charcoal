@@ -11,23 +11,66 @@ use Charcoal\Source\Pagination;
 class DatabasePagination extends Pagination
 {
     /**
-     * Get the pagination's SQL string (Full "LIMIT" subquery)
+     * Generate the pagination's SQL string (full "LIMIT" clause)
      *
-     * For example, for the pagination `{page:3,num_per_page:50}` the result
+     * For example, for the pagination `{ page: 3, num_per_page: 50 }` the result
      * would be: `' LIMIT 100, 50'`.
      *
      * @return string
      */
     public function sql()
     {
-        $sql = '';
-        $page = $this->page() ? $this->page() : 1;
-        $numPerPage = $this->numPerPage();
-
-        if ($numPerPage) {
-            $first_page = max(0, (($page-1)*$numPerPage));
-            $sql = ' LIMIT '.$first_page.', '.$numPerPage;
+        if ($this->active() === false) {
+            return '';
         }
-        return $sql;
+
+        $sql = $this->string();
+        if ($sql) {
+            return strtr($sql, [
+                '{offset}' => $this->offset(),
+                '{limit}'  => $this->limit(),
+                '{page}'   => $this->page(),
+            ]);
+        }
+
+        $sql   = [];
+        $limit = $this->limit();
+        if ($limit > 0) {
+            $sql[] = 'LIMIT '.$limit;
+        }
+
+        $offset = $this->offset();
+        if ($offset > 0) {
+            $sql[] = 'OFFSET '.$offset;
+        }
+
+        return implode(' ', $sql);
+    }
+
+    /**
+     * Alias of {@see self::numPerPage()}
+     *
+     * @return integer
+     */
+    public function limit()
+    {
+        return $this->numPerPage();
+    }
+
+    /**
+     * Retrieve the offset from the page number and count.
+     *
+     * @return integer
+     */
+    public function offset()
+    {
+        $page   = $this->page();
+        $limit  = $this->numPerPage();
+        $offset = (($page - 1) * $limit);
+        if (PHP_INT_MAX <= $offset) {
+            $offset = PHP_INT_MAX;
+        }
+
+        return max(0, $offset);
     }
 }

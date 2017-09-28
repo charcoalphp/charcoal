@@ -6,216 +6,235 @@ use InvalidArgumentException;
 
 // From 'charcoal-core'
 use Charcoal\Source\Order;
+use Charcoal\Tests\ContainerIntegrationTrait;
+use Charcoal\Tests\Source\FieldExpressionTestTrait;
+use Charcoal\Tests\Source\QueryExpressionTestTrait;
 
 /**
  *
  */
 class OrderTest extends \PHPUnit_Framework_TestCase
 {
+    use ContainerIntegrationTrait;
+    use FieldExpressionTestTrait;
+    use QueryExpressionTestTrait;
 
-    public function testContructor()
+    /**
+     * Create expression for testing.
+     *
+     * @return Order
+     */
+    final protected function createExpression()
     {
-        $obj = new Order();
-        $this->assertInstanceOf('\Charcoal\Source\Order', $obj);
-
-        // Default values
-        $this->assertEquals('', $obj->property());
-        $this->assertEquals('', $obj->mode());
-        $this->assertEquals('', $obj->values());
+        return new Order();
     }
 
-    public function testSetData()
+    /**
+     * Provide data for value parsing.
+     *
+     * @used-by QueryExpressionTestTrait::testDefaultValues()
+     * @return  array
+     */
+    final public function provideDefaultValues()
     {
-        $obj = new Order();
+        return [
+            'property' => [ 'property',   null ],
+            'table'    => [ 'table_name', null ],
+            'mode'     => [ 'mode',       null ],
+            'values'   => [ 'values',     null ],
+            'active'   => [ 'active',     true ],
+            'string'   => [ 'string',     null ],
+        ];
+    }
 
-        $obj->setData(['property' => 'foo']);
-        $this->assertEquals('foo', $obj->property());
+    /**
+     * Test the "mode" property.
+     *
+     * Assertions:
+     * 1. Default state
+     * 2. Mutated state
+     * 3. Chainable method
+     * 4. Accepts mixed case
+     * 5. Accepts NULL
+     */
+    public function testMode()
+    {
+        $obj = $this->createExpression();
 
-        $obj->setData(
-            [
-                'property' => 'bar',
-                'mode' => 'asc'
-            ]
-        );
-        $this->assertEquals('bar', $obj->property());
+        /** 1. Default Value */
+        $this->assertNull($obj->mode());
+
+        /** 2. Mutated Value */
+        $that = $obj->setMode('asc');
+        $this->assertInternalType('string', $obj->mode());
         $this->assertEquals('asc', $obj->mode());
-    }
 
-    public function testDataIsChainable()
-    {
-        $obj = new Order();
-        $ret = $obj->setData([]);
+        /** 3. Chainable */
+        $this->assertSame($obj, $that);
 
-        $this->assertSame($ret, $obj);
-    }
+        /** 4. Accepts mixed case */
+        $obj->setMode('DESC');
+        $this->assertEquals('desc', $obj->mode());
 
-    public function testSetProperty()
-    {
-        $obj = new Order();
-        $obj->setProperty('foo');
-
-        $this->assertEquals('foo', $obj->property());
-    }
-
-    public function testSetPropertyIsChainable()
-    {
-        $obj = new Order();
-        $ret = $obj->setProperty('foo');
-
-        $this->assertSame($obj, $ret);
+        /** 5. Accepts NULL */
+        $obj->setMode(null);
+        $this->assertNull($obj->mode());
     }
 
     /**
-     * @dataProvider providerInvalidProperties
+     * Test "mode" property with unsupported mode.
      */
-    public function testSetInvalidPropertyThrowsException($property)
+    public function testModeWithUnsupportedMode()
     {
         $this->setExpectedException(InvalidArgumentException::class);
-
-        $obj = new Order();
-        $obj->setProperty($property);
-    }
-
-    public function testSetMode()
-    {
-        $obj = new Order();
-        $obj->setMode('asc');
-
-        $this->assertEquals('asc', $obj->mode());
-    }
-
-    public function testSetModeIsChainable()
-    {
-        $obj = new Order();
-        $ret = $obj->setMode('asc');
-
-        $this->assertSame($obj, $ret);
+        $this->createExpression()->setMode('foobar');
     }
 
     /**
-     * @dataProvider providerInvalidModes
+     * Test "mode" property with invalid value.
      */
-    public function testSetInvalidModeThrowsException($mode)
+    public function testModeWithInvalidValue()
     {
         $this->setExpectedException(InvalidArgumentException::class);
-
-        $obj = new Order();
-        $obj->setMode($mode);
-    }
-
-    public function testSetValues()
-    {
-        $obj = new Order();
-        $obj->setValues(['foo']);
-
-        $this->assertEquals(['foo'], $obj->values());
-    }
-
-    public function testSetValuesByStringExplodesArray()
-    {
-        $obj = new Order();
-        $obj->setValues('foo,bar,val');
-
-        $this->assertEquals(['foo','bar','val'], $obj->values());
-    }
-
-    public function testSetValuesByStringTrim()
-    {
-        $obj = new Order();
-        $obj->setValues('foo, bar, val');
-
-        // Spaces between values
-        $this->assertEquals(['foo','bar','val'], $obj->values());
-    }
-
-    public function testSetValuesIsChainable()
-    {
-        $obj = new Order();
-        $ret = $obj->setValues(['foo']);
-
-        $this->assertSame($obj, $ret);
+        $this->createExpression()->setMode([]);
     }
 
     /**
-     * @dataProvider providerInvalidValues
+     * Test the "values" property.
+     *
+     * Assertions:
+     * 1. Default state
+     * 2. Mutated state
+     * 3. Chainable method
+     * 4. Accepts NULL
      */
-    public function testSetInvalidValuesThrowsException($values)
+    public function testValues()
+    {
+        $obj = $this->createExpression();
+
+        /** 1. Default Value */
+        $this->assertNull($obj->values());
+
+        /** 2. Mutated Value */
+        $mutated = [ 'foo', 'baz', 'qux' ];
+
+        $that = $obj->setValues([ 'foo', 'baz', 'qux' ]);
+        $this->assertInternalType('array', $obj->values());
+        $this->assertEquals($mutated, $obj->values());
+
+        $obj->setValues('foo,baz,qux');
+        $this->assertEquals($mutated, $obj->values());
+
+        $obj->setValues('foo ,  baz, qux   ');
+        $this->assertEquals($mutated, $obj->values());
+
+        /** 3. Chainable */
+        $this->assertSame($obj, $that);
+
+        /** 4. Accepts NULL */
+        $obj->setValues(null);
+        $this->assertNull($obj->values());
+    }
+
+    /**
+     * Test "mode" property with blank string.
+     */
+    public function testValuesWithBlankValue()
     {
         $this->setExpectedException(InvalidArgumentException::class);
-
-        $obj = new Order();
-        $obj->setValues($values);
+        $this->createExpression()->setValues('');
     }
 
     /**
-     * Invalid arguments for operator, func and operand
+     * Test "mode" property with blank string.
      */
-    public function providerInvalidProperties()
+    public function testValuesWithEmptyArray()
     {
-        $obj = new \StdClass();
-        return [
-            [''],
-            [null],
-            [true],
-            [false],
-            [1],
-            [0],
-            [321],
-            [[]],
-            [['foo']],
-            [1,2,3],
-            [$obj]
-        ];
+        $this->setExpectedException(InvalidArgumentException::class);
+        $this->createExpression()->setValues([]);
     }
 
     /**
-     * Invalid arguments for operator, func and operand
+     * Test "mode" property with invalid value.
      */
-    public function providerInvalidModes()
+    public function testValuesWithInvalidValue()
     {
-        $obj = new \StdClass();
-        return [
-            ['invalid string'],
-            [''],
-            [null],
-            [true],
-            [false],
-            [1],
-            [0],
-            [321],
-            [[]],
-            [['foo']],
-            [1,2,3],
-            [$obj]
-        ];
+        $this->setExpectedException(InvalidArgumentException::class);
+        $this->createExpression()->setValues(42);
     }
 
     /**
-     * Invalid arguments for operator, func and operand
+     * Test data structure with mutated state.
+     *
+     * Assertions:
+     * 1. Mutate all options
+     * 2. Partially mutated state
+     * 3. Auto-set mode from "string"
      */
-    public function providerInvalidValues()
+    public function testData()
     {
-        $obj = new \StdClass();
-        return [
-            [''],
-// empty strings are invalid
-            [null],
-            [true],
-            [false],
-            [1],
-            [0],
-            [321],
-            [[]],
-// empty arrays are invalid
-            [$obj]
-        ];
-    }
+        $obj = $this->createExpression();
 
-    public function providerAscDesc()
-    {
-        return [
-            ['asc'],
-            ['desc']
+        /** 1. Mutate all options */
+        $values   = [ 'foo', 'baz', 'qux' ];
+        $mutation = [
+            'mode'       => 'rand',
+            'values'     => $values,
+            'property'   => 'col',
+            'table_name' => 'tbl',
+            'active'     => false,
+            'string'     => '1 = 1',
         ];
+
+        $obj->setData($mutation);
+        $data = $obj->data();
+
+        $this->assertArrayHasKey('mode', $data);
+        $this->assertEquals('rand', $data['mode']);
+        $this->assertEquals('rand', $obj->mode());
+
+        $this->assertArrayHasKey('values', $data);
+        $this->assertEquals($values, $data['values']);
+        $this->assertEquals($values, $obj->values());
+
+        $this->assertStructHasBasicData($obj, $mutation);
+        $this->assertStructHasFieldData($obj, $mutation);
+
+        /** 2. Partially mutated state */
+        $mutation = [
+            'mode' => 'desc'
+        ];
+
+        $obj = $this->createExpression();
+        $obj->setData($mutation);
+
+        $this->assertNull($obj->values());
+        $this->assertTrue($obj->active());
+        $this->assertNull($obj->string());
+
+        $data = $obj->data();
+        $this->assertArrayNotHasKey('values', $data);
+        $this->assertArrayNotHasKey('active', $data);
+        $this->assertArrayNotHasKey('string', $data);
+
+        $this->assertArrayHasKey('mode', $data);
+        $this->assertEquals('desc', $data['mode']);
+
+        /** 3. Auto-set mode from "string" */
+        $mutation = [
+            'string' => '2 = 2'
+        ];
+
+        $obj = $this->createExpression();
+        $obj->setData($mutation);
+
+        $this->assertEquals('2 = 2', $obj->string());
+
+        $data = $obj->data();
+        $this->assertArrayHasKey('string', $data);
+        $this->assertEquals('2 = 2', $data['string']);
+
+        $this->assertArrayHasKey('mode', $data);
+        $this->assertEquals('custom', $data['mode']);
     }
 }

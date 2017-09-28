@@ -3,6 +3,7 @@
 namespace Charcoal\Source\Database;
 
 // From 'charcoal-core'
+use Charcoal\Source\DatabaseSource;
 use Charcoal\Source\Filter;
 
 /**
@@ -11,85 +12,117 @@ use Charcoal\Source\Filter;
 class DatabaseFilter extends Filter
 {
     /**
+     * The table related to the field identifier.
+     *
+     * @var string $tableName
+     */
+    protected $tableName = DatabaseSource::DEFAULT_TABLE_ALIAS;
+
+    /**
+     * Retrieve the default values for filtering.
+     *
+     * @return array
+     */
+    public function defaultData()
+    {
+        $defaults = parent::defaultData();
+        $defaults['table_name'] = DatabaseSource::DEFAULT_TABLE_ALIAS;
+
+        return $defaults;
+    }
+
+    /**
      * Retrieve the Filter's SQL string to append to a WHERE clause.
      *
      * @return string
      */
     public function sql()
     {
-        $raw = $this->string();
-        if ($raw) {
-            return $raw;
+        if ($this->active() === false) {
+            return '';
         }
 
-        $fields = $this->sqlFields();
+        $sql = $this->string();
+        if ($sql) {
+            return $this->byExpression();
+        }
+
+        $fields = $this->fieldIdentifiers();
         if (empty($fields)) {
             return '';
         }
 
-        $filter = '';
-
-        foreach ($fields as $field) {
-            $val = $this->val();
-
-            // Support custom "operator" for the filter
-            $operator = $this->operator();
-
-            // Support for custom function on column name
-            $function = $this->func();
-
-            // Support custom table name
-            $tableName = $this->tableName();
-
-            if ($function) {
-                $target = sprintf('%1$s(%2$s.%3$s)', $function, $tableName, $field);
+        $conditions = [];
+        $value      = $this->val();
+        $operator   = $this->operator();
+        $function   = $this->func();
+        foreach ($fields as $fieldName) {
+            if ($function !== null) {
+                $target = sprintf('%1$s(%2$s)', $function, $fieldName);
             } else {
-                $target = sprintf('%1$s.%2$s', $tableName, $field);
+                $target = $fieldName;
             }
 
             switch ($operator) {
                 case 'FIND_IN_SET':
-                    if (is_array($val)) {
-                        $val = implode(',', $val);
+                    if (is_array($value)) {
+                        $value = implode(',', $value);
                     }
 
-                    $filter .= sprintf('%1$s(\'%2$s\', %3$s)', $operator, $val, $target);
+                    $conditions[] = sprintf('%1$s(\'%2$s\', %3$s)', $operator, $value, $target);
                     break;
 
                 case 'IS NULL':
                 case 'IS NOT NULL':
-                    $filter .= sprintf('(%1$s %2$s)', $target, $operator);
+                    $conditions[] = sprintf('(%1$s %2$s)', $target, $operator);
                     break;
 
                 case 'IN':
                 case 'NOT IN':
-                    if (is_array($val)) {
-                        $val = implode('\',\'', $val);
+                    if (is_array($value)) {
+                        $value = implode('\',\'', $value);
                     }
 
-                    $filter .= sprintf('(%1$s %2$s (\'%3$s\'))', $target, $operator, $val);
+                    $conditions[] = sprintf('(%1$s %2$s (\'%3$s\'))', $target, $operator, $value);
                     break;
 
                 default:
-                    $filter .= sprintf('(%1$s %2$s \'%3$s\')', $target, $operator, $val);
+                    $conditions[] = sprintf('(%1$s %2$s \'%3$s\')', $target, $operator, $value);
                     break;
             }
         }
 
-        return $filter;
+        if (count($conditions) > 1) {
+            /**
+             * @todo This would be a good occasion to implement "operand"
+             */
+            $conditions = '('.implode(' OR ', $conditions).')';
+        } else {
+            $conditions = implode('', $conditions);
+        }
+
+        return $conditions;
     }
 
     /**
-     * @return array
+     * Retrieve the WHERE condition.
+     *
+     * @return string
      */
-    private function sqlFields()
+    private function byExpression()
     {
-        $property = $this->property();
-        if ($property) {
-            /** @todo Load Property from associated model metadata. */
-            return [$property];
+        $sql = $this->string();
+        if ($sql) {
+            $sql = strtr($sql, [
+                '{func}'       => $this->func(),
+                '{value}'      => $this->val(),
+                '{operator}'   => $this->operator(),
+                '{property}'   => $this->property(),
+                '{fieldName}'  => $this->fieldIdentifier(),
+                '{tableName}'  => $this->tableName(),
+            ]);
         }
 
-        return [];
+        return $sql;
     }
 }

@@ -2,100 +2,73 @@
 
 namespace Charcoal\Source;
 
+// From 'charcoal-core'
+use Charcoal\Source\FieldInterface;
+
 /**
- *
+ * Defines a Condition Expression.
  */
-interface FilterInterface
+interface FilterInterface extends FieldInterface
 {
     /**
-     * @param array $data The filter data.
-     * @return Filter Chainable
-     */
-    public function setData(array $data);
-
-    /**
-     * @param boolean $active The active flag.
-     * @return FilterInterface Chainable
-     */
-    public function setActive($active);
-
-    /**
-     * @return boolean
-     */
-    public function active();
-
-    /**
-     * @param string $property The filter's property.
-     * @throws InvalidArgumentException If the property argument is not a string.
-     * @return FilterInterface Chainable
-     */
-    public function setProperty($property);
-
-    /**
-     * @return string
-     */
-    public function property();
-    /**
-     * @param mixed $val The filter value.
+     * Set the value used for comparison.
+     *
+     * @param  mixed $val The value on the right side of the comparison.
      * @return FilterInterface Chainable
      */
     public function setVal($val);
 
     /**
+     * Retrieve the value used for comparison.
+     *
      * @return mixed
      */
     public function val();
 
     /**
-     * @param string $operator The filter operator.
+     * Set the operator used for comparing field and value.
+     *
+     * @param  string $operator The comparison operator.
+     * @throws InvalidArgumentException If the parameter is not a valid operator.
      * @return FilterInterface Chainable
      */
     public function setOperator($operator);
 
     /**
+     * Retrieve the operator used for comparing field and value.
+     *
      * @return string
      */
     public function operator();
 
     /**
-     * @param string $func The filter function.
+     * Set the function to be called on the expression.
+     *
+     * @param  string $func The function name to invoke on the field.
+     * @throws InvalidArgumentException If the parameter is not a valid function.
      * @return FilterInterface Chainable
      */
     public function setFunc($func);
 
     /**
+     * Retrieve the function to be called on the expression.
+     *
      * @return string
      */
     public function func();
 
     /**
-     * @param string $operand The filter operand.
+     * Set the operator used for joining the next filter.
+     *
+     * @param  string $operand The logical operator.
      * @return FilterInterface Chainable
      */
     public function setOperand($operand);
+
     /**
+     * Retrieve the operator used for joining the next filter.
+     *
      * @return string
      */
     public function operand();
-
-    /**
-     * @param string $tableName The table name (default to objTable).
-     * @return FilterInterface Chainable
-     */
-    public function setTableName($tableName);
-    /**
-     * @return string
-     */
-    public function tableName();
-
-    /**
-     * @param string $sql The filter SQL string.
-     * @return FilterInterface Chainable
-     */
-    public function setString($sql);
-
-    /**
-     * @return string
-     */
-    public function string();
 }

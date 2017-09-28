@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Source\Database;
 
+use DomainException;
+
 // From 'charcoal-core'
 use Charcoal\Source\Database\DatabaseFilter;
 
@@ -30,7 +32,7 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
         $sql = $obj->sql();
 
         /** @todo: Note that 'bar' is not quoted... */
-        $this->assertEquals('(objTable.foo '.$operator.' \'bar\')', $sql);
+        $this->assertEquals('(objTable.`foo` '.$operator.' \'bar\')', $sql);
     }
 
     /**
@@ -45,7 +47,7 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
         $sql = $obj->sql();
 
         /** @todo: Note that 'bar' is not quoted... */
-        $this->assertEquals('(objTable.foo '.$operator.')', $sql);
+        $this->assertEquals('(objTable.`foo` '.$operator.')', $sql);
     }
 
     public function testSQLFunction()
@@ -58,7 +60,7 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
         $sql = $obj->sql();
 
         /** @todo: Note that 'bar' is not quoted... */
-        $this->assertEquals('(ABS(objTable.foo) = \'bar\')', $sql);
+        $this->assertEquals('(ABS(objTable.`foo`) = \'bar\')', $sql);
     }
 
     public function testSQLWithString()

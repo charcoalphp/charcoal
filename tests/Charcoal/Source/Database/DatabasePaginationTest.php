@@ -21,7 +21,7 @@ class DatabasePaginationTest extends \PHPUnit_Framework_TestCase
         $obj->setNumPerPage(20);
         $sql = $obj->sql();
 
-        $this->assertEquals(' LIMIT 0, 20', $sql);
+        $this->assertEquals('LIMIT 20', $sql);
 
         $obj = new DatabasePagination();
         $obj->setPage(1);
@@ -37,20 +37,20 @@ class DatabasePaginationTest extends \PHPUnit_Framework_TestCase
         $obj->setNumPerPage(20);
         $sql = $obj->sql();
 
-        $this->assertEquals(' LIMIT 0, 20', $sql);
+        $this->assertEquals('LIMIT 20', $sql);
 
         $obj = new DatabasePagination();
         $obj->setPage(2);
         $obj->setNumPerPage(25);
         $sql = $obj->sql();
 
-        $this->assertEquals(' LIMIT 25, 25', $sql);
+        $this->assertEquals('LIMIT 25 OFFSET 25', $sql);
 
         $obj = new DatabasePagination();
         $obj->setPage(5);
         $obj->setNumPerPage(50);
         $sql = $obj->sql();
 
-        $this->assertEquals(' LIMIT 200, 50', $sql);
+        $this->assertEquals('LIMIT 50 OFFSET 200', $sql);
     }
 }

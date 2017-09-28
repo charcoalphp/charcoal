@@ -8,6 +8,7 @@ use InvalidArgumentException;
 // From 'charcoal-core'
 use Charcoal\Model\Service\MetadataLoader;
 use Charcoal\Source\AbstractSource;
+use Charcoal\Source\ExpressionInterface;
 use Charcoal\Source\Filter;
 use Charcoal\Source\FilterInterface;
 use Charcoal\Source\Order;
@@ -293,7 +294,8 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
     public function testSetPage()
     {
         $obj = $this->obj;
-        $this->assertEquals(0, $obj->page());
+        $this->assertEquals(1, $obj->page());
+
         $ret = $obj->setPage(42);
         $this->assertSame($ret, $obj);
         $this->assertEquals(42, $obj->page());
@@ -305,7 +307,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
     public function testNumPerPage()
     {
         $obj = $this->obj;
-        $this->assertEquals(Pagination::DEFAULT_NUM_PER_PAGE, $obj->numPerPage());
+        $this->assertEquals(Pagination::DEFAULT_COUNT, $obj->numPerPage());
         $ret = $obj->setNumPerPage(666);
         $this->assertSame($ret, $obj);
         $this->assertEquals(666, $obj->numPerPage());

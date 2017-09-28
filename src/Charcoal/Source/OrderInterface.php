@@ -2,54 +2,43 @@
 
 namespace Charcoal\Source;
 
+// From 'charcoal-core'
+use Charcoal\Source\FieldInterface;
+
 /**
- *
+ * Defines an Order Expression.
  */
-interface OrderInterface
+interface OrderInterface extends FieldInterface
 {
     /**
-     * @param array $data The order data.
-     * @return Order Chainable
-     */
-    public function setData(array $data);
-
-    /**
-     * @param string $property The property to order with.
-     * @return Order (Chainable)
-     */
-    public function setProperty($property);
-
-    /**
-     * @return string
-     */
-    public function property();
-
-    /**
-     * @param string $mode The order mode.
-     * @return Order Chainable
+     * Set the, pre-defined, sorting mode.
+     *
+     * @param  string $mode The order mode.
+     * @throws InvalidArgumentException If the mode is not a string or invalid.
+     * @return OrderInterface Chainable
      */
     public function setMode($mode);
 
     /**
-     * @return string
+     * Retrieve the sorting mode.
+     *
+     * @return string The order mode.
      */
     public function mode();
 
     /**
-     * Set the values.
-     * Values are ignored if the mode is not "values"
+     * Set the values to sort against.
      *
-     * If the `$values` argument is a string, it will be split by ",".
-     * If it is an array, the values will be used as is.
-     * Otherwise, the function will throw an error
-     *
-     * @param  string|array $values The order values.
-     * @return Order (Chainable)
+     * @param  string|array $values A list of field values.
+     * @throws InvalidArgumentException If the parameter is not an array or a string.
+     * @return OrderInterface Chainable
      */
     public function setValues($values);
 
     /**
-     * @return array
+     * Retrieve the values to sort against.
+     *
+     * @return array|null A list of field values or NULL if no values were assigned.
      */
     public function values();
 }
