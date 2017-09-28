@@ -23,7 +23,7 @@ use Charcoal\Source\Database\DatabasePagination;
 class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
 {
     const DEFAULT_DB_HOSTNAME = 'localhost';
-    const DEFAULT_DB_TYPE = 'mysql';
+    const DEFAULT_DB_TYPE     = 'mysql';
 
     /**
      * @var PDO
@@ -60,13 +60,11 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     public function setTable($table)
     {
         if (!is_string($table)) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    'DatabaseSource::setTable() expects a string as table. (%s given). [%s]',
-                    gettype($table),
-                    get_class($this->model())
-                )
-            );
+            throw new InvalidArgumentException(sprintf(
+                'DatabaseSource::setTable() expects a string as table. (%s given). [%s]',
+                gettype($table),
+                get_class($this->model())
+            ));
         }
         // For security reason, only alphanumeric characters (+ underscores) are valid table names.
         // Although SQL can support more, there's really no reason to.
@@ -534,8 +532,8 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
         }
         if (empty($updates)) {
             $this->logger->warning('Could not update items. No valid fields were set / available in database table.', [
-                'properties'    => $properties,
-                'structure'     => $tableStructure
+                'properties' => $properties,
+                'structure'  => $tableStructure
             ]);
             return false;
         }

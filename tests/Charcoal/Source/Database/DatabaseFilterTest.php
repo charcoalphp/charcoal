@@ -64,10 +64,10 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
     public function testSQLWithString()
     {
         $obj = new DatabaseFilter();
-        $obj->setString('1=1');
+        $obj->setString('1 = 1');
 
         $sql = $obj->sql();
-        $this->assertEquals('1=1', $sql);
+        $this->assertEquals('1 = 1', $sql);
     }
 
     public function testSQLWithStringTakesPrecedence()
@@ -80,31 +80,31 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
         $obj->setVal('bar');
 
         // Should take precedence:
-        $obj->setString('1=1');
+        $obj->setString('1 = 1');
 
         $sql = $obj->sql();
-        $this->assertEquals('1=1', $sql);
+        $this->assertEquals('1 = 1', $sql);
     }
 
     public function providerBasicOperators()
     {
         return [
-            ['='],
-            ['>'],
-            ['>='],
-            ['<'],
-            ['>'],
-            ['IS'],
-            ['IS NOT'],
-            ['LIKE']
+            [ '=' ],
+            [ '>' ],
+            [ '>=' ],
+            [ '<' ],
+            [ '>' ],
+            [ 'IS' ],
+            [ 'IS NOT' ],
+            [ 'LIKE' ]
         ];
     }
 
     public function providerNullStyleOperators()
     {
         return [
-            ['IS NULL'],
-            ['IS NOT NULL']
+            [ 'IS NULL' ],
+            [ 'IS NOT NULL' ]
         ];
     }
 }

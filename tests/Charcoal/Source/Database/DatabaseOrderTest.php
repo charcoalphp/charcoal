@@ -83,8 +83,8 @@ class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
     public function providerAscDesc()
     {
         return [
-            ['asc'],
-            ['desc']
+            [ 'asc' ],
+            [ 'desc' ]
         ];
     }
 }

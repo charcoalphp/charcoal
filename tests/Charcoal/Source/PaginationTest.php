@@ -1,6 +1,6 @@
 <?php
 
-namespace Charcoal\Tests\Loader\CollectionLoader;
+namespace Charcoal\Tests\Source;
 
 use InvalidArgumentException;
 
@@ -100,9 +100,9 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
     public function providerInvalidParameters()
     {
         $obj = new \StdClass();
+        // empty string is invalid
         return [
             [''],
-// empty string is invalid
             [null],
             [true],
             [false],

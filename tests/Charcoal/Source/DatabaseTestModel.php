@@ -10,5 +10,4 @@ use Charcoal\Model\AbstractModel;
  */
 class DatabaseTestModel extends AbstractModel
 {
-    // ...
 }

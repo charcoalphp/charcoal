@@ -1,6 +1,6 @@
 <?php
 
-namespace Charcoal\Tests\Loader\CollectionLoader;
+namespace Charcoal\Tests\Source;
 
 use InvalidArgumentException;
 

@@ -100,7 +100,7 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
                 ]
             ]
         );
-        $this->assertEquals(['id', 'test'], $obj->properties());
+        $this->assertEquals([ 'id', 'test' ], $obj->properties());
     }
 
     public function setDataIsChainable()
@@ -130,7 +130,7 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
 
         $loader->setCollectionClass(ArrayIterator::class);
         $collection = $loader->createCollection();
-        $this->assertInstanceOf('\ArrayIterator', $collection);
+        $this->assertInstanceOf(ArrayIterator::class, $collection);
 
         $loader->setCollectionClass('array');
         $collection = $loader->createCollection();
@@ -142,7 +142,7 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
         $loader = $this->obj;
         $loader->setModel($this->model)
                ->setCollectionClass(ArrayIterator::class)
-               ->setProperties(['id', 'test'])
+               ->setProperties([ 'id', 'test' ])
                ->addFilter('test', 10, [ 'operator' => '<' ])
                ->addFilter('allo', 1, [ 'operator' => '>=' ])
                ->addOrder('test', 'asc')

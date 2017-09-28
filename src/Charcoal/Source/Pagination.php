@@ -4,6 +4,9 @@ namespace Charcoal\Source;
 
 use InvalidArgumentException;
 
+// From 'charcoal-core'
+use Charcoal\Source\PaginationInterface;
+
 /**
  * Implementation, as concrete class, of the PaginationInterface.
  */

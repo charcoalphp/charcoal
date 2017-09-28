@@ -9,8 +9,12 @@ use InvalidArgumentException;
 use Charcoal\Model\Service\MetadataLoader;
 use Charcoal\Source\AbstractSource;
 use Charcoal\Source\Filter;
+use Charcoal\Source\FilterInterface;
 use Charcoal\Source\Order;
+use Charcoal\Source\OrderInterface;
 use Charcoal\Source\Pagination;
+use Charcoal\Source\PaginationInterface;
+use Charcoal\Source\SourceConfig;
 
 /**
  *
@@ -40,15 +44,18 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
      */
     public function testReset()
     {
-        $obj = $this->obj;
+        $obj    = $this->obj;
         $filter = $this->getFilter1();
-        $order = $this->getOrder1();
-        $pagination = ['page' => 3, 'num_per_page' => 120];
+        $order  = $this->getOrder1();
+        $paged  = [
+            'page' => 3,
+            'num_per_page' => 120
+        ];
         $obj->setData([
             'properties' => [ 'foo' ],
-            'filters'    => [$filter],
-            'orders'     => [$order],
-            'pagination' => $pagination
+            'filters'    => [ $filter ],
+            'orders'     => [ $order ],
+            'pagination' => $paged
         ]);
         $ret = $obj->reset();
         $this->assertSame($ret, $obj);
@@ -75,7 +82,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
         ]);
         $this->assertSame($ret, $obj);
 
-        $this->assertEquals(['foo'], $obj->properties());
+        $this->assertEquals([ 'foo' ], $obj->properties());
     }
 
     /**
@@ -118,12 +125,12 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
     public function testSetProperties()
     {
         $obj = $this->obj;
-        $ret = $obj->setProperties(['foo']);
+        $ret = $obj->setProperties([ 'foo' ]);
         $this->assertSame($ret, $obj);
-        $this->assertEquals(['foo'], $obj->properties());
+        $this->assertEquals([ 'foo' ], $obj->properties());
 
-        $obj->setProperties(['bar']);
-        $this->assertEquals(['bar'], $obj->properties());
+        $obj->setProperties([ 'bar' ]);
+        $this->assertEquals([ 'bar' ], $obj->properties());
     }
 
     public function testAddProperty()
@@ -133,9 +140,9 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
 
         $ret = $obj->addProperty('foo');
         $this->assertSame($ret, $obj);
-        $this->assertEquals(['foo'], $obj->properties());
+        $this->assertEquals([ 'foo' ], $obj->properties());
         $obj->addProperty('bar');
-        $this->assertEquals(['foo', 'bar'], $obj->properties());
+        $this->assertEquals([ 'foo', 'bar' ], $obj->properties());
 
         $this->setExpectedException(InvalidArgumentException::class);
         $obj->addProperty(false);
@@ -159,12 +166,12 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
         $filter1 = $this->getFilter1();
         $filter2 = $this->getFilter2();
         $obj = $this->obj;
-        $ret = $obj->setFilters([$filter1]);
+        $ret = $obj->setFilters([ $filter1 ]);
         $this->assertSame($ret, $obj);
-        $this->assertEquals([$filter1], $obj->filters());
+        $this->assertEquals([ $filter1 ], $obj->filters());
 
-        $obj->setFilters([$filter2]);
-        $this->assertEquals([$filter2], $obj->filters());
+        $obj->setFilters([ $filter2 ]);
+        $this->assertEquals([ $filter2 ], $obj->filters());
     }
 
     /**
@@ -184,20 +191,20 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
         $obj = $this->obj;
         $ret = $obj->addFilter($filter1);
         $this->assertSame($ret, $obj);
-        $this->assertEquals([$filter1], $obj->filters());
+        $this->assertEquals([ $filter1 ], $obj->filters());
 
         $obj->addFilter($filter2);
-        $this->assertEquals([$filter1, $filter2], $obj->filters());
+        $this->assertEquals([ $filter1, $filter2 ], $obj->filters());
 
         $obj->addFilter([
-            'property'=>'baz'
+            'property' => 'baz'
         ]);
-        $obj->addFilter('foobar', '4', ['operator'=>'<']);
+        $obj->addFilter('foobar', '4', [ 'operator' => '<' ]);
 
         $filters = $obj->filters();
         $this->assertEquals(4, count($filters));
-        $this->assertInstanceOf('\Charcoal\Source\Filter', $filters[2]);
-        $this->assertInstanceOf('\Charcoal\Source\Filter', $filters[3]);
+        $this->assertInstanceOf(FilterInterface::class, $filters[2]);
+        $this->assertInstanceOf(FilterInterface::class, $filters[3]);
 
         $this->setExpectedException(InvalidArgumentException::class);
         $obj->addFilter(true);
@@ -214,12 +221,12 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
         $order1 = $this->getOrder1();
         $order2 = $this->getOrder2();
         $obj = $this->obj;
-        $ret = $obj->setOrders([$order1]);
+        $ret = $obj->setOrders([ $order1 ]);
         $this->assertSame($ret, $obj);
-        $this->assertEquals([$order1], $obj->orders());
+        $this->assertEquals( [$order1 ], $obj->orders());
 
-        $obj->setOrders([$order2]);
-        $this->assertEquals([$order2], $obj->orders());
+        $obj->setOrders([ $order2 ]);
+        $this->assertEquals([ $order2 ], $obj->orders());
     }
 
     /**
@@ -239,20 +246,20 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
         $obj = $this->obj;
         $ret = $obj->addOrder($order1);
         $this->assertSame($ret, $obj);
-        $this->assertEquals([$order1], $obj->orders());
+        $this->assertEquals([ $order1 ], $obj->orders());
 
         $obj->addOrder($order2);
-        $this->assertEquals([$order1, $order2], $obj->orders());
+        $this->assertEquals([ $order1, $order2 ], $obj->orders());
 
         $obj->addOrder([
             'property'=>'baz'
         ]);
-        $obj->addOrder('foobar', 'desc', ['values'=>[1, 2]]);
+        $obj->addOrder('foobar', 'desc', [ 'values'=> [ 1, 2 ] ]);
 
         $orders = $obj->orders();
         $this->assertEquals(4, count($orders));
-        $this->assertInstanceOf('\Charcoal\Source\Order', $orders[2]);
-        $this->assertInstanceOf('\Charcoal\Source\Order', $orders[3]);
+        $this->assertInstanceOf(OrderInterface::class, $orders[2]);
+        $this->assertInstanceOf(OrderInterface::class, $orders[3]);
 
         $this->setExpectedException(InvalidArgumentException::class);
         $obj->addOrder(true);
@@ -267,7 +274,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
         $this->assertSame($p, $obj->pagination());
 
-        $obj->setPagination(['page'=>3, 'num_per_page'=>120]);
+        $obj->setPagination([ 'page' => 3, 'num_per_page' => 120 ]);
         $this->assertInstanceOf(Pagination::class, $obj->pagination());
         $this->assertEquals(3, $obj->page());
         $this->assertEquals(120, $obj->numPerPage());
@@ -310,8 +317,8 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
     public function testCreateConfig()
     {
         $obj = $this->obj;
-        $config = $obj->createConfig(['type'=>'foo']);
-        $this->assertInstanceOf('\Charcoal\Source\SourceConfig', $config);
+        $config = $obj->createConfig([ 'type' => 'foo' ]);
+        $this->assertInstanceOf(SourceConfig::class, $config);
         $this->assertEquals('foo', $config->type());
     }
 
@@ -319,9 +326,9 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
     {
         $filter1 = new Filter();
         $filter1->setData([
-            'property'=>'foo',
-            'operator'=>'=',
-            'val'=>42
+            'property' => 'foo',
+            'operator' => '=',
+            'val'      => 42
         ]);
         return $filter1;
     }
@@ -330,9 +337,9 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
     {
         $filter2 = new Filter();
         $filter2->setData([
-            'property'=>'bar',
-            'operator'=>'>',
-            'val'=>666
+            'property' => 'bar',
+            'operator' => '>',
+            'val'      => 666
         ]);
         return $filter2;
     }
@@ -341,7 +348,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
     {
         $order1 = new Order();
         $order1->setData([
-            'mode'=>'asc'
+            'mode' => 'asc'
         ]);
         return $order1;
     }
@@ -350,7 +357,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
     {
         $order2 = new Order();
         $order2->setData([
-            'mode'=>'desc'
+            'mode' => 'desc'
         ]);
         return $order2;
     }
