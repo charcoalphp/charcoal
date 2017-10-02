@@ -69,10 +69,13 @@ abstract class AbstractLoader implements
 
             // Legacy dynamic template hack
             if ($tryLegacy) {
-                $this->logger->warning(
-                    'The $GLOBALS[\'widget_template\'] hack will be obsolete soon. Use setDynamicTemplate() instead.'
-                );
                 $ident = empty($GLOBALS['widget_template']) ? $ident : $GLOBALS['widget_template'];
+                $this->logger->warning(sprintf(
+                    '%s is deprecated in favor of %s: %s',
+                    '$GLOBALS[\'widget_template\']',
+                    'setDynamicTemplate()',
+                    $ident
+                ));
                 if (!is_string($ident)) {
                     throw new InvalidArgumentException(
                         'Dynamic template ident (from "$widget_template") must be a string'
