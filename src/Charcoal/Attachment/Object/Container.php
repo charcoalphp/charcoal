@@ -51,10 +51,11 @@ class Container extends Attachment implements
     /**
      * Retrieve the objects associated to the current object.
      *
-     * @param  string|null   $group  Filter the attachments by a group identifier.
-     * @param  string|null   $type   Filter the attachments by type.
-     * @param  callable|null $before Process each attachment before applying data.
-     * @param  callable|null $after  Process each attachment after applying data.
+     * @param  array|string|null $group  Filter the attachments by a group identifier.
+     *                                   When an array, filter the attachments by a options list.
+     * @param  string|null       $type   Filter the attachments by type.
+     * @param  callable|null     $before Process each attachment before applying data.
+     * @param  callable|null     $after  Process each attachment after applying data.
      * @throws InvalidArgumentException If the $group or $type is invalid.
      * @return Collection|Attachment[]
      */
@@ -64,6 +65,14 @@ class Container extends Attachment implements
         callable $before = null,
         callable $after = null
     ) {
+        /** Check for $group type. If not an array, log a deprecation warning */
+        if (is_array($group)) {
+            $options = $this->parseAttachmentOptions($group);
+            extract($options);
+        } else {
+            $this->logger->warning('[Attachment] AttachmentAwareTrait::attachments() with $group is deprecated. An array of parameters should be used.');
+        }
+
         $attachableObjects = $this->attachableObjects();
         $attachments       = $this->getAttachments($group, $type, $before, $after);
 

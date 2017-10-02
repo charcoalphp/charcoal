@@ -59,10 +59,11 @@ trait AttachmentAwareTrait
     /**
      * Retrieve the objects associated to the current object.
      *
-     * @param  string|null   $group  Filter the attachments by a group identifier.
-     * @param  string|null   $type   Filter the attachments by type.
-     * @param  callable|null $before Process each attachment before applying data.
-     * @param  callable|null $after  Process each attachment after applying data.
+     * @param  array|string|null $group  Filter the attachments by a group identifier.
+     *                                   When an array, filter the attachments by a options list.
+     * @param  string|null       $type   Filter the attachments by type.
+     * @param  callable|null     $before Process each attachment before applying data.
+     * @param  callable|null     $after  Process each attachment after applying data.
      * @throws InvalidArgumentException If the $group or $type is invalid.
      * @return Collection|Attachment[]
      */
@@ -72,6 +73,17 @@ trait AttachmentAwareTrait
         callable $before = null,
         callable $after = null
     ) {
+        /** Default query requires attachment to be active */
+        $isActive = true;
+
+        /** Check for $group type. If not an array, log a deprecation warning */
+        if (is_array($group)) {
+            $options = $this->parseAttachmentOptions($group);
+            extract($options);
+        } else {
+            $this->logger->warning('[Attachment] AttachmentAwareTrait::attachments() with $group is deprecated. An array of parameters should be used.');
+        }
+
         if ($group === null) {
             $group = 0;
         } elseif (!is_string($group)) {
@@ -122,8 +134,8 @@ trait AttachmentAwareTrait
             WHERE
                 1 = 1', $attTable, $joinTable);
 
-        // Disable `active` check in admin
-        if (!$widget instanceof AttachmentWidget) {
+        /** Disable `active` check in admin, or according to $isActive value */
+        if (!$widget instanceof AttachmentWidget && $isActive === true) {
             $query .= '
             AND
                 attachment.active = 1';
@@ -223,7 +235,9 @@ trait AttachmentAwareTrait
      */
     public function numAttachments()
     {
-        return count($this->attachments());
+        return count($this->attachments([
+            'group' => null
+        ]));
     }
 
     /**
@@ -362,6 +376,33 @@ trait AttachmentAwareTrait
         }
 
         return $attachmentObjects;
+    }
+
+    /**
+     * Parse a given list of options for loading a collection of attachment.
+     *
+     * @param  array  $options A list of options.
+     * @return array
+     */
+    private function parseAttachmentOptions(array $options)
+    {
+        $defaults = [
+            'group'    => null,
+            'type'     => null,
+            'before'   => null,
+            'after'    => null,
+            'isActive' => true
+        ];
+
+        /** Validate the callable options */
+        if (isset($options['before']) && !is_callable($options['before'])) {
+            unset($options['before']);
+        }
+        if (isset($options['after']) && !is_callable($options['after'])) {
+            unset($options['after']);
+        }
+
+        return array_merge($defaults, $options);
     }
 
     // Abstract Methods
