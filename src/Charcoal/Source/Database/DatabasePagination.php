@@ -2,6 +2,8 @@
 
 namespace Charcoal\Source\Database;
 
+use UnexpectedValueException;
+
 // From 'charcoal-core'
 use Charcoal\Source\Pagination;
 
@@ -24,27 +26,61 @@ class DatabasePagination extends Pagination
             return '';
         }
 
-        $sql = $this->string();
-        if ($sql) {
-            return strtr($sql, [
-                '{offset}' => $this->offset(),
-                '{limit}'  => $this->limit(),
-                '{page}'   => $this->page(),
-            ]);
+        if ($this->hasString()) {
+            return $this->byCondition();
         }
 
-        $sql   = [];
+        if ($this->hasLimit()) {
+            return $this->byLimit();
+        }
+
+        return '';
+    }
+
+    /**
+     * Retrieve the custom LIMIT clause.
+     *
+     * @throws UnexpectedValueException If the custom clause is empty.
+     * @return string
+     */
+    protected function byCondition()
+    {
+        if (!$this->hasString()) {
+            throw new UnexpectedValueException(
+                'Custom expression can not be empty.'
+            );
+        }
+
+        return $this->string();
+    }
+
+    /**
+     * Retrieve the LIMIT clause by page number and results per page.
+     *
+     * @throws UnexpectedValueException If there is no count per page.
+     * @return string
+     */
+    protected function byLimit()
+    {
         $limit = $this->limit();
-        if ($limit > 0) {
-            $sql[] = 'LIMIT '.$limit;
+        if ($limit < 1) {
+            throw new UnexpectedValueException(
+                'Number Per Page must be greater than zero.'
+            );
         }
 
         $offset = $this->offset();
-        if ($offset > 0) {
-            $sql[] = 'OFFSET '.$offset;
-        }
+        return 'LIMIT '.$offset.', '.$limit;
+    }
 
-        return implode(' ', $sql);
+    /**
+     * Determine if the expression has a number per page.
+     *
+     * @return boolean
+     */
+    public function hasLimit()
+    {
+        return ($this->limit() > 0);
     }
 
     /**

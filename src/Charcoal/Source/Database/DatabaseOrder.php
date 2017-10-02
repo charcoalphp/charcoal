@@ -2,7 +2,7 @@
 
 namespace Charcoal\Source\Database;
 
-use DomainException;
+use UnexpectedValueException;
 
 // From 'charcoal-core'
 use Charcoal\Source\DatabaseSource;
@@ -36,7 +36,6 @@ class DatabaseOrder extends Order
     /**
      * Retrieve the Order's SQL string to append to an ORDER BY clause.
      *
-     * @throws DomainException If any required property is empty.
      * @return string
      */
     public function sql()
@@ -45,8 +44,19 @@ class DatabaseOrder extends Order
             return '';
         }
 
-        $mode = $this->mode();
+        $mode = (string)$this->mode();
         switch ($mode) {
+            /** NULL Mode */
+            case '':
+                if ($this->hasRaw()) {
+                    return $this->byCondition();
+                }
+
+                if ($this->hasValues()) {
+                    return $this->byValues();
+                }
+                break;
+
             case self::MODE_RANDOM:
                 return $this->byRandom();
 
@@ -54,25 +64,14 @@ class DatabaseOrder extends Order
                 return $this->byValues();
 
             case self::MODE_CUSTOM:
-                return $this->byExpression();
+                return $this->byCondition();
 
             case self::MODE_ASC:
             case self::MODE_DESC:
-                $mode = strtoupper($mode);
-                break;
+                return $this->byDirection();
         }
 
-        $fields = $this->fieldIdentifiers();
-        if (empty($fields)) {
-            return '';
-        }
-
-        $clauses = [];
-        foreach ($fields as $fieldName) {
-            $clauses[] = sprintf('%1$s %2$s', $fieldName, $mode);
-        }
-
-        return implode(', ', $clauses);
+        return '';
     }
 
     /**
@@ -80,50 +79,81 @@ class DatabaseOrder extends Order
      *
      * @return string
      */
-    private function byRandom()
+    protected function byRandom()
     {
         return 'RAND()';
     }
 
     /**
-     * Retrieve the ORDER BY clause for the {@see self::MODE_CUSTOM} mode.
+     * Retrieve the ORDER BY clause for the direction mode.
      *
+     * @throws UnexpectedValueException If any required property is empty.
      * @return string
      */
-    private function byExpression()
+    protected function byDirection()
     {
-        $sql = $this->string();
-        if ($sql) {
-            $sql = strtr($sql, [
-                '{mode}'       => $this->mode(),
-                '{values}'     => $this->prepareValues($this->values()),
-                '{property}'   => $this->property(),
-                '{fielfName}'  => $this->fieldIdentifier(),
-                '{tableName}'  => $this->tableName(),
-            ]);
+        $fields = $this->fieldIdentifiers();
+        if (empty($fields)) {
+            throw new UnexpectedValueException(
+                'Property is required.'
+            );
         }
 
-        return $sql;
+        $dir = $this->direction();
+        $clauses = [];
+        foreach ($fields as $fieldName) {
+            $clauses[] = sprintf('%s %s', $fieldName, $dir);
+        }
+
+        return implode(', ', $clauses);
+    }
+
+    /**
+     * Retrieve a SQL direction.
+     *
+     * @return string Returns "ASC" if the mode is {@see self::MODE_ASC},
+     *     otherwise "DESC".
+     */
+    public function direction()
+    {
+        return ($this->mode() === self::MODE_ASC) ? 'ASC' : 'DESC';
+    }
+
+    /**
+     * Retrieve the ORDER BY clause for the {@see self::MODE_CUSTOM} mode.
+     *
+     * @throws UnexpectedValueException If the custom clause is empty.
+     * @return string
+     */
+    protected function byCondition()
+    {
+        if (!$this->hasString()) {
+            throw new UnexpectedValueException(
+                'Custom expression can not be empty.'
+            );
+        }
+
+        return $this->string();
     }
 
     /**
      * Retrieve the ORDER BY clause for the {@see self::MODE_VALUES} mode.
      *
-     * @throws DomainException If any required property or values is empty.
+     * @throws UnexpectedValueException If any required property or values is empty.
      * @return string
      */
-    private function byValues()
+    protected function byValues()
     {
         $fieldName = $this->fieldIdentifier();
         if (empty($fieldName)) {
-            throw new DomainException(
-                'Field Name can not be empty.'
+            throw new UnexpectedValueException(
+                'Property is required.'
             );
         }
 
         $values = $this->values();
         if (empty($values)) {
-            throw new DomainException(
+            throw new UnexpectedValueException(
                 'Values can not be empty.'
             );
         }
@@ -137,7 +167,6 @@ class DatabaseOrder extends Order
      * Parse the given values for SQL.
      *
      * @param  mixed $values The value to be normalized.
-     * @throws InvalidArgumentException If the parameter is invalid.
      * @return array Returns a collection of parsed values.
      */
     public function prepareValues($values)
@@ -146,19 +175,12 @@ class DatabaseOrder extends Order
             return [];
         }
 
-        $values = array_filter($values, 'is_scalar');
-        $values = array_map(
-            function ($val) {
-                $val = $this::parseValue($val);
-                if (!is_numeric($val)) {
-                    $val = htmlspecialchars($val, ENT_QUOTES);
-                    $val = sprintf('"%s"', $val);
-                }
+        if (!is_array($values)) {
+            $values = (array)$values;
+        }
 
-                return $val;
-            },
-            $values
-        );
+        $values = array_filter($values, 'is_scalar');
+        $values = array_map('self::quoteValue', $values);
 
         return $values;
     }

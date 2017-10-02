@@ -2,6 +2,8 @@
 
 namespace Charcoal\Source\Database;
 
+use UnexpectedValueException;
+
 // From 'charcoal-core'
 use Charcoal\Source\DatabaseSource;
 use Charcoal\Source\Filter;
@@ -42,14 +44,48 @@ class DatabaseFilter extends Filter
             return '';
         }
 
-        $sql = $this->string();
-        if ($sql) {
-            return $this->byExpression();
+        if ($this->hasString()) {
+            return $this->byCondition();
         }
 
+        if ($this->hasFields()) {
+            return $this->byPredicate();
+        }
+
+        return '';
+    }
+
+    /**
+     * Retrieve the custom WHERE condition.
+     *
+     * @throws UnexpectedValueException If the custom condition is empty.
+     * @return string
+     */
+    protected function byCondition()
+    {
+        if (!$this->hasString()) {
+            throw new UnexpectedValueException(
+                'Custom expression can not be empty.'
+            );
+        }
+
+        return $this->string();
+    }
+
+    /**
+     * Retrieve the WHERE condition.
+     *
+     * @todo   Values are often not quoted.
+     * @throws UnexpectedValueException If any required property, function, or operator is empty.
+     * @return string
+     */
+    protected function byPredicate()
+    {
         $fields = $this->fieldIdentifiers();
         if (empty($fields)) {
-            return '';
+            throw new UnexpectedValueException(
+                'Property is required.'
+            );
         }
 
         $conditions = [];
@@ -102,27 +138,5 @@ class DatabaseFilter extends Filter
         }
 
         return $conditions;
-    }
-
-    /**
-     * Retrieve the WHERE condition.
-     *
-     * @return string
-     */
-    private function byExpression()
-    {
-        $sql = $this->string();
-        if ($sql) {
-            $sql = strtr($sql, [
-                '{func}'       => $this->func(),
-                '{value}'      => $this->val(),
-                '{operator}'   => $this->operator(),
-                '{property}'   => $this->property(),
-                '{fieldName}'  => $this->fieldIdentifier(),
-                '{tableName}'  => $this->tableName(),
-            ]);
-        }
-
-        return $sql;
     }
 }

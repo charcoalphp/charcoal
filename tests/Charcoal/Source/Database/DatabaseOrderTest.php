@@ -2,76 +2,226 @@
 
 namespace Charcoal\Tests\Source\Database;
 
-use DomainException;
+use stdClass;
+use UnexpectedValueException;
 
 // From 'charcoal-core'
+use Charcoal\Source\DatabaseSource;
 use Charcoal\Source\Database\DatabaseOrder;
+use Charcoal\Tests\Source\DatabaseExpressionTestTrait;
 
 /**
  *
  */
 class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
 {
-    public function testSqlRandMode()
+    use DatabaseExpressionTestTrait;
+
+    /**
+     * Create expression for testing.
+     *
+     * @return DatabaseOrder
+     */
+    final protected function createExpression()
     {
-        $obj = new DatabaseOrder();
-        $obj->setMode('rand');
-
-        $sql = $obj->sql();
-        $this->assertEquals('RAND()', $sql);
-    }
-
-    public function testSqlValuesMode()
-    {
-        $obj = new DatabaseOrder();
-        $obj->setMode('values');
-        $obj->setProperty('test');
-        $obj->setValues('1,2,3');
-
-        $sql = $obj->sql();
-        $this->assertEquals('FIELD(objTable.`test`, 1,2,3)', $sql);
-    }
-
-    public function testSqlValuesModeWithoutPropertyThrowException()
-    {
-        $this->setExpectedException(DomainException::class);
-
-        $obj = new DatabaseOrder();
-        $obj->setMode('values');
-        $obj->setValues('1,2,3');
-
-        $sql = $obj->sql();
-    }
-
-    public function testSqlValuesModeWithoutValuesThrowException()
-    {
-        $this->setExpectedException(DomainException::class);
-
-        $obj = new DatabaseOrder();
-        $obj->setMode('values');
-        $obj->setProperty('test');
-
-        $sql = $obj->sql();
+        return new DatabaseOrder();
     }
 
     /**
-     * @dataProvider providerAscDesc
+     * Test default table name for default data values.
+     *
+     * @see \Charcoal\Tests\Source\Database\DatabaseFilterTest::testDefaultValues()
      */
-    public function testSqlAscDesc($mode)
+    public function testDefaultValues()
     {
-        $obj = new DatabaseOrder();
-        $obj->setProperty('test');
-        $obj->setMode($mode);
+        $obj = $this->createExpression();
 
-        $sql = $obj->sql();
-        $this->assertEquals('objTable.`test` '.strtoupper($mode), $sql);
+        $data = $obj->defaultData();
+        $this->assertArrayHasKey('table_name', $data);
+        $this->assertEquals(DatabaseSource::DEFAULT_TABLE_ALIAS, $data['table_name']);
+        $this->assertEquals(DatabaseSource::DEFAULT_TABLE_ALIAS, $obj->tableName());
     }
 
-    public function providerAscDesc()
+    /**
+     * Test SQL without a mode.
+     */
+    public function testBlankSql()
+    {
+        $obj = $this->createExpression();
+
+        $obj->setMode(null);
+        $this->assertEquals('', $obj->sql());
+    }
+
+    /**
+     * Test SQL with custom mode and placeholders.
+     */
+    public function testSqlCustomMode()
+    {
+        $obj = $this->createExpression();
+
+        $obj->setMode('custom')->setString('qux ASC');
+        $this->assertEquals('qux ASC', $obj->sql());
+    }
+
+    /**
+     * Test that "custom" and "values" mode have precedence over other features
+     * when the mode is undefined.
+     */
+    public function testSqlModeResolutionAndPrecedence()
+    {
+        $obj = $this->createExpression();
+
+        $obj->setMode(null)->setProperty('country');
+
+        /** Resolves to "values" mode when values are defined. */
+        $obj->setValues([ 'FR', 'UK', 'CA' ]);
+        $this->assertEquals('FIELD(objTable.`country`, "FR","UK","CA")', $obj->sql());
+
+        /** Resolves to "custom" mode, and takes precedence, when a custom expression is defined. */
+        $obj->setString('foo DESC');
+        $this->assertEquals('foo DESC', $obj->sql());
+    }
+
+    /**
+     * Test SQL with random mode.
+     */
+    public function testSqlRandomMode()
+    {
+        $obj = $this->createExpression();
+
+        $obj->setMode('rand');
+        $this->assertEquals('RAND()', $obj->sql());
+    }
+
+    /**
+     * Test direction method.
+     */
+    public function testDirection()
+    {
+        $obj = $this->createExpression();
+
+        $obj->setMode(null);
+        $this->assertEquals('DESC', $obj->direction());
+
+        $obj->setMode('asc');
+        $this->assertEquals('ASC', $obj->direction());
+    }
+
+    /**
+     * Test SQL with direction mode.
+     *
+     * @dataProvider provideSqlDirectionMode
+     *
+     * @param mixed $val      The directional mode to set.
+     * @param mixed $expected The expected SQL direction.
+     */
+    public function testSqlDirectionMode($mode, $expected)
+    {
+        $obj = $this->createExpression();
+
+        $obj->setMode($mode)->setProperty('test');
+        $this->assertEquals(
+            sprintf('objTable.`test` %s', $expected),
+            $obj->sql()
+        );
+    }
+
+    /**
+     * Provide data for selecting directional ordering.
+     *
+     * @used-by self::testSqlDirectionMode()
+     * @return  array
+     */
+    public function provideSqlDirectionMode()
     {
         return [
-            [ 'asc' ],
-            [ 'desc' ]
+            [ 'asc',  'ASC'  ],
+            [ 'desc', 'DESC' ],
         ];
+    }
+
+    /**
+     * Test direction mode without property.
+     */
+    public function testSqlDirectionModeWithoutProperty()
+    {
+        $obj = $this->createExpression();
+
+        $this->setExpectedException(UnexpectedValueException::class);
+
+        $obj->setMode('asc');
+        $obj->sql();
+    }
+
+    /**
+     * Test SQL with values mode.
+     */
+    public function testSqlValuesMode()
+    {
+        $obj = $this->createExpression();
+        $obj->setMode('values')
+            ->setProperty('test')
+            ->setValues([ 1, false, 'foo' ]);
+
+        $this->assertEquals('FIELD(objTable.`test`, 1,0,"foo")', $obj->sql());
+    }
+
+    /**
+     * Test values mode without property.
+     */
+    public function testSqlValuesModeWithoutProperty()
+    {
+        $obj = $this->createExpression();
+
+        $this->setExpectedException(UnexpectedValueException::class);
+
+        $obj->setMode('values')->setValues('1,2,3');
+        $obj->sql();
+    }
+
+    /**
+     * Test values mode without values.
+     */
+    public function testSqlValuesModeWithoutValues()
+    {
+        $obj = $this->createExpression();
+
+        $this->setExpectedException(UnexpectedValueException::class);
+
+        $obj->setMode('values')->setProperty('test');
+        $obj->sql();
+    }
+
+    /**
+     * Test invalid custom SQL.
+     */
+    public function testSqlCustomModeWithoutQuery()
+    {
+        $obj = $this->createExpression();
+
+        $this->setExpectedException(UnexpectedValueException::class);
+
+        $method = $this->getMethod($obj, 'byCondition');
+        $method->invoke($obj);
+    }
+
+    /**
+     * Test helper methods.
+     */
+    public function testPrepareValues()
+    {
+        $obj = $this->createExpression();
+
+        $arr = $obj->prepareValues([]);
+        $this->assertEquals([], $arr);
+
+        $arr = $obj->prepareValues(42);
+        $this->assertEquals([ 42 ], $arr);
+
+        $arr = $obj->prepareValues([
+            1, '19', 'false', 'Foo "Qux" Baz', [ 42 ], new stdClass()
+        ]);
+        $this->assertEquals([ 1, '19', false, '"Foo &quot;Qux&quot; Baz"' ], $arr);
     }
 }

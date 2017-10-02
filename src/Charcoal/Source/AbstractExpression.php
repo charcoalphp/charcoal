@@ -212,6 +212,36 @@ abstract class AbstractExpression implements
     }
 
     /**
+     * Quote the given scalar value.
+     *
+     * @param  mixed $value The value to be quoted.
+     * @return mixed Returns:
+     *     - If $value is not a scalar value, the value is returned intact.
+     *     - if $value is a boolean, the value is cast to an integer.
+     *     - If $value is not a number, the value is stringified
+     *       and wrapped in double quotes.
+     */
+    public static function quoteValue($value)
+    {
+        $value = static::parseValue($value);
+
+        if (!is_scalar($value)) {
+            return $value;
+        }
+
+        if (is_bool($value)) {
+            return (int)$value;
+        }
+
+        if (!is_numeric($value)) {
+            $value = htmlspecialchars($value, ENT_QUOTES);
+            $value = sprintf('"%s"', $value);
+        }
+
+        return $value;
+    }
+
+    /**
      * Compare two values.
      *
      * @param  mixed $a The custom value.

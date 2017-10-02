@@ -2,6 +2,7 @@
 
 namespace Charcoal\Tests\Source;
 
+use stdClass;
 use DateTime;
 use InvalidArgumentException;
 
@@ -86,6 +87,43 @@ trait QueryExpressionTestTrait
             'Boolean String (FALSE)' => [ 'false', false ],
             'Date/Time Object'       => [ $time, '1995-06-08 00:00:00' ],
             'Date/Time Property'     => [ $prop, '2004-07-13 00:00:00' ],
+        ];
+    }
+
+    /**
+     * Test value quoting.
+     *
+     * @dataProvider provideQuotableValues
+     *
+     * @param mixed $val      The value to test.
+     * @param mixed $expected The expected result.
+     */
+    public function testQuoteValue($val, $expected)
+    {
+        $obj = $this->createExpression();
+
+        $this->assertEquals($expected, $obj::quoteValue($val));
+    }
+
+    /**
+     * Provide data for value quoting.
+     *
+     * @used-by self::testQuoteValue()
+     * @return  array
+     */
+    public function provideQuotableValues()
+    {
+        $obj = new stdClass();
+
+        return [
+            'Null Type'       => [ null, null ],
+            'Array Type'      => [ [ 42 ], [ 42 ] ],
+            'Integer Type'    => [ 42, 42 ],
+            'Integer String'  => [ '3', '3' ],
+            'Quotable String' => [ 'Foo "Qux" Baz', '"Foo &quot;Qux&quot; Baz"' ],
+            'Boolean Type'    => [ true, 1 ],
+            'Boolean String'  => [ 'false', 0 ],
+            'Object Type'     => [ $obj, $obj ],
         ];
     }
 
