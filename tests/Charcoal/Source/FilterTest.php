@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Source;
 
+use InvalidArgumentException;
+
 // From 'charcoal-core'
 use Charcoal\Source\Filter;
 
@@ -96,7 +98,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetInvalidPropertyThrowsException($property)
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
 
         $obj = new Filter();
         $obj->setProperty($property);
@@ -152,7 +154,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetInvalidOperatorThrowsException($op)
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
 
         $obj = new Filter();
         $obj->setOperator($op);
@@ -182,7 +184,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetInvalidFuncThrowsException($func)
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
 
         $obj = new Filter();
         $obj->setFunc($func);
@@ -204,7 +206,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetInvalidOperandThrowsException($op)
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
 
         $obj = new Filter();
         $obj->setOperand($op);
@@ -231,7 +233,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
 
     public function testSetInvalidStringThrowsException()
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
 
         $obj = new Filter();
         $obj->setString([]);

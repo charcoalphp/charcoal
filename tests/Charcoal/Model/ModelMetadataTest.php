@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Model;
 
+use Exception;
+
 // From 'charcoal-core'
 use Charcoal\Model\ModelMetadata;
 
@@ -24,7 +26,7 @@ class ModelMetadataTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('foo', $this->obj->ident());
 
-        $this->setExpectedException('\Exception');
+        $this->setExpectedException(Exception::class);
         $this->obj->setIdent(false);
     }
 

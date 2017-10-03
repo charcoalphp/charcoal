@@ -2,7 +2,7 @@
 
 namespace Charcoal\Model\Service;
 
-use Exception;
+use UnexpectedValueException;
 
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
@@ -132,7 +132,7 @@ final class ModelBuilder
      *     source configuration.
      * @param string|null   $sourceIdent Optional. Custom source ident to load.
      *     If NULL, the default (from metadata) will be used.
-     * @throws Exception If the source is not defined in the model's metadata.
+     * @throws UnexpectedValueException If the source is not defined in the model's metadata.
      * @return SourceInterface
      */
     private function createSource(ModelMetadata $metadata, $sourceIdent = null)
@@ -143,7 +143,7 @@ final class ModelBuilder
         $sourceConfig = $metadata->source($sourceIdent);
 
         if (!$sourceConfig) {
-            throw new Exception(
+            throw new UnexpectedValueException(
                 sprintf('Can not create %s source: "%s" is not defined in metadata.', get_class($this), $sourceIdent)
             );
         }

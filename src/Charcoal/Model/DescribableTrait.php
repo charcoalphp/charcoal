@@ -2,7 +2,7 @@
 
 namespace Charcoal\Model;
 
-use Exception;
+use RuntimeException;
 use InvalidArgumentException;
 
 // From 'charcoal-core'
@@ -50,13 +50,13 @@ trait DescribableTrait
     /**
      * Safe MetdataLoader getter. Create the loader if it does not exist.
      *
-     * @throws Exception If the metadata loader was not set.
+     * @throws RuntimeException If the metadata loader was not set.
      * @return MetadataLoader
      */
     protected function metadataLoader()
     {
         if (!$this->metadataLoader) {
-            throw new Exception(
+            throw new RuntimeException(
                 sprintf('Metadata loader was not set for "%s"', get_class($this))
             );
         }

@@ -2,7 +2,10 @@
 
 // namespace Charcoal\Tests\Source;
 
-// use \Charcoal\Charcoal as Charcoal;
+// use Exception;
+// use PDOException;
+// use InvalidArgumentException;
+// use RuntimeException;
 
 // use \Charcoal\Source\DatabaseSource as DatabaseSource;
 
@@ -37,13 +40,13 @@
 //         $this->assertSame($ret, $obj);
 //         $this->assertEquals('foo', $obj->database_ident());
 
-//         $this->setExpectedException('\InvalidArgumentException');
+//         $this->setExpectedException(InvalidArgumentException::class);
 //         $obj->set_database_ident(null);
 //     }
 
 //     public function testSetDatabaseConfig()
 //     {
-//         $this->setExpectedException('\Exception');
+//         $this->setExpectedException(Exception::class);
 
 //         $obj = new DatabaseSource();
 //         $ret = $obj->database_config();
@@ -65,7 +68,7 @@
 //         $this->assertSame($ret, $obj);
 //         $this->assertEquals($cfg, $obj->database_config());
 
-//         $this->setExpectedException('\InvalidArgumentException');
+//         $this->setExpectedException(InvalidArgumentException::class);
 //         $obj->set_database_config(false);
 //     }
 
@@ -74,7 +77,7 @@
 //     */
 //     public function testTableWithoutSetterThrowsException()
 //     {
-//         $this->setExpectedException('\Exception');
+//         $this->setExpectedException(Exception::class);
 
 //         $obj = new DatabaseSource();
 //         $obj->table();
@@ -93,20 +96,20 @@
 //         $this->assertSame($ret, $obj);
 //         $this->assertEquals('foo', $obj->table());
 
-//         $this->setExpectedException('\InvalidArgumentException');
+//         $this->setExpectedException(InvalidArgumentException::class);
 //         $obj->set_table(null);
 //     }
 
 //     public function testCreateTableWithoutTableThrowsException()
 //     {
-//         $this->setExpectedException('\Exception');
+//         $this->setExpectedException(Exception::class);
 //         $obj = new DatabaseSource();
 //         $obj->create_table();
 //     }
 
 //     public function testCreateTableWithoutModelThrowsException()
 //     {
-//         $this->setExpectedException('\Exception');
+//         $this->setExpectedException(Exception::class);
 //         $obj = new DatabaseSource();
 //         $obj->set_table('foo');
 //         $obj->create_table();
@@ -149,7 +152,7 @@
 
 //     // public function testCreateAlterWithoutModelThrowsException()
 //     // {
-//     //     $this->setExpectedException('\Exception');
+//     //     $this->setExpectedException(Exception::class);
 
 //     //     $obj = new DatabaseSource();
 //     //     $obj->set_table('test');
@@ -254,7 +257,7 @@
 //     //     $obj->save_item($item);
 //     //     $this->assertFalse($obj->table_is_empty());
 
-//     //     $this->setExpectedException('\PDOException');
+//     //     $this->setExpectedException(PDOException::class);
 //     //     $obj->set_table('invalid-db-table');
 //     //     $obj->table_is_empty();
 //     // }
@@ -399,7 +402,7 @@
 
 //         $item2 = $this->getItemModel();
 
-//         $this->setExpectedException('\Exception');
+//         $this->setExpectedException(Exception::class);
 //         $obj->delete_item($item2);
 //     }
 // }

@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Model\Service;
 
+use Exception;
+
 // From 'charcoal-factory'
 use Charcoal\Factory\GenericFactory as Factory;
 
@@ -46,7 +48,7 @@ class ModelLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testLoadInvalidObjTypeThrowsException()
     {
-        $this->setExpectedException('\Exception');
+        $this->setExpectedException(Exception::class);
         $this->obj->load('foobar');
     }
 }

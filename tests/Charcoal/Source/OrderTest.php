@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Loader\CollectionLoader;
 
+use InvalidArgumentException;
+
 // From 'charcoal-core'
 use Charcoal\Source\Order;
 
@@ -68,7 +70,7 @@ class OrderTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetInvalidPropertyThrowsException($property)
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
 
         $obj = new Order();
         $obj->setProperty($property);
@@ -95,7 +97,7 @@ class OrderTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetInvalidModeThrowsException($mode)
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
 
         $obj = new Order();
         $obj->setMode($mode);
@@ -121,8 +123,8 @@ class OrderTest extends \PHPUnit_Framework_TestCase
     {
         $obj = new Order();
         $obj->setValues('foo, bar, val');
-// Spaces between values
 
+        // Spaces between values
         $this->assertEquals(['foo','bar','val'], $obj->values());
     }
 
@@ -139,13 +141,11 @@ class OrderTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetInvalidValuesThrowsException($values)
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
 
         $obj = new Order();
         $obj->setValues($values);
     }
-
-
 
     /**
      * Invalid arguments for operator, func and operand

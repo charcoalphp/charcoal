@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Validator;
 
+use InvalidArgumentException;
+
 // From 'charcoal-core'
 use Charcoal\Validator\ValidatorResult;
 
@@ -10,12 +12,6 @@ use Charcoal\Validator\ValidatorResult;
  */
 class ValidatorResultTest extends \PHPUnit_Framework_TestCase
 {
-    public function testConstructor()
-    {
-        $obj = new ValidatorResult();
-        $this->assertInstanceOf('\Charcoal\Validator\ValidatorResult', $obj);
-    }
-
     public function testSetData()
     {
         $obj = new ValidatorResult();
@@ -32,7 +28,7 @@ class ValidatorResultTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
         $this->assertEquals('foo', $obj->ident());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
         $obj->setIdent(false);
     }
 
@@ -45,14 +41,14 @@ class ValidatorResultTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
         $this->assertEquals('warning', $obj->level());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
         $obj->setLevel(false);
     }
 
     public function testSetLevelWithInvalidLevelsThrowException()
     {
         $obj = new ValidatorResult();
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
         $obj->setLevel('foo');
     }
 
@@ -65,7 +61,7 @@ class ValidatorResultTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
         $this->assertEquals('foo', $obj->message());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
         $obj->setMessage(false);
     }
 
@@ -77,7 +73,7 @@ class ValidatorResultTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('\DateTime', $obj->ts());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
         $obj->setTs(false);
     }
 }

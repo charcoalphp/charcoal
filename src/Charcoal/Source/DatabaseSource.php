@@ -2,9 +2,11 @@
 
 namespace Charcoal\Source;
 
-use Exception;
-use InvalidArgumentException;
 use PDO;
+use PDOException;
+use InvalidArgumentException;
+use RuntimeException;
+use UnexpectedValueException;
 
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
@@ -81,13 +83,13 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     /**
      * Get the database's current table.
      *
-     * @throws Exception If the table was not set.
+     * @throws RuntimeException If the table was not set.
      * @return string
      */
     public function table()
     {
         if ($this->table === null) {
-            throw new Exception(
+            throw new RuntimeException(
                 'Table was not set.'
             );
         }
@@ -347,10 +349,10 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     }
 
     /**
-     * @param string            $query The SQL query.
-     * @param array             $binds Optional. The query parameters.
-     * @param StorableInterface $item  Optional. Item (storable object) to load into.
-     * @throws Exception If there is a query error.
+     * @param  string            $query The SQL query.
+     * @param  array             $binds Optional. The query parameters.
+     * @param  StorableInterface $item  Optional. Item (storable object) to load into.
+     * @throws PDOException If there is a query error.
      * @return StorableInterface Item.
      */
     public function loadItemFromQuery($query, array $binds = [], StorableInterface $item = null)
@@ -369,7 +371,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
 
         $sth = $this->dbQuery($query, $binds);
         if ($sth === false) {
-            throw new Exception('Error');
+            throw new PDOException('Could not load item.');
         }
 
         $data = $sth->fetch(PDO::FETCH_ASSOC);
@@ -441,8 +443,8 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     /**
      * Save an item (create a new row) in storage.
      *
-     * @param StorableInterface $item The object to save.
-     * @throws Exception If a database error occurs.
+     * @param  StorableInterface $item The object to save.
+     * @throws PDOException If a database error occurs.
      * @return mixed The created item ID, or false in case of an error.
      */
     public function saveItem(StorableInterface $item)
@@ -486,9 +488,7 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
         $res = $this->dbQuery($q, $binds, $binds_types);
 
         if ($res === false) {
-            throw new Exception(
-                'Could not save item.'
-            );
+            throw new PDOException('Could not save item.');
         } else {
             if ($model->id()) {
                 return $model->id();
@@ -568,8 +568,8 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     /**
      * Delete an item from storage
      *
-     * @param StorableInterface $item Optional item to delete. If none, the current model object will be used.
-     * @throws Exception If the item does not have an ID.
+     * @param  StorableInterface $item Optional item to delete. If none, the current model object will be used.
+     * @throws UnexpectedValueException If the item does not have an ID.
      * @return boolean Success / Failure
      */
     public function deleteItem(StorableInterface $item = null)
@@ -577,10 +577,11 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
         if ($item !== null) {
             $this->setModel($item);
         }
+
         $model = $this->model();
 
         if (!$model->id()) {
-            throw new Exception(
+            throw new UnexpectedValueException(
                 sprintf('Can not delete "%s" item. No ID.', get_class($this))
             );
         }
@@ -647,14 +648,14 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     }
 
     /**
-     * @throws Exception If the source does not have a table defined.
+     * @throws UnexpectedValueException If the source does not have a table defined.
      * @return string
      */
     public function sqlLoad()
     {
         $table = $this->table();
         if (!$table) {
-            throw new Exception(
+            throw new UnexpectedValueException(
                 'Can not get SQL. No table defined.'
             );
         }
@@ -672,15 +673,15 @@ class DatabaseSource extends AbstractSource implements DatabaseSourceInterface
     /**
      * Get a special SQL query for loading the count.
      *
-     * @throws Exception If the source does not have a table defined.
+     * @throws UnexpectedValueException If the source does not have a table defined.
      * @return string
      */
     public function sqlLoadCount()
     {
         $table = $this->table();
         if (!$table) {
-            throw new Exception(
-                'Can not get count SQL. No table defined.s'
+            throw new UnexpectedValueException(
+                'Can not get SQL count. No table defined.'
             );
         }
 

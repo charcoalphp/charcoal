@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Source;
 
+use InvalidArgumentException;
+
 // From 'charcoal-core'
 use Charcoal\Source\SourceConfig;
 
@@ -26,7 +28,7 @@ class SourceConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($obj, $ret);
         $this->assertEquals('foo', $obj->type());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
         $obj->setType([1,2,3]);
     }
 }

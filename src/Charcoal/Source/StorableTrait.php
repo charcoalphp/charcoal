@@ -2,7 +2,7 @@
 
 namespace Charcoal\Source;
 
-use Exception;
+use RuntimeException;
 use InvalidArgumentException;
 
 // From 'charcoal-factory'
@@ -68,7 +68,6 @@ trait StorableTrait
     /**
      * Get the object's (unique) ID. The actualy property get depends on `key()`
      *
-     * @throws Exception If the set key is invalid.
      * @return mixed
      */
     public function id()
@@ -91,12 +90,10 @@ trait StorableTrait
     public function setKey($key)
     {
         if (!is_string($key)) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    'Key must be a string; received %s',
-                    (is_object($key) ? get_class($key) : gettype($key))
-                )
-            );
+            throw new InvalidArgumentException(sprintf(
+                'Key must be a string; received %s',
+                (is_object($key) ? get_class($key) : gettype($key))
+            ));
         }
         // For security reason, only alphanumeric characters (+ underscores) are valid key names.
         // Although SQL can support more, there's really no reason to.
@@ -131,13 +128,13 @@ trait StorableTrait
     }
 
     /**
-     * @throws Exception If the source factory was not previously set.
+     * @throws RuntimeException If the source factory was not previously set.
      * @return FactoryInterface
      */
     protected function sourceFactory()
     {
         if (!isset($this->sourceFactory)) {
-            throw new Exception(
+            throw new RuntimeException(
                 sprintf('Source factory is not set for "%s"', get_class($this))
             );
         }

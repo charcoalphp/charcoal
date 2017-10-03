@@ -3,6 +3,7 @@
 namespace Charcoal\Tests\Validator;
 
 use DateTime;
+use InvalidArgumentException;
 
 // From 'charcoal-core'
 use Charcoal\Validator\ValidatorResult;
@@ -68,7 +69,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $ret = $obj->addResult($resultObj);
         $this->assertSame($ret, $obj);
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
         $obj->addResult(false);
     }
 

@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Loader\CollectionLoader;
 
+use InvalidArgumentException;
+
 // From 'charcoal-core'
 use Charcoal\Source\Pagination;
 
@@ -41,7 +43,7 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetInvalidPageThrowsException($page)
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
 
         $obj = new Pagination();
         $obj->setPage($page);
@@ -68,7 +70,7 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetInvalidNumPerPageThrowsException($num)
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
 
         $obj = new Pagination();
         $obj->setNumPerPage($num);

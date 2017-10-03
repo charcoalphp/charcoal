@@ -44,13 +44,13 @@ class DatabaseSourceConfig extends SourceConfig
     public function defaults()
     {
         return [
-            'type'              => 'mysql',
-            'hostname'          => 'localhost',
-            'username'          => '',
-            'password'          => '',
-            'database'          => '',
-            'table'             => '',
-            'disable_ytf8'      => false
+            'type'         => 'mysql',
+            'hostname'     => 'localhost',
+            'username'     => '',
+            'password'     => '',
+            'database'     => '',
+            'table'        => '',
+            'disable_ytf8' => false
         ];
     }
 

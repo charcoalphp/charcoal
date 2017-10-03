@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Source\Database;
 
+use DomainException;
+
 // From 'charcoal-core'
 use Charcoal\Source\Database\DatabaseOrder;
 
@@ -32,7 +34,7 @@ class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
 
     public function testSqlValuesModeWithoutPropertyThrowException()
     {
-        $this->setExpectedException('\DomainException');
+        $this->setExpectedException(DomainException::class);
 
         $obj = new DatabaseOrder();
         $obj->setMode('values');
@@ -43,7 +45,7 @@ class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
 
     public function testSqlValuesModeWithoutValuesThrowException()
     {
-        $this->setExpectedException('\DomainException');
+        $this->setExpectedException(DomainException::class);
 
         $obj = new DatabaseOrder();
         $obj->setMode('values');
@@ -70,7 +72,7 @@ class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
      */
     public function testSqlAscDescWithoutPropertyThrowsException($mode)
     {
-        $this->setExpectedException('\DomainException');
+        $this->setExpectedException(DomainException::class);
 
         $obj = new DatabaseOrder();
         $obj->setMode($mode);

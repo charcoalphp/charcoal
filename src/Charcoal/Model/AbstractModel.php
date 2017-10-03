@@ -2,10 +2,10 @@
 
 namespace Charcoal\Model;
 
-use DateTimeInterface;
-use Exception;
-use InvalidArgumentException;
 use PDO;
+use PDOException;
+use DateTimeInterface;
+use UnexpectedValueException;
 
 // From PSR-3
 use Psr\Log\LoggerAwareInterface;
@@ -49,9 +49,8 @@ use Charcoal\Validator\ValidatableTrait;
  * - `ValidatableInterface`
  * - `ViewableInterface`.
  *
- * Those interfaces
- * are implemented (in parts, at least) with the `DescribableTrait`, `StorableTrait`,
- * `ValidatableTrait` and the `ViewableTrait`.
+ * Those interfaces are implemented (in parts, at least) with
+ * `DescribableTrait`, `StorableTrait`, `ValidatableTrait`, and `ViewableTrait`.
  *
  * The `JsonSerializable` interface is fully provided by the `DescribableTrait`.
  */
@@ -333,10 +332,10 @@ abstract class AbstractModel extends AbstractEntity implements
      * Load an object from the database from its l10n key $key.
      * Also retrieve and return the actual language that matched.
      *
-     * @param string $key   Key pointing a column's l10n base ident.
-     * @param mixed  $value Value to search in all languages.
-     * @param array  $langs List of languages (code, ex: "en") to check into.
-     * @throws Exception If the PDO query fails.
+     * @param  string $key   Key pointing a column's l10n base ident.
+     * @param  mixed  $value Value to search in all languages.
+     * @param  array  $langs List of languages (code, ex: "en") to check into.
+     * @throws PDOException If the PDO query fails.
      * @return string The matching language.
      */
     public function loadFromL10n($key, $value, array $langs)
@@ -367,7 +366,7 @@ abstract class AbstractModel extends AbstractEntity implements
 
         $sth = $this->source()->dbQuery($q, $binds);
         if ($sth === false) {
-            throw new Exception('Error');
+            throw new PDOException('Could not load item.');
         }
 
         $data = $sth->fetch(PDO::FETCH_ASSOC);
@@ -449,7 +448,7 @@ abstract class AbstractModel extends AbstractEntity implements
     /**
      * StorableInterface > createSource()
      *
-     * @throws Exception If the metadata source can not be found.
+     * @throws UnexpectedValueException If the metadata source can not be found.
      * @return SourceInterface
      */
     protected function createSource()
@@ -459,15 +458,14 @@ abstract class AbstractModel extends AbstractEntity implements
         $sourceConfig  = $metadata->source($defaultSource);
 
         if (!$sourceConfig) {
-            throw new Exception(sprintf(
+            throw new UnexpectedValueException(sprintf(
                 'Can not create source for [%s]: invalid metadata.',
                 get_class($this)
             ));
         }
 
-        $sourceType = isset($sourceConfig['type']) ? $sourceConfig['type'] : self::DEFAULT_SOURCE_TYPE;
-        $sourceFactory = $this->sourceFactory();
-        $source = $sourceFactory->create($sourceType);
+        $type   = isset($sourceConfig['type']) ? $sourceConfig['type'] : self::DEFAULT_SOURCE_TYPE;
+        $source = $this->sourceFactory()->create($type);
         $source->setModel($this);
 
         $source->setData($sourceConfig);

@@ -2,7 +2,7 @@
 
 namespace Charcoal\Source;
 
-use Exception;
+use RuntimeException;
 use InvalidArgumentException;
 
 // From PSR-3
@@ -81,9 +81,10 @@ abstract class AbstractSource implements
     public function reset()
     {
         $this->properties = [];
-        $this->filters = [];
-        $this->orders = [];
+        $this->filters    = [];
+        $this->orders     = [];
         $this->pagination = null;
+
         return $this;
     }
 
@@ -122,13 +123,13 @@ abstract class AbstractSource implements
     /**
      * Return the source's Model.
      *
-     * @throws Exception If not model was previously set.
+     * @throws RuntimeException If not model was previously set.
      * @return ModelInterface
      */
     public function model()
     {
         if ($this->model === null) {
-            throw new Exception(
+            throw new RuntimeException(
                 'No model set.'
             );
         }
@@ -183,11 +184,13 @@ abstract class AbstractSource implements
                 'Property must be a string.'
             );
         }
-        if ($property=='') {
+
+        if ($property === '') {
             throw new InvalidArgumentException(
                 'Property can not be empty.'
             );
         }
+
         $this->properties[] = $property;
         return $this;
     }

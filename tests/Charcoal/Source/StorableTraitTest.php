@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Source;
 
+use InvalidArgumentException;
+
 // From PSR-3
 use Psr\Log\NullLogger;
 
@@ -42,7 +44,7 @@ class StorableTraitTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(42, $this->obj->setId(42)->id());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
         $this->obj->setId(null);
     }
 
@@ -61,7 +63,7 @@ class StorableTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('foo', $this->obj->key());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
         $this->obj->setKey(false);
     }
 
@@ -77,7 +79,7 @@ class StorableTraitTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetKeyNotAlphanumThrowsException($invalidKey)
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
         $this->obj->setKey($invalidKey);
     }
 

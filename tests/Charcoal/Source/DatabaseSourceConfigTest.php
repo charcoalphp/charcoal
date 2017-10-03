@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Source;
 
+use InvalidArgumentException;
+
 // From 'charcoal-core'
 use Charcoal\Source\DatabaseSourceConfig;
 
@@ -35,7 +37,7 @@ class DatabaseSourceConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
         $this->assertEquals('foo', $obj->hostname());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
         $obj->setHostname(false);
     }
 
@@ -47,7 +49,7 @@ class DatabaseSourceConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
         $this->assertEquals('foo', $obj->username());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
         $obj->setUsername(false);
     }
 
@@ -59,7 +61,7 @@ class DatabaseSourceConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
         $this->assertEquals('foo', $obj->password());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
         $obj->setPassword(false);
     }
 
@@ -71,7 +73,7 @@ class DatabaseSourceConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
         $this->assertEquals('foo', $obj->database());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
         $obj->setDatabase(false);
     }
 

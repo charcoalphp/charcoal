@@ -3,6 +3,8 @@
 namespace Charcoal\Tests\Loader;
 
 use ArrayIterator;
+use InvalidArgumentException;
+use RuntimeException;
 
 // From Pimple
 use Pimple\Container;
@@ -15,6 +17,7 @@ use Charcoal\Factory\GenericFactory as Factory;
 
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
+use Charcoal\Model\Collection;
 use Charcoal\Model\Service\MetadataLoader;
 use Charcoal\Source\DatabaseSource;
 
@@ -111,18 +114,18 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $loader = $this->obj;
         $collection = $loader->createCollection();
-        $this->assertInstanceOf('\Charcoal\Model\Collection', $collection);
+        $this->assertInstanceOf(Collection::class, $collection);
     }
 
     public function testCustomCollectionClass()
     {
         $loader = $this->obj;
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
         $loader->setCollectionClass(false);
 
         $loader->setCollectionClass(\IteratorIterator::class);
-        $this->setExpectedException('\RuntimeException');
+        $this->setExpectedException(RuntimeException::class);
         $loader->createCollection();
 
         $loader->setCollectionClass(ArrayIterator::class);

@@ -2,6 +2,9 @@
 
 namespace Charcoal\Tests\Source;
 
+use RuntimeException;
+use InvalidArgumentException;
+
 // From 'charcoal-core'
 use Charcoal\Model\Service\MetadataLoader;
 use Charcoal\Source\AbstractSource;
@@ -102,7 +105,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
     public function testModelWithoutSetThrowsException()
     {
         $obj = $this->obj;
-        $this->setExpectedException('\Exception');
+        $this->setExpectedException(RuntimeException::class);
         $obj->model();
     }
 
@@ -134,14 +137,14 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
         $obj->addProperty('bar');
         $this->assertEquals(['foo', 'bar'], $obj->properties());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
         $obj->addProperty(false);
     }
 
     public function testAddPropertyEmptyPropThrowsException()
     {
         $obj = $this->obj;
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
         $obj->addProperty('');
     }
 
@@ -196,7 +199,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Charcoal\Source\Filter', $filters[2]);
         $this->assertInstanceOf('\Charcoal\Source\Filter', $filters[3]);
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
         $obj->addFilter(true);
     }
 
@@ -251,7 +254,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Charcoal\Source\Order', $orders[2]);
         $this->assertInstanceOf('\Charcoal\Source\Order', $orders[3]);
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
         $obj->addOrder(true);
     }
 
@@ -269,7 +272,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(3, $obj->page());
         $this->assertEquals(120, $obj->numPerPage());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
         $obj->setPagination(false);
     }
 
@@ -288,7 +291,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
         $this->assertEquals(42, $obj->page());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
         $obj->setPage('foo');
     }
 
@@ -300,7 +303,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
         $this->assertEquals(666, $obj->numPerPage());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
         $obj->setNumPerPage('foobar');
     }
 
