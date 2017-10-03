@@ -2,8 +2,12 @@
 
 namespace Charcoal\Tests\Source\Database;
 
-use \Charcoal\Source\Database\DatabasePagination as DatabasePagination;
+// From 'charcoal-core'
+use Charcoal\Source\Database\DatabasePagination;
 
+/**
+ *
+ */
 class DatabasePaginationTest extends \PHPUnit_Framework_TestCase
 {
     public function testSQLEmptyWithoutPage()

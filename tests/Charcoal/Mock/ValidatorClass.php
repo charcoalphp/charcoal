@@ -2,7 +2,8 @@
 
 namespace Charcoal\Tests\Mock;
 
-use \Charcoal\Validator\AbstractValidator as AbstractValidator;
+// From 'charcoal-core'
+use Charcoal\Validator\AbstractValidator;
 
 /**
  * Concrete implementation of AbstractValidator for Unit Tests.

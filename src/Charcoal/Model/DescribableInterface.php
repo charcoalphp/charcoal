@@ -2,7 +2,7 @@
 
 namespace Charcoal\Model;
 
-// Local namespace dependency
+// From 'charcoal-core'
 use Charcoal\Model\Service\MetadataLoader;
 
 /**

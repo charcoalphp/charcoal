@@ -2,18 +2,18 @@
 
 namespace Charcoal\Model\Service;
 
-use \RuntimeException;
-use \InvalidArgumentException;
+use RuntimeException;
+use InvalidArgumentException;
 
 // From PSR-3
-use \Psr\Log\LoggerAwareInterface;
-use \Psr\Log\LoggerAwareTrait;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 
 // From PSR-6
-use \Psr\Cache\CacheItemPoolInterface;
+use Psr\Cache\CacheItemPoolInterface;
 
 // From 'charcoal-core'
-use \Charcoal\Model\MetadataInterface;
+use Charcoal\Model\MetadataInterface;
 
 /**
  * Load metadata from JSON file(s).

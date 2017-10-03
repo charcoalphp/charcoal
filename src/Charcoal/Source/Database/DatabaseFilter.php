@@ -3,7 +3,7 @@
 namespace Charcoal\Source\Database;
 
 // From 'charcoal-core'
-use \Charcoal\Source\Filter;
+use Charcoal\Source\Filter;
 
 /**
  * The DatabaseFilter makes a Filter SQL-aware.

@@ -8,7 +8,7 @@ use CachingIterator;
 use LogicException;
 use InvalidArgumentException;
 
-// Local namespace dependencies
+// From 'charcoal-core'
 use Charcoal\Model\CollectionInterface;
 use Charcoal\Model\ModelInterface;
 

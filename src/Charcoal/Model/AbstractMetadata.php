@@ -2,14 +2,14 @@
 
 namespace Charcoal\Model;
 
-// Module `charcoal-config` dependencies
-use \Charcoal\Config\AbstractConfig;
+// From 'charcoal-config'
+use Charcoal\Config\AbstractConfig;
 
-// Module `charcoal-property` dependencies
-use \Charcoal\Property\PropertyInterface;
+// From 'charcoal-property'
+use Charcoal\Property\PropertyInterface;
 
-// Local namespace dependencies
-use \Charcoal\Model\MetadataInterface;
+// From 'charcoal-core'
+use Charcoal\Model\MetadataInterface;
 
 /**
  * A basic metadata container.

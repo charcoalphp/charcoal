@@ -2,8 +2,12 @@
 
 namespace Charcoal\Tests\Model;
 
-use \Charcoal\Model\ModelMetadata;
+// From 'charcoal-core'
+use Charcoal\Model\ModelMetadata;
 
+/**
+ *
+ */
 class ModelMetadataTest extends \PHPUnit_Framework_TestCase
 {
 

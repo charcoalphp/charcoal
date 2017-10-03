@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Charcoal Model class file
  * Part of the `charcoal-core` package.
@@ -8,8 +9,8 @@
 
 namespace Charcoal\Model;
 
-// Local namespace dependencies
-use \Charcoal\Model\AbstractModel;
+// From 'charcoal-core'
+use Charcoal\Model\AbstractModel;
 
 /**
  * Charcoal Model class

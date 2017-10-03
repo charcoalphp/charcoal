@@ -2,8 +2,12 @@
 
 namespace Charcoal\Tests\Source;
 
-use \Charcoal\Source\DatabaseSourceConfig as DatabaseSourceConfig;
+// From 'charcoal-core'
+use Charcoal\Source\DatabaseSourceConfig;
 
+/**
+ *
+ */
 class DatabaseSourceConfigTest extends \PHPUnit_Framework_TestCase
 {
     public function testDefaultData()

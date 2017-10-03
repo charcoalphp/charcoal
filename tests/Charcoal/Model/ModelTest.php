@@ -7,6 +7,9 @@ use Charcoal\Model\AbstractModel;
 use Charcoal\Model\ModelInterface;
 use Charcoal\Model\Model;
 
+/**
+ *
+ */
 class ModelTest extends \PHPUnit_Framework_TestCase
 {
     use \Charcoal\Tests\ContainerIntegrationTrait;

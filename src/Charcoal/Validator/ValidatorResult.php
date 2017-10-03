@@ -2,10 +2,9 @@
 
 namespace Charcoal\Validator;
 
-// Dependencies from `PHP`
-use \DateTime as DateTime;
-use \DateTimeInterface as DateTimeInterface;
-use \InvalidArgumentException as InvalidArgumentException;
+use DateTime;
+use DateTimeInterface;
+use InvalidArgumentException;
 
 /**
  * A Validator Result object.

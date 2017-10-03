@@ -2,12 +2,12 @@
 
 namespace Charcoal\Validator;
 
-use \InvalidArgumentException;
+use InvalidArgumentException;
 
-// Local namespace dependencies
-use \Charcoal\Validator\ValidatorInterface;
-use \Charcoal\Validator\ValidatableInterface;
-use \Charcoal\Validator\ValidatorResult;
+// From 'charcoal-core'
+use Charcoal\Validator\ValidatorInterface;
+use Charcoal\Validator\ValidatableInterface;
+use Charcoal\Validator\ValidatorResult;
 
 /**
  * An abstract class that implements most of ValidatorInterface.

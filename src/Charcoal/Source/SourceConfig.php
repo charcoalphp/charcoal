@@ -4,7 +4,7 @@ namespace Charcoal\Source;
 
 use InvalidArgumentException;
 
-// Dependency from 'charcoal-config'
+// From 'charcoal-config'
 use Charcoal\Config\AbstractConfig;
 
 /**

@@ -2,44 +2,42 @@
 
 namespace Charcoal\Model;
 
-use \DateTimeInterface;
-use \Exception;
-use \InvalidArgumentException;
+use DateTimeInterface;
+use Exception;
+use InvalidArgumentException;
+use PDO;
 
-use \PDO;
+// From PSR-3
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
+use Psr\Log\NullLogger;
 
-// Dependencies from PSR-3 (Logger)
-use \Psr\Log\LoggerAwareInterface;
-use \Psr\Log\LoggerAwareTrait;
-use \Psr\Log\NullLogger;
+// From Pimple
+use Pimple\Container;
 
-use \Pimple\Container;
+// From 'charcoal-config'
+use Charcoal\Config\AbstractEntity;
 
-// Dependency from 'charcoal-config'
-use \Charcoal\Config\AbstractEntity;
+// From 'charcoal-view'
+use Charcoal\View\GenericView;
+use Charcoal\View\ViewableInterface;
+use Charcoal\View\ViewableTrait;
 
-// Dependencies from 'charcoal-view'
-use \Charcoal\View\GenericView;
-use \Charcoal\View\ViewableInterface;
-use \Charcoal\View\ViewableTrait;
+// From 'charcoal-property'
+use Charcoal\Property\DescribablePropertyInterface;
+use Charcoal\Property\DescribablePropertyTrait;
 
-// Dependencies from 'charcoal-property'
-use \Charcoal\Property\DescribablePropertyInterface;
-use \Charcoal\Property\DescribablePropertyTrait;
-
-// Intra-module ('charcoal-core') dependencies
-use \Charcoal\Model\DescribableInterface;
-use \Charcoal\Model\DescribableTrait;
-use \Charcoal\Source\SourceFactory;
-use \Charcoal\Source\StorableInterface;
-use \Charcoal\Source\StorableTrait;
-use \Charcoal\Validator\ValidatableInterface;
-use \Charcoal\Validator\ValidatableTrait;
-
-// Local namespace dependencies
-use \Charcoal\Model\ModelInterface;
-use \Charcoal\Model\ModelMetadata;
-use \Charcoal\Model\ModelValidator;
+// From 'charcoal-core'
+use Charcoal\Model\DescribableInterface;
+use Charcoal\Model\DescribableTrait;
+use Charcoal\Model\ModelInterface;
+use Charcoal\Model\ModelMetadata;
+use Charcoal\Model\ModelValidator;
+use Charcoal\Source\SourceFactory;
+use Charcoal\Source\StorableInterface;
+use Charcoal\Source\StorableTrait;
+use Charcoal\Validator\ValidatableInterface;
+use Charcoal\Validator\ValidatableTrait;
 
 /**
  * An abstract class that implements most of `ModelInterface`.

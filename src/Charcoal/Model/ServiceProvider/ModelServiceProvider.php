@@ -2,26 +2,26 @@
 
 namespace Charcoal\Model\ServiceProvider;
 
-// Dependencies from `Pimple`
-use \Pimple\Container;
-use \Pimple\ServiceProviderInterface;
+// From Pimple
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
-// Module `charcoal-factory` dependencies
-use \Charcoal\Factory\GenericFactory as Factory;
+// From 'charcoal-factory'
+use Charcoal\Factory\GenericFactory as Factory;
 
-// Module `charcoal-property` dependencies
-use \Charcoal\Property\PropertyInterface;
-use \Charcoal\Property\GenericProperty;
+// From 'charcoal-property'
+use Charcoal\Property\PropertyInterface;
+use Charcoal\Property\GenericProperty;
 
-// Intra-module (`charcoal-core`) dependencies
-use \Charcoal\Loader\CollectionLoader;
-use \Charcoal\Model\Collection;
-use \Charcoal\Model\ModelInterface;
-use \Charcoal\Source\SourceInterface;
-use \Charcoal\Source\DatabaseSource;
-use \Charcoal\Model\Service\MetadataLoader;
-use \Charcoal\Model\Service\ModelBuilder;
-use \Charcoal\Model\Service\ModelLoaderBuilder;
+// From 'charcoal-core'
+use Charcoal\Loader\CollectionLoader;
+use Charcoal\Model\Collection;
+use Charcoal\Model\ModelInterface;
+use Charcoal\Model\Service\MetadataLoader;
+use Charcoal\Model\Service\ModelBuilder;
+use Charcoal\Model\Service\ModelLoaderBuilder;
+use Charcoal\Source\SourceInterface;
+use Charcoal\Source\DatabaseSource;
 
 /**
  * Model Service Providers.

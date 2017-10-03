@@ -2,9 +2,12 @@
 
 namespace Charcoal\Tests\Source;
 
-use \Charcoal\Source\Filter as Filter;
-use \Charcoal\Charcoal as Charcoal;
+// From 'charcoal-core'
+use Charcoal\Source\Filter;
 
+/**
+ *
+ */
 class FilterTest extends \PHPUnit_Framework_TestCase
 {
     public function testContructor()

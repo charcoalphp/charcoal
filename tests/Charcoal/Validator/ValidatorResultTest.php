@@ -2,8 +2,12 @@
 
 namespace Charcoal\Tests\Validator;
 
-use \Charcoal\Validator\ValidatorResult as ValidatorResult;
+// From 'charcoal-core'
+use Charcoal\Validator\ValidatorResult;
 
+/**
+ *
+ */
 class ValidatorResultTest extends \PHPUnit_Framework_TestCase
 {
     public function testConstructor()

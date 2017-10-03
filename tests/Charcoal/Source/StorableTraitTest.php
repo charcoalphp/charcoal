@@ -2,14 +2,17 @@
 
 namespace Charcoal\Tests\Source;
 
-use PHPUnit_Framework_TestCase;
-
+// From PSR-3
 use Psr\Log\NullLogger;
 
+// From 'charcoal-core'
 use Charcoal\Tests\Mock\StorableMock;
 use Charcoal\Tests\Mock\SourceMock;
 
-class StorableTraitTest extends PHPUnit_Framework_TestCase
+/**
+ *
+ */
+class StorableTraitTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var StorableMock

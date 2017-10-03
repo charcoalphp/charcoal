@@ -2,14 +2,14 @@
 
 namespace Charcoal\Source;
 
-use \Exception;
-use \InvalidArgumentException;
+use Exception;
+use InvalidArgumentException;
 
-// Module `charcoal-factory` dependencies
-use \Charcoal\Factory\FactoryInterface;
+// From 'charcoal-factory'
+use Charcoal\Factory\FactoryInterface;
 
-// Local namespace dependencies
-use \Charcoal\Source\SourceInterface;
+// From 'charcoal-core'
+use Charcoal\Source\SourceInterface;
 
 /**
  * Full implementation, as trait, of the StorableInterface

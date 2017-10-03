@@ -2,13 +2,16 @@
 
 namespace Charcoal\Tests\Validator;
 
-use \DateTime;
+use DateTime;
 
-use \Charcoal\Validator\ValidatorResult as ValidatorResult;
+// From 'charcoal-core'
+use Charcoal\Validator\ValidatorResult;
+use Charcoal\Tests\Mock\ValidatorClass;
+use Charcoal\Tests\Mock\ValidatableClass;
 
-use \Charcoal\Tests\Mock\ValidatorClass;
-use \Charcoal\Tests\Mock\ValidatableClass;
-
+/**
+ *
+ */
 class ValidatorTest extends \PHPUnit_Framework_TestCase
 {
     public $obj;

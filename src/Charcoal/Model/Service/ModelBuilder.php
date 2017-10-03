@@ -2,14 +2,14 @@
 
 namespace Charcoal\Model\Service;
 
-use \Exception;
+use Exception;
 
-// Module `charcoal-factory` dependencies
-use \Charcoal\Factory\FactoryInterface;
+// From 'charcoal-factory'
+use Charcoal\Factory\FactoryInterface;
 
-// Local module (`charcoal-core`) dependencies
-use \Charcoal\Model\ModelMetadata;
-use \Charcoal\Model\Service\MetadataLoader;
+// From 'charcoal-core'
+use Charcoal\Model\ModelMetadata;
+use Charcoal\Model\Service\MetadataLoader;
 
 /**
  *

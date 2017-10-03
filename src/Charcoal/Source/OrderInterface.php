@@ -2,6 +2,9 @@
 
 namespace Charcoal\Source;
 
+/**
+ *
+ */
 interface OrderInterface
 {
     /**

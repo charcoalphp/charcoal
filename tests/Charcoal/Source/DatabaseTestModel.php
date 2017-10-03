@@ -2,7 +2,8 @@
 
 namespace Charcoal\Tests\Source;
 
-use \Charcoal\Model\AbstractModel as AbstractModel;
+// From 'charcoal-core'
+use Charcoal\Model\AbstractModel;
 
 /**
  * @todo Concrete implementation of AbstractModel for Unit Tests.

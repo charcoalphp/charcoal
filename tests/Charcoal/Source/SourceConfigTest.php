@@ -2,8 +2,12 @@
 
 namespace Charcoal\Tests\Source;
 
-use \Charcoal\Source\SourceConfig as SourceConfig;
+// From 'charcoal-core'
+use Charcoal\Source\SourceConfig;
 
+/**
+ *
+ */
 class SourceConfigTest extends \PHPUnit_Framework_TestCase
 {
     public function testDefaultData()

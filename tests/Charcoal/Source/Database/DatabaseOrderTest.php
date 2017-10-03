@@ -2,8 +2,12 @@
 
 namespace Charcoal\Tests\Source\Database;
 
-use \Charcoal\Source\Database\DatabaseOrder as DatabaseOrder;
+// From 'charcoal-core'
+use Charcoal\Source\Database\DatabaseOrder;
 
+/**
+ *
+ */
 class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
 {
     public function testSqlRandMode()

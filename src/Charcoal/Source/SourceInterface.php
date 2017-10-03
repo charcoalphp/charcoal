@@ -2,9 +2,8 @@
 
 namespace Charcoal\Source;
 
-// Intra-module (`charcoal-core`) dependencies
+// From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
-
 use Charcoal\Source\StorableInterface;
 
 /**

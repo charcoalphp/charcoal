@@ -2,12 +2,12 @@
 
 namespace Charcoal\Model;
 
-use \Exception;
-use \InvalidArgumentException;
+use Exception;
+use InvalidArgumentException;
 
-// Local module (`charcoal-core`) dependencies
-use \Charcoal\Model\MetadataInterface;
-use \Charcoal\Model\Service\MetadataLoader;
+// From 'charcoal-core'
+use Charcoal\Model\MetadataInterface;
+use Charcoal\Model\Service\MetadataLoader;
 
 /**
  * Default implementation, as trait, of the `DescribableInterface`.

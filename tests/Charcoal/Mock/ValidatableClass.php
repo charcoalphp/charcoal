@@ -2,8 +2,9 @@
 
 namespace Charcoal\Tests\Mock;
 
-use \Charcoal\Validator\ValidatableInterface as ValidatableInterface;
-use \Charcoal\Validator\ValidatableTrait as ValidatableTrait;
+// From 'charcoal-core'
+use Charcoal\Validator\ValidatableInterface;
+use Charcoal\Validator\ValidatableTrait;
 
 /**
  * Concrete implementation of AbstractValidator for Unit Tests.

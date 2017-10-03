@@ -2,12 +2,16 @@
 
 namespace Charcoal\Tests\Source;
 
-use \Charcoal\Source\AbstractSource;
-use \Charcoal\Source\Filter;
-use \Charcoal\Source\Order;
-use \Charcoal\Source\Pagination;
-use \Charcoal\Model\Service\MetadataLoader;
+// From 'charcoal-core'
+use Charcoal\Model\Service\MetadataLoader;
+use Charcoal\Source\AbstractSource;
+use Charcoal\Source\Filter;
+use Charcoal\Source\Order;
+use Charcoal\Source\Pagination;
 
+/**
+ *
+ */
 class AbstractSourceTest extends \PHPUnit_Framework_TestCase
 {
     use \Charcoal\Tests\ContainerIntegrationTrait;

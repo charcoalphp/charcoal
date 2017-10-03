@@ -2,10 +2,11 @@
 
 namespace Charcoal\Tests\Model;
 
-use \PDO;
+use PDO;
 
-use \Charcoal\Model\ModelValidator;
-use \Charcoal\Model\Model;
+// From 'charcoal-core'
+use Charcoal\Model\ModelValidator;
+use Charcoal\Model\Model;
 
 /**
  *

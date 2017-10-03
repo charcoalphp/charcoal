@@ -2,7 +2,8 @@
 
 namespace Charcoal\Model;
 
-use Charcoal\Validator\AbstractValidator as AbstractValidator;
+// From 'charcoal-core'
+use Charcoal\Validator\AbstractValidator;
 
 /**
  *

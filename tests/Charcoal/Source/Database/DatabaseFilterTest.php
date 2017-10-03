@@ -2,8 +2,12 @@
 
 namespace Charcoal\Tests\Source\Database;
 
-use \Charcoal\Source\Database\DatabaseFilter as DatabaseFilter;
+// From 'charcoal-core'
+use Charcoal\Source\Database\DatabaseFilter;
 
+/**
+ *
+ */
 class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
 {
     public function testSQLNoPropertyIsEmpty()

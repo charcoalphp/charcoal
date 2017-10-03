@@ -2,8 +2,8 @@
 
 namespace Charcoal\Validator;
 
-// Local namespace dependencies
-use \Charcoal\Validator\ValidatorInterface as ValidatorInterface;
+// From 'charcoal-core'
+use Charcoal\Validator\ValidatorInterface;
 
 /**
 * A full default implementation, as trait, of the ValidatableInterface.

@@ -2,12 +2,12 @@
 
 namespace Charcoal\Loader;
 
-use \InvalidArgumentException;
+use InvalidArgumentException;
 
-// Dependencies from PSR-3 (Logger)
-use \Psr\Log\LoggerAwareInterface;
-use \Psr\Log\LoggerAwareTrait;
-use \Psr\Log\NullLogger;
+// From PSR-3
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
+use Psr\Log\NullLogger;
 
 /**
  * Base File Loader

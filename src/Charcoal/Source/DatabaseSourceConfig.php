@@ -2,10 +2,9 @@
 
 namespace Charcoal\Source;
 
-// Dependencies from `PHP`
 use InvalidArgumentException;
 
-// Local namespace dependencies
+// From 'charcoal-core'
 use Charcoal\Source\SourceConfig;
 
 /**

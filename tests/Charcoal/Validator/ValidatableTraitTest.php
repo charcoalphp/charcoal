@@ -2,8 +2,12 @@
 
 namespace Charcoal\Tests\Validator;
 
-use \Charcoal\Tests\Mock\ValidatableClass;
+// From 'charcoal-core'
+use Charcoal\Tests\Mock\ValidatableClass;
 
+/**
+ *
+ */
 class ValidatableTraitTest extends \PHPUnit_Framework_TestCase
 {
     public $obj;

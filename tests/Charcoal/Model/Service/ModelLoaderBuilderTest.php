@@ -2,11 +2,13 @@
 
 namespace Charcoal\Tests\Service;
 
-use \Charcoal\Factory\GenericFactory as Factory;
+// From 'charcoal-factory'
+use Charcoal\Factory\GenericFactory as Factory;
 
-use \Charcoal\Model\Service\MetadataLoader;
-use \Charcoal\Model\Service\ModelLoader;
-use \Charcoal\Model\Service\ModelLoaderBuilder;
+// From 'charcoal-core'
+use Charcoal\Model\Service\MetadataLoader;
+use Charcoal\Model\Service\ModelLoader;
+use Charcoal\Model\Service\ModelLoaderBuilder;
 
 /**
  *

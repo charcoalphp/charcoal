@@ -2,9 +2,12 @@
 
 namespace Charcoal\Tests\Loader\CollectionLoader;
 
-use \Charcoal\Source\Pagination;
-use \Charcoal\Charcoal as Charcoal;
+// From 'charcoal-core'
+use Charcoal\Source\Pagination;
 
+/**
+ *
+ */
 class PaginationTest extends \PHPUnit_Framework_TestCase
 {
     public function testContructor()

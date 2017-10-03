@@ -2,9 +2,13 @@
 
 namespace Charcoal\Tests\Mock;
 
+// From 'charcoal-core'
 use Charcoal\Source\AbstractSource;
 use Charcoal\Source\StorableInterface;
 
+/**
+ *
+ */
 class SourceMock extends AbstractSource
 {
     /**

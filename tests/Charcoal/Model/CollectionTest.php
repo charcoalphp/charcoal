@@ -2,19 +2,22 @@
 
 namespace Charcoal\Tests\Model;
 
-use \ArrayIterator;
-use \ArrayObject;
-use \CachingIterator;
-use \ReflectionClass;
+use ArrayIterator;
+use ArrayObject;
+use CachingIterator;
+use ReflectionClass;
 
 // From 'mockery/mockery'
-use \Mockery as m;
+use Mockery as m;
 
 // From 'charcoal-core'
-use \Charcoal\Model\Model;
-use \Charcoal\Model\ModelInterface;
-use \Charcoal\Model\Collection;
+use Charcoal\Model\Model;
+use Charcoal\Model\ModelInterface;
+use Charcoal\Model\Collection;
 
+/**
+ *
+ */
 class CollectionTest extends \PHPUnit_Framework_TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;

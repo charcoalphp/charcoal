@@ -2,35 +2,35 @@
 
 namespace Charcoal\Tests;
 
-use \PDO;
+use PDO;
 
 // From PSR-3
-use \Psr\Log\NullLogger;
+use Psr\Log\NullLogger;
 
 // From 'cache/void-adapter' (PSR-6)
-use \Cache\Adapter\Void\VoidCachePool;
+use Cache\Adapter\Void\VoidCachePool;
 
 // From 'tedivm/stash' (PSR-6)
-use \Stash\Pool;
-use \Stash\Driver\Ephemeral;
+use Stash\Pool;
+use Stash\Driver\Ephemeral;
 
 // From Pimple
-use \Pimple\Container;
+use Pimple\Container;
 
 // From 'charcoal-factory'
-use \Charcoal\Factory\GenericFactory as Factory;
+use Charcoal\Factory\GenericFactory as Factory;
 
 // From 'charcoal-core'
-use \Charcoal\Model\Service\MetadataLoader;
-use \Charcoal\Loader\CollectionLoader;
-use \Charcoal\Source\DatabaseSource;
+use Charcoal\Model\Service\MetadataLoader;
+use Charcoal\Loader\CollectionLoader;
+use Charcoal\Source\DatabaseSource;
 
 // From 'charcoal-translator'
 use Charcoal\Translator\LocalesManager;
 use Charcoal\Translator\Translator;
 
 // From 'charcoal-app'
-use \Charcoal\App\AppConfig;
+use Charcoal\App\AppConfig;
 
 /**
  * Service Container for Unit Tests

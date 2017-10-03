@@ -2,8 +2,8 @@
 
 namespace Charcoal\Source;
 
-// Local namespace dependencies
-use \Charcoal\Source\SourceInterface;
+// From 'charcoal-core'
+use Charcoal\Source\SourceInterface;
 
 /**
  * Storable items can be stored and loaded from a Source.

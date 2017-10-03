@@ -18,6 +18,9 @@ use Charcoal\Loader\CollectionLoader;
 use Charcoal\Model\Service\MetadataLoader;
 use Charcoal\Source\DatabaseSource;
 
+/**
+ *
+ */
 class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
 {
     use \Charcoal\Tests\ContainerIntegrationTrait;

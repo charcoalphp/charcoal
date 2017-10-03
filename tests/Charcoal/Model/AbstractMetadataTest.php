@@ -2,7 +2,8 @@
 
 namespace Charcoal\Tests\Model;
 
-use \Charcoal\Model\AbstractMetadata;
+// From 'charcoal-core'
+use Charcoal\Model\AbstractMetadata;
 
 /**
  *

@@ -2,11 +2,11 @@
 
 namespace Charcoal\Model;
 
-// Module `charcoal-property` dependencies
-use \Charcoal\Property\PropertyInterface;
+// From 'charcoal-property'
+use Charcoal\Property\PropertyInterface;
 
-// Module `charcoal-config` depeendencies
-use \Charcoal\Config\ConfigInterface;
+// From 'charcoal-config'
+use Charcoal\Config\ConfigInterface;
 
 /**
  * Defines a metadata container.

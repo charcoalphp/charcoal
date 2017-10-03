@@ -2,8 +2,8 @@
 
 namespace Charcoal\Source\Database;
 
-// Local parent namespace dependencies
-use \Charcoal\Source\Pagination;
+// From 'charcoal-core'
+use Charcoal\Source\Pagination;
 
 /**
  * The DatabasePagination makes a Pagination SQL-aware

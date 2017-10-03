@@ -2,9 +2,12 @@
 
 namespace Charcoal\Tests\Loader\CollectionLoader;
 
-use \Charcoal\Source\Order as Order;
-use \Charcoal\Charcoal as Charcoal;
+// From 'charcoal-core'
+use Charcoal\Source\Order;
 
+/**
+ *
+ */
 class OrderTest extends \PHPUnit_Framework_TestCase
 {
 

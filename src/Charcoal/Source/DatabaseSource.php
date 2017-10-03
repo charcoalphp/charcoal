@@ -2,17 +2,12 @@
 
 namespace Charcoal\Source;
 
-// Dependencies from `PHP`
 use Exception;
 use InvalidArgumentException;
-
-// Dependencies from `PHP` modules
 use PDO;
 
-// Intra-module (`charcoal-core`) dependencies
+// From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
-
-// Local namespace dependencies
 use Charcoal\Source\AbstractSource;
 use Charcoal\Source\DatabaseSourceConfig;
 use Charcoal\Source\DatabaseSourceInterface;

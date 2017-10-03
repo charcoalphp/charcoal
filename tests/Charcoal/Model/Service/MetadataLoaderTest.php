@@ -2,7 +2,8 @@
 
 namespace Charcoal\Tests\Service;
 
-use \Charcoal\Model\Service\MetadataLoader;
+// From 'charcoal-core'
+use Charcoal\Model\Service\MetadataLoader;
 
 /**
  *
