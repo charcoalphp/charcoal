@@ -53,7 +53,16 @@ class ModelServiceProvider implements ServiceProviderInterface
     public function register(Container $container)
     {
         $this->registerModelDependencies($container);
+        $this->registerBuilderDependencies($container);
+        $this->registerCollectionDependencies($container);
+    }
 
+    /**
+     * @param Container $container A Pimple DI container instance.
+     * @return void
+     */
+    protected function registerBuilderDependencies(Container $container)
+    {
         /**
          * @param Container $container A Pimple DI container instance.
          * @return ModelFactory
@@ -87,6 +96,24 @@ class ModelServiceProvider implements ServiceProviderInterface
                 'cache'     => $container['cache']
             ]);
         };
+    }
+
+    /**
+     * @param Container $container A Pimple DI container instance.
+     * @return void
+     */
+    protected function registerCollectionDependencies(Container $container)
+    {
+        /** The default collection class name. */
+        $container['model/collection/class'] = Collection::class;
+
+        /**
+         * @param Container $container A Pimple DI container instance.
+         * @return ArrayAccess|\Traversable
+         */
+        $container['model/collection'] = $container->factory(function (Container $container) {
+            return new $container['model/collection/class'];
+        });
 
         /**
          * @param Container $container A Pimple DI container instance.
@@ -111,17 +138,6 @@ class ModelServiceProvider implements ServiceProviderInterface
                 ]]
             ]);
         };
-
-        /**
-         * @param Container $container A Pimple DI container instance.
-         * @return ArrayAccess|\Traversable
-         */
-        $container['model/collection'] = $container->factory(function (Container $container) {
-            return new $container['model/collection/class'];
-        });
-
-        /** The default collection class name. */
-        $container['model/collection/class'] = Collection::class;
     }
 
     /**
