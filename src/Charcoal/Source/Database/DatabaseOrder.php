@@ -5,13 +5,15 @@ namespace Charcoal\Source\Database;
 use UnexpectedValueException;
 
 // From 'charcoal-core'
+use Charcoal\Source\Database\DatabaseExpressionInterface;
 use Charcoal\Source\DatabaseSource;
 use Charcoal\Source\Order;
 
 /**
  * The DatabaseOrder makes a Order SQL-aware.
  */
-class DatabaseOrder extends Order
+class DatabaseOrder extends Order implements
+    DatabaseExpressionInterface
 {
     /**
      * The table related to the field identifier.
@@ -34,7 +36,7 @@ class DatabaseOrder extends Order
     }
 
     /**
-     * Retrieve the Order's SQL string to append to an ORDER BY clause.
+     * Retrieve the Order's SQL as a string to append to an ORDER BY clause.
      *
      * @return string
      */

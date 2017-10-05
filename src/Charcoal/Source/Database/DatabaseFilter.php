@@ -5,13 +5,15 @@ namespace Charcoal\Source\Database;
 use UnexpectedValueException;
 
 // From 'charcoal-core'
+use Charcoal\Source\Database\DatabaseExpressionInterface;
 use Charcoal\Source\DatabaseSource;
 use Charcoal\Source\Filter;
 
 /**
  * The DatabaseFilter makes a Filter SQL-aware.
  */
-class DatabaseFilter extends Filter
+class DatabaseFilter extends Filter implements
+    DatabaseExpressionInterface
 {
     /**
      * The table related to the field identifier.
@@ -34,7 +36,7 @@ class DatabaseFilter extends Filter
     }
 
     /**
-     * Retrieve the Filter's SQL string to append to a WHERE clause.
+     * Retrieve the Filter's SQL as a string to append to a WHERE clause.
      *
      * @return string
      */

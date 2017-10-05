@@ -5,15 +5,17 @@ namespace Charcoal\Source\Database;
 use UnexpectedValueException;
 
 // From 'charcoal-core'
+use Charcoal\Source\Database\DatabaseExpressionInterface;
 use Charcoal\Source\Pagination;
 
 /**
  * The DatabasePagination makes a Pagination SQL-aware
  */
-class DatabasePagination extends Pagination
+class DatabasePagination extends Pagination implements
+    DatabaseExpressionInterface
 {
     /**
-     * Generate the pagination's SQL string (full "LIMIT" clause)
+     * Generate the pagination's SQL as a string (full "LIMIT" clause)
      *
      * For example, for the pagination `{ page: 3, num_per_page: 50 }` the result
      * would be: `' LIMIT 100, 50'`.
