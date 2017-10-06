@@ -74,6 +74,16 @@ class LanguageMiddleware
     /**
      * @var boolean
      */
+    private $useHost;
+
+    /**
+     * @var array
+     */
+    private $hostMap;
+
+    /**
+     * @var boolean
+     */
     private $setLocale;
 
     /**
@@ -100,6 +110,9 @@ class LanguageMiddleware
 
         $this->useBrowser   = !!$data['use_browser'];
 
+        $this->useHost      = !!$data['use_host'];
+        $this->hostMap      = (array)$data['host_map'];
+
         $this->setLocale    = !!$data['set_locale'];
     }
 
@@ -125,6 +138,9 @@ class LanguageMiddleware
             'session_key'      => 'current_language',
 
             'use_browser'      => true,
+
+            'use_host'         => false,
+            'host_map'         => [],
 
             'set_locale'       => true
         ];
@@ -159,6 +175,13 @@ class LanguageMiddleware
      */
     private function getLanguage(RequestInterface $request)
     {
+        if ($this->useHost === true) {
+            $lang = $this->getLanguageFromHost($request);
+            if ($lang) {
+                return $lang;
+            }
+        }
+
         if ($this->usePath === true) {
             $lang = $this->getLanguageFromPath($request);
             if ($lang) {
@@ -188,6 +211,20 @@ class LanguageMiddleware
         }
 
         return $this->defaultLanguage;
+    }
+
+    /**
+     * @param  RequestInterface $request The PSR-7 HTTP request.
+     * @return null|string
+     */
+    private function getLanguageFromHost(RequestInterface $request)
+    {
+        $uriHost = $request->getUri()->getHost();
+        foreach ($this->hostMap as $lang => $host) {
+            if (stripos($uriHost, $host) !== false) {
+                return $lang;
+            }
+        }
     }
 
     /**
