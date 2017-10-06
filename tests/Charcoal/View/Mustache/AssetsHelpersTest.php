@@ -2,18 +2,37 @@
 
 namespace Charcoal\Tests\View\Mustache;
 
-use \Charcoal\View\Mustache\AssetsHelpers;
+use StdClass;
 
+// From Mustache
+use Mustache_Engine as MustacheEngine;
+use Mustache_LambdaHelper as LambdaHelper;
+use Mustache_Template as MustacheTemplate;
+
+// From 'charcoal-view'
+use Charcoal\View\Mustache\AssetsHelpers;
+
+/**
+ *
+ */
 class AssetsHelpersTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var MustacheEngine
+     * @var AssetsHelpers
      */
     private $obj;
 
+    /**
+     * @var MustacheEngine
+     */
+    private $mustache;
+
     public function setUp()
     {
-        $this->obj = new AssetsHelpers();
+        $this->obj      = new AssetsHelpers();
+        $this->mustache = new MustacheEngine([
+            'helpers' => $this->obj->toArray()
+        ]);
     }
 
     public function testDefaults()
@@ -26,29 +45,153 @@ class AssetsHelpersTest extends \PHPUnit_Framework_TestCase
 
     public function testAddJs()
     {
-        $this->obj->addJs('foo');
-        $this->assertEquals('foo', $this->obj->js());
+        $this->obj->addJs('<script id="foo">');
+        $this->obj->addJs('<script id="baz">');
+        $this->assertEquals('<script id="foo"><script id="baz">', $this->obj->js());
+        $this->assertEquals('', $this->obj->js());
+    }
+
+    public function testAddJsWithMustache()
+    {
+        $template = $this->mustache->loadTemplate(
+            '{{# addJs }}<script id="{{name}}">{{/ addJs }}'.
+            "<<<\n".'{{& js }}'."\n>>>"
+        );
+
+        $context = new StdClass();
+        $context->name = 'qux';
+
+        $rendered = $template->render($context);
+
+        $this->assertEquals("<<<\n".'<script id="qux">'."\n>>>", $rendered);
     }
 
     public function testAddCss()
     {
-        $this->obj->addCss('foo');
-        $this->assertEquals('foo', $this->obj->css());
+        $this->obj->addCss('<style id="foo">');
+        $this->obj->addCss('<style id="baz">');
+        $this->assertEquals('<style id="foo"><style id="baz">', $this->obj->css());
+    }
+
+    public function testAddCssWithMustache()
+    {
+        $template = $this->mustache->loadTemplate(
+            '{{# addCss }}<style id="{{name}}">{{/ addCss }}'.
+            "<<<\n".'{{& css }}'."\n>>>"
+        );
+
+        $context = new StdClass();
+        $context->name = 'qux';
+
+        $rendered = $template->render($context);
+
+        $this->assertEquals("<<<\n".'<style id="qux">'."\n>>>", $rendered);
     }
 
     public function testAddJsRequirement()
     {
-        $this->obj->addJsRequirement('foo');
-        $this->obj->addJsRequirement('bar');
-        $this->assertEquals('foo'."\n".'bar', $this->obj->jsRequirements());
+        // Test enqueue
+        $this->obj->addJsRequirement('<script id="foo">');
+        $this->obj->addJsRequirement('<script id="baz">');
+        // Test uniqueness
+        $this->obj->addJsRequirement('<script id="baz">');
+        // Assertions
+        $this->assertEquals('<script id="foo">'."\n".'<script id="baz">', $this->obj->jsRequirements());
         $this->assertEquals('', $this->obj->jsRequirements());
+    }
+
+    public function testAddJsRequirementWithMustache()
+    {
+        $template = $this->mustache->loadTemplate(
+            '{{# addJsRequirement }}<script id="{{name}}">{{/ addJsRequirement }}'.
+            "<<<\n".'{{& jsRequirements }}'."\n>>>"
+        );
+
+        $context = new StdClass();
+        $context->name = 'qux';
+
+        $rendered = $template->render($context);
+
+        $this->assertEquals("<<<\n".'<script id="qux">'."\n>>>", $rendered);
     }
 
     public function testAddCssRequirement()
     {
-        $this->obj->addCssRequirement('foo');
-        $this->obj->addCssRequirement('bar');
-        $this->assertEquals('foo'."\n".'bar', $this->obj->cssRequirements());
+        // Test enqueue
+        $this->obj->addCssRequirement('<style id="foo">');
+        $this->obj->addCssRequirement('<style id="baz">');
+        // Test uniqueness
+        $this->obj->addCssRequirement('<style id="baz">');
+        // Assertions
+        $this->assertEquals('<style id="foo">'."\n".'<style id="baz">', $this->obj->cssRequirements());
         $this->assertEquals('', $this->obj->cssRequirements());
+    }
+
+    public function testAddCssRequirementWithMustache()
+    {
+        $template = $this->mustache->loadTemplate(
+            '{{# addCssRequirement }}<style id="{{name}}">{{/ addCssRequirement }}'.
+            "<<<\n".'{{& cssRequirements }}'."\n>>>"
+        );
+
+        $context = new StdClass();
+        $context->name = 'qux';
+
+        $rendered = $template->render($context);
+
+        $this->assertEquals("<<<\n".'<style id="qux">'."\n>>>", $rendered);
+    }
+
+    public function testPurgeJs()
+    {
+        $this->obj->addJs('<script>');
+        $this->obj->purgeJs();
+        $this->assertEquals('', $this->obj->js());
+    }
+
+    public function testPurgeCss()
+    {
+        $this->obj->addCss('<style>');
+        $this->obj->purgeCss();
+        $this->assertEquals('', $this->obj->css());
+    }
+
+    public function testPurgeAssets()
+    {
+        $this->obj->addCss('<style>');
+        $this->obj->addJs('<script>');
+        $this->obj->purgeAssets();
+        $this->assertEquals('', $this->obj->css());
+        $this->assertEquals('', $this->obj->js());
+    }
+
+    public function testPurgeAssetsWithMustache()
+    {
+        $template = $this->mustache->loadTemplate(
+            '{{# addCss }}<style>{{/ addCss }}{{# addJs }}<script>{{/ addJs }}{{ purgeAssets }}'
+        );
+        $rendered = $template->render();
+
+        $this->assertEquals('', $rendered);
+    }
+
+    public function testPurgeJsWithMustache()
+    {
+        $template = $this->mustache->loadTemplate(
+            '{{# addJs }}<script>{{/ addJs }}{{ purgeJs }}'
+        );
+        $rendered = $template->render();
+
+        $this->assertEquals('', $rendered);
+    }
+
+    public function testPurgeCssWithMustache()
+    {
+        $template = $this->mustache->loadTemplate(
+            '{{# addCss }}<style>{{/ addCss }}{{ purgeCss }}'
+        );
+        $rendered = $template->render();
+
+        $this->assertEquals('', $rendered);
     }
 }

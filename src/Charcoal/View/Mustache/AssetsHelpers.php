@@ -45,6 +45,9 @@ class AssetsHelpers implements HelpersInterface
     public function toArray()
     {
         return [
+            'purgeJs' => function() {
+                $this->purgeJs();
+            },
             'addJs' => function($js, LambdaHelper $helper) {
                 $this->addJs($js, $helper);
             },
@@ -60,6 +63,9 @@ class AssetsHelpers implements HelpersInterface
             'addCss' => function($css, LambdaHelper $helper) {
                 $this->addCss($css, $helper);
             },
+            'purgeCss' => function() {
+                $this->purgeCss();
+            },
             'css' => function() {
                 return $this->css();
             },
@@ -68,8 +74,22 @@ class AssetsHelpers implements HelpersInterface
             },
             'cssRequirements' => function() {
                 return $this->cssRequirements();
+            },
+            'purgeAssets' => function() {
+                $this->purgeAssets();
             }
         ];
+    }
+
+    /**
+     * Empty the JS assets queue.
+     *
+     * @return void
+     */
+    public function purgeJs()
+    {
+        self::$js = '';
+        self::$jsRequirements = [];
     }
 
     /**
@@ -137,6 +157,17 @@ class AssetsHelpers implements HelpersInterface
     }
 
     /**
+     * Empty the CSS assets queue.
+     *
+     * @return void
+     */
+    public function purgeCss()
+    {
+        self::$css = '';
+        self::$cssRequirements = [];
+    }
+
+    /**
      * Enqueue (concatenate) inline CSS content.
      *
      * Must include `<style>` surrounding element.
@@ -198,5 +229,16 @@ class AssetsHelpers implements HelpersInterface
         $req = implode("\n", self::$cssRequirements);
         self::$cssRequirements = [];
         return $req;
+    }
+
+    /**
+     * Empty the all asset queues.
+     *
+     * @return void
+     */
+    public function purgeAssets()
+    {
+        $this->purgeJs();
+        $this->purgeCss();
     }
 }
