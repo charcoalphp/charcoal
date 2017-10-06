@@ -14,6 +14,9 @@ use Pimple\Container;
 // From 'charcoal-property'
 use Charcoal\Property\AbstractProperty;
 
+// From 'charcoal-translator'
+use Charcoal\Translator\Translation;
+
 /**
  * File Property
  */
@@ -579,21 +582,40 @@ class FileProperty extends AbstractProperty
 
         // Check in vals for data: base64 images
         // val should be an array if multiple...
-        if ($this->multiple()) {
-            $k = 0;
-            $total = count($val);
-            $f = [];
-            foreach ($val as $v) {
-                if ($this->isDataUri($v)) {
-                    $f[] = $this->dataUpload($v);
+        if ($val !== null) {
+            if ($this->l10n()) {
+                $l10nVal = ($val instanceof Translation) ? $val->data() : $val;
+
+                $k = 0;
+                $total = count($val);
+                $f = [];
+                foreach ($l10nVal as $v) {
+                    if ($this->isDataUri($v)) {
+                        $f[] = $this->dataUpload($v);
+                    }
                 }
+
+                if (!empty($f)) {
+                    return $f;
+                }
+            } elseif ($this->multiple()) {
+                $k = 0;
+                $total = count($val);
+                $f = [];
+                foreach ($val as $v) {
+                    if ($this->isDataUri($v)) {
+                        $f[] = $this->dataUpload($v);
+                    }
+                }
+
+                if (!empty($f)) {
+                    return $f;
+                }
+            } elseif ($this->isDataUri($val)) {
+                $f = $this->dataUpload($val);
+
+                return $f;
             }
-
-            return $f;
-        } elseif ($this->isDataUri($val)) {
-            $f = $this->dataUpload($val);
-
-            return $f;
         }
 
         return $val;
