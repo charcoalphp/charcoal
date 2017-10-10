@@ -81,7 +81,11 @@ trait AttachmentAwareTrait
             $options = $this->parseAttachmentOptions($group);
             extract($options);
         } else {
-            $this->logger->warning('[Attachment] AttachmentAwareTrait::attachments() with $group is deprecated. An array of parameters should be used.');
+            $this->logger->warning(
+                'AttachmentAwareTrait::attachments() with $group is deprecated. '.
+                'An array of parameters should be used.',
+                [ 'package' => 'locomotivemtl/charcoal-attachment' ]
+            );
         }
 
         if ($group === null) {
@@ -272,9 +276,26 @@ trait AttachmentAwareTrait
     /**
      * Remove all joins linked to a specific attachment.
      *
+     * @deprecated in favour of AttachmentAwareTrait::removeAttachmentJoins()
      * @return boolean
      */
     public function removeJoins()
+    {
+        $this->logger->warning(
+            'AttachmentAwareTrait::removeJoins() is deprecated. '.
+            'Use AttachmentAwareTrait::removeAttachmentJoins() instead.',
+            [ 'package' => 'locomotivemtl/charcoal-attachment' ]
+        );
+
+        return $this->removeAttachmentJoins();
+    }
+
+    /**
+     * Remove all joins linked to a specific attachment.
+     *
+     * @return boolean
+     */
+    public function removeAttachmentJoins()
     {
         $joinProto = $this->modelFactory()->get(Join::class);
 
@@ -381,7 +402,7 @@ trait AttachmentAwareTrait
     /**
      * Parse a given list of options for loading a collection of attachment.
      *
-     * @param  array  $options A list of options.
+     * @param  array $options A list of options.
      * @return array
      */
     private function parseAttachmentOptions(array $options)
