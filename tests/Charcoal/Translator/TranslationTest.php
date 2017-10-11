@@ -2,6 +2,7 @@
 
 namespace Charcoal\Tests\Translation;
 
+use DomainException;
 use InvalidArgumentException;
 
 // From PHPUnit
@@ -107,6 +108,12 @@ class TranslationTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('Charcoal', (string)$obj);
     }
 
+    public function testArrayGet()
+    {
+        $obj = new Translation('Charcoal', $this->localesManager());
+        $this->assertEquals('Charcoal', $obj['foo']);
+    }
+
     public function testArrayUnset()
     {
         $obj = new Translation('foobar', $this->localesManager());
@@ -121,6 +128,13 @@ class TranslationTest extends PHPUnit_Framework_TestCase
         $obj = new Translation('foobar', $this->localesManager());
         $this->setExpectedException(InvalidArgumentException::class);
         $ret = $obj[0];
+    }
+
+    public function testOffsetGetThrowsException2()
+    {
+        $obj = new Translation('foobar', $this->localesManager());
+        $this->setExpectedException(DomainException::class);
+        $ret = $obj['bar'];
     }
 
     public function testOffsetSetThrowsException()

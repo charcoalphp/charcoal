@@ -94,6 +94,16 @@ class TranslatorTest extends PHPUnit_Framework_TestCase
         return $this->localesManager;
     }
 
+    public function testConstructorWithoutMessageSelector()
+    {
+        $obj = new Translator([
+            'locale'    => 'en',
+            'cache_dir' => null,
+            'debug'     => false,
+            'manager'   => $this->localesManager()
+        ]);
+    }
+
     public function testAvailableDomains()
     {
         $domains = $this->obj->availableDomains();
