@@ -119,9 +119,10 @@ class Translator extends SymfonyTranslator
         }
 
         $translation = new Translation($val, $this->manager());
+        $localized   = (string)$translation;
         foreach ($this->availableLocales() as $lang) {
-            if (!isset($translation[$lang]) || $translation[$lang] == $val) {
-                $translation[$lang] = $this->trans((string)$translation, $parameters, $domain, $lang);
+            if (!isset($translation[$lang]) || $translation[$lang] === $val) {
+                $translation[$lang] = $this->trans($localized, $parameters, $domain, $lang);
             } else {
                 $translation[$lang] = strtr(
                     $translation[$lang],
@@ -187,9 +188,10 @@ class Translator extends SymfonyTranslator
         ], $parameters);
 
         $translation = new Translation($val, $this->manager());
+        $localized   = (string)$translation;
         foreach ($this->availableLocales() as $lang) {
-            if (!isset($translation[$lang]) || $translation[$lang] == $val) {
-                $translation[$lang] = $this->transChoice((string)$translation, $number, $parameters, $domain, $lang);
+            if (!isset($translation[$lang]) || $translation[$lang] === $val) {
+                $translation[$lang] = $this->transChoice($localized, $number, $parameters, $domain, $lang);
             } else {
                 $translation[$lang] = strtr(
                     $this->selector()->choose($translation[$lang], (int)$number, $lang),
