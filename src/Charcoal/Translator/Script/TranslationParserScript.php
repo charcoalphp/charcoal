@@ -311,7 +311,7 @@ class TranslationParserScript extends AdminScript
         if ($path) {
             $this->climate()->green()->out('Parsing files in <white>'.$path.'</white>');
             $translations = $this->getTranslationsFromPath($path, 'mustache');
-            $translations = array_merge($translations, $this->getTranslationsFromPath($path, 'php'));
+            $translations = array_replace($translations, $this->getTranslationsFromPath($path, 'php'));
             return $translations;
         }
 
@@ -320,8 +320,8 @@ class TranslationParserScript extends AdminScript
         $translations = [];
         foreach ($paths as $p) {
             $this->climate()->green()->out('Parsing files in <white>'.$p.'</white>');
-            $translations = array_merge_recursive($translations, $this->getTranslationsFromPath($p, 'mustache'));
-            $translations = array_merge_recursive($translations, $this->getTranslationsFromPath($p, 'php'));
+            $translations = array_replace_recursive($translations, $this->getTranslationsFromPath($p, 'mustache'));
+            $translations = array_replace_recursive($translations, $this->getTranslationsFromPath($p, 'php'));
         }
 
         return $translations;
