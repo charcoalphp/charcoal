@@ -55,11 +55,11 @@ class TranslatorServiceProvider implements ServiceProviderInterface
     {
         /**
          * @param  Container $container Pimple DI container.
-         * @return LanguageConfig
+         * @return LocalesConfig
          */
         $container['locales/config'] = function(Container $container) {
-            $config = isset($container['config']) ? $container['config'] : [];
-            $localesConfig = isset($config['locales']) ? $config['locales'] : null;
+            $appConfig     = isset($container['config']) ? $container['config'] : [];
+            $localesConfig = isset($appConfig['locales']) ? $appConfig['locales'] : null;
             return new LocalesConfig($localesConfig);
         };
 
@@ -152,8 +152,8 @@ class TranslatorServiceProvider implements ServiceProviderInterface
          * @return TranslatorConfig
          */
         $container['translator/config'] = function (Container $container) {
-            $config = isset($container['config']) ? $container['config'] : [];
-            $translatorConfig = isset($config['translator']) ? $config['translator'] : null;
+            $appConfig        = isset($container['config']) ? $container['config'] : [];
+            $translatorConfig = isset($appConfig['translator']) ? $appConfig['translator'] : null;
             return new TranslatorConfig($translatorConfig);
         };
 
