@@ -74,13 +74,13 @@ class ViewServiceProvider implements ServiceProviderInterface
     protected function registerViewConfig(Container $container)
     {
         /**
-         * @param Container $container A container instance.
+         * @param  Container $container A container instance.
          * @return ViewConfig
          */
         $container['view/config'] = function (Container $container) {
-            $config = $container['config']['view'];
-
-            return new ViewConfig($config);
+            $appConfig  = isset($container['config']) ? $container['config'] : [];
+            $viewConfig = isset($appConfig['view']) ? $appConfig['view'] : null;
+            return new ViewConfig($viewConfig);
         };
     }
 
