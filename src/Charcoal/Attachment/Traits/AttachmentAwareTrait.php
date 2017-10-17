@@ -73,32 +73,42 @@ trait AttachmentAwareTrait
         callable $before = null,
         callable $after = null
     ) {
-        /** Default query requires attachment to be active */
-        $isActive = true;
-
-        /** Check for $group type. If not an array, log a deprecation warning */
         if (is_array($group)) {
-            $options = $this->parseAttachmentOptions($group);
-            extract($options);
+            $options = $group;
         } else {
-            $this->logger->warning(
-                'AttachmentAwareTrait::attachments() with $group is deprecated. '.
-                'An array of parameters should be used.',
-                [ 'package' => 'locomotivemtl/charcoal-attachment' ]
-            );
+            if ($group !== null) {
+                $this->logger->warning(
+                    'AttachmentAwareTrait::attachments() parameters are deprecated. '.
+                    'An array of parameters should be used.',
+                    [ 'package' => 'locomotivemtl/charcoal-attachment' ]
+                );
+            }
+            $options = [
+                'group'  => $group,
+                'type'   => $type,
+                'before' => $before,
+                'after'  => $after,
+            ];
         }
 
-        if ($group === null) {
-            $group = 0;
-        } elseif (!is_string($group)) {
-            throw new InvalidArgumentException('The $group must be a string.');
+        $options = $this->parseAttachmentOptions($options);
+        extract($options);
+
+        if ($group !== 0) {
+            if (!is_string($group)) {
+                throw new InvalidArgumentException(sprintf(
+                    'The "group" must be a string, received %s',
+                    is_object($group) ? get_class($group) : gettype($group)
+                ));
+            }
         }
 
-        if ($type === null) {
-            $type = 0;
-        } else {
+        if ($type !== 0) {
             if (!is_string($type)) {
-                throw new InvalidArgumentException('The $type must be a string.');
+                throw new InvalidArgumentException(sprintf(
+                    'The "type" must be a string, received %s',
+                    is_object($type) ? get_class($type) : gettype($type)
+                ));
             }
 
             $type = preg_replace('/([a-z])([A-Z])/', '$1-$2', $type);
@@ -400,31 +410,66 @@ trait AttachmentAwareTrait
     }
 
     /**
-     * Parse a given list of options for loading a collection of attachment.
+     * Parse a given options for loading a collection of attachments.
      *
      * @param  array $options A list of options.
+     *    Option keys not present in {@see self::getDefaultAttachmentOptions() default options}
+     *    are rejected.
      * @return array
      */
-    private function parseAttachmentOptions(array $options)
+    protected function parseAttachmentOptions(array $options)
     {
-        $defaults = [
-            'group'    => null,
-            'type'     => null,
+        $defaults = $this->getDefaultAttachmentOptions();
+
+        $options = array_intersect_key($options, $defaults);
+        $options = array_filter($options, [ $this, 'filterAttachmentOption' ], ARRAY_FILTER_USE_BOTH);
+        $options = array_replace($defaults, $options);
+
+        return $options;
+    }
+
+    /**
+     * Parse a given options for loading a collection of attachments.
+     *
+     * @param  mixed  $val The option value.
+     * @param  string $key The option key.
+     * @return boolean Return TRUE if the value is preserved. Otherwise FALSE.
+     */
+    protected function filterAttachmentOption($val, $key)
+    {
+        if ($val === null) {
+            return false;
+        }
+
+        switch ($key) {
+            case 'isActive':
+                return is_bool($val);
+
+            case 'before':
+            case 'after':
+                return is_callable($val);
+        }
+
+        return true;
+    }
+
+    /**
+     * Retrieve the default options for loading a collection of attachments.
+     *
+     * @return array
+     */
+    protected function getDefaultAttachmentOptions()
+    {
+        return [
+            'group'    => 0,
+            'type'     => 0,
             'before'   => null,
             'after'    => null,
             'isActive' => true
         ];
-
-        /** Validate the callable options */
-        if (isset($options['before']) && !is_callable($options['before'])) {
-            unset($options['before']);
-        }
-        if (isset($options['after']) && !is_callable($options['after'])) {
-            unset($options['after']);
-        }
-
-        return array_merge($defaults, $options);
     }
+
+
 
     // Abstract Methods
     // =========================================================================

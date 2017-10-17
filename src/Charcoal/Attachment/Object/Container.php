@@ -65,20 +65,12 @@ class Container extends Attachment implements
         callable $before = null,
         callable $after = null
     ) {
-        /** Check for $group type. If not an array, log a deprecation warning */
-        if (is_array($group)) {
-            $options = $this->parseAttachmentOptions($group);
-            extract($options);
-        } else {
-            $this->logger->warning('[Attachment] AttachmentAwareTrait::attachments() with $group is deprecated. An array of parameters should be used.');
-        }
-
-        $attachableObjects = $this->attachableObjects();
-        $attachments       = $this->getAttachments($group, $type, $before, $after);
+        $attachables = $this->attachableObjects();
+        $attachments = call_user_func_array([ $this, 'getAttachments' ], func_get_args());
 
         foreach ($attachments as $attachment) {
-            if (isset($attachableObjects[$attachment->objType()])) {
-                $attachment->attachmentType = $attachableObjects[$attachment->objType()];
+            if (isset($attachables[$attachment->objType()])) {
+                $attachment->attachmentType = $attachables[$attachment->objType()];
             } else {
                 $attachment->attachmentType = [];
             }
