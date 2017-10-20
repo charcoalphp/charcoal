@@ -85,7 +85,7 @@ trait DescribablePropertyTrait
      *
      * @uses   DescribablePropertyTrait::createProperty() Called if the property has not been instantiated.
      * @param  string $propertyIdent The property identifier to return.
-     * @throws InvalidArgumentException If the $propertyIdent is not a string.
+     * @throws InvalidArgumentException If the property identifier is not a string.
      * @return PropertyInterface The {@see PropertyInterface} if found, null otherwise
      */
     public function property($propertyIdent)
@@ -172,16 +172,11 @@ trait DescribablePropertyTrait
 
     /**
      * Alias of {@see DescribablePropertyInterface::property()}
-     * and {@see DescribablePropertyInterface::properties()},
-     * depending if argument is set or not.
+     * and {@see DescribablePropertyInterface::properties()}.
      *
-     * Shortcut for:
-     *
-     * - `property()` if the first parameter is set,
-     * - `properties()` if the $propertyIdent is not set (NULL)
-     *
-     * @param string $propertyIdent The property ident to return.
-     * @return array|PropertyInterface
+     * @param  string|null $propertyIdent Optional property identifier.
+     * @return PropertyInterface|PropertyInterface[] If $propertyIdent is NULL,
+     *     returns all properties. Otherwise, returns the property associated with $propertyIdent.
      */
     public function p($propertyIdent = null)
     {
@@ -196,7 +191,7 @@ trait DescribablePropertyTrait
      * Determine if the model has the given property.
      *
      * @param  string $propertyIdent The property identifier to lookup.
-     * @throws InvalidArgumentException If the identifier argument is not a string.
+     * @throws InvalidArgumentException If the property identifier is not a string.
      * @return boolean
      */
     public function hasProperty($propertyIdent)
@@ -207,9 +202,9 @@ trait DescribablePropertyTrait
             );
         }
 
-        $metadata = $this->metadata();
-        $props = $metadata->properties();
+        $metadata   = $this->metadata();
+        $properties = $metadata->properties();
 
-        return isset($props[$propertyIdent]);
+        return isset($properties[$propertyIdent]);
     }
 }
