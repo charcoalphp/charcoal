@@ -26,6 +26,7 @@ use Charcoal\View\ViewableTrait;
 // From 'charcoal-property'
 use Charcoal\Property\DescribablePropertyInterface;
 use Charcoal\Property\DescribablePropertyTrait;
+use Charcoal\Property\PropertyInterface;
 
 // From 'charcoal-core'
 use Charcoal\Model\DescribableInterface;
@@ -112,7 +113,7 @@ abstract class AbstractModel extends AbstractEntity implements
     /**
      * Inject dependencies from a DI Container.
      *
-     * @param Container $container A dependencies container instance.
+     * @param  Container $container A service container.
      * @return void
      */
     public function setDependencies(Container $container)
@@ -125,10 +126,10 @@ abstract class AbstractModel extends AbstractEntity implements
      *
      * Useful for setting the object ID before the rest of the object's data.
      *
-     * @param array|\Traversable $data The object data.
-     * @return array|\Traversable The object data without the pre-set ID.
+     * @param  array $data The object data.
+     * @return array The object data without the pre-set ID.
      */
-    protected function setIdFromData($data)
+    protected function setIdFromData(array $data)
     {
         $key = $this->key();
         if (isset($data[$key])) {
@@ -142,8 +143,8 @@ abstract class AbstractModel extends AbstractEntity implements
     /**
      * Sets the object data, from an associative array map (or any other Traversable).
      *
-     * @param array $data The entity data. Will call setters.
-     * @return AbstractModel Chainable
+     * @param  array $data The entity data. Will call setters.
+     * @return self
      */
     public function setData(array $data)
     {
@@ -153,26 +154,30 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-     * Return the object data as an array.
+     * Retrieve the model data as a structure.
      *
-     * @param array $propertyFilters Optional. Property filter.
+     * @param  array $properties Optional. List of property identifiers
+     *     for retrieving a subset of data.
      * @return array
      */
-    public function data(array $propertyFilters = null)
+    public function data(array $properties = null)
     {
         $data = [];
-        $properties = $this->properties($propertyFilters);
+        $properties = $this->properties($properties);
         foreach ($properties as $propertyIdent => $property) {
             // Ensure objects are properly encoded.
-            $v = $this->propertyValue($propertyIdent);
-            $v = $this->serializedValue($v);
-            $data[$propertyIdent] = $v;
+            $val = $this->propertyValue($propertyIdent);
+            $val = $this->serializedValue($val);
+            $data[$propertyIdent] = $val;
         }
+
         return $data;
     }
 
     /**
-     * @param mixed $val The value to serialize.
+     * Serialize the given value.
+     *
+     * @param  mixed $val The value to serialize.
      * @return mixed
      */
     protected function serializedValue($val)
@@ -187,15 +192,17 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-     * Override's `\Charcoal\Config\AbstractEntity`'s `setData` method to take properties into consideration.
+     * Merge data on the model.
+     *
+     * Overrides `\Charcoal\Config\AbstractEntity::setData()`
+     * to take properties into consideration.
      *
      * Also add a special case, to merge values for l10n properties.
      *
-     * @param array|\Traversable $data The data to merge.
+     * @param  array $data The data to merge.
      * @return EntityInterface Chainable
-     * @see \Charcoal\Config\AbstractEntity::offsetSet()
      */
-    public function mergeData($data)
+    public function mergeData(array $data)
     {
         $data = $this->setIdFromData($data);
 
@@ -225,7 +232,9 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-     * @return array
+     * Retrieve the default values.
+     *
+     * @return array From the model's metadata.
      */
     public function defaultData()
     {
@@ -234,12 +243,12 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-     * Sets the data
+     * Set the model data (from a flattened structure).
      *
-     * This function takes a 1-dimensional array and fill the object with its value.
+     * This method takes a 1-dimensional array and fills the object with its values.
      *
-     * @param array $flatData The data, as a flat (1-dimension) array.
-     * @return AbstractModel Chainable
+     * @param  array $flatData The model data.
+     * @return self
      */
     public function setFlatData(array $flatData)
     {
@@ -278,8 +287,12 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
+     * Retrieve the model data as a flattened structure.
+     *
+     * This method returns a 1-dimensional array of the object's values.
+     *
+     * @todo   Implementation required.
      * @return array
-     * @todo Implement retrieval of flattened data
      */
     public function flatData()
     {
@@ -287,16 +300,18 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-     * @param string $propertyIdent The property ident to get the value from.
+     * Retrieve the value for the given property.
+     *
+     * @param  string $propertyIdent The property identifier to fetch.
      * @return mixed
      */
     public function propertyValue($propertyIdent)
     {
         $getter = $this->getter($propertyIdent);
-        $func   = [ $this, $getter ];
+        $method = [ $this, $getter ];
 
-        if (is_callable($func)) {
-            return call_user_func($func);
+        if (is_callable($method)) {
+            return call_user_func($method);
         } elseif (isset($this->{$propertyIdent})) {
             return $this->{$propertyIdent};
         }
