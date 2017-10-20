@@ -129,7 +129,7 @@ class CollectionLoader implements LoggerAwareInterface
     }
 
     /**
-     * Set the loader data.
+     * Set the loader settings.
      *
      * @param  array $data Data to assign to the loader.
      * @return CollectionLoader Chainable
