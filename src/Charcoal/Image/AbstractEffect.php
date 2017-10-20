@@ -2,6 +2,8 @@
 
 namespace Charcoal\Image;
 
+use Charcoal\Image\Imagemagick\ImagemagickImage;
+use Charcoal\Image\Imagick\ImagickImage;
 use \Exception;
 
 use \Charcoal\Image\ImageInterface;
@@ -28,7 +30,7 @@ abstract class AbstractEffect implements EffectInterface
 
     /**
      * @throws Exception If the parent image was not set before being accessed.
-     * @return ImageInterface
+     * @return ImageInterface|ImagickImage|ImagemagickImage
      */
     public function image()
     {

@@ -2,7 +2,7 @@
 
 namespace Charcoal\Image\Imagick\Effect;
 
-use \Charcoal\Image\Effect\AbstractMirrorEffect;
+use Charcoal\Image\Effect\AbstractMirrorEffect;
 
 /**
  * Mirror Effect for the Imagick driver.
@@ -11,7 +11,7 @@ class ImagickMirrorEffect extends AbstractMirrorEffect
 {
     /**
      * @param array $data The effect data, if available.
-     * @return ImagickBlurEffect Chainable
+     * @return self
      */
     public function process(array $data = null)
     {

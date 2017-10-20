@@ -11,7 +11,7 @@ class ImagemagickThresholdEffect extends AbstractThresholdEffect
 {
     /**
      * @param array $data The effect data, if available.
-     * @return ImagickThresholdEffect Chainable
+     * @return self
      */
     public function process(array $data = null)
     {

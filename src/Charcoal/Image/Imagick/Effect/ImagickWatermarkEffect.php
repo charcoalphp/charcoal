@@ -16,7 +16,7 @@ class ImagickWatermarkEffect extends AbstractWatermarkEffect
     /**
      * @param array $data The effect data, if available.
      * @throws Exception If the image data is invalid.
-     * @return ImagickWatermarkEffect Chainable
+     * @return self
      */
     public function process(array $data = null)
     {

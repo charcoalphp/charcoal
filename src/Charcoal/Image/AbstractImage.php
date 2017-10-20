@@ -58,7 +58,7 @@ abstract class AbstractImage implements ImageInterface
      * Safe effect factory getter.
      * If the factory doesn't exist, create it.
      *
-     * @return EfectFactory
+     * @return EffectFactory
      */
     protected function effectFactory()
     {

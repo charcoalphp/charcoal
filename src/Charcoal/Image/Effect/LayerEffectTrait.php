@@ -2,7 +2,7 @@
 
 namespace Charcoal\Image\Effect;
 
-use \InvalidArgumentException;
+use InvalidArgumentException;
 
 /**
  * Full implementation, as a Trait, of the Layer Effect Interface.
@@ -10,12 +10,12 @@ use \InvalidArgumentException;
 trait LayerEffectTrait
 {
     /**
-     * @var float $opacity
+     * @var float
      */
     private $opacity = 1.0;
 
     /**
-     * @var string $gravity
+     * @var string
      */
     private $gravity = 'nw';
 
@@ -23,7 +23,7 @@ trait LayerEffectTrait
      * Horizontal adjustment, in pixels.
      * Negative values will move mask to the left, positive values to the right.
      * Depends on the gravity setting
-     * @var integer $x
+     * @var integer
      */
     private $x = 0;
 
@@ -31,14 +31,14 @@ trait LayerEffectTrait
      * Vertical adjustment, in pixels.
      * Negative values will move mask to the top, positive values to the bottom.
      * Depends on the gravity setting
-     * @var integer $y
+     * @var integer
      */
     private $y = 0;
 
     /**
      * @param float $opacity The mask opacity.
      * @throws InvalidArgumentException If the mask opacity is not a numeric value or not between 0.0 and 1.0.
-     * @return AbstractMaskEffect Chainable
+     * @return self
      */
     public function setOpacity($opacity)
     {
@@ -62,7 +62,7 @@ trait LayerEffectTrait
     /**
      * @param string $gravity The mask gravity.
      * @throws InvalidArgumentException If the argument is not a valid gravity name.
-     * @return AbstractMaskEffect Chainable
+     * @return self
      */
     public function setGravity($gravity)
     {
@@ -86,7 +86,7 @@ trait LayerEffectTrait
     /**
      * @param integer $x The mask X position.
      * @throws InvalidArgumentException If the position is not a numeric value.
-     * @return AbstractMaskEffect Chainable
+     * @return self
      */
     public function setX($x)
     {
@@ -110,7 +110,7 @@ trait LayerEffectTrait
     /**
      * @param integer $y The Y position.
      * @throws InvalidArgumentException If the position is not a numeric value.
-     * @return AbstractMaskEffect Chainable
+     * @return self
      */
     public function setY($y)
     {
@@ -132,7 +132,7 @@ trait LayerEffectTrait
     }
 
     /**
-     * @return ImageInterface
+     * @return \Charcoal\Image\ImageInterface
      */
     abstract public function image();
 }

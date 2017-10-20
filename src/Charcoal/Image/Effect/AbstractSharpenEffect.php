@@ -2,9 +2,9 @@
 
 namespace Charcoal\Image\Effect;
 
-use \InvalidArgumentException;
+use InvalidArgumentException;
 
-use \Charcoal\Image\AbstractEffect;
+use Charcoal\Image\AbstractEffect;
 
 /**
  * Sharpen an image, with a simple sharpen algorithm or unsharp mask options
@@ -48,7 +48,7 @@ abstract class AbstractSharpenEffect extends AbstractEffect
     /**
      * @param float $radius The sharpen radius value.
      * @throws InvalidArgumentException If the radius argument is not numeric or lower than 0.
-     * @return AbstractSharpenEffect
+     * @return self
      */
     public function setRadius($radius)
     {
@@ -72,7 +72,7 @@ abstract class AbstractSharpenEffect extends AbstractEffect
     /**
      * @param float $sigma The sharpen sigma value.
      * @throws InvalidArgumentException If the ssigma value is not numeric or lower than 0.
-     * @return AbstractSharpenEffect
+     * @return self
      */
     public function setSigma($sigma)
     {
@@ -96,7 +96,7 @@ abstract class AbstractSharpenEffect extends AbstractEffect
     /**
      * @param float $amount The sharpen amount.
      * @throws InvalidArgumentException If the amount argument is not numeric or lower than 0.
-     * @return AbstractSharpenEffect Chainable
+     * @return self
      */
     public function setAmount($amount)
     {
@@ -120,7 +120,7 @@ abstract class AbstractSharpenEffect extends AbstractEffect
     /**
      * @param float $threshold The sharpen threshold value.
      * @throws InvalidArgumentException If the threshold argumnet is not numeric or lower than 0.
-     * @return AbstractSharpenEffect Chainable
+     * @return self
      */
     public function setThreshold($threshold)
     {
@@ -144,7 +144,7 @@ abstract class AbstractSharpenEffect extends AbstractEffect
     /**
      * @param string $mode The sharpen mode.
      * @throws InvalidArgumentException If the mode argument is not a valid sharpen mode.
-     * @return AbstractSharpenEffect Chainable
+     * @return self
      */
     public function setMode($mode)
     {
@@ -169,7 +169,7 @@ abstract class AbstractSharpenEffect extends AbstractEffect
     /**
      * @param string $channel The sharpen channel.
      * @throws InvalidArgumentException If the channel argument is not a valid channel.
-     * @return AbstractBlurEffect Chainable
+     * @return self
      */
     public function setChannel($channel)
     {
@@ -193,7 +193,7 @@ abstract class AbstractSharpenEffect extends AbstractEffect
 
     /**
      * @param array $data The effect data, if available.
-     * @return AbstractSharpenEffect Chainable
+     * @return self
      */
     public function process(array $data = null)
     {
@@ -216,17 +216,17 @@ abstract class AbstractSharpenEffect extends AbstractEffect
     }
 
     /**
-     * @return AbstractSharpenEffect Chainable
+     * @return self
      */
     abstract public function processAdaptive();
 
     /**
-     * @return AbstractSharpenEffect Chainable
+     * @return self
      */
     abstract public function processUnsharp();
 
     /**
-     * @return AbstractSharpenEffect Chainable
+     * @return self
      */
     abstract public function processStandard();
 }

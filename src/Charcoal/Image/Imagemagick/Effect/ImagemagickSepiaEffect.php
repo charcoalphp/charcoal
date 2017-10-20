@@ -11,7 +11,7 @@ class ImagemagickSepiaEffect extends AbstractSepiaEffect
 {
     /**
      * @param array $data The effect data, if available.
-     * @return ImagickSepiaEffect Chainable
+     * @return self
      */
     public function process(array $data = null)
     {

@@ -2,12 +2,12 @@
 
 namespace Charcoal\Image\Effect;
 
-use \InvalidArgumentException;
+use InvalidArgumentException;
 
-use \Charcoal\Image\AbstractEffect;
-use \Charcoal\Image\ImageInterface;
-use \Charcoal\Image\Effect\LayerEffectInterface;
-use \Charcoal\Image\Effect\LayerEffectTrait;
+use Charcoal\Image\AbstractEffect;
+use Charcoal\Image\ImageInterface;
+use Charcoal\Image\Effect\LayerEffectInterface;
+use Charcoal\Image\Effect\LayerEffectTrait;
 
 /**
  * Composite a watermark on top of the image.
@@ -25,7 +25,7 @@ abstract class AbstractWatermarkEffect extends AbstractEffect implements LayerEf
     /**
      * @param string|ImageInterface $watermark The watermark (path or Image).
      * @throws InvalidArgumentException If the watermark value is not a string or an Image.
-     * @return AbstractMaskEffect Chainable
+     * @return self
      */
     public function setWatermark($watermark)
     {

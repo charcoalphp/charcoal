@@ -10,7 +10,7 @@ use \Charcoal\Image\Effect\AbstractSharpenEffect;
 class ImagemagickSharpenEffect extends AbstractSharpenEffect
 {
     /**
-     * @return ImagickSharpenEffect Chainable
+     * @return self
      */
     public function processAdaptive()
     {
@@ -23,7 +23,7 @@ class ImagemagickSharpenEffect extends AbstractSharpenEffect
     }
 
     /**
-     * @return ImagickSharpenEffect Chainable
+     * @return self
      */
     public function processUnsharp()
     {
@@ -39,7 +39,7 @@ class ImagemagickSharpenEffect extends AbstractSharpenEffect
     }
 
     /**
-     * @return ImagickSharpenEffect Chainable
+     * @return self
      */
     public function processStandard()
     {

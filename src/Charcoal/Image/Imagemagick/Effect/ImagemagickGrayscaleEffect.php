@@ -11,7 +11,7 @@ class ImagemagickGrayscaleEffect extends AbstractGrayscaleEffect
 {
     /**
      * @param array $data The effect data, if available.
-     * @return ImagickGrayscaleEffect Chainable
+     * @return self
      */
     public function process(array $data = null)
     {

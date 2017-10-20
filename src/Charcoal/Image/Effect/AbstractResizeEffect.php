@@ -70,7 +70,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
     /**
      * @param string $mode The resize mode.
      * @throws InvalidArgumentException If the mode argument is not a valid resize mode.
-     * @return AbstractResizeEffect Chainable
+     * @return self
      */
     public function setMode($mode)
     {
@@ -106,7 +106,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
      *
      * @param  mixed $size The size.
      * @throws InvalidArgumentException If the size argument is not valid.
-     * @return Rotate Chainable
+     * @return self
      */
     public function setSize($size)
     {
@@ -134,7 +134,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
     /**
      * @param integer $width The target resize width.
      * @throws InvalidArgumentException If the width argument is not numeric or lower than 0.
-     * @return Rotate Chainable
+     * @return self
      */
     public function setWidth($width)
     {
@@ -158,7 +158,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
     /**
      * @param integer $height The target resize height.
      * @throws InvalidArgumentException If the height argument is not numeric or lower than 0.
-     * @return Rotate Chainable
+     * @return self
      */
     public function setHeight($height)
     {
@@ -182,7 +182,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
     /**
      * @param integer $minWidth The resize minimal width.
      * @throws InvalidArgumentException If the argument is not numeric or lower than 0.
-     * @return Rotate Chainable
+     * @return self
      */
     public function setMinWidth($minWidth)
     {
@@ -206,7 +206,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
     /**
      * @param integer $minHeight The resize minimal height.
      * @throws InvalidArgumentException If the argument is not numeric or lower than 0.
-     * @return Rotate Chainable
+     * @return self
      */
     public function setMinHeight($minHeight)
     {
@@ -230,7 +230,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
     /**
      * @param integer $maxWidth The resize max width.
      * @throws InvalidArgumentException If the argument is not numeric or lower than 0.
-     * @return Rotate Chainable
+     * @return self
      */
     public function setMaxWidth($maxWidth)
     {
@@ -254,7 +254,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
     /**
      * @param integer $maxHeight The resize max height.
      * @throws InvalidArgumentException If the argument is not numeric or lower than 0.
-     * @return Rotate Chainable
+     * @return self
      */
     public function setMaxHeight($maxHeight)
     {
@@ -278,7 +278,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
     /**
      * @param string $gravity The resize gravity.
      * @throws InvalidArgumentException If the argument is not a valid gravity name.
-     * @return AbstractWatermarkEffect Chainable
+     * @return self
      */
     public function setGravity($gravity)
     {
@@ -302,7 +302,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
     /**
      * @param string $color The resize background color.
      * @throws InvalidArgumentException If the color argument is not a string.
-     * @return AbstractRotateEffect Chainable
+     * @return self
      */
     public function setBackgroundColor($color)
     {
@@ -325,7 +325,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
 
     /**
      * @param boolean $adaptive The adaptative resize flag.
-     * @return AbstractRotateEffect Chainable
+     * @return self
      */
     public function setAdaptive($adaptive)
     {
@@ -367,7 +367,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
     /**
      * @param array $data The effect data, if available.
      * @throws Exception If the effect data is invalid for its resize mode.
-     * @return AbstractResizeEffect Chainable
+     * @return self
      */
     public function process(array $data = null)
     {

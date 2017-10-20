@@ -11,7 +11,7 @@ class ImagemagickRevertEffect extends AbstractRevertEffect
 {
     /**
      * @param array $data The effect data, if available.
-     * @return ImagickRevertEffect Chainable
+     * @return self
      */
     public function process(array $data = null)
     {

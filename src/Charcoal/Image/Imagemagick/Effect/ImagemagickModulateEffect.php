@@ -11,7 +11,7 @@ class ImagemagickModulateEffect extends AbstractModulateEffect
 {
     /**
      * @param array $data The effect data, if available.
-     * @return ImagemagickModulateEffect Chainable
+     * @return self
      */
     public function process(array $data = null)
     {

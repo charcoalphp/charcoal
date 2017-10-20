@@ -11,7 +11,7 @@ class ImagemagickTintEffect extends AbstractTintEffect
 {
     /**
      * @param array $data The effect data, if available.
-     * @return ImagickTintEffect Chainable
+     * @return self
      */
     public function process(array $data = null)
     {

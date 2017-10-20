@@ -10,7 +10,7 @@ use \Charcoal\Image\Effect\AbstractBlurEffect;
 class ImagemagickBlurEffect extends AbstractBlurEffect
 {
     /**
-     * @return ImagemagickBlurEffect Chainable
+     * @return self
      */
     public function processAdaptive()
     {
@@ -21,7 +21,7 @@ class ImagemagickBlurEffect extends AbstractBlurEffect
     }
 
     /**
-     * @return ImagemagickBlurEffect Chainable
+     * @return self
      */
     public function processGaussian()
     {
@@ -32,7 +32,7 @@ class ImagemagickBlurEffect extends AbstractBlurEffect
     }
 
     /**
-     * @return ImagemagickBlurEffect Chainable
+     * @return self
      */
     public function processMotion()
     {
@@ -43,7 +43,7 @@ class ImagemagickBlurEffect extends AbstractBlurEffect
     }
 
     /**
-     * @return ImagemagickBlurEffect Chainable
+     * @return self
      */
     public function processRadial()
     {
@@ -54,7 +54,7 @@ class ImagemagickBlurEffect extends AbstractBlurEffect
     }
 
     /**
-     * @return ImagemagickBlurEffect Chainable
+     * @return self
      */
     public function processSoft()
     {
@@ -64,7 +64,7 @@ class ImagemagickBlurEffect extends AbstractBlurEffect
     }
 
     /**
-     * @return ImagemagickBlurEffect Chainable
+     * @return self
      */
     public function processStandard()
     {

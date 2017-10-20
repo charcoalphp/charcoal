@@ -18,7 +18,7 @@ class ImagemagickImage extends AbstractImage
 {
     /**
      * The temporary file location
-     * @var string $tmpFile
+     * @var string|null $tmpFile
      */
     private $tmpFile;
 
@@ -75,7 +75,7 @@ class ImagemagickImage extends AbstractImage
      * @param integer $height Image height, in pixels.
      * @param string  $color  Default to transparent.
      * @throws InvalidArgumentException If the size arguments are not valid.
-     * @return Image Chainable
+     * @return self
      */
     public function create($width, $height, $color = 'rgb(100%, 100%, 100%, 0)')
     {
@@ -102,7 +102,7 @@ class ImagemagickImage extends AbstractImage
      * @param string $source The source path / filename.
      * @throws Exception If the source file does not exist.
      * @throws InvalidArgumentException If the source argument is not a string.
-     * @return Image Chainable
+     * @return self
      */
     public function open($source = null)
     {
@@ -134,7 +134,7 @@ class ImagemagickImage extends AbstractImage
      * @param string $target The target path / filename.
      * @throws Exception If the target file does not exist or is not writeable.
      * @throws InvalidArgumentException If the target argument is not a string.
-     * @return Image Chainable
+     * @return self
      */
     public function save($target = null)
     {
@@ -260,17 +260,17 @@ class ImagemagickImage extends AbstractImage
     /**
      * Retrieve the list of available commands.
      *
-     * @param  string $name The name of an available command.
+     * @param  string $name The name of an available command (mogrify, convert, composite or identify).
      * @throws InvalidArgumentException If the name is not a string.
      * @throws OutOfBoundsException If the name is unsupported.
-     * @return array
+     * @return string
      */
     public function cmd($name)
     {
-        if (!is_string($cmdName)) {
+        if (!is_string($name)) {
             throw new InvalidArgumentException(sprintf(
-                'Target image must be a string, received %s',
-                (is_object($cmdName) ? get_class($cmdName) : gettype($cmdName))
+                'Command name must be a string, received %s',
+                (is_object($name) ? get_class($name) : gettype($name))
             ));
         }
 
@@ -409,7 +409,7 @@ class ImagemagickImage extends AbstractImage
 
             return $out;
         } else {
-            $ret = shell_exec($cmd, $out);
+            $ret = shell_exec($cmd);
 
             return $ret;
         }

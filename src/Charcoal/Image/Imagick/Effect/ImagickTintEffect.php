@@ -2,9 +2,9 @@
 
 namespace Charcoal\Image\Imagick\Effect;
 
-use \ImagickPixel;
+use ImagickPixel;
 
-use \Charcoal\Image\Effect\AbstractTintEffect;
+use Charcoal\Image\Effect\AbstractTintEffect;
 
 /**
  * Tint Effect for the Imagick driver.
@@ -13,7 +13,7 @@ class ImagickTintEffect extends AbstractTintEffect
 {
     /**
      * @param array $data The effect data, if available.
-     * @return ImagickTintEffect Chainable
+     * @return self
      */
     public function process(array $data = null)
     {

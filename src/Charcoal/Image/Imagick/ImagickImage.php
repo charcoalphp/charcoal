@@ -55,7 +55,7 @@ class ImagickImage extends AbstractImage
      * @param integer $height Image height, in pixels.
      * @param string  $color  Default to transparent.
      * @throws InvalidArgumentException If the size arguments are not valid, positive integers.
-     * @return Image Chainable
+     * @return self
      */
     public function create($width, $height, $color = 'rgb(100%, 100%, 100%, 0)')
     {
@@ -78,7 +78,7 @@ class ImagickImage extends AbstractImage
      *
      * @param string $source The source path / filename.
      * @throws InvalidArgumentException If the source argument is not a string.
-     * @return Image Chainable
+     * @return self
      */
     public function open($source = null)
     {
@@ -105,7 +105,7 @@ class ImagickImage extends AbstractImage
      *
      * @param string $target The target path / filename.
      * @throws InvalidArgumentException If the target argument is not a string.
-     * @return Image Chainable
+     * @return self
      */
     public function save($target = null)
     {

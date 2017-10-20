@@ -2,8 +2,8 @@
 
 namespace Charcoal\Image\Imagemagick\Effect;
 
-use \Charcoal\Image\Effect\AbstractWatermarkEffect;
-use \Charcoal\Image\ImageInterface;
+use Charcoal\Image\Effect\AbstractWatermarkEffect;
+use Charcoal\Image\ImageInterface;
 
 /**
  * Watermark Effect for the Imagemagick driver.
@@ -12,7 +12,7 @@ class ImagemagickWatermarkEffect extends AbstractWatermarkEffect
 {
     /**
      * @param array $data The effect data, if available.
-     * @return ImagickWatermarkEffect Chainable
+     * @return self
      */
     public function process(array $data = null)
     {
@@ -39,9 +39,9 @@ class ImagemagickWatermarkEffect extends AbstractWatermarkEffect
         $params  = [ '-gravity '.$gravity ];
 
         $cmd = null;
-        if ($this->compositeCmd()) {
+        if ($this->image()->compositeCmd()) {
             $cmd = 'composite';
-            $params[] = '-watermark 100% '.$watermark.' '.$this->tmp();
+            $params[] = '-watermark 100% '.$watermark.' '.$this->image()->tmp();
         } else {
             $params[] = '-geometry +'.$this->x().'+'.$this->y();
             $params[] = '-draw "image Multiply 0,0 '.$width.','.$height;

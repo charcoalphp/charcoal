@@ -11,7 +11,7 @@ class ImagemagickAutoorientationEffect extends AbstractAutoorientationEffect
 {
     /**
      * @param array $data The effect data, if available.
-     * @return ImagemagickAutoorientationEffect Chainable
+     * @return self
      */
     public function process(array $data = null)
     {

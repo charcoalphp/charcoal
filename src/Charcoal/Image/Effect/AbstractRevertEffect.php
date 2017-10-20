@@ -2,9 +2,9 @@
 
 namespace Charcoal\Image\Effect;
 
-use \InvalidArgumentException;
+use InvalidArgumentException;
 
-use \Charcoal\Image\AbstractEffect;
+use Charcoal\Image\AbstractEffect;
 
 /**
  * Revert (negate) the image's colors.
@@ -19,7 +19,7 @@ abstract class AbstractRevertEffect extends AbstractEffect
     /**
      * @param string $channel The channel to revert.
      * @throws InvalidArgumentException If the channel argument is not a valid channel.
-     * @return AbstractBlurEffect Chainable
+     * @return self
      */
     public function setChannel($channel)
     {

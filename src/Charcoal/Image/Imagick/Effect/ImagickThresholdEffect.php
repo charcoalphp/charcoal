@@ -2,7 +2,7 @@
 
 namespace Charcoal\Image\Imagick\Effect;
 
-use \Charcoal\Image\Effect\AbstractThresholdEffect;
+use Charcoal\Image\Effect\AbstractThresholdEffect;
 
 /**
  * Threshold Effect for the Imagick driver.
@@ -11,7 +11,7 @@ class ImagickThresholdEffect extends AbstractThresholdEffect
 {
     /**
      * @param array $data The effect data, if available.
-     * @return ImagickSepiaEffect Chainable
+     * @return self
      */
     public function process(array $data = null)
     {

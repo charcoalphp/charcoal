@@ -11,7 +11,7 @@ class ImagemagickMirrorEffect extends AbstractMirrorEffect
 {
     /**
      * @param array $data The effect data, if available.
-     * @return ImagickMirrorEffect Chainable
+     * @return self
      */
     public function process(array $data = null)
     {

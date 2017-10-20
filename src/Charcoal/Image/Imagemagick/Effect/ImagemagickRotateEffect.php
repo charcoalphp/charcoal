@@ -11,7 +11,7 @@ class ImagemagickRotateEffect extends AbstractRotateEffect
 {
     /**
      * @param array $data The effect data, if available.
-     * @return ImagickRotateEffect Chainable
+     * @return self
      */
     public function process(array $data = null)
     {
