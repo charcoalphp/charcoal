@@ -62,20 +62,24 @@ trait DescribablePropertyTrait
     /**
      * Retrieve the model's properties as a collection of {@see PropertyInterface} objects.
      *
+     * @param  array $propertyIdents Optional. List of property identifiers
+     *     for retrieving a subset of property objects.
      * @return PropertyInterface[]|\Generator
      */
-    public function properties()
+    public function properties(array $propertyIdents = null)
     {
         // Hack: ensure metadata is loaded.
         $this->metadata();
 
-        $props = array_keys($this->metadata()->properties());
+        if ($propertyIdents === null) {
+            $propertyIdents = array_keys($this->metadata()->properties());
+        }
 
-        if (empty($props)) {
+        if (empty($propertyIdents)) {
             return;
         }
 
-        foreach ($props as $propertyIdent) {
+        foreach ($propertyIdents as $propertyIdent) {
             yield $propertyIdent => $this->property($propertyIdent);
         }
     }
