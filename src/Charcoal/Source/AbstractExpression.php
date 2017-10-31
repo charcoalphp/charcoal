@@ -12,18 +12,11 @@ use Charcoal\Property\DateTimeProperty;
 use Charcoal\Source\ExpressionInterface;
 
 /**
- * Represents a query expression.
+ * Represents the basic structure of a query expression.
  */
 abstract class AbstractExpression implements
     ExpressionInterface
 {
-    /**
-     * Custom query expression.
-     *
-     * @var string|null
-     */
-    protected $condition;
-
     /**
      * Expression name.
      *
@@ -41,23 +34,12 @@ abstract class AbstractExpression implements
     /**
      * Set the expression data.
      *
-     * @param  array $data The expression data.
+     * @param  array<string,mixed> $data The expression data;
+     *     as an associative array.
      * @return self
      */
     public function setData(array $data)
     {
-        /** @deprecated */
-        if (isset($data['string'])) {
-            trigger_error(
-                sprintf(
-                    'Query Expression option "string" is deprecated in favour of "condition": %s',
-                    $data['string']
-                ),
-                E_USER_DEPRECATED
-            );
-            $this->setCondition($data['string']);
-        }
-
         if (isset($data['name'])) {
             $this->setName($data['name']);
         }
@@ -66,42 +48,22 @@ abstract class AbstractExpression implements
             $this->setActive($data['active']);
         }
 
-        if (isset($data['condition'])) {
-            $this->setCondition($data['condition']);
-        }
-
         return $this;
     }
 
     /**
      * Retrieve the default values.
      *
-     * @return array<string,mixed>
+     * @return array<string,mixed> An associative array.
      */
-    public function defaultData()
-    {
-        return [
-            'name'      => null,
-            'active'    => true,
-            'condition' => null,
-        ];
-    }
+    abstract public function defaultData();
 
     /**
      * Retrieve the expression data structure.
      *
-     * @return array<string,mixed>
+     * @return array<string,mixed> An associative array.
      */
-    public function data()
-    {
-        $data = [
-            'name'      => $this->name(),
-            'active'    => $this->active(),
-            'condition' => $this->condition(),
-        ];
-
-        return array_diff_assoc($data, $this->defaultData());
-    }
+    abstract public function data();
 
     /**
      * Set whether the expression is active or not.
@@ -112,7 +74,6 @@ abstract class AbstractExpression implements
     public function setActive($active)
     {
         $this->active = !!$active;
-
         return $this;
     }
 
@@ -154,56 +115,9 @@ abstract class AbstractExpression implements
     }
 
     /**
-     * Set the custom query expression.
-     *
-     * @param  string|null $expr The custom query expression.
-     * @throws InvalidArgumentException If the parameter is not a valid string expression.
-     * @return self
-     */
-    public function setCondition($expr)
-    {
-        if ($expr !== null) {
-            if (!is_string($expr)) {
-                throw new InvalidArgumentException(
-                    'Custom expression must be a string.'
-                );
-            }
-
-            $expr = trim($expr);
-            if ($expr === '') {
-                $expr = null;
-            }
-        }
-
-        $this->condition = $expr;
-
-        return $this;
-    }
-
-    /**
-     * Determine if the expression has a custom query.
-     *
-     * @return boolean
-     */
-    public function hasCondition()
-    {
-        return !(empty($this->condition) && !is_numeric($this->condition));
-    }
-
-    /**
-     * Retrieve the custom query expression.
-     *
-     * @return string|null A custom query expression.
-     */
-    public function condition()
-    {
-        return $this->condition;
-    }
-
-    /**
      * Parse the given value.
      *
-     * @param  mixed $value The value to be normalized.
+     * @param  mixed $value The value to be parsed.
      * @return mixed Returns the parsed value.
      */
     public static function parseValue($value)
@@ -251,22 +165,6 @@ abstract class AbstractExpression implements
         }
 
         return $value;
-    }
-
-    /**
-     * Compare two values.
-     *
-     * @param  mixed $a The custom value.
-     * @param  mixed $b The default value.
-     * @return integer
-     */
-    public static function diffValues($a, $b)
-    {
-        if ($a === $b) {
-            return 0;
-        }
-
-        return 1;
     }
 
     /**
@@ -321,24 +219,62 @@ abstract class AbstractExpression implements
     }
 
     /**
+     * Compare two values.
+     *
+     * @param  mixed $a The custom value.
+     * @param  mixed $b The default value.
+     * @return integer
+     */
+    public static function diffValues($a, $b)
+    {
+        if ($a === $b) {
+            return 0;
+        }
+
+        return 1;
+    }
+
+    /**
+     * Determine if the given value is callable, but not a string.
+     *
+     * @param  mixed $value The value to be checked.
+     * @return boolean
+     */
+    public static function isCallable($value)
+    {
+        return !is_string($value) && is_callable($value);
+    }
+
+    /**
+     * Retrieve the expression data that can be serialized with {@see json_encode()}.
+     *
+     * Convert the expression to its JSON representation.
+     * Convert the expression into something JSON serializable.
+     * Returns an array of parameters to serialize when this is serialized with json_encode().
+     *
      * @see    JsonSerializable
-     * @return array
+     * @uses   self::diffValues()
+     * @return array<string,mixed> An associative array containing only mutated values.
      */
     public function jsonSerialize()
     {
-        return $this->data();
+        return array_udiff_assoc($this->data(), $this->defaultData(), [ $this, 'diffValues' ]);
     }
 
     /**
+     * Generate a storable representation of the expression object.
+     *
      * @see    Serializable
-     * @return string
+     * @return string Returns a string containing a byte-stream representation of the object.
      */
     public function serialize()
     {
-        return serialize($this->data());
+        return serialize($this->jsonSerialize());
     }
 
     /**
+     * Convert the serialized data into an expression object.
+     *
      * @see    Serializable
      * @param  string $data The serialized data.
      * @return void

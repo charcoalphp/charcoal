@@ -5,17 +5,19 @@ namespace Charcoal\Source;
 use InvalidArgumentException;
 
 // From 'charcoal-core'
-use Charcoal\Source\AbstractExpression;
-use Charcoal\Source\FieldTrait;
+use Charcoal\Source\Expression;
+use Charcoal\Source\ExpressionFieldTrait;
 use Charcoal\Source\FilterInterface;
 
 /**
  * Filter Expression
+ *
+ * For affecting the results of a query that meet specified criteria.
  */
-class Filter extends AbstractExpression implements
+class Filter extends Expression implements
     FilterInterface
 {
-    use FieldTrait;
+    use ExpressionFieldTrait;
 
     const DEFAULT_OPERATOR = '=';
     const DEFAULT_OPERAND  = 'AND';
@@ -51,18 +53,31 @@ class Filter extends AbstractExpression implements
     /**
      * Set the filter clause data.
      *
-     * @param  array $data The clause data.
-     * @return Filter Chainable
+     * @param  array<string,mixed> $data The expression data;
+     *     as an associative array.
+     * @return self
      */
     public function setData(array $data)
     {
         parent::setData($data);
 
         /** @deprecated */
+        if (isset($data['string'])) {
+            trigger_error(
+                sprintf(
+                    'Filter expression option "string" is deprecated in favour of "condition": %s',
+                    $data['string']
+                ),
+                E_USER_DEPRECATED
+            );
+            $this->setCondition($data['string']);
+        }
+
+        /** @deprecated */
         if (isset($data['table_name'])) {
             trigger_error(
                 sprintf(
-                    'Query Expression option "table_name" is deprecated in favour of "table": %s',
+                    'Filter expression option "table_name" is deprecated in favour of "table": %s',
                     $data['table_name']
                 ),
                 E_USER_DEPRECATED
@@ -70,10 +85,11 @@ class Filter extends AbstractExpression implements
             $this->setTable($data['table_name']);
         }
 
+        /** @deprecated */
         if (isset($data['val'])) {
             trigger_error(
                 sprintf(
-                    'Query expression option "val" is deprecated in favour of "value": %s',
+                    'Filter expression option "val" is deprecated in favour of "value": %s',
                     $data['val']
                 ),
                 E_USER_DEPRECATED
@@ -91,6 +107,10 @@ class Filter extends AbstractExpression implements
 
         if (isset($data['value'])) {
             $this->setValue($data['value']);
+        }
+
+        if (isset($data['function'])) {
+            $this->setFunc($data['function']);
         }
 
         if (isset($data['func'])) {
@@ -111,43 +131,41 @@ class Filter extends AbstractExpression implements
     /**
      * Retrieve the default values for filtering.
      *
-     * @return array<string,mixed>
+     * @return array<string,mixed> An associative array.
      */
     public function defaultData()
     {
         return [
-            'property'  => null,
-            'table'     => null,
-            'value'     => null,
-            'func'      => null,
-            'operator'  => self::DEFAULT_OPERATOR,
-            'operand'   => self::DEFAULT_OPERAND,
-            'condition' => null,
-            'active'    => true,
-            'name'      => null,
+            'property'    => null,
+            'table'       => null,
+            'value'       => null,
+            'func'        => null,
+            'operator'    => self::DEFAULT_OPERATOR,
+            'operand'     => self::DEFAULT_OPERAND,
+            'condition'   => null,
+            'active'      => true,
+            'name'        => null,
         ];
     }
 
     /**
      * Retrieve the filter clause structure.
      *
-     * @return array<string,mixed>
+     * @return array<string,mixed> An associative array.
      */
     public function data()
     {
-        $data = [
-            'property'  => $this->property(),
-            'table'     => $this->table(),
-            'value'     => $this->value(),
-            'func'      => $this->func(),
-            'operator'  => $this->operator(),
-            'operand'   => $this->operand(),
-            'condition' => $this->condition(),
-            'active'    => $this->active(),
-            'name'      => $this->name(),
+        return [
+            'property'    => $this->property(),
+            'table'       => $this->table(),
+            'value'       => $this->value(),
+            'func'        => $this->func(),
+            'operator'    => $this->operator(),
+            'operand'     => $this->operand(),
+            'condition'   => $this->condition(),
+            'active'      => $this->active(),
+            'name'        => $this->name(),
         ];
-
-        return array_udiff_assoc($data, $this->defaultData(), [ $this, 'diffValues' ]);
     }
 
     /**
@@ -177,7 +195,7 @@ class Filter extends AbstractExpression implements
      *
      * @param  string $operator The comparison operator.
      * @throws InvalidArgumentException If the parameter is not a valid operator.
-     * @return Filter Chainable
+     * @return self
      */
     public function setOperator($operator)
     {
@@ -189,13 +207,13 @@ class Filter extends AbstractExpression implements
 
         $operator = strtoupper($operator);
         if (!in_array($operator, $this->validOperators())) {
-            throw new InvalidArgumentException(
-                'This is not a valid operator.'
-            );
+            throw new InvalidArgumentException(sprintf(
+                'Comparison operator "%s" not allowed in this context.',
+                $operator
+            ));
         }
 
         $this->operator = $operator;
-
         return $this;
     }
 
@@ -214,7 +232,7 @@ class Filter extends AbstractExpression implements
      *
      * @param  string $func The function name to invoke on the field.
      * @throws InvalidArgumentException If the parameter is not a valid function.
-     * @return Filter Chainable
+     * @return self
      */
     public function setFunc($func)
     {
@@ -225,19 +243,19 @@ class Filter extends AbstractExpression implements
 
         if (!is_string($func)) {
             throw new InvalidArgumentException(
-                'Func should be a string.'
+                'Function name should be a string.'
             );
         }
 
         $func = strtoupper($func);
         if (!in_array($func, $this->validFunc())) {
-            throw new InvalidArgumentException(
-                'This is not a valid function.'
-            );
+            throw new InvalidArgumentException(sprintf(
+                'Function "%s" not allowed in this context.',
+                $func
+            ));
         }
 
         $this->func = $func;
-
         return $this;
     }
 
@@ -256,7 +274,7 @@ class Filter extends AbstractExpression implements
      *
      * @param  string $operand The logical operator.
      * @throws InvalidArgumentException If the parameter is not a valid operand.
-     * @return Filter Chainable
+     * @return self
      */
     public function setOperand($operand)
     {
@@ -268,13 +286,13 @@ class Filter extends AbstractExpression implements
 
         $operand = strtoupper($operand);
         if (!in_array($operand, $this->validOperands())) {
-            throw new InvalidArgumentException(
-                'This is not a valid operand.'
-            );
+            throw new InvalidArgumentException(sprintf(
+                'Operand "%s" not allowed in this context.',
+                $operand
+            ));
         }
 
         $this->operand = $operand;
-
         return $this;
     }
 
@@ -285,13 +303,13 @@ class Filter extends AbstractExpression implements
      */
     public function operand()
     {
-        return strtoupper($this->operand);
+        return $this->operand;
     }
 
     /**
      * Retrieve the supported comparison operators (in uppercase).
      *
-     * @return array
+     * @return string[]
      */
     protected function validOperators()
     {
@@ -302,7 +320,7 @@ class Filter extends AbstractExpression implements
             '>', '>=', '<', '<=',
             'IS NULL', 'IS NOT NULL',
             '%', 'MOD',
-            'IN','NOT IN',
+            'IN', 'NOT IN',
             'REGEXP', 'NOT REGEXP'
         ];
     }
@@ -310,7 +328,7 @@ class Filter extends AbstractExpression implements
     /**
      * Retrieve the supported logical operators (in uppercase).
      *
-     * @return array
+     * @return string[]
      */
     protected function validOperands()
     {
@@ -324,7 +342,7 @@ class Filter extends AbstractExpression implements
     /**
      * Retrieve the supported functions (in uppercase).
      *
-     * @return array
+     * @return string[]
      */
     protected function validFunc()
     {

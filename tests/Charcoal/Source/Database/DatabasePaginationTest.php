@@ -9,7 +9,7 @@ use Charcoal\Source\Database\DatabasePagination;
 use Charcoal\Tests\Source\DatabaseExpressionTestTrait;
 
 /**
- *
+ * Test {@see DatabasePagination}.
  */
 class DatabasePaginationTest extends \PHPUnit_Framework_TestCase
 {
@@ -23,6 +23,21 @@ class DatabasePaginationTest extends \PHPUnit_Framework_TestCase
     final protected function createExpression()
     {
         return new DatabasePagination();
+    }
+
+    /**
+     * Test influence of "active" property on SQL compilation.
+     */
+    public function testInactiveExpression()
+    {
+        $obj = $this->createExpression();
+        $obj->setNumPerPage(10);
+
+        $obj->setActive(true);
+        $this->assertEquals('LIMIT 0, 10', $obj->sql());
+
+        $obj->setActive(false);
+        $this->assertEquals('', $obj->sql());
     }
 
     /**
@@ -68,58 +83,6 @@ class DatabasePaginationTest extends \PHPUnit_Framework_TestCase
 
         $obj->setNumPerPage(12);
         $this->assertEquals('LIMIT 0, 12', $obj->sql());
-    }
-
-    /**
-     * Test invalid SQL clause.
-     */
-    public function testInvalidSqlLimit()
-    {
-        $obj = $this->createExpression();
-
-        $this->setExpectedException(UnexpectedValueException::class);
-
-        $method = $this->getMethod($obj, 'byLimit');
-        $method->invoke($obj);
-    }
-
-    /**
-     * Test "condition" property with and without placeholders.
-     */
-    public function testCustomSql()
-    {
-        $obj = $this->createExpression();
-
-        $obj->setCondition('LIMIT 10 OFFSET 1');
-        $this->assertEquals('LIMIT 10 OFFSET 1', $obj->sql());
-    }
-
-    /**
-     * Test "condition" property has precedence over other features.
-     */
-    public function testCustomSqlPrecedence()
-    {
-        $obj = $this->createExpression();
-
-        // Should be ignored
-        $obj->setPage(3)->setNumPerPage(12);
-
-        // Should take precedence
-        $obj->setCondition('LIMIT 1');
-        $this->assertEquals('LIMIT 1', $obj->sql());
-    }
-
-    /**
-     * Test invalid custom SQL.
-     */
-    public function testCustomSqlWithoutQuery()
-    {
-        $obj = $this->createExpression();
-
-        $this->setExpectedException(UnexpectedValueException::class);
-
-        $method = $this->getMethod($obj, 'byCondition');
-        $method->invoke($obj);
     }
 
     /**

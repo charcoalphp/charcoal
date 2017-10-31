@@ -3,26 +3,27 @@
 namespace Charcoal\Source;
 
 // From 'charcoal-core'
-use Charcoal\Source\FieldInterface;
+use Charcoal\Source\ExpressionFieldInterface;
 
 /**
- * Defines an Order Expression.
+ * Describes a sorting expression.
  */
-interface OrderInterface extends FieldInterface
+interface OrderInterface extends
+    ExpressionFieldInterface
 {
     /**
      * Set the, pre-defined, sorting mode.
      *
-     * @param  string $mode The order mode.
+     * @param  string|null $mode The sorting mode.
      * @throws InvalidArgumentException If the mode is not a string or invalid.
-     * @return OrderInterface Chainable
+     * @return OrderInterface Returns the current expression.
      */
     public function setMode($mode);
 
     /**
      * Retrieve the sorting mode.
      *
-     * @return string The order mode.
+     * @return string|null
      */
     public function mode();
 
@@ -31,9 +32,16 @@ interface OrderInterface extends FieldInterface
      *
      * @param  string|array $values A list of field values.
      * @throws InvalidArgumentException If the parameter is not an array or a string.
-     * @return OrderInterface Chainable
+     * @return OrderInterface Returns the current expression.
      */
     public function setValues($values);
+
+    /**
+     * Determine if the Order expression has values.
+     *
+     * @return boolean
+     */
+    public function hasValues();
 
     /**
      * Retrieve the values to sort against.

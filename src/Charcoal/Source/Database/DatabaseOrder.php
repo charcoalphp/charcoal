@@ -10,7 +10,7 @@ use Charcoal\Source\DatabaseSource;
 use Charcoal\Source\Order;
 
 /**
- * The DatabaseOrder makes a Order SQL-aware.
+ * SQL Order Expression
  */
 class DatabaseOrder extends Order implements
     DatabaseExpressionInterface
@@ -36,41 +36,39 @@ class DatabaseOrder extends Order implements
     }
 
     /**
-     * Retrieve the Order's SQL as a string to append to an ORDER BY clause.
+     * Converts the order into a SQL expression for the ORDER BY clause.
      *
-     * @return string
+     * @return string A SQL string fragment.
      */
     public function sql()
     {
-        if ($this->active() === false) {
-            return '';
-        }
+        if ($this->active()) {
+            $mode = (string)$this->mode();
+            switch ($mode) {
+                /** NULL Mode */
+                case '':
+                    if ($this->hasCondition()) {
+                        return $this->byCondition();
+                    }
 
-        $mode = (string)$this->mode();
-        switch ($mode) {
-            /** NULL Mode */
-            case '':
-                if ($this->hasCondition()) {
-                    return $this->byCondition();
-                }
+                    if ($this->hasValues()) {
+                        return $this->byValues();
+                    }
+                    break;
 
-                if ($this->hasValues()) {
+                case self::MODE_RANDOM:
+                    return $this->byRandom();
+
+                case self::MODE_VALUES:
                     return $this->byValues();
-                }
-                break;
 
-            case self::MODE_RANDOM:
-                return $this->byRandom();
+                case self::MODE_CUSTOM:
+                    return $this->byCondition();
 
-            case self::MODE_VALUES:
-                return $this->byValues();
-
-            case self::MODE_CUSTOM:
-                return $this->byCondition();
-
-            case self::MODE_ASC:
-            case self::MODE_DESC:
-                return $this->byDirection();
+                case self::MODE_ASC:
+                case self::MODE_DESC:
+                    return $this->byDirection();
+            }
         }
 
         return '';

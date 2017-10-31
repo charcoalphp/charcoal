@@ -6,7 +6,7 @@ use JsonSerializable;
 use Serializable;
 
 /**
- * Defines a statement expression.
+ * Describes a query expression.
  */
 interface ExpressionInterface extends
     JsonSerializable,
@@ -15,40 +15,25 @@ interface ExpressionInterface extends
     /**
      * Set the expression data.
      *
-     * @param  array $data The expression data.
-     * @return ExpressionInterface Chainable
+     * @param  array<string,mixed> $data The expression data;
+     *     as an associative array.
+     * @return ExpressionInterface Returns the current expression.
      */
     public function setData(array $data);
 
     /**
      * Retrieve the expression data structure.
      *
-     * @return array
+     * @return array<string,mixed> An associative array.
      */
     public function data();
-
-    /**
-     * Set the custom expression.
-     *
-     * @param  string $expr The custom expression.
-     * @throws InvalidArgumentException If the parameter is not a valid expression.
-     * @return ExpressionInterface Chainable
-     */
-    public function setCondition($expr);
-
-    /**
-     * Retrieve the custom expression.
-     *
-     * @return string|null A custom expression.
-     */
-    public function condition();
 
     /**
      * Set the expression name.
      *
      * @param  string $name A unique identifier.
      * @throws InvalidArgumentException If the expression name invalid.
-     * @return ExpressionInterface Chainable
+     * @return ExpressionInterface Returns the current expression.
      */
     public function setName($name);
 
@@ -63,7 +48,7 @@ interface ExpressionInterface extends
      * Set whether the expression is active or not.
      *
      * @param  boolean $active The active flag.
-     * @return ExpressionInterface Chainable
+     * @return ExpressionInterface Returns the current expression.
      */
     public function setActive($active);
 

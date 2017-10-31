@@ -4,20 +4,24 @@ namespace Charcoal\Tests\Source;
 
 use InvalidArgumentException;
 
+// From PHPUnit
+use PHPUnit_Framework_Error;
+
 // From 'charcoal-core'
 use Charcoal\Source\Filter;
+use Charcoal\Source\FilterInterface;
 use Charcoal\Tests\ContainerIntegrationTrait;
-use Charcoal\Tests\Source\FieldExpressionTestTrait;
-use Charcoal\Tests\Source\QueryExpressionTestTrait;
+use Charcoal\Tests\Source\ExpressionTestFieldTrait;
+use Charcoal\Tests\Source\ExpressionTestTrait;
 
 /**
- *
+ * Test {@see Filter} and {@see FilterInterface}.
  */
 class FilterTest extends \PHPUnit_Framework_TestCase
 {
     use ContainerIntegrationTrait;
-    use FieldExpressionTestTrait;
-    use QueryExpressionTestTrait;
+    use ExpressionTestFieldTrait;
+    use ExpressionTestTrait;
 
     /**
      * Create expression for testing.
@@ -30,9 +34,23 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test new instance.
+     *
+     * Assertions:
+     * 1. Implements {@see FilterInterface}
+     */
+    public function testFilterConstruct()
+    {
+        $obj = $this->createExpression();
+
+        /** 1. Implementation */
+        $this->assertInstanceOf(FilterInterface::class, $obj);
+    }
+
+    /**
      * Provide data for value parsing.
      *
-     * @used-by QueryExpressionTestTrait::testDefaultValues()
+     * @used-by ExpressionTestTrait::testDefaultValues()
      * @return  array
      */
     final public function provideDefaultValues()
@@ -44,8 +62,9 @@ class FilterTest extends \PHPUnit_Framework_TestCase
             'function'  => [ 'func',       null ],
             'operator'  => [ 'operator',   '=' ],
             'operand'   => [ 'operand',    'AND' ],
-            'active'    => [ 'active',     true ],
             'condition' => [ 'condition',  null ],
+            'active'    => [ 'active',     true ],
+            'name'      => [ 'name',       null ],
         ];
     }
 
@@ -58,7 +77,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
      * 3. Chainable method
      *
      * Note: {@see Filter::value()} uses {@see \Charcoal\Source\AbstractExpression::parseValue()}.
-     * Tests for `parseValue()` are performed in {@see QueryExpressionTestTrait::testParseValue()}
+     * Tests for `parseValue()` are performed in {@see ExpressionTestTrait::testParseValue()}.
      */
     public function testValue()
     {
@@ -92,7 +111,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
      */
     public function testDeprecatedValError()
     {
-        $this->setExpectedException(\PHPUnit_Framework_Error::class);
+        $this->setExpectedException(PHPUnit_Framework_Error::class);
         $this->createExpression()->setData([ 'val' => 'qux' ]);
 
     }
@@ -249,11 +268,10 @@ class FilterTest extends \PHPUnit_Framework_TestCase
      * Assertions:
      * 1. Mutate all options
      * 2. Partially mutated state
+     * 3. Mutation via aliases
      */
     public function testData()
     {
-        $obj = $this->createExpression();
-
         /** 1. Mutate all options */
         $mutation = [
             'value'     => '%foobar',
@@ -262,11 +280,16 @@ class FilterTest extends \PHPUnit_Framework_TestCase
             'operand'   => 'OR',
             'property'  => 'col',
             'table'     => 'tbl',
-            'active'    => false,
             'condition' => '1 = 1',
+            'active'    => false,
+            'name'      => 'foo',
         ];
 
+        $obj = $this->createExpression();
         $obj->setData($mutation);
+        $this->assertStructHasBasicData($obj, $mutation);
+        $this->assertStructHasFieldData($obj, $mutation);
+
         $data = $obj->data();
 
         $this->assertArrayHasKey('value', $data);
@@ -285,9 +308,6 @@ class FilterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('OR', $data['operand']);
         $this->assertEquals('OR', $obj->operand());
 
-        $this->assertStructHasBasicData($obj, $mutation);
-        $this->assertStructHasFieldData($obj, $mutation);
-
         /** 2. Partially mutated state */
         $mutation = [
             'operator' => 'IS NULL'
@@ -296,20 +316,52 @@ class FilterTest extends \PHPUnit_Framework_TestCase
         $obj = $this->createExpression();
         $obj->setData($mutation);
 
-        $this->assertNull($obj->value());
-        $this->assertNull($obj->func());
-        $this->assertEquals('AND', $obj->operand());
-        $this->assertTrue($obj->active());
-        $this->assertNull($obj->condition());
+        $defs = $obj->defaultData();
+        $this->assertStructHasBasicData($obj, $defs);
+
+        $this->assertEquals($defs['value'], $obj->value());
+        $this->assertEquals($defs['func'], $obj->func());
+        $this->assertEquals($defs['operand'], $obj->operand());
+        $this->assertEquals($defs['condition'], $obj->condition());
 
         $data = $obj->data();
-        $this->assertArrayNotHasKey('value', $data);
-        $this->assertArrayNotHasKey('func', $data);
-        $this->assertArrayNotHasKey('operand', $data);
-        $this->assertArrayNotHasKey('active', $data);
-        $this->assertArrayNotHasKey('condition', $data);
-
-        $this->assertArrayHasKey('operator', $data);
+        $this->assertNotEquals($defs['operator'], $data['operator']);
         $this->assertEquals('IS NULL', $data['operator']);
+
+        /** 3. Mutation via aliases */
+        $mutation = [
+            'function' => 'REVERSE'
+        ];
+
+        $obj = $this->createExpression();
+        $obj->setData($mutation);
+
+        $data = $obj->data();
+        $this->assertEquals('REVERSE', $data['func']);
+    }
+
+    /**
+     * Test deprecated "string" property.
+     *
+     * @see OrderTest::testDeprecatedStringExpression()
+     */
+    public function testDeprecatedStringExpression()
+    {
+        $obj = $this->createExpression();
+
+        @$obj->setData([ 'string' => '1 = 1' ]);
+        $this->assertEquals('1 = 1', $obj->condition());
+    }
+
+    /**
+     * Test "string" property deprecation notice.
+     *
+     * @see OrderTest::testDeprecatedStringError()
+     */
+    public function testDeprecatedStringError()
+    {
+        $this->setExpectedException(PHPUnit_Framework_Error::class);
+        $this->createExpression()->setData([ 'string' => '1 = 1' ]);
+
     }
 }

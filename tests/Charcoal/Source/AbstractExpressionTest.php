@@ -2,21 +2,22 @@
 
 namespace Charcoal\Tests\Source;
 
+use stdClass;
+use DateTime;
 use InvalidArgumentException;
 
 // From 'charcoal-core'
 use Charcoal\Source\AbstractExpression;
 use Charcoal\Source\ExpressionInterface;
 use Charcoal\Tests\ContainerIntegrationTrait;
-use Charcoal\Tests\Source\QueryExpressionTestTrait;
+use Charcoal\Tests\Source\ExpressionTestTrait;
 
 /**
- *
+ * Test {@see AbstractExpression}.
  */
 class AbstractExpressionTest extends \PHPUnit_Framework_TestCase
 {
     use ContainerIntegrationTrait;
-    use QueryExpressionTestTrait;
 
     /**
      * Create expression for testing.
@@ -26,20 +27,6 @@ class AbstractExpressionTest extends \PHPUnit_Framework_TestCase
     final protected function createExpression()
     {
         return $this->getMockForAbstractClass(AbstractExpression::class);
-    }
-
-    /**
-     * Provide data for value parsing.
-     *
-     * @used-by QueryExpressionTestTrait::testDefaultValues()
-     * @return  array
-     */
-    final public function provideDefaultValues()
-    {
-        return [
-            'active'    => [ 'active',    true ],
-            'condition' => [ 'condition', null ],
-        ];
     }
 
     /**
@@ -106,184 +93,204 @@ class AbstractExpressionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test the "condition" property.
+     * Test value parsing.
      *
-     * Assertions:
-     * 1. Default state
-     * 2. Mutated state
-     * 3. Chainable method
-     * 4. Trimmed value
-     * 5. Accepts NULL
-     * 6. Swaps blank string for NULL
+     * @dataProvider provideParsableValues
+     *
+     * @param mixed $value    The value to test.
+     * @param mixed $expected The expected result.
      */
-    public function testConditionExpression()
+    public function testParseValue($value, $expected)
     {
         $obj = $this->createExpression();
 
-        /** 1. Default Value */
-        $this->assertNull($obj->condition());
-
-        /** 2. Mutated Value */
-        $that = $obj->setCondition('1 = 1');
-        $this->assertInternalType('string', $obj->condition());
-        $this->assertEquals('1 = 1', $obj->condition());
-
-        /** 3. Chainable */
-        $this->assertSame($obj, $that);
-
-        /** 4. Trimmed value */
-        $obj->setCondition('   1 = 1  ');
-        $this->assertEquals('1 = 1', $obj->condition());
-
-        /** 5. Accepts NULL */
-        $obj->setCondition(null);
-        $this->assertNull($obj->condition());
-
-        /** 6. Swaps blank string for NULL */
-        $obj->setCondition('  ');
-        $this->assertNull($obj->condition());
+        $this->assertEquals($expected, $obj::parseValue($value));
     }
 
     /**
-     * Test the conditional check of "condition".
+     * Provide data for value parsing.
+     *
+     * @used-by self::testParseValue()
+     * @return  array
      */
-    public function testHasConditionExpression()
+    public function provideParsableValues()
+    {
+        $container = $this->getContainer();
+
+        $prop = $container['property/factory']->create('date-time');
+        $prop->setVal('13 July 2004');
+        $time = new DateTime('8 June 1995');
+
+        return [
+            'Null Type'              => [ null, null ],
+            'Integer Type'           => [ 42, 42 ],
+            'Integer String'         => [ '3', '3' ],
+            'Boolean Type'           => [ true, true ],
+            'Boolean String (TRUE)'  => [ 'true', true ],
+            'Boolean String (FALSE)' => [ 'false', false ],
+            'Date/Time Object'       => [ $time, '1995-06-08 00:00:00' ],
+            'Date/Time Property'     => [ $prop, '2004-07-13 00:00:00' ],
+        ];
+    }
+
+    /**
+     * Test value quoting.
+     *
+     * @dataProvider provideQuotableValues
+     *
+     * @param mixed $value    The value to test.
+     * @param mixed $expected The expected result.
+     */
+    public function testQuoteValue($value, $expected)
     {
         $obj = $this->createExpression();
 
-        $this->assertFalse($obj->hasCondition());
-
-        $obj->setCondition('  ');
-        $this->assertFalse($obj->hasCondition());
-
-        $that = $obj->setCondition('1 = 1');
-        $this->assertTrue($obj->hasCondition());
+        $this->assertEquals($expected, $obj::quoteValue($value));
     }
 
     /**
-     * Test deprecated "string" property.
+     * Provide data for value quoting.
+     *
+     * @used-by self::testQuoteValue()
+     * @return  array
      */
-    public function testDeprecatedStringExpression()
+    public function provideQuotableValues()
+    {
+        $obj = new stdClass();
+
+        return [
+            'Null Type'       => [ null, null ],
+            'Array Type'      => [ [ 42 ], [ 42 ] ],
+            'Integer Type'    => [ 42, 42 ],
+            'Integer String'  => [ '3', '3' ],
+            'Quotable String' => [ 'Foo "Qux" Baz', '"Foo &quot;Qux&quot; Baz"' ],
+            'Boolean Type'    => [ true, 1 ],
+            'Boolean String'  => [ 'false', 0 ],
+            'Object Type'     => [ $obj, $obj ],
+        ];
+    }
+
+    /**
+     * Test field quoting.
+     *
+     * @dataProvider provideQuotableIdentifiers
+     *
+     * @param mixed $fieldName The field name.
+     * @param mixed $tableName The table name.
+     * @param mixed $expected  The expected identifier.
+     */
+    public function testQuoteIdentifier($fieldName, $tableName, $expected)
     {
         $obj = $this->createExpression();
 
-        @$obj->setData([ 'string' => '1 = 1' ]);
-        $this->assertEquals('1 = 1', $obj->condition());
+        $this->assertEquals($expected, $obj::quoteIdentifier($fieldName, $tableName, $expected));
     }
 
     /**
-     * Test "string" property deprecation notice.
+     * Provide data for field quoting.
+     *
+     * @used-by self::testQuoteIdentifier()
+     * @return  array
      */
-    public function testDeprecatedStringError()
+    public function provideQuotableIdentifiers()
     {
-        $this->setExpectedException(\PHPUnit_Framework_Error::class);
-        $this->createExpression()->setData([ 'string' => '1 = 1' ]);
-
+        return [
+            [ null,   null,   ''          ],
+            [ '',     null,   ''          ],
+            [ '*',    null,   '*'         ],
+            [ 'col',  null,   '`col`'     ],
+            [ '*',    'tbl',  'tbl.*'     ],
+            [ 'col',  'tbl',  'tbl.`col`' ],
+        ];
     }
 
     /**
-     * Test "condition" property with invalid value.
+     * Test field quoting with invalid field name.
      */
-    public function testConditionExpressionWithInvalidValue()
+    public function testQuoteIdentifierWithInvalidFieldName()
     {
         $this->setExpectedException(InvalidArgumentException::class);
-        $this->createExpression()->setCondition([]);
+        $obj = $this->createExpression();
+        $obj::quoteIdentifier([]);
     }
 
     /**
-     * Test data structure with mutated state.
-     *
-     * Assertions:
-     * 1. Mutate all options
-     * 2. Partially mutated state
+     * Test field quoting with blank table name.
      */
-    public function testData()
+    public function testQuoteIdentifierWithBlankTableName()
     {
+        $this->setExpectedException(InvalidArgumentException::class);
         $obj = $this->createExpression();
-
-        /** 1. Mutate all options */
-        $mutation = [
-            'active'    => false,
-            'condition' => '1 = 1',
-        ];
-        $obj->setData($mutation);
-        $this->assertStructHasBasicData($obj, $mutation);
-
-        /** 2. Partially mutated state */
-        $obj = $this->createExpression();
-        $obj->setData([ 'condition' => '2 = 2' ]);
-
-        $data = $obj->data();
-        $this->assertArrayNotHasKey('active', $data);
-        $this->assertArrayHasKey('condition', $data);
-        $this->assertEquals('2 = 2', $data['condition']);
-
-        $obj = $this->createExpression();
-        $obj->setData([ 'active' => false ]);
-
-        $data = $obj->data();
-        $this->assertArrayNotHasKey('condition', $data);
-        $this->assertArrayHasKey('active', $data);
-        $this->assertFalse($data['active']);
+        $obj::quoteIdentifier('foo', '');
     }
 
     /**
-     * Test JSON serialization.
-     *
-     * Assertions:
-     * 1. Serialization from default state
-     * 2. Serialization from mutated state
+     * Test field quoting with invalid table name.
      */
-    public function testJsonSerializable()
+    public function testQuoteIdentifierWithInvalidTableName()
     {
+        $this->setExpectedException(InvalidArgumentException::class);
         $obj = $this->createExpression();
-
-        /** 1. Serialization from default state */
-        $this->assertJsonStringEqualsJsonString(
-            json_encode([]),
-            json_encode($obj)
-        );
-
-        /** 2. Serialization from mutated state */
-        $mutation = [
-            'active'    => false,
-            'condition' => '1 = 1',
-        ];
-        $obj->setData($mutation);
-        $this->assertJsonStringEqualsJsonString(
-            json_encode($mutation),
-            json_encode($obj)
-        );
+        $obj::quoteIdentifier('foo', []);
     }
 
     /**
-     * Test data serialization.
+     * Test value differentiation.
      *
-     * Assertions:
-     * 1. Serialization from default state
-     * 2. Serialization from mutated state
+     * @dataProvider provideDiffValues
+     *
+     * @param mixed $a        The custom value.
+     * @param mixed $b        The default value.
+     * @param mixed $expected The expected result.
      */
-    public function testSerializable()
+    public function testDiffValues($a, $b, $expected)
     {
         $obj = $this->createExpression();
 
-        /** 1. Serialization from default state */
-        $that = unserialize(serialize($obj));
-        $this->assertInstanceOf(AbstractExpression::class, $that);
-        $this->assertEquals($obj, $that);
-        $this->assertTrue($that->active());
-        $this->assertNull($that->condition());
+        $this->assertEquals($expected, $obj::diffValues($a, $b));
+    }
 
-        /** 2. Serialization from mutated state */
-        $mutation = [
-            'active'    => false,
-            'condition' => '1 = 1',
+    /**
+     * Provide data for value differentiation.
+     *
+     * @used-by self::testDiffValues()
+     * @return  array
+     */
+    public function provideDiffValues()
+    {
+        return [
+            'Same Type'      => [ 5, 5, 0 ],
+            'Different Type' => [ 5, '5', 1 ],
         ];
-        $obj->setData($mutation);
-        $that = unserialize(serialize($obj));
-        $this->assertInstanceOf(AbstractExpression::class, $that);
-        $this->assertEquals($obj, $that);
-        $this->assertFalse($that->active());
-        $this->assertEquals('1 = 1', $that->condition());
+    }
+
+    /**
+     * Test callable detection.
+     *
+     * @dataProvider provideCallableValues
+     *
+     * @param mixed $value    The value to test.
+     * @param mixed $expected The expected result.
+     */
+    public function testIsCallable($value, $expected)
+    {
+        $obj = $this->createExpression();
+
+        $this->assertEquals($expected, $obj::isCallable($value));
+    }
+
+    /**
+     * Provide data for callable detection.
+     *
+     * @used-by self::testIsCallable()
+     * @return  array
+     */
+    public function provideCallableValues()
+    {
+        return [
+            'Null Type'   => [ null, false ],
+            'String Type' => [ 'strval', false ],
+            'Closure'     => [ function () {}, true ],
+        ];
     }
 }

@@ -2,18 +2,21 @@
 
 namespace Charcoal\Source;
 
+use InvalidArgumentException;
+
 // From 'charcoal-property'
 use Charcoal\Property\PropertyInterface;
 
 /**
- * Defines a field property.
+ * Describes a field property.
  */
-interface FieldInterface
+interface ExpressionFieldInterface
 {
     /**
      * Set model property key or source field key.
      *
      * @param  string|PropertyInterface $property The related property.
+     * @throws InvalidArgumentException If the parameter is invalid.
      * @return self
      */
     public function setProperty($property);
@@ -36,6 +39,7 @@ interface FieldInterface
      * Set the reference to the table related to the field.
      *
      * @param  string $table The table name or alias.
+     * @throws InvalidArgumentException If the parameter is not a string.
      * @return self
      */
     public function setTable($table);

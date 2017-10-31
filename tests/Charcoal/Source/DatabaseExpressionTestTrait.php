@@ -24,6 +24,11 @@ trait DatabaseExpressionTestTrait
     abstract protected function createExpression();
 
     /**
+     * Test influence of "active" property on SQL compilation.
+     */
+    abstract public function testInactiveExpression();
+
+    /**
      * Retrieve access to a non-public method.
      *
      * @param  object $obj  The object to access.
@@ -44,26 +49,11 @@ trait DatabaseExpressionTestTrait
      * Assertions:
      * 1. Implements {@see ExpressionInterface}
      */
-    public function testContruct()
+    public function testConstruct()
     {
         $obj = $this->createExpression();
 
         /** 1. Implementation */
         $this->assertInstanceOf(ExpressionInterface::class, $obj);
-    }
-
-    /**
-     * Test "active" property.
-     */
-    public function testInactiveExpression()
-    {
-        $obj = $this->createExpression();
-        $obj->setData([ 'condition' => ' /* xyzzy */ ' ]);
-
-        $obj->setActive(true);
-        $this->assertEquals('/* xyzzy */', $obj->sql());
-
-        $obj->setActive(false);
-        $this->assertEquals('', $obj->sql());
     }
 }

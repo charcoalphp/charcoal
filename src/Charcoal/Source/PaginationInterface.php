@@ -3,16 +3,17 @@
 namespace Charcoal\Source;
 
 /**
- * Defines a Limit/Offset Clause.
+ * Describes a limit/offset clause of a query.
  */
 interface PaginationInterface
 {
     /**
      * Set the page number.
      *
-     * @param  integer $page The current page. Starts at 0.
+     * @param  integer $page The current page.
+     *     Pages should start at 1.
      * @throws InvalidArgumentException If the parameter is not numeric or < 0.
-     * @return PaginationInterface Chainable
+     * @return PaginationInterface Returns the current expression.
      */
     public function setPage($page);
 
@@ -26,11 +27,12 @@ interface PaginationInterface
     /**
      * Set the number of results per page.
      *
-     * @param  integer $num The number ot item to retrieve per page.
+     * @param  integer $count The number of results to return, per page.
+     *     Use 0 to request all results.
      * @throws InvalidArgumentException If the parameter is not numeric or < 0.
-     * @return PaginationInterface Chainable
+     * @return PaginationInterface Returns the current expression.
      */
-    public function setNumPerPage($num);
+    public function setNumPerPage($count);
 
     /**
      * Retrieve the number of results per page.

@@ -15,7 +15,7 @@ use Charcoal\Tests\ContainerIntegrationTrait;
 use Charcoal\Tests\Source\DatabaseExpressionTestTrait;
 
 /**
- *
+ * Test {@see DatabaseFilter}.
  */
 class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
 {
@@ -60,6 +60,21 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('table', $data);
         $this->assertEquals(DatabaseSource::DEFAULT_TABLE_ALIAS, $data['table']);
         $this->assertEquals(DatabaseSource::DEFAULT_TABLE_ALIAS, $obj->table());
+    }
+
+    /**
+     * Test influence of "active" property on SQL compilation.
+     */
+    public function testInactiveExpression()
+    {
+        $obj = $this->createExpression();
+        $obj->setProperty('foo')->setValue('Charcoal');
+
+        $obj->setActive(true);
+        $this->assertEquals('(objTable.`foo` = \'Charcoal\')', $obj->sql());
+
+        $obj->setActive(false);
+        $this->assertEquals('', $obj->sql());
     }
 
     /**
@@ -122,6 +137,18 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
 
         $method = $this->getMethod($obj, 'byCondition');
         $method->invoke($obj);
+    }
+
+    /**
+     * Test condition compilation.
+     */
+    public function testCompileConditions()
+    {
+        $obj = $this->createExpression();
+
+        $method = $this->getMethod($obj, 'compileConditions');
+        $result = $method->invoke($obj, []);
+        $this->assertEquals('()', $result);
     }
 
 

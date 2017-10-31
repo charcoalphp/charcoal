@@ -9,70 +9,25 @@ use Charcoal\Source\Database\DatabaseExpressionInterface;
 use Charcoal\Source\Pagination;
 
 /**
- * The DatabasePagination makes a Pagination SQL-aware
+ * SQL Pagination Clause
  */
 class DatabasePagination extends Pagination implements
     DatabaseExpressionInterface
 {
     /**
-     * Generate the pagination's SQL as a string (full "LIMIT" clause)
+     * Converts the pagination into a SQL expression for the LIMIT clause.
      *
-     * For example, for the pagination `{ page: 3, num_per_page: 50 }` the result
-     * would be: `' LIMIT 100, 50'`.
-     *
-     * @return string
+     * @return string A SQL string fragment.
      */
     public function sql()
     {
-        if ($this->active() === false) {
-            return '';
-        }
-
-        if ($this->hasCondition()) {
-            return $this->byCondition();
-        }
-
-        if ($this->hasLimit()) {
-            return $this->byLimit();
+        if ($this->active() && $this->hasLimit()) {
+            $limit  = $this->limit();
+            $offset = $this->offset();
+            return 'LIMIT '.$offset.', '.$limit;
         }
 
         return '';
-    }
-
-    /**
-     * Retrieve the custom LIMIT clause.
-     *
-     * @throws UnexpectedValueException If the custom clause is empty.
-     * @return string
-     */
-    protected function byCondition()
-    {
-        if (!$this->hasCondition()) {
-            throw new UnexpectedValueException(
-                'Custom expression can not be empty.'
-            );
-        }
-
-        return $this->condition();
-    }
-
-    /**
-     * Retrieve the LIMIT clause by page number and results per page.
-     *
-     * @throws UnexpectedValueException If there is no count per page.
-     * @return string
-     */
-    protected function byLimit()
-    {
-        $limit = $this->limit();
-        if ($limit < 1) {
-            throw new UnexpectedValueException(
-                'Number Per Page must be greater than zero.'
-            );
-        }
-
-        $offset = $this->offset();
-        return 'LIMIT '.$offset.', '.$limit;
     }
 
     /**

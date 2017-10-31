@@ -6,16 +6,17 @@ use InvalidArgumentException;
 
 // From 'charcoal-core'
 use Charcoal\Source\Pagination;
+use Charcoal\Source\PaginationInterface;
 use Charcoal\Tests\ContainerIntegrationTrait;
-use Charcoal\Tests\Source\QueryExpressionTestTrait;
+use Charcoal\Tests\Source\ExpressionTestTrait;
 
 /**
- *
+ * Test {@see Pagination} and {@see PaginationInterface}.
  */
 class PaginationTest extends \PHPUnit_Framework_TestCase
 {
     use ContainerIntegrationTrait;
-    use QueryExpressionTestTrait;
+    use ExpressionTestTrait;
 
     /**
      * Create expression for testing.
@@ -28,18 +29,32 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test new instance.
+     *
+     * Assertions:
+     * 1. Implements {@see PaginationInterface}
+     */
+    public function testPaginationConstruct()
+    {
+        $obj = $this->createExpression();
+
+        /** 1. Implementation */
+        $this->assertInstanceOf(PaginationInterface::class, $obj);
+    }
+
+    /**
      * Provide data for value parsing.
      *
-     * @used-by QueryExpressionTestTrait::testDefaultValues()
+     * @used-by ExpressionTestTrait::testDefaultValues()
      * @return  array
      */
     final public function provideDefaultValues()
     {
         return [
-            'page num'  => [ 'page',         1 ],
-            'per page'  => [ 'num_per_page', 0 ],
-            'active'    => [ 'active',       true ],
-            'condition' => [ 'condition',    null ],
+            'page num' => [ 'page',         1 ],
+            'per page' => [ 'num_per_page', 0 ],
+            'active'   => [ 'active',       true ],
+            'name'     => [ 'name',         null ],
         ];
     }
 
@@ -156,20 +171,22 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
      * Assertions:
      * 1. Mutate all options
      * 2. Partially mutated state
+     * 3. Mutation via aliases
      */
     public function testData()
     {
-        $obj = $this->createExpression();
-
         /** 1. Mutate all options */
         $mutation = [
             'page'         => 3,
             'num_per_page' => 25,
             'active'       => false,
-            'condition'          => '1 = 1',
+            'name'         => 'foo',
         ];
 
+        $obj = $this->createExpression();
         $obj->setData($mutation);
+        $this->assertStructHasBasicData($obj, $mutation);
+
         $data = $obj->data();
 
         $this->assertArrayHasKey('page', $data);
@@ -180,8 +197,6 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(25, $data['num_per_page']);
         $this->assertEquals(25, $obj->numPerPage());
 
-        $this->assertStructHasBasicData($obj, $mutation);
-
         /** 2. Partially mutated state */
         $mutation = [
             'num_per_page' => 10
@@ -190,17 +205,24 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
         $obj = $this->createExpression();
         $obj->setData($mutation);
 
-        $this->assertEquals(1, $obj->page());
-        $this->assertTrue($obj->active());
-        $this->assertNull($obj->condition());
+        $defs = $obj->defaultData();
+        $this->assertStructHasBasicData($obj, $defs);
+        $this->assertEquals($defs['page'], $obj->page());
 
         $data = $obj->data();
-        $this->assertArrayNotHasKey('page', $data);
-        $this->assertArrayNotHasKey('active', $data);
-        $this->assertArrayNotHasKey('condition', $data);
-
-        $this->assertArrayHasKey('num_per_page', $data);
+        $this->assertNotEquals($defs['num_per_page'], $data['num_per_page']);
         $this->assertEquals(10, $data['num_per_page']);
+
+        /** 3. Mutation via aliases */
+        $mutation = [
+            'per_page' => 15
+        ];
+
+        $obj = $this->createExpression();
+        $obj->setData($mutation);
+
+        $data = $obj->data();
+        $this->assertEquals(15, $data['num_per_page']);
     }
 
     /**

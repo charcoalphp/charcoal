@@ -9,14 +9,14 @@ use Charcoal\Property\GenericProperty;
 use Charcoal\Property\PropertyInterface;
 
 // From 'charcoal-core'
-use Charcoal\Source\FieldTrait;
-use Charcoal\Source\FieldInterface;
+use Charcoal\Source\ExpressionFieldTrait;
+use Charcoal\Source\ExpressionFieldInterface;
 use Charcoal\Tests\ContainerIntegrationTrait;
 
 /**
- *
+ * Test {@see ExpressionFieldTrait} and {@see ExpressionFieldInterface}.
  */
-class FieldTraitTest extends \PHPUnit_Framework_TestCase
+class ExpressionFieldTraitTest extends \PHPUnit_Framework_TestCase
 {
     use ContainerIntegrationTrait;
 
@@ -33,11 +33,11 @@ class FieldTraitTest extends \PHPUnit_Framework_TestCase
     /**
      * Create mock object for testing.
      *
-     * @return FieldInterface
+     * @return ExpressionFieldInterface
      */
     final public function createField()
     {
-        $obj = $this->getMockForTrait(FieldTrait::class);
+        $obj = $this->getMockForTrait(ExpressionFieldTrait::class);
 
         return $obj;
     }

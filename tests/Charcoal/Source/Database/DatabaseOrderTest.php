@@ -11,7 +11,7 @@ use Charcoal\Source\Database\DatabaseOrder;
 use Charcoal\Tests\Source\DatabaseExpressionTestTrait;
 
 /**
- *
+ * Test {@see DatabaseOrder}.
  */
 class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
 {
@@ -40,6 +40,21 @@ class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('table', $data);
         $this->assertEquals(DatabaseSource::DEFAULT_TABLE_ALIAS, $data['table']);
         $this->assertEquals(DatabaseSource::DEFAULT_TABLE_ALIAS, $obj->table());
+    }
+
+    /**
+     * Test influence of "active" property on SQL compilation.
+     */
+    public function testInactiveExpression()
+    {
+        $obj = $this->createExpression();
+        $obj->setMode('asc')->setProperty('foo');
+
+        $obj->setActive(true);
+        $this->assertEquals('objTable.`foo` ASC', $obj->sql());
+
+        $obj->setActive(false);
+        $this->assertEquals('', $obj->sql());
     }
 
     /**

@@ -3,12 +3,13 @@
 namespace Charcoal\Source;
 
 // From 'charcoal-core'
-use Charcoal\Source\FieldInterface;
+use Charcoal\Source\ExpressionFieldInterface;
 
 /**
- * Defines a Condition Expression.
+ * Describes a predicate expression.
  */
-interface FilterInterface extends FieldInterface
+interface FilterInterface extends
+    ExpressionFieldInterface
 {
     /**
      * Set the value used for comparison.
@@ -30,7 +31,7 @@ interface FilterInterface extends FieldInterface
      *
      * @param  string $operator The comparison operator.
      * @throws InvalidArgumentException If the parameter is not a valid operator.
-     * @return FilterInterface Chainable
+     * @return FilterInterface Returns the current expression.
      */
     public function setOperator($operator);
 
@@ -46,7 +47,7 @@ interface FilterInterface extends FieldInterface
      *
      * @param  string $func The function name to invoke on the field.
      * @throws InvalidArgumentException If the parameter is not a valid function.
-     * @return FilterInterface Chainable
+     * @return FilterInterface Returns the current expression.
      */
     public function setFunc($func);
 
@@ -61,7 +62,8 @@ interface FilterInterface extends FieldInterface
      * Set the operator used for joining the next filter.
      *
      * @param  string $operand The logical operator.
-     * @return FilterInterface Chainable
+     * @throws InvalidArgumentException If the parameter is not a valid operand.
+     * @return FilterInterface Returns the current expression.
      */
     public function setOperand($operand);
 

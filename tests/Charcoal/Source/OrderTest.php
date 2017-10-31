@@ -4,20 +4,24 @@ namespace Charcoal\Tests\Source;
 
 use InvalidArgumentException;
 
+// From PHPUnit
+use PHPUnit_Framework_Error;
+
 // From 'charcoal-core'
 use Charcoal\Source\Order;
+use Charcoal\Source\OrderInterface;
 use Charcoal\Tests\ContainerIntegrationTrait;
-use Charcoal\Tests\Source\FieldExpressionTestTrait;
-use Charcoal\Tests\Source\QueryExpressionTestTrait;
+use Charcoal\Tests\Source\ExpressionTestFieldTrait;
+use Charcoal\Tests\Source\ExpressionTestTrait;
 
 /**
- *
+ * Test {@see Order} and {@see OrderInterface}.
  */
 class OrderTest extends \PHPUnit_Framework_TestCase
 {
     use ContainerIntegrationTrait;
-    use FieldExpressionTestTrait;
-    use QueryExpressionTestTrait;
+    use ExpressionTestFieldTrait;
+    use ExpressionTestTrait;
 
     /**
      * Create expression for testing.
@@ -30,9 +34,23 @@ class OrderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test new instance.
+     *
+     * Assertions:
+     * 1. Implements {@see OrderInterface}
+     */
+    public function testOrderConstruct()
+    {
+        $obj = $this->createExpression();
+
+        /** 1. Implementation */
+        $this->assertInstanceOf(OrderInterface::class, $obj);
+    }
+
+    /**
      * Provide data for value parsing.
      *
-     * @used-by QueryExpressionTestTrait::testDefaultValues()
+     * @used-by ExpressionTestTrait::testDefaultValues()
      * @return  array
      */
     final public function provideDefaultValues()
@@ -42,8 +60,9 @@ class OrderTest extends \PHPUnit_Framework_TestCase
             'table'     => [ 'table',      null ],
             'mode'      => [ 'mode',       null ],
             'values'    => [ 'values',     null ],
-            'active'    => [ 'active',     true ],
             'condition' => [ 'condition',  null ],
+            'active'    => [ 'active',     true ],
+            'name'      => [ 'name',       null ],
         ];
     }
 
@@ -173,8 +192,6 @@ class OrderTest extends \PHPUnit_Framework_TestCase
      */
     public function testData()
     {
-        $obj = $this->createExpression();
-
         /** 1. Mutate all options */
         $values   = [ 'foo', 'baz', 'qux' ];
         $mutation = [
@@ -182,11 +199,16 @@ class OrderTest extends \PHPUnit_Framework_TestCase
             'values'    => $values,
             'property'  => 'col',
             'table'     => 'tbl',
-            'active'    => false,
             'condition' => '1 = 1',
+            'active'    => false,
+            'name'      => 'foo',
         ];
 
+        $obj = $this->createExpression();
         $obj->setData($mutation);
+        $this->assertStructHasBasicData($obj, $mutation);
+        $this->assertStructHasFieldData($obj, $mutation);
+
         $data = $obj->data();
 
         $this->assertArrayHasKey('mode', $data);
@@ -197,9 +219,6 @@ class OrderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($values, $data['values']);
         $this->assertEquals($values, $obj->values());
 
-        $this->assertStructHasBasicData($obj, $mutation);
-        $this->assertStructHasFieldData($obj, $mutation);
-
         /** 2. Partially mutated state */
         $mutation = [
             'mode' => 'desc'
@@ -208,16 +227,14 @@ class OrderTest extends \PHPUnit_Framework_TestCase
         $obj = $this->createExpression();
         $obj->setData($mutation);
 
-        $this->assertNull($obj->values());
-        $this->assertTrue($obj->active());
-        $this->assertNull($obj->condition());
+        $defs = $obj->defaultData();
+        $this->assertStructHasBasicData($obj, $defs);
+
+        $this->assertEquals($defs['values'], $obj->values());
+        $this->assertEquals($defs['condition'], $obj->condition());
 
         $data = $obj->data();
-        $this->assertArrayNotHasKey('values', $data);
-        $this->assertArrayNotHasKey('active', $data);
-        $this->assertArrayNotHasKey('condition', $data);
-
-        $this->assertArrayHasKey('mode', $data);
+        $this->assertNotEquals($defs['mode'], $data['mode']);
         $this->assertEquals('desc', $data['mode']);
 
         /** 3. Auto-set mode from "condition" */
@@ -231,10 +248,32 @@ class OrderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('2 = 2', $obj->condition());
 
         $data = $obj->data();
-        $this->assertArrayHasKey('condition', $data);
         $this->assertEquals('2 = 2', $data['condition']);
-
-        $this->assertArrayHasKey('mode', $data);
         $this->assertEquals('custom', $data['mode']);
+    }
+
+    /**
+     * Test deprecated "string" property.
+     *
+     * @see FilterTest::testDeprecatedStringExpression()
+     */
+    public function testDeprecatedStringExpression()
+    {
+        $obj = $this->createExpression();
+
+        @$obj->setData([ 'string' => '1 = 1' ]);
+        $this->assertEquals('1 = 1', $obj->condition());
+    }
+
+    /**
+     * Test "string" property deprecation notice.
+     *
+     * @see FilterTest::testDeprecatedStringError()
+     */
+    public function testDeprecatedStringError()
+    {
+        $this->setExpectedException(PHPUnit_Framework_Error::class);
+        $this->createExpression()->setData([ 'string' => '1 = 1' ]);
+
     }
 }

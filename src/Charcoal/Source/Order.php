@@ -5,12 +5,14 @@ namespace Charcoal\Source;
 use InvalidArgumentException;
 
 // From 'charcoal-core'
-use Charcoal\Source\AbstractExpression;
-use Charcoal\Source\FieldTrait;
+use Charcoal\Source\Expression;
+use Charcoal\Source\ExpressionFieldTrait;
 use Charcoal\Source\OrderInterface;
 
 /**
  * Order Expression
+ *
+ * For sorting the results of a query.
  *
  * Available pre-defined modes:
  * - `asc` to order in ascending (0-9, A-Z) order.
@@ -19,10 +21,10 @@ use Charcoal\Source\OrderInterface;
  * - `values` to order by a defined array of properties.
  * - `custom` to order by a custom SQL string.
  */
-class Order extends AbstractExpression implements
+class Order extends Expression implements
     OrderInterface
 {
-    use FieldTrait;
+    use ExpressionFieldTrait;
 
     const MODE_ASC    = 'asc';
     const MODE_DESC   = 'desc';
@@ -45,20 +47,33 @@ class Order extends AbstractExpression implements
     protected $values;
 
     /**
-     * Set the order clause data.
+     * Set the sorting expression data.
      *
-     * @param  array $data The clause data.
-     * @return Order Chainable
+     * @param  array<string,mixed> $data The expression data;
+     *     as an associative array.
+     * @return self
      */
     public function setData(array $data)
     {
         parent::setData($data);
 
         /** @deprecated */
+        if (isset($data['string'])) {
+            trigger_error(
+                sprintf(
+                    'Sort expression option "string" is deprecated in favour of "condition": %s',
+                    $data['string']
+                ),
+                E_USER_DEPRECATED
+            );
+            $this->setCondition($data['string']);
+        }
+
+        /** @deprecated */
         if (isset($data['table_name'])) {
             trigger_error(
                 sprintf(
-                    'Query Expression option "table_name" is deprecated in favour of "table": %s',
+                    'Sort expression option "table_name" is deprecated in favour of "table": %s',
                     $data['table_name']
                 ),
                 E_USER_DEPRECATED
@@ -82,7 +97,7 @@ class Order extends AbstractExpression implements
             $this->setValues($data['values']);
         }
 
-        if (isset($data['condition'])) {
+        if (isset($data['condition']) || isset($data['string'])) {
             if (!isset($data['mode'])) {
                 $this->setMode(self::MODE_CUSTOM);
             }
@@ -94,7 +109,7 @@ class Order extends AbstractExpression implements
     /**
      * Retrieve the default values for sorting.
      *
-     * @return array<string,mixed>
+     * @return array<string,mixed> An associative array.
      */
     public function defaultData()
     {
@@ -112,11 +127,11 @@ class Order extends AbstractExpression implements
     /**
      * Retrieve the order clause structure.
      *
-     * @return array<string,mixed>
+     * @return array<string,mixed> An associative array.
      */
     public function data()
     {
-        $data = [
+        return [
             'property'  => $this->property(),
             'table'     => $this->table(),
             'mode'      => $this->mode(),
@@ -125,16 +140,14 @@ class Order extends AbstractExpression implements
             'active'    => $this->active(),
             'name'      => $this->name(),
         ];
-
-        return array_udiff_assoc($data, $this->defaultData(), [ $this, 'diffValues' ]);
     }
 
     /**
      * Set the, pre-defined, sorting mode.
      *
-     * @param  string|null $mode The order mode.
+     * @param  string|null $mode The sorting mode.
      * @throws InvalidArgumentException If the mode is not a string or invalid.
-     * @return Order Chainable
+     * @return self
      */
     public function setMode($mode)
     {
@@ -159,7 +172,6 @@ class Order extends AbstractExpression implements
         }
 
         $this->mode = $mode;
-
         return $this;
     }
 
@@ -184,7 +196,7 @@ class Order extends AbstractExpression implements
      *     - is a string, the string will be split by ",".
      *     - is an array, the values will be used as is.
      *     - any other data type throws an exception.
-     * @return Order Chainable
+     * @return self
      */
     public function setValues($values)
     {

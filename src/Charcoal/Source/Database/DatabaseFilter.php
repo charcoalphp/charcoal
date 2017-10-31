@@ -10,7 +10,7 @@ use Charcoal\Source\DatabaseSource;
 use Charcoal\Source\Filter;
 
 /**
- * The DatabaseFilter makes a Filter SQL-aware.
+ * SQL Filter Expression
  */
 class DatabaseFilter extends Filter implements
     DatabaseExpressionInterface
@@ -36,25 +36,43 @@ class DatabaseFilter extends Filter implements
     }
 
     /**
-     * Retrieve the Filter's SQL as a string to append to a WHERE clause.
+     * Converts the filter into a SQL expression for the WHERE clause.
      *
-     * @return string
+     * @return string A SQL string fragment.
      */
     public function sql()
     {
-        if ($this->active() === false) {
-            return '';
-        }
+        if ($this->active()) {
+            if ($this->hasCondition()) {
+                return $this->byCondition();
+            }
 
-        if ($this->hasCondition()) {
-            return $this->byCondition();
-        }
-
-        if ($this->hasFields()) {
-            return $this->byPredicate();
+            if ($this->hasFields()) {
+                return $this->byPredicate();
+            }
         }
 
         return '';
+    }
+
+    /**
+     * Compile the list of conditions.
+     *
+     * @param  string[]    $conditions  The list of conditions to compile.
+     * @param  string|null $conjunction The condition separator.
+     * @return string
+     */
+    protected function compileConditions(array $conditions, $conjunction = null)
+    {
+        if (count($conditions) === 1) {
+            return $conditions[0];
+        }
+
+        if ($conjunction === null) {
+            $conjunction = $this->operand();
+        }
+
+        return '('.implode(' '.$conjunction.' ', $conditions).')';
     }
 
     /**
@@ -130,15 +148,6 @@ class DatabaseFilter extends Filter implements
             }
         }
 
-        if (count($conditions) > 1) {
-            /**
-             * @todo This would be a good occasion to implement "operand"
-             */
-            $conditions = '('.implode(' OR ', $conditions).')';
-        } else {
-            $conditions = implode('', $conditions);
-        }
-
-        return $conditions;
+        return $this->compileConditions($conditions, 'OR');
     }
 }

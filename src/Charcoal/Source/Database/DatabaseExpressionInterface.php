@@ -3,14 +3,14 @@
 namespace Charcoal\Source\Database;
 
 /**
- * Defines an SQL statement expression.
+ * Describes a SQL-aware expression.
  */
 interface DatabaseExpressionInterface
 {
     /**
-     * Retrieve the expression's SQL as a string.
+     * Converts the expression into a SQL string fragment.
      *
-     * @return string
+     * @return string A SQL fragment.
      */
     public function sql();
 }

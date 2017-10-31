@@ -9,7 +9,9 @@ use Charcoal\Source\AbstractExpression;
 use Charcoal\Source\PaginationInterface;
 
 /**
- * Pagination Expression
+ * Pagination Clause
+ *
+ * For limiting the results of a query.
  */
 class Pagination extends AbstractExpression implements
     PaginationInterface
@@ -34,8 +36,9 @@ class Pagination extends AbstractExpression implements
     /**
      * Set the pagination clause data.
      *
-     * @param  array $data The clause data.
-     * @return Pagination Chainable
+     * @param  array<string,mixed> $data The expression data;
+     *     as an associative array.
+     * @return self
      */
     public function setData(array $data)
     {
@@ -43,6 +46,10 @@ class Pagination extends AbstractExpression implements
 
         if (isset($data['page'])) {
             $this->setPage($data['page']);
+        }
+
+        if (isset($data['per_page'])) {
+            $this->setNumPerPage($data['per_page']);
         }
 
         if (isset($data['num_per_page'])) {
@@ -55,14 +62,13 @@ class Pagination extends AbstractExpression implements
     /**
      * Retrieve the default values for pagination.
      *
-     * @return array<string,mixed>
+     * @return array<string,mixed> An associative array.
      */
     public function defaultData()
     {
         return [
             'page'         => self::DEFAULT_PAGE,
             'num_per_page' => self::DEFAULT_COUNT,
-            'condition'    => null,
             'active'       => true,
             'name'         => null,
         ];
@@ -71,27 +77,25 @@ class Pagination extends AbstractExpression implements
     /**
      * Retrieve the pagination clause structure.
      *
-     * @return array<string,mixed>
+     * @return array<string,mixed> An associative array.
      */
     public function data()
     {
-        $data = [
+        return [
             'page'         => $this->page(),
             'num_per_page' => $this->numPerPage(),
-            'condition'    => $this->condition(),
             'active'       => $this->active(),
             'name'         => $this->name(),
         ];
-
-        return array_diff_assoc($data, $this->defaultData());
     }
 
     /**
      * Set the page number.
      *
-     * @param  integer $page The current page. Pages should start at 1.
+     * @param  integer $page The current page.
+     *     Pages should start at 1.
      * @throws InvalidArgumentException If the parameter is not numeric or < 0.
-     * @return Pagination Chainable
+     * @return self
      */
     public function setPage($page)
     {
@@ -111,7 +115,6 @@ class Pagination extends AbstractExpression implements
         }
 
         $this->page = $page;
-
         return $this;
     }
 
@@ -131,7 +134,7 @@ class Pagination extends AbstractExpression implements
      * @param  integer $count The number of results to return, per page.
      *     Use 0 to request all results.
      * @throws InvalidArgumentException If the parameter is not numeric or < 0.
-     * @return Pagination Chainable
+     * @return self
      */
     public function setNumPerPage($count)
     {
@@ -149,7 +152,6 @@ class Pagination extends AbstractExpression implements
         }
 
         $this->numPerPage = $count;
-
         return $this;
     }
 

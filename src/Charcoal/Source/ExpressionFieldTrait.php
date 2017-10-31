@@ -9,12 +9,14 @@ use Charcoal\Property\PropertyInterface;
 use Charcoal\Property\StorablePropertyInterface;
 
 // From 'charcoal-core'
-use Charcoal\Source\AbstractExpression as Expression;
+use Charcoal\Source\Expression;
 
 /**
- * Contains the field property.
+ * Provides the field and table properties.
+ *
+ * Satisfies {@see ExpressionFieldInterface}.
  */
-trait FieldTrait
+trait ExpressionFieldTrait
 {
     /**
      * The model property name or field name or expression to be used in the left hand side of the operator.
@@ -35,7 +37,7 @@ trait FieldTrait
      *
      * @param  string|PropertyInterface $property The related property.
      * @throws InvalidArgumentException If the parameter is invalid.
-     * @return Order Chainable
+     * @return self
      */
     public function setProperty($property)
     {
@@ -68,7 +70,6 @@ trait FieldTrait
         }
 
         $this->property = $property;
-
         return $this;
     }
 
@@ -119,7 +120,6 @@ trait FieldTrait
         }
 
         $this->table = $table;
-
         return $this;
     }
 
