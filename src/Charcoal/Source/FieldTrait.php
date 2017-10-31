@@ -28,7 +28,7 @@ trait FieldTrait
      *
      * @var string|null
      */
-    protected $tableName;
+    protected $table;
 
     /**
      * Set model property key or source field key.
@@ -93,54 +93,54 @@ trait FieldTrait
     }
 
     /**
-     * Set the table name identifying a field.
+     * Set the reference to the table related to the field.
      *
-     * @param  string $tableRef The table name or alias.
+     * @param  string $table The table name or alias.
      * @throws InvalidArgumentException If the parameter is not a string.
      * @return self
      */
-    public function setTableName($tableRef)
+    public function setTable($table)
     {
-        if ($tableRef === null) {
-            $this->tableName = $tableRef;
+        if ($table === null) {
+            $this->table = $table;
             return $this;
         }
 
-        if (!is_string($tableRef)) {
+        if (!is_string($table)) {
             throw new InvalidArgumentException(
-                'Table Name must be a string.'
+                'Table reference must be a string.'
             );
         }
 
-        if ($tableRef === '') {
+        if ($table === '') {
             throw new InvalidArgumentException(
-                'Table Name can not be empty.'
+                'Table reference can not be empty.'
             );
         }
 
-        $this->tableName = $tableRef;
+        $this->table = $table;
 
         return $this;
     }
 
     /**
-     * Determine if a table name is assigned.
+     * Determine if a table is assigned.
      *
      * @return boolean
      */
-    public function hasTableName()
+    public function hasTable()
     {
-        return !empty($this->tableName);
+        return !empty($this->table);
     }
 
     /**
-     * Retrieve the table name identifying a field.
+     * Retrieve the table related to the field.
      *
      * @return string|null The related table.
      */
-    public function tableName()
+    public function table()
     {
-        return $this->tableName;
+        return $this->table;
     }
 
     /**
@@ -205,7 +205,7 @@ trait FieldTrait
     public function fieldIdentifiers()
     {
         $identifiers = [];
-        $tableName   = $this->tableName();
+        $tableName   = $this->table();
         $fieldNames  = $this->fieldNames();
         foreach ($fieldNames as $fieldName) {
             $identifiers[] = Expression::quoteIdentifier($fieldName, $tableName);
@@ -221,7 +221,7 @@ trait FieldTrait
      */
     public function fieldIdentifier()
     {
-        $tableName = $this->tableName();
+        $tableName = $this->table();
         $fieldName = $this->fieldName();
 
         return Expression::quoteIdentifier($fieldName, $tableName);

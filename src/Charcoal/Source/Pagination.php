@@ -62,7 +62,7 @@ class Pagination extends AbstractExpression implements
         return [
             'page'         => self::DEFAULT_PAGE,
             'num_per_page' => self::DEFAULT_COUNT,
-            'string'       => null,
+            'condition'    => null,
             'active'       => true,
             'name'         => null,
         ];
@@ -78,7 +78,7 @@ class Pagination extends AbstractExpression implements
         $data = [
             'page'         => $this->page(),
             'num_per_page' => $this->numPerPage(),
-            'string'       => $this->string(),
+            'condition'    => $this->condition(),
             'active'       => $this->active(),
             'name'         => $this->name(),
         ];

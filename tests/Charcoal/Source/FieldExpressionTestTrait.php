@@ -13,6 +13,27 @@ use Charcoal\Source\FieldTrait;
 trait FieldExpressionTestTrait
 {
     /**
+     * Test deprecated "table_name" property.
+     */
+    public function testDeprecatedTableNameExpression()
+    {
+        $obj = $this->createExpression();
+
+        @$obj->setData([ 'table_name' => 'foobar' ]);
+        $this->assertEquals('foobar', $obj->table());
+    }
+
+    /**
+     * Test "table_name" property deprecation notice.
+     */
+    public function testDeprecatedTableNameError()
+    {
+        $this->setExpectedException(\PHPUnit_Framework_Error::class);
+        $this->createExpression()->setData([ 'table_name' => 'foobar' ]);
+
+    }
+
+    /**
      * Assert the given expression has data from {@see FieldInterface}.
      *
      * @param FieldInterface $obj      The expression to test.
@@ -22,8 +43,8 @@ trait FieldExpressionTestTrait
     {
         if (empty($expected)) {
             $expected = [
-                'property'   => 'col',
-                'table_name' => 'tbl',
+                'property' => 'col',
+                'table'    => 'tbl',
             ];
             $obj->setData($mutation);
         }
@@ -34,8 +55,8 @@ trait FieldExpressionTestTrait
         $this->assertEquals($expected['property'], $data['property']);
         $this->assertEquals($expected['property'], $obj->property());
 
-        $this->assertArrayHasKey('table_name', $data);
-        $this->assertEquals($expected['table_name'], $data['table_name']);
-        $this->assertEquals($expected['table_name'], $obj->tableName());
+        $this->assertArrayHasKey('table', $data);
+        $this->assertEquals($expected['table'], $data['table']);
+        $this->assertEquals($expected['table'], $obj->table());
     }
 }

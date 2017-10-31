@@ -34,14 +34,14 @@ interface ExpressionInterface extends
      * @throws InvalidArgumentException If the parameter is not a valid expression.
      * @return ExpressionInterface Chainable
      */
-    public function setString($expr);
+    public function setCondition($expr);
 
     /**
      * Retrieve the custom expression.
      *
      * @return string|null A custom expression.
      */
-    public function string();
+    public function condition();
 
     /**
      * Set the expression name.

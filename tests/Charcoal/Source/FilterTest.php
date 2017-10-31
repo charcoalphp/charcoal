@@ -38,14 +38,14 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     final public function provideDefaultValues()
     {
         return [
-            'property' => [ 'property',   null ],
-            'table'    => [ 'table_name', null ],
-            'value'    => [ 'val',        null ],
-            'function' => [ 'func',       null ],
-            'operator' => [ 'operator',   '=' ],
-            'operand'  => [ 'operand',    'AND' ],
-            'active'   => [ 'active',     true ],
-            'string'   => [ 'string',     null ],
+            'property'  => [ 'property',   null ],
+            'table'     => [ 'table',      null ],
+            'value'     => [ 'val',        null ],
+            'function'  => [ 'func',       null ],
+            'operator'  => [ 'operator',   '=' ],
+            'operand'   => [ 'operand',    'AND' ],
+            'active'    => [ 'active',     true ],
+            'condition' => [ 'condition',  null ],
         ];
     }
 
@@ -235,14 +235,14 @@ class FilterTest extends \PHPUnit_Framework_TestCase
 
         /** 1. Mutate all options */
         $mutation = [
-            'val'        => '%foobar',
-            'func'       => 'REVERSE',
-            'operator'   => 'LIKE',
-            'operand'    => 'OR',
-            'property'   => 'col',
-            'table_name' => 'tbl',
-            'active'     => false,
-            'string'     => '1 = 1',
+            'val'       => '%foobar',
+            'func'      => 'REVERSE',
+            'operator'  => 'LIKE',
+            'operand'   => 'OR',
+            'property'  => 'col',
+            'table'     => 'tbl',
+            'active'    => false,
+            'condition' => '1 = 1',
         ];
 
         $obj->setData($mutation);
@@ -279,14 +279,14 @@ class FilterTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($obj->func());
         $this->assertEquals('AND', $obj->operand());
         $this->assertTrue($obj->active());
-        $this->assertNull($obj->string());
+        $this->assertNull($obj->condition());
 
         $data = $obj->data();
         $this->assertArrayNotHasKey('val', $data);
         $this->assertArrayNotHasKey('func', $data);
         $this->assertArrayNotHasKey('operand', $data);
         $this->assertArrayNotHasKey('active', $data);
-        $this->assertArrayNotHasKey('string', $data);
+        $this->assertArrayNotHasKey('condition', $data);
 
         $this->assertArrayHasKey('operator', $data);
         $this->assertEquals('IS NULL', $data['operator']);

@@ -57,9 +57,9 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
         $obj = $this->createExpression();
 
         $data = $obj->defaultData();
-        $this->assertArrayHasKey('table_name', $data);
-        $this->assertEquals(DatabaseSource::DEFAULT_TABLE_ALIAS, $data['table_name']);
-        $this->assertEquals(DatabaseSource::DEFAULT_TABLE_ALIAS, $obj->tableName());
+        $this->assertArrayHasKey('table', $data);
+        $this->assertEquals(DatabaseSource::DEFAULT_TABLE_ALIAS, $data['table']);
+        $this->assertEquals(DatabaseSource::DEFAULT_TABLE_ALIAS, $obj->table());
     }
 
     /**
@@ -86,18 +86,18 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test "string" property with and without placeholders.
+     * Test "condition" property with and without placeholders.
      */
     public function testCustomSql()
     {
         $obj = $this->createExpression();
 
-        $obj->setString('objTable.foo = objTable.baz');
+        $obj->setCondition('objTable.foo = objTable.baz');
         $this->assertEquals('objTable.foo = objTable.baz', $obj->sql());
     }
 
     /**
-     * Test "string" property has precedence over other features.
+     * Test "condition" property has precedence over other features.
      */
     public function testCustomSqlPrecedence()
     {
@@ -107,7 +107,7 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
         $obj->setProperty('foo')->setOperator('=')->setVal('bar');
 
         // Should take precedence
-        $obj->setString('1 = 1');
+        $obj->setCondition('1 = 1');
         $this->assertEquals('1 = 1', $obj->sql());
     }
 

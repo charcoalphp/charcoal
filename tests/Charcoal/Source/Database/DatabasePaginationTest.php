@@ -84,18 +84,18 @@ class DatabasePaginationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test "string" property with and without placeholders.
+     * Test "condition" property with and without placeholders.
      */
     public function testCustomSql()
     {
         $obj = $this->createExpression();
 
-        $obj->setString('LIMIT 10 OFFSET 1');
+        $obj->setCondition('LIMIT 10 OFFSET 1');
         $this->assertEquals('LIMIT 10 OFFSET 1', $obj->sql());
     }
 
     /**
-     * Test "string" property has precedence over other features.
+     * Test "condition" property has precedence over other features.
      */
     public function testCustomSqlPrecedence()
     {
@@ -105,7 +105,7 @@ class DatabasePaginationTest extends \PHPUnit_Framework_TestCase
         $obj->setPage(3)->setNumPerPage(12);
 
         // Should take precedence
-        $obj->setString('LIMIT 1');
+        $obj->setCondition('LIMIT 1');
         $this->assertEquals('LIMIT 1', $obj->sql());
     }
 

@@ -58,8 +58,20 @@ class Filter extends AbstractExpression implements
     {
         parent::setData($data);
 
+        /** @deprecated */
         if (isset($data['table_name'])) {
-            $this->setTableName($data['table_name']);
+            trigger_error(
+                sprintf(
+                    'Query Expression option "table_name" is deprecated in favour of "table": %s',
+                    $data['table_name']
+                ),
+                E_USER_DEPRECATED
+            );
+            $this->setTable($data['table_name']);
+        }
+
+        if (isset($data['table'])) {
+            $this->setTable($data['table']);
         }
 
         if (isset($data['property'])) {
@@ -93,15 +105,15 @@ class Filter extends AbstractExpression implements
     public function defaultData()
     {
         return [
-            'property'   => null,
-            'table_name' => null,
-            'val'        => null,
-            'func'       => null,
-            'operator'   => self::DEFAULT_OPERATOR,
-            'operand'    => self::DEFAULT_OPERAND,
-            'string'     => null,
-            'active'     => true,
-            'name'       => null,
+            'property'  => null,
+            'table'     => null,
+            'val'       => null,
+            'func'      => null,
+            'operator'  => self::DEFAULT_OPERATOR,
+            'operand'   => self::DEFAULT_OPERAND,
+            'condition' => null,
+            'active'    => true,
+            'name'      => null,
         ];
     }
 
@@ -113,15 +125,15 @@ class Filter extends AbstractExpression implements
     public function data()
     {
         $data = [
-            'property'   => $this->property(),
-            'table_name' => $this->tableName(),
-            'val'        => $this->val(),
-            'func'       => $this->func(),
-            'operator'   => $this->operator(),
-            'operand'    => $this->operand(),
-            'string'     => $this->string(),
-            'active'     => $this->active(),
-            'name'       => $this->name(),
+            'property'  => $this->property(),
+            'table'     => $this->table(),
+            'val'       => $this->val(),
+            'func'      => $this->func(),
+            'operator'  => $this->operator(),
+            'operand'   => $this->operand(),
+            'condition' => $this->condition(),
+            'active'    => $this->active(),
+            'name'      => $this->name(),
         ];
 
         return array_udiff_assoc($data, $this->defaultData(), [ $this, 'diffValues' ]);

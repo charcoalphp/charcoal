@@ -260,8 +260,8 @@ trait QueryExpressionTestTrait
     {
         if (empty($expected)) {
             $expected = [
-                'active' => false,
-                'string' => '1 = 1',
+                'active'    => false,
+                'condition' => '1 = 1',
             ];
             $obj->setData($mutation);
         }
@@ -272,8 +272,8 @@ trait QueryExpressionTestTrait
         $this->assertEquals($expected['active'], $data['active']);
         $this->assertEquals($expected['active'], $obj->active());
 
-        $this->assertArrayHasKey('string', $data);
-        $this->assertEquals($expected['string'], $data['string']);
-        $this->assertEquals($expected['string'], $obj->string());
+        $this->assertArrayHasKey('condition', $data);
+        $this->assertEquals($expected['condition'], $data['condition']);
+        $this->assertEquals($expected['condition'], $obj->condition());
     }
 }

@@ -136,7 +136,7 @@ class FieldTraitTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test the "table_name" property.
+     * Test the "table" property.
      *
      * Assertions:
      * 1. Default state
@@ -144,54 +144,54 @@ class FieldTraitTest extends \PHPUnit_Framework_TestCase
      * 3. Chainable method
      * 4. Accepts NULL
      */
-    public function testTableName()
+    public function testTable()
     {
         $obj = $this->createField();
 
         /** 1. Default Value */
-        $this->assertNull($obj->tableName());
+        $this->assertNull($obj->table());
 
         /** 2. Mutated Value */
-        $that = $obj->setTableName('foobar');
-        $this->assertInternalType('string', $obj->tableName());
-        $this->assertEquals('foobar', $obj->tableName());
+        $that = $obj->setTable('foobar');
+        $this->assertInternalType('string', $obj->table());
+        $this->assertEquals('foobar', $obj->table());
 
         /** 3. Chainable */
         $this->assertSame($obj, $that);
 
         /** 4. Accepts NULL */
-        $obj->setTableName(null);
-        $this->assertNull($obj->tableName());
+        $obj->setTable(null);
+        $this->assertNull($obj->table());
     }
 
     /**
-     * Test the "table_name" determiner.
+     * Test the "table" determiner.
      */
-    public function testHasTableName()
+    public function testHasTable()
     {
         $obj = $this->createField();
-        $this->assertFalse($obj->hasTableName());
+        $this->assertFalse($obj->hasTable());
 
-        $obj->setTableName('foobar');
-        $this->assertTrue($obj->hasTableName());
+        $obj->setTable('foobar');
+        $this->assertTrue($obj->hasTable());
     }
 
     /**
-     * Test "table_name" property with blank value.
+     * Test "table" property with blank value.
      */
-    public function testTableNameWithBlankValue()
+    public function testTableWithBlankValue()
     {
         $this->setExpectedException(InvalidArgumentException::class);
-        $this->createField()->setTableName('');
+        $this->createField()->setTable('');
     }
 
     /**
-     * Test "table_name" property with invalid value.
+     * Test "table" property with invalid value.
      */
-    public function testTableNameWithInvalidValue()
+    public function testTableWithInvalidValue()
     {
         $this->setExpectedException(InvalidArgumentException::class);
-        $this->createField()->setTableName([]);
+        $this->createField()->setTable([]);
     }
 
     /**
@@ -272,7 +272,7 @@ class FieldTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('`foobar`', $fieldIdentifiers);
 
         /** 2. With table name */
-        $obj->setTableName('bazqux');
+        $obj->setTable('bazqux');
         $this->assertContains('bazqux.`foobar`', $obj->fieldIdentifiers());
     }
 
@@ -298,7 +298,7 @@ class FieldTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('`foobar`', $fieldIdentifier);
 
         /** 2. With table name */
-        $obj->setTableName('bazqux');
+        $obj->setTable('bazqux');
         $this->assertEquals('bazqux.`foobar`', $obj->fieldIdentifier());
     }
 }

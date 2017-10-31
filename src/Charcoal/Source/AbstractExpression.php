@@ -18,11 +18,11 @@ abstract class AbstractExpression implements
     ExpressionInterface
 {
     /**
-     * Raw query expression.
+     * Custom query expression.
      *
      * @var string|null
      */
-    protected $string;
+    protected $condition;
 
     /**
      * Expression name.
@@ -46,6 +46,18 @@ abstract class AbstractExpression implements
      */
     public function setData(array $data)
     {
+        /** @deprecated */
+        if (isset($data['string'])) {
+            trigger_error(
+                sprintf(
+                    'Query Expression option "string" is deprecated in favour of "condition": %s',
+                    $data['string']
+                ),
+                E_USER_DEPRECATED
+            );
+            $this->setCondition($data['string']);
+        }
+
         if (isset($data['name'])) {
             $this->setName($data['name']);
         }
@@ -54,8 +66,8 @@ abstract class AbstractExpression implements
             $this->setActive($data['active']);
         }
 
-        if (isset($data['string'])) {
-            $this->setString($data['string']);
+        if (isset($data['condition'])) {
+            $this->setCondition($data['condition']);
         }
 
         return $this;
@@ -69,9 +81,9 @@ abstract class AbstractExpression implements
     public function defaultData()
     {
         return [
-            'name'   => null,
-            'active' => true,
-            'string' => null,
+            'name'      => null,
+            'active'    => true,
+            'condition' => null,
         ];
     }
 
@@ -83,9 +95,9 @@ abstract class AbstractExpression implements
     public function data()
     {
         $data = [
-            'name'   => $this->name(),
-            'active' => $this->active(),
-            'string' => $this->string(),
+            'name'      => $this->name(),
+            'active'    => $this->active(),
+            'condition' => $this->condition(),
         ];
 
         return array_diff_assoc($data, $this->defaultData());
@@ -148,7 +160,7 @@ abstract class AbstractExpression implements
      * @throws InvalidArgumentException If the parameter is not a valid string expression.
      * @return self
      */
-    public function setString($expr)
+    public function setCondition($expr)
     {
         if ($expr !== null) {
             if (!is_string($expr)) {
@@ -163,7 +175,7 @@ abstract class AbstractExpression implements
             }
         }
 
-        $this->string = $expr;
+        $this->condition = $expr;
 
         return $this;
     }
@@ -173,9 +185,9 @@ abstract class AbstractExpression implements
      *
      * @return boolean
      */
-    public function hasString()
+    public function hasCondition()
     {
-        return !(empty($this->string) && !is_numeric($this->string));
+        return !(empty($this->condition) && !is_numeric($this->condition));
     }
 
     /**
@@ -183,9 +195,9 @@ abstract class AbstractExpression implements
      *
      * @return string|null A custom query expression.
      */
-    public function string()
+    public function condition()
     {
-        return $this->string;
+        return $this->condition;
     }
 
     /**

@@ -37,8 +37,8 @@ class AbstractExpressionTest extends \PHPUnit_Framework_TestCase
     final public function provideDefaultValues()
     {
         return [
-            'active' => [ 'active', true ],
-            'string' => [ 'string', null ],
+            'active'    => [ 'active',    true ],
+            'condition' => [ 'condition', null ],
         ];
     }
 
@@ -106,7 +106,7 @@ class AbstractExpressionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test the "string" property.
+     * Test the "condition" property.
      *
      * Assertions:
      * 1. Default state
@@ -116,57 +116,78 @@ class AbstractExpressionTest extends \PHPUnit_Framework_TestCase
      * 5. Accepts NULL
      * 6. Swaps blank string for NULL
      */
-    public function testString()
+    public function testConditionExpression()
     {
         $obj = $this->createExpression();
 
         /** 1. Default Value */
-        $this->assertNull($obj->string());
+        $this->assertNull($obj->condition());
 
         /** 2. Mutated Value */
-        $that = $obj->setString('1 = 1');
-        $this->assertInternalType('string', $obj->string());
-        $this->assertEquals('1 = 1', $obj->string());
+        $that = $obj->setCondition('1 = 1');
+        $this->assertInternalType('string', $obj->condition());
+        $this->assertEquals('1 = 1', $obj->condition());
 
         /** 3. Chainable */
         $this->assertSame($obj, $that);
 
         /** 4. Trimmed value */
-        $obj->setString('   1 = 1  ');
-        $this->assertEquals('1 = 1', $obj->string());
+        $obj->setCondition('   1 = 1  ');
+        $this->assertEquals('1 = 1', $obj->condition());
 
         /** 5. Accepts NULL */
-        $obj->setString(null);
-        $this->assertNull($obj->string());
+        $obj->setCondition(null);
+        $this->assertNull($obj->condition());
 
         /** 6. Swaps blank string for NULL */
-        $obj->setString('  ');
-        $this->assertNull($obj->string());
+        $obj->setCondition('  ');
+        $this->assertNull($obj->condition());
     }
 
     /**
-     * Test the conditional check of "string".
+     * Test the conditional check of "condition".
      */
-    public function testHasString()
+    public function testHasConditionExpression()
     {
         $obj = $this->createExpression();
 
-        $this->assertFalse($obj->hasString());
+        $this->assertFalse($obj->hasCondition());
 
-        $obj->setString('  ');
-        $this->assertFalse($obj->hasString());
+        $obj->setCondition('  ');
+        $this->assertFalse($obj->hasCondition());
 
-        $that = $obj->setString('1 = 1');
-        $this->assertTrue($obj->hasString());
+        $that = $obj->setCondition('1 = 1');
+        $this->assertTrue($obj->hasCondition());
     }
 
     /**
-     * Test "string" property with invalid value.
+     * Test deprecated "string" property.
      */
-    public function testStringWithInvalidValue()
+    public function testDeprecatedStringExpression()
+    {
+        $obj = $this->createExpression();
+
+        @$obj->setData([ 'string' => '1 = 1' ]);
+        $this->assertEquals('1 = 1', $obj->condition());
+    }
+
+    /**
+     * Test "string" property deprecation notice.
+     */
+    public function testDeprecatedStringError()
+    {
+        $this->setExpectedException(\PHPUnit_Framework_Error::class);
+        $this->createExpression()->setData([ 'string' => '1 = 1' ]);
+
+    }
+
+    /**
+     * Test "condition" property with invalid value.
+     */
+    public function testConditionExpressionWithInvalidValue()
     {
         $this->setExpectedException(InvalidArgumentException::class);
-        $this->createExpression()->setString([]);
+        $this->createExpression()->setCondition([]);
     }
 
     /**
@@ -182,26 +203,26 @@ class AbstractExpressionTest extends \PHPUnit_Framework_TestCase
 
         /** 1. Mutate all options */
         $mutation = [
-            'active' => false,
-            'string' => '1 = 1',
+            'active'    => false,
+            'condition' => '1 = 1',
         ];
         $obj->setData($mutation);
         $this->assertStructHasBasicData($obj, $mutation);
 
         /** 2. Partially mutated state */
         $obj = $this->createExpression();
-        $obj->setData([ 'string' => '2 = 2' ]);
+        $obj->setData([ 'condition' => '2 = 2' ]);
 
         $data = $obj->data();
         $this->assertArrayNotHasKey('active', $data);
-        $this->assertArrayHasKey('string', $data);
-        $this->assertEquals('2 = 2', $data['string']);
+        $this->assertArrayHasKey('condition', $data);
+        $this->assertEquals('2 = 2', $data['condition']);
 
         $obj = $this->createExpression();
         $obj->setData([ 'active' => false ]);
 
         $data = $obj->data();
-        $this->assertArrayNotHasKey('string', $data);
+        $this->assertArrayNotHasKey('condition', $data);
         $this->assertArrayHasKey('active', $data);
         $this->assertFalse($data['active']);
     }
@@ -225,8 +246,8 @@ class AbstractExpressionTest extends \PHPUnit_Framework_TestCase
 
         /** 2. Serialization from mutated state */
         $mutation = [
-            'active' => false,
-            'string' => '1 = 1',
+            'active'    => false,
+            'condition' => '1 = 1',
         ];
         $obj->setData($mutation);
         $this->assertJsonStringEqualsJsonString(
@@ -251,18 +272,18 @@ class AbstractExpressionTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(AbstractExpression::class, $that);
         $this->assertEquals($obj, $that);
         $this->assertTrue($that->active());
-        $this->assertNull($that->string());
+        $this->assertNull($that->condition());
 
         /** 2. Serialization from mutated state */
         $mutation = [
-            'active' => false,
-            'string' => '1 = 1',
+            'active'    => false,
+            'condition' => '1 = 1',
         ];
         $obj->setData($mutation);
         $that = unserialize(serialize($obj));
         $this->assertInstanceOf(AbstractExpression::class, $that);
         $this->assertEquals($obj, $that);
         $this->assertFalse($that->active());
-        $this->assertEquals('1 = 1', $that->string());
+        $this->assertEquals('1 = 1', $that->condition());
     }
 }

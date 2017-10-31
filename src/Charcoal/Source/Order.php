@@ -54,8 +54,20 @@ class Order extends AbstractExpression implements
     {
         parent::setData($data);
 
+        /** @deprecated */
         if (isset($data['table_name'])) {
-            $this->setTableName($data['table_name']);
+            trigger_error(
+                sprintf(
+                    'Query Expression option "table_name" is deprecated in favour of "table": %s',
+                    $data['table_name']
+                ),
+                E_USER_DEPRECATED
+            );
+            $this->setTable($data['table_name']);
+        }
+
+        if (isset($data['table'])) {
+            $this->setTable($data['table']);
         }
 
         if (isset($data['property'])) {
@@ -70,7 +82,7 @@ class Order extends AbstractExpression implements
             $this->setValues($data['values']);
         }
 
-        if (isset($data['string'])) {
+        if (isset($data['condition'])) {
             if (!isset($data['mode'])) {
                 $this->setMode(self::MODE_CUSTOM);
             }
@@ -87,13 +99,13 @@ class Order extends AbstractExpression implements
     public function defaultData()
     {
         return [
-            'property'   => null,
-            'table_name' => null,
-            'mode'       => null,
-            'values'     => null,
-            'string'     => null,
-            'active'     => true,
-            'name'       => null,
+            'property'  => null,
+            'table'     => null,
+            'mode'      => null,
+            'values'    => null,
+            'condition' => null,
+            'active'    => true,
+            'name'      => null,
         ];
     }
 
@@ -105,13 +117,13 @@ class Order extends AbstractExpression implements
     public function data()
     {
         $data = [
-            'property'   => $this->property(),
-            'table_name' => $this->tableName(),
-            'mode'       => $this->mode(),
-            'values'     => $this->values(),
-            'string'     => $this->string(),
-            'active'     => $this->active(),
-            'name'       => $this->name(),
+            'property'  => $this->property(),
+            'table'     => $this->table(),
+            'mode'      => $this->mode(),
+            'values'    => $this->values(),
+            'condition' => $this->condition(),
+            'active'    => $this->active(),
+            'name'      => $this->name(),
         ];
 
         return array_udiff_assoc($data, $this->defaultData(), [ $this, 'diffValues' ]);

@@ -36,10 +36,10 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
     final public function provideDefaultValues()
     {
         return [
-            'page num' => [ 'page',         1 ],
-            'per page' => [ 'num_per_page', 0 ],
-            'active'   => [ 'active',       true ],
-            'string'   => [ 'string',       null ],
+            'page num'  => [ 'page',         1 ],
+            'per page'  => [ 'num_per_page', 0 ],
+            'active'    => [ 'active',       true ],
+            'condition' => [ 'condition',    null ],
         ];
     }
 
@@ -166,7 +166,7 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
             'page'         => 3,
             'num_per_page' => 25,
             'active'       => false,
-            'string'       => '1 = 1',
+            'condition'          => '1 = 1',
         ];
 
         $obj->setData($mutation);
@@ -192,12 +192,12 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(1, $obj->page());
         $this->assertTrue($obj->active());
-        $this->assertNull($obj->string());
+        $this->assertNull($obj->condition());
 
         $data = $obj->data();
         $this->assertArrayNotHasKey('page', $data);
         $this->assertArrayNotHasKey('active', $data);
-        $this->assertArrayNotHasKey('string', $data);
+        $this->assertArrayNotHasKey('condition', $data);
 
         $this->assertArrayHasKey('num_per_page', $data);
         $this->assertEquals(10, $data['num_per_page']);

@@ -28,7 +28,7 @@ class DatabasePagination extends Pagination implements
             return '';
         }
 
-        if ($this->hasString()) {
+        if ($this->hasCondition()) {
             return $this->byCondition();
         }
 
@@ -47,13 +47,13 @@ class DatabasePagination extends Pagination implements
      */
     protected function byCondition()
     {
-        if (!$this->hasString()) {
+        if (!$this->hasCondition()) {
             throw new UnexpectedValueException(
                 'Custom expression can not be empty.'
             );
         }
 
-        return $this->string();
+        return $this->condition();
     }
 
     /**

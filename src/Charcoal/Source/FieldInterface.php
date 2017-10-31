@@ -33,24 +33,24 @@ interface FieldInterface
     public function property();
 
     /**
-     * Set the table name identifying a field.
+     * Set the reference to the table related to the field.
      *
-     * @param  string $reference The table name or alias.
+     * @param  string $table The table name or alias.
      * @return self
      */
-    public function setTableName($reference);
+    public function setTable($table);
 
     /**
      * Determine if a table is assigned.
      *
      * @return boolean
      */
-    public function hasTableName();
+    public function hasTable();
 
     /**
-     * Retrieve the table name identifying a field.
+     * Retrieve the table related to the field.
      *
      * @return string|null The related table.
      */
-    public function tableName();
+    public function table();
 }

@@ -18,9 +18,9 @@ class DatabaseOrder extends Order implements
     /**
      * The table related to the field identifier.
      *
-     * @var string $tableName
+     * @var string
      */
-    protected $tableName = DatabaseSource::DEFAULT_TABLE_ALIAS;
+    protected $table = DatabaseSource::DEFAULT_TABLE_ALIAS;
 
     /**
      * Retrieve the default values for sorting.
@@ -30,7 +30,7 @@ class DatabaseOrder extends Order implements
     public function defaultData()
     {
         $defaults = parent::defaultData();
-        $defaults['table_name'] = DatabaseSource::DEFAULT_TABLE_ALIAS;
+        $defaults['table'] = DatabaseSource::DEFAULT_TABLE_ALIAS;
 
         return $defaults;
     }
@@ -50,7 +50,7 @@ class DatabaseOrder extends Order implements
         switch ($mode) {
             /** NULL Mode */
             case '':
-                if ($this->hasRaw()) {
+                if ($this->hasCondition()) {
                     return $this->byCondition();
                 }
 
@@ -129,13 +129,13 @@ class DatabaseOrder extends Order implements
      */
     protected function byCondition()
     {
-        if (!$this->hasString()) {
+        if (!$this->hasCondition()) {
             throw new UnexpectedValueException(
                 'Custom expression can not be empty.'
             );
         }
 
-        return $this->string();
+        return $this->condition();
     }
 
     /**

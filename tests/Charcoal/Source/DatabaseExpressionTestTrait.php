@@ -58,7 +58,7 @@ trait DatabaseExpressionTestTrait
     public function testInactiveExpression()
     {
         $obj = $this->createExpression();
-        $obj->setData([ 'string' => ' /* xyzzy */ ' ]);
+        $obj->setData([ 'condition' => ' /* xyzzy */ ' ]);
 
         $obj->setActive(true);
         $this->assertEquals('/* xyzzy */', $obj->sql());

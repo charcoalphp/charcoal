@@ -37,9 +37,9 @@ class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
         $obj = $this->createExpression();
 
         $data = $obj->defaultData();
-        $this->assertArrayHasKey('table_name', $data);
-        $this->assertEquals(DatabaseSource::DEFAULT_TABLE_ALIAS, $data['table_name']);
-        $this->assertEquals(DatabaseSource::DEFAULT_TABLE_ALIAS, $obj->tableName());
+        $this->assertArrayHasKey('table', $data);
+        $this->assertEquals(DatabaseSource::DEFAULT_TABLE_ALIAS, $data['table']);
+        $this->assertEquals(DatabaseSource::DEFAULT_TABLE_ALIAS, $obj->table());
     }
 
     /**
@@ -60,7 +60,7 @@ class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
     {
         $obj = $this->createExpression();
 
-        $obj->setMode('custom')->setString('qux ASC');
+        $obj->setMode('custom')->setCondition('qux ASC');
         $this->assertEquals('qux ASC', $obj->sql());
     }
 
@@ -79,7 +79,7 @@ class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('FIELD(objTable.`country`, "FR","UK","CA")', $obj->sql());
 
         /** Resolves to "custom" mode, and takes precedence, when a custom expression is defined. */
-        $obj->setString('foo DESC');
+        $obj->setCondition('foo DESC');
         $this->assertEquals('foo DESC', $obj->sql());
     }
 

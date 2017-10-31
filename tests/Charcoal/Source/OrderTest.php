@@ -38,12 +38,12 @@ class OrderTest extends \PHPUnit_Framework_TestCase
     final public function provideDefaultValues()
     {
         return [
-            'property' => [ 'property',   null ],
-            'table'    => [ 'table_name', null ],
-            'mode'     => [ 'mode',       null ],
-            'values'   => [ 'values',     null ],
-            'active'   => [ 'active',     true ],
-            'string'   => [ 'string',     null ],
+            'property'  => [ 'property',   null ],
+            'table'     => [ 'table',      null ],
+            'mode'      => [ 'mode',       null ],
+            'values'    => [ 'values',     null ],
+            'active'    => [ 'active',     true ],
+            'condition' => [ 'condition',  null ],
         ];
     }
 
@@ -169,7 +169,7 @@ class OrderTest extends \PHPUnit_Framework_TestCase
      * Assertions:
      * 1. Mutate all options
      * 2. Partially mutated state
-     * 3. Auto-set mode from "string"
+     * 3. Auto-set mode from "condition"
      */
     public function testData()
     {
@@ -178,12 +178,12 @@ class OrderTest extends \PHPUnit_Framework_TestCase
         /** 1. Mutate all options */
         $values   = [ 'foo', 'baz', 'qux' ];
         $mutation = [
-            'mode'       => 'rand',
-            'values'     => $values,
-            'property'   => 'col',
-            'table_name' => 'tbl',
-            'active'     => false,
-            'string'     => '1 = 1',
+            'mode'      => 'rand',
+            'values'    => $values,
+            'property'  => 'col',
+            'table'     => 'tbl',
+            'active'    => false,
+            'condition' => '1 = 1',
         ];
 
         $obj->setData($mutation);
@@ -210,29 +210,29 @@ class OrderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertNull($obj->values());
         $this->assertTrue($obj->active());
-        $this->assertNull($obj->string());
+        $this->assertNull($obj->condition());
 
         $data = $obj->data();
         $this->assertArrayNotHasKey('values', $data);
         $this->assertArrayNotHasKey('active', $data);
-        $this->assertArrayNotHasKey('string', $data);
+        $this->assertArrayNotHasKey('condition', $data);
 
         $this->assertArrayHasKey('mode', $data);
         $this->assertEquals('desc', $data['mode']);
 
-        /** 3. Auto-set mode from "string" */
+        /** 3. Auto-set mode from "condition" */
         $mutation = [
-            'string' => '2 = 2'
+            'condition' => '2 = 2'
         ];
 
         $obj = $this->createExpression();
         $obj->setData($mutation);
 
-        $this->assertEquals('2 = 2', $obj->string());
+        $this->assertEquals('2 = 2', $obj->condition());
 
         $data = $obj->data();
-        $this->assertArrayHasKey('string', $data);
-        $this->assertEquals('2 = 2', $data['string']);
+        $this->assertArrayHasKey('condition', $data);
+        $this->assertEquals('2 = 2', $data['condition']);
 
         $this->assertArrayHasKey('mode', $data);
         $this->assertEquals('custom', $data['mode']);
