@@ -92,11 +92,11 @@ interface SourceInterface
      * Add a collection filter to the loader.
      *
      * @param string|array|Filter $param   The filter parameter. May the "filter property" or an array / object.
-     * @param mixed               $val     Optional. Val, only used if the first argument is a string.
+     * @param mixed               $value   Optional. Value, only used if the first argument is a string.
      * @param array               $options Optional. Options, only used if the first argument is a string.
      * @return CollectionLoader (Chainable)
      */
-    public function addFilter($param, $val = null, array $options = null);
+    public function addFilter($param, $value = null, array $options = null);
 
     /**
      * @param array $orders The orders.

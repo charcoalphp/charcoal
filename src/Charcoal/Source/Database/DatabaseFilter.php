@@ -91,7 +91,7 @@ class DatabaseFilter extends Filter implements
         }
 
         $conditions = [];
-        $value      = $this->val();
+        $value      = $this->value();
         $operator   = $this->operator();
         $function   = $this->func();
         foreach ($fields as $fieldName) {

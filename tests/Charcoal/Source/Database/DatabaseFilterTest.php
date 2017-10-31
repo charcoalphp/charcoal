@@ -104,7 +104,7 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
         $obj = $this->createExpression();
 
         // Should be ignored
-        $obj->setProperty('foo')->setOperator('=')->setVal('bar');
+        $obj->setProperty('foo')->setOperator('=')->setValue('bar');
 
         // Should take precedence
         $obj->setCondition('1 = 1');
@@ -142,7 +142,7 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
     public function testSqlBasicOperators($operator)
     {
         $obj = $this->createExpression();
-        $obj->setProperty('xyzzy')->setOperator($operator)->setVal('bar');
+        $obj->setProperty('xyzzy')->setOperator($operator)->setValue('bar');
 
         $this->assertEquals('(objTable.`xyzzy` '.$operator.' \'bar\')', $obj->sql());
     }
@@ -157,7 +157,7 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
     public function testSqlNullOperators($operator)
     {
         $obj = $this->createExpression();
-        $obj->setProperty('xyzzy')->setOperator($operator)->setVal('bar');
+        $obj->setProperty('xyzzy')->setOperator($operator)->setValue('bar');
 
         $this->assertEquals('(objTable.`xyzzy` '.$operator.')', $obj->sql());
     }
@@ -175,11 +175,11 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
     {
         $obj = $this->createExpression();
 
-        $val = [ 'foo', 'bar', 'qux' ];
-        $obj->setProperty('xyzzy')->setOperator($operator)->setVal($val);
+        $value = [ 'foo', 'bar', 'qux' ];
+        $obj->setProperty('xyzzy')->setOperator($operator)->setValue($value);
 
         $this->assertEquals(
-            sprintf($expected, 'objTable.`xyzzy`', implode($delimiter, $val)),
+            sprintf($expected, 'objTable.`xyzzy`', implode($delimiter, $value)),
             $obj->sql()
         );
     }
@@ -190,7 +190,7 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
     public function testSqlFunction()
     {
         $obj = $this->createExpression();
-        $obj->setProperty('xyzzy')->setOperator('=')->setVal('bar')->setFunc('abs');
+        $obj->setProperty('xyzzy')->setOperator('=')->setValue('bar')->setFunc('abs');
 
         $this->assertEquals('(ABS(objTable.`xyzzy`) = \'bar\')', $obj->sql());
     }
@@ -208,7 +208,7 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
         $prop->setL10n(true);
 
         $obj = $this->createExpression();
-        $obj->setProperty($prop)->setOperator('=')->setVal('bar');
+        $obj->setProperty($prop)->setOperator('=')->setValue('bar');
 
         $this->assertEquals(
             '((objTable.`xyzzy_en` = \'bar\') OR (objTable.`xyzzy_fr` = \'bar\') OR '.

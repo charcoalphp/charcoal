@@ -25,7 +25,7 @@ class Filter extends AbstractExpression implements
      *
      * @var mixed
      */
-    protected $val;
+    protected $value;
 
     /**
      * The operator used for comparing field and value.
@@ -70,6 +70,17 @@ class Filter extends AbstractExpression implements
             $this->setTable($data['table_name']);
         }
 
+        if (isset($data['val'])) {
+            trigger_error(
+                sprintf(
+                    'Query expression option "val" is deprecated in favour of "value": %s',
+                    $data['val']
+                ),
+                E_USER_DEPRECATED
+            );
+            $this->setValue($data['val']);
+        }
+
         if (isset($data['table'])) {
             $this->setTable($data['table']);
         }
@@ -78,8 +89,8 @@ class Filter extends AbstractExpression implements
             $this->setProperty($data['property']);
         }
 
-        if (isset($data['val'])) {
-            $this->setVal($data['val']);
+        if (isset($data['value'])) {
+            $this->setValue($data['value']);
         }
 
         if (isset($data['func'])) {
@@ -107,7 +118,7 @@ class Filter extends AbstractExpression implements
         return [
             'property'  => null,
             'table'     => null,
-            'val'       => null,
+            'value'     => null,
             'func'      => null,
             'operator'  => self::DEFAULT_OPERATOR,
             'operand'   => self::DEFAULT_OPERAND,
@@ -127,7 +138,7 @@ class Filter extends AbstractExpression implements
         $data = [
             'property'  => $this->property(),
             'table'     => $this->table(),
-            'val'       => $this->val(),
+            'value'     => $this->value(),
             'func'      => $this->func(),
             'operator'  => $this->operator(),
             'operand'   => $this->operand(),
@@ -142,13 +153,12 @@ class Filter extends AbstractExpression implements
     /**
      * Set the value used for comparison.
      *
-     * @param  mixed $val The value on the right side of the comparison.
-     * @return Filter Chainable
+     * @param  mixed $value The value on the right side of the comparison.
+     * @return self
      */
-    public function setVal($val)
+    public function setValue($value)
     {
-        $this->val = $this::parseValue($val);
-
+        $this->value = $this::parseValue($value);
         return $this;
     }
 
@@ -157,9 +167,9 @@ class Filter extends AbstractExpression implements
      *
      * @return mixed
      */
-    public function val()
+    public function value()
     {
-        return $this->val;
+        return $this->value;
     }
 
     /**

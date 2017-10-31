@@ -13,17 +13,17 @@ interface FilterInterface extends FieldInterface
     /**
      * Set the value used for comparison.
      *
-     * @param  mixed $val The value on the right side of the comparison.
-     * @return FilterInterface Chainable
+     * @param  mixed $value The value on the right side of the comparison.
+     * @return FilterInterface Returns the current expression.
      */
-    public function setVal($val);
+    public function setValue($value);
 
     /**
      * Retrieve the value used for comparison.
      *
      * @return mixed
      */
-    public function val();
+    public function value();
 
     /**
      * Set the operator used for comparing field and value.

@@ -40,7 +40,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
         return [
             'property'  => [ 'property',   null ],
             'table'     => [ 'table',      null ],
-            'value'     => [ 'val',        null ],
+            'value'     => [ 'value',      null ],
             'function'  => [ 'func',       null ],
             'operator'  => [ 'operator',   '=' ],
             'operand'   => [ 'operand',    'AND' ],
@@ -50,30 +50,51 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test the "val" property.
+     * Test the "value" property.
      *
      * Assertions:
      * 1. Default state
      * 2. Mutated state
      * 3. Chainable method
      *
-     * Note: {@see Filter::val()} uses {@see \Charcoal\Source\AbstractExpression::parseVal()}.
-     * Tests for `parseVal()` are performed in {@see QueryExpressionTestTrait::testParseValue()}
+     * Note: {@see Filter::value()} uses {@see \Charcoal\Source\AbstractExpression::parseValue()}.
+     * Tests for `parseValue()` are performed in {@see QueryExpressionTestTrait::testParseValue()}
      */
-    public function testVal()
+    public function testValue()
     {
         $obj = $this->createExpression();
 
         /** 1. Default Value */
-        $this->assertNull($obj->val());
+        $this->assertNull($obj->value());
 
         /** 2. Mutated Value */
-        $that = $obj->setVal('foobar');
-        $this->assertInternalType('string', $obj->val());
-        $this->assertEquals('foobar', $obj->val());
+        $that = $obj->setValue('foobar');
+        $this->assertInternalType('string', $obj->value());
+        $this->assertEquals('foobar', $obj->value());
 
         /** 3. Chainable */
         $this->assertSame($obj, $that);
+    }
+
+    /**
+     * Test deprecated "val" property.
+     */
+    public function testDeprecatedValExpression()
+    {
+        $obj = $this->createExpression();
+
+        @$obj->setData([ 'val' => 'qux' ]);
+        $this->assertEquals('qux', $obj->value());
+    }
+
+    /**
+     * Test "val" property deprecation notice.
+     */
+    public function testDeprecatedValError()
+    {
+        $this->setExpectedException(\PHPUnit_Framework_Error::class);
+        $this->createExpression()->setData([ 'val' => 'qux' ]);
+
     }
 
     /**
@@ -235,7 +256,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
 
         /** 1. Mutate all options */
         $mutation = [
-            'val'       => '%foobar',
+            'value'     => '%foobar',
             'func'      => 'REVERSE',
             'operator'  => 'LIKE',
             'operand'   => 'OR',
@@ -248,9 +269,9 @@ class FilterTest extends \PHPUnit_Framework_TestCase
         $obj->setData($mutation);
         $data = $obj->data();
 
-        $this->assertArrayHasKey('val', $data);
-        $this->assertEquals('%foobar', $data['val']);
-        $this->assertEquals('%foobar', $obj->val());
+        $this->assertArrayHasKey('value', $data);
+        $this->assertEquals('%foobar', $data['value']);
+        $this->assertEquals('%foobar', $obj->value());
 
         $this->assertArrayHasKey('func', $data);
         $this->assertEquals('REVERSE', $data['func']);
@@ -275,14 +296,14 @@ class FilterTest extends \PHPUnit_Framework_TestCase
         $obj = $this->createExpression();
         $obj->setData($mutation);
 
-        $this->assertNull($obj->val());
+        $this->assertNull($obj->value());
         $this->assertNull($obj->func());
         $this->assertEquals('AND', $obj->operand());
         $this->assertTrue($obj->active());
         $this->assertNull($obj->condition());
 
         $data = $obj->data();
-        $this->assertArrayNotHasKey('val', $data);
+        $this->assertArrayNotHasKey('value', $data);
         $this->assertArrayNotHasKey('func', $data);
         $this->assertArrayNotHasKey('operand', $data);
         $this->assertArrayNotHasKey('active', $data);

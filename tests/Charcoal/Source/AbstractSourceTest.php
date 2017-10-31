@@ -181,7 +181,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
      * - add the filter object to the filters
      * - append the filter, when a filter already exists
      * - create and add a filter object when passing an array
-     * - allow passing $property, $val, $options as 3 parameters
+     * - allow passing $property, $value, $options as 3 parameters
      * - throws an exception when an invalid argument type is passed
      */
     public function testAddFilterObject()
@@ -236,7 +236,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
      * - add the order object to the orders
      * - append the order, when a order already exists
      * - create and add a order object when passing an array
-     * - allow passing $property, $val, $options as 3 parameters
+     * - allow passing $property, $value, $options as 3 parameters
      * - throws an exception when an invalid argument type is passed
      */
     public function testAddOrderObject()
@@ -330,7 +330,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
         $filter1->setData([
             'property' => 'foo',
             'operator' => '=',
-            'val'      => 42
+            'value'    => 42
         ]);
         return $filter1;
     }
@@ -341,7 +341,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
         $filter2->setData([
             'property' => 'bar',
             'operator' => '>',
-            'val'      => 666
+            'value'    => 666
         ]);
         return $filter2;
     }

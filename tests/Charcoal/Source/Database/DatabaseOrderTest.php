@@ -113,7 +113,7 @@ class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider provideSqlDirectionMode
      *
-     * @param mixed $val      The directional mode to set.
+     * @param mixed $mode     The directional mode to set.
      * @param mixed $expected The expected SQL direction.
      */
     public function testSqlDirectionMode($mode, $expected)

@@ -238,27 +238,27 @@ abstract class AbstractSource implements
      * - as a `Filter` object, in which case it will be added directly.
      *   - `addFilter($obj);`
      * - as an array of options, which will be used to build the `Filter` object
-     *   - `addFilter(['property' => 'foo', 'val' => 42, 'operator' => '<=']);`
-     * - as 3 parameters: `property`, `val` and `options`
+     *   - `addFilter(['property' => 'foo', 'value' => 42, 'operator' => '<=']);`
+     * - as 3 parameters: `property`, `value` and `options`
      *   - `addFilter('foo', 42, ['operator' => '<=']);`
      *
      * @param string|array|Filter $param   The filter property, or a Filter object / array.
-     * @param mixed               $val     Optional: Only used if the first argument is a string.
+     * @param mixed               $value   Optional: Only used if the first argument is a string.
      * @param array               $options Optional: Only used if the first argument is a string.
      * @throws InvalidArgumentException If property is not a string or empty.
      * @return SourceInterface (Chainable)
      */
-    public function addFilter($param, $val = null, array $options = null)
+    public function addFilter($param, $value = null, array $options = null)
     {
         if ($param instanceof FilterInterface) {
             $filter = $param;
         } elseif (is_array($param)) {
             $filter = $this->createFilter();
             $filter->setData($param);
-        } elseif (is_string($param) && $val !== null) {
+        } elseif (is_string($param) && $value !== null) {
             $filter = $this->createFilter();
             $filter->setProperty($param);
-            $filter->setVal($val);
+            $filter->setValue($value);
             if (is_array($options)) {
                 $filter->setData($options);
             }

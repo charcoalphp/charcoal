@@ -55,14 +55,14 @@ trait QueryExpressionTestTrait
      *
      * @dataProvider provideParsableValues
      *
-     * @param mixed $val      The value to test.
+     * @param mixed $value    The value to test.
      * @param mixed $expected The expected result.
      */
-    public function testParseValue($val, $expected)
+    public function testParseValue($value, $expected)
     {
         $obj = $this->createExpression();
 
-        $this->assertEquals($expected, $obj::parseValue($val));
+        $this->assertEquals($expected, $obj::parseValue($value));
     }
 
     /**
@@ -95,14 +95,14 @@ trait QueryExpressionTestTrait
      *
      * @dataProvider provideQuotableValues
      *
-     * @param mixed $val      The value to test.
+     * @param mixed $value    The value to test.
      * @param mixed $expected The expected result.
      */
-    public function testQuoteValue($val, $expected)
+    public function testQuoteValue($value, $expected)
     {
         $obj = $this->createExpression();
 
-        $this->assertEquals($expected, $obj::quoteValue($val));
+        $this->assertEquals($expected, $obj::quoteValue($value));
     }
 
     /**
