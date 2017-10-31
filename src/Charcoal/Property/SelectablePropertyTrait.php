@@ -23,7 +23,7 @@ trait SelectablePropertyTrait
      * Set the available choices.
      *
      * @param  array $choices One or more choice structures.
-     * @return SelectablePropertyInterface Chainable.
+     * @return self
      */
     public function setChoices(array $choices)
     {
@@ -38,12 +38,12 @@ trait SelectablePropertyTrait
      * Merge the available choices.
      *
      * @param  array $choices One or more choice structures.
-     * @return SelectablePropertyInterface Chainable.
+     * @return self
      */
     public function addChoices(array $choices)
     {
         foreach ($choices as $choiceIdent => $choice) {
-            $this->addChoice((string)$choiceIdent, $choice);
+            $this->addChoice($choiceIdent, $choice);
         }
 
         return $this;
@@ -54,11 +54,11 @@ trait SelectablePropertyTrait
      *
      * @param  string       $choiceIdent The choice identifier (will be key / default ident).
      * @param  string|array $choice      A string representing the choice label or a structure.
-     * @return SelectablePropertyInterface Chainable.
+     * @return self
      */
     public function addChoice($choiceIdent, $choice)
     {
-        $choice = $this->parseChoice($choice, (string)$choiceIdent);
+        $choice = $this->parseChoice($choice, strval($choiceIdent));
         $choiceIdent = $choice['value'];
 
         $this->choices[$choiceIdent] = $choice;

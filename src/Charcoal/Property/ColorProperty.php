@@ -14,10 +14,12 @@ use Charcoal\Property\AbstractProperty;
  */
 class ColorProperty extends AbstractProperty
 {
+    const DEFAULT_SUPPORT_ALPHA = false;
+
     /**
      * @var boolean $supportAlpha
      */
-    private $supportAlpha = false;
+    private $supportAlpha = self::DEFAULT_SUPPORT_ALPHA;
 
     /**
      * @return string
@@ -50,7 +52,7 @@ class ColorProperty extends AbstractProperty
      *
      * @param mixed $val The value to set.
      * @throws InvalidArgumentException If the value does not match property's options.
-     * @return ColorProperty Chainable
+     * @return string|null
      */
     public function parseOne($val)
     {
@@ -59,7 +61,7 @@ class ColorProperty extends AbstractProperty
                 return null;
             } else {
                 throw new InvalidArgumentException(
-                    'Val can not be null (Not allowed)'
+                    'Color value can not be null (or empty). Not allowed.'
                 );
             }
         }

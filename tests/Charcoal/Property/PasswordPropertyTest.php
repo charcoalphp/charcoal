@@ -12,7 +12,7 @@ class PasswordPropertyTest extends \PHPUnit_Framework_TestCase
 {
     use \Charcoal\Tests\Property\ContainerIntegrationTrait;
 
-	public function testType()
+    public function testType()
     {
         $container = $this->getContainer();
 

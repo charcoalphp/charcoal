@@ -21,17 +21,17 @@ class DateTimeProperty extends AbstractProperty
     const DEFAULT_FORMAT = 'Y-m-d H:i:s';
 
     /**
-     * @var DateTime $min
+     * @var DateTimeInterface|null
      */
-    private $min = null;
+    private $min = self::DEFAULT_MIN;
 
     /**
-     * @var DateTime $max
+     * @var DateTimeInterface|null
      */
-    private $max = null;
+    private $max = self::DEFAULT_MAX;
 
     /**
-     * @var string $format
+     * @var string
      */
     private $format = self::DEFAULT_FORMAT;
 
@@ -50,7 +50,7 @@ class DateTimeProperty extends AbstractProperty
      *
      * @param boolean $multiple Multiple flag.
      * @throws InvalidArgumentException If the multiple argument is true (must be false).
-     * @return DateTimeProperty Chainable
+     * @return self
      */
     public function setMultiple($multiple)
     {
@@ -125,7 +125,7 @@ class DateTimeProperty extends AbstractProperty
                 return null;
             } else {
                 throw new Exception(
-                    'Invalid date/time value'
+                    'Invalid date/time value. Must be a DateTimeInterface instance.'
                 );
             }
         }
@@ -143,7 +143,7 @@ class DateTimeProperty extends AbstractProperty
     public function displayVal($val, array $options = [])
     {
         $val = $this->dateTimeVal($val);
-        if ($val === null || $val === '') {
+        if ($val === null || (is_string($val) && $val === '')) {
             return '';
         }
 
@@ -159,7 +159,7 @@ class DateTimeProperty extends AbstractProperty
     /**
      * @param mixed $val Value to convert to DateTime.
      * @throws InvalidArgumentException If the value is not a valid datetime.
-     * @return DateTime|null
+     * @return DateTimeInterface|null
      */
     private function dateTimeVal($val)
     {
@@ -186,7 +186,7 @@ class DateTimeProperty extends AbstractProperty
     /**
      * @param string|DateTime|null $min The minimum allowed value.
      * @throws InvalidArgumentException If the date/time is invalid.
-     * @return DateTimeProperty Chainable
+     * @return self
      */
     public function setMin($min)
     {
@@ -213,20 +213,17 @@ class DateTimeProperty extends AbstractProperty
     }
 
     /**
-     * @return DateTime
+     * @return DateTimeInterface|null
      */
     public function min()
     {
-        if ($this->min === null) {
-            $this->min = self::DEFAULT_MIN;
-        }
         return $this->min;
     }
 
     /**
      * @param string|DateTime|null $max The maximum allowed value.
      * @throws InvalidArgumentException If the date/time is invalid.
-     * @return DateTimeProperty Chainable
+     * @return self
      */
     public function setMax($max)
     {
@@ -253,23 +250,23 @@ class DateTimeProperty extends AbstractProperty
     }
 
     /**
-     * @return DateTime
+     * @return DateTimeInterface|null
      */
     public function max()
     {
-        if ($this->max === null) {
-            $this->max = self::DEFAULT_MAX;
-        }
         return $this->max;
     }
 
     /**
-     * @param string $format The date format.
+     * @param string|null $format The date format.
      * @throws InvalidArgumentException If the format is not a string.
      * @return DateTimeProperty Chainable
      */
     public function setFormat($format)
     {
+        if ($format === null) {
+            $format = '';
+        }
         if (!is_string($format)) {
             throw new InvalidArgumentException(
                 'Format must be a string'

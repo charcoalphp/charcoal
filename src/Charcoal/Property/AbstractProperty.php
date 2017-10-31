@@ -56,97 +56,106 @@ abstract class AbstractProperty extends AbstractEntity implements
     use TranslatorAwareTrait;
     use ValidatableTrait;
 
+    const DEFAULT_L10N = false;
+    const DEFAULT_MULTIPLE = false;
+    const DEFAULT_HIDDEN = false;
+    const DEFAULT_UNIQUE = false;
+    const DEFAULT_REQUIRED = false;
+    const DEFAULT_ALLOW_NULL = true;
+    const DEFAULT_STORABLE = true;
+    const DEFAULT_ACTIVE = true;
+
     /**
-     * @var string $ident
+     * @var string
      */
     private $ident = '';
 
     /**
-     * @var mixed $Val
+     * @var mixed
      */
     protected $val;
 
     /**
-     * @var Translation|null $label
+     * @var Translation|null
      */
     private $label;
 
     /**
-     * @var boolean $l10n
+     * @var boolean
      */
-    private $l10n = false;
+    private $l10n = self::DEFAULT_L10N;
 
     /**
-     * @var boolean $hidden ;
+     * @var boolean
      */
-    private $hidden = false;
-
-    /**
-     * @var boolean $multiple
-     */
-    private $multiple = false;
+    private $multiple = self::DEFAULT_MULTIPLE;
 
     /**
      * Array of options for multiple properties
      * - `separator` (default=",") How the values will be separated in the storage (sql).
      * - `min` (default=null) The min number of values. If null, <0 or NaN, then this is not taken into consideration.
      * - `max` (default=null) The max number of values. If null, <0 or NaN, then there is not limit.
-     * @var mixed $multipleOptions
+     * @var array|null
      */
     private $multipleOptions;
 
     /**
-     * If true, this property *must* have a value
-     * @var boolean $required
+     * @var boolean
      */
-    private $required = false;
+    private $hidden = self::DEFAULT_HIDDEN;
+
+    /**
+     * If true, this property *must* have a value
+     * @var boolean
+     */
+    private $required = self::DEFAULT_REQUIRED;
 
     /**
      * Unique properties should not share he same value across 2 objects
-     * @var boolean $unique
+     * @var boolean
      */
-    private $unique = false;
+    private $unique = self::DEFAULT_UNIQUE;
 
     /**
      * @var boolean $allowNull
      */
-    private $allowNull = true;
+    private $allowNull = self::DEFAULT_ALLOW_NULL;
 
     /**
      * An empty value implies that the property will inherit the table's encoding
-     * @var string $sqlEncoding
+     * @var string
      */
     private $sqlEncoding = '';
 
     /**
      * Only the storable properties should be saved in storage.
-     * @var boolean $storable
+     * @var boolean
      */
-    private $storable = true;
+    private $storable = self::DEFAULT_STORABLE;
 
     /**
      * Inactive properties should be hidden everywhere / unused
-     * @var boolean $active
+     * @var boolean
      */
-    private $active = true;
+    private $active = self::DEFAULT_ACTIVE;
 
     /**
-     * @var Translation|null $description
+     * @var Translation|null
      */
     private $description;
 
     /**
-     * @var Translation|null $notes
+     * @var Translation|null
      */
     private $notes;
 
     /**
-     * @var array $viewOptions
+     * @var array|null
      */
     protected $viewOptions;
 
     /**
-     * @var string $displayType
+     * @var string
      */
     protected $displayType;
 
@@ -158,6 +167,8 @@ abstract class AbstractProperty extends AbstractEntity implements
     /**
      * Required dependencies:
      * - `logger` a PSR3-compliant logger.
+     * - `pdo` a PDO database.
+     * - `translator` a Charcoal Translator (based on Symfony's).
      *
      * @param array $data Optional. Class Dependencies.
      */
@@ -190,15 +201,6 @@ abstract class AbstractProperty extends AbstractEntity implements
     {
         $this->setPropertyFactory($container['property/factory']);
         $this->setMetadataLoader($container['metadata/loader']);
-    }
-
-    /**
-     * @param PDO $pdo The database connection (PDO) instance.
-     * @return void
-     */
-    private function setPdo(PDO $pdo)
-    {
-        $this->pdo = $pdo;
     }
 
     /**
@@ -235,7 +237,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      *
      * @param  string $ident The property identifier.
      * @throws InvalidArgumentException  If the identifier is not a string.
-     * @return PropertyInterface Chainable
+     * @return self
      */
     public function setIdent($ident)
     {
@@ -291,7 +293,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      * Set the property's value.
      *
      * @param  mixed $val The property (raw) value.
-     * @return PropertyInterface Chainable
+     * @return self
      */
     final public function setVal($val)
     {
@@ -449,33 +451,11 @@ abstract class AbstractProperty extends AbstractEntity implements
         return (string)$propertyValue;
     }
 
-    /**
-     * Attempt to get the multilingual value in the requested language.
-     *
-     * @param  mixed $val  The multilingual value to lookup.
-     * @param  mixed $lang The language to return the value in.
-     * @return string|null
-     */
-    protected function l10nVal($val, $lang = null)
-    {
-        if (!is_string($lang)) {
-            if (is_array($lang) && isset($lang['lang'])) {
-                $lang = $lang['lang'];
-            } else {
-                $lang = $this->translator()->getLocale();
-            }
-        }
 
-        if (isset($val[$lang])) {
-            return $val[$lang];
-        } else {
-            return null;
-        }
-    }
 
     /**
      * @param mixed $label The property label.
-     * @return PropertyInterface Chainable
+     * @return self
      */
     public function setLabel($label)
     {
@@ -498,7 +478,7 @@ abstract class AbstractProperty extends AbstractEntity implements
 
     /**
      * @param boolean $l10n The l10n, or "translatable" flag.
-     * @return PropertyInterface Chainable
+     * @return self
      */
     public function setL10n($l10n)
     {
@@ -519,7 +499,7 @@ abstract class AbstractProperty extends AbstractEntity implements
 
     /**
      * @param boolean $hidden The hidden flag.
-     * @return PropertyInterface Chainable
+     * @return self
      */
     public function setHidden($hidden)
     {
@@ -540,7 +520,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      * Set whether this property accepts multiple values or a single value.
      *
      * @param  boolean $multiple The multiple flag.
-     * @return PropertyInterface Chainable
+     * @return self
      */
     public function setMultiple($multiple)
     {
@@ -585,7 +565,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      * - `max` (integer) The maximum number of values. (0 = no limit).
      *
      * @param array $multipleOptions The property multiple options.
-     * @return PropertyInterface Chainable
+     * @return self
      */
     public function setMultipleOptions(array $multipleOptions)
     {
@@ -601,7 +581,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      *
      * @see    self::defaultMultipleOptions
      * @param  string|null $key Optional setting to retrieve from the options.
-     * @return array
+     * @return array|null
      */
     public function multipleOptions($key = null)
     {
@@ -656,7 +636,7 @@ abstract class AbstractProperty extends AbstractEntity implements
 
     /**
      * @param boolean $allow The property allow null flag.
-     * @return PropertyInterface Chainable
+     * @return self
      */
     public function setAllowNull($allow)
     {
@@ -683,7 +663,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      *
      * @param  string $ident The encoding ident.
      * @throws InvalidArgumentException  If the identifier is not a string.
-     * @return PropertyInterface Chainable
+     * @return self
      */
     public function setSqlEncoding($ident)
     {
@@ -712,7 +692,7 @@ abstract class AbstractProperty extends AbstractEntity implements
 
     /**
      * @param boolean $required The property required flag.
-     * @return PropertyInterface Chainable
+     * @return self
      */
     public function setRequired($required)
     {
@@ -736,7 +716,7 @@ abstract class AbstractProperty extends AbstractEntity implements
 
     /**
      * @param boolean $unique The property unique flag.
-     * @return PropertyInterface Chainable
+     * @return self
      */
     public function setUnique($unique)
     {
@@ -755,7 +735,7 @@ abstract class AbstractProperty extends AbstractEntity implements
 
     /**
      * @param boolean $active The property active flag. Inactive properties should have no effects.
-     * @return PropertyInterface Chainable
+     * @return self
      */
     public function setActive($active)
     {
@@ -774,7 +754,7 @@ abstract class AbstractProperty extends AbstractEntity implements
 
     /**
      * @param boolean $storable The storable flag.
-     * @return PropertyInterface Chainable
+     * @return self
      */
     public function setStorable($storable)
     {
@@ -793,7 +773,7 @@ abstract class AbstractProperty extends AbstractEntity implements
 
     /**
      * @param mixed $description The property description.
-     * @return PropertyInterface Chainable
+     * @return self
      */
     public function setDescription($description)
     {
@@ -811,7 +791,7 @@ abstract class AbstractProperty extends AbstractEntity implements
 
     /**
      * @param mixed $notes The property notes.
-     * @return PropertyInterface Chainable
+     * @return self
      */
     public function setNotes($notes)
     {
@@ -889,31 +869,7 @@ abstract class AbstractProperty extends AbstractEntity implements
         return true;
     }
 
-    /**
-     * @param array $data Optional. Metadata data.
-     * @return PropertyMetadata
-     */
-    protected function createMetadata(array $data = null)
-    {
-        $metadata = new PropertyMetadata();
-        if ($data !== null) {
-            $metadata->setData($data);
-        }
 
-        return $metadata;
-    }
-
-    /**
-     * ValidatableTrait > createValidator(). Create a Validator object
-     *
-     * @return ValidatorInterface
-     */
-    protected function createValidator()
-    {
-        $validator = new PropertyValidator($this);
-
-        return $validator;
-    }
 
     /**
      * @param mixed $val The value, at time of saving.
@@ -927,7 +883,7 @@ abstract class AbstractProperty extends AbstractEntity implements
 
     /**
      * @param string $type The display type.
-     * @return PropertyInterface Chainable
+     * @return self
      */
     public function setDisplayType($type)
     {
@@ -986,12 +942,71 @@ abstract class AbstractProperty extends AbstractEntity implements
      * Set view options for both display and input
      *
      * @param array $viewOpts View options.
-     * @return PropertyInterface Chainable
+     * @return self
      */
     final public function setViewOptions(array $viewOpts = [])
     {
         $this->viewOptions = $viewOpts;
 
         return $this;
+    }
+
+    /**
+     * Attempt to get the multilingual value in the requested language.
+     *
+     * @param  mixed $val  The multilingual value to lookup.
+     * @param  mixed $lang The language to return the value in.
+     * @return string|null
+     */
+    protected function l10nVal($val, $lang = null)
+    {
+        if (!is_string($lang)) {
+            if (is_array($lang) && isset($lang['lang'])) {
+                $lang = $lang['lang'];
+            } else {
+                $lang = $this->translator()->getLocale();
+            }
+        }
+
+        if (isset($val[$lang])) {
+            return $val[$lang];
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * @param array $data Optional. Metadata data.
+     * @return PropertyMetadata
+     */
+    protected function createMetadata(array $data = null)
+    {
+        $metadata = new PropertyMetadata();
+        if ($data !== null) {
+            $metadata->setData($data);
+        }
+
+        return $metadata;
+    }
+
+    /**
+     * ValidatableTrait > createValidator(). Create a Validator object
+     *
+     * @return ValidatorInterface
+     */
+    protected function createValidator()
+    {
+        $validator = new PropertyValidator($this);
+
+        return $validator;
+    }
+
+    /**
+     * @param PDO $pdo The database connection (PDO) instance.
+     * @return void
+     */
+    private function setPdo(PDO $pdo)
+    {
+        $this->pdo = $pdo;
     }
 }

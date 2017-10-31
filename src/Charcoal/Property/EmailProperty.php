@@ -21,6 +21,8 @@ class EmailProperty extends StringProperty
     /**
      * Email's maximum length is defined in RFC-3696 (+ errata) as 254 characters.
      *
+     * This overrides PropertyString's maxLength() to ensure compliance with the email standards.
+     *
      * @return integer
      */
     public function maxLength()

@@ -51,7 +51,7 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
      *
      * @var boolean
      */
-    private $allowEmpty;
+    private $allowEmpty = self::DEFAULT_ALLOW_EMPTY;
 
     /**
      * @return string
@@ -81,7 +81,7 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
                 return '';
             }
         } elseif ($val instanceof Translation) {
-            $propertyValue = (string)$val;
+            $propertyValue = strval($val);
         } else {
             $propertyValue = $val;
         }
@@ -101,11 +101,11 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
 
         if (is_array($propertyValue)) {
             foreach ($propertyValue as &$value) {
-                $value = (string)$this->valLabel($value, $options);
+                $value = strval($this->valLabel($value, $options));
             }
             $propertyValue = implode($separator, $propertyValue);
         } else {
-            $propertyValue = (string)$this->valLabel($propertyValue, $options);
+            $propertyValue = strval($this->valLabel($propertyValue, $options));
         }
 
         return $propertyValue;
@@ -282,10 +282,6 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
      */
     public function allowEmpty()
     {
-        if ($this->allowEmpty === null) {
-            $this->allowEmpty = self::DEFAULT_ALLOW_EMPTY;
-        }
-
         return $this->allowEmpty;
     }
 

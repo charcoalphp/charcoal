@@ -275,7 +275,7 @@ class ObjectPropertyTest extends \PHPUnit_Framework_TestCase
         $this->obj->setL10n(false);
         $this->obj->setMultiple(true);
 
-        $this->assertEquals('Foo, ' . self::OBJ_2 . ', Baz, Qux, Xyz', $this->obj->displayVal(implode(',', array_keys($objs))));
+        $this->assertEquals('Foo, '.self::OBJ_2.', Baz, Qux, Xyz', $this->obj->displayVal(implode(',', array_keys($objs))));
         $this->assertEquals('Foo, Baz, Qux', $this->obj->displayVal([ $models[self::OBJ_1], self::OBJ_3, $models[self::OBJ_4] ]));
     }
 

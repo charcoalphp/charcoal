@@ -109,11 +109,11 @@ class StringPropertyTest extends \PHPUnit_Framework_TestCase
         /** Test translatable value with a multilingual property */
         $this->obj->setL10n(true);
 
-        $this->assertEquals('',         $this->obj->displayVal($val['en']));
+        $this->assertEquals('', $this->obj->displayVal($val['en']));
         $this->assertEquals($val['en'], $this->obj->displayVal($l10n));
         $this->assertEquals($val['en'], $this->obj->displayVal($val));
         $this->assertEquals($val['fr'], $this->obj->displayVal($val, [ 'lang' => 'fr' ]));
-        $this->assertEquals('',         $this->obj->displayVal($val, [ 'lang' => 'es' ]));
+        $this->assertEquals('', $this->obj->displayVal($val, [ 'lang' => 'es' ]));
 
         $this->obj->setL10n(false);
         $this->obj->setMultiple(true);

@@ -1,7 +1,8 @@
 {
     "properties": {
         "support_alpha": {
-            "type": "boolean"
+            "type": "boolean",
+            "label": "Alpha supported?"
         }
     },
     "admin": {

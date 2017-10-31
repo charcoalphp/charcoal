@@ -86,11 +86,10 @@ class IdPropertyTest extends \PHPUnit_Framework_TestCase
      * - is chainable
      * - properly resets the mode to detault
      */
-    public function testSetModeNull()
+    public function testSetModeNullThrowsException()
     {
-        $ret = $this->obj->setMode(null);
-        $this->assertSame($ret, $this->obj);
-        $this->assertEquals(IdProperty::DEFAULT_MODE, $this->obj->mode());
+        $this->setExpectedException(InvalidArgumentException::class);
+        $this->obj->setMode(null);
     }
 
     public function testMultipleCannotBeTrue()

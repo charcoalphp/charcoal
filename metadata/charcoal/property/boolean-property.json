@@ -2,11 +2,17 @@
     "properties": {
         "true_label": {
             "type": "string",
+            "label": "Label, for \"true\" value.",
             "l10n": true
         },
         "false_label": {
-          "type": "string",
-          "l10n": true
+            "type": "string",
+            "label":"Label, for \"false\" value.",
+            "l10n": true
+        },
+        "multiple":{
+            "active": false,
+            "description": "Boolean properties can not be multiple (will always be false)."
         }
     },
     "admin": {

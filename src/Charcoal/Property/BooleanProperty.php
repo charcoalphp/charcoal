@@ -72,13 +72,13 @@ class BooleanProperty extends AbstractProperty
     }
 
     /**
-     * AbstractProperty > set_multiple()
+     * AbstractProperty > setMultiple()
      *
      * Ensure multiple can not be true for DateTime property.
      *
      * @param boolean $multiple The multiple flag.
      * @throws InvalidArgumentException If multiple is true. (must be false for boolean properties).
-     * @return BooleanProperty Chainable
+     * @return self
      */
     public function setMultiple($multiple)
     {
@@ -188,12 +188,12 @@ class BooleanProperty extends AbstractProperty
         $val = $this->val();
         return [
             [
-                'label'    => 'True',
+                'label'    => $this->trueLabel(),
                 'selected' => !!$val,
                 'value'    => 1
             ],
             [
-                'label'    => 'False',
+                'label'    => $this->falseLabel(),
                 'selected' => !$val,
                 'value'    => 0
             ]

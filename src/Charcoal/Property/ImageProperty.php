@@ -22,6 +22,8 @@ use Charcoal\Property\FileProperty;
  */
 class ImageProperty extends FileProperty
 {
+    const DEFAULT_DRIVER_TYPE = 'imagick';
+
     const EFFECTS_EVENT_SAVE    = 'save';
     const EFFECTS_EVENT_NEVER   = 'never';
     const EFFECTS_EVENT_UPLOAD  = 'upload';
@@ -41,19 +43,20 @@ class ImageProperty extends FileProperty
      */
     private $applyEffects = self::DEFAULT_APPLY_EFFECTS;
 
-    /**
-     * Store the image factory instance.
-     *
-     * @var ImageFactory
-     */
-    private $imageFactory;
 
     /**
      * The type of image processing engine.
      *
      * @var string
      */
-    private $driverType;
+    private $driverType = self::DEFAULT_DRIVER_TYPE;
+
+    /**
+     * Internal storage of the image factory instance.
+     *
+     * @var ImageFactory
+     */
+    private $imageFactory;
 
     /**
      * @return string
@@ -61,19 +64,6 @@ class ImageProperty extends FileProperty
     public function type()
     {
         return 'image';
-    }
-
-    /**
-     * Set an image factory.
-     *
-     * @param  ImageFactory $factory The image factory, to manipulate images.
-     * @return self
-     */
-    protected function setImageFactory(ImageFactory $factory)
-    {
-        $this->imageFactory = $factory;
-
-        return $this;
     }
 
     /**
@@ -90,25 +80,7 @@ class ImageProperty extends FileProperty
         return $this->imageFactory;
     }
 
-    /**
-     * Create an image factory.
-     *
-     * @return ImageFactory
-     */
-    protected function createImageFactory()
-    {
-        return new ImageFactory();
-    }
 
-    /**
-     * Create an image.
-     *
-     * @return ImageInterface
-     */
-    protected function createImage()
-    {
-        return $this->imageFactory()->create($this->driverType());
-    }
 
     /**
      * Set the name of the property's image processing driver.
@@ -117,7 +89,7 @@ class ImageProperty extends FileProperty
      * @throws InvalidArgumentException If the drive type is not a string.
      * @return ImageProperty Chainable
      */
-    private function setDriverType($type)
+    public function setDriverType($type)
     {
         if (!is_string($type)) {
             throw new InvalidArgumentException(sprintf(
@@ -132,16 +104,12 @@ class ImageProperty extends FileProperty
     }
 
     /**
-     * Get the name of the property's image processing driver.
+     * Retrieve the name of the property's image processing driver.
      *
      * @return string
      */
-    protected function driverType()
+    public function driverType()
     {
-        if ($this->driverType === null) {
-            return 'imagemagick';
-        }
-
         return $this->driverType;
     }
 
@@ -261,12 +229,22 @@ class ImageProperty extends FileProperty
         $effects = $this->effects();
         $grouped = [];
         if ($effects) {
-            $blueprint = [ 'effects' => [], 'save' => true, 'rename' => null, 'copy' => null ];
+            $blueprint = [
+                'effects' => [],
+                'save' => true,
+                'rename' => null,
+                'copy' => null
+            ];
             $fxGroup   = $blueprint;
             foreach ($effects as $effect) {
                 if (isset($effect['type']) && $effect['type'] === 'condition') {
                     $grouped[] = array_merge(
-                        [ 'condition' => null, 'ignore' => null, 'extension' => null, 'mimetype' => null ],
+                        [
+                            'condition' => null,
+                            'ignore' => null,
+                            'extension' => null,
+                            'mimetype' => null
+                        ],
                         $effect
                     );
                 } elseif (isset($effect['type']) && $effect['type'] === 'save') {
@@ -330,6 +308,150 @@ class ImageProperty extends FileProperty
         }
 
         return $value;
+    }
+
+
+
+    /**
+     * Provides the accepted mimetypes for the image properties.
+     *
+     * Overrides FileProperty's acceptedMimetypes() method.
+     *
+     * @return string[]
+     */
+    public function acceptedMimetypes()
+    {
+        return [
+            'image/gif',
+            'image/jpg',
+            'image/jpeg',
+            'image/pjpeg',
+            'image/png',
+            'image/svg+xml',
+            'image/webp'
+        ];
+    }
+
+    /**
+     * Generate the file extension from the property's value.
+     *
+     * @param  string $file The file to parse.
+     * @return string The extension based on the MIME type.
+     */
+    public function generateExtension($file = null)
+    {
+        if (is_string($file)) {
+            if (in_array($file, $this->acceptedMimetypes())) {
+                $mime = $file;
+            } else {
+                $mime = $this->mimetypeFor($file);
+            }
+        } else {
+            $mime = $this->mimetype();
+        }
+
+        switch ($mime) {
+            case 'image/gif':
+                return 'gif';
+
+            case 'image/jpg':
+            case 'image/jpeg':
+            case 'image/pjpeg':
+                return 'jpg';
+
+            case 'image/png':
+                return 'png';
+
+            case 'image/svg+xml':
+                return 'svg';
+
+            case 'image/webp':
+                return 'webp';
+        }
+    }
+
+    /**
+     * @param mixed $val The value, at time of saving.
+     * @return mixed
+     */
+    public function save($val)
+    {
+        $val = parent::save($val);
+
+        if ($this->applyEffects('save')) {
+            $val = $this->processEffects($val);
+        }
+
+        return $val;
+    }
+
+    /**
+     * Apply effects to the uploaded data URI(s).
+     *
+     * @see    FileProperty::fileUpload()
+     * @param  string $fileData The file data, raw.
+     * @return string
+     */
+    public function dataUpload($fileData)
+    {
+        $target = parent::dataUpload($fileData);
+
+        if ($this->applyEffects('upload')) {
+            $target = $this->processEffects($target);
+        }
+
+        return $target;
+    }
+
+    /**
+     * Apply effects to the uploaded file(s).
+     *
+     * @see    FileProperty::fileUpload()
+     * @param  array $fileData The file data to upload.
+     * @return string
+     */
+    public function fileUpload(array $fileData)
+    {
+        $target = parent::fileUpload($fileData);
+
+        if ($this->applyEffects('upload')) {
+            $target = $this->processEffects($target);
+        }
+
+        return $target;
+    }
+
+    /**
+     * Set an image factory.
+     *
+     * @param  ImageFactory $factory The image factory, to manipulate images.
+     * @return self
+     */
+    protected function setImageFactory(ImageFactory $factory)
+    {
+        $this->imageFactory = $factory;
+
+        return $this;
+    }
+
+    /**
+     * Create an image factory.
+     *
+     * @return ImageFactory
+     */
+    protected function createImageFactory()
+    {
+        return new ImageFactory();
+    }
+
+    /**
+     * Create an image.
+     *
+     * @return ImageInterface
+     */
+    protected function createImage()
+    {
+        return $this->imageFactory()->create($this->driverType());
     }
 
     /**
@@ -451,110 +573,5 @@ class ImageProperty extends FileProperty
         }
 
         return $value;
-    }
-
-    /**
-     * @return array
-     */
-    public function acceptedMimetypes()
-    {
-        return [
-            'image/gif',
-            'image/jpg',
-            'image/jpeg',
-            'image/pjpeg',
-            'image/png',
-            'image/svg+xml',
-            'image/webp'
-        ];
-    }
-
-    /**
-     * Generate the file extension from the property's value.
-     *
-     * @param  string $file The file to parse.
-     * @return string The extension based on the MIME type.
-     */
-    public function generateExtension($file = null)
-    {
-        if (is_string($file)) {
-            if (in_array($file, $this->acceptedMimetypes())) {
-                $mime = $file;
-            } else {
-                $mime = $this->mimetypeFor($file);
-            }
-        } else {
-            $mime = $this->mimetype();
-        }
-
-        switch ($mime) {
-            case 'image/gif':
-                return 'gif';
-
-            case 'image/jpg':
-            case 'image/jpeg':
-            case 'image/pjpeg':
-                return 'jpg';
-
-            case 'image/png':
-                return 'png';
-
-            case 'image/svg+xml':
-                return 'svg';
-
-            case 'image/webp':
-                return 'webp';
-        }
-    }
-
-    /**
-     * @param mixed $val The value, at time of saving.
-     * @return mixed
-     */
-    public function save($val)
-    {
-        $val = parent::save($val);
-
-        if ($this->applyEffects('save')) {
-            $val = $this->processEffects($val);
-        }
-
-        return $val;
-    }
-
-    /**
-     * Apply effects to the uploaded data URI(s).
-     *
-     * @see    FileProperty::fileUpload()
-     * @param  string $fileData The file data, raw.
-     * @return string
-     */
-    public function dataUpload($fileData)
-    {
-        $target = parent::dataUpload($fileData);
-
-        if ($this->applyEffects('upload')) {
-            $target = $this->processEffects($target);
-        }
-
-        return $target;
-    }
-
-    /**
-     * Apply effects to the uploaded file(s).
-     *
-     * @see    FileProperty::fileUpload()
-     * @param  array $fileData The file data to upload.
-     * @return string
-     */
-    public function fileUpload(array $fileData)
-    {
-        $target = parent::fileUpload($fileData);
-
-        if ($this->applyEffects('upload')) {
-            $target = $this->processEffects($target);
-        }
-
-        return $target;
     }
 }

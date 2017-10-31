@@ -21,6 +21,8 @@ class PasswordProperty extends StringProperty
     }
 
     /**
+     * Overrides the StringProperty::save() method to ensure the value is encrypted.
+     *
      * @param mixed $val The value, at time of saving.
      * @return string
      */

@@ -83,7 +83,7 @@ class AudioProperty extends FileProperty
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function acceptedMimetypes()
     {

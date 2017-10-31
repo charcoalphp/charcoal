@@ -4,6 +4,7 @@ namespace Charcoal\Tests\Property;
 
 use PDO;
 use DateTime;
+use InvalidArgumentException;
 
 // From 'charcoal-property'
 use Charcoal\Property\DateTimeProperty;
@@ -78,7 +79,7 @@ class DateTimePropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $this->obj);
         $this->assertEquals(null, $this->obj->val());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
         $this->obj->setAllowNull(false);
         $this->obj->setVal(null);
     }
@@ -161,7 +162,7 @@ class DateTimePropertyTest extends \PHPUnit_Framework_TestCase
         $this->obj->set('min', 'today');
         $this->assertEquals($dt, $this->obj['min']);
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
         $this->obj->setMin('foo');
 
         // Ensure setting a null value works
@@ -193,7 +194,7 @@ class DateTimePropertyTest extends \PHPUnit_Framework_TestCase
         $this->obj->set('max', 'today');
         $this->assertEquals($dt, $this->obj['max']);
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
         $this->obj->setMax('foo');
 
         // Ensure setting a null value works
@@ -207,7 +208,7 @@ class DateTimePropertyTest extends \PHPUnit_Framework_TestCase
      * and that the `setFormat()`:
      * - is chainable
      * - sets the format
-     * - throws an exception if not a string or null
+     * - throws an exception if not a string
      */
     public function testSetFormat()
     {
@@ -223,8 +224,8 @@ class DateTimePropertyTest extends \PHPUnit_Framework_TestCase
         $this->obj->set('format', 'Y');
         $this->assertEquals('Y', $this->obj['format']);
 
-        $this->setExpectedException('\InvalidArgumentException');
-        $this->obj->setFormat(null);
+        $this->setExpectedException(InvalidArgumentException::class);
+        $this->obj->setFormat(false);
     }
 
     public function testSave()

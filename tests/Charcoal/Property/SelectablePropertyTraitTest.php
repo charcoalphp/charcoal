@@ -74,7 +74,7 @@ class SelectablePropertyTraitTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('xuq', $this->obj->choiceLabel([ 'value' => 'qux', 'label' => 'xuq' ]));
         $this->assertEquals('qux', $this->obj->choiceLabel([ 'value' => 'qux', 'label' => null ]));
-        $this->assertEquals('',    $this->obj->choiceLabel([ 'value' => 'qux', 'label' => '' ]));
+        $this->assertEquals('', $this->obj->choiceLabel([ 'value' => 'qux', 'label' => '' ]));
         $this->assertEquals('qux', $this->obj->choiceLabel([ 'value' => 'qux' ]));
 
         $this->assertEquals('qux', $this->obj->choiceLabel('qux'));
@@ -169,7 +169,6 @@ class SelectablePropertyTraitTest extends \PHPUnit_Framework_TestCase
 
         $parsed = static::callMethod($this->obj, 'parseChoice', [ [ 'value' => 'baz' ], 'baz' ]);
         $this->assertEquals($baz, $parsed);
-
     }
 
     public function testParseChoiceStructException()

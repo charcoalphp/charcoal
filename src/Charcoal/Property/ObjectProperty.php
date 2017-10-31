@@ -39,6 +39,8 @@ use Charcoal\Property\SelectablePropertyInterface;
  */
 class ObjectProperty extends AbstractProperty implements SelectablePropertyInterface
 {
+    const DEFAULT_PATTERN = '{{name}}';
+
     /**
      * The object type to build the choices from.
      *
@@ -51,7 +53,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      *
      * @var string
      */
-    private $pattern = '{{name}}';
+    private $pattern = self::DEFAULT_PATTERN;
 
     /**
      * The available selectable choices.
@@ -134,111 +136,6 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
         return 'object';
     }
 
-    /**
-     * Set an object model factory.
-     *
-     * @param  FactoryInterface $factory The model factory, to create objects.
-     * @return ObjectProperty Chainable
-     */
-    private function setModelFactory(FactoryInterface $factory)
-    {
-        $this->modelFactory = $factory;
-
-        return $this;
-    }
-
-    /**
-     * Retrieve the object model factory.
-     *
-     * @throws RuntimeException If the model factory was not previously set.
-     * @return FactoryInterface
-     */
-    protected function modelFactory()
-    {
-        if (!isset($this->modelFactory)) {
-            throw new RuntimeException(sprintf(
-                'Model Factory is not defined for "%s"',
-                get_class($this)
-            ));
-        }
-
-        return $this->modelFactory;
-    }
-
-    /**
-     * Set a model collection loader.
-     *
-     * @param  CollectionLoader $loader The collection loader.
-     * @return self
-     */
-    private function setCollectionLoader(CollectionLoader $loader)
-    {
-        $this->collectionLoader = $loader;
-
-        return $this;
-    }
-
-    /**
-     * Retrieve the model collection loader.
-     *
-     * @throws RuntimeException If the collection loader was not previously set.
-     * @return CollectionLoader
-     */
-    protected function collectionLoader()
-    {
-        if ($this->collectionLoader === null) {
-            throw new RuntimeException(sprintf(
-                'Collection Loader is not defined for "%s"',
-                get_class($this)
-            ));
-        }
-
-        return $this->collectionLoader;
-    }
-
-    /**
-     * Retrieve the prepared model collection loader.
-     *
-     * @return CollectionLoader
-     */
-    protected function collectionModelLoader()
-    {
-        $loader = $this->collectionLoader();
-
-        if (!$loader->hasModel()) {
-            $loader->setModel($this->proto());
-
-            $pagination = $this->pagination();
-            if (!empty($pagination)) {
-                $loader->setPagination($pagination);
-            }
-
-            $orders = $this->orders();
-            if (!empty($orders)) {
-                $loader->setOrders($orders);
-            }
-
-            $filters = $this->filters();
-            if (!empty($filters)) {
-                $loader->setFilters($filters);
-            }
-        }
-
-        return $loader;
-    }
-
-    /**
-     * Set the cache service.
-     *
-     * @param  CacheItemPoolInterface $cache A PSR-6 compliant cache pool instance.
-     * @return ObjectProperty Chainable
-     */
-    private function setCachePool(CacheItemPoolInterface $cache)
-    {
-        $this->cachePool = $cache;
-
-        return $this;
-    }
 
     /**
      * Retrieve the cache service.
@@ -263,7 +160,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      *
      * @param  string $objType The object type.
      * @throws InvalidArgumentException If the object type is not a string.
-     * @return ObjectProperty Chainable
+     * @return self
      */
     public function setObjType($objType)
     {
@@ -529,7 +426,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      * Set the available choices.
      *
      * @param  array $choices One or more choice structures.
-     * @return ObjectProperty Chainable
+     * @return self
      */
     public function setChoices(array $choices)
     {
@@ -546,7 +443,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      * Merge the available choices.
      *
      * @param  array $choices One or more choice structures.
-     * @return ObjectProperty Chainable
+     * @return self
      */
     public function addChoices(array $choices)
     {
@@ -564,7 +461,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      *
      * @param  string       $choiceIdent The choice identifier (will be key / default ident).
      * @param  string|array $choice      A string representing the choice label or a structure.
-     * @return ObjectProperty Chainable
+     * @return self
      */
     public function addChoice($choiceIdent, $choice)
     {
@@ -799,6 +696,55 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
+     * Retrieve the model collection loader.
+     *
+     * @throws RuntimeException If the collection loader was not previously set.
+     * @return CollectionLoader
+     */
+    protected function collectionLoader()
+    {
+        if ($this->collectionLoader === null) {
+            throw new RuntimeException(sprintf(
+                'Collection Loader is not defined for "%s"',
+                get_class($this)
+            ));
+        }
+
+        return $this->collectionLoader;
+    }
+
+    /**
+     * Retrieve the prepared model collection loader.
+     *
+     * @return CollectionLoader
+     */
+    protected function collectionModelLoader()
+    {
+        $loader = $this->collectionLoader();
+
+        if (!$loader->hasModel()) {
+            $loader->setModel($this->proto());
+
+            $pagination = $this->pagination();
+            if (!empty($pagination)) {
+                $loader->setPagination($pagination);
+            }
+
+            $orders = $this->orders();
+            if (!empty($orders)) {
+                $loader->setOrders($orders);
+            }
+
+            $filters = $this->filters();
+            if (!empty($filters)) {
+                $loader->setFilters($filters);
+            }
+        }
+
+        return $loader;
+    }
+
+    /**
      * Render the given object.
      *
      * @see    Move to \Charcoal\Admin\Property\AbstractSelectableInput::choiceObjMap()
@@ -902,5 +848,56 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
         ]);
 
         return self::$modelLoaders[$objType];
+    }
+
+    /**
+     * Retrieve the object model factory.
+     *
+     * @throws RuntimeException If the model factory was not previously set.
+     * @return FactoryInterface
+     */
+    protected function modelFactory()
+    {
+        if (!isset($this->modelFactory)) {
+            throw new RuntimeException(sprintf(
+                'Model Factory is not defined for "%s"',
+                get_class($this)
+            ));
+        }
+
+        return $this->modelFactory;
+    }
+
+    /**
+     * Set an object model factory.
+     *
+     * @param  FactoryInterface $factory The model factory, to create objects.
+     * @return void
+     */
+    private function setModelFactory(FactoryInterface $factory)
+    {
+        $this->modelFactory = $factory;
+    }
+
+    /**
+     * Set a model collection loader.
+     *
+     * @param  CollectionLoader $loader The collection loader.
+     * @return void
+     */
+    private function setCollectionLoader(CollectionLoader $loader)
+    {
+        $this->collectionLoader = $loader;
+    }
+
+    /**
+     * Set the cache service.
+     *
+     * @param  CacheItemPoolInterface $cache A PSR-6 compliant cache pool instance.
+     * @return void
+     */
+    private function setCachePool(CacheItemPoolInterface $cache)
+    {
+        $this->cachePool = $cache;
     }
 }

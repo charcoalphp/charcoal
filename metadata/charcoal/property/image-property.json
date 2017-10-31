@@ -1,5 +1,13 @@
 {
     "properties": {
+        "driver_type":{
+            "label":"Image driver",
+            "type": "text",
+            "choices":{
+                "imagick":{},
+                "imagemagick":{}
+            }
+        },
         "effects": {
             "type": "structure"
         },

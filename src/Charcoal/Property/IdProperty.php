@@ -31,7 +31,7 @@ class IdProperty extends AbstractProperty
      *
      * @var string $mode
      */
-    private $mode;
+    private $mode = self::DEFAULT_MODE;
 
     /**
      * Retrieve the property type.
@@ -131,12 +131,6 @@ class IdProperty extends AbstractProperty
      */
     public function setMode($mode)
     {
-        // It is possible to set the mode to NULL, to reset to default mode.
-        if ($mode === null) {
-            $this->mode = null;
-            return $this;
-        }
-
         $availableModes = $this->availableModes();
 
         if (!in_array($mode, $availableModes)) {
@@ -158,10 +152,6 @@ class IdProperty extends AbstractProperty
      */
     public function mode()
     {
-        if ($this->mode === null) {
-            $this->mode = self::DEFAULT_MODE;
-        }
-
         return $this->mode;
     }
 

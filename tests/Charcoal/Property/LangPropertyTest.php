@@ -99,9 +99,9 @@ class LangPropertyTest extends \PHPUnit_Framework_TestCase
         /** Test translatable value with a multilingual property */
         $this->obj->setL10n(true);
 
-        $this->assertEquals('',        $this->obj->displayVal('foo'));
-        $this->assertEquals('',        $this->obj->displayVal($val, [ 'lang' => 'ja' ]));
-        $this->assertEquals('Inglés',  $this->obj->displayVal($val, [ 'lang' => 'es' ]));
+        $this->assertEquals('', $this->obj->displayVal('foo'));
+        $this->assertEquals('', $this->obj->displayVal($val, [ 'lang' => 'ja' ]));
+        $this->assertEquals('Inglés', $this->obj->displayVal($val, [ 'lang' => 'es' ]));
         $this->assertEquals('Anglais', $this->obj->displayVal($val, [ 'lang' => 'fr' ]));
         $this->assertEquals('English', $this->obj->displayVal($val, [ 'lang' => 'de' ]));
         $this->assertEquals('English', $this->obj->displayVal($val));
@@ -109,8 +109,8 @@ class LangPropertyTest extends \PHPUnit_Framework_TestCase
         $this->obj->setL10n(false);
         $this->obj->setMultiple(true);
 
-        $this->assertEquals('English, French, ES',   $this->obj->displayVal([ 'en', 'fr', 'es' ]));
+        $this->assertEquals('English, French, ES', $this->obj->displayVal([ 'en', 'fr', 'es' ]));
         $this->assertEquals('Anglais, Français, ES', $this->obj->displayVal('en,fr,es', [ 'lang' => 'fr' ]));
-        $this->assertEquals('Inglés, Francés, ES',   $this->obj->displayVal('en,fr,es', [ 'lang' => 'es' ]));
+        $this->assertEquals('Inglés, Francés, ES', $this->obj->displayVal('en,fr,es', [ 'lang' => 'es' ]));
     }
 }
