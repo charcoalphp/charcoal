@@ -151,46 +151,62 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('()', $result);
     }
 
-
-
-
-    // -------------------------------------------------------------------------
-
-
-
-
     /**
-     * Test basic SQL operators.
-     *
-     * @dataProvider provideBasicOperators
-     *
-     * @param string $operator A SQL operator.
+     * Test basic SQL operator without a value.
      */
-    public function testSqlBasicOperators($operator)
+    public function testSqlOperatorWithoutValue()
     {
         $obj = $this->createExpression();
-        $obj->setProperty('xyzzy')->setOperator($operator)->setValue('bar');
 
-        $this->assertEquals('(objTable.`xyzzy` '.$operator.' \'bar\')', $obj->sql());
+        $obj->setData([
+            'property' => 'xyzzy',
+            'operator' => '=',
+        ]);
+
+        $this->setExpectedException(UnexpectedValueException::class);
+        $obj->sql();
     }
 
     /**
-     * Test NULL-style SQL operators.
+     * Test comparison SQL operators.
      *
-     * @dataProvider provideNullOperators
+     * @dataProvider provideComparisonOperators
      *
      * @param string $operator A SQL operator.
      */
-    public function testSqlNullOperators($operator)
+    public function testSqlComparisonOperators($operator)
     {
         $obj = $this->createExpression();
-        $obj->setProperty('xyzzy')->setOperator($operator)->setValue('bar');
+        $obj->setData([
+            'property' => 'xyzzy',
+            'operator' => $operator,
+            'value'    => 'Charcoal',
+        ]);
+
+        $this->assertEquals('(objTable.`xyzzy` '.$operator.' \'Charcoal\')', $obj->sql());
+    }
+
+    /**
+     * Test condition-style SQL operators ("value" is ignored).
+     *
+     * @dataProvider provideConditionalOperators
+     *
+     * @param string $operator A SQL operator.
+     */
+    public function testSqlConditionalOperators($operator)
+    {
+        $obj = $this->createExpression();
+        $obj->setData([
+            'property' => 'xyzzy',
+            'operator' => $operator,
+            'value'    => 'Charcoal',
+        ]);
 
         $this->assertEquals('(objTable.`xyzzy` '.$operator.')', $obj->sql());
     }
 
     /**
-     * Test advanced SQL operators.
+     * Test list-based SQL operators.
      *
      * @dataProvider provideSetOperators
      *
@@ -203,7 +219,11 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
         $obj = $this->createExpression();
 
         $value = [ 'foo', 'bar', 'qux' ];
-        $obj->setProperty('xyzzy')->setOperator($operator)->setValue($value);
+        $obj->setData([
+            'property' => 'xyzzy',
+            'operator' => $operator,
+            'value'    => $value,
+        ]);
 
         $this->assertEquals(
             sprintf($expected, 'objTable.`xyzzy`', implode($delimiter, $value)),
@@ -212,14 +232,41 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test list-based SQL operator without a value.
+     *
+     * @dataProvider provideSetOperators
+     *
+     * @param string $operator  A SQL operator.
+     * @param string $delimiter The set's delimiter.
+     * @param string $expected  Unused; The expected result.
+     */
+    public function testSqlSetOperatorsWithoutValue($operator, $delimiter, $expected)
+    {
+        $obj = $this->createExpression();
+
+        $obj->setData([
+            'property' => 'xyzzy',
+            'operator' => $operator,
+        ]);
+
+        $this->setExpectedException(UnexpectedValueException::class);
+        $obj->sql();
+    }
+
+    /**
      * Test SQL function.
      */
     public function testSqlFunction()
     {
         $obj = $this->createExpression();
-        $obj->setProperty('xyzzy')->setOperator('=')->setValue('bar')->setFunc('abs');
+        $obj->setData([
+            'property' => 'xyzzy',
+            'operator' => '=',
+            'value'    => 'Charcoal',
+            'function' => 'reverse',
+        ]);
 
-        $this->assertEquals('(ABS(objTable.`xyzzy`) = \'bar\')', $obj->sql());
+        $this->assertEquals('(REVERSE(objTable.`xyzzy`) = \'Charcoal\')', $obj->sql());
     }
 
     /**
@@ -235,28 +282,30 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
         $prop->setL10n(true);
 
         $obj = $this->createExpression();
-        $obj->setProperty($prop)->setOperator('=')->setValue('bar');
+        $obj->setProperty($prop)->setOperator('=')->setValue('Charcoal');
 
-        $this->assertEquals(
-            '((objTable.`xyzzy_en` = \'bar\') OR (objTable.`xyzzy_fr` = \'bar\') OR '.
-             '(objTable.`xyzzy_de` = \'bar\') OR (objTable.`xyzzy_es` = \'bar\'))',
-            $obj->sql()
-        );
+        $expected  = '(';
+        $expected .= '(objTable.`xyzzy_en` = \'Charcoal\') OR ';
+        $expected .= '(objTable.`xyzzy_fr` = \'Charcoal\') OR ';
+        $expected .= '(objTable.`xyzzy_de` = \'Charcoal\') OR ';
+        $expected .= '(objTable.`xyzzy_es` = \'Charcoal\')';
+        $expected .= ')';
+        $this->assertEquals($expected, $obj->sql());
     }
 
     /**
      * Provide data for simple operators.
      *
-     * @used-by self::testSqlBasicOperators()
+     * @used-by self::testSqlComparisonOperators()
      * @return  array
      */
-    public function provideBasicOperators()
+    public function provideComparisonOperators()
     {
         return [
             [ '=' ], [ '!=' ],
             [ '>' ], [ '>=' ], [ '<' ], [ '<=' ],
             [ 'IS' ], [ 'IS NOT' ],
-            [ 'LIKE' ], [ 'NOT LIKE' ]
+            [ 'LIKE' ], [ 'NOT LIKE' ],
         ];
     }
 
@@ -278,14 +327,16 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
     /**
      * Provide data for NULL-style operators.
      *
-     * @used-by self::testSqlNullOperators()
+     * @used-by self::testSqlConditionalOperators()
      * @return  array
      */
-    public function provideNullOperators()
+    public function provideConditionalOperators()
     {
         return [
-            [ 'IS NULL' ],
-            [ 'IS NOT NULL' ]
+            [ 'IS NULL' ], [ 'IS NOT NULL' ],
+            [ 'IS TRUE' ], [ 'IS NOT TRUE' ],
+            [ 'IS FALSE' ], [ 'IS NOT FALSE' ],
+            [ 'IS UNKNOWN' ], [ 'IS NOT UNKNOWN' ],
         ];
     }
 }

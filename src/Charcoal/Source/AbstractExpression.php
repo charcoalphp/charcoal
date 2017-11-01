@@ -127,9 +127,10 @@ abstract class AbstractExpression implements
         } elseif ($value instanceof DateTimeProperty) {
             $value = $value->storageVal($value->val());
         } elseif (is_string($value)) {
-            if ($value === 'true') {
+            $str = strtolower($value);
+            if ($str === 'true') {
                 $value = true;
-            } elseif ($value === 'false') {
+            } elseif ($str === 'false') {
                 $value = false;
             }
         }

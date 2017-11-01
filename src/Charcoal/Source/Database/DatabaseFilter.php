@@ -11,6 +11,10 @@ use Charcoal\Source\Filter;
 
 /**
  * SQL Filter Expression
+ *
+ * Priority of SQL resolution if the expression is "active":
+ * 1. Custom — If "condition" is defined.
+ * 2. Predicate — If "property" and either "func" or "value" are defined.
  */
 class DatabaseFilter extends Filter implements
     DatabaseExpressionInterface
@@ -96,7 +100,7 @@ class DatabaseFilter extends Filter implements
      * Retrieve the WHERE condition.
      *
      * @todo   Values are often not quoted.
-     * @throws UnexpectedValueException If any required property, function, or operator is empty.
+     * @throws UnexpectedValueException If any required property, function, operator, or value is empty.
      * @return string
      */
     protected function byPredicate()
@@ -121,6 +125,13 @@ class DatabaseFilter extends Filter implements
 
             switch ($operator) {
                 case 'FIND_IN_SET':
+                    if ($value === null) {
+                        throw new UnexpectedValueException(sprintf(
+                            'Value is required for "%s".',
+                            $operator
+                        ));
+                    }
+
                     if (is_array($value)) {
                         $value = implode(',', $value);
                     }
@@ -129,12 +140,25 @@ class DatabaseFilter extends Filter implements
                     break;
 
                 case 'IS NULL':
+                case 'IS TRUE':
+                case 'IS FALSE':
+                case 'IS UNKNOWN':
                 case 'IS NOT NULL':
+                case 'IS NOT TRUE':
+                case 'IS NOT FALSE':
+                case 'IS NOT UNKNOWN':
                     $conditions[] = sprintf('(%1$s %2$s)', $target, $operator);
                     break;
 
                 case 'IN':
                 case 'NOT IN':
+                    if ($value === null) {
+                        throw new UnexpectedValueException(sprintf(
+                            'Value is required for "%s".',
+                            $operator
+                        ));
+                    }
+
                     if (is_array($value)) {
                         $value = implode('\',\'', $value);
                     }
@@ -143,6 +167,13 @@ class DatabaseFilter extends Filter implements
                     break;
 
                 default:
+                    if ($value === null) {
+                        throw new UnexpectedValueException(sprintf(
+                            'Value is required for "%s".',
+                            $operator
+                        ));
+                    }
+
                     $conditions[] = sprintf('(%1$s %2$s \'%3$s\')', $target, $operator, $value);
                     break;
             }

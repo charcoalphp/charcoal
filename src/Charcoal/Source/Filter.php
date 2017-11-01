@@ -319,6 +319,8 @@ class Filter extends Expression implements
             'FIND_IN_SET',
             '>', '>=', '<', '<=',
             'IS NULL', 'IS NOT NULL',
+            'IS TRUE', 'IS FALSE', 'IS UNKNOWN',
+            'IS NOT TRUE', 'IS NOT FALSE', 'IS NOT UNKNOWN',
             '%', 'MOD',
             'IN', 'NOT IN',
             'REGEXP', 'NOT REGEXP'
