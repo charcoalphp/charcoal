@@ -28,6 +28,22 @@ interface OrderInterface extends
     public function mode();
 
     /**
+     * Set the sorting direction.
+     *
+     * @param  string|null $direction The direction to sort on.
+     * @throws InvalidArgumentException If the direction is not a string.
+     * @return OrderInterface Returns the current expression.
+     */
+    public function setDirection($direction);
+
+    /**
+     * Retrieve the sorting direction.
+     *
+     * @return string|null
+     */
+    public function direction();
+
+    /**
      * Set the values to sort against.
      *
      * @param  string|array $values A list of field values.

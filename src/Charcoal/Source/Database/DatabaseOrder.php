@@ -11,6 +11,12 @@ use Charcoal\Source\Order;
 
 /**
  * SQL Order Expression
+ *
+ * Priority of SQL resolution if the expression is "active":
+ * 1. Random — If "mode" is set to "rand".
+ * 2. Custom — If "condition" is defined or "mode" set to "custom".
+ * 3. Values — If "property" and "values" are defined or "mode" set to "values".
+ * 4. Direction — If "property" is defined.
  */
 class DatabaseOrder extends Order implements
     DatabaseExpressionInterface
@@ -43,31 +49,27 @@ class DatabaseOrder extends Order implements
     public function sql()
     {
         if ($this->active()) {
-            $mode = (string)$this->mode();
-            switch ($mode) {
-                /** NULL Mode */
-                case '':
-                    if ($this->hasCondition()) {
-                        return $this->byCondition();
-                    }
-
-                    if ($this->hasValues()) {
-                        return $this->byValues();
-                    }
-                    break;
-
+            switch ($this->mode()) {
                 case self::MODE_RANDOM:
                     return $this->byRandom();
-
-                case self::MODE_VALUES:
-                    return $this->byValues();
 
                 case self::MODE_CUSTOM:
                     return $this->byCondition();
 
-                case self::MODE_ASC:
-                case self::MODE_DESC:
-                    return $this->byDirection();
+                case self::MODE_VALUES:
+                    return $this->byValues();
+            }
+
+            if ($this->hasCondition()) {
+                return $this->byCondition();
+            }
+
+            if ($this->hasValues()) {
+                return $this->byValues();
+            }
+
+            if ($this->hasProperty()) {
+                return $this->byProperty();
             }
         }
 
@@ -85,12 +87,12 @@ class DatabaseOrder extends Order implements
     }
 
     /**
-     * Retrieve the ORDER BY clause for the direction mode.
+     * Generate the ORDER BY clause(s) for the direction mode.
      *
      * @throws UnexpectedValueException If any required property is empty.
      * @return string
      */
-    protected function byDirection()
+    protected function byProperty()
     {
         $fields = $this->fieldIdentifiers();
         if (empty($fields)) {
@@ -100,23 +102,9 @@ class DatabaseOrder extends Order implements
         }
 
         $dir = $this->direction();
-        $clauses = [];
-        foreach ($fields as $fieldName) {
-            $clauses[] = sprintf('%s %s', $fieldName, $dir);
-        }
+        $dir = $dir === null ? '' : ' '.$dir;
 
-        return implode(', ', $clauses);
-    }
-
-    /**
-     * Retrieve a SQL direction.
-     *
-     * @return string Returns "ASC" if the mode is {@see self::MODE_ASC},
-     *     otherwise "DESC".
-     */
-    public function direction()
-    {
-        return ($this->mode() === self::MODE_ASC) ? 'ASC' : 'DESC';
+        return implode($dir.', ', $fields).$dir;
     }
 
     /**
@@ -144,23 +132,30 @@ class DatabaseOrder extends Order implements
      */
     protected function byValues()
     {
-        $fieldName = $this->fieldIdentifier();
-        if (empty($fieldName)) {
+        $fields = $this->fieldIdentifiers();
+        if (empty($fields)) {
             throw new UnexpectedValueException(
                 'Property is required.'
             );
         }
 
-        $values = $this->values();
+        $values = $this->prepareValues($this->values());
         if (empty($values)) {
             throw new UnexpectedValueException(
                 'Values can not be empty.'
             );
         }
 
-        $values = $this->prepareValues($values);
+        $dir = $this->direction();
+        $dir = $dir === null ? '' : ' '.$dir;
 
-        return sprintf('FIELD(%1$s, %2$s)', $fieldName, implode(',', $values));
+        $values  = implode(',', $values);
+        $clauses = [];
+        foreach ($fields as $fieldName) {
+            $clauses[] = sprintf('FIELD(%1$s, %2$s)', $fieldName, $values).$dir;
+        }
+
+        return implode(', ', $clauses);
     }
 
     /**

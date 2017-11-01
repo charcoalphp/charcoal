@@ -14,12 +14,15 @@ use Charcoal\Source\OrderInterface;
  *
  * For sorting the results of a query.
  *
- * Available pre-defined modes:
- * - `asc` to order in ascending (0-9, A-Z) order.
- * - `desc` to order in descending (Z-A / 9-0) order.
- * - `rand` to order in a random fashion.
- * - `values` to order by a defined array of properties.
- * - `custom` to order by a custom SQL string.
+ * Possible sorting modes:
+ * 1. Custom — Sort results by a custom expression.
+ *    - Requirement: "condition"
+ * 2. Values — Sort results against a defined order.
+ *    - Requirements: "values", "property"
+ *    - Complementary: "direction" (useful for sorting unlisted results)
+ * 3. Direction — Sort results in ascending or descending order.
+ *    - Requirements: "property"
+ *    - Complementary: "direction" (ascending, by default)
  */
 class Order extends Expression implements
     OrderInterface
@@ -47,7 +50,14 @@ class Order extends Expression implements
     protected $values;
 
     /**
-     * Set the sorting expression data.
+     * The direction of sorting.
+     *
+     * @var string|null
+     */
+    protected $direction;
+
+    /**
+     * Set the order clause data.
      *
      * @param  array<string,mixed> $data The expression data;
      *     as an associative array.
@@ -89,12 +99,20 @@ class Order extends Expression implements
             $this->setProperty($data['property']);
         }
 
+        if (isset($data['direction'])) {
+            $this->setDirection($data['direction']);
+        }
+
         if (isset($data['mode'])) {
             $this->setMode($data['mode']);
         }
 
         if (isset($data['values'])) {
             $this->setValues($data['values']);
+
+            if (!isset($data['mode'])) {
+                $this->setMode(self::MODE_VALUES);
+            }
         }
 
         if (isset($data['condition']) || isset($data['string'])) {
@@ -116,6 +134,7 @@ class Order extends Expression implements
         return [
             'property'  => null,
             'table'     => null,
+            'direction' => null,
             'mode'      => null,
             'values'    => null,
             'condition' => null,
@@ -134,6 +153,7 @@ class Order extends Expression implements
         return [
             'property'  => $this->property(),
             'table'     => $this->table(),
+            'direction' => $this->direction(),
             'mode'      => $this->mode(),
             'values'    => $this->values(),
             'condition' => $this->condition(),
@@ -171,6 +191,10 @@ class Order extends Expression implements
             ));
         }
 
+        if (in_array($mode, [ self::MODE_ASC, self::MODE_DESC ])) {
+            $this->setDirection($mode);
+        }
+
         $this->mode = $mode;
         return $this;
     }
@@ -183,6 +207,40 @@ class Order extends Expression implements
     public function mode()
     {
         return $this->mode;
+    }
+
+    /**
+     * Set the sorting direction.
+     *
+     * @param  string|null $direction The direction to sort on.
+     * @throws InvalidArgumentException If the direction is not a string.
+     * @return self
+     */
+    public function setDirection($direction)
+    {
+        if ($direction === null) {
+            $this->direction = $direction;
+            return $this;
+        }
+
+        if (!is_string($direction)) {
+            throw new InvalidArgumentException(
+                'Direction must be a string.'
+            );
+        }
+
+        $this->direction = strtolower($direction) === 'asc' ? 'ASC' : 'DESC';
+        return $this;
+    }
+
+    /**
+     * Retrieve the sorting direction.
+     *
+     * @return string|null
+     */
+    public function direction()
+    {
+        return $this->direction;
     }
 
     /**

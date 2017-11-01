@@ -58,12 +58,55 @@ class OrderTest extends \PHPUnit_Framework_TestCase
         return [
             'property'  => [ 'property',   null ],
             'table'     => [ 'table',      null ],
+            'direction' => [ 'direction',  null ],
             'mode'      => [ 'mode',       null ],
             'values'    => [ 'values',     null ],
             'condition' => [ 'condition',  null ],
             'active'    => [ 'active',     true ],
             'name'      => [ 'name',       null ],
         ];
+    }
+
+    /**
+     * Test the "direction" property.
+     *
+     * Assertions:
+     * 1. Default state
+     * 2. Mutated state
+     * 3. Chainable method
+     * 4. Accepts NULL
+     * 5. Unsupported direction sets DESC
+     */
+    public function testDirection()
+    {
+        $obj = $this->createExpression();
+
+        /** 1. Default Value */
+        $this->assertNull($obj->direction());
+
+        /** 2. Mutated Value */
+        $that = $obj->setDirection('asc');
+        $this->assertEquals('ASC', $obj->direction());
+
+        /** 3. Chainable */
+        $this->assertSame($obj, $that);
+
+        /** 4. Accepts NULL */
+        $obj->setDirection(null);
+        $this->assertNull($obj->direction());
+
+        /** 5. Unsupported Direction */
+        $that = $obj->setDirection('foo');
+        $this->assertEquals('DESC', $obj->direction());
+    }
+
+    /**
+     * Test "direction" property with invalid value.
+     */
+    public function testDirectionWithInvalidValue()
+    {
+        $this->setExpectedException(InvalidArgumentException::class);
+        $this->createExpression()->setDirection(0);
     }
 
     /**
@@ -98,6 +141,25 @@ class OrderTest extends \PHPUnit_Framework_TestCase
         /** 5. Accepts NULL */
         $obj->setMode(null);
         $this->assertNull($obj->mode());
+    }
+
+    /**
+     * Test "direction" property when selecting a direction "mode".
+     */
+    public function testDirectionMode()
+    {
+        $obj = $this->createExpression();
+
+        $this->assertNull($obj->direction());
+
+        $obj->setMode('asc');
+        $this->assertEquals('ASC', $obj->direction());
+
+        $obj->setMode('desc');
+        $this->assertEquals('DESC', $obj->direction());
+
+        $obj->setMode('values');
+        $this->assertEquals('DESC', $obj->direction());
     }
 
     /**
@@ -195,6 +257,7 @@ class OrderTest extends \PHPUnit_Framework_TestCase
         /** 1. Mutate all options */
         $values   = [ 'foo', 'baz', 'qux' ];
         $mutation = [
+            'direction' => 'asc',
             'mode'      => 'rand',
             'values'    => $values,
             'property'  => 'col',
@@ -221,7 +284,7 @@ class OrderTest extends \PHPUnit_Framework_TestCase
 
         /** 2. Partially mutated state */
         $mutation = [
-            'mode' => 'desc'
+            'values' => $values
         ];
 
         $obj = $this->createExpression();
@@ -230,12 +293,13 @@ class OrderTest extends \PHPUnit_Framework_TestCase
         $defs = $obj->defaultData();
         $this->assertStructHasBasicData($obj, $defs);
 
-        $this->assertEquals($defs['values'], $obj->values());
+        $this->assertEquals($defs['direction'], $obj->direction());
         $this->assertEquals($defs['condition'], $obj->condition());
 
         $data = $obj->data();
-        $this->assertNotEquals($defs['mode'], $data['mode']);
-        $this->assertEquals('desc', $data['mode']);
+        $this->assertNotEquals($defs['values'], $data['values']);
+        $this->assertEquals($values, $data['values']);
+        $this->assertEquals('values', $data['mode']);
 
         /** 3. Auto-set mode from "condition" */
         $mutation = [

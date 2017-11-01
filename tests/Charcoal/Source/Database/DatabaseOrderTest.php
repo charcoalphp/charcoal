@@ -110,20 +110,6 @@ class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test direction method.
-     */
-    public function testDirection()
-    {
-        $obj = $this->createExpression();
-
-        $obj->setMode(null);
-        $this->assertEquals('DESC', $obj->direction());
-
-        $obj->setMode('asc');
-        $this->assertEquals('ASC', $obj->direction());
-    }
-
-    /**
      * Test SQL with direction mode.
      *
      * @dataProvider provideSqlDirectionMode
@@ -163,10 +149,8 @@ class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
     {
         $obj = $this->createExpression();
 
-        $this->setExpectedException(UnexpectedValueException::class);
-
         $obj->setMode('asc');
-        $obj->sql();
+        $this->assertEquals('', $obj->sql());
     }
 
     /**
@@ -218,6 +202,19 @@ class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(UnexpectedValueException::class);
 
         $method = $this->getMethod($obj, 'byCondition');
+        $method->invoke($obj);
+    }
+
+    /**
+     * Test invalid property SQL.
+     */
+    public function testSqlWithoutModeWithoutProperty()
+    {
+        $obj = $this->createExpression();
+
+        $this->setExpectedException(UnexpectedValueException::class);
+
+        $method = $this->getMethod($obj, 'byProperty');
         $method->invoke($obj);
     }
 
