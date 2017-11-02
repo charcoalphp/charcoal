@@ -272,18 +272,24 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     public function l10nIdent($lang = null)
     {
-        if (!$this->l10n()) {
-            throw new LogicException('Property is not multilingual');
-        }
-
         if ($this->ident === '') {
             throw new RuntimeException('Missing Property Identifier');
+        }
+
+        if (!$this->l10n()) {
+            throw new LogicException(sprintf(
+                'Property "%s" is not multilingual',
+                $this->ident
+            ));
         }
 
         if ($lang === null) {
             $lang = $this->translator()->getLocale();
         } elseif (!is_string($lang)) {
-            throw new InvalidArgumentException('Language must be a string');
+            throw new InvalidArgumentException(sprintf(
+                'Language must be a string for Property "%s"',
+                $this->ident
+            ));
         }
 
         return sprintf('%1$s_%2$s', $this->ident, $lang);
