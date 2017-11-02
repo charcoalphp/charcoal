@@ -15,7 +15,7 @@
         "format": {
             "type": "string",
             "label": "Date format",
-            "description": "The date format is a string (in PHP's DateTime `format()`) that manages how to format the date value for display. Defaults to \"Y-m-d H:i:s\""
+            "description": "The date format is a string (in PHP's DateTime `format()`) that manages how to format the date value for display. Defaults to \"Y-m-d H:i:s\"",
             "allow_empty": true
         }
     },
