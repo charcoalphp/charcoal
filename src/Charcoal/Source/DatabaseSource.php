@@ -803,13 +803,12 @@ class DatabaseSource extends AbstractSource implements
      */
     public function sqlFilters()
     {
-        $filters = $this->filters();
-        if (empty($filters)) {
+        if (!$this->hasFilters()) {
             return '';
         }
 
         $parts = [];
-        foreach ($filters as $filter) {
+        foreach ($this->filters() as $filter) {
             if (!$filter instanceof DatabaseFilter) {
                 $filter = $this->createFilter($filter->data());
             }
@@ -848,13 +847,12 @@ class DatabaseSource extends AbstractSource implements
      */
     public function sqlOrders()
     {
-        $orders = $this->orders();
-        if (empty($orders)) {
+        if (!$this->hasOrders()) {
             return '';
         }
 
         $parts = [];
-        foreach ($orders as $order) {
+        foreach ($this->orders() as $order) {
             if (!$order instanceof DatabaseOrder) {
                 $order = $this->createOrder($order->data());
             }

@@ -23,8 +23,10 @@ use Charcoal\Source\SourceConfig;
 use Charcoal\Source\SourceInterface;
 use Charcoal\Source\Filter;
 use Charcoal\Source\FilterInterface;
+use Charcoal\Source\FilterCollectionTrait;
 use Charcoal\Source\Order;
 use Charcoal\Source\OrderInterface;
+use Charcoal\Source\OrderCollectionTrait;
 use Charcoal\Source\Pagination;
 use Charcoal\Source\PaginationInterface;
 
@@ -38,6 +40,12 @@ abstract class AbstractSource implements
 {
     use ConfigurableTrait;
     use LoggerAwareTrait;
+    use FilterCollectionTrait {
+        FilterCollectionTrait::addFilter as pushFilter;
+    }
+    use OrderCollectionTrait {
+        OrderCollectionTrait::addOrder as pushOrder;
+    }
 
     /**
      * The related model.
@@ -54,20 +62,6 @@ abstract class AbstractSource implements
      * @var array<string,boolean>
      */
     private $properties = [];
-
-    /**
-     * Store the source query filters.
-     *
-     * @var FilterInterface[]
-     */
-    protected $filters = [];
-
-    /**
-     * Store the source query sorters.
-     *
-     * @var OrderInterface[]
-     */
-    protected $orders = [];
 
     /**
      * Store the source query pagination.
@@ -269,44 +263,7 @@ abstract class AbstractSource implements
     }
 
     /**
-     * Set query filters.
-     *
-     * @param  array $filters One or more filters to set.
-     * @return self
-     */
-    public function setFilters(array $filters)
-    {
-        $this->filters = [];
-        $this->addFilters($filters);
-        return $this;
-    }
-
-    /**
-     * Get query filters.
-     *
-     * @return FilterInterface[]
-     */
-    public function filters()
-    {
-        return $this->filters;
-    }
-
-    /**
-     * Add query filters.
-     *
-     * @param  array $filters One or more filters to append.
-     * @return self
-     */
-    public function addFilters(array $filters)
-    {
-        foreach ($filters as $filter) {
-            $this->addFilter($filter);
-        }
-        return $this;
-    }
-
-    /**
-     * Add a query filter to the source.
+     * Append a query filter on the source.
      *
      * There are 3 different ways of adding a filter:
      * - as a `Filter` object, in which case it will be added directly.
@@ -316,65 +273,77 @@ abstract class AbstractSource implements
      * - as 3 parameters: `property`, `value` and `options`
      *   - `addFilter('foo', 42, ['operator' => '<=']);`
      *
-     * @param  mixed $param   The property to filter with,
+     * @deprecated 0.3 To be replaced with FilterCollectionTrait::addFilter()
+     *
+     * @uses   self::parseFilterWithModel()
+     * @uses   FilterCollectionTrait::processFilter()
+     * @param  mixed $param   The property to filter by,
      *     a {@see FilterInterface} object,
      *     or a filter array structure.
-     * @param  mixed $value   Optional. Only used if the first argument is a string.
-     * @param  array $options Optional. Only used if the first argument is a string.
+     * @param  mixed $value   Optional value for the property to compare against.
+     *     Only used if the first argument is a string.
+     * @param  array $options Optional extra settings to apply on the filter.
      * @throws InvalidArgumentException If the $param argument is invalid.
      * @return self
      */
     public function addFilter($param, $value = null, array $options = null)
     {
-        if ($param instanceof FilterInterface) {
-            $filter = $param;
-        } elseif (is_array($param)) {
-            $filter = $this->createFilter();
-            $filter->setData($param);
-        } elseif (is_string($param) && $value !== null) {
-            $filter = $this->createFilter();
-            $filter->setProperty($param);
-            $filter->setValue($value);
-            if (is_array($options)) {
-                $filter->setData($options);
-            }
+        if (is_string($param) && $value !== null) {
+            $expr = $this->createFilter();
+            $expr->setProperty($param);
+            $expr->setValue($value);
         } else {
-            throw new InvalidArgumentException(
-                'Parameter must be an array or a property ident.'
-            );
+            $expr = $param;
         }
 
-        if ($this->hasModel()) {
-            $model = $this->model();
+        $expr = $this->processFilter($expr);
 
-            if ($filter->hasProperty()) {
-                $property = $filter->property();
-                if (is_string($property) && $model->hasProperty($property)) {
-                    $property = $model->property($property);
-                    $filter->setProperty($property);
-                }
-
-                if ($property instanceof PropertyInterface) {
-                    if ($property->l10n()) {
-                        $filter->setProperty($property->l10nIdent());
-                    }
-
-                    if ($property->multiple()) {
-                        $filter->setOperator('FIND_IN_SET');
-                    }
-                }
-            }
+        /** @deprecated 0.3 */
+        if (is_array($param) && isset($param['options'])) {
+            $expr->setData($param['options']);
         }
 
-        $this->filters[] = $filter;
+        if (is_array($options)) {
+            $expr->setData($options);
+        }
+
+        $this->filters[] = $this->parseFilterWithModel($expr);
         return $this;
     }
 
     /**
-     * Create a new filter expression.
+     * Process a query filter with the current model.
      *
+     * @param  FilterInterface $filter The expression object.
+     * @return FilterInterface The parsed expression object.
+     */
+    protected function parseFilterWithModel(FilterInterface $filter)
+    {
+        if ($this->hasModel() && $filter->hasProperty()) {
+            $model    = $this->model();
+            $property = $filter->property();
+            if (is_string($property) && $model->hasProperty($property)) {
+                $property = $model->property($property);
+
+                if ($property->l10n()) {
+                    $filter->setProperty($property->l10nIdent());
+                }
+
+                if ($property->multiple()) {
+                    $filter->setOperator('FIND_IN_SET');
+                }
+            }
+        }
+
+        return $filter;
+    }
+
+    /**
+     * Create a new query filter expression.
+     *
+     * @see    FilterCollectionTrait::createFilter()
      * @param  array $data Optional expression data.
-     * @return FilterInterface
+     * @return FilterInterface A new filter expression object.
      */
     protected function createFilter(array $data = null)
     {
@@ -386,101 +355,71 @@ abstract class AbstractSource implements
     }
 
     /**
-     * Set query sorting.
+     * Append a query order on the source.
      *
-     * @param  array $orders One or more orders to set.
-     * @return self
-     */
-    public function setOrders(array $orders)
-    {
-        $this->orders = [];
-        foreach ($orders as $o) {
-            $this->addOrder($o);
-        }
-        return $this;
-    }
-
-    /**
-     * Get query filters.
+     * @deprecated 0.3 To be replaced with OrderCollectionTrait::addOrder()
      *
-     * @return OrderInterface[]
-     */
-    public function orders()
-    {
-        return $this->orders;
-    }
-
-    /**
-     * Add query sorting.
-     *
-     * @param  array $orders One or more orders to append.
-     * @return self
-     */
-    public function addOrders(array $orders)
-    {
-        foreach ($orders as $o) {
-            $this->addOrder($o);
-        }
-        return $this;
-    }
-
-    /**
-     * Add a query order to the source.
-     *
+     * @uses   self::parseOrderWithModel()
+     * @uses   OrderCollectionTrait::processOrder()
      * @param  mixed  $param   The property to sort by,
      *     a {@see OrderInterface} object,
      *     or a order array structure.
-     * @param  string $mode    Optional. Sorting mode.
-     * @param  array  $options Optional. Sorting options;
-     *     defaults to ascending if a property is provided.
+     * @param  string $mode    Optional sorting mode.
+     *     Defaults to ascending if a property is provided.
+     * @param  array  $options Optional extra settings to apply on the order.
      * @throws InvalidArgumentException If the $param argument is invalid.
      * @return self
      */
     public function addOrder($param, $mode = 'asc', array $options = null)
     {
-        if ($param instanceof OrderInterface) {
-            $order = $param;
-        } elseif (is_array($param)) {
-            $order = $this->createOrder();
-            $order->setData($param);
-        } elseif (is_string($param)) {
-            $order = $this->createOrder();
-            $order->setProperty($param);
-            $order->setMode($mode);
-            if (isset($options['values'])) {
-                $order->setValues($options['values']);
-            }
+        if (is_string($param) && $mode !== null) {
+            $expr = $this->createOrder();
+            $expr->setProperty($param);
+            $expr->setMode($mode);
         } else {
-            throw new InvalidArgumentException(
-                'Parameter must be an OrderInterface object or a property ident.'
-            );
+            $expr = $param;
         }
 
-        if ($this->hasModel()) {
-            $model = $this->model();
+        $expr = $this->processOrder($expr);
 
-            if ($order->hasProperty()) {
-                $property = $order->property();
-                if (is_string($property) && $model->hasProperty($property)) {
-                    $property = $model->property($property);
-                    $order->setProperty($property);
-                }
-
-                if ($property instanceof PropertyInterface) {
-                    if ($property->l10n()) {
-                        $order->setProperty($property->l10nIdent());
-                    }
-                }
-            }
+        /** @deprecated 0.3 */
+        if (is_array($param) && isset($param['options'])) {
+            $expr->setData($param['options']);
         }
 
-        $this->orders[] = $order;
+        if (is_array($options)) {
+            $expr->setData($options);
+        }
 
+        $this->orders[] = $this->parseOrderWithModel($expr);
         return $this;
     }
 
     /**
-     * Create a new order expression.
+     * Process a query order with the current model.
+     *
+     * @param  OrderInterface $order The expression object.
+     * @return OrderInterface The parsed expression object.
+     */
+    protected function parseOrderWithModel(OrderInterface $order)
+    {
+        if ($this->hasModel() && $order->hasProperty()) {
+            $model    = $this->model();
+            $property = $order->property();
+            if (is_string($property) && $model->hasProperty($property)) {
+                $property = $model->property($property);
+
+                if ($property->l10n()) {
+                    $order->setProperty($property->l10nIdent());
+                }
+            }
+        }
+
+        return $order;
+    }
+
+    /**
+     * Create a new query order expression.
      *
      * @param  array $data Optional expression data.
      * @return OrderInterface

@@ -4,15 +4,17 @@ namespace Charcoal\Source;
 
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
-use Charcoal\Source\FilterInterface;
-use Charcoal\Source\OrderInterface;
+use Charcoal\Source\FilterCollectionInterface;
+use Charcoal\Source\OrderCollectionInterface;
 use Charcoal\Source\PaginationInterface;
 use Charcoal\Source\StorableInterface;
 
 /**
  * Describes a data storage source handler.
  */
-interface SourceInterface
+interface SourceInterface extends
+    FilterCollectionInterface,
+    OrderCollectionInterface
 {
     /**
      * Set the source's Model.
@@ -82,79 +84,6 @@ interface SourceInterface
      * @return SourceInterface Returns the current source.
      */
     public function removeProperty($property);
-
-    /**
-     * Set query filters.
-     *
-     * @param  array $filters One or more filters to set.
-     * @return SourceInterface Returns the current source.
-     */
-    public function setFilters(array $filters);
-
-    /**
-     * Get query filters.
-     *
-     * @return FilterInterface[]
-     */
-    public function filters();
-
-    /**
-     * Add query filters.
-     *
-     * @param  array $filters One or more filters to append.
-     * @return SourceInterface Returns the current source.
-     */
-    public function addFilters(array $filters);
-
-    /**
-     * Add a query filter to the source.
-     *
-     * @param  mixed $param   The property to filter with,
-     *     a {@see FilterInterface} object,
-     *     or a filter array structure.
-     * @param  mixed $value   Optional. Only used if the first argument is a string.
-     * @param  array $options Optional. Only used if the first argument is a string.
-     * @throws InvalidArgumentException If the $param argument is invalid.
-     * @return SourceInterface Returns the current source.
-     */
-    public function addFilter($param, $value = null, array $options = null);
-
-    /**
-     * Set query sorting.
-     *
-     * @param  array $orders One or more orders to set.
-     * @return SourceInterface Returns the current source.
-     */
-    public function setOrders(array $orders);
-
-    /**
-     * Get query filters.
-     *
-     * @return OrderInterface[]
-     */
-    public function orders();
-
-    /**
-     * Add query sorting.
-     *
-     * @param  array $orders One or more orders to append.
-     * @return SourceInterface Returns the current source.
-     */
-    public function addOrders(array $orders);
-
-    /**
-     * Add a query order to the source.
-     *
-     * @param  mixed  $param   The property to sort by,
-     *     a {@see OrderInterface} object,
-     *     or a order array structure.
-     * @param  string $mode    Optional. Sorting mode.
-     * @param  array  $options Optional. Sorting options;
-     *     defaults to ascending if a property is provided.
-     * @throws InvalidArgumentException If the $param argument is invalid.
-     * @return SourceInterface Returns the current source.
-     */
-    public function addOrder($param, $mode = 'asc', array $options = null);
 
     /**
      * Set query pagination.
