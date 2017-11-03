@@ -2,14 +2,21 @@
 
 namespace Charcoal\Tests\Property;
 
+use Exception;
+use LogicException;
+use RuntimeException;
+use InvalidArgumentException;
+
+// From 'charcoal-property'
 use Charcoal\Property\AbstractProperty;
+use Charcoal\Tests\Property\ContainerIntegrationTrait;
 
 /**
  *
  */
 class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
 {
-    use \Charcoal\Tests\Property\ContainerIntegrationTrait;
+    use ContainerIntegrationTrait;
 
     /**
      * Object under Test
@@ -42,28 +49,27 @@ class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
         $this->obj->set('ident', 'example');
         $this->assertEquals('example', $this->obj['ident']);
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
         $this->obj->setIdent([]);
     }
 
     public function testL10nIdent()
     {
-        $this->obj['l10n'] = false;
-        $this->setExpectedException('\LogicException');
-        $this->obj->l10nIdent();
-
-        $this->obj['l10n'] = true;
         $this->obj->setIdent('');
-        $this->setExpectedException('\RuntimeException');
+        $this->setExpectedException(RuntimeException::class);
         $this->obj->l10nIdent();
 
         $this->obj->setIdent('foobar');
+        $this->obj->setL10n(false);
+        $this->setExpectedException(LogicException::class);
+        $this->obj->l10nIdent();
 
+        $this->obj->setL10n(true);
         $this->assertEquals('foobar_en', $this->obj->l10nIdent());
         $this->assertEquals('foobar_fr', $this->obj->l10nIdent('fr'));
         $this->assertEquals('foobar_en', $this->obj->l10nIdent(null));
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
         $this->obj->l10nIdent(false);
     }
 
@@ -267,7 +273,7 @@ class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci', $this->obj->sqlEncoding());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
         $this->obj->setSqlEncoding(false);
     }
 }
