@@ -12,9 +12,11 @@ use Charcoal\Source\StorableInterface;
 class SourceMock extends AbstractSource
 {
     /**
-     * @param mixed             $ident The ID of the item to load.
-     * @param StorableInterface $item  Optional item to load into.
-     * @return ModelInterface
+     * Load item by the primary key.
+     *
+     * @param  mixed             $ident Ident can be any scalar value.
+     * @param  StorableInterface $item  Optional item to load into.
+     * @return StorableInterface
      */
     public function loadItem($ident, StorableInterface $item = null)
     {
@@ -22,8 +24,10 @@ class SourceMock extends AbstractSource
     }
 
     /**
-     * @param ModelInterface|null $item The model to load items from.
-     * @return array
+     * Load items for the given model.
+     *
+     * @param  StorableInterface|null $item Optional model.
+     * @return StorableInterface[]
      */
     public function loadItems(StorableInterface $item = null)
     {
@@ -33,8 +37,8 @@ class SourceMock extends AbstractSource
     /**
      * Save an item (create a new row) in storage.
      *
-     * @param StorableInterface $item The object to save.
-     * @return mixed The created item ID, or false in case of an error.
+     * @param  StorableInterface $item The object to save.
+     * @return mixed The created item ID, otherwise FALSE.
      */
     public function saveItem(StorableInterface $item)
     {
@@ -44,9 +48,9 @@ class SourceMock extends AbstractSource
     /**
      * Update an item in storage.
      *
-     * @param StorableInterface $item       The object to update.
-     * @param array             $properties The list of properties to update, if not all.
-     * @return boolean Success / Failure
+     * @param  StorableInterface $item       The object to update.
+     * @param  array             $properties The list of properties to update, if not all.
+     * @return boolean TRUE if the item was updated, otherwise FALSE.
      */
     public function updateItem(StorableInterface $item, array $properties = null)
     {
@@ -54,10 +58,10 @@ class SourceMock extends AbstractSource
     }
 
     /**
-     * Delete an item from storage
+     * Delete an item from storage.
      *
-     * @param StorableInterface $item Optional item to delete. If none, the current model object will be used..
-     * @return boolean Success / Failure
+     * @param  StorableInterface $item Optional item to delete. If none, the current model object will be used.
+     * @return boolean TRUE if the item was deleted, otherwise FALSE.
      */
     public function deleteItem(StorableInterface $item = null)
     {
