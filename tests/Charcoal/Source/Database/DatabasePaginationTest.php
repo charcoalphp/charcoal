@@ -6,6 +6,8 @@ use UnexpectedValueException;
 
 // From 'charcoal-core'
 use Charcoal\Source\Database\DatabasePagination;
+
+use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Source\DatabaseExpressionTestTrait;
 
 /**
@@ -14,6 +16,7 @@ use Charcoal\Tests\Source\DatabaseExpressionTestTrait;
 class DatabasePaginationTest extends \PHPUnit_Framework_TestCase
 {
     use DatabaseExpressionTestTrait;
+    use ReflectionsTrait;
 
     /**
      * Create expression for testing.

@@ -29,21 +29,6 @@ trait DatabaseExpressionTestTrait
     abstract public function testInactiveExpression();
 
     /**
-     * Retrieve access to a non-public method.
-     *
-     * @param  object $obj  The object to access.
-     * @param  string $name The method name to access.
-     * @return ReflectionMethod
-     */
-    public static function getMethod($obj, $name)
-    {
-        $class = new ReflectionClass($obj);
-        $method = $class->getMethod($name);
-        $method->setAccessible(true);
-        return $method;
-    }
-
-    /**
      * Test new instance.
      *
      * Assertions:

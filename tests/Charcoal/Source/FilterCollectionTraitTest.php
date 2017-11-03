@@ -10,6 +10,9 @@ use Charcoal\Source\Filter;
 use Charcoal\Source\FilterInterface;
 use Charcoal\Source\FilterCollectionTrait;
 use Charcoal\Source\FilterCollectionInterface;
+
+use Charcoal\Tests\AssertionsTrait;
+use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Mock\FilterCollectionClass;
 use Charcoal\Tests\Source\ExpressionCollectionTestTrait;
 
@@ -18,7 +21,9 @@ use Charcoal\Tests\Source\ExpressionCollectionTestTrait;
  */
 class FilterCollectionTraitTest extends \PHPUnit_Framework_TestCase
 {
+    use AssertionsTrait;
     use ExpressionCollectionTestTrait;
+    use ReflectionsTrait;
 
     /**
      * Create mock object for testing.
@@ -82,7 +87,7 @@ class FilterCollectionTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertEmpty($ret);
 
         /** 2. Mutated state */
-        static::setPropertyValue($obj, 'filters', $this->dummyItems);
+        $this->setPropertyValue($obj, 'filters', $this->dummyItems);
         $this->assertArrayEquals($this->dummyItems, $obj->filters());
     }
 
@@ -103,7 +108,7 @@ class FilterCollectionTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($obj->hasFilters());
 
         /** 2. Mutated state */
-        static::setPropertyValue($obj, 'filters', $this->dummyItems);
+        $this->setPropertyValue($obj, 'filters', $this->dummyItems);
         $this->assertTrue($obj->hasFilters());
     }
 
@@ -123,7 +128,7 @@ class FilterCollectionTraitTest extends \PHPUnit_Framework_TestCase
         $exp2 = $this->createExpression();
 
         /** 1. Replaces expressions with a new collection */
-        static::setPropertyValue($obj, 'filters', $this->dummyItems);
+        $this->setPropertyValue($obj, 'filters', $this->dummyItems);
         $this->assertArrayEquals($this->dummyItems, $obj->filters());
 
         $that = $obj->setFilters([ $exp1, $exp2 ]);
@@ -152,7 +157,7 @@ class FilterCollectionTraitTest extends \PHPUnit_Framework_TestCase
         $exp2 = $this->createExpression();
 
         /** 1. Appends items to the internal collection */
-        static::setPropertyValue($obj, 'filters', $this->dummyItems);
+        $this->setPropertyValue($obj, 'filters', $this->dummyItems);
         $this->assertArrayEquals($this->dummyItems, $obj->filters());
 
         $that = $obj->addFilters([ $exp1, $exp2 ]);
@@ -206,7 +211,7 @@ class FilterCollectionTraitTest extends \PHPUnit_Framework_TestCase
         $expr = $this->createExpression();
 
         /** 1. Appends one item to the internal collection */
-        static::setPropertyValue($obj, 'filters', $this->dummyItems);
+        $this->setPropertyValue($obj, 'filters', $this->dummyItems);
         $this->assertArrayEquals($this->dummyItems, $obj->filters());
 
         $that = $obj->addFilter($expr);
@@ -228,6 +233,8 @@ class FilterCollectionTraitTest extends \PHPUnit_Framework_TestCase
      *    an Expression object with given data is returned
      * 3. If a closure is provided,
      *    an Expression object is created with the collector's context.
+     * 4. If an instance of {@see FilterInterface} is provided,
+     *    the Expression object is used as is.
      *
      * @covers \Charcoal\Source\FilterCollectionTrait::processFilter
      */
@@ -236,10 +243,10 @@ class FilterCollectionTraitTest extends \PHPUnit_Framework_TestCase
         $obj = $this->createCollector();
 
         /** 1. Condition */
-        $value  = '`foo` ASC';
-        $result = $this->callMethodWith($obj, 'processFilter', $value);
+        $condition  = '`foo` ASC';
+        $result = $this->callMethodWith($obj, 'processFilter', $condition);
         $this->assertInstanceOf(FilterInterface::class, $result);
-        $this->assertEquals($value, $result->condition());
+        $this->assertEquals($condition, $result->condition());
 
         /** 2. Structure */
         $struct = [
@@ -257,6 +264,11 @@ class FilterCollectionTraitTest extends \PHPUnit_Framework_TestCase
         $result = $this->callMethodWith($obj, 'processFilter', $lambda);
         $this->assertInstanceOf(FilterInterface::class, $result);
         $this->assertArrayContains($struct, $result->data());
+
+        /** 4. Expression */
+        $expr   = $this->createExpression();
+        $result = $this->callMethodWith($obj, 'processFilter', $expr);
+        $this->assertSame($expr, $result);
     }
 
     /**

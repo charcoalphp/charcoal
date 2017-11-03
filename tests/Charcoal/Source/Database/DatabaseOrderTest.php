@@ -8,6 +8,8 @@ use UnexpectedValueException;
 // From 'charcoal-core'
 use Charcoal\Source\DatabaseSource;
 use Charcoal\Source\Database\DatabaseOrder;
+
+use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Source\DatabaseExpressionTestTrait;
 
 /**
@@ -16,6 +18,7 @@ use Charcoal\Tests\Source\DatabaseExpressionTestTrait;
 class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
 {
     use DatabaseExpressionTestTrait;
+    use ReflectionsTrait;
 
     /**
      * Create expression for testing.

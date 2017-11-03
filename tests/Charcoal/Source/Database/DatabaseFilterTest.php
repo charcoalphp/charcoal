@@ -11,7 +11,9 @@ use Charcoal\Property\PropertyInterface;
 // From 'charcoal-core'
 use Charcoal\Source\DatabaseSource;
 use Charcoal\Source\Database\DatabaseFilter;
+
 use Charcoal\Tests\ContainerIntegrationTrait;
+use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Source\DatabaseExpressionTestTrait;
 
 /**
@@ -21,6 +23,7 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
 {
     use ContainerIntegrationTrait;
     use DatabaseExpressionTestTrait;
+    use ReflectionsTrait;
 
     /**
      * Create expression for testing.

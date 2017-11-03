@@ -6,12 +6,6 @@ use ArrayIterator;
 use InvalidArgumentException;
 use RuntimeException;
 
-// From Pimple
-use Pimple\Container;
-
-// From 'charcoal-config'
-use Charcoal\Config\GenericConfig;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\GenericFactory as Factory;
 
@@ -21,12 +15,16 @@ use Charcoal\Model\Collection;
 use Charcoal\Model\Service\MetadataLoader;
 use Charcoal\Source\DatabaseSource;
 
+use Charcoal\Tests\ContainerIntegrationTrait;
+use Charcoal\Tests\ReflectionsTrait;
+
 /**
  *
  */
 class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
 {
-    use \Charcoal\Tests\ContainerIntegrationTrait;
+    use ContainerIntegrationTrait;
+    use ReflectionsTrait;
 
     private $obj;
 
@@ -156,5 +154,23 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, 1);
 
         $this->assertTrue(true);
+    }
+
+    /**
+     * Test camelization.
+     *
+     * @covers \Charcoal\Loader\CollectionLoader::camelize
+     * @covers \Charcoal\Loader\CollectionLoader::getter
+     * @covers \Charcoal\Loader\CollectionLoader::setter
+     */
+    public function testCamelize()
+    {
+        $obj = $this->obj;
+
+        $getter = $this->getMethod($obj, 'getter');
+        $setter = $this->getMethod($obj, 'setter');
+
+        $this->assertEquals('charcoalPhp',    $getter->invoke($obj, 'charcoal_php'));
+        $this->assertEquals('setCharcoalPhp', $setter->invoke($obj, 'charcoal_php'));
     }
 }

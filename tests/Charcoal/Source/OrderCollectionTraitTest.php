@@ -10,6 +10,9 @@ use Charcoal\Source\Order;
 use Charcoal\Source\OrderInterface;
 use Charcoal\Source\OrderCollectionTrait;
 use Charcoal\Source\OrderCollectionInterface;
+
+use Charcoal\Tests\AssertionsTrait;
+use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Mock\OrderCollectionClass;
 use Charcoal\Tests\Source\ExpressionCollectionTestTrait;
 
@@ -18,7 +21,9 @@ use Charcoal\Tests\Source\ExpressionCollectionTestTrait;
  */
 class OrderCollectionTraitTest extends \PHPUnit_Framework_TestCase
 {
+    use AssertionsTrait;
     use ExpressionCollectionTestTrait;
+    use ReflectionsTrait;
 
     /**
      * Create mock object for testing.
@@ -82,7 +87,7 @@ class OrderCollectionTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertEmpty($ret);
 
         /** 2. Mutated state */
-        static::setPropertyValue($obj, 'orders', $this->dummyItems);
+        $this->setPropertyValue($obj, 'orders', $this->dummyItems);
         $this->assertArrayEquals($this->dummyItems, $obj->orders());
     }
 
@@ -103,7 +108,7 @@ class OrderCollectionTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($obj->hasOrders());
 
         /** 2. Mutated state */
-        static::setPropertyValue($obj, 'orders', $this->dummyItems);
+        $this->setPropertyValue($obj, 'orders', $this->dummyItems);
         $this->assertTrue($obj->hasOrders());
     }
 
@@ -123,7 +128,7 @@ class OrderCollectionTraitTest extends \PHPUnit_Framework_TestCase
         $exp2 = $this->createExpression();
 
         /** 1. Replaces expressions with a new collection */
-        static::setPropertyValue($obj, 'orders', $this->dummyItems);
+        $this->setPropertyValue($obj, 'orders', $this->dummyItems);
         $this->assertArrayEquals($this->dummyItems, $obj->orders());
 
         $that = $obj->setOrders([ $exp1, $exp2 ]);
@@ -152,7 +157,7 @@ class OrderCollectionTraitTest extends \PHPUnit_Framework_TestCase
         $exp2 = $this->createExpression();
 
         /** 1. Appends items to the internal collection */
-        static::setPropertyValue($obj, 'orders', $this->dummyItems);
+        $this->setPropertyValue($obj, 'orders', $this->dummyItems);
         $this->assertArrayEquals($this->dummyItems, $obj->orders());
 
         $that = $obj->addOrders([ $exp1, $exp2 ]);
@@ -206,7 +211,7 @@ class OrderCollectionTraitTest extends \PHPUnit_Framework_TestCase
         $expr = $this->createExpression();
 
         /** 1. Appends one item to the internal collection */
-        static::setPropertyValue($obj, 'orders', $this->dummyItems);
+        $this->setPropertyValue($obj, 'orders', $this->dummyItems);
         $this->assertArrayEquals($this->dummyItems, $obj->orders());
 
         $that = $obj->addOrder($expr);
@@ -228,6 +233,8 @@ class OrderCollectionTraitTest extends \PHPUnit_Framework_TestCase
      *    an Expression object with given data is returned
      * 3. If a closure is provided,
      *    an Expression object is created with the collector's context.
+     * 4. If an instance of {@see OrderInterface} is provided,
+     *    the Expression object is used as is.
      *
      * @covers \Charcoal\Source\OrderCollectionTrait::processOrder
      */
@@ -236,10 +243,10 @@ class OrderCollectionTraitTest extends \PHPUnit_Framework_TestCase
         $obj = $this->createCollector();
 
         /** 1. Condition */
-        $value  = '`foo` ASC';
-        $result = $this->callMethodWith($obj, 'processOrder', $value);
+        $condition = '`foo` ASC';
+        $result    = $this->callMethodWith($obj, 'processOrder', $condition);
         $this->assertInstanceOf(OrderInterface::class, $result);
-        $this->assertEquals($value, $result->condition());
+        $this->assertEquals($condition, $result->condition());
 
         /** 2. Structure */
         $struct = [
@@ -257,6 +264,11 @@ class OrderCollectionTraitTest extends \PHPUnit_Framework_TestCase
         $result = $this->callMethodWith($obj, 'processOrder', $lambda);
         $this->assertInstanceOf(OrderInterface::class, $result);
         $this->assertArrayContains($struct, $result->data());
+
+        /** 4. Expression */
+        $expr   = $this->createExpression();
+        $result = $this->callMethodWith($obj, 'processOrder', $expr);
+        $this->assertSame($expr, $result);
     }
 
     /**
