@@ -212,7 +212,7 @@ class ObjectPropertyTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals('foobar', $this->obj->parseOne('foobar'));
 
-        $mock = $this->getMock(StorableInterface::class);
+        $mock = $this->createMock(StorableInterface::class);
         $this->assertNull($this->obj->parseOne($mock));
 
         // Force ID to 'foo'.
@@ -224,13 +224,13 @@ class ObjectPropertyTest extends \PHPUnit_Framework_TestCase
 
     public function testParseOneWithObjectWithoutIdReturnsNull()
     {
-        $mock = $this->getMock(StorableInterface::class);
+        $mock = $this->createMock(StorableInterface::class);
         $this->assertNull($this->obj->parseOne($mock));
     }
 
     public function testParseOneWithObjectWithIdReturnsId()
     {
-        $mock = $this->getMock(StorableInterface::class);
+        $mock = $this->createMock(StorableInterface::class);
         $mock->expects($this->any())
              ->method('id')
              ->will($this->returnValue('foo'));
