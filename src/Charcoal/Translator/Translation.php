@@ -168,6 +168,22 @@ class Translation implements
     }
 
     /**
+     * Sanitize each language's string with a callback function.
+     *
+     * The callback method signature is to take a string as parameter and return the sanitized string.
+     *
+     * @param callable $sanitizeCallback The sanitizing function callback.
+     * @return self
+     */
+    public function sanitize(callable $sanitizeCallback)
+    {
+        foreach ($this->val as $lang => $val) {
+            $this->val[$lang] = call_user_func($sanitizeCallback, $val);
+        }
+        return $this;
+    }
+
+    /**
      * Assign the current translation value(s).
      *
      * @param Translation|array|string $val The translation value(s).
