@@ -3,10 +3,10 @@
 namespace Charcoal\Source;
 
 // From 'charcoal-core'
-use Charcoal\Model\ModelInterface;
 use Charcoal\Source\FilterCollectionInterface;
 use Charcoal\Source\OrderCollectionInterface;
 use Charcoal\Source\PaginationInterface;
+use Charcoal\Source\ModelAwareInterface;
 use Charcoal\Source\StorableInterface;
 
 /**
@@ -14,31 +14,9 @@ use Charcoal\Source\StorableInterface;
  */
 interface SourceInterface extends
     FilterCollectionInterface,
-    OrderCollectionInterface
+    OrderCollectionInterface,
+    ModelAwareInterface
 {
-    /**
-     * Set the source's Model.
-     *
-     * @param  ModelInterface $model The source's model.
-     * @return SourceInterface Returns the current source.
-     */
-    public function setModel(ModelInterface $model);
-
-    /**
-     * Determine if a model is assigned.
-     *
-     * @return boolean
-     */
-    public function hasModel();
-
-    /**
-     * Return the source's Model.
-     *
-     * @throws RuntimeException If not model was previously set.
-     * @return ModelInterface
-     */
-    public function model();
-
     /**
      * Set the properties of the source to fetch.
      *

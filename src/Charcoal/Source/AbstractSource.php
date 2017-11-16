@@ -2,7 +2,6 @@
 
 namespace Charcoal\Source;
 
-use RuntimeException;
 use InvalidArgumentException;
 
 // From PSR-3
@@ -17,10 +16,9 @@ use Charcoal\Config\ConfigurableTrait;
 use Charcoal\Property\PropertyInterface;
 
 // From 'charcoal-core'
-use Charcoal\Model\ModelInterface;
-
 use Charcoal\Source\SourceConfig;
 use Charcoal\Source\SourceInterface;
+use Charcoal\Source\ModelAwareTrait;
 use Charcoal\Source\Filter;
 use Charcoal\Source\FilterInterface;
 use Charcoal\Source\FilterCollectionTrait;
@@ -40,19 +38,13 @@ abstract class AbstractSource implements
 {
     use ConfigurableTrait;
     use LoggerAwareTrait;
+    use ModelAwareTrait;
     use FilterCollectionTrait {
         FilterCollectionTrait::addFilter as pushFilter;
     }
     use OrderCollectionTrait {
         OrderCollectionTrait::addOrder as pushOrder;
     }
-
-    /**
-     * The related model.
-     *
-     * @var ModelInterface
-     */
-    private $model;
 
     /**
      * The {@see self::$model}'s properties.
@@ -113,44 +105,6 @@ abstract class AbstractSource implements
         }
 
         return $this;
-    }
-
-    /**
-     * Set the source's Model.
-     *
-     * @param  ModelInterface $model The source's model.
-     * @return self
-     */
-    public function setModel(ModelInterface $model)
-    {
-        $this->model = $model;
-        return $this;
-    }
-
-    /**
-     * Determine if a model is assigned.
-     *
-     * @return boolean
-     */
-    public function hasModel()
-    {
-        return !empty($this->model);
-    }
-
-    /**
-     * Return the source's Model.
-     *
-     * @throws RuntimeException If not model was previously set.
-     * @return ModelInterface
-     */
-    public function model()
-    {
-        if ($this->model === null) {
-            throw new RuntimeException(
-                'Model was not set.'
-            );
-        }
-        return $this->model;
     }
 
     /**
