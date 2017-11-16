@@ -57,20 +57,4 @@ interface FilterInterface extends
      * @return string
      */
     public function func();
-
-    /**
-     * Set the operator used for joining the next filter.
-     *
-     * @param  string $operand The logical operator.
-     * @throws InvalidArgumentException If the parameter is not a valid operand.
-     * @return FilterInterface Returns the current expression.
-     */
-    public function setOperand($operand);
-
-    /**
-     * Retrieve the operator used for joining the next filter.
-     *
-     * @return string
-     */
-    public function operand();
 }

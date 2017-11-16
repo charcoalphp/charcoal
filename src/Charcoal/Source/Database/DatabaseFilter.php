@@ -13,8 +13,11 @@ use Charcoal\Source\Filter;
  * SQL Filter Expression
  *
  * Priority of SQL resolution if the expression is "active":
- * 1. Custom — If "condition" is defined.
- * 2. Predicate — If "property" and either "func" or "value" are defined.
+ * 1. Nested — If "filters" is not empty.
+ *    - Optionally, a logical NOT "operator" can negate the tree by prepending NOT.
+ * 2. Custom — If "condition" is defined.
+ *    - Optionally, a logical NOT "operator" can negate the tree by prepending NOT.
+ * 3. Predicate — If "property" and either "func" or "value" are defined.
  */
 class DatabaseFilter extends Filter implements
     DatabaseExpressionInterface
@@ -47,8 +50,20 @@ class DatabaseFilter extends Filter implements
     public function sql()
     {
         if ($this->active()) {
+            if ($this->hasFilters()) {
+                $sql = $this->byFilters();
+                if ($this->isNegating()) {
+                    return $this->operator().' '.$sql;
+                }
+                return $sql;
+            }
+
             if ($this->hasCondition()) {
-                return $this->byCondition();
+                $sql = $this->byCondition();
+                if ($this->isNegating()) {
+                    return $this->operator().' ('.$sql.')';
+                }
+                return $sql;
             }
 
             if ($this->hasFields()) {
@@ -57,6 +72,16 @@ class DatabaseFilter extends Filter implements
         }
 
         return '';
+    }
+
+    /**
+     * Determine if the expression negates the final result.
+     *
+     * @return boolean TRUE if the expression uses a logical NOT operator, FALSE otherwise.
+     */
+    public function isNegating()
+    {
+        return in_array($this->operator(), [ '!', 'NOT' ]);
     }
 
     /**
@@ -73,7 +98,7 @@ class DatabaseFilter extends Filter implements
         }
 
         if ($conjunction === null) {
-            $conjunction = $this->operand();
+            $conjunction = $this->conjunction();
         }
 
         return '('.implode(' '.$conjunction.' ', $conditions).')';
@@ -94,6 +119,34 @@ class DatabaseFilter extends Filter implements
         }
 
         return $this->condition();
+    }
+
+    /**
+     * Retrieve the correctly parenthesized and nested WHERE conditions.
+     *
+     * @throws UnexpectedValueException If the custom condition is empty.
+     * @return string
+     */
+    protected function byFilters()
+    {
+        if (!$this->hasFilters()) {
+            throw new UnexpectedValueException(
+                'Filters can not be empty.'
+            );
+        }
+
+        $conditions = [];
+        foreach ($this->filters() as $filter) {
+            if ($filter instanceof DatabaseExpressionInterface) {
+                $filter = $filter->sql();
+            }
+
+            if (strlen($filter) > 0) {
+                $conditions[] = $filter;
+            }
+        }
+
+        return $this->compileConditions($conditions);
     }
 
     /**
@@ -136,7 +189,12 @@ class DatabaseFilter extends Filter implements
                         $value = implode(',', $value);
                     }
 
-                    $conditions[] = sprintf('%1$s(\'%2$s\', %3$s)', $operator, $value, $target);
+                    $conditions[] = sprintf('%2$s(\'%3$s\', %1$s)', $target, $operator, $value);
+                    break;
+
+                case '!':
+                case 'NOT':
+                    $conditions[] = sprintf('%2$s %1$s', $target, $operator);
                     break;
 
                 case 'IS NULL':
@@ -147,7 +205,7 @@ class DatabaseFilter extends Filter implements
                 case 'IS NOT TRUE':
                 case 'IS NOT FALSE':
                 case 'IS NOT UNKNOWN':
-                    $conditions[] = sprintf('(%1$s %2$s)', $target, $operator);
+                    $conditions[] = sprintf('%1$s %2$s', $target, $operator);
                     break;
 
                 case 'IN':
@@ -163,7 +221,7 @@ class DatabaseFilter extends Filter implements
                         $value = implode('\',\'', $value);
                     }
 
-                    $conditions[] = sprintf('(%1$s %2$s (\'%3$s\'))', $target, $operator, $value);
+                    $conditions[] = sprintf('%1$s %2$s (\'%3$s\')', $target, $operator, $value);
                     break;
 
                 default:
@@ -174,7 +232,7 @@ class DatabaseFilter extends Filter implements
                         ));
                     }
 
-                    $conditions[] = sprintf('(%1$s %2$s \'%3$s\')', $target, $operator, $value);
+                    $conditions[] = sprintf('%1$s %2$s \'%3$s\'', $target, $operator, $value);
                     break;
             }
         }

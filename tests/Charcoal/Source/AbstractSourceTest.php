@@ -392,6 +392,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
      * 1. Instance of {@see ExpressionInterface}
      * 2. Instance of {@see Filter}
      *
+     * @see    \Charcoal\Tests\Source\FilterTest::testCreateFilter
      * @covers \Charcoal\Source\AbstractSource::createFilter
      */
     public function testCreateFilter()

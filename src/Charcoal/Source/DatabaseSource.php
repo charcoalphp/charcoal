@@ -807,37 +807,16 @@ class DatabaseSource extends AbstractSource implements
             return '';
         }
 
-        $parts = [];
-        foreach ($this->filters() as $filter) {
-            if (!$filter instanceof DatabaseFilter) {
-                $filter = $this->createFilter($filter->data());
-            }
+        $criteria = $this->createFilter([
+            'filters' => $this->filters()
+        ]);
 
-            $sql = $filter->sql();
-            if (strlen($sql) > 0) {
-                $parts[] = [
-                    'sql'     => $sql,
-                    'operand' => $filter->operand()
-                ];
-            }
+        $sql = $criteria->sql();
+        if (strlen($sql) > 0) {
+            $sql = ' WHERE '.$sql;
         }
 
-        if (empty($parts)) {
-            return '';
-        }
-
-        $clause = ' WHERE';
-
-        $i = 0;
-        foreach ($parts as $part) {
-            if ($i > 0) {
-                $clause .= ' '.$part['operand'];
-            }
-            $clause .= ' '.$part['sql'];
-            $i++;
-        }
-
-        return $clause;
+        return $sql;
     }
 
     /**
@@ -867,9 +846,7 @@ class DatabaseSource extends AbstractSource implements
             return '';
         }
 
-        $clause = ' ORDER BY '.implode(', ', $parts);
-
-        return $clause;
+        return ' ORDER BY '.implode(', ', $parts);
     }
 
     /**

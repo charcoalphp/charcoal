@@ -8,9 +8,11 @@ use InvalidArgumentException;
 use PHPUnit_Framework_Error;
 
 // From 'charcoal-core'
+use Charcoal\Source\ExpressionInterface;
 use Charcoal\Source\Filter;
 use Charcoal\Source\FilterInterface;
 use Charcoal\Tests\ContainerIntegrationTrait;
+use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Source\ExpressionTestFieldTrait;
 use Charcoal\Tests\Source\ExpressionTestTrait;
 
@@ -22,6 +24,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     use ContainerIntegrationTrait;
     use ExpressionTestFieldTrait;
     use ExpressionTestTrait;
+    use ReflectionsTrait;
 
     /**
      * Create expression for testing.
@@ -48,6 +51,38 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test deep cloning of expression trees.
+     *
+     * @covers \Charcoal\Source\Filter::__clone
+     */
+    public function testDeepCloning()
+    {
+        $obj = $this->createExpression();
+        $obj->addFilters([
+            [
+                'condition' => 'title LIKE "Hello %"'
+            ],
+            [
+                'property' => 'trashed',
+                'operator' => 'IS NULL'
+            ],
+            [
+                'property' => 'author_id',
+                'value'    => 1
+            ]
+        ]);
+
+        $cln = clone $obj;
+        $this->assertEquals($cln, $obj);
+        $this->assertNotSame($cln, $obj);
+
+        $originals = $obj->filters();
+        foreach ($cln->filters() as $i => $dupe) {
+            $this->assertNotSame($originals[$i], $dupe);
+        }
+    }
+
+    /**
      * Provide data for value parsing.
      *
      * @used-by ExpressionTestTrait::testDefaultValues()
@@ -56,15 +91,16 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     final public function provideDefaultValues()
     {
         return [
-            'property'  => [ 'property',   null ],
-            'table'     => [ 'table',      null ],
-            'value'     => [ 'value',      null ],
-            'function'  => [ 'func',       null ],
-            'operator'  => [ 'operator',   '=' ],
-            'operand'   => [ 'operand',    'AND' ],
-            'condition' => [ 'condition',  null ],
-            'active'    => [ 'active',     true ],
-            'name'      => [ 'name',       null ],
+            'property'    => [ 'property',     null ],
+            'table'       => [ 'table',        null ],
+            'value'       => [ 'value',        null ],
+            'function'    => [ 'func',         null ],
+            'operator'    => [ 'operator',     '=' ],
+            'conjunction' => [ 'conjunction',  'AND' ],
+            'filters'     => [ 'filters',      [] ],
+            'condition'   => [ 'condition',    null ],
+            'active'      => [ 'active',       true ],
+            'name'        => [ 'name',         null ],
         ];
     }
 
@@ -216,7 +252,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test the "operand" property.
+     * Test the "conjunction" property.
      *
      * Assertions:
      * 1. Default state
@@ -224,42 +260,103 @@ class FilterTest extends \PHPUnit_Framework_TestCase
      * 3. Chainable method
      * 4. Accepts mixed case
      */
-    public function testOperand()
+    public function testConjunction()
     {
         $obj = $this->createExpression();
 
         /** 1. Default Value */
-        $this->assertEquals('AND', $obj->operand());
+        $this->assertEquals('AND', $obj->conjunction());
 
         /** 2. Mutated Value */
-        $that = $obj->setOperand('||');
-        $this->assertInternalType('string', $obj->operand());
-        $this->assertEquals('||', $obj->operand());
+        $that = $obj->setConjunction('||');
+        $this->assertInternalType('string', $obj->conjunction());
+        $this->assertEquals('||', $obj->conjunction());
 
         /** 3. Chainable */
         $this->assertSame($obj, $that);
 
         /** 4. Accepts mixed case */
-        $obj->setOperand('xor');
-        $this->assertEquals('XOR', $obj->operand());
+        $obj->setConjunction('xor');
+        $this->assertEquals('XOR', $obj->conjunction());
     }
 
     /**
-     * Test "operand" property with unsupported operand.
+     * Test "conjunction" property with unsupported conjunction.
      */
-    public function testOperandWithUnsupportedOperand()
+    public function testConjunctionWithUnsupportedConjunction()
     {
         $this->setExpectedException(InvalidArgumentException::class);
-        $this->createExpression()->setOperand('qux');
+        $this->createExpression()->setConjunction('qux');
     }
 
     /**
-     * Test "operand" property with invalid value.
+     * Test "conjunction" property with invalid value.
      */
-    public function testOperandWithInvalidValue()
+    public function testConjunctionWithInvalidValue()
     {
         $this->setExpectedException(InvalidArgumentException::class);
-        $this->createExpression()->setOperand(11);
+        $this->createExpression()->setConjunction(11);
+    }
+
+    /**
+     * Test deprecated "operand" property.
+     */
+    public function testDeprecatedOperandExpression()
+    {
+        $obj = $this->createExpression();
+
+        @$obj->setData([ 'operand' => 'XOR' ]);
+        $this->assertEquals('XOR', $obj->conjunction());
+    }
+
+    /**
+     * Test "operand" property deprecation notice.
+     */
+    public function testDeprecatedOperandError()
+    {
+        $this->setExpectedException(PHPUnit_Framework_Error::class);
+        $this->createExpression()->setData([ 'operand' => 'XOR' ]);
+    }
+
+    /**
+     * Test implementation of {@see Countable}.
+     *
+     * Assertions:
+     * 1. Default state
+     * 2. Mutated state
+     *
+     * @covers \Charcoal\Source\Filter::count
+     */
+    public function testCount()
+    {
+        $obj = $this->createExpression();
+
+        /** 1. Default Value */
+        $this->assertEquals(0, $obj->count());
+
+        /** 2. Mutated Value */
+        $obj->addFilter('1 = 1');
+        $this->assertEquals(1, $obj->count());
+    }
+
+    /**
+     * Test the creation of a query filter expression.
+     *
+     * Assertions:
+     * 1. Instance of {@see ExpressionInterface}
+     * 2. Instance of {@see Filter}
+     *
+     * @see    \Charcoal\Tests\Source\AbstractSourceTest::testCreateFilter
+     * @covers \Charcoal\Source\Filter::createFilter
+     */
+    public function testCreateFilter()
+    {
+        $obj = $this->createExpression();
+
+        $result = $this->callMethodWith($obj, 'createFilter', [ 'name' => 'foo' ]);
+        $this->assertInstanceOf(Filter::class, $result);
+        $this->assertInstanceOf(ExpressionInterface::class, $result);
+        $this->assertEquals('foo', $result->name());
     }
 
     /**
@@ -273,16 +370,19 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     public function testData()
     {
         /** 1. Mutate all options */
+        $exp1 = $this->createExpression();
+
         $mutation = [
-            'value'     => '%foobar',
-            'func'      => 'REVERSE',
-            'operator'  => 'LIKE',
-            'operand'   => 'OR',
-            'property'  => 'col',
-            'table'     => 'tbl',
-            'condition' => '1 = 1',
-            'active'    => false,
-            'name'      => 'foo',
+            'value'       => '%foobar',
+            'func'        => 'REVERSE',
+            'operator'    => 'LIKE',
+            'property'    => 'col',
+            'table'       => 'tbl',
+            'conjunction' => 'OR',
+            'filters'     => [ 'foo' => $exp1 ],
+            'condition'   => '1 = 1',
+            'active'      => false,
+            'name'        => 'foo',
         ];
 
         $obj = $this->createExpression();
@@ -304,9 +404,13 @@ class FilterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('LIKE', $data['operator']);
         $this->assertEquals('LIKE', $obj->operator());
 
-        $this->assertArrayHasKey('operand', $data);
-        $this->assertEquals('OR', $data['operand']);
-        $this->assertEquals('OR', $obj->operand());
+        $this->assertArrayHasKey('conjunction', $data);
+        $this->assertEquals('OR', $data['conjunction']);
+        $this->assertEquals('OR', $obj->conjunction());
+
+        $this->assertArrayHasKey('filters', $data);
+        $this->assertContains($exp1, $data['filters']);
+        $this->assertContains($exp1, $obj->filters());
 
         /** 2. Partially mutated state */
         $mutation = [
@@ -321,7 +425,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($defs['value'], $obj->value());
         $this->assertEquals($defs['func'], $obj->func());
-        $this->assertEquals($defs['operand'], $obj->operand());
+        $this->assertEquals($defs['conjunction'], $obj->conjunction());
         $this->assertEquals($defs['condition'], $obj->condition());
 
         $data = $obj->data();
@@ -329,8 +433,11 @@ class FilterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('IS NULL', $data['operator']);
 
         /** 3. Mutation via aliases */
+        $exp2 = $this->createExpression();
+
         $mutation = [
-            'function' => 'REVERSE'
+            'function'   => 'REVERSE',
+            'conditions' => [ 'baz' => $exp2 ]
         ];
 
         $obj = $this->createExpression();
@@ -338,6 +445,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
 
         $data = $obj->data();
         $this->assertEquals('REVERSE', $data['func']);
+        $this->assertContains($exp2, $data['filters']);
     }
 
     /**

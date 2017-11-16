@@ -2,6 +2,7 @@
 
 namespace Charcoal\Tests\Source\Database;
 
+use DateTime;
 use UnexpectedValueException;
 
 // From 'charcoal-property'
@@ -74,10 +75,40 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
         $obj->setProperty('foo')->setValue('Charcoal');
 
         $obj->setActive(true);
-        $this->assertEquals('(objTable.`foo` = \'Charcoal\')', $obj->sql());
+        $this->assertEquals('objTable.`foo` = \'Charcoal\'', $obj->sql());
 
         $obj->setActive(false);
         $this->assertEquals('', $obj->sql());
+    }
+
+    /**
+     * Test SQL without conditions.
+     *
+     * Assertions:
+     * 1. Default state
+     * 2. Negatable Operators
+     * 3. Ignored Operators
+     *
+     * @covers \Charcoal\Source\Database\DatabaseFilter::isNegating
+     */
+    public function testNegation()
+    {
+        $obj = $this->createExpression();
+
+        /** 1. Default Value */
+        $this->assertFalse($obj->isNegating());
+
+        /** 2. Negatable Operators */
+        $obj->setOperator('!');
+        $this->assertTrue($obj->isNegating());
+
+        $obj->setOperator('NOT');
+        $this->assertTrue($obj->isNegating());
+
+        /** 3. Ignored Operators */
+        $obj->setOperator('IS NOT');
+        $this->assertFalse($obj->isNegating());
+
     }
 
     /**
@@ -104,6 +135,152 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test nested filters.
+     *
+     * @dataProvider providedNestedExpressions
+     *
+     * @param array  $conditions The expressions to define.
+     * @param string $expected   The expected compiled SQL string.
+     */
+    public function testNestedSql(array $conditions, $expected)
+    {
+        $obj = $this->createExpression();
+        $obj->addFilters($conditions);
+        $this->assertEquals($expected, $obj->sql());
+    }
+
+    /**
+     * Provide data for value parsing.
+     *
+     * @example [ [ <filters>, <SQL> ] ]
+     * @used-by self::testNestedSql()
+     * @return  array
+     */
+    public function providedNestedExpressions()
+    {
+        return [
+            'One Level'  => $this->nestedExpressionsDataset1(),
+            'Two Levels' => $this->nestedExpressionsDataset2(),
+        ];
+    }
+
+    /**
+     * Dataset #1 for testing nested expressions.
+     *
+     * @used-by self::providedNestedExpressions()
+     * @return  array
+     */
+    protected function nestedExpressionsDataset1()
+    {
+        $time = new DateTime('3 days ago');
+
+        $conditions = [
+            [
+                'condition' => 'title LIKE "Hello %"'
+            ],
+            [
+                'property' => 'posted',
+                'operator' => '>=',
+                'value'    => $time
+            ],
+            [
+                'property' => 'author_id',
+                'value'    => 1
+            ]
+        ];
+
+        $expected  = '(';
+        $expected .= 'title LIKE "Hello %" AND ';
+        $expected .= 'objTable.`posted` >= \''.$time->format('Y-m-d H:i:s').'\' AND ';
+        $expected .= 'objTable.`author_id` = \'1\'';
+        $expected .= ')';
+
+        return [ $conditions, $expected ];
+    }
+
+    /**
+     * Dataset #2 for testing nested expressions.
+     *
+     * @used-by self::providedNestedExpressions()
+     * @return  array
+     */
+    protected function nestedExpressionsDataset2()
+    {
+        $time = date('Y-m-d');
+
+        $conditions = [
+            [
+                'property' => 'author_id',
+                'operator' => '!=',
+                'value'    => 1
+            ],
+            [
+                'conjunction' => 'OR',
+                'filters'     => [
+                    [
+                        'property' => 'published',
+                        'value'    => true
+                    ],
+                    [
+                        'property' => 'posted',
+                        'operator' => '<',
+                        'value'    => $time
+                    ]
+                ]
+            ],
+            [
+                'operator' => 'NOT',
+                'filters'  => [
+                    [
+                        'property' => 'title',
+                        'value'    => 'Hello World'
+                    ],
+                    [
+                        'property' => 'modified',
+                        'operator' => 'IS NULL'
+                    ]
+                ]
+            ]
+        ];
+
+        $expected  = '(';
+        $expected .= 'objTable.`author_id` != \'1\' AND ';
+        $expected .= '(objTable.`published` = \'1\' OR objTable.`posted` < \''.$time.'\') AND NOT ';
+        $expected .= '(objTable.`title` = \'Hello World\' AND objTable.`modified` IS NULL)';
+        $expected .= ')';
+
+        return [ $conditions, $expected ];
+    }
+
+    /**
+     * Test nested filters has precedence over other features.
+     */
+    public function testNestedSqlPrecedence()
+    {
+        $obj = $this->createExpression();
+
+        // Should be ignored
+        $obj->setProperty('foo')->setOperator('=')->setValue('bar');
+
+        // Should take precedence
+        $obj->setCondition('1 = 1');
+        $this->assertEquals('1 = 1', $obj->sql());
+    }
+
+    /**
+     * Test invalid SQL nested filters.
+     */
+    public function testSqlWithoutNestedExpressions()
+    {
+        $obj = $this->createExpression();
+
+        $this->setExpectedException(UnexpectedValueException::class);
+
+        $method = $this->getMethod($obj, 'byFilters');
+        $method->invoke($obj);
+    }
+
+    /**
      * Test "condition" property with and without placeholders.
      */
     public function testCustomSql()
@@ -112,6 +289,17 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
 
         $obj->setCondition('objTable.foo = objTable.baz');
         $this->assertEquals('objTable.foo = objTable.baz', $obj->sql());
+    }
+
+    /**
+     * Test the negation of the "condition" property with the "operator" property.
+     */
+    public function testCustomSqlNegation()
+    {
+        $obj = $this->createExpression();
+
+        $obj->setOperator('NOT')->setCondition('objTable.foo = objTable.baz');
+        $this->assertEquals('NOT (objTable.foo = objTable.baz)', $obj->sql());
     }
 
     /**
@@ -186,7 +374,7 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
             'value'    => 'Charcoal',
         ]);
 
-        $this->assertEquals('(objTable.`xyzzy` '.$operator.' \'Charcoal\')', $obj->sql());
+        $this->assertEquals('objTable.`xyzzy` '.$operator.' \'Charcoal\'', $obj->sql());
     }
 
     /**
@@ -205,7 +393,26 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
             'value'    => 'Charcoal',
         ]);
 
-        $this->assertEquals('(objTable.`xyzzy` '.$operator.')', $obj->sql());
+        $this->assertEquals('objTable.`xyzzy` '.$operator, $obj->sql());
+    }
+
+    /**
+     * Test NOT-style SQL operators ("value" is ignored).
+     *
+     * @dataProvider provideNegationOperators
+     *
+     * @param string $operator A SQL operator.
+     */
+    public function testSqlNegationOperators($operator)
+    {
+        $obj = $this->createExpression();
+        $obj->setData([
+            'property' => 'xyzzy',
+            'operator' => $operator,
+            'value'    => 'Charcoal',
+        ]);
+
+        $this->assertEquals($operator.' objTable.`xyzzy`', $obj->sql());
     }
 
     /**
@@ -269,7 +476,7 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
             'function' => 'reverse',
         ]);
 
-        $this->assertEquals('(REVERSE(objTable.`xyzzy`) = \'Charcoal\')', $obj->sql());
+        $this->assertEquals('REVERSE(objTable.`xyzzy`) = \'Charcoal\'', $obj->sql());
     }
 
     /**
@@ -288,10 +495,10 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
         $obj->setProperty($prop)->setOperator('=')->setValue('Charcoal');
 
         $expected  = '(';
-        $expected .= '(objTable.`xyzzy_en` = \'Charcoal\') OR ';
-        $expected .= '(objTable.`xyzzy_fr` = \'Charcoal\') OR ';
-        $expected .= '(objTable.`xyzzy_de` = \'Charcoal\') OR ';
-        $expected .= '(objTable.`xyzzy_es` = \'Charcoal\')';
+        $expected .= 'objTable.`xyzzy_en` = \'Charcoal\' OR ';
+        $expected .= 'objTable.`xyzzy_fr` = \'Charcoal\' OR ';
+        $expected .= 'objTable.`xyzzy_de` = \'Charcoal\' OR ';
+        $expected .= 'objTable.`xyzzy_es` = \'Charcoal\'';
         $expected .= ')';
         $this->assertEquals($expected, $obj->sql());
     }
@@ -322,13 +529,13 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
     {
         return [
             'FIND_IN_SET' => [ 'FIND_IN_SET', ',',     'FIND_IN_SET(\'%2$s\', %1$s)' ],
-            'IN'          => [ 'IN',          '\',\'', '(%1$s IN (\'%2$s\'))' ],
-            'NOT IN'      => [ 'NOT IN',      '\',\'', '(%1$s NOT IN (\'%2$s\'))' ]
+            'IN'          => [ 'IN',          '\',\'', '%1$s IN (\'%2$s\')' ],
+            'NOT IN'      => [ 'NOT IN',      '\',\'', '%1$s NOT IN (\'%2$s\')' ]
         ];
     }
 
     /**
-     * Provide data for NULL-style operators.
+     * Provide data for condition-style operators.
      *
      * @used-by self::testSqlConditionalOperators()
      * @return  array
@@ -340,6 +547,20 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
             [ 'IS TRUE' ], [ 'IS NOT TRUE' ],
             [ 'IS FALSE' ], [ 'IS NOT FALSE' ],
             [ 'IS UNKNOWN' ], [ 'IS NOT UNKNOWN' ],
+        ];
+    }
+
+    /**
+     * Provide data for logical NOT operators.
+     *
+     * @used-by self::testSqlNegationOperators()
+     * @return  array
+     */
+    public function provideNegationOperators()
+    {
+        return [
+            [ '!' ],
+            [ 'NOT' ],
         ];
     }
 }
