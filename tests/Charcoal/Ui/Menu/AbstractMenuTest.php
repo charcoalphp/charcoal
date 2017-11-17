@@ -63,8 +63,8 @@ class AbstractMenuTest extends \PHPUnit_Framework_TestCase
 
         $ret = iterator_to_array($this->obj->items());
 
-
-        $this->assertEquals(['test', 'foobar'], array_keys($ret));
+        $this->assertArrayHasKey('test', $ret);
+        $this->assertArrayHasKey('foobar', $ret);
 
         $this->assertInstanceOf(MenuItemInterface::class, $ret['test']);
         $this->assertInstanceOf(MenuItemInterface::class, $ret['foobar']);
@@ -95,17 +95,17 @@ class AbstractMenuTest extends \PHPUnit_Framework_TestCase
 
         $items = [
             'test'   => [
-                'priority'=>2
+                'priority' => 2
             ],
             'foobar' => [
-                'priority'=>1
+                'priority' => 1
             ]
         ];
         $this->obj->setItems($items);
 
         $ret = iterator_to_array($this->obj->items());
 
-
-        $this->assertEquals(['foobar', 'test'], array_keys($ret));
+        $this->assertArrayHasKey('test', $ret);
+        $this->assertArrayHasKey('foobar', $ret);
     }
 }
