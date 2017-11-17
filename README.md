@@ -17,7 +17,7 @@ $ composer require locomotivemtl/charcoal-image
 
 ## Dependencies
 
--   `PHP 5.5+`
+-   `PHP 5.6+`
 -   `locomotivemtl/charcoal-factory`
 -   `ext-imagick` (optional but _recommended_)
 **OR**
@@ -67,12 +67,14 @@ $img->process();
 $img->save();
 ```
 
+> `setData()` is perfect for scenario where the effects are from a JSON configuration structure, for example.
+
 ## With magic methods
 
 All effects can also be used as methods on the image (using `__call()` magic).
 
 ```php
-use \Charcoal\Image\Imagick\ImagickImage as Image;
+use Charcoal\Image\Imagick\ImagickImage as Image;
 
 $img = new Image();
 $img->open('example.png');
