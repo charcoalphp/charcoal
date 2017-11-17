@@ -2,11 +2,15 @@
 
 namespace Charcoal\Source;
 
+use Countable;
 use InvalidArgumentException;
 
 // From 'charcoal-core'
 use Charcoal\Source\Expression;
+use Charcoal\Source\ExpressionInterface;
 use Charcoal\Source\ExpressionFieldTrait;
+use Charcoal\Source\FilterCollectionInterface;
+use Charcoal\Source\FilterCollectionTrait;
 use Charcoal\Source\FilterInterface;
 
 /**
@@ -15,12 +19,15 @@ use Charcoal\Source\FilterInterface;
  * For affecting the results of a query that meet specified criteria.
  */
 class Filter extends Expression implements
+    Countable,
+    FilterCollectionInterface,
     FilterInterface
 {
     use ExpressionFieldTrait;
+    use FilterCollectionTrait;
 
-    const DEFAULT_OPERATOR = '=';
-    const DEFAULT_OPERAND  = 'AND';
+    const DEFAULT_OPERATOR    = '=';
+    const DEFAULT_CONJUNCTION = 'AND';
 
     /**
      * The value on the right side of the operation.
@@ -44,11 +51,22 @@ class Filter extends Expression implements
     protected $func;
 
     /**
-     * The operator used for joining the next filter.
+     * The separator used for joining the internal expressions (i.e., conditions, filters).
      *
      * @var string
      */
-    protected $operand = self::DEFAULT_OPERAND;
+    protected $conjunction = self::DEFAULT_CONJUNCTION;
+
+    /**
+     * Count the filters stored in this expression.
+     *
+     * @see    Countable
+     * @return integer
+     */
+    public function count()
+    {
+        return count($this->filters);
+    }
 
     /**
      * Set the filter clause data.
@@ -97,6 +115,18 @@ class Filter extends Expression implements
             $this->setValue($data['val']);
         }
 
+        /** @deprecated */
+        if (isset($data['operand'])) {
+            trigger_error(
+                sprintf(
+                    'Query expression option "operand" is deprecated in favour of "conjunction": %s',
+                    $data['operand']
+                ),
+                E_USER_DEPRECATED
+            );
+            $this->setConjunction($data['operand']);
+        }
+
         if (isset($data['table'])) {
             $this->setTable($data['table']);
         }
@@ -121,8 +151,16 @@ class Filter extends Expression implements
             $this->setOperator($data['operator']);
         }
 
-        if (isset($data['operand'])) {
-            $this->setOperand($data['operand']);
+        if (isset($data['conjunction'])) {
+            $this->setConjunction($data['conjunction']);
+        }
+
+        if (isset($data['conditions'])) {
+            $this->addFilters($data['conditions']);
+        }
+
+        if (isset($data['filters'])) {
+            $this->addFilters($data['filters']);
         }
 
         return $this;
@@ -141,7 +179,8 @@ class Filter extends Expression implements
             'value'       => null,
             'func'        => null,
             'operator'    => self::DEFAULT_OPERATOR,
-            'operand'     => self::DEFAULT_OPERAND,
+            'conjunction' => self::DEFAULT_CONJUNCTION,
+            'filters'     => [],
             'condition'   => null,
             'active'      => true,
             'name'        => null,
@@ -161,7 +200,8 @@ class Filter extends Expression implements
             'value'       => $this->value(),
             'func'        => $this->func(),
             'operator'    => $this->operator(),
-            'operand'     => $this->operand(),
+            'conjunction' => $this->conjunction(),
+            'filters'     => $this->filters(),
             'condition'   => $this->condition(),
             'active'      => $this->active(),
             'name'        => $this->name(),
@@ -270,40 +310,40 @@ class Filter extends Expression implements
     }
 
     /**
-     * Set the operator used for joining the next filter.
+     * Set the conjunction for joining the conditions of this expression.
      *
-     * @param  string $operand The logical operator.
-     * @throws InvalidArgumentException If the parameter is not a valid operand.
+     * @param  string $conjunction The separator to use.
+     * @throws InvalidArgumentException If the parameter is not a valid conjunction.
      * @return self
      */
-    public function setOperand($operand)
+    public function setConjunction($conjunction)
     {
-        if (!is_string($operand)) {
+        if (!is_string($conjunction)) {
             throw new InvalidArgumentException(
-                'Operand should be a string.'
+                'Conjunction should be a string.'
             );
         }
 
-        $operand = strtoupper($operand);
-        if (!in_array($operand, $this->validOperands())) {
+        $conjunction = strtoupper($conjunction);
+        if (!in_array($conjunction, $this->validConjunctions())) {
             throw new InvalidArgumentException(sprintf(
-                'Operand "%s" not allowed in this context.',
-                $operand
+                'Conjunction "%s" not allowed in this context.',
+                $conjunction
             ));
         }
 
-        $this->operand = $operand;
+        $this->conjunction = $conjunction;
         return $this;
     }
 
     /**
-     * Retrieve the operator used for joining the next filter.
+     * Retrieve the conjunction for the conditions of this expression.
      *
      * @return string
      */
-    public function operand()
+    public function conjunction()
     {
-        return $this->operand;
+        return $this->conjunction;
     }
 
     /**
@@ -314,6 +354,7 @@ class Filter extends Expression implements
     protected function validOperators()
     {
         return [
+            '!', 'NOT',
             '=', 'IS', '!=', 'IS NOT',
             'LIKE', 'NOT LIKE',
             'FIND_IN_SET',
@@ -324,20 +365,6 @@ class Filter extends Expression implements
             '%', 'MOD',
             'IN', 'NOT IN',
             'REGEXP', 'NOT REGEXP'
-        ];
-    }
-
-    /**
-     * Retrieve the supported logical operators (in uppercase).
-     *
-     * @return string[]
-     */
-    protected function validOperands()
-    {
-        return [
-            'AND', '&&',
-            'OR', '||',
-            'XOR'
         ];
     }
 
@@ -373,5 +400,49 @@ class Filter extends Expression implements
             'SIGN',
             'SQRT'
         ];
+    }
+
+    /**
+     * Retrieve the supported condition separators.
+     *
+     * @return string[] List of separators (case sensitive).
+     */
+    protected function validConjunctions()
+    {
+        return [
+            'AND', '&&',
+            'OR', '||',
+            'XOR'
+        ];
+    }
+
+    /**
+     * Create a new filter expression.
+     *
+     * @see    FilterCollectionTrait::createFilter()
+     * @param  array $data Optional expression data.
+     * @return FilterInterface A new filter expression object.
+     */
+    protected function createFilter(array $data = null)
+    {
+        $filter = new static();
+        if ($data !== null) {
+            $filter->setData($data);
+        }
+        return $filter;
+    }
+
+    /**
+     * Clone this expression and its subtree of expressions.
+     *
+     * @return void
+     */
+    public function __clone()
+    {
+        foreach ($this->filters as $i => $filter) {
+            if ($filter instanceof ExpressionInterface) {
+                $this->filters[$i] = clone $filter;
+            }
+        }
     }
 }
