@@ -5,22 +5,49 @@ namespace Charcoal\Tests\Source;
 use RuntimeException;
 use InvalidArgumentException;
 
+// From 'charcoal-property'
+use Charcoal\Property\GenericProperty;
+use Charcoal\Property\PropertyInterface;
+
 // From 'charcoal-core'
+use Charcoal\Model\Model;
 use Charcoal\Model\Service\MetadataLoader;
 use Charcoal\Source\AbstractSource;
+use Charcoal\Source\ExpressionInterface;
 use Charcoal\Source\Filter;
+use Charcoal\Source\FilterInterface;
+use Charcoal\Source\FilterCollectionInterface;
 use Charcoal\Source\Order;
+use Charcoal\Source\OrderInterface;
+use Charcoal\Source\OrderCollectionInterface;
 use Charcoal\Source\Pagination;
+use Charcoal\Source\PaginationInterface;
+use Charcoal\Source\SourceConfig;
+use Charcoal\Source\SourceInterface;
+
+use Charcoal\Tests\AssertionsTrait;
+use Charcoal\Tests\ContainerIntegrationTrait;
+use Charcoal\Tests\ReflectionsTrait;
 
 /**
- *
+ * Test {@see AbstractSource} and {@see SourceInterface}.
  */
 class AbstractSourceTest extends \PHPUnit_Framework_TestCase
 {
-    use \Charcoal\Tests\ContainerIntegrationTrait;
+    use AssertionsTrait;
+    use ContainerIntegrationTrait;
+    use ReflectionsTrait;
 
+    /**
+     * The tested class.
+     *
+     * @var AbstractSource
+     */
     public $obj;
 
+    /**
+     * Setup the test.
+     */
     public function setUp()
     {
         $container = $this->getContainer();
@@ -28,6 +55,21 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
         $this->obj = $this->getMockForAbstractClass(AbstractSource::class, [[
             'logger' => $container['logger']
         ]]);
+    }
+
+    /**
+     * Create mock property for testing.
+     *
+     * @return PropertyInterface
+     */
+    final public function createProperty()
+    {
+        $container = $this->getContainer();
+
+        $prop = $container['property/factory']->create('generic');
+        $prop->setIdent('xyzzy');
+
+        return $prop;
     }
 
     /**
@@ -40,15 +82,18 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
      */
     public function testReset()
     {
-        $obj = $this->obj;
-        $filter = $this->getFilter1();
-        $order = $this->getOrder1();
-        $pagination = ['page' => 3, 'num_per_page' => 120];
+        $obj    = $this->obj;
+        $filter = $this->createFilter();
+        $order  = $this->createOrder();
+        $paged  = [
+            'page' => 3,
+            'num_per_page' => 120
+        ];
         $obj->setData([
             'properties' => [ 'foo' ],
-            'filters'    => [$filter],
-            'orders'     => [$order],
-            'pagination' => $pagination
+            'filters'    => [ $filter ],
+            'orders'     => [ $order ],
+            'pagination' => $paged
         ]);
         $ret = $obj->reset();
         $this->assertSame($ret, $obj);
@@ -75,7 +120,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
         ]);
         $this->assertSame($ret, $obj);
 
-        $this->assertEquals(['foo'], $obj->properties());
+        $this->assertEquals([ 'foo' ], $obj->properties());
     }
 
     /**
@@ -88,7 +133,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
         $container = $this->getContainer();
 
         $obj = $this->obj;
-        $model = new \Charcoal\Model\Model([
+        $model = new Model([
             'logger'          => $container['logger'],
             'metadata_loader' => new MetadataLoader([
                 'base_path'   => '',
@@ -114,18 +159,49 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
      * - is chainable
      * - set the properties
      * - reset the properties, when called again
+     *
+     * @covers \Charcoal\Source\AbstractSource::setProperties
+     * @covers \Charcoal\Source\AbstractSource::addProperties
+     * @covers \Charcoal\Source\AbstractSource::resolvePropertyName
      */
     public function testSetProperties()
     {
         $obj = $this->obj;
-        $ret = $obj->setProperties(['foo']);
+        $ret = $obj->setProperties([ 'foo' ]);
         $this->assertSame($ret, $obj);
-        $this->assertEquals(['foo'], $obj->properties());
+        $this->assertEquals([ 'foo' ], $obj->properties());
 
-        $obj->setProperties(['bar']);
-        $this->assertEquals(['bar'], $obj->properties());
+        $obj->setProperties([ 'bar' ]);
+        $this->assertEquals([ 'bar' ], $obj->properties());
     }
 
+    /**
+     * Test property collection emptiness.
+     *
+     * Assertions:
+     * 1. Empty; Default state
+     * 2. Populated; Mutated state
+     *
+     * @covers \Charcoal\Source\AbstractSource::hasProperties
+     */
+    public function testHasProperties()
+    {
+        $obj = $this->obj;
+
+        /** 1. Default state */
+        $this->assertFalse($obj->hasProperties());
+
+        /** 2. Mutated state */
+        $obj->setProperties([ 'foo' ]);
+        $this->assertTrue($obj->hasProperties());
+    }
+
+    /**
+     * Test property collection appending.
+     *
+     * @covers \Charcoal\Source\AbstractSource::addProperty
+     * @covers \Charcoal\Source\AbstractSource::resolvePropertyName
+     */
     public function testAddProperty()
     {
         $obj = $this->obj;
@@ -133,15 +209,45 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
 
         $ret = $obj->addProperty('foo');
         $this->assertSame($ret, $obj);
-        $this->assertEquals(['foo'], $obj->properties());
+        $this->assertEquals([ 'foo' ], $obj->properties());
         $obj->addProperty('bar');
-        $this->assertEquals(['foo', 'bar'], $obj->properties());
+        $this->assertEquals([ 'foo', 'bar' ], $obj->properties());
+    }
 
+    /**
+     * Test property collection appending.
+     *
+     * @covers \Charcoal\Source\AbstractSource::removeProperty
+     * @covers \Charcoal\Source\AbstractSource::resolvePropertyName
+     */
+    public function testRemoveProperty()
+    {
+        $obj = $this->obj;
+        $obj->setProperties([ 'foo', 'bar', 'qux' ]);
+
+        $ret = $obj->removeProperty('foo');
+        $this->assertSame($ret, $obj);
+        $this->assertNotContains('foo', $obj->properties());
+    }
+
+    /**
+     * Test failure when appending an invalid property name.
+     *
+     * @covers \Charcoal\Source\AbstractSource::resolvePropertyName
+     */
+    public function testInvalidPropertyNameResolution()
+    {
+        $obj = $this->obj;
         $this->setExpectedException(InvalidArgumentException::class);
         $obj->addProperty(false);
     }
 
-    public function testAddPropertyEmptyPropThrowsException()
+    /**
+     * Test failure when appending an blank property name.
+     *
+     * @covers \Charcoal\Source\AbstractSource::resolvePropertyName
+     */
+    public function testBlankPropertyNameResolution()
     {
         $obj = $this->obj;
         $this->setExpectedException(InvalidArgumentException::class);
@@ -149,144 +255,364 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Assert that the `setFilters` method:
-     * - is chainable
-     * - set the filters member
-     * - reset the filters, when called again
+     * Test failure when appending a unnamed property object.
+     *
+     * @covers \Charcoal\Source\AbstractSource::resolvePropertyName
      */
-    public function testSetFilters()
+    public function testAnonymousPropertyNameResolution()
     {
-        $filter1 = $this->getFilter1();
-        $filter2 = $this->getFilter2();
-        $obj = $this->obj;
-        $ret = $obj->setFilters([$filter1]);
-        $this->assertSame($ret, $obj);
-        $this->assertEquals([$filter1], $obj->filters());
-
-        $obj->setFilters([$filter2]);
-        $this->assertEquals([$filter2], $obj->filters());
-    }
-
-    /**
-     * Assert that the `addFilter` method:
-     * - is chainable
-     * - add the filter object to the filters
-     * - append the filter, when a filter already exists
-     * - create and add a filter object when passing an array
-     * - allow passing $property, $val, $options as 3 parameters
-     * - throws an exception when an invalid argument type is passed
-     */
-    public function testAddFilterObject()
-    {
-        $filter1 = $this->getFilter1();
-        $filter2 = $this->getFilter2();
-
-        $obj = $this->obj;
-        $ret = $obj->addFilter($filter1);
-        $this->assertSame($ret, $obj);
-        $this->assertEquals([$filter1], $obj->filters());
-
-        $obj->addFilter($filter2);
-        $this->assertEquals([$filter1, $filter2], $obj->filters());
-
-        $obj->addFilter([
-            'property'=>'baz'
-        ]);
-        $obj->addFilter('foobar', '4', ['operator'=>'<']);
-
-        $filters = $obj->filters();
-        $this->assertEquals(4, count($filters));
-        $this->assertInstanceOf('\Charcoal\Source\Filter', $filters[2]);
-        $this->assertInstanceOf('\Charcoal\Source\Filter', $filters[3]);
-
+        $obj  = $this->obj;
+        $prop = $this->createProperty()->setIdent('');
         $this->setExpectedException(InvalidArgumentException::class);
-        $obj->addFilter(true);
+        $obj->addProperty($prop);
     }
 
     /**
-     * Assert that the `setOrders` method:
-     * - is chainable
-     * - set the orders member
-     * - reset the orders, when called again
+     * Test appending a named property object.
+     *
+     * @covers \Charcoal\Source\AbstractSource::resolvePropertyName
      */
-    public function testSetOrders()
+    public function testNamedPropertyNameResolution()
     {
-        $order1 = $this->getOrder1();
-        $order2 = $this->getOrder2();
-        $obj = $this->obj;
-        $ret = $obj->setOrders([$order1]);
-        $this->assertSame($ret, $obj);
-        $this->assertEquals([$order1], $obj->orders());
+        $obj  = $this->obj;
+        $prop = $this->createProperty();
 
-        $obj->setOrders([$order2]);
-        $this->assertEquals([$order2], $obj->orders());
+        $obj->addProperty($prop);
+        $this->assertContains('xyzzy', $obj->properties());
     }
 
     /**
-     * Assert that the `addOrder` method:
-     * - is chainable
-     * - add the order object to the orders
-     * - append the order, when a order already exists
-     * - create and add a order object when passing an array
-     * - allow passing $property, $val, $options as 3 parameters
-     * - throws an exception when an invalid argument type is passed
+     * Test the addition of one query filter expression (customized method).
+     *
+     * Assertions:
+     * 1. If a string is provided as the first argument,
+     *    an Expression object with a condition is returned
+     * 2. If a string is provided as the first argument
+     *    and a non-NULL value is provided as the second argument,
+     *    an Comparison object is returned
+     * 3. If an instance of {@see FilterInterface} is provided,
+     *    the Expression object is used as is.
+     * 4. If an array is provided with an options subset,
+     *    an Expression object with given data is returned
+     * 5. If a third argument is provided,
+     *    an Expression object with given extra data is returned
+     * 6. Chainable method
+     *
+     * @covers \Charcoal\Source\AbstractSource::addFilter
      */
-    public function testAddOrderObject()
+    public function testAddFilter()
     {
-        $order1 = $this->getOrder1();
-        $order2 = $this->getOrder2();
-
         $obj = $this->obj;
-        $ret = $obj->addOrder($order1);
-        $this->assertSame($ret, $obj);
-        $this->assertEquals([$order1], $obj->orders());
 
-        $obj->addOrder($order2);
-        $this->assertEquals([$order1, $order2], $obj->orders());
+        /** 1. Condition */
+        $condition = '`foo` = "Charcoal"';
+        $obj->reset()->addFilter($condition);
+        $result = $obj->filters();
+        $result = end($result);
+        $this->assertEquals($condition, $result->condition());
 
-        $obj->addOrder([
-            'property'=>'baz'
-        ]);
-        $obj->addOrder('foobar', 'desc', ['values'=>[1, 2]]);
+        /** 2. Comparison */
+        $field = 'foo';
+        $value = 'Charcoal';
+        $obj->reset()->addFilter($field, $value);
+        $result = $obj->filters();
+        $result = end($result);
+        $this->assertEquals($field, $result->property());
+        $this->assertEquals($value, $result->value());
 
-        $orders = $obj->orders();
-        $this->assertEquals(4, count($orders));
-        $this->assertInstanceOf('\Charcoal\Source\Order', $orders[2]);
-        $this->assertInstanceOf('\Charcoal\Source\Order', $orders[3]);
+        /** 3. Expression */
+        $expr = $this->createFilter([ 'name' => 'foo' ]);
+        $obj->reset()->addFilter($expr);
+        $result = $obj->filters();
+        $result = end($result);
+        $this->assertSame($expr, $result);
 
-        $this->setExpectedException(InvalidArgumentException::class);
-        $obj->addOrder(true);
+        /** 4. Structure with options subset */
+        $struct = [
+            'name'     => 'foo',
+            'options'  => [
+                'name' => 'bar'
+            ]
+        ];
+        $obj->reset()->addFilter($struct);
+        $result = $obj->filters();
+        $result = end($result);
+        $this->assertEquals('bar', $result->name());
+
+        /** 5. Expression with extra options */
+        $expr   = $this->createFilter([ 'name' => 'foo' ]);
+        $that   = $obj->reset()->addFilter($expr, null, [ 'name' => 'bar' ]);
+        $result = $obj->filters();
+        $result = end($result);
+        $this->assertEquals('bar', $result->name());
+
+        /** 6. Chainable */
+        $this->assertSame($obj, $that);
     }
 
+    /**
+     * Test the post-processing of a query Filter expression.
+     *
+     * Assertions:
+     * 1. If a multilingual property is defined for the expression,
+     *    the source will set the field name for the current locale.
+     * 2. If a multi-value property is defined for the expression,
+     *    the source will set the comparison operator for a valueset.
+     *
+     * @covers \Charcoal\Source\AbstractSource::parseFilterWithModel
+     */
+    public function testParseFilterWithModel()
+    {
+        $model  = $this->createModel();
+        $source = $this->obj;
+        $source->setModel($model);
+        $method = $this->getMethod($source, 'parseFilterWithModel');
+
+        /** 1. Use current locale for multilingual properties */
+        $exp1 = $this->createFilter([ 'property' => 'title', 'operator' => '=' ]);
+        $this->assertEquals('title', $exp1->property());
+
+        $result = $method->invoke($source, $exp1);
+        $this->assertSame($exp1, $result);
+        $this->assertEquals('title_en', $exp1->property());
+
+        /** 2. Force operator for multi-value properties */
+        $exp2 = $this->createFilter([ 'property' => 'roles', 'operator' => '=' ]);
+        $this->assertEquals('=', $exp2->operator());
+
+        $result = $method->invoke($source, $exp2);
+        $this->assertSame($exp2, $result);
+        $this->assertEquals('FIND_IN_SET', $exp2->operator());
+    }
+
+    /**
+     * Test the creation of a query filter expression.
+     *
+     * Assertions:
+     * 1. Instance of {@see ExpressionInterface}
+     * 2. Instance of {@see Filter}
+     *
+     * @covers \Charcoal\Source\AbstractSource::createFilter
+     */
+    public function testCreateFilter()
+    {
+        $result = $this->callMethodWith($this->obj, 'createFilter', [ 'name' => 'foo' ]);
+        $this->assertInstanceOf(Filter::class, $result);
+        $this->assertInstanceOf(ExpressionInterface::class, $result);
+        $this->assertEquals('foo', $result->name());
+    }
+
+    /**
+     * Test the addition of one query order expression (customized method).
+     *
+     * Assertions:
+     * 1. If a string is provided as the first argument,
+     *    an Expression object with a condition is returned
+     * 2. If a string is provided as the first argument
+     *    and a non-NULL value is provided as the second argument,
+     *    an Expression object sorting by field is returned
+     * 3. If an instance of {@see OrderInterface} is provided,
+     *    the Expression object is used as is.
+     * 4. If an array is provided with an options subset,
+     *    an Expression object with given data is returned
+     * 5. If a third argument is provided,
+     *    an Expression object with given extra data is returned
+     * 6. Chainable method
+     *
+     * @covers \Charcoal\Source\AbstractSource::addOrder
+     */
+    public function testAddOrder()
+    {
+        $obj = $this->obj;
+
+        /** 1. Condition */
+        $condition = '`foo` ASC';
+        $obj->reset()->addOrder($condition, null);
+        $result = $obj->orders();
+        $result = end($result);
+        $this->assertEquals($condition, $result->condition());
+
+        /** 2. Sort by field */
+        $field = 'foo';
+        $mode  = 'desc';
+        $obj->reset()->addOrder($field, $mode);
+        $result = $obj->orders();
+        $result = end($result);
+        $this->assertEquals($field, $result->property());
+        $this->assertEquals($mode, $result->mode());
+
+        /** 3. Expression */
+        $expr = $this->createOrder([ 'name' => 'foo' ]);
+        $obj->reset()->addOrder($expr);
+        $result = $obj->orders();
+        $result = end($result);
+        $this->assertSame($expr, $result);
+
+        /** 4. Structure with options subset */
+        $struct = [
+            'name'     => 'foo',
+            'options'  => [
+                'name' => 'bar'
+            ]
+        ];
+        $obj->reset()->addOrder($struct);
+        $result = $obj->orders();
+        $result = end($result);
+        $this->assertEquals('bar', $result->name());
+
+        /** 5. Expression with extra options */
+        $expr   = $this->createOrder([ 'name' => 'foo' ]);
+        $that   = $obj->reset()->addOrder($expr, null, [ 'name' => 'bar' ]);
+        $result = $obj->orders();
+        $result = end($result);
+        $this->assertEquals('bar', $result->name());
+
+        /** 6. Chainable */
+        $this->assertSame($obj, $that);
+    }
+
+    /**
+     * Test the post-processing of a query Order expression.
+     *
+     * Assertions:
+     * 1. If a multilingual property is defined for the expression,
+     *    the source will set the field name for the current locale.
+     *
+     * @covers \Charcoal\Source\AbstractSource::parseOrderWithModel
+     */
+    public function testParseOrderWithModel()
+    {
+        $model  = $this->createModel();
+        $source = $this->obj;
+        $source->setModel($model);
+        $method = $this->getMethod($source, 'parseOrderWithModel');
+
+        /** 1. Use current locale for multilingual properties */
+        $exp = $this->createOrder([ 'property' => 'title', 'direction' => 'ASC' ]);
+        $this->assertEquals('title', $exp->property());
+
+        $result = $method->invoke($source, $exp);
+        $this->assertSame($exp, $result);
+        $this->assertEquals('title_en', $exp->property());
+    }
+
+    /**
+     * Test the creation of a query sorting expression.
+     *
+     * Assertions:
+     * 1. Instance of {@see ExpressionInterface}
+     * 2. Instance of {@see Order}
+     *
+     * @covers \Charcoal\Source\AbstractSource::createOrder
+     */
+    public function testCreateOrder()
+    {
+        $result = $this->callMethodWith($this->obj, 'createOrder', [ 'name' => 'foo' ]);
+        $this->assertInstanceOf(Order::class, $result);
+        $this->assertInstanceOf(ExpressionInterface::class, $result);
+        $this->assertEquals('foo', $result->name());
+    }
+
+    /**
+     * Test pagination returns instance of {@see PaginationInterface}.
+     *
+     * Assertions:
+     * 1. Default state is NULL
+     * 2. Create paginator if state is NULL
+     *
+     * @covers \Charcoal\Source\AbstractSource::pagination
+     * @covers \Charcoal\Source\AbstractSource::hasPagination
+     */
+    public function testGetPagination()
+    {
+        /** 1. Default state is NULL */
+        $this->assertFalse($this->obj->hasPagination());
+
+        /** 2. Create paginator if state is NULL */
+        $result = $this->obj->pagination();
+        $this->assertTrue($this->obj->hasPagination());
+        $this->assertInstanceOf(Pagination::class, $result);
+    }
+
+    /**
+     * Test pagination assignment.
+     *
+     * Assertions:
+     * 1. Accepts instance of {@see PaginationInterface}
+     * 2. Replaces expression with a new instance
+     * 3. Accepts an array structure
+     * 4. Accepts up to two numeric arguments
+     * 5. Chainable method
+     *
+     * @covers \Charcoal\Source\AbstractSource::setPagination
+     */
     public function testSetPagination()
     {
-        $p = new Pagination();
         $obj = $this->obj;
 
-        $ret = $obj->setPagination($p);
-        $this->assertSame($ret, $obj);
-        $this->assertSame($p, $obj->pagination());
+        /** 1. Accepts instance of {@see PaginationInterface}. */
+        $exp1 = $this->createPagination([ 'name' => 'foo' ]);
+        $that = $obj->setPagination($exp1);
+        $this->assertSame($exp1, $obj->pagination());
 
-        $obj->setPagination(['page'=>3, 'num_per_page'=>120]);
-        $this->assertInstanceOf(Pagination::class, $obj->pagination());
+        /** 2. Replaces expression with a new instance. */
+        $exp2 = $this->createPagination([ 'name' => 'bar' ]);
+        $obj->setPagination($exp2);
+        $this->assertSame($exp2, $obj->pagination());
+
+        /** 3. Accepts an array structure */
+        $struct = [ 'page' => 3, 'num_per_page' => 10 ];
+        $obj->setPagination($struct);
+        $exp3 = $obj->pagination();
+        $this->assertInstanceOf(PaginationInterface::class, $exp3);
+        $this->assertArrayContains($struct, $exp3->data());
         $this->assertEquals(3, $obj->page());
-        $this->assertEquals(120, $obj->numPerPage());
+        $this->assertEquals(10, $obj->numPerPage());
 
-        $this->setExpectedException(InvalidArgumentException::class);
-        $obj->setPagination(false);
+        /** 4. Accepts up to two numeric arguments */
+        $obj->setPagination(5, 20);
+        $exp4 = $obj->pagination();
+        $this->assertInstanceOf(PaginationInterface::class, $exp4);
+        $this->assertEquals(5, $exp4->page());
+        $this->assertEquals(20, $exp4->numPerPage());
+
+        /** 5. Chainable */
+        $this->assertSame($obj, $that);
     }
 
-    public function testPaginationWithoutSetReturnsObject()
+    /**
+     * Test the failure when assigning an invalid pagination expression.
+     *
+     * @covers \Charcoal\Source\AbstractSource::setPagination
+     */
+    public function testProcessExpressionWithInvalidValue()
     {
-        $obj = $this->obj;
-        $p = $obj->pagination();
-        $this->assertInstanceOf(Pagination::class, $p);
+        $this->setExpectedException(InvalidArgumentException::class);
+        $this->obj->setPagination(false);
+    }
+
+    /**
+     * Test the creation of a query pagination expression.
+     *
+     * Assertions:
+     * 1. Instance of {@see ExpressionInterface}
+     * 2. Instance of {@see PaginationInterface}
+     *
+     * @covers \Charcoal\Source\AbstractSource::createPagination
+     */
+    public function testCreatePagination()
+    {
+        $result = $this->callMethodWith($this->obj, 'createPagination', [ 'name' => 'foo' ]);
+        $this->assertInstanceOf(Pagination::class, $result);
+        $this->assertInstanceOf(ExpressionInterface::class, $result);
+        $this->assertEquals('foo', $result->name());
     }
 
     public function testSetPage()
     {
         $obj = $this->obj;
-        $this->assertEquals(0, $obj->page());
+        $this->assertEquals(1, $obj->page());
+
         $ret = $obj->setPage(42);
         $this->assertSame($ret, $obj);
         $this->assertEquals(42, $obj->page());
@@ -298,7 +624,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
     public function testNumPerPage()
     {
         $obj = $this->obj;
-        $this->assertEquals(Pagination::DEFAULT_NUM_PER_PAGE, $obj->numPerPage());
+        $this->assertEquals(Pagination::DEFAULT_COUNT, $obj->numPerPage());
         $ret = $obj->setNumPerPage(666);
         $this->assertSame($ret, $obj);
         $this->assertEquals(666, $obj->numPerPage());
@@ -310,48 +636,114 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
     public function testCreateConfig()
     {
         $obj = $this->obj;
-        $config = $obj->createConfig(['type'=>'foo']);
-        $this->assertInstanceOf('\Charcoal\Source\SourceConfig', $config);
+        $config = $obj->createConfig([ 'type' => 'foo' ]);
+        $this->assertInstanceOf(SourceConfig::class, $config);
         $this->assertEquals('foo', $config->type());
     }
 
-    public function getFilter1()
+    /**
+     * Test camelization.
+     *
+     * @covers \Charcoal\Source\AbstractSource::camelize
+     * @covers \Charcoal\Source\AbstractSource::getter
+     * @covers \Charcoal\Source\AbstractSource::setter
+     */
+    public function testCamelize()
     {
-        $filter1 = new Filter();
-        $filter1->setData([
-            'property'=>'foo',
-            'operator'=>'=',
-            'val'=>42
-        ]);
-        return $filter1;
+        $obj = $this->obj;
+
+        $getter = $this->getMethod($obj, 'getter');
+        $setter = $this->getMethod($obj, 'setter');
+
+        $this->assertEquals('charcoalPhp',    $getter->invoke($obj, 'charcoal_php'));
+        $this->assertEquals('setCharcoalPhp', $setter->invoke($obj, 'charcoal_php'));
     }
 
-    public function getFilter2()
+    /**
+     * Create a query filter expression, for testing.
+     *
+     * @param  array $data Optional expression data.
+     * @return Filter
+     */
+    final public function createFilter(array $data = null)
     {
-        $filter2 = new Filter();
-        $filter2->setData([
-            'property'=>'bar',
-            'operator'=>'>',
-            'val'=>666
-        ]);
-        return $filter2;
+        $expr = new Filter();
+        if ($data !== null) {
+            $expr->setData($data);
+        }
+        return $expr;
     }
 
-    public function getOrder1()
+    /**
+     * Create query sorting expression, for testing.
+     *
+     * @param  array $data Optional expression data.
+     * @return Order
+     */
+    final public function createOrder(array $data = null)
     {
-        $order1 = new Order();
-        $order1->setData([
-            'mode'=>'asc'
-        ]);
-        return $order1;
+        $expr = new Order();
+        if ($data !== null) {
+            $expr->setData($data);
+        }
+        return $expr;
     }
 
-    public function getOrder2()
+    /**
+     * Create query pagination expression, for testing.
+     *
+     * @param  array $data Optional expression data.
+     * @return Pagination
+     */
+    final public function createPagination(array $data = null)
     {
-        $order2 = new Order();
-        $order2->setData([
-            'mode'=>'desc'
-        ]);
-        return $order2;
+        $expr = new Pagination();
+        if ($data !== null) {
+            $expr->setData($data);
+        }
+        return $expr;
+    }
+
+    /**
+     * Create a new model instance.
+     *
+     * @return Model
+     */
+    final protected function createModel()
+    {
+        $container = $this->getContainer();
+
+        $obj = $container['model/factory']->create(Model::class);
+        $obj->setMetadata($this->getModelMetadata());
+
+        return $obj;
+    }
+
+    /**
+     * Retrieve the model's mock metadata.
+     *
+     * @return array
+     */
+    final protected function getModelMetadata()
+    {
+        return [
+            'properties' => [
+                'id' => [
+                    'type' => 'id'
+                ],
+                'name' => [
+                    'type' => 'string'
+                ],
+                'title' => [
+                    'type' => 'string',
+                    'l10n' => true
+                ],
+                'roles' => [
+                    'type'     => 'string',
+                    'multiple' => true
+                ]
+            ],
+            'key' => 'id'
+        ];
     }
 }

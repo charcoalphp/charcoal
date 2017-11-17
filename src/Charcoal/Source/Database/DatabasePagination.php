@@ -2,32 +2,68 @@
 
 namespace Charcoal\Source\Database;
 
+use UnexpectedValueException;
+
 // From 'charcoal-core'
+use Charcoal\Source\Database\DatabaseExpressionInterface;
 use Charcoal\Source\Pagination;
 
 /**
- * The DatabasePagination makes a Pagination SQL-aware
+ * SQL Pagination Clause
  */
-class DatabasePagination extends Pagination
+class DatabasePagination extends Pagination implements
+    DatabaseExpressionInterface
 {
     /**
-     * Get the pagination's SQL string (Full "LIMIT" subquery)
+     * Converts the pagination into a SQL expression for the LIMIT clause.
      *
-     * For example, for the pagination `{page:3,num_per_page:50}` the result
-     * would be: `' LIMIT 100, 50'`.
-     *
-     * @return string
+     * @return string A SQL string fragment.
      */
     public function sql()
     {
-        $sql = '';
-        $page = $this->page() ? $this->page() : 1;
-        $numPerPage = $this->numPerPage();
-
-        if ($numPerPage) {
-            $first_page = max(0, (($page-1)*$numPerPage));
-            $sql = ' LIMIT '.$first_page.', '.$numPerPage;
+        if ($this->active() && $this->hasLimit()) {
+            $limit  = $this->limit();
+            $offset = $this->offset();
+            return 'LIMIT '.$offset.', '.$limit;
         }
-        return $sql;
+
+        return '';
+    }
+
+    /**
+     * Determine if the expression has a number per page.
+     *
+     * @return boolean
+     */
+    public function hasLimit()
+    {
+        return ($this->limit() > 0);
+    }
+
+    /**
+     * Alias of {@see self::numPerPage()}
+     *
+     * @return integer
+     */
+    public function limit()
+    {
+        return $this->numPerPage();
+    }
+
+    /**
+     * Retrieve the offset from the page number and count.
+     *
+     * @return integer
+     */
+    public function offset()
+    {
+        $page   = $this->page();
+        $limit  = $this->numPerPage();
+        $offset = (($page - 1) * $limit);
+        if (PHP_INT_MAX <= $offset) {
+            $offset = PHP_INT_MAX;
+        }
+
+        return max(0, $offset);
     }
 }

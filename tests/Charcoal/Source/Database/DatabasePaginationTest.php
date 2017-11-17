@@ -2,55 +2,106 @@
 
 namespace Charcoal\Tests\Source\Database;
 
+use UnexpectedValueException;
+
 // From 'charcoal-core'
 use Charcoal\Source\Database\DatabasePagination;
 
+use Charcoal\Tests\ReflectionsTrait;
+use Charcoal\Tests\Source\DatabaseExpressionTestTrait;
+
 /**
- *
+ * Test {@see DatabasePagination}.
  */
 class DatabasePaginationTest extends \PHPUnit_Framework_TestCase
 {
-    public function testSQLEmptyWithoutPage()
+    use DatabaseExpressionTestTrait;
+    use ReflectionsTrait;
+
+    /**
+     * Create expression for testing.
+     *
+     * @return DatabasePagination
+     */
+    final protected function createExpression()
     {
-        $obj = new DatabasePagination();
-        $sql = $obj->sql();
-
-        $this->assertEquals('', $sql);
-
-        $obj = new DatabasePagination();
-        $obj->setNumPerPage(20);
-        $sql = $obj->sql();
-
-        $this->assertEquals(' LIMIT 0, 20', $sql);
-
-        $obj = new DatabasePagination();
-        $obj->setPage(1);
-        $sql = $obj->sql();
-
-        $this->assertEquals('', $sql);
+        return new DatabasePagination();
     }
 
-    public function testSQL()
+    /**
+     * Test influence of "active" property on SQL compilation.
+     */
+    public function testInactiveExpression()
     {
-        $obj = new DatabasePagination();
+        $obj = $this->createExpression();
+        $obj->setNumPerPage(10);
+
+        $obj->setActive(true);
+        $this->assertEquals('LIMIT 0, 10', $obj->sql());
+
+        $obj->setActive(false);
+        $this->assertEquals('', $obj->sql());
+    }
+
+    /**
+     * Test "page" property without "num_per_page".
+     */
+    public function testSqlOffsetWithoutLimit()
+    {
+        $obj = $this->createExpression();
+
         $obj->setPage(1);
-        $obj->setNumPerPage(20);
-        $sql = $obj->sql();
+        $this->assertEquals('', $obj->sql());
 
-        $this->assertEquals(' LIMIT 0, 20', $sql);
-
-        $obj = new DatabasePagination();
-        $obj->setPage(2);
-        $obj->setNumPerPage(25);
-        $sql = $obj->sql();
-
-        $this->assertEquals(' LIMIT 25, 25', $sql);
-
-        $obj = new DatabasePagination();
         $obj->setPage(5);
-        $obj->setNumPerPage(50);
-        $sql = $obj->sql();
+        $this->assertEquals('', $obj->sql());
+    }
 
-        $this->assertEquals(' LIMIT 200, 50', $sql);
+    /**
+     * Test "page" property with "num_per_page".
+     */
+    public function testSqlOffsetWithLimit()
+    {
+        $obj = $this->createExpression();
+
+        $obj->setNumPerPage(12);
+        $this->assertEquals('LIMIT 0, 12', $obj->sql());
+
+        $obj->setPage(2);
+        $this->assertEquals('LIMIT 12, 12', $obj->sql());
+
+        $obj->setPage(5);
+        $this->assertEquals('LIMIT 48, 12', $obj->sql());
+    }
+
+    /**
+     * Test "num_per_page" property without "page".
+     */
+    public function testSqlLimitWithoutOffset()
+    {
+        $obj = $this->createExpression();
+
+        $obj->setNumPerPage(1);
+        $this->assertEquals('LIMIT 0, 1', $obj->sql());
+
+        $obj->setNumPerPage(12);
+        $this->assertEquals('LIMIT 0, 12', $obj->sql());
+    }
+
+    /**
+     * Test helper methods.
+     */
+    public function testUtilities()
+    {
+        $obj = $this->createExpression();
+
+        $obj->setPage(3);
+        $obj->setNumPerPage(12);
+
+        $this->assertEquals(12, $obj->limit());
+        $this->assertEquals(24, $obj->offset());
+
+        $obj->setNumPerPage(PHP_INT_MAX);
+        $this->assertEquals(PHP_INT_MAX, $obj->offset());
     }
 }

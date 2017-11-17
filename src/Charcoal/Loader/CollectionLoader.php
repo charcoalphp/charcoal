@@ -19,6 +19,9 @@ use Charcoal\Factory\FactoryInterface;
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
 use Charcoal\Model\Collection;
+use Charcoal\Source\FilterInterface;
+use Charcoal\Source\OrderInterface;
+use Charcoal\Source\PaginationInterface;
 use Charcoal\Source\SourceInterface;
 
 /**
@@ -101,8 +104,8 @@ class CollectionLoader implements LoggerAwareInterface
     /**
      * Set an object model factory.
      *
-     * @param FactoryInterface $factory The model factory, to create objects.
-     * @return CollectionLoader Chainable
+     * @param  FactoryInterface $factory The model factory, to create objects.
+     * @return self
      */
     public function setFactory(FactoryInterface $factory)
     {
@@ -129,17 +132,16 @@ class CollectionLoader implements LoggerAwareInterface
     }
 
     /**
-     * Set the loader data.
+     * Set the loader settings.
      *
      * @param  array $data Data to assign to the loader.
-     * @return CollectionLoader Chainable
+     * @return self
      */
     public function setData(array $data)
     {
         foreach ($data as $key => $val) {
             $setter = $this->setter($key);
-
-            if (is_callable([$this, $setter])) {
+            if (is_callable([ $this, $setter ])) {
                 $this->{$setter}($val);
             } else {
                 $this->{$key} = $val;
@@ -153,7 +155,7 @@ class CollectionLoader implements LoggerAwareInterface
      * Retrieve the source to load objects from.
      *
      * @throws RuntimeException If no source has been defined.
-     * @return mixed
+     * @return SourceInterface
      */
     public function source()
     {
@@ -168,7 +170,7 @@ class CollectionLoader implements LoggerAwareInterface
      * Set the source to load objects from.
      *
      * @param  SourceInterface $source A data source.
-     * @return CollectionLoader Chainable
+     * @return self
      */
     public function setSource(SourceInterface $source)
     {
@@ -182,7 +184,7 @@ class CollectionLoader implements LoggerAwareInterface
     /**
      * Reset everything but the model.
      *
-     * @return CollectionLoader Chainable
+     * @return self
      */
     public function reset()
     {
@@ -200,7 +202,7 @@ class CollectionLoader implements LoggerAwareInterface
      * Retrieve the object model.
      *
      * @throws RuntimeException If no model has been defined.
-     * @return Model
+     * @return ModelInterface
      */
     public function model()
     {
@@ -226,7 +228,7 @@ class CollectionLoader implements LoggerAwareInterface
      *
      * @param  string|ModelInterface $model An object model.
      * @throws InvalidArgumentException If the given argument is not a model.
-     * @return CollectionLoader CHainable
+     * @return self
      */
     public function setModel($model)
     {
@@ -251,9 +253,9 @@ class CollectionLoader implements LoggerAwareInterface
     }
 
     /**
-     * @param string $field The field to use for dynamic object type.
+     * @param  string $field The field to use for dynamic object type.
      * @throws InvalidArgumentException If the field is not a string.
-     * @return CollectionLoader Chainable
+     * @return self
      */
     public function setDynamicTypeField($field)
     {
@@ -282,7 +284,7 @@ class CollectionLoader implements LoggerAwareInterface
      * Alias of {@see SourceInterface::setProperties()}
      *
      * @param  array $properties An array of property identifiers.
-     * @return CollectionLoader Chainable
+     * @return self
      */
     public function setProperties(array $properties)
     {
@@ -295,7 +297,7 @@ class CollectionLoader implements LoggerAwareInterface
      * Alias of {@see SourceInterface::addProperty()}
      *
      * @param  string $property A property identifier.
-     * @return CollectionLoader Chainable
+     * @return self
      */
     public function addProperty($property)
     {
@@ -308,13 +310,14 @@ class CollectionLoader implements LoggerAwareInterface
      * Set "search" keywords to filter multiple properties.
      *
      * @param  array $keywords An array of keywords and properties.
-     * @return CollectionLoader Chainable
+     *     Expected format: `[ "search query", [ "field names…" ] ]`.
+     * @return self
      */
     public function setKeywords(array $keywords)
     {
-        foreach ($keywords as $k) {
-            $keyword = $k[0];
-            $properties = (isset($k[1]) ? $k[1] : null);
+        foreach ($keywords as $query) {
+            $keyword    = $query[0];
+            $properties = (isset($query[1]) ? (array)$query[1] : null);
             $this->addKeyword($keyword, $properties);
         }
 
@@ -325,12 +328,12 @@ class CollectionLoader implements LoggerAwareInterface
      * Add a "search" keyword filter to multiple properties.
      *
      * @param  string $keyword    A value to match among $properties.
-     * @param  array  $properties An array of property identifiers.
-     * @return CollectionLoader Chainable
+     * @param  array  $properties One or more of properties to search amongst.
+     * @return self
      */
     public function addKeyword($keyword, array $properties = null)
     {
-        if (!is_array($properties) || empty($properties)) {
+        if ($properties === null) {
             $properties = [];
         }
 
@@ -338,8 +341,8 @@ class CollectionLoader implements LoggerAwareInterface
             $val = ('%'.$keyword.'%');
             $this->addFilter([
                 'property' => $propertyIdent,
-                'val'      => $val,
                 'operator' => 'LIKE',
+                'value'    => $val,
                 'operand'  => 'OR'
             ]);
         }
@@ -350,7 +353,7 @@ class CollectionLoader implements LoggerAwareInterface
     /**
      * Alias of {@see SourceInterface::filters()}
      *
-     * @return array
+     * @return FilterInterface[]
      */
     public function filters()
     {
@@ -361,12 +364,11 @@ class CollectionLoader implements LoggerAwareInterface
      * Alias of {@see SourceInterface::setFilters()}
      *
      * @param  array $filters An array of filters.
-     * @return Collection Chainable
+     * @return self
      */
     public function setFilters(array $filters)
     {
         $this->source()->setFilters($filters);
-
         return $this;
     }
 
@@ -374,36 +376,37 @@ class CollectionLoader implements LoggerAwareInterface
      * Alias of {@see SourceInterface::addFilters()}
      *
      * @param  array $filters An array of filters.
-     * @return Collection Chainable
+     * @return self
      */
     public function addFilters(array $filters)
     {
         foreach ($filters as $f) {
             $this->addFilter($f);
         }
-
         return $this;
     }
 
     /**
      * Alias of {@see SourceInterface::addFilter()}
      *
-     * @param  string|array|Filter $param   A property identifier, filter array, or Filter object.
-     * @param  mixed               $val     Optional. The value to match. Only used if the first argument is a string.
-     * @param  array               $options Optional. Filter options. Only used if the first argument is a string.
-     * @return CollectionLoader Chainable
+     * @param  mixed $param   The property to filter by,
+     *     a {@see FilterInterface} object,
+     *     or a filter array structure.
+     * @param  mixed $value   Optional value for the property to compare against.
+     *     Only used if the first argument is a string.
+     * @param  array $options Optional extra settings to apply on the filter.
+     * @return self
      */
-    public function addFilter($param, $val = null, array $options = null)
+    public function addFilter($param, $value = null, array $options = null)
     {
-        $this->source()->addFilter($param, $val, $options);
-
+        $this->source()->addFilter($param, $value, $options);
         return $this;
     }
 
     /**
      * Alias of {@see SourceInterface::orders()}
      *
-     * @return array
+     * @return OrderInterface[]
      */
     public function orders()
     {
@@ -414,12 +417,11 @@ class CollectionLoader implements LoggerAwareInterface
      * Alias of {@see SourceInterface::setOrders()}
      *
      * @param  array $orders An array of orders.
-     * @return CollectionLoader Chainable
+     * @return self
      */
     public function setOrders(array $orders)
     {
         $this->source()->setOrders($orders);
-
         return $this;
     }
 
@@ -427,36 +429,37 @@ class CollectionLoader implements LoggerAwareInterface
      * Alias of {@see SourceInterface::addOrders()}
      *
      * @param  array $orders An array of orders.
-     * @return Collection Chainable
+     * @return self
      */
     public function addOrders(array $orders)
     {
         foreach ($orders as $o) {
             $this->addOrder($o);
         }
-
         return $this;
     }
 
     /**
      * Alias of {@see SourceInterface::addOrder()}
      *
-     * @param  string|array|Order $param        A property identifier, order array, or Order object.
-     * @param  string             $mode         Optional. Sort order. Only used if the first argument is a string.
-     * @param  array              $orderOptions Optional. Filter options. Only used if the first argument is a string.
-     * @return CollectionLoader Chainable
+     * @param  mixed  $param   The property to sort by,
+     *     a {@see OrderInterface} object,
+     *     or a order array structure.
+     * @param  string $mode    Optional sorting mode.
+     *     Defaults to ascending if a property is provided.
+     * @param  array  $options Optional extra settings to apply on the order.
+     * @return self
      */
-    public function addOrder($param, $mode = 'asc', array $orderOptions = null)
+    public function addOrder($param, $mode = 'asc', array $options = null)
     {
-        $this->source()->addOrder($param, $mode, $orderOptions);
-
+        $this->source()->addOrder($param, $mode, $options);
         return $this;
     }
 
     /**
      * Alias of {@see SourceInterface::pagination()}
      *
-     * @return Pagination
+     * @return PaginationInterface
      */
     public function pagination()
     {
@@ -467,7 +470,7 @@ class CollectionLoader implements LoggerAwareInterface
      * Alias of {@see SourceInterface::setPagination()}
      *
      * @param  mixed $param An associative array of pagination settings.
-     * @return CollectionLoader Chainable
+     * @return self
      */
     public function setPagination($param)
     {
@@ -490,7 +493,7 @@ class CollectionLoader implements LoggerAwareInterface
      * Alias of {@see PaginationInterface::pagination()}
      *
      * @param  integer $page A page number.
-     * @return CollectionLoader Chainable
+     * @return self
      */
     public function setPage($page)
     {
@@ -513,7 +516,7 @@ class CollectionLoader implements LoggerAwareInterface
      * Alias of {@see PaginationInterface::setNumPerPage()}
      *
      * @param  integer $num The number of items to display per page.
-     * @return CollectionLoader Chainable
+     * @return self
      */
     public function setNumPerPage($num)
     {
@@ -525,8 +528,8 @@ class CollectionLoader implements LoggerAwareInterface
     /**
      * Set the callback routine applied to every object added to the collection.
      *
-     * @param callable $callback The callback routine.
-     * @return CollectionLoader Chainable
+     * @param  callable $callback The callback routine.
+     * @return self
      */
     public function setCallback(callable $callback)
     {
@@ -741,7 +744,7 @@ class CollectionLoader implements LoggerAwareInterface
      *
      * @param  string $className The class name of the collection.
      * @throws InvalidArgumentException If the class name is not a string.
-     * @return AbstractPropertyDisplay Chainable
+     * @return self
      */
     public function setCollectionClass($className)
     {
@@ -769,7 +772,7 @@ class CollectionLoader implements LoggerAwareInterface
     /**
      * Allow an object to define how the key getter are called.
      *
-     * @param string $key The key to get the getter from.
+     * @param  string $key The key to get the getter from.
      * @return string The getter method name, for a given key.
      */
     protected function getter($key)
@@ -781,7 +784,7 @@ class CollectionLoader implements LoggerAwareInterface
     /**
      * Allow an object to define how the key setter are called.
      *
-     * @param string $key The key to get the setter from.
+     * @param  string $key The key to get the setter from.
      * @return string The setter method name, for a given key.
      */
     protected function setter($key)
@@ -793,7 +796,7 @@ class CollectionLoader implements LoggerAwareInterface
     /**
      * Transform a snake_case string to camelCase.
      *
-     * @param string $str The snake_case string to camelize.
+     * @param  string $str The snake_case string to camelize.
      * @return string The camelcase'd string.
      */
     protected function camelize($str)

@@ -396,40 +396,6 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-     * Save the object's current state to storage.
-     *
-     * Overrides default StorableTrait save() method to also save properties.
-     *
-     * @see    Charcoal\Source\StorableTrait::save() For the "create" event.
-     * @return boolean
-     * @todo   Enable model validation.
-     */
-    public function save()
-    {
-        $pre = $this->preSave();
-        if ($pre === false) {
-            return false;
-        }
-
-        // Disabled: Invalid models can not be saved.
-        if (!!false) {
-            $valid = $this->validate();
-            if ($valid === false) {
-                return false;
-            }
-        }
-
-        $ret = $this->source()->saveItem($this);
-        if ($ret === false) {
-            return false;
-        } else {
-            $this->setId($ret);
-        }
-        $this->postSave();
-        return $ret;
-    }
-
-    /**
      * StorableTrait > preSave(). Save hook called before saving the model.
      *
      * @return boolean

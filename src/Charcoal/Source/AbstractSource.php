@@ -13,6 +13,9 @@ use Psr\Log\LoggerAwareTrait;
 use Charcoal\Config\ConfigurableInterface;
 use Charcoal\Config\ConfigurableTrait;
 
+// From 'charcoal-property'
+use Charcoal\Property\PropertyInterface;
+
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
 
@@ -20,13 +23,15 @@ use Charcoal\Source\SourceConfig;
 use Charcoal\Source\SourceInterface;
 use Charcoal\Source\Filter;
 use Charcoal\Source\FilterInterface;
+use Charcoal\Source\FilterCollectionTrait;
 use Charcoal\Source\Order;
 use Charcoal\Source\OrderInterface;
+use Charcoal\Source\OrderCollectionTrait;
 use Charcoal\Source\Pagination;
 use Charcoal\Source\PaginationInterface;
 
 /**
- * Full implementation, as abstract class, of the SourceInterface.
+ * Data Storage Source Handler.
  */
 abstract class AbstractSource implements
     SourceInterface,
@@ -35,48 +40,50 @@ abstract class AbstractSource implements
 {
     use ConfigurableTrait;
     use LoggerAwareTrait;
+    use FilterCollectionTrait {
+        FilterCollectionTrait::addFilter as pushFilter;
+    }
+    use OrderCollectionTrait {
+        OrderCollectionTrait::addOrder as pushOrder;
+    }
 
     /**
-     * @var ModelInterface $model
+     * The related model.
+     *
+     * @var ModelInterface
      */
-    private $model = null;
+    private $model;
 
     /**
-     * @var array $properties
+     * The {@see self::$model}'s properties.
+     *
+     * Stored as an associative array to maintain uniqueness.
+     *
+     * @var array<string,boolean>
      */
     private $properties = [];
 
     /**
-     * Array of `Filter` objects
-     * @var array $filters
+     * Store the source query pagination.
+     *
+     * @var PaginationInterface
      */
-    protected $filters = [];
+    protected $pagination;
 
     /**
-     * Array of `Order` object
-     * @var array $orders
+     * Create a new source handler.
+     *
+     * @param array $data Class dependencies.
      */
-    protected $orders = [];
-
-    /**
-     * The `Pagination` object
-     * @var Pagination|null $pagination
-     */
-    protected $pagination = null;
-
-    /**
-     * @param array|\ArrayAccess $dependencies The class dependencies.
-     * @return void
-     */
-    public function __construct($dependencies)
+    public function __construct(array $data)
     {
-        $this->setLogger($dependencies['logger']);
+        $this->setLogger($data['logger']);
     }
 
     /**
      * Reset everything but the model.
      *
-     * @return AbstractSource Chainable
+     * @return self
      */
     public function reset()
     {
@@ -89,35 +96,45 @@ abstract class AbstractSource implements
     }
 
     /**
-     * Initialize the source's properties with an array of data.
+     * Set the source's settings.
      *
-     * @param array $data The source data.
-     * @return AbstractSource Chainable
+     * @param  array $data Data to assign to the source.
+     * @return self
      */
     public function setData(array $data)
     {
-        foreach ($data as $prop => $val) {
-            $func = [$this, $this->setter($prop)];
-            if (is_callable($func)) {
-                call_user_func($func, $val);
-                unset($data[$prop]);
+        foreach ($data as $key => $val) {
+            $setter = $this->setter($key);
+            if (is_callable([ $this, $setter ])) {
+                $this->{$setter}($val);
             } else {
-                $this->{$prop} = $val;
+                $this->{$key} = $val;
             }
         }
+
         return $this;
     }
 
     /**
      * Set the source's Model.
      *
-     * @param ModelInterface $model The source's model.
-     * @return AbstractSource Chainable
+     * @param  ModelInterface $model The source's model.
+     * @return self
      */
     public function setModel(ModelInterface $model)
     {
         $this->model = $model;
         return $this;
+    }
+
+    /**
+     * Determine if a model is assigned.
+     *
+     * @return boolean
+     */
+    public function hasModel()
+    {
+        return !empty($this->model);
     }
 
     /**
@@ -130,55 +147,106 @@ abstract class AbstractSource implements
     {
         if ($this->model === null) {
             throw new RuntimeException(
-                'No model set.'
+                'Model was not set.'
             );
         }
         return $this->model;
     }
 
     /**
-     * @return boolean
-     */
-    public function hasModel()
-    {
-        return ($this->model !== null);
-    }
-
-    /**
      * Set the properties of the source to fetch.
      *
-     * This method accepts an array of property identifiers (property ident, as string)
+     * This method accepts an array of property identifiers
      * that will, if supported, be fetched from the source.
      *
-     * If no properties are set, it is assumed that all the Model's properties are to be fetched.
+     * If no properties are set, it is assumed that
+     * all model propertiesare to be fetched.
      *
-     * @param array $properties The properties.
-     * @return ColelectionLoader Chainable
+     * @param  (string|PropertyInterface)[] $properties One or more property keys to set.
+     * @return self
      */
     public function setProperties(array $properties)
     {
         $this->properties = [];
-        foreach ($properties as $p) {
-            $this->addProperty($p);
-        }
+        $this->addProperties($properties);
+
         return $this;
     }
 
     /**
-     * @return array
+     * Determine if the source has any properties to fetch.
+     *
+     * @return boolean TRUE if properties are defined, otherwise FALSE.
      */
-    public function properties()
+    public function hasProperties()
     {
-        return $this->properties;
+        return !empty($this->properties);
     }
 
     /**
-     * @param string $property Property ident.
-     * @throws InvalidArgumentException If property is not a string or empty.
-     * @return SourceInterface Chainable
+     * Get the properties of the source to fetch.
+     *
+     * @return string[]
+     */
+    public function properties()
+    {
+        return array_keys($this->properties);
+    }
+
+    /**
+     * Add properties of the source to fetch.
+     *
+     * @param  (string|PropertyInterface)[] $properties One or more property keys to append.
+     * @return self
+     */
+    public function addProperties(array $properties)
+    {
+        foreach ($properties as $property) {
+            $this->addProperty($property);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Add a property of the source to fetch.
+     *
+     * @param  string|PropertyInterface $property A property key to append.
+     * @return self
      */
     public function addProperty($property)
     {
+        $property = $this->resolvePropertyName($property);
+        $this->properties[$property] = true;
+        return $this;
+    }
+
+    /**
+     * Remove a property of the source to fetch.
+     *
+     * @param  string|PropertyInterface $property A property key.
+     * @return self
+     */
+    public function removeProperty($property)
+    {
+        $property = $this->resolvePropertyName($property);
+        unset($this->properties[$property]);
+        return $this;
+    }
+
+    /**
+     * Resolve the name for the given property, throws an Exception if not.
+     *
+     * @param  mixed $property Property to resolve.
+     * @throws InvalidArgumentException If property is not a string, empty, or invalid.
+     * @return string The property name.
+     */
+    protected function resolvePropertyName($property)
+    {
+        if ($property instanceof PropertyInterface) {
+            $property = $property->ident();
+        }
+
         if (!is_string($property)) {
             throw new InvalidArgumentException(
                 'Property must be a string.'
@@ -191,222 +259,224 @@ abstract class AbstractSource implements
             );
         }
 
-        $this->properties[] = $property;
-        return $this;
+        return $property;
     }
 
     /**
-     * @param array $filters The filters to set.
-     * @return SourceInterface Chainable
-     */
-    public function setFilters(array $filters)
-    {
-        $this->filters = [];
-        foreach ($filters as $f) {
-            $this->addFilter($f);
-        }
-        return $this;
-    }
-
-    /**
-     * @param array $filters The filters to add.
-     * @return SourceInterface Chainable
-     */
-    public function addFilters(array $filters)
-    {
-        foreach ($filters as $f) {
-            $this->addFilter($f);
-        }
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function filters()
-    {
-        return $this->filters;
-    }
-
-    /**
-     * Add a collection filter to the loader.
+     * Append a query filter on the source.
      *
      * There are 3 different ways of adding a filter:
      * - as a `Filter` object, in which case it will be added directly.
      *   - `addFilter($obj);`
      * - as an array of options, which will be used to build the `Filter` object
-     *   - `addFilter(['property' => 'foo', 'val' => 42, 'operator' => '<=']);`
-     * - as 3 parameters: `property`, `val` and `options`
+     *   - `addFilter(['property' => 'foo', 'value' => 42, 'operator' => '<=']);`
+     * - as 3 parameters: `property`, `value` and `options`
      *   - `addFilter('foo', 42, ['operator' => '<=']);`
      *
-     * @param string|array|Filter $param   The filter property, or a Filter object / array.
-     * @param mixed               $val     Optional: Only used if the first argument is a string.
-     * @param array               $options Optional: Only used if the first argument is a string.
-     * @throws InvalidArgumentException If property is not a string or empty.
-     * @return SourceInterface (Chainable)
+     * @deprecated 0.3 To be replaced with FilterCollectionTrait::addFilter()
+     *
+     * @uses   self::parseFilterWithModel()
+     * @uses   FilterCollectionTrait::processFilter()
+     * @param  mixed $param   The property to filter by,
+     *     a {@see FilterInterface} object,
+     *     or a filter array structure.
+     * @param  mixed $value   Optional value for the property to compare against.
+     *     Only used if the first argument is a string.
+     * @param  array $options Optional extra settings to apply on the filter.
+     * @throws InvalidArgumentException If the $param argument is invalid.
+     * @return self
      */
-    public function addFilter($param, $val = null, array $options = null)
+    public function addFilter($param, $value = null, array $options = null)
     {
-        if ($param instanceof FilterInterface) {
-            $filter = $param;
-        } elseif (is_array($param)) {
-            $filter = $this->createFilter();
-            $filter->setData($param);
-        } elseif (is_string($param) && $val !== null) {
-            $filter = $this->createFilter();
-            $filter->setProperty($param);
-            $filter->setVal($val);
-            if (is_array($options)) {
-                $filter->setData($options);
-            }
+        if (is_string($param) && $value !== null) {
+            $expr = $this->createFilter();
+            $expr->setProperty($param);
+            $expr->setValue($value);
         } else {
-            throw new InvalidArgumentException(
-                'Parameter must be an array or a property ident.'
-            );
+            $expr = $param;
         }
 
-        if ($this->hasModel()) {
-            $property = $filter->property();
-            if ($property) {
-                $p = $this->model()->p($property);
-                if ($p) {
-                    if ($p->l10n()) {
-                        $filter->setProperty($p->l10nIdent());
-                    }
+        $expr = $this->processFilter($expr);
 
-                    if ($p->multiple()) {
-                        $filter->setOperator('FIND_IN_SET');
-                    }
-                }
-            }
+        /** @deprecated 0.3 */
+        if (is_array($param) && isset($param['options'])) {
+            $expr->setData($param['options']);
         }
 
-        $this->filters[] = $filter;
+        if (is_array($options)) {
+            $expr->setData($options);
+        }
 
+        $this->filters[] = $this->parseFilterWithModel($expr);
         return $this;
     }
 
     /**
-     * @return FilterInterface
+     * Process a query filter with the current model.
+     *
+     * @param  FilterInterface $filter The expression object.
+     * @return FilterInterface The parsed expression object.
      */
-    protected function createFilter()
+    protected function parseFilterWithModel(FilterInterface $filter)
     {
-        $filter = new Filter();
+        if ($this->hasModel() && $filter->hasProperty()) {
+            $model    = $this->model();
+            $property = $filter->property();
+            if (is_string($property) && $model->hasProperty($property)) {
+                $property = $model->property($property);
+
+                if ($property->l10n()) {
+                    $filter->setProperty($property->l10nIdent());
+                }
+
+                if ($property->multiple()) {
+                    $filter->setOperator('FIND_IN_SET');
+                }
+            }
+        }
+
         return $filter;
     }
 
     /**
-     * @param array $orders The orders to set.
-     * @return AbstractSource Chainable
+     * Create a new query filter expression.
+     *
+     * @see    FilterCollectionTrait::createFilter()
+     * @param  array $data Optional expression data.
+     * @return FilterInterface A new filter expression object.
      */
-    public function setOrders(array $orders)
+    protected function createFilter(array $data = null)
     {
-        $this->orders = [];
-        foreach ($orders as $o) {
-            $this->addOrder($o);
+        $filter = new Filter();
+        if ($data !== null) {
+            $filter->setData($data);
         }
-        return $this;
+        return $filter;
     }
 
     /**
-     * @param array $orders The orders to add.
-     * @return AbstractSource Chainable
+     * Append a query order on the source.
+     *
+     * @deprecated 0.3 To be replaced with OrderCollectionTrait::addOrder()
+     *
+     * @uses   self::parseOrderWithModel()
+     * @uses   OrderCollectionTrait::processOrder()
+     * @param  mixed  $param   The property to sort by,
+     *     a {@see OrderInterface} object,
+     *     or a order array structure.
+     * @param  string $mode    Optional sorting mode.
+     *     Defaults to ascending if a property is provided.
+     * @param  array  $options Optional extra settings to apply on the order.
+     * @throws InvalidArgumentException If the $param argument is invalid.
+     * @return self
      */
-    public function addOrders(array $orders)
+    public function addOrder($param, $mode = 'asc', array $options = null)
     {
-        foreach ($orders as $o) {
-            $this->addOrder($o);
-        }
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function orders()
-    {
-        return $this->orders;
-    }
-
-    /**
-     * @param string|array|Order $param        The order property, or an Order object / array.
-     * @param string             $mode         Optional.
-     * @param array              $orderOptions Optional.
-     * @throws InvalidArgumentException If the param argument is invalid.
-     * @return SourceInterface Chainable
-     */
-    public function addOrder($param, $mode = 'asc', array $orderOptions = null)
-    {
-        if ($param instanceof OrderInterface) {
-            $order = $param;
-        } elseif (is_array($param)) {
-            $order = $this->createOrder();
-            $order->setData($param);
-        } elseif (is_string($param)) {
-            $order = $this->createOrder();
-            $order->setProperty($param);
-            $order->setMode($mode);
-            if (isset($orderOptions['values'])) {
-                $order->setValues($orderOptions['values']);
-            }
+        if (is_string($param) && $mode !== null) {
+            $expr = $this->createOrder();
+            $expr->setProperty($param);
+            $expr->setMode($mode);
         } else {
-            throw new InvalidArgumentException(
-                'Parameter must be an OrderInterface object or a property ident.'
-            );
+            $expr = $param;
         }
 
-        if ($this->hasModel()) {
+        $expr = $this->processOrder($expr);
+
+        /** @deprecated 0.3 */
+        if (is_array($param) && isset($param['options'])) {
+            $expr->setData($param['options']);
+        }
+
+        if (is_array($options)) {
+            $expr->setData($options);
+        }
+
+        $this->orders[] = $this->parseOrderWithModel($expr);
+        return $this;
+    }
+
+    /**
+     * Process a query order with the current model.
+     *
+     * @param  OrderInterface $order The expression object.
+     * @return OrderInterface The parsed expression object.
+     */
+    protected function parseOrderWithModel(OrderInterface $order)
+    {
+        if ($this->hasModel() && $order->hasProperty()) {
+            $model    = $this->model();
             $property = $order->property();
-            if ($property) {
-                $p = $this->model()->p($property);
-                if ($p) {
-                    if ($p->l10n()) {
-                        $order->setProperty($p->l10nIdent());
-                    }
+            if (is_string($property) && $model->hasProperty($property)) {
+                $property = $model->property($property);
+
+                if ($property->l10n()) {
+                    $order->setProperty($property->l10nIdent());
                 }
             }
         }
 
-        $this->orders[] = $order;
-
-        return $this;
-    }
-
-    /**
-     * @return OrderInterface
-     */
-    protected function createOrder()
-    {
-        $order = new Order();
         return $order;
     }
 
     /**
-     * @param mixed $param The pagination object or array.
-     * @throws InvalidArgumentException If the argument is not an object or array.
-     * @return SourceInterface Chainable
+     * Create a new query order expression.
+     *
+     * @param  array $data Optional expression data.
+     * @return OrderInterface
      */
-    public function setPagination($param)
+    protected function createOrder(array $data = null)
+    {
+        $order = new Order();
+        if ($data !== null) {
+            $order->setData($data);
+        }
+        return $order;
+    }
+
+    /**
+     * Set query pagination.
+     *
+     * @param  mixed        $param The pagination object or array.
+     * @param  integer|null $limit The number of results to fetch if $param is a page number.
+     * @throws InvalidArgumentException If the $param argument is invalid.
+     * @return self
+     */
+    public function setPagination($param, $limit = null)
     {
         if ($param instanceof PaginationInterface) {
-            $this->pagination = $param;
+            $pager = $param;
+        } elseif (is_numeric($param)) {
+            $pager = $this->createPagination();
+            $pager->setPage($param);
+            $pager->setNumPerPage($limit);
         } elseif (is_array($param)) {
-            $pagination = $this->createPagination();
-            $pagination->setData($param);
-            $this->pagination = $pagination;
+            $pager = $this->createPagination();
+            $pager->setData($param);
         } else {
             throw new InvalidArgumentException(
                 'Can not set pagination, invalid argument.'
             );
         }
+
+        $this->pagination = $pager;
+
         return $this;
     }
 
     /**
-     * Get the pagination object.
+     * Determine if the source has defined a query pagination.
      *
-     * If the pagination wasn't set previously, a new (default / blank) Pagination object will be created.
-     * (Always return a `PaginationInterface` object)
+     * @return boolean
+     */
+    public function hasPagination()
+    {
+        return ($this->pagination !== null);
+    }
+
+    /**
+     * Get query pagination.
+     *
+     * If the pagination wasn't previously define, a new Pagination object will be created.
      *
      * @return PaginationInterface
      */
@@ -415,35 +485,41 @@ abstract class AbstractSource implements
         if ($this->pagination === null) {
             $this->pagination = $this->createPagination();
         }
+
         return $this->pagination;
     }
 
     /**
+     * Create a new pagination clause.
+     *
+     * @param  array $data Optional clause data.
      * @return PaginationInterface
      */
-    protected function createPagination()
+    protected function createPagination(array $data = null)
     {
         $pagination = new Pagination();
+        if ($data !== null) {
+            $pagination->setData($data);
+        }
         return $pagination;
     }
 
     /**
-     * @param integer $page The page number.
-     * @throws InvalidArgumentException If the page argument is not numeric.
-     * @return AbstractSource Chainable
+     * Alias for {@see Pagination::setPage()}.
+     *
+     * @param  integer $page The current page.
+     *     Pages should start at 1.
+     * @return self
      */
     public function setPage($page)
     {
-        if (!is_numeric($page)) {
-            throw new InvalidArgumentException(
-                'Page must be an integer.'
-            );
-        }
-        $this->pagination()->setPage((int)$page);
+        $this->pagination()->setPage($page);
         return $this;
     }
 
     /**
+     * Alias for {@see Pagination::page()}.
+     *
      * @return integer
      */
     public function page()
@@ -452,22 +528,21 @@ abstract class AbstractSource implements
     }
 
     /**
-     * @param integer $num The number of items to retrieve per page.
-     * @throws InvalidArgumentException If the num per page argument is not numeric.
-     * @return AbstractSource Chainable
+     * Alias for {@see Pagination::setNumPerPage()}.
+     *
+     * @param  integer $count The number of results to return, per page.
+     *     Use 0 to request all results.
+     * @return self
      */
-    public function setNumPerPage($num)
+    public function setNumPerPage($count)
     {
-        if (!is_numeric($num)) {
-            throw new InvalidArgumentException(
-                'Num must be an integer.'
-            );
-        }
-        $this->pagination()->setNumPerPage((int)$num);
+        $this->pagination()->setNumPerPage($count);
         return $this;
     }
 
     /**
+     * Alias for {@see Pagination::numPerPage()}.
+     *
      * @return integer
      */
     public function numPerPage()
@@ -476,117 +551,94 @@ abstract class AbstractSource implements
     }
 
     /**
-     * ConfigurableTrait > createConfig()
+     * Create a new database source config.
      *
-     * @param array $data Optional.
+     * @see    \Charcoal\Config\ConfigurableTrait
+     * @param  array $data Optional data.
      * @return SourceConfig
      */
     public function createConfig(array $data = null)
     {
-        $config = new SourceConfig();
-        if (is_array($data)) {
-            $config->merge($data);
-        }
+        $config = new SourceConfig($data);
         return $config;
     }
 
     /**
-     * @param mixed             $ident The ID of the item to load.
-     * @param StorableInterface $item  Optional item to load into.
+     * Load item by the primary key.
+     *
+     * @param  mixed             $ident Ident can be any scalar value.
+     * @param  StorableInterface $item  Optional item to load into.
      * @return StorableInterface
      */
     abstract public function loadItem($ident, StorableInterface $item = null);
 
     /**
-     * @param StorableInterface|null $item The model to load items from.
-     * @return array
+     * Load items for the given model.
+     *
+     * @param  StorableInterface|null $item Optional model.
+     * @return StorableInterface[]
      */
     abstract public function loadItems(StorableInterface $item = null);
 
     /**
      * Save an item (create a new row) in storage.
      *
-     * @param StorableInterface $item The object to save.
-     * @return mixed The created item ID, or false in case of an error.
+     * @param  StorableInterface $item The object to save.
+     * @throws \Exception If a storage error occurs.
+     * @return mixed The created item ID, otherwise FALSE.
      */
     abstract public function saveItem(StorableInterface $item);
 
     /**
      * Update an item in storage.
      *
-     * @param StorableInterface $item       The object to update.
-     * @param array             $properties The list of properties to update, if not all.
-     * @return boolean Success / Failure
+     * @param  StorableInterface $item       The object to update.
+     * @param  array             $properties The list of properties to update, if not all.
+     * @return boolean TRUE if the item was updated, otherwise FALSE.
      */
     abstract public function updateItem(StorableInterface $item, array $properties = null);
 
     /**
-     * Delete an item from storage
+     * Delete an item from storage.
      *
-     * @param StorableInterface $item Optional item to delete. If none, the current model object will be used..
-     * @return boolean Success / Failure
+     * @param  StorableInterface $item Optional item to delete. If none, the current model object will be used.
+     * @throws UnexpectedValueException If the item does not have an ID.
+     * @return boolean TRUE if the item was deleted, otherwise FALSE.
      */
     abstract public function deleteItem(StorableInterface $item = null);
 
     /**
      * Allow an object to define how the key getter are called.
      *
-     * @param string $key  The key to get the getter from.
-     * @param string $case Optional. The type of case to return. camel, pascal or snake.
+     * @param  string $key The key to get the getter from.
      * @return string The getter method name, for a given key.
      */
-    protected function getter($key, $case = 'camel')
+    protected function getter($key)
     {
         $getter = $key;
-
-        if ($case == 'camel') {
-            return $this->camelize($getter);
-        } elseif ($case == 'pascal') {
-            return $this->pascalize($getter);
-        } else {
-            return $getter;
-        }
+        return $this->camelize($getter);
     }
 
     /**
      * Allow an object to define how the key setter are called.
      *
-     * @param string $key  The key to get the setter from.
-     * @param string $case Optional. The type of case to return. camel, pascal or snake.
+     * @param  string $key The key to get the setter from.
      * @return string The setter method name, for a given key.
      */
-    protected function setter($key, $case = 'camel')
+    protected function setter($key)
     {
         $setter = 'set_'.$key;
-
-        if ($case == 'camel') {
-            return $this->camelize($setter);
-        } elseif ($case == 'pascal') {
-            return $this->pascalize($setter);
-        } else {
-            return $setter;
-        }
+        return $this->camelize($setter);
     }
 
     /**
      * Transform a snake_case string to camelCase.
      *
-     * @param string $str The snake_case string to camelize.
-     * @return string The camelCase string.
+     * @param  string $str The snake_case string to camelize.
+     * @return string The camelcase'd string.
      */
-    private function camelize($str)
+    protected function camelize($str)
     {
-        return lcfirst($this->pascalize($str));
-    }
-
-    /**
-     * Transform a snake_case string to PamelCase.
-     *
-     * @param string $str The snake_case string to pascalize.
-     * @return string The PamelCase string.
-     */
-    private function pascalize($str)
-    {
-        return implode('', array_map('ucfirst', explode('_', $str)));
+        return lcfirst(implode('', array_map('ucfirst', explode('_', $str))));
     }
 }

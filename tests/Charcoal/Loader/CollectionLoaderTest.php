@@ -6,12 +6,6 @@ use ArrayIterator;
 use InvalidArgumentException;
 use RuntimeException;
 
-// From Pimple
-use Pimple\Container;
-
-// From 'charcoal-config'
-use Charcoal\Config\GenericConfig;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\GenericFactory as Factory;
 
@@ -21,12 +15,16 @@ use Charcoal\Model\Collection;
 use Charcoal\Model\Service\MetadataLoader;
 use Charcoal\Source\DatabaseSource;
 
+use Charcoal\Tests\ContainerIntegrationTrait;
+use Charcoal\Tests\ReflectionsTrait;
+
 /**
  *
  */
 class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
 {
-    use \Charcoal\Tests\ContainerIntegrationTrait;
+    use ContainerIntegrationTrait;
+    use ReflectionsTrait;
 
     private $obj;
 
@@ -100,7 +98,7 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
                 ]
             ]
         );
-        $this->assertEquals(['id', 'test'], $obj->properties());
+        $this->assertEquals([ 'id', 'test' ], $obj->properties());
     }
 
     public function setDataIsChainable()
@@ -130,7 +128,7 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
 
         $loader->setCollectionClass(ArrayIterator::class);
         $collection = $loader->createCollection();
-        $this->assertInstanceOf('\ArrayIterator', $collection);
+        $this->assertInstanceOf(ArrayIterator::class, $collection);
 
         $loader->setCollectionClass('array');
         $collection = $loader->createCollection();
@@ -142,7 +140,7 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
         $loader = $this->obj;
         $loader->setModel($this->model)
                ->setCollectionClass(ArrayIterator::class)
-               ->setProperties(['id', 'test'])
+               ->setProperties([ 'id', 'test' ])
                ->addFilter('test', 10, [ 'operator' => '<' ])
                ->addFilter('allo', 1, [ 'operator' => '>=' ])
                ->addOrder('test', 'asc')
@@ -156,5 +154,23 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, 1);
 
         $this->assertTrue(true);
+    }
+
+    /**
+     * Test camelization.
+     *
+     * @covers \Charcoal\Loader\CollectionLoader::camelize
+     * @covers \Charcoal\Loader\CollectionLoader::getter
+     * @covers \Charcoal\Loader\CollectionLoader::setter
+     */
+    public function testCamelize()
+    {
+        $obj = $this->obj;
+
+        $getter = $this->getMethod($obj, 'getter');
+        $setter = $this->getMethod($obj, 'setter');
+
+        $this->assertEquals('charcoalPhp',    $getter->invoke($obj, 'charcoal_php'));
+        $this->assertEquals('setCharcoalPhp', $setter->invoke($obj, 'charcoal_php'));
     }
 }

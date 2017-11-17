@@ -7,7 +7,7 @@
 // use InvalidArgumentException;
 // use RuntimeException;
 
-// use \Charcoal\Source\DatabaseSource as DatabaseSource;
+// use Charcoal\Source\DatabaseSource;
 
 // class DatabaseSourceTest extends \PHPUnit_Framework_TestCase
 // {

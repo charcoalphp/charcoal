@@ -10,53 +10,66 @@ use Charcoal\Factory\FactoryInterface;
 
 // From 'charcoal-core'
 use Charcoal\Source\SourceInterface;
+use Charcoal\Source\StorableInterface;
 
 /**
- * Full implementation, as trait, of the StorableInterface
+ * Provides an object with storage interaction.
+ *
+ * Full implementation, as trait, of the {@see StorableInterface}
+ *
+ * @property-read \Psr\Log\LoggerInterface $logger The PSR-3 logger instance.
  */
 trait StorableTrait
 {
     /**
-     * @var mixed $id The object (unique) identifier
+     * The object's unique identifier.
+     *
+     * @var mixed
      */
     protected $id;
 
     /**
-     * @var string $key The object key
+     * The object's property for uniquely identifying it in storage.
+     *
+     * @var string
      */
     protected $key = 'id';
 
     /**
-     * @var FactoryInterface $sourceFactory
+     * The datasource repository factory.
+     *
+     * @var FactoryInterface
      */
     protected $sourceFactory;
 
     /**
-     * @var SourceInterface $source
+     * The object's datasource repository.
+     *
+     * @var SourceInterface
      */
     private $source;
 
     /**
-     * Set the object's ID. The actual property set depends on `key()`
+     * Set the object's unique ID.
      *
-     * @param mixed $id The object id (identifier / primary key value).
+     * The actual property set depends on `key()`.
+     *
+     * @param  mixed $id The object's ID.
      * @throws InvalidArgumentException If the argument is not scalar.
-     * @return StorableInterface Chainable
+     * @return self
      */
     public function setId($id)
     {
         if (!is_scalar($id)) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    'ID for "%s" must be a scalar (integer, float, string, or boolean); received %s',
-                    get_class($this),
-                    (is_object($id) ? get_class($id) : gettype($id))
-                )
-            );
+            throw new InvalidArgumentException(sprintf(
+                'ID for "%s" must be a scalar (integer, float, string, or boolean); received %s',
+                get_class($this),
+                (is_object($id) ? get_class($id) : gettype($id))
+            ));
         }
 
         $key = $this->key();
-        if ($key == 'id') {
+        if ($key === 'id') {
             $this->id = $id;
         } else {
             $this[$key] = $id;
@@ -66,14 +79,16 @@ trait StorableTrait
     }
 
     /**
-     * Get the object's (unique) ID. The actualy property get depends on `key()`
+     * Get the object's unique ID.
+     *
+     * The actualy property get depends on `key()`.
      *
      * @return mixed
      */
     public function id()
     {
         $key = $this->key();
-        if ($key == 'id') {
+        if ($key === 'id') {
             return $this->id;
         } else {
             return $this[$key];
@@ -81,11 +96,16 @@ trait StorableTrait
     }
 
     /**
-     * Set the key property.
+     * Set the primary property key.
      *
-     * @param string $key The object key, or identifier "name".
+     * For uniquely identifying this object in storage.
+     *
+     * Note: For security reason, only alphanumeric characters (and underscores)
+     * are valid key names. Although SQL can support more, there's really no reason to.
+     *
+     * @param  string $key The object's primary key.
      * @throws InvalidArgumentException If the argument is not scalar.
-     * @return StorableInterface Chainable
+     * @return self
      */
     public function setKey($key)
     {
@@ -95,20 +115,19 @@ trait StorableTrait
                 (is_object($key) ? get_class($key) : gettype($key))
             ));
         }
-        // For security reason, only alphanumeric characters (+ underscores) are valid key names.
-        // Although SQL can support more, there's really no reason to.
+
         if (!preg_match_all('/^[A-Za-z0-9_]+$/', $key)) {
             throw new InvalidArgumentException(
                 sprintf('Key "%s" is invalid: must be alphanumeric / underscore.', $key)
             );
         }
-        $this->key = $key;
 
+        $this->key = $key;
         return $this;
     }
 
     /**
-     * Get the key property.
+     * Get the primary property key.
      *
      * @return string
      */
@@ -118,8 +137,10 @@ trait StorableTrait
     }
 
     /**
-     * @param FactoryInterface $factory The source factory, which is useful to create source.
-     * @return StorableInterface Chainable
+     * Set the datasource repository factory.
+     *
+     * @param  FactoryInterface $factory The source factory.
+     * @return self
      */
     protected function setSourceFactory(FactoryInterface $factory)
     {
@@ -128,6 +149,8 @@ trait StorableTrait
     }
 
     /**
+     * Get the datasource repository factory.
+     *
      * @throws RuntimeException If the source factory was not previously set.
      * @return FactoryInterface
      */
@@ -142,11 +165,11 @@ trait StorableTrait
     }
 
     /**
-     * Set the object's source.
+     * Set the object's datasource repository.
      *
-     * @param SourceInterface $source The storable object's source.
-     * @return StorableInterface Chainable
-     * @todo This method needs to go protected.
+     * @todo   This method needs to be protected.
+     * @param  SourceInterface $source The storable object's source.
+     * @return self
      */
     public function setSource(SourceInterface $source)
     {
@@ -155,7 +178,7 @@ trait StorableTrait
     }
 
     /**
-     * Get the object's source.
+     * Get the object's datasource repository.
      *
      * @return SourceInterface
      */
@@ -168,17 +191,18 @@ trait StorableTrait
     }
 
     /**
-     * Create the model's source, with the Source Factory.
+     * Create a datasource repository for the model
+     * (using the {@see self::$sourceFactory source factory}).
      *
-     * @return SourceInterface
+     * @return SourceInterface A new repository.
      */
     abstract protected function createSource();
 
     /**
      * Load an object from the database from its ID.
      *
-     * @param mixed $id The identifier to load.
-     * @return StorableInterface Chainable
+     * @param  mixed $id The identifier to load.
+     * @return self
      */
     public function load($id = null)
     {
@@ -190,11 +214,11 @@ trait StorableTrait
     }
 
     /**
-     * Load an object from the database from its key $key.
+     * Load an object from the repository from its key $key.
      *
-     * @param string $key   Key pointing a column's name.
-     * @param mixed  $value Value of said column.
-     * @return StorableInterface Chainable.
+     * @param  string $key   Key pointing a column's name.
+     * @param  mixed  $value Value of said column.
+     * @return self
      */
     public function loadFrom($key = null, $value = null)
     {
@@ -203,11 +227,11 @@ trait StorableTrait
     }
 
     /**
-     * Load an object from the database from a custom SQL query.
+     * Load an object from the repository from a custom SQL query.
      *
-     * @param string $query The SQL query.
-     * @param array  $binds Optional. The SQL query parameters.
-     * @return StorableInterface Chainable.
+     * @param  string $query The SQL query.
+     * @param  array  $binds Optional. The SQL query parameters.
+     * @return self
      */
     public function loadFromQuery($query, array $binds = [])
     {
@@ -216,119 +240,141 @@ trait StorableTrait
     }
 
     /**
-     * Save an object current state to storage
+     * Insert the object's current state in storage.
      *
-     * @return boolean
+     * @return boolean TRUE on success.
      */
     public function save()
     {
         $pre = $this->preSave();
         if ($pre === false) {
             $this->logger->error(sprintf(
-                'Can not save object (%s:%s). The preSave() method failed.',
+                'Can not save object "%s:%s"; cancelled by %s::preSave()',
                 $this->objType(),
-                $this->id()
+                $this->id(),
+                get_called_class()
             ));
             return false;
         }
+
         $ret = $this->source()->saveItem($this);
         if ($ret === false) {
             $this->logger->error(sprintf(
-                'Can not save object (%s:%s). The source\'s saveItem() method failed.',
+                'Can not save object "%s:%s"; repository failed for %s',
                 $this->objType(),
-                $this->id()
+                $this->id(),
+                get_called_class()
             ));
             return false;
+        } else {
+            $this->setId($ret);
         }
+
         $post = $this->postSave();
         if ($post === false) {
-            $this->logger->warning(sprintf(
-                'Although the object (%s:%s) was saved, the postSave() method had an error. Expect problems later.',
+            $this->logger->error(sprintf(
+                'Saved object "%s:%s" but %s::postSave() failed',
                 $this->objType(),
-                $this->id()
+                $this->id(),
+                get_called_class()
             ));
             return false;
         }
+
         return true;
     }
 
     /**
-     * Update the object in storage to the current object state.
+     * Update the object in storage with the current state.
      *
-     * @param array $properties If set, only update the properties specified in this array.
-     * @return boolean
+     * @param  string[] $keys If provided, only update the properties specified.
+     * @return boolean TRUE on success.
      */
-    public function update(array $properties = null)
+    public function update(array $keys = null)
     {
-        $pre = $this->preUpdate($properties);
+        $pre = $this->preUpdate($keys);
         if ($pre === false) {
             $this->logger->error(sprintf(
-                'Can not update object (%s:%s). The preUpdate() method failed.',
+                'Can not update object "%s:%s"; cancelled by %s::preUpdate()',
                 $this->objType(),
-                $this->id()
+                $this->id(),
+                get_called_class()
             ));
             return false;
         }
-        $ret = $this->source()->updateItem($this, $properties);
+
+        $ret = $this->source()->updateItem($this, $keys);
         if ($ret === false) {
             $this->logger->error(sprintf(
-                'Can not update object (%s:%s). The source\'s updateItem() method failed.',
+                'Can not update object "%s:%s"; repository failed for %s',
                 $this->objType(),
-                $this->id()
+                $this->id(),
+                get_called_class()
             ));
             return false;
         }
-        $post = $this->postUpdate($properties);
+
+        $post = $this->postUpdate($keys);
         if ($post === false) {
             $this->logger->warning(sprintf(
-                'Although the object (%s:%s) was updated, the postUpdate() method had an error. Expect problems later.',
+                'Updated object "%s:%s" but %s::postUpdate() failed',
                 $this->objType(),
-                $this->id()
+                $this->id(),
+                get_called_class()
             ));
             return false;
         }
+
         return true;
     }
 
     /**
      * Delete an object from storage.
      *
-     * @return boolean
+     * @return boolean TRUE on success.
      */
     public function delete()
     {
         $pre = $this->preDelete();
         if ($pre === false) {
             $this->logger->error(sprintf(
-                'Can not update object (%s:%s). The preUpdate() method failed.',
+                'Can not delete object "%s:%s"; cancelled by %s::preDelete()',
                 $this->objType(),
-                $this->id()
+                $this->id(),
+                get_called_class()
             ));
             return false;
         }
+
         $ret = $this->source()->deleteItem($this);
         if ($ret === false) {
             $this->logger->error(sprintf(
-                'Can not delete object (%s:%s). The source\'s deleteItem() method failed.',
+                'Can not delete object "%s:%s"; repository failed for %s',
                 $this->objType(),
-                $this->id()
+                $this->id(),
+                get_called_class()
             ));
             return false;
         }
+
         $del = $this->postDelete();
         if ($del === false) {
             $this->logger->warning(sprintf(
-                'Although the object (%s:%s) was deleted, the postDelete() method had an error. Expect problems later.',
+                'Deleted object "%s:%s" but %s::postDelete() failed',
                 $this->objType(),
-                $this->id()
+                $this->id(),
+                get_called_class()
             ));
             return false;
         }
+
         return true;
     }
 
     /**
-     * @return boolean
+     * Event called before {@see self::save() creating} the object.
+     *
+     * @return boolean TRUE to proceed with creation; FALSE to stop creation.
      */
     protected function preSave()
     {
@@ -336,7 +382,9 @@ trait StorableTrait
     }
 
     /**
-     * @return boolean
+     * Event called after {@see self::save() creating} the object.
+     *
+     * @return boolean TRUE to indicate object was created.
      */
     protected function postSave()
     {
@@ -344,8 +392,10 @@ trait StorableTrait
     }
 
     /**
-     * @param string[] $keys Optional. The list of keys to update.
-     * @return boolean
+     * Event called before {@see self::update() updating} the object.
+     *
+     * @param  string[] $keys Optional list of properties to update.
+     * @return boolean TRUE to proceed with update; FALSE to stop update.
      */
     protected function preUpdate(array $keys = null)
     {
@@ -353,8 +403,10 @@ trait StorableTrait
     }
 
     /**
-     * @param string[] $keys Optional. The list of keys to update.
-     * @return boolean
+     * Event called after {@see self::update() updating} the object.
+     *
+     * @param  string[] $keys Optional list of properties to update.
+     * @return boolean TRUE to indicate object was updated.
      */
     protected function postUpdate(array $keys = null)
     {
@@ -362,7 +414,9 @@ trait StorableTrait
     }
 
     /**
-     * @return boolean
+     * Event called before {@see self::delete() deleting} the object.
+     *
+     * @return boolean TRUE to proceed with deletion; FALSE to stop deletion.
      */
     protected function preDelete()
     {
@@ -370,7 +424,9 @@ trait StorableTrait
     }
 
     /**
-     * @return boolean
+     * Event called after {@see self::delete() deleting} the object.
+     *
+     * @return boolean TRUE to indicate object was deleted.
      */
     protected function postDelete()
     {

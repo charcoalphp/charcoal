@@ -5,175 +5,197 @@ namespace Charcoal\Source;
 use InvalidArgumentException;
 
 // From 'charcoal-core'
+use Charcoal\Source\Expression;
+use Charcoal\Source\ExpressionFieldTrait;
 use Charcoal\Source\FilterInterface;
 
 /**
- * Filter
+ * Filter Expression
+ *
+ * For affecting the results of a query that meet specified criteria.
  */
-class Filter implements FilterInterface
+class Filter extends Expression implements
+    FilterInterface
 {
+    use ExpressionFieldTrait;
+
     const DEFAULT_OPERATOR = '=';
-    const DEFAULT_FUNC     = '';
     const DEFAULT_OPERAND  = 'AND';
-    const DEFAULT_TABLE_NAME = 'objTable';
 
     /**
-     * @var string $property
+     * The value on the right side of the operation.
+     *
+     * @var mixed
      */
-    protected $property;
-    /**
-     * @var mixed $val
-     */
-    protected $val;
+    protected $value;
 
     /**
-     * @var string $operator
+     * The operator used for comparing field and value.
+     *
+     * @var string
      */
     protected $operator = self::DEFAULT_OPERATOR;
+
     /**
-     * @var string $func
+     * The function name to be called on the field.
+     *
+     * @var string|null
      */
-    protected $func = self::DEFAULT_FUNC;
+    protected $func;
+
     /**
-     * @var string $operand
+     * The operator used for joining the next filter.
+     *
+     * @var string
      */
     protected $operand = self::DEFAULT_OPERAND;
 
     /**
-     * @var string $tableName
-     */
-    protected $tableName = self::DEFAULT_TABLE_NAME;
-
-    /**
-     * Raw SQL clause.
+     * Set the filter clause data.
      *
-     * @var string
-     */
-    protected $string;
-
-    /**
-     * Inactive filter should be skipped completely.
-     * @var boolean $active
-     */
-    protected $active;
-
-    /**
-     * @param array $data The filter data.
-     * @return Filter Chainable
+     * @param  array<string,mixed> $data The expression data;
+     *     as an associative array.
+     * @return self
      */
     public function setData(array $data)
     {
+        parent::setData($data);
+
+        /** @deprecated */
+        if (isset($data['string'])) {
+            trigger_error(
+                sprintf(
+                    'Filter expression option "string" is deprecated in favour of "condition": %s',
+                    $data['string']
+                ),
+                E_USER_DEPRECATED
+            );
+            $this->setCondition($data['string']);
+        }
+
+        /** @deprecated */
+        if (isset($data['table_name'])) {
+            trigger_error(
+                sprintf(
+                    'Filter expression option "table_name" is deprecated in favour of "table": %s',
+                    $data['table_name']
+                ),
+                E_USER_DEPRECATED
+            );
+            $this->setTable($data['table_name']);
+        }
+
+        /** @deprecated */
+        if (isset($data['val'])) {
+            trigger_error(
+                sprintf(
+                    'Filter expression option "val" is deprecated in favour of "value": %s',
+                    $data['val']
+                ),
+                E_USER_DEPRECATED
+            );
+            $this->setValue($data['val']);
+        }
+
+        if (isset($data['table'])) {
+            $this->setTable($data['table']);
+        }
+
         if (isset($data['property'])) {
             $this->setProperty($data['property']);
         }
 
-        if (isset($data['val'])) {
-            $this->setVal($data['val']);
+        if (isset($data['value'])) {
+            $this->setValue($data['value']);
         }
 
-        if (isset($data['operator'])) {
-            $this->setOperator($data['operator']);
+        if (isset($data['function'])) {
+            $this->setFunc($data['function']);
         }
 
         if (isset($data['func'])) {
             $this->setFunc($data['func']);
         }
 
+        if (isset($data['operator'])) {
+            $this->setOperator($data['operator']);
+        }
+
         if (isset($data['operand'])) {
             $this->setOperand($data['operand']);
         }
 
-        if (isset($data['table_name'])) {
-            $this->setTableName($data['table_name']);
-        }
-
-        if (isset($data['string'])) {
-            $this->setString($data['string']);
-        }
-
-        if (isset($data['active'])) {
-            $this->setActive($data['active']);
-        }
-
         return $this;
     }
 
     /**
-     * @param string $property The filter property.
-     * @throws InvalidArgumentException If the property argument is not a string.
-     * @return Filter (Chainable)
+     * Retrieve the default values for filtering.
+     *
+     * @return array<string,mixed> An associative array.
      */
-    public function setProperty($property)
+    public function defaultData()
     {
-        if (!is_string($property)) {
-            throw new InvalidArgumentException(
-                'Property must be a string.'
-            );
-        }
-        if ($property == '') {
-            throw new InvalidArgumentException(
-                'Property can not be empty.'
-            );
-        }
+        return [
+            'property'    => null,
+            'table'       => null,
+            'value'       => null,
+            'func'        => null,
+            'operator'    => self::DEFAULT_OPERATOR,
+            'operand'     => self::DEFAULT_OPERAND,
+            'condition'   => null,
+            'active'      => true,
+            'name'        => null,
+        ];
+    }
 
-        $this->property = $property;
+    /**
+     * Retrieve the filter clause structure.
+     *
+     * @return array<string,mixed> An associative array.
+     */
+    public function data()
+    {
+        return [
+            'property'    => $this->property(),
+            'table'       => $this->table(),
+            'value'       => $this->value(),
+            'func'        => $this->func(),
+            'operator'    => $this->operator(),
+            'operand'     => $this->operand(),
+            'condition'   => $this->condition(),
+            'active'      => $this->active(),
+            'name'        => $this->name(),
+        ];
+    }
+
+    /**
+     * Set the value used for comparison.
+     *
+     * @param  mixed $value The value on the right side of the comparison.
+     * @return self
+     */
+    public function setValue($value)
+    {
+        $this->value = $this::parseValue($value);
         return $this;
     }
 
     /**
-     * @return string
-     */
-    public function property()
-    {
-        return $this->property;
-    }
-
-    /**
-     * @param mixed $val The filter value.
-     * @return Filter (Chainable)
-     */
-    public function setVal($val)
-    {
-        $this->val = $this->parseVal($val);
-
-        return $this;
-    }
-
-    /**
+     * Retrieve the value used for comparison.
+     *
      * @return mixed
      */
-    public function val()
+    public function value()
     {
-        return $this->val;
+        return $this->value;
     }
 
     /**
-     * Parse the given value.
+     * Set the operator used for comparing field and value.
      *
-     * @param  mixed $val The value to be parsed (normalized).
-     * @return mixed Returns the parsed value.
-     */
-    public function parseVal($val)
-    {
-        if ($val instanceof \DateTimeInterface) {
-            $val = $val->format('Y-m-d H:i:s');
-        } elseif ($val instanceof \Charcoal\Property\DateTimeProperty) {
-            $val = $val->storageVal($this->val());
-        } elseif (is_string($val)) {
-            if ($val === 'true') {
-                $val = true;
-            } elseif ($val === 'false') {
-                $val = false;
-            }
-        }
-
-        return $val;
-    }
-
-    /**
-     * @param string $operator The filter operator.
+     * @param  string $operator The comparison operator.
      * @throws InvalidArgumentException If the parameter is not a valid operator.
-     * @return Filter (Chainable)
+     * @return self
      */
     public function setOperator($operator)
     {
@@ -185,9 +207,10 @@ class Filter implements FilterInterface
 
         $operator = strtoupper($operator);
         if (!in_array($operator, $this->validOperators())) {
-            throw new InvalidArgumentException(
-                'This is not a valid operator.'
-            );
+            throw new InvalidArgumentException(sprintf(
+                'Comparison operator "%s" not allowed in this context.',
+                $operator
+            ));
         }
 
         $this->operator = $operator;
@@ -195,6 +218,8 @@ class Filter implements FilterInterface
     }
 
     /**
+     * Retrieve the operator used for comparing field and value.
+     *
      * @return string
      */
     public function operator()
@@ -203,30 +228,41 @@ class Filter implements FilterInterface
     }
 
     /**
-     * @param string $func The filter function.
+     * Set the function to be called on the expression.
+     *
+     * @param  string $func The function name to invoke on the field.
      * @throws InvalidArgumentException If the parameter is not a valid function.
-     * @return Filter (Chainable)
+     * @return self
      */
     public function setFunc($func)
     {
+        if ($func === null) {
+            $this->func = $func;
+            return $this;
+        }
+
         if (!is_string($func)) {
             throw new InvalidArgumentException(
-                'Func should be astring.'
+                'Function name should be a string.'
             );
         }
 
         $func = strtoupper($func);
         if (!in_array($func, $this->validFunc())) {
-            throw new InvalidArgumentException(
-                'This is not a valid function.'
-            );
+            throw new InvalidArgumentException(sprintf(
+                'Function "%s" not allowed in this context.',
+                $func
+            ));
         }
+
         $this->func = $func;
         return $this;
     }
 
     /**
-     * @return string
+     * Retrieve the function to be called on the expression.
+     *
+     * @return string|null
      */
     public function func()
     {
@@ -234,9 +270,11 @@ class Filter implements FilterInterface
     }
 
     /**
-     * @param string $operand The filter operand.
+     * Set the operator used for joining the next filter.
+     *
+     * @param  string $operand The logical operator.
      * @throws InvalidArgumentException If the parameter is not a valid operand.
-     * @return Filter (Chainable)
+     * @return self
      */
     public function setOperand($operand)
     {
@@ -248,9 +286,10 @@ class Filter implements FilterInterface
 
         $operand = strtoupper($operand);
         if (!in_array($operand, $this->validOperands())) {
-            throw new InvalidArgumentException(
-                'This is not a valid operand.'
-            );
+            throw new InvalidArgumentException(sprintf(
+                'Operand "%s" not allowed in this context.',
+                $operand
+            ));
         }
 
         $this->operand = $operand;
@@ -258,132 +297,62 @@ class Filter implements FilterInterface
     }
 
     /**
+     * Retrieve the operator used for joining the next filter.
+     *
      * @return string
      */
     public function operand()
     {
-        return strtoupper($this->operand);
+        return $this->operand;
     }
 
     /**
-     * @param string $tableName The filter table name.
-     * @throws InvalidArgumentException If the parameter is not a string.
-     * @return Filter (Chainable)
-     */
-    public function setTableName($tableName)
-    {
-        if (!is_string($tableName)) {
-            throw new InvalidArgumentException(
-                'TableName should be a string.'
-            );
-        }
-
-        $this->tableName = $tableName;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function tableName()
-    {
-        return $this->tableName;
-    }
-
-    /**
-     * @param  string $sql The custom filter SQL string.
-     * @throws InvalidArgumentException If the parameter is not a valid operand.
-     * @return Filter (Chainable)
-     */
-    public function setString($sql)
-    {
-        if (!is_string($sql)) {
-            throw new InvalidArgumentException(
-                'Custom SQL clause should be a string.'
-            );
-        }
-
-        $this->string = $sql;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function string()
-    {
-        return $this->string;
-    }
-
-    /**
-     * @param boolean $active The active flag.
-     * @return Filter (Chainable)
-     */
-    public function setActive($active)
-    {
-        $this->active = !!$active;
-        return $this;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function active()
-    {
-        return $this->active;
-    }
-
-
-
-    /**
-     * Supported operators
+     * Retrieve the supported comparison operators (in uppercase).
      *
-     * @return array
+     * @return string[]
      */
     protected function validOperators()
     {
-        $validOperators = [
+        return [
             '=', 'IS', '!=', 'IS NOT',
             'LIKE', 'NOT LIKE',
             'FIND_IN_SET',
             '>', '>=', '<', '<=',
             'IS NULL', 'IS NOT NULL',
+            'IS TRUE', 'IS FALSE', 'IS UNKNOWN',
+            'IS NOT TRUE', 'IS NOT FALSE', 'IS NOT UNKNOWN',
             '%', 'MOD',
-            'IN','NOT IN',
+            'IN', 'NOT IN',
             'REGEXP', 'NOT REGEXP'
         ];
-
-        return $validOperators;
     }
 
     /**
-     * Supported operand types, uppercase
+     * Retrieve the supported logical operators (in uppercase).
      *
-     * @return array
+     * @return string[]
      */
     protected function validOperands()
     {
-        $validOperands = [
+        return [
             'AND', '&&',
             'OR', '||',
             'XOR'
         ];
-
-        return $validOperands;
     }
 
     /**
-     * Supported functions, uppercase
-     * @return array
+     * Retrieve the supported functions (in uppercase).
+     *
+     * @return string[]
      */
     protected function validFunc()
     {
-        $validFunctions = [
+        return [
             'ABS',
             'ACOS', 'ASIN', 'ATAN',
             'COS', 'COT', 'SIN', 'TAN',
-            'CEIL', 'CEILING', 'FLOOR', 'ROUND',
+            'CEIL', 'CEILING', 'FLOOR', 'ROUND', 'COUNT',
             'CHAR_LENGTH', 'CHARACTER_LENGTH', 'LENGTH', 'OCTET_LENGTH',
             'CRC32', 'MD5', 'SHA1',
             'DATE',
@@ -404,7 +373,5 @@ class Filter implements FilterInterface
             'SIGN',
             'SQRT'
         ];
-
-        return $validFunctions;
     }
 }

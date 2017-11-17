@@ -5,69 +5,102 @@ namespace Charcoal\Source;
 use InvalidArgumentException;
 
 // From 'charcoal-core'
+use Charcoal\Source\Expression;
+use Charcoal\Source\ExpressionFieldTrait;
 use Charcoal\Source\OrderInterface;
 
 /**
- * Order
+ * Order Expression
  *
- * Available modes:
- * - `asc` to order in ascending (A-Z / 0-9) order.
- * - `desc` to order in descending (Z-A / 9-0) order.
- * - `rand` to order in a random fashion.
- * - `values` to order by a defined array of properties.
- * - `custom` to order by a custom SQL string.
+ * For sorting the results of a query.
+ *
+ * Possible sorting modes:
+ * 1. Custom — Sort results by a custom expression.
+ *    - Requirement: "condition"
+ * 2. Values — Sort results against a defined order.
+ *    - Requirements: "values", "property"
+ *    - Complementary: "direction" (useful for sorting unlisted results)
+ * 3. Direction — Sort results in ascending or descending order.
+ *    - Requirements: "property"
+ *    - Complementary: "direction" (ascending, by default)
  */
-class Order implements OrderInterface
+class Order extends Expression implements
+    OrderInterface
 {
-    const MODE_ASC = 'asc';
-    const MODE_DESC = 'desc';
+    use ExpressionFieldTrait;
+
+    const MODE_ASC    = 'asc';
+    const MODE_DESC   = 'desc';
     const MODE_RANDOM = 'rand';
     const MODE_VALUES = 'values';
     const MODE_CUSTOM = 'custom';
 
     /**
-     * The model property (SQL column).
-     *
-     * @var string
-     */
-    protected $property;
-
-    /**
      * The sort mode.
      *
-     * @var string
+     * @var string|null
      */
     protected $mode;
 
     /**
-     * The values when {@see self::$mode} is {@see self::MODE_VALUES}.
+     * The values to sort against when {@see self::$mode} is {@see self::MODE_VALUES}.
      *
-     * @var array
+     * @var array|null
      */
     protected $values;
 
     /**
-     * Raw SQL clause when {@see self::$mode} is {@see self::MODE_CUSTOM}.
+     * The direction of sorting.
      *
-     * @var string
+     * @var string|null
      */
-    protected $string;
+    protected $direction;
 
     /**
-     * Whether the order is active.
+     * Set the order clause data.
      *
-     * @var boolean
-     */
-    protected $active = true;
-
-    /**
-     * @param array $data The order data.
-     * @return Order Chainable
+     * @param  array<string,mixed> $data The expression data;
+     *     as an associative array.
+     * @return self
      */
     public function setData(array $data)
     {
+        parent::setData($data);
+
+        /** @deprecated */
+        if (isset($data['string'])) {
+            trigger_error(
+                sprintf(
+                    'Sort expression option "string" is deprecated in favour of "condition": %s',
+                    $data['string']
+                ),
+                E_USER_DEPRECATED
+            );
+            $this->setCondition($data['string']);
+        }
+
+        /** @deprecated */
+        if (isset($data['table_name'])) {
+            trigger_error(
+                sprintf(
+                    'Sort expression option "table_name" is deprecated in favour of "table": %s',
+                    $data['table_name']
+                ),
+                E_USER_DEPRECATED
+            );
+            $this->setTable($data['table_name']);
+        }
+
+        if (isset($data['table'])) {
+            $this->setTable($data['table']);
+        }
+
         if (isset($data['property'])) {
             $this->setProperty($data['property']);
+        }
+
+        if (isset($data['direction'])) {
+            $this->setDirection($data['direction']);
         }
 
         if (isset($data['mode'])) {
@@ -76,78 +109,100 @@ class Order implements OrderInterface
 
         if (isset($data['values'])) {
             $this->setValues($data['values']);
+
+            if (!isset($data['mode'])) {
+                $this->setMode(self::MODE_VALUES);
+            }
         }
 
-        if (isset($data['string'])) {
-            $this->setString($data['string']);
-
+        if (isset($data['condition']) || isset($data['string'])) {
             if (!isset($data['mode'])) {
                 $this->setMode(self::MODE_CUSTOM);
             }
         }
 
-        if (isset($data['active'])) {
-            $this->setActive($data['active']);
-        }
-
         return $this;
     }
 
     /**
-     * @param string $property The order property.
-     * @throws InvalidArgumentException If the property argument is not a string.
-     * @return Order (Chainable)
+     * Retrieve the default values for sorting.
+     *
+     * @return array<string,mixed> An associative array.
      */
-    public function setProperty($property)
+    public function defaultData()
     {
-        if (!is_string($property)) {
-            throw new InvalidArgumentException(
-                'Order Property must be a string.'
-            );
-        }
-        if ($property == '') {
-            throw new InvalidArgumentException(
-                'Order Property can not be empty.'
-            );
-        }
-
-        $this->property = $property;
-        return $this;
+        return [
+            'property'  => null,
+            'table'     => null,
+            'direction' => null,
+            'mode'      => null,
+            'values'    => null,
+            'condition' => null,
+            'active'    => true,
+            'name'      => null,
+        ];
     }
 
     /**
-     * @return string
+     * Retrieve the order clause structure.
+     *
+     * @return array<string,mixed> An associative array.
      */
-    public function property()
+    public function data()
     {
-        return $this->property;
+        return [
+            'property'  => $this->property(),
+            'table'     => $this->table(),
+            'direction' => $this->direction(),
+            'mode'      => $this->mode(),
+            'values'    => $this->values(),
+            'condition' => $this->condition(),
+            'active'    => $this->active(),
+            'name'      => $this->name(),
+        ];
     }
 
     /**
-     * @param string $mode The order mode.
+     * Set the, pre-defined, sorting mode.
+     *
+     * @param  string|null $mode The sorting mode.
      * @throws InvalidArgumentException If the mode is not a string or invalid.
-     * @return Order Chainable
+     * @return self
      */
     public function setMode($mode)
     {
+        if ($mode === null) {
+            $this->mode = $mode;
+            return $this;
+        }
+
         if (!is_string($mode)) {
             throw new InvalidArgumentException(
                 'Order Mode must be a string.'
             );
         }
 
-        $mode = strtolower($mode);
-        if (!in_array($mode, $this->validModes())) {
-            throw new InvalidArgumentException(
-                sprintf('Invalid Order mode "%s".', $mode)
-            );
+        $mode  = strtolower($mode);
+        $valid = $this->validModes();
+        if (!in_array($mode, $valid)) {
+            throw new InvalidArgumentException(sprintf(
+                'Invalid Order Mode. Must be one of "%s"',
+                implode('", "', $valid)
+            ));
         }
+
+        if (in_array($mode, [ self::MODE_ASC, self::MODE_DESC ])) {
+            $this->setDirection($mode);
+        }
+
         $this->mode = $mode;
         return $this;
     }
 
     /**
-     * @return string
+     * Retrieve the sorting mode.
+     *
+     * @return string|null
      */
     public function mode()
     {
@@ -155,44 +210,100 @@ class Order implements OrderInterface
     }
 
     /**
-     * Set the values.
-     * Values are ignored if the mode is not "values"
+     * Set the sorting direction.
      *
-     * If the `$values` argument is a string, it will be split by ",".
-     * If it is an array, the values will be used as is.
-     * Otherwise, the function will throw an error
+     * @param  string|null $direction The direction to sort on.
+     * @throws InvalidArgumentException If the direction is not a string.
+     * @return self
+     */
+    public function setDirection($direction)
+    {
+        if ($direction === null) {
+            $this->direction = $direction;
+            return $this;
+        }
+
+        if (!is_string($direction)) {
+            throw new InvalidArgumentException(
+                'Direction must be a string.'
+            );
+        }
+
+        $this->direction = strtolower($direction) === 'asc' ? 'ASC' : 'DESC';
+        return $this;
+    }
+
+    /**
+     * Retrieve the sorting direction.
+     *
+     * @return string|null
+     */
+    public function direction()
+    {
+        return $this->direction;
+    }
+
+    /**
+     * Set the values to sort against.
+     *
+     * Note: Values are ignored if the mode is not {@see self::MODE_VALUES}.
      *
      * @throws InvalidArgumentException If the parameter is not an array or a string.
-     * @param  string|array $values The order values.
-     * @return Order (Chainable)
+     * @param  string|array|null $values A list of field values.
+     *     If the $values parameter:
+     *     - is a string, the string will be split by ",".
+     *     - is an array, the values will be used as is.
+     *     - any other data type throws an exception.
+     * @return self
      */
     public function setValues($values)
     {
+        if ($values === null) {
+            $this->values = $values;
+            return $this;
+        }
+
         if (is_string($values)) {
-            if ($values == '') {
+            if ($values === '') {
                 throw new InvalidArgumentException(
                     'String values can not be empty.'
                 );
             }
+
             $values = array_map('trim', explode(',', $values));
-            $this->values = $values;
-        } elseif (is_array($values)) {
+        }
+
+        if (is_array($values)) {
             if (empty($values)) {
                 throw new InvalidArgumentException(
                     'Array values can not be empty.'
                 );
             }
+
             $this->values = $values;
-        } else {
-            throw new InvalidArgumentException(
-                'Order Values must be an array, or a comma-delimited string.'
-            );
+            return $this;
         }
-        return $this;
+
+        throw new InvalidArgumentException(sprintf(
+            'Order Values must be an array or comma-delimited string, received %s',
+            is_object($values) ? get_class($values) : gettype($values)
+        ));
     }
 
     /**
-     * @return array
+     * Determine if the Order expression has values.
+     *
+     * @return boolean
+     */
+    public function hasValues()
+    {
+        return !empty($this->values);
+    }
+
+    /**
+     * Retrieve the values to sort against.
+     *
+     * @return array|null A list of field values or NULL if no values were assigned.
      */
     public function values()
     {
@@ -200,64 +311,18 @@ class Order implements OrderInterface
     }
 
     /**
-     * @param  string $sql The custom order SQL string.
-     * @throws InvalidArgumentException If the parameter is not a valid operand.
-     * @return Order (Chainable)
-     */
-    public function setString($sql)
-    {
-        if (!is_string($sql)) {
-            throw new InvalidArgumentException(
-                'Custom SQL clause should be a string.'
-            );
-        }
-
-        $this->string = $sql;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function string()
-    {
-        return $this->string;
-    }
-
-    /**
-     * @param boolean $active The active flag.
-     * @return Order (Chainable)
-     */
-    public function setActive($active)
-    {
-        $this->active = !!$active;
-        return $this;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function active()
-    {
-        return $this->active;
-    }
-
-    /**
-     * Supported modes
+     * Retrieve the supported sorting modes.
      *
      * @return array
      */
     protected function validModes()
     {
-        $validModes = [
+        return [
             self::MODE_DESC,
             self::MODE_ASC,
             self::MODE_RANDOM,
             self::MODE_VALUES,
             self::MODE_CUSTOM
         ];
-
-        return $validModes;
     }
 }

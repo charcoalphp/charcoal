@@ -2,44 +2,78 @@
 
 namespace Charcoal\Source\Database;
 
-use DomainException;
+use UnexpectedValueException;
 
 // From 'charcoal-core'
+use Charcoal\Source\Database\DatabaseExpressionInterface;
+use Charcoal\Source\DatabaseSource;
 use Charcoal\Source\Order;
 
 /**
- * The DatabaseOrder makes a Order SQL-aware.
+ * SQL Order Expression
+ *
+ * Priority of SQL resolution if the expression is "active":
+ * 1. Random — If "mode" is set to "rand".
+ * 2. Custom — If "condition" is defined or "mode" set to "custom".
+ * 3. Values — If "property" and "values" are defined or "mode" set to "values".
+ * 4. Direction — If "property" is defined.
  */
-class DatabaseOrder extends Order
+class DatabaseOrder extends Order implements
+    DatabaseExpressionInterface
 {
     /**
-     * Retrieve the Order's SQL string to append to an ORDER BY clause.
+     * The table related to the field identifier.
      *
-     * @throws DomainException If any required property is empty.
-     * @return string
+     * @var string
+     */
+    protected $table = DatabaseSource::DEFAULT_TABLE_ALIAS;
+
+    /**
+     * Retrieve the default values for sorting.
+     *
+     * @return array
+     */
+    public function defaultData()
+    {
+        $defaults = parent::defaultData();
+        $defaults['table'] = DatabaseSource::DEFAULT_TABLE_ALIAS;
+
+        return $defaults;
+    }
+
+    /**
+     * Converts the order into a SQL expression for the ORDER BY clause.
+     *
+     * @return string A SQL string fragment.
      */
     public function sql()
     {
-        $mode = $this->mode();
-        switch ($mode) {
-            case self::MODE_RANDOM:
-                return $this->byRandom();
+        if ($this->active()) {
+            switch ($this->mode()) {
+                case self::MODE_RANDOM:
+                    return $this->byRandom();
 
-            case self::MODE_VALUES:
+                case self::MODE_CUSTOM:
+                    return $this->byCondition();
+
+                case self::MODE_VALUES:
+                    return $this->byValues();
+            }
+
+            if ($this->hasCondition()) {
+                return $this->byCondition();
+            }
+
+            if ($this->hasValues()) {
                 return $this->byValues();
+            }
 
-            case self::MODE_CUSTOM:
-                return $this->byCustom();
+            if ($this->hasProperty()) {
+                return $this->byProperty();
+            }
         }
 
-        $property = $this->property();
-        if (empty($property)) {
-            throw new DomainException(
-                'Property can not be empty.'
-            );
-        }
-
-        return sprintf('`%1$s` %2$s', $property, $mode);
+        return '';
     }
 
     /**
@@ -47,59 +81,102 @@ class DatabaseOrder extends Order
      *
      * @return string
      */
-    private function byRandom()
+    protected function byRandom()
     {
         return 'RAND()';
     }
 
     /**
-     * Retrieve the ORDER BY clause for the {@see self::MODE_CUSTOM} mode.
+     * Generate the ORDER BY clause(s) for the direction mode.
      *
+     * @throws UnexpectedValueException If any required property is empty.
      * @return string
      */
-    private function byCustom()
+    protected function byProperty()
     {
-        $sql = $this->string();
-        if ($sql) {
-            return $sql;
+        $fields = $this->fieldIdentifiers();
+        if (empty($fields)) {
+            throw new UnexpectedValueException(
+                'Property is required.'
+            );
         }
+
+        $dir = $this->direction();
+        $dir = $dir === null ? '' : ' '.$dir;
+
+        return implode($dir.', ', $fields).$dir;
+    }
+
+    /**
+     * Retrieve the ORDER BY clause for the {@see self::MODE_CUSTOM} mode.
+     *
+     * @throws UnexpectedValueException If the custom clause is empty.
+     * @return string
+     */
+    protected function byCondition()
+    {
+        if (!$this->hasCondition()) {
+            throw new UnexpectedValueException(
+                'Custom expression can not be empty.'
+            );
+        }
+
+        return $this->condition();
     }
 
     /**
      * Retrieve the ORDER BY clause for the {@see self::MODE_VALUES} mode.
      *
-     * @throws DomainException If any required property or values is empty.
+     * @throws UnexpectedValueException If any required property or values is empty.
      * @return string
      */
-    private function byValues()
+    protected function byValues()
     {
-        $values = $this->values();
+        $fields = $this->fieldIdentifiers();
+        if (empty($fields)) {
+            throw new UnexpectedValueException(
+                'Property is required.'
+            );
+        }
+
+        $values = $this->prepareValues($this->values());
         if (empty($values)) {
-            throw new DomainException(
+            throw new UnexpectedValueException(
                 'Values can not be empty.'
             );
         }
 
-        $property = $this->property();
-        if (empty($property)) {
-            throw new DomainException(
-                'Property can not be empty.'
-            );
+        $dir = $this->direction();
+        $dir = $dir === null ? '' : ' '.$dir;
+
+        $values  = implode(',', $values);
+        $clauses = [];
+        foreach ($fields as $fieldName) {
+            $clauses[] = sprintf('FIELD(%1$s, %2$s)', $fieldName, $values).$dir;
+        }
+
+        return implode(', ', $clauses);
+    }
+
+    /**
+     * Parse the given values for SQL.
+     *
+     * @param  mixed $values The value to be normalized.
+     * @return array Returns a collection of parsed values.
+     */
+    public function prepareValues($values)
+    {
+        if (empty($values)) {
+            return [];
+        }
+
+        if (!is_array($values)) {
+            $values = (array)$values;
         }
 
         $values = array_filter($values, 'is_scalar');
-        $values = array_map(
-            function ($val) {
-                if (!is_numeric($val)) {
-                    $val = htmlspecialchars($val, ENT_QUOTES);
-                    $val = sprintf('"%s"', $val);
-                }
+        $values = array_map('self::quoteValue', $values);
 
-                return $val;
-            },
-            $values
-        );
-
-        return sprintf('FIELD(`%1$s`, %2$s)', $property, implode(',', $values));
+        return $values;
     }
 }

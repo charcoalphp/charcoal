@@ -2,54 +2,67 @@
 
 namespace Charcoal\Source;
 
+// From 'charcoal-core'
+use Charcoal\Source\ExpressionFieldInterface;
+
 /**
- *
+ * Describes a sorting expression.
  */
-interface OrderInterface
+interface OrderInterface extends
+    ExpressionFieldInterface
 {
     /**
-     * @param array $data The order data.
-     * @return Order Chainable
-     */
-    public function setData(array $data);
-
-    /**
-     * @param string $property The property to order with.
-     * @return Order (Chainable)
-     */
-    public function setProperty($property);
-
-    /**
-     * @return string
-     */
-    public function property();
-
-    /**
-     * @param string $mode The order mode.
-     * @return Order Chainable
+     * Set the, pre-defined, sorting mode.
+     *
+     * @param  string|null $mode The sorting mode.
+     * @throws InvalidArgumentException If the mode is not a string or invalid.
+     * @return OrderInterface Returns the current expression.
      */
     public function setMode($mode);
 
     /**
-     * @return string
+     * Retrieve the sorting mode.
+     *
+     * @return string|null
      */
     public function mode();
 
     /**
-     * Set the values.
-     * Values are ignored if the mode is not "values"
+     * Set the sorting direction.
      *
-     * If the `$values` argument is a string, it will be split by ",".
-     * If it is an array, the values will be used as is.
-     * Otherwise, the function will throw an error
+     * @param  string|null $direction The direction to sort on.
+     * @throws InvalidArgumentException If the direction is not a string.
+     * @return OrderInterface Returns the current expression.
+     */
+    public function setDirection($direction);
+
+    /**
+     * Retrieve the sorting direction.
      *
-     * @param  string|array $values The order values.
-     * @return Order (Chainable)
+     * @return string|null
+     */
+    public function direction();
+
+    /**
+     * Set the values to sort against.
+     *
+     * @param  string|array $values A list of field values.
+     * @throws InvalidArgumentException If the parameter is not an array or a string.
+     * @return OrderInterface Returns the current expression.
      */
     public function setValues($values);
 
     /**
-     * @return array
+     * Determine if the Order expression has values.
+     *
+     * @return boolean
+     */
+    public function hasValues();
+
+    /**
+     * Retrieve the values to sort against.
+     *
+     * @return array|null A list of field values or NULL if no values were assigned.
      */
     public function values();
 }

@@ -4,328 +4,364 @@ namespace Charcoal\Tests\Source;
 
 use InvalidArgumentException;
 
+// From PHPUnit
+use PHPUnit_Framework_Error;
+
 // From 'charcoal-core'
 use Charcoal\Source\Filter;
+use Charcoal\Source\FilterInterface;
+use Charcoal\Tests\ContainerIntegrationTrait;
+use Charcoal\Tests\Source\ExpressionTestFieldTrait;
+use Charcoal\Tests\Source\ExpressionTestTrait;
 
 /**
- *
+ * Test {@see Filter} and {@see FilterInterface}.
  */
 class FilterTest extends \PHPUnit_Framework_TestCase
 {
-    public function testContructor()
+    use ContainerIntegrationTrait;
+    use ExpressionTestFieldTrait;
+    use ExpressionTestTrait;
+
+    /**
+     * Create expression for testing.
+     *
+     * @return Order
+     */
+    final protected function createExpression()
     {
-        $obj = new Filter();
-        $this->assertInstanceOf('\Charcoal\Source\Filter', $obj);
-
-        // Default values
-        $this->assertEquals('', $obj->property());
-        $this->assertEquals('=', $obj->operator());
-        $this->assertEquals('AND', $obj->operand());
-        $this->assertEquals('', $obj->func());
-    }
-
-    public function testSetData()
-    {
-        $obj = new Filter();
-
-        $obj->setData(['property' => 'foo']);
-        $this->assertEquals('foo', $obj->property());
-
-        $obj->setData(
-            [
-                'property' => 'bar',
-                'val' => 42
-            ]
-        );
-        $this->assertEquals('bar', $obj->property());
-        $this->assertEquals(42, $obj->val());
-
-        // Full data et
-        $data = [
-            'property' => 'foo',
-            'val'      => 42,
-            'operator' => '=',
-            'func'     => 'abs',
-            'operand'  => 'and',
-            'string'   => '(1=1)',
-            'active'   => true
-        ];
-        $obj->setData($data);
-
-        $this->assertEquals('foo', $obj->property());
-        $this->assertEquals(42, $obj->val());
-        $this->assertEquals('=', $obj->operator());
-        $this->assertEquals('ABS', $obj->func());
-        $this->assertEquals('AND', $obj->operand());
-        $this->assertEquals('(1=1)', $obj->string());
-        $this->assertEquals(true, $obj->active());
-    }
-
-    public function testSetDataIsChainable()
-    {
-        $obj = new Filter();
-        $data = [
-            'property' => 'foo',
-            'val'      => 42,
-            'operator' => '=',
-            'func'     => 'abs',
-            'operand'  => 'and',
-            'string'   => '(1=1)',
-            'active'   => true
-        ];
-        $ret = $obj->setData($data);
-        $this->assertSame($obj, $ret);
-    }
-
-    public function testSetProperty()
-    {
-        $obj = new Filter();
-        $obj->setProperty('foo');
-
-        $this->assertEquals('foo', $obj->property());
-    }
-
-    public function testSetPropertyIsChainable()
-    {
-        $obj = new Filter();
-        $ret = $obj->setProperty('foo');
-
-        $this->assertSame($obj, $ret);
+        return new Filter();
     }
 
     /**
-     * @dataProvider providerInvalidProperties
+     * Test new instance.
+     *
+     * Assertions:
+     * 1. Implements {@see FilterInterface}
      */
-    public function testSetInvalidPropertyThrowsException($property)
+    public function testFilterConstruct()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
+        $obj = $this->createExpression();
 
-        $obj = new Filter();
-        $obj->setProperty($property);
-    }
-
-    public function testSetVal()
-    {
-        $obj = new Filter();
-        $obj->setVal('1');
-
-        $this->assertEquals('1', $obj->val());
-    }
-
-    public function testSetValIsChainable()
-    {
-        $obj = new Filter();
-        $ret = $obj->setVal('foo');
-
-        $this->assertSame($obj, $ret);
+        /** 1. Implementation */
+        $this->assertInstanceOf(FilterInterface::class, $obj);
     }
 
     /**
-     * @dataProvider providerValidOperators
+     * Provide data for value parsing.
+     *
+     * @used-by ExpressionTestTrait::testDefaultValues()
+     * @return  array
      */
-    public function testSetOperator($op)
+    final public function provideDefaultValues()
     {
-        $obj = new Filter();
-        $obj->setOperator($op);
-
-        $this->assertEquals(strtoupper($op), $obj->operator());
+        return [
+            'property'  => [ 'property',   null ],
+            'table'     => [ 'table',      null ],
+            'value'     => [ 'value',      null ],
+            'function'  => [ 'func',       null ],
+            'operator'  => [ 'operator',   '=' ],
+            'operand'   => [ 'operand',    'AND' ],
+            'condition' => [ 'condition',  null ],
+            'active'    => [ 'active',     true ],
+            'name'      => [ 'name',       null ],
+        ];
     }
 
-    public function testSetOperatorIsChainable()
+    /**
+     * Test the "value" property.
+     *
+     * Assertions:
+     * 1. Default state
+     * 2. Mutated state
+     * 3. Chainable method
+     *
+     * Note: {@see Filter::value()} uses {@see \Charcoal\Source\AbstractExpression::parseValue()}.
+     * Tests for `parseValue()` are performed in {@see ExpressionTestTrait::testParseValue()}.
+     */
+    public function testValue()
     {
-        $obj = new Filter();
-        $ret = $obj->setOperator('=');
+        $obj = $this->createExpression();
 
-        $this->assertSame($obj, $ret);
+        /** 1. Default Value */
+        $this->assertNull($obj->value());
+
+        /** 2. Mutated Value */
+        $that = $obj->setValue('foobar');
+        $this->assertInternalType('string', $obj->value());
+        $this->assertEquals('foobar', $obj->value());
+
+        /** 3. Chainable */
+        $this->assertSame($obj, $that);
     }
 
-    public function testOperatorUppercase()
+    /**
+     * Test deprecated "val" property.
+     */
+    public function testDeprecatedValExpression()
     {
-        $obj = new Filter();
+        $obj = $this->createExpression();
+
+        @$obj->setData([ 'val' => 'qux' ]);
+        $this->assertEquals('qux', $obj->value());
+    }
+
+    /**
+     * Test "val" property deprecation notice.
+     */
+    public function testDeprecatedValError()
+    {
+        $this->setExpectedException(PHPUnit_Framework_Error::class);
+        $this->createExpression()->setData([ 'val' => 'qux' ]);
+
+    }
+
+    /**
+     * Test the "operator" property.
+     *
+     * Assertions:
+     * 1. Default state
+     * 2. Mutated state
+     * 3. Chainable method
+     * 4. Accepts mixed case
+     */
+    public function testOperator()
+    {
+        $obj = $this->createExpression();
+
+        /** 1. Default Value */
+        $this->assertEquals('=', $obj->operator());
+
+        /** 2. Mutated Value */
+        $that = $obj->setOperator('LIKE');
+        $this->assertInternalType('string', $obj->operator());
+        $this->assertEquals('LIKE', $obj->operator());
+
+        /** 3. Chainable */
+        $this->assertSame($obj, $that);
+
+        /** 4. Accepts mixed case */
         $obj->setOperator('is null');
         $this->assertEquals('IS NULL', $obj->operator());
+    }
 
-        $obj->setOperator('Like');
+    /**
+     * Test "operator" property with unsupported operator.
+     */
+    public function testOperatorWithUnsupportedOperator()
+    {
+        $this->setExpectedException(InvalidArgumentException::class);
+        $this->createExpression()->setOperator('foo');
+    }
+
+    /**
+     * Test "operator" property with invalid value.
+     */
+    public function testOperatorWithInvalidValue()
+    {
+        $this->setExpectedException(InvalidArgumentException::class);
+        $this->createExpression()->setOperator(42);
+    }
+
+    /**
+     * Test the "func" property.
+     *
+     * Assertions:
+     * 1. Default state
+     * 2. Mutated state
+     * 3. Chainable method
+     * 4. Accepts mixed case
+     * 5. Accepts NULL
+     */
+    public function testFunc()
+    {
+        $obj = $this->createExpression();
+
+        /** 1. Default Value */
+        $this->assertNull($obj->func());
+
+        /** 2. Mutated Value */
+        $that = $obj->setFunc('LENGTH');
+        $this->assertInternalType('string', $obj->func());
+        $this->assertEquals('LENGTH', $obj->func());
+
+        /** 3. Chainable */
+        $this->assertSame($obj, $that);
+
+        /** 4. Accepts mixed case */
+        $obj->setFunc('weekDay');
+        $this->assertEquals('WEEKDAY', $obj->func());
+
+        /** 5. Accepts NULL */
+        $obj->setFunc(null);
+        $this->assertNull($obj->func());
+    }
+
+    /**
+     * Test "func" property with unsupported func.
+     */
+    public function testFuncWithUnsupportedFunction()
+    {
+        $this->setExpectedException(InvalidArgumentException::class);
+        $this->createExpression()->setFunc('xyzzy');
+    }
+
+    /**
+     * Test "func" property with invalid value.
+     */
+    public function testFuncWithInvalidValue()
+    {
+        $this->setExpectedException(InvalidArgumentException::class);
+        $this->createExpression()->setFunc(33);
+    }
+
+    /**
+     * Test the "operand" property.
+     *
+     * Assertions:
+     * 1. Default state
+     * 2. Mutated state
+     * 3. Chainable method
+     * 4. Accepts mixed case
+     */
+    public function testOperand()
+    {
+        $obj = $this->createExpression();
+
+        /** 1. Default Value */
+        $this->assertEquals('AND', $obj->operand());
+
+        /** 2. Mutated Value */
+        $that = $obj->setOperand('||');
+        $this->assertInternalType('string', $obj->operand());
+        $this->assertEquals('||', $obj->operand());
+
+        /** 3. Chainable */
+        $this->assertSame($obj, $that);
+
+        /** 4. Accepts mixed case */
+        $obj->setOperand('xor');
+        $this->assertEquals('XOR', $obj->operand());
+    }
+
+    /**
+     * Test "operand" property with unsupported operand.
+     */
+    public function testOperandWithUnsupportedOperand()
+    {
+        $this->setExpectedException(InvalidArgumentException::class);
+        $this->createExpression()->setOperand('qux');
+    }
+
+    /**
+     * Test "operand" property with invalid value.
+     */
+    public function testOperandWithInvalidValue()
+    {
+        $this->setExpectedException(InvalidArgumentException::class);
+        $this->createExpression()->setOperand(11);
+    }
+
+    /**
+     * Test data structure with mutated state.
+     *
+     * Assertions:
+     * 1. Mutate all options
+     * 2. Partially mutated state
+     * 3. Mutation via aliases
+     */
+    public function testData()
+    {
+        /** 1. Mutate all options */
+        $mutation = [
+            'value'     => '%foobar',
+            'func'      => 'REVERSE',
+            'operator'  => 'LIKE',
+            'operand'   => 'OR',
+            'property'  => 'col',
+            'table'     => 'tbl',
+            'condition' => '1 = 1',
+            'active'    => false,
+            'name'      => 'foo',
+        ];
+
+        $obj = $this->createExpression();
+        $obj->setData($mutation);
+        $this->assertStructHasBasicData($obj, $mutation);
+        $this->assertStructHasFieldData($obj, $mutation);
+
+        $data = $obj->data();
+
+        $this->assertArrayHasKey('value', $data);
+        $this->assertEquals('%foobar', $data['value']);
+        $this->assertEquals('%foobar', $obj->value());
+
+        $this->assertArrayHasKey('func', $data);
+        $this->assertEquals('REVERSE', $data['func']);
+        $this->assertEquals('REVERSE', $obj->func());
+
+        $this->assertArrayHasKey('operator', $data);
+        $this->assertEquals('LIKE', $data['operator']);
         $this->assertEquals('LIKE', $obj->operator());
-    }
 
-    /**
-     * @dataProvider providerInvalidArguments
-     */
-    public function testSetInvalidOperatorThrowsException($op)
-    {
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->assertArrayHasKey('operand', $data);
+        $this->assertEquals('OR', $data['operand']);
+        $this->assertEquals('OR', $obj->operand());
 
-        $obj = new Filter();
-        $obj->setOperator($op);
-    }
-
-    /**
-     * @dataProvider providerValidFuncs
-     */
-    public function testSetFunc($func)
-    {
-        $obj = new Filter();
-        $obj->setFunc($func);
-
-        $this->assertEquals(strtoupper($func), $obj->func());
-    }
-
-    public function testSetFuncIsChainable()
-    {
-        $obj = new Filter();
-        $ret = $obj->setFunc('abs');
-
-        $this->assertSame($obj, $ret);
-    }
-
-    /**
-     * @dataProvider providerInvalidArguments
-     */
-    public function testSetInvalidFuncThrowsException($func)
-    {
-        $this->setExpectedException(InvalidArgumentException::class);
-
-        $obj = new Filter();
-        $obj->setFunc($func);
-    }
-
-    /**
-     * @dataProvider providerValidOperands
-     */
-    public function testSetOperandGetterUppercase($operand)
-    {
-        $obj = new Filter();
-        $obj->setOperand($operand);
-
-        $this->assertEquals(strtoupper($operand), $obj->operand());
-    }
-
-    /**
-     * @dataProvider providerInvalidArguments
-     */
-    public function testSetInvalidOperandThrowsException($op)
-    {
-        $this->setExpectedException(InvalidArgumentException::class);
-
-        $obj = new Filter();
-        $obj->setOperand($op);
-    }
-
-    /**
-     * @dataProvider providerValidFuncs
-     */
-    public function testSetString($func)
-    {
-        $obj = new Filter();
-        $obj->setString($func);
-
-        $this->assertEquals($func, $obj->string());
-    }
-
-    public function testSetStringIsChainable()
-    {
-        $obj = new Filter();
-        $ret = $obj->setString('and foo=1');
-
-        $this->assertSame($obj, $ret);
-    }
-
-    public function testSetInvalidStringThrowsException()
-    {
-        $this->setExpectedException(InvalidArgumentException::class);
-
-        $obj = new Filter();
-        $obj->setString([]);
-    }
-
-
-    public function providerValidOperators()
-    {
-        return [
-            ['='],
-            ['>'],
-            ['>='],
-            ['<'],
-            ['>'],
-            ['IS'],
-            ['IS NOT'],
-            ['LIKE'],
-            ['IS NULL'],
-            ['IS NOT NULL'],
-            ['is'],
-// lower case is valid
-            ['Is'],
-// Mixed case is also valid
-            ['like'],
-            ['Is Not NULL']
+        /** 2. Partially mutated state */
+        $mutation = [
+            'operator' => 'IS NULL'
         ];
-    }
 
-    public function providerValidOperands()
-    {
-        return [
-            ['AND'],
-            ['OR'],
-            ['||'],
-            ['&&'],
-            ['and'],
-            ['And']
-        ];
-    }
+        $obj = $this->createExpression();
+        $obj->setData($mutation);
 
-    public function providerValidFuncs()
-    {
-        return [
-            ['ABS'],
-            ['abs'],
-// lowercase is valid
-            ['Abs']
-// Mixed case is also valid
-        ];
-    }
+        $defs = $obj->defaultData();
+        $this->assertStructHasBasicData($obj, $defs);
 
-    /**
-     * Invalid arguments for operator, func and operand
-     */
-    public function providerInvalidProperties()
-    {
-        $obj = new \StdClass();
-        return [
-            [''],
-// empty string is invalid
-            [null],
-            [true],
-            [false],
-            [1],
-            [0],
-            [321],
-            [[]],
-            [['foo']],
-            [1,2,3],
-            [$obj]
+        $this->assertEquals($defs['value'], $obj->value());
+        $this->assertEquals($defs['func'], $obj->func());
+        $this->assertEquals($defs['operand'], $obj->operand());
+        $this->assertEquals($defs['condition'], $obj->condition());
+
+        $data = $obj->data();
+        $this->assertNotEquals($defs['operator'], $data['operator']);
+        $this->assertEquals('IS NULL', $data['operator']);
+
+        /** 3. Mutation via aliases */
+        $mutation = [
+            'function' => 'REVERSE'
         ];
+
+        $obj = $this->createExpression();
+        $obj->setData($mutation);
+
+        $data = $obj->data();
+        $this->assertEquals('REVERSE', $data['func']);
     }
 
     /**
-     * Invalid arguments for operator, func and operand
+     * Test deprecated "string" property.
+     *
+     * @see OrderTest::testDeprecatedStringExpression()
      */
-    public function providerInvalidArguments()
+    public function testDeprecatedStringExpression()
     {
-        $obj = new \StdClass();
-        return [
-            ['invalid string'],
-            [''],
-            [null],
-            [true],
-            [false],
-            [1],
-            [0],
-            [321],
-            [[]],
-            [['foo']],
-            [1,2,3],
-            [$obj]
-        ];
+        $obj = $this->createExpression();
+
+        @$obj->setData([ 'string' => '1 = 1' ]);
+        $this->assertEquals('1 = 1', $obj->condition());
+    }
+
+    /**
+     * Test "string" property deprecation notice.
+     *
+     * @see OrderTest::testDeprecatedStringError()
+     */
+    public function testDeprecatedStringError()
+    {
+        $this->setExpectedException(PHPUnit_Framework_Error::class);
+        $this->createExpression()->setData([ 'string' => '1 = 1' ]);
+
     }
 }
