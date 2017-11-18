@@ -2,25 +2,19 @@
 
 namespace Charcoal\Config;
 
-use \Traversable;
-
-// Local namespace dependencies
-use \Charcoal\Config\EntityInterface;
+use Traversable;
 
 /**
  * Config Interface
  */
-interface ConfigInterface extends EntityInterface
+interface ConfigInterface extends
+    DelegatesAwareInterface,
+    EntityInterface,
+    SeparatorAwareInterface
 {
-    /**
-     * Get the configuration's available keys.
-     *
-     * @return array
-     */
-    public function keys();
 
     /**
-     * @param array|Traversable $data The map of [$key=>$item] items to set.
+     * @param array|\Traversable $data The map of [$key=>$item] items to set.
      * @return ConfigInterface Chainable
      */
     public function merge($data);

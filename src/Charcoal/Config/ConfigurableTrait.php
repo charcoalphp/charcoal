@@ -2,12 +2,12 @@
 
 namespace Charcoal\Config;
 
-use \InvalidArgumentException;
+use InvalidArgumentException;
 
 
 // Local namespace depeendencies
-use \Charcoal\Config\ConfigInterface;
-use \Charcoal\Config\GenericConfig;
+use Charcoal\Config\ConfigInterface;
+use Charcoal\Config\GenericConfig;
 
 /**
 * An implementation, as Trait, of the `ConfigurableInterface`.

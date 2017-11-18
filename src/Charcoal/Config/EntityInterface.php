@@ -2,9 +2,9 @@
 
 namespace Charcoal\Config;
 
-use \ArrayAccess;
-use \JsonSerializable;
-use \Serializable;
+use ArrayAccess;
+use JsonSerializable;
+use Serializable;
 
 /**
  *
@@ -68,28 +68,4 @@ interface EntityInterface extends
      * @return EntityInterface Chainable
      */
     public function set($key, $val);
-
-    /**
-     * @param EntityInterface[] $delegates The list of delegates to add.
-     * @return EntityInterface Chainable.
-     */
-    public function setDelegates(array $delegates);
-
-    /**
-     * @param EntityInterface $delegate A config object to add as delegate.
-     * @return EntityInterface Chainable
-     */
-    public function addDelegate(EntityInterface $delegate);
-
-    /**
-     * @param EntityInterface $delegate A config object to prepend as delegate.
-     * @return EntityInterface Chainable
-     */
-    public function prependDelegate(EntityInterface $delegate);
-
-    /**
-     * @param string $separator The separator character.
-     * @return EntityInterface Chainable
-     */
-    public function setSeparator($separator);
 }

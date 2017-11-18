@@ -8,6 +8,15 @@ Configuration container for all things Charcoal.
 This package provides easy hierarchical configuration container (for config storage and access).
 `Charcoal\Config` acts as a configuration registry / repository.
 
+## Entity and Config
+
+There are 2 main concepts in this package: `Entity` and `Config`.
+
+_Entities_ are simple data container, which implements `ArrayAccess`, `JsonSerializable` and `Serializable`. It also provides the `keys()`, `setData()`, `data()`, `set()`, `get()` and `has()` methods.
+
+_Config_ are _entities_ that also implements the `IteratorAggregate`, `\Interop\Container\ContainerInterface`, `\Charcoal\Config\SeparatorAwareInterface` and `\Charcoal\Config\DelegatesAwareInterface`. On top of those interfaces and _entity_'s methods, it provides the `merge()`, `defaults()`, `addFile()` and `loadFile()` methods.  Config are meant to hold application configuraion data as well as any other object configuration.
+
+
 ## Main features
 
 -   [Load data from ini, json, php or yaml files.](#supported-file-formats)
@@ -19,7 +28,7 @@ This package provides easy hierarchical configuration container (for config stor
 
 ## Supported file formats
 
-There are currently 4 supported file formats: `ini`, `json`, `php` and `yaml`.
+The _config_ container currently supports 4 file formats: `ini`, `json`, `php` and `yaml`.
 
 To load configuration from a file, simply use the `addFile($filename)` method. The file's extension will be used to determine how to load the file.
 
@@ -40,6 +49,8 @@ It is also possible to load a config file directly from the constructor, by pass
 ``` php
 $config = new \Charcoal\GenericConfig('../config/my-config.json');
 ```
+
+Note that file loading is not supported on the base _entity_ container. This is a _config_-only feature.
 
 ### JSON configuration
 
@@ -111,11 +122,11 @@ echo $config['example.foo'];
 > $this->addFile('./config/more-config.json');
 > ```
 >
-> The recommended way of use a _Config_ object is to include a single `config/config.php` file (that is outside of the document root) that takes care of loading required configuration (json or PHP) files.
+> The recommended way of use a root / app _Config_ object is to include a single `config/config.php` file (that is outside of the document root) that takes care of loading required configuration (json or PHP) files.
 
 ### Yaml configuration
 
-To be able to use the yaml loader, make sure `symfony/yaml` is included in your project composer dependencies:
+> 👉 To be able to use the yaml loader, make sure `symfony/yaml` is included (required) in your project composer dependencies:
 
 ```shell
 $ composer require symfony/yaml
@@ -141,9 +152,11 @@ echo $config['exampe.foo'];
 
 ## Separators
 
-It is possible to fetch embedded _array-ish_ values recursively in a single call with the help of _separators_.
+It is possible to fetch embedded _array-ish_ values recursively on _config_ containers in a single call with the help of _separators_.
 
-The default separator is `.` (it can be retrieved with `separator()`) but it can be changed easily with `setSeparator()`.
+In `config` objects, the default separator is `.` (it can be retrieved with `separator()`) but it can be changed easily with `setSeparator()`.
+
+Separator is not available in _entity_ container. This is a _config_-only feature.
 
 > 👉 Separator must be a single character. An exception will be thrown if trying to call `setSeparator()` with a longer string.
 
@@ -152,7 +165,7 @@ The default separator is `.` (it can be retrieved with `separator()`) but it can
 ```php
 $config = new \Charcoal\GenericConfig();
 $config->setSeparator('/'); // Default is "."
-$config->merge([
+$config->setData([
     'foo', [
         'baz'=>example,
         'bar'=>42
@@ -164,9 +177,9 @@ echo $config->get('foo/bar');
 
 ## Delegates
 
-It is possible to "chain" configuration containers with the help of _delegates_.
+It is possible to "chain" _config_ containers with the help of _delegates_.
 
-If one or more delegates are added to a class, they will be used as _fallback_ when trying to fetch a key that isn't set in the config.
+If one or more delegates are added to a class, they will be used as _fallback_ when trying to fetch a key that isn't set in the config's data.
 
 ```php
 $config = new \Charcoal\Config\GenericConfig([
@@ -195,17 +208,19 @@ Delegates can be set with:
 -   `addDelegate()` to add a config object at the end of the delegate list.
 -   `prependDelegate()` to add a config object at the beginning of the delegate list.
 
-It is also possible to set delegates by passing them (as an array of ConfigInterface) to the constructor:
+On _config_ containers, it is also possible to set delegates by passing them as the 2nd argument to the constructor:
 
 ```php
 $config = new \Charcoal\Config\GenericConfig('../config/my-config.json', [$delegate1, $delegate2]);
 ```
 
-> 👉 The order of the delegates is important. They are looked in the order they are added, so the first match is returned. Use `prependDelegate()` to add a config at the beginning of the stack (top priority).
+> 👉 The order of the delegates is important. They are looked in the order they are added, so the first match is returned. Use `prependDelegate()` to add a delegate at the beginning of the stack (top priority).
+
+Delegates are not available on _entity_ containers. This is a _config_-only feature.
 
 ## Array Access
 
-The config class implements the `ArrayAccess` interface and therefore can be used with array style:
+The _entity_ container implements the `ArrayAccess` interface and therefore can be used with array style:
 
 ```php
 $config = new \Charcoal\Config\GenericConfig();
@@ -228,7 +243,7 @@ unset($config['foobar']);
 
 ## Interoperability
 
-The `\Charcoal\Config` container implements the `container-interop` interface.
+The `\Charcoal\Config` entity container implements the `container-interop` interface.
 
 See [https://github.com/container-interop/container-interop](https://github.com/container-interop/container-interop).
 
@@ -293,8 +308,8 @@ $foo->setConfig([
 ]);
 
 // echo 42
-$foo_config = $foo->config();
-echo $foo_config['bar.baz'];
+$fooConfig = $foo->config();
+echo $fooConfig['bar.baz'];
 
 // Also echo 42
 echo $foo->config('bar.baz');
@@ -340,71 +355,11 @@ The Charcoal-Config module follows the Charcoal coding-style:
 
 > Coding style validation / enforcement can be performed with `composer phpcs`. An auto-fixer is also available with `composer phpcbf`.
 
+> This module should also throw no error when running `phpstan analyse -l7 src/` 👍.
+
 ## Authors
 
 -   Mathieu Ducharme <mat@locomotive.ca>
-
-## Changelog
-
-### 0.6
-_Released on 2016-05-10_
-
--   Support for Yaml files.
-
-### 0.5.1
-_Released on 2016-05-09_
-
--   Minor internal changes.
-
-### 0.5
-_Released on 2016-02-02_
-
--   Split the base config class into AbstractEntity.
--   AbstractEntity is the default data container that implements ArrayAccess, Container Interface and serialization.
-
-### 0.4
-_Released on 2016-01-16_
-
-This release breaks compatibility.
-
--   Move to camelCase, for 100% PSR-1 compliance.
-
-### 0.3
-_Released on 2016-01-15_
-
-This releases breaks compatibility
-
--   AbstractConfig constructor is now final.
--   `set_data()` has been renamed to `merge()`.
--   `merge()` (previously set_data) can now accept any `Traversable` objects, as well as array.
--   `default_data()` has been renamed to `defaults()`
--   Added a new `load_file()` method, to return the content of a config file.
--   Added the `keys()` method, to retrieve the list of keys of the config file.
--   Added the `data()` method, to retrieve the config as an array data, now that we have `keys()`.
--   Config now inherits `IteratorAggregate` / `Traversable` (made possible with `data()`).
--   Config is now `serializable` AND `jsonSerializable`.
--   Setter rules can be overridden in children classes (for PSR2-style setter, for example).
--   ConfigurableInterface / Trait `config()` method now accepts an optional `$key` argument.
-
-### 0.2
-_Released on 2015-12-09_
-
--   Added the "delegates" feature.
--   Setting value with a separator now tries to set as array.
--   Implements the container-interop interface.
-
-### 0.1.1
-_Released on 2015-12-02_
-
--   Removed the second argument for the constructor (currently unused).
--   Clearer error message on invalid JSON files.
--   Fix composer.json and the autoloader.
--   Various internal changes (PSR2 compliancy, _with psr1 exception_).
-
-### 0.1
-_Released on 2015-08-25_
-
--   Initial release of `charcoal-config`
 
 # License
 

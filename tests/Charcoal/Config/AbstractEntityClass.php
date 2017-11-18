@@ -10,7 +10,7 @@ class AbstractEntityClass extends AbstractEntity
 
     public function setFoo($foo)
     {
-        $this->foo = (int)$foo+10;
+        $this->foo = ((int)$foo+10);
         return $this;
     }
 

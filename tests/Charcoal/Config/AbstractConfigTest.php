@@ -2,10 +2,17 @@
 
 namespace Charcoal\Tests\Config;
 
+use PHPUnit_Framework_TestCase;
+
+use Exception;
+use InvalidArgumentException;
+
+use Charcoal\Config\AbstractConfig;
+
 /**
  *
  */
-class AbstractConfigTest extends \PHPUnit_Framework_TestCase
+class AbstractConfigTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var mixed The Abstract Config mock
@@ -15,7 +22,7 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         include_once 'AbstractEntityClass.php';
-        $this->obj = $this->getMockForAbstractClass('\Charcoal\Config\AbstractConfig');
+        $this->obj = $this->getMockForAbstractClass(AbstractConfig::class);
     }
 
     /**
@@ -23,13 +30,13 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructorString()
     {
-        $obj = $this->getMockForAbstractClass('\Charcoal\Config\AbstractConfig', [__DIR__.'/config_files/test.json']);
+        $obj = $this->getMockForAbstractClass(AbstractConfig::class, [__DIR__.'/config_files/test.json']);
         $this->assertEquals(['test'=>'phpunit'], $obj['config']);
     }
 
     public function testConstructorArray()
     {
-        $obj = $this->getMockForAbstractClass('\Charcoal\Config\AbstractConfig', [['config'=>['foo'=>'bar']]]);
+        $obj = $this->getMockForAbstractClass(AbstractConfig::class, [['config'=>['foo'=>'bar']]]);
         $this->assertEquals(['foo'=>'bar'], $obj['config']);
     }
 
@@ -37,25 +44,17 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
     {
         $config = $this->obj;
         $config['foo'] = 'bar';
-        $obj = $this->getMockForAbstractClass('\Charcoal\Config\AbstractConfig', [$config]);
+        $obj = $this->getMockForAbstractClass(AbstractConfig::class, [$config]);
         $this->assertEquals('bar', $obj['foo']);
     }
 
     public function testConstructorInvalidParamThrowsException()
     {
-        $this->setExpectedException('\InvalidArgumentException');
-        $obj = $this->getMockForAbstractClass('\Charcoal\Config\AbstractConfig', [new \StdClass()]);
+        $this->setExpectedException(InvalidArgumentException::class);
+        $obj = $this->getMockForAbstractClass(AbstractConfig::class, [new \StdClass()]);
     }
 
-    public function testConstructorDelegates()
-    {
-        $config = $this->obj;
-        $config['foo'] = 42;
-        $config['test'] = 'baz';
-        $obj = $this->getMockForAbstractClass('\Charcoal\Config\AbstractConfig', [['foo'=>666], [$config]]);
-        $this->assertEquals(666, $obj['foo']);
-        $this->assertEquals('baz', $obj['test']);
-    }
+
 
     public function testDefaults()
     {
@@ -65,14 +64,76 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testMerge()
     {
-        $obj = $this->obj;
-        $ret = $obj->merge([
-            'foo'=>'bar',
-            'bar'=>'baz'
+        $this->obj->setData([
+            'a' => 1,
+            'b' => [1, 2, 3],
+            'c' => [
+                'd' => 7,
+                'e' => [7,8,9]
+            ],
+            'd' => 'foo'
         ]);
-        $this->assertSame($ret, $obj);
-        $this->assertEquals('bar', $obj->get('foo'));
-        $this->assertEquals('baz', $obj->get('bar'));
+
+        $ret = $this->obj->merge([
+            'a' => 2,
+            'b' => [4, 5, 6],
+            'c' => [
+                'a' => 42,
+                'd' => 67
+            ]
+        ]);
+        $this->assertSame($ret, $this->obj);
+
+        $expected = [
+            'a' => 2,
+            'b' => [4, 5, 6],
+            'c' => [
+                'd' => 67,
+                'e' => [7, 8, 9],
+                'a' => 42
+            ],
+            'd' => 'foo'
+
+        ];
+
+        $this->assertEquals($expected, $this->obj->data());
+    }
+
+    public function testMergeWithConfigInterface()
+    {
+        $this->obj ->setData([
+            'a' => 1,
+            'b' => [1, 2, 3],
+            'c' => [
+                'd' => 7,
+                'e' => [7,8,9]
+            ],
+            'd' => 'foo'
+        ]);
+
+        $config = $this->getMockForAbstractClass(AbstractConfig::class, [[
+            'a' => 2,
+            'b' => [4, 5, 6],
+            'c' => [
+                'a' => 42,
+                'd' => 67
+            ]
+        ]]);
+        $this->obj->merge($config);
+
+        $expected = [
+            'a' => 2,
+            'b' => [4, 5, 6],
+            'c' => [
+                'd' => 67,
+                'e' => [7, 8, 9],
+                'a' => 42
+            ],
+            'd' => 'foo'
+
+        ];
+
+        $this->assertEquals($expected, $this->obj->data());
     }
 
     public function testData()
@@ -90,29 +151,6 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($c, $obj->data());
     }
 
-    /**
-     * Assert that the `setSeparator` method:
-     * - is chainable
-     * - sets the value (retrievable with `separator()`)
-     * - only accepts strings (or throws exception)
-     */
-    public function testSetSeparator()
-    {
-        $obj = $this->obj;
-        $ret = $obj->setSeparator('_');
-        $this->assertSame($ret, $obj);
-        $this->assertEquals('_', $obj->separator());
-
-        $this->setExpectedException('\InvalidArgumentException');
-        $obj->setSeparator(false);
-    }
-
-    public function testSetSeparatorWithMoreThanOneCharacterThrowsException()
-    {
-        $obj = $this->obj;
-        $this->setExpectedException('\InvalidArgumentException');
-        $obj->setSeparator('foo');
-    }
 
     public function testGet()
     {
@@ -123,46 +161,10 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(42, $obj->get('foobar'));
     }
 
-    public function testGetWithSeparator()
+    public function testSetGetUnderscore()
     {
-        $obj = $this->obj;
-        $obj->set('foo', ['bar'=>42]);
-        $this->assertEquals(['bar'=>42], $obj->get('foo'));
-        $this->assertEquals(42, $obj->get('foo.bar'));
-    }
-
-    public function testSetWithSeparator()
-    {
-        $obj = $this->obj;
-        $obj->set('foo.bar', 42);
-        $this->assertEquals(['bar'=>42], $obj->get('foo'));
-        $this->assertEquals(42, $obj->get('foo.bar'));
-
-        //$obj->set('foo.bar', 13);
-        //$this->assertEquals(13, $obj->get('foo.bar'));
-
-        $obj->set('foo.baz', 666);
-        $this->assertEquals(42, $obj->get('foo.bar'));
-        $this->assertEquals(666, $obj->get('foo.baz'));
-
-        $obj->set('foo.x.y.z', 'test');
-        $this->assertEquals('test', $obj->get('foo.x.y.z'));
-    }
-
-    public function testGetWithCustomSeparator()
-    {
-        $obj = $this->obj;
-        $obj->set('foo', ['bar'=>42]);
-        $obj->setSeparator('/');
-        $this->assertEquals(42, $obj->get('foo/bar'));
-    }
-
-    public function testOffsetGetWithCustomSeparator()
-    {
-        $obj = $this->obj;
-        $obj->set('foo', ['bar'=>42]);
-        $obj->setSeparator('/');
-        $this->assertEquals(42, $obj['foo/bar']);
+        $this->obj->set('_', 'test');
+        $this->assertNull($this->obj->get('_'));
     }
 
     public function testHas()
@@ -189,7 +191,7 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(['test'=>'phpunit'], $obj['config']);
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
         @$obj->addFile(__DIR__.'/config_files/invalid.ini');
     }
 
@@ -201,7 +203,7 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(['test'=>'phpunit'], $obj['config']);
 
-        $this->setExpectedException('\Exception');
+        $this->setExpectedException(Exception::class);
         $obj->addFile(__DIR__.'/config_files/invalid.json');
     }
 
@@ -220,25 +222,25 @@ class AbstractConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
         $this->assertEquals(['test'=>'phpunit'], $obj['config']);
 
-        $this->setExpectedException('\Exception');
+        $this->setExpectedException(Exception::class);
         $obj->addFile(__DIR__.'/config_files/invalid.yml');
     }
 
     public function testLoadFileInvalidArgument()
     {
-        $this->setExpectedException('\Exception');
+        $this->setExpectedException(Exception::class);
         $this->obj->loadFile(false);
     }
 
     public function testLoadFileNotExist()
     {
-        $this->setExpectedException('\Exception');
+        $this->setExpectedException(Exception::class);
         $this->obj->loadFile('foo.php');
     }
 
     public function testLoadFileInvalidFile()
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException(InvalidArgumentException::class);
         $this->obj->loadFile(__DIR__.'/config_files/invalid.txt');
     }
 

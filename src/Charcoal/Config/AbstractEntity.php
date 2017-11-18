@@ -3,94 +3,20 @@
 namespace Charcoal\Config;
 
 // Dependencies from `PHP`
-use \ArrayAccess;
-use \Exception;
-use \InvalidArgumentException;
-
-// Local namespace dependencies
-use \Charcoal\Config\EntityInterface;
+use ArrayAccess;
+use InvalidArgumentException;
 
 /**
  * Default Charcoal core entity (data container).
  */
 abstract class AbstractEntity implements EntityInterface
 {
-    /**
-     * Delegates act as fallbacks when the current object
-     * doesn't have a requested option.
-     *
-     * @var EntityInterface[] $delegates
-     */
-    protected $delegates = [];
 
     /**
      * Keep a list of all config keys available.
      * @var array $keys
      */
     protected $keys = [];
-
-    /**
-     * Delimiter for accessing nested options.
-     *
-     * Is empty by default (which disables the separator feature).
-     *
-     * @var string $separator
-     */
-    protected $separator = '';
-
-    /**
-     * @param EntityInterface[] $delegates The array of delegates (config) to set.
-     * @return EntityInterface Chainable
-     */
-    public function setDelegates(array $delegates)
-    {
-        $this->delegates = [];
-        foreach ($delegates as $delegate) {
-            $this->addDelegate($delegate);
-        }
-        return $this;
-    }
-
-    /**
-     * @param EntityInterface $delegate A delegate (config) instance.
-     * @return EntityInterface Chainable
-     */
-    public function addDelegate(EntityInterface $delegate)
-    {
-        $this->delegates[] = $delegate;
-        return $this;
-    }
-
-    /**
-     * @param EntityInterface $delegate A delegate (config) instance.
-     * @return EntityInterface Chainable
-     */
-    public function prependDelegate(EntityInterface $delegate)
-    {
-        array_unshift($this->delegates, $delegate);
-        return $this;
-    }
-
-    /**
-     * @param string $separator A single-character to delimite nested options.
-     * @throws InvalidArgumentException If $separator is invalid.
-     * @return AbstractConfig Chainable
-     */
-    public function setSeparator($separator)
-    {
-        if (!is_string($separator)) {
-            throw new InvalidArgumentException(
-                'Separator needs to be a string.'
-            );
-        }
-        if (strlen($separator) > 1) {
-            throw new InvalidArgumentException(
-                'Separator needs to be only one-character, or empty.'
-            );
-        }
-        $this->separator = $separator;
-        return $this;
-    }
 
     /**
      * Get the configuration's available keys.
@@ -115,6 +41,7 @@ abstract class AbstractEntity implements EntityInterface
         $keys = $this->keys();
         foreach ($keys as $k) {
             if ($k == 'data') {
+                // Avoid recursive call
                 continue;
             }
             if (isset($this[$k])) {
@@ -125,12 +52,12 @@ abstract class AbstractEntity implements EntityInterface
     }
 
     /**
-     * Sets the entity data, from associative array map (or any other Traversable).
+     * Sets the entity data, from associative array map.
      *
      * This function takes an array and fill the property with its value.
      *
      * @param array $data The entity data. Will call setters.
-     * @return EntityInterface Chainable
+     * @return self
      * @see self::offsetSet()
      */
     public function setData(array $data)
@@ -176,7 +103,7 @@ abstract class AbstractEntity implements EntityInterface
      * @see self::offsetSet()
      * @param string $key   The key to assign $value to.
      * @param mixed  $value Value to assign to $key.
-     * @return AbstractConfig Chainable
+     * @return self
      */
     public function set($key, $value)
     {
@@ -184,6 +111,118 @@ abstract class AbstractEntity implements EntityInterface
         return $this;
     }
 
+    /**
+     * Determine if a configuration key exists.
+     *
+     * @see ArrayAccess::offsetExists()
+     * @param string $key The key of the configuration item to look for.
+     * @throws InvalidArgumentException If the key argument is not a string or is a "numeric" value.
+     * @return boolean
+     */
+    public function offsetExists($key)
+    {
+        if (is_numeric($key)) {
+            throw new InvalidArgumentException(
+                'Entity array access only supports non-numeric keys.'
+            );
+        }
+
+        $key = $this->camelize($key);
+        if (is_callable([$this, $key])) {
+            $value = $this->{$key}();
+        } else {
+            if (!isset($this->{$key})) {
+                return false;
+            }
+            $value = $this->{$key};
+        }
+        return ($value !== null);
+    }
+
+    /**
+     * Find an entry of the configuration by its key and retrieve it.
+     *
+     * @see ArrayAccess::offsetGet()
+     * @param string $key The key of the configuration item to look for.
+     * @throws InvalidArgumentException If the key argument is not a string or is a "numeric" value.
+     * @return mixed The value (or null)
+     */
+    public function offsetGet($key)
+    {
+        if (is_numeric($key)) {
+            throw new InvalidArgumentException(
+                'Entity array access only supports non-numeric keys.'
+            );
+        }
+
+        $key = $this->camelize($key);
+
+        if (is_callable([$this, $key])) {
+            return $this->{$key}();
+        } else {
+            if (isset($this->{$key})) {
+                return $this->{$key};
+            } else {
+                return null;
+            }
+        }
+    }
+
+    /**
+     * Assign a value to the specified key of the configuration.
+     *
+     * Set the value either by:
+     * - a setter method (`set_{$key}()`)
+     * - setting (or overriding)
+     *
+     * @see ArrayAccess::offsetSet()
+     * @param string $key   The key to assign $value to.
+     * @param mixed  $value Value to assign to $key.
+     * @throws InvalidArgumentException If the key argument is not a string or is a "numeric" value.
+     * @return void
+     */
+    public function offsetSet($key, $value)
+    {
+        if (is_numeric($key)) {
+            throw new InvalidArgumentException(
+                'Entity array access only supports non-numeric keys.'
+            );
+        }
+
+        $key = $this->camelize($key);
+        $setter = 'set'.ucfirst($key);
+
+        // Case: url.com?_=something
+        if ($setter === 'set') {
+            return;
+        }
+
+        if (is_callable([$this, $setter])) {
+            $this->{$setter}($value);
+        } else {
+            $this->{$key} = $value;
+        }
+        $this->keys[$key] = true;
+    }
+
+    /**
+     * ArrayAccess > offsetUnset()
+     *
+     * @param string $key The key of the configuration item to remove.
+     * @throws InvalidArgumentException If the key argument is not a string or is a "numeric" value.
+     * @return void
+     */
+    public function offsetUnset($key)
+    {
+        if (is_numeric($key)) {
+            throw new InvalidArgumentException(
+                'Entity array access only supports non-numeric keys.'
+            );
+        }
+        $key = $this->camelize($key);
+        $this[$key] = null;
+        unset($this->keys[$key]);
+    }
     /**
      * JsonSerializable > jsonSerialize()
      *
@@ -217,275 +256,16 @@ abstract class AbstractEntity implements EntityInterface
     }
 
     /**
-     * Determine if a configuration key exists.
-     *
-     * @see ArrayAccess::offsetExists()
-     * @param string $key The key of the configuration item to look for.
-     * @throws InvalidArgumentException If the key argument is not a string or is a "numeric" value.
-     * @return boolean
-     */
-    public function offsetExists($key)
-    {
-        if (is_numeric($key)) {
-            throw new InvalidArgumentException(
-                'Entity array access only supports non-numeric keys.'
-            );
-        }
-
-        if ($this->separator && strstr($key, $this->separator)) {
-            return $this->hasWithSeparator($key);
-        }
-
-        $getter = $this->getter($key);
-        if (is_callable([$this, $getter])) {
-            $value = $this->{$getter}();
-        } else {
-            if (!isset($this->{$key})) {
-                return $this->hasInDelegates($key);
-            }
-            $value = $this->{$key};
-        }
-        return ($value !== null);
-    }
-
-    /**
-     * Find an entry of the configuration by its key and retrieve it.
-     *
-     * @see ArrayAccess::offsetGet()
-     * @param string $key The key of the configuration item to look for.
-     * @throws InvalidArgumentException If the key argument is not a string or is a "numeric" value.
-     * @return mixed The value (or null)
-     */
-    public function offsetGet($key)
-    {
-        if (is_numeric($key)) {
-            throw new InvalidArgumentException(
-                'Entity array access only supports non-numeric keys.'
-            );
-        }
-        if ($this->separator && strstr($key, $this->separator)) {
-            return $this->getWithSeparator($key);
-        }
-        $getter = $this->getter($key);
-
-        if (is_callable([$this, $getter])) {
-            return $this->{$getter}();
-        } else {
-            if (isset($this->{$key})) {
-                return $this->{$key};
-            } else {
-                return $this->getInDelegates($key);
-            }
-        }
-    }
-
-    /**
-     * Assign a value to the specified key of the configuration.
-     *
-     * Set the value either by:
-     * - a setter method (`set_{$key}()`)
-     * - setting (or overriding)
-     *
-     * @see ArrayAccess::offsetSet()
-     * @param string $key   The key to assign $value to.
-     * @param mixed  $value Value to assign to $key.
-     * @throws InvalidArgumentException If the key argument is not a string or is a "numeric" value.
-     * @return void
-     */
-    public function offsetSet($key, $value)
-    {
-        if (is_numeric($key)) {
-            throw new InvalidArgumentException(
-                'Entity array access only supports non-numeric keys.'
-            );
-        }
-
-        if ($this->separator && strstr($key, $this->separator)) {
-            $this->setWithSeparator($key, $value);
-        } else {
-            $setter = $this->setter($key);
-
-            // Case: url.com?_=something
-            if ($setter === 'set') {
-                return ;
-            }
-
-            if (is_callable([$this, $setter])) {
-                $this->{$setter}($value);
-            } else {
-                $this->{$key} = $value;
-            }
-            $this->keys[$key] = true;
-        }
-    }
-
-    /**
-     * ArrayAccess > offsetUnset()
-     *
-     * @param string $key The key of the configuration item to remove.
-     * @throws InvalidArgumentException If the key argument is not a string or is a "numeric" value.
-     * @return void
-     */
-    public function offsetUnset($key)
-    {
-        if (is_numeric($key)) {
-            throw new InvalidArgumentException(
-                'Entity array access only supports non-numeric keys.'
-            );
-        }
-        $this[$key] = null;
-        unset($this->keys[$key]);
-    }
-
-    /**
-     * @param string $key The key of the configuration item to fetch.
-     * @return mixed The item, if found, or null.
-     */
-    private function getInDelegates($key)
-    {
-        foreach ($this->delegates as $delegate) {
-            if (isset($delegate[$key])) {
-                return $delegate[$key];
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * @param string $key The key of the configuration item to check.
-     * @return boolean
-     */
-    protected function hasInDelegates($key)
-    {
-        foreach ($this->delegates as $delegate) {
-            if (isset($delegate[$key])) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * @param string $key The key of the configuration item to look for.
-     * @return mixed The value (or null)
-     */
-    protected function getWithSeparator($key)
-    {
-        $arr = $this;
-        $split_keys = explode($this->separator, $key);
-        foreach ($split_keys as $k) {
-            if (!isset($arr[$k])) {
-                return $this->getInDelegates($key);
-            }
-            if (!is_array($arr[$k]) && ($arr[$k] instanceof ArrayAccess)) {
-                return $arr[$k];
-            }
-            $arr = $arr[$k];
-        }
-        return $arr;
-    }
-
-    /**
-     * @param string $key The key of the configuration item to look for.
-     * @return boolean
-     */
-    protected function hasWithSeparator($key)
-    {
-        $arr = $this;
-        $split_keys = explode($this->separator, $key);
-        foreach ($split_keys as $k) {
-            if (!isset($arr[$k])) {
-                return $this->hasInDelegates($key);
-            }
-            if (!is_array($arr[$k]) && ($arr[$k] instanceof ArrayAccess)) {
-                return true;
-            }
-            $arr = $arr[$k];
-        }
-        return true;
-    }
-
-    /**
-     * @param string $key   The key to assign $value to.
-     * @param mixed  $value Value to assign to $key.
-     * @throws Exception If a value already exists and is scalar (can not be merged).
-     * @return void
-     */
-    protected function setWithSeparator($key, $value)
-    {
-        $keys = explode($this->separator, $key);
-        $first = array_shift($keys);
-
-        $lvl = 1;
-        $num = count($keys);
-
-        $source = $this[$first];
-
-        $result = [];
-        $ref = &$result;
-
-        foreach ($keys as $p) {
-            if ($lvl == $num) {
-                $ref[$p] = $value;
-            } else {
-                if (!isset($source[$p])) {
-                    $ref[$p] = [];
-                } else {
-                    if (is_array($source[$p]) || ($source[$p] instanceof ArrayAccess)) {
-                        $ref[$p] = $source[$p];
-                    } else {
-                        throw new Exception(
-                            sprintf('Can not set recursively with separator.')
-                        );
-                    }
-                }
-            }
-
-            $ref = &$ref[$p];
-            $lvl++;
-        }
-
-        // Merge, if necessary.
-        if (isset($this[$first])) {
-            $result = ($this[$first] + $result);
-        }
-
-        $this[$first] = $result;
-    }
-
-    /**
-     * Allow an object to define how the key getter are called.
-     *
-     * @param string $key The key to get the getter from.
-     * @return string The getter method name, for a given key.
-     */
-    protected function getter($key)
-    {
-        $getter = $key;
-        return $this->camelize($getter);
-    }
-
-    /**
-     * Allow an object to define how the key setter are called.
-     *
-     * @param string $key The key to get the setter from.
-     * @return string The setter method name, for a given key.
-     */
-    protected function setter($key)
-    {
-        $setter = 'set_'.$key;
-        return $this->camelize($setter);
-    }
-
-    /**
      * Transform a snake_case string to camelCase.
      *
      * @param string $str The snake_case string to camelize.
      * @return string The camelcase'd string.
      */
-    protected function camelize($str)
+    final protected function camelize($str)
     {
+        if (strstr($str, '_') === false) {
+            return $str;
+        }
         return lcfirst(implode('', array_map('ucfirst', explode('_', $str))));
     }
 }

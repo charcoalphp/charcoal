@@ -2,19 +2,28 @@
 
 namespace Charcoal\Tests\Config;
 
+use PHPUnit_Framework_TestCase;
+
+use Charcoal\Tests\Config\AbstractEntityClass;
+
+use InvalidArgumentException;
+
+use Charcoal\Config\AbstractEntity;
+
 /**
  *
  */
-class AbstractEntityTest extends \PHPUnit_Framework_TestCase
+class AbstractEntityTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var mixed The Abstract Config mock
+     * The object under test
+     * @var AbstractEntity
      */
     public $obj;
 
     public function setUp()
     {
-        $this->obj = $this->getMockForAbstractClass('\Charcoal\Config\AbstractEntity');
+        $this->obj = $this->getMockForAbstractClass(AbstractEntity::class);
     }
 
     /**
@@ -35,6 +44,22 @@ class AbstractEntityTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([], $obj->keys());
     }
 
+    public function testSetDataIsChainable()
+    {
+        $ret = $this->obj->setData([
+           'foo' => 'bar'
+        ]);
+        $this->assertSame($ret, $this->obj);
+    }
+
+    public function testSetDataSetsData()
+    {
+        $this->obj->setData([
+            'foo' => 'bar'
+        ]);
+        $this->assertEquals(['foo'=>'bar'], $this->obj->data());
+    }
+
     /**
      * Asserts that the `set()` method:
      * - sets the value
@@ -43,145 +68,42 @@ class AbstractEntityTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetGet()
     {
-        $obj = $this->obj;
-        $this->assertNull($obj->get('foobar'));
+        $this->assertNull($this->obj->get('foobar'));
 
-        $obj->set('foobar', 42);
-        $this->assertEquals(42, $obj->get('foobar'));
+        $this->obj->set('foobar', 42);
+        $this->assertEquals(42, $this->obj->get('foobar'));
+    }
+
+    public function testSetUnderscore()
+    {
+        $this->obj->set('_', 'test');
+        $this->assertNull($this->obj->get('_'));
     }
 
     public function testSetGetWithSetterGetter()
     {
-        $obj = new \Charcoal\Tests\Config\AbstractEntityClass();
+        $obj = new AbstractEntityClass();
         $obj->set('foo', 2);
         $this->assertEquals('foo is 12', $obj->get('foo'));
     }
 
+    public function testHas()
+    {
+        $this->assertFalse($this->obj->has('foo'));
+
+        $this->obj['foo'] = 'bar';
+        $this->assertTrue($this->obj->has('foo'));
+
+        unset($this->obj['foo']);
+        $this->assertFalse($this->obj->has('foo'));
+    }
+
     public function testHasWithSetterGetter()
     {
-        $obj = new \Charcoal\Tests\Config\AbstractEntityClass();
+        $obj = new AbstractEntityClass();
         $this->assertTrue($obj->has('foo'));
-    }
 
-    /**
-     * Asserts that:
-     * - The `ArrayAccess` interface is properly implemented
-     * - Setting by array sets the value properly
-     * - Getting by array gets the value properly
-     * - Unsetting by array unsets the key properly
-     * - Using isset by arrat works properly
-     */
-    public function testArrayAccess()
-    {
-        $obj = $this->obj;
-        $obj['foo'] = 'test';
-        $this->assertEquals('test', $obj['foo']);
-
-        $this->assertTrue(isset($obj['foo']));
-        unset($obj['foo']);
-        $this->assertNotTrue(isset($obj['foo']));
-    }
-
-    /**
-     * Asserts that getting by array with a numeric index throws an exception.
-     * Only string "keys" are valid.
-     */
-    public function testArrayAccessGetNumericException()
-    {
-        $obj = $this->obj;
-        $this->setExpectedException('\InvalidArgumentException');
-        $obj[0];
-    }
-
-    /**
-     * Asserts that setting by array with a numeric index throws an exception.
-     * Only string "keys" are valid.
-     */
-    public function testArrayAccessSetNumericException()
-    {
-        $obj = $this->obj;
-        $this->setExpectedException('\InvalidArgumentException');
-        $obj[0] = 'foo';
-    }
-
-    /**
-     * Asserts that checking isset by array with a numeric index throws an exception.
-     * Only string "keys" are valid.
-     */
-    public function testArrayAccessIssetNumericException()
-    {
-        $obj = $this->obj;
-        $this->setExpectedException('\InvalidArgumentException');
-        isset($obj[0]);
-    }
-
-    /**
-     * Asserts that checking isset by array with a numeric index throws an exception.
-     * Only string "keys" are valid.
-     */
-    public function testArrayAccessUnsetNumericException()
-    {
-        $obj = $this->obj;
-        $this->setExpectedException('\InvalidArgumentException');
-        unset($obj[0]);
-    }
-
-    /**
-     * Asserts that the `setDelegates` method is chainable.
-     */
-    public function testSetDelegatesIsChainable()
-    {
-        $delegate = $this->getMockForAbstractClass('\Charcoal\Config\AbstractConfig');
-        $ret = $this->obj->setDelegates([$delegate]);
-        $this->assertSame($ret, $this->obj);
-    }
-
-    /**
-     * Asserts that the `addDelegate` method is chainable.
-     */
-    public function testAddDelegateIsChainable()
-    {
-        $delegate = $this->getMockForAbstractClass('\Charcoal\Config\AbstractConfig');
-        $ret = $this->obj->addDelegate($delegate);
-        $this->assertSame($ret, $this->obj);
-    }
-
-    /**
-     * Asserts that the `prependDelegate` method is chainable.
-     */
-    public function testprependDelegateIsChainable()
-    {
-        $delegate = $this->getMockForAbstractClass('\Charcoal\Config\AbstractConfig');
-        $ret = $this->obj->prependDelegate($delegate);
-        $this->assertSame($ret, $this->obj);
-    }
-
-    /**
-     * Asserts that
-     * - The delegate is actually used when accessing a non-existing key.
-     * - The order of the delegates are respected.
-     */
-    public function testDelegates()
-    {
-        $obj = $this->obj;
-
-        $this->assertFalse($obj->has('foo'));
-
-        $delegate = $this->getMockForAbstractClass('\Charcoal\Config\AbstractConfig');
-        $delegate->set('foo', 'bar');
-        $obj->addDelegate($delegate);
-
-        $this->assertTrue($obj->has('foo'));
-        $this->assertEquals('bar', $obj->get('foo'));
-
-        $delegate2 = $this->getMockForAbstractClass('\Charcoal\Config\AbstractConfig');
-        $delegate2->set('foo', 'baz');
-
-        $obj->addDelegate($delegate2);
-        $this->assertEquals('bar', $obj->get('foo'));
-
-        $obj->prependDelegate($delegate2);
-        $this->assertEquals('baz', $obj->get('foo'));
+        $this->assertFalse($obj->has('bar'));
     }
 
     /**
@@ -189,14 +111,13 @@ class AbstractEntityTest extends \PHPUnit_Framework_TestCase
      */
     public function testSerializable()
     {
-        $obj = $this->obj;
-        $obj->set('foo', 'bar');
+        $this->obj->set('foo', 'bar');
 
-        $s = serialize($obj);
+        $s = serialize($this->obj);
         $o = unserialize($s);
 
         $this->assertEquals($o->get('foo'), 'bar');
-        $this->assertEquals($o, $obj);
+        $this->assertEquals($o, $this->obj);
     }
 
     /**
@@ -208,6 +129,38 @@ class AbstractEntityTest extends \PHPUnit_Framework_TestCase
         $obj->set('foo', 'bar');
         $ret = json_encode($obj);
         $this->assertEquals(trim('{"foo":"bar"}'), $ret);
+
+        $data = json_decode($ret, true);
+        $this->assertEquals($data, $obj->data());
     }
 
+    /**
+     * Asserts that the data container can be passed keys in camelCase or pascal_case format
+     * - setting in pascal_case can be retrieved  in camelCase.
+     * - setting in camelCase can be retrieved in pascal_case.
+     * - unsetting works in both camelCase and pascal_case.
+     * - checking (with has() or isset) works in both cases.
+     *
+     * Basically asserts that both cases can be used interchangeably.
+     */
+    public function testCamelize()
+    {
+        $this->obj->set('foo_bar', 42);
+        $this->assertEquals(42, $this->obj->get('fooBar'));
+        $this->assertTrue(isset($this->obj['fooBar']));
+        $this->assertTrue($this->obj->has('fooBar'));
+
+        unset($this->obj['fooBar']);
+        $this->assertFalse(isset($this->obj['foo_bar']));
+        $this->assertFalse($this->obj->has('fooBar'));
+
+        $this->obj['barBaz'] = 'x';
+        $this->assertEquals('x', $this->obj['bar_baz']);
+        $this->assertTrue(isset($this->obj['bar_baz']));
+        $this->assertTrue($this->obj->has('bar_baz'));
+
+        unset($this->obj['bar_baz']);
+        $this->assertFalse(isset($this->obj['barBaz']));
+        $this->assertFalse($this->obj->has('bar_baz'));
+    }
 }

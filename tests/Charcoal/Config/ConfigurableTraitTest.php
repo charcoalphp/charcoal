@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Config;
 
+use Charcoal\Config\GenericConfig;
+
 class ConfigurableTraitTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -22,10 +24,16 @@ class ConfigurableTraitTest extends \PHPUnit_Framework_TestCase
              ->method('createConfig')
              ->with($this->isType('array'))
              ->will($this->returnCallback(function($args) {
-                return new \Charcoal\Config\GenericConfig($args);
+                return new GenericConfig($args);
              }));
 
-        $this->config = new \Charcoal\Config\GenericConfig();
+        $this->config = new GenericConfig();
+    }
+
+    public function testCallingConfigCreatesConfig()
+    {
+        $config = $this->obj->config();
+        $this->assertInstanceOf(GenericConfig::class, $config);
     }
 
     /**
@@ -53,9 +61,9 @@ class ConfigurableTraitTest extends \PHPUnit_Framework_TestCase
 
     public function testConfigWithKey()
     {
-        $obj = $this->obj;
-        $obj->setConfig(['foo' => 'baz']);
-        $this->assertEquals('baz', $obj->config('foo'));
+        $this->assertNull($this->obj->config('foo'));
 
+        $this->obj->setConfig(['foo' => 'baz']);
+        $this->assertEquals('baz', $this->obj->config('foo'));
     }
 }

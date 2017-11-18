@@ -3,19 +3,16 @@
 namespace Charcoal\Config;
 
 // Dependencies from `PHP`
-use \ArrayIterator;
-use \InvalidArgumentException;
-use \IteratorAggregate;
-use \Traversable;
+use ArrayIterator;
+use InvalidArgumentException;
+use IteratorAggregate;
+use Traversable;
 
 // Dependencies from `symfony/yaml`
 use Symfony\Component\Yaml\Parser as YamlParser;
 
 // Dependencies from `container-interop/container-interop`
 use Interop\Container\ContainerInterface;
-
-// Local namespace dependencies
-use \Charcoal\Config\ConfigInterface;
 
 /**
  * Configuration container / registry.
@@ -29,13 +26,10 @@ abstract class AbstractConfig extends AbstractEntity implements
     ContainerInterface,
     IteratorAggregate
 {
-    const DEFAULT_SEPARATOR = '.';
+    use DelegatesAwareTrait;
+    use SeparatorAwareTrait;
 
-    /**
-     * Default separator for config is "."
-     * @var string $separator
-     */
-    protected $separator = self::DEFAULT_SEPARATOR;
+    const DEFAULT_SEPARATOR = '.';
 
     /**
      * Create the configuration.
@@ -46,8 +40,9 @@ abstract class AbstractConfig extends AbstractEntity implements
      */
     final public function __construct($data = null, array $delegates = null)
     {
+        $this->setSeparator(self::DEFAULT_SEPARATOR);
         // Always set the default data first.
-        $this->merge($this->defaults());
+        $this->setData($this->defaults());
 
         // Set the delegates, if necessary.
         if (isset($delegates)) {
@@ -73,14 +68,109 @@ abstract class AbstractConfig extends AbstractEntity implements
     }
 
     /**
-     * Config gives public access to its separator.
+     * Determine if a configuration key exists.
      *
-     * @return string
+     * @see ArrayAccess::offsetExists()
+     * @param string $key The key of the configuration item to look for.
+     * @throws InvalidArgumentException If the key argument is not a string or is a "numeric" value.
+     * @return boolean
      */
-    public function separator()
+    public function offsetExists($key)
     {
-        return $this->separator;
+        if (is_numeric($key)) {
+            throw new InvalidArgumentException(
+                'Entity array access only supports non-numeric keys.'
+            );
+        }
+
+        if ($this->separator && strstr($key, $this->separator)) {
+            return $this->hasWithSeparator($key);
+        }
+
+        $key = $this->camelize($key);
+        if (is_callable([$this, $key])) {
+            $value = $this->{$key}();
+        } else {
+            if (!isset($this->{$key})) {
+                return $this->hasInDelegates($key);
+            }
+            $value = $this->{$key};
+        }
+        return ($value !== null);
     }
+
+    /**
+     * Find an entry of the configuration by its key and retrieve it.
+     *
+     * @see ArrayAccess::offsetGet()
+     * @param string $key The key of the configuration item to look for.
+     * @throws InvalidArgumentException If the key argument is not a string or is a "numeric" value.
+     * @return mixed The value (or null)
+     */
+    public function offsetGet($key)
+    {
+        if (is_numeric($key)) {
+            throw new InvalidArgumentException(
+                'Entity array access only supports non-numeric keys.'
+            );
+        }
+        if ($this->separator && strstr($key, $this->separator)) {
+            return $this->getWithSeparator($key);
+        }
+        $key = $this->camelize($key);
+
+        if (is_callable([$this, $key])) {
+            return $this->{$key}();
+        } else {
+            if (isset($this->{$key})) {
+                return $this    ->{$key};
+            } else {
+                return $this->getInDelegates($key);
+            }
+        }
+    }
+
+    /**
+     * Assign a value to the specified key of the configuration.
+     *
+     * Set the value either by:
+     * - a setter method (`set_{$key}()`)
+     * - setting (or overriding)
+     *
+     * @see ArrayAccess::offsetSet()
+     * @param string $key   The key to assign $value to.
+     * @param mixed  $value Value to assign to $key.
+     * @throws InvalidArgumentException If the key argument is not a string or is a "numeric" value.
+     * @return void
+     */
+    public function offsetSet($key, $value)
+    {
+        if (is_numeric($key)) {
+            throw new InvalidArgumentException(
+                'Entity array access only supports non-numeric keys.'
+            );
+        }
+
+        if ($this->separator && strstr($key, $this->separator)) {
+            $this->setWithSeparator($key, $value);
+        } else {
+            $key = $this->camelize($key);
+            $setter = 'set'.ucfirst($key);
+
+            // Case: url.com?_=something
+            if ($setter === 'set') {
+                return;
+            }
+
+            if (is_callable([$this, $setter])) {
+                $this->{$setter}($value);
+            } else {
+                $this->{$key} = $value;
+            }
+            $this->keys[$key] = true;
+        }
+    }
+
 
     /**
      * Add a configuration file. The file type is determined by its extension.
@@ -89,7 +179,7 @@ abstract class AbstractConfig extends AbstractEntity implements
      *
      * @param string $filename A supported configuration file.
      * @throws InvalidArgumentException If the file is invalid.
-     * @return AbstractConfig (Chainable)
+     * @return self
      */
     public function addFile($filename)
     {
@@ -107,7 +197,7 @@ abstract class AbstractConfig extends AbstractEntity implements
      *
      * @param string $filename A supported configuration file.
      * @throws InvalidArgumentException If the filename is invalid.
-     * @return mixed The file content.
+     * @return mixed
      */
     public function loadFile($filename)
     {
@@ -146,16 +236,20 @@ abstract class AbstractConfig extends AbstractEntity implements
      * (such as a `ConfigInterface` instance).
      *
      * @param array|Traversable|ConfigInterface $data The data to set.
-     * @return AbstractConfig Chainable
+     * @return self
      * @see self::offsetSet()
      */
     public function merge($data)
     {
         foreach ($data as $k => $v) {
+            if (is_array($v) && isset($this[$k]) && is_array($this[$k])) {
+                $v = array_replace_recursive($this[$k], $v);
+            }
             $this[$k] = $v;
         }
         return $this;
     }
+
 
     /**
      * A stub for when the default data is empty.
@@ -185,14 +279,14 @@ abstract class AbstractConfig extends AbstractEntity implements
      *
      * @param string $filename A INI configuration file.
      * @throws InvalidArgumentException If the file or invalid.
-     * @return AbstractConfig Chainable
+     * @return mixed
      */
     private function loadIniFile($filename)
     {
         $config = parse_ini_file($filename, true);
         if ($config === false) {
             throw new InvalidArgumentException(
-                sprintf('Ini file "%s" is empty or invalid.')
+                sprintf('Ini file "%s" is empty or invalid.', $filename)
             );
         }
         return $config;
@@ -203,7 +297,7 @@ abstract class AbstractConfig extends AbstractEntity implements
      *
      * @param string $filename A JSON configuration file.
      * @throws InvalidArgumentException If the file or invalid.
-     * @return AbstractConfig Chainable
+     * @return mixed
      */
     private function loadJsonFile($filename)
     {
@@ -215,6 +309,7 @@ abstract class AbstractConfig extends AbstractEntity implements
         }
 
         // Handle JSON error
+        $errMsg = '';
         switch ($errCode) {
             case JSON_ERROR_NONE:
                 break;
@@ -247,7 +342,7 @@ abstract class AbstractConfig extends AbstractEntity implements
      * Add a PHP file to the configuration
      *
      * @param string $filename A PHP configuration file.
-     * @return AbstractConfig Chainable
+     * @return mixed
      */
     private function loadPhpFile($filename)
     {
@@ -261,7 +356,7 @@ abstract class AbstractConfig extends AbstractEntity implements
      *
      * @param string $filename A YAML configuration file.
      * @throws InvalidArgumentException If the YAML file can not correctly be parsed into an array.
-     * @return AbstractConfig Chainable
+     * @return mixed
      */
     private function loadYamlFile($filename)
     {

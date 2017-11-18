@@ -3,7 +3,7 @@
 namespace Charcoal\Config;
 
 // Local namespace dependencies
-use \Charcoal\Config\ConfigInterface;
+use Charcoal\Config\ConfigInterface;
 
 /**
  * Configurable Interface defines object that can be configured with a Config object.
