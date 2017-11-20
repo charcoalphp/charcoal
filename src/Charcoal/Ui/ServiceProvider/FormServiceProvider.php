@@ -2,11 +2,14 @@
 
 namespace Charcoal\Ui\ServiceProvider;
 
+// From Pimple
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 
+// From 'charcoal-factory'
 use Charcoal\Factory\GenericFactory as Factory;
 
+// From 'charcoal-ui'
 use Charcoal\Ui\Form\FormBuilder;
 use Charcoal\Ui\Form\FormInterface;
 use Charcoal\Ui\Form\GenericForm;
@@ -106,7 +109,7 @@ class FormServiceProvider implements ServiceProviderInterface
          * @param Container $container A Pimple DI container.
          * @return \Charcoal\Factory\FactoryInterface
          */
-        $container['form/input/factory'] = function(Container $container) {
+        $container['form/input/factory'] = function() {
             return new Factory([
                 'base_class'       => FormInputInterface::class,
                 'default_class'    => GenericFormInput::class,
