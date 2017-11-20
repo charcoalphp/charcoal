@@ -57,6 +57,7 @@ class ContainerProvider
     public function registerBaseServices(Container $container)
     {
         $this->registerConfig($container);
+        $this->registerBaseUrl($container);
         $this->registerSource($container);
         $this->registerLogger($container);
         $this->registerCache($container);
@@ -87,6 +88,19 @@ class ContainerProvider
     public function registerAdminServices(Container $container)
     {
         $this->registerClimate($container);
+    }
+
+    /**
+     * Setup the application's base URI.
+     *
+     * @param  Container $container A DI container.
+     * @return void
+     */
+    public function registerBaseUrl(Container $container)
+    {
+        $container['base-url'] = function (Container $container) {
+            return '';
+        };
     }
 
     /**
