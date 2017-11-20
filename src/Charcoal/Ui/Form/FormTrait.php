@@ -11,6 +11,7 @@ use Charcoal\Factory\FactoryInterface;
 // From 'charcoal-ui'
 use Charcoal\Ui\Form\FormInterface;
 use Charcoal\Ui\FormGroup\FormGroupInterface;
+use Charcoal\Ui\UiItemInterface;
 
 /**
  * Provides an implementation of {@see FormInterface}.
@@ -79,6 +80,15 @@ trait FormTrait
      * @var callable
      */
     private $groupCallback;
+
+    /**
+     * Static comparison function used by {@see uasort()}.
+     *
+     * @param  UiItemInterface $a Widget A.
+     * @param  UiItemInterface $b Widget B.
+     * @return integer Sorting value: -1 or 1
+     */
+    abstract protected static function sortItemsByPriority(UiItemInterface $a, UiItemInterface $b);
 
     /**
      * @param FactoryInterface $factory A factory, to create customized form gorup objects.
@@ -337,7 +347,7 @@ trait FormTrait
     public function groups(callable $groupCallback = null)
     {
         $groups = $this->groups;
-        uasort($groups, [$this, 'sortItemsByPriority']);
+        uasort($groups, [ $this, 'sortItemsByPriority' ]);
 
         $groupCallback = (isset($groupCallback) ? $groupCallback : $this->groupCallback);
 

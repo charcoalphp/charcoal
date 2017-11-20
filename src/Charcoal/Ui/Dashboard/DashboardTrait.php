@@ -37,6 +37,15 @@ trait DashboardTrait
     private $widgetCallback;
 
     /**
+     * Static comparison function used by {@see uasort()}.
+     *
+     * @param  UiItemInterface $a Widget A.
+     * @param  UiItemInterface $b Widget B.
+     * @return integer Sorting value: -1 or 1
+     */
+    abstract protected static function sortItemsByPriority(UiItemInterface $a, UiItemInterface $b);
+
+    /**
      * Set a widget builder.
      *
      * @param  object $builder The builder to create customized widget objects.

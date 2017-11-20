@@ -4,6 +4,7 @@ namespace Charcoal\Ui;
 
 use InvalidArgumentException;
 
+// From 'charcoal-ui'
 use Charcoal\Ui\UiItemInterface;
 
 /**
@@ -11,7 +12,6 @@ use Charcoal\Ui\UiItemInterface;
  */
 trait UiItemTrait
 {
-
     /**
      * @var boolean
      */

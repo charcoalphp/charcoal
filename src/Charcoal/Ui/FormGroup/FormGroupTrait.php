@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use Charcoal\Ui\Form\FormInterface;
 use Charcoal\Ui\FormInput\FormInputBuilder;
 use Charcoal\Ui\FormInput\FormInputInterface;
+use Charcoal\Ui\UiItemInterface;
 
 /**
  * Provides an implementation of {@see \Charcoal\Ui\FormGroup\FormGroupInterface}.
@@ -71,6 +72,15 @@ trait FormGroupTrait
      * @var string|string[]
      */
     private $tabCssClasses;
+
+    /**
+     * Static comparison function used by {@see uasort()}.
+     *
+     * @param  UiItemInterface $a Widget A.
+     * @param  UiItemInterface $b Widget B.
+     * @return integer Sorting value: -1 or 1
+     */
+    abstract protected static function sortItemsByPriority(UiItemInterface $a, UiItemInterface $b);
 
     /**
      * @param FormInputBuilder $builder The builder, to create customized form input objects.
@@ -185,7 +195,7 @@ trait FormGroupTrait
     public function inputs(callable $inputCallback = null)
     {
         $groups = $this->groups;
-        uasort($groups, ['self', 'sortItemsByPriority']);
+        uasort($groups, [ $this, 'sortItemsByPriority' ]);
 
         $inputCallback = isset($inputCallback) ? $inputCallback : $this->inputCallback;
         foreach ($inputs as $input) {

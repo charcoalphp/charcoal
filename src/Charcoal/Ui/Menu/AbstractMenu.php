@@ -9,6 +9,7 @@ use \Charcoal\Ui\AbstractUiItem;
 use \Charcoal\Ui\Menu\MenuInterface;
 use \Charcoal\Ui\MenuItem\MenuItemInterface;
 use \Charcoal\Ui\MenuItem\MenuItemBuilder;
+use \Charcoal\Ui\UiItemInterface;
 
 /**
  * A Basic Menu
@@ -124,7 +125,7 @@ abstract class AbstractMenu extends AbstractUiItem implements
     public function items(callable $itemCallback = null)
     {
         $items = $this->items;
-        uasort($items, [$this, 'sortItemsByPriority']);
+        uasort($items, [ $this, 'sortItemsByPriority' ]);
 
         $itemCallback = isset($itemCallback) ? $itemCallback : $this->itemCallback;
         foreach ($items as $item) {
