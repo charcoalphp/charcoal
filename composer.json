@@ -17,18 +17,18 @@
     "prefer-stable": true,
     "extra": {
         "branch-alias": {
-            "dev-master": "0.7.x-dev"
+            "dev-master": "0.8.x-dev"
         }
     },
     "require": {
-        "locomotivemtl/charcoal-config": "^0.7",
-        "locomotivemtl/charcoal-core": "~0.2",
-        "locomotivemtl/charcoal-object": "~0.1",
-        "locomotivemtl/charcoal-translator": "~0.1"
+        "locomotivemtl/charcoal-config": "^0.8",
+        "locomotivemtl/charcoal-core": "~0.3",
+        "locomotivemtl/charcoal-object": "~0.4",
+        "locomotivemtl/charcoal-translator": "~0.3"
     },
     "require-dev": {
-        "phpunit/phpunit": "^4.8",
-        "squizlabs/php_codesniffer": "^2.4",
+        "phpunit/phpunit": "^5.7",
+        "squizlabs/php_codesniffer": "^2.6",
         "satooshi/php-coveralls":"~1.0"
     },
     "suggest": {
