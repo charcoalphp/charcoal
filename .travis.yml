@@ -14,21 +14,18 @@ matrix:
     allow_failures:
         - php: nightly
 
-before_install:
-    ## Install imagemagick from PPA
-    #- sudo add-apt-repository -y ppa:moti-p/cc
-    #- sudo apt-get update
-    #- sudo apt-get -y --reinstall install imagemagick
-    #- printf "\n" | pecl install imagick-beta
-    - mkdir -p ./tests/tmp/images
-
 before_script:
+
+    ## Install php-imagick
+    - printf "\n" | pecl install imagick
+
     ## Init Composer
     - composer selfupdate --quiet
     - COMPOSER_ROOT_VERSION=dev-master composer install -n --dev
 
     ## Create temporary folders
     - mkdir -p build/logs
+    - mkdir -p ./tests/tmp/images
 
 script:
     ## Lint PHP Files
@@ -38,7 +35,7 @@ script:
     - ./vendor/bin/phpcs --config-set ignore_warnings_on_exit 1;./vendor/bin/phpcs -ps --colors --standard=phpcs.xml src/
 
     ## Run PHPUnit Tests
-    - phpunit --configuration ./tests/phpunit.xml --coverage-text --coverage-clover build/logs/clover.xml
+    - ./vendor/bin/phpunit --configuration ./tests/phpunit.xml --coverage-text --coverage-clover build/logs/clover.xml
 
 after_script:
     - php vendor/bin/coveralls -v
