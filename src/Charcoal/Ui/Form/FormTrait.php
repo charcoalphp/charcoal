@@ -88,7 +88,7 @@ trait FormTrait
      * @param  UiItemInterface $b Widget B.
      * @return integer Sorting value: -1 or 1
      */
-    abstract protected static function sortItemsByPriority(UiItemInterface $a, UiItemInterface $b);
+    abstract protected function sortItemsByPriority(UiItemInterface $a, UiItemInterface $b);
 
     /**
      * @param FactoryInterface $factory A factory, to create customized form gorup objects.

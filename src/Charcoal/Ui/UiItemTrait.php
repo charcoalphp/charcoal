@@ -559,7 +559,7 @@ trait UiItemTrait
      * @param  UiItemInterface $b Widget B.
      * @return integer Sorting value: -1 or 1
      */
-    protected static function sortItemsByPriority(UiItemInterface $a, UiItemInterface $b)
+    protected function sortItemsByPriority(UiItemInterface $a, UiItemInterface $b)
     {
         $priorityA = $a->priority();
         $priorityB = $b->priority();
