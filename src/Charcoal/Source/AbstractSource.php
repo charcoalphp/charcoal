@@ -21,9 +21,11 @@ use Charcoal\Source\SourceInterface;
 use Charcoal\Source\ModelAwareTrait;
 use Charcoal\Source\Filter;
 use Charcoal\Source\FilterInterface;
+use Charcoal\Source\FilterCollectionInterface;
 use Charcoal\Source\FilterCollectionTrait;
 use Charcoal\Source\Order;
 use Charcoal\Source\OrderInterface;
+use Charcoal\Source\OrderCollectionInterface;
 use Charcoal\Source\OrderCollectionTrait;
 use Charcoal\Source\Pagination;
 use Charcoal\Source\PaginationInterface;
@@ -273,19 +275,27 @@ abstract class AbstractSource implements
      */
     protected function parseFilterWithModel(FilterInterface $filter)
     {
-        if ($this->hasModel() && $filter->hasProperty()) {
-            $model    = $this->model();
-            $property = $filter->property();
-            if (is_string($property) && $model->hasProperty($property)) {
-                $property = $model->property($property);
+        if ($this->hasModel()) {
+            if ($filter->hasProperty()) {
+                $model    = $this->model();
+                $property = $filter->property();
+                if (is_string($property) && $model->hasProperty($property)) {
+                    $property = $model->property($property);
 
-                if ($property->l10n()) {
-                    $filter->setProperty($property->l10nIdent());
-                }
+                    if ($property->l10n()) {
+                        $filter->setProperty($property->l10nIdent());
+                    }
 
-                if ($property->multiple()) {
-                    $filter->setOperator('FIND_IN_SET');
+                    if ($property->multiple()) {
+                        $filter->setOperator('FIND_IN_SET');
+                    }
                 }
+            }
+
+            if ($filter instanceof FilterCollectionInterface) {
+                $filter->traverseFilters(function (FilterInterface $expr) {
+                    $this->parseFilterWithModel($expr);
+                });
             }
         }
 
@@ -357,15 +367,23 @@ abstract class AbstractSource implements
      */
     protected function parseOrderWithModel(OrderInterface $order)
     {
-        if ($this->hasModel() && $order->hasProperty()) {
-            $model    = $this->model();
-            $property = $order->property();
-            if (is_string($property) && $model->hasProperty($property)) {
-                $property = $model->property($property);
+        if ($this->hasModel()) {
+            if ($order->hasProperty()) {
+                $model    = $this->model();
+                $property = $order->property();
+                if (is_string($property) && $model->hasProperty($property)) {
+                    $property = $model->property($property);
 
-                if ($property->l10n()) {
-                    $order->setProperty($property->l10nIdent());
+                    if ($property->l10n()) {
+                        $order->setProperty($property->l10nIdent());
+                    }
                 }
+            }
+
+            if ($order instanceof OrderCollectionInterface) {
+                $order->traverseOrders(function (OrderInterface $expr) {
+                    $this->parseOrderWithModel($expr);
+                });
             }
         }
 

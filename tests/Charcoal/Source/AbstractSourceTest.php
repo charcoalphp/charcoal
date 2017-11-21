@@ -27,6 +27,7 @@ use Charcoal\Source\SourceInterface;
 
 use Charcoal\Tests\AssertionsTrait;
 use Charcoal\Tests\ContainerIntegrationTrait;
+use Charcoal\Tests\Mock\OrderTree;
 use Charcoal\Tests\ReflectionsTrait;
 
 /**
@@ -116,11 +117,13 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
             'properties' => [ 'foo' ],
             'filters'    => [],
             'orders'     => [],
-            'pagination' => []
+            'pagination' => [],
+            'foobar'     => true
         ]);
         $this->assertSame($ret, $obj);
 
         $this->assertEquals([ 'foo' ], $obj->properties());
+        $this->assertTrue($obj->foobar);
     }
 
     /**
@@ -358,6 +361,8 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
      *    the source will set the field name for the current locale.
      * 2. If a multi-value property is defined for the expression,
      *    the source will set the comparison operator for a valueset.
+     * 3. If a tree of expressions is passed, the source will traverse
+     *    all expressions.
      *
      * @covers \Charcoal\Source\AbstractSource::parseFilterWithModel
      */
@@ -383,6 +388,14 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
         $result = $method->invoke($source, $exp2);
         $this->assertSame($exp2, $result);
         $this->assertEquals('FIND_IN_SET', $exp2->operator());
+
+        /** 3. Traversal of nested expressions */
+        $exp3 = $this->createFilter();
+        $exp4 = $this->createFilter([ 'filters' => [ $exp3 ] ]);
+
+        $result = $method->invoke($source, $exp4);
+        $this->assertSame($exp4, $result);
+        $this->assertContains($exp3, $result->filters());
     }
 
     /**
@@ -478,6 +491,8 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
      * Assertions:
      * 1. If a multilingual property is defined for the expression,
      *    the source will set the field name for the current locale.
+     * 2. If a tree of expressions is passed, the source will traverse
+     *    all expressions.
      *
      * @covers \Charcoal\Source\AbstractSource::parseOrderWithModel
      */
@@ -489,12 +504,22 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
         $method = $this->getMethod($source, 'parseOrderWithModel');
 
         /** 1. Use current locale for multilingual properties */
-        $exp = $this->createOrder([ 'property' => 'title', 'direction' => 'ASC' ]);
-        $this->assertEquals('title', $exp->property());
+        $exp1 = $this->createOrder([ 'property' => 'title', 'direction' => 'ASC' ]);
+        $this->assertEquals('title', $exp1->property());
 
-        $result = $method->invoke($source, $exp);
-        $this->assertSame($exp, $result);
-        $this->assertEquals('title_en', $exp->property());
+        $result = $method->invoke($source, $exp1);
+        $this->assertSame($exp1, $result);
+        $this->assertEquals('title_en', $exp1->property());
+
+        /** 2. Traversal of nested expressions */
+        $exp2 = new OrderTree();
+        $exp3 = new OrderTree();
+
+        $exp2->addOrder($exp3);
+
+        $result = $method->invoke($source, $exp2);
+        $this->assertSame($exp2, $result);
+        $this->assertContains($exp3, $result->orders());
     }
 
     /**

@@ -138,6 +138,29 @@ trait FilterCollectionTrait
     }
 
     /**
+     * Traverses the tree of query filters and applies a user function to every expression.
+     *
+     * @param  callable $callable The function to run for each expression.
+     * @return self
+     */
+    public function traverseFilters(callable $callable)
+    {
+        foreach ($this->filters() as $expr) {
+            /**
+             * @param  FilterInterface           $expr The iterated filter expression object.
+             * @param  FilterCollectionInterface $this The context of the traversal.
+             * @return void
+             */
+            $callable($expr, $this);
+            if ($expr instanceof FilterCollectionInterface) {
+                $expr->traverseFilters($callable);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * Create a new query filter expression.
      *
      * @param  array $data Optional expression data.

@@ -283,4 +283,38 @@ class FilterCollectionTraitTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(InvalidArgumentException::class);
         $this->callMethodWith($obj, 'processFilter', null);
     }
+
+    /**
+     * Test traversal of internal collection.
+     *
+     * Assertions:
+     * 1. Applies callback to internal collection
+     * 2. Chainable method
+     *
+     * @covers \Charcoal\Source\FilterCollectionTrait::traverseFilters
+     */
+    public function testTraverseExpressions()
+    {
+        $obj  = $this->createCollector();
+        $exp1 = $this->createExpression();
+        $exp2 = $this->createExpression();
+        $exp3 = $this->createExpression();
+        $exp4 = $this->createExpression();
+
+        $exp2->addFilter($exp3);
+        $exp1->addFilter($exp2);
+
+        /** 1. Traverse internal collection */
+        $obj->addFilters([ $exp1, $exp4 ]);
+        $that = $obj->traverseFilters(function (FilterInterface $exp) {
+            $exp->setProperty('foo');
+        });
+
+        foreach ($obj->filters() as $filter) {
+            $this->assertEquals('foo', $filter->property());
+        }
+
+        /** 2. Chainable */
+        $this->assertSame($obj, $that);
+    }
 }

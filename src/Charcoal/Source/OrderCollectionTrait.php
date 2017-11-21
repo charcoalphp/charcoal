@@ -138,6 +138,29 @@ trait OrderCollectionTrait
     }
 
     /**
+     * Traverses the tree of query orders and applies a user function to every expression.
+     *
+     * @param  callable $callable The function to run for each expression.
+     * @return self
+     */
+    public function traverseOrders(callable $callable)
+    {
+        foreach ($this->orders() as $expr) {
+            /**
+             * @param  OrderInterface           $expr The iterated order expression object.
+             * @param  OrderCollectionInterface $this The context of the traversal.
+             * @return void
+             */
+            $callable($expr, $this);
+            if ($expr instanceof OrderCollectionInterface) {
+                $expr->traverseOrders($callable);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * Create a new query sorting expression.
      *
      * @param  array $data Optional expression data.

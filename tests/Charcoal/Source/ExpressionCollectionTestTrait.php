@@ -89,4 +89,9 @@ trait ExpressionCollectionTestTrait
      * 2. Chainable method
      */
     abstract public function testAddExpression();
+
+    /**
+     * Test traversal of internal collection.
+     */
+    abstract public function testTraverseExpressions();
 }

@@ -421,7 +421,7 @@ class Filter extends Expression implements
      *
      * @see    FilterCollectionTrait::createFilter()
      * @param  array $data Optional expression data.
-     * @return FilterInterface A new filter expression object.
+     * @return self
      */
     protected function createFilter(array $data = null)
     {
@@ -430,6 +430,17 @@ class Filter extends Expression implements
             $filter->setData($data);
         }
         return $filter;
+    }
+
+    /**
+     * Alias of {@see self::traverseFilters()}
+     *
+     * @param  callable $callable The function to run for each expression.
+     * @return self
+     */
+    public function traverse(callable $callable)
+    {
+        return $this->traverseFilters($callable);
     }
 
     /**

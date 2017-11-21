@@ -14,6 +14,7 @@ use Charcoal\Source\OrderCollectionInterface;
 use Charcoal\Tests\AssertionsTrait;
 use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Mock\OrderCollectionClass;
+use Charcoal\Tests\Mock\OrderTree;
 use Charcoal\Tests\Source\ExpressionCollectionTestTrait;
 
 /**
@@ -282,5 +283,43 @@ class OrderCollectionTraitTest extends \PHPUnit_Framework_TestCase
 
         $this->setExpectedException(InvalidArgumentException::class);
         $this->callMethodWith($obj, 'processOrder', null);
+    }
+
+    /**
+     * Test traversal of internal collection.
+     *
+     * Assertions:
+     * 1. Replaces expressions with a new collection
+     * 2. Chainable method
+     *
+     * @covers \Charcoal\Source\OrderCollectionTrait::traverseOrders
+     */
+    public function testTraverseExpressions()
+    {
+        $obj  = $this->createCollector();
+        $exp1 = new OrderTree();
+        $exp2 = new OrderTree();
+        $exp3 = new OrderTree();
+
+        $exp2->addOrder($exp3);
+        $exp1->addOrder($exp2);
+
+        /** 1. Traverse internal collection */
+        $obj->addOrders([ $exp1 ]);
+
+        $i = 0;
+        $that = $obj->traverseOrders(function (OrderInterface $exp) use (&$i) {
+            $i++;
+            $exp->setProperty('foo');
+        });
+
+        $this->assertEquals(3, $i);
+
+        foreach ([ $exp1, $exp2, $exp3 ] as $order) {
+            $this->assertEquals('foo', $order->property());
+        }
+
+        /** 2. Chainable */
+        $this->assertSame($obj, $that);
     }
 }
