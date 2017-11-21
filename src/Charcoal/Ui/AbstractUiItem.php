@@ -26,6 +26,7 @@ use Charcoal\View\ViewableInterface;
 use Charcoal\View\ViewableTrait;
 
 // Intra-module ('charcoal-ui') dependencies
+use Charcoal\Ui\PrioritizableTrait;
 use Charcoal\Ui\UiItemInterface;
 use Charcoal\Ui\UiItemTrait;
 
@@ -41,6 +42,7 @@ abstract class AbstractUiItem extends AbstractEntity implements
 {
     use AuthAwareTrait;
     use LoggerAwareTrait;
+    use PrioritizableTrait;
     use TranslatorAwareTrait;
     use UiItemTrait;
     use ViewableTrait;

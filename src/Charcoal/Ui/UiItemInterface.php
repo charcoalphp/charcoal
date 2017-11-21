@@ -8,6 +8,9 @@ use Charcoal\Config\EntityInterface;
 // From 'charcoal-view'
 use Charcoal\View\ViewableInterface;
 
+// From 'charcoal-ui'
+use Charcoal\Ui\PrioritizableInterface;
+
 /**
  * Defines a UI Item.
  *
@@ -18,7 +21,10 @@ use Charcoal\View\ViewableInterface;
  *   - add a required `view` dependency. Typically provided from DI container `['view']`.
  *   - also add `template_ident` property.
  */
-interface UiItemInterface extends EntityInterface, ViewableInterface
+interface UiItemInterface extends
+    EntityInterface,
+    PrioritizableInterface,
+    ViewableInterface
 {
     /**
      * Activates/deactivates the UI item.
@@ -34,21 +40,6 @@ interface UiItemInterface extends EntityInterface, ViewableInterface
      * @return boolean
      */
     public function active();
-
-    /**
-     * Set the group's priority or sorting index.
-     *
-     * @param integer $priority An index, for sorting.
-     * @return UiGroupingInterface Chainable
-     */
-    public function setPriority($priority);
-
-    /**
-     * Retrieve the group's priority or sorting index.
-     *
-     * @return integer
-     */
-    public function priority();
 
     /**
      * Set the UI item type.

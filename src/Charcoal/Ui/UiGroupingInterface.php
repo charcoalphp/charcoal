@@ -21,19 +21,4 @@ interface UiGroupingInterface extends UiItemInterface
      * @return string
      */
     public function ident();
-
-    /**
-     * Set the group's priority or sorting index.
-     *
-     * @param integer $priority An index, for sorting.
-     * @return UiGroupingInterface Chainable
-     */
-    public function setPriority($priority);
-
-    /**
-     * Retrieve the group's priority or sorting index.
-     *
-     * @return integer
-     */
-    public function priority();
 }

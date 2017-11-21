@@ -5,7 +5,7 @@ namespace Charcoal\Ui;
 use InvalidArgumentException;
 
 // From 'charcoal-ui'
-use Charcoal\Ui\UiItemInterface;
+use Charcoal\Ui\PrioritizableInterface;
 
 /**
  * Provides an implementation of {@see \Charcoal\Ui\UiItemInterface}.
@@ -16,13 +16,6 @@ trait UiItemTrait
      * @var boolean
      */
     private $active = true;
-
-    /**
-     * The UI item's sorting index.
-     *
-     * @var integer
-     */
-    private $priority = 0;
 
     /**
      * The UI item type.
@@ -218,37 +211,6 @@ trait UiItemTrait
 
         return $this->template;
     }
-
-    /**
-     * Set the group's priority or sorting index.
-     *
-     * @param  integer|mixed $priority An index, for sorting.
-     * @throws InvalidArgumentException If the priority is not an integer / numeric.
-     * @return self
-     */
-    public function setPriority($priority)
-    {
-        if (!is_numeric($priority)) {
-            throw new InvalidArgumentException(
-                'Priority must be an integer'
-            );
-        }
-
-        $this->priority = intval($priority);
-
-        return $this;
-    }
-
-    /**
-     * Retrieve the group's priority or sorting index.
-     *
-     * @return integer
-     */
-    public function priority()
-    {
-        return $this->priority;
-    }
-
 
     /**
      * Set the UI item's title.
@@ -555,12 +517,14 @@ trait UiItemTrait
     /**
      * Comparison function used by {@see uasort()}.
      *
-     * @param  UiItemInterface $a Widget A.
-     * @param  UiItemInterface $b Widget B.
-     * @return integer Sorting value: -1 or 1
+     * @param  PrioritizableInterface $a Sortable entity A.
+     * @param  PrioritizableInterface $b Sortable entity B.
+     * @return integer Sorting value: -1 or 1.
      */
-    protected function sortItemsByPriority(UiItemInterface $a, UiItemInterface $b)
-    {
+    protected function sortItemsByPriority(
+        PrioritizableInterface $a,
+        PrioritizableInterface $b
+    ) {
         $priorityA = $a->priority();
         $priorityB = $b->priority();
 

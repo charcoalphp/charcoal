@@ -11,7 +11,7 @@ use Charcoal\Factory\FactoryInterface;
 // From 'charcoal-ui'
 use Charcoal\Ui\Form\FormInterface;
 use Charcoal\Ui\FormGroup\FormGroupInterface;
-use Charcoal\Ui\UiItemInterface;
+use Charcoal\Ui\PrioritizableInterface;
 
 /**
  * Provides an implementation of {@see FormInterface}.
@@ -84,11 +84,14 @@ trait FormTrait
     /**
      * Comparison function used by {@see uasort()}.
      *
-     * @param  UiItemInterface $a Widget A.
-     * @param  UiItemInterface $b Widget B.
-     * @return integer Sorting value: -1 or 1
+     * @param  PrioritizableInterface $a Sortable entity A.
+     * @param  PrioritizableInterface $b Sortable entity B.
+     * @return integer Sorting value: -1 or 1.
      */
-    abstract protected function sortItemsByPriority(UiItemInterface $a, UiItemInterface $b);
+    abstract protected function sortItemsByPriority(
+        PrioritizableInterface $a,
+        PrioritizableInterface $b
+    );
 
     /**
      * @param FactoryInterface $factory A factory, to create customized form gorup objects.
