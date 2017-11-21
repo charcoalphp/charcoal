@@ -74,7 +74,7 @@ trait FormGroupTrait
     private $tabCssClasses;
 
     /**
-     * Static comparison function used by {@see uasort()}.
+     * Comparison function used by {@see uasort()}.
      *
      * @param  UiItemInterface $a Widget A.
      * @param  UiItemInterface $b Widget B.

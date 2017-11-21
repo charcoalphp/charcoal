@@ -10,8 +10,8 @@ interface UiGroupingInterface extends UiItemInterface
     /**
      * Set the identifier of the sidemenu group.
      *
-     * @param string $ident Sidemenu group identifier.
-     * @return UiGroupingInterface Chainable
+     * @param  string $ident Sidemenu group identifier.
+     * @return UiGroupingInterface Returns the current item.
      */
     public function setIdent($ident);
 

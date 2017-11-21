@@ -23,8 +23,8 @@ interface UiItemInterface extends EntityInterface, ViewableInterface
     /**
      * Activates/deactivates the UI item.
      *
-     * @param boolean $active Activate (TRUE) or deactivate (FALSE) the UI item.
-     * @return UiItemInterface Chainable
+     * @param  boolean $active Activate (TRUE) or deactivate (FALSE) the UI item.
+     * @return UiItemInterface Returns the current item.
      */
     public function setActive($active);
 
@@ -53,8 +53,8 @@ interface UiItemInterface extends EntityInterface, ViewableInterface
     /**
      * Set the UI item type.
      *
-     * @param string|null $type The UI item type.
-     * @return UiItemInterface Chainable
+     * @param  string|null $type The UI item type.
+     * @return UiItemInterface Returns the current item.
      */
     public function setType($type);
 
@@ -70,8 +70,8 @@ interface UiItemInterface extends EntityInterface, ViewableInterface
      *
      * Usually, a path to a file containing the template to be rendered.
      *
-     * @param string $template A template (identifier).
-     * @return UiItemInterface Chainable
+     * @param  string $template A template (identifier).
+     * @return UiItemInterface Returns the current item.
      */
     public function setTemplate($template);
 
@@ -82,13 +82,11 @@ interface UiItemInterface extends EntityInterface, ViewableInterface
      */
     public function template();
 
-
-
     /**
      * Set the UI item's title.
      *
-     * @param mixed $title A title.
-     * @return UiItemInterface Chainable
+     * @param  mixed $title A title.
+     * @return UiItemInterface Returns the current item.
      */
     public function setTitle($title);
 
@@ -102,8 +100,8 @@ interface UiItemInterface extends EntityInterface, ViewableInterface
     /**
      * Set the UI item's sub-title.
      *
-     * @param mixed $subtitle A sub-title.
-     * @return UiItemInterface Chainable
+     * @param  mixed $subtitle A sub-title.
+     * @return UiItemInterface Returns the current item.
      */
     public function setSubtitle($subtitle);
 
@@ -117,8 +115,8 @@ interface UiItemInterface extends EntityInterface, ViewableInterface
     /**
      * Set the UI item's description.
      *
-     * @param mixed $description A description.
-     * @return UiItemInterface Chainable
+     * @param  mixed $description A description.
+     * @return UiItemInterface Returns the current item.
      */
     public function setDescription($description);
 
@@ -132,8 +130,8 @@ interface UiItemInterface extends EntityInterface, ViewableInterface
     /**
      * Set notes about the UI item.
      *
-     * @param mixed $notes Notes.
-     * @return UiItemInterface Chainable
+     * @param  mixed $notes Notes.
+     * @return UiItemInterface Returns the current item.
      */
     public function setNotes($notes);
 
@@ -147,8 +145,8 @@ interface UiItemInterface extends EntityInterface, ViewableInterface
     /**
      * Show/hide the UI item's title.
      *
-     * @param boolean $show Show (TRUE) or hide (FALSE) the title.
-     * @return UiItemInterface Chainable
+     * @param  boolean $show Show (TRUE) or hide (FALSE) the title.
+     * @return UiItemInterface Returns the current item.
      */
     public function setShowTitle($show);
 
@@ -162,8 +160,8 @@ interface UiItemInterface extends EntityInterface, ViewableInterface
     /**
      * Show/hide the UI item's sub-title.
      *
-     * @param boolean $show Show (TRUE) or hide (FALSE) the sub-title.
-     * @return UiItemInterface Chainable
+     * @param  boolean $show Show (TRUE) or hide (FALSE) the sub-title.
+     * @return UiItemInterface Returns the current item.
      */
     public function setShowSubtitle($show);
 
@@ -177,8 +175,8 @@ interface UiItemInterface extends EntityInterface, ViewableInterface
     /**
      * Show/hide the UI item's description.
      *
-     * @param boolean $show Show (TRUE) or hide (FALSE) the description.
-     * @return UiItemInterface Chainable
+     * @param  boolean $show Show (TRUE) or hide (FALSE) the description.
+     * @return UiItemInterface Returns the current item.
      */
     public function setShowDescription($show);
 
@@ -192,8 +190,8 @@ interface UiItemInterface extends EntityInterface, ViewableInterface
     /**
      * Show/hide the UI item's notes.
      *
-     * @param boolean $show Show (TRUE) or hide (FALSE) the notes.
-     * @return UiItemInterface Chainable
+     * @param  boolean $show Show (TRUE) or hide (FALSE) the notes.
+     * @return UiItemInterface Returns the current item.
      */
     public function setShowNotes($show);
 
@@ -207,8 +205,8 @@ interface UiItemInterface extends EntityInterface, ViewableInterface
     /**
      * Show/hide the UI item's header.
      *
-     * @param boolean $show Show (TRUE) or hide (FALSE) the header.
-     * @return UiItemInterface Chainable
+     * @param  boolean $show Show (TRUE) or hide (FALSE) the header.
+     * @return UiItemInterface Returns the current item.
      */
     public function setShowHeader($show);
 
@@ -222,8 +220,8 @@ interface UiItemInterface extends EntityInterface, ViewableInterface
     /**
      * Show/hide the UI item's footer.
      *
-     * @param boolean $show Show (TRUE) or hide (FALSE) the footer.
-     * @return UiItemInterface Chainable
+     * @param  boolean $show Show (TRUE) or hide (FALSE) the footer.
+     * @return UiItemInterface Returns the current item.
      */
     public function setShowFooter($show);
 

@@ -128,8 +128,8 @@ trait UiItemTrait
     /**
      * Activates/deactivates the UI item.
      *
-     * @param boolean $active Activate (TRUE) or deactivate (FALSE) the UI item.
-     * @return AbstractUiItem Chainable
+     * @param  boolean $active Activate (TRUE) or deactivate (FALSE) the UI item.
+     * @return self
      */
     public function setActive($active)
     {
@@ -151,9 +151,9 @@ trait UiItemTrait
     /**
      * Set the UI item type.
      *
-     * @param string|null $type The UI item type.
+     * @param  string|null $type The UI item type.
      * @throws InvalidArgumentException If the type is not a string (or null).
-     * @return UiItemInterface Chainable
+     * @return self
      */
     public function setType($type)
     {
@@ -188,9 +188,9 @@ trait UiItemTrait
      *
      * Usually, a path to a file containing the template to be rendered.
      *
-     * @param string $template A template (identifier).
+     * @param  string $template A template (identifier).
      * @throws InvalidArgumentException If the template is not a string.
-     * @return UiItemInterface Chainable
+     * @return self
      */
     public function setTemplate($template)
     {
@@ -253,8 +253,8 @@ trait UiItemTrait
     /**
      * Set the UI item's title.
      *
-     * @param mixed $title A title.
-     * @return UiItemInterface Chainable
+     * @param  mixed $title A title.
+     * @return self
      */
     public function setTitle($title)
     {
@@ -275,8 +275,8 @@ trait UiItemTrait
     /**
      * Set the UI item's sub-title.
      *
-     * @param mixed $subtitle A sub-title.
-     * @return UiItemInterface Chainable
+     * @param  mixed $subtitle A sub-title.
+     * @return self
      */
     public function setSubtitle($subtitle)
     {
@@ -297,8 +297,8 @@ trait UiItemTrait
     /**
      * Set the UI item's description.
      *
-     * @param mixed $description A description.
-     * @return UiItemInterface Chainable
+     * @param  mixed $description A description.
+     * @return self
      */
     public function setDescription($description)
     {
@@ -319,8 +319,8 @@ trait UiItemTrait
     /**
      * Set notes about the UI item.
      *
-     * @param mixed $notes Notes.
-     * @return UiItemInterface Chainable
+     * @param  mixed $notes Notes.
+     * @return self
      */
     public function setNotes($notes)
     {
@@ -354,7 +354,7 @@ trait UiItemTrait
      * Set the path to the item's icon associated with the object.
      *
      * @param  string $icon A path to an image.
-     * @return UiItemInterface Chainable
+     * @return self
      */
     public function setIcon($icon)
     {
@@ -366,8 +366,8 @@ trait UiItemTrait
     /**
      * Show/hide the UI item's title.
      *
-     * @param boolean $show Show (TRUE) or hide (FALSE) the title.
-     * @return UiItemInterface Chainable
+     * @param  boolean $show Show (TRUE) or hide (FALSE) the title.
+     * @return self
      */
     public function setShowTitle($show)
     {
@@ -393,8 +393,8 @@ trait UiItemTrait
     /**
      * Show/hide the UI item's sub-title.
      *
-     * @param boolean $show Show (TRUE) or hide (FALSE) the sub-title.
-     * @return UiItemInterface Chainable
+     * @param  boolean $show Show (TRUE) or hide (FALSE) the sub-title.
+     * @return self
      */
     public function setShowSubtitle($show)
     {
@@ -420,8 +420,8 @@ trait UiItemTrait
     /**
      * Show/hide the UI item's description.
      *
-     * @param boolean $show Show (TRUE) or hide (FALSE) the description.
-     * @return UiItemInterface Chainable
+     * @param  boolean $show Show (TRUE) or hide (FALSE) the description.
+     * @return self
      */
     public function setShowDescription($show)
     {
@@ -447,8 +447,8 @@ trait UiItemTrait
     /**
      * Show/hide the UI item's notes.
      *
-     * @param boolean $show Show (TRUE) or hide (FALSE) the notes.
-     * @return UiItemInterface Chainable
+     * @param  boolean $show Show (TRUE) or hide (FALSE) the notes.
+     * @return self
      */
     public function setShowNotes($show)
     {
@@ -474,8 +474,8 @@ trait UiItemTrait
     /**
      * Show/hide the UI item's icon.
      *
-     * @param boolean $show Show (TRUE) or hide (FALSE) the icon.
-     * @return UiItemInterface Chainable
+     * @param  boolean $show Show (TRUE) or hide (FALSE) the icon.
+     * @return self
      */
     public function setShowIcon($show)
     {
@@ -501,8 +501,8 @@ trait UiItemTrait
     /**
      * Show/hide the UI item's header.
      *
-     * @param boolean $show Show (TRUE) or hide (FALSE) the header.
-     * @return UiItemInterface Chainable
+     * @param  boolean $show Show (TRUE) or hide (FALSE) the header.
+     * @return self
      */
     public function setShowHeader($show)
     {
@@ -528,8 +528,8 @@ trait UiItemTrait
     /**
      * Show/hide the UI item's footer.
      *
-     * @param boolean $show Show (TRUE) or hide (FALSE) the footer.
-     * @return UiItemInterface Chainable
+     * @param  boolean $show Show (TRUE) or hide (FALSE) the footer.
+     * @return self
      */
     public function setShowFooter($show)
     {
@@ -553,7 +553,7 @@ trait UiItemTrait
     }
 
     /**
-     * Static comparison function used by {@see uasort()}.
+     * Comparison function used by {@see uasort()}.
      *
      * @param  UiItemInterface $a Widget A.
      * @param  UiItemInterface $b Widget B.
@@ -571,7 +571,7 @@ trait UiItemTrait
     }
 
     /**
-     * All UI objects are translatable, therefore are `translator`-aware.
+     * All UI objects are translatable, therefore are translator-aware.
      *
      * @return \Charcoal\Translator\Translator
      */

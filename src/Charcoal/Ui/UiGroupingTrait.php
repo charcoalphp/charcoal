@@ -26,7 +26,7 @@ trait UiGroupingTrait
     /**
      * Set the identifier of the group.
      *
-     * @param string $ident The group identifier.
+     * @param  string $ident The group identifier.
      * @return self
      */
     public function setIdent($ident)

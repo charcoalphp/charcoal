@@ -45,11 +45,10 @@ abstract class AbstractUiItem extends AbstractEntity implements
     use UiItemTrait;
     use ViewableTrait;
 
-
     /**
      * Return a new UI item.
      *
-     * @param array|\ArrayAccess $data The class depdendencies.
+     * @param array $data The class depdendencies.
      */
     public function __construct(array $data = null)
     {
