@@ -214,18 +214,21 @@ abstract class AbstractConfig extends AbstractEntity implements
 
         $ext = pathinfo($filename, PATHINFO_EXTENSION);
 
-        if ($ext == 'php') {
+        if ($ext === 'php') {
             return $this->loadPhpFile($filename);
-        } elseif ($ext == 'json') {
+        } elseif ($ext === 'json') {
             return $this->loadJsonFile($filename);
-        } elseif ($ext == 'ini') {
+        } elseif ($ext === 'ini') {
             return $this->loadIniFile($filename);
-        } elseif ($ext == 'yml' || $ext == 'yaml') {
+        } elseif ($ext === 'yml' || $ext === 'yaml') {
             return $this->loadYamlFile($filename);
         } else {
-            throw new InvalidArgumentException(
-                'Only JSON, INI and PHP files are accepted as a Configuration file.'
-            );
+            $validConfigExts = [ 'php', 'json', 'yml', 'ini' ];
+            throw new InvalidArgumentException(sprintf(
+                'Unsupported configuration file; must be one of "%s", received "%s"',
+                implode('","', $validConfigExts),
+                $ext
+            ));
         }
     }
 
