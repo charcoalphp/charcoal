@@ -54,8 +54,7 @@ class AssetsHelpersTest extends \PHPUnit_Framework_TestCase
     public function testAddJsWithMustache()
     {
         $template = $this->mustache->loadTemplate(
-            '{{# addJs }}<script id="{{name}}">{{/ addJs }}'.
-            "<<<\n".'{{& js }}'."\n>>>"
+            '{{# addJs }}<script id="{{name}}">{{/ addJs }}'."<<<\n".'{{& js }}'."\n>>>"
         );
 
         $context = new StdClass();
@@ -76,8 +75,7 @@ class AssetsHelpersTest extends \PHPUnit_Framework_TestCase
     public function testAddCssWithMustache()
     {
         $template = $this->mustache->loadTemplate(
-            '{{# addCss }}<style id="{{name}}">{{/ addCss }}'.
-            "<<<\n".'{{& css }}'."\n>>>"
+            '{{# addCss }}<style id="{{name}}">{{/ addCss }}'."<<<\n".'{{& css }}'."\n>>>"
         );
 
         $context = new StdClass();
@@ -103,8 +101,7 @@ class AssetsHelpersTest extends \PHPUnit_Framework_TestCase
     public function testAddJsRequirementWithMustache()
     {
         $template = $this->mustache->loadTemplate(
-            '{{# addJsRequirement }}<script id="{{name}}">{{/ addJsRequirement }}'.
-            "<<<\n".'{{& jsRequirements }}'."\n>>>"
+            '{{# addJsRequirement }}<script id="{{name}}">{{/ addJsRequirement }}'."<<<\n".'{{& jsRequirements }}'."\n>>>"
         );
 
         $context = new StdClass();
@@ -130,8 +127,7 @@ class AssetsHelpersTest extends \PHPUnit_Framework_TestCase
     public function testAddCssRequirementWithMustache()
     {
         $template = $this->mustache->loadTemplate(
-            '{{# addCssRequirement }}<style id="{{name}}">{{/ addCssRequirement }}'.
-            "<<<\n".'{{& cssRequirements }}'."\n>>>"
+            '{{# addCssRequirement }}<style id="{{name}}">{{/ addCssRequirement }}'."<<<\n".'{{& cssRequirements }}'."\n>>>"
         );
 
         $context = new StdClass();

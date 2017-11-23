@@ -35,7 +35,9 @@ class ViewConfig extends AbstractConfig
         return [
             'paths' => [],
             'engines' => [
-                'mustache'      => [],
+                'mustache'      => [
+                    'cache' => '../cache/mustache'
+                ],
                 'php'           => [],
                 'php-mustache'  => [],
                 'twig'          => []

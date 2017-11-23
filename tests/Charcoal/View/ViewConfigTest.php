@@ -28,7 +28,7 @@ class ViewConfigTest extends PHPUnit_Framework_TestCase
     {
         $this->assertEquals('.', $this->obj->separator());
         $this->assertEquals([], $this->obj['paths']);
-        $this->assertEquals([], $this->obj['engines.mustache']);
+        $this->assertEquals(['cache'=>'../cache/mustache'], $this->obj['engines.mustache']);
         $this->assertEquals([], $this->obj['engines.php']);
         $this->assertEquals([], $this->obj['engines.php-mustache']);
         $this->assertEquals([], $this->obj['engines.twig']);
@@ -68,7 +68,7 @@ class ViewConfigTest extends PHPUnit_Framework_TestCase
      */
     public function testEngine()
     {
-        $this->assertEquals([], $this->obj->engine('mustache'));
+        $this->assertEquals(['cache'=>'../cache/mustache'], $this->obj->engine('mustache'));
 
         $this->obj->addEngine('mustache', ['foo'=>'bar']);
         $this->assertEquals(['foo'=>'bar'], $this->obj->engine('mustache'));
