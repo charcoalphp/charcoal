@@ -89,7 +89,7 @@ class AbstractViewTest extends PHPUnit_Framework_TestCase
 
     public function testLoadTemplateInvalidStringThrowsException()
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $this->obj->loadTemplate(false);
     }
 

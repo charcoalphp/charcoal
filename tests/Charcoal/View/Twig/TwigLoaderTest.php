@@ -38,7 +38,7 @@ class TwigLoaderTest extends PHPUnit_Framework_TestCase
         $expected = file_get_contents(__DIR__.'/templates/foo.twig');
         $this->assertEquals($expected, $ret);
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $this->obj->load(false);
     }
 
@@ -68,7 +68,7 @@ class TwigLoaderTest extends PHPUnit_Framework_TestCase
         $expected = file_get_contents(__DIR__.'/templates/foo.twig');
         $this->assertEquals($expected, $ret);
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $GLOBALS['widget_template'] = 1;
         $ret = $this->obj->load('$widget_template');
     }

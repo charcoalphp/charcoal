@@ -45,7 +45,7 @@ class ViewConfigTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(['foo', 'bar'], $this->obj->paths());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $this->obj->setPaths([false]);
     }
 
@@ -59,7 +59,7 @@ class ViewConfigTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(['foo'=>[]], $this->obj->engines());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $this->obj->addEngine(false, []);
     }
 
@@ -74,7 +74,7 @@ class ViewConfigTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(['foo'=>'bar'], $this->obj->engine('mustache'));
 
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $this->obj->engine(false);
     }
 
@@ -92,7 +92,7 @@ class ViewConfigTest extends PHPUnit_Framework_TestCase
      */
     public function testEngineInvalid()
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $this->obj->engine('foobar');
     }
 
@@ -105,7 +105,7 @@ class ViewConfigTest extends PHPUnit_Framework_TestCase
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('php', $this->obj->defaultEngine());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $this->obj->setDefaultEngine(false);
     }
 }

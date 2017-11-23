@@ -69,7 +69,7 @@ class ViewableTraitTest extends PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
         $this->assertEquals('foobar', $obj->templateIdent());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setTemplateIdent(false);
     }
 
@@ -113,7 +113,7 @@ class ViewableTraitTest extends PHPUnit_Framework_TestCase
         $this->assertSame($ret, $this->obj);
         $this->assertEquals([], $this->obj->viewController());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $this->obj->setViewController('foo');
     }
 

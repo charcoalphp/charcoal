@@ -37,7 +37,7 @@ class AbstractLoaderTest extends PHPUnit_Framework_TestCase
      */
     public function testInvalidBasePathThrowsException()
     {
-        $this->setExpectedException('\Exception');
+        $this->expectException('\Exception');
 
         $logger = new NullLogger();
         $loader = $this->getMockForAbstractClass(AbstractLoader::class, [[
@@ -52,7 +52,7 @@ class AbstractLoaderTest extends PHPUnit_Framework_TestCase
      */
     public function testPathsThrowsException()
     {
-        $this->setExpectedException('\Exception');
+        $this->expectException('\Exception');
 
         $logger = new NullLogger();
         $loader = $this->getMockForAbstractClass(AbstractLoader::class, [[
@@ -64,13 +64,13 @@ class AbstractLoaderTest extends PHPUnit_Framework_TestCase
 
     public function testDynamicTemplateInvalidVarName()
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $this->obj->dynamicTemplate(null);
     }
 
     public function testSetDynamicTemplateInvalidVarName()
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $this->obj->setDynamicTemplate(null, 'foo');
     }
 
@@ -82,7 +82,7 @@ class AbstractLoaderTest extends PHPUnit_Framework_TestCase
 
     public function testSetDynamicTemplateInvalidTemplateIdent()
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $this->obj->setDynamicTemplate('foo', []);
     }
 
@@ -91,7 +91,7 @@ class AbstractLoaderTest extends PHPUnit_Framework_TestCase
         $this->obj->setDynamicTemplate('foo', null);
         $this->obj->removeDynamicTemplate('foo');
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $this->obj->removeDynamicTemplate(null);
     }
 
