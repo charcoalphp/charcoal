@@ -307,16 +307,7 @@ abstract class AbstractModel extends AbstractEntity implements
      */
     public function propertyValue($propertyIdent)
     {
-        $getter = $this->camelize($propertyIdent);
-        $method = [ $this, $getter ];
-
-        if (is_callable($method)) {
-            return call_user_func($method);
-        } elseif (isset($this->{$propertyIdent})) {
-            return $this->{$propertyIdent};
-        }
-
-        return null;
+        return $this[$propertyIdent];
     }
 
     /**
