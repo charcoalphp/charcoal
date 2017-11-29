@@ -10,6 +10,7 @@ use Charcoal\View\ViewableInterface;
 
 // From 'charcoal-ui'
 use Charcoal\Ui\PrioritizableInterface;
+use Charcoal\Ui\ConditionalizableInterface;
 
 /**
  * Defines a UI Item.
@@ -24,6 +25,7 @@ use Charcoal\Ui\PrioritizableInterface;
 interface UiItemInterface extends
     EntityInterface,
     PrioritizableInterface,
+    ConditionalizableInterface,
     ViewableInterface
 {
     /**

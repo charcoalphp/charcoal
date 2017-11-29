@@ -43,6 +43,7 @@ abstract class AbstractUiItem extends AbstractEntity implements
     use AuthAwareTrait;
     use LoggerAwareTrait;
     use PrioritizableTrait;
+    use ConditionalizableTrait;
     use TranslatorAwareTrait;
     use UiItemTrait;
     use ViewableTrait;

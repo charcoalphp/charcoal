@@ -2,6 +2,7 @@
 
 namespace Charcoal\Ui\Form;
 
+use Charcoal\Ui\ConditionalizableInterface;
 use Exception;
 use InvalidArgumentException;
 
@@ -358,6 +359,12 @@ trait FormTrait
         foreach ($groups as $group) {
             if (!$group->active()) {
                 continue;
+            }
+
+            if ($group instanceof ConditionalizableInterface) {
+                if (!$group->resolvedCondition()) {
+                    continue;
+                }
             }
 
             // Test formGroup vs. ACL roles
