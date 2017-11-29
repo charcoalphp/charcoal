@@ -151,21 +151,7 @@ class ModelStructureProperty extends StructureProperty
      *
      * @var FactoryInterface
      */
-    protected $modelFactory;
-
-    /**
-     * Return a new Structure Property object.
-     *
-     * @param array|ArrayAccess $data The property's dependencies.
-     */
-    public function __construct($data)
-    {
-        parent::__construct($data);
-
-        if (isset($data['structure_model'])) {
-            $this->setStructureModelClass($data['structure_model']);
-        }
-    }
+    protected $structureModelFactory;
 
     /**
      * Inject dependencies from a DI Container.
@@ -177,39 +163,38 @@ class ModelStructureProperty extends StructureProperty
     {
         parent::setDependencies($container);
 
-        $this->setModelFactory($container['model/factory']);
+        $this->setStructureModelFactory($container['model/factory']);
     }
 
-
     /**
-     * Set an object model factory.
+     * Set an structure model factory.
      *
      * @param FactoryInterface $factory The model factory, to create objects.
      * @return self
      */
-    protected function setModelFactory(FactoryInterface $factory)
+    protected function setStructureModelFactory(FactoryInterface $factory)
     {
-        $this->modelFactory = $factory;
+        $this->structureModelFactory = $factory;
 
         return $this;
     }
 
     /**
-     * Retrieve the object model factory.
+     * Retrieve the structure model factory.
      *
      * @throws RuntimeException If the model factory was not previously set.
      * @return FactoryInterface
      */
-    public function modelFactory()
+    public function structureModelFactory()
     {
-        if (!isset($this->modelFactory)) {
+        if (!isset($this->structureModelFactory)) {
             throw new RuntimeException(sprintf(
                 'Model Factory is not defined for "%s"',
                 get_class($this)
             ));
         }
 
-        return $this->modelFactory;
+        return $this->structureModelFactory;
     }
 
     /**
@@ -405,7 +390,7 @@ class ModelStructureProperty extends StructureProperty
     private function createStructureModel()
     {
         $structClass = $this->structureModelClass();
-        $structure   = $this->modelFactory()->create($structClass);
+        $structure   = $this->structureModelFactory()->create($structClass);
 
         if (!$structure instanceof ArrayAccess) {
             throw new UnexpectedValueException(sprintf(
