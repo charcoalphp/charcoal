@@ -64,6 +64,7 @@ class ViewServiceProvider implements ServiceProviderInterface
         $this->registerLoaderServices($container);
         $this->registerEngineServices($container);
         $this->registerMustacheTemplatingServices($container);
+        $this->registerTwigTemplatingServices($container);
         $this->registerViewServices($container);
     }
 
@@ -164,7 +165,8 @@ class ViewServiceProvider implements ServiceProviderInterface
         $container['view/engine/twig'] = function (Container $container) {
             return new TwigEngine([
                 'logger'    => $container['logger'],
-                'loader'    => $container['view/loader/twig']
+                'loader'    => $container['view/loader/twig'],
+                'cache'     => $container['view/twig/cache']
             ]);
         };
 
@@ -218,6 +220,22 @@ class ViewServiceProvider implements ServiceProviderInterface
         $container['view/mustache/cache'] = function (Container $container) {
             $viewConfig = $container['view/config'];
             return $viewConfig['engines.mustache.cache'];
+        };
+    }
+
+    /**
+     * @param Container $container The DI container.
+     * @return void
+     */
+    protected function registerTwigTemplatingServices(Container $container)
+    {
+        /**
+         * @param  Container $container A container instance.
+         * @return string|null
+         */
+        $container['view/twig/cache'] = function (Container $container) {
+            $viewConfig = $container['view/config'];
+            return $viewConfig['engines.twig.cache'];
         };
     }
 

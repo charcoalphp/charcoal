@@ -28,13 +28,13 @@ class AbstractEngineTest extends PHPUnit_Framework_TestCase
     {
         $logger = new NullLogger();
         $loader = new MustacheLoader([
-            'logger'=>$logger,
-            'base_path'=>__DIR__,
-            'paths'=>['Mustache/templates']
+            'logger'    => $logger,
+            'base_path' => __DIR__,
+            'paths'     => ['Mustache/templates']
         ]);
         $this->obj = $this->getMockForAbstractClass(AbstractEngine::class, [[
-            'logger'=>$logger,
-            'loader'=>$loader
+            'logger' => $logger,
+            'loader' => $loader
         ]]);
     }
 

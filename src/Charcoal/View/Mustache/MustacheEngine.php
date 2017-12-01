@@ -18,7 +18,8 @@ use Charcoal\View\Mustache\HelpersInterface;
  */
 class MustacheEngine extends AbstractEngine
 {
-    const DEFAULT_CACHE = '../cache/mustache';
+    const DEFAULT_CACHE_PATH = '../cache/mustache';
+
     /**
      * A collection of helpers.
      *
@@ -32,14 +33,6 @@ class MustacheEngine extends AbstractEngine
      * @var Mustache_Engine
      */
     private $mustache;
-
-
-    /**
-     * The cache path.
-     *
-     * @var string
-     */
-    private $cache = self::DEFAULT_CACHE;
 
     /**
      * @return string
@@ -61,10 +54,6 @@ class MustacheEngine extends AbstractEngine
         if (isset($data['helpers'])) {
             $this->setHelpers($data['helpers']);
         }
-
-        if (isset($data['cache'])) {
-            $this->cache = $data['cache'];
-        }
     }
 
     /**
@@ -85,7 +74,7 @@ class MustacheEngine extends AbstractEngine
     protected function createMustache()
     {
         $mustache = new Mustache_Engine([
-            'cache'             => $this->cache,
+            'cache'             => $this->cache(),
             'loader'            => $this->loader(),
             'partials_loader'   => $this->loader(),
             'strict_callables'  => true,
@@ -93,6 +82,25 @@ class MustacheEngine extends AbstractEngine
         ]);
 
         return $mustache;
+    }
+
+    /**
+     * Set the engine's cache implementation.
+     *
+     * @param  mixed $cache A Mustache cache option.
+     * @return void
+     */
+    protected function setCache($cache)
+    {
+        /**
+         * If FALSE is specified, the value is converted to NULL
+         * because Mustache internally requires NULL to disable the cache.
+         */
+        if ($cache === false) {
+            $cache = null;
+        }
+
+        parent::setCache($cache);
     }
 
     /**

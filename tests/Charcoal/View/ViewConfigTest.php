@@ -31,7 +31,7 @@ class ViewConfigTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(['cache'=>'../cache/mustache'], $this->obj['engines.mustache']);
         $this->assertEquals([], $this->obj['engines.php']);
         $this->assertEquals([], $this->obj['engines.php-mustache']);
-        $this->assertEquals([], $this->obj['engines.twig']);
+        $this->assertEquals(['cache'=>'../cache/twig'], $this->obj['engines.twig']);
         $this->assertEquals('mustache', $this->obj['default_engine']);
     }
 
