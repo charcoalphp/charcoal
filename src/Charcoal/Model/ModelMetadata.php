@@ -38,7 +38,7 @@ class ModelMetadata extends AbstractMetadata
      *
      * @param  string $ident The metadata identifier.
      * @throws InvalidArgumentException If identifier is not a string.
-     * @return StructureMetadata Chainable
+     * @return self
      */
     public function setIdent($ident)
     {
@@ -69,7 +69,7 @@ class ModelMetadata extends AbstractMetadata
 
     /**
      * @param array $sources The available sources for this model.
-     * @return ModelMetadata Chainable
+     * @return self
      */
     public function setSources(array $sources)
     {
@@ -90,7 +90,7 @@ class ModelMetadata extends AbstractMetadata
     /**
      * @param string $sourceIdent The source identifier.
      * @param mixed  $source      The source data.
-     * @return ModelMetadata Chainable
+     * @return self
      */
     public function addSource($sourceIdent, $source)
     {
@@ -110,7 +110,7 @@ class ModelMetadata extends AbstractMetadata
     /**
      * @param string $defaultSource The default source identifier.
      * @throws InvalidArgumentException If the argument is not a string.
-     * @return ModelMetadata Chainable
+     * @return self
      */
     public function setDefaultSource($defaultSource)
     {

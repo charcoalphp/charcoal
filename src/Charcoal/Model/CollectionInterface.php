@@ -10,7 +10,7 @@ interface CollectionInterface extends \ArrayAccess, \Countable, \IteratorAggrega
     /**
      * Merge the collection with the given objects.
      *
-     * @param  array|Traversable $objs Array of objects to append to this collection.
+     * @param  array|\Traversable $objs Array of objects to append to this collection.
      * @return CollectionInterface
      */
     public function merge($objs);

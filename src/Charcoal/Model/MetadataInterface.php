@@ -19,7 +19,7 @@ interface MetadataInterface extends ConfigInterface
      * Set the object's default values.
      *
      * @param array $defaultData An associative array.
-     * @return MetadataInterface Chainable
+     * @return self
      */
     public function setDefaultData(array $defaultData);
 
@@ -50,7 +50,7 @@ interface MetadataInterface extends ConfigInterface
      *
      * @param string            $propertyIdent  The property indentifer.
      * @param PropertyInterface $propertyObject The property, as object.
-     * @return MetadataInterface Chainable
+     * @return self
      */
     public function setPropertyObject($propertyIdent, PropertyInterface $propertyObject);
 

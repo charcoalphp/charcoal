@@ -98,7 +98,7 @@ final class MetadataLoader implements LoggerAwareInterface
      * Set the cache service.
      *
      * @param  CacheItemPoolInterface $cache A PSR-6 compliant cache pool instance.
-     * @return MetadataLoader Chainable
+     * @return self
      */
     private function setCachePool(CacheItemPoolInterface $cache)
     {
@@ -129,7 +129,7 @@ final class MetadataLoader implements LoggerAwareInterface
      *
      * @param  string $basePath The base path to use.
      * @throws InvalidArgumentException If the base path parameter is not a string.
-     * @return MetadataLoader Chainable
+     * @return self
      */
     private function setBasePath($basePath)
     {
