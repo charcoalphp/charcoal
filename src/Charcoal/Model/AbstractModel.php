@@ -111,36 +111,6 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-     * Inject dependencies from a DI Container.
-     *
-     * @param  Container $container A service container.
-     * @return void
-     */
-    public function setDependencies(Container $container)
-    {
-        // This method is a stub. Reimplement in children method
-    }
-
-    /**
-     * Set the object's ID from an associative array map (or any other Traversable).
-     *
-     * Useful for setting the object ID before the rest of the object's data.
-     *
-     * @param  array $data The object data.
-     * @return array The object data without the pre-set ID.
-     */
-    protected function setIdFromData(array $data)
-    {
-        $key = $this->key();
-        if (isset($data[$key])) {
-            $this->setId($data[$key]);
-            unset($data[$key]);
-        }
-
-        return $data;
-    }
-
-    /**
      * Sets the object data, from an associative array map (or any other Traversable).
      *
      * @param  array $data The entity data. Will call setters.
@@ -154,7 +124,7 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-     * Retrieve the model data as a structure.
+     * Retrieve the model data as a structure (serialize to array).
      *
      * @param  array $properties Optional. List of property identifiers
      *     for retrieving a subset of data.
@@ -175,23 +145,6 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-     * Serialize the given value.
-     *
-     * @param  mixed $val The value to serialize.
-     * @return mixed
-     */
-    protected function serializedValue($val)
-    {
-        if (is_scalar($val)) {
-            return $val;
-        } elseif ($val instanceof DateTimeInterface) {
-            return $val->format('Y-m-d H:i:s');
-        } else {
-            return json_decode(json_encode($val), true);
-        }
-    }
-
-    /**
      * Merge data on the model.
      *
      * Overrides `\Charcoal\Config\AbstractEntity::setData()`
@@ -200,7 +153,7 @@ abstract class AbstractModel extends AbstractEntity implements
      * Also add a special case, to merge values for l10n properties.
      *
      * @param  array $data The data to merge.
-     * @return EntityInterface Chainable
+     * @return self
      */
     public function mergeData(array $data)
     {
@@ -232,9 +185,9 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-     * Retrieve the default values.
+     * Retrieve the default values, from the model's metadata.
      *
-     * @return array From the model's metadata.
+     * @return array
      */
     public function defaultData()
     {
@@ -387,6 +340,66 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
+     * Convert the current class name in "type-ident" format.
+     *
+     * @return string
+     */
+    public function objType()
+    {
+        $ident = preg_replace('/([a-z])([A-Z])/', '$1-$2', get_class($this));
+        $objType = strtolower(str_replace('\\', '/', $ident));
+        return $objType;
+    }
+
+
+    /**
+     * Inject dependencies from a DI Container.
+     *
+     * @param  Container $container A Pimple DI service container.
+     * @return void
+     */
+    protected function setDependencies(Container $container)
+    {
+        // This method is a stub. Reimplement in children method to inject dependencies in your class from a container.
+    }
+
+    /**
+     * Set the object's ID from an associative array map (or any other Traversable).
+     *
+     * Useful for setting the object ID before the rest of the object's data.
+     *
+     * @param  array $data The object data.
+     * @return array The object data without the pre-set ID.
+     */
+    protected function setIdFromData(array $data)
+    {
+        $key = $this->key();
+        if (isset($data[$key])) {
+            $this->setId($data[$key]);
+            unset($data[$key]);
+        }
+
+        return $data;
+    }
+
+    /**
+     * Serialize the given value.
+     *
+     * @param  mixed $val The value to serialize.
+     * @return mixed
+     */
+    protected function serializedValue($val)
+    {
+        if (is_scalar($val)) {
+            return $val;
+        } elseif ($val instanceof DateTimeInterface) {
+            return $val->format('Y-m-d H:i:s');
+        } else {
+            return json_decode(json_encode($val), true);
+        }
+    }
+
+    /**
      * StorableTrait > preSave(). Save hook called before saving the model.
      *
      * @return boolean
@@ -449,7 +462,7 @@ abstract class AbstractModel extends AbstractEntity implements
      * ValidatableInterface > create_validator().
      *
      * @param array $data Optional.
-     * @return ValidatorInterface
+     * @return \Charcoal\Validator\ValidatorInterface
      */
     protected function createValidator(array $data = null)
     {
@@ -458,33 +471,5 @@ abstract class AbstractModel extends AbstractEntity implements
             $validator->setData($data);
         }
         return $validator;
-    }
-
-    /**
-     * @param array $data Optional. View data.
-     * @return ViewInterface
-     */
-    public function createView(array $data = null)
-    {
-        $this->logger->warning('Obsolete method createView called.');
-        $view = new GenericView([
-            'logger' => $this->logger
-        ]);
-        if ($data !== null) {
-            $view->setData($data);
-        }
-        return $view;
-    }
-
-    /**
-     * Convert the current class name in "type-ident" format.
-     *
-     * @return string
-     */
-    public function objType()
-    {
-        $ident = preg_replace('/([a-z])([A-Z])/', '$1-$2', get_class($this));
-        $objType = strtolower(str_replace('\\', '/', $ident));
-        return $objType;
     }
 }
