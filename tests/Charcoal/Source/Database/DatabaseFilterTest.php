@@ -108,7 +108,6 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
         /** 3. Ignored Operators */
         $obj->setOperator('IS NOT');
         $this->assertFalse($obj->isNegating());
-
     }
 
     /**

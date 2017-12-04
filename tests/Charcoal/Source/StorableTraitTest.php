@@ -82,7 +82,6 @@ class StorableTraitTest extends \PHPUnit_Framework_TestCase
 
         /** 3. Chainable */
         $this->assertSame($that, $obj);
-
     }
 
     /**

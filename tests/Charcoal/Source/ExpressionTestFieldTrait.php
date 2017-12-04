@@ -34,7 +34,6 @@ trait ExpressionTestFieldTrait
     {
         $this->setExpectedException(PHPUnit_Framework_Error::class);
         $this->createExpression()->setData([ 'table_name' => 'foobar' ]);
-
     }
 
     /**

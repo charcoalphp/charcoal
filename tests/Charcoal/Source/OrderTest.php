@@ -338,6 +338,5 @@ class OrderTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException(PHPUnit_Framework_Error::class);
         $this->createExpression()->setData([ 'string' => '1 = 1' ]);
-
     }
 }

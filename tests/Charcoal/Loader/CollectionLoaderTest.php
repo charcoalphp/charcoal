@@ -170,7 +170,7 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
         $getter = $this->getMethod($obj, 'getter');
         $setter = $this->getMethod($obj, 'setter');
 
-        $this->assertEquals('charcoalPhp',    $getter->invoke($obj, 'charcoal_php'));
+        $this->assertEquals('charcoalPhp', $getter->invoke($obj, 'charcoal_php'));
         $this->assertEquals('setCharcoalPhp', $setter->invoke($obj, 'charcoal_php'));
     }
 }

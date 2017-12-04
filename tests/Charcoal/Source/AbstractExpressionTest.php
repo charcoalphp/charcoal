@@ -290,7 +290,8 @@ class AbstractExpressionTest extends \PHPUnit_Framework_TestCase
         return [
             'Null Type'   => [ null, false ],
             'String Type' => [ 'strval', false ],
-            'Closure'     => [ function () {}, true ],
+            'Closure'     => [ function () {
+            }, true ],
         ];
     }
 }

@@ -493,7 +493,6 @@ final class MetadataLoader implements LoggerAwareInterface
             case JSON_ERROR_UTF8:
                 $issue = 'Malformed UTF-8 characters, possibly incorrectly encoded';
                 break;
-
         }
 
         throw new InvalidArgumentException(

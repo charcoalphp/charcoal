@@ -29,5 +29,6 @@ class MetadataLoaderTest extends \PHPUnit_Framework_TestCase
     public function testLoadData()
     {
         $this->assertInstanceOf(MetadataLoader::class, $this->obj);
+        //$ret = $this->obj->load('test', $this->);
     }
 }
