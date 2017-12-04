@@ -4,11 +4,12 @@ namespace Charcoal\Model;
 
 // From `charcoal-config`
 use Charcoal\Config\EntityInterface;
+use Charcoal\Source\StorableInterface;
 
 /**
  * Describes a data model.
  */
-interface ModelInterface extends EntityInterface
+interface ModelInterface extends EntityInterface, DescribableInterface, StorableInterface
 {
     /**
      * Set the model data (from a flattened structure).

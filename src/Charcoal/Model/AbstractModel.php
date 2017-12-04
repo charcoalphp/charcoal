@@ -19,7 +19,6 @@ use Pimple\Container;
 use Charcoal\Config\AbstractEntity;
 
 // From 'charcoal-view'
-use Charcoal\View\GenericView;
 use Charcoal\View\ViewableInterface;
 use Charcoal\View\ViewableTrait;
 
@@ -34,8 +33,6 @@ use Charcoal\Model\DescribableTrait;
 use Charcoal\Model\ModelInterface;
 use Charcoal\Model\ModelMetadata;
 use Charcoal\Model\ModelValidator;
-use Charcoal\Source\SourceFactory;
-use Charcoal\Source\StorableInterface;
 use Charcoal\Source\StorableTrait;
 use Charcoal\Validator\ValidatableInterface;
 use Charcoal\Validator\ValidatableTrait;
@@ -57,10 +54,8 @@ use Charcoal\Validator\ValidatableTrait;
  */
 abstract class AbstractModel extends AbstractEntity implements
     ModelInterface,
-    DescribableInterface,
     DescribablePropertyInterface,
     LoggerAwareInterface,
-    StorableInterface,
     ValidatableInterface,
     ViewableInterface
 {
@@ -105,6 +100,7 @@ abstract class AbstractModel extends AbstractEntity implements
             $this->setView($data['view']);
         }
 
+        // Optional dependencies injection via Pimple Container
         if (isset($data['container'])) {
             $this->setDependencies($data['container']);
         }
@@ -120,7 +116,8 @@ abstract class AbstractModel extends AbstractEntity implements
     {
         $data = $this->setIdFromData($data);
 
-        return parent::setData($data);
+        parent::setData($data);
+        return $this;
     }
 
     /**
@@ -434,7 +431,7 @@ abstract class AbstractModel extends AbstractEntity implements
      * StorableInterface > createSource()
      *
      * @throws UnexpectedValueException If the metadata source can not be found.
-     * @return SourceInterface
+     * @return \Charcoal\Source\SourceInterface
      */
     protected function createSource()
     {
