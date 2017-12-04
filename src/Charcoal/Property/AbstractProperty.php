@@ -197,7 +197,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      * @param Container $container A Pimple DI container.
      * @return void
      */
-    public function setDependencies(Container $container)
+    protected function setDependencies(Container $container)
     {
         $this->setPropertyFactory($container['property/factory']);
         $this->setMetadataLoader($container['metadata/loader']);
