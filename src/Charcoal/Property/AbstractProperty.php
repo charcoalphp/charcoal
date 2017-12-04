@@ -194,16 +194,6 @@ abstract class AbstractProperty extends AbstractEntity implements
     }
 
     /**
-     * @param Container $container A Pimple DI container.
-     * @return void
-     */
-    protected function setDependencies(Container $container)
-    {
-        $this->setPropertyFactory($container['property/factory']);
-        $this->setMetadataLoader($container['metadata/loader']);
-    }
-
-    /**
      *
      *
      * @return string
@@ -587,7 +577,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      *
      * @see    self::defaultMultipleOptions
      * @param  string|null $key Optional setting to retrieve from the options.
-     * @return array|null
+     * @return array|mixed|null
      */
     public function multipleOptions($key = null)
     {
@@ -788,7 +778,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     }
 
     /**
-     * @return Translation
+     * @return Translation|null
      */
     public function description()
     {
@@ -806,7 +796,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     }
 
     /**
-     * @return Translation
+     * @return Translation|null
      */
     public function notes()
     {
@@ -955,6 +945,16 @@ abstract class AbstractProperty extends AbstractEntity implements
         $this->viewOptions = $viewOpts;
 
         return $this;
+    }
+
+    /**
+     * @param Container $container A Pimple DI container.
+     * @return void
+     */
+    protected function setDependencies(Container $container)
+    {
+        $this->setPropertyFactory($container['property/factory']);
+        $this->setMetadataLoader($container['metadata/loader']);
     }
 
     /**

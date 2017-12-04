@@ -38,6 +38,129 @@ trait StorablePropertyTrait
     }
 
     /**
+     * Retrieve the property's storage field names.
+     *
+     * @return string[]
+     */
+    public function fieldNames()
+    {
+        $fields = [];
+        if ($this->l10n()) {
+            foreach ($this->translator()->availableLocales() as $langCode) {
+                $fields[$langCode] = $this->l10nIdent($langCode);
+            }
+        } else {
+            $fields[] = $this->ident();
+        }
+
+        return $fields;
+    }
+
+    /**
+     * Retrieve the property's value in a format suitable for storage.
+     *
+     * @param  mixed $val The value to convert for storage.
+     * @return mixed
+     */
+    public function storageVal($val)
+    {
+        if ($val === null) {
+            // Do not json_encode NULL values
+            return null;
+        }
+
+        if (!$this->l10n() && $val instanceof Translation) {
+            $val = (string)$val;
+        }
+
+        if ($this->multiple()) {
+            if (is_array($val)) {
+                $val = implode($this->multipleSeparator(), $val);
+            }
+        }
+
+        if (!is_scalar($val)) {
+            return json_encode($val, JSON_UNESCAPED_UNICODE);
+        }
+
+        return $val;
+    }
+
+
+    /**
+     * @return string
+     */
+    abstract public function sqlEncoding();
+
+    /**
+     * @return string
+     */
+    abstract public function sqlExtra();
+
+    /**
+     * @return string
+     */
+    abstract public function sqlType();
+
+    /**
+     * @return integer
+     */
+    abstract public function sqlPdoType();
+
+    /**
+     * @return string
+     */
+    abstract public function ident();
+
+    /**
+     * @param  string|null $lang The language code to return the identifier with.
+     * @return string
+     */
+    abstract public function l10nIdent($lang = null);
+
+    /**
+     * @return boolean
+     */
+    abstract public function l10n();
+
+    /**
+     * @return boolean
+     */
+    abstract public function multiple();
+
+    /**
+     * @return string
+     */
+    abstract public function multipleSeparator();
+
+    /**
+     * @return boolean
+     */
+    abstract public function allowNull();
+
+    /**
+     * @param  array $data Optional. Field data.
+     * @return PropertyField
+     */
+    protected function createPropertyField(array $data = null)
+    {
+        $field = new PropertyField([
+            'translator' => $this->translator()
+        ]);
+
+        if ($data !== null) {
+            $field->setData($data);
+        }
+
+        return $field;
+    }
+
+    /**
+     * @return \Charcoal\Translator\Translator
+     */
+    abstract protected function translator();
+
+    /**
      * Update the property's storage fields.
      *
      * @param  mixed $val The value to set as field value.
@@ -102,25 +225,6 @@ trait StorablePropertyTrait
     }
 
     /**
-     * Retrieve the property's storage field names.
-     *
-     * @return string[]
-     */
-    public function fieldNames()
-    {
-        $fields = [];
-        if ($this->l10n()) {
-            foreach ($this->translator()->availableLocales() as $langCode) {
-                $fields[$langCode] = $this->l10nIdent($langCode);
-            }
-        } else {
-            $fields[] = $this->ident();
-        }
-
-        return $fields;
-    }
-
-    /**
      * Retrieve the value of the property's given storage field.
      *
      * @param  string $fieldIdent The property field identifier.
@@ -144,106 +248,4 @@ trait StorablePropertyTrait
         }
     }
 
-    /**
-     * Retrieve the property's value in a format suitable for storage.
-     *
-     * @param  mixed $val The value to convert for storage.
-     * @return mixed
-     */
-    public function storageVal($val)
-    {
-        if ($val === null) {
-            // Do not json_encode NULL values
-            return null;
-        }
-
-        if (!$this->l10n() && $val instanceof Translation) {
-            $val = (string)$val;
-        }
-
-        if ($this->multiple()) {
-            if (is_array($val)) {
-                $val = implode($this->multipleSeparator(), $val);
-            }
-        }
-
-        if (!is_scalar($val)) {
-            return json_encode($val, JSON_UNESCAPED_UNICODE);
-        }
-
-        return $val;
-    }
-
-    /**
-     * @param  array $data Optional. Field data.
-     * @return PropertyField
-     */
-    protected function createPropertyField(array $data = null)
-    {
-        $field = new PropertyField([
-            'translator' => $this->translator()
-        ]);
-
-        if ($data !== null) {
-            $field->setData($data);
-        }
-
-        return $field;
-    }
-
-    /**
-     * @return string
-     */
-    abstract public function sqlEncoding();
-
-    /**
-     * @return string
-     */
-    abstract public function sqlExtra();
-
-    /**
-     * @return string
-     */
-    abstract public function sqlType();
-
-    /**
-     * @return integer
-     */
-    abstract public function sqlPdoType();
-
-    /**
-     * @return string
-     */
-    abstract public function ident();
-
-    /**
-     * @param  string|null $lang The language code to return the identifier with.
-     * @return string
-     */
-    abstract public function l10nIdent($lang = null);
-
-    /**
-     * @return boolean
-     */
-    abstract public function l10n();
-
-    /**
-     * @return boolean
-     */
-    abstract public function multiple();
-
-    /**
-     * @return string
-     */
-    abstract public function multipleSeparator();
-
-    /**
-     * @return boolean
-     */
-    abstract public function allowNull();
-
-    /**
-     * @return \Charcoal\Translator\Translator
-     */
-    abstract protected function translator();
 }

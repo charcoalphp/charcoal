@@ -114,21 +114,6 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     private $modelFactory;
 
     /**
-     * Inject dependencies from a DI Container.
-     *
-     * @param  Container $container A dependencies container instance.
-     * @return void
-     */
-    protected function setDependencies(Container $container)
-    {
-        parent::setDependencies($container);
-
-        $this->setModelFactory($container['model/factory']);
-        $this->setCollectionLoader($container['model/collection/loader']);
-        $this->setCachePool($container['cache']);
-    }
-
-    /**
      * @return string
      */
     public function type()
@@ -137,23 +122,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
 
-    /**
-     * Retrieve the cache service.
-     *
-     * @throws RuntimeException If the cache service was not previously set.
-     * @return CacheItemPoolInterface
-     */
-    protected function cachePool()
-    {
-        if (!isset($this->cachePool)) {
-            throw new RuntimeException(sprintf(
-                'Cache Pool is not defined for "%s"',
-                get_class($this)
-            ));
-        }
 
-        return $this->cachePool;
-    }
 
     /**
      * Set the object type to build the choices from.
@@ -612,53 +581,8 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
         return $choice;
     }
 
-    /**
-     * Parse the given objects into choice structures.
-     *
-     * @param  ModelInterface[]|Traversable $objs One or more objects to format.
-     * @throws InvalidArgumentException If the collection of objects is not iterable.
-     * @return array Returns a collection of choice structures.
-     */
-    protected function parseChoices($objs)
-    {
-        if (!is_array($objs) && !$objs instanceof Traversable) {
-            throw new InvalidArgumentException('Must be iterable');
-        }
 
-        $parsed = [];
-        foreach ($objs as $choice) {
-            $choice = $this->parseChoice($choice);
-            if ($choice !== null) {
-                $choiceIdent = $choice['value'];
-                $parsed[$choiceIdent] = $choice;
-            }
-        }
 
-        return $parsed;
-    }
-
-    /**
-     * Parse the given value into a choice structure.
-     *
-     * @param  ModelInterface $obj An object to format.
-     * @return array Returns a choice structure.
-     */
-    protected function parseChoice(ModelInterface $obj)
-    {
-        $label  = $this->renderObjPattern($obj);
-        $choice = [
-            'value' => $obj->id(),
-            'label' => $label,
-            'title' => $label
-        ];
-
-        /** @todo Move to {@see \Charcoal\Admin\Property\AbstractSelectableInput::choiceObjMap()} */
-        if (is_callable([$obj, 'icon'])) {
-            $choice['icon'] = $obj->icon();
-        }
-
-        return $choice;
-    }
 
     /**
      * Retrieve the label for a given choice.
@@ -693,6 +617,88 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
         }
 
         return $this->renderObjPattern($obj);
+    }
+
+    /**
+     * Inject dependencies from a DI Container.
+     *
+     * @param  Container $container A dependencies container instance.
+     * @return void
+     */
+    protected function setDependencies(Container $container)
+    {
+        parent::setDependencies($container);
+
+        $this->setModelFactory($container['model/factory']);
+        $this->setCollectionLoader($container['model/collection/loader']);
+        $this->setCachePool($container['cache']);
+    }
+
+    /**
+     * Retrieve the cache service.
+     *
+     * @throws RuntimeException If the cache service was not previously set.
+     * @return CacheItemPoolInterface
+     */
+    protected function cachePool()
+    {
+        if (!isset($this->cachePool)) {
+            throw new RuntimeException(sprintf(
+                'Cache Pool is not defined for "%s"',
+                get_class($this)
+            ));
+        }
+
+        return $this->cachePool;
+    }
+
+    /**
+     * Parse the given objects into choice structures.
+     *
+     * @param  ModelInterface[]|Traversable $objs One or more objects to format.
+     * @throws InvalidArgumentException If the collection of objects is not iterable.
+     * @return array Returns a collection of choice structures.
+     */
+    protected function parseChoices($objs)
+    {
+        if (!is_array($objs) && !$objs instanceof Traversable) {
+            throw new InvalidArgumentException('Must be iterable');
+        }
+
+        $parsed = [];
+        foreach ($objs as $choice) {
+            $choice = $this->parseChoice($choice);
+            if ($choice !== null) {
+                $choiceIdent = $choice['value'];
+                $parsed[$choiceIdent] = $choice;
+            }
+        }
+
+        return $parsed;
+    }
+
+
+    /**
+     * Parse the given value into a choice structure.
+     *
+     * @param  ModelInterface $obj An object to format.
+     * @return array Returns a choice structure.
+     */
+    protected function parseChoice(ModelInterface $obj)
+    {
+        $label  = $this->renderObjPattern($obj);
+        $choice = [
+            'value' => $obj->id(),
+            'label' => $label,
+            'title' => $label
+        ];
+
+        /** @todo Move to {@see \Charcoal\Admin\Property\AbstractSelectableInput::choiceObjMap()} */
+        if (is_callable([$obj, 'icon'])) {
+            $choice['icon'] = $obj->icon();
+        }
+
+        return $choice;
     }
 
     /**

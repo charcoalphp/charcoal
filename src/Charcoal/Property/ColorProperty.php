@@ -92,21 +92,6 @@ class ColorProperty extends AbstractProperty
     }
 
     /**
-     * @param integer $r Red value (0 to 255).
-     * @param integer $g Green value (0 to 255).
-     * @param integer $b Blue value (0 to 255).
-     * @return string Hexadecimal color value, as uppercased hexadecimal without the "#" prefix.
-     */
-    protected function rgbToHexadecimal($r, $g, $b)
-    {
-        $hex = '';
-        $hex .= str_pad(dechex($r), 2, '0', STR_PAD_LEFT);
-        $hex .= str_pad(dechex($g), 2, '0', STR_PAD_LEFT);
-        $hex .= str_pad(dechex($b), 2, '0', STR_PAD_LEFT);
-        return strtoupper($hex);
-    }
-
-    /**
      * @return string
      */
     public function sqlExtra()
@@ -142,6 +127,23 @@ class ColorProperty extends AbstractProperty
     {
         return PDO::PARAM_STR;
     }
+
+
+    /**
+     * @param integer $r Red value (0 to 255).
+     * @param integer $g Green value (0 to 255).
+     * @param integer $b Blue value (0 to 255).
+     * @return string Hexadecimal color value, as uppercased hexadecimal without the "#" prefix.
+     */
+    protected function rgbToHexadecimal($r, $g, $b)
+    {
+        $hex = '';
+        $hex .= str_pad(dechex($r), 2, '0', STR_PAD_LEFT);
+        $hex .= str_pad(dechex($g), 2, '0', STR_PAD_LEFT);
+        $hex .= str_pad(dechex($b), 2, '0', STR_PAD_LEFT);
+        return strtoupper($hex);
+    }
+
 
     /**
      * @param string|array $val The color array or string to parse.

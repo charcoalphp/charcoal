@@ -112,23 +112,6 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
-     * Attempts to return the label for a given choice.
-     *
-     * @param  string $val  The value to retrieve the label of.
-     * @param  mixed  $lang The language to return the label in.
-     * @return string Returns the label. Otherwise, returns the raw value.
-     */
-    protected function valLabel($val, $lang = null)
-    {
-        if (is_string($val) && $this->hasChoice($val)) {
-            $choice = $this->choice($val);
-            return $this->l10nVal($choice['label'], $lang);
-        } else {
-            return $val;
-        }
-    }
-
-    /**
      * Set the maximum number of characters allowed.
      *
      * @param  integer $maxLength The max length allowed.
@@ -475,5 +458,22 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
     public function sqlPdoType()
     {
         return PDO::PARAM_STR;
+    }
+
+    /**
+     * Attempts to return the label for a given choice.
+     *
+     * @param  string $val  The value to retrieve the label of.
+     * @param  mixed  $lang The language to return the label in.
+     * @return string Returns the label. Otherwise, returns the raw value.
+     */
+    protected function valLabel($val, $lang = null)
+    {
+        if (is_string($val) && $this->hasChoice($val)) {
+            $choice = $this->choice($val);
+            return $this->l10nVal($choice['label'], $lang);
+        } else {
+            return $val;
+        }
     }
 }

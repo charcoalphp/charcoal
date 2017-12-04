@@ -78,8 +78,8 @@ class DateTimeProperty extends AbstractProperty
     /**
      * AbstractProperty > setVal(). Ensure `DateTime` object in val.
      *
-     * @param string|DateTime $val The value to set.
-     * @return DateTime|null
+     * @param string|DateTimeInterface $val The value to set.
+     * @return DateTimeInterface|null
      */
     public function parseOne($val)
     {
@@ -154,33 +154,6 @@ class DateTimeProperty extends AbstractProperty
         }
 
         return $val->format($format);
-    }
-
-    /**
-     * @param mixed $val Value to convert to DateTime.
-     * @throws InvalidArgumentException If the value is not a valid datetime.
-     * @return DateTimeInterface|null
-     */
-    private function dateTimeVal($val)
-    {
-        if ($val === null ||
-            (is_string($val) && ! strlen(trim($val))) ||
-            (is_array($val) && ! count(array_filter($val, 'strlen')))
-        ) {
-            return null;
-        }
-
-        if (is_string($val)) {
-            $val = new DateTime($val);
-        }
-
-        if (!($val instanceof DateTimeInterface)) {
-            throw new InvalidArgumentException(
-                'Val must be a valid date'
-            );
-        }
-
-        return $val;
     }
 
     /**
@@ -350,5 +323,32 @@ class DateTimeProperty extends AbstractProperty
     public function sqlPdoType()
     {
         return PDO::PARAM_STR;
+    }
+
+    /**
+     * @param mixed $val Value to convert to DateTime.
+     * @throws InvalidArgumentException If the value is not a valid datetime.
+     * @return DateTimeInterface|null
+     */
+    private function dateTimeVal($val)
+    {
+        if ($val === null ||
+            (is_string($val) && ! strlen(trim($val))) ||
+            (is_array($val) && ! count(array_filter($val, 'strlen')))
+        ) {
+            return null;
+        }
+
+        if (is_string($val)) {
+            $val = new DateTime($val);
+        }
+
+        if (!($val instanceof DateTimeInterface)) {
+            throw new InvalidArgumentException(
+                'Val must be a valid date'
+            );
+        }
+
+        return $val;
     }
 }

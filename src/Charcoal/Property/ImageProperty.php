@@ -221,56 +221,7 @@ class ImageProperty extends FileProperty
         return $this->effects;
     }
 
-    /**
-     * @return array
-     */
-    protected function batchEffects()
-    {
-        $effects = $this->effects();
-        $grouped = [];
-        if ($effects) {
-            $blueprint = [
-                'effects' => [],
-                'save' => true,
-                'rename' => null,
-                'copy' => null
-            ];
-            $fxGroup   = $blueprint;
-            foreach ($effects as $effect) {
-                if (isset($effect['type']) && $effect['type'] === 'condition') {
-                    $grouped[] = array_merge(
-                        [
-                            'condition' => null,
-                            'ignore' => null,
-                            'extension' => null,
-                            'mimetype' => null
-                        ],
-                        $effect
-                    );
-                } elseif (isset($effect['type']) && $effect['type'] === 'save') {
-                    if (isset($effect['rename'])) {
-                        $fxGroup['rename'] = $effect['rename'];
-                    }
-                    if (isset($effect['copy'])) {
-                        $fxGroup['copy'] = $effect['copy'];
-                    }
 
-                    $grouped[] = $fxGroup;
-
-                    $fxGroup = $blueprint;
-                } else {
-                    $fxGroup['effects'][] = $effect;
-                }
-            }
-
-            if (empty($grouped)) {
-                $grouped[] = $fxGroup;
-            }
-        }
-
-
-        return $grouped;
-    }
 
     /**
      * Process the property's effects on the given image(s).
@@ -452,6 +403,57 @@ class ImageProperty extends FileProperty
     protected function createImage()
     {
         return $this->imageFactory()->create($this->driverType());
+    }
+
+    /**
+     * @return array
+     */
+    protected function batchEffects()
+    {
+        $effects = $this->effects();
+        $grouped = [];
+        if ($effects) {
+            $blueprint = [
+                'effects' => [],
+                'save' => true,
+                'rename' => null,
+                'copy' => null
+            ];
+            $fxGroup   = $blueprint;
+            foreach ($effects as $effect) {
+                if (isset($effect['type']) && $effect['type'] === 'condition') {
+                    $grouped[] = array_merge(
+                        [
+                            'condition' => null,
+                            'ignore' => null,
+                            'extension' => null,
+                            'mimetype' => null
+                        ],
+                        $effect
+                    );
+                } elseif (isset($effect['type']) && $effect['type'] === 'save') {
+                    if (isset($effect['rename'])) {
+                        $fxGroup['rename'] = $effect['rename'];
+                    }
+                    if (isset($effect['copy'])) {
+                        $fxGroup['copy'] = $effect['copy'];
+                    }
+
+                    $grouped[] = $fxGroup;
+
+                    $fxGroup = $blueprint;
+                } else {
+                    $fxGroup['effects'][] = $effect;
+                }
+            }
+
+            if (empty($grouped)) {
+                $grouped[] = $fxGroup;
+            }
+        }
+
+
+        return $grouped;
     }
 
     /**

@@ -105,7 +105,7 @@ class BooleanProperty extends AbstractProperty
 
     /**
      * @param mixed $label The true label.
-     * @return BooleanProperty Chainable
+     * @return self
      */
     public function setTrueLabel($label)
     {
@@ -127,7 +127,7 @@ class BooleanProperty extends AbstractProperty
 
     /**
      * @param mixed $label The false label.
-     * @return BooleanProperty Chainable
+     * @return self
      */
     public function setFalseLabel($label)
     {

@@ -125,7 +125,7 @@ class IdProperty extends AbstractProperty
     /**
      * Set the allowed ID mode.
      *
-     * @param string|null $mode The ID mode ("auto-increment", "custom", "uniqid" or "uuid").
+     * @param string $mode The ID mode ("auto-increment", "custom", "uniqid" or "uuid").
      * @throws InvalidArgumentException If the mode is not one of the 4 valid modes.
      * @return IdProperty Chainable
      */

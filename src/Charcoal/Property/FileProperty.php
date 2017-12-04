@@ -104,19 +104,7 @@ class FileProperty extends AbstractProperty
         return 'file';
     }
 
-    /**
-     * Inject dependencies from a DI Container.
-     *
-     * @param  Container $container A dependencies container instance.
-     * @return void
-     */
-    protected function setDependencies(Container $container)
-    {
-        parent::setDependencies($container);
 
-        $this->basePath = $container['config']['base_path'];
-        $this->publicPath = $container['config']['public_path'];
-    }
 
     /**
      * Set whether uploaded files should be publicly available.
@@ -141,19 +129,7 @@ class FileProperty extends AbstractProperty
         return $this->publicAccess;
     }
 
-    /**
-     * Retrieve the path to the storage directory.
-     *
-     * @return string
-     */
-    protected function basePath()
-    {
-        if ($this->publicAccess()) {
-            return $this->publicPath;
-        } else {
-            return $this->basePath;
-        }
-    }
+
 
     /**
      * Set the destination (directory) where uploaded files are stored.
@@ -233,7 +209,7 @@ class FileProperty extends AbstractProperty
     /**
      * Set the MIME type.
      *
-     * @param  string $type The file MIME type.
+     * @param  mixed $type The file MIME type.
      * @throws InvalidArgumentException If the MIME type argument is not a string.
      * @return FileProperty Chainable
      */
@@ -270,7 +246,7 @@ class FileProperty extends AbstractProperty
                 return '';
             }
 
-            $this->setMimetype($this->mimetypeFor($val));
+            $this->setMimetype($this->mimetypeFor(strval($val)));
         }
 
         return $this->mimetype;
@@ -288,36 +264,6 @@ class FileProperty extends AbstractProperty
         $info = new finfo(FILEINFO_MIME_TYPE);
 
         return $info->file($file);
-    }
-
-    /**
-     * Converts a php.ini notation for size to an integer.
-     *
-     * @param  mixed $size A php.ini notation for size.
-     * @throws InvalidArgumentException If the given parameter is invalid.
-     * @return integer Returns the size in bytes.
-     */
-    protected function parseIniSize($size)
-    {
-        if (is_numeric($size)) {
-            return $size;
-        }
-
-        if (!is_string($size)) {
-            throw new InvalidArgumentException(
-                'Size must be an integer (in bytes, e.g.: 1024) or a string (e.g.: 1M).'
-            );
-        }
-
-        $quant = 'bkmgtpezy';
-        $unit = preg_replace('/[^'.$quant.']/i', '', $size);
-        $size = preg_replace('/[^0-9\.]/', '', $size);
-
-        if ($unit) {
-            $size = ($size * pow(1024, stripos($quant, $unit[0])));
-        }
-
-        return round($size);
     }
 
     /**
@@ -628,17 +574,6 @@ class FileProperty extends AbstractProperty
     }
 
     /**
-     * Determine if the given value is a data URI.
-     *
-     * @param  string $val The value to check.
-     * @return string
-     */
-    protected function isDataUri($val)
-    {
-        return preg_match('/^data:/i', $val);
-    }
-
-    /**
      * Upload to filesystem, from data URI.
      *
      * @param string $fileData The file data, raw.
@@ -794,25 +729,6 @@ class FileProperty extends AbstractProperty
         return false;
     }
 
-    /**
-     * Determine if the given file path is am absolute path.
-     *
-     * Note: Adapted from symfony\filesystem.
-     *
-     * @see https://github.com/symfony/symfony/blob/v3.2.2/LICENSE
-     *
-     * @param  string $file A file path.
-     * @return boolean Returns TRUE if the given path is absolute. Otherwise, returns FALSE.
-     */
-    protected function isAbsolutePath($file)
-    {
-        return strspn($file, '/\\', 0, 1)
-            || (strlen($file) > 3
-                && ctype_alpha($file[0])
-                && substr($file, 1, 1) === ':'
-                && strspn($file, '/\\', 2, 1))
-            || null !== parse_url($file, PHP_URL_SCHEME);
-    }
 
     /**
      * Sanitize a filename by removing characters from a blacklist and escaping dot.
@@ -965,6 +881,95 @@ class FileProperty extends AbstractProperty
         $this->filesystem = $filesystem;
 
         return $this;
+    }
+
+    /**
+     * Inject dependencies from a DI Container.
+     *
+     * @param  Container $container A dependencies container instance.
+     * @return void
+     */
+    protected function setDependencies(Container $container)
+    {
+        parent::setDependencies($container);
+
+        $this->basePath = $container['config']['base_path'];
+        $this->publicPath = $container['config']['public_path'];
+    }
+    /**
+     * Retrieve the path to the storage directory.
+     *
+     * @return string
+     */
+    protected function basePath()
+    {
+        if ($this->publicAccess()) {
+            return $this->publicPath;
+        } else {
+            return $this->basePath;
+        }
+    }
+
+    /**
+     * Converts a php.ini notation for size to an integer.
+     *
+     * @param  mixed $size A php.ini notation for size.
+     * @throws InvalidArgumentException If the given parameter is invalid.
+     * @return integer Returns the size in bytes.
+     */
+    protected function parseIniSize($size)
+    {
+        if (is_numeric($size)) {
+            return $size;
+        }
+
+        if (!is_string($size)) {
+            throw new InvalidArgumentException(
+                'Size must be an integer (in bytes, e.g.: 1024) or a string (e.g.: 1M).'
+            );
+        }
+
+        $quant = 'bkmgtpezy';
+        $unit = preg_replace('/[^'.$quant.']/i', '', $size);
+        $size = preg_replace('/[^0-9\.]/', '', $size);
+
+        if ($unit) {
+            $size = ($size * pow(1024, stripos($quant, $unit[0])));
+        }
+
+        return round($size);
+    }
+
+    /**
+     * Determine if the given file path is am absolute path.
+     *
+     * Note: Adapted from symfony\filesystem.
+     *
+     * @see https://github.com/symfony/symfony/blob/v3.2.2/LICENSE
+     *
+     * @param  string $file A file path.
+     * @return boolean Returns TRUE if the given path is absolute. Otherwise, returns FALSE.
+     */
+    protected function isAbsolutePath($file)
+    {
+        return strspn($file, '/\\', 0, 1)
+            || (strlen($file) > 3
+                && ctype_alpha($file[0])
+                && substr($file, 1, 1) === ':'
+                && strspn($file, '/\\', 2, 1))
+            || null !== parse_url($file, PHP_URL_SCHEME);
+    }
+
+
+    /**
+     * Determine if the given value is a data URI.
+     *
+     * @param  string $val The value to check.
+     * @return string
+     */
+    protected function isDataUri($val)
+    {
+        return preg_match('/^data:/i', $val);
     }
 
     /**
