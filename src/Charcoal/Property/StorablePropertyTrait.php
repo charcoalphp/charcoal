@@ -247,5 +247,4 @@ trait StorablePropertyTrait
             return null;
         }
     }
-
 }
