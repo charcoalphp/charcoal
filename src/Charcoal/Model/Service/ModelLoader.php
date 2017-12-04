@@ -39,7 +39,7 @@ final class ModelLoader implements ArrayAccess
      *
      * The model property name, or SQL column name, to load objects by.
      *
-     * @var string
+     * @var string|null
      */
     private $objKey;
 
@@ -262,7 +262,7 @@ final class ModelLoader implements ArrayAccess
     private function cacheKey($ident)
     {
         if ($this->objKey === null) {
-            $model = $this->factory->get($this->objType);
+            $model = $this->factory->create($this->objType);
             $this->setObjKey($model->key());
         }
 
