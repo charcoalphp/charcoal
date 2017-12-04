@@ -55,7 +55,7 @@ final class ModelBuilder
      * @param string      $objType       The object type of the Model.
      * @param string|null $metadataIdent Optional. The metadata ident of the object.
      * @param string|null $sourceIdent   Optional. The custom source ident to load as source.
-     * @return ModelInterface
+     * @return \Charcoal\Model\ModelInterface
      */
     public function build($objType, $metadataIdent = null, $sourceIdent = null)
     {
@@ -76,7 +76,7 @@ final class ModelBuilder
      * @param string      $objType       The object type of the Model.
      * @param string|null $metadataIdent Optional. The metadata ident of the object.
      * @param string|null $sourceIdent   Optional. The custom source ident to load as source.
-     * @return ModelInterface
+     * @return \Charcoal\Model\ModelInterface
      */
     public function __invoke($objType, $metadataIdent = null, $sourceIdent = null)
     {
@@ -86,7 +86,7 @@ final class ModelBuilder
 
     /**
      * @param FactoryInterface $factory The factory to use to create models.
-     * @return ModelLoaderBuilder Chainable
+     * @return self
      */
     private function setFactory(FactoryInterface $factory)
     {
@@ -96,7 +96,7 @@ final class ModelBuilder
 
     /**
      * @param MetadataLoader $loader The loader instance, used to load metadata.
-     * @return DescribableInterface Chainable
+     * @return self
      */
     private function setMetadataLoader(MetadataLoader $loader)
     {
@@ -106,7 +106,7 @@ final class ModelBuilder
 
     /**
      * @param FactoryInterface $factory The factory to use to create models.
-     * @return ModelLoaderBuilder Chainable
+     * @return self
      */
     private function setSourceFactory(FactoryInterface $factory)
     {
@@ -119,7 +119,7 @@ final class ModelBuilder
      *     (A class name or object identifier).
      * @param string|null $metadataIdent Optional. The metadata identifier to load.
      *     If NULL, it will be implied from objType.
-     * @return MetadataInterface
+     * @return \Charcoal\Model\MetadataInterface
      */
     private function createMetadata($objType, $metadataIdent = null)
     {
@@ -133,7 +133,7 @@ final class ModelBuilder
      * @param string|null   $sourceIdent Optional. Custom source ident to load.
      *     If NULL, the default (from metadata) will be used.
      * @throws UnexpectedValueException If the source is not defined in the model's metadata.
-     * @return SourceInterface
+     * @return \Charcoal\Source\SourceInterface
      */
     private function createSource(ModelMetadata $metadata, $sourceIdent = null)
     {

@@ -6,25 +6,27 @@ namespace Charcoal\Model;
 use Charcoal\Model\Service\MetadataLoader;
 
 /**
- * Defines a model having metadata that allows the customization of objects.
+ * Describable objects are defined by a metadata object.
+ *
+ * A describable object has what's needed to load its metadata.
  */
 interface DescribableInterface
 {
     /**
      * @param array $data The object data.
-     * @return DescribableInterface Chainable
+     * @return self
      */
     public function setData(array $data);
 
     /**
      * @param MetadataLoader $loader The loader instance, used to load metadata.
-     * @return DescribableInterface Chainable
+     * @return self
      */
     public function setMetadataLoader(MetadataLoader $loader);
 
     /**
      * @param array|MetadataInterface $metadata The matadata.
-     * @return DescribableInterface Chainable
+     * @return self
      */
     public function setMetadata($metadata);
 
@@ -41,7 +43,7 @@ interface DescribableInterface
 
     /**
      * @param string $metadataIdent Explicitely set the metadata ident.
-     * @return DescribableInterface Chainable
+     * @return self
      */
     public function setMetadataIdent($metadataIdent);
 

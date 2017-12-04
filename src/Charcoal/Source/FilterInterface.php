@@ -15,7 +15,7 @@ interface FilterInterface extends
      * Set the value used for comparison.
      *
      * @param  mixed $value The value on the right side of the comparison.
-     * @return FilterInterface Returns the current expression.
+     * @return self
      */
     public function setValue($value);
 
@@ -30,8 +30,8 @@ interface FilterInterface extends
      * Set the operator used for comparing field and value.
      *
      * @param  string $operator The comparison operator.
-     * @throws InvalidArgumentException If the parameter is not a valid operator.
-     * @return FilterInterface Returns the current expression.
+     * @throws \InvalidArgumentException If the parameter is not a valid operator.
+     * @return self
      */
     public function setOperator($operator);
 
@@ -46,8 +46,8 @@ interface FilterInterface extends
      * Set the function to be called on the expression.
      *
      * @param  string $func The function name to invoke on the field.
-     * @throws InvalidArgumentException If the parameter is not a valid function.
-     * @return FilterInterface Returns the current expression.
+     * @throws \InvalidArgumentException If the parameter is not a valid function.
+     * @return self
      */
     public function setFunc($func);
 

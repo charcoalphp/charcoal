@@ -32,7 +32,7 @@ interface ExpressionInterface extends
      * Set the expression name.
      *
      * @param  string $name A unique identifier.
-     * @throws InvalidArgumentException If the expression name invalid.
+     * @throws \InvalidArgumentException If the expression name invalid.
      * @return ExpressionInterface Returns the current expression.
      */
     public function setName($name);

@@ -28,7 +28,7 @@ class ValidatorResult
     private $message;
 
     /**
-     * @var DateTime $ts
+     * @var DateTimeInterface $ts
      */
     private $ts;
 

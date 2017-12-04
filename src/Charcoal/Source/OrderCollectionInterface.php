@@ -15,7 +15,7 @@ interface OrderCollectionInterface
      * Note: Any existing orders are dropped.
      *
      * @param  array $orders One or more orders to set on this expression.
-     * @return OrderCollectionInterface Returns the current expression.
+     * @return self
      */
     public function setOrders(array $orders);
 
@@ -23,7 +23,7 @@ interface OrderCollectionInterface
      * Append one or more query orders on this object.
      *
      * @param  array $orders One or more orders to add on this expression.
-     * @return OrderCollectionInterface Returns the current expression.
+     * @return self
      */
     public function addOrders(array $orders);
 
@@ -32,7 +32,7 @@ interface OrderCollectionInterface
      *
      * @param  mixed $order The order expression string, structure, object, or callable to append.
      * @throws InvalidArgumentException If the order is invalid.
-     * @return OrderCollectionInterface Returns the current expression.
+     * @return self
      */
     public function addOrder($order);
 

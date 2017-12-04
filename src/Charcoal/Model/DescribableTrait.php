@@ -33,13 +33,13 @@ trait DescribableTrait
      * Describable object needs to have a `setData()` method
      *
      * @param array $data The object's data.
-     * @return DescribableInterface Chainable
+     * @return self
      */
     abstract public function setData(array $data);
 
     /**
      * @param MetadataLoader $loader The loader instance, used to load metadata.
-     * @return DescribableInterface Chainable
+     * @return self
      */
     public function setMetadataLoader(MetadataLoader $loader)
     {
@@ -66,7 +66,7 @@ trait DescribableTrait
     /**
      * @param array|MetadataInterface $metadata The object's metadata.
      * @throws InvalidArgumentException If the parameter is not an array or MetadataInterface.
-     * @return DescribableInterface Chainable
+     * @return self
      */
     public function setMetadata($metadata)
     {
@@ -82,7 +82,6 @@ trait DescribableTrait
             );
         }
 
-        // Chainable
         return $this;
     }
 
@@ -103,7 +102,7 @@ trait DescribableTrait
      * Use a `MetadataLoader` object and the object's metadataIdent
      * to load the metadata content (typically from the filesystem, as json).
      *
-     * @param string $metadataIdent Optional ident.
+     * @param string $metadataIdent Optional ident. If none is provided then it will use the auto-genereated one.
      * @return MetadataInterface
      */
     public function loadMetadata($metadataIdent = null)
@@ -126,7 +125,7 @@ trait DescribableTrait
 
     /**
      * @param string $metadataIdent The metadata ident.
-     * @return DescribableInterface Chainable
+     * @return self
      */
     public function setMetadataIdent($metadataIdent)
     {

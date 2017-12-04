@@ -69,7 +69,6 @@ abstract class AbstractMetadata extends AbstractConfig implements
      * Set the properties.
      *
      * @param array $properties One or more properties.
-     * @throws InvalidArgumentException If parameter is not an array.
      * @return MetadataInterface Chainable
      */
     public function setProperties(array $properties)

@@ -26,8 +26,8 @@ interface SourceInterface extends
      * If no properties are set, it is assumed that
      * all model propertiesare to be fetched.
      *
-     * @param  (string|PropertyInterface)[] $properties One or more property keys to set.
-     * @return SourceInterface Returns the current source.
+     * @param  (string|\Charcoal\Property\PropertyInterface)[] $properties One or more property keys to set.
+     * @return self
      */
     public function setProperties(array $properties);
 
@@ -48,18 +48,18 @@ interface SourceInterface extends
     /**
      * Add a property of the source to fetch.
      *
-     * @param  string|PropertyInterface $property A property key.
-     * @throws InvalidArgumentException If property is not a string, empty, or invalid.
-     * @return SourceInterface Returns the current source.
+     * @param  string|\Charcoal\Property\PropertyInterface $property A property key.
+     * @throws \InvalidArgumentException If property is not a string, empty, or invalid.
+     * @return self
      */
     public function addProperty($property);
 
     /**
      * Remove a property of the source to fetch.
      *
-     * @param  string|PropertyInterface $property A property key.
-     * @throws InvalidArgumentException If property is not a string, empty, or invalid.
-     * @return SourceInterface Returns the current source.
+     * @param  string|\Charcoal\Property\PropertyInterface $property A property key.
+     * @throws \InvalidArgumentException If property is not a string, empty, or invalid.
+     * @return self
      */
     public function removeProperty($property);
 
@@ -68,8 +68,8 @@ interface SourceInterface extends
      *
      * @param  mixed        $param The pagination object or array.
      * @param  integer|null $limit The number of results to for the $param if a page number.
-     * @throws InvalidArgumentException If the $param argument is invalid.
-     * @return SourceInterface Returns the current source.
+     * @throws \InvalidArgumentException If the $param argument is invalid.
+     * @return self
      */
     public function setPagination($param, $limit = null);
 
@@ -85,8 +85,8 @@ interface SourceInterface extends
      *
      * @param  integer $page The current page.
      *     Pages should start at 1.
-     * @throws InvalidArgumentException If the parameter is not numeric or < 0.
-     * @return SourceInterface Returns the current source.
+     * @throws \InvalidArgumentException If the parameter is not numeric or < 0.
+     * @return self
      */
     public function setPage($page);
 
@@ -102,8 +102,8 @@ interface SourceInterface extends
      *
      * @param  integer $count The number of results to return, per page.
      *     Use 0 to request all results.
-     * @throws InvalidArgumentException If the parameter is not numeric or < 0.
-     * @return SourceInterface Returns the current source.
+     * @throws \InvalidArgumentException If the parameter is not numeric or < 0.
+     * @return self
      */
     public function setNumPerPage($count);
 

@@ -59,7 +59,7 @@ class DatabaseSourceConfig extends SourceConfig
      *
      * @param string $hostname The database hostname.
      * @throws InvalidArgumentException If hostname is not a string.
-     * @return DatabaseSourceConfig Chainable
+     * @return self
      */
     public function setHostname($hostname)
     {
@@ -87,7 +87,7 @@ class DatabaseSourceConfig extends SourceConfig
      *
      * @param string $username The database username.
      * @throws InvalidArgumentException If username is not a string.
-     * @return DatabaseSourceConfig Chainable
+     * @return self
      */
     public function setUsername($username)
     {
@@ -115,7 +115,7 @@ class DatabaseSourceConfig extends SourceConfig
      *
      * @param string $password The database password.
      * @throws InvalidArgumentException If password is not a string.
-     * @return DatabaseSourceConfig Chainable
+     * @return self
      */
     public function setPassword($password)
     {
@@ -143,7 +143,7 @@ class DatabaseSourceConfig extends SourceConfig
      *
      * @param string $database The database name.
      * @throws InvalidArgumentException If database is not a string.
-     * @return DatabaseSourceConfig Chainable
+     * @return self
      */
     public function setDatabase($database)
     {
@@ -168,7 +168,7 @@ class DatabaseSourceConfig extends SourceConfig
 
     /**
      * @param boolean $disableUtf8 The "disable UTF8" flag.
-     * @return DatabaseSourceConfig Chainable
+     * @return self
      */
     public function setDisableUtf8($disableUtf8)
     {
@@ -177,7 +177,7 @@ class DatabaseSourceConfig extends SourceConfig
     }
 
     /**
-     * @return bools
+     * @return boolean
      */
     public function disableUtf8()
     {

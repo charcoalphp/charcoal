@@ -12,7 +12,7 @@ interface PaginationInterface
      *
      * @param  integer $page The current page.
      *     Pages should start at 1.
-     * @throws InvalidArgumentException If the parameter is not numeric or < 0.
+     * @throws \InvalidArgumentException If the parameter is not numeric or < 0.
      * @return PaginationInterface Returns the current expression.
      */
     public function setPage($page);
@@ -29,7 +29,7 @@ interface PaginationInterface
      *
      * @param  integer $count The number of results to return, per page.
      *     Use 0 to request all results.
-     * @throws InvalidArgumentException If the parameter is not numeric or < 0.
+     * @throws \InvalidArgumentException If the parameter is not numeric or < 0.
      * @return PaginationInterface Returns the current expression.
      */
     public function setNumPerPage($count);

@@ -2,11 +2,6 @@
 
 namespace Charcoal\Source;
 
-use InvalidArgumentException;
-
-// From 'charcoal-core'
-use Charcoal\Source\SourceInterface;
-
 /**
  * Describes an object that can be stored and loaded from storage.
  */
@@ -18,8 +13,8 @@ interface StorableInterface
      * The actual property set depends on `key()`.
      *
      * @param  mixed $id The object's ID.
-     * @throws InvalidArgumentException If the argument is not scalar.
-     * @return StorableInterface Returns the current expression.
+     * @throws \InvalidArgumentException If the argument is not scalar.
+     * @return self
      */
     public function setId($id);
 
@@ -38,7 +33,7 @@ interface StorableInterface
      * For uniquely identifying this object in storage.
      *
      * @param  string $key The object's primary key.
-     * @throws InvalidArgumentException If the argument is not scalar.
+     * @throws \InvalidArgumentException If the argument is not scalar.
      * @return StorableInterface Returns the current expression.
      */
     public function setKey($key);
