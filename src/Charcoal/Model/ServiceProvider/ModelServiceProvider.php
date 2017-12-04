@@ -47,7 +47,7 @@ use Charcoal\Source\DatabaseSource;
 class ModelServiceProvider implements ServiceProviderInterface
 {
     /**
-     * @param Container $container A Pimple DI container instance.
+     * @param Container $container A Pimple DI container.
      * @return void
      */
     public function register(Container $container)
@@ -58,14 +58,14 @@ class ModelServiceProvider implements ServiceProviderInterface
     }
 
     /**
-     * @param Container $container A Pimple DI container instance.
+     * @param Container $container A Pimple DI container.
      * @return void
      */
     protected function registerBuilderDependencies(Container $container)
     {
         /**
-         * @param Container $container A Pimple DI container instance.
-         * @return ModelFactory
+         * @param Container $container A Pimple DI container.
+         * @return \Charcoal\Factory\FactoryInterface
          */
         $container['model/factory'] = function (Container $container) {
             return new Factory([
@@ -75,7 +75,7 @@ class ModelServiceProvider implements ServiceProviderInterface
         };
 
         /**
-         * @param Container $container A Pimple DI container instance.
+         * @param Container $container A Pimple DI container.
          * @return ModelBuilder
          */
         $container['model/builder'] = function (Container $container) {
@@ -87,7 +87,7 @@ class ModelServiceProvider implements ServiceProviderInterface
         };
 
         /**
-         * @param Container $container A Pimple DI container instance.
+         * @param Container $container A Pimple DI container.
          * @return ModelLoaderBuilder
          */
         $container['model/loader/builder'] = function (Container $container) {
@@ -99,7 +99,7 @@ class ModelServiceProvider implements ServiceProviderInterface
     }
 
     /**
-     * @param Container $container A Pimple DI container instance.
+     * @param Container $container A Pimple DI container.
      * @return void
      */
     protected function registerCollectionDependencies(Container $container)
@@ -108,15 +108,15 @@ class ModelServiceProvider implements ServiceProviderInterface
         $container['model/collection/class'] = Collection::class;
 
         /**
-         * @param Container $container A Pimple DI container instance.
-         * @return ArrayAccess|\Traversable
+         * @param Container $container A Pimple DI container.
+         * @return \ArrayAccess|\Traversable
          */
         $container['model/collection'] = $container->factory(function (Container $container) {
             return new $container['model/collection/class'];
         });
 
         /**
-         * @param Container $container A Pimple DI container instance.
+         * @param Container $container A Pimple DI container.
          * @return CollectionLoader
          */
         $container['model/collection/loader'] = $container->factory(function (Container $container) {
@@ -125,8 +125,8 @@ class ModelServiceProvider implements ServiceProviderInterface
         });
 
         /**
-         * @param Container $container A Pimple DI container instance.
-         * @return FactoryInterface
+         * @param Container $container A Pimple DI container.
+         * @return \Charcoal\Factory\FactoryInterface
          */
         $container['model/collection/loader/factory'] = function (Container $container) {
             return new Factory([
@@ -141,7 +141,7 @@ class ModelServiceProvider implements ServiceProviderInterface
     }
 
     /**
-     * @param Container $container A Pimple DI container instance.
+     * @param Container $container A Pimple DI container.
      * @return void
      */
     protected function registerModelDependencies(Container $container)
@@ -149,7 +149,7 @@ class ModelServiceProvider implements ServiceProviderInterface
         // The model dependencies might be already set from elsewhere; defines it if not.
         if (!isset($container['model/dependencies'])) {
             /**
-             * @param Container $container A Pimple DI container instance.
+             * @param Container $container A Pimple DI container.
              * @return array The model dependencies array.
              */
             $container['model/dependencies'] = function (Container $container) {
@@ -167,7 +167,7 @@ class ModelServiceProvider implements ServiceProviderInterface
         // The property factory might be already set from elsewhere; defines it if not.
         if (!isset($container['property/factory'])) {
             /**
-             * @param Container $container A Pimple DI container instance.
+             * @param Container $container A Pimple DI container.
              * @return \Charcoal\Factory\FactoryInterface
              */
             $container['property/factory'] = function (Container $container) {
@@ -190,7 +190,7 @@ class ModelServiceProvider implements ServiceProviderInterface
 
         if (!isset($container['metadata/loader'])) {
             /**
-             * @param Container $container A Pimple DI container instance.
+             * @param Container $container A Pimple DI container.
              * @return MetadataLoader
              */
             $container['metadata/loader'] = function (Container $container) {
@@ -205,7 +205,7 @@ class ModelServiceProvider implements ServiceProviderInterface
 
         if (!isset($container['source/factory'])) {
             /**
-             * @param Container $container A Pimple DI container instance.
+             * @param Container $container A Pimple DI container.
              * @return \Charcoal\Factory\FactoryInterface
              */
             $container['source/factory'] = function (Container $container) {
