@@ -95,6 +95,96 @@ final class MetadataLoader implements LoggerAwareInterface
     }
 
     /**
+     * Load the metadata for the given identifier or interfaces.
+     *
+     * @param  string            $ident      The metadata identifier to load or
+     *     to use as the cache key if $interfaces is provided.
+     * @param  MetadataInterface $metadata   The metadata object to load into.
+     * @param  array|null        $interfaces One or more metadata identifiers to load.
+     * @throws InvalidArgumentException If the identifier is not a string.
+     * @return MetadataInterface Returns the cached metadata instance or if it's stale or empty,
+     *     loads a fresh copy of the data into $metadata and returns it;
+     */
+    public function load($ident, MetadataInterface $metadata, array $interfaces = null)
+    {
+        if (!is_string($ident)) {
+            throw new InvalidArgumentException(
+                'Metadata identifier must be a string'
+            );
+        }
+
+        if (is_array($interfaces) && empty($interfaces)) {
+            $interfaces = null;
+        }
+
+        $cacheKey  = 'metadata/'.str_replace('/', '.', $ident);
+        $cacheItem = $this->cachePool()->getItem($cacheKey);
+
+        if (!$cacheItem->isHit()) {
+            if ($interfaces === null) {
+                $data = $this->loadData($ident);
+            } else {
+                $data = $this->loadDataArray($interfaces);
+            }
+            $metadata->setData($data);
+
+            $this->cachePool()->save($cacheItem->set($metadata));
+
+            return $metadata;
+        }
+
+        return $cacheItem->get();
+    }
+
+    /**
+     * Fetch the metadata for the given identifier.
+     *
+     * @param  string $ident The metadata identifier to load.
+     * @throws InvalidArgumentException If the identifier is not a string.
+     * @return array
+     */
+    public function loadData($ident)
+    {
+        if (!is_string($ident)) {
+            throw new InvalidArgumentException(
+                'Metadata identifier must be a string'
+            );
+        }
+
+        $lineage = $this->hierarchy($ident);
+        $catalog = [];
+        foreach ($lineage as $id) {
+            $data = $this->loadFileFromIdent($id);
+
+            if (is_array($data)) {
+                $catalog = array_replace_recursive($catalog, $data);
+            }
+        }
+
+        return $catalog;
+    }
+
+    /**
+     * Fetch the metadata for the given identifiers.
+     *
+     * @param  array $idents One or more metadata identifiers to load.
+     * @return array
+     */
+    public function loadDataArray(array $idents)
+    {
+        $catalog = [];
+        foreach ($idents as $id) {
+            $data = $this->loadData($id);
+
+            if (is_array($data)) {
+                $catalog = array_replace_recursive($catalog, $data);
+            }
+        }
+
+        return $catalog;
+    }
+
+    /**
      * Set the cache service.
      *
      * @param  CacheItemPoolInterface $cache A PSR-6 compliant cache pool instance.
@@ -249,96 +339,6 @@ final class MetadataLoader implements LoggerAwareInterface
     }
 
     /**
-     * Load the metadata for the given identifier or interfaces.
-     *
-     * @param  string            $ident      The metadata identifier to load or
-     *     to use as the cache key if $interfaces is provided.
-     * @param  MetadataInterface $metadata   The metadata object to load into.
-     * @param  array|null        $interfaces One or more metadata identifiers to load.
-     * @throws InvalidArgumentException If the identifier is not a string.
-     * @return MetadataInterface Returns the cached metadata instance or if it's stale or empty,
-     *     loads a fresh copy of the data into $metadata and returns it;
-     */
-    public function load($ident, MetadataInterface $metadata, array $interfaces = null)
-    {
-        if (!is_string($ident)) {
-            throw new InvalidArgumentException(
-                'Metadata identifier must be a string'
-            );
-        }
-
-        if (is_array($interfaces) && empty($interfaces)) {
-            $interfaces = null;
-        }
-
-        $cacheKey  = 'metadata/'.str_replace('/', '.', $ident);
-        $cacheItem = $this->cachePool()->getItem($cacheKey);
-
-        if (!$cacheItem->isHit()) {
-            if ($interfaces === null) {
-                $data = $this->loadData($ident);
-            } else {
-                $data = $this->loadDataArray($interfaces);
-            }
-            $metadata->setData($data);
-
-            $this->cachePool()->save($cacheItem->set($metadata));
-
-            return $metadata;
-        }
-
-        return $cacheItem->get();
-    }
-
-    /**
-     * Fetch the metadata for the given identifier.
-     *
-     * @param  string $ident The metadata identifier to load.
-     * @throws InvalidArgumentException If the identifier is not a string.
-     * @return array
-     */
-    public function loadData($ident)
-    {
-        if (!is_string($ident)) {
-            throw new InvalidArgumentException(
-                'Metadata identifier must be a string'
-            );
-        }
-
-        $lineage = $this->hierarchy($ident);
-        $catalog = [];
-        foreach ($lineage as $id) {
-            $data = $this->loadFileFromIdent($id);
-
-            if (is_array($data)) {
-                $catalog = array_replace_recursive($catalog, $data);
-            }
-        }
-
-        return $catalog;
-    }
-
-    /**
-     * Fetch the metadata for the given identifiers.
-     *
-     * @param  array $idents One or more metadata identifiers to load.
-     * @return array
-     */
-    public function loadDataArray(array $idents)
-    {
-        $catalog = [];
-        foreach ($idents as $id) {
-            $data = $this->loadData($id);
-
-            if (is_array($data)) {
-                $catalog = array_replace_recursive($catalog, $data);
-            }
-        }
-
-        return $catalog;
-    }
-
-    /**
      * Build a class/interface lineage from the given snake-cased namespace.
      *
      * @param  string $ident The FQCN (in snake-case) to load the hierarchy from.
@@ -459,7 +459,7 @@ final class MetadataLoader implements LoggerAwareInterface
      * @throws InvalidArgumentException If a JSON decoding error occurs.
      * @return array|null
      */
-    protected function loadJsonFile($filename)
+    private function loadJsonFile($filename)
     {
         $content = file_get_contents($filename);
 
@@ -474,6 +474,7 @@ final class MetadataLoader implements LoggerAwareInterface
             return $data;
         }
 
+        $issue = 'Unknown error';
         switch ($error) {
             case JSON_ERROR_NONE:
                 break;
@@ -492,9 +493,7 @@ final class MetadataLoader implements LoggerAwareInterface
             case JSON_ERROR_UTF8:
                 $issue = 'Malformed UTF-8 characters, possibly incorrectly encoded';
                 break;
-            default:
-                $issue = 'Unknown error';
-                break;
+
         }
 
         throw new InvalidArgumentException(
