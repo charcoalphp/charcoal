@@ -245,37 +245,6 @@ class AuthToken extends AbstractModel
         return $this;
     }
 
-     /**
-      * StorableTrait > preSave(): Called automatically before saving the object to source.
-      * @return boolean
-      */
-    public function preSave()
-    {
-        parent::preSave();
-
-        if (password_needs_rehash($this->token, PASSWORD_DEFAULT)) {
-            $this->token = password_hash($this->token, PASSWORD_DEFAULT);
-        }
-        $this->setCreated('now');
-        $this->setLastModified('now');
-
-        return true;
-    }
-
-    /**
-     * StorableTrait > preUpdate(): Called automatically before updating the object to source.
-     * @param array $properties The properties (ident) set for update.
-     * @return boolean
-     */
-    public function preUpdate(array $properties = null)
-    {
-        parent::preUpdate($properties);
-
-        $this->setLastModified('now');
-
-        return true;
-    }
-
     /**
      * @return array|null `['ident'=>'', 'token'=>'']
      */
@@ -346,6 +315,37 @@ class AuthToken extends AbstractModel
 
         // Success!
         return $this->username();
+    }
+
+    /**
+     * StorableTrait > preSave(): Called automatically before saving the object to source.
+     * @return boolean
+     */
+    protected function preSave()
+    {
+        parent::preSave();
+
+        if (password_needs_rehash($this->token, PASSWORD_DEFAULT)) {
+            $this->token = password_hash($this->token, PASSWORD_DEFAULT);
+        }
+        $this->setCreated('now');
+        $this->setLastModified('now');
+
+        return true;
+    }
+
+    /**
+     * StorableTrait > preUpdate(): Called automatically before updating the object to source.
+     * @param array $properties The properties (ident) set for update.
+     * @return boolean
+     */
+    protected function preUpdate(array $properties = null)
+    {
+        parent::preUpdate($properties);
+
+        $this->setLastModified('now');
+
+        return true;
     }
 
     /**
