@@ -73,7 +73,7 @@ class Permission extends AbstractModel implements CategorizableInterface
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function ident()
     {

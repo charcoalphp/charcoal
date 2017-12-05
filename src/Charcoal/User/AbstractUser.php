@@ -46,7 +46,7 @@ abstract class AbstractUser extends Content implements
     /**
      * The password is stored encrypted in the (database) storage.
      *
-     * @var string
+     * @var string|null
      */
     private $password;
 
@@ -186,7 +186,7 @@ abstract class AbstractUser extends Content implements
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function password()
     {
@@ -300,7 +300,7 @@ abstract class AbstractUser extends Content implements
     /**
      * Get the last login IP in x.x.x.x format
      *
-     * @return string
+     * @return string|null
      */
     public function lastLoginIp()
     {
@@ -379,7 +379,7 @@ abstract class AbstractUser extends Content implements
     /**
      * Get the last password change IP in x.x.x.x format
      *
-     * @return string
+     * @return string|null
      */
     public function lastPasswordIp()
     {
@@ -387,7 +387,7 @@ abstract class AbstractUser extends Content implements
     }
 
     /**
-     * @param  string $token The login token.
+     * @param  string|null $token The login token.
      * @throws InvalidArgumentException If the token is not a string.
      * @return UserInterface Chainable
      */
@@ -410,7 +410,7 @@ abstract class AbstractUser extends Content implements
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function loginToken()
     {

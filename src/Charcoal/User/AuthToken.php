@@ -222,10 +222,11 @@ class AuthToken extends AbstractModel
      */
     public function generate($username)
     {
+        $metadata = $this->metadata();
         $this->setIdent(bin2hex(random_bytes(16)));
         $this->setToken(bin2hex(random_bytes(32)));
         $this->setUsername($username);
-        $this->setExpiry('now + '.$this->metadata()->cookieDuration());
+        $this->setExpiry('now + '.$metadata['cookieDuration']);
 
         return $this;
     }
@@ -235,10 +236,11 @@ class AuthToken extends AbstractModel
      */
     public function sendCookie()
     {
-        $cookieName = $this->metadata()->cookieName();
+        $metadata = $this->metadata();
+        $cookieName = $metadata['cookieName'];
         $value = $this->ident().';'.$this->token();
-        $expiry = $this->expiry()->getTimestamp();
-        $secure = $this->metadata()->httpsOnly();
+        $expiry = $this->expiry() ? $this->expiry()->getTimestamp() : null;
+        $secure = $metadata['httpsOnly'];
 
         setcookie($cookieName, $value, $expiry, '', '', $secure);
 
@@ -250,7 +252,8 @@ class AuthToken extends AbstractModel
      */
     public function getTokenDataFromCookie()
     {
-        $cookieName = $this->metadata()->cookieName();
+        $metadata = $this->metadata();
+        $cookieName = $metadata['cookieName'];
 
         if (!isset($_COOKIE[$cookieName])) {
             return null;
