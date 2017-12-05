@@ -21,10 +21,10 @@
         "psr/log": "^1.0",
         "zendframework/zend-permissions-acl": "^2.6",
         "locomotivemtl/charcoal-object": "~0.4",
-        "locomotivemtl/charcoal-config": "~0.6",
-        "locomotivemtl/charcoal-factory": "~0.3",
+        "locomotivemtl/charcoal-config": "~0.8",
+        "locomotivemtl/charcoal-factory": "~0.4",
         "locomotivemtl/charcoal-core": "^0.3",
-        "locomotivemtl/charcoal-translator": "~0.2"
+        "locomotivemtl/charcoal-translator": "~0.3"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.7",
