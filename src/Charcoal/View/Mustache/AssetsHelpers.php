@@ -2,7 +2,7 @@
 
 namespace Charcoal\View\Mustache;
 
-use \Mustache_LambdaHelper as LambdaHelper;
+use Mustache_LambdaHelper as LambdaHelper;
 
 /**
  * Mustache helpers for rendering CSS and JavaScript.

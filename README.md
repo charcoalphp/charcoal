@@ -28,7 +28,6 @@ It is the default view layer for `charcoal-app` projects.
     -   [Development dependencies](#development-dependencies)
     -   [Coding Style](#coding-style)
     -   [Authors](#authors)
-    -   [Changelog](#changelog)
 
 # How to install
 
@@ -48,6 +47,7 @@ $ composer create-project locomotivemtl/charcoal-project-boilerplate:@dev --pref
 
 -   `PHP 5.6+`
     -   Older versions of PHP are deprecated, therefore not supported.
+    -   PHP 7 is recommended for security and performance reasons.
 -   [`psr/log`](http://www.php-fig.org/psr/psr-3/)
     -   A PSR-3 compliant logger should be provided to the various services / classes.
 -   [`psr/http-message`](http://www.php-fig.org/psr/psr-7/)
@@ -63,13 +63,14 @@ $ composer create-project locomotivemtl/charcoal-project-boilerplate:@dev --pref
 -   [`twig/twig`](http://twig.sensiolabs.org/)
     -   Twig can also be used as a rendering engine for the view.
 -   [`pimple/pimple`](http://pimple.sensiolabs.org/)
-    -   Dependencies management can be done with a Pimple ServiceProvider (`\Charcoal\View\ViewServiceProvider`)
+    -   Dependencies management can be done with a Pimple ServiceProvider(`\Charcoal\View\ViewServiceProvider`)
+    -   It is actually required by default in `charcoal-app`.
 
 > 👉 Development dependencies are described in the _Development_ section of this README file.
 
 # Basic Usage
 
-A `View` can be used to render any template (which can be loaded from the engine) with any object (or array) as context.
+A `View` can be used to render any template (which can be loaded from the engine) with any object (or array, for twig) as context.
 
 ```php
 use Charcoal\View\Mustache\MustacheLoader;
@@ -77,9 +78,9 @@ use Charcoal\View\Mustache\MustacheEngine;
 use Charcoal\View\GenericView;
 
 $loader = new MustacheLoader([
-    'logger'=>$logger,
-    'base_path'=>__DIR__,
-    'paths'=>[
+    'logger'    => $logger,
+    'base_path' => __DIR__,
+    'paths'     => [
         'templates',
         'views
     ]
@@ -90,14 +91,14 @@ $engine = new MustacheEngine([
     'loader' => $loader
 ]);
 
-$view = new ]GenericView([
+$view = new GenericView([
     ' logger' => $logger,
     'engine'  => $engine
 ]);
 
 echo $view->render('foo/bar/template', $context);
 
-// A template string can also be used directly
+// A template string can also be used directly, with `renderTemplate()`
 $str = 'My name is {{what}}';
 echo $view->renderTemplate($str, $context);
 ```
@@ -128,9 +129,9 @@ echo $container['view']->render('foo/bar/template', $context);
 
 > 👉 The default view engine, used in those examples, would be _mustache_.
 
-## Using the Renderer, with slim
+## Using the Renderer, with Slim
 
-A view can also be implicitely used as a rendering service. Using the `renderer`, with a PSR7 framework (in this example, Slim 3):
+A view can also be implicitely used as a rendering service. Using the provided `view/renderer`, with a PSR7 framework (in this example, Slim 3):
 
 ```php
 use Charcoal\View\ViewServiceProvider;
@@ -205,7 +206,7 @@ Otherwise, calling `$view->renderTemplate($templateString, $context)` expects an
 
 Any objects can be made renderable (viewable) by implementing the `Charcoal\View\ViewableInterface` by using the `Charcoal\View\ViewableTrait`.
 
-The interface adds the following methods:
+The interface adds the following methods to their implementing objects:
 
 -   `setTemplateIdent($ident)`
 -   `templateIdent()`
@@ -252,7 +253,7 @@ The Service Provider adds the following service to a container:
 - `view`
 - `view/renderer`
 
-Other services are:
+Other services / options are:
 
 - `view/config`
 - `view/engine`
@@ -261,11 +262,13 @@ Other services are:
 The `ViewServiceProvider` expects the following services / keys to be set on the container:
 
 - `logger` A PSR-3 logger
-- `config` Application configuration. Container a "view" config.
+- `config` Application configuration. Should contain a "view" config.
 
 ### The View Config
 
-Most service options can be set dynamically from a configuration object:
+Most service options can be set dynamically from a configuration object.
+
+Example:
 
 ```json
 {
@@ -278,6 +281,7 @@ Most service options can be set dynamically from a configuration object:
         ]
     }
 }
+```
 
 # Development
 
@@ -327,21 +331,10 @@ The Charcoal-View module follows the Charcoal coding-style:
 -   Read the [phpcs.xml](phpcs.xml) file for all the details on code style.
 
 > Coding style validation / enforcement can be performed with `composer phpcs`. An auto-fixer is also available with `composer phpcbf`.
+
 ## Authors
 
 -   Mathieu Ducharme <mat@locomotive.ca>
-
-## Changelog
-
-### 0.1.1
-_Released on 2016-02-22_
-
--   Add jsRequirements and cssRequirements to default mustache helper.
-
-### 0.1
-_Released on 2016-02-04_
-
--   Initial release of `charcoal-view`.
 
 # License
 

@@ -35,7 +35,8 @@
         "mustache/mustache": "^2.11",
         "twig/twig": "^1.31",
         "pimple/pimple": "^3.0",
-        "slim/slim": "^3.7"
+        "slim/slim": "^3.7",
+        "locomotivemtl/charcoal-translator": "~0.3"
     },
     "suggest": {
         "mustache/mustache": "Mustache is suggested as the default templating engine.",

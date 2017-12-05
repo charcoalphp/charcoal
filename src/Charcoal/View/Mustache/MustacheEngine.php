@@ -8,10 +8,8 @@ use Traversable;
 // Dependency from 'mustache/mustache'
 use Mustache_Engine;
 
-// Intra-module (`charcoal-view`) depentencies
+// Intra-module (`charcoal-view`) dependencies
 use Charcoal\View\AbstractEngine;
-
-use Charcoal\View\Mustache\HelpersInterface;
 
 /**
  * Mustache view rendering engine.
@@ -54,53 +52,6 @@ class MustacheEngine extends AbstractEngine
         if (isset($data['helpers'])) {
             $this->setHelpers($data['helpers']);
         }
-    }
-
-    /**
-     * @return Mustache_Engine
-     */
-    protected function mustache()
-    {
-        if ($this->mustache === null) {
-            $this->mustache = $this->createMustache();
-        }
-
-        return $this->mustache;
-    }
-
-    /**
-     * @return Mustache_Engine
-     */
-    protected function createMustache()
-    {
-        $mustache = new Mustache_Engine([
-            'cache'             => $this->cache(),
-            'loader'            => $this->loader(),
-            'partials_loader'   => $this->loader(),
-            'strict_callables'  => true,
-            'helpers'           => $this->helpers()
-        ]);
-
-        return $mustache;
-    }
-
-    /**
-     * Set the engine's cache implementation.
-     *
-     * @param  mixed $cache A Mustache cache option.
-     * @return void
-     */
-    protected function setCache($cache)
-    {
-        /**
-         * If FALSE is specified, the value is converted to NULL
-         * because Mustache internally requires NULL to disable the cache.
-         */
-        if ($cache === false) {
-            $cache = null;
-        }
-
-        parent::setCache($cache);
     }
 
     /**
@@ -200,5 +151,52 @@ class MustacheEngine extends AbstractEngine
     public function renderTemplate($templateString, $context)
     {
         return $this->mustache()->render($templateString, $context);
+    }
+
+    /**
+     * @return Mustache_Engine
+     */
+    protected function mustache()
+    {
+        if ($this->mustache === null) {
+            $this->mustache = $this->createMustache();
+        }
+
+        return $this->mustache;
+    }
+
+    /**
+     * @return Mustache_Engine
+     */
+    protected function createMustache()
+    {
+        $mustache = new Mustache_Engine([
+            'cache'             => $this->cache(),
+            'loader'            => $this->loader(),
+            'partials_loader'   => $this->loader(),
+            'strict_callables'  => true,
+            'helpers'           => $this->helpers()
+        ]);
+
+        return $mustache;
+    }
+
+    /**
+     * Set the engine's cache implementation.
+     *
+     * @param  mixed $cache A Mustache cache option.
+     * @return void
+     */
+    protected function setCache($cache)
+    {
+        /**
+         * If FALSE is specified, the value is converted to NULL
+         * because Mustache internally requires NULL to disable the cache.
+         */
+        if ($cache === false) {
+            $cache = null;
+        }
+
+        parent::setCache($cache);
     }
 }

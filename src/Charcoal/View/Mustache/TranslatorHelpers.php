@@ -28,7 +28,7 @@ class TranslatorHelpers implements HelpersInterface
      *
      * Requires {@link https://github.com/bobthecow/mustache.php/wiki/FILTERS-pragma FILTERS pragma}.
      *
-     * @var integer|null
+     * @var string|integer|null
      */
     private $number;
 
@@ -90,13 +90,13 @@ class TranslatorHelpers implements HelpersInterface
      *
      * @param  string            $text   The translation key.
      * @param  LambdaHelper|null $helper For rendering strings in the current context.
-     * @return boolean
+     * @return string
      */
     public function __invoke($text, LambdaHelper $helper = null)
     {
         if (!$helper) {
             $this->number = $text;
-            return $this;
+            return '';
         }
 
         if ($this->translator) {

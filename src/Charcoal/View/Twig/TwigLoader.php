@@ -79,7 +79,7 @@ class TwigLoader extends AbstractLoader implements
      * Gets the cache key to use for the cache for a given template name.
      *
      * @param  string $name The name of the template to load.
-     * @return string The cache key
+     * @return string|null The cache key
      */
     public function getCacheKey($name)
     {

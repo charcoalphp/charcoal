@@ -40,11 +40,6 @@ abstract class AbstractEngine implements
     private $cache;
 
     /**
-     * @return string
-     */
-    abstract public function type();
-
-    /**
      * Build the object with an array of dependencies.
      *
      * ## Required parameters:
@@ -61,6 +56,52 @@ abstract class AbstractEngine implements
         if (isset($data['cache'])) {
             $this->setCache($data['cache']);
         }
+    }
+
+    /**
+     * @return string
+     */
+    abstract public function type();
+
+    /**
+     * Render a template (from ident) with a given context.
+     *
+     * @param string $templateIdent The template identifier to load and render.
+     * @param mixed  $context       The rendering context.
+     * @return string The rendered template string.
+     */
+    public function render($templateIdent, $context)
+    {
+        $template = $this->loadTemplate($templateIdent);
+        return $this->renderTemplate($template, $context);
+    }
+
+    /**
+     * @param string $templateString The template string to render.
+     * @param mixed  $context        The rendering context.
+     * @return string The rendered template string.
+     */
+    abstract public function renderTemplate($templateString, $context);
+
+    /**
+     * Delegates template loading to the engine's Loader object.
+     *
+     * @param string $templateIdent The template identifier to load.
+     * @return string The template string, loaded from identifier.
+     */
+    public function loadTemplate($templateIdent)
+    {
+        return $this->loader()->load($templateIdent);
+    }
+
+    /**
+     * @param string      $varName       The name of the variable to set this template unto.
+     * @param string|null $templateIdent The "dynamic template" to set. null to clear.
+     * @return void
+     */
+    public function setDynamicTemplate($varName, $templateIdent)
+    {
+        $this->loader()->setDynamicTemplate($varName, $templateIdent);
     }
 
     /**
@@ -86,14 +127,6 @@ abstract class AbstractEngine implements
         return $this->cache;
     }
 
-    /**
-     * @param LoaderInterface $loader A loader instance.
-     * @return void
-     */
-    private function setLoader(LoaderInterface $loader)
-    {
-        $this->loader = $loader;
-    }
 
     /**
      * @return LoaderInterface
@@ -103,44 +136,14 @@ abstract class AbstractEngine implements
         return $this->loader;
     }
 
-    /**
-     * Delegates template loading to the engine's Loader object.
-     *
-     * @param string $templateIdent The template identifier to load.
-     * @return string The template string, loaded from identifier.
-     */
-    public function loadTemplate($templateIdent)
-    {
-        return $this->loader()->load($templateIdent);
-    }
+
 
     /**
-     * Render a template (from ident) with a given context.
-     *
-     * @param string $templateIdent The template identifier to load and render.
-     * @param mixed  $context       The rendering context.
-     * @return string The rendered template string.
-     */
-    public function render($templateIdent, $context)
-    {
-        $template = $this->loadTemplate($templateIdent);
-        return $this->renderTemplate($template, $context);
-    }
-
-    /**
-     * @param string $templateString The template string to render.
-     * @param mixed  $context        The rendering context.
-     * @return string The rendered template string.
-     */
-    abstract public function renderTemplate($templateString, $context);
-
-    /**
-     * @param string      $varName       The name of the variable to set this template unto.
-     * @param string|null $templateIdent The "dynamic template" to set. null to clear.
+     * @param LoaderInterface $loader A loader instance.
      * @return void
      */
-    public function setDynamicTemplate($varName, $templateIdent)
+    private function setLoader(LoaderInterface $loader)
     {
-        $this->loader()->setDynamicTemplate($varName, $templateIdent);
+        $this->loader = $loader;
     }
 }

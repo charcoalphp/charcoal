@@ -11,7 +11,7 @@ interface ViewInterface
      * Load a template (from identifier).
      *
      * @param string $templateIdent The template identifier to load..
-     * @throws InvalidArgumentException If the template ident is not a string.
+     * @throws \InvalidArgumentException If the template ident is not a string.
      * @return string
      */
     public function loadTemplate($templateIdent);

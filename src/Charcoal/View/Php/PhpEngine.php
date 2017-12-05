@@ -3,10 +3,10 @@
 namespace Charcoal\View\Php;
 
 // Intra-module (`charcoal-view`) depentencies
-use \Charcoal\View\AbstractEngine;
+use Charcoal\View\AbstractEngine;
 
 /**
- *
+ * PHP view rendering engine
  */
 class PhpEngine extends AbstractEngine
 {

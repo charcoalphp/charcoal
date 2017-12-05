@@ -51,7 +51,7 @@ trait ViewableTrait
      *
      * @param string $templateIdent The template ID.
      * @throws InvalidArgumentException If the template identifier is not a string.
-     * @return ViewableInterface Chainable
+     * @return self
      */
     public function setTemplateIdent($templateIdent)
     {
@@ -81,7 +81,7 @@ trait ViewableTrait
      *
      * @param ViewInterface|array $view The view instance to use to render.
      * @throws InvalidArgumentException If the view parameter is not an array or a View object.
-     * @return ViewableInterface Chainable
+     * @return self
      */
     public function setView(ViewInterface $view)
     {
@@ -134,7 +134,7 @@ trait ViewableTrait
      *
      * @param ViewableInterface|object|array|null $controller A view controller to use when rendering.
      * @throws InvalidArgumentException If the controller is invalid.
-     * @return ViewableInterface Chainable
+     * @return self
      */
     public function setViewController($controller)
     {
@@ -154,7 +154,7 @@ trait ViewableTrait
      *
      * If no controller has been defined, it will return itself.
      *
-     * @return ViewableInterface
+     * @return mixed
      */
     public function viewController()
     {

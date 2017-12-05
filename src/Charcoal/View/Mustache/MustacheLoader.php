@@ -3,11 +3,11 @@
 namespace Charcoal\View\Mustache;
 
 // 3rd-party libraries (`mustache/mustache`) dependencies
-use \Mustache_Loader;
+use Mustache_Loader;
 
 // Parent namespace dependencies
-use \Charcoal\View\AbstractLoader;
-use \Charcoal\View\LoaderInterface;
+use Charcoal\View\AbstractLoader;
+use Charcoal\View\LoaderInterface;
 
 /**
  * - The mustache template loader finds a mustache template file in directories.

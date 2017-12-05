@@ -20,7 +20,7 @@ interface ViewableInterface
      * Usually, a path to a file containing the template to be rendered at runtime.
      *
      * @param string $templateIdent The template ID.
-     * @return ViewableInterface Chainable
+     * @return self
      */
     public function setTemplateIdent($templateIdent);
 

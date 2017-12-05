@@ -40,6 +40,29 @@ class TwigEngine extends AbstractEngine
     }
 
     /**
+     * @param string $templateIdent The template identifier to load and render.
+     * @param mixed  $context       The rendering context.
+     * @return string The rendered template string.
+     */
+    public function render($templateIdent, $context)
+    {
+        $arrayContext = json_decode(json_encode($context), true);
+        return $this->twig()->render($templateIdent, $arrayContext);
+    }
+
+    /**
+     * @param string $templateString The template string to render.
+     * @param mixed  $context        The rendering context.
+     * @return string The rendered template string.
+     */
+    public function renderTemplate($templateString, $context)
+    {
+        $template = $this->twig()->createTemplate($templateString);
+        $arrayContext = json_decode(json_encode($context), true);
+        return $template->render($arrayContext);
+    }
+
+    /**
      * @return Twig_Environment
      */
     protected function createTwig()
@@ -70,28 +93,5 @@ class TwigEngine extends AbstractEngine
         }
 
         parent::setCache($cache);
-    }
-
-    /**
-     * @param string $templateIdent The template identifier to load and render.
-     * @param mixed  $context       The rendering context.
-     * @return string The rendered template string.
-     */
-    public function render($templateIdent, $context)
-    {
-        $arrayContext = json_decode(json_encode($context), true);
-        return $this->twig()->render($templateIdent, $arrayContext);
-    }
-
-    /**
-     * @param string $templateString The template string to render.
-     * @param mixed  $context        The rendering context.
-     * @return string The rendered template string.
-     */
-    public function renderTemplate($templateString, $context)
-    {
-        $template = $this->twig()->createTemplate($templateString);
-        $arrayContext = json_decode(json_encode($context), true);
-        return $template->render($arrayContext);
     }
 }

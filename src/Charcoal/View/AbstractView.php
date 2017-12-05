@@ -46,28 +46,6 @@ abstract class AbstractView implements
     }
 
     /**
-     * Set the engine (`EngineInterface`) dependency.
-     *
-     * @param EngineInterface $engine The rendering engine.
-     * @return void
-     */
-    private function setEngine(EngineInterface $engine)
-    {
-        $this->engine = $engine;
-    }
-
-    /**
-     * Get the view's rendering engine instance.
-     *
-     * @return EngineInterface
-     */
-    protected function engine()
-    {
-        return $this->engine;
-    }
-
-
-    /**
      * Load a template (from identifier).
      *
      * @param string $templateIdent The template identifier to load..
@@ -119,5 +97,26 @@ abstract class AbstractView implements
     public function setDynamicTemplate($varName, $templateIdent)
     {
         $this->engine()->setDynamicTemplate($varName, $templateIdent);
+    }
+
+    /**
+     * Get the view's rendering engine instance.
+     *
+     * @return EngineInterface
+     */
+    protected function engine()
+    {
+        return $this->engine;
+    }
+
+    /**
+     * Set the engine (`EngineInterface`) dependency.
+     *
+     * @param EngineInterface $engine The rendering engine.
+     * @return void
+     */
+    private function setEngine(EngineInterface $engine)
+    {
+        $this->engine = $engine;
     }
 }

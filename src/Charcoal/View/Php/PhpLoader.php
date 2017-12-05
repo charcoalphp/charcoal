@@ -3,8 +3,8 @@
 namespace Charcoal\View\Php;
 
 // Parent namespace dependencies
-use \Charcoal\View\AbstractLoader;
-use \Charcoal\View\LoaderInterface;
+use Charcoal\View\AbstractLoader;
+use Charcoal\View\LoaderInterface;
 
 /**
  * The PHP template loader finds a mustache php template file in directories and includes it (run as PHP).
