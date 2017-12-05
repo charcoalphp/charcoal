@@ -81,16 +81,6 @@ class Role extends AbstractModel
     }
 
     /**
-     * @param Container $container Pimple DI container.
-     * @return void
-     */
-    public function setDependencies(Container $container)
-    {
-        parent::setDependencies($container);
-        $this->setTranslator($container['translator']);
-    }
-
-    /**
      * @return string
      */
     public function key()
@@ -216,5 +206,16 @@ class Role extends AbstractModel
     public function position()
     {
         return $this->position;
+    }
+
+    /**
+     * @param Container $container Pimple DI container.
+     * @return void
+     */
+    protected function setDependencies(Container $container)
+    {
+        parent::setDependencies($container);
+
+        $this->setTranslator($container['translator']);
     }
 }

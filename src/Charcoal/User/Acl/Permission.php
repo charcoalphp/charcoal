@@ -49,16 +49,6 @@ class Permission extends AbstractModel implements CategorizableInterface
     }
 
     /**
-     * @param Container $container Pimple DI container.
-     * @return void
-     */
-    public function setDependencies(Container $container)
-    {
-        parent::setDependencies($container);
-        $this->setTranslator($container['translator']);
-    }
-
-    /**
      * @return string
      */
     public function key()
@@ -106,5 +96,15 @@ class Permission extends AbstractModel implements CategorizableInterface
     public function name()
     {
         return $this->name;
+    }
+
+    /**
+     * @param Container $container Pimple DI container.
+     * @return void
+     */
+    protected function setDependencies(Container $container)
+    {
+        parent::setDependencies($container);
+        $this->setTranslator($container['translator']);
     }
 }
