@@ -3,6 +3,7 @@
 namespace Charcoal\User\Tests;
 
 use DateTime;
+use InvalidArgumentException;
 
 // From PHPUnit
 use PHPUnit_Framework_TestCase;
@@ -123,7 +124,7 @@ class AbstractUserTest extends \PHPUnit_Framework_TestCase
         $this->obj->set('username', 'FOO');
         $this->assertEquals('foo', $this->obj['username']);
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
         $this->obj->setUsername(false);
     }
 
@@ -147,7 +148,7 @@ class AbstractUserTest extends \PHPUnit_Framework_TestCase
         $this->obj->set('email', 'bar@example.com');
         $this->assertEquals('bar@example.com', $this->obj['email']);
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
         $this->obj->setEmail(false);
     }
 
@@ -163,7 +164,7 @@ class AbstractUserTest extends \PHPUnit_Framework_TestCase
         $this->obj->setRoles(['foobar', 'baz']);
         $this->assertEquals(['foobar', 'baz'], $this->obj->roles());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
         $this->obj->setRoles(42);
     }
 
@@ -187,7 +188,7 @@ class AbstractUserTest extends \PHPUnit_Framework_TestCase
         $this->obj->set('last_login_date', $date);
         $this->assertEquals($date, $this->obj['last_login_date']);
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
         $this->obj->setLastLoginDate(false);
     }
 
@@ -210,7 +211,7 @@ class AbstractUserTest extends \PHPUnit_Framework_TestCase
         $this->obj['lastLoginIp'] = 134744072;
         $this->assertEquals('8.8.8.8', $this->obj->lastLoginIp());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
         $this->obj->setLastLoginIp(false);
     }
 
@@ -234,7 +235,7 @@ class AbstractUserTest extends \PHPUnit_Framework_TestCase
         $this->obj->set('last_password_date', $date);
         $this->assertEquals($date, $this->obj['last_password_date']);
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
         $this->obj->setLastPasswordDate(false);
     }
 
@@ -257,7 +258,7 @@ class AbstractUserTest extends \PHPUnit_Framework_TestCase
         $this->obj['lastPasswordIp'] = 134744072;
         $this->assertEquals('8.8.8.8', $this->obj->lastPasswordIp());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
         $this->obj->setLastPasswordIp(false);
     }
 
@@ -276,14 +277,8 @@ class AbstractUserTest extends \PHPUnit_Framework_TestCase
         $this->obj['loginToken'] = null;
         $this->assertNull($this->obj['loginToken']);
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
         $this->obj->setLoginToken([]);
-    }
-
-    public function testLoginFailedResetUsername()
-    {
-        $this->obj->loginFailed('foo');
-        $this->assertEquals('', $this->obj->username());
     }
 
     public function testResetPassword()
@@ -294,7 +289,7 @@ class AbstractUserTest extends \PHPUnit_Framework_TestCase
         $this->obj['username'] = 'bar';
         //$ret = $this->obj->resetPassword('foo');
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
         $this->obj->resetPassword(false);
     }
 

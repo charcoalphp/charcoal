@@ -74,7 +74,7 @@ class AuthTokenTest extends PHPUnit_Framework_TestCase
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('foo', $this->obj->username());
 
-        $this->setExpectedException('\Exception');
+        $this->expectException('\Exception');
         $this->obj->setUsername([]);
     }
 
@@ -91,7 +91,7 @@ class AuthTokenTest extends PHPUnit_Framework_TestCase
         $this->assertSame($ret, $this->obj);
         $this->assertEquals($date, $this->obj->expiry());
 
-        $this->setExpectedException('\Exception');
+        $this->expectException('\Exception');
         $this->obj->setExpiry('fsdjkfsadg');
     }
 
@@ -102,7 +102,7 @@ class AuthTokenTest extends PHPUnit_Framework_TestCase
         $this->assertSame($ret, $this->obj);
         $this->assertEquals($date, $this->obj->created());
 
-        $this->setExpectedException('\Exception');
+        $this->expectException('\Exception');
         $this->obj->setCreated('fsdjkfsadg');
     }
 
@@ -113,7 +113,7 @@ class AuthTokenTest extends PHPUnit_Framework_TestCase
         $this->assertSame($ret, $this->obj);
         $this->assertEquals($date, $this->obj->lastModified());
 
-        $this->setExpectedException('\Exception');
+        $this->expectException('\Exception');
         $this->obj->setLastModified('fsdjkfsadg');
     }
 

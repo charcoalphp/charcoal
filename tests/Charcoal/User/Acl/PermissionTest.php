@@ -68,7 +68,7 @@ class PermissionTest extends PHPUnit_Framework_TestCase
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('foobar', $this->obj->ident());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $this->obj->setIdent(false);
     }
 

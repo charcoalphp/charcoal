@@ -53,7 +53,7 @@ class AuthTokenMetadataTest extends PHPUnit_Framework_TestCase
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('foobar', $this->obj->cookieName());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $this->obj->setCookieName(false);
     }
 
@@ -63,7 +63,7 @@ class AuthTokenMetadataTest extends PHPUnit_Framework_TestCase
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('2 month', $this->obj->cookieDuration());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $this->obj->setCookieDuration(false);
     }
 }

@@ -66,25 +66,25 @@ class AuthenticatorTest extends PHPUnit_Framework_TestCase
 
     public function testAuthenticateByPasswordInvalidUsername()
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $this->obj->authenticateByPassword([], '');
     }
 
     public function testAuthenticateByPasswordInvalidPassword()
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $this->obj->authenticateByPassword('', []);
     }
 
     public function testAuthenticateByPasswordEmpty()
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $this->obj->authenticateByPassword('', '');
     }
 
     public function testAuthenticateByPassword()
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $this->obj->authenticateByPassword('test', 'password');
     }
 
