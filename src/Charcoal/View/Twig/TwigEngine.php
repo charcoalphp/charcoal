@@ -13,6 +13,8 @@ use Charcoal\View\AbstractEngine;
  */
 class TwigEngine extends AbstractEngine
 {
+    const DEFAULT_CACHE_PATH = '../cache/twig';
+
     /**
      * @var Twig_Environment $twig
      */
@@ -43,12 +45,31 @@ class TwigEngine extends AbstractEngine
     protected function createTwig()
     {
         $twig = new Twig_Environment($this->loader(), [
-            'cache'     => 'twig_cache',
+            'cache'     => $this->cache(),
             'charset'   => 'utf-8',
             'debug'     => false
         ]);
 
         return $twig;
+    }
+
+    /**
+     * Set the engine's cache implementation.
+     *
+     * @param  mixed $cache A Twig cache option.
+     * @return void
+     */
+    protected function setCache($cache)
+    {
+        /**
+         * If NULL is specified, the value is converted to FALSE
+         * because Twig internally requires FALSE to disable the cache.
+         */
+        if ($cache === null) {
+            $cache = false;
+        }
+
+        parent::setCache($cache);
     }
 
     /**

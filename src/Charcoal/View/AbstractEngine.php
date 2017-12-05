@@ -33,6 +33,13 @@ abstract class AbstractEngine implements
     private $loader;
 
     /**
+     * The cache option.
+     *
+     * @var mixed
+     */
+    private $cache;
+
+    /**
      * @return string
      */
     abstract public function type();
@@ -50,6 +57,33 @@ abstract class AbstractEngine implements
     {
         $this->setLogger($data['logger']);
         $this->setLoader($data['loader']);
+
+        if (isset($data['cache'])) {
+            $this->setCache($data['cache']);
+        }
+    }
+
+    /**
+     * Set the engine's cache implementation.
+     *
+     * @param  mixed $cache A engine cache implementation,
+     *                      an absolute path to the compiled views,
+     *                      a boolean to enable/disable cache.
+     * @return void
+     */
+    protected function setCache($cache)
+    {
+        $this->cache = $cache;
+    }
+
+    /**
+     * Get the engine's cache implementation.
+     *
+     * @return mixed
+     */
+    protected function cache()
+    {
+        return $this->cache;
     }
 
     /**

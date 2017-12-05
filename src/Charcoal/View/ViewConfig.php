@@ -7,6 +7,10 @@ use InvalidArgumentException;
 // Module `charcoal-config` dependencies
 use Charcoal\Config\AbstractConfig;
 
+// Intra-module (`charcoal-view`) depentencies
+use Charcoal\View\Mustache\MustacheEngine;
+use Charcoal\View\Twig\TwigEngine;
+
 /**
  * View configuration.
  */
@@ -36,11 +40,13 @@ class ViewConfig extends AbstractConfig
             'paths' => [],
             'engines' => [
                 'mustache'      => [
-                    'cache' => '../cache/mustache'
+                    'cache' => MustacheEngine::DEFAULT_CACHE_PATH
                 ],
                 'php'           => [],
                 'php-mustache'  => [],
-                'twig'          => []
+                'twig'          => [
+                    'cache' => TwigEngine::DEFAULT_CACHE_PATH
+                ]
             ],
             'default_engine' => 'mustache'
         ];
