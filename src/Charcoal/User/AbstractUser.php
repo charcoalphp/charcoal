@@ -17,9 +17,6 @@ use Charcoal\Config\ConfigurableTrait;
 // From 'charcoal-object'
 use Charcoal\Object\Content;
 
-// From 'charcoal-user'
-use Charcoal\User\UserInterface;
-
 /**
  * Full implementation, as abstract class, of the `UserInterface`.
  */
@@ -457,38 +454,6 @@ abstract class AbstractUser extends Content implements
 
         $this->saveToSession();
 
-        return true;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function logLogin()
-    {
-        // @todo
-        return true;
-    }
-
-    /**
-     * Failed authentication callback
-     *
-     * @param string $username The failed username.
-     * @return void
-     */
-    public function loginFailed($username)
-    {
-        $this->setUsername('');
-
-        $this->logLoginFailed($username);
-    }
-
-    /**
-     * @param string $username The username to log failure.
-     * @return boolean
-     */
-    public function logLoginFailed($username)
-    {
-        // @todo
         return true;
     }
 

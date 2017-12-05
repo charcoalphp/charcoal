@@ -15,7 +15,6 @@ User defintion (as Charcoal Model), authentication and authorization (with Zend 
     -   [Continuous Integration](#continuous-integration)
     -   [Coding Style](#coding-style)
     -   [Authors](#authors)
-    -   [Changelog](#changelog)
 
 # How to install
 
@@ -30,6 +29,8 @@ The preferred (and only supported) way of installing _charcoal-user_ is with **c
 - PHP 5.6+
     -   This is the last supported version of PHP.
     -   `PHP 7` is also supported (meaning _green on travis_…).
+- `zendframework/zend-permissions-acl`
+- `locomotivemtl/charcoal-object`
 
 # The User object
 
@@ -177,15 +178,14 @@ The charcoal-user module follows the Charcoal coding-style:
 
 > Coding style validation / enforcement can be performed with `composer phpcs`. An auto-fixer is also available with `composer phpcbf`.
 
+
+> This module should also throw no error when running `phpstan analyse -l7 src/` 👍.
+
 # Authors
 
 -   Mathieu Ducharme, mat@locomotive.ca
 -   Chauncey McAskill
--   Locomotive Inc.
-
-# Changelog
-
-_Unreleased_
+-   [Locomotive, a Montreal Web agency](https://locomotive.ca)
 
 # License
 

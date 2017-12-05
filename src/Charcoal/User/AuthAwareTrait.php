@@ -8,10 +8,6 @@ use RuntimeException;
 // From Pimple
 use Pimple\Container;
 
-// From 'charcoal-user'
-use Charcoal\User\Authenticator;
-use Charcoal\User\Authorizer;
-
 /**
  * An implementation, as Trait, of the {@see \Charcoal\User\AuthAwareInterface}.
  */
@@ -33,6 +29,31 @@ trait AuthAwareTrait
     private $requiredAclPermissions;
 
     /**
+     * @return boolean
+     */
+    public function isAuthorized()
+    {
+        return $this->hasPermissions($this->requiredAclPermissions());
+    }
+
+    /**
+     * @param array|null $permissions The list of required permissions to check.
+     * @return boolean
+     */
+    public function hasPermissions($permissions)
+    {
+        $authUser = $this->authenticator()->authenticate();
+        if (!$authUser) {
+            return false;
+        }
+        if ($permissions === null || empty($permissions)) {
+            return true;
+        }
+        $authorized = $this->authorizer()->userAllowed($authUser, $permissions);
+        return $authorized;
+    }
+
+    /**
      * @param  Container $container The DI container.
      * @return void
      */
@@ -46,13 +67,11 @@ trait AuthAwareTrait
      * Set the authentication service.
      *
      * @param  Authenticator $authenticator The authentication service.
-     * @return AuthAwareInterface
+     * @return void
      */
     protected function setAuthenticator(Authenticator $authenticator)
     {
         $this->authenticator = $authenticator;
-
-        return $this;
     }
 
     /**
@@ -77,13 +96,11 @@ trait AuthAwareTrait
      * Set the authorization service.
      *
      * @param  Authorizer $authorizer The authorization service.
-     * @return AuthAwareInterface
+     * @return void
      */
     protected function setAuthorizer(Authorizer $authorizer)
     {
         $this->authorizer = $authorizer;
-
-        return $this;
     }
 
     /**
@@ -107,7 +124,7 @@ trait AuthAwareTrait
      /**
       * @param string[]|string|null $permissions The list of required permissions.
       * @throws InvalidArgumentException If the permissions are not an array or a comma-separated string.
-      * @return AuthAwareTrait Chainable
+      * @return self
       */
     protected function setRequiredAclPermissions($permissions)
     {
@@ -134,30 +151,5 @@ trait AuthAwareTrait
     protected function requiredAclPermissions()
     {
         return $this->requiredAclPermissions;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isAuthorized()
-    {
-        return $this->hasPermissions($this->requiredAclPermissions());
-    }
-
-    /**
-     * @param array|null $permissions The list of required permissions to check.
-     * @return boolean
-     */
-    public function hasPermissions($permissions)
-    {
-        $authUser = $this->authenticator()->authenticate();
-        if (!$authUser) {
-            return false;
-        }
-        if ($permissions === null || empty($permissions)) {
-            return true;
-        }
-        $authorized = $this->authorizer()->userAllowed($authUser, $permissions);
-        return $authorized;
     }
 }

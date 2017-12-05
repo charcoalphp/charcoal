@@ -59,8 +59,6 @@ class Authenticator implements LoggerAwareInterface
     private $tokenFactory;
 
     /**
-     * Returns a new Authoricator object.
-     *
      * @param array $data Class dependencies.
      */
     public function __construct(array $data)
@@ -70,108 +68,6 @@ class Authenticator implements LoggerAwareInterface
         $this->setUserFactory($data['user_factory']);
         $this->setTokenType($data['token_type']);
         $this->setTokenFactory($data['token_factory']);
-    }
-
-    /**
-     * Set the user object type (model).
-     *
-     * @param string $type The user object type.
-     * @throws InvalidArgumentException If the user object type parameter is not a string.
-     * @return Authenticator Chainable
-     */
-    private function setUserType($type)
-    {
-        if (!is_string($type)) {
-            throw new InvalidArgumentException(
-                'User object type must be a string'
-            );
-        }
-
-        $this->userType = $type;
-
-        return $this;
-    }
-
-    /**
-     * Retrieve the user object type.
-     *
-     * @return string
-     */
-    protected function userType()
-    {
-        return $this->userType;
-    }
-
-    /**
-     * Set a user model factory.
-     *
-     * @param FactoryInterface $factory The factory used to create new user instances.
-     * @return void
-     */
-    private function setUserFactory(FactoryInterface $factory)
-    {
-        $this->userFactory = $factory;
-    }
-
-    /**
-     * Retrieve the user model factory.
-     *
-     * @throws RuntimeException If the model factory was not previously set.
-     * @return FactoryInterface
-     */
-    protected function userFactory()
-    {
-        return $this->userFactory;
-    }
-
-    /**
-     * Set the authorization token type (model).
-     *
-     * @param string $type The auth-token object type.
-     * @throws InvalidArgumentException If the token object type parameter is not a string.
-     * @return void
-     */
-    private function setTokenType($type)
-    {
-        if (!is_string($type)) {
-            throw new InvalidArgumentException(
-                'Token object type must be a string'
-            );
-        }
-
-        $this->tokenType = $type;
-    }
-
-    /**
-     * Retrieve the auth-token object type.
-     *
-     * @return string
-     */
-    protected function tokenType()
-    {
-        return $this->tokenType;
-    }
-
-    /**
-     * Set a model factory for token-based authentication.
-     *
-     * @param FactoryInterface $factory The factory used to create new auth-token instances.
-     * @return void
-     */
-    private function setTokenFactory(FactoryInterface $factory)
-    {
-        $this->tokenFactory = $factory;
-    }
-
-    /**
-     * Retrieve the auth-token model factory.
-     *
-     * @throws RuntimeException If the token factory was not previously set.
-     * @return FactoryInterface
-     */
-    protected function tokenFactory()
-    {
-        return $this->tokenFactory;
     }
 
     /**
@@ -260,6 +156,107 @@ class Authenticator implements LoggerAwareInterface
 
             return null;
         }
+    }
+
+    /**
+     * Retrieve the user object type.
+     *
+     * @return string
+     */
+    protected function userType()
+    {
+        return $this->userType;
+    }
+
+
+    /**
+     * Retrieve the user model factory.
+     *
+     * @throws RuntimeException If the model factory was not previously set.
+     * @return FactoryInterface
+     */
+    protected function userFactory()
+    {
+        return $this->userFactory;
+    }
+
+    /**
+     * Retrieve the auth-token object type.
+     *
+     * @return string
+     */
+    protected function tokenType()
+    {
+        return $this->tokenType;
+    }
+
+    /**
+     * Retrieve the auth-token model factory.
+     *
+     * @throws RuntimeException If the token factory was not previously set.
+     * @return FactoryInterface
+     */
+    protected function tokenFactory()
+    {
+        return $this->tokenFactory;
+    }
+
+    /**
+     * Set the user object type (model).
+     *
+     * @param string $type The user object type.
+     * @throws InvalidArgumentException If the user object type parameter is not a string.
+     * @return void
+     */
+    private function setUserType($type)
+    {
+        if (!is_string($type)) {
+            throw new InvalidArgumentException(
+                'User object type must be a string'
+            );
+        }
+
+        $this->userType = $type;
+    }
+
+    /**
+     * Set a user model factory.
+     *
+     * @param FactoryInterface $factory The factory used to create new user instances.
+     * @return void
+     */
+    private function setUserFactory(FactoryInterface $factory)
+    {
+        $this->userFactory = $factory;
+    }
+
+    /**
+     * Set the authorization token type (model).
+     *
+     * @param string $type The auth-token object type.
+     * @throws InvalidArgumentException If the token object type parameter is not a string.
+     * @return void
+     */
+    private function setTokenType($type)
+    {
+        if (!is_string($type)) {
+            throw new InvalidArgumentException(
+                'Token object type must be a string'
+            );
+        }
+
+        $this->tokenType = $type;
+    }
+
+    /**
+     * Set a model factory for token-based authentication.
+     *
+     * @param FactoryInterface $factory The factory used to create new auth-token instances.
+     * @return void
+     */
+    private function setTokenFactory(FactoryInterface $factory)
+    {
+        $this->tokenFactory = $factory;
     }
 
     /**
