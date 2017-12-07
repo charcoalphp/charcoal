@@ -209,9 +209,10 @@ abstract class AbstractLoader implements
     protected function findTemplateFile($ident)
     {
         if (!is_string($ident)) {
-            throw new InvalidArgumentException(
-                'Template ident must be a string'
-            );
+            throw new InvalidArgumentException(sprintf(
+                'Template ident must be a string, received %s',
+                is_object($ident) ? get_class($ident) : gettype($ident)
+            ));
         }
 
         $filename = $this->filenameFromIdent($ident);

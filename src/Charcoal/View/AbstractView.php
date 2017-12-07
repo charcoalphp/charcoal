@@ -55,9 +55,10 @@ abstract class AbstractView implements
     public function loadTemplate($templateIdent)
     {
         if (!is_string($templateIdent)) {
-            throw new InvalidArgumentException(
-                'Template ident must be a string'
-            );
+            throw new InvalidArgumentException(sprintf(
+                'Template ident must be a string, received %s',
+                is_object($templateIdent) ? get_class($templateIdent) : gettype($templateIdent)
+            ));
         }
         if (!$templateIdent) {
             return '';
