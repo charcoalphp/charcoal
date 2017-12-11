@@ -28,7 +28,9 @@ class DatabaseSource extends AbstractSource implements
     DatabaseSourceInterface
 {
     const DEFAULT_DB_HOSTNAME = 'localhost';
+
     const DEFAULT_TABLE_ALIAS = 'objTable';
+
     const MYSQL_DRIVER_NAME   = 'mysql';
     const SQLITE_DRIVER_NAME  = 'sqlite';
 
@@ -243,9 +245,9 @@ class DatabaseSource extends AbstractSource implements
         $table  = $this->table();
         $driver = $dbh->getAttribute(PDO::ATTR_DRIVER_NAME);
         if ($driver === self::SQLITE_DRIVER_NAME) {
-            $query = 'SELECT name FROM sqlite_master WHERE type = "table" AND name = "'.$table.'";';
+            $query = sprintf('SELECT name FROM sqlite_master WHERE type = "table" AND name = "%s";', $table);
         } else {
-            $query = 'SHOW TABLES LIKE "'.$table.'"';
+            $query = sprintf('SHOW TABLES LIKE "%s"', $table);
         }
 
         $this->logger->debug($query);
@@ -266,9 +268,9 @@ class DatabaseSource extends AbstractSource implements
         $table  = $this->table();
         $driver = $dbh->getAttribute(PDO::ATTR_DRIVER_NAME);
         if ($driver === self::SQLITE_DRIVER_NAME) {
-            $query = 'PRAGMA table_info("'.$table.'") ';
+            $query = sprintf('PRAGMA table_info("%s") ', $table);
         } else {
-            $query = 'SHOW COLUMNS FROM `'.$table.'`';
+            $query = sprintf('SHOW COLUMNS FROM `%s`', $table);
         }
 
         $this->logger->debug($query);
@@ -301,7 +303,7 @@ class DatabaseSource extends AbstractSource implements
     public function tableIsEmpty()
     {
         $table = $this->table();
-        $query = 'SELECT NULL FROM `'.$table.'` LIMIT 1';
+        $query = sprintf('SELECT NULL FROM `%s` LIMIT 1', $table);
         $this->logger->debug($query);
         $sth = $this->db()->query($query);
         return ($sth->rowCount() === 0);
@@ -362,7 +364,7 @@ class DatabaseSource extends AbstractSource implements
      * @param  string                 $key   Column name.
      * @param  mixed                  $ident Value of said column.
      * @param  StorableInterface|null $item  Optional. Item (storable object) to load into.
-     * @throws Exception If the query fails.
+     * @throws \Exception If the query fails.
      * @return StorableInterface
      */
     public function loadItemFromKey($key, $ident, StorableInterface $item = null)
@@ -374,21 +376,22 @@ class DatabaseSource extends AbstractSource implements
             $item  = new $class;
         }
 
+        $key = preg_replace("/[^\w-]+/", '', $key);
         // Missing parameters
         if (!$key || !$ident) {
             return $item;
         }
 
         $table = $this->table();
-        $query = '
+        $query = sprintf('
             SELECT
                 *
             FROM
-               `'.$table.'`
+               `%s`
             WHERE
-               `'.$key.'` = :ident
+               `%s` = :ident
             LIMIT
-               1';
+               1', $table, $key);
 
         $binds = [
             'ident' => $ident
@@ -672,7 +675,7 @@ class DatabaseSource extends AbstractSource implements
      * @param  string $query The SQL query to executed.
      * @param  array  $binds Optional. Query parameter binds.
      * @param  array  $types Optional. Types of parameter bindings.
-     * @return PDOStatement|false The PDOStatement, otherwise FALSE.
+     * @return \PDOStatement|false The PDOStatement, otherwise FALSE.
      */
     public function dbQuery($query, array $binds = [], array $types = [])
     {
