@@ -95,7 +95,7 @@ trait ConditionalizableTrait
 
         $result = $this->resolveConditionalLogic($condition);
 
-        return $not ? !$result : $result;
+        return (($not === true) ? !$result : $result);
     }
 
     /**
