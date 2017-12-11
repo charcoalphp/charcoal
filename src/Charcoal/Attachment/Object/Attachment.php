@@ -194,7 +194,7 @@ class Attachment extends Content implements AttachableInterface
      * @param  Container $container A dependencies container instance.
      * @return void
      */
-    public function setDependencies(Container $container)
+    protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
 

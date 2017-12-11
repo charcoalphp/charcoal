@@ -131,7 +131,7 @@ class Join extends AbstractModel implements
      * @param  ServiceContainer $container Service container.
      * @return void
      */
-    public function setDependencies(ServiceContainer $container)
+    protected function setDependencies(ServiceContainer $container)
     {
         parent::setDependencies($container);
 
