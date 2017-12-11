@@ -71,7 +71,7 @@ abstract class AbstractUiItem extends AbstractEntity implements
      * @param  Container $container A dependencies container instance.
      * @return void
      */
-    public function setDependencies(Container $container)
+    protected function setDependencies(Container $container)
     {
         $this->setTranslator($container['translator']);
         $this->setAuthenticator($container['authenticator']);
