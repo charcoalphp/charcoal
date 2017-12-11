@@ -8,9 +8,6 @@ use InvalidArgumentException;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 
-// From 'charcoal-core'
-use Charcoal\Source\SourceInterface;
-use Charcoal\Source\StorableInterface;
 
 /**
  * Provides an object with storage interaction.
@@ -137,34 +134,6 @@ trait StorableTrait
     }
 
     /**
-     * Set the datasource repository factory.
-     *
-     * @param  FactoryInterface $factory The source factory.
-     * @return self
-     */
-    protected function setSourceFactory(FactoryInterface $factory)
-    {
-        $this->sourceFactory = $factory;
-        return $this;
-    }
-
-    /**
-     * Get the datasource repository factory.
-     *
-     * @throws RuntimeException If the source factory was not previously set.
-     * @return FactoryInterface
-     */
-    protected function sourceFactory()
-    {
-        if (!isset($this->sourceFactory)) {
-            throw new RuntimeException(
-                sprintf('Source factory is not set for "%s"', get_class($this))
-            );
-        }
-        return $this->sourceFactory;
-    }
-
-    /**
      * Set the object's datasource repository.
      *
      * @todo   This method needs to be protected.
@@ -204,7 +173,7 @@ trait StorableTrait
      * @param  mixed $id The identifier to load.
      * @return self
      */
-    public function load($id = null)
+    final public function load($id = null)
     {
         if ($id === null) {
             $id = $this->id();
@@ -220,7 +189,7 @@ trait StorableTrait
      * @param  mixed  $value Value of said column.
      * @return self
      */
-    public function loadFrom($key = null, $value = null)
+    final public function loadFrom($key = null, $value = null)
     {
         $this->source()->loadItemFromKey($key, $value, $this);
         return $this;
@@ -233,7 +202,7 @@ trait StorableTrait
      * @param  array  $binds Optional. The SQL query parameters.
      * @return self
      */
-    public function loadFromQuery($query, array $binds = [])
+    final public function loadFromQuery($query, array $binds = [])
     {
         $this->source()->loadItemFromQuery($query, $binds, $this);
         return $this;
@@ -244,7 +213,7 @@ trait StorableTrait
      *
      * @return boolean TRUE on success.
      */
-    public function save()
+    final public function save()
     {
         $pre = $this->preSave();
         if ($pre === false) {
@@ -290,7 +259,7 @@ trait StorableTrait
      * @param  string[] $keys If provided, only update the properties specified.
      * @return boolean TRUE on success.
      */
-    public function update(array $keys = null)
+    final public function update(array $keys = null)
     {
         $pre = $this->preUpdate($keys);
         if ($pre === false) {
@@ -333,7 +302,7 @@ trait StorableTrait
      *
      * @return boolean TRUE on success.
      */
-    public function delete()
+    final public function delete()
     {
         $pre = $this->preDelete();
         if ($pre === false) {
@@ -369,6 +338,34 @@ trait StorableTrait
         }
 
         return true;
+    }
+
+    /**
+     * Set the datasource repository factory.
+     *
+     * @param  FactoryInterface $factory The source factory.
+     * @return self
+     */
+    protected function setSourceFactory(FactoryInterface $factory)
+    {
+        $this->sourceFactory = $factory;
+        return $this;
+    }
+
+    /**
+     * Get the datasource repository factory.
+     *
+     * @throws RuntimeException If the source factory was not previously set.
+     * @return FactoryInterface
+     */
+    protected function sourceFactory()
+    {
+        if (!isset($this->sourceFactory)) {
+            throw new RuntimeException(
+                sprintf('Source factory is not set for "%s"', get_class($this))
+            );
+        }
+        return $this->sourceFactory;
     }
 
     /**
