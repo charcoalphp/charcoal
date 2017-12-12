@@ -492,17 +492,34 @@ class ModelStructureProperty extends StructureProperty
      * - `default_data` (_boolean_|_array_) — If TRUE, the default data defined
      *   in the structure's metadata is merged. If an array, that is merged.
      *
-     * @param  mixed $val     The value to "structurize".
-     * @param  array $options Optional structure options.
+     * @param  mixed                   $val     The value to "structurize".
+     * @param  array|MetadataInterface $options Optional structure options.
+     * @throws InvalidArgumentException If the options are invalid.
      * @return ModelInterface|ModelInterface[]
      */
-    public function structureVal($val, array $options = [])
+    public function structureVal($val, $options = [])
     {
         if ($val === null) {
             return ($this->multiple() ? [] : null);
         }
 
-        $metadata = $this->structureMetadata();
+        $metadata = clone $this->structureMetadata();
+
+        if ($options instanceof MetadataInterface) {
+            $metadata->merge($options);
+        } elseif ($options === null) {
+            $options = [];
+        } elseif (is_array($options)) {
+            if (isset($options['metadata'])) {
+                $metadata->merge($options['metadata']);
+            }
+        } else {
+            throw new InvalidArgumentException(sprintf(
+                'Structure value options must to be an array or an instance of %2$s, received %1$s',
+                is_object($options) ? get_class($options) : gettype($options),
+                StructureMetadata::class
+            ));
+        }
 
         $defaultData = [];
         if (isset($options['default_data'])) {
