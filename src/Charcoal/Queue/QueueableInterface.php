@@ -3,7 +3,7 @@
 namespace Charcoal\Queue;
 
 /**
- * Queuable objects can be queued.
+ * Queueable objects can be added queue.
  */
 interface QueueableInterface
 {
@@ -11,7 +11,7 @@ interface QueueableInterface
      * Set the queue's ID.
      *
      * @param mixed $id The unique queue identifier.
-     * @return QueueableInterface Chainable
+     * @return self
      */
     public function setQueueId($id);
 
@@ -26,7 +26,7 @@ interface QueueableInterface
      * Set the date/time to process the queue.
      *
      * @param mixed $ts A date/time to initiate the queue processing.
-     * @return QueueableInterface Chainable
+     * @return self
      */
     public function queue($ts = null);
 }

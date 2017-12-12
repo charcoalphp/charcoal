@@ -25,7 +25,7 @@ interface QueueItemInterface
      * Set the queue item's data.
      *
      * @param array $data The queue item data to set.
-     * @return QueueItemTrait Chainable
+     * @return self
      */
     public function setQueueItemData(array $data);
 
@@ -33,7 +33,7 @@ interface QueueItemInterface
      * Set the queue's ID.
      *
      * @param mixed $id The unique queue identifier.
-     * @return QueueItemInterface Chainable
+     * @return self
      */
     public function setQueueId($id);
 
@@ -47,47 +47,47 @@ interface QueueItemInterface
     /**
      * Set the date/time the item was queued at.
      *
-     * @param  null|string|DateTimeInterface $ts A date/time string or object.
-     * @return QueueItemInterface Chainable
+     * @param  null|string|\DateTimeInterface $ts A date/time string or object.
+     * @return self
      */
     public function setQueuedDate($ts);
 
     /**
      * Retrieve the date/time the item was queued at.
      *
-     * @return null|DateTimeInterface
+     * @return null|\DateTimeInterface
      */
     public function queuedDate();
 
     /**
      * Set the date/time the item should be processed at.
      *
-     * @param  null|string|DateTimeInterface $ts A date/time string or object.
-     * @throws InvalidArgumentException If the date/time is invalid.
-     * @return QueueItemInterface Chainable
+     * @param  null|string|\DateTimeInterface $ts A date/time string or object.
+     * @throws \InvalidArgumentException If the date/time is invalid.
+     * @return self
      */
     public function setProcessingDate($ts);
 
     /**
      * Retrieve the date/time the item should be processed at.
      *
-     * @return null|DateTimeInterface
+     * @return null|\DateTimeInterface
      */
     public function processingDate();
 
     /**
      * Set the date/time the item was processed at.
      *
-     * @param  null|string|DateTimeInterface $ts A date/time string or object.
-     * @throws InvalidArgumentException If the date/time is invalid.
-     * @return QueueItemInterface Chainable
+     * @param  null|string|\DateTimeInterface $ts A date/time string or object.
+     * @throws \InvalidArgumentException If the date/time is invalid.
+     * @return self
      */
     public function setProcessedDate($ts);
 
     /**
      * Retrieve the date/time the item was processed at.
      *
-     * @return null|DateTimeInterface
+     * @return null|\DateTimeInterface
      */
     public function processedDate();
 }

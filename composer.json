@@ -29,9 +29,9 @@
         "locomotivemtl/charcoal-factory": "~0.4"
     },
     "require-dev": {
-        "phpunit/phpunit": "^4.8",
+        "phpunit/phpunit": "^5.7",
         "squizlabs/php_codesniffer": "^2.4",
-        "satooshi/php-coveralls": "~1.0.1"
+        "php-coveralls/php-coveralls": "~1.0.1"
     },
     "autoload": {
         "psr-4": {

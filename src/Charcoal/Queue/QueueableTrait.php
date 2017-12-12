@@ -2,7 +2,7 @@
 
 namespace Charcoal\Queue;
 
-use \InvalidArgumentException;
+use InvalidArgumentException;
 
 /**
  * Full implementation, as a Trait, of the `QueueableInterface`.
@@ -21,7 +21,7 @@ trait QueueableTrait
      *
      * @param mixed $id The unique queue identifier.
      * @throws InvalidArgumentException If the ID isn't a string.
-     * @return QueueableInterface Chainable
+     * @return self
      */
     public function setQueueId($id)
     {

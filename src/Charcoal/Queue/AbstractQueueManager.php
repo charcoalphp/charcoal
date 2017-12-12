@@ -2,17 +2,17 @@
 
 namespace Charcoal\Queue;
 
-use \Exception;
+use Exception;
 
 // PSR-3 (logger) dependencies
-use \Psr\Log\LoggerAwareInterface;
-use \Psr\Log\LoggerAwareTrait;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 
 // From `charcoal-core`
-use \Charcoal\Loader\CollectionLoader;
+use Charcoal\Loader\CollectionLoader;
 
 // From `charcoal-factory`
-use \Charcoal\Factory\FactoryInterface;
+use Charcoal\Factory\FactoryInterface;
 
 /**
  * Abstract Queue Manager
@@ -49,12 +49,26 @@ abstract class AbstractQueueManager implements
     use LoggerAwareTrait;
 
     /**
+     * The queue processing rate (throttle), in items per second.
+     *
+     * @var integer
+     */
+    private $rate = 0;
+
+    /**
+     * The batch limit.
+     *
+     * @var integer
+     */
+    private $limit = 0;
+
+    /**
      * The queue ID.
      *
      * If set, then it will load only the items from this queue.
      * If NULL, load *all* queued items.
      *
-     * @var mixed $queueId
+     * @var mixed
      */
     private $queueId;
 
@@ -100,24 +114,14 @@ abstract class AbstractQueueManager implements
     {
         $this->setLogger($data['logger']);
         $this->setQueueItemFactory($data['queue_item_factory']);
-    }
 
-    /**
-     * @param FactoryInterface $factory The factory used to create queue items.
-     * @return QueueItemInterface Chainable
-     */
-    protected function setQueueItemFactory(FactoryInterface $factory)
-    {
-        $this->queueItemFactory = $factory;
-        return $this;
-    }
+        if (isset($data['rate'])) {
+            $this->rate = intval($data['rate']);
+        }
 
-    /**
-     * @return FactoryInterface
-     */
-    protected function queueItemFactory()
-    {
-        return $this->queueItemFactory;
+        if (isset($data['limit'])) {
+            $this->limit = intval($data['limit']);
+        }
     }
 
     /**
@@ -139,7 +143,7 @@ abstract class AbstractQueueManager implements
      * Set the queue's ID.
      *
      * @param mixed $id The unique queue identifier.
-     * @return AbstractQueueManager Chainable
+     * @return self
      */
     public function setQueueId($id)
     {
@@ -158,10 +162,46 @@ abstract class AbstractQueueManager implements
     }
 
     /**
+     * @param integer $rate The throttling / processing rate, in items per second.
+     * @return self
+     */
+    public function setRate($rate)
+    {
+        $this->rate = intval($rate);
+        return $this;
+    }
+
+    /**
+     * @return integer
+     */
+    public function rate()
+    {
+        return $this->rate;
+    }
+
+    /**
+     * @param integer $limit The maximum number of items to load.
+     * @return self
+     */
+    public function setLimit($limit)
+    {
+        $this->limit = intval($limit);
+        return $this;
+    }
+
+    /**
+     * @return integer
+     */
+    public function limit()
+    {
+        return $this->limit;
+    }
+
+    /**
      * Set the callback routine when an item is processed.
      *
      * @param callable $callback A item callback routine.
-     * @return QueueManagerInterface Chainable
+     * @return self
      */
     public function setItemCallback(callable $callback)
     {
@@ -173,7 +213,7 @@ abstract class AbstractQueueManager implements
      * Set the callback routine when the item is resolved.
      *
      * @param callable $callback A item callback routine.
-     * @return QueueManagerInterface Chainable
+     * @return self
      */
     public function setItemSuccessCallback(callable $callback)
     {
@@ -185,7 +225,7 @@ abstract class AbstractQueueManager implements
      * Set the callback routine when the item is rejected.
      *
      * @param callable $callback A item callback routine.
-     * @return QueueManagerInterface Chainable
+     * @return self
      */
     public function setItemFailureCallback(callable $callback)
     {
@@ -197,7 +237,7 @@ abstract class AbstractQueueManager implements
      * Set the callback routine when the queue is processed.
      *
      * @param callable $callback A queue callback routine.
-     * @return QueueManagerInterface Chainable
+     * @return self
      */
     public function setProcessedCallback(callable $callback)
     {
@@ -242,6 +282,11 @@ abstract class AbstractQueueManager implements
                 $failures[] = $q;
                 continue;
             }
+
+            // Throttle according to processing rate.
+            if ($this->rate > 0) {
+                usleep(1000000/$this->rate);
+            }
         }
 
         if (is_callable($callback)) {
@@ -254,7 +299,7 @@ abstract class AbstractQueueManager implements
     /**
      * Retrieve the items of the current queue.
      *
-     * @return Collection
+     * @return \Charcoal\Model\Collection|array
      */
     public function loadQueueItems()
     {
@@ -265,11 +310,11 @@ abstract class AbstractQueueManager implements
         $loader->setModel($this->queueItemProto());
         $loader->addFilter([
             'property' => 'processed',
-            'val'      => 0
+            'value'      => 0
         ]);
         $loader->addFilter([
              'property' => 'processing_date',
-             'val'      => date('Y-m-d H:i:s'),
+             'value'      => date('Y-m-d H:i:s'),
              'operator' => '<'
         ]);
 
@@ -277,7 +322,7 @@ abstract class AbstractQueueManager implements
         if ($queueId) {
             $loader->addFilter([
                 'property' => 'queue_id',
-                'val'      => $queueId
+                'value'    => $queueId
             ]);
         }
 
@@ -286,6 +331,11 @@ abstract class AbstractQueueManager implements
             'mode'     => 'asc'
         ]);
         $queued = $loader->load();
+
+        if ($this->limit > 0) {
+            $loader->setNumPerPage($this->limit);
+            $loader->setPage(0);
+        }
 
         return $queued;
     }
@@ -296,4 +346,22 @@ abstract class AbstractQueueManager implements
      * @return QueueItemInterface
      */
     abstract public function queueItemProto();
+
+    /**
+     * @return FactoryInterface
+     */
+    protected function queueItemFactory()
+    {
+        return $this->queueItemFactory;
+    }
+
+    /**
+     * @param FactoryInterface $factory The factory used to create queue items.
+     * @return self
+     */
+    private function setQueueItemFactory(FactoryInterface $factory)
+    {
+        $this->queueItemFactory = $factory;
+        return $this;
+    }
 }

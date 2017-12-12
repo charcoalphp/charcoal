@@ -3,10 +3,10 @@
 namespace Charcoal\Queue;
 
 // Dependencies from `PHP`
-use \DateTime;
-use \DateTimeInterface;
-use \Exception;
-use \InvalidArgumentException;
+use DateTime;
+use DateTimeInterface;
+use Exception;
+use InvalidArgumentException;
 
 /**
  *
@@ -69,7 +69,7 @@ trait QueueItemTrait
      * Set the queue item's data.
      *
      * @param array $data The queue item data to set.
-     * @return QueueItemTrait Chainable
+     * @return self
      */
     public function setQueueItemData(array $data)
     {
@@ -96,7 +96,7 @@ trait QueueItemTrait
      * Set the queue's ID.
      *
      * @param mixed $id The unique queue identifier.
-     * @return QueueItemInterface Chainable
+     * @return self
      */
     public function setQueueId($id)
     {
@@ -118,7 +118,7 @@ trait QueueItemTrait
      * Set the item's processed status.
      *
      * @param boolean $processed Whether the item has been processed.
-     * @return QueueItemInterface Chainable
+     * @return self
      */
     public function setProcessed($processed)
     {
@@ -141,7 +141,7 @@ trait QueueItemTrait
      *
      * @param  null|string|DateTimeInterface $ts A date/time string or object.
      * @throws InvalidArgumentException If the date/time is invalid.
-     * @return QueueItemInterface Chainable
+     * @return self
      */
     public function setQueuedDate($ts)
     {
@@ -174,7 +174,7 @@ trait QueueItemTrait
     /**
      * Retrieve the date/time the item was queued at.
      *
-     * @return null|DateTimeInterface
+     * @return null|\DateTimeInterface
      */
     public function queuedDate()
     {
@@ -184,9 +184,9 @@ trait QueueItemTrait
     /**
      * Set the date/time the item should be processed at.
      *
-     * @param  null|string|DateTimeInterface $ts A date/time string or object.
+     * @param  null|string|\DateTimeInterface $ts A date/time string or object.
      * @throws InvalidArgumentException If the date/time is invalid.
-     * @return QueueItemInterface Chainable
+     * @return self
      */
     public function setProcessingDate($ts)
     {
@@ -219,7 +219,7 @@ trait QueueItemTrait
     /**
      * Retrieve the date/time the item should be processed at.
      *
-     * @return null|DateTimeInterface
+     * @return null|\DateTimeInterface
      */
     public function processingDate()
     {
@@ -229,9 +229,9 @@ trait QueueItemTrait
     /**
      * Set the date/time the item was processed at.
      *
-     * @param  null|string|DateTimeInterface $ts A date/time string or object.
+     * @param  null|string|\DateTimeInterface $ts A date/time string or object.
      * @throws InvalidArgumentException If the date/time is invalid.
-     * @return QueueItemInterface Chainable
+     * @return self
      */
     public function setProcessedDate($ts)
     {
@@ -264,7 +264,7 @@ trait QueueItemTrait
     /**
      * Retrieve the date/time the item was processed at.
      *
-     * @return null|DateTimeInterface
+     * @return null|\DateTimeInterface
      */
     public function processedDate()
     {
@@ -276,9 +276,9 @@ trait QueueItemTrait
      *
      * Presets the item as _to-be_ processed and queued now.
      *
-     * @return QueueItemInterface Chainable
+     * @return self
      */
-    public function preSaveQueueItem()
+    protected function preSaveQueueItem()
     {
         $this->setProcessed(false);
         $this->setQueuedDate('now');

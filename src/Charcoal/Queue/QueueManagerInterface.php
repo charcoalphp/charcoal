@@ -11,7 +11,7 @@ interface QueueManagerInterface
      * Set the queue's ID.
      *
      * @param mixed $id The unique queue identifier.
-     * @return QueueManagerInterface Chainable
+     * @return self
      */
     public function setQueueId($id);
 
@@ -23,10 +23,32 @@ interface QueueManagerInterface
     public function queueId();
 
     /**
+     * @param integer $rate The throttling / processing rate, in items per second.
+     * @return self
+     */
+    public function setRate($rate);
+
+    /**
+     * @return integer
+     */
+    public function rate();
+
+    /**
+     * @param integer $limit The maximum number of items to load.
+     * @return self
+     */
+    public function setLimit($limit);
+
+    /**
+     * @return integer
+     */
+    public function limit();
+
+    /**
      * Set the callback routine when the item is resolved.
      *
      * @param callable $callback A item callback routine.
-     * @return QueueManagerInterface Chainable
+     * @return self
      */
     public function setItemSuccessCallback(callable $callback);
 
@@ -34,7 +56,7 @@ interface QueueManagerInterface
      * Set the callback routine when the item is rejected.
      *
      * @param callable $callback A item callback routine.
-     * @return QueueManagerInterface Chainable
+     * @return self
      */
     public function setItemFailureCallback(callable $callback);
 
@@ -42,7 +64,7 @@ interface QueueManagerInterface
      * Set the callback routine when the queue is processed.
      *
      * @param callable $callback A queue callback routine.
-     * @return QueueManagerInterface Chainable
+     * @return self
      */
     public function setProcessedCallback(callable $callback);
 
@@ -56,7 +78,7 @@ interface QueueManagerInterface
     /**
      * Retrieve the items of the current queue.
      *
-     * @return Collection
+     * @return \Charcoal\Model\Collection|array
      */
     public function loadQueueItems();
 
