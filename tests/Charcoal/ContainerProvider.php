@@ -63,7 +63,9 @@ class ContainerProvider
     public function registerConfig(Container $container)
     {
         $container['config'] = function (Container $container) {
-            return new AppConfig();
+            return new AppConfig(
+                'base_path' => realpath(__DIR__.'/../../..')
+            );
         };
     }
 
@@ -203,7 +205,7 @@ class ContainerProvider
             return new MetadataLoader([
                 'cache'     => $container['cache'],
                 'logger'    => $container['logger'],
-                'base_path' => realpath(__DIR__.'/../../../'),
+                'base_path' => $container['config']['base_path'],
                 'paths'     => [
                     'metadata',
                     'vendor/locomotivemtl/charcoal-property/metadata'
