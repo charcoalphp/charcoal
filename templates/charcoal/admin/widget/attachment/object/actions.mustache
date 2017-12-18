@@ -28,19 +28,41 @@
         <li><a href="#" data-image="[[src]]" data-type="[[type]]" data-microtype="[[microType]]" data-action="preview">Preview</a></li>
         --}}
         {{# attachmentType }}
-        <li><a href="object/edit?obj_type={{ type }}&obj_id={{ id }}" class="{{# locked }}disabled{{/ locked }}" data-type="{{ type }}" data-title="{{# _t }}Edit{{/ _t }}" data-id="{{id}}" data-action="edit">{{# _t }}Edit{{/ _t }}</a></li>
+        <li>
+            <a href="object/edit?obj_type={{ type }}&obj_id={{ id }}{{# formIdent }}&form_ident={{ . }}{{/ formIdent }}"
+               {{# locked }}
+               class="disabled"
+               {{/ locked }}
+               data-type="{{ type }}"
+               data-id="{{ id }}"
+               data-form-ident="{{ formIdent }}"
+               data-quick-form-ident="{{ quickFormIdent }}"
+               data-title="{{ label }}"
+               data-action="edit">{{# _t }}Edit{{/ _t }}</a>
+        </li>
         {{/ attachmentType }}
         {{# isAttachmentContainer }}
         <li role="separator" class="divider"></li>
         {{# attachmentTypes }}
-        <li><a href="#" data-type="{{ type }}"{{# attachmentGroup }} data-group="{{ . }}"{{/ attachmentGroup }} data-id="{{ id }}" data-title="{{ label }}" data-attachment="{{ attachmentType }}" data-action="add-object">
+        <li>
+            <a href="#"
+               {{# attachmentGroup }}
+               data-group="{{ . }}"
+               {{/ attachmentGroup }}
+               data-type="{{ type }}"
+               data-id="{{ id }}"
+               data-attachment="{{ attachmentType }}"
+               data-form-ident="{{ quickFormIdent }}"
+               data-title="{{ label }}"
+               data-action="add-object">
             {{# attachmentOptions.show_icon }}
                 {{# attachmentType }}
                     <span class="{{ faIcon }}">&nbsp;</span>
                 {{/ attachmentType }}
             {{/ attachmentOptions.show_icon }}
             {{ label }}
-        </a></li>
+            </a>
+        </li>
         {{/ attachmentTypes }}
         <li role="separator" class="divider"></li>
         {{/ isAttachmentContainer }}

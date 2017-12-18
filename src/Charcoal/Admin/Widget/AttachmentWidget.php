@@ -180,14 +180,16 @@ class AttachmentWidget extends AdminWidget implements
             $label = $attMeta['label'];
 
             $out[] = [
-                'id'       => (isset($attMeta['att_id']) ? $attMeta['att_id'] : null),
-                'ident'    => $this->createIdent($attType),
-                'skipForm' => $attMeta['skip_form'],
-                'faIcon'   => $attMeta['faIcon'],
-                'label'    => $label,
-                'val'      => $attType,
-                'locked'   => $attMeta['locked'],
-                'active'   => ($i == 1)
+                'id'             => (isset($attMeta['att_id']) ? $attMeta['att_id'] : null),
+                'ident'          => $this->createIdent($attType),
+                'skipForm'       => $attMeta['skipForm'],
+                'formIdent'      => $attMeta['formIdent'],
+                'quickFormIdent' => $attMeta['quickFormIdent'],
+                'faIcon'         => $attMeta['faIcon'],
+                'label'          => $label,
+                'val'            => $attType,
+                'locked'         => $attMeta['locked'],
+                'active'         => ($i == 1)
             ];
         }
 
@@ -535,17 +537,19 @@ class AttachmentWidget extends AdminWidget implements
 
         $out = [];
         foreach ($attachableObjects as $attType => $attMeta) {
-            $label      = '';
-            $filters    = [];
-            $orders     = [];
-            $numPerPage = 0;
-            $page       = 1;
-            $skipForm   = false;
-            $faIcon     = '';
-            $showIcon   = true;
-            $locked     = false;
-            $attOption  = ['label', 'filters', 'orders', 'num_per_page', 'page'];
-            $attData    = array_diff_key($attMeta, $attOption);
+            $label          = '';
+            $filters        = [];
+            $orders         = [];
+            $numPerPage     = 0;
+            $page           = 1;
+            $skipForm       = 0;
+            $formIdent      = null;
+            $quickFormIdent = null;
+            $faIcon         = '';
+            $showIcon       = 1;
+            $locked         = 0;
+            $attOption      = ['label', 'filters', 'orders', 'num_per_page', 'page'];
+            $attData        = array_diff_key($attMeta, $attOption);
 
             // Disable an attachable model
             if (isset($attMeta['active'])) {
@@ -591,6 +595,14 @@ class AttachmentWidget extends AdminWidget implements
                 $skipForm = $attMeta['skip_form'];
             }
 
+            if (isset($attMeta['form_ident'])) {
+                $formIdent = $attMeta['form_ident'];
+            }
+
+            if (isset($attMeta['quick_form_ident'])) {
+                $quickFormIdent = $attMeta['quick_form_ident'];
+            }
+
             if (isset($attMeta['fa_icon']) && !empty($attMeta['fa_icon'])) {
                 $faIcon = 'fa fa-'.$attMeta['fa_icon'];
             } else {
@@ -613,17 +625,19 @@ class AttachmentWidget extends AdminWidget implements
             }
 
             $out[$attType] = [
-                'att_id'     => $attId,
-                'label'      => $label,
-                'skip_form'  => $skipForm,
-                'faIcon'     => $faIcon,
-                'showIcon'   => $showIcon,
-                'filters'    => $filters,
-                'orders'     => $orders,
-                'page'       => $page,
-                'numPerPage' => $numPerPage,
-                'locked'     => $locked,
-                'data'       => $attData
+                'att_id'           => $attId,
+                'label'            => $label,
+                'skipForm'         => $skipForm,
+                'formIdent'        => $formIdent,
+                'quickFormIdent'   => $quickFormIdent,
+                'faIcon'           => $faIcon,
+                'showIcon'         => $showIcon,
+                'filters'          => $filters,
+                'orders'           => $orders,
+                'page'             => $page,
+                'numPerPage'       => $numPerPage,
+                'locked'           => $locked,
+                'data'             => $attData
             ];
         }
 
