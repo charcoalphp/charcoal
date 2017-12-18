@@ -57,12 +57,22 @@
             "label": "URL",
             "notes": "e.g.: <samp>https://locomotive.ca</samp>"
         },
+        "link_label": {
+            "type": "string",
+            "l10n": true,
+            "label": "URL Label"
+        },
         "file": {
             "type": "file",
             "l10n": true,
             "label": "File",
             "upload_path": "uploads/attachments/",
             "public_access": true
+        },
+        "file_label": {
+            "type": "string",
+            "l10n": true,
+            "label": "File Label"
         },
         "file_size": {
             "type": "string",

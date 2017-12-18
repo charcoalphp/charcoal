@@ -104,14 +104,24 @@ class Attachment extends Content implements AttachableInterface
     /**
      * File related attachments.
      *
-     * @var file    $file     The path of an attached file.
-     * @var integer $fileSize The size of the attached file in bytes.
-     * @var string  $fileType The content type of the attached file.
+     * @var string  $file      The path of an attached file.
+     * @var string  $fileLabel The label for the attached file.
+     * @var integer $fileSize  The size of the attached file in bytes.
+     * @var string  $fileType  The content type of the attached file.
      */
     protected $file;
+    protected $fileLabel;
     protected $fileSize;
     protected $fileType;
+
+    /**
+     * Link related attachments.
+     *
+     * @var string $link      The URL related to the attachment.
+     * @var string $linkLabel The label for the attached link.
+     */
     protected $link;
+    protected $linkLabel;
 
     /**
      * Path to a thumbnail of the attached file.
@@ -632,6 +642,32 @@ class Attachment extends Content implements AttachableInterface
     }
 
     /**
+     * Set the file label.
+     *
+     * @param  string $label A descriptor.
+     * @return self
+     */
+    public function setFileLabel($label)
+    {
+        $this->fileLabel = $this->translator()->translation($label);
+
+        return $this;
+    }
+
+    /**
+     * Set the link label.
+     *
+     * @param  string $label A descriptor.
+     * @return self
+     */
+    public function setLinkLabel($label)
+    {
+        $this->linkLabel = $this->translator()->translation($label);
+
+        return $this;
+    }
+
+    /**
      * Set the size of the attached file.
      *
      * @param  integer|float $size A file size in bytes; the one of the attached.
@@ -791,6 +827,26 @@ class Attachment extends Content implements AttachableInterface
         }
 
         return basename(strval($this->file()));
+    }
+
+    /**
+     * Retrieve the file label.
+     *
+     * @return string|null
+     */
+    public function fileLabel()
+    {
+        return $this->fileLabel;
+    }
+
+    /**
+     * Retrieve the link label.
+     *
+     * @return string|null
+     */
+    public function linkLabel()
+    {
+        return $this->linkLabel;
     }
 
     /**
