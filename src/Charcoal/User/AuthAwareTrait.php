@@ -111,7 +111,7 @@ trait AuthAwareTrait
      */
     protected function authorizer()
     {
-        if (!$this->authenticator) {
+        if (!$this->authorizer) {
             throw new RuntimeException(sprintf(
                 'Authorizer service is not defined for "%s"',
                 get_class($this)
