@@ -84,6 +84,13 @@ class TranslatorServiceProvider implements ServiceProviderInterface
         /**
          * Accepted language from the navigator.
          *
+         * Example with Accept-Language "zh-Hant-HK, fr-CH, fr;q=0.9, en;q=0.7":
+         *
+         * 1. zh-Hant-HK
+         * 2. fr-CH
+         * 3. fr
+         * 4. en
+         *
          * @param  Container $container Pimple DI container.
          * @return string|null
          */
@@ -91,12 +98,22 @@ class TranslatorServiceProvider implements ServiceProviderInterface
             if (!isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
                 return null;
             }
-            $availableLanguages = $container['locales/available-languages'];
-            $acceptedLanguages  = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
-            foreach ($acceptedLanguages as $acceptedLang) {
+
+            /**
+             * Using data from configset instead of LocalesManager
+             * since the latter might need the browser language
+             * as the default language.
+             */
+            $localesConfig    = $container['locales/config'];
+            $supportedLocales = array_filter($localesConfig['languages'], function ($locale) {
+                return !(isset($locale['active']) && !$locale['active']);
+            });
+
+            $acceptableLanguages = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+            foreach ($acceptableLanguages as $acceptedLang) {
                 $lang = explode(';', $acceptedLang);
                 $lang = trim($lang[0]);
-                if (in_array($lang, $availableLanguages)) {
+                if (isset($supportedLocales[$lang])) {
                     return $lang;
                 }
             }
@@ -107,6 +124,7 @@ class TranslatorServiceProvider implements ServiceProviderInterface
         /**
          * List of fallback language codes for the translator.
          *
+         * @todo   Use filtered "fallback_languages" from LocalesManager
          * @param  Container $container Pimple DI container.
          * @return string[]
          */
@@ -122,8 +140,8 @@ class TranslatorServiceProvider implements ServiceProviderInterface
          * @return string[]
          */
         $container['locales/available-languages'] = function (Container $container) {
-            $localesConfig = $container['locales/config'];
-            return array_keys($localesConfig['languages']);
+            $manager = $container['locales/manager'];
+            return $manager->availableLocales();
         };
 
         /**
@@ -133,13 +151,14 @@ class TranslatorServiceProvider implements ServiceProviderInterface
          * @return array
          */
         $container['locales/languages'] = function (Container $container) {
-            $localesConfig = $container['locales/config'];
-            return $localesConfig['languages'];
+            $manager = $container['locales/manager'];
+            return $manager->locales();
         };
 
         /**
          * Instance of the Locales Manager.
          *
+         * @todo   Filter "fallback_languages"
          * @param  Container $container Pimple DI container.
          * @return LocalesManager
          */

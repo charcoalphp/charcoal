@@ -48,6 +48,7 @@ class LocalesManagerTest extends PHPUnit_Framework_TestCase
             'default_language' => 'bar'
         ]);
         $this->assertEquals('bar', $this->obj->currentLocale());
+        $this->assertEquals('bar', $this->obj->defaultLocale());
     }
 
     public function testConstructorDefaultLanguageWithInvalidType()

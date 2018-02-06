@@ -31,14 +31,14 @@ class LocalesManager
      *
      * @var string
      */
-    private $defaultLocale;
+    private $defaultLanguage;
 
     /**
      * Language code for the current locale.
      *
      * @var string|null
      */
-    private $currentLocale;
+    private $currentLanguage;
 
     /**
      * Create the Locales Manager with locales and optional options.
@@ -58,25 +58,12 @@ class LocalesManager
     public function __construct(array $data)
     {
         $this->setLocales($data['locales']);
-        $this->languages = array_keys($this->locales);
 
-        if (isset($data['default_language'])) {
-            if (!$this->hasLocale($data['default_language'])) {
-                $lang = $data['default_language'];
-                if (!is_string($lang)) {
-                    $lang = is_object($lang) ? get_class($lang) : gettype($lang);
-                }
+        $default = isset($data['default_language']) ? $data['default_language'] : null;
+        $this->setDefaultLocale($default);
 
-                throw new InvalidArgumentException(sprintf(
-                    'Unsupported default language; must be one of "%s", received %s',
-                    implode(', ', $this->languages),
-                    $lang
-                ));
-            }
-            $this->defaultLocale = $data['default_language'];
-        } else {
-            $this->defaultLocale = $this->languages[0];
-        }
+        $current = isset($data['current_language']) ? $data['current_language'] : null;
+        $this->setCurrentLocale($current);
     }
 
     /**
@@ -100,6 +87,46 @@ class LocalesManager
     }
 
     /**
+     * Set the default language.
+     *
+     * @param  string|null $lang The default language code.
+     *    If NULL, the first language is assigned.
+     * @throws InvalidArgumentException If the language is invalid.
+     * @return void
+     */
+    private function setDefaultLocale($lang)
+    {
+        if ($lang === null) {
+            $this->defaultLanguage = $this->languages[0];
+            return;
+        }
+
+        if (!$this->hasLocale($lang)) {
+            if (!is_string($lang)) {
+                $lang = is_object($lang) ? get_class($lang) : gettype($lang);
+            }
+
+            throw new InvalidArgumentException(sprintf(
+                'Unsupported default language; must be one of "%s", received "%s"',
+                implode(', ', $this->availableLocales()),
+                $lang
+            ));
+        }
+
+        $this->defaultLanguage = $lang;
+    }
+
+    /**
+     * Retrieve the default language.
+     *
+     * @return string
+     */
+    public function defaultLocale()
+    {
+        return $this->defaultLanguage;
+    }
+
+    /**
      * Set the current language.
      *
      * @param  string|null $lang The current language code.
@@ -110,7 +137,7 @@ class LocalesManager
     public function setCurrentLocale($lang)
     {
         if ($lang === null) {
-            $this->currentLocale = null;
+            $this->currentLanguage = null;
             return;
         }
 
@@ -126,7 +153,7 @@ class LocalesManager
             ));
         }
 
-        $this->currentLocale = $lang;
+        $this->currentLanguage = $lang;
     }
 
     /**
@@ -136,10 +163,10 @@ class LocalesManager
      */
     public function currentLocale()
     {
-        if ($this->currentLocale === null) {
-            return $this->defaultLocale;
+        if ($this->currentLanguage === null) {
+            return $this->defaultLanguage;
         }
-        return $this->currentLocale;
+        return $this->currentLanguage;
     }
 
     /**
@@ -150,7 +177,7 @@ class LocalesManager
      */
     public function hasLocale($lang)
     {
-        return in_array($lang, $this->availableLocales());
+        return isset($this->locales[$lang]);
     }
 
     /**
@@ -168,14 +195,16 @@ class LocalesManager
     private function setLocales(array $locales)
     {
         $this->locales = [];
-        foreach ($locales as $language => $locale) {
+        $this->languages = [];
+        foreach ($locales as $langCode => $locale) {
             if (isset($locale['active']) && !$locale['active']) {
                 continue;
             }
             if (!isset($locale['locale'])) {
-                $locale['locale'] = $language;
+                $locale['locale'] = $langCode;
             }
-            $this->locales[$language] = $locale;
+            $this->locales[$langCode] = $locale;
+            $this->languages[] = $langCode;
         }
         if (empty($this->locales)) {
             throw new InvalidArgumentException(
