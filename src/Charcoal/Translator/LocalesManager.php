@@ -7,27 +7,35 @@ use InvalidArgumentException;
 /**
  * Locales Manager
  *
- * The manager handles the collection of available languages, their configuration structures,
- * the order of fallbacks, the default language, and tracks the current language.
+ * The manager handles the collection of available languages, their definitions,
+ * the default language, and tracks the current language.
  */
 class LocalesManager
 {
     /**
+     * Dictionary of language definitions.
+     *
      * @var array
      */
     private $locales;
 
     /**
+     * List of language codes.
+     *
      * @var string[]
      */
     private $languages;
 
     /**
+     * Language code for the default locale.
+     *
      * @var string
      */
     private $defaultLocale;
 
     /**
+     * Language code for the current locale.
+     *
      * @var string|null
      */
     private $currentLocale;
@@ -40,8 +48,8 @@ class LocalesManager
      *
      * Optional parameters:
      * - **default_language** (`string`)
-     *   - If none is set, the first language (from _locales_) will be used
-     * - **fallback_languages** (`string[]`)
+     *   - If none is set, the first language (from _locales_) will be used.
+     * - **current_language** (`string`)
      *   - If none is set, then the default language will be used.
      *
      * @param  array $data Constructor dependencies.
@@ -95,6 +103,7 @@ class LocalesManager
      * Set the current language.
      *
      * @param  string|null $lang The current language code.
+     *    If NULL, the current language is unset.
      * @throws InvalidArgumentException If the language is invalid.
      * @return void
      */
@@ -111,7 +120,7 @@ class LocalesManager
             }
 
             throw new InvalidArgumentException(sprintf(
-                'Unsupported language; must be one of "%s", received %s',
+                'Unsupported language; must be one of "%s", received "%s"',
                 implode(', ', $this->availableLocales()),
                 $lang
             ));

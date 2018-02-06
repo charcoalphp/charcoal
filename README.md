@@ -78,7 +78,7 @@ The parser script (`\Charcoal\Translator\Script\TranslationParserScript`) is use
 
 ```json
 "scripts": {
-    "charcoal/translator/parse":{
+    "charcoal/translator/parse": {
         "ident": "charcoal/translator/script/translation-parser"
     }
 }
@@ -151,12 +151,12 @@ The `\Charcoal\Translator\TranslatorServiceProvider` registers the various optio
 
 It uses the main app configuration (if set) to provide:
 
-| Container key         | Type           | Description |
-| --------------------- | -------------- | ----------- |
-| **locales/config**    | `LocalesConfig` | ... |
-| **locales/manager**   | `LocalesManager` | ... |
+| Container key         | Type               | Description |
+| --------------------- | ------------------ | ----------- |
+| **locales/config**    | `LocalesConfig`    | ... |
+| **locales/manager**   | `LocalesManager`   | ... |
 | **translator/config** | `TranslatorConfig` | ... |
-| **translator**        | `Translator`   | ... |
+| **translator**        | `Translator`       | ... |
 
 
 ## Helpers

@@ -54,6 +54,8 @@ class TranslatorServiceProvider implements ServiceProviderInterface
     private function registerLocales(Container $container)
     {
         /**
+         * Instance of the Locales Configset.
+         *
          * @param  Container $container Pimple DI container.
          * @return LocalesConfig
          */
@@ -64,30 +66,10 @@ class TranslatorServiceProvider implements ServiceProviderInterface
         };
 
         /**
-         * Retrieve the list of language codes (locale ident) available.
+         * Default language of the application, optionally the navigator's preferred language.
          *
          * @param  Container $container Pimple DI container.
-         * @return string[]
-         */
-        $container['locales/available-languages'] = function(Container $container) {
-            $localesConfig = $container['locales/config'];
-            return array_keys($localesConfig['languages']);
-        };
-
-        /**
-         * Retrieve the list of locales (as configuration structure) available.
-         *
-         * @param  Container $container Pimple DI container.
-         * @return array
-         */
-        $container['locales/languages'] = function(Container $container) {
-            $localesConfig = $container['locales/config'];
-            return $localesConfig['languages'];
-        };
-
-        /**
-         * @param  Container $container Pimple DI container.
-         * @return string
+         * @return string|null
          */
         $container['locales/default-language'] = function(Container $container) {
             $localesConfig = $container['locales/config'];
@@ -100,6 +82,8 @@ class TranslatorServiceProvider implements ServiceProviderInterface
         };
 
         /**
+         * Accepted language from the navigator.
+         *
          * @param  Container $container Pimple DI container.
          * @return string|null
          */
@@ -116,12 +100,15 @@ class TranslatorServiceProvider implements ServiceProviderInterface
                     return $lang;
                 }
             }
+
             return null;
         };
 
         /**
+         * List of fallback language codes for the translator.
+         *
          * @param  Container $container Pimple DI container.
-         * @return array
+         * @return string[]
          */
         $container['locales/fallback-languages'] = function(Container $container) {
             $localesConfig = $container['locales/config'];
@@ -129,14 +116,38 @@ class TranslatorServiceProvider implements ServiceProviderInterface
         };
 
         /**
+         * List of language codes (locale ident) from the available locales.
+         *
+         * @param  Container $container Pimple DI container.
+         * @return string[]
+         */
+        $container['locales/available-languages'] = function(Container $container) {
+            $localesConfig = $container['locales/config'];
+            return array_keys($localesConfig['languages']);
+        };
+
+        /**
+         * List of available locales (as configuration structures) of the application.
+         *
+         * @param  Container $container Pimple DI container.
+         * @return array
+         */
+        $container['locales/languages'] = function(Container $container) {
+            $localesConfig = $container['locales/config'];
+            return $localesConfig['languages'];
+        };
+
+        /**
+         * Instance of the Locales Manager.
+         *
          * @param  Container $container Pimple DI container.
          * @return LocalesManager
          */
         $container['locales/manager'] = function (Container $container) {
+            $localesConfig = $container['locales/config'];
             return new LocalesManager([
-                'locales'             => $container['locales/languages'],
-                'default_language'    => $container['locales/default-language'],
-                'fallback_languages'  => $container['locales/fallback-languages']
+                'locales'          => $localesConfig['languages'],
+                'default_language' => $container['locales/default-language']
             ]);
         };
     }
@@ -148,6 +159,8 @@ class TranslatorServiceProvider implements ServiceProviderInterface
     private function registerTranslator(Container $container)
     {
         /**
+         * Instance of the Translator Configset.
+         *
          * @param  Container $container Pimple DI container.
          * @return TranslatorConfig
          */
@@ -158,6 +171,8 @@ class TranslatorServiceProvider implements ServiceProviderInterface
         };
 
         /**
+         * Dictionary of translations grouped by domain and locale.
+         *
          * @param  Container $container Pimple DI container.
          * @return array
          */
@@ -167,6 +182,8 @@ class TranslatorServiceProvider implements ServiceProviderInterface
         };
 
         /**
+         * Instance of the Message Selector, that is used to resolve a translation.
+         *
          * @return MessageSelector
          */
         $container['translator/message-selector'] = function () {
@@ -174,6 +191,8 @@ class TranslatorServiceProvider implements ServiceProviderInterface
         };
 
         /**
+         * Instance of the Translator, that is used for translation.
+         *
          * @todo   Improve file loader with a map of file formats.
          * @param  Container $container Pimple DI container.
          * @return Translator
