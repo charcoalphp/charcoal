@@ -14,6 +14,9 @@ use Psr\Log\NullLogger;
 use Stash\Pool;
 use Stash\Driver\Ephemeral;
 
+// From Slim
+use Slim\Http\Uri;
+
 // From Pimple
 use Pimple\Container;
 
@@ -88,6 +91,7 @@ class ContainerProvider
     public function registerAdminServices(Container $container)
     {
         $this->registerClimate($container);
+        $this->registerAdminBaseUrl($container);
     }
 
     /**
@@ -99,7 +103,20 @@ class ContainerProvider
     public function registerBaseUrl(Container $container)
     {
         $container['base-url'] = function (Container $container) {
-            return '';
+            return Uri::createFromString('https://example.com:8080/foo/bar?abc=123');
+        };
+    }
+
+    /**
+     * Setup the admin's base URI.
+     *
+     * @param  Container $container A DI container.
+     * @return void
+     */
+    public function registerAdminBaseUrl(Container $container)
+    {
+        $container['admin/base-url'] = function (Container $container) {
+            return Uri::createFromString('https://example.com:8080/admin/qux?abc=123');
         };
     }
 

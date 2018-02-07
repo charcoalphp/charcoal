@@ -61,12 +61,30 @@ class LanguageMiddlewareTest extends PHPUnit_Framework_TestCase
     {
         $container = $this->getContainer();
 
-        $this->obj = new LanguageMiddleware([
+        $this->obj = $this->middlewareFactory([
+            'use_params' => true
+        ]);
+    }
+
+    /**
+     * Create LanguageMiddleware.
+     *
+     * @param  array  $data Extra options to pass to the middleare.
+     * @return LanguageMiddleware
+     */
+    protected function middlewareFactory($data = [])
+    {
+        $container = $this->getContainer();
+
+        $defaults = [
             'translator'       => $container['translator'],
             'browser_language' => $container['locales/browser-language'],
             'default_language' => $container['translator']->getLocale(),
-            'use_params'       => true
-        ]);
+        ];
+
+        $middleware = new LanguageMiddleware(array_replace($defaults, $data));
+
+        return $middleware;
     }
 
     /**
@@ -224,14 +242,69 @@ class LanguageMiddlewareTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('fr', $return);
     }
 
+    public function testGetLanguageUseHost()
+    {
+        $this->obj = $this->middlewareFactory([
+            'browser_language' => null,
+            'use_browser'      => false,
+            'use_session'      => false,
+            'use_params'       => false,
+            'use_path'         => false,
+            'use_host'         => true,
+            'host_map'         => [
+                'en' => 'en.example.com',
+                'fr' => 'fr.example.com',
+            ]
+        ]);
+
+        $uri = $this->createMock(UriInterface::class);
+        $uri->expects($this->any())->method('getHost')->will($this->returnValue('fr.example.com'));
+
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->expects($this->any())->method('getUri')->will($this->returnValue($uri));
+
+        $return = static::callMethod($this->obj, 'getLanguage', [ $request ]);
+        $this->assertEquals('fr', $return);
+
+        $uri = $this->createMock(UriInterface::class);
+        $uri->expects($this->any())->method('getHost')->will($this->returnValue('jp.example.com'));
+
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->expects($this->any())->method('getUri')->will($this->returnValue($uri));
+
+        $return = static::callMethod($this->obj, 'getLanguage', [ $request ]);
+        $this->assertEquals('en', $return);
+    }
+
+    public function testGetLanguageUseHostWithBadHost()
+    {
+        $this->obj = $this->middlewareFactory([
+            'browser_language' => null,
+            'use_browser'      => false,
+            'use_session'      => false,
+            'use_params'       => false,
+            'use_path'         => false,
+            'use_host'         => true,
+            'host_map'         => [
+                'en' => 'en.example.com',
+                'fr' => 'fr.example.com',
+            ]
+        ]);
+
+        $uri = $this->createMock(UriInterface::class);
+        $uri->expects($this->any())->method('getHost')->will($this->returnValue('jp.example.com'));
+
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->expects($this->any())->method('getUri')->will($this->returnValue($uri));
+
+        $return = static::callMethod($this->obj, 'getLanguage', [ $request ]);
+        $this->assertEquals('en', $return);
+    }
+
     public function testGetLanguageUseDefault()
     {
-        $container = $this->getContainer();
-
-        $this->obj = new LanguageMiddleware([
-            'translator'       => $container['translator'],
-            'browser_language' => null,
-            'default_language' => $container['translator']->getLocale()
+        $this->obj = $this->middlewareFactory([
+            'browser_language' => null
         ]);
 
         $request = $this->mockRequest();

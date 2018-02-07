@@ -171,6 +171,13 @@ class TranslationTest extends PHPUnit_Framework_TestCase
         $obj = new Translation([ 'foo' ], $this->localesManager());
     }
 
+    public function testSanitize()
+    {
+        $obj = new Translation('  foobar  ', $this->localesManager());
+        $obj->sanitize('trim');
+        $this->assertEquals([ 'foo' => 'foobar' ], $obj->data());
+    }
+
     public function testJsonSerialize()
     {
         $obj = new Translation('foobar', $this->localesManager());

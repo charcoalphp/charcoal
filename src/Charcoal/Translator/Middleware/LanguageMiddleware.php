@@ -215,7 +215,7 @@ class LanguageMiddleware
 
     /**
      * @param  RequestInterface $request The PSR-7 HTTP request.
-     * @return null|string
+     * @return string
      */
     private function getLanguageFromHost(RequestInterface $request)
     {
@@ -225,11 +225,13 @@ class LanguageMiddleware
                 return $lang;
             }
         }
+
+        return '';
     }
 
     /**
      * @param  RequestInterface $request The PSR-7 HTTP request.
-     * @return null|string
+     * @return string
      */
     private function getLanguageFromPath(RequestInterface $request)
     {
