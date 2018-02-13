@@ -59,7 +59,7 @@ class TranslatorServiceProvider implements ServiceProviderInterface
          * @param  Container $container Pimple DI container.
          * @return LocalesConfig
          */
-        $container['locales/config'] = function(Container $container) {
+        $container['locales/config'] = function (Container $container) {
             $appConfig     = isset($container['config']) ? $container['config'] : [];
             $localesConfig = isset($appConfig['locales']) ? $appConfig['locales'] : null;
             return new LocalesConfig($localesConfig);
@@ -71,7 +71,7 @@ class TranslatorServiceProvider implements ServiceProviderInterface
          * @param  Container $container Pimple DI container.
          * @return string|null
          */
-        $container['locales/default-language'] = function(Container $container) {
+        $container['locales/default-language'] = function (Container $container) {
             $localesConfig = $container['locales/config'];
             if (isset($localesConfig['auto_detect']) && $localesConfig['auto_detect']) {
                 if ($container['locales/browser-language'] !== null) {
@@ -87,7 +87,7 @@ class TranslatorServiceProvider implements ServiceProviderInterface
          * @param  Container $container Pimple DI container.
          * @return string|null
          */
-        $container['locales/browser-language'] = function(Container $container) {
+        $container['locales/browser-language'] = function (Container $container) {
             if (!isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
                 return null;
             }
@@ -110,7 +110,7 @@ class TranslatorServiceProvider implements ServiceProviderInterface
          * @param  Container $container Pimple DI container.
          * @return string[]
          */
-        $container['locales/fallback-languages'] = function(Container $container) {
+        $container['locales/fallback-languages'] = function (Container $container) {
             $localesConfig = $container['locales/config'];
             return $localesConfig['fallback_languages'];
         };
@@ -121,7 +121,7 @@ class TranslatorServiceProvider implements ServiceProviderInterface
          * @param  Container $container Pimple DI container.
          * @return string[]
          */
-        $container['locales/available-languages'] = function(Container $container) {
+        $container['locales/available-languages'] = function (Container $container) {
             $localesConfig = $container['locales/config'];
             return array_keys($localesConfig['languages']);
         };
@@ -132,7 +132,7 @@ class TranslatorServiceProvider implements ServiceProviderInterface
          * @param  Container $container Pimple DI container.
          * @return array
          */
-        $container['locales/languages'] = function(Container $container) {
+        $container['locales/languages'] = function (Container $container) {
             $localesConfig = $container['locales/config'];
             return $localesConfig['languages'];
         };
@@ -242,84 +242,84 @@ class TranslatorServiceProvider implements ServiceProviderInterface
         /**
          * @return ArrayLoader
          */
-        $container['translator/loader/array'] = function() {
+        $container['translator/loader/array'] = function () {
             return new ArrayLoader();
         };
 
         /**
          * @return CsvFileLoader
          */
-        $container['translator/loader/file/csv'] = function() {
+        $container['translator/loader/file/csv'] = function () {
             return new CsvFileLoader();
         };
 
         /**
          * @return IcuDatFileLoader
          */
-        $container['translator/loader/file/dat'] = function() {
+        $container['translator/loader/file/dat'] = function () {
             return new IcuDatFileLoader();
         };
 
         /**
          * @return IcuResFileLoader
          */
-        $container['translator/loader/file/res'] = function() {
+        $container['translator/loader/file/res'] = function () {
             return new IcuResFileLoader();
         };
 
         /**
          * @return IniFileLoader
          */
-        $container['translator/loader/file/ini'] = function() {
+        $container['translator/loader/file/ini'] = function () {
             return new IniFileLoader();
         };
 
         /**
          * @return JsonFileLoader
          */
-        $container['translator/loader/file/json'] = function() {
+        $container['translator/loader/file/json'] = function () {
             return new JsonFileLoader();
         };
 
         /**
          * @return MoFileLoader
          */
-        $container['translator/loader/file/mo'] = function() {
+        $container['translator/loader/file/mo'] = function () {
             return new MoFileLoader();
         };
 
         /**
          * @return PhpFileLoader
          */
-        $container['translator/loader/file/php'] = function() {
+        $container['translator/loader/file/php'] = function () {
             return new PhpFileLoader();
         };
 
         /**
          * @return PoFileLoader
          */
-        $container['translator/loader/file/po'] = function() {
+        $container['translator/loader/file/po'] = function () {
             return new PoFileLoader();
         };
 
         /**
          * @return QtFileLoader
          */
-        $container['translator/loader/file/qt'] = function() {
+        $container['translator/loader/file/qt'] = function () {
             return new QtFileLoader();
         };
 
         /**
          * @return XliffFileLoader
          */
-        $container['translator/loader/file/xliff'] = function() {
+        $container['translator/loader/file/xliff'] = function () {
             return new XliffFileLoader();
         };
 
         /**
          * @return YamlFileLoader
          */
-        $container['translator/loader/file/yaml'] = function() {
+        $container['translator/loader/file/yaml'] = function () {
             return new YamlFileLoader();
         };
     }

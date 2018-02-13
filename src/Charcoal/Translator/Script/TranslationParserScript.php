@@ -364,7 +364,7 @@ class TranslationParserScript extends AdminScript
                 $t = count($array[$index]);
                 $locales = $this->locales();
 
-                for (; $i<$t; $i++) {
+                for (; $i < $t; $i++) {
                     $this->climate()->inline('.');
                     $orig = $array[$index][$i];
                     foreach ($locales as $lang) {
@@ -394,7 +394,7 @@ class TranslationParserScript extends AdminScript
         // $max = $this->maxRecursiveLevel();
         $i = 1;
         $files = glob($pattern, $flags);
-        foreach (glob(dirname($pattern).'/*', (GLOB_ONLYDIR|GLOB_NOSORT)) as $dir) {
+        foreach (glob(dirname($pattern).'/*', (GLOB_ONLYDIR | GLOB_NOSORT)) as $dir) {
             $files = array_merge($files, $this->globRecursive($dir.'/'.basename($pattern), $flags));
             $i++;
             // if ($i >= $max) {
