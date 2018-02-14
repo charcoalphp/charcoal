@@ -89,12 +89,12 @@ class DateTimeProperty extends AbstractProperty
     /**
      * AbstractProperty > inputVal(). Convert `DateTime` to input-friendly string.
      *
-     * @todo   [mcaskill: 2016-03-04] Should this be DateTime::RFC3339?
-     * @param  mixed $val Optional. The value to to convert for input.
+     * @param  mixed $val The value to to convert for input.
+     * @param  array $options Unused, optional options.
      * @throws Exception If the date/time is invalid.
      * @return string|null
      */
-    public function inputVal($val)
+    public function inputVal($val. array $options=[])
     {
         $val = $this->dateTimeVal($val);
 
