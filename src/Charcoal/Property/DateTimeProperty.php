@@ -94,7 +94,7 @@ class DateTimeProperty extends AbstractProperty
      * @throws Exception If the date/time is invalid.
      * @return string|null
      */
-    public function inputVal($val. array $options=[])
+    public function inputVal($val, array $options=[])
     {
         $val = $this->dateTimeVal($val);
 
