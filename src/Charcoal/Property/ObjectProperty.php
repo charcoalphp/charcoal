@@ -6,6 +6,8 @@ use Traversable;
 use RuntimeException;
 use InvalidArgumentException;
 
+use PDO;
+
 // From PSR-6
 use Psr\Cache\CacheItemPoolInterface;
 
@@ -217,11 +219,15 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      */
     public function sqlPdoType()
     {
-        // Read from proto's key
-        $proto = $this->proto();
-        $key   = $proto->p($proto->key());
+        if ($this->multiple() === true) {
+            return PDO::PARAM_STR;
+        } else {
+            // Read from proto's key
+            $proto = $this->proto();
+            $key   = $proto->p($proto->key());
 
-        return $key->sqlPdoType();
+            return $key->sqlPdoType();
+        }
     }
 
     /**
