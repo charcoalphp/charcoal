@@ -11,12 +11,14 @@ $autoloader->add('Charcoal\\Tests\\', __DIR__);
 $config = new AppConfig([
     'base_path' => (dirname(__DIR__).'/'),
     'databases' => [
-        'default' => [
+        'phpunit' => [
+            'type'     => 'sqlite',
             'database' => 'charcoal_test',
             'username' => 'root',
             'password' => ''
         ]
     ],
+    'default_database' => 'phpunit',
     'metadata' => [
         'paths' => [
             'metadata/',
@@ -28,23 +30,8 @@ $config = new AppConfig([
     'service_providers' => [
         'charcoal/email/service-provider/email' => [],
         'charcoal/model/service-provider/model' => []
-    ],
-    'databases'=>[
-        'default'=>[
-            'type'=>'sqlite'
-        ]
     ]
 ]);
-
-$appEnv = getenv('APPLICATION_ENV');
-if ($appEnv !== 'testing') {
-    $configPath = realpath(__DIR__.'/../../../../config/config.php');
-
-    if (file_exists($configPath)) {
-        $localConfig = new GenericConfig($configPath);
-        $config['databases'] = $localConfig['databases'];
-    }
-}
 
 $GLOBALS['container'] = new AppContainer([
     'config' => $config

@@ -115,7 +115,7 @@ class EmailConfig extends AbstractConfig
      *
      * @param  boolean $smtp If the email should be sent using SMTP or not.
      * @throws InvalidArgumentException If the SMTP state is not a boolean.
-     * @return EmailConfig Chainable
+     * @return self
      */
     public function setSmtp($smtp)
     {
@@ -138,7 +138,7 @@ class EmailConfig extends AbstractConfig
      *
      * @param  string $hostname The SMTP hostname.
      * @throws InvalidArgumentException If the SMTP hostname is not a string.
-     * @return EmailConfig Chainable
+     * @return self
      */
     public function setSmtpHostname($hostname)
     {
@@ -168,7 +168,7 @@ class EmailConfig extends AbstractConfig
      *
      * @param  integer $port The SMTP port.
      * @throws InvalidArgumentException If the SMTP port is not an integer.
-     * @return EmailConfig Chainable
+     * @return self
      */
     public function setSmtpPort($port)
     {
@@ -197,7 +197,7 @@ class EmailConfig extends AbstractConfig
      * Set whether SMTP requires authentication.
      *
      * @param  boolean $auth The SMTP authentication flag (if auth is required).
-     * @return EmailConfig Chainable
+     * @return self
      */
     public function setSmtpAuth($auth)
     {
@@ -220,7 +220,7 @@ class EmailConfig extends AbstractConfig
      *
      * @param  string $username The SMTP username, if using authentication.
      * @throws InvalidArgumentException If the SMTP username is not a string.
-     * @return EmailConfig Chainable
+     * @return self
      */
     public function setSmtpUsername($username)
     {
@@ -250,7 +250,7 @@ class EmailConfig extends AbstractConfig
      *
      * @param  string $password The SMTP password, if using authentication.
      * @throws InvalidArgumentException If the SMTP password is not a string.
-     * @return EmailConfig Chainable
+     * @return self
      */
     public function setSmtpPassword($password)
     {
@@ -280,7 +280,7 @@ class EmailConfig extends AbstractConfig
      *
      * @param  string $security The SMTP security type (empty, "TLS", or "SSL").
      * @throws InvalidArgumentException If the security type is not valid (empty, "TLS", or "SSL").
-     * @return EmailConfig Chainable
+     * @return self
      */
     public function setSmtpSecurity($security)
     {
@@ -312,21 +312,11 @@ class EmailConfig extends AbstractConfig
      * Set the default sender's email address.
      *
      * @param  string|array $email The default "From" email address.
-     * @throws InvalidArgumentException If the email address is invalid.
-     * @return EmailConfig Chainable
+     * @return self
      */
     public function setDefaultFrom($email)
     {
-        if (is_string($email)) {
-            $this->defaultFrom = $email;
-        } elseif (is_array($email)) {
-            $this->defaultFrom = $this->emailFromArray($email);
-        } else {
-            throw new InvalidArgumentException(
-                'Default sender email address must be an array or a string.'
-            );
-        }
-
+        $this->defaultFrom = $this->parseEmail($email);
         return $this;
     }
 
@@ -344,21 +334,11 @@ class EmailConfig extends AbstractConfig
      * Set the default "Reply-To" email address.
      *
      * @param  string|array $email The default "Reply-To" email address.
-     * @throws InvalidArgumentException If the email address is invalid.
-     * @return EmailConfig Chainable
+     * @return self
      */
     public function setDefaultReplyTo($email)
     {
-        if (is_string($email)) {
-            $this->defaultReplyTo = $email;
-        } elseif (is_array($email)) {
-            $this->defaultReplyTo = $this->emailFromArray($email);
-        } else {
-            throw new InvalidArgumentException(
-                'Default reply-to email address must be an array or a string.'
-            );
-        }
-
+        $this->defaultReplyTo = $this->parseEmail($email);
         return $this;
     }
 
@@ -376,7 +356,7 @@ class EmailConfig extends AbstractConfig
      * Set whether the email should be logged by defaultd.
      *
      * @param  boolean $log The default log flag.
-     * @return EmailConfig Chainable
+     * @return self
      */
     public function setDefaultLog($log)
     {
@@ -398,7 +378,7 @@ class EmailConfig extends AbstractConfig
      * Set whether the email should be tracked by default.
      *
      * @param  boolean $track The default track flag.
-     * @return EmailConfig Chainable
+     * @return self
      */
     public function setDefaultTrack($track)
     {

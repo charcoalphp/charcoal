@@ -2,24 +2,23 @@
 
 namespace Charcoal\Email;
 
-use \Exception;
-use \InvalidArgumentException;
+use Exception;
+use InvalidArgumentException;
 
 // Module `pimple/pimple` dependencies
-use \Pimple\Container;
+use Pimple\Container;
 
 // Module `charcoal/factory` dependencies
-use \Charcoal\Factory\FactoryInterface;
+use Charcoal\Factory\FactoryInterface;
 
 // Module `charcoal-core` dependencies
-use \Charcoal\Model\AbstractModel;
+use Charcoal\Model\AbstractModel;
 
 // Module `charcoal-queue` dependencies
-use \Charcoal\Queue\QueueItemInterface;
-use \Charcoal\Queue\QueueItemTrait;
+use Charcoal\Queue\QueueItemInterface;
+use Charcoal\Queue\QueueItemTrait;
 
-// Module `charcoal-app` dependencies
-use \Charcoal\App\App;
+// Intra-module dependencies
 use \Charcoal\Email\Email;
 
 /**
@@ -33,7 +32,7 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
     /**
      * The queue item ID.
      *
-     * @var string $ident
+     * @var string|null $ident
      */
     private $ident;
 
@@ -84,33 +83,7 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      */
     private $emailFactory;
 
-    /**
-     * @param Container $container Pimple DI container.
-     * @return void
-     */
-    public function setDependencies(Container $container)
-    {
-        parent::setDependencies($container);
-        $this->setEmailFactory($container['email/factory']);
-    }
 
-    /**
-     * @param FactoryInterface $factory The factory to create email objects.
-     * @return EmailQueueItem Chainable
-     */
-    protected function setEmailFactory(FactoryInterface $factory)
-    {
-        $this->emailFactory = $factory;
-        return $this;
-    }
-
-    /**
-     * @return FactoryInterface
-     */
-    protected function emailFactory()
-    {
-        return $this->emailFactory;
-    }
 
     /**
      * Get the primary key that uniquely identifies each queue item.
@@ -127,7 +100,7 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      *
      * @param  string|null $ident The unique queue item identifier.
      * @throws InvalidArgumentException If the identifier is not a string.
-     * @return AbstractMessage Chainable
+     * @return self
      */
     public function setIdent($ident)
     {
@@ -161,23 +134,11 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      * Set the recipient's email address.
      *
      * @param  string|array $email An email address.
-     * @throws InvalidArgumentException If the email address is invalid.
-     * @return EmailQueueItem Chainable
+     * @return self
      */
     public function setTo($email)
     {
-        if (is_string($email)) {
-            $this->to = $email;
-        } elseif (is_array($email)) {
-            $this->to = $this->emailFromArray($email);
-        } else {
-            throw new InvalidArgumentException(
-                'Queue item recipient: Email address must to be a string.'
-            );
-        }
-
-        $this->to = $email;
-
+        $this->to = $this->parseEmail($email);
         return $this;
     }
 
@@ -195,23 +156,11 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      * Set the sender's email address.
      *
      * @param  string|array $email An email address.
-     * @throws InvalidArgumentException If the email address is invalid.
-     * @return EmailQueueItem Chainable
+     * @return self
      */
     public function setFrom($email)
     {
-        if (is_string($email)) {
-            $this->from = $email;
-        } elseif (is_array($email)) {
-            $this->from = $this->emailFromArray($email);
-        } else {
-            throw new InvalidArgumentException(
-                'Queue item sender: Email address must to be a string.'
-            );
-        }
-
-        $this->from = $email;
-
+        $this->from = $this->parseEmail($email);
         return $this;
     }
 
@@ -230,7 +179,7 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      *
      * @param  string $subject The email subject.
      * @throws InvalidArgumentException If the subject is not a string.
-     * @return EmailQueueItem Chainable
+     * @return self
      */
     public function setSubject($subject)
     {
@@ -260,7 +209,7 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      *
      * @param  string $body The HTML message body.
      * @throws InvalidArgumentException If the message is not a string.
-     * @return EmailQueueItem Chainable
+     * @return self
      */
     public function setMsgHtml($body)
     {
@@ -290,7 +239,7 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      *
      * @param  string $body The plain-text mesage body.
      * @throws InvalidArgumentException If the message is not a string.
-     * @return EmailQueueItem Chainable
+     * @return self
      */
     public function setMsgTxt($body)
     {
@@ -320,7 +269,7 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      *
      * @param  string $campaign The campaign identifier.
      * @throws InvalidArgumentException If the campaign is not a string.
-     * @return EmailQueueItem Chainable
+     * @return self
      */
     public function setCampaign($campaign)
     {
@@ -353,7 +302,7 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      * @param  callable $callback        An optional callback routine executed after the item is processed.
      * @param  callable $successCallback An optional callback routine executed when the item is resolved.
      * @param  callable $failureCallback An optional callback routine executed when the item is rejected.
-     * @return boolean  Success / Failure
+     * @return boolean|null  Success / Failure
      */
     public function process(
         callable $callback = null,
@@ -401,17 +350,44 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
     }
 
     /**
+     * @param Container $container Pimple DI container.
+     * @return void
+     */
+    protected function setDependencies(Container $container)
+    {
+        parent::setDependencies($container);
+        $this->setEmailFactory($container['email/factory']);
+    }
+
+    /**
      * Hook called before saving the item.
      *
      * @return boolean
      * @see \Charcoal\Email\Queue\QueueItemTrait::preSaveQueueItem()
      */
-    public function preSave()
+    protected function preSave()
     {
         parent::preSave();
 
         $this->preSaveQueueItem();
 
         return true;
+    }
+
+    /**
+     * @return FactoryInterface
+     */
+    protected function emailFactory()
+    {
+        return $this->emailFactory;
+    }
+
+    /**
+     * @param FactoryInterface $factory The factory to create email objects.
+     * @return void
+     */
+    private function setEmailFactory(FactoryInterface $factory)
+    {
+        $this->emailFactory = $factory;
     }
 }

@@ -10,12 +10,32 @@ use InvalidArgumentException;
  */
 trait EmailAwareTrait
 {
+
+    /**
+     * @param mixed $email An email value (either a string or an array).
+     * @throws InvalidArgumentException If the email is invalid.
+     * @return string
+     */
+    protected function parseEmail($email)
+    {
+        if (is_array($email)) {
+            return $this->emailFromArray($email);
+        } elseif (is_string($email)) {
+            $arr = $this->emailToArray($email);
+            return $this->emailFromArray($arr);
+        } else {
+            throw new InvalidArgumentException(
+                'Can not parse email: must be an array or a string'
+            );
+        }
+    }
+
     /**
      * Convert an email address (RFC822) into a proper array notation.
      *
      * @param  mixed $var An email array (containing an "email" key and optionally a "name" key).
      * @throws InvalidArgumentException If the email is invalid.
-     * @return string
+     * @return array|null
      */
     protected function emailToArray($var)
     {
@@ -67,9 +87,9 @@ trait EmailAwareTrait
             );
         }
 
-        $email = filter_var($arr['email'], FILTER_SANITIZE_EMAIL);
+        $email = strval(filter_var($arr['email'], FILTER_SANITIZE_EMAIL));
 
-        if (!isset($arr['name'])) {
+        if (!isset($arr['name']) || $arr['name'] === '') {
             return $email;
         }
 

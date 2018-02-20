@@ -3,10 +3,10 @@
 namespace Charcoal\Email;
 
 // Dependencies from `charcoal-queue`
-use \Charcoal\Queue\AbstractQueueManager;
+use Charcoal\Queue\AbstractQueueManager;
 
 // Local namespace dependencies
-use \Charcoal\Email\EmailQueueItem;
+use Charcoal\Email\EmailQueueItem;
 
 /**
  * Queue manager for emails.
@@ -20,6 +20,6 @@ class EmailQueueManager extends AbstractQueueManager
      */
     public function queueItemProto()
     {
-        return $this->queueItemFactory()->create('charcoal/email/email-queue-item');
+        return $this->queueItemFactory()->create(EmailQueueItem::class);
     }
 }

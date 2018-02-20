@@ -41,25 +41,6 @@ class ProcessQueueScript extends AbstractScript implements CronScriptInterface
     private $sent;
 
     /**
-     * @param Container $container Pimple DI container.
-     * @return void
-     */
-    public function setDependencies(Container $container)
-    {
-        parent::setDependencies($container);
-        $this->setQueueItemFactory($container['model/factory']);
-    }
-
-    /**
-     * @param FactoryInterface $factory The factory to create queue items.
-     * @return void
-     */
-    private function setQueueItemFactory(FactoryInterface $factory)
-    {
-        $this->queueItemFactory = $factory;
-    }
-
-    /**
      * Process all messages currently in queue.
      *
      * @param  RequestInterface  $request  A PSR-7 compatible Request instance.
@@ -71,6 +52,7 @@ class ProcessQueueScript extends AbstractScript implements CronScriptInterface
         // Unused parameter
         unset($request);
 
+        // Lock script, to ensure it can not be run twice  at the same time (before previous instance is done).
         $this->startLock();
 
         $climate = $this->climate();
@@ -85,7 +67,7 @@ class ProcessQueueScript extends AbstractScript implements CronScriptInterface
             }
 
             if (!empty($skipped)) {
-                $climate->orange()->out(sprintf('%s emails were skipped.', count($skipped)));
+                $climate->dim()->out(sprintf('%s emails were skipped.', count($skipped)));
             }
         };
 
@@ -99,5 +81,24 @@ class ProcessQueueScript extends AbstractScript implements CronScriptInterface
         $this->stopLock();
 
         return $response;
+    }
+
+    /**
+     * @param Container $container Pimple DI container.
+     * @return void
+     */
+    protected function setDependencies(Container $container)
+    {
+        parent::setDependencies($container);
+        $this->setQueueItemFactory($container['model/factory']);
+    }
+
+    /**
+     * @param FactoryInterface $factory The factory to create queue items.
+     * @return void
+     */
+    private function setQueueItemFactory(FactoryInterface $factory)
+    {
+        $this->queueItemFactory = $factory;
     }
 }

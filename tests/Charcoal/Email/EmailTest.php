@@ -2,19 +2,34 @@
 
 namespace Charcoal\Tests\App\Email;
 
-use \Charcoal\Email\Email;
+use PHPUnit_Framework_TestCase;
+
+use InvalidArgumentException;
+
+use Charcoal\Email\Email;
 
 /**
  * Test the AbstractEmail methods, through concrete `Email` class.
  */
-class EmailTest extends \PHPUnit_Framework_TestCase
+class EmailTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @var Email
+     */
     public $obj;
 
     public function setup()
     {
         /** GLOBALS['container'] is defined in bootstrap file */
-        $this->obj = $GLOBALS['container']['email'];
+        $container = $GLOBALS['container'];
+        $this->obj = new Email([
+            'logger'    => $container['logger'],
+            'config'    => $container['email/config'],
+            'view'      => $container['email/view'],
+            'template_factory' => $container['template/factory'],
+            'queue_item_factory' => $container['model/factory'],
+            'log_factory' => $container['model/factory']
+        ]);
     }
 
     public function testSetData()
@@ -59,7 +74,7 @@ class EmailTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
         $this->assertEquals('foo', $obj->campaign());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
         $obj->setCampaign([1, 2, 3]);
     }
 

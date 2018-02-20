@@ -3,20 +3,19 @@
 namespace Charcoal\Email;
 
 // Dependencies from `PHP`
-use \DateTime;
-use \DateTimeInterface;
-use \Exception;
-use \InvalidArgumentException;
+use DateTime;
+use DateTimeInterface;
+use Exception;
+use InvalidArgumentException;
 
 // From `charcoal-core`
-use \Charcoal\Model\AbstractModel;
+use Charcoal\Model\AbstractModel;
 
 /**
  * Email log
  */
 class EmailLog extends AbstractModel
 {
-
     use EmailAwareTrait;
 
     /**
@@ -94,7 +93,7 @@ class EmailLog extends AbstractModel
     /**
      * When the email should be sent.
      *
-     * @var DateTime $sendDate
+     * @var DateTimeInterface|null $sendDate
      */
     private $sendDate;
 
@@ -127,7 +126,7 @@ class EmailLog extends AbstractModel
      *
      * @param  string $type The log type. (e.g., "email").
      * @throws InvalidArgumentException If the log type is not a string.
-     * @return EmailLog Chainable
+     * @return self
      */
     public function setType($type)
     {
@@ -157,7 +156,7 @@ class EmailLog extends AbstractModel
      *
      * @param  string $action The log action (e.g., "send").
      * @throws InvalidArgumentException If the action is not a string.
-     * @return EmailLog Chainable
+     * @return self
      */
     public function setAction($action)
     {
@@ -186,7 +185,7 @@ class EmailLog extends AbstractModel
      * Set the raw response from the mailer.
      *
      * @param mixed $res The response object or array.
-     * @return EmailLog Chainable
+     * @return self
      */
     public function setRawResponse($res)
     {
@@ -209,7 +208,7 @@ class EmailLog extends AbstractModel
      *
      * @param string $messageId The Message-ID.
      * @throws InvalidArgumentException If the Message-ID is not a string.
-     * @return EmailLog Chainable
+     * @return self
      */
     public function setMessageId($messageId)
     {
@@ -240,7 +239,7 @@ class EmailLog extends AbstractModel
      *
      * @param  string $campaign The campaign identifier.
      * @throws InvalidArgumentException If the campaign is invalid.
-     * @return EmailInterface Chainable
+     * @return self
      */
     public function setCampaign($campaign)
     {
@@ -270,20 +269,11 @@ class EmailLog extends AbstractModel
      *
      * @param  string|array $email An email address.
      * @throws InvalidArgumentException If the email address is invalid.
-     * @return EmailLog Chainable
+     * @return self
      */
     public function setFrom($email)
     {
-        if (is_string($email)) {
-            $this->from = $email;
-        } elseif (is_array($email)) {
-            $this->from = $this->emailFromArray($email);
-        } else {
-            throw new InvalidArgumentException(
-                'Sender email address must be a string.'
-            );
-        }
-
+        $this->from = $this->parseEmail($email);
         return $this;
     }
 
@@ -301,21 +291,11 @@ class EmailLog extends AbstractModel
      * Set the recipient's email address.
      *
      * @param  string|array $email An email address.
-     * @throws InvalidArgumentException If the email address is invalid.
-     * @return EmailLog Chainable
+     * @return self
      */
     public function setTo($email)
     {
-        if (is_string($email)) {
-            $this->to = $email;
-        } elseif (is_array($email)) {
-            $this->to = $this->emailFromArray($email);
-        } else {
-            throw new InvalidArgumentException(
-                'Recipient email address must be a string.'
-            );
-        }
-
+        $this->to = $this->parseEmail($email);
         return $this;
     }
 
@@ -334,7 +314,7 @@ class EmailLog extends AbstractModel
      *
      * @param  string $subject The email subject.
      * @throws InvalidArgumentException If the subject is not a string.
-     * @return EmailLog Chainable
+     * @return self
      */
     public function setSubject($subject)
     {
@@ -362,7 +342,7 @@ class EmailLog extends AbstractModel
     /**
      * @param  null|string|DateTime $ts The "send date" datetime value.
      * @throws InvalidArgumentException If the ts is not a valid datetime value.
-     * @return EmailLog Chainable
+     * @return self
      */
     public function setSendDate($ts)
     {
@@ -399,7 +379,7 @@ class EmailLog extends AbstractModel
 
     /**
      * @param mixed $ip The IP adress.
-     * @return EmailLog Chainable
+     * @return self
      */
     public function setIp($ip)
     {
@@ -417,7 +397,7 @@ class EmailLog extends AbstractModel
 
     /**
      * @param string $sessionId The session identifier.
-     * @return EmailLog Chainable
+     * @return self
      */
     public function setSessionId($sessionId)
     {
@@ -437,7 +417,7 @@ class EmailLog extends AbstractModel
      * @see    StorableTrait::preSave()
      * @return boolean
      */
-    public function preSave()
+    protected function preSave()
     {
         parent::preSave();
         $ip = (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '');

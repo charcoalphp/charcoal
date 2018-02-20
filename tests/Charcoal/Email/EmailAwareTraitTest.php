@@ -2,6 +2,11 @@
 
 namespace Charcoals\Tests\Email;
 
+use ReflectionClass;
+
+/**
+ * Class EmailAwareTraitTest
+ */
 class EmailAwareTraitTest extends \PHPUnit_Framework_TestCase
 {
     public $obj;
@@ -13,7 +18,7 @@ class EmailAwareTraitTest extends \PHPUnit_Framework_TestCase
 
     public function getMethod($obj, $name)
     {
-        $class = new \ReflectionClass($obj);
+        $class = new ReflectionClass($obj);
         $method = $class->getMethod($name);
         $method->setAccessible(true);
         return $method;

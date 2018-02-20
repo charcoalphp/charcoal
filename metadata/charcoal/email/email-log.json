@@ -10,7 +10,8 @@
             "type": "string"
         },
         "raw_response": {
-            "type": "html"
+            "type": "html",
+            "description": "Raw response, as returned by the mailer."
         },
         "message_id": {
             "type": "string"
@@ -35,10 +36,6 @@
         "session_id": {
             "type": "string"
         }
-    },
-
-    "data": {
-
     },
 
     "sources": {
