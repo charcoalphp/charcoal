@@ -470,12 +470,26 @@ abstract class AbstractResizeEffect extends AbstractEffect
                 );
 
             case 'fill':
-                $imgClass = get_class($this->image());
-                $canvas = new $imgClass;
-                $canvas->create($this->width(), $this->width(), $this->backgroundColor());
-                throw new Exception(
-                    'Crop resize mode is not (yet) supported'
-                );
+                $newWidth = $this->width();
+                $newHeight = $this->height();
+
+                $oldRatio = ($imageWidth / $imageHeight);
+                $newRatio = ($newWidth / $newHeight);
+
+                if ($newRatio > $oldRatio) {
+                    $newHeight = ($imageHeight * $this->width() / $imageWidth);
+                } else {
+                    $newWidth = ($imageWidth * $this->height() / $imageHeight);
+                }
+
+                $this->doResize($newWidth, $newHeight);
+
+                // $imgClass = get_class($this->image());
+                // $canvas = new $imgClass;
+                // $canvas->create($this->width(), $this->width(), $this->backgroundColor());
+                // throw new Exception(
+                //     'Crop resize mode is not (yet) supported'
+                // );
         }
 
         return $this;
