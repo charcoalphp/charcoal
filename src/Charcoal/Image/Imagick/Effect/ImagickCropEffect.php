@@ -22,6 +22,8 @@ class ImagickCropEffect extends AbstractCropEffect
     {
         $gravity = $this->image()->imagickGravity($this->gravity());
 
-        $this->image()->imagick()->setGravity($gravity)->cropImage($width, $height, $x, $y);
+        $this->image()->imagick()->setGravity($gravity);
+
+        $this->image()->imagick()->cropImage($width, $height, $x, $y);
     }
 }
