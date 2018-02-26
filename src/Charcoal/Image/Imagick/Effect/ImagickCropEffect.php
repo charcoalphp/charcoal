@@ -22,7 +22,46 @@ class ImagickCropEffect extends AbstractCropEffect
     {
         $gravity = $this->image()->imagickGravity($this->gravity());
 
+        // This sets the gravity for the rest of the chain
         $this->image()->imagick()->setGravity($gravity);
+
+        // Apply gravity to crop coordinates
+
+        $imageWidth  = $this->image()->width();
+        $imageHeight = $this->image()->height();
+
+        switch ($this->image()->imagick()->getGravity()) {
+            case Imagick::GRAVITY_NORTHWEST:
+                break;
+            case Imagick::GRAVITY_NORTH:
+                $x = ($imageWidth / 2 - $width / 2);
+                break;
+            case Imagick::GRAVITY_NORTHEAST:
+                $x = ($imageWidth - $width);
+                break;
+            case Imagick::GRAVITY_WEST:
+                $y = ($imageHeight / 2 - $height / 2);
+                break;
+            case Imagick::GRAVITY_CENTER:
+                $x = ($imageWidth / 2 - $width / 2);
+                $y = ($imageHeight / 2 - $height / 2);
+                break;
+            case Imagick::GRAVITY_EAST:
+                $x = ($imageWidth - $width);
+                $y = ($imageHeight / 2 - $height / 2);
+                break;
+            case Imagick::GRAVITY_SOUTHWEST:
+                $y = ($imageHeight - $height);
+                break;
+            case Imagick::GRAVITY_SOUTH:
+                $x = ($imageWidth / 2 - $width / 2);
+                $y = ($imageHeight - $height);
+                break;
+            case Imagick::GRAVITY_SOUTHEAST:
+                $x = ($imageWidth - $width);
+                $y = ($imageHeight - $height);
+                break;
+        }
 
         $this->image()->imagick()->cropImage($width, $height, $x, $y);
     }
