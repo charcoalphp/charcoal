@@ -417,6 +417,7 @@ class ImageProperty extends FileProperty
                 'effects' => [],
                 'save' => true,
                 'rename' => null,
+                'reset' => false,
                 'copy' => null
             ];
             $fxGroup   = $blueprint;
@@ -437,6 +438,9 @@ class ImageProperty extends FileProperty
                     }
                     if (isset($effect['copy'])) {
                         $fxGroup['copy'] = $effect['copy'];
+                    }
+                    if (isset($effect['reset'])) {
+                        $fxGroup['reset'] = $effect['reset'];
                     }
 
                     $grouped[] = $fxGroup;
@@ -570,6 +574,10 @@ class ImageProperty extends FileProperty
                             $image->save($target ?: $value);
                         }
                     }
+                }
+                // reset to default image allow starting effects chains from original image.
+                if ($fxGroup['reset']) {
+                    $image = $image->open($value);
                 }
             }
         }
