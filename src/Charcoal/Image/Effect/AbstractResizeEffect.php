@@ -80,6 +80,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
             'width',
             'height',
             'best_fit',
+            'constraints',
             'crop',
             'fill',
             'none'
