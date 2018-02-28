@@ -19,6 +19,8 @@ use Charcoal\Factory\FactoryInterface;
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
 use Charcoal\Model\Collection;
+use Charcoal\Source\FilterCollectionInterface;
+use Charcoal\Source\OrderCollectionInterface;
 use Charcoal\Source\FilterInterface;
 use Charcoal\Source\OrderInterface;
 use Charcoal\Source\PaginationInterface;
@@ -27,7 +29,10 @@ use Charcoal\Source\SourceInterface;
 /**
  * Object Collection Loader
  */
-class CollectionLoader implements LoggerAwareInterface
+class CollectionLoader implements
+    FilterCollectionInterface,
+    OrderCollectionInterface,
+    LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
@@ -361,6 +366,16 @@ class CollectionLoader implements LoggerAwareInterface
     }
 
     /**
+     * Alias of {@see SourceInterface::hasFilters()}
+     *
+     * @return boolean
+     */
+    public function hasFilters()
+    {
+        return $this->source()->hasFilters();
+    }
+
+    /**
      * Alias of {@see SourceInterface::setFilters()}
      *
      * @param  array $filters An array of filters.
@@ -411,6 +426,16 @@ class CollectionLoader implements LoggerAwareInterface
     public function orders()
     {
         return $this->source()->orders();
+    }
+
+    /**
+     * Alias of {@see SourceInterface::hasOrders()}
+     *
+     * @return boolean
+     */
+    public function hasOrders()
+    {
+        return $this->source()->hasOrders();
     }
 
     /**
