@@ -16,6 +16,7 @@ logs/
 
 # Caches
 
+charcoal_test
 build/docs/
 build/logs/
 tmp/

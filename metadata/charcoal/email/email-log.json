@@ -90,9 +90,9 @@
         "dashboards": {
             "admin.edit": {
                 "layout": {
-                    "structure": [{
-                        "columns": [ 1 ]
-                    }]
+                    "structure": [
+                        { "columns": [ 1 ] }
+                    ]
                 },
                 "widgets": {
                     "form": {
@@ -104,9 +104,9 @@
             },
             "admin.table": {
                 "layout": {
-                    "structure": [{
-                        "columns": [ 1 ]
-                    }]
+                    "structure": [
+                        { "columns": [ 1 ] }
+                    ]
                 },
                 "widgets": {
                     "form": {
