@@ -121,7 +121,6 @@ final class MetadataLoader implements LoggerAwareInterface
         $cacheItem = $this->cachePool()->getItem($cacheKey);
 
         if (!$cacheItem->isHit()) {
-
             if ($interfaces === null) {
                 $data = $this->loadData($ident);
             } else {

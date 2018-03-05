@@ -93,7 +93,7 @@ abstract class AbstractMetadata extends AbstractConfig implements
      * @param string $propertyIdent The property identifier.
      * @return array|null
      */
-    public function property($propertyIdent=null)
+    public function property($propertyIdent = null)
     {
         if (isset($this->properties[$propertyIdent])) {
             return $this->properties[$propertyIdent];

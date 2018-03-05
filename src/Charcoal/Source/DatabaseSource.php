@@ -376,7 +376,7 @@ class DatabaseSource extends AbstractSource implements
             $item  = new $class;
         }
 
-        $key = preg_replace("/[^\w-]+/", '', $key);
+        $key = preg_replace('/[^\w-]+/', '', $key);
         // Missing parameters
         if (!$key || !$ident) {
             return $item;

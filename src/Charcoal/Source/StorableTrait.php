@@ -8,7 +8,6 @@ use InvalidArgumentException;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 
-
 /**
  * Provides an object with storage interaction.
  *
