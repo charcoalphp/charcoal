@@ -63,9 +63,9 @@ class ContainerProvider
     public function registerConfig(Container $container)
     {
         $container['config'] = function (Container $container) {
-            return new AppConfig(
+            return new AppConfig([
                 'base_path' => realpath(__DIR__.'/../../..')
-            );
+            ]);
         };
     }
 
