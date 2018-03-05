@@ -13,7 +13,7 @@ The preferred (and only supported) way of installing _charcoal-core_ is with **c
 ★ composer require locomotivemtl/charcoal-core
 ```
 
-For a complete, ready-to-use project, start from the [`boilerplate`](https://github.com/locomotivemtl/charcoal-project-boilerplate):
+For a complete, ready-to-use _Charcoal_ project, start from the [`boilerplate`](https://github.com/locomotivemtl/charcoal-project-boilerplate):
 
 ```shell
 ★ composer create-project locomotivemtl/charcoal-project-boilerplate:@dev --prefer-source
@@ -33,7 +33,6 @@ Charcoal depends on:
 -   `locomotivemtl/charcoal-factory`
 -   `locomotivemtl/charcoal-property`
 -   `locomotivemtl/charcoal-view`
-
 
 # Loader
 

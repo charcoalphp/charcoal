@@ -441,7 +441,7 @@ abstract class AbstractModel extends AbstractEntity implements
 
         if (!$sourceConfig) {
             throw new UnexpectedValueException(sprintf(
-                'Can not create source for [%s]: invalid metadata.',
+                'Can not create source for [%s]: invalid metadata (can not load source\'s configuration).',
                 get_class($this)
             ));
         }

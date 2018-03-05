@@ -121,6 +121,7 @@ final class MetadataLoader implements LoggerAwareInterface
         $cacheItem = $this->cachePool()->getItem($cacheKey);
 
         if (!$cacheItem->isHit()) {
+
             if ($interfaces === null) {
                 $data = $this->loadData($ident);
             } else {
@@ -188,13 +189,11 @@ final class MetadataLoader implements LoggerAwareInterface
      * Set the cache service.
      *
      * @param  CacheItemPoolInterface $cache A PSR-6 compliant cache pool instance.
-     * @return self
+     * @return void
      */
     private function setCachePool(CacheItemPoolInterface $cache)
     {
         $this->cachePool = $cache;
-
-        return $this;
     }
 
     /**
@@ -219,7 +218,7 @@ final class MetadataLoader implements LoggerAwareInterface
      *
      * @param  string $basePath The base path to use.
      * @throws InvalidArgumentException If the base path parameter is not a string.
-     * @return self
+     * @return void
      */
     private function setBasePath($basePath)
     {
@@ -231,8 +230,6 @@ final class MetadataLoader implements LoggerAwareInterface
 
         $basePath = realpath($basePath);
         $this->basePath = rtrim($basePath, '/\\').DIRECTORY_SEPARATOR;
-
-        return $this;
     }
 
     /**
@@ -249,14 +246,12 @@ final class MetadataLoader implements LoggerAwareInterface
      * Assign a list of paths.
      *
      * @param  string[] $paths The list of paths to add.
-     * @return self
+     * @return void
      */
     private function setPaths(array $paths)
     {
         $this->paths = [];
         $this->addPaths($paths);
-
-        return $this;
     }
 
     /**
@@ -442,14 +437,18 @@ final class MetadataLoader implements LoggerAwareInterface
             return null;
         }
 
+        $ret = [];
         foreach ($paths as $basePath) {
             $file = $basePath.DIRECTORY_SEPARATOR.$filename;
             if (file_exists($file)) {
-                return $this->loadJsonFile($file);
+                $ret = array_replace_recursive($ret, $this->loadJsonFile($file));
             }
         }
-
-        return null;
+        if (!empty($ret)) {
+            return $ret;
+        } else {
+            return null;
+        }
     }
 
     /**

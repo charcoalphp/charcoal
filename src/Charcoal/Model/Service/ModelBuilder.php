@@ -86,32 +86,29 @@ final class ModelBuilder
 
     /**
      * @param FactoryInterface $factory The factory to use to create models.
-     * @return self
+     * @return void
      */
     private function setFactory(FactoryInterface $factory)
     {
         $this->factory = $factory;
-        return $this;
     }
 
     /**
      * @param MetadataLoader $loader The loader instance, used to load metadata.
-     * @return self
+     * @return void
      */
     private function setMetadataLoader(MetadataLoader $loader)
     {
         $this->metadataLoader = $loader;
-        return $this;
     }
 
     /**
      * @param FactoryInterface $factory The factory to use to create models.
-     * @return self
+     * @return void
      */
     private function setSourceFactory(FactoryInterface $factory)
     {
         $this->sourceFactory = $factory;
-        return $this;
     }
 
     /**
