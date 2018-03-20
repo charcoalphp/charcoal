@@ -57,6 +57,7 @@ class LocalesManager
      */
     public function __construct(array $data)
     {
+        uasort($data['locales'], [ $this, 'sortLocalesByPriority' ]);
         $this->setLocales($data['locales']);
 
         $default = isset($data['default_language']) ? $data['default_language'] : null;
@@ -212,4 +213,23 @@ class LocalesManager
             );
         }
     }
+
+    /**
+     * To be called with {@see uasort()}.
+     *
+     * @param  array $a Sortable action A.
+     * @param  array $b Sortable action B.
+     * @return integer
+     */
+    protected function sortLocalesByPriority(array $a, array $b)
+    {
+        $a = isset($a['priority']) ? $a['priority'] : 0;
+        $b = isset($b['priority']) ? $b['priority'] : 0;
+
+        if ($a === $b) {
+            return 0;
+        }
+        return ($a < $b) ? (-1) : 1;
+    }
+
 }
