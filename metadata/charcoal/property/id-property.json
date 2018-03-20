@@ -10,8 +10,5 @@
                 "uuid": {}
             }
         }
-    },
-    "admin": {
-        "input_type": "charcoal/admin/property/input/readonly"
     }
 }

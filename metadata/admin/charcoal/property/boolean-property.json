@@ -1,0 +1,7 @@
+{
+    "admin": {
+        "input_type": "charcoal/admin/property/input/switch",
+        "display_type": "charcoal/admin/property/display/boolean"
+    }
+}
+

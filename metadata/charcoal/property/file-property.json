@@ -27,9 +27,5 @@
             "description": "Maximum allowed file size, in bytes. If 0, null or empty, then there are no size constraint.",
             "allow_null": true
         }
-    },
-    "admin": {
-        "input_type": "charcoal/admin/property/input/file",
-        "show_file_picker": true
     }
 }

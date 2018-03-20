@@ -8,9 +8,6 @@
             "type": "structure"
         }
     },
-    "admin": {
-        "input_type": "charcoal/admin/property/input/textarea"
-    },
     "example": {
         "form_group": {
             "type": "charcoal/admin/widget/form-group/structure",

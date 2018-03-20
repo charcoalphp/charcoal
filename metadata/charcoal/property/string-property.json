@@ -22,8 +22,5 @@
             "type": "boolean",
             "label":"Empty string allowed?"
         }
-    },
-    "admin": {
-        "input_type": "charcoal/admin/property/input/text"
     }
 }

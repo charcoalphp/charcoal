@@ -8,9 +8,5 @@
             "type":"number",
             "allow_null":true
         }
-    },
-
-    "admin": {
-        "input_type": "charcoal/admin/property/input/number"
     }
 }

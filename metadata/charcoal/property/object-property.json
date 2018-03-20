@@ -9,8 +9,5 @@
             "label":"Render pattern",
             "description":"When attempting to render the object, it will use the following pattern to render. Defaults to \"{{name}}\"."
         }
-    },
-    "admin": {
-        "input_type": "charcoal/admin/property/input/select"
     }
 }

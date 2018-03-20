@@ -1,0 +1,6 @@
+{
+    "admin": {
+        "input_type": "charcoal/admin/property/input/color-picker",
+        "display_type": "charcoal/admin/property/display/color-swatch"
+    }
+}

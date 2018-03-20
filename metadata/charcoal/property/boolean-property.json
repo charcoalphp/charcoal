@@ -14,10 +14,6 @@
             "active": false,
             "description": "Boolean properties can not be multiple (will always be false)."
         }
-    },
-    "admin": {
-        "input_type": "charcoal/admin/property/input/switch",
-        "display_type": "charcoal/admin/property/display/boolean"
     }
 }
 
