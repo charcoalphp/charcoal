@@ -3,6 +3,7 @@
 namespace Charcoal\View\Mustache;
 
 use InvalidArgumentException;
+use RuntimeException;
 use Traversable;
 
 // Dependency from 'mustache/mustache'
@@ -114,10 +115,17 @@ class MustacheEngine extends AbstractEngine
      *
      * @param  string $name   The tag name.
      * @param  mixed  $helper The tag value.
+     * @throws RuntimeException If the mustache engine was already initialized.
      * @return MustacheEngine Chainable
      */
     public function addHelper($name, $helper)
     {
+        if ($this->mustache !== null) {
+            throw new RuntimeException(
+                'Can not add helper to mustache engine: the engine has already been initialized.'
+            );
+        }
+        
         $this->helpers[$name] = $helper;
 
         return $this;
