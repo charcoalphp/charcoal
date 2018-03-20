@@ -58,6 +58,7 @@ class ViewServiceProviderTest extends PHPUnit_Framework_TestCase
     {
         $container = new Container([
             'logger' => new NullLogger(),
+            'translator' => null,
             'config' => [
                 'base_path' => __DIR__,
                 'view' => [

@@ -6,11 +6,14 @@ namespace Charcoal\View;
 use Pimple\ServiceProviderInterface;
 use Pimple\Container;
 
+use Parsedown;
+
 // Module `charcoal-view` dependencies
 use Charcoal\View\GenericView;
 use Charcoal\View\Mustache\MustacheEngine;
 use Charcoal\View\Mustache\MustacheLoader;
 use Charcoal\View\Mustache\AssetsHelpers;
+use Charcoal\View\Mustache\MarkdownHelpers;
 use Charcoal\View\Mustache\TranslatorHelpers;
 use Charcoal\View\Php\PhpEngine;
 use Charcoal\View\Php\PhpLoader;
@@ -189,29 +192,7 @@ class ViewServiceProvider implements ServiceProviderInterface
      */
     protected function registerMustacheTemplatingServices(Container $container)
     {
-        if (!isset($container['view/mustache/helpers'])) {
-            $container['view/mustache/helpers'] = function () {
-                return [];
-            };
-        }
-
-        /**
-         * Add global helpers to the Mustache Engine.
-         *
-         * @param Container $container A container instance.
-         * @return array
-         */
-        $container->extend('view/mustache/helpers', function (array $helpers, Container $container) {
-            $deps = [];
-            if (isset($container['translator'])) {
-                $deps['translator'] = $container['translator'];
-            }
-
-            $assets = new AssetsHelpers();
-            $i18n   = new TranslatorHelpers($deps);
-
-            return array_merge($helpers, $assets->toArray(), $i18n->toArray());
-        });
+        $this->registerMustacheHelpersServices($container);
 
         /**
          * @param Container $container A container instance.
@@ -221,6 +202,45 @@ class ViewServiceProvider implements ServiceProviderInterface
             $viewConfig = $container['view/config'];
             return $viewConfig['engines.mustache.cache'];
         };
+    }
+
+    /**
+     * @param Container $container The DI container.
+     * @return void
+     */
+    protected function registerMustacheHelpersServices(Container $container)
+    {
+        if (!isset($container['view/mustache/helpers'])) {
+            $container['view/mustache/helpers'] = function () {
+                return [];
+            };
+        }
+
+        $container['view/mustache/helpers/assets'] = function () {
+            return new AssetsHelpers();
+        };
+
+        $container['view/mustache/helpers/translator'] = function (Container $container) {
+            return new AssetsHelpers([
+                'translator' => $container['translator']
+            ]);
+        };
+
+
+        $container['view/mustache/helpers/markdown'] = function (Container $container) {
+            return new MarkdownHelpers([
+                'parsedown' => $container['view/parsedown']
+            ]);
+        };
+
+        $container->extend('view/mustache/helpers', function (array $helpers, Container $container) {
+            return array_merge(
+                $helpers,
+                $container['view/mustache/helpers/assets']->toArray(),
+                $container['view/mustache/helpers/translator']->toArray(),
+                $container['view/mustache/helpers/markdown']->toArray()
+            );
+        });
     }
 
     /**
@@ -268,6 +288,15 @@ class ViewServiceProvider implements ServiceProviderInterface
             return new Renderer([
                 'view' => $container['view']
             ]);
+        };
+
+        /**
+         * @return Parsedown
+         */
+        $container['view/parsedown'] = function () {
+            $parsedown = new Parsedown();
+            $parsedown->setSafeMode(true);
+            return $parsedown;
         };
     }
 }

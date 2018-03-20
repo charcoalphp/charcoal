@@ -20,6 +20,7 @@ It is the default view layer for `charcoal-app` projects.
     -   [Views](#views)
         -   [Generic View](#generic-view)
     -   [View Engines](#view-engines)
+        - [Mustache Helpers](#mustache-helpers)
     -   [Loaders](#loaders)
         -   [Templates](#templates)
     -   [Viewable Interface and Trait](#viewable-interface-and-trait)
@@ -54,6 +55,10 @@ $ composer create-project locomotivemtl/charcoal-project-boilerplate:@dev --pref
     -   Charcoal View provides a PSR7 renderer.
 -   [`locomotivemtl/charcoal-config`](https://github.com/locomotivemtl/charcoal-config)
     -   The view objects are _configurable_ with `\Charcoal\View\ViewConfig`.
+    [`locomotivemtl/charcoal-translator`](https://github.com/locomotivemtl/charcoal-translator)
+    -   The translator service
+-   [`erusev/parsedown`](https://github.com/erusev/parsedown)
+    -   A markdown parser, which is provided to engines or could be used as a service.
 
 ### Optional dependencies
 
@@ -185,6 +190,43 @@ There are 3 engines available by default:
 -   `php`
 -   `twig`
 
+### Mustache Helpers
+
+Mustache can be extended with the help of `helpers`. Those helpers can be set by extending `view/mustache/helpers` in the container:
+
+```
+$container->extend('view/mustache/helpers', function(array $helpers, Container $container) {
+    return array_merge($helpers, [
+        'my_extended_method' => function($text, LambdaHelper $lambda) {
+            if (isset($helper)) {
+                $text = $helper->render($text);
+            }
+            return customMethod($text);
+        }
+    ]);
+});
+```
+
+*Provided helpers:*
+
+- **Assets** helpers:
+    - `purgeJs`
+    - `addJs`
+    - `js`
+    - `addJsRequirement`
+    - `jsRequirements`
+    - `addCss`
+    - `purgeCss`
+    - `css`
+    - `addCssRequirement`
+    - `cssRequirements`
+    - `purgeAssets`
+- **Translator** helpers:
+    - `_t` Translate a string with `{{#_t}}String to translate{{/_t}}`
+- **Markdown** helpers:
+    - `markdown` Parse markdown to HTML with `{{#markdown}}# this is a H1{{/markdown}}`
+ 
+
 ## Loaders
 
 A `Loader` service is attached to every engine. Its function is to load a given template content
@@ -250,23 +292,24 @@ As seen in the various examples above, it is recommended to use the `ViewService
 
 The Service Provider adds the following service to a container:
 
-- `view`
-- `view/renderer`
+- `view` The base view instance.
+- `view/renderer` A PSR-7 view renderer.
+- `view/parsedown` A parsedown service, to render markdown into HTML.
 
 Other services / options are:
 
-- `view/config`
-- `view/engine`
-- `view/loader`
+- `view/config` View configuration options.
+- `view/engine` Currently used view engine.
+- `view/loader` Currently used template loader.
 
 The `ViewServiceProvider` expects the following services / keys to be set on the container:
 
 - `logger` A PSR-3 logger
-- `config` Application configuration. Should contain a "view" config.
+- `config` Application configuration. Should contain a "view" key to build the _ViewConfig_ obejct.
 
 ### The View Config
 
-Most service options can be set dynamically from a configuration object.
+Most service options can be set dynamically from a configuration object (available in `$container['view/config']`).
 
 Example:
 
@@ -335,6 +378,7 @@ The Charcoal-View module follows the Charcoal coding-style:
 ## Authors
 
 -   Mathieu Ducharme <mat@locomotive.ca>
+-   [Locomotive](https://locomotive.ca)
 
 # License
 
