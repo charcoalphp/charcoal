@@ -91,6 +91,20 @@ class LocalesManagerTest extends PHPUnit_Framework_TestCase
         $this->assertArrayNotHasKey('baz', $locales);
     }
 
+    public function testSortedLocales()
+    {
+        $this->obj = new LocalesManager([
+            'locales' => [
+                'foo' => [ 'priority' => 2 ],
+                'bar' => [ 'priority' => 3 ],
+                'baz' => [ 'priority' => 1, 'active' => false ],
+                'qux' => [ 'priority' => 1 ],
+            ]
+        ]);
+
+        $this->assertEquals([ 'qux', 'foo', 'bar' ], $this->obj->availableLocales());
+    }
+
     public function testAvailableLocales()
     {
         $this->assertEquals([ 'foo', 'bar' ], $this->obj->availableLocales());

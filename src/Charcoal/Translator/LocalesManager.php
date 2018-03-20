@@ -57,7 +57,6 @@ class LocalesManager
      */
     public function __construct(array $data)
     {
-        uasort($data['locales'], [ $this, 'sortLocalesByPriority' ]);
         $this->setLocales($data['locales']);
 
         $default = isset($data['default_language']) ? $data['default_language'] : null;
@@ -195,7 +194,9 @@ class LocalesManager
      */
     private function setLocales(array $locales)
     {
-        $this->locales = [];
+        uasort($locales, [ $this, 'sortLocalesByPriority' ]);
+
+        $this->locales   = [];
         $this->languages = [];
         foreach ($locales as $langCode => $locale) {
             if (isset($locale['active']) && !$locale['active']) {
@@ -207,6 +208,7 @@ class LocalesManager
             $this->locales[$langCode] = $locale;
             $this->languages[] = $langCode;
         }
+
         if (empty($this->locales)) {
             throw new InvalidArgumentException(
                 'Locales can not be empty.'
@@ -231,5 +233,4 @@ class LocalesManager
         }
         return ($a < $b) ? (-1) : 1;
     }
-
 }
