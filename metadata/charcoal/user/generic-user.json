@@ -1,8 +1,8 @@
 {
-    "sources":{
-        "default":{
-            "table":"charcoal_users"
+    "sources": {
+        "default": {
+            "table": "charcoal_users"
         }
     },
-    "default_source":"default",
+    "default_source": "default"
 }
