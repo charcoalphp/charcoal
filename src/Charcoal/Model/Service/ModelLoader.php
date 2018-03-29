@@ -262,7 +262,7 @@ final class ModelLoader implements ArrayAccess
     private function cacheKey($ident)
     {
         if ($this->objKey === null) {
-            $model = $this->factory->create($this->objType);
+            $model = $this->factory->get($this->objType);
             $this->setObjKey($model->key());
         }
 
