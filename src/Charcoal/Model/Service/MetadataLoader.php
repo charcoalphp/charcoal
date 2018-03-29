@@ -124,20 +124,29 @@ final class MetadataLoader implements LoggerAwareInterface
         $cacheKey  = 'metadata/'.str_replace('/', '.', $ident);
         $cacheItem = $this->cachePool()->getItem($cacheKey);
 
-        if (!$cacheItem->isHit()) {
+        if ($cacheItem->isHit()) {
+            $data = $cacheItem->get();
+
+            if ($data instanceof MetadataInterface) {
+                $data = $data->data();
+                $cacheItem->set($data);
+                $this->cachePool()->save($cacheItem);
+            }
+
+            $metadata->setData($data);
+        } else {
             if ($interfaces === null) {
                 $data = $this->loadData($ident);
             } else {
                 $data = $this->loadDataArray($interfaces);
             }
+
             $metadata->setData($data);
-
-            $this->cachePool()->save($cacheItem->set($metadata));
-
-            return $metadata;
+            $cacheItem->set($data);
+            $this->cachePool()->save($cacheItem);
         }
 
-        return $cacheItem->get();
+        return $metadata;
     }
 
     /**
