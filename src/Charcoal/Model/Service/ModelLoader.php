@@ -74,9 +74,9 @@ final class ModelLoader implements ArrayAccess
      */
     public function __construct(array $data)
     {
-        $this->setObjType($data['obj_type']);
-        $this->setFactory($data['factory']);
         $this->setCachePool($data['cache']);
+        $this->setFactory($data['factory']);
+        $this->setObjType($data['obj_type']);
 
         if (isset($data['obj_key'])) {
             $this->setObjKey($data['obj_key']);
@@ -219,18 +219,19 @@ final class ModelLoader implements ArrayAccess
         $cacheItem = $this->cachePool->getItem($cacheKey);
 
         if (!$reloadObj) {
-            $objData = $cacheItem->get();
             if ($cacheItem->isHit()) {
-                $obj = $this->factory->create($this->objType);
-                $obj->setData($objData);
+                $data = $cacheItem->get();
+                $obj  = $this->factory->create($this->objType);
+                $obj->setData($data);
 
                 return $obj;
             }
         }
 
-        $obj = $this->loadFromSource($ident);
-        $objData = ($obj->id() ? $obj->data() : []);
-        $this->cachePool->save($cacheItem->set($objData));
+        $obj  = $this->loadFromSource($ident);
+        $data = ($obj->id() ? $obj->data() : []);
+        $cacheItem->set($data);
+        $this->cachePool->save($cacheItem);
 
         return $obj;
     }
@@ -286,7 +287,7 @@ final class ModelLoader implements ArrayAccess
             );
         }
 
-        $this->objType = $objType;
+        $this->objType = $this->factory->get($objType)->objType();
         return $this;
     }
 
