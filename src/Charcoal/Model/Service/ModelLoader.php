@@ -266,7 +266,7 @@ final class ModelLoader implements ArrayAccess
             $this->setObjKey($model->key());
         }
 
-        $cacheKey = 'objects/'.str_replace('/', '.', $this->objType.'.'.$this->objKey.'.'.$ident);
+        $cacheKey = 'object/'.str_replace('/', '.', $this->objType.'.'.$this->objKey.'.'.$ident);
 
         return $cacheKey;
     }
