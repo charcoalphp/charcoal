@@ -121,7 +121,7 @@ final class MetadataLoader implements LoggerAwareInterface
             $interfaces = null;
         }
 
-        $cacheKey  = 'metadata/'.str_replace('/', '.', $ident);
+        $cacheKey  = $this->cacheKeyFromMetaKey($ident);
         $cacheItem = $this->cachePool()->getItem($cacheKey);
 
         if ($cacheItem->isHit()) {
@@ -213,7 +213,7 @@ final class MetadataLoader implements LoggerAwareInterface
             return static::$lineageCache[$ident];
         }
 
-        $classname = $this->identToClassname($ident);
+        $classname = $this->classNameFromMetaKey($ident);
 
         return $this->classLineage($classname, $ident);
     }
@@ -232,14 +232,14 @@ final class MetadataLoader implements LoggerAwareInterface
         }
 
         if ($ident === null) {
-            $ident = $this->classnameToIdent($classname);
+            $ident = $this->metaKeyFromClassName($classname);
         }
 
         if (isset(static::$lineageCache[$ident])) {
             return static::$lineageCache[$ident];
         }
 
-        $classname = $this->identToClassname($ident);
+        $classname = $this->classNameFromMetaKey($ident);
 
         if (!class_exists($classname) && !interface_exists($classname)) {
             return [ $ident ];
@@ -254,9 +254,9 @@ final class MetadataLoader implements LoggerAwareInterface
             $implements = array_values(class_implements($class));
             $implements = array_reverse($implements);
             foreach ($implements as $interface) {
-                $hierarchy[$this->classnameToIdent($interface)] = 1;
+                $hierarchy[$this->metaKeyFromClassName($interface)] = 1;
             }
-            $hierarchy[$this->classnameToIdent($class)] = 1;
+            $hierarchy[$this->metaKeyFromClassName($class)] = 1;
         }
 
         $hierarchy = array_keys($hierarchy);
@@ -276,18 +276,18 @@ final class MetadataLoader implements LoggerAwareInterface
      */
     private function loadFileFromIdent($ident)
     {
-        $filename = $this->filenameFromIdent($ident);
+        $filename = $this->filePathFromMetaKey($ident);
 
         return $this->loadFile($filename);
     }
 
     /**
-     * Load a metadata file.
+     * Load a file as an array.
      *
      * Supported file types: JSON.
      *
-     * @param  string $filename A supported metadata file.
-     * @return array|null
+     * @param  string $filename A file path to resolve and fetch.
+     * @return array|null An associative array on success, NULL on failure.
      */
     private function loadFile($filename)
     {
@@ -365,26 +365,38 @@ final class MetadataLoader implements LoggerAwareInterface
     }
 
     /**
-     * Convert a snake-cased namespace to a file path.
+     * Generate a cache key.
      *
-     * @param  string $ident The identifier to convert.
+     * @param  string $ident The metadata identifier to convert.
      * @return string
      */
-    private function filenameFromIdent($ident)
+    public function cacheKeyFromMetaKey($ident)
     {
-        $filename  = str_replace([ '\\' ], '.', $ident);
+        $cacheKey = 'metadata/'.str_replace('/', '.', $ident);
+        return $cacheKey;
+    }
+
+    /**
+     * Convert a snake-cased namespace to a file path.
+     *
+     * @param  string $ident The metadata identifier to convert.
+     * @return string
+     */
+    private function filePathFromMetaKey($ident)
+    {
+        $filename  = str_replace('\\', '.', $ident);
         $filename .= '.json';
 
         return $filename;
     }
 
     /**
-     * Convert a snake-cased namespace to CamelCase.
+     * Convert a kebab-cased namespace to CamelCase.
      *
-     * @param  string $ident The namespace to convert.
+     * @param  string $ident The metadata identifier to convert.
      * @return string Returns a valid PHP namespace.
      */
-    private function identToClassname($ident)
+    private function classNameFromMetaKey($ident)
     {
         $key = $ident;
 
@@ -422,20 +434,20 @@ final class MetadataLoader implements LoggerAwareInterface
     }
 
     /**
-     * Convert a CamelCase namespace to snake-case.
+     * Convert a CamelCase namespace to kebab-case.
      *
-     * @param  string $classname The namespace to convert.
-     * @return string Returns a snake-cased namespace.
+     * @param  string $class The FQCN to convert.
+     * @return string Returns a kebab-cased namespace.
      */
-    private function classnameToIdent($classname)
+    private function metaKeyFromClassName($class)
     {
-        $key = trim($classname, '\\');
+        $key = trim($class, '\\');
 
         if (isset(static::$snakeCache[$key])) {
             return static::$snakeCache[$key];
         }
 
-        $ident = strtolower(preg_replace('/([a-z])([A-Z])/', '$1-$2', $classname));
+        $ident = strtolower(preg_replace('/([a-z])([A-Z])/', '$1-$2', $class));
         $ident = str_replace('\\', '/', strtolower($ident));
         $ident = ltrim($ident, '/');
 
@@ -475,9 +487,9 @@ final class MetadataLoader implements LoggerAwareInterface
     }
 
     /**
-     * Assign a list of paths.
+     * Assign many search paths.
      *
-     * @param  string[] $paths The list of paths to add.
+     * @param  string[] $paths One or more search paths.
      * @return void
      */
     private function setPaths(array $paths)
@@ -487,7 +499,7 @@ final class MetadataLoader implements LoggerAwareInterface
     }
 
     /**
-     * Retrieve the searchable paths.
+     * Retrieve search paths.
      *
      * @return string[]
      */
@@ -497,9 +509,9 @@ final class MetadataLoader implements LoggerAwareInterface
     }
 
     /**
-     * Append a list of paths.
+     * Append many search paths.
      *
-     * @param  string[] $paths The list of paths to add.
+     * @param  string[] $paths One or more search paths.
      * @return self
      */
     private function addPaths(array $paths)
@@ -512,10 +524,9 @@ final class MetadataLoader implements LoggerAwareInterface
     }
 
     /**
-     * Append a path.
+     * Append a search path.
      *
      * @param  string $path A file or directory path.
-     * @throws InvalidArgumentException If the path does not exist or is invalid.
      * @return self
      */
     private function addPath($path)
@@ -579,17 +590,10 @@ final class MetadataLoader implements LoggerAwareInterface
     /**
      * Retrieve the cache service.
      *
-     * @throws RuntimeException If the cache service was not previously set.
      * @return CacheItemPoolInterface
      */
     private function cachePool()
     {
-        if (!isset($this->cachePool)) {
-            throw new RuntimeException(
-                sprintf('Cache Pool is not defined for "%s"', get_class($this))
-            );
-        }
-
         return $this->cachePool;
     }
 }
