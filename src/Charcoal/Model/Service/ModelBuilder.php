@@ -121,7 +121,7 @@ final class ModelBuilder
     private function createMetadata($objType, $metadataIdent = null)
     {
         $metadataIdent = ($metadataIdent !== null) ? $metadataIdent : $objType;
-        return $this->metadataLoader->load($metadataIdent, new ModelMetadata());
+        return $this->metadataLoader->load($metadataIdent, ModelMetadata::class);
     }
 
     /**

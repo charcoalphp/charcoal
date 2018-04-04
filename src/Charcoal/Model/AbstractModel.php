@@ -420,13 +420,24 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-     * DescribableTrait > createMetadata().
+     * Create a new metadata object.
      *
-     * @return MetadataInterface
+     * @return ModelMetadata
      */
     protected function createMetadata()
     {
-        return new ModelMetadata();
+        $class = $this->metadataClass();
+        return new $class();
+    }
+
+    /**
+     * Retrieve the class name of the metadata object.
+     *
+     * @return string
+     */
+    protected function metadataClass()
+    {
+        return ModelMetadata::class;
     }
 
     /**

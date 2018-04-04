@@ -4,6 +4,7 @@ namespace Charcoal\Model\Service;
 
 use RuntimeException;
 use InvalidArgumentException;
+use UnexpectedValueException;
 
 // From PSR-3
 use Psr\Log\LoggerAwareInterface;
@@ -35,6 +36,13 @@ final class MetadataLoader implements LoggerAwareInterface
      * @var CacheItemPoolInterface $cachePool
      */
     private $cachePool;
+
+    /**
+     * The cache of metadata instances, indexed by metadata identifier.
+     *
+     * @var MetadataInterface[]
+     */
+    private static $metadataCache = [];
 
     /**
      * The cache of class/interface lineages.
@@ -97,56 +105,73 @@ final class MetadataLoader implements LoggerAwareInterface
     /**
      * Load the metadata for the given identifier or interfaces.
      *
-     * @param  string            $ident      The metadata identifier to load or
-     *     to use as the cache key if $interfaces is provided.
-     * @param  MetadataInterface $metadata   The metadata object to load into.
-     * @param  array|null        $interfaces One or more metadata identifiers to load.
+     * Notes:
+     * - If the requested dataset is found, it will be stored in the cache service.
+     * - If the provided metadata container is an {@see MetadataInterface object},
+     *   it will be stored for the lifetime of the script (whether it be a longer
+     *   running process or a web request).
+     *
+     * @param  string $ident    The metadata identifier to load.
+     * @param  mixed  $metadata The metadata type to load the dataset into.
+     *     If $metadata is a {@see MetadataInterface} instance, the requested dataset will be merged into the object.
+     *     If $metadata is a class name, the requested dataset will be stored in a new instance of that class.
+     *     If $metadata is an array, the requested dataset will be merged into the array.
+     * @param  array  $idents   The metadata identifier(s) to load.
+     *     If $idents is provided, $ident will be used as the cache key
+     *     and $idents are loaded instead.
      * @throws InvalidArgumentException If the identifier is not a string.
-     * @return MetadataInterface Returns the cached metadata instance or if it's stale or empty,
-     *     loads a fresh copy of the data into $metadata and returns it;
+     * @return MetadataInterface|array Returns the dataset, for the given $ident,
+     *     as an array or an instance of {@see MetadataInterface}.
+     *     See $metadata for more details.
      */
-    public function load($ident, MetadataInterface $metadata, array $interfaces = null)
+    public function load($ident, $metadata = [], array $idents = null)
     {
         if (!is_string($ident)) {
-            throw new InvalidArgumentException(
-                'Metadata identifier must be a string'
-            );
+            throw new InvalidArgumentException(sprintf(
+                'Metadata identifier must be a string, received %s',
+                is_object($ident) ? get_class($ident) : gettype($ident)
+            ));
         }
 
         if (strpos($ident, '\\') !== false) {
-            $ident = $this->classnameToIdent($ident);
+            $ident = $this->metaKeyFromClassName($ident);
         }
 
-        if (is_array($interfaces) && empty($interfaces)) {
-            $interfaces = null;
+        $valid = $this->validateMetadataContainer($metadata, $metadataType, $targetMetadata);
+        if ($valid === false) {
+            throw new InvalidArgumentException(sprintf(
+                'Metadata object must be a class name or instance of %s, received %s',
+                MetadataInterface::class,
+                is_object($metadata) ? get_class($metadata) : gettype($metadata)
+            ));
         }
 
-        $cacheKey  = $this->cacheKeyFromMetaKey($ident);
-        $cacheItem = $this->cachePool()->getItem($cacheKey);
+        if (isset(static::$metadataCache[$ident])) {
+            $cachedMetadata = static::$metadataCache[$ident];
 
-        if ($cacheItem->isHit()) {
-            $data = $cacheItem->get();
-
-            if ($data instanceof MetadataInterface) {
-                $data = $data->data();
-                $cacheItem->set($data);
-                $this->cachePool()->save($cacheItem);
+            if (is_object($targetMetadata)) {
+                return $targetMetadata->merge($cachedMetadata);
+            } elseif (is_array($targetMetadata)) {
+                return array_replace_recursive($targetMetadata, $cachedMetadata->data());
             }
 
-            $metadata->setData($data);
-        } else {
-            if ($interfaces === null) {
-                $data = $this->loadData($ident);
-            } else {
-                $data = $this->loadDataArray($interfaces);
-            }
-
-            $metadata->setData($data);
-            $cacheItem->set($data);
-            $this->cachePool()->save($cacheItem);
+            return $cachedMetadata;
         }
 
-        return $metadata;
+        $data = $this->loadMetadataFromCache($ident, $idents);
+
+        if (is_object($targetMetadata)) {
+            return $targetMetadata->merge($data);
+        } elseif (is_array($targetMetadata)) {
+            return array_replace_recursive($targetMetadata, $data);
+        }
+
+        $targetMetadata = new $metadataType;
+        $targetMetadata->setData($data);
+
+        static::$metadataCache[$ident] = $targetMetadata;
+
+        return $targetMetadata;
     }
 
     /**
@@ -156,7 +181,7 @@ final class MetadataLoader implements LoggerAwareInterface
      * @throws InvalidArgumentException If the identifier is not a string.
      * @return array
      */
-    public function loadData($ident)
+    public function loadMetadataByKey($ident)
     {
         if (!is_string($ident)) {
             throw new InvalidArgumentException(
@@ -164,17 +189,16 @@ final class MetadataLoader implements LoggerAwareInterface
             );
         }
 
-        $lineage = $this->hierarchy($ident);
-        $catalog = [];
-        foreach ($lineage as $id) {
-            $data = $this->loadFileFromIdent($id);
-
+        $lineage  = $this->hierarchy($ident);
+        $metadata = [];
+        foreach ($lineage as $metaKey) {
+            $data = $this->loadMetadataFromSource($metaKey);
             if (is_array($data)) {
-                $catalog = array_replace_recursive($catalog, $data);
+                $metadata = array_replace_recursive($metadata, $data);
             }
         }
 
-        return $catalog;
+        return $metadata;
     }
 
     /**
@@ -183,18 +207,17 @@ final class MetadataLoader implements LoggerAwareInterface
      * @param  array $idents One or more metadata identifiers to load.
      * @return array
      */
-    public function loadDataArray(array $idents)
+    public function loadMetadataByKeys(array $idents)
     {
-        $catalog = [];
-        foreach ($idents as $id) {
-            $data = $this->loadData($id);
-
+        $metadata = [];
+        foreach ($idents as $metaKey) {
+            $data = $this->loadMetadataByKey($metaKey);
             if (is_array($data)) {
-                $catalog = array_replace_recursive($catalog, $data);
+                $metadata = array_replace_recursive($metadata, $data);
             }
         }
 
-        return $catalog;
+        return $metadata;
     }
 
     /**
@@ -221,33 +244,33 @@ final class MetadataLoader implements LoggerAwareInterface
     /**
      * Build a class/interface lineage from the given PHP namespace.
      *
-     * @param  string      $classname The FQCN to load the hierarchy from.
-     * @param  string|null $ident     Optional. The snake-cased $classname.
+     * @param  string      $class The FQCN to load the hierarchy from.
+     * @param  string|null $ident Optional. The snake-cased $class.
      * @return array
      */
-    private function classLineage($classname, $ident = null)
+    private function classLineage($class, $ident = null)
     {
-        if (!is_string($classname)) {
+        if (!is_string($class)) {
             return [];
         }
 
         if ($ident === null) {
-            $ident = $this->metaKeyFromClassName($classname);
+            $ident = $this->metaKeyFromClassName($class);
         }
 
         if (isset(static::$lineageCache[$ident])) {
             return static::$lineageCache[$ident];
         }
 
-        $classname = $this->classNameFromMetaKey($ident);
+        $class = $this->classNameFromMetaKey($ident);
 
-        if (!class_exists($classname) && !interface_exists($classname)) {
+        if (!class_exists($class) && !interface_exists($class)) {
             return [ $ident ];
         }
 
-        $classes   = array_values(class_parents($classname));
+        $classes   = array_values(class_parents($class));
         $classes   = array_reverse($classes);
-        $classes[] = $classname;
+        $classes[] = $class;
 
         $hierarchy = [];
         foreach ($classes as $class) {
@@ -267,6 +290,44 @@ final class MetadataLoader implements LoggerAwareInterface
     }
 
     /**
+     * Load a metadataset from the cache.
+     *
+     * @param  string $ident  The metadata identifier to load / cache key for $idents.
+     * @param  array  $idents If provided, $ident is used as the cache key
+     *     and these metadata identifiers are loaded instead.
+     * @return array The data associated with the metadata identifier.
+     */
+    private function loadMetadataFromCache($ident, array $idents = null)
+    {
+        $cacheKey  = $this->cacheKeyFromMetaKey($ident);
+        $cacheItem = $this->cachePool()->getItem($cacheKey);
+
+        if ($cacheItem->isHit()) {
+            $metadata = $cacheItem->get();
+
+            /** Backwards compatibility */
+            if ($metadata instanceof MetadataInterface) {
+                $metadata = $metadata->data();
+                $cacheItem->set($metadata);
+                $this->cachePool()->save($cacheItem);
+            }
+
+            return $metadata;
+        } else {
+            if (empty($idents)) {
+                $metadata = $this->loadMetadataByKey($ident);
+            } else {
+                $metadata = $this->loadMetadataByKeys($idents);
+            }
+
+            $cacheItem->set($metadata);
+            $this->cachePool()->save($cacheItem);
+        }
+
+        return $metadata;
+    }
+
+    /**
      * Load a metadata file from the given metdata identifier.
      *
      * The file is converted to JSON, the only supported format.
@@ -274,7 +335,7 @@ final class MetadataLoader implements LoggerAwareInterface
      * @param  string $ident The metadata identifier to fetch.
      * @return array|null An associative array on success, NULL on failure.
      */
-    private function loadFileFromIdent($ident)
+    private function loadMetadataFromSource($ident)
     {
         $path = $this->filePathFromMetaKey($ident);
         return $this->loadFile($path);
@@ -339,6 +400,22 @@ final class MetadataLoader implements LoggerAwareInterface
         }
 
         return $data;
+    }
+
+    /**
+     * Generate a store key.
+     *
+     * @param  string|string[] $ident The metadata identifier(s) to convert.
+     * @return string
+     */
+    public function serializeMetaKey($ident)
+    {
+        if (is_array($ident)) {
+            sort($ident);
+            $ident = implode(':', $ident);
+        }
+
+        return md5($ident);
     }
 
     /**
@@ -432,6 +509,43 @@ final class MetadataLoader implements LoggerAwareInterface
         static::$camelCache[$ident] = $key;
 
         return $ident;
+    }
+
+    /**
+     * Validate a metadata type or container.
+     *
+     * If specified, the method will also resolve the metadata type or container.
+     *
+     * @param  mixed       $metadata The metadata type or container to validate.
+     * @param  string|null $type     If provided, then it is filled with the resolved metadata type.
+     * @param  mixed|null  $bag      If provided, then it is filled with the resolved metadata container.
+     * @return boolean
+     */
+    private function validateMetadataContainer($metadata, &$type = null, &$bag = null)
+    {
+        // If variables are provided, clear existing values.
+        $type = null;
+        $bag  = null;
+
+        if (is_array($metadata)) {
+            $type = 'array';
+            $bag  = $metadata;
+            return true;
+        }
+
+        if (is_a($metadata, MetadataInterface::class, true)) {
+            if (is_object($metadata)) {
+                $type = get_class($metadata);
+                $bag  = $metadata;
+                return true;
+            }
+            if (is_string($metadata)) {
+                $type = $metadata;
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

@@ -38,9 +38,18 @@ trait DescribableTrait
     abstract public function setData(array $data);
 
     /**
+     * Create a new metadata object.
+     *
      * @return MetadataInterface
      */
     abstract protected function createMetadata();
+
+    /**
+     * Retrieve the class name of the metadata object.
+     *
+     * @return string
+     */
+    abstract protected function metadataClass();
 
     /**
      * @param MetadataLoader $loader The loader instance, used to load metadata.
@@ -116,8 +125,7 @@ trait DescribableTrait
             $metadataIdent = $this->metadataIdent();
         }
 
-        $metadataLoader = $this->metadataLoader();
-        $metadata = $metadataLoader->load($metadataIdent, $this->createMetadata());
+        $metadata = $this->metadataLoader()->load($metadataIdent, $this->metadataClass());
         $this->setMetadata($metadata);
 
         return $metadata;

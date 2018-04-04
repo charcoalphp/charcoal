@@ -93,7 +93,7 @@ class ModelServiceProvider implements ServiceProviderInterface
         $container['model/loader/builder'] = function (Container $container) {
             return new ModelLoaderBuilder([
                 'factory' => $container['model/factory'],
-                'cache'     => $container['cache']
+                'cache'   => $container['cache']
             ]);
         };
     }
