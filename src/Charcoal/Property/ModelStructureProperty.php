@@ -263,24 +263,37 @@ class ModelStructureProperty extends StructureProperty
      */
     protected function loadStructureMetadata()
     {
-        $struct = $this->createStructureMetadata();
+        $structureMetadata = null;
 
         if ($this->isStructureFinalized === false) {
             $this->isStructureFinalized = true;
 
-            $loader = $this->metadataLoader();
-            $paths  = $this->structureInterfaces();
-            if (!empty($paths)) {
-                $ident  = sprintf('property/structure/%s', $this->ident());
-                $struct = $loader->load($ident, $struct, $paths);
+            $structureInterfaces = $this->structureInterfaces();
+            if (!empty($structureInterfaces)) {
+                $metadataLoader = $this->metadataLoader();
+                $metadataClass  = $this->structureMetadataClass();
+
+                $structureKey = $structureInterfaces;
+                array_unshift($structureKey, $this->ident());
+                $structureKey = 'property/structure='.$metadataLoader->serializeMetaKey($structureKey);
+
+                $structureMetadata = $metadataLoader->load(
+                    $structureKey,
+                    $metadataClass,
+                    $structureInterfaces
+                );
             }
         }
 
-        if ($this->terminalStructureMetadata) {
-            $struct->merge($this->terminalStructureMetadata);
+        if ($structureMetadata === null) {
+            $structureMetadata = $this->createStructureMetadata();
         }
 
-        return $struct;
+        if ($this->terminalStructureMetadata) {
+            $structureMetadata->merge($this->terminalStructureMetadata);
+        }
+
+        return $structureMetadata;
     }
 
     /**
@@ -370,15 +383,26 @@ class ModelStructureProperty extends StructureProperty
     }
 
     /**
-     * Create a metadata store for structures.
+     * Create a new metadata object for structures.
      *
      * Similar to {@see \Charcoal\Model\DescribableTrait::createMetadata()}.
      *
      * @return MetadataInterface
      */
-    private function createStructureMetadata()
+    protected function createStructureMetadata()
     {
-        return new StructureMetadata();
+        $class = $this->structureMetadataClass();
+        return new $class();
+    }
+
+    /**
+     * Retrieve the class name of the metadata object.
+     *
+     * @return string
+     */
+    protected function structureMetadataClass()
+    {
+        return StructureMetadata::class;
     }
 
     /**

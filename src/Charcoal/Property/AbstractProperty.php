@@ -982,17 +982,25 @@ abstract class AbstractProperty extends AbstractEntity implements
     }
 
     /**
-     * @param array $data Optional. Metadata data.
+     * Create a new metadata object.
+     *
+     * @param  array $data Optional metadata to merge on the object.
      * @return PropertyMetadata
      */
     protected function createMetadata(array $data = null)
     {
-        $metadata = new PropertyMetadata();
-        if ($data !== null) {
-            $metadata->setData($data);
-        }
+        $class = $this->metadataClass();
+        return new $class($data);
+    }
 
-        return $metadata;
+    /**
+     * Retrieve the class name of the metadata object.
+     *
+     * @return string
+     */
+    protected function metadataClass()
+    {
+        return PropertyMetadata::class;
     }
 
     /**
