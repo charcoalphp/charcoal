@@ -189,154 +189,6 @@ final class MetadataLoader implements LoggerAwareInterface
     }
 
     /**
-     * Set the cache service.
-     *
-     * @param  CacheItemPoolInterface $cache A PSR-6 compliant cache pool instance.
-     * @return void
-     */
-    private function setCachePool(CacheItemPoolInterface $cache)
-    {
-        $this->cachePool = $cache;
-    }
-
-    /**
-     * Retrieve the cache service.
-     *
-     * @throws RuntimeException If the cache service was not previously set.
-     * @return CacheItemPoolInterface
-     */
-    private function cachePool()
-    {
-        if (!isset($this->cachePool)) {
-            throw new RuntimeException(
-                sprintf('Cache Pool is not defined for "%s"', get_class($this))
-            );
-        }
-
-        return $this->cachePool;
-    }
-
-    /**
-     * Assign a base path for relative search paths.
-     *
-     * @param  string $basePath The base path to use.
-     * @throws InvalidArgumentException If the base path parameter is not a string.
-     * @return void
-     */
-    private function setBasePath($basePath)
-    {
-        if (!is_string($basePath)) {
-            throw new InvalidArgumentException(
-                'Base path must be a string'
-            );
-        }
-
-        $basePath = realpath($basePath);
-        $this->basePath = rtrim($basePath, '/\\').DIRECTORY_SEPARATOR;
-    }
-
-    /**
-     * Retrieve the base path for relative search paths.
-     *
-     * @return string
-     */
-    private function basePath()
-    {
-        return $this->basePath;
-    }
-
-    /**
-     * Assign a list of paths.
-     *
-     * @param  string[] $paths The list of paths to add.
-     * @return void
-     */
-    private function setPaths(array $paths)
-    {
-        $this->paths = [];
-        $this->addPaths($paths);
-    }
-
-    /**
-     * Retrieve the searchable paths.
-     *
-     * @return string[]
-     */
-    private function paths()
-    {
-        return $this->paths;
-    }
-
-    /**
-     * Append a list of paths.
-     *
-     * @param  string[] $paths The list of paths to add.
-     * @return self
-     */
-    private function addPaths(array $paths)
-    {
-        foreach ($paths as $path) {
-            $this->addPath($path);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Append a path.
-     *
-     * @param  string $path A file or directory path.
-     * @throws InvalidArgumentException If the path does not exist or is invalid.
-     * @return self
-     */
-    private function addPath($path)
-    {
-        $path = $this->resolvePath($path);
-
-        if ($this->validatePath($path)) {
-            $this->paths[] = $path;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Parse a relative path using the base path if needed.
-     *
-     * @param  string $path The path to resolve.
-     * @throws InvalidArgumentException If the path is invalid.
-     * @return string
-     */
-    private function resolvePath($path)
-    {
-        if (!is_string($path)) {
-            throw new InvalidArgumentException(
-                'Path needs to be a string'
-            );
-        }
-
-        $basePath = $this->basePath();
-        $path = ltrim($path, '/\\');
-
-        if ($basePath && strpos($path, $basePath) === false) {
-            $path = $basePath.$path;
-        }
-
-        return $path;
-    }
-
-    /**
-     * Validate a resolved path.
-     *
-     * @param  string $path The path to validate.
-     * @return string
-     */
-    private function validatePath($path)
-    {
-        return file_exists($path);
-    }
-
-    /**
      * Build a class/interface lineage from the given snake-cased namespace.
      *
      * @param  string $ident The FQCN (in snake-case) to load the hierarchy from.
@@ -582,5 +434,153 @@ final class MetadataLoader implements LoggerAwareInterface
         static::$camelCache[$ident] = $key;
 
         return $ident;
+    }
+
+    /**
+     * Assign a base path for relative search paths.
+     *
+     * @param  string $basePath The base path to use.
+     * @throws InvalidArgumentException If the base path parameter is not a string.
+     * @return void
+     */
+    private function setBasePath($basePath)
+    {
+        if (!is_string($basePath)) {
+            throw new InvalidArgumentException(
+                'Base path must be a string'
+            );
+        }
+
+        $basePath = realpath($basePath);
+        $this->basePath = rtrim($basePath, '/\\').DIRECTORY_SEPARATOR;
+    }
+
+    /**
+     * Retrieve the base path for relative search paths.
+     *
+     * @return string
+     */
+    private function basePath()
+    {
+        return $this->basePath;
+    }
+
+    /**
+     * Assign a list of paths.
+     *
+     * @param  string[] $paths The list of paths to add.
+     * @return void
+     */
+    private function setPaths(array $paths)
+    {
+        $this->paths = [];
+        $this->addPaths($paths);
+    }
+
+    /**
+     * Retrieve the searchable paths.
+     *
+     * @return string[]
+     */
+    private function paths()
+    {
+        return $this->paths;
+    }
+
+    /**
+     * Append a list of paths.
+     *
+     * @param  string[] $paths The list of paths to add.
+     * @return self
+     */
+    private function addPaths(array $paths)
+    {
+        foreach ($paths as $path) {
+            $this->addPath($path);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Append a path.
+     *
+     * @param  string $path A file or directory path.
+     * @throws InvalidArgumentException If the path does not exist or is invalid.
+     * @return self
+     */
+    private function addPath($path)
+    {
+        $path = $this->resolvePath($path);
+
+        if ($this->validatePath($path)) {
+            $this->paths[] = $path;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Parse a relative path using the base path if needed.
+     *
+     * @param  string $path The path to resolve.
+     * @throws InvalidArgumentException If the path is invalid.
+     * @return string
+     */
+    private function resolvePath($path)
+    {
+        if (!is_string($path)) {
+            throw new InvalidArgumentException(
+                'Path needs to be a string'
+            );
+        }
+
+        $basePath = $this->basePath();
+        $path = ltrim($path, '/\\');
+
+        if ($basePath && strpos($path, $basePath) === false) {
+            $path = $basePath.$path;
+        }
+
+        return $path;
+    }
+
+    /**
+     * Validate a resolved path.
+     *
+     * @param  string $path The path to validate.
+     * @return string
+     */
+    private function validatePath($path)
+    {
+        return file_exists($path);
+    }
+
+    /**
+     * Set the cache service.
+     *
+     * @param  CacheItemPoolInterface $cache A PSR-6 compliant cache pool instance.
+     * @return void
+     */
+    private function setCachePool(CacheItemPoolInterface $cache)
+    {
+        $this->cachePool = $cache;
+    }
+
+    /**
+     * Retrieve the cache service.
+     *
+     * @throws RuntimeException If the cache service was not previously set.
+     * @return CacheItemPoolInterface
+     */
+    private function cachePool()
+    {
+        if (!isset($this->cachePool)) {
+            throw new RuntimeException(
+                sprintf('Cache Pool is not defined for "%s"', get_class($this))
+            );
+        }
+
+        return $this->cachePool;
     }
 }

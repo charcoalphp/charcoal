@@ -38,6 +38,11 @@ trait DescribableTrait
     abstract public function setData(array $data);
 
     /**
+     * @return MetadataInterface
+     */
+    abstract protected function createMetadata();
+
+    /**
      * @param MetadataLoader $loader The loader instance, used to load metadata.
      * @return self
      */
@@ -102,7 +107,7 @@ trait DescribableTrait
      * Use a `MetadataLoader` object and the object's metadataIdent
      * to load the metadata content (typically from the filesystem, as json).
      *
-     * @param string $metadataIdent Optional ident. If none is provided then it will use the auto-genereated one.
+     * @param  string $metadataIdent Optional ident. If none is provided then it will use the auto-genereated one.
      * @return MetadataInterface
      */
     public function loadMetadata($metadataIdent = null)
@@ -117,11 +122,6 @@ trait DescribableTrait
 
         return $metadata;
     }
-
-    /**
-     * @return MetadataInterface
-     */
-    abstract protected function createMetadata();
 
     /**
      * @param string $metadataIdent The metadata ident.
