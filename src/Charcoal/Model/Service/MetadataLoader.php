@@ -317,51 +317,29 @@ final class MetadataLoader implements LoggerAwareInterface
     }
 
     /**
-     * Load the contents of a JSON file.
+     * Load a JSON file as an array.
      *
-     * @param  mixed $filename The file path to retrieve.
-     * @throws InvalidArgumentException If a JSON decoding error occurs.
-     * @return array|null
+     * @param  string $path A path to a JSON file.
+     * @throws UnexpectedValueException If the file can not correctly be parsed into an array.
+     * @return array An associative array on success.
      */
-    private function loadJsonFile($filename)
+    private function loadJsonFile($path)
     {
-        $content = file_get_contents($filename);
-
-        if ($content === null) {
-            return null;
+        $data = json_decode(file_get_contents($path), true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            $error = json_last_error_msg() ?: 'Unknown error';
+            throw new UnexpectedValueException(
+                sprintf('JSON file "%s" could not be parsed: "%s"', $path, $error)
+            );
         }
 
-        $data  = json_decode($content, true);
-        $error = json_last_error();
-
-        if ($error == JSON_ERROR_NONE) {
-            return $data;
+        if (!is_array($data)) {
+            throw new UnexpectedValueException(
+                sprintf('JSON file "%s" does not return an array', $path)
+            );
         }
 
-        $issue = 'Unknown error';
-        switch ($error) {
-            case JSON_ERROR_NONE:
-                break;
-            case JSON_ERROR_DEPTH:
-                $issue = 'Maximum stack depth exceeded';
-                break;
-            case JSON_ERROR_STATE_MISMATCH:
-                $issue = 'Underflow or the modes mismatch';
-                break;
-            case JSON_ERROR_CTRL_CHAR:
-                $issue = 'Unexpected control character found';
-                break;
-            case JSON_ERROR_SYNTAX:
-                $issue = 'Syntax error, malformed JSON';
-                break;
-            case JSON_ERROR_UTF8:
-                $issue = 'Malformed UTF-8 characters, possibly incorrectly encoded';
-                break;
-        }
-
-        throw new InvalidArgumentException(
-            sprintf('JSON %s could not be parsed: "%s"', $filename, $issue)
-        );
+        return $data;
     }
 
     /**
