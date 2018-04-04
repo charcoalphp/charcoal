@@ -2,7 +2,6 @@
 
 namespace Charcoal\Queue;
 
-// Dependencies from `PHP`
 use DateTime;
 use DateTimeInterface;
 use Exception;
