@@ -272,13 +272,12 @@ final class MetadataLoader implements LoggerAwareInterface
      * The file is converted to JSON, the only supported format.
      *
      * @param  string $ident The metadata identifier to fetch.
-     * @return array|null
+     * @return array|null An associative array on success, NULL on failure.
      */
     private function loadFileFromIdent($ident)
     {
-        $filename = $this->filePathFromMetaKey($ident);
-
-        return $this->loadFile($filename);
+        $path = $this->filePathFromMetaKey($ident);
+        return $this->loadFile($path);
     }
 
     /**
@@ -286,34 +285,34 @@ final class MetadataLoader implements LoggerAwareInterface
      *
      * Supported file types: JSON.
      *
-     * @param  string $filename A file path to resolve and fetch.
+     * @param  string $path A file path to resolve and fetch.
      * @return array|null An associative array on success, NULL on failure.
      */
-    private function loadFile($filename)
+    private function loadFile($path)
     {
-        if (file_exists($filename)) {
-            return $this->loadJsonFile($filename);
+        if (file_exists($path)) {
+            return $this->loadJsonFile($path);
         }
 
-        $paths = $this->paths();
-
-        if (empty($paths)) {
+        $dirs = $this->paths();
+        if (empty($dirs)) {
             return null;
         }
 
-        $ret = [];
-        $paths = array_reverse($paths);
-        foreach ($paths as $basePath) {
-            $file = $basePath.DIRECTORY_SEPARATOR.$filename;
+        $data = [];
+        $dirs = array_reverse($dirs);
+        foreach ($dirs as $dir) {
+            $file = $dir.DIRECTORY_SEPARATOR.$path;
             if (file_exists($file)) {
-                $ret = array_replace_recursive($ret, $this->loadJsonFile($file));
+                $data = array_replace_recursive($data, $this->loadJsonFile($file));
             }
         }
-        if (!empty($ret)) {
-            return $ret;
-        } else {
+
+        if (empty($data)) {
             return null;
         }
+
+        return $data;
     }
 
     /**
@@ -504,7 +503,7 @@ final class MetadataLoader implements LoggerAwareInterface
     /**
      * Append a search path.
      *
-     * @param  string $path A file or directory path.
+     * @param  string $path A directory path.
      * @return self
      */
     private function addPath($path)
@@ -551,7 +550,7 @@ final class MetadataLoader implements LoggerAwareInterface
      */
     private function validatePath($path)
     {
-        return file_exists($path);
+        return is_dir($path);
     }
 
     /**
