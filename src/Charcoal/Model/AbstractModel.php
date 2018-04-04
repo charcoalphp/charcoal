@@ -337,17 +337,19 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-     * Convert the current class name in "type-ident" format.
+     * Generate a model type identifier from this object's class name.
+     *
+     * Based on {@see DescribableTrait::generateMetadataIdent()}.
      *
      * @return string
      */
     public function objType()
     {
-        $ident = preg_replace('/([a-z])([A-Z])/', '$1-$2', get_class($this));
-        $objType = strtolower(str_replace('\\', '/', $ident));
-        return $objType;
+        $class = get_class($this);
+        $ident = preg_replace('/([a-z])([A-Z])/', '$1-$2', $class);
+        $ident = strtolower(str_replace('\\', '/', $ident));
+        return $ident;
     }
-
 
     /**
      * Inject dependencies from a DI Container.

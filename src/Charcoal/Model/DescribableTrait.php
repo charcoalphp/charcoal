@@ -147,17 +147,17 @@ trait DescribableTrait
     }
 
     /**
-     * Generate a metadata ident from class name.
+     * Generate a metadata identifier from this object's class name.
      *
-     * Change `\` and `.` to `/` and force lowercase
+     * Converts the short class name and converts it from camelCase to kebab-case.
      *
      * @return string
      */
     protected function generateMetadataIdent()
     {
-        $classname = get_class($this);
-        $ident = preg_replace('/([a-z])([A-Z])/', '$1-$2', $classname);
-        $metadataIdent = strtolower(str_replace('\\', '/', $ident));
-        return $metadataIdent;
+        $class = get_class($this);
+        $ident = preg_replace('/([a-z])([A-Z])/', '$1-$2', $class);
+        $ident = strtolower(str_replace('\\', '/', $ident));
+        return $ident;
     }
 }
