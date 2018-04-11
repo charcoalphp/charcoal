@@ -1,30 +1,45 @@
 {{!--
     Attachment Widget \ Collapsible Object
-    =================================
+    ======================================
 
     @used-by `charcoal/admin/widget/attachment/object`
 --}}
-<header role="tab"{{^ attachmentOptions.read_only }} draggable="true"{{/ attachmentOptions.read_only }} id="{{ widgetId }}_heading_{{ id }}" class="panel-heading{{^ attachmentOptions.show_header }} sr-only{{/ attachmentOptions.show_header }}">
-    <h4 class="panel-title">
-        {{# attachmentOptions.show_icon }}
+<header
+    class="card-header{{^ attachmentOptions.show_header }} sr-only{{/ attachmentOptions.show_header }}"
+    id="{{ widgetId }}_heading_{{ id }}"
+    role="tab"
+    {{^ attachmentOptions.read_only }}
+    draggable="true"
+    {{/ attachmentOptions.read_only }}>
+    <h4 class="m-0">
         {{# attachmentType }}
-            {{# showIcon }}
-            <span class="panel-title-icon {{ faIcon }}"></span>
-            {{/ showIcon }}
+            {{> charcoal/admin/widget/attachment/object/icon }}
         {{/ attachmentType }}
-        {{/ attachmentOptions.show_icon }}
         <a role="button"
            href="#{{ widgetId }}_body_{{ id }}"
-           {{# attachmentOptions.show_header }}class="collapsed"{{/ attachmentOptions.show_header }}
+           class="text-dark {{# attachmentOptions.show_header }}collapsed{{/ attachmentOptions.show_header }}"
            data-toggle="collapse"
            data-parent="#{{ widgetId }}_accordion"
            aria-controls="{{ widgetId }}_body_{{ id }}"
-           aria-expanded="{{# attachmentOptions }}{{^ show_header }}true{{/ show_header }}{{# show_header }}false{{/ show_header }}{{/ attachmentOptions }}"
-           >{{& heading }}{{^ active }}&mdash; <em>{{# _t }}Disabled{{/ _t }}</em>{{/ active}}</a>
+           {{# attachmentOptions.show_header }}
+           aria-expanded="false"
+           {{/ attachmentOptions.show_header }}
+           {{^ attachmentOptions.show_header }}
+           aria-expanded="true"
+           {{/ attachmentOptions.show_header }}>
+            {{& heading }}
+            {{^ active }}
+                <span class="small">&mdash; <em>{{# _t }}Disabled{{/ _t }}</em></span>
+            {{/ active }}
+       </a>
     </h4>
 </header>
-<section id="{{ widgetId }}_body_{{ id }}" class="panel-collapse collapse{{^ attachmentOptions.show_header }} in{{/ attachmentOptions.show_header }}" role="tabpanel" aria-labelledby="{{ widgetId }}_heading_{{ id }}">
-    <div class="panel-body">
-        {{> $widget_template }}
+<section
+    class="collapse{{^ attachmentOptions.show_header }} show{{/ attachmentOptions.show_header }}"
+    id="{{ widgetId }}_body_{{ id }}"
+    role="tabpanel"
+    aria-labelledby="{{ widgetId }}_heading_{{ id }}">
+    <div class="card-body">
+    {{> $widget_template }}
     </div>
 </section>

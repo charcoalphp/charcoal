@@ -1,0 +1,24 @@
+{{!--
+    Attachment Widget \ Non Collapsible Object
+    ==========================================
+
+    @used-by `charcoal/admin/widget/attachment/object`
+--}}
+<header
+    class="card-header"
+    id="{{ widgetId }}_heading_{{ id }}"
+    {{^ readOnly }}
+    draggable="true"
+    {{/ readOnly }}>
+    <h4 class="m-0">
+        {{# attachmentType }}
+            {{> charcoal/admin/widget/attachment/object/icon }}
+        {{/ attachmentType }}
+        <a class="text-dark" href="object/edit?obj_type={{ type }}&obj_id={{ id }}">
+            {{& heading }}
+            {{^ active }}
+                <span class="small">&mdash; <em>{{# _t }}Disabled{{/ _t }}</em></span>
+            {{/ active }}
+        </a>
+    </h4>
+</header>

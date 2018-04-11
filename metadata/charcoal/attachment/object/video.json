@@ -53,7 +53,7 @@
                 },
                 "widgets": {
                     "form": {
-                        "type": "charcoal/admin/widget/objectForm",
+                        "type": "charcoal/admin/widget/object-form",
                         "form_ident": "video",
                         "obj_type": "charcoal/attachment/object/video"
                     }

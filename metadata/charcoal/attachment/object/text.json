@@ -114,7 +114,7 @@
                 },
                 "widgets": {
                     "form": {
-                        "type": "charcoal/admin/widget/objectForm",
+                        "type": "charcoal/admin/widget/object-form",
                         "form_ident": "text",
                         "obj_type": "charcoal/attachment/object/text"
                     }
