@@ -17,6 +17,7 @@ use Stash\Interfaces\PoolInterface;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Cache\CacheBuilder;
 use Charcoal\Cache\CacheConfig;
+use Charcoal\Cache\Middleware\CacheMiddleware;
 use Charcoal\Cache\ServiceProvider\CacheServiceProvider;
 
 /**
@@ -28,6 +29,8 @@ class CacheServiceProviderTest extends AbstractTestCase
 {
     /**
      * @covers ::register
+     * @covers ::registerService
+     * @covers ::registerMiddleware
      */
     public function testProvider()
     {
@@ -53,12 +56,36 @@ class CacheServiceProviderTest extends AbstractTestCase
 
         $this->assertArrayHasKey('cache', $container);
         $this->assertInstanceOf(PoolInterface::class, $container['cache']);
+
+        $this->assertArrayHasKey('middlewares/charcoal/cache/middleware/cache', $container);
+        $this->assertInstanceOf(CacheMiddleware::class, $container['middlewares/charcoal/cache/middleware/cache']);
+    }
+
+    /**
+     * Test "middlewares/charcoal/cache/middleware/cache" with a user-preferences.
+     *
+     * @covers ::registerMiddleware
+     */
+    public function testCustomizedMiddleware()
+    {
+        $container = $this->providerFactory([
+            'config' => [
+                'middlewares' => [
+                    'charcoal/cache/middleware/cache' => [
+                        'ttl' => 1
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->assertArrayHasKey('middlewares/charcoal/cache/middleware/cache', $container);
+        $this->assertAttributeEquals(1, 'cacheTtl', $container['middlewares/charcoal/cache/middleware/cache']);
     }
 
     /**
      * Test "cache/drivers"; basic drivers are instances of {@see DriverInterface}.
      *
-     * @covers ::register
+     * @covers ::registerService
      */
     public function testBasicDriverInstances()
     {
@@ -149,7 +176,7 @@ class CacheServiceProviderTest extends AbstractTestCase
     /**
      * Assert "cache/driver" resolves as expected.
      *
-     * @covers ::register
+     * @covers ::registerService
      *
      * @dataProvider provideConfigsForMainDriver
      *

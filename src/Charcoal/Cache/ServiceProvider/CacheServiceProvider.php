@@ -14,6 +14,7 @@ use Stash\Pool;
 // From 'charcoal-cache'
 use Charcoal\Cache\CacheBuilder;
 use Charcoal\Cache\CacheConfig;
+use Charcoal\Cache\Middleware\CacheMiddleware;
 
 /**
  * Cache Service Provider
@@ -35,19 +36,29 @@ use Charcoal\Cache\CacheConfig;
  * - `cache/driver`: The default cache driver.
  * - `cache/factory`: A simple cache pool factory.
  * - `cache/builder`: An advacned cache pool factory.
+ *
+ * ## Middleware
+ *
+ * - `middlewares/charcoal/cache/middleware/cache`: For caching HTTP responses.
+ *
  */
 class CacheServiceProvider implements ServiceProviderInterface
 {
     /**
-     * Registers services on the given container.
-     *
-     * This method should only be used to configure services and parameters.
-     * It should not get services.
-     *
-     * @param Container $container A container instance.
+     * @param  Container $container A container instance.
      * @return void
      */
-    public function register(Container $container)
+    public function register(Container$container)
+    {
+        $this->registerService($container);
+        $this->registerMiddleware($container);
+    }
+
+    /**
+     * @param  Container $container A container instance.
+     * @return void
+     */
+    public function registerService(Container $container)
     {
         /**
          * The cache configset.
@@ -243,6 +254,33 @@ class CacheServiceProvider implements ServiceProviderInterface
 
             $pool = $cacheBuilder($cacheDriver);
             return $pool;
+        };
+    }
+
+    /**
+     * @param  Container $container A container instance.
+     * @return void
+     */
+    private function registerMiddleware(Container $container)
+    {
+        /**
+         * The middleware for caching HTTP responses.
+         *
+         * @param  Container $container A container instance.
+         * @return CacheMiddleware
+         */
+        $container['middlewares/charcoal/cache/middleware/cache'] = function (Container $container) {
+            $appConfig = isset($container['config']) ? $container['config'] : [];
+            if (isset($appConfig['middlewares']['charcoal/cache/middleware/cache'])) {
+                $wareConfig = array_replace($appConfig['middlewares']['charcoal/cache/middleware/cache'], [
+                    'cache' => $container['cache']
+                ]);
+            } else {
+                $wareConfig = [
+                    'cache' => $container['cache']
+                ];
+            }
+            return new CacheMiddleware($wareConfig);
         };
     }
 }
