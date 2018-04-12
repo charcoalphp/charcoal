@@ -64,7 +64,7 @@ class TranslatorConfig extends AbstractConfig
             ],
             'translations' => [],
             'debug'        => false,
-            'cache_dir'    => 'translator_cache'
+            'cache_dir'    => '../cache/translator'
         ];
     }
 
