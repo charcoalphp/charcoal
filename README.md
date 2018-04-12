@@ -22,14 +22,15 @@ A [Charcoal][charcoal-app] service provider for the [Stash Cache Library][stash]
     1.  [Pool Configuration](#pool-configuration)
     2.  ~~[Driver Configuration](#driver-configuration)~~
 4.  [Usage](#usage)
-5.  [Helpers](#helpers)
+5.  [Middleware](#middleware)
+6.  [Helpers](#helpers)
     1.  [CachePoolAwareTrait](#cachepoolawaretrait)
-6.  [Development](#development)
+7.  [Development](#development)
     1. [API Documentation](#api-documentation)
     2. [Development Dependencies](#development-dependencies)
     3. [Coding Style](#coding-style)
-7.  [Credits](#credits)
-8.  [License](#license)
+8.  [Credits](#credits)
+9.  [License](#license)
 
 ## Installation
 
@@ -181,6 +182,71 @@ return $userInfo;
 
 See the [Stash documentation](stash-docs) for more information on using the cache service.
 
+## Middleware
+
+The [`CacheMiddleware`][cache-middleware] is available for PSR-7 applications that support middleware. The middleware saves the HTTP response body and headers into a [PSR-6 cache pool](psr-6) and returns that cached response if still valid.
+
+If you are using [_locomotivemtl/charcoal-app_][charcoal-app], you can add the middleware via the application configset:
+
+```json
+"middlewares": {
+    "charcoal/cache/middleware/cache": {
+        "active": true,
+        "methods": [ "GET", "HEAD" ]
+    }
+}
+```
+
+Otherwise, with [Slim][slim], for example:
+
+```php
+$app = new \Slim\App();
+
+// Register middleware
+$app->add(new \Charcoal\Cache\Middleware\CacheMiddleware([
+    'cache'   => new \Stash\Pool(),
+    'methods' => [ 'GET', 'HEAD' ],
+]));
+```
+
+The middleware comes with a set of default options which can be individually overridden.
+
+| Setting            | Type                     | Default     | Description |
+|:-------------------|:------------------------:|:-----------:|:------------|
+| **active**         | `boolean`                | `FALSE`     | Whether to enable or disable the middleware ([_locomotivemtl/charcoal-app_][charcoal-app] only).
+| **cache**          | `CacheItemPoolInterface` | `cache`     | Required; The main Stash pool.
+| **ttl**            | `string[]`               | 1 week      | Time-to-live (in seconds) for a cached response.
+| **methods**        | `string[]`               | `GET`       | Accepted HTTP method(s) to cache the response.
+| **status_codes**   | `integer[]`              | 200         | Accepted HTTP status code(s) to cache the response.
+| **included_path**  | `string[]`               | `*`         | Accepted URI paths for caching the response.
+| **excluded_path**  | `string[]`               | `^/admin\b` | Rejected URI paths for caching the response.
+| **included_query** | `string[]`               | `NULL`      | Accepted query parameters for caching the response.
+| **excluded_query** | `string[]`               | `NULL`      | Rejected query parameters for caching.
+| **ignored_query**  | `string[]`               | `NULL`      | Ignored query parameters for caching the response.
+
+#### By Default
+
+All HTTP responses are cached unless:
+
+1.  the request method is not GET
+2.  the request URI path starts with `/admin…`
+3.  the request URI contains a query string
+4.  the response is not OK (200)
+
+#### Ignoring Query Strings
+
+If query strings don't affect the server's response, you can permit caching of requests by ignoring all query parameters:
+
+```json
+"ignored_query": "*"
+```
+
+or some of them:
+
+```json
+"ignored_query": [ "sort", "theme" ]
+```
+
 ## Helpers
 
 ### CachePoolAwareTrait
@@ -247,6 +313,7 @@ The charcoal-cache module follows the Charcoal coding-style:
 [app-provider]:     https://github.com/locomotivemtl/charcoal-app/blob/0.7.1/src/Charcoal/App/ServiceProvider/AppServiceProvider.php
 
 [pimple]:           https://packagist.org/packages/pimple/pimple
+[slim]:             https://packagist.org/packages/slim/slim
 [stash]:            https://packagist.org/packages/tedivm/stash
 [stash-drivers]:    https://github.com/tedious/Stash/blob/v0.14.2/src/Stash/DriverList.php
 [stash-docs]:       https://www.stashphp.com/
