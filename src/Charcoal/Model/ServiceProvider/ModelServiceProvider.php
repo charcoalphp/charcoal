@@ -17,6 +17,7 @@ use Charcoal\Property\GenericProperty;
 use Charcoal\Loader\CollectionLoader;
 use Charcoal\Model\Collection;
 use Charcoal\Model\ModelInterface;
+use Charcoal\Model\Service\MetadataConfig;
 use Charcoal\Model\Service\MetadataLoader;
 use Charcoal\Model\Service\ModelBuilder;
 use Charcoal\Model\Service\ModelLoaderBuilder;
@@ -31,10 +32,10 @@ use Charcoal\Source\DatabaseSource;
  * The following keys are expected to be set on the container
  * (from external sources / providers):
  *
- * - `cache` A PSR-6 compliant cache pool.
+ * - `cache` A PSR-6 caching pool.
  * - `config` A charcoal app config (\Charcoal\Config\ConfigInterface)q
  * - `database` A PDO database instance
- * - `logger` A PSR-3 compliant logger.
+ * - `logger` A PSR-3 logger.
  * - `view` A \Charcoal\View\ViewInterface instance
  *
  * ## Services
@@ -53,6 +54,7 @@ class ModelServiceProvider implements ServiceProviderInterface
     public function register(Container $container)
     {
         $this->registerModelDependencies($container);
+        $this->registerMetadataDependencies($container);
         $this->registerBuilderDependencies($container);
         $this->registerCollectionDependencies($container);
     }
@@ -188,21 +190,6 @@ class ModelServiceProvider implements ServiceProviderInterface
             };
         }
 
-        if (!isset($container['metadata/loader'])) {
-            /**
-             * @param Container $container A Pimple DI container.
-             * @return MetadataLoader
-             */
-            $container['metadata/loader'] = function (Container $container) {
-                return new MetadataLoader([
-                    'logger'    => $container['logger'],
-                    'cache'     => $container['cache'],
-                    'base_path' => $container['config']['base_path'],
-                    'paths'     => $container['config']['metadata.paths']
-                ]);
-            };
-        }
-
         if (!isset($container['source/factory'])) {
             /**
              * @param Container $container A Pimple DI container.
@@ -219,6 +206,72 @@ class ModelServiceProvider implements ServiceProviderInterface
                         'cache'  => $container['cache'],
                         'pdo'    => $container['database']
                     ]]
+                ]);
+            };
+        }
+    }
+
+    /**
+     * @param Container $container A Pimple DI container.
+     * @return void
+     */
+    protected function registerMetadataDependencies(Container $container)
+    {
+        if (!isset($container['metadata/config'])) {
+            /**
+             * The application's configset for "config.metadata".
+             *
+             * @param  Container $container Pimple DI container.
+             * @return MetadataConfig
+             */
+            $container['metadata/config'] = function (Container $container) {
+                $appConfig  = isset($container['config']) ? $container['config'] : [];
+                $metaConfig = isset($appConfig['metadata']) ? $appConfig['metadata'] : null;
+                return new MetadataConfig($metaConfig);
+            };
+        }
+
+        if (!isset($container['metadata/cache'])) {
+            /**
+             * The application's metadata source cache.
+             *
+             * @param  Container $container A container instance.
+             * @return \Psr\Cache\CacheItemPoolInterface|null
+             */
+            $container['metadata/cache'] = function (Container $container) {
+                $cache = $container['metadata/config']['cache'];
+                if (!is_object($cache)) {
+                    if (is_bool($cache)) {
+                        return $cache
+                               ? $container['cache']
+                               : $container['cache/builder']->build('memory');
+                    }
+
+                    if (is_array($cache)) {
+                        return $container['cache/builder']->build($cache);
+                    }
+                }
+
+                return $cache;
+            };
+        }
+
+        if (!isset($container['metadata/loader'])) {
+            /**
+             * The application's metadata source loader and factory.
+             *
+             * @param  Container $container A Pimple DI container.
+             * @return MetadataLoader
+             */
+            $container['metadata/loader'] = function (Container $container) {
+                $appConfig  = $container['config'];
+                $metaConfig = $container['metadata/config'];
+
+                return new MetadataLoader([
+                    'logger'    => $container['logger'],
+                    'cache'     => $container['metadata/cache'],
+                    'paths'     => $metaConfig['paths'],
+                    'base_path' => $appConfig['base_path'],
                 ]);
             };
         }

@@ -33,7 +33,7 @@ final class MetadataLoader implements LoggerAwareInterface
     /**
      * The PSR-6 caching service.
      *
-     * @var CacheItemPoolInterface $cachePool
+     * @var CacheItemPoolInterface
      */
     private $cachePool;
 
