@@ -382,8 +382,9 @@ trait FormTrait
 
             $GLOBALS['widget_template'] = $group->template();
 
+            // $group->isHidden = false;
             if ($this->isTabbable() && $i > 1) {
-                $group->isHidden = true;
+                $group->setIsHidden(true);
             }
             $i++;
 

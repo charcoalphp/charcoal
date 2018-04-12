@@ -74,6 +74,11 @@ trait FormGroupTrait
     private $tabCssClasses;
 
     /**
+     * @var boolean
+     */
+    private $isHidden;
+
+    /**
      * Comparison function used by {@see uasort()}.
      *
      * @param  PrioritizableInterface $a Sortable entity A.
@@ -280,5 +285,24 @@ trait FormGroupTrait
     public function tabCssClasses()
     {
         return $this->tabCssClasses;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isHidden()
+    {
+        return $this->isHidden;
+    }
+
+    /**
+     * @param boolean $isHidden
+     * @return self
+     */
+    public function setIsHidden($isHidden)
+    {
+        $this->isHidden = $isHidden;
+
+        return $this;
     }
 }
