@@ -27,10 +27,7 @@
            {{^ attachmentOptions.show_header }}
            aria-expanded="true"
            {{/ attachmentOptions.show_header }}>
-            {{& heading }}
-            {{^ active }}
-                <span class="small">&mdash; <em>{{# _t }}Disabled{{/ _t }}</em></span>
-            {{/ active }}
+            {{> charcoal/admin/widget/attachment/object/heading }}
        </a>
     </h4>
 </header>

@@ -15,10 +15,7 @@
             {{> charcoal/admin/widget/attachment/object/icon }}
         {{/ attachmentType }}
         <a class="text-dark" href="object/edit?obj_type={{ type }}&obj_id={{ id }}">
-            {{& heading }}
-            {{^ active }}
-                <span class="small">&mdash; <em>{{# _t }}Disabled{{/ _t }}</em></span>
-            {{/ active }}
+            {{> charcoal/admin/widget/attachment/object/heading }}
         </a>
     </h4>
 </header>
