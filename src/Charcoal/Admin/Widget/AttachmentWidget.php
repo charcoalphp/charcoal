@@ -604,7 +604,14 @@ class AttachmentWidget extends AdminWidget implements
             }
 
             if (isset($attMeta['fa_icon']) && !empty($attMeta['fa_icon'])) {
-                $faIcon = 'fa fa-'.$attMeta['fa_icon'];
+                $faIcon = $attMeta['fa_icon'];
+                if (!is_array($faIcon)) {
+                    $faIcon = [$faIcon];
+                }
+
+                foreach ($faIcon as &$icon) {
+                    $icon = 'fa fa-'.$icon;
+                }
             } else {
                 $attParts = explode('/', $attType);
                 if (isset($this->defaultIcons[end($attParts)])) {

@@ -9,7 +9,11 @@
         {{# attachmentOptions.show_icon }}
         {{# attachmentType }}
             {{# showIcon }}
-            <span class="panel-title-icon {{ faIcon }}"></span>
+            <span class="panel-title-icon">
+                {{# faIcon }}
+                <i class="{{ . }}"></i>
+                {{/ faIcon }}
+            </span>
             {{/ showIcon }}
         {{/ attachmentType }}
         {{/ attachmentOptions.show_icon }}

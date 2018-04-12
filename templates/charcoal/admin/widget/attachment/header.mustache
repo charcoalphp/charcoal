@@ -20,7 +20,10 @@
                    data-skip-form="{{ skipForm }}"
                    data-form-ident="{{ quickFormIdent }}">
                     {{# attachmentOptions.show_icon }}
-                    <span class="{{ faIcon }}"></span>
+                        {{# faIcon }}
+                            <i class="{{ . }}"></i>
+                        {{/ faIcon }}
+                        &nbsp;
                     {{/ attachmentOptions.show_icon }}
                     <span class="glyphicon-class">{{label}}</span>
                 </a>

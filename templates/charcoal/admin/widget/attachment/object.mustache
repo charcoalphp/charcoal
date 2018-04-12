@@ -19,7 +19,11 @@
             <h4 class="panel-title">
                 {{# attachmentType }}
                     {{# attachmentOptions.show_icon }}
-                        <span class="panel-title-icon {{ faIcon }}"></span>
+                        <span class="panel-title-icon">
+                            {{# faIcon }}
+                                <i class="{{ . }}"></i>
+                            {{/ faIcon }}
+                        </span>
                     {{/ attachmentOptions.show_icon }}
                 {{/ attachmentType }}
                 <a href="object/edit?obj_type={{ type }}&obj_id={{ id }}">{{& heading }}{{^ active }} <span class="small">&mdash; {{# _t }}Disabled{{/ _t }}</span>{{/ active }}</a>

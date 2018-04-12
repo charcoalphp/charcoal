@@ -3,7 +3,9 @@
         {{# attachmentOptions.show_icon }}
         {{# attachmentType }}
         <button type="button" class="btn btn-default" disabled>
-            <span class="{{ faIcon }}"></span>
+            {{# faIcon }}
+                <i class="{{ . }}"></i>
+            {{/ faIcon }}
         </button>
         {{/ attachmentType }}
         {{/ attachmentOptions.show_icon }}
@@ -16,7 +18,9 @@
         {{^ attachmentOptions.show_header }}
             {{# attachmentOptions.show_icon }}
             {{# attachmentType }}
-            <span class="{{ faIcon }}">&nbsp;</span>
+                {{# faIcon }}
+                    <i class="{{ . }}"></i>
+                {{/ faIcon }}
             {{/ attachmentType }}
             {{/ attachmentOptions.show_icon }}
         <span class="sr-only">{{# _t }}Actions{{/ _t }}</span>
@@ -57,7 +61,10 @@
                data-action="add-object">
             {{# attachmentOptions.show_icon }}
                 {{# attachmentType }}
-                    <span class="{{ faIcon }}">&nbsp;</span>
+                    {{# faIcon }}
+                        <i class="{{ . }}"></i>
+                    {{/ faIcon }}
+                    &nbsp;
                 {{/ attachmentType }}
             {{/ attachmentOptions.show_icon }}
             {{ label }}
