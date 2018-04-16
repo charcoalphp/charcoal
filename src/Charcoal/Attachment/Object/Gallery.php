@@ -12,4 +12,44 @@ use Charcoal\Attachment\Object\Container;
  */
 class Gallery extends Container
 {
+    /**
+     * The quantity of columns per row. Should be a multiple of 12.
+     *
+     * @var integer
+     */
+    protected $numColumns = 4;
+
+    /**
+     * Retrieve the container's attachments as rows containing columns.
+     *
+     * @return array
+     */
+    public function attachmentsAsRows()
+    {
+        $rows = [];
+
+        if ($this->hasAttachments()) {
+            $rows = array_chunk($this->attachments()->values(), $this->numColumns);
+
+            /** Map row content with useful front-end properties. */
+            array_walk($rows, function(&$value, $key) {
+                $value = [
+                    'columns' => $value,
+                    'isFirst' => $key === 0
+                ];
+            });
+        }
+
+        return $rows;
+    }
+
+    /**
+     * Retrieve the Bootstrap column width to be used in front-end templating.
+     *
+     * @return string
+     */
+    public function columnWidth()
+    {
+        return (string)ceil(12/$this->numColumns);
+    }
 }
