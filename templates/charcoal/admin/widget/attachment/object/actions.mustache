@@ -14,15 +14,14 @@
         type="button"
         data-toggle="dropdown">
             {{# attachmentOptions.show_header }}
-                <span class="btn-label">{{# _t }}Actions{{/ _t }}</span>
+                {{# _t }}Actions{{/ _t }}
             {{/ attachmentOptions.show_header }}
             {{^ attachmentOptions.show_header }}
                 {{# attachmentType }}
                     {{> charcoal/admin/widget/attachment/object/icon }}
                 {{/ attachmentType }}
-                <span class="sr-only">{{# _t }}Actions{{/ _t }}</span>
+                <span class="btn-label sr-only">{{# _t }}Actions{{/ _t }}</span>
             {{/ attachmentOptions.show_header }}
-        <span class="caret"></span>
     </button>
     <div class="dropdown-menu">
         {{# attachmentType }}
