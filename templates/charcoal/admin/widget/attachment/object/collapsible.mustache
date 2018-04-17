@@ -15,20 +15,21 @@
         {{# attachmentType }}
             {{> charcoal/admin/widget/attachment/object/icon }}
         {{/ attachmentType }}
-        <a role="button"
-           href="#{{ widgetId }}_body_{{ id }}"
-           class="text-dark {{# attachmentOptions.show_header }}collapsed{{/ attachmentOptions.show_header }}"
-           data-toggle="collapse"
-           data-parent="#{{ widgetId }}_accordion"
-           aria-controls="{{ widgetId }}_body_{{ id }}"
-           {{# attachmentOptions.show_header }}
-           aria-expanded="false"
-           {{/ attachmentOptions.show_header }}
-           {{^ attachmentOptions.show_header }}
-           aria-expanded="true"
-           {{/ attachmentOptions.show_header }}>
-            {{> charcoal/admin/widget/attachment/object/heading }}
-       </a>
+        <a
+            role="button"
+            href="#{{ widgetId }}_body_{{ id }}"
+            class="text-dark {{# attachmentOptions.show_header }}collapsed{{/ attachmentOptions.show_header }}"
+            data-toggle="collapse"
+            data-parent="#{{ widgetId }}_accordion"
+            aria-controls="{{ widgetId }}_body_{{ id }}"
+            {{# attachmentOptions.show_header }}
+            aria-expanded="false"
+            {{/ attachmentOptions.show_header }}
+            {{^ attachmentOptions.show_header }}
+            aria-expanded="true"
+            {{/ attachmentOptions.show_header }}>
+                {{> charcoal/admin/widget/attachment/object/heading }}
+        </a>
     </h4>
 </header>
 <section
@@ -37,6 +38,6 @@
     role="tabpanel"
     aria-labelledby="{{ widgetId }}_heading_{{ id }}">
     <div class="card-body">
-    {{> $widget_template }}
+        {{> $widget_template }}
     </div>
 </section>
