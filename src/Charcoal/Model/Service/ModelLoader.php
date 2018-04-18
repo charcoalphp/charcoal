@@ -275,6 +275,8 @@ final class ModelLoader implements ArrayAccess
     /**
      * Set the object type.
      *
+     * Based on {@see DescribableTrait::generateMetadataIdent()}.
+     *
      * @param  string $objType The object type to load with this loader.
      * @throws InvalidArgumentException If the object type is not a string.
      * @return ModelLoader Chainable
@@ -287,7 +289,10 @@ final class ModelLoader implements ArrayAccess
             );
         }
 
-        $this->objType = $this->factory->get($objType)->objType();
+        $objType = preg_replace('/([a-z])([A-Z])/', '$1-$2', $objType);
+        $objType = strtolower(str_replace('\\', '/', trim($objType, '\\/')));
+
+        $this->objType = $objType;
         return $this;
     }
 
