@@ -2,10 +2,11 @@
 
 namespace Charcoal\View;
 
-// Pimple dependencies
+// From Pimple
 use Pimple\ServiceProviderInterface;
 use Pimple\Container;
 
+// From 'erusev/parsedown'
 use Parsedown;
 
 // Module `charcoal-view` dependencies
@@ -216,23 +217,44 @@ class ViewServiceProvider implements ServiceProviderInterface
             };
         }
 
+        /**
+         * Asset helpers for Mustache.
+         *
+         * @return AssetsHelpers
+         */
         $container['view/mustache/helpers/assets'] = function () {
             return new AssetsHelpers();
         };
 
+        /**
+         * Translation helpers for Mustache.
+         *
+         * @return TranslatorHelpers
+         */
         $container['view/mustache/helpers/translator'] = function (Container $container) {
-            return new AssetsHelpers([
+            return new TranslatorHelpers([
                 'translator' => $container['translator']
             ]);
         };
 
-
+        /**
+         * Markdown helpers for Mustache.
+         *
+         * @return MarkdownHelpers
+         */
         $container['view/mustache/helpers/markdown'] = function (Container $container) {
             return new MarkdownHelpers([
                 'parsedown' => $container['view/parsedown']
             ]);
         };
 
+        /**
+         * Extend global helpers for the Mustache Engine.
+         *
+         * @param  array     $helpers   The Mustache helper collection.
+         * @param  Container $container A container instance.
+         * @return array
+         */
         $container->extend('view/mustache/helpers', function (array $helpers, Container $container) {
             return array_merge(
                 $helpers,
@@ -291,6 +313,8 @@ class ViewServiceProvider implements ServiceProviderInterface
         };
 
         /**
+         * A Markdown parser.
+         *
          * @return Parsedown
          */
         $container['view/parsedown'] = function () {
