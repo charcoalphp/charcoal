@@ -448,14 +448,20 @@ abstract class AbstractConfig extends AbstractEntity implements
      */
     private function loadYamlFile($path)
     {
-        $parser = new YamlParser();
-        $config = file_get_contents($path);
-        $config = $parser->parse($config);
-        if (!is_array($config)) {
+        try {
+            $parser = new YamlParser();
+            $data   = $parser->parse(file_get_contents($path));
+        } catch (Exception $e) {
+            $message = sprintf('YAML file "%s" could not be parsed: %s', $path, $e->getMessage());
+            throw new UnexpectedValueException($message, 0, $e);
+        }
+
+        if (!is_array($data)) {
             throw new UnexpectedValueException(
-                sprintf('YAML file "%s" could not be parsed', $path)
+                sprintf('YAML file "%s" does not return an array', $path)
             );
         }
-        return $config;
+
+        return $data;
     }
 }
