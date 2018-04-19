@@ -23,6 +23,7 @@ use Charcoal\Factory\FactoryInterface;
 // From 'charcoal-property'
 use Charcoal\Property\StructureProperty;
 use Charcoal\Property\Structure\StructureMetadata;
+use Charcoal\Property\Structure\StructureModel;
 
 /**
  * Model Structure Data Property
@@ -144,7 +145,7 @@ class ModelStructureProperty extends StructureProperty
      *
      * @var string
      */
-    private $structureModelClass = Model::class;
+    private $structureModelClass = StructureModel::class;
 
     /**
      * Store the factory instance.
