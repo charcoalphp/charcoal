@@ -385,45 +385,25 @@ abstract class AbstractConfig extends AbstractEntity implements
      *
      * @param  string $path A path to a JSON file.
      * @throws UnexpectedValueException If the file can not correctly be parsed into an array.
-     * @return mixed
+     * @return array An associative array on success.
      */
     private function loadJsonFile($path)
     {
-        $config  = file_get_contents($path);
-        $config  = json_decode($config, true);
-        $errCode = json_last_error();
-        if ($errCode == JSON_ERROR_NONE) {
-            return $config;
+        $data = json_decode(file_get_contents($path), true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            $error = json_last_error_msg() ?: 'Unknown error';
+            throw new UnexpectedValueException(
+                sprintf('JSON file "%s" could not be parsed: %s', $path, $error)
+            );
         }
 
-        // Handle JSON error
-        $errMsg = '';
-        switch ($errCode) {
-            case JSON_ERROR_NONE:
-                break;
-            case JSON_ERROR_DEPTH:
-                $errMsg = 'Maximum stack depth exceeded';
-                break;
-            case JSON_ERROR_STATE_MISMATCH:
-                $errMsg = 'Underflow or the modes mismatch';
-                break;
-            case JSON_ERROR_CTRL_CHAR:
-                $errMsg = 'Unexpected control character found';
-                break;
-            case JSON_ERROR_SYNTAX:
-                $errMsg = 'Syntax error, malformed JSON';
-                break;
-            case JSON_ERROR_UTF8:
-                $errMsg = 'Malformed UTF-8 characters, possibly incorrectly encoded';
-                break;
-            default:
-                $errMsg = 'Unknown error';
-                break;
+        if (!is_array($data)) {
+            throw new UnexpectedValueException(
+                sprintf('JSON file "%s" does not return an array', $path)
+            );
         }
 
-        throw new UnexpectedValueException(
-            sprintf('JSON file "%s" could not be parsed: "%s"', $path, $errMsg)
-        );
+        return $data;
     }
 
     /**
