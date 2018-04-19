@@ -2,39 +2,44 @@
 
 namespace Charcoal\Config;
 
-use Traversable;
-
 /**
- * Config Interface
+ * Describes a configuration container / registry.
  */
 interface ConfigInterface extends
     DelegatesAwareInterface,
     EntityInterface,
     SeparatorAwareInterface
 {
+    /**
+     * Gets the default data.
+     *
+     * Pre-populates new configsets.
+     *
+     * @return array Key-value array of data
+     */
+    public function defaults();
 
     /**
-     * @param  array|\Traversable $data The map of [$key=>$item] items to set.
+     * Adds new data, replacing / merging existing data with the same key.
+     *
+     * @param  array|\Traversable $data Key-value array of data to merge.
      * @return ConfigInterface Chainable
      */
     public function merge($data);
 
     /**
-     * The default data, called from object's constructor.
+     * Add a configuration file to the configset.
      *
-     * @return array
-     */
-    public function defaults();
-
-    /**
-     * @param  string $filename The file to load and add.
+     * @param  string $path The file to load and add.
      * @return ConfigInterface Chainable
      */
-    public function addFile($filename);
+    public function addFile($path);
 
     /**
-     * @param  string $filename The file to load.
+     * Load a configuration file as an array.
+     *
+     * @param  string $path A path to a supported file.
      * @return mixed The file content.
      */
-    public function loadFile($filename);
+    public function loadFile($path);
 }
