@@ -429,14 +429,25 @@ abstract class AbstractConfig extends AbstractEntity implements
     /**
      * Load a PHP file, maybe as an array.
      *
+     * Note:
+     * - The context of $this is bound to the current object.
+     * - Data may be any value; the {@see self::addFile()} method will ignore
+     *   anything that isn't an (associative) array.
+     *
      * @param  string $path A path to a PHP file.
-     * @return mixed
+     * @throws UnexpectedValueException If the file can not correctly be parsed.
+     * @return mixed Maybe an associative array on success.
      */
     private function loadPhpFile($path)
     {
-        // `$this` is bound to the current configuration object (Current `$this`)
-        $config = include $path;
-        return $config;
+        try {
+            $data = include $path;
+        } catch (Exception $e) {
+            $message = sprintf('PHP file "%s" could not be parsed: %s', $path, $e->getMessage());
+            throw new UnexpectedValueException($message, 0, $e);
+        }
+
+        return $data;
     }
 
     /**
