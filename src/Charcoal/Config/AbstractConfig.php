@@ -95,16 +95,14 @@ abstract class AbstractConfig extends AbstractEntity implements
      * The provided `$data` can be a simple array or an object which implements `Traversable`
      * (such as a `ConfigInterface` instance).
      *
+     * @uses   self::offsetReplace()
      * @param  array|Traversable|ConfigInterface $data Key-value array of data to merge.
      * @return self
      */
     public function merge($data)
     {
-        foreach ($data as $k => $v) {
-            if (is_array($v) && isset($this[$k]) && is_array($this[$k])) {
-                $v = array_replace_recursive($this[$k], $v);
-            }
-            $this[$k] = $v;
+        foreach ($data as $key => $value) {
+            $this->offsetReplace($key, $value);
         }
         return $this;
     }
@@ -255,6 +253,46 @@ abstract class AbstractConfig extends AbstractEntity implements
         }
 
         $this->keys[$key] = true;
+    }
+
+    /**
+     * Replaces the value from the specified key.
+     *
+     * Routine:
+     * - When the value in the Config and the new value are both arrays,
+     *   the method will replace their respective value recursively.
+     * - Then or otherwise, the new value is {@see self::offsetSet() assigned} to the Config.
+     *
+     * @uses   self::offsetSet()
+     * @uses   array_replace_recursive()
+     * @param  string $key   The data key to assign or merge $value to.
+     * @param  mixed  $value The data value to assign to or merge with $key.
+     * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
+     * @return void
+     */
+    public function offsetReplace($key, $value)
+    {
+        if (is_numeric($key)) {
+            throw new InvalidArgumentException(
+                'Entity array access only supports non-numeric keys'
+            );
+        }
+
+        $key = $this->camelize($key);
+
+        /** @internal Edge Case: "_" → "" */
+        if ($key === '') {
+            return;
+        }
+
+        if (is_array($value) && isset($this[$key])) {
+            $data = $this[$key];
+            if (is_array($data)) {
+                $value = array_replace_recursive($data, $value);
+            }
+        }
+
+        $this[$key] = $value;
     }
 
     /**
