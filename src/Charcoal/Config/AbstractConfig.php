@@ -6,6 +6,7 @@ use ArrayIterator;
 use IteratorAggregate;
 use Traversable;
 use InvalidArgumentException;
+use UnexpectedValueException;
 
 // From 'symfony/yaml'
 use Symfony\Component\Yaml\Parser as YamlParser;
@@ -296,11 +297,11 @@ abstract class AbstractConfig extends AbstractEntity implements
     }
 
     /**
-     * Add a configuration file. The file type is determined by its extension.
+     * Add a configuration file to the configset.
      *
      * Supported file types are `ini`, `json`, `php`
      *
-     * @param  string $path A supported configuration file.
+     * @param  string $path The file to load and add.
      * @throws InvalidArgumentException If the file is invalid.
      * @return self
      */
@@ -314,13 +315,13 @@ abstract class AbstractConfig extends AbstractEntity implements
     }
 
     /**
-     * Load a configuration file. The file type is determined by its extension.
+     * Load a configuration file as an array.
      *
      * Supported file types are `ini`, `json`, `php`
      *
-     * @param  string $path A supported configuration file.
-     * @throws InvalidArgumentException If the filename is invalid.
-     * @return mixed
+     * @param  string $path A path to a supported file.
+     * @throws InvalidArgumentException If the path is invalid.
+     * @return array An associative array on success.
      */
     public function loadFile($path)
     {
@@ -329,6 +330,7 @@ abstract class AbstractConfig extends AbstractEntity implements
                 'Configuration file must be a string'
             );
         }
+
         if (!file_exists($path)) {
             throw new InvalidArgumentException(
                 sprintf('Configuration file "%s" does not exist', $path)
@@ -336,48 +338,53 @@ abstract class AbstractConfig extends AbstractEntity implements
         }
 
         $ext = pathinfo($path, PATHINFO_EXTENSION);
+        switch ($ext) {
+            case 'php':
+                return $this->loadPhpFile($path);
 
-        if ($ext === 'php') {
-            return $this->loadPhpFile($path);
-        } elseif ($ext === 'json') {
-            return $this->loadJsonFile($path);
-        } elseif ($ext === 'ini') {
-            return $this->loadIniFile($path);
-        } elseif ($ext === 'yml' || $ext === 'yaml') {
-            return $this->loadYamlFile($path);
-        } else {
-            $validConfigExts = [ 'php', 'json', 'yml', 'ini' ];
-            throw new InvalidArgumentException(sprintf(
-                'Unsupported configuration file; must be one of "%s", received "%s"',
-                implode('","', $validConfigExts),
-                $ext
-            ));
+            case 'json':
+                return $this->loadJsonFile($path);
+
+            case 'ini':
+                return $this->loadIniFile($path);
+
+            case 'yml':
+            case 'yaml':
+                return $this->loadYamlFile($path);
         }
+
+        $validConfigExts = [ 'ini', 'json', 'php', 'yml' ];
+        throw new InvalidArgumentException(sprintf(
+            'Unsupported file format for "%s"; must be one of "%s"',
+            $path,
+            implode('","', $validConfigExts)
+        ));
     }
 
     /**
-     * Add a `.ini` file to the configuration.
+     * Load an INI file as an array.
      *
-     * @param  string $path A INI configuration file.
-     * @throws InvalidArgumentException If the file or invalid.
-     * @return mixed
+     * @param  string $path A path to an INI file.
+     * @throws UnexpectedValueException If the file can not correctly be parsed into an array.
+     * @return array An associative array on success.
      */
     private function loadIniFile($path)
     {
-        $config = parse_ini_file($path, true);
-        if ($config === false) {
-            throw new InvalidArgumentException(
-                sprintf('Ini file "%s" is empty or invalid', $path)
+        $data = parse_ini_file($path, true);
+        if ($data === false) {
+            throw new UnexpectedValueException(
+                sprintf('INI file "%s" is empty or invalid', $path)
             );
         }
-        return $config;
+
+        return $data;
     }
 
     /**
-     * Add a `.json` file to the configuration.
+     * Load a JSON file as an array.
      *
-     * @param  string $path A JSON configuration file.
-     * @throws InvalidArgumentException If the file or invalid.
+     * @param  string $path A path to a JSON file.
+     * @throws UnexpectedValueException If the file can not correctly be parsed into an array.
      * @return mixed
      */
     private function loadJsonFile($path)
@@ -414,15 +421,15 @@ abstract class AbstractConfig extends AbstractEntity implements
                 break;
         }
 
-        throw new InvalidArgumentException(
+        throw new UnexpectedValueException(
             sprintf('JSON file "%s" could not be parsed: "%s"', $path, $errMsg)
         );
     }
 
     /**
-     * Add a PHP file to the configuration
+     * Load a PHP file, maybe as an array.
      *
-     * @param  string $path A PHP configuration file.
+     * @param  string $path A path to a PHP file.
      * @return mixed
      */
     private function loadPhpFile($path)
@@ -433,11 +440,11 @@ abstract class AbstractConfig extends AbstractEntity implements
     }
 
     /**
-     * Add a YAML file to the configuration
+     * Load a YAML file as an array.
      *
-     * @param  string $path A YAML configuration file.
-     * @throws InvalidArgumentException If the YAML file can not correctly be parsed into an array.
-     * @return mixed
+     * @param  string $path A path to a YAML/YML file.
+     * @throws UnexpectedValueException If the file can not correctly be parsed into an array.
+     * @return array An associative array on success.
      */
     private function loadYamlFile($path)
     {
@@ -445,8 +452,8 @@ abstract class AbstractConfig extends AbstractEntity implements
         $config = file_get_contents($path);
         $config = $parser->parse($config);
         if (!is_array($config)) {
-            throw new InvalidArgumentException(
-                sprintf('YAML file "%s" could not be parsed (invalid yaml)', $path)
+            throw new UnexpectedValueException(
+                sprintf('YAML file "%s" could not be parsed', $path)
             );
         }
         return $config;
