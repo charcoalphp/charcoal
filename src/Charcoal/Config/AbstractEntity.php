@@ -2,24 +2,32 @@
 
 namespace Charcoal\Config;
 
-// Dependencies from `PHP`
 use ArrayAccess;
 use InvalidArgumentException;
 
 /**
- * Default Charcoal core entity (data container).
+ * Default data model.
+ *
+ * ### Notes on {@see \ArrayAccess}:
+ *
+ * - Keys SHOULD be formatted as "snake_case" (e.g., "first_name") or "camelCase" (e.g., "firstName").
+ *   and WILL be converted to the latter {@see PSR-1} to access or assign values.
+ * - Values are accessed and assigned via methods and properties which MUST be formatted as "camelCase",
+ *   e.g.: `$firstName`, `firstName()`, `setFirstName()`.
+ * - A key-value pair is internally passed to a (non-private / non-static) setter method (if present)
+ *   or assigned to a (non-private / non-static) property (declared or not) and tracks affected keys.
  */
 abstract class AbstractEntity implements EntityInterface
 {
-
     /**
-     * Keep a list of all config keys available.
-     * @var array $keys
+     * Holds a list of all data keys.
+     *
+     * @var array
      */
     protected $keys = [];
 
     /**
-     * Get the configuration's available keys.
+     * Gets the data keys on this entity.
      *
      * @return array
      */
@@ -29,54 +37,59 @@ abstract class AbstractEntity implements EntityInterface
     }
 
     /**
-     * Gets the entity data, as associative array map.
+     * Gets all data, or a subset, from this entity.
      *
-     * @param  array $filters Optional. Property filters.
-     * @return array The data map.
+     * @uses   self::offsetExists()
+     * @uses   self::offsetGet()
+     * @param  string[] $keys Optional. Extracts only the requested data.
+     * @return array Key-value array of data, excluding pairs with NULL values.
      */
-    public function data(array $filters = null)
+    public function data(array $keys = null)
     {
-        unset($filters);
-        $ret = [];
-        $keys = $this->keys();
-        foreach ($keys as $k) {
-            if ($k == 'data') {
-                // Avoid recursive call
+        if ($keys === null) {
+            $keys = $this->keys();
+        }
+
+        $data = [];
+        foreach ($keys as $key) {
+            if (strtolower($key) === 'data') {
+                /** @internal Edge Case: Avoid recursive call */
                 continue;
             }
-            if (isset($this[$k])) {
-                $ret[$k] = $this[$k];
+
+            if (isset($this[$key])) {
+                $data[$key] = $this[$key];
             }
         }
-        return $ret;
+        return $data;
     }
 
     /**
-     * Sets the entity data, from associative array map.
+     * Sets data on this entity.
      *
-     * This function takes an array and fill the property with its value.
-     *
-     * @see    self::offsetSet()
-     * @param  array $data The entity data. Will call setters.
+     * @uses   self::offsetSet()
+     * @param  array $data Key-value array of data to append.
      * @return self
      */
     public function setData(array $data)
     {
-        foreach ($data as $prop => $val) {
-            $this[$prop] = $val;
+        foreach ($data as $key => $value) {
+            if (strtolower($key) === 'data') {
+                /** @internal Edge Case: Avoid recursive call */
+                continue;
+            }
+
+            $this[$key] = $value;
         }
         return $this;
     }
 
     /**
-     * Returns true if the container can return an entry for the given identifier.
-     * Returns false otherwise.
+     * Determines if this entity contains the specified key and if its value is not NULL.
      *
-     * `has($key)` returning true does not mean that `get($key)` will not throw an exception.
-     * It does however mean that `get($id)` will not throw a `NotFoundException`.
-     *
-     * @param  string $key Identifier of the entry to look for.
-     * @return boolean
+     * @uses   self::offsetExists()
+     * @param  string $key The data key to check.
+     * @return boolean TRUE if $key exists and has a value other than NULL, FALSE otherwise.
      */
     public function has($key)
     {
@@ -86,9 +99,9 @@ abstract class AbstractEntity implements EntityInterface
     /**
      * Find an entry of the configuration by its key and retrieve it.
      *
-     * @see    self::offsetGet()
-     * @param  string $key The key of the configuration item to look for.
-     * @return mixed
+     * @uses   self::offsetGet()
+     * @param  string $key The data key to retrieve.
+     * @return mixed Value of the requested $key on success, NULL if the $key is not set.
      */
     public function get($key)
     {
@@ -96,14 +109,12 @@ abstract class AbstractEntity implements EntityInterface
     }
 
     /**
-     * Assign a value to the specified key of the configuration.
+     * Assign a value to the specified key on this entity.
      *
-     * Public method variant of setting by array key.
-     *
-     * @see    self::offsetSet()
-     * @param  string $key   The key to assign $value to.
-     * @param  mixed  $value Value to assign to $key.
-     * @return self
+     * @uses   self::offsetSet()
+     * @param  string $key   The data key to assign $value to.
+     * @param  mixed  $value The data value to assign to $key.
+     * @return self Chainable
      */
     public function set($key, $value)
     {
@@ -112,12 +123,18 @@ abstract class AbstractEntity implements EntityInterface
     }
 
     /**
-     * Determine if a configuration key exists.
+     * Determines if this entity contains the specified key and if its value is not NULL.
      *
-     * @see    ArrayAccess::offsetExists()
-     * @param  string $key The key of the configuration item to look for.
-     * @throws InvalidArgumentException If the key argument is not a string or is a "numeric" value.
-     * @return boolean
+     * Routine:
+     * - If the entity has a getter method (e.g., "foo_bar" → `fooBar()`),
+     *   its called and its value is checked;
+     * - If the entity has a property (e.g., `$fooBar`), its value is checked;
+     * - If the entity has neither, FALSE is returned.
+     *
+     * @see    \ArrayAccess
+     * @param  string $key The data key to check.
+     * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
+     * @return boolean TRUE if $key exists and has a value other than NULL, FALSE otherwise.
      */
     public function offsetExists($key)
     {
@@ -128,7 +145,13 @@ abstract class AbstractEntity implements EntityInterface
         }
 
         $key = $this->camelize($key);
-        if (is_callable([$this, $key])) {
+
+        /** @internal Edge Case: "_" → "" */
+        if ($key === '') {
+            return false;
+        }
+
+        if (is_callable([ $this, $key ])) {
             $value = $this->{$key}();
         } else {
             if (!isset($this->{$key})) {
@@ -136,16 +159,23 @@ abstract class AbstractEntity implements EntityInterface
             }
             $value = $this->{$key};
         }
+
         return ($value !== null);
     }
 
     /**
-     * Find an entry of the configuration by its key and retrieve it.
+     * Returns the value from the specified key on this entity.
      *
-     * @see    ArrayAccess::offsetGet()
-     * @param  string $key The key of the configuration item to look for.
-     * @throws InvalidArgumentException If the key argument is not a string or is a "numeric" value.
-     * @return mixed The value (or null)
+     * Routine:
+     * - If the entity has a getter method (e.g., "foo_bar" → `fooBar()`),
+     *   its called and returns its value;
+     * - If the entity has a property (e.g., `$fooBar`), its value is returned;
+     * - If the entity has neither, NULL is returned.
+     *
+     * @see    \ArrayAccess
+     * @param  string $key The data key to retrieve.
+     * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
+     * @return mixed Value of the requested $key on success, NULL if the $key is not set.
      */
     public function offsetGet($key)
     {
@@ -157,7 +187,12 @@ abstract class AbstractEntity implements EntityInterface
 
         $key = $this->camelize($key);
 
-        if (is_callable([$this, $key])) {
+        /** @internal Edge Case: "_" → "" */
+        if ($key === '') {
+            return null;
+        }
+
+        if (is_callable([ $this, $key ])) {
             return $this->{$key}();
         } else {
             if (isset($this->{$key})) {
@@ -169,16 +204,18 @@ abstract class AbstractEntity implements EntityInterface
     }
 
     /**
-     * Assign a value to the specified key of the configuration.
+     * Assigns the value to the specified key on this entity.
      *
-     * Set the value either by:
-     * - a setter method (`set_{$key}()`)
-     * - setting (or overriding)
+     * Routine:
+     * - The data key is added to the {@see self::$keys entity's key pool}.
+     * - If the entity has a setter method (e.g., "foo_bar" → `setFooBar()`),
+     *   its called and passed the value;
+     * - If the entity has NO setter method, the value is assigned to a property (e.g., `$fooBar`).
      *
-     * @see    ArrayAccess::offsetSet()
-     * @param  string $key   The key to assign $value to.
-     * @param  mixed  $value Value to assign to $key.
-     * @throws InvalidArgumentException If the key argument is not a string or is a "numeric" value.
+     * @see    \ArrayAccess
+     * @param  string $key   The data key to assign $value to.
+     * @param  mixed  $value The data value to assign to $key.
+     * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
      * @return void
      */
     public function offsetSet($key, $value)
@@ -190,26 +227,33 @@ abstract class AbstractEntity implements EntityInterface
         }
 
         $key = $this->camelize($key);
-        $setter = 'set'.ucfirst($key);
 
-        // Case: url.com?_=something
-        if ($setter === 'set') {
+        /** @internal Edge Case: "_" → "" */
+        if ($key === '') {
             return;
         }
 
-        if (is_callable([$this, $setter])) {
+        $setter = 'set'.ucfirst($key);
+        if (is_callable([ $this, $setter ])) {
             $this->{$setter}($value);
         } else {
             $this->{$key} = $value;
         }
+
         $this->keys[$key] = true;
     }
 
     /**
-     * ArrayAccess > offsetUnset()
+     * Removes the value from the specified key on this entity.
      *
-     * @param  string $key The key of the configuration item to remove.
-     * @throws InvalidArgumentException If the key argument is not a string or is a "numeric" value.
+     * Routine:
+     * - The data key is removed from the {@see self::$keys entity's key pool}.
+     * - NULL is {@see self::offsetSet() assigned} to the entity.
+     *
+     * @see    \ArrayAccess
+     * @uses   self::offsetSet()
+     * @param  string $key The data key to remove.
+     * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
      * @return void
      */
     public function offsetUnset($key)
@@ -219,14 +263,23 @@ abstract class AbstractEntity implements EntityInterface
                 'Entity array access only supports non-numeric keys'
             );
         }
+
         $key = $this->camelize($key);
+
+        /** @internal Edge Case: "_" → "" */
+        if ($key === '') {
+            return;
+        }
+
         $this[$key] = null;
         unset($this->keys[$key]);
     }
+
     /**
-     * JsonSerializable > jsonSerialize()
+     * Gets the data that can be serialized with {@see json_encode()}.
      *
-     * @return array
+     * @see    \JsonSerializable
+     * @return array Key-value array of data.
      */
     public function jsonSerialize()
     {
@@ -234,9 +287,10 @@ abstract class AbstractEntity implements EntityInterface
     }
 
     /**
-     * Serializable > serialize()
+     * Serializes the data on this entity.
      *
-     * @return string
+     * @see    \Serializable
+     * @return string Returns a string containing a byte-stream representation of the object.
      */
     public function serialize()
     {
@@ -244,22 +298,23 @@ abstract class AbstractEntity implements EntityInterface
     }
 
     /**
-     * Serializable > unserialize()
+     * Applies the serialized data to this entity.
      *
-     * @param  string $serialized The serialized data (with `serialize()`).
+     * @see    \Serializable
+     * @param  string $data The serialized data to extract.
      * @return void
      */
-    public function unserialize($serialized)
+    public function unserialize($data)
     {
-        $unserialized = unserialize($serialized);
-        $this->setData($unserialized);
+        $data = unserialize($data);
+        $this->setData($data);
     }
 
     /**
-     * Transform a snake_case string to camelCase.
+     * Transform a string from "snake_case" to "camelCase".
      *
-     * @param  string $str The snake_case string to camelize.
-     * @return string The camelcase'd string.
+     * @param  string $str The string to camelize.
+     * @return string The camelized string.
      */
     final protected function camelize($str)
     {

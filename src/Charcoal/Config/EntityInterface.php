@@ -7,7 +7,7 @@ use JsonSerializable;
 use Serializable;
 
 /**
- *
+ * Describes a conceptual data model.
  */
 interface EntityInterface extends
     ArrayAccess,
@@ -15,57 +15,50 @@ interface EntityInterface extends
     Serializable
 {
     /**
-     * Get the entity available keys.
+     * Gets the data keys on this entity.
      *
      * @return array
      */
     public function keys();
 
     /**
-     * Gets the entity data, as associative array map.
+     * Gets all data, or a subset, from this entity.
      *
-     * @param  array $filters Optional. Property filters.
-     * @return array The data map.
+     * @param  string[] $keys Optional. Extracts only the requested data.
+     * @return array An associative array.
      */
-    public function data(array $filters = null);
+    public function data(array $keys = null);
 
     /**
-     * Sets the entity data, from associative array map (or any other Traversable).
+     * Sets data on this entity.
      *
-     * This function takes an array and fill the property with its value.
-     *
-     * @param  array $data The entity data.
+     * @param  array $data An associative array.
      * @return EntityInterface Chainable
      */
     public function setData(array $data);
 
     /**
-     * Returns true if the container can return an entry for the given identifier.
-     * Returns false otherwise.
+     * Determines if this entity contains the specified key and if its value is not NULL.
      *
-     * `has($key)` returning true does not mean that `get($key)` will not throw an exception.
-     * It does however mean that `get($id)` will not throw a `NotFoundException`.
-     *
-     * @param  string $key Identifier of the entry to look for.
-     * @return boolean
+     * @param  string $key The data key to check.
+     * @return boolean TRUE if $key exists and has a value other than NULL, FALSE otherwise.
      */
     public function has($key);
 
     /**
-     * Finds an entry of the container by its identifier and returns it.
+     * Find an entry of the configuration by its key and retrieve it.
      *
-     * @see    ContainerInterface::get()
-     * @param  string $key Identifier of the entry to look for.
-     * @throws NotFoundException  No entry was found for this identifier.
-     * @throws ContainerException Error while retrieving the entry.
-     * @return mixed Entry.
+     * @param  string $key The data key to retrieve.
+     * @return mixed Value of the requested $key on success, NULL if the $key is not set.
      */
     public function get($key);
 
     /**
-     * @param  string $key Identifier of the entry to set.
-     * @param  mixed  $val The value to set.
+     * Assign a value to the specified key on this entity.
+     *
+     * @param  string $key   The data key to assign $value to.
+     * @param  mixed  $value The data value to assign to $key.
      * @return EntityInterface Chainable
      */
-    public function set($key, $val);
+    public function set($key, $value);
 }
