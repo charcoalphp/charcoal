@@ -3,25 +3,33 @@
 namespace Charcoal\Config;
 
 /**
+ * Describes an object that can perform lookups in other objects.
  *
+ * This interface can be fully implemented with its accompanying {@see DelegatesAwareTrait}.
  */
 interface DelegatesAwareInterface
 {
     /**
-     * @param  EntityInterface[] $delegates The list of delegates to add.
-     * @return EntityInterface Chainable.
+     * Appends a collection of delegare objects.
+     *
+     * @param  EntityInterface[] $delegates One or more delegate objects to register.
+     * @return DelegatesAwareInterface Chainable
      */
     public function setDelegates(array $delegates);
 
     /**
-     * @param  EntityInterface $delegate A config object to add as delegate.
-     * @return EntityInterface Chainable
+     * Appends a delegare object onto the delegate stack.
+     *
+     * @param  EntityInterface $delegate A delegate object to register.
+     * @return DelegatesAwareInterface Chainable
      */
     public function addDelegate(EntityInterface $delegate);
 
     /**
-     * @param  EntityInterface $delegate A config object to prepend as delegate.
-     * @return EntityInterface Chainable
+     * Prepends a delegare object onto the delegate stack.
+     *
+     * @param  EntityInterface $delegate A delegate object to register.
+     * @return DelegatesAwareInterface Chainable
      */
     public function prependDelegate(EntityInterface $delegate);
 }
