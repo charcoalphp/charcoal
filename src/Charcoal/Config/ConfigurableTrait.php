@@ -36,7 +36,7 @@ trait ConfigurableTrait
             $this->config = $config;
         } else {
             throw new InvalidArgumentException(
-                'Configuration must be an array or a ConfigInterface object.'
+                'Configuration must be an array or a ConfigInterface object'
             );
         }
         return $this;
@@ -49,7 +49,7 @@ trait ConfigurableTrait
      *
      * If a key is provided, return the configuration key value instead of the full object.
      *
-     * @param string $key Optional. If provided, the config key value will be returned, instead of the full object.
+     * @param  string $key Optional. If provided, the config key value will be returned, instead of the full object.
      * @see    self::create_config()
      * @return ConfigInterface
      */

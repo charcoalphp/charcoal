@@ -16,7 +16,7 @@ trait DelegatesAwareTrait
     private $delegates = [];
 
     /**
-     * @param EntityInterface[] $delegates The array of delegates (config) to set.
+     * @param  EntityInterface[] $delegates The array of delegates (config) to set.
      * @return self
      */
     final public function setDelegates(array $delegates)
@@ -29,7 +29,7 @@ trait DelegatesAwareTrait
     }
 
     /**
-     * @param EntityInterface $delegate A delegate (config) instance.
+     * @param  EntityInterface $delegate A delegate (config) instance.
      * @return self
      */
     final public function addDelegate(EntityInterface $delegate)
@@ -39,7 +39,7 @@ trait DelegatesAwareTrait
     }
 
     /**
-     * @param EntityInterface $delegate A delegate (config) instance.
+     * @param  EntityInterface $delegate A delegate (config) instance.
      * @return self
      */
     final public function prependDelegate(EntityInterface $delegate)
@@ -49,7 +49,7 @@ trait DelegatesAwareTrait
     }
 
     /**
-     * @param string $key The key of the configuration item to check.
+     * @param  string $key The key of the configuration item to check.
      * @return boolean
      */
     final protected function hasInDelegates($key)
@@ -63,7 +63,7 @@ trait DelegatesAwareTrait
     }
 
     /**
-     * @param string $key The key of the configuration item to fetch.
+     * @param  string $key The key of the configuration item to fetch.
      * @return mixed The item, if found, or null.
      */
     final protected function getInDelegates($key)

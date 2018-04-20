@@ -21,7 +21,7 @@ trait SeparatorAwareTrait
     protected $separator = '';
 
     /**
-     * @param string $separator A single-character to delimit nested options.
+     * @param  string $separator A single-character to delimit nested options.
      * @throws InvalidArgumentException If $separator is invalid.
      * @return self
      */
@@ -29,12 +29,12 @@ trait SeparatorAwareTrait
     {
         if (!is_string($separator)) {
             throw new InvalidArgumentException(
-                'Separator needs to be a string.'
+                'Separator needs to be a string'
             );
         }
         if (strlen($separator) > 1) {
             throw new InvalidArgumentException(
-                'Separator needs to be only one-character, or empty.'
+                'Separator needs to be only one-character, or empty'
             );
         }
         $this->separator = $separator;
@@ -50,7 +50,7 @@ trait SeparatorAwareTrait
     }
 
     /**
-     * @param string $key The key of the configuration item to look for.
+     * @param  string $key The key of the configuration item to look for.
      * @return mixed The value (or null)
      */
     final protected function getWithSeparator($key)
@@ -70,7 +70,7 @@ trait SeparatorAwareTrait
     }
 
     /**
-     * @param string $key The key of the configuration item to look for.
+     * @param  string $key The key of the configuration item to look for.
      * @return boolean
      */
     final protected function hasWithSeparator($key)
@@ -90,9 +90,8 @@ trait SeparatorAwareTrait
     }
 
     /**
-     * @param string $key   The key to assign $value to.
-     * @param mixed  $value Value to assign to $key.
-     * @throws Exception If a value already exists and is scalar (can not be merged).
+     * @param  string $key   The key to assign $value to.
+     * @param  mixed  $value Value to assign to $key.
      * @return void
      */
     final protected function setWithSeparator($key, $value)

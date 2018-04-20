@@ -34,8 +34,8 @@ abstract class AbstractConfig extends AbstractEntity implements
     /**
      * Create the configuration.
      *
-     * @param mixed             $data      Optional default data. Either a filename, an array, or a Config object.
-     * @param ConfigInterface[] $delegates An array of delegates (config) to set.
+     * @param  mixed             $data      Optional default data. Either a filename, an array, or a Config object.
+     * @param  ConfigInterface[] $delegates An array of delegates (config) to set.
      * @throws InvalidArgumentException If $data is invalid.
      */
     final public function __construct($data = null, array $delegates = null)
@@ -62,7 +62,7 @@ abstract class AbstractConfig extends AbstractEntity implements
             $this->merge($data);
         } else {
             throw new InvalidArgumentException(
-                'Data must be an array, a file string or a ConfigInterface object.'
+                'Data must be an array, a file string or a ConfigInterface object'
             );
         }
     }
@@ -70,8 +70,8 @@ abstract class AbstractConfig extends AbstractEntity implements
     /**
      * Determine if a configuration key exists.
      *
-     * @see ArrayAccess::offsetExists()
-     * @param string $key The key of the configuration item to look for.
+     * @see    ArrayAccess::offsetExists()
+     * @param  string $key The key of the configuration item to look for.
      * @throws InvalidArgumentException If the key argument is not a string or is a "numeric" value.
      * @return boolean
      */
@@ -79,7 +79,7 @@ abstract class AbstractConfig extends AbstractEntity implements
     {
         if (is_numeric($key)) {
             throw new InvalidArgumentException(
-                'Entity array access only supports non-numeric keys.'
+                'Entity array access only supports non-numeric keys'
             );
         }
 
@@ -102,8 +102,8 @@ abstract class AbstractConfig extends AbstractEntity implements
     /**
      * Find an entry of the configuration by its key and retrieve it.
      *
-     * @see ArrayAccess::offsetGet()
-     * @param string $key The key of the configuration item to look for.
+     * @see    ArrayAccess::offsetGet()
+     * @param  string $key The key of the configuration item to look for.
      * @throws InvalidArgumentException If the key argument is not a string or is a "numeric" value.
      * @return mixed The value (or null)
      */
@@ -111,7 +111,7 @@ abstract class AbstractConfig extends AbstractEntity implements
     {
         if (is_numeric($key)) {
             throw new InvalidArgumentException(
-                'Entity array access only supports non-numeric keys.'
+                'Entity array access only supports non-numeric keys'
             );
         }
         if ($this->separator && strstr($key, $this->separator)) {
@@ -137,9 +137,9 @@ abstract class AbstractConfig extends AbstractEntity implements
      * - a setter method (`set_{$key}()`)
      * - setting (or overriding)
      *
-     * @see ArrayAccess::offsetSet()
-     * @param string $key   The key to assign $value to.
-     * @param mixed  $value Value to assign to $key.
+     * @see    ArrayAccess::offsetSet()
+     * @param  string $key   The key to assign $value to.
+     * @param  mixed  $value Value to assign to $key.
      * @throws InvalidArgumentException If the key argument is not a string or is a "numeric" value.
      * @return void
      */
@@ -147,7 +147,7 @@ abstract class AbstractConfig extends AbstractEntity implements
     {
         if (is_numeric($key)) {
             throw new InvalidArgumentException(
-                'Entity array access only supports non-numeric keys.'
+                'Entity array access only supports non-numeric keys'
             );
         }
 
@@ -177,7 +177,7 @@ abstract class AbstractConfig extends AbstractEntity implements
      *
      * Supported file types are `ini`, `json`, `php`
      *
-     * @param string $filename A supported configuration file.
+     * @param  string $filename A supported configuration file.
      * @throws InvalidArgumentException If the file is invalid.
      * @return self
      */
@@ -195,7 +195,7 @@ abstract class AbstractConfig extends AbstractEntity implements
      *
      * Supported file types are `ini`, `json`, `php`
      *
-     * @param string $filename A supported configuration file.
+     * @param  string $filename A supported configuration file.
      * @throws InvalidArgumentException If the filename is invalid.
      * @return mixed
      */
@@ -203,7 +203,7 @@ abstract class AbstractConfig extends AbstractEntity implements
     {
         if (!is_string($filename)) {
             throw new InvalidArgumentException(
-                'Configuration file must be a string.'
+                'Configuration file must be a string'
             );
         }
         if (!file_exists($filename)) {
@@ -238,9 +238,9 @@ abstract class AbstractConfig extends AbstractEntity implements
      * The provided `$data` can be a simple array or an object which implements `Traversable`
      * (such as a `ConfigInterface` instance).
      *
-     * @param array|Traversable|ConfigInterface $data The data to set.
+     * @see    self::offsetSet()
+     * @param  array|Traversable|ConfigInterface $data The data to set.
      * @return self
-     * @see self::offsetSet()
      */
     public function merge($data)
     {
@@ -259,7 +259,7 @@ abstract class AbstractConfig extends AbstractEntity implements
      *
      * Make sure to reimplement in children ConfigInterface classes if any default data should be set.
      *
-     * @see ConfigInterface::defaults()
+     * @see    ConfigInterface::defaults()
      * @return array
      */
     public function defaults()
@@ -280,7 +280,7 @@ abstract class AbstractConfig extends AbstractEntity implements
     /**
      * Add a `.ini` file to the configuration.
      *
-     * @param string $filename A INI configuration file.
+     * @param  string $filename A INI configuration file.
      * @throws InvalidArgumentException If the file or invalid.
      * @return mixed
      */
@@ -289,7 +289,7 @@ abstract class AbstractConfig extends AbstractEntity implements
         $config = parse_ini_file($filename, true);
         if ($config === false) {
             throw new InvalidArgumentException(
-                sprintf('Ini file "%s" is empty or invalid.', $filename)
+                sprintf('Ini file "%s" is empty or invalid', $filename)
             );
         }
         return $config;
@@ -298,7 +298,7 @@ abstract class AbstractConfig extends AbstractEntity implements
     /**
      * Add a `.json` file to the configuration.
      *
-     * @param string $filename A JSON configuration file.
+     * @param  string $filename A JSON configuration file.
      * @throws InvalidArgumentException If the file or invalid.
      * @return mixed
      */
@@ -344,7 +344,7 @@ abstract class AbstractConfig extends AbstractEntity implements
     /**
      * Add a PHP file to the configuration
      *
-     * @param string $filename A PHP configuration file.
+     * @param  string $filename A PHP configuration file.
      * @return mixed
      */
     private function loadPhpFile($filename)
@@ -357,7 +357,7 @@ abstract class AbstractConfig extends AbstractEntity implements
     /**
      * Add a YAML file to the configuration
      *
-     * @param string $filename A YAML configuration file.
+     * @param  string $filename A YAML configuration file.
      * @throws InvalidArgumentException If the YAML file can not correctly be parsed into an array.
      * @return mixed
      */

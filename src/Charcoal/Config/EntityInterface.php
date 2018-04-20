@@ -24,7 +24,7 @@ interface EntityInterface extends
     /**
      * Gets the entity data, as associative array map.
      *
-     * @param array $filters Optional. Property filters.
+     * @param  array $filters Optional. Property filters.
      * @return array The data map.
      */
     public function data(array $filters = null);
@@ -34,7 +34,7 @@ interface EntityInterface extends
      *
      * This function takes an array and fill the property with its value.
      *
-     * @param array $data The entity data.
+     * @param  array $data The entity data.
      * @return EntityInterface Chainable
      */
     public function setData(array $data);
@@ -46,7 +46,7 @@ interface EntityInterface extends
      * `has($key)` returning true does not mean that `get($key)` will not throw an exception.
      * It does however mean that `get($id)` will not throw a `NotFoundException`.
      *
-     * @param string $key Identifier of the entry to look for.
+     * @param  string $key Identifier of the entry to look for.
      * @return boolean
      */
     public function has($key);
@@ -54,17 +54,17 @@ interface EntityInterface extends
     /**
      * Finds an entry of the container by its identifier and returns it.
      *
-     * @param string $key Identifier of the entry to look for.
+     * @see    ContainerInterface::get()
+     * @param  string $key Identifier of the entry to look for.
      * @throws NotFoundException  No entry was found for this identifier.
      * @throws ContainerException Error while retrieving the entry.
      * @return mixed Entry.
-     * @see ContainerInterface::get()
      */
     public function get($key);
 
     /**
-     * @param string $key Identifier of the entry to set.
-     * @param mixed  $val The value to set.
+     * @param  string $key Identifier of the entry to set.
+     * @param  mixed  $val The value to set.
      * @return EntityInterface Chainable
      */
     public function set($key, $val);

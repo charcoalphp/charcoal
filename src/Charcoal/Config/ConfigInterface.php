@@ -14,7 +14,7 @@ interface ConfigInterface extends
 {
 
     /**
-     * @param array|\Traversable $data The map of [$key=>$item] items to set.
+     * @param  array|\Traversable $data The map of [$key=>$item] items to set.
      * @return ConfigInterface Chainable
      */
     public function merge($data);
@@ -27,13 +27,13 @@ interface ConfigInterface extends
     public function defaults();
 
     /**
-     * @param string $filename The file to load and add.
+     * @param  string $filename The file to load and add.
      * @return ConfigInterface Chainable
      */
     public function addFile($filename);
 
     /**
-     * @param string $filename The file to load.
+     * @param  string $filename The file to load.
      * @return mixed The file content.
      */
     public function loadFile($filename);

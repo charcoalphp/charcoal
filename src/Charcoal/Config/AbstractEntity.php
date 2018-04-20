@@ -31,7 +31,7 @@ abstract class AbstractEntity implements EntityInterface
     /**
      * Gets the entity data, as associative array map.
      *
-     * @param array $filters Optional. Property filters.
+     * @param  array $filters Optional. Property filters.
      * @return array The data map.
      */
     public function data(array $filters = null)
@@ -56,9 +56,9 @@ abstract class AbstractEntity implements EntityInterface
      *
      * This function takes an array and fill the property with its value.
      *
-     * @param array $data The entity data. Will call setters.
+     * @see    self::offsetSet()
+     * @param  array $data The entity data. Will call setters.
      * @return self
-     * @see self::offsetSet()
      */
     public function setData(array $data)
     {
@@ -75,7 +75,7 @@ abstract class AbstractEntity implements EntityInterface
      * `has($key)` returning true does not mean that `get($key)` will not throw an exception.
      * It does however mean that `get($id)` will not throw a `NotFoundException`.
      *
-     * @param string $key Identifier of the entry to look for.
+     * @param  string $key Identifier of the entry to look for.
      * @return boolean
      */
     public function has($key)
@@ -86,8 +86,8 @@ abstract class AbstractEntity implements EntityInterface
     /**
      * Find an entry of the configuration by its key and retrieve it.
      *
-     * @see self::offsetGet()
-     * @param string $key The key of the configuration item to look for.
+     * @see    self::offsetGet()
+     * @param  string $key The key of the configuration item to look for.
      * @return mixed
      */
     public function get($key)
@@ -100,9 +100,9 @@ abstract class AbstractEntity implements EntityInterface
      *
      * Public method variant of setting by array key.
      *
-     * @see self::offsetSet()
-     * @param string $key   The key to assign $value to.
-     * @param mixed  $value Value to assign to $key.
+     * @see    self::offsetSet()
+     * @param  string $key   The key to assign $value to.
+     * @param  mixed  $value Value to assign to $key.
      * @return self
      */
     public function set($key, $value)
@@ -114,8 +114,8 @@ abstract class AbstractEntity implements EntityInterface
     /**
      * Determine if a configuration key exists.
      *
-     * @see ArrayAccess::offsetExists()
-     * @param string $key The key of the configuration item to look for.
+     * @see    ArrayAccess::offsetExists()
+     * @param  string $key The key of the configuration item to look for.
      * @throws InvalidArgumentException If the key argument is not a string or is a "numeric" value.
      * @return boolean
      */
@@ -123,7 +123,7 @@ abstract class AbstractEntity implements EntityInterface
     {
         if (is_numeric($key)) {
             throw new InvalidArgumentException(
-                'Entity array access only supports non-numeric keys.'
+                'Entity array access only supports non-numeric keys'
             );
         }
 
@@ -142,8 +142,8 @@ abstract class AbstractEntity implements EntityInterface
     /**
      * Find an entry of the configuration by its key and retrieve it.
      *
-     * @see ArrayAccess::offsetGet()
-     * @param string $key The key of the configuration item to look for.
+     * @see    ArrayAccess::offsetGet()
+     * @param  string $key The key of the configuration item to look for.
      * @throws InvalidArgumentException If the key argument is not a string or is a "numeric" value.
      * @return mixed The value (or null)
      */
@@ -151,7 +151,7 @@ abstract class AbstractEntity implements EntityInterface
     {
         if (is_numeric($key)) {
             throw new InvalidArgumentException(
-                'Entity array access only supports non-numeric keys.'
+                'Entity array access only supports non-numeric keys'
             );
         }
 
@@ -175,9 +175,9 @@ abstract class AbstractEntity implements EntityInterface
      * - a setter method (`set_{$key}()`)
      * - setting (or overriding)
      *
-     * @see ArrayAccess::offsetSet()
-     * @param string $key   The key to assign $value to.
-     * @param mixed  $value Value to assign to $key.
+     * @see    ArrayAccess::offsetSet()
+     * @param  string $key   The key to assign $value to.
+     * @param  mixed  $value Value to assign to $key.
      * @throws InvalidArgumentException If the key argument is not a string or is a "numeric" value.
      * @return void
      */
@@ -185,7 +185,7 @@ abstract class AbstractEntity implements EntityInterface
     {
         if (is_numeric($key)) {
             throw new InvalidArgumentException(
-                'Entity array access only supports non-numeric keys.'
+                'Entity array access only supports non-numeric keys'
             );
         }
 
@@ -208,7 +208,7 @@ abstract class AbstractEntity implements EntityInterface
     /**
      * ArrayAccess > offsetUnset()
      *
-     * @param string $key The key of the configuration item to remove.
+     * @param  string $key The key of the configuration item to remove.
      * @throws InvalidArgumentException If the key argument is not a string or is a "numeric" value.
      * @return void
      */
@@ -216,7 +216,7 @@ abstract class AbstractEntity implements EntityInterface
     {
         if (is_numeric($key)) {
             throw new InvalidArgumentException(
-                'Entity array access only supports non-numeric keys.'
+                'Entity array access only supports non-numeric keys'
             );
         }
         $key = $this->camelize($key);
@@ -246,7 +246,7 @@ abstract class AbstractEntity implements EntityInterface
     /**
      * Serializable > unserialize()
      *
-     * @param string $serialized The serialized data (with `serialize()`).
+     * @param  string $serialized The serialized data (with `serialize()`).
      * @return void
      */
     public function unserialize($serialized)
@@ -258,7 +258,7 @@ abstract class AbstractEntity implements EntityInterface
     /**
      * Transform a snake_case string to camelCase.
      *
-     * @param string $str The snake_case string to camelize.
+     * @param  string $str The snake_case string to camelize.
      * @return string The camelcase'd string.
      */
     final protected function camelize($str)
