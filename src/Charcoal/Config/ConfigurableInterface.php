@@ -2,33 +2,27 @@
 
 namespace Charcoal\Config;
 
-// Local namespace dependencies
-use Charcoal\Config\ConfigInterface;
-
 /**
- * Configurable Interface defines object that can be configured with a Config object.
+ * Describes an object that can be configured with an instance of {@see ConfigInterface}.
  *
- * This interface can be fully implemented with its accompanying `ConfigurableTrait`.
+ * This interface can be fully implemented with its accompanying {@see ConfigurableTrait}.
  */
 interface ConfigurableInterface
 {
     /**
-     * Set the object's configuration container.
+     * Sets the object's configuration container.
      *
-     * @param  ConfigInterface|array $config The config object or data.
+     * @param  mixed $config The Config object or dataset.
      * @return ConfigurableInterface Chainable
      */
     public function setConfig($config);
 
     /**
-     * Retrieve the object's configuration container, or one of its entry.
+     * Gets the object's configuration container or a specific key from the container.
      *
-     * If the object has no existing config, create one.
-     *
-     * If a key is provided, return the configuration key value instead of the full object.
-     *
-     * @param  string $key Optional. If provided, the config key value will be returned, instead of the full object.
-     * @return ConfigInterface
+     * @param  string|null $key If provided, the data key to retrieve.
+     * @return mixed If $key is NULL, the Config object is returned.
+     *     If $key is given, its value on the Config object is returned.
      */
     public function config($key = null);
 }
