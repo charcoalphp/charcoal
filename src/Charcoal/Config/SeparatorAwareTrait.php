@@ -2,46 +2,53 @@
 
 namespace Charcoal\Config;
 
-use ArrayAccess;
-use Exception;
 use InvalidArgumentException;
 
 /**
+ * Provides an object with the ability to perform lookups into multi-dimensional arrays.
  *
+ * This is a full implementation of {@see SeparatorAwareInterface}.
  */
 trait SeparatorAwareTrait
 {
     /**
-     * Delimiter for accessing nested options.
+     * Token for accessing nested data.
      *
      * Is empty by default (which disables the separator feature).
      *
-     * @var string $separator
+     * @var string
      */
     protected $separator = '';
 
     /**
-     * @param  string $separator A single-character to delimit nested options.
-     * @throws InvalidArgumentException If $separator is invalid.
+     * Sets the token for traversing a data-tree.
+     *
+     * @param  string $separator The single-character token to delimit nested data.
+     *     If the token is an empty string, data-tree traversal is disabled.
+     * @throws InvalidArgumentException If the $separator is invalid.
      * @return self
      */
     final public function setSeparator($separator)
     {
         if (!is_string($separator)) {
             throw new InvalidArgumentException(
-                'Separator needs to be a string'
+                'Separator must be a string'
             );
         }
+
         if (strlen($separator) > 1) {
             throw new InvalidArgumentException(
-                'Separator needs to be only one-character, or empty'
+                'Separator must be one-character, or empty'
             );
         }
+
         $this->separator = $separator;
         return $this;
     }
 
     /**
+     * Gets the token for traversing a data-tree, if any.
+     *
      * @return string
      */
     final public function separator()
@@ -50,48 +57,60 @@ trait SeparatorAwareTrait
     }
 
     /**
-     * @param  string $key The key of the configuration item to look for.
-     * @return mixed The value (or null)
-     */
-    final protected function getWithSeparator($key)
-    {
-        $structure = $this;
-        $splitKeys = explode($this->separator, $key);
-        foreach ($splitKeys as $k) {
-            if (!isset($structure[$k])) {
-                return null;
-            }
-            if (!is_array($structure[$k])) {
-                return $structure[$k];
-            }
-            $structure = $structure[$k];
-        }
-        return $structure;
-    }
-
-    /**
-     * @param  string $key The key of the configuration item to look for.
-     * @return boolean
+     * Determines if this store contains the key-path and if its value is not NULL.
+     *
+     * Traverses each node in the key-path until the endpoint is located.
+     *
+     * @param  string $key The key-path to check.
+     * @return boolean TRUE if $key exists and has a value other than NULL, FALSE otherwise.
      */
     final protected function hasWithSeparator($key)
     {
         $structure = $this;
         $splitKeys = explode($this->separator, $key);
-        foreach ($splitKeys as $k) {
-            if (!isset($structure[$k])) {
+        foreach ($splitKeys as $key) {
+            if (!isset($structure[$key])) {
                 return false;
             }
-            if (!is_array($structure[$k])) {
+            if (!is_array($structure[$key])) {
                 return true;
             }
-            $structure = $structure[$k];
+            $structure = $structure[$key];
         }
         return true;
     }
 
     /**
-     * @param  string $key   The key to assign $value to.
-     * @param  mixed  $value Value to assign to $key.
+     * Returns the value from the key-path found on this object.
+     *
+     * Traverses each node in the key-path until the endpoint is located.
+     *
+     * @param  string $key The key-path to retrieve.
+     * @return mixed Value of the requested $key on success, NULL if the $key is not set.
+     */
+    final protected function getWithSeparator($key)
+    {
+        $structure = $this;
+        $splitKeys = explode($this->separator, $key);
+        foreach ($splitKeys as $key) {
+            if (!isset($structure[$key])) {
+                return null;
+            }
+            if (!is_array($structure[$key])) {
+                return $structure[$key];
+            }
+            $structure = $structure[$key];
+        }
+        return $structure;
+    }
+
+    /**
+     * Assign a value to the key-path, replacing / merging existing data with the same endpoint.
+     *
+     * Traverses, in reverse, each node in the key-path from the endpoint.
+     *
+     * @param  string $key   The key-path to assign $value to.
+     * @param  mixed  $value The data value to assign to $key.
      * @return void
      */
     final protected function setWithSeparator($key, $value)
@@ -99,18 +118,19 @@ trait SeparatorAwareTrait
         $splitKeys = array_reverse(explode($this->separator, $key));
 
         $structure = [];
-        $prev = $splitKeys[0];
+        $prevKey = $splitKeys[0];
         $currentVal = $value;
-        foreach ($splitKeys as $k) {
-            $structure[$k] = $currentVal;
+        foreach ($splitKeys as $key) {
+            $structure[$key] = $currentVal;
             $currentVal = $structure;
-            unset($structure[$prev]);
-            $prev = $k;
+            unset($structure[$prevKey]);
+            $prevKey = $key;
         }
-        if (isset($this[$k]) && is_array($this[$k])) {
-            $this[$k] = array_replace_recursive($this[$k], $structure[$k]);
+
+        if (isset($this[$key]) && is_array($this[$key])) {
+            $this[$key] = array_replace_recursive($this[$key], $structure[$key]);
         } else {
-            $this[$k] = $structure[$k];
+            $this[$key] = $structure[$key];
         }
     }
 }
