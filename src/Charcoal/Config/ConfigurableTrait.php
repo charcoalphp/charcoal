@@ -47,18 +47,26 @@ trait ConfigurableTrait
     /**
      * Gets the object's configuration container or a specific key from the container.
      *
-     * @param  string|null $key If provided, the data key to retrieve.
+     * @param  string|null $key     If provided, the data key to retrieve.
+     * @param  mixed       $default The fallback value to return if $key does not exist.
      * @return mixed If $key is NULL, the Config object is returned.
      *     If $key is given, its value on the Config object is returned.
+     *     If the value of $key is NULL, the value of $default is returned.
      */
-    public function config($key = null)
+    public function config($key = null, $default = null)
     {
         if ($this->config === null) {
             $this->config = $this->createConfig();
         }
 
         if ($key !== null) {
-            return $this->config->get($key);
+            if ($this->config->has($key)) {
+                return $this->config->get($key);
+            } elseif (!is_string($default) && is_callable($default)) {
+                return $default();
+            } else {
+                return $default;
+            }
         }
 
         return $this->config;
