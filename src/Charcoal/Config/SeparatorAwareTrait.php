@@ -115,20 +115,19 @@ trait SeparatorAwareTrait
      */
     final protected function setWithSeparator($key, $value)
     {
+        $structure = $value;
         $splitKeys = array_reverse(explode($this->separator, $key));
-
-        $structure = [];
-        $prevKey = $splitKeys[0];
-        $currentVal = $value;
         foreach ($splitKeys as $key) {
-            $structure[$key] = $currentVal;
-            $currentVal = $structure;
-            unset($structure[$prevKey]);
-            $prevKey = $key;
+            $structure = [
+                $key => $structure
+            ];
         }
 
         if (isset($this[$key]) && is_array($this[$key])) {
-            $this[$key] = array_replace_recursive($this[$key], $structure[$key]);
+            $this[$key] = array_replace_recursive(
+                $this[$key],
+                $structure[$key]
+            );
         } else {
             $this[$key] = $structure[$key];
         }
