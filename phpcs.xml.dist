@@ -1,18 +1,15 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ruleset name="Charcoal">
-<!-- PHP CodeSniffer ruleset -->
-
     <description>Charcoal Coding Standard</description>
+
     <arg name="encoding" value="utf-8" />
-    <arg name="tab-width" value="4" />
 
-<!-- Include the whole PSR-1 standard -->
+    <config name="show_progress" value="1" />
+    <config name="ignore_warnings_on_exit" value="1" />
 
-    <rule ref="PSR1"/>
+    <exclude-pattern>*/Fixture/*</exclude-pattern>
 
-<!-- Include the whole PSR-2 standard -->
-
-    <rule ref="PSR2"/>
+    <rule ref="PSR2" />
 
 <!-- Array Sniffs -->
 
@@ -78,6 +75,9 @@
     <!--<rule ref="Squiz.Commenting.BlockComment" />-->
     <!-- Class comment blocks -->
     <rule ref="Squiz.Commenting.ClassComment" />
+    <rule ref="Squiz.Commenting.ClassComment.TagNotAllowed">
+        <exclude-pattern>*/tests/Charcoal/*</exclude-pattern>
+    </rule>
     <!-- Tests that the stars in a doc comment align correctly. -->
     <rule ref="Squiz.Commenting.DocCommentAlignment" />
     <!-- Ensures CATCH clause must at least have a comment -->
@@ -114,7 +114,12 @@
     <!-- Verifies that there is a space between each condition of FOR loops -->
     <rule ref="Squiz.ControlStructures.ForLoopDeclaration" />
     <!-- Tests the spacing of shorthand IF statements -->
-    <!-- <rule ref="Squiz.ControlStructures.InlineIfDeclaration" />-->
+    <rule ref="Squiz.ControlStructures.InlineIfDeclaration" />
+    <!-- Allow inline shorthand IF statements to be declared on multiple lines -->
+    <rule ref="Squiz.ControlStructures.InlineIfDeclaration.NotSingleLine">
+        <!-- This returns false-positive; hide them -->
+        <severity>0</severity>
+    </rule>
     <!-- Ensures all control structure keywords are lowercase -->
     <rule ref="Squiz.ControlStructures.LowercaseDeclaration" />
     <!--<rule ref="Squiz.ControlStructures.SwitchDeclaration" />-->
@@ -218,9 +223,7 @@
 <!-- Objects Sniffs -->
 
     <!-- Ensures objects are assigned to a variable when instantiated. -->
-    <rule ref="Squiz.Objects.ObjectInstantiation">
-        <exclude name="Squiz.Objects.ObjectInstantiation.NotAssigned" />
-    </rule>
+    <rule ref="Squiz.Objects.ObjectInstantiation" />
 
 <!-- Operators Sniffs -->
 
@@ -266,11 +269,7 @@
     <rule ref="Squiz.PHP.DisallowObEndFlush" />
     <rule ref="Squiz.PHP.DisallowSizeFunctionsInLoops" />
     <!-- @todo Doc me -->
-    <rule ref="Squiz.PHP.DiscouragedFunctions">
-        <properties>
-            <property name="forbiddenFunctions" type="array" value="print_r=>null,var_dump=>null,var_export=>null" />
-        </properties>
-    </rule>
+    <rule ref="Squiz.PHP.DiscouragedFunctions" />
     <rule ref="Squiz.PHP.EmbeddedPhp" />
     <rule ref="Squiz.PHP.EmbeddedPhp.Indent">
         <severity>0</severity>
@@ -298,17 +297,9 @@
 <!-- Strings Sniffs -->
 
     <!-- Use one string instead of concatenating 2 strings together -->
-    <rule ref="Generic.Strings.UnnecessaryStringConcat">
-        <properties>
-            <property name="allowMultiline" value="true"/>
-        </properties>
-    </rule>
+    <rule ref="Generic.Strings.UnnecessaryStringConcat" />
     <!-- Makes sure there are no spaces between the concatenation operator (.) the strings -->
-    <rule ref="Squiz.Strings.ConcatenationSpacing">
-        <properties>
-            <property name="ignoreNewlines" value="true"/>
-        </properties>
-    </rule>
+    <rule ref="Squiz.Strings.ConcatenationSpacing" />
     <!-- Makes sure that any use of Double Quotes ("") are warranted. -->
     <rule ref="Squiz.Strings.DoubleQuoteUsage" />
     <!-- Makes sure that any strings that are "echoed" are not enclosed in brackets -->
