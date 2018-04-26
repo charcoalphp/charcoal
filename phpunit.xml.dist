@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit backupGlobals="false"
          backupStaticAttributes="false"
-         bootstrap="vendor/autoload.php"
+         bootstrap="tests/bootstrap.php"
          colors="true"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
+         reportUselessTests="true"
          processIsolation="false"
          stopOnFailure="false"
          verbose="true">
@@ -13,6 +14,7 @@
     <testsuites>
         <testsuite name="Charcoal Test Suite">
             <directory>./tests/Charcoal</directory>
+            <exclude>./tests/Charcoal/Config/Fixture</exclude>
         </testsuite>
     </testsuites>
 

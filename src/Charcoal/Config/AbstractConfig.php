@@ -5,6 +5,9 @@ namespace Charcoal\Config;
 use ArrayIterator;
 use IteratorAggregate;
 use Traversable;
+use Throwable;
+use Exception;
+use LogicException;
 use InvalidArgumentException;
 use UnexpectedValueException;
 
@@ -357,7 +360,7 @@ abstract class AbstractConfig extends AbstractEntity implements
         throw new InvalidArgumentException(sprintf(
             'Unsupported file format for "%s"; must be one of "%s"',
             $path,
-            implode('","', $validConfigExts)
+            implode('", "', $validConfigExts)
         ));
     }
 
@@ -385,22 +388,20 @@ abstract class AbstractConfig extends AbstractEntity implements
      *
      * @param  string $path A path to a JSON file.
      * @throws UnexpectedValueException If the file can not correctly be parsed into an array.
-     * @return array An associative array on success.
+     * @return mixed Maybe an associative array on success.
      */
     private function loadJsonFile($path)
     {
-        $data = json_decode(file_get_contents($path), true);
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            $error = json_last_error_msg() ?: 'Unknown error';
-            throw new UnexpectedValueException(
-                sprintf('JSON file "%s" could not be parsed: %s', $path, $error)
-            );
-        }
-
-        if (!is_array($data)) {
-            throw new UnexpectedValueException(
-                sprintf('JSON file "%s" does not return an array', $path)
-            );
+        $data = null;
+        $json = file_get_contents($path);
+        if ($json) {
+            $data = json_decode($json, true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                $error = json_last_error_msg() ?: 'Unknown error';
+                throw new UnexpectedValueException(
+                    sprintf('JSON file "%s" could not be parsed: %s', $path, $error)
+                );
+            }
         }
 
         return $data;
@@ -425,6 +426,9 @@ abstract class AbstractConfig extends AbstractEntity implements
         } catch (Exception $e) {
             $message = sprintf('PHP file "%s" could not be parsed: %s', $path, $e->getMessage());
             throw new UnexpectedValueException($message, 0, $e);
+        } catch (Throwable $e) {
+            $message = sprintf('PHP file "%s" could not be parsed: %s', $path, $e->getMessage());
+            throw new UnexpectedValueException($message, 0, $e);
         }
 
         return $data;
@@ -434,23 +438,22 @@ abstract class AbstractConfig extends AbstractEntity implements
      * Load a YAML file as an array.
      *
      * @param  string $path A path to a YAML/YML file.
+     * @throws LogicException If a YAML parser is unavailable.
      * @throws UnexpectedValueException If the file can not correctly be parsed into an array.
      * @return array An associative array on success.
      */
     private function loadYamlFile($path)
     {
+        if (!class_exists('Symfony\Component\Yaml\Parser')) {
+            throw new LogicException('YAML format requires the Symfony YAML component');
+        }
+
         try {
-            $parser = new YamlParser();
-            $data   = $parser->parse(file_get_contents($path));
+            $yaml = new YamlParser();
+            $data = $yaml->parseFile($path);
         } catch (Exception $e) {
             $message = sprintf('YAML file "%s" could not be parsed: %s', $path, $e->getMessage());
             throw new UnexpectedValueException($message, 0, $e);
-        }
-
-        if (!is_array($data)) {
-            throw new UnexpectedValueException(
-                sprintf('YAML file "%s" does not return an array', $path)
-            );
         }
 
         return $data;

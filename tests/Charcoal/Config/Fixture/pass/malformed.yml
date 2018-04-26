@@ -1,0 +1,5 @@
+yaml:
+    okay: value
+    also okay: ~
+    causes error because no value specified
+    last key: value okay here too

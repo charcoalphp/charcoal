@@ -123,13 +123,13 @@ trait SeparatorAwareTrait
             ];
         }
 
-        if (isset($this[$key]) && is_array($this[$key])) {
-            $this[$key] = array_replace_recursive(
-                $this[$key],
-                $structure[$key]
-            );
-        } else {
-            $this[$key] = $structure[$key];
+        if (isset($this[$key])) {
+            $data = $this[$key];
+            if (is_array($data)) {
+                $structure[$key] = array_replace_recursive($data, $structure[$key]);
+            }
         }
+
+        $this[$key] = $structure[$key];
     }
 }

@@ -7,7 +7,8 @@
     <config name="show_progress" value="1" />
     <config name="ignore_warnings_on_exit" value="1" />
 
-    <exclude-pattern>*/Fixture/*</exclude-pattern>
+    <exclude-pattern>tests/bootstrap.php</exclude-pattern>
+    <exclude-pattern>tests/*/Fixture/*</exclude-pattern>
 
     <rule ref="PSR2" />
 
