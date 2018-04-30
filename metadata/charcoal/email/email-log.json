@@ -96,7 +96,7 @@
                 },
                 "widgets": {
                     "form": {
-                        "type": "charcoal/admin/widget/objectForm",
+                        "type": "charcoal/admin/widget/object-form",
                         "form_ident": "email_logs",
                         "obj_type": "charcoal/app/email/email-log"
                     }
