@@ -26,7 +26,7 @@ install:
 script:
     - composer phplint
     - composer phpcs
-    - composer phpunit
+    - composer phpunit -- --coverage-clover "build/logs/clover.xml"
 
 after_success:
     - php vendor/bin/php-coveralls -v
