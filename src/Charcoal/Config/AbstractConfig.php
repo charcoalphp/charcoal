@@ -11,11 +11,11 @@ use LogicException;
 use InvalidArgumentException;
 use UnexpectedValueException;
 
+// From PSR-11
+use Psr\Container\ContainerInterface;
+
 // From 'symfony/yaml'
 use Symfony\Component\Yaml\Parser as YamlParser;
-
-// From 'container-interop/container-interop'
-use Interop\Container\ContainerInterface;
 
 /**
  * Default configuration container / registry.

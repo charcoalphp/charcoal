@@ -7,6 +7,9 @@ use Iterator;
 use IteratorAggregate;
 use InvalidArgumentException;
 
+// From PSR-11
+use Psr\Container\ContainerInterface;
+
 // From 'charcoal-config'
 use Charcoal\Tests\Config\AbstractConfigTest;
 use Charcoal\Tests\Config\Mock\MacroConfig;
@@ -40,6 +43,17 @@ class ConfigTest extends AbstractConfigTest
     public function setUp()
     {
         $this->cfg = $this->createConfig();
+    }
+
+    /**
+     * Asserts that the object implements PSR-11.
+     *
+     * @coversNothing
+     * @return void
+     */
+    public function testPsr11()
+    {
+        $this->assertInstanceOf(ContainerInterface::class, $this->cfg);
     }
 
     /**
