@@ -1,375 +1,311 @@
 Charcoal Config
 ===============
 
-Configuration container for all things Charcoal.
+[![License][badge-license]][charcoal-config]
+[![Latest Stable Version][badge-version]][charcoal-config]
+[![Code Quality][badge-scrutinizer]][dev-scrutinizer]
+[![Coverage Status][badge-coveralls]][dev-coveralls]
+[![SensioLabs Insight][badge-sensiolabs]][dev-sensiolabs]
+[![Build Status][badge-travis]][dev-travis]
 
-[![Build Status](https://travis-ci.org/locomotivemtl/charcoal-config.svg?branch=master)](https://travis-ci.org/locomotivemtl/charcoal-config)
+A Charcoal component for organizing configuration data and designing object data models.
 
-This package provides easy hierarchical configuration container (for config storage and access).
-`Charcoal\Config` acts as a configuration registry / repository.
-
-## Entity and Config
-
-There are 2 main concepts in this package: `Entity` and `Config`.
-
-_Entities_ are simple data container, which implements `ArrayAccess`, `JsonSerializable` and `Serializable`. It also provides the `keys()`, `setData()`, `data()`, `set()`, `get()` and `has()` methods.
-
-_Config_ are _entities_ that also implements the `IteratorAggregate`, `\Interop\Container\ContainerInterface`, `\Charcoal\Config\SeparatorAwareInterface` and `\Charcoal\Config\DelegatesAwareInterface`. On top of those interfaces and _entity_'s methods, it provides the `merge()`, `defaults()`, `addFile()` and `loadFile()` methods.  Config are meant to hold application configuraion data as well as any other object configuration.
+This component is the glue for much of the [Charcoal framework][charcoal-app].
 
 
-## Main features
 
--   [Load data from ini, json, php or yaml files.](#supported-file-formats)
--   [Customizable separator access.](#separators)
--   [Delegates (Chaining configurations).](#delegates)
--   [Array access.](#array-access)
--   [Implement Interop-Container.](#interoperability)
--   [Provide Configurable Interface](#configurable)
+## Table of Contents
 
-## Supported file formats
+1.  [Installation](#installation)
+    1.  [Requirements](#requirements)
+2.  [Entity & Config](#entity--config)
+3.  [Features](#features)
+    1.  [File Loader](#file-loader)
+    2.  [Key Separator Lookup](#key-separator-lookup)
+    3.  [Delegated Data Lookup](#delegates-lookup)
+    4.  [Array Access](#array-access)
+    5.  [Interoperability](#interoperability)
+    6.  [Configurable objects](#configurable-objects)
+4.  [Development](#development)
+    1. [API Documentation](#api-documentation)
+    2. [Development Dependencies](#development-dependencies)
+    3. [Coding Style](#coding-style)
+5.  [Credits](#credits)
+6.  [License](#license)
 
-The _config_ container currently supports 4 file formats: `ini`, `json`, `php` and `yaml`.
 
-To load configuration from a file, simply use the `addFile($filename)` method. The file's extension will be used to determine how to load the file.
 
-```php
-$config = new \Charcoal\GenericConfig();
-$config->addFile('./config/my-config.ext');
-```
+## Installation
 
->If you want to load a configuration file *without* adding its content automatically, use `loadFile($filename)`:
->
-> ```php
-> $config = new \Charcoal\GenericConfig();
-> $file_content = $config->loadFile('my-config.ext');
-> ```
-
-It is also possible to load a config file directly from the constructor, by passing a file _string_ as the first argument.
-
-``` php
-$config = new \Charcoal\GenericConfig('../config/my-config.json');
-```
-
-Note that file loading is not supported on the base _entity_ container. This is a _config_-only feature.
-
-### JSON configuration
-
-For the JSON file (ex: `config/my-config.json`):
-
-```json
-{
-    "example":{
-        "foo":"bar"
-    }
-}
-```
-
-Loading this file into configuration is done by using `addFile($filename)`:
-
-```php
-$config = new \Charcoal\GenericConfig();
-$config->addFile('./config/my-config.json');
-
-// Output "bar"
-echo $config['example.foo'];
-```
-
-### INI configuration
-
-For the INI file:
-
-```ini
-[example]
-foo=bar
-```
-
-Loading this file into configuration would be:
-
-```php
-$config = new \Charcoal\GenericConfig();
-$config->addFile('./config/my-config.ini');
-
-// Outputs "bar"
-echo $config['example.foo'];
-```
-
-### PHP configuration
-
-The PHP configuration is loaded from an internal `include`, therefore, the scope of `$this` in the php file is the current _Config_ instance.
-
-For the PHP file:
-
-```php
-$this['example'] = [
-    'foo'=>'bar'
-];
-```
-
-Loading this file into configuration would be:
-
-```php
-$config = new \Charcoal\GenericConfig();
-$config->addFile('./config/my-config.php');
-
-// Outputs "bar"
-echo $config['example.foo'];
-```
-
-> Because `$this` references the actual `ConfigInterface` object, it is possible to include more config files from a PHP file:
->
-> ```php
-> <?php
-> $this->addFile('./config/more-config.json');
-> ```
->
-> The recommended way of use a root / app _Config_ object is to include a single `config/config.php` file (that is outside of the document root) that takes care of loading required configuration (json or PHP) files.
-
-### Yaml configuration
-
-> 👉 To be able to use the yaml loader, make sure `symfony/yaml` is included (required) in your project composer dependencies:
+The preferred (and only supported) method is with Composer:
 
 ```shell
-$ composer require symfony/yaml
+$ composer require locomotivemtl/charcoal-config
 ```
 
-For the YAML file (ex: `config/my-config.yml`):
 
-```yaml
-example:
-    foo: bar
-```
 
-Loading this file into configuration would be:
+### Requirements
+
+-   **PHP 5.6+**: _PHP 7_ is recommended.
+-   [**PSR-11**][psr-11]: The container interface.
+
+
+
+## Entity & Config
+
+In Charcoal, data is organized into two primary object types: `Entity` and `Config`.
+
+-   **Entities** are simple data containers that implement `ArrayAccess`, `JsonSerializable`, and `Serializable`.  
+    It provides the following public methods: `keys()`, `data()`, `setData()`, `has()`, `get()`, `set()`.
+-   **Configs** are advanced _Entities_, with hierarchical storage and file loader support, that also implement `IteratorAggregate`, `Psr\Container\ContainerInterface`, `Charcoal\Config\SeparatorAwareInterface`, and `Charcoal\Config\DelegatesAwareInterface`.  
+    In addition to extending `Entity`, it provides the following public methods: `defaults()`, `merge()`, `addFile()`, and `loadFile()`.  
+    Configs are used for managing runtime configuration data such as application preferences, service options, and object settings.
+
+
+
+## Features
+
+-   [Read data from INI, JSON, PHP, and YAML files](#file-loader)
+-   [Customizable separator for nested lookup](#key-separator-lookup)
+-   [Share configuration entries](#delegates-lookup)
+-   [Array accessible entities](#array-access)
+-   [Interoperable datasets](#interoperability)
+-   [Configurable objects](#configurable-objects)
+
+
+
+### File Loader
+
+The _Config_ container currently supports four file formats: INI, JSON, PHP, and YAML.
+
+A configuration file can be imported into a Config object via the `addFile($path)` method, or by direct instantiation:
 
 ```php
-$config = new \Charcoal\GenericConfig();
-$config->addFile('./config/my-config.yml');
+use Charcoal\Config\GenericConfig as Config;
 
-// Outputs "bar"
-echo $config['exampe.foo'];
+$cfg = new Config('config.json');
+$cfg->addFile('config.yml');
 ```
-> YAML files can have 2 different extensions: `.yml` or `.yaml`. The standard is to use `.yml`.
 
-## Separators
+The file's extension will be used to determine how to import the file.
+The file will be parsed and, if its an array, will be merged into the container.
 
-It is possible to fetch embedded _array-ish_ values recursively on _config_ containers in a single call with the help of _separators_.
-
-In `config` objects, the default separator is `.` (it can be retrieved with `separator()`) but it can be changed easily with `setSeparator()`.
-
-Separator is not available in _entity_ container. This is a _config_-only feature.
-
-> 👉 Separator must be a single character. An exception will be thrown if trying to call `setSeparator()` with a longer string.
-
-### How to use
+If you want to load a configuration file _without_ adding its content to the Config, use `loadFile($path)` instead.
+The file will be parsed and returned regardless if its an array.
 
 ```php
-$config = new \Charcoal\GenericConfig();
-$config->setSeparator('/'); // Default is "."
-$config->setData([
-    'foo', [
-        'baz'=>example,
-        'bar'=>42
+$data = $cfg->loadFile('config.php');
+```
+
+Check out the [documentation](docs/file-loader.md) and [examples](tests/Charcoal/Config/Fixture/pass) for more information.
+
+
+
+### Key Separator Lookup
+
+It is possible to lookup, retrieve, assign, or merge values in multi-dimensional arrays using _key separators_.
+
+In Config objects, the default separator is the period character (`.`). The token can be retrieved with the `separator()` method and customized using the `setSeparator()` method.
+
+```php
+use Charcoal\Config\GenericConfig as Config;
+
+$cfg = new Config();
+$cfg->setSeparator('/');
+$cfg->setData([
+    'database' => [
+        'params' => [
+            'name' => 'mydb',
+            'user' => 'myname',
+            'pass' => 'secret',
+        ]
     ]
 ]);
-// Ouput "42"
-echo $config->get('foo/bar');
+
+echo $cfg['database/params/name']; // "mydb"
 ```
 
-## Delegates
+Check out the [documentation](docs/separator-lookup.md) for more information.
 
-It is possible to "chain" _config_ containers with the help of _delegates_.
 
-If one or more delegates are added to a class, they will be used as _fallback_ when trying to fetch a key that isn't set in the config's data.
+
+### Delegates Lookup
+
+Delegates allow several objects to share values and act as fallbacks when the current object cannot resolve a given data key.
+
+In Config objects, _delegate objects_ are regsitered to an internal stack. If a data key cannot be resolved, the Config iterates over each delegate in the stack and stops on
+the first match containing a value that is not `NULL`.
 
 ```php
-$config = new \Charcoal\Config\GenericConfig([
-    'foo' => 'baz'
+use Charcoal\Config\GenericConfig as Config;
+
+$cfg = new Config([
+    'driver' => null,
+    'host'   => 'localhost',
+]);
+$delegate = new Config([
+    'driver' => 'pdo_mysql',
+    'host'   => 'example.com',
+    'port'   => 11211,
 ]);
 
-// Returns `false`
-$config->has('bar');
+$cfg->addDelegate($delegate);
 
-// Throws exception
-echo $config->get('bar');
+echo $cfg['driver']; // "pdo_mysql"
+echo $cfg['host']; // "localhost"
+echo $cfg['port']; // 11211
+```
 
-$config2 = new \Charcoal\Config\GenericConfig([
-    'bar' => 42
-]);
+Check out the [documentation](docs/delegates-lookup.md) for more information.
 
-$config->addDelegate($config2);
+
+
+### Array Access
+
+The Entity object implements the `ArrayAccess` interface and therefore can be used with array style:
+
+```php
+$cfg = new \Charcoal\Config\GenericConfig();
+
+// Assigns a value to "foobar"
+$cfg['foobar'] = 42;
 
 // Returns 42
-echo $config->get('bar');
+echo $cfg['foobar'];
+
+// Returns TRUE
+isset($cfg['foobar']);
+
+// Returns FALSE
+isset($cfg['xyzzy']);
+
+// Invalidates the "foobar" key
+unset($cfg['foobar']);
 ```
 
-Delegates can be set with:
+> 👉 A data key MUST be a string otherwise `InvalidArgumentException` is thrown.
 
--   `setDelegates()` to set an array of delegates.
--   `addDelegate()` to add a config object at the end of the delegate list.
--   `prependDelegate()` to add a config object at the beginning of the delegate list.
 
-On _config_ containers, it is also possible to set delegates by passing them as the 2nd argument to the constructor:
 
-```php
-$config = new \Charcoal\Config\GenericConfig('../config/my-config.json', [$delegate1, $delegate2]);
-```
+### Interoperability
 
-> 👉 The order of the delegates is important. They are looked in the order they are added, so the first match is returned. Use `prependDelegate()` to add a delegate at the beginning of the stack (top priority).
+The Config object implements [PSR-11](psr-11): `Psr\Container\ContainerInterface`.
 
-Delegates are not available on _entity_ containers. This is a _config_-only feature.
-
-## Array Access
-
-The _entity_ container implements the `ArrayAccess` interface and therefore can be used with array style:
-
-```php
-$config = new \Charcoal\Config\GenericConfig();
-
-// Set value with array
-$config['foobar'] = 42;
-
-// Returns `42`
-echo $config['foobar'];
-
-// Returns `true`
-isset($config['foobar']);
-
-// Returns `false`
-isset($config['invalid-key']);
-
-// Invalidate the "foobar" config key
-unset($config['foobar']);
-```
-
-## Interoperability
-
-The `\Charcoal\Config` entity container implements the `container-interop` interface.
-
-See [https://github.com/container-interop/container-interop](https://github.com/container-interop/container-interop).
-
-This interface requires the `get()` and `has()` methods:
+This interface exposes two methods: `get()` and `has()`. These methods are implemented by the Entity object as aliases of `ArrayAccess::offsetGet()` and `ArrayAccess::offsetExists()`.
 
 ```php
 $config = new \Charcoal\Config\GenericConfig([
-    'foobar'=>42
+    'foobar' => 42
 ]);
 
-// Returns `true`
+// Returns 42
+$config->get('foobar');
+
+// Returns TRUE
 $config->has('foobar');
 
-// Returns `false`
-$config->has('invalid-key');
-
-// Returns `42`
-$config->get('foobar');
+// Returns FALSE
+$config->has('xyzzy');
 ```
 
-## Configurable
+> 👉 A call to the `get()` method with a non-existing key DOES NOT throw an exception.
 
-Also provided in this package is a _Configurable_ interface (`\Charcoal\Config\ConfigrableInterface`) and its full implementation as a trait. `\Charcoal\Config\ConfigurableTrait`.
 
-Configurable (which could have been called "_Config Aware_") objects can have an associated config instance that can help defines various properties, states, or other.
 
-The config object can be set with `setConfig()` and retrieve with `config()`.
+### Configurable Objects
 
-Note that the `ConfigurableTrait` adds an abstract method that must be implemented: `createConfig(array $data)` (returns `ConfigInterface`).
+Also provided in this package is a _Configurable_ mixin:
 
-Implementation example:
+-   `Charcoal\Config\ConfigrableInterface`
+-   `Charcoal\Config\ConfigurableTrait`
 
-```php
-use \Charcoal\Config\ConfigurableInterface;
-use \Charcoal\Config\ConfigurableTrait;
+Configurable objects (which could have been called "_Config Aware_") can have an associated Config object that can help define various properties, states, or other.
 
-use \Acme\Foo\FooConfig;
+The Config object can be assigned with `setConfig()` and retrieved with `config()`.
 
-class Foo implements ConfigurableInterface
-{
-    use ConfigurableTrait;
+An added benefit of `ConfigurableTrait` is the `createConfig($data)` method which is used to create a Config object if one is not assigned. This method can be overridden in sub-classes to customize the instance returned and whatever initial state might be needed.
 
-    public function createConfig(array $data = null)
-    {
-        $config = new FooConfig();
-        if ($data !== null) {
-            $config->merge($data);
-        }
-        return $config;
-    }
-}
-```
+Check out the [documentation](docs/configurable-objects.md) for examples and more information.
 
-The previous class could be use as such:
 
-```php
-$foo = new Foo();
-$foo->setConfig([
-    'bar'=>[
-        'baz'=>42
-    ]
-]);
 
-// echo 42
-$fooConfig = $foo->config();
-echo $fooConfig['bar.baz'];
-
-// Also echo 42
-echo $foo->config('bar.baz');
-```
-
-# Development
+## Development
 
 To install the development environment:
 
 ```shell
-$ composer install --prefer-source
+$ composer install
 ```
 
-## API documentation
+To run the scripts (phplint, phpcs, and phpunit):
+
+```shell
+$ composer test
+```
+
+
+
+### API Documentation
 
 -   The auto-generated `phpDocumentor` API documentation is available at [https://locomotivemtl.github.io/charcoal-config/docs/master/](https://locomotivemtl.github.io/charcoal-config/docs/master/)
 -   The auto-generated `apigen` API documentation is available at [https://codedoc.pub/locomotivemtl/charcoal-config/master/](https://codedoc.pub/locomotivemtl/charcoal-config/master/index.html)
 
-## Development dependencies
 
+
+### Development Dependencies
+
+-   `php-coveralls/php-coveralls`
 -   `phpunit/phpunit`
 -   `squizlabs/php_codesniffer`
--   `satooshi/php-coveralls`
 
-## Continuous Integration
 
-| Service | Badge | Description |
-| ------- | ----- | ----------- |
-| [Travis](https://travis-ci.org/locomotivemtl/charcoal-config) | [![Build Status](https://travis-ci.org/locomotivemtl/charcoal-config.svg?branch=master)](https://travis-ci.org/locomotivemtl/charcoal-config) | Runs code sniff check and unit tests. Auto-generates API documentation. |
-| [Scrutinizer](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-config/) | [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-config/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-config/?branch=master) | Code quality checker. Also validates API documentation quality. |
-| [Coveralls](https://coveralls.io/github/locomotivemtl/charcoal-config) | [![Coverage Status](https://coveralls.io/repos/github/locomotivemtl/charcoal-config/badge.svg?branch=master)](https://coveralls.io/github/locomotivemtl/charcoal-config?branch=master) | Unit Tests code coverage. |
-| [Sensiolabs](https://insight.sensiolabs.com/projects/27ad205f-4208-4fa6-9dcf-534b3a1c0aaa) | [![SensioLabsInsight](https://insight.sensiolabs.com/projects/27ad205f-4208-4fa6-9dcf-534b3a1c0aaa/mini.png)](https://insight.sensiolabs.com/projects/27ad205f-4208-4fa6-9dcf-534b3a1c0aaa) | Another code quality checker, focused on PHP. |
 
-## Coding Style
+### Coding Style
 
-The Charcoal-Config module follows the Charcoal coding-style:
+The charcoal-config module follows the Charcoal coding-style:
 
--   [_PSR-1_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md)
--   [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
--   [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md), autoloading is therefore provided by _Composer_.
+-   [_PSR-1_][psr-1]
+-   [_PSR-2_][psr-2]
+-   [_PSR-4_][psr-4], autoloading is therefore provided by _Composer_.
 -   [_phpDocumentor_](http://phpdoc.org/) comments.
--   Read the [phpcs.xml](phpcs.xml) file for all the details on code style.
+-   [phpcs.xml.dist](phpcs.xml.dist) and [.editorconfig](.editorconfig) for coding standards.
 
 > Coding style validation / enforcement can be performed with `composer phpcs`. An auto-fixer is also available with `composer phpcbf`.
 
 > This module should also throw no error when running `phpstan analyse -l7 src/` 👍.
 
-## Authors
 
--   Mathieu Ducharme <mat@locomotive.ca>
 
-# License
+## Credits
 
-**The MIT License (MIT)**
+-   [Mathieu Ducharme](https://github.com/mducharme)
+-   [Locomotive](https://locomotive.ca/)
 
-_Copyright © 2016 Locomotive inc._
-> See [Authors](#authors).
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+## License
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+Charcoal is licensed under the MIT license. See [LICENSE](LICENSE) for details.
+
+
+
+[charcoal-app]:       https://packagist.org/packages/locomotivemtl/charcoal-app
+[charcoal-config]:    https://packagist.org/packages/locomotivemtl/charcoal-config
+
+[dev-scrutinizer]:    https://scrutinizer-ci.com/g/locomotivemtl/charcoal-config/
+[dev-coveralls]:      https://coveralls.io/r/locomotivemtl/charcoal-config
+[dev-sensiolabs]:     https://insight.sensiolabs.com/projects/27ad205f-4208-4fa6-9dcf-534b3a1c0aaa
+[dev-travis]:         https://travis-ci.org/locomotivemtl/charcoal-config
+
+[badge-license]:      https://img.shields.io/packagist/l/locomotivemtl/charcoal-config.svg?style=flat-square
+[badge-version]:      https://img.shields.io/packagist/v/locomotivemtl/charcoal-config.svg?style=flat-square
+[badge-scrutinizer]:  https://img.shields.io/scrutinizer/g/locomotivemtl/charcoal-config.svg?style=flat-square
+[badge-coveralls]:    https://img.shields.io/coveralls/locomotivemtl/charcoal-config.svg?style=flat-square
+[badge-sensiolabs]:   https://img.shields.io/sensiolabs/i/27ad205f-4208-4fa6-9dcf-534b3a1c0aaa.svg?style=flat-square
+[badge-travis]:       https://img.shields.io/travis/locomotivemtl/charcoal-config.svg?style=flat-square
+
+[psr-1]:  https://www.php-fig.org/psr/psr-1/
+[psr-2]:  https://www.php-fig.org/psr/psr-2/
+[psr-4]:  https://www.php-fig.org/psr/psr-4/
+[psr-11]: https://www.php-fig.org/psr/psr-11/
