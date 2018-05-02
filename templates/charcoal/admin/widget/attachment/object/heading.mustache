@@ -1,0 +1,12 @@
+{{!--
+    Attachment Widget \ Object Heading
+    ==================================
+
+    @used-by `charcoal/admin/widget/attachment/object/collapsible`
+    @used-by `charcoal/admin/widget/attachment/object/noncollapsible`
+    @used-by `charcoal/attachment/object/accordion`
+--}}
+{{& heading }}
+{{^ active }}
+    <span class="small">&mdash; <em>{{# _t }}Disabled{{/ _t }}</em></span>
+{{/ active }}

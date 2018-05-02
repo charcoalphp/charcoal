@@ -1,15 +1,15 @@
 {{# attachmentType }}
-<span class="list-group-item-actions js-attachment-actions">
-    <a class="list-group-item-action list-group-item-icon"
-       href="object/edit?obj_type={{ obj_type }}&obj_id={{ attachment_id }}{{# formIdent }}&form_ident={{ . }}{{/ formIdent }}"
-       data-group="{{ attachmentGroup }}"
-       data-type="{{ obj_type }}"
-       data-attachment="{{ obj_type }}"
-       data-id="{{ attachment_id }}"
-       data-title="{{ label }}"
-       data-form-ident="{{ quickFormIdent }}"
-       data-action="edit">
-        <span class="fa fa-edit -center"></span>
+<div class="js-attachment-actions">
+    <a class="btn btn-primary btn-sm"
+        href="object/edit?obj_type={{ obj_type }}&obj_id={{ attachment_id }}{{# formIdent }}&form_ident={{ . }}{{/ formIdent }}"
+        data-group="{{ attachmentGroup }}"
+        data-type="{{ obj_type }}"
+        data-attachment="{{ obj_type }}"
+        data-id="{{ attachment_id }}"
+        data-title="{{ label }}"
+        data-form-ident="{{ quickFormIdent }}"
+        data-action="edit">
+        {{# _t }}Edit{{/ _t }}
     </a>
-</span>
+</div>
 {{/ attachmentType }}

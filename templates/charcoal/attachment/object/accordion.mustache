@@ -5,13 +5,15 @@
 {{# hasAttachments }}
     <ul class="list-group">
     {{# attachments }}
-        <li class="list-group-item u-truncate{{^ active }} alert-danger{{/ active}}">
-            {{# attachmentType }}
-            {{# attachmentOptions.show_icon }}
-            <span class="list-group-item-icon {{ faIcon }}"></span>
-            {{/ attachmentOptions.show_icon }}
-            {{/ attachmentType }}
-            <span class="list-group-item-label">{{& heading }}{{^ active }} <span class="small">&mdash; {{# _t }}Disabled{{/ _t }}</span>{{/ active }}</span>
+        <li class="list-group-item d-flex justify-content-between align-items-center u-truncate{{^ active }} alert-danger{{/ active}}">
+            <div>
+                {{# attachmentType }}
+                    {{> charcoal/admin/widget/attachment/object/icon }}
+                {{/ attachmentType }}
+                <span class="list-group-item-label">
+                    {{> charcoal/admin/widget/attachment/object/heading }}
+                </span>
+            </div>
             {{> charcoal/attachment/object/partial/modify-button }}
         </li>
     {{/ attachments }}
