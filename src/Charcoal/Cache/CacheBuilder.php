@@ -84,6 +84,7 @@ final class CacheBuilder
      *
      * @param  mixed $cacheDriver The name of a registered cache driver,
      *     the class name or instance of a {@see DriverInterface cache driver}.
+     *     An array may be used to designate fallback drivers.
      * @param  mixed $poolOptions Optional settings for the new pool.
      * @return PoolInterface
      */
@@ -97,6 +98,7 @@ final class CacheBuilder
      *
      * @param  mixed $cacheDriver The name of a registered cache driver,
      *     the class name or instance of a {@see DriverInterface cache driver}.
+     *     An array may be used to designate fallback drivers.
      * @param  mixed $poolOptions Optional settings for the new pool.
      *     If a string is specified, it is used as the namespace for the new pool.
      *     If an array is specified, it is assumed to be associative and is merged with the default settings.
@@ -176,20 +178,35 @@ final class CacheBuilder
      *
      * @param  mixed $driver The name of a registered cache driver,
      *     the class name or instance of a {@see DriverInterface cache driver}.
+     *     An array may be used to designate fallback drivers.
      * @throws InvalidArgumentException When passed invalid or nonexistant driver name, class name, or object.
      * @return DriverInterface
      */
     private function resolveDriver($driver)
     {
-        $isObj = is_object($driver);
+        if (is_array($driver)) {
+            foreach ($driver as $drv) {
+                if (is_array($drv)) {
+                    break;
+                }
 
-        if (!$isObj && isset($this->drivers[$driver])) {
-            $driver = $this->drivers[$driver];
-            $isObj  = is_object($driver);
-        }
+                try {
+                    return $this->resolveDriver($drv);
+                } catch (InvalidArgumentException $e) {
+                    continue;
+                }
+            }
+        } else {
+            $isObj = is_object($driver);
 
-        if (is_a($driver, DriverInterface::class, true)) {
-            return $isObj ? $driver : new $driver();
+            if (!$isObj && isset($this->drivers[$driver])) {
+                $driver = $this->drivers[$driver];
+                $isObj  = is_object($driver);
+            }
+
+            if (is_a($driver, DriverInterface::class, true)) {
+                return $isObj ? $driver : new $driver();
+            }
         }
 
         throw new InvalidArgumentException(sprintf(
