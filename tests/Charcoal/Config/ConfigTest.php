@@ -3,7 +3,7 @@
 namespace Charcoal\Tests\Config;
 
 use StdClass;
-use Iterator;
+use ArrayIterator;
 use IteratorAggregate;
 use InvalidArgumentException;
 
@@ -65,7 +65,7 @@ class ConfigTest extends AbstractConfigTest
     public function testIteratorAggregate()
     {
         $this->assertInstanceOf(IteratorAggregate::class, $this->cfg);
-        $this->assertInstanceOf(Iterator::class, $this->cfg->getIterator());
+        $this->assertInstanceOf(ArrayIterator::class, $this->cfg->getIterator());
     }
 
     /**
@@ -93,9 +93,23 @@ class ConfigTest extends AbstractConfigTest
     }
 
     /**
+     * @covers ::__construct
+     * @covers ::merge
+     * @return void
+     */
+    public function testConstructWithTraversableInstance()
+    {
+        $iter = new ArrayIterator([
+            'name' => 'Charcoal'
+        ]);
+        $cfg  = $this->mockConfig($iter);
+        $this->assertEquals('Charcoal', $cfg['name']);
+    }
+
+    /**
      * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage Data must be an associative array, a file path,
-     *     or an instance of Charcoal\Config\ConfigInterface
+     * @expectedExceptionMessage Data must be a config file, an associative array,
+     *     or an object implementing Traversable
      *
      * @covers ::__construct
      * @covers ::merge

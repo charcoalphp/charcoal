@@ -43,8 +43,9 @@ abstract class AbstractConfig extends AbstractEntity implements
     /**
      * Create the configuration.
      *
-     * @param  mixed             $data      Initial data. Either a filepath, a datamap, or a Config object.
-     * @param  ConfigInterface[] $delegates An array of delegates (config) to set.
+     * @param  mixed             $data      Initial data. Either a filepath,
+     *     an associative array, or an {@see Traversable iterable object}.
+     * @param  EntityInterface[] $delegates An array of delegates (config) to set.
      * @throws InvalidArgumentException If $data is invalid.
      */
     final public function __construct($data = null, array $delegates = null)
@@ -69,12 +70,12 @@ abstract class AbstractConfig extends AbstractEntity implements
             $this->addFile($data);
         } elseif (is_array($data)) {
             $this->merge($data);
-        } elseif ($data instanceof ConfigInterface) {
+        } elseif ($data instanceof Traversable) {
             $this->merge($data);
         } else {
             throw new InvalidArgumentException(sprintf(
-                'Data must be an associative array, a file path, or an instance of %s',
-                ConfigInterface::class
+                'Data must be a config file, an associative array, or an object implementing %s',
+                Traversable::class
             ));
         }
     }
@@ -96,11 +97,10 @@ abstract class AbstractConfig extends AbstractEntity implements
     /**
      * Adds new data, replacing / merging existing data with the same key.
      *
-     * The provided `$data` can be a simple array or an object which implements `Traversable`
-     * (such as a `ConfigInterface` instance).
-     *
      * @uses   self::offsetReplace()
-     * @param  array|Traversable|ConfigInterface $data Key-value array of data to merge.
+     * @param  array|Traversable $data Key-value dataset to merge.
+     *     Either an associative array or an {@see Traversable iterable object}
+     *     (such as {@see ConfigInterface}).
      * @return self
      */
     public function merge($data)
