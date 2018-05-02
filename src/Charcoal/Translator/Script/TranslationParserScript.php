@@ -156,7 +156,7 @@ class TranslationParserScript extends AdminScript
         $this->displayInformations();
 
         // Get translations
-        $translations = $this->getTranslations();
+        $translations = $this->parseTranslations($this->getTranslations());
 
         // Output to CSV file.
         $this->toCSV($translations);
@@ -171,6 +171,30 @@ class TranslationParserScript extends AdminScript
         );
 
         return $response;
+    }
+
+    /**
+     * @param array $trans   The translations array.
+     * @return array
+     */
+    protected function parseTranslations(array $trans)
+    {
+        // Must be the first occurrence of the the key.
+        foreach ($trans as $lang => &$value) {
+            array_walk($value, function (&$val, $key) {
+                // remove key template ident in translation value.
+                if (preg_match('|^\[([^\]]*)\]|', $key, $translationContext)) {
+                    $val = str_replace($translationContext[0], '', $val);
+                }
+
+                // remove key input type from translation value.
+                if (preg_match('|:(?:\S*)$|', $key, $translationInputType)) {
+                    $val = str_replace($translationInputType[0], '', $val);
+                }
+            });
+        }
+
+        return $trans;
     }
 
     /**
@@ -422,7 +446,8 @@ class TranslationParserScript extends AdminScript
     public function paths()
     {
         if (!$this->paths) {
-            $this->paths = $this->appConfig->get('view.paths');
+            $this->paths = $this->appConfig->get('translator.parser.view.paths') ?:
+                $this->appConfig->get('view.paths');
 
             /** @todo Hardcoded; Change this! */
             $this->paths[] = 'src/';
