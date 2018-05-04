@@ -33,7 +33,7 @@ use Charcoal\Cache\Middleware\CacheMiddleware;
  * ## Helpers
  *
  * - `cache/config`: The cache configset.
- * - `cache/driver`: The default cache driver.
+ * - `cache/driver`: The cache driver of the default pool.
  * - `cache/builder`: An advacned cache pool factory.
  *
  * ## Middleware
@@ -190,32 +190,6 @@ class CacheServiceProvider implements ServiceProviderInterface
         };
 
         /**
-         * The main cache driver.
-         *
-         * @param  Container $container The service container.
-         * @return DriverInterface Primary cache driver from Stash.
-         */
-        $container['cache/driver'] = function (Container $container) {
-            $cacheConfig = $container['cache/config'];
-
-            if ($cacheConfig['active'] === true) {
-                $cacheTypes = $cacheConfig['types'];
-                foreach ($cacheTypes as $type) {
-                    if (isset($container['cache/drivers'][$type])) {
-                        return $container['cache/drivers'][$type];
-                    }
-                }
-            }
-
-            /**
-             * If no working drivers were available
-             * or the cache is disabled,
-             * use the memory driver.
-             */
-            return $container['cache/drivers']['memory'];
-        };
-
-        /**
          * A cache pool builder, using Stash.
          *
          * @param  Container $container A Pimple DI container.
@@ -232,17 +206,27 @@ class CacheServiceProvider implements ServiceProviderInterface
         };
 
         /**
+         * The driver of the main cache pool "cache".
+         *
+         * @param  Container $container The service container.
+         * @return DriverInterface Primary cache driver from Stash.
+         */
+        $container['cache/driver'] = $container->factory(function (Container $container) {
+            return $container['cache']->getDriver();
+        });
+
+        /**
          * The main cache item pool.
          *
          * @param  Container $container The service container.
          * @return Pool The cache item pool from Stash.
          */
         $container['cache'] = function (Container $container) {
-            $cacheDriver  = $container['cache/driver'];
             $cacheBuilder = $container['cache/builder'];
+            $cacheConfig  = $container['cache/config'];
+            $cacheDrivers = array_unique($cacheConfig['types'] + [ 'memory' ]);
 
-            $pool = $cacheBuilder($cacheDriver);
-            return $pool;
+            return $cacheBuilder($cacheDrivers);
         };
     }
 

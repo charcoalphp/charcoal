@@ -105,8 +105,8 @@ If you are using [_locomotivemtl/charcoal-app_][charcoal-app], the [`CacheServic
     -   **redis**: [Redis](https://www.stashphp.com/Drivers.html#redis)
     -   **memory**: [Ephemeral](https://www.stashphp.com/Drivers.html#ephemeral) (Runtime Only)
     -   **noop**: Blackhole (NULL caching driver)
--   **cache/driver**: Instance of the main Stash cache driver which is the first supported driver from `cache/config.types`. Defaults to "memory".
 -   **cache/builder**: Instance of [`CacheBuilder`][cache-builder] that is used to build a cache pool.
+-   **cache/driver**: Reference to the Stash cache driver used by `cache`. Defaults to "memory".
 -   **cache**: Main instance of the Stash cache pool which uses `cache/driver` and `cache/config.prefix`.
 
 ## Configuration
