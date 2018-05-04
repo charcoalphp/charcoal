@@ -10,12 +10,26 @@ use Stash\Interfaces\ItemInterface;
 use Stash\Interfaces\PoolInterface;
 
 /**
- * Test pool creation and pool attributes from the CacheBuilder.
+ * Test the cache pool creation and pool attributes from the CacheBuilder.
  *
  * @coversDefaultClass \Charcoal\Cache\CacheBuilder
  */
 class CacheBuilderPoolTest extends AbstractCacheBuilderTest
 {
+    /**
+     * Asserts that the CacheBuilder is invokable.
+     *
+     * @covers ::__invoke
+     */
+    public function testBuildIsInvokable()
+    {
+        $builder = $this->createBuilder();
+        $driver  = $this->createDriver('BlackHole');
+
+        $pool = $builder($driver, []);
+        $this->assertInstanceOf(PoolInterface::class, $pool);
+    }
+
     /**
      * Asserts that the Pool logger can be assigned from build options.
      *
@@ -25,9 +39,10 @@ class CacheBuilderPoolTest extends AbstractCacheBuilderTest
     public function testBuildWithLoggerOnOptions()
     {
         $builder = $this->createBuilder();
+        $driver  = $this->createDriver('BlackHole');
         $logger  = new NullLogger;
 
-        $pool = $builder('Ephemeral', [
+        $pool = $builder($driver, [
             'logger' => $logger,
         ]);
         $this->assertAttributeSame($logger, 'logger', $pool);
@@ -42,13 +57,14 @@ class CacheBuilderPoolTest extends AbstractCacheBuilderTest
     public function testBuildWithNamespaceOnOptions()
     {
         $builder = $this->createBuilder();
+        $driver  = $this->createDriver('BlackHole');
 
         // Accepts namespace as a shortcut
-        $pool = $builder('Ephemeral', 'foo');
+        $pool = $builder($driver, 'foo');
         $this->assertEquals('foo', $pool->getNamespace());
 
         // Accepts namespace from a dataset
-        $pool = $builder('Ephemeral', [
+        $pool = $builder($driver, [
             'namespace' => 'baz',
         ]);
         $this->assertEquals('baz', $pool->getNamespace());
@@ -63,11 +79,12 @@ class CacheBuilderPoolTest extends AbstractCacheBuilderTest
     public function testBuildWithItemClassOnOptions()
     {
         $builder = $this->createBuilder();
+        $driver  = $this->createDriver('BlackHole');
 
         $mockItem      = $this->createMock(ItemInterface::class);
         $mockClassName = get_class($mockItem);
 
-        $pool = $builder('Ephemeral', [
+        $pool = $builder($driver, [
             'item_class' => $mockClassName,
         ]);
         $this->assertAttributeEquals($mockClassName, 'itemClass', $pool);
@@ -82,14 +99,43 @@ class CacheBuilderPoolTest extends AbstractCacheBuilderTest
     public function testBuildWithPoolClassOnOptions()
     {
         $builder = $this->createBuilder();
+        $driver  = $this->createDriver('BlackHole');
 
         $mockPool      = $this->createMock(PoolInterface::class);
         $mockClassName = get_class($mockPool);
 
         // Custom Pool Class
-        $pool = $builder('Ephemeral', [
+        $pool = $builder($driver, [
             'pool_class' => $mockClassName,
         ]);
         $this->assertInstanceOf($mockClassName, $pool);
+    }
+
+    /**
+     * Asserts that the CacheBuilder uses default options when given NULL.
+     *
+     * @covers ::parsePoolOptions
+     */
+    public function testBuildWithNullOnOptions()
+    {
+        $builder = $this->createBuilder();
+        $driver  = $this->createDriver('BlackHole');
+
+        $pool = $builder($driver, null);
+        $this->assertCachePoolHasDefaultAttributes($pool);
+    }
+
+    /**
+     * Asserts that the CacheBuilder uses default options when given NULL.
+     *
+     * @covers ::parsePoolOptions
+     */
+    public function testBuildWithInvalidTypeOnOptions()
+    {
+        $builder = $this->createBuilder();
+        $driver  = $this->createDriver('BlackHole');
+
+        $pool = $builder($driver, 42);
+        $this->assertCachePoolHasDefaultAttributes($pool);
     }
 }

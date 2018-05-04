@@ -86,7 +86,7 @@ class CacheConfigTest extends AbstractTestCase
      * @covers ::setTypes
      * @covers ::types
      */
-    public function testReplaceTypes()
+    public function testReplaceDrivers()
     {
         // Chainable
         $that = $this->cfg->setTypes([ 'memcache', 'noop' ]);
@@ -104,7 +104,7 @@ class CacheConfigTest extends AbstractTestCase
      * @covers ::addType
      * @covers ::types
      */
-    public function testAddTypes()
+    public function testAddDrivers()
     {
         // Chainable
         $that = $this->cfg->addTypes([ 'memcache', 'noop' ]);
@@ -118,13 +118,14 @@ class CacheConfigTest extends AbstractTestCase
     }
 
     /**
+     * @expectedException        InvalidArgumentException
+     * @expectedExceptionMessage Invalid cache type: "foobar"
+     *
      * @covers ::validTypes
      * @covers ::addType
      */
-    public function testUnsupportedType()
+    public function testAddDriverOnInvalidType()
     {
-        // Bad Value
-        $this->expectException(InvalidArgumentException::class);
         $this->cfg->addType('foobar');
     }
 
@@ -140,9 +141,16 @@ class CacheConfigTest extends AbstractTestCase
 
         // Mutated State
         $this->assertEquals(42, $this->cfg->defaultTtl());
+    }
 
-        // Bad Value
-        $this->expectException(InvalidArgumentException::class);
+    /**
+     * @expectedException        InvalidArgumentException
+     * @expectedExceptionMessage TTL must be an integer (seconds)
+     *
+     * @covers ::setDefaultTtl
+     */
+    public function testSetDefaultTtlOnInvalidType()
+    {
         $this->cfg->setDefaultTtl('foo');
     }
 
@@ -150,7 +158,7 @@ class CacheConfigTest extends AbstractTestCase
      * @covers ::setPrefix
      * @covers ::prefix
      */
-    public function testPrefix1()
+    public function testPrefix()
     {
         // Chainable
         $that = $this->cfg->setPrefix('foo');
@@ -158,19 +166,27 @@ class CacheConfigTest extends AbstractTestCase
 
         // Mutated State
         $this->assertEquals('foo', $this->cfg->prefix());
+    }
 
-        // Bad Value
-        $this->expectException(InvalidArgumentException::class);
+    /**
+     * @expectedException        InvalidArgumentException
+     * @expectedExceptionMessage Prefix must be a string
+     *
+     * @covers ::setPrefix
+     */
+    public function testSetPrefixOnInvalidType()
+    {
         $this->cfg->setPrefix(false);
     }
 
     /**
+     * @expectedException        InvalidArgumentException
+     * @expectedExceptionMessage Prefix must be alphanumeric
+     *
      * @covers ::setPrefix
      */
-    public function testPrefix2()
+    public function testSetPrefixOnInvalidValue()
     {
-        // Bad Value
-        $this->expectException(InvalidArgumentException::class);
         $this->cfg->setPrefix('foo!#$bar');
     }
 }

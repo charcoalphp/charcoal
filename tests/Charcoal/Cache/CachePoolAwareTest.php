@@ -30,12 +30,13 @@ class CachePoolAwareTest extends AbstractTestCase
     }
 
     /**
+     * @expectedException        RuntimeException
+     * @expectedExceptionMessage Cache Pool is not defined for "Charcoal\Tests\Mocks\CachePoolAware"
+     *
      * @covers ::cachePool
      */
     public function testMissingPool()
     {
-        $this->expectException(\RuntimeException::class);
-
         $obj = new CachePoolAware();
         $obj->cachePool();
     }

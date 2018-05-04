@@ -13,9 +13,9 @@ use Stash\Interfaces\DriverInterface;
 use Stash\Pool;
 
 /**
- * Model Loader Builder.
+ * Cache Pool Builder
  *
- * Build custom ModelLoader objects with a certain obj type / optional obj key.
+ * Build custom PSR-6 cache pools using Stash drivers.
  */
 final class CacheBuilder
 {
@@ -27,7 +27,7 @@ final class CacheBuilder
     private $drivers;
 
     /**
-     * Defaultlogger instance.
+     * Default logger instance.
      *
      * @var \Psr\Log\LoggerInterface|null
      */
@@ -207,7 +207,7 @@ final class CacheBuilder
      *
      * @param  mixed $driver The name of a registered cache driver,
      *     the class name or instance of a {@see DriverInterface cache driver}.
-     * @throws InvalidArgumentException When passed invalid or nonexistant driver name, class name, or object.
+     * @throws InvalidArgumentException When passed an invalid or nonexistant driver name, class name, or object.
      * @return DriverInterface
      */
     private function resolveOneDriver($driver)
@@ -218,34 +218,49 @@ final class CacheBuilder
             );
         }
 
-        $isObj = is_object($driver);
+        if (is_object($driver)) {
+            if ($driver instanceof DriverInterface) {
+                return $driver;
+            } else {
+                throw new InvalidArgumentException(sprintf(
+                    'Driver class %s must implement %s',
+                    get_class($driver),
+                    DriverInterface::class
+                ));
+            }
+        }
 
-        if (!$isObj) {
-            $name = $driver;
-            if (isset($this->drivers[$name])) {
-                $driver = $this->drivers[$name];
-                if (empty($driver)) {
+        $name = $driver;
+        if (isset($this->drivers[$name])) {
+            $driver = $this->drivers[$name];
+
+            if (empty($driver)) {
+                throw new InvalidArgumentException(
+                    sprintf('Driver "%s" does not exist', $name)
+                );
+            }
+
+            if (is_object($driver)) {
+                if ($driver instanceof DriverInterface) {
+                    return $driver;
+                } else {
                     throw new InvalidArgumentException(sprintf(
-                        'Driver "%s" does not exist',
-                        $name
+                        'Driver "%s": Class %s must implement %s',
+                        $name,
+                        get_class($driver),
+                        DriverInterface::class
                     ));
                 }
-                $isObj = is_object($driver);
             }
         }
 
         if (is_a($driver, DriverInterface::class, true)) {
-            return $isObj ? $driver : new $driver();
+            return new $driver();
         }
 
-        throw new InvalidArgumentException(sprintf(
-            'Unsupported driver "%s"',
-            (is_object($driver)
-                ? get_class($driver)
-                : (is_string($driver)
-                    ? $driver
-                    : gettype($driver)))
-        ));
+        throw new InvalidArgumentException(
+            sprintf('Driver "%s" cannot be resolved', $name)
+        );
     }
 
     /**
@@ -311,7 +326,7 @@ final class CacheBuilder
      * Using this function developers can have the builder generate custom Pool objects.
      *
      * @param  string $class The pool class name.
-     * @throws InvalidArgumentException When passed invalid or nonexistant class.
+     * @throws InvalidArgumentException When passed an invalid or nonexistant class.
      * @return void
      */
     private function setPoolClass($class)
@@ -341,7 +356,7 @@ final class CacheBuilder
      * Using this function developers can have the pool class generate custom Item objects.
      *
      * @param  string $class The item class name.
-     * @throws InvalidArgumentException When passed invalid or nonexistant class.
+     * @throws InvalidArgumentException When passed an invalid or nonexistant class.
      * @return void
      */
     private function setItemClass($class)

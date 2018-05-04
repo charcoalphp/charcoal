@@ -180,7 +180,7 @@ class CacheConfig extends AbstractConfig
     {
         if (!is_numeric($ttl)) {
             throw new InvalidArgumentException(
-                'TTL must be an integer (seconds).'
+                'TTL must be an integer (seconds)'
             );
         }
 
@@ -209,14 +209,14 @@ class CacheConfig extends AbstractConfig
     {
         if (!is_string($prefix)) {
             throw new InvalidArgumentException(
-                'Prefix must be a string.'
+                'Prefix must be a string'
             );
         }
 
         /** @see \Stash\Pool\::setNamespace */
         if (!ctype_alnum($prefix)) {
             throw new InvalidArgumentException(
-                'Prefix must be alphanumeric.'
+                'Prefix must be alphanumeric'
             );
         }
 
