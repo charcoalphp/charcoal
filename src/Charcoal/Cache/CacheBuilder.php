@@ -3,6 +3,7 @@
 namespace Charcoal\Cache;
 
 use ArrayAccess;
+use Traversable;
 use InvalidArgumentException;
 
 // From 'tedivm/stash'
@@ -174,43 +175,71 @@ final class CacheBuilder
     }
 
     /**
-     * Resolve the given cache driver, if available.
+     * Resolve one or many cache drivers, if available.
      *
      * @param  mixed $driver The name of a registered cache driver,
      *     the class name or instance of a {@see DriverInterface cache driver}.
      *     An array may be used to designate fallback drivers.
-     * @throws InvalidArgumentException When passed invalid or nonexistant driver name, class name, or object.
+     * @throws InvalidArgumentException When an array of drivers cannot be resolved.
      * @return DriverInterface
      */
     private function resolveDriver($driver)
     {
-        if (is_array($driver)) {
+        if ($this->isIterable($driver)) {
             foreach ($driver as $drv) {
-                if (is_array($drv)) {
-                    break;
-                }
-
                 try {
-                    return $this->resolveDriver($drv);
+                    return $this->resolveOneDriver($drv);
                 } catch (InvalidArgumentException $e) {
                     continue;
                 }
             }
-        } else {
-            $isObj = is_object($driver);
 
-            if (!$isObj && isset($this->drivers[$driver])) {
-                $driver = $this->drivers[$driver];
-                $isObj  = is_object($driver);
-            }
+            throw new InvalidArgumentException(
+                'Drivers cannot be resolved'
+            );
+        }
 
-            if (is_a($driver, DriverInterface::class, true)) {
-                return $isObj ? $driver : new $driver();
+        return $this->resolveOneDriver($driver);
+    }
+
+    /**
+     * Resolve the given cache driver, if available.
+     *
+     * @param  mixed $driver The name of a registered cache driver,
+     *     the class name or instance of a {@see DriverInterface cache driver}.
+     * @throws InvalidArgumentException When passed invalid or nonexistant driver name, class name, or object.
+     * @return DriverInterface
+     */
+    private function resolveOneDriver($driver)
+    {
+        if (empty($driver)) {
+            throw new InvalidArgumentException(
+                'Driver is empty'
+            );
+        }
+
+        $isObj = is_object($driver);
+
+        if (!$isObj) {
+            $name = $driver;
+            if (isset($this->drivers[$name])) {
+                $driver = $this->drivers[$name];
+                if (empty($driver)) {
+                    throw new InvalidArgumentException(sprintf(
+                        'Driver "%s" does not exist',
+                        $name
+                    ));
+                }
+                $isObj = is_object($driver);
             }
         }
 
+        if (is_a($driver, DriverInterface::class, true)) {
+            return $isObj ? $driver : new $driver();
+        }
+
         throw new InvalidArgumentException(sprintf(
-            'Unsupported driver type "%s"',
+            'Unsupported driver "%s"',
             (is_object($driver)
                 ? get_class($driver)
                 : (is_string($driver)
@@ -228,7 +257,7 @@ final class CacheBuilder
      */
     private function setDrivers($drivers)
     {
-        if (is_array($drivers) || ($drivers instanceof ArrayAccess)) {
+        if ($this->isAccessible($drivers)) {
             $this->drivers = $drivers;
         } else {
             throw new InvalidArgumentException(
@@ -334,5 +363,27 @@ final class CacheBuilder
         }
 
         $this->itemClass = $class;
+    }
+
+    /**
+     * Determine if the variable is an iterable value.
+     *
+     * @param  mixed $var The value to check
+     * @return boolean TRUE if $var is iterable, FALSE otherwise.
+     */
+    private function isIterable($var)
+    {
+        return is_array($var) || ($var instanceof Traversable);
+    }
+
+    /**
+     * Determine if the variable is array accessible.
+     *
+     * @param  mixed $var The value to check
+     * @return boolean TRUE if $var is an array or accessible like an array, FALSE otherwise.
+     */
+    private function isAccessible($var)
+    {
+        return is_array($var) || ($var instanceof ArrayAccess);
     }
 }

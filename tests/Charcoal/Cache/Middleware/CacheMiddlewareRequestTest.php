@@ -114,7 +114,7 @@ class CacheMiddlewareRequestTest extends AbstractCacheMiddlewareTest
     }
 
     /**
-     * Provide data for testing the "cache/driver" service.
+     * Provide data for testing the middleware.
      *
      * @used-by self::testInvoke()
      * @return  array

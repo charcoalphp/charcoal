@@ -40,6 +40,7 @@ class CacheBuilderOptionsTest extends AbstractCacheBuilderTest
     /**
      * @covers ::__construct
      * @covers ::setDrivers
+     * @covers ::isAccessible
      */
     public function testSetDrivers()
     {

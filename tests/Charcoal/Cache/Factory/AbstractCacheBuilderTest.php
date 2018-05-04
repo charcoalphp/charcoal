@@ -2,12 +2,9 @@
 
 namespace Charcoal\Tests\Cache\Factory;
 
-use InvalidArgumentException;
-
 // From 'tedivm/stash'
 use Stash\DriverList;
 use Stash\Interfaces\DriverInterface;
-use Stash\Pool;
 
 // From 'charcoal-cache'
 use Charcoal\Tests\AbstractTestCase;

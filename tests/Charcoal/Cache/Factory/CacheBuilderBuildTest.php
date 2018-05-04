@@ -33,6 +33,7 @@ class CacheBuilderBuildTest extends AbstractCacheBuilderTest
      * @covers ::build
      * @covers ::parsePoolOptions
      * @covers ::resolveDriver
+     * @covers ::resolveOneDriver
      */
     public function testConstructFromArrayOfDriverClassNames()
     {
@@ -51,6 +52,7 @@ class CacheBuilderBuildTest extends AbstractCacheBuilderTest
      *
      * @covers ::parsePoolOptions
      * @covers ::resolveDriver
+     * @covers ::resolveOneDriver
      */
     public function testConstructFromArrayOfDriverInstances()
     {
@@ -68,6 +70,7 @@ class CacheBuilderBuildTest extends AbstractCacheBuilderTest
      *
      * @covers ::parsePoolOptions
      * @covers ::resolveDriver
+     * @covers ::resolveOneDriver
      */
     public function testBuildOnDriverClassName()
     {
@@ -85,7 +88,9 @@ class CacheBuilderBuildTest extends AbstractCacheBuilderTest
      *
      * @covers ::build
      * @covers ::parsePoolOptions
+     * @covers ::isIterable
      * @covers ::resolveDriver
+     * @covers ::resolveOneDriver
      */
     public function testBuildOnDriverInstance()
     {
@@ -100,7 +105,9 @@ class CacheBuilderBuildTest extends AbstractCacheBuilderTest
     /**
      * Test builder with a collection of driver class names.
      *
+     * @covers ::isIterable
      * @covers ::resolveDriver
+     * @covers ::resolveOneDriver
      */
     public function testBuildOnArrayOfDriverClassNames()
     {
@@ -117,6 +124,7 @@ class CacheBuilderBuildTest extends AbstractCacheBuilderTest
      * Test builder with a collection of instances of {@see DriverInterface}.
      *
      * @covers ::resolveDriver
+     * @covers ::resolveOneDriver
      */
     public function testBuildOnArrayOfDriverInstances()
     {
@@ -133,6 +141,7 @@ class CacheBuilderBuildTest extends AbstractCacheBuilderTest
      * Test builder with an invalid driver in a collection of drivers.
      *
      * @covers ::resolveDriver
+     * @covers ::resolveOneDriver
      */
     public function testBuildOnArrayOfDriverClassNamesWithOneInvalidDriver()
     {
@@ -149,6 +158,7 @@ class CacheBuilderBuildTest extends AbstractCacheBuilderTest
      * Test builder with an invalid driver class name.
      *
      * @covers ::resolveDriver
+     * @covers ::resolveOneDriver
      */
     public function testBuildOnInvalidDriverClassName()
     {
@@ -162,6 +172,7 @@ class CacheBuilderBuildTest extends AbstractCacheBuilderTest
      * Test builder with an invalid instance of {@see DriverInterface}.
      *
      * @covers ::resolveDriver
+     * @covers ::resolveOneDriver
      */
     public function testBuildOnInvalidDriverInstance()
     {
@@ -172,19 +183,30 @@ class CacheBuilderBuildTest extends AbstractCacheBuilderTest
     }
 
     /**
-     * Test builder with an invalid type in a collection of drivers.
+     * Test builder with an empty array of drivers.
      *
      * @covers ::resolveDriver
+     * @covers ::resolveOneDriver
      */
-    public function testBuildOnInvalidArrayInArray()
+    public function testBuildOnEmptyArray()
     {
         $this->expectException(InvalidArgumentException::class);
 
-        $drivers = $this->getDriverInstances();
-        $builder = $this->builderFactory([
-            'drivers' => $drivers,
-        ]);
+        $builder = $this->builderFactory();
+        $builder->build([ null ]);
+    }
 
-        $builder->build([ [ 'Ephemeral' ], 'BlackHole' ]);
+    /**
+     * Test builder with an empty array of drivers.
+     *
+     * @covers ::resolveDriver
+     * @covers ::resolveOneDriver
+     */
+    public function testBuildOnBadDriver()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $builder = $this->builderFactory();
+        $builder->build([ null ]);
     }
 }
