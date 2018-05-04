@@ -5,6 +5,8 @@ namespace Charcoal\Tests\Cache\Factory;
 // From 'tedivm/stash'
 use Stash\DriverList;
 use Stash\Interfaces\DriverInterface;
+use Stash\Interfaces\PoolInterface;
+use Stash\Pool;
 
 // From 'charcoal-cache'
 use Charcoal\Tests\AbstractTestCase;
@@ -15,6 +17,21 @@ use Charcoal\Cache\CacheBuilder;
  */
 abstract class AbstractCacheBuilderTest extends AbstractTestCase
 {
+    /**
+     * Create a new CacheBuilder instance.
+     *
+     * @param  array $args Parameters for the initialization of a CacheBuilder.
+     * @return CacheBuilder
+     */
+    public function createBuilder(array $args = [])
+    {
+        if (!isset($args['drivers'])) {
+            $args['drivers'] = $this->getDriverClassNames();
+        }
+
+        return new CacheBuilder($args);
+    }
+
     /**
      * Returns a list of cache drivers that are also supported by this system.
      *
@@ -39,20 +56,5 @@ abstract class AbstractCacheBuilderTest extends AbstractTestCase
         $drivers = DriverList::getAvailableDrivers();
         unset($drivers['Composite']);
         return $drivers;
-    }
-
-    /**
-     * Create a new CacheBuilder instance.
-     *
-     * @param  array $args Parameters for the initialization of a CacheBuilder.
-     * @return CacheBuilder
-     */
-    public function builderFactory(array $args = [])
-    {
-        if (!isset($args['drivers'])) {
-            $args['drivers'] = $this->getDriverClassNames();
-        }
-
-        return new CacheBuilder($args);
     }
 }

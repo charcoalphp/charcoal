@@ -9,23 +9,22 @@ use Psr\Log\NullLogger;
 use Stash\Interfaces\ItemInterface;
 use Stash\Interfaces\PoolInterface;
 
-// From 'charcoal-cache'
-use Charcoal\Cache\CacheBuilder;
-
 /**
- * Test pool creation from the CacheBuilder.
+ * Test pool creation and pool attributes from the CacheBuilder.
  *
  * @coversDefaultClass \Charcoal\Cache\CacheBuilder
  */
 class CacheBuilderPoolTest extends AbstractCacheBuilderTest
 {
     /**
+     * Asserts that the Pool logger can be assigned from build options.
+     *
      * @covers ::parsePoolOptions
      * @covers ::applyPoolOptions
      */
-    public function testBuildWithLogger()
+    public function testBuildWithLoggerOnOptions()
     {
-        $builder = $this->builderFactory();
+        $builder = $this->createBuilder();
         $logger  = new NullLogger;
 
         $pool = $builder('Ephemeral', [
@@ -35,12 +34,14 @@ class CacheBuilderPoolTest extends AbstractCacheBuilderTest
     }
 
     /**
+     * Asserts that the Pool namespace can be customized from build options.
+     *
      * @covers ::parsePoolOptions
      * @covers ::applyPoolOptions
      */
-    public function testBuildWithNamespace()
+    public function testBuildWithNamespaceOnOptions()
     {
-        $builder = $this->builderFactory();
+        $builder = $this->createBuilder();
 
         // Accepts namespace as a shortcut
         $pool = $builder('Ephemeral', 'foo');
@@ -54,12 +55,14 @@ class CacheBuilderPoolTest extends AbstractCacheBuilderTest
     }
 
     /**
+     * Asserts that the Item class can be customized from build options.
+     *
      * @covers ::parsePoolOptions
      * @covers ::applyPoolOptions
      */
-    public function testBuildWithItemClass()
+    public function testBuildWithItemClassOnOptions()
     {
-        $builder = $this->builderFactory();
+        $builder = $this->createBuilder();
 
         $mockItem      = $this->createMock(ItemInterface::class);
         $mockClassName = get_class($mockItem);
@@ -71,12 +74,14 @@ class CacheBuilderPoolTest extends AbstractCacheBuilderTest
     }
 
     /**
+     * Asserts that the Pool class can be customized from build options.
+     *
      * @covers ::parsePoolOptions
      * @covers ::applyPoolOptions
      */
-    public function testBuildWithPoolClass()
+    public function testBuildWithPoolClassOnOptions()
     {
-        $builder = $this->builderFactory();
+        $builder = $this->createBuilder();
 
         $mockPool      = $this->createMock(PoolInterface::class);
         $mockClassName = get_class($mockPool);

@@ -8,28 +8,23 @@ use InvalidArgumentException;
 use Psr\Log\NullLogger;
 
 // From 'tedivm/stash'
-use Stash\DriverList;
-use Stash\Interfaces\DriverInterface;
 use Stash\Interfaces\ItemInterface;
 use Stash\Interfaces\PoolInterface;
 use Stash\Pool;
 
-// From 'charcoal-cache'
-use Charcoal\Cache\CacheBuilder;
-
 /**
- * Test builder options from the CacheBuilder.
+ * Test constructor and class attributes from the CacheBuilder.
  *
  * @coversDefaultClass \Charcoal\Cache\CacheBuilder
  */
-class CacheBuilderOptionsTest extends AbstractCacheBuilderTest
+class CacheBuilderClassTest extends AbstractCacheBuilderTest
 {
     /**
      * @covers ::__construct
      */
     public function testDefaultOptions()
     {
-        $builder = $this->builderFactory();
+        $builder = $this->createBuilder();
 
         $this->assertAttributeEquals(null, 'logger', $builder);
         $this->assertAttributeEquals(null, 'namespace', $builder);
@@ -46,7 +41,7 @@ class CacheBuilderOptionsTest extends AbstractCacheBuilderTest
     {
         /** 1. Accepts Primitive Array */
         $drivers = (array)$this->getDriverClassNames();
-        $builder = $this->builderFactory([
+        $builder = $this->createBuilder([
             'drivers' => $drivers,
         ]);
 
@@ -54,7 +49,7 @@ class CacheBuilderOptionsTest extends AbstractCacheBuilderTest
 
         /** 2. Accepts Array Accessible Object */
         $drivers = new \ArrayObject($this->getDriverClassNames());
-        $builder = $this->builderFactory([
+        $builder = $this->createBuilder([
             'drivers' => $drivers,
         ]);
 
@@ -62,7 +57,7 @@ class CacheBuilderOptionsTest extends AbstractCacheBuilderTest
 
         /** 3. Rejects anything else */
         $this->expectException(InvalidArgumentException::class);
-        $builder = $this->builderFactory([
+        $builder = $this->createBuilder([
             'drivers' => false,
         ]);
     }
@@ -74,7 +69,7 @@ class CacheBuilderOptionsTest extends AbstractCacheBuilderTest
     public function testSetLogger()
     {
         $logger  = new NullLogger;
-        $builder = $this->builderFactory([
+        $builder = $this->createBuilder([
             'logger' => $logger,
         ]);
 
@@ -92,7 +87,7 @@ class CacheBuilderOptionsTest extends AbstractCacheBuilderTest
     public function testSetInvalidLogger()
     {
         $this->expectException(InvalidArgumentException::class);
-        $builder = $this->builderFactory([
+        $builder = $this->createBuilder([
             'logger' => new \stdClass(),
         ]);
     }
@@ -103,7 +98,7 @@ class CacheBuilderOptionsTest extends AbstractCacheBuilderTest
      */
     public function testSetNamespace()
     {
-        $builder = $this->builderFactory([
+        $builder = $this->createBuilder([
             'namespace' => 'qux',
         ]);
 
@@ -125,7 +120,7 @@ class CacheBuilderOptionsTest extends AbstractCacheBuilderTest
     public function testSetInvalidNamespace()
     {
         $this->expectException(InvalidArgumentException::class);
-        $builder = $this->builderFactory([
+        $builder = $this->createBuilder([
             'namespace' => '!@#$%^&*(',
         ]);
     }
@@ -139,7 +134,7 @@ class CacheBuilderOptionsTest extends AbstractCacheBuilderTest
         $mockItem      = $this->createMock(ItemInterface::class);
         $mockClassName = get_class($mockItem);
 
-        $builder = $this->builderFactory([
+        $builder = $this->createBuilder([
             'item_class' => $mockClassName,
         ]);
 
@@ -157,7 +152,7 @@ class CacheBuilderOptionsTest extends AbstractCacheBuilderTest
     public function testSetFakeItemClass()
     {
         $this->expectException(InvalidArgumentException::class);
-        $builder = $this->builderFactory([
+        $builder = $this->createBuilder([
             'item_class' => 'FakeClassName',
         ]);
     }
@@ -168,7 +163,7 @@ class CacheBuilderOptionsTest extends AbstractCacheBuilderTest
     public function testSetInvalidItemClass()
     {
         $this->expectException(InvalidArgumentException::class);
-        $builder = $this->builderFactory([
+        $builder = $this->createBuilder([
             'item_class' => 'stdClass',
         ]);
     }
@@ -182,7 +177,7 @@ class CacheBuilderOptionsTest extends AbstractCacheBuilderTest
         $mockPool      = $this->createMock(PoolInterface::class);
         $mockClassName = get_class($mockPool);
 
-        $builder = $this->builderFactory([
+        $builder = $this->createBuilder([
             'pool_class' => $mockClassName,
         ]);
 
@@ -199,7 +194,7 @@ class CacheBuilderOptionsTest extends AbstractCacheBuilderTest
     public function testSetFakePoolClass()
     {
         $this->expectException(InvalidArgumentException::class);
-        $builder = $this->builderFactory([
+        $builder = $this->createBuilder([
             'pool_class' => 'FakeClassName',
         ]);
     }
@@ -210,7 +205,7 @@ class CacheBuilderOptionsTest extends AbstractCacheBuilderTest
     public function testSetInvalidPoolClass()
     {
         $this->expectException(InvalidArgumentException::class);
-        $builder = $this->builderFactory([
+        $builder = $this->createBuilder([
             'pool_class' => 'stdClass',
         ]);
     }

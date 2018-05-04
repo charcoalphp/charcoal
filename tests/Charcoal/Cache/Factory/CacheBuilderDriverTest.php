@@ -4,14 +4,8 @@ namespace Charcoal\Tests\Cache\Factory;
 
 use InvalidArgumentException;
 
-// From PSR-3
-use Psr\Log\NullLogger;
-
 // From 'tedivm/stash'
-use Stash\DriverList;
 use Stash\Interfaces\DriverInterface;
-use Stash\Interfaces\ItemInterface;
-use Stash\Interfaces\PoolInterface;
 use Stash\Pool;
 
 // From 'charcoal-cache'
@@ -22,7 +16,7 @@ use Charcoal\Cache\CacheBuilder;
  *
  * @coversDefaultClass \Charcoal\Cache\CacheBuilder
  */
-class CacheBuilderBuildTest extends AbstractCacheBuilderTest
+class CacheBuilderDriverTest extends AbstractCacheBuilderTest
 {
     /**
      * Test builder with a map of driver names and class names.
@@ -38,7 +32,7 @@ class CacheBuilderBuildTest extends AbstractCacheBuilderTest
     public function testConstructFromArrayOfDriverClassNames()
     {
         $drivers = $this->getDriverClassNames();
-        $builder = $this->builderFactory([
+        $builder = $this->createBuilder([
             'drivers' => $drivers,
         ]);
 
@@ -57,7 +51,7 @@ class CacheBuilderBuildTest extends AbstractCacheBuilderTest
     public function testConstructFromArrayOfDriverInstances()
     {
         $drivers = $this->getDriverInstances();
-        $builder = $this->builderFactory([
+        $builder = $this->createBuilder([
             'drivers' => $drivers,
         ]);
 
@@ -74,7 +68,7 @@ class CacheBuilderBuildTest extends AbstractCacheBuilderTest
      */
     public function testBuildOnDriverClassName()
     {
-        $builder = $this->builderFactory();
+        $builder = $this->createBuilder();
 
         $mockDriver    = $this->createMock(DriverInterface::class);
         $mockClassName = get_class($mockDriver);
@@ -94,7 +88,7 @@ class CacheBuilderBuildTest extends AbstractCacheBuilderTest
      */
     public function testBuildOnDriverInstance()
     {
-        $builder = $this->builderFactory();
+        $builder = $this->createBuilder();
 
         $mockDriver = $this->createMock(DriverInterface::class);
 
@@ -112,7 +106,7 @@ class CacheBuilderBuildTest extends AbstractCacheBuilderTest
     public function testBuildOnArrayOfDriverClassNames()
     {
         $drivers = $this->getDriverInstances();
-        $builder = $this->builderFactory([
+        $builder = $this->createBuilder([
             'drivers' => $drivers,
         ]);
 
@@ -129,7 +123,7 @@ class CacheBuilderBuildTest extends AbstractCacheBuilderTest
     public function testBuildOnArrayOfDriverInstances()
     {
         $drivers = $this->getDriverInstances();
-        $builder = $this->builderFactory([
+        $builder = $this->createBuilder([
             'drivers' => $drivers,
         ]);
 
@@ -146,7 +140,7 @@ class CacheBuilderBuildTest extends AbstractCacheBuilderTest
     public function testBuildOnArrayOfDriverClassNamesWithOneInvalidDriver()
     {
         $drivers = $this->getDriverInstances();
-        $builder = $this->builderFactory([
+        $builder = $this->createBuilder([
             'drivers' => $drivers,
         ]);
 
@@ -164,7 +158,7 @@ class CacheBuilderBuildTest extends AbstractCacheBuilderTest
     {
         $this->expectException(InvalidArgumentException::class);
 
-        $builder = $this->builderFactory();
+        $builder = $this->createBuilder();
         $builder->build('xyzzy');
     }
 
@@ -178,7 +172,7 @@ class CacheBuilderBuildTest extends AbstractCacheBuilderTest
     {
         $this->expectException(InvalidArgumentException::class);
 
-        $builder = $this->builderFactory();
+        $builder = $this->createBuilder();
         $builder->build(new \stdClass());
     }
 
@@ -192,7 +186,7 @@ class CacheBuilderBuildTest extends AbstractCacheBuilderTest
     {
         $this->expectException(InvalidArgumentException::class);
 
-        $builder = $this->builderFactory();
+        $builder = $this->createBuilder();
         $builder->build([ null ]);
     }
 
@@ -206,7 +200,7 @@ class CacheBuilderBuildTest extends AbstractCacheBuilderTest
     {
         $this->expectException(InvalidArgumentException::class);
 
-        $builder = $this->builderFactory();
+        $builder = $this->createBuilder();
         $builder->build([ null ]);
     }
 }
