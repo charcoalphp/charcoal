@@ -51,9 +51,6 @@ class CacheServiceProviderTest extends AbstractTestCase
         $this->assertArrayHasKey('cache/builder', $container);
         $this->assertInstanceOf(CacheBuilder::class, $container['cache/builder']);
 
-        $this->assertArrayHasKey('cache/factory', $container);
-        $this->assertInstanceOf(PoolInterface::class, $container['cache/factory']);
-
         $this->assertArrayHasKey('cache', $container);
         $this->assertInstanceOf(PoolInterface::class, $container['cache']);
 

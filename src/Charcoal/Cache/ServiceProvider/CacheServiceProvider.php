@@ -34,7 +34,6 @@ use Charcoal\Cache\Middleware\CacheMiddleware;
  *
  * - `cache/config`: The cache configset.
  * - `cache/driver`: The default cache driver.
- * - `cache/factory`: A simple cache pool factory.
  * - `cache/builder`: An advacned cache pool factory.
  *
  * ## Middleware
@@ -231,16 +230,6 @@ class CacheServiceProvider implements ServiceProviderInterface
                 'namespace'  => $cacheConfig['prefix'],
             ]);
         };
-
-        /**
-         * A simple cache pool factory, using Stash and the shared "memory" driver.
-         *
-         * @param  Container $container A Pimple DI container.
-         * @return Pool
-         */
-        $container['cache/factory'] = $container->factory(function (Container $container) {
-            return new Pool($container['cache/drivers']['memory']);
-        });
 
         /**
          * The main cache item pool.

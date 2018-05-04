@@ -107,7 +107,6 @@ If you are using [_locomotivemtl/charcoal-app_][charcoal-app], the [`CacheServic
     -   **noop**: Blackhole (NULL caching driver)
 -   **cache/driver**: Instance of the main Stash cache driver which is the first supported driver from `cache/config.types`. Defaults to "memory".
 -   **cache/builder**: Instance of [`CacheBuilder`][cache-builder] that is used to build a cache pool.
--   **cache/factory**: Factory service to create a new cache pool with the "memory" driver.
 -   **cache**: Main instance of the Stash cache pool which uses `cache/driver` and `cache/config.prefix`.
 
 ## Configuration
@@ -140,19 +139,19 @@ $pool = $this->container->get('cache');
 Or a custom-defined cache pool:
 
 ```php
-// Create a Stash pool with the "memory" cache driver.
-$pool1 = $this->container->get('cache/factory');
-
 // Create a Stash pool with the Memcached driver and a custom namespace.
-$pool2 = $this->container->get('cache/builder')->build('memcache', 'altcache');
+$pool1 = $this->container->get('cache/builder')->build('memcache', 'altcache');
 
 // Create a custom Stash pool with the FileSystem driver and custom features.
-$pool3 = $this->container->get('cache/builder')->build('file', [
+$pool2 = $this->container->get('cache/builder')->build('file', [
     'namespace'  => 'mycache',
     'logger'     => $this->container->get('logger.custom_logger'),
     'pool_class' => \MyApp\Cache\Pool::class,
     'item_class' => \MyApp\Cache\Item::class,
 ]);
+
+// Create a Stash pool with the "memory" cache driver.
+$pool3 = new \Stash\Pool($container['cache/drivers']['memory']);
 ```
 
 Then you can use the cache service directly:
