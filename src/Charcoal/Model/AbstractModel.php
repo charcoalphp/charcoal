@@ -458,15 +458,11 @@ abstract class AbstractModel extends AbstractEntity implements
     /**
      * ValidatableInterface > create_validator().
      *
-     * @param array $data Optional.
      * @return \Charcoal\Validator\ValidatorInterface
      */
-    protected function createValidator(array $data = null)
+    protected function createValidator()
     {
         $validator = new ModelValidator($this);
-        if ($data !== null) {
-            $validator->setData($data);
-        }
         return $validator;
     }
 }
