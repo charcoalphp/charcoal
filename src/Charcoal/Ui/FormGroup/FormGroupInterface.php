@@ -2,6 +2,7 @@
 
 namespace Charcoal\Ui\FormGroup;
 
+// From 'charcoal-ui'
 use Charcoal\Ui\Form\FormInterface;
 
 /**
@@ -75,7 +76,7 @@ interface FormGroupInterface
     /**
      * Set the identifier of the group.
      *
-     * @param string $ident Sidemenu group identifier.
+     * @param string $ident Secondary menu group identifier.
      * @return FormGroupInterface Chainable
      */
     public function setIdent($ident);

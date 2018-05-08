@@ -8,15 +8,15 @@ namespace Charcoal\Ui;
 interface UiGroupingInterface extends UiItemInterface
 {
     /**
-     * Set the identifier of the sidemenu group.
+     * Set the identifier of the secondary menu group.
      *
-     * @param  string $ident Sidemenu group identifier.
+     * @param  string $ident Secondary menu group identifier.
      * @return UiGroupingInterface Returns the current item.
      */
     public function setIdent($ident);
 
     /**
-     * Retrieve the idenfitier of the sidemenu group.
+     * Retrieve the idenfitier of the secondary menu group.
      *
      * @return string
      */
