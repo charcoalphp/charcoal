@@ -4,10 +4,14 @@ It is possible to lookup, retrieve, assign, or merge values in multi-dimensional
 
 > 👉 The key separator feature is only implemented by the `Config` class, by default.
 
-**Mixin**
+#### Mixin
 
--   `Charcoal\Config\SeparatorAwareInterface`
--   `Charcoal\Config\SeparatorAwareTrait`
+-   [`Charcoal\Config\SeparatorAwareInterface`](src/Charcoal/Config/SeparatorAwareInterface.php)
+-   [`Charcoal\Config\SeparatorAwareTrait`](src/Charcoal/Config/SeparatorAwareTrait.php)
+
+
+
+## Config Object
 
 In Config objects, the default separator is the period character (`.`). The token can be retrieved with the `separator()` method and customized using `setSeparator()` method.
 

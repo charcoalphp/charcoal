@@ -4,13 +4,24 @@ Delegates allow several objects to share values and act as fallbacks when the cu
 
 > 👉 The delegates feature is only implemented by the `Config` class, by default.
 
-**Mixin**
+#### Mixin
 
--   `Charcoal\Config\DelegatesAwareInterface`
--   `Charcoal\Config\DelegatesAwareTrait`
+-   [`Charcoal\Config\DelegatesAwareInterface`](src/Charcoal/Config/DelegatesAwareInterface.php)
+-   [`Charcoal\Config\DelegatesAwareTrait`](src/Charcoal/Config/DelegatesAwareTrait.php)
 
-In Config objects, _delegate objects_ are regsitered to an internal stack. If a data key cannot be resolved, the Config iterates over each delegate in the stack and stops on
-the first match containing a value that is not `NULL`.
+#### API
+
+Delegates can be registered with:
+
+-   `setDelegates()` — to replace stack with a new collection of delegates.
+-   `addDelegate()` — to add a delegate to the end of the stack.
+-   `prependDelegate()` — to add a delegate to the beginning of the stack.
+
+
+
+## Config Object
+
+In Config objects, _delegate objects_ are regsitered to an internal stack. If a data key cannot be resolved, the Config iterates over each delegate in the stack and stops on the first match containing a value that is not `NULL`.
 
 ```php
 use Charcoal\Config\GenericConfig as Config;
@@ -39,9 +50,3 @@ $cfg = new Config('path/config.json', [ $del1, $del2 ]);
 ```
 
 > 👉 The order of the delegate stack is important. They are looked in the order they are added, so the first match is returned. Use the `prependDelegate($delegate)` method to add a delegate to the front of the stack (top priority).
-
-Delegates can be registered with:
-
--   `setDelegates()` — to replace stack with a new collection of delegates.
--   `addDelegate()` — to add a delegate to the end of the stack.
--   `prependDelegate()` — to add a delegate to the beginning of the stack.

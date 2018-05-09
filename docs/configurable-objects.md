@@ -1,11 +1,13 @@
 # Configurable Objects
 
-**Mixin**
+#### Mixin
 
--   `Charcoal\Config\ConfigrableInterface`
--   `Charcoal\Config\ConfigurableTrait`
+-   [`Charcoal\Config\ConfigrableInterface`](src/Charcoal/Config/ConfigrableInterface.php)
+-   [`Charcoal\Config\ConfigurableTrait`](src/Charcoal/Config/ConfigurableTrait.php)
 
 Configurable objects (which could have been called "_Config Aware_") can have an associated Config object that can help define various properties, states, or other.
+
+#### API
 
 The trait provides three methods: `config()`, `setConfig()`, and `createConfig()`.
 
@@ -34,6 +36,8 @@ The trait provides three methods: `config()`, `setConfig()`, and `createConfig()
     ```php
     protected ConfigurableTrait::createConfig ( [ mixed $data = null ] ) : ConfigInterface
     ```
+
+#### Examples
 
 **Example #1: Implementation of the mixin**
 

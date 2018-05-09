@@ -4,12 +4,12 @@ Array data can be parsed from files depending on the file extension. This is use
 
 > 👉 The file loading feature is only implemented by the `Config` class, by default.
 
-**Mixin**
+#### Mixin
 
 -   [`Charcoal\Config\FileAwareInterface`](src/Charcoal/Config/FileAwareInterface.php)
 -   [`Charcoal\Config\FileAwareTrait`](src/Charcoal/Config/FileAwareTrait.php)
 
-**Supported File Formats**
+#### Supported File Formats
 
 -   [INI](#ini-configuration-files)
 -   [JSON](#json-configuration-files)
