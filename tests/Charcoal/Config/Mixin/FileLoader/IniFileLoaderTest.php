@@ -1,82 +1,82 @@
 <?php
 
-namespace Charcoal\Tests\Config\Config\FileLoader;
+namespace Charcoal\Tests\Config\Mixin\FileLoader;
 
 // From 'charcoal-config'
-use Charcoal\Tests\Config\Config\FileLoader\AbstractFileLoaderTestCase;
-use Charcoal\Config\AbstractConfig;
-use Charcoal\Config\GenericConfig;
+use Charcoal\Tests\Config\Mixin\FileLoader\AbstractFileLoaderTestCase;
+use Charcoal\Config\FileAwareTrait;
 
 /**
- * Test {@see AbstractConfig::loadIniFile() INI Config File Loading}
+ * Test {@see FileAwareTrait::loadIniFile() INI File Loading}
  *
- * @coversDefaultClass \Charcoal\Config\AbstractConfig
+ * @coversDefaultClass \Charcoal\Config\FileAwareTrait
  */
 class IniFileLoaderTest extends AbstractFileLoaderTestCase
 {
     /**
-     * Asserts that the Config supports INI config files.
+     * Asserts that the File Loader supports INI config files.
      *
      * @covers ::loadIniFile()
      * @covers ::loadFile()
      * @return void
      */
-    public function testAddFile()
+    public function testLoadFile()
     {
         $path = $this->getPathToFixture('pass/valid1.ini');
-        $this->cfg->addFile($path);
+        $data = $this->obj->loadFile($path);
 
-        $this->assertEquals('localhost', $this->cfg['host']);
-        $this->assertEquals('11211', $this->cfg['port']);
+        $this->assertEquals('localhost', $data['host']);
+        $this->assertEquals('11211', $data['port']);
         $this->assertEquals(
             [
                 'pdo_mysql',
                 'pdo_pgsql',
                 'pdo_sqlite',
             ],
-            $this->cfg['drivers']
+            $data['drivers']
         );
     }
 
     /**
-     * Asserts that the Config supports key-paths in INI config files.
+     * Asserts that the File Loader does NOT support key-paths in INI config files.
      *
+     * @see    \Charcoal\Tests\Config\Config\ConfigFileAwareTest::testLoadIniFileWithDelimitedData
      * @covers ::loadIniFile()
      * @return void
      */
-    public function testAddFileWithDelimitedData()
+    public function testLoadFileWithDelimitedData()
     {
         $path = $this->getPathToFixture('pass/valid2.ini');
-        $this->cfg->addFile($path);
+        $data = $this->obj->loadFile($path);
 
-        $this->assertEquals('localhost', $this->cfg['host']);
-        $this->assertEquals('utf8mb4', $this->cfg['database']['charset']);
+        $this->assertEquals('localhost', $data['host']);
+        $this->assertEquals('utf8mb4', $data['database.charset']);
         $this->assertEquals(
             [
                 'pdo_mysql',
                 'pdo_pgsql',
                 'pdo_sqlite',
             ],
-            $this->cfg['database']['drivers']
+            $data['database.drivers']
         );
     }
 
     /**
-     * Assert that an empty file is silently ignored.
+     * Asserts that an empty file is silently ignored.
      *
      * @covers ::loadIniFile()
      * @return void
      */
-    public function testAddEmptyFile()
+    public function testLoadEmptyFile()
     {
         $path = $this->getPathToFixture('pass/empty.ini');
-        $this->cfg->addFile($path);
+        $data = $this->obj->loadFile($path);
 
-        $this->assertEquals([], $this->cfg->data());
+        $this->assertEquals([], $data);
     }
 
     /**
-     * Assert that a broken file is NOT ignored.
+     * Asserts that a broken file is NOT ignored.
      *
      * @expectedException              UnexpectedValueException
      * @expectedExceptionMessageRegExp /^INI file ".+?" is empty or invalid$/
@@ -84,27 +84,27 @@ class IniFileLoaderTest extends AbstractFileLoaderTestCase
      * @covers ::loadIniFile()
      * @return void
      */
-    public function testAddMalformedFile()
+    public function testLoadMalformedFile()
     {
         // phpcs:disable Generic.PHP.NoSilencedErrors.Discouraged
         $path = $this->getPathToFixture('fail/malformed.ini');
-        @$this->cfg->addFile($path);
+        $data = @$this->obj->loadFile($path);
         // phpcs:enable
     }
 
     /**
-     * Assert that an unparsable file is silently ignored.
+     * Asserts that an unparsable file is silently ignored.
      *
      * @covers ::loadIniFile()
      * @return void
      */
-    public function testAddUnparsableFile()
+    public function testLoadUnparsableFile()
     {
         // phpcs:disable Generic.PHP.NoSilencedErrors.Discouraged
         $path = $this->getPathToFixture('pass/unparsable.ini');
-        @$this->cfg->addFile($path);
+        $data = @$this->obj->loadFile($path);
         // phpcs:enable
 
-        $this->assertEquals([], $this->cfg->data());
+        $this->assertEquals([], $data);
     }
 }

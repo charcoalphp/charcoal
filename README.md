@@ -79,9 +79,10 @@ Examples: application preferences, service options, and factory settings.
 -   **Class**: [`Charcoal\Config\AbstractConfig`](src/Charcoal/Config/AbstractConfig.php)
     -   `IteratorAggregate`
     -   `Psr\Container\ContainerInterface`
--   **Methods**: `defaults`, `merge`, `addFile`, `loadFile`
+-   **Methods**: `defaults`, `merge`, `addFile`
 -   **Interface**: [`Charcoal\Config\ConfigInterface`](src/Charcoal/Config/ConfigInterface.php)
     -   `Charcoal\Config\EntityInterface`
+    -   `Charcoal\Config\FileAwareInterface`
     -   `Charcoal\Config\SeparatorAwareInterface`
     -   `Charcoal\Config\DelegatesAwareInterface`
 

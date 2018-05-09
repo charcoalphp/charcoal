@@ -1,71 +1,70 @@
 <?php
 
-namespace Charcoal\Tests\Config\Config\FileLoader;
+namespace Charcoal\Tests\Config\Mixin\FileLoader;
 
 use ReflectionProperty;
 
 // From 'charcoal-config'
-use Charcoal\Tests\Config\Config\FileLoader\AbstractFileLoaderTestCase;
-use Charcoal\Config\AbstractConfig;
-use Charcoal\Config\GenericConfig;
+use Charcoal\Tests\Config\Mixin\FileLoader\AbstractFileLoaderTestCase;
+use Charcoal\Config\FileAwareTrait;
 
 /**
- * Test {@see AbstractConfig::loadYamlFile() YAML Config File Loading}
+ * Test {@see FileAwareTrait::loadYamlFile() YAML File Loading}
  *
- * @coversDefaultClass \Charcoal\Config\AbstractConfig
+ * @coversDefaultClass \Charcoal\Config\FileAwareTrait
  */
 class YamlFileLoaderTest extends AbstractFileLoaderTestCase
 {
     /**
-     * Asserts that the Config supports '.yml' YAML config files.
+     * Asserts that the File Loader supports '.yml' YAML config files.
      *
      * @covers ::loadYamlFile()
      * @covers ::loadFile()
      * @return void
      */
-    public function testAddFileWithYmlExtension()
+    public function testLoadFileWithYmlExtension()
     {
         $path = $this->getPathToFixture('pass/valid1.yml');
-        $this->cfg->addFile($path);
+        $data = $this->obj->loadFile($path);
 
-        $this->assertEquals('localhost', $this->cfg['host']);
-        $this->assertEquals('11211', $this->cfg['port']);
+        $this->assertEquals('localhost', $data['host']);
+        $this->assertEquals('11211', $data['port']);
         $this->assertEquals(
             [
                 'pdo_mysql',
                 'pdo_pgsql',
                 'pdo_sqlite',
             ],
-            $this->cfg['drivers']
+            $data['drivers']
         );
     }
 
     /**
-     * Asserts that the Config supports '.yaml' YAML config files.
+     * Asserts that the File Loader supports '.yaml' YAML config files.
      *
      * @covers ::loadYamlFile()
      * @covers ::loadFile()
      * @return void
      */
-    public function testAddFileWithYamlExtension()
+    public function testLoadFileWithYamlExtension()
     {
         $path = $this->getPathToFixture('pass/valid2.yaml');
-        $this->cfg->addFile($path);
+        $data = $this->obj->loadFile($path);
 
-        $this->assertEquals('localhost', $this->cfg['host']);
-        $this->assertEquals('11211', $this->cfg['port']);
+        $this->assertEquals('localhost', $data['host']);
+        $this->assertEquals('11211', $data['port']);
         $this->assertEquals(
             [
                 'pdo_mysql',
                 'pdo_pgsql',
                 'pdo_sqlite',
             ],
-            $this->cfg['drivers']
+            $data['drivers']
         );
     }
 
     /**
-     * Asserts that the Config throws an exception if the YAML Parser is unavailable.
+     * Asserts that the File Loader throws an exception if the YAML Parser is unavailable.
      *
      * @expectedException        LogicException
      * @expectedExceptionMessage YAML format requires the Symfony YAML component
@@ -75,30 +74,30 @@ class YamlFileLoaderTest extends AbstractFileLoaderTestCase
      * @covers ::loadYamlFile()
      * @return void
      */
-    public function testAddFileWithNoYamlParser()
+    public function testLoadFileWithNoYamlParser()
     {
         $this->disableSymfonyYamlComponent();
 
         $path = $this->getPathToFixture('pass/valid1.yml');
-        $this->cfg->addFile($path);
+        $data = $this->obj->loadFile($path);
     }
 
     /**
-     * Assert that an empty file is silently ignored.
+     * Asserts that an empty file is silently ignored.
      *
      * @covers ::loadYamlFile()
      * @return void
      */
-    public function testAddEmptyFile()
+    public function testLoadEmptyFile()
     {
         $path = $this->getPathToFixture('pass/empty.yml');
-        $this->cfg->addFile($path);
+        $data = $this->obj->loadFile($path);
 
-        $this->assertEquals([], $this->cfg->data());
+        $this->assertEquals([], $data);
     }
 
     /**
-     * Assert that a broken file is NOT ignored.
+     * Asserts that a broken file is NOT ignored.
      *
      * @expectedException              UnexpectedValueException
      * @expectedExceptionMessageRegExp /^YAML file ".+?" could not be parsed: .+$/
@@ -106,39 +105,10 @@ class YamlFileLoaderTest extends AbstractFileLoaderTestCase
      * @covers ::loadYamlFile()
      * @return void
      */
-    public function testAddMalformedFile()
+    public function testLoadMalformedFile()
     {
         $path = $this->getPathToFixture('pass/malformed.yml');
-        $this->cfg->addFile($path);
-    }
-
-    /**
-     * Assert that an ordered list is NOT ignored.
-     *
-     * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage Entity array access only supports non-numeric keys
-     *
-     * @covers ::loadYamlFile()
-     * @return void
-     */
-    public function testAddFileWithInvalidArray()
-    {
-        $path = $this->getPathToFixture('fail/invalid1.yml');
-        $this->cfg->addFile($path);
-    }
-
-    /**
-     * Assert that an invalid file is silently ignored.
-     *
-     * @covers ::loadYamlFile()
-     * @return void
-     */
-    public function testAddFileWithInvalidType()
-    {
-        $path = $this->getPathToFixture('pass/invalid2.yml');
-        $this->cfg->addFile($path);
-
-        $this->assertEquals([], $this->cfg->data());
+        $data = $this->obj->loadFile($path);
     }
 
     /**

@@ -8,6 +8,7 @@ namespace Charcoal\Config;
 interface ConfigInterface extends
     DelegatesAwareInterface,
     EntityInterface,
+    FileAwareInterface,
     SeparatorAwareInterface
 {
     /**
@@ -34,12 +35,4 @@ interface ConfigInterface extends
      * @return ConfigInterface Chainable
      */
     public function addFile($path);
-
-    /**
-     * Load a configuration file as an array.
-     *
-     * @param  string $path A path to a supported file.
-     * @return mixed The file content.
-     */
-    public function loadFile($path);
 }

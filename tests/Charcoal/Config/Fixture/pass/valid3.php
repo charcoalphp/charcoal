@@ -1,0 +1,3 @@
+<?php
+
+$this->foo = 'baz';

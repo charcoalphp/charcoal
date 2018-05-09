@@ -1,6 +1,13 @@
-# File Loader
+# Data File Loader
 
-> 👉 Note that file loading is not supported on the base `Entity` class. This is a `Config`-only feature.
+Array data can be parsed from files depending on the file extension. This is useful for accessing configuration data within application code.
+
+> 👉 The file loading feature is only implemented by the `Config` class, by default.
+
+**Mixin**
+
+-   [`Charcoal\Config\FileAwareInterface`](src/Charcoal/Config/FileAwareInterface.php)
+-   [`Charcoal\Config\FileAwareTrait`](src/Charcoal/Config/FileAwareTrait.php)
 
 **Supported File Formats**
 
@@ -9,7 +16,27 @@
 -   [PHP](#php-configuration-files)
 -   [YAML](#yaml-configuration-files)
 
-A configuration file can be imported into a Config object via the `addFile($path)` method, or by direct instantiation:
+
+
+## Loading Files
+
+> **Data Structure**
+> 
+> Note that the file contents must be parsable into an array, which may be multi-dimensional.
+
+A file can be imported into a variable via the `loadFile($path) : array` method.
+
+```php
+$data = $cfg->loadFile('config.php');
+```
+
+The file will be parsed and, if its an array, will be returned. If its NOT an array, an empty array will be returned instead.
+
+
+
+## Config Object
+
+A configuration file can be imported into a Config object via the `addFile($path) : self` method, or by direct instantiation:
 
 ```php
 use Charcoal\Config\GenericConfig as Config;
@@ -18,25 +45,7 @@ $cfg = new Config('config.json');
 $cfg->addFile('config.yml');
 ```
 
-The file's extension will be used to determine how to import the file.
 The file will be parsed and, if its an array, will be merged into the container.
-
-> **Data Structure**
-> 
-> Note that the file contents must be parsable into an associative array, which may be multi-dimensional.
-
-If you want to load a configuration file _without_ adding its content to the Config, use `loadFile($path)` instead.
-The file will be parsed and returned regardless if its an array.
-
-```php
-$data = $cfg->loadFile('config.php');
-```
-
-> **Key Separator**
-> 
-> By default, the Config uses `.` as the key-path delimiter. This can be changed or disabled, however, using the `setSeparator()` method.  
-> 
-> Learn more about [nested data lookups](docs/nested-lookup).
 
 
 
