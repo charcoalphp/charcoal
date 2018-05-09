@@ -16,22 +16,24 @@ This component is the glue for much of the [Charcoal framework][charcoal-app].
 
 ## Table of Contents
 
-1.  [Installation](#installation)
-    1.  [Requirements](#requirements)
-2.  [Entity & Config](#entity--config)
-3.  [Features](#features)
-    1.  [File Loader](#file-loader)
-    2.  [Key Separator Lookup](#key-separator-lookup)
-    3.  [Delegated Data Lookup](#delegates-lookup)
-    4.  [Array Access](#array-access)
-    5.  [Interoperability](#interoperability)
-    6.  [Configurable objects](#configurable-objects)
-4.  [Development](#development)
-    1. [API Documentation](#api-documentation)
-    2. [Development Dependencies](#development-dependencies)
-    3. [Coding Style](#coding-style)
-5.  [Credits](#credits)
-6.  [License](#license)
+-   [Installation](#installation)
+    -   [Requirements](#requirements)
+-   [Entity & Config](#entity--config)
+    -   [Entity](#entity)
+    -   [Config](#config)
+-   [Features](#features)
+    -   [File Loader](#file-loader)
+    -   [Key Separator Lookup](#key-separator-lookup)
+    -   [Delegated Data Lookup](#delegates-lookup)
+    -   [Array Access](#array-access)
+    -   [Interoperability](#interoperability)
+    -   [Configurable objects](#configurable-objects)
+-   [Development](#development)
+    -   [API Documentation](#api-documentation)
+    -   [Development Dependencies](#development-dependencies)
+    -   [Coding Style](#coding-style)
+-   [Credits](#credits)
+-   [License](#license)
 
 
 
@@ -43,24 +45,45 @@ The preferred (and only supported) method is with Composer:
 $ composer require locomotivemtl/charcoal-config
 ```
 
-
-
 ### Requirements
 
--   **PHP 5.6+**: _PHP 7_ is recommended.
--   [**PSR-11**][psr-11]: The container interface.
+-   [**PHP 5.6+**](https://php.net): _PHP 7_ is recommended.
+
+#### PSR
+
+-   [**PSR-11**][psr-11]: Common interface for dependency containers. For [interoperable configsets](#interoperability).
 
 
 
 ## Entity & Config
 
-In Charcoal, data is organized into two primary object types: `Entity` and `Config`.
+The Config component simplifies access to object data. It provides a property-based user interface for retrieving and storing arbitrary data within application code. Data is organized into two primary object types: _Entity_ and _Config_.
 
--   **Entities** are simple data containers that implement `ArrayAccess`, `JsonSerializable`, and `Serializable`.  
-    It provides the following public methods: `keys()`, `data()`, `setData()`, `has()`, `get()`, `set()`.
--   **Configs** are advanced _Entities_, with hierarchical storage and file loader support, that also implement `IteratorAggregate`, `Psr\Container\ContainerInterface`, `Charcoal\Config\SeparatorAwareInterface`, and `Charcoal\Config\DelegatesAwareInterface`.  
-    In addition to extending `Entity`, it provides the following public methods: `defaults()`, `merge()`, `addFile()`, and `loadFile()`.  
-    Configs are used for managing runtime configuration data such as application preferences, service options, and object settings.
+### Entity
+
+Entities represent simple data-object containers designed as a flexible foundation for domain model objects.  
+Examples: a single result from a repository or serve as the basis for each component of an MVC system.
+
+-   **Class**: [`Charcoal\Config\AbstractEntity`](src/Charcoal/Config/AbstractEntity.php)
+-   **Methods**: `keys`, `data`, `setData`, `has`, `get`, `set`
+-   **Interface**: [`Charcoal\Config\EntityInterface`](src/Charcoal/Config/EntityInterface.php)
+    -   `ArrayAccess`
+    -   `JsonSerializable`
+    -   `Serializable`
+
+### Config
+
+Configs are advanced _Entities_ designed for runtime configuration values with support for loading files and storing hierarchical data.  
+Examples: application preferences, service options, and factory settings.
+
+-   **Class**: [`Charcoal\Config\AbstractConfig`](src/Charcoal/Config/AbstractConfig.php)
+    -   `IteratorAggregate`
+    -   `Psr\Container\ContainerInterface`
+-   **Methods**: `defaults`, `merge`, `addFile`, `loadFile`
+-   **Interface**: [`Charcoal\Config\ConfigInterface`](src/Charcoal/Config/ConfigInterface.php)
+    -   `Charcoal\Config\EntityInterface`
+    -   `Charcoal\Config\SeparatorAwareInterface`
+    -   `Charcoal\Config\DelegatesAwareInterface`
 
 
 
@@ -248,16 +271,18 @@ $ composer test
 
 ### API Documentation
 
--   The auto-generated `phpDocumentor` API documentation is available at [https://locomotivemtl.github.io/charcoal-config/docs/master/](https://locomotivemtl.github.io/charcoal-config/docs/master/)
--   The auto-generated `apigen` API documentation is available at [https://codedoc.pub/locomotivemtl/charcoal-config/master/](https://codedoc.pub/locomotivemtl/charcoal-config/master/index.html)
+-   The auto-generated `phpDocumentor` API documentation is available at:  
+    [https://locomotivemtl.github.io/charcoal-config/docs/master/](https://locomotivemtl.github.io/charcoal-config/docs/master/)
+-   The auto-generated `apigen` API documentation is available at:  
+    [https://codedoc.pub/locomotivemtl/charcoal-config/master/](https://codedoc.pub/locomotivemtl/charcoal-config/master/index.html)
 
 
 
 ### Development Dependencies
 
--   `php-coveralls/php-coveralls`
--   `phpunit/phpunit`
--   `squizlabs/php_codesniffer`
+-   [php-coveralls/php-coveralls][phpcov]
+-   [phpunit/phpunit][phpunit]
+-   [squizlabs/php_codesniffer][phpcs]
 
 
 
@@ -292,6 +317,10 @@ Charcoal is licensed under the MIT license. See [LICENSE](LICENSE) for details.
 
 [charcoal-app]:       https://packagist.org/packages/locomotivemtl/charcoal-app
 [charcoal-config]:    https://packagist.org/packages/locomotivemtl/charcoal-config
+
+[phpunit]:            https://packagist.org/packages/phpunit/phpunit
+[phpcs]:              https://packagist.org/packages/squizlabs/php_codesniffer
+[phpcov]:             https://packagist.org/packages/php-coveralls/php-coveralls
 
 [dev-scrutinizer]:    https://scrutinizer-ci.com/g/locomotivemtl/charcoal-config/
 [dev-coveralls]:      https://coveralls.io/r/locomotivemtl/charcoal-config

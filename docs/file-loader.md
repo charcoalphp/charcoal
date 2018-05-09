@@ -38,6 +38,8 @@ $data = $cfg->loadFile('config.php');
 > 
 > Learn more about [nested data lookups](docs/nested-lookup).
 
+
+
 ## INI Configuration Files
 
 For the INI format, the Config uses the [`parse_ini_file()`](https://php.net/parse_ini_file) PHP function.
@@ -69,6 +71,8 @@ echo $cfg['host']; // "localhost"
 echo $cfg['database']['name']; // "mydb"
 var_export($cfg['database']['drivers']); // [ "pdo_mysql", "pdo_pgsql", "pdo_sqlite" ]
 ```
+
+
 
 ## JSON Configuration Files
 
@@ -103,6 +107,8 @@ echo $cfg['host']; // "localhost"
 echo $cfg['database']['name']; // "mydb"
 var_export($cfg['database']['drivers']); // [ "pdo_mysql", "pdo_pgsql", "pdo_sqlite" ]
 ```
+
+
 
 ## PHP Configuration Files
 
@@ -160,6 +166,8 @@ $this->addFile('path/to/config.json');
 ```
 
 In Charcoal, this approach is used to load environment-bound configuration files and seperate an application's settings into different topics.
+
+
 
 ## YAML Configuration Files
 
