@@ -1,10 +1,10 @@
 <?php
 
-namespace Charcoal\Tests\Entity;
+namespace Charcoal\Tests\Config\Entity;
 
 // From 'charcoal-config'
-use Charcoal\Tests\Entity\AbstractEntityTest;
-use Charcoal\Tests\Entity\Mock\MacroEntity;
+use Charcoal\Tests\Config\Entity\AbstractEntityTestCase;
+use Charcoal\Tests\Config\Mock\MacroEntity;
 use Charcoal\Config\AbstractEntity;
 
 /**
@@ -12,7 +12,7 @@ use Charcoal\Config\AbstractEntity;
  *
  * @coversDefaultClass \Charcoal\Config\AbstractEntity
  */
-class EntityTest extends AbstractEntityTest
+class EntityTest extends AbstractEntityTestCase
 {
     /**
      * @var MacroEntity

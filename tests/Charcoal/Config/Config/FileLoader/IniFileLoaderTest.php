@@ -1,9 +1,9 @@
 <?php
 
-namespace Charcoal\Tests\Config\FileLoader;
+namespace Charcoal\Tests\Config\Config\FileLoader;
 
 // From 'charcoal-config'
-use Charcoal\Tests\Config\FileLoader\AbstractFileLoaderTest;
+use Charcoal\Tests\Config\Config\FileLoader\AbstractFileLoaderTestCase;
 use Charcoal\Config\AbstractConfig;
 use Charcoal\Config\GenericConfig;
 
@@ -12,7 +12,7 @@ use Charcoal\Config\GenericConfig;
  *
  * @coversDefaultClass \Charcoal\Config\AbstractConfig
  */
-class IniFileLoaderTest extends AbstractFileLoaderTest
+class IniFileLoaderTest extends AbstractFileLoaderTestCase
 {
     /**
      * Asserts that the Config supports INI config files.
@@ -101,7 +101,7 @@ class IniFileLoaderTest extends AbstractFileLoaderTest
     public function testAddUnparsableFile()
     {
         // phpcs:disable Generic.PHP.NoSilencedErrors.Discouraged
-        $path = $this->getPathToFixture('pass/invalid.ini');
+        $path = $this->getPathToFixture('pass/unparsable.ini');
         @$this->cfg->addFile($path);
         // phpcs:enable
 

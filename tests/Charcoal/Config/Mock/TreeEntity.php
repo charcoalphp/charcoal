@@ -1,21 +1,22 @@
 <?php
 
-namespace Charcoal\Tests\Entity\Mock;
+namespace Charcoal\Tests\Config\Mock;
 
 use InvalidArgumentException;
 
 // From 'charcoal-config'
-use Charcoal\Config\DelegatesAwareInterface;
-use Charcoal\Config\DelegatesAwareTrait;
+use Charcoal\Config\SeparatorAwareInterface;
+use Charcoal\Config\SeparatorAwareTrait;
 
 /**
- * Mock object of {@see \Charcoal\Tests\Entity\DelegatesAwareTest}
+ * Mock object of {@see \Charcoal\Tests\Config\Mixin\SeparatorAwareTest}
  */
-class DelegateEntity extends Entity implements DelegatesAwareInterface
+class TreeEntity extends Entity implements SeparatorAwareInterface
 {
-    use DelegatesAwareTrait {
-        DelegatesAwareTrait::hasInDelegates as public;
-        DelegatesAwareTrait::getInDelegates as public;
+    use SeparatorAwareTrait {
+        SeparatorAwareTrait::hasWithSeparator as public;
+        SeparatorAwareTrait::getWithSeparator as public;
+        SeparatorAwareTrait::setWithSeparator as public;
     }
 
     /**
@@ -33,6 +34,10 @@ class DelegateEntity extends Entity implements DelegatesAwareInterface
             );
         }
 
+        if ($this->separator && strstr($key, $this->separator)) {
+            return $this->hasWithSeparator($key);
+        }
+
         $key = $this->camelize($key);
 
         /** @internal Edge Case: "_" → "" */
@@ -44,7 +49,7 @@ class DelegateEntity extends Entity implements DelegatesAwareInterface
             $value = $this->{$key}();
         } else {
             if (!isset($this->{$key})) {
-                return $this->hasInDelegates($key);
+                return false;
             }
             $value = $this->{$key};
         }
@@ -67,6 +72,10 @@ class DelegateEntity extends Entity implements DelegatesAwareInterface
             );
         }
 
+        if ($this->separator && strstr($key, $this->separator)) {
+            return $this->getWithSeparator($key);
+        }
+
         $key = $this->camelize($key);
 
         /** @internal Edge Case: "_" → "" */
@@ -80,8 +89,46 @@ class DelegateEntity extends Entity implements DelegatesAwareInterface
             if (isset($this->{$key})) {
                 return $this->{$key};
             } else {
-                return $this->getInDelegates($key);
+                return null;
             }
         }
+    }
+
+    /**
+     * Assigns the value to the specified key on this entity.
+     *
+     * @param  string $key   The data key to assign $value to.
+     * @param  mixed  $value The data value to assign to $key.
+     * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
+     * @return void
+     */
+    public function offsetSet($key, $value)
+    {
+        if (is_numeric($key)) {
+            throw new InvalidArgumentException(
+                'Entity array access only supports non-numeric keys'
+            );
+        }
+
+        if ($this->separator && strstr($key, $this->separator)) {
+            $this->setWithSeparator($key, $value);
+            return;
+        }
+
+        $key = $this->camelize($key);
+
+        /** @internal Edge Case: "_" → "" */
+        if ($key === '') {
+            return;
+        }
+
+        $setter = 'set'.ucfirst($key);
+        if (is_callable([ $this, $setter ])) {
+            $this->{$setter}($value);
+        } else {
+            $this->{$key} = $value;
+        }
+
+        $this->keys[$key] = true;
     }
 }

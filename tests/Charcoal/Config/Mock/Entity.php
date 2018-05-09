@@ -1,6 +1,6 @@
 <?php
 
-namespace Charcoal\Tests\Entity\Mock;
+namespace Charcoal\Tests\Config\Mock;
 
 // From 'charcoal-config'
 use Charcoal\Config\AbstractEntity;

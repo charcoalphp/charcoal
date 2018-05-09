@@ -1,6 +1,6 @@
 <?php
 
-namespace Charcoal\Tests\Entity\Mock;
+namespace Charcoal\Tests\Config\Mock;
 
 /**
  * Mock object of {@see \Charcoal\Config\AbstractEntity}

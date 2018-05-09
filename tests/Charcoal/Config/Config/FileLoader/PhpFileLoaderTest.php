@@ -1,9 +1,9 @@
 <?php
 
-namespace Charcoal\Tests\Config\FileLoader;
+namespace Charcoal\Tests\Config\Config\FileLoader;
 
 // From 'charcoal-config'
-use Charcoal\Tests\Config\FileLoader\AbstractFileLoaderTest;
+use Charcoal\Tests\Config\Config\FileLoader\AbstractFileLoaderTestCase;
 use Charcoal\Config\AbstractConfig;
 use Charcoal\Config\GenericConfig;
 
@@ -12,7 +12,7 @@ use Charcoal\Config\GenericConfig;
  *
  * @coversDefaultClass \Charcoal\Config\AbstractConfig
  */
-class PhpFileLoaderTest extends AbstractFileLoaderTest
+class PhpFileLoaderTest extends AbstractFileLoaderTestCase
 {
     /**
      * Asserts that the Config supports PHP config files.

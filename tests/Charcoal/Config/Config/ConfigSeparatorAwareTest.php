@@ -1,9 +1,9 @@
 <?php
 
-namespace Charcoal\Tests\Config;
+namespace Charcoal\Tests\Config\Config;
 
 // From 'charcoal-config'
-use Charcoal\Tests\Config\AbstractConfigTest;
+use Charcoal\Tests\Config\Config\AbstractConfigTestCase;
 use Charcoal\Tests\Config\Mock\MacroConfig;
 use Charcoal\Config\AbstractConfig;
 use Charcoal\Config\SeparatorAwareInterface;
@@ -13,7 +13,7 @@ use Charcoal\Config\SeparatorAwareInterface;
  *
  * @coversDefaultClass \Charcoal\Config\AbstractConfig
  */
-class ConfigSeparatorAwareTest extends AbstractConfigTest
+class ConfigSeparatorAwareTest extends AbstractConfigTestCase
 {
     /**
      * @var MacroConfig

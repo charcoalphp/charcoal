@@ -1,6 +1,6 @@
 <?php
 
-namespace Charcoal\Tests;
+namespace Charcoal\Tests\Config\Mixin;
 
 use ArrayAccess;
 use InvalidArgumentException;
@@ -10,7 +10,7 @@ use InvalidArgumentException;
  *
  * Only string keys are accepted.
  */
-trait ArrayAccessTrait
+trait ArrayAccessTestTrait
 {
     /**
      * Asserts that the object implements ArrayAccess.

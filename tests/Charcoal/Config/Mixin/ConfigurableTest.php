@@ -1,9 +1,10 @@
 <?php
 
-namespace Charcoal\Tests\Config;
+namespace Charcoal\Tests\Config\Mixin;
 
 // From 'charcoal-config'
-use Charcoal\Tests\Config\AbstractConfigTest;
+use Charcoal\Tests\AbstractTestCase;
+use Charcoal\Tests\FixturesTrait;
 use Charcoal\Tests\Config\Mock\ConfigurableObject;
 use Charcoal\Config\ConfigurableInterface;
 use Charcoal\Config\ConfigurableTrait;
@@ -15,8 +16,10 @@ use Charcoal\Config\GenericConfig;
  *
  * @coversDefaultClass \Charcoal\Config\ConfigurableTrait
  */
-class ConfigurableTest extends AbstractConfigTest
+class ConfigurableTest extends AbstractTestCase
 {
+    use FixturesTrait;
+
     /**
      * @var ConfigurableObject
      */

@@ -1,11 +1,11 @@
 <?php
 
-namespace Charcoal\Tests\Entity;
+namespace Charcoal\Tests\Config\Mixin;
 
 // From 'charcoal-config'
 use Charcoal\Tests\AbstractTestCase;
-use Charcoal\Tests\Entity\Mock\DelegateEntity;
-use Charcoal\Tests\Entity\Mock\Entity;
+use Charcoal\Tests\Config\Mock\DelegateEntity;
+use Charcoal\Tests\Config\Mock\Entity;
 use Charcoal\Config\DelegatesAwareInterface;
 use Charcoal\Config\DelegatesAwareTrait;
 

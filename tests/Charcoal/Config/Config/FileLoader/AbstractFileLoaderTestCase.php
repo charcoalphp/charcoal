@@ -1,16 +1,19 @@
 <?php
 
-namespace Charcoal\Tests\Config\FileLoader;
+namespace Charcoal\Tests\Config\Config\FileLoader;
 
 // From 'charcoal-config'
-use Charcoal\Tests\Config\AbstractConfigTest;
+use Charcoal\Tests\AbstractTestCase;
+use Charcoal\Tests\FixturesTrait;
 use Charcoal\Config\GenericConfig;
 
 /**
  * Base Config File Loading Test
  */
-abstract class AbstractFileLoaderTest extends AbstractConfigTest
+abstract class AbstractFileLoaderTestCase extends AbstractTestCase
 {
+    use FixturesTrait;
+
     /**
      * @var GenericConfig
      */

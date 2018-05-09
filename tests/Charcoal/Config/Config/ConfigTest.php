@@ -1,6 +1,6 @@
 <?php
 
-namespace Charcoal\Tests\Config;
+namespace Charcoal\Tests\Config\Config;
 
 use StdClass;
 use ArrayIterator;
@@ -11,7 +11,7 @@ use InvalidArgumentException;
 use Psr\Container\ContainerInterface;
 
 // From 'charcoal-config'
-use Charcoal\Tests\Config\AbstractConfigTest;
+use Charcoal\Tests\Config\Config\AbstractConfigTestCase;
 use Charcoal\Tests\Config\Mock\MacroConfig;
 use Charcoal\Config\AbstractConfig;
 
@@ -28,7 +28,7 @@ use Charcoal\Config\AbstractConfig;
  *
  * @coversDefaultClass \Charcoal\Config\AbstractConfig
  */
-class ConfigTest extends AbstractConfigTest
+class ConfigTest extends AbstractConfigTestCase
 {
     /**
      * @var MacroConfig

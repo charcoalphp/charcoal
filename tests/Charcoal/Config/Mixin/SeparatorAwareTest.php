@@ -1,10 +1,10 @@
 <?php
 
-namespace Charcoal\Tests\Entity;
+namespace Charcoal\Tests\Config\Mixin;
 
 // From 'charcoal-config'
 use Charcoal\Tests\AbstractTestCase;
-use Charcoal\Tests\Entity\Mock\TreeEntity;
+use Charcoal\Tests\Config\Mock\TreeEntity;
 use Charcoal\Config\SeparatorAwareInterface;
 use Charcoal\Config\SeparatorAwareTrait;
 

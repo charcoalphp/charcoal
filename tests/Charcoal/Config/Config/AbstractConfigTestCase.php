@@ -1,17 +1,20 @@
 <?php
 
-namespace Charcoal\Tests\Config;
+namespace Charcoal\Tests\Config\Config;
 
 // From 'charcoal-config'
 use Charcoal\Tests\AbstractTestCase;
+use Charcoal\Tests\FixturesTrait;
 use Charcoal\Tests\Config\Mock\MacroConfig;
 use Charcoal\Config\AbstractConfig;
 
 /**
  * Base AbstractConfig Test
  */
-abstract class AbstractConfigTest extends AbstractTestCase
+abstract class AbstractConfigTestCase extends AbstractTestCase
 {
+    use FixturesTrait;
+
     /**
      * Create a concrete MacroConfig instance.
      *
@@ -34,16 +37,5 @@ abstract class AbstractConfigTest extends AbstractTestCase
     public function mockConfig($data = null, $delegates = null)
     {
         return $this->getMockForAbstractClass(AbstractConfig::class, [ $data, $delegates ]);
-    }
-
-    /**
-     * Retrieve the file path to the given fixture.
-     *
-     * @param  string $file The file path relative to the Fixture directory.
-     * @return string The file path to the fixture relative to the base directory.
-     */
-    public function getPathToFixture($file)
-    {
-        return 'tests/Charcoal/Config/Fixture/'.ltrim($file, '/');
     }
 }

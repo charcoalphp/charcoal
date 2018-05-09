@@ -1,6 +1,6 @@
 <?php
 
-namespace Charcoal\Tests\Config;
+namespace Charcoal\Tests\Config\Config;
 
 use StdClass;
 use Iterator;
@@ -8,7 +8,7 @@ use IteratorAggregate;
 use InvalidArgumentException;
 
 // From 'charcoal-config'
-use Charcoal\Tests\Config\AbstractConfigTest;
+use Charcoal\Tests\Config\Config\AbstractConfigTestCase;
 use Charcoal\Config\GenericConfig;
 
 /**
@@ -16,7 +16,7 @@ use Charcoal\Config\GenericConfig;
  *
  * @coversDefaultClass \Charcoal\Config\AbstractConfig
  */
-class ConfigArrayMergeTest extends AbstractConfigTest
+class ConfigArrayMergeTest extends AbstractConfigTestCase
 {
     /**
      * @var GenericConfig

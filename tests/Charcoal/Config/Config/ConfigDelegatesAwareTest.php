@@ -1,9 +1,9 @@
 <?php
 
-namespace Charcoal\Tests\Config;
+namespace Charcoal\Tests\Config\Config;
 
 // From 'charcoal-config'
-use Charcoal\Tests\Config\AbstractConfigTest;
+use Charcoal\Tests\Config\Config\AbstractConfigTestCase;
 use Charcoal\Tests\Config\Mock\MacroConfig;
 use Charcoal\Config\AbstractConfig;
 use Charcoal\Config\DelegatesAwareInterface;
@@ -13,7 +13,7 @@ use Charcoal\Config\DelegatesAwareInterface;
  *
  * @coversDefaultClass \Charcoal\Config\AbstractConfig
  */
-class ConfigDelegatesAwareTest extends AbstractConfigTest
+class ConfigDelegatesAwareTest extends AbstractConfigTestCase
 {
     /**
      * @var MacroConfig

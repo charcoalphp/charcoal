@@ -1,11 +1,11 @@
 <?php
 
-namespace Charcoal\Tests\Config\FileLoader;
+namespace Charcoal\Tests\Config\Config\FileLoader;
 
 use ReflectionProperty;
 
 // From 'charcoal-config'
-use Charcoal\Tests\Config\FileLoader\AbstractFileLoaderTest;
+use Charcoal\Tests\Config\Config\FileLoader\AbstractFileLoaderTestCase;
 use Charcoal\Config\AbstractConfig;
 use Charcoal\Config\GenericConfig;
 
@@ -14,7 +14,7 @@ use Charcoal\Config\GenericConfig;
  *
  * @coversDefaultClass \Charcoal\Config\AbstractConfig
  */
-class YamlFileLoaderTest extends AbstractFileLoaderTest
+class YamlFileLoaderTest extends AbstractFileLoaderTestCase
 {
     /**
      * Asserts that the Config supports '.yml' YAML config files.

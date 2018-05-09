@@ -1,13 +1,13 @@
 <?php
 
-namespace Charcoal\Tests\Entity;
+namespace Charcoal\Tests\Config\Entity;
 
 use ArrayAccess;
 
 // From 'charcoal-config'
-use Charcoal\Tests\ArrayAccessTrait;
-use Charcoal\Tests\Entity\AbstractEntityTest;
-use Charcoal\Tests\Entity\Mock\MacroEntity;
+use Charcoal\Tests\Config\Entity\AbstractEntityTestCase;
+use Charcoal\Tests\Config\Mixin\ArrayAccessTestTrait;
+use Charcoal\Tests\Config\Mock\MacroEntity;
 use Charcoal\Config\AbstractEntity;
 
 /**
@@ -15,9 +15,9 @@ use Charcoal\Config\AbstractEntity;
  *
  * @coversDefaultClass \Charcoal\Config\AbstractEntity
  */
-class EntityArrayAccessTest extends AbstractEntityTest
+class EntityArrayAccessTest extends AbstractEntityTestCase
 {
-    use ArrayAccessTrait;
+    use ArrayAccessTestTrait;
 
     /**
      * @var MacroEntity
@@ -112,7 +112,7 @@ class EntityArrayAccessTest extends AbstractEntityTest
     // =========================================================================
 
     /**
-     * @covers \Charcoal\Tests\Entity\Mock\MacroEntity::foo()
+     * @covers \Charcoal\Tests\Config\Mock\MacroEntity::foo()
      * @covers ::offsetExists()
      * @return void
      */
@@ -125,7 +125,7 @@ class EntityArrayAccessTest extends AbstractEntityTest
     }
 
     /**
-     * @covers \Charcoal\Tests\Entity\Mock\MacroEntity::foo()
+     * @covers \Charcoal\Tests\Config\Mock\MacroEntity::foo()
      * @covers ::offsetGet()
      * @return void
      */
@@ -138,7 +138,7 @@ class EntityArrayAccessTest extends AbstractEntityTest
     }
 
     /**
-     * @covers \Charcoal\Tests\Entity\Mock\MacroEntity::setFoo()
+     * @covers \Charcoal\Tests\Config\Mock\MacroEntity::setFoo()
      * @covers ::offsetSet()
      * @return void
      */
@@ -152,7 +152,7 @@ class EntityArrayAccessTest extends AbstractEntityTest
     }
 
     /**
-     * @covers \Charcoal\Tests\Entity\Mock\MacroEntity::setFoo()
+     * @covers \Charcoal\Tests\Config\Mock\MacroEntity::setFoo()
      * @covers ::offsetUnset()
      * @return void
      */

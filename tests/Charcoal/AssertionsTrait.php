@@ -8,7 +8,7 @@ namespace Charcoal\Tests;
 trait AssertionsTrait
 {
     /**
-     * Assert that the given haystack is as expected.
+     * Asserts that the given haystack is as expected.
      *
      * @param  array  $expected The expected haystack.
      * @param  array  $haystack The actual haystack.
@@ -22,7 +22,7 @@ trait AssertionsTrait
     }
 
     /**
-     * Assert that the given haystack contains the expected values.
+     * Asserts that the given haystack contains the expected values.
      *
      * @param  array  $expected The expected haystack.
      * @param  array  $haystack The actual haystack.
@@ -37,7 +37,7 @@ trait AssertionsTrait
     }
 
     /**
-     * Assert that the given haystack contains the expected keys.
+     * Asserts that the given haystack contains the expected keys.
      *
      * @param  array  $expected The expected haystack.
      * @param  array  $haystack The actual haystack.
@@ -52,7 +52,7 @@ trait AssertionsTrait
     }
 
     /**
-     * Assert that the given haystack contains the expected subsets.
+     * Asserts that the given haystack contains the expected subsets.
      *
      * @param  array   $expected The expected haystack.
      * @param  array   $haystack The actual haystack.

@@ -1,19 +1,19 @@
 <?php
 
-namespace Charcoal\Tests\Config;
+namespace Charcoal\Tests\Config\Config;
 
 // From 'charcoal-config'
-use Charcoal\Tests\Config\AbstractConfigTest;
+use Charcoal\Tests\Config\Config\AbstractConfigTestCase;
 use Charcoal\Config\GenericConfig;
 
 /**
  * Test the file loading capabilities of AbstractConfig
  *
- * For tests of supported formats, lookup {@see \Charcoal\Tests\Config\FileLoader}.
+ * For tests of supported formats, lookup {@see \Charcoal\Tests\Config\Config\FileLoader}.
  *
  * @coversDefaultClass \Charcoal\Config\AbstractConfig
  */
-class ConfigFileAwareTest extends AbstractConfigTest
+class ConfigFileAwareTest extends AbstractConfigTestCase
 {
     /**
      * @var GenericConfig

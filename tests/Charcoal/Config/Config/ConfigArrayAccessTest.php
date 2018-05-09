@@ -1,12 +1,12 @@
 <?php
 
-namespace Charcoal\Tests\Config;
+namespace Charcoal\Tests\Config\Config;
 
 use ArrayAccess;
 
 // From 'charcoal-config'
-use Charcoal\Tests\ArrayAccessTrait;
-use Charcoal\Tests\Config\AbstractConfigTest;
+use Charcoal\Tests\Config\Config\AbstractConfigTestCase;
+use Charcoal\Tests\Config\Mixin\ArrayAccessTestTrait;
 use Charcoal\Tests\Config\Mock\MacroConfig;
 use Charcoal\Config\AbstractConfig;
 
@@ -15,9 +15,9 @@ use Charcoal\Config\AbstractConfig;
  *
  * @coversDefaultClass \Charcoal\Config\AbstractConfig
  */
-class ConfigArrayAccessTest extends AbstractConfigTest
+class ConfigArrayAccessTest extends AbstractConfigTestCase
 {
-    use ArrayAccessTrait;
+    use ArrayAccessTestTrait;
 
     /**
      * @var MacroConfig
