@@ -10,27 +10,31 @@ Charcoal Cache
 
 A [Charcoal][charcoal-app] service provider for the [Stash Cache Library][stash].
 
+
+
 ## Table of Contents
 
-1.  [Installation](#installation)
-    1.  [Dependencies](#dependencies)
-    2.  [Dependents](#dependents)
-2.  [Service Provider](#service-provider)
-    1.  [Parameters](#parameters)
-    2.  [Services](#services)
-3.  [Configuration](#configuration)
-    1.  [Pool Configuration](#pool-configuration)
-    2.  ~~[Driver Configuration](#driver-configuration)~~
-4.  [Usage](#usage)
-5.  [Middleware](#middleware)
-6.  [Helpers](#helpers)
-    1.  [CachePoolAwareTrait](#cachepoolawaretrait)
-7.  [Development](#development)
-    1. [API Documentation](#api-documentation)
-    2. [Development Dependencies](#development-dependencies)
-    3. [Coding Style](#coding-style)
-8.  [Credits](#credits)
-9.  [License](#license)
+-   [Installation](#installation)
+    -   [Dependencies](#dependencies)
+    -   [Dependents](#dependents)
+-   [Service Provider](#service-provider)
+    -   [Parameters](#parameters)
+    -   [Services](#services)
+-   [Configuration](#configuration)
+    -   [Pool Configuration](#pool-configuration)
+    -   ~~[Driver Configuration](#driver-configuration)~~
+-   [Usage](#usage)
+-   [Middleware](#middleware)
+-   [Helpers](#helpers)
+    -   [CachePoolAwareTrait](#cachepoolawaretrait)
+-   [Development](#development)
+    -  [API Documentation](#api-documentation)
+    -  [Development Dependencies](#development-dependencies)
+    -  [Coding Style](#coding-style)
+-   [Credits](#credits)
+-   [License](#license)
+
+
 
 ## Installation
 
@@ -66,31 +70,41 @@ A [Charcoal][charcoal-app] service provider for the [Stash Cache Library][stash]
 
 If you are using [_locomotivemtl/charcoal-app_][charcoal-app], the [`CacheServiceProvider`][cache-provider] is automatically registered by the [`AppServiceProvider`][app-provider].
 
+
+
 ### Dependencies
 
 #### Required
 
--   **PHP 5.6+**: _PHP 7_ is recommended.
--   [**PSR-6**][psr-6]: The caching interface.
--   [**pimple/pimple**][pimple]: The service container and provider implementation.
--   [**locomotivemtl/charcoal-config**][charcoal-config]: The caching service is _configurable_ via [`CacheConfig`][cache-config].
--   [**tedivm/stash**][stash]: The supported caching library.
+-   [**PHP 5.6+**](https://php.net): _PHP 7_ is recommended.
+-   [**tedivm/stash**][stash]: PSR-6 compliant caching library.
+-   [**pimple/pimple**][pimple]: PSR-11 compliant service container and provider library.
+-   [**locomotivemtl/charcoal-config**][charcoal-config]: For configuring the caching service.
 
-#### Optional
+#### PSR
 
--   [**PSR-3**][psr-3]: The logger interface.
--   [**PSR-7**][psr-7]: The HTTP request interface for the [`CacheMiddleware`][cache-middleware].
+-   [**PSR-3**][psr-3]: Common interface for logging libraries. Supported by Stash.
+-   [**PSR-6**][psr-6]: Common interface for caching libraries. Fulfilled by Stash.
+-   [**PSR-7**][psr-7]: Common interface for HTTP messages. Followed by [`CacheMiddleware`][cache-middleware].
+-   [**PSR-11**][psr-11]: Common interface for dependency containers. Fulfilled by Pimple.
 
 ### Dependents
 
--   [**locomotivemtl/charcoal-app**][charcoal-app]: For caching HTTP response bodies with the [`CacheMiddleware`][cache-middleware].
--   [**locomotivemtl/charcoal-core**][charcoal-core]: For caching object data and model metadata.
+-   [**locomotivemtl/charcoal-admin**][charcoal-admin]: Admin interface for Charcoal applications.
+-   [**locomotivemtl/charcoal-app**][charcoal-app]: PSR-7 compliant framework for web applications.  
+    For caching HTTP responses via the [`CacheMiddleware`][cache-middleware].
+-   [**locomotivemtl/charcoal-core**][charcoal-core]: Collection, model, metadata, and database library.  
+    For caching object data and model metadata.
+
+
 
 ## Service Provider
 
 ### Parameters
 
 -   **cache/available-drivers**: Collection of registered cache drivers that are supported by this system (via [`Stash\DriverList`][stash-drivers]).
+
+
 
 ### Services
 
@@ -109,6 +123,8 @@ If you are using [_locomotivemtl/charcoal-app_][charcoal-app], the [`CacheServic
 -   **cache/driver**: Reference to the Stash cache driver used by `cache`. Defaults to "memory".
 -   **cache**: Main instance of the Stash cache pool which uses `cache/driver` and `cache/config.prefix`.
 
+
+
 ## Configuration
 
 ### Pool Configuration
@@ -122,11 +138,15 @@ Each pool comes with a set of default options which can be individually overridd
 | **types**       | `string[]` | `memory`   | List of cache drivers to choose from for the main Stash pool.
 | **default_ttl** | `integer`  | 1 week     | Default time-to-live (in seconds) for a cached item.  Currently, only used by the APC driver (`cache/drivers.apc`).
 
+
+
 ### Driver Configuration
 
 ~~Each driver comes with a set of default options which can be individually overridden.~~
 
 —N/A—
+
+
 
 ## Usage
 
@@ -181,6 +201,8 @@ return $userInfo;
 
 See the [Stash documentation](stash-docs) for more information on using the cache service.
 
+
+
 ## Middleware
 
 The [`CacheMiddleware`][cache-middleware] is available for PSR-7 applications that support middleware. The middleware saves the HTTP response body and headers into a [PSR-6 cache pool](psr-6) and returns that cached response if still valid.
@@ -211,7 +233,7 @@ $app->add(new \Charcoal\Cache\Middleware\CacheMiddleware([
 The middleware comes with a set of default options which can be individually overridden.
 
 | Setting            | Type                     | Default     | Description |
-|:-------------------|:------------------------:|:-----------:|:------------|
+|:-------------------|:------------------------ |:-----------:|:------------|
 | **active**         | `boolean`                | `FALSE`     | Whether to enable or disable the middleware ([_locomotivemtl/charcoal-app_][charcoal-app] only).
 | **cache**          | `CacheItemPoolInterface` | `cache`     | Required; The main Stash pool.
 | **ttl**            | `string[]`               | 1 week      | Time-to-live (in seconds) for a cached response.
@@ -246,6 +268,8 @@ or some of them:
 "ignored_query": [ "sort", "theme" ]
 ```
 
+
+
 ## Helpers
 
 ### CachePoolAwareTrait
@@ -255,6 +279,8 @@ The [`CachePoolAwareTrait`][cache-helper] is offered as a convenience to avoid d
 Assign a cache pool with `setCachePool()` and retrieve it with `cachePool()`.  
 
 Both methods are protected; this trait has no public interface.
+
+
 
 ## Development
 
@@ -270,16 +296,24 @@ To run the scripts (phplint, phpcs, and phpunit):
 $ composer test
 ```
 
+
+
 ### API Documentation
 
--   The auto-generated `phpDocumentor` API documentation is available at [https://locomotivemtl.github.io/charcoal-cache/docs/master/](https://locomotivemtl.github.io/charcoal-cache/docs/master/)
--   The auto-generated `apigen` API documentation is available at [https://codedoc.pub/locomotivemtl/charcoal-cache/master/](https://codedoc.pub/locomotivemtl/charcoal-cache/master/index.html)
+-   The auto-generated `phpDocumentor` API documentation is available at:  
+    [https://locomotivemtl.github.io/charcoal-cache/docs/master/](https://locomotivemtl.github.io/charcoal-cache/docs/master/)
+-   The auto-generated `apigen` API documentation is available at:  
+    [https://codedoc.pub/locomotivemtl/charcoal-cache/master/](https://codedoc.pub/locomotivemtl/charcoal-cache/master/index.html)
+
+
 
 ### Development Dependencies
 
--   `php-coveralls/php-coveralls`
--   `phpunit/phpunit`
--   `squizlabs/php_codesniffer`
+-   [php-coveralls/php-coveralls][phpcov]
+-   [phpunit/phpunit][phpunit]
+-   [squizlabs/php_codesniffer][phpcs]
+
+
 
 ### Coding Style
 
@@ -293,27 +327,36 @@ The charcoal-cache module follows the Charcoal coding-style:
 
 > Coding style validation / enforcement can be performed with `composer phpcs`. An auto-fixer is also available with `composer phpcbf`.
 
+
+
 ## Credits
 
 -   [Mathieu Ducharme](https://github.com/mducharme)
 -   [Chauncey McAskill](https://github.com/mcaskill)
 -   [Locomotive](https://locomotive.ca/)
 
+
+
 ## License
 
 -   Charcoal is licensed under the MIT license. See [LICENSE](LICENSE) for details.
 -   Stash is licensed under the BSD License. See the [LICENSE][stash-license] file for details.
+
+
 
 [cache-middleware]: src/Charcoal/Cache/Middleware/CacheMiddleware.php
 [cache-provider]:   src/Charcoal/Cache/ServiceProvider/CacheServiceProvider.php
 [cache-helper]:     src/Charcoal/Cache/CachePoolAwareTrait.php
 [cache-builder]:    src/Charcoal/Cache/CacheBuilder.php
 [cache-config]:     src/Charcoal/Cache/CacheConfig.php
-[app-provider]:     https://github.com/locomotivemtl/charcoal-app/blob/0.7.1/src/Charcoal/App/ServiceProvider/AppServiceProvider.php
+[app-provider]:     https://github.com/locomotivemtl/charcoal-app/blob/0.8.0/src/Charcoal/App/ServiceProvider/AppServiceProvider.php
 
 [pimple]:           https://packagist.org/packages/pimple/pimple
 [slim]:             https://packagist.org/packages/slim/slim
 [stash]:            https://packagist.org/packages/tedivm/stash
+[phpunit]:          https://packagist.org/packages/phpunit/phpunit
+[phpcs]:            https://packagist.org/packages/squizlabs/php_codesniffer
+[phpcov]:           https://packagist.org/packages/php-coveralls/php-coveralls
 [stash-drivers]:    https://github.com/tedious/Stash/blob/v0.14.2/src/Stash/DriverList.php
 [stash-docs]:       https://www.stashphp.com/
 [stash-license]:    https://github.com/tedious/Stash/blob/v0.14.2/LICENSE
@@ -330,15 +373,16 @@ The charcoal-cache module follows the Charcoal coding-style:
 [badge-sensiolabs]:   https://img.shields.io/sensiolabs/i/---.svg?style=flat-square
 [badge-travis]:       https://img.shields.io/travis/locomotivemtl/charcoal-cache.svg?style=flat-square
 
+[charcoal-admin]:  https://packagist.org/packages/locomotivemtl/charcoal-admin
 [charcoal-app]:    https://packagist.org/packages/locomotivemtl/charcoal-app
 [charcoal-cache]:  https://packagist.org/packages/locomotivemtl/charcoal-cache
 [charcoal-core]:   https://packagist.org/packages/locomotivemtl/charcoal-core
 [charcoal-config]: https://packagist.org/packages/locomotivemtl/charcoal-config
 
-[psr-1]: https://www.php-fig.org/psr/psr-1/
-[psr-2]: https://www.php-fig.org/psr/psr-2/
-[psr-3]: https://www.php-fig.org/psr/psr-3/
-[psr-4]: https://www.php-fig.org/psr/psr-4/
-[psr-5]: https://www.php-fig.org/psr/psr-5/
-[psr-6]: https://www.php-fig.org/psr/psr-6/
-[psr-7]: https://www.php-fig.org/psr/psr-7/
+[psr-1]:  https://www.php-fig.org/psr/psr-1/
+[psr-2]:  https://www.php-fig.org/psr/psr-2/
+[psr-3]:  https://www.php-fig.org/psr/psr-3/
+[psr-4]:  https://www.php-fig.org/psr/psr-4/
+[psr-6]:  https://www.php-fig.org/psr/psr-6/
+[psr-7]:  https://www.php-fig.org/psr/psr-7/
+[psr-11]: https://www.php-fig.org/psr/psr-11/
