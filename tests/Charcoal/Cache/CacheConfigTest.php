@@ -43,6 +43,7 @@ class CacheConfigTest extends AbstractTestCase
      * @covers ::defaults
      * @covers ::active
      * @covers ::types
+     * @covers ::defaultTypes
      * @covers ::defaultTtl
      * @covers ::prefix
      */
@@ -60,6 +61,7 @@ class CacheConfigTest extends AbstractTestCase
 
         $this->assertArrayHasKey('types', $defaults);
         $this->assertEquals($defaults['types'], $this->cfg->types());
+        $this->assertEquals($defaults['types'], $this->cfg->defaultTypes());
 
         $this->assertArrayHasKey('default_ttl', $defaults);
         $this->assertEquals($defaults['default_ttl'], $this->cfg->defaultTtl());
@@ -94,9 +96,18 @@ class CacheConfigTest extends AbstractTestCase
 
         // Mutated State
         $types = $this->cfg->types();
-        $this->assertNotContains('memory', $types);
-        $this->assertContains('memcache', $types);
-        $this->assertContains('noop', $types);
+        $this->assertEquals([ 'memcache', 'noop', 'memory' ], $types);
+    }
+
+    /**
+     * @covers ::types
+     */
+    public function testUniqueDrivers()
+    {
+        $this->cfg->setTypes([ 'memcache', 'memory', 'file', 'memcache' ]);
+
+        $types = $this->cfg->types();
+        $this->assertEquals([ 'memcache', 'memory', 'file' ], $types);
     }
 
     /**

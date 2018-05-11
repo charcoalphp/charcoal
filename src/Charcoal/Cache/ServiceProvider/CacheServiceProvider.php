@@ -232,7 +232,12 @@ class CacheServiceProvider implements ServiceProviderInterface
         $container['cache'] = function (Container $container) {
             $cacheBuilder = $container['cache/builder'];
             $cacheConfig  = $container['cache/config'];
-            $cacheDrivers = array_unique($cacheConfig['types'] + [ 'memory' ]);
+
+            if ($cacheConfig['active'] === true) {
+                $cacheDrivers = $cacheConfig['types'];
+            } else {
+                $cacheDrivers = $cacheConfig['default_types'];
+            }
 
             return $cacheBuilder($cacheDrivers);
         };

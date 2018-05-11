@@ -205,27 +205,18 @@ class CacheServiceProviderTest extends AbstractTestCase
         $driverClassNames = DriverList::getAvailableDrivers();
 
         return [
+            'Cache: Enabled' => [
+                $driverClassNames['BlackHole'],
+                [
+                    'active' => true,
+                    'types'  => [ 'noop' ],
+                ]
+            ],
             'Cache: Disabled' => [
                 $driverClassNames['Ephemeral'],
                 [
-                    'active' => false
-                ]
-            ],
-            'Cache: Default Type' => [
-                $driverClassNames['Ephemeral'],
-                [
-                ]
-            ],
-            'Cache: Fallback Type' => [
-                $driverClassNames['Ephemeral'],
-                [
-                    'types' => []
-                ]
-            ],
-            'Cache: Chosen Type' => [
-                $driverClassNames['BlackHole'],
-                [
-                    'types' => [ 'noop' ]
+                    'active' => false,
+                    'types'  => [ 'noop' ],
                 ]
             ],
         ];

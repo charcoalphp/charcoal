@@ -135,8 +135,8 @@ Each pool comes with a set of default options which can be individually overridd
 |:----------------|:----------:|:----------:|:------------|
 | **active**      | `boolean`  | `TRUE`     | Whether to enable or disable the cache service.
 | **prefix**      | `string`   | `charcoal` | Name of the main Stash pool.
-| **types**       | `string[]` | `memory`   | List of cache drivers to choose from for the main Stash pool.
-| **default_ttl** | `integer`  | 1 week     | Default time-to-live (in seconds) for a cached item.  Currently, only used by the APC driver (`cache/drivers.apc`).
+| **types**       | `string[]` | `memory`   | List of cache drivers to choose from for the main Stash pool. Defaults to "memory".
+| **default_ttl** | `integer`  | 1 week     | Default time-to-live (in seconds) for a cached item. Currently, only used by the APC driver (`cache/drivers.apc`).
 
 
 

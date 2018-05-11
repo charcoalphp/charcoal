@@ -15,6 +15,13 @@ class CacheConfig extends AbstractConfig
     const DEFAULT_NAMESPACE = 'charcoal';
 
     /**
+     * Default cache type and fallback for user preference.
+     */
+    const DEFAULT_TYPES = [
+        'memory' => true
+    ];
+
+    /**
      * Human-readable intervals in seconds.
      */
     const HOUR_IN_SECONDS = 3600;
@@ -39,7 +46,7 @@ class CacheConfig extends AbstractConfig
      *
      * @var array
      */
-    private $types = [ 'memory' ];
+    private $types;
 
     /**
      * Time-to-live in seconds.
@@ -64,7 +71,7 @@ class CacheConfig extends AbstractConfig
     {
         return [
             'active'      => true,
-            'types'       => [ 'memory' ],
+            'types'       => $this->defaultTypes(),
             'default_ttl' => self::WEEK_IN_SECONDS,
             'prefix'      => self::DEFAULT_NAMESPACE
         ];
@@ -137,18 +144,33 @@ class CacheConfig extends AbstractConfig
             );
         }
 
-        $this->types[] = $type;
+        $this->types[$type] = true;
         return $this;
     }
 
     /**
      * Retrieve the cache type(s) to use.
      *
+     * Note:
+     * 1. The default cache type is always appended.
+     * 2. Duplicate types are removed.
+     *
      * @return array
      */
     public function types()
     {
-        return $this->types;
+        $types = $this->types + self::DEFAULT_TYPES;
+        return array_keys($types);
+    }
+
+    /**
+     * Retrieve the default cache types.
+     *
+     * @return string[]
+     */
+    public function defaultTypes()
+    {
+        return array_keys(self::DEFAULT_TYPES);
     }
 
     /**
