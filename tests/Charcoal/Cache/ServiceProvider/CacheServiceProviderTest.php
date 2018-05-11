@@ -29,6 +29,7 @@ class CacheServiceProviderTest extends AbstractTestCase
 {
     /**
      * @covers ::register
+     * @covers ::registerDrivers
      * @covers ::registerService
      * @covers ::registerMiddleware
      */
@@ -82,7 +83,7 @@ class CacheServiceProviderTest extends AbstractTestCase
     /**
      * Test "cache/drivers"; basic drivers are instances of {@see DriverInterface}.
      *
-     * @covers ::registerService
+     * @covers ::registerDrivers
      */
     public function testBasicDriverInstances()
     {
@@ -109,7 +110,7 @@ class CacheServiceProviderTest extends AbstractTestCase
     /**
      * Test "cache/drivers"; vendor drivers are instances of {@see DriverInterface}.
      *
-     * @covers ::registerService
+     * @covers ::registerDrivers
      */
     public function testAvailableVendorDriverInstances()
     {
@@ -143,7 +144,7 @@ class CacheServiceProviderTest extends AbstractTestCase
     /**
      * Test "cache/drivers"; unavailable vendor drivers return NULL.
      *
-     * @covers ::registerService
+     * @covers ::registerDrivers
      */
     public function testUnavailableVendorDriverInstances()
     {
@@ -173,6 +174,7 @@ class CacheServiceProviderTest extends AbstractTestCase
     /**
      * Assert "cache/driver" resolves as expected.
      *
+     * @covers ::registerDrivers
      * @covers ::registerService
      *
      * @dataProvider provideConfigsForMainDriver

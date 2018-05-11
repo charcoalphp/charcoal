@@ -49,6 +49,7 @@ class CacheServiceProvider implements ServiceProviderInterface
      */
     public function register(Container$container)
     {
+        $this->registerDrivers($container);
         $this->registerService($container);
         $this->registerMiddleware($container);
     }
@@ -57,20 +58,8 @@ class CacheServiceProvider implements ServiceProviderInterface
      * @param  Container $container A container instance.
      * @return void
      */
-    public function registerService(Container $container)
+    public function registerDrivers(Container $container)
     {
-        /**
-         * The cache configset.
-         *
-         * @param  Container $container The service container.
-         * @return CacheConfig
-         */
-        $container['cache/config'] = function (Container $container) {
-            $appConfig   = isset($container['config']) ? $container['config'] : [];
-            $cacheConfig = isset($appConfig['cache']) ? $appConfig['cache'] : null;
-            return new CacheConfig($cacheConfig);
-        };
-
         /**
          * The collection of cache drivers that are supported by this system.
          *
@@ -187,6 +176,25 @@ class CacheServiceProvider implements ServiceProviderInterface
             };
 
             return $drivers;
+        };
+    }
+
+    /**
+     * @param  Container $container A container instance.
+     * @return void
+     */
+    public function registerService(Container $container)
+    {
+        /**
+         * The cache configset.
+         *
+         * @param  Container $container The service container.
+         * @return CacheConfig
+         */
+        $container['cache/config'] = function (Container $container) {
+            $appConfig   = isset($container['config']) ? $container['config'] : [];
+            $cacheConfig = isset($appConfig['cache']) ? $appConfig['cache'] : null;
+            return new CacheConfig($cacheConfig);
         };
 
         /**
