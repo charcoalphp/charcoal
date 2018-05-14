@@ -5,17 +5,15 @@ namespace Charcoal\Tests\Translator;
 use Exception;
 use ReflectionClass;
 
-// From PHPUnit
-use PHPUnit_Framework_TestCase;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\TranslatorAwareTrait;
 use Charcoal\Translator\Translator;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class TranslatorAwareTraitTest extends PHPUnit_Framework_TestCase
+class TranslatorAwareTraitTest extends AbstractTestCase
 {
     /**
      * Tested Class.
@@ -26,32 +24,34 @@ class TranslatorAwareTraitTest extends PHPUnit_Framework_TestCase
 
     /**
      * Set up the test.
+     *
+     * @return void
      */
     public function setUp()
     {
         $this->obj = $this->getMockForTrait(TranslatorAwareTrait::class);
     }
 
-    private function callMethod($obj, $name, array $args = [])
-    {
-        $class = new ReflectionClass($obj);
-        $method = $class->getMethod($name);
-        $method->setAccessible(true);
-        return $method->invokeArgs($obj, $args);
-    }
-
+    /**
+     * @expectedException Exception
+     *
+     * @return void
+     */
     public function testTranslatorWithoutSettingThrowsException()
     {
-        $this->setExpectedException(Exception::class);
         $this->callMethod($this->obj, 'translator');
     }
 
+    /**
+     * @return void
+     */
     public function testSetTranslator()
     {
         $translator = $this->getMockBuilder(Translator::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $this->callMethod($this->obj, 'setTranslator', [$translator]);
+
+        $this->callMethod($this->obj, 'setTranslator', [ $translator ]);
         $this->assertEquals($translator, $this->callMethod($this->obj, 'translator'));
     }
 }

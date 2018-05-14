@@ -2,9 +2,6 @@
 
 namespace Charcoal\Tests\Translation\ServiceProvider;
 
-// From PHPUnit
-use PHPUnit_Framework_TestCase;
-
 // From Pimple
 use Pimple\Container;
 
@@ -13,11 +10,12 @@ use Charcoal\Translator\Middleware\LanguageMiddleware;
 use Charcoal\Translator\ServiceProvider\TranslatorServiceProvider;
 use Charcoal\Translator\LocalesManager;
 use Charcoal\Translator\Translator;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class TranslatorServiceProviderTest extends PHPUnit_Framework_TestCase
+class TranslatorServiceProviderTest extends AbstractTestCase
 {
     /**
      * Tested Class.
@@ -35,6 +33,8 @@ class TranslatorServiceProviderTest extends PHPUnit_Framework_TestCase
 
     /**
      * Set up the test.
+     *
+     * @return void
      */
     public function setUp()
     {
@@ -89,6 +89,9 @@ class TranslatorServiceProviderTest extends PHPUnit_Framework_TestCase
         $this->container->register($this->obj);
     }
 
+    /**
+     * @return void
+     */
     protected function resetDefaultLanguage()
     {
         static $raw;
@@ -101,6 +104,9 @@ class TranslatorServiceProviderTest extends PHPUnit_Framework_TestCase
         $this->container['locales/default-language'] = $raw;
     }
 
+    /**
+     * @return void
+     */
     public function testKeys()
     {
         $this->assertFalse(isset($this->container['foofoobarbarbaz']));
@@ -113,30 +119,45 @@ class TranslatorServiceProviderTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(isset($this->container['middlewares/charcoal/translator/middleware/language']));
     }
 
+    /**
+     * @return void
+     */
     public function testAvailableLanguages()
     {
         $languages = $this->container['locales/available-languages'];
         $this->assertContains('en', $languages);
     }
 
+    /**
+     * @return void
+     */
     public function testLanguages()
     {
         $languages = $this->container['locales/languages'];
         $this->assertArrayHasKey('en', $languages);
     }
 
+    /**
+     * @return void
+     */
     public function testDefaultLanguage()
     {
         $defaultLanguage = $this->container['locales/default-language'];
         $this->assertEquals('en', $defaultLanguage);
     }
 
+    /**
+     * @return void
+     */
     public function testBrowserLanguageIsNullWithoutHttp()
     {
         $browserLanguage = $this->container['locales/browser-language'];
         $this->assertNull($browserLanguage);
     }
 
+    /**
+     * @return void
+     */
     public function testBrowserLanguage()
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'fr';
@@ -144,6 +165,9 @@ class TranslatorServiceProviderTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('fr', $browserLanguage);
     }
 
+    /**
+     * @return void
+     */
     public function testBrowserLanguageIsNullIfInvalidHttp()
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'baz';
@@ -151,6 +175,9 @@ class TranslatorServiceProviderTest extends PHPUnit_Framework_TestCase
         $this->assertNull($browserLanguage);
     }
 
+    /**
+     * @return void
+     */
     public function testDetectedLanguageIsNullWithoutHttp()
     {
         $this->container['locales/config']->setAutoDetect(true);
@@ -163,6 +190,9 @@ class TranslatorServiceProviderTest extends PHPUnit_Framework_TestCase
         $this->container['locales/config']->setAutoDetect(false);
     }
 
+    /**
+     * @return void
+     */
     public function testDetectedLanguage()
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'fr';
@@ -176,24 +206,36 @@ class TranslatorServiceProviderTest extends PHPUnit_Framework_TestCase
         $this->container['locales/config']->setAutoDetect(false);
     }
 
+    /**
+     * @return void
+     */
     public function testFallbackLanguages()
     {
         $fallbackLanguages = $this->container['locales/fallback-languages'];
         $this->assertEquals([ 'en' ], $fallbackLanguages);
     }
 
+    /**
+     * @return void
+     */
     public function testLanguageManager()
     {
         $manager = $this->container['locales/manager'];
         $this->assertInstanceOf(LocalesManager::class, $manager);
     }
 
+    /**
+     * @return void
+     */
     public function testTranslator()
     {
         $translator = $this->container['translator'];
         $this->assertInstanceOf(Translator::class, $translator);
     }
 
+    /**
+     * @return void
+     */
     public function testMiddleware()
     {
         $middleware = $this->container['middlewares/charcoal/translator/middleware/language'];

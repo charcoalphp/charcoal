@@ -4,16 +4,14 @@ namespace Charcoal\Tests\Translator;
 
 use InvalidArgumentException;
 
-// From PHPUnit
-use PHPUnit_Framework_TestCase;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\TranslatorConfig;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class TranslatorConfigTest extends PHPUnit_Framework_TestCase
+class TranslatorConfigTest extends AbstractTestCase
 {
     /**
      * Tested Class.
@@ -24,12 +22,17 @@ class TranslatorConfigTest extends PHPUnit_Framework_TestCase
 
     /**
      * Set up the test.
+     *
+     * @return void
      */
     public function setUp()
     {
         $this->obj = new TranslatorConfig();
     }
 
+    /**
+     * @return void
+     */
     public function testDefaultsArrayAccess()
     {
         $this->assertEquals([ 'csv' ], $this->obj['loaders']);
@@ -38,6 +41,9 @@ class TranslatorConfigTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('../cache/translator', $this->obj['cache_dir']);
     }
 
+    /**
+     * @return void
+     */
     public function testSetLoaders()
     {
         $this->assertEquals([ 'csv' ], $this->obj->loaders());
@@ -50,30 +56,49 @@ class TranslatorConfigTest extends PHPUnit_Framework_TestCase
         $this->assertEquals([ 'php' ], $this->obj['loaders']);
     }
 
+    /**
+     * @expectedException InvalidArgumentException
+     *
+     * @return void
+     */
     public function testSetUnavailableLoaders()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
         $this->obj['loaders'] = [ 'foo' ];
     }
 
+    /**
+     * @expectedException InvalidArgumentException
+     *
+     * @return void
+     */
     public function testSetInvalidPaths()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
         $this->obj['paths'] = [ false ];
     }
 
+    /**
+     * @expectedException InvalidArgumentException
+     *
+     * @return void
+     */
     public function testSetInvalidDomainTranslations()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
         $this->obj['translations'] = [ false ];
     }
 
+    /**
+     * @expectedException InvalidArgumentException
+     *
+     * @return void
+     */
     public function testSetInvalidMessageTranslations()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
         $this->obj['translations'] = [ [ false ] ];
     }
 
+    /**
+     * @return void
+     */
     public function testSetDebug()
     {
         $this->assertFalse($this->obj->debug());
@@ -85,6 +110,9 @@ class TranslatorConfigTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($this->obj['debug']);
     }
 
+    /**
+     * @return void
+     */
     public function testSetCacheDir()
     {
         $this->assertEquals('../cache/translator', $this->obj->cacheDir());
@@ -96,9 +124,13 @@ class TranslatorConfigTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('bar', $this->obj['cache_dir']);
     }
 
+    /**
+     * @expectedException InvalidArgumentException
+     *
+     * @return void
+     */
     public function testSetInvalidCacheDir()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
         $this->obj['cache_dir'] = false;
     }
 }

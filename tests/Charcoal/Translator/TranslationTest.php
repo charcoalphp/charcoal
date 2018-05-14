@@ -5,23 +5,24 @@ namespace Charcoal\Tests\Translation;
 use DomainException;
 use InvalidArgumentException;
 
-// From PHPUnit
-use PHPUnit_Framework_TestCase;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\LocalesManager;
 use Charcoal\Translator\Translation;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class TranslationTest extends PHPUnit_Framework_TestCase
+class TranslationTest extends AbstractTestCase
 {
     /**
      * @var LocalesManager
      */
     private $localesManager;
 
+    /**
+     * @return LocalesManager
+     */
     private function localesManager()
     {
         if ($this->localesManager === null) {
@@ -43,6 +44,9 @@ class TranslationTest extends PHPUnit_Framework_TestCase
         return $this->localesManager;
     }
 
+    /**
+     * @return void
+     */
     public function testConstructorWithStringParam()
     {
         $obj = new Translation('foobar', $this->localesManager());
@@ -54,6 +58,9 @@ class TranslationTest extends PHPUnit_Framework_TestCase
         $this->assertFalse(isset($obj['bar']));
     }
 
+    /**
+     * @return void
+     */
     public function testConstructorWithArrayParam()
     {
         $obj = new Translation([ 'foo' => 'foobar', 'bar' => 'barfoo' ], $this->localesManager());
@@ -67,6 +74,9 @@ class TranslationTest extends PHPUnit_Framework_TestCase
         $this->assertFalse(isset($obj['baz']));
     }
 
+    /**
+     * @return void
+     */
     public function testConstructorWithObjectParam()
     {
         $trans = new Translation([ 'foo' => 'foobar', 'bar' => 'barfoo' ], $this->localesManager());
@@ -81,12 +91,19 @@ class TranslationTest extends PHPUnit_Framework_TestCase
         $this->assertFalse(isset($obj['baz']));
     }
 
+    /**
+     * @expectedException InvalidArgumentException
+     *
+     * @return void
+     */
     public function testConstructorWithInvalidParam()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
         $obj = new Translation(false, $this->localesManager());
     }
 
+    /**
+     * @return void
+     */
     public function testToString()
     {
         $manager = $this->localesManager();
@@ -102,6 +119,9 @@ class TranslationTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('', (string)$obj);
     }
 
+    /**
+     * @return void
+     */
     public function testArraySet()
     {
         $obj = new Translation('foobar', $this->localesManager());
@@ -111,12 +131,18 @@ class TranslationTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('Charcoal', (string)$obj);
     }
 
+    /**
+     * @return void
+     */
     public function testArrayGet()
     {
         $obj = new Translation('Charcoal', $this->localesManager());
         $this->assertEquals('Charcoal', $obj['foo']);
     }
 
+    /**
+     * @return void
+     */
     public function testArrayUnset()
     {
         $obj = new Translation('foobar', $this->localesManager());
@@ -126,54 +152,85 @@ class TranslationTest extends PHPUnit_Framework_TestCase
         $this->assertFalse(isset($obj['foo']));
     }
 
+    /**
+     * @expectedException InvalidArgumentException
+     *
+     * @return void
+     */
     public function testOffsetGetThrowsException()
     {
         $obj = new Translation('foobar', $this->localesManager());
-        $this->setExpectedException(InvalidArgumentException::class);
         $ret = $obj[0];
     }
 
+    /**
+     * @expectedException DomainException
+     *
+     * @return void
+     */
     public function testOffsetGetThrowsException2()
     {
         $obj = new Translation('foobar', $this->localesManager());
-        $this->setExpectedException(DomainException::class);
         $ret = $obj['bar'];
     }
 
+    /**
+     * @expectedException InvalidArgumentException
+     *
+     * @return void
+     */
     public function testOffsetSetThrowsException()
     {
         $obj = new Translation('foobar', $this->localesManager());
-        $this->setExpectedException(InvalidArgumentException::class);
         $obj[0] = 'foo';
     }
 
+    /**
+     * @expectedException InvalidArgumentException
+     *
+     * @return void
+     */
     public function testOffsetSetThrowsException2()
     {
         $obj = new Translation('foobar', $this->localesManager());
-        $this->setExpectedException(InvalidArgumentException::class);
         $obj['foo'] = [];
     }
 
+    /**
+     * @expectedException InvalidArgumentException
+     *
+     * @return void
+     */
     public function testOffsetExistThrowsException()
     {
         $obj = new Translation('foobar', $this->localesManager());
-        $this->setExpectedException(InvalidArgumentException::class);
         isset($obj[0]);
     }
 
+    /**
+     * @expectedException InvalidArgumentException
+     *
+     * @return void
+     */
     public function testOffsetUnsetThrowsException()
     {
         $obj = new Translation('foobar', $this->localesManager());
-        $this->setExpectedException(InvalidArgumentException::class);
         unset($obj[0]);
     }
 
+    /**
+     * @expectedException InvalidArgumentException
+     *
+     * @return void
+     */
     public function testInvalidValueThrowsException()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
         $obj = new Translation([ 'foo' ], $this->localesManager());
     }
 
+    /**
+     * @return void
+     */
     public function testSanitize()
     {
         $obj = new Translation('  foobar  ', $this->localesManager());
@@ -181,6 +238,9 @@ class TranslationTest extends PHPUnit_Framework_TestCase
         $this->assertEquals([ 'foo' => 'foobar' ], $obj->data());
     }
 
+    /**
+     * @return void
+     */
     public function testJsonSerialize()
     {
         $obj = new Translation('foobar', $this->localesManager());

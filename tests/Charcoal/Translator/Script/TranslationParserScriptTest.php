@@ -4,9 +4,6 @@ namespace Charcoal\Tests\Translation\Script;
 
 use ReflectionClass;
 
-// From PHPUnit
-use PHPUnit_Framework_TestCase;
-
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -17,11 +14,12 @@ use Pimple\Container;
 // From 'charcoal-translator'
 use Charcoal\Translator\Script\TranslationParserScript;
 use Charcoal\Tests\Translator\ContainerProvider;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class TranslationParserScriptTest extends PHPUnit_Framework_TestCase
+class TranslationParserScriptTest extends AbstractTestCase
 {
     /**
      * Tested Class.
@@ -46,6 +44,8 @@ class TranslationParserScriptTest extends PHPUnit_Framework_TestCase
 
     /**
      * Set up the test.
+     *
+     * @return void
      */
     public function setUp()
     {
@@ -76,28 +76,18 @@ class TranslationParserScriptTest extends PHPUnit_Framework_TestCase
         return $container;
     }
 
-    public static function getMethod($obj, $name)
-    {
-        $class = new ReflectionClass($obj);
-        $method = $class->getMethod($name);
-        $method->setAccessible(true);
-
-        return $method;
-    }
-
-    public static function callMethod($obj, $name, array $args = [])
-    {
-        $method = static::getMethod($obj, $name);
-
-        return $method->invokeArgs($obj, $args);
-    }
-
+    /**
+     * @return void
+     */
     public function testDefaultArguments()
     {
         $args = $this->obj->defaultArguments();
         $this->assertArrayHasKey('domain', $args);
     }
 
+    /**
+     * @return void
+     */
     /*
     public function testRun()
     {
@@ -127,22 +117,39 @@ class TranslationParserScriptTest extends PHPUnit_Framework_TestCase
     // CLImate Helpers
     // =============================================================================================
 
-    protected function shouldWrite($content, $count = 1)
+    /**
+     * @param  string  $content The expected content.
+     * @param  integer $times   The number of times this expectation should occur.
+     * @return mixed
+     */
+    protected function shouldWrite($content, $times = 1)
     {
-        return $this->output->shouldReceive('write')->times($count)->with($content);
+        return $this->output->shouldReceive('write')->times($times)->with($content);
     }
 
+    /**
+     * @param  integer $times The number of times this expectation should occur.
+     * @return void
+     */
     protected function shouldHavePersisted($times = 1)
     {
         $this->shouldStartPersisting($times);
         $this->shouldStopPersisting($times);
     }
 
+    /**
+     * @param  integer $times The number of times this expectation should occur.
+     * @return void
+     */
     protected function shouldStartPersisting($times = 1)
     {
         $this->output->shouldReceive('persist')->withNoArgs()->times($times)->andReturn($this->output);
     }
 
+    /**
+     * @param  integer $times The number of times this expectation should occur.
+     * @return void
+     */
     protected function shouldStopPersisting($times = 1)
     {
         $this->output->shouldReceive('persist')->with(false)->times($times)->andReturn($this->output);

@@ -4,9 +4,6 @@ namespace Charcoal\Tests\Translator;
 
 use ReflectionClass;
 
-// From PHPUnit
-use PHPUnit_Framework_TestCase;
-
 // From 'symfony/translation'
 use Symfony\Component\Translation\MessageSelector;
 use Symfony\Component\Translation\Loader\ArrayLoader;
@@ -15,11 +12,13 @@ use Symfony\Component\Translation\Loader\ArrayLoader;
 use Charcoal\Translator\LocalesManager;
 use Charcoal\Translator\Translation;
 use Charcoal\Translator\Translator;
+use Charcoal\Tests\AbstractTestCase;
+use Charcoal\Tests\Translator\Mock\StringClass;
 
 /**
  *
  */
-class TranslatorTest extends PHPUnit_Framework_TestCase
+class TranslatorTest extends AbstractTestCase
 {
     /**
      * The 'symfony/config' cache factory to ignore.
@@ -44,6 +43,8 @@ class TranslatorTest extends PHPUnit_Framework_TestCase
 
     /**
      * Set up the test.
+     *
+     * @return void
      */
     public function setUp()
     {
@@ -58,22 +59,31 @@ class TranslatorTest extends PHPUnit_Framework_TestCase
         $this->obj->addLoader('array', new ArrayLoader());
     }
 
+    /**
+     * @return void
+     */
     public static function setUpBeforeClass()
     {
-        $path = realpath(__DIR__ . '/../../../' . static::SYMFONY_CACHE_PATH);
+        $path = realpath(__DIR__.'/../../../'.static::SYMFONY_CACHE_PATH);
         if ($path !== false) {
             rename($path, $path.'.txt');
         }
     }
 
+    /**
+     * @return void
+     */
     public static function tearDownAfterClass()
     {
-        $path = realpath(__DIR__ . '/../../../' . static::SYMFONY_CACHE_PATH . '.txt');
+        $path = realpath(__DIR__.'/../../../'.static::SYMFONY_CACHE_PATH.'.txt');
         if ($path !== false) {
             rename($path, str_replace('.php.txt', '.php', $path));
         }
     }
 
+    /**
+     * @return LocalesManager
+     */
     private function localesManager()
     {
         if ($this->localesManager === null) {
@@ -95,6 +105,9 @@ class TranslatorTest extends PHPUnit_Framework_TestCase
         return $this->localesManager;
     }
 
+    /**
+     * @return void
+     */
     public function testConstructorWithoutMessageSelector()
     {
         $obj = new Translator([
@@ -105,6 +118,9 @@ class TranslatorTest extends PHPUnit_Framework_TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testAvailableDomains()
     {
         $domains = $this->obj->availableDomains();
@@ -112,6 +128,9 @@ class TranslatorTest extends PHPUnit_Framework_TestCase
         $this->assertEquals([ 'messages' ], $domains);
     }
 
+    /**
+     * @return void
+     */
     public function testTranslation()
     {
         $ret = $this->obj->translation('foo');
@@ -133,6 +152,9 @@ class TranslatorTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider invalidTransTests
+     *
+     * @param  mixed $val The message ID.
+     * @return void
      */
     public function testTranslationInvalidValuesReturnNull($val)
     {
@@ -141,10 +163,17 @@ class TranslatorTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider validTransTests
+     *
+     * @param  string $expected    The expected translation.
+     * @param  string $id          The message ID.
+     * @param  string $translation The translation of $id.
+     * @param  string $parameters  An array of parameters for the message.
+     * @param  string $locale      The locale to use.
+     * @param  string $domain      The domain for the message.
+     * @return void
      */
     public function testTranslate($expected, $id, $translation, $parameters, $locale, $domain)
     {
-        # $this->obj->setLocale('en');
         if (!($id instanceof Translation || is_array($id)) && $locale) {
             $this->obj->addResource('array', [ (string)$id => $translation ], $locale, $domain);
         }
@@ -154,12 +183,18 @@ class TranslatorTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider invalidTransTests
+     *
+     * @param  mixed $val The message ID.
+     * @return void
      */
     public function testTranslateInvalidValuesReturnEmptyString($val)
     {
         $this->assertEquals('', $this->obj->translate($val));
     }
 
+    /**
+     * @return void
+     */
     public function testTranslationChoice()
     {
         $ret = $this->obj->translationChoice('There is one apple|There is %count% apples', 2);
@@ -181,6 +216,9 @@ class TranslatorTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider invalidTransTests
+     *
+     * @param  mixed $val The message ID.
+     * @return void
      */
     public function testTranslationChoiceInvalidValuesReturnNull($val)
     {
@@ -189,10 +227,18 @@ class TranslatorTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider validTransChoiceTests
+     *
+     * @param  string  $expected    The expected translation.
+     * @param  string  $id          The message ID.
+     * @param  string  $translation The translation of $id.
+     * @param  integer $number      The number to use to find the indice of the message.
+     * @param  string  $parameters  An array of parameters for the message.
+     * @param  string  $locale      The locale to use.
+     * @param  string  $domain      The domain for the message.
+     * @return void
      */
     public function testTranslateChoice($expected, $id, $translation, $number, $parameters, $locale, $domain)
     {
-        # $this->obj->setLocale('en');
         if (!($id instanceof Translation || is_array($id)) && $locale) {
             $this->obj->addResource('array', [ (string)$id => $translation ], $locale, $domain);
         }
@@ -200,12 +246,18 @@ class TranslatorTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $this->obj->translateChoice($id, $number, $parameters, $domain, $locale));
     }
 
+    /**
+     * @return void
+     */
     public function testSetLocaleSetLocalesManagerCurrentLanguage()
     {
         $this->obj->setLocale('fr');
         $this->assertEquals('fr', $this->localesManager()->currentLocale());
     }
 
+    /**
+     * @return void
+     */
     public function testLocales()
     {
         $this->assertArrayHasKey('en', $this->obj->locales());
@@ -213,15 +265,20 @@ class TranslatorTest extends PHPUnit_Framework_TestCase
         $this->assertArrayNotHasKey('jp', $this->obj->locales());
     }
 
+    /**
+     * @return void
+     */
     public function testAvailableLocales()
     {
         $this->assertEquals([ 'en', 'fr' ], $this->obj->availableLocales());
     }
 
+    /**
+     * @return void
+     */
     public function testInvalidArrayTranslation()
     {
-        $class = new ReflectionClass($this->obj);
-        $method = $class->getMethod('isValidTranslation');
+        $method = $this->getMethod($this->obj, 'isValidTranslation');
         $method->setAccessible(true);
 
         $this->assertFalse($method->invokeArgs($this->obj, [ [ 0 => 'foo' ] ]));
@@ -230,9 +287,12 @@ class TranslatorTest extends PHPUnit_Framework_TestCase
 
     /**
      * @link https://github.com/symfony/translation/blob/v3.2.3/Tests/TranslatorTest.php
+     *
+     * @return array
      */
     public function validTransTests()
     {
+        // phpcs:disable Generic.Files.LineLength.TooLong
         return [
             [ 'Charcoal est super !', 'Charcoal is great!', 'Charcoal est super !', [], 'fr', '' ],
             [ 'Charcoal est awesome !', 'Charcoal is %what%!', 'Charcoal est %what% !', [ '%what%' => 'awesome' ], 'fr', '' ],
@@ -240,8 +300,12 @@ class TranslatorTest extends PHPUnit_Framework_TestCase
             [ 'Charcoal est super !', new Translation([ 'en' => 'Charcoal is great!', 'fr' => 'Charcoal est super !'], $this->localesManager()), 'Charcoal est super !', [], 'fr', '' ],
             [ 'Charcoal est super !', new StringClass('Charcoal is great!'), 'Charcoal est super !', [], 'fr', '' ],
         ];
+        // phpcs:enable
     }
 
+    /**
+     * @return array
+     */
     public function invalidTransTests()
     {
         return [
@@ -259,9 +323,12 @@ class TranslatorTest extends PHPUnit_Framework_TestCase
 
     /**
      * @link https://github.com/symfony/translation/blob/v3.2.3/Tests/TranslatorTest.php
+     *
+     * @return array
      */
     public function validTransChoiceTests()
     {
+        // phpcs:disable Generic.Files.LineLength.TooLong
         return [
             [ 'Il y a 0 pomme', '{0} There are no appless|{1} There is one apple|]1,Inf] There is %count% apples', '[0,1] Il y a %count% pomme|]1,Inf] Il y a %count% pommes', 0, [], 'fr', '' ],
             [ 'Il y a 1 pomme', '{0} There are no appless|{1} There is one apple|]1,Inf] There is %count% apples', '[0,1] Il y a %count% pomme|]1,Inf] Il y a %count% pommes', 1, [], 'fr', '' ],
@@ -287,23 +354,6 @@ class TranslatorTest extends PHPUnit_Framework_TestCase
             // Override %count% with a custom value
             [ 'Il y a quelques pommes', 'one: There is one apple|more: There are %count% apples', 'one: Il y a %count% pomme|more: Il y a %count% pommes', 2, [ '%count%' => 'quelques' ], 'fr', '' ],
         ];
-    }
-}
-
-/**
- * @link https://github.com/symfony/translation/blob/v3.2.3/Tests/TranslatorTest.php
- */
-class StringClass
-{
-    protected $str;
-
-    public function __construct($str)
-    {
-        $this->str = $str;
-    }
-
-    public function __toString()
-    {
-        return $this->str;
+        // phpcs:enable
     }
 }
