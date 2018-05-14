@@ -1,12 +1,25 @@
 {
-    "name": "locomotivemtl/charcoal-translator",
-    "description": "Charcoal Translator and locales management.",
     "type": "library",
+    "name": "locomotivemtl/charcoal-translator",
+    "description": "Charcoal service provider for translating messages and managing locales.",
+    "keywords": [
+        "charcoal",
+        "translator",
+        "translation",
+        "i18n",
+        "l10n",
+        "g11n"
+    ],
+    "homepage": "https://locomotivemtl.github.io/charcoal-translator/",
     "license": "MIT",
     "authors": [
         {
             "name": "Mathieu Ducharme",
             "email": "mat@locomotive.ca"
+        },
+        {
+            "name": "Locomotive",
+            "homepage": "https://locomotive.ca"
         }
     ],
     "minimum-stability": "dev",
