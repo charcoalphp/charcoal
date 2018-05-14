@@ -27,6 +27,7 @@ class TranslatorTest extends PHPUnit_Framework_TestCase
      * @const string
      */
     const SYMFONY_CACHE_PATH = 'vendor/symfony/config/ConfigCacheFactory.php';
+
     /**
      * Tested Class.
      *

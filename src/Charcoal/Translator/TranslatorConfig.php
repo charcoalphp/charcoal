@@ -4,7 +4,7 @@ namespace Charcoal\Translator;
 
 use InvalidArgumentException;
 
-// From `charcoal-config`
+// From 'charcoal-config'
 use Charcoal\Config\AbstractConfig;
 
 /**

@@ -8,10 +8,13 @@ use InvalidArgumentException;
 // From PHPUnit
 use PHPUnit_Framework_TestCase;
 
-// From `charcoal-translator`
+// From 'charcoal-translator'
 use Charcoal\Translator\LocalesManager;
 use Charcoal\Translator\Translation;
 
+/**
+ *
+ */
 class TranslationTest extends PHPUnit_Framework_TestCase
 {
     /**

@@ -8,7 +8,7 @@ use ReflectionClass;
 // From PHPUnit
 use PHPUnit_Framework_TestCase;
 
-// From `charcoal-translator`
+// From 'charcoal-translator'
 use Charcoal\Translator\TranslatorAwareTrait;
 use Charcoal\Translator\Translator;
 

@@ -21,7 +21,7 @@ use Symfony\Component\Translation\Loader\JsonFileLoader;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Translation\MessageSelector;
 
-// From `charcoal-translator`
+// From 'charcoal-translator'
 use Charcoal\Translator\LocalesConfig;
 use Charcoal\Translator\LocalesManager;
 use Charcoal\Translator\Translator;

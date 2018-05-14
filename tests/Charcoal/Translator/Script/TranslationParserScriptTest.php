@@ -14,7 +14,7 @@ use Psr\Http\Message\ResponseInterface;
 // From Pimple
 use Pimple\Container;
 
-// From `charcoal-translator`
+// From 'charcoal-translator'
 use Charcoal\Translator\Script\TranslationParserScript;
 use Charcoal\Tests\Translator\ContainerProvider;
 

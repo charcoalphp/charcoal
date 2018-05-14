@@ -7,7 +7,7 @@ use InvalidArgumentException;
 // From PHPUnit
 use PHPUnit_Framework_TestCase;
 
-// From `charcoal-translator`
+// From 'charcoal-translator'
 use Charcoal\Translator\TranslatorConfig;
 
 /**
@@ -35,7 +35,7 @@ class TranslatorConfigTest extends PHPUnit_Framework_TestCase
         $this->assertEquals([ 'csv' ], $this->obj['loaders']);
         $this->assertContains('translations/', $this->obj['paths']);
         $this->assertFalse($this->obj['debug']);
-        $this->assertEquals('translator_cache', $this->obj['cache_dir']);
+        $this->assertEquals('../cache/translator', $this->obj['cache_dir']);
     }
 
     public function testSetLoaders()
@@ -87,7 +87,7 @@ class TranslatorConfigTest extends PHPUnit_Framework_TestCase
 
     public function testSetCacheDir()
     {
-        $this->assertEquals('translator_cache', $this->obj->cacheDir());
+        $this->assertEquals('../cache/translator', $this->obj->cacheDir());
         $ret = $this->obj->setCacheDir('foo');
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('foo', $this->obj->cacheDir());

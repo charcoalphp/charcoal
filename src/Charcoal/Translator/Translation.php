@@ -7,7 +7,7 @@ use DomainException;
 use InvalidArgumentException;
 use JsonSerializable;
 
-// From `charcoal-translator`
+// From 'charcoal-translator'
 use Charcoal\Translator\LocalesManager;
 
 /**

@@ -8,10 +8,10 @@ use Pimple\Container;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-// From `charcoal-admin`
+// From 'charcoal-admin'
 use Charcoal\Admin\AdminScript;
 
-// From `charcoal-translator`
+// From 'charcoal-translator'
 use Charcoal\Translator\TranslatorAwareTrait;
 
 /**
@@ -174,7 +174,7 @@ class TranslationParserScript extends AdminScript
     }
 
     /**
-     * @param array $trans   The translations array.
+     * @param array $trans The translations array.
      * @return array
      */
     protected function parseTranslations(array $trans)
@@ -285,7 +285,7 @@ class TranslationParserScript extends AdminScript
      * Regex to match in files.
      *
      * @param  string $type File type (mustache|php).
-     * @return string       Regex string.
+     * @return string Regex string.
      */
     public function regEx($type)
     {

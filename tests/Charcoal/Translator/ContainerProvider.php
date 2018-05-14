@@ -10,7 +10,7 @@ use Mockery;
 // From PSR-3
 use Psr\Log\NullLogger;
 
-// From 'tedivm/stash' (PSR-6)
+// From 'tedivm/stash'
 use Stash\Pool;
 use Stash\Driver\Ephemeral;
 
@@ -102,7 +102,7 @@ class ContainerProvider
      */
     public function registerBaseUrl(Container $container)
     {
-        $container['base-url'] = function (Container $container) {
+        $container['base-url'] = function () {
             return Uri::createFromString('https://example.com:8080/foo/bar?abc=123');
         };
     }
@@ -115,7 +115,7 @@ class ContainerProvider
      */
     public function registerAdminBaseUrl(Container $container)
     {
-        $container['admin/base-url'] = function (Container $container) {
+        $container['admin/base-url'] = function () {
             return Uri::createFromString('https://example.com:8080/admin/qux?abc=123');
         };
     }
@@ -128,7 +128,7 @@ class ContainerProvider
      */
     public function registerConfig(Container $container)
     {
-        $container['config'] = function (Container $container) {
+        $container['config'] = function () {
             return new AppConfig([
                 'base_path' => realpath(__DIR__.'/../../..'),
                 'locales'   => [
@@ -175,7 +175,7 @@ class ContainerProvider
      */
     public function registerSource(Container $container)
     {
-        $container['database'] = function (Container $container) {
+        $container['database'] = function () {
             $pdo = new PDO('sqlite::memory:');
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $pdo;
@@ -190,7 +190,7 @@ class ContainerProvider
      */
     public function registerLogger(Container $container)
     {
-        $container['logger'] = function (Container $container) {
+        $container['logger'] = function () {
             return new NullLogger();
         };
     }
@@ -203,7 +203,7 @@ class ContainerProvider
      */
     public function registerCache(Container $container)
     {
-        $container['cache'] = function ($container) {
+        $container['cache'] = function () {
             return new Pool(new Ephemeral());
         };
     }
@@ -216,7 +216,7 @@ class ContainerProvider
      */
     public function registerTranslator(Container $container)
     {
-        $container['locales/config'] = function(Container $container) {
+        $container['locales/config'] = function (Container $container) {
             return new LocalesConfig($container['config']['locales']);
         };
 
@@ -275,7 +275,7 @@ class ContainerProvider
      */
     public function registerSourceFactory(Container $container)
     {
-        $container['source/factory'] = function ($container) {
+        $container['source/factory'] = function (Container $container) {
             return new Factory([
                 'map' => [
                     'database' => DatabaseSource::class
@@ -297,7 +297,7 @@ class ContainerProvider
      */
     public function registerModelFactory(Container $container)
     {
-        $container['model/factory'] = function ($container) {
+        $container['model/factory'] = function (Container $container) {
             return new Factory([
                 'arguments' => [[
                     'container'         => $container,
@@ -342,7 +342,7 @@ class ContainerProvider
      */
     public function registerClimate(Container $container)
     {
-        $container['climate/system'] = function (Container $container) {
+        $container['climate/system'] = function () {
             $system = Mockery::mock(Linux::class);
             $system->shouldReceive('hasAnsiSupport')->andReturn(true);
             $system->shouldReceive('width')->andReturn(80);
@@ -350,7 +350,7 @@ class ContainerProvider
             return $system;
         };
 
-        $container['climate/output'] = function (Container $container) {
+        $container['climate/output'] = function () {
             $output = Mockery::mock(Output::class);
             $output->shouldReceive('persist')->andReturn($output);
             $output->shouldReceive('sameLine')->andReturn($output);
@@ -359,7 +359,7 @@ class ContainerProvider
             return $output;
         };
 
-        $container['climate/reader'] = function (Container $container) {
+        $container['climate/reader'] = function () {
             $reader = Mockery::mock(Stdin::class);
             $reader->shouldReceive('line')->andReturn('line');
             $reader->shouldReceive('char')->andReturn('char');

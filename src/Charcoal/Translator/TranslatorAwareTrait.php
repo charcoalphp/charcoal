@@ -4,7 +4,7 @@ namespace Charcoal\Translator;
 
 use RuntimeException;
 
-// From `charcoal-translator`
+// From 'charcoal-translator'
 use Charcoal\Translator\Translator;
 
 /**

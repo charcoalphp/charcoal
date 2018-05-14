@@ -10,7 +10,7 @@ use Psr\Http\Message\ResponseInterface;
 // From Pimple
 use Pimple\Container;
 
-// From `charcoal-translator`
+// From 'charcoal-translator'
 use Charcoal\Translator\LocalesManager;
 use Charcoal\Translator\TranslatorAwareTrait;
 
