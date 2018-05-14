@@ -110,20 +110,48 @@ class LocalesManagerTest extends AbstractTestCase
     }
 
     /**
-     * @return void
+     * @requires PHP >= 7.0
+     * @return   void
      */
-    public function testSortedLocales()
+    public function testSortedLocalesInPhp7()
     {
-        $this->obj = new LocalesManager([
+        $obj = $this->getLocalesManagerForSortedLocales();
+
+        $this->assertEquals([ 'xyz', 'zyx', 'qux', 'foo', 'bar' ], $obj->availableLocales());
+    }
+
+    /**
+     * @requires PHP < 7.0
+     * @return   void
+     */
+    public function testSortedLocalesInPhp5()
+    {
+        $obj = $this->getLocalesManagerForSortedLocales();
+
+        $this->assertThat(
+            $obj->availableLocales(),
+            $this->logicalOr(
+                $this->equalTo([ 'xyz', 'zyx', 'qux', 'foo', 'bar' ]),
+                $this->equalTo([ 'zyx', 'xyz', 'qux', 'foo', 'bar' ])
+            )
+        );
+    }
+
+    /**
+     * @return LocalesManager
+     */
+    public function getLocalesManagerForSortedLocales()
+    {
+        return new LocalesManager([
             'locales' => [
                 'foo' => [ 'priority' => 2 ],
                 'bar' => [ 'priority' => 3 ],
                 'baz' => [ 'priority' => 1, 'active' => false ],
                 'qux' => [ 'priority' => 1 ],
+                'xyz' => [ 'priority' => 0 ],
+                'zyx' => [ 'priority' => 0 ],
             ]
         ]);
-
-        $this->assertEquals([ 'qux', 'foo', 'bar' ], $this->obj->availableLocales());
     }
 
     /**

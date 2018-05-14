@@ -13,6 +13,13 @@ use InvalidArgumentException;
 class LocalesManager
 {
     /**
+     * Default sorting priority for locales.
+     *
+     * @const integer
+     */
+    const DEFAULT_SORT_PRIORITY = 10;
+
+    /**
      * Dictionary of language definitions.
      *
      * @var array
@@ -194,17 +201,12 @@ class LocalesManager
      */
     private function setLocales(array $locales)
     {
+        $locales = $this->filterLocales($locales);
         uasort($locales, [ $this, 'sortLocalesByPriority' ]);
 
         $this->locales   = [];
         $this->languages = [];
         foreach ($locales as $langCode => $locale) {
-            if (isset($locale['active']) && !$locale['active']) {
-                continue;
-            }
-            if (!isset($locale['locale'])) {
-                $locale['locale'] = $langCode;
-            }
             $this->locales[$langCode] = $locale;
             $this->languages[] = $langCode;
         }
@@ -217,13 +219,48 @@ class LocalesManager
     }
 
     /**
+     * Filter the available languages.
+     *
+     * Routine:
+     * 1. Removes disabled languages
+     * 2. Assigns a priority, if absent
+     * 3. Assigns a locale, if absent
+     *
+     * @param  array $locales The locales configuration structure.
+     * @return array The parsed language structures.
+     */
+    private function filterLocales(array $locales)
+    {
+        $z = self::DEFAULT_SORT_PRIORITY;
+
+        $filteredLocales = [];
+        foreach ($locales as $langCode => $locale) {
+            if (isset($locale['active']) && !$locale['active']) {
+                continue;
+            }
+
+            if (!isset($locale['priority'])) {
+                $locale['priority'] = $z++;
+            }
+
+            if (!isset($locale['locale'])) {
+                $locale['locale'] = $langCode;
+            }
+
+            $filteredLocales[$langCode] = $locale;
+        }
+
+        return $filteredLocales;
+    }
+
+    /**
      * To be called with {@see uasort()}.
      *
      * @param  array $a Sortable action A.
      * @param  array $b Sortable action B.
      * @return integer
      */
-    protected function sortLocalesByPriority(array $a, array $b)
+    private function sortLocalesByPriority(array $a, array $b)
     {
         $a = isset($a['priority']) ? $a['priority'] : 0;
         $b = isset($b['priority']) ? $b['priority'] : 0;
