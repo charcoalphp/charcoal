@@ -50,10 +50,10 @@ class TranslatorTest extends AbstractTestCase
     {
         $this->obj = new Translator([
             'locale'            => 'en',
-            'message_selector'  => new MessageSelector(),
             'cache_dir'         => null,
             'debug'             => false,
-            'manager'           => $this->localesManager()
+            'manager'           => $this->localesManager(),
+            'message_selector'  => new MessageSelector(),
         ]);
 
         $this->obj->addLoader('array', new ArrayLoader());
@@ -108,14 +108,34 @@ class TranslatorTest extends AbstractTestCase
     /**
      * @return void
      */
+    public function testConstructorWithMessageSelector()
+    {
+        $selector   = new MessageSelector();
+        $translator = new Translator([
+            'locale'           => 'en',
+            'cache_dir'        => null,
+            'debug'            => false,
+            'manager'          => $this->localesManager(),
+            'message_selector' => $selector,
+        ]);
+
+        $this->assertSame($selector, $this->callMethod($translator, 'selector'));
+    }
+
+    /**
+     * @return void
+     */
     public function testConstructorWithoutMessageSelector()
     {
-        $obj = new Translator([
-            'locale'    => 'en',
-            'cache_dir' => null,
-            'debug'     => false,
-            'manager'   => $this->localesManager()
+        $translator = new Translator([
+            'locale'           => 'en',
+            'cache_dir'        => null,
+            'debug'            => false,
+            'manager'          => $this->localesManager(),
+            'message_selector' => null,
         ]);
+
+        $this->assertInstanceOf(MessageSelector::class, $this->callMethod($translator, 'selector'));
     }
 
     /**
