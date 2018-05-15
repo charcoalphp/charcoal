@@ -21,7 +21,7 @@
         }
     },
     "require": {
-        "locomotivemtl/charcoal-config": "^0.8",
+        "locomotivemtl/charcoal-config": "~0.8",
         "locomotivemtl/charcoal-core": "~0.3",
         "locomotivemtl/charcoal-object": "~0.5",
         "locomotivemtl/charcoal-translator": "~0.3"
