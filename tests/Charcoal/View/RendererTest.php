@@ -2,18 +2,23 @@
 
 namespace Charcoal\Tests\View;
 
-use PHPUnit_Framework_TestCase;
-
+// From PSR-3
 use Psr\Log\NullLogger;
 
-use \Slim\Http\Response;
+// From Slim
+use Slim\Http\Response;
 
+// From 'charcoal-view'
 use Charcoal\View\Mustache\MustacheLoader;
 use Charcoal\View\Mustache\MustacheEngine;
 use Charcoal\View\GenericView;
 use Charcoal\View\Renderer;
+use Charcoal\Tests\AbstractTestCase;
 
-class RendererTest extends PHPUnit_Framework_TestCase
+/**
+ *
+ */
+class RendererTest extends AbstractTestCase
 {
     /**
      * Instance of object under test
@@ -22,7 +27,7 @@ class RendererTest extends PHPUnit_Framework_TestCase
     public $obj;
 
     /**
-     *
+     * @return void
      */
     public function setUp()
     {
@@ -46,6 +51,9 @@ class RendererTest extends PHPUnit_Framework_TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testRender()
     {
         $response = new Response();

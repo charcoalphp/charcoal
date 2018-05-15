@@ -2,11 +2,11 @@
 
 namespace Charcoal\View\Twig;
 
-// From `twig/twig`
+// From Twig
 use Twig_LoaderInterface;
 use Twig_Source;
 
-// Parent namespace dependencies
+// From 'charcoal-view'
 use Charcoal\View\AbstractLoader;
 use Charcoal\View\LoaderInterface;
 

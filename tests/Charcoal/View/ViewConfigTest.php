@@ -2,11 +2,14 @@
 
 namespace Charcoal\Tests\View\Mustache;
 
-use PHPUnit_Framework_TestCase;
-
+// From 'charcoal-view'
 use Charcoal\View\ViewConfig;
+use Charcoal\Tests\AbstractTestCase;
 
-class ViewConfigTest extends PHPUnit_Framework_TestCase
+/**
+ *
+ */
+class ViewConfigTest extends AbstractTestCase
 {
     /**
      * @var MustacheEngine
@@ -14,7 +17,7 @@ class ViewConfigTest extends PHPUnit_Framework_TestCase
     private $obj;
 
     /**
-     *
+     * @return void
      */
     public function setUp()
     {
@@ -22,7 +25,7 @@ class ViewConfigTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     *
+     * @return void
      */
     public function testDefaults()
     {
@@ -36,7 +39,7 @@ class ViewConfigTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     *
+     * @return void
      */
     public function testSetPaths()
     {
@@ -50,7 +53,7 @@ class ViewConfigTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     *
+     * @return void
      */
     public function testSetEngines()
     {
@@ -64,7 +67,7 @@ class ViewConfigTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     *
+     * @return void
      */
     public function testEngine()
     {
@@ -79,7 +82,7 @@ class ViewConfigTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     *
+     * @return void
      */
     public function testEngineDefaultEngine()
     {
@@ -88,7 +91,7 @@ class ViewConfigTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     *
+     * @return void
      */
     public function testEngineInvalid()
     {
@@ -97,7 +100,7 @@ class ViewConfigTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     *
+     * @return void
      */
     public function testSetDefaultEngine()
     {

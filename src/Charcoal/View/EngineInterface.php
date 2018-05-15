@@ -4,7 +4,6 @@ namespace Charcoal\View;
 
 /**
  * _Engines_ are the actual template renderers for the views.
- *
  */
 interface EngineInterface
 {

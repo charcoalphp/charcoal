@@ -2,22 +2,26 @@
 
 namespace Charcoal\Tests\View\Mustache;
 
-use PHPUnit_Framework_TestCase;
-
+// From PSR-3
 use Psr\Log\NullLogger;
 
+// From 'charcoal-view'
 use Charcoal\View\Mustache\MustacheLoader;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class MustacheLoaderTest extends PHPUnit_Framework_TestCase
+class MustacheLoaderTest extends AbstractTestCase
 {
     /**
      * @var MustacheLoader
      */
     private $obj;
 
+    /**
+     * @return void
+     */
     public function setUp()
     {
         $this->obj = new MustacheLoader([
@@ -29,6 +33,9 @@ class MustacheLoaderTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider templateProvider
+     *
+     * @param  string $template The template to load.
+     * @return void
      */
     public function testLoad($template)
     {
@@ -43,6 +50,9 @@ class MustacheLoaderTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider templateProvider
+     *
+     * @param  string $template The template to load.
+     * @return void
      */
     public function testLoadDynamicLegacy($template)
     {
@@ -53,6 +63,9 @@ class MustacheLoaderTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $ret);
     }
 
+    /**
+     * @return void
+     */
     public function testLoadDynamicLegacyInvalidException()
     {
         $this->expectException('\InvalidArgumentException');
@@ -62,6 +75,9 @@ class MustacheLoaderTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider templateProvider
+     *
+     * @param  string $template The template to load.
+     * @return void
      */
     public function testLoadDynamic($template)
     {
@@ -72,19 +88,30 @@ class MustacheLoaderTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $ret);
     }
 
+    /**
+     * @return void
+     */
     public function testLoadNotExisting()
     {
         $ret = $this->obj->load('foo/bar/foobar');
         $this->assertEquals('foo/bar/foobar', $ret);
     }
 
-    // public function testFilenameFromIdent()
-    // {
-    //     $this->assertEquals('foo.mustache', $this->obj->filenameFromIdent('foo'));
-    //     $this->assertEquals('foo/bar.mustache', $this->obj->filenameFromIdent('foo/bar'));
-    //     $this->assertEquals('Foo.Bar.mustache', $this->obj->filenameFromIdent('Foo\Bar'));
-    // }
+    /**
+     * @return void
+     */
+    /*
+    public function testFilenameFromIdent()
+    {
+        $this->assertEquals('foo.mustache', $this->obj->filenameFromIdent('foo'));
+        $this->assertEquals('foo/bar.mustache', $this->obj->filenameFromIdent('foo/bar'));
+        $this->assertEquals('Foo.Bar.mustache', $this->obj->filenameFromIdent('Foo\Bar'));
+    }
+    */
 
+    /**
+     * @return array
+     */
     public function templateProvider()
     {
         return [

@@ -9,7 +9,7 @@ use Pimple\Container;
 // From 'erusev/parsedown'
 use Parsedown;
 
-// Module `charcoal-view` dependencies
+// From 'charcoal-view'
 use Charcoal\View\GenericView;
 use Charcoal\View\Mustache\MustacheEngine;
 use Charcoal\View\Mustache\MustacheLoader;

@@ -2,23 +2,27 @@
 
 namespace Charcoal\Tests\View\Twig;
 
-use PHPUnit_Framework_TestCase;
-
+// From PSR-3
 use Psr\Log\NullLogger;
 
+// From 'charcoal-view'
 use Charcoal\View\Twig\TwigEngine;
 use Charcoal\View\Twig\TwigLoader;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class TwigEngineTest extends PHPUnit_Framework_TestCase
+class TwigEngineTest extends AbstractTestCase
 {
     /**
      * @var MustacheEngine
      */
     private $obj;
 
+    /**
+     * @return void
+     */
     public function setUp()
     {
         $logger = new NullLogger();
@@ -33,16 +37,25 @@ class TwigEngineTest extends PHPUnit_Framework_TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testType()
     {
         $this->assertEquals('twig', $this->obj->type());
     }
 
+    /**
+     * @return void
+     */
     public function testRender()
     {
         $this->assertEquals('Hello Charcoal', trim($this->obj->render('foo', ['foo'=>'Charcoal'])));
     }
 
+    /**
+     * @return void
+     */
     public function testRenderTemplate()
     {
         $template = 'Hello {{ foo }}';

@@ -2,18 +2,19 @@
 
 namespace Charcoal\Tests\View;
 
-use PHPUnit_Framework_TestCase;
-
+// From PSR-3
 use Psr\Log\NullLogger;
 
+// From 'charcoal-view'
 use Charcoal\View\Mustache\MustacheLoader;
 use Charcoal\View\Mustache\MustacheEngine;
 use Charcoal\View\AbstractEngine;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class AbstractEngineTest extends PHPUnit_Framework_TestCase
+class AbstractEngineTest extends AbstractTestCase
 {
     /**
      * Instance of object under test
@@ -22,7 +23,7 @@ class AbstractEngineTest extends PHPUnit_Framework_TestCase
     public $obj;
 
     /**
-     *
+     * @return void
      */
     public function setUp()
     {
@@ -38,6 +39,9 @@ class AbstractEngineTest extends PHPUnit_Framework_TestCase
         ]]);
     }
 
+    /**
+     * @return void
+     */
     public function testLoadTemplate()
     {
         $this->assertEquals('', $this->obj->loadTemplate(''));
@@ -46,6 +50,9 @@ class AbstractEngineTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $this->obj->loadTemplate('foo'));
     }
 
+    /**
+     * @return void
+     */
     public function testSetDynamicTemplate()
     {
         $this->assertNull($this->obj->setDynamicTemplate('foo', 'bar'));

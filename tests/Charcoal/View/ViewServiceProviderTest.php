@@ -2,21 +2,27 @@
 
 namespace Charcoal\Tests\View;
 
-use PHPUnit_Framework_TestCase;
-
+// From PSR-3
 use Psr\Log\NullLogger;
 
+// From Slim
 use Slim\Http\Response;
 
+// From Pimple
 use Pimple\Container;
 
+// From 'charcoal-view'
 use Charcoal\View\ViewServiceProvider;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class ViewServiceProviderTest extends PHPUnit_Framework_TestCase
+class ViewServiceProviderTest extends AbstractTestCase
 {
+    /**
+     * @return void
+     */
     public function testProvider()
     {
         $container = new Container([
@@ -31,6 +37,9 @@ class ViewServiceProviderTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(isset($container['view']));
     }
 
+    /**
+     * @return void
+     */
     public function testProviderTwig()
     {
         $container = new Container([
@@ -54,6 +63,9 @@ class ViewServiceProviderTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('Hello Baz', trim((string)$ret->getBody()));
     }
 
+    /**
+     * @return void
+     */
     public function testProviderMustache()
     {
         $container = new Container([
@@ -78,6 +90,9 @@ class ViewServiceProviderTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('Hello Baz', trim((string)$ret->getBody()));
     }
 
+    /**
+     * @return void
+     */
     public function testProviderPhp()
     {
         $container = new Container([

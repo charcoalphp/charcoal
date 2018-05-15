@@ -10,7 +10,7 @@
 
 if [ "$TRAVIS_REPO_SLUG" == "locomotivemtl/charcoal-view" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_PHP_VERSION" == "5.6" ]; then
 
-    echo -e "Publishing PHPDoc to Github Pages...\n"
+    echo -e "Publishing PHPDoc to GitHub Pages...\n"
 
     pwd
 

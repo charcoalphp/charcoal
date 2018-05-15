@@ -4,10 +4,10 @@ namespace Charcoal\View;
 
 use InvalidArgumentException;
 
-// Module `charcoal-config` dependencies
+// From 'charcoal-config'
 use Charcoal\Config\AbstractConfig;
 
-// Intra-module (`charcoal-view`) depentencies
+// From 'charcoal-view'
 use Charcoal\View\Mustache\MustacheEngine;
 use Charcoal\View\Twig\TwigEngine;
 

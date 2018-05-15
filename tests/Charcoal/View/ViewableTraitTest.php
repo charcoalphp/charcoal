@@ -2,21 +2,22 @@
 
 namespace Charcoal\Tests\View;
 
-use PHPUnit_Framework_TestCase;
-
+// From PSR-3
 use Psr\Log\NullLogger;
 
+// From 'charcoal-view'
 use Charcoal\View\ViewableTrait;
 use Charcoal\View\AbstractView;
 use Charcoal\View\GenericView;
 use Charcoal\View\Mustache\MustacheLoader;
 use Charcoal\View\Mustache\MustacheEngine;
 use Charcoal\View\ViewableTrait as MockTrait;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class ViewableTraitTest extends PHPUnit_Framework_TestCase
+class ViewableTraitTest extends AbstractTestCase
 {
     /**
      * @var ViewableTrait $obj
@@ -29,7 +30,7 @@ class ViewableTraitTest extends PHPUnit_Framework_TestCase
     private $view;
 
     /**
-     *
+     * @return void
      */
     public function setUp()
     {
@@ -58,7 +59,7 @@ class ViewableTraitTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     *
+     * @return void
      */
     public function testSetTemplateIdent()
     {
@@ -73,6 +74,9 @@ class ViewableTraitTest extends PHPUnit_Framework_TestCase
         $obj->setTemplateIdent(false);
     }
 
+    /**
+     * @return void
+     */
     public function testRenderWithTemplateIdent()
     {
         $this->obj->foo = 'bar';
@@ -80,6 +84,9 @@ class ViewableTraitTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('Hello bar', trim($ret));
     }
 
+    /**
+     * @return void
+     */
     public function testRender()
     {
         $this->obj->setTemplateIdent('foo');
@@ -89,7 +96,7 @@ class ViewableTraitTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     *
+     * @return void
      */
     public function testRenderTemplate()
     {
@@ -98,6 +105,9 @@ class ViewableTraitTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('Hello bar', $ret);
     }
 
+    /**
+     * @return void
+     */
     public function testToString()
     {
         $this->obj->setTemplateIdent('foo');
@@ -105,6 +115,9 @@ class ViewableTraitTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('Hello bar', trim((string)$this->obj));
     }
 
+    /**
+     * @return void
+     */
     public function testSetViewController()
     {
         $this->assertSame($this->obj, $this->obj->viewController());
@@ -117,7 +130,9 @@ class ViewableTraitTest extends PHPUnit_Framework_TestCase
         $this->obj->setViewController('foo');
     }
 
-
+    /**
+     * @return void
+     */
     public function testSetDynamicTemplate()
     {
         $this->assertNull($this->obj->setDynamicTemplate('foo', 'bar'));

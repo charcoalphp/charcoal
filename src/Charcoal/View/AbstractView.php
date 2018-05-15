@@ -2,15 +2,14 @@
 
 namespace Charcoal\View;
 
-// Dependencies from `PHP`
 use Exception;
 use InvalidArgumentException;
 
-// PSR-3 (logger) dependencies
+// From PSR-3
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 
-// Local namespace dependencie
+// From 'charcoal-view'
 use Charcoal\View\EngineInterface;
 use Charcoal\View\ViewInterface;
 

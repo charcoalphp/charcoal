@@ -2,11 +2,11 @@
 
 namespace Charcoal\View;
 
-// PSR-3 (logger) dependencies
+// From PSR-3
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 
-// Local namespace dependencies
+// From 'charcoal-view'
 use Charcoal\View\EngineInterface;
 use Charcoal\View\LoaderInterface;
 

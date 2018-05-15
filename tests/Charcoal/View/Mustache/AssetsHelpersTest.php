@@ -11,11 +11,12 @@ use Mustache_Template as MustacheTemplate;
 
 // From 'charcoal-view'
 use Charcoal\View\Mustache\AssetsHelpers;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class AssetsHelpersTest extends \PHPUnit_Framework_TestCase
+class AssetsHelpersTest extends AbstractTestCase
 {
     /**
      * @var AssetsHelpers
@@ -27,6 +28,9 @@ class AssetsHelpersTest extends \PHPUnit_Framework_TestCase
      */
     private $mustache;
 
+    /**
+     * @return void
+     */
     public function setUp()
     {
         $this->obj      = new AssetsHelpers();
@@ -35,6 +39,9 @@ class AssetsHelpersTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testDefaults()
     {
         $this->assertEquals('', $this->obj->js());
@@ -43,6 +50,9 @@ class AssetsHelpersTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('', $this->obj->cssRequirements());
     }
 
+    /**
+     * @return void
+     */
     public function testAddJs()
     {
         $this->obj->addJs('<script id="foo">');
@@ -51,6 +61,9 @@ class AssetsHelpersTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('', $this->obj->js());
     }
 
+    /**
+     * @return void
+     */
     public function testAddJsWithMustache()
     {
         $template = $this->mustache->loadTemplate(
@@ -65,6 +78,9 @@ class AssetsHelpersTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("<<<\n".'<script id="qux">'."\n>>>", $rendered);
     }
 
+    /**
+     * @return void
+     */
     public function testAddCss()
     {
         $this->obj->addCss('<style id="foo">');
@@ -72,6 +88,9 @@ class AssetsHelpersTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('<style id="foo"><style id="baz">', $this->obj->css());
     }
 
+    /**
+     * @return void
+     */
     public function testAddCssWithMustache()
     {
         $template = $this->mustache->loadTemplate(
@@ -86,6 +105,9 @@ class AssetsHelpersTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("<<<\n".'<style id="qux">'."\n>>>", $rendered);
     }
 
+    /**
+     * @return void
+     */
     public function testAddJsRequirement()
     {
         // Test enqueue
@@ -98,10 +120,14 @@ class AssetsHelpersTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('', $this->obj->jsRequirements());
     }
 
+    /**
+     * @return void
+     */
     public function testAddJsRequirementWithMustache()
     {
         $template = $this->mustache->loadTemplate(
-            '{{# addJsRequirement }}<script id="{{name}}">{{/ addJsRequirement }}'."<<<\n".'{{& jsRequirements }}'."\n>>>"
+            '{{# addJsRequirement }}<script id="{{name}}">{{/ addJsRequirement }}'.
+            "<<<\n".'{{& jsRequirements }}'."\n>>>"
         );
 
         $context = new StdClass();
@@ -112,6 +138,9 @@ class AssetsHelpersTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("<<<\n".'<script id="qux">'."\n>>>", $rendered);
     }
 
+    /**
+     * @return void
+     */
     public function testAddCssRequirement()
     {
         // Test enqueue
@@ -124,10 +153,14 @@ class AssetsHelpersTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('', $this->obj->cssRequirements());
     }
 
+    /**
+     * @return void
+     */
     public function testAddCssRequirementWithMustache()
     {
         $template = $this->mustache->loadTemplate(
-            '{{# addCssRequirement }}<style id="{{name}}">{{/ addCssRequirement }}'."<<<\n".'{{& cssRequirements }}'."\n>>>"
+            '{{# addCssRequirement }}<style id="{{name}}">{{/ addCssRequirement }}'.
+            "<<<\n".'{{& cssRequirements }}'."\n>>>"
         );
 
         $context = new StdClass();
@@ -138,6 +171,9 @@ class AssetsHelpersTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("<<<\n".'<style id="qux">'."\n>>>", $rendered);
     }
 
+    /**
+     * @return void
+     */
     public function testPurgeJs()
     {
         $this->obj->addJs('<script>');
@@ -145,6 +181,9 @@ class AssetsHelpersTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('', $this->obj->js());
     }
 
+    /**
+     * @return void
+     */
     public function testPurgeCss()
     {
         $this->obj->addCss('<style>');
@@ -152,6 +191,9 @@ class AssetsHelpersTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('', $this->obj->css());
     }
 
+    /**
+     * @return void
+     */
     public function testPurgeAssets()
     {
         $this->obj->addCss('<style>');
@@ -161,6 +203,9 @@ class AssetsHelpersTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('', $this->obj->js());
     }
 
+    /**
+     * @return void
+     */
     public function testPurgeAssetsWithMustache()
     {
         $template = $this->mustache->loadTemplate(
@@ -171,6 +216,9 @@ class AssetsHelpersTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('', $rendered);
     }
 
+    /**
+     * @return void
+     */
     public function testPurgeJsWithMustache()
     {
         $template = $this->mustache->loadTemplate(
@@ -181,6 +229,9 @@ class AssetsHelpersTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('', $rendered);
     }
 
+    /**
+     * @return void
+     */
     public function testPurgeCssWithMustache()
     {
         $template = $this->mustache->loadTemplate(

@@ -2,10 +2,10 @@
 
 namespace Charcoal\View;
 
-// PSR-7 (http-messaging) dependencies
+// From PSR-7
 use Psr\Http\Message\ResponseInterface;
 
-// Local namespace dependencies
+// From 'charcoal-view'
 use Charcoal\View\ViewInterface;
 
 /**

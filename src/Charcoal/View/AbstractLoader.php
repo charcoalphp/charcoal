@@ -2,14 +2,13 @@
 
 namespace Charcoal\View;
 
-// PHP Dependencies
 use InvalidArgumentException;
 
-// PSR-3 (logger) dependencies
+// From PSR-3
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 
-// Local namespace dependencies
+// From 'charcoal-view'
 use Charcoal\View\LoaderInterface;
 
 /**

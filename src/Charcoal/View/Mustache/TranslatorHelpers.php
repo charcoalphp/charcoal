@@ -2,7 +2,7 @@
 
 namespace Charcoal\View\Mustache;
 
-// From 'mustache/mustache'
+// From Mustache
 use Mustache_LambdaHelper as LambdaHelper;
 
 // From 'charcoal-translator'

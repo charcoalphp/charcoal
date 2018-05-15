@@ -2,6 +2,7 @@
 
 namespace Charcoal\View\Mustache;
 
+// From Mustache
 use Mustache_LambdaHelper as LambdaHelper;
 
 /**
@@ -12,28 +13,28 @@ class AssetsHelpers implements HelpersInterface
     /**
      * A string concatenation of inline `<script>` elements.
      *
-     * @var string $js
+     * @var string
      */
     private static $js = '';
 
     /**
      * An array of `<script>` elements referencing external scripts.
      *
-     * @var array $jsRequirements
+     * @var array
      */
     private static $jsRequirements = [];
 
     /**
      * A string concatenation of inline `<style>` elements.
      *
-     * @var string $css;
+     * @var string
      */
     private static $css = '';
 
     /**
      * An array of `<link>` elements referencing external style sheets.
      *
-     * @var array $cssRequirements
+     * @var array
      */
     private static $cssRequirements = [];
 

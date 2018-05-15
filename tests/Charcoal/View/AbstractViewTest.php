@@ -2,20 +2,21 @@
 
 namespace Charcoal\Tests\View;
 
-use PHPUnit_Framework_TestCase;
-
+// From PSR-3
 use Psr\Log\NullLogger;
 
+// From 'charcoal-view'
 use Charcoal\View\Mustache\MustacheLoader;
 use Charcoal\View\Mustache\MustacheEngine;
 use Charcoal\View\Mustache\AssetsHelpers;
 use Charcoal\View\Mustache\TranslatorHelpers;
 use Charcoal\View\AbstractView;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class AbstractViewTest extends PHPUnit_Framework_TestCase
+class AbstractViewTest extends AbstractTestCase
 {
     /**
      * Tested Class.
@@ -26,6 +27,8 @@ class AbstractViewTest extends PHPUnit_Framework_TestCase
 
     /**
      * Set up the test.
+     *
+     * @return void
      */
     public function setUp()
     {
@@ -50,7 +53,7 @@ class AbstractViewTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     *
+     * @return void
      */
     public function testRenderTemplate()
     {
@@ -60,7 +63,7 @@ class AbstractViewTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     *
+     * @return void
      */
     public function testRender()
     {
@@ -68,7 +71,7 @@ class AbstractViewTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     *
+     * @return void
      */
     public function testRenderTemplateHelper()
     {
@@ -87,17 +90,26 @@ class AbstractViewTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, trim($this->obj->renderTemplate('helpers', [ 'foo' => 'Charcoal' ])));
     }
 
+    /**
+     * @return void
+     */
     public function testLoadTemplateInvalidStringThrowsException()
     {
         $this->expectException('\InvalidArgumentException');
         $this->obj->loadTemplate(false);
     }
 
+    /**
+     * @return void
+     */
     public function testLoadTemplateEmptyStringReturnsEmpty()
     {
         $this->assertEquals('', $this->obj->loadTemplate(''));
     }
 
+    /**
+     * @return void
+     */
     public function testSetDynamicTemplate()
     {
         $this->obj->setDynamicTemplate('dynamic', 'foo');

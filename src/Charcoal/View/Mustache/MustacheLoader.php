@@ -2,10 +2,10 @@
 
 namespace Charcoal\View\Mustache;
 
-// 3rd-party libraries (`mustache/mustache`) dependencies
+// From Mustache
 use Mustache_Loader;
 
-// Parent namespace dependencies
+// From 'charcoal-view'
 use Charcoal\View\AbstractLoader;
 use Charcoal\View\LoaderInterface;
 

@@ -2,22 +2,26 @@
 
 namespace Charcoal\Tests\View\Php;
 
-use PHPUnit_Framework_TestCase;
-
+// From PSR-3
 use Psr\Log\NullLogger;
 
+// From 'charcoal-view'
 use Charcoal\View\Php\PhpLoader;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class PhpLoaderTest extends PHPUnit_Framework_TestCase
+class PhpLoaderTest extends AbstractTestCase
 {
     /**
      * @var MustacheLoader
      */
     private $obj;
 
+    /**
+     * @return void
+     */
     public function setUp()
     {
         $this->obj = new PhpLoader([
@@ -27,6 +31,9 @@ class PhpLoaderTest extends PHPUnit_Framework_TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testLoad()
     {
         $ret = $this->obj->load('foo');
@@ -38,6 +45,9 @@ class PhpLoaderTest extends PHPUnit_Framework_TestCase
         $this->obj->load(false);
     }
 
+    /**
+     * @return void
+     */
     public function testLoadDynamic()
     {
         $GLOBALS['widget_template'] = 'foo';
@@ -51,16 +61,24 @@ class PhpLoaderTest extends PHPUnit_Framework_TestCase
         $ret = $this->obj->load('$widget_template');
     }
 
+    /**
+     * @return void
+     */
     public function testLoadNotExisting()
     {
         $ret = $this->obj->load('foo/bar/foobar');
         $this->assertEquals('foo/bar/foobar', $ret);
     }
 
-    // public function testFilenameFromIdent()
-    // {
-    //     $this->assertEquals('foo.mustache', $this->obj->filenameFromIdent('foo'));
-    //     $this->assertEquals('foo/bar.mustache', $this->obj->filenameFromIdent('foo/bar'));
-    //     $this->assertEquals('Foo.Bar.mustache', $this->obj->filenameFromIdent('Foo\Bar'));
-    // }
+    /**
+     * @return void
+     */
+    /*
+    public function testFilenameFromIdent()
+    {
+        $this->assertEquals('foo.mustache', $this->obj->filenameFromIdent('foo'));
+        $this->assertEquals('foo/bar.mustache', $this->obj->filenameFromIdent('foo/bar'));
+        $this->assertEquals('Foo.Bar.mustache', $this->obj->filenameFromIdent('Foo\Bar'));
+    }
+    */
 }

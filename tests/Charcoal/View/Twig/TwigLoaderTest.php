@@ -2,26 +2,31 @@
 
 namespace Charcoal\Tests\View\Twig;
 
-use PHPUnit_Framework_TestCase;
-
 use DateTime;
 
+// From PSR-3
 use Psr\Log\NullLogger;
 
+// From Twig
 use Twig_Source;
 
+// From 'charcoal-view'
 use Charcoal\View\Twig\TwigLoader;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class TwigLoaderTest extends PHPUnit_Framework_TestCase
+class TwigLoaderTest extends AbstractTestCase
 {
     /**
      * @var TwigLoader
      */
     private $obj;
 
+    /**
+     * @return void
+     */
     public function setUp()
     {
         $this->obj = new TwigLoader([
@@ -31,6 +36,9 @@ class TwigLoaderTest extends PHPUnit_Framework_TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testLoad()
     {
         $ret = $this->obj->load('foo');
@@ -42,6 +50,9 @@ class TwigLoaderTest extends PHPUnit_Framework_TestCase
         $this->obj->load(false);
     }
 
+    /**
+     * @return void
+     */
     public function testGetSource()
     {
         $ret = $this->obj->getSource('foo');
@@ -50,6 +61,9 @@ class TwigLoaderTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $ret);
     }
 
+    /**
+     * @return void
+     */
     public function testGetSourceContext()
     {
         $name = 'foo';
@@ -60,6 +74,9 @@ class TwigLoaderTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $ret);
     }
 
+    /**
+     * @return void
+     */
     public function testLoadDynamic()
     {
         $GLOBALS['widget_template'] = 'foo';
@@ -73,25 +90,39 @@ class TwigLoaderTest extends PHPUnit_Framework_TestCase
         $ret = $this->obj->load('$widget_template');
     }
 
+    /**
+     * @return void
+     */
     public function testLoadNotExisting()
     {
         $ret = $this->obj->load('foo/bar/foobar');
         $this->assertEquals('foo/bar/foobar', $ret);
     }
 
-    // public function testFilenameFromIdent()
-    // {
-    //     $this->assertEquals('foo.mustache', $this->obj->filenameFromIdent('foo'));
-    //     $this->assertEquals('foo/bar.mustache', $this->obj->filenameFromIdent('foo/bar'));
-    //     $this->assertEquals('Foo.Bar.mustache', $this->obj->filenameFromIdent('Foo\Bar'));
-    // }
+    /**
+     * @return void
+     */
+    /*
+    public function testFilenameFromIdent()
+    {
+        $this->assertEquals('foo.mustache', $this->obj->filenameFromIdent('foo'));
+        $this->assertEquals('foo/bar.mustache', $this->obj->filenameFromIdent('foo/bar'));
+        $this->assertEquals('Foo.Bar.mustache', $this->obj->filenameFromIdent('Foo\Bar'));
+    }
+    */
 
+    /**
+     * @return void
+     */
     public function testExists()
     {
         $this->assertTrue($this->obj->exists('foo'));
         $this->assertFalse($this->obj->exists('foobaz'));
     }
 
+    /**
+     * @return void
+     */
     public function testIsFresh()
     {
         $date = new DateTime('2000-01-01');

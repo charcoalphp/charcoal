@@ -2,7 +2,7 @@
 
 namespace Charcoal\View\Php;
 
-// Intra-module (`charcoal-view`) depentencies
+// From 'charcoal-view'
 use Charcoal\View\AbstractEngine;
 
 /**

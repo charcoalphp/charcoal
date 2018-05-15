@@ -8,7 +8,7 @@
 
 if [ "$TRAVIS_REPO_SLUG" == "locomotivemtl/charcoal-view" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_PHP_VERSION" == "5.6" ]; then
 
-    echo -e "Publishing ApiGen to Github Pages...\n";
+    echo -e "Publishing ApiGen to GitHub Pages...\n";
 
     pwd
 

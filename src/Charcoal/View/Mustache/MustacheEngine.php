@@ -6,10 +6,10 @@ use InvalidArgumentException;
 use RuntimeException;
 use Traversable;
 
-// Dependency from 'mustache/mustache'
+// From Mustache
 use Mustache_Engine;
 
-// Intra-module (`charcoal-view`) dependencies
+// From 'charcoal-view'
 use Charcoal\View\AbstractEngine;
 
 /**
@@ -125,7 +125,7 @@ class MustacheEngine extends AbstractEngine
                 'Can not add helper to mustache engine: the engine has already been initialized.'
             );
         }
-        
+
         $this->helpers[$name] = $helper;
 
         return $this;

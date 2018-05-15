@@ -2,16 +2,17 @@
 
 namespace Charcoal\Tests\View;
 
-use PHPUnit_Framework_TestCase;
-
+// From PSR-3
 use Psr\Log\NullLogger;
 
+// From 'charcoal-view'
 use Charcoal\View\AbstractLoader;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class AbstractLoaderTest extends PHPUnit_Framework_TestCase
+class AbstractLoaderTest extends AbstractTestCase
 {
     /**
      * Instance of object under test
@@ -20,7 +21,7 @@ class AbstractLoaderTest extends PHPUnit_Framework_TestCase
     public $obj;
 
     /**
-     *
+     * @return void
      */
     public function setUp()
     {
@@ -33,7 +34,7 @@ class AbstractLoaderTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     *
+     * @return void
      */
     public function testInvalidBasePathThrowsException()
     {
@@ -48,7 +49,7 @@ class AbstractLoaderTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     *
+     * @return void
      */
     public function testPathsThrowsException()
     {
@@ -62,30 +63,45 @@ class AbstractLoaderTest extends PHPUnit_Framework_TestCase
         ]]);
     }
 
+    /**
+     * @return void
+     */
     public function testDynamicTemplateInvalidVarName()
     {
         $this->expectException('\InvalidArgumentException');
         $this->obj->dynamicTemplate(null);
     }
 
+    /**
+     * @return void
+     */
     public function testSetDynamicTemplateInvalidVarName()
     {
         $this->expectException('\InvalidArgumentException');
         $this->obj->setDynamicTemplate(null, 'foo');
     }
 
+    /**
+     * @return void
+     */
     public function testSetDynamicTemplate()
     {
         $this->assertNull($this->obj->setDynamicTemplate('dynamic', 'foo'));
         $this->assertEquals('foo', $this->obj->dynamicTemplate('dynamic'));
     }
 
+    /**
+     * @return void
+     */
     public function testSetDynamicTemplateInvalidTemplateIdent()
     {
         $this->expectException('\InvalidArgumentException');
         $this->obj->setDynamicTemplate('foo', []);
     }
 
+    /**
+     * @return void
+     */
     public function testRemoveDynamicTemplate()
     {
         $this->obj->setDynamicTemplate('foo', null);
@@ -95,6 +111,9 @@ class AbstractLoaderTest extends PHPUnit_Framework_TestCase
         $this->obj->removeDynamicTemplate(null);
     }
 
+    /**
+     * @return void
+     */
     public function testClearDynamicTemplate()
     {
         $this->obj->clearDynamicTemplates();
