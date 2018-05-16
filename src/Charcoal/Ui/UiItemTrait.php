@@ -119,6 +119,13 @@ trait UiItemTrait
     private $showFooter = true;
 
     /**
+     * The tab title is dislpayed by default.
+     *
+     * @var boolean
+     */
+    private $showTabTitle = true;
+
+    /**
      * Activates/deactivates the UI item.
      *
      * @param  boolean $active Activate (TRUE) or deactivate (FALSE) the UI item.
@@ -509,6 +516,29 @@ trait UiItemTrait
             return false;
         } else {
             return $this->showNotes();
+        }
+    }
+
+    /**
+     * @param boolean $showTabTitle
+     * @return self
+     */
+    public function setShowTabTitle($showTabTitle)
+    {
+        $this->showTabTitle = !!$showTabTitle;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean If TRUE or unset, check if there is a title.
+     */
+    public function showTabTitle()
+    {
+        if ($this->showTabTitle === false) {
+            return false;
+        } else {
+            return $this->showTitle();
         }
     }
 
