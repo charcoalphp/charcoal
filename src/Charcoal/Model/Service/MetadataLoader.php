@@ -441,6 +441,7 @@ final class MetadataLoader implements LoggerAwareInterface
         }
 
         $ret = [];
+        $paths = array_reverse($paths);
         foreach ($paths as $basePath) {
             $file = $basePath.DIRECTORY_SEPARATOR.$filename;
             if (file_exists($file)) {
