@@ -306,6 +306,45 @@ class TranslatorTest extends AbstractTestCase
     }
 
     /**
+     * @return void
+     */
+    public function testHasTranslation()
+    {
+        $data = [
+            'en' => [
+                'hello'   => 'Hello!',
+                'goodbye' => 'Goodbye!',
+                'super'   => 'Super!',
+            ],
+            'fr' => [
+                'hello'   => 'Bonjour!',
+                'goodbye' => 'Au revoir!',
+                'great'   => 'Génial!',
+            ],
+            'es' => [
+                'hello'   => '¡Hola!',
+                'goodbye' => '¡Adiós!',
+                'great'   => '¡Estupendo!',
+                'super'   => '¡Súper!',
+            ],
+        ];
+
+        foreach ($data as $locale => $messages) {
+            $this->obj->addResource('array', $messages, $locale, 'messages');
+        }
+
+        $this->obj->setFallbackLocales([ 'es' ]);
+
+        $this->assertTrue($this->obj->hasTrans('hello'));
+        $this->assertTrue($this->obj->hasTrans('great', 'messages', 'en'));
+        $this->assertFalse($this->obj->hasTrans('missing'));
+
+        $this->assertTrue($this->obj->transExists('hello'));
+        $this->assertFalse($this->obj->transExists('great', 'messages', 'en'));
+        $this->assertFalse($this->obj->transExists('missing'));
+    }
+
+    /**
      * @link https://github.com/symfony/translation/blob/v3.2.3/Tests/TranslatorTest.php
      *
      * @return array

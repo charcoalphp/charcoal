@@ -324,6 +324,40 @@ class Translator extends SymfonyTranslator
     }
 
     /**
+     * Checks if a message has a translation.
+     *
+     * @param  string      $id     The message id.
+     * @param  string|null $domain The domain for the message or NULL to use the default.
+     * @param  string|null $locale The locale or NULL to use the default.
+     * @return boolean TRUE if the message has a translation, FALSE otherwise.
+     */
+    public function hasTrans($id, $domain = null, $locale = null)
+    {
+        if (null === $domain) {
+            $domain = 'messages';
+        }
+
+        return $this->getCatalogue($locale)->has($id, $domain);
+    }
+
+    /**
+     * Checks if a message has a translation (it does not take into account the fallback mechanism).
+     *
+     * @param  string      $id     The message id.
+     * @param  string|null $domain The domain for the message or NULL to use the default.
+     * @param  string|null $locale The locale or NULL to use the default.
+     * @return boolean TRUE if the message has a translation, FALSE otherwise.
+     */
+    public function transExists($id, $domain = null, $locale = null)
+    {
+        if (null === $domain) {
+            $domain = 'messages';
+        }
+
+        return $this->getCatalogue($locale)->defines($id, $domain);
+    }
+
+    /**
      * Determine if the value is translatable.
      *
      * @param  mixed $val The value to be checked.
