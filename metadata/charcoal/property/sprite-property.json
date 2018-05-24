@@ -1,0 +1,11 @@
+{
+    "properties":{
+        "sprite":{
+            "type":"string",
+            "label":"Sprite path"
+        }
+    },
+    "admin": {
+        "input_type": "charcoal/admin/property/input/select"
+    }
+}
