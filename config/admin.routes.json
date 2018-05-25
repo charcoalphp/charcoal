@@ -1,14 +1,16 @@
 {
-    "routes": {
-        "actions": {
-            "join": {
-                "ident": "charcoal/admin/action/join"
-            },
-            "add-join": {
-                "ident": "charcoal/admin/action/add-join"
-            },
-            "remove-join": {
-                "ident": "charcoal/admin/action/remove-join"
+    "admin": {
+        "routes": {
+            "actions": {
+                "join": {
+                    "ident": "charcoal/admin/action/join"
+                },
+                "add-join": {
+                    "ident": "charcoal/admin/action/add-join"
+                },
+                "remove-join": {
+                    "ident": "charcoal/admin/action/remove-join"
+                }
             }
         }
     }
