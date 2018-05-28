@@ -233,7 +233,7 @@ class TranslatorServiceProvider implements ServiceProviderInterface
                 $translator->addLoader($loader, $container['translator/loader/file/'.$loader]);
 
                 $paths = array_reverse($transConfig['paths']);
-                foreach ($transConfig['paths'] as $path) {
+                foreach ($paths as $path) {
                     $path = realpath($container['config']['base_path'].$path);
 
                     if ($path === false) {
