@@ -42,6 +42,9 @@
         "php-coveralls/php-coveralls": "^2.0",
         "locomotivemtl/charcoal-admin": "~0.8"
     },
+    "suggest": {
+        "locomotivemtl/charcoal-app": "To run the parser script."
+    },
     "autoload": {
         "psr-4": {
             "Charcoal\\": "src/Charcoal/"

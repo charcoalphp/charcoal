@@ -184,13 +184,13 @@ class TranslatorServiceProvider implements ServiceProviderInterface
          * @return TranslatorConfig
          */
         $container['translator/config'] = function (Container $container) {
-            $appConfig        = isset($container['config']) ? $container['config'] : [];
+            $appConfig = isset($container['config']) ? $container['config'] : [];
             $translatorConfig = isset($appConfig['translator']) ? $appConfig['translator'] : null;
             return new TranslatorConfig($translatorConfig);
         };
 
         /**
-         * Dictionary of translations grouped by domain and locale.
+         * Dictionary of translations grouped by domain and locale, from translator config.
          *
          * @param  Container $container Pimple DI container.
          * @return array
@@ -219,10 +219,10 @@ class TranslatorServiceProvider implements ServiceProviderInterface
         $container['translator'] = function (Container $container) {
             $translatorConfig = $container['translator/config'];
             $translator = new Translator([
-                'manager'           => $container['locales/manager'],
-                'message_selector'  => $container['translator/message-selector'],
-                'cache_dir'         => $translatorConfig['cache_dir'],
-                'debug'             => $translatorConfig['debug']
+                'manager' => $container['locales/manager'],
+                'message_selector' => $container['translator/message-selector'],
+                'cache_dir' => $translatorConfig['cache_dir'],
+                'debug' => $translatorConfig['debug']
             ]);
 
             $translator->setFallbackLocales($container['locales/fallback-languages']);
@@ -230,14 +230,14 @@ class TranslatorServiceProvider implements ServiceProviderInterface
             $translator->addLoader('array', $container['translator/loader/array']);
 
             foreach ($translatorConfig['loaders'] as $loader) {
-                $translator->addLoader($loader, $container['translator/loader/file/'.$loader]);
+                $translator->addLoader($loader, $container['translator/loader/file/' . $loader]);
                 $paths = array_reverse($translatorConfig['paths']);
                 foreach ($translatorConfig['paths'] as $path) {
-                    $path = realpath($container['config']['base_path'].$path);
+                    $path = realpath($container['config']['base_path'] . $path);
                     if ($path === false) {
                         continue;
                     }
-                    $files = glob($path.'/*.'.$loader);
+                    $files = glob($path . '/*.' . $loader);
                     foreach ($files as $f) {
                         $names = explode('.', basename($f));
                         if (count($names) < 3) {
@@ -259,6 +259,16 @@ class TranslatorServiceProvider implements ServiceProviderInterface
             return $translator;
         };
 
+        $this->registerTranslatorLoaders($container);
+
+    }
+
+    /**
+     * @param  Container $container Pimple DI container.
+     * @return void
+     */
+    private function registerTranslatorLoaders(Container $container)
+    {
         /**
          * @return ArrayLoader
          */

@@ -338,7 +338,7 @@ class LanguageMiddleware
 
         $locales = array_unique($locales);
 
-        if ($locales) {
+        if (!empty($locales)) {
             setlocale(LC_ALL, $locales);
         }
     }

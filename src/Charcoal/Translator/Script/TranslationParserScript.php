@@ -22,14 +22,14 @@ class TranslationParserScript extends AdminScript
     use TranslatorAwareTrait;
 
     /**
-     * @var AppConfig
+     * @var \Charcoal\App\AppConfig
      */
     private $appConfig;
 
     /**
-     * @var string
+     * @var array
      */
-    protected $fileType;
+    protected $fileTypes;
 
     /**
      * Output File.
@@ -268,7 +268,7 @@ class TranslationParserScript extends AdminScript
             return $this->output;
         }
         $output = $this->argOrInput('output');
-        $this->output = $output;
+        $this->output = (string)$output;
         return $this->output;
     }
 
@@ -278,7 +278,7 @@ class TranslationParserScript extends AdminScript
      */
     public function domain()
     {
-        return $this->argOrInput('domain');
+        return (string)$this->argOrInput('domain');
     }
 
     /**
@@ -441,7 +441,7 @@ class TranslationParserScript extends AdminScript
     }
 
     /**
-     * @return string
+     * @return array
      */
     public function paths()
     {
@@ -471,7 +471,7 @@ class TranslationParserScript extends AdminScript
 
     /**
      * @param array $translations The translations to save in CSV.
-     * @return TranslateScript Chainable
+     * @return self
      */
     public function toCSV(array $translations)
     {
@@ -534,7 +534,7 @@ class TranslationParserScript extends AdminScript
     public function maxRecursiveLevel()
     {
         if ($this->climate()->arguments->defined('recursive')) {
-            return $this->climate()->arguments->get('recursive');
+            return (int)$this->climate()->arguments->get('recursive');
         }
         return 10;
     }
@@ -545,7 +545,7 @@ class TranslationParserScript extends AdminScript
     private function phpFunction()
     {
         if ($this->climate()->arguments->defined('php_function')) {
-            return $this->climate()->arguments->get('php_function');
+            return (string)$this->climate()->arguments->get('php_function');
         }
 
         return 'translate';
@@ -557,7 +557,7 @@ class TranslationParserScript extends AdminScript
     private function mustacheTag()
     {
         if ($this->climate()->arguments->defined('mustache_tag')) {
-            return $this->climate()->arguments->get('mustache_tag');
+            return (string)$this->climate()->arguments->get('mustache_tag');
         }
         return '_t';
     }
