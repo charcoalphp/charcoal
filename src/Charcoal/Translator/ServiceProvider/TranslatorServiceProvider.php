@@ -184,9 +184,9 @@ class TranslatorServiceProvider implements ServiceProviderInterface
          * @return TranslatorConfig
          */
         $container['translator/config'] = function (Container $container) {
-            $appConfig = isset($container['config']) ? $container['config'] : [];
-            $translatorConfig = isset($appConfig['translator']) ? $appConfig['translator'] : null;
-            return new TranslatorConfig($translatorConfig);
+            $appConfig   = isset($container['config']) ? $container['config'] : [];
+            $transConfig = isset($appConfig['translator']) ? $appConfig['translator'] : null;
+            return new TranslatorConfig($transConfig);
         };
 
         /**
@@ -196,8 +196,8 @@ class TranslatorServiceProvider implements ServiceProviderInterface
          * @return array
          */
         $container['translator/translations'] = function (Container $container) {
-            $translatorConfig = $container['translator/config'];
-            return $translatorConfig['translations'];
+            $transConfig = $container['translator/config'];
+            return $transConfig['translations'];
         };
 
         /**
@@ -217,32 +217,37 @@ class TranslatorServiceProvider implements ServiceProviderInterface
          * @return Translator
          */
         $container['translator'] = function (Container $container) {
-            $translatorConfig = $container['translator/config'];
-            $translator = new Translator([
-                'manager' => $container['locales/manager'],
+            $transConfig = $container['translator/config'];
+            $translator  = new Translator([
+                'manager'          => $container['locales/manager'],
                 'message_selector' => $container['translator/message-selector'],
-                'cache_dir' => $translatorConfig['cache_dir'],
-                'debug' => $translatorConfig['debug']
+                'cache_dir'        => $transConfig['cache_dir'],
+                'debug'            => $transConfig['debug']
             ]);
 
             $translator->setFallbackLocales($container['locales/fallback-languages']);
 
             $translator->addLoader('array', $container['translator/loader/array']);
 
-            foreach ($translatorConfig['loaders'] as $loader) {
-                $translator->addLoader($loader, $container['translator/loader/file/' . $loader]);
-                $paths = array_reverse($translatorConfig['paths']);
-                foreach ($translatorConfig['paths'] as $path) {
-                    $path = realpath($container['config']['base_path'] . $path);
+            foreach ($transConfig['loaders'] as $loader) {
+                $translator->addLoader($loader, $container['translator/loader/file/'.$loader]);
+
+                $paths = array_reverse($transConfig['paths']);
+                foreach ($transConfig['paths'] as $path) {
+                    $path = realpath($container['config']['base_path'].$path);
+
                     if ($path === false) {
                         continue;
                     }
-                    $files = glob($path . '/*.' . $loader);
+
+                    $files = glob($path.'/*.'.$loader);
                     foreach ($files as $f) {
                         $names = explode('.', basename($f));
+
                         if (count($names) < 3) {
                             continue;
                         }
+
                         $lang = $names[1];
                         $domain = $names[0];
                         $translator->addResource($loader, $f, $lang, $domain);
@@ -260,7 +265,6 @@ class TranslatorServiceProvider implements ServiceProviderInterface
         };
 
         $this->registerTranslatorLoaders($container);
-
     }
 
     /**
@@ -361,7 +365,7 @@ class TranslatorServiceProvider implements ServiceProviderInterface
     private function registerMiddleware(Container $container)
     {
         /**
-         * @param Container $container
+         * @param  Container $container
          * @return LanguageMiddleware
          */
         $container['middlewares/charcoal/translator/middleware/language'] = function (Container $container) {

@@ -1,4 +1,5 @@
 <?php
+
 namespace Charcoal\Translator\Script;
 
 // From Pimple
@@ -97,32 +98,32 @@ class TranslationParserScript extends AdminScript
     {
         $arguments = [
             'output' => [
-                'prefix' => 'o',
-                'longPrefix' => 'output',
-                'description' => 'Output file path. Make sure the path exists in the translator paths definition. (Default: translation/)',
+                'prefix'       => 'o',
+                'longPrefix'   => 'output',
+                'description'  => 'Output file path. Make sure the path exists in the translator paths definition. (Default: translation/)',
                 'defaultValue' => 'translations/'
             ],
             'domain' => [
-                'prefix' => 'd',
-                'longPrefix' => 'domain',
-                'description' => 'Doman for the csv file. Based on symfony/translator CsvLoader.',
+                'prefix'       => 'd',
+                'longPrefix'   => 'domain',
+                'description'  => 'Doman for the csv file. Based on symfony/translator CsvLoader.',
                 'defaultValue' => 'messages'
             ],
             'recursive' => [
-                'prefix' => 'r',
-                'longPrefix' => 'recursive-level',
-                'description' => 'Max recursive level for the glob operation on folders.',
-                'defaultValue' => 4
+                'prefix'       => 'r',
+                'longPrefix'   => 'recursive-level',
+                'description'  => 'Max recursive level for the glob operation on folders.',
+                'defaultValue' => -1
             ],
             'path' => [
+                'prefix'       => 'p',
                 'longPrefix'   => 'path',
-                'prefix'  => 'p',
                 'description'  => 'Path relative to the project installation (ex: templates/*/*/)',
                 'defaultValue' => false
             ],
             'type' => [
+                'prefix'       => 't',
                 'longPrefix'   => 'type',
-                'prefix'  => 't',
                 'description'  => 'File type (mustache || php)',
                 'defaultValue' => 'mustache'
             ],
