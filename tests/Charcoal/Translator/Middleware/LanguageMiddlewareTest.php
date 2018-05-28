@@ -113,7 +113,7 @@ class LanguageMiddlewareTest extends AbstractTestCase
                 ],
                 'translator' => [
                     'paths' => [
-                        '/fixtures/translations'
+                        '/Charcoal/Translator/Fixture/translations'
                     ],
                     'translations' => [
                         'messages' => [

@@ -65,8 +65,8 @@ class TranslatorServiceProviderTest extends AbstractTestCase
                     'yaml'
                 ],
                 'paths' => [
-                    '/fixtures/translations',
-                    '/fixtures/foobar'
+                    '/Charcoal/Translator/Fixture/translations',
+                    '/Charcoal/Translator/Fixture/foobar'
                 ],
                 'translations' => [
                     'messages' => [

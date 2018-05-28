@@ -141,7 +141,7 @@ class ContainerProvider
                 ],
                 'translator' => [
                     'paths' => [
-                        '/fixtures/translations'
+                        '/Charcoal/Translator/Fixture/translations'
                     ],
                     'translations' => [
                         'messages' => [
@@ -158,7 +158,7 @@ class ContainerProvider
                 ],
                 'view' => [
                     'paths' => [
-                        '/fixtures/views'
+                        '/Charcoal/Translator/Fixture/views'
                     ]
                 ]
             ]);
