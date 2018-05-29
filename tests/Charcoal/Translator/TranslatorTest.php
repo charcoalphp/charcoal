@@ -153,21 +153,21 @@ class TranslatorTest extends AbstractTestCase
      */
     public function testTranslation()
     {
-        $ret = $this->obj->translation('foo');
+        $ret = $this->obj->translation('Hello!');
         $this->assertInstanceOf(Translation::class, $ret);
-        $this->assertEquals('foo', (string)$ret);
+        $this->assertEquals('Hello!', (string)$ret);
 
         $translation = clone($ret);
         $ret = $this->obj->translation($translation);
         $this->assertInstanceOf(Translation::class, $ret);
-        $this->assertEquals('foo', (string)$ret);
+        $this->assertEquals('Hello!', (string)$ret);
 
         $ret = $this->obj->translation([
-            'en' => 'foobar',
-            'fr' => 'barfoo'
+            'en' => 'Hello!',
+            'fr' => 'Bonjour!'
         ]);
         $this->assertInstanceOf(Translation::class, $ret);
-        $this->assertEquals('foobar', (string)$ret);
+        $this->assertEquals('Hello!', (string)$ret);
     }
 
     /**
@@ -301,8 +301,8 @@ class TranslatorTest extends AbstractTestCase
         $method = $this->getMethod($this->obj, 'isValidTranslation');
         $method->setAccessible(true);
 
-        $this->assertFalse($method->invokeArgs($this->obj, [ [ 0 => 'foo' ] ]));
-        $this->assertFalse($method->invokeArgs($this->obj, [ [ 'foo' => 0 ] ]));
+        $this->assertFalse($method->invokeArgs($this->obj, [ [ 0 => 'Hello!' ] ]));
+        $this->assertFalse($method->invokeArgs($this->obj, [ [ 'hello' => 0 ] ]));
     }
 
     /**

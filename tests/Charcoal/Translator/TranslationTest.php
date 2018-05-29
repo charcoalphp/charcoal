@@ -28,15 +28,15 @@ class TranslationTest extends AbstractTestCase
         if ($this->localesManager === null) {
             $this->localesManager = new LocalesManager([
                 'locales' => [
-                    'foo' => [
-                        'locale' => 'foo_FOO.UTF8'
+                    'en' => [
+                        'locale' => 'en_US.UTF8'
                     ],
-                    'bar' => [
-                        'locale' => 'bar_BAR.UTF8'
+                    'fr' => [
+                        'locale' => 'fr_FR.UTF8'
                     ]
                 ],
-                'default_language'   => 'foo',
-                'fallback_languages' => [ 'foo' ]
+                'default_language'   => 'en',
+                'fallback_languages' => [ 'en' ]
 
             ]);
         }
@@ -49,13 +49,13 @@ class TranslationTest extends AbstractTestCase
      */
     public function testConstructorWithStringParam()
     {
-        $obj = new Translation('foobar', $this->localesManager());
+        $obj = new Translation('Hello!', $this->localesManager());
 
-        $this->assertEquals('foobar', $obj['foo']);
-        $this->assertEquals([ 'foo' => 'foobar' ], $obj->data());
+        $this->assertEquals('Hello!', $obj['en']);
+        $this->assertEquals([ 'en' => 'Hello!' ], $obj->data());
 
-        $this->assertTrue(isset($obj['foo']));
-        $this->assertFalse(isset($obj['bar']));
+        $this->assertTrue(isset($obj['en']));
+        $this->assertFalse(isset($obj['fr']));
     }
 
     /**
@@ -63,15 +63,15 @@ class TranslationTest extends AbstractTestCase
      */
     public function testConstructorWithArrayParam()
     {
-        $obj = new Translation([ 'foo' => 'foobar', 'bar' => 'barfoo' ], $this->localesManager());
+        $obj = new Translation([ 'en' => 'Hello!', 'fr' => 'Bonjour!' ], $this->localesManager());
 
-        $this->assertEquals('foobar', $obj['foo']);
-        $this->assertEquals('barfoo', $obj['bar']);
-        $this->assertEquals([ 'foo' => 'foobar', 'bar' => 'barfoo' ], $obj->data());
+        $this->assertEquals('Hello!', $obj['en']);
+        $this->assertEquals('Bonjour!', $obj['fr']);
+        $this->assertEquals([ 'en' => 'Hello!', 'fr' => 'Bonjour!' ], $obj->data());
 
-        $this->assertTrue(isset($obj['foo']));
-        $this->assertTrue(isset($obj['bar']));
-        $this->assertFalse(isset($obj['baz']));
+        $this->assertTrue(isset($obj['en']));
+        $this->assertTrue(isset($obj['fr']));
+        $this->assertFalse(isset($obj['es']));
     }
 
     /**
@@ -79,16 +79,16 @@ class TranslationTest extends AbstractTestCase
      */
     public function testConstructorWithObjectParam()
     {
-        $trans = new Translation([ 'foo' => 'foobar', 'bar' => 'barfoo' ], $this->localesManager());
+        $trans = new Translation([ 'en' => 'Hello!', 'fr' => 'Bonjour!' ], $this->localesManager());
         $obj   = new Translation($trans, $this->localesManager());
 
-        $this->assertEquals('foobar', $obj['foo']);
-        $this->assertEquals('barfoo', $obj['bar']);
-        $this->assertEquals([ 'foo' => 'foobar', 'bar' => 'barfoo' ], $obj->data());
+        $this->assertEquals('Hello!', $obj['en']);
+        $this->assertEquals('Bonjour!', $obj['fr']);
+        $this->assertEquals([ 'en' => 'Hello!', 'fr' => 'Bonjour!' ], $obj->data());
 
-        $this->assertTrue(isset($obj['foo']));
-        $this->assertTrue(isset($obj['bar']));
-        $this->assertFalse(isset($obj['baz']));
+        $this->assertTrue(isset($obj['en']));
+        $this->assertTrue(isset($obj['fr']));
+        $this->assertFalse(isset($obj['es']));
     }
 
     /**
@@ -108,14 +108,14 @@ class TranslationTest extends AbstractTestCase
     {
         $manager = $this->localesManager();
 
-        $obj = new Translation([ 'foo' => 'foobar', 'bar' => 'barfoo' ], $manager);
+        $obj = new Translation([ 'en' => 'Hello!', 'fr' => 'Bonjour!' ], $manager);
 
-        $this->assertEquals('foobar', (string)$obj);
+        $this->assertEquals('Hello!', (string)$obj);
 
-        $manager->setCurrentLocale('bar');
-        $this->assertEquals('barfoo', (string)$obj);
+        $manager->setCurrentLocale('fr');
+        $this->assertEquals('Bonjour!', (string)$obj);
 
-        unset($obj['bar']);
+        unset($obj['fr']);
         $this->assertEquals('', (string)$obj);
     }
 
@@ -124,10 +124,10 @@ class TranslationTest extends AbstractTestCase
      */
     public function testArraySet()
     {
-        $obj = new Translation('foobar', $this->localesManager());
-        $this->assertEquals('foobar', (string)$obj);
+        $obj = new Translation('Hello!', $this->localesManager());
+        $this->assertEquals('Hello!', (string)$obj);
 
-        $obj['foo'] = 'Charcoal';
+        $obj['en'] = 'Charcoal';
         $this->assertEquals('Charcoal', (string)$obj);
     }
 
@@ -137,7 +137,7 @@ class TranslationTest extends AbstractTestCase
     public function testArrayGet()
     {
         $obj = new Translation('Charcoal', $this->localesManager());
-        $this->assertEquals('Charcoal', $obj['foo']);
+        $this->assertEquals('Charcoal', $obj['en']);
     }
 
     /**
@@ -145,11 +145,11 @@ class TranslationTest extends AbstractTestCase
      */
     public function testArrayUnset()
     {
-        $obj = new Translation('foobar', $this->localesManager());
-        $this->assertTrue(isset($obj['foo']));
+        $obj = new Translation('Hello!', $this->localesManager());
+        $this->assertTrue(isset($obj['en']));
 
-        unset($obj['foo']);
-        $this->assertFalse(isset($obj['foo']));
+        unset($obj['en']);
+        $this->assertFalse(isset($obj['en']));
     }
 
     /**
@@ -159,7 +159,7 @@ class TranslationTest extends AbstractTestCase
      */
     public function testOffsetGetThrowsException()
     {
-        $obj = new Translation('foobar', $this->localesManager());
+        $obj = new Translation('Hello!', $this->localesManager());
         $ret = $obj[0];
     }
 
@@ -170,8 +170,8 @@ class TranslationTest extends AbstractTestCase
      */
     public function testOffsetGetThrowsException2()
     {
-        $obj = new Translation('foobar', $this->localesManager());
-        $ret = $obj['bar'];
+        $obj = new Translation('Hello!', $this->localesManager());
+        $ret = $obj['fr'];
     }
 
     /**
@@ -181,8 +181,8 @@ class TranslationTest extends AbstractTestCase
      */
     public function testOffsetSetThrowsException()
     {
-        $obj = new Translation('foobar', $this->localesManager());
-        $obj[0] = 'foo';
+        $obj = new Translation('Hello!', $this->localesManager());
+        $obj[0] = 'en';
     }
 
     /**
@@ -192,8 +192,8 @@ class TranslationTest extends AbstractTestCase
      */
     public function testOffsetSetThrowsException2()
     {
-        $obj = new Translation('foobar', $this->localesManager());
-        $obj['foo'] = [];
+        $obj = new Translation('Hello!', $this->localesManager());
+        $obj['en'] = [];
     }
 
     /**
@@ -203,7 +203,7 @@ class TranslationTest extends AbstractTestCase
      */
     public function testOffsetExistThrowsException()
     {
-        $obj = new Translation('foobar', $this->localesManager());
+        $obj = new Translation('Hello!', $this->localesManager());
         isset($obj[0]);
     }
 
@@ -214,7 +214,7 @@ class TranslationTest extends AbstractTestCase
      */
     public function testOffsetUnsetThrowsException()
     {
-        $obj = new Translation('foobar', $this->localesManager());
+        $obj = new Translation('Hello!', $this->localesManager());
         unset($obj[0]);
     }
 
@@ -225,7 +225,7 @@ class TranslationTest extends AbstractTestCase
      */
     public function testInvalidValueThrowsException()
     {
-        $obj = new Translation([ 'foo' ], $this->localesManager());
+        $obj = new Translation([ 'en' ], $this->localesManager());
     }
 
     /**
@@ -233,9 +233,9 @@ class TranslationTest extends AbstractTestCase
      */
     public function testSanitize()
     {
-        $obj = new Translation('  foobar  ', $this->localesManager());
+        $obj = new Translation('  Hello!  ', $this->localesManager());
         $obj->sanitize('trim');
-        $this->assertEquals([ 'foo' => 'foobar' ], $obj->data());
+        $this->assertEquals([ 'en' => 'Hello!' ], $obj->data());
     }
 
     /**
@@ -243,8 +243,8 @@ class TranslationTest extends AbstractTestCase
      */
     public function testJsonSerialize()
     {
-        $obj = new Translation('foobar', $this->localesManager());
+        $obj = new Translation('Hello!', $this->localesManager());
         $ret = json_encode($obj);
-        $this->assertEquals([ 'foo' => 'foobar' ], json_decode($ret, true));
+        $this->assertEquals([ 'en' => 'Hello!' ], json_decode($ret, true));
     }
 }

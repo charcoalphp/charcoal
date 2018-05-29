@@ -45,10 +45,10 @@ class TranslatorServiceProviderTest extends AbstractTestCase
             'locales'   => [
                 'languages' => [
                     'en' => [ 'locale' => 'en-US' ],
-                    'fr' => [ 'locale' => 'fr-FR' ]
+                    'fr' => [ 'locale' => 'fr-FR' ],
                 ],
                 'default_language'   => 'en',
-                'fallback_languages' => [ 'en' ]
+                'fallback_languages' => [ 'en' ],
             ],
             'translator' => [
                 'loaders' => [
@@ -62,11 +62,11 @@ class TranslatorServiceProviderTest extends AbstractTestCase
                     'po',
                     'qt',
                     'xliff',
-                    'yaml'
+                    'yaml',
                 ],
                 'paths' => [
                     '/Charcoal/Translator/Fixture/translations',
-                    '/Charcoal/Translator/Fixture/foobar'
+                    '/Charcoal/Translator/Fixture/nonexistent',
                 ],
                 'translations' => [
                     'messages' => [
@@ -79,7 +79,7 @@ class TranslatorServiceProviderTest extends AbstractTestCase
                     ]
                 ],
                 'debug' => false,
-                'cache_dir' => 'translator_cache'
+                'cache_dir' => 'translator_cache',
             ],
             'middlewares' => [
                 'charcoal/translator/middleware/language' => []
