@@ -1,21 +1,19 @@
 <?php
 
-namespace Charcoal\User\Tests\Acl;
-
-// From PHPUnit
-use PHPUnit_Framework_TestCase;
+namespace Charcoal\Tests\User\Acl;
 
 // From Pimple
 use Pimple\Container;
 
 // From 'charcoal-user'
 use Charcoal\User\Acl\PermissionCategory;
-use Charcoal\User\Tests\ContainerProvider;
+use Charcoal\Tests\AbstractTestCase;
+use Charcoal\Tests\User\ContainerProvider;
 
 /**
  *
  */
-class PermissionCategoryTest extends PHPUnit_Framework_TestCase
+class PermissionCategoryTest extends AbstractTestCase
 {
     /**
      * Tested Class.
@@ -33,6 +31,8 @@ class PermissionCategoryTest extends PHPUnit_Framework_TestCase
 
     /**
      * Set up the test.
+     *
+     * @return void
      */
     public function setUp()
     {
@@ -44,6 +44,9 @@ class PermissionCategoryTest extends PHPUnit_Framework_TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testSetName()
     {
         $ret = $this->obj->setName('foobar');

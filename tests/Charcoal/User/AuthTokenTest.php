@@ -1,23 +1,21 @@
 <?php
 
-namespace Charcoal\User\Tests;
+namespace Charcoal\Tests\User;
 
 use DateTime;
-
-// From PHPUnit
-use PHPUnit_Framework_TestCase;
 
 // From Pimple
 use Pimple\Container;
 
 // From 'charcoal-user'
 use Charcoal\User\AuthToken;
-use Charcoal\User\Tests\ContainerProvider;
+use Charcoal\Tests\AbstractTestCase;
+use Charcoal\Tests\User\ContainerProvider;
 
 /**
  *
  */
-class AuthTokenTest extends PHPUnit_Framework_TestCase
+class AuthTokenTest extends AbstractTestCase
 {
     /**
      * Tested Class.
@@ -35,6 +33,8 @@ class AuthTokenTest extends PHPUnit_Framework_TestCase
 
     /**
      * Set up the test.
+     *
+     * @return void
      */
     public function setUp()
     {
@@ -49,11 +49,17 @@ class AuthTokenTest extends PHPUnit_Framework_TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testSetKeyIsIdent()
     {
         $this->assertEquals('ident', $this->obj->key());
     }
 
+    /**
+     * @return void
+     */
     public function testSetIdent()
     {
         $ret = $this->obj->setIdent('foo');
@@ -61,6 +67,9 @@ class AuthTokenTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $this->obj->ident());
     }
 
+    /**
+     * @return void
+     */
     public function testSetToken()
     {
         $ret = $this->obj->setToken('foo');
@@ -68,6 +77,9 @@ class AuthTokenTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $this->obj->token());
     }
 
+    /**
+     * @return void
+     */
     public function testSetUsername()
     {
         $ret = $this->obj->setUsername('foo');
@@ -78,12 +90,18 @@ class AuthTokenTest extends PHPUnit_Framework_TestCase
         $this->obj->setUsername([]);
     }
 
+    /**
+     * @return void
+     */
     public function testSetUsernameIsLowercase()
     {
         $this->obj->setUsername('FÔOBÄR');
         $this->assertEquals('fôobär', $this->obj->username());
     }
 
+    /**
+     * @return void
+     */
     public function testSetExpiry()
     {
         $date = new DateTime('tomorrow');
@@ -95,6 +113,9 @@ class AuthTokenTest extends PHPUnit_Framework_TestCase
         $this->obj->setExpiry('fsdjkfsadg');
     }
 
+    /**
+     * @return void
+     */
     public function testSetCreated()
     {
         $date = new DateTime('tomorrow');
@@ -106,6 +127,9 @@ class AuthTokenTest extends PHPUnit_Framework_TestCase
         $this->obj->setCreated('fsdjkfsadg');
     }
 
+    /**
+     * @return void
+     */
     public function testSetLastModified()
     {
         $date = new DateTime('tomorrow');

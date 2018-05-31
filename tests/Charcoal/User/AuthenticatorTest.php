@@ -1,9 +1,6 @@
 <?php
 
-namespace Charcoal\User\Tests;
-
-// From PHPUnit
-use PHPUnit_Framework_TestCase;
+namespace Charcoal\Tests\User;
 
 // From Pimple
 use Pimple\Container;
@@ -12,12 +9,13 @@ use Pimple\Container;
 use Charcoal\User\Authenticator;
 use Charcoal\User\AuthToken;
 use Charcoal\User\GenericUser as User;
-use Charcoal\User\Tests\ContainerProvider;
+use Charcoal\Tests\AbstractTestCase;
+use Charcoal\Tests\User\ContainerProvider;
 
 /**
  *
  */
-class AuthenticatorTest extends PHPUnit_Framework_TestCase
+class AuthenticatorTest extends AbstractTestCase
 {
     /**
      * Tested Class.
@@ -35,6 +33,8 @@ class AuthenticatorTest extends PHPUnit_Framework_TestCase
 
     /**
      * Set up the test.
+     *
+     * @return void
      */
     public function setUp()
     {
@@ -53,39 +53,56 @@ class AuthenticatorTest extends PHPUnit_Framework_TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testConstructor()
     {
         $this->assertInstanceOf(Authenticator::class, $this->obj);
     }
 
+    /**
+     * @return void
+     */
     public function testAuthenticate()
     {
         $ret = $this->obj->authenticate();
         $this->assertNull($ret);
     }
 
+    /**
+     * @return void
+     */
     public function testAuthenticateByPasswordInvalidUsername()
     {
         $this->expectException('\InvalidArgumentException');
         $this->obj->authenticateByPassword([], '');
     }
 
+    /**
+     * @return void
+     */
     public function testAuthenticateByPasswordInvalidPassword()
     {
         $this->expectException('\InvalidArgumentException');
         $this->obj->authenticateByPassword('', []);
     }
 
+    /**
+     * @return void
+     */
     public function testAuthenticateByPasswordEmpty()
     {
         $this->expectException('\InvalidArgumentException');
         $this->obj->authenticateByPassword('', '');
     }
 
+    /**
+     * @return void
+     */
     public function testAuthenticateByPassword()
     {
-        $this->expectException('\InvalidArgumentException');
-        $this->obj->authenticateByPassword('test', 'password');
+        $this->assertNull($this->obj->authenticateByPassword('test', 'password'));
     }
 
     /**

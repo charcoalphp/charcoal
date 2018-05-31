@@ -1,6 +1,6 @@
 <?php
 
-namespace Charcoal\User\Tests;
+namespace Charcoal\Tests\User;
 
 use DateTime;
 
@@ -10,12 +10,13 @@ use Pimple\Container;
 // From 'charcoal-user'
 use Charcoal\User\GenericUser;
 use Charcoal\User\UserInterface;
-use Charcoal\User\Tests\ContainerProvider;
+use Charcoal\Tests\AbstractTestCase;
+use Charcoal\Tests\User\ContainerProvider;
 
 /**
  *
  */
-class GenericUserTest extends \PHPUnit_Framework_TestCase
+class GenericUserTest extends AbstractTestCase
 {
     /**
      * Tested Class.
@@ -33,6 +34,8 @@ class GenericUserTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Set up the test.
+     *
+     * @return void
      */
     public function setUp()
     {
@@ -51,6 +54,9 @@ class GenericUserTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testSessionKey()
     {
         $obj = $this->obj;
@@ -59,6 +65,9 @@ class GenericUserTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('charcoal.user', $sessionKey);
     }
 
+    /**
+     * @return void
+     */
     public function testSaveToSession()
     {
         $obj = $this->obj;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Charcoal\User\Tests;
+namespace Charcoal\Tests\User;
 
 use PDO;
 
@@ -62,7 +62,7 @@ class ContainerProvider
      */
     public function registerDatabase(Container $container)
     {
-        $container['database'] = function (Container $container) {
+        $container['database'] = function () {
             $pdo = new PDO('sqlite::memory:');
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $pdo;
@@ -77,7 +77,7 @@ class ContainerProvider
      */
     public function registerLogger(Container $container)
     {
-        $container['logger'] = function (Container $container) {
+        $container['logger'] = function () {
             return new NullLogger();
         };
     }
@@ -90,8 +90,8 @@ class ContainerProvider
      */
     public function registerCache(Container $container)
     {
-        $container['cache'] = function ($container) {
-            return new Pool(new Ephemeral());
+        $container['cache'] = function () {
+            return new Pool();
         };
     }
 
@@ -186,9 +186,9 @@ class ContainerProvider
                     'suffix' => 'Property'
                 ],
                 'arguments' => [[
-                    'container' => $container,
-                    'database'  => $container['database'],
-                    'logger'    => $container['logger'],
+                    'container'  => $container,
+                    'database'   => $container['database'],
+                    'logger'     => $container['logger'],
                     'translator' => $container['translator']
                 ]]
             ]);
@@ -219,7 +219,7 @@ class ContainerProvider
      */
     public function registerTranslator(Container $container)
     {
-        $container['locales/manager'] = function (Container $container) {
+        $container['locales/manager'] = function () {
             return new LocalesManager([
                 'locales' => [
                     'en' => [ 'locale' => 'en-US' ]

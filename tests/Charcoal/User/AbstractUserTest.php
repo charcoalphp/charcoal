@@ -1,12 +1,9 @@
 <?php
 
-namespace Charcoal\User\Tests;
+namespace Charcoal\Tests\User;
 
 use DateTime;
 use InvalidArgumentException;
-
-// From PHPUnit
-use PHPUnit_Framework_TestCase;
 
 // From Pimple
 use Pimple\Container;
@@ -14,12 +11,13 @@ use Pimple\Container;
 // From 'charcoal-user'
 use Charcoal\User\AbstractUser;
 use Charcoal\User\UserInterface;
-use Charcoal\User\Tests\ContainerProvider;
+use Charcoal\Tests\AbstractTestCase;
+use Charcoal\Tests\User\ContainerProvider;
 
 /**
  *
  */
-class AbstractUserTest extends \PHPUnit_Framework_TestCase
+class AbstractUserTest extends AbstractTestCase
 {
     /**
      * Tested Class.
@@ -37,6 +35,8 @@ class AbstractUserTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Set up the test.
+     *
+     * @return void
      */
     public function setUp()
     {
@@ -69,12 +69,18 @@ class AbstractUserTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue('charcoal.user'));
     }
 
+    /**
+     * @return void
+     */
     public function testKey()
     {
         $obj = $this->obj;
         $this->assertEquals('username', $obj->key());
     }
 
+    /**
+     * @return void
+     */
     public function testDefaultValues()
     {
         $obj = $this->obj;
@@ -86,6 +92,8 @@ class AbstractUserTest extends \PHPUnit_Framework_TestCase
      * Assert that the `setData` method:
      * - is chainable
      * - set the various properties
+     *
+     * @return void
      */
     public function testSetData()
     {
@@ -104,6 +112,9 @@ class AbstractUserTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($obj->active());
     }
 
+    /**
+     * @return void
+     */
     /*public function testSetDataDoesNotSetPassword()
     {
         $obj = $this->obj;
@@ -112,6 +123,9 @@ class AbstractUserTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($obj->password())
     }*/
 
+    /**
+     * @return void
+     */
     public function testSetUsername()
     {
         $ret = $this->obj->setUsername('Foobar');
@@ -128,6 +142,9 @@ class AbstractUserTest extends \PHPUnit_Framework_TestCase
         $this->obj->setUsername(false);
     }
 
+    /**
+     * @return void
+     */
     public function testIdIsUsername()
     {
         $this->assertequals('username', $this->obj->key());
@@ -136,6 +153,9 @@ class AbstractUserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->obj->id(), $this->obj->username());
     }
 
+    /**
+     * @return void
+     */
     public function testSetEmail()
     {
         $ret = $this->obj->setEmail('test@example.com');
@@ -152,6 +172,9 @@ class AbstractUserTest extends \PHPUnit_Framework_TestCase
         $this->obj->setEmail(false);
     }
 
+    /**
+     * @return void
+     */
     public function testSetRoles()
     {
         $ret = $this->obj->setRoles(null);
@@ -168,11 +191,15 @@ class AbstractUserTest extends \PHPUnit_Framework_TestCase
         $this->obj->setRoles(42);
     }
 
+    /**
+     * @return void
+     */
     public function testSetLastLoginDate()
     {
         $ret = $this->obj->setLastLoginDate('today');
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals(new DateTime('today'), $this->obj->lastLoginDate());
+        $date = new DateTime('today');
+        $this->assertEquals($date, $this->obj->lastLoginDate());
 
         $this->obj->setLastLoginDate(null);
         $this->assertNull($this->obj->lastLoginDate());
@@ -192,7 +219,9 @@ class AbstractUserTest extends \PHPUnit_Framework_TestCase
         $this->obj->setLastLoginDate(false);
     }
 
-
+    /**
+     * @return void
+     */
     public function testSetLastLoginIp()
     {
         $ret = $this->obj->setLastLoginIp('8.8.8.8');
@@ -215,11 +244,15 @@ class AbstractUserTest extends \PHPUnit_Framework_TestCase
         $this->obj->setLastLoginIp(false);
     }
 
+    /**
+     * @return void
+     */
     public function testSetLastPasswordDate()
     {
         $ret = $this->obj->setLastPasswordDate('today');
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals(new DateTime('today'), $this->obj->lastPasswordDate());
+        $date = new DateTime('today');
+        $this->assertEquals($date, $this->obj->lastPasswordDate());
 
         $this->obj->setLastPasswordDate(null);
         $this->assertNull($this->obj->lastPasswordDate());
@@ -239,6 +272,9 @@ class AbstractUserTest extends \PHPUnit_Framework_TestCase
         $this->obj->setLastPasswordDate(false);
     }
 
+    /**
+     * @return void
+     */
     public function testSetLastPasswordIp()
     {
         $ret = $this->obj->setLastPasswordIp('8.8.8.8');
@@ -262,6 +298,9 @@ class AbstractUserTest extends \PHPUnit_Framework_TestCase
         $this->obj->setLastPasswordIp(false);
     }
 
+    /**
+     * @return void
+     */
     public function testSetLoginToken()
     {
         $ret = $this->obj->setLoginToken('abc');
@@ -281,6 +320,9 @@ class AbstractUserTest extends \PHPUnit_Framework_TestCase
         $this->obj->setLoginToken([]);
     }
 
+    /**
+     * @return void
+     */
     public function testResetPassword()
     {
         $ret = $this->obj->resetPassword('foo');

@@ -1,21 +1,19 @@
 <?php
 
-namespace Charcoal\User\Tests\Acl;
-
-// From PHPUnit
-use PHPUnit_Framework_TestCase;
+namespace Charcoal\Tests\User\Acl;
 
 // From Pimple
 use Pimple\Container;
 
 // From 'charcoal-user'
 use Charcoal\User\Acl\Permission;
-use Charcoal\User\Tests\ContainerProvider;
+use Charcoal\Tests\AbstractTestCase;
+use Charcoal\Tests\User\ContainerProvider;
 
 /**
  *
  */
-class PermissionTest extends PHPUnit_Framework_TestCase
+class PermissionTest extends AbstractTestCase
 {
     /**
      * Tested Class.
@@ -33,6 +31,8 @@ class PermissionTest extends PHPUnit_Framework_TestCase
 
     /**
      * Set up the test.
+     *
+     * @return void
      */
     public function setUp()
     {
@@ -44,6 +44,9 @@ class PermissionTest extends PHPUnit_Framework_TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testToString()
     {
         $this->assertEquals('', (string)$this->obj);
@@ -56,12 +59,17 @@ class PermissionTest extends PHPUnit_Framework_TestCase
 
     /**
      * Assert that the object's key is the "ident" property.
+     *
+     * @return void
      */
     public function testKey()
     {
         $this->assertEquals('ident', $this->obj->key());
     }
 
+    /**
+     * @return void
+     */
     public function testSetIdent()
     {
         $ret = $this->obj->setIdent('foobar');
@@ -72,6 +80,9 @@ class PermissionTest extends PHPUnit_Framework_TestCase
         $this->obj->setIdent(false);
     }
 
+    /**
+     * @return void
+     */
     public function testSetName()
     {
         $ret = $this->obj->setName('foobar');
@@ -79,6 +90,9 @@ class PermissionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('foobar', (string)$this->obj->name());
     }
 
+    /**
+     * @return void
+     */
     public function testCastToString()
     {
         $this->obj->setIdent('foobar');

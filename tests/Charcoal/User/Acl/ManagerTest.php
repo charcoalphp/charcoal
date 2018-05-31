@@ -1,9 +1,6 @@
 <?php
 
-namespace Charcoal\User\Tests\Acl;
-
-// From PHPUnit
-use PHPUnit_Framework_TestCase;
+namespace Charcoal\Tests\User\Acl;
 
 // From Pimple
 use Pimple\Container;
@@ -12,13 +9,15 @@ use Pimple\Container;
 use Zend\Permissions\Acl\Acl;
 use Zend\Permissions\Acl\Resource\GenericResource as Resource;
 
+// From 'charcoal-user'
 use Charcoal\User\Acl\Manager;
-use Charcoal\User\Tests\ContainerProvider;
+use Charcoal\Tests\AbstractTestCase;
+use Charcoal\Tests\User\ContainerProvider;
 
 /**
  *
  */
-class ManagerTest extends PHPUnit_Framework_TestCase
+class ManagerTest extends AbstractTestCase
 {
     /**
      * Tested Class.
@@ -36,6 +35,8 @@ class ManagerTest extends PHPUnit_Framework_TestCase
 
     /**
      * Set up the test.
+     *
+     * @return void
      */
     public function setUp()
     {
@@ -46,10 +47,14 @@ class ManagerTest extends PHPUnit_Framework_TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testLoadPermissions()
     {
         $acl = new Acl();
-        $acl->addResource(new Resource('phpunit'));
+        $rsc = new Resource('phpunit');
+        $acl->addResource($rsc);
 
         $this->obj->loadPermissions($acl, [
             'test' => [
@@ -78,10 +83,14 @@ class ManagerTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($acl->isAllowed('test2', 'phpunit', 'baz'));
     }
 
+    /**
+     * @return void
+     */
     public function testLoadPermissionsWithStringPermissions()
     {
         $acl = new Acl();
-        $acl->addResource(new Resource('phpunit'));
+        $rsc = new Resource('phpunit');
+        $acl->addResource($rsc);
 
         $this->obj->loadPermissions($acl, [
             'test' => [

@@ -1,21 +1,19 @@
 <?php
 
-namespace Charcoal\User\Tests\Acl;
-
-// From PHPUnit
-use PHPUnit_Framework_TestCase;
+namespace Charcoal\Tests\User\Acl;
 
 // From Pimple
 use Pimple\Container;
 
 // From 'charcoal-user'
 use Charcoal\User\Acl\Role;
-use Charcoal\User\Tests\ContainerProvider;
+use Charcoal\Tests\AbstractTestCase;
+use Charcoal\Tests\User\ContainerProvider;
 
 /**
  *
  */
-class RoleTest extends PHPUnit_Framework_TestCase
+class RoleTest extends AbstractTestCase
 {
     /**
      * Tested Class.
@@ -33,6 +31,8 @@ class RoleTest extends PHPUnit_Framework_TestCase
 
     /**
      * Set up the test.
+     *
+     * @return void
      */
     public function setUp()
     {
@@ -44,6 +44,9 @@ class RoleTest extends PHPUnit_Framework_TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testToString()
     {
         $this->assertEquals('', (string)$this->obj);
@@ -56,12 +59,17 @@ class RoleTest extends PHPUnit_Framework_TestCase
 
     /**
      * Assert that the object's key is the "ident" property.
+     *
+     * @return void
      */
     public function testKey()
     {
         $this->assertEquals('ident', $this->obj->key());
     }
 
+    /**
+     * @return void
+     */
     public function testSetParent()
     {
         $ret = $this->obj->setParent('foo');
@@ -69,6 +77,9 @@ class RoleTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $this->obj->parent());
     }
 
+    /**
+     * @return void
+     */
     public function testSetAllowed()
     {
         $this->assertNull($this->obj->allowed());
@@ -80,6 +91,9 @@ class RoleTest extends PHPUnit_Framework_TestCase
         $this->assertSame(['bar', 'baz'], $this->obj->allowed());
     }
 
+    /**
+     * @return void
+     */
     public function testSuperuser()
     {
         $this->assertFalse($this->obj->superuser());

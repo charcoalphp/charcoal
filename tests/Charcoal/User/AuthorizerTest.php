@@ -1,9 +1,6 @@
 <?php
 
-namespace Charcoal\User\Tests;
-
-// From PHPUnit
-use PHPUnit_Framework_TestCase;
+namespace Charcoal\Tests\User;
 
 // From Pimple
 use Pimple\Container;
@@ -15,12 +12,13 @@ use Zend\Permissions\Acl\Resource\GenericResource as Resource;
 
 // From 'charcoal-user'
 use Charcoal\User\Authorizer;
-use Charcoal\User\Tests\ContainerProvider;
+use Charcoal\Tests\AbstractTestCase;
+use Charcoal\Tests\User\ContainerProvider;
 
 /**
  *
  */
-class AuthorizerTest extends PHPUnit_Framework_TestCase
+class AuthorizerTest extends AbstractTestCase
 {
     /**
      * Tested Class.
@@ -45,6 +43,8 @@ class AuthorizerTest extends PHPUnit_Framework_TestCase
 
     /**
      * Set up the test.
+     *
+     * @return void
      */
     public function setUp()
     {
@@ -58,6 +58,9 @@ class AuthorizerTest extends PHPUnit_Framework_TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testRolesAllowed()
     {
         $acl = $this->acl;
