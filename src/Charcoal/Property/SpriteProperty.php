@@ -23,13 +23,20 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
     private $sprite;
 
     /**
-     * The available selectable choices.
+     * Sets data on this entity.
      *
-     * This collection is built from selected {@see self::$objType}.
-     *
-     * @var array
+     * @uses   self::offsetSet()
+     * @param  array $data Key-value array of data to append.
+     * @return self
      */
-    protected $choices = [];
+    public function setData(array $data)
+    {
+        parent::setData($data);
+
+        $this->setChoices($this->buildChoicesFromSprite());
+
+        return $this;
+    }
 
     /**
      * @return string
@@ -104,9 +111,10 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
      * @see    SelectablePropertyInterface::choices()
      * @return array
      */
-    public function choices()
+    public function buildChoicesFromSprite()
     {
         $sprite = $this->sprite();
+
         if (!file_exists($sprite)) {
             return [];
         }
@@ -120,9 +128,53 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
         foreach ($xml->symbol as $ident => $node) {
             $id = (string)$node->attributes()->id;
 
-            $choices[$sprite.'#'.$id] = $id;
+            $choices[$id] = $id;
         }
 
         return $choices;
+    }
+
+    /**
+     * Parse the given value into a choice structure.
+     *
+     * @param  string|array $choice      A string representing the choice label or a structure.
+     * @param  string       $choiceIdent The choice identifier (will be key / default ident).
+     * @throws InvalidArgumentException If the choice identifier is not a string.
+     * @return array Returns a choice structure.
+     */
+    protected function parseChoice($choice, $choiceIdent)
+    {
+        if (!is_string($choiceIdent)) {
+            throw new InvalidArgumentException(
+                'Choice identifier must be a string.'
+            );
+        }
+
+        if (is_string($choice)) {
+            $choice = [
+                'value' => $choiceIdent,
+                'label' => $this->translator()->translation($choiceIdent),
+                'spritePathWithHash' => $this->sprite().'#'.$choice
+            ];
+        } elseif (is_array($choice)) {
+            if (!isset($choice['value'])) {
+                $choice['value'] = $choiceIdent;
+            }
+
+            if (!isset($choice['spritePathWithHash'])) {
+                $choice['spritePathWithHash'] = $this->sprite().'#'.$choice;
+            }
+
+            if (!isset($choice['spritePathWithHash'])) {
+                $choice['spritePathWithHash'] = $this->sprite().'#'.$choice;
+                $choice['label'] = $this->translator()->translation($choiceIdent);
+            }
+        } else {
+            throw new InvalidArgumentException(
+                'Choice must be a string or an array.'
+            );
+        }
+
+        return $choice;
     }
 }
