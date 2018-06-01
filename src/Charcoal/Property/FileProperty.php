@@ -11,11 +11,11 @@ use UnexpectedValueException;
 // From Pimple
 use Pimple\Container;
 
-// From 'charcoal-property'
-use Charcoal\Property\AbstractProperty;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
+
+// From 'charcoal-property'
+use Charcoal\Property\AbstractProperty;
 
 /**
  * File Property
