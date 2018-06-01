@@ -2,20 +2,25 @@
 
 namespace Charcoal\Tests\Property;
 
+// From 'charcoal-property'
 use Charcoal\Property\NumberProperty;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class NumberPropertyTest extends \PHPUnit_Framework_TestCase
+class NumberPropertyTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Property\ContainerIntegrationTrait;
 
     /**
-     * @var NumberProperty $obj
+     * @var NumberProperty
      */
     public $obj;
 
+    /**
+     * @return void
+     */
     public function setUp()
     {
         $container = $this->getContainer();
@@ -27,9 +32,11 @@ class NumberPropertyTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testType()
     {
-        $obj = $this->obj;
-        $this->assertEquals('number', $obj->type());
+        $this->assertEquals('number', $this->obj->type());
     }
 }

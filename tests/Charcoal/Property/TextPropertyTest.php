@@ -3,17 +3,24 @@
 namespace Charcoal\Tests\Property;
 
 use Charcoal\Property\TextProperty;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  * ## TODOs
  * - 2015-03-12:
  */
-class TextPropertyTest extends \PHPUnit_Framework_TestCase
+class TextPropertyTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Property\ContainerIntegrationTrait;
 
+    /**
+     * @var TextProperty
+     */
     public $obj;
 
+    /**
+     * @return void
+     */
     public function setUp()
     {
         $container = $this->getContainer();
@@ -27,6 +34,8 @@ class TextPropertyTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Asserts that the `type()` method returns "text".
+     *
+     * @return void
      */
     public function testType()
     {
@@ -35,6 +44,8 @@ class TextPropertyTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Asserts that the `defaultMaxLength` method returns 0 (no limit).
+     *
+     * @return void
      */
     public function testDefaultMaxLength()
     {
@@ -43,6 +54,8 @@ class TextPropertyTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Asserts that the `sqlType()` method returns "TEXT".
+     *
+     * @return void
      */
     public function testSqlType()
     {

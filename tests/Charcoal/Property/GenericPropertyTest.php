@@ -2,19 +2,31 @@
 
 namespace Charcoal\Tests\Model;
 
+// From 'charcoal-property'
 use Charcoal\Property\PropertyFactory;
 use Charcoal\Property\GenericProperty;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class PropertyTest extends \PHPUnit_Framework_TestCase
+class GenericPropertyTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Property\ContainerIntegrationTrait;
 
+    /**
+     * @var PropertyFactory
+     */
     public $factory;
+
+    /**
+     * @var GenericProperty
+     */
     public $obj;
 
+    /**
+     * @return GenericProperty
+     */
     public function getObj()
     {
         $container = $this->getContainer();
@@ -26,12 +38,18 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function setUp()
     {
         $this->factory = new PropertyFactory();
         $this->obj     = $this->getObj();
     }
 
+    /**
+     * @return void
+     */
     public function testDefaultValues()
     {
         $obj = $this->obj;
@@ -45,6 +63,9 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(true, $obj->active());
     }
 
+    /**
+     * @return void
+     */
     public function testStaticGetWithoutParameter()
     {
         $obj = $this->obj;
@@ -52,6 +73,9 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Charcoal\Property\GenericProperty', $obj);
     }
 
+    /**
+     * @return void
+     */
     public function testToStringReturnsVal()
     {
         $obj = $this->obj;
@@ -60,6 +84,9 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foo', sprintf($obj));
     }
 
+    /**
+     * @return void
+     */
     public function testToStringReturnsEmptyIfValIsNotAString()
     {
         $obj = $this->obj;
@@ -68,6 +95,9 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('', sprintf($obj));
     }
 
+    /**
+     * @return void
+     */
     public function testSetData()
     {
         $obj = $this->obj;
@@ -109,6 +139,9 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider providerVals
+     *
+     * @param  mixed $val A value to asssign.
+     * @return void
      */
     public function testSetVal($val)
     {
@@ -118,6 +151,9 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($val, $obj->val());
     }
 
+    /**
+     * @return void
+     */
     public function testSetValIsChainable()
     {
         $obj = $this->obj;
@@ -126,6 +162,9 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
     }
 
+    /**
+     * @return void
+     */
     public function testSetL10n()
     {
         $obj = $this->obj;
@@ -137,6 +176,9 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(false, $obj->l10n());
     }
 
+    /**
+     * @return void
+     */
     public function testSetL10nIsChainable()
     {
         $obj = $this->obj;
@@ -144,6 +186,9 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
     }
 
+    /**
+     * @return void
+     */
     public function testSetHidden()
     {
         $obj = $this->obj;
@@ -155,6 +200,9 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(false, $obj->hidden());
     }
 
+    /**
+     * @return void
+     */
     public function testSetHiddenIsChainable()
     {
         $obj = $this->obj;
@@ -162,6 +210,9 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
     }
 
+    /**
+     * @return void
+     */
     public function testSetMultiple()
     {
         $obj = $this->obj;
@@ -173,6 +224,9 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(false, $obj->multiple());
     }
 
+    /**
+     * @return void
+     */
     public function testSetMultipleIsChainable()
     {
         $obj = $this->obj;
@@ -180,6 +234,9 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
     }
 
+    /**
+     * @return void
+     */
     public function testSetUnique()
     {
         $obj = $this->obj;
@@ -191,6 +248,9 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(false, $obj->unique());
     }
 
+    /**
+     * @return void
+     */
     public function testSetUniqueIsChainable()
     {
         $obj = $this->obj;
@@ -198,6 +258,9 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
     }
 
+    /**
+     * @return void
+     */
     public function testSetRequired()
     {
         $obj = $this->obj;
@@ -209,6 +272,9 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(false, $obj->required());
     }
 
+    /**
+     * @return void
+     */
     public function testSetRequiredIsChainable()
     {
         $obj = $this->obj;
@@ -216,6 +282,9 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
     }
 
+    /**
+     * @return void
+     */
     public function testSetActive()
     {
         $obj = $this->obj;
@@ -227,6 +296,9 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(false, $obj->active());
     }
 
+    /**
+     * @return void
+     */
     public function testSetActiveIsChainable()
     {
         $obj = $this->obj;
@@ -234,6 +306,9 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
     }
 
+    /**
+     * @return array
+     */
     public function providerVals()
     {
         $obj = new \StdClass();
@@ -251,6 +326,9 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
+    /**
+     * @return array
+     */
     public function providerInvalidBools()
     {
         $obj = new \StdClass();

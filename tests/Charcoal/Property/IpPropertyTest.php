@@ -6,16 +6,23 @@ use PDO;
 
 // From 'charcoal-property'
 use Charcoal\Property\IpProperty;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class IpPropertyTest extends \PHPUnit_Framework_TestCase
+class IpPropertyTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Property\ContainerIntegrationTrait;
 
+    /**
+     * @var IpProperty
+     */
     public $obj;
 
+    /**
+     * @return void
+     */
     public function setUp()
     {
         $container = $this->getContainer();
@@ -27,34 +34,49 @@ class IpPropertyTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testType()
     {
         $this->assertEquals('ip', $this->obj->type());
     }
 
+    /**
+     * @return void
+     */
     public function testDefaults()
     {
         $this->assertEquals('string', $this->obj->storageMode());
     }
 
+    /**
+     * @return void
+     */
     public function testMultipleCannotBeTrue()
     {
         $this->assertFalse($this->obj->multiple());
 
         $this->assertSame($this->obj, $this->obj->setMultiple(false));
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $this->obj->setMultiple(true);
     }
 
+    /**
+     * @return void
+     */
     public function testL10nCannotBeTrue()
     {
         $this->assertFalse($this->obj->l10n());
 
         $this->assertSame($this->obj, $this->obj->setL10n(false));
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $this->obj->setL10n(true);
     }
 
+    /**
+     * @return void
+     */
     public function testSetStorageMode()
     {
         $this->assertEquals('string', $this->obj->storageMode());
@@ -62,10 +84,13 @@ class IpPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('int', $this->obj->storageMode());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $this->obj->setStorageMode('foobar');
     }
 
+    /**
+     * @return void
+     */
     public function testIntVal()
     {
         $this->assertEquals(0, $this->obj->intVal('0.0.0.0'));
@@ -75,6 +100,9 @@ class IpPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(3232235777, $this->obj->intVal('3232235777'));
     }
 
+    /**
+     * @return void
+     */
     public function testStringVal()
     {
         $this->assertEquals('0.0.0.0', $this->obj->stringVal(0));
@@ -83,6 +111,9 @@ class IpPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('8.8.8.8', $this->obj->stringVal('8.8.8.8'));
     }
 
+    /**
+     * @return void
+     */
     public function testSqlExtra()
     {
         $this->assertEquals('', $this->obj->sqlExtra());
@@ -92,6 +123,8 @@ class IpPropertyTest extends \PHPUnit_Framework_TestCase
      * Asserts that the `sqlType()` method:
      * - returns "VARCHAR(15)" if the storage mode is "string" (default).
      * - returns "BIGINT" if the storage mode is "int".
+     *
+     * @return void
      */
     public function testSqlType()
     {
@@ -102,6 +135,9 @@ class IpPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('BIGINT', $this->obj->sqlType());
     }
 
+    /**
+     * @return void
+     */
     public function testSqlPdoType()
     {
         $this->obj->setStorageMode('string');

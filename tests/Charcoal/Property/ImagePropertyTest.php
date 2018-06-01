@@ -2,18 +2,26 @@
 
 namespace Charcoal\Tests\Property;
 
+// From 'charcoal-property'
 use Charcoal\Property\ImageProperty;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  * ## TODOs
  * - 2015-03-12:
  */
-class ImagePropertyTest extends \PHPUnit_Framework_TestCase
+class ImagePropertyTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Property\ContainerIntegrationTrait;
 
+    /**
+     * @var ImageProperty
+     */
     public $obj;
 
+    /**
+     * @return void
+     */
     public function setUp()
     {
         $container = $this->getContainer();
@@ -25,11 +33,17 @@ class ImagePropertyTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testType()
     {
         $this->assertEquals('image', $this->obj->type());
     }
 
+    /**
+     * @return void
+     */
     public function testSetEffects()
     {
         $this->assertEquals([], $this->obj->effects());
@@ -45,6 +59,9 @@ class ImagePropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, count($this->obj->effects()));
     }
 
+    /**
+     * @return void
+     */
     public function testAddEffect()
     {
         $this->assertEquals(0, count($this->obj->effects()));

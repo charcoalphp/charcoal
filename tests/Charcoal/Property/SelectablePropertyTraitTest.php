@@ -9,13 +9,17 @@ use Charcoal\Translator\Translation;
 
 // From 'charcoal-property'
 use Charcoal\Property\SelectablePropertyTrait;
+use Charcoal\Tests\AbstractTestCase;
+use Charcoal\Tests\ReflectionsTrait;
+use Charcoal\Tests\Property\ContainerIntegrationTrait;
 
 /**
  * Selectable Property Test
  */
-class SelectablePropertyTraitTest extends \PHPUnit_Framework_TestCase
+class SelectablePropertyTraitTest extends AbstractTestCase
 {
-    use \Charcoal\Tests\Property\ContainerIntegrationTrait;
+    use ReflectionsTrait;
+    use ContainerIntegrationTrait;
 
     /**
      * Tested Class.
@@ -26,6 +30,8 @@ class SelectablePropertyTraitTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Set up the test.
+     *
+     * @return void
      */
     public function setUp()
     {
@@ -37,6 +43,10 @@ class SelectablePropertyTraitTest extends \PHPUnit_Framework_TestCase
                   ->will($this->returnValue($container['translator']));
     }
 
+    /**
+     * @param  mixed $val The translation string.
+     * @return Translation
+     */
     public function translation($val)
     {
         $container = $this->getContainer();
@@ -45,22 +55,9 @@ class SelectablePropertyTraitTest extends \PHPUnit_Framework_TestCase
         return new Translation($val, $locales);
     }
 
-    public static function getMethod($obj, $name)
-    {
-        $class = new ReflectionClass($obj);
-        $method = $class->getMethod($name);
-        $method->setAccessible(true);
-
-        return $method;
-    }
-
-    public static function callMethod($obj, $name, array $args = [])
-    {
-        $method = static::getMethod($obj, $name);
-
-        return $method->invokeArgs($obj, $args);
-    }
-
+    /**
+     * @return void
+     */
     public function testEmptyChoices()
     {
         $this->assertEquals([], $this->obj->choices());
@@ -80,6 +77,9 @@ class SelectablePropertyTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('qux', $this->obj->choiceLabel('qux'));
     }
 
+    /**
+     * @return void
+     */
     public function testChoices()
     {
         $choices = [
@@ -116,18 +116,27 @@ class SelectablePropertyTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected['bar']['label'], $this->obj->choiceLabel('bar'));
     }
 
+    /**
+     * @return void
+     */
     public function testChoiceLabelStructException()
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $this->obj->choiceLabel([]);
     }
 
+    /**
+     * @return void
+     */
     public function testChoiceLabelKeyException()
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $this->obj->choiceLabel(0);
     }
 
+    /**
+     * @return void
+     */
     public function testParseChoices()
     {
         $choices = [
@@ -145,7 +154,7 @@ class SelectablePropertyTraitTest extends \PHPUnit_Framework_TestCase
             ]
         ];
 
-        $parsed = static::callMethod($this->obj, 'parseChoices', [ $choices ]);
+        $parsed = $this->callMethod($this->obj, 'parseChoices', [ $choices ]);
         $this->assertEquals($expected, $parsed);
 
         $qux = [
@@ -153,13 +162,13 @@ class SelectablePropertyTraitTest extends \PHPUnit_Framework_TestCase
             'label' => $this->translation('xuq')
         ];
 
-        $parsed = static::callMethod($this->obj, 'parseChoice', [ 'xuq', 'qux' ]);
+        $parsed = $this->callMethod($this->obj, 'parseChoice', [ 'xuq', 'qux' ]);
         $this->assertEquals($qux, $parsed);
 
-        $parsed = static::callMethod($this->obj, 'parseChoice', [ [ 'label' => 'xuq' ], 'qux' ]);
+        $parsed = $this->callMethod($this->obj, 'parseChoice', [ [ 'label' => 'xuq' ], 'qux' ]);
         $this->assertEquals($qux, $parsed);
 
-        $parsed = static::callMethod($this->obj, 'parseChoice', [ $qux, 'qux' ]);
+        $parsed = $this->callMethod($this->obj, 'parseChoice', [ $qux, 'qux' ]);
         $this->assertEquals($qux, $parsed);
 
         $baz = [
@@ -167,19 +176,25 @@ class SelectablePropertyTraitTest extends \PHPUnit_Framework_TestCase
             'label' => $this->translation('baz')
         ];
 
-        $parsed = static::callMethod($this->obj, 'parseChoice', [ [ 'value' => 'baz' ], 'baz' ]);
+        $parsed = $this->callMethod($this->obj, 'parseChoice', [ [ 'value' => 'baz' ], 'baz' ]);
         $this->assertEquals($baz, $parsed);
     }
 
+    /**
+     * @return void
+     */
     public function testParseChoiceStructException()
     {
-        $this->setExpectedException('\InvalidArgumentException');
-        static::callMethod($this->obj, 'parseChoice', [ null, 'foo' ]);
+        $this->expectException('\InvalidArgumentException');
+        $this->callMethod($this->obj, 'parseChoice', [ null, 'foo' ]);
     }
 
+    /**
+     * @return void
+     */
     public function testParseChoiceKeyException()
     {
-        $this->setExpectedException('\InvalidArgumentException');
-        static::callMethod($this->obj, 'parseChoice', [ 'foo', 0 ]);
+        $this->expectException('\InvalidArgumentException');
+        $this->callMethod($this->obj, 'parseChoice', [ 'foo', 0 ]);
     }
 }

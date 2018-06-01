@@ -2,21 +2,26 @@
 
 namespace Charcoal\Tests\Property;
 
+// From 'charcoal-property'
 use Charcoal\Property\MapStructureProperty;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  * ## TODOs
  * - 2015-03-12:
  */
-class MapStructurePropertyTest extends \PHPUnit_Framework_TestCase
+class MapStructurePropertyTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Property\ContainerIntegrationTrait;
 
     /**
-     * @var MapStructureProperty $obj
+     * @var MapStructureProperty
      */
     public $obj;
 
+    /**
+     * @return void
+     */
     public function setUp()
     {
         $container = $this->getContainer();
@@ -28,6 +33,9 @@ class MapStructurePropertyTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testType()
     {
         $this->assertEquals('map-structure', $this->obj->type());

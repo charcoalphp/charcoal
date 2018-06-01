@@ -2,16 +2,21 @@
 
 namespace Charcoal\Tests\Property;
 
+// From 'charcoal-property'
 use Charcoal\Property\PasswordProperty;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  * ## TODOs
  * - 2015-03-12:
  */
-class PasswordPropertyTest extends \PHPUnit_Framework_TestCase
+class PasswordPropertyTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Property\ContainerIntegrationTrait;
 
+    /**
+     * @return void
+     */
     public function testType()
     {
         $container = $this->getContainer();

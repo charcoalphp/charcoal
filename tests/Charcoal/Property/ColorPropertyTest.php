@@ -6,16 +6,23 @@ use ReflectionClass;
 
 // From 'charcoal-property'
 use Charcoal\Property\ColorProperty;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class ColorPropertyTest extends \PHPUnit_Framework_TestCase
+class ColorPropertyTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Property\ContainerIntegrationTrait;
 
+    /**
+     * @var ColorProperty
+     */
     public $obj;
 
+    /**
+     * @return void
+     */
     public function setUp()
     {
         $container = $this->getContainer();
@@ -27,22 +34,19 @@ class ColorPropertyTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
-    protected static function callMethod($obj, $name, array $args = null)
-    {
-        $class = new ReflectionClass($obj);
-        $method = $class->getMethod($name);
-        $method->setAccessible(true);
-        return $method->invokeArgs($obj, $args);
-    }
-
     /**
      * Hello world
+     *
+     * @return void
      */
     public function testDefaults()
     {
         $this->assertEquals(false, $this->obj->supportAlpha());
     }
 
+    /**
+     * @return void
+     */
     public function testSetSupportAlpha()
     {
         $ret = $this->obj->setSupportAlpha(true);
@@ -61,30 +65,43 @@ class ColorPropertyTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider colorProviderNoAlpha
+     *
+     * @param  string $color    A color to test.
+     * @param  string $expected The expected mutation of $color.
+     * @return void
      */
-    public function testColorValueNoAlpha($color, $result)
+    public function testColorValueNoAlpha($color, $expected)
     {
         $this->obj->setSupportAlpha(false);
-        $this->assertEquals($result, $this->obj->colorVal($color));
+        $this->assertEquals($expected, $this->obj->colorVal($color));
     }
 
     /**
      * @dataProvider colorProviderAlpha
+     *
+     * @param  string $color    A color to test.
+     * @param  string $expected The expected mutation of $color.
+     * @return void
      */
-    public function testColorValueAlpha($color, $result)
+    public function testColorValueAlpha($color, $expected)
     {
         $this->obj->setSupportAlpha(true);
-        $this->assertEquals($result, $this->obj->colorVal($color));
+        $this->assertEquals($expected, $this->obj->colorVal($color));
     }
 
+    /**
+     * @return void
+     */
     public function testColorValInvalidThrowsException()
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $this->obj->colorVal('invalid');
     }
 
     /**
-     * Provider for hexadcimalValue, in `[$color, $result]` pairs.
+     * Provider for hexadcimalValue, in `[$color, $expected]` pairs.
+     *
+     * @return array
      */
     public function colorProviderNoAlpha()
     {
@@ -106,9 +123,11 @@ class ColorPropertyTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-        /**
-         * Provider for hexadcimalValue, in `[$color, $result]` pairs.
-         */
+    /**
+     * Provider for hexadcimalValue, in `[$color, $result]` pairs.
+     *
+     * @return array
+     */
     public function colorProviderAlpha()
     {
         return [
@@ -129,12 +148,18 @@ class ColorPropertyTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
+    /**
+     * @return void
+     */
     public function testSqlExtra()
     {
         $obj = $this->obj;
         $this->assertEquals('', $obj->sqlExtra());
     }
 
+    /**
+     * @return void
+     */
     public function testSqlTypeMultiple()
     {
         $obj = $this->obj;
@@ -142,6 +167,9 @@ class ColorPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('TEXT', $obj->sqlType());
     }
 
+    /**
+     * @return void
+     */
     public function testSqlType()
     {
         $obj = $this->obj;

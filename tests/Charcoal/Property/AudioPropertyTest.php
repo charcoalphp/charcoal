@@ -3,17 +3,24 @@
 namespace Charcoal\Tests\Property;
 
 use Charcoal\Property\AudioProperty;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  * ## TODOs
  * - 2015-03-12:
  */
-class AudioPropertyTest extends \PHPUnit_Framework_TestCase
+class AudioPropertyTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Property\ContainerIntegrationTrait;
 
+    /**
+     * @var AudioProperty
+     */
     public $obj;
 
+    /**
+     * @return void
+     */
     public function setUp()
     {
         $container = $this->getContainer();
@@ -25,17 +32,26 @@ class AudioPropertyTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testDefauls()
     {
         $this->assertEquals(0, $this->obj->minLength());
         $this->assertEquals(0, $this->obj->maxLength());
     }
 
+    /**
+     * @return void
+     */
     public function testType()
     {
         $this->assertEquals('audio', $this->obj->type());
     }
 
+    /**
+     * @return void
+     */
     public function testSetData()
     {
         $obj = $this->obj;
@@ -50,6 +66,9 @@ class AudioPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(500, $obj->maxLength());
     }
 
+    /**
+     * @return void
+     */
     public function testSetDataSnakecase()
     {
         $obj = $this->obj;
@@ -64,6 +83,9 @@ class AudioPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(500, $obj->maxLength());
     }
 
+    /**
+     * @return void
+     */
     public function testSetMinLength()
     {
         $ret = $this->obj->setMinLength(5);
@@ -71,10 +93,13 @@ class AudioPropertyTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(5, $this->obj->minLength());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $this->obj->setMinLength(false);
     }
 
+    /**
+     * @return void
+     */
     public function testSetMaxLength()
     {
         $ret = $this->obj->setMaxLength(5);
@@ -82,10 +107,13 @@ class AudioPropertyTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(5, $this->obj->maxLength());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $this->obj->setMaxLength(false);
     }
 
+    /**
+     * @return void
+     */
     public function testAcceptedMimetypes()
     {
         $ret = $this->obj->acceptedMimetypes();
@@ -97,6 +125,10 @@ class AudioPropertyTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider mimeExtensionProvider
+     *
+     * @param  string $mime A MIME type.
+     * @param  string $ext  A file format.
+     * @return void
      */
     public function testGenerateExtension($mime, $ext)
     {
@@ -105,6 +137,9 @@ class AudioPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($ext, $this->obj->generateExtension());
     }
 
+    /**
+     * @return array
+     */
     public function mimeExtensionProvider()
     {
         return [

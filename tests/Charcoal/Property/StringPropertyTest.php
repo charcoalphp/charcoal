@@ -9,11 +9,12 @@ use Charcoal\Translator\Translation;
 
 // From 'charcoal-property'
 use Charcoal\Property\StringProperty;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class StringPropertyTest extends \PHPUnit_Framework_TestCase
+class StringPropertyTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Property\ContainerIntegrationTrait;
 
@@ -26,6 +27,8 @@ class StringPropertyTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Set up the test.
+     *
+     * @return void
      */
     public function setUp()
     {
@@ -40,16 +43,25 @@ class StringPropertyTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testType()
     {
         $this->assertEquals('string', $this->obj->type());
     }
 
+    /**
+     * @return void
+     */
     public function testSqlExtra()
     {
         $this->assertEquals('', $this->obj->sqlExtra());
     }
 
+    /**
+     * @return void
+     */
     public function testSqlType()
     {
         $this->obj->setMultiple(false);
@@ -65,11 +77,17 @@ class StringPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('TEXT', $this->obj->sqlType());
     }
 
+    /**
+     * @return void
+     */
     public function testSqlPdoType()
     {
         $this->assertEquals(PDO::PARAM_STR, $this->obj->sqlPdoType());
     }
 
+    /**
+     * @return void
+     */
     public function testSetData()
     {
         $data = [
@@ -88,6 +106,9 @@ class StringPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(false, $this->obj->allowEmpty());
     }
 
+    /**
+     * @return void
+     */
     public function testDisplayVal()
     {
         $container  = $this->getContainer();
@@ -122,52 +143,95 @@ class StringPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foo, bar, baz', $this->obj->displayVal([ 'foo', 'bar', 'baz' ]));
     }
 
+    /**
+     * @return void
+     */
     public function testDisplayChoices()
+    {
+        $choices = $this->getDisplayChoices();
+        $this->obj->setChoices($choices);
+
+        $expected = [
+            'fox' => [
+                'value' => 'fox',
+                'label' => $choices['fox'],
+            ],
+            'dog' => [
+                'value' => 'dog',
+                'label' => $choices['dog'],
+            ],
+            /*,
+            'wolf' => [
+                'value' => 'wolf',
+                'label' => $this->translation($choices['wolf']),
+            ],
+            */
+        ];
+        $this->assertEquals($expected, $this->obj->choices());
+    }
+
+    /**
+     * @used-by testDisplayChoices()
+     * @used-by testRenderedDisplayChoices()
+     * @return  array
+     */
+    public function getDisplayChoices()
     {
         $container  = $this->getContainer();
         $translator = $container['translator'];
 
-        $choices = [
+        return [
             'fox'  => $translator->translation([
                 'en' => 'Brown fox',
-                'fr' => 'Renard brun'
+                'fr' => 'Renard brun',
             ]),
             'dog'  => $translator->translation([
                 'en' => 'Lazy dog',
-                'fr' => 'Chien paresseux'
-            ])/*,
+                'fr' => 'Chien paresseux',
+            ]),
+            /*,
             'wolf' => $translator->translation([
                 'en' => 'Hungry wolf',
-                'fr' => 'Loup affamé'
-            ])*/
+                'fr' => 'Loup affamé',
+            ]),
+            */
         ];
-        $expected = [
-            'fox' => [
-                'value' => 'fox',
-                'label' => $choices['fox']
-            ],
-            'dog' => [
-                'value' => 'dog',
-                'label' => $choices['dog']
-            ]/*,
-            'wolf' => [
-                'value' => 'wolf',
-                'label' => $this->translation($choices['wolf'])
-            ]*/
-        ];
+    }
 
-        $this->obj->setChoices($choices);
-        $this->assertEquals($expected, $this->obj->choices());
-
+    /**
+     * @dataProvider getDisplayChoicesProvider
+     *
+     * @param  string $expected The displayed $value.
+     * @param  mixed  $value    The value to display.
+     * @param  array  $options  The display options.
+     * @return void
+     */
+    public function testRenderedDisplayChoices($expected, $value, array $options = [])
+    {
+        $this->obj->setChoices($this->getDisplayChoices());
         $this->obj->setL10n(false);
         $this->obj->setMultiple(true);
 
-        $this->assertEquals('Brown fox, Lazy dog, wolf', $this->obj->displayVal([ 'fox', 'dog', 'wolf' ]));
-        $this->assertEquals('Brown fox, Lazy dog, wolf', $this->obj->displayVal('fox,dog,wolf'));
-        $this->assertEquals('Brown fox, Lazy dog, wolf', $this->obj->displayVal('fox,dog,wolf', [ 'lang' => 'es' ]));
-        $this->assertEquals('Renard brun, Chien paresseux, wolf', $this->obj->displayVal('fox,dog,wolf', [ 'lang' => 'fr' ]));
+        $this->assertEquals($expected, $this->obj->displayVal($value, $options));
     }
 
+    /**
+     * @used-by testRenderedDisplayChoices()
+     * @return  array
+     */
+    public function getDisplayChoicesProvider()
+    {
+        return [
+            [ 'Brown fox, Lazy dog, wolf',          [ 'fox', 'dog', 'wolf' ] ],
+            [ 'Brown fox, Lazy dog, wolf',          'fox,dog,wolf'  ],
+            [ 'Brown fox, Lazy dog, wolf',          'fox,dog,wolf', [ 'lang' => 'es' ] ],
+            [ 'Renard brun, Chien paresseux, wolf', 'fox,dog,wolf', [ 'lang' => 'fr' ] ],
+        ];
+    }
+
+    /**
+     * @return void
+     */
     public function testSetMinLength()
     {
         $ret = $this->obj->setMinLength(5);
@@ -180,16 +244,22 @@ class StringPropertyTest extends \PHPUnit_Framework_TestCase
         $this->obj->set('min_length', 30);
         $this->assertEquals(30, $this->obj['min_length']);
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $this->obj->setMinLength('foo');
     }
 
+    /**
+     * @return void
+     */
     public function testSetMinLenghtNegativeThrowsException()
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $this->obj->setMinLength(-1);
     }
 
+    /**
+     * @return void
+     */
     public function testSetMaxLength()
     {
         $ret = $this->obj->setMaxLength(5);
@@ -202,16 +272,22 @@ class StringPropertyTest extends \PHPUnit_Framework_TestCase
         $this->obj->set('max_length', 30);
         $this->assertEquals(30, $this->obj['max_length']);
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $this->obj->setMaxLength('foo');
     }
 
+    /**
+     * @return void
+     */
     public function testSetMaxLenghtNegativeThrowsException()
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $this->obj->setMaxLength(-1);
     }
 
+    /**
+     * @return void
+     */
     public function testSetRegexp()
     {
         $ret = $this->obj->setRegexp('[a-z]');
@@ -224,10 +300,13 @@ class StringPropertyTest extends \PHPUnit_Framework_TestCase
         $this->obj->set('regexp', '[A-Z]');
         $this->assertEquals('[A-Z]', $this->obj['regexp']);
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $this->obj->setRegexp(null);
     }
 
+    /**
+     * @return void
+     */
     public function testSetAllowEmpty()
     {
         $this->assertEquals(true, $this->obj->allowEmpty());
@@ -243,6 +322,9 @@ class StringPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->obj['allow_empty']);
     }
 
+    /**
+     * @return void
+     */
     public function testLength()
     {
         $this->obj->setVal('foo');
@@ -261,11 +343,17 @@ class StringPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(13, $this->obj->length());
     }
 
+    /**
+     * @return void
+     */
     public function testValidationMethods()
     {
         $this->assertInternalType('array', $this->obj->validationMethods());
     }
 
+    /**
+     * @return void
+     */
     public function testValidateMaxLength()
     {
         $this->obj->setMaxLength(5);
@@ -294,6 +382,9 @@ class StringPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertNotTrue($this->obj->validateMaxLength());
     }
 
+    /**
+     * @return void
+     */
     public function testValidateMaxLengthWithZeroMaxLengthReturnsTrue()
     {
         $this->obj->setMaxLength(0);
@@ -304,6 +395,9 @@ class StringPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->obj->validateMaxLength());
     }
 
+    /**
+     * @return void
+     */
     public function testValidateMinLength()
     {
         $this->obj->setMinLength(5);
@@ -333,6 +427,9 @@ class StringPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertNotTrue($this->obj->validateMinLength());
     }
 
+    /**
+     * @return void
+     */
     public function testValidateMinLengthAllowEmpty()
     {
         $this->obj->setAllowNull(false);
@@ -346,6 +443,9 @@ class StringPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertNotTrue($this->obj->validateMinLength());
     }
 
+    /**
+     * @return void
+     */
     public function testValidateMinLengthWithoutValReturnsFalse()
     {
         $this->obj->setAllowNull(false);
@@ -354,6 +454,9 @@ class StringPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertNotTrue($this->obj->validateMinLength());
     }
 
+    /**
+     * @return void
+     */
     public function testValidateMinLengthWithoutMinLengthReturnsTrue()
     {
         $this->assertTrue($this->obj->validateMinLength());
@@ -362,6 +465,9 @@ class StringPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->obj->validateMinLength());
     }
 
+    /**
+     * @return void
+     */
     public function testValidateRegexp()
     {
         /** Without RegExp */
@@ -380,6 +486,9 @@ class StringPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertNotTrue($this->obj->validateRegexp());
     }
 
+    /**
+     * @return void
+     */
     public function testValidateAllowEmpty()
     {
         $this->obj->setAllowEmpty(false);

@@ -8,12 +8,13 @@ use InvalidArgumentException;
 
 // From 'charcoal-property'
 use Charcoal\Property\IdProperty;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  * ## TODOs
  * - 2015-03-12:
  */
-class IdPropertyTest extends \PHPUnit_Framework_TestCase
+class IdPropertyTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Property\ContainerIntegrationTrait;
 
@@ -22,6 +23,9 @@ class IdPropertyTest extends \PHPUnit_Framework_TestCase
      */
     private $obj;
 
+    /**
+     * @return void
+     */
     public function setUp()
     {
         $container = $this->getContainer();
@@ -33,11 +37,17 @@ class IdPropertyTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testType()
     {
         $this->assertEquals('id', $this->obj->type());
     }
 
+    /**
+     * @return void
+     */
     public function testSetData()
     {
         $ret = $this->obj->setData(
@@ -52,6 +62,8 @@ class IdPropertyTest extends \PHPUnit_Framework_TestCase
     /**
      * Asserts that the default mode:
      * - Defaults to auto-increment
+     *
+     * @return void
      */
     public function testDefaultMode()
     {
@@ -64,6 +76,8 @@ class IdPropertyTest extends \PHPUnit_Framework_TestCase
      * - is chainable
      * - properly sets the mode
      * - throws an invalid argument exception for any string modes
+     *
+     * @return void
      */
     public function testSetMode()
     {
@@ -77,7 +91,7 @@ class IdPropertyTest extends \PHPUnit_Framework_TestCase
         $this->obj->set('mode', 'uniqid');
         $this->assertEquals('uniqid', $this->obj['mode']);
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->obj->setMode('foo');
     }
 
@@ -85,31 +99,42 @@ class IdPropertyTest extends \PHPUnit_Framework_TestCase
      * Asserts that calling the `setMode()` method with a NULL argument:
      * - is chainable
      * - properly resets the mode to detault
+     *
+     * @return void
      */
     public function testSetModeNullThrowsException()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->obj->setMode(null);
     }
 
+    /**
+     * @return void
+     */
     public function testMultipleCannotBeTrue()
     {
         $this->assertFalse($this->obj->multiple());
 
         $this->assertSame($this->obj, $this->obj->setMultiple(false));
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->obj->setMultiple(true);
     }
 
+    /**
+     * @return void
+     */
     public function testL10nCannotBeTrue()
     {
         $this->assertFalse($this->obj->l10n());
 
         $this->assertSame($this->obj, $this->obj->setL10n(false));
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->obj->setL10n(true);
     }
 
+    /**
+     * @return void
+     */
     public function testSaveAndAutoGenerateAutoIncrement()
     {
         $obj = $this->obj;
@@ -118,6 +143,9 @@ class IdPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('', $id);
     }
 
+    /**
+     * @return void
+     */
     public function testSaveAndAutoGenerateUniqid()
     {
         $obj = $this->obj;
@@ -126,6 +154,9 @@ class IdPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(13, strlen($id));
     }
 
+    /**
+     * @return void
+     */
     public function testSaveAndAutoGenerateUuid()
     {
         $obj = $this->obj;
@@ -134,6 +165,9 @@ class IdPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(36, strlen($id));
     }
 
+    /**
+     * @return void
+     */
     public function testSqlExtra()
     {
         $obj = $this->obj;
@@ -146,6 +180,9 @@ class IdPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('', $ret);
     }
 
+    /**
+     * @return void
+     */
     public function testSqlType()
     {
         $container = $this->getContainer();
@@ -169,6 +206,9 @@ class IdPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('VARCHAR(255)', $ret);
     }
 
+    /**
+     * @return void
+     */
     public function testSqlPdoType()
     {
         $obj = $this->obj;

@@ -2,20 +2,25 @@
 
 namespace Charcoal\Tests\Property;
 
+// From 'charcoal-property'
 use Charcoal\Property\StructureProperty;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class StructurePropertyTest extends \PHPUnit_Framework_TestCase
+class StructurePropertyTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Property\ContainerIntegrationTrait;
 
     /**
-     * @var StructureProperty $obj
+     * @var StructureProperty
      */
     public $obj;
 
+    /**
+     * @return void
+     */
     public function setUp()
     {
         $container = $this->getContainer();
@@ -27,6 +32,9 @@ class StructurePropertyTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testType()
     {
         $this->assertEquals('structure', $this->obj->type());

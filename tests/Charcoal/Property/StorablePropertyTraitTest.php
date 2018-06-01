@@ -2,21 +2,31 @@
 
 namespace Charcoal\Tests\Property;
 
-use ReflectionObject;
+use ReflectionMethod;
 
 // From 'charcoal-property'
 use Charcoal\Property\PropertyField;
 use Charcoal\Property\StorablePropertyTrait;
+use Charcoal\Tests\AbstractTestCase;
+use Charcoal\Tests\ReflectionsTrait;
+use Charcoal\Tests\Property\ContainerIntegrationTrait;
 
 /**
  *
  */
-class StorablePropertyTraitTest extends \PHPUnit_Framework_TestCase
+class StorablePropertyTraitTest extends AbstractTestCase
 {
-    use \Charcoal\Tests\Property\ContainerIntegrationTrait;
+    use ReflectionsTrait;
+    use ContainerIntegrationTrait;
 
+    /**
+     * @var StorablePropertyTrait
+     */
     private $obj;
 
+    /**
+     * @return void
+     */
     public function setUp()
     {
         $container = $this->getContainer();
@@ -26,6 +36,9 @@ class StorablePropertyTraitTest extends \PHPUnit_Framework_TestCase
         $this->obj = $this->createProperty();
     }
 
+    /**
+     * @return StorablePropertyTrait
+     */
     public function createProperty()
     {
         $container = $this->getContainer();
@@ -51,6 +64,9 @@ class StorablePropertyTraitTest extends \PHPUnit_Framework_TestCase
         return $obj;
     }
 
+    /**
+     * @return StorablePropertyTrait
+     */
     public function createMultilingualProperty()
     {
         $container = $this->getContainer();
@@ -83,6 +99,9 @@ class StorablePropertyTraitTest extends \PHPUnit_Framework_TestCase
         return $obj;
     }
 
+    /**
+     * @return StorablePropertyTrait
+     */
     public function createMultiValueProperty()
     {
         $container = $this->getContainer();
@@ -112,6 +131,9 @@ class StorablePropertyTraitTest extends \PHPUnit_Framework_TestCase
         return $obj;
     }
 
+    /**
+     * @return void
+     */
     public function testStorageVal()
     {
         $container = $this->getContainer();
@@ -133,6 +155,8 @@ class StorablePropertyTraitTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test Unilingual Property Fields
+     *
+     * @return void
      */
     public function testFields()
     {
@@ -148,16 +172,18 @@ class StorablePropertyTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('[]', $fields[0]->val());
     }
 
+    /**
+     * @return void
+     */
     public function testUpdateFields()
     {
-        $refObj  = new ReflectionObject($this->obj);
-        $refFunc = $refObj->getMethod('updatedFields');
-        $refFunc->setAccessible(true);
-        $refFunc->invokeArgs($this->obj, [ 'Cooking' ]);
+        $this->callMethod($this->obj, 'updatedFields', [ 'Cooking' ]);
     }
 
     /**
      * Test Multilingual Property Fields
+     *
+     * @return void
      */
     public function testMultilingualFields()
     {
@@ -188,6 +214,8 @@ class StorablePropertyTraitTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test Unilingual Property Field Names
+     *
+     * @return void
      */
     public function testFieldNames()
     {
@@ -201,6 +229,8 @@ class StorablePropertyTraitTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test Multilingual Property Field Names
+     *
+     * @return void
      */
     public function testMultilingualFieldNames()
     {

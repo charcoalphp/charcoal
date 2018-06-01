@@ -3,16 +3,23 @@
 namespace Charcoal\Tests\Property;
 
 use Charcoal\Property\UrlProperty;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class UrlPropertyTest extends \PHPUnit_Framework_TestCase
+class UrlPropertyTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Property\ContainerIntegrationTrait;
 
+    /**
+     * @var UrlProperty
+     */
     public $obj;
 
+    /**
+     * @return void
+     */
     public function setUp()
     {
         $container = $this->getContainer();
@@ -26,6 +33,8 @@ class UrlPropertyTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Asserts that the `type()` method returns "url".
+     *
+     * @return void
      */
     public function testType()
     {

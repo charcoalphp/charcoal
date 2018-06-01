@@ -20,14 +20,18 @@ use Charcoal\Factory\FactoryInterface;
 
 // From 'charcoal-property'
 use Charcoal\Property\ObjectProperty;
+use Charcoal\Tests\AbstractTestCase;
+use Charcoal\Tests\ReflectionsTrait;
+use Charcoal\Tests\Property\ContainerIntegrationTrait;
 use Charcoal\Tests\Property\Mocks\GenericModel;
 
 /**
  *
  */
-class ObjectPropertyTest extends \PHPUnit_Framework_TestCase
+class ObjectPropertyTest extends AbstractTestCase
 {
-    use \Charcoal\Tests\Property\ContainerIntegrationTrait;
+    use ReflectionsTrait;
+    use ContainerIntegrationTrait;
 
     const OBJ_1 = '40ea';
     const OBJ_2 = '69c6';
@@ -44,6 +48,8 @@ class ObjectPropertyTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Set up the test.
+     *
+     * @return void
      */
     public function setUp()
     {
@@ -78,6 +84,7 @@ class ObjectPropertyTest extends \PHPUnit_Framework_TestCase
             $source->createTable();
         }
 
+        // phpcs:disable Generic.Files.LineLength.TooLong
         $objs = [
             self::OBJ_1 => [ 'active' => 1, 'position' => 1, 'name' => $translator->translation([ 'en' => 'Foo', 'fr' => 'Oof' ]) ],
             self::OBJ_2 => [ 'active' => 0, 'position' => 2, 'name' => $translator->translation([ 'en' => '',    'fr' => '' ]),   ],
@@ -85,6 +92,7 @@ class ObjectPropertyTest extends \PHPUnit_Framework_TestCase
             self::OBJ_4 => [ 'active' => 1, 'position' => 4, 'name' => $translator->translation([ 'en' => 'Qux', 'fr' => 'Xuq' ]) ],
             self::OBJ_5 => [ 'active' => 1, 'position' => 4, 'name' => $translator->translation([ 'en' => 'Xyz', 'fr' => 'Zyx' ]) ],
         ];
+        // phpcs:enable
 
         $models = [];
         foreach ($objs as $objId => $objData) {
@@ -95,24 +103,12 @@ class ObjectPropertyTest extends \PHPUnit_Framework_TestCase
         return $objs;
     }
 
-    public static function getMethod($obj, $name)
-    {
-        $class = new ReflectionClass($obj);
-        $method = $class->getMethod($name);
-        $method->setAccessible(true);
-
-        return $method;
-    }
-
-    public static function callMethod($obj, $name, array $args = [])
-    {
-        $method = static::getMethod($obj, $name);
-
-        return $method->invokeArgs($obj, $args);
-    }
-
     /**
      * @dataProvider provideMissingDependencies
+     *
+     * @param  string $method            The name of a method accessor.
+     * @param  string $expectedException The expected Exception thrown by $method.
+     * @return void
      */
     public function testConstructorWithoutDependencies($method, $expectedException)
     {
@@ -124,10 +120,13 @@ class ObjectPropertyTest extends \PHPUnit_Framework_TestCase
             'translator' => $container['translator']
         ]);
 
-        $this->setExpectedException($expectedException);
+        $this->expectException($expectedException);
         $this->callMethod($prop, $method);
     }
 
+    /**
+     * @return array
+     */
     public function provideMissingDependencies()
     {
         return [
@@ -139,15 +138,22 @@ class ObjectPropertyTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider provideSatisfiedDependencies
+     *
+     * @param  string $method         The name of a method accessor.
+     * @param  string $expectedObject The expected instance returned by $method.
+     * @return void
      */
-    public function testConstructorWithDependencies($method, $expected)
+    public function testConstructorWithDependencies($method, $expectedObject)
     {
         $container = $this->getContainer();
 
         $dependency = $this->callMethod($this->obj, $method);
-        $this->assertInstanceOf($expected, $dependency);
+        $this->assertInstanceOf($expectedObject, $dependency);
     }
 
+    /**
+     * @return array
+     */
     public function provideSatisfiedDependencies()
     {
         return [
@@ -157,16 +163,25 @@ class ObjectPropertyTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
+    /**
+     * @return void
+     */
     public function testType()
     {
         $this->assertEquals('object', $this->obj->type());
     }
 
+    /**
+     * @return void
+     */
     public function testSqlExtra()
     {
         $this->assertEquals('', $this->obj->sqlExtra());
     }
 
+    /**
+     * @return void
+     */
     public function testSqlType()
     {
         $this->obj->setObjType(GenericModel::class);
@@ -176,38 +191,53 @@ class ObjectPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('TEXT', $this->obj->sqlType());
     }
 
+    /**
+     * @return void
+     */
     public function testSqlPdoType()
     {
         $this->obj->setObjType(GenericModel::class);
         $this->assertEquals(PDO::PARAM_STR, $this->obj->sqlPdoType());
     }
 
+    /**
+     * @return void
+     */
     public function testSetObjType()
     {
         $return = $this->obj->setObjType('foo');
         $this->assertSame($return, $this->obj);
         $this->assertEquals('foo', $this->obj->objType());
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->obj->setObjType(false);
     }
 
+    /**
+     * @return void
+     */
     public function testAccessingObjTypeBeforeSetterThrowsException()
     {
-        $this->setExpectedException('\Exception');
+        $this->expectException('\Exception');
         $this->obj->objType();
     }
 
+    /**
+     * @return void
+     */
     public function testSetPattern()
     {
         $return = $this->obj->setPattern('{{foo}}');
         $this->assertSame($return, $this->obj);
         $this->assertEquals('{{foo}}', $this->obj->pattern());
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->obj->setPattern([]);
     }
 
+    /**
+     * @return void
+     */
     public function testParseOneWithScalarValue()
     {
         $this->assertEquals('foobar', $this->obj->parseOne('foobar'));
@@ -222,12 +252,18 @@ class ObjectPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $this->obj->parseOne($mock));
     }
 
+    /**
+     * @return void
+     */
     public function testParseOneWithObjectWithoutIdReturnsNull()
     {
         $mock = $this->createMock(StorableInterface::class);
         $this->assertNull($this->obj->parseOne($mock));
     }
 
+    /**
+     * @return void
+     */
     public function testParseOneWithObjectWithIdReturnsId()
     {
         $mock = $this->createMock(StorableInterface::class);
@@ -237,6 +273,9 @@ class ObjectPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $this->obj->parseOne($mock));
     }
 
+    /**
+     * @return void
+     */
     public function testDisplayVal()
     {
         $objs  = $this->setUpObjects($models);
@@ -275,10 +314,18 @@ class ObjectPropertyTest extends \PHPUnit_Framework_TestCase
         $this->obj->setL10n(false);
         $this->obj->setMultiple(true);
 
-        $this->assertEquals('Foo, '.self::OBJ_2.', Baz, Qux, Xyz', $this->obj->displayVal(implode(',', array_keys($objs))));
-        $this->assertEquals('Foo, Baz, Qux', $this->obj->displayVal([ $models[self::OBJ_1], self::OBJ_3, $models[self::OBJ_4] ]));
+        $expected = 'Foo, '.self::OBJ_2.', Baz, Qux, Xyz';
+        $actual   = $this->obj->displayVal(implode(',', array_keys($objs)));
+        $this->assertEquals($expected, $actual);
+
+        $expected = 'Foo, Baz, Qux';
+        $actual   = $this->obj->displayVal([ $models[self::OBJ_1], self::OBJ_3, $models[self::OBJ_4] ]);
+        $this->assertEquals($expected, $actual);
     }
 
+    /**
+     * @return void
+     */
     public function testInputVal()
     {
         $container = $this->getContainer();
@@ -298,6 +345,9 @@ class ObjectPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foo,baz,qux', $this->obj->inputVal([ 'foo', 'baz', 'qux' ]));
     }
 
+    /**
+     * @return void
+     */
     public function testStorageVal()
     {
         $container = $this->getContainer();
@@ -317,6 +367,9 @@ class ObjectPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foo,baz,qux', $this->obj->storageVal([ 'foo', 'baz', 'qux' ]));
     }
 
+    /**
+     * @return void
+     */
     public function testRenderObjPattern()
     {
         $objs = $this->setUpObjects($models);
@@ -335,6 +388,9 @@ class ObjectPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($models[self::OBJ_1]['name']['en'], $return);
     }
 
+    /**
+     * @return void
+     */
     public function testRenderViewableObjPattern()
     {
         $container = $this->getContainer();
@@ -354,26 +410,35 @@ class ObjectPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($models[self::OBJ_1]['name']['en'], $return);
     }
 
+    /**
+     * @return void
+     */
     public function testRenderObjPatternThrowsExceptionWithBadPattern()
     {
         $container = $this->getContainer();
 
         $model = $container['model/factory']->create(GenericModel::class);
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $return = $this->callMethod($this->obj, 'renderObjPattern', [ $model, false ]);
     }
 
+    /**
+     * @return void
+     */
     public function testRenderObjPatternThrowsExceptionWithBadLang()
     {
         $container = $this->getContainer();
 
         $model = $container['model/factory']->create(GenericModel::class);
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $return = $this->callMethod($this->obj, 'renderObjPattern', [ $model, null, false ]);
     }
 
+    /**
+     * @return void
+     */
     public function testChoices()
     {
         $this->obj->setObjType(GenericModel::class);
@@ -415,18 +480,27 @@ class ObjectPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($fakeId, $this->obj->choiceLabel($fakeId));
     }
 
+    /**
+     * @return void
+     */
     public function testChoiceLabelStructException()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->obj->choiceLabel([]);
     }
 
+    /**
+     * @return void
+     */
     public function testParseChoicesThrowsException()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $return = $this->callMethod($this->obj, 'parseChoices', [ false ]);
     }
 
+    /**
+     * @return void
+     */
     public function testCollectionLoading()
     {
         $this->setUpObjects();
@@ -448,6 +522,9 @@ class ObjectPropertyTest extends \PHPUnit_Framework_TestCase
         $loader = $this->callMethod($this->obj, 'collectionModelLoader');
     }
 
+    /**
+     * @return void
+     */
     public function testLoadObject()
     {
         $container = $this->getContainer();
@@ -469,6 +546,9 @@ class ObjectPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($return);
     }
 
+    /**
+     * @return void
+     */
     public function testModelLoader()
     {
         $objs = $this->setUpObjects();
@@ -479,11 +559,14 @@ class ObjectPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(ModelLoader::class, $return);
     }
 
+    /**
+     * @return void
+     */
     public function testModelLoaderThrowsException()
     {
         $this->obj->setObjType(GenericModel::class);
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $return = $this->callMethod($this->obj, 'modelLoader', [ false ]);
     }
 }

@@ -7,11 +7,12 @@ use ReflectionClass;
 
 // From 'charcoal-property'
 use Charcoal\Property\LangProperty;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  * Lang Property Test
  */
-class LangPropertyTest extends \PHPUnit_Framework_TestCase
+class LangPropertyTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Property\ContainerIntegrationTrait;
 
@@ -24,6 +25,8 @@ class LangPropertyTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Set up the test.
+     *
+     * @return void
      */
     public function setUp()
     {
@@ -39,16 +42,25 @@ class LangPropertyTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testType()
     {
         $this->assertEquals('lang', $this->obj->type());
     }
 
+    /**
+     * @return void
+     */
     public function testSqlExtra()
     {
         $this->assertEquals('', $this->obj->sqlExtra());
     }
 
+    /**
+     * @return void
+     */
     public function testSqlType()
     {
         $this->obj->setMultiple(false);
@@ -58,11 +70,17 @@ class LangPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('TEXT', $this->obj->sqlType());
     }
 
+    /**
+     * @return void
+     */
     public function testSqlPdoType()
     {
         $this->assertEquals(PDO::PARAM_STR, $this->obj->sqlPdoType());
     }
 
+    /**
+     * @return void
+     */
     public function testChoices()
     {
         $container  = $this->getContainer();
@@ -81,6 +99,9 @@ class LangPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array_keys($locales), array_keys($choices));
     }
 
+    /**
+     * @return void
+     */
     public function testDisplayVal()
     {
         $container  = $this->getContainer();

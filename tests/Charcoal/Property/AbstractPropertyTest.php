@@ -9,21 +9,24 @@ use InvalidArgumentException;
 
 // From 'charcoal-property'
 use Charcoal\Property\AbstractProperty;
+use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Property\ContainerIntegrationTrait;
 
 /**
  *
  */
-class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
+class AbstractPropertyTest extends AbstractTestCase
 {
     use ContainerIntegrationTrait;
 
     /**
-     * Object under Test
      * @var AbstractProperty
      */
     public $obj;
 
+    /**
+     * @return void
+     */
     public function setUp()
     {
         $container = $this->getContainer();
@@ -35,6 +38,9 @@ class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
         ]]);
     }
 
+    /**
+     * @return void
+     */
     public function testIdent()
     {
         $this->assertEquals('', $this->obj->ident());
@@ -49,19 +55,22 @@ class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
         $this->obj->set('ident', 'example');
         $this->assertEquals('example', $this->obj['ident']);
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->obj->setIdent([]);
     }
 
+    /**
+     * @return void
+     */
     public function testL10nIdent()
     {
         $this->obj->setIdent('');
-        $this->setExpectedException(RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $this->obj->l10nIdent();
 
         $this->obj->setIdent('foobar');
         $this->obj->setL10n(false);
-        $this->setExpectedException(LogicException::class);
+        $this->expectException(LogicException::class);
         $this->obj->l10nIdent();
 
         $this->obj->setL10n(true);
@@ -69,7 +78,7 @@ class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foobar_fr', $this->obj->l10nIdent('fr'));
         $this->assertEquals('foobar_en', $this->obj->l10nIdent(null));
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->obj->l10nIdent(false);
     }
 
@@ -77,6 +86,8 @@ class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
      * Asserts that the basic displayVal method:
      * - returns an empty string if the value is null
      * - returns the string as is (when not l10n / multiple)
+     *
+     * @return void
      */
     public function testDisplayVal()
     {
@@ -87,6 +98,9 @@ class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $this->obj->displayVal('foo'));
     }
 
+    /**
+     * @return void
+     */
     public function testDisplayValL10n()
     {
         $this->obj['l10n'] = true;
@@ -98,6 +112,9 @@ class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
         //$this->assertEquals('foo', $this->obj->displayVal(['fr'=>'foo']));
     }
 
+    /**
+     * @return void
+     */
     public function testSetInputVal()
     {
         $this->assertEquals('', $this->obj->inputVal(null));
@@ -108,22 +125,34 @@ class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('{"foo":"bar"}', str_replace([ "\n", "\r", "\t", ' ' ], '', $ret));
     }
 
+    /**
+     * @return void
+     */
     public function testSetInputValL10n()
     {
         $this->obj->setL10n(true);
     }
 
+    /**
+     * @return void
+     */
     public function testSetInputValMultiple()
     {
         $this->obj->setMultiple(true);
     }
 
+    /**
+     * @return void
+     */
     public function testSetInputValL10nMultiple()
     {
         $this->obj->setL10n(true);
         $this->obj->setMultiple(true);
     }
 
+    /**
+     * @return void
+     */
     public function testSetL10n()
     {
         $this->assertFalse($this->obj->l10n());
@@ -142,6 +171,9 @@ class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->obj['l10n']);
     }
 
+    /**
+     * @return void
+     */
     public function testSetHidden()
     {
         $this->assertFalse($this->obj->hidden());
@@ -160,6 +192,9 @@ class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->obj['hidden']);
     }
 
+    /**
+     * @return void
+     */
     public function testSetMultiple()
     {
         $this->assertFalse($this->obj->multiple());
@@ -178,6 +213,9 @@ class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->obj['multiple']);
     }
 
+    /**
+     * @return void
+     */
     public function testMultipleSeparator()
     {
         $this->assertEquals(',', $this->obj->multipleSeparator());
@@ -188,6 +226,9 @@ class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('/', $this->obj->multipleSeparator());
     }
 
+    /**
+     * @return void
+     */
     public function testSetRequired()
     {
         $this->assertFalse($this->obj->required());
@@ -206,6 +247,9 @@ class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->obj['required']);
     }
 
+    /**
+     * @return void
+     */
     public function testSetUnique()
     {
         $this->assertFalse($this->obj->unique());
@@ -224,6 +268,9 @@ class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->obj['unique']);
     }
 
+    /**
+     * @return void
+     */
     public function testSetAllowNull()
     {
         $this->assertTrue($this->obj->allowNull());
@@ -242,6 +289,9 @@ class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->obj['allow_null']);
     }
 
+    /**
+     * @return void
+     */
     public function testSetStorable()
     {
         $this->assertTrue($this->obj->storable());
@@ -260,11 +310,17 @@ class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->obj['storable']);
     }
 
+    /**
+     * @return void
+     */
     public function testValidationMethods()
     {
         $this->assertInternalType('array', $this->obj->validationMethods());
     }
 
+    /**
+     * @return void
+     */
     public function testSetSqlEncoding()
     {
         $this->assertEquals('', $this->obj->sqlEncoding());
@@ -273,7 +329,7 @@ class AbstractPropertyTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci', $this->obj->sqlEncoding());
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->obj->setSqlEncoding(false);
     }
 }

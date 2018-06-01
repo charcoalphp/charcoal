@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Charcoal Model class file
  * Part of the `charcoal-core` package.
@@ -14,7 +15,8 @@ use Pimple\Container;
 // From 'charcoal-core'
 use Charcoal\Model\AbstractModel;
 
-// From `charcoal-translation`
+// From 'charcoal-translator'
+use Charcoal\Translator\Translation;
 use Charcoal\Translator\TranslatorAwareTrait;
 
 /**
@@ -25,7 +27,7 @@ class GenericModel extends AbstractModel
     use TranslatorAwareTrait;
 
     /**
-     * @return Translation|string|null
+     * @var Translation|string|null
      */
     private $name;
 

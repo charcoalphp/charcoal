@@ -2,17 +2,25 @@
 
 namespace Charcoal\Tests\Property;
 
+// From 'charcoal-property'
 use Charcoal\Property\EmailProperty;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class EmailPropertyTest extends \PHPUnit_Framework_TestCase
+class EmailPropertyTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Property\ContainerIntegrationTrait;
 
+    /**
+     * @var EmailProperty
+     */
     public $obj;
 
+    /**
+     * @return void
+     */
     public function setUp()
     {
         $container = $this->getContainer();
@@ -26,12 +34,17 @@ class EmailPropertyTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Asserts that the `type()` method returns "url".
+     *
+     * @return void
      */
     public function testType()
     {
         $this->assertEquals('email', $this->obj->type());
     }
 
+    /**
+     * @return void
+     */
     public function testMaxLength()
     {
         $this->assertEquals(254, $this->obj->maxLength());
@@ -40,6 +53,9 @@ class EmailPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(254, $this->obj->maxLength());
     }
 
+    /**
+     * @return void
+     */
     public function testValidateEmail()
     {
         $this->obj->setVal('foo@example.com');
@@ -53,7 +69,7 @@ class EmailPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->obj->validateEmail());
         $this->obj->setVal('foo');
         $this->assertFalse($this->obj->validateEmail());
-         $this->obj->setVal('foo@');
+        $this->obj->setVal('foo@');
         $this->assertFalse($this->obj->validateEmail());
     }
 }

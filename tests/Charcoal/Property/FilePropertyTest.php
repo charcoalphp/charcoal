@@ -6,16 +6,26 @@ use ReflectionClass;
 
 // From 'charcoal-property'
 use Charcoal\Property\FileProperty;
+use Charcoal\Tests\AbstractTestCase;
+use Charcoal\Tests\ReflectionsTrait;
+use Charcoal\Tests\Property\ContainerIntegrationTrait;
 
 /**
  *
  */
-class FilePropertyTest extends \PHPUnit_Framework_TestCase
+class FilePropertyTest extends AbstractTestCase
 {
-    use \Charcoal\Tests\Property\ContainerIntegrationTrait;
+    use ReflectionsTrait;
+    use ContainerIntegrationTrait;
 
+    /**
+     * @var FileProperty
+     */
     public $obj;
 
+    /**
+     * @return void
+     */
     public function setUp()
     {
         $container = $this->getContainer();
@@ -27,14 +37,9 @@ class FilePropertyTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
-    public static function getMethod($obj, $name)
-    {
-        $class = new ReflectionClass($obj);
-        $method = $class->getMethod($name);
-        $method->setAccessible(true);
-        return $method;
-    }
-
+    /**
+     * @return void
+     */
     public function testConstructor()
     {
         $obj = $this->obj;
@@ -47,6 +52,8 @@ class FilePropertyTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Asserts that the `type()` method is "file".
+     *
+     * @return void
      */
     public function testType()
     {
@@ -54,6 +61,9 @@ class FilePropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('file', $obj->type());
     }
 
+    /**
+     * @return void
+     */
     public function testSetData()
     {
         $obj = $this->obj;
@@ -70,6 +80,8 @@ class FilePropertyTest extends \PHPUnit_Framework_TestCase
      * Asserts that the uploadPath method
      * - defaults to 'uploads/'
      * - always append a "/"
+     *
+     * @return void
      */
     public function testSetUploadPath()
     {
@@ -86,10 +98,13 @@ class FilePropertyTest extends \PHPUnit_Framework_TestCase
         $this->obj->set('upload_path', 'bar');
         $this->assertEquals('bar/', $obj['upload_path']);
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setUploadPath(42);
     }
 
+    /**
+     * @return void
+     */
     public function testSetOverwrite()
     {
         $ret = $this->obj->setOverwrite(true);
@@ -103,6 +118,9 @@ class FilePropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->obj['overwrite']);
     }
 
+    /**
+     * @return void
+     */
     public function testVaidationMethods()
     {
         $obj = $this->obj;
@@ -111,6 +129,9 @@ class FilePropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('max_filesize', $ret);
     }
 
+    /**
+     * @return void
+     */
     public function testValidateAcceptedMimetypes()
     {
         $obj = $this->obj;
@@ -128,7 +149,7 @@ class FilePropertyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     *
+     * @return void
      */
     public function testFileExists()
     {
@@ -143,13 +164,15 @@ class FilePropertyTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider providePathsForIsAbsolutePath
+     *
+     * @param  string $path     A path to test.
+     * @param  string $expected Whether the path is absolute (TRUE) or relative (FALSE).
+     * @return void
      */
-    public function testIsAbsolutePath($path, $expectedResult)
+    public function testIsAbsolutePath($path, $expected)
     {
-        $method = self::getMethod($this->obj, 'isAbsolutePath');
-        $result = $method->invoke($this->obj, $path);
-
-        $this->assertEquals($expectedResult, $result);
+        $result = $this->callMethodWith($this->obj, 'isAbsolutePath', $path);
+        $this->assertEquals($expected, $result);
     }
 
     /**
@@ -158,18 +181,22 @@ class FilePropertyTest extends \PHPUnit_Framework_TestCase
     public function providePathsForIsAbsolutePath()
     {
         return [
-            [ '/var/lib', true ],
-            [ 'c:\\\\var\\lib', true ],
-            [ '\\var\\lib', true ],
-            [ 'var/lib', false ],
-            [ '../var/lib', false ],
-            [ '', false ],
-            [ null, false ],
+            [ '/var/lib',       true  ],
+            [ 'c:\\\\var\\lib', true  ],
+            [ '\\var\\lib',     true  ],
+            [ 'var/lib',        false ],
+            [ '../var/lib',     false ],
+            [ '',               false ],
+            [ null,             false ],
         ];
     }
 
     /**
      * @dataProvider filenameProvider
+     *
+     * @param  string $filename  A dirty filename.
+     * @param  string $sanitized A clean version of $filename.
+     * @return void
      */
     public function testSanitizeFilename($filename, $sanitized)
     {
@@ -177,23 +204,32 @@ class FilePropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($sanitized, $obj->sanitizeFilename($filename));
     }
 
+    /**
+     * @return array
+     */
     public function filenameProvider()
     {
         return [
-            [ 'foobar', 'foobar' ],
+            [ 'foobar',              'foobar'              ],
             [ '<foo/bar*baz?x:y|z>', '_foo_bar_baz_x_y_z_' ],
-            [ '.htaccess', 'htaccess' ],
-            [ '../../etc/passwd', '_.._etc_passwd' ]
+            [ '.htaccess',           'htaccess'            ],
+            [ '../../etc/passwd',    '_.._etc_passwd'      ],
         ];
     }
 
+    /**
+     * @return void
+     */
     // public function testGenerateFilenameWithoutIdentThrowsException()
     // {
     //     $obj = $this->obj;
-    //     $this->setExpectedException('\Exception');
+    //     $this->expectException('\Exception');
     //     $obj->generateFilename();
     // }
 
+    /**
+     * @return void
+     */
     public function testGenerateFilename()
     {
         $obj = $this->obj;

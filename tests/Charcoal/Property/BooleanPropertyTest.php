@@ -6,19 +6,23 @@ use PDO;
 
 // From 'charcoal-property'
 use Charcoal\Property\BooleanProperty;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  * ## TODOs
  * - 2015-03-12:
  */
-class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
+class BooleanPropertyTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Property\ContainerIntegrationTrait;
 
+    /**
+     * @var BooleanProperty
+     */
     public $obj;
 
     /**
-     *
+     * @return void
      */
     public function setUp()
     {
@@ -32,7 +36,7 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     *
+     * @return void
      */
     public function testType()
     {
@@ -42,6 +46,8 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
     /**
      * Assert that the boolean property 's `displayVal()` method:
      * - return the proper label
+     *
+     * @return void
      */
     public function testDisplayVal()
     {
@@ -63,6 +69,8 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
      * - set the multiple to false, if false or falsish value
      * - throws exception otherwise (truthish or invalid value)
      * - is chainable
+     *
+     * @return void
      */
     public function testSetMultiple()
     {
@@ -71,12 +79,14 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
         $this->assertFalse($ret->multiple());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setMultiple(1);
     }
 
     /**
      * Asserts that the boolean property is multiple by default
+     *
+     * @return void
      */
     public function testMultiple()
     {
@@ -85,7 +95,7 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     *
+     * @return void
      */
     public function testSetData()
     {
@@ -103,7 +113,7 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     *
+     * @return void
      */
     public function testSetTrueLabel()
     {
@@ -115,7 +125,7 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     *
+     * @return void
      */
     public function testSetFalseLabel()
     {
@@ -127,7 +137,7 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     *
+     * @return void
      */
     public function testSqlExtra()
     {
@@ -136,7 +146,7 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     *
+     * @return void
      */
     public function testSqlType()
     {
@@ -145,7 +155,7 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     *
+     * @return void
      */
     public function testSqlPdoType()
     {
@@ -153,7 +163,7 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     *
+     * @return void
      */
     public function testChoices()
     {
@@ -161,21 +171,21 @@ class BooleanPropertyTest extends \PHPUnit_Framework_TestCase
         $obj->setVal(false);
         $choices = [
             [
-                'label'=>'True',
-                'selected'=>false,
-                'value'=>1
+                'label'    => 'True',
+                'selected' => false,
+                'value'    => 1,
             ],
             [
-                'label'=>'False',
-                'selected'=>true,
-                'value'=>0
-            ]
+                'label'    => 'False',
+                'selected' => true,
+                'value'    => 0,
+            ],
         ];
         $this->assertEquals($choices, $obj->choices());
     }
 
     /**
-     *
+     * @return void
      */
     public function testSave()
     {

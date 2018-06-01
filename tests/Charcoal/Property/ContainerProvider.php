@@ -79,7 +79,7 @@ class ContainerProvider
      */
     public function registerSource(Container $container)
     {
-        $container['database'] = function (Container $container) {
+        $container['database'] = function () {
             $pdo = new PDO('sqlite::memory:');
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $pdo;
@@ -94,7 +94,7 @@ class ContainerProvider
      */
     public function registerLogger(Container $container)
     {
-        $container['logger'] = function (Container $container) {
+        $container['logger'] = function () {
             return new NullLogger();
         };
     }
@@ -107,8 +107,8 @@ class ContainerProvider
      */
     public function registerCache(Container $container)
     {
-        $container['cache'] = function ($container) {
-            return new Pool(new Ephemeral());
+        $container['cache'] = function () {
+            return new Pool();
         };
     }
 
@@ -154,7 +154,7 @@ class ContainerProvider
      */
     public function registerTranslator(Container $container)
     {
-        $container['locales/manager'] = function (Container $container) {
+        $container['locales/manager'] = function () {
             $manager = new LocalesManager([
                 'locales' => [
                     'en' => [ 'locale' => 'en-US' ]
@@ -181,7 +181,7 @@ class ContainerProvider
      */
     public function registerMultilingualTranslator(Container $container)
     {
-        $container['locales/manager'] = function (Container $container) {
+        $container['locales/manager'] = function () {
             $manager = new LocalesManager([
                 'locales' => [
                     'en'  => [
@@ -221,7 +221,8 @@ class ContainerProvider
                 'manager' => $container['locales/manager']
             ]);
 
-            $translator->addLoader('array', new ArrayLoader());
+            $loader = new ArrayLoader();
+            $translator->addLoader('array', $loader);
             $translator->addResource('array', [ 'locale.de' => 'German'   ], 'en', 'messages');
             $translator->addResource('array', [ 'locale.de' => 'Allemand' ], 'fr', 'messages');
             $translator->addResource('array', [ 'locale.de' => 'Deutsch'  ], 'es', 'messages');

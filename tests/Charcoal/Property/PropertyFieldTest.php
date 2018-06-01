@@ -10,16 +10,23 @@ use Charcoal\Translator\Translation;
 
 // From 'charcoal-property'
 use Charcoal\Property\PropertyField;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class PropertyFieldTest extends \PHPUnit_Framework_TestCase
+class PropertyFieldTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Property\ContainerIntegrationTrait;
 
+    /**
+     * @var PropertyField
+     */
     public $obj;
 
+    /**
+     * @return void
+     */
     public function setUp()
     {
         $container = $this->getContainer();
@@ -29,6 +36,9 @@ class PropertyFieldTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testData()
     {
         $data = [
@@ -58,6 +68,9 @@ class PropertyFieldTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($sql, $this->obj->sql());
     }
 
+    /**
+     * @return void
+     */
     public function testIdent()
     {
         $ret = $this->obj->setIdent('title');
@@ -65,16 +78,22 @@ class PropertyFieldTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('title', $this->obj->ident());
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->obj->setIdent(null);
     }
 
+    /**
+     * @return void
+     */
     public function testSqlReturnsEmptyIfEmptyIdent()
     {
         $this->obj->setIdent('');
         $this->assertEquals('', $this->obj->sql());
     }
 
+    /**
+     * @return void
+     */
     public function testLabel()
     {
         $this->assertEquals(null, $this->obj->label());
@@ -87,6 +106,9 @@ class PropertyFieldTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Cooking', (string)$label);
     }
 
+    /**
+     * @return void
+     */
     public function testPdoType()
     {
         $this->assertEquals(PDO::PARAM_NULL, $this->obj->sqlPdoType());
@@ -99,10 +121,13 @@ class PropertyFieldTest extends \PHPUnit_Framework_TestCase
         $this->obj->setVal('foobar');
         $this->assertEquals(PDO::PARAM_BOOL, $this->obj->sqlPdoType());
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->obj->setSqlPdoType(null);
     }
 
+    /**
+     * @return void
+     */
     public function testSqlType()
     {
         $ret = $this->obj->setSqlType('INT(10)');
@@ -110,10 +135,13 @@ class PropertyFieldTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('INT(10)', $this->obj->sqlType());
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->obj->setSqlType(null);
     }
 
+    /**
+     * @return void
+     */
     public function testSqlExtra()
     {
         $this->assertEquals(null, $this->obj->extra());
@@ -123,10 +151,13 @@ class PropertyFieldTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('UNSIGNED', $this->obj->extra());
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->obj->setExtra(null);
     }
 
+    /**
+     * @return void
+     */
     public function testSqlEncoding()
     {
         $this->assertEquals(null, $this->obj->sqlEncoding());
@@ -136,7 +167,7 @@ class PropertyFieldTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('UNSIGNED', $this->obj->sqlEncoding());
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->obj->setSqlEncoding(null);
     }
 }
