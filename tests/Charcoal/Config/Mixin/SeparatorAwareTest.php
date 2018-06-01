@@ -261,7 +261,7 @@ class SeparatorAwareTest extends AbstractTestCase
      * @covers ::hasWithSeparator()
      * @return void
      */
-    public function delegatedTestHasWithSeparatorWithoutDelimiterInPhp7()
+    public function delegatedTestHasWithSeparatorWithoutDelimiter()
     {
         $this->obj->hasWithSeparator('connections.default.host');
     }
@@ -274,7 +274,7 @@ class SeparatorAwareTest extends AbstractTestCase
      */
     public function testHasWithSeparatorWithoutDelimiterInPhp7()
     {
-        $this->delegatedTestHasWithSeparatorWithoutDelimiterInPhp7();
+        $this->delegatedTestHasWithSeparatorWithoutDelimiter();
     }
 
     /**
@@ -285,7 +285,7 @@ class SeparatorAwareTest extends AbstractTestCase
      */
     public function testHasWithSeparatorWithoutDelimiterInPhp5()
     {
-        $this->delegatedTestHasWithSeparatorWithoutDelimiterInPhp7();
+        $this->delegatedTestHasWithSeparatorWithoutDelimiter();
     }
 
 
@@ -393,7 +393,7 @@ class SeparatorAwareTest extends AbstractTestCase
      * @covers ::getWithSeparator()
      * @return void
      */
-    public function delegatedTestGetWithSeparatorWithoutDelimiterInPhp7()
+    public function delegatedTestGetWithSeparatorWithoutDelimiter()
     {
         $this->obj->getWithSeparator('connections.default.host');
     }
@@ -406,7 +406,7 @@ class SeparatorAwareTest extends AbstractTestCase
      */
     public function testGetWithSeparatorWithoutDelimiterInPhp7()
     {
-        $this->delegatedTestGetWithSeparatorWithoutDelimiterInPhp7();
+        $this->delegatedTestGetWithSeparatorWithoutDelimiter();
     }
 
     /**
@@ -417,7 +417,7 @@ class SeparatorAwareTest extends AbstractTestCase
      */
     public function testGetWithSeparatorWithoutDelimiterInPhp5()
     {
-        $this->delegatedTestGetWithSeparatorWithoutDelimiterInPhp7();
+        $this->delegatedTestGetWithSeparatorWithoutDelimiter();
     }
 
 
