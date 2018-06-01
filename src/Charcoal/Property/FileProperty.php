@@ -538,8 +538,6 @@ class FileProperty extends AbstractProperty
             if ($this->l10n()) {
                 $l10nVal = ($val instanceof Translation) ? $val->data() : $val;
 
-                $k = 0;
-                $total = count($val);
                 $f = [];
                 foreach ($l10nVal as $v) {
                     if ($this->isDataUri($v)) {
@@ -551,8 +549,6 @@ class FileProperty extends AbstractProperty
                     return $f;
                 }
             } elseif ($this->multiple()) {
-                $k = 0;
-                $total = count($val);
                 $f = [];
                 foreach ($val as $v) {
                     if ($this->isDataUri($v)) {
