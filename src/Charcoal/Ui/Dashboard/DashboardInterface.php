@@ -2,7 +2,7 @@
 
 namespace Charcoal\Ui\Dashboard;
 
-// Intra-module (`charcoal-ui`) dependencies
+// From 'charcoal-ui'
 use Charcoal\Ui\UiItemInterface;
 use Charcoal\Ui\Layout\LayoutAwareInterface;
 

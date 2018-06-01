@@ -3,24 +3,28 @@
 namespace Charcoal\Tests\Ui\Dashboard;
 
 // From 'charcoal-ui'
-use \Charcoal\Ui\UiItemInterface;
-use \Charcoal\Ui\Dashboard\AbstractDashboard;
-use \Charcoal\Ui\DashboardGroup\DashboardGroupBuilder;
-use \Charcoal\Ui\ServiceProvider\DashboardServiceProvider;
-use \Charcoal\Ui\ServiceProvider\LayoutServiceProvider;
-use \Charcoal\Ui\ServiceProvider\FormServiceProvider;
+use Charcoal\Ui\UiItemInterface;
+use Charcoal\Ui\Dashboard\AbstractDashboard;
+use Charcoal\Ui\DashboardGroup\DashboardGroupBuilder;
+use Charcoal\Ui\ServiceProvider\DashboardServiceProvider;
+use Charcoal\Ui\ServiceProvider\LayoutServiceProvider;
+use Charcoal\Ui\ServiceProvider\FormServiceProvider;
+use Charcoal\Tests\AbstractTestCase;
 
-class AbstractDashboardTest extends \PHPUnit_Framework_TestCase
+/**
+ *
+ */
+class AbstractDashboardTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Ui\ContainerIntegrationTrait;
 
     /**
-     * @var AbstractViewClass $obj
+     * @var AbstractViewClass
      */
     public $obj;
 
     /**
-     *
+     * @return void
      */
     public function setUp()
     {
@@ -52,6 +56,9 @@ class AbstractDashboardTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
+    /**
+     * @return void
+     */
     public function testSetWidgetCallback()
     {
         $obj = $this->obj;
@@ -69,6 +76,8 @@ class AbstractDashboardTest extends \PHPUnit_Framework_TestCase
      * - calling `setLayout()` with an Layout objects set the layout
      * - calling `setLayout()` with an array sets the same layout
      * - `setLayout()` throws an exception if not an array / Layout object
+     *
+     * @return void
      */
     public function testSetLayout()
     {
@@ -87,10 +96,13 @@ class AbstractDashboardTest extends \PHPUnit_Framework_TestCase
         $obj->setLayout($exampleLayout);
         $this->assertEquals($layout, $obj->layout());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setLayout('foobar');
     }
 
+    /**
+     * @return void
+     */
     public function testSetWidgets()
     {
         $obj = $this->obj;
@@ -100,22 +112,31 @@ class AbstractDashboardTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
     }
 
+    /**
+     * @return void
+     */
     public function testAddWidgetInvalidIdentThrowsException()
     {
         $obj = $this->obj;
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->addWidget([], []);
     }
 
+    /**
+     * @return void
+     */
     public function testAddWidgetInvalidWidgetThrowsException()
     {
         $obj = $this->obj;
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->addWidget('foo', false);
     }
 
+    /**
+     * @return void
+     */
     public function testWidgets()
     {
         $obj = $this->obj;
@@ -132,6 +153,9 @@ class AbstractDashboardTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    /**
+     * @return void
+     */
     public function testWidgetsCallback()
     {
         $obj = $this->obj;
@@ -150,6 +174,9 @@ class AbstractDashboardTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    /**
+     * @return void
+     */
     public function testHasWidgets()
     {
         $obj = $this->obj;
@@ -162,6 +189,9 @@ class AbstractDashboardTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($obj->hasWidgets());
     }
 
+    /**
+     * @return void
+     */
     public function testNumWidgets()
     {
         $obj = $this->obj;

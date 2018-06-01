@@ -2,7 +2,7 @@
 
 namespace Charcoal\Ui\FormGroup;
 
-// Intra-module (`charcoal-ui`) dependency
+// From 'charcoal-ui'
 use Charcoal\Ui\UiItemConfig;
 
 /**

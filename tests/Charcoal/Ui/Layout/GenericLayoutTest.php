@@ -2,23 +2,25 @@
 
 namespace Charcoal\Tests\Ui;
 
+// From 'charcoal-ui'
 use Charcoal\Ui\Layout\GenericLayout;
 use Charcoal\Ui\ServiceProvider\LayoutServiceProvider;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class GenericLayoutTest extends \PHPUnit_Framework_TestCase
+class GenericLayoutTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Ui\ContainerIntegrationTrait;
 
     /**
-     * @var GenericLayout $obj
+     * @var GenericLayout
      */
     public $obj;
 
     /**
-     *
+     * @return void
      */
     public function setUp()
     {
@@ -30,6 +32,9 @@ class GenericLayoutTest extends \PHPUnit_Framework_TestCase
         $this->obj = new GenericLayout();
     }
 
+    /**
+     * @return void
+     */
     public function testType()
     {
         $this->assertEquals('charcoal/ui/layout/generic', $this->obj->type());

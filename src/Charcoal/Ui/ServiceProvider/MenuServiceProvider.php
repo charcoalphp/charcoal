@@ -3,14 +3,14 @@
 namespace Charcoal\Ui\ServiceProvider;
 
 // From Pimple
-use \Pimple\Container;
-use \Pimple\ServiceProviderInterface;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
 // From 'charcoal-ui'
-use \Charcoal\Ui\Menu\MenuBuilder;
-use \Charcoal\Ui\Menu\MenuFactory;
-use \Charcoal\Ui\MenuItem\MenuItemBuilder;
-use \Charcoal\Ui\MenuItem\MenuItemFactory;
+use Charcoal\Ui\Menu\MenuBuilder;
+use Charcoal\Ui\Menu\MenuFactory;
+use Charcoal\Ui\MenuItem\MenuItemBuilder;
+use Charcoal\Ui\MenuItem\MenuItemFactory;
 
 /**
  *

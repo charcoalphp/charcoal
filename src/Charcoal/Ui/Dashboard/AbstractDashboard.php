@@ -4,7 +4,7 @@ namespace Charcoal\Ui\Dashboard;
 
 use InvalidArgumentException;
 
-// Intra-module (`charcoal-ui`) dependencies
+// From 'charcoal-ui'
 use Charcoal\Ui\AbstractUiItem;
 use Charcoal\Ui\Dashboard\DashboardInterface;
 use Charcoal\Ui\Dashboard\DashboardTrait;

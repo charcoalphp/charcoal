@@ -2,15 +2,26 @@
 
 namespace Charcoal\Tests\Ui\MenuItem;
 
+// From 'charcoal-ui'
 use Charcoal\Ui\MenuItem\AbstractMenuItem;
 use Charcoal\Ui\ServiceProvider\MenuServiceProvider;
+use Charcoal\Tests\AbstractTestCase;
 
-class AbstractMenuItemTest extends \PHPUnit_Framework_TestCase
+/**
+ *
+ */
+class AbstractMenuItemTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Ui\ContainerIntegrationTrait;
 
+    /**
+     * @var AbstractMenuItem
+     */
     public $obj;
 
+    /**
+     * @return void
+     */
     public function setUp()
     {
         $container = $this->getContainer();
@@ -27,6 +38,9 @@ class AbstractMenuItemTest extends \PHPUnit_Framework_TestCase
         ]]);
     }
 
+    /**
+     * @return void
+     */
     public function testHasChildren()
     {
         $obj = $this->obj;
@@ -39,6 +53,9 @@ class AbstractMenuItemTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($obj->hasChildren());
     }
 
+    /**
+     * @return void
+     */
     public function testNumChildren()
     {
         $obj = $this->obj;

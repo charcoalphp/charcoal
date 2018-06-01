@@ -21,7 +21,7 @@ trait DashboardTrait
      *
      * @var UiItemInterface[]
      */
-    private $widgets;
+    private $widgets = [];
 
     /**
      * Store a widget builder instance.

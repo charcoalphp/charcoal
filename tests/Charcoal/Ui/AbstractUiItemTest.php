@@ -2,20 +2,27 @@
 
 namespace Charcoal\Tests\Ui;
 
-use ReflectionClass;
+use ReflectionMethod;
 
 // From 'charcoal-ui'
 use Charcoal\Ui\AbstractUiItem;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class AbstractUiItemTest extends \PHPUnit_Framework_TestCase
+class AbstractUiItemTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Ui\ContainerIntegrationTrait;
 
+    /**
+     * @var AbstractUiItem
+     */
     public $obj;
 
+    /**
+     * @return void
+     */
     public function setUp()
     {
         $container = $this->getContainer();
@@ -24,18 +31,14 @@ class AbstractUiItemTest extends \PHPUnit_Framework_TestCase
             'container' => $container
         ]]);
 
-        $setAuthDependencies = self::getMethod($this->obj, 'setAuthDependencies');
-        $setAuthDependencies->invoke($this->obj, $container);
-    }
-
-    public static function getMethod($obj, $name)
-    {
-        $class = new ReflectionClass($obj);
-        $method = $class->getMethod($name);
+        $method = new ReflectionMethod($this->obj, 'setAuthDependencies');
         $method->setAccessible(true);
-        return $method;
+        $method->invoke($this->obj, $container);
     }
 
+    /**
+     * @return void
+     */
     public function testDefaults()
     {
         $this->assertTrue($this->obj->active());
@@ -49,7 +52,9 @@ class AbstractUiItemTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('', $this->obj->notes());
     }
 
-
+    /**
+     * @return void
+     */
     public function testSetType()
     {
         $ret = $this->obj->setType('foobar');
@@ -57,6 +62,9 @@ class AbstractUiItemTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foobar', $this->obj->type());
     }
 
+    /**
+     * @return void
+     */
     public function testSetAcive()
     {
         $ret = $this->obj->setActive(false);
@@ -64,6 +72,9 @@ class AbstractUiItemTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(false, $this->obj->active());
     }
 
+    /**
+     * @return void
+     */
     public function testSetPriority()
     {
         $ret = $this->obj->setPriority(42);
@@ -71,16 +82,22 @@ class AbstractUiItemTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(42, $this->obj->priority());
     }
 
+    /**
+     * @return void
+     */
     public function testSetTemplate()
     {
         $ret = $this->obj->setTemplate('foo/bar');
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('foo/bar', $this->obj->template());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $this->obj->setTemplate(false);
     }
 
+    /**
+     * @return void
+     */
     public function testNoTemplateReturnsType()
     {
         $ret = $this->obj->setType('foobar/baz');
@@ -88,6 +105,9 @@ class AbstractUiItemTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foobar/baz', $this->obj->template());
     }
 
+    /**
+     * @return void
+     */
     public function testSetTitle()
     {
         $ret = $this->obj->setTitle('Hello');
@@ -95,6 +115,9 @@ class AbstractUiItemTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Hello', (string)$this->obj->title());
     }
 
+    /**
+     * @return void
+     */
     public function testSetSubtitle()
     {
         $ret = $this->obj->setSubtitle('Hello');
@@ -102,6 +125,9 @@ class AbstractUiItemTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Hello', (string)$this->obj->subtitle());
     }
 
+    /**
+     * @return void
+     */
     public function testSetDescription()
     {
         $ret = $this->obj->setDescription('Hello');
@@ -109,6 +135,9 @@ class AbstractUiItemTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Hello', (string)$this->obj->description());
     }
 
+    /**
+     * @return void
+     */
     public function testSetNotes()
     {
         $ret = $this->obj->setNotes('Hello');
@@ -116,6 +145,9 @@ class AbstractUiItemTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Hello', (string)$this->obj->notes());
     }
 
+    /**
+     * @return void
+     */
     public function testShowTitle()
     {
         $this->assertFalse($this->obj->showTitle());
@@ -126,6 +158,9 @@ class AbstractUiItemTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->obj->showTitle());
     }
 
+    /**
+     * @return void
+     */
     public function testShowSubtitle()
     {
         $this->assertFalse($this->obj->showSubtitle());
@@ -136,6 +171,9 @@ class AbstractUiItemTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->obj->showSubtitle());
     }
 
+    /**
+     * @return void
+     */
     public function testShowDescription()
     {
         $this->assertFalse($this->obj->showDescription());
@@ -146,6 +184,9 @@ class AbstractUiItemTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->obj->showDescription());
     }
 
+    /**
+     * @return void
+     */
     public function testShowNotes()
     {
         $this->assertFalse($this->obj->showNotes());

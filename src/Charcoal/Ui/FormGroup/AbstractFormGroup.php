@@ -2,7 +2,7 @@
 
 namespace Charcoal\Ui\FormGroup;
 
-// Intra-module (`charcoal-ui`) dependencies
+// From 'charcoal-ui'
 use Charcoal\Ui\AbstractUiItem;
 use Charcoal\Ui\FormGroup\FormGroupInterface;
 use Charcoal\Ui\FormGroup\FormGroupTrait;

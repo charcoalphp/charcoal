@@ -2,7 +2,8 @@
 
 namespace Charcoal\Ui\Layout;
 
-use \Charcoal\Ui\Layout\LayoutBuilder;
+// From 'charcoal-ui'
+use Charcoal\Ui\Layout\LayoutBuilder;
 
 /**
  * Defines a layout-aware entity.

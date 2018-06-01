@@ -2,24 +2,26 @@
 
 namespace Charcoal\Tests\Ui\Form;
 
+// From 'charcoal-ui'
 use Charcoal\Ui\FormGroup\AbstractFormGroup;
 use Charcoal\Ui\ServiceProvider\FormServiceProvider;
 use Charcoal\Ui\ServiceProvider\LayoutServiceProvider;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class AbstractFormGroupTest extends \PHPUnit_Framework_TestCase
+class AbstractFormGroupTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Ui\ContainerIntegrationTrait;
 
     /**
-     * @var AbstractViewClass $obj
+     * @var AbstractViewClass
      */
     public $obj;
 
     /**
-     *
+     * @return void
      */
     public function setUp()
     {
@@ -42,6 +44,9 @@ class AbstractFormGroupTest extends \PHPUnit_Framework_TestCase
         ]]);
     }
 
+    /**
+     * @return void
+     */
     public function testSetInputCallback()
     {
         $obj = $this->obj;
@@ -52,6 +57,9 @@ class AbstractFormGroupTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
     }
 
+    /**
+     * @return void
+     */
     public function testSetInputs()
     {
         $obj = $this->obj;
@@ -61,6 +69,9 @@ class AbstractFormGroupTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
     }
 
+    /**
+     * @return void
+     */
     public function testSetPriority()
     {
         $this->assertEquals(0, $this->obj->priority());
@@ -71,10 +82,13 @@ class AbstractFormGroupTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(12, $this->obj->setPriority(12.34)->priority());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $this->obj->setPriority('foobar');
     }
 
+    /**
+     * @return void
+     */
     public function testSetL10nMode()
     {
         $ret = $this->obj->setL10nMode('loop');
@@ -82,6 +96,9 @@ class AbstractFormGroupTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('loop', $this->obj->l10nMode());
     }
 
+    /**
+     * @return void
+     */
     public function testHasInputs()
     {
         $obj = $this->obj;
@@ -94,6 +111,9 @@ class AbstractFormGroupTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($obj->hasInputs());
     }
 
+    /**
+     * @return void
+     */
     public function testNumInput()
     {
         $obj = $this->obj;

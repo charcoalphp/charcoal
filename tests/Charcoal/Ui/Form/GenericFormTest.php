@@ -2,21 +2,26 @@
 
 namespace Charcoal\Tests\Ui;
 
+// From 'charcoal-ui'
 use Charcoal\Ui\Form\GenericForm;
 use Charcoal\Ui\ServiceProvider\FormServiceProvider;
 use Charcoal\Ui\ServiceProvider\LayoutServiceProvider;
+use Charcoal\Tests\AbstractTestCase;
 
-class GenericFormTest extends \PHPUnit_Framework_TestCase
+/**
+ *
+ */
+class GenericFormTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Ui\ContainerIntegrationTrait;
 
     /**
-     * @var AbstractViewClass $obj
+     * @var AbstractViewClass
      */
     public $obj;
 
     /**
-     *
+     * @return void
      */
     public function setUp()
     {
@@ -33,6 +38,9 @@ class GenericFormTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testType()
     {
         $this->assertEquals('charcoal/ui/form/generic', $this->obj->type());

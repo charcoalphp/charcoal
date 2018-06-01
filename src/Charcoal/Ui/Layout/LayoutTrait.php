@@ -2,7 +2,7 @@
 
 namespace Charcoal\Ui\Layout;
 
-use \InvalidArgumentException;
+use InvalidArgumentException;
 
 /**
  * Provides an implementation of {@see \Charcoal\Ui\Layout\LayoutInterface}.

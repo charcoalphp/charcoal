@@ -2,12 +2,12 @@
 
 namespace Charcoal\Ui\Form;
 
-// Intra-module (`charcoal-ui`) dependencies
-use \Charcoal\Ui\AbstractUiItem;
-use \Charcoal\Ui\Form\FormInterface;
-use \Charcoal\Ui\Layout\LayoutAwareInterface;
-use \Charcoal\Ui\Layout\LayoutAwareTrait;
-use \Charcoal\Ui\UiItemInterface;
+// From 'charcoal-ui'
+use Charcoal\Ui\AbstractUiItem;
+use Charcoal\Ui\Form\FormInterface;
+use Charcoal\Ui\Layout\LayoutAwareInterface;
+use Charcoal\Ui\Layout\LayoutAwareTrait;
+use Charcoal\Ui\UiItemInterface;
 
 /**
  * A Basic Form

@@ -2,10 +2,11 @@
 
 namespace Charcoal\Ui\Menu;
 
-use \Pimple\Container;
+// From Pimple
+use Pimple\Container;
 
 // From 'charcoal-factory'
-use \Charcoal\Factory\FactoryInterface;
+use Charcoal\Factory\FactoryInterface;
 
 /**
  * Menu Builder

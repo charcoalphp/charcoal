@@ -3,36 +3,47 @@
 namespace Charcoal\Tests\Ui\ServiceProvider;
 
 // From PSR-3
-use \Psr\Log\NullLogger;
+use Psr\Log\NullLogger;
 
 // From Pimple
-use \Pimple\Container;
+use Pimple\Container;
 
 // From 'charcoal-ui'
-use \Charcoal\Ui\ServiceProvider\DashboardServiceProvider;
+use Charcoal\Ui\ServiceProvider\DashboardServiceProvider;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class DashboardServiceProviderTest extends \PHPUnit_Framework_TestCase
+class DashboardServiceProviderTest extends AbstractTestCase
 {
+    /**
+     * @var DashboardServiceProvider
+     */
     public $obj;
+
+    /**
+     * @var Container
+     */
     public $container;
 
+    /**
+     * @return void
+     */
     public function setUp()
     {
         $this->obj = new DashboardServiceProvider();
         $this->container = new Container();
 
-        $this->container['logger'] = function (Container $container) {
+        $this->container['logger'] = function () {
             return new NullLogger();
         };
 
         // Required depdendencies (stub)
-        $this->container['widget/builder'] = function (Container $container) {
+        $this->container['widget/builder'] = function () {
             return null;
         };
-        $this->container['layout/builder'] = function (Container $container) {
+        $this->container['layout/builder'] = function () {
             return null;
         };
     }
@@ -40,6 +51,8 @@ class DashboardServiceProviderTest extends \PHPUnit_Framework_TestCase
     /**
      * Asserts that the `register()` method
      * - Registers all services on the container
+     *
+     * @return void
      */
     public function testRegisterRegistersAllProviders()
     {
@@ -49,6 +62,9 @@ class DashboardServiceProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(isset($this->container['dashboard/builder']));
     }
 
+    /**
+     * @return void
+     */
     public function testDashboardFactory()
     {
         $this->container->register($this->obj);
@@ -56,6 +72,9 @@ class DashboardServiceProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Charcoal\Factory\GenericFactory', $factory);
     }
 
+    /**
+     * @return void
+     */
     public function testDashboardBuilder()
     {
         $this->container->register($this->obj);

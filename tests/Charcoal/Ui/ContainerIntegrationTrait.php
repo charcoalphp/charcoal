@@ -5,7 +5,7 @@ namespace Charcoal\Tests\Ui;
 // From Pimple
 use Pimple\Container;
 
-// From 'charcoal-core/tests'
+// From 'charcoal-ui'
 use Charcoal\Tests\Ui\ContainerProvider;
 
 /**

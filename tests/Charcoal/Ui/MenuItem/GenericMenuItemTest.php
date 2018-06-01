@@ -2,23 +2,25 @@
 
 namespace Charcoal\Tests\Ui;
 
+// From 'charcoal-ui'
 use Charcoal\Ui\MenuItem\GenericMenuItem;
 use Charcoal\Ui\ServiceProvider\MenuServiceProvider;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class GenericMenuItemTest extends \PHPUnit_Framework_TestCase
+class GenericMenuItemTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Ui\ContainerIntegrationTrait;
 
     /**
-     * @var GenericMenuItem $obj
+     * @var GenericMenuItem
      */
     public $obj;
 
     /**
-     *
+     * @return void
      */
     public function setUp()
     {
@@ -36,6 +38,9 @@ class GenericMenuItemTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testType()
     {
         $this->assertEquals('charcoal/ui/menu-item/generic', $this->obj->type());

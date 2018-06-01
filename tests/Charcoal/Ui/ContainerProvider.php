@@ -76,7 +76,7 @@ class ContainerProvider
      */
     public function registerSource(Container $container)
     {
-        $container['database'] = function (Container $container) {
+        $container['database'] = function () {
             $pdo = new PDO('sqlite::memory:');
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $pdo;
@@ -91,7 +91,7 @@ class ContainerProvider
      */
     public function registerLogger(Container $container)
     {
-        $container['logger'] = function (Container $container) {
+        $container['logger'] = function () {
             return new NullLogger();
         };
     }
@@ -104,8 +104,8 @@ class ContainerProvider
      */
     public function registerCache(Container $container)
     {
-        $container['cache'] = function ($container) {
-            return new Pool(new Ephemeral());
+        $container['cache'] = function () {
+            return new Pool();
         };
     }
 
@@ -117,7 +117,7 @@ class ContainerProvider
      */
     public function registerTranslator(Container $container)
     {
-        $container['locales/manager'] = function (Container $container) {
+        $container['locales/manager'] = function () {
             return new LocalesManager([
                 'locales' => [
                     'en' => [ 'locale' => 'en-US' ]
@@ -236,6 +236,12 @@ class ContainerProvider
         };
     }
 
+    /**
+     * Setup the authenticator service.
+     *
+     * @param  Container $container A DI container.
+     * @return void
+     */
     public function registerAuthenticator(Container $container)
     {
         $this->registerLogger($container);
@@ -252,6 +258,12 @@ class ContainerProvider
         };
     }
 
+    /**
+     * Setup the authorizer service.
+     *
+     * @param  Container $container A DI container.
+     * @return void
+     */
     public function registerAuthorizer(Container $container)
     {
         $this->registerLogger($container);

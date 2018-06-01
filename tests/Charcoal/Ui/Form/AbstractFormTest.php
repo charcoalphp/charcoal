@@ -2,24 +2,26 @@
 
 namespace Charcoal\Tests\Ui\Form;
 
+// From 'charcoal-ui'
 use Charcoal\Ui\Form\AbstractForm;
 use Charcoal\Ui\ServiceProvider\FormServiceProvider;
 use Charcoal\Ui\ServiceProvider\LayoutServiceProvider;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class AbstractFormTest extends \PHPUnit_Framework_TestCase
+class AbstractFormTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Ui\ContainerIntegrationTrait;
 
     /**
-     * @var AbstractViewClass $obj
+     * @var AbstractViewClass
      */
     public $obj;
 
     /**
-     *
+     * @return void
      */
     public function setUp()
     {
@@ -37,6 +39,9 @@ class AbstractFormTest extends \PHPUnit_Framework_TestCase
         ]]);
     }
 
+    /**
+     * @return void
+     */
     public function testSetGroupCallback()
     {
         $cb = function($o) {
@@ -46,6 +51,9 @@ class AbstractFormTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $this->obj);
     }
 
+    /**
+     * @return void
+     */
     public function testSetAction()
     {
         $this->assertEquals('', $this->obj->action());
@@ -53,10 +61,13 @@ class AbstractFormTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('foo/bar', $this->obj->action());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $this->obj->setAction(false);
     }
 
+    /**
+     * @return void
+     */
     public function testSetMethod()
     {
         //$this->assertEquals('post', $obj->method());
@@ -67,10 +78,13 @@ class AbstractFormTest extends \PHPUnit_Framework_TestCase
         $this->obj->setMethod('POST');
         //$this->assertEquals('post', $obj->method());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $this->obj->setMethod('foobar');
     }
 
+    /**
+     * @return void
+     */
     public function testSetL10nMode()
     {
         $ret = $this->obj->setL10nMode('loop');
@@ -78,6 +92,9 @@ class AbstractFormTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('loop', $this->obj->l10nMode());
     }
 
+    /**
+     * @return void
+     */
     public function testSetGroup()
     {
         $ret = $this->obj->setGroups([
@@ -85,15 +102,21 @@ class AbstractFormTest extends \PHPUnit_Framework_TestCase
         ]);
         $this->assertSame($ret, $this->obj);
 
-        $this->assertEquals(1, count($this->obj->groups()));
+        $this->assertEquals(1, $this->obj->numGroups());
     }
 
+    /**
+     * @return void
+     */
     public function testAddGroup()
     {
         $ret = $this->obj->addGroup('ident', []);
         $this->assertSame($ret, $this->obj);
     }
 
+    /**
+     * @return void
+     */
     public function testHasGroups()
     {
         $this->assertFalse($this->obj->hasGroups());
@@ -105,6 +128,9 @@ class AbstractFormTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->obj->hasGroups());
     }
 
+    /**
+     * @return void
+     */
     public function testNumGroups()
     {
         $this->assertEquals(0, $this->obj->numGroups());
@@ -117,6 +143,9 @@ class AbstractFormTest extends \PHPUnit_Framework_TestCase
          $this->assertEquals(2, $this->obj->numGroups());
     }
 
+    /**
+     * @return void
+     */
     public function testSetFormData()
     {
         $this->assertEquals([], $this->obj->formData());
@@ -128,6 +157,9 @@ class AbstractFormTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([ 'baz' => 42 ], $this->obj->formData());
     }
 
+    /**
+     * @return void
+     */
     public function testAddData()
     {
         $ret = $this->obj->addFormData('foo', 'bar');
@@ -136,7 +168,7 @@ class AbstractFormTest extends \PHPUnit_Framework_TestCase
         $this->obj->addFormData('baz', 42);
         $this->assertEquals([ 'foo' => 'bar', 'baz' => 42], $this->obj->formData());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $this->obj->addFormData(false, 'bar');
     }
 }

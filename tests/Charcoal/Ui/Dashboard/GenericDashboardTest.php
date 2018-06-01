@@ -2,21 +2,26 @@
 
 namespace Charcoal\Tests\Ui;
 
+// From 'charcoal-ui'
 use Charcoal\Ui\Dashboard\GenericDashboard;
 use Charcoal\Ui\ServiceProvider\FormServiceProvider;
 use Charcoal\Ui\ServiceProvider\LayoutServiceProvider;
+use Charcoal\Tests\AbstractTestCase;
 
-class GenericDashboardTest extends \PHPUnit_Framework_TestCase
+/**
+ *
+ */
+class GenericDashboardTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Ui\ContainerIntegrationTrait;
 
     /**
-     * @var GenericDashboard $obj
+     * @var GenericDashboard
      */
     public $obj;
 
     /**
-     *
+     * @return void
      */
     public function setUp()
     {
@@ -33,6 +38,9 @@ class GenericDashboardTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testType()
     {
         $this->assertEquals('charcoal/ui/dashboard/generic', $this->obj->type());

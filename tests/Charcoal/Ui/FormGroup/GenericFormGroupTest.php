@@ -2,12 +2,17 @@
 
 namespace Charcoal\Tests\Ui;
 
+// From 'charcoal-ui'
 use Charcoal\Ui\Form\GenericForm;
 use Charcoal\Ui\FormGroup\GenericFormGroup;
 use Charcoal\Ui\ServiceProvider\FormServiceProvider;
 use Charcoal\Ui\ServiceProvider\LayoutServiceProvider;
+use Charcoal\Tests\AbstractTestCase;
 
-class GenericFormGroupTest extends \PHPUnit_Framework_TestCase
+/**
+ *
+ */
+class GenericFormGroupTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Ui\ContainerIntegrationTrait;
 
@@ -17,7 +22,7 @@ class GenericFormGroupTest extends \PHPUnit_Framework_TestCase
     public $obj;
 
     /**
-     *
+     * @return void
      */
     public function setUp()
     {
@@ -41,6 +46,9 @@ class GenericFormGroupTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testConstructor()
     {
         $this->assertInstanceOf(GenericFormGroup::class, $this->obj);

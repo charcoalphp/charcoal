@@ -2,16 +2,27 @@
 
 namespace Charcoal\Tests\Ui\Layout;
 
+// From 'charcoal-ui'
 use Charcoal\Ui\Menu\AbstractMenu;
 use Charcoal\Ui\MenuItem\MenuItemInterface;
 use Charcoal\Ui\ServiceProvider\MenuServiceProvider;
+use Charcoal\Tests\AbstractTestCase;
 
-class AbstractMenuTest extends \PHPUnit_Framework_TestCase
+/**
+ *
+ */
+class AbstractMenuTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Ui\ContainerIntegrationTrait;
 
+    /**
+     * @var AbstractMenu
+     */
     public $obj;
 
+    /**
+     * @return void
+     */
     public function setUp()
     {
         $container = $this->getContainer();
@@ -25,6 +36,9 @@ class AbstractMenuTest extends \PHPUnit_Framework_TestCase
         ]]);
     }
 
+    /**
+     * @return void
+     */
     public function testHasItems()
     {
         $obj = $this->obj;
@@ -37,6 +51,9 @@ class AbstractMenuTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->obj->hasItems());
     }
 
+    /**
+     * @return void
+     */
     public function testNumItems()
     {
         $obj = $this->obj;
@@ -50,6 +67,9 @@ class AbstractMenuTest extends \PHPUnit_Framework_TestCase
          $this->assertEquals(2, $obj->numItems());
     }
 
+    /**
+     * @return void
+     */
     public function testItems()
     {
         $ret = iterator_to_array($this->obj->items());
@@ -70,6 +90,9 @@ class AbstractMenuTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(MenuItemInterface::class, $ret['foobar']);
     }
 
+    /**
+     * @return void
+     */
     public function testItemCallback()
     {
         $cb = function($item) {
@@ -88,6 +111,9 @@ class AbstractMenuTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('yes', $ret['foobar']['property_from_callback']);
     }
 
+    /**
+     * @return void
+     */
     public function testItemsPriority()
     {
         $ret = iterator_to_array($this->obj->items());

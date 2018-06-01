@@ -2,7 +2,7 @@
 
 namespace Charcoal\Ui\FormInput;
 
-// Intra-module (`charcoal-ui`) dependency
+// From 'charcoal-ui'
 use Charcoal\Ui\FormGroup\FormGroupInterface;
 
 /**

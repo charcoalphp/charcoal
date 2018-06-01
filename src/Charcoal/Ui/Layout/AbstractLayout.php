@@ -5,7 +5,7 @@ namespace Charcoal\Ui\Layout;
 // From 'charcoal-config'
 use Charcoal\Config\AbstractEntity;
 
-// Intra-module (`charcoal-ui`) dependencies
+// From 'charcoal-ui'
 use Charcoal\Ui\Layout\LayoutInterface;
 use Charcoal\Ui\Layout\LayoutTrait;
 

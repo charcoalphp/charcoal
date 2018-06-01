@@ -2,7 +2,8 @@
 
 namespace Charcoal\Ui\Menu;
 
-use \Charcoal\Ui\Menu\AbstractMenu;
+// From 'charcoal-ui'
+use Charcoal\Ui\Menu\AbstractMenu;
 
 /**
  * A Generic Menu

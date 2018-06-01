@@ -2,7 +2,8 @@
 
 namespace Charcoal\Ui\Form;
 
-use \Charcoal\Ui\Form\AbstractForm;
+// From 'charcoal-ui'
+use Charcoal\Ui\Form\AbstractForm;
 
 /**
  * A Generic Form

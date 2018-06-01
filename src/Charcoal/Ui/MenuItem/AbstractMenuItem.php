@@ -4,7 +4,7 @@ namespace Charcoal\Ui\MenuItem;
 
 use InvalidArgumentException;
 
-// Intra-module (`charcoal-ui`) dependencies
+// From 'charcoal-ui'
 use Charcoal\Ui\AbstractUiItem;
 use Charcoal\Ui\Menu\MenuInterface;
 use Charcoal\Ui\MenuItem\MenuItemInterface;
@@ -40,7 +40,7 @@ abstract class AbstractMenuItem extends AbstractUiItem implements MenuItemInterf
     /**
      * @var MenuItemInterface[] $children
      */
-    protected $children;
+    protected $children = [];
 
     /**
      * @var callable $childCallback

@@ -4,7 +4,7 @@ namespace Charcoal\Ui\FormGroup;
 
 use InvalidArgumentException;
 
-// Intra-module (`charcoal-ui`) dependencies
+// From 'charcoal-ui'
 use Charcoal\Ui\Form\FormInterface;
 use Charcoal\Ui\FormInput\FormInputBuilder;
 use Charcoal\Ui\FormInput\FormInputInterface;
@@ -27,7 +27,7 @@ trait FormGroupTrait
      *
      * @var FormInputInterface[]
      */
-    private $inputs;
+    private $inputs = [];
 
     /**
      * The input callback; called on every input.
@@ -67,9 +67,9 @@ trait FormGroupTrait
     private $requiredAclPermissions = [];
 
     /**
-     * Class or Classes for tab form group.
+     * One or many CSS classes for tab form group.
      *
-     * @var string|string[]
+     * @var string
      */
     private $tabCssClasses;
 
@@ -280,7 +280,7 @@ trait FormGroupTrait
     }
 
     /**
-     * @return string|\string[]
+     * @return string
      */
     public function tabCssClasses()
     {
@@ -296,7 +296,7 @@ trait FormGroupTrait
     }
 
     /**
-     * @param boolean $isHidden
+     * @param  boolean $isHidden Hidden (TRUE) or shown (FALSE).
      * @return self
      */
     public function setIsHidden($isHidden)

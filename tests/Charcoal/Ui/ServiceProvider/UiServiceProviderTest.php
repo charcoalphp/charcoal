@@ -3,19 +3,30 @@
 namespace Charcoal\Tests\Ui\ServiceProvider;
 
 // From Pimple
-use \Pimple\Container;
+use Pimple\Container;
 
 // From 'charcoal-ui'
-use \Charcoal\Ui\ServiceProvider\UiServiceProvider;
+use Charcoal\Ui\ServiceProvider\UiServiceProvider;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class UiServiceProviderTest extends \PHPUnit_Framework_TestCase
+class UiServiceProviderTest extends AbstractTestCase
 {
+    /**
+     * @var UiServiceProvider
+     */
     public $obj;
+
+    /**
+     * @var Container
+     */
     public $container;
 
+    /**
+     * @return void
+     */
     public function setUp()
     {
         $this->obj = new UiServiceProvider();
@@ -25,6 +36,8 @@ class UiServiceProviderTest extends \PHPUnit_Framework_TestCase
     /**
      * Asserts that the `register()` method
      * - Registers all services on the container
+     *
+     * @return void
      */
     public function testRegisterRegistersAllProviders()
     {

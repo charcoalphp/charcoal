@@ -2,7 +2,7 @@
 
 namespace Charcoal\Ui\Dashboard;
 
-// Intra-module (`charcoal-ui`) dependency
+// From 'charcoal-ui'
 use Charcoal\Ui\UiItemConfig;
 
 /**

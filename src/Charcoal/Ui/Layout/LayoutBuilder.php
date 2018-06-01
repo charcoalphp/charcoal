@@ -2,9 +2,11 @@
 
 namespace Charcoal\Ui\Layout;
 
-use \Pimple\Container;
+// From Pimple
+use Pimple\Container;
 
-use \Charcoal\Factory\FactoryInterface;
+// From 'charcoal-factory'
+use Charcoal\Factory\FactoryInterface;
 
 /**
  * Layout Builder

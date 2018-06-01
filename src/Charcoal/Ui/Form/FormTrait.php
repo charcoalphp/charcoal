@@ -401,7 +401,7 @@ trait FormTrait
      */
     public function hasGroups()
     {
-        return (count($this->groups) > 0);
+        return ($this->numGroups() > 0);
     }
 
     /**

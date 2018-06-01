@@ -2,8 +2,8 @@
 
 namespace Charcoal\Ui\Layout;
 
-// Intra-module (`charcoal-ui`) dependencies
-use \Charcoal\Ui\UiItemConfig;
+// From 'charcoal-ui'
+use Charcoal\Ui\UiItemConfig;
 
 /**
  * A layout configuration set.

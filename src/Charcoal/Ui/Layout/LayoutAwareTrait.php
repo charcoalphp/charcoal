@@ -2,10 +2,11 @@
 
 namespace Charcoal\Ui\Layout;
 
-use \InvalidArgumentException;
+use InvalidArgumentException;
 
-use \Charcoal\Ui\Layout\LayoutBuilder;
-use \Charcoal\Ui\Layout\LayoutInterface;
+// From 'charcoal-ui'
+use Charcoal\Ui\Layout\LayoutBuilder;
+use Charcoal\Ui\Layout\LayoutInterface;
 
 /**
  * Provides an implementation of {@see \Charcoal\Ui\Layout\LayoutAwareInterface}.

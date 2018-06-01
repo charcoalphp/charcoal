@@ -520,7 +520,7 @@ trait UiItemTrait
     }
 
     /**
-     * @param boolean $showTabTitle
+     * @param  boolean $showTabTitle Show (TRUE) or hide (FALSE) the tab title.
      * @return self
      */
     public function setShowTabTitle($showTabTitle)

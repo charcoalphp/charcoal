@@ -2,14 +2,14 @@
 
 namespace Charcoal\Ui\Menu;
 
-use \InvalidArgumentException;
+use InvalidArgumentException;
 
-// Intra-module (`charcoal-ui`) dependencies
-use \Charcoal\Ui\AbstractUiItem;
-use \Charcoal\Ui\Menu\MenuInterface;
-use \Charcoal\Ui\MenuItem\MenuItemInterface;
-use \Charcoal\Ui\MenuItem\MenuItemBuilder;
-use \Charcoal\Ui\UiItemInterface;
+// From 'charcoal-ui'
+use Charcoal\Ui\AbstractUiItem;
+use Charcoal\Ui\Menu\MenuInterface;
+use Charcoal\Ui\MenuItem\MenuItemInterface;
+use Charcoal\Ui\MenuItem\MenuItemBuilder;
+use Charcoal\Ui\UiItemInterface;
 
 /**
  * A Basic Menu
