@@ -11,6 +11,7 @@ use Charcoal\Source\FilterInterface;
 use Charcoal\Source\FilterCollectionTrait;
 use Charcoal\Source\FilterCollectionInterface;
 
+use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\AssertionsTrait;
 use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Mock\FilterCollectionClass;
@@ -19,7 +20,7 @@ use Charcoal\Tests\Source\ExpressionCollectionTestTrait;
 /**
  * Test {@see FilterCollectionTrait} and {@see FilterCollectionInterface}.
  */
-class FilterCollectionTraitTest extends \PHPUnit_Framework_TestCase
+class FilterCollectionTraitTest extends AbstractTestCase
 {
     use AssertionsTrait;
     use ExpressionCollectionTestTrait;
@@ -58,6 +59,8 @@ class FilterCollectionTraitTest extends \PHPUnit_Framework_TestCase
      * 2. Instance of {@see FilterInterface}
      *
      * @covers \Charcoal\Source\FilterCollectionTrait::createFilter
+     *
+     * @return void
      */
     public function testCreateExpression()
     {
@@ -76,6 +79,8 @@ class FilterCollectionTraitTest extends \PHPUnit_Framework_TestCase
      * 2. Populated; Mutated state
      *
      * @covers \Charcoal\Source\FilterCollectionTrait::filters
+     *
+     * @return void
      */
     public function testGetExpressions()
     {
@@ -99,6 +104,8 @@ class FilterCollectionTraitTest extends \PHPUnit_Framework_TestCase
      * 2. Populated; Mutated state
      *
      * @covers \Charcoal\Source\FilterCollectionTrait::hasFilters
+     *
+     * @return void
      */
     public function testHasExpressions()
     {
@@ -120,6 +127,8 @@ class FilterCollectionTraitTest extends \PHPUnit_Framework_TestCase
      * 2. Chainable method
      *
      * @covers \Charcoal\Source\FilterCollectionTrait::setFilters
+     *
+     * @return void
      */
     public function testSetExpressions()
     {
@@ -149,6 +158,8 @@ class FilterCollectionTraitTest extends \PHPUnit_Framework_TestCase
      * 2. Chainable method
      *
      * @covers \Charcoal\Source\FilterCollectionTrait::addFilters
+     *
+     * @return void
      */
     public function testAddExpressions()
     {
@@ -174,6 +185,8 @@ class FilterCollectionTraitTest extends \PHPUnit_Framework_TestCase
      * Test the mass addition of expressions with names.
      *
      * @covers \Charcoal\Source\FilterCollectionTrait::addFilters
+     *
+     * @return void
      */
     public function testAddExpressionsMap()
     {
@@ -204,6 +217,8 @@ class FilterCollectionTraitTest extends \PHPUnit_Framework_TestCase
      * 2. Chainable method
      *
      * @covers \Charcoal\Source\FilterCollectionTrait::addFilter
+     *
+     * @return void
      */
     public function testAddExpression()
     {
@@ -237,6 +252,8 @@ class FilterCollectionTraitTest extends \PHPUnit_Framework_TestCase
      *    the Expression object is used as is.
      *
      * @covers \Charcoal\Source\FilterCollectionTrait::processFilter
+     *
+     * @return void
      */
     public function testProcessExpression()
     {
@@ -275,12 +292,14 @@ class FilterCollectionTraitTest extends \PHPUnit_Framework_TestCase
      * Test the failure when parsing an invalid expression.
      *
      * @covers \Charcoal\Source\FilterCollectionTrait::processFilter
+     *
+     * @return void
      */
     public function testProcessExpressionWithInvalidValue()
     {
         $obj = $this->createCollector();
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->callMethodWith($obj, 'processFilter', null);
     }
 
@@ -292,6 +311,8 @@ class FilterCollectionTraitTest extends \PHPUnit_Framework_TestCase
      * 2. Chainable method
      *
      * @covers \Charcoal\Source\FilterCollectionTrait::traverseFilters
+     *
+     * @return void
      */
     public function testTraverseExpressions()
     {

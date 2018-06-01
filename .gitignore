@@ -7,23 +7,19 @@ config/config.*.json
 
 composer.phar
 composer.lock
-vendor/
-node_modules/
-
-# Documentation
-
-documentation/
-phpdoc/
-docs/
+/vendor/
 
 # Logging
 
 *.log
-logs/
+/logs/
 
-# Caches
+# Caching
 
-build/docs/
-build/logs/
-mustache_cache/
-tmp/
+/cache/
+
+# Codebase
+
+/build/docs/
+/build/logs/
+/build/report/

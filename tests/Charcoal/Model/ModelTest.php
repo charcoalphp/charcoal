@@ -6,11 +6,12 @@ namespace Charcoal\Tests\Model;
 use Charcoal\Model\AbstractModel;
 use Charcoal\Model\ModelInterface;
 use Charcoal\Model\Model;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class ModelTest extends \PHPUnit_Framework_TestCase
+class ModelTest extends AbstractTestCase
 {
     use \Charcoal\Tests\ContainerIntegrationTrait;
 
@@ -115,6 +116,8 @@ class ModelTest extends \PHPUnit_Framework_TestCase
      * Set up the test.
      *
      * Create the SQL table for the test, dropping any existing table.
+     *
+     * @return void
      */
     public function setUp()
     {
@@ -127,12 +130,17 @@ class ModelTest extends \PHPUnit_Framework_TestCase
      * Tear down the test.
      *
      * Drop any existing SQL table.
+     *
+     * @return void
      */
     public function tearDown()
     {
         $this->dropTable();
     }
 
+    /**
+     * @return void
+     */
     public function testConstructor()
     {
         $obj = $this->obj;
@@ -141,6 +149,9 @@ class ModelTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(ModelInterface::class, $obj);
     }
 
+    /**
+     * @return void
+     */
     public function testSetData()
     {
         $obj = $this->obj;
@@ -150,6 +161,9 @@ class ModelTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Orwell', $obj->name);
     }
 
+    /**
+     * @return void
+     */
     public function testSetFlatData()
     {
         $obj = $this->obj;
@@ -159,6 +173,9 @@ class ModelTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Clarke', $obj->name);
     }
 
+    /**
+     * @return void
+     */
     public function testSave()
     {
         $ret = $this->saveHuxley();
@@ -166,6 +183,9 @@ class ModelTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $ret);
     }
 
+    /**
+     * @return void
+     */
     public function testLoad()
     {
         $ret = $this->saveHuxley();
@@ -176,6 +196,9 @@ class ModelTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->getHuxleyData(), $obj1->data());
     }
 
+    /**
+     * @return void
+     */
     public function testUpdate()
     {
         $ret = $this->saveHuxley();
@@ -204,6 +227,9 @@ class ModelTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Screenwriter', $obj2['role']);
     }
 
+    /**
+     * @return void
+     */
     public function testDelete()
     {
         $ret = $this->saveHuxley();
@@ -217,6 +243,9 @@ class ModelTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(null, $obj1['id']);
     }
 
+    /**
+     * @return void
+     */
     public function testSerializeUnserialize()
     {
         $obj  = $this->obj;
@@ -237,6 +266,9 @@ class ModelTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Huxley', $obj2['name']);
     }
 
+    /**
+     * @return void
+     */
     public function testJsonSerialize()
     {
         $obj  = $this->obj;

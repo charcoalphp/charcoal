@@ -6,12 +6,16 @@ use InvalidArgumentException;
 
 // From 'charcoal-core'
 use Charcoal\Source\SourceConfig;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class SourceConfigTest extends \PHPUnit_Framework_TestCase
+class SourceConfigTest extends AbstractTestCase
 {
+    /**
+     * @return void
+     */
     public function testDefaultData()
     {
         $obj = new SourceConfig();
@@ -20,6 +24,9 @@ class SourceConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($obj->type(), $defaults['type']);
     }
 
+    /**
+     * @return void
+     */
     public function testSetType()
     {
         $obj = new SourceConfig();
@@ -28,7 +35,7 @@ class SourceConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($obj, $ret);
         $this->assertEquals('foo', $obj->type());
 
-        $this->setExpectedException(InvalidArgumentException::class);
-        $obj->setType([1,2,3]);
+        $this->expectException(InvalidArgumentException::class);
+        $obj->setType([ 1, 2, 3 ]);
     }
 }

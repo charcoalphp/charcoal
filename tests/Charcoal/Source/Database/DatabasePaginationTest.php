@@ -7,13 +7,14 @@ use UnexpectedValueException;
 // From 'charcoal-core'
 use Charcoal\Source\Database\DatabasePagination;
 
+use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Source\DatabaseExpressionTestTrait;
 
 /**
  * Test {@see DatabasePagination}.
  */
-class DatabasePaginationTest extends \PHPUnit_Framework_TestCase
+class DatabasePaginationTest extends AbstractTestCase
 {
     use DatabaseExpressionTestTrait;
     use ReflectionsTrait;
@@ -30,6 +31,8 @@ class DatabasePaginationTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test influence of "active" property on SQL compilation.
+     *
+     * @return void
      */
     public function testInactiveExpression()
     {
@@ -45,6 +48,8 @@ class DatabasePaginationTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test "page" property without "num_per_page".
+     *
+     * @return void
      */
     public function testSqlOffsetWithoutLimit()
     {
@@ -59,6 +64,8 @@ class DatabasePaginationTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test "page" property with "num_per_page".
+     *
+     * @return void
      */
     public function testSqlOffsetWithLimit()
     {
@@ -76,6 +83,8 @@ class DatabasePaginationTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test "num_per_page" property without "page".
+     *
+     * @return void
      */
     public function testSqlLimitWithoutOffset()
     {
@@ -90,6 +99,8 @@ class DatabasePaginationTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test helper methods.
+     *
+     * @return void
      */
     public function testUtilities()
     {

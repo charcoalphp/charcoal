@@ -11,27 +11,70 @@ use Charcoal\Factory\GenericFactory as Factory;
 
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
+use Charcoal\Model\Model;
 use Charcoal\Model\Collection;
 use Charcoal\Model\Service\MetadataLoader;
 use Charcoal\Source\DatabaseSource;
 
+use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\ContainerIntegrationTrait;
 use Charcoal\Tests\ReflectionsTrait;
 
 /**
  *
  */
-class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
+class CollectionLoaderTest extends AbstractTestCase
 {
     use ContainerIntegrationTrait;
     use ReflectionsTrait;
 
-    private $obj;
+    /**
+     * @var CollectionLoader
+     */
+    private $loader;
 
+    /**
+     * @var Model
+     */
     private $model;
-    private $source;
 
+    /**
+     * @return void
+     */
     public function setUp()
+    {
+        $this->model = $this->createModel();
+        $this->model->source()->createTable();
+
+        $this->loader = $this->createCollectionLoader();
+    }
+
+    /**
+     * @return CollectionLoader
+     */
+    public function createCollectionLoader()
+    {
+        $container = $this->getContainer();
+
+        $factory = new Factory([
+            'arguments' => [[
+                'logger'          => $container['logger'],
+                'metadata_loader' => $container['metadata/loader']
+            ]]
+        ]);
+
+        $loader = new CollectionLoader([
+            'logger'  => $container['logger'],
+            'factory' => $factory,
+        ]);
+
+        return $loader;
+    }
+
+    /**
+     * @return Model
+     */
+    public function createModel()
     {
         $container = $this->getContainer();
 
@@ -41,89 +84,88 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
         ]);
         $source->setTable('tests');
 
-        $factory = new Factory([
-            'arguments' => [[
-                'logger'          => $container['logger'],
-                'metadata_loader' => $container['metadata/loader']
-            ]]
-        ]);
-
-        $this->model = new \Charcoal\Model\Model([
+        $model = new Model([
             'container'        => $container,
             'logger'           => $container['logger'],
             'property_factory' => $container['property/factory'],
             'metadata_loader'  => $container['metadata/loader']
         ]);
 
-        $this->obj = new CollectionLoader([
-            'logger'  => $container['logger'],
-            'factory' => $factory,
+        $source->setModel($model);
+        $model->setSource($source);
+
+        $model->setMetadata([
+            'properties' => [
+                'id' => [
+                    'type' => 'id'
+                ],
+                'test' => [
+                    'type' => 'number'
+                ],
+                'allo' => [
+                    'type' => 'number'
+                ],
+            ],
+            'sources' => [
+                'default' => [
+                    'table' => 'tests'
+                ]
+            ],
+            'default_source' => 'default',
         ]);
 
-        $source->setModel($this->model);
-
-        $this->model->setSource($source);
-        $this->model->setMetadata(json_decode('
-        {
-            "properties": {
-                "id": {
-                    "type": "id"
-                },
-                "test": {
-                    "type": "number"
-                },
-                "allo": {
-                    "type": "number"
-                }
-            },
-            "sources": {
-                "default": {
-                    "table": "tests"
-                }
-            },
-            "default_source": "default"
-        }', true));
-
-        $this->model->source()->createTable();
+        return $model;
     }
 
-    public function setData()
+    /**
+     * @return void
+     */
+    public function testSetData()
     {
-        $obj = $this->obj;
-        $obj->setData(
-            [
-                'properties' => [
-                    'id',
-                    'test'
-                ]
+        $loader = $this->loader;
+        $loader->setModel($this->model);
+
+        $loader->setData([
+            'properties' => [
+                'id',
+                'test'
             ]
-        );
-        $this->assertEquals([ 'id', 'test' ], $obj->properties());
+        ]);
+        $this->assertEquals([ 'id', 'test' ], $loader->properties());
     }
 
-    public function setDataIsChainable()
+    /**
+     * @return void
+     */
+    public function testSetDataIsChainable()
     {
-        $obj = $this->obj;
-        $ret = $obj->setData([]);
-        $this->assertSame($ret, $obj);
+        $loader = $this->loader;
+        $ret = $loader->setData([]);
+        $this->assertSame($ret, $loader);
     }
 
+    /**
+     * @return void
+     */
     public function testDefaultCollection()
     {
-        $loader = $this->obj;
+        $loader = $this->loader;
         $collection = $loader->createCollection();
         $this->assertInstanceOf(Collection::class, $collection);
     }
 
+    /**
+     * @return void
+     */
     public function testCustomCollectionClass()
     {
-        $loader = $this->obj;
+        $loader = $this->loader;
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $loader->setCollectionClass(false);
 
         $loader->setCollectionClass(\IteratorIterator::class);
-        $this->setExpectedException(RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $loader->createCollection();
 
         $loader->setCollectionClass(ArrayIterator::class);
@@ -135,9 +177,12 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertInternalType('array', $collection);
     }
 
+    /**
+     * @return void
+     */
     public function testAll()
     {
-        $loader = $this->obj;
+        $loader = $this->loader;
         $loader->setModel($this->model)
                ->setCollectionClass(ArrayIterator::class)
                ->setProperties([ 'id', 'test' ])
@@ -162,15 +207,17 @@ class CollectionLoaderTest extends \PHPUnit_Framework_TestCase
      * @covers \Charcoal\Loader\CollectionLoader::camelize
      * @covers \Charcoal\Loader\CollectionLoader::getter
      * @covers \Charcoal\Loader\CollectionLoader::setter
+     *
+     * @return void
      */
     public function testCamelize()
     {
-        $obj = $this->obj;
+        $loader = $this->loader;
 
-        $getter = $this->getMethod($obj, 'getter');
-        $setter = $this->getMethod($obj, 'setter');
+        $getter = $this->getMethod($loader, 'getter');
+        $setter = $this->getMethod($loader, 'setter');
 
-        $this->assertEquals('charcoalPhp', $getter->invoke($obj, 'charcoal_php'));
-        $this->assertEquals('setCharcoalPhp', $setter->invoke($obj, 'charcoal_php'));
+        $this->assertEquals('charcoalPhp', $getter->invoke($loader, 'charcoal_php'));
+        $this->assertEquals('setCharcoalPhp', $setter->invoke($loader, 'charcoal_php'));
     }
 }

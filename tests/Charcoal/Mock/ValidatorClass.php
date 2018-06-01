@@ -10,6 +10,9 @@ use Charcoal\Validator\AbstractValidator;
  */
 class ValidatorClass extends AbstractValidator
 {
+    /**
+     * @return boolean
+     */
     public function validate()
     {
         return true;

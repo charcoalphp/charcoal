@@ -4,12 +4,10 @@ namespace Charcoal\Tests\Source;
 
 use InvalidArgumentException;
 
-// From PHPUnit
-use PHPUnit_Framework_Error;
-
 // From 'charcoal-core'
 use Charcoal\Source\Order;
 use Charcoal\Source\OrderInterface;
+use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\ContainerIntegrationTrait;
 use Charcoal\Tests\Source\ExpressionTestFieldTrait;
 use Charcoal\Tests\Source\ExpressionTestTrait;
@@ -17,7 +15,7 @@ use Charcoal\Tests\Source\ExpressionTestTrait;
 /**
  * Test {@see Order} and {@see OrderInterface}.
  */
-class OrderTest extends \PHPUnit_Framework_TestCase
+class OrderTest extends AbstractTestCase
 {
     use ContainerIntegrationTrait;
     use ExpressionTestFieldTrait;
@@ -38,6 +36,8 @@ class OrderTest extends \PHPUnit_Framework_TestCase
      *
      * Assertions:
      * 1. Implements {@see OrderInterface}
+     *
+     * @return void
      */
     public function testOrderConstruct()
     {
@@ -76,6 +76,8 @@ class OrderTest extends \PHPUnit_Framework_TestCase
      * 3. Chainable method
      * 4. Accepts NULL
      * 5. Unsupported direction sets DESC
+     *
+     * @return void
      */
     public function testDirection()
     {
@@ -102,10 +104,12 @@ class OrderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test "direction" property with invalid value.
+     *
+     * @return void
      */
     public function testDirectionWithInvalidValue()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->createExpression()->setDirection(0);
     }
 
@@ -118,6 +122,8 @@ class OrderTest extends \PHPUnit_Framework_TestCase
      * 3. Chainable method
      * 4. Accepts mixed case
      * 5. Accepts NULL
+     *
+     * @return void
      */
     public function testMode()
     {
@@ -145,6 +151,8 @@ class OrderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test "direction" property when selecting a direction "mode".
+     *
+     * @return void
      */
     public function testDirectionMode()
     {
@@ -164,19 +172,23 @@ class OrderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test "mode" property with unsupported mode.
+     *
+     * @return void
      */
     public function testModeWithUnsupportedMode()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->createExpression()->setMode('foobar');
     }
 
     /**
      * Test "mode" property with invalid value.
+     *
+     * @return void
      */
     public function testModeWithInvalidValue()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->createExpression()->setMode([]);
     }
 
@@ -188,6 +200,8 @@ class OrderTest extends \PHPUnit_Framework_TestCase
      * 2. Mutated state
      * 3. Chainable method
      * 4. Accepts NULL
+     *
+     * @return void
      */
     public function testValues()
     {
@@ -219,28 +233,34 @@ class OrderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test "mode" property with blank string.
+     *
+     * @return void
      */
     public function testValuesWithBlankValue()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->createExpression()->setValues('');
     }
 
     /**
      * Test "mode" property with blank string.
+     *
+     * @return void
      */
     public function testValuesWithEmptyArray()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->createExpression()->setValues([]);
     }
 
     /**
      * Test "mode" property with invalid value.
+     *
+     * @return void
      */
     public function testValuesWithInvalidValue()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->createExpression()->setValues(42);
     }
 
@@ -251,6 +271,8 @@ class OrderTest extends \PHPUnit_Framework_TestCase
      * 1. Mutate all options
      * 2. Partially mutated state
      * 3. Auto-set mode from "condition"
+     *
+     * @return void
      */
     public function testData()
     {
@@ -320,6 +342,8 @@ class OrderTest extends \PHPUnit_Framework_TestCase
      * Test deprecated "string" property.
      *
      * @see FilterTest::testDeprecatedStringExpression()
+     *
+     * @return void
      */
     public function testDeprecatedStringExpression()
     {
@@ -333,10 +357,36 @@ class OrderTest extends \PHPUnit_Framework_TestCase
      * Test "string" property deprecation notice.
      *
      * @see FilterTest::testDeprecatedStringError()
+     *
+     * @used-by self::testDeprecatedStringErrorInPhp7()
+     * @used-by self::testDeprecatedStringErrorInPhp5()
+     *
+     * @return void
      */
-    public function testDeprecatedStringError()
+    public function delegatedTestDeprecatedStringError()
     {
-        $this->setExpectedException(PHPUnit_Framework_Error::class);
         $this->createExpression()->setData([ 'string' => '1 = 1' ]);
+    }
+
+    /**
+     * @expectedException PHPUnit\Framework\Error\Error
+     *
+     * @requires PHP >= 7.0
+     * @return   void
+     */
+    public function testDeprecatedStringErrorInPhp7()
+    {
+        $this->delegatedTestDeprecatedStringError();
+    }
+
+    /**
+     * @expectedException PHPUnit_Framework_Error
+     *
+     * @requires PHP < 7.0
+     * @return   void
+     */
+    public function testDeprecatedStringErrorInPhp5()
+    {
+        $this->delegatedTestDeprecatedStringError();
     }
 }

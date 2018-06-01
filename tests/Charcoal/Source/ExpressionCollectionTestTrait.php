@@ -42,6 +42,8 @@ trait ExpressionCollectionTestTrait
      * Assertions:
      * 1. Instance of {@see ExpressionInterface}
      * 2. Instance of relevant collection
+     *
+     * @return void
      */
     abstract public function testCreateExpression();
 
@@ -51,6 +53,8 @@ trait ExpressionCollectionTestTrait
      * Assertions:
      * 1. Empty; Default state
      * 2. Populated; Mutated state
+     *
+     * @return void
      */
     abstract public function testGetExpressions();
 
@@ -60,6 +64,8 @@ trait ExpressionCollectionTestTrait
      * Assertions:
      * 1. Empty; Default state
      * 2. Populated; Mutated state
+     *
+     * @return void
      */
     abstract public function testHasExpressions();
 
@@ -69,6 +75,8 @@ trait ExpressionCollectionTestTrait
      * Assertions:
      * 1. Replaces expressions with a new collection
      * 2. Chainable method
+     *
+     * @return void
      */
     abstract public function testSetExpressions();
 
@@ -78,6 +86,8 @@ trait ExpressionCollectionTestTrait
      * Assertions:
      * 1. Appends an array of items to the internal collection
      * 2. Chainable method
+     *
+     * @return void
      */
     abstract public function testAddExpressions();
 
@@ -87,11 +97,15 @@ trait ExpressionCollectionTestTrait
      * Assertions:
      * 1. Appends one item to the internal collection
      * 2. Chainable method
+     *
+     * @return void
      */
     abstract public function testAddExpression();
 
     /**
      * Test traversal of internal collection.
+     *
+     * @return void
      */
     abstract public function testTraverseExpressions();
 }

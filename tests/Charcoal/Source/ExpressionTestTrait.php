@@ -40,6 +40,8 @@ trait ExpressionTestTrait
      *
      * Assertions:
      * 1. Implements {@see ExpressionInterface}
+     *
+     * @return void
      */
     final public function testConstruct()
     {
@@ -54,6 +56,8 @@ trait ExpressionTestTrait
      *
      * Assertions:
      * 1. Getter returns an array
+     *
+     * @return void
      */
     final public function testDefaultValuesMethod()
     {
@@ -70,6 +74,7 @@ trait ExpressionTestTrait
      *
      * @param mixed $key      The data key test.
      * @param mixed $expected The expected data value.
+     * @return void
      */
     final public function testDefaultValues($key, $expected)
     {
@@ -86,6 +91,8 @@ trait ExpressionTestTrait
      * Assertions:
      * 1. Getter returns an array
      * 2. Setter is chainable
+     *
+     * @return void
      */
     final public function testDataMethod()
     {
@@ -101,6 +108,8 @@ trait ExpressionTestTrait
 
     /**
      * Test data structure with default state.
+     *
+     * @return void
      */
     final public function testDefaultData()
     {
@@ -113,6 +122,7 @@ trait ExpressionTestTrait
      *
      * @param ExpressionInterface $obj      The expression to test.
      * @param array|null          $expected The expected data subset.
+     * @return void
      */
     final public function assertStructHasBasicData(ExpressionInterface $obj, array $expected = null)
     {
@@ -141,6 +151,8 @@ trait ExpressionTestTrait
      * Assertions:
      * 1. Serialization from default state
      * 2. Serialization from mutated state
+     *
+     * @return void
      */
     public function testJsonSerializable()
     {
@@ -169,6 +181,8 @@ trait ExpressionTestTrait
      * Assertions:
      * 1. Serialization from default state
      * 2. Serialization from mutated state
+     *
+     * @return void
      */
     public function testSerializable()
     {

@@ -9,13 +9,14 @@ use UnexpectedValueException;
 use Charcoal\Source\DatabaseSource;
 use Charcoal\Source\Database\DatabaseOrder;
 
+use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Source\DatabaseExpressionTestTrait;
 
 /**
  * Test {@see DatabaseOrder}.
  */
-class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
+class DatabaseOrderTest extends AbstractTestCase
 {
     use DatabaseExpressionTestTrait;
     use ReflectionsTrait;
@@ -34,6 +35,8 @@ class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
      * Test default table name for default data values.
      *
      * @see \Charcoal\Tests\Source\Database\DatabaseFilterTest::testDefaultValues()
+     *
+     * @return void
      */
     public function testDefaultValues()
     {
@@ -47,6 +50,8 @@ class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test influence of "active" property on SQL compilation.
+     *
+     * @return void
      */
     public function testInactiveExpression()
     {
@@ -62,6 +67,8 @@ class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test SQL without a mode.
+     *
+     * @return void
      */
     public function testBlankSql()
     {
@@ -73,6 +80,8 @@ class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test SQL with custom mode and placeholders.
+     *
+     * @return void
      */
     public function testSqlCustomMode()
     {
@@ -85,6 +94,8 @@ class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
     /**
      * Test that "custom" and "values" mode have precedence over other features
      * when the mode is undefined.
+     *
+     * @return void
      */
     public function testSqlModeResolutionAndPrecedence()
     {
@@ -103,6 +114,8 @@ class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test SQL with random mode.
+     *
+     * @return void
      */
     public function testSqlRandomMode()
     {
@@ -117,8 +130,9 @@ class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider provideSqlDirectionMode
      *
-     * @param mixed $mode     The directional mode to set.
-     * @param mixed $expected The expected SQL direction.
+     * @param  mixed $mode     The directional mode to set.
+     * @param  mixed $expected The expected SQL direction.
+     * @return void
      */
     public function testSqlDirectionMode($mode, $expected)
     {
@@ -147,6 +161,8 @@ class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test direction mode without property.
+     *
+     * @return void
      */
     public function testSqlDirectionModeWithoutProperty()
     {
@@ -158,6 +174,8 @@ class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test SQL with values mode.
+     *
+     * @return void
      */
     public function testSqlValuesMode()
     {
@@ -171,12 +189,14 @@ class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test values mode without property.
+     *
+     * @return void
      */
     public function testSqlValuesModeWithoutProperty()
     {
         $obj = $this->createExpression();
 
-        $this->setExpectedException(UnexpectedValueException::class);
+        $this->expectException(UnexpectedValueException::class);
 
         $obj->setMode('values')->setValues('1,2,3');
         $obj->sql();
@@ -184,12 +204,14 @@ class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test values mode without values.
+     *
+     * @return void
      */
     public function testSqlValuesModeWithoutValues()
     {
         $obj = $this->createExpression();
 
-        $this->setExpectedException(UnexpectedValueException::class);
+        $this->expectException(UnexpectedValueException::class);
 
         $obj->setMode('values')->setProperty('test');
         $obj->sql();
@@ -197,12 +219,14 @@ class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test invalid custom SQL.
+     *
+     * @return void
      */
     public function testSqlCustomModeWithoutQuery()
     {
         $obj = $this->createExpression();
 
-        $this->setExpectedException(UnexpectedValueException::class);
+        $this->expectException(UnexpectedValueException::class);
 
         $method = $this->getMethod($obj, 'byCondition');
         $method->invoke($obj);
@@ -210,12 +234,14 @@ class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test invalid property SQL.
+     *
+     * @return void
      */
     public function testSqlWithoutModeWithoutProperty()
     {
         $obj = $this->createExpression();
 
-        $this->setExpectedException(UnexpectedValueException::class);
+        $this->expectException(UnexpectedValueException::class);
 
         $method = $this->getMethod($obj, 'byProperty');
         $method->invoke($obj);
@@ -223,6 +249,8 @@ class DatabaseOrderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test helper methods.
+     *
+     * @return void
      */
     public function testPrepareValues()
     {

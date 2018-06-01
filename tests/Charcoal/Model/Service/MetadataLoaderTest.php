@@ -4,16 +4,23 @@ namespace Charcoal\Tests\Service;
 
 // From 'charcoal-core'
 use Charcoal\Model\Service\MetadataLoader;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class MetadataLoaderTest extends \PHPUnit_Framework_TestCase
+class MetadataLoaderTest extends AbstractTestCase
 {
     use \Charcoal\Tests\ContainerIntegrationTrait;
 
+    /**
+     * @var MetadataLoader
+     */
     public $obj;
 
+    /**
+     * @return void
+     */
     public function setUp()
     {
         $container = $this->getContainer();
@@ -26,6 +33,9 @@ class MetadataLoaderTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testLoadData()
     {
         $this->assertInstanceOf(MetadataLoader::class, $this->obj);

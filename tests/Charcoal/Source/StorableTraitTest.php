@@ -5,9 +5,6 @@ namespace Charcoal\Tests\Source;
 use InvalidArgumentException;
 use RuntimeException;
 
-// From PHPUnit
-use PHPUnit_Framework_Error;
-
 // From PSR-3
 use Psr\Log\NullLogger;
 
@@ -22,12 +19,13 @@ use Charcoal\Source\StorableTrait;
 use Charcoal\Tests\Mock\BadStorableMock;
 use Charcoal\Tests\Mock\StorableMock;
 use Charcoal\Tests\Mock\SourceMock;
+use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\ReflectionsTrait;
 
 /**
  * Test {@see StorableTrait} and {@see StorableInterface}.
  */
-class StorableTraitTest extends \PHPUnit_Framework_TestCase
+class StorableTraitTest extends AbstractTestCase
 {
     use ReflectionsTrait;
 
@@ -40,6 +38,8 @@ class StorableTraitTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Setup the test.
+     *
+     * @return void
      */
     public function setUp()
     {
@@ -68,6 +68,8 @@ class StorableTraitTest extends \PHPUnit_Framework_TestCase
      *
      * @covers \Charcoal\Source\StorableTrait::setKey
      * @covers \Charcoal\Source\StorableTrait::key
+     *
+     * @return void
      */
     public function testKey()
     {
@@ -88,10 +90,12 @@ class StorableTraitTest extends \PHPUnit_Framework_TestCase
      * Test for invalid data type when assigning a primary object key.
      *
      * @covers \Charcoal\Source\StorableTrait::setKey
+     *
+     * @return void
      */
     public function testKeyWithInvalidDataType()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->obj->setKey(null);
     }
 
@@ -99,10 +103,12 @@ class StorableTraitTest extends \PHPUnit_Framework_TestCase
      * Test for invalid character set when assigning a primary object key.
      *
      * @covers \Charcoal\Source\StorableTrait::setKey
+     *
+     * @return void
      */
     public function testKeyWithInvalidCharacters()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->obj->setKey('foo-bar');
     }
 
@@ -116,6 +122,8 @@ class StorableTraitTest extends \PHPUnit_Framework_TestCase
      *
      * @covers \Charcoal\Source\StorableTrait::setId
      * @covers \Charcoal\Source\StorableTrait::id
+     *
+     * @return void
      */
     public function testId()
     {
@@ -142,10 +150,12 @@ class StorableTraitTest extends \PHPUnit_Framework_TestCase
      * Test for invalid data type when assigning a unique object ID.
      *
      * @covers \Charcoal\Source\StorableTrait::setId
+     *
+     * @return void
      */
     public function testIdWithInvalidDataType()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->obj->setId(null);
     }
 
@@ -154,6 +164,8 @@ class StorableTraitTest extends \PHPUnit_Framework_TestCase
      *
      * @covers \Charcoal\Source\StorableTrait::setId
      * @covers \Charcoal\Source\StorableTrait::id
+     *
+     * @return void
      */
     public function testAltId()
     {
@@ -170,6 +182,8 @@ class StorableTraitTest extends \PHPUnit_Framework_TestCase
      *
      * @covers \Charcoal\Source\StorableTrait::setSourceFactory
      * @covers \Charcoal\Source\StorableTrait::sourceFactory
+     *
+     * @return void
      */
     public function testSourceFactory()
     {
@@ -190,10 +204,12 @@ class StorableTraitTest extends \PHPUnit_Framework_TestCase
      * Test for missing repository factory.
      *
      * @covers \Charcoal\Source\StorableTrait::sourceFactory
+     *
+     * @return void
      */
     public function testMissingSourceFactory()
     {
-        $this->setExpectedException(RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $this->callMethod($this->obj, 'sourceFactory');
     }
 
@@ -210,6 +226,8 @@ class StorableTraitTest extends \PHPUnit_Framework_TestCase
      * @covers \Charcoal\Source\StorableTrait::createSource
      * @covers \Charcoal\Source\StorableTrait::setSource
      * @covers \Charcoal\Source\StorableTrait::source
+     *
+     * @return void
      */
     public function testSource()
     {
@@ -236,12 +254,6 @@ class StorableTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($that, $obj);
     }
 
-
-
-
-
-
-
     /**
      * Test object save.
      *
@@ -253,6 +265,8 @@ class StorableTraitTest extends \PHPUnit_Framework_TestCase
      * @covers \Charcoal\Source\StorableTrait::save
      * @covers \Charcoal\Source\StorableTrait::preSave
      * @covers \Charcoal\Source\StorableTrait::postSave
+     *
+     * @return void
      */
     public function testSave()
     {
@@ -285,6 +299,8 @@ class StorableTraitTest extends \PHPUnit_Framework_TestCase
      * @covers \Charcoal\Source\StorableTrait::update
      * @covers \Charcoal\Source\StorableTrait::preUpdate
      * @covers \Charcoal\Source\StorableTrait::postUpdate
+     *
+     * @return void
      */
     public function testUpdate()
     {
@@ -317,6 +333,8 @@ class StorableTraitTest extends \PHPUnit_Framework_TestCase
      * @covers \Charcoal\Source\StorableTrait::delete
      * @covers \Charcoal\Source\StorableTrait::preDelete
      * @covers \Charcoal\Source\StorableTrait::postDelete
+     *
+     * @return void
      */
     public function testDelete()
     {

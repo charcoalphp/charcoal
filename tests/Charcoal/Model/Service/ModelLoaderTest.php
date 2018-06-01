@@ -9,11 +9,12 @@ use Charcoal\Factory\GenericFactory as Factory;
 
 // From 'charcoal-core'
 use Charcoal\Model\Service\ModelLoader;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class ModelLoaderTest extends \PHPUnit_Framework_TestCase
+class ModelLoaderTest extends AbstractTestCase
 {
     use \Charcoal\Tests\ContainerIntegrationTrait;
 
@@ -26,6 +27,8 @@ class ModelLoaderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Set up the test.
+     *
+     * @return void
      */
     public function setUp()
     {
@@ -46,9 +49,12 @@ class ModelLoaderTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testLoadInvalidObjTypeThrowsException()
     {
-        $this->setExpectedException(Exception::class);
+        $this->expectException(Exception::class);
         $this->obj->load('foobar');
     }
 }

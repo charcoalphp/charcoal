@@ -9,13 +9,14 @@ use InvalidArgumentException;
 // From 'charcoal-core'
 use Charcoal\Source\AbstractExpression;
 use Charcoal\Source\ExpressionInterface;
+use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\ContainerIntegrationTrait;
 use Charcoal\Tests\Source\ExpressionTestTrait;
 
 /**
  * Test {@see AbstractExpression}.
  */
-class AbstractExpressionTest extends \PHPUnit_Framework_TestCase
+class AbstractExpressionTest extends AbstractTestCase
 {
     use ContainerIntegrationTrait;
 
@@ -36,6 +37,8 @@ class AbstractExpressionTest extends \PHPUnit_Framework_TestCase
      * 1. Default state
      * 2. Mutated state
      * 3. Chainable method
+     *
+     * @return void
      */
     public function testName()
     {
@@ -54,10 +57,12 @@ class AbstractExpressionTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test "name" property with invalid value.
+     *
+     * @return void
      */
     public function testNameWithInvalidValue()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->createExpression()->setName(0);
     }
 
@@ -69,6 +74,8 @@ class AbstractExpressionTest extends \PHPUnit_Framework_TestCase
      * 2. Mutated state
      * 3. Chainable method
      * 4. Cast value to boolean
+     *
+     * @return void
      */
     public function testActive()
     {
@@ -97,8 +104,9 @@ class AbstractExpressionTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider provideParsableValues
      *
-     * @param mixed $value    The value to test.
-     * @param mixed $expected The expected result.
+     * @param  mixed $value    The value to test.
+     * @param  mixed $expected The expected result.
+     * @return void
      */
     public function testParseValue($value, $expected)
     {
@@ -139,7 +147,8 @@ class AbstractExpressionTest extends \PHPUnit_Framework_TestCase
      * @dataProvider provideQuotableValues
      *
      * @param mixed $value    The value to test.
-     * @param mixed $expected The expected result.
+     * @param  mixed $expected The expected result.
+     * @return void
      */
     public function testQuoteValue($value, $expected)
     {
@@ -175,9 +184,10 @@ class AbstractExpressionTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider provideQuotableIdentifiers
      *
-     * @param mixed $fieldName The field name.
-     * @param mixed $tableName The table name.
-     * @param mixed $expected  The expected identifier.
+     * @param  mixed $fieldName The field name.
+     * @param  mixed $tableName The table name.
+     * @param  mixed $expected  The expected identifier.
+     * @return void
      */
     public function testQuoteIdentifier($fieldName, $tableName, $expected)
     {
@@ -206,30 +216,36 @@ class AbstractExpressionTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test field quoting with invalid field name.
+     *
+     * @return void
      */
     public function testQuoteIdentifierWithInvalidFieldName()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $obj = $this->createExpression();
         $obj::quoteIdentifier([]);
     }
 
     /**
      * Test field quoting with blank table name.
+     *
+     * @return void
      */
     public function testQuoteIdentifierWithBlankTableName()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $obj = $this->createExpression();
         $obj::quoteIdentifier('foo', '');
     }
 
     /**
      * Test field quoting with invalid table name.
+     *
+     * @return void
      */
     public function testQuoteIdentifierWithInvalidTableName()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $obj = $this->createExpression();
         $obj::quoteIdentifier('foo', []);
     }
@@ -239,9 +255,10 @@ class AbstractExpressionTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider provideDiffValues
      *
-     * @param mixed $a        The custom value.
-     * @param mixed $b        The default value.
-     * @param mixed $expected The expected result.
+     * @param  mixed $a        The custom value.
+     * @param  mixed $b        The default value.
+     * @param  mixed $expected The expected result.
+     * @return void
      */
     public function testDiffValues($a, $b, $expected)
     {
@@ -269,8 +286,9 @@ class AbstractExpressionTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider provideCallableValues
      *
-     * @param mixed $value    The value to test.
-     * @param mixed $expected The expected result.
+     * @param  mixed $value    The value to test.
+     * @param  mixed $expected The expected result.
+     * @return void
      */
     public function testIsCallable($value, $expected)
     {

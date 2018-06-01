@@ -14,11 +14,12 @@ use Mockery as m;
 use Charcoal\Model\Model;
 use Charcoal\Model\ModelInterface;
 use Charcoal\Model\Collection;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class CollectionTest extends \PHPUnit_Framework_TestCase
+class CollectionTest extends AbstractTestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -38,6 +39,9 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
      */
     protected $map;
 
+    /**
+     * @return void
+     */
     public function setUp()
     {
         $this->map = [
@@ -61,6 +65,9 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     // Test \Charcoal\Model\CollectionInterface
     // =============================================================================================
 
+    /**
+     * @return void
+     */
     public function testCollectionIsConstructed()
     {
         $c = new Collection;
@@ -70,6 +77,9 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertSame([], $c->all());
     }
 
+    /**
+     * @return void
+     */
     public function testConstructMethodWithAcceptableData()
     {
         list($o1) = $this->arr;
@@ -79,42 +89,62 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException InvalidArgumentException
+     *
+     * @return void
      */
     public function testConstructMethodWithUnacceptableData()
     {
         $c = new Collection('foo');
     }
 
+    /**
+     * @return void
+     */
     public function testConstructMethodFromArray()
     {
         $c = new Collection($this->arr);
         $this->assertEquals($this->map, $c->all());
     }
 
+    /**
+     * @return void
+     */
     public function testConstructMethodFromTraversable()
     {
         $c = new Collection(new ArrayObject($this->arr));
         $this->assertEquals($this->map, $c->all());
     }
 
+    /**
+     * @return void
+     */
     public function testConstructMethodFromCollection()
     {
         $c = new Collection(new Collection($this->arr));
         $this->assertEquals($this->map, $c->all());
     }
 
+    /**
+     * @return void
+     */
     public function testValues()
     {
         $c = new Collection($this->arr);
         $this->assertEquals($this->arr, $c->values());
     }
 
+    /**
+     * @return void
+     */
     public function testKeys()
     {
         $c = new Collection($this->arr);
         $this->assertEquals(array_keys($this->map), $c->keys());
     }
 
+    /**
+     * @return void
+     */
     public function testBaseCollection()
     {
         $c = new Collection($this->arr);
@@ -122,6 +152,9 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(Collection::class, $c->toBase());
     }
 
+    /**
+     * @return void
+     */
     public function testEmptyCollection()
     {
         $c = new Collection;
@@ -131,6 +164,9 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(null, $c->last());
     }
 
+    /**
+     * @return void
+     */
     public function testFirstItemInCollection()
     {
         list($o1, $o2, $o3, $o4, $o5) = $this->arr;
@@ -139,6 +175,9 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($o1, $c->first());
     }
 
+    /**
+     * @return void
+     */
     public function testLastItemInCollection()
     {
         list($o1, $o2, $o3, $o4, $o5) = $this->arr;
@@ -147,6 +186,9 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($o5, $c->last());
     }
 
+    /**
+     * @return void
+     */
     public function testArrayableItems()
     {
         $c = new Collection;
@@ -168,6 +210,9 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($this->arr, $array);
     }
 
+    /**
+     * @return void
+     */
     public function testRemoveKey()
     {
         list($o1) = $this->arr;
@@ -181,6 +226,9 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse(isset($c[self::OBJ_1]));
     }
 
+    /**
+     * @return void
+     */
     public function testAddAcceptableData()
     {
         list($o1) = $this->arr;
@@ -190,6 +238,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException InvalidArgumentException
+     * @return void
      */
     public function testAddUnacceptableData()
     {
@@ -197,6 +246,9 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $c->add('foo');
     }
 
+    /**
+     * @return void
+     */
     public function testGet()
     {
         list($o1, $o2, $o3, $o4, $o5) = $this->arr;
@@ -205,6 +257,9 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($o1, $c->get($o1));
     }
 
+    /**
+     * @return void
+     */
     public function testHas()
     {
         list($o1, $o2, $o3, $o4, $o5) = $this->arr;
@@ -214,18 +269,27 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($c->offsetExists('missing'));
     }
 
+    /**
+     * @return void
+     */
     public function testClear()
     {
         $c = new Collection($this->arr);
         $this->assertSame([], $c->clear()->all());
     }
 
+    /**
+     * @return void
+     */
     public function testMergeNull()
     {
         $c = new Collection($this->arr);
         $this->assertEquals($this->map, $c->merge(null)->all());
     }
 
+    /**
+     * @return void
+     */
     public function testMergeArray()
     {
         list($o1, $o2, $o3, $o4, $o5) = $this->arr;
@@ -234,6 +298,9 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->map, $c->merge([ $o5 ])->all());
     }
 
+    /**
+     * @return void
+     */
     public function testMergeCollection()
     {
         list($o1, $o2, $o3, $o4, $o5) = $this->arr;
@@ -246,6 +313,9 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     // Test \IteratorAggregate
     // =============================================================================================
 
+    /**
+     * @return void
+     */
     public function testIterable()
     {
         $c = new Collection($this->arr);
@@ -255,6 +325,9 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->map, $i->getArrayCopy());
     }
 
+    /**
+     * @return void
+     */
     public function testCachingIterator()
     {
         list($o1, $o2, $o3, $o4, $o5) = $this->arr;
@@ -280,6 +353,9 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     // Test \Countable
     // =============================================================================================
 
+    /**
+     * @return void
+     */
     public function testCountable()
     {
         $c = new Collection($this->arr);
@@ -289,6 +365,9 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     // Test \ArrayAccess
     // =============================================================================================
 
+    /**
+     * @return void
+     */
     public function testArrayAccess()
     {
         list($o1, $o2, $o3, $o4, $o5) = $this->arr;
@@ -310,6 +389,9 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($o4, $c[-1]);
     }
 
+    /**
+     * @return void
+     */
     public function testArrayAccessOffsetExists()
     {
         $c = new Collection($this->arr);
@@ -318,6 +400,9 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($c->offsetExists(5));
     }
 
+    /**
+     * @return void
+     */
     public function testArrayAccessOffsetGet()
     {
         list($o1, $o2) = $this->arr;
@@ -327,6 +412,9 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($o2, $c->offsetGet(1));
     }
 
+    /**
+     * @return void
+     */
     public function testArrayAccessOffsetGetWithNegativeOffset()
     {
         list($o1, $o2, $o3, $o4, $o5) = $this->arr;
@@ -337,12 +425,18 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($o3, $c->offsetGet(-1));
     }
 
+    /**
+     * @return void
+     */
     public function testArrayAccessOffsetGetOnNonExist()
     {
         $c = new Collection($this->arr);
         $this->assertEquals(null, $c->offsetGet(10));
     }
 
+    /**
+     * @return void
+     */
     public function testArrayAccessOffsetSet()
     {
         list($o1, $o2) = $this->arr;
@@ -354,6 +448,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException LogicException
+     * @return void
      */
     public function testArrayAccessOffsetSetWithOffset()
     {
@@ -365,6 +460,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException LogicException
+     * @return void
      */
     public function testArrayAccessOffsetSetWithKey()
     {
@@ -374,6 +470,9 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $c->offsetSet(self::OBJ_1, $o1);
     }
 
+    /**
+     * @return void
+     */
     public function testArrayAccessOffsetUnset()
     {
         $c = new Collection($this->arr);
@@ -382,6 +481,9 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(null, $c[self::OBJ_2]);
     }
 
+    /**
+     * @return void
+     */
     public function testArrayAccessOffsetUnsetWithKey()
     {
         $c = new Collection($this->arr);

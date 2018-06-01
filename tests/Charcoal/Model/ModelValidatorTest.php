@@ -7,17 +7,18 @@ use PDO;
 // From 'charcoal-core'
 use Charcoal\Model\ModelValidator;
 use Charcoal\Model\Model;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class ModelValidatorTest extends \PHPUnit_Framework_TestCase
+class ModelValidatorTest extends AbstractTestCase
 {
     use \Charcoal\Tests\ContainerIntegrationTrait;
 
-    private $obj;
-    private $model;
-
+    /**
+     * @return Model
+     */
     protected function model()
     {
         $container = $this->getContainer();
@@ -30,6 +31,9 @@ class ModelValidatorTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testConstructor()
     {
         $model = $this->model();
@@ -37,25 +41,23 @@ class ModelValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(ModelValidator::class, $obj);
     }
 
+    /**
+     * @return void
+     */
     public function testValidateModel()
     {
         $model = $this->model();
-        $model->setMetadata(
-            [
-                'properties' => [
-                    'foo' => [
-                        'type' => 'string',
-                        'required' => true,
-                        'min_length' => 5
-                    ]
+        $model->setMetadata([
+            'properties' => [
+                'foo' => [
+                    'type'       => 'string',
+                    'required'   => true,
+                    'min_length' => 5
                 ]
             ]
-        );
+        ]);
 
         $obj = new ModelValidator($model);
-        $ret = $obj->validate();
-
-        // var_dump($ret);
-        // $this->assertSame($ret, $obj);
+        $this->assertTrue($obj->validate());
     }
 }

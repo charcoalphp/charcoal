@@ -11,6 +11,7 @@ use Charcoal\Source\OrderInterface;
 use Charcoal\Source\OrderCollectionTrait;
 use Charcoal\Source\OrderCollectionInterface;
 
+use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\AssertionsTrait;
 use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Mock\OrderCollectionClass;
@@ -20,7 +21,7 @@ use Charcoal\Tests\Source\ExpressionCollectionTestTrait;
 /**
  * Test {@see OrderCollectionTrait} and {@see OrderCollectionInterface}.
  */
-class OrderCollectionTraitTest extends \PHPUnit_Framework_TestCase
+class OrderCollectionTraitTest extends AbstractTestCase
 {
     use AssertionsTrait;
     use ExpressionCollectionTestTrait;
@@ -59,6 +60,8 @@ class OrderCollectionTraitTest extends \PHPUnit_Framework_TestCase
      * 2. Instance of {@see OrderInterface}
      *
      * @covers \Charcoal\Source\OrderCollectionTrait::createOrder
+     *
+     * @return void
      */
     public function testCreateExpression()
     {
@@ -77,6 +80,8 @@ class OrderCollectionTraitTest extends \PHPUnit_Framework_TestCase
      * 2. Populated; Mutated state
      *
      * @covers \Charcoal\Source\OrderCollectionTrait::orders
+     *
+     * @return void
      */
     public function testGetExpressions()
     {
@@ -100,6 +105,8 @@ class OrderCollectionTraitTest extends \PHPUnit_Framework_TestCase
      * 2. Populated; Mutated state
      *
      * @covers \Charcoal\Source\OrderCollectionTrait::hasOrders
+     *
+     * @return void
      */
     public function testHasExpressions()
     {
@@ -121,6 +128,8 @@ class OrderCollectionTraitTest extends \PHPUnit_Framework_TestCase
      * 2. Chainable method
      *
      * @covers \Charcoal\Source\OrderCollectionTrait::setOrders
+     *
+     * @return void
      */
     public function testSetExpressions()
     {
@@ -150,6 +159,8 @@ class OrderCollectionTraitTest extends \PHPUnit_Framework_TestCase
      * 2. Chainable method
      *
      * @covers \Charcoal\Source\OrderCollectionTrait::addOrders
+     *
+     * @return void
      */
     public function testAddExpressions()
     {
@@ -175,6 +186,8 @@ class OrderCollectionTraitTest extends \PHPUnit_Framework_TestCase
      * Test the mass addition of expressions with names.
      *
      * @covers \Charcoal\Source\OrderCollectionTrait::addOrders
+     *
+     * @return void
      */
     public function testAddExpressionsMap()
     {
@@ -205,6 +218,8 @@ class OrderCollectionTraitTest extends \PHPUnit_Framework_TestCase
      * 2. Chainable method
      *
      * @covers \Charcoal\Source\OrderCollectionTrait::addOrder
+     *
+     * @return void
      */
     public function testAddExpression()
     {
@@ -238,6 +253,8 @@ class OrderCollectionTraitTest extends \PHPUnit_Framework_TestCase
      *    the Expression object is used as is.
      *
      * @covers \Charcoal\Source\OrderCollectionTrait::processOrder
+     *
+     * @return void
      */
     public function testProcessExpression()
     {
@@ -276,12 +293,14 @@ class OrderCollectionTraitTest extends \PHPUnit_Framework_TestCase
      * Test the failure when parsing an invalid expression.
      *
      * @covers \Charcoal\Source\OrderCollectionTrait::processOrder
+     *
+     * @return void
      */
     public function testProcessExpressionWithInvalidValue()
     {
         $obj = $this->createCollector();
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->callMethodWith($obj, 'processOrder', null);
     }
 
@@ -293,6 +312,8 @@ class OrderCollectionTraitTest extends \PHPUnit_Framework_TestCase
      * 2. Chainable method
      *
      * @covers \Charcoal\Source\OrderCollectionTrait::traverseOrders
+     *
+     * @return void
      */
     public function testTraverseExpressions()
     {

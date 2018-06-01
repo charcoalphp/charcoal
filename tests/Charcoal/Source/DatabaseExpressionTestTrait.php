@@ -25,6 +25,8 @@ trait DatabaseExpressionTestTrait
 
     /**
      * Test influence of "active" property on SQL compilation.
+     *
+     * @return void
      */
     abstract public function testInactiveExpression();
 
@@ -33,6 +35,8 @@ trait DatabaseExpressionTestTrait
      *
      * Assertions:
      * 1. Implements {@see ExpressionInterface}
+     *
+     * @return void
      */
     public function testConstruct()
     {

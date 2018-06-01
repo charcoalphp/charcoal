@@ -4,19 +4,29 @@ namespace Charcoal\Tests\Model;
 
 // From 'charcoal-core'
 use Charcoal\Model\AbstractMetadata;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class AbstractMetadataTest extends \PHPUnit_Framework_TestCase
+class AbstractMetadataTest extends AbstractTestCase
 {
+    /**
+     * @var AbstractMetadata
+     */
     public $obj;
 
+    /**
+     * @return void
+     */
     public function setUp()
     {
         $this->obj = $this->getMockForAbstractClass(AbstractMetadata::class);
     }
 
+    /**
+     * @return void
+     */
     public function testSetData()
     {
         $obj = $this->obj;
@@ -29,6 +39,9 @@ class AbstractMetadataTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('bar', $obj->foo);
     }
 
+    /**
+     * @return void
+     */
     public function testArrayAccessOffsetExists()
     {
         $obj = $this->obj;

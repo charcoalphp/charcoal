@@ -6,12 +6,16 @@ use InvalidArgumentException;
 
 // From 'charcoal-core'
 use Charcoal\Source\DatabaseSourceConfig;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class DatabaseSourceConfigTest extends \PHPUnit_Framework_TestCase
+class DatabaseSourceConfigTest extends AbstractTestCase
 {
+    /**
+     * @return void
+     */
     public function testDefaultData()
     {
         $obj = new DatabaseSourceConfig();
@@ -22,6 +26,9 @@ class DatabaseSourceConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($obj->hostname(), $defaults['hostname']);
     }
 
+    /**
+     * @return void
+     */
     public function testMerge()
     {
         $obj = new DatabaseSourceConfig();
@@ -29,6 +36,9 @@ class DatabaseSourceConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
     }
 
+    /**
+     * @return void
+     */
     public function testSetHostname()
     {
         $obj = new DatabaseSourceConfig();
@@ -37,10 +47,13 @@ class DatabaseSourceConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
         $this->assertEquals('foo', $obj->hostname());
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $obj->setHostname(false);
     }
 
+    /**
+     * @return void
+     */
     public function testSetUsername()
     {
         $obj = new DatabaseSourceConfig();
@@ -49,10 +62,13 @@ class DatabaseSourceConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
         $this->assertEquals('foo', $obj->username());
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $obj->setUsername(false);
     }
 
+    /**
+     * @return void
+     */
     public function testSetPassword()
     {
         $obj = new DatabaseSourceConfig();
@@ -61,10 +77,13 @@ class DatabaseSourceConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
         $this->assertEquals('foo', $obj->password());
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $obj->setPassword(false);
     }
 
+    /**
+     * @return void
+     */
     public function testSetDatabase()
     {
         $obj = new DatabaseSourceConfig();
@@ -73,10 +92,13 @@ class DatabaseSourceConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
         $this->assertEquals('foo', $obj->database());
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $obj->setDatabase(false);
     }
 
+    /**
+     * @return void
+     */
     public function testSetDisableUtf8()
     {
         $obj = new DatabaseSourceConfig();

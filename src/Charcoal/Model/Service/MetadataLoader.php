@@ -113,7 +113,7 @@ final class MetadataLoader implements LoggerAwareInterface
             );
         }
 
-        if (strpos($ident,'\\') !== false) {
+        if (strpos($ident, '\\') !== false) {
             $ident = $this->classnameToIdent($ident);
         }
 

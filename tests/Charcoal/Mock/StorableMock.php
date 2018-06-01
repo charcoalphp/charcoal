@@ -24,6 +24,8 @@ class StorableMock implements
 
     /**
      * Model Datastore.
+     *
+     * @var array
      */
     private $data = [];
 

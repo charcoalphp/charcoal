@@ -9,17 +9,24 @@ use Charcoal\Factory\GenericFactory as Factory;
 use Charcoal\Model\Service\MetadataLoader;
 use Charcoal\Model\Service\ModelLoader;
 use Charcoal\Model\Service\ModelLoaderBuilder;
+use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Mock\GenericModel;
 
 /**
  *
  */
-class ModelLoaderBuilderTest extends \PHPUnit_Framework_TestCase
+class ModelLoaderBuilderTest extends AbstractTestCase
 {
     use \Charcoal\Tests\ContainerIntegrationTrait;
 
+    /**
+     * @var ModelLoaderBuilder
+     */
     public $obj;
 
+    /**
+     * @return void
+     */
     public function setUp()
     {
         $container = $this->getContainer();
@@ -45,12 +52,18 @@ class ModelLoaderBuilderTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testBuild()
     {
         $ret = $this->obj->build(GenericModel::class, 'name');
         $this->assertInstanceOf(ModelLoader::class, $ret);
     }
 
+    /**
+     * @return void
+     */
     public function testInvokable()
     {
         $builder = $this->obj;

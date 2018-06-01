@@ -13,6 +13,7 @@ use Charcoal\Property\PropertyInterface;
 use Charcoal\Source\DatabaseSource;
 use Charcoal\Source\Database\DatabaseFilter;
 
+use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\ContainerIntegrationTrait;
 use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Source\DatabaseExpressionTestTrait;
@@ -20,7 +21,7 @@ use Charcoal\Tests\Source\DatabaseExpressionTestTrait;
 /**
  * Test {@see DatabaseFilter}.
  */
-class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
+class DatabaseFilterTest extends AbstractTestCase
 {
     use ContainerIntegrationTrait;
     use DatabaseExpressionTestTrait;
@@ -55,6 +56,8 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
      * Test default table name for default data values.
      *
      * @see \Charcoal\Tests\Source\Database\DatabaseOrderTest::testDefaultValues()
+     *
+     * @return void
      */
     public function testDefaultValues()
     {
@@ -68,6 +71,8 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test influence of "active" property on SQL compilation.
+     *
+     * @return void
      */
     public function testInactiveExpression()
     {
@@ -90,6 +95,8 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
      * 3. Ignored Operators
      *
      * @covers \Charcoal\Source\Database\DatabaseFilter::isNegating
+     *
+     * @return void
      */
     public function testNegation()
     {
@@ -112,6 +119,8 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test SQL without conditions.
+     *
+     * @return void
      */
     public function testBlankSql()
     {
@@ -122,12 +131,14 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test invalid SQL predicate.
+     *
+     * @return void
      */
     public function testSqlWithoutPredicate()
     {
         $obj = $this->createExpression();
 
-        $this->setExpectedException(UnexpectedValueException::class);
+        $this->expectException(UnexpectedValueException::class);
 
         $method = $this->getMethod($obj, 'byPredicate');
         $method->invoke($obj);
@@ -138,8 +149,9 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider providedNestedExpressions
      *
-     * @param array  $conditions The expressions to define.
-     * @param string $expected   The expected compiled SQL string.
+     * @param  array  $conditions The expressions to define.
+     * @param  string $expected   The expected compiled SQL string.
+     * @return void
      */
     public function testNestedSql(array $conditions, $expected)
     {
@@ -253,6 +265,8 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test nested filters has precedence over other features.
+     *
+     * @return void
      */
     public function testNestedSqlPrecedence()
     {
@@ -268,12 +282,14 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test invalid SQL nested filters.
+     *
+     * @return void
      */
     public function testSqlWithoutNestedExpressions()
     {
         $obj = $this->createExpression();
 
-        $this->setExpectedException(UnexpectedValueException::class);
+        $this->expectException(UnexpectedValueException::class);
 
         $method = $this->getMethod($obj, 'byFilters');
         $method->invoke($obj);
@@ -281,6 +297,8 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test "condition" property with and without placeholders.
+     *
+     * @return void
      */
     public function testCustomSql()
     {
@@ -292,6 +310,8 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test the negation of the "condition" property with the "operator" property.
+     *
+     * @return void
      */
     public function testCustomSqlNegation()
     {
@@ -303,6 +323,8 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test "condition" property has precedence over other features.
+     *
+     * @return void
      */
     public function testCustomSqlPrecedence()
     {
@@ -318,12 +340,14 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test invalid custom SQL.
+     *
+     * @return void
      */
     public function testCustomSqlWithoutQuery()
     {
         $obj = $this->createExpression();
 
-        $this->setExpectedException(UnexpectedValueException::class);
+        $this->expectException(UnexpectedValueException::class);
 
         $method = $this->getMethod($obj, 'byCondition');
         $method->invoke($obj);
@@ -331,6 +355,8 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test condition compilation.
+     *
+     * @return void
      */
     public function testCompileConditions()
     {
@@ -343,6 +369,8 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test basic SQL operator without a value.
+     *
+     * @return void
      */
     public function testSqlOperatorWithoutValue()
     {
@@ -353,7 +381,7 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
             'operator' => '=',
         ]);
 
-        $this->setExpectedException(UnexpectedValueException::class);
+        $this->expectException(UnexpectedValueException::class);
         $obj->sql();
     }
 
@@ -362,7 +390,8 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider provideComparisonOperators
      *
-     * @param string $operator A SQL operator.
+     * @param  string $operator A SQL operator.
+     * @return void
      */
     public function testSqlComparisonOperators($operator)
     {
@@ -381,7 +410,8 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider provideConditionalOperators
      *
-     * @param string $operator A SQL operator.
+     * @param  string $operator A SQL operator.
+     * @return void
      */
     public function testSqlConditionalOperators($operator)
     {
@@ -400,7 +430,8 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider provideNegationOperators
      *
-     * @param string $operator A SQL operator.
+     * @param  string $operator A SQL operator.
+     * @return void
      */
     public function testSqlNegationOperators($operator)
     {
@@ -419,9 +450,10 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider provideSetOperators
      *
-     * @param string $operator  A SQL operator.
-     * @param string $delimiter The set's delimiter.
-     * @param string $expected  The expected result.
+     * @param  string $operator  A SQL operator.
+     * @param  string $delimiter The set's delimiter.
+     * @param  string $expected  The expected result.
+     * @return void
      */
     public function testSqlSetOperators($operator, $delimiter, $expected)
     {
@@ -445,9 +477,10 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider provideSetOperators
      *
-     * @param string $operator  A SQL operator.
-     * @param string $delimiter The set's delimiter.
-     * @param string $expected  Unused; The expected result.
+     * @param  string $operator  A SQL operator.
+     * @param  string $delimiter The set's delimiter.
+     * @param  string $expected  Unused; The expected result.
+     * @return void
      */
     public function testSqlSetOperatorsWithoutValue($operator, $delimiter, $expected)
     {
@@ -458,12 +491,14 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
             'operator' => $operator,
         ]);
 
-        $this->setExpectedException(UnexpectedValueException::class);
+        $this->expectException(UnexpectedValueException::class);
         $obj->sql();
     }
 
     /**
      * Test SQL function.
+     *
+     * @return void
      */
     public function testSqlFunction()
     {
@@ -480,6 +515,8 @@ class DatabaseFilterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test SQL condition with multiple field names.
+     *
+     * @return void
      */
     public function testSqlFields()
     {

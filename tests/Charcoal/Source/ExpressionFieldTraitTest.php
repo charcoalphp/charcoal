@@ -11,17 +11,20 @@ use Charcoal\Property\PropertyInterface;
 // From 'charcoal-core'
 use Charcoal\Source\ExpressionFieldTrait;
 use Charcoal\Source\ExpressionFieldInterface;
+use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\ContainerIntegrationTrait;
 
 /**
  * Test {@see ExpressionFieldTrait} and {@see ExpressionFieldInterface}.
  */
-class ExpressionFieldTraitTest extends \PHPUnit_Framework_TestCase
+class ExpressionFieldTraitTest extends AbstractTestCase
 {
     use ContainerIntegrationTrait;
 
     /**
      * Set up the test.
+     *
+     * @return void
      */
     public function setUp()
     {
@@ -66,6 +69,8 @@ class ExpressionFieldTraitTest extends \PHPUnit_Framework_TestCase
      * 3. Chainable method
      * 4. Accepts Property
      * 5. Accepts NULL
+     *
+     * @return void
      */
     public function testProperty()
     {
@@ -95,6 +100,8 @@ class ExpressionFieldTraitTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test the "property" determiner.
+     *
+     * @return void
      */
     public function testHasProperty()
     {
@@ -107,31 +114,37 @@ class ExpressionFieldTraitTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test "property" property with blank value.
+     *
+     * @return void
      */
     public function testPropertyWithBlankValue()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->createField()->setProperty('');
     }
 
     /**
      * Test "property" property with invalid property.
+     *
+     * @return void
      */
     public function testPropertyWithInvalidProperty()
     {
         $container = $this->getContainer();
         $property  = $container['property/factory']->create('generic');
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->createField()->setProperty($property);
     }
 
     /**
      * Test "property" property with invalid value.
+     *
+     * @return void
      */
     public function testPropertyWithInvalidValue()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->createField()->setProperty([]);
     }
 
@@ -143,6 +156,8 @@ class ExpressionFieldTraitTest extends \PHPUnit_Framework_TestCase
      * 2. Mutated state
      * 3. Chainable method
      * 4. Accepts NULL
+     *
+     * @return void
      */
     public function testTable()
     {
@@ -166,6 +181,8 @@ class ExpressionFieldTraitTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test the "table" determiner.
+     *
+     * @return void
      */
     public function testHasTable()
     {
@@ -178,19 +195,23 @@ class ExpressionFieldTraitTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test "table" property with blank value.
+     *
+     * @return void
      */
     public function testTableWithBlankValue()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->createField()->setTable('');
     }
 
     /**
      * Test "table" property with invalid value.
+     *
+     * @return void
      */
     public function testTableWithInvalidValue()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->createField()->setTable([]);
     }
 
@@ -201,6 +222,8 @@ class ExpressionFieldTraitTest extends \PHPUnit_Framework_TestCase
      * 1. Default state
      * 2. With column name
      * 3. With property instance
+     *
+     * @return void
      */
     public function testFieldNames()
     {
@@ -229,6 +252,8 @@ class ExpressionFieldTraitTest extends \PHPUnit_Framework_TestCase
      * 1. Default state
      * 2. With column name
      * 3. With property instance
+     *
+     * @return void
      */
     public function testFieldName()
     {
@@ -257,6 +282,8 @@ class ExpressionFieldTraitTest extends \PHPUnit_Framework_TestCase
      * 1. Default state
      * 2. With column name
      * 3. With table name
+     *
+     * @return void
      */
     public function testFieldIdentifiers()
     {
@@ -283,6 +310,8 @@ class ExpressionFieldTraitTest extends \PHPUnit_Framework_TestCase
      * 1. Default state
      * 2. With column name
      * 3. With table name
+     *
+     * @return void
      */
     public function testFieldIdentifier()
     {

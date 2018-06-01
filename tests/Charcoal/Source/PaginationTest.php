@@ -7,13 +7,14 @@ use InvalidArgumentException;
 // From 'charcoal-core'
 use Charcoal\Source\Pagination;
 use Charcoal\Source\PaginationInterface;
+use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\ContainerIntegrationTrait;
 use Charcoal\Tests\Source\ExpressionTestTrait;
 
 /**
  * Test {@see Pagination} and {@see PaginationInterface}.
  */
-class PaginationTest extends \PHPUnit_Framework_TestCase
+class PaginationTest extends AbstractTestCase
 {
     use ContainerIntegrationTrait;
     use ExpressionTestTrait;
@@ -33,6 +34,8 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
      *
      * Assertions:
      * 1. Implements {@see PaginationInterface}
+     *
+     * @return void
      */
     public function testPaginationConstruct()
     {
@@ -67,6 +70,8 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
      * 3. Chainable method
      * 4. Accepts float
      * 5. Swaps zero for one
+     *
+     * @return void
      */
     public function testPageNum()
     {
@@ -94,23 +99,27 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test "page" property with negative value.
+     *
+     * @return void
      */
     public function testPageNumWithNegativeValue()
     {
         $obj = $this->createExpression();
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $obj->setPage(-5);
     }
 
     /**
      * Test "page" property with invalid value.
+     *
+     * @return void
      */
     public function testPageNumWithInvalidValue()
     {
         $obj = $this->createExpression();
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $obj->setPage(null);
     }
 
@@ -122,6 +131,8 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
      * 2. Mutated state
      * 3. Chainable method
      * 4. Accepts float
+     *
+     * @return void
      */
     public function testNumPerPage()
     {
@@ -145,23 +156,27 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test "num_per_page" property with negative value.
+     *
+     * @return void
      */
     public function testNumPerPageWithNegativeValue()
     {
         $obj = $this->createExpression();
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $obj->setNumPerPage(-5);
     }
 
     /**
      * Test "num_per_page" property with invalid value.
+     *
+     * @return void
      */
     public function testNumPerPageWithInvalidValue()
     {
         $obj = $this->createExpression();
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $obj->setNumPerPage(null);
     }
 
@@ -172,6 +187,8 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
      * 1. Mutate all options
      * 2. Partially mutated state
      * 3. Mutation via aliases
+     *
+     * @return void
      */
     public function testData()
     {
@@ -227,6 +244,8 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test lowest possible index.
+     *
+     * @return void
      */
     public function testFirst()
     {
@@ -243,6 +262,8 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test highest possible index.
+     *
+     * @return void
      */
     public function testLast()
     {

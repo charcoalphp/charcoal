@@ -20,7 +20,7 @@ trait ReflectionsTrait
      * @param  string $name  The method name to reflect.
      * @return ReflectionMethod
      */
-    final public function getMethod($class, $name)
+    public function getMethod($class, $name)
     {
         $reflected = new ReflectionMethod($class, $name);
         $reflected->setAccessible(true);
@@ -30,24 +30,30 @@ trait ReflectionsTrait
     /**
      * Invoke the requested method, via the Reflection API.
      *
-     * @param  object $object The object that contains the method.
+     * @param  mixed  $object The object that contains the method.
      * @param  string $name   The method name to invoke.
+     * @param  array  $args   The parameters to be passed to the function.
      * @return mixed Returns the method result.
      */
-    final public function callMethod($object, $name)
+    public function callMethod($object, $name, array $args = [])
     {
-        return $this->getMethod($object, $name)->invoke($object);
+        $method = $this->getMethod($object, $name);
+        if (empty($args)) {
+            return $method->invoke($object);
+        } else {
+            return $method->invokeArgs($object, $args);
+        }
     }
 
     /**
      * Invoke the requested method with arguments, via the Reflection API.
      *
-     * @param  object $object  The object that contains the method.
+     * @param  mixed  $object  The object that contains the method.
      * @param  string $name    The method name to invoke.
      * @param  mixed  ...$args The parameters to be passed to the function.
      * @return mixed Returns the method result.
      */
-    final public function callMethodWith($object, $name, ...$args)
+    public function callMethodWith($object, $name, ...$args)
     {
         return $this->getMethod($object, $name)->invoke($object, ...$args);
     }
@@ -61,7 +67,7 @@ trait ReflectionsTrait
      * @param  string $name  The property name to reflect.
      * @return ReflectionProperty
      */
-    final public function getProperty($class, $name)
+    public function getProperty($class, $name)
     {
         $reflected = new ReflectionProperty($class, $name);
         $reflected->setAccessible(true);
@@ -71,11 +77,11 @@ trait ReflectionsTrait
     /**
      * Gets class property value, via the Reflection API.
      *
-     * @param  object $object The object to access.
+     * @param  mixed  $object The object to access.
      * @param  string $name   The property name to fetch.
      * @return mixed
      */
-    final public function getPropertyValue($object, $name)
+    public function getPropertyValue($object, $name)
     {
         return $this->getProperty($object, $name)->getValue($object);
     }
@@ -83,12 +89,12 @@ trait ReflectionsTrait
     /**
      * Set class property value, via the Reflection API.
      *
-     * @param  object $object The object to access.
+     * @param  mixed  $object The object to access.
      * @param  string $name   The property name to affect.
      * @param  mixed  $value  The new value.
      * @return void
      */
-    final public function setPropertyValue($object, $name, $value)
+    public function setPropertyValue($object, $name, $value)
     {
         $this->getProperty($object, $name)->setValue($object, $value);
     }

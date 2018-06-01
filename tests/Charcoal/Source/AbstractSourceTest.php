@@ -25,6 +25,7 @@ use Charcoal\Source\PaginationInterface;
 use Charcoal\Source\SourceConfig;
 use Charcoal\Source\SourceInterface;
 
+use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\AssertionsTrait;
 use Charcoal\Tests\ContainerIntegrationTrait;
 use Charcoal\Tests\Mock\OrderTree;
@@ -33,7 +34,7 @@ use Charcoal\Tests\ReflectionsTrait;
 /**
  * Test {@see AbstractSource} and {@see SourceInterface}.
  */
-class AbstractSourceTest extends \PHPUnit_Framework_TestCase
+class AbstractSourceTest extends AbstractTestCase
 {
     use AssertionsTrait;
     use ContainerIntegrationTrait;
@@ -48,6 +49,8 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Setup the test.
+     *
+     * @return void
      */
     public function setUp()
     {
@@ -80,6 +83,8 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
      * - clear the filters
      * - clear the orders
      * - @todo clear the pagination
+     *
+     * @return void
      */
     public function testReset()
     {
@@ -109,6 +114,8 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
      * Assert that the `setData` method:
      * - is chainable
      * - set the data (properties, filters, orders & pagination)
+     *
+     * @return void
      */
     public function testSetData()
     {
@@ -130,6 +137,8 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
      * Assert that the `setModel` method:
      * - is chainable
      * - set the model (retrievable with the `model` method)
+     *
+     * @return void
      */
     public function testSetModel()
     {
@@ -150,10 +159,13 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($model, $obj->model());
     }
 
+    /**
+     * @return void
+     */
     public function testModelWithoutSetThrowsException()
     {
         $obj = $this->obj;
-        $this->setExpectedException(RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $obj->model();
     }
 
@@ -166,6 +178,8 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
      * @covers \Charcoal\Source\AbstractSource::setProperties
      * @covers \Charcoal\Source\AbstractSource::addProperties
      * @covers \Charcoal\Source\AbstractSource::resolvePropertyName
+     *
+     * @return void
      */
     public function testSetProperties()
     {
@@ -186,6 +200,8 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
      * 2. Populated; Mutated state
      *
      * @covers \Charcoal\Source\AbstractSource::hasProperties
+     *
+     * @return void
      */
     public function testHasProperties()
     {
@@ -204,6 +220,8 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
      *
      * @covers \Charcoal\Source\AbstractSource::addProperty
      * @covers \Charcoal\Source\AbstractSource::resolvePropertyName
+     *
+     * @return void
      */
     public function testAddProperty()
     {
@@ -222,6 +240,8 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
      *
      * @covers \Charcoal\Source\AbstractSource::removeProperty
      * @covers \Charcoal\Source\AbstractSource::resolvePropertyName
+     *
+     * @return void
      */
     public function testRemoveProperty()
     {
@@ -237,11 +257,13 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
      * Test failure when appending an invalid property name.
      *
      * @covers \Charcoal\Source\AbstractSource::resolvePropertyName
+     *
+     * @return void
      */
     public function testInvalidPropertyNameResolution()
     {
         $obj = $this->obj;
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $obj->addProperty(false);
     }
 
@@ -249,11 +271,13 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
      * Test failure when appending an blank property name.
      *
      * @covers \Charcoal\Source\AbstractSource::resolvePropertyName
+     *
+     * @return void
      */
     public function testBlankPropertyNameResolution()
     {
         $obj = $this->obj;
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $obj->addProperty('');
     }
 
@@ -261,12 +285,14 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
      * Test failure when appending a unnamed property object.
      *
      * @covers \Charcoal\Source\AbstractSource::resolvePropertyName
+     *
+     * @return void
      */
     public function testAnonymousPropertyNameResolution()
     {
         $obj  = $this->obj;
         $prop = $this->createProperty()->setIdent('');
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $obj->addProperty($prop);
     }
 
@@ -274,6 +300,8 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
      * Test appending a named property object.
      *
      * @covers \Charcoal\Source\AbstractSource::resolvePropertyName
+     *
+     * @return void
      */
     public function testNamedPropertyNameResolution()
     {
@@ -302,6 +330,8 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
      * 6. Chainable method
      *
      * @covers \Charcoal\Source\AbstractSource::addFilter
+     *
+     * @return void
      */
     public function testAddFilter()
     {
@@ -365,6 +395,8 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
      *    all expressions.
      *
      * @covers \Charcoal\Source\AbstractSource::parseFilterWithModel
+     *
+     * @return void
      */
     public function testParseFilterWithModel()
     {
@@ -407,6 +439,8 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
      *
      * @see    \Charcoal\Tests\Source\FilterTest::testCreateFilter
      * @covers \Charcoal\Source\AbstractSource::createFilter
+     *
+     * @return void
      */
     public function testCreateFilter()
     {
@@ -434,6 +468,8 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
      * 6. Chainable method
      *
      * @covers \Charcoal\Source\AbstractSource::addOrder
+     *
+     * @return void
      */
     public function testAddOrder()
     {
@@ -495,6 +531,8 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
      *    all expressions.
      *
      * @covers \Charcoal\Source\AbstractSource::parseOrderWithModel
+     *
+     * @return void
      */
     public function testParseOrderWithModel()
     {
@@ -530,6 +568,8 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
      * 2. Instance of {@see Order}
      *
      * @covers \Charcoal\Source\AbstractSource::createOrder
+     *
+     * @return void
      */
     public function testCreateOrder()
     {
@@ -548,6 +588,8 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
      *
      * @covers \Charcoal\Source\AbstractSource::pagination
      * @covers \Charcoal\Source\AbstractSource::hasPagination
+     *
+     * @return void
      */
     public function testGetPagination()
     {
@@ -571,6 +613,8 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
      * 5. Chainable method
      *
      * @covers \Charcoal\Source\AbstractSource::setPagination
+     *
+     * @return void
      */
     public function testSetPagination()
     {
@@ -610,10 +654,12 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
      * Test the failure when assigning an invalid pagination expression.
      *
      * @covers \Charcoal\Source\AbstractSource::setPagination
+     *
+     * @return void
      */
     public function testProcessExpressionWithInvalidValue()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->obj->setPagination(false);
     }
 
@@ -625,6 +671,8 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
      * 2. Instance of {@see PaginationInterface}
      *
      * @covers \Charcoal\Source\AbstractSource::createPagination
+     *
+     * @return void
      */
     public function testCreatePagination()
     {
@@ -634,6 +682,9 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $result->name());
     }
 
+    /**
+     * @return void
+     */
     public function testSetPage()
     {
         $obj = $this->obj;
@@ -643,10 +694,13 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
         $this->assertEquals(42, $obj->page());
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $obj->setPage('foo');
     }
 
+    /**
+     * @return void
+     */
     public function testNumPerPage()
     {
         $obj = $this->obj;
@@ -655,10 +709,13 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
         $this->assertEquals(666, $obj->numPerPage());
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $obj->setNumPerPage('foobar');
     }
 
+    /**
+     * @return void
+     */
     public function testCreateConfig()
     {
         $obj = $this->obj;
@@ -673,6 +730,8 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
      * @covers \Charcoal\Source\AbstractSource::camelize
      * @covers \Charcoal\Source\AbstractSource::getter
      * @covers \Charcoal\Source\AbstractSource::setter
+     *
+     * @return void
      */
     public function testCamelize()
     {

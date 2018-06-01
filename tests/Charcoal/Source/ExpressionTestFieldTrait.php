@@ -2,9 +2,6 @@
 
 namespace Charcoal\Tests\Source;
 
-// From PHPUnit
-use PHPUnit_Framework_Error;
-
 // From 'charcoal-core'
 use Charcoal\Source\ExpressionInterface;
 use Charcoal\Source\ExpressionFieldInterface;
@@ -18,6 +15,8 @@ trait ExpressionTestFieldTrait
 {
     /**
      * Test deprecated "table_name" property.
+     *
+     * @return void
      */
     public function testDeprecatedTableNameExpression()
     {
@@ -29,11 +28,37 @@ trait ExpressionTestFieldTrait
 
     /**
      * Test "table_name" property deprecation notice.
+     *
+     * @used-by self::testDeprecatedTableNameErrorInPhp7()
+     * @used-by self::testDeprecatedTableNameErrorInPhp5()
+     *
+     * @return void
      */
-    public function testDeprecatedTableNameError()
+    public function delegatedTestDeprecatedTableNameError()
     {
-        $this->setExpectedException(PHPUnit_Framework_Error::class);
         $this->createExpression()->setData([ 'table_name' => 'foobar' ]);
+    }
+
+    /**
+     * @expectedException PHPUnit\Framework\Error\Error
+     *
+     * @requires PHP >= 7.0
+     * @return   void
+     */
+    public function testDeprecatedTableNameErrorInPhp7()
+    {
+        $this->delegatedTestDeprecatedTableNameError();
+    }
+
+    /**
+     * @expectedException PHPUnit_Framework_Error
+     *
+     * @requires PHP < 7.0
+     * @return   void
+     */
+    public function testDeprecatedTableNameErrorInPhp5()
+    {
+        $this->delegatedTestDeprecatedTableNameError();
     }
 
     /**
@@ -41,6 +66,7 @@ trait ExpressionTestFieldTrait
      *
      * @param ExpressionFieldInterface $obj      The expression to test.
      * @param array|null               $expected The expected data subset.
+     * @return void
      */
     public function assertStructHasFieldData(ExpressionFieldInterface $obj, array $expected = null)
     {

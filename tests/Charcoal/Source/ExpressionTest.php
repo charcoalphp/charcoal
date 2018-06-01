@@ -7,13 +7,14 @@ use InvalidArgumentException;
 // From 'charcoal-core'
 use Charcoal\Source\Expression;
 use Charcoal\Source\ExpressionInterface;
+use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\ContainerIntegrationTrait;
 use Charcoal\Tests\Source\ExpressionTestTrait;
 
 /**
  * Test {@see Expression} and {@see ExpressionInterface}.
  */
-class ExpressionTest extends \PHPUnit_Framework_TestCase
+class ExpressionTest extends AbstractTestCase
 {
     use ContainerIntegrationTrait;
     use ExpressionTestTrait;
@@ -53,6 +54,8 @@ class ExpressionTest extends \PHPUnit_Framework_TestCase
      * 4. Trimmed value
      * 5. Accepts NULL
      * 6. Swaps blank string for NULL
+     *
+     * @return void
      */
     public function testConditionExpression()
     {
@@ -84,6 +87,8 @@ class ExpressionTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test the conditional check of "condition".
+     *
+     * @return void
      */
     public function testHasConditionExpression()
     {
@@ -100,10 +105,12 @@ class ExpressionTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test "condition" property with invalid value.
+     *
+     * @return void
      */
     public function testConditionExpressionWithInvalidValue()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->createExpression()->setCondition([]);
     }
 
@@ -113,6 +120,8 @@ class ExpressionTest extends \PHPUnit_Framework_TestCase
      * Assertions:
      * 1. Mutate all options
      * 2. Partially mutated state
+     *
+     * @return void
      */
     public function testData()
     {

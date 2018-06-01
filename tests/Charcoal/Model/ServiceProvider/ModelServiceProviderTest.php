@@ -37,11 +37,12 @@ use Charcoal\Model\ServiceProvider\ModelServiceProvider;
 use Charcoal\Model\Service\ModelBuilder;
 use Charcoal\Model\Service\ModelLoaderBuilder;
 use Charcoal\Model\Service\MetadataLoader;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class ModelServiceProviderTest extends \PHPUnit_Framework_TestCase
+class ModelServiceProviderTest extends AbstractTestCase
 {
     /**
      * @var ModelServiceProvider
@@ -49,6 +50,9 @@ class ModelServiceProviderTest extends \PHPUnit_Framework_TestCase
     public $obj;
 
 
+    /**
+     * @return void
+     */
     public function setUp()
     {
         $this->obj = new ModelServiceProvider();
@@ -108,18 +112,28 @@ class ModelServiceProviderTest extends \PHPUnit_Framework_TestCase
         return $container;
     }
 
-    public function testRegisterSetsModelFactory()
+    /**
+     * @return void
+     */
+    public function testFactories()
     {
         $container = $this->container();
+
         $this->obj->register($container);
 
-        //$this->assertTrue(isset($this->container['model/factory']));
+        $this->assertTrue(isset($container['model/factory']));
         $this->assertInstanceOf(FactoryInterface::class, $container['model/factory']);
 
         $this->assertTrue(isset($container['property/factory']));
+        $this->assertInstanceOf(FactoryInterface::class, $container['property/factory']);
+
         $this->assertTrue(isset($container['source/factory']));
+        $this->assertInstanceOf(FactoryInterface::class, $container['source/factory']);
     }
 
+    /**
+     * @return void
+     */
     public function testRegisterSetsModelBuilder()
     {
         $container = $this->container();
@@ -129,6 +143,9 @@ class ModelServiceProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(ModelBuilder::class, $container['model/builder']);
     }
 
+    /**
+     * @return void
+     */
     public function testRegisterSetsModelLoaderBuilder()
     {
         $container = $this->container();
@@ -138,6 +155,9 @@ class ModelServiceProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(ModelLoaderBuilder::class, $container['model/loader/builder']);
     }
 
+    /**
+     * @return void
+     */
     public function testRegisterSetsMetadataLoader()
     {
         $container = $this->container();
@@ -145,9 +165,5 @@ class ModelServiceProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue(isset($container['metadata/loader']));
         $this->assertInstanceOf(MetadataLoader::class, $container['metadata/loader']);
-    }
-
-    public function testRegisterSetsPropertyFactory()
-    {
     }
 }

@@ -7,28 +7,46 @@ use InvalidArgumentException;
 
 // From 'charcoal-core'
 use Charcoal\Validator\ValidatorResult;
+use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Mock\ValidatorClass;
 use Charcoal\Tests\Mock\ValidatableClass;
 
 /**
  *
  */
-class ValidatorTest extends \PHPUnit_Framework_TestCase
+class ValidatorTest extends AbstractTestCase
 {
+    /**
+     * @var ValidatorClass
+     */
     public $obj;
 
+    /**
+     * @var ValidatableClass
+     */
+    public $model;
+
+    /**
+     * @return void
+     */
     public function setUp()
     {
         $this->model = new ValidatableClass();
         $this->obj   = new ValidatorClass($this->model);
     }
 
+    /**
+     * @return void
+     */
     public function testConstructor()
     {
         $obj = $this->obj;
         $this->assertInstanceOf('\Charcoal\Validator\AbstractValidator', $obj);
     }
 
+    /**
+     * @return void
+     */
     public function testError()
     {
         $obj = $this->obj;
@@ -37,6 +55,9 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         // var_dump($obj->errorResults());
     }
 
+    /**
+     * @return void
+     */
     public function testWarning()
     {
         $obj = $this->obj;
@@ -45,6 +66,9 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         // var_dump($obj->warningResults());
     }
 
+    /**
+     * @return void
+     */
     public function testNotice()
     {
         $obj = $this->obj;
@@ -53,12 +77,15 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         // var_dump($obj->noticeResults());
     }
 
+    /**
+     * @return void
+     */
     public function testAddResult()
     {
         $result = [
             'ident'   => 'bar',
             'level'   => ValidatorClass::ERROR,
-            'message' => 'foo'
+            'message' => 'foo',
         ];
 
         $obj = $this->obj;
@@ -69,19 +96,20 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $ret = $obj->addResult($resultObj);
         $this->assertSame($ret, $obj);
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $obj->addResult(false);
     }
 
     /**
      * @group time-sensitive
+     * @return void
      */
     public function testResults()
     {
         $result = [
             'ident'   => 'bar',
             'level'   => ValidatorClass::ERROR,
-            'message' => 'foo'
+            'message' => 'foo',
         ];
 
         $obj = $this->obj;
@@ -100,17 +128,20 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([ ValidatorClass::ERROR => [ $expectedResult ] ], $actualResult);
     }
 
+    /**
+     * @return void
+     */
     public function testErrorResults()
     {
         $result1 = [
             'ident'   => 'bar',
             'level'   => ValidatorClass::ERROR,
-            'message' => 'foo'
+            'message' => 'foo',
         ];
         $result2 = [
             'ident'   => 'foo',
             'level'   => ValidatorClass::NOTICE,
-            'message' => 'bar'
+            'message' => 'bar',
         ];
 
         $obj = $this->obj;
@@ -130,17 +161,20 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([ $expectedResult ], $actualResult);
     }
 
+    /**
+     * @return void
+     */
     public function testWarningResults()
     {
         $result1 = [
             'ident'   => 'bar',
             'level'   => ValidatorClass::WARNING,
-            'message' => 'foo'
+            'message' => 'foo',
         ];
         $result2 = [
             'ident'   => 'foo',
             'level'   => ValidatorClass::NOTICE,
-            'message' => 'bar'
+            'message' => 'bar',
         ];
 
         $obj = $this->obj;
@@ -160,17 +194,20 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([ $expectedResult ], $actualResult);
     }
 
+    /**
+     * @return void
+     */
     public function testNoticeResults()
     {
         $result1 = [
             'ident'   => 'bar',
             'level'   => ValidatorClass::NOTICE,
-            'message' => 'foo'
+            'message' => 'foo',
         ];
         $result2 = [
             'ident'   => 'foo',
             'level'   => ValidatorClass::ERROR,
-            'message' => 'bar'
+            'message' => 'bar',
         ];
 
         $obj = $this->obj;
@@ -190,17 +227,20 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([ $expectedResult ], $actualResult);
     }
 
+    /**
+     * @return void
+     */
     public function testMerge()
     {
         $result1 = [
             'ident'   => 'bar',
             'level'   => ValidatorClass::NOTICE,
-            'message' => 'foo'
+            'message' => 'foo',
         ];
         $result2 = [
             'ident'   => 'foo',
             'level'   => ValidatorClass::ERROR,
-            'message' => 'bar'
+            'message' => 'bar',
         ];
 
         $resultObj1 = new ValidatorResult($result1);
@@ -228,7 +268,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             [
                 ValidatorClass::NOTICE => [ $resultObj1 ],
-                ValidatorClass::ERROR  => [ $resultObj2 ]
+                ValidatorClass::ERROR  => [ $resultObj2 ],
             ],
             $actualResult
         );

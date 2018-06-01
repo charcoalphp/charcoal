@@ -6,30 +6,42 @@ use Exception;
 
 // From 'charcoal-core'
 use Charcoal\Model\ModelMetadata;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class ModelMetadataTest extends \PHPUnit_Framework_TestCase
+class ModelMetadataTest extends AbstractTestCase
 {
-
+    /**
+     * @var ModelMetadata
+     */
     private $obj;
 
+    /**
+     * @return void
+     */
     public function setUp()
     {
         $this->obj = new ModelMetadata();
     }
 
+    /**
+     * @return void
+     */
     public function testSetIdent()
     {
         $ret = $this->obj->setIdent('foo');
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('foo', $this->obj->ident());
 
-        $this->setExpectedException(Exception::class);
+        $this->expectException(Exception::class);
         $this->obj->setIdent(false);
     }
 
+    /**
+     * @return void
+     */
     public function testArrayAccessGet()
     {
         $obj = $this->obj;
@@ -38,6 +50,9 @@ class ModelMetadataTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($obj->foo, $obj['foo']);
     }
 
+    /**
+     * @return void
+     */
     public function testArrayAccessSet()
     {
         $obj = $this->obj;
@@ -46,6 +61,9 @@ class ModelMetadataTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($obj->foo, $obj['foo']);
     }
 
+    /**
+     * @return void
+     */
     public function testArrayAccessUnset()
     {
         $obj = $this->obj;
@@ -58,6 +76,9 @@ class ModelMetadataTest extends \PHPUnit_Framework_TestCase
         //$this->assertObjectNotHasAttribute('foo', $obj);
     }
 
+    /**
+     * @return void
+     */
     public function testMerge()
     {
         $data = [
@@ -72,6 +93,9 @@ class ModelMetadataTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($obj->bar, 'foo');
     }
 
+    /**
+     * @return void
+     */
     public function testMergeIsChainable()
     {
         $obj = $this->obj;

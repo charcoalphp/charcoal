@@ -7,13 +7,14 @@ use UnexpectedValueException;
 // From 'charcoal-core'
 use Charcoal\Source\Database\DatabaseExpression;
 
+use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Source\DatabaseExpressionTestTrait;
 
 /**
  * Test {@see DatabaseExpression}.
  */
-class DatabaseExpressionTest extends \PHPUnit_Framework_TestCase
+class DatabaseExpressionTest extends AbstractTestCase
 {
     use DatabaseExpressionTestTrait;
     use ReflectionsTrait;
@@ -30,6 +31,8 @@ class DatabaseExpressionTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test influence of "active" property on SQL compilation.
+     *
+     * @return void
      */
     public function testInactiveExpression()
     {
@@ -45,6 +48,8 @@ class DatabaseExpressionTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test "condition" property.
+     *
+     * @return void
      */
     public function testCustomSql()
     {
@@ -56,12 +61,14 @@ class DatabaseExpressionTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test invalid custom SQL.
+     *
+     * @return void
      */
     public function testCustomSqlWithoutQuery()
     {
         $obj = $this->createExpression();
 
-        $this->setExpectedException(UnexpectedValueException::class);
+        $this->expectException(UnexpectedValueException::class);
 
         $method = $this->getMethod($obj, 'byCondition');
         $method->invoke($obj);

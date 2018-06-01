@@ -2,7 +2,7 @@
 
 namespace Charcoal\Model;
 
-// From `charcoal-config`
+// From 'charcoal-config'
 use Charcoal\Config\EntityInterface;
 use Charcoal\Source\StorableInterface;
 

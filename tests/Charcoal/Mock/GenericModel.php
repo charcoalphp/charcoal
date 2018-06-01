@@ -2,6 +2,9 @@
 
 namespace Charcoal\Tests\Mock;
 
+// From 'charcoal-translator'
+use Charcoal\Translator\Translation;
+
 // From 'charcoal-core'
 use Charcoal\Model\AbstractModel;
 
@@ -11,7 +14,7 @@ use Charcoal\Model\AbstractModel;
 class GenericModel extends AbstractModel
 {
     /**
-     * @return Translation|string|null
+     * @var Translation|string|null
      */
     private $name;
 
