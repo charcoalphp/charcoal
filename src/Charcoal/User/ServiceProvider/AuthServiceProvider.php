@@ -2,12 +2,12 @@
 
 namespace Charcoal\User\ServiceProvider;
 
-// From 'zendframework/zend-permissions-acl'
-use Zend\Permissions\Acl\Acl;
-
 // From Pimple
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+
+// From 'zendframework/zend-permissions-acl'
+use Zend\Permissions\Acl\Acl;
 
 // From 'charcoal-user'
 use Charcoal\User\Authenticator;

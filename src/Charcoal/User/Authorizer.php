@@ -4,12 +4,12 @@ namespace Charcoal\User;
 
 use InvalidArgumentException;
 
-// From 'zendframework/zend-permissions'
-use Zend\Permissions\Acl\Acl;
-
 // From PSR-3
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
+
+// From 'zendframework/zend-permissions'
+use Zend\Permissions\Acl\Acl;
 
 // From 'charcoal-user'
 use Charcoal\User\UserInterface;

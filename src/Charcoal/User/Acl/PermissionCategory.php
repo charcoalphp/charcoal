@@ -2,6 +2,7 @@
 
 namespace Charcoal\User\Acl;
 
+// From 'charcoal-object'
 use Charcoal\Object\Content;
 use Charcoal\Object\CategoryInterface;
 use Charcoal\Object\CategoryTrait;
