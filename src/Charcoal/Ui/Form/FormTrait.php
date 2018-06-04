@@ -83,6 +83,20 @@ trait FormTrait
     private $groupCallback;
 
     /**
+     * Store the tab ident received through REQUEST.
+     *
+     * @var string
+     */
+    private $tabIdent;
+
+    /**
+     * Store the current form group.
+     *
+     * @var string
+     */
+    private $selectedFormGroup;
+
+    /**
      * Comparison function used by {@see uasort()}.
      *
      * @param  PrioritizableInterface $a Sortable entity A.
@@ -216,6 +230,44 @@ trait FormTrait
         foreach ($groups as $groupIdent => $group) {
             $this->addGroup($groupIdent, $group);
         }
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function tabIdent()
+    {
+        return $this->tabIdent;
+    }
+
+    /**
+     * @param mixed $tabIdent Store the tab ident received through REQUEST.
+     * @return self
+     */
+    public function setTabIdent($tabIdent)
+    {
+        $this->tabIdent = $tabIdent;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function selectedFormGroup()
+    {
+        return $this->selectedFormGroup;
+    }
+
+    /**
+     * @param mixed $selectedFormGroup Store the current form group.
+     * @return self
+     */
+    public function setSelectedFormGroup($selectedFormGroup)
+    {
+        $this->selectedFormGroup = $selectedFormGroup;
 
         return $this;
     }
@@ -355,7 +407,38 @@ trait FormTrait
 
         $groupCallback = (isset($groupCallback) ? $groupCallback : $this->groupCallback);
 
+        $groups = $this->finalizeFormGroups($groups);
+
         $i = 1;
+        foreach ($groups as $group) {
+            if ($groupCallback) {
+                $groupCallback($group);
+            }
+
+            $GLOBALS['widget_template'] = $group->template();
+
+            if (!$this->selectedFormGroup() && $this->isTabbable()) {
+                $group->setIsHidden(false);
+                if ($i > 1) {
+                    $group->setIsHidden(true);
+                }
+            }
+            $i++;
+
+            yield $group;
+
+            $GLOBALS['widget_template'] = '';
+        }
+    }
+
+    /**
+     * @param array|FormGroupInterface[] $groups Form groups to finalize.
+     * @return array|FormGroupInterface[]
+     */
+    protected function finalizeFormGroups($groups)
+    {
+        $out = [];
+
         foreach ($groups as $group) {
             if (!$group->active()) {
                 continue;
@@ -376,22 +459,19 @@ trait FormTrait
                 $group->setL10nMode($this->l10nMode());
             }
 
-            if ($groupCallback) {
-                $groupCallback($group);
-            }
-
-            $GLOBALS['widget_template'] = $group->template();
-
-            // $group->isHidden = false;
-            if ($this->isTabbable() && $i > 1) {
+            if ($this->isTabbable() && $this->tabIdent()) {
                 $group->setIsHidden(true);
+
+                if ($group->ident() === $this->tabIdent()) {
+                    $group->setIsHidden(false);
+                    $this->setSelectedFormGroup($group->ident());
+                }
             }
-            $i++;
 
-            yield $group;
-
-            $GLOBALS['widget_template'] = '';
+            $out[] = $group;
         }
+
+        return $out;
     }
 
     /**
