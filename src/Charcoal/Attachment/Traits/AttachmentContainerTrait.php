@@ -183,8 +183,17 @@ trait AttachmentContainerTrait
                     $attMeta['faIcon'] = $faIcon;
 
                     // Custom forms
-                    $attMeta['formIdent']      = isset($attMeta['form_ident'])       ? $attMeta['form_ident']       : null;
-                    $attMeta['quickFormIdent'] = isset($attMeta['quick_form_ident']) ? $attMeta['quick_form_ident'] : null;
+                    if (isset($attMeta['form_ident'])) {
+                        $attMeta['formIdent'] = $attMeta['form_ident'];
+                    } else {
+                        $attMeta['formIdent'] = null;
+                    }
+
+                    if (isset($attMeta['quick_form_ident'])) {
+                        $attMeta['quickFormIdent'] = $attMeta['quick_form_ident'];
+                    } else {
+                        $attMeta['quickFormIdent'] = null;
+                    }
 
                     $this->attachableObjects[$attType] = $attMeta;
                 }

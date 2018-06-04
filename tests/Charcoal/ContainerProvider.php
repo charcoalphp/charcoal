@@ -337,7 +337,7 @@ class ContainerProvider
      */
     public function registerTranslator(Container $container)
     {
-        $container['locales/manager'] = function (Container $container) {
+        $container['locales/manager'] = function () {
             return new LocalesManager([
                 'locales' => [
                     'en' => [ 'locale' => 'en-US' ]

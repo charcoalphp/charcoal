@@ -51,22 +51,14 @@ class Container extends Attachment implements
     /**
      * Retrieve the objects associated to the current object.
      *
-     * @param  array|string|null $group  Filter the attachments by a group identifier.
-     *                                   When an array, filter the attachments by a options list.
-     * @param  string|null       $type   Filter the attachments by type.
-     * @param  callable|null     $before Process each attachment before applying data.
-     * @param  callable|null     $after  Process each attachment after applying data.
-     * @throws InvalidArgumentException If the $group or $type is invalid.
+     * @param  mixed ...$args Filter the attachments;
+     *     options accepted by {@see AttachmentAwareTrait::attachments()}.
      * @return Collection|Attachment[]
      */
-    public function attachments(
-        $group = null,
-        $type = null,
-        callable $before = null,
-        callable $after = null
-    ) {
+    public function attachments(...$args)
+    {
         $attachables = $this->attachableObjects();
-        $attachments = call_user_func_array([ $this, 'getAttachments' ], func_get_args());
+        $attachments = call_user_func_array([ $this, 'getAttachments' ], $args);
 
         foreach ($attachments as $attachment) {
             if (isset($attachables[$attachment->objType()])) {

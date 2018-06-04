@@ -137,11 +137,15 @@ trait ConfigurableAttachmentsTrait
 
         $widgetData = $presetWidgets[$widgetIdent];
         if (isset($widgetData['attachable_objects'])) {
-            $widgetData['attachable_objects'] = $this->mergePresetAttachableObjects($widgetData['attachable_objects']);
+            $widgetData['attachable_objects'] = $this->mergePresetAttachableObjects(
+                $widgetData['attachable_objects']
+            );
         }
 
         if (isset($widgetData['default_attachable_objects'])) {
-            $widgetData['attachable_objects'] = $this->mergePresetAttachableObjects($widgetData['default_attachable_objects']);
+            $widgetData['attachable_objects'] = $this->mergePresetAttachableObjects(
+                $widgetData['default_attachable_objects']
+            );
         }
 
         return array_replace_recursive($widgetData, $data);
