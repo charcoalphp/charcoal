@@ -31,14 +31,6 @@
                 "l10n_mode": "loop_inputs",
                 "groups": {
                     "info": {
-                        "layout": {
-                            "structure": [
-                                { "columns": [ 1, 1 ] },
-                                { "columns": [ 1 ] },
-                                { "columns": [ 1 ] },
-                                { "columns": [ 1 ] }
-                            ]
-                        },
                         "title": "Information",
                         "properties": [
                             "title",
@@ -46,41 +38,50 @@
                             "embed",
                             "description",
                             "keywords"
-                        ]
+                        ],
+                        "layout": {
+                            "structure": [
+                                { "columns": [ 1, 1 ] },
+                                { "columns": [ 1 ] },
+                                { "columns": [ 1 ] },
+                                { "columns": [ 1 ] }
+                            ]
+                        }
                     },
                     "taxo": {
+                        "properties": [
+                            "active"
+                        ],
                         "layout": {
                             "structure": [
                                 { "columns": [ 1 ] }
                             ]
-                        },
-                        "properties": [
-                            "active"
-                        ]
+                        }
                     }
                 },
                 "sidebars": {
-                    "actions": {}
+                    "default": {}
                 }
             },
             "quick": {
                 "groups": {
                     "main": {
+                        "properties": [
+                            "title",
+                            "embed"
+                        ],
                         "layout": {
                             "structure": [
                                 { "columns": [ 1 ] },
                                 { "columns": [ 1 ] }
                             ]
-                        },
-                        "properties": [
-                            "title",
-                            "embed"
-                        ]
+                        }
                     }
                 }
             }
         },
         "default_form": "embed",
+
         "lists": {
             "default": {
                 "properties": [
@@ -88,11 +89,13 @@
                     "file",
                     "active"
                 ],
-                "list_actions": [{
-                    "label": "New Embedded Media",
-                    "ident": "create",
-                    "url": "object/edit?obj_type=charcoal/attachment/object/embed"
-                }],
+                "list_actions": [
+                    {
+                        "label": "New Embedded Media",
+                        "ident": "create",
+                        "url": "object/edit?obj_type=charcoal/attachment/object/embed"
+                    }
+                ],
                 "filters": {
                     "type": {
                         "property": "type",
@@ -120,34 +123,35 @@
             }
         },
         "default_list": "default",
+
         "dashboards": {
             "edit": {
-                "layout": {
-                    "structure": [
-                        { "columns": [ 1 ] }
-                    ]
-                },
                 "widgets": {
                     "form": {
                         "type": "charcoal/admin/widget/object-form",
                         "form_ident": "embed",
                         "obj_type": "charcoal/attachment/object/embed"
                     }
-                }
-            },
-            "table": {
-                "title": "List of Embedded Media",
+                },
                 "layout": {
                     "structure": [
                         { "columns": [ 1 ] }
                     ]
-                },
+                }
+            },
+            "table": {
+                "title": "List of Embedded Media",
                 "widgets": {
                     "form": {
                         "type": "charcoal/admin/widget/table",
                         "collection_ident": "default",
                         "obj_type": "charcoal/attachment/object/embed"
                     }
+                },
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] }
+                    ]
                 }
             }
         }

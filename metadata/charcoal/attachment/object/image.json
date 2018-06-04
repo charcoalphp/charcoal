@@ -28,11 +28,13 @@
                     "file",
                     "active"
                 ],
-                "list_actions": [{
-                    "label": "New Image",
-                    "ident": "create",
-                    "url": "object/edit?obj_type=charcoal/attachment/object/image"
-                }],
+                "list_actions": [
+                    {
+                        "label": "New Image",
+                        "ident": "create",
+                        "url": "object/edit?obj_type=charcoal/attachment/object/image"
+                    }
+                ],
                 "filters": {
                     "type": {
                         "property": "type",
@@ -59,10 +61,17 @@
                 }
             }
         },
+
         "forms": {
             "quick": {
                 "groups": {
                     "main": {
+                        "properties": [
+                            "title",
+                            "subtitle",
+                            "description",
+                            "file"
+                        ],
                         "layout": {
                             "structure": [
                                 { "columns": [ 1, 1 ] },
@@ -70,46 +79,41 @@
                                 { "columns": [ 1 ] },
                                 { "columns": [ 1 ] }
                             ]
-                        },
-                        "properties": [
-                            "title",
-                            "subtitle",
-                            "description",
-                            "file"
-                        ]
+                        }
                     }
                 }
             }
         },
         "default_list": "default",
+
         "dashboards": {
             "edit": {
-                "layout": {
-                    "structure": [
-                        { "columns": [ 1 ] }
-                    ]
-                },
                 "widgets": {
                     "form": {
                         "type": "charcoal/admin/widget/object-form",
                         "form_ident": "default",
                         "obj_type": "charcoal/attachment/object/image"
                     }
-                }
-            },
-            "table": {
-                "title": "List of Images",
+                },
                 "layout": {
                     "structure": [
                         { "columns": [ 1 ] }
                     ]
-                },
+                }
+            },
+            "table": {
+                "title": "List of Images",
                 "widgets": {
                     "form": {
                         "type": "charcoal/admin/widget/table",
                         "collection_ident": "default",
                         "obj_type": "charcoal/attachment/object/image"
                     }
+                },
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] }
+                    ]
                 }
             }
         }

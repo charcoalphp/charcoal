@@ -12,11 +12,13 @@
                     "file",
                     "active"
                 ],
-                "list_actions": [{
-                    "label": "New Video",
-                    "ident": "create",
-                    "url": "object/edit?obj_type=charcoal/attachment/object/video"
-                }],
+                "list_actions": [
+                    {
+                        "label": "New Video",
+                        "ident": "create",
+                        "url": "object/edit?obj_type=charcoal/attachment/object/video"
+                    }
+                ],
                 "filters": {
                     "type": {
                         "property": "type",
@@ -44,34 +46,35 @@
             }
         },
         "default_list": "default",
+
         "dashboards": {
             "edit": {
-                "layout": {
-                    "structure": [
-                        { "columns": [ 1 ] }
-                    ]
-                },
                 "widgets": {
                     "form": {
                         "type": "charcoal/admin/widget/object-form",
                         "form_ident": "video",
                         "obj_type": "charcoal/attachment/object/video"
                     }
-                }
-            },
-            "table": {
-                "title": "List of Videos",
+                },
                 "layout": {
                     "structure": [
                         { "columns": [ 1 ] }
                     ]
-                },
+                }
+            },
+            "table": {
+                "title": "List of Videos",
                 "widgets": {
                     "form": {
                         "type": "charcoal/admin/widget/table",
                         "collection_ident": "default",
                         "obj_type": "charcoal/attachment/object/video"
                     }
+                },
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] }
+                    ]
                 }
             }
         }

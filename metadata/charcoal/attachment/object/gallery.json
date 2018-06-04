@@ -26,11 +26,13 @@
                     "title",
                     "active"
                 ],
-                "list_actions": [{
-                    "label": "New Gallery",
-                    "ident": "create",
-                    "url": "object/edit?obj_type=charcoal/attachment/object/gallery"
-                }],
+                "list_actions": [
+                    {
+                        "label": "New Gallery",
+                        "ident": "create",
+                        "url": "object/edit?obj_type=charcoal/attachment/object/gallery"
+                    }
+                ],
                 "filters": {
                     "type": {
                         "property": "type",
@@ -57,36 +59,32 @@
             }
         },
         "default_list": "default",
+
         "forms": {
             "quick": {
                 "groups": {
                     "main": {
-                        "layout": {
-                            "structure": [
-                                { "columns": [ 1 ] },
-                                { "columns": [ 1 ] }
-                            ]
-                        },
                         "title": {
                             "fr": "Galerie",
                             "en": "Gallery"
                         },
                         "properties": [
                             "title"
-                        ]
+                        ],
+                        "layout": {
+                            "structure": [
+                                { "columns": [ 1 ] },
+                                { "columns": [ 1 ] }
+                            ]
+                        }
                     }
                 }
             }
         },
         "default_form": "quick",
+
         "dashboards": {
             "edit": {
-                "layout": {
-                    "structure": [
-                        { "columns": [ 1 ] },
-                        { "columns": [ 1 ] }
-                    ]
-                },
                 "widgets": {
                     "form": {
                         "type": "charcoal/admin/widget/object-form",
@@ -104,21 +102,27 @@
                             }
                         }
                     }
+                },
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] },
+                        { "columns": [ 1 ] }
+                    ]
                 }
             },
             "table": {
                 "title": "List of Galleries",
-                "layout": {
-                    "structure": [
-                        { "columns": [ 1 ] }
-                    ]
-                },
                 "widgets": {
                     "form": {
                         "type": "charcoal/admin/widget/table",
                         "collection_ident": "default",
                         "obj_type": "charcoal/attachment/object/gallery"
                     }
+                },
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] }
+                    ]
                 }
             }
         }

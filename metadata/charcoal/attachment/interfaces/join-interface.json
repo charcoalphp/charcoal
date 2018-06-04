@@ -18,10 +18,7 @@
         },
         "attachment_id": {
             "type": "string",
-            "label": {
-                "en": "Attachment ID",
-                "fr": "ID de l'attachement"
-            }
+            "label": "Attachment ID"
         },
         "group": {
             "type": "string",

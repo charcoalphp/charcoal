@@ -13,11 +13,13 @@
                     "name",
                     "active"
                 ],
-                "list_actions": [{
-                    "label": "New Category",
-                    "ident": "create",
-                    "url": "object/edit?obj_type=charcoal/attachment/object/category/generic"
-                }]
+                "list_actions": [
+                    {
+                        "label": "New Category",
+                        "ident": "create",
+                        "url": "object/edit?obj_type=charcoal/attachment/object/category/generic"
+                    }
+                ]
             }
         },
         "default_list": "default",
@@ -31,14 +33,14 @@
                             "active"
                         ],
                         "layout": {
-                            "structure": [{
-                                "columns": [5, 1]
-                            }]
+                            "structure": [
+                                { "columns": [ 5, 1 ] }
+                            ]
                         }
                     }
                 },
                 "sidebars": {
-                    "actions": {}
+                    "default": {}
                 }
             }
         },
@@ -56,17 +58,17 @@
             },
             "admin.table": {
                 "title": "List of Categories",
-                "layout": {
-                    "structure": [{
-                        "columns": [1]
-                    }]
-                },
                 "widgets": {
                     "table": {
                         "type": "charcoal/admin/widget/table",
                         "collection_ident": "default",
                         "obj_type": "charcoal/attachment/object/category/generic"
                     }
+                },
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] }
+                    ]
                 }
             }
         },

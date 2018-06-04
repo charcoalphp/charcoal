@@ -20,11 +20,13 @@
                     "file",
                     "active"
                 ],
-                "list_actions": [{
-                    "label": "New File",
-                    "ident": "create",
-                    "url": "object/edit?obj_type=charcoal/attachment/object/file"
-                }],
+                "list_actions": [
+                    {
+                        "label": "New File",
+                        "ident": "create",
+                        "url": "object/edit?obj_type=charcoal/attachment/object/file"
+                    }
+                ],
                 "filters": {
                     "type": {
                         "property": "type",
@@ -52,55 +54,54 @@
             }
         },
         "default_list": "default",
+
         "forms": {
             "quick": {
                 "groups": {
                     "main": {
+                        "properties": [
+                            "title",
+                            "file"
+                        ],
                         "layout": {
                             "structure": [
                                 { "columns": [ 1 ] },
                                 { "columns": [ 1 ] }
                             ]
-                        },
-                        "properties": [
-                            "title",
-                            "file"
-                        ]
+                        }
                     }
                 }
             }
         },
+
         "dashboards": {
             "edit": {
-                "layout": {
-                    "structure": [
-                        { "columns": [ 1 ] }
-                    ]
-                },
                 "widgets": {
                     "form": {
                         "type": "charcoal/admin/widget/object-form",
                         "form_ident": "default",
                         "obj_type": "charcoal/attachment/object/file"
                     }
-                }
-            },
-            "table": {
-                "title": {
-                    "fr": "Liste des fichiers",
-                    "en": "List of Files"
                 },
                 "layout": {
                     "structure": [
                         { "columns": [ 1 ] }
                     ]
-                },
+                }
+            },
+            "table": {
+                "title": "List of Files",
                 "widgets": {
                     "form": {
                         "type": "charcoal/admin/widget/table",
                         "collection_ident": "default",
                         "obj_type": "charcoal/attachment/object/file"
                     }
+                },
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] }
+                    ]
                 }
             }
         }

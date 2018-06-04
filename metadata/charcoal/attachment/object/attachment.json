@@ -130,55 +130,55 @@
                 "groups": {
                     "info": {
                         "priority": 100,
-                        "layout": {
-                            "structure": [
-                                {"columns": [1, 1]},
-                                {"columns": [1]},
-                                {"columns": [1]},
-                                {"columns": [1]},
-                                {"columns": [1]},
-                                {"columns": [1, 1]},
-                                {"columns": [1, 1]}
-                            ]
-                        },
                         "title": "Information",
                         "properties": [
                             "title",
                             "subtitle",
                             "description",
                             "keywords"
-                        ]
+                        ],
+                        "layout": {
+                            "structure": [
+                                { "columns": [ 1, 1 ] },
+                                { "columns": [ 1 ] },
+                                { "columns": [ 1 ] },
+                                { "columns": [ 1 ] },
+                                { "columns": [ 1 ] },
+                                { "columns": [ 1, 1 ] },
+                                { "columns": [ 1, 1 ] }
+                            ]
+                        }
                     },
                     "media": {
                         "priority": 200,
-                        "layout": {
-                            "structure": [
-                                {"columns": [1]},
-                                {"columns": [1, 1]}
-                            ]
-                        },
                         "title": "Media",
                         "properties": [
                             "file",
                             "thumbnail"
-                        ]
+                        ],
+                        "layout": {
+                            "structure": [
+                                { "columns": [ 1 ] },
+                                { "columns": [ 1, 1 ] }
+                            ]
+                        }
                     },
                     "taxo": {
                         "priority": 300,
-                        "layout": {
-                            "structure": [
-                                {"columns": [1]}
-                            ]
-                        },
                         "title": "Taxonomy",
                         "properties": [
                             "active"
-                        ]
+                        ],
+                        "layout": {
+                            "structure": [
+                                { "columns": [ 1 ] }
+                            ]
+                        }
                     }
 
                 },
                 "sidebars": {
-                    "actions": {}
+                    "default": {}
                 }
             }
         },
@@ -187,31 +187,31 @@
         "dashboards": {
             "edit": {
                 "title": "Edit Attachment",
-                "layout": {
-                    "structure": [
-                        {"columns": [1]}
-                    ]
-                },
                 "widgets": {
                     "form": {
                         "type": "charcoal/admin/widget/object-form",
                         "form_ident": "default",
                         "group_display_mode": "tab"
                     }
+                },
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] }
+                    ]
                 }
             },
             "table": {
                 "title": "List of Attachments",
-                "layout": {
-                    "structure": [
-                        {"columns": [1]}
-                    ]
-                },
                 "widgets": {
                     "form": {
                         "type": "charcoal/admin/widget/table",
                         "collection_ident": "default"
                     }
+                },
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] }
+                    ]
                 }
             }
         },

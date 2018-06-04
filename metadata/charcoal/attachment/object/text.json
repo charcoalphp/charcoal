@@ -17,55 +17,56 @@
                 "l10n_mode": "loop_inputs",
                 "groups": {
                     "info": {
-                        "layout": {
-                            "structure": [
-                                { "columns": [ 1, 1 ] },
-                                { "columns": [ 1 ] },
-                                { "columns": [ 1 ] }
-                            ]
-                        },
                         "title": "Information",
                         "properties": [
                             "title",
                             "subtitle",
                             "description",
                             "keywords"
-                        ]
+                        ],
+                        "layout": {
+                            "structure": [
+                                { "columns": [ 1, 1 ] },
+                                { "columns": [ 1 ] },
+                                { "columns": [ 1 ] }
+                            ]
+                        }
                     },
                     "taxo": {
+                        "properties": [
+                            "active"
+                        ],
                         "layout": {
                             "structure": [
                                 { "columns": [ 1 ] }
                             ]
-                        },
-                        "properties": [
-                            "active"
-                        ]
+                        }
                     }
 
                 },
                 "sidebars": {
-                    "actions": {}
+                    "default": {}
                 }
             },
             "quick": {
                 "groups": {
                     "main": {
+                        "properties": [
+                            "title",
+                            "description"
+                        ],
                         "layout": {
                             "structure": [
                                 { "columns": [ 1 ] },
                                 { "columns": [ 1 ] }
                             ]
-                        },
-                        "properties": [
-                            "title",
-                            "description"
-                        ]
+                        }
                     }
                 }
             }
         },
         "default_form": "text",
+
         "lists": {
             "text": {
                 "properties": [
@@ -73,11 +74,13 @@
                     "subtitle",
                     "active"
                 ],
-                "list_actions": [{
-                    "label": "New Text Zone",
-                    "ident": "create",
-                    "url": "object/edit?obj_type=charcoal/attachment/object/text"
-                }],
+                "list_actions": [
+                    {
+                        "label": "New Text Zone",
+                        "ident": "create",
+                        "url": "object/edit?obj_type=charcoal/attachment/object/text"
+                    }
+                ],
                 "filters": {
                     "type": {
                         "property": "type",
@@ -105,34 +108,35 @@
             }
         },
         "default_list": "text",
+
         "dashboards": {
             "edit": {
-                "layout": {
-                    "structure": [
-                        { "columns": [ 1 ] }
-                    ]
-                },
                 "widgets": {
                     "form": {
                         "type": "charcoal/admin/widget/object-form",
                         "form_ident": "text",
                         "obj_type": "charcoal/attachment/object/text"
                     }
-                }
-            },
-            "table": {
-                "title": "List of Text Zones",
+                },
                 "layout": {
                     "structure": [
                         { "columns": [ 1 ] }
                     ]
-                },
+                }
+            },
+            "table": {
+                "title": "List of Text Zones",
                 "widgets": {
                     "form": {
                         "type": "charcoal/admin/widget/table",
                         "collection_ident": "text",
                         "obj_type": "charcoal/attachment/object/text"
                     }
+                },
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] }
+                    ]
                 }
             }
         }
