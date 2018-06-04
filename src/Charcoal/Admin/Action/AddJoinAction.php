@@ -14,7 +14,7 @@ use Charcoal\Admin\AdminAction;
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
 
-// From 'locomotivemtl/charcoal-attachments'
+// From 'charcoal-attachment'
 use Charcoal\Attachment\Object\Join;
 
 /**

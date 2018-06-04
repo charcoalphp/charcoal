@@ -2,7 +2,6 @@
 
 namespace Charcoal\Attachment\Traits;
 
-use Charcoal\Attachment\Interfaces\AttachmentAwareInterface;
 use InvalidArgumentException;
 
 // From 'charcoal-core'
@@ -11,8 +10,9 @@ use Charcoal\Model\ModelInterface;
 // From 'charcoal-admin'
 use Charcoal\Admin\Widget\AttachmentWidget;
 
-// From 'locomotivemtl/charcoal-attachments'
+// From 'charcoal-attachment'
 use Charcoal\Attachment\Interfaces\AttachableInterface;
+use Charcoal\Attachment\Interfaces\AttachmentAwareInterface;
 use Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
 
 use Charcoal\Attachment\Object\Join;

@@ -4,7 +4,7 @@ namespace Charcoal\Attachment\Traits;
 
 use UnexpectedValueException;
 
-// From 'locomotivemtl/charcoal-attachments'
+// From 'charcoal-attachment'
 use Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
 
 /**

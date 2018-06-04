@@ -7,7 +7,7 @@
                 </button>
                 <div class="dropdown-menu js-attachments-manager">
                     {{# attachmentTypes }}
-                        <a href="{{baseUrl}}admin/object/edit?obj_type={{ val }}{{# id }}&obj_id={{ . }}{{/ id }}{{# formIdent }}&form_ident={{ . }}{{/ formIdent }}"
+                        <a href="{{ baseUrl }}admin/object/edit?obj_type={{ val }}{{# id }}&obj_id={{ . }}{{/ id }}{{# formIdent }}&form_ident={{ . }}{{/ formIdent }}"
                             class="dropdown-item js-add-attachment{{# locked }} disabled{{/ locked }}"
                             target="_blank"
                             data-type="{{ val }}"

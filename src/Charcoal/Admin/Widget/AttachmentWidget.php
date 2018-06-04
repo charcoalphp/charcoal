@@ -3,14 +3,13 @@
 namespace Charcoal\Admin\Widget;
 
 use ArrayIterator;
-use Charcoal\Model\ModelInterface;
 use RuntimeException;
 use InvalidArgumentException;
 
 // From Pimple
 use Pimple\Container;
 
-// From 'bobthecow/mustache.php'
+// From Mustache
 use Mustache_LambdaHelper as LambdaHelper;
 
 // From 'charcoal-config'
@@ -21,6 +20,7 @@ use Charcoal\Factory\FactoryInterface;
 
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
+use Charcoal\Model\ModelInterface;
 
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
@@ -30,7 +30,7 @@ use Charcoal\Admin\AdminWidget;
 use Charcoal\Admin\Ui\ObjectContainerInterface;
 use Charcoal\Admin\Ui\ObjectContainerTrait;
 
-// From 'locomotivemtl/charcoal-attachments'
+// From 'charcoal-attachment'
 use Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
 use Charcoal\Attachment\Traits\ConfigurableAttachmentsTrait;
 

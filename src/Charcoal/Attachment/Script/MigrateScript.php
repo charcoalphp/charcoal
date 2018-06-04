@@ -14,7 +14,7 @@ use Charcoal\Property\PropertyField;
 // From 'charcoal-admin'
 use Charcoal\Admin\Script\Object\Table\AlterPrimaryKeyScript;
 
-// From 'locomotivemtl/charcoal-attachments'
+// From 'charcoal-attachment'
 use Charcoal\Attachment\Object\Attachment;
 use Charcoal\Attachment\Object\Join;
 

@@ -22,7 +22,7 @@ use Charcoal\Object\Content;
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
 
-// From 'locomotivemtl/charcoal-attachments'
+// From 'charcoal-attachment'
 use Charcoal\Attachment\Interfaces\AttachableInterface;
 use Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
 

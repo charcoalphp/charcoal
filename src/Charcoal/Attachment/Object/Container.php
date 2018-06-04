@@ -8,7 +8,7 @@ use Pimple\Container as ServiceContainer;
 // From 'charcoal-config'
 use Charcoal\Config\ConfigurableInterface;
 
-// From 'locomotivemtl/charcoal-attachments'
+// From 'charcoal-attachment'
 use Charcoal\Attachment\Interfaces\AttachmentAwareInterface;
 use Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
 use Charcoal\Attachment\Traits\AttachmentAwareTrait;

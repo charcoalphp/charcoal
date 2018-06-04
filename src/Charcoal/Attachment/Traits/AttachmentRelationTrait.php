@@ -4,7 +4,7 @@ namespace Charcoal\Attachment\Traits;
 
 use InvalidArgumentException;
 
-// From 'locomotivemtl/charcoal-attachments'
+// From 'charcoal-attachment'
 use Charcoal\Attachment\Interfaces\AttachableInterface;
 use Charcoal\Attachment\Interfaces\AttachmentAwareInterface;
 use Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
