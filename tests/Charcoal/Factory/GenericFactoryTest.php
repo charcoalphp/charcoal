@@ -1,37 +1,51 @@
 <?php
 
-namespace Charcoal\Tests\Core;
+namespace Charcoal\Tests\Factory;
+
+use Charcoal\Factory\GenericFactory;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class GenericFactoryTest extends \PHPUnit_Framework_TestCase
+class GenericFactoryTest extends AbstractTestCase
 {
+    /**
+     * @var GenericFactory
+     */
     public $obj;
 
     /**
-     *
+     * @return void
      */
     public function setUp()
     {
-        $this->obj = new \Charcoal\Factory\GenericFactory();
+        $this->obj = new GenericFactory();
     }
 
+    /**
+     * @expectedException InvalidArgumentException
+     *
+     * @return void
+     */
     public function testIsResolvable()
     {
         $this->assertTrue($this->obj->isResolvable('DateTime'));
         $this->assertFalse($this->obj->isResolvable('foobaz'));
 
-        $this->setExpectedException('\InvalidArgumentException');
         $this->obj->isResolvable(false);
     }
 
+    /**
+     * @expectedException Exception
+     *
+     * @return void
+     */
     public function testCreate()
     {
         $ret = $this->obj->create('\DateTime');
         $this->assertInstanceOf('\DateTime', $ret);
 
-        $this->setExpectedException('\Exception');
         $ret2 = $this->obj->create('foobar');
     }
 
@@ -39,19 +53,19 @@ class GenericFactoryTest extends \PHPUnit_Framework_TestCase
      * Asserts that the AbstractFactory's `create()` method, as GenericFactory:
      * - Returns the default class when passing an invalid argument, if set
      * - Throws an exception when passing an invalid argument, if no default class is set
+     *
+     * @return void
      */
     public function testCreateDefaultClass()
     {
         $this->obj->setDefaultClass('\DateTime');
         $ret = $this->obj->create('foobar');
         $this->assertInstanceOf('\DateTime', $ret);
-
-        // $this->obj->setDefaultClass(get_class($this));
-        // $this->setExpectedException('\Exception');
-        // $this->obj->create('foobar');
     }
 
-
+    /**
+     * @return void
+     */
     public function testCreateCreatesNewInstance()
     {
         $ret1 = $this->obj->create('\DateTime');
@@ -60,6 +74,9 @@ class GenericFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertNotSame($ret1, $ret2);
     }
 
+    /**
+     * @return void
+     */
     public function testCreateCallback()
     {
         $ret = $this->obj->create('\DateTime', null, function($obj) {
@@ -67,6 +84,9 @@ class GenericFactoryTest extends \PHPUnit_Framework_TestCase
         });
     }
 
+    /**
+     * @return void
+     */
     public function testGetReturnsSameInstance()
     {
         $ret1 = $this->obj->get('\DateTime');
@@ -75,6 +95,11 @@ class GenericFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret1, $ret2);
     }
 
+    /**
+     * @expectedException Exception
+     *
+     * @return void
+     */
     public function testCreateBaseClass()
     {
         $this->obj->setBaseClass('\DateTimeInterface');
@@ -82,7 +107,6 @@ class GenericFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\DateTime', $ret);
 
         $this->obj->setBaseClass('\Charcoal\Factory\FactoryInterface');
-        $this->setExpectedException('\Exception');
         $this->obj->create('\DateTime');
     }
 }

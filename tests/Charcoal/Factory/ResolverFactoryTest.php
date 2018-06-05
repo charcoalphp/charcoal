@@ -1,26 +1,33 @@
 <?php
 
-namespace Charcoal\Tests\Core;
+namespace Charcoal\Tests\Factory;
 
-use \Charcoal\Factory\AbstractFactory;
-
-use \Charcoal\Tests\Factory\AbstractFactoryClass as AbstractFactoryClass;
+use Charcoal\Factory\ResolverFactory;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class ResolverFactoryTest extends \PHPUnit_Framework_TestCase
+class ResolverFactoryTest extends AbstractTestCase
 {
+    /**
+     * @var ResolverFactory
+     */
     public $obj;
 
     /**
-     *
+     * @return void
      */
     public function setUp()
     {
-        $this->obj = new \Charcoal\Factory\ResolverFactory();
+        $this->obj = new ResolverFactory();
     }
 
+    /**
+     * @expectedException InvalidArgumentException
+     *
+     * @return void
+     */
     public function testSetResolverPrefix()
     {
         $this->assertEquals('', $this->obj->resolverPrefix());
@@ -28,10 +35,14 @@ class ResolverFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('foo', $this->obj->resolverPrefix());
 
-        $this->setExpectedException('\InvalidArgumentException');
         $this->obj->setResolverPrefix(false);
     }
 
+    /**
+     * @expectedException InvalidArgumentException
+     *
+     * @return void
+     */
     public function testSetResolverSuffix()
     {
         $this->assertEquals('', $this->obj->resolverSuffix());
@@ -39,13 +50,14 @@ class ResolverFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('foo', $this->obj->resolverSuffix());
 
-        $this->setExpectedException('\InvalidArgumentException');
         $this->obj->setResolverSuffix(false);
     }
 
+    /**
+     * @return void
+     */
     public function testSetResolverCapitals()
     {
-        //$this->assertEquals([], $this->obj->resolverCapitals());
         $ret = $this->obj->setResolverCapitals(['$']);
         $this->assertSame($ret, $this->obj);
         $this->assertEquals(['$'], $this->obj->resolverCapitals());
@@ -53,6 +65,9 @@ class ResolverFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('\$Abc$De', $this->obj->resolve('$abc$de'));
     }
 
+    /**
+     * @return void
+     */
     public function testSetResoverReplacements()
     {
         $ret = $this->obj->setResolverReplacements(['$'=>'_']);
@@ -64,6 +79,10 @@ class ResolverFactoryTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider providerResolve
+     *
+     * @param  string $type      Factory key.
+     * @param  string $classname Factory class name.
+     * @return void
      */
     public function testResolve($type, $classname)
     {
@@ -74,27 +93,41 @@ class ResolverFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($classname.'Test', $this->obj->resolve($type));
     }
 
+    /**
+     * @expectedException InvalidArgumentException
+     *
+     * @return void
+     */
     public function testResolveWithoutStringThrowsException()
     {
-        $this->setExpectedException('\InvalidArgumentException');
         $this->obj->resolve(false);
     }
 
+    /**
+     * @expectedException InvalidArgumentException
+     *
+     * @return void
+     */
     public function testIsResolvable()
     {
         $this->assertFalse($this->obj->isResolvable('foo'));
         $this->assertTrue($this->obj->isResolvable('charcoal/factory/map-factory'));
 
-        $this->setExpectedException('\InvalidArgumentException');
         $this->obj->isResolvable(false);
     }
 
+    /**
+     * @return void
+     */
     public function testCreate()
     {
         $ret = $this->obj->create('charcoal/factory/map-factory');
         $this->assertInstanceOf('\Charcoal\Factory\MapFactory', $ret);
     }
 
+    /**
+     * @return array
+     */
     public function providerResolve()
     {
         return [

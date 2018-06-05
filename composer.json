@@ -1,6 +1,6 @@
 {
-    "name": "locomotivemtl/charcoal-factory",
     "type": "library",
+    "name": "locomotivemtl/charcoal-factory",
     "description": "Charcoal object creation (Factory, AbstractFactory, Builder, Class Resolver)",
     "keywords": [ "charcoal" ],
     "homepage": "https://charcoal.locomotive.ca",
@@ -26,13 +26,18 @@
         "php": ">=5.6.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5.7",
-        "squizlabs/php_codesniffer": "^2.4",
-        "satooshi/php-coveralls": "^1.0"
+        "phpunit/phpunit": "^5.7 || ^6.5",
+        "squizlabs/php_codesniffer": "^3.0",
+        "php-coveralls/php-coveralls": "^2.0"
     },
     "autoload": {
         "psr-4": {
             "Charcoal\\": "src/Charcoal/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Charcoal\\Tests\\": "tests/Charcoal/"
         }
     },
     "scripts": {
@@ -44,9 +49,9 @@
             "@phpcs",
             "@phpunit"
         ],
-        "phplint": "find {src,tests} -name '*.php' -print0 | xargs -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1",
-        "phpunit": "php vendor/bin/phpunit --configuration tests/phpunit.xml --coverage-text",
-        "phpcs": "phpcs --config-set ignore_warnings_on_exit 1;php vendor/bin/phpcs -ps --colors --standard=phpcs.xml src/",
-        "phpcbf": "php vendor/bin/phpcbf -ps --colors --standard=phpcs.xml src/ tests/"
+        "phplint": "find src tests -type f -name '*.php' -print0 | xargs -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1",
+        "phpcs": "php vendor/bin/phpcs -ps --colors src/ tests/",
+        "phpcbf": "php vendor/bin/phpcbf -ps --colors src/ tests/",
+        "phpunit": "php vendor/bin/phpunit --coverage-text"
     }
 }

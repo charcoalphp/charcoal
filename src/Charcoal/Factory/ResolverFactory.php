@@ -2,10 +2,9 @@
 
 namespace Charcoal\Factory;
 
-use \InvalidArgumentException;
+use InvalidArgumentException;
 
-// Local namespace dependencies
-use \Charcoal\Factory\AbstractFactory;
+use Charcoal\Factory\AbstractFactory;
 
 /**
  * The Resolver Factory resolves the **class name** by different configurably

@@ -1,24 +1,26 @@
 <?php
 
-namespace Charcoal\Tests\Core;
+namespace Charcoal\Tests\Factory;
 
-use \Charcoal\Factory\AbstractFactory;
-
-use \Charcoal\Tests\Factory\AbstractFactoryClass as AbstractFactoryClass;
+use Charcoal\Factory\AbstractFactory;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  *
  */
-class AbstractFactoryTest extends \PHPUnit_Framework_TestCase
+class AbstractFactoryTest extends AbstractTestCase
 {
+    /**
+     * @var ResolverFactory
+     */
     public $obj;
 
     /**
-     *
+     * @return void
      */
     public function setUp()
     {
-        $this->obj = $this->getMockForAbstractClass('\Charcoal\Factory\AbstractFactory');
+        $this->obj = $this->getMockForAbstractClass(AbstractFactory::class);
     }
 
     /**
@@ -29,23 +31,30 @@ class AbstractFactoryTest extends \PHPUnit_Framework_TestCase
      * - Is chainable
      * - Properly sets the baseClass value.
      * - Throws an exception if the parameter is not a valid (existing) class
+     *
+     * @expectedException InvalidArgumentException
+     *
+     * @return void
      */
     public function testSetBaseClass()
     {
         $obj = $this->obj;
         $this->assertSame('', $obj->baseClass());
 
-        $ret = $obj->setBaseClass('\Charcoal\Factory\AbstractFactory');
+        $ret = $obj->setBaseClass(AbstractFactory::class);
         $this->assertSame($ret, $obj);
-        $this->assertEquals('\Charcoal\Factory\AbstractFactory', $obj->baseClass());
+        $this->assertEquals(AbstractFactory::class, $obj->baseClass());
 
-        $this->setExpectedException('\InvalidArgumentException');
         $obj->setBaseClass('foobar');
     }
 
+    /**
+     * @expectedException InvalidArgumentException
+     *
+     * @return void
+     */
     public function testSetBaseClassNotAString()
     {
-        $this->setExpectedException('\InvalidArgumentException');
         $this->obj->setBaseClass(false);
     }
 
@@ -57,28 +66,39 @@ class AbstractFactoryTest extends \PHPUnit_Framework_TestCase
      * - Is chainable
      * - Properly sets the defaultClass value.
      * - Throws an exception if the parameter is not a valid (existing) class
+     *
+     * @expectedException InvalidArgumentException
+     *
+     * @return void
      */
     public function testSetDefaultClass()
     {
         $this->assertSame('', $this->obj->defaultClass());
 
-        $ret = $this->obj->setDefaultClass('\Charcoal\Factory\AbstractFactory');
+        $ret = $this->obj->setDefaultClass(AbstractFactory::class);
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals('\Charcoal\Factory\AbstractFactory', $this->obj->defaultClass());
+        $this->assertEquals(AbstractFactory::class, $this->obj->defaultClass());
 
-        $this->setExpectedException('\InvalidArgumentException');
         $this->obj->setDefaultClass('foobar');
     }
 
+    /**
+     * @expectedException InvalidArgumentException
+     *
+     * @return void
+     */
     public function testSetDefaultClassNotAString()
     {
-        $this->setExpectedException('\InvalidArgumentException');
         $this->obj->setDefaultClass(false);
     }
 
+    /**
+     * @expectedException InvalidArgumentException
+     *
+     * @return void
+     */
     public function testCreateInvalidArgumentException()
     {
-        $this->setExpectedException('\InvalidArgumentException');
         $this->obj->create(false);
     }
 }

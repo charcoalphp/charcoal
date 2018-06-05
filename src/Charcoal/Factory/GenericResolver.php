@@ -2,7 +2,7 @@
 
 namespace Charcoal\Factory;
 
-use \InvalidArgumentException;
+use InvalidArgumentException;
 
 /**
  * Converts the given **type** into a **class name**.

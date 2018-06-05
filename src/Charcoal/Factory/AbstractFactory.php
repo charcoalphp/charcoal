@@ -2,13 +2,11 @@
 
 namespace Charcoal\Factory;
 
-// Dependencies from `PHP`
-use \Exception;
-use \InvalidArgumentException;
+use Exception;
+use InvalidArgumentException;
 
-// Local namespace dependencies
-use \Charcoal\Factory\FactoryInterface;
-use \Charcoal\Factory\GenericResolver;
+use Charcoal\Factory\FactoryInterface;
+use Charcoal\Factory\GenericResolver;
 
 /**
  * Full implementation, as Abstract class, of the FactoryInterface.
@@ -113,9 +111,11 @@ abstract class AbstractFactory implements FactoryInterface
      * It is possible to pass a callback method that will be executed upon object instanciation.
      * The callable should have a signature: `function($obj);` where $obj is the newly created object.
      *
-     * @param string   $type The type (class ident).
-     * @param array    $args Optional. Constructor arguments (will override the arguments set on the class from constructor).
-     * @param callable $cb   Optional. Object callback, called at creation. Will run in addition to the default callback, if any.
+     * @param  string   $type The type (class ident).
+     * @param  array    $args Optional. Constructor arguments
+     *     (will override the arguments set on the class from constructor).
+     * @param  callable $cb   Optional. Object callback, called at creation.
+     *     Will run in addition to the default callback, if any.
      * @throws Exception If the base class is set and  the resulting instance is not of the base class.
      * @throws InvalidArgumentException If type argument is not a string or is not an available type.
      * @return mixed The instance / object
@@ -225,7 +225,10 @@ abstract class AbstractFactory implements FactoryInterface
         if (count(array_filter(array_keys($args), 'is_string')) > 0) {
             return new $classname($args);
         } else {
-            // Use argument unpacking (`return new $classname(...$args);`) when minimum PHP requirement is bumped to 5.6.
+            /**
+             * @todo Use argument unpacking (`return new $classname(...$args);`)
+             *     when minimum PHP requirement is bumped to 5.6.
+             */
             $reflection = new \ReflectionClass($classname);
             return $reflection->newInstanceArgs($args);
         }
@@ -234,7 +237,8 @@ abstract class AbstractFactory implements FactoryInterface
     /**
      * Get (load or create) an instance of a class, by type.
      *
-     * Unlike `create()` (which always call a `new` instance), this function first tries to load / reuse
+     * Unlike `create()` (which always call a `new` instance),
+     * this function first tries to load / reuse
      * an already created object of this type, from memory.
      *
      * @param string $type The type (class ident).
