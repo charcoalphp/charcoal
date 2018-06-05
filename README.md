@@ -298,8 +298,12 @@ The Charcoal-Attachment module follows the Charcoal coding-style:
 
 > Coding style validation / enforcement can be performed with `composer phpcs`. An auto-fixer is also available with `composer phpcbf`.
 
-## Authors
+# Authors
 
 -   Mathieu Ducharme <mat@locomotive.ca>
 -   Chauncey McAskill <chauncey@locomotive.ca>
 -   Benjamin Roch <benjamin@locomotive.ca>
+
+# License
+
+Charcoal is licensed under the MIT license. See [LICENSE](LICENSE) for details.
