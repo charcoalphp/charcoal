@@ -141,9 +141,10 @@ class DatabaseOrder extends Order implements
 
         $values = $this->prepareValues($this->values());
         if (empty($values)) {
-            throw new UnexpectedValueException(
-                'Values can not be empty.'
-            );
+            throw new UnexpectedValueException(sprintf(
+                'Value can not be empty on fields: %s',
+                implode(', ', $fields)
+            ));
         }
 
         $dir = $this->direction();

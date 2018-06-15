@@ -180,7 +180,8 @@ class DatabaseFilter extends Filter implements
                 case 'FIND_IN_SET':
                     if ($value === null) {
                         throw new UnexpectedValueException(sprintf(
-                            'Value is required for "%s".',
+                            'Value is required on field "%s" for "%s"',
+                            $target,
                             $operator
                         ));
                     }
@@ -212,7 +213,8 @@ class DatabaseFilter extends Filter implements
                 case 'NOT IN':
                     if ($value === null) {
                         throw new UnexpectedValueException(sprintf(
-                            'Value is required for "%s".',
+                            'Value is required on field "%s" for "%s"',
+                            $target,
                             $operator
                         ));
                     }
@@ -227,7 +229,8 @@ class DatabaseFilter extends Filter implements
                 default:
                     if ($value === null) {
                         throw new UnexpectedValueException(sprintf(
-                            'Value is required for "%s".',
+                            'Value is required on field "%s" for "%s"',
+                            $target,
                             $operator
                         ));
                     }
