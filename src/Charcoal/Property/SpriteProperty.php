@@ -5,6 +5,12 @@ namespace Charcoal\Property;
 use InvalidArgumentException;
 use PDO;
 
+// from 'charcoal-view'
+use Charcoal\View\ViewInterface;
+
+// from 'pimple'
+use Pimple\Container;
+
 /**
  * Sprite Property holds a reference to an external sprite svg.
  *
@@ -23,6 +29,11 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
     private $sprite;
 
     /**
+     * @var ViewInterface
+     */
+    private $view;
+
+    /**
      * Sets data on this entity.
      *
      * @uses   self::offsetSet()
@@ -36,6 +47,17 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
         $this->setChoices($this->buildChoicesFromSprite());
 
         return $this;
+    }
+
+    /**
+     * @param Container $container A Pimple DI container.
+     * @return void
+     */
+    protected function setDependencies(Container $container)
+    {
+        parent::setDependencies($container);
+
+        $this->view = $container['view'];
     }
 
     /**
@@ -152,8 +174,8 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
 
         if (is_string($choice)) {
             $choice = [
-                'value' => $choiceIdent,
-                'label' => $this->translator()->translation($choiceIdent),
+                'value'              => $choiceIdent,
+                'label'              => $this->translator()->translation($choiceIdent),
                 'spritePathWithHash' => $this->sprite().'#'.$choice
             ];
         } elseif (is_array($choice)) {
@@ -167,7 +189,7 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
 
             if (!isset($choice['spritePathWithHash'])) {
                 $choice['spritePathWithHash'] = $this->sprite().'#'.$choice;
-                $choice['label'] = $this->translator()->translation($choiceIdent);
+                $choice['label']              = $this->translator()->translation($choiceIdent);
             }
         } else {
             throw new InvalidArgumentException(
@@ -176,5 +198,28 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
         }
 
         return $choice;
+    }
+
+    /**
+     * @param  mixed $val     The value to to convert for display.
+     * @param  array $options Optional display options.
+     * @return string
+     */
+    public function displayVal($val, array $options = [])
+    {
+        $val = parent::displayVal($val, $options);
+
+        if ($val !== '') {
+            $val = $this->view->render(
+                '<svg viewBox="0 0 25 25" height="40px" role=\'img\'>'.
+                '<use xlink:href=\'{{# withBaseUrl }}{{ spritePathWithHash }}{{/ withBaseUrl }}\'></use>'.
+                '</svg>',
+                [
+                    'spritePathWithHash' => $this->sprite().'#'.$val
+                ]
+            );
+        }
+
+        return $val;
     }
 }
