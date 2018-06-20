@@ -346,6 +346,16 @@ abstract class AbstractProperty extends AbstractEntity implements
                 ));
             }
 
+            if (empty($val) === true) {
+                if ($this->allowNull() === false) {
+                    throw new InvalidArgumentException(sprintf(
+                        'Property "%s" value can not be NULL or empty (not allowed)',
+                        $this->ident()
+                    ));
+                } else {
+                    return null;
+                }
+            }
             $val = array_map([ $this, 'parseOne' ], $val);
         } else {
             $val = $this->parseOne($val);
