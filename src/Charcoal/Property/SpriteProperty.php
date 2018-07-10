@@ -211,7 +211,7 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
 
         if ($val !== '') {
             $val = $this->view->render(
-                '<svg viewBox="0 0 25 25" height="40px" role=\'img\'><use xlink:href=\'{{# withBaseUrl }}{{ spritePathWithHash }}{{/ withBaseUrl }}\'></use></svg>',
+                '<svg fill="currentColor" viewBox="0 0 25 25" height="40px" role=\'img\'><use xlink:href=\'{{# withBaseUrl }}{{ spritePathWithHash }}{{/ withBaseUrl }}\'></use></svg>',
                 [
                     'spritePathWithHash' => $this->sprite().'#'.$val
                 ]
