@@ -2,10 +2,12 @@
 
 namespace Charcoal\Queue;
 
+use Charcoal\Model\ModelInterface;
+
 /**
  *
  */
-interface QueueItemInterface
+interface QueueItemInterface extends ModelInterface
 {
     /**
      * Process the item.
