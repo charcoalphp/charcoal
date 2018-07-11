@@ -30,7 +30,7 @@ trait QueueItemTrait
     /**
      * When the item was queued.
      *
-     * @var DateTimeInterface $queuedDate
+     * @var DateTimeInterface|null $queuedDate
      */
     private $queuedDate;
 
@@ -40,14 +40,14 @@ trait QueueItemTrait
      * The date/time at which this queue item job should be ran.
      * If NULL, 0, or a past date/time, then it should be performed immediately.
      *
-     * @var DateTimeInterface $processingDate
+     * @var DateTimeInterface|null $processingDate
      */
     private $processingDate;
 
     /**
      * When the item was processed.
      *
-     * @var DateTimeInterface $processedDate
+     * @var DateTimeInterface|null $processedDate
      */
     private $processedDate;
 
