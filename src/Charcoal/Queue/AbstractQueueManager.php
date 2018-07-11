@@ -4,14 +4,14 @@ namespace Charcoal\Queue;
 
 use Exception;
 
-// PSR-3 (logger) dependencies
+// From PSR-3
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 
-// From `charcoal-core`
+// From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
 
-// From `charcoal-factory`
+// From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 
 /**
@@ -304,31 +304,31 @@ abstract class AbstractQueueManager implements
     public function loadQueueItems()
     {
         $loader = new CollectionLoader([
-            'logger' => $this->logger,
-            'factory' => $this->queueItemFactory()
+            'logger'  => $this->logger,
+            'factory' => $this->queueItemFactory(),
         ]);
         $loader->setModel($this->queueItemProto());
         $loader->addFilter([
             'property' => 'processed',
-            'value'      => 0
+            'value'    => 0,
         ]);
         $loader->addFilter([
              'property' => 'processing_date',
-             'value'      => date('Y-m-d H:i:s'),
-             'operator' => '<'
+             'operator' => '<',
+             'value'    => date('Y-m-d H:i:s'),
         ]);
 
         $queueId = $this->queueId();
         if ($queueId) {
             $loader->addFilter([
                 'property' => 'queue_id',
-                'value'    => $queueId
+                'value'    => $queueId,
             ]);
         }
 
         $loader->addOrder([
             'property' => 'queued_date',
-            'mode'     => 'asc'
+            'mode'     => 'asc',
         ]);
 
         if ($this->limit > 0) {
