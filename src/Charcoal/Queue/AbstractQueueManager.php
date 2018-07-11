@@ -330,12 +330,13 @@ abstract class AbstractQueueManager implements
             'property' => 'queued_date',
             'mode'     => 'asc'
         ]);
-        $queued = $loader->load();
 
         if ($this->limit > 0) {
             $loader->setNumPerPage($this->limit);
             $loader->setPage(0);
         }
+
+        $queued = $loader->load();
 
         return $queued;
     }
