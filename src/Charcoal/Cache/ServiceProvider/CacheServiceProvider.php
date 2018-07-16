@@ -3,6 +3,7 @@
 namespace Charcoal\Cache\ServiceProvider;
 
 // From Pimple
+use Charcoal\Cache\Facade\CachePoolFacade;
 use Pimple\ServiceProviderInterface;
 use Pimple\Container;
 
@@ -240,6 +241,18 @@ class CacheServiceProvider implements ServiceProviderInterface
             }
 
             return $cacheBuilder($cacheDrivers);
+        };
+
+        /**
+         * @param Container $container
+         * @return CachePoolFacade
+         */
+        $container['cache/facade'] = function (Container $container) {
+            return new CachePoolFacade([
+                'cache'  => $container['cache'],
+                'ttl'    => $container['config']->get('cache.ttl'),
+                'logger' => $container['logger']
+            ]);
         };
     }
 
