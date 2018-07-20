@@ -49,6 +49,13 @@ trait UiItemTrait
     private $title = '';
 
     /**
+     * The UI item's tab title.
+     *
+     * @var \Charcoal\Translator\Translation
+     */
+    private $tabTitle = '';
+
+    /**
      * The UI item's sub-title.
      *
      * @var \Charcoal\Translator\Translation
@@ -239,6 +246,28 @@ trait UiItemTrait
     public function title()
     {
         return $this->title;
+    }
+
+    /**
+     * Set the UI item's tab title.
+     *
+     * @param  mixed $title A title.
+     * @return self
+     */
+    public function setTabTitle($title)
+    {
+        $this->tabTitle = $this->translator()->translation($title);
+        return $this;
+    }
+
+    /**
+     * Retrieve the tab title.
+     *
+     * @return \Charcoal\Translator\Translation|null
+     */
+    public function tabTitle()
+    {
+        return $this->tabTitle ?: $this->title();
     }
 
     /**
