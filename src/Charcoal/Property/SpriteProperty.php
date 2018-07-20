@@ -220,4 +220,22 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
 
         return $val;
     }
+
+    /**
+     * @param  mixed $val The value to to convert as path.
+     * @return string
+     */
+    public function spriteVal($val)
+    {
+        if ($val !== '') {
+            $val = $this->view->render(
+                '{{# withBaseUrl }}{{ spritePathWithHash }}{{/ withBaseUrl }}',
+                [
+                    'spritePathWithHash' => $this->sprite().'#'.$val
+                ]
+            );
+        }
+
+        return $val;
+    }
 }
