@@ -2,6 +2,7 @@
 
 namespace Charcoal\Ui\Form;
 
+use Charcoal\Admin\Widget\FormWidget;
 use Charcoal\Ui\ConditionalizableInterface;
 use Exception;
 use InvalidArgumentException;
@@ -349,7 +350,7 @@ trait FormTrait
         }
 
         $group = $this->formGroupFactory()->create($type);
-        $group->setForm($this);
+        $group->setForm($this->formWidget());
 
         if ($data !== null) {
             $group->setData($data);
@@ -371,7 +372,7 @@ trait FormTrait
         array $groupData = null,
         $groupIdent = null
     ) {
-        $group->setForm($this);
+        $group->setForm($this->formWidget());
 
         if ($groupData !== null) {
             $group->setData($groupData);
@@ -593,5 +594,13 @@ trait FormTrait
     public function formData()
     {
         return $this->formData;
+    }
+
+    /**
+     * @return FormWidget
+     */
+    protected function formWidget()
+    {
+        return $this;
     }
 }

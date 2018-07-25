@@ -79,6 +79,11 @@ trait FormGroupTrait
     private $isHidden;
 
     /**
+     * @var array|null
+     */
+    private $conditionalLogic;
+
+    /**
      * Comparison function used by {@see uasort()}.
      *
      * @param  PrioritizableInterface $a Sortable entity A.
@@ -302,6 +307,34 @@ trait FormGroupTrait
     public function setIsHidden($isHidden)
     {
         $this->isHidden = $isHidden;
+
+        return $this;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function conditionalLogic()
+    {
+        return $this->conditionalLogic;
+    }
+
+    /**
+     * @param array|null $conditionalLogic ConditionalLogic for FormGroupWidget.
+     * @return self
+     */
+    public function setConditionalLogic($conditionalLogic)
+    {
+        if ($conditionalLogic && is_array($conditionalLogic)) {
+            foreach ($conditionalLogic as &$condition) {
+                $prop = $this->form()->formProperty($condition['property']);
+                $condition['input_id'] = $prop->input()->inputId();
+            }
+        }
+
+        $this->conditionalLogic = [
+            $this->widgetId() => $conditionalLogic
+        ];
 
         return $this;
     }
