@@ -267,7 +267,7 @@ trait UiItemTrait
      */
     public function tabTitle()
     {
-        return $this->tabTitle ?: $this->title();
+        return ($this->tabTitle) ? $this->tabTitle : $this->title();
     }
 
     /**
