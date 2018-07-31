@@ -1,9 +1,10 @@
 {
     "admin": {
         "input_type": "charcoal/admin/property/input/selectize",
+        "input_class": "sprite-select",
         "deferred": false,
         "selectizeTemplates": {
-            "item": "charcoal/admin/property/input/selectize/template/sprite",
+            "item": "charcoal/admin/property/input/selectize/template/sprite-item",
             "option": "charcoal/admin/property/input/selectize/template/sprite",
             "controller": "charcoal/admin/property/input/selectize/template/sprite",
             "data": {

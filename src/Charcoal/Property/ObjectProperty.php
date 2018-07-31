@@ -123,9 +123,6 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
         return 'object';
     }
 
-
-
-
     /**
      * Set the object type to build the choices from.
      *
