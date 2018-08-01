@@ -353,7 +353,7 @@ abstract class AbstractProperty extends AbstractEntity implements
                         $this->ident()
                     ));
                 } else {
-                    return null;
+                    return [];
                 }
             }
             $val = array_map([ $this, 'parseOne' ], $val);
