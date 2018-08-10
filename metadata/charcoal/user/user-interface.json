@@ -77,6 +77,15 @@
                 "en": "Login Token",
                 "fr": "Clé de connexion"
             }
+        },
+        "preferences": {
+            "type": "structure",
+            "l10n": false,
+            "multiple": false,
+            "label": {
+                "en": "Preferences",
+                "fr": "Préférences"
+            }
         }
     },
 

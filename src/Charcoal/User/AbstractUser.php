@@ -100,6 +100,15 @@ abstract class AbstractUser extends Content implements
     private $loginToken = '';
 
     /**
+     * Structure
+     *
+     * Get the user preferences
+     *
+     * @var array|mixed
+     */
+    private $preferences;
+
+    /**
      * @see    \Charcoal\Source\StorableTrait::key()
      * @return string
      */
@@ -402,6 +411,25 @@ abstract class AbstractUser extends Content implements
         }
 
         $this->loginToken = $token;
+
+        return $this;
+    }
+
+    /**
+     * @return array|mixed
+     */
+    public function preferences()
+    {
+        return $this->preferences;
+    }
+
+    /**
+     * @param array|mixed $preferences Preferences for AbstractUser.
+     * @return self
+     */
+    public function setPreferences($preferences)
+    {
+        $this->preferences = $preferences;
 
         return $this;
     }

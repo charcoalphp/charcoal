@@ -143,4 +143,13 @@ interface UserInterface extends ContentInterface
      * @return UserInterface Chainable
      */
     public function resetPassword($plainPassword);
+
+    /**
+     * Structure
+     *
+     * Get the user preferences
+     *
+     * @return array|mixed
+     */
+    public function preferences();
 }
