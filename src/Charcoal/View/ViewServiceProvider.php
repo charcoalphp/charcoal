@@ -85,7 +85,26 @@ class ViewServiceProvider implements ServiceProviderInterface
         $container['view/config'] = function (Container $container) {
             $appConfig  = isset($container['config']) ? $container['config'] : [];
             $viewConfig = isset($appConfig['view']) ? $appConfig['view'] : null;
-            return new ViewConfig($viewConfig);
+
+            $config = new ViewConfig($viewConfig);
+
+            $extraViewPaths = [];
+            $basePath = $appConfig['base_path'];
+            foreach ($container['module/classes'] as $module) {
+                if (defined(sprintf('%s::APP_CONFIG', $module))) {
+                    $moduleConfig = $module::APP_CONFIG;
+                    $extraViewPaths = array_merge(
+                        $extraViewPaths,
+                        $config->loadFile($basePath.$moduleConfig)['view']['paths']
+                    );
+                };
+            }
+
+            if (!empty($extraViewPaths)) {
+                $config->addPaths($extraViewPaths);
+            }
+
+            return $config;
         };
     }
 

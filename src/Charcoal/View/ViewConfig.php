@@ -66,6 +66,18 @@ class ViewConfig extends AbstractConfig
     }
 
     /**
+     * @param  string[] $paths One or more search paths.
+     * @return self
+     */
+    public function addPaths(array $paths)
+    {
+        foreach ($paths as $path) {
+            $this->addPath($path);
+        }
+        return $this;
+    }
+
+    /**
      * @param string $path A path to add to the paths list.
      * @throws InvalidArgumentException If the path is not a string.
      * @return ViewConfig Chainable
