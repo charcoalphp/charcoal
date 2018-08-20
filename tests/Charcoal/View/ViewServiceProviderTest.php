@@ -28,6 +28,7 @@ class ViewServiceProviderTest extends AbstractTestCase
         $container = new Container([
             'config' => []
         ]);
+
         $provider = new ViewServiceProvider();
         $provider->register($container);
 
@@ -50,6 +51,7 @@ class ViewServiceProviderTest extends AbstractTestCase
                     'default_engine' => 'twig'
                 ]
             ],
+            'module/classes' => [],
             'logger' => new NullLogger()
         ]);
         $provider = new ViewServiceProvider();
@@ -77,7 +79,8 @@ class ViewServiceProviderTest extends AbstractTestCase
                     'paths' => [ 'Mustache/templates' ],
                     'default_engine' => 'mustache'
                 ]
-            ]
+            ],
+            'module/classes' => []
         ]);
         $provider = new ViewServiceProvider();
         $provider->register($container);
@@ -103,6 +106,7 @@ class ViewServiceProviderTest extends AbstractTestCase
                     'default_engine' => 'php'
                 ]
             ],
+            'module/classes' => [],
             'logger' => new NullLogger()
         ]);
         $provider = new ViewServiceProvider();
