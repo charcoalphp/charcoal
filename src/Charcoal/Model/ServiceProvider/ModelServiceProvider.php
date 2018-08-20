@@ -3,6 +3,8 @@
 namespace Charcoal\Model\ServiceProvider;
 
 // From Pimple
+use Charcoal\Cms\ConfigInterface;
+use Charcoal\Factory\GenericResolver;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 
@@ -227,7 +229,26 @@ class ModelServiceProvider implements ServiceProviderInterface
             $container['metadata/config'] = function (Container $container) {
                 $appConfig  = isset($container['config']) ? $container['config'] : [];
                 $metaConfig = isset($appConfig['metadata']) ? $appConfig['metadata'] : null;
-                return new MetadataConfig($metaConfig);
+
+                $config = new MetadataConfig($metaConfig);
+
+                $extraMetadataPaths = [];
+                $basePath = $appConfig['base_path'];
+                foreach ($container['module/classes'] as $module) {
+                    if (defined(sprintf('%s::APP_CONFIG', $module))) {
+                        $moduleConfig = $module::APP_CONFIG;
+                        $extraMetadataPaths = array_merge(
+                            $extraMetadataPaths,
+                            $config->loadFile($basePath.$moduleConfig)['metadata']['paths']
+                        );
+                    };
+                }
+
+                if (!empty($extraMetadataPaths)) {
+                    $config->addPaths($extraMetadataPaths);
+                }
+
+                return $config;
             };
         }
 
