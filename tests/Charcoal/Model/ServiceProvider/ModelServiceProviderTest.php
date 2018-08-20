@@ -76,6 +76,7 @@ class ModelServiceProviderTest extends AbstractTestCase
         $container = new Container();
 
         $container['cache']  = new Pool(new Ephemeral());
+        $container['metadata/cache']  = new Pool(new Ephemeral());
         $container['config'] = new AppConfig([
             'metadata'  => [
                 'paths' => []
@@ -107,6 +108,10 @@ class ModelServiceProviderTest extends AbstractTestCase
         ]);
         $container['translator'] = new Translator([
             'manager' => $container['language/manager']
+        ]);
+
+        $container['metadata/config'] = new AppConfig([
+            'paths' => []
         ]);
 
         return $container;
