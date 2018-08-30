@@ -165,6 +165,11 @@ abstract class AbstractProperty extends AbstractEntity implements
     protected $pdo;
 
     /**
+     * @var array|null
+     */
+    private $conditionalLogic;
+
+    /**
      * Required dependencies:
      * - `logger` a PSR3-compliant logger.
      * - `pdo` a PDO database.
@@ -1032,5 +1037,24 @@ abstract class AbstractProperty extends AbstractEntity implements
     private function setPdo(PDO $pdo)
     {
         $this->pdo = $pdo;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function conditionalLogic()
+    {
+        return $this->conditionalLogic;
+    }
+
+    /**
+     * @param array|null $conditionalLogic ConditionalLogic for FormGroupWidget.
+     * @return self
+     */
+    public function setConditionalLogic($conditionalLogic)
+    {
+        $this->conditionalLogic = $conditionalLogic;
+
+        return $this;
     }
 }
