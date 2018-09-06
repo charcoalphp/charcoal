@@ -30,13 +30,12 @@
     "admin": {
         "forms": {
             "quick": {
-                "group_display_mode": "tab",
                 "groups": {
                     "body": {
                         "title": "Content Accordion",
                         "show_header": false,
                         "properties": [
-                            "ident"
+                            "title"
                         ],
                         "layout": {
                             "structure": [
@@ -44,8 +43,7 @@
                                 { "columns": [ 1 ] }
                             ]
                         }
-                    },
-                    "quick.auxiliary": {}
+                    }
                 }
             },
             "default": {
