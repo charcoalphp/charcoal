@@ -205,7 +205,7 @@ class AttachmentWidget extends AdminWidget implements
     public function attachments()
     {
         $attachableObjects = $this->attachableObjects();
-        $attachments       = $this->obj()->attachments([
+        $attachments       = $this->obj()->getAttachments([
             'group' => $this->group()
         ]);
 

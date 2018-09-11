@@ -25,9 +25,7 @@ class Container extends Attachment implements
     AttachmentContainerInterface,
     ConfigurableInterface
 {
-    use AttachmentAwareTrait {
-        AttachmentAwareTrait::attachments as getAttachments;
-    }
+    use AttachmentAwareTrait;
     use AttachmentContainerTrait;
     use ConfigurableAttachmentsTrait;
 

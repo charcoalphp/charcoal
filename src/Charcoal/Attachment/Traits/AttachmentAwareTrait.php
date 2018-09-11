@@ -67,7 +67,7 @@ trait AttachmentAwareTrait
      * @throws InvalidArgumentException If the $group or $type is invalid.
      * @return Collection|Attachment[]
      */
-    public function attachments(
+    public function getAttachments(
         $group = null,
         $type = null,
         callable $before = null,
@@ -249,7 +249,7 @@ trait AttachmentAwareTrait
      */
     public function numAttachments()
     {
-        return count($this->attachments([
+        return count($this->getAttachments([
             'group' => null
         ]));
     }
