@@ -6,7 +6,11 @@
     @used-by `charcoal/admin/widget/attachment/object/noncollapsible`
 --}}
 {{# attachmentOptions.show_icon }}
-    {{# faIcon }}
-        <i class="{{ . }} mr-3"></i>
-    {{/ faIcon }}
+    {{# hasFaIcon }}
+    <span class="mr-3">
+        {{# faIcon }}
+        <i class="{{ . }}"></i>
+        {{/ faIcon }}
+    </span>
+    {{/ hasFaIcon }}
 {{/ attachmentOptions.show_icon }}

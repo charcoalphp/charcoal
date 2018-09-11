@@ -181,6 +181,7 @@ trait AttachmentContainerTrait
                     }
 
                     $attMeta['faIcon'] = $faIcon;
+                    $attMeta['hasFaIcon'] = !!$faIcon;
 
                     // Custom forms
                     if (isset($attMeta['form_ident'])) {
