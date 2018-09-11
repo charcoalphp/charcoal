@@ -2,6 +2,7 @@
 
 namespace Charcoal\Attachment\Object;
 
+use Charcoal\Model\ModelInterface;
 use Exception;
 use ReflectionClass;
 use RuntimeException;
@@ -180,6 +181,11 @@ class Attachment extends Content implements AttachableInterface
      * @var CollectionLoader
      */
     private $collectionLoader;
+
+    /**
+     * @var ModelInterface $presenter
+     */
+    private $presenter;
 
     /**
      * Return a new section object.
@@ -884,6 +890,25 @@ class Attachment extends Content implements AttachableInterface
     public function categories()
     {
         return $this->categories;
+    }
+
+    /**
+     * @return ModelInterface|mixed
+     */
+    public function presenter()
+    {
+        return $this->presenter;
+    }
+
+    /**
+     * @param ModelInterface|mixed $presenter Presenter for Attachment.
+     * @return self
+     */
+    public function setPresenter($presenter)
+    {
+        $this->presenter = $presenter;
+
+        return $this;
     }
 
     // Events

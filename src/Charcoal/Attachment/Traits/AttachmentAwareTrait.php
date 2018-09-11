@@ -207,6 +207,17 @@ trait AttachmentAwareTrait
 
                 $att->isPresentable(true);
 
+                /** Not Sure if we want to present the attachment for backend preview.
+                 * Might want to have a second presenter key on attachment model
+                 * so we can supply either the same presenter,
+                 * another one or none at all.
+                 */
+                // if ($att->presenter() !== null) {
+                //         $att = $this->modelFactory()
+                //                     ->create($att->presenterClass())
+                //                     ->setData($att->flatData());
+                // }
+
                 if ($before !== null) {
                     call_user_func_array($before, [ &$att ]);
                 }
@@ -218,6 +229,12 @@ trait AttachmentAwareTrait
                 }
 
                 $att->isPresentable(true);
+
+                if ($att->presenter() !== null) {
+                    $att = $this->modelFactory()
+                                ->create($att->presenter())
+                                ->setData($att->flatData());
+                }
 
                 if ($before !== null) {
                     call_user_func_array($before, [ &$att ]);
