@@ -19,7 +19,7 @@ trait QueueableTrait
     /**
      * Set the queue's ID.
      *
-     * @param mixed $id The unique queue identifier.
+     * @param string|null $id The unique queue identifier.
      * @throws InvalidArgumentException If the ID isn't a string.
      * @return self
      */
@@ -44,7 +44,7 @@ trait QueueableTrait
     /**
      * Get the queue's ID.
      *
-     * @return string $queueId
+     * @return string|null $queueId
      */
     public function queueId()
     {
