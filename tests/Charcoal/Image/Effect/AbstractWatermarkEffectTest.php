@@ -2,7 +2,7 @@
 
 namespace Charcoals\Tests\Image\Effect;
 
-class AbstractWatermarkEffectTest extends \PHPUnit_Framework_Testcase
+class AbstractWatermarkEffectTest extends \PHPUnit\Framework\TestCase
 {
     public $obj;
 
@@ -51,7 +51,7 @@ class AbstractWatermarkEffectTest extends \PHPUnit_Framework_Testcase
         $this->assertSame($ret, $obj);
         $this->assertEquals('bar/baz.png', $obj->watermark());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setWatermark(false);
     }
 
@@ -62,7 +62,7 @@ class AbstractWatermarkEffectTest extends \PHPUnit_Framework_Testcase
         $this->assertSame($ret, $obj);
         $this->assertEquals(0.42, $obj->opacity());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setOpacity(false);
     }
 
@@ -73,7 +73,7 @@ class AbstractWatermarkEffectTest extends \PHPUnit_Framework_Testcase
         $this->assertSame($ret, $obj);
         $this->assertEquals('se', $obj->gravity());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setGravity('foobar');
     }
 
@@ -84,7 +84,7 @@ class AbstractWatermarkEffectTest extends \PHPUnit_Framework_Testcase
         $this->assertSame($ret, $obj);
         $this->assertEquals(15, $obj->x());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setX(false);
     }
 
@@ -95,7 +95,7 @@ class AbstractWatermarkEffectTest extends \PHPUnit_Framework_Testcase
         $this->assertSame($ret, $obj);
         $this->assertEquals(15, $obj->y());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setY(false);
     }
 }

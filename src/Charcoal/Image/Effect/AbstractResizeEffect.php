@@ -395,6 +395,12 @@ abstract class AbstractResizeEffect extends AbstractEffect
         $imageWidth  = $this->image()->width();
         $imageHeight = $this->image()->height();
 
+        if ($imageWidth == 0 || $imageHeight == 0) {
+            throw new Exception(
+                'Can not process image; invalid image (0 width or height)'
+            );
+        }
+
         switch ($mode) {
             case 'exact':
                 if (($this->width() <= 0) || ($this->height() <= 0)) {
@@ -474,8 +480,8 @@ abstract class AbstractResizeEffect extends AbstractEffect
                 $newWidth = $this->width();
                 $newHeight = $this->height();
 
-                $oldRatio = ($imageWidth / $imageHeight);
-                $newRatio = ($newWidth / $newHeight);
+                $oldRatio = $imageHeight ? ($imageWidth / $imageHeight) : 0;
+                $newRatio = $newHeight ? ($newWidth / $newHeight) : 0;
 
                 if ($newRatio > $oldRatio) {
                     $newHeight = ($imageHeight * $this->width() / $imageWidth);

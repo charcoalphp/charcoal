@@ -2,7 +2,7 @@
 
 namespace Charcoals\Tests\Image\Effect;
 
-class AbstractBlurEffectTest extends \PHPUnit_Framework_Testcase
+class AbstractBlurEffectTest extends \PHPUnit\Framework\TestCase
 {
     public $obj;
 
@@ -54,13 +54,13 @@ class AbstractBlurEffectTest extends \PHPUnit_Framework_Testcase
         $this->assertSame($ret, $obj);
         $this->assertEquals(5.6, $obj->radius());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setRadius(false);
     }
 
     public function testSetRadiusNegativeThrowsException()
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj = $this->obj;
         $obj->setRadius(-1);
     }
@@ -73,13 +73,13 @@ class AbstractBlurEffectTest extends \PHPUnit_Framework_Testcase
         $this->assertSame($ret, $obj);
         $this->assertEquals(5.6, $obj->sigma());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setSigma(false);
     }
 
     public function testSetSigmaNegativeThrowsException()
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj = $this->obj;
         $obj->setSigma(-1);
     }
@@ -91,7 +91,7 @@ class AbstractBlurEffectTest extends \PHPUnit_Framework_Testcase
         $this->assertSame($ret, $obj);
         $this->assertEquals('radial', $obj->mode());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setMode('foobar');
     }
 
@@ -102,7 +102,7 @@ class AbstractBlurEffectTest extends \PHPUnit_Framework_Testcase
         $this->assertSame($ret, $obj);
         $this->assertEquals('alpha', $obj->channel());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setChannel('foobar');
     }
 
@@ -113,7 +113,7 @@ class AbstractBlurEffectTest extends \PHPUnit_Framework_Testcase
         $this->assertSame($ret, $obj);
         $this->assertEquals(45, $obj->angle());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setAngle(false);
     }
 }

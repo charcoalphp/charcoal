@@ -2,7 +2,7 @@
 
 namespace Charcoals\Tests\Image\Effect;
 
-class AbstractRevertEffectTest extends \PHPUnit_Framework_Testcase
+class AbstractRevertEffectTest extends \PHPUnit\Framework\TestCase
 {
     public $obj;
 
@@ -40,7 +40,7 @@ class AbstractRevertEffectTest extends \PHPUnit_Framework_Testcase
         $this->assertSame($ret, $obj);
         $this->assertEquals('gray', $obj->channel());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setChannel('foobar');
     }
 }

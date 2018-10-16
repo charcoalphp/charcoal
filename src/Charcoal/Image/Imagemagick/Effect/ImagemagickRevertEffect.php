@@ -2,7 +2,7 @@
 
 namespace Charcoal\Image\Imagemagick\Effect;
 
-use \Charcoal\Image\Effect\AbstractRevertEffect;
+use Charcoal\Image\Effect\AbstractRevertEffect;
 
 /**
  * Rotate Effect for the Imagemagick driver.

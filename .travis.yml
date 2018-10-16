@@ -3,6 +3,7 @@ php:
     - 5.6
     - 7.0
     - 7.1
+    - 7.2
     - nightly
 
 env:
@@ -32,10 +33,10 @@ script:
     - find {src,tests} -name '*.php' -print0 | xargs -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1
 
     ## Run PHP Code Sniffer
-    - ./vendor/bin/phpcs --config-set ignore_warnings_on_exit 1;./vendor/bin/phpcs -ps --colors --standard=phpcs.xml src/
+    - ./vendor/bin/phpcs --config-set ignore_warnings_on_exit 1;./vendor/bin/phpcs -ps --colors src/
 
     ## Run PHPUnit Tests
-    - ./vendor/bin/phpunit --configuration ./tests/phpunit.xml --coverage-text --coverage-clover build/logs/clover.xml
+    - ./vendor/bin/phpunit --coverage-text --coverage-clover build/logs/clover.xml
 
 after_script:
     - php vendor/bin/coveralls -v

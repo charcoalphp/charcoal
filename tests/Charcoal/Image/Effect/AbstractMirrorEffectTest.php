@@ -2,7 +2,7 @@
 
 namespace Charcoals\Tests\Image\Effect;
 
-class AbstractMirrorEffectTest extends \PHPUnit_Framework_Testcase
+class AbstractMirrorEffectTest extends \PHPUnit\Framework\TestCase
 {
     public $obj;
 
@@ -45,7 +45,7 @@ class AbstractMirrorEffectTest extends \PHPUnit_Framework_Testcase
         $this->assertSame($ret, $obj);
         $this->assertEquals('x', $obj->axis());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setAxis('foobar');
     }
 }

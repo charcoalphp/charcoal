@@ -2,7 +2,7 @@
 
 namespace Charcoals\Tests\Image\Effect;
 
-class AbstractSharpenEffectTest extends \PHPUnit_Framework_Testcase
+class AbstractSharpenEffectTest extends \PHPUnit\Framework\TestCase
 {
     public $obj;
 
@@ -56,13 +56,13 @@ class AbstractSharpenEffectTest extends \PHPUnit_Framework_Testcase
         $this->assertSame($ret, $obj);
         $this->assertEquals(5.6, $obj->radius());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setRadius(false);
     }
 
     public function testSetRadiusNegativeThrowsException()
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj = $this->obj;
         $obj->setRadius(-1);
     }
@@ -75,13 +75,13 @@ class AbstractSharpenEffectTest extends \PHPUnit_Framework_Testcase
         $this->assertSame($ret, $obj);
         $this->assertEquals(5.6, $obj->sigma());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setSigma(false);
     }
 
     public function testSetSigmaNegativeThrowsException()
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj = $this->obj;
         $obj->setSigma(-1);
     }
@@ -94,13 +94,13 @@ class AbstractSharpenEffectTest extends \PHPUnit_Framework_Testcase
         $this->assertSame($ret, $obj);
         $this->assertEquals(4.2, $obj->amount());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setAmount('foobar');
     }
 
     public function testSetAmountNegativeThrowsException()
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj = $this->obj;
         $obj->setAmount(-1);
     }
@@ -113,7 +113,7 @@ class AbstractSharpenEffectTest extends \PHPUnit_Framework_Testcase
         $this->assertSame($ret, $obj);
         $this->assertEquals(0.42, $obj->threshold());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setThreshold('foobar');
     }
 
@@ -124,7 +124,7 @@ class AbstractSharpenEffectTest extends \PHPUnit_Framework_Testcase
         $this->assertSame($ret, $obj);
         $this->assertEquals('unsharp', $obj->mode());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setMode('foobar');
     }
 
@@ -135,7 +135,7 @@ class AbstractSharpenEffectTest extends \PHPUnit_Framework_Testcase
         $this->assertSame($ret, $obj);
         $this->assertEquals('alpha', $obj->channel());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setChannel('foobar');
     }
 }

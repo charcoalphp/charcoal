@@ -2,7 +2,7 @@
 
 namespace Charcoals\Tests\Image\Effect;
 
-class AbstractRotateEffectTest extends \PHPUnit_Framework_Testcase
+class AbstractRotateEffectTest extends \PHPUnit\Framework\TestCase
 {
     public $obj;
 
@@ -43,7 +43,7 @@ class AbstractRotateEffectTest extends \PHPUnit_Framework_Testcase
         $this->assertSame($ret, $obj);
         $this->assertEquals(135, $obj->angle());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setAngle('foobar');
     }
 
@@ -54,7 +54,7 @@ class AbstractRotateEffectTest extends \PHPUnit_Framework_Testcase
         $this->assertSame($ret, $obj);
         $this->assertEquals('red', $obj->backgroundColor());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setBackgroundColor(false);
     }
 }

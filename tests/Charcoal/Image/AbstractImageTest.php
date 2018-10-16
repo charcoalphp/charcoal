@@ -2,7 +2,9 @@
 
 namespace Charcoals\Tests\Image;
 
-class AbstractImageTest extends \PHPUnit_Framework_TestCase
+use InvalidArgumentException;
+
+class AbstractImageTest extends \PHPUnit\Framework\TestCase
 {
 
     public function testSetData()
@@ -30,7 +32,7 @@ class AbstractImageTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
         $this->assertEquals('test.png', $obj->source());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
         $obj->setSource(false);
     }
 
@@ -41,7 +43,7 @@ class AbstractImageTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
         $this->assertEquals('test.png', $obj->target());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
         $obj->setTarget(false);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Charcoals\Tests\Image\Effect;
 
-class AbstractMaskEffectTest extends \PHPUnit_Framework_Testcase
+class AbstractMaskEffectTest extends \PHPUnit\Framework\TestCase
 {
     public $obj;
 
@@ -52,7 +52,7 @@ class AbstractMaskEffectTest extends \PHPUnit_Framework_Testcase
         $this->assertSame($ret, $obj);
         $this->assertEquals('bar/baz.png', $obj->mask());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setMask(false);
     }
 
@@ -63,7 +63,7 @@ class AbstractMaskEffectTest extends \PHPUnit_Framework_Testcase
         $this->assertSame($ret, $obj);
         $this->assertEquals(0.42, $obj->opacity());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setOpacity(false);
     }
 
@@ -74,7 +74,7 @@ class AbstractMaskEffectTest extends \PHPUnit_Framework_Testcase
         $this->assertSame($ret, $obj);
         $this->assertEquals('se', $obj->gravity());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setGravity('foobar');
     }
 
@@ -85,7 +85,7 @@ class AbstractMaskEffectTest extends \PHPUnit_Framework_Testcase
         $this->assertSame($ret, $obj);
         $this->assertEquals(15, $obj->x());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setX(false);
     }
 
@@ -96,7 +96,7 @@ class AbstractMaskEffectTest extends \PHPUnit_Framework_Testcase
         $this->assertSame($ret, $obj);
         $this->assertEquals(15, $obj->y());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setY(false);
     }
 }

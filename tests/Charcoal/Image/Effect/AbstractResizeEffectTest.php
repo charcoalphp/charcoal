@@ -2,7 +2,7 @@
 
 namespace Charcoals\Tests\Image\Effect;
 
-class AbstractResizeEffectTest extends \PHPUnit_Framework_Testcase
+class AbstractResizeEffectTest extends \PHPUnit\Framework\TestCase
 {
     public $obj;
 
@@ -57,7 +57,7 @@ class AbstractResizeEffectTest extends \PHPUnit_Framework_Testcase
         $this->assertSame($ret, $obj);
         $this->assertEquals('width', $obj->mode());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setMode('foobar');
     }
 
@@ -81,10 +81,10 @@ class AbstractResizeEffectTest extends \PHPUnit_Framework_Testcase
     {
         $obj = $this->obj;
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setSize(-1);
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setSize([ 'foo', 'bar' ]);
     }
 
@@ -99,7 +99,7 @@ class AbstractResizeEffectTest extends \PHPUnit_Framework_Testcase
     public function testSetWidthNegativeException()
     {
         $obj = $this->obj;
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setWidth(-1);
     }
 
@@ -114,7 +114,7 @@ class AbstractResizeEffectTest extends \PHPUnit_Framework_Testcase
     public function testSetHeightNegativeException()
     {
         $obj = $this->obj;
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setHeight(-1);
     }
 
@@ -125,7 +125,7 @@ class AbstractResizeEffectTest extends \PHPUnit_Framework_Testcase
         $this->assertSame($ret, $obj);
         $this->assertEquals('nw', $obj->gravity());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setGravity('foobar');
     }
 
@@ -136,7 +136,7 @@ class AbstractResizeEffectTest extends \PHPUnit_Framework_Testcase
         $this->assertSame($ret, $obj);
         $this->assertEquals('red', $obj->backgroundColor());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setBackgroundColor(false);
     }
 
@@ -174,7 +174,7 @@ class AbstractResizeEffectTest extends \PHPUnit_Framework_Testcase
     {
         $obj = $this->obj;
         $obj->setMode('exact');
-        $this->setExpectedException('\Exception');
+        $this->expectException('\Exception');
         $obj->process();
     }
 
@@ -182,7 +182,7 @@ class AbstractResizeEffectTest extends \PHPUnit_Framework_Testcase
     {
         $obj = $this->obj;
         $obj->setMode('width');
-        $this->setExpectedException('\Exception');
+        $this->expectException('\Exception');
         $obj->process();
     }
 
@@ -190,7 +190,7 @@ class AbstractResizeEffectTest extends \PHPUnit_Framework_Testcase
     {
         $obj = $this->obj;
         $obj->setMode('height');
-        $this->setExpectedException('\Exception');
+        $this->expectException('\Exception');
         $obj->process();
     }
 
@@ -198,7 +198,7 @@ class AbstractResizeEffectTest extends \PHPUnit_Framework_Testcase
     {
         $obj = $this->obj;
         $obj->setMode('best_fit');
-        $this->setExpectedException('\Exception');
+        $this->expectException('\Exception');
         $obj->process();
     }
 
@@ -206,7 +206,7 @@ class AbstractResizeEffectTest extends \PHPUnit_Framework_Testcase
     {
         $obj = $this->obj;
         $obj->setMode('crop');
-        $this->setExpectedException('\Exception');
+        $this->expectException('\Exception');
         $obj->process();
     }
 
@@ -214,7 +214,7 @@ class AbstractResizeEffectTest extends \PHPUnit_Framework_Testcase
     {
         $obj = $this->obj;
         $obj->setMode('fill');
-        $this->setExpectedException('\Exception');
+        $this->expectException('\Exception');
         $obj->process();
     }
 }

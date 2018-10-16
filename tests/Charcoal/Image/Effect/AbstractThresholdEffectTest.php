@@ -2,7 +2,7 @@
 
 namespace Charcoals\Tests\Image\Effect;
 
-class AbstractThresholdEffectTest extends \PHPUnit_Framework_Testcase
+class AbstractThresholdEffectTest extends \PHPUnit\Framework\TestCase
 {
     public $obj;
 
@@ -41,20 +41,20 @@ class AbstractThresholdEffectTest extends \PHPUnit_Framework_Testcase
         $this->assertSame($ret, $obj);
         $this->assertEquals(0.42, $obj->threshold());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setThreshold('foobar');
     }
 
     public function testSetThresholdMinException()
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj = $this->obj;
         $obj->setThreshold(-1);
     }
 
     public function testSetThresholdMaxException()
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj = $this->obj;
         $obj->setThreshold(-1);
     }

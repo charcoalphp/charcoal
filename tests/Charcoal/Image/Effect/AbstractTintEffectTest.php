@@ -2,7 +2,7 @@
 
 namespace Charcoals\Tests\Image\Effect;
 
-class AbstractTintEffectTest extends \PHPUnit_Framework_Testcase
+class AbstractTintEffectTest extends \PHPUnit\Framework\TestCase
 {
     public $obj;
 
@@ -46,7 +46,7 @@ class AbstractTintEffectTest extends \PHPUnit_Framework_Testcase
         $this->assertSame($ret, $obj);
         $this->assertEquals('#ff00ff', $obj->color());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setColor(false);
     }
 
@@ -57,7 +57,7 @@ class AbstractTintEffectTest extends \PHPUnit_Framework_Testcase
         $this->assertSame($ret, $obj);
         $this->assertEquals(0.42, $obj->opacity());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setOpacity(false);
     }
 

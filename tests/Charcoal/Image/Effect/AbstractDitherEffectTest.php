@@ -2,7 +2,7 @@
 
 namespace Charcoals\Tests\Image\Effect;
 
-class AbstractDitherEffectTest extends \PHPUnit_Framework_Testcase
+class AbstractDitherEffectTest extends \PHPUnit\Framework\TestCase
 {
     public $obj;
 
@@ -44,7 +44,7 @@ class AbstractDitherEffectTest extends \PHPUnit_Framework_Testcase
         $this->assertSame($ret, $obj);
         $this->assertEquals(6, $obj->colors());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setColors(false);
     }
 
@@ -55,7 +55,7 @@ class AbstractDitherEffectTest extends \PHPUnit_Framework_Testcase
         $this->assertSame($ret, $obj);
         $this->assertEquals('checks', $obj->mode());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setMode('foobar');
     }
 }

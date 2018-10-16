@@ -2,7 +2,7 @@
 
 namespace Charcoals\Tests\Image\Effect;
 
-class AbstractGrayscaleEffectTest extends \PHPUnit_Framework_Testcase
+class AbstractGrayscaleEffectTest extends \PHPUnit\Framework\TestCase
 {
     public $obj;
 

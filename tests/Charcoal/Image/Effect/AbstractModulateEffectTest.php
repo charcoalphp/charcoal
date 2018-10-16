@@ -2,7 +2,7 @@
 
 namespace Charcoals\Tests\Image\Effect;
 
-class AbstractModulateEffectTest extends \PHPUnit_Framework_Testcase
+class AbstractModulateEffectTest extends \PHPUnit\Framework\TestCase
 {
     public $obj;
 
@@ -48,13 +48,13 @@ class AbstractModulateEffectTest extends \PHPUnit_Framework_Testcase
         $this->assertSame($ret, $obj);
         $this->assertEquals(42, $obj->hue());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setHue(false);
     }
 
     public function testSetHueMaxExeption()
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
 
         $obj = $this->obj;
         $obj->setHue(101);
@@ -62,7 +62,7 @@ class AbstractModulateEffectTest extends \PHPUnit_Framework_Testcase
 
     public function testSetHueMinExeption()
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
 
         $obj = $this->obj;
         $obj->setHue(-101);
@@ -76,13 +76,13 @@ class AbstractModulateEffectTest extends \PHPUnit_Framework_Testcase
         $this->assertSame($ret, $obj);
         $this->assertEquals(42, $obj->saturation());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setSaturation(false);
     }
 
     public function testSetSaturationMaxExeption()
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
 
         $obj = $this->obj;
         $obj->setSaturation(101);
@@ -90,7 +90,7 @@ class AbstractModulateEffectTest extends \PHPUnit_Framework_Testcase
 
     public function testSetSaturationMinExeption()
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
 
         $obj = $this->obj;
         $obj->setSaturation(-101);
@@ -104,13 +104,13 @@ class AbstractModulateEffectTest extends \PHPUnit_Framework_Testcase
         $this->assertSame($ret, $obj);
         $this->assertEquals(42, $obj->luminance());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setLuminance(false);
     }
 
     public function testSetLuminanceMaxExeption()
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
 
         $obj = $this->obj;
         $obj->setLuminance(101);
@@ -118,7 +118,7 @@ class AbstractModulateEffectTest extends \PHPUnit_Framework_Testcase
 
     public function testSetLuminanceMinExeption()
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
 
         $obj = $this->obj;
         $obj->setLuminance(-101);

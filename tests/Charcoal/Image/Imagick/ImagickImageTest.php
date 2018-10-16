@@ -2,11 +2,14 @@
 
 namespace Charcoals\Tests\Image;
 
-use \Imagick;
-use \Charcoal\Image\ImageFactory;
-use \Charcoal\Image\Imagick\ImagickImage as Image;
+use InvalidArgumentException;
 
-class ImagickImageTest extends \PHPUnit_Framework_Testcase
+use Imagick;
+
+use Charcoal\Image\ImageFactory;
+use Charcoal\Image\Imagick\ImagickImage as Image;
+
+class ImagickImageTest extends \PHPUnit\Framework\TestCase
 {
     private $factory;
 
@@ -36,21 +39,21 @@ class ImagickImageTest extends \PHPUnit_Framework_Testcase
         $ret = $obj->create(1, 1);
         $this->assertSame($ret, $obj);
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->create('foo', 'bar');
     }
 
     public function testCreateMinWidth()
     {
         $obj = $this->createImage();
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->create(400, 0);
     }
 
     public function testCreateMinHeigth()
     {
         $obj = $this->createImage();
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->create(0, 400);
     }
 
@@ -60,14 +63,14 @@ class ImagickImageTest extends \PHPUnit_Framework_Testcase
         $ret = $obj->open(EXAMPLES_DIR.'/test01.jpg');
         $this->assertSame($ret, $obj);
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->open(false);
     }
 
     public function testOpenInvalidFile()
     {
         $obj = $this->createImage();
-        $this->setExpectedException('\Exception');
+        $this->expectException('\Exception');
         $obj->open('foo/bar/baz.png');
     }
 
@@ -111,7 +114,7 @@ class ImagickImageTest extends \PHPUnit_Framework_Testcase
         $ret = $obj->imagickChannel('red');
         $this->assertEquals(Imagick::CHANNEL_RED, $ret);
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->imagickChannel('foobar');
     }
 
@@ -121,7 +124,7 @@ class ImagickImageTest extends \PHPUnit_Framework_Testcase
         $ret = $obj->imagickGravity('ne');
         $this->assertEquals(Imagick::GRAVITY_NORTHEAST, $ret);
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->imagickGravity('foobar');
     }
 
@@ -135,6 +138,20 @@ class ImagickImageTest extends \PHPUnit_Framework_Testcase
 
         $obj->processEffect($effect);
         $obj->save(OUTPUT_DIR.'/'.$filename);
+
+        $this->assertTrue(file_exists(OUTPUT_DIR.'/'.$filename));
+    }
+
+    /**
+     * @dataProvider invalidEffectProvider
+     */
+    public function testInvalidEffect($effect)
+    {
+        $obj = $this->createImage();
+        $obj->open(EXAMPLES_DIR.'/test02.png');
+
+        $this->expectException(InvalidArgumentException::class);
+        $obj->processsEffect($effect);
     }
 
     public function effectProvider()
@@ -181,13 +198,35 @@ class ImagickImageTest extends \PHPUnit_Framework_Testcase
             # Sharpen
             [ [ 'type' => 'sharpen' ], 'imagick-sharpen-default.png' ],
             [ [ 'type' => 'sharpen', 'radius' => 5, 'sigma' => 15 ], 'imagick-sharpen-strong.png' ],
+            [ [ 'type' => 'sharpen', 'mode' => 'unsharp' ], 'imagick-sharpen-unsharp.png' ],
+
             # Threshold
             [ [ 'type' => 'threshold' ], 'imagick-threshold-default.png' ],
             # Tint
             [ [ 'type' => 'tint', 'color' => 'rgb(255,0,0)' ], 'imagick-tint-red.png' ],
             [ [ 'type' => 'tint', 'color' => 'rgb(255,0,0)', 'midtone' => false ], 'imagick-tint-red-colorize.png' ],
             # Watermarkk
-            [ [ 'type' => 'watermark', 'watermark' => EXAMPLES_DIR.'/watermark.png' ], 'imagick-watermark-default.png' ]
+            [ [ 'type' => 'watermark', 'watermark' => EXAMPLES_DIR.'/watermark.png' ], 'imagick-watermark-default.png' ],
+            [ [ 'type' => 'watermark', 'watermark' => EXAMPLES_DIR.'/watermark.png', 'gravity' => 'nw' ], 'imagick-watermark-nw.png' ],
+            [ [ 'type' => 'watermark', 'watermark' => EXAMPLES_DIR.'/watermark.png', 'gravity' => 'n' ], 'imagick-watermark-n.png' ],
+            [ [ 'type' => 'watermark', 'watermark' => EXAMPLES_DIR.'/watermark.png', 'gravity' => 'ne' ], 'imagick-watermark-ne.png' ],
+            [ [ 'type' => 'watermark', 'watermark' => EXAMPLES_DIR.'/watermark.png', 'gravity' => 'w' ], 'imagick-watermark-w.png' ],
+            [ [ 'type' => 'watermark', 'watermark' => EXAMPLES_DIR.'/watermark.png', 'gravity' => 'center' ], 'imagick-watermark-center.png' ],
+            [ [ 'type' => 'watermark', 'watermark' => EXAMPLES_DIR.'/watermark.png', 'gravity' => 'e' ], 'imagick-watermark-e.png' ],
+            [ [ 'type' => 'watermark', 'watermark' => EXAMPLES_DIR.'/watermark.png', 'gravity' => 'sw' ], 'imagick-watermark-sw.png' ],
+            [ [ 'type' => 'watermark', 'watermark' => EXAMPLES_DIR.'/watermark.png', 'gravity' => 's' ], 'imagick-watermark-s.png' ],
+            [ [ 'type' => 'watermark', 'watermark' => EXAMPLES_DIR.'/watermark.png', 'gravity' => 'se' ], 'imagick-watermark-se.png' ],
+            [ [ 'type' => 'watermark', 'watermark' => EXAMPLES_DIR.'/watermark.png', 'opacity' => 0.5 ], 'imagick-watermark-05.png' ]
+        ];
+    }
+
+    public function invalidEffectProvider()
+    {
+        return [
+            # Blur
+            [ [ 'type' => 'blur', 'mode' => 'soft' ], 'imagick-blur-soft.png' ],
+            # Mask
+            [ [ 'type' => 'mask' ] ],
         ];
     }
 }
