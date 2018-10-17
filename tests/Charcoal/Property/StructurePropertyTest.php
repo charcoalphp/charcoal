@@ -39,4 +39,10 @@ class StructurePropertyTest extends AbstractTestCase
     {
         $this->assertEquals('structure', $this->obj->type());
     }
+
+    public function testSetL10nThrowsException()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->obj->setL10n(true);
+    }
 }

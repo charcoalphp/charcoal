@@ -38,6 +38,16 @@ class AbstractPropertyTest extends AbstractTestCase
         ]]);
     }
 
+    public function testDefaults()
+    {
+        $this->assertEquals('', $this->obj->ident());
+        $this->assertFalse( $this->obj->multiple());
+        $this->assertFalse( $this->obj->l10n());
+        $this->assertFalse( $this->obj->required());
+        $this->assertFalse( $this->obj->unique());
+        $this->assertTrue($this->obj->storable());
+    }
+
     /**
      * @return void
      */

@@ -7,25 +7,44 @@ use Charcoal\Property\PasswordProperty;
 use Charcoal\Tests\AbstractTestCase;
 
 /**
- * ## TODOs
- * - 2015-03-12:
+ *
  */
 class PasswordPropertyTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Property\ContainerIntegrationTrait;
 
     /**
+     * @var PasswordProperty
+     */
+    private $obj;
+
+    /**
      * @return void
      */
-    public function testType()
+    public function setUp()
     {
         $container = $this->getContainer();
 
-        $obj = new PasswordProperty([
+        $this->obj = new PasswordProperty([
             'database'   => $container['database'],
             'logger'     => $container['logger'],
             'translator' => $container['translator']
         ]);
-        $this->assertEquals('password', $obj->type());
+    }
+    /**
+     * @return void
+     */
+    public function testType()
+    {
+        $this->assertEquals('password', $this->obj->type());
+    }
+
+    public function testSave()
+    {
+        $v1 = $this->obj->save('xxx');
+        $this->assertNotEquals($v1, 'xxx');
+
+        $v2 = $this->obj->save($v1);
+        $this->assertEquals($v1, $v2);
     }
 }
