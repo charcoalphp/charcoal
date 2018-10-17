@@ -155,50 +155,6 @@ class ModelStructureProperty extends StructureProperty
     protected $structureModelFactory;
 
     /**
-     * Inject dependencies from a DI Container.
-     *
-     * @param  Container $container A dependencies container instance.
-     * @return void
-     */
-    protected function setDependencies(Container $container)
-    {
-        parent::setDependencies($container);
-
-        $this->setStructureModelFactory($container['model/factory']);
-    }
-
-    /**
-     * Set an structure model factory.
-     *
-     * @param FactoryInterface $factory The model factory, to create objects.
-     * @return self
-     */
-    protected function setStructureModelFactory(FactoryInterface $factory)
-    {
-        $this->structureModelFactory = $factory;
-
-        return $this;
-    }
-
-    /**
-     * Retrieve the structure model factory.
-     *
-     * @throws RuntimeException If the model factory was not previously set.
-     * @return FactoryInterface
-     */
-    public function structureModelFactory()
-    {
-        if (!isset($this->structureModelFactory)) {
-            throw new RuntimeException(sprintf(
-                'Model Factory is not defined for "%s"',
-                get_class($this)
-            ));
-        }
-
-        return $this->structureModelFactory;
-    }
-
-    /**
      * Retrieve the property's type identifier.
      *
      * @return string
@@ -254,46 +210,6 @@ class ModelStructureProperty extends StructureProperty
         $this->isStructureFinalized = false;
 
         return $this;
-    }
-
-    /**
-     * Load the property's structure.
-     *
-     * @return MetadataInterface
-     */
-    protected function loadStructureMetadata()
-    {
-        $structureMetadata = null;
-
-        if ($this->isStructureFinalized === false) {
-            $this->isStructureFinalized = true;
-
-            $structureInterfaces = $this->structureInterfaces();
-            if (!empty($structureInterfaces)) {
-                $metadataLoader = $this->metadataLoader();
-                $metadataClass  = $this->structureMetadataClass();
-
-                $structureKey = $structureInterfaces;
-                array_unshift($structureKey, $this->ident());
-                $structureKey = 'property/structure='.$metadataLoader->serializeMetaKey($structureKey);
-
-                $structureMetadata = $metadataLoader->load(
-                    $structureKey,
-                    $metadataClass,
-                    $structureInterfaces
-                );
-            }
-        }
-
-        if ($structureMetadata === null) {
-            $structureMetadata = $this->createStructureMetadata();
-        }
-
-        if ($this->terminalStructureMetadata) {
-            $structureMetadata->merge($this->terminalStructureMetadata);
-        }
-
-        return $structureMetadata;
     }
 
     /**
@@ -367,98 +283,45 @@ class ModelStructureProperty extends StructureProperty
     }
 
     /**
-     * Parse a metadata identifier from given interface.
-     *
-     * Change `\` and `.` to `/` and force lowercase
-     *
-     * @param  string $interface A metadata interface to convert.
-     * @return string
-     */
-    protected function parseStructureInterface($interface)
-    {
-        $ident = preg_replace('/([a-z])([A-Z])/', '$1-$2', $interface);
-        $ident = strtolower(str_replace('\\', '/', $ident));
-
-        return $ident;
-    }
-
-    /**
-     * Create a new metadata object for structures.
-     *
-     * Similar to {@see \Charcoal\Model\DescribableTrait::createMetadata()}.
+     * Load the property's structure.
      *
      * @return MetadataInterface
      */
-    protected function createStructureMetadata()
+    protected function loadStructureMetadata()
     {
-        $class = $this->structureMetadataClass();
-        return new $class();
-    }
+        $structureMetadata = null;
 
-    /**
-     * Retrieve the class name of the metadata object.
-     *
-     * @return string
-     */
-    protected function structureMetadataClass()
-    {
-        return StructureMetadata::class;
-    }
+        if ($this->isStructureFinalized === false) {
+            $this->isStructureFinalized = true;
 
-    /**
-     * Create a data-model structure.
-     *
-     * @todo   Add support for simple {@see ArrayAccess} models.
-     * @throws UnexpectedValueException If the structure is invalid.
-     * @return ArrayAccess
-     */
-    private function createStructureModel()
-    {
-        $structClass = $this->structureModelClass();
-        $structure   = $this->structureModelFactory()->create($structClass);
+            $structureInterfaces = $this->structureInterfaces();
+            if (!empty($structureInterfaces)) {
+                $metadataLoader = $this->metadataLoader();
+                $metadataClass  = $this->structureMetadataClass();
 
-        if (!$structure instanceof ArrayAccess) {
-            throw new UnexpectedValueException(sprintf(
-                'Structure [%s] must implement [%s]',
-                $structClass,
-                ArrayAccess::class
-            ));
-        }
+                $structureKey = $structureInterfaces;
+                array_unshift($structureKey, $this->ident());
+                $structureKey = 'property/structure='.$metadataLoader->serializeMetaKey($structureKey);
 
-        return $structure;
-    }
-
-    /**
-     * Create a data-model structure.
-     *
-     * @param  MetadataInterface $metadata    The model's definition.
-     * @param  array             ...$datasets The dataset(s) to modelize.
-     * @throws UnexpectedValueException If the structure is invalid.
-     * @return DescribableInterface
-     */
-    private function createStructureModelWith(
-        MetadataInterface $metadata,
-        array ...$datasets
-    ) {
-        $model = $this->createStructureModel();
-        if (!$model instanceof DescribableInterface) {
-            throw new UnexpectedValueException(sprintf(
-                'Structure [%s] must implement [%s]',
-                get_class($model),
-                DescribableInterface::class
-            ));
-        }
-
-        $model->setMetadata($metadata);
-
-        if ($datasets) {
-            foreach ($datasets as $data) {
-                $model->setData($data);
+                $structureMetadata = $metadataLoader->load(
+                    $structureKey,
+                    $metadataClass,
+                    $structureInterfaces
+                );
             }
         }
 
-        return $model;
+        if ($structureMetadata === null) {
+            $structureMetadata = $this->createStructureMetadata();
+        }
+
+        if ($this->terminalStructureMetadata) {
+            $structureMetadata->merge($this->terminalStructureMetadata);
+        }
+
+        return $structureMetadata;
     }
+
 
     /**
      * Retrieve a singleton of the structure model for prototyping.
@@ -584,6 +447,8 @@ class ModelStructureProperty extends StructureProperty
     }
 
     /**
+     * PropertyInterface::save().
+     *
      * @param  mixed $val The value, at time of saving.
      * @return mixed
      */
@@ -613,5 +478,147 @@ class ModelStructureProperty extends StructureProperty
         }
 
         return $val;
+    }
+
+    /**
+     * Inject dependencies from a DI Container.
+     *
+     * @param  Container $container A dependencies container instance.
+     * @return void
+     */
+    protected function setDependencies(Container $container)
+    {
+        parent::setDependencies($container);
+
+        $this->setStructureModelFactory($container['model/factory']);
+    }
+
+
+
+    /**
+     * Retrieve the structure model factory.
+     *
+     * @throws RuntimeException If the model factory was not previously set.
+     * @return FactoryInterface
+     */
+    protected function structureModelFactory()
+    {
+        if (!isset($this->structureModelFactory)) {
+            throw new RuntimeException(sprintf(
+                'Model Factory is not defined for "%s"',
+                get_class($this)
+            ));
+        }
+
+        return $this->structureModelFactory;
+    }
+
+
+    /**
+     * Set an structure model factory.
+     *
+     * @param FactoryInterface $factory The model factory, to create objects.
+     * @return self
+     */
+    private function setStructureModelFactory(FactoryInterface $factory)
+    {
+        $this->structureModelFactory = $factory;
+
+        return $this;
+    }
+
+
+    /**
+     * Parse a metadata identifier from given interface.
+     *
+     * Change `\` and `.` to `/` and force lowercase
+     *
+     * @param  string $interface A metadata interface to convert.
+     * @return string
+     */
+    protected function parseStructureInterface($interface)
+    {
+        $ident = preg_replace('/([a-z])([A-Z])/', '$1-$2', $interface);
+        $ident = strtolower(str_replace('\\', '/', $ident));
+
+        return $ident;
+    }
+
+    /**
+     * Create a new metadata object for structures.
+     *
+     * Similar to {@see \Charcoal\Model\DescribableTrait::createMetadata()}.
+     *
+     * @return MetadataInterface
+     */
+    protected function createStructureMetadata()
+    {
+        $class = $this->structureMetadataClass();
+        return new $class();
+    }
+
+    /**
+     * Retrieve the class name of the metadata object.
+     *
+     * @return string
+     */
+    protected function structureMetadataClass()
+    {
+        return StructureMetadata::class;
+    }
+
+    /**
+     * Create a data-model structure.
+     *
+     * @todo   Add support for simple {@see ArrayAccess} models.
+     * @throws UnexpectedValueException If the structure is invalid.
+     * @return ArrayAccess
+     */
+    private function createStructureModel()
+    {
+        $structClass = $this->structureModelClass();
+        $structure   = $this->structureModelFactory()->create($structClass);
+
+        if (!$structure instanceof ArrayAccess) {
+            throw new UnexpectedValueException(sprintf(
+                'Structure [%s] must implement [%s]',
+                $structClass,
+                ArrayAccess::class
+            ));
+        }
+
+        return $structure;
+    }
+
+    /**
+     * Create a data-model structure.
+     *
+     * @param  MetadataInterface $metadata    The model's definition.
+     * @param  array             ...$datasets The dataset(s) to modelize.
+     * @throws UnexpectedValueException If the structure is invalid.
+     * @return DescribableInterface
+     */
+    private function createStructureModelWith(
+        MetadataInterface $metadata,
+        array ...$datasets
+    ) {
+        $model = $this->createStructureModel();
+        if (!$model instanceof DescribableInterface) {
+            throw new UnexpectedValueException(sprintf(
+                'Structure [%s] must implement [%s]',
+                get_class($model),
+                DescribableInterface::class
+            ));
+        }
+
+        $model->setMetadata($metadata);
+
+        if ($datasets) {
+            foreach ($datasets as $data) {
+                $model->setData($data);
+            }
+        }
+
+        return $model;
     }
 }

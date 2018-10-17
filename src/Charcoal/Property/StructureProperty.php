@@ -50,7 +50,7 @@ class StructureProperty extends AbstractProperty
      * @todo   Add support for L10N;
      * @param  boolean $flag The l10n, or "translatable" flag.
      * @throws InvalidArgumentException If the L10N argument is TRUE (must be FALSE).
-     * @return IdProperty Chainable
+     * @return self
      */
     public function setL10n($flag)
     {
