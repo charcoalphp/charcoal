@@ -2,7 +2,9 @@
 
 namespace Charcoal\Property;
 
+use Exception;
 use InvalidArgumentException;
+use SimpleXMLElement;
 use PDO;
 
 // from 'charcoal-view'
@@ -143,17 +145,22 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
 
         $spriteString = file_get_contents($sprite);
 
-        $xml = new \SimpleXMLElement($spriteString);
+        try {
+            $xml = new SimpleXMLElement($spriteString);
 
-        $choices = [];
+            $choices = [];
 
-        foreach ($xml->symbol as $ident => $node) {
-            $id = (string)$node->attributes()->id;
+            foreach ($xml->symbol as $ident => $node) {
+                $id = (string)$node->attributes()->id;
 
-            $choices[$id] = $id;
+                $choices[$id] = $id;
+            }
+
+            return $choices;
+        } catch (Exception $e) {
+            $this->logger->error('Could not parse sprite. Invalid SVG / XML.');
+            return [];
         }
-
-        return $choices;
     }
 
     /**
