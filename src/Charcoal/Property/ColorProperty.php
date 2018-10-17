@@ -3,7 +3,6 @@
 namespace Charcoal\Property;
 
 use PDO;
-use Exception;
 use InvalidArgumentException;
 
 // From 'charcoal-property'
@@ -209,11 +208,6 @@ class ColorProperty extends AbstractProperty
         } elseif (strstr($val, 'rgb(')) {
             return $this->parseRgb($val);
         } elseif (strstr($val, 'rgba(')) {
-            return $this->parseRgba($val);
-        } elseif (strstr($val, 'hsl(')) {
-            return $this->parseHsl($val);
-        } elseif (strstr($val, 'hsla(')) {
-            return $this->parseHsla($val);
         } else {
             return $this->parseNamedColor($val);
         }
@@ -287,32 +281,6 @@ class ColorProperty extends AbstractProperty
             'b' => (int)$m[3],
             'a' => $m[4]
         ];
-    }
-
-    /**
-     * @param string $val The hsl() color string to parse.
-     * @throws Exception This parse method is not yet supported.
-     * @return void
-     */
-    private function parseHsl($val)
-    {
-        unset($val);
-        throw new Exception(
-            'HSL color value is not yet supported'
-        );
-    }
-
-    /**
-     * @param string $val The hsla() string color val to parse.
-     * @throws Exception This parse method is not yet supported.
-     * @return void
-     */
-    private function parseHsla($val)
-    {
-        unset($val);
-        throw new Exception(
-            'HSL color value is not yet supported'
-        );
     }
 
     /**
