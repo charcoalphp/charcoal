@@ -208,6 +208,7 @@ class ColorProperty extends AbstractProperty
         } elseif (strstr($val, 'rgb(')) {
             return $this->parseRgb($val);
         } elseif (strstr($val, 'rgba(')) {
+            return $this->parseRgba($val);
         } else {
             return $this->parseNamedColor($val);
         }

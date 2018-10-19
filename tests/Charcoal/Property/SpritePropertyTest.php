@@ -79,6 +79,6 @@ class SpritePropertyTest extends AbstractTestCase
 
     public function testSqlPdoType()
     {
-        $this->assertEquals(    \PDO::PARAM_STR, $this->obj->sqlPdoType());
+        $this->assertEquals(\PDO::PARAM_STR, $this->obj->sqlPdoType());
     }
 }
