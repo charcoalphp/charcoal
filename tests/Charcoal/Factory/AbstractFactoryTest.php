@@ -2,6 +2,10 @@
 
 namespace Charcoal\Tests\Factory;
 
+use DateTime;
+use DateTimeInterface;
+use InvalidArgumentException;
+
 use Charcoal\Factory\AbstractFactory;
 use Charcoal\Tests\AbstractTestCase;
 
@@ -11,7 +15,7 @@ use Charcoal\Tests\AbstractTestCase;
 class AbstractFactoryTest extends AbstractTestCase
 {
     /**
-     * @var ResolverFactory
+     * @var AbstractFactory
      */
     public $obj;
 
@@ -24,6 +28,27 @@ class AbstractFactoryTest extends AbstractTestCase
     }
 
     /**
+     * @return void
+     */
+    public function testConstructor()
+    {
+        $obj = $this->getMockForAbstractClass(AbstractFactory::class, [[
+            'base_class' => DateTimeInterface::class,
+            'default_class' => DateTime::class,
+            'arguments' => ['2018-01-01 15:30:00'],
+            'map' => [
+                'foo' => DateTime::class
+            ]
+        ]]);
+        $this->assertEquals(DateTimeInterface::class, $obj->baseClass());
+        $this->assertEquals(AbstractFactory::class, $obj->defaultClass());
+
+        $ret = $obj->create('foo');
+        $this->assertInstanceOf(DateTime::class, $ret);
+        $this->assertEquals('2018-01-01 15:30:00', $ret->format('Y-m-d H:i:s'));
+    }
+
+    /**
      * Assert that the `baseClass()` method:
      * - Defaults to ''
      * - Returns the proper value when the `baseClass is set
@@ -31,8 +56,6 @@ class AbstractFactoryTest extends AbstractTestCase
      * - Is chainable
      * - Properly sets the baseClass value.
      * - Throws an exception if the parameter is not a valid (existing) class
-     *
-     * @expectedException InvalidArgumentException
      *
      * @return void
      */
@@ -45,6 +68,7 @@ class AbstractFactoryTest extends AbstractTestCase
         $this->assertSame($ret, $obj);
         $this->assertEquals(AbstractFactory::class, $obj->baseClass());
 
+        $this->expectException(InvalidArgumentException::class);
         $obj->setBaseClass('foobar');
     }
 
@@ -67,8 +91,6 @@ class AbstractFactoryTest extends AbstractTestCase
      * - Properly sets the defaultClass value.
      * - Throws an exception if the parameter is not a valid (existing) class
      *
-     * @expectedException InvalidArgumentException
-     *
      * @return void
      */
     public function testSetDefaultClass()
@@ -79,6 +101,7 @@ class AbstractFactoryTest extends AbstractTestCase
         $this->assertSame($ret, $this->obj);
         $this->assertEquals(AbstractFactory::class, $this->obj->defaultClass());
 
+        $this->expectException(InvalidArgumentException::class);
         $this->obj->setDefaultClass('foobar');
     }
 
