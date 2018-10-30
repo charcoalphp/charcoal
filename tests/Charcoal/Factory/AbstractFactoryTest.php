@@ -41,7 +41,7 @@ class AbstractFactoryTest extends AbstractTestCase
             ]
         ]]);
         $this->assertEquals(DateTimeInterface::class, $obj->baseClass());
-        $this->assertEquals(AbstractFactory::class, $obj->defaultClass());
+        $this->assertEquals(DateTime::class, $obj->defaultClass());
 
         $ret = $obj->create('foo');
         $this->assertInstanceOf(DateTime::class, $ret);
