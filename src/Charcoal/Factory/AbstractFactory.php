@@ -181,58 +181,6 @@ abstract class AbstractFactory implements FactoryInterface
     }
 
     /**
-     * Run the callback(s) on the object, if applicable.
-     *
-     * @param mixed    $obj            The object to pass to callback(s).
-     * @param callable $customCallback An optional additional custom callback.
-     * @return void
-     */
-    private function runCallbacks(&$obj, callable $customCallback = null)
-    {
-        $factoryCallback = $this->callback();
-        if (isset($factoryCallback)) {
-            $factoryCallback($obj);
-        }
-        if (isset($customCallback)) {
-            $customCallback($obj);
-        }
-    }
-
-    /**
-     * Create a class instance with given arguments.
-     *
-     * How the constructor arguments are passed depends on its type:
-     *
-     * - if null, no arguments are passed at all.
-     * - if it's not an array, it's passed as a single argument.
-     * - if it's an associative array, it's passed as a sing argument.
-     * - if it's a sequential (numeric keys) array, it's
-     *
-     * @param string $className The FQN of the class to instanciate.
-     * @param mixed  $args      The constructor arguments.
-     * @return mixed The created object.
-     */
-    protected function createClass($className, $args)
-    {
-        if ($args === null) {
-            return new $className;
-        }
-        if (!is_array($args)) {
-            return new $className($args);
-        }
-        if (count(array_filter(array_keys($args), 'is_string')) > 0) {
-            return new $className($args);
-        } else {
-            /**
-             * @todo Use argument unpacking (`return new $className(...$args);`)
-             *     when minimum PHP requirement is bumped to 5.6.
-             */
-            $reflection = new ReflectionClass($className);
-            return $reflection->newInstanceArgs($args);
-        }
-    }
-
-    /**
      * Get (load or create) an instance of a class, by type.
      *
      * Unlike `create()` (which always call a `new` instance),
@@ -257,69 +205,6 @@ abstract class AbstractFactory implements FactoryInterface
         return $this->instances[$type];
     }
 
-    /**
-     * @param callable $resolver The class resolver instance to use.
-     * @return self
-     */
-    private function setResolver(callable $resolver)
-    {
-        $this->resolver = $resolver;
-        return $this;
-    }
-
-    /**
-     * @return callable
-     */
-    protected function resolver()
-    {
-        return $this->resolver;
-    }
-
-    /**
-     * Add multiple types, in a an array of `type` => `className`.
-     *
-     * @param string[] $map The map (key=>classname) to use.
-     * @return self
-     */
-    private function setMap(array $map)
-    {
-        // Resets (overwrites) map.
-        $this->map = [];
-        foreach ($map as $type => $className) {
-            $this->addClassToMap($type, $className);
-        }
-        return $this;
-    }
-
-    /**
-     * Get the map of all types in `[$type => $class]` format.
-     *
-     * @return string[]
-     */
-    protected function map()
-    {
-        return $this->map;
-    }
-
-    /**
-     * Add a class name to the available types _map_.
-     *
-     * @param string $type      The type (class ident).
-     * @param string $className The FQN of the class.
-     * @throws InvalidArgumentException If the $type parameter is not a striing or the $className class does not exist.
-     * @return self
-     */
-    protected function addClassToMap($type, $className)
-    {
-        if (!is_string($type)) {
-            throw new InvalidArgumentException(
-                'Type (class key) must be a string'
-            );
-        }
-
-        $this->map[$type] = $className;
-        return $this;
-    }
 
     /**
      * If a base class is set, then it must be ensured that the created objects
@@ -501,5 +386,122 @@ abstract class AbstractFactory implements FactoryInterface
         }
 
         return false;
+    }
+
+
+    /**
+     * Create a class instance with given arguments.
+     *
+     * How the constructor arguments are passed depends on its type:
+     *
+     * - if null, no arguments are passed at all.
+     * - if it's not an array, it's passed as a single argument.
+     * - if it's an associative array, it's passed as a sing argument.
+     * - if it's a sequential (numeric keys) array, it's
+     *
+     * @param string $className The FQN of the class to instanciate.
+     * @param mixed  $args      The constructor arguments.
+     * @return mixed The created object.
+     */
+    protected function createClass($className, $args)
+    {
+        if ($args === null) {
+            return new $className;
+        }
+        if (!is_array($args)) {
+            return new $className($args);
+        }
+        if (count(array_filter(array_keys($args), 'is_string')) > 0) {
+            return new $className($args);
+        } else {
+            /**
+             * @todo Use argument unpacking (`return new $className(...$args);`)
+             *     when minimum PHP requirement is bumped to 5.6.
+             */
+            $reflection = new ReflectionClass($className);
+            return $reflection->newInstanceArgs($args);
+        }
+    }
+
+    /**
+     * @return callable
+     */
+    protected function resolver()
+    {
+        return $this->resolver;
+    }
+
+    /**
+     * Get the map of all types in `[$type => $class]` format.
+     *
+     * @return string[]
+     */
+    protected function map()
+    {
+        return $this->map;
+    }
+
+    /**
+     * Add a class name to the available types _map_.
+     *
+     * @param string $type      The type (class ident).
+     * @param string $className The FQN of the class.
+     * @throws InvalidArgumentException If the $type parameter is not a striing or the $className class does not exist.
+     * @return self
+     */
+    protected function addClassToMap($type, $className)
+    {
+        if (!is_string($type)) {
+            throw new InvalidArgumentException(
+                'Type (class key) must be a string'
+            );
+        }
+
+        $this->map[$type] = $className;
+        return $this;
+    }
+
+    /**
+     * @param callable $resolver The class resolver instance to use.
+     * @return self
+     */
+    private function setResolver(callable $resolver)
+    {
+        $this->resolver = $resolver;
+        return $this;
+    }
+
+    /**
+     * Add multiple types, in a an array of `type` => `className`.
+     *
+     * @param string[] $map The map (key=>classname) to use.
+     * @return self
+     */
+    private function setMap(array $map)
+    {
+        // Resets (overwrites) map.
+        $this->map = [];
+        foreach ($map as $type => $className) {
+            $this->addClassToMap($type, $className);
+        }
+        return $this;
+    }
+
+    /**
+     * Run the callback(s) on the object, if applicable.
+     *
+     * @param mixed    $obj            The object to pass to callback(s).
+     * @param callable $customCallback An optional additional custom callback.
+     * @return void
+     */
+    private function runCallbacks(&$obj, callable $customCallback = null)
+    {
+        $factoryCallback = $this->callback();
+        if (isset($factoryCallback)) {
+            $factoryCallback($obj);
+        }
+        if (isset($customCallback)) {
+            $customCallback($obj);
+        }
     }
 }
