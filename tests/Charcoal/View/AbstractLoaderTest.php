@@ -2,6 +2,9 @@
 
 namespace Charcoal\Tests\View;
 
+use Exception;
+use InvalidArgumentException;
+
 // From PSR-3
 use Psr\Log\NullLogger;
 
@@ -38,7 +41,7 @@ class AbstractLoaderTest extends AbstractTestCase
      */
     public function testInvalidBasePathThrowsException()
     {
-        $this->expectException('\Exception');
+        $this->expectException(Exception::class);
 
         $logger = new NullLogger();
         $loader = $this->getMockForAbstractClass(AbstractLoader::class, [[
@@ -95,7 +98,7 @@ class AbstractLoaderTest extends AbstractTestCase
      */
     public function testSetDynamicTemplateInvalidTemplateIdent()
     {
-        $this->expectException('\InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
         $this->obj->setDynamicTemplate('foo', []);
     }
 
@@ -107,7 +110,7 @@ class AbstractLoaderTest extends AbstractTestCase
         $this->obj->setDynamicTemplate('foo', null);
         $this->obj->removeDynamicTemplate('foo');
 
-        $this->expectException('\InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
         $this->obj->removeDynamicTemplate(null);
     }
 
@@ -117,5 +120,6 @@ class AbstractLoaderTest extends AbstractTestCase
     public function testClearDynamicTemplate()
     {
         $this->obj->clearDynamicTemplates();
+        $this->assertInstanceOf(AbstractLoader::class, $this->obj);
     }
 }

@@ -42,6 +42,9 @@ class MarkdownHelpersTest extends AbstractTestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testMarkdown()
     {
         $template = $this->mustache->loadTemplate(

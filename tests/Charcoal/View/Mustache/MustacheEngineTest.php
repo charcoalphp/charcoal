@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\View\Mustache;
 
+use InvalidArgumentException;
+
 // From PSR-3
 use Psr\Log\NullLogger;
 
@@ -53,6 +55,34 @@ class MustacheEngineTest extends AbstractTestCase
         $ret = $this->obj->setHelpers([]);
         $this->assertSame($ret, $this->obj);
         $this->assertEquals([], $this->obj->helpers());
+
+        $this->obj->setHelpers(['foo'=>['bar']]);
+        $this->assertEquals(['foo'=>['bar']], $this->obj->helpers());
+
+        $this->obj->setHelpers(['bar'=>['baz']]);
+        $this->assertEquals(['bar'=>['baz']], $this->obj->helpers());
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->obj->setHelpers('foobar');
+    }
+
+    /**
+     * @return void
+     */
+    public function testMergeHelpers()
+    {
+        $ret = $this->obj->mergeHelpers([]);
+        $this->assertSame($ret, $this->obj);
+        $this->assertEquals([], $this->obj->helpers());
+
+        $this->obj->mergeHelpers(['foo'=>['bar']]);
+        $this->assertEquals(['foo'=>['bar']], $this->obj->helpers());
+
+        $this->obj->mergeHelpers(['bar'=>['baz']]);
+        $this->assertEquals(['foo'=>['bar'], 'bar'=>['baz']], $this->obj->helpers());
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->obj->mergeHelpers('foobar');
     }
 
     /**
