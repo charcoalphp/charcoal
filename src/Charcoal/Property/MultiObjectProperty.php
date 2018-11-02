@@ -43,7 +43,7 @@ class MultiObjectProperty extends AbstractProperty
      */
     public function addAllowedType($type, array $typeOptions = [])
     {
-        $this->allowedType[$type] = $typeOptions;
+        $this->allowedTypes[$type] = $typeOptions;
         return $this;
     }
 

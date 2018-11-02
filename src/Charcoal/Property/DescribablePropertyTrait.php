@@ -28,9 +28,8 @@ trait DescribablePropertyTrait
     /**
      * Set a property factory.
      *
-     * @todo   [mcaskill 2016-09-16] Move factory setter to classes using this trait.
      * @param  FactoryInterface $factory The property factory, to createable property values.
-     * @return DescribableInterface
+     * @return self
      */
     protected function setPropertyFactory(FactoryInterface $factory)
     {
@@ -42,8 +41,6 @@ trait DescribablePropertyTrait
     /**
      * Retrieve the property factory.
      *
-     * @todo   [mcaskill 2016-09-16] Move factory getter to classes using this trait.
-     *     Redefine this method as an abstract method.
      * @throws RuntimeException If the property factory was not previously set.
      * @return FactoryInterface
      */

@@ -26,7 +26,7 @@ interface DescribablePropertyInterface extends DescribableInterface
      * Retrieve an instance of {@see PropertyInterface} for the given property.
      *
      * @param  string $propertyIdent The property (ident) to get.
-     * @throws InvalidArgumentException If the property identifier is invalid.
+     * @throws \InvalidArgumentException If the property identifier is invalid.
      * @return PropertyInterface
      */
     public function property($propertyIdent);
@@ -44,7 +44,7 @@ interface DescribablePropertyInterface extends DescribableInterface
      * Determine if the model has the given property.
      *
      * @param  string $propertyIdent The property identifier to lookup.
-     * @throws InvalidArgumentException If the property identifier is invalid.
+     * @throws \InvalidArgumentException If the property identifier is invalid.
      * @return boolean
      */
     public function hasProperty($propertyIdent);

@@ -183,7 +183,7 @@ class ModelStructureProperty extends StructureProperty
      *
      * @param  MetadataInterface|array|null $data The property's structure (fields, data).
      * @throws InvalidArgumentException If the structure is invalid.
-     * @return ModelstruCtureproperty
+     * @return self
      */
     public function setStructureMetadata($data)
     {
@@ -230,7 +230,7 @@ class ModelStructureProperty extends StructureProperty
      * Set the given metadata interfaces for the property to use as a structure.
      *
      * @param  array $interfaces One or more metadata interfaces to use.
-     * @return ModelstruCtureproperty
+     * @return self
      */
     public function setStructureInterfaces(array $interfaces)
     {
@@ -245,7 +245,7 @@ class ModelStructureProperty extends StructureProperty
      * Add the given metadata interfaces for the property to use as a structure.
      *
      * @param  array $interfaces One or more metadata interfaces to use.
-     * @return ModelstruCtureproperty
+     * @return self
      */
     public function addStructureInterfaces(array $interfaces)
     {
@@ -261,7 +261,7 @@ class ModelStructureProperty extends StructureProperty
      *
      * @param  string $interface A metadata interface to use.
      * @throws InvalidArgumentException If the interface is not a string.
-     * @return ModelstruCtureproperty
+     * @return self
      */
     public function addStructureInterface($interface)
     {
@@ -348,7 +348,7 @@ class ModelStructureProperty extends StructureProperty
      *
      * @param  string $className The class name of the structure.
      * @throws InvalidArgumentException If the class name is not a string.
-     * @return ModelstruCtureproperty
+     * @return self
      */
     protected function setStructureModelClass($className)
     {

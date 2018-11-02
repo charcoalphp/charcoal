@@ -3,6 +3,7 @@
 namespace Charcoal\Property;
 
 use PDO;
+use DomainException;
 use InvalidArgumentException;
 
 // From 'charcoal-property'

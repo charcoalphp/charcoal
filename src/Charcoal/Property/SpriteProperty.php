@@ -191,11 +191,11 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
             }
 
             if (!isset($choice['spritePathWithHash'])) {
-                $choice['spritePathWithHash'] = $this->sprite().'#'.$choice;
+                $choice['spritePathWithHash'] = (string)$this->sprite().'#'.$choiceIdent;
             }
 
             if (!isset($choice['spritePathWithHash'])) {
-                $choice['spritePathWithHash'] = $this->sprite().'#'.$choice;
+                $choice['spritePathWithHash'] = (string)$this->sprite().'#'.$choiceIdent;
                 $choice['label']              = $this->translator()->translation($choiceIdent);
             }
         } else {

@@ -31,7 +31,7 @@ class PropertyMetadata extends AbstractMetadata
      *
      * @param  string $ident The metadata identifier.
      * @throws InvalidArgumentException If identifier is not a string.
-     * @return StructureMetadata Chainable
+     * @return self
      */
     public function setIdent($ident)
     {
