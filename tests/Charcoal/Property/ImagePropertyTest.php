@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Property;
 
+use InvalidArgumentException;
+
 // From 'charcoal-property'
 use Charcoal\Property\ImageProperty;
 use Charcoal\Tests\AbstractTestCase;
@@ -33,6 +35,12 @@ class ImagePropertyTest extends AbstractTestCase
         ]);
     }
 
+
+    public function testDefaults()
+    {
+        $this->assertEquals([], $this->obj->effects());
+        $this->assertEquals(ImageProperty::DEFAULT_DRIVER_TYPE, $this->obj->driverType());
+    }
     /**
      * @return void
      */
@@ -72,5 +80,22 @@ class ImagePropertyTest extends AbstractTestCase
 
         $this->obj->addEffect(['type'=>'blur', 'sigma'=>1]);
         $this->assertEquals(2, count($this->obj->effects()));
+    }
+
+    public function testDriverType()
+    {
+        $this->assertEquals(ImageProperty::DEFAULT_DRIVER_TYPE, $this->obj->driverType());
+        $ret = $this->obj->setDriverType('foo');
+        $this->assertSame($ret, $this->obj);
+        $this->assertEquals('foo', $this->obj->driverType());
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->obj->setDriverType(false);
+    }
+
+    public function testProcessEffects()
+    {
+        $ret = $this->obj->processEffects(null, []);
+        $this->assertNull($ret);
     }
 }

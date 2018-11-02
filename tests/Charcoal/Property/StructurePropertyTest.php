@@ -2,6 +2,9 @@
 
 namespace Charcoal\Tests\Property;
 
+use Exception;
+use InvalidArgumentException;
+
 // From 'charcoal-property'
 use Charcoal\Property\StructureProperty;
 use Charcoal\Tests\AbstractTestCase;
@@ -42,7 +45,45 @@ class StructurePropertyTest extends AbstractTestCase
 
     public function testSetL10nThrowsException()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->obj->setL10n(true);
+    }
+
+    public function testParseOneNull()
+    {
+        $this->obj->setAllowNull(true);
+        $this->assertNull($this->obj->parseOne(null));
+
+        $this->obj->setAllowNull(false);
+        $this->expectException(Exception::class);
+        $this->obj->parseOne(null);
+    }
+
+    public function testParseOneString()
+    {
+        $this->assertEquals('', $this->obj->parseOne(''));
+       // $this->assertEquals('foo', $this->obj->parseOne('foo'));
+        $this->assertEquals(['foo'], $this->obj->parseOne('["foo"]'));
+        $this->assertEquals(['foo'=>'bar'], $this->obj->parseOne('{"foo":"bar"}'));
+    }
+
+    public function testSqlType()
+    {
+        $this->assertEquals('TEXT', $this->obj->sqlType());
+
+        $ret = $this->obj->setSqlType('LONGTEXT');
+        $this->assertSame($ret, $this->obj);
+        $this->assertEquals('LONGTEXT', $this->obj->sqlType());
+
+        $this->obj->setSqlType('long');
+        $this->assertEquals('LONGTEXT', $this->obj->sqlType());
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->obj->setSqlType('foobar');
+    }
+
+    public function testSqlPdoType()
+    {
+        $this->assertEquals(\PDO::PARAM_STR, $this->obj->sqlPdoType());
     }
 }

@@ -2,6 +2,9 @@
 
 namespace Charcoal\Tests\Property;
 
+use Exception;
+use InvalidArgumentException;
+use PDO;
 use ReflectionClass;
 
 // From 'charcoal-property'
@@ -32,6 +35,47 @@ class ColorPropertyTest extends AbstractTestCase
             'logger'     => $container['logger'],
             'translator' => $container['translator']
         ]);
+    }
+
+    /**
+     * @return void
+     */
+    public function testType()
+    {
+        $this->assertEquals('color', $this->obj->type());
+    }
+
+    public function testParseOneNull()
+    {
+        $this->obj->setAllowNull(true);
+        $this->assertNull($this->obj->parseOne(null));
+
+        $this->obj->setAllowNull(false);
+        $this->expectException(Exception::class);
+        $this->obj->parseOne(null);
+    }
+
+    public function testParseOneEmpty()
+    {
+        $this->obj->setAllowNull(true);
+        $this->assertNull($this->obj->parseOne(''));
+
+        $this->obj->setAllowNull(false);
+        $this->expectException(Exception::class);
+        $this->obj->parseOne('');
+    }
+
+    public function parseOneFalse()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->obj->parseOne(false);
+    }
+
+    public function parseOneArray()
+    {
+        $this->assertEquals(['r'=>255, 'g'=>255, 'b'=>255], $this->obj->parseOne([255,255,255]));
+        $this->expectException(InvalidArgumentException::class);
+        $this->obj->parseOne([255]);
     }
 
     /**
@@ -179,5 +223,10 @@ class ColorPropertyTest extends AbstractTestCase
 
         $obj->setSupportAlpha(false);
         $this->assertEquals('CHAR(7)', $obj->sqlType());
+    }
+
+    public function testSqlPdoType()
+    {
+        $this->assertEquals(PDO::PARAM_STR, $this->obj->sqlPdoType());
     }
 }

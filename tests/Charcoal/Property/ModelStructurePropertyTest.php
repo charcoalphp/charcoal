@@ -39,4 +39,21 @@ class ModelStructurePropertyTest extends AbstractTestCase
     {
         $this->assertEquals('model-structure', $this->obj->type());
     }
+
+    public function testSetStructureMetadata()
+    {
+        $ret = $this->obj->setStructureMetadata(null);
+        $this->assertSame($ret, $this->obj);
+
+        $this->obj->setStructureMetadata([]);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->obj->setStructureMetadata('foo');
+    }
+
+    public function setStructureInterfaces()
+    {
+        $ret = $this->obj->setStructureInterfaces([]);
+        $this->assertSame($ret, $this->obj);
+    }
 }

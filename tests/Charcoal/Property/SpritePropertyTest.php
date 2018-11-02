@@ -58,11 +58,11 @@ class SpritePropertyTest extends AbstractTestCase
     public function testBuildChoices()
     {
         $ret = $this->obj->buildChoicesFromSprite();
-        $this->assertEmpty($ret);
+        $this->assertEquals([], $ret);
 
         $this->obj->setSprite('composer.json');
         $ret = $this->obj->buildChoicesFromSprite();
-        var_dump($ret);
+        $this->assertEquals([], $ret);
     }
 
     public function testSqlExtra()

@@ -42,10 +42,12 @@ class AbstractPropertyTest extends AbstractTestCase
     {
         $this->assertEquals('', $this->obj->ident());
         $this->assertFalse($this->obj->multiple());
+        $this->assertEquals(',', $this->obj->multipleSeparator());
         $this->assertFalse($this->obj->l10n());
         $this->assertFalse($this->obj->required());
         $this->assertFalse($this->obj->unique());
         $this->assertTrue($this->obj->storable());
+        $this->assertTrue($this->obj->allowNull());
     }
 
     /**
@@ -141,6 +143,9 @@ class AbstractPropertyTest extends AbstractTestCase
     public function testSetInputValL10n()
     {
         $this->obj->setL10n(true);
+
+        $this->assertEquals('', $this->obj->inputVal(null));
+        $this->assertEquals('foo', $this->obj->inputVal('foo'));
     }
 
     /**
@@ -149,6 +154,9 @@ class AbstractPropertyTest extends AbstractTestCase
     public function testSetInputValMultiple()
     {
         $this->obj->setMultiple(true);
+
+        $this->assertEquals('', $this->obj->inputVal(null));
+        $this->assertEquals('foo', $this->obj->inputVal('foo'));
     }
 
     /**
@@ -158,6 +166,9 @@ class AbstractPropertyTest extends AbstractTestCase
     {
         $this->obj->setL10n(true);
         $this->obj->setMultiple(true);
+
+        $this->assertEquals('', $this->obj->inputVal(null));
+        $this->assertEquals('foo', $this->obj->inputVal('foo'));
     }
 
     /**
