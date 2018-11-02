@@ -50,4 +50,13 @@ class EmailProperty extends StringProperty
         $emailValid = filter_var($val, FILTER_VALIDATE_EMAIL);
         return !!$emailValid;
     }
+
+    /**
+     * @param mixed $val A single value to parse.
+     * @return string
+     */
+    public function parseOne($val)
+    {
+        return filter_var(strip_tags($val), FILTER_SANITIZE_EMAIL);
+    }
 }

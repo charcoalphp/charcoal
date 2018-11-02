@@ -53,4 +53,17 @@ class UrlProperty extends StringProperty
     {
         return 'url';
     }
+
+    /**
+     * Parse a value. (From `AbstractProperty`)
+     *
+     * Ensure the URL is valid (sanitize).
+     *
+     * @param mixed $val A single value to parse.
+     * @return mixed The parsed value.
+     */
+    public function parseOne($val)
+    {
+        return filter_var(strip_tags($val), FILTER_SANITIZE_URL);
+    }
 }
