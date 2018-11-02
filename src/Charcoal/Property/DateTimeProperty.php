@@ -100,8 +100,6 @@ class DateTimeProperty extends AbstractProperty
 
         if ($val instanceof DateTimeInterface) {
             return $val->format('Y-m-d H:i:s');
-        } elseif (is_string($val)) {
-            return $val;
         } else {
             return '';
         }
@@ -143,7 +141,7 @@ class DateTimeProperty extends AbstractProperty
     public function displayVal($val, array $options = [])
     {
         $val = $this->dateTimeVal($val);
-        if ($val === null || (is_string($val) && $val === '')) {
+        if ($val === null) {
             return '';
         }
 
@@ -254,9 +252,6 @@ class DateTimeProperty extends AbstractProperty
      */
     public function format()
     {
-        if ($this->format === null) {
-            $this->format = self::DEFAULT_FORMAT;
-        }
         return $this->format;
     }
 
