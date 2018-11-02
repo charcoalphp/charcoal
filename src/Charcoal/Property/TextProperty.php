@@ -10,6 +10,31 @@ use Charcoal\Property\StringProperty;
  */
 class TextProperty extends StringProperty
 {
+    const DEFAULT_LONG = false;
+
+    /**
+     * @var boolean
+     */
+    private $long = self::DEFAULT_LONG;
+
+    /**
+     * @param boolean $long Whether long text are supported.
+     * @return self
+     */
+    public function setLong($long)
+    {
+        $this->long = !!$long;
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function long()
+    {
+        return $this->long;
+    }
+
     /**
      * @return string
      */
@@ -36,6 +61,10 @@ class TextProperty extends StringProperty
      */
     public function sqlType()
     {
-        return 'TEXT';
+        if ($this->long() === true) {
+            return 'LONGTEXT';
+        } else {
+            return 'TEXT';
+        }
     }
 }
