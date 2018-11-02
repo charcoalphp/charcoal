@@ -37,6 +37,15 @@ interface PropertyInterface
     public function l10nIdent($lang = null);
 
     /**
+     * Parse the given value.
+     *
+     * @param  mixed $val The value to be parsed (normalized).
+     * @throws \InvalidArgumentException If the value does not match property settings.
+     * @return mixed Returns the parsed value.
+     */
+    public function parseVal($val);
+
+    /**
      * @param mixed $val Optional. The value to to convert for input.
      * @return string
      */
