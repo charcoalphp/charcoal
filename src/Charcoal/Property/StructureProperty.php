@@ -91,13 +91,7 @@ class StructureProperty extends AbstractProperty
             return $val;
         }
 
-        /** Parse multilingual values */
-        if ($this->l10n()) {
-            $propertyValue = $this->l10nVal($val, $options);
-            if ($propertyValue === null) {
-                return '';
-            }
-        } elseif ($val instanceof Translation) {
+        if ($val instanceof Translation) {
             $propertyValue = (string)$val;
         } else {
             $propertyValue = $val;
@@ -166,7 +160,7 @@ class StructureProperty extends AbstractProperty
             return null;
         }
 
-        if (!$this->l10n() && $val instanceof Translation) {
+        if ($val instanceof Translation) {
             $val = (string)$val;
         }
 
