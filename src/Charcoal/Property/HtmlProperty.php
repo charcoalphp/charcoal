@@ -39,6 +39,14 @@ class HtmlProperty extends StringProperty
     }
 
     /**
+     * @return boolean
+     */
+    public function allowHtml()
+    {
+        return true;
+    }
+
+    /**
      * Get the SQL type (Storage format).
      *
      * @return string The SQL type

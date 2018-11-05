@@ -24,6 +24,7 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
     const DEFAULT_MAX_LENGTH = 255;
     const DEFAULT_REGEXP = '';
     const DEFAULT_ALLOW_EMPTY = true;
+    const DEFAULT_ALLOW_HTML = false;
 
     /**
      * The minimum number of characters allowed.
@@ -52,6 +53,11 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
      * @var boolean
      */
     private $allowEmpty = self::DEFAULT_ALLOW_EMPTY;
+
+    /**
+     * @var boolean
+     */
+    private $allowHtml = self::DEFAULT_ALLOW_HTML;
 
     /**
      * @return string
@@ -116,7 +122,7 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
      *
      * @param  integer $maxLength The max length allowed.
      * @throws InvalidArgumentException If the parameter is not an integer or < 0.
-     * @return StringProperty Chainable
+     * @return self
      */
     public function setMaxLength($maxLength)
     {
@@ -166,7 +172,7 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
      *
      * @param integer $minLength The minimum length allowed.
      * @throws InvalidArgumentException If the parameter is not an integer or < 0.
-     * @return StringProperty Chainable
+     * @return self
      */
     public function setMinLength($minLength)
     {
@@ -216,7 +222,7 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
      *
      * @param  string $regexp A regular expression.
      * @throws InvalidArgumentException If the parameter is not a string.
-     * @return StringProperty Chainable
+     * @return self
      */
     public function setRegexp($regexp)
     {
@@ -249,7 +255,7 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
      * Set whether the value is allowed to be empty.
      *
      * @param  boolean $allowEmpty The allow empty flag.
-     * @return StringProperty Chainable
+     * @return self
      */
     public function setAllowEmpty($allowEmpty)
     {
@@ -266,6 +272,27 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
     public function allowEmpty()
     {
         return $this->allowEmpty;
+    }
+
+    /**
+     * Set whether the value is allowed to contain HTML.
+     *
+     * @param boolean $allowHtml The allow HTML flag.
+     * @return self
+     */
+    public function setAllowHtml($allowHtml)
+    {
+        $this->allowHtml = !!$allowHtml;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function allowHtml()
+    {
+        return $this->allowHtml;
     }
 
     /**
@@ -419,6 +446,25 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
         } else {
             return true;
         }
+    }
+
+    /**
+     * Parse a value. (From `AbstractProperty`).
+     *
+     * Strip HTML if it is not allowed.
+     *
+     * @param mixed $val A single value to parse.
+     * @return mixed The parsed value.
+     */
+    public function parseOne($val)
+    {
+        if ($this->allowHtml() === false) {
+            if (is_string($val)) {
+                return strip_tags($val);
+            }
+        }
+
+        return $val;
     }
 
     /**
