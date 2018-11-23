@@ -153,7 +153,11 @@ class DateTimePropertyTest extends AbstractTestCase
     public function testInputVal()
     {
         // Test default format
-        $this->assertEquals('2015-10-01 15:00:00', $this->obj->displayVal('October 1st, 2015 15:00:00'));
+        $this->assertEquals('2015-10-01 15:00:00', $this->obj->inputVal('October 1st, 2015 15:00:00'));
+
+        // Test with custom format and DateTime parameter
+        $this->obj->setFormat('Y/m/d');
+        $this->assertEquals('2015-09-01 00:00:00', $this->obj->inputVal(new DateTime('September 1st, 2015')));
 
         $this->assertEquals('', $this->obj->inputVal(null));
     }
@@ -214,16 +218,17 @@ class DateTimePropertyTest extends AbstractTestCase
         $this->obj->set('min', 'today');
         $this->assertEquals($dt, $this->obj['min']);
 
-        // Setting null
         $this->obj->setMin(null);
         $this->assertNull($this->obj->min());
 
         $this->expectException(InvalidArgumentException::class);
         $this->obj->setMin('foo');
+    }
 
-        // Ensure setting a null value works
-        $this->obj->setMin(null);
-        $this->assertEquals(null, $this->obj->min());
+    public function testSetMinInvalidObjectThrowsException()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->obj->setMin(new \StdClass());
     }
 
     /**
@@ -255,16 +260,17 @@ class DateTimePropertyTest extends AbstractTestCase
         $this->obj->set('max', 'today');
         $this->assertEquals($dt, $this->obj['max']);
 
-        // Setting null
-        $this->obj->setMin(null);
-        $this->assertNull($this->obj->min());
+        $this->obj->setMax(null);
+        $this->assertEquals(null, $this->obj->max());
 
         $this->expectException(InvalidArgumentException::class);
         $this->obj->setMax('foo');
+    }
 
-        // Ensure setting a null value works
-        $this->obj->setMax(null);
-        $this->assertEquals(null, $this->obj->max());
+    public function testSetMaxInvalidObjectThrowsException()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->obj->setMax(new \StdClass());
     }
 
     /**

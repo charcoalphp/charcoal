@@ -80,11 +80,6 @@ class AbstractPropertyTest extends AbstractTestCase
         $this->expectException(RuntimeException::class);
         $this->obj->l10nIdent();
 
-        $this->obj->setIdent('foobar');
-        $this->obj->setL10n(false);
-        $this->expectException(LogicException::class);
-        $this->obj->l10nIdent();
-
         $this->obj->setL10n(true);
         $this->assertEquals('foobar_en', $this->obj->l10nIdent());
         $this->assertEquals('foobar_fr', $this->obj->l10nIdent('fr'));
@@ -92,6 +87,23 @@ class AbstractPropertyTest extends AbstractTestCase
 
         $this->expectException(InvalidArgumentException::class);
         $this->obj->l10nIdent(false);
+    }
+
+    public function testL1onIdentThrowsExceptionIfL10nIsFalse()
+    {
+        $this->expectException(LogicException::class);
+        $this->obj->    setL10n(false);
+        $this->obj->setIdent('foobar');
+        $this->obj->l10nIdent();
+    }
+
+    public function testSetLabel()
+    {
+        $this->assertEquals('', $this->obj->label());
+
+        $ret = $this->obj->setLabel('Foo');
+        $this->assertSame($ret, $this->obj);
+        $this->assertEquals('Foo', $this->obj->label());
     }
 
     /**

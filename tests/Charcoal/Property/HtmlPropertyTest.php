@@ -37,8 +37,19 @@ class HtmlPropertyTest extends AbstractTestCase
      */
     public function testType()
     {
-        $obj = $this->obj;
-        $this->assertEquals('html', $obj->type());
+        $this->assertEquals('html', $this->obj->type());
+    }
+
+    public function testDefaults()
+    {
+        $this->assertFalse($this->obj->required());
+        $this->assertFalse($this->obj->unique());
+        $this->assertTrue($this->obj->storable());
+        $this->assertFalse($this->obj->l10n());
+        $this->assertFalse($this->obj->multiple());
+        $this->assertTrue($this->obj->allowNull());
+        $this->assertTrue($this->obj->allowHtml());
+        $this->assertTrue($this->obj->active());
     }
 
     /**
@@ -46,10 +57,8 @@ class HtmlPropertyTest extends AbstractTestCase
      */
     public function testDefaultMaxLength()
     {
-        $obj = $this->obj;
-        $this->assertEquals(0, $obj->maxLength());
-
-        $this->assertEquals(0, $obj->defaultMaxLength());
+        $this->assertEquals(0, $this->obj->maxLength());
+        $this->assertEquals(0, $this->obj->defaultMaxLength());
     }
 
     /**
@@ -57,7 +66,15 @@ class HtmlPropertyTest extends AbstractTestCase
      */
     public function testSqlType()
     {
-        $obj = $this->obj;
-        $this->assertEquals('TEXT', $obj->sqlType());
+        $this->assertEquals('TEXT', $this->obj->sqlType());
+    }
+
+    public function testFilesystem()
+    {
+        $this->assertEquals('', $this->obj->filesystem());
+
+        $ret = $this->obj->setFilesystem('foo');
+        $this->assertSame($ret, $this->obj);
+        $this->assertEquals('foo', $this->obj->filesystem());
     }
 }

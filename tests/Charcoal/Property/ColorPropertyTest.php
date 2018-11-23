@@ -163,7 +163,8 @@ class ColorPropertyTest extends AbstractTestCase
             ['RED', '#FF0000'],
             [[255,0,255], '#FF00FF'],
             [['r'=>255, 'g'=>0, 'b'=>255], '#FF00FF'],
-            [['r'=>255, 'g'=>0, 'b'=>255, 'a'=>0], '#FF00FF']
+            [['r'=>255, 'g'=>0, 'b'=>255, 'a'=>0], '#FF00FF'],
+            ['ABC', '#AABBCC']
         ];
     }
 

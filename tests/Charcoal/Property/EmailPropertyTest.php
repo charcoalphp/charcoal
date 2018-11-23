@@ -72,4 +72,32 @@ class EmailPropertyTest extends AbstractTestCase
         $this->obj->setVal('foo@');
         $this->assertFalse($this->obj->validateEmail());
     }
+
+    /**
+     * @return void
+     */
+    public function testValidationMethods()
+    {
+        $this->assertContains('email', $this->obj->validationMethods());
+    }
+
+    public function testParseVal()
+    {
+        $this->assertEquals('charcoal@example.com', $this->obj->parseVal('charcoal@example.com'));
+    }
+
+    public function testDisplayVal()
+    {
+        $this->assertEquals('charcoal@example.com', $this->obj->displayVal('charcoal@example.com'));
+    }
+
+    public function testInputVal()
+    {
+        $this->assertEquals('charcoal@example.com', $this->obj->inputVal('charcoal@example.com'));
+    }
+
+    public function testStorageVal()
+    {
+        $this->assertEquals('charcoal@example.com', $this->obj->storageVal('charcoal@example.com'));
+    }
 }

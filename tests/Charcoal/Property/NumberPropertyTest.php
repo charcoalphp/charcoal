@@ -39,4 +39,27 @@ class NumberPropertyTest extends AbstractTestCase
     {
         $this->assertEquals('number', $this->obj->type());
     }
+
+    public function testDefaults()
+    {
+        $this->assertNull($this->obj->min());
+        $this->assertNull($this->obj->max());
+    }
+
+    public function testSetData()
+    {
+        $this->obj->setData([
+            'min' => 0,
+            'max' => 100
+        ]);
+        $this->assertEquals(0, $this->obj->min());
+        $this->assertEquals(100, $this->obj->max());
+    }
+
+    public function testValidationMethods()
+    {
+        $ret = $this->obj->validationMethods();
+        $this->assertContains('min', $ret);
+        $this->assertContains('max', $ret);
+    }
 }

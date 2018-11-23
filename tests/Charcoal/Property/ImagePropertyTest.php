@@ -82,6 +82,35 @@ class ImagePropertyTest extends AbstractTestCase
         $this->assertEquals(2, count($this->obj->effects()));
     }
 
+    public function testSetApplyEffects()
+    {
+        $this->assertEquals('save', $this->obj->applyEffects());
+        $this->assertTrue($this->obj->applyEffects('save'));
+        $this->assertFalse($this->obj->applyEffects('upload'));
+
+        $ret = $this->obj->setApplyEffects('never');
+        $this->assertSame($ret, $this->obj);
+        $this->assertEquals('never', $this->obj->applyEffects());
+        $this->assertTrue($this->obj->applyEffects('never'));
+
+        $this->obj->setApplyEffects('');
+        $this->assertEquals('save', $this->obj->applyEffects());
+
+        $this->obj->setApplyEffects(null);
+        $this->assertEquals('save', $this->obj->applyEffects());
+
+        $this->obj->setApplyEffects(false);
+        $this->assertEquals('never', $this->obj->applyEffects());
+
+        $this->obj->setApplyEffects('upload');
+        $this->assertEquals('upload', $this->obj->applyEffects());
+        $this->assertTrue($this->obj->applyEffects('upload'));
+
+
+        $this->expectException(\OutOfBoundsException::class);
+        $this->obj->setApplyEffects('foobar');
+    }
+
     public function testDriverType()
     {
         $this->assertEquals(ImageProperty::DEFAULT_DRIVER_TYPE, $this->obj->driverType());
@@ -97,5 +126,12 @@ class ImagePropertyTest extends AbstractTestCase
     {
         $ret = $this->obj->processEffects(null, []);
         $this->assertNull($ret);
+    }
+
+    public function testAcceptedMimetypes()
+    {
+        $ret = $this->obj->acceptedMimetypes();
+        $this->assertContains('image/png', $ret);
+        $this->assertContains('image/jpg', $ret);
     }
 }

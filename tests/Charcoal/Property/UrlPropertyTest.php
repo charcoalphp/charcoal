@@ -40,4 +40,10 @@ class UrlPropertyTest extends AbstractTestCase
     {
         $this->assertEquals('url', $this->obj->type());
     }
+
+    public function testParseOne()
+    {
+        $this->assertEquals('example.com', $this->obj->parseOne('example.com'));
+        $this->assertEquals('https://example.com:2020', $this->obj->parseOne('<script></script>https:// example.com:2020 '));
+    }
 }

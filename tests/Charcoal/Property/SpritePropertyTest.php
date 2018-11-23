@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Property;
 
+use InvalidArgumentException;
+
 // From 'charcoal-property'
 use Charcoal\Property\SpriteProperty;
 use Charcoal\Tests\AbstractTestCase;
@@ -24,11 +26,13 @@ class SpritePropertyTest extends AbstractTestCase
     public function setUp()
     {
         $container = $this->getContainer();
+        $container['view'] = null;
 
         $this->obj = new SpriteProperty([
             'database'   => $container['database'],
             'logger'     => $container['logger'],
-            'translator' => $container['translator']
+            'translator' => $container['translator'],
+            'container'  => $container
         ]);
     }
 
@@ -53,6 +57,9 @@ class SpritePropertyTest extends AbstractTestCase
         $ret = $this->obj->setSprite('foo');
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('foo', $this->obj->sprite());
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->obj->setSprite(false);
     }
 
     public function testBuildChoices()

@@ -111,6 +111,19 @@ class IpPropertyTest extends AbstractTestCase
         $this->assertEquals('8.8.8.8', $this->obj->stringVal('8.8.8.8'));
     }
 
+    public function testStorageVal()
+    {
+        $this->assertEquals('0.0.0.0', $this->obj->storageVal('0.0.0.0'));
+        $this->assertEquals('127.0.0.1', $this->obj->storageVal('127.0.0.1'));
+        $this->assertEquals('127.0.0.1', $this->obj->stringVal('127.0.0.1'));
+    }
+
+    public function testHostname()
+    {
+        $this->assertEquals('0.0.0.0', $this->obj->hostname(0));
+        $this->assertContains('google.com', $this->obj->hostname('8.8.8.8'));
+    }
+
     /**
      * @return void
      */

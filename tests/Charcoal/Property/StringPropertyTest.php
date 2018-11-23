@@ -51,6 +51,18 @@ class StringPropertyTest extends AbstractTestCase
         $this->assertEquals('string', $this->obj->type());
     }
 
+    public function testDefaults()
+    {
+        $this->assertFalse($this->obj->required());
+        $this->assertFalse($this->obj->unique());
+        $this->assertTrue($this->obj->storable());
+        $this->assertFalse($this->obj->l10n());
+        $this->assertFalse($this->obj->multiple());
+        $this->assertTrue($this->obj->allowNull());
+        $this->assertFalse($this->obj->allowHtml());
+        $this->assertTrue($this->obj->active());
+    }
+
     /**
      * @return void
      */
@@ -94,7 +106,8 @@ class StringPropertyTest extends AbstractTestCase
             'min_length'  => 5,
             'max_length'  => 42,
             'regexp'      => '/[0-9]*/',
-            'allow_empty' => false
+            'allow_empty' => false,
+            'allow_html'  => true
         ];
         $ret = $this->obj->setData($data);
 
@@ -103,7 +116,8 @@ class StringPropertyTest extends AbstractTestCase
         $this->assertEquals(5, $this->obj->minLength());
         $this->assertEquals(42, $this->obj->maxLength());
         $this->assertEquals('/[0-9]*/', $this->obj->regexp());
-        $this->assertEquals(false, $this->obj->allowEmpty());
+        $this->assertFalse($this->obj->allowEmpty());
+        $this->assertTrue($this->obj->allowHtml());
     }
 
     /**
@@ -341,6 +355,17 @@ class StringPropertyTest extends AbstractTestCase
 
         $this->obj->setVal([ 'foo', 'baz', 'qux' ]);
         $this->assertEquals(13, $this->obj->length());
+    }
+
+    public function testParseOne()
+    {
+        $this->obj->setAllowHtml(false);
+        $ret = $this->obj->parseOne('<p>with html</p>');
+        $this->assertEquals('with html', $ret);
+
+        $this->obj->setAllowHtml(true);
+        $ret = $this->obj->parseOne('<p>with html</p>');
+        $this->assertEquals('<p>with html</p>', $ret);
     }
 
     /**

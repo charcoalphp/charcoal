@@ -62,6 +62,9 @@ class BooleanPropertyTest extends AbstractTestCase
 
         $this->assertEquals('Yes', $this->obj->displayVal(true));
         $this->assertEquals('No', $this->obj->displayVal(false));
+
+        $this->assertEquals('V', $this->obj->displayVal(true, ['true_label'=>'V']));
+        $this->assertEquals('F', $this->obj->displayVal(false, ['false_label'=>'F']));
     }
 
     /**

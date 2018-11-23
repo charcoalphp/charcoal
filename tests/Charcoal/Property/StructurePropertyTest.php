@@ -45,6 +45,11 @@ class StructurePropertyTest extends AbstractTestCase
 
     public function testSetL10nThrowsException()
     {
+        $this->assertFalse($this->obj->l10n());
+        $ret = $this->obj->setL10n(false);
+        $this->assertSame($ret, $this->obj);
+        $this->assertFalse($this->obj->l10n());
+
         $this->expectException(InvalidArgumentException::class);
         $this->obj->setL10n(true);
     }
@@ -78,12 +83,48 @@ class StructurePropertyTest extends AbstractTestCase
         $this->obj->setSqlType('long');
         $this->assertEquals('LONGTEXT', $this->obj->sqlType());
 
+        $this->obj->setSqlType('medium');
+        $this->assertEquals('MEDIUMTEXT', $this->obj->sqlType());
+
+        $this->obj->setSqlType('TINY');
+        $this->assertEquals('TINYTEXT', $this->obj->sqlType());
+
+        $this->obj->setSqlType('TEXT');
+        $this->assertEquals('TEXT', $this->obj->sqlType());
+
         $this->expectException(InvalidArgumentException::class);
         $this->obj->setSqlType('foobar');
+    }
+
+    public function testSetSqlTypeNullException()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->obj->setSqlType(false);
     }
 
     public function testSqlPdoType()
     {
         $this->assertEquals(\PDO::PARAM_STR, $this->obj->sqlPdoType());
+    }
+
+    public function testSqlExtra()
+    {
+        $this->assertEquals('', $this->obj->sqlExtra());
+    }
+
+    public function testInputVal()
+    {
+        $this->assertEquals('', $this->obj->inputVal(''));
+        $this->assertEquals('', $this->obj->inputVal(null));
+        $this->assertEquals('{}', $this->obj->inputVal(new \StdClass()));
+        $this->assertEquals('[]', $this->obj->inputVal([]));
+    }
+
+    public function testStorageVal()
+    {
+        $this->assertEquals('', $this->obj->inputVal(''));
+        $this->assertEquals(null, $this->obj->inputVal(null));
+        $this->assertEquals('{}', $this->obj->inputVal(new \StdClass()));
+        $this->assertEquals('[]', $this->obj->inputVal([]));
     }
 }
