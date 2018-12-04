@@ -7,10 +7,6 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "Mathieu Ducharme",
-            "email": "mat@locomotive.ca"
-        },
-        {
             "name": "Locomotive",
             "homepage": "https://locomotive.ca"
         }

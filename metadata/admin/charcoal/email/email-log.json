@@ -1,0 +1,100 @@
+{
+  "admin": {
+    "lists": {
+      "default": {
+        "title": {
+          "fr": "Logs d'envoi de courriel",
+          "en": "Email logs"
+        },
+        "properties": [
+          "send_date",
+          "from",
+          "to",
+          "campaign",
+          "subject",
+          "send_error"
+        ],
+        "orders": [
+          {
+            "property": "send_date",
+            "mode": "desc"
+          }
+        ]
+      }
+    },
+    "default_list": "default",
+
+    "forms": {
+      "default": {
+        "groups": {
+          "infos": {
+            "title": {
+              "fr": "Log d'envoi de courriel",
+              "en": "Email log"
+            },
+            "layout": {
+              "structure": [
+                {"columns": [1, 1]},
+                {"columns": [1, 1]},
+                {"columns": [1]},
+                {"columns": [1, 1]}
+              ]
+            },
+            "properties": [
+              "send_date",
+              "campaign",
+              "from",
+              "to",
+              "subject",
+              "ip",
+              "session_id"
+            ]
+          },
+          "status":{
+            "title": "Status",
+            "properties": [
+              "message_id",
+              "send_status",
+              "send_error"
+            ]
+          }
+        }
+      }
+    },
+    "default_form": "default",
+
+    "dashboards": {
+      "admin.edit": {
+        "layout": {
+          "structure": [
+            { "columns": [ 1 ] }
+          ]
+        },
+        "widgets": {
+          "form": {
+            "type": "charcoal/admin/widget/object-form",
+            "form_ident": "default",
+            "obj_type": "charcoal/email/email-log"
+          }
+        }
+      },
+      "admin.table": {
+        "layout": {
+          "structure": [
+            { "columns": [ 1 ] }
+          ]
+        },
+        "widgets": {
+          "form": {
+            "type": "charcoal/admin/widget/table",
+            "collection_ident": "default",
+            "obj_type": "charcoal/email/email-log"
+          }
+        }
+      }
+    },
+    "default_create_dashboard": "admin.edit",
+    "default_edit_dashboard": "admin.edit",
+    "default_collection_dashboard": "admin.table"
+  }
+}

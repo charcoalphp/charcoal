@@ -10,7 +10,7 @@
             "type": "string"
         },
         "raw_response": {
-            "type": "html",
+            "type": "structure",
             "description": "Raw response, as returned by the mailer."
         },
         "message_id": {
@@ -18,17 +18,50 @@
         },
         "from": {
             "type": "string",
-            "description": "Sender's (from) email"
+            "description": "Sender's (from) email",
+            "label": {
+                "en": "From",
+                "fr": "De:"
+            }
         },
         "to": {
             "type": "string",
-            "description": "Recipient's (to) email"
+            "description": "Recipient's (to) email",
+            "label": {
+                "en": "To",
+                "fr": "À:"
+            }
         },
         "subject": {
-            "type": "string"
+            "type": "string",
+            "label": {
+                "en": "Subject",
+                "fr": "Sujet"
+            }
         },
         "send_date": {
-            "type": "date-time"
+            "type": "date-time",
+            "label": {
+                "en": "Date",
+                "fr": "Date"
+            }
+        },
+        "send_status": {
+            "type": "string"
+        },
+        "send_error": {
+            "type": "string",
+            "label": {
+                "en": "Error",
+                "fr": "Erreur"
+            }
+        },
+        "campaign": {
+            "type": "string",
+            "label": {
+                "en": "Campaign",
+                "fr": "Campagne"
+            }
         },
         "ip": {
             "type": "ip"
@@ -44,81 +77,5 @@
             "table": "charcoal_email_logs"
         }
     },
-    "default_source": "default",
-
-    "admin": {
-        "lists": {
-            "email_logs": {
-                "title": {
-                    "fr": "Logs d'envoi de courriel",
-                    "en": "Email logs"
-                },
-                "properties": [
-                    "send_date",
-                    "from",
-                    "to",
-                    "subject"
-                ]
-            }
-        },
-        "default_list": "email_logs",
-
-        "forms": {
-            "email_logs": {
-                "groups": {
-                    "title": {
-                        "fr": "Log d'envoi de courriel",
-                        "en": "Email log"
-                    },
-                    "infos": {
-                        "properties": [
-                            "send_date",
-                            "from",
-                            "to",
-                            "subject",
-                            "message_id",
-                            "raw_response",
-                            "ip",
-                            "session_id"
-                        ]
-                    }
-                }
-            }
-        },
-        "default_form": "email_logs",
-
-        "dashboards": {
-            "admin.edit": {
-                "layout": {
-                    "structure": [
-                        { "columns": [ 1 ] }
-                    ]
-                },
-                "widgets": {
-                    "form": {
-                        "type": "charcoal/admin/widget/object-form",
-                        "form_ident": "email_logs",
-                        "obj_type": "charcoal/app/email/email-log"
-                    }
-                }
-            },
-            "admin.table": {
-                "layout": {
-                    "structure": [
-                        { "columns": [ 1 ] }
-                    ]
-                },
-                "widgets": {
-                    "form": {
-                        "type": "charcoal/admin/widget/table",
-                        "collection_ident": "email_logs",
-                        "obj_type": "charcoal/app/email/email-log"
-                    }
-                }
-            }
-        },
-        "default_create_dashboard": "admin.edit",
-        "default_edit_dashboard": "admin.edit",
-        "default_collection_dashboard": "admin.table"
-    }
+    "default_source": "default"
 }
