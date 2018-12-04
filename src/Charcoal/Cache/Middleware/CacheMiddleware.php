@@ -192,26 +192,26 @@ class CacheMiddleware
         $response = $next($request, $response);
 
         if (!$this->isResponseStatusValid($response)) {
-            return $response;
+            return $response->withHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
         }
 
         if (!$this->isPathIncluded($path)) {
-            return $response;
+            return $response->withHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
         }
 
         if ($this->isPathExcluded($path)) {
-            return $response;
+            return $response->withHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
         }
 
         if (!$this->isQueryIncluded($query)) {
             $queryArr = $this->parseIgnoredParams($query);
             if (!empty($queryArr)) {
-                    return $response;
+                    return $response->withHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
             }
         }
 
         if ($this->isQueryExcluded($query)) {
-            return $response;
+            return $response->withHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
         }
 
         // Nothing has excluded the cache so far: add it to the pool.
