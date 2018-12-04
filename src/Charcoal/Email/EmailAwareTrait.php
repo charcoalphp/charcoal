@@ -2,7 +2,6 @@
 
 namespace Charcoal\Email;
 
-// From `PHP`
 use InvalidArgumentException;
 
 /**

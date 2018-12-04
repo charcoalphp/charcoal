@@ -2,7 +2,6 @@
 
 namespace Charcoal\Email;
 
-// Dependencies from `PHP`
 use Exception;
 use InvalidArgumentException;
 
@@ -10,26 +9,26 @@ use InvalidArgumentException;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 
-// From `phpmailer/phpmailer`
+// From 'phpmailer/phpmailer'
 use PHPMailer\PHPMailer\PHPMailer;
 
-// Module `charcoal-config` dependencies
+// From 'charcoal-config'
 use Charcoal\Config\ConfigurableInterface;
 use Charcoal\Config\ConfigurableTrait;
 
-// Module `charcoal-factory` dependencies
+// Module 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 
-// Module `charcoal-view` dependencies
+// Module 'charcoal-view'
 use Charcoal\View\GenericView;
 use Charcoal\View\ViewableInterface;
 use Charcoal\View\ViewableTrait;
 
-// Module `charcoal-queue` dependencies
+// Module 'charcoal-queue'
 use Charcoal\Queue\QueueableInterface;
 use Charcoal\Queue\QueueableTrait;
 
-// Intra module (`charcoal-email`) dependencies
+
 use Charcoal\Email\EmailInterface;
 use Charcoal\Email\EmailConfig;
 use Charcoal\Email\EmailLog;

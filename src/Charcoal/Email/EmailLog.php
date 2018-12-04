@@ -2,13 +2,12 @@
 
 namespace Charcoal\Email;
 
-// Dependencies from `PHP`
 use DateTime;
 use DateTimeInterface;
 use Exception;
 use InvalidArgumentException;
 
-// From `charcoal-core`
+// From 'charcoal-core'
 use Charcoal\Model\AbstractModel;
 
 /**
@@ -79,7 +78,7 @@ class EmailLog extends AbstractModel
      *
      * Error code (0 = success)
      *
-     * @var int $sendStatus
+     * @var integer $sendStatus
      */
     private $sendStatus;
 

@@ -2,17 +2,19 @@
 
 namespace Charcoal\Email\ServiceProvider;
 
-use \Pimple\Container;
-use \Pimple\ServiceProviderInterface;
+// From 'pimple/pimple'
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
-// From `phpmailer/phpmailer`
-use \PHPMailer\PHPMailer\PHPMailer;
+// From 'phpmailer/phpmailer'
+use PHPMailer\PHPMailer\PHPMailer;
 
-use \Charcoal\Email\Email;
-use \Charcoal\Email\EmailInterface;
-use \Charcoal\Email\EmailConfig;
+// From 'charcoal-factory'
+use Charcoal\Factory\GenericFactory;
 
-use \Charcoal\Factory\GenericFactory;
+use Charcoal\Email\Email;
+use Charcoal\Email\EmailInterface;
+use Charcoal\Email\EmailConfig;
 
 /**
  * Email Service Provider

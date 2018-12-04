@@ -6,7 +6,7 @@
         "type": {
             "type": "string"
         },
-        "action": { 
+        "action": {
             "type": "string"
         },
         "raw_response": {

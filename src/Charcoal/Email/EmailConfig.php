@@ -2,11 +2,10 @@
 
 namespace Charcoal\Email;
 
-// From `PHP`
-use \InvalidArgumentException as InvalidArgumentException;
+use InvalidArgumentException;
 
-// From `charcoal-core`
-use \Charcoal\Config\AbstractConfig;
+// From 'charcoal-core'
+use Charcoal\Config\AbstractConfig;
 
 /**
  * Email configuration.
