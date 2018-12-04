@@ -3,16 +3,13 @@
 <!-- PHP CodeSniffer ruleset -->
 
     <description>Charcoal Coding Standard</description>
+
     <arg name="encoding" value="utf-8" />
-    <arg name="tab-width" value="4" />
 
-<!-- Include the whole PSR-1 standard -->
+    <config name="show_progress" value="1" />
+    <config name="ignore_warnings_on_exit" value="1" />
 
-    <rule ref="PSR1"/>
-
-<!-- Include the whole PSR-2 standard -->
-
-    <rule ref="PSR2"/>
+    <rule ref="PSR2" />
 
 <!-- Array Sniffs -->
 
@@ -266,7 +263,6 @@
     <!--<rule ref="Squiz.PHP.DisallowInlineIf" />-->
 
     <rule ref="Squiz.PHP.DisallowMultipleAssignments" />
-    <rule ref="Squiz.PHP.DisallowObEndFlush" />
     <rule ref="Squiz.PHP.DisallowSizeFunctionsInLoops" />
     <!-- @todo Doc me -->
     <rule ref="Squiz.PHP.DiscouragedFunctions" />
@@ -275,8 +271,6 @@
         <severity>0</severity>
     </rule>
     <rule ref="Squiz.PHP.Eval" />
-    <!-- Disallow usage of functions that should be obsolete but kept for compatibility. -->
-    <rule ref="Squiz.PHP.ForbiddenFunctions" />
     <rule ref="Squiz.PHP.GlobalKeyword" />
     <rule ref="Squiz.PHP.Heredoc" />
     <rule ref="Squiz.PHP.InnerFunctions" />
@@ -299,7 +293,11 @@
     <!-- Use one string instead of concatenating 2 strings together -->
     <rule ref="Generic.Strings.UnnecessaryStringConcat" />
     <!-- Makes sure there are no spaces between the concatenation operator (.) the strings -->
-    <rule ref="Squiz.Strings.ConcatenationSpacing" />
+    <rule ref="Squiz.Strings.ConcatenationSpacing">
+        <properties>
+            <property name="ignoreNewlines" value="true"/>
+        </properties>
+    </rule>
     <!-- Makes sure that any use of Double Quotes ("") are warranted. -->
     <rule ref="Squiz.Strings.DoubleQuoteUsage" />
     <!-- Makes sure that any strings that are "echoed" are not enclosed in brackets -->
