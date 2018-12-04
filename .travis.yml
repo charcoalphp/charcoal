@@ -34,6 +34,10 @@ script:
     ## Run PHPUnit Tests
     - ./vendor/bin/phpunit --configuration ./tests/phpunit.xml --coverage-text --coverage-clover build/logs/clover.xml
 
+after_success:
+    - php vendor/bin/php-coveralls -v
+    #- bash build/travis/phpdoc_ghpages.sh
+    #- bash build/travis/apigen_ghpages.sh
 
 notifications:
     slack: locomotivemtl:d9h8ZWwTZ6b3WUsSP9s26nb1
