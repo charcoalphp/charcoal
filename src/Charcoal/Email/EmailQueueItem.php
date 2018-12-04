@@ -363,7 +363,7 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      * Hook called before saving the item.
      *
      * @return boolean
-     * @see \Charcoal\Email\Queue\QueueItemTrait::preSaveQueueItem()
+     * @see \Charcoal\Queue\QueueItemTrait::preSaveQueueItem()
      */
     protected function preSave()
     {

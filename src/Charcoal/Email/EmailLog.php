@@ -420,11 +420,16 @@ class EmailLog extends AbstractModel
     protected function preSave()
     {
         parent::preSave();
+
         $ip = (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '');
         $sessionId = session_id();
 
         $this->setIp($ip);
         $this->setSessionId($sessionId);
+
+        if ($this->sendDate() === null) {
+            $this->setSendDate('now');
+        }
 
         return true;
     }
