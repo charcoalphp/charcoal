@@ -192,26 +192,26 @@ class CacheMiddleware
         $response = $next($request, $response);
 
         if (!$this->isResponseStatusValid($response)) {
-            return $response->withHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+            return $this->noCacheResponse($response);
         }
 
         if (!$this->isPathIncluded($path)) {
-            return $response->withHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+            return $this->noCacheResponse($response);
         }
 
         if ($this->isPathExcluded($path)) {
-            return $response->withHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+            return $this->noCacheResponse($response);
         }
 
         if (!$this->isQueryIncluded($query)) {
             $queryArr = $this->parseIgnoredParams($query);
             if (!empty($queryArr)) {
-                    return $response->withHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+                    return $this->noCacheResponse($response);
             }
         }
 
         if ($this->isQueryExcluded($query)) {
-            return $response->withHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+            return $this->noCacheResponse($response);
         }
 
         // Nothing has excluded the cache so far: add it to the pool.
@@ -400,5 +400,23 @@ class CacheMiddleware
         }
 
         return array_diff_key($queryParams, array_flip((array)$this->ignoredQuery));
+    }
+
+    /**
+     * Disable the HTTP cache headers
+     *
+     * - Cache-Control is the proper HTTP
+     * - Pragma is for HTTP 1.0 support
+     * - Expires is an alternative that also is supported by 1.0 proxies
+     *
+     * @param ResponseInterface $response
+     * @return ResponseInterface
+     */
+    private function noCacheResponse(ResponseInterface $response)
+    {
+        return $response
+            ->withHeader('Cache-Control', 'no-cache, no-store, must-revalidate')
+            ->withHeader('Pragma', 'no-cache')
+            ->withHeader('Expires', '0');
     }
 }
