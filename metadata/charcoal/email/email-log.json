@@ -10,7 +10,7 @@
             "type": "string"
         },
         "raw_response": {
-            "type": "structure",
+            "type": "text",
             "description": "Raw response, as returned by the mailer."
         },
         "message_id": {
