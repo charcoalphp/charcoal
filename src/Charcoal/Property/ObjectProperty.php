@@ -187,13 +187,6 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
         return $this->pattern;
     }
 
-    /**
-     * @return string
-     */
-    public function sqlExtra()
-    {
-        return '';
-    }
 
     /**
      * @return string
@@ -583,8 +576,6 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
 
         return $choice;
     }
-
-
 
 
     /**

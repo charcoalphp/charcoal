@@ -8,9 +8,6 @@ namespace Charcoal\Property;
 interface StorablePropertyInterface
 {
 
-
-
-
     /**
      * @param  mixed $val The value to set as field value.
      * @return array

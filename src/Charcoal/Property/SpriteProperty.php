@@ -36,6 +36,14 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
     private $view;
 
     /**
+     * @return string
+     */
+    public function type()
+    {
+        return 'sprite';
+    }
+
+    /**
      * Sets data on this entity.
      *
      * @uses   self::offsetSet()
@@ -51,24 +59,6 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
         return $this;
     }
 
-    /**
-     * @param Container $container A Pimple DI container.
-     * @return void
-     */
-    protected function setDependencies(Container $container)
-    {
-        parent::setDependencies($container);
-
-        $this->view = $container['view'];
-    }
-
-    /**
-     * @return string
-     */
-    public function type()
-    {
-        return 'sprite';
-    }
 
     /**
      * @return string
@@ -94,14 +84,6 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
         $this->sprite = $sprite;
 
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function sqlExtra()
-    {
-        return '';
     }
 
     /**
@@ -164,6 +146,57 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
+     * @param  mixed $val     The value to to convert for display.
+     * @param  array $options Optional display options.
+     * @see AbstractPropery::displayVal()
+     * @return string
+     */
+    public function displayVal($val, array $options = [])
+    {
+        $val = parent::displayVal($val, $options);
+
+        if ($val !== '') {
+            $val = $this->view->render(
+                '<svg fill="currentColor" viewBox="0 0 25 25" height="40px" role=\'img\'><use xlink:href=\'{{# withBaseUrl }}{{ spritePathWithHash }}{{/ withBaseUrl }}\'></use></svg>',
+                [
+                    'spritePathWithHash' => $this->sprite().'#'.$val
+                ]
+            );
+        }
+
+        return $val;
+    }
+
+    /**
+     * @param  mixed $val The value to to convert as path.
+     * @return string
+     */
+    public function spriteVal($val)
+    {
+        if ($val !== '') {
+            $val = $this->view->render(
+                '{{# withBaseUrl }}{{ spritePathWithHash }}{{/ withBaseUrl }}',
+                [
+                    'spritePathWithHash' => $this->sprite().'#'.$val
+                ]
+            );
+        }
+
+        return $val;
+    }
+
+    /**
+     * @param Container $container A Pimple DI container.
+     * @return void
+     */
+    protected function setDependencies(Container $container)
+    {
+        parent::setDependencies($container);
+
+        $this->view = $container['view'];
+    }
+
+    /**
      * Parse the given value into a choice structure.
      *
      * @param  string|array $choice      A string representing the choice label or a structure.
@@ -205,44 +238,5 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
         }
 
         return $choice;
-    }
-
-    /**
-     * @param  mixed $val     The value to to convert for display.
-     * @param  array $options Optional display options.
-     * @return string
-     */
-    public function displayVal($val, array $options = [])
-    {
-        $val = parent::displayVal($val, $options);
-
-        if ($val !== '') {
-            $val = $this->view->render(
-                '<svg fill="currentColor" viewBox="0 0 25 25" height="40px" role=\'img\'><use xlink:href=\'{{# withBaseUrl }}{{ spritePathWithHash }}{{/ withBaseUrl }}\'></use></svg>',
-                [
-                    'spritePathWithHash' => $this->sprite().'#'.$val
-                ]
-            );
-        }
-
-        return $val;
-    }
-
-    /**
-     * @param  mixed $val The value to to convert as path.
-     * @return string
-     */
-    public function spriteVal($val)
-    {
-        if ($val !== '') {
-            $val = $this->view->render(
-                '{{# withBaseUrl }}{{ spritePathWithHash }}{{/ withBaseUrl }}',
-                [
-                    'spritePathWithHash' => $this->sprite().'#'.$val
-                ]
-            );
-        }
-
-        return $val;
     }
 }

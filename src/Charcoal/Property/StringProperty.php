@@ -454,6 +454,7 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
      * Strip HTML if it is not allowed.
      *
      * @param mixed $val A single value to parse.
+     * @see AbstractProperty::parseVal()
      * @return mixed The parsed value.
      */
     public function parseOne($val)
@@ -468,18 +469,11 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
-     * @return string
-     */
-    public function sqlExtra()
-    {
-        return '';
-    }
-
-    /**
      * Get the SQL type (Storage format)
      *
      * Stored as `VARCHAR` for maxLength under 255 and `TEXT` for other, longer strings
      *
+     * @see StorablePropertyTrait::sqlType()
      * @return string The SQL type
      */
     public function sqlType()
@@ -499,6 +493,7 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
+     * @see StorablePropertyTrait::sqlPdoType()
      * @return integer
      */
     public function sqlPdoType()

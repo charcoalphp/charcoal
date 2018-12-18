@@ -221,8 +221,6 @@ class ImageProperty extends FileProperty
         return $this->effects;
     }
 
-
-
     /**
      * Process the property's effects on the given image(s).
      *

@@ -99,18 +99,11 @@ class NumberProperty extends AbstractProperty
     }
 
     /**
-     * @return string
-     */
-    public function sqlExtra()
-    {
-        return '';
-    }
-
-    /**
      * Get the SQL type (Storage format)
      *
      * Stored as `VARCHAR` for max_length under 255 and `TEXT` for other, longer strings
      *
+     * @see StorablePropertyTrait::sqlType()
      * @return string The SQL type
      */
     public function sqlType()
@@ -124,6 +117,7 @@ class NumberProperty extends AbstractProperty
     }
 
     /**
+     * @see StorablePropertyTrait::sqlPdoType()
      * @return integer
      */
     public function sqlPdoType()

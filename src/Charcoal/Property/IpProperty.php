@@ -38,9 +38,9 @@ class IpProperty extends AbstractProperty
     /**
      * Ensure multiple can not be TRUE for ID property.
      *
-     * @see    AbstractProperty::setMultiple()
      * @param  boolean $flag The multiple flag.
      * @throws InvalidArgumentException If the multiple argument is TRUE (must be FALSE).
+     * @see    AbstractProperty::setMultiple()
      * @return IdProperty Chainable
      */
     public function setMultiple($flag)
@@ -70,9 +70,9 @@ class IpProperty extends AbstractProperty
     /**
      * Ensure l10n can not be TRUE for IP property.
      *
-     * @see    AbstractProperty::setL10n()
      * @param  boolean $flag The l10n, or "translatable" flag.
      * @throws InvalidArgumentException If the L10N argument is TRUE (must be FALSE).
+     * @see    AbstractProperty::setL10n()
      * @return IdProperty Chainable
      */
     public function setL10n($flag)
@@ -102,7 +102,7 @@ class IpProperty extends AbstractProperty
     /**
      * @param string $mode Either "string" or "int".
      * @throws InvalidArgumentException If the storage mode is invalid.
-     * @return IpProperty Chainable
+     * @return self
      */
     public function setStorageMode($mode)
     {
@@ -161,6 +161,7 @@ class IpProperty extends AbstractProperty
      * Get the IP value in the suitable format for storage.
      *
      * @param mixed $val The value to convert to string.
+     * @see StorablePropertyTrait::storageVal()
      * @return string
      */
     public function storageVal($val)
@@ -186,14 +187,9 @@ class IpProperty extends AbstractProperty
         return gethostbyaddr($val);
     }
 
+
     /**
-     * @return string
-     */
-    public function sqlExtra()
-    {
-        return '';
-    }
-    /**
+     * @see StorableProperyTrait:sqlType()
      * @return string
      */
     public function sqlType()
@@ -208,6 +204,7 @@ class IpProperty extends AbstractProperty
     }
 
     /**
+     * @see StorableProperyTrait::sqlPdoType()
      * @return integer
      */
     public function sqlPdoType()

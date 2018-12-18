@@ -18,6 +18,14 @@ class TextProperty extends StringProperty
     private $long = self::DEFAULT_LONG;
 
     /**
+     * @return string
+     */
+    public function type()
+    {
+        return 'text';
+    }
+
+    /**
      * @param boolean $long Whether long text are supported.
      * @return self
      */
@@ -36,17 +44,10 @@ class TextProperty extends StringProperty
     }
 
     /**
-     * @return string
-     */
-    public function type()
-    {
-        return 'text';
-    }
-
-    /**
      * String's default max length is overridden for the text property.
      * (0 = no max length).
      *
+     * @see StringProperty::defaultMaxLength()
      * @return integer
      */
     public function defaultMaxLength()
@@ -57,6 +58,7 @@ class TextProperty extends StringProperty
     /**
      * Get the SQL type (Storage format)
      *
+     * @see StorablePropertyTrait::sqlType()
      * @return string The SQL type
      */
     public function sqlType()

@@ -47,10 +47,11 @@ class ColorProperty extends AbstractProperty
     }
 
     /**
-     * AbstractProperty > setVal(). Ensure proper hexadecimal value.
      *
      * @param mixed $val The value to set.
      * @throws InvalidArgumentException If the value does not match property's options.
+     * @see AbstractProperty::parseOne()
+     * @see AbstractProperty::parseVal()
      * @return string|null
      */
     public function parseOne($val)
@@ -91,18 +92,11 @@ class ColorProperty extends AbstractProperty
     }
 
     /**
-     * @return string
-     */
-    public function sqlExtra()
-    {
-        return '';
-    }
-
-    /**
      * Get the SQL type (Storage format)
      *
      * Stored as `VARCHAR` for maxLength under 255 and `TEXT` for other, longer strings
      *
+     * @see StorablePropertyTrait::sqlType()
      * @return string The SQL type
      */
     public function sqlType()
@@ -120,6 +114,7 @@ class ColorProperty extends AbstractProperty
     }
 
     /**
+     * @see StorablePropertyTrait::sqlPdoType()
      * @return integer
      */
     public function sqlPdoType()

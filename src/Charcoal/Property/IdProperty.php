@@ -50,12 +50,12 @@ class IdProperty extends AbstractProperty
      * @see    AbstractProperty::setMultiple()
      * @param  boolean $flag The multiple flag.
      * @throws InvalidArgumentException If the multiple argument is TRUE (must be FALSE).
-     * @return IdProperty Chainable
+     * @see AbstractProperty::setMultiple()
+     * @return self
      */
     public function setMultiple($flag)
     {
         $flag = !!$flag;
-
         if ($flag === true) {
             throw new InvalidArgumentException(
                 'The ID property does not support multiple values.'
@@ -82,7 +82,8 @@ class IdProperty extends AbstractProperty
      * @see    AbstractProperty::setL10n()
      * @param  boolean $flag The l10n, or "translatable" flag.
      * @throws InvalidArgumentException If the L10N argument is TRUE (must be FALSE).
-     * @return IdProperty Chainable
+     * @see AbstractProperty::setL10n()
+     * @return self
      */
     public function setL10n($flag)
     {
@@ -128,12 +129,11 @@ class IdProperty extends AbstractProperty
      *
      * @param string $mode The ID mode ("auto-increment", "custom", "uniqid" or "uuid").
      * @throws InvalidArgumentException If the mode is not one of the 4 valid modes.
-     * @return IdProperty Chainable
+     * @return self
      */
     public function setMode($mode)
     {
         $availableModes = $this->availableModes();
-
         if (!in_array($mode, $availableModes)) {
             throw new InvalidArgumentException(sprintf(
                 'Invalid ID mode. Must be one of "%s"',
@@ -176,8 +176,14 @@ class IdProperty extends AbstractProperty
     /**
      * Auto-generate a value upon first save.
      *
-     * Note: {@see self::MODE_AUTO_INCREMENT} is handled at the database driver level
-     * (for now...) and {@see self::MODE_CUSTOM} si self-explanatory.
+     * - self::MODE_AUTOINCREMENT
+     *   - null: The auto-generated value should be handled at the database driver level.
+     * - self::MODE_CUSTOM
+     *   - null: Custom mode must be defined elsewhere.
+     * - self::MODE_UNIQID
+     *   - A random 13-char `uniqid()` value.
+     * - self::MODE_UUID
+     *   - A random RFC-4122 UUID value.
      *
      * @throws DomainException If the mode does not have a value generator.
      * @return string|null
@@ -196,11 +202,10 @@ class IdProperty extends AbstractProperty
     }
 
     /**
-     * Generate a RFC-4122 v4 Universally-Unique Identifier.
-     *
-     * @return string
+     * Generate a RFC-4122 v4 Universally-Unique Identifier (UUID).
      *
      * @see http://tools.ietf.org/html/rfc4122#section-4.4
+     * @return string
      */
     private function generateUuid()
     {
@@ -227,8 +232,9 @@ class IdProperty extends AbstractProperty
     /**
      * Get additional SQL field options.
      *
+     *
+     * @see StorablePropertyTrait::sqlExtra()
      * @return string
-     * @see AbstractProperty::fields()
      */
     public function sqlExtra()
     {
@@ -249,8 +255,8 @@ class IdProperty extends AbstractProperty
      * - For "uniqid" ids, it is a 13-char string.
      * - For "uuid" id, it is a 36-char string.
      *
+     * @see StorablePropertyTrait::sqlType()
      * @return string The SQL type.
-     * @see AbstractProperty::fields()
      */
     public function sqlType()
     {
@@ -275,8 +281,8 @@ class IdProperty extends AbstractProperty
     /**
      * Get the PDO data type.
      *
+     * @see StorablePropertyTrait::sqlPdoType()
      * @return integer
-     * @see AbstractProperty::fields()
      */
     public function sqlPdoType()
     {

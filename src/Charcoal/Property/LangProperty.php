@@ -30,10 +30,11 @@ class LangProperty extends AbstractProperty implements SelectablePropertyInterfa
     }
 
     /**
-     * Set the available choices.
+     * Ensure the choices are never explicitly set, as they will always be auto-generated from environment / config.
      *
      * @param  array $choices One or more choice structures.
-     * @return LangProperty Chainable.
+     * @see SelectablePropertyTrait::setChoices()
+     * @return self
      */
     public function setChoices(array $choices)
     {
@@ -47,10 +48,11 @@ class LangProperty extends AbstractProperty implements SelectablePropertyInterfa
     }
 
     /**
-     * Merge the available choices.
+     * Ensure the choices are never explicitly set, as they will always be auto-generated from environment / config.
      *
      * @param  array $choices One or more choice structures.
-     * @return LangProperty Chainable.
+     * @see SelectablePropertyTrait::setChoices()
+     * @return self
      */
     public function addChoices(array $choices)
     {
@@ -64,10 +66,11 @@ class LangProperty extends AbstractProperty implements SelectablePropertyInterfa
     }
 
     /**
-     * Add a choice to the available choices.
+     * Ensure the choices are never explicitly set, as they will always be auto-generated from environment / config.
      *
      * @param string       $choiceIdent The choice identifier (will be key / default ident).
      * @param string|array $choice      A string representing the choice label or a structure.
+     * @see SelectablePropertyTrait::addChoice()
      * @return LangProperty Chainable.
      */
     public function addChoice($choiceIdent, $choice)
@@ -84,6 +87,7 @@ class LangProperty extends AbstractProperty implements SelectablePropertyInterfa
     /**
      * Determine if choices are available.
      *
+     * @see SelectablePropertyTrait::hasChoices()
      * @return boolean
      */
     public function hasChoices()
@@ -95,6 +99,7 @@ class LangProperty extends AbstractProperty implements SelectablePropertyInterfa
      * Determine if the given choice is available.
      *
      * @param  string $choiceIdent The choice identifier to lookup.
+     * @see SelectablePropertyTrait::hasChoice()
      * @return boolean
      */
     public function hasChoice($choiceIdent)
@@ -109,7 +114,7 @@ class LangProperty extends AbstractProperty implements SelectablePropertyInterfa
     /**
      * Retrieve the available choice structures.
      *
-     * @see    SelectablePropertyInterface::choices()
+     * @see    SelectablePropertyTrait::choices()
      * @return array
      */
     public function choices()
@@ -208,19 +213,12 @@ class LangProperty extends AbstractProperty implements SelectablePropertyInterfa
         return $propertyValue;
     }
 
-    /**
-     * @return string
-     */
-    public function sqlExtra()
-    {
-        return '';
-    }
 
     /**
-     * Get the SQL type (Storage format)
+     * Get the SQL type (Storage format). ISO 639-1 value is a 2-character language code.
      *
+     * @see StorablePropertyTrait::sqlType()
      * @return string The SQL type
-     * @todo   Only the 2-character language code (ISO 639-1)
      */
     public function sqlType()
     {

@@ -46,10 +46,9 @@ class StructureProperty extends AbstractProperty
     /**
      * Ensure l10n can not be TRUE for structure property.
      *
-     * @see    AbstractProperty::setL10n()
-     * @todo   Add support for L10N;
      * @param  boolean $flag The l10n, or "translatable" flag.
      * @throws InvalidArgumentException If the L10N argument is TRUE (must be FALSE).
+     * @see    AbstractProperty::setL10n()
      * @return self
      */
     public function setL10n($flag)
@@ -172,21 +171,11 @@ class StructureProperty extends AbstractProperty
     }
 
     /**
-     * Retrieve the property's extra SQL field settings.
-     *
-     * @return string
-     */
-    public function sqlExtra()
-    {
-        return '';
-    }
-
-    /**
      * Set the property's SQL encoding & collation.
      *
      * @param string $sqlType The field SQL column type.
      * @throws InvalidArgumentException If the SQL type is invalid.
-     * @return StructureProperty Chainable
+     * @return self
      */
     public function setSqlType($sqlType)
     {
@@ -232,6 +221,7 @@ class StructureProperty extends AbstractProperty
      *
      * For a lack of better array support in mysql, data is stored as encoded JSON in a TEXT.
      *
+     * @see StorableProperyTrait::sqlType()
      * @return string
      */
     public function sqlType()
@@ -246,6 +236,7 @@ class StructureProperty extends AbstractProperty
     /**
      * Retrieve the property's PDO data type.
      *
+     * @see StorablePropertyTrait::sqlPdoType()
      * @return integer
      */
     public function sqlPdoType()

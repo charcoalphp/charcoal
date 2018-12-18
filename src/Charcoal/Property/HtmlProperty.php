@@ -29,34 +29,6 @@ class HtmlProperty extends StringProperty
     }
 
     /**
-     * Unlike strings' default upper limit of 255, HTML has no default max length (0).
-     *
-     * @return integer
-     */
-    public function defaultMaxLength()
-    {
-        return 0;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function allowHtml()
-    {
-        return true;
-    }
-
-    /**
-     * Get the SQL type (Storage format).
-     *
-     * @return string The SQL type
-     */
-    public function sqlType()
-    {
-        return 'TEXT';
-    }
-
-    /**
      * @return string
      */
     public function filesystem()
@@ -73,5 +45,37 @@ class HtmlProperty extends StringProperty
         $this->filesystem = $filesystem;
 
         return $this;
+    }
+
+    /**
+     * Unlike strings' default upper limit of 255, HTML has no default max length (0).
+     *
+     * @see StringProperty::defaultMaxLength()
+     * @return integer
+     */
+    public function defaultMaxLength()
+    {
+        return 0;
+    }
+
+    /**
+     * Unlike the parent's String Property, HTML property obviously always allow HTML.
+     *
+     * @see StringProperty::allowHtml()
+     * @return boolean
+     */
+    public function allowHtml()
+    {
+        return true;
+    }
+
+    /**
+     * Get the SQL type (Storage format).
+     *
+     * @return string The SQL type
+     */
+    public function sqlType()
+    {
+        return 'TEXT';
     }
 }

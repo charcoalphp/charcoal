@@ -40,6 +40,8 @@ class BooleanProperty extends AbstractProperty
 
     /**
      * @param mixed $val A single value to parse.
+     * @see AbstractProperty::parseOne()
+     * @see AbstractProperty::parseVal()
      * @return boolean
      */
     public function parseOne($val)
@@ -50,6 +52,7 @@ class BooleanProperty extends AbstractProperty
     /**
      * @param  mixed $val     The value to to convert for display.
      * @param  array $options Optional display options.
+     * @see AbstractProperty::displayVal()
      * @return string
      */
     public function displayVal($val, array $options = [])
@@ -72,12 +75,11 @@ class BooleanProperty extends AbstractProperty
     }
 
     /**
-     * AbstractProperty > setMultiple()
-     *
-     * Ensure multiple can not be true for DateTime property.
+     * Ensure multiple can never be true for boolean property.
      *
      * @param boolean $multiple The multiple flag.
      * @throws InvalidArgumentException If multiple is true. (must be false for boolean properties).
+     * @see AbstractProperty::setMultiple()
      * @return self
      */
     public function setMultiple($multiple)
@@ -92,10 +94,9 @@ class BooleanProperty extends AbstractProperty
     }
 
     /**
-     * AbstractProperty > multiple()
+     * Multiple is always false for boolean property.
      *
-     * Multiple is always false for Boolean property.
-     *
+     * @see AbstractProperty::multiple()
      * @return boolean
      */
     public function multiple()
@@ -148,18 +149,11 @@ class BooleanProperty extends AbstractProperty
     }
 
     /**
-     * @return string
-     */
-    public function sqlExtra()
-    {
-        return '';
-    }
-
-    /**
      * Get the SQL type (Storage format).
      *
      * Boolean properties are stored as `TINYINT(1) UNSIGNED`
      *
+     * @see StorablePropertyTrait::sqlType()
      * @return string The SQL type
      */
     public function sqlType()
@@ -173,6 +167,7 @@ class BooleanProperty extends AbstractProperty
     }
 
     /**
+     * @see StorablePropertyTrait::sqlPdoType()
      * @return integer
      */
     public function sqlPdoType()
@@ -181,6 +176,7 @@ class BooleanProperty extends AbstractProperty
     }
 
     /**
+     * @see SelectablePropertyTrait::choices()
      * @return array
      */
     public function choices()

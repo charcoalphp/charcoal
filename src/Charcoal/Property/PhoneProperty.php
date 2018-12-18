@@ -23,6 +23,7 @@ class PhoneProperty extends StringProperty
     /**
      * Set StringProperty's `defaultMaxLength` to 16 for phone numbers.
      *
+     * @see StringProperty::defaultMaxLength()
      * @return integer
      */
     public function defaultMaxLength()
@@ -44,6 +45,7 @@ class PhoneProperty extends StringProperty
     /**
      * @param  mixed $val     The value to to convert for display.
      * @param  array $options Unused display options.
+     * @see AbstractProperty::displayVal()
      * @return string
      */
     public function displayVal($val, array $options = [])

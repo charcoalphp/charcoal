@@ -53,6 +53,8 @@ class EmailProperty extends StringProperty
 
     /**
      * @param mixed $val A single value to parse.
+     * @see AbstractProperty::parseOne()
+     * @see AbstractProperty::parseVal()
      * @return string
      */
     public function parseOne($val)

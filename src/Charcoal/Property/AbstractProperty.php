@@ -121,8 +121,6 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     private $allowNull = self::DEFAULT_ALLOW_NULL;
 
-
-
     /**
      * Only the storable properties should be saved in storage.
      * @var boolean
@@ -964,6 +962,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      * Create a new metadata object.
      *
      * @param  array $data Optional metadata to merge on the object.
+     * @see DescribableTrait::createMetadata()
      * @return PropertyMetadata
      */
     protected function createMetadata(array $data = null)
@@ -975,6 +974,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     /**
      * Retrieve the class name of the metadata object.
      *
+     * @see DescribableTrait::metadataClass()
      * @return string
      */
     protected function metadataClass()
@@ -983,8 +983,9 @@ abstract class AbstractProperty extends AbstractEntity implements
     }
 
     /**
-     * ValidatableTrait > createValidator(). Create a Validator object
+     * Create a Validator object
      *
+     * @see ValidatableTrait::createValidator()
      * @return ValidatorInterface
      */
     protected function createValidator()

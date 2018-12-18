@@ -21,14 +21,7 @@ class GenericProperty extends AbstractProperty
     }
 
     /**
-     * @return string
-     */
-    public function sqlExtra()
-    {
-        return '';
-    }
-
-    /**
+     * @see StorablePropertyTrait::sqlType()
      * @return string
      */
     public function sqlType()
@@ -41,6 +34,7 @@ class GenericProperty extends AbstractProperty
     }
 
     /**
+     * @see StorablePropertyTrait::sqlPdoType()
      * @return integer
      */
     public function sqlPdoType()
