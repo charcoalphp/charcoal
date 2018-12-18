@@ -141,7 +141,6 @@ trait DescribablePropertyTrait
         }
 
         $propertyMetadata = $props[$propertyIdent];
-        $propertyMetadata = $this->filterPropertyMetadata($propertyMetadata, $propertyIdent);
         if (!isset($propertyMetadata['type'])) {
             throw new RuntimeException(sprintf(
                 'Invalid model metadata [%s] - Undefined property type for "%s".',
@@ -157,18 +156,6 @@ trait DescribablePropertyTrait
         $property->setData($propertyMetadata);
 
         return $property;
-    }
-
-    /**
-     * Filter the given metadata.
-     *
-     * @param  mixed  $propertyMetadata The property data from the described object.
-     * @param  string $propertyIdent    The property identifier to return.
-     * @return mixed Return the filtered $propertyMetadata.
-     */
-    public function filterPropertyMetadata($propertyMetadata, $propertyIdent)
-    {
-        return $propertyMetadata;
     }
 
     /**
