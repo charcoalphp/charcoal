@@ -447,8 +447,31 @@ class ModelStructureProperty extends StructureProperty
     }
 
     /**
+     * @param null|string $model Model ident.
+     * @return ArrayAccess|DescribableInterface|mixed
+     * @throws UnexpectedValueException If the structure is invalid.
+     */
+    public function toModel($model = null)
+    {
+        if ($model) {
+            $structure = $this->structureModelFactory()->create($model);
+
+            if (!$structure instanceof ArrayAccess) {
+                throw new UnexpectedValueException(sprintf(
+                    'Structure [%s] must implement [%s]',
+                    $model,
+                    ArrayAccess::class
+                ));
+            }
+
+            return $structure;
+        }
+
+        return $this->structureProto();
+    }
+
+    /**
      * PropertyInterface::save().
-     *
      * @param  mixed $val The value, at time of saving.
      * @return mixed
      */
