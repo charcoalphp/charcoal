@@ -2,6 +2,8 @@
 
 namespace Charcoal\Property;
 
+use InvalidArgumentException;
+
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
 
@@ -19,6 +21,44 @@ trait StorablePropertyTrait
      * @var PropertyField[]|null
      */
     private $fields;
+
+    /**
+     * An empty value implies that the property will inherit the table's encoding
+     * @var string
+     */
+    private $sqlEncoding = '';
+
+    /**
+     * Set the property's SQL encoding & collation.
+     *
+     * @param  string $ident The encoding ident.
+     * @throws InvalidArgumentException  If the identifier is not a string.
+     * @return self
+     */
+    public function setSqlEncoding($ident)
+    {
+        if (!is_string($ident)) {
+            throw new InvalidArgumentException(
+                'Encoding ident needs to be string.'
+            );
+        }
+
+        if ($ident === 'utf8mb4') {
+            $this->sqlEncoding = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci';
+        }
+
+        return $this;
+    }
+
+    /**
+     * Retrieve the property's SQL encoding ident.
+     *
+     * @return string
+     */
+    public function sqlEncoding()
+    {
+        return $this->sqlEncoding;
+    }
 
     /**
      * Retrieve the property's storage fields.
@@ -85,12 +125,6 @@ trait StorablePropertyTrait
 
         return $val;
     }
-
-
-    /**
-     * @return string
-     */
-    abstract public function sqlEncoding();
 
     /**
      * @return string

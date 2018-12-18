@@ -7,6 +7,10 @@ namespace Charcoal\Property;
  */
 interface StorablePropertyInterface
 {
+
+
+
+
     /**
      * @param  mixed $val The value to set as field value.
      * @return array
@@ -23,6 +27,15 @@ interface StorablePropertyInterface
      * @return mixed
      */
     public function storageVal($val);
+
+    /**
+     * Set the property's SQL encoding & collation.
+     *
+     * @param  string $ident The encoding ident.
+     * @throws \InvalidArgumentException  If the identifier is not a string.
+     * @return self
+     */
+    public function setSqlEncoding($ident);
 
     /**
      * @return string

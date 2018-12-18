@@ -121,11 +121,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     private $allowNull = self::DEFAULT_ALLOW_NULL;
 
-    /**
-     * An empty value implies that the property will inherit the table's encoding
-     * @var string
-     */
-    private $sqlEncoding = '';
+
 
     /**
      * Only the storable properties should be saved in storage.
@@ -667,38 +663,6 @@ abstract class AbstractProperty extends AbstractEntity implements
     public function allowNull()
     {
         return $this->allowNull;
-    }
-
-    /**
-     * Set the property's SQL encoding & collation.
-     *
-     * @param  string $ident The encoding ident.
-     * @throws InvalidArgumentException  If the identifier is not a string.
-     * @return self
-     */
-    public function setSqlEncoding($ident)
-    {
-        if (!is_string($ident)) {
-            throw new InvalidArgumentException(
-                'Encoding ident needs to be string.'
-            );
-        }
-
-        if ($ident === 'utf8mb4') {
-            $this->sqlEncoding = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci';
-        }
-
-        return $this;
-    }
-
-    /**
-     * Retrieve the property's SQL encoding ident.
-     *
-     * @return string
-     */
-    public function sqlEncoding()
-    {
-        return $this->sqlEncoding;
     }
 
     /**
