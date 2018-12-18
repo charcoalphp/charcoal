@@ -359,7 +359,8 @@ abstract class AbstractModel extends AbstractEntity implements
      */
     protected function setDependencies(Container $container)
     {
-        // This method is a stub. Reimplement in children method to inject dependencies in your class from a container.
+        // This method is a stub.
+        // Reimplement in children method to inject dependencies in your class from a Pimple container.
     }
 
     /**
@@ -399,8 +400,9 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-     * StorableTrait > preSave(). Save hook called before saving the model.
+     * Save event called (in storable trait) before saving the model.
      *
+     * @see StorableTrait::preSave()
      * @return boolean
      */
     protected function preSave()
@@ -412,6 +414,7 @@ abstract class AbstractModel extends AbstractEntity implements
      * StorableTrait > preUpdate(). Update hook called before updating the model.
      *
      * @param string[] $properties Optional. The properties to update.
+     * @see StorableTrait::preUpdate()
      * @return boolean
      */
     protected function preUpdate(array $properties = null)
@@ -422,6 +425,7 @@ abstract class AbstractModel extends AbstractEntity implements
     /**
      * Create a new metadata object.
      *
+     * @see DescribablePropertyTrait::createMetadata()
      * @return ModelMetadata
      */
     protected function createMetadata()
@@ -433,6 +437,7 @@ abstract class AbstractModel extends AbstractEntity implements
     /**
      * Retrieve the class name of the metadata object.
      *
+     * @see DescribableTrait::metadataClass()
      * @return string
      */
     protected function metadataClass()
@@ -441,9 +446,8 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-     * StorableInterface > createSource()
-     *
      * @throws UnexpectedValueException If the metadata source can not be found.
+     * @see StorableTrait::createSource()
      * @return \Charcoal\Source\SourceInterface
      */
     protected function createSource()

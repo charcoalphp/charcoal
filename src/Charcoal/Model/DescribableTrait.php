@@ -30,52 +30,13 @@ trait DescribableTrait
     protected $metadataIdent;
 
     /**
-     * Describable object needs to have a `setData()` method
+     * Describable object needs to have a `setData()` method to allow a global setter from array.
      *
      * @param array $data The object's data.
      * @return self
      */
     abstract public function setData(array $data);
 
-    /**
-     * Create a new metadata object.
-     *
-     * @return MetadataInterface
-     */
-    abstract protected function createMetadata();
-
-    /**
-     * Retrieve the class name of the metadata object.
-     *
-     * @return string
-     */
-    abstract protected function metadataClass();
-
-    /**
-     * @param MetadataLoader $loader The loader instance, used to load metadata.
-     * @return self
-     */
-    public function setMetadataLoader(MetadataLoader $loader)
-    {
-        $this->metadataLoader = $loader;
-        return $this;
-    }
-
-    /**
-     * Safe MetdataLoader getter. Create the loader if it does not exist.
-     *
-     * @throws RuntimeException If the metadata loader was not set.
-     * @return MetadataLoader
-     */
-    protected function metadataLoader()
-    {
-        if (!$this->metadataLoader) {
-            throw new RuntimeException(
-                sprintf('Metadata loader was not set for "%s"', get_class($this))
-            );
-        }
-        return $this->metadataLoader;
-    }
 
     /**
      * @param array|MetadataInterface $metadata The object's metadata.
@@ -100,6 +61,8 @@ trait DescribableTrait
     }
 
     /**
+     * Retrieve metadata, or load it if it was not explicitly set.
+     *
      * @return MetadataInterface
      */
     public function metadata()
@@ -142,7 +105,7 @@ trait DescribableTrait
     }
 
     /**
-     * Get the metadata ident, or generate it from class name.
+     * Get the metadata ident, or generate it from class name if it was not set explicitly.
      *
      * @return string
      */
@@ -155,7 +118,47 @@ trait DescribableTrait
     }
 
     /**
-     * Generate a metadata identifier from this object's class name.
+     * Create a new metadata object.
+     *
+     * @return MetadataInterface
+     */
+    abstract protected function createMetadata();
+
+    /**
+     * Retrieve the class name of the metadata object.
+     *
+     * @return string
+     */
+    abstract protected function metadataClass();
+
+    /**
+     * @param MetadataLoader $loader The loader instance, used to load metadata.
+     * @return self
+     */
+    protected function setMetadataLoader(MetadataLoader $loader)
+    {
+        $this->metadataLoader = $loader;
+        return $this;
+    }
+
+    /**
+     * Safe MetadataLoader getter. Create the loader if it does not exist.
+     *
+     * @throws RuntimeException If the metadata loader was not set.
+     * @return MetadataLoader
+     */
+    protected function metadataLoader()
+    {
+        if (!$this->metadataLoader) {
+            throw new RuntimeException(
+                sprintf('Metadata loader was not set for "%s"', get_class($this))
+            );
+        }
+        return $this->metadataLoader;
+    }
+
+    /**
+     * Generate a metadata identifier from this object's class name (FQN).
      *
      * Converts the short class name and converts it from camelCase to kebab-case.
      *
@@ -163,8 +166,7 @@ trait DescribableTrait
      */
     protected function generateMetadataIdent()
     {
-        $class = get_class($this);
-        $ident = preg_replace('/([a-z])([A-Z])/', '$1-$2', $class);
+        $ident = preg_replace('/([a-z])([A-Z])/', '$1-$2', static::class);
         $ident = strtolower(str_replace('\\', '/', $ident));
         return $ident;
     }
