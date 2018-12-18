@@ -115,6 +115,21 @@ trait DescribablePropertyTrait
     }
 
     /**
+     * Filter the given metadata.
+     *
+     * This method gives a "change" to object to have some conditional logic on their property's metadata.
+     *
+     * @param  mixed  $propertyMetadata The property data from the described object.
+     * @param  string $propertyIdent    The property identifier to return.
+     * @return mixed Return the filtered $propertyMetadata.
+     */
+    public function filterPropertyMetadata($propertyMetadata, $propertyIdent)
+    {
+        // This method is a stub. Reimplement as needed in sub-classes.
+        return $propertyMetadata;
+    }
+
+    /**
      * Set a property factory.
      *
      * @param  FactoryInterface $factory The property factory, to createable property values.
@@ -179,6 +194,7 @@ trait DescribablePropertyTrait
         }
 
         $propertyMetadata = $props[$propertyIdent];
+        $propertyMetadata = $this->filterPropertyMetadata($propertyMetadata, $propertyIdent);
         if (!isset($propertyMetadata['type'])) {
             throw new RuntimeException(sprintf(
                 'Invalid model metadata [%s] - Undefined property type for "%s".',
