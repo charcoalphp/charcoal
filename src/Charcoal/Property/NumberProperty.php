@@ -82,6 +82,22 @@ class NumberProperty extends AbstractProperty
         return $this->max;
     }
 
+
+    /**
+     * The property's default validation methods.
+     *
+     * @return string[]
+     */
+    public function validationMethods()
+    {
+        $parentMethods = parent::validationMethods();
+
+        return array_merge($parentMethods, [
+            'max',
+            'min'
+        ]);
+    }
+
     /**
      * @return string
      */
