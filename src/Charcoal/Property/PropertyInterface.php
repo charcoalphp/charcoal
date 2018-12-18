@@ -46,6 +46,12 @@ interface PropertyInterface
     public function parseVal($val);
 
     /**
+     * @param mixed $val A single value to parse.
+     * @return mixed The parsed value.
+     */
+    public function parseOne($val);
+
+    /**
      * @param mixed $val Optional. The value to to convert for input.
      * @return string
      */
