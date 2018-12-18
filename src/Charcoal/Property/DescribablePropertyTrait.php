@@ -26,37 +26,6 @@ trait DescribablePropertyTrait
     protected $propertyFactory;
 
     /**
-     * Set a property factory.
-     *
-     * @param  FactoryInterface $factory The property factory, to createable property values.
-     * @return self
-     */
-    protected function setPropertyFactory(FactoryInterface $factory)
-    {
-        $this->propertyFactory = $factory;
-
-        return $this;
-    }
-
-    /**
-     * Retrieve the property factory.
-     *
-     * @throws RuntimeException If the property factory was not previously set.
-     * @return FactoryInterface
-     */
-    protected function propertyFactory()
-    {
-        if ($this->propertyFactory === null) {
-            throw new RuntimeException(sprintf(
-                'Model [%s] does not have a property factory.',
-                get_class($this)
-            ));
-        }
-
-        return $this->propertyFactory;
-    }
-
-    /**
      * Retrieve the model's properties as a collection of {@see PropertyInterface} objects.
      *
      * @param  array $propertyIdents Optional. List of property identifiers
@@ -108,6 +77,75 @@ trait DescribablePropertyTrait
     }
 
     /**
+     * Alias of {@see DescribablePropertyInterface::property()}
+     * and {@see DescribablePropertyInterface::properties()}.
+     *
+     * @param  string|null $propertyIdent Optional property identifier.
+     * @return PropertyInterface|PropertyInterface[] If $propertyIdent is NULL,
+     *     returns all properties. Otherwise, returns the property associated with $propertyIdent.
+     */
+    public function p($propertyIdent = null)
+    {
+        if ($propertyIdent === null) {
+            return $this->properties();
+        }
+
+        return $this->property($propertyIdent);
+    }
+
+    /**
+     * Determine if the model has the given property.
+     *
+     * @param  string $propertyIdent The property identifier to lookup.
+     * @throws InvalidArgumentException If the property identifier is not a string.
+     * @return boolean
+     */
+    public function hasProperty($propertyIdent)
+    {
+        if (!is_string($propertyIdent)) {
+            throw new InvalidArgumentException(
+                'Property identifier must be a string.'
+            );
+        }
+
+        $metadata   = $this->metadata();
+        $properties = $metadata->properties();
+
+        return isset($properties[$propertyIdent]);
+    }
+
+    /**
+     * Set a property factory.
+     *
+     * @param  FactoryInterface $factory The property factory, to createable property values.
+     * @return self
+     */
+    protected function setPropertyFactory(FactoryInterface $factory)
+    {
+        $this->propertyFactory = $factory;
+
+        return $this;
+    }
+
+    /**
+     * Retrieve the property factory.
+     *
+     * @throws RuntimeException If the property factory was not previously set.
+     * @return FactoryInterface
+     */
+    protected function propertyFactory()
+    {
+        if ($this->propertyFactory === null) {
+            throw new RuntimeException(sprintf(
+                'Model [%s] does not have a property factory.',
+                get_class($this)
+            ));
+        }
+
+        return $this->propertyFactory;
+    }
+
+    /**
      * Create an instance of {@see PropertyInterface} for the given property.
      *
      * @param  string $propertyIdent The property identifier to return.
@@ -156,43 +194,5 @@ trait DescribablePropertyTrait
         $property->setData($propertyMetadata);
 
         return $property;
-    }
-
-    /**
-     * Alias of {@see DescribablePropertyInterface::property()}
-     * and {@see DescribablePropertyInterface::properties()}.
-     *
-     * @param  string|null $propertyIdent Optional property identifier.
-     * @return PropertyInterface|PropertyInterface[] If $propertyIdent is NULL,
-     *     returns all properties. Otherwise, returns the property associated with $propertyIdent.
-     */
-    public function p($propertyIdent = null)
-    {
-        if ($propertyIdent === null) {
-            return $this->properties();
-        }
-
-        return $this->property($propertyIdent);
-    }
-
-    /**
-     * Determine if the model has the given property.
-     *
-     * @param  string $propertyIdent The property identifier to lookup.
-     * @throws InvalidArgumentException If the property identifier is not a string.
-     * @return boolean
-     */
-    public function hasProperty($propertyIdent)
-    {
-        if (!is_string($propertyIdent)) {
-            throw new InvalidArgumentException(
-                'Property identifier must be a string.'
-            );
-        }
-
-        $metadata   = $this->metadata();
-        $properties = $metadata->properties();
-
-        return isset($properties[$propertyIdent]);
     }
 }
