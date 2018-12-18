@@ -129,7 +129,10 @@ trait StorablePropertyTrait
     /**
      * @return string
      */
-    abstract public function sqlExtra();
+    public function sqlExtra()
+    {
+        return '';
+    }
 
     /**
      * @return string
