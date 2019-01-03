@@ -354,7 +354,10 @@ abstract class AbstractProperty extends AbstractEntity implements
             $val = array_map([ $this, 'parseOne' ], $val);
         } else {
             if ($this->l10n()) {
-                $val = $this->translator()->translation($val)->sanitize([$this, 'parseOne']);
+                $val = $this->translator()->translation($val);
+                if ($val) {
+                    $val->sanitize([$this, 'parseOne']);
+                }
             } else {
                 $val = $this->parseOne($val);
             }
