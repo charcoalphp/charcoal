@@ -26,6 +26,7 @@
                 "en": "Sender's (from) email",
                 "fr": "Courriel d'envoi"
             },
+            "allow_html": true,
             "label": {
                 "en": "From",
                 "fr": "De:"
@@ -37,6 +38,7 @@
                 "en": "Recipient's (to) email",
                 "fr": "Courriel de réception"
             },
+            "allow_html": true,
             "label": {
                 "en": "To",
                 "fr": "À:"
