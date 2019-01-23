@@ -12,7 +12,7 @@ interface AttachmentAwareInterface
      *
      * @return string
      */
-    public function objType();
+    public static function objType();
 
     /**
      * Retrieve the object's unique ID.
