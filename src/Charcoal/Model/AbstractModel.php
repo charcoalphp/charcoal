@@ -343,9 +343,9 @@ abstract class AbstractModel extends AbstractEntity implements
      *
      * @return string
      */
-    public function objType()
+    public static function objType()
     {
-        $class = get_class($this);
+        $class = get_called_class();
         $ident = preg_replace('/([a-z])([A-Z])/', '$1-$2', $class);
         $ident = strtolower(str_replace('\\', '/', $ident));
         return $ident;
