@@ -492,13 +492,6 @@ trait AttachmentAwareTrait
     // =========================================================================
 
     /**
-     * Retrieve the object's type identifier.
-     *
-     * @return string
-     */
-    abstract public function objType();
-
-    /**
      * Retrieve the object's unique ID.
      *
      * @return mixed
