@@ -576,6 +576,11 @@ class FileProperty extends AbstractProperty
         if (is_array($fileData)) {
             // retrieve tmp file from temp dir
             $tmpFile = sys_get_temp_dir() . $fileData['id'];
+            if (!file_exists($tmpFile)) {
+                throw new Exception(
+                    'File does not exists.'
+                );
+            }
             $fileContent = file_get_contents($tmpFile);
             $filename = (!empty($fileData['name'])) ? $fileData['name'] : null;
             // delete tmp file
