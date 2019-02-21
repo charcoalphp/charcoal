@@ -545,7 +545,7 @@ class FileProperty extends AbstractProperty
             } elseif ($this->multiple()) {
                 $f = [];
                 foreach ($val as $v) {
-                    if ($this->isDataUri($v)) {
+                    if ((is_array($v) && isset($v['id'])) || $this->isDataUri($v)) {
                         $f[] = $this->dataUpload($v);
                     }
                 }
@@ -572,7 +572,18 @@ class FileProperty extends AbstractProperty
      */
     public function dataUpload($fileData)
     {
-        $fileContent = file_get_contents($fileData);
+        $filename = null;
+        if (is_array($fileData)) {
+            // retrieve tmp file from temp dir
+            $tmpFile = sys_get_temp_dir() . $fileData['id'];
+            $fileContent = file_get_contents($tmpFile);
+            $filename = (!empty($fileData['name'])) ? $fileData['name'] : null;
+            // delete tmp file
+            unlink($tmpFile);
+        } else {
+            $fileContent = file_get_contents($fileData);
+        }
+
         if ($fileContent === false) {
             throw new Exception(
                 'File content could not be decoded.'
@@ -586,7 +597,7 @@ class FileProperty extends AbstractProperty
             return '';
         }
 
-        $target = $this->uploadTarget();
+        $target = $this->uploadTarget($filename);
 
         $ret = file_put_contents($target, $fileContent);
         if ($ret === false) {
