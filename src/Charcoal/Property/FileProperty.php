@@ -575,7 +575,7 @@ class FileProperty extends AbstractProperty
         $filename = null;
         if (is_array($fileData)) {
             // retrieve tmp file from temp dir
-            $tmpDir = rtrim(sys_get_temp_dir(), '/').'/';
+            $tmpDir = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
             $tmpFile = $tmpDir.$fileData['id'];
 
             if (!file_exists($tmpFile)) {
