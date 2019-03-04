@@ -1,13 +1,18 @@
 {
     "properties": {
-        "username": {
-            "type": "string",
+        "id": {
+            "type": "id",
+            "mode": "uuid"
+        },
+        "email": {
+            "type": "email",
             "unique": true,
             "required": true,
+            "allow_empty": false,
             "allow_null": false,
             "label": {
-                "en": "Username",
-                "fr": "Nom d'utilisateur"
+                "en": "Email Address",
+                "fr": "Adresse Courriel"
             }
         },
         "password": {
@@ -20,14 +25,12 @@
                 "fr": "Mot de passe"
             }
         },
-        "email": {
-            "type": "email",
+        "display_name": {
+            "type": "string",
             "required": true,
-            "allow_empty": false,
-            "allow_null": false,
             "label": {
-                "en": "Email Address",
-                "fr": "Adresse Courriel"
+                "en": "Display Name",
+                "fr": "Nom d'affichage"
             }
         },
         "roles": {
@@ -87,7 +90,5 @@
                 "fr": "Préférences"
             }
         }
-    },
-
-    "key": "username"
+    }
 }

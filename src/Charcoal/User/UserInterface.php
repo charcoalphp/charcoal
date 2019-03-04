@@ -16,21 +16,6 @@ interface UserInterface extends ContentInterface
     public static function sessionKey();
 
     /**
-     * Force a lowercase username
-     *
-     * @param string $username The username (also the login name).
-     * @return UserInterface Chainable
-     */
-    public function setUsername($username);
-
-    /**
-     * The username is also used as login name and main identifier (key).
-     *
-     * @return string
-     */
-    public function username();
-
-    /**
      * @param string $email The user email.
      * @return UserInterface Chainable
      */
@@ -51,6 +36,17 @@ interface UserInterface extends ContentInterface
      * @return string
      */
     public function password();
+
+    /**
+     * @param  string|null $name The user's display name.
+     * @return UserInterface Chainable
+     */
+    public function setDisplayName($name);
+
+    /**
+     * @return string|null
+     */
+    public function displayName();
 
     /**
      * @param string|string[]|null $roles The ACL roles this user belongs to.

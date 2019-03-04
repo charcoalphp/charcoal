@@ -50,11 +50,8 @@ class AbstractUserTest extends AbstractTestCase
             AbstractUser::class,
             [
                 [
-                    # 'container'        => $container,
-                    'logger'           => $container['logger'],
-                    'translator'       => $container['translator'],
-                    # 'property_factory' => $container['property/factory'],
-                    # 'metadata_loader'  => $container['metadata/loader']
+                    'logger'     => $container['logger'],
+                    'translator' => $container['translator'],
                 ]
             ],
             '',
@@ -75,7 +72,7 @@ class AbstractUserTest extends AbstractTestCase
     public function testKey()
     {
         $obj = $this->obj;
-        $this->assertEquals('username', $obj->key());
+        $this->assertEquals('id', $obj->key());
     }
 
     /**
@@ -99,58 +96,17 @@ class AbstractUserTest extends AbstractTestCase
     {
         $obj = $this->obj;
         $ret = $obj->setData([
-            'username'   => 'Foo',
+            'id'         => 'foo',
             'email'      => 'test@example.com',
             'roles'      => [ 'foo', 'bar' ],
             'loginToken' => 'token',
             'active'     => false
         ]);
         $this->assertSame($ret, $obj);
-        $this->assertEquals('foo', $obj->username());
+        $this->assertEquals('foo', $obj->id());
         $this->assertEquals('test@example.com', $obj->email());
         $this->assertEquals('token', $obj->loginToken());
         $this->assertFalse($obj->active());
-    }
-
-    /**
-     * @return void
-     */
-    /*public function testSetDataDoesNotSetPassword()
-    {
-        $obj = $this->obj;
-        $this->assertNull($obj->password());
-        $obj->setData(['password'=>'password123']);
-        $this->assertNull($obj->password())
-    }*/
-
-    /**
-     * @return void
-     */
-    public function testSetUsername()
-    {
-        $ret = $this->obj->setUsername('Foobar');
-        $this->assertSame($ret, $this->obj);
-        $this->assertEquals('foobar', $this->obj->username());
-
-        $this->obj['username'] = 'Baz';
-        $this->assertEquals('baz', $this->obj->username());
-
-        $this->obj->set('username', 'FOO');
-        $this->assertEquals('foo', $this->obj['username']);
-
-        $this->expectException(InvalidArgumentException::class);
-        $this->obj->setUsername(false);
-    }
-
-    /**
-     * @return void
-     */
-    public function testIdIsUsername()
-    {
-        $this->assertequals('username', $this->obj->key());
-        $this->obj->setUsername('foo');
-        $this->assertEquals('foo', $this->obj->id());
-        $this->assertEquals($this->obj->id(), $this->obj->username());
     }
 
     /**
@@ -328,8 +284,7 @@ class AbstractUserTest extends AbstractTestCase
         $ret = $this->obj->resetPassword('foo');
         $this->assertSame($ret, $this->obj);
 
-        $this->obj['username'] = 'bar';
-        //$ret = $this->obj->resetPassword('foo');
+        $this->obj['id'] = 'bar';
 
         $this->expectException(InvalidArgumentException::class);
         $this->obj->resetPassword(false);
