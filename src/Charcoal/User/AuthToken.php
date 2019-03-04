@@ -28,10 +28,11 @@ class AuthToken extends AbstractModel
     private $token;
 
     /**
-     * The username should be unique and mandatory.
+     * The user ID should be unique and mandatory.
+     *
      * @var string
      */
-    private $username;
+    private $userId;
 
     /**
      * @var DateTimeInterface|null
@@ -96,29 +97,27 @@ class AuthToken extends AbstractModel
 
 
     /**
-     * Force a lowercase username
-     *
-     * @param string $username The username (also the login name).
-     * @throws InvalidArgumentException If the username is not a string.
+     * @param string $id The user ID.
+     * @throws InvalidArgumentException If the user ID is not a string.
      * @return AuthToken Chainable
      */
-    public function setUsername($username)
+    public function setUserId($id)
     {
-        if (!is_string($username)) {
+        if (!is_string($id)) {
             throw new InvalidArgumentException(
-                'Set user username: Username must be a string'
+                'Set User ID: identifier must be a string'
             );
         }
-        $this->username = mb_strtolower($username);
+        $this->userId = $id;
         return $this;
     }
 
     /**
      * @return string
      */
-    public function username()
+    public function userId()
     {
-        return $this->username;
+        return $this->userId;
     }
 
     /**
@@ -217,15 +216,15 @@ class AuthToken extends AbstractModel
     /**
      * Note: the `random_bytes()` function is new to PHP-7. Available in PHP 5 with `compat-random`.
      *
-     * @param string $username The username to generate the auth token from.
+     * @param string $userId The user ID to generate the auth token from.
      * @return AuthToken Chainable
      */
-    public function generate($username)
+    public function generate($userId)
     {
         $metadata = $this->metadata();
         $this->setIdent(bin2hex(random_bytes(16)));
         $this->setToken(bin2hex(random_bytes(32)));
-        $this->setUsername($username);
+        $this->setUserId($userId);
         $this->setExpiry('now + '.$metadata['cookieDuration']);
 
         return $this;
@@ -273,20 +272,10 @@ class AuthToken extends AbstractModel
 
     /**
      * @param mixed  $ident The auth-token identifier.
-     * @param string $token The token key to validate against.
-     * @return mixed The user id.
-     */
-    public function getUserId($ident, $token)
-    {
-        return $this->getUsernameFromToken($ident, $token);
-    }
-
-    /**
-     * @param mixed  $ident The auth-token identifier (username).
      * @param string $token The token to validate against.
      * @return mixed The user id. An empty string if no token match.
      */
-    public function getUsernameFromToken($ident, $token)
+    public function getUserIdFromToken($ident, $token)
     {
         if (!$this->source()->tableExists()) {
             return '';
@@ -317,7 +306,7 @@ class AuthToken extends AbstractModel
         }
 
         // Success!
-        return $this->username();
+        return $this->userId();
     }
 
     /**
@@ -362,15 +351,15 @@ class AuthToken extends AbstractModel
             'Possible security breach: an authentication token was found in the database but its token does not match.'
         );
 
-        if ($this->username) {
+        if ($this->userId) {
             $table = $this->source()->table();
             $q = sprintf('
                 DELETE FROM
                     `%s`
                 WHERE
-                    username = :username', $table);
+                    userId = :userId', $table);
             $this->source()->dbQuery($q, [
-                'username' => $this->username()
+                'userId' => $this->userId()
             ]);
         }
     }

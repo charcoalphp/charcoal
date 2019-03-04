@@ -80,23 +80,14 @@ class AuthTokenTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testSetUsername()
+    public function testSetUserId()
     {
-        $ret = $this->obj->setUsername('foo');
+        $ret = $this->obj->setUserId('foo');
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals('foo', $this->obj->username());
+        $this->assertEquals('foo', $this->obj->userId());
 
         $this->expectException('\Exception');
-        $this->obj->setUsername([]);
-    }
-
-    /**
-     * @return void
-     */
-    public function testSetUsernameIsLowercase()
-    {
-        $this->obj->setUsername('FÔOBÄR');
-        $this->assertEquals('fôobär', $this->obj->username());
+        $this->obj->setUserId([]);
     }
 
     /**

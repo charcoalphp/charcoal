@@ -73,9 +73,9 @@ class GenericUserTest extends AbstractTestCase
         $obj = $this->obj;
 
         $sessionKey = $obj::sessionKey();
-        $this->obj['username'] = 'foo';
+        $this->obj['id'] = 'foo';
         $this->obj->saveToSession();
-        $this->assertEquals($_SESSION[$sessionKey], $this->obj['username']);
+        $this->assertEquals($_SESSION[$sessionKey], $this->obj['id']);
     }
 
     /**

@@ -96,67 +96,64 @@ class Authenticator implements LoggerAwareInterface
     /**
      * Attempt to authenticate a user using the given credentials.
      *
-     * @param string $username Username, part of necessary credentials.
+     * @param string $email Email, part of necessary credentials.
      * @param string $password Password, part of necessary credentials.
-     * @param string|null $key Optional property (key) to use for the username. Defaults to actual object's key.
-     * @throws InvalidArgumentException If username or password are invalid or empty.
+     * @throws InvalidArgumentException If email or password are invalid or empty.
      * @return \Charcoal\User\UserInterface|null Returns the authenticated user object
      *     or NULL if not authenticated.
      */
-    public function authenticateByPassword($username, $password, $key=null)
+    public function authenticateByPassword($email, $password)
     {
-        if (!is_string($username) || !is_string($password)) {
+        if (!is_string($email) || !is_string($password)) {
             throw new InvalidArgumentException(
-                'Username and password must be strings'
+                'Email and password must be strings'
             );
         }
 
-        if ($username == '' || $password == '') {
+        if ($email == '' || $password == '') {
             throw new InvalidArgumentException(
-                'Username and password can not be empty.'
+                'Email and password can not be empty.'
             );
         }
 
-        $u = $this->userFactory()->create($this->userType());
-        if (!$u->source()->tableExists()) {
-            $u->source()->createTable();
+        $user = $this->userFactory()->create($this->userType());
+        if (!$user->source()->tableExists()) {
+            $user->source()->createTable();
         }
 
-        // Force lowercase
-        $username = mb_strtolower($username);
+        // Load the user by email
+        $key = 'email';
+        $user->loadFrom($key, $email);
 
-        // Load the user by username
-        if ($key === null) {
-            $key = $u->key();
-        }
-        $u->loadFrom($key, $username);
-
-        if ($u[$key] != $username) {
+        if ($user[$key] !== $email) {
             return null;
         }
 
-        if ($u->active() === false) {
+        if ($user->active() === false) {
             return null;
         }
 
         // Validate password
-        if (password_verify($password, $u->password())) {
-            if (password_needs_rehash($u->password(), PASSWORD_DEFAULT)) {
+        if (password_verify($password, $user->password())) {
+            if (password_needs_rehash($user->password(), PASSWORD_DEFAULT)) {
                 $this->logger->notice(sprintf(
                     'Rehashing password for user "%s" (%s)',
-                    $u->username(),
+                    $user->email(),
                     $this->userType()
                 ));
                 $hash = password_hash($password, PASSWORD_DEFAULT);
-                $u->setPassword($hash);
-                $u->update(['password']);
+                $user->setPassword($hash);
+                $user->update(['password']);
             }
 
-            $u->login();
+            $user->login();
 
-            return $u;
+            return $user;
         } else {
-            $this->logger->warning('Invalid login attempt for user: invalid password.');
+            $this->logger->warning(sprintf(
+                'Invalid login attempt for user "%s": invalid password.',
+                $user->email()
+            ));
 
             return null;
         }
@@ -303,13 +300,13 @@ class Authenticator implements LoggerAwareInterface
         if (!$tokenData) {
             return null;
         }
-        $username = $authToken->getUsernameFromToken($tokenData['ident'], $tokenData['token']);
-        if (!$username) {
+        $userId = $authToken->getUserIdFromToken($tokenData['ident'], $tokenData['token']);
+        if (!$userId) {
             return null;
         }
 
         $u = $this->userFactory()->create($this->userType());
-        $u->load($username);
+        $u->load($userId);
 
         if ($u->id()) {
             $u->saveToSession();

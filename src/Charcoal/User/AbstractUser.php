@@ -10,6 +10,9 @@ use InvalidArgumentException;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 
+// From 'charcoal-core'
+use Charcoal\Validator\ValidatorInterface;
+
 // From 'charcoal-config'
 use Charcoal\Config\ConfigurableInterface;
 use Charcoal\Config\ConfigurableTrait;
@@ -32,13 +35,13 @@ abstract class AbstractUser extends Content implements
     protected static $authenticatedUser;
 
     /**
-     * The username should be unique and mandatory.
+     * The email address should be unique and mandatory.
      *
-     * It is also used as the login name and main identifier (key).
+     * It is also used as the login name.
      *
      * @var string
      */
-    private $username = '';
+    private $email;
 
     /**
      * The password is stored encrypted in the (database) storage.
@@ -48,11 +51,11 @@ abstract class AbstractUser extends Content implements
     private $password;
 
     /**
-     * The email address associated with the account.
+     * The display name serves as a human-readable identifier for the user.
      *
-     * @var string
+     * @var string|null
      */
-    private $email;
+    private $displayName;
 
     /**
      * Roles define a set of tasks a user is allowed or denied from performing.
@@ -109,43 +112,6 @@ abstract class AbstractUser extends Content implements
     private $preferences;
 
     /**
-     * @see    \Charcoal\Source\StorableTrait::key()
-     * @return string
-     */
-    public function key()
-    {
-        return 'username';
-    }
-
-    /**
-     * Force a lowercase username
-     *
-     * @param  string $username The username (also the login name).
-     * @throws InvalidArgumentException If the username is not a string.
-     * @return UserInterface Chainable
-     */
-    public function setUsername($username)
-    {
-        if (!is_string($username)) {
-            throw new InvalidArgumentException(
-                'Set user username: Username must be a string'
-            );
-        }
-
-        $this->username = mb_strtolower($username);
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function username()
-    {
-        return $this->username;
-    }
-
-    /**
      * @param  string $email The user email.
      * @throws InvalidArgumentException If the email is not a string.
      * @return UserInterface Chainable
@@ -197,6 +163,25 @@ abstract class AbstractUser extends Content implements
     public function password()
     {
         return $this->password;
+    }
+
+    /**
+     * @param  string|null $name The user's display name.
+     * @return UserInterface Chainable
+     */
+    public function setDisplayName($name)
+    {
+        $this->displayName = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function displayName()
+    {
+        return $this->displayName;
     }
 
     /**
@@ -416,11 +401,11 @@ abstract class AbstractUser extends Content implements
     }
 
     /**
-     * @return array|mixed
+     * @return string|null
      */
-    public function preferences()
+    public function loginToken()
     {
-        return $this->preferences;
+        return $this->loginToken;
     }
 
     /**
@@ -435,11 +420,11 @@ abstract class AbstractUser extends Content implements
     }
 
     /**
-     * @return string|null
+     * @return array|mixed
      */
-    public function loginToken()
+    public function preferences()
     {
-        return $this->loginToken;
+        return $this->preferences;
     }
 
     /**
@@ -570,12 +555,55 @@ abstract class AbstractUser extends Content implements
         $user->load($userId);
 
         // Inactive users can not authenticate
-        if (!$user->id() || !$user->username() || !$user->active()) {
+        if (!$user->id() || !$user->email() || !$user->active()) {
             return null;
         }
 
         static::$authenticatedUser[$key] = $user;
 
         return $user;
+    }
+
+
+
+    // Extends \Charcoal\Validator\ValidatableTrait
+    // =========================================================================
+
+    /**
+     * Validate the model.
+     *
+     * @see   \Charcoal\Validator\ValidatorInterface
+     * @param ValidatorInterface $v Optional. A custom validator object to use for validation. If null, use object's.
+     * @return boolean
+     */
+    public function validate(ValidatorInterface &$v = null)
+    {
+        $result = parent::validate($v);
+        $previousModel = $this->modelFactory()->create(self::class)->load($this->id());
+
+        $email = $this->email();
+        if (empty($email)) {
+            $this->validator()->error(
+                'Email is required.',
+                'email'
+            );
+        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $this->validator()->error(
+                'Email format is incorrect.',
+                'email'
+            );
+        /** Check if updating/changing email. */
+        } elseif ($previousModel->email() !== $email) {
+            $existingModel = $this->modelFactory()->create(self::class)->loadFrom('email', $email);
+            /** Check for existing user with given email. */
+            if (!empty($existingModel->id())) {
+                $this->validator()->error(
+                    'This email is not available.',
+                    'email'
+                );
+            }
+        }
+
+        return count($this->validator()->errorResults()) === 0 && $result;
     }
 }
