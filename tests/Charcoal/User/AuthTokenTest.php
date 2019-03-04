@@ -42,10 +42,8 @@ class AuthTokenTest extends AbstractTestCase
 
         $this->obj = $container['model/factory']->create(AuthToken::class);
         $this->obj = new AuthToken([
-            # 'container'        => $container,
-            'logger'           => $container['logger'],
-            # 'property_factory' => $container['property/factory'],
-            'metadata_loader'  => $container['metadata/loader']
+            'logger'          => $container['logger'],
+            'metadata_loader' => $container['metadata/loader']
         ]);
     }
 

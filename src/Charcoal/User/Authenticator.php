@@ -96,7 +96,7 @@ class Authenticator implements LoggerAwareInterface
     /**
      * Attempt to authenticate a user using the given credentials.
      *
-     * @param string $email Email, part of necessary credentials.
+     * @param string $email    Email, part of necessary credentials.
      * @param string $password Password, part of necessary credentials.
      * @throws InvalidArgumentException If email or password are invalid or empty.
      * @return \Charcoal\User\UserInterface|null Returns the authenticated user object

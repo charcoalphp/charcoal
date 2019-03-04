@@ -50,11 +50,8 @@ class AbstractUserTest extends AbstractTestCase
             AbstractUser::class,
             [
                 [
-                    # 'container'        => $container,
-                    'logger'           => $container['logger'],
-                    'translator'       => $container['translator'],
-                    # 'property_factory' => $container['property/factory'],
-                    # 'metadata_loader'  => $container['metadata/loader']
+                    'logger'     => $container['logger'],
+                    'translator' => $container['translator'],
                 ]
             ],
             '',
@@ -111,17 +108,6 @@ class AbstractUserTest extends AbstractTestCase
         $this->assertEquals('token', $obj->loginToken());
         $this->assertFalse($obj->active());
     }
-
-    /**
-     * @return void
-     */
-    /*public function testSetDataDoesNotSetPassword()
-    {
-        $obj = $this->obj;
-        $this->assertNull($obj->password());
-        $obj->setData(['password'=>'password123']);
-        $this->assertNull($obj->password())
-    }*/
 
     /**
      * @return void
@@ -299,7 +285,6 @@ class AbstractUserTest extends AbstractTestCase
         $this->assertSame($ret, $this->obj);
 
         $this->obj['id'] = 'bar';
-        //$ret = $this->obj->resetPassword('foo');
 
         $this->expectException(InvalidArgumentException::class);
         $this->obj->resetPassword(false);

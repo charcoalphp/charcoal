@@ -28,7 +28,7 @@ class AuthTokenMetadata extends ModelMetadata
     private $cookieDuration;
 
     /**
-     * @var bool $httpsOnly
+     * @var boolean $httpsOnly
      */
     private $httpsOnly;
 
