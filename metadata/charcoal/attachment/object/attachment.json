@@ -93,7 +93,8 @@
             "type": "text",
             "l10n": true,
             "label": "Embed Video",
-            "notes": "As provided by YouTube or Vimeo"
+            "notes": "As provided by YouTube or Vimeo",
+            "allow_html" : true
         }
     },
 
