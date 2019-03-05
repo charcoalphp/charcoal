@@ -579,7 +579,8 @@ abstract class AbstractUser extends Content implements
     public function validate(ValidatorInterface &$v = null)
     {
         $result = parent::validate($v);
-        $previousModel = $this->modelFactory()->create(self::class)->load($this->id());
+        $objType = self::objType();
+        $previousModel = $this->modelFactory()->create($objType)->load($this->id());
 
         $email = $this->email();
         if (empty($email)) {
@@ -594,7 +595,7 @@ abstract class AbstractUser extends Content implements
             );
         /** Check if updating/changing email. */
         } elseif ($previousModel->email() !== $email) {
-            $existingModel = $this->modelFactory()->create(self::class)->loadFrom('email', $email);
+            $existingModel = $this->modelFactory()->create($objType)->loadFrom('email', $email);
             /** Check for existing user with given email. */
             if (!empty($existingModel->id())) {
                 $this->validator()->error(
