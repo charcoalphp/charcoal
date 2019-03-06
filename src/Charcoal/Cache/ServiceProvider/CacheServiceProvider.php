@@ -128,7 +128,7 @@ class CacheServiceProvider implements ServiceProviderInterface
 
                 $cacheConfig   = $container['cache/config'];
                 $driverOptions = [
-                    'servers' => []
+                    'servers' => [],
                 ];
 
                 if (isset($cacheConfig['servers'])) {
@@ -244,15 +244,23 @@ class CacheServiceProvider implements ServiceProviderInterface
         };
 
         /**
-         * @param Container $container
-         * @return CachePoolFacade
+         * The facade for the main cache pool.
+         *
+         * @param  Container $container The service container.
+         * @return CachePoolFacade The facade for the main cache pool.
          */
         $container['cache/facade'] = function (Container $container) {
-            return new CachePoolFacade([
+            $args = [
                 'cache'  => $container['cache'],
-                'ttl'    => $container['config']->get('cache.ttl'),
-                'logger' => $container['logger']
-            ]);
+                'logger' => $container['logger'],
+            ];
+
+            $cacheConfig = $container['cache/config'];
+            if (isset($cacheConfig['ttl'])) {
+                $args['ttl'] = $cacheConfig['ttl'];
+            }
+
+            return new CachePoolFacade($args);
         };
     }
 
@@ -272,11 +280,11 @@ class CacheServiceProvider implements ServiceProviderInterface
             $appConfig = isset($container['config']) ? $container['config'] : [];
             if (isset($appConfig['middlewares']['charcoal/cache/middleware/cache'])) {
                 $wareConfig = array_replace($appConfig['middlewares']['charcoal/cache/middleware/cache'], [
-                    'cache' => $container['cache']
+                    'cache' => $container['cache'],
                 ]);
             } else {
                 $wareConfig = [
-                    'cache' => $container['cache']
+                    'cache' => $container['cache'],
                 ];
             }
             return new CacheMiddleware($wareConfig);
