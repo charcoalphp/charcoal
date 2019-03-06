@@ -2,152 +2,162 @@
 
 namespace Charcoal\Cache\Facade;
 
+use InvalidArgumentException;
+
+// From PSR-6
+use Psr\Cache\CacheItemInterface;
+
+// From 'charcoal-cache'
+use Charcoal\Cache\CacheConfig;
+use Charcoal\Cache\CachePoolAwareTrait;
+
 /**
- * Cache layer to help deal with the cache.
+ * Cache Pool Facade
+ *
+ * The facade provides a simpler interface to work with the cache pool.
  */
 class CachePoolFacade
 {
+    use CachePoolAwareTrait;
 
     /**
-     * @var mixed $cache The cache pool.
+     * Default maximum time an item will be cached.
+     *
+     * @var mixed
      */
-    private $cache;
+    private $defaultTtl = CacheConfig::HOUR_IN_SECONDS;
 
     /**
-     * @var mixed $logger Logger.
+     * Create a cache pool facade.
+     *
+     * @param array $data The facade dependencies.
      */
-    private $logger;
-
-    /**
-     * @var integer $ttl Cache time to live
-     */
-    private $ttl;
-
-    /**
-     * @param array $container Dependencies.
-     */
-    public function __construct(array $container)
+    public function __construct(array $data)
     {
-        $this->setCache($container['cache']);
-        $this->setLogger($container['logger']);
-        $this->setTtl($container['ttl'] ?: 60);
+        $this->setCachePool($data['cache']);
+
+        if (isset($data['default_ttl'])) {
+            $this->setDefaultTtl($data['default_ttl']);
+        }
     }
 
     /**
-     * Get cache object from key or sets it from lambda function.
-     * @param  string        $key    Key to cache data.
-     * @param  callable|null $lambda Function to generate cache data.
-     * @param  integer|null  $ttl    Time to live.
-     * @return mixed                    Whatever was in the cache.
+     * Retrieve the value associated with the specified key from the pool.
+     *
+     * This method will call $lambada if the cache item representing $key resulted in a cache miss.
+     *
+     * @param  string        $key     The key for which to return the associated value.
+     * @param  callable|null $resolve The function to execute if the cached value does not exist
+     *     or is considered expired. The function must return a value which will be stored
+     *     in the cache before being returned by the method.
+     * @param  integer|null  $ttl     The time-to-live, in seconds, after which the cached value
+     *     must be considered expired.
+     *     If NULL, the facade's default time-to-live is used.
+     * @return mixed The value corresponding to this cache item's $key, or NULL if not found.
      */
-    public function get($key, $lambda = null, $ttl = null)
+    public function get($key, callable $resolve = null, $ttl = null)
     {
-        $cache     = $this->cache();
-        $cacheItem = $cache->getItem($key);
-        $out       = $cacheItem->get();
+        $pool = $this->cachePool();
+        $item = $pool->getItem($key);
+        $data = $item->get();
 
-        if (!$cacheItem->isMiss()) {
-            return $out;
+        if ($item->isHit()) {
+            return $data;
         }
 
-        if (is_callable($lambda)) {
-            $out = call_user_func($lambda);
-            $this->set($cacheItem, $out, $ttl);
+        if (is_callable($resolve)) {
+            $item->lock();
+            $data = call_user_func($resolve);
+            $this->save($item, $data, $ttl);
+            return $data;
         }
 
-        return $out;
+        return null;
     }
 
     /**
-     * Sets the cache data.
-     * @param string $cacheItem Cache item.
-     * @param mixed  $out       Data to set in cache.
-     * @param mixed  $ttl       Time to live.
-     * @return self
+     * Determine if the specified key results in a cache hit.
+     *
+     * @param  string $key The key for which to check existence.
+     * @return boolean TRUE if item exists in the cache, FALSE otherwise.
      */
-    public function set($cacheItem, $out, $ttl = null)
+    public function has($key)
     {
-        $cacheItem->lock();
+        return $this->cachePool()->getItem($key)->isHit();
+    }
 
+    /**
+     * Store a value with the specified key to be saved immediately.
+     *
+     * @param  string       $key   The key to save the value on.
+     * @param  mixed        $value The serializable value to be stored.
+     * @param  integer|null $ttl   The time-to-live, in seconds.
+     * @return boolean TRUE if the item was successfully persisted. FALSE if there was an error.
+     */
+    public function set($key, $value, $ttl = null)
+    {
+        $item = $this->cachePool()->getItem($key);
+
+        return $this->save($item, $value, $ttl);
+    }
+
+    /**
+     * Set a value on a cache item to be saved immediately.
+     *
+     * @param  CacheItemInterface $item  The cache item to save.
+     * @param  mixed              $value The serializable value to be stored.
+     * @param  integer|null       $ttl   The time-to-live, in seconds.
+     * @return boolean TRUE if the item was successfully persisted. FALSE if there was an error.
+     */
+    protected function save(CacheItemInterface $item, $value, $ttl = null)
+    {
         if (!$ttl) {
-            $ttl = $this->ttl();
+            $ttl = $this->defaultTtl();
         }
 
-        $cache = $this->cache();
-
-        $cacheItem->expiresAfter($ttl);
-        $cacheItem->set($out);
-        $cache->save($cacheItem);
-
-        return $this;
+        return $item->setTTL($ttl)
+                    ->set($value)
+                    ->save();
     }
 
     /**
-     * Removes the object from the cache.
-     * @param  string $key Key to object.
-     * @return self
+     * Removes one or more items from the pool.
+     *
+     * @param  string[] ...$keys One or many keys to delete.
+     * @return bool TRUE if the item was successfully removed. FALSE if there was an error.
      */
-    public function delete($key)
+    public function delete(...$keys)
     {
-        $this->cache->deleteItem($key);
+        $pool = $this->cachePool();
 
-        return $this;
+        $results = true;
+        foreach ($keys as $key) {
+            $results = $pool->deleteItem($key) && $results;
+        }
+
+        return $results;
     }
 
     /**
-     * @return mixed
+     * Retrieve the facade's default time-to-live for cached items.
+     *
+     * @return mixed An integer, date interval, or date.
      */
-    public function cache()
+    public function defaultTtl()
     {
-        return $this->cache;
+        return $this->defaultTtl;
     }
 
     /**
-     * @param mixed $cache Cache for CachePoolFacade.
-     * @return self
+     * Set the facade's default time-to-live for cached items.
+     *
+     * @see \Stash\Item::setTTL()
+     *
+     * @param  mixed $ttl An integer, date interval, or date.
+     * @return void
      */
-    public function setCache($cache)
+    public function setDefaultTtl($ttl)
     {
-        $this->cache = $cache;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function logger()
-    {
-        return $this->logger;
-    }
-
-    /**
-     * @param mixed $logger Logger for CachePoolFacade.
-     * @return self
-     */
-    public function setLogger($logger)
-    {
-        $this->logger = $logger;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function ttl()
-    {
-        return $this->ttl;
-    }
-
-    /**
-     * @param mixed $ttl Cache time to live.
-     * @return self
-     */
-    public function setTtl($ttl)
-    {
-        $this->ttl = $ttl;
-
-        return $this;
+        $this->defaultTtl = $ttl;
     }
 }

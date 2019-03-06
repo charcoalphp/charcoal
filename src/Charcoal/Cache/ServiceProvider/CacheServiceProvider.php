@@ -87,6 +87,7 @@ class CacheServiceProvider implements ServiceProviderInterface
                     // Apc is not available on system
                     return null;
                 }
+
                 return new $drivers['Apc']([
                     'ttl'       => $container['cache/config']['default_ttl'],
                     'namespace' => $container['cache/config']['prefix'],
@@ -103,6 +104,7 @@ class CacheServiceProvider implements ServiceProviderInterface
                     // SQLite is not available on system
                     return null;
                 }
+
                 return new $drivers['SQLite']();
             };
 
@@ -173,6 +175,7 @@ class CacheServiceProvider implements ServiceProviderInterface
                     // Redis is not available on system
                     return null;
                 }
+
                 return new $drivers['Redis']();
             };
 
@@ -251,13 +254,12 @@ class CacheServiceProvider implements ServiceProviderInterface
          */
         $container['cache/facade'] = function (Container $container) {
             $args = [
-                'cache'  => $container['cache'],
-                'logger' => $container['logger'],
+                'cache' => $container['cache'],
             ];
 
             $cacheConfig = $container['cache/config'];
-            if (isset($cacheConfig['ttl'])) {
-                $args['ttl'] = $cacheConfig['ttl'];
+            if (isset($cacheConfig['default_ttl'])) {
+                $args['default_ttl'] = $cacheConfig['default_ttl'];
             }
 
             return new CachePoolFacade($args);

@@ -49,7 +49,7 @@ class CacheConfig extends AbstractConfig
     private $types;
 
     /**
-     * Time-to-live in seconds.
+     * Default maximum time an item will be cached.
      *
      * @var integer
      */

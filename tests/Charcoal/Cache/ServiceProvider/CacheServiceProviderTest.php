@@ -17,6 +17,7 @@ use Stash\Interfaces\PoolInterface;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Cache\CacheBuilder;
 use Charcoal\Cache\CacheConfig;
+use Charcoal\Cache\Facade\CachePoolFacade;
 use Charcoal\Cache\Middleware\CacheMiddleware;
 use Charcoal\Cache\ServiceProvider\CacheServiceProvider;
 
@@ -55,6 +56,9 @@ class CacheServiceProviderTest extends AbstractTestCase
         $this->assertArrayHasKey('cache', $container);
         $this->assertInstanceOf(PoolInterface::class, $container['cache']);
 
+        $this->assertArrayHasKey('cache/facade', $container);
+        $this->assertInstanceOf(CachePoolFacade::class, $container['cache/facade']);
+
         $this->assertArrayHasKey('middlewares/charcoal/cache/middleware/cache', $container);
         $this->assertInstanceOf(CacheMiddleware::class, $container['middlewares/charcoal/cache/middleware/cache']);
     }
@@ -70,10 +74,10 @@ class CacheServiceProviderTest extends AbstractTestCase
             'config' => [
                 'middlewares' => [
                     'charcoal/cache/middleware/cache' => [
-                        'ttl' => 1
-                    ]
-                ]
-            ]
+                        'ttl' => 1,
+                    ],
+                ],
+            ],
         ]);
 
         $this->assertArrayHasKey('middlewares/charcoal/cache/middleware/cache', $container);
@@ -187,8 +191,8 @@ class CacheServiceProviderTest extends AbstractTestCase
     {
         $container = $this->providerFactory([
             'config' => [
-                'cache' => $cacheConfig
-            ]
+                'cache' => $cacheConfig,
+            ],
         ]);
 
         $this->assertInstanceOf($className, $container['cache/driver']);
@@ -210,14 +214,14 @@ class CacheServiceProviderTest extends AbstractTestCase
                 [
                     'active' => true,
                     'types'  => [ 'noop' ],
-                ]
+                ],
             ],
             'Cache: Disabled' => [
                 $driverClassNames['Ephemeral'],
                 [
                     'active' => false,
                     'types'  => [ 'noop' ],
-                ]
+                ],
             ],
         ];
     }
