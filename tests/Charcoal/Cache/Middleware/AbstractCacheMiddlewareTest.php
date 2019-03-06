@@ -2,9 +2,6 @@
 
 namespace Charcoal\Tests\Cache\Middleware;
 
-// From PSR-6
-use Psr\Cache\CacheItemPoolInterface;
-
 // From PSR-7
 use Psr\Http\Message\UriInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -20,12 +17,9 @@ use Slim\Http\RequestBody;
 use Slim\Http\Response;
 use Slim\Http\Uri;
 
-// From 'tedivm/stash'
-use Stash\Driver\Ephemeral;
-use Stash\Pool;
-
 // From 'charcoal-cache'
 use Charcoal\Tests\AbstractTestCase;
+use Charcoal\Tests\Cache\CachePoolTrait;
 use Charcoal\Cache\Middleware\CacheMiddleware;
 
 /**
@@ -35,53 +29,7 @@ use Charcoal\Cache\Middleware\CacheMiddleware;
  */
 abstract class AbstractCacheMiddlewareTest extends AbstractTestCase
 {
-    /**
-     * PSR-6 cache item pool.
-     *
-     * @var CacheItemPoolInterface
-     */
-    protected static $cachePool;
-
-    /**
-     * Create the cache pool service.
-     *
-     * @return CacheItemPoolInterface
-     */
-    protected static function createCachePool()
-    {
-        $pool = new Pool(new Ephemeral());
-        $pool->setNamespace('tests');
-
-        self::$cachePool = $pool;
-
-        return $pool;
-    }
-
-    /**
-     * Gets the cache pool service.
-     *
-     * @return void
-     */
-    protected static function clearCachePool()
-    {
-        if (self::$cachePool !== null) {
-            self::$cachePool->clear();
-        }
-    }
-
-    /**
-     * Gets the cache pool service.
-     *
-     * @return CacheItemPoolInterface
-     */
-    protected static function getCachePool()
-    {
-        if (self::$cachePool === null) {
-            static::createCachePool();
-        }
-
-        return self::$cachePool;
-    }
+    use CachePoolTrait;
 
     /**
      * Create a new CacheMiddleware instance.
