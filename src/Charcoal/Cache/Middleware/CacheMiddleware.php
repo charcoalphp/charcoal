@@ -415,8 +415,8 @@ class CacheMiddleware
     private function disableCacheHeadersOnResponse(ResponseInterface $response)
     {
         return $response
-               ->withHeader('Cache-Control', 'no-cache, no-store, must-revalidate')
-               ->withHeader('Pragma', 'no-cache')
-               ->withHeader('Expires', '0');
+                ->withHeader('Cache-Control', 'no-cache, no-store, must-revalidate')
+                ->withHeader('Pragma', 'no-cache')
+                ->withHeader('Expires', '0');
     }
 }

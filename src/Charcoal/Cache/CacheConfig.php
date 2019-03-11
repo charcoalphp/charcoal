@@ -194,7 +194,7 @@ class CacheConfig extends AbstractConfig
     /**
      * Set the default time-to-live for cached items.
      *
-     * @param  integer $ttl The time-to-live, in seconds.
+     * @param  mixed $ttl A number representing time in seconds.
      * @throws InvalidArgumentException If the TTL is not numeric.
      * @return CacheConfig Chainable
      */
