@@ -2,6 +2,9 @@
 
 namespace Charcoal\Tests\Cache\Middleware;
 
+// From PSR-7
+use Psr\Http\Message\ResponseInterface;
+
 // From 'tedivm/stash'
 use Stash\Pool;
 
@@ -70,6 +73,7 @@ class CacheMiddlewareResponseTest extends AbstractCacheMiddlewareTest
         $this->assertEquals($txt, $data['body']);
 
         $this->assertArrayHasKey('headers', $data);
+
         $this->assertArrayHasKey('X-Charcoal-1', $data['headers']);
         $this->assertContains('foo', $data['headers']['X-Charcoal-1']);
 

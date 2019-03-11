@@ -192,26 +192,26 @@ class CacheMiddleware
         $response = $next($request, $response);
 
         if (!$this->isResponseStatusValid($response)) {
-            return $this->noCacheResponse($response);
+            return $this->disableCacheHeadersOnResponse($response);
         }
 
         if (!$this->isPathIncluded($path)) {
-            return $this->noCacheResponse($response);
+            return $this->disableCacheHeadersOnResponse($response);
         }
 
         if ($this->isPathExcluded($path)) {
-            return $this->noCacheResponse($response);
+            return $this->disableCacheHeadersOnResponse($response);
         }
 
         if (!$this->isQueryIncluded($query)) {
             $queryArr = $this->parseIgnoredParams($query);
             if (!empty($queryArr)) {
-                    return $this->noCacheResponse($response);
+                return $this->disableCacheHeadersOnResponse($response);
             }
         }
 
         if ($this->isQueryExcluded($query)) {
-            return $this->noCacheResponse($response);
+            return $this->disableCacheHeadersOnResponse($response);
         }
 
         // Nothing has excluded the cache so far: add it to the pool.
@@ -403,20 +403,20 @@ class CacheMiddleware
     }
 
     /**
-     * Disable the HTTP cache headers
+     * Disable the HTTP cache headers.
      *
-     * - Cache-Control is the proper HTTP
-     * - Pragma is for HTTP 1.0 support
-     * - Expires is an alternative that also is supported by 1.0 proxies
+     * - `Cache-Control` is the proper HTTP header.
+     * - `Pragma` is for HTTP 1.0 support.
+     * - `Expires` is an alternative that is also supported by 1.0 proxies.
      *
-     * @param ResponseInterface $response
-     * @return ResponseInterface
+     * @param  ResponseInterface $response The PSR-7 HTTP response.
+     * @return ResponseInterface The new HTTP response.
      */
-    private function noCacheResponse(ResponseInterface $response)
+    private function disableCacheHeadersOnResponse(ResponseInterface $response)
     {
         return $response
-            ->withHeader('Cache-Control', 'no-cache, no-store, must-revalidate')
-            ->withHeader('Pragma', 'no-cache')
-            ->withHeader('Expires', '0');
+               ->withHeader('Cache-Control', 'no-cache, no-store, must-revalidate')
+               ->withHeader('Pragma', 'no-cache')
+               ->withHeader('Expires', '0');
     }
 }

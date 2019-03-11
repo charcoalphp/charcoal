@@ -156,4 +156,24 @@ abstract class AbstractCacheMiddlewareTest extends AbstractTestCase
         $response = new Response($status, $headers, $body);
         return $response;
     }
+
+    /**
+     * Reports an error if the HTTP response headers does not have disabled cache headers.
+     *
+     * @covers ::disableCacheHeadersOnResponse
+     *
+     * @param  array $headers The HTTP response headers to test.
+     * @return void
+     */
+    public function assertResponseHasDisabledCacheHeaders(array $headers)
+    {
+        $this->assertArrayHasKey('Cache-Control', $headers);
+        $this->assertContains('no-cache, no-store, must-revalidate', $headers['Cache-Control']);
+
+        $this->assertArrayHasKey('Pragma', $headers);
+        $this->assertContains('no-cache', $headers['Pragma']);
+
+        $this->assertArrayHasKey('Expires', $headers);
+        $this->assertContains('0', $headers['Expires']);
+    }
 }
