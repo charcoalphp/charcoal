@@ -63,7 +63,7 @@ class CacheMiddlewareResponseTest extends AbstractCacheMiddlewareTest
         $this->assertEquals(200, $result->getStatusCode());
 
         // Validate that the HTTP response is cached
-        $pool = $this->getCachePool();
+        $pool = static::getCachePool();
         $item = $pool->getItem('request/GET/' . md5((string) $request->getUri()));
 
         $this->assertTrue($item->isHit());
@@ -114,7 +114,7 @@ class CacheMiddlewareResponseTest extends AbstractCacheMiddlewareTest
         $this->assertContains('qux', $headers['X-Charcoal-2']);
 
         // Validate that the HTTP response is cached
-        $pool = $this->getCachePool();
+        $pool = static::getCachePool();
         $item = $pool->getItem('request/GET/' . md5((string) $request->getUri()));
 
         $data = $item->get();

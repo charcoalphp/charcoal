@@ -109,7 +109,7 @@ class CacheMiddlewareRequestTest extends AbstractCacheMiddlewareTest
         $this->assertEquals(200, $result->getStatusCode());
 
         // Validate that the HTTP response is NOT cached
-        $pool = $this->getCachePool();
+        $pool = static::getCachePool();
         $item = $pool->getItem('request/GET/' . md5((string) $request->getUri()));
 
         $this->assertEquals($expected, $item->isHit());
