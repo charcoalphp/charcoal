@@ -2,8 +2,16 @@
 
 namespace Charcoal\Tests\Cache\Facade;
 
+use DateInterval;
+use DateTime;
+use DateTimeImmutable;
+use DateTimeInterface;
+
 // From PSR-3
 use Psr\Log\NullLogger;
+
+// From 'tedivm/stash'
+use Stash\Interfaces\ItemInterface;
 
 // From 'charcoal-cache'
 use Charcoal\Tests\AbstractTestCase;
@@ -160,21 +168,101 @@ class CachePoolFacadeTest extends AbstractTestCase
     }
 
     /**
+     * Test a numeric expiration time for this cache item.
+     *
+     * @covers ::save
+     *
+     * @dataProvider provideTtlOnSave
+     *
+     * @param  DateTimeInterface $expected   The expected expiration time
+     *     from {@see \Stash\Interfaces\ItemInterface::getExpiration()}.
+     * @param  mixed             $itemTtl    The cache item's expiration time.
+     * @param  DateTimeInterface $defaultTtl The facade default expiration time.
+     * @return void
+     */
+    public function testTtlOnSave(DateTimeInterface $expected, $itemTtl, DateTimeInterface $defaultTtl)
+    {
+        $stash  = static::getCachePool();
+        $facade = $this->facadeFactory([
+            'default_ttl' => $defaultTtl,
+        ]);
+
+        $facade->set('base/one', $this->data, $itemTtl);
+
+        $this->assertLessThanOrEqual(
+            $expected->getTimestamp(),
+            $stash->getItem('base/one')->getExpiration()->getTimestamp()
+        );
+    }
+
+    /**
+     * Provide data for testing the expiration time per cache item.
+     *
+     * @used-by self::testTtlOnSave()
+     * @return  array
+     */
+    public function provideTtlOnSave()
+    {
+        $data = [];
+        $date = new DateTimeImmutable('now');
+
+        $default = $date->add(new DateInterval('P50Y'));
+
+        $interval   = new DateInterval('P1D');
+        $expiration = $date->add($interval);
+        $data['DateInterval'] = [ $expiration, $interval, $default ];
+
+        $datetime   = new DateTimeImmutable('tomorrow');
+        $data['DateTime'] = [ $expiration, $datetime, $default ];
+
+        $integer    = 120;
+        $interval   = DateInterval::createFromDateString('120 seconds');
+        $expiration = $date->add($interval);
+        $data['integer'] = [ $expiration, $integer, $default ];
+
+        $float      = '59.5';
+        $interval   = DateInterval::createFromDateString('59 seconds');
+        $expiration = $date->add($interval);
+        $data['float'] = [ $expiration, $float, $default ];
+
+        $data['boolean'] = [ $default, false, $default ];
+        $data['null']    = [ $default, null, $default ];
+
+        return $data;
+    }
+
+    /**
      * @covers ::defaultTtl
      * @covers ::setDefaultTtl
      *
      * @return void
      */
-    public function testSetTtl()
+    public function testSetDefaultTtl()
     {
-        $ttl = new \DateInterval('P1D');
+        $time = new \DateInterval('P1D');
         $facade = $this->facadeFactory([
-            'default_ttl' => $ttl,
+            'default_ttl' => $time,
         ]);
-        $this->assertSame($ttl, $facade->defaultTtl());
+        $this->assertSame($time, $facade->defaultTtl());
+
+        $time = new DateTime('tomorrow');
+        $facade->setDefaultTtl($time);
+        $this->assertEquals($time, $facade->defaultTtl());
 
         $time = 120;
         $facade->setDefaultTtl($time);
         $this->assertEquals($time, $facade->defaultTtl());
+
+        $time = '59.5';
+        $facade->setDefaultTtl($time);
+        $this->assertEquals($time, $facade->defaultTtl());
+
+        $val = false;
+        $facade->setDefaultTtl($val);
+        $this->assertEquals($val, $facade->defaultTtl());
+
+        $val = null;
+        $facade->setDefaultTtl($val);
+        $this->assertEquals($val, $facade->defaultTtl());
     }
 }

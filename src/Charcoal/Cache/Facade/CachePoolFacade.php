@@ -2,8 +2,6 @@
 
 namespace Charcoal\Cache\Facade;
 
-use InvalidArgumentException;
-
 // From PSR-6
 use Psr\Cache\CacheItemInterface;
 
@@ -22,6 +20,8 @@ class CachePoolFacade
 
     /**
      * Default maximum time an item will be cached.
+     *
+     * Either an integer, date interval, or date.
      *
      * @var mixed
      */
@@ -50,9 +50,16 @@ class CachePoolFacade
      * @param  callable|null $resolve The function to execute if the cached value does not exist
      *     or is considered expired. The function must return a value which will be stored
      *     in the cache before being returned by the method.
-     * @param  integer|null  $ttl     The time-to-live, in seconds, after which the cached value
-     *     must be considered expired.
-     *     If NULL, the facade's default time-to-live is used.
+     *
+     *     ```
+     *     $resolve ( mixed $data, CacheItemInterface $item ) : mixed
+     *     ```
+     *
+     *     The $resolve takes on two parameters:
+     *
+     *     1. The expired value or NULL if no value was stored.
+     *     2. The cache item of the specified key.
+     * @param  mixed         $ttl     An integer, interval, date, or NULL to use the facade's default value.
      * @return mixed The value corresponding to this cache item's $key, or NULL if not found.
      */
     public function get($key, callable $resolve = null, $ttl = null)
@@ -66,8 +73,7 @@ class CachePoolFacade
         }
 
         if (is_callable($resolve)) {
-            $item->lock();
-            $data = call_user_func($resolve);
+            $data = $resolve($data, $item);
             $this->save($item, $data, $ttl);
             return $data;
         }
@@ -89,9 +95,9 @@ class CachePoolFacade
     /**
      * Store a value with the specified key to be saved immediately.
      *
-     * @param  string       $key   The key to save the value on.
-     * @param  mixed        $value The serializable value to be stored.
-     * @param  integer|null $ttl   The time-to-live, in seconds.
+     * @param  string $key   The key to save the value on.
+     * @param  mixed  $value The serializable value to be stored.
+     * @param  mixed  $ttl   An integer, interval, date, or NULL to use the facade's default value.
      * @return boolean TRUE if the item was successfully persisted. FALSE if there was an error.
      */
     public function set($key, $value, $ttl = null)
@@ -106,18 +112,24 @@ class CachePoolFacade
      *
      * @param  CacheItemInterface $item  The cache item to save.
      * @param  mixed              $value The serializable value to be stored.
-     * @param  integer|null       $ttl   The time-to-live, in seconds.
+     * @param  mixed              $ttl   An integer, interval, date, or NULL to use the facade's default value.
      * @return boolean TRUE if the item was successfully persisted. FALSE if there was an error.
      */
     protected function save(CacheItemInterface $item, $value, $ttl = null)
     {
-        if (!$ttl) {
+        if ($ttl === null) {
             $ttl = $this->defaultTtl();
         }
 
-        return $item->setTTL($ttl)
-                    ->set($value)
-                    ->save();
+        if (is_numeric($ttl) || ($ttl instanceof \DateInterval)) {
+            $item->expiresAfter($ttl);
+        } elseif ($ttl instanceof \DateTimeInterface) {
+            $item->expiresAt($ttl);
+        }
+
+        $item->set($value);
+
+        return $this->cachePool()->save($item);
     }
 
     /**
@@ -150,8 +162,6 @@ class CachePoolFacade
 
     /**
      * Set the facade's default time-to-live for cached items.
-     *
-     * @see \Stash\Item::setTTL()
      *
      * @param  mixed $ttl An integer, date interval, or date.
      * @return void
