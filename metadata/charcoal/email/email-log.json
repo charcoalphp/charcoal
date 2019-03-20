@@ -15,6 +15,7 @@
         },
         "message_id": {
             "type": "string",
+            "allow_html": true,
             "label": {
                 "en": "Message identifier",
                 "fr": "Identifiant courriel"
@@ -22,11 +23,11 @@
         },
         "from": {
             "type": "string",
+            "allow_html": true,
             "description": {
                 "en": "Sender's (from) email",
                 "fr": "Courriel d'envoi"
             },
-            "allow_html": true,
             "label": {
                 "en": "From",
                 "fr": "De:"
@@ -34,11 +35,11 @@
         },
         "to": {
             "type": "string",
+            "allow_html": true,
             "description": {
                 "en": "Recipient's (to) email",
                 "fr": "Courriel de réception"
             },
-            "allow_html": true,
             "label": {
                 "en": "To",
                 "fr": "À:"

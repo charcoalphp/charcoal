@@ -48,6 +48,7 @@
         },
         "to": {
             "type": "string",
+            "allow_html": true,
             "label": {
                 "en": "To",
                 "fr": "À:"
@@ -55,6 +56,7 @@
         },
         "from": {
             "type": "string",
+            "allow_html": true,
             "label": {
                 "en": "From",
                 "fr": "De:"
