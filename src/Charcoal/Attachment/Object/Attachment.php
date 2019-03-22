@@ -197,7 +197,7 @@ class Attachment extends Content implements AttachableInterface
         parent::__construct($data);
 
         if (is_callable([ $this, 'defaultData' ])) {
-            $defaultData = $this->defaultData();
+            $defaultData = $this->metadata()->defaultData();
             if ($defaultData) {
                 $this->setData($defaultData);
             }
