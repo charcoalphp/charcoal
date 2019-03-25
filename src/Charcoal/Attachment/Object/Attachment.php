@@ -978,7 +978,7 @@ class Attachment extends Content implements AttachableInterface
      * @param  string $uri A URI path to wrap.
      * @return UriInterface|null
      */
-    protected function createAbsoluteUrl($uri)
+    public function createAbsoluteUrl($uri)
     {
         if (!isset($uri)) {
             return null;
