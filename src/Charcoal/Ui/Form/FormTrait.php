@@ -481,7 +481,7 @@ trait FormTrait
                             case '!':
                             case 'not':
                                 if ($value === $logic['value']) {
-                                   $valid = false;
+                                    $valid = false;
                                 }
                                 break;
                             default:
