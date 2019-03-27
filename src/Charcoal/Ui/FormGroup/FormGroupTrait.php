@@ -84,6 +84,16 @@ trait FormGroupTrait
     private $conditionalLogic;
 
     /**
+     * @var array|null
+     */
+    private $rawConditionalLogic;
+
+    /**
+     * @var boolean
+     */
+    private $conditionalLogicUnmet;
+
+    /**
      * Comparison function used by {@see uasort()}.
      *
      * @param  PrioritizableInterface $a Sortable entity A.
@@ -320,11 +330,21 @@ trait FormGroupTrait
     }
 
     /**
+     * @return array|null
+     */
+    public function rawConditionalLogic()
+    {
+        return $this->rawConditionalLogic;
+    }
+
+    /**
      * @param array|null $conditionalLogic ConditionalLogic for FormGroupWidget.
      * @return self
      */
     public function setConditionalLogic($conditionalLogic)
     {
+        $this->rawConditionalLogic = $conditionalLogic;
+
         if ($conditionalLogic && is_array($conditionalLogic)) {
             foreach ($conditionalLogic as &$condition) {
                 $prop = $this->form()->formProperty($condition['property']);
@@ -335,6 +355,25 @@ trait FormGroupTrait
         $this->conditionalLogic = [
             $this->widgetId() => $conditionalLogic
         ];
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function conditionalLogicUnmet()
+    {
+        return $this->conditionalLogicUnmet;
+    }
+
+    /**
+     * @param boolean $conditionalLogicUnmet ConditionalLogicUnmet for FormGroupTrait.
+     * @return self
+     */
+    public function setConditionalLogicUnmet($conditionalLogicUnmet)
+    {
+        $this->conditionalLogicUnmet = $conditionalLogicUnmet;
 
         return $this;
     }

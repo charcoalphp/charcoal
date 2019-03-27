@@ -469,6 +469,39 @@ trait FormTrait
                 }
             }
 
+            if ($group->rawConditionalLogic()) {
+                if (is_callable([$this, 'obj'])) {
+                    foreach ($group->rawConditionalLogic() as $logic) {
+                        $valid = true;
+                        $value = $this->obj()->get($logic['property']);
+
+                        switch ($logic['operator']) {
+                            case '!==':
+                            case '!=':
+                            case '!':
+                            case 'not':
+                                if ($value === $logic['value']) {
+                                    $valid = false;
+                                }
+                                break;
+                            default:
+                            case '"==="':
+                            case '"=="':
+                            case '"="':
+                            case '"is"':
+                                if ($value !== $logic['value']) {
+                                    $valid = false;
+                                }
+                                break;
+                        }
+
+                        if (!$valid) {
+                            $group->setConditionalLogicUnmet(true);
+                        }
+                    }
+                }
+            }
+
             $out[] = $group;
         }
 
