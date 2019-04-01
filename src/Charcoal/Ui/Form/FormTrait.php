@@ -480,7 +480,7 @@ trait FormTrait
                             case '!=':
                             case '!':
                             case 'not':
-                                if ($value === $logic['value']) {
+                                if ($value == $logic['value']) {
                                     $valid = false;
                                 }
                                 break;
@@ -489,7 +489,7 @@ trait FormTrait
                             case '"=="':
                             case '"="':
                             case '"is"':
-                                if ($value !== $logic['value']) {
+                                if ($value != $logic['value']) {
                                     $valid = false;
                                 }
                                 break;
