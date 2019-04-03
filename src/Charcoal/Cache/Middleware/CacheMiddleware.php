@@ -183,10 +183,10 @@ class CacheMiddleware
             return $next($request, $response);
         }
 
-        if (!$this->isSkipCache($request)) {
+        if ($this->isSkipCache($request)) {
             return $next($request, $response);
         }
-    
+
         $cacheKey  = $this->cacheKeyFromRequest($request);
         $cacheItem = $this->cachePool->getItem($cacheKey);
 
@@ -290,7 +290,16 @@ class CacheMiddleware
         foreach ($this->skipCache as $ident => $skip) {
             switch ($ident) {
                 case 'session_vars':
-                    if (session_id() && in_array($_SESSION, $skip)) {
+                    if (empty($skip)) {
+                        continue;
+                    }
+
+                    if (!session_id()) {
+                        session_cache_limiter(false);
+                        session_start();
+                    }
+
+                    if (array_intersect_key($_SESSION, array_flip($skip))) {
                         return true;
                     }
                     break;
