@@ -105,6 +105,13 @@ class CacheMiddleware
     private $ignoredQuery;
 
     /**
+     * Skip cache early on various conditions.
+     *
+     * @var array|null
+     */
+    private $skipCache;
+
+    /**
      * @param array $data Constructor dependencies and options.
      */
     public function __construct(array $data)
@@ -123,6 +130,8 @@ class CacheMiddleware
         $this->includedQuery = $data['included_query'];
         $this->excludedQuery = $data['excluded_query'];
         $this->ignoredQuery  = $data['ignored_query'];
+
+        $this->skipCache = (array)$data['skip_cache'];
     }
 
     /**
@@ -143,7 +152,11 @@ class CacheMiddleware
 
             'included_query' => null,
             'excluded_query' => null,
-            'ignored_query'  => null
+            'ignored_query'  => null,
+
+            'skip_cache' => [
+                'session_vars' => []
+            ]
         ];
     }
 
@@ -170,6 +183,10 @@ class CacheMiddleware
             return $next($request, $response);
         }
 
+        if (!$this->isSkipCache($request)) {
+            return $next($request, $response);
+        }
+    
         $cacheKey  = $this->cacheKeyFromRequest($request);
         $cacheItem = $this->cachePool->getItem($cacheKey);
 
@@ -260,6 +277,27 @@ class CacheMiddleware
     private function isRequestMethodValid(RequestInterface $request)
     {
         return in_array($request->getMethod(), $this->methods);
+    }
+
+    /**
+     * Determine if the HTTP request method matches the accepted choices.
+     *
+     * @param  RequestInterface $request The PSR-7 HTTP request.
+     * @return boolean
+     */
+    private function isSkipCache(RequestInterface $request)
+    {
+        foreach ($this->skipCache as $ident => $skip) {
+            switch ($ident) {
+                case 'session_vars':
+                    if (session_id() && in_array($_SESSION, $skip)) {
+                        return true;
+                    }
+                    break;
+            }
+        }
+
+        return false;
     }
 
     /**
