@@ -287,22 +287,18 @@ class CacheMiddleware
      */
     private function isSkipCache(RequestInterface $request)
     {
-        foreach ($this->skipCache as $ident => $skip) {
-            switch ($ident) {
-                case 'session_vars':
-                    if (empty($skip)) {
-                        continue;
-                    }
+        if (isset($this->skipCache['session_vars'])) {
+            $skip = $this->skipCache['session_vars'];
 
-                    if (!session_id()) {
-                        session_cache_limiter(false);
-                        session_start();
-                    }
+            if (!empty($skip)) {
+                if (!session_id()) {
+                    session_cache_limiter(false);
+                    session_start();
+                }
 
-                    if (array_intersect_key($_SESSION, array_flip($skip))) {
-                        return true;
-                    }
-                    break;
+                if (array_intersect_key($_SESSION, array_flip($skip))) {
+                    return true;
+                }
             }
         }
 
