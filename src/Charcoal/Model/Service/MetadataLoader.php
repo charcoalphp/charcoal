@@ -647,7 +647,7 @@ final class MetadataLoader implements LoggerAwareInterface
         }
 
         $basePath = $this->basePath();
-        $path = ltrim($path, '/\\');
+        $path = trim($path, '/\\');
 
         if ($basePath && strpos($path, $basePath) === false) {
             $path = $basePath.$path;
