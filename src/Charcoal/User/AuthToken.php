@@ -299,7 +299,7 @@ class AuthToken extends AbstractModel
         }
 
         // Validate encrypted token
-        if ($token !== $this->token()) {
+        if (password_verify($token, $this->token()) !== true) {
             $this->panic();
             $this->delete();
             return '';
@@ -357,9 +357,9 @@ class AuthToken extends AbstractModel
                 DELETE FROM
                     `%s`
                 WHERE
-                    userId = :userId', $table);
+                    user_id = :userId', $table);
             $this->source()->dbQuery($q, [
-                'user_id' => $this->userId()
+                'userId' => $this->userId()
             ]);
         }
     }
