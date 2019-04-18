@@ -491,12 +491,17 @@ class ImageProperty extends FileProperty
         if ($effects) {
             $basePath = $this->basePath();
 
-            // @todo Save original file here
-            $image->open($value);
-
-            $target = null;
+            $isAbsolute = false;
             if (null !== parse_url($value, PHP_URL_HOST)) {
-                $target = $this->uploadPath().pathinfo($value, PATHINFO_BASENAME);
+                $isAbsolute = true;
+            }
+
+            // @todo Save original file here
+            $valuePath = ($isAbsolute ? '' : $basePath);
+            $image->open($valuePath.$value);
+            $target = null;
+            if ($isAbsolute) {
+                $target = $basePath.$this->uploadPath().pathinfo($value, PATHINFO_BASENAME);
             }
 
             foreach ($effects as $fxGroup) {
@@ -562,20 +567,21 @@ class ImageProperty extends FileProperty
 
                         if ($rename || $copy) {
                             if ($doCopy) {
-                                $image->save($copy);
+
+                                $image->save($valuePath.$copy);
                             }
 
                             if ($doRename) {
-                                $image->save($value);
+                                $image->save($valuePath.$value);
                             }
                         } else {
-                            $image->save($target ?: $value);
+                            $image->save($target ?: $valuePath.$value);
                         }
                     }
                 }
                 // reset to default image allow starting effects chains from original image.
                 if ($fxGroup['reset']) {
-                    $image = $image->open($value);
+                    $image = $image->open($valuePath.$value);
                 }
             }
         }
