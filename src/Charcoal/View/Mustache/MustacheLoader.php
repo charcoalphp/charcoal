@@ -3,23 +3,25 @@
 namespace Charcoal\View\Mustache;
 
 // From Mustache
-use Mustache_Loader;
+use Mustache_Loader as MustacheLoaderInterface;
 
 // From 'charcoal-view'
 use Charcoal\View\AbstractLoader;
 use Charcoal\View\LoaderInterface;
 
 /**
- * - The mustache template loader finds a mustache template file in directories.
+ * Mustache Template Loader
+ *
+ * Finds a Mustache template file in a collection of directory paths.
  */
 class MustacheLoader extends AbstractLoader implements
-    Mustache_Loader,
-    LoaderInterface
+    LoaderInterface,
+    MustacheLoaderInterface
 {
     /**
      * Convert an identifier to a file path.
      *
-     * @param string $ident The template identifier to convert to a filename.
+     * @param  string $ident The template identifier to convert to a filename.
      * @return string
      */
     protected function filenameFromIdent($ident)

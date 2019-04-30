@@ -12,7 +12,9 @@ use Psr\Log\LoggerAwareTrait;
 use Charcoal\View\LoaderInterface;
 
 /**
- * Base template loader.
+ * Base Template Loader
+ *
+ * Finds a template file in a collection of directory paths.
  */
 abstract class AbstractLoader implements
     LoggerAwareInterface,
@@ -54,6 +56,7 @@ abstract class AbstractLoader implements
      * Load a template content
      *
      * @deprecated $GLOBALS['widget_template']
+     *
      * @param  string $ident The template ident to load and render.
      * @throws InvalidArgumentException If the dynamic template identifier is not a string.
      * @return string
@@ -92,9 +95,30 @@ abstract class AbstractLoader implements
     }
 
     /**
+     * @param  string $varName The name of the variable to get template ident from.
+     * @throws InvalidArgumentException If the var name is not a string.
+     * @return string
+     */
+    public function dynamicTemplate($varName)
+    {
+        if (!is_string($varName)) {
+            throw new InvalidArgumentException(
+                'Can not get dynamic template: var name is not a string.'
+            );
+        }
+
+        if (!isset($this->dynamicTemplates[$varName])) {
+            return '';
+        }
+
+        return $this->dynamicTemplates[$varName];
+    }
+
+    /**
      * @deprecated $GLOBALS['widget_template']
-     * @param string      $varName       The name of the variable to set this template unto.
-     * @param string|null $templateIdent The "dynamic template" to set or NULL to clear.
+     *
+     * @param  string      $varName       The name of the variable to set this template unto.
+     * @param  string|null $templateIdent The "dynamic template" to set or NULL to clear.
      * @throws InvalidArgumentException If var name is not a string
      *     or if the template is not a string (and not null).
      * @return void
@@ -127,28 +151,9 @@ abstract class AbstractLoader implements
     }
 
     /**
-     * @param string $varName The name of the variable to get template ident from.
-     * @throws InvalidArgumentException If the var name is not a string.
-     * @return string
-     */
-    public function dynamicTemplate($varName)
-    {
-        if (!is_string($varName)) {
-            throw new InvalidArgumentException(
-                'Can not get dynamic template: var name is not a string.'
-            );
-        }
-
-        if (!isset($this->dynamicTemplates[$varName])) {
-            return '';
-        }
-
-        return $this->dynamicTemplates[$varName];
-    }
-
-    /**
      * @deprecated $GLOBALS['widget_template']
-     * @param string $varName The name of the variable to remove.
+     *
+     * @param  string $varName The name of the variable to remove.
      * @throws InvalidArgumentException If var name is not a string.
      * @return void
      */
@@ -170,6 +175,7 @@ abstract class AbstractLoader implements
 
     /**
      * @deprecated $GLOBALS['widget_template']
+     *
      * @return void
      */
     public function clearDynamicTemplates()
@@ -189,6 +195,23 @@ abstract class AbstractLoader implements
     }
 
     /**
+     * @param  string $basePath The base path to set.
+     * @throws InvalidArgumentException If the base path parameter is not a string.
+     * @return LoaderInterface Chainable
+     */
+    private function setBasePath($basePath)
+    {
+        if (!is_string($basePath)) {
+            throw new InvalidArgumentException(
+                'Base path must be a string'
+            );
+        }
+        $basePath = realpath($basePath);
+        $this->basePath = rtrim($basePath, '/\\').DIRECTORY_SEPARATOR;
+        return $this;
+    }
+
+    /**
      * @return string[]
      */
     protected function paths()
@@ -197,11 +220,59 @@ abstract class AbstractLoader implements
     }
 
     /**
+     * @param  string[] $paths The list of path to add.
+     * @return LoaderInterface Chainable
+     */
+    private function setPaths(array $paths)
+    {
+        $this->paths = [];
+
+        foreach ($paths as $path) {
+            $this->addPath($path);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param  string $path The path to add to the load.
+     * @return LoaderInterface Chainable
+     */
+    private function addPath($path)
+    {
+        $this->paths[] = $this->resolvePath($path);
+
+        return $this;
+    }
+
+    /**
+     * @param  string $path The path to resolve.
+     * @throws InvalidArgumentException If the path argument is not a string.
+     * @return string
+     */
+    private function resolvePath($path)
+    {
+        if (!is_string($path)) {
+            throw new InvalidArgumentException(
+                'Path needs to be a string'
+            );
+        }
+
+        $basePath = $this->basePath();
+        $path = rtrim($path, '/\\').DIRECTORY_SEPARATOR;
+        if ($basePath && strpos($path, $basePath) === false) {
+            $path = $basePath.$path;
+        }
+
+        return $path;
+    }
+
+    /**
      * Get the template file (full path + filename) to load from an ident.
      *
      * This method first generates the filename for an identifier and search for it in all of the loader's paths.
      *
-     * @param string $ident The template identifier to load.
+     * @param  string $ident The template identifier to load.
      * @throws InvalidArgumentException If the template ident is not a string.
      * @return string|null The full path + filename of the found template. Null if nothing was found.
      */
@@ -227,73 +298,8 @@ abstract class AbstractLoader implements
     }
 
     /**
-     * @param string $ident The template identifier to convert to a filename.
+     * @param  string $ident The template identifier to convert to a filename.
      * @return string
      */
     abstract protected function filenameFromIdent($ident);
-
-    /**
-     * @param string[] $paths The list of path to add.
-     * @return LoaderInterface Chainable
-     */
-    private function setPaths(array $paths)
-    {
-        $this->paths = [];
-
-        foreach ($paths as $path) {
-            $this->addPath($path);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param string $basePath The base path to set.
-     * @throws InvalidArgumentException If the base path parameter is not a string.
-     * @return LoaderInterface Chainable
-     */
-    private function setBasePath($basePath)
-    {
-        if (!is_string($basePath)) {
-            throw new InvalidArgumentException(
-                'Base path must be a string'
-            );
-        }
-        $basePath = realpath($basePath);
-        $this->basePath = rtrim($basePath, '/\\').DIRECTORY_SEPARATOR;
-        return $this;
-    }
-
-    /**
-     * @param string $path The path to add to the load.
-     * @return LoaderInterface Chainable
-     */
-    private function addPath($path)
-    {
-        $this->paths[] = $this->resolvePath($path);
-
-        return $this;
-    }
-
-    /**
-     * @param string $path The path to resolve.
-     * @throws InvalidArgumentException If the path argument is not a string.
-     * @return string
-     */
-    private function resolvePath($path)
-    {
-        if (!is_string($path)) {
-            throw new InvalidArgumentException(
-                'Path needs to be a string'
-            );
-        }
-
-        $basePath = $this->basePath();
-        $path = rtrim($path, '/\\').DIRECTORY_SEPARATOR;
-        if ($basePath && strpos($path, $basePath) === false) {
-            $path = $basePath.$path;
-        }
-
-        return $path;
-    }
 }

@@ -7,7 +7,9 @@ use Charcoal\View\AbstractLoader;
 use Charcoal\View\LoaderInterface;
 
 /**
- * The PHP template loader finds a mustache php template file in directories and includes it (run as PHP).
+ * PHP Template Loader
+ *
+ * Finds a PHP template file in a collection of directory paths.
  */
 class PhpLoader extends AbstractLoader implements LoaderInterface
 {
