@@ -86,6 +86,14 @@ abstract class AbstractLoader implements
             }
         }
 
+        /**
+         * Prevents the loader from passing a proper template through further
+         * procedures meant for a template identifier.
+         */
+        if ($this->isTemplateString($ident)) {
+            return $ident;
+        }
+
         $file = $this->findTemplateFile($ident);
         if ($file === null || $file === '') {
             return $ident;
@@ -265,6 +273,21 @@ abstract class AbstractLoader implements
         }
 
         return $path;
+    }
+
+    /**
+     * Determine if the variable is a template literal.
+     *
+     * This method looks for any line-breaks in the given string,
+     * which a file path would not allow.
+     *
+     * @param  string $ident The template being evaluated.
+     * @return boolean Returns TRUE if the given value is most likely the template contents
+     *     as opposed to a template identifier (file path).
+     */
+    protected function isTemplateString($ident)
+    {
+        return strpos($ident, PHP_EOL) !== false;
     }
 
     /**
