@@ -42,7 +42,8 @@ trait AssertionsTrait
     {
         if (!is_array($needles) &&
             !(is_object($needles) && $needles instanceof Traversable)) {
-            throw InvalidArgumentHelper::factory(
+            $invalidArgHelper = $this->getInvalidArgumentHelperClass();
+            throw $invalidArgHelper::factory(
                 1,
                 'array or Traversable'
             );
@@ -66,7 +67,8 @@ trait AssertionsTrait
     {
         if (!is_array($keys) &&
             !(is_object($keys) && $keys instanceof Traversable)) {
-            throw InvalidArgumentHelper::factory(
+            $invalidArgHelper = $this->getInvalidArgumentHelperClass();
+            throw $invalidArgHelper::factory(
                 1,
                 'array or Traversable'
             );
@@ -95,7 +97,8 @@ trait AssertionsTrait
     ) {
         if (!is_array($subsets) &&
             !(is_object($subsets) && $subsets instanceof Traversable)) {
-            throw InvalidArgumentHelper::factory(
+            $invalidArgHelper = $this->getInvalidArgumentHelperClass();
+            throw $invalidArgHelper::factory(
                 1,
                 'array or Traversable'
             );
@@ -123,18 +126,54 @@ trait AssertionsTrait
         $message = ''
     ) {
         if (!(is_array($subset) || $subset instanceof ArrayAccess)) {
-            throw InvalidArgumentHelper::factory(
+            $invalidArgHelper = $this->getInvalidArgumentHelperClass();
+            throw $invalidArgHelper::factory(
                 1,
                 'array or ArrayAccess'
             );
         }
 
         // phpcs:disable Squiz.Objects.ObjectInstantiation.NotAssigned
-        $constraint = new LogicalNot(
-            new ArraySubset($subset, $strict)
+        $logicalNot  = $this->getLogicalNotClass();
+        $arraySubset = $this->getArraySubsetClass();
+        $constraint  = new $logicalNot(
+            new $arraySubset($subset, $strict)
         );
         // phpcs:enable
 
         static::assertThat($array, $constraint, $message);
+    }
+
+    /**
+     * Retrieve the correct version of the `InvalidArgumentHelper` class.
+     *
+     * @return string
+     */
+    protected function getInvalidArgumentHelperClass()
+    {
+        $class57 = 'PHPUnit_Util_InvalidArgumentHelper';
+        return class_exists($class57) ? $class57 : InvalidArgumentHelper::class;
+    }
+
+    /**
+     * Retrieve the correct version of the `LogicalNot` class.
+     *
+     * @return string
+     */
+    protected function getLogicalNotClass()
+    {
+        $class57 = 'PHPUnit_Framework_Constraint_Not';
+        return class_exists($class57) ? $class57 : LogicalNot::class;
+    }
+
+    /**
+     * Retrieve the correct version of the `ArraySubset` class.
+     *
+     * @return string
+     */
+    protected function getArraySubsetClass()
+    {
+        $class57 = 'PHPUnit_Framework_Constraint_ArraySubset';
+        return class_exists($class57) ? $class57 : ArraySubset::class;
     }
 }
