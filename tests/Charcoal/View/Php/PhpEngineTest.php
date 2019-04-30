@@ -29,11 +29,11 @@ class PhpEngineTest extends AbstractTestCase
         $loader = new PhpLoader([
             'logger'    => $logger,
             'base_path' => __DIR__,
-            'paths'     => ['templates']
+            'paths'     => [ 'templates' ],
         ]);
         $this->obj = new PhpEngine([
             'logger' => $logger,
-            'loader' => $loader
+            'loader' => $loader,
         ]);
     }
 
@@ -50,7 +50,7 @@ class PhpEngineTest extends AbstractTestCase
      */
     public function testRender()
     {
-        $actual = trim($this->obj->render('foo', ['foo'=>'Charcoal']));
+        $actual = trim($this->obj->render('foo', [ 'foo' => 'Charcoal' ]));
         $this->assertEquals('Hello Charcoal', $actual);
     }
 
@@ -59,7 +59,7 @@ class PhpEngineTest extends AbstractTestCase
      */
     public function testRenderTemplate()
     {
-        $actual = trim($this->obj->renderTemplate('Hello <?php echo $foo; ?>  ', ['foo' => 'World!']));
+        $actual = trim($this->obj->renderTemplate('Hello <?php echo $foo; ?>  ', [ 'foo' => 'World!' ]));
         $this->assertEquals('Hello World!', $actual);
     }
 }

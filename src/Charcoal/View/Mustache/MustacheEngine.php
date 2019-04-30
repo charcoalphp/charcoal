@@ -122,7 +122,7 @@ class MustacheEngine extends AbstractEngine
     {
         if ($this->mustache !== null) {
             throw new RuntimeException(
-                'Can not add helper to mustache engine: the engine has already been initialized.'
+                'Can not add helper to Mustache engine: the engine has already been initialized.'
             );
         }
 

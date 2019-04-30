@@ -33,21 +33,21 @@ class RendererTest extends AbstractTestCase
     {
         $logger = new NullLogger();
         $loader = new MustacheLoader([
-            'logger'=>$logger,
-            'base_path'=>__DIR__,
-            'paths'=>['Mustache/templates']
+            'logger'    => $logger,
+            'base_path' => __DIR__,
+            'paths'     => [ 'Mustache/templates' ],
         ]);
         $engine = new MustacheEngine([
-            'logger'=>$logger,
-            'loader'=>$loader
+            'logger' => $logger,
+            'loader' => $loader,
         ]);
         $view = new GenericView([
             'logger' => $logger,
-            'engine' => $engine
+            'engine' => $engine,
         ]);
 
         $this->obj = new Renderer([
-            'view'  => $view
+            'view' => $view,
         ]);
     }
 
@@ -57,7 +57,7 @@ class RendererTest extends AbstractTestCase
     public function testRender()
     {
         $response = new Response();
-        $ret = $this->obj->render($response, 'foo', ['foo'=>'Charcoal']);
+        $ret = $this->obj->render($response, 'foo', [ 'foo' => 'Charcoal' ]);
         $this->assertEquals($response, $ret);
         $this->assertEquals('Hello Charcoal', trim((string)$ret->getBody()));
     }

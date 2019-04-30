@@ -3,6 +3,7 @@
 namespace Charcoal\Tests\View\Mustache;
 
 use InvalidArgumentException;
+use RuntimeException;
 
 // From PSR-3
 use Psr\Log\NullLogger;
@@ -11,6 +12,7 @@ use Psr\Log\NullLogger;
 use Charcoal\View\Mustache\MustacheEngine;
 use Charcoal\View\Mustache\MustacheLoader;
 use Charcoal\Tests\AbstractTestCase;
+use Charcoal\Tests\View\Mustache\Mock\MockHelpers;
 
 /**
  *
@@ -31,11 +33,12 @@ class MustacheEngineTest extends AbstractTestCase
         $loader = new MustacheLoader([
             'logger'    => $logger,
             'base_path' => __DIR__,
-            'paths'     => ['templates']
+            'paths'     => [ 'templates' ],
         ]);
         $this->obj = new MustacheEngine([
             'logger' => $logger,
-            'loader' => $loader
+            'loader' => $loader,
+            'cache'  => false,
         ]);
     }
 
@@ -56,11 +59,13 @@ class MustacheEngineTest extends AbstractTestCase
         $this->assertSame($ret, $this->obj);
         $this->assertEquals([], $this->obj->helpers());
 
-        $this->obj->setHelpers(['foo'=>['bar']]);
-        $this->assertEquals(['foo'=>['bar']], $this->obj->helpers());
+        $arr = [ 'foo' => 'baz' ];
+        $this->obj->setHelpers($arr);
+        $this->assertArraySubset($arr, $this->obj->helpers());
 
-        $this->obj->setHelpers(['bar'=>['baz']]);
-        $this->assertEquals(['bar'=>['baz']], $this->obj->helpers());
+        $helpers = new MockHelpers();
+        $this->obj->setHelpers($helpers);
+        $this->assertArraySubsets($helpers->toArray(), $this->obj->helpers());
 
         $this->expectException(InvalidArgumentException::class);
         $this->obj->setHelpers('foobar');
@@ -75,11 +80,15 @@ class MustacheEngineTest extends AbstractTestCase
         $this->assertSame($ret, $this->obj);
         $this->assertEquals([], $this->obj->helpers());
 
-        $this->obj->mergeHelpers(['foo'=>['bar']]);
-        $this->assertEquals(['foo'=>['bar']], $this->obj->helpers());
+        $arr = [ 'foo' => 'baz' ];
+        $this->obj->mergeHelpers($arr);
+        $this->assertArraySubset($arr, $this->obj->helpers());
 
-        $this->obj->mergeHelpers(['bar'=>['baz']]);
-        $this->assertEquals(['foo'=>['bar'], 'bar'=>['baz']], $this->obj->helpers());
+        $helpers = new MockHelpers();
+        $this->obj->mergeHelpers($helpers);
+
+        $this->assertNotArraySubset($arr, $this->obj->helpers());
+        $this->assertArraySubsets($helpers->toArray(), $this->obj->helpers());
 
         $this->expectException(InvalidArgumentException::class);
         $this->obj->mergeHelpers('foobar');
@@ -88,9 +97,20 @@ class MustacheEngineTest extends AbstractTestCase
     /**
      * @return void
      */
+    public function testAddHelperTooLate()
+    {
+        $this->obj->renderTemplate('Hello, {{foo}}!', []);
+
+        $this->expectException(RuntimeException::class);
+        $this->obj->addHelper('foo', 'World');
+    }
+
+    /**
+     * @return void
+     */
     public function testRender()
     {
-        $this->assertEquals('Hello Charcoal', trim($this->obj->render('foo', ['foo'=>'Charcoal'])));
+        $this->assertEquals('Hello Charcoal', trim($this->obj->render('foo', [ 'foo' => 'Charcoal' ])));
     }
 
     /**
@@ -98,6 +118,6 @@ class MustacheEngineTest extends AbstractTestCase
      */
     public function testRenderTemplate()
     {
-        $this->assertEquals('Hello World!', trim($this->obj->renderTemplate('Hello {{bar}}', ['bar'=>'World!'])));
+        $this->assertEquals('Hello World!', trim($this->obj->renderTemplate('Hello {{bar}}', [ 'bar' => 'World!' ])));
     }
 }

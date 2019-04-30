@@ -85,26 +85,30 @@ class ViewServiceProvider implements ServiceProviderInterface
         $container['view/config'] = function (Container $container) {
             $appConfig  = isset($container['config']) ? $container['config'] : [];
             $viewConfig = isset($appConfig['view']) ? $appConfig['view'] : null;
+            $viewConfig = new ViewConfig($viewConfig);
 
-            $config = new ViewConfig($viewConfig);
+            if (isset($container['module/classes'])) {
+                $extraPaths = [];
+                $basePath   = $appConfig['base_path'];
+                $modules    = $container['module/classes'];
+                foreach ($modules as $module) {
+                    if (defined(sprintf('%s::APP_CONFIG', $module))) {
+                        $configPath = $module::APP_CONFIG;
+                        $configPath = rtrim($basePath, '/').'/'.ltrim($configPath, '/');
+                        $configData = $viewConfig->loadFile($configPath);
+                        $extraPaths = array_merge(
+                            $extraPaths,
+                            $configData['view']['paths']
+                        );
+                    };
+                }
 
-            $extraViewPaths = [];
-            $basePath = $appConfig['base_path'];
-            foreach ($container['module/classes'] as $module) {
-                if (defined(sprintf('%s::APP_CONFIG', $module))) {
-                    $moduleConfig = $module::APP_CONFIG;
-                    $extraViewPaths = array_merge(
-                        $extraViewPaths,
-                        $config->loadFile($basePath.$moduleConfig)['view']['paths']
-                    );
-                };
+                if (!empty($extraPaths)) {
+                    $viewConfig->addPaths($extraPaths);
+                }
             }
 
-            if (!empty($extraViewPaths)) {
-                $config->addPaths($extraViewPaths);
-            }
-
-            return $config;
+            return $viewConfig;
         };
     }
 

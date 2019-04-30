@@ -26,7 +26,7 @@ class ViewServiceProviderTest extends AbstractTestCase
     public function testProvider()
     {
         $container = new Container([
-            'config' => []
+            'config' => [],
         ]);
 
         $provider = new ViewServiceProvider();
@@ -41,27 +41,47 @@ class ViewServiceProviderTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testProviderTwig()
+    public function testExtraViewPaths()
     {
         $container = new Container([
             'config' => [
+                'base_path' => dirname(dirname(dirname(__DIR__))),
+            ],
+            'module/classes' => [
+                'Charcoal\\Tests\\View\\Mock\\MockModule',
+            ],
+        ]);
+
+        $provider = new ViewServiceProvider();
+        $provider->register($container);
+
+        $viewConfig = $container['view/config'];
+        $this->assertContains('tests/Charcoal/View/Mock/templates', $viewConfig->paths());
+    }
+
+    /**
+     * @return void
+     */
+    public function testProviderTwig()
+    {
+        $container = new Container([
+            'logger' => new NullLogger(),
+            'config' => [
                 'base_path' => __DIR__,
-                'view' => [
-                    'paths' => ['Twig/templates'],
-                    'default_engine' => 'twig'
+                'view'      => [
+                    'paths'          => [ 'Twig/templates' ],
+                    'default_engine' => 'twig',
                 ]
             ],
-            'module/classes' => [],
-            'logger' => new NullLogger()
         ]);
         $provider = new ViewServiceProvider();
         $provider->register($container);
 
-        $ret = $container['view']->render('foo', ['foo'=>'Bar']);
+        $ret = $container['view']->render('foo', [ 'foo' => 'Bar' ]);
         $this->assertEquals('Hello Bar', trim($ret));
 
         $response = new Response();
-        $ret = $container['view/renderer']->render($response, 'foo', ['foo'=>'Baz']);
+        $ret = $container['view/renderer']->render($response, 'foo', [ 'foo' => 'Baz' ]);
         $this->assertEquals('Hello Baz', trim((string)$ret->getBody()));
     }
 
@@ -71,16 +91,15 @@ class ViewServiceProviderTest extends AbstractTestCase
     public function testProviderMustache()
     {
         $container = new Container([
-            'logger' => new NullLogger(),
+            'logger'     => new NullLogger(),
             'translator' => null,
-            'config' => [
+            'config'     => [
                 'base_path' => __DIR__,
-                'view' => [
-                    'paths' => [ 'Mustache/templates' ],
-                    'default_engine' => 'mustache'
+                'view'      => [
+                    'paths'          => [ 'Mustache/templates' ],
+                    'default_engine' => 'mustache',
                 ]
             ],
-            'module/classes' => []
         ]);
         $provider = new ViewServiceProvider();
         $provider->register($container);
@@ -89,7 +108,7 @@ class ViewServiceProviderTest extends AbstractTestCase
         $this->assertEquals('Hello Bar', trim($ret));
 
         $response = new Response();
-        $ret = $container['view/renderer']->render($response, 'foo', ['foo'=>'Baz']);
+        $ret = $container['view/renderer']->render($response, 'foo', [ 'foo' => 'Baz' ]);
         $this->assertEquals('Hello Baz', trim((string)$ret->getBody()));
     }
 
@@ -99,24 +118,23 @@ class ViewServiceProviderTest extends AbstractTestCase
     public function testProviderPhp()
     {
         $container = new Container([
+            'logger' => new NullLogger(),
             'config' => [
                 'base_path' => __DIR__,
-                'view' => [
-                    'paths' => ['Php/templates'],
-                    'default_engine' => 'php'
+                'view'      => [
+                    'paths'          => [ 'Php/templates' ],
+                    'default_engine' => 'php',
                 ]
             ],
-            'module/classes' => [],
-            'logger' => new NullLogger()
         ]);
         $provider = new ViewServiceProvider();
         $provider->register($container);
 
-        $ret = $container['view']->render('foo', ['foo'=>'Bar']);
+        $ret = $container['view']->render('foo', [ 'foo' => 'Bar' ]);
         $this->assertEquals('Hello Bar', trim($ret));
 
         $response = new Response();
-        $ret = $container['view/renderer']->render($response, 'foo', ['foo'=>'Baz']);
+        $ret = $container['view/renderer']->render($response, 'foo', [ 'foo' => 'Baz' ]);
         $this->assertEquals('Hello Baz', trim((string)$ret->getBody()));
     }
 }

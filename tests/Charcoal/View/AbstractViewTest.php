@@ -9,7 +9,6 @@ use Psr\Log\NullLogger;
 use Charcoal\View\Mustache\MustacheLoader;
 use Charcoal\View\Mustache\MustacheEngine;
 use Charcoal\View\Mustache\AssetsHelpers;
-use Charcoal\View\Mustache\TranslatorHelpers;
 use Charcoal\View\AbstractView;
 use Charcoal\Tests\AbstractTestCase;
 
@@ -36,20 +35,21 @@ class AbstractViewTest extends AbstractTestCase
         $loader = new MustacheLoader([
             'logger'    => $logger,
             'base_path' => __DIR__,
-            'paths'     => [ 'Mustache/templates' ]
+            'paths'     => [ 'Mustache/templates' ],
         ]);
 
         $assets = new AssetsHelpers();
-        $i18n   = new TranslatorHelpers();
         $engine = new MustacheEngine([
             'logger'  => $logger,
             'loader'  => $loader,
-            'helpers' => array_merge($assets->toArray(), $i18n->toArray())
+            'helpers' => $assets->toArray(),
         ]);
-        $this->obj = $this->getMockForAbstractClass(AbstractView::class, [[
-            'logger' => $logger,
-            'engine' => $engine
-        ]]);
+        $this->obj = $this->getMockForAbstractClass(AbstractView::class, [
+            [
+                'logger' => $logger,
+                'engine' => $engine,
+            ],
+        ]);
     }
 
     /**
@@ -58,8 +58,8 @@ class AbstractViewTest extends AbstractTestCase
     public function testRenderTemplate()
     {
         $this->assertEquals('Hello', $this->obj->renderTemplate('Hello'));
-        $this->assertEquals('Hello Foo!', $this->obj->renderTemplate('Hello {{bar}}', ['bar' => 'Foo!']));
-        $this->assertEquals('Hello ', $this->obj->renderTemplate('Hello {{bar}}', ['baz' => 'Foo!']));
+        $this->assertEquals('Hello Foo!', $this->obj->renderTemplate('Hello {{bar}}', [ 'bar' => 'Foo!' ]));
+        $this->assertEquals('Hello ', $this->obj->renderTemplate('Hello {{bar}}', [ 'baz' => 'Foo!' ]));
     }
 
     /**
@@ -110,10 +110,18 @@ class AbstractViewTest extends AbstractTestCase
     /**
      * @return void
      */
+    public function testLoadTemplateFile()
+    {
+        $this->assertEquals("Hello {{foo}}\n", $this->obj->loadTemplate('foo'));
+    }
+
+    /**
+     * @return void
+     */
     public function testSetDynamicTemplate()
     {
         $this->obj->setDynamicTemplate('dynamic', 'foo');
-        $ret = $this->obj->renderTemplate('{{> $dynamic }}', ['foo'=>'Dynamic']);
+        $ret = $this->obj->renderTemplate('{{> $dynamic }}', [ 'foo' => 'Dynamic' ]);
         $this->assertEquals('Hello Dynamic', trim($ret));
     }
 }

@@ -31,10 +31,10 @@ class ViewConfigTest extends AbstractTestCase
     {
         $this->assertEquals('.', $this->obj->separator());
         $this->assertEquals([], $this->obj['paths']);
-        $this->assertEquals(['cache'=>'../cache/mustache'], $this->obj['engines.mustache']);
+        $this->assertEquals([ 'cache' => '../cache/mustache' ], $this->obj['engines.mustache']);
         $this->assertEquals([], $this->obj['engines.php']);
         $this->assertEquals([], $this->obj['engines.php-mustache']);
-        $this->assertEquals(['cache'=>'../cache/twig'], $this->obj['engines.twig']);
+        $this->assertEquals([ 'cache' => '../cache/twig' ], $this->obj['engines.twig']);
         $this->assertEquals('mustache', $this->obj['default_engine']);
     }
 
@@ -57,10 +57,10 @@ class ViewConfigTest extends AbstractTestCase
      */
     public function testSetEngines()
     {
-        $ret = $this->obj->setEngines(['foo'=>[]]);
+        $ret = $this->obj->setEngines([ 'foo' => [] ]);
         $this->assertSame($ret, $this->obj);
 
-        $this->assertEquals(['foo'=>[]], $this->obj->engines());
+        $this->assertEquals([ 'foo' => [] ], $this->obj->engines());
 
         $this->expectException('\InvalidArgumentException');
         $this->obj->addEngine(false, []);
@@ -71,10 +71,10 @@ class ViewConfigTest extends AbstractTestCase
      */
     public function testEngine()
     {
-        $this->assertEquals(['cache'=>'../cache/mustache'], $this->obj->engine('mustache'));
+        $this->assertEquals([ 'cache' => '../cache/mustache' ], $this->obj->engine('mustache'));
 
-        $this->obj->addEngine('mustache', ['foo'=>'bar']);
-        $this->assertEquals(['foo'=>'bar'], $this->obj->engine('mustache'));
+        $this->obj->addEngine('mustache', [ 'foo' => 'bar' ]);
+        $this->assertEquals([ 'foo' => 'bar' ], $this->obj->engine('mustache'));
 
 
         $this->expectException('\InvalidArgumentException');
@@ -86,8 +86,8 @@ class ViewConfigTest extends AbstractTestCase
      */
     public function testEngineDefaultEngine()
     {
-        $this->obj->addEngine('mustache', ['foo'=>'bar']);
-        $this->assertEquals(['foo'=>'bar'], $this->obj->engine());
+        $this->obj->addEngine('mustache', [ 'foo' => 'bar' ]);
+        $this->assertEquals([ 'foo' => 'bar' ], $this->obj->engine());
     }
 
     /**

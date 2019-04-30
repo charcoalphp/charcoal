@@ -53,7 +53,7 @@ abstract class AbstractEngine implements
         $this->setLogger($data['logger']);
         $this->setLoader($data['loader']);
 
-        if (isset($data['cache'])) {
+        if (array_key_exists('cache', $data)) {
             $this->setCache($data['cache']);
         }
     }

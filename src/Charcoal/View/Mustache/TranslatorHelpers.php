@@ -2,6 +2,8 @@
 
 namespace Charcoal\View\Mustache;
 
+use LogicException;
+
 // From Mustache
 use Mustache_LambdaHelper as LambdaHelper;
 
@@ -24,9 +26,12 @@ class TranslatorHelpers implements HelpersInterface
     private $translator;
 
     /**
-     * Store the given number to use to find the indice of the message.
+     * Store the given number to use to find the indice of the message (Mustache tag node).
      *
-     * Requires {@link https://github.com/bobthecow/mustache.php/wiki/FILTERS-pragma FILTERS pragma}.
+     * This can be a variable name in the context stack or an integer.
+     *
+     * Floats are not supported due to their decimal symbol conflicting
+     * with Mustache's dot-notation.
      *
      * @var string|integer|null
      */
@@ -35,12 +40,16 @@ class TranslatorHelpers implements HelpersInterface
     /**
      * Store the given locale (Mustache tag node).
      *
+     * This must be an available locale on the Translator.
+     *
      * @var string|null
      */
     private $locale;
 
     /**
      * Store the given domain for the message (Mustache tag node).
+     *
+     * This must be an available domain on the Translator.
      *
      * @var string|null
      */
@@ -51,9 +60,20 @@ class TranslatorHelpers implements HelpersInterface
      */
     public function __construct(array $data = null)
     {
-        if (isset($data['translator']) && $data['translator'] instanceof Translator) {
-            $this->translator = $data['translator'];
+        if (isset($data['translator'])) {
+            $this->setTranslator($data['translator']);
         }
+    }
+
+    /**
+     * Set the translator service.
+     *
+     * @param  Translator $translator The Translator service.
+     * @return void
+     */
+    protected function setTranslator(Translator $translator)
+    {
+        $this->translator = $translator;
     }
 
     /**
@@ -64,7 +84,7 @@ class TranslatorHelpers implements HelpersInterface
     public function toArray()
     {
         return [
-            '_t' => $this
+            '_t' => $this,
         ];
     }
 
@@ -94,11 +114,6 @@ class TranslatorHelpers implements HelpersInterface
      */
     public function __invoke($text, LambdaHelper $helper = null)
     {
-        if (!$helper) {
-            $this->number = $text;
-            return '';
-        }
-
         if ($this->translator) {
             if ($this->number === null) {
                 $text = $this->translator->trans($text, [], $this->domain, $this->locale);
@@ -136,6 +151,7 @@ class TranslatorHelpers implements HelpersInterface
      * Required by Mustache.
      *
      * @param  string $macro A domain, locale, or number.
+     * @throws LogicException If the macro is unresolved.
      * @return mixed
      */
     public function __get($macro)
@@ -144,18 +160,21 @@ class TranslatorHelpers implements HelpersInterface
             return $this;
         }
 
-        if ($macro === '_t' || $macro === '_n') {
+        if ($this->locale === null && in_array($macro, $this->translator->availableLocales())) {
+            $this->locale = $macro;
             return $this;
         }
 
-        if (in_array($macro, $this->translator->availableLocales())) {
-            $this->locale = $macro;
-        } elseif (in_array($macro, $this->translator->availableDomains())) {
+        if ($this->domain === null && in_array($macro, $this->translator->availableDomains())) {
             $this->domain = $macro;
-        } else {
-            $this->number = $macro;
+            return $this;
         }
 
-        return $this;
+        if ($this->number === null) {
+            $this->number = $macro;
+            return $this;
+        }
+
+        throw new LogicException(sprintf('Unknown translator macro: %s', $macro));
     }
 }

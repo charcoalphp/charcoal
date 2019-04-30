@@ -27,7 +27,7 @@ class MustacheLoaderTest extends AbstractTestCase
         $this->obj = new MustacheLoader([
             'logger'    => new NullLogger(),
             'base_path' => __DIR__,
-            'paths'     => ['templates']
+            'paths'     => [ 'templates' ],
         ]);
     }
 
@@ -98,25 +98,13 @@ class MustacheLoaderTest extends AbstractTestCase
     }
 
     /**
-     * @return void
-     */
-    /*
-    public function testFilenameFromIdent()
-    {
-        $this->assertEquals('foo.mustache', $this->obj->filenameFromIdent('foo'));
-        $this->assertEquals('foo/bar.mustache', $this->obj->filenameFromIdent('foo/bar'));
-        $this->assertEquals('Foo.Bar.mustache', $this->obj->filenameFromIdent('Foo\Bar'));
-    }
-    */
-
-    /**
      * @return array
      */
     public function templateProvider()
     {
         return [
-            ['foo'],
-            ['helpers']
+            [ 'foo' ],
+            [ 'helpers' ],
         ];
     }
 }

@@ -35,7 +35,7 @@ class AssetsHelpersTest extends AbstractTestCase
     {
         $this->obj      = new AssetsHelpers();
         $this->mustache = new MustacheEngine([
-            'helpers' => $this->obj->toArray()
+            'helpers' => $this->obj->toArray(),
         ]);
     }
 

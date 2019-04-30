@@ -59,9 +59,7 @@ class ViewConfig extends AbstractConfig
     public function setPaths(array $paths)
     {
         $this->paths = [];
-        foreach ($paths as $p) {
-            $this->addPath($p);
-        }
+        $this->addPaths($paths);
         return $this;
     }
 

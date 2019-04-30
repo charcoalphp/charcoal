@@ -2,7 +2,7 @@
 
 namespace Charcoal\View\Php;
 
-// Parent namespace dependencies
+// From 'charcoal-view'
 use Charcoal\View\AbstractLoader;
 use Charcoal\View\LoaderInterface;
 

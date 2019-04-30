@@ -36,7 +36,7 @@ class MarkdownHelpers implements HelpersInterface
     public function toArray()
     {
         return [
-            'markdown' => $this
+            'markdown' => $this,
         ];
     }
 

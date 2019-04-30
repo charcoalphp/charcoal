@@ -35,10 +35,10 @@ class MarkdownHelpersTest extends AbstractTestCase
         $parsedown = new Parsedown();
         $parsedown->setSafeMode(true);
         $this->obj = new MarkdownHelpers([
-            'parsedown' => $parsedown
+            'parsedown' => $parsedown,
         ]);
         $this->mustache = new MustacheEngine([
-            'helpers' => $this->obj->toArray()
+            'helpers' => $this->obj->toArray(),
         ]);
     }
 

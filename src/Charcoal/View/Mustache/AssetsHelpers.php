@@ -78,7 +78,7 @@ class AssetsHelpers implements HelpersInterface
             },
             'purgeAssets' => function() {
                 $this->purgeAssets();
-            }
+            },
         ];
     }
 

@@ -29,11 +29,12 @@ class TwigEngineTest extends AbstractTestCase
         $loader = new TwigLoader([
             'logger'    => $logger,
             'base_path' => __DIR__,
-            'paths'     => ['templates']
+            'paths'     => [ 'templates' ],
         ]);
         $this->obj = new TwigEngine([
             'logger' => $logger,
-            'loader' => $loader
+            'loader' => $loader,
+            'cache'  => null,
         ]);
     }
 
@@ -50,7 +51,7 @@ class TwigEngineTest extends AbstractTestCase
      */
     public function testRender()
     {
-        $this->assertEquals('Hello Charcoal', trim($this->obj->render('foo', ['foo'=>'Charcoal'])));
+        $this->assertEquals('Hello Charcoal', trim($this->obj->render('foo', [ 'foo' => 'Charcoal' ])));
     }
 
     /**
@@ -59,7 +60,7 @@ class TwigEngineTest extends AbstractTestCase
     public function testRenderTemplate()
     {
         $template = 'Hello {{ foo }}';
-        $context = ['foo'=>'World!'];
+        $context  = [ 'foo' => 'World!' ];
         $this->assertEquals('Hello World!', trim($this->obj->renderTemplate($template, $context)));
     }
 }

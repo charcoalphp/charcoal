@@ -32,7 +32,7 @@ class TwigLoaderTest extends AbstractTestCase
         $this->obj = new TwigLoader([
             'logger'    => new NullLogger(),
             'base_path' => __DIR__,
-            'paths'     => ['templates']
+            'paths'     => [ 'templates' ],
         ]);
     }
 
@@ -98,18 +98,6 @@ class TwigLoaderTest extends AbstractTestCase
         $ret = $this->obj->load('foo/bar/foobar');
         $this->assertEquals('foo/bar/foobar', $ret);
     }
-
-    /**
-     * @return void
-     */
-    /*
-    public function testFilenameFromIdent()
-    {
-        $this->assertEquals('foo.mustache', $this->obj->filenameFromIdent('foo'));
-        $this->assertEquals('foo/bar.mustache', $this->obj->filenameFromIdent('foo/bar'));
-        $this->assertEquals('Foo.Bar.mustache', $this->obj->filenameFromIdent('Foo\Bar'));
-    }
-    */
 
     /**
      * @return void

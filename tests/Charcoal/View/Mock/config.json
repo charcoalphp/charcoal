@@ -1,0 +1,7 @@
+{
+    "view": {
+        "paths": [
+            "tests/Charcoal/View/Mock/templates"
+        ]
+    }
+}

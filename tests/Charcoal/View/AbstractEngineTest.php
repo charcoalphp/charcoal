@@ -31,12 +31,14 @@ class AbstractEngineTest extends AbstractTestCase
         $loader = new MustacheLoader([
             'logger'    => $logger,
             'base_path' => __DIR__,
-            'paths'     => ['Mustache/templates']
+            'paths'     => [ 'Mustache/templates' ],
         ]);
-        $this->obj = $this->getMockForAbstractClass(AbstractEngine::class, [[
-            'logger' => $logger,
-            'loader' => $loader
-        ]]);
+        $this->obj = $this->getMockForAbstractClass(AbstractEngine::class, [
+            [
+                'logger' => $logger,
+                'loader' => $loader,
+            ]
+        ]);
     }
 
     /**
