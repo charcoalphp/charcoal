@@ -62,7 +62,8 @@ trait DescribablePropertyTrait
     {
         if (!is_string($propertyIdent)) {
             throw new InvalidArgumentException(
-                'Property identifier must be a string.'
+                '[%s] Property identifier must be a string',
+                get_class($this)
             );
         }
 
@@ -104,7 +105,8 @@ trait DescribablePropertyTrait
     {
         if (!is_string($propertyIdent)) {
             throw new InvalidArgumentException(
-                'Property identifier must be a string.'
+                '[%s] Property identifier must be a string',
+                get_class($this)
             );
         }
 
@@ -152,7 +154,7 @@ trait DescribablePropertyTrait
     {
         if ($this->propertyFactory === null) {
             throw new RuntimeException(sprintf(
-                'Model [%s] does not have a property factory.',
+                '[%s] Model does not have a property factory',
                 get_class($this)
             ));
         }
@@ -172,7 +174,9 @@ trait DescribablePropertyTrait
     {
         if (!is_string($propertyIdent)) {
             throw new InvalidArgumentException(
-                'Property identifier must be a string.'
+                '[%s] Property identifier must be a string, received %s',
+                get_class($this),
+                (is_object($propertyIdent) ? get_class($propertyIdent) : gettype($propertyIdent))
             );
         }
 
@@ -180,14 +184,15 @@ trait DescribablePropertyTrait
 
         if (empty($props)) {
             throw new RuntimeException(sprintf(
-                'Invalid model metadata [%s] - No properties defined.',
-                get_class($this)
+                '[%s] Invalid model metadata - No properties defined (must define at least "%s")',
+                get_class($this),
+                $propertyIdent
             ));
         }
 
         if (!isset($props[$propertyIdent])) {
             throw new RuntimeException(sprintf(
-                'Invalid model metadata [%s] - Undefined property metadata for "%s".',
+                '[%s] Invalid model metadata - Undefined property metadata for "%s"',
                 get_class($this),
                 $propertyIdent
             ));
@@ -197,7 +202,7 @@ trait DescribablePropertyTrait
         $propertyMetadata = $this->filterPropertyMetadata($propertyMetadata, $propertyIdent);
         if (!isset($propertyMetadata['type'])) {
             throw new RuntimeException(sprintf(
-                'Invalid model metadata [%s] - Undefined property type for "%s".',
+                '[%s] Invalid model metadata - Undefined property type for "%s"',
                 get_class($this),
                 $propertyIdent
             ));
