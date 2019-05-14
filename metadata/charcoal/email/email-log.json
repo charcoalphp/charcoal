@@ -52,7 +52,7 @@
                 "fr": "Sujet"
             }
         },
-        "send_date": {
+        "send_ts": {
             "type": "date-time",
             "label": {
                 "en": "Date",

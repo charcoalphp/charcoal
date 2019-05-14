@@ -1,9 +1,18 @@
 {
+    "labels": {
+        "name": "Email log",
+        "singular_name": "Email log",
+        "edit_item": "Edit log",
+        "create_item": "Create log",
+        "new_item": "New log",
+        "all_items": "All logs",
+        "menu_items": "Email logs"
+    },
     "admin": {
         "export": {
             "default": {
                 "properties": [
-                    "send_date",
+                    "send_ts",
                     "from",
                     "to",
                     "campaign",
@@ -13,7 +22,7 @@
                     "ip"
                 ],
                 "orders": [{
-                    "property": "send_date",
+                    "property": "send_ts",
                     "mode": "desc"
                 }],
                 "exporter_options": {
@@ -32,17 +41,24 @@
                     "en": "Email logs"
                 },
                 "properties": [
-                    "send_date",
+                    "send_ts",
                     "from",
                     "to",
-                    "campaign",
-                    "subject",
-                    "send_error"
+                    "subject"
                 ],
                 "orders": [{
-                    "property": "send_date",
+                    "property": "send_ts",
                     "mode": "desc"
-                }]
+                }],
+                "list_actions": {
+                    "export": {
+                        "url": "object/export?obj_type={{obj_type}}",
+                        "label": {
+                            "fr": "Exporter",
+                            "en": "Export"
+                        }
+                    }
+                }
             }
         },
         "default_list": "default",
@@ -71,7 +87,7 @@
                             ]
                         },
                         "properties": [
-                            "send_date",
+                            "send_ts",
                             "campaign",
                             "from",
                             "to",
