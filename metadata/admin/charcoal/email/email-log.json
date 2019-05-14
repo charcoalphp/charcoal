@@ -58,6 +58,9 @@
                             "en": "Export"
                         }
                     }
+                },
+                "pagination": {
+                    "num_per_page": 100
                 }
             }
         },
