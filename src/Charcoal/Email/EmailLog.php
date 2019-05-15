@@ -92,7 +92,7 @@ class EmailLog extends AbstractModel
     /**
      * When the email should be sent.
      *
-     * @var DateTimeInterface|null $sendDate
+     * @var DateTimeInterface|null $sendTs
      */
     private $sendTs;
 
@@ -426,8 +426,8 @@ class EmailLog extends AbstractModel
         $this->setIp($ip);
         $this->setSessionId($sessionId);
 
-        if ($this->sendDate() === null) {
-            $this->setSendDate('now');
+        if ($this->sendTs() === null) {
+            $this->setSendTs('now');
         }
 
         return true;
