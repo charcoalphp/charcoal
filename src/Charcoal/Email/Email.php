@@ -1030,7 +1030,7 @@ class Email implements
             $log->setMessageId($mailer->getLastMessageId());
             $log->setCampaign($this->campaign());
 
-            $log->setSendDate('now');
+            $log->setSendTs('now');
 
             $log->setFrom($mailer->From);
             $log->setTo($to);
