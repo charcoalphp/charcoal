@@ -94,7 +94,7 @@ class EmailLog extends AbstractModel
      *
      * @var DateTimeInterface|null $sendDate
      */
-    private $sendDate;
+    private $sendTs;
 
     /**
      * The current IP address at the time of the log.
@@ -343,10 +343,10 @@ class EmailLog extends AbstractModel
      * @throws InvalidArgumentException If the ts is not a valid datetime value.
      * @return self
      */
-    public function setSendDate($ts)
+    public function setSendTs($ts)
     {
         if ($ts === null) {
-            $this->sendDate = null;
+            $this->sendTs = null;
             return $this;
         }
 
@@ -364,16 +364,16 @@ class EmailLog extends AbstractModel
             );
         }
 
-        $this->sendDate = $ts;
+        $this->sendTs = $ts;
         return $this;
     }
 
     /**
      * @return null|DateTimeInterface
      */
-    public function sendDate()
+    public function sendTs()
     {
-        return $this->sendDate;
+        return $this->sendTs;
     }
 
     /**
