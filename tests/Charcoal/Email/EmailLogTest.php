@@ -34,7 +34,7 @@ class EmailLogTest extends PHPUnit_Framework_TestCase
             'to' => 'phpunit@example.com',
             'from' => 'charcoal@locomotive.ca',
             'subject' => 'Foo bar',
-            'send_date' => '2010-01-02 03:45:00',
+            'send_ts' => '2010-01-02 03:45:00',
             'ip' => '1.2.3.4',
             'session_id' => 'foobar'
         ]);
@@ -48,7 +48,7 @@ class EmailLogTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('phpunit@example.com', $this->obj->to());
         $this->assertEquals('charcoal@locomotive.ca', $this->obj->from());
         $this->assertEquals('Foo bar', $this->obj->subject());
-        $this->assertEquals(new DateTime('2010-01-02 03:45:00'), $this->obj->sendDate());
+        $this->assertEquals(new DateTime('2010-01-02 03:45:00'), $this->obj->sendTs());
         $this->assertEquals('1.2.3.4', $this->obj->ip());
         $this->assertEquals('foobar', $this->obj->sessionId());
     }
