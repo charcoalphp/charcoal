@@ -339,6 +339,42 @@ class EmailLog extends AbstractModel
     }
 
     /**
+     * @param  string $status The mailer's status code or description.
+     * @return self
+     */
+    public function setSendStatus($status)
+    {
+        $this->sendStatus = $status;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function sendStatus()
+    {
+        return $this->sendStatus;
+    }
+
+    /**
+     * @param  string $errorMessage The mailer's error code or description.
+     * @return self
+     */
+    public function setSendError($errorMessage)
+    {
+        $this->sendError = $errorMessage;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function sendError()
+    {
+        return $this->sendError;
+    }
+
+    /**
      * @param  null|string|DateTime $ts The "send date" datetime value.
      * @throws InvalidArgumentException If the ts is not a valid datetime value.
      * @return self

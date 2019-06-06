@@ -1,12 +1,12 @@
 {
     "labels": {
-        "name": "Email log",
-        "singular_name": "Email log",
-        "edit_item": "Edit log",
-        "create_item": "Create log",
-        "new_item": "New log",
-        "all_items": "All logs",
-        "menu_items": "Email logs"
+        "name": "Email Log",
+        "singular_name": "Email Log",
+        "edit_item": "Edit Email Log",
+        "create_item": "Create Email Log",
+        "new_item": "New Email Log",
+        "all_items": "All Email Logs",
+        "menu_items": "Email Logs"
     },
     "admin": {
         "export": {
@@ -21,10 +21,12 @@
                     "message_id",
                     "ip"
                 ],
-                "orders": [{
-                    "property": "send_ts",
-                    "mode": "desc"
-                }],
+                "orders": [
+                    {
+                        "property": "send_ts",
+                        "mode": "desc"
+                    }
+                ],
                 "exporter_options": {
                     "convert_br_to_newlines": true,
                     "strip_tags": true,
@@ -38,7 +40,7 @@
             "default": {
                 "title": {
                     "fr": "Logs d'envoi de courriel",
-                    "en": "Email logs"
+                    "en": "Sent Email Logs"
                 },
                 "properties": [
                     "send_ts",
@@ -46,10 +48,15 @@
                     "to",
                     "subject"
                 ],
-                "orders": [{
-                    "property": "send_ts",
-                    "mode": "desc"
-                }],
+                "orders": [
+                    {
+                        "property": "send_ts",
+                        "mode": "desc"
+                    }
+                ],
+                "pagination": {
+                    "num_per_page": 100
+                },
                 "list_actions": {
                     "export": {
                         "url": "object/export?obj_type={{obj_type}}",
@@ -58,9 +65,6 @@
                             "en": "Export"
                         }
                     }
-                },
-                "pagination": {
-                    "num_per_page": 100
                 }
             }
         },
@@ -72,22 +76,7 @@
                     "charcoal/email/email-log/infos": {
                         "title": {
                             "fr": "Log d'envoi de courriel",
-                            "en": "Email log"
-                        },
-                        "layout": {
-                            "structure": [{
-                                "columns": [1, 1]
-                            },
-                                {
-                                    "columns": [1, 1]
-                                },
-                                {
-                                    "columns": [1]
-                                },
-                                {
-                                    "columns": [1, 1]
-                                }
-                            ]
+                            "en": "Sent Email Log"
                         },
                         "properties": [
                             "send_ts",
@@ -97,7 +86,15 @@
                             "subject",
                             "ip",
                             "session_id"
-                        ]
+                        ],
+                        "layout": {
+                            "structure": [
+                                { "columns": [ 1, 1 ] },
+                                { "columns": [ 1, 1 ] },
+                                { "columns": [ 1 ] },
+                                { "columns": [ 1, 1 ] }
+                            ]
+                        }
                     },
                     "status": {
                         "title": "Status",
@@ -114,31 +111,31 @@
 
         "dashboards": {
             "admin.edit": {
-                "layout": {
-                    "structure": [{
-                        "columns": [1]
-                    }]
-                },
                 "widgets": {
                     "form": {
                         "type": "charcoal/admin/widget/object-form",
                         "form_ident": "default",
                         "obj_type": "charcoal/email/email-log"
                     }
+                },
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] }
+                    ]
                 }
             },
             "admin.table": {
-                "layout": {
-                    "structure": [{
-                        "columns": [1]
-                    }]
-                },
                 "widgets": {
                     "form": {
                         "type": "charcoal/admin/widget/table",
                         "collection_ident": "default",
                         "obj_type": "charcoal/email/email-log"
                     }
+                },
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] }
+                    ]
                 }
             }
         },

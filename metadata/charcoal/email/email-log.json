@@ -11,13 +11,17 @@
         },
         "raw_response": {
             "type": "text",
+            "label": {
+                "en": "Raw Response",
+                "fr": "Réponse brute"
+            },
             "description": "Raw response, as returned by the mailer."
         },
         "message_id": {
             "type": "string",
             "allow_html": true,
             "label": {
-                "en": "Message identifier",
+                "en": "Message Identifier",
                 "fr": "Identifiant courriel"
             }
         },
@@ -62,15 +66,15 @@
         "send_status": {
             "type": "string",
             "label": {
-                "en": "Send status",
+                "en": "Send Status",
                 "fr": "Status d'envoi"
             }
         },
         "send_error": {
             "type": "string",
             "label": {
-                "en": "Error",
-                "fr": "Erreur"
+                "en": "Send Error",
+                "fr": "Erreur d'envoi"
             }
         },
         "campaign": {
@@ -90,7 +94,7 @@
         "session_id": {
             "type": "string",
             "label": {
-                "en": "Session identifier",
+                "en": "Session Identifier",
                 "fr": "Identifiant de message"
             }
         }
