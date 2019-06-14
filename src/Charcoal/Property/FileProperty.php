@@ -966,12 +966,12 @@ class FileProperty extends AbstractProperty
     /**
      * Determine if the given value is a data URI.
      *
-     * @param  string $val The value to check.
-     * @return string
+     * @param  mixed $val The value to check.
+     * @return boolean
      */
     protected function isDataUri($val)
     {
-        return preg_match('/^data:/i', $val);
+        return is_string($val) && preg_match('/^data:/i', $val);
     }
 
     /**
