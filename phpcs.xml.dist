@@ -291,9 +291,25 @@
 <!-- Strings Sniffs -->
 
     <!-- Use one string instead of concatenating 2 strings together -->
-    <rule ref="Generic.Strings.UnnecessaryStringConcat" />
+    <rule ref="Generic.Strings.UnnecessaryStringConcat">
+        <properties>
+            <property name="allowMultiline" value="true" />
+        </properties>
+    </rule>
+    <rule ref="Generic.Strings.UnnecessaryStringConcat.Found">
+        <type>warning</type>
+        <message>Only concatenate strings if they would be too long on a single line.</message>
+    </rule>
     <!-- Makes sure there are no spaces between the concatenation operator (.) the strings -->
-    <rule ref="Squiz.Strings.ConcatenationSpacing" />
+    <rule ref="Squiz.Strings.ConcatenationSpacing">
+        <properties>
+            <property name="ignoreNewlines" value="true" />
+        </properties>
+    </rule>
+    <rule ref="Squiz.Strings.ConcatenationSpacing.PaddingFound">
+        <type>warning</type>
+        <message>Concat operator should not be surrounded by spaces</message>
+    </rule>
     <!-- Makes sure that any use of Double Quotes ("") are warranted. -->
     <rule ref="Squiz.Strings.DoubleQuoteUsage" />
     <rule ref="Squiz.Strings.DoubleQuoteUsage.ContainsVar">

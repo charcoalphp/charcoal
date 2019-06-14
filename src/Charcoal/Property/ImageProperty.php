@@ -567,7 +567,6 @@ class ImageProperty extends FileProperty
 
                         if ($rename || $copy) {
                             if ($doCopy) {
-
                                 $image->save($valuePath.$copy);
                             }
 
