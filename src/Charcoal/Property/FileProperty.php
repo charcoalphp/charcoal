@@ -104,8 +104,6 @@ class FileProperty extends AbstractProperty
         return 'file';
     }
 
-
-
     /**
      * Set whether uploaded files should be publicly available.
      *
@@ -128,8 +126,6 @@ class FileProperty extends AbstractProperty
     {
         return $this->publicAccess;
     }
-
-
 
     /**
      * Set the destination (directory) where uploaded files are stored.
@@ -446,9 +442,9 @@ class FileProperty extends AbstractProperty
     }
 
     /**
-     * Overwrites AbstractProperty::save($val) to process file uploading.
+     * Process file uploads {@see AbstractProperty::save() parsing values}.
      *
-     * @param mixed $val The value, at time of saving.
+     * @param  mixed $val The value, at time of saving.
      * @return mixed
      */
     public function save($val)
@@ -737,7 +733,6 @@ class FileProperty extends AbstractProperty
         return false;
     }
 
-
     /**
      * Sanitize a filename by removing characters from a blacklist and escaping dot.
      *
@@ -810,7 +805,7 @@ class FileProperty extends AbstractProperty
      */
     public function generateFilename()
     {
-        $filename = $this->label().' '.date('Y-m-d H-i-s');
+        $filename  = $this->label().' '.date('Y-m-d H-i-s');
         $extension = $this->generateExtension();
 
         if ($extension) {
@@ -967,7 +962,6 @@ class FileProperty extends AbstractProperty
                 && strspn($file, '/\\', 2, 1))
             || null !== parse_url($file, PHP_URL_SCHEME);
     }
-
 
     /**
      * Determine if the given value is a data URI.
