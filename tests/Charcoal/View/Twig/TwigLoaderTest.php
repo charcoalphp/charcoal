@@ -79,15 +79,11 @@ class TwigLoaderTest extends AbstractTestCase
      */
     public function testLoadDynamic()
     {
-        $GLOBALS['widget_template'] = 'foo';
+        $this->obj->setDynamicTemplate('widget_template', 'foo');
         $ret = $this->obj->load('$widget_template');
 
         $expected = file_get_contents(__DIR__.'/templates/foo.twig');
         $this->assertEquals($expected, $ret);
-
-        $this->expectException('\InvalidArgumentException');
-        $GLOBALS['widget_template'] = 1;
-        $ret = $this->obj->load('$widget_template');
     }
 
     /**

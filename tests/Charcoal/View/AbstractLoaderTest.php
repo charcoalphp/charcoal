@@ -122,16 +122,4 @@ class AbstractLoaderTest extends AbstractTestCase
         $this->obj->clearDynamicTemplates();
         $this->assertInstanceOf(AbstractLoader::class, $this->obj);
     }
-
-    /**
-     * @return void
-     */
-    public function testLegacyDynamicTemplate()
-    {
-        $this->obj->setDynamicTemplate('widget_template', 'foo');
-        $this->assertEquals('foo', $GLOBALS['widget_template']);
-
-        $this->obj->removeDynamicTemplate('widget_template');
-        $this->assertNull($GLOBALS['widget_template']);
-    }
 }

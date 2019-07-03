@@ -54,31 +54,6 @@ class MustacheLoaderTest extends AbstractTestCase
      * @param  string $template The template to load.
      * @return void
      */
-    public function testLoadDynamicLegacy($template)
-    {
-        $GLOBALS['widget_template'] = $template;
-        $ret = $this->obj->load('$widget_template');
-
-        $expected = file_get_contents(__DIR__.'/templates/'.$template.'.mustache');
-        $this->assertEquals($expected, $ret);
-    }
-
-    /**
-     * @return void
-     */
-    public function testLoadDynamicLegacyInvalidException()
-    {
-        $this->expectException('\InvalidArgumentException');
-        $GLOBALS['widget_template'] = 1;
-        $ret = $this->obj->load('$widget_template');
-    }
-
-    /**
-     * @dataProvider templateProvider
-     *
-     * @param  string $template The template to load.
-     * @return void
-     */
     public function testLoadDynamic($template)
     {
         $this->obj->setDynamicTemplate('dynamic', $template);
