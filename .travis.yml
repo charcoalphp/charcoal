@@ -5,6 +5,7 @@ php:
     - 7.0
     - 7.1
     - 7.2
+    - 7.3
     - nightly
 
 env:
@@ -28,9 +29,7 @@ install:
     - mkdir -p build/logs/
 
 script:
-    - composer phplint
-    - composer phpcs
-    - composer phpunit -- --coverage-clover "build/logs/clover.xml"
+    - composer test
 
 after_script:
     - php vendor/bin/php-coveralls -v
