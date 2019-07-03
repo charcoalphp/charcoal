@@ -180,12 +180,8 @@ trait DashboardTrait
             if ($widgetCallback) {
                 $widgetCallback($widget);
             }
-
-            $GLOBALS['widget_template'] = $widget->template();
-
+            $this->setDynamicTemplate('widget_template', $widget->template());
             yield $widget;
-
-            $GLOBALS['widget_template'] = '';
         }
     }
 

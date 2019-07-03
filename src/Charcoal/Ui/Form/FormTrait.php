@@ -416,7 +416,7 @@ trait FormTrait
                 $groupCallback($group);
             }
 
-            $GLOBALS['widget_template'] = $group->template();
+            $this->setDynamicTemplate('widget_template', $group->template());
 
             if (!$this->selectedFormGroup() && $this->isTabbable()) {
                 $group->setIsHidden(false);
@@ -427,8 +427,6 @@ trait FormTrait
             $i++;
 
             yield $group;
-
-            $GLOBALS['widget_template'] = '';
         }
     }
 

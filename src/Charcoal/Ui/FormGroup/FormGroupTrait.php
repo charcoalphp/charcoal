@@ -228,9 +228,8 @@ trait FormGroupTrait
             if ($inputCallback) {
                 $inputCallback($input);
             }
-            $GLOBALS['widget_template'] = $input->template();
+            $this->setDynamicTemplate('widget_template', $input->template());
             yield $input->ident() => $input;
-            $GLOBALS['widget_template'] = '';
         }
     }
 
