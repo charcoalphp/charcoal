@@ -37,8 +37,7 @@
         "twig/twig": "^1.31",
         "pimple/pimple": "^3.0",
         "slim/slim": "^3.7",
-        "locomotivemtl/charcoal-translator": "~0.3",
-        "phpstan/phpstan": "^0.11.8"
+        "locomotivemtl/charcoal-translator": "~0.3"
     },
     "suggest": {
         "mustache/mustache": "Mustache is suggested as the default templating engine.",
@@ -66,7 +65,6 @@
         "phplint": "find src tests -type f -name '*.php' -print0 | xargs -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1",
         "phpcs": "php vendor/bin/phpcs -ps --colors src/ tests/",
         "phpcbf": "php vendor/bin/phpcbf -ps --colors src/ tests/",
-        "phpunit": "php vendor/bin/phpunit --coverage-text",
-        "phpstan": "php vendor/bin/phpstan analyze -l3 src/"
+        "phpunit": "php vendor/bin/phpunit --coverage-text"
     }
 }
