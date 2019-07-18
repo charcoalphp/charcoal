@@ -1,14 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 <ruleset name="Charcoal">
+<!-- PHP CodeSniffer ruleset -->
+
     <description>Charcoal Coding Standard</description>
 
     <arg name="encoding" value="utf-8" />
 
     <config name="show_progress" value="1" />
     <config name="ignore_warnings_on_exit" value="1" />
-
-    <exclude-pattern>tests/bootstrap.php</exclude-pattern>
-    <exclude-pattern>tests/*/Fixture/*</exclude-pattern>
 
     <rule ref="PSR2" />
 
@@ -76,9 +75,6 @@
     <!--<rule ref="Squiz.Commenting.BlockComment" />-->
     <!-- Class comment blocks -->
     <rule ref="Squiz.Commenting.ClassComment" />
-    <rule ref="Squiz.Commenting.ClassComment.TagNotAllowed">
-        <exclude-pattern>*/tests/Charcoal/*</exclude-pattern>
-    </rule>
     <!-- Tests that the stars in a doc comment align correctly. -->
     <rule ref="Squiz.Commenting.DocCommentAlignment" />
     <!-- Ensures CATCH clause must at least have a comment -->
@@ -267,7 +263,6 @@
     <!--<rule ref="Squiz.PHP.DisallowInlineIf" />-->
 
     <rule ref="Squiz.PHP.DisallowMultipleAssignments" />
-    <rule ref="Squiz.PHP.DisallowObEndFlush" />
     <rule ref="Squiz.PHP.DisallowSizeFunctionsInLoops" />
     <!-- @todo Doc me -->
     <rule ref="Squiz.PHP.DiscouragedFunctions" />
@@ -276,8 +271,6 @@
         <severity>0</severity>
     </rule>
     <rule ref="Squiz.PHP.Eval" />
-    <!-- Disallow usage of functions that should be obsolete but kept for compatibility. -->
-    <rule ref="Squiz.PHP.ForbiddenFunctions" />
     <rule ref="Squiz.PHP.GlobalKeyword" />
     <rule ref="Squiz.PHP.Heredoc" />
     <rule ref="Squiz.PHP.InnerFunctions" />
@@ -300,7 +293,11 @@
     <!-- Use one string instead of concatenating 2 strings together -->
     <rule ref="Generic.Strings.UnnecessaryStringConcat" />
     <!-- Makes sure there are no spaces between the concatenation operator (.) the strings -->
-    <rule ref="Squiz.Strings.ConcatenationSpacing" />
+    <rule ref="Squiz.Strings.ConcatenationSpacing">
+        <properties>
+            <property name="ignoreNewlines" value="true"/>
+        </properties>
+    </rule>
     <!-- Makes sure that any use of Double Quotes ("") are warranted. -->
     <rule ref="Squiz.Strings.DoubleQuoteUsage" />
     <!-- Makes sure that any strings that are "echoed" are not enclosed in brackets -->
