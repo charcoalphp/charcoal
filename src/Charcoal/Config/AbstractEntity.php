@@ -154,8 +154,7 @@ abstract class AbstractEntity implements EntityInterface
         $getter = 'get'.ucfirst($key);
         if (is_callable([ $this, $getter])) {
             $value = $this->{$getter}();
-        }
-        else if (is_callable([ $this, $key ])) {
+        } elseif (is_callable([ $this, $key ])) {
             $value = $this->{$key}();
         } else {
             if (!isset($this->{$key})) {
