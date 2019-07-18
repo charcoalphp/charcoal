@@ -1,7 +1,5 @@
 <?php
 
-global $autoloader;
-
 /**
  * Assigin the Composer autoloader to the global state.
  *
@@ -11,4 +9,4 @@ global $autoloader;
  *
  * @var \Composer\Autoload\ClassLoader $autoloader
  */
-$autoloader = require dirname(__DIR__) . '/vendor/autoload.php';
+$GLOBALS['autoloader'] = require dirname(__DIR__).'/vendor/autoload.php';
