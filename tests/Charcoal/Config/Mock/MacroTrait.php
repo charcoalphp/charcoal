@@ -28,6 +28,8 @@ trait MacroTrait
     }
 
     /**
+     * Legacy getter.
+
      * @return string
      */
     public function foo()
@@ -46,9 +48,11 @@ trait MacroTrait
     }
 
     /**
+     * Property getX getter.
+     *
      * @return boolean
      */
-    public function erd()
+    public function getErd()
     {
         return $this->erd;
     }
