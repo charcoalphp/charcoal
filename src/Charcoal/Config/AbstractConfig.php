@@ -151,7 +151,10 @@ abstract class AbstractConfig extends AbstractEntity implements
             return false;
         }
 
-        if (is_callable([ $this, $key ])) {
+        $getter = 'get'.ucfirst($key);
+        if (is_callable([ $this, $getter])) {
+           $value = $this->{$getter}();
+        } else if (is_callable([ $this, $key ])) {
             $value = $this->{$key}();
         } else {
             if (!isset($this->{$key})) {
@@ -198,7 +201,10 @@ abstract class AbstractConfig extends AbstractEntity implements
             return null;
         }
 
-        if (is_callable([ $this, $key ])) {
+        $getter = 'get'.ucfirst($key);
+        if (is_callable([ $this, $getter])) {
+            return $this->{$getter}();
+        } else if (is_callable([ $this, $key ])) {
             return $this->{$key}();
         } else {
             if (isset($this->{$key})) {
