@@ -192,7 +192,10 @@ abstract class AbstractEntity implements EntityInterface
             return null;
         }
 
-        if (is_callable([ $this, $key ])) {
+        $getter = 'get'.ucfirst($key);
+        if (is_callable([ $this, $getter])) {
+            return $this->{$getter}();
+        } elseif (is_callable([ $this, $key ])) {
             return $this->{$key}();
         } else {
             if (isset($this->{$key})) {
