@@ -92,6 +92,16 @@ trait StorableTrait
     }
 
     /**
+     * Allow ID to also be accessed with ArrayAccess.
+     *
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id();
+    }
+
+    /**
      * Set the primary property key.
      *
      * For uniquely identifying this object in storage.
