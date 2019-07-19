@@ -92,7 +92,7 @@ class Role extends AbstractModel
 
     /**
      * @param string|Role $parent Role's parent.
-     * @return Role Chainable
+     * @return self
      */
     public function setParent($parent)
     {
@@ -103,7 +103,7 @@ class Role extends AbstractModel
     /**
      * @return string
      */
-    public function parent()
+    public function getParent()
     {
         return $this->parent;
     }
@@ -111,7 +111,7 @@ class Role extends AbstractModel
     /**
      * @param string[]|string|null $allowed The allowed permissions for this role.
      * @throws InvalidArgumentException If the passed arguments is not an array, null, or a comma-separated string.
-     * @return Role Chainable
+     * @return self
      */
     public function setAllowed($allowed)
     {
@@ -136,7 +136,7 @@ class Role extends AbstractModel
     /**
      * @return string[]|null
      */
-    public function allowed()
+    public function getAllowed()
     {
         return $this->allowed;
     }
@@ -144,7 +144,7 @@ class Role extends AbstractModel
     /**
      * @param string[]|string|null $denied The denied permissions for this role.
      * @throws InvalidArgumentException If the passed arguments is not an array, null, or a comma-separated string.
-     * @return Role Chainable
+     * @return self
      */
     public function setDenied($denied)
     {
@@ -169,14 +169,14 @@ class Role extends AbstractModel
     /**
      * @return string[]|null
      */
-    public function denied()
+    public function getDenied()
     {
         return $this->denied;
     }
 
     /**
      * @param boolean $isSuper The superuser flag.
-     * @return Role Chainable
+     * @return self
      */
     public function setSuperuser($isSuper)
     {
@@ -187,14 +187,14 @@ class Role extends AbstractModel
     /**
      * @return boolean
      */
-    public function superuser()
+    public function getSuperuser()
     {
         return $this->superuser;
     }
 
     /**
      * @param integer|string|null $position The role's ordering position.
-     * @return Role Chainable
+     * @return self
      */
     public function setPosition($position)
     {
@@ -205,7 +205,7 @@ class Role extends AbstractModel
     /**
      * @return integer
      */
-    public function position()
+    public function getPosition()
     {
         return $this->position;
     }

@@ -17,74 +17,63 @@ interface UserInterface extends ContentInterface
 
     /**
      * @param string $email The user email.
-     * @return UserInterface Chainable
+     * @return self
      */
     public function setEmail($email);
 
     /**
      * @return string
      */
-    public function email();
+    public function getEmail();
 
     /**
      * @param string|null $password The user password. Encrypted in storage.
-     * @return UserInterface Chainable
+     * @return self
      */
     public function setPassword($password);
 
     /**
      * @return string
      */
-    public function password();
+    public function getPassword();
 
     /**
      * @param  string|null $name The user's display name.
-     * @return UserInterface Chainable
+     * @return self
      */
     public function setDisplayName($name);
 
     /**
      * @return string|null
      */
-    public function displayName();
+    public function getDisplayName();
 
     /**
      * @param string|string[]|null $roles The ACL roles this user belongs to.
      * @throws InvalidArgumentException If the roles argument is invalid.
-     * @return UserInterface Chainable
+     * @return self
      */
     public function setRoles($roles);
 
     /**
      * @return string[]
      */
-    public function roles();
-
-    /**
-     * @param boolean $active The active flag.
-     * @return UserInterface Chainable
-     */
-    public function setActive($active);
-
-    /**
-     * @return boolean
-     */
-    public function active();
+    public function getRoles();
 
     /**
      * @param string|\DateTimeInterface $ts The last login date.
-     * @return UserInterface Chainable
+     * @return self
      */
     public function setLastLoginDate($ts);
 
     /**
      * @return \DateTimeInterface|null
      */
-    public function lastLoginDate();
+    public function getLastLoginDate();
 
     /**
      * @param string|integer|null $ip The last login IP address.
-     * @return UserInterface Chainable
+     * @return self
      */
     public function setLastLoginIp($ip);
 
@@ -92,22 +81,22 @@ interface UserInterface extends ContentInterface
      * Get the last login IP in x.x.x.x format
      * @return string
      */
-    public function lastLoginIp();
+    public function getLastLoginIp();
 
     /**
      * @param string|\DateTimeInterface $ts The last password date.
-     * @return UserInterface Chainable
+     * @return self
      */
     public function setLastPasswordDate($ts);
 
     /**
      * @return \DateTimeInterface|null
      */
-    public function lastPasswordDate();
+    public function getLastPasswordDate();
 
     /**
      * @param integer|string|null $ip The last password IP.
-     * @return UserInterface Chainable
+     * @return self
      */
     public function setLastPasswordIp($ip);
 
@@ -116,18 +105,18 @@ interface UserInterface extends ContentInterface
      *
      * @return string
      */
-    public function lastPasswordIp();
+    public function getLastPasswordIp();
 
     /**
      * @param string $token The login token.
-     * @return UserInterface Chainable
+     * @return self
      */
     public function setLoginToken($token);
 
     /**
      * @return string
      */
-    public function loginToken();
+    public function getLoginToken();
 
     /**
      * Reset the password.
@@ -136,7 +125,7 @@ interface UserInterface extends ContentInterface
      * Also updates the last password date & ip.
      *
      * @param string $plainPassword The plain (non-encrypted) password to reset to.
-     * @return UserInterface Chainable
+     * @return self
      */
     public function resetPassword($plainPassword);
 

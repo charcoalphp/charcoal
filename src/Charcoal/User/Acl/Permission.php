@@ -59,7 +59,7 @@ class Permission extends AbstractModel implements CategorizableInterface
     /**
      * @param string $ident The permission identifier.
      * @throws InvalidArgumentException If the ident is not a string.
-     * @return Permission Chainable
+     * @return self
      */
     public function setIdent($ident)
     {
@@ -75,14 +75,14 @@ class Permission extends AbstractModel implements CategorizableInterface
     /**
      * @return string|null
      */
-    public function ident()
+    public function getIdent()
     {
         return $this->ident;
     }
 
     /**
      * @param mixed $name The permission name / label.
-     * @return Permission Chainable
+     * @return self
      */
     public function setName($name)
     {
@@ -93,7 +93,7 @@ class Permission extends AbstractModel implements CategorizableInterface
     /**
      * @return \Charcoal\Translator\Translation|null
      */
-    public function name()
+    public function getName()
     {
         return $this->name;
     }

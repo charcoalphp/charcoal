@@ -52,7 +52,7 @@ class AuthTokenMetadata extends ModelMetadata
 
     /**
      * @param boolean $enabled The enabled flag.
-     * @return AuthTokenMetadata Chainable
+     * @return self
      */
     public function setEnabled($enabled)
     {
@@ -63,7 +63,7 @@ class AuthTokenMetadata extends ModelMetadata
     /**
      * @return boolean
      */
-    public function enabled()
+    public function getEnabled()
     {
         return $this->enabled;
     }
@@ -71,7 +71,7 @@ class AuthTokenMetadata extends ModelMetadata
     /**
      * @param string $name The cookie name.
      * @throws InvalidArgumentException If the cookie name is not a string.
-     * @return AuthTokenMetadata Chainable
+     * @return self
      */
     public function setCookieName($name)
     {
@@ -87,7 +87,7 @@ class AuthTokenMetadata extends ModelMetadata
     /**
      * @return string
      */
-    public function cookieName()
+    public function getCookieName()
     {
         return $this->cookieName;
     }
@@ -95,7 +95,7 @@ class AuthTokenMetadata extends ModelMetadata
     /**
      * @param string $duration The cookie duration, or duration. Ex: "15 days".
      * @throws InvalidArgumentException If the cookie name is not a string.
-     * @return AuthTokenMetadata Chainable
+     * @return self
      */
     public function setCookieDuration($duration)
     {
@@ -111,14 +111,14 @@ class AuthTokenMetadata extends ModelMetadata
     /**
      * @return string
      */
-    public function cookieDuration()
+    public function getCookieDuration()
     {
         return $this->cookieDuration;
     }
 
     /**
      * @param boolean $httpsOnly The "https only" flag.
-     * @return AuthTokenMetadata Chainable
+     * @return self
      */
     public function setHttpsOnly($httpsOnly)
     {
@@ -129,7 +129,7 @@ class AuthTokenMetadata extends ModelMetadata
     /**
      * @return boolean
      */
-    public function httpsOnly()
+    public function getHttpsOnly()
     {
         return $this->httpsOnly;
     }

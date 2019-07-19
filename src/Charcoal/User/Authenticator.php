@@ -134,8 +134,8 @@ class Authenticator implements LoggerAwareInterface
         }
 
         // Validate password
-        if (password_verify($password, $user->password())) {
-            if (password_needs_rehash($user->password(), PASSWORD_DEFAULT)) {
+        if (password_verify($password, $user['password'])) {
+            if (password_needs_rehash($user['password'], PASSWORD_DEFAULT)) {
                 $this->logger->notice(sprintf(
                     'Rehashing password for user "%s" (%s)',
                     $user->email(),
@@ -292,7 +292,7 @@ class Authenticator implements LoggerAwareInterface
         $tokenType = $this->tokenType();
         $authToken = $this->tokenFactory()->create($tokenType);
 
-        if ($authToken->metadata()->enabled() !== true) {
+        if ($authToken->metadata()['enabled'] !== true) {
             return null;
         }
 
