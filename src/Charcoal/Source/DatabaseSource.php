@@ -331,7 +331,7 @@ class DatabaseSource extends AbstractSource implements
         $fields = [];
         foreach ($properties as $propertyIdent) {
             $prop = $model->property($propertyIdent);
-            if (!$prop || !$prop->active() || !$prop->storable()) {
+            if (!$prop || !$prop['active'] || !$prop['storable']) {
                 continue;
             }
 

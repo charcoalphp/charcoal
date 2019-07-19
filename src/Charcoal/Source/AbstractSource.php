@@ -282,11 +282,11 @@ abstract class AbstractSource implements
                 if (is_string($property) && $model->hasProperty($property)) {
                     $property = $model->property($property);
 
-                    if ($property->l10n()) {
+                    if ($property['l10n']) {
                         $filter->setProperty($property->l10nIdent());
                     }
 
-                    if ($property->multiple()) {
+                    if ($property['multiple']) {
                         $filter->setOperator('FIND_IN_SET');
                     }
                 }
@@ -374,7 +374,7 @@ abstract class AbstractSource implements
                 if (is_string($property) && $model->hasProperty($property)) {
                     $property = $model->property($property);
 
-                    if ($property->l10n()) {
+                    if ($property['l10n']) {
                         $order->setProperty($property->l10nIdent());
                     }
                 }
