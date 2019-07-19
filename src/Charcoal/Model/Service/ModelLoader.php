@@ -279,7 +279,7 @@ final class ModelLoader implements ArrayAccess
      *
      * @param  string $objType The object type to load with this loader.
      * @throws InvalidArgumentException If the object type is not a string.
-     * @return ModelLoader Chainable
+     * @return self
      */
     private function setObjType($objType)
     {
@@ -301,7 +301,7 @@ final class ModelLoader implements ArrayAccess
      *
      * @param  string $objKey The object key to use for laoding.
      * @throws InvalidArgumentException If the object key is not a string.
-     * @return ModelLoader Chainable
+     * @return self
      */
     private function setObjKey($objKey)
     {
@@ -324,7 +324,7 @@ final class ModelLoader implements ArrayAccess
      * Set the model factory.
      *
      * @param  FactoryInterface $factory The factory to create models.
-     * @return ModelLoader Chainable
+     * @return self
      */
     private function setFactory(FactoryInterface $factory)
     {
@@ -336,7 +336,7 @@ final class ModelLoader implements ArrayAccess
      * Set the cache pool handler.
      *
      * @param  CacheItemPoolInterface $cachePool A PSR-6 compatible cache pool.
-     * @return ModelLoader Chainable
+     * @return self
      */
     private function setCachePool(CacheItemPoolInterface $cachePool)
     {

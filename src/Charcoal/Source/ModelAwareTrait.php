@@ -23,7 +23,7 @@ trait ModelAwareTrait
      * Set the source's model.
      *
      * @param ModelInterface $model The source's model.
-     * @return AbstractSource Chainable
+     * @return self
      */
     public function setModel(ModelInterface $model)
     {

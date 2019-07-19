@@ -41,7 +41,7 @@ abstract class AbstractValidator implements ValidatorInterface
     /**
      * @param string      $msg   The error message.
      * @param string|null $ident Optional result ident.
-     * @return ValidatorInterface
+     * @return self
      */
     public function error($msg, $ident = null)
     {
@@ -51,7 +51,7 @@ abstract class AbstractValidator implements ValidatorInterface
     /**
      * @param string      $msg   The warning message.
      * @param string|null $ident Optional result ident.
-     * @return ValidatorInterface
+     * @return self
      */
     public function warning($msg, $ident = null)
     {
@@ -61,7 +61,7 @@ abstract class AbstractValidator implements ValidatorInterface
     /**
      * @param string      $msg   The notice message.
      * @param string|null $ident Optional result ident.
-     * @return ValidatorInterface
+     * @return self
      */
     public function notice($msg, $ident = null)
     {
@@ -72,7 +72,7 @@ abstract class AbstractValidator implements ValidatorInterface
      * @param string      $level The validation level.
      * @param string      $msg   The validation message.
      * @param string|null $ident Optional result ident.
-     * @return ValidatorInterface
+     * @return self
      */
     public function log($level, $msg, $ident = null)
     {
@@ -89,7 +89,7 @@ abstract class AbstractValidator implements ValidatorInterface
     /**
      * @param array|ValidatorResult $result The result object or array.
      * @throws InvalidArgumentException If result is not an array or object.
-     * @return AbstractValidator Chainable
+     * @return self
      */
     public function addResult($result)
     {
@@ -152,7 +152,7 @@ abstract class AbstractValidator implements ValidatorInterface
     /**
      * @param ValidatorInterface $v            The validator to merge.
      * @param string             $ident_prefix Optional identigfier prefix.
-     * @return ValidatorInterface Chainable
+     * @return self
      */
     public function merge(ValidatorInterface $v, $ident_prefix = null)
     {

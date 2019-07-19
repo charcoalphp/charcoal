@@ -66,23 +66,19 @@ final class ModelLoaderBuilder
 
     /**
      * @param FactoryInterface $factory The factory to use to create models.
-     * @return ModelLoaderBuilder Chainable
+     * @return void
      */
     private function setFactory(FactoryInterface $factory)
     {
         $this->factory = $factory;
-
-        return $this;
     }
 
     /**
      * @param CacheItemPoolInterface $cachePool The PSR-6 compliant cache pool.
-     * @return ModelLoaderBuilder Chainable
+     * @return void
      */
     private function setCachePool(CacheItemPoolInterface $cachePool)
     {
         $this->cachePool = $cachePool;
-
-        return $this;
     }
 }

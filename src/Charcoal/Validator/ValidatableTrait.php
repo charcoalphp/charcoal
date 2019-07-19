@@ -20,7 +20,7 @@ trait ValidatableTrait
 
     /**
      * @param ValidatorInterface $validator The validator object to use for validation.
-     * @return ValidatableInterface Chainable
+     * @return self
      */
     public function setValidator(ValidatorInterface $validator)
     {

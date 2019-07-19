@@ -47,7 +47,7 @@ class ValidatorResult
 
     /**
      * @param array $data The validator result data.
-     * @return ValidatorResult Chainable
+     * @return self
      */
     public function setData(array $data)
     {

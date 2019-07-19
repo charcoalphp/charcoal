@@ -47,7 +47,7 @@ abstract class AbstractMetadata extends AbstractConfig implements
      * Set the object's default values.
      *
      * @param array $defaultData An associative array.
-     * @return MetadataInterface Chainable
+     * @return self
      */
     public function setDefaultData(array $defaultData)
     {
@@ -69,7 +69,7 @@ abstract class AbstractMetadata extends AbstractConfig implements
      * Set the properties.
      *
      * @param array $properties One or more properties.
-     * @return MetadataInterface Chainable
+     * @return self
      */
     public function setProperties(array $properties)
     {
@@ -107,7 +107,7 @@ abstract class AbstractMetadata extends AbstractConfig implements
      *
      * @param string            $propertyIdent  The property indentifer.
      * @param PropertyInterface $propertyObject The property, as an object.
-     * @return MetadataInterface Chainable
+     * @return self
      */
     public function setPropertyObject($propertyIdent, PropertyInterface $propertyObject)
     {
