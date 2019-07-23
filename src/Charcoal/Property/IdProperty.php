@@ -68,10 +68,10 @@ class IdProperty extends AbstractProperty
     /**
      * Multiple is always FALSE for ID property.
      *
-     * @see    AbstractProperty::multiple()
+     * @see    AbstractProperty::getMultiple()
      * @return boolean
      */
-    public function multiple()
+    public function getMultiple()
     {
         return false;
     }
@@ -101,10 +101,10 @@ class IdProperty extends AbstractProperty
     /**
      * L10N is always FALSE for ID property.
      *
-     * @see    AbstractProperty::l10n()
+     * @see    AbstractProperty::getL10n()
      * @return boolean
      */
-    public function l10n()
+    public function getL10n()
     {
         return false;
     }
@@ -151,7 +151,7 @@ class IdProperty extends AbstractProperty
      *
      * @return string
      */
-    public function mode()
+    public function getMode()
     {
         return $this->mode;
     }
@@ -190,7 +190,7 @@ class IdProperty extends AbstractProperty
      */
     public function autoGenerate()
     {
-        $mode = $this->mode();
+        $mode = $this['mode'];
 
         if ($mode === self::MODE_UNIQID) {
             return uniqid();
@@ -238,7 +238,7 @@ class IdProperty extends AbstractProperty
      */
     public function sqlExtra()
     {
-        $mode = $this->mode();
+        $mode = $this->getMode();
 
         if ($mode === self::MODE_AUTO_INCREMENT) {
             return 'AUTO_INCREMENT';
@@ -260,7 +260,7 @@ class IdProperty extends AbstractProperty
      */
     public function sqlType()
     {
-        $mode = $this->mode();
+        $mode = $this->getMode();
 
         if ($mode === self::MODE_AUTO_INCREMENT) {
             $dbDriver = $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
@@ -286,7 +286,7 @@ class IdProperty extends AbstractProperty
      */
     public function sqlPdoType()
     {
-        $mode = $this->mode();
+        $mode = $this->getMode();
 
         if ($mode === self::MODE_AUTO_INCREMENT) {
             return PDO::PARAM_INT;

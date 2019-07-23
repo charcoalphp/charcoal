@@ -124,7 +124,7 @@ class FileProperty extends AbstractProperty
      *
      * @return boolean
      */
-    public function publicAccess()
+    public function getPublicAccess()
     {
         return $this->publicAccess;
     }
@@ -159,7 +159,7 @@ class FileProperty extends AbstractProperty
      *
      * @return string
      */
-    public function uploadPath()
+    public function getUploadPath()
     {
         return $this->uploadPath;
     }
@@ -182,7 +182,7 @@ class FileProperty extends AbstractProperty
      *
      * @return boolean
      */
-    public function overwrite()
+    public function getOverwrite()
     {
         return $this->overwrite;
     }
@@ -403,7 +403,7 @@ class FileProperty extends AbstractProperty
      */
     public function validateMaxFilesize()
     {
-        $maxFilesize = $this->maxFilesize();
+        $maxFilesize = $this['maxFilesize'];
         if ($maxFilesize == 0) {
             // No max size rule = always true
             return true;
@@ -429,7 +429,7 @@ class FileProperty extends AbstractProperty
     public function sqlType()
     {
         // Multiple strings are always stored as TEXT because they can hold multiple values
-        if ($this->multiple()) {
+        if ($this['multiple']) {
             return 'TEXT';
         } else {
             return 'VARCHAR(255)';
@@ -463,7 +463,7 @@ class FileProperty extends AbstractProperty
         ) {
             $file = $_FILES[$i];
 
-            if (is_array($file['name']) && $this->multiple() && $this->l10n()) {
+            if (is_array($file['name']) && $this['multiple'] && $this['l10n']) {
                 $f = [];
                 foreach ($file['name'] as $lang => $langVal) {
                     $f[$lang] = [];
@@ -484,7 +484,7 @@ class FileProperty extends AbstractProperty
                         $f[$lang][] = $this->fileUpload($data);
                     }
                 }
-            } elseif (is_array($file['name']) && $this->multiple()) {
+            } elseif (is_array($file['name']) && $this['multiple']) {
                 $f = [];
                 $k = 0;
                 $total = count($file['name']);
@@ -498,7 +498,7 @@ class FileProperty extends AbstractProperty
 
                     $f[] = $this->fileUpload($data);
                 }
-            } elseif (is_array($file['name']) && $this->l10n()) {
+            } elseif (is_array($file['name']) && $this['l10n']) {
                 // Not so cool
                 // Both the multiple and l10n loop could and
                 // should be combined into one.
@@ -529,7 +529,7 @@ class FileProperty extends AbstractProperty
         // Check in vals for data: base64 images
         // val should be an array if multiple...
         if ($val !== null) {
-            if ($this->l10n()) {
+            if ($this['l10n']) {
                 $l10nVal = ($val instanceof Translation) ? $val->data() : $val;
 
                 $f = [];
@@ -542,7 +542,7 @@ class FileProperty extends AbstractProperty
                 if (!empty($f)) {
                     return $f;
                 }
-            } elseif ($this->multiple()) {
+            } elseif ($this['multiple']) {
                 $f = [];
                 foreach ($val as $v) {
                     if ((is_array($v) && isset($v['id'])) || $this->isDataUri($v)) {

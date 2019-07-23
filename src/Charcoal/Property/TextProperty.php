@@ -38,7 +38,7 @@ class TextProperty extends StringProperty
     /**
      * @return boolean
      */
-    public function long()
+    public function getLong()
     {
         return $this->long;
     }
@@ -63,7 +63,7 @@ class TextProperty extends StringProperty
      */
     public function sqlType()
     {
-        if ($this->long() === true) {
+        if ($this['long'] === true) {
             return 'LONGTEXT';
         } else {
             return 'TEXT';

@@ -67,10 +67,10 @@ class StructureProperty extends AbstractProperty
     /**
      * L10N is always FALSE for structure property.
      *
-     * @see    AbstractProperty::l10n()
+     * @see    AbstractProperty::getL10n()
      * @return boolean
      */
-    public function l10n()
+    public function getL10n()
     {
         return false;
     }
@@ -130,7 +130,7 @@ class StructureProperty extends AbstractProperty
     public function parseOne($val)
     {
         if ($val === null || $val === '') {
-            if ($this->allowNull()) {
+            if ($this['allowNull']) {
                 return null;
             } else {
                 throw new InvalidArgumentException(

@@ -85,7 +85,7 @@ trait StorablePropertyTrait
     public function fieldNames()
     {
         $fields = [];
-        if ($this->l10n()) {
+        if ($this['l10n']) {
             foreach ($this->translator()->availableLocales() as $langCode) {
                 $fields[$langCode] = $this->l10nIdent($langCode);
             }
@@ -109,11 +109,11 @@ trait StorablePropertyTrait
             return null;
         }
 
-        if (!$this->l10n() && $val instanceof Translation) {
+        if (!$this['l10n'] && $val instanceof Translation) {
             $val = (string)$val;
         }
 
-        if ($this->multiple()) {
+        if ($this['multiple']) {
             if (is_array($val)) {
                 $val = implode($this->multipleSeparator(), $val);
             }
@@ -147,7 +147,7 @@ trait StorablePropertyTrait
     /**
      * @return string
      */
-    abstract public function ident();
+    abstract public function getIdent();
 
     /**
      * @param  string|null $lang The language code to return the identifier with.
@@ -158,12 +158,12 @@ trait StorablePropertyTrait
     /**
      * @return boolean
      */
-    abstract public function l10n();
+    abstract public function getL10n();
 
     /**
      * @return boolean
      */
-    abstract public function multiple();
+    abstract public function getMultiple();
 
     /**
      * @return string
@@ -173,7 +173,7 @@ trait StorablePropertyTrait
     /**
      * @return boolean
      */
-    abstract public function allowNull();
+    abstract public function getAllowNull();
 
     /**
      * @param  array $data Optional. Field data.
@@ -209,7 +209,7 @@ trait StorablePropertyTrait
             return $this->generateFields($val);
         }
 
-        if ($this->l10n()) {
+        if ($this['l10n']) {
             foreach ($this->translator()->availableLocales() as $langCode) {
                 $this->fields[$langCode]->setVal($this->fieldVal($langCode, $val));
             }
@@ -229,7 +229,7 @@ trait StorablePropertyTrait
     private function generateFields($val)
     {
         $this->fields = [];
-        if ($this->l10n()) {
+        if ($this['l10n']) {
             foreach ($this->translator()->availableLocales() as $langCode) {
                 $ident = $this->l10nIdent($langCode);
                 $field = $this->createPropertyField([
@@ -240,7 +240,7 @@ trait StorablePropertyTrait
                     'extra'       => $this->sqlExtra(),
                     'val'         => $this->fieldVal($langCode, $val),
                     'defaultVal'  => null,
-                    'allowNull'   => $this->allowNull()
+                    'allowNull'   => $this['allowNull']
                 ]);
                 $this->fields[$langCode] = $field;
             }
@@ -253,7 +253,7 @@ trait StorablePropertyTrait
                 'extra'       => $this->sqlExtra(),
                 'val'         => $this->storageVal($val),
                 'defaultVal'  => null,
-                'allowNull'   => $this->allowNull()
+                'allowNull'   => $this['allowNull']
             ]);
             $this->fields[] = $field;
         }

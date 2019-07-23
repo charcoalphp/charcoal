@@ -26,7 +26,7 @@ class GenericProperty extends AbstractProperty
      */
     public function sqlType()
     {
-        if ($this->multiple()) {
+        if ($this['multiple']) {
             return 'TEXT';
         } else {
             return 'VARCHAR(255)';

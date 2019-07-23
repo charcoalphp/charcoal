@@ -59,10 +59,10 @@ class IpProperty extends AbstractProperty
     /**
      * Multiple is always FALSE for ID property.
      *
-     * @see    AbstractProperty::multiple()
+     * @see    AbstractProperty::getMultiple()
      * @return boolean
      */
-    public function multiple()
+    public function getMultiple()
     {
         return false;
     }
@@ -91,10 +91,10 @@ class IpProperty extends AbstractProperty
     /**
      * L10N is always FALSE for IP property.
      *
-     * @see    AbstractProperty::l10n()
+     * @see    AbstractProperty::getL10n()
      * @return boolean
      */
-    public function l10n()
+    public function getL10n()
     {
         return false;
     }
@@ -122,7 +122,7 @@ class IpProperty extends AbstractProperty
     /**
      * @return string
      */
-    public function storageMode()
+    public function getStorageMode()
     {
         return $this->storageMode;
     }
@@ -166,7 +166,7 @@ class IpProperty extends AbstractProperty
      */
     public function storageVal($val)
     {
-        $mode = $this->storageMode();
+        $mode = $this->getStorageMode();
 
         if ($mode === self::STORAGE_MODE_INT) {
             return $this->intVal($val);
@@ -194,7 +194,7 @@ class IpProperty extends AbstractProperty
      */
     public function sqlType()
     {
-        $mode = $this->storageMode();
+        $mode = $this->getStorageMode();
 
         if ($mode === self::STORAGE_MODE_INT) {
             return 'BIGINT';
@@ -209,7 +209,7 @@ class IpProperty extends AbstractProperty
      */
     public function sqlPdoType()
     {
-        $mode = $this->storageMode();
+        $mode = $this->getStorageMode();
 
         if ($mode === self::STORAGE_MODE_INT) {
             return PDO::PARAM_INT;

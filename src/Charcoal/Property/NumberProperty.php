@@ -109,7 +109,7 @@ class NumberProperty extends AbstractProperty
     public function sqlType()
     {
         // Multiple number are stocked as TEXT because we do not know the maximum length
-        if ($this->multiple()) {
+        if ($this['multiple']) {
             return 'TEXT';
         }
 

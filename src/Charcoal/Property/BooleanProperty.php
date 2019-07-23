@@ -61,13 +61,13 @@ class BooleanProperty extends AbstractProperty
             if (isset($options['true_label'])) {
                 $label = $options['true_label'];
             } else {
-                $label = $this->trueLabel();
+                $label = $this['trueLabel'];
             }
         } else {
             if (isset($options['false_label'])) {
                 $label = $options['false_label'];
             } else {
-                $label = $this->falseLabel();
+                $label = $this['falseLabel'];
             }
         }
 
@@ -96,10 +96,10 @@ class BooleanProperty extends AbstractProperty
     /**
      * Multiple is always false for boolean property.
      *
-     * @see AbstractProperty::multiple()
+     * @see AbstractProperty::getMultiple()
      * @return boolean
      */
-    public function multiple()
+    public function getMultiple()
     {
         return false;
     }
@@ -117,7 +117,7 @@ class BooleanProperty extends AbstractProperty
     /**
      * @return Translation
      */
-    public function trueLabel()
+    public function getTrueLabel()
     {
         if ($this->trueLabel === null) {
             // Default value
@@ -139,7 +139,7 @@ class BooleanProperty extends AbstractProperty
     /**
      * @return Translation
      */
-    public function falseLabel()
+    public function getFalseLabel()
     {
         if ($this->falseLabel === null) {
             // Default value
@@ -184,12 +184,12 @@ class BooleanProperty extends AbstractProperty
         $val = $this->val();
         return [
             [
-                'label'    => $this->trueLabel(),
+                'label'    => $this['trueLabel'],
                 'selected' => !!$val,
                 'value'    => 1
             ],
             [
-                'label'    => $this->falseLabel(),
+                'label'    => $this['falseLabel'],
                 'selected' => !$val,
                 'value'    => 0
             ]

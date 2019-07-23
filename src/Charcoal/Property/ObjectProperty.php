@@ -149,7 +149,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      * @throws RuntimeException If the object type was not previously set.
      * @return string
      */
-    public function objType()
+    public function getObjType()
     {
         if ($this->objType === null) {
             throw new RuntimeException(sprintf(
@@ -182,7 +182,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     /**
      * @return string
      */
-    public function pattern()
+    public function getPattern()
     {
         return $this->pattern;
     }
@@ -193,7 +193,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      */
     public function sqlType()
     {
-        if ($this->multiple() === true) {
+        if ($this['multiple'] === true) {
             return 'TEXT';
         } else {
             // Read from proto's key
@@ -209,7 +209,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      */
     public function sqlPdoType()
     {
-        if ($this->multiple() === true) {
+        if ($this['multiple'] === true) {
             return PDO::PARAM_STR;
         } else {
             // Read from proto's key
@@ -250,7 +250,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
 
         $val = $this->parseVal($val);
 
-        if ($this->multiple()) {
+        if ($this['multiple']) {
             if (is_array($val)) {
                 $val = implode($this->multipleSeparator(), $val);
             }
@@ -270,7 +270,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      */
     public function proto()
     {
-        return $this->modelFactory()->get($this->objType());
+        return $this->modelFactory()->get($this['objType']);
     }
 
     /**
@@ -292,7 +292,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
 
         $val = $this->parseVal($val);
 
-        if ($this->multiple()) {
+        if ($this['multiple']) {
             if (is_array($val)) {
                 $val = implode($this->multipleSeparator(), $val);
             }
@@ -339,7 +339,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
         }
 
         /** Parse multilingual values */
-        if ($this->l10n()) {
+        if ($this['l10n']) {
             $propertyValue = $this->l10nVal($val, $options);
             if ($propertyValue === null) {
                 return '';
@@ -353,7 +353,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
         $separator = $this->multipleSeparator();
 
         /** Parse multiple values / ensure they are of array type. */
-        if ($this->multiple()) {
+        if ($this['multiple']) {
             if (!is_array($propertyValue)) {
                 $propertyValue = explode($separator, $propertyValue);
             }
@@ -757,7 +757,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     protected function renderObjPattern(ModelInterface $obj, $pattern = null, $lang = null)
     {
         if ($pattern === null) {
-            $pattern = $this->pattern();
+            $pattern = $this->getPattern();
         } elseif (!is_string($pattern)) {
             throw new InvalidArgumentException(
                 'The render pattern must be a string.'
@@ -829,7 +829,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     protected function modelLoader($objType = null)
     {
         if ($objType === null) {
-            $objType = $this->objType();
+            $objType = $this->getObjType();
         } elseif (!is_string($objType)) {
             throw new InvalidArgumentException(
                 'Object type must be a string.'

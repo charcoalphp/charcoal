@@ -41,7 +41,7 @@ class ColorProperty extends AbstractProperty
     /**
      * @return boolean
      */
-    public function supportAlpha()
+    public function getSupportAlpha()
     {
         return $this->supportAlpha;
     }
@@ -57,7 +57,7 @@ class ColorProperty extends AbstractProperty
     public function parseOne($val)
     {
         if ($val === null || $val === '') {
-            if ($this->allowNull()) {
+            if ($this['allowNull']) {
                 return null;
             } else {
                 throw new InvalidArgumentException(
@@ -102,11 +102,11 @@ class ColorProperty extends AbstractProperty
     public function sqlType()
     {
         // Multiple strings are always stored as TEXT because they can hold multiple values
-        if ($this->multiple()) {
+        if ($this['multiple']) {
             return 'TEXT';
         }
 
-        if ($this->supportAlpha()) {
+        if ($this['supportAlpha']) {
             return 'VARCHAR(32)';
         } else {
             return 'CHAR(7)';

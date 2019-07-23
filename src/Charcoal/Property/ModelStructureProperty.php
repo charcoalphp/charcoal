@@ -388,7 +388,7 @@ class ModelStructureProperty extends StructureProperty
     public function structureVal($val, $options = [])
     {
         if ($val === null) {
-            return ($this->multiple() ? [] : null);
+            return ($this['multiple'] ? [] : null);
         }
 
         $metadata = clone $this->structureMetadata();
@@ -424,7 +424,7 @@ class ModelStructureProperty extends StructureProperty
 
         $val = $this->parseVal($val);
 
-        if ($this->multiple()) {
+        if ($this['multiple']) {
             $entries = [];
             foreach ($val as $v) {
                 $entries[] = $this->createStructureModelWith($metadata, $defaultData, $v);
@@ -479,7 +479,7 @@ class ModelStructureProperty extends StructureProperty
     {
         $val = parent::save($val);
 
-        if ($this->multiple()) {
+        if ($this['multiple']) {
             $proto = $this->structureProto();
             if ($proto instanceof ModelInterface) {
                 $objs = (array)$this->structureVal($val);

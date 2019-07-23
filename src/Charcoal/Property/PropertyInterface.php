@@ -26,7 +26,7 @@ interface PropertyInterface
      *
      * @return string
      */
-    public function ident();
+    public function getIdent();
 
     /**
      * Retrieve the property's localized identifier.
@@ -72,7 +72,7 @@ interface PropertyInterface
     /**
      * @return mixed
      */
-    public function label();
+    public function getLabel();
 
     /**
      * @param boolean $l10n The l10n, or "translatable" flag.
@@ -83,7 +83,7 @@ interface PropertyInterface
     /**
      * @return boolean
      */
-    public function l10n();
+    public function getL10n();
 
     /**
      * @param boolean $hidden The hidden flag.
@@ -94,7 +94,7 @@ interface PropertyInterface
     /**
      * @return boolean
      */
-    public function hidden();
+    public function getHidden();
 
     /**
      * @param boolean $multiple The multiple flag.
@@ -105,7 +105,7 @@ interface PropertyInterface
     /**
      * @return boolean
      */
-    public function multiple();
+    public function getMultiple();
 
     /**
      * Set the multiple options / configuration, when property is `multiple`.
@@ -123,7 +123,7 @@ interface PropertyInterface
     /**
      * @return array
      */
-    public function multipleOptions();
+    public function getMultipleOptions();
 
     /**
      * @param boolean $required The property required flag.
@@ -134,7 +134,7 @@ interface PropertyInterface
     /**
      * @return boolean
      */
-    public function required();
+    public function getRequired();
 
     /**
      * @param boolean $unique The property unique flag.
@@ -145,7 +145,7 @@ interface PropertyInterface
     /**
      * @return boolean
      */
-    public function unique();
+    public function getUnique();
 
     /**
      * @param boolean $storable The property storable flag.
@@ -156,7 +156,7 @@ interface PropertyInterface
     /**
      * @return boolean
      */
-    public function storable();
+    public function getStorable();
 
     /**
      * @param boolean $active The property active flag. Inactive properties should have no effects.
@@ -167,7 +167,7 @@ interface PropertyInterface
     /**
      * @return boolean
      */
-    public function active();
+    public function getActive();
 
     /**
      * @param mixed $val The value, at time of saving.

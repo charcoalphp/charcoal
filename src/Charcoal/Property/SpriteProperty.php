@@ -63,7 +63,7 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
     /**
      * @return string
      */
-    public function sprite()
+    public function getSprite()
     {
         return $this->sprite;
     }
@@ -96,7 +96,7 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
     public function sqlType()
     {
         // Multiple strings are always stored as TEXT because they can hold multiple values
-        if ($this->multiple()) {
+        if ($this['multiple']) {
             return 'TEXT';
         }
 
@@ -119,7 +119,7 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
      */
     public function buildChoicesFromSprite()
     {
-        $sprite = $this->sprite();
+        $sprite = $this['sprite'];
 
         if (!file_exists($sprite)) {
             return [];
@@ -159,7 +159,7 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
             $val = $this->view->render(
                 '<svg fill="currentColor" viewBox="0 0 25 25" height="40px" role=\'img\'><use xlink:href=\'{{# withBaseUrl }}{{ spritePathWithHash }}{{/ withBaseUrl }}\'></use></svg>',
                 [
-                    'spritePathWithHash' => $this->sprite().'#'.$val
+                    'spritePathWithHash' => $this->getSprite().'#'.$val
                 ]
             );
         }
@@ -177,7 +177,7 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
             $val = $this->view->render(
                 '{{# withBaseUrl }}{{ spritePathWithHash }}{{/ withBaseUrl }}',
                 [
-                    'spritePathWithHash' => $this->sprite().'#'.$val
+                    'spritePathWithHash' => $this->getSprite().'#'.$val
                 ]
             );
         }
@@ -216,7 +216,7 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
             $choice = [
                 'value'              => $choiceIdent,
                 'label'              => $this->translator()->translation($choiceIdent),
-                'spritePathWithHash' => $this->sprite().'#'.$choice
+                'spritePathWithHash' => $this['sprite'].'#'.$choice
             ];
         } elseif (is_array($choice)) {
             if (!isset($choice['value'])) {
@@ -224,11 +224,11 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
             }
 
             if (!isset($choice['spritePathWithHash'])) {
-                $choice['spritePathWithHash'] = (string)$this->sprite().'#'.$choiceIdent;
+                $choice['spritePathWithHash'] = (string)$this['sprite'].'#'.$choiceIdent;
             }
 
             if (!isset($choice['spritePathWithHash'])) {
-                $choice['spritePathWithHash'] = (string)$this->sprite().'#'.$choiceIdent;
+                $choice['spritePathWithHash'] = (string)$this['sprite'].'#'.$choiceIdent;
                 $choice['label']              = $this->translator()->translation($choiceIdent);
             }
         } else {

@@ -239,9 +239,14 @@ abstract class AbstractProperty extends AbstractEntity implements
      *
      * @return string
      */
-    public function ident()
+    public function getIdent()
     {
         return $this->ident;
+    }
+
+    public function ident()
+    {
+        return $this->getIdent();
     }
 
     /**
@@ -259,7 +264,7 @@ abstract class AbstractProperty extends AbstractEntity implements
             throw new RuntimeException('Missing Property Identifier');
         }
 
-        if (!$this->l10n()) {
+        if (!$this['l10n']) {
             throw new LogicException(sprintf(
                 'Property "%s" is not multilingual',
                 $this->ident
@@ -316,7 +321,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     final public function parseVal($val)
     {
-        if ($this->allowNull()) {
+        if ($this['allowNull']) {
             if ($val === null) {
                 return null;
             }
@@ -327,7 +332,7 @@ abstract class AbstractProperty extends AbstractEntity implements
             ));
         }
 
-        if ($this->multiple()) {
+        if ($this['multiple']) {
             if (is_string($val)) {
                 $val = explode($this->multipleSeparator(), $val);
             } else {
@@ -342,7 +347,7 @@ abstract class AbstractProperty extends AbstractEntity implements
             }
 
             if (empty($val) === true) {
-                if ($this->allowNull() === false) {
+                if ($this['allowNull'] === false) {
                     throw new InvalidArgumentException(sprintf(
                         'Property "%s" value can not be NULL or empty (not allowed)',
                         $this->ident()
@@ -353,7 +358,7 @@ abstract class AbstractProperty extends AbstractEntity implements
             }
             $val = array_map([ $this, 'parseOne' ], $val);
         } else {
-            if ($this->l10n()) {
+            if ($this['l10n']) {
                 $val = $this->translator()->translation($val);
                 if ($val) {
                     $val->sanitize([$this, 'parseOne']);
@@ -391,7 +396,7 @@ abstract class AbstractProperty extends AbstractEntity implements
         }
 
         /** Parse multilingual values */
-        if ($this->l10n()) {
+        if ($this['l10n']) {
             $propertyValue = $this->l10nVal($val, $options);
             if ($propertyValue === null) {
                 return '';
@@ -403,7 +408,7 @@ abstract class AbstractProperty extends AbstractEntity implements
         }
 
         /** Parse multiple values / ensure they are of array type. */
-        if ($this->multiple()) {
+        if ($this['multiple']) {
             if (is_array($propertyValue)) {
                 $propertyValue = implode($this->multipleSeparator(), $propertyValue);
             }
@@ -428,7 +433,7 @@ abstract class AbstractProperty extends AbstractEntity implements
         }
 
         /** Parse multilingual values */
-        if ($this->l10n()) {
+        if ($this['l10n']) {
             $propertyValue = $this->l10nVal($val, $options);
             if ($propertyValue === null) {
                 return '';
@@ -442,7 +447,7 @@ abstract class AbstractProperty extends AbstractEntity implements
         $separator = $this->multipleSeparator();
 
         /** Parse multiple values / ensure they are of array type. */
-        if ($this->multiple()) {
+        if ($this['multiple']) {
             if (!is_array($propertyValue)) {
                 $propertyValue = explode($separator, $propertyValue);
             }
@@ -475,7 +480,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     /**
      * @return Translation
      */
-    public function label()
+    public function getLabel()
     {
         if ($this->label === null) {
             return ucwords(str_replace([ '.', '_' ], ' ', $this->ident()));
@@ -500,7 +505,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      *
      * @return boolean
      */
-    public function l10n()
+    public function getL10n()
     {
         return $this->l10n;
     }
@@ -519,7 +524,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     /**
      * @return boolean
      */
-    public function hidden()
+    public function getHidden()
     {
         return $this->hidden;
     }
@@ -559,7 +564,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      *
      * @return boolean
      */
-    public function multiple()
+    public function getMultiple()
     {
         return $this->multiple;
     }
@@ -591,7 +596,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      * @param  string|null $key Optional setting to retrieve from the options.
      * @return array|mixed|null
      */
-    public function multipleOptions($key = null)
+    public function getMultipleOptions($key = null)
     {
         if ($this->multipleOptions === null) {
             $this->multipleOptions = $this->defaultMultipleOptions();
@@ -615,7 +620,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     public function multipleOptionsAsJson()
     {
-        return json_encode($this->multipleOptions());
+        return json_encode($this->getMultipleOptions());
     }
 
     /**
@@ -639,7 +644,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     public function multipleSeparator()
     {
-        return $this->multipleOptions('separator');
+        return $this->getMultipleOptions('separator');
     }
 
     /**
@@ -661,7 +666,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      *
      * @return boolean
      */
-    public function allowNull()
+    public function getAllowNull()
     {
         return $this->allowNull;
     }
@@ -685,7 +690,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      *
      * @return boolean
      */
-    public function required()
+    public function getRequired()
     {
         return $this->required;
     }
@@ -704,7 +709,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     /**
      * @return boolean
      */
-    public function unique()
+    public function getUnique()
     {
         return $this->unique;
     }
@@ -723,7 +728,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     /**
      * @return boolean
      */
-    public function active()
+    public function getActive()
     {
         return $this->active;
     }
@@ -742,7 +747,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     /**
      * @return boolean
      */
-    public function storable()
+    public function getStorable()
     {
         return $this->storable;
     }
@@ -760,7 +765,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     /**
      * @return Translation|null
      */
-    public function description()
+    public function getDescription()
     {
         return $this->description;
     }
@@ -778,7 +783,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     /**
      * @return Translation|null
      */
-    public function notes()
+    public function getNotes()
     {
         return $this->notes;
     }
@@ -809,7 +814,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     public function validateRequired()
     {
-        if ($this->required() && !$this->val()) {
+        if ($this['required'] && !$this->val()) {
             $this->validator()->error('Value is required.', 'required');
 
             return false;
@@ -823,7 +828,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     public function validateUnique()
     {
-        if (!$this->unique()) {
+        if (!$this['unique']) {
             return true;
         }
 
@@ -836,7 +841,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     public function validateAllowNull()
     {
-        if (!$this->allowNull() && $this->val() === null) {
+        if (!$this['allowNull'] && $this->val() === null) {
             $this->validator()->error('Value can not be null.', 'allowNull');
 
             return false;
@@ -871,7 +876,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     /**
      * @return string
      */
-    public function displayType()
+    public function getDisplayType()
     {
         if (!$this->displayType) {
             $meta = $this->metadata();

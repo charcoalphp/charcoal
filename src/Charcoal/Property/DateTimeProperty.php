@@ -65,10 +65,10 @@ class DateTimeProperty extends AbstractProperty
     /**
      * Multiple is always false for DateTime property.
      *
-     * @see AbstractProperty::multiple()
+     * @see AbstractProperty::getMultiple()
      * @return boolean
      */
-    public function multiple()
+    public function getMultiple()
     {
         return false;
     }
@@ -121,7 +121,7 @@ class DateTimeProperty extends AbstractProperty
         if ($val instanceof DateTimeInterface) {
             return $val->format('Y-m-d H:i:s');
         } else {
-            if ($this->allowNull()) {
+            if ($this['allowNull']) {
                 return null;
             } else {
                 throw new Exception(

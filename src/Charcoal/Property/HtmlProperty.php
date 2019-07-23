@@ -31,7 +31,7 @@ class HtmlProperty extends StringProperty
     /**
      * @return string
      */
-    public function filesystem()
+    public function getFilesystem()
     {
         return $this->filesystem;
     }
@@ -64,7 +64,7 @@ class HtmlProperty extends StringProperty
      * @see StringProperty::allowHtml()
      * @return boolean
      */
-    public function allowHtml()
+    public function getAllowHtml()
     {
         return true;
     }

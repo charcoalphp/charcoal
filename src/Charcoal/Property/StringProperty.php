@@ -81,7 +81,7 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
         }
 
         /** Parse multilingual values */
-        if ($this->l10n()) {
+        if ($this['l10n']) {
             $propertyValue = $this->l10nVal($val, $options);
             if ($propertyValue === null) {
                 return '';
@@ -95,7 +95,7 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
         $separator = $this->multipleSeparator();
 
         /** Parse multiple values / ensure they are of array type. */
-        if ($this->multiple()) {
+        if ($this['multiple']) {
             if (!is_array($propertyValue)) {
                 $propertyValue = explode($separator, $propertyValue);
             }
@@ -148,7 +148,7 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
      *
      * @return integer
      */
-    public function maxLength()
+    public function getMaxLength()
     {
         if ($this->maxLength === null) {
             $this->maxLength = $this->defaultMaxLength();
@@ -198,7 +198,7 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
      *
      * @return integer
      */
-    public function minLength()
+    public function getMinLength()
     {
         if ($this->minLength === null) {
             $this->minLength = $this->defaultMinLength();
@@ -242,7 +242,7 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
      *
      * @return string
      */
-    public function regexp()
+    public function getRegexp()
     {
         if ($this->regexp === null) {
             $this->regexp = self::DEFAULT_REGEXP;
@@ -269,7 +269,7 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
      *
      * @return boolean
      */
-    public function allowEmpty()
+    public function getAllowEmpty()
     {
         return $this->allowEmpty;
     }
@@ -290,7 +290,7 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
     /**
      * @return boolean
      */
-    public function allowHtml()
+    public function getAllowHtml()
     {
         return $this->allowHtml;
     }
@@ -339,11 +339,11 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
     {
         $val = $this->val();
 
-        if ($val === null && $this->allowNull()) {
+        if ($val === null && $this['allowNull']) {
             return true;
         }
 
-        $maxLength = $this->maxLength();
+        $maxLength = $this->getMaxLength();
         if ($maxLength == 0) {
             return true;
         }
@@ -378,15 +378,15 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
         $val = $this->val();
 
         if ($val === null) {
-            return $this->allowNull();
+            return $this['allowNull'];
         }
 
-        $minLength = $this->minLength();
+        $minLength = $this['minLength'];
         if ($minLength == 0) {
             return true;
         }
 
-        if ($val === '' && $this->allowEmpty()) {
+        if ($val === '' && $this['allowEmpty']) {
             // Don't check empty string if they are allowed
             return true;
         }
@@ -419,7 +419,7 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
     {
         $val = $this->val();
 
-        $regexp = $this->regexp();
+        $regexp = $this['regexp'];
         if ($regexp == '') {
             return true;
         }
@@ -441,7 +441,7 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
     {
         $val = $this->val();
 
-        if (($val === null || $val === '') && !$this->allowEmpty()) {
+        if (($val === null || $val === '') && !$this['allowEmpty']) {
             return false;
         } else {
             return true;
@@ -479,11 +479,11 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
     public function sqlType()
     {
         // Multiple strings are always stored as TEXT because they can hold multiple values
-        if ($this->multiple()) {
+        if ($this['multiple']) {
             return 'TEXT';
         }
 
-        $maxLength = $this->maxLength();
+        $maxLength = $this['maxLength'];
         // VARCHAR or TEXT, depending on length
         if ($maxLength <= 255 && $maxLength != 0) {
             return 'VARCHAR('.$maxLength.')';
