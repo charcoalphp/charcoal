@@ -810,7 +810,7 @@ class FileProperty extends AbstractProperty
      */
     public function generateFilename()
     {
-        $filename = $this->label().' '.date('Y-m-d H-i-s');
+        $filename = $this['label'].' '.date('Y-m-d H-i-s');
         $extension = $this->generateExtension();
 
         if ($extension) {
@@ -911,7 +911,7 @@ class FileProperty extends AbstractProperty
      */
     protected function basePath()
     {
-        if ($this->publicAccess()) {
+        if ($this['publicAccess']) {
             return $this->publicPath;
         } else {
             return $this->basePath;
@@ -1018,7 +1018,7 @@ class FileProperty extends AbstractProperty
 
         $defaults = [
             '{{property}}'  => $this->ident(),
-            '{{label}}'     => $this->label(),
+            '{{label}}'     => $this['label'],
             '{{extension}}' => $info['extension'],
             '{{basename}}'  => $info['basename'],
             '{{filename}}'  => $info['filename']

@@ -78,7 +78,7 @@ class ColorProperty extends AbstractProperty
             return $val;
         }
         $parsed = $this->parseColorVal($val);
-        if (!$this->supportAlpha()) {
+        if (!$this['supportAlpha']) {
             return '#'.$this->rgbToHexadecimal($parsed['r'], $parsed['g'], $parsed['b']);
         } else {
             return sprintf(

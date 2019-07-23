@@ -459,7 +459,7 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
      */
     public function parseOne($val)
     {
-        if ($this->allowHtml() === false) {
+        if ($this['allowHtml'] === false) {
             if (is_string($val)) {
                 return strip_tags($val);
             }

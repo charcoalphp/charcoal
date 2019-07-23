@@ -25,7 +25,7 @@ class EmailProperty extends StringProperty
      *
      * @return integer
      */
-    public function maxLength()
+    public function getMaxLength()
     {
         return 254;
     }

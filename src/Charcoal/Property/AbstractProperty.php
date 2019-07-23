@@ -244,6 +244,11 @@ abstract class AbstractProperty extends AbstractEntity implements
         return $this->ident;
     }
 
+    /**
+     * Legacy support of ident() instead of getIdent().
+     *
+     * @return string
+     */
     public function ident()
     {
         return $this->getIdent();
@@ -731,6 +736,16 @@ abstract class AbstractProperty extends AbstractEntity implements
     public function getActive()
     {
         return $this->active;
+    }
+
+    /**
+     * Legacy support of active() instead of getActive().
+     *
+     * @return string
+     */
+    public function active()
+    {
+        return $this->getActive();
     }
 
     /**
