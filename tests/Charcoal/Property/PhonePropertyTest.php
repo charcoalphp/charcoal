@@ -39,10 +39,8 @@ class PhonePropertyTest extends AbstractTestCase
      */
     public function testDefaultValues()
     {
-        $this->assertInstanceOf('\Charcoal\Property\PhoneProperty', $this->obj);
-
-        $this->assertEquals(0, $this->obj->minLength());
-        $this->assertEquals(16, $this->obj->maxLength());
+        $this->assertEquals(0, $this->obj['minLength']);
+        $this->assertEquals(16, $this->obj['maxLength']);
     }
 
     /**

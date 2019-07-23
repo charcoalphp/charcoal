@@ -45,10 +45,10 @@ class StructurePropertyTest extends AbstractTestCase
 
     public function testSetL10nThrowsException()
     {
-        $this->assertFalse($this->obj->l10n());
+        $this->assertFalse($this->obj['l10n']);
         $ret = $this->obj->setL10n(false);
         $this->assertSame($ret, $this->obj);
-        $this->assertFalse($this->obj->l10n());
+        $this->assertFalse($this->obj['l10n']);
 
         $this->expectException(InvalidArgumentException::class);
         $this->obj->setL10n(true);

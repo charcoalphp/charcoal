@@ -47,7 +47,7 @@ class IpPropertyTest extends AbstractTestCase
      */
     public function testDefaults()
     {
-        $this->assertEquals('string', $this->obj->storageMode());
+        $this->assertEquals('string', $this->obj['storageMode']);
     }
 
     /**
@@ -55,10 +55,10 @@ class IpPropertyTest extends AbstractTestCase
      */
     public function testMultipleCannotBeTrue()
     {
-        $this->assertFalse($this->obj->multiple());
+        $this->assertFalse($this->obj['multiple']);
 
         $this->assertSame($this->obj, $this->obj->setMultiple(false));
-        $this->expectException('\InvalidArgumentException');
+        $this->expectException(\InvalidArgumentException::class);
         $this->obj->setMultiple(true);
     }
 
@@ -67,10 +67,10 @@ class IpPropertyTest extends AbstractTestCase
      */
     public function testL10nCannotBeTrue()
     {
-        $this->assertFalse($this->obj->l10n());
+        $this->assertFalse($this->obj['l10n']);
 
         $this->assertSame($this->obj, $this->obj->setL10n(false));
-        $this->expectException('\InvalidArgumentException');
+        $this->expectException(\InvalidArgumentException::class);
         $this->obj->setL10n(true);
     }
 
@@ -79,12 +79,12 @@ class IpPropertyTest extends AbstractTestCase
      */
     public function testSetStorageMode()
     {
-        $this->assertEquals('string', $this->obj->storageMode());
+        $this->assertEquals('string', $this->obj['storageMode']);
         $ret = $this->obj->setStorageMode('int');
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals('int', $this->obj->storageMode());
+        $this->assertEquals('int', $this->obj['storageMode']);
 
-        $this->expectException('\InvalidArgumentException');
+        $this->expectException(\InvalidArgumentException::class);
         $this->obj->setStorageMode('foobar');
     }
 
@@ -121,7 +121,7 @@ class IpPropertyTest extends AbstractTestCase
     public function testHostname()
     {
         $this->assertEquals('0.0.0.0', $this->obj->hostname(0));
-        $this->assertContains('google.com', $this->obj->hostname('8.8.8.8'));
+        $this->assertContains('google', $this->obj->hostname('8.8.8.8'));
     }
 
     /**

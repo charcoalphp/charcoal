@@ -42,14 +42,14 @@ class HtmlPropertyTest extends AbstractTestCase
 
     public function testDefaults()
     {
-        $this->assertFalse($this->obj->required());
-        $this->assertFalse($this->obj->unique());
-        $this->assertTrue($this->obj->storable());
-        $this->assertFalse($this->obj->l10n());
-        $this->assertFalse($this->obj->multiple());
-        $this->assertTrue($this->obj->allowNull());
-        $this->assertTrue($this->obj->allowHtml());
-        $this->assertTrue($this->obj->active());
+        $this->assertFalse($this->obj['required']);
+        $this->assertFalse($this->obj['unique']);
+        $this->assertTrue($this->obj['storable']);
+        $this->assertFalse($this->obj['l10n']);
+        $this->assertFalse($this->obj['multiple']);
+        $this->assertTrue($this->obj['allowNull']);
+        $this->assertTrue($this->obj['allowHtml']);
+        $this->assertTrue($this->obj['active']);
     }
 
     /**
@@ -57,7 +57,7 @@ class HtmlPropertyTest extends AbstractTestCase
      */
     public function testDefaultMaxLength()
     {
-        $this->assertEquals(0, $this->obj->maxLength());
+        $this->assertEquals(0, $this->obj['maxLength']);
         $this->assertEquals(0, $this->obj->defaultMaxLength());
     }
 
@@ -71,10 +71,10 @@ class HtmlPropertyTest extends AbstractTestCase
 
     public function testFilesystem()
     {
-        $this->assertEquals('', $this->obj->filesystem());
+        $this->assertEquals('', $this->obj['filesystem']);
 
         $ret = $this->obj->setFilesystem('foo');
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals('foo', $this->obj->filesystem());
+        $this->assertEquals('foo', $this->obj['filesystem']);
     }
 }

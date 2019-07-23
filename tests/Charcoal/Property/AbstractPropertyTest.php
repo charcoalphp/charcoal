@@ -40,14 +40,14 @@ class AbstractPropertyTest extends AbstractTestCase
 
     public function testDefaults()
     {
-        $this->assertEquals('', $this->obj->ident());
-        $this->assertFalse($this->obj->multiple());
+        $this->assertEquals('', $this->obj['ident']);
+        $this->assertFalse($this->obj['multiple']);
         $this->assertEquals(',', $this->obj->multipleSeparator());
-        $this->assertFalse($this->obj->l10n());
-        $this->assertFalse($this->obj->required());
-        $this->assertFalse($this->obj->unique());
-        $this->assertTrue($this->obj->storable());
-        $this->assertTrue($this->obj->allowNull());
+        $this->assertFalse($this->obj['l10n']);
+        $this->assertFalse($this->obj['required']);
+        $this->assertFalse($this->obj['unique']);
+        $this->assertTrue($this->obj['storable']);
+        $this->assertTrue($this->obj['allowNull']);
     }
 
     /**
@@ -92,18 +92,18 @@ class AbstractPropertyTest extends AbstractTestCase
     public function testL1onIdentThrowsExceptionIfL10nIsFalse()
     {
         $this->expectException(LogicException::class);
-        $this->obj->    setL10n(false);
+        $this->obj->setL10n(false);
         $this->obj->setIdent('foobar');
         $this->obj->l10nIdent();
     }
 
     public function testSetLabel()
     {
-        $this->assertEquals('', $this->obj->label());
+        $this->assertEquals('', $this->obj['label']);
 
         $ret = $this->obj->setLabel('Foo');
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals('Foo', $this->obj->label());
+        $this->assertEquals('Foo', $this->obj['label']);
     }
 
     /**
@@ -188,17 +188,17 @@ class AbstractPropertyTest extends AbstractTestCase
      */
     public function testSetL10n()
     {
-        $this->assertFalse($this->obj->l10n());
+        $this->assertFalse($this->obj['l10n']);
 
         $ret = $this->obj->setL10n(true);
         $this->assertSame($ret, $this->obj);
-        $this->assertTrue($this->obj->l10n());
+        $this->assertTrue($this->obj['l10n']);
 
         $this->obj->setL10n(0);
-        $this->assertFalse($this->obj->l10n());
+        $this->assertFalse($this->obj['l10n']);
 
         $this->obj['l10n'] = true;
-        $this->assertTrue($this->obj->l10n());
+        $this->assertTrue($this->obj['l10n']);
 
         $this->obj->set('l10n', false);
         $this->assertFalse($this->obj['l10n']);
@@ -209,17 +209,17 @@ class AbstractPropertyTest extends AbstractTestCase
      */
     public function testSetHidden()
     {
-        $this->assertFalse($this->obj->hidden());
+        $this->assertFalse($this->obj['hidden']);
 
         $ret = $this->obj->setHidden(true);
         $this->assertSame($ret, $this->obj);
-        $this->assertTrue($this->obj->hidden());
+        $this->assertTrue($this->obj['hidden']);
 
         $this->obj->setHidden(0);
-        $this->assertFalse($this->obj->hidden());
+        $this->assertFalse($this->obj['hidden']);
 
         $this->obj['hidden'] = true;
-        $this->assertTrue($this->obj->hidden());
+        $this->assertTrue($this->obj['hidden']);
 
         $this->obj->set('hidden', false);
         $this->assertFalse($this->obj['hidden']);
@@ -230,17 +230,17 @@ class AbstractPropertyTest extends AbstractTestCase
      */
     public function testSetMultiple()
     {
-        $this->assertFalse($this->obj->multiple());
+        $this->assertFalse($this->obj['multiple']);
 
         $ret = $this->obj->setMultiple(true);
         $this->assertSame($ret, $this->obj);
-        $this->assertTrue($this->obj->multiple());
+        $this->assertTrue($this->obj['multiple']);
 
         $this->obj->setMultiple(0);
-        $this->assertFalse($this->obj->multiple());
+        $this->assertFalse($this->obj['multiple']);
 
         $this->obj['multiple'] = true;
-        $this->assertTrue($this->obj->multiple());
+        $this->assertTrue($this->obj['multiple']);
 
         $this->obj->set('multiple', false);
         $this->assertFalse($this->obj['multiple']);
@@ -264,17 +264,17 @@ class AbstractPropertyTest extends AbstractTestCase
      */
     public function testSetRequired()
     {
-        $this->assertFalse($this->obj->required());
+        $this->assertFalse($this->obj['required']);
 
         $ret = $this->obj->setRequired(true);
         $this->assertSame($ret, $this->obj);
-        $this->assertTrue($this->obj->required());
+        $this->assertTrue($this->obj['required']);
 
         $this->obj->setRequired(0);
-        $this->assertFalse($this->obj->required());
+        $this->assertFalse($this->obj['required']);
 
         $this->obj['required'] = true;
-        $this->assertTrue($this->obj->required());
+        $this->assertTrue($this->obj['required']);
 
         $this->obj->set('required', false);
         $this->assertFalse($this->obj['required']);
@@ -285,17 +285,17 @@ class AbstractPropertyTest extends AbstractTestCase
      */
     public function testSetUnique()
     {
-        $this->assertFalse($this->obj->unique());
+        $this->assertFalse($this->obj['unique']);
 
         $ret = $this->obj->setUnique(true);
         $this->assertSame($ret, $this->obj);
-        $this->assertTrue($this->obj->unique());
+        $this->assertTrue($this->obj['unique']);
 
         $this->obj->setUnique(0);
-        $this->assertFalse($this->obj->unique());
+        $this->assertFalse($this->obj['unique']);
 
         $this->obj['unique'] = true;
-        $this->assertTrue($this->obj->unique());
+        $this->assertTrue($this->obj['unique']);
 
         $this->obj->set('unique', false);
         $this->assertFalse($this->obj['unique']);
@@ -306,20 +306,20 @@ class AbstractPropertyTest extends AbstractTestCase
      */
     public function testSetAllowNull()
     {
-        $this->assertTrue($this->obj->allowNull());
+        $this->assertTrue($this->obj['allowNull']);
 
         $ret = $this->obj->setAllowNull(false);
         $this->assertSame($ret, $this->obj);
-        $this->assertFalse($this->obj->allowNull());
+        $this->assertFalse($this->obj['allowNull']);
 
         $this->obj->setAllowNull(0);
-        $this->assertFalse($this->obj->allowNull());
+        $this->assertFalse($this->obj['allowNull']);
 
         $this->obj['allow_null'] = true;
-        $this->assertTrue($this->obj->allowNull());
+        $this->assertTrue($this->obj['allowNull']);
 
         $this->obj->set('allow_null', false);
-        $this->assertFalse($this->obj['allow_null']);
+        $this->assertFalse($this->obj['allowNull']);
     }
 
     /**
@@ -327,17 +327,17 @@ class AbstractPropertyTest extends AbstractTestCase
      */
     public function testSetStorable()
     {
-        $this->assertTrue($this->obj->storable());
+        $this->assertTrue($this->obj['storable']);
 
         $ret = $this->obj->setStorable(false);
         $this->assertSame($ret, $this->obj);
-        $this->assertFalse($this->obj->storable());
+        $this->assertFalse($this->obj['storable']);
 
         $this->obj->setStorable(0);
-        $this->assertFalse($this->obj->storable());
+        $this->assertFalse($this->obj['storable']);
 
         $this->obj['storable'] = true;
-        $this->assertTrue($this->obj->storable());
+        $this->assertTrue($this->obj['storable']);
 
         $this->obj->set('storable', false);
         $this->assertFalse($this->obj['storable']);

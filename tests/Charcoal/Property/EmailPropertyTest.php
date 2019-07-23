@@ -47,10 +47,10 @@ class EmailPropertyTest extends AbstractTestCase
      */
     public function testMaxLength()
     {
-        $this->assertEquals(254, $this->obj->maxLength());
+        $this->assertEquals(254, $this->obj['maxLength']);
 
         $this->obj->setMaxLength(100);
-        $this->assertEquals(254, $this->obj->maxLength());
+        $this->assertEquals(254, $this->obj['maxLength']);
     }
 
     /**

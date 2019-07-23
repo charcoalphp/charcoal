@@ -85,7 +85,7 @@ class ColorPropertyTest extends AbstractTestCase
      */
     public function testDefaults()
     {
-        $this->assertEquals(false, $this->obj->supportAlpha());
+        $this->assertEquals(false, $this->obj['supportAlpha']);
     }
 
     /**
@@ -95,16 +95,16 @@ class ColorPropertyTest extends AbstractTestCase
     {
         $ret = $this->obj->setSupportAlpha(true);
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals(true, $this->obj->supportAlpha());
+        $this->assertEquals(true, $this->obj['supportAlpha']);
 
         $this->obj->setSupportAlpha(0);
-        $this->assertFalse($this->obj->supportAlpha());
+        $this->assertFalse($this->obj['supportAlpha']);
 
         $this->obj['support_alpha'] = true;
-        $this->assertTrue($this->obj->supportAlpha());
+        $this->assertTrue($this->obj['supportAlpha']);
 
         $this->obj->set('support_alpha', false);
-        $this->assertFalse($this->obj['support_alpha']);
+        $this->assertFalse($this->obj['supportAlpha']);
     }
 
     /**

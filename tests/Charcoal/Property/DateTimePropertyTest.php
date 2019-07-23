@@ -65,11 +65,11 @@ class DateTimePropertyTest extends AbstractTestCase
         $this->assertSame($ret, $this->obj);
 
         $expected = new DateTime('2015-01-01 00:00:00');
-        $this->assertEquals($expected, $this->obj->min());
+        $this->assertEquals($expected, $this->obj['min']);
 
         $expected = new DateTime('2025-01-01 00:00:00');
-        $this->assertEquals($expected, $this->obj->max());
-        $this->assertEquals('Y.m.d', $this->obj->format());
+        $this->assertEquals($expected, $this->obj['max']);
+        $this->assertEquals('Y.m.d', $this->obj['format']);
     }
 
     /**
@@ -174,9 +174,9 @@ class DateTimePropertyTest extends AbstractTestCase
     {
         $ret = $this->obj->setMultiple(0);
         $this->assertSame($ret, $this->obj);
-        $this->assertSame(false, $ret->multiple());
+        $this->assertSame(false, $ret['multiple']);
 
-        $this->expectException('\InvalidArgumentException');
+        $this->expectException(\InvalidArgumentException::class);
         $this->obj->setMultiple(1);
     }
 
@@ -185,7 +185,7 @@ class DateTimePropertyTest extends AbstractTestCase
      */
     public function testMultiple()
     {
-        $this->assertSame(false, $this->obj->multiple());
+        $this->assertSame(false, $this->obj['multiple']);
     }
 
     /**
@@ -204,22 +204,22 @@ class DateTimePropertyTest extends AbstractTestCase
         $this->assertSame($ret, $this->obj);
 
         $expected = new DateTime('2020-01-01 01:02:03');
-        $this->assertEquals($expected, $this->obj->min());
+        $this->assertEquals($expected, $this->obj['min']);
 
         // Setting by DateTime
         $dt = new DateTime('today');
         $ret = $this->obj->setMin($dt);
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals($dt, $this->obj->min());
+        $this->assertEquals($dt, $this->obj['min']);
 
         $this->obj['min'] = 'today';
-        $this->assertEquals($dt, $this->obj->min());
+        $this->assertEquals($dt, $this->obj['min']);
 
         $this->obj->set('min', 'today');
         $this->assertEquals($dt, $this->obj['min']);
 
         $this->obj->setMin(null);
-        $this->assertNull($this->obj->min());
+        $this->assertNull($this->obj['min']);
 
         $this->expectException(InvalidArgumentException::class);
         $this->obj->setMin('foo');
@@ -246,22 +246,22 @@ class DateTimePropertyTest extends AbstractTestCase
         $this->assertSame($ret, $this->obj);
 
         $expected = new DateTime('2020-01-01 01:02:03');
-        $this->assertEquals($expected, $this->obj->max());
+        $this->assertEquals($expected, $this->obj['max']);
 
         // Setting by DateTime
         $dt = new DateTime('today');
         $ret = $this->obj->setMax($dt);
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals($dt, $this->obj->max());
+        $this->assertEquals($dt, $this->obj['max']);
 
         $this->obj['max'] = 'today';
-        $this->assertEquals($dt, $this->obj->max());
+        $this->assertEquals($dt, $this->obj['max']);
 
         $this->obj->set('max', 'today');
         $this->assertEquals($dt, $this->obj['max']);
 
         $this->obj->setMax(null);
-        $this->assertEquals(null, $this->obj->max());
+        $this->assertEquals(null, $this->obj['max']);
 
         $this->expectException(InvalidArgumentException::class);
         $this->obj->setMax('foo');
@@ -287,23 +287,23 @@ class DateTimePropertyTest extends AbstractTestCase
      */
     public function testSetFormat()
     {
-        $this->assertEquals('Y-m-d H:i:s', $this->obj->format());
+        $this->assertEquals('Y-m-d H:i:s', $this->obj['format']);
 
         $ret = $this->obj->setFormat('Y/m/d');
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals('Y/m/d', $this->obj->format());
+        $this->assertEquals('Y/m/d', $this->obj['format']);
 
         $this->obj['format'] = 'd-m-Y';
-        $this->assertEquals('d-m-Y', $this->obj->format());
+        $this->assertEquals('d-m-Y', $this->obj['format']);
 
         $this->obj->set('format', 'Y');
         $this->assertEquals('Y', $this->obj['format']);
 
         $this->obj->setFormat('');
-        $this->assertEquals('', $this->obj->format());
+        $this->assertEquals('', $this->obj['format']);
 
         $this->obj->setFormat(null);
-        $this->assertEquals('', $this->obj->format());
+        $this->assertEquals('', $this->obj['format']);
 
         $this->expectException(InvalidArgumentException::class);
         $this->obj->setFormat(false);

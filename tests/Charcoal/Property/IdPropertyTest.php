@@ -56,7 +56,7 @@ class IdPropertyTest extends AbstractTestCase
             ]
         );
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals('uniqid', $this->obj->mode());
+        $this->assertEquals('uniqid', $this->obj['mode']);
     }
 
     /**
@@ -67,8 +67,8 @@ class IdPropertyTest extends AbstractTestCase
      */
     public function testDefaultMode()
     {
-        $this->assertEquals(IdProperty::DEFAULT_MODE, $this->obj->mode());
-        $this->assertEquals('auto-increment', $this->obj->mode());
+        $this->assertEquals(IdProperty::DEFAULT_MODE, $this->obj['mode']);
+        $this->assertEquals('auto-increment', $this->obj['mode']);
     }
 
     /**
@@ -83,10 +83,10 @@ class IdPropertyTest extends AbstractTestCase
     {
         $ret = $this->obj->setMode('uuid');
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals('uuid', $this->obj->mode());
+        $this->assertEquals('uuid', $this->obj['mode']);
 
         $this->obj['mode'] = 'auto-increment';
-        $this->assertEquals('auto-increment', $this->obj->mode());
+        $this->assertEquals('auto-increment', $this->obj['mode']);
 
         $this->obj->set('mode', 'uniqid');
         $this->assertEquals('uniqid', $this->obj['mode']);
@@ -113,7 +113,7 @@ class IdPropertyTest extends AbstractTestCase
      */
     public function testMultipleCannotBeTrue()
     {
-        $this->assertFalse($this->obj->multiple());
+        $this->assertFalse($this->obj['multiple']);
 
         $this->assertSame($this->obj, $this->obj->setMultiple(false));
         $this->expectException(InvalidArgumentException::class);
@@ -125,7 +125,7 @@ class IdPropertyTest extends AbstractTestCase
      */
     public function testL10nCannotBeTrue()
     {
-        $this->assertFalse($this->obj->l10n());
+        $this->assertFalse($this->obj['l10n']);
 
         $this->assertSame($this->obj, $this->obj->setL10n(false));
         $this->expectException(InvalidArgumentException::class);

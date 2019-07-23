@@ -207,7 +207,7 @@ class ObjectPropertyTest extends AbstractTestCase
     {
         $return = $this->obj->setObjType('foo');
         $this->assertSame($return, $this->obj);
-        $this->assertEquals('foo', $this->obj->objType());
+        $this->assertEquals('foo', $this->obj['objType']);
 
         $this->expectException(InvalidArgumentException::class);
         $this->obj->setObjType(false);
@@ -219,7 +219,7 @@ class ObjectPropertyTest extends AbstractTestCase
     public function testAccessingObjTypeBeforeSetterThrowsException()
     {
         $this->expectException('\Exception');
-        $this->obj->objType();
+        $this->obj['objType'];
     }
 
     /**
@@ -229,7 +229,7 @@ class ObjectPropertyTest extends AbstractTestCase
     {
         $return = $this->obj->setPattern('{{foo}}');
         $this->assertSame($return, $this->obj);
-        $this->assertEquals('{{foo}}', $this->obj->pattern());
+        $this->assertEquals('{{foo}}', $this->obj['pattern']);
 
         $this->expectException(InvalidArgumentException::class);
         $this->obj->setPattern([]);

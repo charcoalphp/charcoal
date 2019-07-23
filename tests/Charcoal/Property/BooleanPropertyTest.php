@@ -80,7 +80,7 @@ class BooleanPropertyTest extends AbstractTestCase
         $obj = $this->obj;
         $ret = $obj->setMultiple(0);
         $this->assertSame($ret, $obj);
-        $this->assertFalse($ret->multiple());
+        $this->assertFalse($ret['multiple']);
 
         $this->expectException('\InvalidArgumentException');
         $obj->setMultiple(1);
@@ -94,7 +94,7 @@ class BooleanPropertyTest extends AbstractTestCase
     public function testMultiple()
     {
         $obj = $this->obj;
-        $this->assertFalse($obj->multiple());
+        $this->assertFalse($obj['multiple']);
     }
 
     /**
@@ -111,8 +111,8 @@ class BooleanPropertyTest extends AbstractTestCase
 
         $this->assertSame($ret, $obj);
 
-        $this->assertEquals('foo', $obj->trueLabel());
-        $this->assertEquals('bar', $obj->falseLabel());
+        $this->assertEquals('foo', $obj['trueLabel']);
+        $this->assertEquals('bar', $obj['falseLabel']);
     }
 
     /**
@@ -124,7 +124,7 @@ class BooleanPropertyTest extends AbstractTestCase
         $ret = $obj->setTrueLabel('foo');
         $this->assertSame($ret, $obj);
 
-        $this->assertEquals('foo', $obj->trueLabel());
+        $this->assertEquals('foo', $obj['trueLabel']);
     }
 
     /**
@@ -136,7 +136,7 @@ class BooleanPropertyTest extends AbstractTestCase
         $ret = $obj->setFalseLabel('foo');
         $this->assertSame($ret, $obj);
 
-        $this->assertEquals('foo', $obj->falseLabel());
+        $this->assertEquals('foo', $obj['falseLabel']);
     }
 
     /**

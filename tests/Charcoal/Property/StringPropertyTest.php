@@ -53,14 +53,14 @@ class StringPropertyTest extends AbstractTestCase
 
     public function testDefaults()
     {
-        $this->assertFalse($this->obj->required());
-        $this->assertFalse($this->obj->unique());
-        $this->assertTrue($this->obj->storable());
-        $this->assertFalse($this->obj->l10n());
-        $this->assertFalse($this->obj->multiple());
-        $this->assertTrue($this->obj->allowNull());
-        $this->assertFalse($this->obj->allowHtml());
-        $this->assertTrue($this->obj->active());
+        $this->assertFalse($this->obj['required']);
+        $this->assertFalse($this->obj['unique']);
+        $this->assertTrue($this->obj['storable']);
+        $this->assertFalse($this->obj['l10n']);
+        $this->assertFalse($this->obj['multiple']);
+        $this->assertTrue($this->obj['allowNull']);
+        $this->assertFalse($this->obj['allowHtml']);
+        $this->assertTrue($this->obj['active']);
     }
 
     /**
@@ -113,11 +113,11 @@ class StringPropertyTest extends AbstractTestCase
 
         $this->assertSame($ret, $this->obj);
 
-        $this->assertEquals(5, $this->obj->minLength());
-        $this->assertEquals(42, $this->obj->maxLength());
-        $this->assertEquals('/[0-9]*/', $this->obj->regexp());
-        $this->assertFalse($this->obj->allowEmpty());
-        $this->assertTrue($this->obj->allowHtml());
+        $this->assertEquals(5, $this->obj['minLength']);
+        $this->assertEquals(42, $this->obj['maxLength']);
+        $this->assertEquals('/[0-9]*/', $this->obj['regexp']);
+        $this->assertFalse($this->obj['allowEmpty']);
+        $this->assertTrue($this->obj['allowHtml']);
     }
 
     /**
@@ -250,10 +250,10 @@ class StringPropertyTest extends AbstractTestCase
     {
         $ret = $this->obj->setMinLength(5);
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals(5, $this->obj->minLength());
+        $this->assertEquals(5, $this->obj['minLength']);
 
         $this->obj['min_length'] = 10;
-        $this->assertEquals(10, $this->obj->minLength());
+        $this->assertEquals(10, $this->obj['minLength']);
 
         $this->obj->set('min_length', 30);
         $this->assertEquals(30, $this->obj['min_length']);
@@ -278,10 +278,10 @@ class StringPropertyTest extends AbstractTestCase
     {
         $ret = $this->obj->setMaxLength(5);
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals(5, $this->obj->maxLength());
+        $this->assertEquals(5, $this->obj['maxLength']);
 
         $this->obj['max_length'] = 10;
-        $this->assertEquals(10, $this->obj->maxLength());
+        $this->assertEquals(10, $this->obj['maxLength']);
 
         $this->obj->set('max_length', 30);
         $this->assertEquals(30, $this->obj['max_length']);
@@ -306,10 +306,10 @@ class StringPropertyTest extends AbstractTestCase
     {
         $ret = $this->obj->setRegexp('[a-z]');
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals('[a-z]', $this->obj->regexp());
+        $this->assertEquals('[a-z]', $this->obj['regexp']);
 
         $this->obj['regexp'] = '[_]';
-        $this->assertEquals('[_]', $this->obj->regexp());
+        $this->assertEquals('[_]', $this->obj['regexp']);
 
         $this->obj->set('regexp', '[A-Z]');
         $this->assertEquals('[A-Z]', $this->obj['regexp']);
@@ -323,14 +323,14 @@ class StringPropertyTest extends AbstractTestCase
      */
     public function testSetAllowEmpty()
     {
-        $this->assertEquals(true, $this->obj->allowEmpty());
+        $this->assertEquals(true, $this->obj['allowEmpty']);
 
         $ret = $this->obj->setAllowEmpty(false);
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals(false, $this->obj->allowEmpty());
+        $this->assertEquals(false, $this->obj['allowEmpty']);
 
         $this->obj['allow_empty'] = true;
-        $this->assertTrue($this->obj->allowEmpty());
+        $this->assertTrue($this->obj['allowEmpty']);
 
         $this->obj->set('allow_empty', false);
         $this->assertFalse($this->obj['allow_empty']);

@@ -47,10 +47,10 @@ class FilePropertyTest extends AbstractTestCase
     {
         $obj = $this->obj;
         $this->assertInstanceOf('\Charcoal\Property\FileProperty', $obj);
-        $this->assertEquals('uploads/', $obj->uploadPath());
-        $this->assertFalse($obj->overwrite());
-        $this->assertEquals([], $obj->acceptedMimetypes());
-        $this->assertEquals($obj->maxFilesizeAllowedByPhp(), $obj->maxFilesize());
+        $this->assertEquals('uploads/', $obj['uploadPath']);
+        $this->assertFalse($obj['overwrite']);
+        $this->assertEquals([], $obj['acceptedMimetypes']);
+        $this->assertEquals($obj->maxFilesizeAllowedByPhp(), $obj['maxFilesize']);
     }
 
     /**
@@ -79,11 +79,11 @@ class FilePropertyTest extends AbstractTestCase
         ]);
         $this->assertSame($ret, $obj);
 
-        $this->assertTrue($this->obj->publicAccess());
-        $this->assertEquals('uploads/foobar/', $this->obj->uploadPath());
-        $this->assertTrue($this->obj->overwrite());
-        $this->assertEquals(['image/x-foobar'], $this->obj->acceptedMimetypes());
-        $this->assertEquals((32*1024*1024), $this->obj->maxFilesize());
+        $this->assertTrue($this->obj['publicAccess']);
+        $this->assertEquals('uploads/foobar/', $this->obj['uploadPath']);
+        $this->assertTrue($this->obj['overwrite']);
+        $this->assertEquals(['image/x-foobar'], $this->obj['acceptedMimetypes']);
+        $this->assertEquals((32*1024*1024), $this->obj['maxFilesize']);
     }
 
     /**
@@ -96,19 +96,19 @@ class FilePropertyTest extends AbstractTestCase
     public function testSetUploadPath()
     {
         $obj = $this->obj;
-        $this->assertEquals('uploads/', $this->obj->uploadPath());
+        $this->assertEquals('uploads/', $this->obj['uploadPath']);
 
         $ret = $obj->setUploadPath('foobar');
         $this->assertSame($ret, $obj);
-        $this->assertEquals('foobar/', $obj->uploadPath());
+        $this->assertEquals('foobar/', $obj['uploadPath']);
 
         $this->obj['upload_path'] = 'foo';
-        $this->assertEquals('foo/', $obj->uploadPath());
+        $this->assertEquals('foo/', $obj['uploadPath']);
 
         $this->obj->set('upload_path', 'bar');
         $this->assertEquals('bar/', $obj['upload_path']);
 
-        $this->expectException('\InvalidArgumentException');
+        $this->expectException(\InvalidArgumentException::class);
         $obj->setUploadPath(42);
     }
 
@@ -119,10 +119,10 @@ class FilePropertyTest extends AbstractTestCase
     {
         $ret = $this->obj->setOverwrite(true);
         $this->assertSame($ret, $this->obj);
-        $this->assertTrue($this->obj->overwrite());
+        $this->assertTrue($this->obj['overwrite']);
 
         $this->obj['overwrite'] = false;
-        $this->assertFalse($this->obj->overwrite());
+        $this->assertFalse($this->obj['overwrite']);
 
         $this->obj->set('overwrite', true);
         $this->assertTrue($this->obj['overwrite']);
@@ -148,7 +148,7 @@ class FilePropertyTest extends AbstractTestCase
         $obj->setMimetype('image/x-foobar');
         $this->assertTrue($obj->validateAcceptedMimetypes());
 
-        $this->assertEmpty($obj->acceptedMimetypes());
+        $this->assertEmpty($obj['acceptedMimetypes']);
         $this->assertTrue($obj->validateAcceptedMimetypes());
 
         $obj->setAcceptedMimetypes(['image/x-barbaz']);
@@ -263,11 +263,11 @@ class FilePropertyTest extends AbstractTestCase
 
     public function testFilesystem()
     {
-        $this->assertEquals('public', $this->obj->filesystem());
+        $this->assertEquals('public', $this->obj['filesystem']);
 
         $ret = $this->obj->setFilesystem('foo');
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals('foo', $this->obj->filesystem());
+        $this->assertEquals('foo', $this->obj['filesystem']);
     }
 
     public function testSetMimetype()

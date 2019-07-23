@@ -44,15 +44,15 @@ class TextPropertyTest extends AbstractTestCase
 
     public function testDefaults()
     {
-        $this->assertFalse($this->obj->required());
-        $this->assertFalse($this->obj->unique());
-        $this->assertTrue($this->obj->storable());
-        $this->assertFalse($this->obj->l10n());
-        $this->assertFalse($this->obj->multiple());
-        $this->assertTrue($this->obj->allowNull());
-        $this->assertFalse($this->obj->allowHtml());
-        $this->assertTrue($this->obj->active());
-        $this->assertFalse($this->obj->long());
+        $this->assertFalse($this->obj['required']);
+        $this->assertFalse($this->obj['unique']);
+        $this->assertTrue($this->obj['storable']);
+        $this->assertFalse($this->obj['l10n']);
+        $this->assertFalse($this->obj['multiple']);
+        $this->assertTrue($this->obj['allowNull']);
+        $this->assertFalse($this->obj['allowHtml']);
+        $this->assertTrue($this->obj['active']);
+        $this->assertFalse($this->obj['long']);
     }
 
     /**

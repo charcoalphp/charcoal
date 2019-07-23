@@ -37,8 +37,8 @@ class AudioPropertyTest extends AbstractTestCase
      */
     public function testDefauls()
     {
-        $this->assertEquals(0, $this->obj->minLength());
-        $this->assertEquals(0, $this->obj->maxLength());
+        $this->assertEquals(0, $this->obj['minLength']);
+        $this->assertEquals(0, $this->obj['maxLength']);
     }
 
     /**
@@ -62,8 +62,8 @@ class AudioPropertyTest extends AbstractTestCase
         $ret = $obj->setData($data);
         $this->assertSame($ret, $obj);
 
-        $this->assertEquals(20, $obj->minLength());
-        $this->assertEquals(500, $obj->maxLength());
+        $this->assertEquals(20, $obj['minLength']);
+        $this->assertEquals(500, $obj['maxLength']);
     }
 
     /**
@@ -79,8 +79,8 @@ class AudioPropertyTest extends AbstractTestCase
         $ret = $obj->setData($data);
         $this->assertSame($ret, $obj);
 
-        $this->assertEquals(20, $obj->minLength());
-        $this->assertEquals(500, $obj->maxLength());
+        $this->assertEquals(20, $obj['minLength']);
+        $this->assertEquals(500, $obj['maxLength']);
     }
 
     /**
@@ -91,9 +91,9 @@ class AudioPropertyTest extends AbstractTestCase
         $ret = $this->obj->setMinLength(5);
         $this->assertSame($ret, $this->obj);
 
-        $this->assertEquals(5, $this->obj->minLength());
+        $this->assertEquals(5, $this->obj['minLength']);
 
-        $this->expectException('\InvalidArgumentException');
+        $this->expectException(\InvalidArgumentException::class);
         $this->obj->setMinLength(false);
     }
 
@@ -105,9 +105,9 @@ class AudioPropertyTest extends AbstractTestCase
         $ret = $this->obj->setMaxLength(5);
         $this->assertSame($ret, $this->obj);
 
-        $this->assertEquals(5, $this->obj->maxLength());
+        $this->assertEquals(5, $this->obj['maxLength']);
 
-        $this->expectException('\InvalidArgumentException');
+        $this->expectException(\InvalidArgumentException::class);
         $this->obj->setMaxLength(false);
     }
 

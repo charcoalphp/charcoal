@@ -38,7 +38,7 @@ class SpritePropertyTest extends AbstractTestCase
 
     public function testDefaults()
     {
-        $this->assertNull($this->obj->sprite());
+        $this->assertNull($this->obj['sprite']);
     }
 
 
@@ -53,10 +53,10 @@ class SpritePropertyTest extends AbstractTestCase
 
     public function testSetSprite()
     {
-        $this->assertNull($this->obj->sprite());
+        $this->assertNull($this->obj['sprite']);
         $ret = $this->obj->setSprite('foo');
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals('foo', $this->obj->sprite());
+        $this->assertEquals('foo', $this->obj['sprite']);
 
         $this->expectException(InvalidArgumentException::class);
         $this->obj->setSprite(false);
