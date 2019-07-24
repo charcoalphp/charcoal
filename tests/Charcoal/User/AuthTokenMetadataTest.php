@@ -37,10 +37,10 @@ class AuthTokenMetadataTest extends AbstractTestCase
      */
     public function testDefaults()
     {
-        $this->assertTrue($this->obj->enabled());
-        $this->assertEquals('charcoal_user_login', $this->obj->cookieName());
-        $this->assertEquals('15 days', $this->obj->cookieDuration());
-        $this->assertFalse($this->obj->httpsOnly());
+        $this->assertTrue($this->obj['enabled']);
+        $this->assertEquals('charcoal_user_login', $this->obj['cookieName']);
+        $this->assertEquals('15 days', $this->obj['cookieDuration']);
+        $this->assertFalse($this->obj['httpsOnly']);
     }
 
     /**
@@ -50,7 +50,7 @@ class AuthTokenMetadataTest extends AbstractTestCase
     {
         $ret = $this->obj->setEnabled(false);
         $this->assertSame($ret, $this->obj);
-        $this->assertFalse($this->obj->enabled());
+        $this->assertFalse($this->obj['enabled']);
     }
 
     /**
@@ -60,9 +60,9 @@ class AuthTokenMetadataTest extends AbstractTestCase
     {
         $ret = $this->obj->setCookieName('foobar');
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals('foobar', $this->obj->cookieName());
+        $this->assertEquals('foobar', $this->obj['cookieName']);
 
-        $this->expectException('\InvalidArgumentException');
+        $this->expectException(\InvalidArgumentException::class);
         $this->obj->setCookieName(false);
     }
 
@@ -73,9 +73,9 @@ class AuthTokenMetadataTest extends AbstractTestCase
     {
         $ret = $this->obj->setCookieDuration('2 month');
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals('2 month', $this->obj->cookieDuration());
+        $this->assertEquals('2 month', $this->obj['cookieDuration']);
 
-        $this->expectException('\InvalidArgumentException');
+        $this->expectException(\InvalidArgumentException::class);
         $this->obj->setCookieDuration(false);
     }
 }

@@ -62,7 +62,7 @@ class AuthTokenTest extends AbstractTestCase
     {
         $ret = $this->obj->setIdent('foo');
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals('foo', $this->obj->ident());
+        $this->assertEquals('foo', $this->obj['ident']);
     }
 
     /**
@@ -72,7 +72,7 @@ class AuthTokenTest extends AbstractTestCase
     {
         $ret = $this->obj->setToken('foo');
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals('foo', $this->obj->token());
+        $this->assertEquals('foo', $this->obj['token']);
     }
 
     /**
@@ -82,7 +82,7 @@ class AuthTokenTest extends AbstractTestCase
     {
         $ret = $this->obj->setUserId('foo');
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals('foo', $this->obj->userId());
+        $this->assertEquals('foo', $this->obj['userId']);
 
         $this->expectException('\Exception');
         $this->obj->setUserId([]);
@@ -96,7 +96,7 @@ class AuthTokenTest extends AbstractTestCase
         $date = new DateTime('tomorrow');
         $ret = $this->obj->setExpiry($date);
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals($date, $this->obj->expiry());
+        $this->assertEquals($date, $this->obj['expiry']);
 
         $this->expectException('\Exception');
         $this->obj->setExpiry('fsdjkfsadg');
@@ -110,7 +110,7 @@ class AuthTokenTest extends AbstractTestCase
         $date = new DateTime('tomorrow');
         $ret = $this->obj->setCreated($date);
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals($date, $this->obj->created());
+        $this->assertEquals($date, $this->obj['created']);
 
         $this->expectException('\Exception');
         $this->obj->setCreated('fsdjkfsadg');
@@ -124,7 +124,7 @@ class AuthTokenTest extends AbstractTestCase
         $date = new DateTime('tomorrow');
         $ret = $this->obj->setLastModified($date);
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals($date, $this->obj->lastModified());
+        $this->assertEquals($date, $this->obj['lastModified']);
 
         $this->expectException('\Exception');
         $this->obj->setLastModified('fsdjkfsadg');

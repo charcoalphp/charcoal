@@ -74,7 +74,7 @@ class RoleTest extends AbstractTestCase
     {
         $ret = $this->obj->setParent('foo');
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals('foo', $this->obj->parent());
+        $this->assertEquals('foo', $this->obj['parent']);
     }
 
     /**
@@ -82,13 +82,13 @@ class RoleTest extends AbstractTestCase
      */
     public function testSetAllowed()
     {
-        $this->assertNull($this->obj->allowed());
+        $this->assertNull($this->obj['allowed']);
         $ret = $this->obj->setAllowed('foo');
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals(['foo'], $this->obj->allowed());
+        $this->assertEquals(['foo'], $this->obj['allowed']);
 
         $this->obj->setAllowed(['bar', 'baz']);
-        $this->assertSame(['bar', 'baz'], $this->obj->allowed());
+        $this->assertSame(['bar', 'baz'], $this->obj['allowed']);
     }
 
     /**
@@ -96,10 +96,10 @@ class RoleTest extends AbstractTestCase
      */
     public function testSuperuser()
     {
-        $this->assertFalse($this->obj->superuser());
+        $this->assertFalse($this->obj['superuser']);
         $ret = $this->obj->setSuperuser(1);
         $this->assertSame($ret, $this->obj);
-        $this->assertTrue($this->obj->superuser());
+        $this->assertTrue($this->obj['superuser']);
     }
 
     /**

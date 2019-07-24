@@ -75,7 +75,7 @@ class AuthenticatorTest extends AbstractTestCase
      */
     public function testAuthenticateByPasswordInvalidEmail()
     {
-        $this->expectException('\InvalidArgumentException');
+        $this->expectException(\InvalidArgumentException::class);
         $this->obj->authenticateByPassword([], '');
     }
 
@@ -84,7 +84,7 @@ class AuthenticatorTest extends AbstractTestCase
      */
     public function testAuthenticateByPasswordInvalidPassword()
     {
-        $this->expectException('\InvalidArgumentException');
+        $this->expectException(\InvalidArgumentException::class);
         $this->obj->authenticateByPassword('', []);
     }
 
@@ -93,7 +93,7 @@ class AuthenticatorTest extends AbstractTestCase
      */
     public function testAuthenticateByPasswordEmpty()
     {
-        $this->expectException('\InvalidArgumentException');
+        $this->expectException(\InvalidArgumentException::class);
         $this->obj->authenticateByPassword('', '');
     }
 

@@ -81,8 +81,8 @@ class AbstractUserTest extends AbstractTestCase
     public function testDefaultValues()
     {
         $obj = $this->obj;
-        $this->assertTrue($obj->active());
-        $this->assertEquals('', $obj->loginToken());
+        $this->assertTrue($obj['active']);
+        $this->assertEquals('', $obj['loginToken']);
     }
 
     /**
@@ -103,10 +103,10 @@ class AbstractUserTest extends AbstractTestCase
             'active'     => false
         ]);
         $this->assertSame($ret, $obj);
-        $this->assertEquals('foo', $obj->id());
-        $this->assertEquals('test@example.com', $obj->email());
-        $this->assertEquals('token', $obj->loginToken());
-        $this->assertFalse($obj->active());
+        $this->assertEquals('foo', $obj['id']);
+        $this->assertEquals('test@example.com', $obj['email']);
+        $this->assertEquals('token', $obj['loginToken']);
+        $this->assertFalse($obj['active']);
     }
 
     /**
@@ -116,10 +116,10 @@ class AbstractUserTest extends AbstractTestCase
     {
         $ret = $this->obj->setEmail('test@example.com');
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals('test@example.com', $this->obj->email());
+        $this->assertEquals('test@example.com', $this->obj['email']);
 
         $this->obj['email'] = 'foo@example.com';
-        $this->assertEquals('foo@example.com', $this->obj->email());
+        $this->assertEquals('foo@example.com', $this->obj['email']);
 
         $this->obj->set('email', 'bar@example.com');
         $this->assertEquals('bar@example.com', $this->obj['email']);
@@ -135,13 +135,13 @@ class AbstractUserTest extends AbstractTestCase
     {
         $ret = $this->obj->setRoles(null);
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals([], $this->obj->roles());
+        $this->assertEquals([], $this->obj['roles']);
 
         $this->obj->setRoles('foo, bar');
-        $this->assertEquals(['foo', 'bar'], $this->obj->roles());
+        $this->assertEquals(['foo', 'bar'], $this->obj['roles']);
 
         $this->obj->setRoles(['foobar', 'baz']);
-        $this->assertEquals(['foobar', 'baz'], $this->obj->roles());
+        $this->assertEquals(['foobar', 'baz'], $this->obj['roles']);
 
         $this->expectException(InvalidArgumentException::class);
         $this->obj->setRoles(42);
@@ -155,21 +155,21 @@ class AbstractUserTest extends AbstractTestCase
         $ret = $this->obj->setLastLoginDate('today');
         $this->assertSame($ret, $this->obj);
         $date = new DateTime('today');
-        $this->assertEquals($date, $this->obj->lastLoginDate());
+        $this->assertEquals($date, $this->obj['lastLoginDate']);
 
         $this->obj->setLastLoginDate(null);
-        $this->assertNull($this->obj->lastLoginDate());
+        $this->assertNull($this->obj['lastLoginDate']);
 
         $date = new DateTime('tomorrow');
         $this->obj->setLastLoginDate($date);
-        $this->assertEquals($date, $this->obj->lastLoginDate());
+        $this->assertEquals($date, $this->obj['lastLoginDate']);
 
         $date2 = new DateTime('today');
         $this->obj['last_login_date'] = $date2;
-        $this->assertEquals($date2, $this->obj->lastLoginDate());
+        $this->assertEquals($date2, $this->obj['lastLoginDate']);
 
         $this->obj->set('last_login_date', $date);
-        $this->assertEquals($date, $this->obj['last_login_date']);
+        $this->assertEquals($date, $this->obj['lastLoginDate']);
 
         $this->expectException(InvalidArgumentException::class);
         $this->obj->setLastLoginDate(false);
@@ -182,19 +182,19 @@ class AbstractUserTest extends AbstractTestCase
     {
         $ret = $this->obj->setLastLoginIp('8.8.8.8');
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals('8.8.8.8', $this->obj->lastLoginIp());
+        $this->assertEquals('8.8.8.8', $this->obj['lastLoginIp']);
 
         $this->obj['last_login_ip'] = '1.2.3.4';
-        $this->assertEquals('1.2.3.4', $this->obj->lastLoginIp());
+        $this->assertEquals('1.2.3.4', $this->obj['lastLoginIp']);
 
         $this->obj->set('last_login_ip', '4.3.2.1');
-        $this->assertEquals('4.3.2.1', $this->obj['last_login_ip']);
+        $this->assertEquals('4.3.2.1', $this->obj['lastLoginIp']);
 
         $this->obj->setLastLoginIp(null);
         $this->assertNull($this->obj['lastLoginIp']);
 
         $this->obj['lastLoginIp'] = 134744072;
-        $this->assertEquals('8.8.8.8', $this->obj->lastLoginIp());
+        $this->assertEquals('8.8.8.8', $this->obj['lastLoginIp']);
 
         $this->expectException(InvalidArgumentException::class);
         $this->obj->setLastLoginIp(false);
@@ -208,18 +208,18 @@ class AbstractUserTest extends AbstractTestCase
         $ret = $this->obj->setLastPasswordDate('today');
         $this->assertSame($ret, $this->obj);
         $date = new DateTime('today');
-        $this->assertEquals($date, $this->obj->lastPasswordDate());
+        $this->assertEquals($date, $this->obj['lastPasswordDate']);
 
         $this->obj->setLastPasswordDate(null);
-        $this->assertNull($this->obj->lastPasswordDate());
+        $this->assertNull($this->obj['lastPasswordDate']);
 
         $date = new DateTime('tomorrow');
         $this->obj->setLastPasswordDate($date);
-        $this->assertEquals($date, $this->obj->lastPasswordDate());
+        $this->assertEquals($date, $this->obj['lastPasswordDate']);
 
         $date2 = new DateTime('today');
         $this->obj['last_password_date'] = $date2;
-        $this->assertEquals($date2, $this->obj->lastPasswordDate());
+        $this->assertEquals($date2, $this->obj['lastPasswordDate']);
 
         $this->obj->set('last_password_date', $date);
         $this->assertEquals($date, $this->obj['last_password_date']);
@@ -236,10 +236,10 @@ class AbstractUserTest extends AbstractTestCase
         $ret = $this->obj->setLastPasswordIp('8.8.8.8');
         $this->assertSame($ret, $this->obj);
 
-        $this->assertEquals('8.8.8.8', $this->obj->lastPasswordIp());
+        $this->assertEquals('8.8.8.8', $this->obj['lastPasswordIp']);
 
         $this->obj['last_password_ip'] = '1.2.3.4';
-        $this->assertEquals('1.2.3.4', $this->obj->lastPasswordIp());
+        $this->assertEquals('1.2.3.4', $this->obj['lastPasswordIp']);
 
         $this->obj->set('last_password_ip', '4.3.2.1');
         $this->assertEquals('4.3.2.1', $this->obj['last_password_ip']);
@@ -248,7 +248,7 @@ class AbstractUserTest extends AbstractTestCase
         $this->assertNull($this->obj['lastPasswordIp']);
 
         $this->obj['lastPasswordIp'] = 134744072;
-        $this->assertEquals('8.8.8.8', $this->obj->lastPasswordIp());
+        $this->assertEquals('8.8.8.8', $this->obj['lastPasswordIp']);
 
         $this->expectException(InvalidArgumentException::class);
         $this->obj->setLastPasswordIp(false);
@@ -261,10 +261,10 @@ class AbstractUserTest extends AbstractTestCase
     {
         $ret = $this->obj->setLoginToken('abc');
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals('abc', $this->obj->loginToken());
+        $this->assertEquals('abc', $this->obj['loginToken']);
 
         $this->obj['login_token'] = 'foo';
-        $this->assertEquals('foo', $this->obj->loginToken());
+        $this->assertEquals('foo', $this->obj['loginToken']);
 
         $this->obj->set('login_token', 'bar');
         $this->assertEquals('bar', $this->obj['login_token']);

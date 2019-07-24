@@ -51,7 +51,7 @@ class PermissionCategoryTest extends AbstractTestCase
     {
         $ret = $this->obj->setName('foobar');
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals('foobar', $this->obj->name());
+        $this->assertEquals('foobar', $this->obj['name']);
     }
 
     /**

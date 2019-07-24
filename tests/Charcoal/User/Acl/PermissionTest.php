@@ -74,9 +74,9 @@ class PermissionTest extends AbstractTestCase
     {
         $ret = $this->obj->setIdent('foobar');
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals('foobar', $this->obj->ident());
+        $this->assertEquals('foobar', $this->obj['ident']);
 
-        $this->expectException('\InvalidArgumentException');
+        $this->expectException(\InvalidArgumentException::class);
         $this->obj->setIdent(false);
     }
 
@@ -87,7 +87,7 @@ class PermissionTest extends AbstractTestCase
     {
         $ret = $this->obj->setName('foobar');
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals('foobar', (string)$this->obj->name());
+        $this->assertEquals('foobar', (string)$this->obj['name']);
     }
 
     /**
