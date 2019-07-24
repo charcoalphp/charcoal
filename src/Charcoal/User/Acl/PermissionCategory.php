@@ -21,7 +21,7 @@ class PermissionCategory extends Content implements CategoryInterface
 
     /**
      * @param mixed $name The news category name (localized).
-     * @return PermissionCategory Chainable
+     * @return self
      */
     public function setName($name)
     {
@@ -32,7 +32,7 @@ class PermissionCategory extends Content implements CategoryInterface
     /**
      * @return \Charcoal\Translator\Translation|null
      */
-    public function name()
+    public function getName()
     {
         return $this->name;
     }

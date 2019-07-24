@@ -114,7 +114,7 @@ abstract class AbstractUser extends Content implements
     /**
      * @param  string $email The user email.
      * @throws InvalidArgumentException If the email is not a string.
-     * @return UserInterface Chainable
+     * @return self
      */
     public function setEmail($email)
     {
@@ -132,7 +132,7 @@ abstract class AbstractUser extends Content implements
     /**
      * @return string
      */
-    public function email()
+    public function getEmail()
     {
         return $this->email;
     }
@@ -140,7 +140,7 @@ abstract class AbstractUser extends Content implements
     /**
      * @param  string|null $password The user password. Encrypted in storage.
      * @throws InvalidArgumentException If the password is not a string (or null, to reset).
-     * @return UserInterface Chainable
+     * @return self
      */
     public function setPassword($password)
     {
@@ -160,14 +160,14 @@ abstract class AbstractUser extends Content implements
     /**
      * @return string|null
      */
-    public function password()
+    public function getPassword()
     {
         return $this->password;
     }
 
     /**
      * @param  string|null $name The user's display name.
-     * @return UserInterface Chainable
+     * @return self
      */
     public function setDisplayName($name)
     {
@@ -179,7 +179,7 @@ abstract class AbstractUser extends Content implements
     /**
      * @return string|null
      */
-    public function displayName()
+    public function getDisplayName()
     {
         return $this->displayName;
     }
@@ -187,7 +187,7 @@ abstract class AbstractUser extends Content implements
     /**
      * @param  string|string[]|null $roles The ACL roles this user belongs to.
      * @throws InvalidArgumentException If the roles argument is invalid.
-     * @return UserInterface Chainable
+     * @return self
      */
     public function setRoles($roles)
     {
@@ -214,7 +214,7 @@ abstract class AbstractUser extends Content implements
     /**
      * @return string[]
      */
-    public function roles()
+    public function getRoles()
     {
         return $this->roles;
     }
@@ -222,7 +222,7 @@ abstract class AbstractUser extends Content implements
     /**
      * @param  string|DateTimeInterface|null $lastLoginDate The last login date.
      * @throws InvalidArgumentException If the ts is not a valid date/time.
-     * @return UserInterface Chainable
+     * @return self
      */
     public function setLastLoginDate($lastLoginDate)
     {
@@ -256,7 +256,7 @@ abstract class AbstractUser extends Content implements
     /**
      * @return DateTimeInterface|null
      */
-    public function lastLoginDate()
+    public function getLastLoginDate()
     {
         return $this->lastLoginDate;
     }
@@ -264,7 +264,7 @@ abstract class AbstractUser extends Content implements
     /**
      * @param  string|integer|null $ip The last login IP address.
      * @throws InvalidArgumentException If the IP is not an IP string, an integer, or null.
-     * @return UserInterface Chainable
+     * @return self
      */
     public function setLastLoginIp($ip)
     {
@@ -293,7 +293,7 @@ abstract class AbstractUser extends Content implements
      *
      * @return string|null
      */
-    public function lastLoginIp()
+    public function getLastLoginIp()
     {
         return $this->lastLoginIp;
     }
@@ -301,7 +301,7 @@ abstract class AbstractUser extends Content implements
     /**
      * @param  string|DateTimeInterface|null $lastPasswordDate The last password date.
      * @throws InvalidArgumentException If the passsword date is not a valid DateTime.
-     * @return UserInterface Chainable
+     * @return self
      */
     public function setLastPasswordDate($lastPasswordDate)
     {
@@ -335,7 +335,7 @@ abstract class AbstractUser extends Content implements
     /**
      * @return DateTimeInterface|null
      */
-    public function lastPasswordDate()
+    public function getLastPasswordDate()
     {
         return $this->lastPasswordDate;
     }
@@ -343,7 +343,7 @@ abstract class AbstractUser extends Content implements
     /**
      * @param  integer|string|null $ip The last password IP.
      * @throws InvalidArgumentException If the IP is not null, an integer or an IP string.
-     * @return UserInterface Chainable
+     * @return self
      */
     public function setLastPasswordIp($ip)
     {
@@ -372,7 +372,7 @@ abstract class AbstractUser extends Content implements
      *
      * @return string|null
      */
-    public function lastPasswordIp()
+    public function getLastPasswordIp()
     {
         return $this->lastPasswordIp;
     }
@@ -380,7 +380,7 @@ abstract class AbstractUser extends Content implements
     /**
      * @param  string|null $token The login token.
      * @throws InvalidArgumentException If the token is not a string.
-     * @return UserInterface Chainable
+     * @return self
      */
     public function setLoginToken($token)
     {
@@ -403,7 +403,7 @@ abstract class AbstractUser extends Content implements
     /**
      * @return string|null
      */
-    public function loginToken()
+    public function getLoginToken()
     {
         return $this->loginToken;
     }
@@ -429,7 +429,7 @@ abstract class AbstractUser extends Content implements
 
     /**
      * @throws Exception If trying to save a user to session without a ID.
-     * @return UserInterface Chainable
+     * @return self
      */
     public function saveToSession()
     {
@@ -463,7 +463,10 @@ abstract class AbstractUser extends Content implements
             $this->setLastLoginIp($ip);
         }
 
-        $this->update([ 'last_login_ip', 'last_login_date' ]);
+        $this->update([
+            'last_login_ip',
+            'last_login_date'
+        ]);
 
         $this->saveToSession();
 
@@ -498,7 +501,7 @@ abstract class AbstractUser extends Content implements
      *
      * @param string $plainPassword The plain (non-encrypted) password to reset to.
      * @throws InvalidArgumentException If the plain password is not a string.
-     * @return UserInterface Chainable
+     * @return self
      */
     public function resetPassword($plainPassword)
     {
@@ -518,7 +521,11 @@ abstract class AbstractUser extends Content implements
         }
 
         if ($this->id()) {
-            $this->update([ 'password', 'last_password_date', 'last_password_ip' ]);
+            $this->update([
+                'password',
+                'last_password_date',
+                'last_password_ip'
+            ]);
         }
 
         return $this;
@@ -555,7 +562,7 @@ abstract class AbstractUser extends Content implements
         $user->load($userId);
 
         // Inactive users can not authenticate
-        if (!$user->id() || !$user->email() || !$user->active()) {
+        if (!$user['id'] || !$user['email'] || !$user['active']) {
             return null;
         }
 
@@ -582,7 +589,7 @@ abstract class AbstractUser extends Content implements
         $objType = self::objType();
         $previousModel = $this->modelFactory()->create($objType)->load($this->id());
 
-        $email = $this->email();
+        $email = $this['email'];
         if (empty($email)) {
             $this->validator()->error(
                 'Email is required.',
@@ -594,7 +601,7 @@ abstract class AbstractUser extends Content implements
                 'email'
             );
         /** Check if updating/changing email. */
-        } elseif ($previousModel->email() !== $email) {
+        } elseif ($previousModel['email'] !== $email) {
             $existingModel = $this->modelFactory()->create($objType)->loadFrom('email', $email);
             /** Check for existing user with given email. */
             if (!empty($existingModel->id())) {
