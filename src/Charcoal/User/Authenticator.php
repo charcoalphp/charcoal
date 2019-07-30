@@ -129,7 +129,7 @@ class Authenticator implements LoggerAwareInterface
             return null;
         }
 
-        if ($user->active() === false) {
+        if ($user['active'] === false) {
             return null;
         }
 
@@ -138,7 +138,7 @@ class Authenticator implements LoggerAwareInterface
             if (password_needs_rehash($user['password'], PASSWORD_DEFAULT)) {
                 $this->logger->notice(sprintf(
                     'Rehashing password for user "%s" (%s)',
-                    $user->email(),
+                    $user['email'],
                     $this->userType()
                 ));
                 $hash = password_hash($password, PASSWORD_DEFAULT);
@@ -152,7 +152,7 @@ class Authenticator implements LoggerAwareInterface
         } else {
             $this->logger->warning(sprintf(
                 'Invalid login attempt for user "%s": invalid password.',
-                $user->email()
+                $user['email']
             ));
 
             return null;
