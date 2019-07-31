@@ -66,14 +66,17 @@ abstract class AbstractMetadata extends AbstractConfig implements
     }
 
     /**
-     * Set the properties.
+     * Set the properties. Ensure the property idents (keys) are camel-cased.
      *
      * @param array $properties One or more properties.
      * @return self
      */
     public function setProperties(array $properties)
     {
-        $this->properties = $properties;
+        $this->properties = [];
+        foreach ($properties as $k => $v) {
+            $this->properties[$this->camelize($k)] = $v;
+        }
         return $this;
     }
 

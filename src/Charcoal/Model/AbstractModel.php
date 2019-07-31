@@ -111,6 +111,7 @@ abstract class AbstractModel extends AbstractEntity implements
      *
      * @param  array $data The entity data. Will call setters.
      * @return self
+     * @see AbstractEntity::setData()
      */
     public function setData(array $data)
     {
@@ -211,7 +212,8 @@ abstract class AbstractModel extends AbstractEntity implements
             foreach ($fields as $k => $f) {
                 if (is_string($k)) {
                     $fid = $f->ident();
-                    $key = str_replace($propertyIdent.'_', '', $fid);
+                    $snake = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $propertyIdent));
+                    $key = str_replace($snake.'_', '', $fid);
                     if (isset($flatData[$fid])) {
                         $data[$propertyIdent][$key] = $flatData[$fid];
                         unset($flatData[$fid]);
@@ -251,12 +253,14 @@ abstract class AbstractModel extends AbstractEntity implements
 
     /**
      * Retrieve the value for the given property.
+     * Force camelcase on the parameter.
      *
      * @param  string $propertyIdent The property identifier to fetch.
      * @return mixed
      */
     public function propertyValue($propertyIdent)
     {
+        $propertyIdent = $this->camelize($propertyIdent);
         return $this[$propertyIdent];
     }
 
