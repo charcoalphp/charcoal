@@ -121,7 +121,10 @@ class IpPropertyTest extends AbstractTestCase
     public function testHostname()
     {
         $this->assertEquals('0.0.0.0', $this->obj->hostname(0));
-        $this->assertContains('google.com', $this->obj->hostname('8.8.8.8'));
+        $this->assertThat($this->obj->hostname('8.8.8.8'), $this->logicalOr(
+            $this->identicalTo('dns.google'),
+            $this->identicalTo('google.com')
+        ));
     }
 
     /**
