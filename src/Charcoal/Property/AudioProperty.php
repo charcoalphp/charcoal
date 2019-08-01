@@ -90,6 +90,7 @@ class AudioProperty extends FileProperty
         return [
             'audio/mp3',
             'audio/mpeg',
+            'audio/ogg',
             'audio/wav',
             'audio/x-wav'
         ];
@@ -117,6 +118,9 @@ class AudioProperty extends FileProperty
             case 'audio/mp3':
             case 'audio/mpeg':
                 return 'mp3';
+
+            case 'audio/ogg':
+                return 'ogg';
 
             case 'audio/wav':
             case 'audio/x-wav':

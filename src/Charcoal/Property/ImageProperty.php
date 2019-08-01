@@ -80,8 +80,6 @@ class ImageProperty extends FileProperty
         return $this->imageFactory;
     }
 
-
-
     /**
      * Set the name of the property's image processing driver.
      *
@@ -259,8 +257,6 @@ class ImageProperty extends FileProperty
         return $value;
     }
 
-
-
     /**
      * Provides the accepted mimetypes for the image properties.
      *
@@ -277,7 +273,7 @@ class ImageProperty extends FileProperty
             'image/pjpeg',
             'image/png',
             'image/svg+xml',
-            'image/webp'
+            'image/webp',
         ];
     }
 
