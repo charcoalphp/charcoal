@@ -1,5 +1,6 @@
 {
     "admin": {
-        "input_type": "charcoal/admin/property/input/tinymce"
+        "input_type": "charcoal/admin/property/input/tinymce",
+        "show_file_picker": true
     }
 }
