@@ -28,7 +28,7 @@ class AudioPropertyTest extends AbstractTestCase
         $this->obj = new AudioProperty([
             'database'   => $container['database'],
             'logger'     => $container['logger'],
-            'translator' => $container['translator']
+            'translator' => $container['translator'],
         ]);
     }
 
@@ -57,7 +57,7 @@ class AudioPropertyTest extends AbstractTestCase
         $obj = $this->obj;
         $data = [
             'minLength' => 20,
-            'maxLength' => 500
+            'maxLength' => 500,
         ];
         $ret = $obj->setData($data);
         $this->assertSame($ret, $obj);
@@ -74,7 +74,7 @@ class AudioPropertyTest extends AbstractTestCase
         $obj = $this->obj;
         $data = [
           'min_length' => 20,
-          'max_length' => 500
+          'max_length' => 500,
         ];
         $ret = $obj->setData($data);
         $this->assertSame($ret, $obj);
@@ -116,7 +116,7 @@ class AudioPropertyTest extends AbstractTestCase
      */
     public function testAcceptedMimetypes()
     {
-        $ret = $this->obj->acceptedMimetypes();
+        $ret = $this->obj['acceptedMimetypes'];
         $this->assertContains('audio/mp3', $ret);
         $this->assertContains('audio/mpeg', $ret);
         $this->assertContains('audio/wav', $ret);
@@ -146,7 +146,7 @@ class AudioPropertyTest extends AbstractTestCase
             ['audio/mp3', 'mp3'],
             ['audio/mpeg', 'mp3'],
             ['audio/wav', 'wav'],
-            ['audio/x-wav', 'wav']
+            ['audio/x-wav', 'wav'],
         ];
     }
 }

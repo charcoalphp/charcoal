@@ -53,7 +53,7 @@ class AudioProperty extends FileProperty
     /**
      * @return integer
      */
-    public function minLength()
+    public function getMinLength()
     {
         return $this->minLength;
     }
@@ -77,7 +77,7 @@ class AudioProperty extends FileProperty
     /**
      * @return integer
      */
-    public function maxLength()
+    public function getMaxLength()
     {
         return $this->maxLength;
     }
@@ -85,13 +85,14 @@ class AudioProperty extends FileProperty
     /**
      * @return string[]
      */
-    public function acceptedMimetypes()
+    public function getAcceptedMimetypes()
     {
         return [
             'audio/mp3',
             'audio/mpeg',
+            'audio/ogg',
             'audio/wav',
-            'audio/x-wav'
+            'audio/x-wav',
         ];
     }
 
@@ -117,6 +118,9 @@ class AudioProperty extends FileProperty
             case 'audio/mp3':
             case 'audio/mpeg':
                 return 'mp3';
+
+            case 'audio/ogg':
+                return 'ogg';
 
             case 'audio/wav':
             case 'audio/x-wav':

@@ -26,6 +26,17 @@ class FileProperty extends AbstractProperty
     const DEFAULT_UPLOAD_PATH = 'uploads/';
     const DEFAULT_FILESYSTEM = 'public';
     const DEFAULT_OVERWRITE = false;
+    const ERROR_MESSAGES = [
+        UPLOAD_ERR_OK         => 'There is no error, the file uploaded with success',
+        UPLOAD_ERR_INI_SIZE   => 'The uploaded file exceeds the upload_max_filesize directive in php.ini',
+        UPLOAD_ERR_FORM_SIZE  => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
+        UPLOAD_ERR_PARTIAL    => 'The uploaded file was only partially uploaded',
+        UPLOAD_ERR_NO_FILE    => 'No file was uploaded',
+        UPLOAD_ERR_NO_TMP_DIR => 'Missing a temporary folder',
+        UPLOAD_ERR_CANT_WRITE => 'Failed to write file to disk',
+        UPLOAD_ERR_EXTENSION  => 'A PHP extension stopped the file upload.',
+    ];
+
     /**
      * Whether uploaded files should be accessible from the web root.
      *
@@ -104,8 +115,6 @@ class FileProperty extends AbstractProperty
         return 'file';
     }
 
-
-
     /**
      * Set whether uploaded files should be publicly available.
      *
@@ -128,8 +137,6 @@ class FileProperty extends AbstractProperty
     {
         return $this->publicAccess;
     }
-
-
 
     /**
      * Set the destination (directory) where uploaded files are stored.
@@ -201,7 +208,7 @@ class FileProperty extends AbstractProperty
     /**
      * @return string[]
      */
-    public function acceptedMimetypes()
+    public function getAcceptedMimetypes()
     {
         return $this->acceptedMimetypes;
     }
@@ -287,7 +294,7 @@ class FileProperty extends AbstractProperty
      *
      * @return integer
      */
-    public function maxFilesize()
+    public function getMaxFilesize()
     {
         if (!isset($this->maxFilesize)) {
             return $this->maxFilesizeAllowedByPhp();
@@ -369,7 +376,7 @@ class FileProperty extends AbstractProperty
      */
     public function validateAcceptedMimetypes()
     {
-        $acceptedMimetypes = $this->acceptedMimetypes();
+        $acceptedMimetypes = $this['acceptedMimetypes'];
         if (empty($acceptedMimetypes)) {
             // No validation rules = always true
             return true;
@@ -446,216 +453,276 @@ class FileProperty extends AbstractProperty
     }
 
     /**
-     * Overwrites AbstractProperty::save($val) to process file uploading.
+     * Process file uploads {@see AbstractProperty::save() parsing values}.
      *
-     * @param mixed $val The value, at time of saving.
+     * @param  mixed $val The value, at time of saving.
      * @return mixed
      */
     public function save($val)
     {
-        // Current ident
-        $i = $this->ident();
-
-        // Upload file, if in request.
-        if (isset($_FILES[$i])
-            && (isset($_FILES[$i]['name']) && $_FILES[$i]['name'])
-            && (isset($_FILES[$i]['tmp_name']) && $_FILES[$i]['tmp_name'])
-        ) {
-            $file = $_FILES[$i];
-
-            if (is_array($file['name']) && $this['multiple'] && $this['l10n']) {
-                $f = [];
-                foreach ($file['name'] as $lang => $langVal) {
-                    $f[$lang] = [];
-                    if (!$file['name'][$lang]) {
-                        $f[$lang] = isset($val[$lang]) ? $val[$lang] : '';
-                        continue;
-                    }
-                    $k = 0;
-                    $total = count($file['name'][$lang]);
-                    for (; $k < $total; $k++) {
-                        $data = [];
-                        $data['name'] = $file['name'][$lang][$k];
-                        $data['tmp_name'] = $file['tmp_name'][$lang][$k];
-                        $data['error'] = $file['error'][$lang][$k];
-                        $data['type'] = $file['type'][$lang][$k];
-                        $data['size'] = $file['size'][$lang][$k];
-
-                        $f[$lang][] = $this->fileUpload($data);
-                    }
-                }
-            } elseif (is_array($file['name']) && $this['multiple']) {
-                $f = [];
-                $k = 0;
-                $total = count($file['name']);
-                for (; $k < $total; $k++) {
-                    $data = [];
-                    $data['name'] = $file['name'][$k];
-                    $data['tmp_name'] = $file['tmp_name'][$k];
-                    $data['error'] = $file['error'][$k];
-                    $data['type'] = $file['type'][$k];
-                    $data['size'] = $file['size'][$k];
-
-                    $f[] = $this->fileUpload($data);
-                }
-            } elseif (is_array($file['name']) && $this['l10n']) {
-                // Not so cool
-                // Both the multiple and l10n loop could and
-                // should be combined into one.
-                // Not sure how
-                $f = [];
-                foreach ($file['name'] as $lang => $langVal) {
-                    $data = [];
-
-                    if (!$file['name'][$lang]) {
-                        $f[$lang] = isset($val[$lang]) ? $val[$lang] : '';
-                        continue;
-                    }
-                    $data['name'] = $file['name'][$lang];
-                    $data['tmp_name'] = $file['tmp_name'][$lang];
-                    $data['error'] = $file['error'][$lang];
-                    $data['type'] = $file['type'][$lang];
-                    $data['size'] = $file['size'][$lang];
-
-                    $f[$lang] = $this->fileUpload($data);
-                }
-            } else {
-                $f = $this->fileUpload($file);
-            }
-
-            return $f;
+        if ($val instanceof Translation) {
+            $values = $val->data();
+        } else {
+            $values = $val;
         }
 
-        // Check in vals for data: base64 images
-        // val should be an array if multiple...
-        if ($val !== null) {
-            if ($this['l10n']) {
-                $l10nVal = ($val instanceof Translation) ? $val->data() : $val;
+        $uploadedFiles = $this->getUploadedFiles();
 
-                $f = [];
-                foreach ($l10nVal as $v) {
-                    if ($this->isDataUri($v)) {
-                        $f[] = $this->dataUpload($v);
-                    }
+        if ($this['l10n']) {
+            foreach ($this->translator()->availableLocales() as $lang) {
+                if (!isset($values[$lang])) {
+                    $values[$lang] = $this['multiple'] ? [] : '';
                 }
 
-                if (!empty($f)) {
-                    return $f;
-                }
-            } elseif ($this['multiple']) {
-                $f = [];
-                foreach ($val as $v) {
-                    if ((is_array($v) && isset($v['id'])) || $this->isDataUri($v)) {
-                        $f[] = $this->dataUpload($v);
-                    }
+                $parsedFiles = [];
+
+                if (isset($uploadedFiles[$lang])) {
+                    $parsedFiles = $this->saveFileUploads($uploadedFiles[$lang]);
                 }
 
-                if (!empty($f)) {
-                    return $f;
+                if (empty($parsedFiles)) {
+                    $parsedFiles = $this->saveDataUploads($values[$lang]);
                 }
-            } elseif ($this->isDataUri($val)) {
-                $f = $this->dataUpload($val);
 
-                return $f;
+                $values[$lang] = $this->parseSavedValues($parsedFiles, $values[$lang]);
+            }
+        } else {
+            $parsedFiles = [];
+
+            if (!empty($uploadedFiles)) {
+                $parsedFiles = $this->saveFileUploads($uploadedFiles);
+            }
+
+            if (empty($parsedFiles)) {
+                $parsedFiles = $this->saveDataUploads($values);
+            }
+
+            $values = $this->parseSavedValues($parsedFiles, $values);
+        }
+
+        return $values;
+    }
+
+    /**
+     * Process and transfer any data URIs to the filesystem,
+     * and carry over any pre-processed file paths.
+     *
+     * @param  mixed $values One or more data URIs, data entries, or processed file paths.
+     * @return string|string[] One or more paths to the processed uploaded files.
+     */
+    protected function saveDataUploads($values)
+    {
+        // Bag value if singular
+        if (!is_array($values) || isset($values['id'])) {
+            $values = [ $values ];
+        }
+
+        $parsed = [];
+        foreach ($values as $value) {
+            if ($this->isDataArr($value) || $this->isDataUri($value)) {
+                $path = $this->dataUpload($value);
+                if ($path !== null) {
+                    $parsed[] = $path;
+                }
+            } elseif (is_string($value) && !empty($value)) {
+                $parsed[] = $value;
             }
         }
 
-        return $val;
+        return $parsed;
+    }
+
+    /**
+     * Process and transfer any uploaded files to the filesystem.
+     *
+     * @param  mixed $files One or more normalized $_FILE entries.
+     * @return string[] One or more paths to the processed uploaded files.
+     */
+    protected function saveFileUploads($files)
+    {
+        // Bag value if singular
+        if (isset($files['error'])) {
+            $files = [ $files ];
+        }
+
+        $parsed = [];
+        foreach ($files as $file) {
+            if (isset($file['error'])) {
+                $path = $this->fileUpload($file);
+                if ($path !== null) {
+                    $parsed[] = $path;
+                }
+            }
+        }
+
+        return $parsed;
+    }
+
+    /**
+     * Finalize any processed files.
+     *
+     * @param  mixed $saved   One or more values, at time of saving.
+     * @param  mixed $default The default value to return.
+     * @return string|string[] One or more paths to the processed uploaded files.
+     */
+    protected function parseSavedValues($saved, $default = null)
+    {
+        $values = empty($saved) ? $default : $saved;
+
+        if ($this['multiple']) {
+            if (!is_array($values)) {
+                $values = empty($values) && !is_numeric($values) ? [] : [ $values ];
+            }
+        } else {
+            if (is_array($values)) {
+                $values = reset($values);
+            }
+        }
+
+        return $values;
     }
 
     /**
      * Upload to filesystem, from data URI.
      *
-     * @param string $fileData The file data, raw.
+     * @param  mixed $data A data URI.
      * @throws Exception If data content decoding fails.
-     * @return string
+     * @throws InvalidArgumentException If the $data is invalid.
+     * @return string|null The file path to the uploaded data.
      */
-    public function dataUpload($fileData)
+    public function dataUpload($data)
     {
         $filename = null;
-        if (is_array($fileData)) {
-            // retrieve tmp file from temp dir
-            $tmpDir = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
-            $tmpFile = $tmpDir.$fileData['id'];
+        $content  = false;
 
-            if (!file_exists($tmpFile)) {
-                throw new Exception(
-                    'File does not exists.'
+        if (is_array($data)) {
+            if (!isset($data['id'], $data['name'])) {
+                throw new InvalidArgumentException(
+                    '$data as an array MUST contain each of the keys "id" and "name", '.
+                    'with each represented as a scalar value; one or more were missing or non-array values'
                 );
             }
-            $fileContent = file_get_contents($tmpFile);
-            $filename = (!empty($fileData['name'])) ? $fileData['name'] : null;
+            // retrieve tmp file from temp dir
+            $tmpDir  = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+            $tmpFile = $tmpDir.$data['id'];
+            if (!file_exists($tmpFile)) {
+                throw new Exception(sprintf(
+                    'File %s does not exists',
+                    $data['id']
+                ));
+            }
+
+            $content  = file_get_contents($tmpFile);
+            $filename = empty($data['name']) ? null : $data['name'];
+
             // delete tmp file
             unlink($tmpFile);
-        } else {
-            $fileContent = file_get_contents($fileData);
+        } elseif (is_string($data)) {
+            $content = file_get_contents($data);
         }
 
-        if ($fileContent === false) {
+        if ($content === false) {
             throw new Exception(
-                'File content could not be decoded.'
+                'File content could not be decoded'
             );
         }
 
         $info = new finfo(FILEINFO_MIME_TYPE);
-        $this->setMimetype($info->buffer($fileContent));
-        $this->setFilesize(strlen($fileContent));
+        $this->setMimetype($info->buffer($content));
+        $this->setFilesize(strlen($content));
         if (!$this->validateAcceptedMimetypes() || !$this->validateMaxFilesize()) {
-            return '';
+            return null;
         }
 
-        $target = $this->uploadTarget($filename);
+        $targetPath = $this->uploadTarget($filename);
 
-        $ret = file_put_contents($target, $fileContent);
-        if ($ret === false) {
-            return '';
-        } else {
-            $basePath = $this->basePath();
-            $target = str_replace($basePath, '', $target);
-
-            return $target;
+        $result = file_put_contents($targetPath, $content);
+        if ($result === false) {
+            $this->logger->warning(sprintf(
+                'Failed to write file to %s',
+                $targetPath
+            ));
+            return null;
         }
+
+        $basePath  = $this->basePath();
+        $targetPath = str_replace($basePath, '', $targetPath);
+
+        return $targetPath;
     }
 
     /**
      * Upload to filesystem.
      *
-     * @param array $fileData The file data (from $_FILES, typically).
-     * @throws InvalidArgumentException If the FILES data argument is missing `name` or `tmp_name`.
-     * @return string
+     * @link https://github.com/slimphp/Slim/blob/3.12.1/Slim/Http/UploadedFile.php
+     *     Adapted from slim/slim.
+     *
+     * @param  array $file A single $_FILES entry.
+     * @throws InvalidArgumentException If the $file is invalid.
+     * @return string|null The file path to the uploaded file.
      */
-    public function fileUpload(array $fileData)
+    public function fileUpload(array $file)
     {
-        if (!isset($fileData['name'])) {
+        if (!isset($file['tmp_name'], $file['name'], $file['size'], $file['error'])) {
             throw new InvalidArgumentException(
-                'File data is invalid'
+                '$file MUST contain each of the keys "tmp_name", "name", "size", and "error", '.
+                'with each represented as a scalar value; one or more were missing or non-array values'
             );
         }
 
-        $target = $this->uploadTarget($fileData['name']);
+        if ($file['error'] !== UPLOAD_ERR_OK) {
+            $this->logger->warning(sprintf(
+                'Upload error on file %s: %s',
+                $file['name'],
+                self::ERROR_MESSAGES[$this->error]
+            ));
 
-        if (file_exists($fileData['tmp_name'])) {
+            return null;
+        }
+
+        if (file_exists($file['tmp_name'])) {
             $info = new finfo(FILEINFO_MIME_TYPE);
-            $this->setMimetype($info->file($fileData['tmp_name']));
-            $this->setFilesize(filesize($fileData['tmp_name']));
+            $this->setMimetype($info->file($file['tmp_name']));
+            $this->setFilesize(filesize($file['tmp_name']));
             if (!$this->validateAcceptedMimetypes() || !$this->validateMaxFilesize()) {
-                return '';
+                return null;
             }
-        }
-
-        $ret = move_uploaded_file($fileData['tmp_name'], $target);
-
-        if ($ret === false) {
-            $this->logger->warning(sprintf('Could not upload file %s', $target));
-
-            return '';
         } else {
-            $this->logger->notice(sprintf('File %s uploaded succesfully', $target));
-            $basePath = $this->basePath();
-            $target = str_replace($basePath, '', $target);
-
-            return $target;
+            $this->logger->warning(sprintf(
+                'File %s does not exists',
+                $file['tmp_name']
+            ));
+            return null;
         }
+
+        $targetPath = $this->uploadTarget($file['name']);
+
+        if (!is_uploaded_file($file['tmp_name'])) {
+            $this->logger->warning(sprintf(
+                '%s is not a valid uploaded file',
+                $file['tmp_name']
+            ));
+            return null;
+        }
+
+        if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
+            $this->logger->warning(sprintf(
+                'Error moving uploaded file %s to %s',
+                $file['tmp_name'],
+                $targetPath
+            ));
+            return null;
+        }
+
+        $this->logger->notice(sprintf(
+            'File %s uploaded succesfully',
+            $targetPath
+        ));
+
+        $basePath   = $this->basePath();
+        $targetPath = str_replace($basePath, '', $targetPath);
+
+        return $targetPath;
     }
 
     /**
@@ -665,39 +732,38 @@ class FileProperty extends AbstractProperty
      */
     public function uploadTarget($filename = null)
     {
-        $basePath = $this->basePath();
+        $uploadPath = $this->basePath().$this['uploadPath'];
 
-        $dir = $basePath.$this->uploadPath();
-        $filename = ($filename) ? $this->sanitizeFilename($filename) : $this->generateFilename();
-
-        if (!file_exists($dir)) {
+        if (!file_exists($uploadPath)) {
             // @todo: Feedback
             $this->logger->debug(
-                'Path does not exist. Attempting to create path '.$dir.'.',
+                'Path does not exist. Attempting to create path '.$uploadPath.'.',
                 [ get_called_class().'::'.__FUNCTION__ ]
             );
-            mkdir($dir, 0777, true);
+            mkdir($uploadPath, 0777, true);
         }
-        if (!is_writable($dir)) {
+
+        if (!is_writable($uploadPath)) {
             throw new Exception(
                 'Error: upload directory is not writeable'
             );
         }
 
-        $target = $dir.$filename;
+        $filename   = empty($filename) ? $this->generateFilename() : $this->sanitizeFilename($filename);
+        $targetPath = $uploadPath.$filename;
 
-        if ($this->fileExists($target)) {
-            if ($this->overwrite() === true) {
-                return $target;
+        if ($this->fileExists($targetPath)) {
+            if ($this['overwrite'] === true) {
+                return $targetPath;
             } else {
-                $target = $dir.$this->generateUniqueFilename($filename);
-                while ($this->fileExists($target)) {
-                    $target = $dir.$this->generateUniqueFilename($filename);
+                $targetPath = $uploadPath.$this->generateUniqueFilename($filename);
+                while ($this->fileExists($targetPath)) {
+                    $targetPath = $uploadPath.$this->generateUniqueFilename($filename);
                 }
             }
         }
 
-        return $target;
+        return $targetPath;
     }
 
     /**
@@ -736,7 +802,6 @@ class FileProperty extends AbstractProperty
 
         return false;
     }
-
 
     /**
      * Sanitize a filename by removing characters from a blacklist and escaping dot.
@@ -810,7 +875,7 @@ class FileProperty extends AbstractProperty
      */
     public function generateFilename()
     {
-        $filename = $this['label'].' '.date('Y-m-d H-i-s');
+        $filename  = $this['label'].' '.date('Y-m-d H-i-s');
         $extension = $this->generateExtension();
 
         if ($extension) {
@@ -861,12 +926,23 @@ class FileProperty extends AbstractProperty
     {
         if ($file === null) {
             $file = $this->val();
-        } elseif (is_string($file)) {
-            if (in_array($file, $this->acceptedMimetypes())) {
-                $mime = $file;
-            } else {
-                $mime = $this->mimetypeFor($file);
+        }
+
+        // PHP 7.2
+        if (is_string($file) && defined('FILEINFO_EXTENSION')) {
+            $info = new finfo(FILEINFO_EXTENSION);
+            $ext  = $info->file($file);
+
+            if ($ext === '???') {
+                return '';
             }
+
+            if (strpos($ext, '/') !== false) {
+                $ext = explode('/', $ext);
+                $ext = reset($ext);
+            }
+
+            return $ext;
         }
 
         return '';
@@ -875,7 +951,7 @@ class FileProperty extends AbstractProperty
     /**
      * @return string
      */
-    public function filesystem()
+    public function getFilesystem()
     {
         return $this->filesystem;
     }
@@ -968,16 +1044,26 @@ class FileProperty extends AbstractProperty
             || null !== parse_url($file, PHP_URL_SCHEME);
     }
 
-
     /**
      * Determine if the given value is a data URI.
      *
-     * @param  string $val The value to check.
-     * @return string
+     * @param  mixed $val The value to check.
+     * @return boolean
      */
     protected function isDataUri($val)
     {
-        return preg_match('/^data:/i', $val);
+        return is_string($val) && preg_match('/^data:/i', $val);
+    }
+
+    /**
+     * Determine if the given value is a data array.
+     *
+     * @param  mixed $val The value to check.
+     * @return boolean
+     */
+    protected function isDataArr($val)
+    {
+        return is_array($val) && isset($val['id']);
     }
 
     /**
@@ -1021,7 +1107,7 @@ class FileProperty extends AbstractProperty
             '{{label}}'     => $this['label'],
             '{{extension}}' => $info['extension'],
             '{{basename}}'  => $info['basename'],
-            '{{filename}}'  => $info['filename']
+            '{{filename}}'  => $info['filename'],
         ];
 
         if ($args === null) {
@@ -1049,5 +1135,113 @@ class FileProperty extends AbstractProperty
         }
 
         return $args;
+    }
+
+    /**
+     * Retrieve normalized file upload data for this property.
+     *
+     * @return array A tree of normalized $_FILE entries.
+     */
+    public function getUploadedFiles()
+    {
+        $propIdent = $this->ident();
+
+        $filterErrNoFile = function (array $file) {
+            return $file['error'] !== UPLOAD_ERR_NO_FILE;
+        };
+        $uploadedFiles = static::parseUploadedFiles($_FILES, $filterErrNoFile, $propIdent);
+
+        return $uploadedFiles;
+    }
+
+    /**
+     * Parse a non-normalized, i.e. $_FILES superglobal, tree of uploaded file data.
+     *
+     * @link https://github.com/slimphp/Slim/blob/3.12.1/Slim/Http/UploadedFile.php
+     *     Adapted from slim/slim.
+     *
+     * @todo Add support for "dot" notation on $searchKey.
+     *
+     * @param  array    $uploadedFiles  The non-normalized tree of uploaded file data.
+     * @param  callable $filterCallback If specified, the callback function to used to filter files.
+     * @param  mixed    $searchKey      If specified, then only top-level keys containing these values are returned.
+     * @return array A tree of normalized $_FILE entries.
+     */
+    public static function parseUploadedFiles(array $uploadedFiles, callable $filterCallback = null, $searchKey = null)
+    {
+        if ($searchKey !== null) {
+            if (is_array($searchKey)) {
+                $uploadedFiles = array_intersect_key($uploadedFiles, array_flip($searchKey));
+                return static::parseUploadedFiles($uploadedFiles, $filterCallback);
+            }
+
+            if (isset($uploadedFiles[$searchKey])) {
+                $uploadedFiles = [
+                    $searchKey => $uploadedFiles[$searchKey],
+                ];
+                $parsedFiles = static::parseUploadedFiles($uploadedFiles, $filterCallback);
+                if (isset($parsedFiles[$searchKey])) {
+                    return $parsedFiles[$searchKey];
+                }
+            }
+
+            return [];
+        }
+
+        $parsedFiles = [];
+        foreach ($uploadedFiles as $field => $uploadedFile) {
+            if (!isset($uploadedFile['error'])) {
+                if (is_array($uploadedFile)) {
+                    $subArray = static::parseUploadedFiles($uploadedFile, $filterCallback);
+                    if (!empty($subArray)) {
+                        if (!isset($parsedFiles[$field])) {
+                            $parsedFiles[$field] = [];
+                        }
+
+                        $parsedFiles[$field] = $subArray;
+                    }
+                }
+                continue;
+            }
+
+            if (!is_array($uploadedFile['error'])) {
+                if ($filterCallback === null || $filterCallback($uploadedFile, $field) === true) {
+                    if (!isset($parsedFiles[$field])) {
+                        $parsedFiles[$field] = [];
+                    }
+
+                    $parsedFiles[$field] = [
+                        'tmp_name' => $uploadedFile['tmp_name'],
+                        'name'     => isset($uploadedFile['name']) ? $uploadedFile['name'] : null,
+                        'type'     => isset($uploadedFile['type']) ? $uploadedFile['type'] : null,
+                        'size'     => isset($uploadedFile['size']) ? $uploadedFile['size'] : null,
+                        'error'    => $uploadedFile['error'],
+                    ];
+                }
+            } else {
+                $subArray = [];
+                foreach ($uploadedFile['error'] as $fileIdx => $error) {
+                    // normalise subarray and re-parse to move the input's keyname up a level
+                    $subArray[$fileIdx] = [
+                        'tmp_name' => $uploadedFile['tmp_name'][$fileIdx],
+                        'name'     => $uploadedFile['name'][$fileIdx],
+                        'type'     => $uploadedFile['type'][$fileIdx],
+                        'size'     => $uploadedFile['size'][$fileIdx],
+                        'error'    => $uploadedFile['error'][$fileIdx],
+                    ];
+
+                    $subArray = static::parseUploadedFiles($subArray, $filterCallback);
+                    if (!empty($subArray)) {
+                        if (!isset($parsedFiles[$field])) {
+                            $parsedFiles[$field] = [];
+                        }
+
+                        $parsedFiles[$field] = $subArray;
+                    }
+                }
+            }
+        }
+
+        return $parsedFiles;
     }
 }

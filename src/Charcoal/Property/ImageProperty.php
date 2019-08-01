@@ -43,7 +43,6 @@ class ImageProperty extends FileProperty
      */
     private $applyEffects = self::DEFAULT_APPLY_EFFECTS;
 
-
     /**
      * The type of image processing engine.
      *
@@ -80,8 +79,6 @@ class ImageProperty extends FileProperty
         return $this->imageFactory;
     }
 
-
-
     /**
      * Set the name of the property's image processing driver.
      *
@@ -108,7 +105,7 @@ class ImageProperty extends FileProperty
      *
      * @return string
      */
-    public function driverType()
+    public function getDriverType()
     {
         return $this->driverType;
     }
@@ -150,28 +147,33 @@ class ImageProperty extends FileProperty
     /**
      * Determine if effects should be applied.
      *
+     * @return string Returns the property's condition on effects.
+     */
+    public function getApplyEffects()
+    {
+        return $this->applyEffects;
+    }
+
+    /**
+     * Determine if effects should be applied.
+     *
      * @param  string|boolean $event A specific event to check or a global flag to set.
      * @throws OutOfBoundsException If the effects event does not exist.
-     * @return mixed If an $event is provided, returns TRUE or FALSE if the property applies
-     *     effects for the given event. Otherwise, returns the property's condition on effects.
+     * @return mixed Returns TRUE or FALSE if the property applies effects for the given event.
      */
-    public function applyEffects($event = null)
+    public function canApplyEffects($event)
     {
-        if ($event !== null) {
-            if (!in_array($event, $this->acceptedEffectsEvents())) {
-                if (!is_string($event)) {
-                    $event = (is_object($event) ? get_class($event) : gettype($event));
-                }
-                throw new OutOfBoundsException(sprintf(
-                    'Unsupported image property event "%s" provided',
-                    $event
-                ));
+        if (!in_array($event, $this->acceptedEffectsEvents())) {
+            if (!is_string($event)) {
+                $event = (is_object($event) ? get_class($event) : gettype($event));
             }
-
-            return $this->applyEffects === $event;
+            throw new OutOfBoundsException(sprintf(
+                'Unsupported image property event "%s" provided',
+                $event
+            ));
         }
 
-        return $this->applyEffects;
+        return $this->applyEffects === $event;
     }
 
     /**
@@ -216,7 +218,7 @@ class ImageProperty extends FileProperty
     /**
      * @return array
      */
-    public function effects()
+    public function getEffects()
     {
         return $this->effects;
     }
@@ -259,8 +261,6 @@ class ImageProperty extends FileProperty
         return $value;
     }
 
-
-
     /**
      * Provides the accepted mimetypes for the image properties.
      *
@@ -268,7 +268,7 @@ class ImageProperty extends FileProperty
      *
      * @return string[]
      */
-    public function acceptedMimetypes()
+    public function getAcceptedMimetypes()
     {
         return [
             'image/gif',
@@ -277,7 +277,7 @@ class ImageProperty extends FileProperty
             'image/pjpeg',
             'image/png',
             'image/svg+xml',
-            'image/webp'
+            'image/webp',
         ];
     }
 
@@ -290,7 +290,7 @@ class ImageProperty extends FileProperty
     public function generateExtension($file = null)
     {
         if (is_string($file)) {
-            if (in_array($file, $this->acceptedMimetypes())) {
+            if (in_array($file, $this['acceptedMimetypes'])) {
                 $mime = $file;
             } else {
                 $mime = $this->mimetypeFor($file);
@@ -327,7 +327,7 @@ class ImageProperty extends FileProperty
     {
         $val = parent::save($val);
 
-        if ($this->applyEffects('save')) {
+        if ($this->canApplyEffects('save')) {
             $val = $this->processEffects($val);
         }
 
@@ -345,7 +345,7 @@ class ImageProperty extends FileProperty
     {
         $target = parent::dataUpload($fileData);
 
-        if ($this->applyEffects('upload')) {
+        if ($this->canApplyEffects('upload')) {
             $target = $this->processEffects($target);
         }
 
@@ -363,7 +363,7 @@ class ImageProperty extends FileProperty
     {
         $target = parent::fileUpload($fileData);
 
-        if ($this->applyEffects('upload')) {
+        if ($this->canApplyEffects('upload')) {
             $target = $this->processEffects($target);
         }
 
@@ -400,7 +400,7 @@ class ImageProperty extends FileProperty
      */
     protected function createImage()
     {
-        return $this->imageFactory()->create($this->driverType());
+        return $this->imageFactory()->create($this['driverType']);
     }
 
     /**
@@ -408,15 +408,15 @@ class ImageProperty extends FileProperty
      */
     protected function batchEffects()
     {
-        $effects = $this->effects();
+        $effects = $this['effects'];
         $grouped = [];
         if ($effects) {
             $blueprint = [
                 'effects' => [],
-                'save' => true,
-                'rename' => null,
-                'reset' => false,
-                'copy' => null
+                'save'    => true,
+                'rename'  => null,
+                'reset'   => false,
+                'copy'    => null,
             ];
             $fxGroup   = $blueprint;
             foreach ($effects as $effect) {
@@ -424,9 +424,9 @@ class ImageProperty extends FileProperty
                     $grouped[] = array_merge(
                         [
                             'condition' => null,
-                            'ignore' => null,
+                            'ignore'    => null,
                             'extension' => null,
-                            'mimetype' => null
+                            'mimetype'  => null,
                         ],
                         $effect
                     );
@@ -501,7 +501,7 @@ class ImageProperty extends FileProperty
             $image->open($valuePath.$value);
             $target = null;
             if ($isAbsolute) {
-                $target = $basePath.$this->uploadPath().pathinfo($value, PATHINFO_BASENAME);
+                $target = $basePath.$this['uploadPath'].pathinfo($value, PATHINFO_BASENAME);
             }
 
             foreach ($effects as $fxGroup) {
@@ -547,13 +547,13 @@ class ImageProperty extends FileProperty
                         if ($copy) {
                             $copy   = $this->renderFileRenamePattern(($target ?: $value), $copy);
                             $exists = $this->fileExists($basePath.$copy);
-                            $doCopy = ($copy && ($this->overwrite() || !$exists));
+                            $doCopy = ($copy && ($this['overwrite'] || !$exists));
                         }
 
                         if ($rename) {
                             $value    = $this->renderFileRenamePattern(($target ?: $value), $rename);
                             $exists   = $this->fileExists($basePath.$value);
-                            $doRename = ($value && ($this->overwrite() || !$exists));
+                            $doRename = ($value && ($this['overwrite'] || !$exists));
                         }
 
                         $doSave = ($doCopy || $doRename);

@@ -1,5 +1,10 @@
 {
     "properties": {
+        "filesystem": {
+            "type": "string",
+            "label": "File System",
+            "description": "The default file system where the uploaded files will be stored."
+        },
         "public_access":{
             "type": "boolean",
             "label": "Public access?",
