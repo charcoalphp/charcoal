@@ -118,7 +118,8 @@ class PropertyField
                 'Identifier must be a string.'
             );
         }
-        $this->ident = $ident;
+        // Ensure snake_case
+        $this->ident = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $ident));
         return $this;
     }
 
