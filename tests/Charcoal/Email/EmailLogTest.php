@@ -28,7 +28,6 @@ class EmailLogTest extends PHPUnit_Framework_TestCase
         $ret = $this->obj->setData([
             'type'         => 'email',
             'action'       => 'foo',
-            'raw_response' => [ 'foo' => 'bar' ],
             'message_id'   => 'foobar',
             'campaign'     => 'phpunit',
             'to'           => 'phpunit@example.com',
@@ -44,7 +43,6 @@ class EmailLogTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals('email', $this->obj->type());
         $this->assertEquals('foo', $this->obj->action());
-        $this->assertEquals(['foo'=>'bar'], $this->obj->rawResponse());
         $this->assertEquals('foobar', $this->obj->messageId());
         $this->assertEquals('phpunit', $this->obj->campaign());
         $this->assertEquals('phpunit@example.com', $this->obj->to());

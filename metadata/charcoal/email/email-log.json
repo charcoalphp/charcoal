@@ -9,14 +9,6 @@
         "action": {
             "type": "string"
         },
-        "raw_response": {
-            "type": "text",
-            "label": {
-                "en": "Raw Response",
-                "fr": "Réponse brute"
-            },
-            "description": "Raw response, as returned by the mailer."
-        },
         "message_id": {
             "type": "string",
             "allow_html": true,

@@ -32,13 +32,6 @@ class EmailLog extends AbstractModel
     private $action;
 
     /**
-     * The mailer's raw response.
-     *
-     * @var mixed $rawResponse
-     */
-    private $rawResponse;
-
-    /**
      * The Message-ID (Unique message identifier)
      *
      * @var string $messageId
@@ -178,28 +171,6 @@ class EmailLog extends AbstractModel
     public function action()
     {
         return $this->action;
-    }
-
-    /**
-     * Set the raw response from the mailer.
-     *
-     * @param mixed $res The response object or array.
-     * @return self
-     */
-    public function setRawResponse($res)
-    {
-        $this->rawResponse = $res;
-        return $this;
-    }
-
-    /**
-     * Get the raw response from the mailer.
-     *
-     * @return mixed
-     */
-    public function rawResponse()
-    {
-        return $this->rawResponse;
     }
 
     /**

@@ -1025,8 +1025,6 @@ class Email implements
             $log->setType('email');
             $log->setAction('send');
 
-            $log->setRawResponse($mailer);
-
             $log->setMessageId($mailer->getLastMessageId());
             $log->setCampaign($this->campaign());
 
