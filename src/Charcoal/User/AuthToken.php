@@ -237,8 +237,8 @@ class AuthToken extends AbstractModel
     {
         $metadata = $this->metadata();
         $cookieName = $metadata['cookieName'];
-        $value = $this->ident().';'.$this->token();
-        $expiry = $this->expiry() ? $this->expiry()->getTimestamp() : null;
+        $value = $this['ident'].';'.$this['token'];
+        $expiry = $this['expiry'] ? $this['expiry']->getTimestamp() : null;
         $secure = $metadata['httpsOnly'];
 
         setcookie($cookieName, $value, $expiry, '', '', $secure);
@@ -292,21 +292,21 @@ class AuthToken extends AbstractModel
 
         // Expired cookie
         $now = new DateTime('now');
-        if (!$this->expiry() || $now > $this->expiry()) {
+        if (!$this['expiry'] || $now > $this['expiry']) {
             $this->logger->warning('Expired auth token');
             $this->delete();
             return '';
         }
 
         // Validate encrypted token
-        if (password_verify($token, $this->token()) !== true) {
+        if (password_verify($token, $this['token']) !== true) {
             $this->panic();
             $this->delete();
             return '';
         }
 
         // Success!
-        return $this->userId();
+        return $this['userId'];
     }
 
     /**
@@ -359,7 +359,7 @@ class AuthToken extends AbstractModel
                 WHERE
                     user_id = :userId', $table);
             $this->source()->dbQuery($q, [
-                'userId' => $this->userId()
+                'userId' => $this['userId']
             ]);
         }
     }
