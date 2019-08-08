@@ -282,7 +282,7 @@ class AuthToken extends AbstractModel
         }
 
         $this->load($ident);
-        if (!$this->ident()) {
+        if (!$this['ident']) {
             $this->logger->warning(sprintf(
                 'Auth token not found: "%s"',
                 $ident
