@@ -98,20 +98,12 @@ class TranslatorConfig extends AbstractConfig
 
     /**
      * @param  string[] $paths The "paths" (search pattern) to look into for translation resources.
-     * @throws InvalidArgumentException If the path is not a string.
      * @return TranslatorConfig Chainable
      */
     public function setPaths(array $paths)
     {
         $this->paths = [];
-        foreach ($paths as $path) {
-            if (!is_string($path)) {
-                throw new InvalidArgumentException(
-                    'Translator path must be a string'
-                );
-            }
-            $this->paths[] = $path;
-        }
+        $this->addPaths($paths);
         return $this;
     }
 
