@@ -166,7 +166,7 @@ class TranslatorServiceProvider implements ServiceProviderInterface
             $localesConfig = $container['locales/config'];
             return new LocalesManager([
                 'locales'          => $localesConfig['languages'],
-                'default_language' => $container['locales/default-language']
+                'default_language' => $container['locales/default-language'],
             ]);
         };
     }
@@ -219,10 +219,10 @@ class TranslatorServiceProvider implements ServiceProviderInterface
         $container['translator'] = function (Container $container) {
             $transConfig = $container['translator/config'];
             $translator  = new Translator([
-                'manager'          => $container['locales/manager'],
-                'message_selector' => $container['translator/message-selector'],
-                'cache_dir'        => $transConfig['cache_dir'],
-                'debug'            => $transConfig['debug']
+                'manager'           => $container['locales/manager'],
+                'message_selector'  => $container['translator/message-selector'],
+                'cache_dir'         => $transConfig['cache_dir'],
+                'debug'             => $transConfig['debug'],
             ]);
 
             $translator->setFallbackLocales($container['locales/fallback-languages']);
@@ -372,12 +372,12 @@ class TranslatorServiceProvider implements ServiceProviderInterface
             $middlewareConfig = $container['config']['middlewares']['charcoal/translator/middleware/language'];
             $middlewareConfig = array_replace(
                 [
-                    'default_language'  => $container['translator']->getLocale()
+                    'default_language'  => $container['translator']->getLocale(),
                 ],
                 $middlewareConfig,
                 [
                     'translator'        => $container['translator'],
-                    'browser_language'  => $container['locales/browser-language']
+                    'browser_language'  => $container['locales/browser-language'],
                 ]
             );
             return new LanguageMiddleware($middlewareConfig);

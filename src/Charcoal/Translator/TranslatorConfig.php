@@ -57,14 +57,14 @@ class TranslatorConfig extends AbstractConfig
     {
         return [
             'loaders' => [
-                'csv'
+                'csv',
             ],
             'paths' => [
-                'translations/'
+                'translations/',
             ],
             'translations' => [],
             'debug'        => false,
-            'cache_dir'    => '../cache/translator'
+            'cache_dir'    => '../cache/translator',
         ];
     }
 
@@ -243,7 +243,7 @@ class TranslatorConfig extends AbstractConfig
             'po',
             'qt',
             'xliff',
-            'yaml'
+            'yaml',
         ];
     }
 }

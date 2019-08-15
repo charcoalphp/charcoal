@@ -43,14 +43,14 @@ class LocalesConfig extends AbstractConfig
         return [
             'languages' => [
                 'en' => [
-                    'locale' => 'en-US'
-                ]
+                    'locale' => 'en-US',
+                ],
             ],
             'default_language'   => 'en',
             'fallback_languages' => [
-                'en'
+                'en',
             ],
-            'auto_detect' => false
+            'auto_detect' => false,
         ];
     }
 

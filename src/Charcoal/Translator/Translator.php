@@ -57,7 +57,7 @@ class Translator extends SymfonyTranslator
         $defaults = [
             'locale'    => $this->manager()->currentLocale(),
             'cache_dir' => null,
-            'debug'     => false
+            'debug'     => false,
         ];
         $data = array_merge($defaults, $data);
 
