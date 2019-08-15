@@ -241,6 +241,19 @@ class TranslationTest extends AbstractTestCase
     /**
      * @return void
      */
+    public function testEach()
+    {
+        $obj = new Translation('  Hello!  ', $this->localesManager());
+        $obj->each(function ($val, $lang) {
+            $this->assertEquals('en', $lang);
+            return trim($val);
+        });
+        $this->assertEquals([ 'en' => 'Hello!' ], $obj->data());
+    }
+
+    /**
+     * @return void
+     */
     public function testJsonSerialize()
     {
         $obj = new Translation('Hello!', $this->localesManager());
