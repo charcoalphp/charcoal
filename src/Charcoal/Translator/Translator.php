@@ -5,6 +5,8 @@ namespace Charcoal\Translator;
 use RuntimeException;
 
 // From 'symfony/translation'
+use Symfony\Component\Translation\Formatter\MessageFormatter;
+use Symfony\Component\Translation\Formatter\MessageFormatterInterface;
 use Symfony\Component\Translation\MessageSelector;
 use Symfony\Component\Translation\Translator as SymfonyTranslator;
 
@@ -35,6 +37,13 @@ class Translator extends SymfonyTranslator
     private $selector;
 
     /**
+     * The message formatter.
+     *
+     * @var MessageFormatterInterface
+     */
+    private $formatter;
+
+    /**
      * The loaded domains.
      *
      * @var string[]
@@ -42,7 +51,7 @@ class Translator extends SymfonyTranslator
     private $domains = [ 'messages' ];
 
     /**
-     * @param array $data Constructor data.
+     * @param array $data Translator dependencies.
      */
     public function __construct(array $data)
     {
@@ -53,6 +62,12 @@ class Translator extends SymfonyTranslator
             $data['message_selector'] = new MessageSelector();
         }
         $this->setSelector($data['message_selector']);
+
+        // Ensure Charcoal has control of the message formatter.
+        if (!isset($data['message_formatter'])) {
+            $data['message_formatter'] = new MessageFormatter($data['message_selector']);
+        }
+        $this->setFormatter($data['message_formatter']);
 
         $defaults = [
             'locale'    => $this->manager()->currentLocale(),
@@ -68,7 +83,7 @@ class Translator extends SymfonyTranslator
 
         parent::__construct(
             $data['locale'],
-            $data['message_selector'],
+            $data['message_formatter'],
             $data['cache_dir'],
             $data['debug']
         );
@@ -321,6 +336,30 @@ class Translator extends SymfonyTranslator
     protected function selector()
     {
         return $this->selector;
+    }
+
+    /**
+     * Set the message formatter.
+     *
+     * The {@see SymfonyTranslator} keeps the message formatter private (as of 3.3.2),
+     * thus we must explicitly require it in this class to guarantee access.
+     *
+     * @param  MessageFormatterInterface $formatter The formatter.
+     * @return void
+     */
+    public function setFormatter(MessageFormatterInterface $formatter)
+    {
+        $this->formatter = $formatter;
+    }
+
+    /**
+     * Retrieve the message formatter.
+     *
+     * @return MessageFormatterInterface
+     */
+    protected function formatter()
+    {
+        return $this->formatter;
     }
 
     /**

@@ -5,8 +5,9 @@ namespace Charcoal\Tests\Translator;
 use ReflectionClass;
 
 // From 'symfony/translation'
-use Symfony\Component\Translation\MessageSelector;
+use Symfony\Component\Translation\Formatter\MessageFormatter;
 use Symfony\Component\Translation\Loader\ArrayLoader;
+use Symfony\Component\Translation\MessageSelector;
 
 // From 'charcoal-translator'
 use Charcoal\Translator\LocalesManager;
@@ -48,12 +49,16 @@ class TranslatorTest extends AbstractTestCase
      */
     public function setUp()
     {
+        $selector  = new MessageSelector();
+        $formatter = new MessageFormatter($selector);
+
         $this->obj = new Translator([
             'locale'            => 'en',
             'cache_dir'         => null,
             'debug'             => false,
             'manager'           => $this->localesManager(),
-            'message_selector'  => new MessageSelector(),
+            'message_selector'  => $selector,
+            'message_formatter' => $formatter,
         ]);
 
         $this->obj->addLoader('array', new ArrayLoader());
@@ -136,6 +141,39 @@ class TranslatorTest extends AbstractTestCase
         ]);
 
         $this->assertInstanceOf(MessageSelector::class, $this->callMethod($translator, 'selector'));
+    }
+
+    /**
+     * @return void
+     */
+    public function testConstructorWithMessageFormatter()
+    {
+        $formatter  = new MessageFormatter();
+        $translator = new Translator([
+            'locale'            => 'en',
+            'cache_dir'         => null,
+            'debug'             => false,
+            'manager'           => $this->localesManager(),
+            'message_formatter' => $formatter,
+        ]);
+
+        $this->assertSame($formatter, $this->callMethod($translator, 'formatter'));
+    }
+
+    /**
+     * @return void
+     */
+    public function testConstructorWithoutMessageFormatter()
+    {
+        $translator = new Translator([
+            'locale'            => 'en',
+            'cache_dir'         => null,
+            'debug'             => false,
+            'manager'           => $this->localesManager(),
+            'message_formatter' => null,
+        ]);
+
+        $this->assertInstanceOf(MessageFormatter::class, $this->callMethod($translator, 'formatter'));
     }
 
     /**

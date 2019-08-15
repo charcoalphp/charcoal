@@ -19,6 +19,7 @@ use Symfony\Component\Translation\Loader\QtFileLoader;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Component\Translation\Loader\JsonFileLoader;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
+use Symfony\Component\Translation\Formatter\MessageFormatter;
 use Symfony\Component\Translation\MessageSelector;
 
 // From 'charcoal-translator'
@@ -210,6 +211,16 @@ class TranslatorServiceProvider implements ServiceProviderInterface
         };
 
         /**
+         * Instance of the Message Formatter, that is used to format a localized message.
+         *
+         * @param  Container $container Pimple DI container.
+         * @return MessageFormatter
+         */
+        $container['translator/message-formatter'] = function (Container $container) {
+            return new MessageFormatter($container['translator/message-selector']);
+        };
+
+        /**
          * Instance of the Translator, that is used for translation.
          *
          * @todo   Improve file loader with a map of file formats.
@@ -221,6 +232,7 @@ class TranslatorServiceProvider implements ServiceProviderInterface
             $translator  = new Translator([
                 'manager'           => $container['locales/manager'],
                 'message_selector'  => $container['translator/message-selector'],
+                'message_formatter' => $container['translator/message-formatter'],
                 'cache_dir'         => $transConfig['cache_dir'],
                 'debug'             => $transConfig['debug'],
             ]);
