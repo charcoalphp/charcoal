@@ -331,6 +331,11 @@ class DateTimeProperty extends AbstractProperty
             return null;
         }
 
+        if (is_int($val) && $this->isValidTimeStamp($val)) {
+            $dateTime = new DateTime();
+            $val = $dateTime->setTimestamp($val);
+        }
+
         if (is_string($val)) {
             $val = new DateTime($val);
         }
@@ -342,5 +347,16 @@ class DateTimeProperty extends AbstractProperty
         }
 
         return $val;
+    }
+
+    /**
+     * @param integer|string $timestamp Timestamp.
+     * @return boolean
+     */
+    private function isValidTimeStamp($timestamp)
+    {
+        return (is_int($timestamp))
+            && ($timestamp <= PHP_INT_MAX)
+            && ($timestamp >= ~PHP_INT_MAX);
     }
 }
