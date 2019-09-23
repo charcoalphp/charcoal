@@ -175,6 +175,8 @@ trait ExpressionFieldTrait
             if ($property instanceof StorablePropertyInterface) {
                 return $property->fieldNames();
             } else {
+                // Ensure snake_case
+                $property = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $property));
                 return [ $property ];
             }
         }
