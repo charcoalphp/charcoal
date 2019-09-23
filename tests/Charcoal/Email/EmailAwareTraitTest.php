@@ -44,9 +44,11 @@ class EmailAwareTraitTest extends \PHPUnit_Framework_TestCase
             ['"M_athieu-Mémo" <mat@locomotive.ca>', ['email'=>'mat@locomotive.ca', 'name'=>'M_athieu-Mémo']],
             ['Alertes Mathieu-Loco <alertes@loco-motive_123.ca>', ['email'=>'alertes@loco-motive_123.ca', 'name'=>'Alertes Mathieu-Loco']],
             ['longtld@museum.com', ['email'=>'longtld@museum.com', 'name'=>'']],
+            ['"Long TLD" <longtld@museum.com>', ['email'=>'longtld@museum.com', 'name'=>'Long TLD']],
             ['a.b-c-@d.e.f-g.com', ['email'=>'a.b-c-@d.e.f-g.com', 'name'=>'']],
             ['mat+1@locomotive.ca', ['email'=>'mat+1@locomotive.ca', 'name'=>'']],
-            ['Mathieu <mat+1@locomotive.ca>', ['email'=>'mat+1@locomotive.ca', 'name'=>'Mathieu']]
+            ['Mathieu <mat+1@locomotive.ca>', ['email'=>'mat+1@locomotive.ca', 'name'=>'Mathieu']],
+            ['Name.with.dot <name-with-dot@test.justatest>', ['email'=>'name-with-dot@test.justatest', 'name'=>'Name.with.dot']]
         ];
     }
 }
