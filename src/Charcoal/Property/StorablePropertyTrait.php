@@ -87,10 +87,12 @@ trait StorablePropertyTrait
         $fields = [];
         if ($this['l10n']) {
             foreach ($this->translator()->availableLocales() as $langCode) {
-                $fields[$langCode] = $this->l10nIdent($langCode);
+                // Ensure snake_case
+                $fields[$langCode] = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $this->ident())).'_'.$langCode;
             }
         } else {
-            $fields[] = $this->ident();
+            // Ensure snake_case
+            $fields[] = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $this->ident()));
         }
 
         return $fields;
