@@ -82,6 +82,7 @@ class StructureProperty extends AbstractProperty
      */
     public function inputVal($val, array $options = [])
     {
+        unset($options);
         if ($val === null) {
             return '';
         }

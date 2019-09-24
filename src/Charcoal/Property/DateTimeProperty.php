@@ -97,6 +97,7 @@ class DateTimeProperty extends AbstractProperty
      */
     public function inputVal($val, array $options = [])
     {
+        unset($options);
         $val = $this->dateTimeVal($val);
 
         if ($val instanceof DateTimeInterface) {

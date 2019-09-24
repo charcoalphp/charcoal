@@ -119,7 +119,6 @@ class MultiObjectProperty extends AbstractProperty
         $res = $this->source()->db()->query($q);
         $tableExists = $res->fetchColumn(0);
 
-        // Return as boolean
         return !!$tableExists;
     }
 
