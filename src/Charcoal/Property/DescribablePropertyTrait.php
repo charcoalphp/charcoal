@@ -66,7 +66,7 @@ trait DescribablePropertyTrait
                 get_class($this)
             );
         }
-        
+
         $propertyIdent = $this->camelize($propertyIdent);
 
         $metadata = $this->metadata();
@@ -131,6 +131,7 @@ trait DescribablePropertyTrait
      */
     public function filterPropertyMetadata($propertyMetadata, $propertyIdent)
     {
+        unset($propertyIdent);
         // This method is a stub. Reimplement as needed in sub-classes.
         return $propertyMetadata;
     }
