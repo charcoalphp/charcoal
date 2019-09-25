@@ -34,6 +34,7 @@ class EntityArrayAccessTest extends AbstractEntityTestCase
         $this->obj = $this->createEntity([
             'name' => 'Charcoal',
             'foo'  => 10,
+            'erd'  => true,
         ]);
     }
 
@@ -62,8 +63,15 @@ class EntityArrayAccessTest extends AbstractEntityTestCase
     {
         $obj = $this->obj;
 
+        // MacroEntity::$name
         $this->assertObjectHasAttribute('name', $obj);
         $this->assertTrue(isset($obj['name']));
+
+        // MacroEntity::foo()
+        $this->assertTrue(isset($obj['foo']));
+
+        // MacroEntity::getErd()
+        $this->assertTrue(isset($obj['erd']));
     }
 
     /**
@@ -74,8 +82,15 @@ class EntityArrayAccessTest extends AbstractEntityTestCase
     {
         $obj = $this->obj;
 
+        // MacroEntity::$name
         $this->assertAttributeEquals('Charcoal', 'name', $obj);
         $this->assertEquals('Charcoal', $obj['name']);
+
+        // MacroEntity::foo()
+        $this->assertEquals('foo is 20', $obj['foo']);
+
+        // MacroEntity::getErd()
+        $this->assertEquals(true, $obj['erd']);
     }
 
     /**

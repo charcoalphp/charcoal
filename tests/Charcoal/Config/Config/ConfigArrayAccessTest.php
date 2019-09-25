@@ -34,6 +34,7 @@ class ConfigArrayAccessTest extends AbstractConfigTestCase
         $this->cfg = $this->createConfig([
             'name' => 'Charcoal',
             'foo'  => 10,
+            'erd'  => true,
         ]);
     }
 
@@ -62,8 +63,15 @@ class ConfigArrayAccessTest extends AbstractConfigTestCase
     {
         $cfg = $this->cfg;
 
+        // MacroConfig::$name
         $this->assertObjectHasAttribute('name', $cfg);
         $this->assertTrue(isset($cfg['name']));
+
+        // MacroConfig::foo()
+        $this->assertTrue(isset($cfg['foo']));
+
+        // MacroConfig::getErd()
+        $this->assertTrue(isset($cfg['erd']));
     }
 
     /**
@@ -74,8 +82,15 @@ class ConfigArrayAccessTest extends AbstractConfigTestCase
     {
         $cfg = $this->cfg;
 
+        // MacroConfig::$name
         $this->assertAttributeEquals('Charcoal', 'name', $cfg);
         $this->assertEquals('Charcoal', $cfg['name']);
+
+        // MacroConfig::foo()
+        $this->assertEquals('foo is 20', $cfg['foo']);
+
+        // MacroConfig::getErd()
+        $this->assertEquals(true, $cfg['erd']);
     }
 
     /**
