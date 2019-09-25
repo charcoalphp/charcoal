@@ -57,6 +57,10 @@
     <rule ref="Generic.CodeAnalysis.UselessOverridingMethod" />
     <!-- This sniff class detects empty statement. -->
     <rule ref="Generic.CodeAnalysis.EmptyStatement" />
+    <!-- This sniff class detects empty files. -->
+    <rule ref="Internal.NoCodeFound">
+        <exclude-pattern>*/tests/Charcoal/Config/Fixture/*</exclude-pattern>
+    </rule>
 
 <!-- Commenting Sniffs -->
 
@@ -75,6 +79,9 @@
     <!--<rule ref="Squiz.Commenting.BlockComment" />-->
     <!-- Class comment blocks -->
     <rule ref="Squiz.Commenting.ClassComment" />
+    <rule ref="Squiz.Commenting.ClassComment.TagNotAllowed">
+        <exclude-pattern>*/tests/Charcoal/Config/*</exclude-pattern>
+    </rule>
     <!-- Tests that the stars in a doc comment align correctly. -->
     <rule ref="Squiz.Commenting.DocCommentAlignment" />
     <!-- Ensures CATCH clause must at least have a comment -->
@@ -286,7 +293,6 @@
     <rule ref="Squiz.Scope.MethodScope" />
     <!-- Make sure $this is not used in static methods -->
     <rule ref="Squiz.Scope.StaticThisUsage" />
-
 
 <!-- Strings Sniffs -->
 
