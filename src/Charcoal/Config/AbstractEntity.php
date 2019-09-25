@@ -27,6 +27,13 @@ abstract class AbstractEntity implements EntityInterface
     protected $keys = [];
 
     /**
+     * Holds a list of all camelized strings.
+     *
+     * @var string[]
+     */
+    protected static $camelCache = [];
+
+    /**
      * Gets the data keys on this entity.
      *
      * @return array
@@ -319,14 +326,23 @@ abstract class AbstractEntity implements EntityInterface
     /**
      * Transform a string from "snake_case" to "camelCase".
      *
-     * @param  string $str The string to camelize.
+     * @param  string $value The string to camelize.
      * @return string The camelized string.
      */
-    final protected function camelize($str)
+    final protected function camelize($value)
     {
-        if (strstr($str, '_') === false) {
-            return $str;
+        $key = $value;
+
+        if (isset(static::$camelCache[$key])) {
+            return static::$camelCache[$key];
         }
-        return lcfirst(implode('', array_map('ucfirst', explode('_', $str))));
+
+        if (strpos($value, '_') !== false) {
+            $value = implode('', array_map('ucfirst', explode('_', $value)));
+        }
+
+        static::$camelCache[$key] = lcfirst($value);
+
+        return static::$camelCache[$key];
     }
 }
