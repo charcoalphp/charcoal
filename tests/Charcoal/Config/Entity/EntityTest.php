@@ -257,7 +257,7 @@ class EntityTest extends AbstractEntityTestCase
         $obj->setData($mutation);
         $that = unserialize(serialize($obj));
         $this->assertInstanceOf(get_class($obj), $that);
-        $this->assertEquals($obj, $that);
+        $this->assertEquals($obj->data(), $that->data());
         $this->assertEquals('Charcoal', $that['name']);
     }
 }

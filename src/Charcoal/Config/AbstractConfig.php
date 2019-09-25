@@ -152,18 +152,29 @@ abstract class AbstractConfig extends AbstractEntity implements
         }
 
         $getter = 'get'.ucfirst($key);
-        if (is_callable([ $this, $getter])) {
-            $value = $this->{$getter}();
-        } elseif (is_callable([ $this, $key ])) {
-            $value = $this->{$key}();
-        } else {
-            if (!isset($this->{$key})) {
-                return $this->hasInDelegates($key);
-            }
-            $value = $this->{$key};
+        if (!isset($this->accessorsCache[$getter])) {
+            $this->accessorsCache[$getter] = is_callable([ $this, $getter ]);
         }
 
-        return ($value !== null);
+        if ($this->accessorsCache[$getter]) {
+            return ($this->{$getter}() !== null);
+        }
+
+        // -- START DEPRECATED
+        if (!isset($this->accessorsCache[$key])) {
+            $this->accessorsCache[$key] = is_callable([ $this, $key ]);
+        }
+
+        if ($this->accessorsCache[$key]) {
+            return ($this->{$key}() !== null);
+        }
+        // -- END DEPRECATED
+
+        if (isset($this->{$key})) {
+            return true;
+        }
+
+        return $this->hasInDelegates($key);
     }
 
     /**
@@ -202,17 +213,29 @@ abstract class AbstractConfig extends AbstractEntity implements
         }
 
         $getter = 'get'.ucfirst($key);
-        if (is_callable([ $this, $getter])) {
-            return $this->{$getter}();
-        } elseif (is_callable([ $this, $key ])) {
-            return $this->{$key}();
-        } else {
-            if (isset($this->{$key})) {
-                return $this->{$key};
-            } else {
-                return $this->getInDelegates($key);
-            }
+        if (!isset($this->accessorsCache[$getter])) {
+            $this->accessorsCache[$getter] = is_callable([ $this, $getter ]);
         }
+
+        if ($this->accessorsCache[$getter]) {
+            return $this->{$getter}();
+        }
+
+        // -- START DEPRECATED
+        if (!isset($this->accessorsCache[$key])) {
+            $this->accessorsCache[$key] = is_callable([ $this, $key ]);
+        }
+
+        if ($this->accessorsCache[$key]) {
+            return $this->{$key}();
+        }
+        // -- END DEPRECATED
+
+        if (isset($this->{$key})) {
+            return $this->{$key};
+        }
+
+        return $this->getInDelegates($key);
     }
 
     /**
@@ -250,13 +273,17 @@ abstract class AbstractConfig extends AbstractEntity implements
         }
 
         $setter = 'set'.ucfirst($key);
-        if (is_callable([ $this, $setter ])) {
+        if (!isset($this->accessorsCache[$setter])) {
+            $this->accessorsCache[$setter] = is_callable([ $this, $setter ]);
+        }
+
+        if ($this->accessorsCache[$setter]) {
             $this->{$setter}($value);
         } else {
             $this->{$key} = $value;
         }
 
-        $this->keys[$key] = true;
+        $this->keysCache[$key] = true;
     }
 
     /**

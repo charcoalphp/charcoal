@@ -20,11 +20,18 @@ use InvalidArgumentException;
 abstract class AbstractEntity implements EntityInterface
 {
     /**
-     * Holds a list of all data keys.
+     * Holds a list of all data keys per class.
      *
-     * @var array
+     * @var (boolean|null)[]
      */
-    protected $keys = [];
+    protected $keysCache = [];
+
+    /**
+     * Holds a list of getters/setters per class.
+     *
+     * @var string[]
+     */
+    protected $accessorsCache = [];
 
     /**
      * Gets the data keys on this entity.
@@ -33,7 +40,7 @@ abstract class AbstractEntity implements EntityInterface
      */
     public function keys()
     {
-        return array_keys($this->keys);
+        return array_keys($this->keysCache);
     }
 
     /**
@@ -152,18 +159,29 @@ abstract class AbstractEntity implements EntityInterface
         }
 
         $getter = 'get'.ucfirst($key);
-        if (is_callable([ $this, $getter])) {
-            $value = $this->{$getter}();
-        } elseif (is_callable([ $this, $key ])) {
-            $value = $this->{$key}();
-        } else {
-            if (!isset($this->{$key})) {
-                return false;
-            }
-            $value = $this->{$key};
+        if (!isset($this->accessorsCache[$getter])) {
+            $this->accessorsCache[$getter] = is_callable([ $this, $getter ]);
         }
 
-        return ($value !== null);
+        if ($this->accessorsCache[$getter]) {
+            return ($this->{$getter}() !== null);
+        }
+
+        // -- START DEPRECATED
+        if (!isset($this->accessorsCache[$key])) {
+            $this->accessorsCache[$key] = is_callable([ $this, $key ]);
+        }
+
+        if ($this->accessorsCache[$key]) {
+            return ($this->{$key}() !== null);
+        }
+        // -- END DEPRECATED
+
+        if (isset($this->{$key})) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -196,17 +214,29 @@ abstract class AbstractEntity implements EntityInterface
         }
 
         $getter = 'get'.ucfirst($key);
-        if (is_callable([ $this, $getter])) {
-            return $this->{$getter}();
-        } elseif (is_callable([ $this, $key ])) {
-            return $this->{$key}();
-        } else {
-            if (isset($this->{$key})) {
-                return $this->{$key};
-            } else {
-                return null;
-            }
+        if (!isset($this->accessorsCache[$getter])) {
+            $this->accessorsCache[$getter] = is_callable([ $this, $getter ]);
         }
+
+        if ($this->accessorsCache[$getter]) {
+            return $this->{$getter}();
+        }
+
+        // -- START DEPRECATED
+        if (!isset($this->accessorsCache[$key])) {
+            $this->accessorsCache[$key] = is_callable([ $this, $key ]);
+        }
+
+        if ($this->accessorsCache[$key]) {
+            return $this->{$key}();
+        }
+        // -- END DEPRECATED
+
+        if (isset($this->{$key})) {
+            return $this->{$key};
+        }
+
+        return null;
     }
 
     /**
@@ -240,13 +270,17 @@ abstract class AbstractEntity implements EntityInterface
         }
 
         $setter = 'set'.ucfirst($key);
-        if (is_callable([ $this, $setter ])) {
+        if (!isset($this->accessorsCache[$setter])) {
+            $this->accessorsCache[$setter] = is_callable([ $this, $setter ]);
+        }
+
+        if ($this->accessorsCache[$setter]) {
             $this->{$setter}($value);
         } else {
             $this->{$key} = $value;
         }
 
-        $this->keys[$key] = true;
+        $this->keysCache[$key] = true;
     }
 
     /**
@@ -278,7 +312,7 @@ abstract class AbstractEntity implements EntityInterface
         }
 
         $this[$key] = null;
-        unset($this->keys[$key]);
+        unset($this->keysCache[$key]);
     }
 
     /**
