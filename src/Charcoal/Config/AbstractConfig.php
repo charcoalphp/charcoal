@@ -152,20 +152,20 @@ abstract class AbstractConfig extends AbstractEntity implements
         }
 
         $getter = 'get'.ucfirst($key);
-        if (!isset($this->accessorsCache[$getter])) {
-            $this->accessorsCache[$getter] = is_callable([ $this, $getter ]);
+        if (!isset($this->mutatorCache[$getter])) {
+            $this->mutatorCache[$getter] = is_callable([ $this, $getter ]);
         }
 
-        if ($this->accessorsCache[$getter]) {
+        if ($this->mutatorCache[$getter]) {
             return ($this->{$getter}() !== null);
         }
 
         // -- START DEPRECATED
-        if (!isset($this->accessorsCache[$key])) {
-            $this->accessorsCache[$key] = is_callable([ $this, $key ]);
+        if (!isset($this->mutatorCache[$key])) {
+            $this->mutatorCache[$key] = is_callable([ $this, $key ]);
         }
 
-        if ($this->accessorsCache[$key]) {
+        if ($this->mutatorCache[$key]) {
             return ($this->{$key}() !== null);
         }
         // -- END DEPRECATED
@@ -213,20 +213,20 @@ abstract class AbstractConfig extends AbstractEntity implements
         }
 
         $getter = 'get'.ucfirst($key);
-        if (!isset($this->accessorsCache[$getter])) {
-            $this->accessorsCache[$getter] = is_callable([ $this, $getter ]);
+        if (!isset($this->mutatorCache[$getter])) {
+            $this->mutatorCache[$getter] = is_callable([ $this, $getter ]);
         }
 
-        if ($this->accessorsCache[$getter]) {
+        if ($this->mutatorCache[$getter]) {
             return $this->{$getter}();
         }
 
         // -- START DEPRECATED
-        if (!isset($this->accessorsCache[$key])) {
-            $this->accessorsCache[$key] = is_callable([ $this, $key ]);
+        if (!isset($this->mutatorCache[$key])) {
+            $this->mutatorCache[$key] = is_callable([ $this, $key ]);
         }
 
-        if ($this->accessorsCache[$key]) {
+        if ($this->mutatorCache[$key]) {
             return $this->{$key}();
         }
         // -- END DEPRECATED
@@ -273,17 +273,17 @@ abstract class AbstractConfig extends AbstractEntity implements
         }
 
         $setter = 'set'.ucfirst($key);
-        if (!isset($this->accessorsCache[$setter])) {
-            $this->accessorsCache[$setter] = is_callable([ $this, $setter ]);
+        if (!isset($this->mutatorCache[$setter])) {
+            $this->mutatorCache[$setter] = is_callable([ $this, $setter ]);
         }
 
-        if ($this->accessorsCache[$setter]) {
+        if ($this->mutatorCache[$setter]) {
             $this->{$setter}($value);
         } else {
             $this->{$key} = $value;
         }
 
-        $this->keysCache[$key] = true;
+        $this->keyCache[$key] = true;
     }
 
     /**
