@@ -13,10 +13,6 @@ use Charcoal\Factory\FactoryInterface;
 // From 'charcoal-core'
 use Charcoal\Validator\ValidatorInterface;
 
-// From 'charcoal-config'
-use Charcoal\Config\ConfigurableInterface;
-use Charcoal\Config\ConfigurableTrait;
-
 // From 'charcoal-object'
 use Charcoal\Object\Content;
 
@@ -24,11 +20,8 @@ use Charcoal\Object\Content;
  * Full implementation, as abstract class, of the `UserInterface`.
  */
 abstract class AbstractUser extends Content implements
-    UserInterface,
-    ConfigurableInterface
+    UserInterface
 {
-    use ConfigurableTrait;
-
     /**
      * @var UserInterface $authenticatedUser
      */
