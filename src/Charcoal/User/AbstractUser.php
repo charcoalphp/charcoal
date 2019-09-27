@@ -504,17 +504,16 @@ abstract class AbstractUser extends Content implements
         }
 
         $userClass = get_called_class();
-        $user = $factory->create($userClass);
-        $user->load($userId);
+        $userModel = $factory->create($userClass);
+        $userModel->load($userId);
 
-        // Inactive users can not authenticate
-        if (!$user['id'] || !$user['email'] || !$user['active']) {
+        if (!$userModel->validateAuthentication()) {
             return null;
         }
 
-        static::$authenticatedUser[$key] = $user;
+        static::$authenticatedUser[$key] = $userModel;
 
-        return $user;
+        return $userModel;
     }
 
 
@@ -594,5 +593,17 @@ abstract class AbstractUser extends Content implements
             }
             return false;
         }
+    }
+
+    /**
+     * Validate the user authentication state is okay.
+     *
+     * For example, inactive users can not authenticate.
+     *
+     * @return boolean
+     */
+    public function validateAuthentication()
+    {
+        return !!(!$this['id'] || !$this['email'] || !$this['active']);
     }
 }
