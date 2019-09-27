@@ -407,15 +407,12 @@ abstract class AbstractUser extends Content implements
             return false;
         }
 
-        $this->setLastLoginDate('now');
-        $ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
-        if ($ip) {
-            $this->setLastLoginIp($ip);
-        }
+        $this['lastLoginDate'] = 'now';
+        $this['lastLoginIp']   = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
 
         $this->update([
             'last_login_ip',
-            'last_login_date'
+            'last_login_date',
         ]);
 
         $this->saveToSession();
@@ -461,22 +458,21 @@ abstract class AbstractUser extends Content implements
             );
         }
 
-        $hash = password_hash($plainPassword, PASSWORD_DEFAULT);
-        $this->setPassword($hash);
-
-        $this->setLastPasswordDate('now');
-        $ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
-        if ($ip) {
-            $this->setLastPasswordIp($ip);
+        if (!$this->id()) {
+            throw new InvalidArgumentException(
+                'Can not change password: user has no ID'
+            );
         }
 
-        if ($this->id()) {
-            $this->update([
-                'password',
-                'last_password_date',
-                'last_password_ip'
-            ]);
-        }
+        $this['password']         = password_hash($plainPassword, PASSWORD_DEFAULT);
+        $this['lastPasswordDate'] = 'now';
+        $this['lastPasswordIp']   = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
+
+        $this->update([
+            'password',
+            'last_password_date',
+            'last_password_ip',
+        ]);
 
         return $this;
     }
