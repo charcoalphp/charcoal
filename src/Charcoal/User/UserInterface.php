@@ -130,11 +130,13 @@ interface UserInterface extends ContentInterface
     public function resetPassword($plainPassword);
 
     /**
-     * Structure
-     *
-     * Get the user preferences
-     *
-     * @return array|mixed
+     * @param  mixed $preferences Structure of user preferences.
+     * @return self
      */
-    public function preferences();
+    public function setPreferences($preferences);
+
+    /**
+     * @return mixed
+     */
+    public function getPreferences();
 }

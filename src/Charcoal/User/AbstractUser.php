@@ -103,11 +103,9 @@ abstract class AbstractUser extends Content implements
     private $loginToken = '';
 
     /**
-     * Structure
+     * The user preferences.
      *
-     * Get the user preferences
-     *
-     * @var array|mixed
+     * @var mixed
      */
     private $preferences;
 
@@ -409,7 +407,7 @@ abstract class AbstractUser extends Content implements
     }
 
     /**
-     * @param array|mixed $preferences Preferences for AbstractUser.
+     * @param  mixed $preferences Structure of user preferences.
      * @return self
      */
     public function setPreferences($preferences)
@@ -420,9 +418,9 @@ abstract class AbstractUser extends Content implements
     }
 
     /**
-     * @return array|mixed
+     * @return mixed
      */
-    public function preferences()
+    public function getPreferences()
     {
         return $this->preferences;
     }
