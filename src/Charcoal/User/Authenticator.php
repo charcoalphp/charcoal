@@ -12,6 +12,9 @@ use Psr\Log\LoggerAwareTrait;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 
+// From 'charcoal-user'
+use Charcoal\User\Access\AuthenticatableInterface;
+
 /**
  * The Authenticator service helps with user authentication / login.
  *
@@ -71,95 +74,6 @@ class Authenticator implements LoggerAwareInterface
     }
 
     /**
-     * Determine if the current user is authenticated.
-     *
-     * The user is authenticated via _session ID_ or _auth token_.
-     *
-     * @return \Charcoal\User\UserInterface|null Returns the authenticated user object
-     *     or NULL if not authenticated.
-     */
-    public function authenticate()
-    {
-        $u = $this->authenticateBySession();
-        if ($u) {
-            return $u;
-        }
-
-        $u = $this->authenticateByToken();
-        if ($u) {
-            return $u;
-        }
-
-        return null;
-    }
-
-    /**
-     * Attempt to authenticate a user using the given credentials.
-     *
-     * @param string $email    Email, part of necessary credentials.
-     * @param string $password Password, part of necessary credentials.
-     * @throws InvalidArgumentException If email or password are invalid or empty.
-     * @return \Charcoal\User\UserInterface|null Returns the authenticated user object
-     *     or NULL if not authenticated.
-     */
-    public function authenticateByPassword($email, $password)
-    {
-        if (!is_string($email) || !is_string($password)) {
-            throw new InvalidArgumentException(
-                'Email and password must be strings'
-            );
-        }
-
-        if ($email == '' || $password == '') {
-            throw new InvalidArgumentException(
-                'Email and password can not be empty.'
-            );
-        }
-
-        $user = $this->userFactory()->create($this->userType());
-        if (!$user->source()->tableExists()) {
-            $user->source()->createTable();
-        }
-
-        // Load the user by email
-        $key = 'email';
-        $user->loadFrom($key, $email);
-
-        if ($user[$key] !== $email) {
-            return null;
-        }
-
-        if ($user['active'] === false) {
-            return null;
-        }
-
-        // Validate password
-        if (password_verify($password, $user['password'])) {
-            if (password_needs_rehash($user['password'], PASSWORD_DEFAULT)) {
-                $this->logger->notice(sprintf(
-                    'Rehashing password for user "%s" (%s)',
-                    $user['email'],
-                    $this->userType()
-                ));
-                $hash = password_hash($password, PASSWORD_DEFAULT);
-                $user->setPassword($hash);
-                $user->update(['password']);
-            }
-
-            $user->login();
-
-            return $user;
-        } else {
-            $this->logger->warning(sprintf(
-                'Invalid login attempt for user "%s": invalid password.',
-                $user['email']
-            ));
-
-            return null;
-        }
-    }
-
-    /**
      * Retrieve the user object type.
      *
      * @return string
@@ -168,7 +82,6 @@ class Authenticator implements LoggerAwareInterface
     {
         return $this->userType;
     }
-
 
     /**
      * Retrieve the user model factory.
@@ -261,6 +174,84 @@ class Authenticator implements LoggerAwareInterface
     }
 
     /**
+     * Determine if the current user is authenticated.
+     *
+     * The user is authenticated via _session ID_ or _auth token_.
+     *
+     * @return \Charcoal\User\UserInterface|null Returns the authenticated user object
+     *     or NULL if not authenticated.
+     */
+    public function authenticate()
+    {
+        $user = $this->authenticateBySession();
+        if ($user) {
+            return $user;
+        }
+
+        $user = $this->authenticateByToken();
+        if ($user) {
+            return $user;
+        }
+
+        return null;
+    }
+
+    /**
+     * Attempt to authenticate a user using the given credentials.
+     *
+     * @param  string $identifier The login ID, part of necessary credentials.
+     * @param  string $password   The password, part of necessary credentials.
+     * @throws InvalidArgumentException If the credentials are invalid or missing.
+     * @return \Charcoal\User\UserInterface|null Returns the authenticated user object
+     *     or NULL if not authenticated.
+     */
+    public function authenticateByPassword($identifier, $password)
+    {
+        if ($this->validateLogin($identifier, $password)) {
+            throw new InvalidArgumentException(
+                'Invalid credentials'
+            );
+        }
+
+        $user = $this->userFactory()->create($this->userType());
+        if (!$user->source()->tableExists()) {
+            $user->source()->createTable();
+        }
+
+        // Load the user by email
+        $user->loadFrom($user->getAuthIdentifierKey(), $identifier);
+
+        // Check identifier is as requested
+        if ($user->getAuthIdentifier() !== $identifier) {
+            return null;
+        }
+
+        // Allow model to validate user standing
+        if (!$user->validateAuthentication()) {
+            return null;
+        }
+
+        // Validate password
+        $hashedPassword = $user->getAuthPassword();
+        if (password_verify($password, $hashedPassword)) {
+            if (password_needs_rehash($hashedPassword, PASSWORD_DEFAULT)) {
+                $this->rehashUserPassword($user, $password);
+            }
+
+            $user->login();
+
+            return $user;
+        }
+
+        $this->logger->warning(sprintf(
+            'Invalid login attempt for user "%s": invalid password.',
+             $identifier
+        ));
+
+        return null;
+    }
+
+    /**
      * Attempt to authenticate a user using their session ID.
      *
      * @return \Charcoal\User\UserInterface|null Returns the authenticated user object
@@ -268,17 +259,21 @@ class Authenticator implements LoggerAwareInterface
      */
     private function authenticateBySession()
     {
-        $u = $this->userFactory()->create($this->userType());
-        // Call static method on user
-        $u = call_user_func([get_class($u), 'getAuthenticated'], $this->userFactory());
+        $factory   = $this->userFactory();
+        $userModel = $factory->get($this->userType());
+        $userClass = get_class($userModel);
 
-        if ($u && $u->id()) {
-            $u->saveToSession();
+        // Call static method on user model
+        $user = call_user_func([ $userClass, 'getAuthenticated' ], $factory);
 
-            return $u;
-        } else {
-            return null;
+        // Allow model to validate user standing
+        if ($user && $user->validateAuthentication()) {
+            $user->saveToSession();
+
+            return $user;
         }
+
+        return null;
     }
 
     /**
@@ -289,8 +284,7 @@ class Authenticator implements LoggerAwareInterface
      */
     private function authenticateByToken()
     {
-        $tokenType = $this->tokenType();
-        $authToken = $this->tokenFactory()->create($tokenType);
+        $authToken = $this->tokenFactory()->create($this->tokenType());
 
         if ($authToken->metadata()['enabled'] !== true) {
             return null;
@@ -300,19 +294,111 @@ class Authenticator implements LoggerAwareInterface
         if (!$tokenData) {
             return null;
         }
+
         $userId = $authToken->getUserIdFromToken($tokenData['ident'], $tokenData['token']);
         if (!$userId) {
             return null;
         }
 
-        $u = $this->userFactory()->create($this->userType());
-        $u->load($userId);
+        $user = $this->userFactory()->create($this->userType());
+        $user->load($userId);
 
-        if ($u->id()) {
-            $u->saveToSession();
-            return $u;
-        } else {
-            return null;
+        // Allow model to validate user standing
+        if ($user->validateAuthentication()) {
+            $user->saveToSession();
+            return $user;
         }
+
+        return null;
+    }
+
+    /**
+     * Validate the user login credentials are acceptable.
+     *
+     * @param  string $identifier The user identifier to check.
+     * @param  string $password   The user password to check.
+     * @return boolean Returns TRUE if the credentials are acceptable, or FALSE otherwise.
+     */
+    public function validateLogin($identifier, $password)
+    {
+        return ($this->validateAuthIdentifier($identifier) && $this->validateAuthPassword($password));
+    }
+
+    /**
+     * Validate the user identifier is acceptable.
+     *
+     * @param  string $identifier The login ID.
+     * @return boolean Returns TRUE if the identifier is acceptable, or FALSE otherwise.
+     */
+    public function validateAuthIdentifier($identifier)
+    {
+        return (is_string($identifier) && !empty($identifier));
+    }
+
+    /**
+     * Validate the user password is acceptable.
+     *
+     * @param  string $password The password.
+     * @return boolean Returns TRUE if the password is acceptable, or FALSE otherwise.
+     */
+    public function validateAuthPassword($password)
+    {
+        return (is_string($password) && !empty($password));
+    }
+
+    /**
+     * Updates the user's password hash.
+     *
+     * Assumes that the existing hash needs to be rehashed.
+     *
+     * @param  AuthenticatableInterface $user     The user to update.
+     * @param  string                   $password The plain-text password to hash.
+     * @return boolean Returns TRUE if the password was changed, or FALSE otherwise.
+     */
+    protected function rehashUserPassword(AuthenticatableInterface $user, $password)
+    {
+        if (!$this->validateAuthPassword($password)) {
+            throw new InvalidArgumentException(
+                'Can not rehash password: password is invalid'
+            );
+        }
+
+        if (!$user->getAuthId()) {
+            throw new InvalidArgumentException(
+                'Can not rehash password: user has no ID'
+            );
+        }
+
+        $userIdent = $user->getAuthIdentifier();
+        $userClass = get_class($user);
+
+        $this->logger->info(sprintf(
+            'Rehashing password for user "%s" (%s)',
+            $userIdent,
+            $userClass
+        ));
+
+        $passwordKey = $user->getAuthPasswordKey();
+
+        $user[$passwordKey] = password_hash($password, PASSWORD_DEFAULT);
+        $result = $user->update([
+            $passwordKey,
+        ]);
+
+        if ($result) {
+            $this->logger->notice(sprintf(
+                'Password was rehashed for user "%s" (%s)',
+                $userIdent,
+                $userClass
+            ));
+        } else {
+            $this->logger->warning(sprintf(
+                'Password failed to be rehashed for user "%s" (%s)',
+                $userIdent,
+                $userClass
+            ));
+        }
+
+        return $result;
     }
 }

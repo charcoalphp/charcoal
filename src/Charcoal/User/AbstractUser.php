@@ -16,12 +16,19 @@ use Charcoal\Validator\ValidatorInterface;
 // From 'charcoal-object'
 use Charcoal\Object\Content;
 
+// From 'charcoal-user'
+use Charcoal\User\Access\AuthenticatableInterface;
+use Charcoal\User\Access\AuthenticatableTrait;
+
 /**
  * Full implementation, as abstract class, of the `UserInterface`.
  */
 abstract class AbstractUser extends Content implements
+    AuthenticatableInterface,
     UserInterface
 {
+    use AuthenticatableTrait;
+
     /**
      * @var UserInterface $authenticatedUser
      */
@@ -383,13 +390,13 @@ abstract class AbstractUser extends Content implements
      */
     public function saveToSession()
     {
-        if (!$this->id()) {
+        if (!$this->getAuthId()) {
             throw new Exception(
                 'Can not set auth user; no user ID'
             );
         }
 
-        $_SESSION[static::sessionKey()] = $this->id();
+        $_SESSION[static::sessionKey()] = $this->getAuthId();
 
         return $this;
     }
@@ -403,7 +410,7 @@ abstract class AbstractUser extends Content implements
      */
     public function login()
     {
-        if (!$this->id()) {
+        if (!$this->getAuthId()) {
             return false;
         }
 
@@ -428,7 +435,7 @@ abstract class AbstractUser extends Content implements
     public function logout()
     {
         // Irrelevant call...
-        if (!$this->id()) {
+        if (!$this->getAuthId()) {
             return false;
         }
 
@@ -450,26 +457,28 @@ abstract class AbstractUser extends Content implements
      * @throws InvalidArgumentException If the plain password is not a string.
      * @return self
      */
-    public function resetPassword($plainPassword)
+    public function resetPassword($password)
     {
-        if (!is_string($plainPassword)) {
+        if (!is_string($password)) {
             throw new InvalidArgumentException(
                 'Can not change password: password is not a string.'
             );
         }
 
-        if (!$this->id()) {
+        if (!$this->getAuthId()) {
             throw new InvalidArgumentException(
                 'Can not change password: user has no ID'
             );
         }
 
-        $this['password']         = password_hash($plainPassword, PASSWORD_DEFAULT);
+        $passwordKey = $this->getAuthPasswordKey();
+
+        $this[$passwordKey]       = password_hash($password, PASSWORD_DEFAULT);
         $this['lastPasswordDate'] = 'now';
         $this['lastPasswordIp']   = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
 
         $this->update([
-            'password',
+            $passwordKey,
             'last_password_date',
             'last_password_ip',
         ]);
@@ -518,6 +527,43 @@ abstract class AbstractUser extends Content implements
 
 
 
+    // Extends Charcoal\User\Access\AuthenticatableTrait
+    // =========================================================================
+
+    /**
+     * Retrieve the name of the unique ID for the user.
+     *
+     * @return string
+     */
+    public function getAuthIdKey()
+    {
+        return $this->key();
+    }
+
+    /**
+     * Retrieve the name of the login username for the user.
+     *
+     * @return string
+     */
+    public function getAuthIdentifierKey()
+    {
+        return 'email';
+    }
+
+    /**
+     * Retrieve the name of the login password for the user.
+     *
+     * Typically, "password".
+     *
+     * @return string
+     */
+    public function getAuthPasswordKey()
+    {
+        return 'password';
+    }
+
+
+
     // Extends Charcoal\Validator\ValidatableTrait
     // =========================================================================
 
@@ -543,25 +589,27 @@ abstract class AbstractUser extends Content implements
     }
 
     /**
-     * Validate the email address.
+     * Validate the username or email address.
      *
      * @return boolean
      */
     protected function validateLoginRequired()
     {
-        $email = $this['email'];
-        if (empty($email)) {
+        $userKey   = $this->getAuthIdentifierKey();
+        $userLogin = $this->getAuthIdentifier();
+
+        if (empty($userLogin)) {
             $this->validator()->error(
-                'Email address is required.',
-                'email'
+                sprintf('User Credentials: "%s" is required.', $userKey),
+                $userKey
             );
             return false;
         }
 
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        if (strpos($userKey, 'email') !== false && !filter_var($userLogin, FILTER_VALIDATE_EMAIL)) {
             $this->validator()->error(
-                'Email address is incorrect.',
-                'email'
+                'User Credentials: Email format is incorrect.',
+                $userKey
             );
             return false;
         }
@@ -570,25 +618,27 @@ abstract class AbstractUser extends Content implements
     }
 
     /**
-     * Validate the email address is unique.
+     * Validate the username or email address is unique.
      *
      * @return boolean
      */
     protected function validateLoginUnique()
     {
+        $userKey   = $this->getAuthIdentifierKey();
+        $userLogin = $this->getAuthIdentifier();
+
         $objType = self::objType();
         $factory = $this->modelFactory();
 
-        $currentEmail = $this['email'];
-        $originalUser = $factory->create($objType)->load($this->id());
+        $originalUser = $factory->create($objType)->load($this->getAuthId());
 
-        if ($originalUser['email'] !== $currentEmail) {
-            $existingUser = $factory->create($objType)->loadFrom('email', $currentEmail);
+        if ($originalModel->getAuthIdentifier() !== $userLogin) {
+            $existingUser = $factory->create($objType)->loadFrom($userKey, $userLogin);
             /** Check for existing user with given email. */
-            if (!empty($existingUser['id'])) {
+            if (!empty($existingUser->getAuthId())) {
                 $this->validator()->error(
-                    'Email address is not available.',
-                    'email'
+                    sprintf('User Credentials: "%s" is not available.', $userKey),
+                    $userKey
                 );
             }
             return false;
@@ -604,6 +654,6 @@ abstract class AbstractUser extends Content implements
      */
     public function validateAuthentication()
     {
-        return !!(!$this['id'] || !$this['email'] || !$this['active']);
+        return !!((!$this->getAuthId() || !$this->getAuthIdentifier() || !$this['active']));
     }
 }

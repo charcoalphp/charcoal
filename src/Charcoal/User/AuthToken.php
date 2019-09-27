@@ -95,7 +95,6 @@ class AuthToken extends AbstractModel
         return $this->token;
     }
 
-
     /**
      * @param string $id The user ID.
      * @throws InvalidArgumentException If the user ID is not a string.

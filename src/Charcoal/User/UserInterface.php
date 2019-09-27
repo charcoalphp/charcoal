@@ -113,10 +113,10 @@ interface UserInterface extends ContentInterface
      * Encrypt the password and re-save the object in the database.
      * Also updates the last password date & ip.
      *
-     * @param string $plainPassword The plain (non-encrypted) password to reset to.
+     * @param string $password The plain (non-encrypted) password to reset to.
      * @return self
      */
-    public function resetPassword($plainPassword);
+    public function resetPassword($password);
 
     /**
      * @param  mixed $preferences Structure of user preferences.
