@@ -93,16 +93,6 @@ abstract class AbstractUser extends Content implements
     private $lastPasswordIp;
 
     /**
-     * Tracks the password reset token.
-     *
-     * If the token is set (not empty), then the user should be prompted
-     * to reset his password after login / enter the token to continue.
-     *
-     * @var string|null
-     */
-    private $loginToken = '';
-
-    /**
      * The user preferences.
      *
      * @var mixed
@@ -373,37 +363,6 @@ abstract class AbstractUser extends Content implements
     public function getLastPasswordIp()
     {
         return $this->lastPasswordIp;
-    }
-
-    /**
-     * @param  string|null $token The login token.
-     * @throws InvalidArgumentException If the token is not a string.
-     * @return self
-     */
-    public function setLoginToken($token)
-    {
-        if ($token === null) {
-            $this->loginToken = null;
-            return $this;
-        }
-
-        if (!is_string($token)) {
-            throw new InvalidArgumentException(
-                'Login Token must be a string'
-            );
-        }
-
-        $this->loginToken = $token;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getLoginToken()
-    {
-        return $this->loginToken;
     }
 
     /**
