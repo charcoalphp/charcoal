@@ -527,41 +527,76 @@ abstract class AbstractUser extends Content implements
     // =========================================================================
 
     /**
-     * Validate the model.
+     * Validate the user model.
      *
-     * @see   \Charcoal\Validator\ValidatorInterface
-     * @param ValidatorInterface $v Optional. A custom validator object to use for validation. If null, use object's.
+     * @param  ValidatorInterface $v Optional. A custom validator object to use for validation. If null, use object's.
      * @return boolean
      */
     public function validate(ValidatorInterface &$v = null)
     {
         $result = parent::validate($v);
-        $objType = self::objType();
-        $previousModel = $this->modelFactory()->create($objType)->load($this->id());
 
+        if (!$this->validateLoginRequired()) {
+            return false;
+        }
+
+        if (!$this->validateLoginUnique()) {
+            return false;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Validate the email address.
+     *
+     * @return boolean
+     */
+    protected function validateLoginRequired()
+    {
         $email = $this['email'];
         if (empty($email)) {
             $this->validator()->error(
-                'Email is required.',
+                'Email address is required.',
                 'email'
             );
-        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return false;
+        }
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $this->validator()->error(
-                'Email format is incorrect.',
+                'Email address is incorrect.',
                 'email'
             );
-        /** Check if updating/changing email. */
-        } elseif ($previousModel['email'] !== $email) {
-            $existingModel = $this->modelFactory()->create($objType)->loadFrom('email', $email);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Validate the email address is unique.
+     *
+     * @return boolean
+     */
+    protected function validateLoginUnique()
+    {
+        $objType = self::objType();
+        $factory = $this->modelFactory();
+
+        $currentEmail = $this['email'];
+        $originalUser = $factory->create($objType)->load($this->id());
+
+        if ($originalUser['email'] !== $currentEmail) {
+            $existingUser = $factory->create($objType)->loadFrom('email', $currentEmail);
             /** Check for existing user with given email. */
-            if (!empty($existingModel->id())) {
+            if (!empty($existingUser['id'])) {
                 $this->validator()->error(
-                    'This email is not available.',
+                    'Email address is not available.',
                     'email'
                 );
             }
+            return false;
         }
-
-        return count($this->validator()->errorResults()) === 0 && $result;
     }
 }
