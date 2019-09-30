@@ -2,13 +2,13 @@
 
 namespace Charcoal\User;
 
-// From 'charcoal-object'
-use Charcoal\Object\ContentInterface;
+// From 'charcoal-core'
+use Charcoal\Model\ModelInterface;
 
 /**
- * User Interface, based on charcoal/object/content-interface.
+ * User Interface, based on charcoal/model/model-interface.
  */
-interface UserInterface extends ContentInterface
+interface UserInterface extends ModelInterface
 {
     /**
      * @return string
