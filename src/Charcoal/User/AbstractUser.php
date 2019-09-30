@@ -88,6 +88,13 @@ abstract class AbstractUser extends Content implements
     private $lastPasswordIp;
 
     /**
+     * The token value for the "remember me" session.
+     *
+     * @var string|null
+     */
+    private $loginToken;
+
+    /**
      * The user preferences.
      *
      * @var mixed
@@ -361,6 +368,37 @@ abstract class AbstractUser extends Content implements
     }
 
     /**
+     * @param  string|null $token The login token.
+     * @throws InvalidArgumentException If the token is not a string.
+     * @return self
+     */
+    public function setLoginToken($token)
+    {
+        if ($token === null) {
+            $this->loginToken = null;
+            return $this;
+        }
+
+        if (!is_string($token)) {
+            throw new InvalidArgumentException(
+                'Login Token must be a string'
+            );
+        }
+
+        $this->loginToken = $token;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getLoginToken()
+    {
+        return $this->loginToken;
+    }
+
+    /**
      * @param  mixed $preferences Structure of user preferences.
      * @return self
      */
@@ -407,13 +445,21 @@ abstract class AbstractUser extends Content implements
     /**
      * Retrieve the name of the login password for the user.
      *
-     * Typically, "password".
-     *
      * @return string
      */
     public function getAuthPasswordKey()
     {
         return 'password';
+    }
+
+    /**
+     * Retrieve the name of the login token for the user.
+     *
+     * @return string
+     */
+    public function getAuthLoginTokenKey()
+    {
+        return 'login_token';
     }
 
 

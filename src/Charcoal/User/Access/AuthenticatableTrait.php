@@ -43,6 +43,29 @@ trait AuthenticatableTrait
     }
 
     /**
+     * Retrieve the login token for the user.
+     *
+     * @return string|null
+     */
+    public function getAuthLoginToken()
+    {
+        $key = $this->getAuthLoginTokenKey();
+        return $this[$key];
+    }
+
+    /**
+     * Set the token value for the login token.
+     *
+     * @param  string $value The token value.
+     * @return void
+     */
+    public function setAuthLoginToken($value)
+    {
+        $key = $this->getAuthLoginTokenKey();
+        $this[$key] = $value;
+    }
+
+    /**
      * Retrieve the name of the unique ID for the user.
      *
      * @return string
@@ -64,4 +87,13 @@ trait AuthenticatableTrait
      * @return string
      */
     abstract public function getAuthPasswordKey();
+
+    /**
+     * Retrieve the name of the login token for the user.
+     *
+     * Typically, "login_token" or "remember_token".
+     *
+     * @return string
+     */
+    abstract public function getAuthLoginTokenKey();
 }

@@ -108,6 +108,17 @@ interface UserInterface extends ContentInterface
     public function getLastPasswordIp();
 
     /**
+     * @param  string|null $token The login token.
+     * @return self
+     */
+    public function setLoginToken($token);
+
+    /**
+     * @return string|null
+     */
+    public function getLoginToken();
+
+    /**
      * @param  mixed $preferences Structure of user preferences.
      * @return self
      */

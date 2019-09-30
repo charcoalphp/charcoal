@@ -73,6 +73,14 @@
                 "fr": "Adresse IP de la dernière modification de mot de passe"
             }
         },
+        "login_token": {
+            "type": "string",
+            "input_type": "charcoal/admin/property/input/readonly",
+            "label": {
+                "en": "Login Token",
+                "fr": "Clé de connexion"
+            }
+        },
         "preferences": {
             "type": "structure",
             "l10n": false,

@@ -60,4 +60,28 @@ interface AuthenticatableInterface
      * @return string|null
      */
     public function getAuthPassword();
+
+    /**
+     * Retrieve the name of the login token for the user.
+     *
+     * Typically, "login_token" or "remember_token".
+     *
+     * @return string
+     */
+    public function getAuthLoginTokenKey();
+
+    /**
+     * Retrieve the login token for the user.
+     *
+     * @return string|null
+     */
+    public function getAuthLoginToken();
+
+    /**
+     * Set the token value for the login token.
+     *
+     * @param  string $value The token value.
+     * @return void
+     */
+    public function setAuthLoginToken($value);
 }
