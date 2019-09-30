@@ -12,6 +12,13 @@ namespace Charcoal\User\Access;
 interface AuthenticatableInterface
 {
     /**
+     * Retrieve the name of the session key for the user model.
+     *
+     * @return string
+     */
+    public static function sessionKey();
+
+    /**
      * Retrieve the name of the unique ID for the user.
      *
      * Typically, "id".

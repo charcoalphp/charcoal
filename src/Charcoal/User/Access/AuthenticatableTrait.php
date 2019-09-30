@@ -96,4 +96,11 @@ trait AuthenticatableTrait
      * @return string
      */
     abstract public function getAuthLoginTokenKey();
+
+    /**
+     * Retrieve the name of the session key for the user model.
+     *
+     * @return string
+     */
+    abstract public static function sessionKey();
 }

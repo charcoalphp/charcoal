@@ -11,11 +11,6 @@ use Charcoal\Model\ModelInterface;
 interface UserInterface extends ModelInterface
 {
     /**
-     * @return string
-     */
-    public static function sessionKey();
-
-    /**
      * @param string $email The user email.
      * @return self
      */
