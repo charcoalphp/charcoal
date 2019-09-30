@@ -18,35 +18,43 @@ use Charcoal\User\AuthTokenMetadata;
 class AuthToken extends AbstractModel
 {
     /**
+     * The token key.
+     *
      * @var string
      */
     private $ident;
 
     /**
+     * The token value.
+     *
      * @var string
      */
     private $token;
 
     /**
-     * The user ID should be unique and mandatory.
+     * The related user ID.
      *
      * @var string
      */
     private $userId;
 
     /**
+     * The token's expiration date.
+     *
      * @var DateTimeInterface|null
      */
     private $expiry;
 
     /**
-     * Token creation date (set automatically on save)
+     * The token's creation date (set automatically on save).
+     *
      * @var DateTimeInterface|null
      */
     private $created;
 
     /**
-     * Token last modified date (set automatically on save and update)
+     * The token's last modification date (set automatically on save and update).
+     *
      * @var DateTimeInterface|null
      */
     private $lastModified;
@@ -78,7 +86,7 @@ class AuthToken extends AbstractModel
     }
 
     /**
-     * @param string $token The token.
+     * @param  string $token The token.
      * @return self
      */
     public function setToken($token)
@@ -96,7 +104,7 @@ class AuthToken extends AbstractModel
     }
 
     /**
-     * @param string $id The user ID.
+     * @param  string $id The user ID.
      * @throws InvalidArgumentException If the user ID is not a string.
      * @return self
      */
@@ -107,6 +115,7 @@ class AuthToken extends AbstractModel
                 'Set User ID: identifier must be a string'
             );
         }
+
         $this->userId = $id;
         return $this;
     }
@@ -120,7 +129,7 @@ class AuthToken extends AbstractModel
     }
 
     /**
-     * @param DateTimeInterface|string|null $expiry The date/time at object's creation.
+     * @param  DateTimeInterface|string|null $expiry The date/time at object's creation.
      * @throws InvalidArgumentException If the date/time is invalid.
      * @return self
      */
@@ -130,14 +139,17 @@ class AuthToken extends AbstractModel
             $this->expiry = null;
             return $this;
         }
+
         if (is_string($expiry)) {
             $expiry = new DateTime($expiry);
         }
+
         if (!($expiry instanceof DateTimeInterface)) {
             throw new InvalidArgumentException(
                 'Invalid "Expiry" value. Must be a date/time string or a DateTime object.'
             );
         }
+
         $this->expiry = $expiry;
         return $this;
     }
@@ -151,7 +163,7 @@ class AuthToken extends AbstractModel
     }
 
     /**
-     * @param DateTimeInterface|string|null $created The date/time at object's creation.
+     * @param  DateTimeInterface|string|null $created The date/time at object's creation.
      * @throws InvalidArgumentException If the date/time is invalid.
      * @return self
      */
@@ -161,14 +173,17 @@ class AuthToken extends AbstractModel
             $this->created = null;
             return $this;
         }
+
         if (is_string($created)) {
             $created = new DateTime($created);
         }
+
         if (!($created instanceof DateTimeInterface)) {
             throw new InvalidArgumentException(
                 'Invalid "Created" value. Must be a date/time string or a DateTime object.'
             );
         }
+
         $this->created = $created;
         return $this;
     }
@@ -182,7 +197,7 @@ class AuthToken extends AbstractModel
     }
 
     /**
-     * @param DateTimeInterface|string|null $lastModified The last modified date/time.
+     * @param  DateTimeInterface|string|null $lastModified The last modified date/time.
      * @throws InvalidArgumentException If the date/time is invalid.
      * @return self
      */
@@ -192,14 +207,17 @@ class AuthToken extends AbstractModel
             $this->lastModified = null;
             return $this;
         }
+
         if (is_string($lastModified)) {
             $lastModified = new DateTime($lastModified);
         }
+
         if (!($lastModified instanceof DateTimeInterface)) {
             throw new InvalidArgumentException(
                 'Invalid "Last Modified" value. Must be a date/time string or a DateTime object.'
             );
         }
+
         $this->lastModified = $lastModified;
         return $this;
     }
@@ -213,18 +231,21 @@ class AuthToken extends AbstractModel
     }
 
     /**
+     * Generate auth token data for the given user ID.
+     *
      * Note: the `random_bytes()` function is new to PHP-7. Available in PHP 5 with `compat-random`.
      *
-     * @param string $userId The user ID to generate the auth token from.
+     * @param  string $userId The user ID to generate the auth token from.
      * @return self
      */
     public function generate($userId)
     {
         $metadata = $this->metadata();
-        $this->setIdent(bin2hex(random_bytes(16)));
-        $this->setToken(bin2hex(random_bytes(32)));
-        $this->setUserId($userId);
-        $this->setExpiry('now + '.$metadata['cookieDuration']);
+
+        $this['ident']  = bin2hex(random_bytes(16));
+        $this['token']  = bin2hex(random_bytes(32));
+        $this['userId'] = $userId;
+        $this['expiry'] = 'now + '.$metadata['cookieDuration'];
 
         return $this;
     }
@@ -234,50 +255,51 @@ class AuthToken extends AbstractModel
      */
     public function sendCookie()
     {
-        $metadata = $this->metadata();
-        $cookieName = $metadata['cookieName'];
-        $value = $this['ident'].';'.$this['token'];
-        $expiry = $this['expiry'] ? $this['expiry']->getTimestamp() : null;
+        $metadata   = $this->metadata();
+
+        $name   = $metadata['cookieName'];
+        $value  = $this['ident'].';'.$this['token'];
+        $expiry = isset($this['expiry']) ? $this['expiry']->getTimestamp() : null;
         $secure = $metadata['httpsOnly'];
 
-        setcookie($cookieName, $value, $expiry, '', '', $secure);
+        setcookie($name, $value, $expiry, '', '', $secure);
 
         return $this;
     }
 
     /**
-     * @return array|null `['ident'=>'', 'token'=>'']
+     * @return array|null `[ 'ident' => '', 'token' => '' ]
      */
     public function getTokenDataFromCookie()
     {
         $metadata = $this->metadata();
-        $cookieName = $metadata['cookieName'];
 
-        if (!isset($_COOKIE[$cookieName])) {
+        $name = $metadata['cookieName'];
+        if (!isset($_COOKIE[$name])) {
             return null;
         }
 
-        $authCookie = $_COOKIE[$cookieName];
-        $vals = explode(';', $authCookie);
-        if (!isset($vals[0]) || !isset($vals[1])) {
+        $cookie = $_COOKIE[$name];
+        $data   = array_pad(explode(';', $cookie), 2, null);
+        if (!isset($data[0]) || !isset($data[1])) {
             return null;
         }
 
         return [
-            'ident' => $vals[0],
-            'token' => $vals[1]
+            'ident' => $data[0],
+            'token' => $data[1],
         ];
     }
 
     /**
-     * @param mixed  $ident The auth-token identifier.
-     * @param string $token The token to validate against.
+     * @param  mixed  $ident The auth-token identifier.
+     * @param  string $token The token to validate against.
      * @return mixed The user id. An empty string if no token match.
      */
     public function getUserIdFromToken($ident, $token)
     {
         if (!$this->source()->tableExists()) {
-            return '';
+            return null;
         }
 
         $this->load($ident);
@@ -286,7 +308,7 @@ class AuthToken extends AbstractModel
                 'Auth token not found: "%s"',
                 $ident
             ));
-            return '';
+            return null;
         }
 
         // Expired cookie
@@ -294,14 +316,14 @@ class AuthToken extends AbstractModel
         if (!$this['expiry'] || $now > $this['expiry']) {
             $this->logger->warning('Expired auth token');
             $this->delete();
-            return '';
+            return null;
         }
 
         // Validate encrypted token
         if (password_verify($token, $this['token']) !== true) {
             $this->panic();
             $this->delete();
-            return '';
+            return null;
         }
 
         // Success!
@@ -319,8 +341,9 @@ class AuthToken extends AbstractModel
         if (password_needs_rehash($this->token, PASSWORD_DEFAULT)) {
             $this->token = password_hash($this->token, PASSWORD_DEFAULT);
         }
-        $this->setCreated('now');
-        $this->setLastModified('now');
+
+        $this['created']      = 'now';
+        $this['lastModified'] = 'now';
 
         return true;
     }
@@ -334,7 +357,7 @@ class AuthToken extends AbstractModel
     {
         parent::preUpdate($properties);
 
-        $this->setLastModified('now');
+        $this['lastModified'] = 'now';
 
         return true;
     }
@@ -352,13 +375,9 @@ class AuthToken extends AbstractModel
 
         if ($this->userId) {
             $table = $this->source()->table();
-            $q = sprintf('
-                DELETE FROM
-                    `%s`
-                WHERE
-                    user_id = :userId', $table);
-            $this->source()->dbQuery($q, [
-                'userId' => $this['userId']
+            $sql = sprintf('DELETE FROM `%s` WHERE user_id = :userId', $table);
+            $this->source()->dbQuery($sql, [
+                'userId' => $this['userId'],
             ]);
         }
     }
