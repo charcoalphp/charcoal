@@ -252,20 +252,6 @@ class AbstractUserTest extends AbstractTestCase
     }
 
     /**
-     * @return void
-     */
-    public function testResetPassword()
-    {
-        $ret = $this->obj->resetPassword('foo');
-        $this->assertSame($ret, $this->obj);
-
-        $this->obj['id'] = 'bar';
-
-        $this->expectException(InvalidArgumentException::class);
-        $this->obj->resetPassword(false);
-    }
-
-    /**
      * Set up the service container.
      *
      * @return Container

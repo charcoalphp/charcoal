@@ -66,19 +66,6 @@ class GenericUserTest extends AbstractTestCase
     }
 
     /**
-     * @return void
-     */
-    public function testSaveToSession()
-    {
-        $obj = $this->obj;
-
-        $sessionKey = $obj::sessionKey();
-        $this->obj['id'] = 'foo';
-        $this->obj->saveToSession();
-        $this->assertEquals($_SESSION[$sessionKey], $this->obj['id']);
-    }
-
-    /**
      * Set up the service container.
      *
      * @return Container

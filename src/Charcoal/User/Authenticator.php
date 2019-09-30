@@ -33,6 +33,31 @@ class Authenticator implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
+    const METHOD_PASSWORD = 'password';
+    const METHOD_SESSION  = 'session';
+    const METHOD_TOKEN    = 'token';
+
+    /**
+     * The authenticated user.
+     *
+     * @var \Charcoal\User\UserInterface
+     */
+    private $authenticatedUser;
+
+    /**
+     * The authentication method.
+     *
+     * @var string
+     */
+    private $authenticatedMethod;
+
+    /**
+     * Indicate if the a user is authenticated.
+     *
+     * @var boolean
+     */
+    private $isAuthenticated;
+
     /**
      * The user object type.
      *
@@ -174,6 +199,109 @@ class Authenticator implements LoggerAwareInterface
     }
 
     /**
+     * Retrieve the currently authenticated user.
+     *
+     * The method will attempt to authenticate a
+     *
+     * @return \Charcoal\User\UserInterface|null
+     */
+    public function user()
+    {
+        if ($this->isAuthenticated === null) {
+            $this->authenticate();
+        }
+
+        return $this->authenticatedUser;
+    }
+
+    /**
+     * Return the currently cached user.
+     *
+     * @return \Charcoal\User\UserInterface|null
+     */
+    public function getUser()
+    {
+        return $this->authenticatedUser;
+    }
+
+    /**
+     * Set the authenticated user.
+     *
+     * @param  AuthenticatableInterface $user The authenticated user.
+     * @return void
+     */
+    protected function setUser(AuthenticatableInterface $user)
+    {
+        $this->authenticatedUser = $user;
+        $this->isAuthenticated   = true;
+    }
+
+    /**
+     * Determines if the user is authenticated or not.
+     *
+     * @return bool TRUE if a user has been authenticated, FALSE otherwise.
+     */
+    public function isAuthenticated()
+    {
+        if ($this->isAuthenticated === null) {
+            $this->authenticate();
+        }
+
+        return $this->isAuthenticated;
+    }
+
+    /**
+     * Log a user into the application.
+     *
+     * @param  AuthenticatableInterface $user     The authenticated user to log in.
+     * @param  boolean                  $remember Whether to "remember" the user or not.
+     * @return boolean Success / Failure
+     */
+    public function login(AuthenticatableInterface $user, $remember = false)
+    {
+        if (!$user->getAuthId()) {
+            return false;
+        }
+
+        $this->updateSession($user);
+
+        if ($remember) {
+            $this->updateCookie($user);
+        }
+
+        $this->touchUserLogin($user);
+
+        $this->setUser($user);
+
+        return true;
+    }
+
+    /**
+     * Log the user out of the application.
+     *
+     * @return boolean Logged out or not.
+     */
+    public function logout()
+    {
+        $user = $this->user();
+
+        if ($user === null) {
+            $user = $this->userFactory()->get($this->userType());
+        }
+
+        $key = $user::sessionKey();
+
+        $_SESSION[$key] = null;
+        unset($_SESSION[$key]);
+
+        $this->authenticatedMethod = null;
+        $this->authenticatedUser   = null;
+        $this->isAuthenticated     = false;
+
+        return true;
+    }
+
+    /**
      * Determine if the current user is authenticated.
      *
      * The user is authenticated via _session ID_ or _auth token_.
@@ -192,6 +320,10 @@ class Authenticator implements LoggerAwareInterface
         if ($user) {
             return $user;
         }
+
+        $this->authenticatedMethod = null;
+        $this->authenticatedUser   = null;
+        $this->isAuthenticated     = false;
 
         return null;
     }
@@ -238,7 +370,8 @@ class Authenticator implements LoggerAwareInterface
                 $this->rehashUserPassword($user, $password);
             }
 
-            $user->login();
+            $this->login($user);
+            $this->authenticatedMethod = static::METHOD_PASSWORD;
 
             return $user;
         }
@@ -259,16 +392,26 @@ class Authenticator implements LoggerAwareInterface
      */
     private function authenticateBySession()
     {
-        $factory   = $this->userFactory();
-        $userModel = $factory->get($this->userType());
-        $userClass = get_class($userModel);
+        $user = $this->userFactory()->create($this->userType());
+        $key  = $user::sessionKey();
 
-        // Call static method on user model
-        $user = call_user_func([ $userClass, 'getAuthenticated' ], $factory);
+        if (!isset($_SESSION[$key])) {
+            return null;
+        }
+
+        $userId = $_SESSION[$key];
+        if (!$userId) {
+            return null;
+        }
+
+        $user->load($userId);
 
         // Allow model to validate user standing
-        if ($user && $user->validateAuthentication()) {
-            $user->saveToSession();
+        if ($user->validateAuthentication()) {
+            $this->updateSession($user);
+
+            $this->setUser($user);
+            $this->authenticatedMethod = static::METHOD_SESSION;
 
             return $user;
         }
@@ -305,11 +448,57 @@ class Authenticator implements LoggerAwareInterface
 
         // Allow model to validate user standing
         if ($user->validateAuthentication()) {
-            $user->saveToSession();
+            $this->updateSession($user);
+
+            $this->setUser($user);
+            $this->authenticatedMethod = static::METHOD_TOKEN;
+
             return $user;
         }
 
         return null;
+    }
+
+    /**
+     * Update the session with the given user.
+     *
+     * @param  AuthenticatableInterface $user The authenticated user to remember.
+     * @throws InvalidArgumentException If trying to save a user to session without an ID.
+     * @return void
+     */
+    protected function updateSession(AuthenticatableInterface $user)
+    {
+        $userId = $user->getAuthId();
+        if (!$userId) {
+            throw new InvalidArgumentException(
+                'Can not save user to session; no user ID'
+            );
+        }
+
+        $_SESSION[$user::sessionKey()] = $userId;
+    }
+
+    /**
+     * Store the auth token for the given user in a cookie.
+     *
+     * @param  AuthenticatableInterface $user The authenticated user to remember.
+     * @throws InvalidArgumentException If trying to save a user to cookies without an ID.
+     * @return void
+     */
+    protected function updateCookie(AuthenticatableInterface $user)
+    {
+        $userId = $user->getAuthId();
+        if (!$userId) {
+            throw new InvalidArgumentException(
+                'Can not save user to session; no user ID'
+            );
+        }
+
+        $authToken = $this->tokenFactory()->create($this->tokenType());
+        $authToken->generate($userId);
+        $authToken->sendCookie();
+
+        $authToken->save();
     }
 
     /**
@@ -344,6 +533,55 @@ class Authenticator implements LoggerAwareInterface
     public function validateAuthPassword($password)
     {
         return (is_string($password) && !empty($password));
+    }
+
+    /**
+     * Updates the user's timestamp for their last log in.
+     *
+     * @param  AuthenticatableInterface $user     The user to update.
+     * @param  string                   $password The plain-text password to hash.
+     * @return boolean Returns TRUE if the password was changed, or FALSE otherwise.
+     */
+    protected function touchUserLogin(AuthenticatableInterface $user)
+    {
+        if (!$user->getAuthId()) {
+            throw new InvalidArgumentException(
+                'Can not touch user: user has no ID'
+            );
+        }
+
+        $userIdent = $user->getAuthIdentifier();
+        $userClass = get_class($user);
+
+        $this->logger->info(sprintf(
+            'Updating last login fields for user "%s" (%s)',
+            $userIdent,
+            $userClass
+        ));
+
+        $user['lastLoginDate'] = 'now';
+        $user['lastLoginIp']   = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
+
+        $result = $user->update([
+            'last_login_ip',
+            'last_login_date',
+        ]);
+
+        if ($result) {
+            $this->logger->notice(sprintf(
+                'Last login fields were updated for user "%s" (%s)',
+                $userIdent,
+                $userClass
+            ));
+        } else {
+            $this->logger->warning(sprintf(
+                'Last login fields failed to be updated for user "%s" (%s)',
+                $userIdent,
+                $userClass
+            ));
+        }
+
+        return $result;
     }
 
     /**
@@ -394,6 +632,65 @@ class Authenticator implements LoggerAwareInterface
         } else {
             $this->logger->warning(sprintf(
                 'Password failed to be rehashed for user "%s" (%s)',
+                $userIdent,
+                $userClass
+            ));
+        }
+
+        return $result;
+    }
+
+    /**
+     * Updates the user's password hash.
+     *
+     * @param  AuthenticatableInterface $user     The user to update.
+     * @param  string                   $password The plain-text password to hash.
+     * @return boolean Returns TRUE if the password was changed, or FALSE otherwise.
+     */
+    protected function changeUserPassword(AuthenticatableInterface $user, $password)
+    {
+        if (!$this->validateAuthPassword($password)) {
+            throw new InvalidArgumentException(
+                'Can not reset password: password is invalid'
+            );
+        }
+
+        if (!$user->getAuthId()) {
+            throw new InvalidArgumentException(
+                'Can not reset password: user has no ID'
+            );
+        }
+
+        $userIdent = $user->getAuthIdentifier();
+        $userClass = get_class($user);
+
+        $this->logger->info(sprintf(
+            'Changing password for user "%s" (%s)',
+            $userIdent,
+            $userClass
+        ));
+
+        $passwordKey = $user->getAuthPasswordKey();
+
+        $user[$passwordKey]       = password_hash($password, PASSWORD_DEFAULT);
+        $user['lastPasswordDate'] = 'now';
+        $user['lastPasswordIp']   = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
+
+        $result = $user->update([
+            $passwordKey,
+            'last_password_date',
+            'last_password_ip',
+        ]);
+
+        if ($result) {
+            $this->logger->notice(sprintf(
+                'Password was changed for user "%s" (%s)',
+                $userIdent,
+                $userClass
+            ));
+        } else {
+            $this->logger->warning(sprintf(
+                'Password failed to be changed for user "%s" (%s)',
                 $userIdent,
                 $userClass
             ));
