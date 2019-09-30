@@ -359,7 +359,7 @@ class Authenticator implements LoggerAwareInterface
         }
 
         // Allow model to validate user standing
-        if (!$user->validateAuthentication()) {
+        if (!$this->validateAuthentication($user)) {
             return null;
         }
 
@@ -407,16 +407,16 @@ class Authenticator implements LoggerAwareInterface
         $user->load($userId);
 
         // Allow model to validate user standing
-        if ($user->validateAuthentication()) {
-            $this->updateSession($user);
-
-            $this->setUser($user);
-            $this->authenticatedMethod = static::METHOD_SESSION;
-
-            return $user;
+        if (!$this->validateAuthentication($user)) {
+            return null;
         }
 
-        return null;
+        $this->updateSession($user);
+
+        $this->setUser($user);
+        $this->authenticatedMethod = static::METHOD_SESSION;
+
+        return $user;
     }
 
     /**
@@ -447,16 +447,16 @@ class Authenticator implements LoggerAwareInterface
         $user->load($userId);
 
         // Allow model to validate user standing
-        if ($user->validateAuthentication()) {
-            $this->updateSession($user);
-
-            $this->setUser($user);
-            $this->authenticatedMethod = static::METHOD_TOKEN;
-
-            return $user;
+        if (!$this->validateAuthentication($user)) {
+            return null;
         }
 
-        return null;
+        $this->updateSession($user);
+
+        $this->setUser($user);
+        $this->authenticatedMethod = static::METHOD_TOKEN;
+
+        return $user;
     }
 
     /**
@@ -533,6 +533,19 @@ class Authenticator implements LoggerAwareInterface
     public function validateAuthPassword($password)
     {
         return (is_string($password) && !empty($password));
+    }
+
+    /**
+     * Validate the user authentication state is okay.
+     *
+     * For example, inactive users can not authenticate.
+     *
+     * @param  AuthenticatableInterface $user The user to validate.
+     * @return boolean
+     */
+    public function validateAuthentication(AuthenticatableInterface $user)
+    {
+        return !!((!$user->getAuthId() || !$user->getAuthIdentifier() || !$user['active']));
     }
 
     /**

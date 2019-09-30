@@ -544,16 +544,4 @@ abstract class AbstractUser extends Content implements
             return false;
         }
     }
-
-    /**
-     * Validate the user authentication state is okay.
-     *
-     * For example, inactive users can not authenticate.
-     *
-     * @return boolean
-     */
-    public function validateAuthentication()
-    {
-        return !!((!$this->getAuthId() || !$this->getAuthIdentifier() || !$this['active']));
-    }
 }
