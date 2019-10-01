@@ -4,9 +4,10 @@ namespace Charcoal\Model;
 
 // From 'charcoal-core'
 use Charcoal\Validator\AbstractValidator;
+use Charcoal\Validator\ValidatableInterface;
 
 /**
- *
+ * Model Validator
  */
 class ModelValidator extends AbstractValidator
 {
@@ -15,23 +16,27 @@ class ModelValidator extends AbstractValidator
      */
     public function validate()
     {
-        $model = $this->model;
+        $result = true;
 
+        $model = $this->model;
         $props = $model->properties();
 
-        $ret = true;
-        foreach ($props as $ident => $p) {
-            if (!$p ||  !$p->active()) {
+        foreach ($props as $ident => $prop) {
+            if (!($prop instanceof ValidatableInterface) || !$prop['active']) {
                 continue;
             }
-            $valid = $p->validate();
-            if ($valid === false) {
-                $validator = $p->validator();
+
+            $value   = $model->propertyValue($ident);
+            $isValid = $prop->setVal($value)->validate();
+            $prop->clearVal();
+
+            if ($isValid === false) {
+                $validator = $prop->validator();
                 $this->merge($validator, $ident);
-                $ret = false;
+                $result = false;
             }
         }
 
-        return $ret;
+        return $result;
     }
 }

@@ -19,7 +19,7 @@
     "prefer-stable": true,
     "extra": {
         "branch-alias": {
-            "dev-master": "0.4.x-dev"
+            "dev-master": "0.5.x-dev"
         }
     },
     "require": {
@@ -32,7 +32,7 @@
         "locomotivemtl/charcoal-cache": "~0.1",
         "locomotivemtl/charcoal-config": "~0.9",
         "locomotivemtl/charcoal-factory": "~0.4",
-        "locomotivemtl/charcoal-property": "~0.7",
+        "locomotivemtl/charcoal-property": "~0.9",
         "locomotivemtl/charcoal-view": "~0.3"
     },
     "require-dev": {
