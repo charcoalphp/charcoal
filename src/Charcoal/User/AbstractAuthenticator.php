@@ -131,6 +131,16 @@ abstract class AbstractAuthenticator implements
     }
 
     /**
+     * Create a new user model.
+     *
+     * @return \Charcoal\User\Access\AuthenticatableInterface
+     */
+    public function createUser()
+    {
+        return $this->userFactory()->create($this->userType());
+    }
+
+    /**
      * Retrieve the auth-token object type.
      *
      * @return string
@@ -152,9 +162,19 @@ abstract class AbstractAuthenticator implements
     }
 
     /**
+     * Create a new auth-token model.
+     *
+     * @return \Charcoal\User\AuthToken
+     */
+    public function createToken()
+    {
+        return $this->tokenFactory()->create($this->tokenType());
+    }
+
+    /**
      * Set the user object type (model).
      *
-     * @param string $type The user object type.
+     * @param  string $type The user object type.
      * @throws InvalidArgumentException If the user object type parameter is not a string.
      * @return void
      */
@@ -172,7 +192,7 @@ abstract class AbstractAuthenticator implements
     /**
      * Set a user model factory.
      *
-     * @param FactoryInterface $factory The factory used to create new user instances.
+     * @param  FactoryInterface $factory The factory used to create new user instances.
      * @return void
      */
     protected function setUserFactory(FactoryInterface $factory)
@@ -183,7 +203,7 @@ abstract class AbstractAuthenticator implements
     /**
      * Set the authorization token type (model).
      *
-     * @param string $type The auth-token object type.
+     * @param  string $type The auth-token object type.
      * @throws InvalidArgumentException If the token object type parameter is not a string.
      * @return void
      */
@@ -201,7 +221,7 @@ abstract class AbstractAuthenticator implements
     /**
      * Set a model factory for token-based authentication.
      *
-     * @param FactoryInterface $factory The factory used to create new auth-token instances.
+     * @param  FactoryInterface $factory The factory used to create new auth-token instances.
      * @return void
      */
     protected function setTokenFactory(FactoryInterface $factory)
@@ -418,7 +438,7 @@ abstract class AbstractAuthenticator implements
             );
         }
 
-        $user = $this->userFactory()->create($this->userType());
+        $user = $this->createUser();
         if (!$user->source()->tableExists()) {
             $user->source()->createTable();
         }
@@ -465,7 +485,7 @@ abstract class AbstractAuthenticator implements
      */
     protected function authenticateBySession()
     {
-        $user = $this->userFactory()->create($this->userType());
+        $user = $this->createUser();
         $key  = $user::sessionKey();
 
         if (!isset($_SESSION[$key])) {
@@ -500,7 +520,7 @@ abstract class AbstractAuthenticator implements
      */
     protected function authenticateByToken()
     {
-        $authToken = $this->tokenFactory()->create($this->tokenType());
+        $authToken = $this->createToken();
 
         if (!$authToken->isEnabled()) {
             return null;
@@ -516,7 +536,7 @@ abstract class AbstractAuthenticator implements
             return null;
         }
 
-        $user = $this->userFactory()->create($this->userType());
+        $user = $this->createUser();
         $user->load($userId);
 
         // Allow model to validate user standing
@@ -559,7 +579,7 @@ abstract class AbstractAuthenticator implements
      */
     protected function deleteUserTokens(AuthenticatableInterface $user = null)
     {
-        $authToken = $this->tokenFactory()->create($this->tokenType());
+        $authToken = $this->createToken();
         if (!$authToken->isEnabled()) {
             return;
         }
@@ -637,7 +657,7 @@ abstract class AbstractAuthenticator implements
             );
         }
 
-        $authToken = $this->tokenFactory()->create($this->tokenType());
+        $authToken = $this->createToken();
 
         if (!$authToken->isEnabled()) {
             return;
