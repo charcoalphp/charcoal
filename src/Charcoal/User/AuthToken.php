@@ -240,6 +240,10 @@ class AuthToken extends AbstractModel
      */
     public function generate($userId)
     {
+        if (!$this->isEnabled()) {
+            return $this;
+        }
+
         $metadata = $this->metadata();
 
         $this['ident']  = bin2hex(random_bytes(16));
@@ -251,11 +255,35 @@ class AuthToken extends AbstractModel
     }
 
     /**
+     * Determine if authentication by token is supported.
+     *
+     * @return boolean
+     */
+    public function isEnabled()
+    {
+        return $this->metadata()['enabled'];
+    }
+
+    /**
+     * Determine if authentication by token should be only over HTTPS.
+     *
+     * @return boolean
+     */
+    public function isSecure()
+    {
+        return $this->metadata()['httpsOnly'];
+    }
+
+    /**
      * @return self
      */
     public function sendCookie()
     {
-        $metadata   = $this->metadata();
+        if (!$this->isEnabled()) {
+            return $this;
+        }
+
+        $metadata = $this->metadata();
 
         $name   = $metadata['cookieName'];
         $value  = $this['ident'].';'.$this['token'];
@@ -268,10 +296,34 @@ class AuthToken extends AbstractModel
     }
 
     /**
+     * @return self
+     */
+    public function deleteCookie()
+    {
+        if (!$this->isEnabled()) {
+            return $this;
+        }
+
+        $metadata = $this->metadata();
+
+        $name   = $metadata['cookieName'];
+        $expiry = (time() - 1000);
+        $secure = $metadata['httpsOnly'];
+
+        setcookie($name, '', $expiry, '', '', $secure);
+
+        return $this;
+    }
+
+    /**
      * @return array|null `[ 'ident' => '', 'token' => '' ]
      */
     public function getTokenDataFromCookie()
     {
+        if (!$this->isEnabled()) {
+            return null;
+        }
+
         $metadata = $this->metadata();
 
         $name = $metadata['cookieName'];
@@ -298,6 +350,10 @@ class AuthToken extends AbstractModel
      */
     public function getUserIdFromToken($ident, $token)
     {
+        if (!$this->isEnabled()) {
+            return null;
+        }
+
         if (!$this->source()->tableExists()) {
             return null;
         }
@@ -328,6 +384,25 @@ class AuthToken extends AbstractModel
 
         // Success!
         return $this['userId'];
+    }
+
+    /**
+     * Delete all auth tokens from storage for the current user.
+     *
+     * @return void
+     */
+    public function deleteUserAuthTokens()
+    {
+        $userId = $this['userId'];
+        if (isset($userId)) {
+            $sql = sprintf(
+                'DELETE FROM `%s` WHERE user_id = :userId',
+                $this->source()->table()
+            );
+            $this->source()->dbQuery($sql, [
+                'userId' => $userId,
+            ]);
+        }
     }
 
     /**
@@ -373,13 +448,7 @@ class AuthToken extends AbstractModel
             'Possible security breach: an authentication token was found in the database but its token does not match.'
         );
 
-        if ($this->userId) {
-            $table = $this->source()->table();
-            $sql = sprintf('DELETE FROM `%s` WHERE user_id = :userId', $table);
-            $this->source()->dbQuery($sql, [
-                'userId' => $this['userId'],
-            ]);
-        }
+        $this->deleteUserAuthTokens();
     }
 
     /**

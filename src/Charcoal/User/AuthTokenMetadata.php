@@ -8,7 +8,7 @@ use InvalidArgumentException;
 use Charcoal\Model\ModelMetadata;
 
 /**
- * User Auth Token metadata
+ * User Auth Token Metadata
  */
 class AuthTokenMetadata extends ModelMetadata
 {
@@ -45,7 +45,7 @@ class AuthTokenMetadata extends ModelMetadata
             'enabled'         => true,
             'cookie_name'     => 'charcoal_user_login',
             'cookie_duration' => '15 days',
-            'https_only'      => false
+            'https_only'      => false,
         ]);
         return $defaults;
     }
