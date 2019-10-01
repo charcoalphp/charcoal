@@ -177,6 +177,8 @@ class DatabaseSource extends AbstractSource implements
         $this->logger->debug($query);
         $dbh->query($query);
 
+        $this->setTableExists();
+
         return true;
     }
 
@@ -243,6 +245,27 @@ class DatabaseSource extends AbstractSource implements
     {
         $dbh    = $this->db();
         $table  = $this->table();
+
+        if (isset($dbh->tableExists, $dbh->tableExists[$table])) {
+            return $dbh->tableExists[$table];
+        }
+
+        $exists = $this->performTableExists();
+        $this->setTableExists($exists);
+
+        return $exists;
+    }
+
+    /**
+     * Perform a source table exists operation.
+     *
+     * @return boolean TRUE if the table exists, otherwise FALSE.
+     */
+    protected function performTableExists()
+    {
+        $dbh    = $this->db();
+        $table  = $this->table();
+
         $driver = $dbh->getAttribute(PDO::ATTR_DRIVER_NAME);
         if ($driver === self::SQLITE_DRIVER_NAME) {
             $query = sprintf('SELECT name FROM sqlite_master WHERE type = "table" AND name = "%s";', $table);
@@ -254,7 +277,25 @@ class DatabaseSource extends AbstractSource implements
         $sth    = $dbh->query($query);
         $exists = $sth->fetchColumn(0);
 
-        return !!$exists;
+        return (bool)$exists;
+    }
+
+    /**
+     * Store a reminder whether the source's database table exists.
+     *
+     * @param  boolean $exists Whether the table exists or not.
+     * @return void
+     */
+    protected function setTableExists($exists = true)
+    {
+        $dbh   = $this->db();
+        $table = $this->table();
+
+        if (!isset($dbh->tableExists)) {
+            $dbh->tableExists = [];
+        }
+
+        $dbh->tableExists[$table] = $exists;
     }
 
     /**
@@ -637,7 +678,7 @@ class DatabaseSource extends AbstractSource implements
 
         if (!$model->id()) {
             throw new UnexpectedValueException(
-                sprintf('Can not delete "%s" item. No ID.', get_class($this))
+                sprintf('Can not delete "%s" item. No ID.', get_class($model))
             );
         }
 
