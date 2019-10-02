@@ -463,7 +463,6 @@ abstract class AbstractUser extends Content implements
     }
 
 
-
     // Extends Charcoal\Validator\ValidatableTrait
     // =========================================================================
 

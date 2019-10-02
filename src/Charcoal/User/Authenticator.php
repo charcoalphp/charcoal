@@ -58,9 +58,10 @@ class Authenticator extends AbstractAuthenticator
      *
      * @param  AuthenticatableInterface $user     The user to update.
      * @param  string                   $password The plain-text password to hash.
+     * @param  boolean                  $update   Whether to persist changes to storage.
      * @return boolean Returns TRUE if the password was changed, or FALSE otherwise.
      */
-    protected function touchUserLogin(AuthenticatableInterface $user)
+    protected function touchUserLogin(AuthenticatableInterface $user, $update = true)
     {
         if (!($user instanceof UserInterface)) {
             return false;
@@ -72,35 +73,40 @@ class Authenticator extends AbstractAuthenticator
             );
         }
 
-        $userIdent = $user->getAuthIdentifier();
-        $userClass = get_class($user);
+        $userId = $user->getAuthId();
 
-        $this->logger->info(sprintf(
-            'Updating last login fields for user "%s" (%s)',
-            $userIdent,
-            $userClass
-        ));
+        if ($update && $userId) {
+            $userClass = get_class($user);
+
+            $this->logger->info(sprintf(
+                'Updating last login fields for user "%s" (%s)',
+                $userId,
+                $userClass
+            ));
+        }
 
         $user['lastLoginDate'] = 'now';
         $user['lastLoginIp']   = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
 
-        $result = $user->update([
-            'last_login_ip',
-            'last_login_date',
-        ]);
+        if ($update && $userId) {
+            $result = $user->update([
+                'last_login_ip',
+                'last_login_date',
+            ]);
 
-        if ($result) {
-            $this->logger->notice(sprintf(
-                'Last login fields were updated for user "%s" (%s)',
-                $userIdent,
-                $userClass
-            ));
-        } else {
-            $this->logger->warning(sprintf(
-                'Last login fields failed to be updated for user "%s" (%s)',
-                $userIdent,
-                $userClass
-            ));
+            if ($result) {
+                $this->logger->notice(sprintf(
+                    'Last login fields were updated for user "%s" (%s)',
+                    $userId,
+                    $userClass
+                ));
+            } else {
+                $this->logger->warning(sprintf(
+                    'Last login fields failed to be updated for user "%s" (%s)',
+                    $userId,
+                    $userClass
+                ));
+            }
         }
 
         return $result;
@@ -111,9 +117,11 @@ class Authenticator extends AbstractAuthenticator
      *
      * @param  AuthenticatableInterface $user     The user to update.
      * @param  string                   $password The plain-text password to hash.
+     * @param  boolean                  $update   Whether to persist changes to storage.
+     * @throws InvalidArgumentException If the password is invalid.
      * @return boolean Returns TRUE if the password was changed, or FALSE otherwise.
      */
-    protected function changeUserPassword(AuthenticatableInterface $user, $password)
+    protected function changeUserPassword(AuthenticatableInterface $user, $password, $update = true)
     {
         if (!($user instanceof UserInterface)) {
             return parent::changeUserPassword($user, $password);
@@ -125,20 +133,17 @@ class Authenticator extends AbstractAuthenticator
             );
         }
 
-        if (!$user->getAuthId()) {
-            throw new InvalidArgumentException(
-                'Can not reset password: user has no ID'
-            );
+        $userId = $user->getAuthId();
+
+        if ($update && $userId) {
+            $userClass = get_class($user);
+
+            $this->logger->info(sprintf(
+                'Changing password for user "%s" (%s)',
+                $userId,
+                $userClass
+            ));
         }
-
-        $userIdent = $user->getAuthIdentifier();
-        $userClass = get_class($user);
-
-        $this->logger->info(sprintf(
-            'Changing password for user "%s" (%s)',
-            $userIdent,
-            $userClass
-        ));
 
         $passwordKey = $user->getAuthPasswordKey();
 
@@ -146,26 +151,30 @@ class Authenticator extends AbstractAuthenticator
         $user['lastPasswordDate'] = 'now';
         $user['lastPasswordIp']   = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
 
-        $result = $user->update([
-            $passwordKey,
-            'last_password_date',
-            'last_password_ip',
-        ]);
+        if ($update && $userId) {
+            $result = $user->update([
+                $passwordKey,
+                'last_password_date',
+                'last_password_ip',
+            ]);
 
-        if ($result) {
-            $this->logger->notice(sprintf(
-                'Password was changed for user "%s" (%s)',
-                $userIdent,
-                $userClass
-            ));
-        } else {
-            $this->logger->warning(sprintf(
-                'Password failed to be changed for user "%s" (%s)',
-                $userIdent,
-                $userClass
-            ));
+            if ($result) {
+                $this->logger->notice(sprintf(
+                    'Password was changed for user "%s" (%s)',
+                    $userId,
+                    $userClass
+                ));
+            } else {
+                $this->logger->warning(sprintf(
+                    'Password failed to be changed for user "%s" (%s)',
+                    $userId,
+                    $userClass
+                ));
+            }
+
+            return $result;
         }
 
-        return $result;
+        return true;
     }
 }

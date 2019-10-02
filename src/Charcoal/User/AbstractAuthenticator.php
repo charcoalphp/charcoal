@@ -387,7 +387,7 @@ abstract class AbstractAuthenticator implements
         $this->deleteUserSession($user);
         $this->deleteUserTokens($user);
 
-        $this->clearAuthenticator()
+        $this->clearAuthenticator();
     }
 
     /**
@@ -432,7 +432,7 @@ abstract class AbstractAuthenticator implements
      */
     public function authenticateByPassword($identifier, $password)
     {
-        if ($this->validateLogin($identifier, $password)) {
+        if (!$this->validateLogin($identifier, $password)) {
             throw new InvalidArgumentException(
                 'Invalid user login credentials'
             );
@@ -724,9 +724,11 @@ abstract class AbstractAuthenticator implements
      *
      * @param  AuthenticatableInterface $user     The user to update.
      * @param  string                   $password The plain-text password to hash.
+     * @param  boolean                  $update   Whether to persist changes to storage.
+     * @throws InvalidArgumentException If the password is invalid.
      * @return boolean Returns TRUE if the password was changed, or FALSE otherwise.
      */
-    protected function rehashUserPassword(AuthenticatableInterface $user, $password)
+    protected function rehashUserPassword(AuthenticatableInterface $user, $password, $update = true)
     {
         if (!$this->validateAuthPassword($password)) {
             throw new InvalidArgumentException(
@@ -734,44 +736,45 @@ abstract class AbstractAuthenticator implements
             );
         }
 
-        if (!$user->getAuthId()) {
-            throw new InvalidArgumentException(
-                'Can not rehash password: user has no ID'
-            );
+        $userId = $user->getAuthId();
+
+        if ($update && $userId) {
+            $userClass = get_class($user);
+
+            $this->logger->info(sprintf(
+                'Rehashing password for user "%s" (%s)',
+                $userId,
+                $userClass
+            ));
         }
-
-        $userIdent = $user->getAuthIdentifier();
-        $userClass = get_class($user);
-
-        $this->logger->info(sprintf(
-            'Rehashing password for user "%s" (%s)',
-            $userIdent,
-            $userClass
-        ));
 
         $passwordKey = $user->getAuthPasswordKey();
 
         $user[$passwordKey] = password_hash($password, PASSWORD_DEFAULT);
 
-        $result = $user->update([
-            $passwordKey,
-        ]);
+        if ($update && $userId) {
+            $result = $user->update([
+                $passwordKey,
+            ]);
 
-        if ($result) {
-            $this->logger->notice(sprintf(
-                'Password was rehashed for user "%s" (%s)',
-                $userIdent,
-                $userClass
-            ));
-        } else {
-            $this->logger->warning(sprintf(
-                'Password failed to be rehashed for user "%s" (%s)',
-                $userIdent,
-                $userClass
-            ));
+            if ($result) {
+                $this->logger->notice(sprintf(
+                    'Password was rehashed for user "%s" (%s)',
+                    $userId,
+                    $userClass
+                ));
+            } else {
+                $this->logger->warning(sprintf(
+                    'Password failed to be rehashed for user "%s" (%s)',
+                    $userId,
+                    $userClass
+                ));
+            }
+
+            return $result;
         }
 
-        return $result;
+        return true;
     }
 
     /**
@@ -779,54 +782,57 @@ abstract class AbstractAuthenticator implements
      *
      * @param  AuthenticatableInterface $user     The user to update.
      * @param  string                   $password The plain-text password to hash.
+     * @param  boolean                  $update   Whether to persist changes to storage.
+     * @throws InvalidArgumentException If the password is invalid.
      * @return boolean Returns TRUE if the password was changed, or FALSE otherwise.
      */
-    protected function changeUserPassword(AuthenticatableInterface $user, $password)
+    protected function changeUserPassword(AuthenticatableInterface $user, $password, $update = true)
     {
         if (!$this->validateAuthPassword($password)) {
             throw new InvalidArgumentException(
-                'Can not reset password: password is invalid'
+                'Can not change password: password is invalid'
             );
         }
 
-        if (!$user->getAuthId()) {
-            throw new InvalidArgumentException(
-                'Can not reset password: user has no ID'
-            );
+        $userId = $user->getAuthId();
+
+        if ($update && $userId) {
+            $userClass = get_class($user);
+
+            $this->logger->info(sprintf(
+                'Changing password for user "%s" (%s)',
+                $userId,
+                $userClass
+            ));
         }
-
-        $userIdent = $user->getAuthIdentifier();
-        $userClass = get_class($user);
-
-        $this->logger->info(sprintf(
-            'Changing password for user "%s" (%s)',
-            $userIdent,
-            $userClass
-        ));
 
         $passwordKey = $user->getAuthPasswordKey();
 
         $user[$passwordKey] = password_hash($password, PASSWORD_DEFAULT);
 
-        $result = $user->update([
-            $passwordKey,
-        ]);
+        if ($update && $userId) {
+            $result = $user->update([
+                $passwordKey,
+            ]);
 
-        if ($result) {
-            $this->logger->notice(sprintf(
-                'Password was changed for user "%s" (%s)',
-                $userIdent,
-                $userClass
-            ));
-        } else {
-            $this->logger->warning(sprintf(
-                'Password failed to be changed for user "%s" (%s)',
-                $userIdent,
-                $userClass
-            ));
+            if ($result) {
+                $this->logger->notice(sprintf(
+                    'Password was changed for user "%s" (%s)',
+                    $userId,
+                    $userClass
+                ));
+            } else {
+                $this->logger->warning(sprintf(
+                    'Password failed to be changed for user "%s" (%s)',
+                    $userId,
+                    $userClass
+                ));
+            }
+
+            return $result;
         }
 
-        return $result;
+        return true;
     }
 
     /**
