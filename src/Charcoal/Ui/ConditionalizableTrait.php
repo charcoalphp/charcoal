@@ -4,6 +4,10 @@ namespace Charcoal\Ui;
 
 use InvalidArgumentException;
 
+// From 'charcoal-view'
+use Charcoal\View\ViewableInterface;
+use Charcoal\View\ViewInterface;
+
 /**
  * Provides an entity with a condition.
  *
@@ -108,10 +112,22 @@ trait ConditionalizableTrait
     {
         if (is_callable([ $this, $condition ])) {
             return !!$this->{$condition}();
-        } elseif (is_callable($condition)) {
+        }
+
+        if (is_callable($condition)) {
             return !!$condition();
-        } elseif ($this->form()->obj()->view()) {
-            return !!$this->form()->obj()->renderTemplate($condition);
+        }
+
+        if (is_callable([ $this, 'form' ])) {
+            $form = $this->form();
+
+            if (is_callable([ $form, 'obj' ])) {
+                $obj = $form->obj();
+
+                if (($obj instanceof ViewableInterface) && ($obj->view() instanceof ViewInterface)) {
+                    return !!$obj->renderTemplate($condition);
+                }
+            }
         }
 
         return !!$condition;
