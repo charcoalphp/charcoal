@@ -23,18 +23,73 @@ class PasswordProperty extends StringProperty
     /**
      * Overrides the StringProperty::save() method to ensure the value is encrypted.
      *
-     * @param mixed $val The value, at time of saving.
+     * If the hash is corruped or the algorithm is not recognized, the value will be rehashed.
+     *
+     * @todo   Implement proper hashing/rehashing/validation.
+     * @param  mixed $val The value, at time of saving.
      * @return string
      */
     public function save($val)
     {
-        $password = $val;
+        if ($val === null || $val === '') {
+            return $val;
+        }
 
-        // Assuming the password_needs_rehash is set to true is the hash given isn't a hash
-        if (password_needs_rehash($password, PASSWORD_DEFAULT)) {
-            $val = password_hash($password, PASSWORD_DEFAULT);
+        if (!$this->isHashed($val)) {
+            $val = password_hash($val, PASSWORD_DEFAULT);
         }
 
         return $val;
+    }
+
+    /**
+     * Retrieve the maximum number of characters allowed.
+     *
+     * @return integer
+     */
+    public function getMaxLength()
+    {
+        if (PASSWORD_DEFAULT === PASSWORD_BCRYPT) {
+            /** @link https://www.php.net/manual/en/function.password-hash.php */
+            return 72;
+        }
+
+        return parent::getMaxLength();
+    }
+
+    /**
+     * Determine if the given value is hashed.
+     *
+     * If the hash is corruped or the algorithm is not recognized, the value is assumed to be plain-text (not hashed).
+     *
+     * @param  string $hash The value to test.
+     * @return boolean
+     */
+    public function isHashed($hash)
+    {
+        $info = password_get_info($hash);
+        return !($info['algo'] === 0);
+    }
+
+    /**
+     * Validates password and rehashes if necessary.
+     *
+     * If the hash is corruped or the algorithm is not recognized, the value is assumed to be plain-text (not hashed).
+     *
+     * @param  string $password A plain-text password.
+     * @param  string $hash     A hash created by {@see password_hash()}.
+     * @return string|boolean
+     */
+    public function isValid($password, $hash)
+    {
+        if (password_verify($password, $hash) === false) {
+            return false;
+        }
+
+        if (password_needs_rehash($hash, PASSWORD_DEFAULT)) {
+            return password_hash($password, PASSWORD_DEFAULT);
+        }
+
+        return $hash;
     }
 }
