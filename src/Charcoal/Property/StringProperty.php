@@ -325,7 +325,7 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
             'maxLength',
             'minLength',
             'regexp',
-            'allowEmpty'
+            'allowEmpty',
         ]);
     }
 

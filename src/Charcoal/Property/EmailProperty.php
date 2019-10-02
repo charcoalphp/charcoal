@@ -36,8 +36,9 @@ class EmailProperty extends StringProperty
     public function validationMethods()
     {
         $parentMethods = parent::validationMethods();
+
         return array_merge($parentMethods, [
-            'email'
+            'email',
         ]);
     }
 
