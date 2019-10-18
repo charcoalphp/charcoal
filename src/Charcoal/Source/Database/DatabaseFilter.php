@@ -141,7 +141,7 @@ class DatabaseFilter extends Filter implements
                 $filter = $filter->sql();
             }
 
-            if (strlen($filter) > 0) {
+            if ($filter && strlen($filter) > 0) {
                 $conditions[] = $filter;
             }
         }
