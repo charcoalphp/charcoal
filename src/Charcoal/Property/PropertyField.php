@@ -56,6 +56,13 @@ class PropertyField
     private $allowNull;
 
     /**
+     * Holds a list of all snake_case strings.
+     *
+     * @var string[]
+     */
+    protected static $snakeCache = [];
+
+    /**
      * @param  array $data The field data.
      * @return PropertyField Chainable
      */
@@ -104,8 +111,7 @@ class PropertyField
                 'Identifier must be a string'
             );
         }
-        // Ensure snake_case
-        $this->ident = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $ident));
+        $this->ident = $this->snakeize($ident);
         return $this;
     }
 
@@ -342,5 +348,26 @@ class PropertyField
         }
 
         return implode(' ', $parts);
+    }
+
+    /**
+     * Transform a string from "camelCase" to "snake_case".
+     *
+     * @param  string $value The string to snakeize.
+     * @return string The snake_case string.
+     */
+    protected function snakeize($value)
+    {
+        $key = $value;
+
+        if (isset(static::$snakeCache[$key])) {
+            return static::$snakeCache[$key];
+        }
+
+        $value = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $value));
+
+        static::$snakeCache[$key] = $value;
+
+        return static::$snakeCache[$key];
     }
 }

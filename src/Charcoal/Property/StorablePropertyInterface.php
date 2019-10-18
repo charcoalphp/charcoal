@@ -11,7 +11,15 @@ interface StorablePropertyInterface
      * @param  mixed $val The value to set as field value.
      * @return \Charcoal\Property\PropertyField[]
      */
-    public function fields($val);
+    public function fields($val = null);
+
+    /**
+     * Retrieve the property's identifier formatted for field names.
+     *
+     * @param  string|null $key The field key to suffix to the property identifier.
+     * @return string
+     */
+    public function fieldIdent($key = null);
 
     /**
      * @return string[]

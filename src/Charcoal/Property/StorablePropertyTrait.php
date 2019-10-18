@@ -23,11 +23,32 @@ trait StorablePropertyTrait
     private $sqlEncoding;
 
     /**
+     * The property's identifier formatted for field names.
+     *
+     * @var string
+     */
+    private $fieldIdent;
+
+    /**
      * Store of the property's storage fields.
      *
      * @var PropertyField[]
      */
-    private $fields;
+    protected $fields;
+
+    /**
+     * Store of the property's storage field identifiers.
+     *
+     * @var string[]
+     */
+    protected $fieldNames;
+
+    /**
+     * Holds a list of all snake_case strings.
+     *
+     * @var string[]
+     */
+    protected static $snakeCache = [];
 
     /**
      * Retrieve the property's storage fields.
@@ -35,47 +56,79 @@ trait StorablePropertyTrait
      * @param  mixed $val The value to set as field value.
      * @return PropertyField[]
      */
-    public function fields($val)
+    public function fields($val = null)
     {
         if (empty($this->fields)) {
-            $this->generateFields($val);
+            $this->fields = $this->generateFields($val);
         } else {
-            $this->updatedFields($val);
+            $this->fields = $this->updatedFields($this->fields, $val);
         }
 
         return $this->fields;
     }
 
     /**
-     * Retrieve the property's storage field names.
+     * Retrieve the property's identifier formatted for field names.
+     *
+     * @param  string|null $key The field key to suffix to the property identifier.
+     * @return string|null Returns the property's field name.
+     *     If $key is provided, returns the namespaced field name otherwise NULL.
+     */
+    public function fieldIdent($key = null)
+    {
+        if ($this->fieldIdent === null) {
+            $this->fieldIdent = $this->snakeize($this['ident']);
+        }
+
+        if ($key === null || $key === '') {
+            return $this->fieldIdent;
+        }
+
+        if ($this->isValidFieldKey($key)) {
+            return $this->fieldIdent.'_'.$this->snakeize($key);
+        }
+
+        return null;
+    }
+
+    /**
+     * Retrieve the property's namespaced storage field names.
+     *
+     * Examples:
+     * 1. `name`: `name_en`, `name_fr`, `name_de`
+     * 2. `obj`: `obj_id`, `obj_type`
+     * 3. `file`: `file`, `file_type`
+     * 4. `opt`: `opt_0`, `opt_1`, `opt_2`
      *
      * @return string[]
      */
     public function fieldNames()
     {
-        $ident  = $this['ident'];
-        $fields = [];
-        if ($this['l10n']) {
-            foreach ($this->translator()->availableLocales() as $langCode) {
-                // Ensure snake_case
-                $fields[$langCode] = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $ident)).'_'.$langCode;
+        if ($this->fieldNames === null) {
+            $names = [];
+            if ($this['l10n']) {
+                $keys = $this->translator()->availableLocales();
+                foreach ($keys as $key) {
+                    $names[$key] = $this->fieldIdent($key);
+                }
+            } else {
+                $names[''] = $this->fieldIdent();
             }
-        } else {
-            // Ensure snake_case
-            $fields[] = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $ident));
+
+            $this->fieldNames = $names;
         }
 
-        return $fields;
+        return $this->fieldNames;
     }
 
     /**
-     * Retrieve the value of the property's given storage field.
+     * Retrieve the property's value in a format suitable for the given field key.
      *
-     * @param  string $fieldIdent The property field identifier.
-     * @param  mixed  $val        The value to set as field value.
+     * @param  string $key The property field key.
+     * @param  mixed  $val The value to set as field value.
      * @return mixed
      */
-    private function fieldVal($fieldIdent, $val)
+    protected function fieldValue($key, $val)
     {
         if ($val === null) {
             return null;
@@ -85,11 +138,15 @@ trait StorablePropertyTrait
             return $this->storageVal($val);
         }
 
-        if (isset($val[$fieldIdent])) {
-            return $this->storageVal($val[$fieldIdent]);
-        } else {
-            return null;
+        if (!$this->isValidFieldKey($key)) {
+            return $this->storageVal($val);
         }
+
+        if (isset($val[$key])) {
+            return $this->storageVal($val[$key]);
+        }
+
+        return null;
     }
 
     /**
@@ -127,26 +184,52 @@ trait StorablePropertyTrait
     }
 
     /**
+     * Parse the property's value (from a flattened structure)
+     * in a format suitable for models.
+     *
+     * This method takes a one-dimensional array and, depending on
+     * the property's {@see self::fieldNames() field structure},
+     * returns a complex array.
+     *
+     * @param  array $flatData The model data subset.
+     * @return mixed
+     */
+    public function parseFromFlatData(array $flatData)
+    {
+        $value = null;
+
+        $fieldNames = $this->fieldNames();
+        foreach ($fieldNames as $fieldKey => $fieldName) {
+            if ($this->isValidFieldKey($fieldKey)) {
+                if (isset($flatData[$fieldName])) {
+                    $value[$fieldKey] = $flatData[$fieldName];
+                }
+            } elseif (isset($flatData[$fieldName])) {
+                $value = $flatData[$fieldName];
+            }
+        }
+
+        return $value;
+    }
+
+    /**
      * Update the property's storage fields.
      *
-     * @param  mixed $val The value to set as field value.
+     * @param  PropertyField[] $fields The storage fields to update.
+     * @param  mixed           $val    The value to set as field value.
      * @return PropertyField[]
      */
-    private function updatedFields($val)
+    protected function updatedFields(array $fields, $val)
     {
-        if (empty($this->fields)) {
-            return $this->generateFields($val);
+        if (empty($fields)) {
+            $fields = $this->generateFields($val);
         }
 
-        if ($this['l10n']) {
-            foreach ($this->translator()->availableLocales() as $langCode) {
-                $this->fields[$langCode]->setVal($this->fieldVal($langCode, $val));
-            }
-        } else {
-            $this->fields[0]->setVal($this->storageVal($val));
+        foreach ($fields as $fieldKey => $field) {
+            $fields[$fieldKey]->setVal($this->fieldValue($fieldKey, $val));
         }
 
-        return $this->fields;
+        return $fields;
     }
 
     /**
@@ -155,39 +238,27 @@ trait StorablePropertyTrait
      * @param  mixed $val The value to set as field value.
      * @return PropertyField[]
      */
-    private function generateFields($val)
+    protected function generateFields($val = null)
     {
-        $this->fields = [];
-        if ($this['l10n']) {
-            foreach ($this->translator()->availableLocales() as $langCode) {
-                $ident = $this->l10nIdent($langCode);
-                $field = $this->createPropertyField([
-                    'ident'       => $ident,
-                    'sqlType'     => $this->sqlType(),
-                    'sqlPdoType'  => $this->sqlPdoType(),
-                    'sqlEncoding' => $this->sqlEncoding(),
-                    'extra'       => $this->sqlExtra(),
-                    'val'         => $this->fieldVal($langCode, $val),
-                    'defaultVal'  => null,
-                    'allowNull'   => $this['allowNull'],
-                ]);
-                $this->fields[$langCode] = $field;
-            }
-        } else {
+        $fields = [];
+
+        $fieldNames = $this->fieldNames();
+        foreach ($fieldNames as $fieldKey => $fieldName) {
             $field = $this->createPropertyField([
-                'ident'       => $this['ident'],
+                'ident'       => $fieldName,
                 'sqlType'     => $this->sqlType(),
                 'sqlPdoType'  => $this->sqlPdoType(),
                 'sqlEncoding' => $this->sqlEncoding(),
                 'extra'       => $this->sqlExtra(),
-                'val'         => $this->storageVal($val),
-                'defaultVal'  => null,
+                'val'         => $this->fieldValue($fieldKey, $val),
+                'defaultVal'  => $this->sqlDefaultVal(),
                 'allowNull'   => $this['allowNull'],
             ]);
-            $this->fields[] = $field;
+
+            $fields[$fieldKey] = $field;
         }
 
-        return $this->fields;
+        return $fields;
     }
 
     /**
@@ -196,15 +267,45 @@ trait StorablePropertyTrait
      */
     protected function createPropertyField(array $data = null)
     {
-        $field = new PropertyField([
-            'translator' => $this->translator(),
-        ]);
+        $field = new PropertyField();
 
         if ($data !== null) {
             $field->setData($data);
         }
 
         return $field;
+    }
+
+    /**
+     * Determine if the given value is a valid field key suffix.
+     *
+     * @param  mixed $key The key to test.
+     * @return boolean
+     */
+    protected function isValidFieldKey($key)
+    {
+        return (!empty($key) || is_numeric($key));
+    }
+
+    /**
+     * Transform a string from "camelCase" to "snake_case".
+     *
+     * @param  string $value The string to snakeize.
+     * @return string The snake_case string.
+     */
+    protected function snakeize($value)
+    {
+        $key = $value;
+
+        if (isset(static::$snakeCache[$key])) {
+            return static::$snakeCache[$key];
+        }
+
+        $value = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $value));
+
+        static::$snakeCache[$key] = $value;
+
+        return static::$snakeCache[$key];
     }
 
     /**
@@ -270,12 +371,6 @@ trait StorablePropertyTrait
      * @return string
      */
     abstract public function getIdent();
-
-    /**
-     * @param  string|null $lang The language code to return the identifier with.
-     * @return string
-     */
-    abstract public function l10nIdent($lang = null);
 
     /**
      * @return boolean
