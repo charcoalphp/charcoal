@@ -243,12 +243,22 @@ abstract class AbstractModel extends AbstractEntity implements
      *
      * This method returns a 1-dimensional array of the object's values.
      *
-     * @todo   Implementation required.
+     * @param  array $properties Optional. List of property identifiers
+     *     for retrieving a subset of data.
      * @return array
      */
-    public function flatData()
+    public function flatData(array $properties = null)
     {
-        return [];
+        $flatData   = [];
+        $properties = $this->properties($properties);
+        foreach ($properties as $propertyIdent => $property) {
+            $value = $this->propertyValue($propertyIdent);
+            foreach ($property->fields($value) as $field) {
+                $flatData[$field->ident()] = $field->val();
+            }
+        }
+
+        return $flatData;
     }
 
     /**
