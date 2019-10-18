@@ -50,9 +50,18 @@ class AuthServiceProvider implements ServiceProviderInterface
             $container['authorizer'] = function (Container $container) {
                 return new Authorizer([
                     'logger'    => $container['logger'],
-                    'acl'       => new Acl(),
+                    'acl'       => $container['authorizer/acl'],
                     'resource'  => 'charcoal'
                 ]);
+            };
+        }
+
+        if (!isset($container['authorizer/acl'])) {
+            /**
+             * @return Acl
+             */
+            $container['authorizer/acl'] = function () {
+                return new Acl();
             };
         }
     }
