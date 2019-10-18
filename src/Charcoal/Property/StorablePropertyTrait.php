@@ -18,9 +18,9 @@ trait StorablePropertyTrait
     /**
      * An empty value implies that the property will inherit the table's encoding.
      *
-     * @var string
+     * @var string|null
      */
-    private $sqlEncoding = '';
+    private $sqlEncoding;
 
     /**
      * Store of the property's storage fields.
@@ -102,6 +102,10 @@ trait StorablePropertyTrait
     {
         if ($val === null) {
             // Do not json_encode NULL values
+            return null;
+        }
+
+        if ($this['allowNull'] && $val === '') {
             return null;
         }
 
@@ -206,29 +210,30 @@ trait StorablePropertyTrait
     /**
      * Set the property's SQL encoding & collation.
      *
-     * @param  string $ident The encoding ident.
+     * @param  string|null $encoding The encoding identifier or SQL encoding and collation.
      * @throws InvalidArgumentException  If the identifier is not a string.
      * @return self
      */
-    public function setSqlEncoding($ident)
+    public function setSqlEncoding($encoding)
     {
-        if (!is_string($ident)) {
+        if (!is_string($encoding) && $encoding !== null) {
             throw new InvalidArgumentException(
                 'Encoding ident needs to be string.'
             );
         }
 
-        if ($ident === 'utf8mb4') {
-            $this->sqlEncoding = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci';
+        if ($encoding === 'utf8mb4') {
+            $encoding = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci';
         }
 
+        $this->sqlEncoding = $encoding;
         return $this;
     }
 
     /**
-     * Retrieve the property's SQL encoding ident.
+     * Retrieve the property's SQL encoding & collation.
      *
-     * @return string
+     * @return string|null
      */
     public function sqlEncoding()
     {
@@ -236,15 +241,23 @@ trait StorablePropertyTrait
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function sqlExtra()
     {
-        return '';
+        return null;
     }
 
     /**
-     * @return string
+     * @return string|null
+     */
+    public function sqlDefaultVal()
+    {
+        return null;
+    }
+
+    /**
+     * @return string|null
      */
     abstract public function sqlType();
 

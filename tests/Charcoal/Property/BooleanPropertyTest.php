@@ -145,7 +145,7 @@ class BooleanPropertyTest extends AbstractTestCase
     public function testSqlExtra()
     {
         $obj = $this->obj;
-        $this->assertSame('', $obj->sqlExtra());
+        $this->assertSame(null, $obj->sqlExtra());
     }
 
     /**

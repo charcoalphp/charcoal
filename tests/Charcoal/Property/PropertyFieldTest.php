@@ -5,9 +5,6 @@ namespace Charcoal\Tests\Property;
 use PDO;
 use InvalidArgumentException;
 
-// From 'charcoal-translator'
-use Charcoal\Translator\Translation;
-
 // From 'charcoal-property'
 use Charcoal\Property\PropertyField;
 use Charcoal\Tests\AbstractTestCase;
@@ -102,7 +99,7 @@ class PropertyFieldTest extends AbstractTestCase
         $this->assertSame($this->obj, $ret);
 
         $label = $this->obj->label();
-        $this->assertInstanceOf(Translation::class, $label);
+        $this->assertInternalType('string', $label);
         $this->assertEquals('Cooking', (string)$label);
     }
 
@@ -136,7 +133,7 @@ class PropertyFieldTest extends AbstractTestCase
         $this->assertEquals('INT(10)', $this->obj->sqlType());
 
         $this->expectException(InvalidArgumentException::class);
-        $this->obj->setSqlType(null);
+        $this->obj->setSqlType(0);
     }
 
     /**
@@ -152,7 +149,7 @@ class PropertyFieldTest extends AbstractTestCase
         $this->assertEquals('UNSIGNED', $this->obj->extra());
 
         $this->expectException(InvalidArgumentException::class);
-        $this->obj->setExtra(null);
+        $this->obj->setExtra(0);
     }
 
     /**
@@ -168,6 +165,6 @@ class PropertyFieldTest extends AbstractTestCase
         $this->assertEquals('UNSIGNED', $this->obj->sqlEncoding());
 
         $this->expectException(InvalidArgumentException::class);
-        $this->obj->setSqlEncoding(null);
+        $this->obj->setSqlEncoding(0);
     }
 }

@@ -385,7 +385,7 @@ class DateTimePropertyTest extends AbstractTestCase
      */
     public function testSqlExtra()
     {
-        $this->assertSame('', $this->obj->sqlExtra());
+        $this->assertSame(null, $this->obj->sqlExtra());
     }
 
     /**

@@ -29,18 +29,20 @@ interface StorablePropertyInterface
     /**
      * Set the property's SQL encoding & collation.
      *
-     * @param  string $ident The encoding ident.
+     * @param  string|null $encoding The encoding identifier or SQL encoding and collation.
      * @return self
      */
-    public function setSqlEncoding($ident);
+    public function setSqlEncoding($encoding);
 
     /**
-     * @return string
+     * Retrieve the property's SQL encoding & collation.
+     *
+     * @return string|null
      */
     public function sqlEncoding();
 
     /**
-     * @return string
+     * @return string|null
      */
     public function sqlExtra();
 

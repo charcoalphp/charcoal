@@ -131,19 +131,11 @@ class MultiObjectProperty extends AbstractProperty
     }
 
     /**
-     * @return string
-     */
-    public function sqlExtra()
-    {
-        return '';
-    }
-
-    /**
-     * @return string
+     * @return string|null
      */
     public function sqlType()
     {
-        return '';
+        return null;
     }
 
     /**
