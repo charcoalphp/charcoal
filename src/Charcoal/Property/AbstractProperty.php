@@ -475,8 +475,6 @@ abstract class AbstractProperty extends AbstractEntity implements
         return (string)$propertyValue;
     }
 
-
-
     /**
      * @param mixed $label The property label.
      * @return self

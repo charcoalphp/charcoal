@@ -1,12 +1,12 @@
 {
-    "properties":{
-        "min":{
-            "type":"number",
-            "allow_null":true
+    "properties": {
+        "min": {
+            "type": "number",
+            "allow_null": true
         },
-        "max":{
-            "type":"number",
-            "allow_null":true
+        "max": {
+            "type": "number",
+            "allow_null": true
         }
     }
 }

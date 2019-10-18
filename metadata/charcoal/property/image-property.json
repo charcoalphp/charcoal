@@ -1,11 +1,11 @@
 {
     "properties": {
-        "driver_type":{
-            "label":"Image driver",
+        "driver_type": {
+            "label": "Image Driver",
             "type": "text",
-            "choices":{
-                "imagick":{},
-                "imagemagick":{}
+            "choices": {
+                "imagick": {},
+                "imagemagick": {}
             }
         },
         "effects": {
