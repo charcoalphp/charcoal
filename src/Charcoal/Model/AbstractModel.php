@@ -107,21 +107,6 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-     * Sets the object data, from an associative array map (or any other Traversable).
-     *
-     * @param  array $data The entity data. Will call setters.
-     * @return self
-     * @see AbstractEntity::setData()
-     */
-    public function setData(array $data)
-    {
-        $data = $this->setIdFromData($data);
-
-        parent::setData($data);
-        return $this;
-    }
-
-    /**
      * Retrieve the model data as a structure (serialize to array).
      *
      * @param  array $properties Optional. List of property identifiers
@@ -140,6 +125,21 @@ abstract class AbstractModel extends AbstractEntity implements
         }
 
         return $data;
+    }
+
+    /**
+     * Sets the object data, from an associative array map (or any other Traversable).
+     *
+     * @param  array $data The entity data. Will call setters.
+     * @return self
+     * @see AbstractEntity::setData()
+     */
+    public function setData(array $data)
+    {
+        $data = $this->setIdFromData($data);
+
+        parent::setData($data);
+        return $this;
     }
 
     /**
@@ -330,33 +330,6 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-     * Generate a model type identifier from this object's class name.
-     *
-     * Based on {@see DescribableTrait::generateMetadataIdent()}.
-     *
-     * @return string
-     */
-    public static function objType()
-    {
-        $class = get_called_class();
-        $ident = preg_replace('/([a-z])([A-Z])/', '$1-$2', $class);
-        $ident = strtolower(str_replace('\\', '/', $ident));
-        return $ident;
-    }
-
-    /**
-     * Inject dependencies from a DI Container.
-     *
-     * @param  Container $container A Pimple DI service container.
-     * @return void
-     */
-    protected function setDependencies(Container $container)
-    {
-        // This method is a stub.
-        // Reimplement in children method to inject dependencies in your class from a Pimple container.
-    }
-
-    /**
      * Set the object's ID from an associative array map (or any other Traversable).
      *
      * Useful for setting the object ID before the rest of the object's data.
@@ -474,5 +447,32 @@ abstract class AbstractModel extends AbstractEntity implements
     {
         $validator = new ModelValidator($this);
         return $validator;
+    }
+
+    /**
+     * Inject dependencies from a DI Container.
+     *
+     * @param  Container $container A Pimple DI service container.
+     * @return void
+     */
+    protected function setDependencies(Container $container)
+    {
+        // This method is a stub.
+        // Reimplement in children method to inject dependencies in your class from a Pimple container.
+    }
+
+    /**
+     * Generate a model type identifier from this object's class name.
+     *
+     * Based on {@see DescribableTrait::generateMetadataIdent()}.
+     *
+     * @return string
+     */
+    public static function objType()
+    {
+        $class = get_called_class();
+        $ident = preg_replace('/([a-z])([A-Z])/', '$1-$2', $class);
+        $ident = strtolower(str_replace('\\', '/', $ident));
+        return $ident;
     }
 }
