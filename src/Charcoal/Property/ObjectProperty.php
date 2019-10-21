@@ -133,9 +133,11 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     public function setObjType($objType)
     {
         if (!is_string($objType)) {
-            throw new InvalidArgumentException(
-                'Property object type ("obj_type") must be a string.'
-            );
+            throw new InvalidArgumentException(sprintf(
+                'Object Property "%s": Object type ("obj_type") must be a string, received %s',
+                $this->ident(),
+                gettype($objType)
+            ));
         }
 
         $this->objType = $objType;
@@ -153,7 +155,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     {
         if ($this->objType === null) {
             throw new RuntimeException(sprintf(
-                'Missing object type ("obj_type"). Invalid property "%s".',
+                'Object Property "%s": Missing object type ("obj_type")',
                 $this->ident()
             ));
         }
@@ -270,7 +272,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      */
     public function proto()
     {
-        return $this->modelFactory()->get($this['objType']);
+        return $this->modelFactory()->get($this->getObjType());
     }
 
     /**
@@ -576,7 +578,6 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
 
         return $choice;
     }
-
 
     /**
      * Retrieve the label for a given choice.
