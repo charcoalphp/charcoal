@@ -18,24 +18,24 @@ class AuthTokenMetadata extends ModelMetadata
     private $enabled;
 
     /**
-     * @var string $cookieName
-     */
-    private $cookieName;
-
-    /**
-     * @var string $cookieDuration
-     */
-    private $cookieDuration;
-
-    /**
      * @var boolean $httpsOnly
      */
     private $httpsOnly;
 
     /**
+     * @var string $tokenName
+     */
+    private $tokenName;
+
+    /**
+     * @var string $tokenDuration
+     */
+    private $tokenDuration;
+
+    /**
+     * @see \Charcoal\Config\ConfigInterface::defaults()
      *
      * @return array
-     * @see \Charcoal\Config\ConfigInterface::defaults()
      */
     public function defaults()
     {
@@ -43,15 +43,15 @@ class AuthTokenMetadata extends ModelMetadata
 
         $defaults = array_replace_recursive($parentDefaults, [
             'enabled'         => true,
-            'cookie_name'     => 'charcoal_user_login',
-            'cookie_duration' => '15 days',
+            'token_name'     => 'charcoal_user_login',
+            'token_duration' => '15 days',
             'https_only'      => false,
         ]);
         return $defaults;
     }
 
     /**
-     * @param boolean $enabled The enabled flag.
+     * @param  boolean $enabled The enabled flag.
      * @return self
      */
     public function setEnabled($enabled)
@@ -69,55 +69,7 @@ class AuthTokenMetadata extends ModelMetadata
     }
 
     /**
-     * @param string $name The cookie name.
-     * @throws InvalidArgumentException If the cookie name is not a string.
-     * @return self
-     */
-    public function setCookieName($name)
-    {
-        if (!is_string($name)) {
-            throw new InvalidArgumentException(
-                'Can not set auth token\'s cookie  name: must be a string'
-            );
-        }
-        $this->cookieName = $name;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCookieName()
-    {
-        return $this->cookieName;
-    }
-
-    /**
-     * @param string $duration The cookie duration, or duration. Ex: "15 days".
-     * @throws InvalidArgumentException If the cookie name is not a string.
-     * @return self
-     */
-    public function setCookieDuration($duration)
-    {
-        if (!is_string($duration)) {
-            throw new InvalidArgumentException(
-                'Can not set auth token\'s cookie duration: must be a string'
-            );
-        }
-        $this->cookieDuration = $duration;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCookieDuration()
-    {
-        return $this->cookieDuration;
-    }
-
-    /**
-     * @param boolean $httpsOnly The "https only" flag.
+     * @param  boolean $httpsOnly The "HTTPS only" flag.
      * @return self
      */
     public function setHttpsOnly($httpsOnly)
@@ -132,5 +84,117 @@ class AuthTokenMetadata extends ModelMetadata
     public function getHttpsOnly()
     {
         return $this->httpsOnly;
+    }
+
+    /**
+     * @param  string $name The token name.
+     * @throws InvalidArgumentException If the token name is not a string.
+     * @return self
+     */
+    public function setTokenName($name)
+    {
+        if (!is_string($name)) {
+            throw new InvalidArgumentException(
+                'Can not set auth token\'s name: must be a string'
+            );
+        }
+        $this->tokenName = $name;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTokenName()
+    {
+        return $this->tokenName;
+    }
+
+    /**
+     * @param  string $duration The token duration, or duration. Ex: "15 days".
+     * @throws InvalidArgumentException If the token name is not a string.
+     * @return self
+     */
+    public function setTokenDuration($duration)
+    {
+        if (!is_string($duration)) {
+            throw new InvalidArgumentException(
+                'Can not set auth token\'s duration: must be a string'
+            );
+        }
+        $this->tokenDuration = $duration;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTokenDuration()
+    {
+        return $this->tokenDuration;
+    }
+
+    /**
+     * @deprecated In favour of {@see self::setTokenName()}.
+     *
+     * @param  string $name The cookie name.
+     * @return self
+     */
+    public function setCookieName($name)
+    {
+        trigger_error(
+            'Auth token option "cookie_name" is deprecated in favour of "token_name"',
+            E_USER_DEPRECATED
+        );
+
+        $this->setTokenName($name);
+        return $this;
+    }
+
+    /**
+     * @deprecated In favour of {@see self::getTokenName()}.
+     *
+     * @return string
+     */
+    public function getCookieName()
+    {
+        trigger_error(
+            'Auth token option "cookie_duration" is deprecated in favour of "token_duration"',
+            E_USER_DEPRECATED
+        );
+
+        return $this->getTokenDuration();
+    }
+
+    /**
+     * @deprecated In favour of {@see self::setTokenDuration()}.
+     *
+     * @param  string $duration The cookie duration, or duration. Ex: "15 days".
+     * @return self
+     */
+    public function setCookieDuration($duration)
+    {
+        trigger_error(
+            'Auth token option "cookie_duration" is deprecated in favour of "token_duration"',
+            E_USER_DEPRECATED
+        );
+
+        $this->setTokenDuration($duration);
+        return $this;
+    }
+
+    /**
+     * @deprecated In favour of {@see self::getTokenDuration()}.
+     *
+     * @return string
+     */
+    public function getCookieDuration()
+    {
+        trigger_error(
+            'Auth token option "cookie_duration" is deprecated in favour of "token_duration"',
+            E_USER_DEPRECATED
+        );
+
+        return $this->getTokenDuration();
     }
 }

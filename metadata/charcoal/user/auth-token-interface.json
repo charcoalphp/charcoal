@@ -1,0 +1,17 @@
+{
+    "properties": {
+        "ident": {
+            "type": "string",
+            "unique": true
+        },
+        "token": {
+            "type": "string"
+        },
+        "user_id": {
+            "type": "string"
+        },
+        "expiry": {
+            "type": "date-time"
+        }
+    }
+}

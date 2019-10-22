@@ -37,7 +37,7 @@ class AuthServiceProvider implements ServiceProviderInterface
                     'user_type'     => User::class,
                     'user_factory'  => $container['model/factory'],
                     'token_type'    => AuthToken::class,
-                    'token_factory' => $container['model/factory']
+                    'token_factory' => $container['model/factory'],
                 ]);
             };
         }
@@ -51,7 +51,7 @@ class AuthServiceProvider implements ServiceProviderInterface
                 return new Authorizer([
                     'logger'    => $container['logger'],
                     'acl'       => $container['authorizer/acl'],
-                    'resource'  => 'charcoal'
+                    'resource'  => 'charcoal',
                 ]);
             };
         }

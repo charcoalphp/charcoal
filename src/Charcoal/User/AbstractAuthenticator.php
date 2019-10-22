@@ -51,7 +51,7 @@ abstract class AbstractAuthenticator implements
     /**
      * The token that was last authenticated.
      *
-     * @var \Charcoal\User\AuthToken
+     * @var \Charcoal\User\AuthTokenInterface
      */
     private $authenticatedToken;
 
@@ -164,7 +164,7 @@ abstract class AbstractAuthenticator implements
     /**
      * Create a new auth-token model.
      *
-     * @return \Charcoal\User\AuthToken
+     * @return \Charcoal\User\AuthTokenInterface
      */
     public function createToken()
     {
@@ -346,7 +346,7 @@ abstract class AbstractAuthenticator implements
      * If the current user was authenticated by token,
      * the auth token instance is returned.
      *
-     * @return AuthToken|null
+     * @return AuthTokenInterface|null
      */
     public function getAuthenticationToken()
     {
@@ -488,7 +488,7 @@ abstract class AbstractAuthenticator implements
         $user = $this->createUser();
         $key  = $user::sessionKey();
 
-        if (!isset($_SESSION[$key])) {
+        if (empty($key) || !isset($_SESSION[$key])) {
             return null;
         }
 
@@ -523,6 +523,10 @@ abstract class AbstractAuthenticator implements
         $authToken = $this->createToken();
 
         if (!$authToken->isEnabled()) {
+            return null;
+        }
+
+        if (!($authToken instanceof AuthTokenCookieInterface)) {
             return null;
         }
 
