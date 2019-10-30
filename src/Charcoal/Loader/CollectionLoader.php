@@ -137,6 +137,29 @@ class CollectionLoader implements
     }
 
     /**
+     * Create a new model.
+     *
+     * @return ModelInterface
+     */
+    public function createModel()
+    {
+        $obj = $this->factory()->create($this->modelClass());
+        return $obj;
+    }
+
+    /**
+     * Create a new model from a dataset.
+     *
+     * @param  array $data The model data.
+     * @return ModelInterface
+     */
+    protected function createModelFromData(array $data)
+    {
+        $obj = $this->factory()->create($this->dynamicModelClass($data));
+        return $obj;
+    }
+
+    /**
      * Set the loader settings.
      *
      * @param  array $data Data to assign to the loader.
@@ -255,6 +278,50 @@ class CollectionLoader implements
         $this->setSource($model->source());
 
         return $this;
+    }
+
+    /**
+     * Retrieve the model class.
+     *
+     * @return string
+     */
+    public function modelClass()
+    {
+        return get_class($this->model());
+    }
+
+    /**
+     * Retrieve the model class.
+     *
+     * @param  array $data The model data.
+     * @return string
+     */
+    protected function dynamicModelClass(array $data)
+    {
+        $field = $this->dynamicTypeField();
+        if ($field && isset($data[$field])) {
+            return $data[$field];
+        }
+
+        return $this->modelClass();
+    }
+
+    /**
+     * @return string|null
+     */
+    public function dynamicTypeField()
+    {
+        return $this->dynamicTypeField;
+    }
+
+    /**
+     * Determine if the model has a dynamic object type.
+     *
+     * @return boolean
+     */
+    public function hasDynamicTypeField()
+    {
+        return !!$this->dynamicTypeField;
     }
 
     /**
@@ -689,7 +756,7 @@ class CollectionLoader implements
      */
     protected function processCollection($results, callable $before = null, callable $after = null)
     {
-        $collection   = $this->createCollection();
+        $collection = $this->createCollection();
         foreach ($results as $objData) {
             $obj = $this->processModel($objData, $before, $after);
 
@@ -711,13 +778,7 @@ class CollectionLoader implements
      */
     protected function processModel($objData, callable $before = null, callable $after = null)
     {
-        if ($this->dynamicTypeField && isset($objData[$this->dynamicTypeField])) {
-            $objType = $objData[$this->dynamicTypeField];
-        } else {
-            $objType = get_class($this->model());
-        }
-
-        $obj = $this->factory()->create($objType);
+        $obj = $this->createModelFromData($objData);
 
         if ($before !== null) {
             call_user_func_array($before, [ &$obj ]);
