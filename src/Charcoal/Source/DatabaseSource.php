@@ -721,6 +721,32 @@ class DatabaseSource extends AbstractSource implements
     public function dbQuery($query, array $binds = [], array $types = [])
     {
         $this->logger->debug($query, $binds);
+
+        $sth = $this->dbPrepare($query, $binds, $types);
+        if ($sth === false) {
+            return false;
+        }
+
+        $result = $sth->execute();
+        if ($result === false) {
+            return false;
+        }
+
+        return $sth;
+    }
+
+    /**
+     * Prepare an SQL query, with PDO, and return the PDOStatement.
+     *
+     * If the preparation fails, this method will return false.
+     *
+     * @param  string $query The SQL query to executed.
+     * @param  array  $binds Optional. Query parameter binds.
+     * @param  array  $types Optional. Types of parameter bindings.
+     * @return \PDOStatement|false The PDOStatement, otherwise FALSE.
+     */
+    public function dbPrepare($query, array $binds = [], array $types = [])
+    {
         $sth = $this->db()->prepare($query);
         if (!$sth) {
             return false;
@@ -737,11 +763,6 @@ class DatabaseSource extends AbstractSource implements
                 $param = ':'.$key;
                 $sth->bindParam($param, $binds[$key], $type);
             }
-        }
-
-        $result = $sth->execute();
-        if ($result === false) {
-            return false;
         }
 
         return $sth;
