@@ -5,7 +5,9 @@ namespace Charcoal\Tests\Property;
 use ReflectionMethod;
 
 // From 'charcoal-property'
+use Charcoal\Property\GenericProperty;
 use Charcoal\Property\PropertyField;
+use Charcoal\Property\StorablePropertyInterface;
 use Charcoal\Property\StorablePropertyTrait;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\ReflectionsTrait;
@@ -20,7 +22,7 @@ class StorablePropertyTraitTest extends AbstractTestCase
     use ContainerIntegrationTrait;
 
     /**
-     * @var StorablePropertyTrait
+     * @var StorablePropertyInterfaceß
      */
     private $obj;
 
@@ -37,31 +39,16 @@ class StorablePropertyTraitTest extends AbstractTestCase
     }
 
     /**
-     * @return StorablePropertyTrait
+     * @return GenericProperty
      */
     public function createProperty()
     {
         $container = $this->getContainer();
 
-        $obj = $this->getMockForTrait(StorablePropertyTrait::class);
+        $prop = $container['property/factory']->create(GenericProperty::class);
 
-        $obj->expects($this->any())
-            ->method('ident')
-            ->will($this->returnValue('test'));
-
-        $obj->expects($this->any())
-            ->method('translator')
-            ->will($this->returnValue($container['translator']));
-
-        $obj->expects($this->any())
-            ->method('l10n')
-            ->will($this->returnValue(false));
-
-        $obj->expects($this->any())
-            ->method('multiple')
-            ->will($this->returnValue(false));
-
-        return $obj;
+        $prop['ident'] = 'test';
+        return $prop;
     }
 
     /**
@@ -69,34 +56,10 @@ class StorablePropertyTraitTest extends AbstractTestCase
      */
     public function createMultilingualProperty()
     {
-        $container = $this->getContainer();
+        $prop = $this->createProperty();
 
-        $obj = $this->getMockForTrait(StorablePropertyTrait::class);
-
-        $obj->expects($this->any())
-            ->method('ident')
-            ->will($this->returnValue('test'));
-
-        $obj->expects($this->any())
-            ->method('translator')
-            ->will($this->returnValue($container['translator']));
-
-        $obj->expects($this->any())
-            ->method('l10nIdent')
-            ->with($this->isType('string'))
-            ->will($this->returnCallback(function($lang) {
-                return sprintf('test_%s', $lang);
-            }));
-
-        $obj->expects($this->any())
-            ->method('l10n')
-            ->will($this->returnValue(true));
-
-        $obj->expects($this->any())
-            ->method('multiple')
-            ->will($this->returnValue(false));
-
-        return $obj;
+        $prop['l10n'] = true;
+        return $prop;
     }
 
     /**
@@ -104,31 +67,10 @@ class StorablePropertyTraitTest extends AbstractTestCase
      */
     public function createMultiValueProperty()
     {
-        $container = $this->getContainer();
+        $prop = $this->createProperty();
 
-        $obj = $this->getMockForTrait(StorablePropertyTrait::class);
-
-        $obj->expects($this->any())
-            ->method('ident')
-            ->will($this->returnValue('test'));
-
-        $obj->expects($this->any())
-            ->method('translator')
-            ->will($this->returnValue($container['translator']));
-
-        $obj->expects($this->any())
-            ->method('l10n')
-            ->will($this->returnValue(false));
-
-        $obj->expects($this->any())
-            ->method('multiple')
-            ->will($this->returnValue(true));
-
-        $obj->expects($this->any())
-            ->method('multipleSeparator')
-            ->will($this->returnValue(','));
-
-        return $obj;
+        $prop['multiple'] = true;
+        return $prop;
     }
 
     /**
@@ -164,12 +106,16 @@ class StorablePropertyTraitTest extends AbstractTestCase
 
         $this->assertInternalType('array', $fields);
         $this->assertCount(1, $fields);
-        $this->assertInstanceOf(PropertyField::class, $fields[0]);
-        $this->assertEquals('test', $fields[0]->ident());
-        $this->assertEquals('Cooking', $fields[0]->val());
+
+        $field = reset($fields);
+
+        $this->assertInstanceOf(PropertyField::class, $field);
+        $this->assertEquals('test', $field->ident());
+        $this->assertEquals('Cooking', $field->val());
 
         $fields = $this->obj->fields([]);
-        $this->assertEquals('[]', $fields[0]->val());
+        $field  = reset($fields);
+        $this->assertEquals('[]', $field->val());
     }
 
     /**
@@ -177,7 +123,7 @@ class StorablePropertyTraitTest extends AbstractTestCase
      */
     public function testUpdateFields()
     {
-        $this->callMethod($this->obj, 'updatedFields', [ 'Cooking' ]);
+        $this->callMethod($this->obj, 'updatedFields', [ [], 'Cooking' ]);
     }
 
     /**
@@ -187,6 +133,8 @@ class StorablePropertyTraitTest extends AbstractTestCase
      */
     public function testMultilingualFields()
     {
+        $container = $this->getContainer();
+
         $obj = $this->createMultilingualProperty();
 
         $fields = $obj->fields('Cooking');
@@ -223,8 +171,11 @@ class StorablePropertyTraitTest extends AbstractTestCase
 
         $this->assertInternalType('array', $names);
         $this->assertCount(1, $names);
-        $this->assertInternalType('string', $names[0]);
-        $this->assertEquals('test', $names[0]);
+
+        $name = reset($names);
+
+        $this->assertInternalType('string', $name);
+        $this->assertEquals('test', $name);
     }
 
     /**
