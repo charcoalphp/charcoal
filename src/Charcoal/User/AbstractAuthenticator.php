@@ -44,30 +44,30 @@ abstract class AbstractAuthenticator implements
     /**
      * The user that was last authenticated.
      *
-     * @var AuthenticatableInterface
+     * @var AuthenticatableInterface|null
      */
-    private $authenticatedUser;
+    protected $authenticatedUser;
 
     /**
      * The token that was last authenticated.
      *
-     * @var \Charcoal\User\AuthTokenInterface
+     * @var \Charcoal\User\AuthTokenInterface|null
      */
-    private $authenticatedToken;
+    protected $authenticatedToken;
 
     /**
      * The authentication method of the user that was last authenticated.
      *
-     * @var string
+     * @var string|null
      */
-    private $authenticatedMethod;
+    protected $authenticatedMethod;
 
     /**
      * Indicates if the logout method has been called.
      *
      * @var boolean
      */
-    private $isLoggedOut = false;
+    protected $isLoggedOut = false;
 
     /**
      * The user object type.
@@ -98,7 +98,7 @@ abstract class AbstractAuthenticator implements
     private $tokenFactory;
 
     /**
-     * @param array $data Class dependencies.
+     * @param array $data Authenticator dependencies.
      */
     public function __construct(array $data)
     {
@@ -298,6 +298,8 @@ abstract class AbstractAuthenticator implements
     /**
      * Set the authenticated user.
      *
+     * Log a user into the application without sessions or cookies.
+     *
      * @param  AuthenticatableInterface $user The authenticated user.
      * @return void
      */
@@ -305,6 +307,25 @@ abstract class AbstractAuthenticator implements
     {
         $this->authenticatedUser = $user;
         $this->isLoggedOut       = false;
+    }
+
+    /**
+     * Set the authenticated user from the given user ID.
+     *
+     * Log a user into the application without sessions or cookies.
+     *
+     * @param  mixed $userId The authenticated user ID.
+     * @return void
+     */
+    public function setUserById($userId)
+    {
+        $user = $this->createUser();
+        $user->loadFrom($user->getAuthIdKey(), $userId);
+
+        // Allow model to validate user standing
+        if ($this->validateAuthentication($user)) {
+            $this->setUser($user);
+        }
     }
 
     /**
@@ -440,7 +461,13 @@ abstract class AbstractAuthenticator implements
 
         $user = $this->createUser();
         if (!$user->source()->tableExists()) {
-            $user->source()->createTable();
+            $this->logger->warning(sprintf(
+                '[Authenticator] Invalid login attempt for user "%s" (%s): The table "%s" does not exist.',
+                $identifier,
+                get_class($user),
+                $user->source()->table()
+            ));
+            return null;
         }
 
         // Load the user by email
@@ -470,8 +497,9 @@ abstract class AbstractAuthenticator implements
         }
 
         $this->logger->warning(sprintf(
-            'Invalid login attempt for user "%s": invalid password.',
-             $identifier
+            '[Authenticator] Invalid login attempt for user "%s" (%s): invalid password.',
+            $identifier,
+            get_class($user)
         ));
 
         return null;
@@ -486,8 +514,16 @@ abstract class AbstractAuthenticator implements
     protected function authenticateBySession()
     {
         $user = $this->createUser();
-        $key  = $user::sessionKey();
+        if (!$user->source()->tableExists()) {
+            $this->logger->warning(sprintf(
+                '[Authenticator] Invalid login attempt by session for a user (%s): The table "%s" does not exist.',
+                get_class($user),
+                $user->source()->table()
+            ));
+            return null;
+        }
 
+        $key = $user::sessionKey();
         if (empty($key) || !isset($_SESSION[$key])) {
             return null;
         }
@@ -497,7 +533,7 @@ abstract class AbstractAuthenticator implements
             return null;
         }
 
-        $user->load($userId);
+        $user->loadFrom($user->getAuthIdKey(), $userId);
 
         // Allow model to validate user standing
         if (!$this->validateAuthentication($user)) {
@@ -541,7 +577,16 @@ abstract class AbstractAuthenticator implements
         }
 
         $user = $this->createUser();
-        $user->load($userId);
+        if (!$user->source()->tableExists()) {
+            $this->logger->warning(sprintf(
+                '[Authenticator] Invalid login attempt by token for a user (%s): The table "%s" does not exist.',
+                get_class($user),
+                $user->source()->table()
+            ));
+            return null;
+        }
+
+        $user->loadFrom($user->getAuthIdKey(), $userId);
 
         // Allow model to validate user standing
         if (!$this->validateAuthentication($user)) {
@@ -746,7 +791,7 @@ abstract class AbstractAuthenticator implements
             $userClass = get_class($user);
 
             $this->logger->info(sprintf(
-                'Rehashing password for user "%s" (%s)',
+                '[Authenticator] Rehashing password for user "%s" (%s)',
                 $userId,
                 $userClass
             ));
@@ -763,13 +808,13 @@ abstract class AbstractAuthenticator implements
 
             if ($result) {
                 $this->logger->notice(sprintf(
-                    'Password was rehashed for user "%s" (%s)',
+                    '[Authenticator] Password was rehashed for user "%s" (%s)',
                     $userId,
                     $userClass
                 ));
             } else {
                 $this->logger->warning(sprintf(
-                    'Password failed to be rehashed for user "%s" (%s)',
+                    '[Authenticator] Password failed to be rehashed for user "%s" (%s)',
                     $userId,
                     $userClass
                 ));
@@ -804,7 +849,7 @@ abstract class AbstractAuthenticator implements
             $userClass = get_class($user);
 
             $this->logger->info(sprintf(
-                'Changing password for user "%s" (%s)',
+                '[Authenticator] Changing password for user "%s" (%s)',
                 $userId,
                 $userClass
             ));
@@ -821,13 +866,13 @@ abstract class AbstractAuthenticator implements
 
             if ($result) {
                 $this->logger->notice(sprintf(
-                    'Password was changed for user "%s" (%s)',
+                    '[Authenticator] Password was changed for user "%s" (%s)',
                     $userId,
                     $userClass
                 ));
             } else {
                 $this->logger->warning(sprintf(
-                    'Password failed to be changed for user "%s" (%s)',
+                    '[Authenticator] Password failed to be changed for user "%s" (%s)',
                     $userId,
                     $userClass
                 ));
