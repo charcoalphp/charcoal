@@ -143,6 +143,26 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
+     * Sets the object data, from an associative array map (or any other Traversable).
+     *
+     * @param  array $data The model property data.
+     * @return array Returns the remaining dataset.
+     */
+    public function setPropertyData(array $data)
+    {
+        $data = $this->setIdFromData($data);
+
+        foreach ($data as $key => $value) {
+            if ($this->hasProperty($key)) {
+                $this[$key] = $value;
+                unset($data[$key]);
+            }
+        }
+
+        return $data;
+    }
+
+    /**
      * Merge data on the model.
      *
      * Overrides `\Charcoal\Config\AbstractEntity::setData()`
@@ -196,39 +216,12 @@ abstract class AbstractModel extends AbstractEntity implements
     /**
      * Set the model data (from a flattened structure).
      *
-     * This method takes a 1-dimensional array and fills the object with its values.
-     *
-     * @param  array $flatData The model data.
+     * @param  array $flatData The model dataset.
      * @return self
      */
     public function setFlatData(array $flatData)
     {
-        $flatData = $this->setIdFromData($flatData);
-
-        $data = [];
-        $properties = $this->properties();
-        foreach ($properties as $propertyIdent => $property) {
-            $fields = $property->fields(null);
-            foreach ($fields as $k => $f) {
-                if (is_string($k)) {
-                    $fid = $f->ident();
-                    $snake = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $propertyIdent));
-                    $key = str_replace($snake.'_', '', $fid);
-                    if (isset($flatData[$fid])) {
-                        $data[$propertyIdent][$key] = $flatData[$fid];
-                        unset($flatData[$fid]);
-                    }
-                } else {
-                    $fid = $f->ident();
-                    if (isset($flatData[$fid])) {
-                        $data[$propertyIdent] = $flatData[$fid];
-                        unset($flatData[$fid]);
-                    }
-                }
-            }
-        }
-
-        $this->setData($data);
+        $flatData = $this->setPropertyDataFromFlatData($flatData);
 
         // Set remaining (non-property) data.
         if (!empty($flatData)) {
@@ -236,6 +229,40 @@ abstract class AbstractModel extends AbstractEntity implements
         }
 
         return $this;
+    }
+
+    /**
+     * Set the model property data (from a flattened structure).
+     *
+     * This method takes a one-dimensional dataset and, depending on the property's
+     * {@see \Charcoal\Property\PropertyField::fieldNames() field structure},
+     * returns a {@see \Charcoal\Property\PropertyField::parseFromFlatData() complex datum}.
+     *
+     * @param  array $flatData The model property data.
+     * @return array Returns the remaining dataset.
+     */
+    public function setPropertyDataFromFlatData(array $flatData)
+    {
+        $flatData = $this->setIdFromData($flatData);
+
+        $propData   = [];
+        $properties = $this->properties();
+        foreach ($properties as $propertyIdent => $property) {
+            $fieldValues = [];
+            $fieldNames  = $property->fieldNames();
+            foreach ($fieldNames as $fieldName) {
+                if (array_key_exists($fieldName, $flatData)) {
+                    $fieldValues[$fieldName] = $flatData[$fieldName];
+                    unset($flatData[$fieldName]);
+                }
+            }
+
+            if ($fieldValues) {
+                $this[$propertyIdent] = $property->parseFromFlatData($fieldValues);
+            }
+        }
+
+        return $flatData;
     }
 
     /**
@@ -358,7 +385,7 @@ abstract class AbstractModel extends AbstractEntity implements
      * Useful for setting the object ID before the rest of the object's data.
      *
      * @param  array $data The object data.
-     * @return array The object data without the pre-set ID.
+     * @return array Returns the remaining dataset.
      */
     protected function setIdFromData(array $data)
     {

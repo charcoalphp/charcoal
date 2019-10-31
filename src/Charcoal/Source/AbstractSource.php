@@ -270,6 +270,7 @@ abstract class AbstractSource implements
     /**
      * Process a query filter with the current model.
      *
+     * @todo   If property is L10N, turn filter into group of filters for each language.
      * @param  FilterInterface $filter The expression object.
      * @return FilterInterface The parsed expression object.
      */
