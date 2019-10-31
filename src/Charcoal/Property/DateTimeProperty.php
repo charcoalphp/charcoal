@@ -264,8 +264,12 @@ class DateTimeProperty extends AbstractProperty
      */
     public function validationMethods()
     {
-        $parent_methods = parent::validationMethods();
-        return array_merge($parent_methods, ['min', 'max']);
+        $parentMethods = parent::validationMethods();
+
+        return array_merge($parentMethods, [
+            'min',
+            'max',
+        ]);
     }
 
     /**
