@@ -82,7 +82,6 @@ class NumberProperty extends AbstractProperty
         return $this->max;
     }
 
-
     /**
      * The property's default validation methods.
      *
@@ -94,8 +93,54 @@ class NumberProperty extends AbstractProperty
 
         return array_merge($parentMethods, [
             'max',
-            'min'
+            'min',
         ]);
+    }
+
+    /**
+     * @return boolean
+     */
+    public function validateRequired()
+    {
+        if ($this['required'] && !is_numeric($this->val())) {
+            $this->validator()->error('Value is required.', 'required');
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function validateMin()
+    {
+        $min = $this->min();
+        if (!$min) {
+            return true;
+        }
+        $valid = ($this->val() >= $min);
+        if ($valid === false) {
+            $this->validator()->error('The number is smaller than the minimum value', 'min');
+        }
+        return $valid;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function validateMax()
+    {
+        $max = $this->max();
+        if (!$max) {
+            return true;
+        }
+        $valid = ($this->val() <= $max);
+        if ($valid === false) {
+            $this->validator()->error('The number is bigger than the maximum value', 'max');
+        }
+        return $valid;
     }
 
     /**
