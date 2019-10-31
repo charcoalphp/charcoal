@@ -42,7 +42,7 @@ trait AuthAwareTrait
      */
     public function hasPermissions($permissions)
     {
-        $authUser = $this->authenticator()->authenticate();
+        $authUser = $this->authenticator()->user();
         if (!$authUser) {
             return false;
         }
