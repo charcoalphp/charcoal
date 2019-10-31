@@ -338,35 +338,26 @@ abstract class AbstractProperty extends AbstractEntity implements
         }
 
         if ($this['multiple']) {
-            if (is_string($val)) {
-                $val = explode($this->multipleSeparator(), $val);
-            } else {
-                $val = (array)$val;
-            }
+            $val = $this->parseValAsMultiple($val);
 
-            if (!is_array($val)) {
-                throw new InvalidArgumentException(sprintf(
-                    'Value is multiple. It must be an array or a delimited string, received "%s"',
-                    is_object($val) ? get_class($val) : gettype($val)
-                ));
-            }
-
-            if (empty($val) === true) {
+            if (empty($val)) {
                 if ($this['allowNull'] === false) {
                     throw new InvalidArgumentException(sprintf(
                         'Property "%s" value can not be NULL or empty (not allowed)',
                         $this->ident()
                     ));
-                } else {
-                    return [];
                 }
+
+                return $val;
             }
+
             $val = array_map([ $this, 'parseOne' ], $val);
         } else {
             if ($this['l10n']) {
-                $val = $this->translator()->translation($val);
+                $val = $this->parseValAsL10n($val);
+
                 if ($val) {
-                    $val->sanitize([$this, 'parseOne']);
+                    $val->sanitize([ $this, 'parseOne' ]);
                 }
             } else {
                 $val = $this->parseOne($val);
@@ -449,20 +440,19 @@ abstract class AbstractProperty extends AbstractEntity implements
             $propertyValue = $val;
         }
 
-        $separator = $this->multipleSeparator();
-
         /** Parse multiple values / ensure they are of array type. */
         if ($this['multiple']) {
             if (!is_array($propertyValue)) {
-                $propertyValue = explode($separator, $propertyValue);
+                $propertyValue = $this->parseValAsMultiple($propertyValue);
             }
         }
 
-        if ($separator === ',') {
-            $separator = ', ';
-        }
-
         if (is_array($propertyValue)) {
+            $separator = $this->multipleSeparator();
+            if ($separator === ',') {
+                $separator = ', ';
+            }
+
             $propertyValue = implode($separator, $propertyValue);
         }
 
@@ -513,6 +503,15 @@ abstract class AbstractProperty extends AbstractEntity implements
     public function getL10n()
     {
         return $this->l10n;
+    }
+
+    /**
+     * @param  mixed $val A L10N variable.
+     * @return Translation The translation value.
+     */
+    public function parseValAsL10n($val)
+    {
+        return $this->translator()->translation($val);
     }
 
     /**
@@ -650,6 +649,27 @@ abstract class AbstractProperty extends AbstractEntity implements
     public function multipleSeparator()
     {
         return $this->getMultipleOptions('separator');
+    }
+
+    /**
+     * @param  mixed $val A multi-value variable.
+     * @return array The array of values.
+     */
+    public function parseValAsMultiple($val)
+    {
+        if (is_array($val)) {
+            return $val;
+        }
+
+        if ($val === null || $val === '') {
+            return [];
+        }
+
+        if (!is_string($val)) {
+            return (array)$val;
+        }
+
+        return explode($this->multipleSeparator(), $val);
     }
 
     /**

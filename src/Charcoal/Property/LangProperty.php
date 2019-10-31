@@ -180,20 +180,19 @@ class LangProperty extends AbstractProperty implements SelectablePropertyInterfa
             $propertyValue = $val;
         }
 
-        $separator = $this->multipleSeparator();
-
         /** Parse multiple values / ensure they are of array type. */
         if ($this['multiple']) {
             if (!is_array($propertyValue)) {
-                $propertyValue = explode($separator, $propertyValue);
+                $propertyValue = $this->parseValAsMultiple($propertyValue);
             }
         }
 
-        if ($separator === ',') {
-            $separator = ', ';
-        }
-
         if (is_array($propertyValue)) {
+            $separator = $this->multipleSeparator();
+            if ($separator === ',') {
+                $separator = ', ';
+            }
+
             foreach ($propertyValue as &$value) {
                 if (is_string($value)) {
                     $value = $this->choiceLabel($value);
@@ -202,6 +201,7 @@ class LangProperty extends AbstractProperty implements SelectablePropertyInterfa
                     }
                 }
             }
+
             $propertyValue = implode($separator, $propertyValue);
         } elseif (is_string($propertyValue)) {
             $propertyValue = $this->choiceLabel($propertyValue);

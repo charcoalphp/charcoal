@@ -352,19 +352,13 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
             $propertyValue = $val;
         }
 
-        $separator = $this->multipleSeparator();
-
         /** Parse multiple values / ensure they are of array type. */
         if ($this['multiple']) {
             if (!is_array($propertyValue)) {
-                $propertyValue = explode($separator, $propertyValue);
+                $propertyValue = $this->parseValAsMultiple($propertyValue);
             }
         } else {
             $propertyValue = (array)$propertyValue;
-        }
-
-        if ($separator === ',') {
-            $separator = ', ';
         }
 
         $values = [];
@@ -384,6 +378,11 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
             }
 
             $values[] = $label;
+        }
+
+        $separator = $this->multipleSeparator();
+        if ($separator === ',') {
+            $separator = ', ';
         }
 
         return implode($separator, $values);

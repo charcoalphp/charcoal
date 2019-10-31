@@ -92,23 +92,23 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
             $propertyValue = $val;
         }
 
-        $separator = $this->multipleSeparator();
-
         /** Parse multiple values / ensure they are of array type. */
         if ($this['multiple']) {
             if (!is_array($propertyValue)) {
-                $propertyValue = explode($separator, $propertyValue);
+                $propertyValue = $this->parseValAsMultiple($propertyValue);
             }
-        }
-
-        if ($separator === ',') {
-            $separator = ', ';
         }
 
         if (is_array($propertyValue)) {
+            $separator = $this->multipleSeparator();
+            if ($separator === ',') {
+                $separator = ', ';
+            }
+
             foreach ($propertyValue as &$value) {
                 $value = strval($this->valLabel($value, $options));
             }
+
             $propertyValue = implode($separator, $propertyValue);
         } else {
             $propertyValue = strval($this->valLabel($propertyValue, $options));
