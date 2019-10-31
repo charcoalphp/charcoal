@@ -46,33 +46,26 @@ class Manager implements LoggerAwareInterface
 
     /**
      * @param Acl    $acl      The Zend Acl instance to load permissions to.
-     * @param PDO    $db       The PDO database instance.
+     * @param PDO    $dbh      The PDO database instance.
      * @param string $table    The table where to fetch the roles and permissions.
      * @param string $resource The Acl resource (string identifier) to load roles and permissions into.
      * @return void
      */
-    public function loadDatabasePermissions(Acl &$acl, PDO $db, $table, $resource = '')
+    public function loadDatabasePermissions(Acl &$acl, PDO $dbh, $table, $resource = '')
     {
         // Quick-and-dirty sanitization
         $table = preg_replace('/[^A-Za-z0-9_]/', '', $table);
 
-        $q = sprintf('
-            SELECT
-                `ident`,
-                `parent`,
-                `denied`,
-                `allowed`,
-                `superuser`
-            FROM
-                `%s`
-            ORDER BY
-                `position` ASC', $table);
+        $query = sprintf(
+            'SELECT * FROM `%s` ORDER BY `position` ASC',
+            $table
+        );
 
-        $this->logger->debug($q);
+        $this->logger->debug($query);
 
         // Put inside a try-catch block because ACL is optional; table might not exist.
         try {
-            $sth = $db->query($q);
+            $sth = $dbh->query($query);
             while ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
                 $this->addRoleAndPermissions($acl, $row['ident'], $row, $resource);
             }
