@@ -139,6 +139,10 @@ class Filter extends Expression implements
             $this->setValue($data['value']);
         }
 
+        if (isset($data['values'])) {
+            $this->setValue($data['values']);
+        }
+
         if (isset($data['function'])) {
             $this->setFunc($data['function']);
         }
