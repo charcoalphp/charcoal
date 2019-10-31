@@ -305,16 +305,29 @@ abstract class AbstractModel extends AbstractEntity implements
      * @param  string $key   Key pointing a column's l10n base ident.
      * @param  mixed  $value Value to search in all languages.
      * @param  array  $langs List of languages (code, ex: "en") to check into.
+     * @throws InvalidArgumentException If a language is invalid.
      * @throws PDOException If the PDO query fails.
      * @return string The matching language.
      */
     public function loadFromL10n($key, $value, array $langs)
     {
+        $binds = [
+            'ident' => $value,
+        ];
         $switch = [];
         $where  = [];
         foreach ($langs as $lang) {
-            $switch[] = 'WHEN `'.$key.'_'.$lang.'` = :ident THEN \''.$lang.'\'';
-            $where[]  = '`'.$key.'_'.$lang.'` = :ident';
+            if (!is_string($lang)) {
+                throw new InvalidArgumentException('Language; must be a string');
+            }
+
+            $fieldName = $key.'_'.$lang;
+            $langParam = 'lang_'.$lang;
+            $binds[$langParam] = $lang;
+            $langParam = ':'.$langParam;
+
+            $switch[] = 'WHEN `'.$fieldName.'` = :ident THEN '.$langParam;
+            $where[]  = '`'.$fieldName.'` = :ident';
         }
 
         $source = $this->source();
