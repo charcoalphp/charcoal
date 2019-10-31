@@ -301,30 +301,19 @@ abstract class AbstractModel extends AbstractEntity implements
     public function loadFromL10n($key, $value, array $langs)
     {
         $switch = [];
-        $where = [];
+        $where  = [];
         foreach ($langs as $lang) {
-            $switch[] = 'when `'.$key.'_'.$lang.'` = :ident then \''.$lang.'\'';
-            $where[] = '`'.$key.'_'.$lang.'` = :ident';
+            $switch[] = 'WHEN `'.$key.'_'.$lang.'` = :ident THEN \''.$lang.'\'';
+            $where[]  = '`'.$key.'_'.$lang.'` = :ident';
         }
 
-        $q = '
-            SELECT
-                *,
-                (case
-                    '.implode("\n", $switch).'
-                end) as _lang
-            FROM
-               `'.$this->source()->table().'`
-            WHERE
-                ('.implode(' OR ', $where).')
-            LIMIT
-               1';
+        $source = $this->source();
 
-        $binds = [
-            'ident' => $value
-        ];
+        $sql  = 'SELECT *, (CASE '.implode("\n", $switch).' END) AS _lang ';
+        $sql .= 'FROM `'.$source->table().'` ';
+        $sql .= 'WHERE ('.implode(' OR ', $where).') LIMIT 1';
 
-        $sth = $this->source()->dbQuery($q, $binds);
+        $sth = $source->dbQuery($sql, $binds);
         if ($sth === false) {
             throw new PDOException('Could not load item.');
         }

@@ -424,15 +424,11 @@ class DatabaseSource extends AbstractSource implements
         }
 
         $table = $this->table();
-        $query = sprintf('
-            SELECT
-                *
-            FROM
-               `%s`
-            WHERE
-               `%s` = :ident
-            LIMIT
-               1', $table, $key);
+        $query = sprintf(
+            'SELECT * FROM `%s` WHERE `%s` = :ident LIMIT 1',
+            $table,
+            $key
+        );
 
         $binds = [
             'ident' => $ident
