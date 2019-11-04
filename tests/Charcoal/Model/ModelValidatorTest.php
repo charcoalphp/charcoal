@@ -57,7 +57,13 @@ class ModelValidatorTest extends AbstractTestCase
             ]
         ]);
 
-        $obj = new ModelValidator($model);
-        $this->assertTrue($obj->validate());
+        $validator = new ModelValidator($model);
+        $this->assertFalse($validator->validate());
+
+        $model['foo'] = 'qux';
+        $this->assertFalse($validator->validate());
+
+        $model['foo'] = 'xyzzy';
+        $this->assertTrue($validator->validate());
     }
 }

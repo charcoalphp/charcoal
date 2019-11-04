@@ -7,6 +7,10 @@ namespace Charcoal\Validator;
  */
 interface ValidatorInterface
 {
+    const ERROR   = 'error';
+    const WARNING = 'warning';
+    const NOTICE  = 'notice';
+
     /**
      * @param string $msg The error message.
      * @return self

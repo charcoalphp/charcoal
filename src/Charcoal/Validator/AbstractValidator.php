@@ -16,10 +16,6 @@ use Charcoal\Validator\ValidatorResult;
  */
 abstract class AbstractValidator implements ValidatorInterface
 {
-    const ERROR   = 'error';
-    const WARNING = 'warning';
-    const NOTICE  = 'notice';
-
     /**
      * @var ValidatableInterface
      */
@@ -29,6 +25,13 @@ abstract class AbstractValidator implements ValidatorInterface
      * @var ValidatorResult[] $results
      */
     private $results = [];
+
+    /**
+     * Holds a list of all camelized strings.
+     *
+     * @var string[]
+     */
+    protected static $camelCache = [];
 
     /**
      * @param ValidatableInterface $model The object to validate.
@@ -150,22 +153,46 @@ abstract class AbstractValidator implements ValidatorInterface
     }
 
     /**
-     * @param ValidatorInterface $v            The validator to merge.
-     * @param string             $ident_prefix Optional identigfier prefix.
+     * @param  ValidatorInterface $v      The validator to merge.
+     * @param  string|null        $prefix Optional key to prefix onto identifiers.
      * @return self
      */
-    public function merge(ValidatorInterface $v, $ident_prefix = null)
+    public function merge(ValidatorInterface $v, $prefix = null)
     {
-        $results = $v->results();
-        foreach ($results as $level => $levelResults) {
-            foreach ($levelResults as $r) {
-                if ($ident_prefix !== null) {
-                    $r->set_ident($ident_prefix.'.'.$r->ident());
+        $allResults = $v->results();
+
+        foreach ($allResults as $level => $resultset) {
+            foreach ($resultset as $result) {
+                if ($prefix !== null) {
+                    $result->setIdent($prefix.'.'.$result->ident());
                 }
-                $this->addResult($r);
+                $this->addResult($result);
             }
         }
         return $this;
+    }
+
+    /**
+     * Transform a string from "snake_case" to "camelCase".
+     *
+     * @param  string $value The string to camelize.
+     * @return string The camelized string.
+     */
+    final protected function camelize($value)
+    {
+        $key = $value;
+
+        if (isset(static::$camelCache[$key])) {
+            return static::$camelCache[$key];
+        }
+
+        if (strpos($value, '_') !== false) {
+            $value = implode('', array_map('ucfirst', explode('_', $value)));
+        }
+
+        static::$camelCache[$key] = lcfirst($value);
+
+        return static::$camelCache[$key];
     }
 
     /**
