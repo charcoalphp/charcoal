@@ -69,10 +69,18 @@ class AbstractLoaderTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testDynamicTemplateInvalidVarName()
+    public function testGetDynamicTemplateWithInvalidVarName()
     {
         $this->expectException('\InvalidArgumentException');
         $this->obj->dynamicTemplate(null);
+    }
+
+    /**
+     * @return void
+     */
+    public function testGetDynamicTemplateReturnsEmptyTemplateForUndefinedVarName()
+    {
+        $this->assertEquals('', $this->obj->dynamicTemplate('foo'));
     }
 
     /**

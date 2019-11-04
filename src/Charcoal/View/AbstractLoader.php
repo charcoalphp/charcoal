@@ -38,6 +38,13 @@ abstract class AbstractLoader implements
     private $dynamicTemplates = [];
 
     /**
+     * The cache of searched template files.
+     *
+     * @var array
+     */
+    private $fileCache = [];
+
+    /**
      * Default constructor, if none is provided by the concrete class implementations.
      *
      * ## Required dependencies
@@ -258,7 +265,7 @@ abstract class AbstractLoader implements
      *
      * @param  string $ident The template identifier to load.
      * @throws InvalidArgumentException If the template ident is not a string.
-     * @return string|null The full path + filename of the found template. Null if nothing was found.
+     * @return string|null The full path + filename of the found template. NULL if nothing was found.
      */
     protected function findTemplateFile($ident)
     {
@@ -269,16 +276,25 @@ abstract class AbstractLoader implements
             ));
         }
 
-        $filename = $this->filenameFromIdent($ident);
-        $searchPath = $this->paths();
-        foreach ($searchPath as $path) {
-            $f = realpath($path).'/'.strtolower($filename);
-            if (file_exists($f)) {
-                return $f;
+        $key = hash('md5', $ident);
+
+        if (array_key_exists($key, $this->fileCache)) {
+            return $this->fileCache[$key];
+        }
+
+        $filename    = $this->filenameFromIdent($ident);
+        $searchPaths = $this->paths();
+        foreach ($searchPaths as $searchPath) {
+            $filepath = realpath($searchPath).'/'.strtolower($filename);
+            if (file_exists($filepath)) {
+                $this->fileCache[$key] = $filepath;
+                return $filepath;
             }
         }
 
-        return null;
+        $filepath = null;
+        $this->fileCache[$key] = $filepath;
+        return $filepath;
     }
 
     /**
