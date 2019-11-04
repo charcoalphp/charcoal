@@ -28,7 +28,7 @@ class NumberPropertyTest extends AbstractTestCase
         $this->obj = new NumberProperty([
             'database'   => $container['database'],
             'logger'     => $container['logger'],
-            'translator' => $container['translator']
+            'translator' => $container['translator'],
         ]);
     }
 
@@ -42,18 +42,18 @@ class NumberPropertyTest extends AbstractTestCase
 
     public function testDefaults()
     {
-        $this->assertNull($this->obj->min());
-        $this->assertNull($this->obj->max());
+        $this->assertNull($this->obj->getMin());
+        $this->assertNull($this->obj->getMax());
     }
 
     public function testSetData()
     {
         $this->obj->setData([
             'min' => 0,
-            'max' => 100
+            'max' => 100,
         ]);
-        $this->assertEquals(0, $this->obj->min());
-        $this->assertEquals(100, $this->obj->max());
+        $this->assertEquals(0, $this->obj->getMin());
+        $this->assertEquals(100, $this->obj->getMax());
     }
 
     public function testValidationMethods()

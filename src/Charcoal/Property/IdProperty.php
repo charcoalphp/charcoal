@@ -47,10 +47,11 @@ class IdProperty extends AbstractProperty
     /**
      * Ensure multiple can not be TRUE for ID property (ID must be unique per object).
      *
+     * @see AbstractProperty::setMultiple()
+     *
      * @see    AbstractProperty::setMultiple()
      * @param  boolean $flag The multiple flag.
      * @throws InvalidArgumentException If the multiple argument is TRUE (must be FALSE).
-     * @see AbstractProperty::setMultiple()
      * @return self
      */
     public function setMultiple($flag)
@@ -82,7 +83,6 @@ class IdProperty extends AbstractProperty
      * @see    AbstractProperty::setL10n()
      * @param  boolean $flag The l10n, or "translatable" flag.
      * @throws InvalidArgumentException If the L10N argument is TRUE (must be FALSE).
-     * @see AbstractProperty::setL10n()
      * @return self
      */
     public function setL10n($flag)

@@ -59,7 +59,6 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
         return $this;
     }
 
-
     /**
      * @return string
      */

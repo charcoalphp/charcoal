@@ -36,7 +36,7 @@ class FilePropertyTest extends AbstractTestCase
             'database'   => $container['database'],
             'logger'     => $container['logger'],
             'translator' => $container['translator'],
-            'container'  => $container
+            'container'  => $container,
         ]);
     }
 
@@ -75,7 +75,7 @@ class FilePropertyTest extends AbstractTestCase
             'uploadPath'        => 'uploads/foobar/',
             'overwrite'         => true,
             'acceptedMimetypes' => ['image/x-foobar'],
-            'maxFilesize'       => (32*1024*1024)
+            'maxFilesize'       => (32 * 1024 * 1024),
         ]);
         $this->assertSame($ret, $obj);
 
@@ -83,7 +83,7 @@ class FilePropertyTest extends AbstractTestCase
         $this->assertEquals('uploads/foobar/', $this->obj['uploadPath']);
         $this->assertTrue($this->obj['overwrite']);
         $this->assertEquals(['image/x-foobar'], $this->obj['acceptedMimetypes']);
-        $this->assertEquals((32*1024*1024), $this->obj['maxFilesize']);
+        $this->assertEquals((32 * 1024 * 1024), $this->obj['maxFilesize']);
     }
 
     /**

@@ -169,7 +169,7 @@ class ModelStructureProperty extends StructureProperty
      *
      * @return MetadataInterface|null
      */
-    public function structureMetadata()
+    public function getStructureMetadata()
     {
         if ($this->structureMetadata === null || $this->isStructureFinalized === false) {
             $this->structureMetadata = $this->loadStructureMetadata();
@@ -217,7 +217,7 @@ class ModelStructureProperty extends StructureProperty
      *
      * @return array
      */
-    public function structureInterfaces()
+    public function getStructureInterfaces()
     {
         if (empty($this->structureInterfaces)) {
             return $this->structureInterfaces;
@@ -294,10 +294,10 @@ class ModelStructureProperty extends StructureProperty
         if ($this->isStructureFinalized === false) {
             $this->isStructureFinalized = true;
 
-            $structureInterfaces = $this->structureInterfaces();
+            $structureInterfaces = $this->getStructureInterfaces();
             if (!empty($structureInterfaces)) {
                 $metadataLoader = $this->metadataLoader();
-                $metadataClass  = $this->structureMetadataClass();
+                $metadataClass  = $this->getStructureMetadataClass();
 
                 $structureKey = $structureInterfaces;
                 array_unshift($structureKey, $this->ident());
@@ -322,7 +322,6 @@ class ModelStructureProperty extends StructureProperty
         return $structureMetadata;
     }
 
-
     /**
      * Retrieve a singleton of the structure model for prototyping.
      *
@@ -334,7 +333,7 @@ class ModelStructureProperty extends StructureProperty
             $model = $this->createStructureModel();
 
             if ($model instanceof DescribableInterface) {
-                $model->setMetadata($this->structureMetadata());
+                $model->setMetadata($this->getStructureMetadata());
             }
 
             $this->structurePrototype = $model;
@@ -368,7 +367,7 @@ class ModelStructureProperty extends StructureProperty
      *
      * @return string
      */
-    public function structureModelClass()
+    public function getStructureModelClass()
     {
         return $this->structureModelClass;
     }
@@ -391,7 +390,7 @@ class ModelStructureProperty extends StructureProperty
             return ($this['multiple'] ? [] : null);
         }
 
-        $metadata = clone $this->structureMetadata();
+        $metadata = clone $this->getStructureMetadata();
 
         if ($options instanceof MetadataInterface) {
             $metadata->merge($options);
@@ -516,8 +515,6 @@ class ModelStructureProperty extends StructureProperty
         $this->setStructureModelFactory($container['model/factory']);
     }
 
-
-
     /**
      * Retrieve the structure model factory.
      *
@@ -536,7 +533,6 @@ class ModelStructureProperty extends StructureProperty
         return $this->structureModelFactory;
     }
 
-
     /**
      * Set an structure model factory.
      *
@@ -549,7 +545,6 @@ class ModelStructureProperty extends StructureProperty
 
         return $this;
     }
-
 
     /**
      * Parse a metadata identifier from given interface.
@@ -576,7 +571,7 @@ class ModelStructureProperty extends StructureProperty
      */
     protected function createStructureMetadata()
     {
-        $class = $this->structureMetadataClass();
+        $class = $this->getStructureMetadataClass();
         return new $class();
     }
 
@@ -585,7 +580,7 @@ class ModelStructureProperty extends StructureProperty
      *
      * @return string
      */
-    protected function structureMetadataClass()
+    protected function getStructureMetadataClass()
     {
         return StructureMetadata::class;
     }
@@ -599,7 +594,7 @@ class ModelStructureProperty extends StructureProperty
      */
     private function createStructureModel()
     {
-        $structClass = $this->structureModelClass();
+        $structClass = $this->getStructureModelClass();
         $structure   = $this->structureModelFactory()->create($structClass);
 
         if (!$structure instanceof ArrayAccess) {

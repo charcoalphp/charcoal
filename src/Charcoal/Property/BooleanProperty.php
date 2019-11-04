@@ -39,9 +39,10 @@ class BooleanProperty extends AbstractProperty
     }
 
     /**
-     * @param mixed $val A single value to parse.
      * @see AbstractProperty::parseOne()
      * @see AbstractProperty::parseVal()
+     *
+     * @param  mixed $val A single value to parse.
      * @return boolean
      */
     public function parseOne($val)
@@ -50,9 +51,10 @@ class BooleanProperty extends AbstractProperty
     }
 
     /**
+     * @see AbstractProperty::displayVal()
+     *
      * @param  mixed $val     The value to to convert for display.
      * @param  array $options Optional display options.
-     * @see AbstractProperty::displayVal()
      * @return string
      */
     public function displayVal($val, array $options = [])
@@ -77,9 +79,10 @@ class BooleanProperty extends AbstractProperty
     /**
      * Ensure multiple can never be true for boolean property.
      *
-     * @param boolean $multiple The multiple flag.
-     * @throws InvalidArgumentException If multiple is true. (must be false for boolean properties).
      * @see AbstractProperty::setMultiple()
+     *
+     * @param  boolean $multiple The multiple flag.
+     * @throws InvalidArgumentException If multiple is true. (must be false for boolean properties).
      * @return self
      */
     public function setMultiple($multiple)
@@ -97,6 +100,7 @@ class BooleanProperty extends AbstractProperty
      * Multiple is always false for boolean property.
      *
      * @see AbstractProperty::getMultiple()
+     *
      * @return boolean
      */
     public function getMultiple()
@@ -105,7 +109,7 @@ class BooleanProperty extends AbstractProperty
     }
 
     /**
-     * @param mixed $label The true label.
+     * @param  mixed $label The true label.
      * @return self
      */
     public function setTrueLabel($label)
@@ -127,7 +131,7 @@ class BooleanProperty extends AbstractProperty
     }
 
     /**
-     * @param mixed $label The false label.
+     * @param  mixed $label The false label.
      * @return self
      */
     public function setFalseLabel($label)
@@ -154,6 +158,7 @@ class BooleanProperty extends AbstractProperty
      * Boolean properties are stored as `TINYINT(1) UNSIGNED`
      *
      * @see StorablePropertyTrait::sqlType()
+     *
      * @return string The SQL type
      */
     public function sqlType()
@@ -168,6 +173,7 @@ class BooleanProperty extends AbstractProperty
 
     /**
      * @see StorablePropertyTrait::sqlPdoType()
+     *
      * @return integer
      */
     public function sqlPdoType()
@@ -177,6 +183,7 @@ class BooleanProperty extends AbstractProperty
 
     /**
      * @see SelectablePropertyTrait::choices()
+     *
      * @return array
      */
     public function choices()
@@ -186,13 +193,13 @@ class BooleanProperty extends AbstractProperty
             [
                 'label'    => $this['trueLabel'],
                 'selected' => !!$val,
-                'value'    => 1
+                'value'    => 1,
             ],
             [
                 'label'    => $this['falseLabel'],
                 'selected' => !$val,
-                'value'    => 0
-            ]
+                'value'    => 0,
+            ],
         ];
     }
 }

@@ -119,7 +119,7 @@ class FileProperty extends AbstractProperty
     /**
      * Set whether uploaded files should be publicly available.
      *
-     * @param boolean $public Whether uploaded files should be accessible (TRUE) or not (FALSE) from the web root.
+     * @param  boolean $public Whether uploaded files should be accessible (TRUE) or not (FALSE) from the web root.
      * @return self
      */
     public function setPublicAccess($public)
@@ -144,7 +144,7 @@ class FileProperty extends AbstractProperty
      *
      * The path must be relative to the {@see self::basePath()},
      *
-     * @param string $path The destination directory, relative to project's root.
+     * @param  string $path The destination directory, relative to project's root.
      * @throws InvalidArgumentException If the path is not a string.
      * @return self
      */
@@ -175,7 +175,7 @@ class FileProperty extends AbstractProperty
     /**
      * Set whether existing destinations should be overwritten.
      *
-     * @param boolean $overwrite Whether existing destinations should be overwritten (TRUE) or not (FALSE).
+     * @param  boolean $overwrite Whether existing destinations should be overwritten (TRUE) or not (FALSE).
      * @return self
      */
     public function setOverwrite($overwrite)
@@ -196,7 +196,7 @@ class FileProperty extends AbstractProperty
     }
 
     /**
-     * @param string[] $mimetypes The accepted mimetypes.
+     * @param  string[] $mimetypes The accepted mimetypes.
      * @return self
      */
     public function setAcceptedMimetypes(array $mimetypes)
@@ -245,7 +245,7 @@ class FileProperty extends AbstractProperty
      *
      * @return string
      */
-    public function mimetype()
+    public function getMimetype()
     {
         if (!$this->mimetype) {
             $val = $this->val();
@@ -254,10 +254,20 @@ class FileProperty extends AbstractProperty
                 return '';
             }
 
-            $this->setMimetype($this->mimetypeFor(strval($val)));
+            $this->setMimetype($this->getMimetypeFor(strval($val)));
         }
 
         return $this->mimetype;
+    }
+
+    /**
+     * Alias of {@see self::getMimetype()}.
+     *
+     * @return string
+     */
+    public function mimetype()
+    {
+        return $this->getMimetype();
     }
 
     /**
@@ -267,7 +277,7 @@ class FileProperty extends AbstractProperty
      * @param  string $file The file to check.
      * @return string|false Returns the given file's MIME type or FALSE if an error occurred.
      */
-    public function mimetypeFor($file)
+    public function getMimetypeFor($file)
     {
         $info = new finfo(FILEINFO_MIME_TYPE);
 
@@ -275,9 +285,20 @@ class FileProperty extends AbstractProperty
     }
 
     /**
+     * Alias of {@see self::getMimetypeFor()}.
+     *
+     * @param  string $file The file to check.
+     * @return string|false
+     */
+    public function mimetypeFor($file)
+    {
+        return $this->getMimetypeFor($file);
+    }
+
+    /**
      * Set the maximium size accepted for an uploaded files.
      *
-     * @param string|integer $size The maximum file size allowed, in bytes.
+     * @param  string|integer $size The maximum file size allowed, in bytes.
      * @throws InvalidArgumentException If the size argument is not an integer.
      * @return FileProperty Chainable
      */
@@ -309,7 +330,7 @@ class FileProperty extends AbstractProperty
      * as configured in {@link http://php.net/manual/en/ini.php `php.ini`}.
      *
      * @param string|null $iniDirective If $iniDirective is provided, then it is filled with
-     *                                  the name of the PHP INI directive corresponding to the maximum size allowed.
+     *     the name of the PHP INI directive corresponding to the maximum size allowed.
      * @return integer
      */
     public function maxFilesizeAllowedByPhp(&$iniDirective = null)
@@ -329,7 +350,7 @@ class FileProperty extends AbstractProperty
     }
 
     /**
-     * @param integer $size The file size, in bytes.
+     * @param  integer $size The file size, in bytes.
      * @throws InvalidArgumentException If the size argument is not an integer.
      * @return FileProperty Chainable
      */
@@ -348,7 +369,7 @@ class FileProperty extends AbstractProperty
     /**
      * @return integer
      */
-    public function filesize()
+    public function getFilesize()
     {
         if (!$this->filesize) {
             $val = $this->val();
@@ -360,6 +381,16 @@ class FileProperty extends AbstractProperty
         }
 
         return $this->filesize;
+    }
+
+    /**
+     * Alias of {@see self::getFilesize()}.
+     *
+     * @return integer
+     */
+    public function filesize()
+    {
+        return $this->getFilesize();
     }
 
     /**
@@ -393,7 +424,7 @@ class FileProperty extends AbstractProperty
             if (!$val) {
                 return true;
             }
-            $mimetype = $this->mimetypeFor($val);
+            $mimetype = $this->getMimetypeFor($val);
         }
         $valid = false;
         foreach ($acceptedMimetypes as $m) {

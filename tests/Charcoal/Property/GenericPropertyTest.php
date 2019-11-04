@@ -40,7 +40,6 @@ class GenericPropertyTest extends AbstractTestCase
         $this->assertEquals('generic', $this->obj->type());
     }
 
-
     public function testSqlExtra()
     {
         $this->assertEquals('', $this->obj->sqlExtra());

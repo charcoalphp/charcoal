@@ -189,7 +189,6 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
         return $this->pattern;
     }
 
-
     /**
      * @return string
      */
@@ -670,7 +669,6 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
 
         return $parsed;
     }
-
 
     /**
      * Parse the given value into a choice structure.

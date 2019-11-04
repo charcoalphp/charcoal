@@ -144,7 +144,7 @@ class LangProperty extends AbstractProperty implements SelectablePropertyInterfa
                     $choices[$langCode] = [
                         'label'    => $label,
                         'selected' => in_array($langCode, $selected),
-                        'value'    => $langCode
+                        'value'    => $langCode,
                     ];
                 }
 
@@ -212,7 +212,6 @@ class LangProperty extends AbstractProperty implements SelectablePropertyInterfa
 
         return $propertyValue;
     }
-
 
     /**
      * Get the SQL type (Storage format). ISO 639-1 value is a 2-character language code.

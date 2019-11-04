@@ -20,11 +20,11 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
 {
     use SelectablePropertyTrait;
 
-    const DEFAULT_MIN_LENGTH = 0;
-    const DEFAULT_MAX_LENGTH = 255;
-    const DEFAULT_REGEXP = '';
+    const DEFAULT_MIN_LENGTH  = 0;
+    const DEFAULT_MAX_LENGTH  = 255;
+    const DEFAULT_REGEXP      = '';
     const DEFAULT_ALLOW_EMPTY = true;
-    const DEFAULT_ALLOW_HTML = false;
+    const DEFAULT_ALLOW_HTML  = false;
 
     /**
      * The minimum number of characters allowed.
@@ -453,8 +453,9 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
      *
      * Strip HTML if it is not allowed.
      *
-     * @param mixed $val A single value to parse.
      * @see AbstractProperty::parseVal()
+     *
+     * @param mixed $val A single value to parse.
      * @return mixed The parsed value.
      */
     public function parseOne($val)

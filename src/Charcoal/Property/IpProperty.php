@@ -175,18 +175,17 @@ class IpProperty extends AbstractProperty
         }
     }
 
-     /**
-      * Get the hostname currently associated with an IP value.
-      *
-      * @param mixed $val The value to convert to string.
-      * @return string
-      */
+    /**
+     * Get the hostname currently associated with an IP value.
+     *
+     * @param mixed $val The value to convert to string.
+     * @return string
+     */
     public function hostname($val)
     {
         $val = $this->stringVal($val);
         return gethostbyaddr($val);
     }
-
 
     /**
      * @see StorableProperyTrait:sqlType()

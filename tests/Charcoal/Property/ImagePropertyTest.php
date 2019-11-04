@@ -35,7 +35,6 @@ class ImagePropertyTest extends AbstractTestCase
         ]);
     }
 
-
     public function testDefaults()
     {
         $this->assertEquals([], $this->obj['effects']);
@@ -105,7 +104,6 @@ class ImagePropertyTest extends AbstractTestCase
         $this->obj->setApplyEffects('upload');
         $this->assertEquals('upload', $this->obj['applyEffects']);
         $this->assertTrue($this->obj->canApplyEffects('upload'));
-
 
         $this->expectException(\OutOfBoundsException::class);
         $this->obj->setApplyEffects('foobar');

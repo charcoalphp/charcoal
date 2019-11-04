@@ -12,7 +12,6 @@ use Charcoal\Property\StringProperty;
  */
 class HtmlProperty extends StringProperty
 {
-
     /**
      * The available filesystems (used in TinyMCE's elFinder media manager).
      *

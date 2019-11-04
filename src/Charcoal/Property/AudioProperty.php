@@ -16,13 +16,15 @@ class AudioProperty extends FileProperty
 {
     /**
      * Minimum audio length, in seconds.
-     * @var integer $_minLength
+     *
+     * @var integer
      */
     private $minLength = 0;
 
     /**
      * Maximum audio length, in seconds.
-     * @var integer $_maxLength
+     *
+     * @var integer
      */
     private $maxLength = 0;
 
@@ -105,13 +107,13 @@ class AudioProperty extends FileProperty
     public function generateExtension($file = null)
     {
         if (is_string($file)) {
-            if (in_array($file, $this->acceptedMimetypes())) {
+            if (in_array($file, $this->getAcceptedMimetypes())) {
                 $mime = $file;
             } else {
-                $mime = $this->mimetypeFor($file);
+                $mime = $this->getMimetypeFor($file);
             }
         } else {
-            $mime = $this->mimetype();
+            $mime = $this->getMimetype();
         }
 
         switch ($mime) {

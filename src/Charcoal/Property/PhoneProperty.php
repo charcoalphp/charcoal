@@ -43,9 +43,10 @@ class PhoneProperty extends StringProperty
     }
 
     /**
+     * @see AbstractProperty::displayVal()
+     *
      * @param  mixed $val     The value to to convert for display.
      * @param  array $options Unused display options.
-     * @see AbstractProperty::displayVal()
      * @return string
      */
     public function displayVal($val, array $options = [])

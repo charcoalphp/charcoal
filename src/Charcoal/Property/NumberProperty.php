@@ -55,7 +55,7 @@ class NumberProperty extends AbstractProperty
      *
      * @return mixed|null
      */
-    public function min()
+    public function getMin()
     {
         return $this->min;
     }
@@ -77,7 +77,7 @@ class NumberProperty extends AbstractProperty
      *
      * @return mixed|null
      */
-    public function max()
+    public function getMax()
     {
         return $this->max;
     }
@@ -116,7 +116,7 @@ class NumberProperty extends AbstractProperty
      */
     public function validateMin()
     {
-        $min = $this->min();
+        $min = $this->getMin();
         if (!$min) {
             return true;
         }
@@ -132,7 +132,7 @@ class NumberProperty extends AbstractProperty
      */
     public function validateMax()
     {
-        $max = $this->max();
+        $max = $this->getMax();
         if (!$max) {
             return true;
         }

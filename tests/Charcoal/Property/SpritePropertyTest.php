@@ -41,7 +41,6 @@ class SpritePropertyTest extends AbstractTestCase
         $this->assertNull($this->obj['sprite']);
     }
 
-
     /**
      * @return void
      */
@@ -49,7 +48,6 @@ class SpritePropertyTest extends AbstractTestCase
     {
         $this->assertEquals('sprite', $this->obj->type());
     }
-
 
     public function testSetSprite()
     {

@@ -47,11 +47,11 @@ class ColorProperty extends AbstractProperty
     }
 
     /**
-     *
-     * @param mixed $val The value to set.
-     * @throws InvalidArgumentException If the value does not match property's options.
      * @see AbstractProperty::parseOne()
      * @see AbstractProperty::parseVal()
+     *
+     * @param  mixed $val The value to set.
+     * @throws InvalidArgumentException If the value does not match property's options.
      * @return string|null
      */
     public function parseOne($val)
@@ -69,7 +69,7 @@ class ColorProperty extends AbstractProperty
     }
 
     /**
-     * @param string|array $val The color value to sanitize to an hexadecimal or rgba() value.
+     * @param  string|array $val The color value to sanitize to an hexadecimal or rgba() value.
      * @return string The color string. Hexadecimal or rgba() if alpha is supported..
      */
     public function colorVal($val)
@@ -97,6 +97,7 @@ class ColorProperty extends AbstractProperty
      * Stored as `VARCHAR` for maxLength under 255 and `TEXT` for other, longer strings
      *
      * @see StorablePropertyTrait::sqlType()
+     *
      * @return string The SQL type
      */
     public function sqlType()
@@ -115,6 +116,7 @@ class ColorProperty extends AbstractProperty
 
     /**
      * @see StorablePropertyTrait::sqlPdoType()
+     *
      * @return integer
      */
     public function sqlPdoType()
@@ -122,25 +124,23 @@ class ColorProperty extends AbstractProperty
         return PDO::PARAM_STR;
     }
 
-
     /**
-     * @param integer $r Red value (0 to 255).
-     * @param integer $g Green value (0 to 255).
-     * @param integer $b Blue value (0 to 255).
+     * @param  integer $r Red value (0 to 255).
+     * @param  integer $g Green value (0 to 255).
+     * @param  integer $b Blue value (0 to 255).
      * @return string Hexadecimal color value, as uppercased hexadecimal without the "#" prefix.
      */
     protected function rgbToHexadecimal($r, $g, $b)
     {
-        $hex = '';
+        $hex  = '';
         $hex .= str_pad(dechex($r), 2, '0', STR_PAD_LEFT);
         $hex .= str_pad(dechex($g), 2, '0', STR_PAD_LEFT);
         $hex .= str_pad(dechex($b), 2, '0', STR_PAD_LEFT);
         return strtoupper($hex);
     }
 
-
     /**
-     * @param string|array $val The color array or string to parse.
+     * @param  string|array $val The color array or string to parse.
      * @return array The parsed `[r,g,b,a]` color array.
      */
     private function parseColorVal($val)
@@ -153,7 +153,7 @@ class ColorProperty extends AbstractProperty
     }
 
     /**
-     * @param array $val The color array to parse.
+     * @param  array $val The color array to parse.
      * @throws InvalidArgumentException If the array does not have at least 3 items.
      * @return array The parsed `[r,g,b,a]` color array.
      */
@@ -164,6 +164,7 @@ class ColorProperty extends AbstractProperty
                 'Color value must have at least 3 items in array (r, g and b) to be parsed by parseArray()'
             );
         }
+
         if (isset($val['r'])) {
             $r = $val['r'];
             $g = $val['g'];
@@ -180,12 +181,12 @@ class ColorProperty extends AbstractProperty
             'r' => (int)$r,
             'g' => (int)$g,
             'b' => (int)$b,
-            'a' => $a
+            'a' => $a,
         ];
     }
 
     /**
-     * @param string $val The colors string to parse.
+     * @param  string $val The colors string to parse.
      * @throws InvalidArgumentException If the color value is not a string.
      * @return array The parsed `[r,g,b,a]` color array.
      */
@@ -210,7 +211,7 @@ class ColorProperty extends AbstractProperty
     }
 
     /**
-     * @param string $val The hexadecimal color string to parse.
+     * @param  string $val The hexadecimal color string to parse.
      * @return array The parsed `[r,g,b,a]` color array.
      */
     private function parseHexadecimal($val)
@@ -223,7 +224,7 @@ class ColorProperty extends AbstractProperty
                 'g' => hexdec(substr($val, 1, 1).substr($val, 1, 1)),
                 'b' => hexdec(substr($val, 2, 1).substr($val, 2, 1)),
                 // Ignore alpha.
-                'a' => 0
+                'a' => 0,
             ];
         } else {
             return [
@@ -231,13 +232,13 @@ class ColorProperty extends AbstractProperty
                 'g' => hexdec(substr($val, 2, 2)),
                 'b' => hexdec(substr($val, 4, 2)),
                 // Ignore alpha.
-                'a' => 0
+                'a' => 0,
             ];
         }
     }
 
     /**
-     * @param string $val The rgb() color string to parse.
+     * @param  string $val The rgb() color string to parse.
      * @throws InvalidArgumentException If the color can not be parsed.
      * @return array The parsed `[r,g,b,a]` color array.
      */
@@ -254,12 +255,12 @@ class ColorProperty extends AbstractProperty
             'g' => $m[2],
             'b' => $m[3],
             // Ignore alpha.
-            'a' => 0
+            'a' => 0,
         ];
     }
 
     /**
-     * @param string $val The rgab() color string to parse.
+     * @param  string $val The rgab() color string to parse.
      * @throws InvalidArgumentException If The colors string is invalid (does not match rgba format).
      * @return array The parsed `[r,g,b,a]` color array.
      */
@@ -275,12 +276,12 @@ class ColorProperty extends AbstractProperty
             'r' => (int)$m[1],
             'g' => (int)$m[2],
             'b' => (int)$m[3],
-            'a' => $m[4]
+            'a' => $m[4],
         ];
     }
 
     /**
-     * @param string $val The named color val to parse.
+     * @param  string $val The named color val to parse.
      * @throws InvalidArgumentException If the string is not an existing SVG color.
      * @return array The parsed `[r,g,b,a]` color array.
      */

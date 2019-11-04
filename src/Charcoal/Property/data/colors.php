@@ -149,5 +149,5 @@ return [
     'white'             => 'rgb(255, 255, 255)',
     'whitesmoke'        => 'rgb(245, 245, 245)',
     'yellow'            => 'rgb(255, 255, 0)',
-    'yellowgreen'       => 'rgb(154, 205, 50)'
+    'yellowgreen'       => 'rgb(154, 205, 50)',
 ];

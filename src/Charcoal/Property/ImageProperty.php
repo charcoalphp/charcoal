@@ -264,7 +264,7 @@ class ImageProperty extends FileProperty
     /**
      * Provides the accepted mimetypes for the image properties.
      *
-     * Overrides FileProperty's acceptedMimetypes() method.
+     * Overrides FileProperty's getAcceptedMimetypes() method.
      *
      * @return string[]
      */
@@ -293,10 +293,10 @@ class ImageProperty extends FileProperty
             if (in_array($file, $this['acceptedMimetypes'])) {
                 $mime = $file;
             } else {
-                $mime = $this->mimetypeFor($file);
+                $mime = $this->getMimetypeFor($file);
             }
         } else {
-            $mime = $this->mimetype();
+            $mime = $this->getMimetype();
         }
 
         switch ($mime) {
@@ -454,7 +454,6 @@ class ImageProperty extends FileProperty
             }
         }
 
-
         return $grouped;
     }
 
@@ -516,7 +515,7 @@ class ImageProperty extends FileProperty
                                 break;
 
                             case 'mimetype':
-                                $type = $this->mimetypeFor($value);
+                                $type = $this->getMimetypeFor($value);
                                 if (in_array($type, (array)$fxGroup['mimetype'])) {
                                     break 2;
                                 }
