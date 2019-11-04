@@ -9,6 +9,7 @@ interface PropertyInterface
 {
     /**
      * Get the "type" (identifier) of the property.
+     *
      * @return string
      */
     public function type();
@@ -40,31 +41,30 @@ interface PropertyInterface
      * Parse the given value.
      *
      * @param  mixed $val The value to be parsed (normalized).
-     * @throws \InvalidArgumentException If the value does not match property settings.
      * @return mixed Returns the parsed value.
      */
     public function parseVal($val);
 
     /**
-     * @param mixed $val A single value to parse.
+     * @param  mixed $val A single value to parse.
      * @return mixed The parsed value.
      */
     public function parseOne($val);
 
     /**
-     * @param mixed $val Optional. The value to to convert for input.
+     * @param  mixed $val Optional. The value to to convert for input.
      * @return string
      */
     public function inputVal($val);
 
     /**
-     * @param mixed $val Optional. The value to to convert for display.
+     * @param  mixed $val Optional. The value to to convert for display.
      * @return string
      */
     public function displayVal($val);
 
     /**
-     * @param mixed $label The property label.
+     * @param  mixed $label The property label.
      * @return PropertyInterface Chainable
      */
     public function setLabel($label);
@@ -75,7 +75,7 @@ interface PropertyInterface
     public function getLabel();
 
     /**
-     * @param boolean $l10n The l10n, or "translatable" flag.
+     * @param  boolean $l10n The l10n, or "translatable" flag.
      * @return PropertyInterface Chainable
      */
     public function setL10n($l10n);
@@ -86,7 +86,7 @@ interface PropertyInterface
     public function getL10n();
 
     /**
-     * @param boolean $hidden The hidden flag.
+     * @param  boolean $hidden The hidden flag.
      * @return PropertyInterface Chainable
      */
     public function setHidden($hidden);
@@ -97,7 +97,7 @@ interface PropertyInterface
     public function getHidden();
 
     /**
-     * @param boolean $multiple The multiple flag.
+     * @param  boolean $multiple The multiple flag.
      * @return PropertyInterface Chainable
      */
     public function setMultiple($multiple);
@@ -115,7 +115,7 @@ interface PropertyInterface
      * - `min` (integer) The minimum number of values. (0 = no limit).
      * - `max` (integer) The maximum number of values. (0 = no limit).
      *
-     * @param array $multipleOptions The property multiple options.
+     * @param  array $multipleOptions The property multiple options.
      * @return PropertyInterface Chainable
      */
     public function setMultipleOptions(array $multipleOptions);
@@ -126,7 +126,18 @@ interface PropertyInterface
     public function getMultipleOptions();
 
     /**
-     * @param boolean $required The property required flag.
+     * @param  boolean $allow The property allow null flag.
+     * @return PropertyInterface Chainable
+     */
+    public function setAllowNull($allow);
+
+    /**
+     * @return boolean
+     */
+    public function getAllowNull();
+
+    /**
+     * @param  boolean $required The property required flag.
      * @return PropertyInterface Chainable
      */
     public function setRequired($required);
@@ -137,7 +148,7 @@ interface PropertyInterface
     public function getRequired();
 
     /**
-     * @param boolean $unique The property unique flag.
+     * @param  boolean $unique The property unique flag.
      * @return PropertyInterface Chainable
      */
     public function setUnique($unique);
@@ -148,7 +159,7 @@ interface PropertyInterface
     public function getUnique();
 
     /**
-     * @param boolean $storable The property storable flag.
+     * @param  boolean $storable The property storable flag.
      * @return PropertyInterface Chainable
      */
     public function setStorable($storable);
@@ -159,7 +170,7 @@ interface PropertyInterface
     public function getStorable();
 
     /**
-     * @param boolean $active The property active flag. Inactive properties should have no effects.
+     * @param  boolean $active The property active flag. Inactive properties should have no effects.
      * @return PropertyInterface Chainable
      */
     public function setActive($active);
@@ -170,7 +181,7 @@ interface PropertyInterface
     public function getActive();
 
     /**
-     * @param mixed $val The value, at time of saving.
+     * @param  mixed $val The value, at time of saving.
      * @return mixed
      */
     public function save($val);

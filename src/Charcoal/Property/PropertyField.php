@@ -5,24 +5,18 @@ namespace Charcoal\Property;
 use PDO;
 use InvalidArgumentException;
 
-// From 'charcoal-translator'
-use Charcoal\Translator\Translation;
-use Charcoal\Translator\TranslatorAwareTrait;
-
 /**
  *
  */
 class PropertyField
 {
-    use TranslatorAwareTrait;
-
     /**
      * @var string
      */
     private $ident;
 
     /**
-     * @var Translation
+     * @var string
      */
     private $label;
 
@@ -62,12 +56,11 @@ class PropertyField
     private $allowNull;
 
     /**
-     * @param array $data Constructor options.
+     * Holds a list of all snake_case strings.
+     *
+     * @var string[]
      */
-    public function __construct(array $data)
-    {
-        $this->setTranslator($data['translator']);
-    }
+    protected static $snakeCache = [];
 
     /**
      * @param  array $data The field data.
@@ -115,11 +108,10 @@ class PropertyField
     {
         if (!is_string($ident)) {
             throw new InvalidArgumentException(
-                'Identifier must be a string.'
+                'Identifier must be a string'
             );
         }
-        // Ensure snake_case
-        $this->ident = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $ident));
+        $this->ident = $this->snakeize($ident);
         return $this;
     }
 
@@ -132,17 +124,23 @@ class PropertyField
     }
 
     /**
-     * @param  mixed $label The field label.
+     * @param  string $label The field label.
+     * @throws InvalidArgumentException If the label is not a string.
      * @return PropertyField Chainable
      */
     public function setLabel($label)
     {
-        $this->label = $this->translator()->translation($label);
+        if (!is_string($label) && $label !== null) {
+            throw new InvalidArgumentException(
+                'Label must be a string'
+            );
+        }
+        $this->label = $label;
         return $this;
     }
 
     /**
-     * @return Translation|null
+     * @return string|null
      */
     public function label()
     {
@@ -156,9 +154,9 @@ class PropertyField
      */
     public function setSqlType($sqlType)
     {
-        if (!is_string($sqlType)) {
+        if (!is_string($sqlType) && $sqlType !== null) {
             throw new InvalidArgumentException(
-                'SQL Type must be a string.'
+                'SQL Type must be a string'
             );
         }
         $this->sqlType = $sqlType;
@@ -166,7 +164,7 @@ class PropertyField
     }
 
     /**
-     * @return string|null
+     * @return string
      */
     public function sqlType()
     {
@@ -182,7 +180,7 @@ class PropertyField
     {
         if (!is_integer($sqlPdoType)) {
             throw new InvalidArgumentException(
-                'PDO Type must be an integer.'
+                'PDO Type must be an integer'
             );
         }
         $this->sqlPdoType = $sqlPdoType;
@@ -202,15 +200,15 @@ class PropertyField
     }
 
     /**
-     * @param  string $extra The extra.
+     * @param  string|null $extra The extra.
      * @throws InvalidArgumentException If the extra is not a string.
      * @return PropertyField Chainable
      */
     public function setExtra($extra)
     {
-        if (!is_string($extra)) {
+        if (!is_string($extra) && $extra !== null) {
             throw new InvalidArgumentException(
-                'Extra must be a string.'
+                'Extra must be a string'
             );
         }
         $this->extra = $extra;
@@ -232,9 +230,9 @@ class PropertyField
      */
     public function setSqlEncoding($encoding)
     {
-        if (!is_string($encoding)) {
+        if (!is_string($encoding) && $encoding !== null) {
             throw new InvalidArgumentException(
-                'Encoding must be a string.'
+                'Encoding must be a string'
             );
         }
         $this->sqlEncoding = $encoding;
@@ -304,21 +302,26 @@ class PropertyField
     }
 
     /**
-     * @return string
+     * Generates the SQL table column.
+     *
+     * @return string|null
      */
     public function sql()
     {
         $ident = $this->ident();
         if (!$ident) {
-            return '';
+            return null;
         }
-
-        $parts = [ sprintf('`%s`', $ident) ];
 
         $dataType = $this->sqlType();
-        if ($dataType) {
-            $parts[] = $dataType;
+        if (!$dataType) {
+            return null;
         }
+
+        $parts = [
+            sprintf('`%s`', $ident),
+            $dataType
+        ];
 
         if ($this->allowNull() === false) {
             $parts[] = 'NOT NULL';
@@ -345,5 +348,26 @@ class PropertyField
         }
 
         return implode(' ', $parts);
+    }
+
+    /**
+     * Transform a string from "camelCase" to "snake_case".
+     *
+     * @param  string $value The string to snakeize.
+     * @return string The snake_case string.
+     */
+    protected function snakeize($value)
+    {
+        $key = $value;
+
+        if (isset(static::$snakeCache[$key])) {
+            return static::$snakeCache[$key];
+        }
+
+        $value = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $value));
+
+        static::$snakeCache[$key] = $value;
+
+        return static::$snakeCache[$key];
     }
 }

@@ -1,10 +1,10 @@
 {
-    "properties":{
-        "storage_mode":{
+    "properties": {
+        "storage_mode": {
             "type": "text",
-            "choices":{
-                "string":{},
-                "int":{}
+            "choices": {
+                "string": {},
+                "int": {}
             }
         }
     }

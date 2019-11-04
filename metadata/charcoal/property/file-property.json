@@ -5,7 +5,7 @@
             "label": "File System",
             "description": "The default file system where the uploaded files will be stored."
         },
-        "public_access":{
+        "public_access": {
             "type": "boolean",
             "label": "Public access?",
             "description": "If the public access is true (default) then the file will be stored in a public filesystem. If not, then it will be stored in a private (non-web-accessible) filesystem."

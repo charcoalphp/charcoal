@@ -7,20 +7,29 @@ namespace Charcoal\Property;
  */
 interface StorablePropertyInterface
 {
-
     /**
      * @param  mixed $val The value to set as field value.
-     * @return array
+     * @return \Charcoal\Property\PropertyField[]
      */
-    public function fields($val);
+    public function fields($val = null);
 
     /**
-     * @return array
+     * Retrieve the property's identifier formatted for field names.
+     *
+     * @param  string|null $key The field key to suffix to the property identifier.
+     * @return string
+     */
+    public function fieldIdent($key = null);
+
+    /**
+     * @return string[]
      */
     public function fieldNames();
 
     /**
-     * @param mixed $val Optional. The value to convert to storage value.
+     * Retrieve the property's value in a format suitable for storage.
+     *
+     * @param  mixed $val Optional. The value to convert to storage value.
      * @return mixed
      */
     public function storageVal($val);
@@ -28,19 +37,20 @@ interface StorablePropertyInterface
     /**
      * Set the property's SQL encoding & collation.
      *
-     * @param  string $ident The encoding ident.
-     * @throws \InvalidArgumentException  If the identifier is not a string.
+     * @param  string|null $encoding The encoding identifier or SQL encoding and collation.
      * @return self
      */
-    public function setSqlEncoding($ident);
+    public function setSqlEncoding($encoding);
 
     /**
-     * @return string
+     * Retrieve the property's SQL encoding & collation.
+     *
+     * @return string|null
      */
     public function sqlEncoding();
 
     /**
-     * @return string
+     * @return string|null
      */
     public function sqlExtra();
 

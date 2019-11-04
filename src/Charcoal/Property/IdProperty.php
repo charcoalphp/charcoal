@@ -257,7 +257,7 @@ class IdProperty extends AbstractProperty
         if ($mode === self::MODE_AUTO_INCREMENT) {
             return 'AUTO_INCREMENT';
         } else {
-            return '';
+            return null;
         }
     }
 

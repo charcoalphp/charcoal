@@ -343,7 +343,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     final public function parseVal($val)
     {
         if ($this['allowNull']) {
-            if ($val === null) {
+            if ($val === null || $val === '') {
                 return null;
             }
         } elseif ($val === null) {
@@ -474,8 +474,6 @@ abstract class AbstractProperty extends AbstractEntity implements
 
         return (string)$propertyValue;
     }
-
-
 
     /**
      * @param mixed $label The property label.

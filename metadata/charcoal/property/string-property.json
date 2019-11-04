@@ -8,7 +8,7 @@
         },
         "max_length": {
             "type": "number",
-            "label":"Maximum length",
+            "label": "Maximum length",
             "description": "Maximum length (or number of characters) constraint. UTF-8 characters are supported. If 0, empty or null, then it should be ignored (no maximal constraint).",
             "allow_null": true
         },
@@ -16,11 +16,11 @@
             "type": "string",
             "label": "Regular expression",
             "description": "Regular expression validation constraint.",
-            "allow_null":true
+            "allow_null": true
         },
         "allow_empty": {
             "type": "boolean",
-            "label":"Empty string allowed?"
+            "label": "Empty string allowed?"
         }
     }
 }
