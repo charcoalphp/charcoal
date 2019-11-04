@@ -155,7 +155,10 @@ class DatabaseSource extends AbstractSource implements
         $fields  = $this->getModelFields($model);
         $columns = [];
         foreach ($fields as $field) {
-            $columns[] = $field->sql();
+            $fieldSql = $field->sql();
+            if ($fieldSql) {
+                $columns[] = $fieldSql;
+            }
         }
 
         $query  = 'CREATE TABLE  `'.$table.'` ('."\n";
@@ -201,10 +204,18 @@ class DatabaseSource extends AbstractSource implements
             $ident = $field->ident();
 
             if (!array_key_exists($ident, $cols)) {
-                // The key does not exist at all.
-                $query = 'ALTER TABLE `'.$table.'` ADD '.$field->sql();
-                $this->logger->debug($query);
-                $dbh->query($query);
+                $fieldSql = $field->sql();
+                if ($fieldSql) {
+                    // The key does not exist at all.
+                    $query = 'ALTER TABLE `'.$table.'` ADD '.$fieldSql;
+                    $this->logger->debug($query);
+                    $dbh->query($query);
+                } else {
+                    $this->logger->warning('Empty column definition.', [
+                        'table' => $table,
+                        'field' => $ident,
+                    ]);
+                }
             } else {
                 // The key exists. Validate.
                 $col   = $cols[$ident];
@@ -226,9 +237,17 @@ class DatabaseSource extends AbstractSource implements
                 }
 
                 if ($alter === true) {
-                    $query = 'ALTER TABLE `'.$table.'` CHANGE `'.$ident.'` '.$field->sql();
-                    $this->logger->debug($query);
-                    $dbh->query($query);
+                    $fieldSql = $field->sql();
+                    if ($fieldSql) {
+                        $query = 'ALTER TABLE `'.$table.'` CHANGE `'.$ident.'` '.$fieldSql;
+                        $this->logger->debug($query);
+                        $dbh->query($query);
+                    } else {
+                        $this->logger->warning('Empty column definition.', [
+                            'table' => $table,
+                            'field' => $ident,
+                        ]);
+                    }
                 }
             }
         }
@@ -327,7 +346,7 @@ class DatabaseSource extends AbstractSource implements
                     'Null'      => !!$col['notnull'] ? 'NO' : 'YES',
                     'Default'   => $col['dflt_value'],
                     'Key'       => !!$col['pk'] ? 'PRI' : '',
-                    'Extra'     => ''
+                    'Extra'     => '',
                 ];
             }
             return $struct;
@@ -873,7 +892,7 @@ class DatabaseSource extends AbstractSource implements
         ]);
 
         $sql = $criteria->sql();
-        if (strlen($sql) > 0) {
+        if ($sql && strlen($sql) > 0) {
             $sql = ' WHERE '.$sql;
         }
 
@@ -898,7 +917,7 @@ class DatabaseSource extends AbstractSource implements
             }
 
             $sql = $order->sql();
-            if (strlen($sql) > 0) {
+            if ($sql && strlen($sql) > 0) {
                 $parts[] = $sql;
             }
         }
@@ -923,7 +942,7 @@ class DatabaseSource extends AbstractSource implements
         }
 
         $sql = $pager->sql();
-        if (strlen($sql) > 0) {
+        if ($sql && strlen($sql) > 0) {
             $sql = ' '.$sql;
         }
 

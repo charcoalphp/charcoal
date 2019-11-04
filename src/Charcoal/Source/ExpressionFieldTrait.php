@@ -33,6 +33,13 @@ trait ExpressionFieldTrait
     protected $table;
 
     /**
+     * Holds a list of all snake_case strings.
+     *
+     * @var string[]
+     */
+    protected static $snakeCache = [];
+
+    /**
      * Set model property key or source field key.
      *
      * @param  string|PropertyInterface $property The related property.
@@ -175,8 +182,7 @@ trait ExpressionFieldTrait
             if ($property instanceof StorablePropertyInterface) {
                 return $property->fieldNames();
             } else {
-                // Ensure snake_case
-                $property = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $property));
+                $property = $this->snakeize($property);
                 return [ $property ];
             }
         }
@@ -193,7 +199,7 @@ trait ExpressionFieldTrait
     {
         $property = $this->property();
         if ($property instanceof PropertyInterface) {
-            return $property->ident();
+            return $property->fieldIdent();
         } else {
             return $property;
         }
@@ -227,5 +233,26 @@ trait ExpressionFieldTrait
         $fieldName = $this->fieldName();
 
         return Expression::quoteIdentifier($fieldName, $tableName);
+    }
+
+    /**
+     * Transform a string from "camelCase" to "snake_case".
+     *
+     * @param  string $value The string to snakeize.
+     * @return string The snake_case string.
+     */
+    protected function snakeize($value)
+    {
+        $key = $value;
+
+        if (isset(static::$snakeCache[$key])) {
+            return static::$snakeCache[$key];
+        }
+
+        $value = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $value));
+
+        static::$snakeCache[$key] = $value;
+
+        return static::$snakeCache[$key];
     }
 }

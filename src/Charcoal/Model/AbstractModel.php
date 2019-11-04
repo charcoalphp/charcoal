@@ -107,21 +107,6 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-     * Sets the object data, from an associative array map (or any other Traversable).
-     *
-     * @param  array $data The entity data. Will call setters.
-     * @return self
-     * @see AbstractEntity::setData()
-     */
-    public function setData(array $data)
-    {
-        $data = $this->setIdFromData($data);
-
-        parent::setData($data);
-        return $this;
-    }
-
-    /**
      * Retrieve the model data as a structure (serialize to array).
      *
      * @param  array $properties Optional. List of property identifiers
@@ -137,6 +122,41 @@ abstract class AbstractModel extends AbstractEntity implements
             $val = $this->propertyValue($propertyIdent);
             $val = $this->serializedValue($val);
             $data[$propertyIdent] = $val;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Sets the object data, from an associative array map (or any other Traversable).
+     *
+     * @param  array $data The entity data. Will call setters.
+     * @return self
+     * @see AbstractEntity::setData()
+     */
+    public function setData(array $data)
+    {
+        $data = $this->setIdFromData($data);
+
+        parent::setData($data);
+        return $this;
+    }
+
+    /**
+     * Sets the object data, from an associative array map (or any other Traversable).
+     *
+     * @param  array $data The model property data.
+     * @return array Returns the remaining dataset.
+     */
+    public function setPropertyData(array $data)
+    {
+        $data = $this->setIdFromData($data);
+
+        foreach ($data as $key => $value) {
+            if ($this->hasProperty($key)) {
+                $this[$key] = $value;
+                unset($data[$key]);
+            }
         }
 
         return $data;
@@ -196,39 +216,12 @@ abstract class AbstractModel extends AbstractEntity implements
     /**
      * Set the model data (from a flattened structure).
      *
-     * This method takes a 1-dimensional array and fills the object with its values.
-     *
-     * @param  array $flatData The model data.
+     * @param  array $flatData The model dataset.
      * @return self
      */
     public function setFlatData(array $flatData)
     {
-        $flatData = $this->setIdFromData($flatData);
-
-        $data = [];
-        $properties = $this->properties();
-        foreach ($properties as $propertyIdent => $property) {
-            $fields = $property->fields(null);
-            foreach ($fields as $k => $f) {
-                if (is_string($k)) {
-                    $fid = $f->ident();
-                    $snake = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $propertyIdent));
-                    $key = str_replace($snake.'_', '', $fid);
-                    if (isset($flatData[$fid])) {
-                        $data[$propertyIdent][$key] = $flatData[$fid];
-                        unset($flatData[$fid]);
-                    }
-                } else {
-                    $fid = $f->ident();
-                    if (isset($flatData[$fid])) {
-                        $data[$propertyIdent] = $flatData[$fid];
-                        unset($flatData[$fid]);
-                    }
-                }
-            }
-        }
-
-        $this->setData($data);
+        $flatData = $this->setPropertyDataFromFlatData($flatData);
 
         // Set remaining (non-property) data.
         if (!empty($flatData)) {
@@ -239,16 +232,60 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
+     * Set the model property data (from a flattened structure).
+     *
+     * This method takes a one-dimensional dataset and, depending on the property's
+     * {@see \Charcoal\Property\PropertyField::fieldNames() field structure},
+     * returns a {@see \Charcoal\Property\PropertyField::parseFromFlatData() complex datum}.
+     *
+     * @param  array $flatData The model property data.
+     * @return array Returns the remaining dataset.
+     */
+    public function setPropertyDataFromFlatData(array $flatData)
+    {
+        $flatData = $this->setIdFromData($flatData);
+
+        $propData   = [];
+        $properties = $this->properties();
+        foreach ($properties as $propertyIdent => $property) {
+            $fieldValues = [];
+            $fieldNames  = $property->fieldNames();
+            foreach ($fieldNames as $fieldName) {
+                if (array_key_exists($fieldName, $flatData)) {
+                    $fieldValues[$fieldName] = $flatData[$fieldName];
+                    unset($flatData[$fieldName]);
+                }
+            }
+
+            if ($fieldValues) {
+                $this[$propertyIdent] = $property->parseFromFlatData($fieldValues);
+            }
+        }
+
+        return $flatData;
+    }
+
+    /**
      * Retrieve the model data as a flattened structure.
      *
      * This method returns a 1-dimensional array of the object's values.
      *
-     * @todo   Implementation required.
+     * @param  array $properties Optional. List of property identifiers
+     *     for retrieving a subset of data.
      * @return array
      */
-    public function flatData()
+    public function flatData(array $properties = null)
     {
-        return [];
+        $flatData   = [];
+        $properties = $this->properties($properties);
+        foreach ($properties as $propertyIdent => $property) {
+            $value = $this->propertyValue($propertyIdent);
+            foreach ($property->fields($value) as $field) {
+                $flatData[$field->ident()] = $field->val();
+            }
+        }
+
+        return $flatData;
     }
 
     /**
@@ -295,16 +332,29 @@ abstract class AbstractModel extends AbstractEntity implements
      * @param  string $key   Key pointing a column's l10n base ident.
      * @param  mixed  $value Value to search in all languages.
      * @param  array  $langs List of languages (code, ex: "en") to check into.
+     * @throws InvalidArgumentException If a language is invalid.
      * @throws PDOException If the PDO query fails.
      * @return string The matching language.
      */
     public function loadFromL10n($key, $value, array $langs)
     {
+        $binds = [
+            'ident' => $value,
+        ];
         $switch = [];
         $where  = [];
         foreach ($langs as $lang) {
-            $switch[] = 'WHEN `'.$key.'_'.$lang.'` = :ident THEN \''.$lang.'\'';
-            $where[]  = '`'.$key.'_'.$lang.'` = :ident';
+            if (!is_string($lang)) {
+                throw new InvalidArgumentException('Language; must be a string');
+            }
+
+            $fieldName = $key.'_'.$lang;
+            $langParam = 'lang_'.$lang;
+            $binds[$langParam] = $lang;
+            $langParam = ':'.$langParam;
+
+            $switch[] = 'WHEN `'.$fieldName.'` = :ident THEN '.$langParam;
+            $where[]  = '`'.$fieldName.'` = :ident';
         }
 
         $source = $this->source();
@@ -330,39 +380,12 @@ abstract class AbstractModel extends AbstractEntity implements
     }
 
     /**
-     * Generate a model type identifier from this object's class name.
-     *
-     * Based on {@see DescribableTrait::generateMetadataIdent()}.
-     *
-     * @return string
-     */
-    public static function objType()
-    {
-        $class = get_called_class();
-        $ident = preg_replace('/([a-z])([A-Z])/', '$1-$2', $class);
-        $ident = strtolower(str_replace('\\', '/', $ident));
-        return $ident;
-    }
-
-    /**
-     * Inject dependencies from a DI Container.
-     *
-     * @param  Container $container A Pimple DI service container.
-     * @return void
-     */
-    protected function setDependencies(Container $container)
-    {
-        // This method is a stub.
-        // Reimplement in children method to inject dependencies in your class from a Pimple container.
-    }
-
-    /**
      * Set the object's ID from an associative array map (or any other Traversable).
      *
      * Useful for setting the object ID before the rest of the object's data.
      *
      * @param  array $data The object data.
-     * @return array The object data without the pre-set ID.
+     * @return array Returns the remaining dataset.
      */
     protected function setIdFromData(array $data)
     {
@@ -474,5 +497,32 @@ abstract class AbstractModel extends AbstractEntity implements
     {
         $validator = new ModelValidator($this);
         return $validator;
+    }
+
+    /**
+     * Inject dependencies from a DI Container.
+     *
+     * @param  Container $container A Pimple DI service container.
+     * @return void
+     */
+    protected function setDependencies(Container $container)
+    {
+        // This method is a stub.
+        // Reimplement in children method to inject dependencies in your class from a Pimple container.
+    }
+
+    /**
+     * Generate a model type identifier from this object's class name.
+     *
+     * Based on {@see DescribableTrait::generateMetadataIdent()}.
+     *
+     * @return string
+     */
+    public static function objType()
+    {
+        $class = get_called_class();
+        $ident = preg_replace('/([a-z])([A-Z])/', '$1-$2', $class);
+        $ident = strtolower(str_replace('\\', '/', $ident));
+        return $ident;
     }
 }
