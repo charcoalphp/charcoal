@@ -21,17 +21,13 @@ class Authenticator extends AbstractAuthenticator
      *
      * @param  AuthenticatableInterface $user     The authenticated user to log in.
      * @param  boolean                  $remember Whether to "remember" the user or not.
-     * @return boolean Success / Failure
+     * @return void
      */
     public function login(AuthenticatableInterface $user, $remember = false)
     {
-        $result = parent::login($user, $remember);
+        parent::login($user, $remember);
 
-        if ($result) {
-            $this->touchUserLogin($user);
-        }
-
-        return $result;
+        $this->touchUserLogin($user);
     }
 
     /**
@@ -61,7 +57,7 @@ class Authenticator extends AbstractAuthenticator
      * @throws InvalidArgumentException If the user has no ID.
      * @return boolean Returns TRUE if the password was changed, or FALSE otherwise.
      */
-    protected function touchUserLogin(AuthenticatableInterface $user, $update = true)
+    public function touchUserLogin(AuthenticatableInterface $user, $update = true)
     {
         if (!($user instanceof UserInterface)) {
             return false;
@@ -121,7 +117,7 @@ class Authenticator extends AbstractAuthenticator
      * @throws InvalidArgumentException If the password is invalid.
      * @return boolean Returns TRUE if the password was changed, or FALSE otherwise.
      */
-    protected function changeUserPassword(AuthenticatableInterface $user, $password, $update = true)
+    public function changeUserPassword(AuthenticatableInterface $user, $password, $update = true)
     {
         if (!($user instanceof UserInterface)) {
             return parent::changeUserPassword($user, $password);
@@ -129,7 +125,7 @@ class Authenticator extends AbstractAuthenticator
 
         if (!$this->validateAuthPassword($password)) {
             throw new InvalidArgumentException(
-                'Can not reset password: password is invalid'
+                'Can not change password: password is invalid'
             );
         }
 
@@ -139,7 +135,7 @@ class Authenticator extends AbstractAuthenticator
             $userClass = get_class($user);
 
             $this->logger->info(sprintf(
-                'Changing password for user "%s" (%s)',
+                '[Authenticator] Changing password for user "%s" (%s)',
                 $userId,
                 $userClass
             ));
@@ -160,13 +156,13 @@ class Authenticator extends AbstractAuthenticator
 
             if ($result) {
                 $this->logger->notice(sprintf(
-                    'Password was changed for user "%s" (%s)',
+                    '[Authenticator] Password was changed for user "%s" (%s)',
                     $userId,
                     $userClass
                 ));
             } else {
                 $this->logger->warning(sprintf(
-                    'Password failed to be changed for user "%s" (%s)',
+                    '[Authenticator] Password failed to be changed for user "%s" (%s)',
                     $userId,
                     $userClass
                 ));

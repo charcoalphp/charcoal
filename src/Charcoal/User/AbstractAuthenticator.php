@@ -777,7 +777,7 @@ abstract class AbstractAuthenticator implements
      * @throws InvalidArgumentException If the password is invalid.
      * @return boolean Returns TRUE if the password was changed, or FALSE otherwise.
      */
-    protected function rehashUserPassword(AuthenticatableInterface $user, $password, $update = true)
+    public function rehashUserPassword(AuthenticatableInterface $user, $password, $update = true)
     {
         if (!$this->validateAuthPassword($password)) {
             throw new InvalidArgumentException(
@@ -835,7 +835,7 @@ abstract class AbstractAuthenticator implements
      * @throws InvalidArgumentException If the password is invalid.
      * @return boolean Returns TRUE if the password was changed, or FALSE otherwise.
      */
-    protected function changeUserPassword(AuthenticatableInterface $user, $password, $update = true)
+    public function changeUserPassword(AuthenticatableInterface $user, $password, $update = true)
     {
         if (!$this->validateAuthPassword($password)) {
             throw new InvalidArgumentException(
