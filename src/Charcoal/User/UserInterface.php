@@ -2,19 +2,14 @@
 
 namespace Charcoal\User;
 
-// From 'charcoal-object'
-use Charcoal\Object\ContentInterface;
+// From 'charcoal-core'
+use Charcoal\Model\ModelInterface;
 
 /**
- * User Interface, based on charcoal/object/content-interface.
+ * User Interface, based on charcoal/model/model-interface.
  */
-interface UserInterface extends ContentInterface
+interface UserInterface extends ModelInterface
 {
-    /**
-     * @return string
-     */
-    public static function sessionKey();
-
     /**
      * @param string $email The user email.
      * @return self
@@ -108,33 +103,24 @@ interface UserInterface extends ContentInterface
     public function getLastPasswordIp();
 
     /**
-     * @param string $token The login token.
+     * @param  string|null $token The login token.
      * @return self
      */
     public function setLoginToken($token);
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getLoginToken();
 
     /**
-     * Reset the password.
-     *
-     * Encrypt the password and re-save the object in the database.
-     * Also updates the last password date & ip.
-     *
-     * @param string $plainPassword The plain (non-encrypted) password to reset to.
+     * @param  mixed $preferences Structure of user preferences.
      * @return self
      */
-    public function resetPassword($plainPassword);
+    public function setPreferences($preferences);
 
     /**
-     * Structure
-     *
-     * Get the user preferences
-     *
-     * @return array|mixed
+     * @return mixed
      */
-    public function preferences();
+    public function getPreferences();
 }

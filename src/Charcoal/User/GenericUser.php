@@ -8,6 +8,8 @@ namespace Charcoal\User;
 class GenericUser extends AbstractUser
 {
     /**
+     * Retrieve the name of the session key for the user model.
+     *
      * @return string
      */
     public static function sessionKey()

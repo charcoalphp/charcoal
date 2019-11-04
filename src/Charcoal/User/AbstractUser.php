@@ -13,26 +13,21 @@ use Charcoal\Factory\FactoryInterface;
 // From 'charcoal-core'
 use Charcoal\Validator\ValidatorInterface;
 
-// From 'charcoal-config'
-use Charcoal\Config\ConfigurableInterface;
-use Charcoal\Config\ConfigurableTrait;
-
 // From 'charcoal-object'
 use Charcoal\Object\Content;
+
+// From 'charcoal-user'
+use Charcoal\User\Access\AuthenticatableInterface;
+use Charcoal\User\Access\AuthenticatableTrait;
 
 /**
  * Full implementation, as abstract class, of the `UserInterface`.
  */
 abstract class AbstractUser extends Content implements
-    UserInterface,
-    ConfigurableInterface
+    AuthenticatableInterface,
+    UserInterface
 {
-    use ConfigurableTrait;
-
-    /**
-     * @var UserInterface $authenticatedUser
-     */
-    protected static $authenticatedUser;
+    use AuthenticatableTrait;
 
     /**
      * The email address should be unique and mandatory.
@@ -93,21 +88,16 @@ abstract class AbstractUser extends Content implements
     private $lastPasswordIp;
 
     /**
-     * Tracks the password reset token.
-     *
-     * If the token is set (not empty), then the user should be prompted
-     * to reset his password after login / enter the token to continue.
+     * The token value for the "remember me" session.
      *
      * @var string|null
      */
-    private $loginToken = '';
+    private $loginToken;
 
     /**
-     * Structure
+     * The user preferences.
      *
-     * Get the user preferences
-     *
-     * @var array|mixed
+     * @var mixed
      */
     private $preferences;
 
@@ -409,7 +399,7 @@ abstract class AbstractUser extends Content implements
     }
 
     /**
-     * @param array|mixed $preferences Preferences for AbstractUser.
+     * @param  mixed $preferences Structure of user preferences.
      * @return self
      */
     public function setPreferences($preferences)
@@ -420,198 +410,137 @@ abstract class AbstractUser extends Content implements
     }
 
     /**
-     * @return array|mixed
+     * @return mixed
      */
-    public function preferences()
+    public function getPreferences()
     {
         return $this->preferences;
     }
 
+
+
+    // Extends Charcoal\User\Access\AuthenticatableTrait
+    // =========================================================================
+
     /**
-     * @throws Exception If trying to save a user to session without a ID.
-     * @return self
+     * Retrieve the name of the unique ID for the user.
+     *
+     * @return string
      */
-    public function saveToSession()
+    public function getAuthIdKey()
     {
-        if (!$this->id()) {
-            throw new Exception(
-                'Can not set auth user; no user ID'
-            );
-        }
-
-        $_SESSION[static::sessionKey()] = $this->id();
-
-        return $this;
+        return $this->key();
     }
 
     /**
-     * Log in the user (in session)
+     * Retrieve the name of the login username for the user.
      *
-     * Called when the authentication is successful.
-     *
-     * @return boolean Success / Failure
+     * @return string
      */
-    public function login()
+    public function getAuthIdentifierKey()
     {
-        if (!$this->id()) {
-            return false;
-        }
-
-        $this->setLastLoginDate('now');
-        $ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
-        if ($ip) {
-            $this->setLastLoginIp($ip);
-        }
-
-        $this->update([
-            'last_login_ip',
-            'last_login_date'
-        ]);
-
-        $this->saveToSession();
-
-        return true;
+        return 'email';
     }
 
     /**
-     * Empties the session var associated to the session key.
+     * Retrieve the name of the login password for the user.
      *
-     * @return boolean Logged out or not.
+     * @return string
      */
-    public function logout()
+    public function getAuthPasswordKey()
     {
-        // Irrelevant call...
-        if (!$this->id()) {
-            return false;
-        }
-
-        $key = static::sessionKey();
-
-        $_SESSION[$key] = null;
-        unset($_SESSION[$key], static::$authenticatedUser[$key]);
-
-        return true;
+        return 'password';
     }
 
     /**
-     * Reset the password.
+     * Retrieve the name of the login token for the user.
      *
-     * Encrypt the password and re-save the object in the database.
-     * Also updates the last password date & ip.
-     *
-     * @param string $plainPassword The plain (non-encrypted) password to reset to.
-     * @throws InvalidArgumentException If the plain password is not a string.
-     * @return self
+     * @return string
      */
-    public function resetPassword($plainPassword)
+    public function getAuthLoginTokenKey()
     {
-        if (!is_string($plainPassword)) {
-            throw new InvalidArgumentException(
-                'Can not change password: password is not a string.'
-            );
-        }
-
-        $hash = password_hash($plainPassword, PASSWORD_DEFAULT);
-        $this->setPassword($hash);
-
-        $this->setLastPasswordDate('now');
-        $ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
-        if ($ip) {
-            $this->setLastPasswordIp($ip);
-        }
-
-        if ($this->id()) {
-            $this->update([
-                'password',
-                'last_password_date',
-                'last_password_ip'
-            ]);
-        }
-
-        return $this;
+        return 'login_token';
     }
-
-    /**
-     * Get the currently authenticated user (from session)
-     *
-     * Return null if there is no current user in logged into
-     *
-     * @param  FactoryInterface $factory The factory to create the user object with.
-     * @throws Exception If the user from session is invalid.
-     * @return UserInterface|null
-     */
-    public static function getAuthenticated(FactoryInterface $factory)
-    {
-        $key = static::sessionKey();
-
-        if (isset(static::$authenticatedUser[$key])) {
-            return static::$authenticatedUser[$key];
-        }
-
-        if (!isset($_SESSION[$key])) {
-            return null;
-        }
-
-        $userId = $_SESSION[$key];
-        if (!$userId) {
-            return null;
-        }
-
-        $userClass = get_called_class();
-        $user = $factory->create($userClass);
-        $user->load($userId);
-
-        // Inactive users can not authenticate
-        if (!$user['id'] || !$user['email'] || !$user['active']) {
-            return null;
-        }
-
-        static::$authenticatedUser[$key] = $user;
-
-        return $user;
-    }
-
 
 
     // Extends Charcoal\Validator\ValidatableTrait
     // =========================================================================
 
     /**
-     * Validate the model.
+     * Validate the user model.
      *
-     * @see   \Charcoal\Validator\ValidatorInterface
-     * @param ValidatorInterface $v Optional. A custom validator object to use for validation. If null, use object's.
+     * @param  ValidatorInterface $v Optional. A custom validator object to use for validation. If null, use object's.
      * @return boolean
      */
     public function validate(ValidatorInterface &$v = null)
     {
         $result = parent::validate($v);
-        $objType = self::objType();
-        $previousModel = $this->modelFactory()->create($objType)->load($this->id());
 
-        $email = $this['email'];
-        if (empty($email)) {
-            $this->validator()->error(
-                'Email is required.',
-                'email'
-            );
-        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $this->validator()->error(
-                'Email format is incorrect.',
-                'email'
-            );
-        /** Check if updating/changing email. */
-        } elseif ($previousModel['email'] !== $email) {
-            $existingModel = $this->modelFactory()->create($objType)->loadFrom('email', $email);
-            /** Check for existing user with given email. */
-            if (!empty($existingModel->id())) {
-                $this->validator()->error(
-                    'This email is not available.',
-                    'email'
-                );
-            }
+        if (!$this->validateLoginRequired()) {
+            return false;
         }
 
-        return count($this->validator()->errorResults()) === 0 && $result;
+        if (!$this->validateLoginUnique()) {
+            return false;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Validate the username or email address.
+     *
+     * @return boolean
+     */
+    protected function validateLoginRequired()
+    {
+        $userKey   = $this->getAuthIdentifierKey();
+        $userLogin = $this->getAuthIdentifier();
+
+        if (empty($userLogin)) {
+            $this->validator()->error(
+                sprintf('User Credentials: "%s" is required.', $userKey),
+                $userKey
+            );
+            return false;
+        }
+
+        if (strpos($userKey, 'email') !== false && !filter_var($userLogin, FILTER_VALIDATE_EMAIL)) {
+            $this->validator()->error(
+                'User Credentials: Email format is incorrect.',
+                $userKey
+            );
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Validate the username or email address is unique.
+     *
+     * @return boolean
+     */
+    protected function validateLoginUnique()
+    {
+        $userKey   = $this->getAuthIdentifierKey();
+        $userLogin = $this->getAuthIdentifier();
+
+        $objType = self::objType();
+        $factory = $this->modelFactory();
+
+        $originalUser = $factory->create($objType)->load($this->getAuthId());
+
+        if ($originalModel->getAuthIdentifier() !== $userLogin) {
+            $existingUser = $factory->create($objType)->loadFrom($userKey, $userLogin);
+            /** Check for existing user with given email. */
+            if (!empty($existingUser->getAuthId())) {
+                $this->validator()->error(
+                    sprintf('User Credentials: "%s" is not available.', $userKey),
+                    $userKey
+                );
+            }
+            return false;
+        }
     }
 }

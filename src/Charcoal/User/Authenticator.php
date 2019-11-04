@@ -3,316 +3,174 @@
 namespace Charcoal\User;
 
 use InvalidArgumentException;
-use RuntimeException;
 
-// From PSR-3
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerAwareTrait;
+// From 'charcoal-object'
+use Charcoal\Object\ContentInterface;
 
-// From 'charcoal-factory'
-use Charcoal\Factory\FactoryInterface;
+// From 'charcoal-user'
+use Charcoal\User\Access\AuthenticatableInterface;
+use Charcoal\User\UserInterface;
 
 /**
- * The Authenticator service helps with user authentication / login.
- *
- * ## Constructor dependencies
- *
- * Constructor dependencies are passed as an array of `key=>value` pair.
- * The required dependencies are:
- *
- * - `logger` A PSR3 logger instance
- * - `user_type` The user object type (FQN or ident)
- * - `user_factory` The Factory used to instanciate new users.
- * - `token_type` The auth token object type (FQN or ident)
- * - `token_factory` The Factory used to instanciate new auth tokens.
+ * The User Authenticator
  */
-class Authenticator implements LoggerAwareInterface
+class Authenticator extends AbstractAuthenticator
 {
-    use LoggerAwareTrait;
-
     /**
-     * The user object type.
+     * Log a user into the application.
      *
-     * @var string
+     * @param  AuthenticatableInterface $user     The authenticated user to log in.
+     * @param  boolean                  $remember Whether to "remember" the user or not.
+     * @return void
      */
-    private $userType;
-
-    /**
-     * Store the user model factory instance for the current class.
-     *
-     * @var FactoryInterface
-     */
-    private $userFactory;
-
-    /**
-     * The auth-token object type.
-     *
-     * @var string
-     */
-    private $tokenType;
-
-    /**
-     * Store the auth-token model factory instance for the current class.
-     *
-     * @var FactoryInterface
-     */
-    private $tokenFactory;
-
-    /**
-     * @param array $data Class dependencies.
-     */
-    public function __construct(array $data)
+    public function login(AuthenticatableInterface $user, $remember = false)
     {
-        $this->setLogger($data['logger']);
-        $this->setUserType($data['user_type']);
-        $this->setUserFactory($data['user_factory']);
-        $this->setTokenType($data['token_type']);
-        $this->setTokenFactory($data['token_factory']);
+        parent::login($user, $remember);
+
+        $this->touchUserLogin($user);
     }
 
     /**
-     * Determine if the current user is authenticated.
+     * Validate the user authentication state is okay.
      *
-     * The user is authenticated via _session ID_ or _auth token_.
+     * For example, inactive users can not authenticate.
      *
-     * @return \Charcoal\User\UserInterface|null Returns the authenticated user object
-     *     or NULL if not authenticated.
+     * @param  AuthenticatableInterface $user The user to validate.
+     * @return boolean
      */
-    public function authenticate()
+    public function validateAuthentication(AuthenticatableInterface $user)
     {
-        $u = $this->authenticateBySession();
-        if ($u) {
-            return $u;
+        if ($user instanceof ContentInterface) {
+            if (!$user['active']) {
+                return false;
+            }
         }
 
-        $u = $this->authenticateByToken();
-        if ($u) {
-            return $u;
-        }
-
-        return null;
+        return parent::validateAuthentication($user);
     }
 
     /**
-     * Attempt to authenticate a user using the given credentials.
+     * Updates the user's timestamp for their last log in.
      *
-     * @param string $email    Email, part of necessary credentials.
-     * @param string $password Password, part of necessary credentials.
-     * @throws InvalidArgumentException If email or password are invalid or empty.
-     * @return \Charcoal\User\UserInterface|null Returns the authenticated user object
-     *     or NULL if not authenticated.
+     * @param  AuthenticatableInterface $user   The user to update.
+     * @param  boolean                  $update Whether to persist changes to storage.
+     * @throws InvalidArgumentException If the user has no ID.
+     * @return boolean Returns TRUE if the password was changed, or FALSE otherwise.
      */
-    public function authenticateByPassword($email, $password)
+    public function touchUserLogin(AuthenticatableInterface $user, $update = true)
     {
-        if (!is_string($email) || !is_string($password)) {
+        if (!($user instanceof UserInterface)) {
+            return false;
+        }
+
+        if (!$user->getAuthId()) {
             throw new InvalidArgumentException(
-                'Email and password must be strings'
+                'Can not touch user: user has no ID'
             );
         }
 
-        if ($email == '' || $password == '') {
-            throw new InvalidArgumentException(
-                'Email and password can not be empty.'
-            );
+        $userId = $user->getAuthId();
+
+        if ($update && $userId) {
+            $userClass = get_class($user);
+
+            $this->logger->info(sprintf(
+                'Updating last login fields for user "%s" (%s)',
+                $userId,
+                $userClass
+            ));
         }
 
-        $user = $this->userFactory()->create($this->userType());
-        if (!$user->source()->tableExists()) {
-            $user->source()->createTable();
-        }
+        $user['lastLoginDate'] = 'now';
+        $user['lastLoginIp']   = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
 
-        // Load the user by email
-        $key = 'email';
-        $user->loadFrom($key, $email);
+        if ($update && $userId) {
+            $result = $user->update([
+                'last_login_ip',
+                'last_login_date',
+            ]);
 
-        if ($user[$key] !== $email) {
-            return null;
-        }
-
-        if ($user['active'] === false) {
-            return null;
-        }
-
-        // Validate password
-        if (password_verify($password, $user['password'])) {
-            if (password_needs_rehash($user['password'], PASSWORD_DEFAULT)) {
+            if ($result) {
                 $this->logger->notice(sprintf(
-                    'Rehashing password for user "%s" (%s)',
-                    $user['email'],
-                    $this->userType()
+                    'Last login fields were updated for user "%s" (%s)',
+                    $userId,
+                    $userClass
                 ));
-                $hash = password_hash($password, PASSWORD_DEFAULT);
-                $user->setPassword($hash);
-                $user->update(['password']);
+            } else {
+                $this->logger->warning(sprintf(
+                    'Last login fields failed to be updated for user "%s" (%s)',
+                    $userId,
+                    $userClass
+                ));
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Updates the user's password hash.
+     *
+     * @param  AuthenticatableInterface $user     The user to update.
+     * @param  string                   $password The plain-text password to hash.
+     * @param  boolean                  $update   Whether to persist changes to storage.
+     * @throws InvalidArgumentException If the password is invalid.
+     * @return boolean Returns TRUE if the password was changed, or FALSE otherwise.
+     */
+    public function changeUserPassword(AuthenticatableInterface $user, $password, $update = true)
+    {
+        if (!($user instanceof UserInterface)) {
+            return parent::changeUserPassword($user, $password);
+        }
+
+        if (!$this->validateAuthPassword($password)) {
+            throw new InvalidArgumentException(
+                'Can not change password: password is invalid'
+            );
+        }
+
+        $userId = $user->getAuthId();
+
+        if ($update && $userId) {
+            $userClass = get_class($user);
+
+            $this->logger->info(sprintf(
+                '[Authenticator] Changing password for user "%s" (%s)',
+                $userId,
+                $userClass
+            ));
+        }
+
+        $passwordKey = $user->getAuthPasswordKey();
+
+        $user[$passwordKey]       = password_hash($password, PASSWORD_DEFAULT);
+        $user['lastPasswordDate'] = 'now';
+        $user['lastPasswordIp']   = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
+
+        if ($update && $userId) {
+            $result = $user->update([
+                $passwordKey,
+                'last_password_date',
+                'last_password_ip',
+            ]);
+
+            if ($result) {
+                $this->logger->notice(sprintf(
+                    '[Authenticator] Password was changed for user "%s" (%s)',
+                    $userId,
+                    $userClass
+                ));
+            } else {
+                $this->logger->warning(sprintf(
+                    '[Authenticator] Password failed to be changed for user "%s" (%s)',
+                    $userId,
+                    $userClass
+                ));
             }
 
-            $user->login();
-
-            return $user;
-        } else {
-            $this->logger->warning(sprintf(
-                'Invalid login attempt for user "%s": invalid password.',
-                $user['email']
-            ));
-
-            return null;
-        }
-    }
-
-    /**
-     * Retrieve the user object type.
-     *
-     * @return string
-     */
-    protected function userType()
-    {
-        return $this->userType;
-    }
-
-
-    /**
-     * Retrieve the user model factory.
-     *
-     * @throws RuntimeException If the model factory was not previously set.
-     * @return FactoryInterface
-     */
-    protected function userFactory()
-    {
-        return $this->userFactory;
-    }
-
-    /**
-     * Retrieve the auth-token object type.
-     *
-     * @return string
-     */
-    protected function tokenType()
-    {
-        return $this->tokenType;
-    }
-
-    /**
-     * Retrieve the auth-token model factory.
-     *
-     * @throws RuntimeException If the token factory was not previously set.
-     * @return FactoryInterface
-     */
-    protected function tokenFactory()
-    {
-        return $this->tokenFactory;
-    }
-
-    /**
-     * Set the user object type (model).
-     *
-     * @param string $type The user object type.
-     * @throws InvalidArgumentException If the user object type parameter is not a string.
-     * @return void
-     */
-    private function setUserType($type)
-    {
-        if (!is_string($type)) {
-            throw new InvalidArgumentException(
-                'User object type must be a string'
-            );
+            return $result;
         }
 
-        $this->userType = $type;
-    }
-
-    /**
-     * Set a user model factory.
-     *
-     * @param FactoryInterface $factory The factory used to create new user instances.
-     * @return void
-     */
-    private function setUserFactory(FactoryInterface $factory)
-    {
-        $this->userFactory = $factory;
-    }
-
-    /**
-     * Set the authorization token type (model).
-     *
-     * @param string $type The auth-token object type.
-     * @throws InvalidArgumentException If the token object type parameter is not a string.
-     * @return void
-     */
-    private function setTokenType($type)
-    {
-        if (!is_string($type)) {
-            throw new InvalidArgumentException(
-                'Token object type must be a string'
-            );
-        }
-
-        $this->tokenType = $type;
-    }
-
-    /**
-     * Set a model factory for token-based authentication.
-     *
-     * @param FactoryInterface $factory The factory used to create new auth-token instances.
-     * @return void
-     */
-    private function setTokenFactory(FactoryInterface $factory)
-    {
-        $this->tokenFactory = $factory;
-    }
-
-    /**
-     * Attempt to authenticate a user using their session ID.
-     *
-     * @return \Charcoal\User\UserInterface|null Returns the authenticated user object
-     *     or NULL if not authenticated.
-     */
-    private function authenticateBySession()
-    {
-        $u = $this->userFactory()->create($this->userType());
-        // Call static method on user
-        $u = call_user_func([get_class($u), 'getAuthenticated'], $this->userFactory());
-
-        if ($u && $u->id()) {
-            $u->saveToSession();
-
-            return $u;
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Attempt to authenticate a user using their auth token.
-     *
-     * @return \Charcoal\User\UserInterface|null Returns the authenticated user object
-     *     or NULL if not authenticated.
-     */
-    private function authenticateByToken()
-    {
-        $tokenType = $this->tokenType();
-        $authToken = $this->tokenFactory()->create($tokenType);
-
-        if ($authToken->metadata()['enabled'] !== true) {
-            return null;
-        }
-
-        $tokenData = $authToken->getTokenDataFromCookie();
-        if (!$tokenData) {
-            return null;
-        }
-        $userId = $authToken->getUserIdFromToken($tokenData['ident'], $tokenData['token']);
-        if (!$userId) {
-            return null;
-        }
-
-        $u = $this->userFactory()->create($this->userType());
-        $u->load($userId);
-
-        if ($u->id()) {
-            $u->saveToSession();
-            return $u;
-        } else {
-            return null;
-        }
+        return true;
     }
 }

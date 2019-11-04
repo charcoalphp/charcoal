@@ -82,7 +82,6 @@ class AbstractUserTest extends AbstractTestCase
     {
         $obj = $this->obj;
         $this->assertTrue($obj['active']);
-        $this->assertEquals('', $obj['loginToken']);
     }
 
     /**
@@ -99,13 +98,11 @@ class AbstractUserTest extends AbstractTestCase
             'id'         => 'foo',
             'email'      => 'test@example.com',
             'roles'      => [ 'foo', 'bar' ],
-            'loginToken' => 'token',
             'active'     => false
         ]);
         $this->assertSame($ret, $obj);
         $this->assertEquals('foo', $obj['id']);
         $this->assertEquals('test@example.com', $obj['email']);
-        $this->assertEquals('token', $obj['loginToken']);
         $this->assertFalse($obj['active']);
     }
 
@@ -252,42 +249,6 @@ class AbstractUserTest extends AbstractTestCase
 
         $this->expectException(InvalidArgumentException::class);
         $this->obj->setLastPasswordIp(false);
-    }
-
-    /**
-     * @return void
-     */
-    public function testSetLoginToken()
-    {
-        $ret = $this->obj->setLoginToken('abc');
-        $this->assertSame($ret, $this->obj);
-        $this->assertEquals('abc', $this->obj['loginToken']);
-
-        $this->obj['login_token'] = 'foo';
-        $this->assertEquals('foo', $this->obj['loginToken']);
-
-        $this->obj->set('login_token', 'bar');
-        $this->assertEquals('bar', $this->obj['login_token']);
-
-        $this->obj['loginToken'] = null;
-        $this->assertNull($this->obj['loginToken']);
-
-        $this->expectException(InvalidArgumentException::class);
-        $this->obj->setLoginToken([]);
-    }
-
-    /**
-     * @return void
-     */
-    public function testResetPassword()
-    {
-        $ret = $this->obj->resetPassword('foo');
-        $this->assertSame($ret, $this->obj);
-
-        $this->obj['id'] = 'bar';
-
-        $this->expectException(InvalidArgumentException::class);
-        $this->obj->resetPassword(false);
     }
 
     /**

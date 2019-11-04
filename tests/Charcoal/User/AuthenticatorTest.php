@@ -42,15 +42,40 @@ class AuthenticatorTest extends AbstractTestCase
             session_unset();
         }
 
+        $this->obj = $this->createAuthenticator();
+    }
+
+    /**
+     * Create a new Authenticator instance.
+     *
+     * @return Authenticator
+     */
+    public function createAuthenticator()
+    {
         $container = $this->container();
 
-        $this->obj = new Authenticator([
+        $authenticator = new Authenticator([
             'logger'        => $container['logger'],
             'user_type'     => User::class,
             'user_factory'  => $container['model/factory'],
             'token_type'    => AuthToken::class,
-            'token_factory' => $container['model/factory']
+            'token_factory' => $container['model/factory'],
         ]);
+
+        return $authenticator;
+    }
+
+    /**
+     * Create a new User instance from a given Authenticator.
+     *
+     * @param  Authenticator $authenticator The authenticator service.
+     * @return User
+     */
+    public function createUser(Authenticator $authenticator)
+    {
+        $factoryMethod = new ReflectionMethod(Authenticator, 'userFactory');
+
+        return $factoryMethod->invoke($authenticator)->create(User::class);
     }
 
     /**
@@ -104,6 +129,37 @@ class AuthenticatorTest extends AbstractTestCase
     {
         $this->assertNull($this->obj->authenticateByPassword('test', 'password'));
     }
+
+    /**
+     * @return void
+     */
+    /*
+    public function testUpdateSession()
+    {
+        $obj = $this->obj;
+
+        $sessionKey = $obj::sessionKey();
+        $this->obj['id'] = 'foo';
+        $this->obj->saveToSession();
+        $this->assertEquals($_SESSION[$sessionKey], $this->obj['id']);
+    }
+    */
+
+    /**
+     * @return void
+     */
+    /*
+    public function testResetPassword()
+    {
+        $ret = $this->obj->resetPassword('foo');
+        $this->assertSame($ret, $this->obj);
+
+        $this->obj['id'] = 'bar';
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->obj->resetPassword(false);
+    }
+    */
 
     /**
      * Set up the service container.
