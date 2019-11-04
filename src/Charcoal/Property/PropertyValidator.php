@@ -4,9 +4,10 @@ namespace Charcoal\Property;
 
 // From 'charcoal-core'
 use Charcoal\Validator\AbstractValidator;
+use Charcoal\Validator\ValidatableInterface;
 
 /**
- *
+ * Property Validator
  */
 class PropertyValidator extends AbstractValidator
 {
@@ -15,17 +16,21 @@ class PropertyValidator extends AbstractValidator
      */
     public function validate()
     {
-        // The model, in this case, should be a PropertyInterface
-        $model = $this->model;
+        $result = true;
 
-        $ret = true;
-        $validationMethods = $model->validationMethods();
-        foreach ($validationMethods as $m) {
-            $fn = [$model, 'validate_'.$m];
-            if (is_callable($fn)) {
-                $ret = $ret && call_user_func($fn);
+        // The model, in this case, should be a PropertyInterface
+        $property = $this->model;
+
+        $methods = $property->validationMethods();
+        foreach ($methods as $method) {
+            $method = $this->camelize($method);
+
+            $func = [ $property, 'validate'.ucfirst($method) ];
+            if (is_callable($func)) {
+                $result = $result && call_user_func($func);
             }
         }
-        return $ret;
+
+        return $result;
     }
 }

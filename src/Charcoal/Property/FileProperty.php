@@ -369,7 +369,10 @@ class FileProperty extends AbstractProperty
     {
         $parentMethods = parent::validationMethods();
 
-        return array_merge($parentMethods, [ 'accepted_mimetypes', 'max_filesize' ]);
+        return array_merge($parentMethods, [
+            'acceptedMimetypes',
+            'maxFilesize',
+        ]);
     }
 
     /**

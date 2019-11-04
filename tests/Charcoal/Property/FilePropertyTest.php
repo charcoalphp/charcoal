@@ -135,8 +135,8 @@ class FilePropertyTest extends AbstractTestCase
     {
         $obj = $this->obj;
         $ret = $obj->validationMethods();
-        $this->assertContains('accepted_mimetypes', $ret);
-        $this->assertContains('max_filesize', $ret);
+        $this->assertContains('acceptedMimetypes', $ret);
+        $this->assertContains('maxFilesize', $ret);
     }
 
     /**

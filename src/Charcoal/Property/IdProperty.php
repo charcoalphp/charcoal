@@ -174,6 +174,20 @@ class IdProperty extends AbstractProperty
     }
 
     /**
+     * @return boolean
+     */
+    public function validateRequired()
+    {
+        $mode = $this->getMode();
+
+        if ($mode !== self::MODE_AUTO_INCREMENT) {
+            return parent::validateRequired();
+        }
+
+        return true;
+    }
+
+    /**
      * Auto-generate a value upon first save.
      *
      * - self::MODE_AUTOINCREMENT

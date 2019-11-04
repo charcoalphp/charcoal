@@ -291,9 +291,10 @@ abstract class AbstractProperty extends AbstractEntity implements
     /**
      * Set the property's value.
      *
+     * @deprecated
+     *
      * @param  mixed $val The property (raw) value.
      * @return self
-     * @deprecated
      */
     final public function setVal($val)
     {
@@ -303,10 +304,25 @@ abstract class AbstractProperty extends AbstractEntity implements
     }
 
     /**
+     * Clear the property's value.
+     *
+     * @deprecated
+     *
+     * @return self
+     */
+    final public function clearVal()
+    {
+        $this->val = null;
+
+        return $this;
+    }
+
+    /**
      * Retrieve the property's value.
      *
-     * @return mixed
      * @deprecated
+     *
+     * @return mixed
      */
     final public function val()
     {
@@ -840,7 +856,7 @@ abstract class AbstractProperty extends AbstractEntity implements
         return [
             'required',
             'unique',
-            'allowNull'
+            'allowNull',
         ];
     }
 
@@ -884,8 +900,6 @@ abstract class AbstractProperty extends AbstractEntity implements
 
         return true;
     }
-
-
 
     /**
      * @param mixed $val The value, at time of saving.
