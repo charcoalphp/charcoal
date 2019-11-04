@@ -260,11 +260,17 @@ abstract class AbstractAuthToken extends AbstractModel implements
     {
         $userId = $this['userId'];
         if (isset($userId)) {
+            $source = $this->source();
+
+            if (!$source->tableExists()) {
+                return;
+            }
+
             $sql = sprintf(
                 'DELETE FROM `%s` WHERE user_id = :userId',
-                $this->source()->table()
+                $source->table()
             );
-            $this->source()->dbQuery($sql, [
+            $source->dbQuery($sql, [
                 'userId' => $userId,
             ]);
         }
