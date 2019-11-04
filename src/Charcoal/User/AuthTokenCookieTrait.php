@@ -13,7 +13,7 @@ trait AuthTokenCookieTrait
     public function sendCookie()
     {
         if (!$this->isEnabled()) {
-            return $this;
+            return false;
         }
 
         $metadata = $this->metadata();
@@ -32,7 +32,7 @@ trait AuthTokenCookieTrait
     public function deleteCookie()
     {
         if (!$this->isEnabled()) {
-            return $this;
+            return false;
         }
 
         $metadata = $this->metadata();
