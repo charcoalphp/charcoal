@@ -214,8 +214,8 @@ abstract class AbstractAuthToken extends AbstractModel implements
         if (!$this->source()->tableExists()) {
             $this->logger->warning(sprintf(
                 '[AuthToken] Invalid login attempt from token "%s": The table "%s" does not exist.',
-                 $ident,
-                 $this->source()->table()
+                $ident,
+                $this->source()->table()
             ));
             return null;
         }

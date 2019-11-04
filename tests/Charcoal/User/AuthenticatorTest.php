@@ -68,7 +68,7 @@ class AuthenticatorTest extends AbstractTestCase
     /**
      * Create a new User instance from a given Authenticator.
      *
-     * @param  Authenticator $authenticator
+     * @param  Authenticator $authenticator The authenticator service.
      * @return User
      */
     public function createUser(Authenticator $authenticator)

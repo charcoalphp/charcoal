@@ -56,9 +56,9 @@ class Authenticator extends AbstractAuthenticator
     /**
      * Updates the user's timestamp for their last log in.
      *
-     * @param  AuthenticatableInterface $user     The user to update.
-     * @param  string                   $password The plain-text password to hash.
-     * @param  boolean                  $update   Whether to persist changes to storage.
+     * @param  AuthenticatableInterface $user   The user to update.
+     * @param  boolean                  $update Whether to persist changes to storage.
+     * @throws InvalidArgumentException If the user has no ID.
      * @return boolean Returns TRUE if the password was changed, or FALSE otherwise.
      */
     protected function touchUserLogin(AuthenticatableInterface $user, $update = true)
