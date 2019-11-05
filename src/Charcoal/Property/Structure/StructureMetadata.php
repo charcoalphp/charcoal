@@ -74,6 +74,7 @@ class StructureMetadata extends AbstractMetadata
     public function setDefaultData(array $data)
     {
         foreach ($data as $key => $val) {
+            $key = $this->camelize($key);
             $this->defaultData[$key] = $val;
         }
 
@@ -89,6 +90,7 @@ class StructureMetadata extends AbstractMetadata
     public function setProperties(array $properties)
     {
         foreach ($properties as $propertyIdent => $propertyMetadata) {
+            $propertyIdent = $this->camelize($propertyIdent);
             if (isset($this->properties[$propertyIdent])) {
                 $this->properties[$propertyIdent] = array_replace_recursive(
                     $this->properties[$propertyIdent],
@@ -117,6 +119,7 @@ class StructureMetadata extends AbstractMetadata
             );
         }
 
+        $propertyIdent = $this->camelize($propertyIdent);
         return isset($this->properties[$propertyIdent]);
     }
 
