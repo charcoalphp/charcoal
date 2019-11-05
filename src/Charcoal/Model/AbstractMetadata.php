@@ -98,6 +98,7 @@ abstract class AbstractMetadata extends AbstractConfig implements
      */
     public function property($propertyIdent = null)
     {
+        $propertyIdent = $this->camelize($propertyIdent);
         if (isset($this->properties[$propertyIdent])) {
             return $this->properties[$propertyIdent];
         } else {
