@@ -586,7 +586,7 @@ class Attachment extends Content implements AttachableInterface
     {
         $this->description = $this->translator()->translation($description);
 
-        if ($this->isPresentable()) {
+        if ($this->isPresentable() && $this->description) {
             foreach ($this->description->data() as $lang => $trans) {
                 $this->description[$lang] = $this->resolveUrls($trans);
             }
