@@ -445,13 +445,14 @@ abstract class AbstractAuthenticator implements
     /**
      * Attempt to authenticate a user using the given credentials.
      *
-     * @param  string $identifier The login ID, part of necessary credentials.
-     * @param  string $password   The password, part of necessary credentials.
+     * @param  string  $identifier The login ID, part of necessary credentials.
+     * @param  string  $password   The password, part of necessary credentials.
+     * @param  boolean $remember   Whether to "remember" the user or not.
      * @throws InvalidArgumentException If the credentials are invalid or missing.
      * @return AuthenticatableInterface|null Returns the authenticated user object
      *     or NULL if not authenticated.
      */
-    public function authenticateByPassword($identifier, $password)
+    public function authenticateByPassword($identifier, $password, $remember = false)
     {
         if (!$this->validateLogin($identifier, $password)) {
             throw new InvalidArgumentException(
@@ -490,7 +491,7 @@ abstract class AbstractAuthenticator implements
                 $this->rehashUserPassword($user, $password);
             }
 
-            $this->login($user);
+            $this->login($user, $remember);
             $this->authenticatedMethod = static::AUTH_BY_PASSWORD;
 
             return $user;
