@@ -12,13 +12,13 @@
         "export": {
             "default": {
                 "properties": [
-                    "send_ts",
+                    "sendTs",
                     "from",
                     "to",
                     "campaign",
                     "subject",
-                    "send_error",
-                    "message_id",
+                    "sendError",
+                    "messageId",
                     "ip"
                 ],
                 "orders": [
