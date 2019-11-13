@@ -139,6 +139,13 @@ class ModelStructureProperty extends StructureProperty
     private $structurePrototype;
 
     /**
+     * The object type of the "structure" collection to use.
+     *
+     * @var string
+     */
+    private $structureModelType;
+
+    /**
      * The class name of the "structure" collection to use.
      *
      * Must be a fully-qualified PHP namespace and an implementation of {@see ArrayAccess}.
@@ -227,6 +234,16 @@ class ModelStructureProperty extends StructureProperty
     }
 
     /**
+     * Determine if the property has any structure metadata interfaces.
+     *
+     * @return boolean
+     */
+    public function hasStructureInterfaces()
+    {
+        return !empty($this->structureInterfaces);
+    }
+
+    /**
      * Set the given metadata interfaces for the property to use as a structure.
      *
      * @param  array $interfaces One or more metadata interfaces to use.
@@ -294,7 +311,12 @@ class ModelStructureProperty extends StructureProperty
         if ($this->isStructureFinalized === false) {
             $this->isStructureFinalized = true;
 
-            $structureInterfaces = $this->getStructureInterfaces();
+            if ($this->hasStructureInterfaces()) {
+                $structureInterfaces = $this->getStructureInterfaces();
+            } elseif ($this->hasCustomStructureModelClass()) {
+                $structureInterfaces = (array)$this->getStructureModelType();
+            }
+
             if (!empty($structureInterfaces)) {
                 $metadataLoader = $this->metadataLoader();
                 $metadataClass  = $this->getStructureMetadataClass();
@@ -343,23 +365,65 @@ class ModelStructureProperty extends StructureProperty
     }
 
     /**
+     * Retrieve the default data-model structure class name.
+     *
+     * @return string
+     */
+    public static function getDefaultStructureModelClass()
+    {
+        return StructureModel::class;
+    }
+
+    /**
      * Set the class name of the data-model structure.
      *
+     * A model type (kebab-case) is converted to a FQN.
+     *
      * @param  string $className The class name of the structure.
-     * @throws InvalidArgumentException If the class name is not a string.
+     * @throws InvalidArgumentException If the class name is invalid.
      * @return self
      */
     protected function setStructureModelClass($className)
     {
+        if ($className === null) {
+            $this->structureModelClass = static::getDefaultStructureModelClass();
+
+            return $this;
+        }
+
         if (!is_string($className)) {
             throw new InvalidArgumentException(
                 'Structure class name must be a string.'
             );
         }
 
+        if (strpos($className, '/') !== false) {
+            try {
+                $this->structureModelType = $className;
+                $prototype = $this->structureModelFactory()->get($className);
+                $className = get_class($prototype);
+            } catch (Exception $e) {
+                throw new InvalidArgumentException(sprintf(
+                    'Invalid structure class name: %s',
+                    $className
+                ), 0, $e);
+            }
+        }
+
         $this->structureModelClass = $className;
+        $this->structureModelType  = $this->parseStructureInterface($className);
 
         return $this;
+    }
+
+    /**
+     * Determine if the property is using a custom data-model.
+     *
+     * @return boolean
+     */
+    public function hasCustomStructureModelClass()
+    {
+        return $this->getStructureModelClass() !== static::getDefaultStructureModelClass();
     }
 
     /**
@@ -370,6 +434,20 @@ class ModelStructureProperty extends StructureProperty
     public function getStructureModelClass()
     {
         return $this->structureModelClass;
+    }
+
+    /**
+     * Retrieve the class name of the data-model structure.
+     *
+     * @return string
+     */
+    public function getStructureModelType()
+    {
+        if ($this->structureModelType === null) {
+            $this->structureModelType = $this->parseStructureInterface($this->getStructureModelClass());
+        }
+
+        return $this->structureModelType;
     }
 
     /**
