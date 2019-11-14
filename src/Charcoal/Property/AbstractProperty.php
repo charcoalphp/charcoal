@@ -863,7 +863,8 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     public function validateRequired()
     {
-        if ($this['required'] && !$this->val()) {
+        $val = $this->val();
+        if ($this['required'] && empty($val) && !is_numeric($val)) {
             $this->validator()->error('Value is required.', 'required');
 
             return false;
@@ -890,7 +891,8 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     public function validateAllowNull()
     {
-        if (!$this['allowNull'] && $this->val() === null) {
+        $val = $this->val();
+        if (!$this['allowNull'] && $val === null) {
             $this->validator()->error('Value can not be null.', 'allowNull');
 
             return false;

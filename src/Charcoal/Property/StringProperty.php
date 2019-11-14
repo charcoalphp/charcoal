@@ -440,12 +440,13 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
     public function validateAllowEmpty()
     {
         $val = $this->val();
+        if (!$this['allowEmpty'] && empty($val) && !is_numeric($val)) {
+            $this->validator()->error('Value can not be empty.', 'allowEmpty');
 
-        if (($val === null || $val === '') && !$this['allowEmpty']) {
             return false;
-        } else {
-            return true;
         }
+
+        return true;
     }
 
     /**
