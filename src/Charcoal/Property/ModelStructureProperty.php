@@ -581,6 +581,36 @@ class ModelStructureProperty extends StructureProperty
     }
 
     /**
+     * @param  mixed $val     The value to to convert for display.
+     * @param  array $options Optional display options.
+     * @return string
+     */
+    public function displayVal($val, array $options = [])
+    {
+        if ($val === null || $val === '') {
+            return '';
+        }
+
+        /** Parse multilingual values */
+        if ($this['l10n']) {
+            $propertyValue = $this->l10nVal($val, $options);
+            if ($propertyValue === null) {
+                return '';
+            }
+        } elseif ($val instanceof Translation) {
+            $propertyValue = (string)$val;
+        } else {
+            $propertyValue = $val;
+        }
+
+        if (!is_scalar($propertyValue)) {
+            $propertyValue = json_encode($propertyValue, JSON_PRETTY_PRINT);
+        }
+
+        return (string)$propertyValue;
+    }
+
+    /**
      * Inject dependencies from a DI Container.
      *
      * @param  Container $container A dependencies container instance.
