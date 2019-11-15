@@ -169,29 +169,12 @@ class DateTimeProperty extends AbstractProperty
      */
     public function setMin($min)
     {
-        if ($min === null) {
-            $this->min = null;
+        try {
+            $this->min = $this->dateTimeVal($min);
             return $this;
+        } catch (Exception $e) {
+            throw new InvalidArgumentException('Invalid minimum date/time', 0, $e);
         }
-
-        if (is_string($min)) {
-            try {
-                $min = new DateTime($min);
-            } catch (Exception $e) {
-                throw new InvalidArgumentException(
-                    'Can not set min: '.$e->getMessage()
-                );
-            }
-        }
-
-        if (!($min instanceof DateTimeInterface)) {
-            throw new InvalidArgumentException(
-                'Invalid min'
-            );
-        }
-
-        $this->min = $min;
-        return $this;
     }
 
     /**
@@ -209,29 +192,12 @@ class DateTimeProperty extends AbstractProperty
      */
     public function setMax($max)
     {
-        if ($max === null) {
-            $this->max = null;
+        try {
+            $this->max = $this->dateTimeVal($max);
             return $this;
+        } catch (Exception $e) {
+            throw new InvalidArgumentException('Invalid maximum date/time', 0, $e);
         }
-
-        if (is_string($max)) {
-            try {
-                $max = new DateTime($max);
-            } catch (Exception $e) {
-                throw new InvalidArgumentException(
-                    'Can not set min: '.$e->getMessage()
-                );
-            }
-        }
-
-        if (!($max instanceof DateTimeInterface)) {
-            throw new InvalidArgumentException(
-                'Invalid max'
-            );
-        }
-
-        $this->max = $max;
-        return $this;
     }
 
     /**
@@ -357,7 +323,7 @@ class DateTimeProperty extends AbstractProperty
 
         if (!($val instanceof DateTimeInterface)) {
             throw new InvalidArgumentException(
-                'Val must be a valid date'
+                'Value must be a valid date/time'
             );
         }
 
