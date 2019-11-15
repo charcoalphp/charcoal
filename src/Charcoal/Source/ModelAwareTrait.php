@@ -41,7 +41,7 @@ trait ModelAwareTrait
     {
         if ($this->model === null) {
             throw new RuntimeException(
-                'Model is missing for source.'
+                'Model is missing for source'
             );
         }
         return $this->model;

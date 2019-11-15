@@ -69,9 +69,10 @@ class DatabaseSource extends AbstractSource implements
     public function db()
     {
         if ($this->pdo === null) {
-            throw new RuntimeException(
-                'Database Connector was not set.'
-            );
+            throw new RuntimeException(sprintf(
+                '[%s] Database connector was not set',
+                $this->getModelClassForException()
+            ));
         }
         return $this->pdo;
     }
@@ -87,9 +88,9 @@ class DatabaseSource extends AbstractSource implements
     {
         if (!is_string($table)) {
             throw new InvalidArgumentException(sprintf(
-                'DatabaseSource::setTable() expects a string as table. (%s given). [%s]',
-                gettype($table),
-                get_class($this->model())
+                '[%s] Database table name expects a string, received %s',
+                $this->getModelClassForException(),
+                gettype($table)
             ));
         }
 
@@ -100,7 +101,8 @@ class DatabaseSource extends AbstractSource implements
          */
         if (!preg_match('/[A-Za-z0-9_]/', $table)) {
             throw new InvalidArgumentException(sprintf(
-                'Table name "%s" is invalid: must be alphanumeric / underscore.',
+                '[%s] Database table name "%s" is invalid: must be alphanumeric / underscore',
+                $this->getModelClassForException(),
                 $table
             ));
         }
@@ -128,9 +130,10 @@ class DatabaseSource extends AbstractSource implements
     public function table()
     {
         if ($this->table === null) {
-            throw new RuntimeException(
-                'Table was not set.'
-            );
+            throw new RuntimeException(sprintf(
+                '[%s] Database table name was not set',
+                $this->getModelClassForException()
+            ));
         }
         return $this->table;
     }
@@ -481,7 +484,10 @@ class DatabaseSource extends AbstractSource implements
 
         $sth = $this->dbQuery($query, $binds);
         if ($sth === false) {
-            throw new PDOException('Could not load item.');
+            throw new PDOException(sprintf(
+                '[%s] Could not load item',
+                $this->getModelClassForException()
+            ));
         }
 
         $data = $sth->fetch(PDO::FETCH_ASSOC);
@@ -595,7 +601,10 @@ class DatabaseSource extends AbstractSource implements
         $result = $this->dbQuery($query, $binds, $types);
 
         if ($result === false) {
-            throw new PDOException('Could not save item.');
+            throw new PDOException(sprintf(
+                '[%s] Could not save item',
+                $this->getModelClassForException()
+            ));
         } else {
             if ($model->id()) {
                 return $model->id();
@@ -692,9 +701,10 @@ class DatabaseSource extends AbstractSource implements
         $model = $this->model();
 
         if (!$model->id()) {
-            throw new UnexpectedValueException(
-                sprintf('Can not delete "%s" item. No ID.', get_class($model))
-            );
+            throw new UnexpectedValueException(sprintf(
+                '[%s] Can not delete item; no ID',
+                $this->getModelClassForException()
+            ));
         }
 
         $key   = $model->key();
@@ -731,6 +741,7 @@ class DatabaseSource extends AbstractSource implements
      * @param  string $query The SQL query to executed.
      * @param  array  $binds Optional. Query parameter binds.
      * @param  array  $types Optional. Types of parameter bindings.
+     * @throws PDOException If the SQL query fails.
      * @return \PDOStatement|false The PDOStatement, otherwise FALSE.
      */
     public function dbQuery($query, array $binds = [], array $types = [])
@@ -742,7 +753,15 @@ class DatabaseSource extends AbstractSource implements
             return false;
         }
 
-        $result = $sth->execute();
+        try {
+            $result = $sth->execute();
+        } catch (PDOException $e) {
+            throw new PDOException(sprintf(
+                '[%s] Failed SQL query: '.$e->getMessage(),
+                $this->getModelClassForException()
+            ), 0, $e);
+        }
+
         if ($result === false) {
             return false;
         }
@@ -792,9 +811,10 @@ class DatabaseSource extends AbstractSource implements
     public function sqlLoad()
     {
         if (!$this->hasTable()) {
-            throw new UnexpectedValueException(
-                'Can not get SQL SELECT clause. No table defined.'
-            );
+            throw new UnexpectedValueException(sprintf(
+                '[%s] Can not get SQL SELECT clause; no databse table name defined',
+                $this->getModelClassForException()
+            ));
         }
 
         $selects = $this->sqlSelect();
@@ -816,9 +836,10 @@ class DatabaseSource extends AbstractSource implements
     public function sqlLoadCount()
     {
         if (!$this->hasTable()) {
-            throw new UnexpectedValueException(
-                'Can not get SQL count. No table defined.'
-            );
+            throw new UnexpectedValueException(sprintf(
+                '[%s] Can not get SQL count; no databse table name defined',
+                $this->getModelClassForException()
+            ));
         }
 
         $tables  = $this->sqlFrom();
@@ -847,9 +868,10 @@ class DatabaseSource extends AbstractSource implements
         }
 
         if (empty($parts)) {
-            throw new UnexpectedValueException(
-                'Can not get SQL SELECT clause. No valid properties.'
-            );
+            throw new UnexpectedValueException(sprintf(
+                '[%s] Can not get SQL SELECT clause; no valid properties',
+                $this->getModelClassForException()
+            ));
         }
 
         $clause = implode(', ', $parts);
@@ -866,9 +888,10 @@ class DatabaseSource extends AbstractSource implements
     public function sqlFrom()
     {
         if (!$this->hasTable()) {
-            throw new UnexpectedValueException(
-                'Can not get SQL FROM clause. No table defined.'
-            );
+            throw new UnexpectedValueException(sprintf(
+                '[%s] Can not get SQL FROM clause; no database table name defined',
+                $this->getModelClassForException()
+            ));
         }
 
         $table = $this->table();

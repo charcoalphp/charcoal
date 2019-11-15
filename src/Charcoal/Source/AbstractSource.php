@@ -204,15 +204,17 @@ abstract class AbstractSource implements
         }
 
         if (!is_string($property)) {
-            throw new InvalidArgumentException(
-                'Property must be a string.'
-            );
+            throw new InvalidArgumentException(sprintf(
+                '[%s] property must be a string',
+                $this->getModelClassForException()
+            ));
         }
 
         if ($property === '') {
-            throw new InvalidArgumentException(
-                'Property can not be empty.'
-            );
+            throw new InvalidArgumentException(sprintf(
+                '[%s] property can not be empty',
+                $this->getModelClassForException()
+            ));
         }
 
         return $property;
@@ -426,9 +428,10 @@ abstract class AbstractSource implements
             $pager = $this->createPagination();
             $pager->setData($param);
         } else {
-            throw new InvalidArgumentException(
-                'Can not set pagination, invalid argument.'
-            );
+            throw new InvalidArgumentException(sprintf(
+                '[%s] Can not set pagination, invalid argument',
+                $this->getModelClassForException()
+            ));
         }
 
         $this->pagination = $pager;
@@ -613,5 +616,17 @@ abstract class AbstractSource implements
     protected function camelize($str)
     {
         return lcfirst(implode('', array_map('ucfirst', explode('_', $str))));
+    }
+
+    /**
+     * @return string
+     */
+    protected function getModelClassForException()
+    {
+        if ($this->hasModel()) {
+            return get_class($this->model());
+        }
+
+        return 'Unknown Model';
     }
 }
