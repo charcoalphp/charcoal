@@ -63,6 +63,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     const DEFAULT_REQUIRED = false;
     const DEFAULT_ALLOW_NULL = true;
     const DEFAULT_STORABLE = true;
+    const DEFAULT_VALIDATABLE = true;
     const DEFAULT_ACTIVE = true;
 
     /**
@@ -126,6 +127,12 @@ abstract class AbstractProperty extends AbstractEntity implements
      * @var boolean
      */
     private $storable = self::DEFAULT_STORABLE;
+
+    /**
+     * Whether to validate the property.
+     * @var boolean
+     */
+    private $validatable = self::DEFAULT_VALIDATABLE;
 
     /**
      * Inactive properties should be hidden everywhere / unused
@@ -780,6 +787,25 @@ abstract class AbstractProperty extends AbstractEntity implements
     public function active()
     {
         return $this->getActive();
+    }
+
+    /**
+     * @param  boolean $validatable The validatable flag.
+     * @return self
+     */
+    public function setValidatable($validatable)
+    {
+        $this->validatable = !!$validatable;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getValidatable()
+    {
+        return $this->validatable;
     }
 
     /**
