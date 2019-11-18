@@ -1137,6 +1137,10 @@ class FileProperty extends AbstractProperty
             );
         }
 
+        if (!isset($info['extension'])) {
+            $info['extension'] = '';
+        }
+
         $defaults = [
             '{{property}}'  => $this->ident(),
             '{{label}}'     => $this['label'],
