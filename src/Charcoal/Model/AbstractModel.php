@@ -313,7 +313,10 @@ abstract class AbstractModel extends AbstractEntity implements
 
         foreach ($properties as $propertyIdent) {
             $p = $this->p($propertyIdent);
-            $v = $p->save($this->propertyValue($propertyIdent));
+
+            $v = $p->getStorable()
+                ? $p->save($this->propertyValue($propertyIdent))
+                : null;
 
             if ($v === null) {
                 continue;
