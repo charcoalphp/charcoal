@@ -63,6 +63,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     const DEFAULT_REQUIRED = false;
     const DEFAULT_ALLOW_NULL = true;
     const DEFAULT_STORABLE = true;
+    const DEFAULT_VALIDATABLE = true;
     const DEFAULT_ACTIVE = true;
 
     /**
@@ -126,6 +127,12 @@ abstract class AbstractProperty extends AbstractEntity implements
      * @var boolean
      */
     private $storable = self::DEFAULT_STORABLE;
+
+    /**
+     * Whether to validate the property.
+     * @var boolean
+     */
+    private $validatable = self::DEFAULT_VALIDATABLE;
 
     /**
      * Inactive properties should be hidden everywhere / unused
@@ -783,6 +790,25 @@ abstract class AbstractProperty extends AbstractEntity implements
     }
 
     /**
+     * @param  boolean $validatable The validatable flag.
+     * @return self
+     */
+    public function setValidatable($validatable)
+    {
+        $this->validatable = !!$validatable;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getValidatable()
+    {
+        return $this->validatable;
+    }
+
+    /**
      * @param boolean $storable The storable flag.
      * @return self
      */
@@ -863,7 +889,8 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     public function validateRequired()
     {
-        if ($this['required'] && !$this->val()) {
+        $val = $this->val();
+        if ($this['required'] && empty($val) && !is_numeric($val)) {
             $this->validator()->error('Value is required.', 'required');
 
             return false;
@@ -890,7 +917,8 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     public function validateAllowNull()
     {
-        if (!$this['allowNull'] && $this->val() === null) {
+        $val = $this->val();
+        if (!$this['allowNull'] && $val === null) {
             $this->validator()->error('Value can not be null.', 'allowNull');
 
             return false;

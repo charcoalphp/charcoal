@@ -21,6 +21,10 @@ class PropertyValidator extends AbstractValidator
         // The model, in this case, should be a PropertyInterface
         $property = $this->model;
 
+        if (!$property['validatable']) {
+            return true;
+        }
+
         $methods = $property->validationMethods();
         foreach ($methods as $method) {
             $method = $this->camelize($method);
