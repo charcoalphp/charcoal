@@ -26,6 +26,10 @@ class ModelValidator extends AbstractValidator
                 continue;
             }
 
+            if (isset($prop['validatable']) && !$prop['validatable']) {
+                continue;
+            }
+
             $value   = $model->propertyValue($ident);
             $isValid = $prop->setVal($value)->validate();
             $prop->clearVal();
