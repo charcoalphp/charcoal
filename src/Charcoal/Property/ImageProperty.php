@@ -497,10 +497,10 @@ class ImageProperty extends FileProperty
 
             // @todo Save original file here
             $valuePath = ($isAbsolute ? '' : $basePath);
-            $image->open($valuePath.$value);
+            $image->open(static::normalizePath($valuePath.$value));
             $target = null;
             if ($isAbsolute) {
-                $target = $basePath.$this['uploadPath'].pathinfo($value, PATHINFO_BASENAME);
+                $target = static::normalizePath($basePath.$this['uploadPath'].pathinfo($value, PATHINFO_BASENAME));
             }
 
             foreach ($effects as $fxGroup) {
@@ -545,13 +545,13 @@ class ImageProperty extends FileProperty
                     if ($rename || $copy) {
                         if ($copy) {
                             $copy   = $this->renderFileRenamePattern(($target ?: $value), $copy);
-                            $exists = $this->fileExists($basePath.$copy);
+                            $exists = $this->fileExists(static::normalizePath($basePath.$copy));
                             $doCopy = ($copy && ($this['overwrite'] || !$exists));
                         }
 
                         if ($rename) {
                             $value    = $this->renderFileRenamePattern(($target ?: $value), $rename);
-                            $exists   = $this->fileExists($basePath.$value);
+                            $exists   = $this->fileExists(static::normalizePath($basePath.$value));
                             $doRename = ($value && ($this['overwrite'] || !$exists));
                         }
 
@@ -566,20 +566,20 @@ class ImageProperty extends FileProperty
 
                         if ($rename || $copy) {
                             if ($doCopy) {
-                                $image->save($valuePath.$copy);
+                                $image->save(static::normalizePath($valuePath.$copy));
                             }
 
                             if ($doRename) {
-                                $image->save($valuePath.$value);
+                                $image->save(static::normalizePath($valuePath.$value));
                             }
                         } else {
-                            $image->save($target ?: $valuePath.$value);
+                            $image->save($target ?: static::normalizePath($valuePath.$value));
                         }
                     }
                 }
                 // reset to default image allow starting effects chains from original image.
                 if ($fxGroup['reset']) {
-                    $image = $image->open($valuePath.$value);
+                    $image = $image->open(static::normalizePath($valuePath.$value));
                 }
             }
         }

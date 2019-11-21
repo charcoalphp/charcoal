@@ -109,6 +109,13 @@ class FileProperty extends AbstractProperty
     private $filesystem = self::DEFAULT_FILESYSTEM;
 
     /**
+     * Holds a list of all normalized paths.
+     *
+     * @var string[]
+     */
+    protected static $normalizePathCache = [];
+
+    /**
      * @return string
      */
     public function type()
@@ -1282,5 +1289,56 @@ class FileProperty extends AbstractProperty
         }
 
         return $parsedFiles;
+    }
+
+    /**
+     * Normalize a file path string so that it can be checked safely.
+     *
+     * Attempt to avoid invalid encoding bugs by transcoding the path. Then
+     * remove any unnecessary path components including '.', '..' and ''.
+     *
+     * @link https://gist.github.com/thsutton/772287
+     *
+     * @param  string $path     The path to normalise.
+     * @param  string $encoding The name of the path iconv() encoding.
+     * @return string The path, normalised.
+     */
+    public static function normalizePath($path, $encoding = 'UTF-8')
+    {
+        $key = $path;
+
+        if (isset(static::$normalizePathCache[$key])) {
+            return static::$normalizePathCache[$key];
+        }
+
+        // Attempt to avoid path encoding problems.
+        $path = iconv($encoding, $encoding.'//IGNORE//TRANSLIT', $path);
+
+        if (strpos($path, '..') !== false || strpos($path, './') !== false) {
+            // Process the components
+            $parts = explode('/', $path);
+            $safe = [];
+            foreach ($parts as $idx => $part) {
+                if ((empty($part) && !is_numeric($part)) || ($part === '.')) {
+                    continue;
+                } elseif ($part === '..') {
+                    array_pop($safe);
+                    continue;
+                } else {
+                    $safe[] = $part;
+                }
+            }
+
+            // Return the "clean" path
+            $path = implode(DIRECTORY_SEPARATOR, $safe);
+
+            if ($key[0] === '/' && $path[0] !== '/') {
+                $path = '/'.$path;
+            }
+        }
+
+        static::$normalizePathCache[$key] = $path;
+
+        return static::$normalizePathCache[$key];
     }
 }
