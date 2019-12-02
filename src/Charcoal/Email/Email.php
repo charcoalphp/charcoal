@@ -761,6 +761,7 @@ class Email implements
     public function queue($ts = null)
     {
         $recipients = $this->to();
+        error_log(var_export($recipients, true));
         $author     = $this->from();
         $subject    = $this->subject();
         $msgHtml    = $this->msgHtml();
@@ -769,18 +770,20 @@ class Email implements
         $queueId    = $this->queueId();
 
         foreach ($recipients as $to) {
-            $queueItem = $this->queueItemFactory()->create(EmailQueueItem::class);
+            if (is_string($to) && !empty($to)) {
+                $queueItem = $this->queueItemFactory()->create(EmailQueueItem::class);
 
-            $queueItem->setTo($to);
-            $queueItem->setFrom($author);
-            $queueItem->setSubject($subject);
-            $queueItem->setMsgHtml($msgHtml);
-            $queueItem->setMsgTxt($msgTxt);
-            $queueItem->setCampaign($campaign);
-            $queueItem->setProcessingDate($ts);
-            $queueItem->setQueueId($queueId);
+                $queueItem->setTo($to);
+                $queueItem->setFrom($author);
+                $queueItem->setSubject($subject);
+                $queueItem->setMsgHtml($msgHtml);
+                $queueItem->setMsgTxt($msgTxt);
+                $queueItem->setCampaign($campaign);
+                $queueItem->setProcessingDate($ts);
+                $queueItem->setQueueId($queueId);
 
-            $res = $queueItem->save();
+                $res = $queueItem->save();
+            }
         }
 
         return true;
