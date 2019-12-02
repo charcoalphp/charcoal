@@ -761,7 +761,6 @@ class Email implements
     public function queue($ts = null)
     {
         $recipients = $this->to();
-        error_log(var_export($recipients, true));
         $author     = $this->from();
         $subject    = $this->subject();
         $msgHtml    = $this->msgHtml();
@@ -783,6 +782,8 @@ class Email implements
                 $queueItem->setQueueId($queueId);
 
                 $res = $queueItem->save();
+            } else {
+                $this->logger->warning('Could not queue email, null or empty value');
             }
         }
 
