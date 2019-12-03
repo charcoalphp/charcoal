@@ -474,11 +474,6 @@ abstract class AbstractAuthenticator implements
         // Load the user by email
         $user->loadFrom($user->getAuthIdentifierKey(), $identifier);
 
-        // Check identifier is as requested
-        if ($user->getAuthIdentifier() !== $identifier) {
-            return null;
-        }
-
         // Allow model to validate user standing
         if (!$this->validateAuthentication($user)) {
             return null;
