@@ -16,14 +16,14 @@ use Charcoal\View\ViewInterface;
 trait ConditionalizableTrait
 {
     /**
-     * Condition needed to render the entity.
+     * The condition needed to render the entity.
      *
      * @var string|boolean
      */
     private $condition;
 
     /**
-     * rendered condition.
+     * The resolved condition.
      *
      * @var string|boolean
      */
@@ -121,8 +121,16 @@ trait ConditionalizableTrait
         if (is_callable([ $this, 'form' ])) {
             $form = $this->form();
 
+            if (is_callable([ $form, $condition ])) {
+                return !!$form->{$condition}();
+            }
+
             if (is_callable([ $form, 'obj' ])) {
                 $obj = $form->obj();
+
+                if (is_callable([ $obj, $condition ])) {
+                    return !!$obj->{$condition}();
+                }
 
                 if (($obj instanceof ViewableInterface) && ($obj->view() instanceof ViewInterface)) {
                     return !!$obj->renderTemplate($condition);
