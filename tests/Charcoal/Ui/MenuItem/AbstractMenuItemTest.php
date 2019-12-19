@@ -27,15 +27,19 @@ class AbstractMenuItemTest extends AbstractTestCase
         $container = $this->getContainer();
         $container->register(new MenuServiceProvider());
 
-        $container['view'] = null;
+        $provider = $this->getContainerProvider();
+        $provider->registerView($container);
 
         $menu = $container['menu/builder']->build([]);
 
-        $this->obj = $this->getMockForAbstractClass(AbstractMenuItem::class, [[
-            'view'              => $container['view'],
-            'menu'              => $menu,
-            'menu_item_builder' => $container['menu/item/builder']
-        ]]);
+        $this->obj = $this->getMockForAbstractClass(AbstractMenuItem::class, [
+            [
+                'menu'              => $menu,
+                'logger'            => $container['logger'],
+                'view'              => $container['view'],
+                'menu_item_builder' => $container['menu/item/builder'],
+            ],
+        ]);
     }
 
     /**

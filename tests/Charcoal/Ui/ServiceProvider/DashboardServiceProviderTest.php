@@ -40,6 +40,9 @@ class DashboardServiceProviderTest extends AbstractTestCase
         };
 
         // Required depdendencies (stub)
+        $this->container['view'] = function () {
+            return null;
+        };
         $this->container['widget/builder'] = function () {
             return null;
         };

@@ -29,12 +29,14 @@ class GenericFormTest extends AbstractTestCase
         $container->register(new FormServiceProvider());
         $container->register(new LayoutServiceProvider());
 
-        $container['view'] = null;
+        $provider = $this->getContainerProvider();
+        $provider->registerView($container);
 
         $this->obj = new GenericForm([
             'logger'             => $container['logger'],
+            'view'               => $container['view'],
             'layout_builder'     => $container['layout/builder'],
-            'form_group_factory' => $container['form/group/factory']
+            'form_group_factory' => $container['form/group/factory'],
         ]);
     }
 

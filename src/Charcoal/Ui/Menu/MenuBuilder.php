@@ -57,12 +57,7 @@ class MenuBuilder
         $container = $this->container;
         $objType = isset($options['type']) ? $options['type'] : self::DEFAULT_TYPE;
 
-        $obj = $this->factory->create($objType, [
-            'logger'            => $container['logger'],
-            'view'              => $container['view'],
-            'menu_item_builder' => $container['menu/item/builder'],
-            'container'         => $container
-        ]);
+        $obj = $this->factory->create($objType);
         $obj->setData($options);
 
         return $obj;

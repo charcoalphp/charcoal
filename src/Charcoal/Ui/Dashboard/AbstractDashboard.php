@@ -35,5 +35,7 @@ abstract class AbstractDashboard extends AbstractUiItem implements
         /** Satisfies {@see \Charcoal\Ui\Layout\LayoutAwareInterface} */
         $this->setLayoutBuilder($data['layout_builder']);
 
+        /** Satisfies {@see \Charcoal\View\ViewableInterface} */
+        $this->setView($data['view']);
     }
 }

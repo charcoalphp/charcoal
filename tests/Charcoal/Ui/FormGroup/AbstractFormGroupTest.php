@@ -29,19 +29,22 @@ class AbstractFormGroupTest extends AbstractTestCase
         $container->register(new FormServiceProvider());
         $container->register(new LayoutServiceProvider());
 
-        $container['view'] = null;
+        $provider = $this->getContainerProvider();
+        $provider->registerView($container);
 
         $form = $container['form/builder']->build([
             'type' => null
         ]);
 
-        $this->obj = $this->getMockForAbstractClass(AbstractFormGroup::class, [[
-            'form'               => $form,
-            'logger'             => $container['logger'],
-            'view'               => $container['view'],
-            'layout_builder'     => $container['layout/builder'],
-            'form_input_builder' => $container['form/input/builder']
-        ]]);
+        $this->obj = $this->getMockForAbstractClass(AbstractFormGroup::class, [
+            [
+                'form'               => $form,
+                'logger'             => $container['logger'],
+                'view'               => $container['view'],
+                'layout_builder'     => $container['layout/builder'],
+                'form_input_builder' => $container['form/input/builder'],
+            ],
+        ]);
     }
 
     /**
