@@ -197,12 +197,16 @@ trait ExpressionFieldTrait
      */
     public function fieldName()
     {
-        $property = $this->property();
-        if ($property instanceof PropertyInterface) {
-            return $property->fieldIdent();
-        } else {
-            return $property;
+        if ($this->hasProperty()) {
+            $property = $this->property();
+            if ($property instanceof PropertyInterface) {
+                return $property->fieldIdent();
+            }
+
+            return $this->snakeize($property);
         }
+
+        return null;
     }
 
     /**
