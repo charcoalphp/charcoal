@@ -54,10 +54,11 @@ abstract class AbstractMenuItem extends AbstractUiItem implements MenuItemInterf
      */
     public function __construct($data)
     {
+        parent::__construct($data);
+
         $this->setMenu($data['menu']);
         $this->setMenuItemBuilder($data['menu_item_builder']);
 
-        parent::__construct($data);
     }
 
     /**

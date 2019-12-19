@@ -29,6 +29,8 @@ abstract class AbstractForm extends AbstractUiItem implements
      */
     public function __construct($data = null)
     {
+        parent::__construct($data);
+
         /** Satisfies {@see \Charcoal\Ui\Form\FormTrait} */
         $this->setFormGroupFactory($data['form_group_factory']);
 
