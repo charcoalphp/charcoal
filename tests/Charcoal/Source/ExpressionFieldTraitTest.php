@@ -263,10 +263,10 @@ class ExpressionFieldTraitTest extends AbstractTestCase
         $this->assertNull($obj->fieldName());
 
         /** 2. With column name */
-        $obj->setProperty('foobar');
+        $obj->setProperty('fooBar');
         $fieldName = $obj->fieldName();
         $this->assertInternalType('string', $fieldName);
-        $this->assertEquals('foobar', $fieldName);
+        $this->assertEquals('foo_bar', $fieldName);
 
         /** 3. With property instance */
         $property = $this->createProperty();

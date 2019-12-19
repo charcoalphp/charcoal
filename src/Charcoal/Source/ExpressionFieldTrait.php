@@ -161,9 +161,9 @@ trait ExpressionFieldTrait
             $property = $this->property();
             if ($property instanceof StorablePropertyInterface) {
                 return (count($property->fieldNames()) > 0);
-            } else {
-                return true;
             }
+
+            return true;
         }
 
         return false;
@@ -181,10 +181,10 @@ trait ExpressionFieldTrait
             $property = $this->property();
             if ($property instanceof StorablePropertyInterface) {
                 return $property->fieldNames();
-            } else {
-                $property = $this->snakeize($property);
-                return [ $property ];
             }
+
+            $property = $this->snakeize($property);
+            return [ $property ];
         }
 
         return [];
