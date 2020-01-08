@@ -34,7 +34,7 @@ class ProcessQueueScript extends AbstractScript implements CronScriptInterface
     private $queueItemFactory;
 
     /**
-     * A copy of all sent message.
+     * A copy of all sent messages.
      *
      * @var array $sent
      */
@@ -52,12 +52,12 @@ class ProcessQueueScript extends AbstractScript implements CronScriptInterface
         // Unused parameter
         unset($request);
 
-        // Lock script, to ensure it can not be run twice  at the same time (before previous instance is done).
+        // Lock script, to ensure it can not be run twice at the same time (before previous instance is done).
         $this->startLock();
 
         $climate = $this->climate();
 
-        $processedCallback = function($success, $failures, $skipped) use ($climate) {
+        $processedCallback = function ($success, $failures, $skipped) use ($climate) {
             if (!empty($success)) {
                 $climate->green()->out(sprintf('%s emails were successfully sent.', count($success)));
             }
@@ -72,8 +72,9 @@ class ProcessQueueScript extends AbstractScript implements CronScriptInterface
         };
 
         $queueManager = new EmailQueueManager([
-            'logger' => $this->logger,
-            'queue_item_factory' => $this->queueItemFactory
+            'logger'             => $this->logger,
+            'queue_item_factory' => $this->queueItemFactory,
+            'chunkSize'          => 100
         ]);
         $queueManager->setProcessedCallback($processedCallback);
         $queueManager->processQueue();

@@ -18,18 +18,18 @@ class EmailLog extends AbstractModel
     use EmailAwareTrait;
 
     /**
-     * Type of log (e.g., "email").
+     * The Queue ID
      *
-     * @var string $type
+     * @var string $queueId
      */
-    private $type;
+    private $queueId;
 
     /**
-     * The action logged (e.g., "send").
+     * The error code
      *
-     * @var string $action
+     * @var string $errorCode
      */
-    private $action;
+    private $errorCode;
 
     /**
      * The Message-ID (Unique message identifier)
@@ -67,41 +67,11 @@ class EmailLog extends AbstractModel
     private $subject;
 
     /**
-     * Whether the email has been semt.
-     *
-     * Error code (0 = success)
-     *
-     * @var integer $sendStatus
-     */
-    private $sendStatus;
-
-    /**
-     * The error message from a failed send.
-     *
-     * @var string $sendError
-     */
-    private $sendError;
-
-    /**
      * When the email should be sent.
      *
      * @var DateTimeInterface|null $sendTs
      */
     private $sendTs;
-
-    /**
-     * The current IP address at the time of the log.
-     *
-     * @var string $ip
-     */
-    private $ip;
-
-    /**
-     * The current session ID at the time of the log.
-     *
-     * @var string $sessionId
-     */
-    private $sessionId;
 
     /**
      * Get the primary key that uniquely identifies each queue item.
@@ -114,63 +84,49 @@ class EmailLog extends AbstractModel
     }
 
     /**
-     * Set the type of log.
+     * Set the queue ID.
      *
-     * @param  string $type The log type. (e.g., "email").
-     * @throws InvalidArgumentException If the log type is not a string.
+     * @param  string $queueId The queue ID.
      * @return self
      */
-    public function setType($type)
+    public function setQueueId($queueId)
     {
-        if (!is_string($type)) {
-            throw new InvalidArgumentException(
-                'Log type must be a string.'
-            );
-        }
-
-        $this->type = $type;
+        $this->queueId = $queueId;
 
         return $this;
     }
 
     /**
-     * Get the log type.
+     * Get the queue ID.
      *
      * @return string
      */
-    public function type()
+    public function queueId()
     {
-        return $this->type;
+        return $this->queueId;
     }
 
     /**
-     * Set the logged action.
+     * Set the error code.
      *
-     * @param  string $action The log action (e.g., "send").
-     * @throws InvalidArgumentException If the action is not a string.
+     * @param  string $errorCode The error code.
      * @return self
      */
-    public function setAction($action)
+    public function setErrorCode($errorCode)
     {
-        if (!is_string($action)) {
-            throw new InvalidArgumentException(
-                'Action must be a string.'
-            );
-        }
-
-        $this->action = $action;
+        $this->errorCode = $errorCode;
 
         return $this;
     }
 
     /**
-     * Get the logged action.
+     * Get the error code.
      *
      * @return string
      */
-    public function action()
+    public function errorCode()
     {
-        return $this->action;
+        return $this->errorCode;
     }
 
     /**
@@ -202,7 +158,6 @@ class EmailLog extends AbstractModel
     {
         return $this->messageId;
     }
-
 
     /**
      * Set the campaign ID.
@@ -310,42 +265,6 @@ class EmailLog extends AbstractModel
     }
 
     /**
-     * @param  string $status The mailer's status code or description.
-     * @return self
-     */
-    public function setSendStatus($status)
-    {
-        $this->sendStatus = $status;
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function sendStatus()
-    {
-        return $this->sendStatus;
-    }
-
-    /**
-     * @param  string $errorMessage The mailer's error code or description.
-     * @return self
-     */
-    public function setSendError($errorMessage)
-    {
-        $this->sendError = $errorMessage;
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function sendError()
-    {
-        return $this->sendError;
-    }
-
-    /**
      * @param  null|string|DateTime $ts The "send date" datetime value.
      * @throws InvalidArgumentException If the ts is not a valid datetime value.
      * @return self
@@ -384,54 +303,12 @@ class EmailLog extends AbstractModel
     }
 
     /**
-     * @param mixed $ip The IP adress.
-     * @return self
-     */
-    public function setIp($ip)
-    {
-        $this->ip = $ip;
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function ip()
-    {
-        return $this->ip;
-    }
-
-    /**
-     * @param string $sessionId The session identifier.
-     * @return self
-     */
-    public function setSessionId($sessionId)
-    {
-        $this->sessionId = $sessionId;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function sessionId()
-    {
-        return $this->sessionId;
-    }
-
-    /**
      * @see    StorableTrait::preSave()
      * @return boolean
      */
     protected function preSave()
     {
         parent::preSave();
-
-        $ip = (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '');
-        $sessionId = session_id();
-
-        $this->setIp($ip);
-        $this->setSessionId($sessionId);
 
         if ($this->sendTs() === null) {
             $this->setSendTs('now');

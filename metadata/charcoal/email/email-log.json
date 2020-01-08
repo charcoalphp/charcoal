@@ -3,11 +3,19 @@
         "id": {
             "type": "id"
         },
-        "type": {
-            "type": "string"
+        "queue_id": {
+            "type": "string",
+            "label": {
+                "en": "Queue Identifier",
+                "fr": "Identifiant de la queue"
+            }
         },
-        "action": {
-            "type": "string"
+        "error_code": {
+            "type": "string",
+            "label": {
+                "en": "Error code",
+                "fr": "Code d'erreur"
+            }
         },
         "message_id": {
             "type": "string",
@@ -55,39 +63,11 @@
                 "fr": "Date"
             }
         },
-        "send_status": {
-            "type": "string",
-            "label": {
-                "en": "Send Status",
-                "fr": "Status d'envoi"
-            }
-        },
-        "send_error": {
-            "type": "string",
-            "label": {
-                "en": "Send Error",
-                "fr": "Erreur d'envoi"
-            }
-        },
         "campaign": {
             "type": "string",
             "label": {
                 "en": "Campaign",
                 "fr": "Campagne"
-            }
-        },
-        "ip": {
-            "type": "ip",
-            "label": {
-                "en": "IP Address",
-                "fr": "Adresse IP"
-            }
-        },
-        "session_id": {
-            "type": "string",
-            "label": {
-                "en": "Session Identifier",
-                "fr": "Identifiant de message"
             }
         }
     },

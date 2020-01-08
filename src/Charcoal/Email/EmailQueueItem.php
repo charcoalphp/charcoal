@@ -213,9 +213,9 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      */
     public function setMsgHtml($body)
     {
-        if (!is_string($body)) {
+        if (!is_string($body) && !is_null($body)) {
             throw new InvalidArgumentException(
-                'HTML message needs to be a string'
+                'HTML message needs to be a string or null'
             );
         }
 
@@ -243,9 +243,9 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      */
     public function setMsgTxt($body)
     {
-        if (!is_string($body)) {
+        if (!is_string($body) && !is_null($body)) {
             throw new InvalidArgumentException(
-                'Plan-text message needs to be a string'
+                'Plan-text message needs to be a string or null'
             );
         }
 
@@ -320,10 +320,13 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
 
         try {
             $res = $email->send();
+
             if ($res === true) {
                 $this->setProcessed(true);
                 $this->setProcessedDate('now');
-                $this->update(['processed', 'processed_date']);
+                $this->setMsgHtml(null);
+                $this->setMsgTxt(null);
+                $this->update(['processed', 'processed_date', 'msg_html', 'msg_txt']);
 
                 if ($successCallback !== null) {
                     $successCallback($this);

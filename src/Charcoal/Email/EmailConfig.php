@@ -99,13 +99,13 @@ class EmailConfig extends AbstractConfig
     public function defaults()
     {
         return [
-            'smtp'              => false,
+            'smtp'             => false,
 
-            'default_from'      => '',
-            'default_reply_to'  => '',
+            'default_from'     => '',
+            'default_reply_to' => '',
 
-            'default_track'     => false,
-            'default_log'       => true
+            'default_track'    => false,
+            'default_log'      => true
         ];
     }
 
