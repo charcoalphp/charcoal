@@ -63,6 +63,13 @@ abstract class AbstractQueueManager implements
     private $limit = 0;
 
     /**
+     * The chunk size to batch the queue with.
+     *
+     * @var integer|null
+     */
+    private $chunkSize = null;
+
+    /**
      * The queue ID.
      *
      * If set, then it will load only the items from this queue.
@@ -71,6 +78,27 @@ abstract class AbstractQueueManager implements
      * @var mixed
      */
     private $queueId;
+
+    /**
+     * Items that were successfully processed
+     *
+     * @var array
+     */
+    private $successItems = [];
+
+    /**
+     * Item that failed to process
+     *
+     * @var array
+     */
+    private $failedItems = [];
+
+    /**
+     * Items that were skipped during the processing
+     *
+     * @var array
+     */
+    private $skippedItems = [];
 
     /**
      * The callback routine when an item is processed (whether resolved or rejected).
@@ -121,6 +149,10 @@ abstract class AbstractQueueManager implements
 
         if (isset($data['limit'])) {
             $this->limit = intval($data['limit']);
+        }
+
+        if (isset($data['chunkSize'])) {
+            $this->chunkSize = intval($data['chunkSize']);
         }
     }
 
@@ -198,6 +230,24 @@ abstract class AbstractQueueManager implements
     }
 
     /**
+     * @param integer $chunkSize The size of the chunk of items to process at the same time in the queue.
+     * @return self
+     */
+    public function setChunkSize($chunkSize)
+    {
+        $this->chunkSize = intval($chunkSize);
+        return $this;
+    }
+
+    /**
+     * @return integer
+     */
+    public function chunkSize()
+    {
+        return $this->chunkSize;
+    }
+
+    /**
      * Set the callback routine when an item is processed.
      *
      * @param callable $callback A item callback routine.
@@ -246,8 +296,9 @@ abstract class AbstractQueueManager implements
     }
 
     /**
-     * Process the items of the queue.
+     * Process the queue.
      *
+     * It can be process in a single batch or in multiple chunks to reduce memory
      * If no callback is passed and a self::$processedCallback is set, the latter is used.
      *
      * @param  callable $callback An optional alternative callback routine executed
@@ -256,44 +307,57 @@ abstract class AbstractQueueManager implements
      */
     public function processQueue(callable $callback = null)
     {
-        $queued = $this->loadQueueItems();
-
         if (!is_callable($callback)) {
             $callback = $this->processedCallback;
         }
 
-        $success  = [];
-        $failures = [];
-        $skipped  = [];
-        foreach ($queued as $q) {
+        if (!is_null($this->chunkSize())) {
+            $totalChunks = $this->totalChunks();
+            for ($i = 0; $i <= $totalChunks; $i++) {
+                $queuedItems = $this->loadQueueItems();
+                $this->processItems($queuedItems);
+            }
+        } else {
+            $queuedItems = $this->loadQueueItems();
+            $this->processItems($queuedItems);
+        }
+
+        if (is_callable($callback)) {
+            $callback($this->successItems, $this->failedItems, $this->skippedItems);
+        }
+
+        return true;
+    }
+
+    /**
+     * @param mixed $queuedItems The items to process.
+     * @return void
+     */
+    private function processItems($queuedItems)
+    {
+        foreach ($queuedItems as $q) {
             try {
                 $res = $q->process($this->itemCallback, $this->itemSuccessCallback, $this->itemFailureCallback);
                 if ($res === true) {
-                    $success[] = $q;
+                    $this->successItems[] = $q;
                 } elseif ($res === false) {
-                    $failures[] = $q;
+                    $this->failedItems[] = $q;
                 } else {
-                    $skipped[] = $q;
+                    $this->skippedItems[] = $q;
                 }
             } catch (Exception $e) {
                 $this->logger->error(
                     sprintf('Could not process a queue item: %s', $e->getMessage())
                 );
-                $failures[] = $q;
+                $this->failedItems[] = $q;
                 continue;
             }
 
             // Throttle according to processing rate.
             if ($this->rate > 0) {
-                usleep(1000000/$this->rate);
+                usleep(1000000 / $this->rate);
             }
         }
-
-        if (is_callable($callback)) {
-            $callback($success, $failures, $skipped);
-        }
-
-        return true;
     }
 
     /**
@@ -313,9 +377,9 @@ abstract class AbstractQueueManager implements
             'value'    => 0,
         ]);
         $loader->addFilter([
-             'property' => 'processing_date',
-             'operator' => '<',
-             'value'    => date('Y-m-d H:i:s'),
+            'property' => 'processing_date',
+            'operator' => '<',
+            'value'    => date('Y-m-d H:i:s'),
         ]);
 
         $queueId = $this->queueId();
@@ -331,14 +395,68 @@ abstract class AbstractQueueManager implements
             'mode'     => 'asc',
         ]);
 
-        if ($this->limit > 0) {
-            $loader->setNumPerPage($this->limit);
+        if (!is_null($this->chunkSize())) {
+            $loader->setNumPerPage($this->chunkSize());
+        }
+
+        if ($this->limit() > 0) {
+            $loader->setNumPerPage($this->limit());
             $loader->setPage(0);
         }
 
         $queued = $loader->load();
 
         return $queued;
+    }
+
+    /**
+     * Retrieve the total of queued items.
+     *
+     * @return integer
+     */
+    public function totalQueuedItems()
+    {
+        $loader = new CollectionLoader([
+            'logger'  => $this->logger,
+            'factory' => $this->queueItemFactory(),
+        ]);
+        $loader->setModel($this->queueItemProto());
+        $loader->addFilter([
+            'property' => 'processed',
+            'value'    => 0,
+        ]);
+        $loader->addFilter([
+            'property' => 'processing_date',
+            'operator' => '<',
+            'value'    => date('Y-m-d H:i:s'),
+        ]);
+
+        $queueId = $this->queueId();
+        if ($queueId) {
+            $loader->addFilter([
+                'property' => 'queue_id',
+                'value'    => $queueId,
+            ]);
+        }
+
+        $loader->addOrder([
+            'property' => 'queued_date',
+            'mode'     => 'asc',
+        ]);
+
+        $total = $loader->loadCount();
+
+        return $total;
+    }
+
+    /**
+     * Retrieve the number of chunks to process.
+     *
+     * @return integer
+     */
+    public function totalChunks()
+    {
+        return (int)ceil($this->totalQueuedItems() / $this->chunkSize());
     }
 
     /**
