@@ -769,18 +769,22 @@ class Email implements
         $queueId    = $this->queueId();
 
         foreach ($recipients as $to) {
-            $queueItem = $this->queueItemFactory()->create(EmailQueueItem::class);
+            if (is_string($to) && !empty($to)) {
+                $queueItem = $this->queueItemFactory()->create(EmailQueueItem::class);
 
-            $queueItem->setTo($to);
-            $queueItem->setFrom($author);
-            $queueItem->setSubject($subject);
-            $queueItem->setMsgHtml($msgHtml);
-            $queueItem->setMsgTxt($msgTxt);
-            $queueItem->setCampaign($campaign);
-            $queueItem->setProcessingDate($ts);
-            $queueItem->setQueueId($queueId);
+                $queueItem->setTo($to);
+                $queueItem->setFrom($author);
+                $queueItem->setSubject($subject);
+                $queueItem->setMsgHtml($msgHtml);
+                $queueItem->setMsgTxt($msgTxt);
+                $queueItem->setCampaign($campaign);
+                $queueItem->setProcessingDate($ts);
+                $queueItem->setQueueId($queueId);
 
-            $res = $queueItem->save();
+                $res = $queueItem->save();
+            } else {
+                $this->logger->warning('Could not queue email, null or empty value');
+            }
         }
 
         return true;
