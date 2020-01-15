@@ -1026,17 +1026,17 @@ class Email implements
         foreach ($recipients as $to) {
             $log = $this->logFactory()->create('charcoal/email/email-log');
 
-            $log->setType('email');
-            $log->setAction('send');
-
+            $log->setQueueId($this->queueId());
             $log->setMessageId($mailer->getLastMessageId());
             $log->setCampaign($this->campaign());
-
             $log->setSendTs('now');
-
             $log->setFrom($mailer->From);
             $log->setTo($to);
             $log->setSubject($this->subject());
+
+            if (!empty($mailer->getSMTPInstance()->getError()['smtp_code'])) {
+                $log->setErrorCode($mailer->getSMTPInstance()->getError()['smtp_code']);
+            }
 
             $log->save();
         }

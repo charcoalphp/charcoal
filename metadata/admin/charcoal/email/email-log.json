@@ -17,9 +17,7 @@
                     "to",
                     "campaign",
                     "subject",
-                    "sendError",
-                    "messageId",
-                    "ip"
+                    "messageId"
                 ],
                 "orders": [
                     {
@@ -83,9 +81,7 @@
                             "campaign",
                             "from",
                             "to",
-                            "subject",
-                            "ip",
-                            "session_id"
+                            "subject"
                         ],
                         "layout": {
                             "structure": [
@@ -99,9 +95,7 @@
                     "status": {
                         "title": "Status",
                         "properties": [
-                            "message_id",
-                            "send_status",
-                            "send_error"
+                            "message_id"
                         ]
                     }
                 }

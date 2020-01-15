@@ -63,12 +63,12 @@ class EmailServiceProvider implements ServiceProviderInterface
                 'base_class' => EmailInterface::class,
                 'default_class' => Email::class,
                 'arguments' => [[
-                    'logger'    => $container['logger'],
-                    'config'    => $container['email/config'],
-                    'view'      => $container['email/view'],
-                    'template_factory' => $container['template/factory'],
+                    'logger'             => $container['logger'],
+                    'config'             => $container['email/config'],
+                    'view'               => $container['email/view'],
+                    'template_factory'   => $container['template/factory'],
                     'queue_item_factory' => $container['model/factory'],
-                    'log_factory' => $container['model/factory']
+                    'log_factory'        => $container['model/factory']
                 ]]
             ]);
         };

@@ -83,9 +83,10 @@
                     "en": "Sent status"
                 },
                 "layout": {
-                    "structure": [{
-                        "columns": [1, 2]
-                    },
+                    "structure": [
+                        {
+                            "columns": [1, 2]
+                        },
                         {
                             "columns": [1]
                         },
@@ -109,9 +110,10 @@
                     "fr": "Message"
                 },
                 "layout": {
-                    "structure": [{
-                        "columns": [1, 1]
-                    },
+                    "structure": [
+                        {
+                            "columns": [1, 1]
+                        },
                         {
                             "columns": [1]
                         },
