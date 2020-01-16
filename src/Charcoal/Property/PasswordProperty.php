@@ -68,7 +68,7 @@ class PasswordProperty extends StringProperty
     public function isHashed($hash)
     {
         $info = password_get_info($hash);
-        return !($info['algo'] === 0);
+        return strtolower($info['algoName']) !== 'unknown';
     }
 
     /**
