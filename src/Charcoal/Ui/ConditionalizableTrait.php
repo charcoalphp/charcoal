@@ -68,7 +68,7 @@ trait ConditionalizableTrait
             );
         }
 
-        unset($this->resolvedCondition);
+        $this->resolvedCondition = null;
         $this->condition = $condition;
         return $this;
     }
@@ -104,6 +104,8 @@ trait ConditionalizableTrait
 
     /**
      * Parse the widget's conditional logic.
+     *
+     * @todo Simplify logic by moving `form()` method lookup to relevant form widget.
      *
      * @param  callable|string $condition The callable or renderable condition.
      * @return boolean
