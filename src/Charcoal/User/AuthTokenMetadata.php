@@ -42,10 +42,11 @@ class AuthTokenMetadata extends ModelMetadata
         $parentDefaults = parent::defaults();
 
         $defaults = array_replace_recursive($parentDefaults, [
-            'enabled'         => true,
+            'enabled'        => true,
             'token_name'     => 'charcoal_user_login',
             'token_duration' => '15 days',
-            'https_only'      => false,
+            'token_path'     => '',
+            'https_only'     => false,
         ]);
         return $defaults;
     }
