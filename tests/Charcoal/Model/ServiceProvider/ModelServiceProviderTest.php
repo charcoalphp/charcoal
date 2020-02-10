@@ -36,6 +36,7 @@ use Charcoal\Translator\Translator;
 use Charcoal\Model\ServiceProvider\ModelServiceProvider;
 use Charcoal\Model\Service\ModelBuilder;
 use Charcoal\Model\Service\ModelLoaderBuilder;
+use Charcoal\Model\Service\MetadataConfig;
 use Charcoal\Model\Service\MetadataLoader;
 use Charcoal\Tests\AbstractTestCase;
 
@@ -110,7 +111,7 @@ class ModelServiceProviderTest extends AbstractTestCase
             'manager' => $container['language/manager']
         ]);
 
-        $container['metadata/config'] = new AppConfig([
+        $container['metadata/config'] = new MetadataConfig([
             'paths' => []
         ]);
 
