@@ -37,7 +37,7 @@ trait AuthAwareTrait
     }
 
     /**
-     * @param array|null $permissions The list of required permissions to check.
+     * @param  array|null $permissions The list of required permissions to check.
      * @return boolean
      */
     public function hasPermissions($permissions)
@@ -121,11 +121,11 @@ trait AuthAwareTrait
         return $this->authorizer;
     }
 
-     /**
-      * @param string[]|string|null $permissions The list of required permissions.
-      * @throws InvalidArgumentException If the permissions are not an array or a comma-separated string.
-      * @return self
-      */
+    /**
+     * @param  string[]|string|null $permissions The list of required permissions.
+     * @throws InvalidArgumentException If the permissions are not an array or a comma-separated string.
+     * @return self
+     */
     protected function setRequiredAclPermissions($permissions)
     {
         if ($permissions === null || !$permissions) {

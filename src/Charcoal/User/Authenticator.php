@@ -12,7 +12,7 @@ use Charcoal\User\Access\AuthenticatableInterface;
 use Charcoal\User\UserInterface;
 
 /**
- * The User Authenticator
+ * User Authenticator
  */
 class Authenticator extends AbstractAuthenticator
 {

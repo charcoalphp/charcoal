@@ -26,9 +26,7 @@ The preferred (and only supported) way of installing _charcoal-user_ is with **c
 
 ## Dependencies
 
-- PHP 5.6+
-    -   This is the last supported version of PHP.
-    -   `PHP 7` is also supported (meaning _green on travis_…).
+- PHP 7.1+
 - `zendframework/zend-permissions-acl`
 - `locomotivemtl/charcoal-object`
 
@@ -52,7 +50,7 @@ For quick prototypes or small projects, a full concrete class is provided as `\C
 | **last\_login\_ip**       | `string`    | `''`        | …           |
 | **last\_password\_date**  | `date-time` | `null`      | …           |
 | **last\_password\_ip**    | `string`    | `''`        | …           |
-| **login_token**           | `string`    | `null`
+| **login\_token**          | `string`    | `null`      | …           |
 
 > Note that the `key` of the User is the `username`. Therefore, `id()` returns the username. It must be unique.
 
@@ -63,8 +61,8 @@ For quick prototypes or small projects, a full concrete class is provided as `\C
 | **active**                | `boolean`   | `true`      | …           |
 | **position**              | `number`    | `null`      | …           |
 | **created**               | `date-time` | `null`      | …           |
-| **created_by**            | `string`    | `''`        | …           |
-| **last_modified**         | `date-time` | `null`      | …           |
+| **created\_by**           | `string`    | `''`        | …           |
+| **last\_modified**        | `date-time` | `null`      | …           |
 | **last\_modified\_by**    | `string`    | `''`        | …           |
 
 # Authentication
@@ -73,9 +71,7 @@ For quick prototypes or small projects, a full concrete class is provided as `\C
 
 ## Authentication Examples
 
-```php
-$
-```
+...
 
 # Authorization
 
@@ -92,9 +88,9 @@ To set up ACL, it is highly recommended to use the `\Charcoal\User\Acl\Manager`.
 ```json
 {
     "acl": {
-        "permissions":{
+        "permissions": {
             "superuser": {
-                "superuser":true
+                "superuser": true
             },
             "author": {
                 "allowed": {},
@@ -119,17 +115,17 @@ $acl = new Acl();
 $acl->addResource(new AclResource($resourceName));
 
 $aclManager = new AclManager([
-    'logger' => $logger
+    'logger' => $logger,
 ]);
 $aclManager->loadPermissions($acl, $config['acl.permissions'], $resourceName);
 
 $authorizer = new Authorizer([
     'logger'   => $logger,
     'acl'      => $acl,
-    'resource' => $resourceName
+    'resource' => $resourceName,
 ]);
 
-$isAllowed = $authorizer->userAllowed($user, ['permssion']);
+$isAllowed = $authorizer->userAllowed($user, [ 'permssion' ]);
 ```
 
 # Development

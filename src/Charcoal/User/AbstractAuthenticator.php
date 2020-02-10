@@ -22,7 +22,7 @@ use Charcoal\User\Access\AuthenticatableInterface;
  *
  * ## Constructor dependencies
  *
- * Constructor dependencies are passed as an array of `key=>value` pair.
+ * Constructor dependencies are passed as an array of `key => value` pair.
  * The required dependencies are:
  *
  * - `logger` A PSR3 logger instance
