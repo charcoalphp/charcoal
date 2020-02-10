@@ -76,43 +76,41 @@ class ModelServiceProviderTest extends AbstractTestCase
     {
         $container = new Container();
 
-        $container['cache']  = new Pool(new Ephemeral());
-        $container['metadata/cache']  = new Pool(new Ephemeral());
+        $container['logger']   = new NullLogger();
+        $container['cache']    = new Pool(new Ephemeral());
+        $container['database'] = new PDO('sqlite::memory:');
+
         $container['config'] = new AppConfig([
             'metadata'  => [
-                'paths' => []
-            ]
+                'paths' => [],
+            ],
         ]);
-        $container['database'] = new PDO('sqlite::memory:');
-        $container['logger']   = new NullLogger();
 
         $container['view/loader'] = new PhpLoader([
             'logger'    => $container['logger'],
             'base_path' => dirname(__DIR__),
-            'paths'     => [ 'views' ]
+            'paths'     => [ 'views' ],
         ]);
 
         $container['view/engine'] = new PhpEngine([
             'logger' => $container['logger'],
-            'loader' => $container['view/loader']
+            'loader' => $container['view/loader'],
         ]);
 
         $container['view'] = new GenericView([
             'logger' => $container['logger'],
-            'engine' => $container['view/engine']
+            'engine' => $container['view/engine'],
         ]);
 
-        $container['language/manager'] = new LocalesManager([
+        $container['locales/manager'] = new LocalesManager([
             'locales' => [
-                'en' => [ 'locale' => 'en-US' ]
-            ]
+                'en' => [
+                    'locale' => 'en-US',
+                ],
+            ],
         ]);
         $container['translator'] = new Translator([
-            'manager' => $container['language/manager']
-        ]);
-
-        $container['metadata/config'] = new MetadataConfig([
-            'paths' => []
+            'manager' => $container['locales/manager'],
         ]);
 
         return $container;
@@ -171,5 +169,26 @@ class ModelServiceProviderTest extends AbstractTestCase
 
         $this->assertTrue(isset($container['metadata/loader']));
         $this->assertInstanceOf(MetadataLoader::class, $container['metadata/loader']);
+    }
+
+    /**
+     * @return void
+     */
+    public function testExtraMetadataPaths()
+    {
+        $container = new Container([
+            'config' => [
+                'base_path' => dirname(dirname(dirname(dirname(__DIR__)))),
+            ],
+            'module/classes' => [
+                'Charcoal\\Tests\\Mock\\MockModule',
+            ],
+        ]);
+
+        $provider = new ModelServiceProvider();
+        $provider->register($container);
+
+        $metadataConfig = $container['metadata/config'];
+        $this->assertContains('tests/Charcoal/Model/metadata', $metadataConfig->paths());
     }
 }

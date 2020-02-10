@@ -229,26 +229,31 @@ class ModelServiceProvider implements ServiceProviderInterface
             $container['metadata/config'] = function (Container $container) {
                 $appConfig  = isset($container['config']) ? $container['config'] : [];
                 $metaConfig = isset($appConfig['metadata']) ? $appConfig['metadata'] : null;
+                $metaConfig = new MetadataConfig($metaConfig);
 
-                $config = new MetadataConfig($metaConfig);
+                if (isset($container['module/classes'])) {
+                    $extraPaths = [];
+                    $basePath   = rtrim($appConfig['base_path'], '/');
+                    $modules    = $container['module/classes'];
+                    foreach ($modules as $module) {
+                        if (defined(sprintf('%s::APP_CONFIG', $module))) {
+                            $configPath = ltrim($module::APP_CONFIG, '/');
+                            $configPath = $basePath.'/'.$configPath;
 
-                $extraMetadataPaths = [];
-                $basePath = $appConfig['base_path'];
-                foreach ($container['module/classes'] as $module) {
-                    if (defined(sprintf('%s::APP_CONFIG', $module))) {
-                        $moduleConfig = $module::APP_CONFIG;
-                        $extraMetadataPaths = array_merge(
-                            $extraMetadataPaths,
-                            $config->loadFile($basePath.$moduleConfig)['metadata']['paths']
-                        );
-                    };
+                            $configData = $metaConfig->loadFile($configPath);
+                            $extraPaths = array_merge(
+                                $extraPaths,
+                                $configData['metadata']['paths']
+                            );
+                        };
+                    }
+
+                    if (!empty($extraPaths)) {
+                        $metaConfig->addPaths($extraPaths);
+                    }
                 }
 
-                if (!empty($extraMetadataPaths)) {
-                    $config->addPaths($extraMetadataPaths);
-                }
-
-                return $config;
+                return $metaConfig;
             };
         }
 
