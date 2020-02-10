@@ -9,9 +9,9 @@ use PDOException;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 
-// From 'zendframework/zend-permissions'
-use Zend\Permissions\Acl\Acl;
-use Zend\Permissions\Acl\Role\GenericRole;
+// From 'laminas/laminas-permissions-acl'
+use Laminas\Permissions\Acl\Acl;
+use Laminas\Permissions\Acl\Role\GenericRole;
 
 /**
  * Manage ACL roles and permissions from config (arrays) or database.
@@ -32,9 +32,9 @@ class Manager implements LoggerAwareInterface
     }
 
     /**
-     * @param Acl    $acl         The Zend Acl instant to load permissions to.
-     * @param array  $permissions The array of permissions, in [role=>details] array.
-     * @param string $resource    The Acl resource (string identifier) to load roles and permissions into.
+     * @param  Acl    $acl         The Laminas Acl instant to load permissions to.
+     * @param  array  $permissions The array of permissions, in [role=>details] array.
+     * @param  string $resource    The Acl resource (string identifier) to load roles and permissions into.
      * @return void
      */
     public function loadPermissions(Acl &$acl, array $permissions, $resource = '')
@@ -45,10 +45,10 @@ class Manager implements LoggerAwareInterface
     }
 
     /**
-     * @param Acl    $acl      The Zend Acl instance to load permissions to.
-     * @param PDO    $dbh      The PDO database instance.
-     * @param string $table    The table where to fetch the roles and permissions.
-     * @param string $resource The Acl resource (string identifier) to load roles and permissions into.
+     * @param  Acl    $acl      The Laminas Acl instance to load permissions to.
+     * @param  PDO    $dbh      The PDO database instance.
+     * @param  string $table    The table where to fetch the roles and permissions.
+     * @param  string $resource The Acl resource (string identifier) to load roles and permissions into.
      * @return void
      */
     public function loadDatabasePermissions(Acl &$acl, PDO $dbh, $table, $resource = '')
@@ -75,10 +75,10 @@ class Manager implements LoggerAwareInterface
     }
 
     /**
-     * @param Acl    $acl         The Zend Acl instant to add permissions to.
-     * @param string $role        The role (string identifier) to add.
-     * @param array  $permissions The permissions details (array) to add.
-     * @param string $resource    The Acl resource (string identifier) to add roles and permissions into.
+     * @param  Acl    $acl         The Laminas Acl instant to add permissions to.
+     * @param  string $role        The role (string identifier) to add.
+     * @param  array  $permissions The permissions details (array) to add.
+     * @param  string $resource    The Acl resource (string identifier) to add roles and permissions into.
      * @return void
      */
     private function addRoleAndPermissions(Acl &$acl, $role, array $permissions, $resource)

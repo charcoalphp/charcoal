@@ -4,8 +4,8 @@ namespace Charcoal\User;
 
 use RuntimeException;
 
-// From 'zendframework/zend-permissions-acl'
-use Zend\Permissions\Acl\Acl;
+// From 'laminas/laminas-permissions-acl'
+use Laminas\Permissions\Acl\Acl;
 
 /**
  * Provides access control list.

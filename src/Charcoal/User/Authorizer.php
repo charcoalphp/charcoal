@@ -8,8 +8,8 @@ use InvalidArgumentException;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 
-// From 'zendframework/zend-permissions'
-use Zend\Permissions\Acl\Acl;
+// From 'laminas/laminas-permissions-acl'
+use Laminas\Permissions\Acl\Acl;
 
 // From 'charcoal-user'
 use Charcoal\User\UserInterface;
@@ -23,7 +23,7 @@ use Charcoal\User\UserInterface;
  * The required dependencies are:
  *
  * - `logger` A PSR3 logger instance.
- * - `acl` A Zend ACL (Access-Control-List) instance.
+ * - `acl` A Laminas ACL (Access-Control-List) instance.
  * - `resource` The ACL resource identifier (string).
  *
  * ## Checking permissions
