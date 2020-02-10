@@ -89,12 +89,13 @@ class ViewServiceProvider implements ServiceProviderInterface
 
             if (isset($container['module/classes'])) {
                 $extraPaths = [];
-                $basePath   = $appConfig['base_path'];
+                $basePath   = rtrim($appConfig['base_path'], '/');
                 $modules    = $container['module/classes'];
                 foreach ($modules as $module) {
                     if (defined(sprintf('%s::APP_CONFIG', $module))) {
-                        $configPath = $module::APP_CONFIG;
-                        $configPath = rtrim($basePath, '/').'/'.ltrim($configPath, '/');
+                        $configPath = ltrim($module::APP_CONFIG, '/');
+                        $configPath = $basePath.'/'.$configPath;
+
                         $configData = $viewConfig->loadFile($configPath);
                         $extraPaths = array_merge(
                             $extraPaths,
