@@ -32,8 +32,7 @@ $ composer require locomotivemtl/charcoal-ui
 
 ## Dependencies
 
--   `PHP 5.5+`
-    - Older versions of PHP are deprecated, therefore not supported.
+-   PHP 7.1+
 -   [`psr/log`](http://www.php-fig.org/psr/psr-3/)
     - A PSR-3 compliant logger should be provided to the various services / classes.
 -   [`locomotivemtl/charcoal-config`](https://github.com/locomotivemtl/charcoal-config) 0.6+
@@ -48,59 +47,57 @@ $ composer require locomotivemtl/charcoal-ui
 ## Form
 
 ```php
-
-use \Charcoal\Config\GenericMetadata;
-
-use \Charcoal\Ui\Form\FormBuilder;
-use \Charcoal\Ui\Form\FormFactory;
+use Charcoal\Config\GenericMetadata;
+use Charcoal\Ui\Form\FormBuilder;
+use Charcoal\Ui\Form\FormFactory;
 
 $metadata = new GenericMetadata([
     'properties' => [
         'first_name' => [
-            'type' => 'string'
+            'type' => 'string',
         ],
         'last_name' => [
-            'type' => 'string'
+            'type' => 'string',
         ],
         'email' => [
-            'type' => 'email'
-        ]
-    ]
+            'type' => 'email',
+        ],
+    ],
 ]);
 
 $formData = [
     'first_name' => 'Mathieu',
-    'last_name' => 'Ducharme',
-    'email' => 'mat@locomotive.ca'
+    'last_name'  => 'Ducharme',
+    'email'      => 'mat@locomotive.ca',
 ];
 
 $formConfig = [
-    'type'                      => 'charcoal/ui/form/generic'
-    'template_ident'    => 'foo/bar/form',
-    'template_data'     => [],
-    'label'                     => 'Example Form',
-    'groups'                    => [
+    'type'           => 'charcoal/ui/form/generic'
+    'template_ident' => 'foo/bar/form',
+    'template_data'  => [],
+    'label'          => 'Example Form',
+    'groups'         => [
         'info' => [
-            'layout' =>[
+            'layout' => [
                 'structure' => [
                     'columns' => [
-                        [1,1],
-                        [1]
-                    ]
-                ]
+                        [ 1, 1 ],
+                        [ 1 ],
+                    ],
+                ],
             ],
             'properties' => [
                 'first_name',
                 'last_name',
-                'email'
-            ]
-        ]
-    ]
+                'email',
+            ],
+        ],
+    ],
 ];
 
 $formBuilder = new FormBuilder([
     'form_factory' => new FormFactory(),
-    'view' => $container['view']
+    'view'         => $container['view'],
 ]);
 
 $form = $formBuilder->build($formConfig);
