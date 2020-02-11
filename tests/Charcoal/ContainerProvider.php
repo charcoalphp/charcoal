@@ -4,21 +4,17 @@ namespace Charcoal\Tests;
 
 use PDO;
 
-// From Mockery
-use Mockery;
+// From Pimple
+use Pimple\Container;
 
 // From PSR-3
 use Psr\Log\NullLogger;
 
-// From 'tedivm/stash'
+// From 'tedivm/stash' (PSR-6)
 use Stash\Pool;
-use Stash\Driver\Ephemeral;
 
-// From 'zendframework/zend-permissions-acl'
-use Zend\Permissions\Acl\Acl;
-
-// From Pimple
-use Pimple\Container;
+// From Slim
+use Slim\Http\Uri;
 
 // From 'league/climate'
 use League\CLImate\CLImate;
@@ -27,41 +23,24 @@ use League\CLImate\Util\Output;
 use League\CLImate\Util\Reader\Stdin;
 use League\CLImate\Util\UtilFactory;
 
-// From 'charcoal-factory'
-use Charcoal\Factory\GenericFactory as Factory;
+// From 'charcoal-core'
+use Charcoal\Source\DatabaseSource;
+use Charcoal\Model\ServiceProvider\ModelServiceProvider;
+
+// From 'charcoal-user'
+use Charcoal\User\ServiceProvider\AuthServiceProvider;
+
+// From 'charcoal-translator'
+use Charcoal\Translator\ServiceProvider\TranslatorServiceProvider;
+
+// From 'charcoal-view'
+use Charcoal\View\ViewServiceProvider;
 
 // From 'charcoal-app'
 use Charcoal\App\AppConfig;
-use Charcoal\App\Template\WidgetBuilder;
-
-// From 'charcoal-core'
-use Charcoal\Model\Service\MetadataLoader;
-use Charcoal\Source\DatabaseSource;
-
-// From 'charcoal-user'
-use Charcoal\User\Authenticator;
-use Charcoal\User\Authorizer;
-
-// From 'charcoal-ui'
-use Charcoal\Ui\Dashboard\DashboardBuilder;
-use Charcoal\Ui\Dashboard\DashboardInterface;
-use Charcoal\Ui\Layout\LayoutBuilder;
-use Charcoal\Ui\Layout\LayoutFactory;
-
-// From 'charcoal-email'
-use Charcoal\Email\Email;
-use Charcoal\Email\EmailConfig;
-
-// From 'charcoal-view'
-use Charcoal\View\GenericView;
-use Charcoal\View\Mustache\MustacheEngine;
-use Charcoal\View\Mustache\MustacheLoader;
-
-// From 'charcoal-translator'
-use Charcoal\Translator\LocalesManager;
-use Charcoal\Translator\Translator;
 
 // From 'charcoal-admin'
+use Charcoal\Admin\ServiceProvider\AdminServiceProvider;
 use Charcoal\Admin\Config as AdminConfig;
 
 /**
@@ -93,8 +72,6 @@ class ContainerProvider
     {
         $this->registerBaseUrl($container);
         $this->registerAdminConfig($container);
-        $this->registerAuthenticator($container);
-        $this->registerAuthorizer($container);
     }
 
     /**
@@ -106,7 +83,11 @@ class ContainerProvider
     public function registerBaseUrl(Container $container)
     {
         $container['base-url'] = function () {
-            return '';
+            return Uri::createFromString('');
+        };
+
+        $container['admin/base-url'] = function () {
+            return Uri::createFromString('admin');
         };
     }
 
@@ -126,11 +107,36 @@ class ContainerProvider
                         'recaptcha' => [
                             'public_key'  => 'foobar',
                             'private_key' => 'bazqux',
-                        ]
-                    ]
-                ]
+                        ],
+                    ],
+                ],
+                'locales'    => [
+                    'en' => [
+                        'locale' => 'en-US',
+                    ],
+                ],
+                'translator' => [
+                    'paths' => [],
+                ],
+                'metadata'   => [
+                    'paths'  => [
+                        'metadata',
+                        'vendor/locomotivemtl/charcoal-object/metadata',
+                        'vendor/locomotivemtl/charcoal-user/metadata',
+                    ],
+                ],
             ]);
         };
+
+        /**
+         * List of Charcoal module classes.
+         *
+         * Explicitly defined in case of a version mismatch with dependencies. This parameter
+         * is normally defined by {@see \Charcoal\App\ServiceProvider\AppServiceProvider}.
+         *
+         * @var array
+         */
+        $container['module/classes'] = [];
     }
 
     /**
@@ -145,107 +151,6 @@ class ContainerProvider
 
         $container['admin/config'] = function () {
             return new AdminConfig();
-        };
-    }
-
-    /**
-     * @param  Container $container A DI container.
-     * @return void
-     */
-    public function registerLayoutFactory(Container $container)
-    {
-        $container['layout/factory'] = function () {
-            $layoutFactory = new LayoutFactory();
-            return $layoutFactory;
-        };
-    }
-
-    /**
-     * @param  Container $container A DI container.
-     * @return void
-     */
-    public function registerLayoutBuilder(Container $container)
-    {
-        $this->registerLayoutFactory($container);
-
-        $container['layout/builder'] = function (Container $container) {
-            $layoutFactory = $container['layout/factory'];
-            $layoutBuilder = new LayoutBuilder($layoutFactory, $container);
-            return $layoutBuilder;
-        };
-    }
-
-    /**
-     * @param  Container $container A DI container.
-     * @return void
-     */
-    public function registerDashboardFactory(Container $container)
-    {
-        $this->registerLogger($container);
-        $this->registerWidgetBuilder($container);
-        $this->registerLayoutBuilder($container);
-
-        $container['dashboard/factory'] = function (Container $container) {
-            return new Factory([
-                'arguments'          => [[
-                    'container'      => $container,
-                    'logger'         => $container['logger'],
-                    'widget_builder' => $container['widget/builder'],
-                    'layout_builder' => $container['layout/builder']
-                ]],
-                'resolver_options' => [
-                    'suffix' => 'Dashboard'
-                ]
-            ]);
-        };
-    }
-
-    /**
-     * @param  Container $container A DI container.
-     * @return void
-     */
-    public function registerDashboardBuilder(Container $container)
-    {
-        $this->registerDashboardFactory($container);
-
-        $container['dashboard/builder'] = function (Container $container) {
-            $dashboardFactory = $container['dashboard/factory'];
-            $dashboardBuilder = new DashboardBuilder($dashboardFactory, $container);
-            return $dashboardBuilder;
-        };
-    }
-
-    /**
-     * @param  Container $container A DI container.
-     * @return void
-     */
-    public function registerWidgetFactory(Container $container)
-    {
-        $this->registerLogger($container);
-
-        $container['widget/factory'] = function (Container $container) {
-            return new Factory([
-                'resolver_options' => [
-                    'suffix' => 'Widget'
-                ],
-                'arguments' => [[
-                    'container' => $container,
-                    'logger'    => $container['logger']
-                ]]
-            ]);
-        };
-    }
-
-    /**
-     * @param  Container $container A DI container.
-     * @return void
-     */
-    public function registerWidgetBuilder(Container $container)
-    {
-        $this->registerWidgetFactory($container);
-
-        $container['widget/builder'] = function (Container $container) {
-            return new WidgetBuilder($container['widget/factory'], $container);
         };
     }
 
@@ -296,89 +201,6 @@ class ContainerProvider
     }
 
     /**
-     * Setup the framework's view renderer.
-     *
-     * @param  Container $container A DI container.
-     * @return void
-     */
-    public function registerView(Container $container)
-    {
-        $container['view/loader'] = function (Container $container) {
-            return new MustacheLoader([
-                'logger'    => $container['logger'],
-                'base_path' => $container['config']['base_path'],
-                'paths'     => [
-                    'views'
-                ]
-            ]);
-        };
-
-        $container['view/engine'] = function (Container $container) {
-            return new MustacheEngine([
-                'logger' => $container['logger'],
-                'cache'  => MustacheEngine::DEFAULT_CACHE_PATH,
-                'loader' => $container['view/loader']
-            ]);
-        };
-
-        $container['view'] = function (Container $container) {
-            return new GenericView([
-                'logger' => $container['logger'],
-                'engine' => $container['view/engine']
-            ]);
-        };
-    }
-
-    /**
-     * Setup the application's translator service.
-     *
-     * @param  Container $container A DI container.
-     * @return void
-     */
-    public function registerTranslator(Container $container)
-    {
-        $container['locales/manager'] = function () {
-            return new LocalesManager([
-                'locales' => [
-                    'en' => [ 'locale' => 'en-US' ]
-                ]
-            ]);
-        };
-
-        $container['translator'] = function (Container $container) {
-            return new Translator([
-                'manager' => $container['locales/manager']
-            ]);
-        };
-    }
-
-    /**
-     * Setup the application's logging interface.
-     *
-     * @param  Container $container A DI container.
-     * @return void
-     */
-    public function registerLogger(Container $container)
-    {
-        $container['logger'] = function () {
-            return new NullLogger();
-        };
-    }
-
-    /**
-     * Setup the application's caching interface.
-     *
-     * @param  Container $container A DI container.
-     * @return void
-     */
-    public function registerCache(Container $container)
-    {
-        $container['cache'] = function () {
-            return new Pool();
-        };
-    }
-
-    /**
      * @param  Container $container A DI container.
      * @return void
      */
@@ -395,22 +217,85 @@ class ContainerProvider
      * @param  Container $container A DI container.
      * @return void
      */
-    public function registerMetadataLoader(Container $container)
+    public function registerModelServiceProvider(Container $container)
     {
-        $this->registerLogger($container);
-        $this->registerCache($container);
+        static $provider = null;
 
-        $container['metadata/loader'] = function (Container $container) {
-            return new MetadataLoader([
-                'logger'    => $container['logger'],
-                'cache'     => $container['cache'],
-                'base_path' => $container['config']['base_path'],
-                'paths'     => [
-                    'metadata',
-                    'vendor/locomotivemtl/charcoal-object/metadata',
-                    'vendor/locomotivemtl/charcoal-user/metadata',
-                ]
-            ]);
+        if ($provider === null) {
+            $provider = new ModelServiceProvider();
+        }
+
+        $provider->register($container);
+    }
+
+    /**
+     * @param  Container $container A DI container.
+     * @return void
+     */
+    public function registerAuthServiceProvider(Container $container)
+    {
+        static $provider = null;
+
+        if ($provider === null) {
+            $provider = new AuthServiceProvider();
+        }
+
+        $provider->register($container);
+    }
+
+    /**
+     * @param  Container $container A DI container.
+     * @return void
+     */
+    public function registerTranslatorServiceProvider(Container $container)
+    {
+        static $provider = null;
+
+        if ($provider === null) {
+            $provider = new TranslatorServiceProvider();
+        }
+
+        $provider->register($container);
+    }
+
+    /**
+     * @param  Container $container A DI container.
+     * @return void
+     */
+    public function registerViewServiceProvider(Container $container)
+    {
+        static $provider = null;
+
+        if ($provider === null) {
+            $provider = new ViewServiceProvider();
+        }
+
+        $provider->register($container);
+    }
+
+    /**
+     * @param  Container $container A DI container.
+     * @return void
+     */
+    public function registerAdminServiceProvider(Container $container)
+    {
+        static $provider = null;
+
+        if ($provider === null) {
+            $provider = new AdminServiceProvider();
+        }
+
+        $provider->register($container);
+    }
+
+    /**
+     * @param  Container $container A DI container.
+     * @return void
+     */
+    public function registerLogger(Container $container)
+    {
+        $container['logger'] = function () {
+            return new NullLogger();
         };
     }
 
@@ -418,243 +303,10 @@ class ContainerProvider
      * @param  Container $container A DI container.
      * @return void
      */
-    public function registerSourceFactory(Container $container)
+    public function registerCache(Container $container)
     {
-        $this->registerLogger($container);
-        $this->registerDatabase($container);
-
-        $container['source/factory'] = function (Container $container) {
-            return new Factory([
-                'map' => [
-                    'database' => DatabaseSource::class
-                ],
-                'arguments'  => [[
-                    'logger' => $container['logger'],
-                    'pdo'    => $container['database']
-                ]]
-            ]);
+        $container['cache'] = function () {
+            return new Pool();
         };
-    }
-
-    /**
-     * @param  Container $container A DI container.
-     * @return void
-     */
-    public function registerPropertyFactory(Container $container)
-    {
-        $this->registerTranslator($container);
-        $this->registerDatabase($container);
-        $this->registerLogger($container);
-
-        $container['property/factory'] = function (Container $container) {
-            return new Factory([
-                'resolver_options' => [
-                    'prefix' => '\\Charcoal\\Property\\',
-                    'suffix' => 'Property'
-                ],
-                'arguments' => [[
-                    'container'  => $container,
-                    'database'   => $container['database'],
-                    'translator' => $container['translator'],
-                    'logger'     => $container['logger']
-                ]]
-            ]);
-        };
-    }
-
-    /**
-     * @param  Container $container A DI container.
-     * @return void
-     */
-    public function registerPropertyDisplayFactory(Container $container)
-    {
-        $this->registerDatabase($container);
-        $this->registerLogger($container);
-
-        $container['property/display/factory'] = function (Container $container) {
-            return new Factory([
-                'resolver_options' => [
-                    'suffix' => 'Display'
-                ],
-                'arguments' => [[
-                    'container' => $container,
-                    'logger'    => $container['logger']
-                ]]
-            ]);
-        };
-    }
-
-
-    /**
-     * @param  Container $container A DI container.
-     * @return void
-     */
-    public function registerModelFactory(Container $container)
-    {
-        $this->registerLogger($container);
-        $this->registerTranslator($container);
-        $this->registerMetadataLoader($container);
-        $this->registerPropertyFactory($container);
-        $this->registerSourceFactory($container);
-
-        $container['model/factory'] = function (Container $container) {
-            return new Factory([
-                'arguments' => [[
-                    'container'        => $container,
-                    'logger'           => $container['logger'],
-                    'metadata_loader'  => $container['metadata/loader'],
-                    'property_factory' => $container['property/factory'],
-                    'source_factory'   => $container['source/factory']
-                ]]
-            ]);
-        };
-    }
-
-    /**
-     * @param  Container $container A DI container.
-     * @return void
-     */
-    public function registerAcl(Container $container)
-    {
-        $container['admin/acl'] = function () {
-            return new Acl();
-        };
-    }
-
-    /**
-     * @param  Container $container A DI container.
-     * @return void
-     */
-    public function registerAuthenticator(Container $container)
-    {
-        $this->registerLogger($container);
-        $this->registerModelFactory($container);
-
-        $container['admin/authenticator'] = function (Container $container) {
-            return new Authenticator([
-                'logger'        => $container['logger'],
-                'user_type'     => 'charcoal/admin/user',
-                'user_factory'  => $container['model/factory'],
-                'token_type'    => 'charcoal/admin/user/auth-token',
-                'token_factory' => $container['model/factory']
-            ]);
-        };
-    }
-
-    /**
-     * @param  Container $container A DI container.
-     * @return void
-     */
-    public function registerAuthorizer(Container $container)
-    {
-        $this->registerLogger($container);
-        $this->registerAcl($container);
-
-        $container['admin/authorizer'] = function (Container $container) {
-            return new Authorizer([
-                'logger'    => $container['logger'],
-                'acl'       => $container['admin/acl'],
-                'resource'  => 'admin'
-            ]);
-        };
-    }
-
-    /**
-     * @param  Container $container A DI container.
-     * @return void
-     */
-    public function registerCollectionLoader(Container $container)
-    {
-        $this->registerLogger($container);
-        $this->registerModelFactory($container);
-
-        $container['model/collection/loader'] = function (Container $container) {
-            return new \Charcoal\Loader\CollectionLoader([
-                'logger'  => $container['logger'],
-                'factory' => $container['model/factory']
-            ]);
-        };
-    }
-
-    /**
-     * @param  Container $container A DI container.
-     * @return void
-     */
-    public function registerEmailFactory(Container $container)
-    {
-        $container['email/factory'] = function () {
-            return new Factory([
-                'map' => [
-                    'email' => Email::class
-                ]
-            ]);
-        };
-    }
-
-    /**
-     * @param  Container $container A DI container.
-     * @return void
-     */
-    public function registerElfinderConfig(Container $container)
-    {
-        $container['elfinder/config'] = function () {
-            return [];
-        };
-    }
-
-    /**
-     * @param  Container $container A DI container.
-     * @return void
-     */
-    public function registerActionDependencies(Container $container)
-    {
-        $this->registerLogger($container);
-
-        $this->registerModelFactory($container);
-        $this->registerTranslator($container);
-
-        $this->registerAdminConfig($container);
-        $this->registerBaseUrl($container);
-
-        $this->registerAuthenticator($container);
-        $this->registerAuthorizer($container);
-    }
-
-    /**
-     * @param  Container $container A DI container.
-     * @return void
-     */
-    public function registerTemplateDependencies(Container $container)
-    {
-        $this->registerLogger($container);
-
-        $this->registerModelFactory($container);
-        $this->registerTranslator($container);
-
-        $this->registerAdminConfig($container);
-        $this->registerBaseUrl($container);
-
-        $this->registerAuthenticator($container);
-        $this->registerAuthorizer($container);
-
-        $container['menu/builder'] = null;
-        $container['menu/item/builder'] = null;
-    }
-
-    /**
-     * @param  Container $container A DI container.
-     * @return void
-     */
-    public function registerWidgetDependencies(Container $container)
-    {
-        $this->registerLogger($container);
-        $this->registerTranslator($container);
-        $this->registerView($container);
-        $this->registerAdminConfig($container);
-        $this->registerBaseUrl($container);
-        $this->registerModelFactory($container);
-
-        $this->registerAuthenticator($container);
-        $this->registerAuthorizer($container);
     }
 }

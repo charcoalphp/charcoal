@@ -59,10 +59,10 @@ trait ContainerIntegrationTrait
         $container = new Container();
 
         $provider->registerBaseServices($container);
-        $provider->registerTranslator($container);
-        $provider->registerMetadataLoader($container);
-        $provider->registerSourceFactory($container);
-        $provider->registerPropertyFactory($container);
+        $provider->registerViewServiceProvider($container);
+        $provider->registerModelServiceProvider($container);
+        $provider->registerAuthServiceProvider($container);
+        $provider->registerTranslatorServiceProvider($container);
 
         $this->container = $container;
         $this->containerProvider = $provider;
