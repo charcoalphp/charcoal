@@ -4,6 +4,9 @@ namespace Charcoal\Tests;
 
 use PDO;
 
+// From Mockery
+use Mockery;
+
 // From Pimple
 use Pimple\Container;
 
