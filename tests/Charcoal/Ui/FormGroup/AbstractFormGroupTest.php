@@ -29,9 +29,6 @@ class AbstractFormGroupTest extends AbstractTestCase
         $container->register(new FormServiceProvider());
         $container->register(new LayoutServiceProvider());
 
-        $provider = $this->getContainerProvider();
-        $provider->registerView($container);
-
         $form = $container['form/builder']->build([
             'type' => null
         ]);

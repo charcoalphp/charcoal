@@ -29,9 +29,6 @@ class AbstractFormTest extends AbstractTestCase
         $container->register(new FormServiceProvider());
         $container->register(new LayoutServiceProvider());
 
-        $provider = $this->getContainerProvider();
-        $provider->registerView($container);
-
         $this->obj = $this->getMockForAbstractClass(AbstractForm::class, [
             [
                 'container'          => $container,

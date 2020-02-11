@@ -33,9 +33,6 @@ class AbstractDashboardTest extends AbstractTestCase
         $container->register(new LayoutServiceProvider());
         $container->register(new FormServiceProvider());
 
-        $provider = $this->getContainerProvider();
-        $provider->registerView($container);
-
         $this->obj = $this->getMockForAbstractClass(AbstractDashboard::class, [
             [
                 'logger'         => $container['logger'],

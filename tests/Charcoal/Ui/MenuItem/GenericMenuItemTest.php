@@ -27,16 +27,13 @@ class GenericMenuItemTest extends AbstractTestCase
         $container = $this->getContainer();
         $container->register(new MenuServiceProvider());
 
-        $provider = $this->getContainerProvider();
-        $provider->registerView($container);
-
         $menu = $container['menu/builder']->build([]);
 
         $this->obj = new GenericMenuItem([
             'menu'              => $menu,
             'logger'            => $container['logger'],
             'view'              => $container['view'],
-            'menu_item_builder' => $container['menu/item/builder']
+            'menu_item_builder' => $container['menu/item/builder'],
         ]);
     }
 

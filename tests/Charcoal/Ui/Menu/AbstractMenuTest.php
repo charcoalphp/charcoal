@@ -28,9 +28,6 @@ class AbstractMenuTest extends AbstractTestCase
         $container = $this->getContainer();
         $container->register(new MenuServiceProvider());
 
-        $provider = $this->getContainerProvider();
-        $provider->registerView($container);
-
         $this->obj = $this->getMockForAbstractClass(AbstractMenu::class, [
             [
                 'container'         => $container,

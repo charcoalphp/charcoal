@@ -29,9 +29,6 @@ class GenericDashboardTest extends AbstractTestCase
         $container->register(new LayoutServiceProvider());
         $container->register(new FormServiceProvider());
 
-        $provider = $this->getContainerProvider();
-        $provider->registerView($container);
-
         $this->obj = new GenericDashboard([
             'logger'         => $container['logger'],
             'view'           => $container['view'],
