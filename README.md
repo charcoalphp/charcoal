@@ -14,8 +14,7 @@ The preferred (and only supported) way of installing _charcoal-attachment is wit
 
 ## Dependencies
 
--   [`PHP 5.6+`](http://php.net)
-    - `PHP 7` is recommended, for security and performance reasons.
+-   [PHP 7.1+](http://php.net)
 -   [`locomotivemtl/charcoal-core`](https://github.com/locomotivemtl/charcoal-core)
 -   [`locomotivemtl/charcoal-base`](https://github.com/locomotivemtl/charcoal-base)
 -   [`locomotivemtl/charcoal-admin`](https://github.com/locomotivemtl/charcoal-admin)
@@ -141,8 +140,8 @@ Then, we need to add the necessary routes for the widgets in admin.json config f
 
 You need to make your object(s) "Attachment Aware", so that it knows it can have attachments. To do that, use/implement attachmentAware:
 ```php
-use \Charcoal\Attachment\Traits\AttachmentAwareTrait;
-use \Charcoal\Attachment\Interfaces\AttachmentAwareInterface;
+use Charcoal\Attachment\Traits\AttachmentAwareTrait;
+use Charcoal\Attachment\Interfaces\AttachmentAwareInterface;
 ```
 
 Then, just add in the widget in the edit dashboard or the form like this:
@@ -171,6 +170,7 @@ Available attachable objects as provided by the current modile are:
 To create a new attachment, you need to extend the base Attachment object `charcoal/attachment/object/attachment` and provide a "quick" form.
 
 To remove unnecessary join when deleting an object, you need to add this to your object:
+
 ```php
 public function preDelete()
 {
@@ -208,8 +208,9 @@ IF you need to add properties to an existing attachment, you can always extend i
 ```php
 /**
  * Extended text class.
- **/
+ */
 namespace My\Namespace;
+
 use Charcoal\Attachment\Object\Text as AttachmentText;
 
 class Text extends AttachmentText
@@ -233,6 +234,7 @@ Now that we have the extend, let's add to the JSON by creating a `my/namespace/t
     "data": {
         "type": "my/namespace/text"
     }
+}
 ```
 
 In that case, the editor options are changed to remove the base style formats, change the body class and add the appropriate css. The important part is to set the data type to the current object. This is used in live edit and delete features.
