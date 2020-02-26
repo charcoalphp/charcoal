@@ -282,10 +282,14 @@ class FileProperty extends AbstractProperty
      *
      * @uses   finfo
      * @param  string $file The file to check.
-     * @return string|false Returns the given file's MIME type or FALSE if an error occurred.
+     * @return string|null Returns the given file's MIME type or FALSE if an error occurred.
      */
     public function getMimetypeFor($file)
     {
+        if (!$this->fileExists($file)) {
+            return null;
+        }
+
         $info = new finfo(FILEINFO_MIME_TYPE);
 
         return $info->file($file);
@@ -380,7 +384,7 @@ class FileProperty extends AbstractProperty
     {
         if (!$this->filesize) {
             $val = $this->val();
-            if (!$val || !file_exists($val) || !is_readable($val)) {
+            if (!$val || !$this->fileExists($val)) {
                 return 0;
             } else {
                 $this->filesize = filesize($val);
@@ -428,14 +432,14 @@ class FileProperty extends AbstractProperty
             $mimetype = $this->mimetype;
         } else {
             $val = $this->val();
-            if (!$val) {
+            if (!$val || !$this->fileExists($val)) {
                 return true;
             }
             $mimetype = $this->getMimetypeFor($val);
         }
         $valid = false;
         foreach ($acceptedMimetypes as $m) {
-            if ($m == $mimetype) {
+            if ($m === $mimetype) {
                 $valid = true;
                 break;
             }
