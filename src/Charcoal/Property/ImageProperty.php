@@ -186,7 +186,7 @@ class ImageProperty extends FileProperty
         return [
             self::EFFECTS_EVENT_UPLOAD,
             self::EFFECTS_EVENT_SAVE,
-            self::EFFECTS_EVENT_NEVER
+            self::EFFECTS_EVENT_NEVER,
         ];
     }
 
@@ -477,6 +477,10 @@ class ImageProperty extends FileProperty
                 'Target image must be a string, received %s',
                 (is_object($value) ? get_class($value) : gettype($value))
             ));
+        }
+
+        if (!$this->fileExists($value)) {
+            return $value;
         }
 
         if ($image === null) {
