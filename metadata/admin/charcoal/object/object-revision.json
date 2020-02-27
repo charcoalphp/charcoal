@@ -1,4 +1,13 @@
 {
+    "properties": {
+        "revUser": {
+            "type": "object",
+            "input_type": "charcoal/admin/property/input/readonly",
+            "obj_type": "charcoal/admin/user",
+            "pattern": "displayName"
+        }
+    },
+
     "admin": {
         "lists": {
             "default": {
