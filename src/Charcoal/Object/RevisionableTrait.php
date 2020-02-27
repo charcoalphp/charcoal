@@ -129,7 +129,10 @@ trait RevisionableTrait
     }
 
     /**
-     * @see \Charcoal\Object\ObejctRevision::objectRevisionNum
+     * @see \Charcoal\Object\ObejctRevision::objectRevisionNum()
+     *
+     * @todo Should return NULL if source does not exist.
+     *
      * @param  integer $revNum The revision number.
      * @return ObjectRevision
      */

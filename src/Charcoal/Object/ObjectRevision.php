@@ -384,16 +384,18 @@ class ObjectRevision extends AbstractModel implements ObjectRevisionInterface
     }
 
     /**
+     * @todo Should return NULL if source does not exist.
+     *
      * @param RevisionableInterface $obj The object  to load the last revision of.
      * @return ObjectRevision The last revision for the give object.
      */
     public function lastObjectRevision(RevisionableInterface $obj)
     {
-        if ($this->source()->tableExists() === false) {
-            $this->source()->createTable();
-        }
-
         $rev = $this->modelFactory()->create(self::class);
+
+        if ($this->source()->tableExists() === false) {
+            return $rev;
+        }
 
         $sql = sprintf(
             'SELECT * FROM `%s` WHERE `target_type` = :target_type AND `target_id` = :target_id ORDER BY `rev_ts` DESC LIMIT 1',
@@ -410,17 +412,19 @@ class ObjectRevision extends AbstractModel implements ObjectRevisionInterface
     /**
      * Retrieve a specific object revision, by revision number.
      *
-     * @param RevisionableInterface $obj    Target object.
-     * @param integer               $revNum The revision number to load.
+     * @todo Should return NULL if source does not exist.
+     *
+     * @param  RevisionableInterface $obj    Target object.
+     * @param  integer               $revNum The revision number to load.
      * @return ObjectRevision
      */
     public function objectRevisionNum(RevisionableInterface $obj, $revNum)
     {
-        if ($this->source()->tableExists() === false) {
-            $this->source()->createTable();
-        }
-
         $rev = $this->modelFactory()->create(self::class);
+
+        if ($this->source()->tableExists() === false) {
+            return $rev;
+        }
 
         $sql = sprintf(
             'SELECT * FROM `%s` WHERE `target_type` = :target_type AND `target_id` = :target_id AND `rev_num` = :rev_num LIMIT 1',
