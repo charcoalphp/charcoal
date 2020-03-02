@@ -4,27 +4,17 @@ namespace Charcoal\User;
 
 use InvalidArgumentException;
 
-// From PSR-3
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerAwareTrait;
-
 // From 'laminas/laminas-permissions-acl'
-use Laminas\Permissions\Acl\Acl;
+use Laminas\Permissions\Acl\Exception\ExceptionInterface as AclExceptionInterface;
+use Laminas\Permissions\Acl\Resource\ResourceInterface as AclResourceInterface;
 
 // From 'charcoal-user'
 use Charcoal\User\UserInterface;
 
 /**
- * The authorizer service helps with user authorization (permission checking).
+ * User Authorization Checker
  *
- * ## Constructor dependencies
- *
- * Constructor dependencies are passed as an array of `key=>value` pair.
- * The required dependencies are:
- *
- * - `logger` A PSR3 logger instance.
- * - `acl` A Laminas ACL (Access-Control-List) instance.
- * - `resource` The ACL resource identifier (string).
+ * The authorizer service provides support, upon creation, for a default ACL resource.
  *
  * ## Checking permissions
  *
@@ -33,103 +23,112 @@ use Charcoal\User\UserInterface;
  * - `userAllowed(UserInterface $user, string[] $aclPermissions)`
  * - `rolesAllowed(string[] $roles, string[] $aclPermissions)`
  */
-class Authorizer implements LoggerAwareInterface
+class Authorizer extends AbstractAuthorizer
 {
-    use LoggerAwareTrait;
+    const DEFAULT_RESOURCE = 'DEFAULT_RESOURCE';
 
     /**
-     * @var Acl $acl
+     * The default ACL resource identifier.
+     *
+     * @var string|null
      */
-    private $acl;
-
-    /**
-     * The ACL resource identifier
-     * @var string $resource
-     */
-    private $resource;
+    private $defaultResource;
 
     /**
      * @param array $data Class dependencies.
      */
     public function __construct(array $data)
     {
-        $this->setLogger($data['logger']);
-        $this->setAcl($data['acl']);
-        $this->setResource($data['resource']);
+        parent::__construct($data);
+
+        if (isset($data['resource'])) {
+            $this->setDefaultResource($data['resource']);
+        }
     }
 
     /**
-     * @param string[] $aclRoles       The ACL roles to validate against.
-     * @param string[] $aclPermissions The acl permissions to validate.
-     * @return boolean Wether the permissions are allowed for a given list of roles.
+     * Determine if access is granted by checking the role(s) for permission(s).
+     *
+     * @deprecated In favour of AbstractAuthorizer::anyRolesGrantedAll()
+     *
+     * @param  string[] $aclRoles       The ACL role(s) to check.
+     * @param  string[] $aclPermissions The ACL privilege(s) to check.
+     * @return boolean Returns TRUE if and only if the $aclPermissions are granted against one of the $aclRoles.
+     *     Returns TRUE if an empty array of permissions is given.
+     *     Returns NULL if no applicable roles or permissions could be checked.
      */
     public function rolesAllowed(array $aclRoles, array $aclPermissions)
     {
-        $acl = $this->acl();
-        $aclResource = $this->resource();
-
-        foreach ($aclRoles as $aclRole) {
-            foreach ($aclPermissions as $aclPermission) {
-                if (!$acl->isAllowed($aclRole, $aclResource, $aclPermission)) {
-                    $this->logger->error(sprintf(
-                        'Role "%s" is not allowed permission "%s"',
-                        $aclRole,
-                        $aclPermission
-                    ));
-                    return false;
-                }
-            }
+        if (empty($aclPermissions)) {
+            return true;
         }
-        return true;
+
+        return $this->anyRolesGrantedAll($aclRoles, static::DEFAULT_RESOURCE, $aclPermissions);
     }
 
     /**
-     * @param UserInterface $user           The user to validate against.
-     * @param string[]      $aclPermissions The acl permissions to validate.
-     * @return boolean Whether the permissions are allowed for a given user.
+     * Determine if access is granted by checking the user's role(s) for permission(s).
+     *
+     * @deprecated In favour of AbstractAuthorizer::isUserGranted()
+     *
+     * @param  UserInterface $user           The user to check.
+     * @param  string[]      $aclPermissions The ACL privilege(s) to check.
+     * @return boolean
+     *     Returns TRUE if and only if the $aclPermissions are granted against one of the roles of the $user.
+     *     Returns TRUE if an empty array of permissions is given.
+     *     Returns NULL if no applicable roles or permissions could be checked.
      */
     public function userAllowed(UserInterface $user, array $aclPermissions)
     {
-        return $this->rolesAllowed($user['roles'], $aclPermissions);
+        if (empty($aclPermissions)) {
+            return true;
+        }
+
+        return $this->isUserGranted($user, static::DEFAULT_RESOURCE, $aclPermissions);
     }
 
     /**
-     * @return Acl
+     * {@inheritdoc}
+     *
+     * This method overrides {@see AbstractAuthorizer::isAllowed()}
+     * as proxy to {@see \Laminas\Permissions\Acl\Acl::isAllowed()}
+     * to provide support for the special class constant `Authorizer::DEFAULT_RESOURCE`.
+     *
+     * @param  AclRoleInterface|string     $role      The ACL role to check.
+     * @param  AclResourceInterface|string $resource  The ACL resource to check.
+     * @param  string                      $privilege The ACL privilege to check.
+     * @return boolean Returns TRUE if and only if the $role has access to the $resource.
      */
-    protected function acl()
+    public function isAllowed($role = null, $resource = null, $privilege = null)
     {
-        return $this->acl;
+        if ($resource === static::DEFAULT_RESOURCE) {
+            $resource = $this->getDefaultResource();
+        }
+
+        return parent::isAllowed($role, $resource, $privilege);
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    protected function resource()
+    protected function getDefaultResource()
     {
-        return $this->resource;
+        return $this->defaultResource;
     }
 
     /**
-     * @param Acl $acl The ACL instance.
-     * @return void
-     */
-    private function setAcl(Acl $acl)
-    {
-        $this->acl = $acl;
-    }
-
-    /**
-     * @param string $resource The ACL resource identifier.
+     * @param  string|null $resource The ACL resource identifier.
      * @throws InvalidArgumentException If the resource identifier is not a string.
      * @return void
      */
-    private function setResource($resource)
+    private function setDefaultResource($resource)
     {
-        if (!is_string($resource)) {
+        if (!is_string($resource) && $resource !== null) {
             throw new InvalidArgumentException(
-                'ACL resource identifier must be a string.'
+                'ACL resource identifier must be a string or NULL'
             );
         }
-        $this->resource = $resource;
+
+        $this->defaultResource = $resource;
     }
 }
