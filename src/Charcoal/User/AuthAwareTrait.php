@@ -14,7 +14,7 @@ use Pimple\Container;
 trait AuthAwareTrait
 {
     /**
-     * @var Authenticator
+     * @var AuthenticatorInterface
      */
     private $authenticator;
 
@@ -66,10 +66,10 @@ trait AuthAwareTrait
     /**
      * Set the authentication service.
      *
-     * @param  Authenticator $authenticator The authentication service.
+     * @param  AuthenticatorInterface $authenticator The authentication service.
      * @return void
      */
-    protected function setAuthenticator(Authenticator $authenticator)
+    protected function setAuthenticator(AuthenticatorInterface $authenticator)
     {
         $this->authenticator = $authenticator;
     }
@@ -78,7 +78,7 @@ trait AuthAwareTrait
      * Retrieve the authentication service.
      *
      * @throws RuntimeException If the authenticator was not previously set.
-     * @return Authenticator
+     * @return AuthenticatorInterface
      */
     protected function authenticator()
     {
