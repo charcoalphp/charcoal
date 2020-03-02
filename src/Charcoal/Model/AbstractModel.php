@@ -372,6 +372,10 @@ abstract class AbstractModel extends AbstractEntity implements
         }
 
         $data = $sth->fetch(PDO::FETCH_ASSOC);
+        if (!$data || !isset($data['_lang'])) {
+            throw new PDOException('Could not load item.');
+        }
+
         $lang = $data['_lang'];
         unset($data['_lang']);
 
