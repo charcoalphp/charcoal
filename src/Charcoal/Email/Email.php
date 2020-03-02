@@ -13,6 +13,7 @@ use Psr\Log\LoggerAwareTrait;
 use PHPMailer\PHPMailer\PHPMailer;
 
 // From 'charcoal-config'
+use Charcoal\Config\AbstractEntity;
 use Charcoal\Config\ConfigurableInterface;
 use Charcoal\Config\ConfigurableTrait;
 
@@ -37,7 +38,7 @@ use Charcoal\Email\EmailQueueItem;
 /**
  * Default implementation of the `EmailInterface`.
  */
-class Email implements
+class Email extends AbstractEntity implements
     ConfigurableInterface,
     EmailInterface,
     LoggerAwareInterface,
@@ -173,26 +174,6 @@ class Email implements
         $this->setTemplateFactory($data['template_factory']);
         $this->setQueueItemFactory($data['queue_item_factory']);
         $this->setLogFactory($data['log_factory']);
-    }
-
-    /**
-     * Set the email's data.
-     *
-     * @param array $data The data to set.
-     * @return Email Chainable
-     */
-    public function setData(array $data)
-    {
-        foreach ($data as $prop => $val) {
-            $func = [$this, $this->setter($prop)];
-            if (is_callable($func)) {
-                call_user_func($func, $val);
-            } else {
-                $this->{$prop} = $val;
-            }
-        }
-
-        return $this;
     }
 
     /**
@@ -1040,17 +1021,6 @@ class Email implements
 
             $log->save();
         }
-    }
-
-    /**
-     * Transform a snake_case string to camelCase.
-     *
-     * @param string $str The snake_case string to camelize.
-     * @return string The camelCase string.
-     */
-    private function camelize($str)
-    {
-        return lcfirst(implode('', array_map('ucfirst', explode('_', $str))));
     }
 
     /**
