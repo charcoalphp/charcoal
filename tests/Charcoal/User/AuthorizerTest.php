@@ -5,10 +5,10 @@ namespace Charcoal\Tests\User;
 // From Pimple
 use Pimple\Container;
 
-// From 'zendframework/zend-permissions'
-use Zend\Permissions\Acl\Acl;
-use Zend\Permissions\Acl\Role\GenericRole as Role;
-use Zend\Permissions\Acl\Resource\GenericResource as Resource;
+// From 'laminas/laminas-permissions-acl'
+use Laminas\Permissions\Acl\Acl;
+use Laminas\Permissions\Acl\Role\GenericRole as Role;
+use Laminas\Permissions\Acl\Resource\GenericResource as Resource;
 
 // From 'charcoal-user'
 use Charcoal\User\Authorizer;

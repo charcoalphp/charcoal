@@ -19,7 +19,7 @@
     "require": {
         "php": ">7.1",
         "psr/log": "^1.0",
-        "zendframework/zend-permissions-acl": "^2.6",
+        "laminas/laminas-permissions-acl": "^2.7",
         "locomotivemtl/charcoal-object": "~0.7",
         "locomotivemtl/charcoal-config": "~0.10",
         "locomotivemtl/charcoal-factory": "~0.4",

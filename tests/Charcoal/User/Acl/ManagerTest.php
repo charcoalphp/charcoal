@@ -5,9 +5,9 @@ namespace Charcoal\Tests\User\Acl;
 // From Pimple
 use Pimple\Container;
 
-// From 'zendframework/zend-permissions'
-use Zend\Permissions\Acl\Acl;
-use Zend\Permissions\Acl\Resource\GenericResource as Resource;
+// From 'laminas/laminas-permissions-acl'
+use Laminas\Permissions\Acl\Acl;
+use Laminas\Permissions\Acl\Resource\GenericResource as Resource;
 
 // From 'charcoal-user'
 use Charcoal\User\Acl\Manager;

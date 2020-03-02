@@ -1,7 +1,7 @@
 Charcoal User
 =============
 
-User defintion (as Charcoal Model), authentication and authorization (with Zend ACL).
+User defintion (as Charcoal Model), authentication and authorization (with Laminas ACL).
 
 
 # Table of content
@@ -27,7 +27,7 @@ The preferred (and only supported) way of installing _charcoal-user_ is with **c
 ## Dependencies
 
 - PHP 7.1+
-- `zendframework/zend-permissions-acl`
+- `laminas/laminas-permissions-acl`
 - `locomotivemtl/charcoal-object`
 
 # The User object
@@ -75,7 +75,7 @@ For quick prototypes or small projects, a full concrete class is provided as `\C
 
 # Authorization
 
-User authorization is managed with a role-based _Access Control List_ (ACL). Internally, it uses [`zendframework/zend-permissions-acl`](https://github.com/zendframework/zend-permissions-acl) for the ACL logic. It is recommended to read the  [Zend ACL documentation](https://zendframework.github.io/zend-permissions-acl/) to learn more about how it all works.
+User authorization is managed with a role-based _Access Control List_ (ACL). Internally, it uses [`laminas/laminas-permissions-acl`](https://github.com/laminas/laminas-permissions-acl) for the ACL logic. It is recommended to read the  [Laminas ACL documentation](https://docs.laminas.dev/laminas-permissions-acl/) to learn more about how it all works.
 
 There are 2 main concepts that must be managed, either from JSON config files or in the database (which works well with `locomotivemtl/charcoal-admin`), **roles** and **permissions**.
 
@@ -102,9 +102,8 @@ To set up ACL, it is highly recommended to use the `\Charcoal\User\Acl\Manager`.
 ```
 
 ```php
-// Dependencies from `zendframework/zend-permissions`
-use Zend\Permissions\Acl\Acl;
-use Zend\Permissions\Acl\Resource\GenericResource as AclResource;
+use Laminas\Permissions\Acl\Acl;
+use Laminas\Permissions\Acl\Resource\GenericResource as AclResource;
 
 // Dependencies from `charcoal-user`
 use Charcoal\User\Acl\Manager as AclManager;
