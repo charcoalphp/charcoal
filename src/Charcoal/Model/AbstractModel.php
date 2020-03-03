@@ -368,12 +368,22 @@ abstract class AbstractModel extends AbstractEntity implements
 
         $sth = $source->dbQuery($sql, $binds);
         if ($sth === false) {
-            throw new PDOException('Could not load item.');
+            throw new PDOException(sprintf(
+                'Could not load model [%s] for localized column "%s" [%s]',
+                get_class($this),
+                $fieldName,
+                (is_object($value) ? get_class($value) : (is_string($value) ? $value : gettype($value)))
+            ));
         }
 
         $data = $sth->fetch(PDO::FETCH_ASSOC);
         if (!$data || !isset($data['_lang'])) {
-            throw new PDOException('Could not load item.');
+            throw new PDOException(sprintf(
+                'Unable to retrieve model [%s] data for localized column "%s" [%s]',
+                get_class($this),
+                $fieldName,
+                (is_object($value) ? get_class($value) : (is_string($value) ? $value : gettype($value)))
+            ));
         }
 
         $lang = $data['_lang'];
@@ -481,7 +491,7 @@ abstract class AbstractModel extends AbstractEntity implements
 
         if (!$sourceConfig) {
             throw new UnexpectedValueException(sprintf(
-                'Can not create source for [%s]: invalid metadata (can not load source\'s configuration).',
+                'Can not create source for model [%s]: Invalid metadata (can not load source\'s configuration)',
                 get_class($this)
             ));
         }
