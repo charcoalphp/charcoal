@@ -169,7 +169,12 @@ class DatabaseSource extends AbstractSource implements
 
         $key = $model->key();
         if ($key) {
-            $query .= ', PRIMARY KEY (`'.$key.'`) '."\n";
+            if ($driver === self::SQLITE_DRIVER_NAME) {
+                /** Convert MySQL syntax to SQLite */
+                $query = preg_replace('/`'.$key.'` INT(EGER)? AUTO_INCREMENT/', '`'.$key.'` INTEGER PRIMARY KEY', $query, 1);
+            } else {
+                $query .= ', PRIMARY KEY (`'.$key.'`) '."\n";
+            }
         }
 
         /** @todo Add indexes for all defined list constraints (yea... tough job...) */
