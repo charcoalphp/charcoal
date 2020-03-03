@@ -47,6 +47,9 @@ class EmailProperty extends StringProperty
      */
     public function validateEmail()
     {
+        if ($this['allowNull'] && !$this['required']) {
+            return true;
+        }
         $val = $this->val();
         $emailValid = filter_var($val, FILTER_VALIDATE_EMAIL);
         return !!$emailValid;
