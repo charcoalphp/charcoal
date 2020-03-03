@@ -58,6 +58,9 @@ class EmailPropertyTest extends AbstractTestCase
      */
     public function testValidateEmail()
     {
+        $this->obj['allowNull'] = false;
+        $this->obj['required'] = true;
+
         $this->obj->setVal('foo@example.com');
         $this->assertTrue($this->obj->validateEmail());
         $this->obj->setVal('foo.bar@example.museum');
