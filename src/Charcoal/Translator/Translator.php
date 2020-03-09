@@ -175,11 +175,19 @@ class Translator extends SymfonyTranslator
         }
 
         if (is_string($val)) {
-            return $this->trans($val, $parameters, $domain, $locale);
-        } else {
-            $translation = $this->translation($val, $parameters, $domain);
+            if ($val !== '') {
+                return $this->trans($val, $parameters, $domain, $locale);
+            }
+
+            return '';
+        }
+
+        $translation = $this->translation($val, $parameters, $domain);
+        if ($translation instanceof Translation) {
             return $translation[$locale];
         }
+
+        return '';
     }
 
     /**
@@ -252,11 +260,19 @@ class Translator extends SymfonyTranslator
         }
 
         if (is_string($val)) {
-            return $this->transChoice($val, $number, $parameters, $domain, $locale);
-        } else {
-            $translation = $this->translationChoice($val, $number, $parameters, $domain);
+            if ($val !== '') {
+                return $this->transChoice($val, $number, $parameters, $domain, $locale);
+            }
+
+            return '';
+        }
+
+        $translation = $this->translationChoice($val, $number, $parameters, $domain);
+        if ($translation instanceof Translation) {
             return $translation[$locale];
         }
+
+        return '';
     }
 
     /**

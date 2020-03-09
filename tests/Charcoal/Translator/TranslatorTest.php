@@ -211,12 +211,12 @@ class TranslatorTest extends AbstractTestCase
     /**
      * @dataProvider invalidTransTests
      *
-     * @param  mixed $val The message ID.
+     * @param  mixed $value The message ID.
      * @return void
      */
-    public function testTranslationInvalidValuesReturnNull($val)
+    public function testTranslationInvalidValuesReturnNull($value)
     {
-        $this->assertNull($this->obj->translation($val));
+        $this->assertNull($this->obj->translation($value));
     }
 
     /**
@@ -242,12 +242,12 @@ class TranslatorTest extends AbstractTestCase
     /**
      * @dataProvider invalidTransTests
      *
-     * @param  mixed $val The message ID.
+     * @param  mixed $value The message ID.
      * @return void
      */
-    public function testTranslateInvalidValuesReturnEmptyString($val)
+    public function testTranslateInvalidValuesReturnEmptyString($value)
     {
-        $this->assertEquals('', $this->obj->translate($val));
+        $this->assertEquals('', $this->obj->translate($value));
     }
 
     /**
@@ -275,12 +275,12 @@ class TranslatorTest extends AbstractTestCase
     /**
      * @dataProvider invalidTransTests
      *
-     * @param  mixed $val The message ID.
+     * @param  mixed $value The message ID.
      * @return void
      */
-    public function testTranslationChoiceInvalidValuesReturnNull($val)
+    public function testTranslationChoiceInvalidValuesReturnNull($value)
     {
-        $this->assertNull($this->obj->translationChoice($val, 1));
+        $this->assertNull($this->obj->translationChoice($value, 1));
     }
 
     /**
@@ -302,6 +302,17 @@ class TranslatorTest extends AbstractTestCase
         }
 
         $this->assertEquals($expected, $this->obj->translateChoice($id, $number, $parameters, $domain, $locale));
+    }
+
+    /**
+     * @dataProvider invalidTransTests
+     *
+     * @param  mixed $value The message ID.
+     * @return void
+     */
+    public function testTranslateChoiceInvalidValuesReturnEmptyString($value)
+    {
+        $this->assertEquals('', $this->obj->translateChoice($value, 1));
     }
 
     /**
@@ -406,15 +417,15 @@ class TranslatorTest extends AbstractTestCase
     public function invalidTransTests()
     {
         return [
-            [ null ],
-            [ 0 ],
-            [ 1 ],
-            [ true ],
-            [ false ],
-            [ [] ],
-            [ [ 'foo', 'bar' ] ],
-            [ [ [ ] ] ],
-            [ '' ]
+            'null'                         => [ null ],
+            '0'                            => [ 0 ],
+            '1'                            => [ 1 ],
+            'true'                         => [ true ],
+            'false'                        => [ false ],
+            'empty string'                 => [ '' ],
+            'empty array'                  => [ [] ],
+            'indexed array'                => [ [ 'foo', 'bar' ] ],
+            'empty multidimensional array' => [ [ [ ] ] ],
         ];
     }
 
