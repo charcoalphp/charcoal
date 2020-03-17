@@ -3,15 +3,22 @@
 namespace Charcoal\Property;
 
 // From 'charcoal-property'
-use Charcoal\Property\StringProperty;
+use Charcoal\Property\TextProperty;
 
 /**
  * HTML Property.
  *
  * The html property is a specialized string property.
  */
-class HtmlProperty extends StringProperty
+class HtmlProperty extends TextProperty
 {
+    const DEFAULT_LONG = true;
+
+    /**
+     * @var boolean
+     */
+    protected $long = self::DEFAULT_LONG;
+
     /**
      * The available filesystems (used in TinyMCE's elFinder media manager).
      *
@@ -66,15 +73,5 @@ class HtmlProperty extends StringProperty
     public function getAllowHtml()
     {
         return true;
-    }
-
-    /**
-     * Get the SQL type (Storage format).
-     *
-     * @return string The SQL type
-     */
-    public function sqlType()
-    {
-        return 'TEXT';
     }
 }

@@ -50,6 +50,7 @@ class HtmlPropertyTest extends AbstractTestCase
         $this->assertTrue($this->obj['allowNull']);
         $this->assertTrue($this->obj['allowHtml']);
         $this->assertTrue($this->obj['active']);
+        $this->assertTrue($this->obj['long']);
     }
 
     /**
@@ -66,7 +67,11 @@ class HtmlPropertyTest extends AbstractTestCase
      */
     public function testSqlType()
     {
+        $this->obj->setLong(false);
         $this->assertEquals('TEXT', $this->obj->sqlType());
+
+        $this->obj->setLong(true);
+        $this->assertEquals('LONGTEXT', $this->obj->sqlType());
     }
 
     public function testFilesystem()

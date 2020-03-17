@@ -15,7 +15,7 @@ class TextProperty extends StringProperty
     /**
      * @var boolean
      */
-    private $long = self::DEFAULT_LONG;
+    protected $long = self::DEFAULT_LONG;
 
     /**
      * @return string
