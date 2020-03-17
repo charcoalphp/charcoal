@@ -22,7 +22,7 @@
                 "filters": {
                     "type": {
                         "property": "type",
-                        "val": "charcoal/attachment/object/video"
+                        "value": "charcoal/attachment/object/video"
                     }
                 }
             },
@@ -40,7 +40,7 @@
                 "filters": {
                     "type": {
                         "property": "type",
-                        "val": "charcoal/attachment/object/video"
+                        "value": "charcoal/attachment/object/video"
                     }
                 }
             }
