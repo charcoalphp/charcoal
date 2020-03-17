@@ -76,7 +76,7 @@
                 "filters": {
                     "type": {
                         "property": "type",
-                        "val": "charcoal/attachment/object/link"
+                        "value": "charcoal/attachment/object/link"
                     }
                 }
             },
@@ -94,7 +94,7 @@
                 "filters": {
                     "type": {
                         "property": "type",
-                        "val": "charcoal/attachment/object/link"
+                        "value": "charcoal/attachment/object/link"
                     }
                 }
             }

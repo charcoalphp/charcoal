@@ -30,7 +30,7 @@
                 "filters": {
                     "type": {
                         "property": "type",
-                        "val": "charcoal/attachment/object/file"
+                        "value": "charcoal/attachment/object/file"
                     }
                 }
             },
@@ -48,7 +48,7 @@
                 "filters": {
                     "type": {
                         "property": "type",
-                        "val": "charcoal/attachment/object/file"
+                        "value": "charcoal/attachment/object/file"
                     }
                 }
             }

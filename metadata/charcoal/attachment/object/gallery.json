@@ -36,7 +36,7 @@
                 "filters": {
                     "type": {
                         "property": "type",
-                        "val": "charcoal/attachment/object/gallery"
+                        "value": "charcoal/attachment/object/gallery"
                     }
                 }
             },
@@ -53,7 +53,7 @@
                 "filters": {
                     "type": {
                         "property": "type",
-                        "val": "charcoal/attachment/object/gallery"
+                        "value": "charcoal/attachment/object/gallery"
                     }
                 }
             }
