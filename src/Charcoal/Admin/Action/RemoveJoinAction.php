@@ -15,6 +15,7 @@ use Charcoal\Admin\AdminAction;
 use Charcoal\Loader\CollectionLoader;
 
 // From 'charcoal-attachment'
+use Charcoal\Attachment\Object\Attachment;
 use Charcoal\Attachment\Object\Join;
 
 /**
@@ -72,11 +73,22 @@ class RemoveJoinAction extends AdminAction
             ->addFilter('attachment_id', $attachmentId)
             ->addFilter('group', $group);
 
-        $existing_joins = $loader->load();
+        $existingJoins = $loader->load();
 
         // Should be just one, tho.
-        foreach ($existing_joins as $j) {
-            $j->delete();
+        foreach ($existingJoins as $joinModel) {
+            $joinModel->delete();
+        }
+
+        // Try loading the attachment
+        try {
+            $attachment = $this->modelFactory()->create(Attachment::class)->load($attachmentId);
+            if ($attachment['id'] !== null) {
+                $attachment->delete();
+            }
+        } catch (Exception $error) {
+            $this->setSuccess(false);
+            return $response;
         }
 
         $this->setSuccess(true);

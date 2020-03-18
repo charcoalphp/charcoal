@@ -342,6 +342,21 @@ trait AttachmentAwareTrait
     }
 
     /**
+     * Delete the objects associated to the current object.
+     *
+     * @param  array $options Filter the attachments by an option list.
+     * @return boolean
+     */
+    public function deleteAttachments(array $options = [])
+    {
+        foreach ($this->getAttachments($options) as $attachment) {
+            $attachment->delete();
+        }
+
+        return true;
+    }
+
+    /**
      * Retrieve the attachment widget.
      *
      * @return AttachmentWidget

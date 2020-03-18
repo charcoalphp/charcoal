@@ -26,7 +26,6 @@ use Charcoal\Translator\Translation;
 // From 'charcoal-attachment'
 use Charcoal\Attachment\Interfaces\AttachableInterface;
 use Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
-
 use Charcoal\Attachment\Object\File;
 use Charcoal\Attachment\Object\Image;
 use Charcoal\Attachment\Object\Text;
@@ -923,15 +922,14 @@ class Attachment extends Content implements AttachableInterface
      */
     public function preDelete()
     {
-        $attId = $this->id();
-        $joinProto = $this->modelFactory()->get(Join::class);
-        $loader = $this->collectionLoader();
-        $loader->setModel($joinProto);
+        $joinCollection = $this->collectionLoader()
+            ->reset()
+            ->setModel(Join::class)
+            ->addFilter('attachment_id', $this['id'])
+            ->load();
 
-        $collection = $loader->addFilter('attachment_id', $attId)->load();
-
-        foreach ($collection as $obj) {
-            $obj->delete();
+        foreach ($joinCollection as $joinModel) {
+            $joinModel->delete();
         }
 
         return parent::preDelete();
