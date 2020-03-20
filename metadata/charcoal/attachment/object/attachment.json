@@ -66,6 +66,7 @@
             "type": "file",
             "l10n": true,
             "label": "File",
+            "validatable": false,
             "upload_path": "uploads/attachments/",
             "public_access": true
         },
