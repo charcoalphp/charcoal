@@ -598,9 +598,10 @@ class AttachmentWidget extends AdminWidget implements
                 $formIdent = $attMeta['form_ident'];
             }
 
-            if (isset($attMeta['quick_form_ident'])) {
-                $quickFormIdent = $attMeta['quick_form_ident'];
-            }
+            $quickFormIdent = !$quickFormIdent && isset($attMeta['quick_form_ident'])
+                ? $attMeta['quick_form_ident'] : $quickFormIdent;
+            $quickFormIdent = !$quickFormIdent && isset($attMeta['quickFormIdent'])
+                ? $attMeta['quickFormIdent'] : $quickFormIdent;
 
             if (isset($attMeta['fa_icon']) && !empty($attMeta['fa_icon'])) {
                 $faIcon = $attMeta['fa_icon'];
