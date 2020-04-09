@@ -262,13 +262,13 @@ class ImageProperty extends FileProperty
     }
 
     /**
-     * Provides the accepted mimetypes for the image properties.
+     * Retrieves the default list of acceptable MIME types for uploaded files.
      *
-     * Overrides FileProperty's getAcceptedMimetypes() method.
+     * This method should be overriden.
      *
      * @return string[]
      */
-    public function getAcceptedMimetypes()
+    public function getDefaultAcceptedMimetypes()
     {
         return [
             'image/gif',
@@ -282,24 +282,14 @@ class ImageProperty extends FileProperty
     }
 
     /**
-     * Generate the file extension from the property's value.
+     * Resolve the file extension from the given MIME type.
      *
-     * @param  string $file The file to parse.
-     * @return string The extension based on the MIME type.
+     * @param  string $type The MIME type to resolve.
+     * @return string|null The extension based on the MIME type.
      */
-    public function generateExtension($file = null)
+    protected function resolveExtensionFromMimeType($type)
     {
-        if (is_string($file)) {
-            if (in_array($file, $this['acceptedMimetypes'])) {
-                $mime = $file;
-            } else {
-                $mime = $this->getMimetypeFor($file);
-            }
-        } else {
-            $mime = $this->getMimetype();
-        }
-
-        switch ($mime) {
+        switch ($type) {
             case 'image/gif':
                 return 'gif';
 
@@ -317,6 +307,8 @@ class ImageProperty extends FileProperty
             case 'image/webp':
                 return 'webp';
         }
+
+        return null;
     }
 
     /**

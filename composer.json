@@ -19,14 +19,14 @@
     "prefer-stable": true,
     "extra": {
         "branch-alias": {
-            "dev-master": "0.10.x-dev"
+            "dev-master": "0.11.x-dev"
         }
     },
     "require": {
         "php": ">=5.6.0 || >=7.0",
         "ext-fileinfo": "*",
-        "ext-PDO": "*",
-        "ext-SimpleXML": "*",
+        "ext-pdo": "*",
+        "ext-simplexml": "*",
         "psr/log": "^1.0",
         "psr/cache": "^1.0",
         "locomotivemtl/charcoal-config": "~0.9",

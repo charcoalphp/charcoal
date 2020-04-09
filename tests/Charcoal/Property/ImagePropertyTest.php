@@ -6,46 +6,111 @@ use InvalidArgumentException;
 
 // From 'charcoal-property'
 use Charcoal\Property\ImageProperty;
-use Charcoal\Tests\AbstractTestCase;
 
 /**
- * ## TODOs
- * - 2015-03-12:
+ *
  */
-class ImagePropertyTest extends AbstractTestCase
+class ImagePropertyTest extends AbstractFilePropertyTestCase
 {
-    use \Charcoal\Tests\Property\ContainerIntegrationTrait;
-
     /**
-     * @var ImageProperty
+     * Create a file property instance.
+     *
+     * @return ImageProperty
      */
-    public $obj;
-
-    /**
-     * @return void
-     */
-    public function setUp()
+    public function createProperty()
     {
         $container = $this->getContainer();
 
-        $this->obj = new ImageProperty([
+        return new ImageProperty([
             'database'   => $container['database'],
             'logger'     => $container['logger'],
             'translator' => $container['translator'],
+            'container'  => $container,
         ]);
     }
 
-    public function testDefaults()
-    {
-        $this->assertEquals([], $this->obj['effects']);
-        $this->assertEquals(ImageProperty::DEFAULT_DRIVER_TYPE, $this->obj['driverType']);
-    }
     /**
+     * Asserts that the `type()` method is "file".
+     *
+     * @covers \Charcoal\Property\ImageProperty::type()
      * @return void
      */
-    public function testType()
+    public function testPropertyType()
     {
         $this->assertEquals('image', $this->obj->type());
+    }
+
+    /**
+     * Asserts that the property adheres to file property defaults.
+     *
+     * @return void
+     */
+    public function testPropertyDefaults()
+    {
+        parent::testPropertyDefaults();
+
+        $this->assertInternalType('array', $this->obj['effects']);
+        $this->assertEmpty($this->obj['effects']);
+
+        $this->assertEquals(ImageProperty::DEFAULT_DRIVER_TYPE, $this->obj['driverType']);
+        $this->assertEquals(ImageProperty::DEFAULT_APPLY_EFFECTS, $this->obj['applyEffects']);
+    }
+
+    /**
+     * Asserts that the property adheres to file property defaults.
+     *
+     * @covers \Charcoal\Property\ImageProperty::getDefaultAcceptedMimetypes()
+     * @return void
+     */
+    public function testDefaulAcceptedMimeTypes()
+    {
+        $this->assertInternalType('array', $this->obj['defaultAcceptedMimetypes']);
+        $this->assertNotEmpty($this->obj['defaultAcceptedMimetypes']);
+    }
+
+    /**
+     * Asserts that the property properly checks if
+     * any acceptable MIME types are available.
+     *
+     * @covers \Charcoal\Property\ImageProperty::hasAcceptedMimetypes()
+     * @return void
+     */
+    public function testHasAcceptedMimeTypes()
+    {
+        $this->assertTrue($this->obj->hasAcceptedMimetypes());
+
+        $this->obj->setAcceptedMimetypes([ 'image/gif' ]);
+        $this->assertTrue($this->obj->hasAcceptedMimetypes());
+    }
+
+    /**
+     * Asserts that the property can resolve a filesize from its value.
+     *
+     * @return void
+     */
+    public function testFilesizeFromVal()
+    {
+        $obj = $this->obj;
+
+        $obj['uploadPath'] = $this->getPathToFixtures().'/files';
+        $obj['val'] = $this->getPathToFixture('files/panda.png');
+
+        $this->assertEquals(170276, $obj['filesize']);
+    }
+
+    /**
+     * Asserts that the property can resolve a MIME type from its value.
+     *
+     * @return void
+     */
+    public function testMimetypeFromVal()
+    {
+        $obj = $this->obj;
+
+        $obj['uploadPath'] = $this->getPathToFixtures().'/files';
+        $obj['val'] = $this->getPathToFixture('files/panda.png');
+
+        $this->assertEquals('image/png', $obj['mimetype']);
     }
 
     /**
@@ -131,5 +196,26 @@ class ImagePropertyTest extends AbstractTestCase
         $ret = $this->obj['acceptedMimetypes'];
         $this->assertContains('image/png', $ret);
         $this->assertContains('image/jpg', $ret);
+    }
+
+    /**
+     * Provide property data for {@see ImageProperty::generateExtension()}.
+     *
+     * @used-by AbstractFilePropertyTestCase::testGenerateExtensionFromDataProvider()
+     * @return  array
+     */
+    public function provideDataForGenerateExtension()
+    {
+        return [
+            [ 'image/gif',     'gif' ],
+            [ 'image/jpg',     'jpg' ],
+            [ 'image/jpeg',    'jpg' ],
+            [ 'image/pjpeg',   'jpg' ],
+            [ 'image/png',     'png' ],
+            [ 'image/svg+xml', 'svg' ],
+            [ 'image/webp',    'webp' ],
+            [ 'image/x-foo',    null ],
+            [ 'video/webm',     null ],
+        ];
     }
 }
