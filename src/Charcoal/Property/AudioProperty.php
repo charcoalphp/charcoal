@@ -85,38 +85,35 @@ class AudioProperty extends FileProperty
     }
 
     /**
+     * Retrieves the default list of acceptable MIME types for uploaded files.
+     *
+     * This method should be overriden.
+     *
      * @return string[]
      */
-    public function getAcceptedMimetypes()
+    public function getDefaultAcceptedMimetypes()
     {
         return [
             'audio/mp3',
             'audio/mpeg',
             'audio/ogg',
+            'audio/webm',
             'audio/wav',
+            'audio/wave',
             'audio/x-wav',
+            'audio/x-pn-wav',
         ];
     }
 
     /**
-     * Generate the file extension from the property's value.
+     * Resolve the file extension from the given MIME type.
      *
-     * @param  string $file The file to parse.
-     * @return string The extension based on the MIME type.
+     * @param  string $type The MIME type to resolve.
+     * @return string|null The extension based on the MIME type.
      */
-    public function generateExtension($file = null)
+    protected function resolveExtensionFromMimeType($type)
     {
-        if (is_string($file)) {
-            if (in_array($file, $this->getAcceptedMimetypes())) {
-                $mime = $file;
-            } else {
-                $mime = $this->getMimetypeFor($file);
-            }
-        } else {
-            $mime = $this->getMimetype();
-        }
-
-        switch ($mime) {
+        switch ($type) {
             case 'audio/mp3':
             case 'audio/mpeg':
                 return 'mp3';
@@ -124,12 +121,16 @@ class AudioProperty extends FileProperty
             case 'audio/ogg':
                 return 'ogg';
 
-            case 'audio/wav':
-            case 'audio/x-wav':
-                return 'wav';
+            case 'audio/webm':
+                return 'webm';
 
-            default:
-                return '';
+            case 'audio/wav':
+            case 'audio/wave':
+            case 'audio/x-wav':
+            case 'audio/x-pn-wav':
+                return 'wav';
         }
+
+        return null;
     }
 }

@@ -6,33 +6,27 @@ use PDO;
 use InvalidArgumentException;
 use ReflectionClass;
 
+// From 'charcoal-core'
+use Charcoal\Validator\ValidatorInterface as Validator;
+
 // From 'charcoal-property'
 use Charcoal\Property\FileProperty;
-use Charcoal\Tests\AbstractTestCase;
-use Charcoal\Tests\ReflectionsTrait;
-use Charcoal\Tests\Property\ContainerIntegrationTrait;
 
 /**
  *
  */
-class FilePropertyTest extends AbstractTestCase
+class FilePropertyTest extends AbstractFilePropertyTestCase
 {
-    use ReflectionsTrait;
-    use ContainerIntegrationTrait;
-
     /**
-     * @var FileProperty
+     * Create a file property instance.
+     *
+     * @return FileProperty
      */
-    public $obj;
-
-    /**
-     * @return void
-     */
-    public function setUp()
+    public function createProperty()
     {
         $container = $this->getContainer();
 
-        $this->obj = new FileProperty([
+        return new FileProperty([
             'database'   => $container['database'],
             'logger'     => $container['logger'],
             'translator' => $container['translator'],
@@ -41,27 +35,81 @@ class FilePropertyTest extends AbstractTestCase
     }
 
     /**
+     * Asserts that the `type()` method is "file".
+     *
+     * @covers \Charcoal\Property\FileProperty::type()
      * @return void
      */
-    public function testConstructor()
+    public function testPropertyType()
     {
-        $obj = $this->obj;
-        $this->assertInstanceOf('\Charcoal\Property\FileProperty', $obj);
-        $this->assertEquals('uploads/', $obj['uploadPath']);
-        $this->assertFalse($obj['overwrite']);
-        $this->assertEquals([], $obj['acceptedMimetypes']);
-        $this->assertEquals($obj->maxFilesizeAllowedByPhp(), $obj['maxFilesize']);
+        $this->assertEquals('file', $this->obj->type());
     }
 
     /**
-     * Asserts that the `type()` method is "file".
+     * Asserts that the property adheres to file property defaults.
+     *
+     * @covers \Charcoal\Property\FileProperty::getDefaultAcceptedMimetypes()
+     * @return void
+     */
+    public function testDefaulAcceptedMimeTypes()
+    {
+        $this->assertInternalType('array', $this->obj['defaultAcceptedMimetypes']);
+        $this->assertEmpty($this->obj['defaultAcceptedMimetypes']);
+    }
+
+    /**
+     * Asserts that the property properly checks if
+     * any acceptable MIME types are available.
+     *
+     * @covers \Charcoal\Property\FileProperty::hasAcceptedMimetypes()
+     * @return void
+     */
+    public function testHasAcceptedMimeTypes()
+    {
+        $obj = $this->obj;
+
+        $explicitMimeTypes = $this->getPropertyValue($obj, 'acceptedMimetypes');
+        $fallbackMimeTypes = $obj->getDefaultAcceptedMimetypes();
+        if (!empty($explicitMimeTypes) || !empty($fallbackMimeTypes)) {
+            $this->assertTrue($obj->hasAcceptedMimetypes());
+        } else {
+            $this->assertFalse($obj->hasAcceptedMimetypes());
+        }
+
+        if (empty($explicitMimeTypes)) {
+            $obj->setAcceptedMimetypes([ 'text/plain', 'text/html', 'text/css' ]);
+            $this->assertTrue($obj->hasAcceptedMimetypes());
+        }
+    }
+
+    /**
+     * Asserts that the property can resolve a filesize from its value.
      *
      * @return void
      */
-    public function testType()
+    public function testFilesizeFromVal()
     {
         $obj = $this->obj;
-        $this->assertEquals('file', $obj->type());
+
+        $obj['uploadPath'] = $this->getPathToFixtures().'/files';
+        $obj['val'] = $this->getPathToFixture('files/document.txt');
+
+        $this->assertEquals(743, $obj['filesize']);
+    }
+
+    /**
+     * Asserts that the property can resolve a MIME type from its value.
+     *
+     * @return void
+     */
+    public function testMimetypeFromVal()
+    {
+        $obj = $this->obj;
+
+        $obj['uploadPath'] = $this->getPathToFixtures().'/files';
+        $obj['val'] = $this->getPathToFixture('files/document.txt');
+
+        $this->assertEquals('text/plain', $obj['mimetype']);
     }
 
     /**
@@ -74,7 +122,7 @@ class FilePropertyTest extends AbstractTestCase
             'public_access'     => true,
             'uploadPath'        => 'uploads/foobar/',
             'overwrite'         => true,
-            'acceptedMimetypes' => ['image/x-foobar'],
+            'acceptedMimetypes' => [ 'image/x-foobar' ],
             'maxFilesize'       => (32 * 1024 * 1024),
         ]);
         $this->assertSame($ret, $obj);
@@ -84,32 +132,6 @@ class FilePropertyTest extends AbstractTestCase
         $this->assertTrue($this->obj['overwrite']);
         $this->assertEquals(['image/x-foobar'], $this->obj['acceptedMimetypes']);
         $this->assertEquals((32 * 1024 * 1024), $this->obj['maxFilesize']);
-    }
-
-    /**
-     * Asserts that the uploadPath method
-     * - defaults to 'uploads/'
-     * - always append a "/"
-     *
-     * @return void
-     */
-    public function testSetUploadPath()
-    {
-        $obj = $this->obj;
-        $this->assertEquals('uploads/', $this->obj['uploadPath']);
-
-        $ret = $obj->setUploadPath('foobar');
-        $this->assertSame($ret, $obj);
-        $this->assertEquals('foobar/', $obj['uploadPath']);
-
-        $this->obj['upload_path'] = 'foo';
-        $this->assertEquals('foo/', $obj['uploadPath']);
-
-        $this->obj->set('upload_path', 'bar');
-        $this->assertEquals('bar/', $obj['upload_path']);
-
-        $this->expectException(\InvalidArgumentException::class);
-        $obj->setUploadPath(42);
     }
 
     /**
@@ -133,29 +155,83 @@ class FilePropertyTest extends AbstractTestCase
      */
     public function testVaidationMethods()
     {
-        $obj = $this->obj;
-        $ret = $obj->validationMethods();
-        $this->assertContains('acceptedMimetypes', $ret);
-        $this->assertContains('maxFilesize', $ret);
+        $methods = $this->obj->validationMethods();
+        $this->assertContains('mimetypes', $methods);
+        $this->assertContains('filesizes', $methods);
     }
 
     /**
+     * Test validation file MIME types on property.
+     *
+     * @dataProvider provideDataForValidateMimetypes
+     *
+     * @param  mixed   $val               The value(s) to be validated.
+     * @param  boolean $l10n              Whether the property value is multilingual.
+     * @param  boolean $multiple          Whether the property accepts zero or more values.
+     * @param  mixed   $acceptedMimetypes The accepted MIME types.
+     * @param  boolean $expectedReturn    The expected return value of the method.
+     * @param  array   $expectedResults   The expected validation results.
      * @return void
      */
-    public function testValidateAcceptedMimetypes()
-    {
+    public function testValidateMimetypes(
+        $val,
+        $l10n,
+        $multiple,
+        $acceptedMimetypes,
+        $expectedReturn,
+        array $expectedResults = []
+    ) {
         $obj = $this->obj;
-        $obj->setMimetype('image/x-foobar');
-        $this->assertTrue($obj->validateAcceptedMimetypes());
 
-        $this->assertEmpty($obj['acceptedMimetypes']);
-        $this->assertTrue($obj->validateAcceptedMimetypes());
+        $obj['uploadPath'] = $this->getPathToFixtures().'/files';
+        $obj['acceptedMimetypes'] = $acceptedMimetypes;
+        $obj['l10n'] = $l10n;
+        $obj['multiple'] = $multiple;
+        $obj['val'] = $val;
 
-        $obj->setAcceptedMimetypes(['image/x-barbaz']);
-        $this->assertFalse($obj->validateAcceptedMimetypes());
+        $this->assertSame($expectedReturn, $obj->validateMimetypes());
 
-        $obj->setAcceptedMimetypes(['image/x-foobar']);
-        $this->assertTrue($obj->validateAcceptedMimetypes());
+        $this->assertValidatorHasResults(
+            $expectedResults,
+            $obj->validator()->results()
+        );
+    }
+
+    /**
+     * Test validation file sizes on property.
+     *
+     * @dataProvider provideDataForValidateFilesizes
+     *
+     * @param  mixed   $val             The value(s) to be validated.
+     * @param  boolean $l10n            Whether the property value is multilingual.
+     * @param  boolean $multiple        Whether the property accepts zero or more values.
+     * @param  integer $maxFilesize     The maximum file size accepted.
+     * @param  boolean $expectedReturn  The expected return value of the method.
+     * @param  array   $expectedResults The expected validation results.
+     * @return void
+     */
+    public function testValidateFilesizes(
+        $val,
+        $l10n,
+        $multiple,
+        $maxFilesize,
+        $expectedReturn,
+        array $expectedResults = []
+    ) {
+        $obj = $this->obj;
+
+        $obj['uploadPath'] = $this->getPathToFixtures().'/files';
+        $obj['maxFilesize'] = $maxFilesize;
+        $obj['l10n'] = $l10n;
+        $obj['multiple'] = $multiple;
+        $obj['val'] = $val;
+
+        $this->assertSame($expectedReturn, $obj->validateFilesizes());
+
+        $this->assertValidatorHasResults(
+            $expectedResults,
+            $obj->validator()->results()
+        );
     }
 
     /**
@@ -230,16 +306,6 @@ class FilePropertyTest extends AbstractTestCase
     /**
      * @return void
      */
-    // public function testGenerateFilenameWithoutIdentThrowsException()
-    // {
-    //     $obj = $this->obj;
-    //     $this->expectException('\Exception');
-    //     $obj->generateFilename();
-    // }
-
-    /**
-     * @return void
-     */
     public function testGenerateFilename()
     {
         $obj = $this->obj;
@@ -270,22 +336,6 @@ class FilePropertyTest extends AbstractTestCase
         $this->assertEquals('foo', $this->obj['filesystem']);
     }
 
-    public function testSetMimetype()
-    {
-        $ret = $this->obj->setMimetype('foo');
-        $this->assertSame($ret, $this->obj);
-        $this->assertEquals('foo', $this->obj->mimetype());
-
-        $this->obj->setMimetype(null);
-        $this->assertEquals('', $this->obj->mimetype());
-
-        $this->obj->setMimetype(false);
-        $this->assertEquals('', $this->obj->mimetype());
-
-        $this->expectException(InvalidArgumentException::class);
-        $this->obj->setMimetype([]);
-    }
-
     /**
      * @return void
      */
@@ -312,5 +362,320 @@ class FilePropertyTest extends AbstractTestCase
     public function testSqlPdoType()
     {
         $this->assertEquals(PDO::PARAM_STR, $this->obj->sqlPdoType());
+    }
+
+    /**
+     * Provide property data for {@see FileProperty::validateMimetypes()}.
+     *
+     * @used-by self::testValidateMimetypes()
+     * @return  array
+     */
+    public function provideDataForValidateMimetypes()
+    {
+        $paths = $this->getFileMapOfFixtures();
+
+        return [
+            'any MIME types, no value' => [
+                'propertyValues'          => null,
+                'propertyL10n'            => false,
+                'propertyMultiple'        => false,
+                'acceptedMimetypes'       => null,
+                'assertValidationReturn'  => true,
+                'assertValidationResults' => [],
+            ],
+            'any MIME types, text file' => [
+                'propertyValues'          => $paths['document.txt'],
+                'propertyL10n'            => false,
+                'propertyMultiple'        => false,
+                'acceptedMimetypes'       => null,
+                'assertValidationReturn'  => true,
+                'assertValidationResults' => [],
+            ],
+            'any MIME types, image file' => [
+                'propertyValues'          => $paths['panda.png'],
+                'propertyL10n'            => false,
+                'propertyMultiple'        => false,
+                'acceptedMimetypes'       => null,
+                'assertValidationReturn'  => true,
+                'assertValidationResults' => [],
+            ],
+            'text/plain, no value' => [
+                'propertyValues'          => null,
+                'propertyL10n'            => false,
+                'propertyMultiple'        => false,
+                'acceptedMimetypes'       => [ 'text/plain' ],
+                'assertValidationReturn'  => true,
+                'assertValidationResults' => [],
+            ],
+            'text/plain, single text file' => [
+                'propertyValues'          => $paths['document.txt'],
+                'propertyL10n'            => false,
+                'propertyMultiple'        => false,
+                'acceptedMimetypes'       => [ 'text/plain' ],
+                'assertValidationReturn'  => true,
+                'assertValidationResults' => [],
+            ],
+            'text/plain, single image file' => [
+                'propertyValues'          => $paths['panda.png'],
+                'propertyL10n'            => false,
+                'propertyMultiple'        => false,
+                'acceptedMimetypes'       => [ 'text/plain' ],
+                'assertValidationReturn'  => false,
+                'assertValidationResults' => [
+                    Validator::ERROR => [
+                        'File ['.$paths['panda.png'].'] has unacceptable MIME type [image/png]',
+                    ],
+                ],
+            ],
+            'text/plain, nonexistent file' => [
+                'propertyValues'          => $paths['nonexistent.txt'],
+                'propertyL10n'            => false,
+                'propertyMultiple'        => false,
+                'acceptedMimetypes'       => [ 'text/plain' ],
+                'assertValidationReturn'  => false,
+                'assertValidationResults' => [
+                    Validator::ERROR => [
+                        'File ['.$paths['nonexistent.txt'].'] not found or MIME type unrecognizable',
+                    ],
+                ],
+            ],
+            'text/plain, l10n, text file' => [
+                'propertyValues'          => $paths['document.txt'],
+                'propertyL10n'            => true,
+                'propertyMultiple'        => false,
+                'acceptedMimetypes'       => [ 'text/plain' ],
+                'assertValidationReturn'  => true,
+                'assertValidationResults' => [],
+            ],
+            'text/plain, l10n, text + image file' => [
+                'propertyValues'          => [
+                    'en' => $paths['document.txt'],
+                    'fr' => $paths['panda.png'],
+                ],
+                'propertyL10n'            => true,
+                'propertyMultiple'        => false,
+                'acceptedMimetypes'       => [ 'text/plain' ],
+                'assertValidationReturn'  => false,
+                'assertValidationResults' => [
+                    Validator::ERROR => [
+                        'File ['.$paths['panda.png'].'] has unacceptable MIME type [image/png]',
+                    ],
+                ],
+            ],
+            'text/plain, multiple, text files' => [
+                'propertyValues'          => [
+                    $paths['document.txt'],
+                    $paths['todo.txt'],
+                ],
+                'propertyL10n'            => false,
+                'propertyMultiple'        => true,
+                'acceptedMimetypes'       => [ 'text/plain' ],
+                'assertValidationReturn'  => true,
+                'assertValidationResults' => [],
+            ],
+            'text/plain, multiple, text + image file' => [
+                'propertyValues'          => [
+                    $paths['document.txt'],
+                    $paths['panda.png'],
+                ],
+                'propertyL10n'            => false,
+                'propertyMultiple'        => true,
+                'acceptedMimetypes'       => [ 'text/plain' ],
+                'assertValidationReturn'  => false,
+                'assertValidationResults' => [
+                    Validator::ERROR => [
+                        'File ['.$paths['panda.png'].'] has unacceptable MIME type [image/png]',
+                    ],
+                ],
+            ],
+            'text/plain, l10n + multiple #1' => [
+                'propertyValues'          => [
+                    'en' => $paths['document.txt'].','.$paths['todo.txt'],
+                    'fr' => [ $paths['stuff.txt'], $paths['draft.txt'] ],
+                ],
+                'propertyL10n'            => false,
+                'propertyMultiple'        => false,
+                'acceptedMimetypes'       => [ 'text/plain' ],
+                'assertValidationReturn'  => true,
+                'assertValidationResults' => [],
+            ],
+            'text/plain, l10n + multiple #2' => [
+                'propertyValues'          => [
+                    'en' => $paths['document.txt'].','.$paths['scream.wav'],
+                    'fr' => [ $paths['stuff.txt'], $paths['cat.jpg'] ],
+                ],
+                'propertyL10n'            => false,
+                'propertyMultiple'        => false,
+                'acceptedMimetypes'       => [ 'text/plain' ],
+                'assertValidationReturn'  => false,
+                'assertValidationResults' => [
+                    Validator::ERROR => [
+                        'File ['.$paths['scream.wav'].'] has unacceptable MIME type [audio/%s]',
+                        'File ['.$paths['cat.jpg'].'] has unacceptable MIME type [image/%s]',
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Provide property data for {@see FileProperty::validateFilesizes()}.
+     *
+     * @used-by self::testValidateFilesizes()
+     * @return  array
+     */
+    public function provideDataForValidateFilesizes()
+    {
+        $paths = $this->getFileMapOfFixtures();
+
+        return [
+            'any size, no value' => [
+                'propertyValues'          => null,
+                'propertyL10n'            => false,
+                'propertyMultiple'        => false,
+                'maxFilesize'             => 0,
+                'assertValidationReturn'  => true,
+                'assertValidationResults' => [],
+            ],
+            'any size, text file' => [
+                'propertyValues'          => $paths['document.txt'],
+                'propertyL10n'            => false,
+                'propertyMultiple'        => false,
+                'maxFilesize'             => 0,
+                'assertValidationReturn'  => true,
+                'assertValidationResults' => [],
+            ],
+            'max 10kB, no value' => [
+                'propertyValues'          => null,
+                'propertyL10n'            => false,
+                'propertyMultiple'        => false,
+                'maxFilesize'             => 10240,
+                'assertValidationReturn'  => true,
+                'assertValidationResults' => [],
+            ],
+            'max 10kB, single text file' => [
+                'propertyValues'          => $paths['document.txt'],
+                'propertyL10n'            => false,
+                'propertyMultiple'        => false,
+                'maxFilesize'             => 10240,
+                'assertValidationReturn'  => true,
+                'assertValidationResults' => [],
+            ],
+            'max 10kB, single image file' => [
+                'propertyValues'          => $paths['panda.png'],
+                'propertyL10n'            => false,
+                'propertyMultiple'        => false,
+                'maxFilesize'             => 10240,
+                'assertValidationReturn'  => false,
+                'assertValidationResults' => [
+                    Validator::ERROR => [
+                        'File ['.$paths['panda.png'].'] exceeds maximum file size [%s]',
+                    ],
+                ],
+            ],
+            'max 10kB, nonexistent file' => [
+                'propertyValues'          => $paths['nonexistent.txt'],
+                'propertyL10n'            => false,
+                'propertyMultiple'        => false,
+                'maxFilesize'             => 10240,
+                'assertValidationReturn'  => false,
+                'assertValidationResults' => [
+                    Validator::ERROR => [
+                        'File ['.$paths['nonexistent.txt'].'] not found or size unknown',
+                    ],
+                ],
+            ],
+            'max 10kB, l10n, text file' => [
+                'propertyValues'          => $paths['document.txt'],
+                'propertyL10n'            => true,
+                'propertyMultiple'        => false,
+                'maxFilesize'             => 10240,
+                'assertValidationReturn'  => true,
+                'assertValidationResults' => [],
+            ],
+            'max 10kB, l10n, text + image file' => [
+                'propertyValues'          => [
+                    'en' => $paths['document.txt'],
+                    'fr' => $paths['panda.png'],
+                ],
+                'propertyL10n'            => true,
+                'propertyMultiple'        => false,
+                'maxFilesize'             => 10240,
+                'assertValidationReturn'  => false,
+                'assertValidationResults' => [
+                    Validator::ERROR => [
+                        'File ['.$paths['panda.png'].'] exceeds maximum file size [%s]',
+                    ],
+                ],
+            ],
+            'max 10kB, multiple, text files' => [
+                'propertyValues'          => [
+                    $paths['document.txt'],
+                    $paths['todo.txt'],
+                ],
+                'propertyL10n'            => false,
+                'propertyMultiple'        => true,
+                'maxFilesize'             => 10240,
+                'assertValidationReturn'  => true,
+                'assertValidationResults' => [],
+            ],
+            'max 10kB, multiple, text + image file' => [
+                'propertyValues'          => [
+                    $paths['document.txt'],
+                    $paths['panda.png'],
+                ],
+                'propertyL10n'            => false,
+                'propertyMultiple'        => true,
+                'maxFilesize'             => 10240,
+                'assertValidationReturn'  => false,
+                'assertValidationResults' => [
+                    Validator::ERROR => [
+                        'File ['.$paths['panda.png'].'] exceeds maximum file size [%s]',
+                    ],
+                ],
+            ],
+            'max 10kB, l10n + multiple #1' => [
+                'propertyValues'          => [
+                    'en' => $paths['document.txt'].','.$paths['todo.txt'],
+                    'fr' => [ $paths['stuff.txt'], $paths['draft.txt'] ],
+                ],
+                'propertyL10n'            => false,
+                'propertyMultiple'        => false,
+                'maxFilesize'             => 10240,
+                'assertValidationReturn'  => true,
+                'assertValidationResults' => [],
+            ],
+            'max 10kB, l10n + multiple #2' => [
+                'propertyValues'          => [
+                    'en' => $paths['document.txt'].','.$paths['scream.wav'],
+                    'fr' => [ $paths['stuff.txt'], $paths['panda.png'] ],
+                ],
+                'propertyL10n'            => false,
+                'propertyMultiple'        => false,
+                'maxFilesize'             => 10240,
+                'assertValidationReturn'  => false,
+                'assertValidationResults' => [
+                    Validator::ERROR => [
+                        'File ['.$paths['scream.wav'].'] exceeds maximum file size [%s]',
+                        'File ['.$paths['panda.png'].'] exceeds maximum file size [%s]',
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Provide property data for {@see ImageProperty::generateExtension()}.
+     *
+     * @used-by AbstractFilePropertyTestCase::testGenerateExtensionFromDataProvider()
+     * @return  array
+     */
+    public function provideDataForGenerateExtension()
+    {
+        return [
+            [ 'text/plain',  'txt' ],
+            [ 'text/html',   null ],
+            [ 'image/x-foo', null ],
+        ];
     }
 }

@@ -2,51 +2,122 @@
 
 namespace Charcoal\Tests\Property;
 
+// From 'charcoal-property'
 use Charcoal\Property\AudioProperty;
-use Charcoal\Tests\AbstractTestCase;
 
 /**
- * ## TODOs
- * - 2015-03-12:
+ *
  */
-class AudioPropertyTest extends AbstractTestCase
+class AudioPropertyTest extends AbstractFilePropertyTestCase
 {
-    use \Charcoal\Tests\Property\ContainerIntegrationTrait;
-
     /**
-     * @var AudioProperty
+     * Create a file property instance.
+     *
+     * @return AudioProperty
      */
-    public $obj;
-
-    /**
-     * @return void
-     */
-    public function setUp()
+    public function createProperty()
     {
         $container = $this->getContainer();
 
-        $this->obj = new AudioProperty([
+        return new AudioProperty([
             'database'   => $container['database'],
             'logger'     => $container['logger'],
             'translator' => $container['translator'],
+            'container'  => $container,
         ]);
     }
 
     /**
+     * Asserts that the `type()` method is "file".
+     *
+     * @covers \Charcoal\Property\AudioProperty::type()
      * @return void
      */
-    public function testDefauls()
+    public function testPropertyType()
     {
+        $this->assertEquals('audio', $this->obj->type());
+    }
+
+    /**
+     * Asserts that the property adheres to file property defaults.
+     *
+     * @return void
+     */
+    public function testPropertyDefaults()
+    {
+        parent::testPropertyDefaults();
+
         $this->assertEquals(0, $this->obj['minLength']);
         $this->assertEquals(0, $this->obj['maxLength']);
     }
 
     /**
+     * Asserts that the property adheres to file property defaults.
+     *
+     * @covers \Charcoal\Property\AudioProperty::getDefaultAcceptedMimetypes()
      * @return void
      */
-    public function testType()
+    public function testDefaulAcceptedMimeTypes()
     {
-        $this->assertEquals('audio', $this->obj->type());
+        $this->assertInternalType('array', $this->obj['defaultAcceptedMimetypes']);
+        $this->assertNotEmpty($this->obj['defaultAcceptedMimetypes']);
+    }
+
+    /**
+     * Asserts that the property properly checks if
+     * any acceptable MIME types are available.
+     *
+     * @covers \Charcoal\Property\AudioProperty::hasAcceptedMimetypes()
+     * @return void
+     */
+    public function testHasAcceptedMimeTypes()
+    {
+        $this->assertTrue($this->obj->hasAcceptedMimetypes());
+
+        $this->obj->setAcceptedMimetypes([ 'audio/wav' ]);
+        $this->assertTrue($this->obj->hasAcceptedMimetypes());
+    }
+
+    /**
+     * Asserts that the property can resolve a filesize from its value.
+     *
+     * @return void
+     */
+    public function testFilesizeFromVal()
+    {
+        $obj = $this->obj;
+
+        $obj['uploadPath'] = $this->getPathToFixtures().'/files';
+        $obj['val'] = $this->getPathToFixture('files/buzzer.mp3');
+
+        $this->assertEquals(16512, $obj['filesize']);
+    }
+
+    /**
+     * Asserts that the property can resolve a MIME type from its value.
+     *
+     * Ignore issues under PHP 7.0 and PHP 7.1, see https://bugs.php.net/bug.php?id=78183
+     *
+     * @return void
+     */
+    public function testMimetypeFromVal()
+    {
+        $obj = $this->obj;
+
+        $obj['uploadPath'] = $this->getPathToFixtures().'/files';
+        $obj['val'] = $this->getPathToFixture('files/buzzer.mp3');
+
+        $mime = $obj['mimetype'];
+        if ($mime === 'application/octet-stream') {
+            $this->markTestSkipped(
+                'Failed detecting MIME type for \'buzzer.mp3\'; received \'application/octet-stream\'.'
+            );
+        } else {
+            $this->assertThat($obj['mimetype'], $this->logicalOr(
+                $this->equalTo('audio/mp3'),
+                $this->equalTo('audio/mpeg')
+            ));
+        }
     }
 
     /**
@@ -124,29 +195,24 @@ class AudioPropertyTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider mimeExtensionProvider
+     * Provide property data for {@see AudioProperty::generateExtension()}.
      *
-     * @param  string $mime A MIME type.
-     * @param  string $ext  A file format.
-     * @return void
+     * @used-by AbstractFilePropertyTestCase::testGenerateExtensionFromDataProvider()
+     * @return  array
      */
-    public function testGenerateExtension($mime, $ext)
-    {
-        $this->obj->setMimetype($mime);
-        $this->assertEquals($mime, $this->obj['mimetype']);
-        $this->assertEquals($ext, $this->obj->generateExtension());
-    }
-
-    /**
-     * @return array
-     */
-    public function mimeExtensionProvider()
+    public function provideDataForGenerateExtension()
     {
         return [
-            ['audio/mp3', 'mp3'],
-            ['audio/mpeg', 'mp3'],
-            ['audio/wav', 'wav'],
-            ['audio/x-wav', 'wav'],
+            [ 'audio/mp3',      'mp3' ],
+            [ 'audio/mpeg',     'mp3' ],
+            [ 'audio/ogg',      'ogg' ],
+            [ 'audio/webm',     'webm' ],
+            [ 'audio/wav',      'wav' ],
+            [ 'audio/wave',     'wav' ],
+            [ 'audio/x-wav',    'wav' ],
+            [ 'audio/x-pn-wav', 'wav' ],
+            [ 'audio/x-foo',    null ],
+            [ 'video/webm',     null ],
         ];
     }
 }
