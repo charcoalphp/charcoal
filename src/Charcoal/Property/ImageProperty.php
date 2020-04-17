@@ -277,6 +277,7 @@ class ImageProperty extends FileProperty
             'image/pjpeg',
             'image/png',
             'image/svg+xml',
+            'image/svg',
             'image/webp',
         ];
     }
@@ -302,6 +303,7 @@ class ImageProperty extends FileProperty
                 return 'png';
 
             case 'image/svg+xml':
+            case 'image/svg':
                 return 'svg';
 
             case 'image/webp':
