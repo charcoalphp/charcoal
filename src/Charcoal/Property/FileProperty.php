@@ -1340,12 +1340,7 @@ class FileProperty extends AbstractProperty
     protected function pathFor($path)
     {
         $path       = trim($path, '/');
-        $uploadPath = trim($this['uploadPath'], '/');
         $basePath   = rtrim($this->basePath(), '/');
-
-        if (strpos($path, $uploadPath) !== 0) {
-            $basePath .= '/'.$uploadPath;
-        }
 
         return $basePath.'/'.$path;
     }
