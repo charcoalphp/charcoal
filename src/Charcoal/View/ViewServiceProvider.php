@@ -10,7 +10,6 @@ use Pimple\Container;
 use Parsedown;
 
 // From 'charcoal-view'
-use Charcoal\View\GenericView;
 use Charcoal\View\Mustache\MustacheEngine;
 use Charcoal\View\Mustache\MustacheLoader;
 use Charcoal\View\Mustache\AssetsHelpers;
@@ -20,9 +19,6 @@ use Charcoal\View\Php\PhpEngine;
 use Charcoal\View\Php\PhpLoader;
 use Charcoal\View\Twig\TwigEngine;
 use Charcoal\View\Twig\TwigLoader;
-use Charcoal\View\Renderer;
-use Charcoal\View\ViewConfig;
-use Charcoal\View\ViewInterface;
 
 /**
  * View Service Provider
