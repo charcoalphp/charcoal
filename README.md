@@ -46,9 +46,8 @@ $ composer create-project locomotivemtl/charcoal-project-boilerplate:@dev --pref
 
 ## Dependencies
 
--   `PHP 5.6+`
+-   `PHP 7.1+`
     -   Older versions of PHP are deprecated, therefore not supported.
-    -   PHP 7 is recommended for security and performance reasons.
 -   [`psr/http-message`](http://www.php-fig.org/psr/psr-7/)
     -   Charcoal View provides a PSR7 renderer.
 -   [`locomotivemtl/charcoal-config`](https://github.com/locomotivemtl/charcoal-config)
