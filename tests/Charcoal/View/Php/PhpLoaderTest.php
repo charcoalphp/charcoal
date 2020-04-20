@@ -2,9 +2,6 @@
 
 namespace Charcoal\Tests\View\Php;
 
-// From PSR-3
-use Psr\Log\NullLogger;
-
 // From 'charcoal-view'
 use Charcoal\View\Php\PhpLoader;
 use Charcoal\Tests\AbstractTestCase;
@@ -25,7 +22,6 @@ class PhpLoaderTest extends AbstractTestCase
     public function setUp()
     {
         $this->obj = new PhpLoader([
-            'logger'    => new NullLogger(),
             'base_path' => __DIR__,
             'paths'     => [ 'templates' ],
         ]);

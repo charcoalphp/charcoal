@@ -4,10 +4,6 @@ namespace Charcoal\View;
 
 use InvalidArgumentException;
 
-// From PSR-3
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerAwareTrait;
-
 // From 'charcoal-view'
 use Charcoal\View\LoaderInterface;
 
@@ -16,11 +12,8 @@ use Charcoal\View\LoaderInterface;
  *
  * Finds a template file in a collection of directory paths.
  */
-abstract class AbstractLoader implements
-    LoggerAwareInterface,
-    LoaderInterface
+abstract class AbstractLoader implements LoaderInterface
 {
-    use LoggerAwareTrait;
 
     /**
      * @var string
@@ -47,14 +40,11 @@ abstract class AbstractLoader implements
     /**
      * Default constructor, if none is provided by the concrete class implementations.
      *
-     * ## Required dependencies
-     * - `logger` A PSR-3 logger
      *
      * @param array $data The class dependencies map.
      */
     public function __construct(array $data = null)
     {
-        $this->setLogger($data['logger']);
         $this->setBasePath($data['base_path']);
         $this->setPaths($data['paths']);
     }

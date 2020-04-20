@@ -5,10 +5,6 @@ namespace Charcoal\View;
 use Exception;
 use InvalidArgumentException;
 
-// From PSR-3
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerAwareTrait;
-
 // From 'charcoal-view'
 use Charcoal\View\EngineInterface;
 use Charcoal\View\ViewInterface;
@@ -18,11 +14,8 @@ use Charcoal\View\ViewInterface;
  *
  * Also implements the `ConfigurableInterface`
  */
-abstract class AbstractView implements
-    LoggerAwareInterface,
-    ViewInterface
+abstract class AbstractView implements ViewInterface
 {
-    use LoggerAwareTrait;
 
     /**
      * @var EngineInterface $engine
@@ -32,15 +25,11 @@ abstract class AbstractView implements
     /**
      * Build the object with an array of dependencies.
      *
-     * ## Parameters:
-     * - `logger` a PSR-3 logger
-     *
      * @param array $data View class dependencies.
      * @throws InvalidArgumentException If required parameters are missing.
      */
     public function __construct(array $data)
     {
-        $this->setLogger($data['logger']);
         $this->setEngine($data['engine']);
     }
 

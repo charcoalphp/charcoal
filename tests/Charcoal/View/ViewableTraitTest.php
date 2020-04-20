@@ -2,9 +2,6 @@
 
 namespace Charcoal\Tests\View;
 
-// From PSR-3
-use Psr\Log\NullLogger;
-
 // From 'charcoal-view'
 use Charcoal\View\ViewableTrait;
 use Charcoal\View\AbstractView;
@@ -34,18 +31,14 @@ class ViewableTraitTest extends AbstractTestCase
      */
     public function setUp()
     {
-        $logger = new NullLogger();
         $loader = new MustacheLoader([
-            'logger'    => $logger,
             'base_path' => __DIR__,
             'paths'     => [ 'Mustache/templates' ],
         ]);
         $engine = new MustacheEngine([
-            'logger'    => $logger,
             'loader'    => $loader,
         ]);
         $genericView = new GenericView([
-            'logger'    => $logger,
             'engine'    => $engine,
         ]);
 

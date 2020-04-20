@@ -5,9 +5,6 @@ namespace Charcoal\Tests\View\Mustache;
 use InvalidArgumentException;
 use RuntimeException;
 
-// From PSR-3
-use Psr\Log\NullLogger;
-
 // From 'charcoal-view'
 use Charcoal\View\Mustache\MustacheEngine;
 use Charcoal\View\Mustache\MustacheLoader;
@@ -29,14 +26,11 @@ class MustacheEngineTest extends AbstractTestCase
      */
     public function setUp()
     {
-        $logger = new NullLogger();
         $loader = new MustacheLoader([
-            'logger'    => $logger,
             'base_path' => __DIR__,
             'paths'     => [ 'templates' ],
         ]);
         $this->obj = new MustacheEngine([
-            'logger' => $logger,
             'loader' => $loader,
             'cache'  => false,
         ]);

@@ -49,8 +49,6 @@ $ composer create-project locomotivemtl/charcoal-project-boilerplate:@dev --pref
 -   `PHP 5.6+`
     -   Older versions of PHP are deprecated, therefore not supported.
     -   PHP 7 is recommended for security and performance reasons.
--   [`psr/log`](http://www.php-fig.org/psr/psr-3/)
-    -   A PSR-3 compliant logger should be provided to the various services / classes.
 -   [`psr/http-message`](http://www.php-fig.org/psr/psr-7/)
     -   Charcoal View provides a PSR7 renderer.
 -   [`locomotivemtl/charcoal-config`](https://github.com/locomotivemtl/charcoal-config)
@@ -83,7 +81,6 @@ use Charcoal\View\Mustache\MustacheEngine;
 use Charcoal\View\GenericView;
 
 $loader = new MustacheLoader([
-    'logger'    => $logger,
     'base_path' => __DIR__,
     'paths'     => [
         'templates',
@@ -92,12 +89,10 @@ $loader = new MustacheLoader([
 ]);
 
 $engine = new MustacheEngine([
-    'logger' => $logger, // PSR-3 logger
     'loader' => $loader
 ]);
 
 $view = new GenericView([
-    ' logger' => $logger,
     'engine'  => $engine
 ]);
 
@@ -117,7 +112,6 @@ use Pimple\Container;
 use Charcoal\View\ViewServiceProvider;
 
 $container = new Container([
-    'logger' => $logger,
     'base_path' => __DIR__,
     'view' = [
         'default_engine' -> 'mustache',
@@ -304,7 +298,6 @@ Other services / options are:
 
 The `ViewServiceProvider` expects the following services / keys to be set on the container:
 
-- `logger` A PSR-3 logger
 - `config` Application configuration. Should contain a "view" key to build the _ViewConfig_ obejct.
 
 ### The View Config

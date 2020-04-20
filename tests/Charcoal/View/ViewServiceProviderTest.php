@@ -2,9 +2,6 @@
 
 namespace Charcoal\Tests\View;
 
-// From PSR-3
-use Psr\Log\NullLogger;
-
 // From Slim
 use Slim\Http\Response;
 
@@ -65,7 +62,6 @@ class ViewServiceProviderTest extends AbstractTestCase
     public function testProviderTwig()
     {
         $container = new Container([
-            'logger' => new NullLogger(),
             'config' => [
                 'base_path' => __DIR__,
                 'view'      => [
@@ -91,7 +87,6 @@ class ViewServiceProviderTest extends AbstractTestCase
     public function testProviderMustache()
     {
         $container = new Container([
-            'logger'     => new NullLogger(),
             'translator' => null,
             'config'     => [
                 'base_path' => __DIR__,
@@ -118,7 +113,6 @@ class ViewServiceProviderTest extends AbstractTestCase
     public function testProviderPhp()
     {
         $container = new Container([
-            'logger' => new NullLogger(),
             'config' => [
                 'base_path' => __DIR__,
                 'view'      => [

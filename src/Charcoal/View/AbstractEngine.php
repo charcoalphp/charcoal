@@ -2,10 +2,6 @@
 
 namespace Charcoal\View;
 
-// From PSR-3
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerAwareTrait;
-
 // From 'charcoal-view'
 use Charcoal\View\EngineInterface;
 use Charcoal\View\LoaderInterface;
@@ -19,13 +15,9 @@ use Charcoal\View\LoaderInterface;
  *   - Provides `loadtemplate()` method
  * - A `render()` method, which takes a $template and a $context arguments
  *
- * > Engines implements the `LoggerAwareInterface`. A logger can be accessed with the `logger()` method.
  */
-abstract class AbstractEngine implements
-    EngineInterface,
-    LoggerAwareInterface
+abstract class AbstractEngine implements EngineInterface
 {
-    use LoggerAwareTrait;
 
     /**
      * @var LoaderInterface
@@ -43,14 +35,12 @@ abstract class AbstractEngine implements
      * Build the object with an array of dependencies.
      *
      * ## Required parameters:
-     * - `logger` a PSR-3 logger
      * - `loader` a Loader object, to load templates.
      *
      * @param array $data Engine dependencie.
      */
     public function __construct(array $data)
     {
-        $this->setLogger($data['logger']);
         $this->setLoader($data['loader']);
 
         if (array_key_exists('cache', $data)) {

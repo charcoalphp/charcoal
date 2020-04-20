@@ -2,9 +2,6 @@
 
 namespace Charcoal\Tests\View;
 
-// From PSR-3
-use Psr\Log\NullLogger;
-
 // From Slim
 use Slim\Http\Response;
 
@@ -31,18 +28,14 @@ class RendererTest extends AbstractTestCase
      */
     public function setUp()
     {
-        $logger = new NullLogger();
         $loader = new MustacheLoader([
-            'logger'    => $logger,
             'base_path' => __DIR__,
             'paths'     => [ 'Mustache/templates' ],
         ]);
         $engine = new MustacheEngine([
-            'logger' => $logger,
             'loader' => $loader,
         ]);
         $view = new GenericView([
-            'logger' => $logger,
             'engine' => $engine,
         ]);
 

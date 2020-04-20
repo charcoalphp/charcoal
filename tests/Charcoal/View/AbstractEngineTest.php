@@ -2,9 +2,6 @@
 
 namespace Charcoal\Tests\View;
 
-// From PSR-3
-use Psr\Log\NullLogger;
-
 // From 'charcoal-view'
 use Charcoal\View\Mustache\MustacheLoader;
 use Charcoal\View\Mustache\MustacheEngine;
@@ -27,15 +24,12 @@ class AbstractEngineTest extends AbstractTestCase
      */
     public function setUp()
     {
-        $logger = new NullLogger();
         $loader = new MustacheLoader([
-            'logger'    => $logger,
             'base_path' => __DIR__,
             'paths'     => [ 'Mustache/templates' ],
         ]);
         $this->obj = $this->getMockForAbstractClass(AbstractEngine::class, [
             [
-                'logger' => $logger,
                 'loader' => $loader,
             ]
         ]);

@@ -2,9 +2,6 @@
 
 namespace Charcoal\Tests\View\Twig;
 
-// From PSR-3
-use Psr\Log\NullLogger;
-
 // From 'charcoal-view'
 use Charcoal\View\Twig\TwigEngine;
 use Charcoal\View\Twig\TwigLoader;
@@ -25,14 +22,11 @@ class TwigEngineTest extends AbstractTestCase
      */
     public function setUp()
     {
-        $logger = new NullLogger();
         $loader = new TwigLoader([
-            'logger'    => $logger,
             'base_path' => __DIR__,
             'paths'     => [ 'templates' ],
         ]);
         $this->obj = new TwigEngine([
-            'logger' => $logger,
             'loader' => $loader,
             'cache'  => null,
         ]);

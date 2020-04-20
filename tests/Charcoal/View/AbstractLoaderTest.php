@@ -5,8 +5,6 @@ namespace Charcoal\Tests\View;
 use Exception;
 use InvalidArgumentException;
 
-// From PSR-3
-use Psr\Log\NullLogger;
 
 // From 'charcoal-view'
 use Charcoal\View\AbstractLoader;
@@ -28,9 +26,7 @@ class AbstractLoaderTest extends AbstractTestCase
      */
     public function setUp()
     {
-        $logger = new NullLogger();
         $this->obj = $this->getMockForAbstractClass(AbstractLoader::class, [[
-            'logger'    => $logger,
             'base_path' => __DIR__,
             'paths'     => [ 'Mustache/templates' ],
         ]]);
@@ -43,9 +39,7 @@ class AbstractLoaderTest extends AbstractTestCase
     {
         $this->expectException(Exception::class);
 
-        $logger = new NullLogger();
         $loader = $this->getMockForAbstractClass(AbstractLoader::class, [[
-            'logger'    => $logger,
             'base_path' => false,
             'paths'     => [ 'Mustache/templates' ],
         ]]);
@@ -58,9 +52,7 @@ class AbstractLoaderTest extends AbstractTestCase
     {
         $this->expectException('\Exception');
 
-        $logger = new NullLogger();
         $loader = $this->getMockForAbstractClass(AbstractLoader::class, [[
-            'logger'    => $logger,
             'base_path' => __DIR__,
             'paths'     => [ false ],
         ]]);

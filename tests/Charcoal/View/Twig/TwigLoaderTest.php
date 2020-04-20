@@ -4,9 +4,6 @@ namespace Charcoal\Tests\View\Twig;
 
 use DateTime;
 
-// From PSR-3
-use Psr\Log\NullLogger;
-
 // From Twig
 use Twig_Source;
 
@@ -30,7 +27,6 @@ class TwigLoaderTest extends AbstractTestCase
     public function setUp()
     {
         $this->obj = new TwigLoader([
-            'logger'    => new NullLogger(),
             'base_path' => __DIR__,
             'paths'     => [ 'templates' ],
         ]);
