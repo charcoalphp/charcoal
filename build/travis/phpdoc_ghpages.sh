@@ -8,7 +8,7 @@
 # echo "TRAVIS_BRANCH: $TRAVIS_BRANCH"
 # echo "TRAVIS_BUILD_NUMBER: $TRAVIS_BUILD_NUMBER"
 
-if [ "$TRAVIS_REPO_SLUG" == "locomotivemtl/charcoal-view" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_PHP_VERSION" == "5.6" ]; then
+if [ "$TRAVIS_REPO_SLUG" == "locomotivemtl/charcoal-view" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_PHP_VERSION" == "7.3" ]; then
 
     echo -e "Publishing PHPDoc to GitHub Pages...\n"
 
