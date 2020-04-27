@@ -93,10 +93,14 @@ class AttachmentFormGroup extends AbstractFormGroup implements
     public function defaultWidgetData()
     {
         return [
-            'type'     => 'charcoal/admin/widget/attachment',
-            'preset'   => $this['preset'],
-            'objId'    => $this->objId(),
-            'objType'  => $this->objType()
+            'type'               => 'charcoal/admin/widget/attachment',
+            'group'              => $this['group'],
+            'attachment_options' => $this['attachmentOptions'],
+            'attachable_objects' => $this['attachableObjects'],
+            'preset'             => $this['preset'],
+            'obj'                => $this->obj(),
+            'objId'              => $this->objId(),
+            'objType'            => $this->objType()
         ];
     }
 
