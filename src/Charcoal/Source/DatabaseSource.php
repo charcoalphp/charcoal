@@ -232,11 +232,7 @@ class DatabaseSource extends AbstractSource implements
                     $alter = true;
                 }
 
-                if ((strtolower($col['Null']) === 'no') && !$field->allowNull()) {
-                    $alter = true;
-                }
-
-                if ((strtolower($col['Null']) !== 'no') && $field->allowNull()) {
+                if ((strtolower($col['Null']) !== 'no') !== $field->allowNull()) {
                     $alter = true;
                 }
 
