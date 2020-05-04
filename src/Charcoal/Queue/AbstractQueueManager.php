@@ -505,11 +505,21 @@ abstract class AbstractQueueManager implements
     }
 
     /**
-     * Retrieve the queue item's model.
+     * Retrieve the queue item prototype model.
      *
      * @return QueueItemInterface
      */
-    abstract public function queueItemProto();
+    public function queueItemProto()
+    {
+        return $this->queueItemFactory()->get($this->getQueueItemClass());
+    }
+
+    /**
+     * Retrieve the class name of the queue item model.
+     *
+     * @return string
+     */
+    abstract public function getQueueItemClass();
 
     /**
      * @return FactoryInterface
