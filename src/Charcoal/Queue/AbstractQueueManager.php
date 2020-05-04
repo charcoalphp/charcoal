@@ -65,9 +65,9 @@ abstract class AbstractQueueManager implements
     /**
      * The chunk size to batch the queue with.
      *
-     * @var integer|null
+     * @var integer
      */
-    private $chunkSize = null;
+    private $chunkSize = 0;
 
     /**
      * The queue ID.
@@ -311,7 +311,7 @@ abstract class AbstractQueueManager implements
             $callback = $this->processedCallback;
         }
 
-        if (!is_null($this->chunkSize())) {
+        if ($this->chunkSize() > 0) {
             $totalChunks = $this->totalChunks();
             for ($i = 0; $i <= $totalChunks; $i++) {
                 $queuedItems = $this->loadQueueItems();
@@ -395,7 +395,7 @@ abstract class AbstractQueueManager implements
             'mode'     => 'asc',
         ]);
 
-        if (!is_null($this->chunkSize())) {
+        if ($this->chunkSize() > 0) {
             $loader->setNumPerPage($this->chunkSize());
         }
 
