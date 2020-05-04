@@ -2,6 +2,9 @@
 
 namespace Charcoal\Loader;
 
+// From 'charcoal-core'
+use Charcoal\Model\ModelInterface;
+
 /**
  * Lazy Object Collection Loader
  */
