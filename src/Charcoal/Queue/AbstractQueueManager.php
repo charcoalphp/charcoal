@@ -370,17 +370,29 @@ abstract class AbstractQueueManager implements
     }
 
     /**
-     * Retrieve the items of the current queue.
+     * Create a queue items collection loader.
      *
-     * @return \Charcoal\Model\Collection|array
+     * @return CollectionLoader
      */
-    public function loadQueueItems()
+    public function createQueueItemsLoader()
     {
         $loader = new CollectionLoader([
             'logger'  => $this->logger,
             'factory' => $this->queueItemFactory(),
+            'model'   => $this->queueItemProto(),
         ]);
-        $loader->setModel($this->queueItemProto());
+
+        return $loader;
+    }
+
+    /**
+     * Configure the queue items collection loader.
+     *
+     * @param  CollectionLoader $loader The collection loader to prepare.
+     * @return void
+     */
+    protected function configureQueueItemsLoader(CollectionLoader $loader)
+    {
         $loader->addFilter([
             'property' => 'processed',
             'value'    => 0,
@@ -404,17 +416,26 @@ abstract class AbstractQueueManager implements
             'mode'     => 'asc',
         ]);
 
+        $loader->isConfigured = true;
+    }
+
+    /**
+     * Retrieve the items of the current queue.
+     *
+     * @return \Charcoal\Model\Collection|array
+     */
+    public function loadQueueItems()
+    {
+        $loader = $this->createQueueItemsLoader();
+        $this->configureQueueItemsLoader($loader);
+
         if ($this->chunkSize() > 0) {
             $loader->setNumPerPage($this->chunkSize());
-        }
-
-        if ($this->limit() > 0) {
+        } elseif ($this->limit() > 0) {
             $loader->setNumPerPage($this->limit());
-            $loader->setPage(0);
         }
 
         $queued = $loader->load();
-
         return $queued;
     }
 
@@ -425,36 +446,10 @@ abstract class AbstractQueueManager implements
      */
     public function totalQueuedItems()
     {
-        $loader = new CollectionLoader([
-            'logger'  => $this->logger,
-            'factory' => $this->queueItemFactory(),
-        ]);
-        $loader->setModel($this->queueItemProto());
-        $loader->addFilter([
-            'property' => 'processed',
-            'value'    => 0,
-        ]);
-        $loader->addFilter([
-            'property' => 'processing_date',
-            'operator' => '<',
-            'value'    => date('Y-m-d H:i:s'),
-        ]);
-
-        $queueId = $this->queueId();
-        if ($queueId) {
-            $loader->addFilter([
-                'property' => 'queue_id',
-                'value'    => $queueId,
-            ]);
-        }
-
-        $loader->addOrder([
-            'property' => 'queued_date',
-            'mode'     => 'asc',
-        ]);
+        $loader = $this->createQueueItemsLoader();
+        $this->configureQueueItemsLoader($loader);
 
         $total = $loader->loadCount();
-
         return $total;
     }
 
