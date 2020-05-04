@@ -353,10 +353,19 @@ abstract class AbstractQueueManager implements
                 continue;
             }
 
-            // Throttle according to processing rate.
-            if ($this->rate > 0) {
-                usleep(1000000 / $this->rate);
-            }
+            $this->throttle();
+        }
+    }
+
+    /**
+     * Throttle processing of items.
+     *
+     * @return void
+     */
+    private function throttle()
+    {
+        if ($this->rate > 0) {
+            usleep(1000000 / $this->rate);
         }
     }
 
