@@ -53,13 +53,14 @@ trait QueueItemTrait
     /**
      * Process the item.
      *
-     * @param  callable $callback        An optional callback routine executed after the item is processed.
+     * @param  callable $alwaysCallback  An optional callback routine executed after the item is processed.
      * @param  callable $successCallback An optional callback routine executed when the item is resolved.
      * @param  callable $failureCallback An optional callback routine executed when the item is rejected.
-     * @return boolean  Success / Failure
+     * @return boolean|null Returns TRUE i this item was successfully processed,
+     *     FALSE on failure or if an error occurs, NULL if this item is already processed.
      */
     abstract public function process(
-        callable $callback = null,
+        callable $alwaysCallback = null,
         callable $successCallback = null,
         callable $failureCallback = null
     );
