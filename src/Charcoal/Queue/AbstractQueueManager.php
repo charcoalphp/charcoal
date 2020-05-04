@@ -326,6 +326,31 @@ abstract class AbstractQueueManager implements
             $callback($this->successItems, $this->failedItems, $this->skippedItems);
         }
 
+        $summary = sprintf(
+            '%d successful, %d skipped, %d failed',
+            count($this->successItems),
+            count($this->failedItems),
+            count($this->skippedItems)
+        );
+
+        $queueId = $this->queueId();
+        if ($queueId) {
+            $this->logger->notice(sprintf(
+                'Completed processing of queue [%s]: %s',
+                $queueId,
+                $summary
+            ), [
+                'manager' => get_called_class(),
+            ]);
+        } else {
+            $this->logger->notice(sprintf(
+                'Completed processing of queues: %s',
+                $summary
+            ), [
+                'manager' => get_called_class(),
+            ]);
+        }
+
         return true;
     }
 
@@ -337,17 +362,26 @@ abstract class AbstractQueueManager implements
     {
         foreach ($queuedItems as $q) {
             try {
-                $res = $q->process($this->itemCallback, $this->itemSuccessCallback, $this->itemFailureCallback);
-                if ($res === true) {
+                $result = $q->process(
+                    $this->itemCallback,
+                    $this->itemSuccessCallback,
+                    $this->itemFailureCallback
+                );
+                if ($result === true) {
                     $this->successItems[] = $q;
-                } elseif ($res === false) {
+                } elseif ($result === false) {
                     $this->failedItems[] = $q;
                 } else {
                     $this->skippedItems[] = $q;
                 }
             } catch (Exception $e) {
                 $this->logger->error(
-                    sprintf('Could not process a queue item: %s', $e->getMessage())
+                    sprintf('Could not process a queue item: %s', $e->getMessage()),
+                    [
+                        'manager' => get_called_class(),
+                        'queueId' => $q['queueId'],
+                        'itemId'  => $q['id'],
+                    ]
                 );
                 $this->failedItems[] = $q;
                 continue;
