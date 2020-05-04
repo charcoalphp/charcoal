@@ -465,7 +465,14 @@ abstract class AbstractQueueManager implements
      */
     public function totalChunks()
     {
-        return (int)ceil($this->totalQueuedItems() / $this->chunkSize());
+        $total = $this->totalQueuedItems();
+
+        $limit = $this->limit();
+        if ($limit > 0 && $total > $limit) {
+            $total = $limit;
+        }
+
+        return (int)ceil($total / $this->chunkSize());
     }
 
     /**
