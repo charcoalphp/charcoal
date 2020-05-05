@@ -1,14 +1,13 @@
 <?php
 
-namespace Charcoals\Tests\Email;
-
-use PHPUnit_Framework_TestCase;
+namespace Charcoal\Tests\Email;
 
 use InvalidArgumentException;
 
 use Charcoal\Email\EmailConfig;
+use Charcoal\Tests\AbstractTestCase;
 
-class EmailConfigTest extends PHPUnit_Framework_TestCase
+class EmailConfigTest extends AbstractTestCase
 {
     /**
      * @var EmailConfig

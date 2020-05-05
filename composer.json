@@ -29,7 +29,7 @@
     },
     "require-dev": {
         "pimple/pimple": "~3.0",
-        "phpunit/phpunit": "^5.7",
+        "phpunit/phpunit": "^5.7 || ^6.5",
         "squizlabs/php_codesniffer": "^3.0",
         "php-coveralls/php-coveralls": "~1.0",
         "mustache/mustache": "^2.11"
@@ -37,6 +37,11 @@
     "autoload": {
         "psr-4": {
             "Charcoal\\Email\\": "src/Charcoal/Email"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Charcoal\\Tests\\": "tests/Charcoal"
         }
     },
     "scripts": {

@@ -2,16 +2,15 @@
 
 namespace Charcoal\Tests\App\Email;
 
-use PHPUnit_Framework_TestCase;
-
 use InvalidArgumentException;
 
 use Charcoal\Email\Email;
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  * Test the AbstractEmail methods, through concrete `Email` class.
  */
-class EmailTest extends PHPUnit_Framework_TestCase
+class EmailTest extends AbstractTestCase
 {
     /**
      * @var Email
@@ -117,10 +116,10 @@ class EmailTest extends PHPUnit_Framework_TestCase
         $obj->setTo('test@example.com');
         $this->assertEquals(['test@example.com'], $obj->to());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setTo(false);
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setTo(false);
     }
 
@@ -134,7 +133,7 @@ class EmailTest extends PHPUnit_Framework_TestCase
         $obj->addTo(['name'=>'Test','email'=>'test@example.com']);
         $this->assertEquals(['test@example.com', '"Test" <test@example.com>'], $obj->to());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->addTo(false);
     }
 
@@ -157,7 +156,7 @@ class EmailTest extends PHPUnit_Framework_TestCase
         $obj->setCc('test@example.com');
         $this->assertEquals(['test@example.com'], $obj->cc());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->SetCc(false);
     }
 
@@ -171,7 +170,7 @@ class EmailTest extends PHPUnit_Framework_TestCase
         $obj->addCc(['name'=>'Test','email'=>'test@example.com']);
         $this->assertEquals(['test@example.com', '"Test" <test@example.com>'], $obj->cc());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->addCc(false);
     }
 
@@ -194,7 +193,7 @@ class EmailTest extends PHPUnit_Framework_TestCase
         $obj->setBcc('test@example.com');
         $this->assertEquals(['test@example.com'], $obj->bcc());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setBcc(false);
     }
 
@@ -208,7 +207,7 @@ class EmailTest extends PHPUnit_Framework_TestCase
         $obj->addBcc(['name'=>'Test','email'=>'test@example.com']);
         $this->assertEquals(['test@example.com', '"Test" <test@example.com>'], $obj->bcc());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->addBcc(false);
     }
 
@@ -228,7 +227,7 @@ class EmailTest extends PHPUnit_Framework_TestCase
         ]);
         $this->assertEquals('"Test" <test@example.com>', $obj->from());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setFrom(false);
     }
 
@@ -248,7 +247,7 @@ class EmailTest extends PHPUnit_Framework_TestCase
         ]);
         $this->assertEquals('"Test" <test@example.com>', $obj->replyTo());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setReplyTo(false);
     }
 
@@ -259,7 +258,7 @@ class EmailTest extends PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
         $this->assertEquals('foo', $obj->subject());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setSubject(null);
     }
 
@@ -270,7 +269,7 @@ class EmailTest extends PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
         $this->assertEquals('foo', $obj->msgHtml());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setMsgHtml(null);
     }
 
@@ -281,7 +280,7 @@ class EmailTest extends PHPUnit_Framework_TestCase
         $this->assertSame($ret, $obj);
         $this->assertEquals('foo', $obj->msgTxt());
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $obj->setMsgTxt(null);
     }
 

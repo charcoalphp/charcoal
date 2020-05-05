@@ -1,14 +1,13 @@
 <?php
 
-namespace Charcoals\Tests\Email;
-
-use PHPUnit_Framework_TestCase;
+namespace Charcoal\Tests\Email;
 
 use DateTime;
 
 use Charcoal\Email\EmailLog;
+use Charcoal\Tests\AbstractTestCase;
 
-class EmailLogTest extends PHPUnit_Framework_TestCase
+class EmailLogTest extends AbstractTestCase
 {
     /**
      * @var EmailLog

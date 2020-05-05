@@ -1,13 +1,15 @@
 <?php
 
-namespace Charcoals\Tests\Email;
+namespace Charcoal\Tests\Email;
 
 use ReflectionClass;
+
+use Charcoal\Tests\AbstractTestCase;
 
 /**
  * Class EmailAwareTraitTest
  */
-class EmailAwareTraitTest extends \PHPUnit_Framework_TestCase
+class EmailAwareTraitTest extends AbstractTestCase
 {
     public $obj;
 

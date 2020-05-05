@@ -1,12 +1,12 @@
 <?php
 
-namespace Charcoals\Tests\Email;
-
-use PHPUnit_Framework_TestCase;
+namespace Charcoal\Tests\Email;
 
 use Charcoal\Email\EmailQueueItem;
+use Charcoal\Queue\QueueItemInterface;
+use Charcoal\Tests\AbstractTestCase;
 
-class EmailQueueItemTest extends PHPUnit_Framework_TestCase
+class EmailQueueItemTest extends AbstractTestCase
 {
     /**
      * @var EmailQueueItem
