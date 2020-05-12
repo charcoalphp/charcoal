@@ -68,4 +68,21 @@ class Container extends Attachment implements
 
         return $attachments;
     }
+
+    /**
+     * Event called before _deleting_ the attachment.
+     *
+     * @return boolean
+     * @see    Charcoal\Attachment\Traits\AttachmentAwareTrait::removeJoins
+     * @see    Charcoal\Source\StorableTrait::preDelete() For the "create" Event.
+     */
+    public function preDelete()
+    {
+        // Delete nested attachments
+        array_map(function($attachment) {
+            $attachment->delete();
+        }, $this->attachments()->values());
+
+        return parent::preDelete();
+    }
 }
