@@ -83,6 +83,8 @@ class RemoveJoinAction extends AdminAction
         // Try loading the attachment
         try {
             $attachment = $this->modelFactory()->create(Attachment::class)->load($attachmentId);
+            $attachment = $this->modelFactory()->create($attachment['type'])->setData($attachment->data());
+
             if ($attachment['id'] !== null) {
                 $attachment->delete();
             }
