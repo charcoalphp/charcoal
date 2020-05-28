@@ -1,6 +1,6 @@
 <?php
 
-namespace Charcoal\Ui\Dashboard;
+namespace Charcoal\Ui\FormInput;
 
 // From 'charcoal-ui'
 use Charcoal\Ui\UiItemConfig;
