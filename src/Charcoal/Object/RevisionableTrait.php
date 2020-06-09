@@ -50,6 +50,22 @@ trait RevisionableTrait
     }
 
     /**
+     * Create a revision collection loader.
+     *
+     * @return CollectionLoader
+     */
+    public function createRevisionObjectCollectionLoader()
+    {
+        $loader = new CollectionLoader([
+            'logger'  => $this->logger,
+            'factory' => $this->modelFactory(),
+            'model'   => $this->getRevisionObjectPrototype(),
+        ]);
+
+        return $loader;
+    }
+
+    /**
      * Create a revision object.
      *
      * @return ObjectRevisionInterface
@@ -59,6 +75,18 @@ trait RevisionableTrait
         $rev = $this->modelFactory()->create($this->getObjectRevisionClass());
 
         return $rev;
+    }
+
+    /**
+     * Retrieve the revision object prototype.
+     *
+     * @return ObjectRevisionInterface
+     */
+    public function getRevisionObjectPrototype()
+    {
+        $proto = $this->modelFactory()->get($this->getObjectRevisionClass());
+
+        return $proto;
     }
 
     /**
@@ -152,19 +180,25 @@ trait RevisionableTrait
      */
     public function allRevisions(callable $callback = null)
     {
-        $loader = new CollectionLoader([
-            'logger'  => $this->logger,
-            'factory' => $this->modelFactory(),
-        ]);
-        $loader->setModel($this->createRevisionObject());
-        $loader->addFilter('targetType', $this->objType());
-        $loader->addFilter('targetId', $this->id());
-        $loader->addOrder('revTs', 'desc');
+        $loader = $this->createRevisionObjectCollectionLoader();
+        $loader
+            ->addOrder('revTs', 'desc')
+            ->addFilters([
+                [
+                    'property' => 'targetType',
+                    'value'    => $this->objType(),
+                ],
+                [
+                    'property' => 'targetId',
+                    'value'    => $this->id(),
+                ],
+            ]);
+
         if ($callback !== null) {
             $loader->setCallback($callback);
         }
-        $revisions = $loader->load();
 
+        $revisions = $loader->load();
         return $revisions->objects();
     }
 
