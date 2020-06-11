@@ -21,6 +21,9 @@ Attachment Widget, as Form Group
     <fieldset>
         {{> charcoal/admin/template/inc.notes }}
 
-        {{> charcoal/admin/widget/attachment }}
+        {{# widget }}
+            {{> $widget_template }}
+        {{/ widget }}
+
     </fieldset>
 </div>
