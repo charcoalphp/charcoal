@@ -99,24 +99,11 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      * Set the queue item's ID.
      *
      * @param  string|null $ident The unique queue item identifier.
-     * @throws InvalidArgumentException If the identifier is not a string.
      * @return self
      */
     public function setIdent($ident)
     {
-        if ($ident === null) {
-            $this->ident = null;
-            return $this;
-        }
-
-        if (!is_string($ident)) {
-            throw new InvalidArgumentException(
-                'Ident needs to be a string'
-            );
-        }
-
         $this->ident = $ident;
-
         return $this;
     }
 
@@ -138,7 +125,11 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      */
     public function setTo($email)
     {
-        $this->to = $this->parseEmail($email);
+        try {
+            $this->to = $this->parseEmail($email);
+        } catch (Exception $e) {
+            $this->logger->warning(sprintf('Invalid "to" email: "%s"', strval($email)));
+        }
         return $this;
     }
 
@@ -160,7 +151,11 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      */
     public function setFrom($email)
     {
-        $this->from = $this->parseEmail($email);
+        try {
+            $this->from = $this->parseEmail($email);
+        } catch (Exception $e) {
+            $this->logger->warning(sprintf('Invalid "from" email: "%s"', strval($email)));
+        }
         return $this;
     }
 
@@ -178,19 +173,11 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      * Set the email subject.
      *
      * @param  string $subject The email subject.
-     * @throws InvalidArgumentException If the subject is not a string.
      * @return self
      */
     public function setSubject($subject)
     {
-        if (!is_string($subject)) {
-            throw new InvalidArgumentException(
-                'Subject needs to be a string'
-            );
-        }
-
         $this->subject = $subject;
-
         return $this;
     }
 
@@ -208,19 +195,11 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      * Set the email's HTML message body.
      *
      * @param  string $body The HTML message body.
-     * @throws InvalidArgumentException If the message is not a string.
      * @return self
      */
     public function setMsgHtml($body)
     {
-        if (!is_string($body) && !is_null($body)) {
-            throw new InvalidArgumentException(
-                'HTML message needs to be a string or null'
-            );
-        }
-
         $this->msgHtml = $body;
-
         return $this;
     }
 
@@ -238,19 +217,11 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      * Set the email's plain-text message body.
      *
      * @param  string $body The plain-text mesage body.
-     * @throws InvalidArgumentException If the message is not a string.
      * @return self
      */
     public function setMsgTxt($body)
     {
-        if (!is_string($body) && !is_null($body)) {
-            throw new InvalidArgumentException(
-                'Plan-text message needs to be a string or null'
-            );
-        }
-
         $this->msgTxt = $body;
-
         return $this;
     }
 
@@ -268,19 +239,11 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      * Set the campaign ID.
      *
      * @param  string $campaign The campaign identifier.
-     * @throws InvalidArgumentException If the campaign is not a string.
      * @return self
      */
     public function setCampaign($campaign)
     {
-        if (!is_string($campaign)) {
-            throw new InvalidArgumentException(
-                'Campaign ID needs to be a string'
-            );
-        }
-
         $this->campaign = $campaign;
-
         return $this;
     }
 
