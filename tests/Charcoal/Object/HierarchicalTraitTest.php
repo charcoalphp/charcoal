@@ -215,4 +215,17 @@ class HierarchicalTraitTest extends AbstractTestCase
         $obj->setMaster($master);
         $this->assertTrue($obj->isChildOf($master));
     }
+
+    /**
+     * @return void
+     */
+    public function testRecurisveIsChildOf()
+    {
+        $obj = $this->obj;
+        $master = $this->createMock(get_class($obj));
+
+        $this->assertFalse($obj->isChildOf($master));
+        $obj->setMaster($master);
+        $this->assertTrue($obj->isChildOf($master));
+    }
 }

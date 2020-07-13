@@ -338,11 +338,15 @@ trait HierarchicalTrait
      */
     public function recursiveIsChildOf($master)
     {
-        $master = $this->objFromIdent($master);
-        if ($master === null) {
-            return false;
+        if ($this->isChildOf($master)) {
+            return true;
         }
-        // TODO
+
+        if ($this->hasParents() && $this->getMaster()->recursiveIsChildOf($master)) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
