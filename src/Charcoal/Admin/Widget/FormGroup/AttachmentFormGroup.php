@@ -99,7 +99,6 @@ class AttachmentFormGroup extends AbstractFormGroup implements
             'attachable_objects' => $this['attachableObjects'],
             'preset'             => $this['preset'],
             'obj'                => $this->obj(),
-            'objId'              => $this->objId(),
             'objType'            => $this->objType()
         ];
     }
