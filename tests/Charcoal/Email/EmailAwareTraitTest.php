@@ -54,7 +54,8 @@ class EmailAwareTraitTest extends AbstractTestCase
             ['"Nom quand même assez long" <mat@locomotive.ca>', ['email'=>'mat@locomotive.ca', 'name'=>'Nom quand même assez long']],
             ['"Mathieu O\'Ducharme" <mat@locomotive.ca', ['email'=>'mat@locomotive.ca', 'name'=>'Mathieu O\'Ducharme']],
             ['"Mat & Memo" <mat.memo@locomotive.ca>', ['email' => 'mat.memo@locomotive.ca', 'name'=>'Mat & Memo']],
-            ['"Memo+ 2000 <memo@locomotive.ca>"', ['email'=>'memo@locomotive.ca', 'name'=>'Memo+ 2000']]
+            ['"Memo+ 2000 <memo@locomotive.ca>"', ['email'=>'memo@locomotive.ca', 'name'=>'Memo+ 2000']],
+            ['"Mathieu Parenthesis (esq.)" <test@locomotive.ca>', ['email'=>'test@locomotive.ca', 'name'=>'Mathieu Parenthesis (esq.)']]
         ];
     }
 }
