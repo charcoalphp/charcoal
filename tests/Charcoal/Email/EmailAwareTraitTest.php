@@ -41,7 +41,7 @@ class EmailAwareTraitTest extends AbstractTestCase
         return [
             ['mat@locomotive.ca', ['email'=>'mat@locomotive.ca', 'name'=>'']],
             ['Mathieu <mat@locomotive.ca>', ['email'=>'mat@locomotive.ca', 'name'=>'Mathieu']],
-            ["'Mathieu' <mat@locomotive.ca>", ['email'=>'mat@locomotive.ca', 'name'=>'Mathieu']],
+            ["'Mathieu 100%' <mat@locomotive.ca>", ['email'=>'mat@locomotive.ca', 'name'=>'Mathieu 100%']],
             ['"Mathieu Mémo" <mat@locomotive.ca>', ['email'=>'mat@locomotive.ca', 'name'=>'Mathieu Mémo']],
             ['"M_athieu-Mémo" <mat@locomotive.ca>', ['email'=>'mat@locomotive.ca', 'name'=>'M_athieu-Mémo']],
             ['Alertes Mathieu-Loco <alertes@loco-motive_123.ca>', ['email'=>'alertes@loco-motive_123.ca', 'name'=>'Alertes Mathieu-Loco']],
@@ -55,7 +55,8 @@ class EmailAwareTraitTest extends AbstractTestCase
             ['"Mathieu O\'Ducharme" <mat@locomotive.ca', ['email'=>'mat@locomotive.ca', 'name'=>'Mathieu O\'Ducharme']],
             ['"Mat & Memo" <mat.memo@locomotive.ca>', ['email' => 'mat.memo@locomotive.ca', 'name'=>'Mat & Memo']],
             ['"Memo+ 2000 <memo@locomotive.ca>"', ['email'=>'memo@locomotive.ca', 'name'=>'Memo+ 2000']],
-            ['"Mathieu Parenthesis (esq.)" <test@locomotive.ca>', ['email'=>'test@locomotive.ca', 'name'=>'Mathieu Parenthesis (esq.)']]
+            ['"Mathieu Parenthesis (esq.)" <test@locomotive.ca>', ['email'=>'test@locomotive.ca', 'name'=>'Mathieu Parenthesis (esq.)']],
+            ['"Team #MEMO" <memo@locomotive.ca>', ['email'=>'memo@locomotive.ca', 'name'=>'Team #MEMO']]
         ];
     }
 }
