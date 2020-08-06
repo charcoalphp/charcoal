@@ -41,6 +41,6 @@ class EmailQueueItemTest extends AbstractTestCase
      */
     public function testConstructor()
     {
-        $this->assertInstanceOf(EmailQueueItem::class, $this->obj);
+        $this->assertInstanceOf(QueueItemInterface::class, $this->obj);
     }
 }

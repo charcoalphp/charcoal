@@ -230,13 +230,14 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
     /**
      * Process the item.
      *
-     * @param  callable $callback        An optional callback routine executed after the item is processed.
+     * @param  callable $alwaysCallback  An optional callback routine executed after the item is processed.
      * @param  callable $successCallback An optional callback routine executed when the item is resolved.
      * @param  callable $failureCallback An optional callback routine executed when the item is rejected.
-     * @return boolean|null  Success / Failure
+     * @return boolean|null Returns TRUE i this item was successfully processed,
+     *     FALSE on failure or if an error occurs, NULL if this item is already processed.
      */
     public function process(
-        callable $callback = null,
+        callable $alwaysCallback = null,
         callable $successCallback = null,
         callable $failureCallback = null
     ): ?bool {
@@ -246,18 +247,21 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
         }
 
         $email = $this->emailFactory()->create('email');
-
         $email->setData($this->data());
 
         try {
-            $res = $email->send();
-
-            if ($res === true) {
+            $result = $email->send();
+            if ($result === true) {
                 $this->setProcessed(true);
                 $this->setProcessedDate('now');
                 $this->setMsgHtml(null);
                 $this->setMsgTxt(null);
-                $this->update(['processed', 'processed_date', 'msg_html', 'msg_txt']);
+                $this->update([
+                    'processed',
+                    'processed_date',
+                    'msg_html',
+                    'msg_txt',
+                ]);
 
                 if ($successCallback !== null) {
                     $successCallback($this);
@@ -268,11 +272,7 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
                 }
             }
 
-            if ($callback !== null) {
-                $callback($this);
-            }
-
-            return $res;
+            return $result;
         } catch (Exception $e) {
             // Todo log error
             if ($failureCallback !== null) {
@@ -280,6 +280,10 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
             }
 
             return false;
+        } finally {
+            if ($alwaysCallback !== null) {
+                $alwaysCallback($this);
+            }
         }
     }
 
