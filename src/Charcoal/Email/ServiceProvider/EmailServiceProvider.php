@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Email\ServiceProvider;
 
 // From 'pimple/pimple'
+use Charcoal\Factory\FactoryInterface;
+use Charcoal\View\ViewInterface;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 
@@ -32,13 +36,13 @@ class EmailServiceProvider implements ServiceProviderInterface
      * @param Container $container A pimple container instance.
      * @return void
      */
-    public function register(Container $container)
+    public function register(Container $container): void
     {
         /**
          * @param Container $container Pimple DI container.
-         * @return \Charcoal\Email\EmailConfig
+         * @return EmailConfig
          */
-        $container['email/config'] = function (Container $container) {
+        $container['email/config'] = function (Container $container): EmailConfig {
             $appConfig = $container['config'];
             $emailConfig = new EmailConfig($appConfig['email']);
             return $emailConfig;
@@ -46,16 +50,16 @@ class EmailServiceProvider implements ServiceProviderInterface
 
         /**
          * @param Container $container Pimple DI container.
-         * @return \Charcoal\View\ViewInterface
+         * @return ViewInterface
          */
-        $container['email/view'] = function (Container $container) {
+        $container['email/view'] = function (Container $container): ViewInterface {
             return $container['view'];
         };
 
         /**
-         * @return \Charcoal\Factory\FactoryInterface
+         * @return FactoryInterface
          */
-        $container['email/factory'] = function(Container $container) {
+        $container['email/factory'] = function(Container $container): FactoryInterface {
             return new GenericFactory([
                 'map' => [
                     'email' => Email::class
@@ -77,7 +81,7 @@ class EmailServiceProvider implements ServiceProviderInterface
          * @param Container $container Pimple DI container.
          * @return \Charcoal\Email\EmailInterface
          */
-        $container['email'] = $container->factory(function (Container $container) {
+        $container['email'] = $container->factory(function (Container $container): EmailInterface {
             return $container['email/factory']->create('email');
         });
     }

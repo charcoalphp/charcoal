@@ -18,7 +18,7 @@ class EmailQueueManager extends AbstractQueueManager
      *
      * @return EmailQueueItem
      */
-    public function queueItemProto()
+    public function queueItemProto() : EmailQueueItem
     {
         return $this->queueItemFactory()->create(EmailQueueItem::class);
     }

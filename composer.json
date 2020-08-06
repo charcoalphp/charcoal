@@ -19,7 +19,7 @@
         }
     },
     "require": {
-        "php": ">=5.6.0",
+        "php": ">=7.1",
         "psr/log": "^1.0",
         "phpmailer/phpmailer": "~6.0",
         "locomotivemtl/charcoal-config": "~0.6",
@@ -56,7 +56,7 @@
         ],
         "jsonlint": "find metadata -type f -name '*.json' -print0 | xargs -0 -n1 -P8 vendor/bin/jsonlint | grep -v '^Valid JSON'; test $? -eq 1",
         "phplint": "find {src,tests} -name '*.php' -print0 | xargs -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1",
-        "phpunit": "php vendor/bin/phpunit --configuration tests/phpunit.xml --coverage-text",
+        "phpunit": "php vendor/bin/phpunit --coverage-text",
         "phpcs": "php vendor/bin/phpcs -ps --colors src/",
         "phpcbf": "php vendor/bin/phpcbf -ps --colors src/ tests/"
     }

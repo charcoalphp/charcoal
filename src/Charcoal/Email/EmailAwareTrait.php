@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Email;
 
 use InvalidArgumentException;
@@ -15,7 +17,7 @@ trait EmailAwareTrait
      * @throws InvalidArgumentException If the email is invalid.
      * @return string
      */
-    protected function parseEmail($email)
+    protected function parseEmail($email): string
     {
         if (is_array($email)) {
             return $this->emailFromArray($email);
@@ -36,7 +38,7 @@ trait EmailAwareTrait
      * @throws InvalidArgumentException If the email is invalid.
      * @return array|null
      */
-    protected function emailToArray($var)
+    protected function emailToArray($var) : ?array
     {
         if ($var === null) {
             return null;
@@ -74,7 +76,7 @@ trait EmailAwareTrait
      * @throws InvalidArgumentException If the email array is invalid.
      * @return string
      */
-    protected function emailFromArray(array $arr)
+    protected function emailFromArray(array $arr) : string
     {
         if (isset($arr['address'])) {
             $arr['email'] = $arr['address'];

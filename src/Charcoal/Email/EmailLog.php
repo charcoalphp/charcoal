@@ -7,7 +7,7 @@ use DateTimeInterface;
 use Exception;
 use InvalidArgumentException;
 
-// From 'charcoal-core'
+// From 'locomotivemtl/charcoal-core'
 use Charcoal\Model\AbstractModel;
 
 /**
@@ -306,7 +306,7 @@ class EmailLog extends AbstractModel
      * @see    StorableTrait::preSave()
      * @return boolean
      */
-    protected function preSave()
+    protected function preSave() : bool
     {
         parent::preSave();
 

@@ -14,7 +14,8 @@ The preferred (and only supported) way of installing _charcoal-email_ is with **
 
 ## Dependencies
 
--   [`PHP 5.5+`](http://php.net)
+-   [`PHP 5.6+`](http://php.net)
+    - PHP 7.3+ is highly recommended
 -   [`phpmailer/phpmailer`](https://github.com/PHPMailer/PHPMailer)
 -   [`locomotivemtl/charcoal-config`](https://github.com/locomotivemtl/charcoal-config)
 -   [`locomotivemtl/charcoal-app`](https://github.com/locomotivemtl/charcoal-app)
@@ -84,7 +85,7 @@ The entire email system can be configured from the main app config, in the `emai
 
 # Service Provider
 
-All email services can be quickly register to a (`pimple`) container with `\Charcoal\Email\ServiceProvider\EmailServiceProvider`.
+All email services can be quickly registered to a (`pimple`) container with `\Charcoal\Email\ServiceProvider\EmailServiceProvider`.
 
 **Provided services:**
 
@@ -167,16 +168,9 @@ The Charcoal-Email module follows the Charcoal coding-style:
 
 # Authors
 
--   Mathieu Ducharme <mat@locomotive.ca>
--   Chauncey McAskill <chauncey@locomotive.ca>
--   Benjamin Roch <benjamin@locomotive.ca>
+-    [Locomotive](https://locomotive.ca)
 
 # License
 
 Charcoal is licensed under the MIT license. See [LICENSE](LICENSE) for details.
 
-# Changelog
-
-### 0.1
-
--Unreleased

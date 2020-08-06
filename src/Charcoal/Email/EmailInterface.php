@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Email;
 
 /**
@@ -21,7 +23,7 @@ interface EmailInterface
      * @param  string $campaign The campaign identifier.
      * @return EmailInterface Chainable
      */
-    public function setCampaign($campaign);
+    public function setCampaign(string $campaign);
 
     /**
      * Get the campaign identifier.
@@ -232,7 +234,7 @@ interface EmailInterface
      *
      * @return boolean Success / Failure.
      */
-    public function send();
+    public function send(): bool;
 
     /**
      * Enqueue the email for each recipient.
@@ -240,5 +242,5 @@ interface EmailInterface
      * @param mixed $ts A date/time to initiate the queue processing.
      * @return boolean Success / Failure.
      */
-    public function queue($ts = null);
+    public function queue($ts = null): bool;
 }

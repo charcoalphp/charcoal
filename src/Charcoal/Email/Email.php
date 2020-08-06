@@ -1,39 +1,35 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Email;
 
 use Exception;
 use InvalidArgumentException;
 
-// PSR-3 (logger) dependencies
+// // From 'psr/log' (PSR-3)
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 
 // From 'phpmailer/phpmailer'
 use PHPMailer\PHPMailer\PHPMailer;
 
-// From 'charcoal-config'
+// From 'locomotivemtl/charcoal-config'
 use Charcoal\Config\AbstractEntity;
 use Charcoal\Config\ConfigurableInterface;
 use Charcoal\Config\ConfigurableTrait;
 
-// Module 'charcoal-factory'
+// From 'locomotivemtl/charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 
-// Module 'charcoal-view'
+// From 'locomotivemtl/charcoal-view'
 use Charcoal\View\GenericView;
 use Charcoal\View\ViewableInterface;
 use Charcoal\View\ViewableTrait;
 
-// Module 'charcoal-queue'
+// From 'locomotivemtl/charcoal-queue'
 use Charcoal\Queue\QueueableInterface;
 use Charcoal\Queue\QueueableTrait;
-
-
-use Charcoal\Email\EmailInterface;
-use Charcoal\Email\EmailConfig;
-use Charcoal\Email\EmailLog;
-use Charcoal\Email\EmailQueueItem;
 
 /**
  * Default implementation of the `EmailInterface`.
@@ -180,16 +176,10 @@ class Email extends AbstractEntity implements
      * Set the campaign ID.
      *
      * @param  string $campaign The campaign identifier.
-     * @throws InvalidArgumentException If the campaign is invalid.
      * @return self
      */
-    public function setCampaign($campaign)
+    public function setCampaign(string $campaign)
     {
-        if (!is_string($campaign)) {
-            throw new InvalidArgumentException(
-                'Campaign must be a string'
-            );
-        }
 
         $this->campaign = $campaign;
 
@@ -636,7 +626,7 @@ class Email extends AbstractEntity implements
      * @todo Implement methods and property for toggling rich-text vs. plain-text
      *       emails (`$mail->isHTML(true)`).
      */
-    public function send()
+    public function send(): bool
     {
         $this->logger->debug(
             'Attempting to send an email',
@@ -739,7 +729,7 @@ class Email extends AbstractEntity implements
      * @param mixed $ts A date/time to initiate the queue processing.
      * @return boolean Success / Failure.
      */
-    public function queue($ts = null)
+    public function queue($ts = null): bool
     {
         $recipients = $this->to();
         $author     = $this->from();

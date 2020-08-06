@@ -1,25 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Email;
 
 use Exception;
 use InvalidArgumentException;
 
-// Module `pimple/pimple` dependencies
+// From 'pimple/pimple'
 use Pimple\Container;
 
-// Module `charcoal/factory` dependencies
+// From 'locomotivemtl/charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 
-// Module `charcoal-core` dependencies
+// From 'locomotivemtl/charcoal-core'
 use Charcoal\Model\AbstractModel;
 
-// Module `charcoal-queue` dependencies
+// From 'locomotivemtl/charcoal-queue'
 use Charcoal\Queue\QueueItemInterface;
 use Charcoal\Queue\QueueItemTrait;
-
-// Intra-module dependencies
-use \Charcoal\Email\Email;
 
 /**
  * Email queue item.
@@ -271,7 +270,7 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
         callable $callback = null,
         callable $successCallback = null,
         callable $failureCallback = null
-    ) {
+    ): ?bool {
         if ($this->processed() === true) {
             // Do not process twice, ever.
             return null;
@@ -319,7 +318,7 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      * @param Container $container Pimple DI container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(Container $container): void
     {
         parent::setDependencies($container);
         $this->setEmailFactory($container['email/factory']);
@@ -331,7 +330,7 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      * @return boolean
      * @see \Charcoal\Queue\QueueItemTrait::preSaveQueueItem()
      */
-    protected function preSave()
+    protected function preSave():  bool
     {
         parent::preSave();
 
@@ -343,7 +342,7 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
     /**
      * @return FactoryInterface
      */
-    protected function emailFactory()
+    protected function emailFactory(): FactoryInterface
     {
         return $this->emailFactory;
     }
@@ -352,7 +351,7 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      * @param FactoryInterface $factory The factory to create email objects.
      * @return void
      */
-    private function setEmailFactory(FactoryInterface $factory)
+    private function setEmailFactory(FactoryInterface $factory): void
     {
         $this->emailFactory = $factory;
     }

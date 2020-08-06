@@ -1,23 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Email\Script;
 
-// PSR-7 (http messaging) dependencies
-use \Psr\Http\Message\RequestInterface;
-use \Psr\Http\Message\ResponseInterface;
+// From 'psr/http-message' (PSR-7)
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
-use \Pimple\Container;
+// From 'pimple/pimple'
+use Pimple\Container;
 
-// Module `charcoal-app` dependencies
-use \Charcoal\App\Script\AbstractScript;
-use \Charcoal\App\Script\CronScriptInterface;
-use \Charcoal\App\Script\CronScriptTrait;
+// From 'locomotivemtl/charcoal-app'
+use Charcoal\App\Script\AbstractScript;
+use Charcoal\App\Script\CronScriptInterface;
+use Charcoal\App\Script\CronScriptTrait;
 
-// Module `charcoal-factory` dependencies
-use \Charcoal\Factory\FactoryInterface;
+// From 'locomotivemtl/charcoal-factory'
+use Charcoal\Factory\FactoryInterface;
 
 // Local dependencies
-use \Charcoal\Email\EmailQueueManager;
+use Charcoal\Email\EmailQueueManager;
 
 /**
  * Process Email Queue script.
@@ -47,7 +50,7 @@ class ProcessQueueScript extends AbstractScript implements CronScriptInterface
      * @param  ResponseInterface $response A PSR-7 compatible Response instance.
      * @return ResponseInterface
      */
-    public function run(RequestInterface $request, ResponseInterface $response)
+    public function run(RequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         // Unused parameter
         unset($request);
@@ -57,7 +60,7 @@ class ProcessQueueScript extends AbstractScript implements CronScriptInterface
 
         $climate = $this->climate();
 
-        $processedCallback = function ($success, $failures, $skipped) use ($climate) {
+        $processedCallback = function ($success, $failures, $skipped) use ($climate): void {
             if (!empty($success)) {
                 $climate->green()->out(sprintf('%s emails were successfully sent.', count($success)));
             }
@@ -88,7 +91,7 @@ class ProcessQueueScript extends AbstractScript implements CronScriptInterface
      * @param Container $container Pimple DI container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(Container $container): void
     {
         parent::setDependencies($container);
         $this->setQueueItemFactory($container['model/factory']);
@@ -98,7 +101,7 @@ class ProcessQueueScript extends AbstractScript implements CronScriptInterface
      * @param FactoryInterface $factory The factory to create queue items.
      * @return void
      */
-    private function setQueueItemFactory(FactoryInterface $factory)
+    private function setQueueItemFactory(FactoryInterface $factory): void
     {
         $this->queueItemFactory = $factory;
     }

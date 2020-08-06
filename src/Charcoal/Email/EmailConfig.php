@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Email;
 
 use InvalidArgumentException;
@@ -96,7 +98,7 @@ class EmailConfig extends AbstractConfig
      *
      * @return array
      */
-    public function defaults()
+    public function defaults(): array
     {
         return [
             'smtp'             => false,
