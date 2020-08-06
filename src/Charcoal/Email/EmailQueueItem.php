@@ -29,13 +29,6 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
     use EmailAwareTrait;
 
     /**
-     * The queue item ID.
-     *
-     * @var string|null $ident
-     */
-    private $ident;
-
-    /**
      * The recipient's email address.
      *
      * @var string $to
@@ -82,8 +75,6 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      */
     private $emailFactory;
 
-
-
     /**
      * Get the primary key that uniquely identifies each queue item.
      *
@@ -92,28 +83,6 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
     public function key()
     {
         return 'id';
-    }
-
-    /**
-     * Set the queue item's ID.
-     *
-     * @param  string|null $ident The unique queue item identifier.
-     * @return self
-     */
-    public function setIdent($ident)
-    {
-        $this->ident = $ident;
-        return $this;
-    }
-
-    /**
-     * Get the queue item's ID.
-     *
-     * @return string
-     */
-    public function ident()
-    {
-        return $this->ident;
     }
 
     /**
