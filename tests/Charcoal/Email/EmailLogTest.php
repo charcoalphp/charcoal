@@ -6,6 +6,7 @@ use DateTime;
 
 use Charcoal\Email\EmailLog;
 use Charcoal\Tests\AbstractTestCase;
+use Psr\Log\NullLogger;
 
 class EmailLogTest extends AbstractTestCase
 {
@@ -16,9 +17,8 @@ class EmailLogTest extends AbstractTestCase
 
     public function setUp()
     {
-        $container = $GLOBALS['container'];
         $this->obj = new EmailLog([
-            'logger' => $container['logger']
+            'logger' => new NullLogger()
         ]);
     }
 

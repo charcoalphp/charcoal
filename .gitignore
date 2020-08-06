@@ -19,4 +19,5 @@ logs/
 charcoal_test
 build/docs/
 build/logs/
+build/report/
 tmp/

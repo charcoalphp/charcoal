@@ -72,9 +72,6 @@ class EmailTest extends AbstractTestCase
         $ret = $obj->setCampaign('foo');
         $this->assertSame($ret, $obj);
         $this->assertEquals('foo', $obj->campaign());
-
-        $this->expectException(InvalidArgumentException::class);
-        $obj->setCampaign([1, 2, 3]);
     }
 
     public function testGenerateCampaign()
