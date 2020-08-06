@@ -7,7 +7,7 @@ namespace Charcoal\Email;
 use Exception;
 use InvalidArgumentException;
 
-// // From 'psr/log' (PSR-3)
+// From 'psr/log' (PSR-3)
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 
@@ -157,7 +157,14 @@ class Email extends AbstractEntity implements
     private $logFactory;
 
     /**
-     * Construct a new Email object.
+     * Construct a new Email object with the given dependencies.
+     *
+     * - `logger` a PSR-3 logger.
+     * - `view` a charcoal view for template rendering.
+     * - `config` a charcoal config containing email settings.
+     * - `template_factory` a charcoal model factory to create templates.
+     * - `queue_item_factory` a charcoal model factory to create queue item.
+     * - `log_factory` a charcoal model factory to create email logs.
      *
      * @param array $data Dependencies and settings.
      */
@@ -688,13 +695,14 @@ class Email extends AbstractEntity implements
             $ret = $mail->send();
 
             $this->logSend($ret, $mail);
-
-            return $ret;
         } catch (Exception $e) {
+            $ret = false;
             $this->logger->error(
                 sprintf('Error sending email: %s', $e->getMessage())
             );
         }
+
+        return $ret;
     }
 
     /**
@@ -727,9 +735,9 @@ class Email extends AbstractEntity implements
      * Enqueue the email for each recipient.
      *
      * @param mixed $ts A date/time to initiate the queue processing.
-     * @return boolean Success / Failure.
+     * @return self
      */
-    public function queue($ts = null): bool
+    public function queue($ts = null)
     {
         $recipients = $this->to();
         $author     = $this->from();
@@ -758,7 +766,7 @@ class Email extends AbstractEntity implements
             }
         }
 
-        return true;
+        return $this;
     }
 
     /**
@@ -788,7 +796,7 @@ class Email extends AbstractEntity implements
      *
      * @return array
      */
-    public function templateData()
+    public function templateData(): array
     {
         return $this->templateData;
     }
@@ -833,7 +841,7 @@ class Email extends AbstractEntity implements
     /**
      * @return FactoryInterface
      */
-    protected function templateFactory()
+    protected function templateFactory(): FactoryInterface
     {
         return $this->templateFactory;
     }
@@ -851,7 +859,7 @@ class Email extends AbstractEntity implements
     /**
      * @return FactoryInterface
      */
-    protected function queueItemFactory()
+    protected function queueItemFactory(): FactoryInterface
     {
         return $this->queueItemFactory;
     }
@@ -869,7 +877,7 @@ class Email extends AbstractEntity implements
     /**
      * @return FactoryInterface
      */
-    protected function logFactory()
+    protected function logFactory(): FactoryInterface
     {
         return $this->logFactory;
     }
@@ -880,7 +888,7 @@ class Email extends AbstractEntity implements
      * @see    ViewableInterface::renderTemplate()
      * @return string
      */
-    protected function generateMsgHtml()
+    protected function generateMsgHtml(): string
     {
         $templateIdent = $this->templateIdent();
 
@@ -898,7 +906,7 @@ class Email extends AbstractEntity implements
      *
      * @return string
      */
-    protected function generateCampaign()
+    protected function generateCampaign(): string
     {
         return uniqid();
     }
@@ -909,7 +917,7 @@ class Email extends AbstractEntity implements
      * @param string $key The key to get the getter from.
      * @return string The getter method name, for a given key.
      */
-    protected function getter($key)
+    protected function getter(string $key): string
     {
         $getter = $key;
         return $this->camelize($getter);
@@ -921,7 +929,7 @@ class Email extends AbstractEntity implements
      * @param string $key The key to get the setter from.
      * @return string The setter method name, for a given key.
      */
-    protected function setter($key)
+    protected function setter(string $key): string
     {
         $setter = 'set_'.$key;
         return $this->camelize($setter);
@@ -933,7 +941,7 @@ class Email extends AbstractEntity implements
      * @param string $html The HTML string to convert.
      * @return string The resulting plain-text string.
      */
-    protected function stripHtml($html)
+    protected function stripHtml(string $html): string
     {
         $str = html_entity_decode($html);
 
@@ -969,11 +977,11 @@ class Email extends AbstractEntity implements
     /**
      * Log the send event for each recipient.
      *
-     * @param  boolean $result Success or failure.
-     * @param  mixed   $mailer The raw mailer.
+     * @param  boolean   $result Success or failure.
+     * @param  PHPMailer $mailer The raw mailer.
      * @return void
      */
-    protected function logSend($result, $mailer)
+    protected function logSend(bool $result, PHPMailer $mailer): void
     {
         if ($this->log() === false) {
             return;
@@ -995,7 +1003,7 @@ class Email extends AbstractEntity implements
         );
 
         foreach ($recipients as $to) {
-            $log = $this->logFactory()->create('charcoal/email/email-log');
+            $log = $this->logFactory()->create(EmailLog::class);
 
             $log->setQueueId($this->queueId());
             $log->setMessageId($mailer->getLastMessageId());

@@ -32,7 +32,8 @@
         "phpunit/phpunit": "^5.7 || ^6.5",
         "squizlabs/php_codesniffer": "^3.0",
         "php-coveralls/php-coveralls": "~1.0",
-        "mustache/mustache": "^2.11"
+        "mustache/mustache": "^2.11",
+        "phpstan/phpstan": "^0.12.36"
     },
     "autoload": {
         "psr-4": {
@@ -51,6 +52,7 @@
         "tests": [
             "@phplint",
             "@phpcs",
+            "@phpstan",
             "@phpunit",
             "@jsonlint"
         ],
@@ -58,6 +60,7 @@
         "phplint": "find {src,tests} -name '*.php' -print0 | xargs -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1",
         "phpunit": "php vendor/bin/phpunit --coverage-text",
         "phpcs": "php vendor/bin/phpcs -ps --colors src/",
-        "phpcbf": "php vendor/bin/phpcbf -ps --colors src/ tests/"
+        "phpcbf": "php vendor/bin/phpcbf -ps --colors src/ tests/",
+        "phpstan": "php vendor/bin/phpstan analyze -l1 src/ tests/"
     }
 }

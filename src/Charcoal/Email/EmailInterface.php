@@ -240,7 +240,7 @@ interface EmailInterface
      * Enqueue the email for each recipient.
      *
      * @param mixed $ts A date/time to initiate the queue processing.
-     * @return boolean Success / Failure.
+     * @return self
      */
-    public function queue($ts = null): bool;
+    public function queue($ts = null);
 }
