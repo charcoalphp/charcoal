@@ -65,9 +65,9 @@ abstract class AbstractQueueManager implements
     /**
      * The chunk size to batch the queue with.
      *
-     * @var integer|null
+     * @var integer
      */
-    private $chunkSize = null;
+    private $chunkSize = 0;
 
     /**
      * The queue ID.
@@ -311,7 +311,7 @@ abstract class AbstractQueueManager implements
             $callback = $this->processedCallback;
         }
 
-        if (!is_null($this->chunkSize())) {
+        if ($this->chunkSize() > 0) {
             $totalChunks = $this->totalChunks();
             for ($i = 0; $i <= $totalChunks; $i++) {
                 $queuedItems = $this->loadQueueItems();
@@ -326,6 +326,31 @@ abstract class AbstractQueueManager implements
             $callback($this->successItems, $this->failedItems, $this->skippedItems);
         }
 
+        $summary = sprintf(
+            '%d successful, %d skipped, %d failed',
+            count($this->successItems),
+            count($this->failedItems),
+            count($this->skippedItems)
+        );
+
+        $queueId = $this->queueId();
+        if ($queueId) {
+            $this->logger->notice(sprintf(
+                'Completed processing of queue [%s]: %s',
+                $queueId,
+                $summary
+            ), [
+                'manager' => get_called_class(),
+            ]);
+        } else {
+            $this->logger->notice(sprintf(
+                'Completed processing of queues: %s',
+                $summary
+            ), [
+                'manager' => get_called_class(),
+            ]);
+        }
+
         return true;
     }
 
@@ -337,41 +362,71 @@ abstract class AbstractQueueManager implements
     {
         foreach ($queuedItems as $q) {
             try {
-                $res = $q->process($this->itemCallback, $this->itemSuccessCallback, $this->itemFailureCallback);
-                if ($res === true) {
+                $result = $q->process(
+                    $this->itemCallback,
+                    $this->itemSuccessCallback,
+                    $this->itemFailureCallback
+                );
+                if ($result === true) {
                     $this->successItems[] = $q;
-                } elseif ($res === false) {
+                } elseif ($result === false) {
                     $this->failedItems[] = $q;
                 } else {
                     $this->skippedItems[] = $q;
                 }
             } catch (Exception $e) {
                 $this->logger->error(
-                    sprintf('Could not process a queue item: %s', $e->getMessage())
+                    sprintf('Could not process a queue item: %s', $e->getMessage()),
+                    [
+                        'manager' => get_called_class(),
+                        'queueId' => $q['queueId'],
+                        'itemId'  => $q['id'],
+                    ]
                 );
                 $this->failedItems[] = $q;
                 continue;
             }
 
-            // Throttle according to processing rate.
-            if ($this->rate > 0) {
-                usleep(1000000 / $this->rate);
-            }
+            $this->throttle();
         }
     }
 
     /**
-     * Retrieve the items of the current queue.
+     * Throttle processing of items.
      *
-     * @return \Charcoal\Model\Collection|array
+     * @return void
      */
-    public function loadQueueItems()
+    private function throttle()
+    {
+        if ($this->rate > 0) {
+            usleep(1000000 / $this->rate);
+        }
+    }
+
+    /**
+     * Create a queue items collection loader.
+     *
+     * @return CollectionLoader
+     */
+    public function createQueueItemsLoader()
     {
         $loader = new CollectionLoader([
             'logger'  => $this->logger,
             'factory' => $this->queueItemFactory(),
+            'model'   => $this->queueItemProto(),
         ]);
-        $loader->setModel($this->queueItemProto());
+
+        return $loader;
+    }
+
+    /**
+     * Configure the queue items collection loader.
+     *
+     * @param  CollectionLoader $loader The collection loader to prepare.
+     * @return void
+     */
+    protected function configureQueueItemsLoader(CollectionLoader $loader)
+    {
         $loader->addFilter([
             'property' => 'processed',
             'value'    => 0,
@@ -395,17 +450,26 @@ abstract class AbstractQueueManager implements
             'mode'     => 'asc',
         ]);
 
-        if (!is_null($this->chunkSize())) {
-            $loader->setNumPerPage($this->chunkSize());
-        }
+        $loader->isConfigured = true;
+    }
 
-        if ($this->limit() > 0) {
+    /**
+     * Retrieve the items of the current queue.
+     *
+     * @return \Charcoal\Model\Collection|array
+     */
+    public function loadQueueItems()
+    {
+        $loader = $this->createQueueItemsLoader();
+        $this->configureQueueItemsLoader($loader);
+
+        if ($this->chunkSize() > 0) {
+            $loader->setNumPerPage($this->chunkSize());
+        } elseif ($this->limit() > 0) {
             $loader->setNumPerPage($this->limit());
-            $loader->setPage(0);
         }
 
         $queued = $loader->load();
-
         return $queued;
     }
 
@@ -416,36 +480,10 @@ abstract class AbstractQueueManager implements
      */
     public function totalQueuedItems()
     {
-        $loader = new CollectionLoader([
-            'logger'  => $this->logger,
-            'factory' => $this->queueItemFactory(),
-        ]);
-        $loader->setModel($this->queueItemProto());
-        $loader->addFilter([
-            'property' => 'processed',
-            'value'    => 0,
-        ]);
-        $loader->addFilter([
-            'property' => 'processing_date',
-            'operator' => '<',
-            'value'    => date('Y-m-d H:i:s'),
-        ]);
-
-        $queueId = $this->queueId();
-        if ($queueId) {
-            $loader->addFilter([
-                'property' => 'queue_id',
-                'value'    => $queueId,
-            ]);
-        }
-
-        $loader->addOrder([
-            'property' => 'queued_date',
-            'mode'     => 'asc',
-        ]);
+        $loader = $this->createQueueItemsLoader();
+        $this->configureQueueItemsLoader($loader);
 
         $total = $loader->loadCount();
-
         return $total;
     }
 
@@ -456,15 +494,32 @@ abstract class AbstractQueueManager implements
      */
     public function totalChunks()
     {
-        return (int)ceil($this->totalQueuedItems() / $this->chunkSize());
+        $total = $this->totalQueuedItems();
+
+        $limit = $this->limit();
+        if ($limit > 0 && $total > $limit) {
+            $total = $limit;
+        }
+
+        return (int)ceil($total / $this->chunkSize());
     }
 
     /**
-     * Retrieve the queue item's model.
+     * Retrieve the queue item prototype model.
      *
      * @return QueueItemInterface
      */
-    abstract public function queueItemProto();
+    public function queueItemProto()
+    {
+        return $this->queueItemFactory()->get($this->getQueueItemClass());
+    }
+
+    /**
+     * Retrieve the class name of the queue item model.
+     *
+     * @return string
+     */
+    abstract public function getQueueItemClass();
 
     /**
      * @return FactoryInterface
