@@ -25,14 +25,7 @@ before_script:
     - mkdir -p build/logs
 
 script:
-    ## Lint PHP Files
-    - find {src,tests} -name '*.php' -print0 | xargs -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1
-
-    ## Run PHP Code Sniffer
-    - ./vendor/bin/phpcs --config-set ignore_warnings_on_exit 1;./vendor/bin/phpcs -ps --colors src/
-
-    ## Run PHPUnit Tests
-    - ./vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+    - composer test
 
 after_success:
     - php vendor/bin/php-coveralls -v
