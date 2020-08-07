@@ -440,16 +440,10 @@ class Email extends AbstractEntity implements
      * Set the email subject.
      *
      * @param  string $subject The email subject.
-     * @throws InvalidArgumentException If the subject is not a string.
      * @return self
      */
-    public function setSubject($subject)
+    public function setSubject(string $subject)
     {
-        if (!is_string($subject)) {
-            throw new InvalidArgumentException(
-                'Subject needs to be a string'
-            );
-        }
         $this->subject = $subject;
         return $this;
     }
@@ -459,7 +453,7 @@ class Email extends AbstractEntity implements
      *
      * @return string The emails' subject.
      */
-    public function subject()
+    public function subject(): string
     {
         return $this->subject;
     }
@@ -468,16 +462,10 @@ class Email extends AbstractEntity implements
      * Set the email's HTML message body.
      *
      * @param  string $body The HTML message body.
-     * @throws InvalidArgumentException If the message is not a string.
      * @return self
      */
-    public function setMsgHtml($body)
+    public function setMsgHtml(string $body)
     {
-        if (!is_string($body)) {
-            throw new InvalidArgumentException(
-                'HTML message needs to be a string'
-            );
-        }
         $this->msgHtml = $body;
         return $this;
     }
@@ -490,7 +478,7 @@ class Email extends AbstractEntity implements
      *
      * @return string
      */
-    public function msgHtml()
+    public function msgHtml(): string
     {
         if ($this->msgHtml === null) {
             $this->msgHtml = $this->generateMsgHtml();
@@ -502,16 +490,10 @@ class Email extends AbstractEntity implements
      * Set the email's plain-text message body.
      *
      * @param string $body The message's text body.
-     * @throws InvalidArgumentException If the parameter is invalid.
      * @return self
      */
-    public function setMsgTxt($body)
+    public function setMsgTxt(string $body)
     {
-        if (!is_string($body)) {
-            throw new InvalidArgumentException(
-                'Plan-text message needs to be a string'
-            );
-        }
         $this->msgTxt = $body;
         return $this;
     }
@@ -524,7 +506,7 @@ class Email extends AbstractEntity implements
      *
      * @return string
      */
-    public function msgTxt()
+    public function msgTxt(): string
     {
         if ($this->msgTxt === null) {
             $this->msgTxt = $this->stripHtml($this->msgHtml());

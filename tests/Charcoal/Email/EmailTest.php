@@ -256,9 +256,6 @@ class EmailTest extends AbstractTestCase
         $ret = $obj->setSubject('foo');
         $this->assertSame($ret, $obj);
         $this->assertEquals('foo', $obj->subject());
-
-        $this->expectException('\InvalidArgumentException');
-        $obj->setSubject(null);
     }
 
     public function testSetMsgHtml()
@@ -267,9 +264,6 @@ class EmailTest extends AbstractTestCase
         $ret = $obj->setMsgHtml('foo');
         $this->assertSame($ret, $obj);
         $this->assertEquals('foo', $obj->msgHtml());
-
-        $this->expectException('\InvalidArgumentException');
-        $obj->setMsgHtml(null);
     }
 
     public function testSetMsgTxt()
@@ -278,9 +272,6 @@ class EmailTest extends AbstractTestCase
         $ret = $obj->setMsgTxt('foo');
         $this->assertSame($ret, $obj);
         $this->assertEquals('foo', $obj->msgTxt());
-
-        $this->expectException('\InvalidArgumentException');
-        $obj->setMsgTxt(null);
     }
 
     public function testConvertHtml()
