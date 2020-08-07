@@ -50,109 +50,114 @@ class Email extends AbstractEntity implements
     /**
      * The campaign ID.
      *
-     * @var string $campaign
+     * @var string
      */
     private $campaign;
 
     /**
      * The recipient email address(es).
      *
-     * @var array $to
+     * @var array
      */
     private $to = [];
 
     /**
      * The CC recipient email address(es).
      *
-     * @var array $cc
+     * @var array
      */
     private $cc = [];
 
     /**
      * The BCC recipient email address(es).
      *
-     * @var array $bcc
+     * @var array
      */
     private $bcc = [];
 
     /**
      * The sender's email address.
      *
-     * @var string $from
+     * @var string
      */
     private $from;
 
     /**
      * The email address to reply to the message.
      *
-     * @var string $replyTo
+     * @var string
      */
     private $replyTo;
 
     /**
      * The email subject.
      *
-     * @var string $subject
+     * @var string
      */
     private $subject;
 
     /**
      * The HTML message body.
      *
-     * @var string $msgHtml
+     * @var string
      */
     private $msgHtml;
 
     /**
      * The plain-text message body.
      *
-     * @var string $msgTxt
+     * @var string
      */
     private $msgTxt;
 
     /**
-     * @var array $attachments
+     * @var array
      */
     private $attachments = [];
 
     /**
      * Whether the email should be logged.
      *
-     * @var boolean $log
+     * @var boolean
      */
-    private $log;
+    private $logEnabled;
 
     /**
      * Whether the email should be tracked.
      *
-     * @var boolean $track
+     * @var boolean
      */
-    private $track;
+    private $trackOpenEnabled;
+
+    /**
+     * @var boolean
+     */
+    private $trackLinksEnabled;
 
     /**
      * The data to pass onto the view controller.
      *
-     * @var array $templateData
+     * @var array
      */
     private $templateData = [];
 
     /**
-     * @var PHPMailer $phpMailer PHP Mailer instance.
+     * @var PHPMailer
      */
     private $phpMailer;
 
     /**
-     * @var FactoryInterface $templateFactory
+     * @var FactoryInterface
      */
     private $templateFactory;
 
     /**
-     * @var FactoryInterface $queueItemFactory
+     * @var FactoryInterface
      */
     private $queueItemFactory;
 
     /**
-     * @var FactoryInterface $logFactory
+     * @var FactoryInterface
      */
     private $logFactory;
 
@@ -187,9 +192,7 @@ class Email extends AbstractEntity implements
      */
     public function setCampaign(string $campaign)
     {
-
         $this->campaign = $campaign;
-
         return $this;
     }
 
@@ -205,7 +208,6 @@ class Email extends AbstractEntity implements
         if ($this->campaign === null) {
             $this->campaign = $this->generateCampaign();
         }
-
         return $this->campaign;
     }
 
@@ -405,7 +407,6 @@ class Email extends AbstractEntity implements
         if ($this->from === null) {
             $this->setFrom($this->config()->defaultFrom());
         }
-
         return $this->from;
     }
 
@@ -432,7 +433,6 @@ class Email extends AbstractEntity implements
         if ($this->replyTo === null) {
             $this->replyTo = $this->config()->defaultReplyTo();
         }
-
         return $this->replyTo;
     }
 
@@ -450,9 +450,7 @@ class Email extends AbstractEntity implements
                 'Subject needs to be a string'
             );
         }
-
         $this->subject = $subject;
-
         return $this;
     }
 
@@ -480,9 +478,7 @@ class Email extends AbstractEntity implements
                 'HTML message needs to be a string'
             );
         }
-
         $this->msgHtml = $body;
-
         return $this;
     }
 
@@ -516,9 +512,7 @@ class Email extends AbstractEntity implements
                 'Plan-text message needs to be a string'
             );
         }
-
         $this->msgTxt = $body;
-
         return $this;
     }
 
@@ -535,7 +529,6 @@ class Email extends AbstractEntity implements
         if ($this->msgTxt === null) {
             $this->msgTxt = $this->stripHtml($this->msgHtml());
         }
-
         return $this->msgTxt;
     }
 
@@ -550,7 +543,6 @@ class Email extends AbstractEntity implements
         foreach ($attachments as $att) {
             $this->addAttachment($att);
         }
-
         return $this;
     }
 
@@ -579,12 +571,12 @@ class Email extends AbstractEntity implements
     /**
      * Enable or disable logging for this particular email.
      *
-     * @param  boolean $log The log flag.
+     * @param  boolean $log The log-enabled flag.
      * @return self
      */
-    public function setLog($log)
+    public function setLogEnabled($log)
     {
-        $this->log = !!$log;
+        $this->logEnabled = !!$log;
         return $this;
     }
 
@@ -593,38 +585,64 @@ class Email extends AbstractEntity implements
      *
      * @return boolean
      */
-    public function log()
+    public function logEnabled(): bool
     {
-        if ($this->log === null) {
-            $this->log = $this->config()->defaultLog();
+        if ($this->logEnabled === null) {
+            $this->logEnabled = $this->config()->defaultLogEnabled();
         }
-        return $this->log;
+        return $this->logEnabled;
     }
 
     /**
-     * Enable or disable tracking for this particular email.
+     * Enable or disable email open tracking for this particular email.
      *
      * @param boolean $track The track flag.
      * @return self
      */
-    public function setTrack($track)
+    public function setTrackOpenEnabled($track)
     {
-        $this->track = !!$track;
+        $this->trackOpenEnabled = !!$track;
         return $this;
     }
 
     /**
-     * Determine if tracking is enabled for this particular email.
+     * Determine if email open tracking is enabled for this particular email.
      *
      * @return boolean
      */
-    public function track()
+    public function trackOpenEnabled(): bool
     {
-        if ($this->track === null) {
-            $this->track = $this->config()->defaultTrack();
+        if ($this->trackOpenEnabled === null) {
+            $this->trackOpenEnabled = $this->config()->defaultTrackOpenEnabled();
         }
-        return $this->track;
+        return $this->trackOpenEnabled;
     }
+
+    /**
+     * Enable or disable email links tracking for this particular email.
+     *
+     * @param boolean $track The track flag.
+     * @return self
+     */
+    public function setTrackLinksEnabled($track)
+    {
+        $this->trackLinksEnabled = !!$track;
+        return $this;
+    }
+
+    /**
+     * Determine if email links tracking is enabled for this particular email.
+     *
+     * @return boolean
+     */
+    public function trackLinksEnabled(): bool
+    {
+        if ($this->trackLinksEnabled === null) {
+            $this->trackLinksEnabled = $this->config()->defaultTrackLinksEnabled();
+        }
+        return $this->trackLinksEnabled;
+    }
+
 
     /**
      * Send the email to all recipients
@@ -983,7 +1001,7 @@ class Email extends AbstractEntity implements
      */
     protected function logSend(bool $result, PHPMailer $mailer): void
     {
-        if ($this->log() === false) {
+        if ($this->logEnabled() === false) {
             return;
         }
 

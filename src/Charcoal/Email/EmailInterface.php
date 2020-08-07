@@ -205,14 +205,14 @@ interface EmailInterface
      * @param  boolean $log The log flag.
      * @return EmailInterface Chainable
      */
-    public function setLog($log);
+    public function setLogEnabled($log);
 
     /**
      * Determine if logging is enabled for this particular email.
      *
      * @return boolean
      */
-    public function log();
+    public function logEnabled(): bool;
 
     /**
      * Enable or disable tracking for this particular email.
@@ -220,14 +220,29 @@ interface EmailInterface
      * @param boolean $track The track flag.
      * @return EmailInterface Chainable
      */
-    public function setTrack($track);
+    public function setTrackOpenEnabled($track);
 
     /**
      * Determine if tracking is enabled for this particular email.
      *
      * @return boolean
      */
-    public function track();
+    public function trackLinksEnabled(): bool;
+
+    /**
+     * Enable or disable tracking for this particular email.
+     *
+     * @param boolean $track The track flag.
+     * @return EmailInterface Chainable
+     */
+    public function setTrackLinksEnabled($track);
+
+    /**
+     * Determine if tracking is enabled for this particular email.
+     *
+     * @return boolean
+     */
+    public function trackOpenEnabled(): bool;
 
     /**
      * Send the email to all recipients.

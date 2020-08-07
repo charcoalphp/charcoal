@@ -80,18 +80,26 @@ class EmailConfig extends AbstractConfig
     private $defaultReplyTo;
 
     /**
-     * Whether the email should be tracked by default.
+     * Whether the email (open) should be tracked by default.
      *
      * @var boolean $defaultTrack
      */
-    private $defaultTrack;
+    private $defaultTrackOpenEnabled;
+
+
+    /**
+     * Whether the email (links) should be tracked by default.
+     *
+     * @var boolean $defaultTrack
+     */
+    private $defaultTrackLinksEnabled;
 
     /**
      * Whether the email should be logged by default.
      *
      * @var boolean $defaultLog
      */
-    private $defaultLog;
+    private $defaultLogEnabled;
 
     /**
      * Default email configuration.
@@ -106,8 +114,9 @@ class EmailConfig extends AbstractConfig
             'default_from'     => '',
             'default_reply_to' => '',
 
-            'default_track'    => false,
-            'default_log'      => true
+            'default_track_open_enabled'    => true,
+            'default_track_links_enabled'   => true,
+            'default_log_enabled'           => true
         ];
     }
 
@@ -354,46 +363,68 @@ class EmailConfig extends AbstractConfig
     }
 
     /**
-     * Set whether the email should be logged by defaultd.
+     * Set whether the email sending should be logged by default.
      *
      * @param  boolean $log The default log flag.
      * @return self
      */
-    public function setDefaultLog($log)
+    public function setDefaultLogEnabled($log)
     {
-        $this->defaultLog = !!$log;
+        $this->defaultLogEnabled = !!$log;
         return $this;
     }
 
     /**
-     * Determine if the email should be logged by default.
+     * Determine if the email sending should be logged by default.
      *
      * @return boolean
      */
-    public function defaultLog()
+    public function defaultLogEnabled()
     {
-        return $this->defaultLog;
+        return $this->defaultLogEnabled;
     }
 
     /**
-     * Set whether the email should be tracked by default.
+     * Set whether the email (open) should be tracked by default.
      *
      * @param  boolean $track The default track flag.
      * @return self
      */
-    public function setDefaultTrack($track)
+    public function setDefaultTrackOpenEnabled($track)
     {
-        $this->defaultTrack = !!$track;
+        $this->defaultTrackOpenEnabled = !!$track;
         return $this;
     }
 
     /**
-     * Determine if the email should be tracked by default.
+     * Determine if the email (open) should be tracked by default.
      *
      * @return boolean
      */
-    public function defaultTrack()
+    public function defaultTrackOpenEnabled()
     {
-        return $this->defaultTrack;
+        return $this->defaultTrackOpenEnabled;
+    }
+
+    /**
+     * Set whether the email links should be tracked by default.
+     *
+     * @param  boolean $track The default track flag.
+     * @return self
+     */
+    public function setDefaultTrackLinksEnabled($track)
+    {
+        $this->defaultTrackLinksEnabled = !!$track;
+        return $this;
+    }
+
+    /**
+     * Determine if the email links should be tracked by default.
+     *
+     * @return boolean
+     */
+    public function defaultTrackLinksEnabled()
+    {
+        return $this->defaultTrackLinksEnabled;
     }
 }
