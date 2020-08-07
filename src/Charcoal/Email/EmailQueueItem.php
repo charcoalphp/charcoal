@@ -29,13 +29,6 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
     use EmailAwareTrait;
 
     /**
-     * The queue item ID.
-     *
-     * @var string|null $ident
-     */
-    private $ident;
-
-    /**
      * The recipient's email address.
      *
      * @var string $to
@@ -82,8 +75,6 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      */
     private $emailFactory;
 
-
-
     /**
      * Get the primary key that uniquely identifies each queue item.
      *
@@ -92,28 +83,6 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
     public function key()
     {
         return 'id';
-    }
-
-    /**
-     * Set the queue item's ID.
-     *
-     * @param  string|null $ident The unique queue item identifier.
-     * @return self
-     */
-    public function setIdent($ident)
-    {
-        $this->ident = $ident;
-        return $this;
-    }
-
-    /**
-     * Get the queue item's ID.
-     *
-     * @return string
-     */
-    public function ident()
-    {
-        return $this->ident;
     }
 
     /**
@@ -261,13 +230,14 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
     /**
      * Process the item.
      *
-     * @param  callable $callback        An optional callback routine executed after the item is processed.
+     * @param  callable $alwaysCallback  An optional callback routine executed after the item is processed.
      * @param  callable $successCallback An optional callback routine executed when the item is resolved.
      * @param  callable $failureCallback An optional callback routine executed when the item is rejected.
-     * @return boolean|null  Success / Failure
+     * @return boolean|null Returns TRUE i this item was successfully processed,
+     *     FALSE on failure or if an error occurs, NULL if this item is already processed.
      */
     public function process(
-        callable $callback = null,
+        callable $alwaysCallback = null,
         callable $successCallback = null,
         callable $failureCallback = null
     ): ?bool {
@@ -277,18 +247,21 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
         }
 
         $email = $this->emailFactory()->create('email');
-
         $email->setData($this->data());
 
         try {
-            $res = $email->send();
-
-            if ($res === true) {
+            $result = $email->send();
+            if ($result === true) {
                 $this->setProcessed(true);
                 $this->setProcessedDate('now');
                 $this->setMsgHtml(null);
                 $this->setMsgTxt(null);
-                $this->update(['processed', 'processed_date', 'msg_html', 'msg_txt']);
+                $this->update([
+                    'processed',
+                    'processed_date',
+                    'msg_html',
+                    'msg_txt',
+                ]);
 
                 if ($successCallback !== null) {
                     $successCallback($this);
@@ -299,11 +272,7 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
                 }
             }
 
-            if ($callback !== null) {
-                $callback($this);
-            }
-
-            return $res;
+            return $result;
         } catch (Exception $e) {
             // Todo log error
             if ($failureCallback !== null) {
@@ -311,6 +280,10 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
             }
 
             return false;
+        } finally {
+            if ($alwaysCallback !== null) {
+                $alwaysCallback($this);
+            }
         }
     }
 
