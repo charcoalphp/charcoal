@@ -788,16 +788,6 @@ class Email extends AbstractEntity implements
     }
 
     /**
-     * Log the queue event.
-     *
-     * @return void
-     * @todo Implement log qeueing.
-     */
-    protected function logQueue()
-    {
-    }
-
-    /**
      * Set the template data for the view.
      *
      * @param array $data The template data.
