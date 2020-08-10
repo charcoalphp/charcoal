@@ -37,7 +37,7 @@ class TranslatorHelpersTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->translator = $this->createTranslator();
         $this->mustache   = $this->createMustacheEngine($this->translator);

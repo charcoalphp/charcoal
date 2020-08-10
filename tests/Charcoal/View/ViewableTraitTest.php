@@ -29,7 +29,7 @@ class ViewableTraitTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         $loader = new MustacheLoader([
             'base_path' => __DIR__,
@@ -62,9 +62,6 @@ class ViewableTraitTest extends AbstractTestCase
         $ret = $obj->setTemplateIdent('foobar');
         $this->assertSame($ret, $obj);
         $this->assertEquals('foobar', $obj->templateIdent());
-
-        $this->expectException('\InvalidArgumentException');
-        $obj->setTemplateIdent(false);
     }
 
     /**

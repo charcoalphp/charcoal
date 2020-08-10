@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\View;
 
 use Exception;
@@ -37,17 +39,10 @@ abstract class AbstractView implements ViewInterface
      * Load a template (from identifier).
      *
      * @param string $templateIdent The template identifier to load..
-     * @throws InvalidArgumentException If the template ident is not a string.
      * @return string
      */
-    public function loadTemplate($templateIdent)
+    public function loadTemplate(string $templateIdent): string
     {
-        if (!is_string($templateIdent)) {
-            throw new InvalidArgumentException(sprintf(
-                'Template ident must be a string, received %s',
-                is_object($templateIdent) ? get_class($templateIdent) : gettype($templateIdent)
-            ));
-        }
         if (!$templateIdent) {
             return '';
         }
@@ -61,7 +56,7 @@ abstract class AbstractView implements ViewInterface
      * @param mixed  $context       The view controller (rendering context).
      * @return string
      */
-    public function render($templateIdent, $context = null)
+    public function render(string $templateIdent, $context = null): string
     {
         return $this->engine()->render($templateIdent, $context);
     }
@@ -73,7 +68,7 @@ abstract class AbstractView implements ViewInterface
      * @param mixed  $context        The view controller (rendering context).
      * @return string
      */
-    public function renderTemplate($templateString, $context = null)
+    public function renderTemplate(string $templateString, $context = null): string
     {
         return $this->engine()->render($templateString, $context);
     }
@@ -83,7 +78,7 @@ abstract class AbstractView implements ViewInterface
      * @param string|null $templateIdent The "dynamic template" to set. null to clear.
      * @return void
      */
-    public function setDynamicTemplate($varName, $templateIdent)
+    public function setDynamicTemplate(string $varName, ?string $templateIdent): void
     {
         $this->engine()->setDynamicTemplate($varName, $templateIdent);
     }
@@ -93,7 +88,7 @@ abstract class AbstractView implements ViewInterface
      *
      * @return EngineInterface
      */
-    protected function engine()
+    protected function engine(): EngineInterface
     {
         return $this->engine;
     }
@@ -104,7 +99,7 @@ abstract class AbstractView implements ViewInterface
      * @param EngineInterface $engine The rendering engine.
      * @return void
      */
-    private function setEngine(EngineInterface $engine)
+    private function setEngine(EngineInterface $engine): void
     {
         $this->engine = $engine;
     }

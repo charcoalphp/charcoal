@@ -19,7 +19,7 @@ class ViewConfigTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->obj = new ViewConfig();
     }
@@ -47,9 +47,6 @@ class ViewConfigTest extends AbstractTestCase
         $this->assertSame($ret, $this->obj);
 
         $this->assertEquals(['foo', 'bar'], $this->obj->paths());
-
-        $this->expectException('\InvalidArgumentException');
-        $this->obj->setPaths([false]);
     }
 
     /**
@@ -61,9 +58,6 @@ class ViewConfigTest extends AbstractTestCase
         $this->assertSame($ret, $this->obj);
 
         $this->assertEquals([ 'foo' => [] ], $this->obj->engines());
-
-        $this->expectException('\InvalidArgumentException');
-        $this->obj->addEngine(false, []);
     }
 
     /**
@@ -75,10 +69,6 @@ class ViewConfigTest extends AbstractTestCase
 
         $this->obj->addEngine('mustache', [ 'foo' => 'bar' ]);
         $this->assertEquals([ 'foo' => 'bar' ], $this->obj->engine('mustache'));
-
-
-        $this->expectException('\InvalidArgumentException');
-        $this->obj->engine(false);
     }
 
     /**
@@ -107,8 +97,5 @@ class ViewConfigTest extends AbstractTestCase
         $ret = $this->obj->setDefaultEngine('php');
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('php', $this->obj->defaultEngine());
-
-        $this->expectException('\InvalidArgumentException');
-        $this->obj->setDefaultEngine(false);
     }
 }

@@ -1,10 +1,8 @@
 <?php
 
-namespace Charcoal\View;
+declare(strict_types=1);
 
-// From 'charcoal-view'
-use Charcoal\View\EngineInterface;
-use Charcoal\View\LoaderInterface;
+namespace Charcoal\View;
 
 /**
  * Default implementation, as abstract class, of the `EngineInterface`.
@@ -51,7 +49,7 @@ abstract class AbstractEngine implements EngineInterface
     /**
      * @return string
      */
-    abstract public function type();
+    abstract public function type(): string;
 
     /**
      * Render a template (from ident) with a given context.
@@ -60,7 +58,7 @@ abstract class AbstractEngine implements EngineInterface
      * @param mixed  $context       The rendering context.
      * @return string The rendered template string.
      */
-    public function render($templateIdent, $context)
+    public function render(string $templateIdent, $context): string
     {
         $template = $this->loadTemplate($templateIdent);
         return $this->renderTemplate($template, $context);
@@ -71,7 +69,7 @@ abstract class AbstractEngine implements EngineInterface
      * @param mixed  $context        The rendering context.
      * @return string The rendered template string.
      */
-    abstract public function renderTemplate($templateString, $context);
+    abstract public function renderTemplate(string $templateString, $context): string;
 
     /**
      * Delegates template loading to the engine's Loader object.
@@ -79,7 +77,7 @@ abstract class AbstractEngine implements EngineInterface
      * @param string $templateIdent The template identifier to load.
      * @return string The template string, loaded from identifier.
      */
-    public function loadTemplate($templateIdent)
+    public function loadTemplate(string $templateIdent): string
     {
         return $this->loader()->load($templateIdent);
     }
@@ -89,7 +87,7 @@ abstract class AbstractEngine implements EngineInterface
      * @param string|null $templateIdent The "dynamic template" to set. null to clear.
      * @return void
      */
-    public function setDynamicTemplate($varName, $templateIdent)
+    public function setDynamicTemplate(string $varName, ?string $templateIdent): void
     {
         $this->loader()->setDynamicTemplate($varName, $templateIdent);
     }
@@ -102,7 +100,7 @@ abstract class AbstractEngine implements EngineInterface
      *                      a boolean to enable/disable cache.
      * @return void
      */
-    protected function setCache($cache)
+    protected function setCache($cache): void
     {
         $this->cache = $cache;
     }
@@ -121,7 +119,7 @@ abstract class AbstractEngine implements EngineInterface
     /**
      * @return LoaderInterface
      */
-    protected function loader()
+    protected function loader() : LoaderInterface
     {
         return $this->loader;
     }
@@ -132,7 +130,7 @@ abstract class AbstractEngine implements EngineInterface
      * @param LoaderInterface $loader A loader instance.
      * @return void
      */
-    private function setLoader(LoaderInterface $loader)
+    private function setLoader(LoaderInterface $loader): void
     {
         $this->loader = $loader;
     }

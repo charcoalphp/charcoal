@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\View;
 
 /**
@@ -13,7 +15,7 @@ interface EngineInterface
      * @param string $templateIdent The template identifier to load.
      * @return string
      */
-    public function loadTemplate($templateIdent);
+    public function loadTemplate(string $templateIdent): string;
 
     /**
      * Load a template (from identifier) and render it.
@@ -22,7 +24,7 @@ interface EngineInterface
      * @param mixed  $context       The rendering context.
      * @return string The rendered template string.
      */
-    public function render($templateIdent, $context);
+    public function render(string $templateIdent, $context): string;
 
     /**
      * Render a template (from string).
@@ -31,12 +33,12 @@ interface EngineInterface
      * @param mixed  $context        The rendering context.
      * @return string The rendered template string.
      */
-    public function renderTemplate($templateString, $context);
+    public function renderTemplate(string $templateString, $context): string;
 
     /**
      * @param string      $varName       The name of the variable to set this template unto.
      * @param string|null $templateIdent The "dynamic template" to set. null to clear.
      * @return void
      */
-    public function setDynamicTemplate($varName, $templateIdent);
+    public function setDynamicTemplate(string $varName, ?string $templateIdent): void;
 }

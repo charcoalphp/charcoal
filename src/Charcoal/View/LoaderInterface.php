@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\View;
 
 /**
@@ -18,11 +20,11 @@ interface LoaderInterface
      * @param  string|null $templateIdent The "dynamic template" to set. null to clear.
      * @return void
      */
-    public function setDynamicTemplate($varName, $templateIdent);
+    public function setDynamicTemplate(string $varName, ?string $templateIdent): void;
 
     /**
      * @param  string $varName The name of the variable to get template ident from.
      * @return string
      */
-    public function dynamicTemplate($varName);
+    public function dynamicTemplate(string $varName): string;
 }

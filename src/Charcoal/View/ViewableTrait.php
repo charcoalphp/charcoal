@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\View;
 
 use InvalidArgumentException;
@@ -17,7 +19,7 @@ trait ViewableTrait
      *
      * @var string
      */
-    private $templateIdent;
+    private $templateIdent = '';
 
     /**
      * The context for the {@see self::$view} to render templates.
@@ -49,19 +51,11 @@ trait ViewableTrait
      * Usually, a path to a file containing the template to be rendered at runtime.
      *
      * @param string $templateIdent The template ID.
-     * @throws InvalidArgumentException If the template identifier is not a string.
      * @return self
      */
-    public function setTemplateIdent($templateIdent)
+    public function setTemplateIdent(string $templateIdent)
     {
-        if (!is_string($templateIdent)) {
-            throw new InvalidArgumentException(
-                'Template identifier must be a string.'
-            );
-        }
-
         $this->templateIdent = $templateIdent;
-
         return $this;
     }
 
@@ -70,7 +64,7 @@ trait ViewableTrait
      *
      * @return string
      */
-    public function templateIdent()
+    public function templateIdent(): string
     {
         return $this->templateIdent;
     }
@@ -85,7 +79,6 @@ trait ViewableTrait
     public function setView(ViewInterface $view)
     {
         $this->view = $view;
-
         return $this;
     }
 
@@ -108,7 +101,7 @@ trait ViewableTrait
      *     If NULL, will use the object's previously set template identifier.
      * @return string The rendered template.
      */
-    public function render($templateIdent = null)
+    public function render(?string $templateIdent = null): string
     {
         if ($templateIdent === null) {
             $templateIdent = $this->templateIdent();
@@ -123,7 +116,7 @@ trait ViewableTrait
      * @param string $templateString The template  to render from string.
      * @return string The rendered template.
      */
-    public function renderTemplate($templateString)
+    public function renderTemplate(string $templateString): string
     {
         return $this->view()->renderTemplate($templateString, $this->viewController());
     }
@@ -169,7 +162,7 @@ trait ViewableTrait
      * @param string|null $templateIdent The "dynamic template" to set. null to clear.
      * @return void
      */
-    public function setDynamicTemplate($varName, $templateIdent)
+    public function setDynamicTemplate(string $varName, ?string $templateIdent): void
     {
         $this->view()->setDynamicTemplate($varName, $templateIdent);
     }

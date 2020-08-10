@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\View\Twig;
 
 // From Twig
@@ -23,7 +25,7 @@ class TwigEngine extends AbstractEngine
     /**
      * @return string
      */
-    public function type()
+    public function type(): string
     {
         return 'twig';
     }
@@ -31,7 +33,7 @@ class TwigEngine extends AbstractEngine
     /**
      * @return Twig_Environment
      */
-    public function twig()
+    public function twig(): Twig_Environment
     {
         if ($this->twig === null) {
             $this->twig = $this->createTwig();
@@ -44,7 +46,7 @@ class TwigEngine extends AbstractEngine
      * @param mixed  $context       The rendering context.
      * @return string The rendered template string.
      */
-    public function render($templateIdent, $context)
+    public function render(string $templateIdent, $context): string
     {
         $arrayContext = json_decode(json_encode($context), true);
         return $this->twig()->render($templateIdent, $arrayContext);
@@ -55,7 +57,7 @@ class TwigEngine extends AbstractEngine
      * @param mixed  $context        The rendering context.
      * @return string The rendered template string.
      */
-    public function renderTemplate($templateString, $context)
+    public function renderTemplate(string $templateString, $context): string
     {
         $template = $this->twig()->createTemplate($templateString);
         $arrayContext = json_decode(json_encode($context), true);
@@ -65,7 +67,7 @@ class TwigEngine extends AbstractEngine
     /**
      * @return Twig_Environment
      */
-    protected function createTwig()
+    protected function createTwig(): Twig_Environment
     {
         $twig = new Twig_Environment($this->loader(), [
             'cache'     => $this->cache(),
@@ -82,7 +84,7 @@ class TwigEngine extends AbstractEngine
      * @param  mixed $cache A Twig cache option.
      * @return void
      */
-    protected function setCache($cache)
+    protected function setCache($cache): void
     {
         /**
          * If NULL is specified, the value is converted to FALSE

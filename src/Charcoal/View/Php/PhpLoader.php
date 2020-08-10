@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\View\Php;
 
 // From 'charcoal-view'
@@ -23,7 +25,7 @@ class PhpLoader extends AbstractLoader implements LoaderInterface
      * @param  string $ident The template being evaluated.
      * @return boolean
      */
-    protected function isTemplateString($ident)
+    protected function isTemplateString(string $ident): bool
     {
         return strpos($ident, '<?') !== false || parent::isTemplateString($ident);
     }
@@ -34,7 +36,7 @@ class PhpLoader extends AbstractLoader implements LoaderInterface
      * @param string $ident The identifier to convert.
      * @return string
      */
-    protected function filenameFromIdent($ident)
+    protected function filenameFromIdent(string $ident): string
     {
         $filename = str_replace([ '\\' ], '.', $ident);
         $filename .= '.php';

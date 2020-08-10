@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\View\Mustache;
 
 /**
@@ -18,5 +20,5 @@ interface HelpersInterface
      *
      * @return array
      */
-    public function toArray();
+    public function toArray(): array;
 }

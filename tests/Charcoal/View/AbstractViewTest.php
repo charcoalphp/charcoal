@@ -26,7 +26,7 @@ class AbstractViewTest extends AbstractTestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         $loader = new MustacheLoader([
             'base_path' => __DIR__,
@@ -81,15 +81,6 @@ class AbstractViewTest extends AbstractTestCase
 </script>');
 
         $this->assertEquals($expected, trim($this->obj->renderTemplate('helpers', [ 'foo' => 'Charcoal' ])));
-    }
-
-    /**
-     * @return void
-     */
-    public function testLoadTemplateInvalidStringThrowsException()
-    {
-        $this->expectException('\InvalidArgumentException');
-        $this->obj->loadTemplate(false);
     }
 
     /**

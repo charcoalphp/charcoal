@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\View;
 
 /**
@@ -12,7 +14,7 @@ interface ViewableInterface
      *
      * @return string
      */
-    public function __toString();
+    public function __toString(): string;
 
     /**
      * Set the viewable object's template identifier.
@@ -22,20 +24,20 @@ interface ViewableInterface
      * @param string $templateIdent The template ID.
      * @return self
      */
-    public function setTemplateIdent($templateIdent);
+    public function setTemplateIdent(string $templateIdent);
 
     /**
      * Retrieve the viewable object's template identifier.
      *
      * @return string
      */
-    public function templateIdent();
+    public function templateIdent(): string;
 
     /**
      * Set the renderable view.
      *
-     * @param ViewInterface|array $view The view instance to use to render.
-     * @return ViewableInterface Chainable
+     * @param ViewInterface $view The view instance to use to render.
+     * @return self
      */
     public function setView(ViewInterface $view);
 
@@ -44,18 +46,18 @@ interface ViewableInterface
      *
      * @return ViewInterface The object's View instance.
      */
-    public function view();
+    public function view(): ViewInterface;
 
     /**
      * Render the template by the given identifier.
      *
      * Usually, a path to a file containing the template to be rendered at runtime.
      *
-     * @param string $templateIdent The template to load, parse, and render.
+     * @param string|null $templateIdent The template to load, parse, and render.
      *     If NULL, will use the object's previously set template identifier.
      * @return string The rendered template.
      */
-    public function render($templateIdent = null);
+    public function render(?string $templateIdent = null): string;
 
     /**
      * Render the given template from string.
@@ -63,12 +65,12 @@ interface ViewableInterface
      * @param string $templateString The template  to render from string.
      * @return string The rendered template.
      */
-    public function renderTemplate($templateString);
+    public function renderTemplate(string $templateString): string;
 
     /**
      * @param string      $varName       The name of the variable to set this template unto.
      * @param string|null $templateIdent The "dynamic template" to set. null to clear.
      * @return void
      */
-    public function setDynamicTemplate($varName, $templateIdent);
+    public function setDynamicTemplate(string $varName, ?string $templateIdent): void;
 }

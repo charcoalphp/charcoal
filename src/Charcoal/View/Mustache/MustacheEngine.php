@@ -36,7 +36,7 @@ class MustacheEngine extends AbstractEngine
     /**
      * @return string
      */
-    public function type()
+    public function type(): string
     {
         return 'mustache';
     }
@@ -60,7 +60,7 @@ class MustacheEngine extends AbstractEngine
      *
      * @param  array|Traversable|HelpersInterface $helpers Mustache helpers.
      * @throws InvalidArgumentException If the given helper(s) are invalid.
-     * @return MustacheEngine Chainable
+     * @return self
      */
     public function setHelpers($helpers)
     {
@@ -88,7 +88,7 @@ class MustacheEngine extends AbstractEngine
      *
      * @param  array|Traversable|HelpersInterface $helpers Mustache helpers.
      * @throws InvalidArgumentException If the given helper(s) are invalid.
-     * @return MustacheEngine Chainable
+     * @return self
      */
     public function mergeHelpers($helpers)
     {
@@ -116,9 +116,9 @@ class MustacheEngine extends AbstractEngine
      * @param  string $name   The tag name.
      * @param  mixed  $helper The tag value.
      * @throws RuntimeException If the mustache engine was already initialized.
-     * @return MustacheEngine Chainable
+     * @return self
      */
-    public function addHelper($name, $helper)
+    public function addHelper(string $name, $helper)
     {
         if ($this->mustache !== null) {
             throw new RuntimeException(
@@ -136,7 +136,7 @@ class MustacheEngine extends AbstractEngine
      *
      * @return array
      */
-    public function helpers()
+    public function helpers(): array
     {
         return $this->helpers;
     }
@@ -146,7 +146,7 @@ class MustacheEngine extends AbstractEngine
      * @param mixed  $context       The rendering context.
      * @return string The rendered template string.
      */
-    public function render($templateIdent, $context)
+    public function render(string $templateIdent, $context): string
     {
         return $this->mustache()->render($templateIdent, $context);
     }
@@ -156,7 +156,7 @@ class MustacheEngine extends AbstractEngine
      * @param mixed  $context        The rendering context.
      * @return string The rendered template string.
      */
-    public function renderTemplate($templateString, $context)
+    public function renderTemplate(string $templateString, $context): string
     {
         return $this->mustache()->render($templateString, $context);
     }
@@ -164,7 +164,7 @@ class MustacheEngine extends AbstractEngine
     /**
      * @return Mustache_Engine
      */
-    protected function mustache()
+    protected function mustache(): Mustache_Engine
     {
         if ($this->mustache === null) {
             $this->mustache = $this->createMustache();
@@ -176,7 +176,7 @@ class MustacheEngine extends AbstractEngine
     /**
      * @return Mustache_Engine
      */
-    protected function createMustache()
+    protected function createMustache(): Mustache_Engine
     {
         $mustache = new Mustache_Engine([
             'cache'             => $this->cache(),
@@ -195,7 +195,7 @@ class MustacheEngine extends AbstractEngine
      * @param  mixed $cache A Mustache cache option.
      * @return void
      */
-    protected function setCache($cache)
+    protected function setCache($cache): void
     {
         /**
          * If FALSE is specified, the value is converted to NULL

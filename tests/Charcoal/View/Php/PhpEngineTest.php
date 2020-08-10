@@ -20,7 +20,7 @@ class PhpEngineTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         $loader = new PhpLoader([
             'base_path' => __DIR__,

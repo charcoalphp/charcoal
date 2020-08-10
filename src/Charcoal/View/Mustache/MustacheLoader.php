@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\View\Mustache;
 
 // From Mustache
@@ -28,7 +30,7 @@ class MustacheLoader extends AbstractLoader implements
      * @param  string $ident The template being evaluated.
      * @return boolean
      */
-    protected function isTemplateString($ident)
+    protected function isTemplateString(string $ident): bool
     {
         return strpos($ident, '{{') !== false || parent::isTemplateString($ident);
     }
@@ -39,7 +41,7 @@ class MustacheLoader extends AbstractLoader implements
      * @param  string $ident The template identifier to convert to a filename.
      * @return string
      */
-    protected function filenameFromIdent($ident)
+    protected function filenameFromIdent(string $ident): string
     {
         $filename  = str_replace([ '\\' ], '.', $ident);
         $filename .= '.mustache';

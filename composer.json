@@ -7,10 +7,6 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "Mathieu Ducharme",
-            "email": "mat@locomotive.ca"
-        },
-        {
             "name": "Locomotive",
             "homepage": "https://locomotive.ca"
         }
@@ -24,12 +20,13 @@
     },
     "require": {
         "php": ">=7.1",
+        "ext-json": "*",
         "psr/http-message": "^1.0",
         "locomotivemtl/charcoal-config": "~0.8",
         "erusev/parsedown": "^1.7"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5.7 || ^6.5",
+        "phpunit/phpunit": "^8.2",
         "squizlabs/php_codesniffer": "^3.0",
         "php-coveralls/php-coveralls": "^2.0",
         "mustache/mustache": "^2.11",
@@ -67,6 +64,6 @@
         "phpcs": "php vendor/bin/phpcs -ps --colors src/ tests/",
         "phpcbf": "php vendor/bin/phpcbf -ps --colors src/ tests/",
         "phpunit": "php vendor/bin/phpunit --coverage-text --coverage-clover build/logs/clover.xml",
-        "phpstan": "php vendor/bin/phpstan analyze -n -l1 src/"
+        "phpstan": "php vendor/bin/phpstan analyze -n -l3 src/"
     }
 }

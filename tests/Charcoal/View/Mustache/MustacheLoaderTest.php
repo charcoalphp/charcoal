@@ -19,7 +19,7 @@ class MustacheLoaderTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->obj = new MustacheLoader([
             'base_path' => __DIR__,
@@ -39,9 +39,6 @@ class MustacheLoaderTest extends AbstractTestCase
 
         $expected = file_get_contents(__DIR__.'/templates/'.$template.'.mustache');
         $this->assertEquals($expected, $ret);
-
-        $this->expectException('\InvalidArgumentException');
-        $this->obj->load(false);
     }
 
     /**

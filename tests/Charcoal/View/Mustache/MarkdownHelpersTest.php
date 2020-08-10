@@ -30,7 +30,7 @@ class MarkdownHelpersTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         $parsedown = new Parsedown();
         $parsedown->setSafeMode(true);
@@ -52,6 +52,6 @@ class MarkdownHelpersTest extends AbstractTestCase
         );
 
         $ret = $template->render();
-        $this->assertContains('<strong>test</strong>', $ret);
+        $this->assertStringContainsString('<strong>test</strong>', $ret);
     }
 }

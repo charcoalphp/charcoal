@@ -1,12 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\View;
 
 // From PSR-7
-use Psr\Http\Message\ResponseInterface;
-
-// From 'charcoal-view'
-use Charcoal\View\ViewInterface;
+use Psr\Http\Message\ResponseInterface as Response;
 
 /**
  * Provides a PSR-7 renderer that uses a Charcoal View.
@@ -32,12 +31,12 @@ class Renderer
     }
 
     /**
-     * @param ResponseInterface $response      The HTTP response.
-     * @param string            $templateIdent The template identifier to load and render.
-     * @param mixed             $context       The view controller / context.
-     * @return ResponseInterface
+     * @param Response $response      The HTTP response.
+     * @param string   $templateIdent The template identifier to load and render.
+     * @param mixed    $context       The view controller / context.
+     * @return Response
      */
-    public function render(ResponseInterface $response, $templateIdent, $context = null)
+    public function render(Response $response, string $templateIdent, $context = null): Response
     {
         $rendered = $this->view->render($templateIdent, $context);
         $response->getBody()->write($rendered);
@@ -46,11 +45,10 @@ class Renderer
 
     /**
      * @param ViewInterface $view The view instance to use.
-     * @return Renderer Chainable
+     * @return void
      */
-    private function setView(ViewInterface $view)
+    private function setView(ViewInterface $view): void
     {
         $this->view = $view;
-        return $this;
     }
 }

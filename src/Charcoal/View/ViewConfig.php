@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\View;
 
 use InvalidArgumentException;
@@ -34,7 +36,7 @@ class ViewConfig extends AbstractConfig
     /**
      * @return array
      */
-    public function defaults()
+    public function defaults(): array
     {
         return [
             'paths' => [],
@@ -54,7 +56,7 @@ class ViewConfig extends AbstractConfig
 
     /**
      * @param array $paths The paths to search into.
-     * @return ViewConfig Chainable
+     * @return self
      */
     public function setPaths(array $paths)
     {
@@ -78,15 +80,10 @@ class ViewConfig extends AbstractConfig
     /**
      * @param string $path A path to add to the paths list.
      * @throws InvalidArgumentException If the path is not a string.
-     * @return ViewConfig Chainable
+     * @return self
      */
-    public function addPath($path)
+    public function addPath(string $path)
     {
-        if (!is_string($path)) {
-            throw new InvalidArgumentException(
-                'Template path must be a string'
-            );
-        }
         $this->paths[] = $path;
         return $this;
     }
@@ -94,14 +91,14 @@ class ViewConfig extends AbstractConfig
     /**
      * @return array
      */
-    public function paths()
+    public function paths(): array
     {
         return $this->paths;
     }
 
     /**
      * @param array $engines The various engines configuration.
-     * @return ViewConfig Chainable
+     * @return self
      */
     public function setEngines(array $engines)
     {
@@ -115,16 +112,10 @@ class ViewConfig extends AbstractConfig
     /**
      * @param string $engineIdent  The engine identifier.
      * @param array  $engineConfig The engine configuration data.
-     * @throws InvalidArgumentException If the engine ident is not a string.
-     * @return ViewConfig Chainable
+     * @return self
      */
-    public function addEngine($engineIdent, array $engineConfig)
+    public function addEngine(string $engineIdent, array $engineConfig)
     {
-        if (!is_string($engineIdent)) {
-            throw new InvalidArgumentException(
-                'Can not add engine to view config: engine identifier must be a string.'
-            );
-        }
         $this->engines[$engineIdent] = $engineConfig;
         return $this;
     }
@@ -132,7 +123,7 @@ class ViewConfig extends AbstractConfig
     /**
      * @return array
      */
-    public function engines()
+    public function engines(): array
     {
         return $this->engines;
     }
@@ -141,20 +132,14 @@ class ViewConfig extends AbstractConfig
      * Get an engine's configuration.
      *
      * @param string|null $engineIdent The engine identifier to get the configuration of.
-     * @throws InvalidArgumentException If the engine ident is not a string or does not match any engines.
+     * @throws InvalidArgumentException If the engine ident does not match any engines.
      * @return array
      */
-    public function engine($engineIdent = null)
+    public function engine(?string $engineIdent = null): array
     {
         if ($engineIdent === null) {
             $engineIdent = $this->defaultEngine();
         }
-        if (!is_string($engineIdent)) {
-            throw new InvalidArgumentException(
-                'Invalid engine identifier (must be a string)'
-            );
-        }
-
         if (!isset($this->engines[$engineIdent])) {
             throw new InvalidArgumentException(
                 sprintf('No configured engines matching "%s"', $engineIdent)
@@ -165,16 +150,10 @@ class ViewConfig extends AbstractConfig
 
     /**
      * @param string $engineIdent The default engine (identifier).
-     * @throws InvalidArgumentException If the engine ident is not a string.
-     * @return ViewConfig Chainable
+     * @return self
      */
-    public function setDefaultEngine($engineIdent)
+    public function setDefaultEngine(string $engineIdent)
     {
-        if (!is_string($engineIdent)) {
-            throw new InvalidArgumentException(
-                'Default engine must be a string'
-            );
-        }
         $this->defaultEngine = $engineIdent;
         return $this;
     }
@@ -182,7 +161,7 @@ class ViewConfig extends AbstractConfig
     /**
      * @return string
      */
-    public function defaultEngine()
+    public function defaultEngine(): string
     {
         return $this->defaultEngine;
     }

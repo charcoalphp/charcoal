@@ -15,7 +15,7 @@ class MockHelpers implements HelpersInterface
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'foo' => [ 'A', 'B', 'C' ],

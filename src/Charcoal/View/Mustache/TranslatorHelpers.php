@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\View\Mustache;
 
 use LogicException;
@@ -71,7 +73,7 @@ class TranslatorHelpers implements HelpersInterface
      * @param  Translator $translator The Translator service.
      * @return void
      */
-    protected function setTranslator(Translator $translator)
+    protected function setTranslator(Translator $translator): void
     {
         $this->translator = $translator;
     }
@@ -81,7 +83,7 @@ class TranslatorHelpers implements HelpersInterface
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             '_t' => $this,
@@ -93,17 +95,12 @@ class TranslatorHelpers implements HelpersInterface
      *
      * @return void
      */
-    protected function reset()
+    protected function reset(): void
     {
         $this->number = null;
         $this->domain = null;
         $this->locale = null;
     }
-
-
-
-    // Magic Methods
-    // =========================================================================
 
     /**
      * Magic: Render the Mustache section.
@@ -112,7 +109,7 @@ class TranslatorHelpers implements HelpersInterface
      * @param  LambdaHelper|null $helper For rendering strings in the current context.
      * @return string
      */
-    public function __invoke($text, LambdaHelper $helper = null)
+    public function __invoke(string $text, LambdaHelper $helper = null): string
     {
         if ($this->translator) {
             if ($this->number === null) {
@@ -140,7 +137,7 @@ class TranslatorHelpers implements HelpersInterface
      * @param  string $macro A domain, locale, or number.
      * @return boolean
      */
-    public function __isset($macro)
+    public function __isset(string $macro): bool
     {
         return boolval($macro);
     }
@@ -154,7 +151,7 @@ class TranslatorHelpers implements HelpersInterface
      * @throws LogicException If the macro is unresolved.
      * @return mixed
      */
-    public function __get($macro)
+    public function __get(string $macro)
     {
         if (!$this->translator) {
             return $this;

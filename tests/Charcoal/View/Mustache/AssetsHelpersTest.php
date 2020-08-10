@@ -31,7 +31,7 @@ class AssetsHelpersTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->obj      = new AssetsHelpers();
         $this->mustache = new MustacheEngine([

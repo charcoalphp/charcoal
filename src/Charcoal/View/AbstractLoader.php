@@ -1,11 +1,8 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\View;
-
-use InvalidArgumentException;
-
-// From 'charcoal-view'
-use Charcoal\View\LoaderInterface;
 
 /**
  * Base Template Loader
@@ -14,7 +11,6 @@ use Charcoal\View\LoaderInterface;
  */
 abstract class AbstractLoader implements LoaderInterface
 {
-
     /**
      * @var string
      */
@@ -53,7 +49,6 @@ abstract class AbstractLoader implements LoaderInterface
      * Load a template content
      *
      * @param  string $ident The template ident to load and render.
-     * @throws InvalidArgumentException If the dynamic template identifier is not a string.
      * @return string
      */
     public function load($ident)
@@ -81,17 +76,10 @@ abstract class AbstractLoader implements LoaderInterface
 
     /**
      * @param  string $varName The name of the variable to get template ident from.
-     * @throws InvalidArgumentException If the var name is not a string.
      * @return string
      */
-    public function dynamicTemplate($varName)
+    public function dynamicTemplate(string $varName): string
     {
-        if (!is_string($varName)) {
-            throw new InvalidArgumentException(
-                'Can not get dynamic template: var name is not a string.'
-            );
-        }
-
         if (!isset($this->dynamicTemplates[$varName])) {
             return '';
         }
@@ -102,27 +90,14 @@ abstract class AbstractLoader implements LoaderInterface
     /**
      * @param  string      $varName       The name of the variable to set this template unto.
      * @param  string|null $templateIdent The "dynamic template" to set or NULL to clear.
-     * @throws InvalidArgumentException If var name is not a string
      *     or if the template is not a string (and not null).
      * @return void
      */
-    public function setDynamicTemplate($varName, $templateIdent)
+    public function setDynamicTemplate(string $varName, ?string $templateIdent): void
     {
-        if (!is_string($varName)) {
-            throw new InvalidArgumentException(
-                'Can not set dynamic template: var name is not a string.'
-            );
-        }
-
         if ($templateIdent === null) {
             $this->removeDynamicTemplate($varName);
             return;
-        }
-
-        if (!is_string($templateIdent)) {
-            throw new InvalidArgumentException(
-                'Can not set dynamic template. Must be a a string, or null.'
-            );
         }
 
         $this->dynamicTemplates[$varName] = $templateIdent;
@@ -130,24 +105,17 @@ abstract class AbstractLoader implements LoaderInterface
 
     /**
      * @param  string $varName The name of the variable to remove.
-     * @throws InvalidArgumentException If var name is not a string.
      * @return void
      */
-    public function removeDynamicTemplate($varName)
+    public function removeDynamicTemplate(string $varName): void
     {
-        if (!is_string($varName)) {
-            throw new InvalidArgumentException(
-                'Can not set dynamic template: var name is not a string.'
-            );
-        }
-
         unset($this->dynamicTemplates[$varName]);
     }
 
     /**
      * @return void
      */
-    public function clearDynamicTemplates()
+    public function clearDynamicTemplates(): void
     {
         $this->dynamicTemplates = [];
     }
@@ -155,23 +123,17 @@ abstract class AbstractLoader implements LoaderInterface
     /**
      * @return string
      */
-    protected function basePath()
+    protected function basePath(): string
     {
         return $this->basePath;
     }
 
     /**
      * @param  string $basePath The base path to set.
-     * @throws InvalidArgumentException If the base path parameter is not a string.
-     * @return LoaderInterface Chainable
+     * @return self
      */
-    private function setBasePath($basePath)
+    private function setBasePath(string $basePath)
     {
-        if (!is_string($basePath)) {
-            throw new InvalidArgumentException(
-                'Base path must be a string'
-            );
-        }
         $basePath = realpath($basePath);
         $this->basePath = rtrim($basePath, '/\\').DIRECTORY_SEPARATOR;
         return $this;
@@ -180,14 +142,14 @@ abstract class AbstractLoader implements LoaderInterface
     /**
      * @return string[]
      */
-    protected function paths()
+    protected function paths(): array
     {
         return $this->paths;
     }
 
     /**
      * @param  string[] $paths The list of path to add.
-     * @return LoaderInterface Chainable
+     * @return self
      */
     private function setPaths(array $paths)
     {
@@ -202,9 +164,9 @@ abstract class AbstractLoader implements LoaderInterface
 
     /**
      * @param  string $path The path to add to the load.
-     * @return LoaderInterface Chainable
+     * @return self
      */
-    private function addPath($path)
+    private function addPath(string $path)
     {
         $this->paths[] = $this->resolvePath($path);
 
@@ -213,17 +175,10 @@ abstract class AbstractLoader implements LoaderInterface
 
     /**
      * @param  string $path The path to resolve.
-     * @throws InvalidArgumentException If the path argument is not a string.
      * @return string
      */
-    private function resolvePath($path)
+    private function resolvePath(string $path): string
     {
-        if (!is_string($path)) {
-            throw new InvalidArgumentException(
-                'Path needs to be a string'
-            );
-        }
-
         $basePath = $this->basePath();
         $path = rtrim($path, '/\\').DIRECTORY_SEPARATOR;
         if ($basePath && strpos($path, $basePath) === false) {
@@ -243,7 +198,7 @@ abstract class AbstractLoader implements LoaderInterface
      * @return boolean Returns TRUE if the given value is most likely the template contents
      *     as opposed to a template identifier (file path).
      */
-    protected function isTemplateString($ident)
+    protected function isTemplateString(string $ident): bool
     {
         return strpos($ident, PHP_EOL) !== false;
     }
@@ -253,19 +208,11 @@ abstract class AbstractLoader implements LoaderInterface
      *
      * This method first generates the filename for an identifier and search for it in all of the loader's paths.
      *
-     * @param  string $ident The template identifier to load.
-     * @throws InvalidArgumentException If the template ident is not a string.
+     * @param  string $ident The template identifier to load..
      * @return string|null The full path + filename of the found template. NULL if nothing was found.
      */
-    protected function findTemplateFile($ident)
+    protected function findTemplateFile(string $ident): ?string
     {
-        if (!is_string($ident)) {
-            throw new InvalidArgumentException(sprintf(
-                'Template ident must be a string, received %s',
-                is_object($ident) ? get_class($ident) : gettype($ident)
-            ));
-        }
-
         $key = hash('md5', $ident);
 
         if (array_key_exists($key, $this->fileCache)) {
@@ -291,5 +238,5 @@ abstract class AbstractLoader implements LoaderInterface
      * @param  string $ident The template identifier to convert to a filename.
      * @return string
      */
-    abstract protected function filenameFromIdent($ident);
+    abstract protected function filenameFromIdent(string $ident): string;
 }

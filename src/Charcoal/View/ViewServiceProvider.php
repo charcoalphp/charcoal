@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\View;
 
 // From Pimple
+use Charcoal\View\Mustache\HelpersInterface;
 use Pimple\ServiceProviderInterface;
 use Pimple\Container;
 
@@ -56,7 +59,7 @@ class ViewServiceProvider implements ServiceProviderInterface
      * @param Container $container A container instance.
      * @return void
      */
-    public function register(Container $container)
+    public function register(Container $container): void
     {
         $this->registerViewConfig($container);
         $this->registerLoaderServices($container);
@@ -70,13 +73,13 @@ class ViewServiceProvider implements ServiceProviderInterface
      * @param Container $container The DI container.
      * @return void
      */
-    protected function registerViewConfig(Container $container)
+    protected function registerViewConfig(Container $container): void
     {
         /**
          * @param  Container $container A container instance.
          * @return ViewConfig
          */
-        $container['view/config'] = function (Container $container) {
+        $container['view/config'] = function (Container $container): ViewConfig {
             $appConfig  = isset($container['config']) ? $container['config'] : [];
             $viewConfig = isset($appConfig['view']) ? $appConfig['view'] : null;
             $viewConfig = new ViewConfig($viewConfig);
@@ -111,13 +114,13 @@ class ViewServiceProvider implements ServiceProviderInterface
      * @param Container $container The DI container.
      * @return void
      */
-    protected function registerLoaderServices(Container $container)
+    protected function registerLoaderServices(Container $container): void
     {
         /**
          * @param Container $container A container instance.
          * @return array The view loader dependencies array.
          */
-        $container['view/loader/dependencies'] = function (Container $container) {
+        $container['view/loader/dependencies'] = function (Container $container): array {
             return [
                 'base_path' => $container['config']['base_path'],
                 'paths'     => $container['view/config']['paths']
@@ -128,7 +131,7 @@ class ViewServiceProvider implements ServiceProviderInterface
          * @param Container $container A container instance.
          * @return MustacheLoader
          */
-        $container['view/loader/mustache'] = function (Container $container) {
+        $container['view/loader/mustache'] = function (Container $container): MustacheLoader {
             return new MustacheLoader($container['view/loader/dependencies']);
         };
 
@@ -136,7 +139,7 @@ class ViewServiceProvider implements ServiceProviderInterface
          * @param Container $container A container instance.
          * @return PhpLoader
          */
-        $container['view/loader/php'] = function (Container $container) {
+        $container['view/loader/php'] = function (Container $container): PhpLoader {
             return new PhpLoader($container['view/loader/dependencies']);
         };
 
@@ -144,7 +147,7 @@ class ViewServiceProvider implements ServiceProviderInterface
          * @param Container $container A container instance.
          * @return TwigLoader
          */
-        $container['view/loader/twig'] = function (Container $container) {
+        $container['view/loader/twig'] = function (Container $container): TwigLoader {
             return new TwigLoader($container['view/loader/dependencies']);
         };
     }
@@ -153,7 +156,7 @@ class ViewServiceProvider implements ServiceProviderInterface
      * @param Container $container The DI container.
      * @return void
      */
-    protected function registerEngineServices(Container $container)
+    protected function registerEngineServices(Container $container): void
     {
         /**
          * @param Container $container A container instance.
@@ -171,7 +174,7 @@ class ViewServiceProvider implements ServiceProviderInterface
          * @param Container $container A container instance.
          * @return PhpEngine
          */
-        $container['view/engine/php'] = function (Container $container) {
+        $container['view/engine/php'] = function (Container $container): PhpEngine {
             return new PhpEngine([
                 'loader'    => $container['view/loader/php']
             ]);
@@ -181,7 +184,7 @@ class ViewServiceProvider implements ServiceProviderInterface
          * @param Container $container A container instance.
          * @return TwigEngine
          */
-        $container['view/engine/twig'] = function (Container $container) {
+        $container['view/engine/twig'] = function (Container $container): TwigEngine {
             return new TwigEngine([
                 'loader'    => $container['view/loader/twig'],
                 'cache'     => $container['view/twig/cache']
@@ -192,9 +195,9 @@ class ViewServiceProvider implements ServiceProviderInterface
          * The default view engine.
          *
          * @param Container $container A container instance.
-         * @return \Charcoal\View\EngineInterface
+         * @return EngineInterface
          */
-        $container['view/engine'] = function (Container $container) {
+        $container['view/engine'] = function (Container $container): EngineInterface {
             $viewConfig = $container['view/config'];
             $type = $viewConfig['default_engine'];
             return $container['view/engine/'.$type];
@@ -205,7 +208,7 @@ class ViewServiceProvider implements ServiceProviderInterface
      * @param Container $container The DI container.
      * @return void
      */
-    protected function registerMustacheTemplatingServices(Container $container)
+    protected function registerMustacheTemplatingServices(Container $container): void
     {
         $this->registerMustacheHelpersServices($container);
 
@@ -213,7 +216,7 @@ class ViewServiceProvider implements ServiceProviderInterface
          * @param Container $container A container instance.
          * @return string|null
          */
-        $container['view/mustache/cache'] = function (Container $container) {
+        $container['view/mustache/cache'] = function (Container $container): ?string {
             $viewConfig = $container['view/config'];
             return $viewConfig['engines.mustache.cache'];
         };
@@ -223,10 +226,10 @@ class ViewServiceProvider implements ServiceProviderInterface
      * @param Container $container The DI container.
      * @return void
      */
-    protected function registerMustacheHelpersServices(Container $container)
+    protected function registerMustacheHelpersServices(Container $container): void
     {
         if (!isset($container['view/mustache/helpers'])) {
-            $container['view/mustache/helpers'] = function () {
+            $container['view/mustache/helpers'] = function (): array {
                 return [];
             };
         }
@@ -236,16 +239,16 @@ class ViewServiceProvider implements ServiceProviderInterface
          *
          * @return AssetsHelpers
          */
-        $container['view/mustache/helpers/assets'] = function () {
+        $container['view/mustache/helpers/assets'] = function (): AssetsHelpers {
             return new AssetsHelpers();
         };
 
         /**
          * Translation helpers for Mustache.
          *
-         * @return TranslatorHelpers|null
+         * @return TranslatorHelpers
          */
-        $container['view/mustache/helpers/translator'] = function (Container $container) {
+        $container['view/mustache/helpers/translator'] = function (Container $container): TranslatorHelpers {
             return new TranslatorHelpers([
                 'translator' => (isset($container['translater']) ? $container['translator'] : null)
             ]);
@@ -256,7 +259,7 @@ class ViewServiceProvider implements ServiceProviderInterface
          *
          * @return MarkdownHelpers
          */
-        $container['view/mustache/helpers/markdown'] = function (Container $container) {
+        $container['view/mustache/helpers/markdown'] = function (Container $container): MarkdownHelpers {
             return new MarkdownHelpers([
                 'parsedown' => $container['view/parsedown']
             ]);
@@ -269,7 +272,7 @@ class ViewServiceProvider implements ServiceProviderInterface
          * @param  Container $container A container instance.
          * @return array
          */
-        $container->extend('view/mustache/helpers', function (array $helpers, Container $container) {
+        $container->extend('view/mustache/helpers', function (array $helpers, Container $container): array {
             return array_merge(
                 $helpers,
                 $container['view/mustache/helpers/assets']->toArray(),

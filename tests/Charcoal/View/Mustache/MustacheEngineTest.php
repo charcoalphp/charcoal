@@ -24,7 +24,7 @@ class MustacheEngineTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         $loader = new MustacheLoader([
             'base_path' => __DIR__,
@@ -55,7 +55,7 @@ class MustacheEngineTest extends AbstractTestCase
 
         $arr = [ 'foo' => 'baz' ];
         $this->obj->setHelpers($arr);
-        $this->assertArraySubset($arr, $this->obj->helpers());
+        $this->assertArraySubsets($arr, $this->obj->helpers());
 
         $helpers = new MockHelpers();
         $this->obj->setHelpers($helpers);
@@ -76,7 +76,7 @@ class MustacheEngineTest extends AbstractTestCase
 
         $arr = [ 'foo' => 'baz' ];
         $this->obj->mergeHelpers($arr);
-        $this->assertArraySubset($arr, $this->obj->helpers());
+        $this->assertArraySubsets($arr, $this->obj->helpers());
 
         $helpers = new MockHelpers();
         $this->obj->mergeHelpers($helpers);

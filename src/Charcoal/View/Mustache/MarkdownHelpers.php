@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\View\Mustache;
 
 // From Mustache
@@ -33,7 +35,7 @@ class MarkdownHelpers implements HelpersInterface
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'markdown' => $this,
@@ -47,7 +49,7 @@ class MarkdownHelpers implements HelpersInterface
      * @param  LambdaHelper|null $helper For rendering strings in the current context.
      * @return string
      */
-    public function __invoke($text, LambdaHelper $helper = null)
+    public function __invoke($text, LambdaHelper $helper = null): string
     {
         if ($helper !== null) {
             $text = $helper->render($text);
@@ -61,7 +63,7 @@ class MarkdownHelpers implements HelpersInterface
      * @param  Parsedown $parser Thar Markdown parser.
      * @return void
      */
-    private function setParsedown(Parsedown $parser)
+    private function setParsedown(Parsedown $parser): void
     {
         $this->parsedown = $parser;
     }

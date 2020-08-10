@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\View;
 
 /**
@@ -11,10 +13,9 @@ interface ViewInterface
      * Load a template (from identifier).
      *
      * @param string $templateIdent The template identifier to load..
-     * @throws \InvalidArgumentException If the template ident is not a string.
      * @return string
      */
-    public function loadTemplate($templateIdent);
+    public function loadTemplate(string $templateIdent): string;
 
     /**
      * Load a template (from identifier) and render it.
@@ -23,7 +24,7 @@ interface ViewInterface
      * @param mixed  $context       The view controller (rendering context).
      * @return string
      */
-    public function render($templateIdent, $context = null);
+    public function render(string $templateIdent, $context = null): string;
 
     /**
      * Render a template (from string).
@@ -32,12 +33,12 @@ interface ViewInterface
      * @param mixed  $context        The view controller (rendering context).
      * @return string
      */
-    public function renderTemplate($templateString, $context = null);
+    public function renderTemplate(string $templateString, $context = null);
 
     /**
-     * @param string $varName       The name of the variable to set this template unto.
-     * @param string $templateIdent The "dynamic template" to set. null to clear.
+     * @param string      $varName       The name of the variable to set this template unto.
+     * @param string|null $templateIdent The "dynamic template" to set. null to clear.
      * @return void
      */
-    public function setDynamicTemplate($varName, $templateIdent);
+    public function setDynamicTemplate(string $varName, ?string $templateIdent): void;
 }

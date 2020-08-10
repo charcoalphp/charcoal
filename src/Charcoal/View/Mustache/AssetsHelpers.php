@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\View\Mustache;
 
 // From Mustache
@@ -43,7 +45,7 @@ class AssetsHelpers implements HelpersInterface
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'purgeJs' => function() {
@@ -87,7 +89,7 @@ class AssetsHelpers implements HelpersInterface
      *
      * @return void
      */
-    public function purgeJs()
+    public function purgeJs(): void
     {
         self::$js = '';
         self::$jsRequirements = [];
@@ -102,7 +104,7 @@ class AssetsHelpers implements HelpersInterface
      * @param LambdaHelper $helper For rendering strings in the current context.
      * @return void
      */
-    public function addJs($js, LambdaHelper $helper = null)
+    public function addJs(string $js, LambdaHelper $helper = null): void
     {
         if ($helper !== null) {
             $js = $helper->render($js);
@@ -115,7 +117,7 @@ class AssetsHelpers implements HelpersInterface
      *
      * @return string
      */
-    public function js()
+    public function js(): string
     {
         $js = self::$js;
         self::$js = '';
@@ -131,7 +133,7 @@ class AssetsHelpers implements HelpersInterface
      * @param LambdaHelper $helper For rendering strings in the current context.
      * @return void
      */
-    public function addJsRequirement($js, LambdaHelper $helper = null)
+    public function addJsRequirement(string $js, LambdaHelper $helper = null): void
     {
         $js  = trim($js);
         $key = md5($js);
@@ -150,7 +152,7 @@ class AssetsHelpers implements HelpersInterface
      *
      * @return string
      */
-    public function jsRequirements()
+    public function jsRequirements(): string
     {
         $req = implode("\n", self::$jsRequirements);
         self::$jsRequirements = [];
@@ -162,7 +164,7 @@ class AssetsHelpers implements HelpersInterface
      *
      * @return void
      */
-    public function purgeCss()
+    public function purgeCss(): void
     {
         self::$css = '';
         self::$cssRequirements = [];
@@ -177,7 +179,7 @@ class AssetsHelpers implements HelpersInterface
      * @param LambdaHelper $helper For rendering strings in the current context.
      * @return void
      */
-    public function addCss($css, LambdaHelper $helper = null)
+    public function addCss(string $css, LambdaHelper $helper = null): void
     {
         if ($helper !== null) {
             $css = $helper->render($css);
@@ -190,7 +192,7 @@ class AssetsHelpers implements HelpersInterface
      *
      * @return string
      */
-    public function css()
+    public function css(): string
     {
         $css = self::$css;
         self::$css = '';
@@ -206,7 +208,7 @@ class AssetsHelpers implements HelpersInterface
      * @param LambdaHelper $helper For rendering strings in the current context.
      * @return void
      */
-    public function addCssRequirement($css, LambdaHelper $helper = null)
+    public function addCssRequirement(string $css, LambdaHelper $helper = null): void
     {
         $css = trim($css);
         $key = md5($css);
@@ -225,7 +227,7 @@ class AssetsHelpers implements HelpersInterface
      *
      * @return string
      */
-    public function cssRequirements()
+    public function cssRequirements(): string
     {
         $req = implode("\n", self::$cssRequirements);
         self::$cssRequirements = [];
@@ -237,7 +239,7 @@ class AssetsHelpers implements HelpersInterface
      *
      * @return void
      */
-    public function purgeAssets()
+    public function purgeAssets(): void
     {
         $this->purgeJs();
         $this->purgeCss();

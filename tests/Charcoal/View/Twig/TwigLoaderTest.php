@@ -24,7 +24,7 @@ class TwigLoaderTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->obj = new TwigLoader([
             'base_path' => __DIR__,
@@ -41,9 +41,6 @@ class TwigLoaderTest extends AbstractTestCase
 
         $expected = file_get_contents(__DIR__.'/templates/foo.twig');
         $this->assertEquals($expected, $ret);
-
-        $this->expectException('\InvalidArgumentException');
-        $this->obj->load(false);
     }
 
     /**

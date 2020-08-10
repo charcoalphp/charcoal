@@ -26,7 +26,7 @@ class RendererTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         $loader = new MustacheLoader([
             'base_path' => __DIR__,
