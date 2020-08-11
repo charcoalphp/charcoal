@@ -12,7 +12,12 @@ use InvalidArgumentException;
 class Parser
 {
     /**
-     * @param mixed $email An email value (either a string or an array).
+     * @var string
+     */
+    public const REGEXP = '/(.+[\s]+)?(<)?(([\w\-\._\+]+)@((?:[\w\-_]+\.)+)([a-zA-Z]*))?(>)?/u';
+
+    /**
+     * @param string|array $email An email value (either a string or an array).
      * @throws InvalidArgumentException If the email is invalid.
      * @return string
      */
@@ -33,14 +38,13 @@ class Parser
     /**
      * Convert an email address (RFC822) into a proper array notation.
      *
-     * @param  string|array $var An email array (containing an "email" key and optionally a "name" key).
+     * @param  string $var An email array (containing an "email" key and optionally a "name" key).
      * @throws InvalidArgumentException If the email is invalid.
      * @return array
      */
     public function emailToArray(string $var) : array
     {
-        $regexp = '/(.+[\s]+)?(<)?(([\w\-\._\+]+)@((?:[\w\-_]+\.)+)([a-zA-Z]*))?(>)?/u';
-        preg_match($regexp, $var, $out);
+        preg_match(self::REGEXP, $var, $out);
         return [
             'email' => (isset($out[3]) ? trim($out[3]) : ''),
             'name'  => (isset($out[1]) ? trim(trim($out[1]), '\'"') : '')
