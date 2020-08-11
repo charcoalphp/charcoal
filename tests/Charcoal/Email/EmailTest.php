@@ -47,8 +47,9 @@ class EmailTest extends AbstractTestCase
             'attachments' => [
                 'foo'
             ],
-            'log'   => true,
-            'track' => true
+            'log_enabled'   => true,
+            'track_open_enabled' => true,
+            'track_links_enabled' => true
         ]);
         $this->assertSame($ret, $obj);
 
@@ -62,8 +63,9 @@ class EmailTest extends AbstractTestCase
         $this->assertEquals('foo', $obj->msgHtml());
         $this->assertEquals('baz', $obj->msgTxt());
         $this->assertEquals(['foo'], $obj->attachments());
-        $this->assertEquals(true, $obj->log());
-        $this->assertEquals(true, $obj->track());
+        $this->assertEquals(true, $obj->logEnabled());
+        $this->assertEquals(true, $obj->trackOpenEnabled());
+        $this->assertEquals(true, $obj->trackLinksEnabled());
     }
 
     public function testSetCampaign()
@@ -254,9 +256,6 @@ class EmailTest extends AbstractTestCase
         $ret = $obj->setSubject('foo');
         $this->assertSame($ret, $obj);
         $this->assertEquals('foo', $obj->subject());
-
-        $this->expectException('\InvalidArgumentException');
-        $obj->setSubject(null);
     }
 
     public function testSetMsgHtml()
@@ -265,9 +264,6 @@ class EmailTest extends AbstractTestCase
         $ret = $obj->setMsgHtml('foo');
         $this->assertSame($ret, $obj);
         $this->assertEquals('foo', $obj->msgHtml());
-
-        $this->expectException('\InvalidArgumentException');
-        $obj->setMsgHtml(null);
     }
 
     public function testSetMsgTxt()
@@ -276,9 +272,6 @@ class EmailTest extends AbstractTestCase
         $ret = $obj->setMsgTxt('foo');
         $this->assertSame($ret, $obj);
         $this->assertEquals('foo', $obj->msgTxt());
-
-        $this->expectException('\InvalidArgumentException');
-        $obj->setMsgTxt(null);
     }
 
     public function testConvertHtml()
@@ -301,31 +294,45 @@ class EmailTest extends AbstractTestCase
         $this->assertEquals(['foo'], $obj->attachments());
     }
 
-    public function testSetLog()
+    public function testSetLogEnabled()
     {
         $obj = $this->obj;
-        // $this->config()->setDefaultLog(false);
-        // $this->assertNotTrue($obj->log());
+        // $this->config()->setDefaultLogEnabled(false);
+        // $this->assertNotTrue($obj->logEnabled());
 
-        $ret = $obj->setLog(true);
+        $ret = $obj->setLogEnabled(true);
         $this->assertSame($ret, $obj);
-        $this->assertTrue($obj->log());
+        $this->assertTrue($obj->logEnabled());
 
-        $obj->setLog(false);
-        $this->assertNotTrue($obj->log());
+        $obj->setLogEnabled(false);
+        $this->assertNotTrue($obj->logEnabled());
     }
 
-    public function testSetTrack()
+    public function testSetTrackOpenEnabled()
     {
         $obj = $this->obj;
-        // $this->config()->setDefaultTrack(false);
-        // $this->assertNotTrue($obj->track());
+        // $this->config()->setDefaultTrackOpenEnabled(false);
+        // $this->assertNotTrue($obj->trackOpenEnabled());
 
-        $ret = $obj->setTrack(true);
+        $ret = $obj->setTrackOpenEnabled(true);
         $this->assertSame($ret, $obj);
-        $this->assertTrue($obj->track());
+        $this->assertTrue($obj->trackOpenEnabled());
 
-        $obj->setTrack(false);
-        $this->assertNotTrue($obj->track());
+        $obj->setTrackOpenEnabled(false);
+        $this->assertNotTrue($obj->trackOpenEnabled());
+    }
+
+    public function testSetTrackLinksEnabled()
+    {
+        $obj = $this->obj;
+        // $this->config()->setDefaultTrackLinksEnabled(false);
+        // $this->assertNotTrue($obj->trackLinksEnabled());
+
+        $ret = $obj->setTrackLinksEnabled(true);
+        $this->assertSame($ret, $obj);
+        $this->assertTrue($obj->trackLinksEnabled());
+
+        $obj->setTrackLinksEnabled(false);
+        $this->assertNotTrue($obj->trackLinksEnabled());
     }
 }

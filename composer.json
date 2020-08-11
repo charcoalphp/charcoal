@@ -15,7 +15,7 @@
     "prefer-stable": true,
     "extra": {
         "branch-alias": {
-            "dev-master": "0.4.x-dev"
+            "dev-master": "0.5.x-dev"
         }
     },
     "require": {
@@ -24,7 +24,7 @@
         "phpmailer/phpmailer": "~6.0",
         "locomotivemtl/charcoal-config": "~0.6",
         "locomotivemtl/charcoal-app": "~0.6",
-        "locomotivemtl/charcoal-queue": "~0.2",
+        "locomotivemtl/charcoal-queue": "~0.3",
         "seld/jsonlint": "^1.7"
     },
     "require-dev": {

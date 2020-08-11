@@ -28,8 +28,9 @@ class EmailConfigTest extends AbstractTestCase
                 'name'  => 'Test',
                 'email' => 'test@example.com'
             ],
-            'default_log'   => true,
-            'default_track' => true
+            'default_log_enabled'   => true,
+            'default_track_open_enabled' => true,
+            'default_track_links_enabled' => true
         ];
         $ret = $this->obj->merge($data);
         $this->assertSame($ret, $this->obj);
@@ -37,8 +38,9 @@ class EmailConfigTest extends AbstractTestCase
         $this->assertEquals('localhost', $this->obj->smtpHostname());
         $this->assertEquals('test@example.com', $this->obj->defaultFrom());
         $this->assertEquals('"Test" <test@example.com>', $this->obj->defaultReplyTo());
-        $this->assertEquals(true, $this->obj->defaultLog());
-        $this->assertEquals(true, $this->obj->defaultTrack());
+        $this->assertEquals(true, $this->obj->defaultLogEnabled());
+        $this->assertEquals(true, $this->obj->defaultTrackOpenEnabled());
+        $this->assertEquals(true, $this->obj->defaultTrackLinksEnabled());
     }
 
     public function testSetSmtp()
@@ -133,17 +135,24 @@ class EmailConfigTest extends AbstractTestCase
         $this->obj->setDefaultReplyTo(123);
     }
 
-    public function testSetDefaultLog()
+    public function testSetDefaultLogEnabled()
     {
-        $ret = $this->obj->setDefaultLog(true);
+        $ret = $this->obj->setDefaultLogEnabled(true);
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals(true, $this->obj->defaultLog());
+        $this->assertEquals(true, $this->obj->defaultLogEnabled());
     }
 
-    public function testSetDefaultTrack()
+    public function testSetDefaultTrackOpenEnabled()
     {
-        $ret = $this->obj->setDefaultTrack(true);
+        $ret = $this->obj->setDefaultTrackOpenEnabled(true);
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals(true, $this->obj->defaultTrack());
+        $this->assertEquals(true, $this->obj->defaultTrackOpenEnabled());
+    }
+
+    public function testSetDefaultTrackLinksEnabled()
+    {
+        $ret = $this->obj->setDefaultTrackLinksEnabled(true);
+        $this->assertSame($ret, $this->obj);
+        $this->assertEquals(true, $this->obj->defaultTrackLinksEnabled());
     }
 }

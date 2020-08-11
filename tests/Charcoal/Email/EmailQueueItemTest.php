@@ -14,20 +14,33 @@ class EmailQueueItemTest extends AbstractTestCase
      */
     public $obj;
 
+    /**
+     * Set up the test.
+     *
+     * @return void
+     */
     public function setUp()
     {
-        $this->obj = new EmailQueueItem([
+        $this->obj = $this->createObj();
+    }
+
+    /**
+     * Create tested class.
+     *
+     * @return EmailQueueItem
+     */
+    public function createObj()
+    {
+        return new EmailQueueItem([
             'logger' => new NullLogger()
         ]);
     }
 
-    public function testSetData()
+    /**
+     * @return void
+     */
+    public function testConstructor()
     {
-        $ret = $this->obj->setData([
-            'ident' => 'phpunit'
-        ]);
-        $this->assertSame($this->obj, $ret);
-
-        $this->assertEquals('phpunit', $this->obj->ident());
+        $this->assertInstanceOf(QueueItemInterface::class, $this->obj);
     }
 }

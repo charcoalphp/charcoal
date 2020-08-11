@@ -137,14 +137,14 @@ interface EmailInterface
      * @param  string $subject The email subject.
      * @return EmailInterface Chainable
      */
-    public function setSubject($subject);
+    public function setSubject(string $subject);
 
     /**
      * Get the email subject.
      *
      * @return string The emails' subject.
      */
-    public function subject();
+    public function subject(): string;
 
     /**
      * Set the email's HTML message body.
@@ -152,14 +152,14 @@ interface EmailInterface
      * @param  string $body The HTML message body.
      * @return EmailInterface Chainable
      */
-    public function setMsgHtml($body);
+    public function setMsgHtml(string $body);
 
     /**
      * Get the email's HTML message body.
      *
      * @return string
      */
-    public function msgHtml();
+    public function msgHtml(): string;
 
     /**
      * Set the email's plain-text message body.
@@ -167,14 +167,14 @@ interface EmailInterface
      * @param string $body The message's text body.
      * @return EmailInterface Chainable
      */
-    public function setMsgTxt($body);
+    public function setMsgTxt(string $body);
 
     /**
      * Get the email's plain-text message body.
      *
      * @return string
      */
-    public function msgTxt();
+    public function msgTxt(): string;
 
     /**
      * Set the email's attachments.
@@ -205,14 +205,14 @@ interface EmailInterface
      * @param  boolean $log The log flag.
      * @return EmailInterface Chainable
      */
-    public function setLog($log);
+    public function setLogEnabled($log);
 
     /**
      * Determine if logging is enabled for this particular email.
      *
      * @return boolean
      */
-    public function log();
+    public function logEnabled(): bool;
 
     /**
      * Enable or disable tracking for this particular email.
@@ -220,14 +220,29 @@ interface EmailInterface
      * @param boolean $track The track flag.
      * @return EmailInterface Chainable
      */
-    public function setTrack($track);
+    public function setTrackOpenEnabled($track);
 
     /**
      * Determine if tracking is enabled for this particular email.
      *
      * @return boolean
      */
-    public function track();
+    public function trackLinksEnabled(): bool;
+
+    /**
+     * Enable or disable tracking for this particular email.
+     *
+     * @param boolean $track The track flag.
+     * @return EmailInterface Chainable
+     */
+    public function setTrackLinksEnabled($track);
+
+    /**
+     * Determine if tracking is enabled for this particular email.
+     *
+     * @return boolean
+     */
+    public function trackOpenEnabled(): bool;
 
     /**
      * Send the email to all recipients.
