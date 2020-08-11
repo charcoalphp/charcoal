@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Charcoal\Email\ServiceProvider;
 
 // From 'pimple/pimple'
-use Charcoal\Factory\FactoryInterface;
 use Charcoal\View\ViewInterface;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
@@ -13,12 +12,14 @@ use Pimple\ServiceProviderInterface;
 // From 'phpmailer/phpmailer'
 use PHPMailer\PHPMailer\PHPMailer;
 
-// From 'charcoal-factory'
+// From 'locomotivemtl/charcoal-factory'
+use Charcoal\Factory\FactoryInterface;
 use Charcoal\Factory\GenericFactory;
 
 use Charcoal\Email\Email;
 use Charcoal\Email\EmailInterface;
 use Charcoal\Email\EmailConfig;
+use Charcoal\Email\Services\Parser;
 
 /**
  * Email Service Provider
@@ -57,6 +58,7 @@ class EmailServiceProvider implements ServiceProviderInterface
         };
 
         /**
+         * @param Container $container Pimple DI Container.
          * @return FactoryInterface
          */
         $container['email/factory'] = function(Container $container): FactoryInterface {
@@ -75,6 +77,13 @@ class EmailServiceProvider implements ServiceProviderInterface
                     'log_factory'        => $container['model/factory']
                 ]]
             ]);
+        };
+
+        /**
+         * @return Parser
+         */
+        $container['email/parser'] = function(): Parser {
+            return new Parser();
         };
 
         /**

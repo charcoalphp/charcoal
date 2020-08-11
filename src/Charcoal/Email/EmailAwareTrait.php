@@ -6,11 +6,37 @@ namespace Charcoal\Email;
 
 use InvalidArgumentException;
 
+use Charcoal\Email\Services\Parser;
+
 /**
  * For objects that are or interact with emails.
  */
 trait EmailAwareTrait
 {
+    /**
+     * @var Parser
+     */
+    private $parser;
+
+    /**
+     * @param Parser $parser Email parser service.
+     * @return void
+     */
+    protected function setParser(Parser $parser): void
+    {
+        $this->parser = $parser;
+    }
+
+    /**
+     * @return Parser
+     */
+    protected function getParser(): Parser
+    {
+        if ($this->parser === null) {
+            $this->parser = new Parser();
+        }
+        return $this->parser;
+    }
 
     /**
      * @param mixed $email An email value (either a string or an array).
@@ -19,16 +45,7 @@ trait EmailAwareTrait
      */
     protected function parseEmail($email): string
     {
-        if (is_array($email)) {
-            return $this->emailFromArray($email);
-        } elseif (is_string($email)) {
-            $arr = $this->emailToArray($email);
-            return $this->emailFromArray($arr);
-        } else {
-            throw new InvalidArgumentException(
-                'Can not parse email: must be an array or a string'
-            );
-        }
+        return $this->getParser()->parse($email);
     }
 
     /**
@@ -40,33 +57,7 @@ trait EmailAwareTrait
      */
     protected function emailToArray($var) : ?array
     {
-        if ($var === null) {
-            return null;
-        }
-        if (!is_string($var) && !is_array($var)) {
-            throw new InvalidArgumentException(
-                sprintf('Email address must be an array or a string. (%s given)', gettype($var))
-            );
-        }
-
-        // Assuming nobody's gonna set an email that is just a display name
-        if (is_string($var)) {
-            $regexp = '/(.+[\s]+)?(<)?(([\w\-\._\+]+)@((?:[\w\-_]+\.)+)([a-zA-Z]*))?(>)?/u';
-            preg_match($regexp, $var, $out);
-            $arr = [
-                'email' => (isset($out[3]) ? trim($out[3]) : ''),
-                'name'  => (isset($out[1]) ? trim(trim($out[1]), '\'"') : '')
-            ];
-        } else {
-            $arr = $var;
-
-            if (!isset($arr['name'])) {
-                $arr['name'] = '';
-            }
-        }
-
-
-        return $arr;
+        return $this->getParser()->emailToArray($var);
     }
 
     /**
@@ -78,24 +69,6 @@ trait EmailAwareTrait
      */
     protected function emailFromArray(array $arr) : string
     {
-        if (isset($arr['address'])) {
-            $arr['email'] = $arr['address'];
-            unset($arr['address']);
-        }
-
-        if (!isset($arr['email'])) {
-            throw new InvalidArgumentException(
-                'The array must contain at least the "email" key.'
-            );
-        }
-
-        $email = strval(filter_var($arr['email'], FILTER_SANITIZE_EMAIL));
-
-        if (!isset($arr['name']) || $arr['name'] === '') {
-            return $email;
-        }
-
-        $name = str_replace('"', '', filter_var($arr['name'], FILTER_SANITIZE_STRING));
-        return sprintf('"%s" <%s>', $name, $email);
+        return $this->getParser()->emailFromArray($arr);
     }
 }
