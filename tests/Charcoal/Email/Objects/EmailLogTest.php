@@ -1,10 +1,10 @@
 <?php
 
-namespace Charcoal\Tests\Email;
+namespace Charcoal\Tests\Email\Objects;
 
 use DateTime;
 
-use Charcoal\Email\EmailLog;
+use Charcoal\Email\Objects\EmailLog;
 use Charcoal\Tests\AbstractTestCase;
 use Psr\Log\NullLogger;
 

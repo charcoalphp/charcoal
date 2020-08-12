@@ -27,7 +27,8 @@ class EmailTest extends AbstractTestCase
             'view'      => $container['email/view'],
             'template_factory' => $container['template/factory'],
             'queue_item_factory' => $container['model/factory'],
-            'log_factory' => $container['model/factory']
+            'log_factory' => $container['model/factory'],
+            'tracker'   => $container['email/tracker']
         ]);
     }
 

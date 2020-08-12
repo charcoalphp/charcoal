@@ -1,0 +1,21 @@
+{
+    "admin": {
+        "lists": {
+            "default": {
+                "title": {
+                    "fr": "",
+                    "en": ""
+                },
+                "properties": [
+
+                ]
+
+            }
+        },
+        "default_list": "default",
+
+        "forms": {
+
+        }
+    }
+}

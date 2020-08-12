@@ -1,0 +1,25 @@
+{
+    "properties": {
+        "id": {
+            "type": "id",
+            "mode": "uniqid"
+        },
+        "email": {
+            "type": "object",
+            "obj_type": "charcoal/email/email-log"
+        },
+        "ts": {
+            "type": "date-time"
+        },
+        "ip": {
+            "type": "ip"
+        }
+    },
+    "sources": {
+        "default": {
+            "type": "database",
+            "table": "charcoal_email_open_logs"
+        }
+    },
+    "default_source": "default"
+}

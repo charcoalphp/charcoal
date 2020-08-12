@@ -1,7 +1,8 @@
 {
     "properties": {
         "id": {
-            "type": "id"
+            "type": "id",
+            "mode": "uniqid"
         },
         "queue_id": {
             "type": "string",

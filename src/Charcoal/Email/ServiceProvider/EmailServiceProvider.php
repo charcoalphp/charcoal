@@ -20,6 +20,7 @@ use Charcoal\Email\Email;
 use Charcoal\Email\EmailInterface;
 use Charcoal\Email\EmailConfig;
 use Charcoal\Email\Services\Parser;
+use Charcoal\Email\Services\Tracker;
 
 /**
  * Email Service Provider
@@ -74,7 +75,8 @@ class EmailServiceProvider implements ServiceProviderInterface
                     'view'               => $container['email/view'],
                     'template_factory'   => $container['template/factory'],
                     'queue_item_factory' => $container['model/factory'],
-                    'log_factory'        => $container['model/factory']
+                    'log_factory'        => $container['model/factory'],
+                    'tracker'            => $container['email/tracker']
                 ]]
             ]);
         };
@@ -84,6 +86,17 @@ class EmailServiceProvider implements ServiceProviderInterface
          */
         $container['email/parser'] = function(): Parser {
             return new Parser();
+        };
+
+        /**
+         * @param Container $container Pimple DI Container.
+         * @return Tracker
+         */
+        $container['email/tracker'] = function(Container $container): Tracker {
+            return new Tracker(
+                (string)$container['base-url'],
+                $container['model/factory']
+            );
         };
 
         /**

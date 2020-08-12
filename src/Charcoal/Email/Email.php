@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Charcoal\Email;
 
+use Charcoal\Email\Services\Tracker;
 use Exception;
 use InvalidArgumentException;
 
@@ -162,6 +163,11 @@ class Email extends AbstractEntity implements
     private $logFactory;
 
     /**
+     * @var Tracker
+     */
+    private $tracker;
+
+    /**
      * Construct a new Email object with the given dependencies.
      *
      * - `logger` a PSR-3 logger.
@@ -182,6 +188,7 @@ class Email extends AbstractEntity implements
         $this->setTemplateFactory($data['template_factory']);
         $this->setQueueItemFactory($data['queue_item_factory']);
         $this->setLogFactory($data['log_factory']);
+        $this->setTracker($data['tracker']);
     }
 
     /**
@@ -688,13 +695,24 @@ class Email extends AbstractEntity implements
 
             $mail->isHTML(true);
 
+            $logId = uniqid();
+
+            if ($this->trackOpenEnabled() === true) {
+                $this->tracker->addOpenTrackingImage($this, $logId);
+            }
+            if ($this->trackLinksEnabled() === true) {
+                $this->tracker->replaceLinksWithTracker($this, $logId);
+            }
+
             $mail->Subject = $this->subject();
             $mail->Body    = $this->msgHtml();
             $mail->AltBody = $this->msgTxt();
 
             $ret = $mail->send();
 
-            $this->logSend($ret, $mail);
+            if ($this->logEnabled() === true) {
+                $this->logSend($ret, $logId, $mail);
+            }
         } catch (Exception $e) {
             $ret = false;
             $this->logger->error(
@@ -873,6 +891,15 @@ class Email extends AbstractEntity implements
     }
 
     /**
+     * @param Tracker $tracker Tracker service.
+     * @return void
+     */
+    public function setTracker(Tracker $tracker)
+    {
+        $this->tracker = $tracker;
+    }
+
+    /**
      * Get the email's HTML message from the template, if applicable.
      *
      * @see    ViewableInterface::renderTemplate()
@@ -968,15 +995,12 @@ class Email extends AbstractEntity implements
      * Log the send event for each recipient.
      *
      * @param  boolean   $result Success or failure.
+     * @param  string    $logId  Email log id.
      * @param  PHPMailer $mailer The raw mailer.
      * @return void
      */
-    protected function logSend(bool $result, PHPMailer $mailer): void
+    protected function logSend(bool $result, string $logId, PHPMailer $mailer): void
     {
-        if ($this->logEnabled() === false) {
-            return;
-        }
-
         if (!$result) {
             $this->logger->error('Email could not be sent.');
         } else {
@@ -995,6 +1019,7 @@ class Email extends AbstractEntity implements
         foreach ($recipients as $to) {
             $log = $this->logFactory()->create(EmailLog::class);
 
+            $log->setId($logId);
             $log->setQueueId($this->queueId());
             $log->setMessageId($mailer->getLastMessageId());
             $log->setCampaign($this->campaign());
