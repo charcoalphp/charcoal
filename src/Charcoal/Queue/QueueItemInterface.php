@@ -93,4 +93,11 @@ interface QueueItemInterface extends ModelInterface
      * @return null|\DateTimeInterface
      */
     public function processedDate();
+
+    /**
+     * Retrieve the date/time the item should be expired at.
+     *
+     * @return null|\DateTimeInterface
+     */
+    public function expiryDate();
 }

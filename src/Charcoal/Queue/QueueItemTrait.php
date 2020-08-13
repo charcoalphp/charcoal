@@ -2,6 +2,7 @@
 
 namespace Charcoal\Queue;
 
+use DateInterval;
 use DateTime;
 use DateTimeInterface;
 use Exception;
@@ -49,6 +50,23 @@ trait QueueItemTrait
      * @var DateTimeInterface|null $processedDate
      */
     private $processedDate;
+
+    /**
+     * When the item should be considered expired.
+     *
+     * The date/time at which this queue item job should expire and be prevented to fire.
+     * If NULL, 0, or a future date/time, then it should be allowed to be performed.
+     *
+     * @var DateTimeInterface|null $lexpiryDate
+     */
+    private $expiryDate;
+
+    /**
+     * Default amount of seconds before expiry after processing date.
+     *
+     * @var integer $defaultExpiryInSeconde
+     */
+    private $defaultExpiryInSeconds = 84400;
 
     /**
      * Process the item.
@@ -272,6 +290,51 @@ trait QueueItemTrait
     }
 
     /**
+     * Retrieve the date/time the item should be expired at.
+     *
+     * @return null|\DateTimeInterface
+     */
+    public function expiryDate()
+    {
+        return $this->expiryDate;
+    }
+
+    /**
+     * Set the date/time the item will expire at.
+     *
+     * @param  null|string|\DateTimeInterface $ts A date/time string or object.
+     * @throws InvalidArgumentException If the date/time is invalid.
+     * @return self
+     */
+    public function setExpiryDate($ts)
+    {
+        if ($ts === null) {
+            $this->expiryDate = null;
+            return $this;
+        }
+
+        if (is_string($ts)) {
+            try {
+                $ts = new DateTime($ts);
+            } catch (Exception $e) {
+                throw new InvalidArgumentException(
+                    sprintf('%s (%s)', $e->getMessage(), $ts)
+                );
+            }
+        }
+
+        if (!($ts instanceof DateTimeInterface)) {
+            throw new InvalidArgumentException(
+                'Invalid "Expiry Date" value. Must be a date/time string or a DateTime object.'
+            );
+        }
+
+        $this->expiryDate = $ts;
+
+        return $this;
+    }
+
+    /**
      * Hook called before saving the item.
      *
      * Presets the item as _to-be_ processed and queued now.
@@ -283,6 +346,23 @@ trait QueueItemTrait
         $this->setProcessed(false);
         $this->setQueuedDate('now');
 
+        if (!$this->expiryDate()) {
+            $this->generateExpiry();
+        }
+
         return $this;
+    }
+
+    /**
+     * Generate an expiry date based on the default interval and the scheduled processing date.
+     *
+     * @return self
+     */
+    protected function generateExpiry()
+    {
+        $date = (clone $this['processingDate']) ?? new DateTime();
+        $date->add(new DateInterval('PT'.$this->defaultExpiryInSeconds.'S'));
+
+        return $this->setExpiryDate($date);
     }
 }
