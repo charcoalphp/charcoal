@@ -59,5 +59,4 @@ class Migration20200827131900 extends AbstractMigration
 
         $this->setStatus(self::PROCESSED_STATUS);
     }
-
 }
