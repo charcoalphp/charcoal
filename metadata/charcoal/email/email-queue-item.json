@@ -46,6 +46,9 @@
                 "fr": "Date à laquelle le gestionnaire de queue devrait traité cet élément et envoyer le courriel."
             }
         },
+        "expiry_date": {
+            "type": "date-time"
+        },
         "to": {
             "type": "string",
             "allow_html": true,
