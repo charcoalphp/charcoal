@@ -43,7 +43,14 @@ class Migration20200827131900 extends AbstractMigration
     public function up(): void
     {
         try {
+            /** @var EmailQueueItem $proto */
             $proto = $this->modelFactory()->create(EmailQueueItem::class);
+            $table = $proto->source()->table();
+
+            $this->addFeedback(
+                "Updating <white>${table} Table</white>."
+            );
+
             $this->createOrAlter($proto);
         } catch (PDOException $exception) {
             $this->addError($exception->getMessage());
