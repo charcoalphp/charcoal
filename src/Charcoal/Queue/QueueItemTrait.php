@@ -66,7 +66,7 @@ trait QueueItemTrait
      *
      * @var integer $defaultExpiryInSeconde
      */
-    private $defaultExpiryInSeconds = 84400;
+    private $defaultExpiryInSeconds = 86400;
 
     /**
      * Process the item.
