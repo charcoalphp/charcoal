@@ -436,6 +436,9 @@ abstract class AbstractQueueManager implements
             'operator' => '<',
             'value'    => date('Y-m-d H:i:s'),
         ]);
+        $loader->addFilter([
+            'condition' => '(expiry_date > NOW() OR expiry_date IS NULL)',
+        ]);
 
         $queueId = $this->queueId();
         if ($queueId) {
