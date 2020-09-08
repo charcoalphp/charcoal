@@ -3,27 +3,24 @@
     ============================
 --}}
 {{# hasAttachments }}
-    {{# attachmentsAsRows }}
-        <div class="row{{^ isFirst }} mt-3{{/ isFirst }}">
-            {{# columns }}
-                <div class="col-{{ columnWidth }} js-attachment-actions">
-                    <a class="card img-thumbnail{{^ active }} bg-danger{{/ active }}"
-                       href="object/edit?obj_type={{ obj_type }}&obj_id={{ attachment_id }}"
-                       data-type="{{ obj_type }}"
-                       data-group="{{ attachmentGroup }}"
-                       data-attachment="{{ obj_type }}"
-                       data-id="{{ attachment_id }}"
-                       data-title="{{# _t }}Edit{{/ _t }}"
-                       data-action="edit"
-                       data-form-ident="{{ attachmentType.quickFormIdent }}">
-                        {{# src }}
-                            <img class="img-fluid" src="{{ . }}"/>
-                        {{/ src }}
-                    </a>
-                </div>
-            {{/ columns }}
-        </div>
-    {{/ attachmentsAsRows }}
+    <div class="d-flex flex-wrap align-content-between m-n3">
+        {{# attachments }}
+            <div class="m-3 js-attachment-actions">
+                <a href="object/edit?obj_type={{ obj_type }}&obj_id={{ attachment_id }}"
+                   data-type="{{ obj_type }}"
+                   data-group="{{ attachmentGroup }}"
+                   data-attachment="{{ obj_type }}"
+                   data-id="{{ attachment_id }}"
+                   data-title="{{# _t }}Edit{{/ _t }}"
+                   data-action="edit"
+                   data-form-ident="{{ attachmentType.quickFormIdent }}">
+                    {{# src }}
+                        <img src="{{ . }}" alt="{{ title }}" class="img-thumbnail{{^ active }} alert-danger{{/ active }}" />
+                    {{/ src }}
+                </a>
+            </div>
+        {{/ attachments }}
+    </div>
 {{/ hasAttachments }}
 {{^ hasAttachments }}
     {{> charcoal/admin/widget/attachment/empty }}

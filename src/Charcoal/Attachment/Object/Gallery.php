@@ -32,10 +32,10 @@ class Gallery extends Container
             $rows = array_chunk($this->attachments()->values(), $this->numColumns);
 
             /** Map row content with useful front-end properties. */
-            array_walk($rows, function(&$value, $key) {
-                $value = [
-                    'columns' => $value,
-                    'isFirst' => $key === 0
+            array_walk($rows, function (&$attachment, $index) {
+                $attachment = [
+                    'columns' => $attachment,
+                    'isFirst' => ($index === 0),
                 ];
             });
         }
