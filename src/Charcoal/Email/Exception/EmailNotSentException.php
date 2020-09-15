@@ -9,6 +9,6 @@ use Exception;
  *
  * Exception thrown when sending an email fails and there is absolutely no doubt no email has been sent.
  */
-class EmailNotSentException extends Exception
+class EmailNotSentException extends RuntimeException implements ExceptionInterface
 {
 }
