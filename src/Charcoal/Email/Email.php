@@ -14,6 +14,7 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 
 // From 'phpmailer/phpmailer'
+use PHPMailer\PHPMailer\Exception as PHPMailerException;
 use PHPMailer\PHPMailer\PHPMailer;
 
 // From 'locomotivemtl/charcoal-config'
@@ -717,7 +718,7 @@ class Email extends AbstractEntity implements
 
         try {
             $ret = $mail->send();
-        } catch (\PHPMailer\PHPMailer\Exception $e) {
+        } catch (PHPMailerException $e) {
             throw new EmailNotSentException($e->getMessage(), $e->getCode(), $e);
         }
 
