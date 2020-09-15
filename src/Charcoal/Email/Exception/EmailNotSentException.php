@@ -2,7 +2,7 @@
 
 namespace Charcoal\Email\Exception;
 
-use Exception;
+use RuntimeException;
 
 /**
  * Email was not sent
