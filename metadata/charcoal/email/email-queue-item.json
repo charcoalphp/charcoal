@@ -93,6 +93,18 @@
                 "en": "The text message to send in the email body. May be emptied (safely_ by cleanup scripts after this queue item (email) is processed / sent.",
                 "fr": "Le message texte à envoyer dans le courriel. Peut être vidé (sécuritairement) par des scripts de nettoyage après que cet élément (courriel) ait été envoyé."
             }
+        },
+        "status": {
+            "type": "string",
+            "l10n": false,
+            "label": {
+                "en": "Status",
+                "fr": "Status"
+            },
+            "description": {
+                "en": "",
+                "fr": ""
+            }
         }
     },
 
