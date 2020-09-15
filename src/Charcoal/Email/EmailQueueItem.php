@@ -236,11 +236,12 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
     /**
      * Process the item.
      *
-     * @param  callable|null $alwaysCallback  An optional callback routine executed after the item is processed.
-     * @param  callable $successCallback An optional callback routine executed when the item is resolved.
-     * @param  callable $failureCallback An optional callback routine executed when the item is rejected.
+     * @param callable|null $alwaysCallback  An optional callback routine executed after the item is processed.
+     * @param callable|null $successCallback An optional callback routine executed when the item is resolved.
+     * @param callable|null $failureCallback An optional callback routine executed when the item is rejected.
      * @return boolean|null Returns TRUE i this item was successfully processed,
-     *     FALSE on failure or if an error occurs, NULL if this item is already processed.
+     *                                       FALSE on failure or if an error occurs, NULL if this item is already
+     *                                       processed.
      */
     public function process(
         callable $alwaysCallback = null,
