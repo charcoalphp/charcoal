@@ -360,13 +360,28 @@ abstract class AbstractQueueManager implements
      */
     private function processItems($queuedItems)
     {
+        /** @var QueueItemInterface $q */
         foreach ($queuedItems as $q) {
             try {
+                if ($q->processed()) {
+                    // Do not process twice, ever.
+                    $this->skippedItems[] = $q;
+                    continue;
+                }
+                // Ensuring a queue item won't ever be processed twice
+                $q->setProcessed(true)
+                  ->setProcessedDate('now')
+                  ->update([
+                      'processed',
+                      'processed_date',
+                  ]);
+
                 $result = $q->process(
                     $this->itemCallback,
                     $this->itemSuccessCallback,
                     $this->itemFailureCallback
                 );
+
                 if ($result === true) {
                     $this->successItems[] = $q;
                 } elseif ($result === false) {
@@ -472,8 +487,7 @@ abstract class AbstractQueueManager implements
             $loader->setNumPerPage($this->limit());
         }
 
-        $queued = $loader->load();
-        return $queued;
+        return $loader->load();
     }
 
     /**
@@ -486,8 +500,7 @@ abstract class AbstractQueueManager implements
         $loader = $this->createQueueItemsLoader();
         $this->configureQueueItemsLoader($loader);
 
-        $total = $loader->loadCount();
-        return $total;
+        return $loader->loadCount();
     }
 
     /**
