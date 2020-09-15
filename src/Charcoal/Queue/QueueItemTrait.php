@@ -69,6 +69,13 @@ trait QueueItemTrait
     private $defaultExpiryInSeconds = 86400;
 
     /**
+     * The status of the queue item.
+     *
+     * @var string
+     */
+    private $status;
+
+    /**
      * Process the item.
      *
      * @param  callable $alwaysCallback  An optional callback routine executed after the item is processed.
@@ -82,6 +89,22 @@ trait QueueItemTrait
         callable $successCallback = null,
         callable $failureCallback = null
     );
+
+    /**
+     * @param Exception $e Exception to log.
+     * @return void
+     */
+    protected function logProcessingException(Exception $e)
+    {
+        $this->logger->error(
+            sprintf('Could not process a queue item: %s', $e->getMessage()),
+            [
+                'manager' => get_called_class(),
+                'queueId' => $this->queueId(),
+                'itemId'  => $this->id(),
+            ]
+        );
+    }
 
     /**
      * Set the queue item's data.
@@ -330,6 +353,25 @@ trait QueueItemTrait
         }
 
         $this->expiryDate = $ts;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function status()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param string $status Status for QueueItemTrait.
+     * @return self
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
 
         return $this;
     }
