@@ -313,7 +313,7 @@ abstract class AbstractQueueManager implements
 
         if ($this->chunkSize() > 0) {
             $totalChunks = $this->totalChunks();
-            for ($i = 0; $i <= $totalChunks; $i++) {
+            for ($i = 0; $i < $totalChunks; $i++) {
                 $queuedItems = $this->loadQueueItems();
                 $this->processItems($queuedItems);
             }
