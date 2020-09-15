@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Charcoal\Email;
 
+use Charcoal\Email\Exception\EmailNotSentException;
 use Exception;
-use InvalidArgumentException;
 
 // From 'pimple/pimple'
 use Pimple\Container;
@@ -98,6 +98,7 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
         } catch (Exception $e) {
             $this->logger->warning(sprintf('Invalid "to" email: "%s"', strval($email)));
         }
+
         return $this;
     }
 
@@ -124,6 +125,7 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
         } catch (Exception $e) {
             $this->logger->warning(sprintf('Invalid "from" email: "%s"', strval($email)));
         }
+
         return $this;
     }
 
@@ -146,6 +148,7 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
     public function setSubject($subject)
     {
         $this->subject = $subject;
+
         return $this;
     }
 
@@ -168,6 +171,7 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
     public function setMsgHtml($body)
     {
         $this->msgHtml = $body;
+
         return $this;
     }
 
@@ -190,6 +194,7 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
     public function setMsgTxt($body)
     {
         $this->msgTxt = $body;
+
         return $this;
     }
 
@@ -212,6 +217,7 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
     public function setCampaign($campaign)
     {
         $this->campaign = $campaign;
+
         return $this;
     }
 
@@ -230,7 +236,7 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
     /**
      * Process the item.
      *
-     * @param  callable $alwaysCallback  An optional callback routine executed after the item is processed.
+     * @param  callable|null $alwaysCallback  An optional callback routine executed after the item is processed.
      * @param  callable $successCallback An optional callback routine executed when the item is resolved.
      * @param  callable $failureCallback An optional callback routine executed when the item is rejected.
      * @return boolean|null Returns TRUE i this item was successfully processed,
@@ -241,50 +247,52 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
         callable $successCallback = null,
         callable $failureCallback = null
     ): ?bool {
-        if ($this->processed() === true) {
-            // Do not process twice, ever.
-            return null;
-        }
-
         $email = $this->emailFactory()->create('email');
         $email->setData($this->data());
 
         try {
             $result = $email->send();
-            if ($result === true) {
-                $this->setProcessed(true);
-                $this->setProcessedDate('now');
-                $this->setMsgHtml(null);
-                $this->setMsgTxt(null);
-                $this->update([
-                    'processed',
-                    'processed_date',
-                    'msg_html',
-                    'msg_txt',
-                ]);
 
-                if ($successCallback !== null) {
-                    $successCallback($this);
-                }
-            } else {
-                if ($failureCallback !== null) {
-                    $failureCallback($this);
-                }
-            }
+            $this->setStatus(($result) ? self::SUCCESS_STATUS : self::FAILED_STATUS);
+        } catch (EmailNotSentException $e) {
+            $this->logProcessingException($e);
+            $this->setStatus(self::RETRY_STATUS);
 
-            return $result;
+            $result = false;
         } catch (Exception $e) {
-            // Todo log error
+            $this->logProcessingException($e);
+            $this->setStatus(self::FAILED_STATUS);
+
+            $result = false;
+        }
+
+        $propsToUpdate = [];
+
+        if ($result) {
+            // Clear cumbersome DB data
+            $this->setMsgHtml(null)
+                 ->setMsgTxt(null);
+
+            array_push($propsToUpdate, 'msg_html', 'msg_txt');
+
+            if ($successCallback !== null) {
+                $successCallback($this);
+            }
+        } else {
             if ($failureCallback !== null) {
                 $failureCallback($this);
             }
-
-            return false;
-        } finally {
-            if ($alwaysCallback !== null) {
-                $alwaysCallback($this);
-            }
         }
+
+        $this->update(array_merge([
+            'status',
+        ], $propsToUpdate));
+
+        if ($alwaysCallback !== null) {
+            $alwaysCallback($this);
+        }
+
+        return $result;
     }
 
     /**
