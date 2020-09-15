@@ -637,7 +637,7 @@ class Email extends AbstractEntity implements
      * Send the email to all recipients
      *
      * @return boolean Success / Failure.
-     * @throws EmailNotSentException On email sending failure
+     * @throws EmailNotSentException On email sending failure.
      * @todo Implement methods and property for toggling rich-text vs. plain-text
      *       emails (`$mail->isHTML(true)`).
      */
