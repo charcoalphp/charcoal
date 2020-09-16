@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Charcoal\Email;
 
+use Charcoal\Email\Exception\EmailNotSentException;
 use Charcoal\Email\Services\Tracker;
 use Exception;
 use InvalidArgumentException;
@@ -13,6 +14,7 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 
 // From 'phpmailer/phpmailer'
+use PHPMailer\PHPMailer\Exception as PHPMailerException;
 use PHPMailer\PHPMailer\PHPMailer;
 
 // From 'locomotivemtl/charcoal-config'
@@ -24,7 +26,6 @@ use Charcoal\Config\ConfigurableTrait;
 use Charcoal\Factory\FactoryInterface;
 
 // From 'locomotivemtl/charcoal-view'
-use Charcoal\View\GenericView;
 use Charcoal\View\ViewableInterface;
 use Charcoal\View\ViewableTrait;
 
@@ -637,6 +638,7 @@ class Email extends AbstractEntity implements
      * Send the email to all recipients
      *
      * @return boolean Success / Failure.
+     * @throws EmailNotSentException On email sending failure.
      * @todo Implement methods and property for toggling rich-text vs. plain-text
      *       emails (`$mail->isHTML(true)`).
      */
@@ -707,17 +709,21 @@ class Email extends AbstractEntity implements
             $mail->Subject = $this->subject();
             $mail->Body    = $this->msgHtml();
             $mail->AltBody = $this->msgTxt();
-
-            $ret = $mail->send();
-
-            if ($this->logEnabled() === true) {
-                $this->logSend($ret, $logId, $mail);
-            }
         } catch (Exception $e) {
-            $ret = false;
             $this->logger->error(
                 sprintf('Error sending email: %s', $e->getMessage())
             );
+            return false;
+        }
+
+        try {
+            $ret = $mail->send();
+        } catch (PHPMailerException $e) {
+            throw new EmailNotSentException($e->getMessage(), $e->getCode(), $e);
+        }
+
+        if ($this->logEnabled() === true) {
+            $this->logSend($ret, $logId, $mail);
         }
 
         return $ret;
@@ -778,7 +784,7 @@ class Email extends AbstractEntity implements
                 $queueItem->setProcessingDate($ts);
                 $queueItem->setQueueId($queueId);
 
-                $res = $queueItem->save();
+                $queueItem->save();
             } else {
                 $this->logger->warning('Could not queue email, null or empty value');
             }
