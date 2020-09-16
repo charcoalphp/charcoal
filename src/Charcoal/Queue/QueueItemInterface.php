@@ -9,6 +9,10 @@ use Charcoal\Model\ModelInterface;
  */
 interface QueueItemInterface extends ModelInterface
 {
+    const STATUS_SUCCESS = 'STATUS_SUCCESS';
+    const STATUS_FAILED = 'STATUS_FAILED';
+    const STATUS_RETRY = 'STATUS_RETRY';
+
     /**
      * Process the item.
      *
@@ -95,9 +99,35 @@ interface QueueItemInterface extends ModelInterface
     public function processedDate();
 
     /**
+     * Set the item's processed status.
+     *
+     * @param boolean $processed Whether the item has been processed.
+     * @return self
+     */
+    public function setProcessed($processed);
+
+    /**
+     * Determine if the item has been processed.
+     *
+     * @return boolean
+     */
+    public function processed();
+
+    /**
      * Retrieve the date/time the item should be expired at.
      *
      * @return null|\DateTimeInterface
      */
     public function expiryDate();
+
+    /**
+     * @param string $status Status for QueueItemTrait.
+     * @return self
+     */
+    public function setStatus($status);
+
+    /**
+     * @return null|string
+     */
+    public function status();
 }
