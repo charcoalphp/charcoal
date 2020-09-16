@@ -9,9 +9,9 @@ use Charcoal\Model\ModelInterface;
  */
 interface QueueItemInterface extends ModelInterface
 {
-    const SUCCESS_STATUS = 'success';
-    const FAILED_STATUS = 'failed';
-    const RETRY_STATUS = 'retry';
+    const STATUS_SUCCESS = 'STATUS_SUCCESS';
+    const STATUS_FAILED = 'STATUS_FAILED';
+    const STATUS_RETRY = 'STATUS_RETRY';
 
     /**
      * Process the item.
