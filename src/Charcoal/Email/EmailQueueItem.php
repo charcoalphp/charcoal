@@ -254,15 +254,15 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
         try {
             $result = $email->send();
 
-            $this->setStatus(($result) ? self::SUCCESS_STATUS : self::FAILED_STATUS);
+            $this->setStatus(($result) ? self::STATUS_SUCCESS : self::STATUS_FAILED);
         } catch (EmailNotSentException $e) {
             $this->logProcessingException($e);
-            $this->setStatus(self::RETRY_STATUS);
+            $this->setStatus(self::STATUS_RETRY);
 
             $result = false;
         } catch (Exception $e) {
             $this->logProcessingException($e);
-            $this->setStatus(self::FAILED_STATUS);
+            $this->setStatus(self::STATUS_FAILED);
 
             $result = false;
         }
