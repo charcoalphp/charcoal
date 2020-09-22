@@ -114,8 +114,8 @@ class EmailConfig extends AbstractConfig
             'default_from'     => '',
             'default_reply_to' => '',
 
-            'default_track_open_enabled'    => true,
-            'default_track_links_enabled'   => true,
+            'default_track_open_enabled'    => false,
+            'default_track_links_enabled'   => false,
             'default_log_enabled'           => true
         ];
     }
