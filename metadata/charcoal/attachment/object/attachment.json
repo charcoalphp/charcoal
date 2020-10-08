@@ -54,6 +54,7 @@
         "link": {
             "type": "string",
             "l10n": true,
+            "display_type": "charcoal/admin/property/display/link",
             "label": "URL",
             "notes": "e.g.: <samp>https://locomotive.ca</samp>"
         },
@@ -65,10 +66,11 @@
         "file": {
             "type": "file",
             "l10n": true,
-            "label": "File",
             "validatable": false,
             "upload_path": "uploads/attachments/",
-            "public_access": true
+            "public_access": true,
+            "display_type": "charcoal/admin/property/display/link",
+            "label": "File"
         },
         "file_label": {
             "type": "string",
