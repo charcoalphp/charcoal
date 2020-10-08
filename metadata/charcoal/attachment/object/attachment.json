@@ -128,6 +128,7 @@
 
         "forms": {
             "default": {
+                "show_header": false,
                 "l10n_mode": "loop_inputs",
                 "groups": {
                     "info": {
