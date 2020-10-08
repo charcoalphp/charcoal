@@ -78,7 +78,7 @@ trait AttachmentAwareTrait
         } else {
             if ($group !== null) {
                 $this->logger->warning(
-                    'AttachmentAwareTrait::attachments() parameters are deprecated. '.
+                    'AttachmentAwareTrait::getAttachments() parameters are deprecated. '.
                     'An array of parameters should be used.',
                     [ 'package' => 'locomotivemtl/charcoal-attachment' ]
                 );
@@ -207,7 +207,8 @@ trait AttachmentAwareTrait
 
                 $att->isPresentable(true);
 
-                /** Not Sure if we want to present the attachment for backend preview.
+                /**
+                 * Not Sure if we want to present the attachment for backend preview.
                  * Might want to have a second presenter key on attachment model
                  * so we can supply either the same presenter,
                  * another one or none at all.

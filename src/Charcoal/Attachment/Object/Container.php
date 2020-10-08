@@ -50,7 +50,7 @@ class Container extends Attachment implements
      * Retrieve the objects associated to the current object.
      *
      * @param  mixed ...$args Filter the attachments;
-     *     options accepted by {@see AttachmentAwareTrait::attachments()}.
+     *     options accepted by {@see AttachmentAwareTrait::getAttachments()}.
      * @return Collection|Attachment[]
      */
     public function attachments(...$args)
