@@ -85,6 +85,20 @@
             "type": "string",
             "label": "File Type"
         },
+        "file_or_link": {
+            "type": "string",
+            "l10n": true,
+            "storable": false,
+            "display_type": "charcoal/admin/property/display/link",
+            "label": "File / Link"
+        },
+        "file_and_link": {
+            "type": "string",
+            "multiple": true,
+            "storable": false,
+            "display_type": "charcoal/admin/property/display/link",
+            "label": "File / Link"
+        },
         "thumbnail": {
             "type": "image",
             "l10n": true,

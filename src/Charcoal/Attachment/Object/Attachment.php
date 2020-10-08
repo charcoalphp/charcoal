@@ -822,6 +822,34 @@ class Attachment extends Content implements AttachableInterface
     }
 
     /**
+     * Retrieve either the attached file or link.
+     *
+     * @return Translation|string|null
+     */
+    public function fileOrLink()
+    {
+        return $this['file'] ?: $this['link'];
+    }
+
+    /**
+     * Retrieve the attached file(s) and link(s).
+     *
+     * @return string[]|null
+     */
+    public function fileAndLink()
+    {
+        $prop  = $this->property('file');
+        $files = $prop->parseValAsFileList($this['file']);
+        $links = $prop->parseValAsFileList($this['link']);
+
+        $items = array_merge($files, $links);
+        $items = array_unique($items);
+        $items = array_values($items);
+
+        return $items;
+    }
+
+    /**
      * Basename of the associated file.
      * @return string Basename of file.
      */
