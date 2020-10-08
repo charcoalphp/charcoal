@@ -337,6 +337,23 @@ class Attachment extends Content implements AttachableInterface
     }
 
     /**
+     * Retrieve the label of the attachment type.
+     *
+     * @return string Returns the translated attachment type or the short name.
+     */
+    public function typeLabel()
+    {
+        $type  = $this->type();
+        $label = $this->translator()->translate($type);
+
+        if ($type === $label) {
+            $label = ucfirst($this->microType());
+        }
+
+        return $label;
+    }
+
+    /**
      * Retrieve the unqualified class name.
      *
      * @return string Returns the short name of the model's class, the part without the namespace.
@@ -375,7 +392,7 @@ class Attachment extends Content implements AttachableInterface
 
         if (!$heading) {
             $heading = $this->translator()->translation('{{ objType }} #{{ id }}', [
-                '{{ objType }}' => ucfirst($this->microType()),
+                '{{ objType }}' => $this->typeLabel(),
                 '{{ id }}'      => $this->id()
             ]);
         }

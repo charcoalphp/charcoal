@@ -51,6 +51,11 @@
             "type": "string",
             "label": "Type"
         },
+        "type_label": {
+            "type": "string",
+            "storable": false,
+            "label": "Type"
+        },
         "link": {
             "type": "string",
             "l10n": true,
