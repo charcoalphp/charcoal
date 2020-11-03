@@ -206,7 +206,11 @@ class AttachmentWidget extends AdminWidget implements
     {
         $attachableObjects = $this->attachableObjects();
         $attachments       = $this->obj()->getAttachments([
-            'group' => $this->group()
+            'group' => $this->group(),
+            // If we ever need to remove the inactive attachments from the back-end display, this
+            // is where we will need to add additional configurations.  This is hardcoded to
+            // "false" because it's better than assuming the widget type in the AttachmentAwareTrait.
+            'isActive' => false
         ]);
 
         foreach ($attachments as $attachment) {
