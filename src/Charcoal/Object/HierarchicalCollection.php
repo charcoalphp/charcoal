@@ -71,13 +71,13 @@ class HierarchicalCollection extends CharcoalCollection
 
         foreach ($this->objects as $object) {
             // Repair bad hierarchy.
-            if ($object->hasMaster() && $object->getMaster()->id() === $object->id()) {
+            if ($object->hasMaster() && $object->getMaster() === $object->id()) {
                 $object->setMaster(0);
                 $object->update([ 'master' ]);
             }
 
             if ($object->hasMaster()) {
-                $childObjects[$object->getMaster()->id()][] = $object;
+                $childObjects[$object->getMaster()][] = $object;
             } else {
                 $rootObjects[] = $object;
             }
@@ -85,7 +85,7 @@ class HierarchicalCollection extends CharcoalCollection
 
         if (empty($rootObjects) && !empty($childObjects)) {
             foreach ($childObjects as $parentId => $children) {
-                $parentObj = $children[0]->getMaster();
+                $parentObj = $children[0]->getMasterObject();
                 $parentObj->auxiliary = true;
 
                 $rootObjects[] = $parentObj;
@@ -190,7 +190,7 @@ class HierarchicalCollection extends CharcoalCollection
             foreach ($childObjects[$parentObj->id()] as $object) {
                 if ($count === 0 && $object->hasMaster()) {
                     $myParents = [];
-                    $myParent  = $object->getMaster();
+                    $myParent  = $object->getMasterObject();
                     while ($myParent) {
                         $myParents[] = $myParent;
 
@@ -198,7 +198,7 @@ class HierarchicalCollection extends CharcoalCollection
                             break;
                         }
 
-                        $myParent = $myParent->getMaster();
+                        $myParent = $myParent->getMasterObject();
                     }
 
                     $numParents = count($myParents);
@@ -236,7 +236,7 @@ class HierarchicalCollection extends CharcoalCollection
                 // If the page starts in a subtree, print the parents.
                 if ($count === $start && $object->hasMaster()) {
                     $myParents = [];
-                    $myParent  = $object->getMaster();
+                    $myParent  = $object->getMasterObject();
                     while ($myParent) {
                         $myParents[] = $myParent;
 
@@ -244,7 +244,7 @@ class HierarchicalCollection extends CharcoalCollection
                             break;
                         }
 
-                        $myParent = $myParent->getMaster();
+                        $myParent = $myParent->getMasterObject();
                     }
 
                     $numParents = count($myParents);

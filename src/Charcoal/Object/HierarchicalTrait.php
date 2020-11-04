@@ -16,7 +16,7 @@ trait HierarchicalTrait
     /**
      * The object's parent, if any, in the hierarchy.
      *
-     * @var HierarchicalInterface|null
+     * @var string|null
      */
     protected $master;
 
@@ -42,6 +42,13 @@ trait HierarchicalTrait
     private $siblings;
 
     /**
+     * The object's parent object, if any, in the hierarchy.
+     *
+     * @var HierarchicalInterface|null
+     */
+    private $masterObject;
+
+    /**
      * A store of cached objects.
      *
      * @var ModelInterface[] $objectCache
@@ -65,26 +72,12 @@ trait HierarchicalTrait
     /**
      * Set this object's immediate parent.
      *
-     * @param  mixed $master The object's parent (or master).
-     * @throws UnexpectedValueException The current object cannot be its own parent.
+     * @param mixed $master The object's parent (or master).
      * @return HierarchicalInterface Chainable
      */
     public function setMaster($master)
     {
-        $master = $this->objFromIdent($master);
-
-        if ($master instanceof ModelInterface) {
-            if ($master->id() === $this->id()) {
-                throw new UnexpectedValueException(sprintf(
-                    'Can not be ones own parent: %s',
-                    $master->id()
-                ));
-            }
-        }
-
         $this->master = $master;
-
-        $this->resetHierarchy();
 
         return $this;
     }
@@ -92,11 +85,38 @@ trait HierarchicalTrait
     /**
      * Retrieve this object's immediate parent.
      *
-     * @return HierarchicalInterface|null
+     * @return string|null
      */
     public function getMaster()
     {
         return $this->master;
+    }
+
+    /**
+     * Retrieve this object's immediate parent as object.
+     * @return HierarchicalInterface|null
+     * @throws UnexpectedValueException The current object cannot be its own parent.
+     */
+    public function getMasterObject()
+    {
+        if (!isset($this->masterObject)) {
+            $master = $this->objFromIdent($this->getMaster());
+
+            if ($master instanceof ModelInterface) {
+                if ($master->id() === $this->id()) {
+                    throw new UnexpectedValueException(sprintf(
+                        'Can not be ones own parent: %s',
+                        $master->id()
+                    ));
+                }
+            }
+
+            $this->resetHierarchy();
+
+            $this->masterObject = $master;
+        }
+
+        return $this->masterObject;
     }
 
     /**
@@ -145,7 +165,9 @@ trait HierarchicalTrait
     public function hierarchyLevel()
     {
         $hierarchy = $this->hierarchy();
-        $level = (count($hierarchy) + 1);
+        $level     = (count($hierarchy) + 1);
+
+        error_log(var_export($level, true));
 
         return $level;
     }
@@ -184,10 +206,10 @@ trait HierarchicalTrait
     {
         if (!isset($this->hierarchy)) {
             $hierarchy = [];
-            $master = $this->getMaster();
+            $master    = $this->getMasterObject();
             while ($master) {
                 $hierarchy[] = $master;
-                $master = $master->getMaster();
+                $master      = $master->getMasterObject();
             }
 
             $this->hierarchy = $hierarchy;
@@ -204,6 +226,7 @@ trait HierarchicalTrait
     public function invertedHierarchy()
     {
         $hierarchy = $this->hierarchy();
+
         return array_reverse($hierarchy);
     }
 
@@ -216,7 +239,8 @@ trait HierarchicalTrait
     public function isMasterOf($child)
     {
         $child = $this->objFromIdent($child);
-        return ($child->getMaster() == $this);
+
+        return ($child->getMaster() === $this->id());
     }
 
     /**
@@ -240,6 +264,7 @@ trait HierarchicalTrait
     public function hasChildren()
     {
         $numChildren = $this->numChildren();
+
         return ($numChildren > 0);
     }
 
@@ -250,6 +275,7 @@ trait HierarchicalTrait
     public function numChildren()
     {
         $children = $this->children();
+
         return count($children);
     }
 
@@ -274,13 +300,14 @@ trait HierarchicalTrait
         foreach ($children as $c) {
             $this->addChild($c);
         }
+
         return $this;
     }
 
     /**
      * @param mixed $child The child object (or ident) to add.
-     * @throws UnexpectedValueException The current object cannot be its own child.
      * @return HierarchicalInterface Chainable
+     * @throws UnexpectedValueException The current object cannot be its own child.
      */
     public function addChild($child)
     {
@@ -311,6 +338,7 @@ trait HierarchicalTrait
         }
 
         $this->children = $this->loadChildren();
+
         return $this->children;
     }
 
@@ -329,7 +357,8 @@ trait HierarchicalTrait
         if ($master === null) {
             return false;
         }
-        return ($master == $this->getMaster());
+
+        return ($master->id() == $this->getMaster());
     }
 
     /**
@@ -342,7 +371,7 @@ trait HierarchicalTrait
             return true;
         }
 
-        if ($this->hasParents() && $this->getMaster()->recursiveIsChildOf($master)) {
+        if ($this->hasParents() && $this->getMasterObject()->recursiveIsChildOf($master)) {
             return true;
         }
 
@@ -355,6 +384,7 @@ trait HierarchicalTrait
     public function hasSiblings()
     {
         $numSiblings = $this->numSiblings();
+
         return ($numSiblings > 1);
     }
 
@@ -364,6 +394,7 @@ trait HierarchicalTrait
     public function numSiblings()
     {
         $siblings = $this->siblings();
+
         return count($siblings);
     }
 
@@ -376,7 +407,7 @@ trait HierarchicalTrait
         if ($this->siblings !== null) {
             return $this->siblings;
         }
-        $master = $this->getMaster();
+        $master = $this->getMasterObject();
         if ($master === null) {
             // Todo: return all top-level objects.
             $siblings = [];
@@ -385,6 +416,7 @@ trait HierarchicalTrait
             $siblings = $master->children();
         }
         $this->siblings = $siblings;
+
         return $this->siblings;
     }
 
@@ -395,13 +427,14 @@ trait HierarchicalTrait
     public function isSiblingOf($sibling)
     {
         $sibling = $this->objFromIdent($sibling);
-        return ($sibling->getMaster() == $this->getMaster());
+
+        return ($sibling->getMaster() === $this->getMaster());
     }
 
     /**
      * @param mixed $ident The ident.
-     * @throws InvalidArgumentException If the identifier is not a scalar value.
      * @return HierarchicalInterface|null
+     * @throws InvalidArgumentException If the identifier is not a scalar value.
      */
     private function objFromIdent($ident)
     {
