@@ -16,7 +16,7 @@ trait HierarchicalTrait
     /**
      * The object's parent, if any, in the hierarchy.
      *
-     * @var string|null
+     * @var string|integer|null
      */
     protected $master;
 
@@ -99,7 +99,7 @@ trait HierarchicalTrait
      */
     public function getMasterObject()
     {
-        if (!isset($this->masterObject)) {
+        if (!$this->masterObject && $this->hasMaster()) {
             $master = $this->objFromIdent($this->getMaster());
 
             if ($master instanceof ModelInterface) {

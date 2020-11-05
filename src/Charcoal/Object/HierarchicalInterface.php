@@ -44,7 +44,7 @@ interface HierarchicalInterface
     /**
      * Retrieve this object's immediate parent.
      *
-     * @return string|null
+     * @return string|integer|null
      */
     public function getMaster();
 
