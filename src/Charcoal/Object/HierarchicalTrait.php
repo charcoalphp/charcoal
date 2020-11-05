@@ -79,6 +79,8 @@ trait HierarchicalTrait
     {
         $this->master = $master;
 
+        $this->resetHierarchy();
+
         return $this;
     }
 
@@ -110,8 +112,6 @@ trait HierarchicalTrait
                     ));
                 }
             }
-
-            $this->resetHierarchy();
 
             $this->masterObject = $master;
         }
@@ -166,8 +166,6 @@ trait HierarchicalTrait
     {
         $hierarchy = $this->hierarchy();
         $level     = (count($hierarchy) + 1);
-
-        error_log(var_export($level, true));
 
         return $level;
     }
@@ -358,7 +356,7 @@ trait HierarchicalTrait
             return false;
         }
 
-        return ($master->id() == $this->getMaster());
+        return ($master->id() === $this->getMaster());
     }
 
     /**
