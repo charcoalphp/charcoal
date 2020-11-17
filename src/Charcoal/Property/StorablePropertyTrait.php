@@ -162,12 +162,19 @@ trait StorablePropertyTrait
             return null;
         }
 
-        if ($this['allowNull'] && $val === '') {
-            return null;
+        if ($val instanceof Translation) {
+            // Do not serialize Translation objects
+            $val = (string)$val;
         }
 
-        if (!$this['l10n'] && $val instanceof Translation) {
-            $val = (string)$val;
+        if ($this['l10n']) {
+            if ($val === '') {
+                return $val;
+            }
+        } else {
+            if ($this['allowNull'] && $val === '') {
+                return null;
+            }
         }
 
         if ($this['multiple']) {
@@ -203,6 +210,8 @@ trait StorablePropertyTrait
             if ($this->isValidFieldKey($fieldKey)) {
                 if (isset($flatData[$fieldName])) {
                     $value[$fieldKey] = $flatData[$fieldName];
+                } elseif ($this['l10n']) {
+                    $value[$fieldKey] = '';
                 }
             } elseif (isset($flatData[$fieldName])) {
                 $value = $flatData[$fieldName];
