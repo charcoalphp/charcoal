@@ -10,7 +10,7 @@ use Charcoal\Property\FileProperty;
 /**
  * Audio Property.
  *
- * The audio property is a specialized file property.
+ * The audio property is a specialized file property that handles audio file.
  */
 class AudioProperty extends FileProperty
 {
