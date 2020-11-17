@@ -156,7 +156,7 @@ class StructureProperty extends AbstractProperty
     public function storageVal($val)
     {
         if ($val === null || $val === '') {
-            // Do not encode NULL values
+            // Do not serialize NULL values
             return null;
         }
 

@@ -158,7 +158,7 @@ trait StorablePropertyTrait
     public function storageVal($val)
     {
         if ($val === null) {
-            // Do not json_encode NULL values
+            // Do not serialize NULL values
             return null;
         }
 
