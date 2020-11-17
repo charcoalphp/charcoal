@@ -1,0 +1,6 @@
+{
+    "admin": {
+        "input_type": "charcoal/admin/property/input/video",
+        "display_type": "charcoal/admin/property/display/video"
+    }
+}
