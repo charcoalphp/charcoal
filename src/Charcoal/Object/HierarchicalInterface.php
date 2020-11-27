@@ -44,9 +44,16 @@ interface HierarchicalInterface
     /**
      * Retrieve this object's immediate parent.
      *
-     * @return HierarchicalInterface|null
+     * @return string|integer|null
      */
     public function getMaster();
+
+    /**
+     * Retrieve this object's immediate parent as object.
+     *
+     * @return HierarchicalInterface|null
+     */
+    public function getMasterObject();
 
     /**
      * Retrieve the top-level ancestor of this object.
