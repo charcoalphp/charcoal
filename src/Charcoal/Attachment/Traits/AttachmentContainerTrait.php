@@ -172,12 +172,6 @@ trait AttachmentContainerTrait
                     $faIcon = '';
                     if (isset($attMeta['fa_icon']) && !empty($attMeta['fa_icon'])) {
                         $faIcon = 'fa fa-'.$attMeta['fa_icon'];
-                    } elseif ($this->attachmentWidget()) {
-                        $attParts = explode('/', $attType);
-                        $defaultIcons = $this->attachmentWidget()->defaultIcons();
-                        if (isset($defaultIcons[end($attParts)])) {
-                            $faIcon = 'fa fa-'.$defaultIcons[end($attParts)];
-                        }
                     }
 
                     $attMeta['faIcon'] = $faIcon;
