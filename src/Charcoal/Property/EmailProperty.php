@@ -50,9 +50,14 @@ class EmailProperty extends StringProperty
         if ($this['allowNull'] && !$this['required']) {
             return true;
         }
+
         $val = $this->val();
-        $emailValid = filter_var($val, FILTER_VALIDATE_EMAIL);
-        return !!$emailValid;
+        if (!filter_var($val, FILTER_VALIDATE_EMAIL)) {
+            $this->validator()->error('Value is not an email address.', 'email');
+            return false;
+        }
+
+        return true;
     }
 
     /**
