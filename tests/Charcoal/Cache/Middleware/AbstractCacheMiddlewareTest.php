@@ -41,6 +41,9 @@ abstract class AbstractCacheMiddlewareTest extends AbstractTestCase
     {
         if (!isset($args['cache'])) {
             $args['cache'] = static::getCachePool();
+            $args['processCacheKeyCallback'] = function ($key) {
+                return $key;
+            };
         }
 
         return new CacheMiddleware($args);
