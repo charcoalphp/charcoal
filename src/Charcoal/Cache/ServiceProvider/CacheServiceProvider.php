@@ -267,17 +267,6 @@ class CacheServiceProvider implements ServiceProviderInterface
 
             return new CachePoolFacade($args);
         };
-
-        /**
-         * Provides a way to add custom processing over the cache key for the cache middleware.
-         *
-         * @return Closure
-         */
-        $container['cache/process-cache-key-callback'] = function () {
-            return function ($key) {
-                return $key;
-            };
-        };
     }
 
     /**
