@@ -276,8 +276,11 @@ class CacheMiddleware
         $cacheKey = 'request/' . $request->getMethod() . '/' . md5((string)$uri);
 
         $callback = $this->processCacheKeyCallback;
+        if (is_callable($callback)) {
+            return $callback($cacheKey);
+        }
 
-        return $callback($cacheKey);
+        return $cacheKey;
     }
 
     /**
