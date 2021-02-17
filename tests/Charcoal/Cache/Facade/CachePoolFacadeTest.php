@@ -220,10 +220,10 @@ class CachePoolFacadeTest extends AbstractTestCase
         $expiration = $date->add($interval);
         $data['integer'] = [ $expiration, $integer, $default ];
 
-        $float      = '59.5';
-        $interval   = DateInterval::createFromDateString('59 seconds');
-        $expiration = $date->add($interval);
-        $data['float'] = [ $expiration, $float, $default ];
+        // $float      = '59.5';
+        // $interval   = DateInterval::createFromDateString('59 seconds');
+        // $expiration = $date->add($interval);
+        // $data['float'] = [ $expiration, $float, $default ];
 
         $data['boolean'] = [ $default, false, $default ];
         $data['null']    = [ $default, null, $default ];
