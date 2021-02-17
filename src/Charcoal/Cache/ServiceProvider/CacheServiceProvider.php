@@ -287,25 +287,33 @@ class CacheServiceProvider implements ServiceProviderInterface
     private function registerMiddleware(Container $container)
     {
         /**
+         * The cache middleware configset.
+         *
+         * @param  Container $container The service container.
+         * @return array
+         */
+        $container['cache/middleware/config'] = function (Container $container) {
+            $appConfig = isset($container['config']) ? $container['config'] : [];
+
+            if (isset($appConfig['middlewares']['charcoal/cache/middleware/cache'])) {
+                $wareConfig = $appConfig['middlewares']['charcoal/cache/middleware/cache'];
+            } else {
+                $wareConfig = [];
+            }
+
+            $wareConfig['cache'] = $container['cache'];
+
+            return $wareConfig;
+        };
+
+        /**
          * The middleware for caching HTTP responses.
          *
          * @param  Container $container A container instance.
          * @return CacheMiddleware
          */
         $container['middlewares/charcoal/cache/middleware/cache'] = function (Container $container) {
-            $appConfig = isset($container['config']) ? $container['config'] : [];
-            if (isset($appConfig['middlewares']['charcoal/cache/middleware/cache'])) {
-                $wareConfig = array_replace($appConfig['middlewares']['charcoal/cache/middleware/cache'], [
-                    'cache' => $container['cache'],
-                    'processCacheKeyCallback' => $container['cache/process-cache-key-callback'],
-                ]);
-            } else {
-                $wareConfig = [
-                    'cache' => $container['cache'],
-                    'processCacheKeyCallback' => $container['cache/process-cache-key-callback'],
-                ];
-            }
-            return new CacheMiddleware($wareConfig);
+            return new CacheMiddleware($container['cache/middleware/config']);
         };
     }
 }

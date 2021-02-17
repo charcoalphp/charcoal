@@ -138,6 +138,8 @@ class CacheMiddleware
         $this->excludedQuery = $data['excluded_query'];
         $this->ignoredQuery  = $data['ignored_query'];
 
+        $this->skipCache = $data['skip_cache'];
+
         $this->processCacheKeyCallback = $data['processCacheKeyCallback'];
     }
 
@@ -476,5 +478,16 @@ class CacheMiddleware
                 ->withHeader('Cache-Control', 'no-cache, no-store, must-revalidate')
                 ->withHeader('Pragma', 'no-cache')
                 ->withHeader('Expires', '0');
+    }
+
+    /**
+     * @param Closure|null $processCacheKeyCallback ProcessCacheKeyCallback for CacheMiddleware.
+     * @return self
+     */
+    public function setProcessCacheKeyCallback($processCacheKeyCallback)
+    {
+        $this->processCacheKeyCallback = $processCacheKeyCallback;
+
+        return $this;
     }
 }
