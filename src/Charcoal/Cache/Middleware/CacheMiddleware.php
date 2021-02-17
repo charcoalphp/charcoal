@@ -2,6 +2,8 @@
 
 namespace Charcoal\Cache\Middleware;
 
+use Closure;
+
 // From PSR-6
 use Psr\Cache\CacheItemPoolInterface;
 
@@ -112,6 +114,11 @@ class CacheMiddleware
     private $skipCache;
 
     /**
+     * @var Closure|null
+     */
+    private $processCacheKeyCallback;
+
+    /**
      * @param array $data Constructor dependencies and options.
      */
     public function __construct(array $data)
@@ -131,7 +138,7 @@ class CacheMiddleware
         $this->excludedQuery = $data['excluded_query'];
         $this->ignoredQuery  = $data['ignored_query'];
 
-        $this->skipCache = (array)$data['skip_cache'];
+        $this->processCacheKeyCallback = $data['processCacheKeyCallback'];
     }
 
     /**
@@ -155,8 +162,10 @@ class CacheMiddleware
             'ignored_query'  => null,
 
             'skip_cache' => [
-                'session_vars' => []
-            ]
+                'session_vars' => [],
+            ],
+
+            'processCacheKeyCallback' => null,
         ];
     }
 
@@ -265,7 +274,10 @@ class CacheMiddleware
         }
 
         $cacheKey = 'request/' . $request->getMethod() . '/' . md5((string)$uri);
-        return $cacheKey;
+
+        $callback = $this->processCacheKeyCallback;
+
+        return $callback($cacheKey);
     }
 
     /**

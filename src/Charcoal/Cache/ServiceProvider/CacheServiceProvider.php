@@ -48,7 +48,7 @@ class CacheServiceProvider implements ServiceProviderInterface
      * @param  Container $container A container instance.
      * @return void
      */
-    public function register(Container$container)
+    public function register(Container $container)
     {
         $this->registerDrivers($container);
         $this->registerService($container);
@@ -267,6 +267,17 @@ class CacheServiceProvider implements ServiceProviderInterface
 
             return new CachePoolFacade($args);
         };
+
+        /**
+         * Provides a way to add custom processing over the cache key for the cache middleware.
+         *
+         * @return Closure
+         */
+        $container['cache/process-cache-key-callback'] = function () {
+            return function ($key) {
+                return $key;
+            };
+        };
     }
 
     /**
@@ -286,10 +297,12 @@ class CacheServiceProvider implements ServiceProviderInterface
             if (isset($appConfig['middlewares']['charcoal/cache/middleware/cache'])) {
                 $wareConfig = array_replace($appConfig['middlewares']['charcoal/cache/middleware/cache'], [
                     'cache' => $container['cache'],
+                    'processCacheKeyCallback' => $container['cache/process-cache-key-callback'],
                 ]);
             } else {
                 $wareConfig = [
                     'cache' => $container['cache'],
+                    'processCacheKeyCallback' => $container['cache/process-cache-key-callback'],
                 ];
             }
             return new CacheMiddleware($wareConfig);
