@@ -27,7 +27,7 @@
         },
         "display_name": {
             "type": "string",
-            "required": true,
+            "required": false,
             "label": {
                 "en": "Display Name",
                 "fr": "Nom d'affichage"
