@@ -20,9 +20,8 @@ class ImagickTintEffect extends AbstractTintEffect
         if ($data !== null) {
             $this->setData($data);
         }
-
         $color = new ImagickPixel($this->color());
-        $opacity = new ImagickPixel(sprintf('rgba(128,128,128,%f)', $this->opacity()));
+        $opacity = new ImagickPixel(sprintf('rgba(255,255,255,%f)', $this->opacity()));
 
         if ($this->midtone() === true) {
             $this->image()->imagick()->tintImage($color, $opacity);
