@@ -170,7 +170,7 @@ class EmailLog extends AbstractModel
      */
     public function setCampaign($campaign)
     {
-        if ($campaign !== NULL && !is_string($campaign)) {
+        if ($campaign !== null && !is_string($campaign)) {
             throw new InvalidArgumentException(
                 'Campaign must be a string'
             );
