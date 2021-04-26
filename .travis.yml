@@ -17,6 +17,9 @@ matrix:
         - php: nightly
 
 before_script:
+    ## Fix xdebug 3
+    - echo 'xdebug.mode=coverage' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+
     ## Init Composer
     - composer selfupdate --quiet
     - composer install -n
