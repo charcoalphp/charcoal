@@ -7,6 +7,7 @@ namespace Charcoal\Email;
 use Charcoal\Email\Exception\EmailNotSentException;
 use Charcoal\Email\Services\Tracker;
 use Exception;
+use PDOException;
 use InvalidArgumentException;
 
 // From 'psr/log' (PSR-3)
@@ -723,7 +724,13 @@ class Email extends AbstractEntity implements
         }
 
         if ($this->logEnabled() === true) {
-            $this->logSend($ret, $logId, $mail);
+            try {
+                $this->logSend($ret, $logId, $mail);
+            } catch (PDOException $e) {
+                $this->logger->error(
+                    sprintf('Error logging email: %s', $e->getMessage())
+                );
+            }
         }
 
         return $ret;
