@@ -32,6 +32,11 @@ abstract class AbstractModel
     protected $modelFactory;
 
     /**
+     * @return string
+     */
+    abstract public static function objType();
+
+    /**
      * @param array|null $data The model dependencies.
      */
     public function __construct(array $data = null)
@@ -95,11 +100,6 @@ abstract class AbstractModel
     {
         return $this->getKey();
     }
-
-    /**
-     * @return string
-     */
-    abstract public function objType();
 
     /**
      * @param  FactoryInterface $factory The model factory.

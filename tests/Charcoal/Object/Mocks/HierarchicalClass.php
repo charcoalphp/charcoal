@@ -18,7 +18,7 @@ class HierarchicalClass extends AbstractModel implements
     /**
      * @return string
      */
-    public function objType()
+    public static function objType()
     {
         return 'charcoal/tests/object/hierarchical-class';
     }

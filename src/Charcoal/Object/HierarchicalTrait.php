@@ -531,7 +531,11 @@ trait HierarchicalTrait
     abstract public function id();
 
     /**
+     * Return the model type identifier.
+     *
+     * @see \Charcoal\Model\AbstractModel::objType()
+     *
      * @return string
      */
-    abstract public function objType();
+    abstract public static function objType();
 }
