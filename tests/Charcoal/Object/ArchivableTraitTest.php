@@ -24,7 +24,7 @@ class ArchivableTraitTest extends AbstractTestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->obj = $this->getMockForTrait(ArchivableTrait::class);
     }

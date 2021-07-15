@@ -49,7 +49,7 @@ class RoutableTraitTest extends AbstractTestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         $container = $this->container();
 

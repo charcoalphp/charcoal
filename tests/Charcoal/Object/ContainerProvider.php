@@ -7,12 +7,8 @@ use PDO;
 // From PSR-3
 use Psr\Log\NullLogger;
 
-// From cache/void-adapter (PSR-6)
-use Cache\Adapter\Void\VoidCachePool;
-
 // From tedivm/stash (PSR-6)
 use Stash\Pool;
-use Stash\Driver\Ephemeral;
 
 // From Pimple
 use Pimple\Container;
