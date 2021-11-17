@@ -440,9 +440,14 @@ class DatabaseSource extends AbstractSource implements
             $item  = new $class;
         }
 
+        // Strip invalid characters
         $key = preg_replace('/[^\w-]+/', '', $key);
-        // Missing parameters
-        if (!$key || !$ident) {
+        if (!$key) {
+            return $item;
+        }
+
+        // Allow truthy values and zero
+        if (!$ident && !is_numeric($ident)) {
             return $item;
         }
 
