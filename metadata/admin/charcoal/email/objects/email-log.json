@@ -1,13 +1,39 @@
 {
     "labels": {
-        "name": "Email Log",
-        "singular_name": "Email Log",
-        "edit_item": "Edit Email Log",
-        "create_item": "Create Email Log",
-        "new_item": "New Email Log",
-        "all_items": "All Email Logs",
-        "menu_items": "Email Logs"
+        "name": {
+            "en": "Email Logs",
+            "fr": "Journaux des courriels"
+        },
+        "singular_name": {
+            "en": "Email Log",
+            "fr": "Journal d'un courriel"
+        },
+        "view_item": {
+            "en": "View Log",
+            "fr": "Voir l'entrée"
+        },
+        "edit_item": {
+            "en": "Edit Log",
+            "fr": "Modifier l'entrée"
+        },
+        "create_item": {
+            "en": "Create Log",
+            "fr": "Créer l'entrée"
+        },
+        "new_item": {
+            "en": "New Log",
+            "fr": "Nouvelle entrée"
+        },
+        "all_items": {
+            "en": "All Logs",
+            "fr": "Toutes les entrées"
+        },
+        "menu_items": {
+            "en": "Email Logs",
+            "fr": "Journaux des courriels"
+        }
     },
+
     "admin": {
         "export": {
             "default": {
@@ -36,10 +62,6 @@
 
         "lists": {
             "default": {
-                "title": {
-                    "fr": "Logs d'envoi de courriel",
-                    "en": "Sent Email Logs"
-                },
                 "properties": [
                     "send_ts",
                     "from",
@@ -63,6 +85,14 @@
                             "en": "Export"
                         }
                     }
+                },
+                "object_actions": {
+                    "edit": {
+                        "label": {
+                            "fr": "Voir",
+                            "en": "View"
+                        }
+                    }
                 }
             }
         },
@@ -71,40 +101,62 @@
         "forms": {
             "default": {
                 "groups": {
-                    "charcoal/email/email-log/infos": {
-                        "title": {
-                            "fr": "Log d'envoi de courriel",
-                            "en": "Sent Email Log"
-                        },
-                        "properties": [
-                            "send_ts",
-                            "campaign",
-                            "from",
-                            "to",
-                            "subject"
-                        ],
-                        "layout": {
-                            "structure": [
-                                { "columns": [ 1, 1 ] },
-                                { "columns": [ 1, 1 ] },
-                                { "columns": [ 1 ] },
-                                { "columns": [ 1, 1 ] }
-                            ]
-                        }
+                    "charcoal/email/email-log/info": {
                     },
-                    "status": {
-                        "title": "Status",
-                        "properties": [
-                            "message_id"
-                        ]
+                    "charcoal/email/email-log/sent": {
                     }
                 }
             }
         },
         "default_form": "default",
 
+        "form_groups": {
+            "charcoal/email/email-log/info": {
+                "title": {
+                    "en": "Information",
+                    "fr": "Informations"
+                },
+                "properties": [
+                    "campaign",
+                    "from",
+                    "to",
+                    "subject"
+                ],
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] },
+                        { "columns": [ 1, 1 ] },
+                        { "columns": [ 1 ] }
+                    ]
+                }
+            },
+            "charcoal/email/email-log/sent": {
+                "title": {
+                    "en": "Sent",
+                    "fr": "Envoi"
+                },
+                "properties": [
+                    "message_id",
+                    "send_ts",
+                    "error_code"
+                ],
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] },
+                        { "columns": [ 1 ] },
+                        { "columns": [ 1 ] }
+                    ]
+                }
+            }
+        },
+
         "dashboards": {
             "admin.edit": {
+                "show_title": false,
+                "title": {
+                    "en": "Sent Email Log",
+                    "fr": "Journal d'envoi d'un courriel"
+                },
                 "widgets": {
                     "form": {
                         "type": "charcoal/admin/widget/object-form",
@@ -119,6 +171,11 @@
                 }
             },
             "admin.table": {
+                "show_title": false,
+                "title": {
+                    "en": "Sent Email Logs",
+                    "fr": "Journaux d'envoi de courriels"
+                },
                 "widgets": {
                     "form": {
                         "type": "charcoal/admin/widget/table",
