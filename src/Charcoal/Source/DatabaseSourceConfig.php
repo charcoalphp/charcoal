@@ -8,10 +8,15 @@ use InvalidArgumentException;
 use Charcoal\Source\SourceConfig;
 
 /**
- *
+ * Database Config
  */
 class DatabaseSourceConfig extends SourceConfig
 {
+    /**
+     * @var string $type
+     */
+    private $type;
+
     /**
      * @var string $hostname
      */
@@ -32,7 +37,6 @@ class DatabaseSourceConfig extends SourceConfig
      */
     private $database;
 
-
     /**
      * @var boolean $disableUtf8
      */
@@ -49,15 +53,42 @@ class DatabaseSourceConfig extends SourceConfig
             'username'     => '',
             'password'     => '',
             'database'     => '',
-            'table'        => '',
-            'disable_ytf8' => false
+            'disable_utf8' => false,
         ];
     }
 
     /**
-     * Set hostname
+     * Set the database type.
      *
-     * @param string $hostname The database hostname.
+     * @param  string $type The database type.
+     * @throws InvalidArgumentException If parameter is not a string.
+     * @return self
+     */
+    public function setType($type)
+    {
+        if (!is_string($type)) {
+            throw new InvalidArgumentException(
+                'Source type must be a string.'
+            );
+        }
+        $this->type = $type;
+        return $this;
+    }
+
+    /**
+     * Get the database type.
+     *
+     * @return string
+     */
+    public function type()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Set the database hostname.
+     *
+     * @param  string $hostname The database server hostname.
      * @throws InvalidArgumentException If hostname is not a string.
      * @return self
      */
@@ -73,7 +104,7 @@ class DatabaseSourceConfig extends SourceConfig
     }
 
     /**
-     * Get hostname
+     * Get the database hostname.
      *
      * @return string
      */
@@ -83,9 +114,9 @@ class DatabaseSourceConfig extends SourceConfig
     }
 
     /**
-     * Set username
+     * Set the database authentication identifier.
      *
-     * @param string $username The database username.
+     * @param  string $username The username.
      * @throws InvalidArgumentException If username is not a string.
      * @return self
      */
@@ -101,7 +132,7 @@ class DatabaseSourceConfig extends SourceConfig
     }
 
     /**
-     * Get username
+     * Get the database authentication identifier.
      *
      * @return string
      */
@@ -111,9 +142,9 @@ class DatabaseSourceConfig extends SourceConfig
     }
 
     /**
-     * Set password
+     * Set the database authentication password.
      *
-     * @param string $password The database password.
+     * @param  string $password The password.
      * @throws InvalidArgumentException If password is not a string.
      * @return self
      */
@@ -129,7 +160,7 @@ class DatabaseSourceConfig extends SourceConfig
     }
 
     /**
-     * Get password
+     * Get the database authentication password.
      *
      * @return string
      */
@@ -139,7 +170,7 @@ class DatabaseSourceConfig extends SourceConfig
     }
 
     /**
-     * Set database
+     * Set the database name.
      *
      * @param string $database The database name.
      * @throws InvalidArgumentException If database is not a string.
@@ -157,7 +188,7 @@ class DatabaseSourceConfig extends SourceConfig
     }
 
     /**
-     * Get database
+     * Get the database name.
      *
      * @return string
      */
@@ -167,7 +198,9 @@ class DatabaseSourceConfig extends SourceConfig
     }
 
     /**
-     * @param boolean $disableUtf8 The "disable UTF8" flag.
+     * Set whether to disable UTF-8 compatibility or not.
+     *
+     * @param  boolean $disableUtf8 The disable flag.
      * @return self
      */
     public function setDisableUtf8($disableUtf8)
@@ -177,6 +210,8 @@ class DatabaseSourceConfig extends SourceConfig
     }
 
     /**
+     * Get whether to disable UTF-8 compatibility or not.
+     *
      * @return boolean
      */
     public function disableUtf8()
