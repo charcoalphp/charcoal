@@ -555,6 +555,11 @@ trait FormTrait
      */
     public function setGroupDisplayMode($mode)
     {
+        if ($mode === null || $mode === '') {
+            $this->groupDisplayMode = null;
+            return $this;
+        }
+
         if (!is_string($mode)) {
             throw new InvalidArgumentException(
                 'Display mode must be a string'
@@ -566,14 +571,13 @@ trait FormTrait
         }
 
         $this->groupDisplayMode = $mode;
-
         return $this;
     }
 
     /**
      * Retrieve the widget's content group display mode.
      *
-     * @return string Group display mode.
+     * @return string|null
      */
     public function groupDisplayMode()
     {
