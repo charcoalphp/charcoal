@@ -650,15 +650,23 @@ class DatabaseSource extends AbstractSource implements
                 $binds[$key] = $field->val();
                 $types[$key] = $field->sqlPdoType();
             } else {
-                $this->logger->debug(
-                    sprintf('Field "%s" not in table structure', $key)
+                $this->logger->warning(
+                    sprintf('Field "%s" not in table structure', $key),
+                    [
+                        'model' => get_class($model),
+                        'table' => $table,
+                        'field' => $key,
+                    ]
                 );
             }
         }
+
         if (empty($updates)) {
             $this->logger->warning(
-                'Could not update items. No valid fields were set / available in database table.',
+                'Could not update items. No valid fields were set or available in database table.',
                 [
+                    'model'      => get_class($model),
+                    'table'      => $table,
                     'properties' => $properties,
                     'structure'  => $struct
                 ]
