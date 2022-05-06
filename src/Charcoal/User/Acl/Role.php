@@ -165,7 +165,7 @@ class Role extends AbstractModel
     }
 
     /**
-     * @param boolean $isSuper The superuser flag.
+     * @param  boolean $isSuper The superuser flag.
      * @return self
      */
     public function setSuperuser($isSuper)
@@ -183,7 +183,7 @@ class Role extends AbstractModel
     }
 
     /**
-     * @param integer|string|null $position The role's ordering position.
+     * @param  integer|string|null $position The role's ordering position.
      * @return self
      */
     public function setPosition($position)
@@ -201,7 +201,7 @@ class Role extends AbstractModel
     }
 
     /**
-     * @param Container $container Pimple DI container.
+     * @param  Container $container Pimple DI container.
      * @return void
      */
     protected function setDependencies(Container $container)
