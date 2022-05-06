@@ -22,8 +22,6 @@ class Role extends AbstractModel
 {
     use TranslatorAwareTrait;
 
-    const SEPARATOR = ',';
-
     /**
      * @var string|null $ident
      */
@@ -131,27 +129,12 @@ class Role extends AbstractModel
     }
 
     /**
-     * @param string[]|string|null $allowed The allowed permissions for this role.
-     * @throws InvalidArgumentException If the passed arguments is not an array, null, or a comma-separated string.
+     * @param  mixed $allowed The allowed permissions for this role.
      * @return self
      */
     public function setAllowed($allowed)
     {
-        if ($allowed === null) {
-            $this->allowed = null;
-            return $this;
-        }
-
-        if (is_string($allowed)) {
-            $allowed = explode(self::SEPARATOR, $allowed);
-            $allowed = array_map('trim', $allowed);
-        }
-        if (!is_array($allowed)) {
-            throw new InvalidArgumentException(
-                'Invalid allowed value. Must be an array, null, or a comma-separated string.'
-            );
-        }
-        $this->allowed = $allowed;
+        $this->allowed = $this->p('allowed')->parseVal($allowed);
         return $this;
     }
 
@@ -164,27 +147,12 @@ class Role extends AbstractModel
     }
 
     /**
-     * @param string[]|string|null $denied The denied permissions for this role.
-     * @throws InvalidArgumentException If the passed arguments is not an array, null, or a comma-separated string.
+     * @param  mixed $denied The denied permissions for this role.
      * @return self
      */
     public function setDenied($denied)
     {
-        if ($denied === null) {
-            $this->denied = null;
-            return $this;
-        }
-
-        if (is_string($denied)) {
-            $denied = explode(self::SEPARATOR, $denied);
-            $denied = array_map('trim', $denied);
-        }
-        if (!is_array($denied)) {
-            throw new InvalidArgumentException(
-                'Invalid denied value. Must be an array, null, or a comma-separated string.'
-            );
-        }
-        $this->denied = $denied;
+        $this->denied = $this->p('denied')->parseVal($denied);
         return $this;
     }
 
