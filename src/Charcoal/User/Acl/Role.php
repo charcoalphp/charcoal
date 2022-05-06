@@ -34,7 +34,7 @@ class Role extends AbstractModel
      *
      * This role will inherit all of its parent's permissions.
      *
-     * @var string $parent
+     * @var string|null $parent
      */
     public $parent;
 
@@ -91,17 +91,21 @@ class Role extends AbstractModel
     }
 
     /**
-     * @param string|Role $parent Role's parent.
+     * @param  string|Role $parent Role's parent.
      * @return self
      */
     public function setParent($parent)
     {
-        $this->parent = (string)$parent;
+        if ($parent instanceof self) {
+            $parent = $parent['ident'];
+        }
+
+        $this->parent = $parent;
         return $this;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getParent()
     {
