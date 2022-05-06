@@ -134,7 +134,12 @@ class Role extends AbstractModel
      */
     public function setAllowed($allowed)
     {
-        $this->allowed = $this->p('allowed')->parseVal($allowed);
+        $allowed = $this->p('allowed')->parseVal($allowed);
+        if (is_array($allowed)) {
+            $allowed = array_filter(array_map('trim', $allowed));
+        }
+
+        $this->allowed = $allowed;
         return $this;
     }
 
@@ -152,7 +157,12 @@ class Role extends AbstractModel
      */
     public function setDenied($denied)
     {
-        $this->denied = $this->p('denied')->parseVal($denied);
+        $denied = $this->p('denied')->parseVal($denied);
+        if (is_array($denied)) {
+            $denied = array_filter(array_map('trim', $denied));
+        }
+
+        $this->denied = $denied;
         return $this;
     }
 
