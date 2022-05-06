@@ -41,7 +41,7 @@ class Role extends AbstractModel
     /**
      * The user-friendly name.
      *
-     * @var \Charcoal\Translator\Translation
+     * @var \Charcoal\Translator\Translation|null
      */
     public $name;
 
@@ -106,6 +106,24 @@ class Role extends AbstractModel
     public function getParent()
     {
         return $this->parent;
+    }
+
+    /**
+     * @param  mixed $name The user-friendly name of this role.
+     * @return self
+     */
+    public function setName($name)
+    {
+        $this->name = $this->p('name')->parseVal($name);
+        return $this;
+    }
+
+    /**
+     * @return \Charcoal\Translator\Translation|null
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**
