@@ -40,7 +40,7 @@ trait ViewableTrait
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->render();
     }
@@ -87,7 +87,7 @@ trait ViewableTrait
      *
      * @return ViewInterface The object's View instance.
      */
-    public function view()
+    public function view(): ViewInterface
     {
         return $this->view;
     }
