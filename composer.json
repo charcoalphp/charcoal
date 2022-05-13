@@ -21,6 +21,11 @@
             "email": "joel@locomotive.ca"
         }
     ],
+    "extra": {
+        "branch-alias": {
+            "dev-main": "1.0.x-dev"
+        }
+    },
     "require": {
         "barryvdh/elfinder-flysystem-driver": "^0.3",
         "erusev/parsedown": "^1.7",
