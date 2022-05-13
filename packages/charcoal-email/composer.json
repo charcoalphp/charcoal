@@ -2,7 +2,7 @@
     "name": "locomotivemtl/charcoal-email",
     "type": "library",
     "description": "Email sending and queueing for Charcoal",
-    "keywords": [ "charcoal", "email", "queue", "phpmailer" ],
+    "keywords": ["charcoal", "email", "queue", "phpmailer"],
     "homepage": "https://charcoal.locomotive.ca",
     "license": "MIT",
     "authors": [
@@ -11,30 +11,28 @@
             "homepage": "https://locomotive.ca"
         }
     ],
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "extra": {
         "branch-alias": {
             "dev-master": "0.7.x-dev"
         }
     },
     "require": {
-        "php": "^7.1 || ^8.0",
+        "php": "^7.4 || ^8.0",
         "psr/log": "^1.0",
         "phpmailer/phpmailer": "~6.0",
-        "locomotivemtl/charcoal-config": "~0.6",
-        "locomotivemtl/charcoal-app": "~0.6",
+        "locomotivemtl/charcoal-config": "^0.10",
+        "locomotivemtl/charcoal-app": "^0.9",
         "locomotivemtl/charcoal-queue": "~0.5",
-        "seld/jsonlint": "^1.7",
+        "seld/jsonlint": "^1.9",
         "ext-pdo": "*"
     },
     "require-dev": {
-        "pimple/pimple": "~3.0",
-        "phpunit/phpunit": "^5.7 || ^6.5",
-        "squizlabs/php_codesniffer": "^3.0",
-        "php-coveralls/php-coveralls": "~1.0",
+        "pimple/pimple": "^3.0",
+        "phpunit/phpunit": "^9.5",
+        "squizlabs/php_codesniffer": "^3.5",
+        "php-coveralls/php-coveralls": "^2.2",
         "mustache/mustache": "^2.11",
-        "phpstan/phpstan": "^0.12.36"
+        "phpstan/phpstan": "^1.6"
     },
     "autoload": {
         "psr-4": {
@@ -63,5 +61,7 @@
         "phpcs": "php vendor/bin/phpcs -ps --colors src/",
         "phpcbf": "php vendor/bin/phpcbf -ps --colors src/ tests/",
         "phpstan": "php vendor/bin/phpstan analyze -l1 src/ tests/"
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

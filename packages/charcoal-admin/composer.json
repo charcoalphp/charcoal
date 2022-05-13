@@ -2,7 +2,7 @@
     "type": "library",
     "name": "locomotivemtl/charcoal-admin",
     "description": "The Charcoal Administration Dashboard",
-    "keywords": [ "charcoal", "admin", "cms" ],
+    "keywords": ["charcoal", "admin", "cms"],
     "homepage": "https://charcoal.locomotive.ca",
     "license": "MIT",
     "authors": [
@@ -15,8 +15,6 @@
             "homepage": "https://locomotive.ca"
         }
     ],
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "config": {
         "sort-packages": true
     },
@@ -26,20 +24,20 @@
         }
     },
     "require": {
-        "php": "^7.3 || ^8.0",
+        "php": "^7.4 || ^8.0",
         "barryvdh/elfinder-flysystem-driver": "^0.3",
         "guzzlehttp/guzzle": "^6.0 || ^7.0",
         "kriswallsmith/assetic": "^1.4",
         "laminas/laminas-permissions-acl": "^2.8",
-        "locomotivemtl/charcoal-app": "~0.9",
+        "locomotivemtl/charcoal-app": "^0.9",
         "locomotivemtl/charcoal-cache": "~0.1",
         "locomotivemtl/charcoal-cms": "~0.9",
-        "locomotivemtl/charcoal-core": "~0.6",
+        "locomotivemtl/charcoal-core": "^0.6",
         "locomotivemtl/charcoal-email": "~0.4",
-        "locomotivemtl/charcoal-object": "~0.8",
+        "locomotivemtl/charcoal-object": "^0.8",
         "locomotivemtl/charcoal-translator": "~0.3",
         "locomotivemtl/charcoal-ui": "~0.3",
-        "locomotivemtl/charcoal-user": "~0.7",
+        "locomotivemtl/charcoal-user": "^0.7",
         "mcaskill/php-html-build-attributes": "^1.0",
         "paragonie/random_compat": ">=2",
         "psr/cache": "^1.0",
@@ -52,8 +50,8 @@
         "mockery/mockery": "^1.0",
         "mustache/mustache": "^2.11",
         "php-coveralls/php-coveralls": "^2.2",
-        "phpunit/phpunit": "^9.0",
-        "seld/jsonlint": "^1.8",
+        "phpunit/phpunit": "^9.5",
+        "seld/jsonlint": "^1.9",
         "squizlabs/php_codesniffer": "^3.5",
         "tedivm/stash": "~0.16"
     },
@@ -86,5 +84,7 @@
         "phpcs": "php vendor/bin/phpcs -ps --colors src/",
         "phpcbf": "php vendor/bin/phpcbf -ps --colors src/ tests/",
         "phpunit": "php vendor/bin/phpunit --coverage-text"
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

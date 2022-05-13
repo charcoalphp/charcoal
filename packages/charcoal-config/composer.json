@@ -2,7 +2,7 @@
     "name": "locomotivemtl/charcoal-config",
     "type": "library",
     "description": "Charcoal component for configuration data and object modeling",
-    "keywords": [ "charcoal", "configuration", "json", "xml", "yml", "yaml", "ini" ],
+    "keywords": ["charcoal", "configuration", "json", "xml", "yml", "yaml", "ini"],
     "homepage": "https://locomotivemtl.github.io/charcoal-config/",
     "license": "MIT",
     "authors": [
@@ -15,24 +15,22 @@
             "homepage": "https://locomotive.ca"
         }
     ],
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "extra": {
         "branch-alias": {
             "dev-master": "0.10.x-dev"
         }
     },
     "require": {
-        "php": ">=5.6.0 || >=7.0",
+        "php": "^7.4 || ^8.0",
         "ext-json": "*",
         "ext-spl": "*",
         "psr/container": "^1.0"
     },
     "require-dev": {
         "symfony/yaml": "^3.0",
-        "phpunit/phpunit": "^5.7 || ^6.5",
-        "squizlabs/php_codesniffer": "^3.0",
-        "php-coveralls/php-coveralls": "^2.0"
+        "phpunit/phpunit": "^9.5",
+        "squizlabs/php_codesniffer": "^3.5",
+        "php-coveralls/php-coveralls": "^2.2"
     },
     "suggest": {
         "symfony/yaml": "To load and parse configuration files in yaml format."
@@ -60,5 +58,7 @@
         "phpcs": "php vendor/bin/phpcs -ps --colors src/ tests/",
         "phpcbf": "php vendor/bin/phpcbf -ps --colors src/ tests/",
         "phpunit": "php vendor/bin/phpunit --coverage-text"
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

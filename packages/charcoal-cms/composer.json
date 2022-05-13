@@ -2,7 +2,7 @@
     "type": "library",
     "name": "locomotivemtl/charcoal-cms",
     "description": "Charcoal CMS (Content Management System) Module",
-    "keywords": [ "charcoal", "cms" ],
+    "keywords": ["charcoal", "cms"],
     "homepage": "https://charcoal.locomotive.ca",
     "license": "MIT",
     "authors": [
@@ -15,31 +15,29 @@
             "homepage": "https://locomotive.ca"
         }
     ],
-    "minimum-stability":"dev",
-    "prefer-stable": true,
     "extra": {
         "branch-alias": {
             "dev-master": "0.10.x-dev"
         }
     },
     "require": {
-        "php": ">7.1",
+        "php": "^7.4 || ^8.0",
         "psr/http-message": "^1.0",
-        "locomotivemtl/charcoal-app": "~0.8",
+        "locomotivemtl/charcoal-app": "^0.9",
         "locomotivemtl/charcoal-attachment": "~0.10",
-        "locomotivemtl/charcoal-core": "~0.6",
-        "locomotivemtl/charcoal-factory": "~0.4",
-        "locomotivemtl/charcoal-object": "~0.7",
+        "locomotivemtl/charcoal-core": "^0.6",
+        "locomotivemtl/charcoal-factory": "^0.4",
+        "locomotivemtl/charcoal-object": "^0.8",
         "locomotivemtl/charcoal-property": "~0.10",
         "locomotivemtl/charcoal-translator": "~0.3"
     },
     "require-dev": {
-        "locomotivemtl/charcoal-admin": "~0.28",
+        "locomotivemtl/charcoal-admin": "^0.30",
         "mustache/mustache": "^2.11",
         "php-coveralls/php-coveralls": "^2.2",
-        "phpunit/phpunit": "^7.5",
-        "squizlabs/php_codesniffer": "^3.3",
-        "tedivm/stash": "~0.14"
+        "phpunit/phpunit": "^9.5",
+        "squizlabs/php_codesniffer": "^3.5",
+        "tedivm/stash": "~0.16"
     },
     "conflict": {
         "locomotivemtl/charcoal-admin": "<0.28.0"
@@ -67,5 +65,7 @@
         "phpcs": "php vendor/bin/phpcs -ps --colors src/",
         "phpcbf": "php vendor/bin/phpcbf -ps --colors src/ tests/",
         "phpunit": "php vendor/bin/phpunit --coverage-text"
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

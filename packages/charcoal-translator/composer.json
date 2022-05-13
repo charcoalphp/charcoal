@@ -2,14 +2,7 @@
     "type": "library",
     "name": "locomotivemtl/charcoal-translator",
     "description": "Charcoal service provider for translating messages and managing locales.",
-    "keywords": [
-        "charcoal",
-        "translator",
-        "translation",
-        "i18n",
-        "l10n",
-        "g11n"
-    ],
+    "keywords": ["charcoal", "translator", "translation", "i18n", "l10n", "g11n"],
     "homepage": "https://locomotivemtl.github.io/charcoal-translator/",
     "license": "MIT",
     "authors": [
@@ -22,25 +15,23 @@
             "homepage": "https://locomotive.ca"
         }
     ],
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "extra": {
         "branch-alias": {
             "dev-master": "0.3.x-dev"
         }
     },
     "require": {
-        "php": ">=5.6.0 || >=7.0",
-        "locomotivemtl/charcoal-config": "~0.8",
+        "php": "^7.4 || ^8.0",
+        "locomotivemtl/charcoal-config": "^0.10",
         "symfony/translation": "^3.4",
         "pimple/pimple": "^3.0"
     },
     "require-dev": {
-        "mockery/mockery": "^0.9",
-        "phpunit/phpunit": "^5.7 || ^6.5",
-        "squizlabs/php_codesniffer": "^3.0",
-        "php-coveralls/php-coveralls": "^2.0",
-        "locomotivemtl/charcoal-admin": "~0.8"
+        "mockery/mockery": "^1.0",
+        "phpunit/phpunit": "^9.5",
+        "squizlabs/php_codesniffer": "^3.5",
+        "php-coveralls/php-coveralls": "^2.2",
+        "locomotivemtl/charcoal-admin": "^0.30"
     },
     "suggest": {
         "locomotivemtl/charcoal-app": "To run the parser script."
@@ -68,5 +59,7 @@
         "phpcs": "php vendor/bin/phpcs -ps --colors src/ tests/",
         "phpcbf": "php vendor/bin/phpcbf -ps --colors src/ tests/",
         "phpunit": "php vendor/bin/phpunit --coverage-text"
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
