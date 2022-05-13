@@ -1,0 +1,54 @@
+{
+    "properties": {
+        "ident": {
+            "type": "string"
+        },
+        "parent": {
+            "type": "object",
+            "obj_type": "charcoal/user/acl/role"
+        },
+        "name": {
+            "type": "string",
+            "l10n": true
+        },
+        "allowed": {
+            "type": "string",
+            "multiple": true,
+            "label": {
+                "en": "List of allowed permissions",
+                "fr": "Liste des permissions (allowed)"
+            }
+        },
+        "denied": {
+            "type": "string",
+            "multiple": true,
+            "label": {
+                "en": "List of denied permissions",
+                "fr": "Liste des contraintes (denied)"
+            }
+        },
+        "superuser": {
+            "type": "boolean",
+            "label": {
+                "en": "Super user",
+                "fr": "Super-utilisateur"
+            },
+            "description": {
+                "en": "Super users have all permissions (they are allowed everything).",
+                "fr": "Les super-utilisateurs ont toutes les permissions (tout est permis / allowed)."
+            }
+        },
+        "position": {
+            "type": "number"
+        }
+    },
+
+    "key": "ident",
+
+    "sources": {
+        "default": {
+            "table": "charcoal_user_acl_roles"
+        }
+    },
+    "default_source": "default"
+}

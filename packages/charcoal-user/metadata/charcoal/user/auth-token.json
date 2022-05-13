@@ -1,0 +1,8 @@
+{
+    "sources": {
+        "default": {
+            "table": "charcoal_user_auth_tokens"
+        }
+    },
+    "default_source": "default"
+}
