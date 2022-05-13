@@ -1,0 +1,201 @@
+{
+    "routable": {
+        "pattern": {
+            "fr": "{{ title }}",
+            "en": "{{ title }}"
+        },
+        "prefix": {
+            "fr": "{{^ hasMaster }}fr{{/ hasMaster }}{{# hasMaster }}{{ master.slug }}{{/ hasMaster }}/",
+            "en": "{{^ hasMaster }}en{{/ hasMaster }}{{# hasMaster }}{{ master.slug }}{{/ hasMaster }}/"
+        }
+    },
+
+    "default_data": {
+        "template_ident": "generic",
+        "main_menu": "content",
+        "secondary_menu": "content"
+    },
+
+    "sources": {
+        "default": {
+            "table": "cms_sections"
+        }
+    },
+    "default_source": "default",
+
+    "labels": {
+        "name": "Pages",
+        "singular_name": "Page",
+        "edit_item": {
+            "en": "Edit Page",
+            "fr": "Modifier la page"
+        },
+        "all_items": {
+            "en": "All Pages",
+            "fr": "Toutes les pages"
+        },
+        "menu_items": "Pages"
+    },
+
+    "properties": {
+        "id": {
+            "type": "id",
+            "mode": "auto-increment",
+            "label": "ID"
+        },
+        "locked": {
+            "type": "boolean",
+            "label": {
+                "fr": "Verrouillé",
+                "en": "Locked"
+            },
+            "description": {
+                "en": "A locked object cannot be deleted nor the slug be modified.",
+                "fr": "Un objet verrouillé ne peut être supprimé et son slug ne peut être modifié."
+            }
+        },
+        "section_type": {
+            "type": "string",
+            "allow_null": false,
+            "label": {
+                "fr": "Type de section",
+                "en": "Section Type"
+            }
+        },
+        "title": {
+            "type": "string",
+            "l10n": true,
+            "label": {
+                "fr": "Titre",
+                "en": "Title"
+            }
+        },
+        "subtitle": {
+            "type": "html",
+            "l10n": true,
+            "label": {
+                "fr": "Sous-titre",
+                "en": "Subtitle"
+            }
+        },
+        "summary": {
+            "label": {
+                "fr": "Sommaire",
+                "en": "Summary"
+            },
+            "type": "text",
+            "l10n": true,
+            "input_type": "charcoal/admin/property/input/textarea",
+            "rows": 5,
+            "input_class": "u-resize-vertical"
+        },
+        "content": {
+            "type": "html",
+            "input_type": "charcoal/admin/property/input/tinymce",
+            "l10n": true,
+            "label": {
+                "fr": "Contenu",
+                "en": "Content"
+            }
+        },
+        "image": {
+            "type": "image",
+            "l10n": true,
+            "public_access": true,
+            "upload_path": "uploads/sections/"
+        },
+        "position": {
+            "type": "number",
+            "label": "Position"
+        },
+        "master": {
+            "type": "Charcoal\\Admin\\Property\\HierarchicalObjectProperty",
+            "obj_type": "charcoal/cms/section",
+            "pattern": "{{ hierarchicalLabel }}",
+            "label": {
+                "fr": "Page Parente",
+                "en": "Parent Page"
+            }
+        },
+        "external_url": {
+            "type": "string",
+            "l10n": true,
+            "label": {
+                "fr": "Lien externe",
+                "en": "External URL"
+            },
+            "notes": {
+                "en": "If the page is an \"External Destination\", visitors will be redirected to the URL defined below when accessing this page's route.",
+                "fr": "Si la page est une \"Destination externe\", les visiteurs seront redirigés vers l'URL défini ci-dessous lors de l'accès de l'URL de cette page."
+            }
+        },
+        "in_menu": {
+            "type": "boolean",
+            "label": {
+                "fr": "Inclure dans le menu principal",
+                "en": "Include in the main menu"
+            }
+        },
+        "meta_title": {
+            "description": {
+                "en": "Meta tags are useful for search engine optimisation and sharing on social medias",
+                "fr": "Les tags méta sont utilisés pour optimiser les moteurs de cherches et lors des partages sur les résaux sociaux"
+            },
+            "notes": {
+                "en": "Meta tags will be auto-generated if not filled",
+                "fr": "Les tags méta seront générés automatiquement si laissés vide"
+            }
+        },
+        "meta_description": {
+            "input_type": "charcoal/admin/property/input/textarea",
+            "rows": 5,
+            "input_class": "u-resize-vertical",
+            "description": {
+                "en": "Meta tags are useful for search engine optimisation and sharing on social medias",
+                "fr": "Les tags méta sont utilisés pour optimiser les moteurs de cherches et lors des partages sur les résaux sociaux"
+            },
+            "notes": {
+                "en": "Meta tags will be auto-generated if not filled",
+                "fr": "Les tags méta seront générés automatiquement si laissés vide"
+            }
+        },
+        "meta_image": {
+            "description": {
+                "en": "Meta tags are useful for search engine optimisation and sharing on social medias",
+                "fr": "Les tags méta sont utilisés pour optimiser les moteurs de cherches et lors des partages sur les résaux sociaux"
+            },
+            "notes": {
+                "en": "Meta tags will be auto-generated if not filled",
+                "fr": "Les tags méta seront générés automatiquement si laissés vide"
+            }
+        },
+        "keywords": {
+            "type": "object",
+            "obj_type": "charcoal/cms/tag",
+            "input_type": "charcoal/admin/property/input/selectize",
+            "multiple": true,
+            "label": {
+                "fr": "Mots-clés",
+                "en": "Keywords"
+            },
+            "description": {
+                "fr": "Les mots-clés permettent d'optimiser la recherche",
+                "en": "Key-words optimises research"
+            }
+        },
+        "slug": {
+            "description": {
+                "en": "The part of the url that point to the article on the site",
+                "fr": "La partie du url qui pointe vers cet article"
+            },
+            "notes": {
+                "en": "Will be automatically generated if blank",
+                "fr": "Sera généré automatiquement si laissé vide"
+            }
+        },
+        "template_ident": {
+            "type": "template",
+            "allow_null": false
+        }
+    }
+}

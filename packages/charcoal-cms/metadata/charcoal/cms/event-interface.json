@@ -1,0 +1,163 @@
+{
+    "template": {
+        "ident": "charcoal/cms/event"
+    },
+
+    "routable": {
+        "editable": true,
+        "pattern": {
+            "fr": "{{ title }}",
+            "en": "{{ title }}"
+        },
+        "prefix": {
+            "fr": "fr/evenements/",
+            "en": "en/events/"
+        }
+    },
+
+    "default_data": {
+        "main_menu": "content",
+        "secondary_menu": "content"
+    },
+
+    "properties": {
+        "id": {
+            "type": "id"
+        },
+        "title": {
+            "type": "string",
+            "l10n": true,
+            "label": {
+                "en": "Title",
+                "fr": "Titre"
+            }
+        },
+        "subtitle": {
+            "type": "text",
+            "l10n": true,
+            "input_type": "charcoal/admin/property/input/textarea",
+            "label": {
+                "en": "Subtitle",
+                "fr": "Sous-titre"
+            }
+        },
+        "summary": {
+            "type": "html",
+            "l10n": true,
+            "label": {
+                "en": "Summary",
+                "fr": "Sommaire"
+            }
+        },
+        "content": {
+            "type": "html",
+            "l10n": true,
+            "label": {
+                "en": "Content",
+                "fr": "Contenu"
+            }
+        },
+        "image": {
+            "type": "image",
+            "l10n": true,
+            "public_access": true,
+            "upload_path": "uploads/events/"
+        },
+        "startDate": {
+            "type": "date-time",
+            "label": {
+                "fr": "Date de début",
+                "en": "Start date"
+            },
+            "notes": {
+                "en": "Will be set to the start date if blank.",
+                "fr": "La date actuelle sera utilisée si laissée vide."
+            }
+        },
+        "endDate": {
+            "type": "date-time",
+            "label": {
+                "fr": "Date de fin",
+                "en": "End date"
+            },
+            "notes": {
+                "en": "Will be set to the current if blank.",
+                "fr": "La date de début sera utilisée si laissé vide."
+            }
+        },
+        "infoUrl": {
+            "type": "url",
+            "l10n": true,
+            "label": {
+                "fr": "URL externe",
+                "en": "Information URL"
+            },
+            "description": {
+                "fr": "Si l'événement possède un URL externe dédié pour avoir de l'information supplémentaire.",
+                "en": "Custom event URL."
+            }
+        },
+        "infoPhone": {
+            "type": "phone",
+            "label": {
+                "en": "Phone",
+                "fr": "Téléphone"
+            },
+            "description":{
+                "fr": "Numéro de téléphone à contacter pour avoir de l'information supplémentaire sur l'événement.",
+                "en": "Phone number to contact to have more information on the event."
+            }
+        },
+        "ticketPriceMin": {
+            "type": "number",
+            "label": {
+                "en": "Minimum ticket price",
+                "fr": "Prix minimal des billets"
+            }
+        },
+        "ticketPriceMax":{
+            "type": "number",
+            "label": {
+                "en": "Maximum ticket price",
+                "fr": "Prix maximal des billets"
+            }
+        },
+        "ticketSummary":{
+            "type": "html",
+            "l10n": true,
+            "label": {
+                "en": "More tickets information",
+                "fr": "Informations supplémentaires sur les billets"
+            }
+        },
+        "ticketUrl": {
+            "type": "url",
+            "l10n": true,
+            "label": {
+                "en": "URL for tickets",
+                "fr": "URL pour les billets"
+            }
+        },
+        "ticketPhone": {
+            "type": "phone",
+            "label": {
+                "en": "Phone for tickets",
+                "fr": "Téléphone pour les billets"
+            }
+        },
+        "keywords": {
+            "type": "object",
+            "obj_type": "charcoal/cms/tag",
+            "input_type": "charcoal/admin/property/input/selectize",
+            "multiple": true,
+            "label": {
+                "fr": "Mots-clés",
+                "en": "Keywords"
+            },
+            "description": {
+                "fr": "Les mots-clés permettent d'optimiser la recherche.",
+                "en": "Keywords optimize search results."
+            }
+        }
+    }
+}

@@ -1,0 +1,13 @@
+{
+    "default_data": {
+        "color": "#D6E066"
+    },
+
+	"sources": {
+		"default": {
+			"type": "database",
+			"table": "charcoal_cms_tags"
+		}
+	},
+	"default_source": "default"
+}

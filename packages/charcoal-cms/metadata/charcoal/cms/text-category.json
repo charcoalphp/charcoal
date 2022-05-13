@@ -1,0 +1,8 @@
+{
+    "sources": {
+        "default": {
+            "table": "charcoal_cms_texts_categories"
+        }
+    },
+    "default_source": "default"
+}

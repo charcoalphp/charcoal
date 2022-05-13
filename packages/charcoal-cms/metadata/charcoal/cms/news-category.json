@@ -1,0 +1,27 @@
+{
+    "category_item_type": "cms/object/news",
+
+    "default_data": {
+        "main_menu": "content",
+        "secondary_menu": "content"
+    },
+
+    "sources": {
+        "default": {
+            "table": "cms_news_categories"
+        }
+    },
+    "default_source": "default",
+
+    "properties": {
+        "id": {
+            "type": "id"
+        },
+        "name": {
+            "label": {
+                "fr": "Nom",
+                "en": "Name"
+            }
+        }
+    }
+}

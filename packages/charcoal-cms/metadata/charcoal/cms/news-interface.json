@@ -1,0 +1,104 @@
+{
+    "template": {
+        "ident": "charcoal/cms/news"
+    },
+
+    "routable": {
+        "editable": true,
+        "pattern": {
+            "fr": "{{ title }}",
+            "en": "{{ title }}"
+        },
+        "prefix": {
+            "fr": "fr/actualites/",
+            "en": "en/news/"
+        }
+    },
+
+    "default_data": {
+        "template_ident": "generic",
+        "main_menu": "content",
+        "secondary_menu": "content"
+    },
+
+    "properties": {
+        "id": {
+            "type": "id"
+        },
+        "title": {
+            "type": "string",
+            "l10n": true,
+            "label": {
+                "en": "Title",
+                "fr": "Titre"
+            }
+        },
+        "subtitle": {
+            "type": "text",
+            "l10n": true,
+            "input_type": "charcoal/admin/property/input/textarea",
+            "label": {
+                "en": "Subtitle",
+                "fr": "Sous-titre"
+            }
+        },
+        "summary": {
+            "type": "html",
+            "l10n": true,
+            "label": {
+                "en": "Summary",
+                "fr": "Sommaire"
+            }
+        },
+        "content": {
+            "type": "html",
+            "l10n": true,
+            "label": {
+                "en": "Content",
+                "fr": "Contenu"
+            }
+        },
+        "category": {
+            "obj_type": "charcoal/cms/news-category"
+        },
+        "image": {
+            "type": "image",
+            "l10n": true,
+            "public_access": true,
+            "upload_path": "uploads/news/"
+        },
+        "newsDate": {
+            "type": "date-time",
+            "label": {
+                "en": "News date",
+                "fr": "Date de la nouvelle"
+            },
+            "description": {
+                "en": "The \"display\" date of this news.",
+                "fr": "La date affichée de la nouvelle."
+            },
+            "notes": {
+                "en": "Will be set automatically to the current date if blank.",
+                "fr": "La date actuelle sera utilisée automatiquement si laissée vide."
+            }
+        },
+        "infoUrl": {
+            "type": "url",
+            "l10n": true
+        },
+        "keywords": {
+            "type": "object",
+            "obj_type": "charcoal/cms/tag",
+            "input_type": "charcoal/admin/property/input/selectize",
+            "multiple": true,
+            "label": {
+                "fr": "Mots-clés",
+                "en": "Keywords"
+            },
+            "description": {
+                "fr": "Les mots-clés permettent d'optimiser la recherche",
+                "en": "Key-words optimises research"
+            }
+        }
+    }
+}

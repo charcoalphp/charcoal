@@ -1,0 +1,8 @@
+{
+    "sources": {
+        "default": {
+            "table": "cms_texts"
+        }
+    },
+    "default_source": "default"
+}

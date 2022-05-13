@@ -1,0 +1,20 @@
+{
+    "properties": {
+        "master": {
+            "obj_type": "charcoal/cms/section"
+        }
+    },
+
+    "slug_pattern": {
+        "en": "en/{{title}}",
+        "fr": "fr/{{title}}"
+    },
+
+    "sources": {
+        "default": {
+            "type": "database",
+            "table": "cms_sections"
+        }
+    },
+    "default_source": "default"
+}
