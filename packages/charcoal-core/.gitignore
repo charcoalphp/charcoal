@@ -1,0 +1,25 @@
+# Charcoal
+
+config/config.*.json
+!config/config.default.json
+
+# Package Managers
+
+composer.phar
+composer.lock
+/vendor/
+
+# Logging
+
+*.log
+/logs/
+
+# Caching
+
+/cache/
+
+# Codebase
+
+/build/docs/
+/build/logs/
+/build/report/
