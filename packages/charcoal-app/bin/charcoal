@@ -1,0 +1,89 @@
+#!/usr/bin/env php
+<?php
+
+use Slim\Http\Environment as SlimEnvironment;
+
+use Charcoal\App\App;
+use Charcoal\App\AppConfig;
+use Charcoal\App\AppContainer;
+
+// Ensure CLI mode
+if (PHP_SAPI !== 'cli') {
+    die('This program can only be executed from a terminal / Command Line Interface'."\n");
+}
+
+$autoloaderPath = [
+    __DIR__.'/../../../../vendor/autoload.php',
+    __DIR__.'/../vendor/autoload.php',
+    __DIR__.'/../autoload.php'
+];
+
+$autoloaderFound = false;
+foreach ($autoloaderPath as $file) {
+    if (file_exists($file)) {
+        $autoloaderFound = true;
+        include $file;
+        break;
+    }
+}
+if (!$autoloaderFound) {
+    die('Composer autoloader not found.'."\n");
+}
+
+$baseDir = dirname(dirname(realpath($file)));
+
+global $argv;
+// Convert command line arguments into a URL (for Slim)
+$argv = $GLOBALS['argv'];
+if (!isset($argv[1])) {
+    die('This script requires at least one parameter: the script action name / ident.'."\n");
+}
+$path = '/'.ltrim($argv[1], '/');
+
+$config = new AppConfig();
+$config->addFile($baseDir.'/config/config.php');
+$config->set('base_path', $baseDir . '/');
+
+// Serve the application from the web directory.
+chdir($config['public_path']);
+
+// Create container and configure it (with charcoal-config)
+$container = new AppContainer([
+    'config'   => $config
+]);
+
+// Handle "404 Not Found"
+$container['notFoundHandler'] = function ($container)
+{
+    return function ($request, $response) use ($container)
+    {
+        return $container['response']
+            ->withStatus(404)
+            ->write(sprintf('Script "%s" not found', $container['request']->getUri()->getPath())."\n");
+    };
+};
+
+// Handle "500 Server Error"
+$container['errorHandler'] = function ($container)
+{
+    return function ($request, $response, $exception) use ($container)
+    {
+        return $container['response']
+            ->withStatus(500)
+            ->write(
+                sprintf('Something went wrong! [%s]'."\n", $exception->getMessage())
+            );
+    };
+};
+
+// Fake environment (for CLI) with path
+$container['environment'] = function($container) use ($path) {
+    return SlimEnvironment::mock([
+        'PATH_INFO'   => $path,
+        'REQUEST_URI' => $path
+    ]);
+};
+
+// Charcoal / Slim is the main app
+$app = App::instance($container);
+$app->run();
