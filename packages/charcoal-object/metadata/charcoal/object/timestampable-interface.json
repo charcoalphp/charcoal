@@ -1,0 +1,26 @@
+{
+    "properties": {
+        "created": {
+            "type": "date-time",
+            "label": {
+                "en": "Creation date",
+                "fr": "Date de création"
+            },
+            "description": {
+                "en": "The creation timestamp should be set automatically when first saving this object in storage.",
+                "fr": "La date de création devrait être enregistrée automatiquement lors de la première sauvegarde de l'objet."
+            }
+        },
+        "lastModified": {
+            "type": "date-time",
+            "label": {
+                "en": "Last modified",
+                "fr": "Dernière modification"
+            },
+            "description": {
+                "en": "The last-modified timestamp should be set automatically when updating the object in storage.",
+                "fr": "La date de la dernière modification devrait être enregistrée automatiquement lors de la mise-à-jour de l'objet."
+            }
+        }
+    }
+}

@@ -1,0 +1,72 @@
+{
+    "sources": {
+        "default": {
+            "type": "database",
+            "table": "object_revisions"
+        }
+    },
+    "default_source": "default",
+
+    "properties": {
+        "id": {
+            "type": "id",
+            "label": "ID"
+        },
+        "targetType": {
+            "type": "string",
+            "label": {
+                "en": "Object type",
+                "fr": "Type de l'objet"
+            }
+        },
+        "targetId": {
+            "type": "string",
+            "label": {
+                "en": "Object identifier",
+                "fr": "Identifiant de l'objet"
+            }
+        },
+        "revNum": {
+            "type": "number",
+            "label": {
+                "en": "Revision number",
+                "fr": "Numéro de la révision"
+            }
+        },
+        "revTs": {
+            "type": "date-time",
+            "label": {
+                "en": "Revision date",
+                "fr": "Date de la révision"
+            }
+        },
+        "revUser": {
+            "type": "string",
+            "label": {
+                "en": "Revision author",
+                "fr": "Auteur de la révision"
+            }
+        },
+        "dataPrev": {
+            "type": "structure",
+            "label": {
+                "en": "Previous revision data",
+                "fr": "Données de la révision précédente"
+            }
+        },
+        "dataObj": {
+            "type": "structure",
+            "label": {
+                "en": "Object data (current revision)",
+                "fr": "Données de l'objet (révision courante)"
+            }
+        },
+        "dataDiff": {
+            "type": "structure",
+            "label": {
+                "en": "Diff data",
+                "fr": "Données différentes"
+            }
+        }
+    }
+}

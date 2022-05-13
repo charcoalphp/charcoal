@@ -1,0 +1,15 @@
+{
+    "admin": {
+        "form_groups": {
+            "charcoal/object/revisionable/object-revisions": {
+                "priority": 99,
+                "title": {
+                    "en": "Revision History",
+                    "fr": "Historique des révisions"
+                },
+                "type": "charcoal/admin/widget/form-group/object-revisions",
+                "template": "charcoal/admin/widget/form-group/object-revisions"
+            }
+        }
+    }
+}

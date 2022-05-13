@@ -1,0 +1,18 @@
+{
+    "properties": {
+        "createdBy": {
+            "type": "string",
+            "label": {
+                "en": "Created by",
+                "fr": "Créé par"
+            }
+        },
+        "lastModifiedBy": {
+            "type": "string",
+            "label": {
+                "en": "Last modfied by",
+                "fr": "Modifié par"
+            }
+        }
+    }
+}

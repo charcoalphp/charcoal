@@ -1,0 +1,98 @@
+{
+    "sources": {
+        "default": {
+            "type": "database",
+            "table": "object_routes"
+        }
+    },
+    "default_source": "default",
+
+    "properties": {
+        "id": {
+            "type": "id"
+        },
+        "active": {
+            "type": "boolean",
+            "label": {
+                "fr": "Actif",
+                "en": "Active"
+            },
+            "description": {
+                "en": "Inactive object routes will return a 404.",
+                "fr": "Les routes inactives retourneront une erreur 404."
+            }
+        },
+        "creationDate": {
+            "type": "date-time",
+            "label": {
+                "en": "Creation date",
+                "fr": "Date de création"
+            },
+            "description": {
+                "en": "The creation date should be set automatically when first saving this object in storage.",
+                "fr": "La date de création devrait être enregistrée automatiquement lors de la première sauvegarde de l'objet."
+            }
+        },
+        "lastModificationDate": {
+            "type": "date-time",
+            "label": {
+                "en": "Last Modification Date",
+                "fr": "Date de la dernière modification"
+            }
+        },
+        "lang": {
+            "type": "string",
+            "label": {
+                "fr": "Langue",
+                "en": "Language"
+            },
+            "description": {
+                "fr": "Langue de l'URL",
+                "en": "URL Language"
+            }
+        },
+        "slug": {
+            "type": "string",
+            "unique": true,
+            "label": {
+                "fr": "Slug",
+                "en": "Slug"
+            }
+        },
+        "routeObjType": {
+            "type": "string",
+            "label": {
+                "fr": "Type d'objet de la route",
+                "en": "Route object type"
+            }
+        },
+        "routeObjId": {
+            "type": "string",
+            "label": {
+                "fr": "Identification de l'objet de la route",
+                "en": "Route object ID"
+            }
+        },
+        "routeTemplate": {
+            "type": "string",
+            "label": {
+                "fr": "Identifiant du garabrit",
+                "en": "Template ident"
+            }
+        },
+        "routeOptions": {
+            "type": "structure",
+            "label": {
+                "en": "Route options",
+                "fr": "Options de route"
+            }
+        },
+        "routeOptionsIdent": {
+            "type": "string",
+            "label": {
+                "en": "Route options Ident",
+                "fr": "Identifiant d'options de route"
+            }
+        }
+    }
+}

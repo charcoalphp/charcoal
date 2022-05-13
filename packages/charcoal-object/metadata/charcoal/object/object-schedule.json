@@ -1,0 +1,58 @@
+{
+    "sources": {
+        "default": {
+            "type": "database",
+            "table": "object_schedules"
+        }
+    },
+    "default_source": "default",
+
+    "properties": {
+        "id": {
+            "type": "id",
+            "label": "ID"
+        },
+        "targetType": {
+            "type": "string",
+            "label": {
+                "en": "Object type",
+                "fr": "Type de l'objet"
+            }
+        },
+        "targetId": {
+            "type": "string",
+            "label": {
+                "en": "Object identifier",
+                "fr": "Identifiant de l'objet"
+            }
+        },
+        "scheduledDate": {
+            "type": "date-time",
+            "label": {
+                "en": "Scheduled date",
+                "fr": "Date prévue"
+            }
+        },
+        "dataDiff": {
+            "type": "structure",
+            "label": {
+                "en": "Diff data",
+                "fr": "Données différentes"
+            }
+        },
+        "processed": {
+            "type": "boolean",
+            "label": {
+                "en": "Task processed",
+                "fr": "Tâche traitée"
+            }
+        },
+        "processedDate": {
+            "type": "date-time",
+            "label": {
+                "en": "Processed date",
+                "fr": "Date de traitement"
+            }
+        }
+    }
+}

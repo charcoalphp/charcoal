@@ -1,0 +1,74 @@
+{
+    "properties": {
+        "revUser": {
+            "type": "object",
+            "input_type": "charcoal/admin/property/input/readonly",
+            "obj_type": "charcoal/admin/user",
+            "pattern": "displayName"
+        }
+    },
+
+    "admin": {
+        "lists": {
+            "default": {
+                "properties": [
+                    "revNum",
+                    "revTs",
+                    "revUser"
+                ]
+            }
+        },
+        "default_list": "default",
+
+        "forms": {
+            "default": {
+                "groups": {
+                    "info": {}
+                }
+            }
+        },
+        "default_form": "default",
+
+        "dashboards": {
+            "admin.edit": {
+                "title": {
+                    "en": "Revisions",
+                    "fr": "Révisions"
+                },
+                "widgets": {
+                    "form": {
+                        "type": "charcoal/admin/widget/object-form",
+                        "form_ident": "default",
+                        "target_type": "charcoal/object/object-revision"
+                    }
+                },
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] }
+                    ]
+                }
+            },
+            "admin.table": {
+                "title": {
+                    "en": "List of Revisions",
+                    "fr": "Liste des révisions"
+                },
+                "widgets": {
+                    "form": {
+                        "type": "charcoal/admin/widget/table",
+                        "collection_ident": "default",
+                        "target_type": "charcoal/object/object-revision"
+                    }
+                },
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] }
+                    ]
+                }
+            }
+        },
+        "default_create_dashboard": "admin.edit",
+        "default_edit_dashboard": "admin.edit",
+        "default_collection_dashboard": "admin.table"
+    }
+}

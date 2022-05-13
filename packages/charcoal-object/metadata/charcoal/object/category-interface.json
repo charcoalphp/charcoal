@@ -1,0 +1,29 @@
+{
+    "properties": {
+        "id": {
+            "type": "id",
+            "label": "ID"
+        },
+        "name": {
+            "type": "string",
+            "l10n": true,
+            "label": {
+                "en": "Name",
+                "fr": "Nom"
+            }
+        },
+        "position": {
+            "type": "number",
+            "label": "Position"
+        },
+        "numCategoryItems": {
+            "type": "number",
+            "read_only": true,
+            "storable": false,
+            "label": {
+                "en": "# items",
+                "fr": "# d'items"
+            }
+        }
+    }
+}
