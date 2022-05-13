@@ -1,0 +1,11 @@
+<div>
+    {{foo}}
+    {{#addJs}}
+<script>
+    window.alert('Charcoal Unit Tests');
+</script>
+    {{/addJs}}
+</div>
+
+<!-- Javascript should be printed below: -->
+{{&js}}
