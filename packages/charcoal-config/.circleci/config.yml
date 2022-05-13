@@ -1,0 +1,44 @@
+version: 2
+
+jobs:
+    build:
+        working_directory: ~/charcoal-config
+        docker:
+            - image: circleci/php:7.2-apache
+        ignore:
+            - gh-pages
+            - develop
+            - /^.+-develop.*/
+        steps:
+            - checkout
+            - run:
+                name: Updating Composer
+                command: sudo composer self-update --quiet
+
+            - restore_cache:
+                keys:
+                    - composer-{{ .Branch }}-{{ checksum "composer.json" }}
+
+            - run:
+                name: Installing Composer Dependencies
+                command: |
+                    composer install --no-interaction --no-suggest
+                    mkdir -p ./build/logs/
+
+            - save_cache:
+                key: composer-{{ .Branch }}-{{ checksum "composer.json" }}
+                paths:
+                    - ./composer.lock
+                    - ~/.composer/cache/files
+
+            - run:
+                name: Running Charcoal Tests
+                command: |
+                    composer phplint
+                    composer phpcs
+                    composer phpunit -- --log-junit "build/logs/junit/results.xml"
+
+            - store_test_results:
+                path: ./build/logs/
+            - store_artifacts:
+                path: ./build/logs/
