@@ -1,0 +1,67 @@
+{
+    "name": "locomotivemtl/charcoal-email",
+    "type": "library",
+    "description": "Email sending and queueing for Charcoal",
+    "keywords": [ "charcoal", "email", "queue", "phpmailer" ],
+    "homepage": "https://charcoal.locomotive.ca",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Locomotive",
+            "homepage": "https://locomotive.ca"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.7.x-dev"
+        }
+    },
+    "require": {
+        "php": "^7.1 || ^8.0",
+        "psr/log": "^1.0",
+        "phpmailer/phpmailer": "~6.0",
+        "locomotivemtl/charcoal-config": "~0.6",
+        "locomotivemtl/charcoal-app": "~0.6",
+        "locomotivemtl/charcoal-queue": "~0.5",
+        "seld/jsonlint": "^1.7",
+        "ext-pdo": "*"
+    },
+    "require-dev": {
+        "pimple/pimple": "~3.0",
+        "phpunit/phpunit": "^5.7 || ^6.5",
+        "squizlabs/php_codesniffer": "^3.0",
+        "php-coveralls/php-coveralls": "~1.0",
+        "mustache/mustache": "^2.11",
+        "phpstan/phpstan": "^0.12.36"
+    },
+    "autoload": {
+        "psr-4": {
+            "Charcoal\\Email\\": "src/Charcoal/Email"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Charcoal\\Tests\\": "tests/Charcoal"
+        }
+    },
+    "scripts": {
+        "test": [
+            "@tests"
+        ],
+        "tests": [
+            "@phplint",
+            "@phpcs",
+            "@phpstan",
+            "@phpunit",
+            "@jsonlint"
+        ],
+        "jsonlint": "find metadata -type f -name '*.json' -print0 | xargs -0 -n1 -P8 vendor/bin/jsonlint | grep -v '^Valid JSON'; test $? -eq 1",
+        "phplint": "find {src,tests} -name '*.php' -print0 | xargs -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1",
+        "phpunit": "php vendor/bin/phpunit --coverage-text",
+        "phpcs": "php vendor/bin/phpcs -ps --colors src/",
+        "phpcbf": "php vendor/bin/phpcbf -ps --colors src/ tests/",
+        "phpstan": "php vendor/bin/phpstan analyze -l1 src/ tests/"
+    }
+}

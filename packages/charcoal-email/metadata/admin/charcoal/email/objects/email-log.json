@@ -1,0 +1,197 @@
+{
+    "labels": {
+        "name": {
+            "en": "Email Logs",
+            "fr": "Journaux des courriels"
+        },
+        "singular_name": {
+            "en": "Email Log",
+            "fr": "Journal d'un courriel"
+        },
+        "view_item": {
+            "en": "View Log",
+            "fr": "Voir l'entrée"
+        },
+        "edit_item": {
+            "en": "Edit Log",
+            "fr": "Modifier l'entrée"
+        },
+        "create_item": {
+            "en": "Create Log",
+            "fr": "Créer l'entrée"
+        },
+        "new_item": {
+            "en": "New Log",
+            "fr": "Nouvelle entrée"
+        },
+        "all_items": {
+            "en": "All Logs",
+            "fr": "Toutes les entrées"
+        },
+        "menu_items": {
+            "en": "Email Logs",
+            "fr": "Journaux des courriels"
+        }
+    },
+
+    "admin": {
+        "export": {
+            "default": {
+                "properties": [
+                    "sendTs",
+                    "from",
+                    "to",
+                    "campaign",
+                    "subject",
+                    "messageId"
+                ],
+                "orders": [
+                    {
+                        "property": "send_ts",
+                        "mode": "desc"
+                    }
+                ],
+                "exporter_options": {
+                    "convert_br_to_newlines": true,
+                    "strip_tags": true,
+                    "filename": "email-logs.csv"
+                }
+            }
+        },
+        "default_export": "default",
+
+        "lists": {
+            "default": {
+                "properties": [
+                    "send_ts",
+                    "from",
+                    "to",
+                    "subject"
+                ],
+                "orders": [
+                    {
+                        "property": "send_ts",
+                        "mode": "desc"
+                    }
+                ],
+                "pagination": {
+                    "num_per_page": 100
+                },
+                "list_actions": {
+                    "export": {
+                        "url": "object/export?obj_type={{obj_type}}",
+                        "label": {
+                            "fr": "Exporter",
+                            "en": "Export"
+                        }
+                    }
+                },
+                "object_actions": {
+                    "edit": {
+                        "label": {
+                            "fr": "Voir",
+                            "en": "View"
+                        }
+                    }
+                }
+            }
+        },
+        "default_list": "default",
+
+        "forms": {
+            "default": {
+                "groups": {
+                    "charcoal/email/email-log/info": {
+                    },
+                    "charcoal/email/email-log/sent": {
+                    }
+                }
+            }
+        },
+        "default_form": "default",
+
+        "form_groups": {
+            "charcoal/email/email-log/info": {
+                "title": {
+                    "en": "Information",
+                    "fr": "Informations"
+                },
+                "properties": [
+                    "campaign",
+                    "from",
+                    "to",
+                    "subject"
+                ],
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] },
+                        { "columns": [ 1, 1 ] },
+                        { "columns": [ 1 ] }
+                    ]
+                }
+            },
+            "charcoal/email/email-log/sent": {
+                "title": {
+                    "en": "Sent",
+                    "fr": "Envoi"
+                },
+                "properties": [
+                    "message_id",
+                    "send_ts",
+                    "error_code"
+                ],
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] },
+                        { "columns": [ 1 ] },
+                        { "columns": [ 1 ] }
+                    ]
+                }
+            }
+        },
+
+        "dashboards": {
+            "admin.edit": {
+                "show_title": false,
+                "title": {
+                    "en": "Sent Email Log",
+                    "fr": "Journal d'envoi d'un courriel"
+                },
+                "widgets": {
+                    "form": {
+                        "type": "charcoal/admin/widget/object-form",
+                        "form_ident": "default",
+                        "obj_type": "charcoal/email/email-log"
+                    }
+                },
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] }
+                    ]
+                }
+            },
+            "admin.table": {
+                "show_title": false,
+                "title": {
+                    "en": "Sent Email Logs",
+                    "fr": "Journaux d'envoi de courriels"
+                },
+                "widgets": {
+                    "form": {
+                        "type": "charcoal/admin/widget/table",
+                        "collection_ident": "default",
+                        "obj_type": "charcoal/email/email-log"
+                    }
+                },
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] }
+                    ]
+                }
+            }
+        },
+        "default_create_dashboard": "admin.edit",
+        "default_edit_dashboard": "admin.edit",
+        "default_collection_dashboard": "admin.table"
+    }
+}

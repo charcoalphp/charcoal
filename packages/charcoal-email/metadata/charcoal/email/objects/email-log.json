@@ -1,0 +1,100 @@
+{
+    "properties": {
+        "id": {
+            "type": "id",
+            "input_type": "charcoal/admin/property/input/readonly",
+            "mode": "uniqid",
+            "label": "ID"
+        },
+        "queue_id": {
+            "type": "string",
+            "input_type": "charcoal/admin/property/input/readonly",
+            "label": {
+                "en": "Queue Identifier",
+                "fr": "Identifiant de la queue"
+            }
+        },
+        "error_code": {
+            "type": "string",
+            "input_type": "charcoal/admin/property/input/readonly",
+            "label": {
+                "en": "Error code",
+                "fr": "Code d'erreur"
+            }
+        },
+        "message_id": {
+            "type": "string",
+            "input_type": "charcoal/admin/property/input/readonly",
+            "display_escape": true,
+            "allow_html": true,
+            "description": {
+                "en": "The identifier format varies by provider.",
+                "fr": "Le format de l'identifiant varie selon le fournisseur."
+            },
+            "label": {
+                "en": "Email Identifier",
+                "fr": "Identifiant du courriel"
+            }
+        },
+        "from": {
+            "type": "string",
+            "input_type": "charcoal/admin/property/input/readonly",
+            "display_escape": true,
+            "allow_html": true,
+            "description": {
+                "en": "Sender's (\"From\") email address",
+                "fr": "Adresse courriel de l'expéditeur (\"De\")"
+            },
+            "label": {
+                "en": "Sender",
+                "fr": "Expéditeur"
+            }
+        },
+        "to": {
+            "type": "string",
+            "input_type": "charcoal/admin/property/input/readonly",
+            "display_escape": true,
+            "allow_html": true,
+            "description": {
+                "en": "Recipient's (\"To\") email address",
+                "fr": "Adresse courriel du destinataire (\"À\")"
+            },
+            "label": {
+                "en": "Recipient",
+                "fr": "Destinataire"
+            }
+        },
+        "subject": {
+            "type": "string",
+            "input_type": "charcoal/admin/property/input/readonly",
+            "label": {
+                "en": "Subject",
+                "fr": "Sujet"
+            }
+        },
+        "campaign": {
+            "type": "string",
+            "input_type": "charcoal/admin/property/input/readonly",
+            "label": {
+                "en": "Campaign",
+                "fr": "Campagne"
+            }
+        },
+        "send_ts": {
+            "type": "date-time",
+            "input_type": "charcoal/admin/property/input/readonly",
+            "label": {
+                "en": "Send Date",
+                "fr": "Date d'envoi"
+            }
+        }
+    },
+
+    "sources": {
+        "default": {
+            "type": "database",
+            "table": "charcoal_email_logs"
+        }
+    },
+    "default_source": "default"
+}

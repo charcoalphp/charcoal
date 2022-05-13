@@ -1,0 +1,26 @@
+{
+    "properties": {
+        "id": {
+            "type": "id",
+            "mode": "uniqid"
+        },
+        "email": {
+            "type": "object",
+            "obj_type": "charcoal/email/email-log"
+        },
+        "url": {
+            "type": "url",
+            "label": {
+                "en": "Original URL",
+                "fr": "URL original"
+            }
+        }
+    },
+    "sources": {
+        "default": {
+            "type": "database",
+            "table": "charcoal_email_links"
+        }
+    },
+    "default_source": "default"
+}

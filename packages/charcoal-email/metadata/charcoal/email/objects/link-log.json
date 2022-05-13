@@ -1,0 +1,25 @@
+{
+    "properties": {
+        "id": {
+            "type": "id",
+            "mode": "uniqid"
+        },
+        "link": {
+            "type": "object",
+            "obj_type": "charcoal/email/objects/link"
+        },
+        "ts": {
+            "type": "date-time"
+        },
+        "ip": {
+            "type": "ip"
+        }
+    },
+    "sources": {
+        "default": {
+            "type": "database",
+            "table": "charcoal_email_link_logs"
+        }
+    },
+    "default_source": "default"
+}

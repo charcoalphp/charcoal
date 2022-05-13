@@ -1,0 +1,172 @@
+{
+    "admin": {
+        "export": {
+            "default": {
+                "properties": [
+                    "queue_id",
+                    "queued_date",
+                    "processed",
+                    "processed_date",
+                    "from",
+                    "to",
+                    "subject"
+                ],
+                "orders": [{
+                    "property": "queued_date",
+                    "mode": "desc"
+                }],
+                "exporter_options": {
+                    "convert_br_to_newlines": true,
+                    "strip_tags": true,
+                    "filename": "email-queue-items.csv"
+                }
+            }
+        },
+        "default_export": "default",
+
+        "lists": {
+            "default": {
+                "title": {
+                    "fr": "Queues de courriel",
+                    "en": "Email queue items"
+                },
+                "properties": [
+                    "queue_id",
+                    "processed",
+                    "from",
+                    "to"
+                ],
+                "orders": [{
+                    "property": "queued_date",
+                    "mode": "desc"
+                }]
+            }
+        },
+        "default_list": "default",
+
+        "forms": {
+            "default": {
+                "groups": {
+                    "charcoal/email/email-queue-item/queue": {
+                        "priority": 10
+                    },
+                    "charcoal/email/email-queue-item/send": {
+                        "priority": 30
+                    },
+                    "charcoal/email/email-queue-item/message": {
+                        "priority": 40
+                    }
+                }
+            }
+        },
+        "default_form": "default",
+
+        "form_groups": {
+            "charcoal/email/email-queue-item/queue": {
+                "title": {
+                    "fr": "Queue de courriel",
+                    "en": "Email queue"
+                },
+                "layout": {
+                    "structure": [{
+                        "columns": [1, 2]
+                    }]
+                },
+                "properties": [
+                    "queue_id",
+                    "queued_date"
+                ]
+            },
+            "charcoal/email/email-queue-item/send": {
+                "title": {
+                    "fr": "Envoi",
+                    "en": "Sent status"
+                },
+                "layout": {
+                    "structure": [
+                        {
+                            "columns": [1, 2]
+                        },
+                        {
+                            "columns": [1]
+                        },
+                        {
+                            "columns": [1]
+                        },
+                        {
+                            "columns": [1]
+                        }
+                    ]
+                },
+                "properties": [
+                    "processed",
+                    "processed_date",
+                    "processing_date"
+                ]
+            },
+            "charcoal/email/email-queue-item/message": {
+                "title": {
+                    "en": "Message",
+                    "fr": "Message"
+                },
+                "layout": {
+                    "structure": [
+                        {
+                            "columns": [1, 1]
+                        },
+                        {
+                            "columns": [1]
+                        },
+                        {
+                            "columns": [1]
+                        },
+                        {
+                            "columns": [1]
+                        }
+                    ]
+                },
+                "properties": [
+                    "from",
+                    "to",
+                    "subject",
+                    "msg_html",
+                    "msg_txt"
+                ]
+            }
+        },
+
+        "dashboards": {
+            "admin.edit": {
+                "layout": {
+                    "structure": [{
+                        "columns": [1]
+                    }]
+                },
+                "widgets": {
+                    "form": {
+                        "type": "charcoal/admin/widget/object-form",
+                        "form_ident": "default",
+                        "obj_type": "charcoal/email/email-queue-item"
+                    }
+                }
+            },
+            "admin.table": {
+                "layout": {
+                    "structure": [{
+                        "columns": [1]
+                    }]
+                },
+                "widgets": {
+                    "form": {
+                        "type": "charcoal/admin/widget/table",
+                        "collection_ident": "default",
+                        "obj_type": "charcoal/email/email-queue-item"
+                    }
+                }
+            }
+        },
+        "default_create_dashboard": "admin.edit",
+        "default_edit_dashboard": "admin.edit",
+        "default_collection_dashboard": "admin.table"
+    }
+}

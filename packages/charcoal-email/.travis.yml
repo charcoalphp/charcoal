@@ -1,0 +1,40 @@
+language: php
+
+php:
+    - 7.1
+    - 7.2
+    - 7.3
+    - 7.4
+    - nightly
+
+env:
+    global:
+        - secure: "nIqiRZI+x4iY2TS9qMaWjFUAhwyL0tPzowm0gW19X+ao3vPhQTbK7kfEw3mu1Um6nvrZzhkpaJ+IjhsuFbPscFmy9mkXdEtpjo6xB8vh59h+5BB+Zov9MO5ipMtIm/RjhqCA5cSwC8MMucifo6aPsPQkgxEakH0bqvcd1R4wXRQ0U2S9lngg9mOKNcPPs+8bLAgBsjV/iplPgFoTCoEnqU31+9FghHydT3CKfyObx3e8T3tLjMnPhH1wF/HIWuYe4Z/bypgIqLouT2HiYR2/6FZnTU3UabPcicwQavElDKAqCQLJaiZYfx+bnP11yoYE/bbBYerQaMcRTd/E7I2xvRzkWKl1l8JSWKbsi9D1hai8lkcSd3eF43TZRlb3mjKgqy5JITf04byEBt/009rSFfHK4+63ycwUbUSONcxFwW/iLulfeAbZaIMQ3B84U3wEX5nRHwpG9Te2Aidd3X1ZM/FvGsPOK9HbExk04VcP2C+VNKcZJxFWcuupCJK0p/MNnmBla+5Xs0HIwFW1LGv77S1J/+u99jAtMatWcPwu+XVwT4TPb0QOAGOOiWcogTX51nrRZqxPLFBqSxB85DbQRpMaa5osXgD/fhL0qVeDGb24gk25vk+ihFdQ/sugVn+RqvYRkDyol2XdTVU9udPXo53Lu8fxdAbtDsvUKzMfBoc="
+        - GH_REPO: github.com/locomotivemtl/charcoal-email.git
+
+matrix:
+    allow_failures:
+        - php: nightly
+
+before_script:
+    ## Fix xdebug 3
+    - echo 'xdebug.mode=coverage' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+
+    ## Init Composer
+    - composer selfupdate --quiet
+    - composer install -n
+
+    ## Create temporary folders
+    - mkdir -p build/logs
+
+script:
+    - composer test
+
+after_success:
+    - php vendor/bin/php-coveralls -v
+    #- bash build/travis/phpdoc_ghpages.sh
+    #- bash build/travis/apigen_ghpages.sh
+
+notifications:
+    slack: locomotivemtl:d9h8ZWwTZ6b3WUsSP9s26nb1
+    email: charcoal@locomotive.ca
