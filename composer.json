@@ -141,6 +141,20 @@
         "locomotivemtl/charcoal-user": "self.version",
         "locomotivemtl/charcoal-view": "self.version"
     },
+    "scripts": {
+        "test": [
+            "@tests"
+        ],
+        "tests": [
+            "@phpcs",
+            "@phpunit"
+        ],
+        "phplint": "find packages -type f -name '*.php' -print0 | xargs -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1",
+        "phpcs": "php vendor/bin/phpcs -ps --colors packages/*/src/ --ignore=tests/",
+        "phpcbf": "php vendor/bin/phpcbf -ps --colors packages/*/src/ --ignore=tests/",
+        "phpunit": "php vendor/bin/phpunit --coverage-text",
+        "phpstan": "vendor/bin/phpstan analyse packages/*/src packages/*/tests"
+    },
     "minimum-stability": "dev",
     "prefer-stable": true
 }

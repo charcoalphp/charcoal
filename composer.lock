@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "12a113be7257a0a89c004327fcb2fdc5",
+    "content-hash": "ea2b8eaa9df0a7bd9fb313c808587d8c",
     "packages": [
         {
             "name": "barryvdh/elfinder-flysystem-driver",
