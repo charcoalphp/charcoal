@@ -1,6 +1,6 @@
 {
     "type": "library",
-    "name": "locomotivemtl-charcoal/charcoal",
+    "name": "locomotive-charcoal/charcoal",
     "authors": [
         {
             "name": "Locomotive",
