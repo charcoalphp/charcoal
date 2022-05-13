@@ -1,0 +1,21 @@
+# Package Managers
+
+composer.lock
+composer.phar
+vendor/
+node_modules/
+
+# Documentation
+
+phpdoc/
+
+# Logging
+
+*.log
+logs/
+
+# Caches
+
+build/docs/
+build/logs/
+tmp/
