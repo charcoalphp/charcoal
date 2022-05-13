@@ -1,0 +1,9 @@
+{
+    "sources": {
+        "default": {
+            "type": "database",
+            "table": "charcoal_attachment_joins"
+        }
+    },
+    "default_source": "default"
+}

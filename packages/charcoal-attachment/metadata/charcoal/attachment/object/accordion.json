@@ -1,0 +1,97 @@
+{
+    "default_data": {
+        "type": "charcoal/attachment/object/accordion",
+        "preview": "{{> charcoal/attachment/object/accordion }}",
+        "heading": "{{# _t }}Accordion{{/ _t }}{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}"
+    },
+    "data": {
+        "type": "charcoal/attachment/object/accordion",
+        "preview": "{{> charcoal/attachment/object/accordion }}",
+        "heading": "{{# _t }}Accordion{{/ _t }}{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}"
+    },
+
+    "attachments": {
+        "attachable_objects": {
+            "charcoal/attachment/object/text": {
+                "label": "Text Zone"
+            },
+            "charcoal/attachment/object/image": {
+                "label": "Picture"
+            },
+            "charcoal/attachment/object/gallery": {
+                "label": "Picture Gallery"
+            },
+            "charcoal/attachment/object/embed": {
+                "label": "Embedded Media"
+            }
+        }
+    },
+
+    "admin": {
+        "forms": {
+            "quick": {
+                "groups": {
+                    "body": {
+                        "title": "Content Accordion",
+                        "show_header": false,
+                        "properties": [
+                            "title"
+                        ],
+                        "layout": {
+                            "structure": [
+                                { "columns": [ 1 ] },
+                                { "columns": [ 1 ] }
+                            ]
+                        }
+                    }
+                }
+            },
+            "default": {
+                "groups": {
+                    "body": {
+                        "title": "Content Accordion",
+                        "properties": [
+                            "title",
+                            "active",
+                            "description",
+                            "keywords"
+                        ],
+                        "layout": {
+                            "structure": [
+                                { "columns": [ 5, 1 ] },
+                                { "columns": [ 1 ] },
+                                { "columns": [ 1 ] },
+                                { "columns": [ 1 ] }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+
+        "form_groups": {
+            "contents": {
+                "title": "Panels",
+                "type": "charcoal/admin/widget/form-group/attachment",
+                "template": "charcoal/admin/widget/form-group/attachment",
+                "group": "accordion",
+                "show_previews": false
+            }
+        },
+
+        "dashboards": {
+            "admin.edit": {
+                "title": "Edit Attachment",
+                "widgets": {
+                    "form": {
+                        "type": "charcoal/admin/widget/object-form",
+                        "form_ident": "default",
+                        "obj_type": "charcoal/attachment/object/accordion"
+                    }
+                }
+            }
+        },
+        "default_create_dashboard": "admin.edit",
+        "default_edit_dashboard": "admin.edit"
+    }
+}

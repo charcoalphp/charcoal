@@ -1,0 +1,79 @@
+{
+    "sources": {
+        "default": {
+            "table": "charcoal_attachment_categories"
+        }
+    },
+    "default_source": "default",
+
+    "admin": {
+        "lists": {
+            "default": {
+                "properties": [
+                    "name",
+                    "active"
+                ],
+                "list_actions": [
+                    {
+                        "label": "New Category",
+                        "ident": "create",
+                        "url": "object/edit?obj_type=charcoal/attachment/object/category/generic"
+                    }
+                ]
+            }
+        },
+        "default_list": "default",
+        "forms": {
+            "default": {
+                "groups": {
+                    "body": {
+                        "title": "Information",
+                        "properties": [
+                            "name",
+                            "active"
+                        ],
+                        "layout": {
+                            "structure": [
+                                { "columns": [ 5, 1 ] }
+                            ]
+                        }
+                    }
+                },
+                "sidebars": {
+                    "default": {}
+                }
+            }
+        },
+
+        "dashboards": {
+            "admin.edit": {
+                "title": "Category",
+                "widgets": {
+                    "form": {
+                        "type": "charcoal/admin/widget/object-form",
+                        "form_ident": "default",
+                        "obj_type": "charcoal/attachment/object/category/generic"
+                    }
+                }
+            },
+            "admin.table": {
+                "title": "List of Categories",
+                "widgets": {
+                    "table": {
+                        "type": "charcoal/admin/widget/table",
+                        "collection_ident": "default",
+                        "obj_type": "charcoal/attachment/object/category/generic"
+                    }
+                },
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] }
+                    ]
+                }
+            }
+        },
+        "default_create_dashboard": "admin.edit",
+        "default_edit_dashboard": "admin.edit",
+        "default_collection_dashboard": "admin.table"
+    }
+}

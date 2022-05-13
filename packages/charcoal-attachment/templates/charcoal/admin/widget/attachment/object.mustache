@@ -1,0 +1,29 @@
+{{!--
+    Attachment Widget \ Single Object
+    =================================
+
+    @used-by `charcoal/admin/widget/attachment/list`
+--}}
+<article
+    class="c-attachments_row row js-attachment"
+    id="{{ widgetId }}_{{ id }}"
+    data-id="{{ id }}"
+    data-type="{{ objType }}"
+    data-microtype="{{ microType }}"
+    {{# attachmentGroup }} data-group="{{ . }}"{{/ attachmentGroup }}>
+    <div class="col-10">
+        <div class="card card-collapsible{{^ active }} alert-danger{{/ active }}">
+            {{# attachmentOptions.show_preview }}
+                {{> charcoal/admin/widget/attachment/object/collapsible }}
+            {{/ attachmentOptions.show_preview }}
+            {{^ attachmentOptions.show_preview }}
+                {{> charcoal/admin/widget/attachment/object/noncollapsible }}
+            {{/ attachmentOptions.show_preview }}
+        </div>
+    </div>
+    <aside class="col-2">
+        <div class="btn-toolbar js-attachment-actions" role="toolbar">
+            {{> charcoal/admin/widget/attachment/object/actions }}
+        </div>
+    </aside>
+</article>

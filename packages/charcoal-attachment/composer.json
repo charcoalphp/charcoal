@@ -1,0 +1,64 @@
+{
+    "type": "library",
+    "name": "locomotivemtl/charcoal-attachment",
+    "description": "Charcoal Attachments Module",
+    "homepage": "https://charcoal.locomotive.ca",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Bene Roch",
+            "email": "ben@locomotive.ca"
+        },
+        {
+            "name": "Locomotive",
+            "homepage": "https://locomotive.ca"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.9.x-dev"
+        }
+    },
+    "require": {
+        "php": " >=7.1",
+        "locomotivemtl/charcoal-config": "~0.8",
+        "locomotivemtl/charcoal-core": "~0.4",
+        "locomotivemtl/charcoal-object": "~0.5",
+        "locomotivemtl/charcoal-translator": "~0.3"
+    },
+    "require-dev": {
+        "locomotivemtl/charcoal-admin": "~0.8",
+        "mockery/mockery": "^1.0",
+        "php-coveralls/php-coveralls": "^2.2",
+        "phpunit/phpunit": "^7.5",
+        "squizlabs/php_codesniffer": "^3.3"
+    },
+    "suggest": {
+        "locomotivemtl/charcoal-admin": "To use the attachment widgets, actions, and scripts."
+    },
+    "autoload": {
+        "psr-4": {
+            "Charcoal\\": "src/Charcoal"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Charcoal\\Tests\\": "tests/Charcoal"
+        }
+    },
+    "scripts": {
+        "test": [
+            "@tests"
+        ],
+        "tests": [
+            "@phplint",
+            "@phpcs"
+        ],
+        "phplint": "find src tests -type f -name '*.php' -print0 | xargs -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1",
+        "phpcs": "php vendor/bin/phpcs -ps --colors src/ tests/",
+        "phpcbf": "php vendor/bin/phpcbf -ps --colors src/ tests/",
+        "phpunit": "php vendor/bin/phpunit --coverage-text"
+    }
+}

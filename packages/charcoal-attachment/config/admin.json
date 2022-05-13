@@ -1,0 +1,25 @@
+{
+    "admin": {
+        "routes": {
+            "actions": {
+                "join": {
+                    "ident": "charcoal/admin/action/join"
+                },
+                "add-join": {
+                    "ident": "charcoal/admin/action/add-join"
+                },
+                "remove-join": {
+                    "ident": "charcoal/admin/action/remove-join"
+                }
+            },
+            "scripts": {
+                "locomotivemtl/attachment/migrate": {
+                    "ident": "charcoal/attachment/script/migrate"
+                },
+                "locomotivemtl/attachment/cleanup": {
+                    "ident": "charcoal/attachment/script/cleanup"
+                }
+            }
+        }
+    }
+}

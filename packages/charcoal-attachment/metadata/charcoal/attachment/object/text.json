@@ -1,0 +1,144 @@
+{
+    "default_data": {
+        "type": "charcoal/attachment/object/text",
+        "preview": "{{> charcoal/attachment/object/text }}",
+        "heading": "{{# _t }}Text Zone{{/ _t }}{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}"
+    },
+
+    "properties": {
+        "description": {
+            "type": "html"
+        }
+    },
+
+    "admin": {
+        "forms": {
+            "text": {
+                "l10n_mode": "loop_inputs",
+                "groups": {
+                    "info": {
+                        "title": "Information",
+                        "properties": [
+                            "title",
+                            "subtitle",
+                            "description",
+                            "keywords"
+                        ],
+                        "layout": {
+                            "structure": [
+                                { "columns": [ 1, 1 ] },
+                                { "columns": [ 1 ] },
+                                { "columns": [ 1 ] }
+                            ]
+                        }
+                    },
+                    "taxo": {
+                        "properties": [
+                            "active"
+                        ],
+                        "layout": {
+                            "structure": [
+                                { "columns": [ 1 ] }
+                            ]
+                        }
+                    }
+
+                },
+                "sidebars": {
+                    "default": {}
+                }
+            },
+            "quick": {
+                "groups": {
+                    "main": {
+                        "properties": [
+                            "title",
+                            "description"
+                        ],
+                        "layout": {
+                            "structure": [
+                                { "columns": [ 1 ] },
+                                { "columns": [ 1 ] }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "default_form": "text",
+
+        "lists": {
+            "text": {
+                "properties": [
+                    "title",
+                    "subtitle",
+                    "active"
+                ],
+                "list_actions": [
+                    {
+                        "label": "New Text Zone",
+                        "ident": "create",
+                        "url": "object/edit?obj_type=charcoal/attachment/object/text"
+                    }
+                ],
+                "filters": {
+                    "type": {
+                        "property": "type",
+                        "value": "charcoal/attachment/object/text"
+                    }
+                }
+            },
+            "attachment": {
+                "properties": [
+                    "title",
+                    "subtitle"
+                ],
+                "orders": {
+                    "type": {
+                        "property": "type",
+                        "val": "asc"
+                    }
+                },
+                "filters": {
+                    "type": {
+                        "property": "type",
+                        "value": "charcoal/attachment/object/text"
+                    }
+                }
+            }
+        },
+        "default_list": "text",
+
+        "dashboards": {
+            "edit": {
+                "widgets": {
+                    "form": {
+                        "type": "charcoal/admin/widget/object-form",
+                        "form_ident": "text",
+                        "obj_type": "charcoal/attachment/object/text"
+                    }
+                },
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] }
+                    ]
+                }
+            },
+            "table": {
+                "title": "List of Text Zones",
+                "widgets": {
+                    "form": {
+                        "type": "charcoal/admin/widget/table",
+                        "collection_ident": "text",
+                        "obj_type": "charcoal/attachment/object/text"
+                    }
+                },
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] }
+                    ]
+                }
+            }
+        }
+    }
+}

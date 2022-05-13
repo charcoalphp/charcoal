@@ -1,0 +1,33 @@
+{
+    "properties": {
+        "id": {
+            "type": "id",
+            "label": "ID"
+        },
+        "active": {
+            "type": "boolean",
+            "label": "Active"
+        },
+        "object_type": {
+            "type": "string",
+            "label": "Object Type"
+        },
+        "object_id": {
+            "type": "string",
+            "label": "Object ID"
+        },
+        "attachment_id": {
+            "type": "string",
+            "label": "Attachment ID"
+        },
+        "group": {
+            "type": "string",
+            "label": "Group",
+            "notes": "If empty, the group will be set to \"Generic\""
+        },
+        "position": {
+            "type": "number",
+            "label": "Position"
+        }
+    }
+}

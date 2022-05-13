@@ -1,0 +1,159 @@
+{
+    "default_data": {
+        "type": "charcoal/attachment/object/embed",
+        "preview": "{{> charcoal/attachment/object/embed }}",
+        "heading": "{{# _t }}Embedded Media{{/ _t }}{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}"
+    },
+    "data": {
+        "type": "charcoal/attachment/object/embed",
+        "preview": "{{> charcoal/attachment/object/embed }}",
+        "heading": "{{# _t }}Embedded Media{{/ _t }}{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}"
+    },
+
+    "properties": {
+        "file": {
+            "type": "image",
+            "upload_path": "uploads/attachments/images/",
+            "view_options": {
+                "charcoal/admin/property/display/image": {
+                    "height": 50
+                }
+            }
+        },
+        "description": {
+            "type": "html"
+        }
+    },
+
+    "admin": {
+        "forms": {
+            "embed": {
+                "l10n_mode": "loop_inputs",
+                "groups": {
+                    "info": {
+                        "title": "Information",
+                        "properties": [
+                            "title",
+                            "subtitle",
+                            "embed",
+                            "description",
+                            "keywords"
+                        ],
+                        "layout": {
+                            "structure": [
+                                { "columns": [ 1, 1 ] },
+                                { "columns": [ 1 ] },
+                                { "columns": [ 1 ] },
+                                { "columns": [ 1 ] }
+                            ]
+                        }
+                    },
+                    "taxo": {
+                        "properties": [
+                            "active"
+                        ],
+                        "layout": {
+                            "structure": [
+                                { "columns": [ 1 ] }
+                            ]
+                        }
+                    }
+                },
+                "sidebars": {
+                    "default": {}
+                }
+            },
+            "quick": {
+                "groups": {
+                    "main": {
+                        "properties": [
+                            "title",
+                            "embed"
+                        ],
+                        "layout": {
+                            "structure": [
+                                { "columns": [ 1 ] },
+                                { "columns": [ 1 ] }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "default_form": "embed",
+
+        "lists": {
+            "default": {
+                "properties": [
+                    "title",
+                    "file",
+                    "active"
+                ],
+                "list_actions": [
+                    {
+                        "label": "New Embedded Media",
+                        "ident": "create",
+                        "url": "object/edit?obj_type=charcoal/attachment/object/embed"
+                    }
+                ],
+                "filters": {
+                    "type": {
+                        "property": "type",
+                        "value": "charcoal/attachment/object/embed"
+                    }
+                }
+            },
+            "attachment": {
+                "properties": [
+                    "title",
+                    "embed"
+                ],
+                "orders": {
+                    "type": {
+                        "property": "type",
+                        "val": "asc"
+                    }
+                },
+                "filters": {
+                    "type": {
+                        "property": "type",
+                        "value": "charcoal/attachment/object/embed"
+                    }
+                }
+            }
+        },
+        "default_list": "default",
+
+        "dashboards": {
+            "edit": {
+                "widgets": {
+                    "form": {
+                        "type": "charcoal/admin/widget/object-form",
+                        "form_ident": "embed",
+                        "obj_type": "charcoal/attachment/object/embed"
+                    }
+                },
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] }
+                    ]
+                }
+            },
+            "table": {
+                "title": "List of Embedded Media",
+                "widgets": {
+                    "form": {
+                        "type": "charcoal/admin/widget/table",
+                        "collection_ident": "default",
+                        "obj_type": "charcoal/attachment/object/embed"
+                    }
+                },
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] }
+                    ]
+                }
+            }
+        }
+    }
+}

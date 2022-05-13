@@ -1,0 +1,38 @@
+<div class="btn-toolbar" role="toolbar">
+    {{^ attachmentOptions.read_only }}
+        {{# hasAttachmentTypes }}
+            <div class="btn-group js-attachments-manager" role="group">
+                <button class="btn btn-dark dropdown-toggle" type="button" data-toggle="dropdown">
+                    {{# _t }}Add{{/ _t }}
+                </button>
+                <div class="dropdown-menu js-attachments-manager">
+                    {{# attachmentTypes }}
+                        <a href="{{ baseUrl }}admin/object/edit?obj_type={{ val }}{{# id }}&obj_id={{ . }}{{/ id }}{{# formIdent }}&form_ident={{ . }}{{/ formIdent }}"
+                            class="dropdown-item js-add-attachment{{# locked }} disabled{{/ locked }}"
+                            target="_blank"
+                            data-type="{{ val }}"
+                            {{# id }}
+                            data-id="{{ . }}"
+                            {{/ id }}
+                            data-title="{{ label }}"
+                            data-skip-form="{{ skipForm }}"
+                            data-form-ident="{{ quickFormIdent }}">
+                            {{> charcoal/admin/widget/attachment/object/icon }}
+                            <span>{{& label }}</span>
+                        </a>
+                    {{/ attachmentTypes }}
+                </div>
+            </div>
+        {{/ hasAttachmentTypes }}
+    {{/ attachmentOptions.read_only }}
+    {{# attachmentOptions.show_preview }}
+        <div class="btn-group" role="group" aria-label="{{# _t }}Toggle Content Previews{{/ _t }}">
+            <button type="button" class="btn btn-outline-secondary js-attachments-expand" aria-label="{{# _t }}Expand Previews{{/ _t }}">
+                <span class="fa fa-toggle-down" aria-hidden="true"></span> {{# _t }}Expand{{/ _t }}
+            </button>
+            <button type="button" class="btn btn-outline-secondary js-attachments-collapse" aria-label="{{# _t }}Close Previews{{/ _t }}">
+                <span class="fa fa-toggle-up" aria-hidden="true"></span> {{# _t }}Close{{/ _t }}
+            </button>
+        </div>
+    {{/ attachmentOptions.show_preview }}
+</div>

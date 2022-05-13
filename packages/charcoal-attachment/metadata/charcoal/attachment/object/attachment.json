@@ -1,0 +1,246 @@
+{
+    "default_data": {
+        "show_title": true,
+        "preview": "{{ title }}",
+        "heading": "{{# _t }}Related Content{{/ _t }}{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}"
+    },
+    "data": {
+        "show_title": true,
+        "preview": "{{ title }}",
+        "heading": "{{# _t }}Related Content{{/ _t }}{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}"
+    },
+
+    "properties": {
+        "id": {
+            "type": "id",
+            "mode": "uniqid",
+            "label": "ID"
+        },
+        "title": {
+            "type": "string",
+            "l10n": true,
+            "label": "Title"
+        },
+        "show_title": {
+            "type": "boolean",
+            "label": "Show title on the website"
+        },
+        "categories": {
+            "type": "object",
+            "obj_type": "charcoal/attachment/object/category/generic",
+            "multiple": true,
+            "label": "Categories"
+        },
+        "subtitle": {
+            "type": "string",
+            "l10n": true,
+            "label": "Sub-Title"
+        },
+        "description": {
+            "type": "text",
+            "l10n": true,
+            "label": "Description"
+        },
+        "keywords": {
+            "type": "string",
+            "multiple": true,
+            "l10n": true,
+            "label": "Keywords"
+        },
+        "type": {
+            "type": "string",
+            "label": "Type"
+        },
+        "type_label": {
+            "type": "string",
+            "storable": false,
+            "label": "Type"
+        },
+        "link": {
+            "type": "string",
+            "l10n": true,
+            "display_type": "charcoal/admin/property/display/link",
+            "label": "URL",
+            "notes": "e.g.: <samp>https://locomotive.ca</samp>"
+        },
+        "link_label": {
+            "type": "string",
+            "l10n": true,
+            "label": "URL Label"
+        },
+        "file": {
+            "type": "file",
+            "l10n": true,
+            "validatable": false,
+            "upload_path": "uploads/attachments/",
+            "public_access": true,
+            "display_type": "charcoal/admin/property/display/link",
+            "label": "File"
+        },
+        "file_label": {
+            "type": "string",
+            "l10n": true,
+            "label": "File Label"
+        },
+        "file_size": {
+            "type": "string",
+            "label": "File Size"
+        },
+        "file_type": {
+            "type": "string",
+            "label": "File Type"
+        },
+        "file_or_link": {
+            "type": "string",
+            "l10n": true,
+            "storable": false,
+            "display_type": "charcoal/admin/property/display/link",
+            "label": "File / Link"
+        },
+        "file_and_link": {
+            "type": "string",
+            "multiple": true,
+            "storable": false,
+            "display_type": "charcoal/admin/property/display/link",
+            "label": "File / Link"
+        },
+        "thumbnail": {
+            "type": "image",
+            "l10n": true,
+            "label": "File's Thumbnail",
+            "upload_path": "uploads/attachments/thumbs/",
+            "public_access": true
+        },
+        "embed": {
+            "type": "text",
+            "l10n": true,
+            "label": "Embed Video",
+            "notes": "As provided by YouTube or Vimeo",
+            "allow_html" : true
+        }
+    },
+
+    "sources": {
+        "default": {
+            "type": "database",
+            "table": "charcoal_attachments"
+        }
+    },
+    "default_source": "default",
+
+    "admin": {
+        "lists": {
+            "default": {
+                "properties": [
+                    "title",
+                    "subtitle",
+                    "type",
+                    "file"
+                ],
+                "orders": {
+                    "type": {
+                        "property": "type",
+                        "val": "asc"
+                    }
+                }
+            }
+        },
+        "default_list": "default",
+
+        "forms": {
+            "default": {
+                "show_header": false,
+                "l10n_mode": "loop_inputs",
+                "groups": {
+                    "info": {
+                        "priority": 100,
+                        "title": "Information",
+                        "properties": [
+                            "title",
+                            "subtitle",
+                            "description",
+                            "keywords"
+                        ],
+                        "layout": {
+                            "structure": [
+                                { "columns": [ 1, 1 ] },
+                                { "columns": [ 1 ] },
+                                { "columns": [ 1 ] },
+                                { "columns": [ 1 ] },
+                                { "columns": [ 1 ] },
+                                { "columns": [ 1, 1 ] },
+                                { "columns": [ 1, 1 ] }
+                            ]
+                        }
+                    },
+                    "media": {
+                        "priority": 200,
+                        "title": "Media",
+                        "properties": [
+                            "file",
+                            "thumbnail"
+                        ],
+                        "layout": {
+                            "structure": [
+                                { "columns": [ 1 ] },
+                                { "columns": [ 1, 1 ] }
+                            ]
+                        }
+                    },
+                    "taxo": {
+                        "priority": 300,
+                        "title": "Taxonomy",
+                        "properties": [
+                            "active"
+                        ],
+                        "layout": {
+                            "structure": [
+                                { "columns": [ 1 ] }
+                            ]
+                        }
+                    }
+
+                },
+                "sidebars": {
+                    "default": {}
+                }
+            }
+        },
+        "default_form": "default",
+
+        "dashboards": {
+            "edit": {
+                "title": "Edit Attachment",
+                "widgets": {
+                    "form": {
+                        "type": "charcoal/admin/widget/object-form",
+                        "form_ident": "default",
+                        "group_display_mode": "tab"
+                    }
+                },
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] }
+                    ]
+                }
+            },
+            "table": {
+                "title": "List of Attachments",
+                "widgets": {
+                    "form": {
+                        "type": "charcoal/admin/widget/table",
+                        "collection_ident": "default"
+                    }
+                },
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] }
+                    ]
+                }
+            }
+        },
+        "default_create_dashboard": "edit",
+        "default_edit_dashboard": "edit",
+        "default_collection_dashboard": "table"
+    }
+}

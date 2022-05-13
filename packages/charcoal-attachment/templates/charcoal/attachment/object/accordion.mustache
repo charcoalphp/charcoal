@@ -1,0 +1,24 @@
+{{!--
+    Attachable Preview \ Accordion
+    ==============================
+--}}
+{{# hasAttachments }}
+    <ul class="list-group">
+    {{# attachments }}
+        <li class="list-group-item d-flex justify-content-between align-items-center{{^ active }} alert-danger{{/ active }}">
+            <div>
+                {{# attachmentType }}
+                    {{> charcoal/admin/widget/attachment/object/icon }}
+                {{/ attachmentType }}
+                <span class="list-group-item-label">
+                    {{> charcoal/admin/widget/attachment/object/heading }}
+                </span>
+            </div>
+            {{> charcoal/attachment/object/partial/modify-button }}
+        </li>
+    {{/ attachments }}
+    </ul>
+{{/ hasAttachments }}
+{{^ hasAttachments }}
+    {{> charcoal/admin/widget/attachment/empty }}
+{{/ hasAttachments }}

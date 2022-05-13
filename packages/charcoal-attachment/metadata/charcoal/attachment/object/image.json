@@ -1,0 +1,121 @@
+{
+    "default_data": {
+        "type": "charcoal/attachment/object/image",
+        "preview": "{{> charcoal/attachment/object/image }}",
+        "heading": "{{# _t }}Picture{{/ _t }}{{# title }}: {{ . }} — {{/ title }}{{^ title }} #{{ id }} — {{/ title }}{{ basename }}"
+    },
+
+    "properties": {
+        "description": {
+            "type": "html"
+        },
+        "file": {
+            "type": "image",
+            "upload_path": "uploads/attachments/images/",
+            "view_options": {
+                "charcoal/admin/property/display/image": {
+                    "height": 50
+                }
+            }
+        }
+    },
+
+    "admin": {
+        "lists": {
+            "default": {
+                "properties": [
+                    "title",
+                    "file",
+                    "active"
+                ],
+                "list_actions": [
+                    {
+                        "label": "New Image",
+                        "ident": "create",
+                        "url": "object/edit?obj_type=charcoal/attachment/object/image"
+                    }
+                ],
+                "filters": {
+                    "type": {
+                        "property": "type",
+                        "value": "charcoal/attachment/object/image"
+                    }
+                }
+            },
+            "attachment": {
+                "properties": [
+                    "title",
+                    "file"
+                ],
+                "orders": {
+                    "type": {
+                        "property": "type",
+                        "val": "asc"
+                    }
+                },
+                "filters": {
+                    "type": {
+                        "property": "type",
+                        "value": "charcoal/attachment/object/image"
+                    }
+                }
+            }
+        },
+
+        "forms": {
+            "quick": {
+                "groups": {
+                    "main": {
+                        "properties": [
+                            "title",
+                            "subtitle",
+                            "description",
+                            "file"
+                        ],
+                        "layout": {
+                            "structure": [
+                                { "columns": [ 1, 1 ] },
+                                { "columns": [ 1 ] },
+                                { "columns": [ 1 ] },
+                                { "columns": [ 1 ] }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "default_list": "default",
+
+        "dashboards": {
+            "edit": {
+                "widgets": {
+                    "form": {
+                        "type": "charcoal/admin/widget/object-form",
+                        "form_ident": "default",
+                        "obj_type": "charcoal/attachment/object/image"
+                    }
+                },
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] }
+                    ]
+                }
+            },
+            "table": {
+                "title": "List of Images",
+                "widgets": {
+                    "form": {
+                        "type": "charcoal/admin/widget/table",
+                        "collection_ident": "default",
+                        "obj_type": "charcoal/attachment/object/image"
+                    }
+                },
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] }
+                    ]
+                }
+            }
+        }
+    }
+}

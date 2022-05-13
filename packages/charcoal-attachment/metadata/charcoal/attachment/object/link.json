@@ -1,0 +1,136 @@
+{
+    "default_data": {
+        "type": "charcoal/attachment/object/link",
+        "preview": "{{> charcoal/attachment/object/link }}",
+        "heading": "{{# _t }}External Link{{/ _t }}{{# title }}: {{ . }} — {{/ title }}{{^ title }} #{{ id }} — {{/ title }}{{ link }}"
+    },
+
+    "admin": {
+        "forms": {
+            "link": {
+                "l10n_mode": "loop_inputs",
+                "groups": {
+                    "info": {
+                        "title": "Information",
+                        "properties": [
+                            "title",
+                            "link"
+                        ],
+                        "layout": {
+                            "structure": [
+                                { "columns": [ 1, 1 ] },
+                                { "columns": [ 1 ] },
+                                { "columns": [ 1 ] }
+                            ]
+                        }
+                    },
+                    "taxo": {
+                        "properties": [
+                            "active"
+                        ],
+                        "layout": {
+                            "structure": [
+                                { "columns": [ 1 ] }
+                            ]
+                        }
+                    }
+
+                },
+                "sidebars": {
+                    "default": {}
+                }
+            },
+            "quick": {
+                "groups": {
+                    "main": {
+                        "properties": [
+                            "title",
+                            "link"
+                        ],
+                        "layout": {
+                            "structure": [
+                                { "columns": [ 1 ] },
+                                { "columns": [ 1 ] }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "default_form": "link",
+
+        "lists": {
+            "link": {
+                "properties": [
+                    "title",
+                    "subtitle",
+                    "active"
+                ],
+                "list_actions": [
+                    {
+                        "label": "New Link",
+                        "ident": "create",
+                        "url": "object/edit?obj_type=charcoal/attachment/object/link"
+                    }
+                ],
+                "filters": {
+                    "type": {
+                        "property": "type",
+                        "value": "charcoal/attachment/object/link"
+                    }
+                }
+            },
+            "attachment": {
+                "properties": [
+                    "title",
+                    "subtitle"
+                ],
+                "orders": {
+                    "type": {
+                        "property": "type",
+                        "val": "asc"
+                    }
+                },
+                "filters": {
+                    "type": {
+                        "property": "type",
+                        "value": "charcoal/attachment/object/link"
+                    }
+                }
+            }
+        },
+        "default_list": "link",
+
+        "dashboards": {
+            "edit": {
+                "widgets": {
+                    "form": {
+                        "type": "charcoal/admin/widget/object-form",
+                        "form_ident": "link",
+                        "obj_type": "charcoal/attachment/object/link"
+                    }
+                },
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] }
+                    ]
+                }
+            },
+            "table": {
+                "title": "List of Links",
+                "widgets": {
+                    "form": {
+                        "type": "charcoal/admin/widget/table",
+                        "collection_ident": "link",
+                        "obj_type": "charcoal/attachment/object/link"
+                    }
+                },
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] }
+                    ]
+                }
+            }
+        }
+    }
+}

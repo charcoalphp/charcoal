@@ -1,0 +1,26 @@
+# Package Managers
+
+composer.phar
+composer.lock
+/vendor/
+/node_modules/
+
+# Logging
+
+*.log
+/logs/
+
+# Caching
+
+/cache/
+
+# Testing
+
+phpcs.xml
+phpunit.xml
+
+# Codebase
+
+/build/docs/
+/build/logs/
+/build/report/

@@ -1,0 +1,130 @@
+{
+    "default_data": {
+        "type": "charcoal/attachment/object/gallery",
+        "preview": "{{> charcoal/attachment/object/gallery }}",
+        "heading": "{{# _t }}Gallery{{/ _t }}{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}"
+    },
+    "data": {
+        "type": "charcoal/attachment/object/gallery",
+        "preview": "{{> charcoal/attachment/object/gallery }}",
+        "heading": "{{# _t }}Gallery{{/ _t }}{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}"
+    },
+
+    "attachments": {
+        "default_widget": "images",
+        "attachable_objects": {
+            "charcoal/attachment/object/image": {
+                "label": "Image"
+            }
+        }
+    },
+
+    "admin": {
+        "lists": {
+            "default": {
+                "properties": [
+                    "title",
+                    "active"
+                ],
+                "list_actions": [
+                    {
+                        "label": "New Gallery",
+                        "ident": "create",
+                        "url": "object/edit?obj_type=charcoal/attachment/object/gallery"
+                    }
+                ],
+                "filters": {
+                    "type": {
+                        "property": "type",
+                        "value": "charcoal/attachment/object/gallery"
+                    }
+                }
+            },
+            "attachment": {
+                "properties": [
+                    "title"
+                ],
+                "orders": {
+                    "type": {
+                        "property": "type",
+                        "val": "asc"
+                    }
+                },
+                "filters": {
+                    "type": {
+                        "property": "type",
+                        "value": "charcoal/attachment/object/gallery"
+                    }
+                }
+            }
+        },
+        "default_list": "default",
+
+        "forms": {
+            "quick": {
+                "groups": {
+                    "main": {
+                        "title": {
+                            "fr": "Galerie",
+                            "en": "Gallery"
+                        },
+                        "properties": [
+                            "title"
+                        ],
+                        "layout": {
+                            "structure": [
+                                { "columns": [ 1 ] },
+                                { "columns": [ 1 ] }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "default_form": "quick",
+
+        "dashboards": {
+            "edit": {
+                "widgets": {
+                    "form": {
+                        "type": "charcoal/admin/widget/object-form",
+                        "form_ident": "quick",
+                        "obj_type": "charcoal/attachment/object/gallery"
+                    },
+                    "images": {
+                        "title": "Images",
+                        "type": "charcoal/admin/widget/attachment",
+                        "form_ident": "default",
+                        "group": "gallery",
+                        "attachable_objects": {
+                            "charcoal/attachment/object/image": {
+                                "label": "Image"
+                            }
+                        }
+                    }
+                },
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] },
+                        { "columns": [ 1 ] }
+                    ]
+                }
+            },
+            "table": {
+                "title": "List of Galleries",
+                "widgets": {
+                    "form": {
+                        "type": "charcoal/admin/widget/table",
+                        "collection_ident": "default",
+                        "obj_type": "charcoal/attachment/object/gallery"
+                    }
+                },
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] }
+                    ]
+                }
+            }
+        }
+    }
+}

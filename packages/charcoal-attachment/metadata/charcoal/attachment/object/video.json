@@ -1,0 +1,82 @@
+{
+    "default_data": {
+        "type": "charcoal/attachment/object/video",
+        "heading": "{{# _t }}Video{{/ _t }}{{# title }}: {{ . }}{{/ title }}{{^ title }} #{{ id }}{{/ title }}"
+    },
+
+    "admin": {
+        "lists": {
+            "default": {
+                "properties": [
+                    "title",
+                    "file",
+                    "active"
+                ],
+                "list_actions": [
+                    {
+                        "label": "New Video",
+                        "ident": "create",
+                        "url": "object/edit?obj_type=charcoal/attachment/object/video"
+                    }
+                ],
+                "filters": {
+                    "type": {
+                        "property": "type",
+                        "value": "charcoal/attachment/object/video"
+                    }
+                }
+            },
+            "attachment": {
+                "properties": [
+                    "title",
+                    "embed"
+                ],
+                "orders": {
+                    "type": {
+                        "property": "type",
+                        "val": "asc"
+                    }
+                },
+                "filters": {
+                    "type": {
+                        "property": "type",
+                        "value": "charcoal/attachment/object/video"
+                    }
+                }
+            }
+        },
+        "default_list": "default",
+
+        "dashboards": {
+            "edit": {
+                "widgets": {
+                    "form": {
+                        "type": "charcoal/admin/widget/object-form",
+                        "form_ident": "video",
+                        "obj_type": "charcoal/attachment/object/video"
+                    }
+                },
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] }
+                    ]
+                }
+            },
+            "table": {
+                "title": "List of Videos",
+                "widgets": {
+                    "form": {
+                        "type": "charcoal/admin/widget/table",
+                        "collection_ident": "default",
+                        "obj_type": "charcoal/attachment/object/video"
+                    }
+                },
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] }
+                    ]
+                }
+            }
+        }
+    }
+}

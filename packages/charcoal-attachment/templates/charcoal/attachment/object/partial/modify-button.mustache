@@ -1,0 +1,15 @@
+{{# attachmentType }}
+<div class="js-attachment-actions">
+    <a class="btn btn-primary btn-sm"
+        href="object/edit?obj_type={{ obj_type }}&obj_id={{ attachment_id }}{{# formIdent }}&form_ident={{ . }}{{/ formIdent }}"
+        data-group="{{ attachmentGroup }}"
+        data-type="{{ obj_type }}"
+        data-attachment="{{ obj_type }}"
+        data-id="{{ attachment_id }}"
+        data-title="{{ label }}"
+        data-form-ident="{{ quickFormIdent }}"
+        data-action="edit">
+        {{# _t }}Edit{{/ _t }}
+    </a>
+</div>
+{{/ attachmentType }}

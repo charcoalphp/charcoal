@@ -1,0 +1,29 @@
+{{!--
+    Attachments Widget
+    =================-
+
+    @see `charcoal/admin/widget/table`
+
+    This widget expects to be in a context (model) of type `Charcoal\Admin\Widget\Table`.
+--}}
+
+<div id="{{ widgetId }}" class="c-attachments">
+    {{^ hasObj }}
+    {{> charcoal/admin/widget/attachment/unsaved }}
+    {{/ hasObj }}
+    {{# hasObj }}
+    <header class="c-attachments_header">
+        {{> charcoal/admin/widget/attachment/header }}
+    </header>
+
+    {{> charcoal/admin/widget/attachment/list }}
+
+    <div class="js-attachment-template d-none">
+        <a class="img-thumbnail js-attachment" href="#" data-id="{{ id }}" data-type="{{ objType }}">name</a>
+    </div>
+    {{/ hasObj }}
+</div>
+
+{{# hasObj }}
+{{> charcoal/admin/widget/attachment/js }}
+{{/ hasObj }}

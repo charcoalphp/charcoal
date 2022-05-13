@@ -1,0 +1,72 @@
+<div class="btn-group" role="group">
+    {{# attachmentOptions.read_only }}
+        {{# attachmentOptions.show_icon }}
+            {{# attachmentType }}
+                <button type="button" class="btn btn-default" disabled>
+                    {{# faIcon }}
+                        <i class="{{ . }}"></i>
+                    {{/ faIcon }}
+                </button>
+            {{/ attachmentType }}
+        {{/ attachmentOptions.show_icon }}
+    {{/ attachmentOptions.read_only }}
+    {{^ attachmentOptions.read_only }}
+    <button
+        class="btn{{# active }} btn-primary{{/ active }}{{^ active }} btn-danger{{/ active }} dropdown-toggle"
+        type="button"
+        data-toggle="dropdown">
+            {{# attachmentOptions.show_header }}
+                {{# _t }}Actions{{/ _t }}
+            {{/ attachmentOptions.show_header }}
+            {{^ attachmentOptions.show_header }}
+                {{# attachmentType }}
+                    {{> charcoal/admin/widget/attachment/object/icon }}
+                {{/ attachmentType }}
+                <span class="btn-label sr-only">{{# _t }}Actions{{/ _t }}</span>
+            {{/ attachmentOptions.show_header }}
+    </button>
+    <div class="dropdown-menu">
+        {{# attachmentType }}
+            <a class="dropdown-item text-dark {{# locked }}disabled{{/ locked }}"
+                href="object/edit?obj_type={{ type }}&obj_id={{ id }}{{# formIdent }}&form_ident={{ . }}{{/ formIdent }}"
+                data-type="{{ type }}"
+                data-id="{{ id }}"
+                data-form-ident="{{ quickFormIdent }}"
+                data-title="{{ label }}"
+                data-action="edit">
+                {{# _t }}Edit{{/ _t }}
+            </a>
+        {{/ attachmentType }}
+        {{# isAttachmentContainer }}
+            <div class="dropdown-divider"></div>
+                {{# attachmentTypes }}
+                    <a class="dropdown-item text-dark"
+                        href="#"
+                        {{# attachmentGroup }}
+                        data-group="{{ . }}"
+                        {{/ attachmentGroup }}
+                        data-type="{{ type }}"
+                        data-id="{{ id }}"
+                        data-attachment="{{ attachmentType }}"
+                        data-form-ident="{{ quickFormIdent }}"
+                        data-title="{{ label }}"
+                        data-action="add-object">
+                        {{> charcoal/admin/widget/attachment/object/icon }}
+                        {{ label }}
+                    </a>
+                {{/ attachmentTypes }}
+            <div class="dropdown-divider"></div>
+        {{/ isAttachmentContainer }}
+        <a class="dropdown-item"
+            href="object/delete?obj_type={{ type }}&obj_id={{ id }}"
+            data-type="{{ type }}"
+            data-id="{{ id }}"
+            data-action="delete">
+            {{# _t }}Remove{{/ _t }}
+        </a>
+        {{# isAttachmentContainer }}
+            <a class="dropdown-item" href="object/edit?obj_type={{ type }}&obj_id={{ id }}" target="_blank">{{# _t }}Edit Content{{/ _t }}</a>
+        {{/ isAttachmentContainer }}
+    </div>
+    {{/ attachmentOptions.read_only }}
+</div>
