@@ -1,0 +1,24 @@
+{
+    "properties": {
+        "structure_interfaces": {
+            "type": "string",
+            "multiple": true
+        },
+        "structure_metadata": {
+            "type": "structure"
+        },
+        "structure_model_class": {
+            "type": "string"
+        },
+        "structure_metadata_class": {
+            "type": "string"
+        }
+    },
+    "example": {
+        "form_group": {
+            "type": "charcoal/admin/widget/form-group/structure",
+            "template": "charcoal/admin/widget/form-group/structure",
+            "storage_property": null
+        }
+    }
+}

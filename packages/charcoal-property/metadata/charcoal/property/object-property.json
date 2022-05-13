@@ -1,0 +1,13 @@
+{
+    "properties": {
+        "obj_type": {
+            "type": "string",
+            "label": "Object Type"
+        },
+        "pattern": {
+            "type": "string",
+            "label": "Render Pattern",
+            "description": "When attempting to render the object, it will use the following pattern to render. Defaults to \"{{name}}\"."
+        }
+    }
+}

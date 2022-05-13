@@ -1,0 +1,14 @@
+{
+    "properties": {
+        "mode": {
+            "type": "string",
+            "label": "ID mode",
+            "description": "The ID generation mode. Can be `auto-increment` (auto-generated incrementing number), `uniqid` (13-characters ID) or `uuid` (36 characters RFC-4122 UUIDv4).",
+            "choices": {
+                "auto-increment": {},
+                "uniqid": {},
+                "uuid": {}
+            }
+        }
+    }
+}

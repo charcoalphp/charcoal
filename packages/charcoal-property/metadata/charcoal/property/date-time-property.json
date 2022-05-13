@@ -1,0 +1,22 @@
+{
+    "properties": {
+        "min": {
+            "type": "date-time",
+            "label": "Minimum date",
+            "description": "Minimum date value. If 0, empty or null, then there is no minimal constraint.",
+            "allow_null": true
+        },
+        "max": {
+            "type": "date-time",
+            "label": "Maximum date",
+            "description": "Maximum date value. If 0, empty or null, then there is no maximal constraint.",
+            "allow_null": true
+        },
+        "format": {
+            "type": "string",
+            "label": "Date format",
+            "description": "The date format is a string (in PHP's DateTime `format()`) that manages how to format the date value for display. Defaults to \"Y-m-d H:i:s\"",
+            "allow_empty": true
+        }
+    }
+}

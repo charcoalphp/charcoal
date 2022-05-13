@@ -1,0 +1,60 @@
+{
+    "properties": {
+        "ident": {
+            "type": "string"
+        },
+        "label": {
+            "type": "string",
+            "label": "Label",
+            "l10n": true
+        },
+        "description": {
+            "type": "html",
+            "label": "Description",
+            "l10n": true
+        },
+        "notes": {
+            "type": "html",
+            "label": "Notes",
+            "l10n": true
+        },
+        "l10n": {
+            "type": "boolean",
+            "label": "Translatable (l10n)?",
+            "description": "L10n properties (defaults to false) allow the value to be localized / translatable. In storage, a field will be create for each active languages."
+        },
+        "multiple": {
+            "type": "boolean",
+            "label": "Multiple?",
+            "description": "Multiple properties (default to false) can hold an array of values, instead of just a single value."
+        },
+        "hidden": {
+            "type": "boolean",
+            "label": "Hidden?",
+            "description": "Hidden properties (default to false) should be active but hidden from any UI."
+        },
+        "allow_null": {
+            "type": "boolean",
+            "label": "Allow Null?"
+        },
+        "required": {
+            "type": "boolean",
+            "label": "Required?"
+        },
+        "unique": {
+            "type": "boolean",
+            "label": "Unique?",
+            "description": "Unique properties (default to false) can not have two of the same value in the same storage / database."
+        },
+        "storable": {
+            "type": "boolean",
+            "label": "Storable?",
+            "description": "Storable properties (default to true) should have a space in the database to be stored. Non-storable properties (if set to false) "
+        },
+        "active": {
+            "type": "boolean",
+            "label": "Active?",
+            "description": "Only active properties (default to true) should be taken into consideration. Inactive properties should not be used anywhere."
+        }
+    }
+}

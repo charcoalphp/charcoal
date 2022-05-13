@@ -1,0 +1,18 @@
+{
+    "property": {
+        "min_length": {
+            "type": "number",
+            "label": "Minimum length",
+            "description": "Minimum audio length, in seconds. If 0, empty or null, then there is no minimal constraint.",
+            "notes": "In seconds",
+            "allow_null": true
+        },
+        "max_length": {
+            "type": "number",
+            "label": "Maximum length",
+            "description": "Maximum audio length, in seconds. If 0, empty or null, then there is no maximal constraint.",
+            "notes": "In seconds",
+            "allow_null": true
+        }
+    }
+}

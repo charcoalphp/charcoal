@@ -1,0 +1,36 @@
+{
+    "properties": {
+        "filesystem": {
+            "type": "string",
+            "label": "File System",
+            "description": "The default file system where the uploaded files will be stored."
+        },
+        "public_access": {
+            "type": "boolean",
+            "label": "Public access?",
+            "description": "If the public access is true (default) then the file will be stored in a public filesystem. If not, then it will be stored in a private (non-web-accessible) filesystem."
+        },
+        "upload_path": {
+            "type": "string",
+            "label": "Upload path",
+            "description": "The default upload path, relative to `base_url`, where the uploaded files will be stored."
+        },
+        "overwrite": {
+            "type": "boolean",
+            "label": "Overwrite on save / update?",
+            "description": "If true, when a target file already exists on the filesystem it will be overwritten. If false, a new unique name will be generated (with a suffix)."
+        },
+        "accepted_mimetypes": {
+            "type": "string",
+            "label": "Accepted mime types",
+            "description": "List of accepted mimetypes. Leave empty to accept all types (no mimetype constraint).",
+            "multiple": true
+        },
+        "max_filesize": {
+            "type": "number",
+            "label": "Maximum file size",
+            "description": "Maximum allowed file size, in bytes. If 0, null or empty, then there are no size constraint.",
+            "allow_null": true
+        }
+    }
+}

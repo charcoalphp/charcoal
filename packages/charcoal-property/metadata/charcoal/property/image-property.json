@@ -1,0 +1,18 @@
+{
+    "properties": {
+        "driver_type": {
+            "label": "Image Driver",
+            "type": "text",
+            "choices": {
+                "imagick": {},
+                "imagemagick": {}
+            }
+        },
+        "effects": {
+            "type": "structure"
+        },
+        "apply_effects": {
+            "type": "string"
+        }
+    }
+}

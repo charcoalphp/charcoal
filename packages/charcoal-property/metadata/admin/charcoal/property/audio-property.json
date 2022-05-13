@@ -1,0 +1,6 @@
+{
+    "admin": {
+        "input_type": "charcoal/admin/property/input/audio",
+        "display_type": "charcoal/admin/property/input/audio"
+    }
+}

@@ -1,0 +1,11 @@
+{
+    "properties": {
+        "storage_mode": {
+            "type": "text",
+            "choices": {
+                "string": {},
+                "int": {}
+            }
+        }
+    }
+}

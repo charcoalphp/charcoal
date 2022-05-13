@@ -1,0 +1,8 @@
+{
+    "properties": {
+        "support_alpha": {
+            "type": "boolean",
+            "label": "Alpha supported?"
+        }
+    }
+}

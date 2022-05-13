@@ -1,0 +1,42 @@
+language: php
+
+php:
+    - 5.6
+    - 7.0
+    - 7.1
+    - 7.2
+    - nightly
+
+env:
+    global:
+        - secure: "MRv/I0IUyZ6Ia/ViN7/OTcbipL49G3GgxFrRfZHoVZLQ4H3597Ow1WdaZO//+59QDlEJvY5wCbFEi25bLKwdez4CgTyeftiA+K14eG8Gzs7OjRErLiu7Od+XcVoFlJY9pB4ZpqRAvU+3BlP3ueiCqBEAGlpCOeb2DQ1ZG6pQj6rP48mT/lZQaco0g/KsO5FxH9sAg5SOgPw+SXHsFXxVd9iGkudFkj9Im2Vpo+InwXE0SPQ/bq+GFVlEzUi3b1Beh5QSzjYxxETYSvNbWPhK5qFQKUjtykGNcIzIh9MMbvmiJGRTVY3mZNHmrX9TIxNnee+rUX5TC+CwZdyijfCF+1319iAzic1b5DCpB1qmEZAJzNom/5l5zRfBFtAO6h30IjJ1yNGrv+QVgwg91v4+Mh1cmXhjjM9GI9H4gqcUHdsLAHWFEfW0dJi6LN+j1Ygzyx6YlKYEA1ToJI4QGs/aTkErJ0tWrquurLgC3WdZegGIy65quoMi9InNWdKhYogHm+sDmuV7qZAnL4zCnNNld7borrydnK3eYnN1Fd0598iKr7s9UQwED2BLp3sczAaLnN1dFcLAoz5++h5XMJFWNGWy7Vz3swbfqeMT9YHZBL7c9gWpDGWp2XZPsK7M6DiqXBfrdNv9UsZ+7/QJx2sFmiriGGRH2i/2JDx15WXZ190="
+        - GH_REPO: github.com/locomotivemtl/charcoal-property.git
+
+matrix:
+    allow_failures:
+        - php: nightly
+
+cache:
+    directories:
+        - $HOME/.composer/cache
+
+before_install:
+    - composer self-update --quiet
+
+install:
+    - composer install --no-interaction --no-suggest
+    - mkdir -p build/logs/
+
+script:
+    - composer phplint
+    - composer phpcs
+    - composer phpunit -- --coverage-clover "build/logs/clover.xml"
+
+after_success:
+    - php vendor/bin/php-coveralls -v
+    - bash build/travis/phpdoc_ghpages.sh
+    - bash build/travis/apigen_ghpages.sh
+
+notifications:
+    slack: locomotivemtl:d9h8ZWwTZ6b3WUsSP9s26nb1
+    email: charcoal@locomotive.ca

@@ -1,0 +1,6 @@
+{
+    "admin": {
+        "input_type": "charcoal/admin/property/input/file",
+        "show_file_picker": true
+    }
+}

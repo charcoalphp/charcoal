@@ -1,0 +1,26 @@
+{
+    "properties": {
+        "min_length": {
+            "type": "number",
+            "label": "Minimum length",
+            "description": "Minimum length (or number of characters) constraint. UTF-8 characters are supported. If 0, empty or null, then it should be ignored (no minimal constraint).",
+            "allow_null": true
+        },
+        "max_length": {
+            "type": "number",
+            "label": "Maximum length",
+            "description": "Maximum length (or number of characters) constraint. UTF-8 characters are supported. If 0, empty or null, then it should be ignored (no maximal constraint).",
+            "allow_null": true
+        },
+        "regexp": {
+            "type": "string",
+            "label": "Regular expression",
+            "description": "Regular expression validation constraint.",
+            "allow_null": true
+        },
+        "allow_empty": {
+            "type": "boolean",
+            "label": "Empty string allowed?"
+        }
+    }
+}

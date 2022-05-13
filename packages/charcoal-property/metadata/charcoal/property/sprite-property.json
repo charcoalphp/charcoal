@@ -1,0 +1,8 @@
+{
+    "properties": {
+        "sprite": {
+            "type": "string",
+            "label": "Sprite Path"
+        }
+    }
+}
