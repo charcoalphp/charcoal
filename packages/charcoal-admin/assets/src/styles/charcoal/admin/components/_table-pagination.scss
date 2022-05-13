@@ -1,0 +1,16 @@
+// ==========================================================================
+// Table Pagination / Collection
+// ==========================================================================
+
+.c-table-pagination {
+    color: $charcoal-gray-4;
+    font-size: 12px;
+
+    @media (max-width: $to-small) {
+        margin: $unit-small 0;
+    }
+
+    @media (min-width: $from-small) {
+        margin: rem($unit / 2) 0;
+    }
+}

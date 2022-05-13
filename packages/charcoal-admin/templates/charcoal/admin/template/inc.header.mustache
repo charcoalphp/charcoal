@@ -1,0 +1,40 @@
+{{!--
+Header include
+==============
+
+`charcoal/admin/template/inc.header`
+
+Open the HTML document and include meta tags and required external resources.
+
+Based on the HTML5 boilerplate.
+
+--}}
+<!doctype html>
+<html {{& htmlAttr }}>
+<head>
+    <meta charset="utf-8">
+
+    <!-- Viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="HandheldFriendly" content="True">
+
+    <title>{{& documentTitle }}</title>
+
+    <base href="{{ adminUrl }}" />
+
+    <!-- Theming -->
+    <meta name="theme-color" content="#393939">
+
+    {{> charcoal/admin/template/inc.favicon }}
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,500,700,400italic" rel="stylesheet" type="text/css">
+    <link href="{{ baseUrl }}assets/admin/styles/charcoal.admin.vendors.css" rel="stylesheet" type="text/css">
+    <link href="{{ baseUrl }}assets/admin/styles/charcoal.admin.css" rel="stylesheet" type="text/css">
+
+    {{> charcoal/admin/template/inc.head.extra }}
+</head>
+<body{{# showHeaderMenu }} class="has-nav-main"{{/ showHeaderMenu }}>
+
+    <div class="o-flex">
+
+        {{> charcoal/admin/widget/menu.header }}

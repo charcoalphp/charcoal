@@ -1,0 +1,19 @@
+{{!--
+
+    Administration User Roles
+    =========================
+
+--}}
+{{> charcoal/admin/template/inc.header }}
+
+<main class="c-page-container o-flex_main">
+    {{> charcoal/admin/template/inc.page-header }}
+    <section class="o-container -bottom">
+        {{> charcoal/admin/widget/feedbacks }}
+        {{# dashboard }}
+            {{> charcoal/admin/widget/dashboard }}
+        {{/ dashboard }}
+    </section>
+</main>
+
+{{> charcoal/admin/template/inc.footer }}

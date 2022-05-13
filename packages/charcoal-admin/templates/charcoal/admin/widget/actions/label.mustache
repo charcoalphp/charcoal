@@ -1,0 +1,8 @@
+{{!--
+    Table Widget \ Action Label
+    ===========================
+--}}
+{{> charcoal/admin/widget/inc.icon }}
+{{# isSubmittable }}<span class="fa fa-refresh u-spin d-none"></span>{{/ isSubmittable }}
+{{# showLabel }}<span class="btn-label">{{& label }}</span>{{/ showLabel }}
+{{^ showLabel }}<span class="sr-only">{{& label }}</span>{{/ showLabel }}

@@ -1,0 +1,51 @@
+{{!--
+    Admin \ UI \ Sub-Dropdown Menu
+    ==============================
+
+    @used-by `charcoal/admin/widget/actions/dropdown-menu`
+--}}
+{{# isButton }}
+<button class="btn{{# ident }} {{ jsActionPrefix }}-{{ . }}{{/ ident }}"
+        type="{{ buttonType }}"
+        {{# name }}
+        name="{{ . }}"
+        {{/ name }}
+        {{# value }}
+        value="{{ . }}"
+        {{/ value }}
+        {{# widgetType }}
+        data-widget-type="{{ . }}"
+        {{/ widgetType }}
+        {{# dataAttributes }}
+        data-{{ key }}="{{ value }}"
+        {{/ dataAttributes }}
+        tabindex="-1"
+        aria-haspopup="true"
+        aria-expanded="false"
+        >{{> charcoal/admin/widget/actions/label }}</button>
+{{/ isButton }}
+{{# isLink }}
+<a{{# ident }} class="{{ jsActionPrefix }}-{{ . }}"{{/ ident }}
+   href="{{ url }}"
+   {{# target }}
+   target="{{ . }}"
+   {{/ target }}
+   {{# widgetType }}
+   data-widget-type="{{ . }}"
+   {{/ widgetType }}
+   {{# dataAttributes }}
+   data-{{ key }}="{{ value }}"
+   {{/ dataAttributes }}
+   tabindex="-1"
+   aria-haspopup="true"
+   aria-expanded="false"
+   >{{> charcoal/admin/widget/actions/label }}</a>
+{{/ isLink }}
+{{# isText }}
+{{> charcoal/admin/widget/actions/label }}
+{{/ isText }}
+<ul class="dropdown-menu">
+{{# actions }}
+    {{> charcoal/admin/widget/actions/dropdown-menu }}
+{{/ actions }}
+</ul>

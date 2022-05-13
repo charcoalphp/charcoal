@@ -1,0 +1,17 @@
+{{!--
+    TinyMCE Property Input JS Component
+    ===================================
+
+    @used-by `charcoal/admin/property/input/tinymce`
+--}}
+{{# prepareFilePickerUrl }}{{!-- NOOP --}}{{/ prepareFilePickerUrl }}
+{{# addJs }}
+<script>
+Charcoal.Admin.manager().add_property_input({
+    id:       '{{ inputId }}',
+    input_id: '{{ inputId }}',
+    type:     '{{ inputType }}',
+    data:     {{& controlDataForJsAsJson }}
+});
+</script>
+{{/ addJs }}

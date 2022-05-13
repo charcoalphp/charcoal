@@ -1,0 +1,37 @@
+// ==========================================================================
+// Header Objects
+// ==========================================================================
+
+.o-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    @media (max-width: $to-small) {
+        height: $unit;
+    }
+
+    @media (min-width: $from-small) and (max-width: $to-large) {
+        height: $nav-main-width;
+    }
+
+    @media (min-width: $from-large) {
+        height: rem($header-height);
+    }
+
+    &.-border {
+        border-bottom: 1px solid $gray-light;
+        height: auto;
+        margin-bottom: rem($unit);
+    }
+
+    &.-small {
+        height: $unit;
+    }
+
+    &.-small\@to-large {
+        @media (max-width: $to-large) {
+            height: $unit;
+        }
+    }
+}

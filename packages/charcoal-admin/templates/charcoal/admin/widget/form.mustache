@@ -1,0 +1,34 @@
+{{!--
+    Form Widget
+    ===========
+
+    @see charcoal/admin/widget/form
+
+    This widget expects to be in a context (model) of type `Charcoal\Admin\Widget\Form`.
+--}}
+<form id="{{ widgetId }}" method="{{ method }}" action="{{ adminUrl }}{{ action }}" enctype="multipart/form-data"{{# novalidate }} novalidate{{/ novalidate }}>
+    <div class="o-flex c-form-widget -form{{# isTabbable }} -tabbed{{/ isTabbable }}">
+        <div class="o-flex_main c-form-widget_form">
+            <div class="o-section">
+                {{# isTabbable }}
+                    {{> $form_tabs_template }}
+                {{/ isTabbable }}
+
+                {{> $form_groups_template }}
+            </div>
+
+            <div class="o-section">
+                <button type="submit" class="btn btn-primary">{{ submitLabel }}</button>
+            </div>
+        </div>
+
+        {{# hiddenProperties }}
+            {{# output }}
+                {{> $widget_template }}
+            {{/ output }}
+        {{/ hiddenProperties }}
+
+    </div>
+</form>
+
+{{> charcoal/admin/template/form/js }}

@@ -1,0 +1,145 @@
+{
+    "properties": {
+        "roles": {
+            "type": "object",
+            "obj_type": "charcoal/admin/user/acl-role",
+            "input_type": "charcoal/admin/property/input/checkbox",
+            "pattern": "{{name}}",
+            "multiple": true
+        }
+    },
+
+    "sources": {
+        "default": {
+            "table": "charcoal_admin_users"
+        }
+    },
+    "default_source": "default",
+
+    "admin": {
+        "lists": {
+            "default": {
+                "label": {
+                    "en": "Administrators / Managers",
+                    "fr": "Administrateurs / Gestionnaires"
+                },
+                "properties": [
+                    "display_name",
+                    "email",
+                    "roles",
+                    "last_login_date"
+                ],
+                "list_actions": [
+                    {
+                        "ident": "create",
+                        "label": {
+                            "en": "Create a new user",
+                            "fr": "Créer un nouvel utilisateur"
+                        },
+                        "url": "object/edit?obj_type=charcoal/admin/user"
+                    }
+                ]
+            }
+        },
+        "default_list": "default",
+
+        "forms": {
+            "default": {
+                "label": "Admin User Form",
+                "groups": {
+                    "main": {
+                        "title": {
+                            "en": "Information",
+                            "fr": "Informations"
+                        },
+                        "properties": [
+                            "active",
+                            "display_name",
+                            "email",
+                            "password"
+                        ],
+                        "priority": 10
+                    },
+                    "access": {
+                        "title": {
+                            "en": "Access levels",
+                            "fr": "Niveaux d'accès"
+                        },
+                        "properties": [
+                            "roles"
+                        ],
+                        "priority": 20
+                    },
+                    "logs": {
+                        "title": {
+                            "en": "Logs",
+                            "fr": "Journal"
+                        },
+                        "properties": [
+                            "last_login_date",
+                            "last_login_ip",
+                            "last_password_date",
+                            "last_password_ip"
+                        ],
+                        "priority": 30
+                    }
+                },
+                "sidebars": {
+                    "actions": {
+                        "properties": [
+                            "created",
+                            "last_modified"
+                        ]
+                    }
+                }
+            }
+        },
+        "default_form": "default",
+
+        "dashboards": {
+            "admin.edit": {
+                "layout": {
+                    "structure": [
+                        {
+                            "num_columns": 3,
+                            "columns": [ 2, 1 ]
+                        }
+                    ]
+                },
+                "widgets": {
+                    "form": {
+                        "type": "charcoal/admin/widget/object-form",
+                        "obj_type": "charcoal/admin/user"
+                    }
+                },
+                "secondary_menu": {
+                    "widget_options": {
+                        "ident": "system"
+                    }
+                }
+            },
+            "admin.collection": {
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] }
+                    ]
+                },
+                "widgets": {
+                    "list": {
+                        "type": "charcoal/admin/widget/table",
+                        "label": "Admin user (website manager) list",
+                        "obj_type": "charcoal/admin/user"
+                    }
+                },
+                "secondary_menu": {
+                    "widget_options": {
+                        "ident": "system"
+                    }
+                }
+            }
+        },
+        "default_create_dashboard": "admin.edit",
+        "default_edit_dashboard": "admin.edit",
+        "default_collection_dashboard": "admin.collection"
+    }
+}

@@ -1,0 +1,36 @@
+{
+    "default": [
+        "build",
+        "deploy"
+    ],
+
+    "build": [
+        "styles",
+        "scripts",
+        "copy:vendors",
+        "svg_sprite"
+    ],
+
+    "styles": [
+        "sass",
+        "postcss",
+        "cssmin"
+    ],
+
+    "scripts": [
+        "eslint",
+        "concat",
+        "uglify"
+    ],
+
+    "sync": [
+        "browserSync",
+        "watch",
+        "notify:watch"
+    ],
+
+    "deploy": [
+        "copy:www",
+        "notify:www"
+    ]
+}

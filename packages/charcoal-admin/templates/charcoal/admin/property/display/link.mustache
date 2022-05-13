@@ -1,0 +1,8 @@
+{{# multiple }}
+    <ul>
+    {{# displayValList }}<li>{{& . }}</li>{{/displayValList}}
+    </ul>
+{{/ multiple }}
+{{^ multiple }}
+    {{& displayVal }}
+{{/ multiple }}

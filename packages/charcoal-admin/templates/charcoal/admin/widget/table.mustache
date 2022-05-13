@@ -1,0 +1,38 @@
+{{!--
+    Table Widget Body
+    =================
+
+    @see `charcoal/admin/widget/table`
+
+    This widget expects to be in a context (model) of type `Charcoal\Admin\Widget\Table`.
+--}}
+<div class="o-section position-relative" id="{{ widgetId }}">
+    {{# showTableHeader }}
+        {{> charcoal/admin/widget/table/header }}
+    {{/ showTableHeader }}
+    <div class="c-table-container table-responsive{{^ showTableHeader }} mt-4{{/ showTableHeader }}">
+        {{# hasObjects }}
+            <div class="c-table-pagination">
+                {{> charcoal/admin/widget/table/counter }}
+            </div>
+            <table class="table table-bordered table-hover{{# sortable }} table-sortable{{/ sortable }}">
+                {{# showTableHead }}
+                    {{> charcoal/admin/widget/table/thead }}
+                {{/ showTableHead }}
+                {{> charcoal/admin/widget/table/tbody }}
+                {{# showTableFoot }}
+                    {{> charcoal/admin/widget/table/tfoot }}
+                {{/ showTableFoot }}
+            </table>
+            {{# paginationWidget }}
+                {{> charcoal/admin/widget/table/pagination }}
+            {{/ paginationWidget }}
+        {{/ hasObjects }}
+        {{^ hasObjects }}
+            {{> charcoal/admin/widget/table/empty }}
+        {{/ hasObjects }}
+    </div>
+    {{> charcoal/admin/widget/inc.loader }}
+</div>
+
+{{> charcoal/admin/widget/table/js }}

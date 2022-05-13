@@ -1,0 +1,77 @@
+// ==========================================================================
+// Admin / Vendors
+// ==========================================================================
+
+// Tools
+// ==========================================================================
+
+@import "tools/functions";
+@import "tools/mixins";
+@import "tools/fonts";
+@import "tools/layout";
+@import "tools/widths";
+
+// Settings
+// ==========================================================================
+
+@import "settings/config.colors";
+@import "settings/config";
+
+// Utilities
+// ==========================================================================
+
+@import "utilities/ratio";
+
+// Overwriting core Bootstrap variables
+@import "bootstrap/variables";
+
+// Centralized dependencies
+// ==========================================================================
+
+// All of Bootstrap
+@import "../../../../../node_modules/bootstrap/scss/bootstrap";
+
+// Font Awesome
+@import "../../../../../node_modules/components-font-awesome/scss/font-awesome";
+
+// Awesome Bootstrap Checkbox
+@import "../../../../../node_modules/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.scss";
+
+// Bootstrap Select
+@import "../../../../../node_modules/bootstrap-select/sass/bootstrap-select";
+
+// Bootstrap 4 Datepicker
+@import "../../../../../node_modules/tempusdominus-bootstrap-4/build/css/tempusdominus-bootstrap-4";
+
+// jQuery MiniColors
+@import "../../../../../node_modules/@claviska/jquery-minicolors/jquery.minicolors";
+
+// Dependency overrides
+// ==========================================================================
+
+// Awesome Bootstrap Checkbox
+@import "vendors/awesome-bootstrap-checkbox";
+
+// Bootstrap Dialog
+@import "vendors/bootstrap-dialog";
+
+// Bootstrap Select
+@import "vendors/bootstrap-select";
+
+// Selectize (also manages the base style imports)
+@import "vendors/selectize";
+
+// Tinymce
+@import "vendors/tinymce";
+
+// jQuery MiniColors
+@import "vendors/minicolors";
+
+// CLDNR
+@import "vendors/clndr";
+
+// Form.io modal style overrides
+@import "vendors/formio-modal";
+
+// Overrides for Bootstrap pre-4.0 glyphicons
+@import "vendors/bootstrap-glyphicons";

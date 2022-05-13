@@ -1,0 +1,19 @@
+// ==========================================================================
+// Notifications / Container
+// ==========================================================================
+
+.c-notifications {
+    position: fixed;
+    z-index: 100;
+    right: 0;
+    bottom: 0;
+    padding: $spacer;
+}
+
+.c-notifications_item {
+    margin: 0;
+
+    & + & {
+        margin-top: $spacer;
+    }
+}

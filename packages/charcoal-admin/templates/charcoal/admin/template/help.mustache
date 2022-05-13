@@ -1,0 +1,23 @@
+{{!--
+
+    Help Template
+    =============
+
+--}}
+{{> charcoal/admin/template/inc.header }}
+
+<main class="c-page-container o-flex_main">
+    {{> charcoal/admin/template/inc.page-header }}
+    <section class="o-container -top -bottom">
+        {{> charcoal/admin/widget/feedbacks }}
+        <div class="jumbotron">
+            <h1 class="display-4">{{# _t }}Need Help?{{/ _t }}</h1>
+            <p class="lead">{{# _t }}For any questions about the use of this service, please do not hesitate to contact <a href="mailto:charcoal@locomotive.ca">charcoal@locomotive.ca</a>.{{/ _t }}</p>
+            <p class="lead">{{# _t }}Charcoal is operated by <a href="https://locomotive.ca">Locomotive</a>, a Web agency based in Montréal.{{/ _t }}</p>
+            <p class="lead">{{# _t }}Memo, the alerts system, is powered by <em>Charcoal</em>.{{/ _t }}</p>
+            <p>&copy; {{ now.year }} Locomotive</p>
+        </div>
+    </section>
+</main>
+
+{{> charcoal/admin/template/inc.footer }}

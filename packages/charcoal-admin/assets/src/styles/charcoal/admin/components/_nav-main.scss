@@ -1,0 +1,164 @@
+// ==========================================================================
+// Nav / Main
+// ==========================================================================
+
+@mixin c-nav-main {
+    background-color: $charcoal-gray-6;
+    position: fixed;
+    top: $unit;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    transition: transform 0.2s;
+    transform: translateX(-100%);
+}
+
+.c-nav-main {
+    position: absolute;
+    top: rem($header-height);
+    bottom: 0;
+    left: 0;
+    line-height: 1;
+    z-index: 850;
+
+    @media (max-width: $to-small) {
+        width: $unit;
+    }
+
+    @media (min-width: $from-small) and (max-width: $to-large) {
+        width: $nav-main-width;
+    }
+
+    @media (max-width: $to-large) {
+        @include c-nav-main;
+    }
+
+    @media (min-width: $from-large) {
+        width: rem($nav-main-width);
+    }
+
+    .is-fullscreen-template & {
+        @media (min-width: $from-large) {
+            @include c-nav-main;
+        }
+    }
+
+    .has-nav-open & {
+        transform: translateX(0);
+    }
+}
+
+.c-nav-main_list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: block; // because of .nav on element
+}
+
+.c-nav-main_item {
+    & + & {
+        border-top: 1px solid transparent;
+    }
+
+    @media (max-width: $to-small) {
+        height: $unit;
+    }
+
+    @media (min-width: $from-small) and (max-width: $to-large) {
+        height: $nav-main-width;
+    }
+
+    @media (min-width: $from-large) {
+        height: rem(95px);
+    }
+
+    .is-fullscreen-template & {
+        @media (min-width: $from-large) {
+            height: $nav-main-width;
+        }
+    }
+}
+
+.c-nav-main_link {
+    background-color: $charcoal-gray-5;
+    position: relative;
+    display: flex;
+    text-align: center;
+    font-size: 10px;
+    color: $charcoal-gray-3;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    transition: background-color $speed, color $speed;
+
+    &:focus {
+        color: $white;
+    }
+
+    &:hover,
+    &:active,
+    &.active {
+        color: $charcoal-blue-1;
+    }
+
+    &:focus,
+    &:hover,
+    &:active,
+    &.active {
+        text-decoration: none;
+    }
+
+    &.active {
+        background-color: transparent;
+    }
+}
+
+.c-nav-main_link_icon {
+    fill: currentColor;
+    transition: fill $speed;
+
+    @media (max-width: $to-small) {
+        width:  20px;
+        height: 20px;
+    }
+
+    @media (min-width: $from-small) {
+        width:  rem(35px);
+        height: rem(35px);
+    }
+}
+
+.c-nav-main_link_text {
+    @media (max-width: $to-small) {
+        display: none;
+    }
+
+    @media (min-width: $from-small) {
+        display: block;
+        padding: 0 3px;
+    }
+
+    .c-nav-main_link_icon + & {
+        @media (min-width: $from-small) {
+            margin-top: rem(7px);
+        }
+    }
+}
+
+.c-nav-main_overlay {
+    @extend .o-overlay;
+
+    @media (min-width: $from-large) {
+        display: none;
+    }
+
+    .is-fullscreen-template & {
+        @media (min-width: $from-large) {
+            display: block;
+        }
+    }
+
+    .has-nav-open & {
+        opacity: 1;
+        visibility: visible;
+    }
+}

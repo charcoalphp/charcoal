@@ -1,0 +1,164 @@
+{{# prepareElfinderConnectorUrl }}{{!-- NOOP --}}{{/ prepareElfinderConnectorUrl }}
+<!DOCTYPE html>
+<html class="has-no-js{{# devMode }} s-admin-debug{{/ devMode }}" lang="{{ lang }}">
+    <head>
+        <meta charset="utf-8">
+        <title>{{# _t }}elFinder.manager.title{{/ _t }}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+
+        <script data-main="{{ elfinderAssetsUrl }}main.js" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
+
+        <style type="text/css">
+            html,
+            body/*,
+            #elfinder */{
+                height: 100%;
+                margin: 0;
+            }
+
+            .elfinder {
+                border: none;
+                box-shadow: none;
+            }
+        </style>
+
+        <script>
+            // config of RequireJS (REQUIRED)
+            /*
+            require.config({
+                baseUrl: '{{ elfinderAssetsUrl }}js'
+            });
+            */
+
+            /**
+             * elFinder options for Charcoal
+             *
+             * {@link https://github.com/Studio-42/elFinder/wiki/Client-configuration-options Documentation for client options:}
+             *
+             * @param  {jQuery} $ - jQuery API
+             * @return {object}   - elFinder client settings.
+             */
+            define('elFinderConfig', [ 'jquery' ], function ($) {
+                var $window       = $(window),
+                    $html         = $(document.documentElement),
+                    customOpts    = {},
+                    defaultOpts   = {},
+                    immutableOpts = {};
+
+                $html.removeClass('has-no-js').addClass('has-js');
+
+                if (!$.fn.smartresize) {
+                    // debouncing function from John Hann
+                    // http://unscriptable.com/index.php/2009/03/20/debouncing-javascript-methods/
+                    var debounce = function (func, threshold, execAsap) {
+                        var timeout;
+
+                        return function debounced() {
+                            var obj = this,
+                                args = arguments;
+
+                            function delayed() {
+                                if (!execAsap) {
+                                    func.apply(obj, args);
+                                }
+                                timeout = null;
+                            };
+
+                            if (timeout) {
+                                clearTimeout(timeout);
+                            } else if (execAsap) {
+                                func.apply(obj, args);
+                            }
+
+                            timeout = setTimeout(delayed, threshold || 100);
+                        };
+                    };
+
+                    $.fn.smartresize = function (fn) {
+                        return fn ? this.bind('resize', debounce(fn)) : this.trigger('smartresize');
+                    };
+                }
+
+                defaultOpts = {
+                    url:        '{{& elfinderConnectorUrl }}',
+                    resizable:  false,
+                    height:     $window.height(),
+                    commandsOptions: {
+                        quicklook: {
+                            // to enable preview with Google Docs Viewer
+                            googleDocsMimes: [
+                                'application/pdf',
+                                'image/tiff',
+                                'application/vnd.ms-office',
+                                'application/msword',
+                                'application/vnd.ms-word',
+                                'application/vnd.ms-excel',
+                                'application/vnd.ms-powerpoint',
+                                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                                'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+                            ]
+                        }
+                    },
+                    bootCallback: function (fm /* , extraObj */) {
+                        // Set document.title dynamically.
+                        var title = document.title;
+                        fm.bind('open', function() {
+                            var path = '',
+                                cwd  = fm.cwd();
+                            if (cwd) {
+                                path = fm.path(cwd.hash) || null;
+                            }
+                            document.title = path ? path + ':' + title : title;
+                        }).bind('destroy', function() {
+                            document.title = title;
+                        });
+
+                        $window.smartresize(function () {
+                            var height = $window.height();
+                            console.log('SmartResize', fm.options.height, height);
+
+                            if (fm.options.height != height) {
+                                fm.resize('auto', height);
+                            }
+                        });
+                    },
+                    getFileCallback: function (file, fm) {
+                        if (fm.option('separator') === '\\') {
+                            var separator = /\\/g;
+                            if ($.isArray(file)) {
+                                file = $.map(file, function (f) {
+                                    return f.path.replace(separator, '/');
+                                });
+                            } else {
+                                file.path = file.path.replace(separator, '/');
+                            }
+                        }
+
+                        if (typeof(parent.elFinderCallback['{{ elfinderCallback }}']) === 'function') {
+                            parent.elFinderCallback['{{ elfinderCallback }}'](file, fm);
+                        }
+                    }
+                };
+                customOpts = {{& elfinderClientConfigAsJson }};
+
+                return {
+                    defaultOpts: $.extend({}, defaultOpts, customOpts),
+                    managers: {
+                        'elfinder': {},
+                    }
+                };
+            });
+            /**
+             * elFinder localizations for Charcoal
+             *
+             * @return {object} - Localized messages.
+             */
+            define('elFinderL10n', {{& elfinderLocalizationsAsJson }});
+        </script>
+    </head>
+
+    <body>
+        <div id="elfinder"></div>
+    </body>
+</html>

@@ -1,0 +1,15 @@
+// ==========================================================================
+// Section
+// ==========================================================================
+
+.o-section {
+    & + & { // @todo Check if `& + &` breaks anythings, added 11/04/2018
+        @media (max-width: $to-small) {
+            margin-top: $unit-small;
+        }
+
+        @media (min-width: $from-small) {
+            margin-top: rem($unit / 2);
+        }
+    }
+}

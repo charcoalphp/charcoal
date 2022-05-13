@@ -1,0 +1,92 @@
+
+//
+// Tabs
+//
+
+.nav-tabs {
+    @media (max-width: $to-small) {
+        margin-bottom: $unit / 2;
+    }
+
+    @media (min-width: $from-large) {
+        border-color: transparent;
+    }
+
+    .nav-item {
+        position: relative;
+
+        & + .nav-item {
+            margin-left: 4px;
+        }
+    }
+
+    .nav-link {
+        color: $black;
+        display: block;
+
+        @media (max-width: $to-small) {
+            font-size: 12px;
+            padding: 5px 10px;
+        }
+
+        @media (min-width: $from-small) {
+            font-size: 14px;
+            font-weight: $weight-semi;
+            padding: 10px 15px;
+        }
+
+        .nav-icon {
+            display: inline-block;
+            vertical-align: center;
+        }
+
+        &.hide-title {
+            .nav-title {
+                display: none;
+            }
+        }
+
+        &.active {
+            color: $black;
+
+            @media (min-width: $from-large) {
+                border-color: $charcoal-white-1;
+            }
+
+            &.hide-title {
+                .nav-title {
+                    display: inline-block;
+                }
+            }
+        }
+
+        &:not(.active) {
+            @include hover-focus {
+                ~ .tooltip {
+                    opacity: 1;
+                }
+            }
+        }
+
+        ~ .tooltip {
+            font-family: $font-family;
+            font-size: 14px;
+            pointer-events: none;
+            top: calc(100% - #{$tooltip-arrow-height});
+            left: 50%;
+            width: auto;
+            transform: translateX(-50%);
+            transition: opacity 0.1s ease-out, top 0.15s ease-out;
+
+            .arrow {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        }
+    }
+
+    .nav-icon + .nav-title,
+    .nav-title + .nav-icon {
+        margin-left: 4px;
+    }
+}

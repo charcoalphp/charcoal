@@ -1,0 +1,28 @@
+// ==========================================================================
+// Info - (?) additional info
+// ==========================================================================
+
+.c-info {
+    display: inline-block;
+
+    width: rem(18px);
+    height: rem(18px);
+
+    text-align: center;
+
+    border: 1px solid $gray-light;
+    border-radius: 50%;
+
+    color: $gray-light;
+
+    margin-left: rem(10px);
+    cursor: help;
+    font-size: rem(12px);
+    font-weight: normal;
+    line-height: rem(16px);
+
+    &.-dark {
+        border: 1px solid $gray-dark;
+        color: $gray-dark;
+    }
+}

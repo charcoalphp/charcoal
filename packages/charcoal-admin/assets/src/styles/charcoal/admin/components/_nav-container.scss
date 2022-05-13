@@ -1,0 +1,200 @@
+// ==========================================================================
+// Nav / Container
+// ==========================================================================
+
+@mixin c-nav-container {
+    background-color: $charcoal-gray-4;
+    position: fixed;
+    right: 0;
+    height: $unit;
+    width: auto;
+}
+
+.c-nav-container {
+    top: 0;
+    left: 0;
+    z-index: 900;
+    backface-visibility: hidden;
+    position: relative;
+
+    @media (max-width: $to-large) {
+        @include c-nav-container;
+    }
+
+    @media (min-width: $from-large) {
+        background-color: $charcoal-gray-6;
+        width: rem($nav-width);
+    }
+
+    .is-fullscreen-template & {
+        @media (min-width: $from-large) {
+            @include c-nav-container;
+        }
+    }
+}
+
+.c-nav-container_wrap {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+
+    @media (min-width: $from-large) {
+        bottom: 0;
+        width: rem($nav-width);
+    }
+
+    display: flex;
+    flex-direction: column;
+}
+
+@mixin c-nav-container_button {
+    cursor: pointer;
+    background: none;
+    border: none;
+    display: block;
+    position: absolute;
+    width: $nav-button-width;
+    height: $nav-button-width;
+    padding: 0;
+    padding-bottom: 6px;
+    text-align: center;
+}
+
+.c-nav-container_button {
+    @media (max-width: $to-large) {
+        @include c-nav-container_button;
+    }
+
+    @media (min-width: $from-large) {
+        display: none;
+    }
+
+    .is-fullscreen-template & {
+        @media (min-width: $from-large) {
+            @include c-nav-container_button;
+        }
+    }
+}
+
+
+.c-nav-container_button_icon {
+    position: relative;
+    display: inline-block;
+    width: 20px;
+    height: 2px;
+    background-color: $white;
+    transition: background-color $speed $easing, transform $speed $easing;
+
+    .has-nav-open & {
+        background-color: transparent;
+        transform: translateX(-3px);
+    }
+
+    &::before, &::after {
+        content: "";
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background-color: $white;
+        height: 2px;
+        transform-origin: center right;
+        transition: transform $speed $easing;
+    }
+
+    &::before {
+        top: -6px;
+
+        .has-nav-open & {
+            transform: translateY(-1px) rotate(-45deg);
+        }
+    }
+
+    &::after {
+        bottom: -6px;
+
+        .has-nav-open & {
+            transform: translateY(1px) rotate(45deg);
+        }
+    }
+}
+
+@mixin c-nav-container_header {
+    position: relative;
+    top: 0;
+    left: $nav-button-width;
+    right: 0;
+    height: $unit;
+    width: calc(100% - #{$unit});
+}
+
+.c-nav-container_header {
+    @media (max-width: $to-large) {
+        @include c-nav-container_header;
+    }
+
+    @media (min-width: $from-large) {
+        background-color: $charcoal-gray-4;
+        height: rem($header-height);
+        overflow: visible;
+    }
+
+    position: relative;
+    flex: 0 0 auto;
+
+    .is-fullscreen-template & {
+        @media (min-width: $from-large) {
+            @include c-nav-container_header;
+        }
+    }
+}
+
+.c-nav-container_logo {
+    position: absolute;
+    bottom: 0;
+    font-size: 0;
+    line-height: 1;
+    left: 0;
+    z-index: 1100;
+
+    svg {
+        fill: $charcoal-gray-1;
+    }
+
+    @media (max-width: $to-large) {
+        padding: 13px 6px 12px;
+
+        svg {
+            width: 81px;
+            height: 15px;
+        }
+    }
+
+    @media (min-width: $from-large) {
+        padding: rem(22px) rem($spacer-x);
+
+        svg {
+            width: rem(130px);
+            height: rem(24px);
+        }
+    }
+
+    .is-fullscreen-template & {
+        @media (max-width: $to-small) {
+            padding-left: $spacer;
+            padding-right: $spacer;
+        }
+    }
+
+    .is-fullscreen-template & {
+        @media (min-width: $from-large) {
+            padding: 13px 6px 12px;
+
+            svg {
+                width: 81px;
+                height: 15px;
+            }
+        }
+    }
+}

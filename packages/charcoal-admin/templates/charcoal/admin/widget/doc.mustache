@@ -1,0 +1,24 @@
+{{!--
+    Object Form Widget
+    ==================
+
+    @see charcoal/admin/widget/object-form
+
+    This widget expects to be in a context (model) of type `Charcoal\Admin\Widget\Form`.
+--}}
+<div id="{{ widgetId }}">
+    {{! Using object form classes for style only }}
+    <div class="o-flex c-form-widget -object-form{{# isTabbable }} -tabbed{{/ isTabbable }}">
+        <div class="o-flex_main c-form-widget_form">
+            {{# isTabbable }}
+                {{> $form_tabs_template }}
+            {{/ isTabbable }}
+
+            {{> $form_groups_template }}
+        </div>
+
+        {{# sidebars }}
+            {{> $widget_template }}
+        {{/ sidebars }}
+    </div>
+</div>

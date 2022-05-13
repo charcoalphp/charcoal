@@ -1,0 +1,66 @@
+{{!--
+    Admin \ UI \ Dropdown Actions
+    =============================
+
+    @used-by `charcoal/admin/widget/actions`
+--}}
+<div class="btn-group" role="group">
+    {{# isButton }}
+    <button class="{{ cssClasses }}{{^ splitButton }} dropdown-toggle{{/ splitButton }}"
+        type="{{ buttonType }}"
+        {{# name }}
+        name="{{ . }}"
+        {{/ name }}
+        {{# value }}
+        value="{{ . }}"
+        {{/ value }}
+        {{# widgetType }}
+        data-widget-type="{{ . }}"
+        {{/ widgetType }}
+        {{# dataAttributes }}
+        data-{{ key }}="{{ value }}"
+        {{/ dataAttributes }}
+        {{^ splitButton }}
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+        {{/ splitButton }}>
+        {{> charcoal/admin/widget/actions/label }}
+    </button>
+    {{/ isButton }}
+    {{^ isButton }}
+    <a class="{{ cssClasses }}{{^ splitButton }} dropdown-toggle{{/ splitButton }}"
+       href="{{ url }}"
+       {{# target }}
+       target="{{ . }}"
+       {{/ target }}
+       {{# widgetType }}
+       data-widget-type="{{ . }}"
+       {{/ widgetType }}
+       {{# dataAttributes }}
+       data-{{ key }}="{{ value }}"
+       {{/ dataAttributes }}
+       {{^ splitButton }}
+       role="button"
+       data-toggle="dropdown"
+       aria-haspopup="true"
+       aria-expanded="false"
+       {{/ splitButton }}>
+        {{> charcoal/admin/widget/actions/label }}
+    </a>
+    {{/ isButton }}
+    {{# splitButton }}
+    <button class="btn{{# actionType }} btn-{{ . }}{{/ actionType }} dropdown-toggle dropdown-toggle-split"
+        type="button"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false">
+        <span class="sr-only">{{# _t }}Toggle Dropdown{{/ _t }}</span>
+    </button>
+    {{/ splitButton }}
+    <div class="dropdown-menu dropdown-menu-right">
+    {{# actions }}
+        {{> charcoal/admin/widget/actions/dropdown-menu }}
+    {{/ actions }}
+    </div>
+</div>

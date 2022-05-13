@@ -1,0 +1,19 @@
+{{!--
+    Table Widget \ Table Header
+    ===========================
+
+    @used-by `charcoal/admin/widget/table`
+--}}
+<thead>
+    <tr>
+        {{# sortable }}
+            <th class="table-row-sort table-cell-sort" aria-hidden="true"></th>
+        {{/ sortable }}
+        {{# collectionProperties }}
+            {{> charcoal/admin/widget/table/thead-col }}
+        {{/ collectionProperties }}
+        {{# showObjectActions }}
+            <th>{{# _t }}Actions{{/ _t }}</th>
+        {{/ showObjectActions }}
+    </tr>
+</thead>

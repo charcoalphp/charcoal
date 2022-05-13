@@ -1,0 +1,22 @@
+{{!--
+    Table Widget \ Header
+    =====================
+
+    @used-by `charcoal/admin/widget/table`
+--}}
+<div class="c-table-header o-header">
+    {{# showListActions }}
+        {{! @todo Evaluate if btn-group is actually useful, therefore removed class for now }}
+        <div class="___btn-group" role="group">
+            {{# listActions }}
+                {{# isSeparator }}
+                    </div>
+                    <div class="___btn-group" role="group">
+                {{/ isSeparator }}
+                {{^ isSeparator }}
+                    {{> charcoal/admin/widget/actions }}
+                {{/ isSeparator }}
+            {{/ listActions }}
+        </div>
+    {{/ showListActions }}
+</div>

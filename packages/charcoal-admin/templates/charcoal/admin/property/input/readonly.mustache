@@ -1,0 +1,17 @@
+{{!--
+    Static Property Input
+    =====================
+
+    `charcoal/admin/property/input/readonly`
+--}}
+{{# hasPropertyVal }}
+    {{# showAsCodeBlock }}
+        <pre class="pre-scrollable"><code>{{ renderVal }}</code></pre>
+    {{/ showAsCodeBlock }}
+    {{^ showAsCodeBlock }}
+        <div class="form-control-plaintext">{{& renderVal }}</div>
+    {{/ showAsCodeBlock }}
+{{/ hasPropertyVal }}
+{{^ hasPropertyVal }}
+    <div class="form-control-plaintext">—</div>
+{{/ hasPropertyVal }}

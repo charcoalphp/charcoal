@@ -1,0 +1,197 @@
+// ==========================================================================
+// Tables
+// ==========================================================================
+.table {
+    border-radius: $border-radius;
+
+    &:not(.table-contourless) {
+        box-shadow: 0 0 0 1px $table-border-color;
+    }
+    border-style: hidden !important;
+    overflow: hidden;
+
+    @media (max-width: $to-small) {
+        margin-top: $unit-small;
+        margin-bottom: $unit-small;
+    }
+
+    @media (min-width: $from-small) {
+        margin-top: rem($unit / 2);
+        margin-bottom: rem($unit / 2);
+    }
+
+    tr {
+        width: 100%;
+
+        &.draggable--over {
+            background-color: $table-border-color !important;
+
+            td {
+                opacity: 0;
+            }
+
+            .table-cell-sort {
+                border-top-color: $table-border-color;
+                border-bottom-color: $table-border-color;
+            }
+
+            & + tr {
+                .table-cell-sort {
+                    border-top-color: $table-border-color;
+                }
+            }
+        }
+    }
+
+    th, td {
+        position: relative;
+
+        td, th {
+            padding: $table-cell-padding-sm;
+        }
+    }
+
+    > thead,
+    > tbody,
+    > tfoot {
+        > tr {
+            > th,
+            > td {
+                vertical-align: middle;
+            }
+        }
+    }
+
+    > thead > tr > th {
+        border-bottom-width: 1px;
+        font-weight: $weight-bold;
+    }
+}
+
+.table-hover {
+    tbody {
+        tr:hover {
+            background-color: $charcoal-white-1;
+        }
+    }
+}
+
+.table-sortable {
+    tr {
+        outline: none;
+    }
+
+    .draggable-container--is-dragging {
+        tr:not(:last-child) td {
+            border-bottom: none !important;
+        }
+    }
+
+    .draggable-mirror {
+        background-color: $charcoal-white-1;
+        display: table;
+        width: 100%;
+        z-index: 1;
+
+        .table-cell-sort {
+            border-top-color: $table-border-color;
+            border-bottom-color: $table-border-color;
+        }
+    }
+}
+
+.table-cell-checkbox {
+    width: rem(20px + 30px);
+    text-align: center;
+}
+
+.table-cell-sort {
+    padding: 0px 5px;
+
+    &::after {
+        content: "";
+        background: $white;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 0;
+    }
+
+    @media (min-width: $from-small) {
+        @include u-auto-cell-width;
+    }
+
+    .table-sortable tbody & {
+        border-top-color: $white;
+        border-bottom-color: $white;
+    }
+}
+
+.table-sortable-handle {
+    background-color: $white;
+    border: 1px solid $charcoal-gray-2;
+    color: $black;
+    padding: 5px;
+    font-size: 12px;
+    opacity: 0;
+    position: relative;
+    z-index: 1;
+
+    .table tr.draggable-mirror &,
+    .table tr:hover & {
+        opacity: 1;
+    }
+}
+
+// ==========================================================================
+// wenzhixin/bootstrap-table
+// ==========================================================================
+
+.card-table > .bootstrap-table {
+    > .fixed-table-container {
+        border: 0;
+    }
+
+    > .fixed-table-toolbar {
+        position: absolute;
+        top: 0;
+        right: 10px;
+
+        /**
+         * Apply `.form-control-sm `
+         */
+        > .search .form-control {
+            padding: .15rem $input-padding-x-sm;
+            font-size: $font-size-sm;
+            line-height: $input-line-height-sm;
+            @include border-radius($input-border-radius-sm);
+        }
+    }
+
+    /**
+     * Apply `.card-footer`
+     */
+    .fixed-table-pagination {
+        padding-right: $card-spacer-x;
+        padding-left: $card-spacer-x;
+        background-color: $card-cap-bg;
+        border-top: $card-border-width solid $card-border-color;
+        font-size: $font-size-sm;
+        line-height: $input-line-height-sm;
+
+        &:last-child {
+            @include border-radius(0 0 $card-inner-border-radius $card-inner-border-radius);
+        }
+    }
+
+    .table {
+        margin-top: 0;
+
+        > tbody > tr > th,
+        > tbody > tr > td {
+            padding: $table-cell-padding-sm;
+        }
+    }
+}

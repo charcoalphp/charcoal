@@ -1,0 +1,51 @@
+/**
+ * Attachment Widget
+ */
+
+.c-attachments {
+    .ui-sortable-helper {
+        cursor: move;
+    }
+
+    .card-body {
+        img {
+            max-width: 100%;
+            height:    auto;
+        }
+    }
+}
+
+.c-attachments_header {
+    margin-bottom: 2rem;
+}
+
+.c-attachments_container {
+    .js-grid-container {
+        min-height: 100px;
+    }
+}
+
+.c-attachments_row {
+    & + & {
+        margin-top: $card-spacer-y;
+    }
+
+    &.-placeholder {
+        height:           calc(#{($card-spacer-y * 2)} + #{$h4-font-size * $headings-line-height} + 2px);
+        padding:          $card-spacer-y;
+        border-color:     #BBB;
+        border-style:     dashed;
+        box-shadow:       none;
+        background-color: transparent;
+    }
+}
+
+
+/**
+ * Sweet hack.
+ * Allows the sortable to apply on video as well.
+ */
+.js-attachment iframe {
+    pointer-events: none;
+    max-width: 100%;
+}

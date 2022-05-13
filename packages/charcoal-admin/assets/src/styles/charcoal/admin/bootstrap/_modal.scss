@@ -1,0 +1,104 @@
+// ==========================================================================
+// Modal
+// ==========================================================================
+
+.modal {
+    &.-quick-form {
+
+    }
+
+    iframe {
+        display: block;
+    }
+
+    &.-elfinder {
+        .modal-content {
+            border-radius: 0;
+        }
+
+        .modal-header {
+            border-bottom:           none;
+            border-top-left-radius:  0;
+            border-top-right-radius: 0;
+        }
+
+        .modal-body {
+            padding: 0;
+        }
+    }
+
+    .form-group {
+        .pull-right {
+            display: none;
+        }
+    }
+
+    .form-field.-l10n {
+        &[data-lang] {
+            margin-top:  10px;
+            margin-left: 30px;
+
+            &.d-none {
+                display: block !important;
+            }
+
+            &::before {
+                content:        attr(data-lang);
+                position:       absolute;
+                top:            0;
+                left:           -30px;
+                display:        block;
+                width:          30px;
+                color:          #959595;
+                font-size:      $font-size-sm;
+                font-weight:    700;
+                letter-spacing: 1px;
+                line-height:    $input-height;
+                text-transform: uppercase;
+            }
+        }
+
+        // .form-group-sm &[data-lang]::before {
+        //     line-height: $input-height-sm;
+        // }
+
+        // .form-group-lg &[data-lang]::before {
+        //     line-height: $input-height-lg;
+        // }
+
+        &.form-property-file[data-lang]::before,
+        &.form-property-image[data-lang]::before {
+            line-height: 32px;
+        }
+    }
+
+    // .bootstrap-dialog-close-button > .close {
+    //     width:        24px;
+    //     margin-right: -6px;
+    // }
+
+    // .bootstrap-dialog-message > :last-child {
+    //     margin-bottom: 0;
+    // }
+
+    // .modal-body .nav-tabs {
+    //     margin-left:   -15px;
+    //     margin-right:  -15px;
+    //     padding-left:  15px;
+    //     padding-right: 15px;
+    // }
+
+    // .modal-header.d-none + .modal-body .nav-tabs {
+    //     padding-right: (15px * 2) + 18px;
+    // }
+}
+
+.modal-footer {
+    .modal-body & {
+        margin: 0 -1rem -1rem;
+    }
+
+    .c-form-widget.-quick-form.-tabbed + & {
+        border-top: none;
+    }
+}

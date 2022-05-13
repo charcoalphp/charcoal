@@ -1,0 +1,77 @@
+// ==========================================================================
+// Nav / System
+// ==========================================================================
+
+.c-nav-system {
+    position: absolute;
+    z-index: 1200;
+    right: 0;
+    bottom: 0;
+
+    @media (max-width: $to-large) {
+        top: 0;
+    }
+}
+
+.c-nav-system_button {
+    background-color: transparent;
+    cursor: pointer;
+
+    @media (max-width: $to-large) {
+        padding: 10px 20px;
+    }
+
+    @media (min-width: $from-large) {
+        padding: rem(22px) rem($spacer-x);
+    }
+
+    &::after {
+        content: none;
+    }
+
+    svg {
+        fill: $charcoal-gray-1;
+        transform: rotate(90deg);
+        width: 16px;
+
+        @media (max-width: $to-large) {
+            height: 8px;
+        }
+
+        @media (min-width: $from-large) {
+            height: 4px;
+        }
+    }
+}
+
+.c-nav-system_list {
+    background-color: $charcoal-gray-4;
+}
+
+.c-nav-system_link {
+    color: $charcoal-gray-2;
+    font-size: 13px;
+
+    &:hover {
+        background-color: $charcoal-gray-3;
+        color: $white;
+    }
+
+    &.-logout:hover {
+        background-color: $charcoal-red-1;
+    }
+}
+
+.c-nav-system_logout {
+    background-color: transparent !important;
+    border-color: transparent !important;
+    color: $charcoal-gray-1;
+    position: absolute;
+    z-index: 1200;
+    right: rem(10px);
+    bottom: rem(8px);
+
+    &:hover {
+        color: $charcoal-gray-2;
+    }
+}

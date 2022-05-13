@@ -1,0 +1,333 @@
+{
+    "base_path": "admin",
+
+    "metadata": {
+        "cache": "memory"
+    },
+
+    "routes": {
+        "templates": {
+            "home": {
+                "ident": "charcoal/admin/template/home",
+                "route": "[/[home]]"
+            },
+            "login": {
+                "ident": "charcoal/admin/template/login"
+            },
+            "logout": {
+                "ident": "charcoal/admin/template/logout"
+            },
+            "help": {
+                "ident": "charcoal/admin/template/help"
+            },
+            "account/lost-password": {
+                "ident": "charcoal/admin/template/account/lost-password"
+            },
+            "account/reset-password": {
+                "route": "/account/reset-password[/{token}]",
+                "ident": "charcoal/admin/template/account/reset-password"
+            },
+            "object/create": {
+                "ident": "charcoal/admin/template/object/create"
+            },
+            "object/edit": {
+                "ident": "charcoal/admin/template/object/edit"
+            },
+            "object/doc": {
+                "ident": "charcoal/admin/docs/template/object/doc"
+            },
+            "object/collection": {
+                "ident": "charcoal/admin/template/object/collection"
+            },
+            "elfinder": {
+                "ident": "charcoal/admin/template/elfinder"
+            },
+            "media": {
+                "template": "charcoal/admin/template/media",
+                "controller": "charcoal/admin/template/elfinder"
+            },
+            "system/cache": {
+                "ident": "charcoal/admin/template/system/clear-cache"
+            },
+            "system/object/info": {
+                "ident": "charcoal/admin/template/system/object/info"
+            },
+            "system/static-website": {
+                "ident": "charcoal/admin/template/system/static-website"
+            },
+            "system/users": {
+                "ident": "charcoal/admin/template/system/users"
+            },
+            "system/user-roles": {
+                "ident": "charcoal/admin/template/system/user-roles"
+            },
+            "system/user-permissions": {
+                "ident": "charcoal/admin/template/system/user-permissions"
+            }
+        },
+        "actions": {
+            "login": {
+                "ident": "charcoal/admin/action/login"
+            },
+            "account/lost-password": {
+                "ident": "charcoal/admin/action/account/lost-password"
+            },
+            "account/reset-password": {
+                "ident": "charcoal/admin/action/account/reset-password"
+            },
+            "object/delete": {
+                "ident": "charcoal/admin/action/object/delete"
+            },
+            "object/save": {
+                "ident": "charcoal/admin/action/object/save"
+            },
+            "object/update": {
+                "ident": "charcoal/admin/action/object/update"
+            },
+            "selectize/save": {
+                "ident": "charcoal/admin/action/selectize/save"
+            },
+            "selectize/update": {
+                "ident": "charcoal/admin/action/selectize/update"
+            },
+            "object/reorder": {
+                "ident": "charcoal/admin/action/object/reorder"
+            },
+            "object/export": {
+                "methods": [ "GET" ],
+                "ident": "charcoal/admin/action/object/export"
+            },
+            "object/revert-revision": {
+                "ident": "charcoal/admin/action/object/revert-revision"
+            },
+            "object/load": {
+                "methods": [ "GET", "POST" ],
+                "ident": "charcoal/admin/action/object/load"
+            },
+            "filesystem/load": {
+                "methods": [ "GET" ],
+                "ident": "charcoal/admin/action/filesystem/load"
+            },
+            "filesystem/download": {
+                "methods": [ "GET" ],
+                "ident": "charcoal/admin/action/filesystem/load",
+                "action_data": {
+                    "disposition": "attachment"
+                }
+            },
+            "selectize/load[/{query}]": {
+                "methods": [ "GET", "POST" ],
+                "ident": "charcoal/admin/action/selectize/load"
+            },
+            "elfinder-connector": {
+                "methods": [ "GET", "POST" ],
+                "ident": "charcoal/admin/action/elfinder-connector"
+            },
+            "widget/load": {
+                "ident": "charcoal/admin/action/widget/load"
+            },
+            "widget/table/inline": {
+                "ident": "charcoal/admin/action/widget/table/inline"
+            },
+            "widget/table/inline-multi": {
+                "ident": "charcoal/admin/action/widget/table/inline-multi"
+            },
+            "system/clear-cache": {
+                "ident": "charcoal/admin/action/system/clear-cache"
+            },
+            "system/cache/clear": {
+                "ident": "charcoal/admin/action/system/clear-cache"
+            },
+            "system/cache/purge": {
+                "ident": "charcoal/admin/action/system/purge-cache"
+            },
+            "system/static-website/activate": {
+                "ident": "charcoal/admin/action/system/static-website/activate"
+            },
+            "system/static-website/deactivate": {
+                "ident": "charcoal/admin/action/system/static-website/deactivate"
+            },
+            "system/static-website/add": {
+                "ident": "charcoal/admin/action/system/static-website/add"
+            },
+            "system/static-website/update": {
+                "ident": "charcoal/admin/action/system/static-website/update"
+            },
+            "system/static-website/preview": {
+                "ident": "charcoal/admin/action/system/static-website/preview"
+            },
+            "system/static-website/delete": {
+                "ident": "charcoal/admin/action/system/static-website/delete"
+            },
+            "system/static-website/update-all": {
+                "ident": "charcoal/admin/action/system/static-website/update-all"
+            },
+            "system/static-website/delete-all": {
+                "ident": "charcoal/admin/action/system/static-website/delete-all"
+            },
+            "system/static-website/crawl": {
+                "ident": "charcoal/admin/action/system/static-website/crawl"
+            },
+            "tinymce/upload/image": {
+                "methods": [ "POST" ],
+                "ident": "charcoal/admin/action/tinymce/upload-image"
+            }
+        },
+        "scripts": {
+            "notification/minute": {
+                "ident": "charcoal/admin/script/notification/process-minute"
+            },
+            "notification/hourly": {
+                "ident": "charcoal/admin/script/notification/process-hourly"
+            },
+            "notification/daily": {
+                "ident": "charcoal/admin/script/notification/process-daily"
+            },
+            "notification/weekly": {
+                "ident": "charcoal/admin/script/notification/process-weekly"
+            },
+            "notification/monthly": {
+                "ident": "charcoal/admin/script/notification/process-monthly"
+            },
+            "object/create": {
+                "ident": "charcoal/admin/script/object/create"
+            },
+            "object/table/alter": {
+                "ident": "charcoal/admin/script/object/table/alter"
+            },
+            "object/table/alter-primary-key": {
+                "ident": "charcoal/admin/script/object/table/alter-primary-key"
+            },
+            "object/table/create": {
+                "ident": "charcoal/admin/script/object/table/create"
+            },
+            "object/process-schedules": {
+                "ident": "charcoal/admin/script/object/process-schedules"
+            },
+            "objects": {
+                "ident": "charcoal/admin/script/objects"
+            },
+            "user/create": {
+                "ident": "charcoal/admin/script/user/create"
+            },
+            "user/role/create": {
+                "ident": "charcoal/admin/script/user/acl-role/create"
+            },
+            "user/reset-password": {
+                "ident": "charcoal/admin/script/user/reset-password"
+            },
+            "tools/static-website/add": {
+                "ident": "charcoal/admin/script/tools/static-website/add"
+            },
+            "tools/static-website/delete": {
+                "ident": "charcoal/admin/script/tools/static-website/delete"
+            },
+            "tools/static-website/update": {
+                "ident": "charcoal/admin/script/tools/static-website/update"
+            },
+            "tools/static-website/crawl": {
+                "ident": "charcoal/admin/script/tools/static-website/crawl"
+            },
+            "tools/check-links": {
+                "ident": "charcoal/admin/script/tools/check-links"
+            },
+            "tools/copy-assets": {
+                "ident": "charcoal/admin/script/tools/copy-assets"
+            },
+            "tools/optimize-images": {
+                "ident": "charcoal/admin/script/tools/optimize-images"
+            },
+            "tools/resize-images": {
+                "ident": "charcoal/admin/script/tools/resize-images"
+            }
+        }
+    },
+
+    "handlers": {
+        "defaults": {
+            "template": "charcoal/admin/handler/layout",
+            "controller": "charcoal/admin/template/handler"
+        },
+        "notFound": {
+            "partial": "charcoal/admin/handler/404"
+        }
+    },
+
+    "user": {
+        "subscription_email": {
+            "active": true,
+            "template": "charcoal/admin/email/user.subscription",
+            "campaign": "admin.user.subscription",
+            "from": {
+                "name": "Charcoal",
+                "email": "registration@charcoal.locomotive.ca"
+            },
+            "subject": "Your subscription to Charcoal",
+            "log": true,
+            "track": true
+        },
+        "lost_password_email": {
+            "active": true,
+            "template": "charcoal/admin/email/user.lost-password",
+            "campaign": "admin.user.lost-password",
+            "from": {
+                "name": "Charcoal",
+                "email": "registration@charcoal.locomotive.ca"
+            },
+            "subject": "Reset your Charcoal password",
+            "log": true,
+            "track": true
+        }
+    },
+
+    "acl": {
+        "permissions": {
+            "default": {
+                "allowed": [
+                    "action",
+                    "template",
+                    "template.charcoal/admin/home"
+                ],
+                "denied": []
+            }
+        }
+    },
+
+    "login": {
+        "visit_site": null,
+        "token_expiry": "2 hours"
+    },
+
+    "main_menu": {
+        "visit_site": null
+    },
+
+    "assets": {
+        "collections": {
+            "echarts_js": {
+                "files": [
+                    "vendor/locomotivemtl/charcoal-admin/assets/dist/scripts/vendors/echarts/echarts.min.js"
+                ]
+            },
+            "js": {},
+            "module": {},
+            "css": {}
+
+        }
+    },
+
+    "elfinder": {
+        "client": {
+            "theme": "moono",
+            "themeOptions": {
+                "moono": {
+                    "cssClass": "elfinder-theme-moono",
+                    "cssAutoLoad": [
+                        "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css",
+                        "themes/moono/css/theme.css"
+                    ]
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,22 @@
+{{!--
+    Select Control
+    ==============
+
+    @used-by
+        - `charcoal/admin/property/input/select`
+--}}
+{{> charcoal/admin/property/control/fallback }}
+<select
+    id="{{ inputId }}"
+    name="{{ inputName }}"
+    class="bs-select-hidden{{# inputClass }} {{ . }}{{/ inputClass }} form-control"
+    {{# size }}size="{{ . }}"{{/ size }}
+    {{# multiple }}multiple{{/ multiple }}
+    {{# placeholder }}placeholder="{{ . }}"{{/ placeholder }}
+    {{# required }}required{{/ required }}
+    {{# disabled }}disabled{{/ disabled }}
+>
+    {{# choices }}
+        {{> charcoal/admin/property/input/select/option }}
+    {{/ choices }}
+</select>

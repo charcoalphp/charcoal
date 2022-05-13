@@ -1,0 +1,34 @@
+{{!--
+
+    Docs \ Form Group Widget
+    ========================
+
+    `charcoal/admin/docs/widget/form-group-widget`
+
+    Display a form group (as a fieldset) and loop the properties to display them.
+
+    This widget expects a `Charcoal\Admin\Widget\FormGroup` model as context.
+
+--}}
+<div>
+    {{# showHeader }}
+        <header class="o-header -border">
+            {{# showTitle }}
+                <h2>{{ title }}</h2>
+            {{/ showTitle }}
+        </header>
+    {{/ showHeader }}
+    {{^ showHeader }}
+        {{# showDescription }}
+            <div class="form-text border-bottom mb-4 pb-4">{{& description }}</div>
+        {{/ showDescription }}
+        {{# showNotesAbove }}
+            {{> charcoal/admin/template/inc.notes }}
+        {{/ showNotesAbove }}
+    {{/ showHeader }}
+    {{# formProperties }}
+        <div class="mb-4">
+            {{> charcoal/admin/docs/widget/form-property-widget }}
+        </div>
+    {{/ formProperties }}
+</div>

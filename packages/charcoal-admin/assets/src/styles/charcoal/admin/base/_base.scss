@@ -1,0 +1,51 @@
+// ==========================================================================
+// Base
+// ==========================================================================
+
+//
+// 1. Set the default `font-size` for the entire project, sourced from our
+//    default variables. The `font-size` is calculated to exist in ems.
+//
+html {
+    @media (max-width: $to-large) {
+        font-size: 14px;
+    }
+
+    @media (min-width: $from-large) and (max-width: $to-big) {
+        font-size: 12px;
+    }
+
+    @media (min-width: $from-big) {
+        font-size: em($font-size, 16px); /* [1] */
+    }
+}
+
+//
+// 1. Force scrollbars to always be visible to prevent awkward ‘jumps’ when
+//    navigating between pages that do/do not have enough content to produce
+//    scrollbars naturally.
+// 2. Ensure the page always fills at least the entire height of the viewport.
+//
+body {
+    overflow-y: scroll; /* [1] */
+    min-height: 100%; /* [2] */
+}
+
+::selection {
+    background-color: $charcoal-blue-2;
+    color: $white;
+    text-shadow: none;
+}
+
+th {
+    font-size: 14px;
+    font-weight: $weight-bold;
+}
+
+td {
+    font-size: 12px;
+}
+
+output {
+    display: block;
+}

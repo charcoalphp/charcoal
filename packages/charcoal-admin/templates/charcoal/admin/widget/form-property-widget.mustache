@@ -1,0 +1,44 @@
+{{!--
+    Form Property Widget
+    ====================
+
+    @used-by `charcoal/admin/widget/form-group-widget`
+--}}
+<fieldset class="{{ formGroupCssClass }}">
+    {{# showLabel }}
+    {{# hasIcon }}
+        <span class="text-info">
+            {{> charcoal/admin/widget/inc.icon }}
+            &nbsp;
+        </span>
+    {{/ hasIcon }}
+    <label for="{{ widgetId }}">{{> charcoal/admin/property/control/label }}</label>
+
+    {{# showActiveLanguage }}
+    <span class="active-lang pull-right" aria-label="{{# _t }}Languages{{/ _t }}">
+        {{# languages }}
+        <span aria-label="{{ name }}" data-lang="{{ ident }}"{{^ current }} class="d-none"{{/ current }}>{{ ident }}</span>
+        {{/ languages }}
+    </span>
+    {{/ showActiveLanguage }}
+    {{/ showLabel }}
+    {{^ showLabel }}
+    <label class="sr-only" for="{{ widgetId }}">{{> charcoal/admin/property/control/label }}</label>
+    {{/ showLabel }}
+
+    {{> charcoal/admin/template/inc.description }}
+    {{# showNotesAbove }}
+    {{> charcoal/admin/template/inc.notes }}
+    {{/ showNotesAbove }}
+
+    {{# output }}
+    {{!-- The actual property control (typically `PropertyInput`) --}}
+    <div id="form-field-{{ widgetId }}" class="{{ formFieldCssClass }}{{# hidden }} d-none{{/ hidden }}"{{# inputNameAsCssClass }} data-name="{{ . }}"{{/ inputNameAsCssClass }}{{# propertyType }} data-type="{{ . }}"{{/ propertyType }}{{# resolvedOutputType }} data-field="{{ . }}"{{/ resolvedOutputType }}{{# widgetId }} data-key="{{ widgetId }}"{{/ widgetId }}{{# l10n }} data-lang="{{ lang }}"{{/ l10n }}>
+        {{> $widget_template }}
+    </div>
+    {{/ output }}
+    {{^ showNotesAbove }}
+
+    {{> charcoal/admin/template/inc.notes }}
+    {{/ showNotesAbove }}
+</fieldset>

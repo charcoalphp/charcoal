@@ -1,0 +1,83 @@
+// ==========================================================================
+// Bootstrap Settings
+// ==========================================================================
+
+// Colors
+// ==========================================================================
+
+$primary:      $charcoal-blue-1;
+$danger:       $charcoal-red-1;
+$dark:         $charcoal-gray-5;
+
+$theme-colors: (
+    "primary": $primary,
+    "danger":  $danger,
+    "dark":    $dark
+);
+
+// Typography
+// ==========================================================================
+
+$font-family-sans-serif: $font-family;
+
+$h1-font-size:           $font-size-h1;
+$h2-font-size:           $font-size-h2;
+$h3-font-size:           $font-size-h3;
+$h4-font-size:           $font-size-h4;
+$h5-font-size:           $font-size-h5;
+$h6-font-size:           $font-size-h6;
+
+$small-font-size: 72%;
+
+// Components
+// ==========================================================================
+
+$caret-width: .35em;
+
+// Tables
+// ==========================================================================
+
+$table-border-color: #cccccc;
+
+// Forms
+// ==========================================================================
+
+$input-padding-y:    rem(10px);
+$input-padding-y-sm: rem(8px);
+$input-padding-y-lg: rem(14px);
+
+$input-color:              $charcoal-gray-6;
+$input-border-color:       $charcoal-gray-2;
+
+$input-focus-border-color: $charcoal-blue-1;
+
+// Grid system
+// ==========================================================================
+
+$grid-gutter-width: 20px;
+
+// Navs
+// ==========================================================================
+
+$nav-tabs-border-color:             $charcoal-gray-2;
+$nav-tabs-link-hover-border-color:  $nav-tabs-border-color;
+$nav-tabs-link-active-bg:           $charcoal-white-1;
+$nav-tabs-link-active-border-color: $nav-tabs-border-color $nav-tabs-border-color $nav-tabs-link-active-bg;
+
+// Tooltips
+// ==========================================================================
+
+$tooltip-bg:      $charcoal-gray-5;
+$tooltip-opacity: 1;
+
+// Modal
+// ==========================================================================
+
+$modal-lg: 900px;
+$modal-md: 600px;
+
+// Alerts
+// ==========================================================================
+
+$alert-padding-y:     1.25rem; // same as $alert-padding-x
+$alert-margin-bottom: 1.25rem; // same as $alert-padding-x

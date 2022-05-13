@@ -1,0 +1,38 @@
+// ==========================================================================
+// Map maker
+// ==========================================================================
+
+.c-map-maker {
+    position: relative;
+    overflow: hidden;
+}
+
+.c-map-maker_header {
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    background-color: $charcoal-white-0;
+    border-bottom: 1px solid $gray-light;
+    transform: translateY(-100%);
+    transition: transform $speed $easing;
+
+    .c-map-maker.is-header-open & {
+        transform: translateY(0%);
+    }
+}
+
+.c-map-maker_input {
+    * {
+        display: inline;
+    }
+
+    br {
+        display: none;
+    }
+}
+
+.c-map-maker_map {
+    height: 100%;
+    overflow: hidden;
+}

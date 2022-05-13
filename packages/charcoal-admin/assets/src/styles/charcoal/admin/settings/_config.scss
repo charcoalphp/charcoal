@@ -1,0 +1,78 @@
+// ==========================================================================
+// Settings / Config
+// ==========================================================================
+
+// Fonts
+// ==========================================================================
+$roboto: 'Roboto', sans-serif;
+
+$weight-light: 300;
+$weight-normal: 400;
+$weight-semi: 500;
+$weight-bold: 700;
+
+// Headings
+$font-size-h1: 24px !default;
+$font-size-h2: 22px !default;
+$font-size-h3: 20px !default;
+$font-size-h4: 18px !default;
+$font-size-h5: 17px !default;
+$font-size-h6: 16px !default;
+
+// Base
+// ==========================================================================
+$font-family: $roboto;
+$font-size: 16px;
+$color: $black;
+$radius: 2px;
+
+// Screen widths
+// ==========================================================================
+$from-tiny:   500px             !default;
+$to-tiny:     $from-tiny - 1    !default;
+$from-small:  700px             !default;
+$to-small:    $from-small - 1   !default;
+$from-medium: 1000px            !default;
+$to-medium:   $from-medium - 1  !default;
+$from-large:  1200px            !default;
+$to-large:    $from-large - 1   !default;
+$from-big:    1400px            !default;
+$to-big:      $from-big - 1     !default;
+$from-huge:   1600px            !default;
+$to-huge:     $from-huge - 1    !default;
+
+// Units
+// ==========================================================================
+// $unit: 60px;
+$unit: 40px;
+$unit-small: 10px;
+$spacer-x: 25px;
+
+// Components
+// ==========================================================================
+$header-height: 95px;
+
+$nav-width: 390px;
+$nav-main-width: 90px;
+
+$nav-button-width: $unit;
+
+$nav-small: 80px;
+$nav-page: 100px;
+
+$sidebar-width: 250px;
+
+// Transitions
+// ==========================================================================
+$speed: 0.2s;
+$speed-medium: 0.3s;
+$slow-speed: $speed-medium;
+$speed-large: 0.4s;
+$slower-speed: $speed-large;
+$easing: linear;
+
+// Vendors
+// ==========================================================================
+
+// Font Awesome
+$fa-font-path: "//netdna.bootstrapcdn.com/font-awesome/4.7.0/fonts";

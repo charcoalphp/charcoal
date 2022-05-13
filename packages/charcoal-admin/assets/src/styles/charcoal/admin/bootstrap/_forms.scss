@@ -1,0 +1,137 @@
+// ==========================================================================
+// Forms
+// ==========================================================================
+
+// Focus for file, radio, and checkbox
+input[type="file"]:focus,
+input[type="radio"]:focus,
+input[type="checkbox"]:focus {
+   // outline: none;
+}
+
+input[type="url"] {
+    // @see https://github.com/necolas/normalize.css/issues/519#issuecomment-197131966
+    font-family: monospace, monospace;
+}
+
+label {
+    font-size: 14px;
+}
+
+.form-control {
+    box-shadow: $input-box-shadow;
+
+    &:focus {
+        box-shadow: none;
+    }
+
+    &.-norounded {
+        border-radius: 0;
+    }
+
+    &.-noborder {
+        border: none;
+    }
+
+    &[readonly] {
+        cursor: not-allowed;
+    }
+}
+
+// Form groups
+//
+// Designed to help with the organization and spacing of vertical forms. For
+// horizontal forms, use the predefined grid classes.
+
+.form-text {
+    margin-bottom: ($form-text-margin-top * 2);
+}
+
+.form-control-plaintext {
+    font-size: 12px;
+}
+
+.form-field {
+    position: relative;
+
+    &.-multiple {
+        > .form-control:not(.selectized) + .form-control {
+            margin-top: 5px;
+        }
+    }
+}
+
+.form-field-note {
+    font-size: 90%;
+
+    @media (min-width: $from-big) {
+        font-size: 72%;
+    }
+}
+
+.form-check-color {
+    position: relative;
+    margin-bottom: $form-check-inline-margin-x;
+
+    .form-check-input {
+        position: absolute;
+        margin: 0;
+        top: 3px;
+        left: 3px;
+
+        &:checked + label > .o-swatch::after {
+            content:       '';
+            position:      absolute;
+            top:           -3px;
+            left:          -3px;
+            right:         -3px;
+            bottom:        -3px;
+            display:       block;
+            border:        2px solid $primary;
+            border-radius: calc(#{$input-border-radius} + 3px);
+        }
+    }
+
+    .form-check-label {
+        cursor: pointer;
+    }
+
+    .o-swatch {
+        width:  calc(#{$input-height} - 6px);
+        height: calc(#{$input-height} - 6px);
+    }
+
+    .o-swatch_color {
+        border-radius: $input-border-radius;
+    }
+
+    &.form-check-color-lg {
+        .o-swatch {
+            width:  calc(#{$input-height-lg} - 6px);
+            height: calc(#{$input-height-lg} - 6px);
+        }
+    }
+
+    &.form-check-color-sm {
+        .o-swatch {
+            width:  calc(#{$input-height-sm} - 6px);
+            height: calc(#{$input-height-sm} - 6px);
+        }
+    }
+}
+
+.active-lang {
+    [data-lang] {
+        color:          $charcoal-gray-3;
+        display:        inline-block;
+        font-size:      10px;
+        letter-spacing: 1px;
+        margin-bottom:  5px;
+        text-transform: uppercase;
+    }
+}
+
+.form-description {
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid $nav-tabs-border-color;
+}

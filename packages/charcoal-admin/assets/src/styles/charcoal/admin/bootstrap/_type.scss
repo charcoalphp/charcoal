@@ -1,0 +1,33 @@
+//
+// Headings
+//
+
+h1, .h1 {
+    @media (max-width: $to-small) {
+        font-size: 20px;
+    }
+
+    @media (min-width: $from-small) {
+        font-size: rem($h1-font-size);
+    }
+}
+
+h2, .h2 {
+    @media (max-width: $to-small) {
+        font-size: 18px;
+    }
+
+    @media (min-width: $from-small) {
+        font-size: rem($h2-font-size);
+    }
+}
+
+h3, .h3 {
+    @media (max-width: $to-small) {
+        font-size: 16px;
+    }
+
+    @media (min-width: $from-small) {
+        font-size: rem($h3-font-size);
+    }
+}

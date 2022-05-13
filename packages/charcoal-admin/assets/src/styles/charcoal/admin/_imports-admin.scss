@@ -1,0 +1,108 @@
+// ==========================================================================
+// Admin / Main
+// ==========================================================================
+
+// Tools
+// ==========================================================================
+@import "tools/functions";
+@import "tools/mixins";
+@import "tools/fonts";
+@import "tools/layout";
+@import "tools/widths";
+
+// Settings
+// ==========================================================================
+
+@import "settings/config.colors";
+@import "settings/config";
+
+// Overwriting core Bootstrap variables
+@import "bootstrap/variables";
+
+// ==========================================================================
+// Bootstrap
+// ==========================================================================
+
+// Core variables & utilities
+// ==========================================================================
+@import "../../../../../node_modules/bootstrap/scss/functions";
+@import "../../../../../node_modules/bootstrap/scss/variables";
+@import "../../../../../node_modules/bootstrap/scss/mixins";
+
+// Overwrites
+// ==========================================================================
+
+@import "bootstrap/reboot";
+@import "bootstrap/type";
+@import "bootstrap/tables";
+@import "bootstrap/forms";
+@import "bootstrap/buttons";
+@import "bootstrap/button-group";
+@import "bootstrap/dropdown";
+@import "bootstrap/nav";
+@import "bootstrap/card";
+@import "bootstrap/modal";
+@import "bootstrap/alert";
+
+// ==========================================================================
+// Charcoal
+// ==========================================================================
+
+// Base
+// ==========================================================================
+@import "base/base";
+
+// Objects
+// ==========================================================================
+@import "objects/flex";
+@import "objects/header";
+@import "objects/container";
+@import "objects/section";
+@import "objects/overlay";
+@import "objects/background";
+@import "objects/toolbox";
+@import "objects/module";
+@import "objects/chips";
+@import "objects/swatch";
+
+// Components
+// ==========================================================================
+@import "components/nav-container";
+@import "components/nav-system";
+@import "components/nav-main";
+@import "components/nav-secondary";
+@import "components/page-header";
+@import "components/page-container";
+@import "components/search";
+@import "components/table-header";
+@import "components/table-container";
+@import "components/table-pagination";
+@import "components/table-card";
+@import "components/form-widget";
+@import "components/sidebar-widget";
+@import "components/structure-property";
+@import "components/login";
+@import "components/info";
+@import "components/notifications";
+@import "components/audio-player";
+@import "components/map-maker";
+@import "components/attachments";
+@import "components/dual-select";
+@import "components/clear-cache";
+@import "components/loader";
+
+// Templates
+// ==========================================================================
+@import "templates/dashboard";
+
+
+// Bootstrap custom components
+// ==========================================================================
+@import "bootstrap-custom/switch";
+
+// Utilities
+// ==========================================================================
+@import "utilities/align";
+@import "utilities/helpers";
+@import "utilities/ratio";
+

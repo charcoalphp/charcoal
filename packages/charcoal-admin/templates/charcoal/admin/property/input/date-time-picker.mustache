@@ -1,0 +1,42 @@
+{{!--
+DateTime picker Property Input
+=======================
+
+`charcoal/admin/property/input/datetimepicker`
+
+--}}
+<div class="input-group{{# inputGroupClass }} {{ . }}{{/ inputGroupClass }}" id="datetimepicker_{{ inputId }}" data-target-input="nearest">
+    <input
+        type="text"
+        id="{{ inputId }}"
+        name="{{ inputName }}"
+        class="form-control datetimepicker-input{{# inputClass }} {{ . }}{{/ inputClass }}"
+        data-target="#datetimepicker_{{ inputId }}"
+        {{# placeholder }}placeholder="{{ . }}"{{/ placeholder }}
+        {{# readOnly }}readonly{{/ readOnly }}
+        {{# required }}required{{/ required }}
+        {{# disabled }}disabled{{/ disabled }}
+        value="">
+    <div class="input-group-append">
+        <button id="{{ inputId }}_create" class="btn btn-lg btn-outline-secondary"
+                data-target="#datetimepicker_{{ inputId }}"
+                data-toggle="datetimepicker"
+                for="{{ inputId }}" type="button">
+            <span class="sr-only">{{# _t }}Use Calendar Widget{{/ _t }}</span>
+            <span class="fa fa-calendar" aria-hidden="true"></span>
+        </button>
+    </div>
+</div>
+
+{{# addJs }}
+<script>
+Charcoal.Admin.manager().add_property_input({
+    id: '{{ inputId }}',
+    type: 'charcoal/admin/property/input/DateTimePicker',
+    data: {
+        datetimepicker_selector: '#datetimepicker_{{ inputId }}',
+        datetimepicker_options:  {{& pickerOptionsAsJson }}
+    }
+});
+</script>
+{{/ addJs }}

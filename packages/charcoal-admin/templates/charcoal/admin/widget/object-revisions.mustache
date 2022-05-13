@@ -1,0 +1,26 @@
+{{!--
+
+    Form Group Widget - Object Revisions
+    ====================================
+
+--}}
+<div id="{{widgetId}}" class="o-container c-form-widget_group_content">
+    <fieldset>
+        {{> charcoal/admin/widget/object-revisions/table }}
+        {{> charcoal/admin/template/inc.notes }}
+    </fieldset>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-danger" data-dismiss="dialog">
+        {{# _t }}Cancel{{/ _t }}
+    </button>
+</div>
+
+{{# addJsRequirement }}
+    <script rel="l10n">
+        {{> charcoal/admin/l10n/widget.js }}
+        {{> charcoal/admin/l10n/object-revisions.js }}
+    </script>
+{{/ addJsRequirement }}
+
+{{& jsRequirements }}

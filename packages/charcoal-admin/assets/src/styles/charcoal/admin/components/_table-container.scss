@@ -1,0 +1,35 @@
+// ==========================================================================
+// Table Container / Collection
+// ==========================================================================
+
+.c-table-container {
+    background-color: $white;
+    border-radius: $border-radius;
+
+    @media (max-width: $to-small) {
+        padding: 0 $unit-small;
+    }
+
+    @media (min-width: $from-small) {
+        padding: 0 rem($unit / 2);
+    }
+
+    .property-active {
+        text-align: center;
+        @include u-auto-cell-width;
+    }
+
+    .ui-tablesort-placeholder {
+        margin: 12px;
+        border: 2px dotted black;
+        height: calc(#{rem(40px)} - 2px);
+    }
+}
+
+.c-table-container_actions {
+    padding: 0 !important;
+
+    @media (min-width: $from-small) {
+        @include u-auto-cell-width;
+    }
+}

@@ -1,0 +1,9 @@
+.dashboard {
+    .widget {
+        border-radius: 5px;
+        padding: $unit-small;
+        padding-top: initial;
+        margin-bottom: $unit-small *2;
+        box-sizing: border-box;
+    }
+}

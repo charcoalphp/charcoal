@@ -1,0 +1,29 @@
+{{!--
+Loop notifications, by object types.
+--}}
+{{# objects }}
+    <h4>{{# _t }}{{ num }} object(s) of type <em>{{ typeLabel }}</em>{{/ _t }}</h4>
+    {{# objects }}
+        <div>
+            <p><strong>{{# _t }}Object:{{/ _t }}</strong> {{ targetTypeLabel }} (<strong>{{# _t}}ID:{{/_t}}</strong> {{ targetId }})</p>
+            {{# title }}
+                <p><strong>{{# _t}}Title:{{/_t}}</strong> "{{ . }}"</p>
+            {{/title}}
+            <p><strong>{{# _t }}Revision #:{{/ _t }}</strong> {{revNum}} ({{ dateStr}})</p>
+            <p><strong>{{# _t }}Author:{{/ _t }}</strong> {{ userObject.displayName }} ({{ userObject.email }})</p>
+            <p><strong>{{# _t }}Properties:{{/ _t }}</strong> {{propertiesString}}</p>
+
+            {{# publicUrl }}
+                <p><strong>{{# _t }}URL: {{/ _t }}<a href="{{ . }}">{{ . }}</a></p>
+            {{/ publicUrl }}
+
+            {{# charcoalUrl }}
+                <p><a href="{{ . }}">{{# _t }}Voir dans Charcoal{{/ _t }}</a></p>
+            {{/ charcoalUrl }}
+        </div>
+        <hr />
+    {{/ objects }}
+    <br />
+    <hr />
+    <br />
+{{/ objects }}

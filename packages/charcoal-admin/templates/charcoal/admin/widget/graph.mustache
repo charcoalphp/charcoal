@@ -1,0 +1,17 @@
+{{# showAsCard }}
+    <div class="card">
+        <header class="card-header">
+            <h3 class="card-title mb-0">Graph</h3>
+        </header>
+        <div class="card-body">
+            <div id="{{ widgetId }}" class="js-graph-container" style="height: {{ height }};"></div>
+        </div>
+    </div>
+{{/ showAsCard }}
+{{^ showAsCard }}
+    <div>
+        <div id="{{ widgetId }}" class="js-graph-container" style="height: {{ height }};"></div>
+    </div>
+{{/ showAsCard }}
+
+{{> charcoal/admin/widget/graph/js }}

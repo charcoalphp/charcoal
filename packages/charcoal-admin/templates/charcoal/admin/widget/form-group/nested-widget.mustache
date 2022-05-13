@@ -1,0 +1,35 @@
+{{!
+    Nested Widget Form Group
+    ========================
+
+    `charcoal/admin/widget/form-group/nested-widget`
+}}
+{{# showHeader }}
+    <header class="o-header -small">
+        {{# showTitle }}
+            <h3>{{ title }}</h3>
+        {{/ showTitle }}
+        {{> charcoal/admin/template/inc.description }}
+    </header>
+{{/ showHeader }}
+<div class="o-container c-form-widget_group_content">
+<fieldset>
+    {{^ showHeader }}
+        {{# showDescription }}
+            <div class="form-text text-muted o-section">{{& description }}</div>
+        {{/ showDescription }}
+        {{# showNotesAbove }}
+            {{> charcoal/admin/template/inc.notes }}
+        {{/ showNotesAbove }}
+    {{/ showHeader }}
+    {{# showNotesAbove }}
+        {{> charcoal/admin/template/inc.notes }}
+    {{/ showNotesAbove }}
+    {{# widget }}
+        {{> $widget_template }}
+    {{/ widget }}
+    {{^ showNotesAbove }}
+        {{> charcoal/admin/template/inc.notes }}
+    {{/ showNotesAbove }}
+</fieldset>
+</div>

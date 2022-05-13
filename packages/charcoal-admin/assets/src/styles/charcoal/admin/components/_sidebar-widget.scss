@@ -1,0 +1,204 @@
+// ==========================================================================
+// Form Widget \ Sidebar
+// ==========================================================================
+
+.c-sidebar-widget {
+    @extend .c-form-widget_sidebar;
+}
+
+.c-sidebar-widget {
+    background-color: $black;
+
+    @media (max-width: $to-small) {
+        display: flex;
+        flex-flow: column;
+        margin-bottom: $unit / 2;
+    }
+
+    @media (min-width: $from-small) {
+        border-bottom-left-radius: $radius;
+        overflow: hidden;
+        position: fixed;
+        right: 0;
+    }
+
+    @media (min-width: $from-small) and (max-width: $to-large) {
+        top: $unit;
+    }
+
+    @media (min-width: $from-large) {
+        top: rem($header-height);
+    }
+
+    @media (min-width: $from-small) {
+        .c-form-widget.-sticky-sidebar & {
+            position: sticky;
+            top: 0;
+        }
+    }
+}
+
+// Header
+// ==========================================================================
+.c-sidebar-widget_header {
+    @media (max-width: $to-small) {
+        display: none;
+    }
+
+    @media (min-width: $from-small) {
+        color: $charcoal-gray-0;
+        padding: rem(24px) rem($unit / 2) rem(14px);
+    }
+}
+
+.c-sidebar-widget_heading {
+    margin: 0;
+}
+
+// Main
+// ==========================================================================
+.c-sidebar-widget_wrapper {
+    border-top: 1px solid $charcoal-gray-5;
+
+    @media (max-width: $to-small) {
+        padding: $unit-small;
+        width: 100%;
+
+        &:first-of-type {
+            border-top: none;
+        }
+
+        // Apply .btn-sm styles to the actions
+        // .btn {
+        //     @include button-size($btn-padding-y-sm, $btn-padding-x-sm, $font-size-sm, $btn-line-height-sm, $btn-border-radius-sm);
+        // }
+    }
+
+    @media (min-width: $from-small) {
+        padding: rem($unit / 2);
+
+        // .btn {
+        //     width: 100%;
+        // }
+    }
+
+    &:last-child {
+        border-bottom: 1px solid $charcoal-gray-5;
+    }
+
+    &.-properties {}
+
+    &.-actions {
+        @media (max-width: $to-small) {
+            display: flex;
+            flex-wrap: wrap;
+
+            > [role="group"] {
+                width: 50%;
+            }
+        }
+    }
+}
+
+.c-sidebar-widget_subtitle {
+    color: $charcoal-gray-0;
+}
+
+.c-sidebar-widget_table {
+    font-size: 10px;
+    margin-bottom: 0;
+
+    @media (max-width: $to-small) {
+        display: flex;
+        flex-wrap: wrap;
+    }
+}
+
+.c-sidebar-widget_table_row {
+    @media (max-width: $to-small) {
+        width: 50%;
+
+        &:nth-child(n + 3) {
+            padding-top: 6px;
+        }
+    }
+
+    @media (min-width: $from-small) {
+        padding: rem(8px) 0;
+
+        & + & {
+            border-top: 1px solid $charcoal-gray-5;
+        }
+    }
+}
+
+.c-sidebar-widget_table_header,
+.c-sidebar-widget_table_data {
+    color: $charcoal-gray-0;
+}
+
+.c-sidebar-widget_table_header {
+    opacity: 0.7;
+    margin-bottom: rem(5px);
+}
+
+.c-sidebar-widget_actions {
+    @media (min-width: $from-small) {
+        width: 100%;
+    }
+}
+
+// Footer
+// ==========================================================================
+.c-sidebar-widget_footer {
+    border-top: 1px solid $charcoal-gray-5;
+
+    @media (max-width: $to-small) {
+        height: auto;
+        padding: 0 $unit-small;
+    }
+
+    @media (min-width: $from-small) {
+        height: rem(50px);
+        padding: 0 rem($unit / 2);
+        display: flex;
+    }
+}
+
+.c-sidebar-widget_button {
+    border: none;
+    color: $charcoal-gray-0;
+    background-color: transparent !important;
+    font-size: 10px;
+
+    > i {
+        font-size: 14px;
+    }
+
+    &:focus,
+    &:active {
+        box-shadow: none;
+    }
+
+    @media (min-width: $from-small) {
+        width: 100%;
+    }
+
+    &.-delete {
+        @include hover-focus {
+            color: $primary;
+        }
+    }
+
+    &.-reset {
+        @include hover-focus {
+            color: $danger;
+        }
+    }
+
+    &.-revision {
+        @include hover-focus {
+            color: $warning;
+        }
+    }
+}

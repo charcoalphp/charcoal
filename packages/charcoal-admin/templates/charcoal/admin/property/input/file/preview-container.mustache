@@ -1,0 +1,17 @@
+{{!--
+    File Property Input \ Preview Container
+    =======================================
+
+    `charcoal/admin/property/input/file`
+--}}
+{{# showFilePreview }}
+<figure class="figure img-thumbnail hide-if-no-file{{^ inputVal }} d-none{{/ inputVal }}">
+    <div class="js-preview-file">{{& filePreview }}</div>
+    <figcaption class="figure-caption p-1">
+        <p class="u-truncate">
+            <samp class="form-control-plaintext js-preview-text" title="{{ inputVal }}">{{& abridgedInputVal }}</samp>
+        </p>
+        <button type="button" class="btn btn-danger js-remove-file">{{ removeButtonLabel }}</button>
+    </figcaption>
+</figure>
+{{/ showFilePreview }}

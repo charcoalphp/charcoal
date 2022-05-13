@@ -1,0 +1,18 @@
+// ==========================================================================
+// Page / Container
+// ==========================================================================
+
+.c-page-container {
+    background-color: $charcoal-white-1;
+    min-height: 100vh;
+
+    @media (max-width: $to-large) {
+        padding-top: $unit;
+    }
+
+    .is-fullscreen-template & {
+        @media (min-width: $from-large) {
+            padding-top: $unit;
+        }
+    }
+}

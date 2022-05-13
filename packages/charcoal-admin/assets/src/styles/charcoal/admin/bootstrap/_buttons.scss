@@ -1,0 +1,30 @@
+// ==========================================================================
+// Buttons
+// ==========================================================================
+
+.btn {
+    font-size: 12px;
+    transition: background-color $speed, color $speed;
+    box-shadow: none;
+
+    &.btn-lg {
+        font-size: 1rem;
+    }
+
+    > .fa:not(.d-none) + .btn-label,
+    > .glyphicon:not(.d-none) + .btn-label {
+        margin-left: 0.25em;
+    }
+}
+
+.btn-seamless {
+    background-color: transparent;
+    color: $charcoal-blue-1;
+}
+
+/** Force border-radius */
+.btn-rounded {
+    @if $enable-rounded {
+        border-radius: $border-radius !important;
+    }
+}

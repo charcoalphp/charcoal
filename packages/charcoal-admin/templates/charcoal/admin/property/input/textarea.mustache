@@ -1,0 +1,19 @@
+{{!--
+    Text Area Property Input
+    ========================
+
+    `charcoal/admin/property/input/textarea`
+--}}
+<textarea
+    id="{{ inputId }}"
+    name="{{ inputName }}"
+    class="form-control{{# inputClass }} {{ . }}{{/ inputClass }}"
+    {{# cols }}cols="{{ . }}"{{/ cols }}
+    {{# rows }}rows="{{ . }}"{{/ rows }}
+    {{# minLength }}minlength="{{ . }}"{{/ minLength }}
+    {{# maxLength }}maxlength="{{ . }}"{{/ maxLength }}
+    {{# placeholder }}placeholder="{{ . }}"{{/ placeholder }}
+    {{# readOnly }}readonly{{/ readOnly }}
+    {{# required }}required{{/ required }}
+    {{# disabled }}disabled{{/ disabled }}
+>{{& inputVal }}</textarea>

@@ -1,0 +1,25 @@
+{{!--
+    Switch Input Control
+    ====================
+
+    `charcoal/admin/property/input/switch`
+--}}
+
+<input
+    type="hidden"
+    name="{{ inputName }}"
+>
+<div class="form-group">
+    <span class="switch switch-lg{{# inputClass }} {{ . }}{{/ inputClass }}">
+        <input
+            class="switch"
+            type="checkbox"
+            id="{{ inputId }}"
+            name="{{ inputName }}"
+            {{# checked }}checked{{/ checked }}
+            {{# readOnly }}readonly{{/ readOnly }}
+            {{# required }}required{{/ required }}
+            {{# disabled }}disabled{{/ disabled }}>
+        <label for="{{ inputId }}"><span class="sr-only">{{# _t }}Toggle Value{{/ _t }}</span></label>
+    </span>
+</div>

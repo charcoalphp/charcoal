@@ -1,0 +1,59 @@
+// ==========================================================================
+// Container Objects
+// ==========================================================================
+
+.o-container {
+    @media (max-width: $to-small) {
+        padding: 0 $unit-small;
+    }
+
+    @media (min-width: $from-small) {
+        padding: 0 rem($unit / 2);
+    }
+
+    &.-right {
+        padding-left: 0;
+    }
+
+    &.-top {
+        @media (max-width: $to-small) {
+            padding-top: $unit-small;
+        }
+
+        @media (min-width: $from-small) {
+            padding-top: rem($unit);
+        }
+    }
+
+    &.-bottom {
+        @media (max-width: $to-small) {
+            padding-bottom: $unit-small;
+        }
+
+        @media (min-width: $from-small) {
+            padding-bottom: rem($unit);
+        }
+    }
+}
+
+// .o-container_header {
+//     @media (max-width: $to-small) {
+//         margin-bottom: $unit-small / 2;
+//     }
+
+//     @media (min-width: $from-small) {
+//         margin-bottom: rem($unit / 2);
+//     }
+
+//     :first-child {
+//         margin-top: 0;
+//     }
+
+//     :first-child {
+//         margin-bottom: 0;
+//     }
+// }
+
+// .o-container_aside {
+//     width: rem($nav-width - $unit);
+// }

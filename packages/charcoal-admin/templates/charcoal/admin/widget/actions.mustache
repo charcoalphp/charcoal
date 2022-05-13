@@ -1,0 +1,52 @@
+{{!--
+    Admin \ UI \ Actions
+    ====================
+
+    @used-by `charcoal/admin/widget/table/header-left`
+    @used-by `charcoal/admin/widget/table/empty`
+    @used-by `charcoal/admin/widget/form.sidebar`
+--}}
+{{# active }}
+    {{# hasActions }}
+        {{> charcoal/admin/widget/actions/dropdown }}
+    {{/ hasActions }}
+    {{^ hasActions }}
+        {{# isButton }}
+            <button
+                class="{{ cssClasses }}"
+                type="{{ buttonType }}"
+                {{# name }}
+                name="{{ . }}"
+                {{/ name }}
+                {{# value }}
+                value="{{ . }}"
+                {{/ value }}
+                {{# widgetType }}
+                data-widget-type="{{ . }}"
+                {{/ widgetType }}
+                {{# dataAttributes }}
+                data-{{ key }}="{{ value }}"
+                {{/ dataAttributes }}
+            >{{> charcoal/admin/widget/actions/label }}</button>
+        {{/ isButton }}
+        {{^ isButton }}
+            <a class="{{ cssClasses }}"
+                href="{{ url }}"
+                {{# target }}
+                target="{{ . }}"
+                {{/ target }}
+                {{# widgetType }}
+                data-widget-type="{{ . }}"
+                {{/ widgetType }}
+                {{# dataAttributes }}
+                data-{{ key }}="{{ value }}"
+                {{/ dataAttributes }}
+            >{{> charcoal/admin/widget/actions/label }}</a>
+        {{/ isButton }}
+
+				{{# extraTemplate }}
+				{{& . }}
+				{{/ extraTemplate }}
+
+    {{/ hasActions }}
+{{/ active }}

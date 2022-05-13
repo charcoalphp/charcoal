@@ -1,0 +1,30 @@
+{{!--
+
+    Object Collection Template
+    ==========================
+
+    `charcoal/admin/template/objet/edit`
+
+    Display the object's "collection" dashboard.
+
+    This template expects a `Charcoal\Admin\Template\Object\Collection` model as context.
+
+--}}
+{{> charcoal/admin/template/inc.header }}
+
+{{! @todo See if broken, feedbacks partial used to be right here L15 }}
+
+<main class="c-page-container o-flex_main"{{# objType }} data-model-type="{{ . }}"{{/ objType }}>
+    {{> charcoal/admin/template/inc.page-header }}
+    {{# searchWidget }}
+        {{> charcoal/admin/widget/search }}
+    {{/ searchWidget }}
+    <section class="o-container -bottom">
+        {{> charcoal/admin/widget/feedbacks }}
+        {{# dashboard }}
+            {{> charcoal/admin/widget/dashboard }}
+        {{/ dashboard }}
+    </section>
+</main>
+
+{{> charcoal/admin/template/inc.footer }}
