@@ -2,6 +2,7 @@
 
 namespace Charcoal\Admin\Ui;
 
+use Charcoal\Admin\Property\PropertyInputInterface;
 use Exception;
 use InvalidArgumentException;
 use UnexpectedValueException;
@@ -159,7 +160,7 @@ trait CollectionContainerTrait
      * @throws Exception If the view instance is not previously set / injected.
      * @return ViewInterface The object's view.
      */
-    public function view()
+    public function view(): ViewInterface
     {
         if ($this->view === null) {
             throw new Exception(
@@ -703,7 +704,7 @@ trait CollectionContainerTrait
     }
 
     /**
-     * @return CollectionLoader
+     * @return Collection
      */
     public function collection()
     {
@@ -718,7 +719,7 @@ trait CollectionContainerTrait
      * @todo Integrate $data; merge with $collectionConfig
      * @param array $data Optional collection data.
      * @throws Exception If the object type of the colletion has not been set.
-     * @return CollectionLoader
+     * @return ModelInterface[]
      */
     public function createCollection(array $data = null)
     {
@@ -736,7 +737,7 @@ trait CollectionContainerTrait
      */
     public function objects()
     {
-        return $this->collection()->objects();
+        return $this->collection()->values();
     }
 
     /**
@@ -801,8 +802,7 @@ trait CollectionContainerTrait
 
     /**
      * Supplies properties for objects in table template specific to object configuration.
-     *
-     * @return array This metod is a generator.
+     * @return \Generator
      */
     public function objectRows()
     {
@@ -995,7 +995,7 @@ trait CollectionContainerTrait
     /**
      * @param boolean $reload If true, reload will be forced.
      * @throws InvalidArgumentException If the object type is not defined / can not create prototype.
-     * @return object
+     * @return ModelInterface
      */
     public function proto($reload = false)
     {

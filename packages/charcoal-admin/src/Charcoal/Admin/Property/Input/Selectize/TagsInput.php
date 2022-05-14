@@ -104,7 +104,7 @@ class TagsInput extends AbstractSelectableInput
      * Show/hide the "Copy to Clipboard" button.
      *
      * @param  boolean $flag Show (TRUE) or hide (FALSE) the copy button.
-     * @return UiItemInterface Chainable
+     * @return self
      */
     public function setAllowClipboardCopy($flag)
     {
@@ -179,7 +179,7 @@ class TagsInput extends AbstractSelectableInput
         }
 
         if ($key === 'options') {
-            $val = $this->parseSelectizeAvailableChoices($val);
+            $val = $this->parseSelectizeOptions($val);
         }
 
         $this->selectizeOptions[$key] = $val;
