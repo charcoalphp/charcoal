@@ -142,7 +142,7 @@
         "locomotivemtl/charcoal-view": "self.version"
     },
     "bin": [
-        "packages/charcoal-app/bin/charcoal"
+        "bin/charcoal"
     ],
     "scripts": {
         "test": [
