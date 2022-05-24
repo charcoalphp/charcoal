@@ -141,6 +141,9 @@
         "locomotivemtl/charcoal-user": "self.version",
         "locomotivemtl/charcoal-view": "self.version"
     },
+    "bin": [
+        "packages/charcoal-app/bin/charcoal"
+    ],
     "scripts": {
         "test": [
             "@tests"
