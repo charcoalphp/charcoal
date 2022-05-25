@@ -67,8 +67,8 @@ jobs:
                     #repository_host: git.private.com:1234
 
                     # ↓ the user signed under the split commit
-                    user-name: "GitHub Action"
-                    user-email: "action@github.com"
+                    user_name: "GitHub Action"
+                    user_email: "action@github.com"
                     branch: "main"
 
             # with tag
@@ -89,6 +89,6 @@ jobs:
                     #repository_host: git.private.com:1234
 
                     # ↓ the user signed under the split commit
-                    user-name: "GitHub Action"
-                    user-email: "action@github.com"
+                    user_name: "GitHub Action"
+                    user_email: "action@github.com"
                     branch: "main"
