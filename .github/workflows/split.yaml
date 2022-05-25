@@ -4,15 +4,12 @@ on:
     push:
         branches:
             - main
-
         # see https://github.community/t/how-to-run-github-actions-workflow-only-for-new-tags/16075/10?u=tomasvotruba
         tags:
             - '*'
 
-    pull_request: null
-
     release:
-        types: [ created ]
+        types: [ published ]
 
 env:
     GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
