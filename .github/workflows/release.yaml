@@ -31,14 +31,7 @@ jobs:
             -   name: Checkout project
                 uses: actions/checkout@v3
 
-            -   name: Setup PHP
-                uses: shivammathur/setup-php@v2
-                with:
-                    php-version: 8.0
-                    coverage: none
-
-            -   name: Install Dependencies
-                uses: ramsey/composer-install@v2
+            -   uses: bahmutov/npm-install@v1
 
             -   name: Semantic Release
                 uses: cycjimmy/semantic-release-action@v3
@@ -48,6 +41,8 @@ jobs:
     provide_packages_json:
         # see json juggling: https://docs.github.com/en/free-pro-team@latest/actions/reference/context-and-expression-syntax-for-github-actions#example-6
         # see https://stackoverflow.com/a/62953566/1348344
+        needs: release
+
         runs-on: ubuntu-latest
 
         if: "endsWith(github.ref, 'main')"
