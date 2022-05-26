@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symplify\ComposerJsonManipulator\ValueObject\ComposerJsonSection;
+use Symplify\MonorepoBuilder\Release\ReleaseWorker\SetCurrentMutualDependenciesReleaseWorker;
+use Symplify\MonorepoBuilder\Release\ReleaseWorker\UpdateReplaceReleaseWorker;
 use Symplify\MonorepoBuilder\ValueObject\Option;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
@@ -21,4 +23,10 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             'phpunit/phpunit' => '^9.5',
         ],
     ]);
+
+    $services = $containerConfigurator->services();
+
+    # release workers - in order to execute
+    $services->set(UpdateReplaceReleaseWorker::class);
+    $services->set(SetCurrentMutualDependenciesReleaseWorker::class);
 };
