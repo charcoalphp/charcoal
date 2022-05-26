@@ -1,10 +1,22 @@
-name: Split Monorepo
+name: Release
 
 on:
     push:
         branches:
             - main
-        # see https://github.community/t/how-to-run-github-actions-workflow-only-for-new-tags/16075/10?u=tomasvotruba
+            - beta
+            - alpha
+            - next
+            - next-major
+        tags:
+            - '*'
+    pull_request:
+        branches:
+            - main
+            - beta
+            - alpha
+            - next
+            - next-major
         tags:
             - '*'
 
@@ -12,24 +24,49 @@ env:
     GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
 
 jobs:
+    release:
+        runs-on: ubuntu-latest
+
+        steps:
+            -   name: Checkout project
+                uses: actions/checkout@v3
+
+            -   name: Setup PHP
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: 8.0
+                    coverage: none
+
+            -   name: Install Dependencies
+                uses: ramsey/composer-install@v2
+
+            -   name: Semantic Release
+                uses: cycjimmy/semantic-release-action@v3
+                with:
+                    semantic_version: 19
+
     provide_packages_json:
         # see json juggling: https://docs.github.com/en/free-pro-team@latest/actions/reference/context-and-expression-syntax-for-github-actions#example-6
         # see https://stackoverflow.com/a/62953566/1348344
         runs-on: ubuntu-latest
 
-        steps:
-            -   uses: actions/checkout@v2
+        if: "endsWith(github.ref, 'main')"
 
-            # required for matrix of packages set
-            -   uses: shivammathur/setup-php@v2
+        steps:
+            -   uses: actions/checkout@v3
+
+            -   name: Setup PHP
+                uses: shivammathur/setup-php@v2
                 with:
                     php-version: 8.0
                     coverage: none
 
-            -   uses: "ramsey/composer-install@v1"
+            -   name: Install Dependencies
+                uses: ramsey/composer-install@v2
 
             # get package json list
-            -   id: output_data
+            -   name: Output list packages as JSON
+                id: output_data
                 run: echo "::set-output name=matrix::$(vendor/bin/monorepo-builder packages-json)"
 
         # this step is needed, so the output gets to the next defined job
@@ -92,3 +129,4 @@ jobs:
                     user_name: "GitHub Action"
                     user_email: "action@github.com"
                     branch: "main"
+
