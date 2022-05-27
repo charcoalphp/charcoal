@@ -17,22 +17,22 @@
     ],
     "extra": {
         "branch-alias": {
-            "dev-master": "1.0-dev"
+            "dev-master": "1.1-dev"
         }
     },
     "require": {
         "php": "^7.4 || ^8.0",
         "psr/http-message": "^1.0",
-        "locomotivemtl/charcoal-app": "^1.0",
-        "locomotivemtl/charcoal-attachment": "^1.0",
-        "locomotivemtl/charcoal-core": "^1.0",
-        "locomotivemtl/charcoal-factory": "^1.0",
-        "locomotivemtl/charcoal-object": "^1.0",
-        "locomotivemtl/charcoal-property": "^1.0",
-        "locomotivemtl/charcoal-translator": "^1.0"
+        "locomotivemtl/charcoal-app": "^1.1",
+        "locomotivemtl/charcoal-attachment": "^1.1",
+        "locomotivemtl/charcoal-core": "^1.1",
+        "locomotivemtl/charcoal-factory": "^1.1",
+        "locomotivemtl/charcoal-object": "^1.1",
+        "locomotivemtl/charcoal-property": "^1.1",
+        "locomotivemtl/charcoal-translator": "^1.1"
     },
     "require-dev": {
-        "locomotivemtl/charcoal-admin": "^1.0",
+        "locomotivemtl/charcoal-admin": "^1.1",
         "mustache/mustache": "^2.11",
         "php-coveralls/php-coveralls": "^2.2",
         "phpunit/phpunit": "^9.5",

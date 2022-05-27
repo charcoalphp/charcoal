@@ -20,7 +20,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.0-dev"
+            "dev-master": "1.1-dev"
         }
     },
     "require": {
@@ -28,11 +28,11 @@
         "ext-pdo": "*",
         "league/climate": "^3.2",
         "league/flysystem": "^1.0",
-        "locomotivemtl/charcoal-cache": "^1.0",
-        "locomotivemtl/charcoal-config": "^1.0",
-        "locomotivemtl/charcoal-factory": "^1.0",
-        "locomotivemtl/charcoal-translator": "^1.0",
-        "locomotivemtl/charcoal-view": "^1.0",
+        "locomotivemtl/charcoal-cache": "^1.1",
+        "locomotivemtl/charcoal-config": "^1.1",
+        "locomotivemtl/charcoal-factory": "^1.1",
+        "locomotivemtl/charcoal-translator": "^1.1",
+        "locomotivemtl/charcoal-view": "^1.1",
         "monolog/monolog": "^1.17",
         "psr/http-message": "^1.0",
         "psr/log": "^1.0",
