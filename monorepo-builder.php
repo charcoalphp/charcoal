@@ -5,6 +5,8 @@ declare(strict_types=1);
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symplify\ComposerJsonManipulator\ValueObject\ComposerJsonSection;
 use Symplify\MonorepoBuilder\Release\ReleaseWorker\SetCurrentMutualDependenciesReleaseWorker;
+use Symplify\MonorepoBuilder\Release\ReleaseWorker\SetNextMutualDependenciesReleaseWorker;
+use Symplify\MonorepoBuilder\Release\ReleaseWorker\UpdateBranchAliasReleaseWorker;
 use Symplify\MonorepoBuilder\Release\ReleaseWorker\UpdateReplaceReleaseWorker;
 use Symplify\MonorepoBuilder\ValueObject\Option;
 
@@ -29,4 +31,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     # release workers - in order to execute
     $services->set(UpdateReplaceReleaseWorker::class);
     $services->set(SetCurrentMutualDependenciesReleaseWorker::class);
+
+    $services->set(SetNextMutualDependenciesReleaseWorker::class);
+    $services->set(UpdateBranchAliasReleaseWorker::class);
 };
