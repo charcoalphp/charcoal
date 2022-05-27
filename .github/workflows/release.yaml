@@ -30,6 +30,7 @@ jobs:
         steps:
             -   name: Checkout project
                 uses: actions/checkout@v3
+                persist-credentials: false
 
             -   uses: bahmutov/npm-install@v1
 
