@@ -16,6 +16,13 @@
         ["@semantic-release/changelog", {
             "changelogFile": "docs/CHANGELOG.md"
         }],
+        ["@semantic-release/git", {
+            "assets": [
+                "docs/CHANGELOG.md",
+                "composer.json",
+                "packages/**/composer.json"
+            ]
+        }],
         "@semantic-release/github"
     ],
     "preset": "angular"
