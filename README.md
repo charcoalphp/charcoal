@@ -3,16 +3,16 @@
     <img alt="charcoal" src="charcoal-logo.png"/>
     <br>
     <br>
-    <h1>Charcoal Framework - Website fuel</h1>
-    <small>A master repo hosting the totality of Charcoal Core packages</small>
+    <h1>Charcoal Framework - Web Fuel</h1>
 </div>
 
 [![License][badge-license]][charcoal]
 [![Latest Stable Version][badge-version]][charcoal]
-[![semantic-release: angular](https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release)](https://github.com/semantic-release/semantic-release)
-[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
+[![semantic-release: angular][badge-semantic-release]][semantic-release]
+[![Commitizen friendly][badge-commitizen]][commitizen]
 [![Php version][badge-php]][charcoal]
 
+## A Monorepo for the Charcoal Application suite
 
 This monorepo contains the integrality of the Charcoal Framework that can be used directly within a website project.
 You'll find all the different packages in [`/packages`](./packages/) directory. These packages all also individually hosted in `READONLY` format under the [charcoal][charcoal-git].
@@ -128,14 +128,14 @@ Charcoal is licensed under the MIT license. See [LICENSE](LICENSE) for details.
 
 [charcoal]:         https://packagist.org/packages/locomotive-charcoal/charcoal
 [charcoal-git]:     https://github.com/locomotive-charcoal
+[semantic-release]: https://github.com/semantic-release/semantic-release
+[commitizen]:       http://commitizen.github.io/cz-cli/
 
-[badge-license]:      https://img.shields.io/packagist/l/locomotive-charcoal/charcoal.svg?style=flat-square
-[badge-version]:      https://img.shields.io/packagist/v/locomotive-charcoal/charcoal.svg?style=flat-square
-[badge-scrutinizer]:  https://img.shields.io/scrutinizer/g/locomotive-charcoal/charcoal?style=flat-square
-[badge-coveralls]:    https://img.shields.io/coveralls/locomotive-charcoal/charcoal?style=flat-square
-[badge-travis]:       https://img.shields.io/travis/com/locomotive-charcoal/charcoal?style=flat-square
-[badge-php]:          https://img.shields.io/packagist/php-v/locomotive-charcoal/charcoal?style=flat-square
-[badge-tabulator]:    https://img.shields.io/github/package-json/dependency-version/locomotive-charcoal/charcoal/tabulator-tables?style=flat-square
+[badge-license]:            https://img.shields.io/packagist/l/locomotive-charcoal/charcoal.svg?style=flat-square
+[badge-version]:            https://img.shields.io/packagist/v/locomotive-charcoal/charcoal.svg?style=flat-square&logo=packagist
+[badge-php]:                https://img.shields.io/packagist/php-v/locomotive-charcoal/charcoal?style=flat-square&logo=php
+[badge-semantic-release]:   https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release&style=flat-square
+[badge-commitizen]:         https://img.shields.io/badge/commitizen-friendly-brightgreen.svg?style=flat-square
 
 [psr-1]:  https://www.php-fig.org/psr/psr-1/
 [psr-2]:  https://www.php-fig.org/psr/psr-2/
