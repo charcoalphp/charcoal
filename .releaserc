@@ -10,7 +10,7 @@
     "plugins": [
         "@semantic-release/commit-analyzer",
         ["@semantic-release/exec", {
-            "prepareCmd": "[ $(git branch --show-current) != beta && $(git branch --show-current) != alpha ] && ./vendor/bin/monorepo-builder release ${nextRelease.version} ${options.branch}"
+            "prepareCmd": "./build-monorepo ${nextRelease.version}"
         }],
         "@semantic-release/release-notes-generator",
         ["@semantic-release/changelog", {
