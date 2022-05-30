@@ -199,14 +199,14 @@ The following property inputs are available  to build forms in the _admin_ modul
   <td valign="top"><em>array</em></td>
   <td valign="top">Custom mapping between an object properties or callable and the selectize. It is discouraged to use renderable data. choice_obj_map must be a mapping with existing object properties.
   <table class="table table-bordered table-hover table-condensed">
-          </br>
-          </br>
+          <br/>
+          <br/>
           <tbody><tr>
           <td valign="top"><strong>value</strong></td>
           <td>Object property or object callable. Defines the actual value to be registered in the database</td>
           </tr>
           <tr>
-          <td valign="top"><strong>label<string></td>
+          <td valign="top"><strong>label</strong></td>
           <td>Object property or object callable. Defines the visible label of the input.</td>
           </tr>
           </tbody>
@@ -228,8 +228,8 @@ The following property inputs are available  to build forms in the _admin_ modul
   <td valign="top"><em>string|array</em></td>
   <td valign="top">Allow custom rendering for selectize [item] and [option]. Overrule choice_obj_map[label]. Priotize using this for rendering custom labels instead of choice_obj_map.<br><br>The value can either be a string with render tags, a path to a custom template or even an array mapping to handle "item", "option", "controller" and "data" individually.
   <table class="table table-bordered table-hover table-condensed">
-          </br>
-          </br>
+          <br/>
+          <br/>
           <tbody><tr>
           <td valign="top"><strong>item</strong><br>(Can be a renderable string or template path)</td>
           <td>Custom renderable html or mustache template for the selectize item. [Item] is the term used to refer to a selected choice.</td>
