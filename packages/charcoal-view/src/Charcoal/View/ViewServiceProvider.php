@@ -250,7 +250,7 @@ class ViewServiceProvider implements ServiceProviderInterface
          */
         $container['view/mustache/helpers/translator'] = function (Container $container): TranslatorHelpers {
             return new TranslatorHelpers([
-                'translator' => (isset($container['translater']) ? $container['translator'] : null)
+                'translator' => (isset($container['translator']) ? $container['translator'] : null)
             ]);
         };
 
