@@ -10,7 +10,7 @@
     "plugins": [
         "@semantic-release/commit-analyzer",
         ["@semantic-release/exec", {
-            "prepareCmd": "./build-monorepo ${nextRelease.version}"
+            "prepareCmd": "./build-monorepo.sh ${nextRelease.version}"
         }],
         "@semantic-release/release-notes-generator",
         ["@semantic-release/changelog", {
