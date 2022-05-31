@@ -1,3 +1,15 @@
+## [1.0.1-beta.1](https://github.com/locomotive-charcoal/Charcoal/compare/v1.0.0...v1.0.1-beta.1) (2022-05-31)
+
+
+### Bug Fixes
+
+* **readme:** fix some html errors/typos ([abb0e9f](https://github.com/locomotive-charcoal/Charcoal/commit/abb0e9fa4e2b7540d691e953c3125cbc8ea2f0a5))
+* **readme:** fix some html errors/typos ([7c16128](https://github.com/locomotive-charcoal/Charcoal/commit/7c1612873e91836126ec23ee8c405b80f14047a6))
+* **typehint:** fix a missing return type conflict ([b9d31c1](https://github.com/locomotive-charcoal/Charcoal/commit/b9d31c1f89f59cc122db39490abfdcf6474cce16))
+* **typehint:** fix a missing return type conflict ([df8938c](https://github.com/locomotive-charcoal/Charcoal/commit/df8938c740afcbc6b2e3d616ad264d2d6c5153e0))
+* **typo:** fix typo for Translator mustache helper ([dc7d20a](https://github.com/locomotive-charcoal/Charcoal/commit/dc7d20af5c23e5d03cf1e952eb67390db0fd6e02))
+* **typo:** fix typo for Translator mustache helper ([3e82bb7](https://github.com/locomotive-charcoal/Charcoal/commit/3e82bb77dd9fd8ae492503ff960a3dbc255af85e))
+
 # [1.0.0-beta.3](https://github.com/locomotive-charcoal/Charcoal/compare/v1.0.0-beta.2...v1.0.0-beta.3) (2022-05-31)
 
 
