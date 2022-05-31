@@ -14,11 +14,11 @@
         }],
         "@semantic-release/release-notes-generator",
         ["@semantic-release/changelog", {
-            "changelogFile": "docs/CHANGELOG.md"
+            "changelogFile": "CHANGELOG.md"
         }],
         ["@semantic-release/git", {
             "assets": [
-                "docs/CHANGELOG.md",
+                "CHANGELOG.md",
                 "composer.json",
                 "packages/**/composer.json"
             ]
