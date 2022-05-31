@@ -1,3 +1,15 @@
+# [1.1.0-beta.2](https://github.com/locomotive-charcoal/Charcoal/compare/v1.1.0-beta.1...v1.1.0-beta.2) (2022-05-31)
+
+
+### Bug Fixes
+
+* **changelog:** remove duplicated blocks ([4bb817f](https://github.com/locomotive-charcoal/Charcoal/commit/4bb817f2218b1a0e2c72e56dfb207e50fd9743ad))
+
+
+### Features
+
+* **changelog:** add title and description to changelog generation ([93b8f2a](https://github.com/locomotive-charcoal/Charcoal/commit/93b8f2ae9b01c82a714c87b8b9257daa42e60288))
+
 # [1.1.0-beta.1](https://github.com/locomotive-charcoal/Charcoal/compare/v1.0.1-beta.5...v1.1.0-beta.1) (2022-05-31)
 
 
