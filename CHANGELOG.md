@@ -1,3 +1,11 @@
+# [1.1.0-beta.1](https://github.com/locomotive-charcoal/Charcoal/compare/v1.0.1-beta.5...v1.1.0-beta.1) (2022-05-31)
+
+
+### Features
+
+* **release:** add github pull-request ([79e6915](https://github.com/locomotive-charcoal/Charcoal/commit/79e69154876231c292e0c1c30c37a4a3dc15197d))
+* **release:** add github pull-request to .releaserc ([8a5f33e](https://github.com/locomotive-charcoal/Charcoal/commit/8a5f33eafe6f9f7e252c4ee75b9b7d24c21f00e6))
+
 ## [1.0.1-beta.5](https://github.com/locomotive-charcoal/Charcoal/compare/v1.0.1-beta.4...v1.0.1-beta.5) (2022-05-31)
 
 
