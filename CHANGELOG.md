@@ -1,3 +1,10 @@
+## [1.0.1-beta.5](https://github.com/locomotive-charcoal/Charcoal/compare/v1.0.1-beta.4...v1.0.1-beta.5) (2022-05-31)
+
+
+### Bug Fixes
+
+* **release:** test commit for release ([20d9990](https://github.com/locomotive-charcoal/Charcoal/commit/20d9990990835255d69a09be12c91fae24f04e89))
+
 ## [1.0.1-beta.1](https://github.com/locomotive-charcoal/Charcoal/compare/v1.0.0...v1.0.1-beta.1) (2022-05-31)
 
 
