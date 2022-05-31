@@ -32,7 +32,7 @@ trait TemplateableTrait
     /**
      * The object's template identifier.
      *
-     * @var mixed
+     * @var string
      */
     protected $templateIdent;
 
@@ -82,9 +82,9 @@ trait TemplateableTrait
     /**
      * Retrieve the renderable object's template identifier.
      *
-     * @return mixed
+     * @return string
      */
-    public function templateIdent()
+    public function templateIdent(): string
     {
         return $this->templateIdent;
     }
