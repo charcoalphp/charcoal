@@ -17,7 +17,7 @@
             "changelogFile": "CHANGELOG.md"
         }],
         ["@semantic-release/exec", {
-            "prepareCmd": "git add -f CHANGELOG.md"
+            "prepareCmd": "$(git add CHANGELOG.md -f)"
         }],
         ["@semantic-release/git", {
             "assets": [
