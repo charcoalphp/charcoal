@@ -36,7 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Bug Fixes
 
-=======
+
 * **changelog:** add title and description to changelog generation ([792cfbf](https://github.com/locomotive-charcoal/Charcoal/commit/792cfbfcdfb9755494321fbd82908ffd8ae2a2b7))
 * **changelog:** remove duplicated blocks ([4bb817f](https://github.com/locomotive-charcoal/Charcoal/commit/4bb817f2218b1a0e2c72e56dfb207e50fd9743ad))
 * **readme:** fix some html errors/typos ([abb0e9f](https://github.com/locomotive-charcoal/Charcoal/commit/abb0e9fa4e2b7540d691e953c3125cbc8ea2f0a5))
