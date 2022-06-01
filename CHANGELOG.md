@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1-beta.1](https://github.com/locomotive-charcoal/Charcoal/compare/v1.1.0...v1.1.1-beta.1) (2022-06-01)
+
+
+### Bug Fixes
+
+* **gitignore:** remove CHANGELOG from gitignore ([d695b92](https://github.com/locomotive-charcoal/Charcoal/commit/d695b927cba3ae2fd7033c58db36b4b0956cb3bc))
+* **release:** remove pull_request event from release action ([1b64881](https://github.com/locomotive-charcoal/Charcoal/commit/1b648818bd7f828cd03b0747e9318ee386b54982))
+* **release:** remove pull_request generation from semantic release workflow ([3027fcb](https://github.com/locomotive-charcoal/Charcoal/commit/3027fcbfbf34dc813c73b1d6ba54591e9d6817ee))
 
 # [1.1.0-beta.4](https://github.com/locomotive-charcoal/Charcoal/compare/v1.1.0-beta.3...v1.1.0-beta.4) (2022-06-01)
 
