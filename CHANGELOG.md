@@ -4,11 +4,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1-beta.1](https://github.com/locomotive-charcoal/Charcoal/compare/v1.1.0...v1.1.1-beta.1) (2022-06-01)
+
+
+### Bug Fixes
+
+* **gitignore:** remove CHANGELOG from gitignore ([d695b92](https://github.com/locomotive-charcoal/Charcoal/commit/d695b927cba3ae2fd7033c58db36b4b0956cb3bc))
+* **release:** remove pull_request event from release action ([1b64881](https://github.com/locomotive-charcoal/Charcoal/commit/1b648818bd7f828cd03b0747e9318ee386b54982))
+* **release:** remove pull_request generation from semantic release workflow ([3027fcb](https://github.com/locomotive-charcoal/Charcoal/commit/3027fcbfbf34dc813c73b1d6ba54591e9d6817ee))
+
+# [1.1.0-beta.4](https://github.com/locomotive-charcoal/Charcoal/compare/v1.1.0-beta.3...v1.1.0-beta.4) (2022-06-01)
+
+
+### Bug Fixes
+
+* **gitignore:** remove CHANGELOG from gitignore ([d695b92](https://github.com/locomotive-charcoal/Charcoal/commit/d695b927cba3ae2fd7033c58db36b4b0956cb3bc))
+* **release:** remove pull_request event from release action ([1b64881](https://github.com/locomotive-charcoal/Charcoal/commit/1b648818bd7f828cd03b0747e9318ee386b54982))
+* **release:** remove pull_request generation from semantic release workflow ([3027fcb](https://github.com/locomotive-charcoal/Charcoal/commit/3027fcbfbf34dc813c73b1d6ba54591e9d6817ee))
+
 # [1.1.0](https://github.com/locomotive-charcoal/Charcoal/compare/v1.0.0...v1.1.0) (2022-05-31)
 
 
 ### Bug Fixes
 
+=======
 * **changelog:** add title and description to changelog generation ([792cfbf](https://github.com/locomotive-charcoal/Charcoal/commit/792cfbfcdfb9755494321fbd82908ffd8ae2a2b7))
 * **changelog:** remove duplicated blocks ([4bb817f](https://github.com/locomotive-charcoal/Charcoal/commit/4bb817f2218b1a0e2c72e56dfb207e50fd9743ad))
 * **readme:** fix some html errors/typos ([abb0e9f](https://github.com/locomotive-charcoal/Charcoal/commit/abb0e9fa4e2b7540d691e953c3125cbc8ea2f0a5))
@@ -28,6 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * **changelog:** add title and description to changelog generation ([93b8f2a](https://github.com/locomotive-charcoal/Charcoal/commit/93b8f2ae9b01c82a714c87b8b9257daa42e60288))
 * **release:** add github pull-request ([79e6915](https://github.com/locomotive-charcoal/Charcoal/commit/79e69154876231c292e0c1c30c37a4a3dc15197d))
 * **release:** add github pull-request to .releaserc ([8a5f33e](https://github.com/locomotive-charcoal/Charcoal/commit/8a5f33eafe6f9f7e252c4ee75b9b7d24c21f00e6))
+
 
 # [1.1.0-beta.3](https://github.com/locomotive-charcoal/Charcoal/compare/v1.1.0-beta.2...v1.1.0-beta.3) (2022-05-31)
 

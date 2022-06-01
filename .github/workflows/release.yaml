@@ -10,15 +10,6 @@ on:
             - next-major
         tags:
             - '*'
-    pull_request:
-        branches:
-            - main
-            - beta
-            - alpha
-            - next
-            - next-major
-        tags:
-            - '*'
 
 env:
     GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}

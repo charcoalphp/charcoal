@@ -24,11 +24,7 @@
                 "packages/**/composer.json"
             ]
         }],
-        "@semantic-release/github",
-        ["semantic-release-github-pullrequest", {
-            "assets": ["CHANGELOG.md"],
-            "baseRef": "main"
-        }]
+        "@semantic-release/github"
     ],
     "preset": "angular"
 }
