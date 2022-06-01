@@ -20,7 +20,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.1-dev"
+            "dev-master": "1.2-dev"
         }
     },
     "require": {
@@ -29,15 +29,15 @@
         "guzzlehttp/guzzle": "^6.0 || ^7.0",
         "kriswallsmith/assetic": "^1.4",
         "laminas/laminas-permissions-acl": "^2.8",
-        "locomotivemtl/charcoal-app": "^1.1",
-        "locomotivemtl/charcoal-cache": "^1.1",
-        "locomotivemtl/charcoal-cms": "^1.1",
-        "locomotivemtl/charcoal-core": "^1.1",
-        "locomotivemtl/charcoal-email": "^1.1",
-        "locomotivemtl/charcoal-object": "^1.1",
-        "locomotivemtl/charcoal-translator": "^1.1",
-        "locomotivemtl/charcoal-ui": "^1.1",
-        "locomotivemtl/charcoal-user": "^1.1",
+        "locomotivemtl/charcoal-app": "^1.2",
+        "locomotivemtl/charcoal-cache": "^1.2",
+        "locomotivemtl/charcoal-cms": "^1.2",
+        "locomotivemtl/charcoal-core": "^1.2",
+        "locomotivemtl/charcoal-email": "^1.2",
+        "locomotivemtl/charcoal-object": "^1.2",
+        "locomotivemtl/charcoal-translator": "^1.2",
+        "locomotivemtl/charcoal-ui": "^1.2",
+        "locomotivemtl/charcoal-user": "^1.2",
         "mcaskill/php-html-build-attributes": "^1.0",
         "paragonie/random_compat": ">=2",
         "psr/cache": "^1.0",
