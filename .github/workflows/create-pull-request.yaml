@@ -31,7 +31,7 @@ jobs:
 
             -   name: Exrtact changelog
                 shell: bash
-                run: echo "##[set-output name=changelog;]$(conventional-changelog --config conventional-changelog-pr.json)"
+                run: echo "##[set-output name=changelog;]$(npx conventional-changelog --config conventional-changelog-pr.json)"
                 id: extract_changelog
 
             -   name: Create pull request
