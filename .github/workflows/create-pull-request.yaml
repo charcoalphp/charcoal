@@ -1,0 +1,46 @@
+name: Create Pull Request
+
+on:
+    push:
+        branches:
+            pr/**
+
+env:
+    GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+
+jobs:
+    create-pull-request:
+        runs-on: ubuntu-latest
+
+        steps:
+            -   name: Checkout project
+                uses: actions/checkout@v3
+                with:
+                    persist-credentials: false
+
+            -   uses: bahmutov/npm-install@v1
+
+            -   name: Extract branch name
+                shell: bash
+                run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+                id: extract_branch
+
+            -   name: Exrtact changelog
+                shell: bash
+                run: echo "##[set-output name=changelog;]$(conventional-changelog --config conventional-changelog-pr.json)"
+                id: extract_changelog
+
+            -   name: Create pull request
+                uses: peter-evans/create-pull-request@v4
+                with:
+                    title: Merge ${{ steps.extract_branch.outputs.branch }} into main
+                    branch: ${{ steps.extract_branch.outputs.branch }}
+                    base: main
+                    body: "# Merge ${{ steps.extract_branch.outputs.branch }} into main
+                           ## Proposed changes
+                           ${{ steps.extract_changelog.outputs.changelog }}"
+                    labels: release, automatic-pr
+                    assignees: ${{ github.event.pusher.name }}
+                    team-reviews: Reviewers
+
+
