@@ -46,6 +46,6 @@ jobs:
                            ${{ steps.extract_changelog.outputs.changelog }}"
                     labels: release, automatic-pr
                     assignees: ${{ github.event.pusher.name }}
-                    team-reviews: Reviewers
+                    team-reviewers: Reviewers
 
 
