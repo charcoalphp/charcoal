@@ -1,9 +1,13 @@
 name: Create Pull Request
 
 on:
-    push:
-        branches:
-            pr/**
+    workflow_dispatch:
+        inputs:
+            base:
+                description: The base branch to pull into
+                required: true
+                default: 'main'
+
 
 env:
     GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
@@ -33,10 +37,11 @@ jobs:
             -   name: Create pull request
                 uses: peter-evans/create-pull-request@v4
                 with:
-                    title: Merge ${{ steps.extract_branch.outputs.branch }} into main
-                    branch: ${{ steps.extract_branch.outputs.branch }}
-                    base: main
-                    body: "# Merge ${{ steps.extract_branch.outputs.branch }} into main
+                    token: ${{ secrets.ACCESS_TOKEN }}
+                    title: Merge ${{ steps.extract_branch.outputs.branch }} into ${{ github.event.inputs.base }}
+                    branch: pr/${{ steps.extract_branch.outputs.branch }}
+                    base: ${{ github.event.inputs.base }}
+                    body: "# Merge ${{ steps.extract_branch.outputs.branch }} into ${{ github.event.inputs.base }}
                            ## Proposed changes
                            ${{ steps.extract_changelog.outputs.changelog }}"
                     labels: release, automatic-pr
