@@ -39,7 +39,12 @@ jobs:
 
             -   name: Exrtact changelog
                 shell: bash
-                run: echo "##[set-output name=changelog;]$(npx conventional-changelog --config conventional-changelog-pr.json)"
+                run: |
+                    CHANGELOG=$(npx conventional-changelog --config conventional-changelog-pr.json)
+                    CHANGELOG="${CHANGELOG//'%'/'%25'}"
+                    CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
+                    CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
+                    echo "::set-output name=changelog::CHANGELOG"
                 id: extract_changelog
 
             -   name: pull-request
