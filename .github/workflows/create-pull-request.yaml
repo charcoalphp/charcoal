@@ -44,7 +44,7 @@ jobs:
                     CHANGELOG="${CHANGELOG//'%'/'%25'}"
                     CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
                     CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
-                    echo "::set-output name=changelog::CHANGELOG"
+                    echo "::set-output name=changelog::$CHANGELOG"
                 id: extract_changelog
 
             -   name: pull-request
@@ -55,10 +55,10 @@ jobs:
                     destination_branch: ${{ github.event.inputs.base }}
                     pr_title: "Pulling ${{ steps.extract_branch.outputs.branch }} into ${{ github.event.inputs.base }}"
                     pr_body: |
-                        # Merge ${{ steps.extract_branch.outputs.branch }} into ${{ github.event.inputs.base }} \
+                        # Merge ${{ steps.extract_branch.outputs.branch }} into ${{ github.event.inputs.base }}
                         ${{ steps.extract_changelog.outputs.changelog }}
                     pr_reviewer: "@locomotive-charcoal/reviewers"    # Comma-separated list (no spaces)
-                    pr_assignee: ${{ github.event.inputs.user_name }}   # Comma-separated list (no spaces)
+                    # pr_assignee: ${{ github.event.inputs.user_name }}   # Comma-separated list (no spaces)
                     pr_label: release,automatic-pr                 # Comma-separated list (no spaces)
                     pr_draft: false                                # Creates pull request as draft
                     pr_allow_empty: false                          # Creates pull request even if there are no changes
