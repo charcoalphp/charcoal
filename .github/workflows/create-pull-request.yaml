@@ -8,7 +8,6 @@ on:
                 required: true
                 default: 'main'
 
-
 env:
     GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
 
@@ -34,18 +33,20 @@ jobs:
                 run: echo "##[set-output name=changelog;]$(npx conventional-changelog --config conventional-changelog-pr.json)"
                 id: extract_changelog
 
-            -   name: Create pull request
-                uses: peter-evans/create-pull-request@v4
+            -   name: pull-request
+                uses: repo-sync/pull-request@v2
                 with:
-                    token: ${{ secrets.ACCESS_TOKEN }}
-                    title: Merge ${{ steps.extract_branch.outputs.branch }} into ${{ github.event.inputs.base }}
-                    branch: pr/${{ steps.extract_branch.outputs.branch }}
-                    base: ${{ github.event.inputs.base }}
-                    body: "# Merge ${{ steps.extract_branch.outputs.branch }} into ${{ github.event.inputs.base }}
+                    source_branch: ${{ steps.extract_branch.outputs.branch }}
+                    destination_branch: ${{ github.event.inputs.base }}
+                    pr_title: "Pulling ${{ steps.extract_branch.outputs.branch }} into ${{ github.event.inputs.base }}"
+                    pr_body: "# Merge ${{ steps.extract_branch.outputs.branch }} into ${{ github.event.inputs.base }}
                            ## Proposed changes
                            ${{ steps.extract_changelog.outputs.changelog }}"
-                    labels: release, automatic-pr
-                    assignees: ${{ github.event.pusher.name }}
-                    team-reviewers: Reviewers
+                    pr_reviewer: Reviewers                         # Comma-separated list (no spaces)
+                    pr_assignee: ${{ github.event.pusher.name }}   # Comma-separated list (no spaces)
+                    pr_label: release,automatic-pr                 # Comma-separated list (no spaces)
+                    pr_draft: false                                # Creates pull request as draft
+                    pr_allow_empty: false                          # Creates pull request even if there are no changes
+                    github_token: ${{ secrets.ACCESS_TOKEN }}
 
 
