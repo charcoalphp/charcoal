@@ -20,6 +20,7 @@ jobs:
                 uses: actions/checkout@v3
                 with:
                     persist-credentials: false
+                    fetch-depth: 0
 
             -   uses: bahmutov/npm-install@v1
 
@@ -41,8 +42,7 @@ jobs:
                     pr_title: "Pulling ${{ steps.extract_branch.outputs.branch }} into ${{ github.event.inputs.base }}"
                     pr_body: |
                         # Merge ${{ steps.extract_branch.outputs.branch }} into ${{ github.event.inputs.base }}
-                        ## Proposed changes
-                        ${{ steps.extract_changelog.outputs.changelog }}
+                        "${{ steps.extract_changelog.outputs.changelog }}"
                     pr_reviewer: Reviewers                         # Comma-separated list (no spaces)
                     pr_assignee: ${{ github.event.pusher.name }}   # Comma-separated list (no spaces)
                     pr_label: release,automatic-pr                 # Comma-separated list (no spaces)
@@ -50,4 +50,17 @@ jobs:
                     pr_allow_empty: false                          # Creates pull request even if there are no changes
                     github_token: ${{ secrets.ACCESS_TOKEN }}
 
+            -   name: Create pull request
+                uses: peter-evans/create-pull-request@v4
+                with:
+                    token: ${{ secrets.ACCESS_TOKEN }}
+                    title: Merge ${{ steps.extract_branch.outputs.branch }} into ${{ github.event.inputs.base }}
+                    branch: pr/${{ steps.extract_branch.outputs.branch }}
+                    base: ${{ github.event.inputs.base }}
+                    body: |
+                        "# Merge ${{ steps.extract_branch.outputs.branch }} into ${{ github.event.inputs.base }}
+                         ${{ steps.extract_changelog.outputs.changelog }}"
+                    labels: release, automatic-pr
+                    assignees: ${{ github.event.pusher.name }}
+                    team-reviewers: Reviewers
 
