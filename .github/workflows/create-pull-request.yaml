@@ -7,6 +7,10 @@ on:
                 description: The base branch to pull into
                 required: true
                 default: 'main'
+            user_name:
+                description: The user name requesting the pull.
+                required: false
+                default: ''
 
 env:
     GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
@@ -29,6 +33,10 @@ jobs:
                 run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
                 id: extract_branch
 
+            -   name: Test
+                shell: bash
+                run: npx conventional-changelog --config conventional-changelog-pr.json
+
             -   name: Exrtact changelog
                 shell: bash
                 run: echo "##[set-output name=changelog;]$(npx conventional-changelog --config conventional-changelog-pr.json)"
@@ -45,22 +53,8 @@ jobs:
                         # Merge ${{ steps.extract_branch.outputs.branch }} into ${{ github.event.inputs.base }} \
                         ${{ steps.extract_changelog.outputs.changelog }}
                     pr_reviewer: "@locomotive-charcoal/reviewers"    # Comma-separated list (no spaces)
-                    pr_assignee: ${{ github.event.pusher.name }}   # Comma-separated list (no spaces)
+                    pr_assignee: ${{ github.event.inputs.user_name }}   # Comma-separated list (no spaces)
                     pr_label: release,automatic-pr                 # Comma-separated list (no spaces)
                     pr_draft: false                                # Creates pull request as draft
                     pr_allow_empty: false                          # Creates pull request even if there are no changes
-
-            -   name: Create pull request
-                uses: peter-evans/create-pull-request@v4
-                with:
-                    token: ${{ secrets.ACCESS_TOKEN }}
-                    title: Merge ${{ steps.extract_branch.outputs.branch }} into ${{ github.event.inputs.base }}
-                    branch: pr/${{ steps.extract_branch.outputs.branch }}
-                    base: ${{ github.event.inputs.base }}
-                    body: |
-                        "# Merge ${{ steps.extract_branch.outputs.branch }} into ${{ github.event.inputs.base }}
-                         ${{ steps.extract_changelog.outputs.changelog }}"
-                    labels: release, automatic-pr
-                    assignees: ${{ github.event.pusher.name }}
-                    team-reviewers: Reviewers
 
