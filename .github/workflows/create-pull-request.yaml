@@ -44,7 +44,7 @@ jobs:
                     pr_body: |
                         # Merge ${{ steps.extract_branch.outputs.branch }} into ${{ github.event.inputs.base }} \
                         ${{ steps.extract_changelog.outputs.changelog }}
-                    pr_reviewer: Reviewers                         # Comma-separated list (no spaces)
+                    pr_reviewer: @locomotive-charcoal/reviewers    # Comma-separated list (no spaces)
                     pr_assignee: ${{ github.event.pusher.name }}   # Comma-separated list (no spaces)
                     pr_label: release,automatic-pr                 # Comma-separated list (no spaces)
                     pr_draft: false                                # Creates pull request as draft
