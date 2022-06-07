@@ -1,14 +1,11 @@
 <div align="center">
-    <br>
     <img alt="charcoal" src="charcoal-logo.png"/>
-    <br>
-    <br>
     <h1>Charcoal Framework - Web Fuel</h1>
 </div>
 
 [![License][badge-license]][charcoal]
 [![Latest Stable Version][badge-version]][charcoal]
-[![semantic-release: angular][badge-semantic-release]][semantic-release]
+[![semantic-release: conventionalcommits][badge-semantic-release]][semantic-release]
 [![Commitizen friendly][badge-commitizen]][commitizen]
 [![Php version][badge-php]][charcoal]
 
@@ -90,11 +87,16 @@ https://github.com/symplify/monorepo-builder monorepo-builder is used to handle 
 
 [TODO] Commit convention : https://www.conventionalcommits.org/en/v1.0.0/
 
-[TODO] commitizen
+[TODO] commitizen https://github.com/commitizen/cz-cli
+
 
 ### Development Dependencies
 
 - [symplify/monorepo-builder](https://github.com/symplify/monorepo-builder)
+    - Keeps packages versions in sync.
+- [semantic-release](https://github.com/semantic-release/semantic-release) 
+    - Handle the release process from a [Github action](https://github.com/cycjimmy/semantic-release-action).
+
 
 ### Development History
 
@@ -115,12 +117,46 @@ This monorepo was created with a many to mono aproach using this guide and tool 
 
 ### Scripts
 
-#### create-pr
+#### __create-pr__
+
+This script streamlines the process of creating a Pull Request. When your branch is ready to be pulled into the `main` or 
+another `[target]` branch, this tool will generate it for you, request review form [@charcoalphp/reviewers][reviewers] and add
+a beautiful and readable release note generated from the differences between the 2 breanches. 
 
 ```shell
 # target: the target branch for the pull request. Defaults to [main]
 $ ./create-pr [target]
 ```
+
+#### __create-release-notes__ (_optional tool_)
+
+This script generates release notes on request, returning a changelog based on the requested `range of commits` or `branches`
+
+Documentation:
+
+```shell
+$ ./build/script/create-release-notes --help
+```
+
+Example:
+
+```shell
+$ ./build/script/create-release-notes -g --from main
+```
+
+Output:
+
+>## Changes :
+>
+>### Features
+>
+>* **create-pr:** add a script to trigger a pull request on the remote ([3016115](https://github.com/locomotive-charcoal/charcoal/commit/3016115d4f7c919261c54e3a17ae6c36552e532a))
+>
+>
+>### Bug Fixes
+>
+>* **create-pr:** remove Personal access token from script and replace with $GITHUB_TOKEN instead ([f2aaac6](https://github.com/locomotive-charcoal/charcoal/commit/f2aaac6dbd630f0f8fa759e49f9f41c957e3868a))
+>* **package:** add missing semantic-release plugin ([59bd1b1](https://github.com/locomotive-charcoal/charcoal/commit/59bd1b1798e4e7b6bf874c7ba8ecbae19d76342b))
 
 ## Credits
 
@@ -148,11 +184,12 @@ Charcoal is licensed under the MIT license. See [LICENSE](LICENSE) for details.
 [charcoal-git]:     https://github.com/locomotive-charcoal
 [semantic-release]: https://github.com/semantic-release/semantic-release
 [commitizen]:       http://commitizen.github.io/cz-cli/
+[reviewers]:        https://github.com/orgs/locomotive-charcoal/teams/reviewers
 
 [badge-license]:            https://img.shields.io/packagist/l/locomotive-charcoal/charcoal.svg?style=flat-square
 [badge-version]:            https://img.shields.io/packagist/v/locomotive-charcoal/charcoal.svg?style=flat-square&logo=packagist
 [badge-php]:                https://img.shields.io/packagist/php-v/locomotive-charcoal/charcoal?style=flat-square&logo=php
-[badge-semantic-release]:   https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release&style=flat-square
+[badge-semantic-release]:   https://img.shields.io/badge/semantic--release-conventionalcommits-e10079?logo=semantic-release&style=flat-square
 [badge-commitizen]:         https://img.shields.io/badge/commitizen-friendly-brightgreen.svg?style=flat-square
 
 [psr-1]:  https://www.php-fig.org/psr/psr-1/
