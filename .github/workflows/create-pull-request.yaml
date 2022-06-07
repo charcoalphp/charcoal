@@ -1,0 +1,62 @@
+name: Create Pull Request
+
+on:
+    workflow_dispatch:
+        inputs:
+            base:
+                description: The base branch to pull into
+                required: true
+                default: 'main'
+            user_name:
+                description: The user name requesting the pull.
+                required: false
+                default: ''
+
+env:
+    GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+
+jobs:
+    create-pull-request:
+        runs-on: ubuntu-latest
+
+        steps:
+            -   name: Checkout project
+                uses: actions/checkout@v3
+                with:
+                    fetch-depth: 0
+
+            -   uses: bahmutov/npm-install@v1
+
+            -   name: Extract branch name
+                shell: bash
+                run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+                id: extract_branch
+
+            -   name: Exrtact changelog
+                shell: bash
+                run: |
+                    git switch ${{ github.event.inputs.base }}
+                    git switch -
+                    CHANGELOG=$(./create-release-notes --from ${{ github.event.inputs.base }} --group)
+                    CHANGELOG="${CHANGELOG//'%'/'%25'}"
+                    CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
+                    CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
+                    echo "::set-output name=changelog::$CHANGELOG"
+                id: extract_changelog
+
+            -   name: pull-request
+                uses: repo-sync/pull-request@v2
+                with:
+                    github_token: ${{ secrets.ACCESS_TOKEN }}
+                    source_branch: ${{ steps.extract_branch.outputs.branch }}
+                    destination_branch: ${{ github.event.inputs.base }}
+                    pr_title: "Pulling ${{ steps.extract_branch.outputs.branch }} into ${{ github.event.inputs.base }}"
+                    pr_body: |
+                        # Merge ${{ steps.extract_branch.outputs.branch }} into ${{ github.event.inputs.base }}
+                        ${{ steps.extract_changelog.outputs.changelog }}
+                    pr_reviewer: "@locomotive-charcoal/reviewers"    # Comma-separated list (no spaces)
+                    pr_assignee: "${{ github.event.inputs.user_name }}"   # Comma-separated list (no spaces)
+                    pr_label: release,automatic-pr                 # Comma-separated list (no spaces)
+                    pr_draft: false                                # Creates pull request as draft
+                    pr_allow_empty: false                          # Creates pull request even if there are no changes
+

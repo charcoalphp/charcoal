@@ -1,0 +1,10 @@
+{
+    "writerOpts": {
+        "headerPartial": "## Changes : "
+    },
+    "options": {
+        "preset": {
+            "name": "conventionalcommits"
+        }
+    }
+}

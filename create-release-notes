@@ -1,0 +1,79 @@
+#!/usr/bin/env node
+'use strict'
+
+const conventionalChangelog = require('conventional-changelog')
+const resolve = require('path').resolve
+const _ = require('lodash')
+const meow = require('meow')
+
+const cli = meow(`
+    Usage
+      create-release-notes
+
+    Example
+      create-release-notes --from beta --to HEAD
+
+    Options
+      -g  --group               Group all messages under the same group. Needs to
+      -f, --from                Commit or branch to start from when processing the release notes
+      -t, --to                  Commit or branch to end to when processing the release notes
+      -n, --config              A filepath of your config script
+                                Example of a config script: https://github.com/conventional-changelog/conventional-changelog/blob/master/packages/conventional-changelog-cli/test/fixtures/config.js
+`, {
+    booleanDefault: undefined,
+    flags: {
+        config: {
+            alias: 'n',
+            type: 'string'
+        },
+        group: {
+            alias: 'g',
+            type: 'boolean'
+        },
+        from: {
+            type: 'string'
+        },
+        to: {
+            type: 'string'
+        },
+    }
+})
+
+let config;
+const flags = cli.flags
+let options = {};
+
+if (flags.group) {
+    options.tagPrefix = 'null' // This allows us to igonre tags when generating release notes, this way we get all the changes in a single grouped release block.
+}
+
+if (flags.config) {
+    config = require(resolve(process.cwd(), flags.config))
+} else {
+    config = _.merge(config, {
+        writerOpts: {
+            headerPartial: '## Changes : '
+        },
+        options: {
+            preset: {
+                name: 'conventionalcommits'
+            }
+        }
+    })
+}
+
+options.config = config
+options = _.merge(options, config.options)
+
+const gitRawCommitsOpts = _.merge({}, config.gitRawCommitsOpts || {})
+
+if (flags.from) {
+    gitRawCommitsOpts.from = flags.from
+}
+
+if (flags.to) {
+    gitRawCommitsOpts.to = flags.to
+}
+
+conventionalChangelog(options, {}, gitRawCommitsOpts, config.parserOpts, config.writerOpts)
+    .pipe(process.stdout); // or any writable stream
