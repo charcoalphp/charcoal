@@ -1,6 +1,7 @@
 <div align="center">
-    <img alt="charcoal" src="charcoal-logo.png"/>
-    <h1>Charcoal Framework - Web Fuel</h1>
+    <br/>
+    <img width="300" alt="charcoal" src="assets/docs/images/charcoal-logo-full.svg"/>
+    <h2>by Locomotive 🚂</h2>
 </div>
 
 [![License][badge-license]][charcoal]
@@ -9,7 +10,7 @@
 [![Commitizen friendly][badge-commitizen]][commitizen]
 [![Php version][badge-php]][charcoal]
 
-## A Monorepo for the Charcoal Application suite
+## A Monorepo for the Charcoal Application suite 🔥
 
 This monorepo contains the integrality of the Charcoal Framework that can be used directly within a website project.
 You'll find all the different packages in [`/packages`](./packages/) directory. These packages all also individually hosted in `READONLY` format under the [charcoal][charcoal-git].
@@ -55,17 +56,19 @@ If possible, allow custom composer require. (TODO)
 
 ### Dependencies
 
-#### Required
+#### ⚠️ Required
 
 - [**PHP ^7.4**](https://php.net) || [**PHP ^8.0**](https://php.net)
 
-## Configuration
+## ⚙️ Configuration
 
 ## Usage
 
 ## Development
 
 Development is made in a seperate branch from the ``main`` branch. 
+
+> ⚠️ The ``main`` branch is protected and doesn't allow pushing changes directly into
 
 To install the development environment:
 
@@ -94,6 +97,7 @@ https://github.com/symplify/monorepo-builder monorepo-builder is used to handle 
 
 - [symplify/monorepo-builder](https://github.com/symplify/monorepo-builder)
     - Keeps packages versions in sync.
+    - Config is located in [**monorepo-builder**](/.monorepo-builder.php). It allows to define more dependencies
 - [semantic-release](https://github.com/semantic-release/semantic-release) 
     - Handle the release process from a [Github action](https://github.com/cycjimmy/semantic-release-action).
 
@@ -158,19 +162,23 @@ Output:
 >* **create-pr:** remove Personal access token from script and replace with $GITHUB_TOKEN instead ([f2aaac6](https://github.com/locomotive-charcoal/charcoal/commit/f2aaac6dbd630f0f8fa759e49f9f41c957e3868a))
 >* **package:** add missing semantic-release plugin ([59bd1b1](https://github.com/locomotive-charcoal/charcoal/commit/59bd1b1798e4e7b6bf874c7ba8ecbae19d76342b))
 
-## Credits
+## Contributing
 
-- [Locomotive](https://locomotive.ca/)
-- [Joel Alphonso](mailto:joel@locomotive.ca)
+Please see [CONTRIBUTION.md](./CONTRIBUTION.md) for guidelines on how to contribute to the **Charcoal** framework
+
+## ✍🏻 Authors
+
+- [Locomotive](https://locomotive.ca/) 🚂
+- [Joel Alphonso](mailto:joel@locomotive.ca) 👨🏻‍💻
 
 
-## Contributors
+## 🎉 Contributors
 
 [![contributors](https://contrib.rocks/image?repo=Locomotive-Charcoal/charcoal)](https://github.com/Locomotive-Charcoal/charcoal/graphs/contributors)
 
 Made with [contrib.rocks](https://contrib.rocks).
 
-## Changelog
+##  Changelog
 
 View [CHANGELOG](docs/CHANGELOG.md).
 
