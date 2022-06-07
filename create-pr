@@ -13,7 +13,7 @@ HTTP_CODE=$(curl --write-out "%{http_code}\n" --output output.txt --silent \
   -H "Accept: application/vnd.github.v3+json" \
   https://api.github.com/repos/$OWNER/$REPO/actions/workflows/create-pull-request.yaml/dispatches \
   -d "{\"ref\":\"$REF\",\"inputs\":{\"base\":\"$BASE\",\"user_name\":\"$USER\"}}" \
-  -u github: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)
+  -u github:$GITHUB_TOKEN)
 
 echo $HTTP_CODE
 
