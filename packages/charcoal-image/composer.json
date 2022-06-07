@@ -11,12 +11,12 @@
     ],
     "extra": {
         "branch-alias": {
-            "dev-master": "1.3-dev"
+            "dev-master": "1.4-dev"
         }
     },
     "require": {
         "php": "^7.4 || ^8.0",
-        "locomotivemtl/charcoal-factory": "^1.3"
+        "locomotivemtl/charcoal-factory": "^1.4"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",
