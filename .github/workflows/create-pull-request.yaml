@@ -24,7 +24,6 @@ jobs:
                 uses: actions/checkout@v3
                 with:
                     fetch-depth: 0
-                    persist-credentials: false
 
             -   uses: bahmutov/npm-install@v1
 
@@ -36,7 +35,6 @@ jobs:
             -   name: Exrtact changelog
                 shell: bash
                 run: |
-                    git fetch --all
                     CHANGELOG=$(./create-release-notes --from ${{ github.event.inputs.base }} --group)
                     CHANGELOG="${CHANGELOG//'%'/'%25'}"
                     CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
