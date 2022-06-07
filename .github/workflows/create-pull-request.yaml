@@ -37,7 +37,7 @@ jobs:
                 run: |
                     git switch ${{ github.event.inputs.base }}
                     git switch -
-                    CHANGELOG=$(./create-release-notes --from ${{ github.event.inputs.base }} --group)
+                    CHANGELOG=$(./build/script/create-release-notes --from ${{ github.event.inputs.base }} --group)
                     CHANGELOG="${CHANGELOG//'%'/'%25'}"
                     CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
                     CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
@@ -54,8 +54,7 @@ jobs:
                     pr_body: |
                         # Merge ${{ steps.extract_branch.outputs.branch }} into ${{ github.event.inputs.base }}
                         ${{ steps.extract_changelog.outputs.changelog }}
-                    pr_reviewer: "@locomotive-charcoal/reviewers"    # Comma-separated list (no spaces)
-                    pr_assignee: "${{ github.event.inputs.user_name }}"   # Comma-separated list (no spaces)
+                    pr_reviewer: "@locomotive-charcoal/reviewers"    # Comma-separated list (no spaces
                     pr_label: release,automatic-pr                 # Comma-separated list (no spaces)
                     pr_draft: false                                # Creates pull request as draft
                     pr_allow_empty: false                          # Creates pull request even if there are no changes

@@ -7,14 +7,18 @@ const _ = require('lodash')
 const meow = require('meow')
 
 const cli = meow(`
+    Create changelog blocks in accordance with conventional-changelog conventions.
+    Default preset: conventionalcommits
+
     Usage
       create-release-notes
 
     Example
-      create-release-notes --from beta --to HEAD
+      create-release-notes -g --from beta --to HEAD
 
     Options
-      -g  --group               Group all messages under the same group. Needs to
+      -g  --group               Group all commit messages in a single changelog block. Needs to supply a [from] arguments
+                                or the script will create a changelog including all the commits since commit 1
       -f, --from                Commit or branch to start from when processing the release notes
       -t, --to                  Commit or branch to end to when processing the release notes
       -n, --config              A filepath of your config script

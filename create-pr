@@ -1,0 +1,27 @@
+#!/bin/sh
+
+OWNER=locomotive-charcoal
+REPO=charcoal
+REF=$(git branch --show-current)
+BASE=${1:-main}
+USER=$(git config user.email)
+
+echo "Preparing pull request form $REF to $BASE..."
+
+HTTP_CODE=$(curl --write-out "%{http_code}\n" --output output.txt --silent \
+  -X POST \
+  -H "Accept: application/vnd.github.v3+json" \
+  https://api.github.com/repos/$OWNER/$REPO/actions/workflows/create-pull-request.yaml/dispatches \
+  -d "{\"ref\":\"$REF\",\"inputs\":{\"base\":\"$BASE\",\"user_name\":\"$USER\"}}" \
+  -u github:$GITHUB_TOKEN)
+
+echo $HTTP_CODE
+
+if [ 200 -gt $HTTP_CODE ] || [ $HTTP_CODE -gt 299 ]; then
+    echo "There was an error triggering the pull request."
+    exit 1
+fi
+
+echo "The pull request was successfully triggered."
+
+exit 0
