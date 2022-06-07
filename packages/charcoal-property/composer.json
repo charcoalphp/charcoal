@@ -17,7 +17,7 @@
     ],
     "extra": {
         "branch-alias": {
-            "dev-master": "1.2-dev"
+            "dev-master": "1.3-dev"
         }
     },
     "require": {
@@ -27,11 +27,11 @@
         "ext-simplexml": "*",
         "psr/log": "^1.0",
         "psr/cache": "^1.0",
-        "locomotivemtl/charcoal-config": "^1.2",
-        "locomotivemtl/charcoal-core": "^1.2",
-        "locomotivemtl/charcoal-factory": "^1.2",
-        "locomotivemtl/charcoal-image": "^1.2",
-        "locomotivemtl/charcoal-translator": "^1.2"
+        "locomotivemtl/charcoal-config": "^1.3",
+        "locomotivemtl/charcoal-core": "^1.3",
+        "locomotivemtl/charcoal-factory": "^1.3",
+        "locomotivemtl/charcoal-image": "^1.3",
+        "locomotivemtl/charcoal-translator": "^1.3"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",
