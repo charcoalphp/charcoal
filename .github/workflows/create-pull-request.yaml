@@ -36,8 +36,7 @@ jobs:
             -   name: Exrtact changelog
                 shell: bash
                 run: |
-                    git fetch ${{ github.event.inputs.base }}
-                    CHANGELOG=$(./create-release-notes --from ${{ github.event.inputs.base }} --group)
+                    CHANGELOG=$(./create-release-notes --from '${{ github.event.inputs.base }}' --group)
                     CHANGELOG="${CHANGELOG//'%'/'%25'}"
                     CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
                     CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
