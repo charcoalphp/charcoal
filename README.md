@@ -19,23 +19,23 @@ You'll find all the different packages in [`/packages`](./packages/) directory. 
 
 | Package                                                                             | Description |
 |-------------------------------------------------------------------------------------|-------------|
-| [`charcoal-admin`](https://github.com/locomotive-charcoal/charcoal-admin)           |             |
-| [`charcoal-app`](https://github.com/locomotive-charcoal/charcoal-app)               |             |
-| [`charcoal-attachment`](https://github.com/locomotive-charcoal/charcoal-attachment) |             |
-| [`charcoal-cache`](https://github.com/locomotive-charcoal/charcoal-cache)           |             |
-| [`charcoal-cms`](https://github.com/locomotive-charcoal/charcoal-cms)               |             |
-| [`charcoal-config`](https://github.com/locomotive-charcoal/charcoal-config)         |             |
-| [`charcoal-core`](https://github.com/locomotive-charcoal/charcoal-core)             |             |
-| [`charcoal-email`](https://github.com/locomotive-charcoal/charcoal-email)           |             |
-| [`charcoal-factory`](https://github.com/locomotive-charcoal/charcoal-factory)       |             |
-| [`charcoal-image`](https://github.com/locomotive-charcoal/charcoal-image)           |             |
-| [`charcoal-object`](https://github.com/locomotive-charcoal/charcoal-object)         |             |
-| [`charcoal-property`](https://github.com/locomotive-charcoal/charcoal-property)     |             |
-| [`charcoal-queue`](https://github.com/locomotive-charcoal/charcoal-queue)           |             |
-| [`charcoal-translator`](https://github.com/locomotive-charcoal/charcoal-translator) |             |
-| [`charcoal-ui`](https://github.com/locomotive-charcoal/charcoal-ui)                 |             |
-| [`charcoal-user`](https://github.com/locomotive-charcoal/charcoal-user)             |             |
-| [`charcoal-view`](https://github.com/locomotive-charcoal/charcoal-view)             |             |
+| [`admin`](https://github.com/locomotive-charcoal/charcoal-admin)           |             |
+| [`app`](https://github.com/locomotive-charcoal/charcoal-app)               |             |
+| [`attachment`](https://github.com/locomotive-charcoal/charcoal-attachment) |             |
+| [`cache`](https://github.com/locomotive-charcoal/charcoal-cache)           |             |
+| [`cms`](https://github.com/locomotive-charcoal/charcoal-cms)               |             |
+| [`config`](https://github.com/locomotive-charcoal/charcoal-config)         |             |
+| [`core`](https://github.com/locomotive-charcoal/charcoal-core)             |             |
+| [`email`](https://github.com/locomotive-charcoal/charcoal-email)           |             |
+| [`factory`](https://github.com/locomotive-charcoal/charcoal-factory)       |             |
+| [`image`](https://github.com/locomotive-charcoal/charcoal-image)           |             |
+| [`object`](https://github.com/locomotive-charcoal/charcoal-object)         |             |
+| [`property`](https://github.com/locomotive-charcoal/charcoal-property)     |             |
+| [`queue`](https://github.com/locomotive-charcoal/charcoal-queue)           |             |
+| [`translator`](https://github.com/locomotive-charcoal/charcoal-translator) |             |
+| [`ui`](https://github.com/locomotive-charcoal/charcoal-ui)                 |             |
+| [`user`](https://github.com/locomotive-charcoal/charcoal-user)             |             |
+| [`view`](https://github.com/locomotive-charcoal/charcoal-view)             |             |
 
 
 ## Installation
