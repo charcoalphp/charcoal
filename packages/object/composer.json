@@ -11,16 +11,16 @@
     ],
     "extra": {
         "branch-alias": {
-            "dev-master": "1.4-dev"
+            "dev-master": "2.1-dev"
         }
     },
     "require": {
         "php": "^7.4 || ^8.0",
         "psr/log": "^1.0",
-        "locomotivemtl/charcoal-config": "^1.4",
-        "locomotivemtl/charcoal-core": "^1.4",
-        "locomotivemtl/charcoal-factory": "^1.4",
-        "locomotivemtl/charcoal-translator": "^1.4"
+        "locomotivemtl/charcoal-config": "^2.1",
+        "locomotivemtl/charcoal-core": "^2.1",
+        "locomotivemtl/charcoal-factory": "^2.1",
+        "locomotivemtl/charcoal-translator": "^2.1"
     },
     "require-dev": {
         "php-coveralls/php-coveralls": "^2.2",
