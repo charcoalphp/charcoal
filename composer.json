@@ -1,6 +1,6 @@
 {
     "type": "library",
-    "name": "locomotive-charcoal/charcoal",
+    "name": "charcoal/charcoal",
     "description": "The Charcoal Framework monorepo",
     "keywords": ["framework", "charcoal", "cms"],
     "homepage": "https://charcoal.locomotive.ca",
