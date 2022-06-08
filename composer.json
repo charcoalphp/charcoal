@@ -70,46 +70,46 @@
     "autoload": {
         "psr-4": {
             "Charcoal\\": [
-                "packages/charcoal-app/src/Charcoal/",
-                "packages/charcoal-attachment/src/Charcoal",
-                "packages/charcoal-cache/src/Charcoal/",
-                "packages/charcoal-cms/src/Charcoal",
-                "packages/charcoal-config/src/Charcoal/",
-                "packages/charcoal-core/src/Charcoal",
-                "packages/charcoal-factory/src/Charcoal/",
-                "packages/charcoal-image/src/Charcoal",
-                "packages/charcoal-property/src/Charcoal/",
-                "packages/charcoal-queue/src/Charcoal",
-                "packages/charcoal-translator/src/Charcoal/",
-                "packages/charcoal-ui/src/Charcoal/"
+                "packages/app/src/Charcoal/",
+                "packages/attachment/src/Charcoal",
+                "packages/cache/src/Charcoal/",
+                "packages/cms/src/Charcoal",
+                "packages/config/src/Charcoal/",
+                "packages/core/src/Charcoal",
+                "packages/factory/src/Charcoal/",
+                "packages/image/src/Charcoal",
+                "packages/property/src/Charcoal/",
+                "packages/queue/src/Charcoal",
+                "packages/translator/src/Charcoal/",
+                "packages/ui/src/Charcoal/"
             ],
-            "Charcoal\\Admin\\": "packages/charcoal-admin/src/Charcoal/Admin/",
-            "Charcoal\\Email\\": "packages/charcoal-email/src/Charcoal/Email",
-            "Charcoal\\Object\\": "packages/charcoal-object/src/Charcoal/Object",
-            "Charcoal\\User\\": "packages/charcoal-user/src/Charcoal/User",
-            "Charcoal\\View\\": "packages/charcoal-view/src/Charcoal/View"
+            "Charcoal\\Admin\\": "packages/admin/src/Charcoal/Admin/",
+            "Charcoal\\Email\\": "packages/email/src/Charcoal/Email",
+            "Charcoal\\Object\\": "packages/object/src/Charcoal/Object",
+            "Charcoal\\User\\": "packages/user/src/Charcoal/User",
+            "Charcoal\\View\\": "packages/view/src/Charcoal/View"
         }
     },
     "autoload-dev": {
         "psr-4": {
             "Charcoal\\Tests\\": [
-                "packages/charcoal-admin/tests/Charcoal/",
-                "packages/charcoal-app/tests/Charcoal",
-                "packages/charcoal-attachment/tests/Charcoal",
-                "packages/charcoal-cache/tests/Charcoal/",
-                "packages/charcoal-cms/tests/Charcoal",
-                "packages/charcoal-config/tests/Charcoal/",
-                "packages/charcoal-core/tests/Charcoal",
-                "packages/charcoal-email/tests/Charcoal",
-                "packages/charcoal-factory/tests/Charcoal/",
-                "packages/charcoal-image/tests/Charcoal",
-                "packages/charcoal-object/tests/Charcoal/",
-                "packages/charcoal-property/tests/Charcoal",
-                "packages/charcoal-queue/tests/Charcoal/",
-                "packages/charcoal-translator/tests/Charcoal",
-                "packages/charcoal-ui/tests/Charcoal",
-                "packages/charcoal-user/tests/Charcoal/",
-                "packages/charcoal-view/tests/Charcoal"
+                "packages/admin/tests/Charcoal/",
+                "packages/app/tests/Charcoal",
+                "packages/attachment/tests/Charcoal",
+                "packages/cache/tests/Charcoal/",
+                "packages/cms/tests/Charcoal",
+                "packages/config/tests/Charcoal/",
+                "packages/core/tests/Charcoal",
+                "packages/email/tests/Charcoal",
+                "packages/factory/tests/Charcoal/",
+                "packages/image/tests/Charcoal",
+                "packages/object/tests/Charcoal/",
+                "packages/property/tests/Charcoal",
+                "packages/queue/tests/Charcoal/",
+                "packages/translator/tests/Charcoal",
+                "packages/ui/tests/Charcoal",
+                "packages/user/tests/Charcoal/",
+                "packages/view/tests/Charcoal"
             ]
         }
     },
