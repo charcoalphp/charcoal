@@ -17,6 +17,7 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v2
               with:
+                  token: ${{ secrets.ACCESS_TOKEN }}
                   # Fetch entire history of repository to ensure relase date can be
                   # extracted from commit of the given tag.
                   fetch-depth: 0
