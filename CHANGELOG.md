@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 > ⚠️ This `CHANGELOG` file is automatically generated through Github actions from Github release notes.
 
-## [Unreleased](https://github.com/locomotive-charcoal/Charcoal/compare/v1.3.4...main)
+## [Unreleased](https://github.com/locomotive-charcoal/Charcoal/compare/v2.0.0...main)
 
 Please do not update the unreleased notes.
 
@@ -41,6 +41,18 @@ Please do not update the unreleased notes.
 - **changelog:** add title and description to changelog generation ([93b8f2a](https://github.com/locomotive-charcoal/Charcoal/commit/93b8f2ae9b01c82a714c87b8b9257daa42e60288))
 - **release:** add github pull-request ([79e6915](https://github.com/locomotive-charcoal/Charcoal/commit/79e69154876231c292e0c1c30c37a4a3dc15197d))
 - **release:** add github pull-request to .releaserc ([8a5f33e](https://github.com/locomotive-charcoal/Charcoal/commit/8a5f33eafe6f9f7e252c4ee75b9b7d24c21f00e6))
+
+## [v2.0.0](https://github.com/locomotive-charcoal/Charcoal/compare/v1.3.4...v2.0.0) - 2022-06-08
+
+### [2.0.0](https://github.com/locomotive-charcoal/Charcoal/compare/v1.3.4...v2.0.0) (2022-06-08)
+
+#### ⚠ BREAKING CHANGES
+
+- The location of the packages must be changed everywhere they are called.
+
+#### Code Refactoring
+
+- remove the "charcoal-" prefix from the package names ([3302354](https://github.com/locomotive-charcoal/Charcoal/commit/3302354378025fe038f5b8091d8b54dfb50ba54a))
 
 ## [v1.3.4](https://github.com/locomotive-charcoal/Charcoal/compare/v1.3.3...v1.3.4) - 2022-06-08
 
