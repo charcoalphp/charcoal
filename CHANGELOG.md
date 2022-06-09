@@ -11,7 +11,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Please do not update the unreleased notes.
 
-## [1.1.1](https://github.com/locomotive-charcoal/Charcoal/compare/v1.1.0...v1.1.1) (2022-06-01)
+## [v2.0.0](https://github.com/locomotive-charcoal/Charcoal/compare/v1.3.4...v2.0.0) - 2022-06-08
+
+### Changes :
+
+#### ⚠ BREAKING CHANGES
+
+- The location of the packages must be changed everywhere they are called.
+
+#### Code Refactoring
+
+- remove the "charcoal-" prefix from the package names ([3302354](https://github.com/locomotive-charcoal/Charcoal/commit/3302354378025fe038f5b8091d8b54dfb50ba54a))
+
+## [v1.3.4](https://github.com/locomotive-charcoal/Charcoal/compare/v1.3.3...v1.3.4) - 2022-06-08
+
+### Changes :
+
+#### Bug Fixes
+
+- **action:** add token to checkout in update-changelog.yaml ([20a51aa](https://github.com/locomotive-charcoal/Charcoal/commit/20a51aa09fbd8eff49100d68654a3fddf84f5bc0))
+- Regenerate composer.lock from PHP 7.4 ([4d1eddd](https://github.com/locomotive-charcoal/Charcoal/commit/4d1edddccf66630b5582ef7e7897df4e8f9acc4a))
+
+## [v1.3.3](https://github.com/locomotive-charcoal/Charcoal/compare/v1.1.1...v1.3.3) - 2022-06-08
+
+### Changes :
+
+#### Bug Fixes
+
+- **action:** add token to checkout in update-changelog.yaml ([f491bbd](https://github.com/locomotive-charcoal/Charcoal/commit/f491bbd8456f19882b3ee1bd6358b8681b62e8d8))
+
+## [v1.1.1](https://github.com/locomotive-charcoal/Charcoal/compare/v1.1.0...v1.1.1) - 2022-06-01
 
 ### Bug Fixes
 
@@ -19,7 +48,7 @@ Please do not update the unreleased notes.
 - **release:** remove pull_request event from release action ([1b64881](https://github.com/locomotive-charcoal/Charcoal/commit/1b648818bd7f828cd03b0747e9318ee386b54982))
 - **release:** remove pull_request generation from semantic release workflow ([3027fcb](https://github.com/locomotive-charcoal/Charcoal/commit/3027fcbfbf34dc813c73b1d6ba54591e9d6817ee))
 
-## [1.1.0](https://github.com/locomotive-charcoal/Charcoal/compare/v1.0.0...v1.1.0) (2022-05-31)
+## [v1.1.0](https://github.com/locomotive-charcoal/Charcoal/compare/v1.0.0...v1.1.0) - 2022-05-31
 
 ### Bug Fixes
 
@@ -41,32 +70,3 @@ Please do not update the unreleased notes.
 - **changelog:** add title and description to changelog generation ([93b8f2a](https://github.com/locomotive-charcoal/Charcoal/commit/93b8f2ae9b01c82a714c87b8b9257daa42e60288))
 - **release:** add github pull-request ([79e6915](https://github.com/locomotive-charcoal/Charcoal/commit/79e69154876231c292e0c1c30c37a4a3dc15197d))
 - **release:** add github pull-request to .releaserc ([8a5f33e](https://github.com/locomotive-charcoal/Charcoal/commit/8a5f33eafe6f9f7e252c4ee75b9b7d24c21f00e6))
-
-## [v2.0.0](https://github.com/locomotive-charcoal/Charcoal/compare/v1.3.4...v2.0.0) - 2022-06-08
-
-### [2.0.0](https://github.com/locomotive-charcoal/Charcoal/compare/v1.3.4...v2.0.0) (2022-06-08)
-
-#### ⚠ BREAKING CHANGES
-
-- The location of the packages must be changed everywhere they are called.
-
-#### Code Refactoring
-
-- remove the "charcoal-" prefix from the package names ([3302354](https://github.com/locomotive-charcoal/Charcoal/commit/3302354378025fe038f5b8091d8b54dfb50ba54a))
-
-## [v1.3.4](https://github.com/locomotive-charcoal/Charcoal/compare/v1.3.3...v1.3.4) - 2022-06-08
-
-### [1.3.4](https://github.com/locomotive-charcoal/Charcoal/compare/v1.3.3...v1.3.4) (2022-06-08)
-
-#### Bug Fixes
-
-- **action:** add token to checkout in update-changelog.yaml ([20a51aa](https://github.com/locomotive-charcoal/Charcoal/commit/20a51aa09fbd8eff49100d68654a3fddf84f5bc0))
-- Regenerate composer.lock from PHP 7.4 ([4d1eddd](https://github.com/locomotive-charcoal/Charcoal/commit/4d1edddccf66630b5582ef7e7897df4e8f9acc4a))
-
-## [v1.3.3](https://github.com/locomotive-charcoal/Charcoal/compare/v1.1.1...v1.3.3) - 2022-06-08
-
-### [1.3.3](https://github.com/locomotive-charcoal/Charcoal/compare/v1.3.2...v1.3.3) (2022-06-08)
-
-#### Bug Fixes
-
-- **action:** add token to checkout in update-changelog.yaml ([f491bbd](https://github.com/locomotive-charcoal/Charcoal/commit/f491bbd8456f19882b3ee1bd6358b8681b62e8d8))
