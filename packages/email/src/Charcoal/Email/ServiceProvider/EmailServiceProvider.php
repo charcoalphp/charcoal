@@ -12,7 +12,7 @@ use Pimple\ServiceProviderInterface;
 // From 'phpmailer/phpmailer'
 use PHPMailer\PHPMailer\PHPMailer;
 
-// From 'locomotivemtl/charcoal-factory'
+// From 'charcoal/factory'
 use Charcoal\Factory\FactoryInterface;
 use Charcoal\Factory\GenericFactory;
 

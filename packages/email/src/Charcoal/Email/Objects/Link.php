@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Charcoal\Email\Objects;
 
-// From 'locomotivemtl/charcoal-core'
+// From 'charcoal/core'
 use Charcoal\Model\AbstractModel;
 
 /**

@@ -9,17 +9,17 @@ Document, Embed, Image, Gallery, Link Video, amongst others.
 The preferred (and only supported) way of installing _charcoal-attachment is with **composer**:
 
 ```shell
-★ composer require locomotivemtl/charcoal-attachment
+★ composer require charcoal/attachment
 ```
 
 ## Dependencies
 
 -   [PHP 7.1+](http://php.net)
--   [`locomotivemtl/charcoal-core`](https://github.com/locomotivemtl/charcoal-core)
--   [`locomotivemtl/charcoal-base`](https://github.com/locomotivemtl/charcoal-base)
--   [`locomotivemtl/charcoal-admin`](https://github.com/locomotivemtl/charcoal-admin)
--   [`locomotivemtl/charcoal-ui`](https://github.com/locomotivemtl/charcoal-ui)
--   [`locomotivemtl/charcoal-translation`](https://github.com/locomotivemtl/charcoal-translation)
+-   [`charcoal/core`](https://github.com/charcoalphp/core)
+-   [`charcoal/base`](https://github.com/charcoalphp/base)
+-   [`charcoal/admin`](https://github.com/charcoalphp/admin)
+-   [`charcoal/ui`](https://github.com/charcoalphp/ui)
+-   [`charcoal/translation`](https://github.com/charcoalphp/translation)
 
 ## Objects
 
@@ -53,9 +53,9 @@ In addition from the default metadata provided by `Content`, the following prope
 
 All attachments are assumed to have a `title`, `subtitle`, `description` and `keywords`. Some attachments also 
 
-> Read the [`charcoal-object`](https://github.com/locomotivemtl/charcoal-object) documentation for the other default properties provided by the `Content` object (and `RevisionableInterface`).
+> Read the [`charcoal-object`](https://github.com/charcoalphp/object) documentation for the other default properties provided by the `Content` object (and `RevisionableInterface`).
 
-> Read the [`charcoal-core`](https://github.com/locomotivemtl/charcoal-core) documention for the other default properties provided by `AbstractModel` (and `DescribableInterface` and `StorableInterface`). 
+> Read the [`charcoal-core`](https://github.com/charcoalphp/core) documention for the other default properties provided by `AbstractModel` (and `DescribableInterface` and `StorableInterface`). 
 
 
 ### Type of Attachment objects
@@ -99,19 +99,19 @@ Add the views path and metadata path to the config file.
 "metadata": {
     "paths": [
         "...",
-        "vendor/locomotivemtl/charcoal-attachment/metadata/"
+        "vendor/charcoal/attachment/metadata/"
     ]
 },
 "view": {
     "paths": [
         "...",
-        "vendor/locomotivemtl/charcoal-attachment/templates/"
+        "vendor/charcoal/attachment/templates/"
     ]
 },
 "translations": {
     "paths": [
         "...",
-        "vendor/locomotivemtl/charcoal-attachment/translations/"
+        "vendor/charcoal/attachment/translations/"
     ]
 }
 ```

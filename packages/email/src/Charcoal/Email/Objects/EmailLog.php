@@ -7,7 +7,7 @@ use DateTimeInterface;
 use Exception;
 use InvalidArgumentException;
 
-// From 'locomotivemtl/charcoal-core'
+// From 'charcoal/core'
 use Charcoal\Model\AbstractModel;
 
 use Charcoal\Email\EmailAwareTrait;

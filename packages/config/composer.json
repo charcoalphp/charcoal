@@ -1,5 +1,5 @@
 {
-    "name": "locomotivemtl/charcoal-config",
+    "name": "charcoal/config",
     "type": "library",
     "description": "Charcoal component for configuration data and object modeling",
     "keywords": ["charcoal", "configuration", "json", "xml", "yml", "yaml", "ini"],

@@ -70,7 +70,7 @@ trait AttachmentAwareTrait
                 $this->logger->warning(
                     'AttachmentAwareTrait::getAttachments() parameters are deprecated. '.
                     'An array of parameters should be used.',
-                    [ 'package' => 'locomotivemtl/charcoal-attachment' ]
+                    [ 'package' => 'charcoal/attachment' ]
                 );
             }
             $options = [
@@ -254,7 +254,7 @@ trait AttachmentAwareTrait
         $this->logger->warning(
             'AttachmentAwareTrait::removeJoins() is deprecated. '.
             'Use AttachmentAwareTrait::removeAttachmentJoins() instead.',
-            [ 'package' => 'locomotivemtl/charcoal-attachment' ]
+            [ 'package' => 'charcoal/attachment' ]
         );
 
         return $this->removeAttachmentJoins();

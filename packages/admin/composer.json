@@ -1,6 +1,6 @@
 {
     "type": "library",
-    "name": "locomotivemtl/charcoal-admin",
+    "name": "charcoal/admin",
     "description": "The Charcoal Administration Dashboard",
     "keywords": ["charcoal", "admin", "cms"],
     "homepage": "https://charcoal.locomotive.ca",

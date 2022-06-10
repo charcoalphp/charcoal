@@ -10,13 +10,13 @@ use Exception;
 // From 'pimple/pimple'
 use Pimple\Container;
 
-// From 'locomotivemtl/charcoal-factory'
+// From 'charcoal/factory'
 use Charcoal\Factory\FactoryInterface;
 
-// From 'locomotivemtl/charcoal-core'
+// From 'charcoal/core'
 use Charcoal\Model\AbstractModel;
 
-// From 'locomotivemtl/charcoal-queue'
+// From 'charcoal/queue'
 use Charcoal\Queue\QueueItemInterface;
 use Charcoal\Queue\QueueItemTrait;
 

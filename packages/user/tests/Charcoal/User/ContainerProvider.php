@@ -110,7 +110,11 @@ class ContainerProvider
                 'base_path' => realpath(__DIR__.'/../../../'),
                 'paths'     => [
                     'metadata',
-                    'vendor/locomotivemtl/charcoal-property/metadata'
+                    // Standalone repo
+                    'vendor/charcoal/property/metadata',
+                    // Monorepo
+                    // [TODO:monorepo] use path tag
+                    'vendor/charcoal/charcoal/packages/metadata',
                 ]
             ]);
         };

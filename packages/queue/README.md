@@ -6,13 +6,13 @@ Queue Managers, Queue Items and Queueable objects (through Interface & Trait) fo
 ## How to install
 
 ```
-composer require locomotivemtl/charcoal-queue`
+composer require charcoal/queue`
 ```
 
 ## Dependencies
 
--   `locomotivemtl/charcoal-core` for the `CollectionLoader`
--   `locomotivemtl/charcoal-factory` for the queue-item factory.
+-   `charcoal/core` for the `CollectionLoader`
+-   `charcoal/factory` for the queue-item factory.
 
 ## Queueing System
 

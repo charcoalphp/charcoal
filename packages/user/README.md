@@ -21,18 +21,18 @@ User defintion (as Charcoal Model), authentication and authorization (with Lamin
 The preferred (and only supported) way of installing _charcoal-user_ is with **composer**:
 
 ```shell
-★ composer require locomotivemtl/charcoal-user
+★ composer require charcoal/user
 ```
 
 ## Dependencies
 
 - PHP 7.1+
 - `laminas/laminas-permissions-acl`
-- `locomotivemtl/charcoal-object`
+- `charcoal/object`
 
 # The User object
 
-At the core of this module is the definition of a "User" object. The contract can be found as `\Charcoal\User\UserInterface`. This interfaces extends `\Charcoal\Object\ContentInterface` (from `locomotivemtl/charcoal-object`), which extends `\Charcoal\Model\ModelInterface` (from `locomotivemtl/charcoal-core`).
+At the core of this module is the definition of a "User" object. The contract can be found as `\Charcoal\User\UserInterface`. This interfaces extends `\Charcoal\Object\ContentInterface` (from `charcoal/object`), which extends `\Charcoal\Model\ModelInterface` (from `charcoal/core`).
 
 The preferred way of using this module is by defining your own User class in your project and extending the provided `\Charcoal\User\AbstractUser` class.
 
@@ -77,7 +77,7 @@ For quick prototypes or small projects, a full concrete class is provided as `\C
 
 User authorization is managed with a role-based _Access Control List_ (ACL). Internally, it uses [`laminas/laminas-permissions-acl`](https://github.com/laminas/laminas-permissions-acl) for the ACL logic. It is recommended to read the  [Laminas ACL documentation](https://docs.laminas.dev/laminas-permissions-acl/) to learn more about how it all works.
 
-There are 2 main concepts that must be managed, either from JSON config files or in the database (which works well with `locomotivemtl/charcoal-admin`), **roles** and **permissions**.
+There are 2 main concepts that must be managed, either from JSON config files or in the database (which works well with `charcoal/admin`), **roles** and **permissions**.
 
 ## ACL Configuration
 

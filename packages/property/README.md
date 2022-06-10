@@ -13,13 +13,13 @@ Properties are defined globally for objects (_charcoal models_) in its `metadata
 The preferred (and only suppported) way of installing _charcoal-property_ is with **composer**:
 
 ```shell
-★ composer require locomotivemtl/charcoal-property
+★ composer require charcoal/property
 ```
 
-For a complete, ready-to-use project, start from the [`boilerplate`](https://github.com/locomotivemtl/charcoal-project-boilerplate):
+For a complete, ready-to-use project, start from the [`boilerplate`](https://github.com/charcoal/project-boilerplate):
 
 ```shell
-★ composer create-project locomotivemtl/charcoal-project-boilerplate:@dev --prefer-source
+★ composer create-project charcoal/project-boilerplate:@dev --prefer-source
 ```
 
 ## Dependencies
@@ -28,15 +28,15 @@ For a complete, ready-to-use project, start from the [`boilerplate`](https://git
     -   PHP 7 is recommended for security & performance reasons.
 -   [`psr/log`](http://www.php-fig.org/psr/psr-3/)
     -   A PSR-3 compliant logger should be provided to the various services / classes.
--   [`locomotivemtl/charcoal-config`](https://github.com/locomotivemtl/charcoal-config)
+-   [`charcoal/config`](https://github.com/charcoalphp/config)
     -   Properties configuration and metadata.
--   [`locomotivemtl/charcoal-core`](https://github.com/locomotivemtl/charcoal-core)
+-   [`charcoal/core`](https://github.com/charcoalphp/core)
     -   Also required for validator, model and more.
--   [`locomotivemtl/charcoal-factory`](https://github.com/locomotivemtl/charcoal-fatory)
+-   [`charcoal/factory`](https://github.com/charcoalphp/fatory)
     -   Dynamic object creation is provided with charcoal factories.
--   [`locomotivemtl/charcoal-image`](https://github.com/locomotivemtl/charcoal-image)
+-   [`charcoal/image`](https://github.com/charcoalphp/image)
     -   For image manipulation.
--   [`locomotivemtl/charcoal-translator`](https://github.com/locomotivemtl/charcoal-translator)
+-   [`charcoal/translator`](https://github.com/charcoalphp/translator)
     -   For localization.
 
 # Property options

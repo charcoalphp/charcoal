@@ -10,7 +10,7 @@ use Charcoal\Object\CategoryTrait;
 /**
  * Attachment Category
  *
- * Based on 'locomotivemtl/charcoal-object''s category.
+ * Based on 'charcoal/object''s category.
  */
 class Generic extends Content implements CategoryInterface
 {
