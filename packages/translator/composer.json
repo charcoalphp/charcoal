@@ -1,6 +1,6 @@
 {
     "type": "library",
-    "name": "locomotivemtl/charcoal-translator",
+    "name": "charcoal/translator",
     "description": "Charcoal service provider for translating messages and managing locales.",
     "keywords": ["charcoal", "translator", "translation", "i18n", "l10n", "g11n"],
     "homepage": "https://locomotivemtl.github.io/charcoal-translator/",
@@ -22,7 +22,7 @@
     },
     "require": {
         "php": "^7.4 || ^8.0",
-        "locomotivemtl/charcoal-config": "^2.1",
+        "charcoal/config": "^2.1",
         "symfony/translation": "^3.4",
         "pimple/pimple": "^3.0"
     },
@@ -31,10 +31,10 @@
         "phpunit/phpunit": "^9.5",
         "squizlabs/php_codesniffer": "^3.5",
         "php-coveralls/php-coveralls": "^2.2",
-        "locomotivemtl/charcoal-admin": "^2.1"
+        "charcoal/admin": "^2.1"
     },
     "suggest": {
-        "locomotivemtl/charcoal-app": "To run the parser script."
+        "charcoal/app": "To run the parser script."
     },
     "autoload": {
         "psr-4": {

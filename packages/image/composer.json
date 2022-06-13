@@ -1,5 +1,5 @@
 {
-    "name": "locomotivemtl/charcoal-image",
+    "name": "charcoal/image",
     "description": "PHP Image manipulation library",
     "keywords": ["php", "image", "imagick", "gd", "imagemagick", "charcoal", "locomotive"],
     "license": "MIT",
@@ -16,7 +16,7 @@
     },
     "require": {
         "php": "^7.4 || ^8.0",
-        "locomotivemtl/charcoal-factory": "^2.1"
+        "charcoal/factory": "^2.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",
