@@ -123,7 +123,7 @@ class ViewServiceProvider implements ServiceProviderInterface
         $container['view/loader/dependencies'] = function (Container $container): array {
             return [
                 'base_path' => $container['config']['base_path'],
-                'paths'     => $container['view/config']['paths']
+                'paths'     => $container['package/map']->map($container['view/config']['paths'])
             ];
         };
 
