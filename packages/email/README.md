@@ -9,7 +9,7 @@ Sending emails (with _PHPMailer_) and queue management.
 The preferred (and only supported) way of installing _charcoal-email_ is with **composer**:
 
 ```shell
-★ composer require locomotivemtl/charcoal-email
+★ composer require charcoal/email
 ```
 
 ## Dependencies
@@ -17,8 +17,8 @@ The preferred (and only supported) way of installing _charcoal-email_ is with **
 -   [`PHP 5.6+`](http://php.net)
     - PHP 7.3+ is highly recommended
 -   [`phpmailer/phpmailer`](https://github.com/PHPMailer/PHPMailer)
--   [`locomotivemtl/charcoal-config`](https://github.com/locomotivemtl/charcoal-config)
--   [`locomotivemtl/charcoal-app`](https://github.com/locomotivemtl/charcoal-app)
+-   [`charcoal/config`](https://github.com/charcoalphp/config)
+-   [`charcoal/app`](https://github.com/charcoalphp/app)
 
 ## Optional dependencies
 

@@ -1,6 +1,6 @@
 {
     "type": "library",
-    "name": "locomotivemtl/charcoal-cms",
+    "name": "charcoal/cms",
     "description": "Charcoal CMS (Content Management System) Module",
     "keywords": ["charcoal", "cms"],
     "homepage": "https://charcoal.locomotive.ca",
@@ -23,16 +23,16 @@
     "require": {
         "php": "^7.4 || ^8.0",
         "psr/http-message": "^1.0",
-        "locomotivemtl/charcoal-app": "^2.1",
-        "locomotivemtl/charcoal-attachment": "^2.1",
-        "locomotivemtl/charcoal-core": "^2.1",
-        "locomotivemtl/charcoal-factory": "^2.1",
-        "locomotivemtl/charcoal-object": "^2.1",
-        "locomotivemtl/charcoal-property": "^2.1",
-        "locomotivemtl/charcoal-translator": "^2.1"
+        "charcoal/app": "^2.1",
+        "charcoal/attachment": "^2.1",
+        "charcoal/core": "^2.1",
+        "charcoal/factory": "^2.1",
+        "charcoal/object": "^2.1",
+        "charcoal/property": "^2.1",
+        "charcoal/translator": "^2.1"
     },
     "require-dev": {
-        "locomotivemtl/charcoal-admin": "^2.1",
+        "charcoal/admin": "^2.1",
         "mustache/mustache": "^2.11",
         "php-coveralls/php-coveralls": "^2.2",
         "phpunit/phpunit": "^9.5",
@@ -40,7 +40,7 @@
         "tedivm/stash": "~0.16"
     },
     "conflict": {
-        "locomotivemtl/charcoal-admin": "<0.28.0"
+        "charcoal/admin": "<0.28.0"
     },
     "autoload": {
         "psr-4": {

@@ -1,6 +1,6 @@
 {
     "type": "library",
-    "name": "locomotivemtl/charcoal-factory",
+    "name": "charcoal/factory",
     "description": "Charcoal object creation (Factory, AbstractFactory, Builder, Class Resolver)",
     "keywords": ["charcoal"],
     "homepage": "https://charcoal.locomotive.ca",

@@ -35,9 +35,11 @@ const cli = meow(`
             type: 'boolean'
         },
         from: {
+            alias: 'f',
             type: 'string'
         },
         to: {
+            alias: 't',
             type: 'string'
         },
     }

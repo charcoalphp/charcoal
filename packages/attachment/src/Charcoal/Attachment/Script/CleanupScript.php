@@ -19,12 +19,12 @@ use Charcoal\Model\ModelInterface;
 // From 'charcoal-app'
 use Charcoal\App\Script\AbstractScript;
 
-// From 'locomotivemtl/charcoal-attachment'
+// From 'charcoal/attachment'
 use Charcoal\Attachment\Interfaces\AttachableInterface;
 use Charcoal\Attachment\Object\Attachment;
 use Charcoal\Attachment\Object\Join;
 
-// From 'locomotivemtl/charcoal-utils'
+// From 'charcoal/utils'
 use Utils\Support\Traits\ConfigAwareTrait;
 use Utils\Support\Traits\ModelAwareTrait;
 use Utils\Support\Interfaces\ConfigAwareInterface;

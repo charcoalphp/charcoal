@@ -42,7 +42,7 @@ This component is the glue for much of the [Charcoal framework][charcoal-app].
 The preferred (and only supported) method is with Composer:
 
 ```shell
-$ composer require locomotivemtl/charcoal-config
+$ composer require charcoal/config
 ```
 
 ### Requirements
@@ -275,7 +275,7 @@ $ composer test
 -   The auto-generated `phpDocumentor` API documentation is available at:  
     [https://locomotivemtl.github.io/charcoal-config/docs/master/](https://locomotivemtl.github.io/charcoal-config/docs/master/)
 -   The auto-generated `apigen` API documentation is available at:  
-    [https://codedoc.pub/locomotivemtl/charcoal-config/master/](https://codedoc.pub/locomotivemtl/charcoal-config/master/index.html)
+    [https://codedoc.pub/charcoalconfig/master/](https://codedoc.pub/charcoal/config/master/index.html)
 
 
 
@@ -316,8 +316,8 @@ Charcoal is licensed under the MIT license. See [LICENSE](LICENSE) for details.
 
 
 
-[charcoal-app]:       https://packagist.org/packages/locomotivemtl/charcoal-app
-[charcoal-config]:    https://packagist.org/packages/locomotivemtl/charcoal-config
+[charcoal-app]:       https://packagist.org/packages/charcoal/app
+[charcoal-config]:    https://packagist.org/packages/charcoal/config
 
 [phpunit]:            https://packagist.org/packages/phpunit/phpunit
 [phpcs]:              https://packagist.org/packages/squizlabs/php_codesniffer
@@ -328,8 +328,8 @@ Charcoal is licensed under the MIT license. See [LICENSE](LICENSE) for details.
 [dev-sensiolabs]:     https://insight.sensiolabs.com/projects/27ad205f-4208-4fa6-9dcf-534b3a1c0aaa
 [dev-travis]:         https://travis-ci.org/locomotivemtl/charcoal-config
 
-[badge-license]:      https://img.shields.io/packagist/l/locomotivemtl/charcoal-config.svg?style=flat-square
-[badge-version]:      https://img.shields.io/packagist/v/locomotivemtl/charcoal-config.svg?style=flat-square
+[badge-license]:      https://img.shields.io/packagist/l/charcoal/config.svg?style=flat-square
+[badge-version]:      https://img.shields.io/packagist/v/charcoal/config.svg?style=flat-square
 [badge-scrutinizer]:  https://img.shields.io/scrutinizer/g/locomotivemtl/charcoal-config.svg?style=flat-square
 [badge-coveralls]:    https://img.shields.io/coveralls/locomotivemtl/charcoal-config.svg?style=flat-square
 [badge-sensiolabs]:   https://img.shields.io/sensiolabs/i/27ad205f-4208-4fa6-9dcf-534b3a1c0aaa.svg?style=flat-square

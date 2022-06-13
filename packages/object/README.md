@@ -34,7 +34,7 @@ Object definition (Content and UserData), behaviors and tools.
 The preferred (and only supported) way of installing _charcoal-object_ is with **composer**:
 
 ```shell
-★ composer require locomotivemtl/charcoal-object
+★ composer require charcoal/object
 ```
 
 ## Dependencies
@@ -297,7 +297,7 @@ It is possible, (typically from the charcoal admin backend), to create *schedule
 
 -   `process([callable $callback, callable $successCallback,callable $failureCallback])`
 
-> Scheduled actions should be run with a timely cron job. The [charcoal-admin](https://github.com/locomotivemtl/charcoal-admin) module contains a script to run schedules automatically:
+> Scheduled actions should be run with a timely cron job. The [charcoal-admin](https://github.com/charcoalphp/admin) module contains a script to run schedules automatically:
 >
 > ```shell
 > ★ ./vendor/bin/charcoal admin/object/process-schedules`

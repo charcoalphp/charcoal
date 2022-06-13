@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Charcoal\Email\Services;
 
-// From 'locomotivemtl/charcoal-factory'
+// From 'charcoal/factory'
 use Charcoal\Factory\FactoryInterface;
 
 use Charcoal\Email\Email;

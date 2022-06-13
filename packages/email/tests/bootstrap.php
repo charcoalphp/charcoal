@@ -20,9 +20,10 @@ $config = new AppConfig([
     'metadata' => [
         'paths' => [
             'metadata/',
-            'vendor/locomotivemtl/charcoal-app/metadata/',
-            'vendor/locomotivemtl/charcoal-property/metadata/',
-            'vendor/locomotivemtl/charcoal-base/metadata/'
+            // [TODO:monorepo] use a path tag instead to allow usage from monorepo and standalone.
+            'vendor/charcoal/app/metadata/',
+            'vendor/charcoal/property/metadata/',
+            'vendor/charcoal/base/metadata/'
         ]
     ],
     'service_providers' => [

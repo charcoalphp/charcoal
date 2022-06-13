@@ -1,7 +1,7 @@
 <div align="center">
     <br/>
-    <img width="300" alt="charcoal" src="assets/docs/images/charcoal-logo-full.svg"/>
-    <h2>by Locomotive 🚂</h2>
+    <h1 alt="charcoal" title="charcoal" aria-title="charcoal"><img width="300" alt="charcoal" src="assets/docs/images/charcoal-logo-full.svg"/></h1>
+    <h2>by <a href="https://locomotive.ca">Locomotive</a> 🚂</h2>
 </div>
 
 [![License][badge-license]][charcoal]
@@ -12,30 +12,31 @@
 
 ## A Monorepo for the Charcoal Application suite 🔥
 
-This monorepo contains the integrality of the Charcoal Framework that can be used directly within a website project.
-You'll find all the different packages in [`/packages`](./packages/) directory. These packages all also individually hosted in `READONLY` format under the [charcoal][charcoal-git].
+This monorepo contains the integrality of the Charcoal Framework usable directly within a website project.
+You'll find all the different packages in [`/packages`](./packages/) directory. These packages all also individually
+hosted in `READONLY` format under the [charcoal][charcoal-git].
 
 ## Charcoal packages
 
-| Package                                                                             | Description |
-|-------------------------------------------------------------------------------------|-------------|
-| [`admin`](https://github.com/locomotive-charcoal/charcoal-admin)           |             |
-| [`app`](https://github.com/locomotive-charcoal/charcoal-app)               |             |
-| [`attachment`](https://github.com/locomotive-charcoal/charcoal-attachment) |             |
-| [`cache`](https://github.com/locomotive-charcoal/charcoal-cache)           |             |
-| [`cms`](https://github.com/locomotive-charcoal/charcoal-cms)               |             |
-| [`config`](https://github.com/locomotive-charcoal/charcoal-config)         |             |
-| [`core`](https://github.com/locomotive-charcoal/charcoal-core)             |             |
-| [`email`](https://github.com/locomotive-charcoal/charcoal-email)           |             |
-| [`factory`](https://github.com/locomotive-charcoal/charcoal-factory)       |             |
-| [`image`](https://github.com/locomotive-charcoal/charcoal-image)           |             |
-| [`object`](https://github.com/locomotive-charcoal/charcoal-object)         |             |
-| [`property`](https://github.com/locomotive-charcoal/charcoal-property)     |             |
-| [`queue`](https://github.com/locomotive-charcoal/charcoal-queue)           |             |
-| [`translator`](https://github.com/locomotive-charcoal/charcoal-translator) |             |
-| [`ui`](https://github.com/locomotive-charcoal/charcoal-ui)                 |             |
-| [`user`](https://github.com/locomotive-charcoal/charcoal-user)             |             |
-| [`view`](https://github.com/locomotive-charcoal/charcoal-view)             |             |
+| Package                                                   | Description |
+|-----------------------------------------------------------|-------------|
+| [`admin`](https://github.com/charcoalphp/admin)           |             |
+| [`app`](https://github.com/charcoalphp/app)               |             |
+| [`attachment`](https://github.com/charcoalphp/attachment) |             |
+| [`cache`](https://github.com/charcoalphp/cache)           |             |
+| [`cms`](https://github.com/charcoalphp/cms)               |             |
+| [`config`](https://github.com/charcoalphp/config)         |             |
+| [`core`](https://github.com/charcoalphp/core)             |             |
+| [`email`](https://github.com/charcoalphp/email)           |             |
+| [`factory`](https://github.com/charcoalphp/factory)       |             |
+| [`image`](https://github.com/charcoalphp/image)           |             |
+| [`object`](https://github.com/charcoalphp/object)         |             |
+| [`property`](https://github.com/charcoalphp/property)     |             |
+| [`queue`](https://github.com/charcoalphp/queue)           |             |
+| [`translator`](https://github.com/charcoalphp/translator) |             |
+| [`ui`](https://github.com/charcoalphp/ui)                 |             |
+| [`user`](https://github.com/charcoalphp/user)             |             |
+| [`view`](https://github.com/charcoalphp/view)             |             |
 
 
 ## Installation
@@ -43,12 +44,12 @@ You'll find all the different packages in [`/packages`](./packages/) directory. 
 The preferred (and only supported) method is with Composer:
 
 ```shell
-$ composer require locomotive-charcoal/charcoal
+$ composer require charcoal/charcoal
 ```
 > Note that `charcoal` is intended to be run along a `charcoal-app` based project. To start from a boilerplate:
 >
 > ```shell
-> $ composer create-project locomotive-charcoal/boilerplate
+> $ composer create-project charcoal/boilerplate
 
 ### À la carte methode
 
@@ -154,13 +155,13 @@ Output:
 >
 >### Features
 >
->* **create-pr:** add a script to trigger a pull request on the remote ([3016115](https://github.com/locomotive-charcoal/charcoal/commit/3016115d4f7c919261c54e3a17ae6c36552e532a))
+>* **create-pr:** add a script to trigger a pull request on the remote ([3016115](https://github.com/charcoalphp/charcoal/commit/3016115d4f7c919261c54e3a17ae6c36552e532a))
 >
 >
 >### Bug Fixes
 >
->* **create-pr:** remove Personal access token from script and replace with $GITHUB_TOKEN instead ([f2aaac6](https://github.com/locomotive-charcoal/charcoal/commit/f2aaac6dbd630f0f8fa759e49f9f41c957e3868a))
->* **package:** add missing semantic-release plugin ([59bd1b1](https://github.com/locomotive-charcoal/charcoal/commit/59bd1b1798e4e7b6bf874c7ba8ecbae19d76342b))
+>* **create-pr:** remove Personal access token from script and replace with $GITHUB_TOKEN instead ([f2aaac6](https://github.com/charcoalphp/charcoal/commit/f2aaac6dbd630f0f8fa759e49f9f41c957e3868a))
+>* **package:** add missing semantic-release plugin ([59bd1b1](https://github.com/charcoalphp/charcoal/commit/59bd1b1798e4e7b6bf874c7ba8ecbae19d76342b))
 
 ## Contributing
 
@@ -174,7 +175,7 @@ Please see [CONTRIBUTION.md](./CONTRIBUTION.md) for guidelines on how to contrib
 
 ## 🎉 Contributors
 
-[![contributors](https://contrib.rocks/image?repo=Locomotive-Charcoal/charcoal)](https://github.com/Locomotive-Charcoal/charcoal/graphs/contributors)
+[![contributors](https://contrib.rocks/image?repo=charcoalphp/charcoal)](https://github.com/charcoalphp/charcoal/graphs/contributors)
 
 Made with [contrib.rocks](https://contrib.rocks).
 
@@ -188,15 +189,15 @@ The changelog is compliant with [*keepachangelog*](https://keepachangelog.com/en
 
 Charcoal is licensed under the MIT license. See [LICENSE](LICENSE) for details.
 
-[charcoal]:         https://packagist.org/packages/locomotive-charcoal/charcoal
-[charcoal-git]:     https://github.com/locomotive-charcoal
+[charcoal]:         https://packagist.org/packages/charcoal/charcoal
+[charcoal-git]:     https://github.com/charcoalphp
 [semantic-release]: https://github.com/semantic-release/semantic-release
 [commitizen]:       http://commitizen.github.io/cz-cli/
-[reviewers]:        https://github.com/orgs/locomotive-charcoal/teams/reviewers
+[reviewers]:        https://github.com/orgs/charcoalphp/teams/reviewers
 
-[badge-license]:            https://img.shields.io/packagist/l/locomotive-charcoal/charcoal.svg?style=flat-square
-[badge-version]:            https://img.shields.io/packagist/v/locomotive-charcoal/charcoal.svg?style=flat-square&logo=packagist
-[badge-php]:                https://img.shields.io/packagist/php-v/locomotive-charcoal/charcoal?style=flat-square&logo=php
+[badge-license]:            https://img.shields.io/packagist/l/charcoal/charcoal.svg?style=flat-square
+[badge-version]:            https://img.shields.io/packagist/v/charcoal/charcoal.svg?style=flat-square&logo=packagist
+[badge-php]:                https://img.shields.io/packagist/php-v/charcoal/charcoal?style=flat-square&logo=php
 [badge-semantic-release]:   https://img.shields.io/badge/semantic--release-conventionalcommits-e10079?logo=semantic-release&style=flat-square
 [badge-commitizen]:         https://img.shields.io/badge/commitizen-friendly-brightgreen.svg?style=flat-square
 

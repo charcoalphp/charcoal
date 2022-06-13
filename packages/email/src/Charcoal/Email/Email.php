@@ -18,19 +18,19 @@ use Psr\Log\LoggerAwareTrait;
 use PHPMailer\PHPMailer\Exception as PHPMailerException;
 use PHPMailer\PHPMailer\PHPMailer;
 
-// From 'locomotivemtl/charcoal-config'
+// From 'charcoal/config'
 use Charcoal\Config\AbstractEntity;
 use Charcoal\Config\ConfigurableInterface;
 use Charcoal\Config\ConfigurableTrait;
 
-// From 'locomotivemtl/charcoal-factory'
+// From 'charcoal/factory'
 use Charcoal\Factory\FactoryInterface;
 
-// From 'locomotivemtl/charcoal-view'
+// From 'charcoal/view'
 use Charcoal\View\ViewableInterface;
 use Charcoal\View\ViewableTrait;
 
-// From 'locomotivemtl/charcoal-queue'
+// From 'charcoal/queue'
 use Charcoal\Queue\QueueableInterface;
 use Charcoal\Queue\QueueableTrait;
 

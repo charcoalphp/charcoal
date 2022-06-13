@@ -8,7 +8,7 @@ namespace Charcoal\Email;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
-// From 'locomotivemtl/charcoal-app'
+// From 'charcoal/app'
 use Charcoal\App\Module\AbstractModule;
 
 use Charcoal\Email\Api\V1\LinkAction;
