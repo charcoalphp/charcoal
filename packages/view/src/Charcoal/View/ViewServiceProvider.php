@@ -121,9 +121,10 @@ class ViewServiceProvider implements ServiceProviderInterface
          * @return array The view loader dependencies array.
          */
         $container['view/loader/dependencies'] = function (Container $container): array {
+            $paths = $container['view/config']['paths'];
             return [
                 'base_path' => $container['config']['base_path'],
-                'paths'     => $container['package/map']->map($container['view/config']['paths'])
+                'paths'     => $container['package/map']->map($paths)
             ];
         };
 

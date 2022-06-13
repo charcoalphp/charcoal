@@ -291,12 +291,12 @@ class ModelServiceProvider implements ServiceProviderInterface
              */
             $container['metadata/loader'] = function (Container $container) {
                 $appConfig  = $container['config'];
-                $metaConfig = $container['metadata/config'];
+                $paths = $container['metadata/config']['paths'];
 
                 return new MetadataLoader([
                     'logger'    => $container['logger'],
                     'cache'     => $container['metadata/cache'],
-                    'paths'     => $container['package/map']->map($metaConfig['paths']),
+                    'paths'     => $container['package/map']->map($paths),
                     'base_path' => $appConfig['base_path'],
                 ]);
             };

@@ -188,7 +188,7 @@ class TranslatorServiceProvider implements ServiceProviderInterface
             $appConfig   = isset($container['config']) ? $container['config'] : [];
             $transConfig = isset($appConfig['translator']) ? $appConfig['translator'] : null;
             if (isset($transConfig['paths'])) {
-                $transConfig['paths'] = $container['package/map']->map($transConfig['paths']);
+                $container['package/map']->map($transConfig['paths']);
             }
             return new TranslatorConfig($transConfig);
         };

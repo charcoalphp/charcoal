@@ -10,6 +10,8 @@ use UnexpectedValueException;
 class PackageMapService
 {
     const PACKAGES_DIRECTORY = '/vendor/charcoal/charcoal/packages/';
+    const CHARCOAL_PACKAGE = 'charcoal/charcoal';
+
     private bool $isMonoRepo;
     private string $basePath;
 
@@ -18,7 +20,7 @@ class PackageMapService
      */
     public function __construct(array $data)
     {
-        $this->isMonoRepo = \Composer\InstalledVersions::isInstalled('charcoal/charcoal');
+        $this->isMonoRepo = \Composer\InstalledVersions::isInstalled(self::CHARCOAL_PACKAGE);
         $this->basePath = $data['basePath'];
     }
 
@@ -26,10 +28,11 @@ class PackageMapService
      * @param string|string[] $value The value(s) to map to package.
      * @return mixed
      */
-    public function map($value)
+    public function map(&$value)
     {
         if (is_array($value)) {
-            return array_map([$this, 'mapOne'], $value);
+            array_walk($value, [$this, 'mapOne']);
+            return $value;
         }
 
         return $this->mapOne($value);
@@ -42,9 +45,9 @@ class PackageMapService
      * @throws UnexpectedValueException If the resolved value is not a string or number.
      * @return mixed
      */
-    public function mapOne(string $value): string
+    public function mapOne(string &$value): string
     {
-        return preg_replace_callback('/%%|%package\.([^\.%\s]+)\.path%/', function ($match) use ($value) {
+        $value = preg_replace_callback('/%%|%package\.([^\.%\s]+)\.path%/', function ($match) use ($value) {
             // skip escaped %%
             if (!isset($match[1])) {
                 return '%%';
@@ -68,6 +71,8 @@ class PackageMapService
 
             return $resolved;
         }, $value);
+
+        return $value;
     }
 
     /**
