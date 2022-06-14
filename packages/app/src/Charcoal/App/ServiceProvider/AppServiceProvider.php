@@ -51,7 +51,6 @@ use Charcoal\App\Handler\NotAllowed;
 use Charcoal\App\Handler\NotFound;
 
 use Charcoal\App\Template\TemplateInterface;
-use Charcoal\App\Template\TemplateBuilder;
 use Charcoal\App\Template\WidgetInterface;
 use Charcoal\App\Template\WidgetBuilder;
 
@@ -94,6 +93,7 @@ class AppServiceProvider implements ServiceProviderInterface
         $container->register(new ScriptServiceProvider());
         $container->register(new TranslatorServiceProvider());
         $container->register(new ViewServiceProvider());
+        $container->register(new PackageServiceProvider());
 
         $this->registerKernelServices($container);
         $this->registerHandlerServices($container);

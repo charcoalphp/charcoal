@@ -1,6 +1,6 @@
 #!/bin/sh
 
-OWNER=locomotive-charcoal
+OWNER=charcoalphp
 REPO=charcoal
 REF=$(git branch --show-current)
 BASE=${1:-main}
@@ -8,7 +8,7 @@ USER=$(git config user.email)
 
 echo "Preparing pull request form $REF to $BASE..."
 
-HTTP_CODE=$(curl --write-out "%{http_code}\n" --output output.txt --silent \
+HTTP_CODE=$(curl --write-out "%{http_code}\n" --silent \
   -X POST \
   -H "Accept: application/vnd.github.v3+json" \
   https://api.github.com/repos/$OWNER/$REPO/actions/workflows/create-pull-request.yaml/dispatches \
