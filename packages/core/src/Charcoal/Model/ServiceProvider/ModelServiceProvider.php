@@ -296,7 +296,7 @@ class ModelServiceProvider implements ServiceProviderInterface
                 return new MetadataLoader([
                     'logger'    => $container['logger'],
                     'cache'     => $container['metadata/cache'],
-                    'paths'     => $metaConfig['paths'],
+                    'paths'     => $container['config']->resolveValues($metaConfig['paths']),
                     'base_path' => $appConfig['base_path'],
                 ]);
             };
