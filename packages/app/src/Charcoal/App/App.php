@@ -5,6 +5,8 @@ namespace Charcoal\App;
 use LogicException;
 use RuntimeException;
 
+use Dotenv\Dotenv;
+
 // From Slim
 use Slim\App as SlimApp;
 
@@ -18,7 +20,6 @@ use Charcoal\Config\ConfigurableTrait;
 
 // From 'charcoal-app'
 use Charcoal\App\Route\RouteManager;
-use Charcoal\App\Route\RouteFactory;
 
 /**
  * Charcoal App
@@ -127,6 +128,10 @@ class App extends SlimApp implements
     {
         $config = $this->config();
         date_default_timezone_set($config['timezone']);
+
+        // Setup env
+        $dotenv = Dotenv::createImmutable($config->basePath());
+        $dotenv->safeLoad();
 
         // Setup routes
         $this->routeManager()->setupRoutes();
