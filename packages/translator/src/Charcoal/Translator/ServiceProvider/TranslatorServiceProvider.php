@@ -249,7 +249,7 @@ class TranslatorServiceProvider implements ServiceProviderInterface
 
                 $paths = array_reverse($transConfig['paths']);
                 foreach ($paths as $path) {
-                    $path = realpath($container['config']['base_path'].$path);
+                    $path = realpath($container['config']['base_path'].DIRECTORY_SEPARATOR.$path);
 
                     if ($path === false) {
                         continue;
