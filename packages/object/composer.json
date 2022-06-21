@@ -28,7 +28,8 @@
         "pimple/pimple": "^3.0",
         "seld/jsonlint": "^1.9",
         "squizlabs/php_codesniffer": "^3.5",
-        "tedivm/stash": "~0.16"
+        "tedivm/stash": "~0.16",
+        "ext-json": "*"
     },
     "autoload": {
         "psr-4": {

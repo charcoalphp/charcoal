@@ -28,7 +28,7 @@ use Charcoal\Object\RevisionableInterface;
  * Intended to be used to collect all routes related to models
  * under a single source (e.g., database table).
  *
- * {@see Charcoal\Object\ObjectRoute} for a similar model that aggregates data
+ * {@see \Charcoal\Object\ObjectRoute} for a similar model that aggregates data
  * under a common source.
  */
 class ObjectRevision extends AbstractModel implements ObjectRevisionInterface

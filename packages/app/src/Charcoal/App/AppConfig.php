@@ -192,6 +192,15 @@ class AppConfig extends AbstractConfig
     }
 
     /**
+     * @param array $values Array of values to resolve.
+     * @return array
+     */
+    public function resolveValues(array $values): array
+    {
+        return array_map([$this, 'resolveValue'], $values);
+    }
+
+    /**
      * Replaces placeholders (%app.key%) by their values in the config.
      *
      * @param  mixed $value A value to resolve.
@@ -205,6 +214,9 @@ class AppConfig extends AbstractConfig
             'app.public_path' => $this->publicPath(),
             'app.cache_path'  => $this->cachePath(),
             'app.logs_path'   => $this->logsPath(),
+            'packages.path'   => isset($_ENV['MONOREPO']) && $_ENV['MONOREPO']
+                ? 'vendor/charcoal/charcoal/packages'
+                : 'vendor/charcoal'
         ];
 
         if (is_string($value)) {
@@ -222,8 +234,9 @@ class AppConfig extends AbstractConfig
                     $resolvedType = (is_object($resolved) ? get_class($resolved) : gettype($resolved));
 
                     throw new UnexpectedValueException(sprintf(
-                        'Invalid config parameter "%s" inside string value "%s"; must be a string or number, received %s',
-                        $key,
+                        'Invalid config parameter "%s" inside string value "%s";'.
+                        ' must be a string or number, received %s',
+                        $tag,
                         $value,
                         $resolvedType
                     ));
@@ -234,6 +247,22 @@ class AppConfig extends AbstractConfig
         }
 
         return $value;
+    }
+
+    /**
+     * Adds a configuration file to the configset.
+     *
+     * Natively supported file formats: INI, JSON, PHP.
+     *
+     * @uses   FileAwareTrait::loadFile()
+     * @param  string $path The file to load and add.
+     * @return self
+     */
+    public function addFile($path)
+    {
+        $path = $this->resolveValue($path);
+
+        return parent::addFile($path);
     }
 
     /**

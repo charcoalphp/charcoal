@@ -29,7 +29,7 @@ use Charcoal\Object\ObjectRouteInterface;
  * Intended to be used to collect all routes related to models
  * under a single source (e.g., database table).
  *
- * {@see Charcoal\Object\ObjectRevision} for a similar model that aggregates data
+ * {@see \Charcoal\Object\ObjectRevision} for a similar model that aggregates data
  * under a common source.
  *
  * Requirements:
@@ -144,7 +144,7 @@ class ObjectRoute extends AbstractModel implements
     /**
      * Event called before _creating_ the object.
      *
-     * @see    Charcoal\Source\StorableTrait::preSave() For the "create" Event.
+     * @see    \Charcoal\Source\StorableTrait::preSave() For the "create" Event.
      * @return boolean
      */
     protected function preSave()
@@ -159,7 +159,7 @@ class ObjectRoute extends AbstractModel implements
     /**
      * Event called before _updating_ the object.
      *
-     * @see    Charcoal\Source\StorableTrait::preUpdate() For the "update" Event.
+     * @see    \Charcoal\Source\StorableTrait::preUpdate() For the "update" Event.
      * @param  array $properties Optional. The list of properties to update.
      * @return boolean
      */
@@ -504,8 +504,8 @@ class ObjectRoute extends AbstractModel implements
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
-        return (string)$this->slug();
+        return (string)$this->getSlug();
     }
 }

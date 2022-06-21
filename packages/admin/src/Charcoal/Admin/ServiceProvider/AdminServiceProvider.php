@@ -127,6 +127,7 @@ class AdminServiceProvider implements ServiceProviderInterface
             // The `admin.json` file is not part of regular config
             if (!empty($appConfig['admin_config'])) {
                 $appAdminConfigs = (array)$appConfig['admin_config'];
+                $appAdminConfigs = $container['config']->resolveValues($appAdminConfigs);
                 array_push($extraConfigs, ...$appAdminConfigs);
             }
 
@@ -195,7 +196,7 @@ class AdminServiceProvider implements ServiceProviderInterface
             /**
              * @return MetadataConfig
              */
-            $container['metadata/config'] = function () {
+            $container['metadata/config'] = function (Container $container) {
                 $settings   = $container['admin/config']['metadata'];
                 $metaConfig = new MetadataConfig($settings);
 

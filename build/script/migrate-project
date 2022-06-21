@@ -1,0 +1,36 @@
+#!/bin/sh
+
+# Migrate a charcoal project to the monorepo version
+cd $(dirname $0)
+
+CHARCOAL_BASE=../../
+PROJECT_BASE=../../../
+
+echo navigating to charcoal directory
+
+cd $CHARCOAL_BASE
+
+echo Fetching and parsing charcoal packages
+
+PACKAGES="$(vendor/bin/monorepo-builder packages-json)"
+
+PACKAGES=$(sed -Ee 's/(\[|\]|")//g' <<< $PACKAGES)
+PACKAGES=$(sed -Ee 's/,/|/g' <<< $PACKAGES)
+
+echo Replacing these packages $PACKAGES
+
+FILE=config/config.json
+
+echo Replacing metadata paths in ${FILE}
+
+NEW_CONTENT=$(sed -Ee "s#vendor/locomotivemtl/charcoal-($PACKAGES)#%packages.path%/\1#g" ${PROJECT_BASE}${FILE})
+
+echo "$NEW_CONTENT" > ${PROJECT_BASE}${FILE}
+
+FILE=config/admin.php
+
+echo Replacing metadata paths in ${FILE}
+
+NEW_CONTENT=$(sed -Ee "s#/vendor/locomotivemtl/charcoal-($PACKAGES)#/%packages.path%/\1#g" ${PROJECT_BASE}${FILE})
+
+echo "$NEW_CONTENT" > ${PROJECT_BASE}${FILE}

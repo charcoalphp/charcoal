@@ -187,6 +187,9 @@ class TranslatorServiceProvider implements ServiceProviderInterface
         $container['translator/config'] = function (Container $container) {
             $appConfig   = isset($container['config']) ? $container['config'] : [];
             $transConfig = isset($appConfig['translator']) ? $appConfig['translator'] : null;
+            if (isset($transConfig['paths'])) {
+                $transConfig['paths'] = $container['config']->resolveValues($transConfig['paths']);
+            }
             return new TranslatorConfig($transConfig);
         };
 
@@ -246,7 +249,7 @@ class TranslatorServiceProvider implements ServiceProviderInterface
 
                 $paths = array_reverse($transConfig['paths']);
                 foreach ($paths as $path) {
-                    $path = realpath($container['config']['base_path'].$path);
+                    $path = realpath($container['config']['base_path'].DIRECTORY_SEPARATOR.$path);
 
                     if ($path === false) {
                         continue;
