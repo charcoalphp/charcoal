@@ -7,9 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 > ⚠️ This `CHANGELOG` file is automatically generated through Github actions from Github release notes.
 
-## [Unreleased](https://github.com/locomotive-charcoal/Charcoal/compare/v2.1.2...main)
+## [Unreleased](https://github.com/locomotive-charcoal/Charcoal/compare/v2.2.0...main)
 
 Please do not update the unreleased notes.
+
+## [v2.2.0](https://github.com/locomotive-charcoal/Charcoal/compare/v2.1.2...v2.2.0) - 2022-06-21
+
+### [2.2.0](https://github.com/charcoalphp/charcoal/compare/v2.1.2...v2.2.0) (2022-06-21)
+
+#### Features
+
+- **script:** add .env file creation in migrate-project script ([b302511](https://github.com/charcoalphp/charcoal/commit/b302511559c0ab35dfc7d4c67662aa644352b944))
+- **script:** change repo owner and add token validation to create-pr script ([536fabd](https://github.com/charcoalphp/charcoal/commit/536fabdce7f9ef12dabc93922f730d2b0c8dda67))
 
 ## [v2.1.2](https://github.com/locomotive-charcoal/Charcoal/compare/v2.1.1...v2.1.2) - 2022-06-21
 
