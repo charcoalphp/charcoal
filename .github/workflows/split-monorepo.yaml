@@ -62,7 +62,7 @@ jobs:
                     package_directory: 'packages/${{ matrix.package }}'
 
                     # ↓ into locomotive-charcoal/[split_repository] repository
-                    repository_organization: 'locomotive-charcoal'
+                    repository_organization: 'charcoalphp'
                     repository_name: '${{ matrix.package }}'
 
                     # [optional, with "github.com" as default]
