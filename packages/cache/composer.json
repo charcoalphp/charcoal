@@ -17,12 +17,12 @@
     ],
     "extra": {
         "branch-alias": {
-            "dev-master": "2.2-dev"
+            "dev-master": "2.3-dev"
         }
     },
     "require": {
         "php": "^7.4 || ^8.0",
-        "charcoal/config": "^2.2",
+        "charcoal/config": "^2.3",
         "pimple/pimple": "^3.0",
         "psr/cache": "^1.0",
         "tedivm/stash": "~0.16"

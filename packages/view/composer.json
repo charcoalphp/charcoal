@@ -13,14 +13,14 @@
     ],
     "extra": {
         "branch-alias": {
-            "dev-master": "2.2-dev"
+            "dev-master": "2.3-dev"
         }
     },
     "require": {
         "php": "^7.4 || ^8.0",
         "ext-json": "*",
         "psr/http-message": "^1.0",
-        "charcoal/config": "^2.2",
+        "charcoal/config": "^2.3",
         "erusev/parsedown": "^1.7"
     },
     "require-dev": {
@@ -31,7 +31,7 @@
         "twig/twig": "^1.31",
         "pimple/pimple": "^3.0",
         "slim/slim": "^3.7",
-        "charcoal/translator": "^2.2",
+        "charcoal/translator": "^2.3",
         "phpstan/phpstan": "^1.6"
     },
     "suggest": {

@@ -20,7 +20,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.2-dev"
+            "dev-master": "2.3-dev"
         }
     },
     "require": {
@@ -28,11 +28,11 @@
         "ext-pdo": "*",
         "league/climate": "^3.2",
         "league/flysystem": "^1.0",
-        "charcoal/cache": "^2.2",
-        "charcoal/config": "^2.2",
-        "charcoal/factory": "^2.2",
-        "charcoal/translator": "^2.2",
-        "charcoal/view": "^2.2",
+        "charcoal/cache": "^2.3",
+        "charcoal/config": "^2.3",
+        "charcoal/factory": "^2.3",
+        "charcoal/translator": "^2.3",
+        "charcoal/view": "^2.3",
         "monolog/monolog": "^1.17",
         "psr/http-message": "^1.0",
         "psr/log": "^1.0",

@@ -16,18 +16,18 @@
     ],
     "extra": {
         "branch-alias": {
-            "dev-master": "2.2-dev"
+            "dev-master": "2.3-dev"
         }
     },
     "require": {
         "php": "^7.4 || ^8.0",
-        "charcoal/config": "^2.2",
-        "charcoal/core": "^2.2",
-        "charcoal/object": "^2.2",
-        "charcoal/translator": "^2.2"
+        "charcoal/config": "^2.3",
+        "charcoal/core": "^2.3",
+        "charcoal/object": "^2.3",
+        "charcoal/translator": "^2.3"
     },
     "require-dev": {
-        "charcoal/admin": "^2.2",
+        "charcoal/admin": "^2.3",
         "mockery/mockery": "^1.0",
         "php-coveralls/php-coveralls": "^2.2",
         "phpunit/phpunit": "^9.5",

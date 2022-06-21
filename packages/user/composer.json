@@ -11,18 +11,18 @@
     ],
     "extra": {
         "branch-alias": {
-            "dev-master": "2.2-dev"
+            "dev-master": "2.3-dev"
         }
     },
     "require": {
         "php": "^7.4 || ^8.0",
         "psr/log": "^1.0",
         "laminas/laminas-permissions-acl": "^2.8",
-        "charcoal/object": "^2.2",
-        "charcoal/config": "^2.2",
-        "charcoal/factory": "^2.2",
-        "charcoal/core": "^2.2",
-        "charcoal/translator": "^2.2"
+        "charcoal/object": "^2.3",
+        "charcoal/config": "^2.3",
+        "charcoal/factory": "^2.3",
+        "charcoal/core": "^2.3",
+        "charcoal/translator": "^2.3"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",

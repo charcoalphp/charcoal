@@ -17,12 +17,12 @@
     ],
     "extra": {
         "branch-alias": {
-            "dev-master": "2.2-dev"
+            "dev-master": "2.3-dev"
         }
     },
     "require": {
         "php": "^7.4 || ^8.0",
-        "charcoal/config": "^2.2",
+        "charcoal/config": "^2.3",
         "symfony/translation": "^3.4",
         "pimple/pimple": "^3.0"
     },
@@ -31,7 +31,7 @@
         "phpunit/phpunit": "^9.5",
         "squizlabs/php_codesniffer": "^3.5",
         "php-coveralls/php-coveralls": "^2.2",
-        "charcoal/admin": "^2.2"
+        "charcoal/admin": "^2.3"
     },
     "suggest": {
         "charcoal/app": "To run the parser script."
