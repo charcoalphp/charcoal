@@ -1,8 +1,13 @@
 <div align="center">
     <br/>
-    <h1 alt="charcoal" title="charcoal" aria-title="charcoal"><img width="300" alt="charcoal" src="assets/docs/images/charcoal-logo-full.svg"/></h1>
-    <h2>by <a href="https://locomotive.ca">Locomotive</a> 🚂</h2>
+    <br/>
+    <img width="300" alt="charcoal" src="assets/docs/images/charcoal-logo-full.svg"/>
+    <br/>
+    <br/>
+     by <a href="https://locomotive.ca">Locomotive</a> 🚂
 </div>
+
+---
 
 [![License][badge-license]][charcoal]
 [![Latest Stable Version][badge-version]][charcoal]
@@ -18,25 +23,25 @@ hosted in `READONLY` format under the [charcoal][charcoal-git].
 
 ## Charcoal packages
 
-| Package                                                   | Description |
-|-----------------------------------------------------------|-------------|
-| [`admin`](https://github.com/charcoalphp/admin)           |             |
-| [`app`](https://github.com/charcoalphp/app)               |             |
-| [`attachment`](https://github.com/charcoalphp/attachment) |             |
-| [`cache`](https://github.com/charcoalphp/cache)           |             |
-| [`cms`](https://github.com/charcoalphp/cms)               |             |
-| [`config`](https://github.com/charcoalphp/config)         |             |
-| [`core`](https://github.com/charcoalphp/core)             |             |
-| [`email`](https://github.com/charcoalphp/email)           |             |
-| [`factory`](https://github.com/charcoalphp/factory)       |             |
-| [`image`](https://github.com/charcoalphp/image)           |             |
-| [`object`](https://github.com/charcoalphp/object)         |             |
-| [`property`](https://github.com/charcoalphp/property)     |             |
-| [`queue`](https://github.com/charcoalphp/queue)           |             |
-| [`translator`](https://github.com/charcoalphp/translator) |             |
-| [`ui`](https://github.com/charcoalphp/ui)                 |             |
-| [`user`](https://github.com/charcoalphp/user)             |             |
-| [`view`](https://github.com/charcoalphp/view)             |             |
+| Package                                                   | Description                                                                   |
+|-----------------------------------------------------------|-------------------------------------------------------------------------------|
+| [`admin`](https://github.com/charcoalphp/admin)           | The admin (Backend Dashboard) for Charcoal                                    |
+| [`app`](https://github.com/charcoalphp/app)               | Slim-based application (modules, routes / controllers and middleware)         |
+| [`attachment`](https://github.com/charcoalphp/attachment) | Adds support for working with relationships between models.                   |
+| [`cache`](https://github.com/charcoalphp/cache)           | Charcoal service provider for the Stash Cache Library                                                                              |
+| [`cms`](https://github.com/charcoalphp/cms)               | Charcoal Content Management System (CMS) Module                               |
+| [`config`](https://github.com/charcoalphp/config)         | Configuration container for all things Charcoal                                                                              |
+| [`core`](https://github.com/charcoalphp/core)             | The Charcoal PHP framework                                                    |
+| [`email`](https://github.com/charcoalphp/email)           | Charcoal email sending (with phpmailer) and queue management.                 |
+| [`factory`](https://github.com/charcoalphp/factory)       | Dynamic object creation (Factory/ AbstractFactory / Builder / Class Resolver) |
+| [`image`](https://github.com/charcoalphp/image)           | Image manipulation library for PHP                                            |
+| [`object`](https://github.com/charcoalphp/object)         | Object definition (Content and UserData), behaviors and tools.                |
+| [`property`](https://github.com/charcoalphp/property)     | Properties define model metadata.                                             |
+| [`queue`](https://github.com/charcoalphp/queue)           | Queue, Queue Items and Queue-able objects, for Charcoal                       |
+| [`translator`](https://github.com/charcoalphp/translator) | Charcoal Translator, based on Symfony's.                                      |
+| [`ui`](https://github.com/charcoalphp/ui)                 | Ui tools (Dashboard, Layout, Form and Menu)                                   |
+| [`user`](https://github.com/charcoalphp/user)             | User definition, authentication and authorization                             |
+| [`view`](https://github.com/charcoalphp/view)             | Charcoal Views (mustache, php, or more)                                       |
 
 
 ## Installation
@@ -50,6 +55,22 @@ $ composer require charcoal/charcoal
 >
 > ```shell
 > $ composer create-project charcoal/boilerplate
+ 
+### Migrate a project to `charcoal/charcoal`
+
+Following these steps will ease the process of converting a project from `locomotivemtl/admin` to `charcoal/charcoal`.
+
+- Start by removing all `locomotivemtl` core packages from `composer.json` and replace `contribs` with the ones from 
+`charcoalphp`
+- Then run `composer require charcoal/charcoal`
+- After the install process is done, run the following migration script:
+```shell
+$ vendor/charcoal/charcoal/build/script/migrate-project
+```
+The `migrate-project` script will all metadata paths in the project's config files.
+Then it'll edit or create a `.env` with the key `MONOREPO` set to `true`.
+This allows the `%packages.path%` string template to expand to the packages location within `charcoal/charcoal`,
+otherwise it will lead in the `vendor` directory
 
 ### À la carte methode
 

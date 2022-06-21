@@ -34,3 +34,6 @@ echo Replacing metadata paths in ${FILE}
 NEW_CONTENT=$(sed -Ee "s#/vendor/locomotivemtl/charcoal-($PACKAGES)#/%packages.path%/\1#g" ${PROJECT_BASE}${FILE})
 
 echo "$NEW_CONTENT" > ${PROJECT_BASE}${FILE}
+
+echo Adding 'MONOREPO' key to '.env'
+echo MONOREPO=true >> ${PROJECT_BASE}.env
