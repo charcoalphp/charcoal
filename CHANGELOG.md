@@ -7,9 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 > ⚠️ This `CHANGELOG` file is automatically generated through Github actions from Github release notes.
 
-## [Unreleased](https://github.com/locomotive-charcoal/Charcoal/compare/v2.0.1...main)
+## [Unreleased](https://github.com/locomotive-charcoal/Charcoal/compare/v2.1.0...main)
 
 Please do not update the unreleased notes.
+
+## [v2.1.0](https://github.com/locomotive-charcoal/Charcoal/compare/v2.0.1...v2.1.0) - 2022-06-21
+
+### [2.1.0](https://github.com/charcoalphp/charcoal/compare/v2.0.1...v2.1.0) (2022-06-21)
+
+#### Features
+
+- add template tags supports for configurable paths where needed ([f3afb94](https://github.com/charcoalphp/charcoal/commit/f3afb94bfd0e563b043e315bb9c34a50d2c4c40d))
+- **app:** add %packages.path% string template ([3efadb9](https://github.com/charcoalphp/charcoal/commit/3efadb91c99dc63a5e1fc1c37ae33fc0c3e98fc5))
+- **dotenv:** add dotenv support to App.php ([70b6bd7](https://github.com/charcoalphp/charcoal/commit/70b6bd73a6cf946629fd2d1c721da4469188d622))
+- **migration:** add a migration script for port charcoal projects to new framework ([c9cc66a](https://github.com/charcoalphp/charcoal/commit/c9cc66ad72ecc1adc44669edc5be2f69edf9a825))
+
+#### Bug Fixes
+
+- fix missing return type ([24c7f57](https://github.com/charcoalphp/charcoal/commit/24c7f5774826080f5bb7eec01c71c4b450810d66))
+- **translator:** add missing directory separator for translation files ([83d5a30](https://github.com/charcoalphp/charcoal/commit/83d5a30ab10c745639076cd9ca3bec78e971bb0f))
+- update and improve migrate-project script ([d234b26](https://github.com/charcoalphp/charcoal/commit/d234b2645064662fe1729f9d20a4533a468c451b))
 
 ## [v2.0.1](https://github.com/locomotive-charcoal/Charcoal/compare/v2.0.0...v2.0.1) - 2022-06-13
 
