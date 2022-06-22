@@ -141,7 +141,24 @@
         "charcoal/translator": "2.2.0",
         "charcoal/ui": "2.2.0",
         "charcoal/user": "2.2.0",
-        "charcoal/view": "2.2.0"
+        "charcoal/view": "2.2.0",
+        "locomotivemtl/charcoal-admin": "*",
+        "locomotivemtl/charcoal-app": "*",
+        "locomotivemtl/charcoal-attachment": "*",
+        "locomotivemtl/charcoal-cache": "*",
+        "locomotivemtl/charcoal-cms": "*",
+        "locomotivemtl/charcoal-config": "*",
+        "locomotivemtl/charcoal-core": "*",
+        "locomotivemtl/charcoal-email": "*",
+        "locomotivemtl/charcoal-factory": "*",
+        "locomotivemtl/charcoal-image": "*",
+        "locomotivemtl/charcoal-object": "*",
+        "locomotivemtl/charcoal-property": "*",
+        "locomotivemtl/charcoal-queue": "*",
+        "locomotivemtl/charcoal-translator": "*",
+        "locomotivemtl/charcoal-ui": "*",
+        "locomotivemtl/charcoal-user": "*",
+        "locomotivemtl/charcoal-view": "*"
     },
     "bin": [
         "bin/charcoal"
