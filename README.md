@@ -67,7 +67,7 @@ where we don't need `charcoal/admin` is a good example of a possible use case.
 
 ### Migrate a project to `charcoal/charcoal`
 
-Following these steps will ease the process of converting a project from `locomotivemtl/admin` to `charcoal/charcoal`.
+Following these steps will ease the process of converting a project from `locomotivemtl/charcoal-admin` to `charcoal/charcoal`.
 
 1. Start by removing all `locomotivemtl` core packages from `composer.json` and replace `contribs` with the ones from 
 `charcoalphp`
