@@ -5,6 +5,8 @@ if [[ -z "$GITHUB_TOKEN" ]]; then
   exit 1
 fi
 
+# [TODO] Add github api integration
+
 OWNER=charcoalphp
 REPO=charcoal
 REF=$(git branch --show-current)
