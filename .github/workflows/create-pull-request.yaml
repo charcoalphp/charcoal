@@ -12,14 +12,18 @@ on:
                 required: false
                 default: ''
 
-env:
-    GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-
 jobs:
     create-pull-request:
         runs-on: ubuntu-latest
 
         steps:
+            - name: Get Token
+                id: get_workflow_token
+                uses: peter-murray/workflow-application-token-action@v1
+                with:
+                    application_id: ${{ secrets.APPLICATION_ID }}
+                    application_private_key: ${{ secrets.APPLICATION_PRIVATE_KEY }}
+
             -   name: Checkout project
                 uses: actions/checkout@v3
                 with:
@@ -46,6 +50,8 @@ jobs:
 
             -   name: pull-request
                 uses: repo-sync/pull-request@v2
+                env:
+                  GITHUB_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
                 with:
                     github_token: ${{ secrets.ACCESS_TOKEN }}
                     source_branch: ${{ steps.extract_branch.outputs.branch }}
