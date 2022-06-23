@@ -254,7 +254,7 @@ Other actions such quick view are on the to-do list as well.
 For a complete project example using `charcoal-attachment`, see the [charcoal-project-boilerplate](https://github.com/locomotivemtl/charcoal-project-boilerplate).
 
 
-# Development
+## Development
 
 To install the development environment:
 
@@ -268,18 +268,18 @@ Run the code checkers and unit tests with:
 ★ composer test
 ```
 
-## API documentation
+### API documentation
 
 -   The auto-generated `phpDocumentor` API documentation is available at [https://locomotivemtl.github.io/charcoal-attachment/docs/master/](https://locomotivemtl.github.io/charcoal-attachment/docs/master/)
 -   The auto-generated `apigen` API documentation is available at [https://locomotivemtl.github.io/charcoal-attachment/apigen/master/](https://locomotivemtl.github.io/charcoal-attachment/apigen/master/)
 
-## Development dependencies
+### Development dependencies
 
 -   `phpunit/phpunit`
 -   `squizlabs/php_codesniffer`
 -   `satooshi/php-coveralls`
 
-## Continuous Integration
+### Continuous Integration
 
 | Service | Badge | Description |
 | ------- | ----- | ----------- |
@@ -288,7 +288,7 @@ Run the code checkers and unit tests with:
 | [Coveralls](https://coveralls.io/github/locomotivemtl/charcoal-attachment) | [![Coverage Status](https://coveralls.io/repos/github/locomotivemtl/charcoal-attachment/badge.svg?branch=master)](https://coveralls.io/github/locomotivemtl/charcoal-attachment?branch=master) | Unit Tests code coverage. |
 | [Sensiolabs](https://insight.sensiolabs.com/projects/09876d95-da9d-4c23-896f-904be3368c99) | [![SensioLabsInsight](https://insight.sensiolabs.com/projects/09876d95-da9d-4c23-896f-904be3368c99/mini.png)](https://insight.sensiolabs.com/projects/09876d95-da9d-4c23-896f-904be3368c99) | Another code quality checker, focused on PHP. |
 
-## Coding Style
+### Coding Style
 
 The Charcoal-Attachment module follows the Charcoal coding-style:
 
@@ -300,12 +300,20 @@ The Charcoal-Attachment module follows the Charcoal coding-style:
 
 > Coding style validation / enforcement can be performed with `composer phpcs`. An auto-fixer is also available with `composer phpcbf`.
 
-# Authors
+## Authors
 
 -   Mathieu Ducharme <mat@locomotive.ca>
 -   Chauncey McAskill <chauncey@locomotive.ca>
 -   Benjamin Roch <benjamin@locomotive.ca>
 
-# License
+## License
 
 Charcoal is licensed under the MIT license. See [LICENSE](LICENSE) for details.
+
+## Report Issues
+
+In case you are experiencing a bug or want to request a new feature head over to the [Charcoal monorepo issue tracker](https://github.com/charcoalphp/charcoal/issues)
+
+## Contribute
+
+The sources of this package are contained in the Charcoal monorepo. We welcome contributions for this package on [charcoalphp/charcoal](https://github.com/charcoalphp/charcoal).

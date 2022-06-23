@@ -16,24 +16,26 @@ This component is the glue for much of the [Charcoal framework][charcoal-app].
 
 ## Table of Contents
 
--   [Installation](#installation)
+- [Installation](#installation)
     -   [Requirements](#requirements)
--   [Entity & Config](#entity--config)
+- [Entity & Config](#entity--config)
     -   [Entity](#entity)
     -   [Config](#config)
--   [Features](#features)
+- [Features](#features)
     -   [File Loader](#file-loader)
     -   [Key Separator Lookup](#key-separator-lookup)
     -   [Delegated Data Lookup](#delegates-lookup)
     -   [Array Access](#array-access)
     -   [Interoperability](#interoperability)
     -   [Configurable objects](#configurable-objects)
--   [Development](#development)
+- [Development](#development)
     -   [API Documentation](#api-documentation)
     -   [Development Dependencies](#development-dependencies)
     -   [Coding Style](#coding-style)
--   [Credits](#credits)
--   [License](#license)
+- [Credits](#credits)
+- [License](#license)
+- [Report Issues](#report-issues)
+- [Contribute](#contribute)
 
 
 
@@ -314,6 +316,17 @@ The charcoal-config module follows the Charcoal coding-style:
 
 Charcoal is licensed under the MIT license. See [LICENSE](LICENSE) for details.
 
+
+
+## Report Issues
+
+In case you are experiencing a bug or want to request a new feature head over to the [Charcoal monorepo issue tracker](https://github.com/charcoalphp/charcoal/issues)
+
+
+
+## Contribute
+
+The sources of this package are contained in the Charcoal monorepo. We welcome contributions for this package on [charcoalphp/charcoal](https://github.com/charcoalphp/charcoal).
 
 
 [charcoal-app]:       https://packagist.org/packages/charcoal/app

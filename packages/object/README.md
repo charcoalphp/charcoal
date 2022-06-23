@@ -4,9 +4,9 @@ Charcoal Object
 Object definition (Content and UserData), behaviors and tools.
 
 # Table of content
--   [How to install](#how-to-install)
+- [How to install](#how-to-install)
     -   [Dependencies](#dependencies)
--   [The Charcoal Object](#the-charcoal-object)
+- [The Charcoal Object](#the-charcoal-object)
     -   [Basic classes](#basic-classes)
         -   [Content](#content)
         -   [UserData](#userdata)
@@ -22,12 +22,14 @@ Object definition (Content and UserData), behaviors and tools.
         -   [ObjectDraft](#objectdraft)
         -   [ObjectRevision](#objectrevision)
         -   [ObjectSchedule](#objectschedule)
--   [Development](#development)
-    -   [Development dependencies](#development-dependencies)
-    -   [Continuous Integration](#continuous-integration)
-    -   [Coding Style](#coding-style)
-    -   [Authors](#authors)
-    -   [Changelog](#changelog)
+- [Development](#development)
+    - [Development dependencies](#development-dependencies)
+    - [Continuous Integration](#continuous-integration)
+    - [Coding Style](#coding-style)
+    - [Authors](#authors)
+    - [Changelog](#changelog)
+- [Report Issues](#report-issues)
+- [Contribute](#contribute)
 
 # How to install
 
@@ -359,3 +361,15 @@ The charcoal-object module follows the Charcoal coding-style:
 # License
 
 Charcoal is licensed under the MIT license. See [LICENSE](LICENSE) for details.
+
+
+
+## Report Issues
+
+In case you are experiencing a bug or want to request a new feature head over to the [Charcoal monorepo issue tracker](https://github.com/charcoalphp/charcoal/issues)
+
+
+
+## Contribute
+
+The sources of this package are contained in the Charcoal monorepo. We welcome contributions for this package on [charcoalphp/charcoal](https://github.com/charcoalphp/charcoal).

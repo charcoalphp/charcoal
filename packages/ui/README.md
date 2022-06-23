@@ -5,22 +5,24 @@ The `Charcoal\Ui` module provides tools to create UI elements (dashboards, layou
 
 # Table of contents
 
--   [How to install](#how-to-install)
+- [How to install](#how-to-install)
     -   [Dependencies](#dependencies)
--   [Base UI Item](#base-ui-item)
--   [Dashboard](#dashboard)
--   [Layout](#layout)
--   [Form](#form)
--   [Form Group](#form-group)
--   [Form Input](#form-input)
--   [Menu](#menu)
--   [Menu Item](#menu-item)
--   [Service Providers](#service-provider)
--   [Development](#development)
-    -   [Development dependencies](#development-dependencies)
-    -   [Coding Style](#coding-style)
-    -   [Authors](#authors)
-    -   [Changelog](#changelog)
+- [Base UI Item](#base-ui-item)
+- [Dashboard](#dashboard)
+- [Layout](#layout)
+- [Form](#form)
+- [Form Group](#form-group)
+- [Form Input](#form-input)
+- [Menu](#menu)
+- [Menu Item](#menu-item)
+- [Service Providers](#service-provider)
+- [Development](#development)
+    - [Development dependencies](#development-dependencies)
+    - [Coding Style](#coding-style)
+    - [Authors](#authors)
+    - [Changelog](#changelog)
+- [Report Issues](#report-issues)
+- [Contribute](#contribute)
 
 # How to install
 
@@ -424,3 +426,15 @@ The Charcoal-Ui module follows the Charcoal coding-style:
 # License
 
 Charcoal is licensed under the MIT license. See [LICENSE](LICENSE) for details.
+
+
+
+## Report Issues
+
+In case you are experiencing a bug or want to request a new feature head over to the [Charcoal monorepo issue tracker](https://github.com/charcoalphp/charcoal/issues)
+
+
+
+## Contribute
+
+The sources of this package are contained in the Charcoal monorepo. We welcome contributions for this package on [charcoalphp/charcoal](https://github.com/charcoalphp/charcoal).
