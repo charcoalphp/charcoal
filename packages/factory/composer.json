@@ -38,7 +38,7 @@
             "Charcoal\\Tests\\": "tests/Charcoal/"
         }
     },
-    "replace":{
+    "replace": {
         "locomotivemtl/charcoal-factory": "*"
     },
     "scripts": {

@@ -42,7 +42,7 @@
             "Charcoal\\Tests\\": "tests/Charcoal/"
         }
     },
-    "replace":{
+    "replace": {
         "locomotivemtl/charcoal-user": "*"
     },
     "scripts": {

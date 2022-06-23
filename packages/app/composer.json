@@ -61,7 +61,7 @@
             "Charcoal\\Tests\\": "tests/Charcoal"
         }
     },
-    "replace":{
+    "replace": {
         "locomotivemtl/charcoal-app": "*"
     },
     "bin": [
