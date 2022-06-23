@@ -37,6 +37,9 @@
             "Charcoal\\Tests\\": "tests/Charcoal"
         }
     },
+    "replace":{
+        "locomotivemtl/charcoal-image": "*"
+    },
     "scripts": {
         "test": [
             "@tests"

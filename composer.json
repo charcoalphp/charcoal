@@ -75,8 +75,7 @@
         "squizlabs/php_codesniffer": "^3.5",
         "symfony/yaml": "^3.0",
         "symplify/monorepo-builder": "^10.2",
-        "twig/twig": "^1.31",
-        "ext-json": "*"
+        "twig/twig": "^1.31"
     },
     "autoload": {
         "psr-4": {
@@ -141,7 +140,24 @@
         "charcoal/translator": "2.2.2",
         "charcoal/ui": "2.2.2",
         "charcoal/user": "2.2.2",
-        "charcoal/view": "2.2.2"
+        "charcoal/view": "2.2.2",
+        "locomotivemtl/charcoal-admin": "*",
+        "locomotivemtl/charcoal-app": "*",
+        "locomotivemtl/charcoal-attachment": "*",
+        "locomotivemtl/charcoal-cache": "*",
+        "locomotivemtl/charcoal-cms": "*",
+        "locomotivemtl/charcoal-config": "*",
+        "locomotivemtl/charcoal-core": "*",
+        "locomotivemtl/charcoal-email": "*",
+        "locomotivemtl/charcoal-factory": "*",
+        "locomotivemtl/charcoal-image": "*",
+        "locomotivemtl/charcoal-object": "*",
+        "locomotivemtl/charcoal-property": "*",
+        "locomotivemtl/charcoal-queue": "*",
+        "locomotivemtl/charcoal-translator": "*",
+        "locomotivemtl/charcoal-ui": "*",
+        "locomotivemtl/charcoal-user": "*",
+        "locomotivemtl/charcoal-view": "*"
     },
     "bin": [
         "bin/charcoal"
