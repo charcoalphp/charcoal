@@ -17,7 +17,7 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            - name: Get Token
+            -   name: Get Token
                 id: get_workflow_token
                 uses: peter-murray/workflow-application-token-action@v1
                 with:
@@ -53,7 +53,7 @@ jobs:
                 env:
                   GITHUB_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
                 with:
-                    github_token: ${{ secrets.ACCESS_TOKEN }}
+                    github_token: ${{ secrets.GITHUB_TOKEN }}
                     source_branch: ${{ steps.extract_branch.outputs.branch }}
                     destination_branch: ${{ github.event.inputs.base }}
                     pr_title: "Pulling ${{ steps.extract_branch.outputs.branch }} into ${{ github.event.inputs.base }}"
