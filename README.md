@@ -14,6 +14,10 @@
 [![Commitizen friendly][badge-commitizen]][commitizen]
 [![Php version][badge-php]][charcoal]
 
+## Table of content
+
+[todo]
+
 ## A Monorepo for the Charcoal Application suite 🔥
 
 This monorepo contains the integrality of the Charcoal Framework usable directly within a website project.
