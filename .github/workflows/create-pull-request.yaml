@@ -50,10 +50,8 @@ jobs:
 
             -   name: pull-request
                 uses: repo-sync/pull-request@v2
-                env:
-                  GITHUB_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
                 with:
-                    github_token: ${{ secrets.GITHUB_TOKEN }}
+                    github_token:  ${{ steps.get_workflow_token.outputs.token }}
                     source_branch: ${{ steps.extract_branch.outputs.branch }}
                     destination_branch: ${{ github.event.inputs.base }}
                     pr_title: "Pulling ${{ steps.extract_branch.outputs.branch }} into ${{ github.event.inputs.base }}"
