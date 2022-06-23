@@ -233,6 +233,19 @@ All Charcoal modules follow the same coding style and `charcoal-factory` is no e
 
 Charcoal is licensed under the MIT license. See [LICENSE](LICENSE) for details.
 
+
+
+## Report Issues
+
+In case you are experiencing a bug or want to request a new feature head over to the [Charcoal monorepo issue tracker](https://github.com/charcoalphp/charcoal/issues)
+
+
+
+## Contribute
+
+The sources of this package are contained in the Charcoal monorepo. We welcome contributions for this package on [charcoalphp/charcoal](https://github.com/charcoalphp/charcoal).
+
+
 # Changelog
 
 ### 0.3.2

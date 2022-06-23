@@ -33,11 +33,11 @@ The framework features (internally and externally) the following:
 
 ## Table of Contents
 
--   [Installation](#Installation)
+- [Installation](#Installation)
     -   [From Boilerplate](#from-boilerplate)
     -   [Dependencies](#dependencies)
     -   [Recommended Modules](#recommended-modules)
--   [Components](#components)
+- [Components](#components)
     -   [Config](#config-component)
     -   [App](#app-compoment)
     -   [Routes and RequestController](#routes-and-requestcontroller)
@@ -49,13 +49,15 @@ The framework features (internally and externally) the following:
     -   [Middlewares](#middlewares)
     -   [Charcoal Binary](#charcoal-binary)
     -   [PHPUnits Tests](#phpunit-tests)
--   [Service Providers](#service-providers)
--   [Usage](#usage)
--   [Development](#development)
-    -   [Development dependencies](#development-dependencies)
-    -   [Continuous Integration](#continuous-integration)
-    -   [Coding Style](#coding-style)
-    -   [Authors](#authors)
+- [Service Providers](#service-providers)
+- [Usage](#usage)
+- [Development](#development)
+    - [Development dependencies](#development-dependencies)
+    - [Continuous Integration](#continuous-integration)
+    - [Coding Style](#coding-style)
+    - [Authors](#authors)
+- [Report Issues](#report-issues)
+- [Contribute](#contribute)
 
 
 
@@ -259,6 +261,17 @@ The charcoal-cache module follows the Charcoal coding-style:
 
 Charcoal is licensed under the MIT license. See [LICENSE](LICENSE) for details.
 
+
+
+## Report Issues
+
+In case you are experiencing a bug or want to request a new feature head over to the [Charcoal monorepo issue tracker](https://github.com/charcoalphp/charcoal/issues)
+
+
+
+## Contribute
+
+The sources of this package are contained in the Charcoal monorepo. We welcome contributions for this package on [charcoalphp/charcoal](https://github.com/charcoalphp/charcoal).
 
 
 [charcoal-admin]:        https://packagist.org/packages/locomotivemtl/charcoal-admin
