@@ -1,56 +1,56 @@
 name: "Update Changelog"
 
 on:
-    release:
-        types: [released]
+  release:
+    types: [ released ]
 
 jobs:
-    update:
-        runs-on: ubuntu-latest
+  update:
+    runs-on: ubuntu-latest
 
-        if: "github.event.release.target_commitish == 'main'"
+    if: "github.event.release.target_commitish == 'main'"
 
-        steps:
-            - name: Get Token
-              id: get_workflow_token
-              uses: peter-murray/workflow-application-token-action@v1
-              with:
-                  application_id: ${{ secrets.APPLICATION_ID }}
-                  application_private_key: ${{ secrets.APPLICATION_PRIVATE_KEY }}
+    steps:
+      - name: Get Token
+        id: get_workflow_token
+        uses: peter-murray/workflow-application-token-action@v1
+        with:
+          application_id: ${{ secrets.APPLICATION_ID }}
+          application_private_key: ${{ secrets.APPLICATION_PRIVATE_KEY }}
 
-            - name: Checkout code
-              uses: actions/checkout@v2
-              with:
-                  token: ${{ steps.get_workflow_token.outputs.token }}
-                  # Fetch entire history of repository to ensure relase date can be
-                  # extracted from commit of the given tag.
-                  fetch-depth: 0
-                  # Checkout target branch of this release. Ensures that the CHANGELOG
-                  # is not out of date.
-                  ref: ${{ github.event.release.target_commitish }}
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          token: ${{ steps.get_workflow_token.outputs.token }}
+          # Fetch entire history of repository to ensure relase date can be
+          # extracted from commit of the given tag.
+          fetch-depth: 0
+          # Checkout target branch of this release. Ensures that the CHANGELOG
+          # is not out of date.
+          ref: ${{ github.event.release.target_commitish }}
 
-            - name: Extract release date from git tag
-              id: release_date
-              run: |
-                  echo "::set-output name=date::$(git log -1 --date=short --format=%ad '${{ github.event.release.tag_name }}')"
+      - name: Extract release date from git tag
+        id: release_date
+        run: |
+          echo "::set-output name=date::$(git log -1 --date=short --format=%ad '${{ github.event.release.tag_name }}')"
 
-            - name: Update Changelog
-              uses: stefanzweifel/changelog-updater-action@v1
-              env:
-                GITHUB_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
-              with:
-                  # Pass extracted release date, release notes and version to the Action.
-                  release-date: ${{ steps.release_date.outputs.date }}
-                  release-notes: ${{ github.event.release.body }}
-                  latest-version: ${{ github.event.release.tag_name }}
-                  compare-url-target-revision: ${{ github.event.release.target_commitish }}
+      - name: Update Changelog
+        uses: stefanzweifel/changelog-updater-action@v1
+        env:
+          GITHUB_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
+        with:
+          # Pass extracted release date, release notes and version to the Action.
+          release-date: ${{ steps.release_date.outputs.date }}
+          release-notes: ${{ github.event.release.body }}
+          latest-version: ${{ github.event.release.tag_name }}
+          compare-url-target-revision: ${{ github.event.release.target_commitish }}
 
-            - name: Commit updated CHANGELOG
-              uses: stefanzweifel/git-auto-commit-action@v4
-              env:
-                GITHUB_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
-              with:
-                  # Push updated CHANGELOG to release target branch.
-                  branch: ${{ github.event.release.target_commitish }}
-                  commit_message: "docs(changelog): Update CHANGELOG [skip actions]"
-                  file_pattern: CHANGELOG.md
+      - name: Commit updated CHANGELOG
+        uses: stefanzweifel/git-auto-commit-action@v4
+        env:
+          GITHUB_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
+        with:
+          # Push updated CHANGELOG to release target branch.
+          branch: ${{ github.event.release.target_commitish }}
+          commit_message: "docs(changelog): Update CHANGELOG [skip actions]"
+          file_pattern: CHANGELOG.md

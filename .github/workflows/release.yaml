@@ -1,46 +1,46 @@
 name: Release
 
 on:
-    push:
-        branches:
-            - main
-            - beta
-            - alpha
-            - next
-            - next-major
+  push:
+    branches:
+      - main
+      - beta
+      - alpha
+      - next
+      - next-major
 
 jobs:
-    release:
-        runs-on: ubuntu-latest
+  release:
+    runs-on: ubuntu-latest
 
-        steps:
-            -   name: Get Token
-                id: get_workflow_token
-                uses: peter-murray/workflow-application-token-action@v1
-                with:
-                    application_id: ${{ secrets.APPLICATION_ID }}
-                    application_private_key: ${{ secrets.APPLICATION_PRIVATE_KEY }}
+    steps:
+      - name: Get Token
+        id: get_workflow_token
+        uses: peter-murray/workflow-application-token-action@v1
+        with:
+          application_id: ${{ secrets.APPLICATION_ID }}
+          application_private_key: ${{ secrets.APPLICATION_PRIVATE_KEY }}
 
-            -   name: Checkout project
-                uses: actions/checkout@v3
-                with:
-                    persist-credentials: false
+      - name: Checkout project
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
 
-            -   uses: bahmutov/npm-install@v1
+      - uses: bahmutov/npm-install@v1
 
-            -   name: Setup PHP
-                uses: shivammathur/setup-php@v2
-                with:
-                    php-version: 8.0
-                    coverage: none
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.0
+          coverage: none
 
-            # semantic release local configuration needs to call ./vendor/bin/monorepo-builder
-            -   name: Install Dependencies
-                uses: ramsey/composer-install@v2
+      # semantic release local configuration needs to call ./vendor/bin/monorepo-builder
+      - name: Install Dependencies
+        uses: ramsey/composer-install@v2
 
-            -   name: Semantic Release
-                uses: cycjimmy/semantic-release-action@v3
-                with:
-                    semantic_version: 19
-                env:
-                    GH_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
+      - name: Semantic Release
+        uses: cycjimmy/semantic-release-action@v3
+        with:
+          semantic_version: 19
+        env:
+          GH_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
