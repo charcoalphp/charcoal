@@ -214,9 +214,7 @@ class AppConfig extends AbstractConfig
             'app.public_path' => $this->publicPath(),
             'app.cache_path'  => $this->cachePath(),
             'app.logs_path'   => $this->logsPath(),
-            'packages.path'   => isset($_ENV['MONOREPO']) && $_ENV['MONOREPO']
-                ? 'vendor/charcoal/charcoal/packages'
-                : 'vendor/charcoal'
+            'packages.path'   => ($_ENV['PACKAGES_PATH'] ?? 'vendor/charcoal')
         ];
 
         if (is_string($value)) {

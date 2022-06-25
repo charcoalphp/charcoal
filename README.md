@@ -90,7 +90,7 @@ Following these steps will ease the process of converting a project from `locomo
 $ vendor/charcoal/charcoal/build/script/migrate-project
 ```
 The `migrate-project` script will all metadata paths in the project's config files.
-Then it'll edit or create a `.env` with the key `MONOREPO` set to `true`.
+Then it'll edit or create a `.env` with the key `PACKAGES_PATH` set to `vendor/charcoal/charcoal/packages`.
 This allows the `%packages.path%` string template to expand to the packages location within `charcoal/charcoal`,
 otherwise it will lead in the `vendor` directory
 
