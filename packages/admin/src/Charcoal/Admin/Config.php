@@ -41,6 +41,13 @@ class Config extends AbstractConfig
     public $acl = [];
 
     /**
+     * The application's view/rendering configset.
+     *
+     * @var array
+     */
+    protected $view;
+
+    /**
      * The default data is defined in a JSON file.
      *
      * @return array
@@ -144,5 +151,28 @@ class Config extends AbstractConfig
     public function handlers()
     {
         return $this->handlers;
+    }
+
+    /**
+     * Configure the application's global view service.
+     *
+     * @param  array $view The global configset for the application's view service.
+     * @throws InvalidArgumentException If the argument is not a configset.
+     * @return self
+     */
+    public function setView(array $view)
+    {
+        $this->view = $view;
+        return $this;
+    }
+
+    /**
+     * Retrieve the configset for application's global view service.
+     *
+     * @return array
+     */
+    public function view()
+    {
+        return $this->view;
     }
 }

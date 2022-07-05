@@ -30,6 +30,7 @@ use Charcoal\Translator\ServiceProvider\TranslatorServiceProvider;
 
 // From 'charcoal-view'
 use Charcoal\View\ViewServiceProvider;
+use Charcoal\View\Twig\UrlHelpers as TwigUrlHelpers;
 
 // From 'charcoal-app'
 use Charcoal\App\AppConfig;
@@ -472,6 +473,18 @@ class AppServiceProvider implements ServiceProviderInterface
      */
     protected function registerViewServices(Container $container)
     {
+        $this->registerMustacheHelpersServices($container);
+
+        $this->registerTwigHelpersServices($container);
+
+    }
+
+    /**
+     * @param Container $container The DI container.
+     * @return void
+     */
+    protected function registerMustacheHelpersServices(Container $container): void
+    {
         if (!isset($container['view/mustache/helpers'])) {
             $container['view/mustache/helpers'] = function () {
                 return [];
@@ -541,6 +554,45 @@ class AppServiceProvider implements ServiceProviderInterface
             ];
 
             return array_merge($helpers, $urls);
+        });
+    }
+
+    /**
+     * @param Container $container The DI container.
+     * @return void
+     */
+    protected function registerTwigHelpersServices(Container $container): void
+    {
+        if (!isset($container['view/twig/helpers'])) {
+            $container['view/twig/helpers'] = function () {
+                return [];
+            };
+        }
+
+        /**
+         * Asset helpers for Twig.
+         *
+         * @return AssetsHelpers
+         */
+        $container['view/twig/helpers/url'] = function (Container $container) {
+            return new TwigUrlHelpers([
+                'baseUrl' => $container['base-url'],
+                'config'  => $container['config'],
+            ]);
+        };
+
+        /**
+         * Extend global helpers for the Twig Engine.
+         *
+         * @param  array     $helpers   The Mustache helper collection.
+         * @param  Container $container A container instance.
+         * @return array
+         */
+        $container->extend('view/twig/helpers', function (array $helpers, Container $container) {
+            return array_merge(
+                $helpers,
+                $container['view/twig/helpers/url']->toArray(),
+            );
         });
     }
 }

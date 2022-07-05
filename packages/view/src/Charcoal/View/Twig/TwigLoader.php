@@ -4,8 +4,6 @@ namespace Charcoal\View\Twig;
 
 // From Twig
 use Twig\Loader\LoaderInterface as TwigLoaderInterface;
-use Twig\Loader\ExistsLoaderInterface as TwigExistsLoaderInterface;
-use Twig\Loader\SourceContextLoaderInterface as TwigSourceContextLoaderInterface;
 use Twig\Source as TwigSource;
 
 // From 'charcoal-view'
@@ -19,9 +17,7 @@ use Charcoal\View\LoaderInterface;
  */
 class TwigLoader extends AbstractLoader implements
     LoaderInterface,
-    TwigLoaderInterface,
-    TwigExistsLoaderInterface,
-    TwigSourceContextLoaderInterface
+    TwigLoaderInterface
 {
     /**
      * Determine if the variable is a template literal.
@@ -33,7 +29,7 @@ class TwigLoader extends AbstractLoader implements
      * @param  string $ident The template being evaluated.
      * @return boolean
      */
-    protected function isTemplateString(string $ident): bool
+    protected function isTemplateString($ident): bool
     {
         return strpos($ident, '{%') !== false || parent::isTemplateString($ident);
     }
@@ -44,7 +40,7 @@ class TwigLoader extends AbstractLoader implements
      * @param  string $ident The identifier to convert.
      * @return string
      */
-    protected function filenameFromIdent(string $ident): string
+    protected function filenameFromIdent($ident): string
     {
         $filename = str_replace([ '\\' ], '.', $ident);
         $filename .= '.twig';
@@ -75,7 +71,7 @@ class TwigLoader extends AbstractLoader implements
      * @param  string $name The name of the template to load.
      * @return TwigSource The template source object.
      */
-    public function getSourceContext($name)
+    public function getSourceContext(string $name) : TwigSource
     {
         $source = $this->load($name);
         return new TwigSource($source, $name);
@@ -101,12 +97,19 @@ class TwigLoader extends AbstractLoader implements
      * @see TwigLoaderInterface::getCacheKey()
      *
      * @param  string $name The name of the template to load.
-     * @return string|null The cache key
+     * @return string The cache key
      */
-    public function getCacheKey($name)
+    public function getCacheKey(string $name) : string
     {
-        $key = $this->findTemplateFile($name);
-        return $key;
+        if (null === $path = $this->findTemplateFile($name)) {
+            return '';
+        }
+        $len = \strlen($this->basePath());
+        if (0 === strncmp($this->basePath(), $path, $len)) {
+            return substr($path, $len);
+        }
+
+        return $path;
     }
 
     /**
@@ -118,7 +121,7 @@ class TwigLoader extends AbstractLoader implements
      * @param  integer $time The last modification time of the cached template.
      * @return boolean
      */
-    public function isFresh($name, $time)
+    public function isFresh(string $name, int $time) : bool
     {
         $file = $this->findTemplateFile($name);
         $fresh = (filemtime($file) <= $time);

@@ -1,0 +1,23 @@
+{#
+    Web Metadata \ OpenGraph Data
+    =============================
+#}
+
+{% if (opengraphType ?? null) %}
+<meta property="og:type"        content="{{ opengraphType }}">
+{% endif %}
+{% if (currentUrl ?? null) %}
+<meta property="og:url"         content="{{ currentUrl }}">
+{% endif %}
+{% if (siteName ?? null) %}
+<meta property="og:site_name"   content="{{ siteName }}">
+{% endif %}
+{% if (metaTitle ?? null) %}
+<meta property="og:title"       content="{{ metaTitle }}">
+{% endif %}
+{% if (opengraphImage ?? null) %}
+<meta property="og:image"       content="{{ opengraphImage }}">
+{% endif %}
+{% if (metaDescription ?? null) %}
+<meta property="og:description" content="{{ metaDescription }}">
+{% endif %}

@@ -20,6 +20,10 @@ use Charcoal\View\Mustache\MarkdownHelpers;
 use Charcoal\View\Mustache\TranslatorHelpers;
 use Charcoal\View\Php\PhpEngine;
 use Charcoal\View\Php\PhpLoader;
+
+// use Charcoal\View\Twig\UrlHelpers as TwigUrlHelpers;
+use Charcoal\View\Twig\MarkdownHelpers as TwigMarkdownHelpers;
+use Charcoal\View\Twig\TranslatorHelpers as TwigTranslatorHelpers;
 use Charcoal\View\Twig\TwigEngine;
 use Charcoal\View\Twig\TwigLoader;
 
@@ -184,10 +188,13 @@ class ViewServiceProvider implements ServiceProviderInterface
          * @param Container $container A container instance.
          * @return TwigEngine
          */
-        $container['view/engine/twig'] = function (Container $container): TwigEngine {
+        $container['view/engine/twig'] = function (Container $container) {
             return new TwigEngine([
+                'config'    => $container['view/config'],
                 'loader'    => $container['view/loader/twig'],
-                'cache'     => $container['view/twig/cache']
+                'helpers'   => $container['view/twig/helpers'],
+                'cache'     => $container['view/twig/cache'],
+                'debug'     => $container['debug'],
             ]);
         };
 
@@ -288,6 +295,8 @@ class ViewServiceProvider implements ServiceProviderInterface
      */
     protected function registerTwigTemplatingServices(Container $container)
     {
+        $this->registerTwigHelpersServices($container);
+
         /**
          * @param  Container $container A container instance.
          * @return string|null
@@ -296,6 +305,57 @@ class ViewServiceProvider implements ServiceProviderInterface
             $viewConfig = $container['view/config'];
             return $viewConfig['engines.twig.cache'];
         };
+    }
+
+    /**
+     * @param Container $container The DI container.
+     * @return void
+     */
+    protected function registerTwigHelpersServices(Container $container)
+    {
+        if (!isset($container['view/twig/helpers'])) {
+            $container['view/twig/helpers'] = function () {
+                return [];
+            };
+        }
+
+        /**
+         * Translation helpers for Twig.
+         *
+         * @return TranslatorHelpers
+         */
+        $container['view/twig/helpers/translator'] = function (Container $container) {
+            return new TwigTranslatorHelpers([
+                'translator' => $container['translator'],
+            ]);
+        };
+
+        /**
+         * Markdown helpers for Twig.
+         *
+         * @return MarkdownHelpers
+         */
+        $container['view/twig/helpers/markdown'] = function (Container $container) {
+            return new TwigMarkdownHelpers([
+                'parsedown' => $container['view/parsedown']
+            ]);
+        };
+
+        /**
+         * Extend global helpers for the Twig Engine.
+         *
+         * @param  array     $helpers   The Mustache helper collection.
+         * @param  Container $container A container instance.
+         * @return array
+         */
+        $container->extend('view/twig/helpers', function (array $helpers, Container $container) {
+            return array_merge(
+                $helpers,
+                $container['view/twig/helpers/translator']->toArray(),
+                // $container['view/twig/helpers/url']->toArray(),
+                // $container['view/twig/helpers/markdown']->toArray()
+            );
+        });
     }
 
     /**

@@ -1,0 +1,22 @@
+{#
+    Web Metadata \ Document Information
+    ===================================
+#}
+<title>{{ documentTitle }}</title>
+
+{% if hasAlternateTranslations %}
+<link rel="alternate" hreflang="{{ currentLanguage }}" {% if (currentUrl ?? null) %} href="{{ currentUrl }}"{% endif %}>
+{% for alternateTrans in alternateTranslations %}
+<link rel="alternate" hreflang="{{ alternateTrans.hreflang }}" href="{{ alternateTrans.url }}">
+{% endfor %}
+{% endif %}
+
+{% if hasSeoMetadata %}
+{% for seoMetatag in seoMetadata %}
+<meta name="{{ seoMetatag.name }}" content="{{ seoMetatag.content }}">
+{% endfor %}
+{% endif %}
+
+{% if (metaDescription ?? null) %}
+<meta name="description" content="{{ metaDescription }}">
+{% endif %}
