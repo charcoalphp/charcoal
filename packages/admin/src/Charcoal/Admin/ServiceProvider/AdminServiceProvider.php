@@ -81,18 +81,6 @@ class AdminServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $container)
     {
-        /**
-         * The default view instance.
-         *
-         * @param Container $container A container instance.
-         * @return ViewInterface
-         */
-        $container->extend('view', function ($view, Container $container) {
-            return new GenericView([
-                'engine' => $container['view/engine/mustache']
-            ]);
-        });
-
         // Ensure dependencies are set
         $container->register(new EmailServiceProvider());
         $container->register(new UiServiceProvider());
@@ -198,9 +186,23 @@ class AdminServiceProvider implements ServiceProviderInterface
             };
         }
 
+        /**
+         * The default view instance.
+         *
+         * @param Container $container A container instance.
+         * @return ViewInterface
+         */
+        $container->extend('view', function ($view, Container $container) {
+            return new GenericView([
+                'engine' => $container['view/engine/mustache']
+            ]);
+        });
+
         $container->extend('view/config', function ($viewConfig, Container $container) {
             $adminConfig = $container['admin/config'];
-            $viewConfig->addPaths($adminConfig['view']['paths']);
+            if (isset($adminConfig['view']['paths'])) {
+                $viewConfig->addPaths($adminConfig['view']['paths']);
+            }
             return $viewConfig;
         });
     }
