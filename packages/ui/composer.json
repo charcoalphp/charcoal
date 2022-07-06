@@ -50,6 +50,9 @@
             "Charcoal\\Tests\\": "tests/Charcoal"
         }
     },
+    "replace": {
+        "locomotivemtl/charcoal-ui": "*"
+    },
     "scripts": {
         "test": [
             "@tests"

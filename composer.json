@@ -75,8 +75,7 @@
         "squizlabs/php_codesniffer": "^3.5",
         "symfony/yaml": "^3.0",
         "symplify/monorepo-builder": "^10.2",
-        "twig/twig": "^1.31",
-        "ext-json": "*"
+        "twig/twig": "^1.31"
     },
     "autoload": {
         "psr-4": {
@@ -125,23 +124,23 @@
         }
     },
     "replace": {
-        "charcoal/admin": "2.2.1",
-        "charcoal/app": "2.2.1",
-        "charcoal/attachment": "2.2.1",
-        "charcoal/cache": "2.2.1",
-        "charcoal/cms": "2.2.1",
-        "charcoal/config": "2.2.1",
-        "charcoal/core": "2.2.1",
-        "charcoal/email": "2.2.1",
-        "charcoal/factory": "2.2.1",
-        "charcoal/image": "2.2.1",
-        "charcoal/object": "2.2.1",
-        "charcoal/property": "2.2.1",
-        "charcoal/queue": "2.2.1",
-        "charcoal/translator": "2.2.1",
-        "charcoal/ui": "2.2.1",
-        "charcoal/user": "2.2.1",
-        "charcoal/view": "2.2.1"
+        "charcoal/admin": "2.2.4",
+        "charcoal/app": "2.2.4",
+        "charcoal/attachment": "2.2.4",
+        "charcoal/cache": "2.2.4",
+        "charcoal/cms": "2.2.4",
+        "charcoal/config": "2.2.4",
+        "charcoal/core": "2.2.4",
+        "charcoal/email": "2.2.4",
+        "charcoal/factory": "2.2.4",
+        "charcoal/image": "2.2.4",
+        "charcoal/object": "2.2.4",
+        "charcoal/property": "2.2.4",
+        "charcoal/queue": "2.2.4",
+        "charcoal/translator": "2.2.4",
+        "charcoal/ui": "2.2.4",
+        "charcoal/user": "2.2.4",
+        "charcoal/view": "2.2.4"
     },
     "bin": [
         "bin/charcoal"

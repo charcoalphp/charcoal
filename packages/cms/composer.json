@@ -52,6 +52,9 @@
             "Charcoal\\Tests\\": "tests/Charcoal"
         }
     },
+    "replace": {
+        "locomotivemtl/charcoal-cms": "*"
+    },
     "scripts": {
         "test": [
             "@tests"

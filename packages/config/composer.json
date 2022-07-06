@@ -45,6 +45,9 @@
             "Charcoal\\Tests\\": "tests/Charcoal/"
         }
     },
+    "replace": {
+        "locomotivemtl/charcoal-config": "*"
+    },
     "scripts": {
         "test": [
             "@tests"

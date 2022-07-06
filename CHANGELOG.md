@@ -7,9 +7,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 > ⚠️ This `CHANGELOG` file is automatically generated through Github actions from Github release notes.
 
-## [Unreleased](https://github.com/locomotive-charcoal/Charcoal/compare/v2.2.0...main)
+## [Unreleased](https://github.com/locomotive-charcoal/Charcoal/compare/v2.2.4...main)
 
 Please do not update the unreleased notes.
+
+## [v2.2.4](https://github.com/locomotive-charcoal/Charcoal/compare/v2.2.3...v2.2.4) - 2022-06-25
+
+### [2.2.4](https://github.com/charcoalphp/charcoal/compare/v2.2.3...v2.2.4) (2022-06-25)
+
+#### Bug Fixes
+
+- **packages-path:** change env var for packages path ([ae369ec](https://github.com/charcoalphp/charcoal/commit/ae369ec29a39fe7fa5b632c079d8e35698b1320d))
+- **workflow:** fix a typo in workflow file ([d5d95b5](https://github.com/charcoalphp/charcoal/commit/d5d95b5443f76942b3962a1f7f878de7b2b38864))
+- **workflow:** fix workflow token ([0b5db3b](https://github.com/charcoalphp/charcoal/commit/0b5db3b546ec66b14d649b04d32e2fba1949ee5c))
+
+## [v2.2.3](https://github.com/locomotive-charcoal/Charcoal/compare/v2.2.2...v2.2.3) - 2022-06-23
+
+### [2.2.3](https://github.com/charcoalphp/charcoal/compare/v2.2.2...v2.2.3) (2022-06-23)
+
+#### Bug Fixes
+
+- **packages:** :building_construction: add replace options in all packages composer files ([9f1777a](https://github.com/charcoalphp/charcoal/commit/9f1777a74a5ca84755fa38eb671cc42451137798))
+
+## [v2.2.2](https://github.com/locomotive-charcoal/Charcoal/compare/v2.2.1...v2.2.2) - 2022-06-23
+
+### [2.2.2](https://github.com/charcoalphp/charcoal/compare/v2.2.1...v2.2.2) (2022-06-23)
+
+#### Bug Fixes
+
+- **charcoal:** add a TODO for a feature request ([45f59b8](https://github.com/charcoalphp/charcoal/commit/45f59b887c5a36fd76a5350592d781a3b2c969c7))
+
+## [v2.2.1](https://github.com/locomotive-charcoal/Charcoal/compare/v2.2.0...v2.2.1) - 2022-06-22
+
+### [2.2.1](https://github.com/charcoalphp/charcoal/compare/v2.2.0...v2.2.1) (2022-06-22)
+
+#### Bug Fixes
+
+- **composer:** add replace packages for all old charcoal packages ([8bec034](https://github.com/charcoalphp/charcoal/commit/8bec034c5aa379559ad5ea98ddc5d929a09222fd))
 
 ## [v2.2.0](https://github.com/locomotive-charcoal/Charcoal/compare/v2.1.2...v2.2.0) - 2022-06-21
 
