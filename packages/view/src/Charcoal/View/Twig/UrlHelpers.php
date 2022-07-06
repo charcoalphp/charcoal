@@ -11,8 +11,8 @@ use Twig\TwigFunction;
 /**
  * Twig helpers for Url.
  */
-class UrlHelpers extends AbstractExtension
-    implements HelpersInterface
+class UrlHelpers extends AbstractExtension implements
+    HelpersInterface
 {
     /**
      * @param array $data Class Dependencies.
@@ -83,7 +83,7 @@ class UrlHelpers extends AbstractExtension
     public function toArray()
     {
         return [
-            'Charcoal\View\Twig\UrlHelpers' => $this,
+            static::class => $this,
         ];
     }
 }

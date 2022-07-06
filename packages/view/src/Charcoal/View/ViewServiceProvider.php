@@ -15,14 +15,12 @@ use Parsedown;
 // From 'charcoal-view'
 use Charcoal\View\Mustache\MustacheEngine;
 use Charcoal\View\Mustache\MustacheLoader;
-use Charcoal\View\Mustache\AssetsHelpers;
-use Charcoal\View\Mustache\MarkdownHelpers;
-use Charcoal\View\Mustache\TranslatorHelpers;
+use Charcoal\View\Mustache\AssetsHelpers as MustacheAssetsHelpers;
+use Charcoal\View\Mustache\MarkdownHelpers as MustacheMarkdownHelpers;
+use Charcoal\View\Mustache\TranslatorHelpers as MustacheTranslatorHelpers;
 use Charcoal\View\Php\PhpEngine;
 use Charcoal\View\Php\PhpLoader;
 
-// use Charcoal\View\Twig\UrlHelpers as TwigUrlHelpers;
-use Charcoal\View\Twig\MarkdownHelpers as TwigMarkdownHelpers;
 use Charcoal\View\Twig\TranslatorHelpers as TwigTranslatorHelpers;
 use Charcoal\View\Twig\TwigEngine;
 use Charcoal\View\Twig\TwigLoader;
@@ -244,10 +242,10 @@ class ViewServiceProvider implements ServiceProviderInterface
         /**
          * Asset helpers for Mustache.
          *
-         * @return AssetsHelpers
+         * @return MustacheAssetsHelpers
          */
-        $container['view/mustache/helpers/assets'] = function (): AssetsHelpers {
-            return new AssetsHelpers();
+        $container['view/mustache/helpers/assets'] = function (): MustacheAssetsHelpers {
+            return new MustacheAssetsHelpers();
         };
 
         /**
@@ -255,8 +253,8 @@ class ViewServiceProvider implements ServiceProviderInterface
          *
          * @return TranslatorHelpers
          */
-        $container['view/mustache/helpers/translator'] = function (Container $container): TranslatorHelpers {
-            return new TranslatorHelpers([
+        $container['view/mustache/helpers/translator'] = function (Container $container): MustacheTranslatorHelpers {
+            return new MustacheTranslatorHelpers([
                 'translator' => (isset($container['translator']) ? $container['translator'] : null)
             ]);
         };
@@ -266,8 +264,8 @@ class ViewServiceProvider implements ServiceProviderInterface
          *
          * @return MarkdownHelpers
          */
-        $container['view/mustache/helpers/markdown'] = function (Container $container): MarkdownHelpers {
-            return new MarkdownHelpers([
+        $container['view/mustache/helpers/markdown'] = function (Container $container): MustacheMarkdownHelpers {
+            return new MustacheMarkdownHelpers([
                 'parsedown' => $container['view/parsedown']
             ]);
         };
@@ -324,20 +322,9 @@ class ViewServiceProvider implements ServiceProviderInterface
          *
          * @return TranslatorHelpers
          */
-        $container['view/twig/helpers/translator'] = function (Container $container) {
+        $container['view/twig/helpers/translator'] = function (Container $container): TwigTranslatorHelpers {
             return new TwigTranslatorHelpers([
                 'translator' => $container['translator'],
-            ]);
-        };
-
-        /**
-         * Markdown helpers for Twig.
-         *
-         * @return MarkdownHelpers
-         */
-        $container['view/twig/helpers/markdown'] = function (Container $container) {
-            return new TwigMarkdownHelpers([
-                'parsedown' => $container['view/parsedown']
             ]);
         };
 
@@ -352,8 +339,6 @@ class ViewServiceProvider implements ServiceProviderInterface
             return array_merge(
                 $helpers,
                 $container['view/twig/helpers/translator']->toArray(),
-                // $container['view/twig/helpers/url']->toArray(),
-                // $container['view/twig/helpers/markdown']->toArray()
             );
         });
     }

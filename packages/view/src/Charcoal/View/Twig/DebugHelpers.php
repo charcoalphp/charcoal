@@ -11,8 +11,8 @@ use Twig\TwigFunction;
 /**
  * Twig helpers for Url.
  */
-class DebugHelpers extends AbstractExtension
-    implements HelpersInterface
+class DebugHelpers extends AbstractExtension implements
+    HelpersInterface
 {
     /**
      * @param array $data Class Dependencies.
@@ -34,17 +34,18 @@ class DebugHelpers extends AbstractExtension
 
     public function isDebug()
     {
-        if (null === $this->config) {
-            return false;
-        }
-
-        return ($this->config['debug'] || $this->config['dev_mode']);
+        return ($this->config['debug'] ?? false);
     }
 
+    /**
+     * Retrieve the helpers.
+     *
+     * @return array
+     */
     public function toArray()
     {
         return [
-            'Charcoal\View\Twig\DebugHelpers' => $this,
+            static::class => $this,
         ];
     }
 }

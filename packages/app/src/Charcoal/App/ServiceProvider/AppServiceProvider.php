@@ -505,7 +505,7 @@ class AppServiceProvider implements ServiceProviderInterface
                  *
                  * @return boolean
                  */
-                'debug' => ($container['config']['debug'] || $container['config']['dev_mode']),
+                'debug' => ($container['config']['debug'] ?? false),
                 /**
                  * Retrieve the base URI of the project.
                  *

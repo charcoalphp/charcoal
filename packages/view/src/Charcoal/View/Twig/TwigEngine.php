@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\View\Twig;
 
 // From Twig
@@ -41,9 +43,9 @@ class TwigEngine extends AbstractEngine
     }
 
     /**
-     * Build the Mustache Engine with an array of dependencies.
+     * Build the Twig Engine with an array of dependencies.
      *
-     * @param array $data Engine dependencie.
+     * @param array $data Engine dependencies.
      */
     public function __construct(array $data)
     {
@@ -98,7 +100,7 @@ class TwigEngine extends AbstractEngine
             $helpers = $helpers->toArray();
         }
 
-        if (!is_array($helpers) && !$helpers instanceof Traversable) {
+        if (!is_iterable($helpers)) {
             throw new InvalidArgumentException(sprintf(
                 'mergeHelpers expects an array of helpers, received %s',
                 (is_object($helpers) ? get_class($helpers) : gettype($helpers))

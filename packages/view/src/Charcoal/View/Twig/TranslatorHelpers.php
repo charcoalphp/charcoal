@@ -13,8 +13,8 @@ use Charcoal\View\Twig\HelpersInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
-class TranslatorHelpers extends AbstractExtension
-    implements HelpersInterface
+class TranslatorHelpers extends AbstractExtension implements
+    HelpersInterface
 {
     /**
      * Store the translator service.
@@ -60,10 +60,14 @@ class TranslatorHelpers extends AbstractExtension
     }
 
     /**
-     * Render the Twig section.
+     * Translates the given (mixed) message.
      *
-     * @param  string            $message   The translation key.
-     * @return string
+     * @uses   SymfonyTranslator::trans()
+     * @param  mixed       $message    The string or translation-object to retrieve.
+     * @param  array       $parameters An array of parameters for the message.
+     * @param  string|null $domain     The domain for the message or NULL to use the default.
+     * @param  string|null $locale     The locale or NULL to use the default.
+     * @return string The translated string
      */
     public function trans($message, array $arguments = [], $domain = null, $locale = null)
     {
@@ -74,6 +78,17 @@ class TranslatorHelpers extends AbstractExtension
         return $this->translator->trans($message, $arguments, $domain, $locale);
     }
 
+    /**
+     * Translates the given choice message by choosing a translation according to a number.
+     *
+     * @param string      $message    The message (may also be an object that can be cast to string)
+     * @param int         $count      The number to use to find the index of the message
+     * @param array       $arguments  An array of parameters for the message
+     * @param string|null $domain     The domain for the message or null to use the default
+     * @param string|null $locale     The locale or null to use the default
+     *
+     * @return string The translated string
+     */
     public function transchoice($message, $count, array $arguments = [], $domain = null, $locale = null)
     {
         if (null === $this->translator) {
@@ -91,7 +106,7 @@ class TranslatorHelpers extends AbstractExtension
     public function toArray()
     {
         return [
-            'Charcoal\View\Twig\TranslatorHelpers' => $this,
+            static::class => $this,
         ];
     }
 
