@@ -31,6 +31,7 @@ use Charcoal\Translator\ServiceProvider\TranslatorServiceProvider;
 // From 'charcoal-view'
 use Charcoal\View\ViewServiceProvider;
 use Charcoal\View\Twig\UrlHelpers as TwigUrlHelpers;
+use Charcoal\View\Twig\DebugHelpers as TwigDebugHelpers;
 
 // From 'charcoal-app'
 use Charcoal\App\AppConfig;
@@ -572,11 +573,21 @@ class AppServiceProvider implements ServiceProviderInterface
         /**
          * Asset helpers for Twig.
          *
-         * @return AssetsHelpers
+         * @return TwigUrlHelpers
          */
         $container['view/twig/helpers/url'] = function (Container $container) {
             return new TwigUrlHelpers([
                 'baseUrl' => $container['base-url'],
+            ]);
+        };
+
+        /**
+         * Debug helpers for Twig.
+         *
+         * @return TwigDebugHelpers
+         */
+        $container['view/twig/helpers/debug'] = function (Container $container) {
+            return new TwigDebugHelpers([
                 'config'  => $container['config'],
             ]);
         };
@@ -592,6 +603,7 @@ class AppServiceProvider implements ServiceProviderInterface
             return array_merge(
                 $helpers,
                 $container['view/twig/helpers/url']->toArray(),
+                $container['view/twig/helpers/debug']->toArray(),
             );
         });
     }

@@ -6,9 +6,7 @@ namespace Charcoal\View\Twig;
 use Charcoal\View\Twig\HelpersInterface;
 
 use Twig\Extension\AbstractExtension;
-use Twig\TwigFilter;
 use Twig\TwigFunction;
-use Twig\TwigTest;
 
 /**
  * Twig helpers for Url.
@@ -24,17 +22,6 @@ class UrlHelpers extends AbstractExtension
         if (isset($data['baseUrl'])) {
             $this->baseUrl = $data['baseUrl'];
         }
-
-        if (isset($data['config'])) {
-            $this->config = $data['config'];
-        }
-    }
-
-    public function getTests()
-    {
-        return [
-            new TwigTest('debug', 'isDebug'),
-        ];
     }
 
     public function getFunctions()
@@ -44,20 +31,6 @@ class UrlHelpers extends AbstractExtension
             new TwigFunction('siteUrl', [$this, 'baseUrl']),
             new TwigFunction('withBaseUrl', [$this, 'withBaseUrl']),
         ];
-    }
-
-    /**
-     * Render the Twig baseUrl function.
-     *
-     * @return string
-     */
-    public function isDebug()
-    {
-        if (null === $this->config) {
-            return false;
-        }
-
-        return ($this->config['debug'] || $this->config['dev_mode']);
     }
 
     /**
@@ -114,7 +87,7 @@ class UrlHelpers extends AbstractExtension
     public function toArray()
     {
         return [
-            'Charcoal\View\Twig\AssetsHelpers' => $this,
+            'Charcoal\View\Twig\UrlHelpers' => $this,
         ];
     }
 }
