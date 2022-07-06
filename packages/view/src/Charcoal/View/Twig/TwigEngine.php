@@ -70,7 +70,7 @@ class TwigEngine extends AbstractEngine
             $helpers = $helpers->toArray();
         }
 
-        if (!is_array($helpers) && !$helpers instanceof Traversable) {
+        if (!is_iterable($helpers)) {
             throw new InvalidArgumentException(sprintf(
                 'setHelpers expects an array of helpers, received %s',
                 (is_object($helpers) ? get_class($helpers) : gettype($helpers))
@@ -190,8 +190,6 @@ class TwigEngine extends AbstractEngine
             'debug'             => $this->debug,
         ]);
         $twig->setExtensions($this->helpers());
-        // $twig->addExtension(new \Twig\Extension\DebugExtension());
-        // $twig->addExtension(new TranslationExtension($this->translator));
 
         return $twig;
     }

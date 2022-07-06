@@ -27,9 +27,9 @@ class UrlHelpers extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new TwigFunction('baseUrl', [$this, 'baseUrl']),
-            new TwigFunction('siteUrl', [$this, 'baseUrl']),
-            new TwigFunction('withBaseUrl', [$this, 'withBaseUrl']),
+            new TwigFunction('baseUrl', [ $this, 'baseUrl' ]),
+            new TwigFunction('siteUrl', [ $this, 'baseUrl' ]),
+            new TwigFunction('withBaseUrl', [ $this, 'withBaseUrl' ]),
         ];
     }
 
@@ -40,11 +40,7 @@ class UrlHelpers extends AbstractExtension
      */
     public function baseUrl()
     {
-        if (null === $this->baseUrl) {
-            return '';
-        }
-
-        return $this->baseUrl;
+        return $this->baseUrl ?? '';
     }
 
     /**

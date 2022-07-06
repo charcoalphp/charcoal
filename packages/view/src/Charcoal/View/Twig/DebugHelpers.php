@@ -27,16 +27,11 @@ class DebugHelpers extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new TwigFunction('debug', [$this, 'isDebug']),
-            new TwigFunction('isDebug', [$this, 'isDebug']),
+            new TwigFunction('debug', [ $this, 'isDebug' ]),
+            new TwigFunction('isDebug', [ $this, 'isDebug' ]),
         ];
     }
 
-    /**
-     * Render the Twig baseUrl function.
-     *
-     * @return string
-     */
     public function isDebug()
     {
         if (null === $this->config) {
@@ -46,11 +41,6 @@ class DebugHelpers extends AbstractExtension
         return ($this->config['debug'] || $this->config['dev_mode']);
     }
 
-    /**
-     * Retrieve the helpers.
-     *
-     * @return array
-     */
     public function toArray()
     {
         return [

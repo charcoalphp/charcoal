@@ -13,9 +13,6 @@ use Charcoal\View\Twig\HelpersInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
-/**
- * Translating Mustache Templates
- */
 class TranslatorHelpers extends AbstractExtension
     implements HelpersInterface
 {
@@ -57,8 +54,8 @@ class TranslatorHelpers extends AbstractExtension
     public function getFilters()
     {
         return [
-            new TwigFilter('trans', [$this, 'trans']),
-            new TwigFilter('transchoice', [$this, 'transchoice']),
+            new TwigFilter('trans', [ $this, 'trans' ]),
+            new TwigFilter('transchoice', [ $this, 'transchoice' ]),
         ];
     }
 
