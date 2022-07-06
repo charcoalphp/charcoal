@@ -31,20 +31,6 @@ class GroupAttachmentWidget extends AttachmentWidget implements
     use LayoutAwareTrait;
 
     /**
-     * The cache of snake-cased words.
-     *
-     * @var array
-     */
-    protected static $snakeCache = [];
-
-    /**
-     * The cache of camel-cased words.
-     *
-     * @var array
-     */
-    protected static $camelCache = [];
-
-    /**
      * Store the metadata loader instance.
      *
      * @var MetadataLoader
@@ -193,7 +179,11 @@ class GroupAttachmentWidget extends AttachmentWidget implements
             $structureMetadata = $this->createMetadata();
 
             if (count($interfaces)) {
-                $controllerMetadataIdent = sprintf('widget/metadata/%s/%s', $obj->objType(), $obj->id());
+                $controllerMetadataIdent = sprintf(
+                    'widget/metadata/%s/%s',
+                    $obj->objType(),
+                    $obj->id()
+                );
                 $structureMetadata       = $this->metadataLoader()->load(
                     $controllerMetadataIdent,
                     $structureMetadata,
