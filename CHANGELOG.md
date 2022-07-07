@@ -7,9 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 > ⚠️ This `CHANGELOG` file is automatically generated through Github actions from Github release notes.
 
-## [Unreleased](https://github.com/locomotive-charcoal/Charcoal/compare/v2.2.4...main)
+## [Unreleased](https://github.com/locomotive-charcoal/Charcoal/compare/v2.2.5...main)
 
 Please do not update the unreleased notes.
+
+## [v2.2.5](https://github.com/locomotive-charcoal/Charcoal/compare/v2.2.4...v2.2.5) - 2022-07-07
+
+### [2.2.5](https://github.com/charcoalphp/charcoal/compare/v2.2.4...v2.2.5) (2022-07-07)
+
+#### Bug Fixes
+
+- **php-coveralls:** remove old satooshi/php-coveralls dependency ([e890acf](https://github.com/charcoalphp/charcoal/commit/e890acf97c47dced5febd492d4915501a7530962))
 
 ## [v2.2.4](https://github.com/locomotive-charcoal/Charcoal/compare/v2.2.3...v2.2.4) - 2022-06-25
 
