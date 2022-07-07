@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace Charcoal\View\Twig;
 
-// From Twig
-use Twig\Loader\LoaderInterface as TwigLoaderInterface;
-use Twig\Source as TwigSource;
-
-// From 'charcoal-view'
 use Charcoal\View\AbstractLoader;
 use Charcoal\View\LoaderInterface;
+
+use Twig\Loader\LoaderInterface as TwigLoaderInterface;
+use Twig\Source as TwigSource;
 
 /**
  * Twig Template Loader

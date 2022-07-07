@@ -28,39 +28,31 @@ use Charcoal\Cache\ServiceProvider\CacheServiceProvider;
 // From 'charcoal-translator'
 use Charcoal\Translator\ServiceProvider\TranslatorServiceProvider;
 
-// From 'charcoal-view'
-use Charcoal\View\ViewServiceProvider;
-use Charcoal\View\Twig\UrlHelpers as TwigUrlHelpers;
-use Charcoal\View\Twig\DebugHelpers as TwigDebugHelpers;
-
-// From 'charcoal-app'
 use Charcoal\App\AppConfig;
-
 use Charcoal\App\Action\ActionInterface;
-use Charcoal\App\Script\ScriptInterface;
-use Charcoal\App\Module\ModuleInterface;
-
-use Charcoal\App\Middleware\IpMiddleware;
-
-use Charcoal\App\Route\ActionRoute;
-use Charcoal\App\Route\RouteInterface;
-use Charcoal\App\Route\TemplateRoute;
-
 use Charcoal\App\Handler\Error;
-use Charcoal\App\Handler\PhpError;
 use Charcoal\App\Handler\Maintenance;
 use Charcoal\App\Handler\NotAllowed;
 use Charcoal\App\Handler\NotFound;
-
+use Charcoal\App\Handler\PhpError;
+use Charcoal\App\Middleware\IpMiddleware;
+use Charcoal\App\Module\ModuleInterface;
+use Charcoal\App\Route\ActionRoute;
+use Charcoal\App\Route\RouteInterface;
+use Charcoal\App\Route\TemplateRoute;
+use Charcoal\App\Script\ScriptInterface;
+use Charcoal\App\ServiceProvider\DatabaseServiceProvider;
+use Charcoal\App\ServiceProvider\FilesystemServiceProvider;
+use Charcoal\App\ServiceProvider\ScriptServiceProvider;
+use Charcoal\App\ServiceProvider\LoggerServiceProvider;
 use Charcoal\App\Template\TemplateInterface;
 use Charcoal\App\Template\TemplateBuilder;
 use Charcoal\App\Template\WidgetInterface;
 use Charcoal\App\Template\WidgetBuilder;
 
-use Charcoal\App\ServiceProvider\DatabaseServiceProvider;
-use Charcoal\App\ServiceProvider\FilesystemServiceProvider;
-use Charcoal\App\ServiceProvider\ScriptServiceProvider;
-use Charcoal\App\ServiceProvider\LoggerServiceProvider;
+use Charcoal\View\Twig\DebugHelpers as TwigDebugHelpers;
+use Charcoal\View\Twig\UrlHelpers as TwigUrlHelpers;
+use Charcoal\View\ViewServiceProvider;
 
 /**
  * Application Service Provider
@@ -477,7 +469,6 @@ class AppServiceProvider implements ServiceProviderInterface
         $this->registerMustacheHelpersServices($container);
 
         $this->registerTwigHelpersServices($container);
-
     }
 
     /**
