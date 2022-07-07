@@ -432,7 +432,7 @@ Run the code checkers and unit tests with:
 
 -   `phpunit/phpunit`
 -   `squizlabs/php_codesniffer`
--   `satooshi/php-coveralls`
+-   `php-coveralls/php-coveralls`
 
 ## Continuous Integration
 

@@ -309,7 +309,7 @@ $ composer install --prefer-source
 
 -   `phpunit/phpunit`
 -   `squizlabs/php_codesniffer`
--   `satooshi/php-coveralls`
+-   `php-coveralls/php-coveralls`
 
 ## Continuous Integration
 
