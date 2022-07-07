@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\View\Twig;
 
 // From 'charcoal-view'
@@ -9,7 +11,7 @@ use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 /**
- * Twig helpers for Url.
+ * Twig helpers for Debug.
  */
 class DebugHelpers extends AbstractExtension implements
     HelpersInterface
@@ -24,7 +26,7 @@ class DebugHelpers extends AbstractExtension implements
         }
     }
 
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('debug', [ $this, 'isDebug' ]),
@@ -32,7 +34,7 @@ class DebugHelpers extends AbstractExtension implements
         ];
     }
 
-    public function isDebug()
+    public function isDebug(): bool
     {
         return ($this->config['debug'] ?? false);
     }
@@ -42,7 +44,7 @@ class DebugHelpers extends AbstractExtension implements
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             static::class => $this,

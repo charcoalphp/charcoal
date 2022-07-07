@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\View\Twig;
 
 // From 'charcoal-view'
@@ -24,7 +26,7 @@ class UrlHelpers extends AbstractExtension implements
         }
     }
 
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('baseUrl', [ $this, 'baseUrl' ]),
@@ -36,7 +38,7 @@ class UrlHelpers extends AbstractExtension implements
     /**
      * Render the Twig baseUrl function.
      *
-     * @return string
+     * @return mixed
      */
     public function baseUrl()
     {
@@ -46,7 +48,7 @@ class UrlHelpers extends AbstractExtension implements
     /**
      * Render the Twig baseUrl filter.
      *
-     * @return string
+     * @return mixed
      */
     public function withBaseUrl($uri)
     {
@@ -80,7 +82,7 @@ class UrlHelpers extends AbstractExtension implements
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             static::class => $this,

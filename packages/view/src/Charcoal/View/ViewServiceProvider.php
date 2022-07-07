@@ -20,7 +20,6 @@ use Charcoal\View\Mustache\MarkdownHelpers as MustacheMarkdownHelpers;
 use Charcoal\View\Mustache\TranslatorHelpers as MustacheTranslatorHelpers;
 use Charcoal\View\Php\PhpEngine;
 use Charcoal\View\Php\PhpLoader;
-
 use Charcoal\View\Twig\TranslatorHelpers as TwigTranslatorHelpers;
 use Charcoal\View\Twig\TwigEngine;
 use Charcoal\View\Twig\TwigLoader;
@@ -164,7 +163,7 @@ class ViewServiceProvider implements ServiceProviderInterface
          * @param Container $container A container instance.
          * @return MustacheEngine
          */
-        $container['view/engine/mustache'] = function (Container $container) {
+        $container['view/engine/mustache'] = function (Container $container): MustacheEngine {
             return new MustacheEngine([
                 'loader'    => $container['view/loader/mustache'],
                 'helpers'   => $container['view/mustache/helpers'],
@@ -186,7 +185,7 @@ class ViewServiceProvider implements ServiceProviderInterface
          * @param Container $container A container instance.
          * @return TwigEngine
          */
-        $container['view/engine/twig'] = function (Container $container) {
+        $container['view/engine/twig'] = function (Container $container): TwigEngine {
             return new TwigEngine([
                 'config'    => $container['view/config'],
                 'loader'    => $container['view/loader/twig'],
@@ -234,7 +233,7 @@ class ViewServiceProvider implements ServiceProviderInterface
     protected function registerMustacheHelpersServices(Container $container): void
     {
         if (!isset($container['view/mustache/helpers'])) {
-            $container['view/mustache/helpers'] = function (): array {
+            $container['view/mustache/helpers'] = function () {
                 return [];
             };
         }
@@ -299,7 +298,7 @@ class ViewServiceProvider implements ServiceProviderInterface
          * @param  Container $container A container instance.
          * @return string|null
          */
-        $container['view/twig/cache'] = function (Container $container) {
+        $container['view/twig/cache'] = function (Container $container): ?string {
             $viewConfig = $container['view/config'];
             return $viewConfig['engines.twig.cache'];
         };
@@ -335,7 +334,7 @@ class ViewServiceProvider implements ServiceProviderInterface
          * @param  Container $container A container instance.
          * @return array
          */
-        $container->extend('view/twig/helpers', function (array $helpers, Container $container) {
+        $container->extend('view/twig/helpers', function (array $helpers, Container $container): array {
             return array_merge(
                 $helpers,
                 $container['view/twig/helpers/translator']->toArray(),
@@ -355,7 +354,7 @@ class ViewServiceProvider implements ServiceProviderInterface
          * @param Container $container A container instance.
          * @return ViewInterface
          */
-        $container['view'] = function (Container $container) {
+        $container['view'] = function (Container $container): ViewInterface {
             return new GenericView([
                 'engine' => $container['view/engine']
             ]);
@@ -367,7 +366,7 @@ class ViewServiceProvider implements ServiceProviderInterface
          * @param Container $container A container instance.
          * @return Renderer
          */
-        $container['view/renderer'] = function (Container $container) {
+        $container['view/renderer'] = function (Container $container): Renderer {
             return new Renderer([
                 'view' => $container['view']
             ]);
@@ -378,7 +377,7 @@ class ViewServiceProvider implements ServiceProviderInterface
          *
          * @return Parsedown
          */
-        $container['view/parsedown'] = function () {
+        $container['view/parsedown'] = function (): Parsedown {
             $parsedown = new Parsedown();
             $parsedown->setSafeMode(true);
             return $parsedown;

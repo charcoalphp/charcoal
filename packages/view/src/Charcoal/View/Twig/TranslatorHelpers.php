@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\View\Twig;
 
 use LogicException;
@@ -24,7 +26,7 @@ class TranslatorHelpers extends AbstractExtension implements
     private $translator;
 
     /**
-     * Store the given locale (Mustache tag node).
+     * Store the given locale.
      *
      * This must be an available locale on the Translator.
      *
@@ -33,7 +35,7 @@ class TranslatorHelpers extends AbstractExtension implements
     private $locale;
 
     /**
-     * Store the given domain for the message (Mustache tag node).
+     * Store the given domain for the message.
      *
      * This must be an available domain on the Translator.
      *
@@ -51,7 +53,7 @@ class TranslatorHelpers extends AbstractExtension implements
         }
     }
 
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             new TwigFilter('trans', [ $this, 'trans' ]),
@@ -69,7 +71,7 @@ class TranslatorHelpers extends AbstractExtension implements
      * @param  string|null $locale     The locale or NULL to use the default.
      * @return string The translated string
      */
-    public function trans($message, array $arguments = [], $domain = null, $locale = null)
+    public function trans($message, array $arguments = [], $domain = null, $locale = null): string
     {
         if (null === $this->translator) {
             return strtr($message, $arguments);
@@ -89,7 +91,7 @@ class TranslatorHelpers extends AbstractExtension implements
      *
      * @return string The translated string
      */
-    public function transchoice($message, $count, array $arguments = [], $domain = null, $locale = null)
+    public function transchoice($message, $count, array $arguments = [], $domain = null, $locale = null): ?string
     {
         if (null === $this->translator) {
             return strtr($message, $arguments);
@@ -103,7 +105,7 @@ class TranslatorHelpers extends AbstractExtension implements
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             static::class => $this,
@@ -116,7 +118,7 @@ class TranslatorHelpers extends AbstractExtension implements
      * @param  Translator $translator The Translator service.
      * @return void
      */
-    protected function setTranslator(Translator $translator)
+    protected function setTranslator(Translator $translator): void
     {
         $this->translator = $translator;
     }

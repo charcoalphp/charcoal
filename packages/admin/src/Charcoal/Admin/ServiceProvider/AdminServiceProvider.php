@@ -48,6 +48,7 @@ use Charcoal\User\Authorizer;
 // From 'charcoal-view'
 use Charcoal\View\EngineInterface;
 use Charcoal\View\GenericView;
+use Charcoal\View\ViewConfig;
 
 // From 'charcoal-admin'
 use Charcoal\Admin\Config as AdminConfig;
@@ -187,18 +188,26 @@ class AdminServiceProvider implements ServiceProviderInterface
         }
 
         /**
-         * The default view instance.
+         * Overwrite view instance.
          *
+         * @param GenericView $view The view instance.
          * @param Container $container A container instance.
          * @return ViewInterface
          */
-        $container->extend('view', function ($view, Container $container) {
+        $container->extend('view', function (GenericView $view, Container $container): GenericView {
             return new GenericView([
                 'engine' => $container['view/engine/mustache']
             ]);
         });
 
-        $container->extend('view/config', function ($viewConfig, Container $container) {
+        /**
+         * Extend view/config.
+         *
+         * @param ConfigInterface $viewConfig The view config instance.
+         * @param Container $container A container instance.
+         * @return ViewInterface
+         */
+        $container->extend('view/config', function (ViewConfig $viewConfig, Container $container): ViewConfig {
             $adminConfig = $container['admin/config'];
             if (isset($adminConfig['view']['paths'])) {
                 $viewConfig->addPaths($adminConfig['view']['paths']);

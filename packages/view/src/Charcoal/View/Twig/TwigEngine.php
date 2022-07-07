@@ -62,9 +62,9 @@ class TwigEngine extends AbstractEngine
     /**
      * Set the engine's helpers.
      *
-     * @param  array|Traversable|HelpersInterface $helpers Mustache helpers.
+     * @param  array|Traversable|HelpersInterface $helpers Twig helpers.
      * @throws InvalidArgumentException If the given helper(s) are invalid.
-     * @return MustacheEngine Chainable
+     * @return TwigEngine Chainable
      */
     public function setHelpers($helpers)
     {
@@ -90,9 +90,9 @@ class TwigEngine extends AbstractEngine
     /**
      * Merge (replacing or adding) the engine's helpers.
      *
-     * @param  array|Traversable|HelpersInterface $helpers Mustache helpers.
+     * @param  array|Traversable|HelpersInterface $helpers Twig helpers.
      * @throws InvalidArgumentException If the given helper(s) are invalid.
-     * @return MustacheEngine Chainable
+     * @return TwigEngine Chainable
      */
     public function mergeHelpers($helpers)
     {
@@ -119,14 +119,14 @@ class TwigEngine extends AbstractEngine
      *
      * @param  string $name   The tag name.
      * @param  mixed  $helper The tag value.
-     * @throws RuntimeException If the mustache engine was already initialized.
-     * @return MustacheEngine Chainable
+     * @throws RuntimeException If the twig engine was already initialized.
+     * @return TwigEngine Chainable
      */
     public function addHelper($name, $helper)
     {
         if ($this->twig !== null) {
             throw new RuntimeException(
-                'Can not add helper to Mustache engine: the engine has already been initialized.'
+                'Can not add helper to Twig engine: the engine has already been initialized.'
             );
         }
 
@@ -140,7 +140,7 @@ class TwigEngine extends AbstractEngine
      *
      * @return array
      */
-    public function helpers()
+    public function helpers(): ?array
     {
         return $this->helpers;
     }
@@ -148,7 +148,7 @@ class TwigEngine extends AbstractEngine
     /**
      * @return Twig_Environment
      */
-    public function twig()
+    public function twig(): TwigEnvironment
     {
         if ($this->twig === null) {
             $this->twig = $this->createTwig();
@@ -161,7 +161,7 @@ class TwigEngine extends AbstractEngine
      * @param mixed  $context       The rendering context.
      * @return string The rendered template string.
      */
-    public function render($templateIdent, $context): string
+    public function render(string $templateIdent, $context): string
     {
         $arrayContext = json_decode(json_encode($context), true);
         return $this->twig()->render($templateIdent, $arrayContext);
@@ -172,7 +172,7 @@ class TwigEngine extends AbstractEngine
      * @param mixed  $context        The rendering context.
      * @return string The rendered template string.
      */
-    public function renderTemplate($templateString, $context): string
+    public function renderTemplate(string $templateString, $context): string
     {
         $template = $this->twig()->createTemplate($templateString);
         $arrayContext = json_decode(json_encode($context), true);
@@ -182,17 +182,17 @@ class TwigEngine extends AbstractEngine
     /**
      * @return Twig_Environment
      */
-    protected function createTwig()
+    protected function createTwig(): TwigEnvironment
     {
+        $useCache = $this->config->useCache ?? true;
         $twig = new TwigEnvironment($this->loader(), [
-            'cache'             => $this->config->useCache ?? true,
+            'cache'             => $useCache ? $this->cache() : false,
             'charset'           => 'utf-8',
             'auto_reload'       => false,
             'strict_variables'  => $this->config->strictVariables ?? true,
             'debug'             => $this->debug,
         ]);
         $twig->setExtensions($this->helpers());
-
         return $twig;
     }
 

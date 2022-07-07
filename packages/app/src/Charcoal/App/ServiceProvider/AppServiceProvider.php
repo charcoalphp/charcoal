@@ -571,11 +571,11 @@ class AppServiceProvider implements ServiceProviderInterface
         }
 
         /**
-         * Asset helpers for Twig.
+         * Url helpers for Twig.
          *
          * @return TwigUrlHelpers
          */
-        $container['view/twig/helpers/url'] = function (Container $container) {
+        $container['view/twig/helpers/url'] = function (Container $container): TwigUrlHelpers {
             return new TwigUrlHelpers([
                 'baseUrl' => $container['base-url'],
             ]);
@@ -586,7 +586,7 @@ class AppServiceProvider implements ServiceProviderInterface
          *
          * @return TwigDebugHelpers
          */
-        $container['view/twig/helpers/debug'] = function (Container $container) {
+        $container['view/twig/helpers/debug'] = function (Container $container): TwigDebugHelpers {
             return new TwigDebugHelpers([
                 'config'  => $container['config'],
             ]);
@@ -599,7 +599,7 @@ class AppServiceProvider implements ServiceProviderInterface
          * @param  Container $container A container instance.
          * @return array
          */
-        $container->extend('view/twig/helpers', function (array $helpers, Container $container) {
+        $container->extend('view/twig/helpers', function (array $helpers, Container $container): array {
             return array_merge(
                 $helpers,
                 $container['view/twig/helpers/url']->toArray(),
