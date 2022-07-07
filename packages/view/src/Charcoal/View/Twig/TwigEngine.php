@@ -183,12 +183,12 @@ class TwigEngine extends AbstractEngine
      */
     protected function createTwig(): TwigEnvironment
     {
-        $useCache = $this->config->useCache ?? true;
+        $useCache = ($this->config->useCache ?? true);
         $twig = new TwigEnvironment($this->loader(), [
             'cache'             => $useCache ? $this->cache() : false,
             'charset'           => 'utf-8',
             'auto_reload'       => false,
-            'strict_variables'  => $this->config->strictVariables ?? true,
+            'strict_variables'  => ($this->config->strictVariables ?? true),
             'debug'             => $this->debug,
         ]);
         $twig->setExtensions($this->helpers());

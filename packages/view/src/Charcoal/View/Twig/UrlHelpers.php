@@ -47,6 +47,7 @@ class UrlHelpers extends AbstractExtension implements
     /**
      * Render the Twig baseUrl filter.
      *
+     * @param mixed $uri The current uri.
      * @return mixed
      */
     public function withBaseUrl($uri)
