@@ -32,8 +32,7 @@ class RemoveJoinAction extends AdminAction
     {
         $params = $request->getParams();
 
-        if (
-            !isset($params['attachment_id']) ||
+        if (!isset($params['attachment_id']) ||
             !isset($params['obj_id']) ||
             !isset($params['obj_type']) ||
             !isset($params['group'])

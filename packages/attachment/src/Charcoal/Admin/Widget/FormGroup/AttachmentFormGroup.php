@@ -181,7 +181,7 @@ class AttachmentFormGroup extends AbstractFormGroup implements
 
         if (isset($container['attachments/config'])) {
             $this->setConfig($container['attachments/config']);
-        } else if (isset($container['config']['attachments'])) {
+        } elseif (isset($container['config']['attachments'])) {
             $this->setConfig($container['config']['attachments']);
         }
 

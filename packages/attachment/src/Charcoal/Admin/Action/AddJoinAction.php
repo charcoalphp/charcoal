@@ -31,8 +31,7 @@ class AddJoinAction extends AdminAction
     {
         $params = $request->getParams();
 
-        if (
-            !isset($params['attachments']) ||
+        if (!isset($params['attachments']) ||
             !isset($params['obj_id']) ||
             !isset($params['obj_type']) ||
             !isset($params['group'])

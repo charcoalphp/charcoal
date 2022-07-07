@@ -41,7 +41,7 @@ class UrlHelpers extends AbstractExtension implements
      */
     public function baseUrl()
     {
-        return $this->baseUrl ?? '';
+        return ($this->baseUrl ?? '');
     }
 
     /**

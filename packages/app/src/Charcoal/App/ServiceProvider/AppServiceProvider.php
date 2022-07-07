@@ -469,7 +469,6 @@ class AppServiceProvider implements ServiceProviderInterface
         $this->registerMustacheHelpersServices($container);
 
         $this->registerTwigHelpersServices($container);
-
     }
 
     /**

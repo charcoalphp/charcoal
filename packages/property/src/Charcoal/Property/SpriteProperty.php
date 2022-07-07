@@ -147,7 +147,7 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
             }
 
             foreach ($xml->symbol as $node) {
-                $id = (string) $node->attributes()->id;
+                $id = (string)$node->attributes()->id;
 
                 if (!$id) {
                     $this->logger->warning(sprintf(

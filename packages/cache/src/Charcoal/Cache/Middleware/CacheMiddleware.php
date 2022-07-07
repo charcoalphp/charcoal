@@ -275,7 +275,7 @@ class CacheMiddleware
             $uri = $uri->withQuery($queryStr);
         }
 
-        $cacheKey = 'request/' . $request->getMethod() . '/' . md5((string)$uri);
+        $cacheKey = 'request/'.$request->getMethod().'/'.md5((string)$uri);
 
         $callback = $this->processCacheKeyCallback;
         if (is_callable($callback)) {
@@ -350,7 +350,7 @@ class CacheMiddleware
         }
 
         foreach ((array)$this->includedPath as $included) {
-            if (preg_match('@' . $included . '@', $path)) {
+            if (preg_match('@'.$included.'@', $path)) {
                 return true;
             }
         }
@@ -375,7 +375,7 @@ class CacheMiddleware
         }
 
         foreach ((array)$this->excludedPath as $excluded) {
-            if (preg_match('@' . $excluded . '@', $path)) {
+            if (preg_match('@'.$excluded.'@', $path)) {
                 return true;
             }
         }

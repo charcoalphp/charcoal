@@ -136,7 +136,7 @@ class CachePoolFacade
      * Removes one or more items from the pool.
      *
      * @param  string ...$keys One or many keys to delete.
-     * @return bool TRUE if the item was successfully removed. FALSE if there was an error.
+     * @return boolean TRUE if the item was successfully removed. FALSE if there was an error.
      */
     public function delete(...$keys)
     {

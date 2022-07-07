@@ -29,7 +29,7 @@ class TwigEngine extends AbstractEngine
     private $config;
 
     /**
-     * @var bool $debug
+     * @var boolean $debug
      */
     private $debug;
 
