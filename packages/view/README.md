@@ -1,7 +1,7 @@
 Charcoal View
 =============
 
-The `Charcoal\View` module (`locomotivemtl/charcoal-view`) provides everything needed to render templates and add renderer to objects.
+The `Charcoal\View` module (`charcoalphp/view`) provides everything needed to render templates and add renderer to objects.
 
 It is a thin layer on top of various _rendering engines_, such as **mustache** or **twig** that can be used either as a _View_ component with any frameworks, as PSR-7 renderer for such frameworks (such as Slim) 
 
@@ -38,12 +38,12 @@ It is the default view layer for `charcoal-app` projects.
 The preferred (and only supported) way of installing charcoal-view is with **composer**:
 
 ```shell
-$ composer require locomotivemtl/charcoal-view
+$ composer require charcoalphp/view
 ```
 To install a full Charcoal project, which includes `charcoal-view`:
 
 ```shell
-$ composer create-project locomotivemtl/charcoal-project-boilerplate:@dev --prefer-source
+$ composer create-project charcoalphp/boilerplate:@dev --prefer-source
 ```
 
 
