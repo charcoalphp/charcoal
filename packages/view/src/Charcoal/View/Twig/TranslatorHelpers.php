@@ -6,10 +6,8 @@ namespace Charcoal\View\Twig;
 
 use LogicException;
 
-// From 'charcoal-translator'
 use Charcoal\Translator\Translator;
 
-// From 'charcoal-view'
 use Charcoal\View\Twig\HelpersInterface;
 
 use Twig\Extension\AbstractExtension;

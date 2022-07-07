@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Charcoal\View\Twig;
 
-// From Twig
-use Twig\Environment as TwigEnvironment;
-use Twig\Loader\FilesystemLoader as TwigFilesystemLoader;
+use Charcoal\View\AbstractEngine;
+
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 
-// From 'charcoal-view'
-use Charcoal\View\AbstractEngine;
+use Twig\Environment as TwigEnvironment;
+use Twig\Loader\FilesystemLoader as TwigFilesystemLoader;
 
 /**
  *

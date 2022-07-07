@@ -4,20 +4,17 @@ declare(strict_types=1);
 
 namespace Charcoal\View;
 
-// From Pimple
-use Charcoal\View\Mustache\HelpersInterface;
+use Parsedown;
+
 use Pimple\ServiceProviderInterface;
 use Pimple\Container;
 
-// From 'erusev/parsedown'
-use Parsedown;
-
-// From 'charcoal-view'
 use Charcoal\View\Mustache\MustacheEngine;
 use Charcoal\View\Mustache\MustacheLoader;
 use Charcoal\View\Mustache\AssetsHelpers as MustacheAssetsHelpers;
 use Charcoal\View\Mustache\MarkdownHelpers as MustacheMarkdownHelpers;
 use Charcoal\View\Mustache\TranslatorHelpers as MustacheTranslatorHelpers;
+use Charcoal\View\Mustache\HelpersInterface;
 use Charcoal\View\Php\PhpEngine;
 use Charcoal\View\Php\PhpLoader;
 use Charcoal\View\Twig\TranslatorHelpers as TwigTranslatorHelpers;
