@@ -69,7 +69,7 @@ To run the tests:
 
 -   `phpunit/phpunit`
 -   `squizlabs/php_codesniffer`
--   `satooshi/php-coveralls`
+-   `php-coveralls/php-coveralls`
 
 ## Continuous Integration
 

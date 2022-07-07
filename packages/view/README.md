@@ -343,7 +343,7 @@ $ composer test
 
 -   `phpunit/phpunit`
 -   `squizlabs/php_codesniffer`
--   `satooshi/php-coveralls`
+-   `php-coveralls/php-coveralls`
 -   `pimple/pimple`
 -   `mustache/mustache`
 -   `twig/twig`
