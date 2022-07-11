@@ -246,11 +246,11 @@ $container->extend('view/twig/helpers', function (array $helpers, Container $con
     - `isDebug` function alias of `debug`
 - **Translator** helpers:
     - `trans` filter a string with `{{ "String to translate"|trans }}`
-    - `transchoice` filter:
+    - `transChoice` filter:
     ```
-        {{ '{0}First: %test%|{1}Second: %test%'|transchoice(0, {'%test%': 'this is a test'}) }}
+        {{ '{0}First: %test%|{1}Second: %test%'|transChoice(0, {'%test%': 'this is a test'}) }}
         {# First: this is a test #}
-        {{ '{0}First: %test%|{1}Second: %test%'|transchoice(1, {'%test%': 'this is a test'}) }}
+        {{ '{0}First: %test%|{1}Second: %test%'|transChoice(1, {'%test%': 'this is a test'}) }}
         {# Second: this is a test #}
     ```
 - **Url** helpers: 
