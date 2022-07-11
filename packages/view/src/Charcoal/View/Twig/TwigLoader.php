@@ -85,7 +85,7 @@ class TwigLoader extends AbstractLoader implements
      */
     public function getCacheKey(string $name): string
     {
-        if (null === $path = $this->findTemplateFile($name)) {
+        if ($path = $this->findTemplateFile($name) === null) {
             return '';
         }
         $len = \strlen($this->basePath());
