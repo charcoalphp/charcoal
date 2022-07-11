@@ -19,13 +19,10 @@ use League\CLImate\CLImate;
 // From Mustache
 use Mustache_LambdaHelper as LambdaHelper;
 
-// From 'charcoal-factory'
 use Charcoal\Factory\GenericFactory as Factory;
 
-// From 'charcoal-cache'
 use Charcoal\Cache\ServiceProvider\CacheServiceProvider;
 
-// From 'charcoal-translator'
 use Charcoal\Translator\ServiceProvider\TranslatorServiceProvider;
 
 use Charcoal\App\AppConfig;
@@ -51,6 +48,7 @@ use Charcoal\App\Template\WidgetInterface;
 use Charcoal\App\Template\WidgetBuilder;
 
 use Charcoal\View\Twig\DebugHelpers as TwigDebugHelpers;
+use Charcoal\View\Twig\HelpersInterface as TwigHelpersInterface;
 use Charcoal\View\Twig\UrlHelpers as TwigUrlHelpers;
 use Charcoal\View\ViewServiceProvider;
 
@@ -566,7 +564,7 @@ class AppServiceProvider implements ServiceProviderInterface
          *
          * @return TwigUrlHelpers
          */
-        $container['view/twig/helpers/url'] = function (Container $container): TwigUrlHelpers {
+        $container['view/twig/helpers/url'] = function (Container $container): TwigHelpersInterface {
             return new TwigUrlHelpers([
                 'baseUrl' => $container['base-url'],
             ]);
@@ -577,7 +575,7 @@ class AppServiceProvider implements ServiceProviderInterface
          *
          * @return TwigDebugHelpers
          */
-        $container['view/twig/helpers/debug'] = function (Container $container): TwigDebugHelpers {
+        $container['view/twig/helpers/debug'] = function (Container $container): TwigHelpersInterface {
             return new TwigDebugHelpers([
                 'config'  => $container['config'],
             ]);

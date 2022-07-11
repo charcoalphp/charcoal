@@ -49,6 +49,7 @@ use Charcoal\User\Authorizer;
 use Charcoal\View\EngineInterface;
 use Charcoal\View\GenericView;
 use Charcoal\View\ViewConfig;
+use Charcoal\View\ViewInterface;
 
 // From 'charcoal-admin'
 use Charcoal\Admin\Config as AdminConfig;
@@ -194,7 +195,7 @@ class AdminServiceProvider implements ServiceProviderInterface
          * @param Container $container A container instance.
          * @return ViewInterface
          */
-        $container->extend('view', function (GenericView $view, Container $container): GenericView {
+        $container->extend('view', function (GenericView $view, Container $container): ViewInterface {
             return new GenericView([
                 'engine' => $container['view/engine/mustache']
             ]);

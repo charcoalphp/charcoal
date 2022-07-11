@@ -92,7 +92,7 @@ class TranslatorHelpers extends AbstractExtension implements
      *
      * @return string The translated string
      */
-    public function transchoice($message, $count, array $arguments = [], $domain = null, $locale = null): ?string
+    public function transChoice($message, $count, array $arguments = [], $domain = null, $locale = null): ?string
     {
         if (null === $this->translator) {
             return strtr($message, $arguments);
