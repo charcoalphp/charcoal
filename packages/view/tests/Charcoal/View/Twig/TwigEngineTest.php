@@ -13,7 +13,7 @@ use Charcoal\Tests\AbstractTestCase;
 class TwigEngineTest extends AbstractTestCase
 {
     /**
-     * @var MustacheEngine
+     * @var TwigEngine
      */
     private $obj;
 
@@ -27,9 +27,12 @@ class TwigEngineTest extends AbstractTestCase
             'paths'     => [ 'templates' ],
         ]);
         $this->obj = new TwigEngine([
-            'loader' => $loader,
-            'cache'  => null,
-        ]);
+                'config'    => false,
+                'loader'    => $loader,
+                'helpers'   => [],
+                'cache'     => false,
+                'debug'     => true,
+            ]);
     }
 
     /**

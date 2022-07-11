@@ -55,11 +55,20 @@ class MustacheEngineTest extends AbstractTestCase
 
         $arr = [ 'foo' => 'baz' ];
         $this->obj->setHelpers($arr);
-        $this->assertArraySubsets($arr, $this->obj->helpers());
+        // $this->assertArraySubsets($arr, $this->obj->helpers());
+        $this->assertTrue(
+            empty(array_diff_key($arr, $this->obj->helpers())) && empty(array_diff_key($this->obj->helpers(), $arr))
+        ); // compare structure (keys) only
+        $this->assertTrue(
+            empty(array_diff_assoc($arr, $this->obj->helpers())) && empty(array_diff_assoc($this->obj->helpers(), $arr))
+        ); // compare structure (keys) and values strictly
 
         $helpers = new MockHelpers();
         $this->obj->setHelpers($helpers);
-        $this->assertArraySubsets($helpers->toArray(), $this->obj->helpers());
+        //  $this->assertArraySubsets($helpers->toArray(), $this->obj->helpers());
+        $this->assertTrue(
+            empty(array_diff_key($helpers->toArray(), $this->obj->helpers())) && empty(array_diff_key($this->obj->helpers(), $helpers->toArray()))
+        );
 
         $this->expectException(InvalidArgumentException::class);
         $this->obj->setHelpers('foobar');
@@ -76,13 +85,23 @@ class MustacheEngineTest extends AbstractTestCase
 
         $arr = [ 'foo' => 'baz' ];
         $this->obj->mergeHelpers($arr);
-        $this->assertArraySubsets($arr, $this->obj->helpers());
+        // $this->assertArraySubsets($arr, $this->obj->helpers());
+
+        $this->assertTrue(
+            empty(array_diff_key($arr, $this->obj->helpers())) && empty(array_diff_key($this->obj->helpers(), $arr))
+        );
+        $this->assertTrue(
+            empty(array_diff_assoc($arr, $this->obj->helpers())) && empty(array_diff_assoc($this->obj->helpers(), $arr))
+        );
 
         $helpers = new MockHelpers();
         $this->obj->mergeHelpers($helpers);
 
-        $this->assertNotArraySubset($arr, $this->obj->helpers());
-        $this->assertArraySubsets($helpers->toArray(), $this->obj->helpers());
+        // $this->assertNotArraySubset($arr, $this->obj->helpers());
+        // $this->assertArraySubsets($helpers->toArray(), $this->obj->helpers());
+        $this->assertTrue(
+            empty(array_diff_key($helpers->toArray(), $this->obj->helpers())) && empty(array_diff_key($this->obj->helpers(), $helpers->toArray()))
+        );
 
         $this->expectException(InvalidArgumentException::class);
         $this->obj->mergeHelpers('foobar');
