@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Charcoal\View\Twig;
 
+use InvalidArgumentException;
+use RuntimeException;
+
 use Charcoal\View\AbstractEngine;
 
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
