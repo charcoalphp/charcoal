@@ -6,7 +6,6 @@ namespace Charcoal\View\Twig;
 
 use Charcoal\View\AbstractLoader;
 use Charcoal\View\LoaderInterface;
-
 use Twig\Loader\LoaderInterface as TwigLoaderInterface;
 use Twig\Source as TwigSource;
 

@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace Charcoal\View\Twig;
 
+use Charcoal\View\AbstractEngine;
 use InvalidArgumentException;
 use RuntimeException;
-
-use Charcoal\View\AbstractEngine;
-
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
-
 use Twig\Environment as TwigEnvironment;
 use Twig\Loader\FilesystemLoader as TwigFilesystemLoader;
 
