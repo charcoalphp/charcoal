@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace Charcoal\View\Twig;
 
-use LogicException;
-
 use Charcoal\Translator\Translator;
-
 use Charcoal\View\Twig\HelpersInterface;
-
+use LogicException;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
@@ -25,24 +22,6 @@ class TranslatorHelpers extends AbstractExtension implements
      * @var Translator|null
      */
     private $translator;
-
-    /**
-     * Store the given locale.
-     *
-     * This must be an available locale on the Translator.
-     *
-     * @var string|null
-     */
-    private $locale;
-
-    /**
-     * Store the given domain for the message.
-     *
-     * This must be an available domain on the Translator.
-     *
-     * @var string|null
-     */
-    private $domain;
 
     /**
      * @param array $data Class Dependencies.
