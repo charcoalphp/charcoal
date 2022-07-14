@@ -173,7 +173,7 @@ All Charcoal modules follow the same coding style and `charcoal-image` is no exc
 -   [_phpDocumentor_](http://phpdoc.org/)
 -   Arrays should be written in short notation (`[]` instead of `array()`)
 
-Coding styles are enforced with `grunt phpcs` ([_PHP Code Sniffer_](https://github.com/squizlabs/PHP_CodeSniffer)). The actual ruleset can be found in `phpcs.xml`.
+Coding styles are enforced with `grunt phpcs` ([_PHP Code Sniffer_](https://github.com/squizlabs/PHP_CodeSniffer)). The actual ruleset can be found in `phpcs.xml.dist`.
 
 > 👉 To fix minor coding style problems, run `grunt phpcbf` ([_PHP Code Beautifier and Fixer_](https://github.com/squizlabs/PHP_CodeSniffer)). This tool uses the same ruleset as *phpcs* to automatically correct coding standard violations.
 

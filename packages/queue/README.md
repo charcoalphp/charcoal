@@ -110,7 +110,7 @@ The Charcoal-Validator module follows the Charcoal coding-style:
 -   [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
 -   [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md), autoloading is therefore provided by _Composer_.
 -   [_phpDocumentor_](http://phpdoc.org/) comments.
--   Read the [phpcs.xml](phpcs.xml) file for all the details on code style.
+-   Read the [phpcs.xml.dist](phpcs.xml.dist) file for all the details on code style.
 
 > Coding style validation / enforcement can be performed with `composer phpcs`. An auto-fixer is also available with `composer phpcbf`.
 
