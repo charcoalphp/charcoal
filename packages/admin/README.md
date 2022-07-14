@@ -431,7 +431,7 @@ The Charcoal-Admin module follows the Charcoal coding-style:
 	-	For type-hinting, use `boolean` (instead of `bool`), `integer` (instead of `int`), `float` (instead of `double` or `real`);
 	-	Omit the `@return` tag if the method does not return anything.
 -	Naming conventions
-	-	Read the [phpcs.xml](phpcs.xml) file for all the details.
+	-	Read the [phpcs.xml.dist](phpcs.xml.dist) file for all the details.
 
 > Coding style validation / enforcement can be performed with `composer phpcs`. An auto-fixer is also available with `composer phpcbf`.
 
