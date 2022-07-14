@@ -7,9 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 > ⚠️ This `CHANGELOG` file is automatically generated through Github actions from Github release notes.
 
-## [Unreleased](https://github.com/locomotive-charcoal/Charcoal/compare/v2.2.5...main)
+## [Unreleased](https://github.com/locomotive-charcoal/Charcoal/compare/v2.3.0...main)
 
 Please do not update the unreleased notes.
+
+## [v2.3.0](https://github.com/locomotive-charcoal/Charcoal/compare/v2.2.5...v2.3.0) - 2022-07-14
+
+### [2.3.0](https://github.com/charcoalphp/charcoal/compare/v2.2.5...v2.3.0) (2022-07-14)
+
+#### Features
+
+- **twig:** first version of Twig implementation in Charcoal using Twig 3.4 ([c1ffed3](https://github.com/charcoalphp/charcoal/commit/c1ffed3c725260364a7d78c70c27ccaf9b88e625))
+
+#### Bug Fixes
+
+- **twig:** fix condition getCacheKey ([01d78c3](https://github.com/charcoalphp/charcoal/commit/01d78c3e17b1e33cade413f023cc9d2a3386e909))
+- **twig:** fix Twig UrlHelpers and split functionnality with new DebugHelpers ([bf4056f](https://github.com/charcoalphp/charcoal/commit/bf4056f0f886fe1ccb2e97fdb43ce240f48eef63))
+- **twig:** update twig version for dev dependencies ([563f59f](https://github.com/charcoalphp/charcoal/commit/563f59f83dfc62944ac6674702ae8eb40fd4a847))
+
+#### Performance Improvements
+
+- **twig:** apply suggestions from code review ([63a9c4f](https://github.com/charcoalphp/charcoal/commit/63a9c4f46917af30ea2ea015994e8f3078a727cc))
 
 ## [v2.2.5](https://github.com/locomotive-charcoal/Charcoal/compare/v2.2.4...v2.2.5) - 2022-07-07
 
