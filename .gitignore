@@ -1,2 +1,8 @@
-/vendor/
-/node_modules/
+.phpunit.result.cache
+node_modules/
+packages/**/composer.lock
+phpcs.xml
+phpstan.neon
+phpunit.xml
+psalm.xml
+vendor/
