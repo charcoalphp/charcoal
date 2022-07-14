@@ -30,5 +30,4 @@
     <rule ref="Squiz.PHP.CommentedOutCode" />
     <rule ref="Squiz.PHP.Eval" />
     <rule ref="Squiz.PHP.GlobalKeyword" />
-
 </ruleset>
