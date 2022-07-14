@@ -1,7 +1,7 @@
 Charcoal View
 =============
 
-The `Charcoal\View` module (`locomotivemtl/charcoal-view`) provides everything needed to render templates and add renderer to objects.
+The `Charcoal\View` module (`charcoalphp/view`) provides everything needed to render templates and add renderer to objects.
 
 It is a thin layer on top of various _rendering engines_, such as **mustache** or **twig** that can be used either as a _View_ component with any frameworks, as PSR-7 renderer for such frameworks (such as Slim) 
 
@@ -21,6 +21,7 @@ It is the default view layer for `charcoal-app` projects.
         -   [Generic View](#generic-view)
     -   [View Engines](#view-engines)
         - [Mustache Helpers](#mustache-helpers)
+        - [Twig Helpers](#twig-helpers)
     -   [Loaders](#loaders)
         -   [Templates](#templates)
     -   [Viewable Interface and Trait](#viewable-interface-and-trait)
@@ -37,12 +38,12 @@ It is the default view layer for `charcoal-app` projects.
 The preferred (and only supported) way of installing charcoal-view is with **composer**:
 
 ```shell
-$ composer require locomotivemtl/charcoal-view
+$ composer require charcoalphp/view
 ```
 To install a full Charcoal project, which includes `charcoal-view`:
 
 ```shell
-$ composer create-project locomotivemtl/charcoal-project-boilerplate:@dev --prefer-source
+$ composer create-project charcoalphp/boilerplate:@dev --prefer-source
 ```
 
 
@@ -52,9 +53,9 @@ $ composer create-project locomotivemtl/charcoal-project-boilerplate:@dev --pref
     -   Older versions of PHP are deprecated, therefore not supported.
 -   [`psr/http-message`](http://www.php-fig.org/psr/psr-7/)
     -   Charcoal View provides a PSR7 renderer.
--   [`locomotivemtl/charcoal-config`](https://github.com/locomotivemtl/charcoal-config)
+-   [`charcoalphp/config`](https://github.com/charcoalphp/config)
     -   The view objects are _configurable_ with `\Charcoal\View\ViewConfig`.
-    [`locomotivemtl/charcoal-translator`](https://github.com/locomotivemtl/charcoal-translator)
+-    [`charcoalphp/translator`](https://github.com/charcoalphp/translator)
     -   The translator service
 -   [`erusev/parsedown`](https://github.com/erusev/parsedown)
     -   A markdown parser, which is provided to engines or could be used as a service.
@@ -64,7 +65,7 @@ $ composer create-project locomotivemtl/charcoal-project-boilerplate:@dev --pref
 -   [`mustache/mustache`](https://github.com/bobthecow/mustache.php)
     -   The default rendering engine is _mustache_, so it should be included in most cases.
     -   All default charcoal modules use mustache templates.
--   [`twig/twig`](http://twig.sensiolabs.org/)
+-   [`twig/twig`](https://twig.symfony.com/doc/3.x/)
     -   Twig can also be used as a rendering engine for the view.
 -   [`pimple/pimple`](http://pimple.sensiolabs.org/)
     -   Dependencies management can be done with a Pimple ServiceProvider(`\Charcoal\View\ViewServiceProvider`)
@@ -189,7 +190,7 @@ There are 3 engines available by default:
 
 Mustache can be extended with the help of `helpers`. Those helpers can be set by extending `view/mustache/helpers` in the container:
 
-```
+```php
 $container->extend('view/mustache/helpers', function(array $helpers, Container $container) {
     return array_merge($helpers, [
         'my_extended_method' => function($text, LambdaHelper $lambda) {
@@ -221,7 +222,42 @@ $container->extend('view/mustache/helpers', function(array $helpers, Container $
 - **Markdown** helpers:
     - `markdown` Parse markdown to HTML with `{{#markdown}}# this is a H1{{/markdown}}`
  
+### Twig Helpers
 
+Twig can be extended with the help of [TwigExtension](https://twig.symfony.com/doc/3.x/advanced.html#creating-an-extension). Those helpers can be set by extending `view/twig/helpers` in the container:
+
+```php
+$container['my/twig/helper'] = function (Container $container): MyTwigHelper {
+    return new MyTwigHelper();
+};
+
+$container->extend('view/twig/helpers', function (array $helpers, Container $container): array {
+    return array_merge(
+        $helpers,
+        $container['my/twig/helper']->toArray(),
+    );
+});
+```
+
+*Provided helpers:*
+
+- **Debug** helpers
+    - `debug` function `{{ debug() }}`
+    - `isDebug` function alias of `debug`
+- **Translator** helpers:
+    - `trans` filter a string with `{{ "String to translate"|trans }}`
+    - `transChoice` filter:
+    ```
+        {{ '{0}First: %test%|{1}Second: %test%'|transChoice(0, {'%test%': 'this is a test'}) }}
+        {# First: this is a test #}
+        {{ '{0}First: %test%|{1}Second: %test%'|transChoice(1, {'%test%': 'this is a test'}) }}
+        {# Second: this is a test #}
+    ```
+- **Url** helpers: 
+    - `baseUrl` function `{{ baseUrl() }}`
+    - `siteUrl` function alias of `baseUrl`
+    - `withBaseUrl` function `{{ withBaseUrl('/example/path') }}`
+        
 ## Loaders
 
 A `Loader` service is attached to every engine. Its function is to load a given template content
@@ -232,6 +268,7 @@ Templates are simply files, stored on the filesystem, containing the main view (
 
 -   For the *mustache* engine, they are `.mustache` files.
 -   For the *php* engine, they are `.php` files.
+-   For the *twig* engine, they are `.twig` files.
 
 Templates are loaded with template _loaders_. Loaders implement the `Charcoal\View\LoaderInterface` and simply tries to match an identifier (passed as argument to the `load()` method) to a file on the filesystem.
 
@@ -305,19 +342,31 @@ The `ViewServiceProvider` expects the following services / keys to be set on the
 
 Most service options can be set dynamically from a configuration object (available in `$container['view/config']`).
 
-Example:
-
+Example for mustache:
 ```json
 {
     "base_path":"/",
     "view": {
-        "engine":"mustache",
+        "default_engine":"mustache",
         "paths":[
             "templates",
             "views"
         ]
     }
 }
+```
+
+Example for twig:
+```json
+    "view": {
+        "default_engine": "twig",
+        "use_cache": false,
+        "strict_variables": true,
+        "paths": [
+            "templates",
+            "views",
+        ]
+    }
 ```
 
 # Development

@@ -1,0 +1,8 @@
+<h1>{{ "Application Error"|trans }}</h1>
+
+{% if displayErrorDetails %}
+<p>The application could not run because of the following error:</p>
+{{ htmlErrorDetails | raw }}
+{% else %}
+<p>{{ "The server encountered a problem. Sorry for the temporary inconvenience."|trans }}</p>
+{% endif %}

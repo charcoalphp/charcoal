@@ -1,16 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\View\Twig;
 
-// From Twig
-use Twig\Loader\LoaderInterface as TwigLoaderInterface;
-use Twig\Loader\ExistsLoaderInterface as TwigExistsLoaderInterface;
-use Twig\Loader\SourceContextLoaderInterface as TwigSourceContextLoaderInterface;
-use Twig\Source as TwigSource;
-
-// From 'charcoal-view'
 use Charcoal\View\AbstractLoader;
 use Charcoal\View\LoaderInterface;
+use Twig\Loader\LoaderInterface as TwigLoaderInterface;
+use Twig\Source as TwigSource;
 
 /**
  * Twig Template Loader
@@ -19,9 +16,7 @@ use Charcoal\View\LoaderInterface;
  */
 class TwigLoader extends AbstractLoader implements
     LoaderInterface,
-    TwigLoaderInterface,
-    TwigExistsLoaderInterface,
-    TwigSourceContextLoaderInterface
+    TwigLoaderInterface
 {
     /**
      * Determine if the variable is a template literal.
@@ -53,29 +48,14 @@ class TwigLoader extends AbstractLoader implements
     }
 
     /**
-     * Gets the source code of a template, given its name.
-     *
-     * @see TwigLoaderInterface::getSource()
-     *     Deprecated since Twig v1.27 (to be removed in Twig v2.0)
-     *
-     * @param  string $name The name of the template to load.
-     * @return string The template source code.
-     */
-    public function getSource($name)
-    {
-        return $this->load($name);
-    }
-
-    /**
      * Returns the source context for a given template logical name.
      *
-     * @see TwigSourceContextLoaderInterface::getSourceContext()
-     *     Deprecated since Twig v1.27 (to be removed in Twig v3.0).
+     * @see Twig\Loader\LoaderInterface::getSourceContext()
      *
      * @param  string $name The name of the template to load.
      * @return TwigSource The template source object.
      */
-    public function getSourceContext($name)
+    public function getSourceContext(string $name): TwigSource
     {
         $source = $this->load($name);
         return new TwigSource($source, $name);
@@ -84,13 +64,12 @@ class TwigLoader extends AbstractLoader implements
     /**
      * Check if we have the source code of a template, given its name.
      *
-     * @see TwigExistsLoaderInterface::exists()
-     *     Deprecated since Twig v1.12 (to be removed in Twig v3.0).
+     * @see Twig\Loader\LoaderInterface::exists()
      *
      * @param  string $name The name of the template to load.
      * @return boolean
      */
-    public function exists($name)
+    public function exists(string $name): bool
     {
         return !!$this->findTemplateFile($name);
     }
@@ -101,12 +80,20 @@ class TwigLoader extends AbstractLoader implements
      * @see TwigLoaderInterface::getCacheKey()
      *
      * @param  string $name The name of the template to load.
-     * @return string|null The cache key
+     * @return string The cache key
      */
-    public function getCacheKey($name)
+    public function getCacheKey(string $name): string
     {
-        $key = $this->findTemplateFile($name);
-        return $key;
+        if (($path = $this->findTemplateFile($name)) === null) {
+            return '';
+        }
+
+        $len = \strlen($this->basePath());
+        if (0 === strncmp($this->basePath(), $path, $len)) {
+            return substr($path, $len);
+        }
+
+        return $path;
     }
 
     /**
@@ -118,7 +105,7 @@ class TwigLoader extends AbstractLoader implements
      * @param  integer $time The last modification time of the cached template.
      * @return boolean
      */
-    public function isFresh($name, $time)
+    public function isFresh(string $name, int $time): bool
     {
         $file = $this->findTemplateFile($name);
         $fresh = (filemtime($file) <= $time);

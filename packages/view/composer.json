@@ -28,7 +28,7 @@
         "squizlabs/php_codesniffer": "^3.5",
         "php-coveralls/php-coveralls": "^2.2",
         "mustache/mustache": "^2.11",
-        "twig/twig": "^1.31",
+        "twig/twig": "^3.4",
         "pimple/pimple": "^3.0",
         "slim/slim": "^3.7",
         "charcoal/translator": "^2.3",

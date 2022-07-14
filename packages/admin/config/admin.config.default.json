@@ -329,5 +329,12 @@
                 }
             }
         }
+    },
+
+    "view": {
+        "paths": [
+            "vendor/charcoal/charcoal/packages/admin/templates/",
+            "vendor/charcoal/charcoal/packages/attachment/templates/"
+        ]
     }
 }

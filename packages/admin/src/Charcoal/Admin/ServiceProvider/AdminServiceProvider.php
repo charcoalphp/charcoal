@@ -45,6 +45,12 @@ use Charcoal\Factory\GenericFactory as Factory;
 use Charcoal\User\Authenticator;
 use Charcoal\User\Authorizer;
 
+// From 'charcoal-view'
+use Charcoal\View\EngineInterface;
+use Charcoal\View\GenericView;
+use Charcoal\View\ViewConfig;
+use Charcoal\View\ViewInterface;
+
 // From 'charcoal-admin'
 use Charcoal\Admin\Config as AdminConfig;
 use Charcoal\Admin\Property\PropertyInputInterface;
@@ -181,6 +187,34 @@ class AdminServiceProvider implements ServiceProviderInterface
                 return $adminUrl;
             };
         }
+
+        /**
+         * Overwrite view instance.
+         *
+         * @param GenericView $view The view instance.
+         * @param Container $container A container instance.
+         * @return ViewInterface
+         */
+        $container->extend('view', function (GenericView $view, Container $container): ViewInterface {
+            return new GenericView([
+                'engine' => $container['view/engine/mustache']
+            ]);
+        });
+
+        /**
+         * Extend view/config.
+         *
+         * @param ConfigInterface $viewConfig The view config instance.
+         * @param Container $container A container instance.
+         * @return ViewInterface
+         */
+        $container->extend('view/config', function (ViewConfig $viewConfig, Container $container): ViewConfig {
+            $adminConfig = $container['admin/config'];
+            if (isset($adminConfig['view']['paths'])) {
+                $viewConfig->addPaths($adminConfig['view']['paths']);
+            }
+            return $viewConfig;
+        });
     }
 
     /**
