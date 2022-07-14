@@ -39,7 +39,7 @@ class ElfinderConnectorAction extends AdminAction
      *
      * @const string
      */
-    const DEFAULT_STORAGE_PATH = 'uploads';
+    public const DEFAULT_STORAGE_PATH = 'uploads';
 
     /**
      * The base path for the Charcoal installation.

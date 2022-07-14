@@ -24,12 +24,12 @@ use Charcoal\Admin\Property\AbstractPropertyInput;
  */
 class ReadonlyInput extends AbstractPropertyInput
 {
-    const RENDER_TYPE_CONTROL        = 'input';
-    const RENDER_TYPE_DISPLAY        = 'display';
+    public const RENDER_TYPE_CONTROL        = 'input';
+    public const RENDER_TYPE_DISPLAY        = 'display';
 
-    const DEFAULT_MAYBE_INPUT_IS_SERIALIZED = false;
-    const DEFAULT_RENDER_TYPE               = self::RENDER_TYPE_CONTROL;
-    const DEFAULT_SHOW_AS_CODE_BLOCK        = false;
+    public const DEFAULT_MAYBE_INPUT_IS_SERIALIZED = false;
+    public const DEFAULT_RENDER_TYPE               = self::RENDER_TYPE_CONTROL;
+    public const DEFAULT_SHOW_AS_CODE_BLOCK        = false;
 
     /**
      * Whether the input property has a value.

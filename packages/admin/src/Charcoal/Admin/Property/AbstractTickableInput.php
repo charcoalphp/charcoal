@@ -10,11 +10,11 @@ use OutOfBoundsException;
  */
 abstract class AbstractTickableInput extends AbstractSelectableInput
 {
-    const BLOCK_INPUT_LAYOUT   = 'block';
-    const COLUMN_INPUT_LAYOUT  = 'column';
-    const GRID_INPUT_LAYOUT    = 'grid';
-    const INLINE_INPUT_LAYOUT  = 'inline';
-    const DEFAULT_INPUT_LAYOUT = self::INLINE_INPUT_LAYOUT;
+    public const BLOCK_INPUT_LAYOUT   = 'block';
+    public const COLUMN_INPUT_LAYOUT  = 'column';
+    public const GRID_INPUT_LAYOUT    = 'grid';
+    public const INLINE_INPUT_LAYOUT  = 'inline';
+    public const DEFAULT_INPUT_LAYOUT = self::INLINE_INPUT_LAYOUT;
 
     /**
      * How radio controls should be displayed.

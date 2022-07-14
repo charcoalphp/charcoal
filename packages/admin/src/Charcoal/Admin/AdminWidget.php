@@ -41,9 +41,9 @@ class AdminWidget extends AbstractWidget implements
     use ConditionalizableTrait;
     use TranslatorAwareTrait;
 
-    const DATA_SOURCE_REQUEST = 'request';
-    const DATA_SOURCE_OBJECT  = 'object';
-    const DATA_SOURCE_METADATA = 'metadata';
+    public const DATA_SOURCE_REQUEST = 'request';
+    public const DATA_SOURCE_OBJECT  = 'object';
+    public const DATA_SOURCE_METADATA = 'metadata';
 
     /**
      * @var string $widgetId

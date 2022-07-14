@@ -43,7 +43,7 @@ abstract class AbstractWebTemplate extends AbstractTemplate
      *
      * @var string
      */
-    const DEFAULT_SOCIAL_MEDIA_IMAGE = '';
+    public const DEFAULT_SOCIAL_MEDIA_IMAGE = '';
 
     /**
      * The application's configuration container.

@@ -49,7 +49,7 @@ class AdminTemplate extends AbstractTemplate implements
     use SecurityTrait;
     use TranslatorAwareTrait;
 
-    const GOOGLE_RECAPTCHA_CLIENT_URL = 'https://www.google.com/recaptcha/api.js';
+    public const GOOGLE_RECAPTCHA_CLIENT_URL = 'https://www.google.com/recaptcha/api.js';
 
     /**
      * The name of the project.

@@ -13,12 +13,12 @@ use Charcoal\Property\AbstractProperty;
  */
 class IdProperty extends AbstractProperty
 {
-    const MODE_AUTO_INCREMENT = 'auto-increment';
-    const MODE_CUSTOM = 'custom';
-    const MODE_UNIQID = 'uniqid';
-    const MODE_UUID = 'uuid';
+    public const MODE_AUTO_INCREMENT = 'auto-increment';
+    public const MODE_CUSTOM = 'custom';
+    public const MODE_UNIQID = 'uniqid';
+    public const MODE_UUID = 'uuid';
 
-    const DEFAULT_MODE = self::MODE_AUTO_INCREMENT;
+    public const DEFAULT_MODE = self::MODE_AUTO_INCREMENT;
 
     /**
      * The ID mode.

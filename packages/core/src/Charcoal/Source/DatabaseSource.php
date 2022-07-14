@@ -25,12 +25,12 @@ use Charcoal\Source\Expression;
 class DatabaseSource extends AbstractSource implements
     DatabaseSourceInterface
 {
-    const DEFAULT_DB_HOSTNAME = 'localhost';
+    public const DEFAULT_DB_HOSTNAME = 'localhost';
 
-    const DEFAULT_TABLE_ALIAS = 'objTable';
+    public const DEFAULT_TABLE_ALIAS = 'objTable';
 
-    const MYSQL_DRIVER_NAME   = 'mysql';
-    const SQLITE_DRIVER_NAME  = 'sqlite';
+    public const MYSQL_DRIVER_NAME   = 'mysql';
+    public const SQLITE_DRIVER_NAME  = 'sqlite';
 
     /**
      * The database connector.

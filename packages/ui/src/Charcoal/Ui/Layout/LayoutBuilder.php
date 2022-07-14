@@ -17,7 +17,7 @@ class LayoutBuilder
      *
      * @const string
      */
-    const DEFAULT_TYPE = 'charcoal/ui/layout/generic';
+    public const DEFAULT_TYPE = 'charcoal/ui/layout/generic';
 
     /**
      * Store the layout factory instance.

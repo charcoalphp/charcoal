@@ -23,11 +23,11 @@ use DateTimeInterface;
  */
 interface PublishableInterface
 {
-    const STATUS_DRAFT     = 'draft';
-    const STATUS_PENDING   = 'pending';
-    const STATUS_PUBLISHED = 'published';
-    const STATUS_UPCOMING  = 'upcoming';
-    const STATUS_EXPIRED   = 'expired';
+    public const STATUS_DRAFT     = 'draft';
+    public const STATUS_PENDING   = 'pending';
+    public const STATUS_PUBLISHED = 'published';
+    public const STATUS_UPCOMING  = 'upcoming';
+    public const STATUS_EXPIRED   = 'expired';
 
     /**
      * Set the object's publication date.

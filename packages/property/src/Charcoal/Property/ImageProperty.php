@@ -19,12 +19,12 @@ use Charcoal\Property\FileProperty;
  */
 class ImageProperty extends FileProperty
 {
-    const DEFAULT_DRIVER_TYPE = 'imagick';
+    public const DEFAULT_DRIVER_TYPE = 'imagick';
 
-    const EFFECTS_EVENT_SAVE    = 'save';
-    const EFFECTS_EVENT_NEVER   = 'never';
-    const EFFECTS_EVENT_UPLOAD  = 'upload';
-    const DEFAULT_APPLY_EFFECTS = self::EFFECTS_EVENT_SAVE;
+    public const EFFECTS_EVENT_SAVE    = 'save';
+    public const EFFECTS_EVENT_NEVER   = 'never';
+    public const EFFECTS_EVENT_UPLOAD  = 'upload';
+    public const DEFAULT_APPLY_EFFECTS = self::EFFECTS_EVENT_SAVE;
 
     /**
      * One or more effects to apply on the image.

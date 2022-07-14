@@ -25,8 +25,8 @@ class Filter extends Expression implements
     use ExpressionFieldTrait;
     use FilterCollectionTrait;
 
-    const DEFAULT_OPERATOR    = '=';
-    const DEFAULT_CONJUNCTION = 'AND';
+    public const DEFAULT_OPERATOR    = '=';
+    public const DEFAULT_CONJUNCTION = 'AND';
 
     /**
      * The value on the right side of the operation.

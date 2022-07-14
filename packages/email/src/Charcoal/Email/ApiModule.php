@@ -17,7 +17,7 @@ use Charcoal\Email\Api\V1\OpenAction;
  */
 class ApiModule extends AbstractModule
 {
-    const BASE_PATH = '/email/v1';
+    public const BASE_PATH = '/email/v1';
 
     /**
      * @return self

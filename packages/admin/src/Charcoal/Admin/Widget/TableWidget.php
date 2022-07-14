@@ -39,7 +39,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      *
      * @const integer
      */
-    const DEFAULT_ACTION_PRIORITY = 10;
+    public const DEFAULT_ACTION_PRIORITY = 10;
 
     /**
      * @var array $properties

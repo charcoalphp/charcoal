@@ -18,9 +18,9 @@ use Charcoal\Admin\Property\Input\AudioInput;
  */
 class AudioWidgetInput extends AudioInput
 {
-    const INPUT_TEXT    = 'text';
-    const INPUT_CAPTURE = 'capture';
-    const INPUT_UPLOAD  = 'upload';
+    public const INPUT_TEXT    = 'text';
+    public const INPUT_CAPTURE = 'capture';
+    public const INPUT_UPLOAD  = 'upload';
 
     /**
      * Whether text-to-speech is enabled.

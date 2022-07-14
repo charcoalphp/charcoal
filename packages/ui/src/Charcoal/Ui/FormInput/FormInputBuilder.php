@@ -16,7 +16,7 @@ class FormInputBuilder
      *
      * @const string
      */
-    const DEFAULT_TYPE = 'charcoal/ui/form-input/generic';
+    public const DEFAULT_TYPE = 'charcoal/ui/form-input/generic';
 
     /**
      * Store the form input factory instance.

@@ -17,7 +17,7 @@ class UrlProperty extends StringProperty
      * @link https://gist.github.com/729294 Using Diego Perini's version
      * @var DEFAULT_REGEXP
      */
-    const DIEGO_PERINI_PATTERN = '_^
+    public const DIEGO_PERINI_PATTERN = '_^
         (?:(?<scheme>https?|ftp)://)
         (?:
             (?<user>\S+)
@@ -44,7 +44,7 @@ class UrlProperty extends StringProperty
         )?
     $_iuSx';
 
-    const DEFAULT_URL_PATTERN = self::DIEGO_PERINI_PATTERN;
+    public const DEFAULT_URL_PATTERN = self::DIEGO_PERINI_PATTERN;
 
     /**
      * @return string

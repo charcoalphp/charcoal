@@ -16,7 +16,7 @@ use Twig\Loader\FilesystemLoader as TwigFilesystemLoader;
  */
 class TwigEngine extends AbstractEngine
 {
-    const DEFAULT_CACHE_PATH = '../cache/twig';
+    public const DEFAULT_CACHE_PATH = '../cache/twig';
 
     /**
      * @var TwigEnvironment $twig

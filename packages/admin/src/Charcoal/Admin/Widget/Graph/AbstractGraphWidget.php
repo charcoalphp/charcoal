@@ -22,7 +22,7 @@ abstract class AbstractGraphWidget extends AdminWidget implements
      *
      * @const integer
      */
-    const DEFAULT_ACTION_PRIORITY = 10;
+    public const DEFAULT_ACTION_PRIORITY = 10;
 
     /**
      * Store the list actions.

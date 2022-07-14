@@ -12,7 +12,7 @@ use Charcoal\Property\AbstractProperty;
  */
 class ColorProperty extends AbstractProperty
 {
-    const DEFAULT_SUPPORT_ALPHA = false;
+    public const DEFAULT_SUPPORT_ALPHA = false;
 
     /**
      * @var boolean $supportAlpha

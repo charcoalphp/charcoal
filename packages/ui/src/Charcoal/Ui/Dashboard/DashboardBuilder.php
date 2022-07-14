@@ -16,7 +16,7 @@ class DashboardBuilder
      *
      * @const string
      */
-    const DEFAULT_TYPE = 'charcoal/ui/dashboard/generic';
+    public const DEFAULT_TYPE = 'charcoal/ui/dashboard/generic';
 
     /**
      * Store the dashboard factory instance.

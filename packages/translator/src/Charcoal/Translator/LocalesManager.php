@@ -17,7 +17,7 @@ class LocalesManager
      *
      * @const integer
      */
-    const DEFAULT_SORT_PRIORITY = 10;
+    public const DEFAULT_SORT_PRIORITY = 10;
 
     /**
      * Dictionary of language definitions.

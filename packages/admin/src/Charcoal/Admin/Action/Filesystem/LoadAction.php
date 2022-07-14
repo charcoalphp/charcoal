@@ -46,8 +46,8 @@ use Charcoal\Admin\AdminAction;
  */
 class LoadAction extends AdminAction
 {
-    const DISPOSITION_ATTACHMENT = 'attachment';
-    const DISPOSITION_INLINE     = 'inline';
+    public const DISPOSITION_ATTACHMENT = 'attachment';
+    public const DISPOSITION_INLINE     = 'inline';
 
     /**
      * The request parameters.

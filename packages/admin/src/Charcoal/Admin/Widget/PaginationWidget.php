@@ -17,7 +17,7 @@ class PaginationWidget extends AdminWidget
     /**
      * Max pages count in the pagination
      */
-    const MAX_PAGE_COUNT = 10;
+    public const MAX_PAGE_COUNT = 10;
 
     /**
      * The pager object.

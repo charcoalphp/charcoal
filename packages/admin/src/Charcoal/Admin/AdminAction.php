@@ -39,7 +39,7 @@ abstract class AdminAction extends AbstractAction implements
     use SecurityTrait;
     use TranslatorAwareTrait;
 
-    const GOOGLE_RECAPTCHA_SERVER_URL = 'https://www.google.com/recaptcha/api/siteverify';
+    public const GOOGLE_RECAPTCHA_SERVER_URL = 'https://www.google.com/recaptcha/api/siteverify';
 
     /**
      * The name of the project.

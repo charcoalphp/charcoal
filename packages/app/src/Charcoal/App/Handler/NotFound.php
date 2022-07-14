@@ -16,7 +16,7 @@ use Charcoal\App\Handler\AbstractHandler;
  */
 class NotFound extends AbstractHandler
 {
-    const DEFAULT_PARTIAL = 'charcoal/app/handler/404';
+    public const DEFAULT_PARTIAL = 'charcoal/app/handler/404';
 
     /**
      * Invoke "Not Found" Handler
