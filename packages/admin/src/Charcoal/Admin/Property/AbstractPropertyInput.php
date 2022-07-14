@@ -18,7 +18,7 @@ use Charcoal\Admin\Property\PropertyInputInterface;
 abstract class AbstractPropertyInput extends AbstractProperty implements
     PropertyInputInterface
 {
-    const DEFAULT_INPUT_TYPE = 'charcoal/admin/property/input/text';
+    public const DEFAULT_INPUT_TYPE = 'charcoal/admin/property/input/text';
 
     /**
      * @var string $inputType
@@ -307,7 +307,7 @@ abstract class AbstractPropertyInput extends AbstractProperty implements
      */
     public function getInputEscape()
     {
-        return $this->getInputEscapeOptions()['function'] ?? null;
+        return ($this->getInputEscapeOptions()['function'] ?? null);
     }
 
     /**
@@ -505,7 +505,7 @@ abstract class AbstractPropertyInput extends AbstractProperty implements
             }
         }
 
-        return $this->inputPrefix ?? null;
+        return (this->inputPrefix ?? null);
     }
 
     /**
@@ -556,7 +556,7 @@ abstract class AbstractPropertyInput extends AbstractProperty implements
             }
         }
 
-        return $this->inputSuffix ?? null;
+        return ($this->inputSuffix ?? null);
     }
 
     /**
@@ -684,7 +684,7 @@ abstract class AbstractPropertyInput extends AbstractProperty implements
             }
         }
 
-        return $this->placeholder ?? null;
+        return ($this->placeholder ?? null);
     }
 
     /**

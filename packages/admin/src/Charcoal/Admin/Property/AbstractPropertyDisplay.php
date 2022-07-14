@@ -16,7 +16,7 @@ use Charcoal\Admin\Property\PropertyDisplayInterface;
 abstract class AbstractPropertyDisplay extends AbstractProperty implements
     PropertyDisplayInterface
 {
-    const DEFAULT_DISPLAY_TYPE = 'charcoal/admin/property/display/text';
+    public const DEFAULT_DISPLAY_TYPE = 'charcoal/admin/property/display/text';
 
     /**
      * @var string
@@ -256,7 +256,7 @@ abstract class AbstractPropertyDisplay extends AbstractProperty implements
      */
     public function getDisplayEscape()
     {
-        return $this->getDisplayEscapeOptions()['function'] ?? null;
+        return ($this->getDisplayEscapeOptions()['function'] ?? null);
     }
 
     /**
