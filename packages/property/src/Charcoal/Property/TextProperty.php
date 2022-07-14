@@ -10,7 +10,7 @@ use Charcoal\Property\StringProperty;
  */
 class TextProperty extends StringProperty
 {
-    const DEFAULT_LONG = false;
+    public const DEFAULT_LONG = false;
 
     /**
      * @var boolean

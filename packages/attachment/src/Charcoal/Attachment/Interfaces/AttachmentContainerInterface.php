@@ -12,7 +12,7 @@ interface AttachmentContainerInterface
      *
      * @var string
      */
-    const DEFAULT_GROUPING = 'generic';
+    public const DEFAULT_GROUPING = 'generic';
 
     /**
      * Retrieve the attachments configuration from this object's metadata.

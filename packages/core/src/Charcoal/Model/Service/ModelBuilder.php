@@ -14,7 +14,7 @@ use Charcoal\Model\Service\MetadataLoader;
  */
 final class ModelBuilder
 {
-    const DEFAULT_SOURCE_TYPE = 'database';
+    public const DEFAULT_SOURCE_TYPE = 'database';
 
     /**
      * @var FactoryInterface

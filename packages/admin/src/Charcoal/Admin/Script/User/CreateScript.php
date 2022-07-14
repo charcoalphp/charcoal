@@ -23,7 +23,7 @@ class CreateScript extends AdminScript implements
 {
     use AuthAwareTrait;
 
-    const MIN_PASSWORD_LENGTH = 5;
+    public const MIN_PASSWORD_LENGTH = 5;
 
     /**
      * @param array|\ArrayAccess $data The dependencies (app and logger).

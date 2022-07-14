@@ -16,7 +16,7 @@ use Charcoal\App\Handler\AbstractHandler;
  */
 class NotAllowed extends AbstractHandler
 {
-    const DEFAULT_PARTIAL = 'charcoal/app/handler/405';
+    public const DEFAULT_PARTIAL = 'charcoal/app/handler/405';
 
     /**
      * HTTP methods allowed by the current request.

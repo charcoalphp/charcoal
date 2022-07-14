@@ -15,9 +15,9 @@ use Charcoal\Property\AbstractProperty;
  */
 class DateTimeProperty extends AbstractProperty
 {
-    const DEFAULT_MIN = null;
-    const DEFAULT_MAX = null;
-    const DEFAULT_FORMAT = 'Y-m-d H:i:s';
+    public const DEFAULT_MIN = null;
+    public const DEFAULT_MAX = null;
+    public const DEFAULT_FORMAT = 'Y-m-d H:i:s';
 
     /**
      * @var DateTimeInterface|null

@@ -12,10 +12,10 @@ use Charcoal\Property\AbstractProperty;
  */
 class IpProperty extends AbstractProperty
 {
-    const STORAGE_MODE_STRING = 'string';
-    const STORAGE_MODE_INT = 'int';
+    public const STORAGE_MODE_STRING = 'string';
+    public const STORAGE_MODE_INT = 'int';
 
-    const DEFAULT_STORAGE_MODE = self::STORAGE_MODE_STRING;
+    public const DEFAULT_STORAGE_MODE = self::STORAGE_MODE_STRING;
 
     /**
      * The storage mode can be either "string" (default) or "int".

@@ -31,7 +31,7 @@ abstract class AbstractConfig extends AbstractEntity implements
     use FileAwareTrait;
     use SeparatorAwareTrait;
 
-    const DEFAULT_SEPARATOR = '.';
+    public const DEFAULT_SEPARATOR = '.';
 
     /**
      * Create the configuration.

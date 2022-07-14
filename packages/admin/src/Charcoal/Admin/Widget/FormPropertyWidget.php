@@ -28,13 +28,13 @@ use Charcoal\Admin\AdminWidget;
 class FormPropertyWidget extends AdminWidget implements
     FormInputInterface
 {
-    const HIDDEN_FORM_CONTROL     = 'charcoal/admin/property/input/hidden';
-    const READONLY_FORM_CONTROL   = 'charcoal/admin/property/input/readonly';
-    const DEFAULT_FORM_CONTROL    = 'charcoal/admin/property/input/text';
+    public const HIDDEN_FORM_CONTROL     = 'charcoal/admin/property/input/hidden';
+    public const READONLY_FORM_CONTROL   = 'charcoal/admin/property/input/readonly';
+    public const DEFAULT_FORM_CONTROL    = 'charcoal/admin/property/input/text';
 
-    const PROPERTY_CONTROL = 'input';
-    const PROPERTY_DISPLAY = 'display';
-    const DEFAULT_OUTPUT   = self::PROPERTY_CONTROL;
+    public const PROPERTY_CONTROL = 'input';
+    public const PROPERTY_DISPLAY = 'display';
+    public const DEFAULT_OUTPUT   = self::PROPERTY_CONTROL;
 
     /**
      * The widget's type.

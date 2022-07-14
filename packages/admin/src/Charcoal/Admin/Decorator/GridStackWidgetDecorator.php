@@ -13,8 +13,8 @@ use Charcoal\App\Template\WidgetInterface;
  */
 class GridStackWidgetDecorator
 {
-    const GS_WIDTH = 4;
-    const GS_HEIGHT = 4;
+    public const GS_WIDTH = 4;
+    public const GS_HEIGHT = 4;
 
     /**
      * @var array

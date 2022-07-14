@@ -12,7 +12,7 @@ use Charcoal\Property\TextProperty;
  */
 class HtmlProperty extends TextProperty
 {
-    const DEFAULT_LONG = true;
+    public const DEFAULT_LONG = true;
 
     /**
      * @var boolean

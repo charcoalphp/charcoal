@@ -44,7 +44,7 @@ abstract class AbstractProperty implements
     use TranslatorAwareTrait;
     use ViewableTrait;
 
-    const DEFAULT_ESCAPE_FUNCTION = 'htmlspecialchars';
+    public const DEFAULT_ESCAPE_FUNCTION = 'htmlspecialchars';
 
     /**
      * @var ModelPropertyInterface $property

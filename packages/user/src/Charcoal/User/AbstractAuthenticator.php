@@ -34,9 +34,9 @@ abstract class AbstractAuthenticator implements
 {
     use LoggerAwareTrait;
 
-    const AUTH_BY_PASSWORD = 'password';
-    const AUTH_BY_SESSION  = 'session';
-    const AUTH_BY_TOKEN    = 'token';
+    public const AUTH_BY_PASSWORD = 'password';
+    public const AUTH_BY_SESSION  = 'session';
+    public const AUTH_BY_TOKEN    = 'token';
 
     /**
      * The user that was last authenticated.

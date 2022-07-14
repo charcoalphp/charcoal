@@ -19,11 +19,11 @@ use Charcoal\Property\AbstractProperty;
  */
 class FileProperty extends AbstractProperty
 {
-    const DEFAULT_PUBLIC_ACCESS = false;
-    const DEFAULT_UPLOAD_PATH = 'uploads/';
-    const DEFAULT_FILESYSTEM = 'public';
-    const DEFAULT_OVERWRITE = false;
-    const ERROR_MESSAGES = [
+    public const DEFAULT_PUBLIC_ACCESS = false;
+    public const DEFAULT_UPLOAD_PATH = 'uploads/';
+    public const DEFAULT_FILESYSTEM = 'public';
+    public const DEFAULT_OVERWRITE = false;
+    public const ERROR_MESSAGES = [
         UPLOAD_ERR_OK         => 'There is no error, the file uploaded with success',
         UPLOAD_ERR_INI_SIZE   => 'The uploaded file exceeds the upload_max_filesize directive in php.ini',
         UPLOAD_ERR_FORM_SIZE  => 'The uploaded file exceeds the MAX_FILE_SIZE directive' .

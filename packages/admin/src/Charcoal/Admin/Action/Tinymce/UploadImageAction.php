@@ -12,10 +12,10 @@ use Psr\Http\Message\ResponseInterface;
  */
 class UploadImageAction extends AdminAction
 {
-    const DEFAULT_PUBLIC_ACCESS = true;
-    const DEFAULT_UPLOAD_PATH = 'uploads/tinymce/';
-    const DEFAULT_FILESYSTEM = 'public';
-    const DEFAULT_OVERWRITE = true;
+    public const DEFAULT_PUBLIC_ACCESS = true;
+    public const DEFAULT_UPLOAD_PATH = 'uploads/tinymce/';
+    public const DEFAULT_FILESYSTEM = 'public';
+    public const DEFAULT_OVERWRITE = true;
 
     /**
      * Whether uploaded files should be accessible from the web root.

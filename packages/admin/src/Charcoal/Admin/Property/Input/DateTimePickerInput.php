@@ -10,7 +10,7 @@ use Charcoal\Admin\Property\AbstractPropertyInput;
  */
 class DateTimePickerInput extends AbstractPropertyInput
 {
-    const DEFAULT_JS_FORMAT = 'YYYY-MM-DD HH:mm:ss';
+    public const DEFAULT_JS_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
     /**
      * @var string $inputGroupClass

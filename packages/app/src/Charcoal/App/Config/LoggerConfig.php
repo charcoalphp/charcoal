@@ -11,7 +11,7 @@ use Charcoal\Config\AbstractConfig;
  */
 class LoggerConfig extends AbstractConfig
 {
-    const DEFAULT_CHANNEL = 'charcoal';
+    public const DEFAULT_CHANNEL = 'charcoal';
 
     /**
      * Whether to enable or disable the logger service.

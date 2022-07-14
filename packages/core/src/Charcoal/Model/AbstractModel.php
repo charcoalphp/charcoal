@@ -60,7 +60,7 @@ abstract class AbstractModel extends AbstractEntity implements
     use ValidatableTrait;
     use ViewableTrait;
 
-    const DEFAULT_SOURCE_TYPE = 'database';
+    public const DEFAULT_SOURCE_TYPE = 'database';
 
     /**
      * @param array $data Dependencies.

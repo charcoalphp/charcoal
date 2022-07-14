@@ -50,15 +50,15 @@ abstract class AbstractProperty extends AbstractEntity implements
     use TranslatorAwareTrait;
     use ValidatableTrait;
 
-    const DEFAULT_L10N = false;
-    const DEFAULT_MULTIPLE = false;
-    const DEFAULT_HIDDEN = false;
-    const DEFAULT_UNIQUE = false;
-    const DEFAULT_REQUIRED = false;
-    const DEFAULT_ALLOW_NULL = true;
-    const DEFAULT_STORABLE = true;
-    const DEFAULT_VALIDATABLE = true;
-    const DEFAULT_ACTIVE = true;
+    public const DEFAULT_L10N = false;
+    public const DEFAULT_MULTIPLE = false;
+    public const DEFAULT_HIDDEN = false;
+    public const DEFAULT_UNIQUE = false;
+    public const DEFAULT_REQUIRED = false;
+    public const DEFAULT_ALLOW_NULL = true;
+    public const DEFAULT_STORABLE = true;
+    public const DEFAULT_VALIDATABLE = true;
+    public const DEFAULT_ACTIVE = true;
 
     /**
      * @var string

@@ -33,7 +33,7 @@ use Charcoal\Property\SelectablePropertyInterface;
  */
 class ObjectProperty extends AbstractProperty implements SelectablePropertyInterface
 {
-    const DEFAULT_PATTERN = '{{name}}';
+    public const DEFAULT_PATTERN = '{{name}}';
 
     /**
      * The object type to build the choices from.

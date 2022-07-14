@@ -17,7 +17,7 @@ class FormBuilder
      *
      * @const string
      */
-    const DEFAULT_TYPE = 'charcoal/ui/form/generic';
+    public const DEFAULT_TYPE = 'charcoal/ui/form/generic';
 
     /**
      * Store the form factory instance.

@@ -17,7 +17,7 @@ use Charcoal\App\Handler\AbstractError;
  */
 class PhpError extends AbstractError
 {
-    const DEFAULT_PARTIAL = 'charcoal/app/handler/500';
+    public const DEFAULT_PARTIAL = 'charcoal/app/handler/500';
 
     /**
      * Invoke Error Handler

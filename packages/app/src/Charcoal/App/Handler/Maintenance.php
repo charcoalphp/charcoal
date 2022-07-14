@@ -18,7 +18,7 @@ use Charcoal\App\Handler\AbstractHandler;
  */
 class Maintenance extends AbstractHandler
 {
-    const DEFAULT_PARTIAL = 'charcoal/app/handler/503';
+    public const DEFAULT_PARTIAL = 'charcoal/app/handler/503';
 
     /**
      * Invoke "Maintenance" Handler

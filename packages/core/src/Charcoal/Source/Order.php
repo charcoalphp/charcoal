@@ -28,11 +28,11 @@ class Order extends Expression implements
 {
     use ExpressionFieldTrait;
 
-    const MODE_ASC    = 'asc';
-    const MODE_DESC   = 'desc';
-    const MODE_RANDOM = 'rand';
-    const MODE_VALUES = 'values';
-    const MODE_CUSTOM = 'custom';
+    public const MODE_ASC    = 'asc';
+    public const MODE_DESC   = 'desc';
+    public const MODE_RANDOM = 'rand';
+    public const MODE_VALUES = 'values';
+    public const MODE_CUSTOM = 'custom';
 
     /**
      * The sort mode.

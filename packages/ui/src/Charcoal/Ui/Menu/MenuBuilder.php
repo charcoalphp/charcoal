@@ -17,7 +17,7 @@ class MenuBuilder
      *
      * @const string
      */
-    const DEFAULT_TYPE = 'charcoal/ui/menu/generic';
+    public const DEFAULT_TYPE = 'charcoal/ui/menu/generic';
 
     /**
      * Store the menu factory instance.

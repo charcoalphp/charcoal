@@ -15,7 +15,7 @@ use Charcoal\View\AbstractEngine;
  */
 class MustacheEngine extends AbstractEngine
 {
-    const DEFAULT_CACHE_PATH = '../cache/mustache';
+    public const DEFAULT_CACHE_PATH = '../cache/mustache';
 
     /**
      * A collection of helpers.

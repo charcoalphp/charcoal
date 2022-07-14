@@ -14,7 +14,7 @@ use Charcoal\App\Route\RouteConfig;
  */
 class Config extends AbstractConfig
 {
-    const DEFAULT_BASE_PATH = 'admin';
+    public const DEFAULT_BASE_PATH = 'admin';
 
     /**
      * The base path for the admin module's route group.

@@ -9,10 +9,10 @@ namespace Charcoal\Admin\Ui;
  */
 interface StructureContainerInterface
 {
-    const SEAMLESS_STRUCT_DISPLAY = 'seamless';
-    const CARD_STRUCT_DISPLAY     = 'card';
-    const GROUP_STRUCT_DISPLAY    = 'group';
-    const DEFAULT_STRUCT_DISPLAY  = self::GROUP_STRUCT_DISPLAY;
+    public const SEAMLESS_STRUCT_DISPLAY = 'seamless';
+    public const CARD_STRUCT_DISPLAY     = 'card';
+    public const GROUP_STRUCT_DISPLAY    = 'group';
+    public const DEFAULT_STRUCT_DISPLAY  = self::GROUP_STRUCT_DISPLAY;
 
     /**
      * Retrieve the property's display layout.
