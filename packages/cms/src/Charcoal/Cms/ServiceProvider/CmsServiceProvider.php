@@ -5,13 +5,10 @@ namespace Charcoal\Cms\ServiceProvider;
 // From Pimple
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-
 // From 'charcoal-core'
 use Charcoal\Model\AbstractModel;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\GenericFactory as Factory;
-
 // From 'charcoal-cms'
 use Charcoal\Cms\SectionInterface;
 use Charcoal\Cms\Config;
@@ -65,7 +62,7 @@ class CmsServiceProvider implements ServiceProviderInterface
             $cms = $appConfig->get('cms');
 
             $cmsConfig = new CmsConfig();
-            $cmsConfig->addFile(__DIR__.'/../../../../config/cms.json');
+            $cmsConfig->addFile(__DIR__ . '/../../../../config/cms.json');
             $cmsConfig->setData($cms);
 
             $configType = $cmsConfig->get('config_obj');

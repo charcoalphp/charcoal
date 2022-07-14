@@ -3,7 +3,6 @@
 namespace Charcoal\Ui;
 
 use InvalidArgumentException;
-
 // From 'charcoal-ui'
 use Charcoal\Ui\PrioritizableInterface;
 

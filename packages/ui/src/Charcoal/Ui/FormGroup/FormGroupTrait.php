@@ -3,7 +3,6 @@
 namespace Charcoal\Ui\FormGroup;
 
 use InvalidArgumentException;
-
 // From 'charcoal-ui'
 use Charcoal\Ui\Form\FormInterface;
 use Charcoal\Ui\FormInput\FormInputBuilder;

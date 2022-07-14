@@ -2,16 +2,14 @@
 
 namespace Charcoal\Image\Effect;
 
-use \InvalidArgumentException;
-
-use \Charcoal\Image\AbstractEffect;
+use InvalidArgumentException;
+use Charcoal\Image\AbstractEffect;
 
 /**
  * Convert an image to grayscale colorspace
  */
 abstract class AbstractSepiaEffect extends AbstractEffect
 {
-
     /**
      * @var float $threshold
      */

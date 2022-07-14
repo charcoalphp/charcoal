@@ -6,16 +6,12 @@ use DateTime;
 use DateTimeInterface;
 use Exception;
 use InvalidArgumentException;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-core'
 use Charcoal\Model\AbstractModel;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\TranslatorAwareTrait;
-
 // From 'charcoal-object'
 use Charcoal\Object\UserDataInterface;
 
@@ -175,7 +171,7 @@ class UserData extends AbstractModel implements
                 $uri .= 's';
             }
 
-            $uri .= '://'.$host;
+            $uri .= '://' . $host;
         }
         $uri .= getenv('REQUEST_URI');
 

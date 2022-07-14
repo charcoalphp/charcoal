@@ -3,16 +3,12 @@
 namespace Charcoal\Admin\Widget\FormGroup;
 
 use RuntimeException;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-ui'
 use Charcoal\Ui\FormGroup\AbstractFormGroup;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Ui\NestedWidgetContainerInterface;
 use Charcoal\Admin\Ui\NestedWidgetContainerTrait;
@@ -88,7 +84,7 @@ class NestedWidgetFormGroup extends AbstractFormGroup implements
     public function widgetId()
     {
         if (!$this->widgetId) {
-            $this->widgetId = 'nested_widget_'.uniqid();
+            $this->widgetId = 'nested_widget_' . uniqid();
         }
 
         return $this->widgetId;

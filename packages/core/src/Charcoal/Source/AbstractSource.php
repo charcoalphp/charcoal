@@ -3,18 +3,14 @@
 namespace Charcoal\Source;
 
 use InvalidArgumentException;
-
 // From PSR-3
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-
 // From 'charcoal-config'
 use Charcoal\Config\ConfigurableInterface;
 use Charcoal\Config\ConfigurableTrait;
-
 // From 'charcoal-property'
 use Charcoal\Property\PropertyInterface;
-
 // From 'charcoal-core'
 use Charcoal\Source\SourceConfig;
 use Charcoal\Source\SourceInterface;
@@ -603,7 +599,7 @@ abstract class AbstractSource implements
      */
     protected function setter($key)
     {
-        $setter = 'set_'.$key;
+        $setter = 'set_' . $key;
         return $this->camelize($setter);
     }
 

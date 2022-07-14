@@ -3,10 +3,8 @@
 namespace Charcoal\Admin\Property\Input;
 
 use InvalidArgumentException;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Property\AbstractPropertyInput;
 

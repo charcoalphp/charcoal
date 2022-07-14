@@ -5,30 +5,22 @@ namespace Charcoal\Property;
 use Traversable;
 use RuntimeException;
 use InvalidArgumentException;
-
 use PDO;
-
 // From PSR-6
 use Psr\Cache\CacheItemPoolInterface;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
 use Charcoal\Model\ModelInterface;
 use Charcoal\Model\Service\ModelLoader;
 use Charcoal\Source\StorableInterface;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-view'
 use Charcoal\View\ViewableInterface;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
-
 // From 'charcoal-property'
 use Charcoal\Property\AbstractProperty;
 use Charcoal\Property\SelectablePropertyInterface;
@@ -782,7 +774,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
         } elseif (($obj instanceof ViewableInterface) && $obj->view()) {
             $output = $obj->renderTemplate($pattern);
         } else {
-            $callback = function($matches) use ($obj) {
+            $callback = function ($matches) use ($obj) {
                 $prop = trim($matches[1]);
                 return (string)$obj[$prop];
             };

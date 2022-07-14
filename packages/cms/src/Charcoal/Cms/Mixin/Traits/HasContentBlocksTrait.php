@@ -97,7 +97,7 @@ trait HasContentBlocksTrait
         if ($content instanceof Translation) {
             $content = $content->data();
             foreach ($content as $lang => $text) {
-                $content[$lang] = strlen($text) > $length ? substr(strip_tags($text), 0, $length).'...' : $text;
+                $content[$lang] = strlen($text) > $length ? substr(strip_tags($text), 0, $length) . '...' : $text;
             }
             $content = $this->translator()->translation($content);
         } else {

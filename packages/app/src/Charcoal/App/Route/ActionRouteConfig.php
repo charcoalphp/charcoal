@@ -10,7 +10,6 @@ use Charcoal\App\Route\RouteConfig;
  */
 class ActionRouteConfig extends RouteConfig
 {
-
     /**
      * @var array $actionData
      */

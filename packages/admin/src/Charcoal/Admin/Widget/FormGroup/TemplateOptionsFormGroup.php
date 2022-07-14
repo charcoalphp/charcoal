@@ -5,23 +5,18 @@ namespace Charcoal\Admin\Widget\FormGroup;
 use RuntimeException;
 use UnexpectedValueException;
 use InvalidArgumentException;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-core'
 use Charcoal\Model\Service\MetadataLoader;
 use Charcoal\Model\MetadataInterface;
-
 // From 'charcoal-property'
 use Charcoal\Property\PropertyInterface;
 use Charcoal\Property\Structure\StructureMetadata;
 use Charcoal\Property\TemplateProperty;
 use Charcoal\Property\SelectablePropertyInterface;
-
 // From 'charcoal-cms'
 use Charcoal\Cms\TemplateableInterface;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Widget\FormGroup\StructureFormGroup;
 
@@ -321,7 +316,7 @@ class TemplateOptionsFormGroup extends StructureFormGroup
 
                 $controllerStructKey = $controllerInterfaces;
                 array_unshift($controllerStructKey, $obj->objType(), $obj->id());
-                $controllerStructKey = 'template/structure='.$metadataLoader->serializeMetaKey($controllerStructKey);
+                $controllerStructKey = 'template/structure=' . $metadataLoader->serializeMetaKey($controllerStructKey);
 
                 $structureMetadata = $this->metadataLoader()->load(
                     $controllerStructKey,

@@ -2,9 +2,8 @@
 
 namespace Charcoal\Image\Imagemagick\Effect;
 
-use \Exception;
-
-use \Charcoal\Image\Effect\AbstractDitherEffect;
+use Exception;
+use Charcoal\Image\Effect\AbstractDitherEffect;
 
 /**
  * Dither Effect for the Imagemagick driver.

@@ -6,17 +6,14 @@ namespace Charcoal\Admin\Widget;
 use Charcoal\Ui\Layout\LayoutBuilder;
 use Charcoal\Ui\Layout\LayoutInterface;
 use Pimple\Container;
-
 // form 'charcoal-user'
 use Charcoal\User\AuthAwareInterface;
 use Charcoal\User\UserInterface;
-
 // From 'charcoal-ui'
 use Charcoal\Ui\Dashboard\DashboardInterface;
 use Charcoal\Ui\Dashboard\DashboardTrait;
 use Charcoal\Ui\UiItemTrait;
 use Charcoal\Ui\UiItemInterface;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminWidget;
 use Charcoal\Admin\Decorator\GridStackWidgetDecorator;

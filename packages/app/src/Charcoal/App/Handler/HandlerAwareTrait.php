@@ -3,7 +3,6 @@
 namespace Charcoal\App\Handler;
 
 use RuntimeException;
-
 // From 'charcoal-app'
 use Charcoal\App\Handler\HandlerInterface;
 

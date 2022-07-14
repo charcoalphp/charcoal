@@ -4,7 +4,6 @@ namespace Charcoal\Admin\Property\Input;
 
 use InvalidArgumentException;
 use OutOfBoundsException;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Property\AbstractSelectableInput;
 

@@ -8,13 +8,10 @@ use DateInterval;
 use DateTimeInterface;
 use DateTime;
 use RuntimeException;
-
 use Stash\Driver\Apc;
 use Stash\Driver\Ephemeral;
 use Stash\Driver\Memcache;
-
 use Pimple\Container;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminTemplate;
 
@@ -95,7 +92,7 @@ class ClearCacheTemplate extends AdminTemplate
         if ($this->cacheInfo === null || $force === true) {
             $flip      = array_flip($this->availableCacheDrivers);
             $driver    = get_class($this->cache->getDriver());
-            $cacheType = isset($flip['\\'.$driver]) ? $flip['\\'.$driver] : $driver;
+            $cacheType = isset($flip['\\' . $driver]) ? $flip['\\' . $driver] : $driver;
 
             $globalItems = $this->globalCacheItems();
             $this->cacheInfo = [
@@ -134,7 +131,7 @@ class ClearCacheTemplate extends AdminTemplate
      */
     private function getGlobalCacheKey()
     {
-        return '/::'.$this->getCacheNamespace().'::/';
+        return '/::' . $this->getCacheNamespace() . '::/';
     }
 
     /**
@@ -174,7 +171,7 @@ class ClearCacheTemplate extends AdminTemplate
      */
     private function getPagesCacheKey()
     {
-        return '/::'.$this->getCacheNamespace().'::request::|::'.$this->getCacheNamespace().'::template::/';
+        return '/::' . $this->getCacheNamespace() . '::request::|::' . $this->getCacheNamespace() . '::template::/';
     }
 
     /**
@@ -214,7 +211,7 @@ class ClearCacheTemplate extends AdminTemplate
      */
     private function getObjectsCacheKey()
     {
-        return '/::'.$this->getCacheNamespace().'::object::|::'.$this->getCacheNamespace().'::metadata::/';
+        return '/::' . $this->getCacheNamespace() . '::object::|::' . $this->getCacheNamespace() . '::metadata::/';
     }
 
     /**
@@ -292,8 +289,8 @@ class ClearCacheTemplate extends AdminTemplate
 
             $item['expiration_time'] = ($item['creation_time'] + $item['ttl']);
 
-            $date1 = new DateTime('@'.$item['creation_time']);
-            $date2 = new DateTime('@'.$item['expiration_time']);
+            $date1 = new DateTime('@' . $item['creation_time']);
+            $date2 = new DateTime('@' . $item['expiration_time']);
 
             $item['created'] = $date1->format('Y-m-d H:i:s');
             $item['expiry']  = $date2->format('Y-m-d H:i:s');
@@ -398,7 +395,7 @@ class ClearCacheTemplate extends AdminTemplate
             $sns = $matches['stashNS'];
             $iid = trim($matches['itemID'], ':');
             $iid = preg_replace([ '/:+/', '/\.+/' ], [ '⇒', '/' ], $iid);
-            $key = $matches['stashNS'].'⇒'.$iid;
+            $key = $matches['stashNS'] . '⇒' . $iid;
         }
 
         return $key;
@@ -425,7 +422,7 @@ class ClearCacheTemplate extends AdminTemplate
         $locale = localeconv();
         $size   = number_format($size, 2, $locale['decimal_point'], $locale['thousands_sep']);
 
-        return rtrim($size, '.0').' '.$unit;
+        return rtrim($size, '.0') . ' ' . $unit;
     }
 
     /**

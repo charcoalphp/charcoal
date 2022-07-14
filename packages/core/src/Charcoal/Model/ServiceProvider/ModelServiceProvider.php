@@ -7,14 +7,11 @@ use Charcoal\Cms\ConfigInterface;
 use Charcoal\Factory\GenericResolver;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\GenericFactory as Factory;
-
 // From 'charcoal-property'
 use Charcoal\Property\PropertyInterface;
 use Charcoal\Property\GenericProperty;
-
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
 use Charcoal\Model\Collection;
@@ -116,7 +113,7 @@ class ModelServiceProvider implements ServiceProviderInterface
          * @return \ArrayAccess|\Traversable
          */
         $container['model/collection'] = $container->factory(function (Container $container) {
-            return new $container['model/collection/class'];
+            return new $container['model/collection/class']();
         });
 
         /**
@@ -238,7 +235,7 @@ class ModelServiceProvider implements ServiceProviderInterface
                     foreach ($modules as $module) {
                         if (defined(sprintf('%s::APP_CONFIG', $module))) {
                             $configPath = ltrim($module::APP_CONFIG, '/');
-                            $configPath = $basePath.'/'.$configPath;
+                            $configPath = $basePath . '/' . $configPath;
 
                             $configData = $metaConfig->loadFile($configPath);
                             $extraPaths = array_merge(

@@ -50,6 +50,6 @@ class Gallery extends Container
      */
     public function columnWidth()
     {
-        return (string)ceil(12/$this->numColumns);
+        return (string)ceil(12 / $this->numColumns);
     }
 }

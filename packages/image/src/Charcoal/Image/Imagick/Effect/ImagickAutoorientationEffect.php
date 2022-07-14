@@ -2,9 +2,8 @@
 
 namespace Charcoal\Image\Imagick\Effect;
 
-use \Imagick;
-
-use \Charcoal\Image\Effect\AbstractAutoorientationEffect;
+use Imagick;
+use Charcoal\Image\Effect\AbstractAutoorientationEffect;
 
 /**
  * Auto-orientation Effect for the Imagick driver.

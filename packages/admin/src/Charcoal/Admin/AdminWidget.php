@@ -3,31 +3,24 @@
 namespace Charcoal\Admin;
 
 use InvalidArgumentException;
-
 // From 'pimple/pimple'
 use Pimple\Container;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
 use Charcoal\Translator\TranslatorAwareTrait;
-
 // From 'charcoal-user'
 use Charcoal\User\AuthAwareInterface;
 use Charcoal\User\AuthAwareTrait;
-
 // From 'charcoal-ui'
 use Charcoal\Ui\ConditionalizableInterface;
 use Charcoal\Ui\ConditionalizableTrait;
 use Charcoal\Ui\PrioritizableInterface;
 use Charcoal\Ui\PrioritizableTrait;
-
 // From 'charcoal-app'
 use Charcoal\App\DebugAwareTrait;
 use Charcoal\App\Template\AbstractWidget;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Support\AdminTrait;
 use Charcoal\Admin\Support\BaseUrlTrait;
@@ -210,7 +203,7 @@ class AdminWidget extends AbstractWidget implements
     public function widgetId()
     {
         if (!$this->widgetId) {
-            $this->widgetId = 'widget_'.uniqid();
+            $this->widgetId = 'widget_' . uniqid();
         }
 
         return $this->widgetId;
@@ -374,7 +367,7 @@ class AdminWidget extends AbstractWidget implements
      */
     final public function escapedWidgetDataForJsAsJson()
     {
-        return '{{=<% %>=}}'.$this->widgetDataForJsAsJson().'<%={{ }}=%>';
+        return '{{=<% %>=}}' . $this->widgetDataForJsAsJson() . '<%={{ }}=%>';
     }
 
     /**
@@ -609,7 +602,7 @@ class AdminWidget extends AbstractWidget implements
                 $method = $matches[2];
 
                 if ($class === 'parent') {
-                    $resolved = [ $this, $class.'::'.$method ];
+                    $resolved = [ $this, $class . '::' . $method ];
                 } else {
                     if (!class_exists($class)) {
                         return null;
@@ -639,7 +632,7 @@ class AdminWidget extends AbstractWidget implements
         $sources = $this->dataSources();
         foreach ($sources as $sourceIdent) {
             $filter = $this->dataSourceFilter($sourceIdent);
-            $getter = $this->camelize('data_from_'.$sourceIdent);
+            $getter = $this->camelize('data_from_' . $sourceIdent);
             $method = [ $this, $getter ];
 
             if (is_callable($method)) {

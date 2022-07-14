@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Charcoal\Email;
 
 use InvalidArgumentException;
-
 use Charcoal\Email\Services\Parser;
 
 /**
@@ -55,7 +54,7 @@ trait EmailAwareTrait
      * @throws InvalidArgumentException If the email is invalid.
      * @return array|null
      */
-    protected function emailToArray($var) : ?array
+    protected function emailToArray($var): ?array
     {
         return $this->getParser()->emailToArray($var);
     }
@@ -67,7 +66,7 @@ trait EmailAwareTrait
      * @throws InvalidArgumentException If the email array is invalid.
      * @return string
      */
-    protected function emailFromArray(array $arr) : string
+    protected function emailFromArray(array $arr): string
     {
         return $this->getParser()->emailFromArray($arr);
     }

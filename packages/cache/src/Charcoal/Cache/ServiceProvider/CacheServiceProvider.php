@@ -6,12 +6,10 @@ namespace Charcoal\Cache\ServiceProvider;
 use Charcoal\Cache\Facade\CachePoolFacade;
 use Pimple\ServiceProviderInterface;
 use Pimple\Container;
-
 // From 'tedivm/stash'
 use Stash\DriverList;
 use Stash\Interfaces\DriverInterface;
 use Stash\Pool;
-
 // From 'charcoal-cache'
 use Charcoal\Cache\CacheBuilder;
 use Charcoal\Cache\CacheConfig;

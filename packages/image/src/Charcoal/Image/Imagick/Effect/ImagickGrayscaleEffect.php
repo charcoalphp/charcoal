@@ -2,16 +2,14 @@
 
 namespace Charcoal\Image\Imagick\Effect;
 
-use \Imagick as Imagick;
-
-use \Charcoal\Image\Effect\AbstractGrayscaleEffect;
+use Imagick as Imagick;
+use Charcoal\Image\Effect\AbstractGrayscaleEffect;
 
 /**
  * Grayscale Effect for the Imagick driver.
  */
 class ImagickGrayscaleEffect extends AbstractGrayscaleEffect
 {
-
     /**
      * @param array $data The effect data, if available.
      * @return ImagickGrayscaleEffect Chainable

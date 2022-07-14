@@ -1,4 +1,5 @@
 <?php
+
 namespace Charcoal\Object;
 
 use DateTime;
@@ -6,20 +7,15 @@ use DateTimeInterface;
 use InvalidArgumentException;
 use RuntimeException;
 use Exception;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-core'
 use Charcoal\Model\AbstractModel;
 use Charcoal\Loader\CollectionLoader;
-
 use Charcoal\Model\ModelFactoryTrait;
 use Charcoal\Loader\CollectionLoaderAwareTrait;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-object'
 use Charcoal\Object\ObjectRouteInterface;
 
@@ -201,7 +197,8 @@ class ObjectRoute extends AbstractModel implements
         if ($obj->id() === $this->id()) {
             return true;
         }
-        if ($obj->getRouteObjId() === $this->getRouteObjId() &&
+        if (
+            $obj->getRouteObjId() === $this->getRouteObjId() &&
             $obj->getRouteObjType() === $this->getRouteObjType() &&
             $obj->getLang() === $this->getLang()
         ) {
@@ -225,7 +222,7 @@ class ObjectRoute extends AbstractModel implements
                 $this->originalSlug = $this->getSlug();
             }
             $this->slugInc++;
-            $this->setSlug($this->originalSlug.'-'.$this->slugInc);
+            $this->setSlug($this->originalSlug . '-' . $this->slugInc);
 
             return $this->generateUniqueSlug();
         }

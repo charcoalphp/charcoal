@@ -3,7 +3,6 @@
 namespace Charcoal\App;
 
 use RuntimeException;
-
 // From Slim
 use Slim\Interfaces\CallableResolverInterface;
 
@@ -104,7 +103,7 @@ trait CallableResolverAwareTrait
                             break;
 
                         case 'parent':
-                            $callable = [ $this, 'parent::'.$method ];
+                            $callable = [ $this, 'parent::' . $method ];
                             break;
                     }
                 }

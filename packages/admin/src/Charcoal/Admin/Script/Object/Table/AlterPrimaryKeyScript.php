@@ -4,7 +4,6 @@ namespace Charcoal\Admin\Script\Object\Table;
 
 use PDO;
 use PDOStatement;
-
 use Closure;
 use Countable;
 use Traversable;
@@ -13,22 +12,17 @@ use ReflectionMethod;
 use RuntimeException;
 use UnexpectedValueException;
 use InvalidArgumentException;
-
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
-
 // From 'charcoal-property'
 use Charcoal\Property\IdProperty;
 use Charcoal\Property\PropertyField;
 use Charcoal\Property\PropertyInterface;
-
 // From 'charcoal-app'
 use Charcoal\App\Script\ArgScriptTrait;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminScript;
 
@@ -89,7 +83,7 @@ class AlterPrimaryKeyScript extends AdminScript
         parent::init();
 
         $this->setDescription(
-            'The <underline>object/table/alter-primary-key</underline> script replaces '.
+            'The <underline>object/table/alter-primary-key</underline> script replaces ' .
             'the existing primary key with the new definition from the given model\'s metadata.'
         );
     }
@@ -884,8 +878,8 @@ class AlterPrimaryKeyScript extends AdminScript
             );
 
             $sql = strtr(
-                'UPDATE `%relatedTable` AS a '.
-                    'JOIN `%sourceTable` AS b ON a.`%prop` = b.`%oldKey` '.
+                'UPDATE `%relatedTable` AS a ' .
+                    'JOIN `%sourceTable` AS b ON a.`%prop` = b.`%oldKey` ' .
                     'SET a.`%prop` = b.`%newKey`',
                 [
                     '%relatedTable' => $tbl,

@@ -3,10 +3,8 @@
 namespace Charcoal\App\Handler;
 
 use InvalidArgumentException;
-
 // From 'charcoal-config'
 use Charcoal\Config\AbstractConfig;
-
 // From 'charcoal-app'
 use Charcoal\App\App;
 use Charcoal\App\Template\GenericTemplate;

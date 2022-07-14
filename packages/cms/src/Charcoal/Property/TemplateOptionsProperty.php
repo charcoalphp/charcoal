@@ -3,7 +3,6 @@
 namespace Charcoal\Property;
 
 use InvalidArgumentException;
-
 // From 'charcoal-property'
 use Charcoal\Property\ModelStructureProperty;
 use Charcoal\Property\TemplateProperty;

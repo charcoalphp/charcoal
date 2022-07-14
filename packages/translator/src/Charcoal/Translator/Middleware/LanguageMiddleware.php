@@ -6,10 +6,8 @@ namespace Charcoal\Translator\Middleware;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\LocalesManager;
 use Charcoal\Translator\TranslatorAwareTrait;
@@ -158,7 +156,7 @@ class LanguageMiddleware
         $uri  = $request->getUri();
         $path = $uri->getPath();
         foreach ($this->excludedPath as $excluded) {
-            if (preg_match('@'.$excluded.'@', $path)) {
+            if (preg_match('@' . $excluded . '@', $path)) {
                 return $next($request, $response);
             }
         }
@@ -236,7 +234,7 @@ class LanguageMiddleware
     private function getLanguageFromPath(RequestInterface $request)
     {
         $path = $request->getRequestTarget();
-        if (preg_match('@'.$this->pathRegexp.'@', $path, $matches)) {
+        if (preg_match('@' . $this->pathRegexp . '@', $path, $matches)) {
             $lang = $matches[1];
         } else {
             return '';

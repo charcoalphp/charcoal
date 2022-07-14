@@ -5,7 +5,6 @@ namespace Charcoal\App\Route;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From 'charcoal-config'
 use Charcoal\Config\ConfigurableInterface;
 use Charcoal\Config\ConfigurableTrait;
@@ -80,7 +79,7 @@ final class RouteManager implements
     {
         $routePattern = isset($templateConfig['route'])
             ? $templateConfig['route']
-            : '/'.ltrim($routeIdent, '/');
+            : '/' . ltrim($routeIdent, '/');
 
         $templateConfig['route'] = $routePattern;
 
@@ -156,7 +155,7 @@ final class RouteManager implements
     {
         $routePattern = isset($actionConfig['route'])
             ? $actionConfig['route']
-            : '/'.ltrim($routeIdent, '/');
+            : '/' . ltrim($routeIdent, '/');
 
         $actionConfig['route'] = $routePattern;
 
@@ -232,7 +231,7 @@ final class RouteManager implements
     {
         $routePattern = isset($scriptConfig['route'])
             ? $scriptConfig['route']
-            : '/'.ltrim($routeIdent, '/');
+            : '/' . ltrim($routeIdent, '/');
 
         $scriptConfig['route'] = $routePattern;
 

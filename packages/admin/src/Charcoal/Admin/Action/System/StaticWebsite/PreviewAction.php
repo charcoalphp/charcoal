@@ -5,12 +5,9 @@ namespace Charcoal\Admin\Action\System\StaticWebsite;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From Pimple
 use Pimple\Container;
-
 use GuzzleHttp\Client as GuzzleClient;
-
 use Charcoal\Admin\AdminAction;
 
 /**
@@ -37,23 +34,23 @@ class PreviewAction extends AdminAction
     {
         $url = $request->getParam('url');
         $relativeUrl = str_replace($this->baseUrl(), '', $url);
-        $url = $this->baseUrl().$relativeUrl;
+        $url = $this->baseUrl() . $relativeUrl;
 
-        $outputDir = $this->basePath.'cache/static/'.$relativeUrl;
+        $outputDir = $this->basePath . 'cache/static/' . $relativeUrl;
         if (!file_exists($outputDir)) {
             $this->setSuccess(false);
             $this->addFeedback('error', 'Can not preview static page: does not exist on filesystem.');
             return $response->withStatus(404);
         }
 
-        if (file_exists($outputDir.'/index.html')) {
-            $this->fileContent = file_get_contents($outputDir.'/index.html');
+        if (file_exists($outputDir . '/index.html')) {
+            $this->fileContent = file_get_contents($outputDir . '/index.html');
             $this->setSuccess(true);
             return $response;
         }
         // Previous static version must be deleted in order to generate a new one.
-        if (file_exists($outputDir.'/index.php')) {
-            $this->fileContent = file_get_contents($outputDir.'/index.php');
+        if (file_exists($outputDir . '/index.php')) {
+            $this->fileContent = file_get_contents($outputDir . '/index.php');
             $this->setSuccess(true);
             return $response;
         }

@@ -3,17 +3,12 @@
 namespace Charcoal\Admin\Script\Tools;
 
 use Exception;
-
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 use Pimple\Container;
-
 use Goutte\Client as GoutteClient;
-
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\TransferStats;
-
 use Charcoal\Admin\AdminScript;
 
 /**
@@ -103,7 +98,7 @@ class CheckLinksScript extends AdminScript
         $climate = $this->climate();
         $climate->arguments->parse();
 
-        $this->startUrl = rtrim($climate->arguments->get('url'), '/').'/';
+        $this->startUrl = rtrim($climate->arguments->get('url'), '/') . '/';
         $this->maxLevel = $climate->arguments->get('max-level');
         $this->setVerbose($climate->arguments->get('verbose'));
 
@@ -140,7 +135,7 @@ class CheckLinksScript extends AdminScript
                 'on_stats' => function (TransferStats $stats) {
                     if ($stats->hasResponse()) {
                         $code = $stats->getResponse()->getStatusCode();
-                        $transferTime = (1000*$stats->getTransferTime());
+                        $transferTime = (1000 * $stats->getTransferTime());
                         $effectiveUrl = (string)$stats->getEffectiveUri();
                         if ($this->verbose() && $code > 200 && $code < 400) {
                             $this->climate()->orange(sprintf(
@@ -169,7 +164,7 @@ class CheckLinksScript extends AdminScript
             ]);
         } catch (Exception $e) {
             // Do nothing
-            $this->climate()->error('-- Error retrieving '.$url);
+            $this->climate()->error('-- Error retrieving ' . $url);
         }
         if ($rawUrl !== $url) {
             $this->processedUrls[] = $rawUrl;
@@ -185,7 +180,7 @@ class CheckLinksScript extends AdminScript
     {
 
         $crawler = $this->goutteClient->request('GET', $url);
-        $crawler->filter('a')->each(function($item) use ($level) {
+        $crawler->filter('a')->each(function ($item) use ($level) {
             $href = $item->attr('href');
             if (in_array($href, $this->processedUrls)) {
                 return;
@@ -220,7 +215,7 @@ class CheckLinksScript extends AdminScript
     private function absoluteLink($url)
     {
         if (strstr($url, 'http') === false) {
-            return $this->startUrl.ltrim($url, '/');
+            return $this->startUrl . ltrim($url, '/');
         } else {
             return $url;
         }

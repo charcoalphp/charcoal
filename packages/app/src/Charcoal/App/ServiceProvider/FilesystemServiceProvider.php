@@ -5,31 +5,23 @@ namespace Charcoal\App\ServiceProvider;
 use Exception;
 use InvalidArgumentException;
 use UnexpectedValueException;
-
 // From Pimple
 use Pimple\ServiceProviderInterface;
 use Pimple\Container;
-
 // From 'aws/aws-sdk-php'
 use Aws\S3\S3Client;
-
 // From 'league/flysystem'
 use League\Flysystem\MountManager;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Adapter\Local as LocalAdapter;
 use League\Flysystem\Adapter\Ftp as FtpAdapter;
 use League\Flysystem\Adapter\NullAdapter;
-
 // From 'league/flysystem-aws-s3-v3'
 use League\Flysystem\AwsS3v3\AwsS3Adapter;
-
-
 // From 'league/flysystem-sftp'
 use League\Flysystem\Sftp\SftpAdapter;
-
 // From 'league/flysystem-memory'
 use League\Flysystem\Memory\MemoryAdapter;
-
 // From 'charcoal-app'
 use Charcoal\App\AppConfig;
 use Charcoal\App\Config\FilesystemConfig;

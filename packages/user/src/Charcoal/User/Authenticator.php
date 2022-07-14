@@ -3,10 +3,8 @@
 namespace Charcoal\User;
 
 use InvalidArgumentException;
-
 // From 'charcoal-object'
 use Charcoal\Object\ContentInterface;
-
 // From 'charcoal-user'
 use Charcoal\User\Access\AuthenticatableInterface;
 use Charcoal\User\UserInterface;

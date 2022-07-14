@@ -28,7 +28,7 @@ trait ArgScriptTrait
                 throw new InvalidArgumentException('The delimiter must be a string.');
             }
 
-            $var = preg_split('#(?<!\\\\)'.$delimiter.'#', $var);
+            $var = preg_split('#(?<!\\\\)' . $delimiter . '#', $var);
         }
 
         if (is_array($var) || $var instanceof Traversable) {

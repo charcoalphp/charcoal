@@ -19,8 +19,8 @@ class ImagemagickSepiaEffect extends AbstractSepiaEffect
             $this->setData($data);
         }
 
-        $value = (($this->threshold()/255)*100).'%';
-        $cmd = '-sepia-tone '.$value;
+        $value = (($this->threshold() / 255) * 100) . '%';
+        $cmd = '-sepia-tone ' . $value;
         $this->image()->applyCmd($cmd);
         return $this;
     }

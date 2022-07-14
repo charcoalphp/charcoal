@@ -7,19 +7,15 @@ use ArrayAccess;
 use RuntimeException;
 use InvalidArgumentException;
 use UnexpectedValueException;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-core'
 use Charcoal\Model\DescribableInterface;
 use Charcoal\Model\MetadataInterface;
 use Charcoal\Model\ModelInterface;
 use Charcoal\Model\Model;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-property'
 use Charcoal\Property\StructureProperty;
 use Charcoal\Property\Structure\StructureMetadata;
@@ -323,7 +319,7 @@ class ModelStructureProperty extends StructureProperty
 
                 $structureKey = $structureInterfaces;
                 array_unshift($structureKey, $this->ident());
-                $structureKey = 'property/structure='.$metadataLoader->serializeMetaKey($structureKey);
+                $structureKey = 'property/structure=' . $metadataLoader->serializeMetaKey($structureKey);
 
                 $structureMetadata = $metadataLoader->load(
                     $structureKey,

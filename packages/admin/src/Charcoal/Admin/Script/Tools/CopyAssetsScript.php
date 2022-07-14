@@ -4,11 +4,9 @@ namespace Charcoal\Admin\Script\Tools;
 
 // From 'pimple/pimple'
 use Pimple\Container;
-
 // From 'psr/http-message'
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\RequestInterface;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminScript;
 
@@ -52,7 +50,7 @@ class CopyAssetsScript extends AdminScript
         $climate->arguments->parse();
 
         $dirArg = $climate->arguments->get('dir');
-        $dirPath = $this->basePath.$dirArg;
+        $dirPath = $this->basePath . $dirArg;
         $this->dir = realpath($dirPath);
         if (!$this->dir) {
             $climate->orange('Directory does not exist. Creating it…');
@@ -69,7 +67,7 @@ class CopyAssetsScript extends AdminScript
         );
         $climate->orange('Make sure you know what you are doing and have a backup in case things go wrong.');
 
-        $climate->out('Directory: '.$this->dir);
+        $climate->out('Directory: ' . $this->dir);
 
         $input = $climate->input('Continue?');
         $input->accept(['y', 'n'], true);
@@ -82,7 +80,7 @@ class CopyAssetsScript extends AdminScript
          * @todo Store the Charcoal Admin package base directory somewhere.
          * @see \Charcoal\Admin\Config::L50 for similar relative path usage.
          */
-        $assetsDirectory = realpath(__DIR__.'/../../../../../assets/dist');
+        $assetsDirectory = realpath(__DIR__ . '/../../../../../assets/dist');
 
         $this->copy($assetsDirectory, $this->dir);
 
@@ -137,7 +135,7 @@ class CopyAssetsScript extends AdminScript
             }
 
             // Deep copy directories
-            $this->copy($source.'/'.$entry, $dest.'/'.$entry, $permissions);
+            $this->copy($source . '/' . $entry, $dest . '/' . $entry, $permissions);
         }
 
         // Clean up

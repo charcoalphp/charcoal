@@ -4,10 +4,8 @@ namespace Charcoal\Cms;
 
 // From 'charcoal-object'
 use Charcoal\Object\Content;
-
 // From 'charcoal-property'
 use Charcoal\Property\Structure\StructureMetadata;
-
 // From 'charcoal-cms'
 use Charcoal\Cms\ConfigInterface;
 

@@ -4,22 +4,16 @@ namespace Charcoal\Admin;
 
 // From Pimple
 use Pimple\Container;
-
 // From 'league/climate'
 use League\CLImate\TerminalObject\Dynamic\Input as LeagueInput;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-app'
 use Charcoal\App\Script\AbstractScript;
-
 // From 'charcoal-property'
 use Charcoal\Property\PropertyInterface;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\TranslatorAwareTrait;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Support\BaseUrlTrait;
 

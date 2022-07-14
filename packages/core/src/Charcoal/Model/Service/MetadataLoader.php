@@ -5,14 +5,11 @@ namespace Charcoal\Model\Service;
 use RuntimeException;
 use InvalidArgumentException;
 use UnexpectedValueException;
-
 // From PSR-3
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-
 // From PSR-6
 use Psr\Cache\CacheItemPoolInterface;
-
 // From 'charcoal-core'
 use Charcoal\Model\MetadataInterface;
 
@@ -166,7 +163,7 @@ final class MetadataLoader implements LoggerAwareInterface
             return array_replace_recursive($targetMetadata, $data);
         }
 
-        $targetMetadata = new $metadataType;
+        $targetMetadata = new $metadataType();
         $targetMetadata->setData($data);
 
         static::$metadataCache[$ident] = $targetMetadata;
@@ -363,7 +360,7 @@ final class MetadataLoader implements LoggerAwareInterface
         $data = [];
         $dirs = array_reverse($dirs);
         foreach ($dirs as $dir) {
-            $file = $dir.DIRECTORY_SEPARATOR.$path;
+            $file = $dir . DIRECTORY_SEPARATOR . $path;
             if (file_exists($file)) {
                 $data = array_replace_recursive($data, $this->loadJsonFile($file));
             }
@@ -426,7 +423,7 @@ final class MetadataLoader implements LoggerAwareInterface
      */
     public function cacheKeyFromMetaKey($ident)
     {
-        $cacheKey = 'metadata/'.str_replace('/', '.', $ident);
+        $cacheKey = 'metadata/' . str_replace('/', '.', $ident);
         return $cacheKey;
     }
 
@@ -462,7 +459,7 @@ final class MetadataLoader implements LoggerAwareInterface
         $parts = explode('-', $ident);
         array_walk(
             $parts,
-            function(&$i) {
+            function (&$i) {
                 $i = ucfirst($i);
             }
         );
@@ -474,7 +471,7 @@ final class MetadataLoader implements LoggerAwareInterface
 
         array_walk(
             $parts,
-            function(&$i) {
+            function (&$i) {
                 $i = ucfirst($i);
             }
         );
@@ -564,7 +561,7 @@ final class MetadataLoader implements LoggerAwareInterface
         }
 
         $basePath = realpath($basePath);
-        $this->basePath = rtrim($basePath, '/\\').DIRECTORY_SEPARATOR;
+        $this->basePath = rtrim($basePath, '/\\') . DIRECTORY_SEPARATOR;
     }
 
     /**
@@ -650,7 +647,7 @@ final class MetadataLoader implements LoggerAwareInterface
         $path = trim($path, '/\\');
 
         if ($basePath && strpos($path, $basePath) === false) {
-            $path = $basePath.$path;
+            $path = $basePath . $path;
         }
 
         return $path;

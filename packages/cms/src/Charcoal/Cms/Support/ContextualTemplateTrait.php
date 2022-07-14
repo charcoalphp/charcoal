@@ -3,10 +3,8 @@
 namespace Charcoal\Cms\Support;
 
 use InvalidArgumentException;
-
 // From 'psr/http-message'
 use Psr\Http\Message\UriInterface;
-
 // From 'charcoal-core'
 use Charcoal\Model\Model;
 use Charcoal\Model\ModelInterface;
@@ -140,7 +138,7 @@ trait ContextualTemplateTrait
 
                 $base = $uri->getBasePath();
                 $path = $uri->getPath();
-                $path = $base.'/'.ltrim($path, '/');
+                $path = $base . '/' . ltrim($path, '/');
 
                 $endpoint[$lang] = $path;
             }

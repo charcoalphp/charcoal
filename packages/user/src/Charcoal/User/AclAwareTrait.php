@@ -3,7 +3,6 @@
 namespace Charcoal\User;
 
 use RuntimeException;
-
 // From 'laminas/laminas-permissions-acl'
 use Laminas\Permissions\Acl\Acl;
 

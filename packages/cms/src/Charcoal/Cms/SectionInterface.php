@@ -6,7 +6,6 @@ namespace Charcoal\Cms;
 use Charcoal\Object\ContentInterface;
 use Charcoal\Object\HierarchicalInterface;
 use Charcoal\Object\RoutableInterface;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
 

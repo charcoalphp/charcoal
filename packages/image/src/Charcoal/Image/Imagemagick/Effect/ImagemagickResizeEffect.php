@@ -28,15 +28,15 @@ class ImagemagickResizeEffect extends AbstractResizeEffect
 
         $size = $this->size();
         if ($size) {
-            $params = [ $option.' "'.$size.'"' ];
+            $params = [ $option . ' "' . $size . '"' ];
         } else {
             if ($width === 0 && $height === 0) {
                 return;
             }
 
             $params = [
-                '-gravity "'.$this->gravity().'"',
-                '-background "'.$this->backgroundColor().'"'
+                '-gravity "' . $this->gravity() . '"',
+                '-background "' . $this->backgroundColor() . '"'
             ];
 
             if ($width === 0) {
@@ -47,12 +47,12 @@ class ImagemagickResizeEffect extends AbstractResizeEffect
                 $height = '';
             }
 
-            $size = $width.'x'.$height;
+            $size = $width . 'x' . $height;
             if ($bestFit) {
-                $params[] = $option.' "'.$size.'^"';
-                $params[] = '-extent '.$size;
+                $params[] = $option . ' "' . $size . '^"';
+                $params[] = '-extent ' . $size;
             } else {
-                $params[] = $option.' '.$size;
+                $params[] = $option . ' ' . $size;
             }
         }
 

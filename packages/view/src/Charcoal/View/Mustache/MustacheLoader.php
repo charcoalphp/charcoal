@@ -6,7 +6,6 @@ namespace Charcoal\View\Mustache;
 
 // From Mustache
 use Mustache_Loader as MustacheLoaderInterface;
-
 // From 'charcoal-view'
 use Charcoal\View\AbstractLoader;
 use Charcoal\View\LoaderInterface;

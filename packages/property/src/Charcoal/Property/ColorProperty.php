@@ -4,7 +4,6 @@ namespace Charcoal\Property;
 
 use PDO;
 use InvalidArgumentException;
-
 // From 'charcoal-property'
 use Charcoal\Property\AbstractProperty;
 
@@ -79,7 +78,7 @@ class ColorProperty extends AbstractProperty
         }
         $parsed = $this->parseColorVal($val);
         if (!$this['supportAlpha']) {
-            return '#'.$this->rgbToHexadecimal($parsed['r'], $parsed['g'], $parsed['b']);
+            return '#' . $this->rgbToHexadecimal($parsed['r'], $parsed['g'], $parsed['b']);
         } else {
             return sprintf(
                 'rgba(%d,%d,%d,%s)',
@@ -220,9 +219,9 @@ class ColorProperty extends AbstractProperty
 
         if (strlen($val) == 3) {
             return [
-                'r' => hexdec(substr($val, 0, 1).substr($val, 0, 1)),
-                'g' => hexdec(substr($val, 1, 1).substr($val, 1, 1)),
-                'b' => hexdec(substr($val, 2, 1).substr($val, 2, 1)),
+                'r' => hexdec(substr($val, 0, 1) . substr($val, 0, 1)),
+                'g' => hexdec(substr($val, 1, 1) . substr($val, 1, 1)),
+                'b' => hexdec(substr($val, 2, 1) . substr($val, 2, 1)),
                 // Ignore alpha.
                 'a' => 0,
             ];

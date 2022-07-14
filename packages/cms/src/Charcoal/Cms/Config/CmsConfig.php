@@ -4,10 +4,8 @@ namespace Charcoal\Cms\Config;
 
 // From 'charcoal-config'
 use Charcoal\Config\AbstractConfig;
-
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
-
 // From 'charcoal-cms'
 use Charcoal\Cms\Config\EventConfig;
 use Charcoal\Cms\Config\NewsConfig;

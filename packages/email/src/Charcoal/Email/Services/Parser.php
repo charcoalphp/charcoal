@@ -42,7 +42,7 @@ class Parser
      * @throws InvalidArgumentException If the email is invalid.
      * @return array
      */
-    public function emailToArray(string $var) : array
+    public function emailToArray(string $var): array
     {
         preg_match(self::REGEXP, $var, $out);
         return [
@@ -58,7 +58,7 @@ class Parser
      * @throws InvalidArgumentException If the email array is invalid.
      * @return string
      */
-    public function emailFromArray(array $arr) : string
+    public function emailFromArray(array $arr): string
     {
         if (!isset($arr['email'])) {
             throw new InvalidArgumentException(

@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace Charcoal\View;
 
 use Parsedown;
-
 use Pimple\ServiceProviderInterface;
 use Pimple\Container;
-
 use Charcoal\View\EngineInterface;
 use Charcoal\View\LoaderInterface;
 use Charcoal\View\Mustache\AssetsHelpers as MustacheAssetsHelpers;
@@ -93,7 +91,7 @@ class ViewServiceProvider implements ServiceProviderInterface
                 foreach ($modules as $module) {
                     if (defined(sprintf('%s::APP_CONFIG', $module))) {
                         $configPath = ltrim($module::APP_CONFIG, '/');
-                        $configPath = $basePath.'/'.$configPath;
+                        $configPath = $basePath . '/' . $configPath;
 
                         $configData = $viewConfig->loadFile($configPath);
                         $extraPaths = array_merge(
@@ -205,7 +203,7 @@ class ViewServiceProvider implements ServiceProviderInterface
         $container['view/engine'] = function (Container $container): EngineInterface {
             $viewConfig = $container['view/config'];
             $type = $viewConfig['default_engine'];
-            return $container['view/engine/'.$type];
+            return $container['view/engine/' . $type];
         };
     }
 

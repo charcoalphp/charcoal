@@ -3,13 +3,10 @@
 namespace Charcoal\Cms\Section;
 
 use RuntimeException;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
-
 // From 'charcoal-cms'
 use Charcoal\Cms\AbstractSection;
 use Charcoal\Cms\Mixin\BlocksSectionInterface;

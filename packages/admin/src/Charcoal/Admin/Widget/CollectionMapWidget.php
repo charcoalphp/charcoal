@@ -6,13 +6,10 @@ use ArrayAccess;
 use RuntimeException;
 use InvalidArgumentException;
 use UnexpectedValueException;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminWidget;
 use Charcoal\Admin\Support\HttpAwareTrait;
@@ -220,7 +217,7 @@ class CollectionMapWidget extends AdminWidget implements CollectionContainerInte
                 $loader->setData($collectionConfig);
             }
 
-            $callback = function(&$obj) {
+            $callback = function (&$obj) {
                 $obj->mapInfoboxTemplate = $this->infoboxTemplate();
 
                 if ($this->latProperty() && $this->latProperty()) {
@@ -463,7 +460,7 @@ class CollectionMapWidget extends AdminWidget implements CollectionContainerInte
                 $method = $matches[2];
 
                 if ($class === 'parent') {
-                    $resolved = [ $model, $class.'::'.$method ];
+                    $resolved = [ $model, $class . '::' . $method ];
                 }
             }
 

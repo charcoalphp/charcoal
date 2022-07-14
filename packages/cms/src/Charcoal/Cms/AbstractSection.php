@@ -3,16 +3,13 @@
 namespace Charcoal\Cms;
 
 use InvalidArgumentException;
-
 // From 'charcoal-core'
 use Charcoal\Model\Collection;
 use Charcoal\Loader\CollectionLoader;
-
 // From 'charcoal-object'
 use Charcoal\Object\Content;
 use Charcoal\Object\HierarchicalTrait;
 use Charcoal\Object\RoutableTrait;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
 
@@ -132,7 +129,7 @@ abstract class AbstractSection extends Content implements SectionInterface
      */
     public function hierarchicalLabel()
     {
-        return str_repeat('— ', ($this->hierarchyLevel() - 1)).$this->title();
+        return str_repeat('— ', ($this->hierarchyLevel() - 1)) . $this->title();
     }
 
     /**

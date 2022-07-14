@@ -4,7 +4,6 @@ namespace Charcoal\Admin\Template\System;
 
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminTemplate;
 use Charcoal\Admin\Ui\CollectionContainerInterface;

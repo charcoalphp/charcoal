@@ -3,28 +3,21 @@
 namespace Charcoal\Admin\Widget\FormGroup;
 
 use RuntimeException;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Ui\NestedWidgetContainerInterface;
 use Charcoal\Admin\Ui\NestedWidgetContainerTrait;
 use Charcoal\Admin\Ui\ObjectContainerInterface;
 use Charcoal\Admin\Ui\ObjectContainerTrait;
-
 // From 'charcoal-ui'
 use Charcoal\Ui\FormGroup\AbstractFormGroup;
-
 // From 'charcoal-config'
 use Charcoal\Config\ConfigurableInterface;
-
 // from 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // from 'charcoal-translator'
 use Charcoal\Translator\Translation;
-
 // From 'pimple'
 use Pimple\Container;
-
 // from 'charcoal-attachment'
 use Charcoal\Attachment\Traits\ConfigurableAttachmentsTrait;
 
@@ -111,7 +104,7 @@ class AttachmentFormGroup extends AbstractFormGroup implements
     public function widgetId()
     {
         if (!$this->widgetId) {
-            $this->widgetId = 'attachment_widget_'.uniqid();
+            $this->widgetId = 'attachment_widget_' . uniqid();
         }
 
         return $this->widgetId;
@@ -181,7 +174,7 @@ class AttachmentFormGroup extends AbstractFormGroup implements
 
         if (isset($container['attachments/config'])) {
             $this->setConfig($container['attachments/config']);
-        } else if (isset($container['config']['attachments'])) {
+        } elseif (isset($container['config']['attachments'])) {
             $this->setConfig($container['config']['attachments']);
         }
 

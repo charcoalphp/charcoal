@@ -29,7 +29,7 @@ class PropertyValidator extends AbstractValidator
         foreach ($methods as $method) {
             $method = $this->camelize($method);
 
-            $func = [ $property, 'validate'.ucfirst($method) ];
+            $func = [ $property, 'validate' . ucfirst($method) ];
             if (is_callable($func)) {
                 $result = $result && call_user_func($func);
             }

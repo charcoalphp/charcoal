@@ -2,9 +2,8 @@
 
 namespace Charcoal\Image\Imagick\Effect;
 
-use \Imagick;
-
-use \Charcoal\Image\Effect\AbstractResizeEffect;
+use Imagick;
+use Charcoal\Image\Effect\AbstractResizeEffect;
 
 /**
  * Resize Effect for the Imagick driver

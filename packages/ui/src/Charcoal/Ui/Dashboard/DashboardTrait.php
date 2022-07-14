@@ -3,10 +3,8 @@
 namespace Charcoal\Ui\Dashboard;
 
 use InvalidArgumentException;
-
 // From 'charcoal-user'
 use Charcoal\User\AuthAwareInterface;
-
 // From 'charcoal-ui'
 use Charcoal\Ui\PrioritizableInterface;
 use Charcoal\Ui\UiItemInterface;

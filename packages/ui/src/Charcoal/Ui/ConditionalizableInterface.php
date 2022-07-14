@@ -1,4 +1,5 @@
 <?php
+
 namespace Charcoal\Ui;
 
 use InvalidArgumentException;

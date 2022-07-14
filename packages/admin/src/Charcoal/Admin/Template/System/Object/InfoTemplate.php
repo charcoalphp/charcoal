@@ -7,10 +7,8 @@ use Charcoal\Model\Service\MetadataLoader;
 use Exception;
 use ReflectionClass;
 use ReflectionObject;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminTemplate;
 use Charcoal\Admin\Ui\DashboardContainerInterface;
@@ -74,7 +72,7 @@ class InfoTemplate extends AdminTemplate implements
 
             $ret[] = $property;
         }
-        usort($ret, function($a, $b) {
+        usort($ret, function ($a, $b) {
             $ret = strcmp($a['metadataSource'], $b['metadataSource']);
             if ($ret === 0) {
                 return strcmp($a['ident'], $b['ident']);

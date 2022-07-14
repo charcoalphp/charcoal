@@ -7,18 +7,14 @@ namespace Charcoal\Email\Script;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-app'
 use Charcoal\App\Script\AbstractScript;
 use Charcoal\App\Script\CronScriptInterface;
 use Charcoal\App\Script\CronScriptTrait;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-email'
 use Charcoal\Email\EmailQueueManager;
 

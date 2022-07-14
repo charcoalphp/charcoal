@@ -2,10 +2,9 @@
 
 namespace Charcoal\Image\Effect;
 
-use \Exception;
-use \InvalidArgumentException;
-
-use \Charcoal\Image\AbstractEffect;
+use Exception;
+use InvalidArgumentException;
+use Charcoal\Image\AbstractEffect;
 
 /**
  * Resize an image to given dimensions

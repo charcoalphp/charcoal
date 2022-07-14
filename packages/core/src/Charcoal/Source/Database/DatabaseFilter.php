@@ -3,7 +3,6 @@
 namespace Charcoal\Source\Database;
 
 use UnexpectedValueException;
-
 // From 'charcoal-core'
 use Charcoal\Source\Database\DatabaseExpressionInterface;
 use Charcoal\Source\DatabaseSource;
@@ -53,7 +52,7 @@ class DatabaseFilter extends Filter implements
             if ($this->hasFilters()) {
                 $sql = $this->byFilters();
                 if ($this->isNegating()) {
-                    return $this->operator().' '.$sql;
+                    return $this->operator() . ' ' . $sql;
                 }
                 return $sql;
             }
@@ -61,7 +60,7 @@ class DatabaseFilter extends Filter implements
             if ($this->hasCondition()) {
                 $sql = $this->byCondition();
                 if ($this->isNegating()) {
-                    return $this->operator().' ('.$sql.')';
+                    return $this->operator() . ' (' . $sql . ')';
                 }
                 return $sql;
             }
@@ -101,7 +100,7 @@ class DatabaseFilter extends Filter implements
             $conjunction = $this->conjunction();
         }
 
-        return '('.implode(' '.$conjunction.' ', $conditions).')';
+        return '(' . implode(' ' . $conjunction . ' ', $conditions) . ')';
     }
 
     /**

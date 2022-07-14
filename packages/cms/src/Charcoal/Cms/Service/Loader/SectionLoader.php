@@ -3,13 +3,10 @@
 namespace Charcoal\Cms\Service\Loader;
 
 use Exception;
-
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
-
 // From 'charcoal-object'
 use Charcoal\Object\ObjectRoute;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\TranslatorAwareTrait;
 
@@ -148,10 +145,10 @@ class SectionLoader extends AbstractLoader
 
         $filters = [];
         foreach ($sectionTypes as $key => $val) {
-            $filters[] = 'route_obj_type = \''.$val.'\'';
+            $filters[] = 'route_obj_type = \'' . $val . '\'';
         }
-        $q = 'SELECT * FROM `'.$proto->source()->table().'`
-            WHERE active = 1 AND ('.implode(' OR ', $filters).')
+        $q = 'SELECT * FROM `' . $proto->source()->table() . '`
+            WHERE active = 1 AND (' . implode(' OR ', $filters) . ')
             AND `route_options_ident` IS NULL
             ORDER BY creation_date ASC';
 
@@ -293,7 +290,7 @@ class SectionLoader extends AbstractLoader
         }
         if (!ctype_lower($value)) {
             $value = preg_replace('/\s+/u', '', $value);
-            $value = mb_strtolower(preg_replace('/(.)(?=[A-Z])/u', '$1'.$delimiter, $value), 'UTF-8');
+            $value = mb_strtolower(preg_replace('/(.)(?=[A-Z])/u', '$1' . $delimiter, $value), 'UTF-8');
         }
         static::$snakeCache[$key][$delimiter] = $value;
 

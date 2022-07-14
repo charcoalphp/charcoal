@@ -4,10 +4,8 @@ namespace Charcoal\Cms\Support\Traits;
 
 // From Slim
 use Slim\Exception\ContainerException;
-
 // From 'charcoal-object'
 use Charcoal\Object\CategoryInterface;
-
 // From 'charcoal-cms'
 use Charcoal\Cms\NewsInterface;
 use Charcoal\Cms\Service\Manager\NewsManager;

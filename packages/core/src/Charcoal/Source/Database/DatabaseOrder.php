@@ -3,7 +3,6 @@
 namespace Charcoal\Source\Database;
 
 use UnexpectedValueException;
-
 // From 'charcoal-core'
 use Charcoal\Source\Database\DatabaseExpressionInterface;
 use Charcoal\Source\DatabaseSource;
@@ -102,9 +101,9 @@ class DatabaseOrder extends Order implements
         }
 
         $dir = $this->direction();
-        $dir = $dir === null ? '' : ' '.$dir;
+        $dir = $dir === null ? '' : ' ' . $dir;
 
-        return implode($dir.', ', $fields).$dir;
+        return implode($dir . ', ', $fields) . $dir;
     }
 
     /**
@@ -148,12 +147,12 @@ class DatabaseOrder extends Order implements
         }
 
         $dir = $this->direction();
-        $dir = $dir === null ? '' : ' '.$dir;
+        $dir = $dir === null ? '' : ' ' . $dir;
 
         $values  = implode(',', $values);
         $clauses = [];
         foreach ($fields as $fieldName) {
-            $clauses[] = sprintf('FIELD(%1$s, %2$s)', $fieldName, $values).$dir;
+            $clauses[] = sprintf('FIELD(%1$s, %2$s)', $fieldName, $values) . $dir;
         }
 
         return implode(', ', $clauses);

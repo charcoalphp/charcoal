@@ -4,7 +4,6 @@ namespace Charcoal\App\Template;
 
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
-
 // From Pimple
 use Pimple\Container;
 

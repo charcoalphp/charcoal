@@ -3,16 +3,12 @@
 namespace Charcoal\Admin\Action\System\StaticWebsite;
 
 use Exception;
-
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From Pimple
 use Pimple\Container;
-
 use GuzzleHttp\Client as GuzzleClient;
-
 use Charcoal\Admin\AdminAction;
 
 /**
@@ -38,9 +34,9 @@ class UpdateAction extends AdminAction
         }
         $url = $request->getParam('url');
         $relativeUrl = str_replace($this->baseUrl(), '', $url);
-        $url = $this->baseUrl().$relativeUrl;
+        $url = $this->baseUrl() . $relativeUrl;
 
-        $outputDir = $this->basePath.'cache/static/'.$relativeUrl;
+        $outputDir = $this->basePath . 'cache/static/' . $relativeUrl;
 
         $ret = $this->cacheUrl($url, $outputDir, $response);
 
@@ -89,11 +85,11 @@ class UpdateAction extends AdminAction
         }
 
         // Previous static version must be deleted in order to generate a new one.
-        if (file_exists($outputDir.'/index.php')) {
-            unlink($outputDir.'/index.php');
+        if (file_exists($outputDir . '/index.php')) {
+            unlink($outputDir . '/index.php');
         }
-        if (file_exists($outputDir.'/index.html')) {
-            unlink($outputDir.'/index.html');
+        if (file_exists($outputDir . '/index.html')) {
+            unlink($outputDir . '/index.html');
         }
 
         try {
@@ -117,12 +113,12 @@ class UpdateAction extends AdminAction
         }
 
         if (strstr($headers['Content-Type'][0], 'text/html') !== false) {
-            $outputFile = $outputDir.'/index.html';
+            $outputFile = $outputDir . '/index.html';
             $prefix = '';
         } else {
-            $outputFile = $outputDir.'/index.php';
+            $outputFile = $outputDir . '/index.php';
             $prefix = '<?php
-            header("Content-Type: '.$headers['Content-Type'][0].'");
+            header("Content-Type: ' . $headers['Content-Type'][0] . '");
             ?>
             ';
         }
@@ -134,7 +130,7 @@ class UpdateAction extends AdminAction
             return false;
         }
 
-        $ret = file_put_contents($outputFile, $prefix.$body);
+        $ret = file_put_contents($outputFile, $prefix . $body);
         return ($ret !== false);
     }
 }

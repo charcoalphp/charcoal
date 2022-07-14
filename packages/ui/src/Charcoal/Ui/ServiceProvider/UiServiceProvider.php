@@ -5,10 +5,8 @@ namespace Charcoal\Ui\ServiceProvider;
 // From Pimple
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-
 // From 'charcoal-user'
 use Charcoal\User\ServiceProvider\AuthServiceProvider;
-
 // From 'charcoal-ui'
 use Charcoal\Ui\ServiceProvider\DashboardServiceProvider;
 use Charcoal\Ui\ServiceProvider\FormServiceProvider;

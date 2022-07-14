@@ -4,7 +4,6 @@ namespace Charcoal\Cms\Support\Traits;
 
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
-
 // From 'charcoal-cms'
 use Charcoal\Cms\ConfigInterface;
 
@@ -50,7 +49,7 @@ trait SocialNetworksAwareTrait
             $socials[$ident] = [
                 'account' => $account,
                 'prefix' => $prefix,
-                'fullUrl' => $prefix.$account
+                'fullUrl' => $prefix . $account
             ];
         }
 

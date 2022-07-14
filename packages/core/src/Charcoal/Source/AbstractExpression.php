@@ -4,10 +4,8 @@ namespace Charcoal\Source;
 
 use DateTimeInterface;
 use InvalidArgumentException;
-
 // From 'charcoal-property'
 use Charcoal\Property\DateTimeProperty;
-
 // From 'charcoal-core'
 use Charcoal\Source\ExpressionInterface;
 

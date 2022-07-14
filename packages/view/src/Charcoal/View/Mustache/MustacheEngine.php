@@ -5,10 +5,8 @@ namespace Charcoal\View\Mustache;
 use InvalidArgumentException;
 use RuntimeException;
 use Traversable;
-
 // From Mustache
 use Mustache_Engine;
-
 // From 'charcoal-view'
 use Charcoal\View\AbstractEngine;
 

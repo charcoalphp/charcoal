@@ -65,7 +65,7 @@ trait PathScriptTrait
             throw new InvalidArgumentException('The path must be a string.');
         }
 
-        return $this->globRecursive($this->basePath().'/'.$path, GLOB_BRACE);
+        return $this->globRecursive($this->basePath() . '/' . $path, GLOB_BRACE);
     }
 
     /**
@@ -84,7 +84,7 @@ trait PathScriptTrait
             throw new InvalidArgumentException('The path must be a string.');
         }
 
-        if ($trim === null && defined(get_called_class().'::DIRECTORY_SEPARATORS')) {
+        if ($trim === null && defined(get_called_class() . '::DIRECTORY_SEPARATORS')) {
             $trim = static::DIRECTORY_SEPARATORS;
         }
 
@@ -111,7 +111,7 @@ trait PathScriptTrait
      */
     public function filterWritablePath($path, $name = null)
     {
-        if ($name === null && defined(get_called_class().'::DEFAULT_BASENAME')) {
+        if ($name === null && defined(get_called_class() . '::DEFAULT_BASENAME')) {
             $name = static::DEFAULT_BASENAME;
         }
 
@@ -122,11 +122,11 @@ trait PathScriptTrait
         }
 
         $path = $this->filterPath($path);
-        $test = $this->basePath().'/'.$path;
+        $test = $this->basePath() . '/' . $path;
 
         if (is_dir($test)) {
             if (is_writable($test)) {
-                $path .= '/'.$name;
+                $path .= '/' . $name;
             } else {
                 throw new InvalidArgumentException('The target path is not writeable.');
             }
@@ -161,8 +161,8 @@ trait PathScriptTrait
 
         $depth = 1;
         $files = glob($pattern, $flags);
-        foreach (glob(dirname($pattern).'/*', (GLOB_ONLYDIR|GLOB_NOSORT)) as $dir) {
-            $files = array_merge($files, $this->globRecursive($dir.'/'.basename($pattern), $flags));
+        foreach (glob(dirname($pattern) . '/*', (GLOB_ONLYDIR | GLOB_NOSORT)) as $dir) {
+            $files = array_merge($files, $this->globRecursive($dir . '/' . basename($pattern), $flags));
             $depth++;
             if ($maxDepth > 0 && $depth >= $maxDepth) {
                 break;

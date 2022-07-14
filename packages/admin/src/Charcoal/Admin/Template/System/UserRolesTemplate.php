@@ -3,7 +3,6 @@
 namespace Charcoal\Admin\Template\System;
 
 use Pimple\Container;
-
 use Charcoal\Admin\AdminTemplate;
 use Charcoal\Admin\Ui\CollectionContainerInterface;
 use Charcoal\Admin\Ui\CollectionContainerTrait;

@@ -2,9 +2,8 @@
 
 namespace Charcoal\Image\Imagemagick\Effect;
 
-use \Exception;
-
-use \Charcoal\Image\Effect\AbstractMaskEffect;
+use Exception;
+use Charcoal\Image\Effect\AbstractMaskEffect;
 
 /**
  * Mask Effect for the Imagemagick driver.

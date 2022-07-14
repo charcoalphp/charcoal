@@ -6,17 +6,13 @@ use Charcoal\Ui\Form\FormInterface;
 use Traversable;
 use RuntimeException;
 use InvalidArgumentException;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-view'
 use Charcoal\View\ViewableInterface;
 use Charcoal\View\ViewInterface;
-
 // From 'charcoal-app'
 use Charcoal\App\Template\WidgetInterface;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Ui\ObjectContainerInterface;
 

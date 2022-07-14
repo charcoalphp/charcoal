@@ -4,10 +4,8 @@ namespace Charcoal\Admin\Property;
 
 use InvalidArgumentException;
 use UnexpectedValueException;
-
 // From 'charcoal-property'
 use Charcoal\Property\PropertyInterface;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Property\AbstractProperty;
 use Charcoal\Admin\Property\PropertyDisplayInterface;
@@ -174,7 +172,7 @@ abstract class AbstractPropertyDisplay extends AbstractProperty implements
         }
 
         if ($this->p()['l10n']) {
-            $name .= '['.$this->lang().']';
+            $name .= '[' . $this->lang() . ']';
         }
 
         if ($this->multiple()) {
@@ -368,6 +366,6 @@ abstract class AbstractPropertyDisplay extends AbstractProperty implements
      */
     protected function generateDisplayId()
     {
-        return 'display_'.uniqid();
+        return 'display_' . uniqid();
     }
 }

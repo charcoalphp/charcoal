@@ -6,27 +6,21 @@ use PDO;
 use PDOException;
 use DateTimeInterface;
 use UnexpectedValueException;
-
 // From PSR-3
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\NullLogger;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-config'
 use Charcoal\Config\AbstractEntity;
-
 // From 'charcoal-view'
 use Charcoal\View\ViewableInterface;
 use Charcoal\View\ViewableTrait;
-
 // From 'charcoal-property'
 use Charcoal\Property\DescribablePropertyInterface;
 use Charcoal\Property\DescribablePropertyTrait;
 use Charcoal\Property\PropertyInterface;
-
 // From 'charcoal-core'
 use Charcoal\Model\DescribableInterface;
 use Charcoal\Model\DescribableTrait;
@@ -351,20 +345,20 @@ abstract class AbstractModel extends AbstractEntity implements
                 throw new InvalidArgumentException('Language; must be a string');
             }
 
-            $fieldName = $key.'_'.$lang;
-            $langParam = 'lang_'.$lang;
+            $fieldName = $key . '_' . $lang;
+            $langParam = 'lang_' . $lang;
             $binds[$langParam] = $lang;
-            $langParam = ':'.$langParam;
+            $langParam = ':' . $langParam;
 
-            $switch[] = 'WHEN `'.$fieldName.'` = :ident THEN '.$langParam;
-            $where[]  = '`'.$fieldName.'` = :ident';
+            $switch[] = 'WHEN `' . $fieldName . '` = :ident THEN ' . $langParam;
+            $where[]  = '`' . $fieldName . '` = :ident';
         }
 
         $source = $this->source();
 
-        $sql  = 'SELECT *, (CASE '.implode("\n", $switch).' END) AS _lang ';
-        $sql .= 'FROM `'.$source->table().'` ';
-        $sql .= 'WHERE ('.implode(' OR ', $where).') LIMIT 1';
+        $sql  = 'SELECT *, (CASE ' . implode("\n", $switch) . ' END) AS _lang ';
+        $sql .= 'FROM `' . $source->table() . '` ';
+        $sql .= 'WHERE (' . implode(' OR ', $where) . ') LIMIT 1';
 
         $sth = $source->dbQuery($sql, $binds);
         if ($sth === false) {

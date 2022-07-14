@@ -6,9 +6,7 @@ use DateTime;
 use DateTimeInterface;
 use Exception;
 use InvalidArgumentException;
-
 use Pimple\Container;
-
 // From 'charcoal-core'
 use Charcoal\Model\AbstractModel;
 
@@ -137,7 +135,7 @@ class LostPasswordToken extends AbstractModel
     protected function preSave()
     {
         if ($this->expiry === null) {
-            $this->setExpiry('now +'.$this->defaultExpiry);
+            $this->setExpiry('now +' . $this->defaultExpiry);
         }
 
         return parent::preSave();

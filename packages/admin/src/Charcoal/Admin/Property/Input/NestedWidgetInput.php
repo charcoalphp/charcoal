@@ -5,20 +5,15 @@ namespace Charcoal\Admin\Property\Input;
 use Charcoal\Ui\Form\FormInterface;
 use RuntimeException;
 use InvalidArgumentException;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-ui'
 use Charcoal\Ui\FormGroup\FormGroupInterface;
 use Charcoal\Ui\FormInput\FormInputInterface;
-
 // From 'charcoal-app'
 use Charcoal\App\Template\WidgetInterface;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Property\AbstractPropertyInput;
 use Charcoal\Admin\Ui\NestedWidgetContainerInterface;

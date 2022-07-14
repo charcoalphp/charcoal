@@ -3,7 +3,6 @@
 namespace Charcoal\Admin\Support;
 
 use RuntimeException;
-
 // From PSR-7
 use Psr\Http\Message\UriInterface;
 
@@ -59,7 +58,7 @@ trait BaseUrlTrait
             return $this->createAbsoluteUrl($this->baseUrl, $targetPath);
         }
 
-        return rtrim($this->baseUrl, '/').'/';
+        return rtrim($this->baseUrl, '/') . '/';
     }
 
     /**
@@ -95,7 +94,7 @@ trait BaseUrlTrait
             return $this->createAbsoluteUrl($this->adminUrl, $targetPath);
         }
 
-        return rtrim($this->adminUrl, '/').'/';
+        return rtrim($this->adminUrl, '/') . '/';
     }
 
     /**

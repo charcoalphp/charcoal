@@ -3,17 +3,13 @@
 namespace Charcoal\Admin\Ui;
 
 use RuntimeException;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
-
 // From 'charcoal-view'
 use Charcoal\View\ViewableInterface;
 use Charcoal\View\ViewInterface;
-
 // From 'charcoal-user'
 use Charcoal\User\AuthAwareInterface;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Ui\CollectionContainerInterface;
 use Charcoal\Admin\Ui\FormSidebarInterface;
@@ -440,7 +436,7 @@ trait ActionContainerTrait
             }
 
             if ($url && strpos($url, ':') === false && !in_array($url[0], [ '/', '#', '?' ])) {
-                $url = $this->adminUrl().$url;
+                $url = $this->adminUrl() . $url;
             }
 
             return $url;
@@ -448,7 +444,7 @@ trait ActionContainerTrait
             $url = $renderer->renderTemplate($url);
 
             if ($url && strpos($url, ':') === false && !in_array($url[0], [ '/', '#', '?' ])) {
-                $url = $this->adminUrl().$url;
+                $url = $this->adminUrl() . $url;
             }
         }
 
@@ -475,8 +471,8 @@ trait ActionContainerTrait
             $classes = [];
         }
         $classes[] = 'btn';
-        $classes[] = 'btn-'.$action['actionType'];
-        $classes[] = $this->jsActionPrefix().'-'.$action['ident'];
+        $classes[] = 'btn-' . $action['actionType'];
+        $classes[] = $this->jsActionPrefix() . '-' . $action['ident'];
 
         return $classes;
     }

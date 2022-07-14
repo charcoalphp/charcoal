@@ -3,7 +3,6 @@
 namespace Charcoal\Ui\FormInput;
 
 use Pimple\Container;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 

@@ -6,7 +6,6 @@ namespace Charcoal\View;
 
 use Exception;
 use InvalidArgumentException;
-
 // From 'charcoal-view'
 use Charcoal\View\EngineInterface;
 use Charcoal\View\ViewInterface;
@@ -18,7 +17,6 @@ use Charcoal\View\ViewInterface;
  */
 abstract class AbstractView implements ViewInterface
 {
-
     /**
      * @var EngineInterface $engine
      */

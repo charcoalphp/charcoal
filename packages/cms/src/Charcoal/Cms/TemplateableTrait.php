@@ -3,12 +3,10 @@
 namespace Charcoal\Cms;
 
 use RuntimeException;
-
 // From 'charcoal-core'
 use Charcoal\Model\Model;
 use Charcoal\Model\ModelInterface;
 use Charcoal\Source\StorableTrait;
-
 // From 'charcoal-property'
 use Charcoal\Property\PropertyInterface;
 use Charcoal\Property\SelectablePropertyInterface;
@@ -17,7 +15,6 @@ use Charcoal\Property\Structure\StructureModel;
 use Charcoal\Property\ModelStructureProperty;
 use Charcoal\Property\TemplateOptionsProperty;
 use Charcoal\Property\TemplateProperty;
-
 // From 'charcoal-cms'
 use Charcoal\Cms\TemplateableInterface;
 
@@ -368,7 +365,7 @@ trait TemplateableTrait
 
         $templateStructKey = $templateInterfaces;
         array_unshift($templateStructKey, $this->objType(), $this->id());
-        $templateStructKey = 'template/structure='.$metadataLoader->serializeMetaKey($templateStructKey);
+        $templateStructKey = 'template/structure=' . $metadataLoader->serializeMetaKey($templateStructKey);
 
         $structureMetadata = $metadataLoader->load(
             $templateStructKey,

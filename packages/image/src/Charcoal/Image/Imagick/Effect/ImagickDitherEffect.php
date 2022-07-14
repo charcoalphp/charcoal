@@ -2,9 +2,8 @@
 
 namespace Charcoal\Image\Imagick\Effect;
 
-use \Imagick;
-
-use \Charcoal\Image\Effect\AbstractDitherEffect;
+use Imagick;
+use Charcoal\Image\Effect\AbstractDitherEffect;
 
 /**
  * Dither Effect for the Imagick driver.

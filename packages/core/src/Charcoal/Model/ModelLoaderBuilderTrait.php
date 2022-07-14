@@ -4,7 +4,6 @@ namespace Charcoal\Model;
 
 use InvalidArgumentException;
 use RuntimeException;
-
 use Charcoal\Model\Service\ModelLoader;
 use Charcoal\Model\Service\ModelLoaderBuilder;
 

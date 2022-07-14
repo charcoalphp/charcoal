@@ -5,10 +5,8 @@ namespace Charcoal\Admin\Script;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminScript;
 use Charcoal\Admin\Ui\CollectionContainerInterface;

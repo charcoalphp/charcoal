@@ -6,7 +6,6 @@ namespace Charcoal\View\Mustache;
 
 // From Mustache
 use Mustache_LambdaHelper as LambdaHelper;
-
 // From 'erusev/parsedown'
 use Parsedown;
 

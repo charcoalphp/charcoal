@@ -3,19 +3,14 @@
 namespace Charcoal\Object;
 
 use InvalidArgumentException;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-core'
 use Charcoal\Model\AbstractModel;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\TranslatorAwareTrait;
-
 // From 'charcoal-object'
 use Charcoal\Object\ContentInterface;
 use Charcoal\Object\AuthorableInterface;

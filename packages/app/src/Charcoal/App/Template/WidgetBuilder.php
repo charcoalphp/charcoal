@@ -3,10 +3,8 @@
 namespace Charcoal\App\Template;
 
 use InvalidArgumentException;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 

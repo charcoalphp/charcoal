@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Charcoal\View;
 
 use InvalidArgumentException;
-
 // From 'charcoal-view'
 use Charcoal\View\ViewInterface;
 

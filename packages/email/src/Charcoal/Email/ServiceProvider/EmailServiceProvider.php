@@ -8,14 +8,11 @@ namespace Charcoal\Email\ServiceProvider;
 use Charcoal\View\ViewInterface;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-
 // From 'phpmailer/phpmailer'
 use PHPMailer\PHPMailer\PHPMailer;
-
 // From 'charcoal/factory'
 use Charcoal\Factory\FactoryInterface;
 use Charcoal\Factory\GenericFactory;
-
 use Charcoal\Email\Email;
 use Charcoal\Email\EmailInterface;
 use Charcoal\Email\EmailConfig;
@@ -62,7 +59,7 @@ class EmailServiceProvider implements ServiceProviderInterface
          * @param Container $container Pimple DI Container.
          * @return FactoryInterface
          */
-        $container['email/factory'] = function(Container $container): FactoryInterface {
+        $container['email/factory'] = function (Container $container): FactoryInterface {
             return new GenericFactory([
                 'map' => [
                     'email' => Email::class
@@ -84,7 +81,7 @@ class EmailServiceProvider implements ServiceProviderInterface
         /**
          * @return Parser
          */
-        $container['email/parser'] = function(): Parser {
+        $container['email/parser'] = function (): Parser {
             return new Parser();
         };
 
@@ -92,7 +89,7 @@ class EmailServiceProvider implements ServiceProviderInterface
          * @param Container $container Pimple DI Container.
          * @return Tracker
          */
-        $container['email/tracker'] = function(Container $container): Tracker {
+        $container['email/tracker'] = function (Container $container): Tracker {
             return new Tracker(
                 (string)$container['base-url'],
                 $container['model/factory']

@@ -78,7 +78,7 @@ trait AuthTemplateTrait
             $label = $this->translator()->translate($label);
         }
 
-        return '&larr; '.$label;
+        return '&larr; ' . $label;
     }
 
     /**

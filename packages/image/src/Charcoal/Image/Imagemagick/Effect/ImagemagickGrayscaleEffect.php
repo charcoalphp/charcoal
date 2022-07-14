@@ -2,7 +2,7 @@
 
 namespace Charcoal\Image\Imagemagick\Effect;
 
-use \Charcoal\Image\Effect\AbstractGrayscaleEffect;
+use Charcoal\Image\Effect\AbstractGrayscaleEffect;
 
 /**
  * Grayscale Effect for the Imagemagick driver.

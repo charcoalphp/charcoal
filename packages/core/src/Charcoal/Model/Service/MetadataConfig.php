@@ -3,7 +3,6 @@
 namespace Charcoal\Model\Service;
 
 use InvalidArgumentException;
-
 // From 'charcoal-config'
 use Charcoal\Config\AbstractConfig;
 

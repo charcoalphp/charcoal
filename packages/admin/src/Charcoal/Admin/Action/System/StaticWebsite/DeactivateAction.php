@@ -5,10 +5,8 @@ namespace Charcoal\Admin\Action\System\StaticWebsite;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From Pimple
 use Pimple\Container;
-
 use Charcoal\Admin\AdminAction;
 
 /**
@@ -30,7 +28,7 @@ class DeactivateAction extends AdminAction
     {
         unset($request);
 
-        $staticLink = $this->basePath.'www/static';
+        $staticLink = $this->basePath . 'www/static';
         if (!file_exists($staticLink)) {
             $this->setSuccess(false);
             return $response->withStatus(409);

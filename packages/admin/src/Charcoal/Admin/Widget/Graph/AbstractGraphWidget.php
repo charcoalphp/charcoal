@@ -5,7 +5,6 @@ namespace Charcoal\Admin\Widget\Graph;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminWidget;
 use Charcoal\Admin\Widget\Graph\GraphWidgetInterface;
-
 use Charcoal\Admin\Ui\ActionContainerTrait;
 use Charcoal\Admin\Ui\CollectionContainerInterface;
 use Charcoal\Admin\Ui\CollectionContainerTrait;

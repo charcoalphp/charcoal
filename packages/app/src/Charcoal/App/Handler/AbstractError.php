@@ -4,10 +4,8 @@ namespace Charcoal\App\Handler;
 
 // From PSR-3
 use Psr\Log\LoggerInterface;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-app'
 use Charcoal\App\Handler\AbstractHandler;
 
@@ -76,7 +74,7 @@ abstract class AbstractError extends AbstractHandler
 
         $html = $this->renderHtmlError($error);
         while ($error = $error->getPrevious()) {
-            $html .= '<h2>'.$this->translator()->translate('Previous error').'</h2>';
+            $html .= '<h2>' . $this->translator()->translate('Previous error') . '</h2>';
             $html .= $this->renderHtmlError($error);
         }
 
@@ -173,26 +171,26 @@ abstract class AbstractError extends AbstractHandler
      */
     protected function renderThrowableAsText($throwable)
     {
-        $text = sprintf('Type: %s'.PHP_EOL, get_class($throwable));
+        $text = sprintf('Type: %s' . PHP_EOL, get_class($throwable));
 
         $code = $throwable->getCode();
         if (!empty($code)) {
-            $text .= sprintf('Code: %s'.PHP_EOL, $code);
+            $text .= sprintf('Code: %s' . PHP_EOL, $code);
         }
 
         $message = $throwable->getMessage();
         if (!empty($message)) {
-            $text .= sprintf('Message: %s'.PHP_EOL, htmlentities($message));
+            $text .= sprintf('Message: %s' . PHP_EOL, htmlentities($message));
         }
 
         $file = $throwable->getFile();
         if (!empty($file)) {
-            $text .= sprintf('File: %s'.PHP_EOL, $file);
+            $text .= sprintf('File: %s' . PHP_EOL, $file);
         }
 
         $line = $throwable->getLine();
         if (!empty($line)) {
-            $text .= sprintf('Line: %s'.PHP_EOL, $line);
+            $text .= sprintf('Line: %s' . PHP_EOL, $line);
         }
 
         $trace = $throwable->getTraceAsString();
@@ -224,11 +222,11 @@ abstract class AbstractError extends AbstractHandler
 
         $message = $this->renderThrowableAsText($throwable);
         while ($throwable = $throwable->getPrevious()) {
-            $message .= PHP_EOL.$prev.PHP_EOL;
+            $message .= PHP_EOL . $prev . PHP_EOL;
             $message .= $this->renderThrowableAsText($throwable);
         }
 
-        $message .= PHP_EOL.$note.PHP_EOL;
+        $message .= PHP_EOL . $note . PHP_EOL;
 
         $this->logError($message);
     }
@@ -260,9 +258,9 @@ abstract class AbstractError extends AbstractHandler
         if ($this->displayErrorDetails()) {
             $prev = $this->translator()->translate('Previous error:', [], 'charcoal');
 
-            $message .= PHP_EOL.$this->renderThrowableAsText($throwable);
+            $message .= PHP_EOL . $this->renderThrowableAsText($throwable);
             while ($throwable = $throwable->getPrevious()) {
-                $message .= PHP_EOL.$prev.PHP_EOL;
+                $message .= PHP_EOL . $prev . PHP_EOL;
                 $message .= $this->renderThrowableAsText($throwable);
             }
         }
@@ -308,16 +306,16 @@ abstract class AbstractError extends AbstractHandler
      */
     protected function renderXmlMessage($throwable)
     {
-        $xml = "<error>\n  <message>".$this->getSummary()."</message>\n";
+        $xml = "<error>\n  <message>" . $this->getSummary() . "</message>\n";
         if ($this->displayErrorDetails()) {
             do {
                 $xml .= "  <exception>\n";
-                $xml .= '    <type>'.get_class($throwable)."</type>\n";
-                $xml .= '    <code>'.$throwable->getCode()."</code>\n";
-                $xml .= '    <message>'.$this->createCdataSection($throwable->getMessage())."</message>\n";
-                $xml .= '    <file>'.$throwable->getFile()."</file>\n";
-                $xml .= '    <line>'.$throwable->getLine()."</line>\n";
-                $xml .= '    <trace>'.$this->createCdataSection($throwable->getTraceAsString())."</trace>\n";
+                $xml .= '    <type>' . get_class($throwable) . "</type>\n";
+                $xml .= '    <code>' . $throwable->getCode() . "</code>\n";
+                $xml .= '    <message>' . $this->createCdataSection($throwable->getMessage()) . "</message>\n";
+                $xml .= '    <file>' . $throwable->getFile() . "</file>\n";
+                $xml .= '    <line>' . $throwable->getLine() . "</line>\n";
+                $xml .= '    <trace>' . $this->createCdataSection($throwable->getTraceAsString()) . "</trace>\n";
                 $xml .= "  </exception>\n";
             } while ($throwable = $throwable->getPrevious());
         }
@@ -370,7 +368,7 @@ abstract class AbstractError extends AbstractHandler
         }
 
         if ($trace) {
-            $html .= '<h2>'.$this->translator()->translate('Trace', [], 'charcoal').'</h2>';
+            $html .= '<h2>' . $this->translator()->translate('Trace', [], 'charcoal') . '</h2>';
             $html .= sprintf('<pre>%s</pre>', htmlentities($trace));
         }
 
@@ -389,7 +387,7 @@ abstract class AbstractError extends AbstractHandler
 
         $html = $this->renderHtmlError($error);
         while ($error = $error->getPrevious()) {
-            $html .= '<h2>'.$this->translator()->translate('Previous error').'</h2>';
+            $html .= '<h2>' . $this->translator()->translate('Previous error') . '</h2>';
             $html .= $this->renderHtmlError($error);
         }
 

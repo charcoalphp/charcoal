@@ -7,13 +7,10 @@ use DateTimeInterface;
 use Exception;
 use RuntimeException;
 use InvalidArgumentException;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-core'
 use Charcoal\Model\AbstractModel;
-
 // From 'charcoal-object'
 use Charcoal\Object\ObjectScheduleInterface;
 

@@ -3,14 +3,11 @@
 namespace Charcoal\Cache\Middleware;
 
 use Closure;
-
 // From PSR-6
 use Psr\Cache\CacheItemPoolInterface;
-
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From 'charcoal-cache'
 use Charcoal\Cache\CacheConfig;
 

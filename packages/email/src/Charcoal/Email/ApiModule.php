@@ -7,10 +7,8 @@ namespace Charcoal\Email;
 // From 'psr/http-message' (PSR-7)
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-
 // From 'charcoal/app'
 use Charcoal\App\Module\AbstractModule;
-
 use Charcoal\Email\Api\V1\LinkAction;
 use Charcoal\Email\Api\V1\OpenAction;
 
@@ -38,11 +36,11 @@ class ApiModule extends AbstractModule
     {
         $container = $this->app()->getContainer();
 
-        $this->app()->group(self::BASE_PATH, function() use ($container) {
+        $this->app()->group(self::BASE_PATH, function () use ($container) {
 
             $group = $this;
 
-            $group->get('/link/{linkId}', function(Request $request, Response $response, array $args) use ($container) {
+            $group->get('/link/{linkId}', function (Request $request, Response $response, array $args) use ($container) {
                 $action = new LinkAction(
                     $args['linkId'],
                     $container['email/tracker'],
@@ -51,7 +49,7 @@ class ApiModule extends AbstractModule
                 return $action($request, $response);
             });
 
-            $group->get('/open/{emailId}[.png]', function(Request $request, Response $response, array $args) use ($container) {
+            $group->get('/open/{emailId}[.png]', function (Request $request, Response $response, array $args) use ($container) {
                 $action = new OpenAction(
                     $args['emailId'],
                     $container['email/tracker']

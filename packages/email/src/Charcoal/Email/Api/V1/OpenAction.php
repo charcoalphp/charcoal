@@ -42,7 +42,7 @@ class OpenAction
      * @param Response $response PSR-7 Response.
      * @return Response
      */
-    public function __invoke(Request $request, Response $response) : Response
+    public function __invoke(Request $request, Response $response): Response
     {
         $ip = $request->getAttribute('client-ip');
         $this->tracker->trackOpen($this->emailId, $ip);

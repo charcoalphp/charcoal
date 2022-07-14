@@ -3,7 +3,6 @@
 namespace Charcoal\Cache;
 
 use InvalidArgumentException;
-
 // From 'charcoal-config'
 use Charcoal\Config\AbstractConfig;
 
@@ -159,7 +158,7 @@ class CacheConfig extends AbstractConfig
      */
     public function types()
     {
-        $types = $this->types + self::DEFAULT_TYPES;
+        $types = ($this->types + self::DEFAULT_TYPES);
         return array_keys($types);
     }
 

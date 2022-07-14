@@ -3,16 +3,12 @@
 namespace Charcoal\User\Acl;
 
 use InvalidArgumentException;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-core'
 use Charcoal\Model\AbstractModel;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\TranslatorAwareTrait;
-
 // From 'charcoal-object'
 use Charcoal\Object\CategorizableInterface;
 use Charcoal\Object\CategorizableTrait;

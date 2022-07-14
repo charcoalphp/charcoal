@@ -3,17 +3,14 @@
 namespace Charcoal\User;
 
 use InvalidArgumentException;
-
 // From PSR-3
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-
 // From 'laminas/laminas-permissions-acl'
 use Laminas\Permissions\Acl\Acl;
 use Laminas\Permissions\Acl\Exception\ExceptionInterface as AclExceptionInterface;
 use Laminas\Permissions\Acl\Resource\ResourceInterface as AclResourceInterface;
 use Laminas\Permissions\Acl\Role\RoleInterface as AclRoleInterface;
-
 // From 'charcoal-user'
 use Charcoal\User\UserInterface;
 
@@ -83,7 +80,7 @@ abstract class AbstractAuthorizer implements
 
             return $result;
         } catch (AclExceptionInterface $e) {
-            $this->logger->error('[ACL] '.$e->getMessage());
+            $this->logger->error('[ACL] ' . $e->getMessage());
         }
 
         return null;
@@ -166,7 +163,7 @@ abstract class AbstractAuthorizer implements
 
             return $result;
         } catch (AclExceptionInterface $e) {
-            $this->logger->error('[ACL] '.$e->getMessage());
+            $this->logger->error('[ACL] ' . $e->getMessage());
         }
 
         return null;

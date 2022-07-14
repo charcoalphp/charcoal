@@ -5,13 +5,10 @@ namespace Charcoal\App\ServiceProvider;
 // From Pimple
 use Pimple\ServiceProviderInterface;
 use Pimple\Container;
-
 // From 'league/climate'
 use League\CLImate\CLImate;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\GenericFactory as Factory;
-
 use Charcoal\App\Route\ScriptRoute;
 use Charcoal\App\Script\ScriptInterface;
 

@@ -4,7 +4,6 @@ namespace Charcoal\Model;
 
 // From 'charcoal-property'
 use Charcoal\Property\PropertyInterface;
-
 // From 'charcoal-config'
 use Charcoal\Config\ConfigInterface;
 

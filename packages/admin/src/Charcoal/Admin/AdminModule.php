@@ -5,11 +5,9 @@ namespace Charcoal\Admin;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From 'charcoal-app'
 use Charcoal\App\Handler\HandlerInterface;
 use Charcoal\App\Module\AbstractModule;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\ServiceProvider\AdminServiceProvider;
 
@@ -57,7 +55,7 @@ class AdminModule extends AbstractModule
 
         $this->setConfig($adminConfig);
 
-        $groupIdent = '/'.trim($adminConfig['base_path'], '/');
+        $groupIdent = '/' . trim($adminConfig['base_path'], '/');
 
         // Add the route group
         $this->app()->group($groupIdent, 'charcoal/admin/module:setupRoutes')

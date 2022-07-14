@@ -5,7 +5,6 @@ namespace Charcoal\Ui\ServiceProvider;
 // From Pimple
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-
 // From 'charcoal-ui'
 use Charcoal\Ui\Menu\MenuBuilder;
 use Charcoal\Ui\Menu\MenuFactory;
@@ -37,7 +36,7 @@ class MenuServiceProvider implements ServiceProviderInterface
          * @param Container $container A Pimple DI container.
          * @return MenuFactory
          */
-        $container['menu/factory'] = function(Container $container) {
+        $container['menu/factory'] = function (Container $container) {
             $menuFactory = new MenuFactory();
             $menuFactory->setArguments([
                 'container'         => $container,
@@ -52,7 +51,7 @@ class MenuServiceProvider implements ServiceProviderInterface
          * @param Container $container A Pimple DI container.
          * @return MenuBuilder
          */
-        $container['menu/builder'] = function(Container $container) {
+        $container['menu/builder'] = function (Container $container) {
             $menuFactory = $container['menu/factory'];
             $menuBuilder = new MenuBuilder($menuFactory, $container);
             return $menuBuilder;

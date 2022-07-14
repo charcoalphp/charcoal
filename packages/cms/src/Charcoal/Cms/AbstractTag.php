@@ -3,11 +3,9 @@
 namespace Charcoal\Cms;
 
 use Exception;
-
 // From 'charcoal-cms'
 use Charcoal\Object\CategoryTrait;
 use Charcoal\Object\Content;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
 

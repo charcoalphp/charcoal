@@ -3,7 +3,6 @@
 namespace Charcoal\Source;
 
 use InvalidArgumentException;
-
 // From 'charcoal-core'
 use Charcoal\Source\Filter;
 use Charcoal\Source\FilterInterface;

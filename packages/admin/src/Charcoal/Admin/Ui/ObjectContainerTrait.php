@@ -6,13 +6,10 @@ use Exception;
 use RuntimeException;
 use InvalidArgumentException;
 use ReflectionClass;
-
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-view'
 use Charcoal\View\ViewableInterface;
 use Charcoal\View\ViewInterface;

@@ -5,35 +5,27 @@ namespace Charcoal\Admin\Property;
 use Traversable;
 use InvalidArgumentException;
 use UnexpectedValueException;
-
 // From PSR-3
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\NullLogger;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-core'
 use Charcoal\Model\DescribableInterface;
 use Charcoal\Model\DescribableTrait;
-
 // From 'charcoal-view'
 use Charcoal\View\ViewableInterface;
 use Charcoal\View\ViewableTrait;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
 use Charcoal\Translator\TranslatorAwareTrait;
-
 // From 'charcoal-property'
 use Charcoal\Property\PropertyFactory;
 use Charcoal\Property\PropertyInterface as ModelPropertyInterface;
 use Charcoal\Property\PropertyMetadata;
-
 // From 'charcoal-app'
 use Charcoal\App\DebugAwareTrait;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Property\PropertyInterface as AdminPropertyInterface;
 
@@ -586,7 +578,7 @@ abstract class AbstractProperty implements
      */
     protected function setter($key)
     {
-        $setter = 'set_'.$key;
+        $setter = 'set_' . $key;
         return $this->camelize($setter);
     }
 

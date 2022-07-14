@@ -3,15 +3,12 @@
 namespace Charcoal\Attachment\Traits;
 
 use InvalidArgumentException;
-
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
-
 // From 'charcoal-attachment'
 use Charcoal\Attachment\Interfaces\AttachableInterface;
 use Charcoal\Attachment\Interfaces\AttachmentAwareInterface;
 use Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
-
 use Charcoal\Attachment\Object\Join;
 use Charcoal\Attachment\Object\Attachment;
 
@@ -68,7 +65,7 @@ trait AttachmentAwareTrait
         } else {
             if ($group !== null) {
                 $this->logger->warning(
-                    'AttachmentAwareTrait::getAttachments() parameters are deprecated. '.
+                    'AttachmentAwareTrait::getAttachments() parameters are deprecated. ' .
                     'An array of parameters should be used.',
                     [ 'package' => 'charcoal/attachment' ]
                 );
@@ -252,7 +249,7 @@ trait AttachmentAwareTrait
     public function removeJoins()
     {
         $this->logger->warning(
-            'AttachmentAwareTrait::removeJoins() is deprecated. '.
+            'AttachmentAwareTrait::removeJoins() is deprecated. ' .
             'Use AttachmentAwareTrait::removeAttachmentJoins() instead.',
             [ 'package' => 'charcoal/attachment' ]
         );
@@ -333,7 +330,7 @@ trait AttachmentAwareTrait
         }
 
         // Current form
-        $form = $this->metadata()->get('admin.forms.'.$formIdent);
+        $form = $this->metadata()->get('admin.forms.' . $formIdent);
 
         // Setted form gruops
         $formGroups = $this->metadata()->get('admin.form_groups');

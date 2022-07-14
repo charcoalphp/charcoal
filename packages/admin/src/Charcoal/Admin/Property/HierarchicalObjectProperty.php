@@ -4,16 +4,12 @@ namespace Charcoal\Admin\Property;
 
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
-
 // From 'charcoal-object'
 use Charcoal\Object\HierarchicalInterface;
-
 // From 'charcoal-property'
 use Charcoal\Property\ObjectProperty;
-
 // From 'charcoal-support'
 use Charcoal\Object\HierarchicalCollection;
 

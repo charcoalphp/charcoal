@@ -4,7 +4,6 @@ namespace Charcoal\Property;
 
 // From 'charcoal-core'
 use Charcoal\Model\DescribableInterface;
-
 // From 'charcoal-property'
 use Charcoal\Property\PropertyInterface;
 

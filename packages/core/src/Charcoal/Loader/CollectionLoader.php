@@ -7,15 +7,12 @@ use RuntimeException;
 use ArrayAccess;
 use Traversable;
 use PDO;
-
 // From PSR-3
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\NullLogger;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
 use Charcoal\Model\Collection;
@@ -410,7 +407,7 @@ class CollectionLoader implements
         }
 
         foreach ($properties as $propertyIdent) {
-            $val = ('%'.$keyword.'%');
+            $val = ('%' . $keyword . '%');
             $this->addFilter([
                 'property' => $propertyIdent,
                 'operator' => 'LIKE',
@@ -730,8 +727,8 @@ class CollectionLoader implements
             $sth = $this->source()->dbQuery($query, $binds, $types);
         } else {
             throw new InvalidArgumentException(sprintf(
-                'The SQL query must be a string or an array: '.
-                '[ string $query, array $binds, array $dataTypes ]; '.
+                'The SQL query must be a string or an array: ' .
+                '[ string $query, array $binds, array $dataTypes ]; ' .
                 'received %s',
                 is_object($query) ? get_class($query) : $query
             ));
@@ -820,7 +817,7 @@ class CollectionLoader implements
             ));
         }
 
-        $collection = new $collectClass;
+        $collection = new $collectClass();
 
         return $collection;
     }
@@ -875,7 +872,7 @@ class CollectionLoader implements
      */
     protected function setter($key)
     {
-        $setter = 'set_'.$key;
+        $setter = 'set_' . $key;
         return $this->camelize($setter);
     }
 

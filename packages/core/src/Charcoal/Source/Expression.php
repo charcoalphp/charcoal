@@ -3,7 +3,6 @@
 namespace Charcoal\Source;
 
 use InvalidArgumentException;
-
 // From 'charcoal-core'
 use Charcoal\Source\AbstractExpression;
 use Charcoal\Source\ExpressionInterface;

@@ -5,15 +5,12 @@ namespace Charcoal\Cms\Service\Manager;
 use DateTime;
 use DateTimeInterface;
 use Exception;
-
 // From 'charcoal-core'
 use Charcoal\Model\Collection;
 use Charcoal\Model\Model;
-
 // From 'charcoal-object'
 use Charcoal\Object\CategoryInterface;
 use Charcoal\Object\CategoryTrait;
-
 // From 'charcoal-cms'
 use Charcoal\Cms\Config\CmsConfig;
 use Charcoal\Cms\EventCategory;
@@ -140,7 +137,7 @@ class EventManager extends AbstractManager
 
         // Basicly.
         if ($year && $month && $day && !$date) {
-            $date = new DateTime($year.'-'.$month.'-'.$day);
+            $date = new DateTime($year . '-' . $month . '-' . $day);
         }
 
         // Category is still valid.
@@ -148,7 +145,7 @@ class EventManager extends AbstractManager
         if ($cat) {
             $extraSql = '
             AND
-                \''.$cat.'\' IN (category)';
+                \'' . $cat . '\' IN (category)';
         }
 
         // Get event from specific date.
@@ -156,13 +153,13 @@ class EventManager extends AbstractManager
             $loader = $this->loader()->all();
             $proto = $this->loader()->proto();
             $table = $proto->source()->table();
-            $q = 'SELECT * FROM '.$table.'
+            $q = 'SELECT * FROM ' . $table . '
                 WHERE
-                    \''.$date->format('Y-m-d').'\'
+                    \'' . $date->format('Y-m-d') . '\'
                 BETWEEN
                     DATE(start_date) AND DATE(end_date)
                 AND
-                    active = 1'.$extraSql;
+                    active = 1' . $extraSql;
 
             $collection = $loader->loadFromQuery($q);
 
@@ -174,13 +171,13 @@ class EventManager extends AbstractManager
             $loader = $this->loader()->all();
             $proto = $this->loader()->proto();
             $table = $proto->source()->table();
-            $q = 'SELECT * FROM '.$table.'
+            $q = 'SELECT * FROM ' . $table . '
                 WHERE
-                    \''.$this->year().'\' = YEAR(start_date)
+                    \'' . $this->year() . '\' = YEAR(start_date)
                 OR
-                    \''.$this->year().'\' = YEAR(end_date)
+                    \'' . $this->year() . '\' = YEAR(end_date)
                 AND
-                    active = 1'.$extraSql;
+                    active = 1' . $extraSql;
 
             $collection = $loader->loadFromQuery($q);
 
@@ -189,19 +186,19 @@ class EventManager extends AbstractManager
 
         // Year AND month filter.
         if ($year && $month) {
-            $between = new DateTime($year.'-'.$month.'-01');
+            $between = new DateTime($year . '-' . $month . '-01');
             $loader = $this->loader()->all();
             $proto = $this->loader()->proto();
             $table = $proto->source()->table();
-            $q = 'SELECT * FROM '.$table.'
+            $q = 'SELECT * FROM ' . $table . '
                 WHERE
-                    \''.$between->format('Y-m-d H:i:s').'\'
+                    \'' . $between->format('Y-m-d H:i:s') . '\'
                 BETWEEN
                     CAST(CONCAT(YEAR(start_date), \'-\', MONTH(start_date), \'-\', 01) AS DATETIME)
                 AND
                     CAST(CONCAT(YEAR(end_date), \'-\', MONTH(end_date), \'-\', 01) AS DATETIME)
                 AND
-                    active = 1'.$extraSql;
+                    active = 1' . $extraSql;
 
             $collection = $loader->loadFromQuery($q);
 

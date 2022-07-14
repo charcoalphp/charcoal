@@ -4,26 +4,20 @@ namespace Charcoal\Admin\Property\Input;
 
 use RuntimeException;
 use InvalidArgumentException;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
 use Charcoal\Model\Collection;
 use Charcoal\Loader\CollectionLoader;
-
 // From 'charcoal-object'
 use Charcoal\Object\HierarchicalCollection;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-property'
 use Charcoal\Property\ObjectProperty;
 use Charcoal\Property\SelectablePropertyInterface;
 use Charcoal\Property\AbstractProperty;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Service\SelectizeRenderer;
 use Charcoal\Admin\Property\HierarchicalObjectProperty;
@@ -661,7 +655,7 @@ class SelectizeInput extends SelectInput
         }
 
         if ($this->p()['l10n']) {
-            $name .= '['.$this->lang().']';
+            $name .= '[' . $this->lang() . ']';
         }
 
         if ($this->multiple() && $this->isObject()) {
@@ -1024,7 +1018,7 @@ class SelectizeInput extends SelectInput
 
             'form_data'                => $this->getFormData(),
             'form_ident'               => $this->formIdent(),
-            'selectize_selector'       => '#'.$this->inputId(),
+            'selectize_selector'       => '#' . $this->inputId(),
             'selectize_options'        => $this->selectizeOptions(),
             'choice_obj_map'           => $this->choiceObjMap(),
             'selectize_property_ident' => $prop->ident(),

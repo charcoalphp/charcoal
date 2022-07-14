@@ -3,7 +3,7 @@
 namespace Charcoal\Image;
 
 // Intra-module (`charcoal-image`) dependencies
-use \Charcoal\Image\ImageInterface;
+use Charcoal\Image\ImageInterface;
 
 /**
  * Image Effect Interface.

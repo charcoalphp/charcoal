@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace Charcoal\View;
 
 use InvalidArgumentException;
-
 // From 'charcoal-config'
 use Charcoal\Config\AbstractConfig;
-
 // From 'charcoal-view'
 use Charcoal\View\Mustache\MustacheEngine;
 use Charcoal\View\Twig\TwigEngine;

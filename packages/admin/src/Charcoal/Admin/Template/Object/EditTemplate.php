@@ -3,12 +3,9 @@
 namespace Charcoal\Admin\Template\Object;
 
 use Exception;
-
 // From Pimple
 use Pimple\Container;
-
 use Psr\Http\Message\RequestInterface;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminTemplate;
 use Charcoal\Admin\Ui\DashboardContainerInterface;
@@ -36,7 +33,7 @@ class EditTemplate extends AdminTemplate implements
 
         if (!$this->obj()->id()) {
             $path = str_replace('object/edit', 'object/create', $request->getUri()->getPath());
-            header('Location: '.(string)$request->getUri()->withPath($path));
+            header('Location: ' . (string)$request->getUri()->withPath($path));
             die();
         }
         return $ret;

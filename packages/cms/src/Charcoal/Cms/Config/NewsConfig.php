@@ -1,4 +1,5 @@
 <?php
+
 namespace Charcoal\Cms\Config;
 
 // From 'charcoal-config'

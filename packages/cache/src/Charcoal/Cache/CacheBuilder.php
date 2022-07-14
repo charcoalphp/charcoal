@@ -5,7 +5,6 @@ namespace Charcoal\Cache;
 use ArrayAccess;
 use Traversable;
 use InvalidArgumentException;
-
 // From 'tedivm/stash'
 use Stash\Interfaces\ItemInterface;
 use Stash\Interfaces\PoolInterface;

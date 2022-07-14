@@ -4,10 +4,8 @@ namespace Charcoal\Model;
 
 // From 'charcoal-config'
 use Charcoal\Config\AbstractConfig;
-
 // From 'charcoal-property'
 use Charcoal\Property\PropertyInterface;
-
 // From 'charcoal-core'
 use Charcoal\Model\MetadataInterface;
 

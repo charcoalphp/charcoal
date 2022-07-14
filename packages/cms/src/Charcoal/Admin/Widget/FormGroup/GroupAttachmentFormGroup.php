@@ -7,7 +7,6 @@ use Charcoal\Ui\FormGroup\FormGroupInterface;
 use Charcoal\Ui\FormGroup\FormGroupTrait;
 use Charcoal\Ui\UiItemInterface;
 use Charcoal\Ui\UiItemTrait;
-
 // From 'charcoal-cms'
 use Charcoal\Admin\Widget\GroupAttachmentWidget;
 

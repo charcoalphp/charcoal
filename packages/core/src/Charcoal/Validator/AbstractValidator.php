@@ -3,7 +3,6 @@
 namespace Charcoal\Validator;
 
 use InvalidArgumentException;
-
 // From 'charcoal-core'
 use Charcoal\Validator\ValidatorInterface;
 use Charcoal\Validator\ValidatableInterface;
@@ -164,7 +163,7 @@ abstract class AbstractValidator implements ValidatorInterface
         foreach ($allResults as $level => $resultset) {
             foreach ($resultset as $result) {
                 if ($prefix !== null) {
-                    $result->setIdent($prefix.'.'.$result->ident());
+                    $result->setIdent($prefix . '.' . $result->ident());
                 }
                 $this->addResult($result);
             }

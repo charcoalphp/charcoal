@@ -5,7 +5,6 @@ namespace Charcoal\Admin\Script\Object;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminScript;
 
@@ -67,7 +66,7 @@ class CreateScript extends AdminScript
         $ret = $obj->save();
 
         $climate->green()->out(
-            "\n".sprintf('Success! Object "%s" created.', $ret)
+            "\n" . sprintf('Success! Object "%s" created.', $ret)
         );
 
         return $response;

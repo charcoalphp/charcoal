@@ -3,7 +3,6 @@
 namespace Charcoal\Admin\Template\System;
 
 use Pimple\Container;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminTemplate;
 
@@ -50,7 +49,7 @@ class StaticWebsiteTemplate extends AdminTemplate
      */
     public function isStaticWebsiteEnabled()
     {
-        return file_exists($this->basePath.'/www/static');
+        return file_exists($this->basePath . '/www/static');
     }
 
     /**
@@ -58,11 +57,11 @@ class StaticWebsiteTemplate extends AdminTemplate
      */
     public function staticWebsiteFiles()
     {
-        $files = $this->globRecursive($this->basePath.'cache/static', 'index.*');
+        $files = $this->globRecursive($this->basePath . 'cache/static', 'index.*');
         foreach ($files as $file) {
             yield [
                 'file'      => $file,
-                'name'      => dirname(str_replace($this->basePath.'cache/static/', '', $file)),
+                'name'      => dirname(str_replace($this->basePath . 'cache/static/', '', $file)),
                 'size'      => $this->formatBytes(filesize($file)),
                 'mtime'     => date(DATE_ATOM, filemtime($file)),
                 'generated' => date('Y-m-d H:i:s', filemtime($file)),
@@ -96,7 +95,7 @@ class StaticWebsiteTemplate extends AdminTemplate
         $suffixes = [ 'bytes', 'k', 'M', 'G', 'T' ];
 
         $floor = floor($base);
-        return round(pow(1024, ($base - $floor)), 2).' '.$suffixes[$floor];
+        return round(pow(1024, ($base - $floor)), 2) . ' ' . $suffixes[$floor];
     }
 
     /**
@@ -107,8 +106,8 @@ class StaticWebsiteTemplate extends AdminTemplate
      */
     private function globRecursive($dir, $pattern, $flags = 0)
     {
-        $files = glob($dir.'/'.$pattern, $flags);
-        foreach (glob($dir.'/*', (GLOB_ONLYDIR|GLOB_NOSORT)) as $dir) {
+        $files = glob($dir . '/' . $pattern, $flags);
+        foreach (glob($dir . '/*', (GLOB_ONLYDIR | GLOB_NOSORT)) as $dir) {
             $files = array_merge($files, $this->globRecursive($dir, $pattern, $flags));
         }
         return $files;

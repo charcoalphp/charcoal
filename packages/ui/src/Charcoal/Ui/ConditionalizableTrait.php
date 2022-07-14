@@ -3,7 +3,6 @@
 namespace Charcoal\Ui;
 
 use InvalidArgumentException;
-
 // From 'charcoal-view'
 use Charcoal\View\ViewableInterface;
 use Charcoal\View\ViewInterface;

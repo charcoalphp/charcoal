@@ -20,7 +20,7 @@ class ImagemagickRevertEffect extends AbstractRevertEffect
         }
 
         $channel = $this->image()->convertChannel($this->channel());
-        $cmd = '-channel '.$channel.' -negate';
+        $cmd = '-channel ' . $channel . ' -negate';
         $this->image()->applyCmd($cmd);
         return $this;
     }

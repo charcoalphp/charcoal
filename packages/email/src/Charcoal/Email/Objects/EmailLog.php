@@ -6,10 +6,8 @@ use DateTime;
 use DateTimeInterface;
 use Exception;
 use InvalidArgumentException;
-
 // From 'charcoal/core'
 use Charcoal\Model\AbstractModel;
-
 use Charcoal\Email\EmailAwareTrait;
 
 /**
@@ -308,7 +306,7 @@ class EmailLog extends AbstractModel
      * @see    StorableTrait::preSave()
      * @return boolean
      */
-    protected function preSave() : bool
+    protected function preSave(): bool
     {
         parent::preSave();
 

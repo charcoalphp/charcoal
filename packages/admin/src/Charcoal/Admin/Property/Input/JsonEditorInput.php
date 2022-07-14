@@ -3,7 +3,6 @@
 namespace Charcoal\Admin\Property\Input;
 
 use InvalidArgumentException;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Property\Input\TextareaInput;
 

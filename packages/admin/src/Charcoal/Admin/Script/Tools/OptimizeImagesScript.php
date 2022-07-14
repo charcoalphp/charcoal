@@ -4,9 +4,7 @@ namespace Charcoal\Admin\Script\Tools;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 use Pimple\Container;
-
 use Charcoal\Admin\AdminScript;
 
 /**
@@ -77,7 +75,7 @@ class OptimizeImagesScript extends AdminScript
         $this->jpgLevel = $climate->arguments->get('jpg');
         $this->pngLevel = $climate->arguments->get('png');
         $dir = $climate->arguments->get('dir');
-        $this->dir = realpath($this->basePath.$dir);
+        $this->dir = realpath($this->basePath . $dir);
         if (!$this->dir) {
             $climate->error('Invalid directory');
             return $response;
@@ -201,13 +199,13 @@ class OptimizeImagesScript extends AdminScript
      */
     private function findCmd($cmdName)
     {
-        $cmd = exec('type -p '.$cmdName);
-        $cmd = str_replace($cmdName.' is ', '', $cmd);
+        $cmd = exec('type -p ' . $cmdName);
+        $cmd = str_replace($cmdName . ' is ', '', $cmd);
         if (!$cmd) {
-            $cmd = exec('where '.$cmdName);
+            $cmd = exec('where ' . $cmdName);
         }
         if (!$cmd) {
-            $cmd = exec('which '.$cmdName);
+            $cmd = exec('which ' . $cmdName);
         }
         if (!$cmd) {
             return '';

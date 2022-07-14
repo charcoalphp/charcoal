@@ -2,7 +2,7 @@
 
 namespace Charcoal\Image\Imagick\Effect;
 
-use \Charcoal\Image\Effect\AbstractRotateEffect;
+use Charcoal\Image\Effect\AbstractRotateEffect;
 
 /**
  * Rotate Effect for the imagick driver.

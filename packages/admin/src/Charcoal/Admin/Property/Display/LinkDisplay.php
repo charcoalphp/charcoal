@@ -3,17 +3,13 @@
 namespace Charcoal\Admin\Property\Display;
 
 use InvalidArgumentException;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-property'
 use Charcoal\Property\FileProperty;
 use Charcoal\Property\ImageProperty;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Property\AbstractPropertyDisplay;
 use Charcoal\Admin\Support\BaseUrlTrait;

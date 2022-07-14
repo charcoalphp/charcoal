@@ -4,10 +4,8 @@ namespace Charcoal\Admin\Property\Input;
 
 // From Pimple
 use Pimple\Container;
-
 // From Mustache
 use Mustache_LambdaHelper as LambdaHelper;
-
 // // From 'charcoal-admin'
 use Charcoal\Admin\Property\AbstractPropertyInput;
 
@@ -139,7 +137,7 @@ class FileInput extends AbstractPropertyInput
     public function abridgedInputVal()
     {
         $val = (string)$this->inputVal();
-        $val = preg_replace('!^'.preg_quote($this->p()['uploadPath'], '!').'!', '', $val);
+        $val = preg_replace('!^' . preg_quote($this->p()['uploadPath'], '!') . '!', '', $val);
 
         if (strpos($val, '://') !== false) {
             $host = parse_url($val, PHP_URL_HOST);
@@ -147,7 +145,7 @@ class FileInput extends AbstractPropertyInput
             if (mb_strlen($path) > 30) {
                 $a = 12;
                 $z = 12;
-                $abr = (($a > 0) ? mb_substr($path, 0, $a) : '').'&hellip;'.(($z > 0) ? mb_substr($path, -$z) : '');
+                $abr = (($a > 0) ? mb_substr($path, 0, $a) : '') . '&hellip;' . (($z > 0) ? mb_substr($path, -$z) : '');
                 $val = str_replace($path, $abr, $val);
             }
         }
@@ -343,7 +341,7 @@ class FileInput extends AbstractPropertyInput
     protected function getFilePickerUrlTemplate()
     {
         $uri = 'obj_type={{ objType }}&obj_id={{ objId }}&property={{ p.ident }}&callback={{ inputId }}';
-        $uri = '{{# withAdminUrl }}elfinder?'.$uri.'{{/ withAdminUrl }}';
+        $uri = '{{# withAdminUrl }}elfinder?' . $uri . '{{/ withAdminUrl }}';
 
         return $uri;
     }

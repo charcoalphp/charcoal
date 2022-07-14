@@ -4,7 +4,6 @@ namespace Charcoal\Admin\Action\Selectize;
 
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Action\Object\UpdateAction as BaseUpdateAction;
 use Charcoal\Admin\Service\SelectizeRenderer;

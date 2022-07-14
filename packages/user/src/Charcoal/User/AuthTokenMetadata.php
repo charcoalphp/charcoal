@@ -3,7 +3,6 @@
 namespace Charcoal\User;
 
 use InvalidArgumentException;
-
 // From 'charcoal-core'
 use Charcoal\Model\ModelMetadata;
 

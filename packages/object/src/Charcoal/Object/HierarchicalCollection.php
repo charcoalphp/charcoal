@@ -3,10 +3,8 @@
 namespace Charcoal\Object;
 
 use InvalidArgumentException;
-
 // From 'charcoal-core'
 use Charcoal\Model\Collection as CharcoalCollection;
-
 // From 'charcoal-object'
 use Charcoal\Object\HierarchicalInterface;
 

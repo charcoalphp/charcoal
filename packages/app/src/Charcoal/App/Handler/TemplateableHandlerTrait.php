@@ -3,18 +3,14 @@
 namespace Charcoal\App\Handler;
 
 use RuntimeException;
-
 // From PSR-7
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Translator;
-
 // From 'charcoal-view'
 use Charcoal\View\ViewInterface;
 
@@ -43,7 +39,7 @@ trait TemplateableHandlerTrait
     {
         if ($this->cacheEnabled()) {
             $cachePool = $this->container['cache'];
-            $cacheKey  = 'template/'.str_replace('/', '.', $this->cacheIdent());
+            $cacheKey  = 'template/' . str_replace('/', '.', $this->cacheIdent());
             $cacheItem = $cachePool->getItem($cacheKey);
 
             $output = $cacheItem->get();

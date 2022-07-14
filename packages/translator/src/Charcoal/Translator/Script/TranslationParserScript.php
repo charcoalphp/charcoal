@@ -4,14 +4,11 @@ namespace Charcoal\Translator\Script;
 
 // From Pimple
 use Pimple\Container;
-
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminScript;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\TranslatorAwareTrait;
 
@@ -165,10 +162,10 @@ class TranslationParserScript extends AdminScript
         // Warn the user
         $base = $this->appConfig->get('base_path');
         $output = $this->output();
-        $filePath = str_replace('/', DIRECTORY_SEPARATOR, $base.$output);
+        $filePath = str_replace('/', DIRECTORY_SEPARATOR, $base . $output);
 
         $this->climate()->backgroundGreen()->out(
-            'Make sure to include <light_green>'.$filePath.'</light_green> in your <light_green>translator/paths</light_green> configurations.'
+            'Make sure to include <light_green>' . $filePath . '</light_green> in your <light_green>translator/paths</light_green> configurations.'
         );
 
         return $response;
@@ -209,15 +206,15 @@ class TranslationParserScript extends AdminScript
         );
 
         $this->climate()->green()->out(
-            'CSV file output: <white>'.$this->filePath().'</white>'
+            'CSV file output: <white>' . $this->filePath() . '</white>'
         );
 
         $this->climate()->green()->out(
-            'CSV file names: <white>'.$this->domain().'.{locale}.csv</white>'
+            'CSV file names: <white>' . $this->domain() . '.{locale}.csv</white>'
         );
 
         $this->climate()->green()->out(
-            'Looping through <white>'.$this->maxRecursiveLevel().'</white> level of folders'
+            'Looping through <white>' . $this->maxRecursiveLevel() . '</white> level of folders'
         );
 
         $this->climate()->green()->out(
@@ -239,7 +236,7 @@ class TranslationParserScript extends AdminScript
 
         $base = $this->appConfig->get('base_path');
         $output = $this->output();
-        $this->filePath = str_replace('/', DIRECTORY_SEPARATOR, $base.$output);
+        $this->filePath = str_replace('/', DIRECTORY_SEPARATOR, $base . $output);
         return $this->filePath;
     }
 
@@ -293,12 +290,12 @@ class TranslationParserScript extends AdminScript
         switch ($type) {
             case 'php':
                 $f = $this->phpFunction();
-                $regex = '/->'.$f.'\(\s*\n*\r*(["\'])(?<text>(.|\n|\r|\n\r)*?)\s*\n*\r*\1\)/i';
+                $regex = '/->' . $f . '\(\s*\n*\r*(["\'])(?<text>(.|\n|\r|\n\r)*?)\s*\n*\r*\1\)/i';
                 break;
 
             case 'mustache':
                 $tag = $this->mustacheTag();
-                $regex = '/({{|\[\[)\s*#\s*'.$tag.'\s*(}}|\]\])(?<text>(.|\n|\r|\n\r)*?)({{|\[\[)\s*\/\s*'.$tag.'\s*(}}|\]\])/i';
+                $regex = '/({{|\[\[)\s*#\s*' . $tag . '\s*(}}|\]\])(?<text>(.|\n|\r|\n\r)*?)({{|\[\[)\s*\/\s*' . $tag . '\s*(}}|\]\])/i';
                 break;
 
             default:
@@ -334,7 +331,7 @@ class TranslationParserScript extends AdminScript
         $path = $this->path();
 
         if ($path) {
-            $this->climate()->green()->out('Parsing files in <white>'.$path.'</white>');
+            $this->climate()->green()->out('Parsing files in <white>' . $path . '</white>');
             $translations = $this->getTranslationsFromPath($path, 'mustache');
             $translations = array_replace($translations, $this->getTranslationsFromPath($path, 'php'));
             return $translations;
@@ -344,7 +341,7 @@ class TranslationParserScript extends AdminScript
 
         $translations = [];
         foreach ($paths as $p) {
-            $this->climate()->green()->out('Parsing files in <white>'.$p.'</white>');
+            $this->climate()->green()->out('Parsing files in <white>' . $p . '</white>');
             $translations = array_replace_recursive($translations, $this->getTranslationsFromPath($p, 'mustache'));
             $translations = array_replace_recursive($translations, $this->getTranslationsFromPath($p, 'php'));
         }
@@ -362,7 +359,7 @@ class TranslationParserScript extends AdminScript
     {
         // remove vendor/locomotivemtl/charcoal-app
         $base  = $this->appConfig->get('base_path');
-        $glob  = $this->globRecursive($base.$path.'*.'.$fileType);
+        $glob  = $this->globRecursive($base . $path . '*.' . $fileType);
         $regex = $this->regEx($fileType);
 
         $translations = [];
@@ -403,7 +400,7 @@ class TranslationParserScript extends AdminScript
             }
         }
         $this->climate()->out('.');
-        $this->climate()->green()->out('Translations parsed from '.$path);
+        $this->climate()->green()->out('Translations parsed from ' . $path);
         return $translations;
     }
 
@@ -419,8 +416,8 @@ class TranslationParserScript extends AdminScript
         // $max = $this->maxRecursiveLevel();
         $i = 1;
         $files = glob($pattern, $flags);
-        foreach (glob(dirname($pattern).'/*', (GLOB_ONLYDIR | GLOB_NOSORT)) as $dir) {
-            $files = array_merge($files, $this->globRecursive($dir.'/'.basename($pattern), $flags));
+        foreach (glob(dirname($pattern) . '/*', (GLOB_ONLYDIR | GLOB_NOSORT)) as $dir) {
+            $files = array_merge($files, $this->globRecursive($dir . '/' . basename($pattern), $flags));
             $i++;
             // if ($i >= $max) {
             //     break;
@@ -478,8 +475,8 @@ class TranslationParserScript extends AdminScript
     {
         if (!count($translations)) {
             $this->climate()->error('
-                There was no translations in the provided path ('.$this->path().')
-                with the given recursive level ('.$this->maxRecursiveLevel().')
+                There was no translations in the provided path (' . $this->path() . ')
+                with the given recursive level (' . $this->maxRecursiveLevel() . ')
             ');
             return $this;
         }
@@ -492,13 +489,13 @@ class TranslationParserScript extends AdminScript
 
         foreach ($translations as $lang => $trans) {
             // Create / open the handle
-            $filePath = str_replace('/', DIRECTORY_SEPARATOR, $base.$output);
+            $filePath = str_replace('/', DIRECTORY_SEPARATOR, $base . $output);
             $dirname = dirname($filePath);
 
             if (!file_exists($filePath)) {
                 mkdir($filePath, 0755, true);
             }
-            $file = fopen($base.$output.$domain.'.'.$lang.'.csv', 'w');
+            $file = fopen($base . $output . $domain . '.' . $lang . '.csv', 'w');
             if (!$file) {
                 continue;
             }

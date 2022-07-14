@@ -63,7 +63,7 @@ trait ImageAttributesTrait
 
         $defaults = $this->parseStyleAttr($this->defaultStyleAttr());
         if ($defaults) {
-            $styles .= ' '.$defaults;
+            $styles .= ' ' . $defaults;
         }
 
         $this->styleAttr = $styles;

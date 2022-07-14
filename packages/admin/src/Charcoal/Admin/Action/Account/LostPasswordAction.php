@@ -4,17 +4,13 @@ namespace Charcoal\Admin\Action\Account;
 
 use Exception;
 use RuntimeException;
-
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminAction;
 use Charcoal\Admin\User;
@@ -270,7 +266,7 @@ class LostPasswordAction extends AdminAction
                 'token'            => $token->id(),
                 'siteName'         => $siteName,
                 'adminUrl'         => $this->adminUrl(),
-                'urlResetPassword' => $this->adminUrl().'account/reset-password/'.$token->id(),
+                'urlResetPassword' => $this->adminUrl() . 'account/reset-password/' . $token->id(),
                 'expiry'           => $token->expiry()->format('Y-m-d H:i:s'),
                 'ipAddress'        => isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '',
             ],

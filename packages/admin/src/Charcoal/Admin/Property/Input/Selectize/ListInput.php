@@ -25,7 +25,7 @@ class ListInput extends SelectizeInput
     {
         $parentClass = parent::inputClass();
 
-        $class = $parentClass.' selectize-list';
+        $class = $parentClass . ' selectize-list';
 
         return $class;
     }

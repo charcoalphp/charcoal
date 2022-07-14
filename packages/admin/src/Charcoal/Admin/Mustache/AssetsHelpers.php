@@ -8,7 +8,6 @@ use Assetic\Asset\AssetReference;
 use Assetic\Asset\StringAsset;
 use Assetic\AssetManager;
 use Mustache_LambdaHelper as LambdaHelper;
-
 // From charcoal-view
 use Charcoal\View\Mustache\HelpersInterface;
 
@@ -122,7 +121,7 @@ class AssetsHelpers implements HelpersInterface
     public function __get($macro)
     {
         if (!$this->action) {
-            $macro = '__'.$macro;
+            $macro = '__' . $macro;
             if (!method_exists($this, $macro)) {
                 return false;
             }
@@ -186,6 +185,6 @@ class AssetsHelpers implements HelpersInterface
     protected function __output($collection)
     {
         $dump = $this->assets->get($collection)->dump();
-        return '{{=<<<<% %>>>>=}}'.$dump.'<<<<%={{ }}=%>>>>';
+        return '{{=<<<<% %>>>>=}}' . $dump . '<<<<%={{ }}=%>>>>';
     }
 }

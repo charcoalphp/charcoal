@@ -6,18 +6,14 @@ use Exception;
 use UnexpectedValueException;
 use InvalidArgumentException;
 use RuntimeException;
-
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-core'
 use Charcoal\Model\Collection;
 use Charcoal\Loader\CollectionLoader;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminAction;
 
@@ -123,7 +119,7 @@ class LoadAction extends AdminAction
         }
 
         try {
-            $this->logger->debug('[Admin] Loading object: '.$objType);
+            $this->logger->debug('[Admin] Loading object: ' . $objType);
 
             $this->setObjType($objType);
             $this->loadObjectCollection($objType);

@@ -4,7 +4,6 @@ namespace Charcoal\Object;
 
 use InvalidArgumentException;
 use UnexpectedValueException;
-
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
 

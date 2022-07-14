@@ -5,13 +5,10 @@ declare(strict_types=1);
 namespace Charcoal\View\Mustache;
 
 use LogicException;
-
 // From Mustache
 use Mustache_LambdaHelper as LambdaHelper;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Translator;
-
 // From 'charcoal-view'
 use Charcoal\View\Mustache\HelpersInterface;
 
@@ -116,7 +113,7 @@ class TranslatorHelpers implements HelpersInterface
                 $text = $this->translator->trans($text, [], $this->domain, $this->locale);
             } else {
                 if (!is_numeric($this->number) && is_string($this->number)) {
-                    $this->number = $helper->render('{{ '.$this->number.' }}');
+                    $this->number = $helper->render('{{ ' . $this->number . ' }}');
                 }
 
                 $text = $this->translator->transChoice($text, (int)$this->number, [], $this->domain, $this->locale);

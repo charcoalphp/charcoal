@@ -4,11 +4,9 @@ namespace Charcoal\User\Acl;
 
 use PDO;
 use PDOException;
-
 // From PSR-3
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-
 // From 'laminas/laminas-permissions-acl'
 use Laminas\Permissions\Acl\Acl;
 use Laminas\Permissions\Acl\Role\GenericRole;
@@ -70,7 +68,7 @@ class Manager implements LoggerAwareInterface
                 $this->addRoleAndPermissions($acl, $row['ident'], $row, $resource);
             }
         } catch (PDOException $e) {
-            $this->logger->warning('Can not fetch ACL roles: '.$e->getMessage());
+            $this->logger->warning('Can not fetch ACL roles: ' . $e->getMessage());
         }
     }
 

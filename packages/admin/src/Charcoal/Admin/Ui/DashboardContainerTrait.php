@@ -4,11 +4,9 @@ namespace Charcoal\Admin\Ui;
 
 use Exception;
 use InvalidArgumentException;
-
 // From 'charcoal-ui'
 use Charcoal\Ui\Dashboard\DashboardBuilder;
 use Charcoal\Ui\Dashboard\DashboardInterface;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Widget\DashboardWidget;
 

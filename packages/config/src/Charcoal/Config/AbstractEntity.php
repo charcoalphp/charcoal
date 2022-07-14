@@ -165,7 +165,7 @@ abstract class AbstractEntity implements EntityInterface
             return false;
         }
 
-        $getter = 'get'.ucfirst($key);
+        $getter = 'get' . ucfirst($key);
         if (!isset($this->mutatorCache[$getter])) {
             $this->mutatorCache[$getter] = is_callable([ $this, $getter ]);
         }
@@ -220,7 +220,7 @@ abstract class AbstractEntity implements EntityInterface
             return null;
         }
 
-        $getter = 'get'.ucfirst($key);
+        $getter = 'get' . ucfirst($key);
         if (!isset($this->mutatorCache[$getter])) {
             $this->mutatorCache[$getter] = is_callable([ $this, $getter ]);
         }
@@ -276,7 +276,7 @@ abstract class AbstractEntity implements EntityInterface
             return;
         }
 
-        $setter = 'set'.ucfirst($key);
+        $setter = 'set' . ucfirst($key);
         if (!isset($this->mutatorCache[$setter])) {
             $this->mutatorCache[$setter] = is_callable([ $this, $setter ]);
         }

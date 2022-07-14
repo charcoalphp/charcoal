@@ -5,10 +5,8 @@ namespace Charcoal\Ui\ServiceProvider;
 // From Pimple
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\GenericFactory as Factory;
-
 // From 'charcoal-ui'
 use Charcoal\Ui\Form\FormBuilder;
 use Charcoal\Ui\Form\FormInterface;
@@ -46,7 +44,7 @@ class FormServiceProvider implements ServiceProviderInterface
          * @param Container $container A Pimple DI container.
          * @return \Charcoal\Factory\FactoryInterface
          */
-        $container['form/factory'] = function(Container $container) {
+        $container['form/factory'] = function (Container $container) {
             return new Factory([
                 'base_class'    => FormInterface::class,
                 'default_class' => GenericForm::class,
@@ -66,7 +64,7 @@ class FormServiceProvider implements ServiceProviderInterface
          * @param Container $container A Pimple DI container.
          * @return FormBuilder
          */
-        $container['form/builder'] = function(Container $container) {
+        $container['form/builder'] = function (Container $container) {
             $formFactory = $container['form/factory'];
             $formBuilder = new FormBuilder($formFactory);
             return $formBuilder;
@@ -83,7 +81,7 @@ class FormServiceProvider implements ServiceProviderInterface
          * @param Container $container A Pimple DI container.
          * @return \Charcoal\Factory\FactoryInterface
          */
-        $container['form/group/factory'] = function(Container $container) {
+        $container['form/group/factory'] = function (Container $container) {
             return new Factory([
                 'base_class'    => FormGroupInterface::class,
                 'default_class' => GenericFormGroup::class,
@@ -113,7 +111,7 @@ class FormServiceProvider implements ServiceProviderInterface
          * @param Container $container A Pimple DI container.
          * @return \Charcoal\Factory\FactoryInterface
          */
-        $container['form/input/factory'] = function() {
+        $container['form/input/factory'] = function () {
             return new Factory([
                 'base_class'       => FormInputInterface::class,
                 'default_class'    => GenericFormInput::class,
@@ -127,7 +125,7 @@ class FormServiceProvider implements ServiceProviderInterface
          * @param Container $container A Pimple DI container.
          * @return FormInputBuilder
          */
-        $container['form/input/builder'] = function(Container $container) {
+        $container['form/input/builder'] = function (Container $container) {
             $formInputFactory = $container['form/input/factory'];
             $formInputBuilder = new FormInputBuilder($formInputFactory, $container);
             return $formInputBuilder;

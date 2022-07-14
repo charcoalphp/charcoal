@@ -5,7 +5,6 @@ namespace Charcoal\Admin\Script\Translation;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminScript;
 
@@ -104,7 +103,7 @@ class TranslateScript extends AdminScript
 
         // remove vendor/locomotivemtl/charcoal-app
         $base = $this->base();
-        $glob = $this->globRecursive($base.$path.$file);
+        $glob = $this->globRecursive($base . $path . $file);
 
 
         $input = $climate->confirm(
@@ -117,7 +116,7 @@ class TranslateScript extends AdminScript
         // Check out existing translations
         if ($toCSV) {
             $output = $this->file();
-            if (file_exists($base.$output)) {
+            if (file_exists($base . $output)) {
                 // loop all
                 $translations = $this->fromCSV();
             }
@@ -132,7 +131,7 @@ class TranslateScript extends AdminScript
                 $i = 0;
                 $t = count($array[$index]);
 
-                for (; $i<$t; $i++) {
+                for (; $i < $t; $i++) {
                     $orig = $array[$index][$i];
                     if (!isset($translations[$orig])) {
                         $translations[$orig] = [
@@ -162,8 +161,8 @@ class TranslateScript extends AdminScript
         $max = $this->maxRecursiveLevel();
         $i = 1;
         $files = glob($pattern, $flags);
-        foreach (glob(dirname($pattern).'/*', (GLOB_ONLYDIR|GLOB_NOSORT)) as $dir) {
-            $files = array_merge($files, $this->globRecursive($dir.'/'.basename($pattern), $flags));
+        foreach (glob(dirname($pattern) . '/*', (GLOB_ONLYDIR | GLOB_NOSORT)) as $dir) {
+            $files = array_merge($files, $this->globRecursive($dir . '/' . basename($pattern), $flags));
             $i++;
             if ($i >= $max) {
                 break;
@@ -179,7 +178,7 @@ class TranslateScript extends AdminScript
      */
     public function base()
     {
-        return realpath($this->app()->config()->get('base_path').'../../../').'/';
+        return realpath($this->app()->config()->get('base_path') . '../../../') . '/';
     }
 
     /**
@@ -248,7 +247,7 @@ class TranslateScript extends AdminScript
     {
         $output = $this->file();
         $base = $this->base();
-        $file = fopen($base.$output, 'r');
+        $file = fopen($base . $output, 'r');
 
         if (!$file) {
             return [];
@@ -290,11 +289,11 @@ class TranslateScript extends AdminScript
         $columns = $this->columns();
 
         // Create / open the handle
-        $dirname = dirname($base.$output);
+        $dirname = dirname($base . $output);
         if (!is_dir($dirname)) {
             mkdir($dirname, 0755, true);
         }
-        $file = fopen($base.$output, 'w');
+        $file = fopen($base . $output, 'w');
         if (!$file) {
             // Wtf happened?
             return $this;

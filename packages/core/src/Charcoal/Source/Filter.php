@@ -4,7 +4,6 @@ namespace Charcoal\Source;
 
 use Countable;
 use InvalidArgumentException;
-
 // From 'charcoal-core'
 use Charcoal\Source\Expression;
 use Charcoal\Source\ExpressionInterface;

@@ -3,10 +3,8 @@
 namespace Charcoal\Property;
 
 use PDO;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
-
 // From 'charcoal-property'
 use Charcoal\Property\AbstractProperty;
 use Charcoal\Property\SelectablePropertyInterface;
@@ -133,7 +131,7 @@ class LangProperty extends AbstractProperty implements SelectablePropertyInterfa
                     if (isset($localeStruct['name'])) {
                         $label = $this->translator()->translation($localeStruct['name']);
                     } else {
-                        $trans = 'locale.'.$langCode;
+                        $trans = 'locale.' . $langCode;
                         if ($trans === $this->translator()->translate($trans)) {
                             $label = strtoupper($langCode);
                         } else {

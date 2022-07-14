@@ -5,14 +5,11 @@ namespace Charcoal\Cms;
 use DateTime;
 use DateTimeInterface;
 use InvalidArgumentException;
-
-
 // From 'charcoal-object'
 use Charcoal\Object\Content;
 use Charcoal\Object\CategorizableTrait;
 use Charcoal\Object\PublishableTrait;
 use Charcoal\Object\RoutableTrait;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
 
@@ -156,7 +153,7 @@ abstract class AbstractEvent extends Content implements EventInterface
         if ($start === $end) {
             $date = $start;
         } else {
-            $date = $start.' - '.$end;
+            $date = $start . ' - ' . $end;
         }
 
         return $date;

@@ -4,14 +4,11 @@ namespace Charcoal\Admin\Property\Display;
 
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-view'
 use Charcoal\View\ViewableInterface;
 use Charcoal\View\ViewableTrait;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Property\AbstractPropertyDisplay;
 

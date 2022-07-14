@@ -5,24 +5,18 @@ namespace Charcoal\Admin\Script\Notification;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
 use Charcoal\Model\CollectionInterface;
-
 // From 'charcoal-object'
 use Charcoal\Object\ObjectRevision;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-app'
 use Charcoal\App\Script\CronScriptInterface;
 use Charcoal\App\Script\CronScriptTrait;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminScript;
 use Charcoal\Admin\Object\Notification;
@@ -63,7 +57,7 @@ abstract class AbstractNotificationScript extends AdminScript implements CronScr
         $arguments = [
             'now' => [
                 'longPrefix'    => 'now',
-                'description'   => 'The "relative" time this script should run at. '.
+                'description'   => 'The "relative" time this script should run at. ' .
                                    'If nothing is provided, default "now" is used.',
                 'defaultValue'  => 'now'
             ]
@@ -209,7 +203,7 @@ abstract class AbstractNotificationScript extends AdminScript implements CronScr
         $email = $this->emailFactory->create('email');
 
         $defaultEmailData = [
-            'campaign'      => 'admin-notification-'.$notification->id(),
+            'campaign'      => 'admin-notification-' . $notification->id(),
             'subject'       => 'Charcoal Notification',
             'from'          => 'charcoal@example.com',
             'template_data' => [
@@ -290,9 +284,9 @@ abstract class AbstractNotificationScript extends AdminScript implements CronScr
                 $obj->targetTypeLabel = $obj['target_type'];
             }
             $obj->userObject = $userFactory->create(User::class)->load($obj['rev_user']);
-            $obj->publicUrl = is_callable([$obj->targetObject, 'url']) ? $baseUrl.$obj->targetObject->url() : null;
+            $obj->publicUrl = is_callable([$obj->targetObject, 'url']) ? $baseUrl . $obj->targetObject->url() : null;
             $obj->charcoalUrl = sprintf(
-                $baseUrl.'admin/object/edit?obj_type=%s&obj_id=%s',
+                $baseUrl . 'admin/object/edit?obj_type=%s&obj_id=%s',
                 $obj['target_type'],
                 $obj['target_id']
             );

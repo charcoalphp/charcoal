@@ -4,16 +4,12 @@ namespace Charcoal\Admin\Widget\Cms;
 
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
-
 // From 'charcoal-property'
 use Charcoal\Property\PropertyInterface;
-
 // From 'charcoal-object'
 use Charcoal\Object\HierarchicalCollection;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Property\Display\HierarchicalDisplay;
 use Charcoal\Admin\Widget\TableWidget;

@@ -3,10 +3,8 @@
 namespace Charcoal\Admin\Property\Display;
 
 use InvalidArgumentException;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Property\AbstractPropertyDisplay;
 

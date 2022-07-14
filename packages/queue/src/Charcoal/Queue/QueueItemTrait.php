@@ -403,7 +403,7 @@ trait QueueItemTrait
     protected function generateExpiry()
     {
         $date = (clone $this['processingDate'] ?? new DateTime());
-        $date->add(new DateInterval('PT'.$this->defaultExpiryInSeconds.'S'));
+        $date->add(new DateInterval('PT' . $this->defaultExpiryInSeconds . 'S'));
 
         return $this->setExpiryDate($date);
     }

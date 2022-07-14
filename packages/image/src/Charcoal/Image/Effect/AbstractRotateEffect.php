@@ -2,16 +2,14 @@
 
 namespace Charcoal\Image\Effect;
 
-use \InvalidArgumentException;
-
-use \Charcoal\Image\AbstractEffect;
+use InvalidArgumentException;
+use Charcoal\Image\AbstractEffect;
 
 /**
  * Rotate the image by a certain angle
  */
 abstract class AbstractRotateEffect extends AbstractEffect
 {
-
     /**
      * The angle of rotation, in degrees, clockwise
      * @var float $Angle

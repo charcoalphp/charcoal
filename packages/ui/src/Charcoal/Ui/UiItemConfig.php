@@ -3,7 +3,6 @@
 namespace Charcoal\Ui;
 
 use InvalidArgumentException;
-
 // From 'charcoa-config'
 use Charcoal\Config\AbstractConfig;
 

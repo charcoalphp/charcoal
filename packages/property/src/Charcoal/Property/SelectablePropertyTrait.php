@@ -3,7 +3,6 @@
 namespace Charcoal\Property;
 
 use InvalidArgumentException;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
 

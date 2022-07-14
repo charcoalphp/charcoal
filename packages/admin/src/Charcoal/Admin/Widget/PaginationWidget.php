@@ -3,10 +3,8 @@
 namespace Charcoal\Admin\Widget;
 
 use InvalidArgumentException;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminWidget;
-
 // From 'charcoal-core'
 use Charcoal\Source\Pagination;
 use Charcoal\Source\PaginationInterface;

@@ -4,25 +4,19 @@ namespace Charcoal\App\Script;
 
 use InvalidArgumentException;
 use RuntimeException;
-
 // From PSR-3
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'league/climate'
 use League\CLImate\CLImate;
 use League\CLImate\Util\Reader\ReaderInterface;
-
 // From 'charcoal-config'
 use Charcoal\Config\AbstractEntity;
-
 // From 'charcoal-app'
 use Charcoal\App\AppInterface;
 use Charcoal\App\Script\ScriptInterface;
@@ -483,9 +477,9 @@ abstract class AbstractScript extends AbstractEntity implements
                 }
 
                 if ($default && is_string($default) || is_numeric($default)) {
-                    $pattern = '/[\(\[\<]'.preg_quote($default, '/').'[\)\]\>]/';
+                    $pattern = '/[\(\[\<]' . preg_quote($default, '/') . '[\)\]\>]/';
                     if (!preg_match($pattern, $prompt)) {
-                        $prompt .= ' ('.$default.')';
+                        $prompt .= ' (' . $default . ')';
                     }
                 }
             }

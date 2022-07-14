@@ -2,7 +2,7 @@
 
 namespace Charcoal\Image\Imagemagick\Effect;
 
-use \Charcoal\Image\Effect\AbstractTintEffect;
+use Charcoal\Image\Effect\AbstractTintEffect;
 
 /**
  * Tint Effect for the Imagemagick driver.
@@ -25,8 +25,8 @@ class ImagemagickTintEffect extends AbstractTintEffect
             $tintCmd = '-colorize';
         }
         $color = $this->color();
-        $value = ($this->opacity()*100).'%';
-        $cmd = '-fill "'.$color.'" '.$tintCmd.' '.$value;
+        $value = ($this->opacity() * 100) . '%';
+        $cmd = '-fill "' . $color . '" ' . $tintCmd . ' ' . $value;
         $this->image()->applyCmd($cmd);
         return $this;
     }

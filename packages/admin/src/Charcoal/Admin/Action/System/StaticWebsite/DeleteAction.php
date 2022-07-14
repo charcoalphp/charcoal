@@ -5,12 +5,9 @@ namespace Charcoal\Admin\Action\System\StaticWebsite;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From Pimple
 use Pimple\Container;
-
 use GuzzleHttp\Client as GuzzleClient;
-
 use Charcoal\Admin\AdminAction;
 
 /**
@@ -33,7 +30,7 @@ class DeleteAction extends AdminAction
         $url = $request->getParam('url');
         $relativeUrl = str_replace($this->baseUrl(), '', $url);
 
-        $outputDir = $this->basePath.'cache/static/'.$relativeUrl;
+        $outputDir = $this->basePath . 'cache/static/' . $relativeUrl;
         if (!file_exists($outputDir)) {
             $this->setSuccess(false);
             $this->addFeedback('error', 'Can not delete static page: did not exist on filesystem.');
@@ -41,11 +38,11 @@ class DeleteAction extends AdminAction
         }
 
         $ret = null;
-        if (file_exists($outputDir.'/index.php')) {
-            $ret = unlink($outputDir.'/index.php');
+        if (file_exists($outputDir . '/index.php')) {
+            $ret = unlink($outputDir . '/index.php');
         }
-        if (file_exists($outputDir.'/index.html')) {
-            $ret = unlink($outputDir.'/index.html');
+        if (file_exists($outputDir . '/index.html')) {
+            $ret = unlink($outputDir . '/index.html');
         }
 
         if ($ret === null) {

@@ -2,11 +2,10 @@
 
 namespace Charcoal\Image\Imagick\Effect;
 
-use \Exception;
-use \Imagick;
-
-use \Charcoal\Image\Effect\AbstractWatermarkEffect;
-use \Charcoal\Image\ImageInterface;
+use Exception;
+use Imagick;
+use Charcoal\Image\Effect\AbstractWatermarkEffect;
+use Charcoal\Image\ImageInterface;
 
 /**
  * Watermark Effect for the Imagick driver.
@@ -32,16 +31,16 @@ class ImagickWatermarkEffect extends AbstractWatermarkEffect
             $watermark = $this->watermark();
         } else {
             $imgClass = get_class($img);
-            $watermark = new $imgClass;
+            $watermark = new $imgClass();
             $watermark->open($this->watermark());
         }
 
         if (($watermark->width() > $imageWidth) || ($watermark->height() > $imageHeight)) {
             // Scale-down watermark image, if necessary
             $watermark->resize([
-                'mode'=>'best_fit',
-                'width'=>$imageWidth,
-                'height'=>$imageHeight
+                'mode' => 'best_fit',
+                'width' => $imageWidth,
+                'height' => $imageHeight
             ]);
         }
 
@@ -53,25 +52,25 @@ class ImagickWatermarkEffect extends AbstractWatermarkEffect
             $x = $this->x();
             $y = $this->y();
         } elseif ($gravity == 'n') {
-            $x = ($imageWidth/2 - ($watermarkWidth/2) + $this->x());
+            $x = ($imageWidth / 2 - ($watermarkWidth / 2) + $this->x());
             $y = $this->y();
         } elseif ($gravity == 'ne') {
             $x = ($imageWidth - $watermarkHeight - $this->x());
             $y = $this->y();
         } elseif ($gravity == 'w') {
             $x = $this->x();
-            $y = ($imageHeight/2 - ($watermarkHeight/2) + $this->y());
+            $y = ($imageHeight / 2 - ($watermarkHeight / 2) + $this->y());
         } elseif ($gravity == 'center') {
-            $x = ($imageWidth/2 - ($watermarkWidth/2) + $this->x());
-            $y = ($imageHeight/2 - ($watermarkHeight/2) + $this->y());
+            $x = ($imageWidth / 2 - ($watermarkWidth / 2) + $this->x());
+            $y = ($imageHeight / 2 - ($watermarkHeight / 2) + $this->y());
         } elseif ($gravity == 'e') {
             $x = ($imageWidth - $watermarkWidth - $this->x());
-            $y = ($imageHeight/2 - ($watermarkHeight/2) + $this->y());
+            $y = ($imageHeight / 2 - ($watermarkHeight / 2) + $this->y());
         } elseif ($gravity == 'sw') {
             $x = $this->x();
             $y = ($imageHeight - $watermarkHeight - $this->y());
         } elseif ($gravity == 's') {
-            $x = ($imageWidth/2 - ($watermarkWidth/2) + $this->x());
+            $x = ($imageWidth / 2 - ($watermarkWidth / 2) + $this->x());
             $y = ($imageHeight - $watermarkHeight - $this->y());
         } elseif ($gravity == 'se') {
             $x = ($imageWidth - $watermarkWidth - $this->x());

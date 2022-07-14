@@ -3,16 +3,12 @@
 namespace Charcoal\Attachment\Traits;
 
 use InvalidArgumentException;
-
 // From 'charcoal-config'
 use Charcoal\Config\ConfigInterface;
-
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Ui\ObjectContainerInterface;
-
 // From 'charcoal-attachment'
 use Charcoal\Attachment\AttachmentsConfig;
 

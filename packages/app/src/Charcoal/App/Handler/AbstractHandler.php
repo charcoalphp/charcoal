@@ -3,34 +3,25 @@
 namespace Charcoal\App\Handler;
 
 use RuntimeException;
-
 // From PSR-3
 use Psr\Log\LoggerAwareTrait;
-
 // From PSR-7
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
-
 // From Slim
 use Slim\Http\Body;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-config'
 use Charcoal\Config\ConfigurableTrait;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-view'
 use Charcoal\View\ViewInterface;
 use Charcoal\View\ViewableTrait;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\TranslatorAwareTrait;
-
 // From 'charcoal-app'
 use Charcoal\App\Handler\HandlerConfig;
 use Charcoal\App\Handler\HandlerInterface;
@@ -255,7 +246,7 @@ abstract class AbstractHandler implements
 
         // handle +json and +xml specially
         if (preg_match('/\+(json|xml)/', $acceptHeader, $matches)) {
-            $mediaType = 'application/'.$matches[1];
+            $mediaType = 'application/' . $matches[1];
             if (in_array($mediaType, $this->knownContentTypes)) {
                 return $mediaType;
             }
