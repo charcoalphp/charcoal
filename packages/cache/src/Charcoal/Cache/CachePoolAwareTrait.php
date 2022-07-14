@@ -3,7 +3,6 @@
 namespace Charcoal\Cache;
 
 use RuntimeException;
-
 // From PSR-6
 use Psr\Cache\CacheItemPoolInterface;
 

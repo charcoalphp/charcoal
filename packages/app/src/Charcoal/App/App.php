@@ -4,20 +4,15 @@ namespace Charcoal\App;
 
 use LogicException;
 use RuntimeException;
-
 use Dotenv\Dotenv;
-
 // From Slim
 use Slim\App as SlimApp;
-
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From 'charcoal-config'
 use Charcoal\Config\ConfigurableInterface;
 use Charcoal\Config\ConfigurableTrait;
-
 // From 'charcoal-app'
 use Charcoal\App\Route\RouteManager;
 
@@ -250,13 +245,13 @@ class App extends SlimApp implements
                     ));
                 }
 
-                if (!isset($container['middlewares/'.$id])) {
+                if (!isset($container['middlewares/' . $id])) {
                     throw new RuntimeException(
                         sprintf('Middleware "%s" is not set on container.', $id)
                     );
                 }
 
-                $this->add($container['middlewares/'.$id]);
+                $this->add($container['middlewares/' . $id]);
             }
         }
     }

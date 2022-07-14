@@ -4,7 +4,6 @@ namespace Charcoal\Cms\Support\Interfaces;
 
 // From 'charcoal-object'
 use Charcoal\Object\CategoryInterface;
-
 // From 'charcoal-cms'
 use Charcoal\Cms\NewsInterface;
 

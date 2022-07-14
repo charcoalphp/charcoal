@@ -64,7 +64,7 @@ class IpMiddleware
      *
      * @return array
      */
-    public function defaults() : array
+    public function defaults(): array
     {
         return [
             'disallowed' => [],
@@ -152,7 +152,7 @@ class IpMiddleware
      * @param string $ip The IP address to check against the disallowed.
      * @return boolean
      */
-    private function isIpDisallowed($ip) : bool
+    private function isIpDisallowed($ip): bool
     {
         if (empty($this->disallowed)) {
             return false;
@@ -170,7 +170,7 @@ class IpMiddleware
      * @param string $ip The IP address to check against the allowed.
      * @return boolean
      */
-    private function isIpAllowed($ip) : bool
+    private function isIpAllowed($ip): bool
     {
         if (empty($this->allowed)) {
             return true;
@@ -183,7 +183,7 @@ class IpMiddleware
      * @param string[] $cidrs The array of IPs/CIDRs to validate against. "/32" netmask is assumed.
      * @return boolean
      */
-    private function isIpInRange(string $ip, array $cidrs) : bool
+    private function isIpInRange(string $ip, array $cidrs): bool
     {
         foreach ($cidrs as $range) {
             if (strpos($range, '/') === false) {
@@ -203,7 +203,7 @@ class IpMiddleware
     /**
      * @return string
      */
-    private function getClientIp() : string
+    private function getClientIp(): string
     {
         if (isset($_SERVER['REMOTE_ADDR'])) {
             return filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP);

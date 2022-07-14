@@ -4,7 +4,6 @@ namespace Charcoal\Model;
 
 use RuntimeException;
 use InvalidArgumentException;
-
 // From 'charcoal-core'
 use Charcoal\Model\MetadataInterface;
 use Charcoal\Model\Service\MetadataLoader;

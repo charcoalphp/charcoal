@@ -21,7 +21,7 @@ class ImagemagickWatermarkEffect extends AbstractWatermarkEffect
         }
 
         if ($this->watermark() instanceof ImageInterface) {
-            $out = '/tmp/_'.uniqid().'.png';
+            $out = '/tmp/_' . uniqid() . '.png';
             $this->watermark()->save($out);
             $width = $this->watermark()->width();
             $height = $this->watermark()->height();
@@ -29,23 +29,23 @@ class ImagemagickWatermarkEffect extends AbstractWatermarkEffect
         } else {
             $watermark = $this->watermark();
             $c = get_class($this->image());
-            $w = new $c;
+            $w = new $c();
             $w->open($watermark);
             $width = $w->width();
             $height = $w->height();
         }
 
         $gravity = $this->image()->imagemagickGravity($this->gravity());
-        $params  = [ '-gravity '.$gravity ];
+        $params  = [ '-gravity ' . $gravity ];
 
         $cmd = null;
         if ($this->image()->compositeCmd()) {
             $cmd = 'composite';
-            $params[] = '-watermark 100% '.$watermark.' '.$this->image()->tmp();
+            $params[] = '-watermark 100% ' . $watermark . ' ' . $this->image()->tmp();
         } else {
-            $params[] = '-geometry +'.$this->x().'+'.$this->y();
-            $params[] = '-draw "image Multiply 0,0 '.$width.','.$height;
-            $params[] = '\''.$watermark.'\'"';
+            $params[] = '-geometry +' . $this->x() . '+' . $this->y();
+            $params[] = '-draw "image Multiply 0,0 ' . $width . ',' . $height;
+            $params[] = '\'' . $watermark . '\'"';
         }
 
         $this->image()->applyCmd(implode(' ', $params), $cmd);

@@ -2,7 +2,7 @@
 
 namespace Charcoal\Image\Imagemagick\Effect;
 
-use \Charcoal\Image\Effect\AbstractModulateEffect;
+use Charcoal\Image\Effect\AbstractModulateEffect;
 
 /**
  * Modulate Effect for the Imagemagick driver.
@@ -23,7 +23,7 @@ class ImagemagickModulateEffect extends AbstractModulateEffect
         $s = ($this->saturation() + 100);
         $l = ($this->luminance() + 100);
 
-        $cmd = '-modulate '.$l.','.$s.','.$h;
+        $cmd = '-modulate ' . $l . ',' . $s . ',' . $h;
         $this->image()->applyCmd($cmd);
         return $this;
     }

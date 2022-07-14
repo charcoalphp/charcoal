@@ -5,16 +5,12 @@ namespace Charcoal\Admin\Widget;
 use Charcoal\Object\RevisionableInterface;
 use Charcoal\User\AuthAwareInterface;
 use InvalidArgumentException;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-ui'
 use Charcoal\Ui\Form\FormInterface;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminWidget;
 use Charcoal\Admin\Ui\ActionContainerTrait;
@@ -350,7 +346,7 @@ class FormSidebarWidget extends AdminWidget implements
                 return false;
             }
 
-            $actions = array_filter($actions, function($action) {
+            $actions = array_filter($actions, function ($action) {
                 return $action['active'] === true;
             });
 
@@ -755,7 +751,7 @@ class FormSidebarWidget extends AdminWidget implements
         }
 
         // Overridden by conditionals
-        if (!$this->isObjDeletable() && !$this->isObjResettable() &&!$this->isObjRevisionable()) {
+        if (!$this->isObjDeletable() && !$this->isObjResettable() && !$this->isObjRevisionable()) {
             return false;
         }
 
@@ -836,7 +832,7 @@ class FormSidebarWidget extends AdminWidget implements
             if (isset($localeStruct['name'])) {
                 $label = $this->translator()->translation($localeStruct['name']);
             } else {
-                $trans = 'locale.'.$locale;
+                $trans = 'locale.' . $locale;
                 if ($trans === $this->translator()->translate($trans)) {
                     $label = strtoupper($locale);
                 } else {

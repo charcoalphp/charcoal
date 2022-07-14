@@ -8,7 +8,6 @@ use Charcoal\Admin\Mustache\AssetsHelpers;
 use Charcoal\Admin\Service\AssetsBuilder;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-
 use Assetic\AssetManager;
 
 /**

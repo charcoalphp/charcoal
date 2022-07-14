@@ -5,23 +5,17 @@ namespace Charcoal\Admin\Script\Object;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-app'
 use Charcoal\App\Script\CronScriptInterface;
 use Charcoal\App\Script\CronScriptTrait;
-
 // From 'charcoal-object'
 use Charcoal\Object\ObjectSchedule;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminScript;
 
@@ -50,7 +44,7 @@ class ProcessSchedulesScript extends AdminScript implements CronScriptInterface
             ],
             'obj-id' => [
                 'longPrefix'   => 'obj-id',
-                'description'  => 'Object ID. Must have "obj-type" set to have any effect. '.
+                'description'  => 'Object ID. Must have "obj-type" set to have any effect. ' .
                                   'Leave empty to process all objects.',
                 'defaultValue' => ''
             ]
@@ -78,17 +72,17 @@ class ProcessSchedulesScript extends AdminScript implements CronScriptInterface
 
         $scheduled = $this->loadSchedules($objType, $objId);
 
-        $callback = function($obj) use ($climate) {
+        $callback = function ($obj) use ($climate) {
             // No default callback
         };
 
-        $successCallback = function($obj) use ($climate) {
+        $successCallback = function ($obj) use ($climate) {
             $climate->green()->out(
                 sprintf('Object %s : %s schedule was successfully ran.', $obj->targetType(), $obj->targetId())
             );
         };
 
-        $failureCallback = function($obj) use ($climate) {
+        $failureCallback = function ($obj) use ($climate) {
             $climate->red()->out(
                 sprintf('Object %s : %s schedule could not be ran.', $obj->targetType(), $obj->targetId())
             );

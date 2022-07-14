@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Charcoal\View\Twig;
 
 use Charcoal\View\Twig\HelpersInterface;
-
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 

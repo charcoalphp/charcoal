@@ -4,14 +4,11 @@ namespace Charcoal\User;
 
 use InvalidArgumentException;
 use RuntimeException;
-
 // From PSR-3
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-user'
 use Charcoal\User\Access\AuthenticatableInterface;
 

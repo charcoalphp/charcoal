@@ -79,6 +79,6 @@ trait CronScriptTrait
         $lockName = str_replace('\\', '-', static::class);
         $lockName .= md5(__DIR__);
 
-        return sys_get_temp_dir().DIRECTORY_SEPARATOR.$lockName;
+        return sys_get_temp_dir() . DIRECTORY_SEPARATOR . $lockName;
     }
 }

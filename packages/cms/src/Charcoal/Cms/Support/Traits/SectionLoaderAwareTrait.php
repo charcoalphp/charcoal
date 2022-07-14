@@ -4,10 +4,8 @@ namespace Charcoal\Cms\Support\Traits;
 
 // From Slim
 use Slim\Exception\ContainerException;
-
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
-
 // From 'charcoal-cms'
 use Charcoal\Cms\Service\Loader\SectionLoader;
 use Charcoal\Cms\SectionInterface;

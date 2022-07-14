@@ -4,19 +4,14 @@ namespace Charcoal\Admin\Property\Input\Selectize;
 
 use RuntimeException;
 use InvalidArgumentException;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-property'
 use Charcoal\Property\ObjectProperty;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Property\AbstractSelectableInput;
 
@@ -70,7 +65,7 @@ class TagsInput extends AbstractSelectableInput
         }
 
         if ($this->p()['l10n']) {
-            $name .= '['.$this->lang().']';
+            $name .= '[' . $this->lang() . ']';
         }
 
         return $name;
@@ -265,7 +260,7 @@ class TagsInput extends AbstractSelectableInput
             'title'                    => (string)$prop['label'],
             'copy_items'               => $this->allowClipboardCopy(),
 
-            'selectize_selector'       => '#'.$this->inputId(),
+            'selectize_selector'       => '#' . $this->inputId(),
             'selectize_options'        => $this->selectizeOptions(),
 
             // Base Property

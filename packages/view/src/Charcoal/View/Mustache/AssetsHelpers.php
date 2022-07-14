@@ -48,37 +48,37 @@ class AssetsHelpers implements HelpersInterface
     public function toArray(): array
     {
         return [
-            'purgeJs' => function() {
+            'purgeJs' => function () {
                 $this->purgeJs();
             },
-            'addJs' => function($js, LambdaHelper $helper) {
+            'addJs' => function ($js, LambdaHelper $helper) {
                 $this->addJs($js, $helper);
             },
-            'js' => function() {
+            'js' => function () {
                 return $this->js();
             },
-            'addJsRequirement' => function($js, LambdaHelper $helper) {
+            'addJsRequirement' => function ($js, LambdaHelper $helper) {
                 $this->addJsRequirement($js, $helper);
             },
-            'jsRequirements' => function() {
+            'jsRequirements' => function () {
                 return $this->jsRequirements();
             },
-            'addCss' => function($css, LambdaHelper $helper) {
+            'addCss' => function ($css, LambdaHelper $helper) {
                 $this->addCss($css, $helper);
             },
-            'purgeCss' => function() {
+            'purgeCss' => function () {
                 $this->purgeCss();
             },
-            'css' => function() {
+            'css' => function () {
                 return $this->css();
             },
-            'addCssRequirement' => function($css, LambdaHelper $helper) {
+            'addCssRequirement' => function ($css, LambdaHelper $helper) {
                 $this->addCssRequirement($css, $helper);
             },
-            'cssRequirements' => function() {
+            'cssRequirements' => function () {
                 return $this->cssRequirements();
             },
-            'purgeAssets' => function() {
+            'purgeAssets' => function () {
                 $this->purgeAssets();
             },
         ];

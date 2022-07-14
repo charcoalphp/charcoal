@@ -6,7 +6,6 @@ namespace Charcoal\Email\Services;
 
 // From 'charcoal/factory'
 use Charcoal\Factory\FactoryInterface;
-
 use Charcoal\Email\Email;
 use Charcoal\Email\Objects\Link;
 use Charcoal\Email\Objects\LinkLog;
@@ -23,7 +22,6 @@ use Charcoal\Email\Objects\OpenLog;
  */
 class Tracker
 {
-
     /**
      * @var string
      */
@@ -53,10 +51,10 @@ class Tracker
     {
         $html = $email->msgHtml();
         $regexp = '/(<body.*?>)/i';
-        $pixel = sprintf('<img src="%s" alt="" />', $this->baseUrl.'email/v1/open/'.$emailLogId.'.png');
+        $pixel = sprintf('<img src="%s" alt="" />', $this->baseUrl . 'email/v1/open/' . $emailLogId . '.png');
         if (preg_match($regexp, $html) != false) {
             $parts = preg_split($regexp, $html, -1, (PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE));
-            $html = $parts[0].$parts[1].$pixel.$parts[2];
+            $html = $parts[0] . $parts[1] . $pixel . $parts[2];
         } else {
             $html .= $pixel;
         }
@@ -72,9 +70,9 @@ class Tracker
     {
         $html = $email->msgHtml();
 
-        $callback = function(array $matches) use ($emailLogId): string {
+        $callback = function (array $matches) use ($emailLogId): string {
             $linkId  = $this->createLink($emailLogId, $matches[1]);
-            $linkUrl = $this->baseUrl.'email/v1/link/'.$linkId;
+            $linkUrl = $this->baseUrl . 'email/v1/link/' . $linkId;
             return str_replace($matches[1], $linkUrl, $matches[0]);
         };
         $regexp = '/<a\s+(?:[^>]*?\s+)?href="([^"]*)"/';

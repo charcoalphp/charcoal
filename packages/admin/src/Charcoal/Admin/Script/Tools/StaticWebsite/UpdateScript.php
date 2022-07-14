@@ -3,17 +3,13 @@
 namespace Charcoal\Admin\Script\Tools\StaticWebsite;
 
 use InvalidArgumentException;
-
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'guzzlehttp/guzzle'
 use GuzzleHttp\Client as GuzzleClient;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminScript;
 
@@ -77,18 +73,18 @@ class UpdateScript extends AdminScript
         if (!$all && $url) {
             $files = [str_replace($this->baseUrl(), '', $url)];
         } else {
-            $files = $this->globRecursive($this->basePath.'cache/static', 'index.*');
+            $files = $this->globRecursive($this->basePath . 'cache/static', 'index.*');
         }
 
         foreach ($files as $file) {
-            $relativeUrl = dirname(str_replace($this->basePath.'cache/static/', '', $file));
+            $relativeUrl = dirname(str_replace($this->basePath . 'cache/static/', '', $file));
             if ($relativeUrl === '.') {
                 $relativeUrl = '';
             }
-            $url = $this->baseUrl().$relativeUrl;
-            $outputDir = $this->basePath.'cache/static/'.$relativeUrl;
+            $url = $this->baseUrl() . $relativeUrl;
+            $outputDir = $this->basePath . 'cache/static/' . $relativeUrl;
             if ($this->verbose()) {
-                $climate->out('Updating "'.$relativeUrl.'"...');
+                $climate->out('Updating "' . $relativeUrl . '"...');
             }
             $this->cacheUrl($url, $outputDir);
         }
@@ -115,15 +111,15 @@ class UpdateScript extends AdminScript
     private function cacheUrl($url, $outputDir)
     {
         $relativeUrl = str_replace($this->baseUrl(), '', $url);
-        $url = $this->baseUrl().$relativeUrl;
-        $outputDir = $outputDir.'/'.$relativeUrl;
+        $url = $this->baseUrl() . $relativeUrl;
+        $outputDir = $outputDir . '/' . $relativeUrl;
 
         // Previous static version must be deleted in order to generate a new one.
-        if (file_exists($outputDir.'/index.php')) {
-            unlink($outputDir.'/index.php');
+        if (file_exists($outputDir . '/index.php')) {
+            unlink($outputDir . '/index.php');
         }
-        if (file_exists($outputDir.'/index.html')) {
-            unlink($outputDir.'/index.html');
+        if (file_exists($outputDir . '/index.html')) {
+            unlink($outputDir . '/index.html');
         }
 
         $response = $this->guzzleClient->request('GET', $url);
@@ -135,12 +131,12 @@ class UpdateScript extends AdminScript
         }
 
         if (strstr($headers['Content-Type'][0], 'text/html') !== false) {
-            $outputFile = $outputDir.'/index.html';
+            $outputFile = $outputDir . '/index.html';
             $prefix = '';
         } else {
-            $outputFile = $outputDir.'/index.php';
+            $outputFile = $outputDir . '/index.php';
             $prefix = '<?php
-            header("Content-Type: '.$headers['Content-Type'][0].'");
+            header("Content-Type: ' . $headers['Content-Type'][0] . '");
             ?>
             ';
         }
@@ -149,7 +145,7 @@ class UpdateScript extends AdminScript
             mkdir($outputDir, null, true);
         }
 
-        file_put_contents($outputFile, $prefix.$response->getBody());
+        file_put_contents($outputFile, $prefix . $response->getBody());
     }
 
     /**
@@ -160,8 +156,8 @@ class UpdateScript extends AdminScript
      */
     private function globRecursive($dir, $pattern, $flags = 0)
     {
-        $files = glob($dir.'/'.$pattern, $flags);
-        foreach (glob($dir.'/*', (GLOB_ONLYDIR|GLOB_NOSORT)) as $dir) {
+        $files = glob($dir . '/' . $pattern, $flags);
+        foreach (glob($dir . '/*', (GLOB_ONLYDIR | GLOB_NOSORT)) as $dir) {
             $files = array_merge($files, $this->globRecursive($dir, $pattern, $flags));
         }
         return $files;

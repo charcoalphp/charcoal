@@ -5,31 +5,23 @@ namespace Charcoal\Admin\Widget;
 use ArrayIterator;
 use RuntimeException;
 use InvalidArgumentException;
-
 // From Pimple
 use Pimple\Container;
-
 // From Mustache
 use Mustache_LambdaHelper as LambdaHelper;
-
 // From 'charcoal-config'
 use Charcoal\Config\ConfigurableInterface;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
 use Charcoal\Model\ModelInterface;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminWidget;
 use Charcoal\Admin\Ui\ObjectContainerInterface;
 use Charcoal\Admin\Ui\ObjectContainerTrait;
-
 // From 'charcoal-attachment'
 use Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
 use Charcoal\Attachment\Traits\ConfigurableAttachmentsTrait;
@@ -614,12 +606,12 @@ class AttachmentWidget extends AdminWidget implements
                 }
 
                 foreach ($faIcon as &$icon) {
-                    $icon = 'fa fa-'.$icon;
+                    $icon = 'fa fa-' . $icon;
                 }
             } else {
                 $attParts = explode('/', $attType);
                 if (isset($this->defaultIcons[end($attParts)])) {
-                    $faIcon = 'fa fa-'.$this->defaultIcons[end($attParts)];
+                    $faIcon = 'fa fa-' . $this->defaultIcons[end($attParts)];
                 }
             }
 

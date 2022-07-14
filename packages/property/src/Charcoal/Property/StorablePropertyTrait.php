@@ -3,10 +3,8 @@
 namespace Charcoal\Property;
 
 use InvalidArgumentException;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
-
 // From 'charcoal-property'
 use Charcoal\Property\PropertyField;
 
@@ -85,7 +83,7 @@ trait StorablePropertyTrait
         }
 
         if ($this->isValidFieldKey($key)) {
-            return $this->fieldIdent.'_'.$this->snakeize($key);
+            return $this->fieldIdent . '_' . $this->snakeize($key);
         }
 
         return null;

@@ -5,14 +5,11 @@ namespace Charcoal\User;
 use DateTime;
 use DateTimeInterface;
 use InvalidArgumentException;
-
 // From 'charcoal-core'
 use Charcoal\Model\AbstractModel;
-
 // From 'charcoal-object'
 use Charcoal\Object\TimestampableInterface;
 use Charcoal\Object\TimestampableTrait;
-
 // From 'charcoal-user'
 use Charcoal\User\AuthTokenMetadata;
 
@@ -175,7 +172,7 @@ abstract class AbstractAuthToken extends AbstractModel implements
         $this['ident']  = bin2hex(random_bytes(16));
         $this['token']  = bin2hex(random_bytes(32));
         $this['userId'] = $userId;
-        $this['expiry'] = 'now + '.$metadata['tokenDuration'];
+        $this['expiry'] = 'now + ' . $metadata['tokenDuration'];
 
         return $this;
     }

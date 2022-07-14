@@ -4,10 +4,8 @@ namespace Charcoal\Property;
 
 use PDO;
 use InvalidArgumentException;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
-
 // From 'charcoal-property'
 use Charcoal\Property\AbstractProperty;
 use Charcoal\Property\SelectablePropertyInterface;
@@ -488,7 +486,7 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
         $maxLength = $this['maxLength'];
         // VARCHAR or TEXT, depending on length
         if ($maxLength <= 255 && $maxLength != 0) {
-            return 'VARCHAR('.$maxLength.')';
+            return 'VARCHAR(' . $maxLength . ')';
         } else {
             return 'TEXT';
         }

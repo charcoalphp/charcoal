@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Charcoal\Email;
 
 use InvalidArgumentException;
-
 // From 'charcoal-core'
 use Charcoal\Config\AbstractConfig;
 

@@ -4,7 +4,6 @@ namespace Charcoal\Email;
 
 // From 'charcoal-queue'
 use Charcoal\Queue\AbstractQueueManager;
-
 // From 'charcoal-email'
 use Charcoal\Email\EmailQueueItem;
 

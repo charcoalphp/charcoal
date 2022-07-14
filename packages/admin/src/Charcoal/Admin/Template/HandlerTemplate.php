@@ -4,7 +4,6 @@ namespace Charcoal\Admin\Template;
 
 // From 'charcoal-app'
 use Charcoal\App\Handler\HandlerAwareTrait;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminTemplate;
 

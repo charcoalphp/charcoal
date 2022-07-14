@@ -4,21 +4,16 @@ namespace Charcoal\Admin\Widget;
 
 use UnexpectedValueException;
 use InvalidArgumentException;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-property'
 use Charcoal\Property\ModelStructureProperty;
-
 // From 'charcoal-ui'
 use Charcoal\Ui\FormGroup\FormGroupInterface;
 use Charcoal\Ui\Form\FormInterface;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Widget\FormWidget;
 use Charcoal\Admin\Widget\FormPropertyWidget;
-
 use Charcoal\Admin\Ui\ObjectContainerInterface;
 use Charcoal\Admin\Ui\ObjectContainerTrait;
 
@@ -366,7 +361,7 @@ class ObjectFormWidget extends FormWidget implements
             'obj_id'             => $this->objId(),
             'obj_type'           => $this->objType(),
             'template'           => $this->template(),
-            'form_selector'      => '#'.$this->widgetId(),
+            'form_selector'      => '#' . $this->widgetId(),
             'tab'                => $this->isTabbable(),
             'group_display_mode' => $this->groupDisplayMode(),
             'group_conditions'   => $this->groupsConditionalLogic(),
@@ -466,7 +461,7 @@ class ObjectFormWidget extends FormWidget implements
                 $method = $matches[2];
 
                 if ($class === 'parent') {
-                    $resolved = [$obj, $class.'::'.$method];
+                    $resolved = [$obj, $class . '::' . $method];
                 }
             }
 

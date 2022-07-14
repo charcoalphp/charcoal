@@ -2,9 +2,8 @@
 
 namespace Charcoal\Image\Imagick\Effect;
 
-use \Exception;
-
-use \Charcoal\Image\Effect\AbstractBlurEffect;
+use Exception;
+use Charcoal\Image\Effect\AbstractBlurEffect;
 
 /**
  * Blur Effect for the Imagick driver.

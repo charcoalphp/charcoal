@@ -4,7 +4,6 @@ namespace Charcoal\Admin\Ui\SecondaryMenu;
 
 // From 'charcoal-ui'
 use Charcoal\Ui\PrioritizableInterface;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Widget\SecondaryMenuWidgetInterface;
 

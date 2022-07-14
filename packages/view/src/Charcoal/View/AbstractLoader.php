@@ -135,7 +135,7 @@ abstract class AbstractLoader implements LoaderInterface
     private function setBasePath(string $basePath)
     {
         $basePath = realpath($basePath);
-        $this->basePath = rtrim($basePath, '/\\').DIRECTORY_SEPARATOR;
+        $this->basePath = rtrim($basePath, '/\\') . DIRECTORY_SEPARATOR;
         return $this;
     }
 
@@ -180,9 +180,9 @@ abstract class AbstractLoader implements LoaderInterface
     private function resolvePath(string $path): string
     {
         $basePath = $this->basePath();
-        $path = rtrim($path, '/\\').DIRECTORY_SEPARATOR;
+        $path = rtrim($path, '/\\') . DIRECTORY_SEPARATOR;
         if ($basePath && strpos($path, $basePath) === false) {
-            $path = $basePath.$path;
+            $path = $basePath . $path;
         }
 
         return $path;
@@ -222,7 +222,7 @@ abstract class AbstractLoader implements LoaderInterface
         $filename    = $this->filenameFromIdent($ident);
         $searchPaths = $this->paths();
         foreach ($searchPaths as $searchPath) {
-            $filepath = realpath($searchPath).'/'.strtolower($filename);
+            $filepath = realpath($searchPath) . '/' . strtolower($filename);
             if (file_exists($filepath)) {
                 $this->fileCache[$key] = $filepath;
                 return $filepath;

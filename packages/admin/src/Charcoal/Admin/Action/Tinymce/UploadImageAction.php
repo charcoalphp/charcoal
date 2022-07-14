@@ -136,14 +136,14 @@ class UploadImageAction extends AdminAction
     {
         $basePath = $this->basePath();
 
-        $dir      = $basePath.$this->uploadPath();
+        $dir      = $basePath . $this->uploadPath();
         $filename = ($filename) ? $this->sanitizeFilename($filename) : 'unnamed_file';
 
         if (!file_exists($dir)) {
             // @todo: Feedback
             $this->logger->debug(
-                'Path does not exist. Attempting to create path '.$dir.'.',
-                [get_called_class().'::'.__FUNCTION__]
+                'Path does not exist. Attempting to create path ' . $dir . '.',
+                [get_called_class() . '::' . __FUNCTION__]
             );
             mkdir($dir, 0777, true);
         }
@@ -153,15 +153,15 @@ class UploadImageAction extends AdminAction
             );
         }
 
-        $target = $dir.$filename;
+        $target = $dir . $filename;
 
         if ($this->fileExists($target)) {
             if ($this->overwrite() === true) {
                 return $target;
             } else {
-                $target = $dir.$this->generateUniqueFilename($filename);
+                $target = $dir . $this->generateUniqueFilename($filename);
                 while ($this->fileExists($target)) {
-                    $target = $dir.$this->generateUniqueFilename($filename);
+                    $target = $dir . $this->generateUniqueFilename($filename);
                 }
             }
         }
@@ -182,7 +182,7 @@ class UploadImageAction extends AdminAction
     public function fileExists($file, $caseInsensitive = true)
     {
         if (!$this->isAbsolutePath($file)) {
-            $file = $this->basePath().$file;
+            $file = $this->basePath() . $file;
         }
 
         if (file_exists($file)) {
@@ -193,7 +193,7 @@ class UploadImageAction extends AdminAction
             return false;
         }
 
-        $files = glob(dirname($file).DIRECTORY_SEPARATOR.'*', GLOB_NOSORT);
+        $files = glob(dirname($file) . DIRECTORY_SEPARATOR . '*', GLOB_NOSORT);
         if ($files) {
             $pattern = preg_quote($file, '#');
             foreach ($files as $f) {
@@ -266,10 +266,10 @@ class UploadImageAction extends AdminAction
             $info = $filename;
         }
 
-        $filename = $info['filename'].'-'.uniqid();
+        $filename = $info['filename'] . '-' . uniqid();
 
         if (isset($info['extension']) && $info['extension']) {
-            $filename .= '.'.$info['extension'];
+            $filename .= '.' . $info['extension'];
         }
 
         return $filename;
@@ -301,7 +301,7 @@ class UploadImageAction extends AdminAction
         }
 
         // Sanitize upload path (force trailing slash)
-        $this->uploadPath = rtrim($path, '/').'/';
+        $this->uploadPath = rtrim($path, '/') . '/';
 
         return $this;
     }

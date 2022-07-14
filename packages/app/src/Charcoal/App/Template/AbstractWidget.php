@@ -5,17 +5,13 @@ namespace Charcoal\App\Template;
 // From PSR-3
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-config'
 use Charcoal\Config\AbstractEntity;
-
 // From 'charcoal-view'
 use Charcoal\View\ViewableInterface;
 use Charcoal\View\ViewableTrait;
-
 // From 'charcoal-app'
 use Charcoal\App\Template\WidgetInterface;
 

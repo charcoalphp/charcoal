@@ -4,7 +4,6 @@ namespace Charcoal\Admin\Template\Account;
 
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminTemplate;
 use Charcoal\Admin\Template\AuthTemplateTrait;
@@ -31,7 +30,7 @@ class LostPasswordTemplate extends AdminTemplate
         $notice = $request->getParam('notice');
         switch ($notice) {
             case 'invalidtoken':
-                $message = $translator->translate('Your password reset token is invalid or expired.').' '.
+                $message = $translator->translate('Your password reset token is invalid or expired.') . ' ' .
                            $translator->translate('Please request a new token below.');
                 $this->addFeedback([
                     'level'       => 'error',

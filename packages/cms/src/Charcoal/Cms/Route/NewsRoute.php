@@ -3,23 +3,17 @@
 namespace Charcoal\Cms\Route;
 
 use Exception;
-
 // From Pimple
 use Pimple\Container;
-
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\TranslatorAwareTrait;
-
 // From 'charcoal-app'
 use Charcoal\App\Route\TemplateRoute;
-
 // From 'charcoal-object'
 use Charcoal\Object\RoutableInterface;
-
 // From 'charcoal-cms'
 use Charcoal\Cms\NewsInterface;
 

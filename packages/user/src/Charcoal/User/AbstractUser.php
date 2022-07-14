@@ -6,16 +6,12 @@ use DateTime;
 use DateTimeInterface;
 use Exception;
 use InvalidArgumentException;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-core'
 use Charcoal\Validator\ValidatorInterface;
-
 // From 'charcoal-object'
 use Charcoal\Object\Content;
-
 // From 'charcoal-user'
 use Charcoal\User\Access\AuthenticatableInterface;
 use Charcoal\User\Access\AuthenticatableTrait;

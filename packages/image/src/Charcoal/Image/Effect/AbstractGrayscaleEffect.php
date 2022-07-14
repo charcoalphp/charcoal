@@ -2,7 +2,7 @@
 
 namespace Charcoal\Image\Effect;
 
-use \Charcoal\Image\AbstractEffect;
+use Charcoal\Image\AbstractEffect;
 
 /**
  * Convert an image to grayscale colorspace

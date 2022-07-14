@@ -3,7 +3,6 @@
 namespace Charcoal\Ui\Layout;
 
 use InvalidArgumentException;
-
 // From 'charcoal-ui'
 use Charcoal\Ui\Layout\LayoutBuilder;
 use Charcoal\Ui\Layout\LayoutInterface;

@@ -3,10 +3,8 @@
 namespace Charcoal\Admin\Property\Input;
 
 use DomainException;
-
 // From 'charcoal-app'
 use Charcoal\App\Template\WidgetInterface;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Property\Input\NestedWidgetInput;
 use Charcoal\Admin\Widget\FormGroup\StructureFormGroup;

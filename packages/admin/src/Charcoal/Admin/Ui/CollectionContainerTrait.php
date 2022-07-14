@@ -6,10 +6,8 @@ use Charcoal\Admin\Property\PropertyInputInterface;
 use Exception;
 use InvalidArgumentException;
 use UnexpectedValueException;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
 use Charcoal\Model\Collection;
@@ -20,10 +18,8 @@ use Charcoal\Source\Order;
 use Charcoal\Source\OrderInterface;
 use Charcoal\Source\Pagination;
 use Charcoal\Source\PaginationInterface;
-
 // From 'charcoal-property'
 use Charcoal\Property\PropertyInterface;
-
 // From 'charcoal-view'
 use Charcoal\View\ViewableInterface;
 use Charcoal\View\ViewInterface;
@@ -982,7 +978,7 @@ trait CollectionContainerTrait
             $objMetadata = $proto->metadata();
             if (isset($objMetadata['labels']) && !empty($objMetadata['labels'])) {
                 $objLabels = $objMetadata['labels'];
-                array_walk($objLabels, function(&$value) {
+                array_walk($objLabels, function (&$value) {
                     $value = $this->translator()->translation($value);
                 });
                 $this->objLabels = $objLabels;

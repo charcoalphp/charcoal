@@ -4,32 +4,24 @@ namespace Charcoal\Cms\Route;
 
 use RuntimeException;
 use InvalidArgumentException;
-
 // From Pimple
 use Pimple\Container;
-
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\TranslatorAwareTrait;
-
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
 use Charcoal\Loader\CollectionLoader;
-
 // From 'charcoal-app'
 use Charcoal\App\Route\TemplateRoute;
-
 // From 'charcoal-object'
 use Charcoal\Object\ObjectRoute;
 use Charcoal\Object\ObjectRouteInterface;
 use Charcoal\Object\RoutableInterface;
-
 // From 'charcoal-cms'
 use Charcoal\Cms\TemplateableInterface;
 
@@ -507,13 +499,13 @@ class GenericRoute extends TemplateRoute
         // Slugs are unique
         // Slug can be duplicated by adding the front "/" to it hence the order by last_modification_date
         $route = $this->createRouteObject();
-        $table = '`'.$route->source()->table().'`';
+        $table = '`' . $route->source()->table() . '`';
         $where = '`lang` = :lang AND (`slug` = :route1 OR `slug` = :route2)';
         $order = '`last_modification_date` DESC';
-        $query = 'SELECT * FROM '.$table.' WHERE '.$where.' ORDER BY '.$order.' LIMIT 1';
+        $query = 'SELECT * FROM ' . $table . ' WHERE ' . $where . ' ORDER BY ' . $order . ' LIMIT 1';
 
         $route->loadFromQuery($query, [
-            'route1' => '/'.$this->path(),
+            'route1' => '/' . $this->path(),
             'route2' => $this->path(),
             'lang'   => $this->translator()->getLocale(),
         ]);
@@ -709,6 +701,6 @@ class GenericRoute extends TemplateRoute
     protected function cacheIdent()
     {
         $obj = $this->getContextObject();
-        return $obj->objType().'.'.$obj->id();
+        return $obj->objType() . '.' . $obj->id();
     }
 }

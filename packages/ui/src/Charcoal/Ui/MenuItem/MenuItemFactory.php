@@ -3,7 +3,6 @@
 namespace Charcoal\Ui\MenuItem;
 
 use Charcoal\Factory\ResolverFactory;
-
 use Charcoal\Ui\MenuItem\MenuItemInterface;
 use Charcoal\Ui\MenuItem\GenericMenuItem;
 

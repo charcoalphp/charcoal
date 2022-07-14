@@ -3,7 +3,6 @@
 namespace Charcoal\Ui\Dashboard;
 
 use Pimple\Container;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 

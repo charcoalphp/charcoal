@@ -2,7 +2,7 @@
 
 namespace Charcoal\Image\Imagick\Effect;
 
-use \Charcoal\Image\Effect\AbstractSepiaEffect;
+use Charcoal\Image\Effect\AbstractSepiaEffect;
 
 /**
  * Sepia Effect for the Imagick driver.

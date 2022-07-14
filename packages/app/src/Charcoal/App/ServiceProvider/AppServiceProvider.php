@@ -5,26 +5,18 @@ namespace Charcoal\App\ServiceProvider;
 // From PSR-7
 use Charcoal\Factory\GenericResolver;
 use Psr\Http\Message\UriInterface;
-
 // From Pimple
 use Pimple\ServiceProviderInterface;
 use Pimple\Container;
-
 // From Slim
 use Slim\Http\Uri;
-
 // From 'league/climate'
 use League\CLImate\CLImate;
-
 // From Mustache
 use Mustache_LambdaHelper as LambdaHelper;
-
 use Charcoal\Factory\GenericFactory as Factory;
-
 use Charcoal\Cache\ServiceProvider\CacheServiceProvider;
-
 use Charcoal\Translator\ServiceProvider\TranslatorServiceProvider;
-
 use Charcoal\App\AppConfig;
 use Charcoal\App\Action\ActionInterface;
 use Charcoal\App\Handler\Error;
@@ -46,7 +38,6 @@ use Charcoal\App\Template\TemplateInterface;
 use Charcoal\App\Template\TemplateBuilder;
 use Charcoal\App\Template\WidgetInterface;
 use Charcoal\App\Template\WidgetBuilder;
-
 use Charcoal\View\Twig\DebugHelpers as TwigDebugHelpers;
 use Charcoal\View\Twig\HelpersInterface as TwigHelpersInterface;
 use Charcoal\View\Twig\UrlHelpers as TwigUrlHelpers;
@@ -307,7 +298,7 @@ class AppServiceProvider implements ServiceProviderInterface
          * @param  Container $container A service container.
          * @return IpMiddleware
          */
-        $container['middlewares/charcoal/app/middleware/ip'] = function(container $container) {
+        $container['middlewares/charcoal/app/middleware/ip'] = function (container $container) {
             $wareConfig = $container['config']['middlewares']['charcoal/app/middleware/ip'];
             return new IpMiddleware($wareConfig);
         };
@@ -539,7 +530,7 @@ class AppServiceProvider implements ServiceProviderInterface
                     return $uri;
                 },
                 'renderContext' => function ($text, LambdaHelper $helper = null) {
-                    return $helper->render('{{>'.$helper->render($text).'}}');
+                    return $helper->render('{{>' . $helper->render($text) . '}}');
                 },
             ];
 

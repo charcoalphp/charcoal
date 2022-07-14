@@ -6,7 +6,6 @@ namespace Charcoal\Cms;
 use Charcoal\Object\ContentInterface;
 use Charcoal\Object\CategorizableInterface;
 use Charcoal\Object\PublishableInterface;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
 

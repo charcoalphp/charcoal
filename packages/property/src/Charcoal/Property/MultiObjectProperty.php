@@ -97,7 +97,7 @@ class MultiObjectProperty extends AbstractProperty
             return;
         }
 
-        $q = 'CREATE TABLE \''.$this->getJoinTable().'\' (
+        $q = 'CREATE TABLE \'' . $this->getJoinTable() . '\' (
             target_type VARCHAR(255),
             target_id VARCHAR(255),
             target_property VARCHAR(255),
@@ -114,7 +114,7 @@ class MultiObjectProperty extends AbstractProperty
      */
     public function joinTableExists()
     {
-        $q = 'SHOW TABLES LIKE \''.$this->getJoinTable().'\'';
+        $q = 'SHOW TABLES LIKE \'' . $this->getJoinTable() . '\'';
         $this->logger->debug($q);
         $res = $this->source()->db()->query($q);
         $tableExists = $res->fetchColumn(0);

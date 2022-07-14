@@ -3,11 +3,9 @@
 namespace Charcoal\App\Handler;
 
 use UnexpectedValueException;
-
 // From PSR-7
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From 'charcoal-app'
 use Charcoal\App\Handler\AbstractHandler;
 
@@ -89,7 +87,7 @@ class NotFound extends AbstractHandler
         $message = $this->translator()->translate('Not Found', [], 'charcoal');
         $message = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
 
-        return $this->renderTemplate('{"message":"'.$message.'"}');
+        return $this->renderTemplate('{"message":"' . $message . '"}');
     }
 
     /**
@@ -101,7 +99,7 @@ class NotFound extends AbstractHandler
     {
         $message = $this->translator()->translate('Not Found', [], 'charcoal');
 
-        return $this->renderTemplate('<root><message>'.$message.'</message></root>');
+        return $this->renderTemplate('<root><message>' . $message . '</message></root>');
     }
 
     /**

@@ -59,7 +59,7 @@ class PhoneProperty extends StringProperty
             $areaCode = substr($val, 0, 3);
             $part1 = substr($val, 3, 3);
             $part2 = substr($val, 6, 4);
-            return '('.$areaCode.') '.$part1.'-'.$part2;
+            return '(' . $areaCode . ') ' . $part1 . '-' . $part2;
         } else {
             return $val;
         }

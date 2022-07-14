@@ -4,19 +4,15 @@ namespace Charcoal\Admin\Action\Object;
 
 use Exception;
 use PDOException;
-
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
 use Charcoal\Model\ModelValidator;
 use Charcoal\Source\StorableInterface;
-
 // From 'charcoal-property'
 use Charcoal\Property\DescribablePropertyInterface;
-
 // From 'charcoal-object'
 use Charcoal\Object\AuthorableInterface;
 

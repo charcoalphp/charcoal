@@ -4,7 +4,6 @@ namespace Charcoal\Cms;
 
 // From 'charcoal-core'
 use Charcoal\Validator\ValidatorInterface;
-
 // From 'charcoal-object'
 use Charcoal\Object\Content;
 use Charcoal\Object\CategoryInterface;

@@ -3,18 +3,14 @@
 namespace Charcoal\App\Route;
 
 use InvalidArgumentException;
-
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-config'
 use Charcoal\Config\ConfigurableInterface;
 use Charcoal\Config\ConfigurableTrait;
-
 // From 'charcoal-app'
 use Charcoal\App\Action\ActionInterface;
 use Charcoal\App\Route\RouteInterface;

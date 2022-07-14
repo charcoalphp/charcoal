@@ -4,7 +4,6 @@ namespace Charcoal\Source;
 
 use RuntimeException;
 use InvalidArgumentException;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 

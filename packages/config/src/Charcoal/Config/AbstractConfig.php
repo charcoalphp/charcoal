@@ -6,7 +6,6 @@ use ArrayIterator;
 use IteratorAggregate;
 use Traversable;
 use InvalidArgumentException;
-
 // From PSR-11
 use Psr\Container\ContainerInterface;
 
@@ -151,7 +150,7 @@ abstract class AbstractConfig extends AbstractEntity implements
             return false;
         }
 
-        $getter = 'get'.ucfirst($key);
+        $getter = 'get' . ucfirst($key);
         if (!isset($this->mutatorCache[$getter])) {
             $this->mutatorCache[$getter] = is_callable([ $this, $getter ]);
         }
@@ -212,7 +211,7 @@ abstract class AbstractConfig extends AbstractEntity implements
             return null;
         }
 
-        $getter = 'get'.ucfirst($key);
+        $getter = 'get' . ucfirst($key);
         if (!isset($this->mutatorCache[$getter])) {
             $this->mutatorCache[$getter] = is_callable([ $this, $getter ]);
         }
@@ -272,7 +271,7 @@ abstract class AbstractConfig extends AbstractEntity implements
             return;
         }
 
-        $setter = 'set'.ucfirst($key);
+        $setter = 'set' . ucfirst($key);
         if (!isset($this->mutatorCache[$setter])) {
             $this->mutatorCache[$setter] = is_callable([ $this, $setter ]);
         }

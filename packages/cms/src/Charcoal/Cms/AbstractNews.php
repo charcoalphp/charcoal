@@ -5,13 +5,11 @@ namespace Charcoal\Cms;
 use DateTime;
 use DateTimeInterface;
 use InvalidArgumentException;
-
 // From 'charcoal-object'
 use Charcoal\Object\Content;
 use Charcoal\Object\CategorizableTrait;
 use Charcoal\Object\PublishableTrait;
 use Charcoal\Object\RoutableTrait;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
 

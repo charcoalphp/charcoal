@@ -3,10 +3,8 @@
 namespace Charcoal\App\Route;
 
 use InvalidArgumentException;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
-
 // From 'charcoal-app'
 use Charcoal\App\App;
 use Charcoal\App\Route\RouteConfig;

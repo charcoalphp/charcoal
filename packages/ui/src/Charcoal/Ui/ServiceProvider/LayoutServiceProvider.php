@@ -5,7 +5,6 @@ namespace Charcoal\Ui\ServiceProvider;
 // From Pimple
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-
 // From 'charcoal-ui'
 use Charcoal\Ui\Layout\LayoutBuilder;
 use Charcoal\Ui\Layout\LayoutFactory;

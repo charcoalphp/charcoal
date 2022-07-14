@@ -136,7 +136,7 @@ trait FeedbackContainerTrait
         $levels = $this->getSupportedValidatorLevelsForFeedback();
 
         if (is_string($filters) && in_array($filters, $levels)) {
-            $results = call_user_func([ $validator, $filters.'Results' ]);
+            $results = call_user_func([ $validator, $filters . 'Results' ]);
             foreach ($results as $result) {
                 $this->addFeedbackFromValidatorResult($result);
             }

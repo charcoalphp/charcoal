@@ -4,9 +4,7 @@ namespace Charcoal\Admin\Script\Tools;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 use Pimple\Container;
-
 use Charcoal\Admin\AdminScript;
 
 /**
@@ -77,7 +75,7 @@ class ResizeImagesScript extends AdminScript
         $this->maxWidth = $climate->arguments->get('width');
         $this->maxHeight = $climate->arguments->get('height');
         $dir = $climate->arguments->get('dir');
-        $this->dir = realpath($this->basePath.$dir);
+        $this->dir = realpath($this->basePath . $dir);
         if (!$this->dir) {
             $climate->error('Invalid directory');
             return $response;
@@ -91,9 +89,9 @@ class ResizeImagesScript extends AdminScript
             $climate->orange('WARNING: this script is destructive and can easily be misused to lose image data.');
             $climate->orange('Make sure you know what you are doing and have a backup in case things go wrong.');
 
-            $climate->out('Directory: '.$this->dir);
-            $climate->out('Max width: '.$this->maxWidth);
-            $climate->out('Max height: '.$this->maxHeight);
+            $climate->out('Directory: ' . $this->dir);
+            $climate->out('Max width: ' . $this->maxWidth);
+            $climate->out('Max height: ' . $this->maxHeight);
 
             $input = $climate->input('Continue?');
             $input->accept(['y', 'n'], true);
@@ -190,13 +188,13 @@ class ResizeImagesScript extends AdminScript
      */
     private function findCmd($cmdName)
     {
-        $cmd = exec('type -p '.$cmdName);
-        $cmd = str_replace($cmdName.' is ', '', $cmd);
+        $cmd = exec('type -p ' . $cmdName);
+        $cmd = str_replace($cmdName . ' is ', '', $cmd);
         if (!$cmd) {
-            $cmd = exec('where '.$cmdName);
+            $cmd = exec('where ' . $cmdName);
         }
         if (!$cmd) {
-            $cmd = exec('which '.$cmdName);
+            $cmd = exec('which ' . $cmdName);
         }
         if (!$cmd) {
             return '';

@@ -4,10 +4,8 @@ namespace Charcoal\Attachment\Object;
 
 // From Pimple
 use Pimple\Container as ServiceContainer;
-
 // From 'charcoal-config'
 use Charcoal\Config\ConfigurableInterface;
-
 // From 'charcoal-attachment'
 use Charcoal\Attachment\Interfaces\AttachmentAwareInterface;
 use Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
@@ -79,7 +77,7 @@ class Container extends Attachment implements
     public function preDelete()
     {
         // Delete nested attachments
-        array_map(function($attachment) {
+        array_map(function ($attachment) {
             $attachment->delete();
         }, $this->attachments()->values());
 

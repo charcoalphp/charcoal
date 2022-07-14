@@ -5,20 +5,15 @@ namespace Charcoal\Admin\Action\Widget;
 use Exception;
 use RuntimeException;
 use InvalidArgumentException;
-
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-view'
 use Charcoal\View\ViewInterface;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminAction;
 
@@ -131,7 +126,7 @@ class LoadAction extends AdminAction
                 return $response->withStatus(400);
             }
 
-            $this->logger->debug('[Admin] Loading widget: '.$widgetType);
+            $this->logger->debug('[Admin] Loading widget: ' . $widgetType);
 
             $widget = $this->widgetFactory()->create($widgetType);
             $widget->setView($this->widgetView());
@@ -161,7 +156,7 @@ class LoadAction extends AdminAction
             $uniqueJs   = $widget->renderTemplate('{{&js}}');
             $widgetId   = $widget->widgetId();
 
-            $this->setWidgetHtml($sharedJs.$widgetHtml.$uniqueJs);
+            $this->setWidgetHtml($sharedJs . $widgetHtml . $uniqueJs);
             $this->setWidgetId($widgetId);
 
             if ($withData) {

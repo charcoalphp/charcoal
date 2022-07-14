@@ -5,13 +5,10 @@ namespace Charcoal\Model\Service;
 use ArrayAccess;
 use LogicException;
 use InvalidArgumentException;
-
 // From PSR-6
 use Psr\Cache\CacheItemPoolInterface;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
 
@@ -267,7 +264,7 @@ final class ModelLoader implements ArrayAccess
             $this->setObjKey($model->key());
         }
 
-        $cacheKey = 'object/'.str_replace('/', '.', $this->objType.'.'.$this->objKey.'.'.$ident);
+        $cacheKey = 'object/' . str_replace('/', '.', $this->objType . '.' . $this->objKey . '.' . $ident);
 
         return $cacheKey;
     }

@@ -3,21 +3,16 @@
 namespace Charcoal\App\Action;
 
 use InvalidArgumentException;
-
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From PSR-3
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-config'
 use Charcoal\Config\AbstractEntity;
-
 // From 'charcoal-app'
 use Charcoal\App\Helper\CallbackStream;
 use Charcoal\App\Action\ActionInterface;

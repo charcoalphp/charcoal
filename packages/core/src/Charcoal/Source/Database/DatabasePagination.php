@@ -3,7 +3,6 @@
 namespace Charcoal\Source\Database;
 
 use UnexpectedValueException;
-
 // From 'charcoal-core'
 use Charcoal\Source\Database\DatabaseExpressionInterface;
 use Charcoal\Source\Pagination;
@@ -24,7 +23,7 @@ class DatabasePagination extends Pagination implements
         if ($this->active() && $this->hasLimit()) {
             $limit  = $this->limit();
             $offset = $this->offset();
-            return 'LIMIT '.$offset.', '.$limit;
+            return 'LIMIT ' . $offset . ', ' . $limit;
         }
 
         return '';

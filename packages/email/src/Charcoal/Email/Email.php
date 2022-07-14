@@ -9,27 +9,21 @@ use Charcoal\Email\Services\Tracker;
 use Exception;
 use PDOException;
 use InvalidArgumentException;
-
 // From 'psr/log' (PSR-3)
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-
 // From 'phpmailer/phpmailer'
 use PHPMailer\PHPMailer\Exception as PHPMailerException;
 use PHPMailer\PHPMailer\PHPMailer;
-
 // From 'charcoal/config'
 use Charcoal\Config\AbstractEntity;
 use Charcoal\Config\ConfigurableInterface;
 use Charcoal\Config\ConfigurableTrait;
-
 // From 'charcoal/factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal/view'
 use Charcoal\View\ViewableInterface;
 use Charcoal\View\ViewableTrait;
-
 // From 'charcoal/queue'
 use Charcoal\Queue\QueueableInterface;
 use Charcoal\Queue\QueueableTrait;
@@ -961,7 +955,7 @@ class Email extends AbstractEntity implements
      */
     protected function setter(string $key): string
     {
-        $setter = 'set_'.$key;
+        $setter = 'set_' . $key;
         return $this->camelize($setter);
     }
 
@@ -1000,7 +994,7 @@ class Email extends AbstractEntity implements
         $str = preg_replace('#\n{3,}#', "\n\n", $str);
         $str = preg_replace('/ {2,}/', ' ', $str);
         $str = implode("\n", array_map('trim', explode("\n", $str)));
-        $str = trim($str)."\n";
+        $str = trim($str) . "\n";
         return $str;
     }
 

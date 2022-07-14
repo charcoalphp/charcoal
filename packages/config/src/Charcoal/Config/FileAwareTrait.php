@@ -8,7 +8,6 @@ use Exception;
 use LogicException;
 use InvalidArgumentException;
 use UnexpectedValueException;
-
 // From 'symfony/yaml'
 use Symfony\Component\Yaml\Parser as YamlParser;
 

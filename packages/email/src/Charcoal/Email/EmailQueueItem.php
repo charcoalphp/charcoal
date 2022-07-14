@@ -6,16 +6,12 @@ namespace Charcoal\Email;
 
 use Charcoal\Email\Exception\EmailNotSentException;
 use Exception;
-
 // From 'pimple/pimple'
 use Pimple\Container;
-
 // From 'charcoal/factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal/core'
 use Charcoal\Model\AbstractModel;
-
 // From 'charcoal/queue'
 use Charcoal\Queue\QueueItemInterface;
 use Charcoal\Queue\QueueItemTrait;
@@ -312,7 +308,7 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      * @return boolean
      * @see \Charcoal\Queue\QueueItemTrait::preSaveQueueItem()
      */
-    protected function preSave():  bool
+    protected function preSave(): bool
     {
         parent::preSave();
 

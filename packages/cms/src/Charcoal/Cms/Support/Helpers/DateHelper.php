@@ -4,7 +4,6 @@ namespace Charcoal\Cms\Support\Helpers;
 
 use DateTime;
 use Exception;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\TranslatorAwareTrait;
 

@@ -3,14 +3,11 @@
 namespace Charcoal\Queue;
 
 use Exception;
-
 // From PSR-3
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 

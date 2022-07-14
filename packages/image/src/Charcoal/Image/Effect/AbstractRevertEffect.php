@@ -3,7 +3,6 @@
 namespace Charcoal\Image\Effect;
 
 use InvalidArgumentException;
-
 use Charcoal\Image\AbstractEffect;
 
 /**

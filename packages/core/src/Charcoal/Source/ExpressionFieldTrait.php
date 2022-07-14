@@ -3,11 +3,9 @@
 namespace Charcoal\Source;
 
 use InvalidArgumentException;
-
 // From 'charcoal-property'
 use Charcoal\Property\PropertyInterface;
 use Charcoal\Property\StorablePropertyInterface;
-
 // From 'charcoal-core'
 use Charcoal\Source\Expression;
 

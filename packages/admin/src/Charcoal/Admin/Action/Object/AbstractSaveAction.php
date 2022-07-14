@@ -3,19 +3,15 @@
 namespace Charcoal\Admin\Action\Object;
 
 use InvalidArgumentException;
-
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
 use Charcoal\Validator\ValidatableInterface;
 use Charcoal\Validator\ValidatorResult;
-
 // From 'charcoal-user'
 use Charcoal\User\Authenticator;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminAction;
 use Charcoal\Admin\Ui\ObjectContainerInterface;
@@ -105,7 +101,7 @@ abstract class AbstractSaveAction extends AdminAction implements ObjectContainer
         $levels = $this->getSupportedValidatorLevelsForFeedback();
 
         if (is_string($filters) && in_array($filters, $levels)) {
-            $results = call_user_func([ $validator, $filters.'Results' ]);
+            $results = call_user_func([ $validator, $filters . 'Results' ]);
             foreach ($results as $result) {
                 $this->addFeedbackFromModelValidatorResult($result, $obj);
             }

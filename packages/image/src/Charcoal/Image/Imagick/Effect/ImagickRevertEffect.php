@@ -2,7 +2,7 @@
 
 namespace Charcoal\Image\Imagick\Effect;
 
-use \Charcoal\Image\Effect\AbstractRevertEffect;
+use Charcoal\Image\Effect\AbstractRevertEffect;
 
 /**
  * Revert Effect for the Imagick driver.

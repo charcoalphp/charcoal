@@ -3,17 +3,13 @@
 namespace Charcoal\Attachment\Script;
 
 use InvalidArgumentException;
-
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
-
 // From 'charcoal-property'
 use Charcoal\Property\IdProperty;
 use Charcoal\Property\PropertyField;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Script\Object\Table\AlterPrimaryKeyScript;
-
 // From 'charcoal-attachment'
 use Charcoal\Attachment\Object\Attachment;
 use Charcoal\Attachment\Object\Join;
@@ -40,8 +36,8 @@ class MigrateScript extends AlterPrimaryKeyScript
         $this->setArguments($this->defaultArguments());
 
         $this->setDescription(
-            'The <underline>locomotivemtl/attachment/migrate</underline> script '.
-            'upgrades the attachments SQL tables from 0.1 to 0.2; '.
+            'The <underline>locomotivemtl/attachment/migrate</underline> script ' .
+            'upgrades the attachments SQL tables from 0.1 to 0.2; ' .
             'Auto-incremented IDs are replaced with generated unique IDs.'
         );
     }
@@ -110,7 +106,7 @@ class MigrateScript extends AlterPrimaryKeyScript
         foreach ($targets as $table => $source) {
             if (!$source->tableExists()) {
                 $cli->error(
-                    sprintf('The table "%s" does not exist.', $table).
+                    sprintf('The table "%s" does not exist.', $table) .
                     ' This script can only alter existing tables.'
                 );
                 return $this;

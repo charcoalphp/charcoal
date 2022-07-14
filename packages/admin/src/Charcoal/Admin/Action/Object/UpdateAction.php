@@ -3,14 +3,11 @@
 namespace Charcoal\Admin\Action\Object;
 
 use Exception;
-
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From 'charcoal-core'
 use Charcoal\Model\ModelValidator;
-
 // From 'charcoal-object'
 use Charcoal\Object\AuthorableInterface;
 

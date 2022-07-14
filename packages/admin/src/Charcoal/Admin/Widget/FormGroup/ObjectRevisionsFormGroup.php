@@ -4,15 +4,12 @@ namespace Charcoal\Admin\Widget\FormGroup;
 
 // From 'pimple/pimple'
 use Pimple\Container;
-
 // From 'charcoal-core'
 use Charcoal\Model\ModelFactoryTrait;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Ui\ObjectContainerInterface;
 use Charcoal\Admin\Ui\ObjectRevisionsInterface;
 use Charcoal\Admin\Ui\ObjectRevisionsTrait;
-
 // From 'locomotivemtl/charcoal-ui'
 use Charcoal\Ui\FormGroup\AbstractFormGroup;
 
@@ -58,7 +55,7 @@ class ObjectRevisionsFormGroup extends AbstractFormGroup implements
     public function widgetId()
     {
         if (!$this->widgetId) {
-            $this->widgetId = 'widget_'.uniqid();
+            $this->widgetId = 'widget_' . uniqid();
         }
 
         return $this->widgetId;

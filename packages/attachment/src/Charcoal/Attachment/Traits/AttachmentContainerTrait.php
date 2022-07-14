@@ -3,7 +3,6 @@
 namespace Charcoal\Attachment\Traits;
 
 use UnexpectedValueException;
-
 // From 'charcoal-attachment'
 use Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
 
@@ -171,7 +170,7 @@ trait AttachmentContainerTrait
 
                     $faIcon = '';
                     if (isset($attMeta['fa_icon']) && !empty($attMeta['fa_icon'])) {
-                        $faIcon = 'fa fa-'.$attMeta['fa_icon'];
+                        $faIcon = 'fa fa-' . $attMeta['fa_icon'];
                     }
 
                     $attMeta['faIcon'] = $faIcon;

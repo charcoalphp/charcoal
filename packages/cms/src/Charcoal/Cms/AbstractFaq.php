@@ -6,7 +6,6 @@ namespace Charcoal\Cms;
 use Charcoal\Object\Content;
 use Charcoal\Object\CategorizableTrait;
 use Charcoal\Object\PublishableTrait;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
 

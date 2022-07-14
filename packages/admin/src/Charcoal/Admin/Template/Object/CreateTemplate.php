@@ -3,13 +3,10 @@
 namespace Charcoal\Admin\Template\Object;
 
 use Exception;
-
 // From psr-7
 use Psr\Http\Message\RequestInterface;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminTemplate;
 use Charcoal\Admin\Ui\DashboardContainerInterface;
@@ -37,7 +34,7 @@ class CreateTemplate extends AdminTemplate implements
 
         if ($this->obj()->id()) {
             $path = str_replace('object/create', 'object/edit', $request->getUri()->getPath());
-            header('Location: '.(string)$request->getUri()->withPath($path));
+            header('Location: ' . (string)$request->getUri()->withPath($path));
             die();
         }
         return $ret;

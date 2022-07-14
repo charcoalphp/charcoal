@@ -4,10 +4,8 @@ namespace Charcoal\Property;
 
 use InvalidArgumentException;
 use RuntimeException;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-property'
 use Charcoal\Property\PropertyInterface;
 

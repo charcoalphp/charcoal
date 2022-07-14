@@ -3,7 +3,6 @@
 namespace Charcoal\Ui\Dashboard;
 
 use InvalidArgumentException;
-
 // From 'charcoal-ui'
 use Charcoal\Ui\AbstractUiItem;
 use Charcoal\Ui\Dashboard\DashboardInterface;

@@ -57,7 +57,7 @@ trait LayoutTrait
         foreach ($layouts as $l) {
             $loop = isset($l['loop']) ? (int)$l['loop'] : 1;
             unset($l['loop']);
-            for ($i=0; $i<$loop; $i++) {
+            for ($i = 0; $i < $loop; $i++) {
                 $computedLayouts[] = $l;
             }
         }
@@ -196,7 +196,7 @@ trait LayoutTrait
             $firstList[$i] = $p;
             if ($p > $position) {
                 // Previous p
-                return $firstList[($i-1)];
+                return $firstList[($i - 1)];
             }
 
             $numCells = isset($row['columns']) ? count($row['columns']) : 0;
@@ -205,7 +205,7 @@ trait LayoutTrait
 
             $i++;
         }
-        return $firstList[($i-1)];
+        return $firstList[($i - 1)];
     }
 
     /**
@@ -266,7 +266,7 @@ trait LayoutTrait
         if (!$numColumns) {
             return null;
         }
-        return ($this->cellSpan($position)*(12/$numColumns));
+        return ($this->cellSpan($position) * (12 / $numColumns));
     }
 
     /**
@@ -299,7 +299,7 @@ trait LayoutTrait
         $cellNum = $this->cellRowIndex($position);
         $numCells = $this->rowNumCells($position);
 
-        return ($cellNum >= ($numCells-1));
+        return ($cellNum >= ($numCells - 1));
     }
 
     /**

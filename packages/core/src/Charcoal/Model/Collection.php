@@ -7,7 +7,6 @@ use ArrayIterator;
 use CachingIterator;
 use LogicException;
 use InvalidArgumentException;
-
 // From 'charcoal-core'
 use Charcoal\Model\CollectionInterface;
 use Charcoal\Model\ModelInterface;

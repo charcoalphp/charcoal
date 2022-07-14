@@ -3,29 +3,22 @@
 namespace Charcoal\Admin;
 
 use RuntimeException;
-
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-user'
 use Charcoal\User\AuthAwareInterface;
 use Charcoal\User\AuthAwareTrait;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
 use Charcoal\Translator\TranslatorAwareTrait;
-
 // From 'charcoal-app'
 use Charcoal\App\Action\AbstractAction;
 use Charcoal\App\DebugAwareTrait;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Ui\FeedbackContainerTrait;
 use Charcoal\Admin\Support\AdminTrait;
@@ -322,7 +315,7 @@ abstract class AdminAction extends AbstractAction implements
         }
 
         $query = http_build_query($data);
-        $url   = static::GOOGLE_RECAPTCHA_SERVER_URL.'?'.$query;
+        $url   = static::GOOGLE_RECAPTCHA_SERVER_URL . '?' . $query;
 
         $this->logger->debug(sprintf('Verifying reCAPTCHA user response: %s', $url));
 

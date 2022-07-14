@@ -3,7 +3,7 @@
 namespace Charcoal\Image;
 
 // From 'charcoal-factory'
-use \Charcoal\Factory\AbstractFactory;
+use Charcoal\Factory\AbstractFactory;
 
 /**
  *

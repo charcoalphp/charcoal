@@ -2,7 +2,7 @@
 
 namespace Charcoal\Image\Imagemagick\Effect;
 
-use \Charcoal\Image\Effect\AbstractMirrorEffect;
+use Charcoal\Image\Effect\AbstractMirrorEffect;
 
 /**
  * Mirror Effect for the Imagemagick driver.

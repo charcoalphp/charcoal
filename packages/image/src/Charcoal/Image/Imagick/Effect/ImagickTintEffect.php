@@ -3,7 +3,6 @@
 namespace Charcoal\Image\Imagick\Effect;
 
 use ImagickPixel;
-
 use Charcoal\Image\Effect\AbstractTintEffect;
 
 /**

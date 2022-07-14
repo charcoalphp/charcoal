@@ -4,9 +4,8 @@ namespace Charcoal\Image;
 
 use Charcoal\Image\Imagemagick\ImagemagickImage;
 use Charcoal\Image\Imagick\ImagickImage;
-use \Exception;
-
-use \Charcoal\Image\ImageInterface;
+use Exception;
+use Charcoal\Image\ImageInterface;
 
 /**
  * Base Effect
@@ -71,7 +70,7 @@ abstract class AbstractEffect implements EffectInterface
      */
     protected function setter($key)
     {
-        $setter = 'set_'.$key;
+        $setter = 'set_' . $key;
         return $this->camelize($setter);
     }
 

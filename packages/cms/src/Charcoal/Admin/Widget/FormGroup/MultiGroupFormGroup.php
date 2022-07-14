@@ -5,7 +5,6 @@ namespace Charcoal\Admin\Widget\FormGroup;
 // from 'charcoal-admin'
 use Charcoal\Admin\Widget\FormPropertyWidget;
 use Charcoal\Admin\Widget\MultiGroupWidget;
-
 // from 'charcoal-ui'
 use Charcoal\Ui\Form\FormInterface;
 use Charcoal\Ui\FormGroup\FormGroupInterface;
@@ -103,8 +102,10 @@ class MultiGroupFormGroup extends MultiGroupWidget implements
      */
     public function formProperties(array $group = null)
     {
-        if (!key_exists(self::DATA_SOURCE_METADATA, array_flip($this->dataSources())) ||
-            !$this->widgetMetadata()) {
+        if (
+            !key_exists(self::DATA_SOURCE_METADATA, array_flip($this->dataSources())) ||
+            !$this->widgetMetadata()
+        ) {
             return iterator_to_array($this->form()->formProperties());
         }
 

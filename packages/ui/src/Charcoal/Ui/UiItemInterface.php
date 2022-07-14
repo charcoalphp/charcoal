@@ -4,10 +4,8 @@ namespace Charcoal\Ui;
 
 // From 'charcoal-config'
 use Charcoal\Config\EntityInterface;
-
 // From 'charcoal-view'
 use Charcoal\View\ViewableInterface;
-
 // From 'charcoal-ui'
 use Charcoal\Ui\PrioritizableInterface;
 use Charcoal\Ui\ConditionalizableInterface;

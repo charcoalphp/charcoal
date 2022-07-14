@@ -3,26 +3,21 @@
 namespace Charcoal\App\ServiceProvider;
 
 use InvalidArgumentException;
-
 // From Pimple
 use Pimple\ServiceProviderInterface;
 use Pimple\Container;
-
 // From PSR-3
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
-
 // From Monolog
 use Monolog\Logger;
 use Monolog\Processor\MemoryUsageProcessor;
 use Monolog\Processor\UidProcessor;
 use Monolog\Handler\BrowserConsoleHandler;
 use Monolog\Handler\StreamHandler;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\GenericFactory as Factory;
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-app'
 use Charcoal\App\AppConfig;
 use Charcoal\App\Config\LoggerConfig;

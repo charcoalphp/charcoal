@@ -5,13 +5,10 @@ namespace Charcoal\Admin\Property;
 use Closure;
 use DateTimeInterface;
 use InvalidArgumentException;
-
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
-
 // From 'charcoal-view'
 use Charcoal\View\ViewableInterface;
 use Charcoal\View\ViewInterface;

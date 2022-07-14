@@ -4,11 +4,9 @@ namespace Charcoal\App\ServiceProvider;
 
 use Exception;
 use PDO;
-
 // From Pimple
 use Pimple\ServiceProviderInterface;
 use Pimple\Container;
-
 // From 'charcoal-app'
 use Charcoal\App\Config\DatabaseConfig;
 
@@ -89,9 +87,9 @@ class DatabaseServiceProvider implements ServiceProviderInterface
                     }
 
                     if ($type === 'sqlite') {
-                        $dsn = $type.':'.$database;
+                        $dsn = $type . ':' . $database;
                     } else {
-                        $dsn = $type.':host='.$host.';dbname='.$database;
+                        $dsn = $type . ':host=' . $host . ';dbname=' . $database;
                     }
 
                     $db = new PDO($dsn, $username, $password, $extraOptions);

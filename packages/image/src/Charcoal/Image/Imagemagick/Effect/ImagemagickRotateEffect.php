@@ -2,7 +2,7 @@
 
 namespace Charcoal\Image\Imagemagick\Effect;
 
-use \Charcoal\Image\Effect\AbstractRotateEffect;
+use Charcoal\Image\Effect\AbstractRotateEffect;
 
 /**
  * Rotate Effect for the Imagemagick driver.
@@ -19,7 +19,7 @@ class ImagemagickRotateEffect extends AbstractRotateEffect
             $this->setData($data);
         }
 
-        $cmd = '-background "'.$this->backgroundColor().'" -rotate '.$this->angle();
+        $cmd = '-background "' . $this->backgroundColor() . '" -rotate ' . $this->angle();
         $this->image()->applyCmd($cmd);
         return $this;
     }

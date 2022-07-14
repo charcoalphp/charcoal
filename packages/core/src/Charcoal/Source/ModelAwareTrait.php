@@ -3,7 +3,6 @@
 namespace Charcoal\Source;
 
 use RuntimeException;
-
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
 

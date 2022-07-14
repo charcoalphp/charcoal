@@ -7,22 +7,16 @@ use Exception;
 use ReflectionClass;
 use RuntimeException;
 use InvalidArgumentException;
-
 // From PSR-7
 use Psr\Http\Message\UriInterface;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
-
 // From 'charcoal-object'
 use Charcoal\Object\Content;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
-
 // From 'charcoal-attachment'
 use Charcoal\Attachment\Interfaces\AttachableInterface;
 use Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
@@ -1062,7 +1056,7 @@ class Attachment extends Content implements AttachableInterface
         }
 
         $text = preg_replace_callback(
-            '~'.$search.'~i',
+            '~' . $search . '~i',
             function ($matches) {
                 return $this->createAbsoluteUrl($matches[1]);
             },

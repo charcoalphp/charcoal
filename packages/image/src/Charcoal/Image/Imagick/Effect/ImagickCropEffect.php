@@ -2,9 +2,8 @@
 
 namespace Charcoal\Image\Imagick\Effect;
 
-use \Imagick;
-
-use \Charcoal\Image\Effect\AbstractCropEffect;
+use Imagick;
+use Charcoal\Image\Effect\AbstractCropEffect;
 
 /**
  * Resize Effect for the Imagick driver

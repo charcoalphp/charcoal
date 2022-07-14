@@ -5,10 +5,8 @@ namespace Charcoal\Property;
 use PDO;
 use InvalidArgumentException;
 use UnexpectedValueException;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
-
 // From 'charcoal-property'
 use Charcoal\Property\AbstractProperty;
 

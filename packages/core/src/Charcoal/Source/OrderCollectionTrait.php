@@ -3,7 +3,6 @@
 namespace Charcoal\Source;
 
 use InvalidArgumentException;
-
 // From 'charcoal-core'
 use Charcoal\Source\Order;
 use Charcoal\Source\OrderInterface;

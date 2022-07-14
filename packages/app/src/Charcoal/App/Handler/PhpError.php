@@ -4,11 +4,9 @@ namespace Charcoal\App\Handler;
 
 use Throwable;
 use UnexpectedValueException;
-
 // From PSR-7
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From 'charcoal-app'
 use Charcoal\App\Handler\AbstractError;
 

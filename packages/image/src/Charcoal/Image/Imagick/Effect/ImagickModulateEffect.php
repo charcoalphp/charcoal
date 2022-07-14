@@ -2,7 +2,7 @@
 
 namespace Charcoal\Image\Imagick\Effect;
 
-use \Charcoal\Image\Effect\AbstractModulateEffect;
+use Charcoal\Image\Effect\AbstractModulateEffect;
 
 /**
  * Module Effect for the Imagick driver.

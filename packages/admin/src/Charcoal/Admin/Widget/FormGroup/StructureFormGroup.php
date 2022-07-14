@@ -6,17 +6,14 @@ use RuntimeException;
 use OutOfBoundsException;
 use UnexpectedValueException;
 use InvalidArgumentException;
-
 // From 'charcoal-property'
 use Charcoal\Property\ModelStructureProperty;
 use Charcoal\Property\PropertyInterface;
-
 // From 'charcoal-ui'
 use Charcoal\Ui\ConditionalizableInterface;
 use Charcoal\Ui\FormGroup\AbstractFormGroup;
 use Charcoal\Ui\FormGroup\FormGroupInterface;
 use Charcoal\Ui\FormInput\FormInputInterface;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Widget\FormGroupWidget;
 use Charcoal\Admin\Ui\ObjectContainerInterface;
@@ -233,7 +230,7 @@ class StructureFormGroup extends FormGroupWidget implements
     {
         $display = $this->display();
 
-        return 'charcoal/admin/widget/form-group/structure/container-'.$display;
+        return 'charcoal/admin/widget/form-group/structure/container-' . $display;
     }
 
     /**

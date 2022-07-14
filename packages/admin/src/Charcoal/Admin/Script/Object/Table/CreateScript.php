@@ -5,7 +5,6 @@ namespace Charcoal\Admin\Script\Object\Table;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminScript;
 
@@ -90,7 +89,7 @@ class CreateScript extends AdminScript
         $ret = $source->createTable();
 
         $climate->green()->out(
-            "\n".'Success!'
+            "\n" . 'Success!'
         );
 
         return $response;

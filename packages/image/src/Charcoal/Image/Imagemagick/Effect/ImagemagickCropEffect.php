@@ -2,9 +2,8 @@
 
 namespace Charcoal\Image\Imagemagick\Effect;
 
-use \Exception;
-
-use \Charcoal\Image\Effect\AbstractCropEffect;
+use Exception;
+use Charcoal\Image\Effect\AbstractCropEffect;
 
 /**
  * Reisze Effect for the Imagemagick driver.
@@ -27,12 +26,12 @@ class ImagemagickCropEffect extends AbstractCropEffect
 
         $geometry = $this->geometry();
         if ($geometry) {
-            $params = [ $option.' "'.$geometry.'"' ];
+            $params = [ $option . ' "' . $geometry . '"' ];
         } else {
-            $params = [ '-gravity "'.$this->gravity().'"' ];
+            $params = [ '-gravity "' . $this->gravity() . '"' ];
 
-            $size = $width.'x'.$height.($x >= 0 ? '+' : '').$x.($y >= 0 ? '+' : '').$y;
-            $params[] = $option.' '.$size;
+            $size = $width . 'x' . $height . ($x >= 0 ? '+' : '') . $x . ($y >= 0 ? '+' : '') . $y;
+            $params[] = $option . ' ' . $size;
         }
 
         if ($this->repage()) {

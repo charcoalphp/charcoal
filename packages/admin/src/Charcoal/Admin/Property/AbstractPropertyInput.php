@@ -4,13 +4,10 @@ namespace Charcoal\Admin\Property;
 
 use InvalidArgumentException;
 use UnexpectedValueException;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
-
 // From 'charcoal-property'
 use Charcoal\Property\PropertyInterface;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Property\AbstractProperty;
 use Charcoal\Admin\Property\PropertyInputInterface;
@@ -222,7 +219,7 @@ abstract class AbstractPropertyInput extends AbstractProperty implements
         }
 
         if ($this->p()['l10n']) {
-            $name .= '['.$this->lang().']';
+            $name .= '[' . $this->lang() . ']';
         }
 
         if ($this->multiple()) {
@@ -723,7 +720,7 @@ abstract class AbstractPropertyInput extends AbstractProperty implements
      */
     public function escapedControlDataForJsAsJson()
     {
-        return '{{=<% %>=}}'.$this->controlDataForJsAsJson().'<%={{ }}=%>';
+        return '{{=<% %>=}}' . $this->controlDataForJsAsJson() . '<%={{ }}=%>';
     }
 
     /**
@@ -733,6 +730,6 @@ abstract class AbstractPropertyInput extends AbstractProperty implements
      */
     protected function generateInputId()
     {
-        return 'input_'.uniqid();
+        return 'input_' . uniqid();
     }
 }

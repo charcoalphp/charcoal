@@ -7,29 +7,23 @@ use Exception;
 use LogicException;
 use RuntimeException;
 use InvalidArgumentException;
-
 // From PSR-3
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\NullLogger;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-config'
 use Charcoal\Config\AbstractEntity;
-
 // From 'charcoal-core'
 use Charcoal\Model\DescribableInterface;
 use Charcoal\Model\DescribableTrait;
 use Charcoal\Validator\ValidatableInterface;
 use Charcoal\Validator\ValidatableTrait;
 use Charcoal\Validator\ValidatorInterface;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
 use Charcoal\Translator\TranslatorAwareTrait;
-
 // From 'charcoal-property'
 use Charcoal\Property\DescribablePropertyInterface;
 use Charcoal\Property\DescribablePropertyTrait;

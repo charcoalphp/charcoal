@@ -10,5 +10,4 @@ use Charcoal\App\Route\RouteConfig;
  */
 class ScriptRouteConfig extends RouteConfig
 {
-
 }

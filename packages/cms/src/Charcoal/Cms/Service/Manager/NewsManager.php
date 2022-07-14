@@ -3,14 +3,11 @@
 namespace Charcoal\Cms\Service\Manager;
 
 use Exception;
-
 // From 'charcoal-core'
 use Charcoal\Model\Collection;
-
 // From 'charcoal-object'
 use Charcoal\Object\CategoryInterface;
 use Charcoal\Object\CategoryTrait;
-
 // From 'charcoal-cms'
 use Charcoal\Cms\Config\CmsConfig;
 use Charcoal\Cms\NewsInterface;

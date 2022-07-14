@@ -3,7 +3,6 @@
 namespace Charcoal\Admin\Script\Notification;
 
 use DateTime;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Object\Notification;
 use Charcoal\Admin\Script\Notification\AbstractNotificationScript;
@@ -40,7 +39,7 @@ class ProcessMinuteScript extends AbstractNotificationScript
      */
     protected function endDate()
     {
-        $d = new DateTime($this->starDate().' +1 minute');
+        $d = new DateTime($this->starDate() . ' +1 minute');
         return $d;
     }
 

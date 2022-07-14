@@ -3,13 +3,10 @@
 namespace Charcoal\Admin\Action\Selectize;
 
 use RuntimeException;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-property'
 use Charcoal\Property\PropertyInterface;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Property\Input\SelectizeInput;
 use Charcoal\Admin\Property\PropertyInputInterface;

@@ -4,10 +4,8 @@ namespace Charcoal\Model\Service;
 
 // From PSR-6
 use Psr\Cache\CacheItemPoolInterface;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-core'
 use Charcoal\Model\Service\ModelLoader;
 

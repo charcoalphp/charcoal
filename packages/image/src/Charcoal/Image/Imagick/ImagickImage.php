@@ -2,12 +2,10 @@
 
 namespace Charcoal\Image\Imagick;
 
-use \Exception;
-use \InvalidArgumentException;
-
-use \Imagick;
-
-use \Charcoal\Image\AbstractImage;
+use Exception;
+use InvalidArgumentException;
+use Imagick;
+use Charcoal\Image\AbstractImage;
 
 /**
  *

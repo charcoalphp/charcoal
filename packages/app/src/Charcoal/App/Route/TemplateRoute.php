@@ -5,17 +5,13 @@ namespace Charcoal\App\Route;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From Pimple
 use Pimple\Container;
-
 // From Slim
 use Slim\Http\Uri;
-
 // From 'charcoal-config'
 use Charcoal\Config\ConfigurableInterface;
 use Charcoal\Config\ConfigurableTrait;
-
 // From 'charcoal-app'
 use Charcoal\App\Route\RouteInterface;
 use Charcoal\App\Route\TemplateRouteConfig;
@@ -121,7 +117,7 @@ class TemplateRoute implements
     ) {
         if ($this->cacheEnabled()) {
             $cachePool = $container['cache'];
-            $cacheKey  = 'template/'.str_replace('/', '.', $this->cacheIdent());
+            $cacheKey  = 'template/' . str_replace('/', '.', $this->cacheIdent());
             $cacheItem = $cachePool->getItem($cacheKey);
 
             $template = $cacheItem->get();

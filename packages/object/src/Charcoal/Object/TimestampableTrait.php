@@ -3,7 +3,6 @@
 namespace Charcoal\Object;
 
 use InvalidArgumentException;
-
 use DateTime;
 use DateTimeInterface;
 

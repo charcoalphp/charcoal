@@ -9,48 +9,35 @@ use Pimple\ServiceProviderInterface;
 use Assetic\Asset\AssetReference;
 use Charcoal\Attachment\Object\File;
 use Charcoal\Factory\GenericResolver;
-
 // from 'kriswallsmith/assetic'
 use Assetic\AssetManager;
-
 // From PSR-7
 use Psr\Http\Message\UriInterface;
-
 // From Slim
 use Slim\Http\Uri;
-
 // From Mustache
 use Mustache_LambdaHelper as LambdaHelper;
-
 // From 'charcoal-config'
 use Charcoal\Config\ConfigInterface;
 use Charcoal\Config\GenericConfig as Config;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-core'
 use Charcoal\Model\Service\MetadataConfig;
-
 // From 'charcoal-ui'
 use Charcoal\Ui\ServiceProvider\UiServiceProvider;
-
 // From 'charcoal-email'
 use Charcoal\Email\ServiceProvider\EmailServiceProvider;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\GenericFactory as Factory;
-
 // From 'charcoal-user'
 use Charcoal\User\Authenticator;
 use Charcoal\User\Authorizer;
-
 // From 'charcoal-view'
 use Charcoal\View\EngineInterface;
 use Charcoal\View\GenericView;
 use Charcoal\View\ViewConfig;
 use Charcoal\View\ViewInterface;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Config as AdminConfig;
 use Charcoal\Admin\Property\PropertyInputInterface;
@@ -140,7 +127,7 @@ class AdminServiceProvider implements ServiceProviderInterface
             if (!empty($extraConfigs)) {
                 $basePath = rtrim($appConfig['base_path'], '/');
                 foreach ($extraConfigs as $path) {
-                    $configPath = $basePath.'/'.ltrim($path, '/');
+                    $configPath = $basePath . '/' . ltrim($path, '/');
 
                     $appConfig->addFile($configPath);
                 }
@@ -172,7 +159,7 @@ class AdminServiceProvider implements ServiceProviderInterface
                     if ($adminConfig['base_path']) {
                         $basePath  = rtrim($adminUrl->getBasePath(), '/');
                         $adminPath = ltrim($adminConfig['base_path'], '/');
-                        $adminUrl  = $adminUrl->withBasePath($basePath.'/'.$adminPath);
+                        $adminUrl  = $adminUrl->withBasePath($basePath . '/' . $adminPath);
                     }
                 }
 
@@ -292,12 +279,12 @@ class AdminServiceProvider implements ServiceProviderInterface
          */
         $container->extend('metadata/config', function (MetadataConfig $metaConfig, Container $container) {
             $adminConfig = $container['admin/config'];
-            $adminDir    = '/'.trim($adminConfig['base_path'], '/');
+            $adminDir    = '/' . trim($adminConfig['base_path'], '/');
 
             $metaPaths   = $metaConfig->paths();
             $parsedPaths = [];
             foreach ($metaPaths as $basePath) {
-                $adminPath = rtrim($basePath, '/').$adminDir;
+                $adminPath = rtrim($basePath, '/') . $adminDir;
 
                 array_push($parsedPaths, $adminPath, $basePath);
             }

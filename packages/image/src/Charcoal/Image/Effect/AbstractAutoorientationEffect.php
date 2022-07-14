@@ -2,7 +2,7 @@
 
 namespace Charcoal\Image\Effect;
 
-use \Charcoal\Image\AbstractEffect;
+use Charcoal\Image\AbstractEffect;
 
 /**
  * Reads image EXIF data to automatically rotate it to the proper orientation

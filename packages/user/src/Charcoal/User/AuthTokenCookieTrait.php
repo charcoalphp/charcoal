@@ -19,7 +19,7 @@ trait AuthTokenCookieTrait
         $metadata = $this->metadata();
 
         $name   = $metadata['tokenName'];
-        $value  = $this['ident'].';'.$this['token'];
+        $value  = $this['ident'] . ';' . $this['token'];
         $expiry = isset($this['expiry']) ? $this['expiry']->getTimestamp() : null;
         $path   = $metadata['tokenPath'];
         $secure = $metadata['httpsOnly'];

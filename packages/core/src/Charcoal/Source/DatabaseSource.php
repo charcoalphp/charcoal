@@ -7,10 +7,8 @@ use PDOException;
 use InvalidArgumentException;
 use RuntimeException;
 use UnexpectedValueException;
-
 // From 'charcoal-property'
 use Charcoal\Property\PropertyField;
-
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
 use Charcoal\Source\AbstractSource;
@@ -164,23 +162,23 @@ class DatabaseSource extends AbstractSource implements
             }
         }
 
-        $query  = 'CREATE TABLE  `'.$table.'` ('."\n";
+        $query  = 'CREATE TABLE  `' . $table . '` (' . "\n";
         $query .= implode(',', $columns);
 
         $key = $model->key();
         if ($key) {
             if ($driver === self::SQLITE_DRIVER_NAME) {
                 /** Convert MySQL syntax to SQLite */
-                $query = preg_replace('/`'.$key.'` INT(EGER)? AUTO_INCREMENT/', '`'.$key.'` INTEGER PRIMARY KEY', $query, 1);
+                $query = preg_replace('/`' . $key . '` INT(EGER)? AUTO_INCREMENT/', '`' . $key . '` INTEGER PRIMARY KEY', $query, 1);
             } else {
-                $query .= ', PRIMARY KEY (`'.$key.'`) '."\n";
+                $query .= ', PRIMARY KEY (`' . $key . '`) ' . "\n";
             }
         }
 
         /** @todo Add indexes for all defined list constraints (yea... tough job...) */
         if ($driver === self::MYSQL_DRIVER_NAME) {
             $engine = 'InnoDB';
-            $query .= ') ENGINE='.$engine.' DEFAULT CHARSET=utf8 COMMENT="'.addslashes($metadata['name']).'";';
+            $query .= ') ENGINE=' . $engine . ' DEFAULT CHARSET=utf8 COMMENT="' . addslashes($metadata['name']) . '";';
         } else {
             $query .= ');';
         }
@@ -215,7 +213,7 @@ class DatabaseSource extends AbstractSource implements
                 $fieldSql = $field->sql();
                 if ($fieldSql) {
                     // The key does not exist at all.
-                    $query = 'ALTER TABLE `'.$table.'` ADD '.$fieldSql;
+                    $query = 'ALTER TABLE `' . $table . '` ADD ' . $fieldSql;
                     $this->logger->debug($query);
                     $dbh->query($query);
                 } else {
@@ -243,7 +241,7 @@ class DatabaseSource extends AbstractSource implements
                 if ($alter === true) {
                     $fieldSql = $field->sql();
                     if ($fieldSql) {
-                        $query = 'ALTER TABLE `'.$table.'` CHANGE `'.$ident.'` '.$fieldSql;
+                        $query = 'ALTER TABLE `' . $table . '` CHANGE `' . $ident . '` ' . $fieldSql;
                         $this->logger->debug($query);
                         $dbh->query($query);
                     } else {
@@ -437,7 +435,7 @@ class DatabaseSource extends AbstractSource implements
             $this->setModel($item);
         } else {
             $class = get_class($this->model());
-            $item  = new $class;
+            $item  = new $class();
         }
 
         // Strip invalid characters
@@ -480,7 +478,7 @@ class DatabaseSource extends AbstractSource implements
             $this->setModel($item);
         } else {
             $class = get_class($this->model());
-            $item = new $class;
+            $item = new $class();
         }
 
         // Missing parameters
@@ -552,7 +550,7 @@ class DatabaseSource extends AbstractSource implements
 
         $className = get_class($model);
         while ($objData = $sth->fetch()) {
-            $obj = new $className;
+            $obj = new $className();
             $obj->setFlatData($objData);
             $items[] = $obj;
         }
@@ -589,8 +587,8 @@ class DatabaseSource extends AbstractSource implements
         foreach ($fields as $field) {
             $key = $field->ident();
             if (in_array($key, $struct)) {
-                $keys[]      = '`'.$key.'`';
-                $values[]    = ':'.$key.'';
+                $keys[]      = '`' . $key . '`';
+                $values[]    = ':' . $key . '';
                 $binds[$key] = $field->val();
                 $types[$key] = $field->sqlPdoType();
             }
@@ -599,10 +597,10 @@ class DatabaseSource extends AbstractSource implements
         $query = '
             INSERT
                 INTO
-            `'.$table.'`
-                ('.implode(', ', $keys).')
+            `' . $table . '`
+                (' . implode(', ', $keys) . ')
             VALUES
-                ('.implode(', ', $values).')';
+                (' . implode(', ', $values) . ')';
 
         $result = $this->dbQuery($query, $binds, $types);
 
@@ -644,8 +642,8 @@ class DatabaseSource extends AbstractSource implements
             $key = $field->ident();
             if (in_array($key, $struct)) {
                 if ($key !== $model->key()) {
-                    $param = ':'.$key;
-                    $updates[] = '`'.$key.'` = '.$param;
+                    $param = ':' . $key;
+                    $updates[] = '`' . $key . '` = ' . $param;
                 }
                 $binds[$key] = $field->val();
                 $types[$key] = $field->sqlPdoType();
@@ -679,15 +677,15 @@ class DatabaseSource extends AbstractSource implements
 
         $query = '
             UPDATE
-                `'.$table.'`
+                `' . $table . '`
             SET
-                '.implode(", \n\t", $updates).'
+                ' . implode(", \n\t", $updates) . '
             WHERE
-                `'.$model->key().'`=:'.$model->key().'';
+                `' . $model->key() . '`=:' . $model->key() . '';
 
         $driver = $this->db()->getAttribute(PDO::ATTR_DRIVER_NAME);
         if ($driver == self::MYSQL_DRIVER_NAME) {
-            $query .= "\n".'LIMIT 1';
+            $query .= "\n" . 'LIMIT 1';
         }
 
         $result = $this->dbQuery($query, $binds, $types);
@@ -725,13 +723,13 @@ class DatabaseSource extends AbstractSource implements
         $table = $this->table();
         $query = '
             DELETE FROM
-                `'.$table.'`
+                `' . $table . '`
             WHERE
-                `'.$key.'` = :id';
+                `' . $key . '` = :id';
 
         $driver = $this->db()->getAttribute(PDO::ATTR_DRIVER_NAME);
         if ($driver == self::MYSQL_DRIVER_NAME) {
-            $query .= "\n".'LIMIT 1';
+            $query .= "\n" . 'LIMIT 1';
         }
 
         $binds = [
@@ -771,7 +769,7 @@ class DatabaseSource extends AbstractSource implements
             $result = $sth->execute();
         } catch (PDOException $e) {
             throw new PDOException(sprintf(
-                '[%s] Failed SQL query: '.$e->getMessage(),
+                '[%s] Failed SQL query: ' . $e->getMessage(),
                 $this->getModelClassForException()
             ), 0, $e);
         }
@@ -808,7 +806,7 @@ class DatabaseSource extends AbstractSource implements
                     $binds[$key] = json_encode($binds[$key]);
                 }
                 $type  = (isset($types[$key]) ? $types[$key] : PDO::PARAM_STR);
-                $param = ':'.$key;
+                $param = ':' . $key;
                 $sth->bindParam($param, $binds[$key], $type);
             }
         }
@@ -837,7 +835,7 @@ class DatabaseSource extends AbstractSource implements
         $orders  = $this->sqlOrders();
         $limits  = $this->sqlPagination();
 
-        $query = 'SELECT '.$selects.' FROM '.$tables.$filters.$orders.$limits;
+        $query = 'SELECT ' . $selects . ' FROM ' . $tables . $filters . $orders . $limits;
         return $query;
     }
 
@@ -859,7 +857,7 @@ class DatabaseSource extends AbstractSource implements
         $tables  = $this->sqlFrom();
         $filters = $this->sqlFilters();
 
-        $query = 'SELECT COUNT(*) FROM '.$tables.$filters;
+        $query = 'SELECT COUNT(*) FROM ' . $tables . $filters;
         return $query;
     }
 
@@ -873,7 +871,7 @@ class DatabaseSource extends AbstractSource implements
     {
         $properties = $this->properties();
         if (empty($properties)) {
-            return self::DEFAULT_TABLE_ALIAS.'.*';
+            return self::DEFAULT_TABLE_ALIAS . '.*';
         }
 
         $parts = [];
@@ -909,7 +907,7 @@ class DatabaseSource extends AbstractSource implements
         }
 
         $table = $this->table();
-        return '`'.$table.'` AS `'.self::DEFAULT_TABLE_ALIAS.'`';
+        return '`' . $table . '` AS `' . self::DEFAULT_TABLE_ALIAS . '`';
     }
 
     /**
@@ -930,7 +928,7 @@ class DatabaseSource extends AbstractSource implements
 
         $sql = $criteria->sql();
         if ($sql && strlen($sql) > 0) {
-            $sql = ' WHERE '.$sql;
+            $sql = ' WHERE ' . $sql;
         }
 
         return $sql;
@@ -963,7 +961,7 @@ class DatabaseSource extends AbstractSource implements
             return '';
         }
 
-        return ' ORDER BY '.implode(', ', $parts);
+        return ' ORDER BY ' . implode(', ', $parts);
     }
 
     /**
@@ -980,7 +978,7 @@ class DatabaseSource extends AbstractSource implements
 
         $sql = $pager->sql();
         if ($sql && strlen($sql) > 0) {
-            $sql = ' '.$sql;
+            $sql = ' ' . $sql;
         }
 
         return $sql;

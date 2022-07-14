@@ -2,11 +2,10 @@
 
 namespace Charcoal\Image\Imagemagick;
 
-use \Exception;
-use \InvalidArgumentException;
-use \OutOfBoundsException;
-
-use \Charcoal\Image\AbstractImage;
+use Exception;
+use InvalidArgumentException;
+use OutOfBoundsException;
+use Charcoal\Image\AbstractImage;
 
 /**
  * The Imagemagick image driver.
@@ -92,7 +91,7 @@ class ImagemagickImage extends AbstractImage
 
         $this->resetTmp();
         touch($this->tmp());
-        $this->exec($this->convertCmd().' -size '.(int)$width.'x'.(int)$height.' canvas:"'.$color.'" '.$this->tmp());
+        $this->exec($this->convertCmd() . ' -size ' . (int)$width . 'x' . (int)$height . ' canvas:"' . $color . '" ' . $this->tmp());
         return $this;
     }
 
@@ -166,7 +165,7 @@ class ImagemagickImage extends AbstractImage
         if (!file_exists($this->tmp())) {
             return 0;
         }
-        $cmd = $this->identifyCmd().' -format "%w" '.$this->tmp();
+        $cmd = $this->identifyCmd() . ' -format "%w" ' . $this->tmp();
         return (int)trim($this->exec($cmd));
     }
 
@@ -180,7 +179,7 @@ class ImagemagickImage extends AbstractImage
         if (!file_exists($this->tmp())) {
             return 0;
         }
-        $cmd = $this->identifyCmd().' -format "%h" '.$this->tmp();
+        $cmd = $this->identifyCmd() . ' -format "%h" ' . $this->tmp();
         return (int)trim($this->exec($cmd));
     }
 
@@ -226,15 +225,15 @@ class ImagemagickImage extends AbstractImage
             ));
         }
 
-        $cmd = exec('type -p '.$cmdName);
-        $cmd = str_replace($cmdName.' is ', '', $cmd);
+        $cmd = exec('type -p ' . $cmdName);
+        $cmd = str_replace($cmdName . ' is ', '', $cmd);
 
         if (!$cmd) {
-            $cmd = exec('where '.$cmdName);
+            $cmd = exec('where ' . $cmdName);
         }
 
         if (!$cmd) {
-            $cmd = exec('which '.$cmdName);
+            $cmd = exec('which ' . $cmdName);
         }
 
         if (!$cmd) {
@@ -357,7 +356,7 @@ class ImagemagickImage extends AbstractImage
             return $this->tmpFile;
         }
 
-        $this->tmpFile = rtrim(sys_get_temp_dir(), '/\\').DIRECTORY_SEPARATOR.'charcoal_image_'.uniqid();
+        $this->tmpFile = rtrim(sys_get_temp_dir(), '/\\') . DIRECTORY_SEPARATOR . 'charcoal_image_' . uniqid();
         return $this->tmpFile;
     }
 
@@ -435,7 +434,7 @@ class ImagemagickImage extends AbstractImage
             );
         }
 
-        $this->exec($cmd.' '.$params.' '.$this->tmp());
+        $this->exec($cmd . ' ' . $params . ' ' . $this->tmp());
 
         return $this;
     }

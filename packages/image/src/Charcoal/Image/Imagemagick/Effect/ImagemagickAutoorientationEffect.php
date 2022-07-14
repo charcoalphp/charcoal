@@ -2,7 +2,7 @@
 
 namespace Charcoal\Image\Imagemagick\Effect;
 
-use \Charcoal\Image\Effect\AbstractAutoorientationEffect;
+use Charcoal\Image\Effect\AbstractAutoorientationEffect;
 
 /**
  * Auto-orientate Effect for the Imagemagick driver.

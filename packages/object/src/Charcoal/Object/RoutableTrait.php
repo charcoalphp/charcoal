@@ -5,16 +5,12 @@ namespace Charcoal\Object;
 use Exception;
 use InvalidArgumentException;
 use UnexpectedValueException;
-
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
-
 // From 'charcoal-view'
 use Charcoal\View\ViewableInterface;
-
 // From 'charcoal-object'
 use Charcoal\Object\ObjectRoute;
 use Charcoal\Object\ObjectRouteInterface;
@@ -378,7 +374,7 @@ trait RoutableTrait
         } else {
             throw new InvalidArgumentException(sprintf(
                 '[%s] slug parameter must be an instance of %s, received %s',
-                get_called_class().'::'.__FUNCTION__,
+                get_called_class() . '::' . __FUNCTION__,
                 Translation::class,
                 is_object($slug) ? get_class($slug) : gettype($slug)
             ));
@@ -568,19 +564,19 @@ trait RoutableTrait
 
         // Unify all dashes/underscores as one separator character
         $flip = ($separator === '-') ? '_' : '-';
-        $slug = preg_replace('!['.preg_quote($flip).']+!u', $separator, $slug);
+        $slug = preg_replace('![' . preg_quote($flip) . ']+!u', $separator, $slug);
 
         // Remove all whitespace and normalize delimiters
         $slug = preg_replace('![_\|\s|\(\)]+!', $separator, $slug);
 
         // Squeeze multiple delimiters and whitespace with a single separator
-        $slug = preg_replace('!['.$pregDelim.'\s]{2,}!', $separator, $slug);
+        $slug = preg_replace('![' . $pregDelim . '\s]{2,}!', $separator, $slug);
 
         // Squeeze multiple URI path delimiters
-        $slug = preg_replace('!['.$pregDir.']{2,}!', $separator, $slug);
+        $slug = preg_replace('![' . $pregDir . ']{2,}!', $separator, $slug);
 
         // Remove delimiters surrouding URI path delimiters
-        $slug = preg_replace('!(?<=['.$pregDir.'])['.$pregDelim.']|['.$pregDelim.'](?=['.$pregDir.'])!', '', $slug);
+        $slug = preg_replace('!(?<=[' . $pregDir . '])[' . $pregDelim . ']|[' . $pregDelim . '](?=[' . $pregDir . '])!', '', $slug);
 
         // Strip leading and trailing dashes or underscores
         $slug = trim($slug, $delimiters);
@@ -608,7 +604,7 @@ trait RoutableTrait
             if ($slug === $prefix) {
                 throw new UnexpectedValueException('The slug is the same as the prefix.');
             }
-            $slug = $prefix.preg_replace('!^'.preg_quote($prefix).'\b!', '', $slug);
+            $slug = $prefix . preg_replace('!^' . preg_quote($prefix) . '\b!', '', $slug);
         }
 
         $suffix = $this->slugSuffix();
@@ -617,7 +613,7 @@ trait RoutableTrait
             if ($slug === $suffix) {
                 throw new UnexpectedValueException('The slug is the same as the suffix.');
             }
-            $slug = preg_replace('!\b'.preg_quote($suffix).'$!', '', $slug).$suffix;
+            $slug = preg_replace('!\b' . preg_quote($suffix) . '$!', '', $slug) . $suffix;
         }
 
         $slug = rtrim($slug, '/');

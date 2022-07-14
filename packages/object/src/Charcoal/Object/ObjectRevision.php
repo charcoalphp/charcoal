@@ -5,17 +5,13 @@ namespace Charcoal\Object;
 use InvalidArgumentException;
 use DateTime;
 use DateTimeInterface;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-core'
 use Charcoal\Model\AbstractModel;
 use Charcoal\Model\ModelFactoryTrait;
-
 // From 'charcoal-object'
 use Charcoal\Object\ObjectRevisionInterface;
 use Charcoal\Object\RevisionableInterface;

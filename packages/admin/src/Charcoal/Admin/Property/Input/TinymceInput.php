@@ -3,10 +3,8 @@
 namespace Charcoal\Admin\Property\Input;
 
 use InvalidArgumentException;
-
 // From Mustache
 use Mustache_LambdaHelper as LambdaHelper;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Property\Input\TextareaInput;
 
@@ -261,7 +259,7 @@ class TinymceInput extends TextareaInput
     protected function getFilePickerUrlTemplate()
     {
         $uri = 'obj_type={{ objType }}&obj_id={{ objId }}&property={{ p.ident }}&callback={{ inputId }}';
-        $uri = '{{# withAdminUrl }}elfinder?'.$uri.'{{/ withAdminUrl }}';
+        $uri = '{{# withAdminUrl }}elfinder?' . $uri . '{{/ withAdminUrl }}';
 
         return $uri;
     }

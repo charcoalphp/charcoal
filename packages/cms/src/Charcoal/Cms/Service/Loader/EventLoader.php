@@ -4,7 +4,6 @@ namespace Charcoal\Cms\Service\Loader;
 
 use DateTime;
 use DateTimeInterface;
-
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
 

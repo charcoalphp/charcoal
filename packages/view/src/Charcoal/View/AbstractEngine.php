@@ -16,7 +16,6 @@ namespace Charcoal\View;
  */
 abstract class AbstractEngine implements EngineInterface
 {
-
     /**
      * @var LoaderInterface
      */
@@ -119,7 +118,7 @@ abstract class AbstractEngine implements EngineInterface
     /**
      * @return LoaderInterface
      */
-    protected function loader() : LoaderInterface
+    protected function loader(): LoaderInterface
     {
         return $this->loader;
     }

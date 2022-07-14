@@ -3,20 +3,15 @@
 namespace Charcoal\Admin\Script\Tools\StaticWebsite;
 
 use InvalidArgumentException;
-
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'guzzlehttp/guzzle'
 use GuzzleHttp\Client as GuzzleClient;
-
 // From 'fabpot/goutte'
 use Goutte\Client as GoutteClient;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminScript;
 
@@ -116,10 +111,10 @@ class CrawlScript extends AdminScript
         $climate = $this->climate();
         $climate->arguments->parse();
 
-        $this->startUrl = rtrim($climate->arguments->get('url'), '/').'/';
+        $this->startUrl = rtrim($climate->arguments->get('url'), '/') . '/';
         $this->parsedStartUrl = parse_url($this->startUrl);
 
-        $this->outputDir = rtrim($this->basePath.$climate->arguments->get('output-dir'), '/');
+        $this->outputDir = rtrim($this->basePath . $climate->arguments->get('output-dir'), '/');
 
         $this->maxLevel = $climate->arguments->get('max-level');
 
@@ -155,15 +150,15 @@ class CrawlScript extends AdminScript
         }
 
         $relativeUrl = str_replace($this->startUrl, '', $url);
-        $url = $this->startUrl.$relativeUrl;
-        $outputDir = $this->outputDir.'/'.$relativeUrl;
+        $url = $this->startUrl . $relativeUrl;
+        $outputDir = $this->outputDir . '/' . $relativeUrl;
 
         // Previous static version must be deleted in order to generate a new one.
-        if (file_exists($outputDir.'/index.php')) {
-            unlink($outputDir.'/index.php');
+        if (file_exists($outputDir . '/index.php')) {
+            unlink($outputDir . '/index.php');
         }
-        if (file_exists($outputDir.'/index.html')) {
-            unlink($outputDir.'/index.html');
+        if (file_exists($outputDir . '/index.html')) {
+            unlink($outputDir . '/index.html');
         }
 
         $response = $this->guzzleClient->request('GET', $url);
@@ -175,12 +170,12 @@ class CrawlScript extends AdminScript
         }
 
         if (strstr($headers['Content-Type'][0], 'text/html') !== false) {
-            $outputFile = $outputDir.'/index.html';
+            $outputFile = $outputDir . '/index.html';
             $prefix = '';
         } else {
-            $outputFile = $outputDir.'/index.php';
+            $outputFile = $outputDir . '/index.php';
             $prefix = '<?php
-            header("Content-Type: '.$headers['Content-Type'][0].'");
+            header("Content-Type: ' . $headers['Content-Type'][0] . '");
             ?>
             ';
         }
@@ -189,7 +184,7 @@ class CrawlScript extends AdminScript
             mkdir($outputDir, null, true);
         }
 
-        file_put_contents($outputFile, $prefix.$response->getBody());
+        file_put_contents($outputFile, $prefix . $response->getBody());
         $this->processedUrls[] = $url;
     }
 
@@ -201,7 +196,7 @@ class CrawlScript extends AdminScript
     private function retrieveLinks($url, $level)
     {
         $crawler = $this->goutteClient->request('GET', $url);
-        $crawler->filter('a')->each(function($item) use ($level) {
+        $crawler->filter('a')->each(function ($item) use ($level) {
             $href = $item->attr('href');
             $parsedHref = parse_url($href);
             if (isset($parsedHref['host']) && ($parsedHref['host'] !== $this->parsedStartUrl['host'])) {
@@ -236,11 +231,11 @@ class CrawlScript extends AdminScript
                 'Static'
             );
         }
-        $this->climate()->out('Deleting '.$dir);
+        $this->climate()->out('Deleting ' . $dir);
 
         $files = array_diff(scandir($dir), ['.','..']);
         foreach ($files as $file) {
-            $f = $dir.'/'.$file;
+            $f = $dir . '/' . $file;
             if (is_dir($f)) {
                 $this->recursiveDelete($f);
             } else {

@@ -2,16 +2,14 @@
 
 namespace Charcoal\Image\Effect;
 
-use \InvalidArgumentException;
-
-use \Charcoal\Image\AbstractEffect;
+use InvalidArgumentException;
+use Charcoal\Image\AbstractEffect;
 
 /**
  * Convert the image to monochrome (black and white)
  */
 abstract class AbstractThresholdEffect extends AbstractEffect
 {
-
     /**
      * @var float $threshold
      */

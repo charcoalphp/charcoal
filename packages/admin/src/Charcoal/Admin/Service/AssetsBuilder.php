@@ -93,13 +93,13 @@ final class AssetsBuilder
      */
     private function extractFiles(array $files = [])
     {
-        $basePath = dirname(__DIR__, 7).'/';
+        $basePath = dirname(__DIR__, 7) . '/';
         $collection = [];
 
         foreach ($files as $f) {
             // Files with asterisks should be treated as glob.
             if (strpos($f, '*') !== false) {
-                $collection[] = new GlobAsset($basePath.$f);
+                $collection[] = new GlobAsset($basePath . $f);
                 continue;
             }
 
@@ -111,7 +111,7 @@ final class AssetsBuilder
                 continue;
             }
 
-            $collection[] = new FileAsset($basePath.$f);
+            $collection[] = new FileAsset($basePath . $f);
         }
 
         return $collection;

@@ -5,13 +5,10 @@ namespace Charcoal\Admin\Widget;
 use ReflectionClass;
 use InvalidArgumentException;
 use UnexpectedValueException;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-ui'
 use Charcoal\Ui\FormGroup\FormGroupInterface;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Docs\Widget\DocFormPropertyWidget;
 use Charcoal\Admin\Ui\FormSidebarInterface;
@@ -145,7 +142,7 @@ class DocWidget extends FormWidget implements
                 '{{id}}'   => $this->obj()->id()
             ]);
 
-            $url = 'object/edit?main_menu='.$this->obj()['main_menu'].'&obj_type={{obj_type}}&obj_id={{id}}';
+            $url = 'object/edit?main_menu=' . $this->obj()['main_menu'] . '&obj_type={{obj_type}}&obj_id={{id}}';
 
             $out = [
                 'title'       => $translator->translate('Actions'),
@@ -535,7 +532,7 @@ class DocWidget extends FormWidget implements
                 $method = $matches[2];
 
                 if ($class === 'parent') {
-                    $resolved = [ $obj, $class.'::'.$method ];
+                    $resolved = [ $obj, $class . '::' . $method ];
                 }
             }
 

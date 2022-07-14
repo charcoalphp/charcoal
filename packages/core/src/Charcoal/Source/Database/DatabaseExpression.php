@@ -3,7 +3,6 @@
 namespace Charcoal\Source\Database;
 
 use UnexpectedValueException;
-
 // From 'charcoal-core'
 use Charcoal\Source\Database\DatabaseExpressionInterface;
 use Charcoal\Source\Expression;

@@ -5,13 +5,10 @@ namespace Charcoal\App;
 use Exception;
 use InvalidArgumentException;
 use UnexpectedValueException;
-
 // From PSR-7
 use Psr\Http\Message\UriInterface;
-
 // From Slim
 use Slim\Http\Uri;
-
 // From 'charcoal-config'
 use Charcoal\Config\AbstractConfig;
 
@@ -170,7 +167,7 @@ class AppConfig extends AbstractConfig
     public function defaults()
     {
         /** @var string $baseDir Presume that Charcoal App _is_ the application */
-        $baseDir = rtrim(realpath(__DIR__.'/../../../'), '/').'/';
+        $baseDir = rtrim(realpath(__DIR__ . '/../../../'), '/') . '/';
 
         return [
             'project_name'     => '',
@@ -232,7 +229,7 @@ class AppConfig extends AbstractConfig
                     $resolvedType = (is_object($resolved) ? get_class($resolved) : gettype($resolved));
 
                     throw new UnexpectedValueException(sprintf(
-                        'Invalid config parameter "%s" inside string value "%s";'.
+                        'Invalid config parameter "%s" inside string value "%s";' .
                         ' must be a string or number, received %s',
                         $tag,
                         $value,
@@ -332,7 +329,7 @@ class AppConfig extends AbstractConfig
     public function publicPath()
     {
         if ($this->publicPath === null) {
-            $this->publicPath = $this->basePath().DIRECTORY_SEPARATOR.'www';
+            $this->publicPath = $this->basePath() . DIRECTORY_SEPARATOR . 'www';
         }
 
         return $this->publicPath;
@@ -370,7 +367,7 @@ class AppConfig extends AbstractConfig
     public function cachePath()
     {
         if ($this->cachePath === null) {
-            $this->cachePath = $this->basePath().DIRECTORY_SEPARATOR.'var'.DIRECTORY_SEPARATOR.'cache';
+            $this->cachePath = $this->basePath() . DIRECTORY_SEPARATOR . 'var' . DIRECTORY_SEPARATOR . 'cache';
         }
 
         return $this->cachePath;
@@ -408,7 +405,7 @@ class AppConfig extends AbstractConfig
     public function logsPath()
     {
         if ($this->logsPath === null) {
-            $this->logsPath = $this->basePath().DIRECTORY_SEPARATOR.'var'.DIRECTORY_SEPARATOR.'logs';
+            $this->logsPath = $this->basePath() . DIRECTORY_SEPARATOR . 'var' . DIRECTORY_SEPARATOR . 'logs';
         }
 
         return $this->logsPath;

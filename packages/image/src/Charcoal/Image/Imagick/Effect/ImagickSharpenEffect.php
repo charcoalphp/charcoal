@@ -2,7 +2,7 @@
 
 namespace Charcoal\Image\Imagick\Effect;
 
-use \Charcoal\Image\Effect\AbstractSharpenEffect;
+use Charcoal\Image\Effect\AbstractSharpenEffect;
 
 /**
  * Sharpen Effect for Imagick driver.

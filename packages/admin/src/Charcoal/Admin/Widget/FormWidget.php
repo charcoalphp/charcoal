@@ -5,26 +5,20 @@ namespace Charcoal\Admin\Widget;
 use Exception;
 use InvalidArgumentException;
 use RuntimeException;
-
 // From Pimple
 use Pimple\Container;
-
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
-
 /// From 'charcoal-ui'
 use Charcoal\Ui\Form\FormInterface;
 use Charcoal\Ui\Form\FormTrait;
 use Charcoal\Ui\Layout\LayoutAwareInterface;
 use Charcoal\Ui\Layout\LayoutAwareTrait;
 use Charcoal\Ui\PrioritizableInterface;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminWidget;
 use Charcoal\Admin\Property\HierarchicalObjectProperty;
@@ -390,7 +384,7 @@ class FormWidget extends AdminWidget implements
      */
     public function hasSidebars()
     {
-        return (bool) $this->sidebars;
+        return (bool)$this->sidebars;
     }
 
     /**

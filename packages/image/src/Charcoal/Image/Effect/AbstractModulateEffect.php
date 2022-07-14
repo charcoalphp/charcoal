@@ -2,9 +2,8 @@
 
 namespace Charcoal\Image\Effect;
 
-use \InvalidArgumentException;
-
-use \Charcoal\Image\AbstractEffect;
+use InvalidArgumentException;
+use Charcoal\Image\AbstractEffect;
 
 /**
  * Modifies an image's colors in the special HSL (hue-saturation-luminance) colorspace.

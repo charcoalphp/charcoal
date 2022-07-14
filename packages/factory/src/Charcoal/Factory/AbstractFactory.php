@@ -406,7 +406,7 @@ abstract class AbstractFactory implements FactoryInterface
     protected function createClass($className, $args)
     {
         if ($args === null) {
-            return new $className;
+            return new $className();
         }
         if (!is_array($args)) {
             return new $className($args);

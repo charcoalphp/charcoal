@@ -3,7 +3,6 @@
 namespace Charcoal\Admin\Support;
 
 use RuntimeException;
-
 // From PSR-7
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\RequestInterface;

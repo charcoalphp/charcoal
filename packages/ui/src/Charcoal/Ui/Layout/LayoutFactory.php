@@ -3,7 +3,6 @@
 namespace Charcoal\Ui\Layout;
 
 use Charcoal\Factory\ResolverFactory;
-
 use Charcoal\Ui\Layout\LayoutInterface;
 use Charcoal\Ui\Layout\GenericLayout;
 

@@ -3,14 +3,11 @@
 namespace Charcoal\Admin\Action\Object;
 
 use Exception;
-
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminAction;
 use Charcoal\Admin\Ui\ObjectContainerInterface;
@@ -93,7 +90,7 @@ class ReorderAction extends AdminAction implements ObjectContainerInterface
                 return $response->withStatus(400);
             }
 
-            $this->logger->debug('[Admin] Reordering objects: '.$objType);
+            $this->logger->debug('[Admin] Reordering objects: ' . $objType);
 
             $this->setObjType($objType);
 

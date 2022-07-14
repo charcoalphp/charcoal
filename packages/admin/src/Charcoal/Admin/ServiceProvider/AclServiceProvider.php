@@ -5,11 +5,9 @@ namespace Charcoal\Admin\ServiceProvider;
 // From Pimple
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-
 // From 'laminas/laminas-permissions-acl'
 use Laminas\Permissions\Acl\Acl;
 use Laminas\Permissions\Acl\Resource\GenericResource as AclResource;
-
 // From 'charcoal-user'
 use Charcoal\User\Acl\Manager as AclManager;
 

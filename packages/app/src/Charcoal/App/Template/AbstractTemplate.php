@@ -5,16 +5,12 @@ namespace Charcoal\App\Template;
 // From 'psr/log'
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-
 // From 'psr/http-message'
 use Psr\Http\Message\RequestInterface;
-
 // From 'pimple/pimple'
 use Pimple\Container;
-
 // From 'charcoal-config'
 use Charcoal\Config\AbstractEntity;
-
 // From 'charcoal-app'
 use Charcoal\App\Template\TemplateInterface;
 
@@ -53,7 +49,7 @@ abstract class AbstractTemplate extends AbstractEntity implements
      */
     public function templateName()
     {
-        $key = substr(strrchr('\\'.get_class($this), '\\'), 1);
+        $key = substr(strrchr('\\' . get_class($this), '\\'), 1);
 
         if (!isset(static::$templateNameCache[$key])) {
             $value = $key;

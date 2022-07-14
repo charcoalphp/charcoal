@@ -3,10 +3,8 @@
 namespace Charcoal\Admin;
 
 use InvalidArgumentException;
-
 // From 'charcoal-core'
 use Charcoal\Config\AbstractConfig;
-
 // From 'charcoal-app'
 use Charcoal\App\Handler\HandlerConfig;
 use Charcoal\App\Route\RouteConfig;
@@ -54,10 +52,10 @@ class Config extends AbstractConfig
      */
     public function defaults()
     {
-        $baseDir = rtrim(realpath(__DIR__.'/../../../'), '/');
-        $confDir = $baseDir.'/config';
+        $baseDir = rtrim(realpath(__DIR__ . '/../../../'), '/');
+        $confDir = $baseDir . '/config';
 
-        return $this->loadFile($confDir.'/admin.config.default.json');
+        return $this->loadFile($confDir . '/admin.config.default.json');
     }
 
     /**

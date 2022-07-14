@@ -4,10 +4,8 @@ namespace Charcoal\Admin\Template\System;
 
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminTemplate;
 use Charcoal\Admin\Ui\CollectionContainerInterface;
@@ -64,7 +62,7 @@ class UserPermissionsTemplate extends AdminTemplate implements
             ]);
             $this->addFeedback(
                 'notice',
-                '<span class="fa fa-asterisk" aria-hidden="true"></span><span>&nbsp; '.$msg.'</span>'
+                '<span class="fa fa-asterisk" aria-hidden="true"></span><span>&nbsp; ' . $msg . '</span>'
             );
         }
     }

@@ -3,7 +3,6 @@
 namespace Charcoal\Model;
 
 use RuntimeException;
-
 use Charcoal\Model\Service\MetadataLoader;
 
 /**

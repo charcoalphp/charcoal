@@ -4,16 +4,12 @@ namespace Charcoal\Admin\Widget\Cms;
 
 use Exception;
 use RuntimeException;
-
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-property'
 use Charcoal\Property\PropertyInterface;
-
 // From 'charcoal-cms'
 use Charcoal\Cms\AbstractSection;
 
@@ -97,13 +93,13 @@ trait SectionTableTrait
                     case AbstractSection::TYPE_EXTERNAL:
                         $externalUrl = (string)$object->externalUrl();
                         $linkExcerpt = '';
-                        $tagTemplate = '<span class="fa fa-link" data-toggle="tooltip" '.
+                        $tagTemplate = '<span class="fa fa-link" data-toggle="tooltip" ' .
                             'data-placement="auto" title="%1$s"></span>';
 
                         if ($externalUrl) {
-                            $tagTemplate = '<a class="btn btn-secondary btn-sm" href="%2$s" target="_blank">'.
-                                '<span class="fa fa-link" aria-hidden="true"></span> '.
-                                '<span class="sr-only">URL:</span> %3$s'.
+                            $tagTemplate = '<a class="btn btn-secondary btn-sm" href="%2$s" target="_blank">' .
+                                '<span class="fa fa-link" aria-hidden="true"></span> ' .
+                                '<span class="sr-only">URL:</span> %3$s' .
                                 '</a>';
 
                             $linkExcerpt = $this->abridgeUri($externalUrl);
@@ -111,7 +107,7 @@ trait SectionTableTrait
 
                         $p = $object->p('section_type');
                         $propertyValue .= sprintf(
-                            ' &nbsp; '.$tagTemplate,
+                            ' &nbsp; ' . $tagTemplate,
                             $p->displayVal($p->val()),
                             $externalUrl,
                             $linkExcerpt
@@ -124,8 +120,8 @@ trait SectionTableTrait
         if ($propertyIdent === 'title') {
             if (is_callable([ $object, 'navMenu' ]) && $object->navMenu()) {
                 $propertyValue .= sprintf(
-                    ' &nbsp; '.
-                    '<span class="fa fa-list" data-toggle="tooltip" '.
+                    ' &nbsp; ' .
+                    '<span class="fa fa-list" data-toggle="tooltip" ' .
                     'data-placement="auto" title="%s"></span>',
                     $this->translator()->translation([
                         'en' => 'Present in a menu',
@@ -136,8 +132,8 @@ trait SectionTableTrait
 
             if (is_callable([ $object, 'locked' ]) && $object->locked()) {
                 $propertyValue .= sprintf(
-                    ' &nbsp; '.
-                    '<span class="fa fa-lock" data-toggle="tooltip" '.
+                    ' &nbsp; ' .
+                    '<span class="fa fa-lock" data-toggle="tooltip" ' .
                     'data-placement="auto" title="%s"></span>',
                     $object->p('locked')['label']
                 );
@@ -163,7 +159,7 @@ trait SectionTableTrait
         }
 
         $host = rtrim(parse_url($uri, PHP_URL_HOST), '/');
-        $path = '/'.ltrim(parse_url($uri, PHP_URL_PATH), '/');
+        $path = '/' . ltrim(parse_url($uri, PHP_URL_PATH), '/');
 
         if ($host === getenv('HTTP_HOST')) {
             $i = 50;
@@ -180,7 +176,7 @@ trait SectionTableTrait
 
         $path = $this->abridgeStr($path, $i, $j);
 
-        return $host.$path;
+        return $host . $path;
     }
 
     /**
@@ -195,7 +191,7 @@ trait SectionTableTrait
     private function abridgeStr($str, $l = 30, $a = 12, $z = 12)
     {
         if (mb_strlen($str) > $l) {
-            $str = (($a > 0) ? mb_substr($str, 0, $a) : '').'&hellip;'.(($z > 0) ? mb_substr($str, -$z) : '');
+            $str = (($a > 0) ? mb_substr($str, 0, $a) : '') . '&hellip;' . (($z > 0) ? mb_substr($str, -$z) : '');
         }
 
         return $str;

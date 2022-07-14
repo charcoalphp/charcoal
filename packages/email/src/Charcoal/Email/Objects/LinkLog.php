@@ -8,7 +8,6 @@ use DateTime;
 use DateTimeInterface;
 use Exception;
 use InvalidArgumentException;
-
 // From 'charcoal/core'
 use Charcoal\Model\AbstractModel;
 

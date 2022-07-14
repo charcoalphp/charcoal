@@ -4,7 +4,6 @@ namespace Charcoal\Admin\Ui;
 
 // From 'charcoal-ui'
 use Charcoal\Ui\PrioritizableInterface;
-
 // From 'charcoal-admin'
 use Charcoal\Ui\Form\FormInterface;
 

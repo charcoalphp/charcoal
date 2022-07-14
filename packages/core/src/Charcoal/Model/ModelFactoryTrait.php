@@ -3,7 +3,6 @@
 namespace Charcoal\Model;
 
 use RuntimeException;
-
 // from `charcoal-factory`
 use Charcoal\Factory\FactoryInterface;
 

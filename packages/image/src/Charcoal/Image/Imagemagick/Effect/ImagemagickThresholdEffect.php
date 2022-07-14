@@ -2,7 +2,7 @@
 
 namespace Charcoal\Image\Imagemagick\Effect;
 
-use \Charcoal\Image\Effect\AbstractThresholdEffect;
+use Charcoal\Image\Effect\AbstractThresholdEffect;
 
 /**
  * Threshold Effect for the Imagemagick driver.
@@ -19,8 +19,8 @@ class ImagemagickThresholdEffect extends AbstractThresholdEffect
             $this->setData($data);
         }
 
-        $value = ($this->threshold()*100).'%';
-        $cmd = '-threshold '.$value;
+        $value = ($this->threshold() * 100) . '%';
+        $cmd = '-threshold ' . $value;
         $this->image()->applyCmd($cmd);
         return $this;
     }

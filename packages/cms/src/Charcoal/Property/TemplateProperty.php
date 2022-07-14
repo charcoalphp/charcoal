@@ -3,16 +3,12 @@
 namespace Charcoal\Property;
 
 use PDO;
-
 use RuntimeException;
 use InvalidArgumentException;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
-
 // From 'charcoal-property'
 use Charcoal\Property\AbstractProperty;
 use Charcoal\Property\SelectablePropertyInterface;

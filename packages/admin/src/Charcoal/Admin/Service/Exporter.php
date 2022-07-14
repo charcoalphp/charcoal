@@ -7,16 +7,12 @@ use Exception;
 use InvalidArgumentException;
 use RuntimeException;
 use SplTempFileObject;
-
 // LeagueCSV
 use League\Csv\Writer;
-
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\TranslatorAwareTrait;
 
@@ -263,7 +259,7 @@ class Exporter
             $this->setExportIdent($exportIdent);
         }
 
-        $export = $metadata->get('admin.export.'.$this->exportIdent());
+        $export = $metadata->get('admin.export.' . $this->exportIdent());
         if (!$export) {
             throw new InvalidArgumentException(sprintf(
                 'No export data defined for "%s" at "%s" in %s',
@@ -274,7 +270,7 @@ class Exporter
         }
 
         if (is_string($export)) {
-            $export = $metadata->get('admin.lists.'.$export);
+            $export = $metadata->get('admin.lists.' . $export);
             if (!$export) {
                 throw new InvalidArgumentException(sprintf(
                     'No export data defined for "%s" in %s',
@@ -309,7 +305,7 @@ class Exporter
         // Filename is not a requirement
         if (!$this->filename()) {
             $ts = new DateTime('now');
-            $filename = str_replace('/', '.', strtolower($this->objType())).'-export-'.$ts->format('Ymd.His').'.csv';
+            $filename = str_replace('/', '.', strtolower($this->objType())) . '-export-' . $ts->format('Ymd.His') . '.csv';
             $this->setFilename($filename);
         }
 
@@ -338,7 +334,7 @@ class Exporter
         $out = [];
         foreach ($properties as $p) {
             // $p = property ident.
-            $prop = $metadata->get('properties.'.$p);
+            $prop = $metadata->get('properties.' . $p);
             if (!$prop) {
                 continue;
             }
@@ -372,7 +368,7 @@ class Exporter
                 // Use the property factory to get
                 // the proper val to output in csv
                 // as a string.
-                $propertyMetadata = $metadata->get('properties.'.$p);
+                $propertyMetadata = $metadata->get('properties.' . $p);
                 try {
                     $prop = $this->propertyFactory()->create($propertyMetadata['type']);
                     $prop->setIdent($p);

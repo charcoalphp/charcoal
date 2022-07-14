@@ -51,9 +51,9 @@ class GenericResolver
         }
         if (!isset($data['replacements'])) {
             $data['replacements'] = [
-                '-'=>'',
-                '/'=>'\\',
-                '.'=>'_'
+                '-' => '',
+                '/' => '\\',
+                '.' => '_'
             ];
         }
         $this->prefix = $data['prefix'];
@@ -89,9 +89,9 @@ class GenericResolver
         }
 
         // Normalize requested type with prefix / suffix, if applicable.
-        $type = $this->prefix.$type.$this->suffix;
+        $type = $this->prefix . $type . $this->suffix;
 
-        $capitalizeNext = function(&$i) {
+        $capitalizeNext = function (&$i) {
             $i = ucfirst($i);
         };
 
@@ -107,7 +107,7 @@ class GenericResolver
             $type = str_replace($rep, $target, $type);
         }
 
-        $class = '\\'.trim($type, '\\');
+        $class = '\\' . trim($type, '\\');
 
         return $class;
     }

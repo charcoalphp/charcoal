@@ -2,12 +2,11 @@
 
 namespace Charcoal\Image;
 
-use \Exception;
-use \InvalidArgumentException;
-
-use \Charcoal\Image\ImageInterface;
-use \Charcoal\Image\EffectInterface;
-use \Charcoal\Image\EffectFactory;
+use Exception;
+use InvalidArgumentException;
+use Charcoal\Image\ImageInterface;
+use Charcoal\Image\EffectInterface;
+use Charcoal\Image\EffectFactory;
 
 /**
  * Base Image class
@@ -324,7 +323,7 @@ abstract class AbstractImage implements ImageInterface
             if (strstr($fxType, '/') === false) {
                 // Core effects do not need to be namespaced
                 $driver = $this->driverType();
-                $fxType = 'charcoal/image/'.$driver.'/effect/'.$driver.'-'.$fxType.'-effect';
+                $fxType = 'charcoal/image/' . $driver . '/effect/' . $driver . '-' . $fxType . '-effect';
             }
             $imageEffect = $this->effectFactory()->create($fxType);
             $imageEffect->setImage($this);

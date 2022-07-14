@@ -3,7 +3,6 @@
 namespace Charcoal\Admin\Object;
 
 use InvalidArgumentException;
-
 use Charcoal\Model\AbstractModel;
 
 /**

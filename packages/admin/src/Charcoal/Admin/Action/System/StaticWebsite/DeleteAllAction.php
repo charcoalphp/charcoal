@@ -4,16 +4,12 @@ namespace Charcoal\Admin\Action\System\StaticWebsite;
 
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From Pimple
 use Pimple\Container;
-
 use GuzzleHttp\Client as GuzzleClient;
-
 use Charcoal\Admin\AdminAction;
 
 /**
@@ -35,7 +31,7 @@ class DeleteAllAction extends AdminAction
     {
         unset($request);
 
-        $outputDir = $this->basePath.'cache/static/';
+        $outputDir = $this->basePath . 'cache/static/';
         if (!file_exists($outputDir)) {
             $this->setSuccess(false);
             $this->addFeedback('error', 'Can not delete all static pages: did not exist on filesystem.');

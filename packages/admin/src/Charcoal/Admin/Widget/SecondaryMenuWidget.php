@@ -5,17 +5,13 @@ namespace Charcoal\Admin\Widget;
 use ArrayIterator;
 use RuntimeException;
 use InvalidArgumentException;
-
 // From Pimple
 use Pimple\Container;
-
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriInterface;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminWidget;
 use Charcoal\Admin\Support\HttpAwareTrait;
@@ -635,7 +631,7 @@ class SecondaryMenuWidget extends AdminWidget implements
         uasort($this->groups, [ $this, 'sortGroupsByPriority' ]);
 
         // Remove items that are not active.
-        $this->groups = array_filter($this->groups, function($item) {
+        $this->groups = array_filter($this->groups, function ($item) {
             return ($item->active());
         });
 

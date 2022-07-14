@@ -3,14 +3,11 @@
 namespace Charcoal\Admin\Action\Selectize;
 
 use Exception;
-
 // From Pimple
 use Pimple\Container;
-
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Action\Object\LoadAction as BaseLoadAction;
 use Charcoal\Admin\Action\Selectize\SelectizeRendererAwareTrait;
@@ -77,7 +74,7 @@ class LoadAction extends BaseLoadAction
                 $query = [
                     'property' => $searchField,
                     'operator' => 'LIKE',
-                    'value'    => '%'.$this->query().'%',
+                    'value'    => '%' . $this->query() . '%',
                 ];
 
                 $filters = $sp->filters();

@@ -4,16 +4,12 @@ namespace Charcoal\Admin\Property\Input;
 
 use InvalidArgumentException;
 use UnexpectedValueException;
-
 // From Mustache
 use Mustache_LambdaHelper as LambdaHelper;
-
 // From 'charcoal-view'
 use Charcoal\View\ViewableInterface;
-
 // From 'charcoal-property'
 use Charcoal\Property\PropertyInterface;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Property\Input\AudioInput;
 
@@ -261,7 +257,7 @@ class AudioWidgetInput extends AudioInput
     protected function getRecorderPluginUrlTemplate()
     {
         $uri = 'assets/admin/scripts/vendors/recorderjs/recorder.js';
-        $uri = '{{# withBaseUrl }}'.$uri.'{{/ withBaseUrl }}';
+        $uri = '{{# withBaseUrl }}' . $uri . '{{/ withBaseUrl }}';
 
         return $uri;
     }
@@ -520,7 +516,7 @@ class AudioWidgetInput extends AudioInput
         }
 
         if ($this->textProperty()['l10n']) {
-            $name .= '['.$this->lang().']';
+            $name .= '[' . $this->lang() . ']';
         }
 
         return $name;
@@ -561,7 +557,7 @@ class AudioWidgetInput extends AudioInput
      */
     public function textInputId()
     {
-        return 'audio_text_'.$this->inputId();
+        return 'audio_text_' . $this->inputId();
     }
 
     /**
@@ -571,7 +567,7 @@ class AudioWidgetInput extends AudioInput
      */
     public function captureInputId()
     {
-        return 'audio_capture_'.$this->inputId();
+        return 'audio_capture_' . $this->inputId();
     }
 
     /**
@@ -581,7 +577,7 @@ class AudioWidgetInput extends AudioInput
      */
     public function uploadInputId()
     {
-        return 'audio_upload_'.$this->inputId();
+        return 'audio_upload_' . $this->inputId();
     }
 
     /**
@@ -591,7 +587,7 @@ class AudioWidgetInput extends AudioInput
      */
     public function hiddenInputId()
     {
-        return 'audio_hidden_'.$this->inputId();
+        return 'audio_hidden_' . $this->inputId();
     }
 
     /**
@@ -686,7 +682,7 @@ class AudioWidgetInput extends AudioInput
     protected function getFilePickerUrlTemplate()
     {
         $uri = 'obj_type={{ objType }}&obj_id={{ objId }}&property={{ p.ident }}&callback={{ uploadInputId }}';
-        $uri = '{{# withAdminUrl }}elfinder?'.$uri.'{{/ withAdminUrl }}';
+        $uri = '{{# withAdminUrl }}elfinder?' . $uri . '{{/ withAdminUrl }}';
 
         return $uri;
     }

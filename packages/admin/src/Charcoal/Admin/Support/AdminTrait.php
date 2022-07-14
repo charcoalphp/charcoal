@@ -4,7 +4,6 @@ namespace Charcoal\Admin\Support;
 
 // From 'charcoal-app'
 use Charcoal\App\AppConfig;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Config as AdminConfig;
 
@@ -108,7 +107,7 @@ trait AdminTrait
      */
     protected function apiConfig($key, $default = null)
     {
-        $key = 'apis.'.$key;
+        $key = 'apis.' . $key;
 
         if (isset($this->adminConfig[$key])) {
             return $this->adminConfig[$key];

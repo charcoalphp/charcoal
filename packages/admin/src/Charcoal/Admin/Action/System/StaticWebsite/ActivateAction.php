@@ -5,10 +5,8 @@ namespace Charcoal\Admin\Action\System\StaticWebsite;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From Pimple
 use Pimple\Container;
-
 use Charcoal\Admin\AdminAction;
 
 /**
@@ -30,7 +28,7 @@ class ActivateAction extends AdminAction
     {
         unset($request);
 
-        $cachePath = $this->basePath.'cache';
+        $cachePath = $this->basePath . 'cache';
         // Ensure 'cache' directory exists
         if (!file_exists($cachePath)) {
             $ret = mkdir($cachePath);
@@ -40,7 +38,7 @@ class ActivateAction extends AdminAction
             }
         }
 
-        $staticPath = $cachePath.'/static';
+        $staticPath = $cachePath . '/static';
         // Ensure 'cache/static' directory exists
         if (!file_exists($staticPath)) {
             $ret = mkdir($staticPath);
@@ -50,8 +48,8 @@ class ActivateAction extends AdminAction
             }
         }
 
-        $publicPath = $this->basePath.'www';
-        $staticLink = $publicPath.'/static';
+        $publicPath = $this->basePath . 'www';
+        $staticLink = $publicPath . '/static';
         // Ensure 'www/static' directory does NOT exist
         if (file_exists($staticLink)) {
             $this->setSuccess(false);

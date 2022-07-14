@@ -3,10 +3,8 @@
 namespace Charcoal\Object;
 
 use InvalidArgumentException;
-
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
-
 // From 'charcoal-object'
 use Charcoal\Object\ObjectRevision;
 use Charcoal\Object\ObjectRevisionInterface;

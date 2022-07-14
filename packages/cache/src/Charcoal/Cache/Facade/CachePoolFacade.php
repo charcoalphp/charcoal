@@ -4,7 +4,6 @@ namespace Charcoal\Cache\Facade;
 
 // From PSR-6
 use Psr\Cache\CacheItemInterface;
-
 // From 'charcoal-cache'
 use Charcoal\Cache\CacheConfig;
 use Charcoal\Cache\CachePoolAwareTrait;

@@ -3,7 +3,6 @@
 namespace Charcoal\Attachment\Traits;
 
 use InvalidArgumentException;
-
 // From 'charcoal-attachment'
 use Charcoal\Attachment\Interfaces\AttachableInterface;
 use Charcoal\Attachment\Interfaces\AttachmentAwareInterface;

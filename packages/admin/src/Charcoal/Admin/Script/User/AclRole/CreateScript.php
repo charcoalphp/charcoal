@@ -5,10 +5,8 @@ namespace Charcoal\Admin\Script\User\AclRole;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From 'charcoal-core'
 use Charcoal\Validator\ValidatableInterface;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminScript;
 
@@ -66,7 +64,7 @@ class CreateScript extends AdminScript
 
         $ret = $role->save();
         if ($ret) {
-            $climate->green()->out("\n".sprintf('Success! Role "%s" created.', $ret));
+            $climate->green()->out("\n" . sprintf('Success! Role "%s" created.', $ret));
         } else {
             $climate->red()->out("\nError. Object could not be created.");
         }

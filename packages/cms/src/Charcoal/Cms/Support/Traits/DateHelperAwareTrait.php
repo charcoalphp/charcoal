@@ -4,7 +4,6 @@ namespace Charcoal\Cms\Support\Traits;
 
 // From Slim
 use Slim\Exception\ContainerException;
-
 // From 'charcoal-cms'
 use Charcoal\Cms\Support\Helpers\DateHelper;
 

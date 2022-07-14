@@ -4,24 +4,19 @@ namespace Charcoal\Admin\Widget;
 
 use InvalidArgumentException;
 use RuntimeException;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-core'
 use Charcoal\Model\MetadataInterface;
 use Charcoal\Model\Service\MetadataLoader;
-
 // From 'charcoal-property'
 use Charcoal\Property\Structure\StructureMetadata;
-
 // From 'charcoal-ui'
 use Charcoal\Ui\Form\FormInterface;
 use Charcoal\Ui\Form\FormTrait;
 use Charcoal\Ui\Layout\LayoutAwareInterface;
 use Charcoal\Ui\Layout\LayoutAwareTrait;
 use Charcoal\Ui\PrioritizableInterface;
-
 // From 'charcoal-cms'
 use Charcoal\Cms\TemplateableInterface;
 

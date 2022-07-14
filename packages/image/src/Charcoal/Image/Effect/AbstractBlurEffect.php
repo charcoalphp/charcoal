@@ -2,16 +2,14 @@
 
 namespace Charcoal\Image\Effect;
 
-use \InvalidArgumentException;
-
-use \Charcoal\Image\AbstractEffect;
+use InvalidArgumentException;
+use Charcoal\Image\AbstractEffect;
 
 /**
  * Blur the image
  */
 abstract class AbstractBlurEffect extends AbstractEffect
 {
-
     /**
      * @var float $radius
      */

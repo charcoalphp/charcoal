@@ -4,13 +4,10 @@ namespace Charcoal\Cms\Service\Loader;
 
 use RuntimeException;
 use Exception;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\TranslatorAwareTrait;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
 

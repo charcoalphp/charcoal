@@ -4,7 +4,6 @@ namespace Charcoal\Admin\Ui\SecondaryMenu;
 
 use ArrayIterator;
 use InvalidArgumentException;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Widget\SecondaryMenuWidgetInterface;
 

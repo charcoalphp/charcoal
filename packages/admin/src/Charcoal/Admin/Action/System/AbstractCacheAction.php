@@ -4,17 +4,13 @@ namespace Charcoal\Admin\Action\System;
 
 // From PSR-6
 use Psr\Cache\CacheItemPoolInterface;
-
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-cache'
 use Charcoal\Cache\CachePoolAwareTrait;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminAction;
 

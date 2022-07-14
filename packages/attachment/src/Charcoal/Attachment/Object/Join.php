@@ -6,16 +6,12 @@ use Exception;
 use LogicException;
 use RuntimeException;
 use InvalidArgumentException;
-
 // From Pimple
 use Pimple\Container as ServiceContainer;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-core'
 use Charcoal\Model\AbstractModel;
-
 // From 'charcoal-attachment'
 use Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
 use Charcoal\Attachment\Interfaces\JoinInterface;

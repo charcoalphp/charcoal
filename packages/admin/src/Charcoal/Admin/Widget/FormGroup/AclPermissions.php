@@ -4,25 +4,19 @@ namespace Charcoal\Admin\Widget\FormGroup;
 
 use PDO;
 use RuntimeException;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'laminas/laminas-permissions-acl'
 use Laminas\Permissions\Acl\Acl;
 use Laminas\Permissions\Acl\Role\GenericRole as Role;
 use Laminas\Permissions\Acl\Resource\GenericResource as Resource;
-
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
-
 // From 'charcoal-ui'
 use Charcoal\Ui\FormGroup\FormGroupInterface;
 use Charcoal\Ui\FormGroup\FormGroupTrait;
-
 // From 'charcoal-user'
 use Charcoal\User\Acl\Manager as AclManager;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminWidget;
 use Charcoal\Admin\User\Permission;

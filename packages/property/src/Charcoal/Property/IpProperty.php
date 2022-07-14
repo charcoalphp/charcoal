@@ -4,7 +4,6 @@ namespace Charcoal\Property;
 
 use PDO;
 use InvalidArgumentException;
-
 // From 'charcoal-property'
 use Charcoal\Property\AbstractProperty;
 

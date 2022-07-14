@@ -2,9 +2,8 @@
 
 namespace Charcoal\Image\Effect;
 
-use \InvalidArgumentException;
-
-use \Charcoal\Image\AbstractEffect;
+use InvalidArgumentException;
+use Charcoal\Image\AbstractEffect;
 
 /**
  * AbstractDitherEffect an image to a reduced number of colors

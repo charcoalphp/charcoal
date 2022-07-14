@@ -3,16 +3,12 @@
 namespace Charcoal\Admin\Action\System\StaticWebsite;
 
 use Exception;
-
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From Pimple
 use Pimple\Container;
-
 use GuzzleHttp\Client as GuzzleClient;
-
 use Charcoal\Admin\AdminAction;
 
 /**
@@ -38,9 +34,9 @@ class AddAction extends AdminAction
         }
         $url = $request->getParam('url');
         $relativeUrl = str_replace($this->baseUrl(), '', $url);
-        $url = $this->baseUrl().$relativeUrl;
+        $url = $this->baseUrl() . $relativeUrl;
 
-        $outputDir = $this->basePath.'cache/static/'.$relativeUrl;
+        $outputDir = $this->basePath . 'cache/static/' . $relativeUrl;
         if (!file_exists($outputDir)) {
             $ret = mkdir($outputDir, null, true);
             if ($ret === false) {
@@ -51,11 +47,11 @@ class AddAction extends AdminAction
 
         $ret = true;
         // Previous static version must be deleted in order to generate a new one.
-        if (file_exists($outputDir.'/index.php')) {
-            $ret =unlink($outputDir.'/index.php');
+        if (file_exists($outputDir . '/index.php')) {
+            $ret = unlink($outputDir . '/index.php');
         }
-        if (file_exists($outputDir.'/index.html')) {
-            $ret = unlink($outputDir.'/index.html');
+        if (file_exists($outputDir . '/index.html')) {
+            $ret = unlink($outputDir . '/index.html');
         }
         if ($ret === false) {
             $this->setSuccess(false);
@@ -89,12 +85,12 @@ class AddAction extends AdminAction
         }
 
         if (strstr($headers['Content-Type'][0], 'text/html') !== false) {
-            $outputFile = $outputDir.'/index.html';
+            $outputFile = $outputDir . '/index.html';
             $prefix = '';
         } else {
-            $outputFile = $outputDir.'/index.php';
+            $outputFile = $outputDir . '/index.php';
             $prefix = '<?php
-            header("Content-Type: '.$headers['Content-Type'][0].'");
+            header("Content-Type: ' . $headers['Content-Type'][0] . '");
             ?>
             ';
         }
@@ -106,7 +102,7 @@ class AddAction extends AdminAction
             return $response->withStatus(404);
         }
 
-        $ret = file_put_contents($outputFile, $prefix.$body);
+        $ret = file_put_contents($outputFile, $prefix . $body);
 
         if ($ret === false) {
             $this->setSuccess(false);

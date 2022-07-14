@@ -5,7 +5,6 @@ namespace Charcoal\Translator\ServiceProvider;
 // From Pimple
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-
 // From 'symfony/translation'
 use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\Loader\CsvFileLoader;
@@ -21,7 +20,6 @@ use Symfony\Component\Translation\Loader\JsonFileLoader;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Formatter\MessageFormatter;
 use Symfony\Component\Translation\MessageSelector;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\LocalesConfig;
 use Charcoal\Translator\LocalesManager;
@@ -41,7 +39,7 @@ class TranslatorServiceProvider implements ServiceProviderInterface
      * @param  Container $container Pimple DI container.
      * @return void
      */
-    public function register(Container$container)
+    public function register(Container $container)
     {
         $this->registerLocales($container);
         $this->registerTranslator($container);
@@ -245,17 +243,17 @@ class TranslatorServiceProvider implements ServiceProviderInterface
             $translator->addLoader('array', $container['translator/loader/array']);
 
             foreach ($transConfig['loaders'] as $loader) {
-                $translator->addLoader($loader, $container['translator/loader/file/'.$loader]);
+                $translator->addLoader($loader, $container['translator/loader/file/' . $loader]);
 
                 $paths = array_reverse($transConfig['paths']);
                 foreach ($paths as $path) {
-                    $path = realpath($container['config']['base_path'].DIRECTORY_SEPARATOR.$path);
+                    $path = realpath($container['config']['base_path'] . DIRECTORY_SEPARATOR . $path);
 
                     if ($path === false) {
                         continue;
                     }
 
-                    $files = glob($path.'/*.'.$loader);
+                    $files = glob($path . '/*.' . $loader);
                     foreach ($files as $f) {
                         $names = explode('.', basename($f));
 

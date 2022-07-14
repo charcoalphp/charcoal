@@ -3,7 +3,6 @@
 namespace Charcoal\Admin\Property;
 
 use Traversable;
-
 // From 'charcoal-property'
 use Charcoal\Property\PropertyInterface as ModelPropertyInterface;
 

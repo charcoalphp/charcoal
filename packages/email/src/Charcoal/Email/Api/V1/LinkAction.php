@@ -7,10 +7,8 @@ namespace Charcoal\Email\Api\V1;
 // From 'psr/http-message' (PSR-7)
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-
 // From 'charcoal/factory'
 use Charcoal\Factory\FactoryInterface;
-
 use Charcoal\Email\Objects\Link;
 use Charcoal\Email\Services\Tracker;
 
@@ -53,7 +51,7 @@ class LinkAction
      * @param Response $response PSR-7 Response.
      * @return Response
      */
-    public function __invoke(Request $request, Response $response) : Response
+    public function __invoke(Request $request, Response $response): Response
     {
         $ip = $request->getAttribute('client-ip');
         $this->tracker->trackLink($this->linkId, $ip);

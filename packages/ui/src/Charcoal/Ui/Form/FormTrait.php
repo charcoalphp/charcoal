@@ -6,10 +6,8 @@ use Charcoal\Admin\Widget\FormWidget;
 use Charcoal\Ui\ConditionalizableInterface;
 use Exception;
 use InvalidArgumentException;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-ui'
 use Charcoal\Ui\Form\FormInterface;
 use Charcoal\Ui\FormGroup\FormGroupInterface;

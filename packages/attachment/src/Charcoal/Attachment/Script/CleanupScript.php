@@ -5,25 +5,19 @@ namespace Charcoal\Attachment\Script;
 use PDO;
 use Exception;
 use InvalidArgumentException;
-
 // From Pimple
 use Pimple\Container;
-
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
-
 // From 'charcoal-app'
 use Charcoal\App\Script\AbstractScript;
-
 // From 'charcoal/attachment'
 use Charcoal\Attachment\Interfaces\AttachableInterface;
 use Charcoal\Attachment\Object\Attachment;
 use Charcoal\Attachment\Object\Join;
-
 // From 'charcoal/utils'
 use Utils\Support\Traits\ConfigAwareTrait;
 use Utils\Support\Traits\ModelAwareTrait;
@@ -118,7 +112,7 @@ class CleanupScript extends AbstractScript implements
         parent::init();
 
         $this->setDescription(
-            'The <underline>locomotivemtl/attachment/prune</underline> script '.
+            'The <underline>locomotivemtl/attachment/prune</underline> script ' .
             'removes all unassociated attachments.'
         );
     }
@@ -233,7 +227,7 @@ class CleanupScript extends AbstractScript implements
         $sql = 'SELECT DISTINCT `%sourceType` FROM `%pivotTable`;';
         $rows = $db->query(strtr($sql, $binds), PDO::FETCH_ASSOC);
         if ($rows->rowCount()) {
-            error_log(get_called_class().'::'.__FUNCTION__);
+            error_log(get_called_class() . '::' . __FUNCTION__);
 
             /** @todo Confirm each distinct source type */
 
@@ -338,12 +332,14 @@ class CleanupScript extends AbstractScript implements
         $collection = $loader->loadFromQuery(strtr($sql, $binds));
 
         $this->total = count($collection);
-        if (!$this->describeCount(
-            $this->total,
-            '%d unused attachments were found.',
-            '%d unused attachment was found.',
-            'All attachments are associated!'
-        )) {
+        if (
+            !$this->describeCount(
+                $this->total,
+                '%d unused attachments were found.',
+                '%d unused attachment was found.',
+                'All attachments are associated!'
+            )
+        ) {
             return $this;
         }
 
@@ -407,7 +403,7 @@ class CleanupScript extends AbstractScript implements
 
                 $cli->out(
                     sprintf(
-                        '%'.$length.'d/%-'.$length.'s — <yellow>%s</yellow>',
+                        '%' . $length . 'd/%-' . $length . 's — <yellow>%s</yellow>',
                         $this->processed,
                         $this->total,
                         $label
@@ -635,14 +631,14 @@ class CleanupScript extends AbstractScript implements
             ];
         }
 
-        $input = $cli->input($this->indent.'Delete attachment');
+        $input = $cli->input($this->indent . 'Delete attachment');
         $input->accept($opts, true);
 
         $value = $input->prompt();
         switch ($value) {
             case '?':
                 $cli->br();
-                $cli->out($this->indent.implode("\n".$this->indent, $help));
+                $cli->out($this->indent . implode("\n" . $this->indent, $help));
                 $cli->br();
                 return $this->promptForDeletion();
 
@@ -693,14 +689,14 @@ class CleanupScript extends AbstractScript implements
             '[v]iew — view unused attachments',
         ];
 
-        $input = $cli->input($this->indent.'Continue');
+        $input = $cli->input($this->indent . 'Continue');
         $input->accept($opts, true);
 
         $value = $input->prompt();
         switch ($value) {
             case '?':
                 $cli->br();
-                $cli->out($this->indent.implode("\n".$this->indent, $help));
+                $cli->out($this->indent . implode("\n" . $this->indent, $help));
                 $cli->br();
                 return $this->promptToStart();
 

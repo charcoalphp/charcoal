@@ -5,12 +5,9 @@ namespace Charcoal\Admin\Action\System\StaticWebsite;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From Pimple
 use Pimple\Container;
-
 use GuzzleHttp\Client as GuzzleClient;
-
 use Charcoal\Admin\Action\System\StaticWebsite\UpdateAction;
 
 /**
@@ -27,11 +24,11 @@ class UpdateAllAction extends UpdateAction
     {
         unset($request);
 
-        $files = $this->globRecursive($this->basePath.'cache/static', 'index.*');
+        $files = $this->globRecursive($this->basePath . 'cache/static', 'index.*');
         foreach ($files as $file) {
-            $relativeUrl = dirname(str_replace($this->basePath.'cache/static/', '', $file));
-            $url = $this->baseUrl().$relativeUrl;
-            $outputDir = $this->basePath.'cache/static/'.$relativeUrl;
+            $relativeUrl = dirname(str_replace($this->basePath . 'cache/static/', '', $file));
+            $url = $this->baseUrl() . $relativeUrl;
+            $outputDir = $this->basePath . 'cache/static/' . $relativeUrl;
             $this->cacheUrl($url, $outputDir, $response);
         }
         $this->setSuccess(true);
@@ -59,8 +56,8 @@ class UpdateAllAction extends UpdateAction
      */
     protected function globRecursive($dir, $pattern, $flags = 0)
     {
-        $files = glob($dir.'/'.$pattern, $flags);
-        foreach (glob($dir.'/*', (GLOB_ONLYDIR|GLOB_NOSORT)) as $dir) {
+        $files = glob($dir . '/' . $pattern, $flags);
+        foreach (glob($dir . '/*', (GLOB_ONLYDIR | GLOB_NOSORT)) as $dir) {
             $files = array_merge($files, $this->globRecursive($dir, $pattern, $flags));
         }
         return $files;

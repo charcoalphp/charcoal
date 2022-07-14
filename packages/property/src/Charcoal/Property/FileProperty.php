@@ -7,13 +7,10 @@ use PDO;
 use Exception;
 use InvalidArgumentException;
 use UnexpectedValueException;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
-
 // From 'charcoal-property'
 use Charcoal\Property\AbstractProperty;
 
@@ -29,7 +26,7 @@ class FileProperty extends AbstractProperty
     const ERROR_MESSAGES = [
         UPLOAD_ERR_OK         => 'There is no error, the file uploaded with success',
         UPLOAD_ERR_INI_SIZE   => 'The uploaded file exceeds the upload_max_filesize directive in php.ini',
-        UPLOAD_ERR_FORM_SIZE  => 'The uploaded file exceeds the MAX_FILE_SIZE directive'.
+        UPLOAD_ERR_FORM_SIZE  => 'The uploaded file exceeds the MAX_FILE_SIZE directive' .
                                  'that was specified in the HTML form',
         UPLOAD_ERR_PARTIAL    => 'The uploaded file was only partially uploaded',
         UPLOAD_ERR_NO_FILE    => 'No file was uploaded',
@@ -169,7 +166,7 @@ class FileProperty extends AbstractProperty
         }
 
         // Sanitize upload path (force trailing slash)
-        $this->uploadPath = rtrim($path, '/').'/';
+        $this->uploadPath = rtrim($path, '/') . '/';
 
         return $this;
     }
@@ -497,7 +494,7 @@ class FileProperty extends AbstractProperty
             $factor = 0;
         }
 
-        return sprintf('%.'.$decimals.'f', ($bytes / pow(1024, $factor))).' '.$unit[$factor];
+        return sprintf('%.' . $decimals . 'f', ($bytes / pow(1024, $factor))) . ' ' . $unit[$factor];
     }
 
     /**
@@ -836,13 +833,13 @@ class FileProperty extends AbstractProperty
         if (is_array($data)) {
             if (!isset($data['id'], $data['name'])) {
                 throw new InvalidArgumentException(
-                    '$data as an array MUST contain each of the keys "id" and "name", '.
+                    '$data as an array MUST contain each of the keys "id" and "name", ' .
                     'with each represented as a scalar value; one or more were missing or non-array values'
                 );
             }
             // retrieve tmp file from temp dir
-            $tmpDir  = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
-            $tmpFile = $tmpDir.$data['id'];
+            $tmpDir  = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+            $tmpFile = $tmpDir . $data['id'];
             if (!file_exists($tmpFile)) {
                 throw new Exception(sprintf(
                     'File %s does not exists',
@@ -921,7 +918,7 @@ class FileProperty extends AbstractProperty
     {
         if (!isset($file['tmp_name'], $file['name'], $file['size'], $file['error'])) {
             throw new InvalidArgumentException(
-                '$file MUST contain each of the keys "tmp_name", "name", "size", and "error", '.
+                '$file MUST contain each of the keys "tmp_name", "name", "size", and "error", ' .
                 'with each represented as a scalar value; one or more were missing or non-array values'
             );
         }
@@ -1000,7 +997,7 @@ class FileProperty extends AbstractProperty
             $filename = $this->sanitizeFilename($filename);
         }
 
-        $targetPath = $uploadPath.'/'.$filename;
+        $targetPath = $uploadPath . '/' . $filename;
 
         if ($this->fileExists($targetPath)) {
             if ($this['overwrite'] === true) {
@@ -1008,7 +1005,7 @@ class FileProperty extends AbstractProperty
             }
 
             do {
-                $targetPath = $uploadPath.'/'.$this->generateUniqueFilename($filename);
+                $targetPath = $uploadPath . '/' . $this->generateUniqueFilename($filename);
             } while ($this->fileExists($targetPath));
         }
 
@@ -1042,7 +1039,7 @@ class FileProperty extends AbstractProperty
             return false;
         }
 
-        $files = glob(dirname($file).DIRECTORY_SEPARATOR.'*', GLOB_NOSORT);
+        $files = glob(dirname($file) . DIRECTORY_SEPARATOR . '*', GLOB_NOSORT);
         if ($files) {
             $pattern = preg_quote($file, '#');
             foreach ($files as $f) {
@@ -1136,10 +1133,10 @@ class FileProperty extends AbstractProperty
     public function generateFilename($extension = null)
     {
         $filename = $this->sanitizeFilename($this['fallbackFilename']);
-        $filename = $filename.' '.date('Y-m-d\TH-i-s');
+        $filename = $filename . ' ' . date('Y-m-d\TH-i-s');
 
         if ($extension !== null) {
-            return $filename.'.'.$extension;
+            return $filename . '.' . $extension;
         }
 
         return $filename;
@@ -1167,10 +1164,10 @@ class FileProperty extends AbstractProperty
             ));
         }
 
-        $filename = $info['filename'].'-'.uniqid();
+        $filename = $info['filename'] . '-' . uniqid();
 
         if (isset($info['extension']) && strlen($info['extension']) > 0) {
-            $filename .= '.'.$info['extension'];
+            $filename .= '.' . $info['extension'];
         }
 
         return $filename;
@@ -1342,7 +1339,7 @@ class FileProperty extends AbstractProperty
         $path       = trim($path, '/');
         $basePath   = rtrim($this->basePath(), '/');
 
-        return $basePath.'/'.$path;
+        return $basePath . '/' . $path;
     }
 
     /**
@@ -1358,7 +1355,7 @@ class FileProperty extends AbstractProperty
         if (!file_exists($uploadPath)) {
             $this->logger->debug(sprintf(
                 '[%s] Upload directory [%s] does not exist; attempting to create path',
-                [ get_called_class().'::'.__FUNCTION__ ],
+                [ get_called_class() . '::' . __FUNCTION__ ],
                 $uploadPath
             ));
 
@@ -1393,7 +1390,7 @@ class FileProperty extends AbstractProperty
         }
 
         $quant = 'bkmgtpezy';
-        $unit = preg_replace('/[^'.$quant.']/i', '', $size);
+        $unit = preg_replace('/[^' . $quant . ']/i', '', $size);
         $size = preg_replace('/[^0-9\.]/', '', $size);
 
         if ($unit) {
@@ -1696,7 +1693,7 @@ class FileProperty extends AbstractProperty
         }
 
         // Attempt to avoid path encoding problems.
-        $path = iconv($encoding, $encoding.'//IGNORE//TRANSLIT', $path);
+        $path = iconv($encoding, $encoding . '//IGNORE//TRANSLIT', $path);
 
         if (strpos($path, '..') !== false || strpos($path, './') !== false) {
             // Process the components
@@ -1717,7 +1714,7 @@ class FileProperty extends AbstractProperty
             $path = implode(DIRECTORY_SEPARATOR, $safe);
 
             if ($key[0] === '/' && $path[0] !== '/') {
-                $path = '/'.$path;
+                $path = '/' . $path;
             }
         }
 

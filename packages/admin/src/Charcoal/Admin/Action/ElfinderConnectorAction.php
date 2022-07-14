@@ -5,32 +5,24 @@ namespace Charcoal\Admin\Action;
 use InvalidArgumentException;
 use RuntimeException;
 use UnexpectedValueException;
-
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
-
 // From Pimple
 use Pimple\Container;
-
 // From elFinder
 use elFinder;
 use elFinderConnector;
 use elFinderVolumeDriver;
-
 // From 'charcoal-config'
 use Charcoal\Config\ConfigInterface;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-property'
 use Charcoal\Property\PropertyInterface;
-
 // From 'charcoal-app'
 use Charcoal\App\CallableResolverAwareTrait;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminAction;
 use Charcoal\Admin\Template\ElfinderTemplate;
@@ -364,16 +356,16 @@ class ElfinderConnectorAction extends AdminAction
         $uploadPath = $this->defaultUploadPath();
 
         if (isset($fsConfig['base_url'])) {
-            $baseUrl = rtrim($fsConfig['base_url'], '/').'/';
+            $baseUrl = rtrim($fsConfig['base_url'], '/') . '/';
         } else {
             $baseUrl = $this->baseUrl();
         }
 
         return [
-            'URL'     => $baseUrl.'/'.$uploadPath,
+            'URL'     => $baseUrl . '/' . $uploadPath,
             'path'    => $uploadPath,
-            'tmbURL'  => (string)$this->baseUrl($uploadPath.'/.tmb'),
-            'tmbPath' => $uploadPath.'/.tmb',
+            'tmbURL'  => (string)$this->baseUrl($uploadPath . '/.tmb'),
+            'tmbPath' => $uploadPath . '/.tmb',
         ];
     }
 
@@ -473,8 +465,8 @@ class ElfinderConnectorAction extends AdminAction
             $acceptedMimetypes = $formProperty['acceptedMimetypes'];
             $basePath  = $isPublic ? $this->publicPath : $this->basePath;
 
-            if (!file_exists($basePath.$startPath)) {
-                mkdir($basePath.$startPath, 0755, true);
+            if (!file_exists($basePath . $startPath)) {
+                mkdir($basePath . $startPath, 0755, true);
             }
 
             if ($startPath) {
@@ -667,7 +659,7 @@ class ElfinderConnectorAction extends AdminAction
      */
     protected function translateFilesystemName(string $ident): ?string
     {
-        $key  = 'filesystem.volume.'.$ident;
+        $key  = 'filesystem.volume.' . $ident;
         $name = $this->translator()->trans($key);
         if ($key !== $name) {
             return $name;
@@ -726,14 +718,14 @@ class ElfinderConnectorAction extends AdminAction
             $mask = $options['replace'];
         }
 
-        $ext = '.'.pathinfo($name, PATHINFO_EXTENSION);
+        $ext = '.' . pathinfo($name, PATHINFO_EXTENSION);
 
         // Strip leading and trailing dashes or underscores
         $name = trim(str_replace($ext, '', $name), $mask);
 
         // Squeeze multiple delimiters and whitespace with a single separator
         $name = preg_replace(
-            '!['.preg_quote($mask, '!').'\.\s]{2,}!',
+            '![' . preg_quote($mask, '!') . '\.\s]{2,}!',
             $options['replace'],
             $name
         );

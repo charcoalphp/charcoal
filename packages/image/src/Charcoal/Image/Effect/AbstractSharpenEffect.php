@@ -3,7 +3,6 @@
 namespace Charcoal\Image\Effect;
 
 use InvalidArgumentException;
-
 use Charcoal\Image\AbstractEffect;
 
 /**
@@ -11,7 +10,6 @@ use Charcoal\Image\AbstractEffect;
  */
 abstract class AbstractSharpenEffect extends AbstractEffect
 {
-
     /**
      * @var float $radius
      */

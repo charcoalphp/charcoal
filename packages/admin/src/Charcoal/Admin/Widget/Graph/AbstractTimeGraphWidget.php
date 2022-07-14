@@ -1,4 +1,5 @@
 <?php
+
 namespace Charcoal\Admin\Widget\Graph;
 
 use DateInterval;
@@ -7,7 +8,6 @@ use DateTimeInterface;
 use Exception;
 use InvalidArgumentException;
 use PDO;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Widget\Graph\AbstractGraphWidget;
 use Charcoal\Admin\Widget\Graph\TimeGraphWidgetInterface;
@@ -284,7 +284,7 @@ abstract class AbstractTimeGraphWidget extends AbstractGraphWidget implements Ti
             $cols = [];
             $seriesOptions = $this->seriesOptions();
             foreach ($seriesOptions as $serieId => $serieOpts) {
-                $cols[] = $serieOpts['function'].' AS '.$serieId;
+                $cols[] = $serieOpts['function'] . ' AS ' . $serieId;
             }
 
             $sql = strtr(
@@ -309,7 +309,7 @@ abstract class AbstractTimeGraphWidget extends AbstractGraphWidget implements Ti
                 'end_date'   => $this->endDate()->format($this->dateFormat())
             ]);
 
-            $this->dbRows = $result->fetchAll((PDO::FETCH_GROUP|PDO::FETCH_UNIQUE|PDO::FETCH_ASSOC));
+            $this->dbRows = $result->fetchAll((PDO::FETCH_GROUP | PDO::FETCH_UNIQUE | PDO::FETCH_ASSOC));
         }
 
         return $this->dbRows;

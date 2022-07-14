@@ -3,7 +3,6 @@
 namespace Charcoal\Factory;
 
 use InvalidArgumentException;
-
 use Charcoal\Factory\AbstractFactory;
 
 /**
@@ -56,9 +55,9 @@ class ResolverFactory extends AbstractFactory
         }
         if (!isset($data['resolver_replacements'])) {
             $data['resolver_replacements'] = [
-                '-'=>'',
-                '/'=>'\\',
-                '.'=>'_'
+                '-' => '',
+                '/' => '\\',
+                '.' => '_'
             ];
         }
         $this->setResolverPrefix($data['resolver_prefix']);
@@ -166,7 +165,7 @@ class ResolverFactory extends AbstractFactory
             );
         }
 
-        $capitalize_next = function(&$i) {
+        $capitalize_next = function (&$i) {
             $i = ucfirst($i);
         };
 
@@ -182,10 +181,10 @@ class ResolverFactory extends AbstractFactory
             $type = str_replace($rep, $target, $type);
         }
 
-        $class = '\\'.trim($type, '\\');
+        $class = '\\' . trim($type, '\\');
 
         // Add prefix + suffix, if applicable
-        $class = $this->resolverPrefix().$class.$this->resolverSuffix();
+        $class = $this->resolverPrefix() . $class . $this->resolverSuffix();
 
         return $class;
     }
