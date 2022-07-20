@@ -7,9 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 > ⚠️ This `CHANGELOG` file is automatically generated through Github actions from Github release notes.
 
-## [Unreleased](https://github.com/locomotive-charcoal/Charcoal/compare/v3.0.0...main)
+## [Unreleased](https://github.com/locomotive-charcoal/Charcoal/compare/v3.0.1...main)
 
 Please do not update the unreleased notes.
+
+## [v3.0.1](https://github.com/locomotive-charcoal/Charcoal/compare/v3.0.0...v3.0.1) - 2022-07-20
+
+### [3.0.1](https://github.com/charcoalphp/charcoal/compare/v3.0.0...v3.0.1) (2022-07-20)
+
+#### Bug Fixes
+
+- **admin:** Typo with property inputPrefix ([28b5554](https://github.com/charcoalphp/charcoal/commit/28b55545ca8ab1689cdb0de898375b9dd99329de))
 
 ## [v3.0.0](https://github.com/locomotive-charcoal/Charcoal/compare/v2.3.0...v3.0.0) - 2022-07-20
 
@@ -18,8 +26,9 @@ Please do not update the unreleased notes.
 #### ⚠ BREAKING CHANGES
 
 - (BC):
-
+- 
 - Method `widgetOptions()` now returns an array instead of a JSON serialized string to allow for easier overriding in subclasses.
+- 
 
 Added:
 
