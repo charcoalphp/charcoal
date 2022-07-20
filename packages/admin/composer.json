@@ -20,7 +20,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.4-dev"
+            "dev-master": "3.1-dev"
         }
     },
     "require": {
@@ -29,15 +29,15 @@
         "guzzlehttp/guzzle": "^6.0 || ^7.0",
         "kriswallsmith/assetic": "^1.4",
         "laminas/laminas-permissions-acl": "^2.8",
-        "charcoal/app": "^2.4",
-        "charcoal/cache": "^2.4",
-        "charcoal/cms": "^2.4",
-        "charcoal/core": "^2.4",
-        "charcoal/email": "^2.4",
-        "charcoal/object": "^2.4",
-        "charcoal/translator": "^2.4",
-        "charcoal/ui": "^2.4",
-        "charcoal/user": "^2.4",
+        "charcoal/app": "^3.1",
+        "charcoal/cache": "^3.1",
+        "charcoal/cms": "^3.1",
+        "charcoal/core": "^3.1",
+        "charcoal/email": "^3.1",
+        "charcoal/object": "^3.1",
+        "charcoal/translator": "^3.1",
+        "charcoal/ui": "^3.1",
+        "charcoal/user": "^3.1",
         "mcaskill/php-html-build-attributes": "^1.0",
         "paragonie/random_compat": ">=2",
         "psr/cache": "^1.0",
