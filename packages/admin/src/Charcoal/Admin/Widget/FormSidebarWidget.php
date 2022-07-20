@@ -17,6 +17,7 @@ use Charcoal\Admin\Ui\ActionContainerTrait;
 use Charcoal\Admin\Ui\FormSidebarInterface;
 use Charcoal\Admin\Ui\HasLanguageSwitcherInterface;
 use Charcoal\Admin\Ui\HasLanguageSwitcherTrait;
+use Charcoal\Admin\Ui\LanguageSwitcherAwareInterface;
 use Charcoal\Admin\Widget\FormWidget;
 
 /**
@@ -797,8 +798,8 @@ class FormSidebarWidget extends AdminWidget implements
     {
         $form = $this->form();
         if ($form) {
-            if ($form instanceof FormWidget) {
-                return $form->hasL10nFormProperties();
+            if ($form instanceof LanguageSwitcherAwareInterface) {
+                return $form->supportsLanguageSwitch();
             }
         }
 
