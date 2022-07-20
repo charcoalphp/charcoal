@@ -7,6 +7,7 @@
 
 {{# addJsRequirement }}
 <script rel="l10n">
+    {{> charcoal/admin/l10n/widget.js }}
     {{> charcoal/admin/l10n/attachment.js }}
 </script>
 {{/ addJsRequirement }}
@@ -14,24 +15,20 @@
 {{# addJs }}
 <script>
 // Prevent bootstrap dialog from blocking focusin
-$(document).on('focusin', function(e) {
-    if ($(e.target).closest('.mce-window').length) {
-        e.stopImmediatePropagation();
+$(document).on('focusin', function (event) {
+    if ($(event.target).closest('.mce-window').length) {
+        event.stopImmediatePropagation();
     }
 });
 {{!
     @see Charcoal.Admin.Widget_Attachment
 }}
 Charcoal.Admin.manager().add_widget({
-    id:   '{{ widgetId }}',
-    type: 'charcoal/admin/widget/attachment',
-    widget_type: '{{ type }}',
-    data: {
-        obj_type: '{{ objType }}',
-        obj_id:   '{{ objId }}', // Can be a string
-        group:    '{{ group }}'
-    },
-    widget_options: {{& widgetOptions }}
+    id:             '{{ widgetId }}',
+    type:           'charcoal/admin/widget/attachment',
+    widget_type:    '{{ type }}',
+    data:           {{& widgetDataForJsAsJson }},
+    widget_options: {{& widgetOptionsAsJson }}
 });
 </script>
 {{/ addJs }}

@@ -134,24 +134,32 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
 
             $choices = [];
 
-            if (isset($xml->defs)) {
-                $xml = $xml->defs;
-            }
-
             if (!isset($xml->symbol)) {
-                throw new RuntimeException(
-                    'Missing <symbol> element(s)'
-                );
+                if (isset($xml->defs->symbol)) {
+                    $xml = $xml->defs;
+                } else {
+                    throw new RuntimeException(
+                        'Missing <symbol> element(s)'
+                    );
+                }
             }
 
+            $i = -1;
             foreach ($xml->symbol as $node) {
+                $i++;
+
                 $id = (string)$node->attributes()->id;
 
                 if (!$id) {
                     $this->logger->warning(sprintf(
                         'Invalid SVG/XML spritesheet: Missing or empty ID attribute on: %s',
                         $node->asXML()
-                    ));
+                    ), [
+                        'property'     => $this['ident'],
+                        'symbolIndex'  => $i,
+                        'symbolID'     => null,
+                        'spriteSource' => $spritePath,
+                    ]);
                     continue;
                 }
 
@@ -159,7 +167,12 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
                     $this->logger->warning(sprintf(
                         'Invalid SVG/XML spritesheet: Duplicate ID attribute: %s',
                         $id
-                    ));
+                    ), [
+                        'property'     => $this['ident'],
+                        'symbolIndex'  => $i,
+                        'symbolID'     => $id,
+                        'spriteSource' => $spritePath,
+                    ]);
                     continue;
                 }
 
@@ -172,7 +185,9 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
                 'Invalid SVG/XML spritesheet: %s',
                 $e->getMessage()
             ), [
-                'exception' => $e,
+                'property'     => $this['ident'],
+                'spriteSource' => $spritePath,
+                'exception'    => $e,
             ]);
 
             return [];

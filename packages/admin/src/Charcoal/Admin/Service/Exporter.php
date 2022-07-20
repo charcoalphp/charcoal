@@ -10,7 +10,7 @@ use SplTempFileObject;
 // LeagueCSV
 use League\Csv\Writer;
 // From 'charcoal-core'
-use Charcoal\Loader\CollectionLoader;
+use Charcoal\Loader\LazyCollectionLoader;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 // From 'charcoal-translator'
@@ -181,7 +181,7 @@ class Exporter
             ));
         }
 
-        $collection = new CollectionLoader([
+        $collection = new LazyCollectionLoader([
             'logger'  => $this->logger,
             'factory' => $this->modelFactory()
         ]);

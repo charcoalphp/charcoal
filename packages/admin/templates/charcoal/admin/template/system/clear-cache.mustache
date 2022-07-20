@@ -2,8 +2,11 @@
 `charcoal/admin/template/system/users`
 --}}
 {{# addCss }}
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.19.1/bootstrap-table.min.css">
 {{/ addCss }}
+{{# addJs }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.19.1/bootstrap-table.min.js"></script>
+{{/ addJs }}
 
 {{> charcoal/admin/template/inc.header }}
 
@@ -39,8 +42,6 @@
                 </div>
             </div>
 
-            {{/ isMemory }}
-            {{^ isMemory }}
             <div class="c-cache-items row">
                 <div class="col-12">
                     {{> charcoal/admin/widget/cache/items }}
@@ -51,7 +52,4 @@
     </section>
 </main>
 
-{{# addJs }}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.js"></script>
-{{/ addJs }}
 {{> charcoal/admin/template/inc.footer }}

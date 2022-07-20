@@ -3,7 +3,7 @@
         <h3 class="card-title mb-0">{{# _t }}Cache Entries{{/ _t }}</h3>
     </header>
     {{# cacheInfo.has_global_items }}
-    <table class="table" data-toggle="table" data-search="true" data-pagination="true" data-page-list="10,25,50,100,All" data-page-size="25">
+    <table class="table" data-toggle="table" data-search="true" data-pagination="true" data-icon-size="sm" data-page-list="10,25,50,100,All" data-page-size="25">
         <thead>
             <tr>
                 <th scope="col" data-sortable="true" data-searchable="true">{{# _t }}Key{{/ _t }}</th>
@@ -12,7 +12,7 @@
                 <th scope="col" data-sortable="true" data-searchable="true">{{# _t }}Created{{/ _t }}</th>
                 <th scope="col" data-sortable="true">{{# _t }}Timeout{{/ _t }}</th>
                 <th scope="col" data-sortable="true" data-searchable="true">{{# _t }}Expiry{{/ _t }}</th>
-                <!-- <th scope="col">{{# _t }}Action{{/ _t }}</th> -->
+                {{!-- <th scope="col">[[# _t ]]Action[[/ _t ]]</th> --}}
             </tr>
         </thead>
         <tbody>
@@ -24,9 +24,11 @@
                 <td>{{ created }}</td>
                 <td>{{ timeout }}</td>
                 <td>{{ expiry }}</td>
-                <!-- <td>
-                    <button class="btn btn-danger" data-clear="cache" data-cache-type="item" data-cache-key="{{ key }}">{{# _t }}Delete{{/ _t }}</button>
-                </td> -->
+                {{!--
+                <td>
+                    <button class="btn btn-danger" data-clear="cache" data-cache-type="item" data-cache-key="[[ key ]]">[[# _t ]]Delete[[/ _t ]]</button>
+                </td>
+                --}}
             </tr>
             {{/ cacheInfo.global_items }}
         </tbody>

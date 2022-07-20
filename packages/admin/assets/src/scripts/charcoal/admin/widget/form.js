@@ -12,7 +12,7 @@
  */
 
 Charcoal.Admin.Widget_Form = function (opts) {
-    this.EVENT_NAMESPACE = '.charcoal.form';
+    this.EVENT_NAMESPACE = Charcoal.Admin.Widget_Form.EVENT_NAMESPACE;
 
     Charcoal.Admin.Widget.call(this, opts);
 
@@ -25,6 +25,8 @@ Charcoal.Admin.Widget_Form = function (opts) {
     this.extra_form_data   = opts.extra_form_data || {};
     this.form_selector     = null;
     this.form_working      = false;
+    this.attempts          = 0;
+    this.max_attempts      = 5;
     this.submitted_via     = null;
     this.is_new_object     = false;
     this.xhr               = null;
@@ -38,14 +40,17 @@ Charcoal.Admin.Widget_Form = function (opts) {
 
     this._on_popstate_tab = this._on_popstate_tab.bind(this);
     this._on_shown_tab    = this._on_shown_tab.bind(this);
-
-    this.set_properties(opts);
 };
+
+Charcoal.Admin.Widget_Form.EVENT_NAMESPACE = '.charcoal.form';
+
 Charcoal.Admin.Widget_Form.prototype             = Object.create(Charcoal.Admin.Widget.prototype);
 Charcoal.Admin.Widget_Form.prototype.constructor = Charcoal.Admin.Widget_Form;
 Charcoal.Admin.Widget_Form.prototype.parent      = Charcoal.Admin.Widget.prototype;
 
 Charcoal.Admin.Widget_Form.prototype.init = function () {
+    this.set_properties(this.opts());
+
     this.update_tab_ident();
 
     this.bind_events();
@@ -350,7 +355,28 @@ Charcoal.Admin.Widget_Form.prototype.get_form_data = function () {
  * @return {void}
  */
 Charcoal.Admin.Widget_Form.prototype.request_submit = function () {
+    this.attempts++;
+
     if (this.form_working) {
+        var message;
+
+        if (this.attempts >= this.max_attempts) {
+            message = commonL10n.errorTemplate.replaceMap({
+                '[[ errorMessage ]]': formWidgetL10n.isBlocked,
+                '[[ errorThrown ]]':  commonL10n.tryAgainLater
+            });
+        } else {
+            message = commonL10n.errorTemplate.replaceMap({
+                '[[ errorMessage ]]': formWidgetL10n.isProcessing,
+                '[[ errorThrown ]]':  commonL10n.pleaseWait
+            });
+        }
+
+        Charcoal.Admin.feedback([ {
+            level:   'warning',
+            display: 'toast',
+            message: message
+        } ]);
         return;
     }
 
@@ -409,6 +435,8 @@ Charcoal.Admin.Widget_Form.prototype.request_done = function (response, textStat
 };
 
 Charcoal.Admin.Widget_Form.prototype.request_success = function (response/* textStatus, jqXHR */) {
+    this.attempts = 0;
+
     var successEvent = $.Event('success' + this.EVENT_NAMESPACE, {
         subtype:   'submission',
         component: this,
@@ -508,6 +536,16 @@ Charcoal.Admin.Widget_Form.prototype.request_complete = function (/* ... */) {
     }
 
     if (!this.suppress_feedback()) {
+        if (this.attempts >= this.max_attempts) {
+            Charcoal.Admin.feedback([ {
+                level:   'error',
+                message: commonL10n.errorTemplate.replaceMap({
+                    '[[ errorMessage ]]': formWidgetL10n.isBlocked,
+                    '[[ errorThrown ]]':  commonL10n.tryAgainLater
+                })
+            } ]);
+        }
+
         Charcoal.Admin.feedback().dispatch();
         this.enable_form();
     }
@@ -782,9 +820,23 @@ Charcoal.Admin.Widget_Form.prototype.reload = function (callback) {
  * Switch languages for all l10n elements in the form
  */
 Charcoal.Admin.Widget_Form.prototype.switch_language = function (lang) {
-    var currentLang = Charcoal.Admin.lang();
-    if (currentLang !== lang) {
+    var originalLanguage = Charcoal.Admin.lang();
+    if (originalLanguage !== lang) {
+        var beforeSwitchEvent = $.Event('beforelanguageswitch' + this.EVENT_NAMESPACE, {
+            language: lang,
+            originalLanguage: originalLanguage,
+            relatedTarget: this.$form[0],
+            relatedComponent: this
+        });
+
+        $(document).triggerHandler(beforeSwitchEvent);
+
+        if (beforeSwitchEvent.isDefaultPrevented()) {
+            return;
+        }
+
         Charcoal.Admin.setLang(lang);
+
         $('[data-lang][data-lang!=' + lang + ']').addClass('d-none');
         $('[data-lang][data-lang=' + lang + ']').removeClass('d-none');
 
@@ -796,20 +848,30 @@ Charcoal.Admin.Widget_Form.prototype.switch_language = function (lang) {
             .removeClass('btn-outline-primary')
             .addClass('btn-primary');
 
+        /** @deprecated in favour of custom events 'beforelanguageswitch' and 'languageswitch' */
         $(document).triggerHandler({
             type: 'switch_language.charcoal'
         });
+
+        var afterSwitchEvent = $.Event('languageswitch' + this.EVENT_NAMESPACE, {
+            language: lang,
+            originalLanguage: originalLanguage,
+            relatedTarget: this.$form[0],
+            relatedComponent: this
+        });
+
+        $(document).triggerHandler(afterSwitchEvent);
     }
 };
 
 Charcoal.Admin.Widget_Form.prototype.destroy = function () {
-    this.$form.off(this.EVENT_NAMESPACE);
+    $(this.form_selector).off(this.EVENT_NAMESPACE);
 
     $('.js-sidebar-widget', this.form_selector).off(this.EVENT_NAMESPACE);
 
     window.removeEventListener('popstate', this._on_popstate_tab);
 
     if (this.isTab) {
-        this.$form.off('shown.bs.tab', '.js-group-tabs', this._shown_tab_handler);
+        $(this.form_selector).off('shown.bs.tab', '.js-group-tabs', this._shown_tab_handler);
     }
 };

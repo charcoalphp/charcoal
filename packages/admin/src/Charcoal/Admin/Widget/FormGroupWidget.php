@@ -7,13 +7,13 @@ use InvalidArgumentException;
 use Pimple\Container;
 // From 'charcoal-ui'
 use Charcoal\Ui\AbstractUiItem;
-use Charcoal\Ui\FormGroup\FormGroupInterface;
 use Charcoal\Ui\FormGroup\FormGroupTrait;
 use Charcoal\Ui\FormInput\FormInputInterface;
 use Charcoal\Ui\Layout\LayoutAwareInterface;
 use Charcoal\Ui\Layout\LayoutAwareTrait;
 // From 'charcoal-admin'
 use Charcoal\Admin\Ui\ObjectContainerInterface;
+use Charcoal\Admin\Ui\FormGroupInterface;
 
 /**
  * Form Group Widget Controller

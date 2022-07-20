@@ -15,14 +15,20 @@ use Charcoal\Translator\Translation;
 use Charcoal\Admin\AdminWidget;
 use Charcoal\Admin\Ui\ActionContainerTrait;
 use Charcoal\Admin\Ui\FormSidebarInterface;
+use Charcoal\Admin\Ui\HasLanguageSwitcherInterface;
+use Charcoal\Admin\Ui\HasLanguageSwitcherTrait;
+use Charcoal\Admin\Ui\LanguageSwitcherAwareInterface;
+use Charcoal\Admin\Widget\FormWidget;
 
 /**
  * Form Sidebar Widget
  */
 class FormSidebarWidget extends AdminWidget implements
-    FormSidebarInterface
+    FormSidebarInterface,
+    HasLanguageSwitcherInterface
 {
     use ActionContainerTrait;
+    use HasLanguageSwitcherTrait;
 
     /**
      * Default sorting priority for an action.
@@ -114,13 +120,6 @@ class FormSidebarWidget extends AdminWidget implements
      * @var boolean
      */
     protected $showSidebarActions;
-
-    /**
-     * Whether to display the language switcher.
-     *
-     * @var boolean
-     */
-    protected $showLanguageSwitch;
 
     /**
      * Whether the object is viewable.
@@ -459,7 +458,7 @@ class FormSidebarWidget extends AdminWidget implements
             }
         }
 
-        usort($sidebarActions, [ $this, 'sortActionsByPriority' ]);
+        usort($sidebarActions, [ 'Charcoal\Admin\Support\Sorter', 'sortByPriority' ]);
 
         while (($first = reset($sidebarActions)) && $first['isSeparator']) {
             array_shift($sidebarActions);
@@ -792,82 +791,19 @@ class FormSidebarWidget extends AdminWidget implements
     }
 
     /**
-     * @see    FormPropertyWidget::showActiveLanguage()
+     * @see    HasLanguageSwitcherTrait::showLanguageSwitch()
      * @return boolean
      */
-    public function showLanguageSwitch()
+    protected function resolveShowLanguageSwitch()
     {
-        if ($this->showLanguageSwitch === null) {
-            $form = $this->form();
-            if ($form) {
-                $this->showLanguageSwitch = $form->hasL10nFormProperties();
-                return $this->showLanguageSwitch;
+        $form = $this->form();
+        if ($form) {
+            if ($form instanceof LanguageSwitcherAwareInterface) {
+                return $form->supportsLanguageSwitch();
             }
-
-            $this->showLanguageSwitch = false;
         }
 
-        return $this->showLanguageSwitch;
-    }
-
-    /**
-     * Retrieve the available languages, formatted for the sidebar language-switcher.
-     *
-     * @see    FormGroupWidget::languages()
-     * @return array
-     */
-    public function languages()
-    {
-        $currentLocale = $this->translator()->getLocale();
-        $locales = $this->translator()->locales();
-        $languages = [];
-
-        uasort($locales, [ $this, 'sortLanguagesByPriority' ]);
-
-        foreach ($locales as $locale => $localeStruct) {
-            /**
-             * @see \Charcoal\Admin\Widget\FormGroupWidget::languages()
-             * @see \Charcoal\Property\LangProperty::localeChoices()
-             */
-            if (isset($localeStruct['name'])) {
-                $label = $this->translator()->translation($localeStruct['name']);
-            } else {
-                $trans = 'locale.' . $locale;
-                if ($trans === $this->translator()->translate($trans)) {
-                    $label = strtoupper($locale);
-                } else {
-                    $label = $this->translator()->translation($trans);
-                }
-            }
-
-            $isCurrent = ($locale === $currentLocale);
-            $languages[] = [
-                'cssClasses' => ($isCurrent) ? 'btn-primary' : 'btn-outline-primary',
-                'ident'      => $locale,
-                'name'       => $label,
-                'current'    => $isCurrent
-            ];
-        }
-
-        return $languages;
-    }
-
-    /**
-     * To be called with {@see uasort()}.
-     *
-     * @param  array $a Sortable action A.
-     * @param  array $b Sortable action B.
-     * @return integer
-     */
-    protected function sortLanguagesByPriority(array $a, array $b)
-    {
-        $a = isset($a['priority']) ? $a['priority'] : 0;
-        $b = isset($b['priority']) ? $b['priority'] : 0;
-
-        if ($a === $b) {
-            return 0;
-        }
-        return ($a < $b) ? (-1) : 1;
+        return false;
     }
 
     /**
@@ -894,8 +830,6 @@ class FormSidebarWidget extends AdminWidget implements
 
         return !!$condition;
     }
-
-
 
     // ACL Permissions
     // =========================================================================

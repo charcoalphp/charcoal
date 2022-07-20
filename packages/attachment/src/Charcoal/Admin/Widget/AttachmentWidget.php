@@ -730,23 +730,59 @@ class AttachmentWidget extends AdminWidget implements
     }
 
     /**
-     * Retrieve the current widget's options as a JSON object.
+     * @return array
+     */
+    public function widgetDataForJs()
+    {
+        return [
+            'obj_type' => $this->obj()->objType(),
+            'obj_id'   => $this->obj()->id(),
+            'group'    => $this->group(),
+        ];
+    }
+
+    /**
+     * Retrieve the widget's options.
      *
-     * @return string A JSON string.
+     * @return array
      */
     public function widgetOptions()
     {
-        $options = [
+        return [
             'obj_type'           => $this->obj()->objType(),
             'obj_id'             => $this->obj()->id(),
             'group'              => $this->group(),
             'attachment_options' => $this->attachmentOptions(),
             'attachable_objects' => $this->attachableObjects(),
-            'title'              => $this->title(),
-            'lang'               => $this->translator()->getLocale()
+            'title'              => (string)$this->title(),
+            'lang'               => $this->translator()->getLocale(),
         ];
+    }
 
-        return json_encode($options, true);
+    /**
+     * Converts the widget's {@see self::widgetOptions() options} as a JSON string.
+     *
+     * @return string Returns data serialized with {@see json_encode()}.
+     */
+    final public function widgetOptionsAsJson()
+    {
+        $options = (JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+
+        if ($this->debug()) {
+            $options = ($options | JSON_PRETTY_PRINT);
+        }
+
+        return json_encode($this->widgetOptions(), $options);
+    }
+
+    /**
+     * Converts the widget's {@see self::widgetOptions() options} as a JSON string, protected from Mustache.
+     *
+     * @return string Returns a stringified JSON object, protected from Mustache rendering.
+     */
+    final public function escapedWidgetOptionsAsJson()
+    {
+        return '{{=<% %>=}}' . $this->widgetOptionsAsJson() . '<%={{ }}=%>';
     }
 
     /**

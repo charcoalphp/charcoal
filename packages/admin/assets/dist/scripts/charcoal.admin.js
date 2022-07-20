@@ -816,7 +816,7 @@ Charcoal.Admin = (function () {
         jqxhr = jqxhr.then(this.resolveJqXhrFalsePositive);
 
         if (typeof success === 'function') {
-            jqxhr.done(function (response, status, jqxhr) {
+            jqxhr = jqxhr.done(function (response, status, jqxhr) {
                 response = $.extend({ success: true, feedbacks: [] }, response);
 
                 if (response.feedbacks.length === 0 && response.message) {
@@ -838,7 +838,7 @@ Charcoal.Admin = (function () {
         }
 
         if (typeof failure === 'function') {
-            jqxhr.fail(function (jqxhr, status, error) {
+            jqxhr = jqxhr.fail(function (jqxhr, status, error) {
                 var response = { success: false, feedbacks: [] };
 
                 if (jqxhr.responseJSON) {
@@ -872,7 +872,7 @@ Charcoal.Admin = (function () {
         }
 
         if (typeof complete === 'function') {
-            jqxhr.always(function () {
+            jqxhr = jqxhr.always(function () {
                 /**
                  * Fires when the request finishes.
                  *
@@ -1333,16 +1333,20 @@ Charcoal.Admin = (function () {
      */
     Manager.prototype.add_component = function (component_group, component_data) {
         if (!component_data.type) {
-            console.error('Was not able to store component: missing type');
+            console.error('Unable to store component:', 'missing type');
             return false;
         }
 
         // Figure out which component to instanciate
         var component_class_name = Charcoal.Admin.get_object_name(component_data.type);
+        var component_class_path = 'Charcoal.Admin.' + component_class_name;
 
         // Make sure component class exists first
         if (typeof Charcoal.Admin[component_class_name] !== 'function') {
-            console.error('Was not able to store component [Charcoal.Admin.' + component_class_name + ']: missing class');
+            console.error(
+                'Unable to store component [' + component_class_path + ']:',
+                'missing class'
+            );
             return false;
         }
 
@@ -1360,8 +1364,8 @@ Charcoal.Admin = (function () {
                 });
 
                 if (component) {
-                    var message = 'Was not able to store component [Charcoal.Admin.' + component_class_name + ']: ' +
-                                component_data.id + ' already registered';
+                    var message = 'Unable to store component [' + component_class_path + ']:';
+                    var reason  = component_data.id + ' already registered';
 
                     if (
                         // Compare against an instantiated component
@@ -1370,10 +1374,10 @@ Charcoal.Admin = (function () {
                         (component.type && component.type === component_data.type)
                     ) {
                         // Assume its a reloaded component
-                        console.warn(message);
+                        console.warn(message, reason);
                     } else {
                         // Something is not right
-                        console.error(message);
+                        console.error(message, reason);
                     }
 
                     return false;
@@ -1584,10 +1588,11 @@ Charcoal.Admin = (function () {
                     }
 
                 } catch (error) {
+                    var component_class_path = 'Charcoal.Admin.' + component_data.ident;
                     if (component_data.id) {
-                        console.error('Was not able to instantiate component [Charcoal.Admin.' + component_data.ident + '] (' + component_data.id + ')');
+                        console.error('Was not able to instantiate component [' + component_class_path + '] (' + component_data.id + ')');
                     } else {
-                        console.error('Was not able to instantiate component [Charcoal.Admin.' + component_data.ident + ']');
+                        console.error('Was not able to instantiate component [' + component_class_path + ']');
                     }
                     console.error(error);
                 }
@@ -1715,7 +1720,7 @@ Charcoal.Admin = (function () {
             }
 
             if (typeof component.validate === 'function') {
-                result = component.validate();
+                result = component.validate(scope);
                 if (result === false) {
                     return result;
                 }
@@ -1732,7 +1737,7 @@ Charcoal.Admin = (function () {
             }
 
             if (typeof component.save === 'function') {
-                result = component.save();
+                result = component.save(scope);
                 if (result === false) {
                     return result;
                 }
@@ -1976,6 +1981,18 @@ Charcoal.Admin = (function () {
 ;(function ($, Admin) {
     'use strict';
 
+    /**
+     * @typedef {Level} string
+     */
+
+    /**
+     * @typedef {DisplayMode} ?string
+     */
+
+    /**
+     * @type {Level[]}       lvls
+     * @type {DisplayMode[]} modes
+     */
     var lvls, modes, defs, alts, reset = function () {
         lvls  = DEFAULTS.supported.slice();
         modes = DEFAULTS.displayModes.slice();
@@ -2013,7 +2030,8 @@ Charcoal.Admin = (function () {
         aliases: {
             info: 'notice',
             danger: 'error'
-        }
+        },
+        delay: 3200
     };
 
     /**
@@ -2059,12 +2077,7 @@ Charcoal.Admin = (function () {
      * @return {this}
      */
     Manager.prototype.resolveAliases = function (level) {
-        if ($.inArray(level, lvls) === -1) {
-            throw new TypeError(
-                'Unsupported feedback level, received "' + level +
-                '". Must be one of: ' + lvls.join(', ')
-            );
-        }
+        this.assertValidLevel(level);
 
         var key = level;
         level = defs[level];
@@ -2135,7 +2148,7 @@ Charcoal.Admin = (function () {
     /**
      * Get Messages
      *
-     * @return {array}  Messages to show.
+     * @return {Entry[]}  Messages to show.
      */
     Manager.prototype.getMessages = function () {
         return this.storage;
@@ -2144,7 +2157,7 @@ Charcoal.Admin = (function () {
     /**
      * Count Messages
      *
-     * @return {integer} The number of messages.
+     * @return {number} The number of messages.
      */
     Manager.prototype.countMessages = function () {
         return this.storage.length;
@@ -2159,23 +2172,51 @@ Charcoal.Admin = (function () {
         return this.countMessages() > 0;
     };
 
+    Manager.prototype.validMessage = function (message) {
+        return ($.type(message) === 'string');
+    };
+
     /**
      * Get all messages grouped by level
+     *
+     * @deprecated in faovur of {@see this#getMessagesMaoByLevel()}
+     *
+     * @return {object<Level, Entry[]>}
+     */
+    Manager.prototype.getMessagesMap = function () {
+        return this.getMessagesMapByLevel();
+    };
+
+    /**
+     * Get all messages grouped by level
+     *
+     * @return {object<Level, Entry[]>}
+     */
+    Manager.prototype.getMessagesMapByLevel = function () {
+        if (!this.hasMessages()) {
+            return {};
+        }
+
+        return this.groupMessagesByLevel(this.getMessages());
+    };
+
+    /**
+     * Group messages by level
      *
      * @example
      * {
      *     '<level>': [ <messages> ]
      * }
      *
-     * @return {object} Messages to show.
+     * @param  {Entry[]} entries
+     * @return {object<Level, Entry[]>}
      */
-    Manager.prototype.getMessagesMap = function () {
-        if (!this.hasMessages()) {
+    Manager.prototype.groupMessagesByLevel = function (entries) {
+        if (!entries.length) {
             return {};
         }
 
         var key, entry;
-        var entries = this.getMessages();
         var grouped = {};
         for (var i = 0; i < entries.length; i++) {
             entry = entries[i];
@@ -2283,6 +2324,25 @@ Charcoal.Admin = (function () {
     };
 
     /**
+     * Determines if level is valid.
+     */
+    Manager.prototype.assertValidLevel = function (level) {
+        if (!this.isValidLevel(level)) {
+            throw new TypeError(
+                'Unsupported feedback level, received "' + level +
+                '". Must be one of: ' + lvls.join(', ')
+            );
+        }
+    };
+
+    /**
+     * Determines if level is valid.
+     */
+    Manager.prototype.isValidLevel = function (level) {
+        return ($.type(level) === 'string' && $.inArray(level, lvls) > -1);
+    };
+
+    /**
      * Get display mode override
      */
     Manager.prototype.getDisplay = function () {
@@ -2293,15 +2353,29 @@ Charcoal.Admin = (function () {
      * Set display mode override
      */
     Manager.prototype.setDisplay = function (mode) {
-        if ($.inArray(mode, modes) === -1 && mode !== null) {
+        this.assertValidDisplay(mode);
+
+        this.display = mode;
+        return this;
+    };
+
+    /**
+     * Determines if display mode is valid.
+     */
+    Manager.prototype.assertValidDisplay = function (mode) {
+        if (!this.isValidDisplay(mode)) {
             throw new TypeError(
                 'Unsupported display mode, received "' + mode +
                 '". Must be one of: null, ' + modes.join(', ')
             );
         }
+    };
 
-        this.display = mode;
-        return this;
+    /**
+     * Determines if display mode is valid.
+     */
+    Manager.prototype.isValidDisplay = function (mode) {
+        return (mode !== null && $.inArray(mode, modes) > -1);
     };
 
     /**
@@ -2449,12 +2523,7 @@ Charcoal.Admin = (function () {
                 throw new TypeError('Feedback level must be a string, received ' + vartype);
             }
 
-            if ($.inArray(level, lvls) === -1) {
-                throw new TypeError(
-                    'Unsupported feedback level, received "' + level +
-                    '". Must be one of: ' + lvls.join(', ')
-                );
-            }
+            Manager.prototype.assertValidLevel(level);
 
             if (level in alts) {
                 level = alts[level];
@@ -2466,7 +2535,7 @@ Charcoal.Admin = (function () {
         },
 
         validLevel: function (level) {
-            return ($.type(level) === 'string' && $.inArray(level, lvls) > -1);
+            return Manager.prototype.isValidLevel(level);
         },
 
         message: function () {
@@ -2485,7 +2554,7 @@ Charcoal.Admin = (function () {
         },
 
         validMessage: function (message) {
-            return ($.type(message) === 'string');
+            return Manager.prototype.validMessage(message);
         }
     };
 
@@ -2504,7 +2573,7 @@ Charcoal.Admin = (function () {
 
         this.config = $.extend({}, {
             id:    BootstrapDialog.newGuid(),
-            delay: 3200
+            delay: DEFAULTS.delay
         }, config);
 
         this.$elem = $('<article class="c-notifications_item alert fade show" role="alert"></article>');
@@ -2833,6 +2902,7 @@ Charcoal.Admin.Component.prototype.destroy = function () {
  * Each component is expected to add their own feedback if their
  * value is invalid or errored (via `validate` or `save`).
  *
+ * @param  {Component} [scope] - The parent component that calls for validation.
  * @return {boolean} If `false`, the component is invalid.
  */
 // Charcoal.Admin.Component.prototype.validate = function (scope) {
@@ -2858,9 +2928,10 @@ Charcoal.Admin.Component.prototype.destroy = function () {
  * Each component is expected to add their own feedback if their
  * value is invalid or errored (via `validate` or `save`).
  *
+ * @param  {Component} [scope] - The parent component that calls for save.
  * @return {boolean} If `false`, the component could not save.
  */
-// Charcoal.Admin.Component.prototype.save = function () {
+// Charcoal.Admin.Component.prototype.save = function (scope) {
 //     return true;
 // };
 
@@ -3238,6 +3309,8 @@ Charcoal.Admin.Widget = function (opts) {
     this._widget_id;
     this._widget_type;
     /* jshint ignore:end */
+
+    this._is_reloading = false;
     this._suppress_feedback = false;
 
     if (opts.widget_id) {
@@ -3308,11 +3381,32 @@ Charcoal.Admin.Widget.prototype.anim_out = function (callback) {
 };
 
 /**
+ * @return {Boolean} Whether the widget is busy reloading (TRUE) or not (FALSE).
+ */
+Charcoal.Admin.Widget.prototype.is_reloading = function () {
+    return this._is_reloading;
+};
+
+/**
+ * @return {this}
+ */
+Charcoal.Admin.Widget.prototype.try_reload = function () {
+    if (!this.is_reloading()) {
+        this.reload.apply(this, arguments);
+    }
+
+    return this;
+
+};
+
+/**
  * @param  {Function} [callback]  - What to do after the reload?
  * @param  {*}        [with_data] - Additional data to passthrough.
  * @return {this}
  */
 Charcoal.Admin.Widget.prototype.reload = function (callback, with_data) {
+    this._is_reloading = true;
+
     var that = this;
 
     var url  = Charcoal.Admin.admin_url() + 'widget/load' + window.location.search;
@@ -3394,6 +3488,8 @@ Charcoal.Admin.Widget.prototype.reload = function (callback, with_data) {
     };
 
     complete = function () {
+        that._is_reloading = false;
+
         if (!that.suppress_feedback()) {
             Charcoal.Admin.feedback().dispatch();
         }
@@ -3445,18 +3541,17 @@ Charcoal.Admin.Widget.prototype.dialog = function (dialog_opts, callback) {
     var alertTemplate = '<div class="alert alert-{type}" role="alert">{text}</div>';
 
     dialogOptions.onshown = function (dialog) {
-        var xhr,
-            url  = Charcoal.Admin.admin_url() + 'widget/load',
+        var url  = Charcoal.Admin.admin_url() + 'widget/load',
             data = dialog_opts;
 
-        xhr = $.ajax({
+        dialog.xhr = $.ajax({
             method:   'POST',
             url:      url,
             data:     data,
             dataType: 'json'
         });
 
-        xhr
+        dialog.xhr
             .then(function (response, textStatus, jqXHR) {
                 if (!response || !response.success) {
                     if (response.feedbacks) {
@@ -3578,11 +3673,12 @@ Charcoal.Admin.Widget.prototype.confirm = function (dialog_opts, confirmed_callb
     return BootstrapDialog.confirm(opts);
 };
 
-/* globals commonL10n,attachmentWidgetL10n */
+/* globals attachmentWidgetL10n,commonL10n,formWidgetL10n,widgetL10n */
 
 /**
- * Keep track of XHR by group
- * @type {{}}
+ * Keep track of XHR requests by group.
+ *
+ * @type object<string, jqXHR>
  */
 var globalXHR = {};
 
@@ -3594,7 +3690,12 @@ var globalXHR = {};
  * @see widget.js (Charcoal.Admin.Widget
  */
 Charcoal.Admin.Widget_Attachment = function (opts) {
+    this.EVENT_NAMESPACE = Charcoal.Admin.Widget_Attachment.EVENT_NAMESPACE;
+
     Charcoal.Admin.Widget.call(this, opts);
+
+    this.busy  = false;
+    this.dirty = false;
 
     this.glyphs = {
         embed:      'glyphicon-blackboard',
@@ -3609,17 +3710,25 @@ Charcoal.Admin.Widget_Attachment = function (opts) {
     };
 
     var that = this;
-    $(document).on('switch_language.charcoal', function () {
-        var opts = that.opts();
-        // Set widget lang to current Charcoal Admin Lang
-        opts.widget_options.lang = Charcoal.Admin.lang();
-        that.set_opts(opts);
-        that.reload();
-    });
 
-    this.dirty = false;
+    $(document)
+        .on('beforelanguageswitch' + Charcoal.Admin.Widget_Form.EVENT_NAMESPACE, function (event) {
+            if (that.is_busy()) {
+                event.preventDefault();
+                that.enqueue_is_busy_feedback().dispatch();
+                return;
+            }
+
+            that.perform_save();
+        })
+        .on('languageswitch' + Charcoal.Admin.Widget_Form.EVENT_NAMESPACE, function () {
+            that.change_locale().try_reload();
+        });
+
     return this;
 };
+
+Charcoal.Admin.Widget_Attachment.EVENT_NAMESPACE = '.charcoal.attachments';
 
 Charcoal.Admin.Widget_Attachment.prototype = Object.create(Charcoal.Admin.Widget.prototype);
 Charcoal.Admin.Widget_Attachment.prototype.constructor = Charcoal.Admin.Widget_Attachment;
@@ -3643,6 +3752,8 @@ Charcoal.Admin.Widget_Attachment.prototype.init = function () {
             $container.sortable('refreshPositions');
         });
 
+        var that = this;
+
         $container.sortable({
             handle:      '[draggable="true"]',
             placeholder: 'card c-attachments_row -placeholder',
@@ -3653,6 +3764,9 @@ Charcoal.Admin.Widget_Attachment.prototype.init = function () {
                 if (!$collapsible.hasClass('collapsed')) {
                     ui.item.children('.collapse').collapse('hide');
                 }
+            },
+            update:      function () {
+                that.set_dirty_state(true);
             }
         }).disableSelection();
     }
@@ -3662,21 +3776,58 @@ Charcoal.Admin.Widget_Attachment.prototype.init = function () {
 };
 
 /**
- * Check if the widget has something a dirty state that needs to be saved.
- * @return Boolean     Widget dirty of not.
+ * Checks whether the widget is busy.
+ *
+ * Checks if {@see Widget.is_reloading()} is TRUE or {@see this.busy} is TRUE.
+ *
+ * @return {boolean} TRUE if the widget is busy, otherwise FALSE.
+ */
+Charcoal.Admin.Widget_Attachment.prototype.is_busy = function () {
+    return (this.busy || this.is_reloading());
+};
+
+/**
+ * Sets whether the widget is busy.
+ *
+ * @param  {boolean} state
+ * @return {this}
+ */
+Charcoal.Admin.Widget_Attachment.prototype.set_busy_state = function (state) {
+    this.busy = state;
+    return this;
+};
+
+/**
+ * Checks whether the widget has changes that should be saved.
+ *
+ * @return {boolean} TRUE if the widget is dirty, otherwise FALSE.
  */
 Charcoal.Admin.Widget_Attachment.prototype.is_dirty = function () {
     return this.dirty;
 };
 
 /**
- * Set the widget to dirty or not to prevent unnecessary save
- * action.
- * @param Boolean bool Self explanatory.
- * @return Add_Attachment_Widget Chainable.
+ * Sets whether the widget has changes that should be saved.
+ *
+ * @param  {boolean} state
+ * @return {this}
  */
-Charcoal.Admin.Widget_Attachment.prototype.set_dirty_state = function (bool) {
-    this.dirty = bool;
+Charcoal.Admin.Widget_Attachment.prototype.set_dirty_state = function (state) {
+    this.dirty = state;
+    return this;
+};
+
+/**
+ * Set widget lang to the given language or Charcoal's current language.
+ *
+ * @param  {string} [lang]
+ * @return {this}
+ */
+Charcoal.Admin.Widget_Attachment.prototype.change_locale = function (lang) {
+    var opts = this.opts();
+    opts.widget_options.lang = (lang || Charcoal.Admin.lang());
+    this.set_opts(opts);
+
     return this;
 };
 
@@ -3692,8 +3843,8 @@ Charcoal.Admin.Widget_Attachment.prototype.listeners = function () {
 
     // Prevent multiple binds
     this.element()
-        .off('click')
-        .on('click.charcoal.attachments', '.js-attachments-collapse', function () {
+        .off(this.EVENT_NAMESPACE)
+        .on('click' + this.EVENT_NAMESPACE, '.js-attachments-collapse', function () {
             var $attachments = $container.children('.js-attachment');
 
             if ($container.hasClass('js-attachment-preview-only')) {
@@ -3702,7 +3853,7 @@ Charcoal.Admin.Widget_Attachment.prototype.listeners = function () {
 
             $attachments.find('.collapse.show').collapse('hide');
         })
-        .on('click.charcoal.attachments', '.js-attachments-expand', function () {
+        .on('click' + this.EVENT_NAMESPACE, '.js-attachments-expand', function () {
             var $attachments = $container.children('.js-attachment');
 
             if ($container.hasClass('js-attachment-preview-only')) {
@@ -3711,8 +3862,8 @@ Charcoal.Admin.Widget_Attachment.prototype.listeners = function () {
 
             $attachments.find('.collapse:not(.show)').collapse('show');
         })
-        .on('click.charcoal.attachments', '.js-add-attachment', function (e) {
-            e.preventDefault();
+        .on('click' + this.EVENT_NAMESPACE, '.js-add-attachment', function (event) {
+            event.preventDefault();
 
             var _this = $(this);
 
@@ -3748,13 +3899,13 @@ Charcoal.Admin.Widget_Attachment.prototype.listeners = function () {
                 });
             }
         })
-        .on('click.charcoal.attachments', '.js-attachment-actions a', function (e) {
+        .on('click' + this.EVENT_NAMESPACE, '.js-attachment-actions a', function (event) {
             var _this = $(this);
             if (!_this.data('action')) {
                 return ;
             }
 
-            e.preventDefault();
+            event.preventDefault();
             var action = _this.data('action');
             switch (action) {
                 case 'edit':
@@ -3852,7 +4003,32 @@ Charcoal.Admin.Widget_Attachment.prototype.select_attachment = function (elem) {
     }
 };
 
+/**
+ * @param  {string}        type
+ * @param  {number|string} [id]
+ * @param  {object}        [parent]
+ * @param  {object}        [customOpts]
+ * @param  {function}      [callback]
+ * @return {jqXHR|BootstrapDialog}
+ */
 Charcoal.Admin.Widget_Attachment.prototype.create_attachment = function (type, id, parent, customOpts, callback) {
+    // Skip quick form
+    if (customOpts && customOpts.skipForm) {
+        return this.create_quick_attachment(type, id, parent, customOpts, callback);
+    }
+
+    return this.create_dialog_attachment(type, id, parent, customOpts, callback);
+};
+
+/**
+ * @param  {string}        type
+ * @param  {number|string} [id]
+ * @param  {object}        [parent]
+ * @param  {object}        [customOpts]
+ * @param  {function}      [callback]
+ * @return {jqXHR}
+ */
+Charcoal.Admin.Widget_Attachment.prototype.create_quick_attachment = function (type, id, parent, customOpts, callback) {
     // Id = EDIT mod.
     if (!id) {
         id = 0;
@@ -3862,39 +4038,83 @@ Charcoal.Admin.Widget_Attachment.prototype.create_attachment = function (type, i
         customOpts = {};
     }
 
-    // Scope
-    var that = this;
-
     if (!parent) {
-        var opts = that.opts();
-        parent   = {
-            obj_type: opts.data.obj_type,
-            obj_id:   opts.data.obj_id,
-            group:    opts.data.group
-        };
+        parent = this.get_parent_container();
     }
 
-    // Skip quick form
-    if (customOpts.skipForm) {
-        this.xhr = $.ajax({
-            type: 'POST',
-            url: 'object/save',
-            data: {
-                obj_type:  type,
-                obj_id:    id,
-                pivot:     parent
-            }
-        });
+    this.xhr = $.ajax({
+        type: 'POST',
+        url: 'object/save',
+        data: {
+            obj_type:  type,
+            obj_id:    id,
+            pivot:     parent
+        }
+    });
 
-        this.xhr.done(function (response) {
-            if (response.feedbacks) {
-                Charcoal.Admin.feedback(response.feedbacks).dispatch();
-            }
+    var success, failure, complete;
+
+    success = function (response) {
+        if (response.feedbacks.length) {
+            Charcoal.Admin.feedback(response.feedbacks);
+        }
+
+        if (typeof callback === 'function') {
             callback(response);
-        });
+        }
+    };
+
+    failure = function (response) {
+        if (response.feedbacks.length) {
+            Charcoal.Admin.feedback(response.feedbacks);
+        } else {
+            var message = (id ? formWidgetL10n.updateFailed : formWidgetL10n.createFailed);
+            var error   = commonL10n.errorOccurred;
+
+            Charcoal.Admin.feedback([ {
+                level:   'error',
+                message: commonL10n.errorTemplate.replaceMap({
+                    '[[ errorMessage ]]': message,
+                    '[[ errorThrown ]]':  error
+                })
+            } ]);
+        }
+    };
+
+    complete = function () {
+        Charcoal.Admin.feedback().dispatch();
 
         Charcoal.Admin.manager().render();
-        return;
+    };
+
+    return Charcoal.Admin.resolveSimpleJsonXhr(
+        this.xhr,
+        success,
+        failure,
+        complete
+    );
+};
+
+/**
+ * @param  {string}        type
+ * @param  {number|string} [id]
+ * @param  {object}        [parent]
+ * @param  {object}        [customOpts]
+ * @param  {function}      [callback]
+ * @return {BootstrapDialog}
+ */
+Charcoal.Admin.Widget_Attachment.prototype.create_dialog_attachment = function (type, id, parent, customOpts, callback) {
+    // Id = EDIT mod.
+    if (!id) {
+        id = 0;
+    }
+
+    if (!customOpts) {
+        customOpts = {};
+    }
+
+    if (!parent) {
+        parent = this.get_parent_container();
     }
 
     var defaultOpts = {
@@ -3915,44 +4135,68 @@ Charcoal.Admin.Widget_Attachment.prototype.create_attachment = function (type, i
     var immutableOpts = {};
     var dialogOpts = $.extend({}, defaultOpts, customOpts, immutableOpts);
 
-    var dialog = this.dialog(dialogOpts, function (response) {
-        if (response.success) {
-            // Call the quickForm widget js.
-            // Really not a good place to do that.
-            if (!response.widget_id) {
-                return false;
-            }
-
-            Charcoal.Admin.manager().add_widget({
-                id:   response.widget_id,
-                type: 'charcoal/admin/widget/quick-form',
-                data: response.widget_data,
-                obj_id: id,
-                save_callback: function (response) {
-                    callback(response);
-
-                    if ((this instanceof Charcoal.Admin.Component) && this.id()) {
-                        Charcoal.Admin.manager().destroy_component('widgets', this.id());
-                    }
-
-                    dialog.close();
-                }
-            });
-
-            // Re render.
-            // This is not good.
-            Charcoal.Admin.manager().render();
+    return this.dialog(dialogOpts, function (response, dialog) {
+        if (!response.success) {
+            return false;
         }
+
+        // Call the quickForm widget js.
+        // Really not a good place to do that.
+        if (!response.widget_id) {
+            return false;
+        }
+
+        Charcoal.Admin.manager().add_widget({
+            id:   response.widget_id,
+            type: 'charcoal/admin/widget/quick-form',
+            data: response.widget_data,
+            obj_id: id,
+            save_callback: function (response) {
+                if (typeof callback === 'function') {
+                    callback(response);
+                }
+
+                if ((this instanceof Charcoal.Admin.Component) && this.id()) {
+                    Charcoal.Admin.manager().destroy_component('widgets', this.id());
+                }
+
+                dialog.close();
+            }
+        });
+
+        // Re render.
+        // This is not good.
+        Charcoal.Admin.manager().render();
     });
+};
+
+/**
+ * @return {object}
+ */
+Charcoal.Admin.Widget_Attachment.prototype.get_parent_container = function () {
+    var opts = this.opts();
+
+    return {
+        obj_type: opts.data.obj_type,
+        obj_id:   opts.data.obj_id,
+        group:    opts.data.group
+    };
 };
 
 /**
  * Add an attachment to an existing container.
  *
- * @param {object} attachment - The attachment to add to the container.
- * @param {object} container  - The container attachment.
+ * @param  {object} attachment - The attachment to add to the container.
+ * @param  {object} container  - The container attachment.
+ * @return {?jqXHR}
  */
 Charcoal.Admin.Widget_Attachment.prototype.add_object_to_container = function (attachment, container, grouping) {
+    if (this.is_busy()) {
+        return null;
+    }
+
+    this.set_busy_state(true);
+
     var that = this,
         data = {
             obj_type:    container.type,
@@ -3964,12 +4208,49 @@ Charcoal.Admin.Widget_Attachment.prototype.add_object_to_container = function (a
                     position: 0
                 }
             ],
-            group: grouping || container.group || ''
+            group: (grouping || container.group || '')
         };
 
-    $.post('add-join', data, function () {
+    if (globalXHR[data.group] != null && globalXHR[data.group].abort) {
+        globalXHR[data.group].abort();
+    }
+
+    var xhr = $.post('add-join', data);
+
+    var success, failure, complete;
+
+    success = function () {
         that.reload();
-    }, 'json');
+    };
+
+    failure = function (response) {
+        if (response.feedbacks.length) {
+            Charcoal.Admin.feedback(response.feedbacks);
+        } else {
+            Charcoal.Admin.feedback([ {
+                level:   'error',
+                message: commonL10n.errorTemplate.replaceMap({
+                    '[[ errorMessage ]]': formWidgetL10n.saveFailed,
+                    '[[ errorThrown ]]':  commonL10n.errorOccurred
+                })
+            } ]);
+        }
+    };
+
+    complete = function () {
+        delete globalXHR[data.group];
+
+        that.set_busy_state(false);
+
+        Charcoal.Admin.feedback().dispatch();
+    };
+
+    return globalXHR[data.group] = Charcoal.Admin.resolveSimpleJsonXhr(
+        xhr,
+        success,
+        failure,
+        complete
+    );
 };
 
 /**
@@ -3981,7 +4262,6 @@ Charcoal.Admin.Widget_Attachment.prototype.add = function (obj) {
         return false;
     }
 
-    // There is something to save.
     this.set_dirty_state(true);
 
     var template = this.element().find('.js-attachment-template').clone();
@@ -3992,14 +4272,51 @@ Charcoal.Admin.Widget_Attachment.prototype.add = function (obj) {
 };
 
 /**
+ * @return {Feedback}
+ */
+Charcoal.Admin.Widget_Attachment.prototype.enqueue_is_busy_feedback = function () {
+    var opts = this.widget_options();
+    var widgetName = (opts && opts.title || attachmentWidgetL10n.widgetName);
+
+    return Charcoal.Admin.feedback([ {
+        level:   'warning',
+        display: 'toast',
+        message: commonL10n.errorTemplate.replaceMap({
+            '[[ errorMessage ]]': widgetName,
+            '[[ errorThrown ]]':  widgetL10n.isBusy
+        })
+    } ]);
+};
+
+/**
+ * Validates the component.
+ *
+ * @return {boolean}
+ */
+Charcoal.Admin.Widget_Attachment.prototype.validate = function (scope) {
+    if (this.is_busy()) {
+        if (scope.attempts && scope.max_attempts && scope.attempts < scope.max_attempts) {
+            this.enqueue_is_busy_feedback();
+        }
+        return false;
+    }
+
+    return true;
+};
+
+/**
  * Determines if the component is a candidate for saving.
+ *
+ * @todo Disabled the function to revert to initial behaviour of always saving
+ *     no matter the context. The reason for this is that this widget is often
+ *     integrated as adjacent to the form instead of nested.
  *
  * @param  {Component} [scope] - The parent component that calls for save.
  * @return {boolean}
  */
-Charcoal.Admin.Widget_Attachment.prototype.will_save = function (scope) {
-    return (scope && $.contains(scope.element()[0], this.element()[0]));
-};
+// Charcoal.Admin.Widget_Attachment.prototype.will_save = function (scope) {
+//     return (scope && $.contains(scope.element()[0], this.element()[0]));
+// };
 
 /**
  * Prepares the component to be saved.
@@ -4010,19 +4327,41 @@ Charcoal.Admin.Widget_Attachment.prototype.will_save = function (scope) {
  * @return {boolean}
  */
 Charcoal.Admin.Widget_Attachment.prototype.save = function () {
-    if (this.is_dirty()) {
+    if (this.is_busy()) {
         return false;
     }
 
-    this.join();
+    return this.perform_save();
+};
+
+/**
+ * Performs the save operation.
+ *
+ * @return {boolean}
+ */
+Charcoal.Admin.Widget_Attachment.prototype.perform_save = function () {
+    if (this.is_dirty()) {
+        this.join();
+    }
 
     return true;
 };
 
-Charcoal.Admin.Widget_Attachment.prototype.join = function (cb) {
-    if (!$('#' + this.element().attr('id')).length) {
-        return;
+/**
+ * @param  {function}  [callback]
+ * @return {?jqXHR}
+ */
+Charcoal.Admin.Widget_Attachment.prototype.join = function (callback) {
+    if (this.is_busy()) {
+        return null;
     }
+
+    if (!$('#' + this.element().attr('id')).length) {
+        return null;
+    }
+
+    this.set_busy_state(true);
+
     // Scope
     var that = this;
 
@@ -4047,29 +4386,67 @@ Charcoal.Admin.Widget_Attachment.prototype.join = function (cb) {
         });
     });
 
-    if (typeof globalXHR[opts.data.group] !== 'undefined') {
-        globalXHR[opts.data.group].abort();
+    if (globalXHR[data.group] != null && globalXHR[data.group].abort) {
+        globalXHR[data.group].abort();
     }
 
-    globalXHR[opts.data.group] = $.post('join', data, function () {
-        if (typeof cb === 'function') {
-            cb();
+    var xhr = $.post('join', data);
+
+    var success, failure, complete;
+
+    success = function () {
+        if (typeof callback === 'function') {
+            callback();
         }
+    };
+
+    failure = function (response) {
+        if (response.feedbacks.length) {
+            Charcoal.Admin.feedback(response.feedbacks);
+        } else {
+            Charcoal.Admin.feedback([ {
+                level:   'error',
+                message: commonL10n.errorTemplate.replaceMap({
+                    '[[ errorMessage ]]': formWidgetL10n.saveFailed,
+                    '[[ errorThrown ]]':  commonL10n.errorOccurred
+                })
+            } ]);
+        }
+    };
+
+    complete = function () {
+        delete globalXHR[data.group];
+
+        that.set_busy_state(false);
         that.set_dirty_state(false);
-        delete globalXHR[opts.data.group];
-    }, 'json');
+
+        Charcoal.Admin.feedback().dispatch();
+    };
+
+    return globalXHR[data.group] = Charcoal.Admin.resolveSimpleJsonXhr(
+        xhr,
+        success,
+        failure,
+        complete
+    );
 };
 
 /**
- * [remove_join description]
- * @param  {Function} cb [description]
- * @return {[type]}      [description]
+ * @param  {string|number} id
+ * @param  {function}      [callback]
+ * @return {?jqXHR}
  */
-Charcoal.Admin.Widget_Attachment.prototype.remove_join = function (id, cb) {
+Charcoal.Admin.Widget_Attachment.prototype.remove_join = function (id, callback) {
+    if (this.is_busy()) {
+        return null;
+    }
+
     if (!id) {
         // How could this possibly be!
-        return false;
+        return null;
     }
+
+    this.set_busy_state(true);
 
     // Scope
     var that = this;
@@ -4082,12 +4459,49 @@ Charcoal.Admin.Widget_Attachment.prototype.remove_join = function (id, cb) {
         group:         opts.data.group
     };
 
-    $.post('remove-join', data, function () {
-        if (typeof cb === 'function') {
-            cb();
+    if (globalXHR[data.group] != null && globalXHR[data.group].abort) {
+        globalXHR[data.group].abort();
+    }
+
+    var xhr = $.post('remove-join', data);
+
+    var success, failure, complete;
+
+    success = function () {
+        if (typeof callback === 'function') {
+            callback();
         }
+    };
+
+    failure = function (response) {
+        if (response.feedbacks.length) {
+            Charcoal.Admin.feedback(response.feedbacks);
+        } else {
+            Charcoal.Admin.feedback([ {
+                level:   'error',
+                message: commonL10n.errorTemplate.replaceMap({
+                    '[[ errorMessage ]]': attachmentWidgetL10n.removeFailed,
+                    '[[ errorThrown ]]':  commonL10n.errorOccurred
+                })
+            } ]);
+        }
+    };
+
+    complete = function () {
+        delete globalXHR[data.group];
+
+        that.set_busy_state(false);
         that.set_dirty_state(false);
-    }, 'json');
+
+        Charcoal.Admin.feedback().dispatch();
+    };
+
+    return globalXHR[data.group] = Charcoal.Admin.resolveSimpleJsonXhr(
+        xhr,
+        success,
+        failure,
+        complete
+    );
 };
 
 /**
@@ -4095,7 +4509,14 @@ Charcoal.Admin.Widget_Attachment.prototype.remove_join = function (id, cb) {
  * @return {[type]} [description]
  */
 Charcoal.Admin.Widget_Attachment.prototype.widget_options = function () {
-    return this.opts('widget_options');
+    var options = this.opts('widget_options');
+
+    // Hack to persist widget ID across reloads
+    if (!options.widget_id && this.widget_id()) {
+        options.widget_id = this.widget_id();
+    }
+
+    return options;
 };
 
 /* globals moment */
@@ -4332,7 +4753,7 @@ Charcoal.Admin.Widget_Card_Collection.prototype.widget_options = function () {
  */
 
 Charcoal.Admin.Widget_Form = function (opts) {
-    this.EVENT_NAMESPACE = '.charcoal.form';
+    this.EVENT_NAMESPACE = Charcoal.Admin.Widget_Form.EVENT_NAMESPACE;
 
     Charcoal.Admin.Widget.call(this, opts);
 
@@ -4345,6 +4766,8 @@ Charcoal.Admin.Widget_Form = function (opts) {
     this.extra_form_data   = opts.extra_form_data || {};
     this.form_selector     = null;
     this.form_working      = false;
+    this.attempts          = 0;
+    this.max_attempts      = 5;
     this.submitted_via     = null;
     this.is_new_object     = false;
     this.xhr               = null;
@@ -4358,14 +4781,17 @@ Charcoal.Admin.Widget_Form = function (opts) {
 
     this._on_popstate_tab = this._on_popstate_tab.bind(this);
     this._on_shown_tab    = this._on_shown_tab.bind(this);
-
-    this.set_properties(opts);
 };
+
+Charcoal.Admin.Widget_Form.EVENT_NAMESPACE = '.charcoal.form';
+
 Charcoal.Admin.Widget_Form.prototype             = Object.create(Charcoal.Admin.Widget.prototype);
 Charcoal.Admin.Widget_Form.prototype.constructor = Charcoal.Admin.Widget_Form;
 Charcoal.Admin.Widget_Form.prototype.parent      = Charcoal.Admin.Widget.prototype;
 
 Charcoal.Admin.Widget_Form.prototype.init = function () {
+    this.set_properties(this.opts());
+
     this.update_tab_ident();
 
     this.bind_events();
@@ -4670,7 +5096,28 @@ Charcoal.Admin.Widget_Form.prototype.get_form_data = function () {
  * @return {void}
  */
 Charcoal.Admin.Widget_Form.prototype.request_submit = function () {
+    this.attempts++;
+
     if (this.form_working) {
+        var message;
+
+        if (this.attempts >= this.max_attempts) {
+            message = commonL10n.errorTemplate.replaceMap({
+                '[[ errorMessage ]]': formWidgetL10n.isBlocked,
+                '[[ errorThrown ]]':  commonL10n.tryAgainLater
+            });
+        } else {
+            message = commonL10n.errorTemplate.replaceMap({
+                '[[ errorMessage ]]': formWidgetL10n.isProcessing,
+                '[[ errorThrown ]]':  commonL10n.pleaseWait
+            });
+        }
+
+        Charcoal.Admin.feedback([ {
+            level:   'warning',
+            display: 'toast',
+            message: message
+        } ]);
         return;
     }
 
@@ -4729,6 +5176,8 @@ Charcoal.Admin.Widget_Form.prototype.request_done = function (response, textStat
 };
 
 Charcoal.Admin.Widget_Form.prototype.request_success = function (response/* textStatus, jqXHR */) {
+    this.attempts = 0;
+
     var successEvent = $.Event('success' + this.EVENT_NAMESPACE, {
         subtype:   'submission',
         component: this,
@@ -4828,6 +5277,16 @@ Charcoal.Admin.Widget_Form.prototype.request_complete = function (/* ... */) {
     }
 
     if (!this.suppress_feedback()) {
+        if (this.attempts >= this.max_attempts) {
+            Charcoal.Admin.feedback([ {
+                level:   'error',
+                message: commonL10n.errorTemplate.replaceMap({
+                    '[[ errorMessage ]]': formWidgetL10n.isBlocked,
+                    '[[ errorThrown ]]':  commonL10n.tryAgainLater
+                })
+            } ]);
+        }
+
         Charcoal.Admin.feedback().dispatch();
         this.enable_form();
     }
@@ -5102,9 +5561,23 @@ Charcoal.Admin.Widget_Form.prototype.reload = function (callback) {
  * Switch languages for all l10n elements in the form
  */
 Charcoal.Admin.Widget_Form.prototype.switch_language = function (lang) {
-    var currentLang = Charcoal.Admin.lang();
-    if (currentLang !== lang) {
+    var originalLanguage = Charcoal.Admin.lang();
+    if (originalLanguage !== lang) {
+        var beforeSwitchEvent = $.Event('beforelanguageswitch' + this.EVENT_NAMESPACE, {
+            language: lang,
+            originalLanguage: originalLanguage,
+            relatedTarget: this.$form[0],
+            relatedComponent: this
+        });
+
+        $(document).triggerHandler(beforeSwitchEvent);
+
+        if (beforeSwitchEvent.isDefaultPrevented()) {
+            return;
+        }
+
         Charcoal.Admin.setLang(lang);
+
         $('[data-lang][data-lang!=' + lang + ']').addClass('d-none');
         $('[data-lang][data-lang=' + lang + ']').removeClass('d-none');
 
@@ -5116,21 +5589,31 @@ Charcoal.Admin.Widget_Form.prototype.switch_language = function (lang) {
             .removeClass('btn-outline-primary')
             .addClass('btn-primary');
 
+        /** @deprecated in favour of custom events 'beforelanguageswitch' and 'languageswitch' */
         $(document).triggerHandler({
             type: 'switch_language.charcoal'
         });
+
+        var afterSwitchEvent = $.Event('languageswitch' + this.EVENT_NAMESPACE, {
+            language: lang,
+            originalLanguage: originalLanguage,
+            relatedTarget: this.$form[0],
+            relatedComponent: this
+        });
+
+        $(document).triggerHandler(afterSwitchEvent);
     }
 };
 
 Charcoal.Admin.Widget_Form.prototype.destroy = function () {
-    this.$form.off(this.EVENT_NAMESPACE);
+    $(this.form_selector).off(this.EVENT_NAMESPACE);
 
     $('.js-sidebar-widget', this.form_selector).off(this.EVENT_NAMESPACE);
 
     window.removeEventListener('popstate', this._on_popstate_tab);
 
     if (this.isTab) {
-        this.$form.off('shown.bs.tab', '.js-group-tabs', this._shown_tab_handler);
+        $(this.form_selector).off('shown.bs.tab', '.js-group-tabs', this._shown_tab_handler);
     }
 };
 
@@ -5150,12 +5633,14 @@ Charcoal.Admin.Widget_Form.prototype.destroy = function () {
     'use strict';
 
     var Graph = function (opts) {
-        this.EVENT_NAMESPACE = '.charcoal.widget.graph';
+        this.EVENT_NAMESPACE = Graph.EVENT_NAMESPACE;
 
         Charcoal.Admin.Widget.call(this, opts);
 
         this.graph_options = opts.graph_options || opts.data.graph_options || {};
     };
+
+    Graph.EVENT_NAMESPACE = '.charcoal.widget.graph';
 
     Graph.prototype            = Object.create(Charcoal.Admin.Widget.prototype);
     Graph.prototype.contructor = Graph;
@@ -5444,7 +5929,7 @@ Charcoal.Admin.Widget_Object_Revisions.prototype.request_success = function ($fo
  * @return {thisArg}
  */
 Charcoal.Admin.Widget_Quick_Form = function (opts) {
-    this.EVENT_NAMESPACE = '.charcoal.quickform';
+    this.EVENT_NAMESPACE = Charcoal.Admin.Widget_Quick_Form.EVENT_NAMESPACE;
 
     Charcoal.Admin.Widget.call(this, opts);
 
@@ -5452,25 +5937,38 @@ Charcoal.Admin.Widget_Quick_Form = function (opts) {
     this.cancel_callback = opts.cancel_callback || '';
 
     this.form_selector = opts.data.form_selector;
-    this.$form         = $(this.form_selector);
 
     this.save_action     = opts.save_action || 'object/save';
     this.update_action   = opts.update_action || 'object/update';
     this.extra_form_data = opts.extra_form_data || {};
 
     this.group_conditions = opts.data.group_conditions;
+    this.group_display_mode = opts.data.group_display_mode || '';
+    this.show_language_switch = opts.data.show_language_switch || false;
     this.form_working = false;
     this.is_new_object = false;
     this.xhr = null;
     this.obj_id = Charcoal.Admin.parseNumber(opts.obj_id) || 0;
 };
+
+Charcoal.Admin.Widget_Quick_Form.EVENT_NAMESPACE = '.charcoal.quickform';
+
 Charcoal.Admin.Widget_Quick_Form.prototype = Object.create(Charcoal.Admin.Widget_Form.prototype);
 Charcoal.Admin.Widget_Quick_Form.prototype.constructor = Charcoal.Admin.Widget_Quick_Form;
 Charcoal.Admin.Widget_Quick_Form.prototype.parent = Charcoal.Admin.Widget.prototype;
 
 Charcoal.Admin.Widget_Quick_Form.prototype.init = function () {
+    this.set_properties(this.opts());
     this.bind_events();
     this.parse_group_conditions();
+
+    if (this.show_language_switch) {
+        $('.nav-link.nav-lang[data-tab-ident="' + Charcoal.Admin.lang() + '"]').trigger('click')
+    }
+};
+
+Charcoal.Admin.Widget_Quick_Form.prototype.set_properties = function () {
+    this.$form = $(this.form_selector);
 };
 
 Charcoal.Admin.Widget_Quick_Form.prototype.bind_events = function () {
@@ -5486,7 +5984,14 @@ Charcoal.Admin.Widget_Quick_Form.prototype.bind_events = function () {
             if ($.isFunction(that.cancel_callback)) {
                 that.cancel_callback(event);
             }
+        })
+
+    if (this.show_language_switch) {
+        $form.on('click.nav-link.nav-lang', 'a.nav-link.nav-lang', function (event) {
+            event.preventDefault();
+            that.trigger_lang_tab($(this).attr('data-tab-ident'))
         });
+    }
 };
 
 Charcoal.Admin.Widget_Quick_Form.prototype.request_success = function (response/* ... */) {
@@ -5524,6 +6029,21 @@ Charcoal.Admin.Widget_Quick_Form.prototype.request_success = function (response/
     if (typeof this.save_callback === 'function') {
         this.save_callback(response);
     }
+};
+
+Charcoal.Admin.Widget_Quick_Form.prototype.trigger_lang_tab = function (currentLangTab) {
+    $('.modal .form-field').each(function () {
+        var dataLang = $(this).attr('data-lang');
+        if (!dataLang) {
+            return;
+        }
+
+        if (currentLangTab !== dataLang) {
+            this.style.setProperty('display', 'none', 'important');
+        } else {
+            this.style.setProperty('display', 'block', 'important');
+        }
+    });
 };
 
 /* globals commonL10n,relationWidgetL10n */
@@ -5897,7 +6417,7 @@ Charcoal.Admin.Widget_Relation.prototype.widget_options = function () {
  * @param  {Object}  opts Options for widget
  */
 Charcoal.Admin.Widget_Search = function (opts) {
-    this.EVENT_NAMESPACE = '.charcoal.widget.search';
+    this.EVENT_NAMESPACE = Charcoal.Admin.Widget_Search.EVENT_NAMESPACE;
 
     Charcoal.Admin.Widget.call(this, opts);
 
@@ -5926,6 +6446,8 @@ Charcoal.Admin.Widget_Search = function (opts) {
 
     return this;
 };
+
+Charcoal.Admin.Widget_Search.EVENT_NAMESPACE = '.charcoal.widget.search';
 
 Charcoal.Admin.Widget_Search.prototype = Object.create(Charcoal.Admin.Widget.prototype);
 Charcoal.Admin.Widget_Search.prototype.constructor = Charcoal.Admin.Widget_Search;
@@ -6447,7 +6969,7 @@ Charcoal.Admin.Property.prototype.error = function (data) {
  */
 
 Charcoal.Admin.Property_Input_File = function (opts) {
-    this.EVENT_NAMESPACE = '.charcoal.property.file';
+    this.EVENT_NAMESPACE = Charcoal.Admin.Property_Input_File.EVENT_NAMESPACE;
     this.input_type = 'charcoal/admin/property/input/file';
 
     Charcoal.Admin.Property.call(this, opts);
@@ -6457,6 +6979,8 @@ Charcoal.Admin.Property_Input_File = function (opts) {
 
     this.set_input_id(opts.id).init();
 };
+
+Charcoal.Admin.Property_Input_File.EVENT_NAMESPACE = '.charcoal.property.file';
 
 Charcoal.Admin.Property_Input_File.prototype = Object.create(Charcoal.Admin.Property.prototype);
 Charcoal.Admin.Property_Input_File.prototype.constructor = Charcoal.Admin.Property_Input_File;
@@ -6797,6 +7321,8 @@ Charcoal.Admin.Property_Input_File.prototype.destroy = function () {
 
         this.init();
     }
+
+    PropertyInput.EVENT_NAMESPACE = EVENT_KEY;
 
     PropertyInput.prototype = Object.create(Admin.Property.prototype);
     PropertyInput.prototype.constructor = PropertyInput;
@@ -8919,7 +9445,7 @@ Charcoal.Admin.Property_Input_File.prototype.destroy = function () {
  * @param Object opts
  */
 Charcoal.Admin.Property_Input_Audio_Widget = function (opts) {
-    this.EVENT_NAMESPACE = '.charcoal.property.audio.widget';
+    this.EVENT_NAMESPACE = Charcoal.Admin.Property_Input_Audio_Widget.EVENT_NAMESPACE;
 
     Charcoal.Admin.Property.call(this, opts);
 
@@ -8928,6 +9454,8 @@ Charcoal.Admin.Property_Input_Audio_Widget = function (opts) {
 
     this.init();
 };
+
+Charcoal.Admin.Property_Input_Audio_Widget.EVENT_NAMESPACE = '.charcoal.property.audio.widget';
 
 Charcoal.Admin.Property_Input_Audio_Widget.prototype = Object.create(Charcoal.Admin.Property.prototype);
 Charcoal.Admin.Property_Input_Audio_Widget.prototype.constructor = Charcoal.Admin.Property_Input_Audio_Widget;
@@ -9157,7 +9685,7 @@ Charcoal.Admin.Property_Input_Audio_Widget.prototype.destroy = function () {
  */
 
 Charcoal.Admin.Property_Input_Audio = function (opts) {
-    this.EVENT_NAMESPACE = '.charcoal.property.audio';
+    this.EVENT_NAMESPACE = Charcoal.Admin.Property_Input_Audio.EVENT_NAMESPACE;
     this.input_type = 'charcoal/admin/property/input/audio';
 
     Charcoal.Admin.Property.call(this, opts);
@@ -9167,6 +9695,8 @@ Charcoal.Admin.Property_Input_Audio = function (opts) {
 
     this.set_input_id(opts.id).init();
 };
+
+Charcoal.Admin.Property_Input_Audio.EVENT_NAMESPACE = '.charcoal.property.audio';
 
 Charcoal.Admin.Property_Input_Audio.prototype = Object.create(Charcoal.Admin.Property_Input_File.prototype);
 Charcoal.Admin.Property_Input_Audio.prototype.constructor = Charcoal.Admin.Property_Input_Audio;
@@ -9443,9 +9973,9 @@ Charcoal.Admin.Property_Input_Geometry_Widget = function (data) {
     // Never send multiple true to BB gmap
     this._map_options.multiple = false;
 
-    var EVENT_NAMESPACE = 'geolocation';
+    var EVENT_NAMESPACE = Charcoal.Admin.Property_Input_Geometry_Widget.EVENT_NAMESPACE;
     var EVENT = {
-        GOOGLE_MAP_LOADED: 'google-map-loaded.' + EVENT_NAMESPACE
+        GOOGLE_MAP_LOADED: 'google-map-loaded' + EVENT_NAMESPACE
     };
 
     if (typeof google === 'undefined') {
@@ -9469,6 +9999,8 @@ Charcoal.Admin.Property_Input_Geometry_Widget = function (data) {
     }
 
 };
+
+Charcoal.Admin.Property_Input_Geometry_Widget.EVENT_NAMESPACE = '.geolocation';
 
 Charcoal.Admin.Property_Input_Geometry_Widget.prototype = Object.create(Charcoal.Admin.Property.prototype);
 Charcoal.Admin.Property_Input_Geometry_Widget.prototype.constructor = Charcoal.Admin.Property_Input_Geometry_Widget;
@@ -9809,7 +10341,7 @@ Charcoal.Admin.Property_Input_Geometry_Widget.prototype.save = function () {
  */
 
 Charcoal.Admin.Property_Input_Image = function (opts) {
-    this.EVENT_NAMESPACE = '.charcoal.property.image';
+    this.EVENT_NAMESPACE = Charcoal.Admin.Property_Input_Image.EVENT_NAMESPACE;
     this.input_type = 'charcoal/admin/property/input/image';
 
     Charcoal.Admin.Property.call(this, opts);
@@ -9819,6 +10351,8 @@ Charcoal.Admin.Property_Input_Image = function (opts) {
 
     this.set_input_id(opts.id).init();
 };
+
+Charcoal.Admin.Property_Input_Image.EVENT_NAMESPACE = '.charcoal.property.image';
 
 Charcoal.Admin.Property_Input_Image.prototype = Object.create(Charcoal.Admin.Property_Input_File.prototype);
 Charcoal.Admin.Property_Input_Image.prototype.constructor = Charcoal.Admin.Property_Input_Image;
@@ -10146,7 +10680,7 @@ Charcoal.Admin.Property_Input_Map_Widget.prototype.save = function () {
  */
 
 Charcoal.Admin.Property_Input_Range = function (opts) {
-    this.EVENT_NAMESPACE = '.charcoal.property.range';
+    this.EVENT_NAMESPACE = Charcoal.Admin.Property_Input_Range.EVENT_NAMESPACE;
 
     Charcoal.Admin.Property.call(this, opts);
 
@@ -10160,6 +10694,8 @@ Charcoal.Admin.Property_Input_Range = function (opts) {
 
     this.init();
 };
+
+Charcoal.Admin.Property_Input_Range.EVENT_NAMESPACE = '.charcoal.property.range';
 
 Charcoal.Admin.Property_Input_Range.prototype = Object.create(Charcoal.Admin.Property.prototype);
 Charcoal.Admin.Property_Input_Range.prototype.constructor = Charcoal.Admin.Property_Input_Range;
@@ -12598,7 +13134,7 @@ Charcoal.Admin.Property_Input_Tinymce.prototype.destroy = function () {
  */
 
 Charcoal.Admin.Property_Input_Video = function (opts) {
-    this.EVENT_NAMESPACE = '.charcoal.property.video';
+    this.EVENT_NAMESPACE = Charcoal.Admin.Property_Input_Video.EVENT_NAMESPACE;
     this.input_type = 'charcoal/admin/property/input/video';
 
     Charcoal.Admin.Property.call(this, opts);
@@ -12608,6 +13144,8 @@ Charcoal.Admin.Property_Input_Video = function (opts) {
 
     this.set_input_id(opts.id).init();
 };
+
+Charcoal.Admin.Property_Input_Video.EVENT_NAMESPACE = '.charcoal.property.video';
 
 Charcoal.Admin.Property_Input_Video.prototype = Object.create(Charcoal.Admin.Property_Input_File.prototype);
 Charcoal.Admin.Property_Input_Video.prototype.constructor = Charcoal.Admin.Property_Input_Video;
