@@ -505,7 +505,7 @@ abstract class AbstractPropertyInput extends AbstractProperty implements
             }
         }
 
-        return (this->inputPrefix ?? null);
+        return ($this->inputPrefix ?? null);
     }
 
     /**
