@@ -47,7 +47,7 @@ trait HasLanguageSwitcherTrait
             if (isset($localeStruct['name'])) {
                 $label = $this->translator()->translation($localeStruct['name']);
             } else {
-                $trans = 'locale.'.$locale;
+                $trans = 'locale.' . $locale;
                 if ($trans === $this->translator()->trans($trans)) {
                     $label = strtoupper($locale);
                 } else {

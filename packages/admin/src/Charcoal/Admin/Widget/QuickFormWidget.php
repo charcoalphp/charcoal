@@ -4,10 +4,8 @@ namespace Charcoal\Admin\Widget;
 
 // From 'charcoal-admin'
 use Charcoal\Admin\Widget\ObjectFormWidget;
-
 // From 'charcoal-property'
 use Charcoal\Property\ModelStructureProperty;
-
 // From 'charcoal-ui'
 use Charcoal\Admin\Ui\HasLanguageSwitcherInterface;
 use Charcoal\Admin\Ui\HasLanguageSwitcherTrait;
@@ -25,14 +23,14 @@ class QuickFormWidget extends ObjectFormWidget implements
      *
      * @const string
      */
-    const DISPLAY_MODE_TAB = 'tab';
+    public const DISPLAY_MODE_TAB = 'tab';
 
     /**
      * Ident for lang tab display.
      *
      * @const string
      */
-    const DISPLAY_MODE_LANG = 'lang';
+    public const DISPLAY_MODE_LANG = 'lang';
 
     /**
      * @param  array $data The widget data.

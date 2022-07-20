@@ -754,7 +754,7 @@ class AttachmentWidget extends AdminWidget implements
             'group'              => $this->group(),
             'attachment_options' => $this->attachmentOptions(),
             'attachable_objects' => $this->attachableObjects(),
-            'title'              => (string) $this->title(),
+            'title'              => (string)$this->title(),
             'lang'               => $this->translator()->getLocale(),
         ];
     }
@@ -782,7 +782,7 @@ class AttachmentWidget extends AdminWidget implements
      */
     final public function escapedWidgetOptionsAsJson()
     {
-        return '{{=<% %>=}}'.$this->widgetOptionsAsJson().'<%={{ }}=%>';
+        return '{{=<% %>=}}' . $this->widgetOptionsAsJson() . '<%={{ }}=%>';
     }
 
     /**
