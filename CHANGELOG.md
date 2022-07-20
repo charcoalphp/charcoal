@@ -7,9 +7,64 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 > ⚠️ This `CHANGELOG` file is automatically generated through Github actions from Github release notes.
 
-## [Unreleased](https://github.com/locomotive-charcoal/Charcoal/compare/v2.3.0...main)
+## [Unreleased](https://github.com/locomotive-charcoal/Charcoal/compare/v3.0.0...main)
 
 Please do not update the unreleased notes.
+
+## [v3.0.0](https://github.com/locomotive-charcoal/Charcoal/compare/v2.3.0...v3.0.0) - 2022-07-20
+
+### [3.0.0](https://github.com/charcoalphp/charcoal/compare/v2.3.0...v3.0.0) (2022-07-20)
+
+#### ⚠ BREAKING CHANGES
+
+- (BC):
+
+- Method `widgetOptions()` now returns an array instead of a JSON serialized string to allow for easier overriding in subclasses.
+
+Added:
+
+- Methods `widgetOptionsAsJson()` and `escapedWidgetOptionsAsJson()` for rendering widget options as JSON.
+- Method `widgetDataForJs()` to replace hardcoded widget data options in view file.
+
+Changed:
+
+- Stringify the widget's title.
+
+#### Features
+
+- **admin:** Add new group display mode for quick form widget ([524ec25](https://github.com/charcoalphp/charcoal/commit/524ec25d7e65b93b2bd3625f9dd0cb0d41561e36)), closes [locomotivemtl/charcoal-admin#63](https://github.com/locomotivemtl/charcoal-admin/issues/63) [locomotivemtl/charcoal-admin#d27a30e44b0e6e06899a481322015b09e743dc82](https://github.com/locomotivemtl/charcoal-admin/issues/d27a30e44b0e6e06899a481322015b09e743dc82)
+- **admin:** Improve dialog in widget.js ([1855d3b](https://github.com/charcoalphp/charcoal/commit/1855d3bb71e417a0016844e65bbabfda198defbd)), closes [locomotivemtl/charcoal-admin#8eb005a375875a7158537898c357b050ab066050](https://github.com/locomotivemtl/charcoal-admin/issues/8eb005a375875a7158537898c357b050ab066050)
+- **admin:** Improve error handling in form.js ([8340eb6](https://github.com/charcoalphp/charcoal/commit/8340eb6378dc38ef54094a2d0acd18148e4cc9b0)), closes [locomotivemtl/charcoal-admin#6659001b72230e62f353ac533e449ffec40221d4](https://github.com/locomotivemtl/charcoal-admin/issues/6659001b72230e62f353ac533e449ffec40221d4)
+- **admin:** Improve generic graph widgets ([b8a03f6](https://github.com/charcoalphp/charcoal/commit/b8a03f6993f2f40468cc0b15181a67afe6c57530)), closes [locomotivemtl/charcoal-admin#8e482bd13688c8b3d2770078424b6117eba3d0](https://github.com/locomotivemtl/charcoal-admin/issues/8e482bd13688c8b3d2770078424b6117eba3d0)
+- **admin:** Improve reloading in widget.js ([f409aac](https://github.com/charcoalphp/charcoal/commit/f409aac22b752fcb762c0e76a829cf1c6e0f8922)), closes [locomotivemtl/charcoal-admin#d8d977c1609515b144837d1d1ca3f11677972](https://github.com/locomotivemtl/charcoal-admin/issues/d8d977c1609515b144837d1d1ca3f11677972)
+- **admin:** Improve showLanguageSwitch integration ([41f341f](https://github.com/charcoalphp/charcoal/commit/41f341f51ef6351ba269cb8cc3a2e5fe01074c89)), closes [locomotivemtl/charcoal-admin#9c436ea57c5a37e90f97f90cf78994ab66cd0083](https://github.com/locomotivemtl/charcoal-admin/issues/9c436ea57c5a37e90f97f90cf78994ab66cd0083)
+- **admin:** Improve switch language in form.js ([22c30ec](https://github.com/charcoalphp/charcoal/commit/22c30ec406cfac51983cbbf144bf7af14cb66aac)), closes [locomotivemtl/charcoal-admin#e9d29556820f0b2f4e6a6adc127c31dad86fae04](https://github.com/locomotivemtl/charcoal-admin/issues/e9d29556820f0b2f4e6a6adc127c31dad86fae04)
+- **admin:** Improve validate/save in component_manager.js ([423c84b](https://github.com/charcoalphp/charcoal/commit/423c84ba4e2a995c09b9c81131bbf02b21ff94bf)), closes [locomotivemtl/charcoal-admin#1759d2bb90297ff7f03c5c94a0211b22dd2796](https://github.com/locomotivemtl/charcoal-admin/issues/1759d2bb90297ff7f03c5c94a0211b22dd2796) [locomotivemtl/charcoal-admin#e5e0741666cb52ca84a09cabce6619a8ec61c7c2](https://github.com/locomotivemtl/charcoal-admin/issues/e5e0741666cb52ca84a09cabce6619a8ec61c7c2)
+
+#### Bug Fixes
+
+- **admin:** Add missing localizations ([9496922](https://github.com/charcoalphp/charcoal/commit/9496922339b674da2baef6a619d0cee6f597d7be)), closes [locomotivemtl/charcoal-admin#47012a22e696bd090adb08ded9954ac1a50e84](https://github.com/locomotivemtl/charcoal-admin/issues/47012a22e696bd090adb08ded9954ac1a50e84)
+- **admin:** Ensure widgetL10n is available with attachment.js ([8cea251](https://github.com/charcoalphp/charcoal/commit/8cea2510f62a19bacd19375e83ca6a639e3c8aec)), closes [locomotivemtl/charcoal-attachment#496b9bec978bb01065e59c36e4291fe8e3384](https://github.com/locomotivemtl/charcoal-attachment/issues/496b9bec978bb01065e59c36e4291fe8e3384)
+- **admin:** Improve hasL10nFormProperties resolution ([3be40b0](https://github.com/charcoalphp/charcoal/commit/3be40b0acfd6b9a95ac9c552e7071bedeb286d68)), closes [locomotivemtl/charcoal-admin#2c4c3797bb8463241e723e6d157589291c832a0](https://github.com/locomotivemtl/charcoal-admin/issues/2c4c3797bb8463241e723e6d157589291c832a0)
+- **admin:** Improve internals of attachment.js ([a387db3](https://github.com/charcoalphp/charcoal/commit/a387db36ff0b3cbc20e1c2e0efa6b2bafaaa736d)), closes [locomotivemtl/charcoal-admin#45135ef015723f319ed246bf28eac4d4d2dccbe4](https://github.com/locomotivemtl/charcoal-admin/issues/45135ef015723f319ed246bf28eac4d4d2dccbe4)
+- **admin:** Improve resolveSimpleJsonXhr in charcoal.js ([1eee836](https://github.com/charcoalphp/charcoal/commit/1eee836cf5eecd1035f05776945a2f08a83c0746)), closes [locomotivemtl/charcoal-admin#bc8327e7aadeb57ea6e1ec931051aba4d630d409](https://github.com/locomotivemtl/charcoal-admin/issues/bc8327e7aadeb57ea6e1ec931051aba4d630d409)
+- **admin:** Update Bootstrap to v4.6.2 ([1fb8b4a](https://github.com/charcoalphp/charcoal/commit/1fb8b4afa418b6dcbeb30eac8e4e8505efa0222e)), closes [locomotivemtl/charcoal-admin#e6ac7b6f3b447cf08b7d9578b3d888d178a3639](https://github.com/locomotivemtl/charcoal-admin/issues/e6ac7b6f3b447cf08b7d9578b3d888d178a3639)
+- **property:** Fix parsing + error handling in Sprite Property ([831f16d](https://github.com/charcoalphp/charcoal/commit/831f16d9fa84392278a9143ecde767785a7bde14)), closes [locomotivemtl/charcoal-property#d1ef3c66122781581a856721fe233a816fc5b0b6](https://github.com/locomotivemtl/charcoal-property/issues/d1ef3c66122781581a856721fe233a816fc5b0b6) [locomotivemtl/charcoal-property#8f3403145b55c43190e447dae1c8f4dea249cc33](https://github.com/locomotivemtl/charcoal-property/issues/8f3403145b55c43190e447dae1c8f4dea249cc33)
+
+#### Performance Improvements
+
+- **admin:** Fix and improve event namespacing in JS components ([db46534](https://github.com/charcoalphp/charcoal/commit/db46534d23e3e281d0ca74a8103fe229d7f5a57d)), closes [locomotivemtl/charcoal-admin#738ae375ed4fa92cdd2ddbdadb2dca3cab8bbe96](https://github.com/locomotivemtl/charcoal-admin/issues/738ae375ed4fa92cdd2ddbdadb2dca3cab8bbe96)
+- **admin:** Improve elements in form.js and quickform.js ([81b9cad](https://github.com/charcoalphp/charcoal/commit/81b9cad39e241c4483e8400ccb9a5121efc4159f)), closes [locomotivemtl/charcoal-admin#bee1d393d313fdfc0a8b9a5918a7678a46b33d21](https://github.com/locomotivemtl/charcoal-admin/issues/bee1d393d313fdfc0a8b9a5918a7678a46b33d21)
+- **admin:** Improve internals of feedback.js ([cb6a4f6](https://github.com/charcoalphp/charcoal/commit/cb6a4f6484aa1f10b76d3f77f02ed913a2bb617f)), closes [locomotivemtl/charcoal-admin#45b76606fc945ab2526ccdd9db8219b11fb8ca10](https://github.com/locomotivemtl/charcoal-admin/issues/45b76606fc945ab2526ccdd9db8219b11fb8ca10)
+- **export:** improve performance of exporter ([9a1de4c](https://github.com/charcoalphp/charcoal/commit/9a1de4ccf2238530c7ae7d18719d228d61ad69aa)), closes [locomotivemtl/charcoal-admin#19192817861a2faed50ad7aeb8b10dfbcc63ce25](https://github.com/locomotivemtl/charcoal-admin/issues/19192817861a2faed50ad7aeb8b10dfbcc63ce25)
+
+#### Reverts
+
+- **admin:** Disable `will_save` constraint in attachment.js ([3e78bcd](https://github.com/charcoalphp/charcoal/commit/3e78bcdd9f6a8efc07778f0db9db5148bf07896f)), closes [locomotivemtl/charcoal-admin#1759d2bb90297ff7f03c5c94a0211b22dd2796](https://github.com/locomotivemtl/charcoal-admin/issues/1759d2bb90297ff7f03c5c94a0211b22dd2796) [locomotivemtl/charcoal-admin#6fb62c401db2192693d09cd42b8b2250d7af57b6](https://github.com/locomotivemtl/charcoal-admin/issues/6fb62c401db2192693d09cd42b8b2250d7af57b6)
+
+#### Code Refactoring
+
+- Integration of Attachment widget data and options ([c24ebc7](https://github.com/charcoalphp/charcoal/commit/c24ebc7f54926d68874a862953812e539330220f)), closes [locomotivemtl/charcoal-attachment#994dcc357626c0fd716b864812dffdc1ca742d93](https://github.com/locomotivemtl/charcoal-attachment/issues/994dcc357626c0fd716b864812dffdc1ca742d93)
 
 ## [v2.3.0](https://github.com/locomotive-charcoal/Charcoal/compare/v2.2.5...v2.3.0) - 2022-07-14
 
