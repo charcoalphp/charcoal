@@ -69,7 +69,7 @@ class Role extends AbstractModel
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         if ($this->ident === null) {
             return '';
