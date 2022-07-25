@@ -36,7 +36,7 @@ class Permission extends AbstractModel implements CategorizableInterface
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         if ($this->ident === null) {
             return '';
