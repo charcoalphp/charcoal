@@ -7,9 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 > ⚠️ This `CHANGELOG` file is automatically generated through Github actions from Github release notes.
 
-## [Unreleased](https://github.com/locomotive-charcoal/Charcoal/compare/v3.0.1...main)
+## [Unreleased](https://github.com/locomotive-charcoal/Charcoal/compare/v3.0.2...main)
 
 Please do not update the unreleased notes.
+
+## [v3.0.2](https://github.com/locomotive-charcoal/Charcoal/compare/v3.0.1...v3.0.2) - 2022-07-27
+
+### [3.0.2](https://github.com/charcoalphp/charcoal/compare/v3.0.1...v3.0.2) (2022-07-27)
+
+#### Bug Fixes
+
+- **user:** fix __toString compatibility with AbstractModel on Acl Permission and Acl Role ([7ade0c0](https://github.com/charcoalphp/charcoal/commit/7ade0c05f6d6dd047d3320ff157e6b47b829bb58))
 
 ## [v3.0.1](https://github.com/locomotive-charcoal/Charcoal/compare/v3.0.0...v3.0.1) - 2022-07-20
 
