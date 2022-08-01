@@ -64,9 +64,7 @@ jobs:
       token: ${{ steps.get_workflow_token.outputs.token }}
 
   split_monorepo:
-    needs: |
-      provide_packages_json
-      get_token
+    needs: [provide_packages_json, get_token]
 
     runs-on: ubuntu-latest
 
