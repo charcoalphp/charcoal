@@ -59,7 +59,7 @@ jobs:
       - name: Save token to env
         run: echo "GITHUB_TOKEN=$(echo ${{ steps.get_workflow_token.outputs.token }})" >> $GITHUB_ENV
 
-      - uses: google/secrets-sync-action
+      - uses: google/secrets-sync-action@v1.4.1
         with:
           SECRETS: |
             ^BUTLER_TOKEN$
