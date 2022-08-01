@@ -58,9 +58,8 @@ jobs:
             *
           GITHUB_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
           CONCURRENCY: 10
-
-    outputs:
-      token: ${{ steps.get_workflow_token.outputs.token }}
+        env:
+          BUTLER_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
 
   split_monorepo:
     needs: [provide_packages_json, get_token]
