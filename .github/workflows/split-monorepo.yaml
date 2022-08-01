@@ -61,12 +61,13 @@ jobs:
           GITHUB_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
         with:
           token: ${{ steps.get_workflow_token.outputs.token }}
+          persist-credentials: false
 
       # with tag
       - uses: "symplify/monorepo-split-github-action@2.1"
         name: Monorepo Tagged Split of ${{ matrix.package }}
         env:
-          GITHUB_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
+          PAT: ${{ steps.get_workflow_token.outputs.token }}
         with:
           tag: ${{ github.event.release.tag_name }}
 
