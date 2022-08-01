@@ -56,7 +56,6 @@ jobs:
             ^BUTLER_TOKEN$
           REPOSITORIES: |
             *
-          DRY_RUN: true
           GITHUB_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
           CONCURRENCY: 10
 
