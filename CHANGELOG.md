@@ -7,9 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 > ⚠️ This `CHANGELOG` file is automatically generated through Github actions from Github release notes.
 
-## [Unreleased](https://github.com/locomotive-charcoal/Charcoal/compare/v3.0.7...main)
+## [Unreleased](https://github.com/locomotive-charcoal/Charcoal/compare/v3.0.8...main)
 
 Please do not update the unreleased notes.
+
+## [v3.0.8](https://github.com/locomotive-charcoal/Charcoal/compare/v3.0.7...v3.0.8) - 2022-08-01
+
+### [3.0.8](https://github.com/charcoalphp/charcoal/compare/v3.0.7...v3.0.8) (2022-08-01)
+
+#### Bug Fixes
+
+- **action:** try to fix split-monorepo.yaml ([8b4d735](https://github.com/charcoalphp/charcoal/commit/8b4d735374ec874e196e9706278ecb919bd25045))
 
 ## [v3.0.7](https://github.com/locomotive-charcoal/Charcoal/compare/v3.0.6...v3.0.7) - 2022-08-01
 
