@@ -7,9 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 > ⚠️ This `CHANGELOG` file is automatically generated through Github actions from Github release notes.
 
-## [Unreleased](https://github.com/locomotive-charcoal/Charcoal/compare/v3.0.2...main)
+## [Unreleased](https://github.com/locomotive-charcoal/Charcoal/compare/v3.0.3...main)
 
 Please do not update the unreleased notes.
+
+## [v3.0.3](https://github.com/locomotive-charcoal/Charcoal/compare/v3.0.2...v3.0.3) - 2022-08-01
+
+### [3.0.3](https://github.com/charcoalphp/charcoal/compare/v3.0.2...v3.0.3) (2022-08-01)
+
+#### Bug Fixes
+
+- **trigger:** trigger release ([b0fc93f](https://github.com/charcoalphp/charcoal/commit/b0fc93f666ea307a547af5eacde062b68ac47860))
 
 ## [v3.0.2](https://github.com/locomotive-charcoal/Charcoal/compare/v3.0.1...v3.0.2) - 2022-07-27
 
