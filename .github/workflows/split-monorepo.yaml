@@ -57,13 +57,20 @@ jobs:
           organization: 'charcoalphp'
 
       - name: Save token to env
-        run: echo "PAT=$(echo ${{ steps.get_workflow_token.outputs.token }})" >> $GITHUB_ENV
+        run: echo "GITHUB_TOKEN=$(echo ${{ steps.get_workflow_token.outputs.token }})" >> $GITHUB_ENV
+
+      - uses: google/secrets-sync-action
+        with:
+          SECRETS: |
+            ^BUTLER_TOKEN$
+          REPOSITORIES: |
+            *
+          DRY_RUN: true
+          GITHUB_TOKEN: ${{ GITHUB_TOKEN }}
+          CONCURRENCY: 10
 
       - uses: actions/checkout@v3
-        env:
-          GITHUB_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
         with:
-          token: ${{ steps.get_workflow_token.outputs.token }}
           persist-credentials: false
 
       # with tag
