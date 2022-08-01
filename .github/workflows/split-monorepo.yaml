@@ -55,7 +55,7 @@ jobs:
           SECRETS: |
             ^BUTLER_TOKEN$
           REPOSITORIES: |
-            *
+            ${{github.repository}}
           GITHUB_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
           CONCURRENCY: 10
         env:
