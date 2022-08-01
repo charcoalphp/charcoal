@@ -56,6 +56,9 @@ jobs:
           application_private_key: ${{ secrets.APPLICATION_PRIVATE_KEY }}
           organization: 'charcoalphp'
 
+      - name: Save token to env
+        run: echo "PAT=$(echo ${{ steps.get_workflow_token.outputs.token }})" >> $GITHUB_ENV
+
       - uses: actions/checkout@v3
         env:
           GITHUB_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
@@ -66,8 +69,6 @@ jobs:
       # with tag
       - uses: "symplify/monorepo-split-github-action@2.1"
         name: Monorepo Tagged Split of ${{ matrix.package }}
-        env:
-          PAT: ${{ steps.get_workflow_token.outputs.token }}
         with:
           tag: ${{ github.event.release.tag_name }}
 
