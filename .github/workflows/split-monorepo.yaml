@@ -35,17 +35,8 @@ jobs:
     outputs:
       matrix: ${{ steps.output_data.outputs.matrix }}
 
-  split_monorepo:
-    needs: provide_packages_json
-
+  get_token:
     runs-on: ubuntu-latest
-
-    strategy:
-      fail-fast: false
-
-      matrix:
-        # define package to repository map
-        package: ${{fromJson(needs.provide_packages_json.outputs.matrix)}}
 
     steps:
       - name: Get Token
@@ -66,9 +57,27 @@ jobs:
           REPOSITORIES: |
             *
           DRY_RUN: true
-          GITHUB_TOKEN: ${{ GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
           CONCURRENCY: 10
 
+    outputs:
+      token: ${{ steps.get_workflow_token.outputs.token }}
+
+  split_monorepo:
+    needs: |
+      provide_packages_json
+      get_token
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        # define package to repository map
+        package: ${{fromJson(needs.provide_packages_json.outputs.matrix)}}
+
+    steps:
       - uses: actions/checkout@v3
         with:
           persist-credentials: false
