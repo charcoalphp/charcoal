@@ -47,14 +47,16 @@ jobs:
         package: ${{fromJson(needs.provide_packages_json.outputs.matrix)}}
 
     steps:
-      - uses: actions/checkout@v2
-
       - name: Get Token
         id: get_workflow_token
         uses: peter-murray/workflow-application-token-action@v1
         with:
           application_id: ${{ secrets.APPLICATION_ID }}
           application_private_key: ${{ secrets.APPLICATION_PRIVATE_KEY }}
+
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ steps.get_workflow_token.outputs.token }}
 
       # with tag
       - uses: "symplify/monorepo-split-github-action@2.1"
@@ -67,7 +69,7 @@ jobs:
           # ↓ split "packages/[local_path]" directory
           package_directory: 'packages/${{ matrix.package }}'
 
-          # ↓ into locomotive-charcoal/[split_repository] repository
+          # ↓ into charcoalphp/[split_repository] repository
           repository_organization: 'charcoalphp'
           repository_name: '${{ matrix.package }}'
 
