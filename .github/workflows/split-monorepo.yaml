@@ -54,6 +54,7 @@ jobs:
         with:
           application_id: ${{ secrets.APPLICATION_ID }}
           application_private_key: ${{ secrets.APPLICATION_PRIVATE_KEY }}
+          organization: 'charcoalphp'
 
       - uses: actions/checkout@v2
         with:
