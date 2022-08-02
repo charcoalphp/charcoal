@@ -5,6 +5,9 @@ on:
     types: [ released ]
 
 
+env:
+  GITHUB_TOKEN: ${{ secrets.BUTLER_TOKEN }}
+
 jobs:
   provide_packages_json:
     # see json juggling: https://docs.github.com/en/free-pro-team@latest/actions/reference/context-and-expression-syntax-for-github-actions#example-6
@@ -35,34 +38,8 @@ jobs:
     outputs:
       matrix: ${{ steps.output_data.outputs.matrix }}
 
-  get_token:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Get Token
-        id: get_workflow_token
-        uses: peter-murray/workflow-application-token-action@v1
-        with:
-          application_id: ${{ secrets.APPLICATION_ID }}
-          application_private_key: ${{ secrets.APPLICATION_PRIVATE_KEY }}
-          organization: 'charcoalphp'
-
-      - name: Save token to env
-        run: echo "GITHUB_TOKEN=$(echo ${{ steps.get_workflow_token.outputs.token }})" >> $GITHUB_ENV
-
-      - uses: google/secrets-sync-action@v1.4.1
-        with:
-          SECRETS: |
-            ^BUTLER_TOKEN$
-          REPOSITORIES: |
-            ${{github.repository}}
-          GITHUB_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
-          CONCURRENCY: 10
-        env:
-          BUTLER_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
-
   split_monorepo:
-    needs: [provide_packages_json, get_token]
+    needs: provide_packages_json
 
     runs-on: ubuntu-latest
 
