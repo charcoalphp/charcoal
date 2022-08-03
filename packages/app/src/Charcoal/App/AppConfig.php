@@ -255,8 +255,6 @@ class AppConfig extends AbstractConfig
      */
     public function addFile($path)
     {
-        $path = $this->resolveValue($path);
-
         return parent::addFile($path);
     }
 
@@ -283,7 +281,7 @@ class AppConfig extends AbstractConfig
             );
         }
 
-        $this->basePath = rtrim(realpath($path), '\\/');
+        $this->basePath = rtrim(realpath($path), '\\/').DIRECTORY_SEPARATOR;
         return $this;
     }
 
@@ -317,7 +315,7 @@ class AppConfig extends AbstractConfig
             );
         }
 
-        $this->publicPath = rtrim(realpath($path), '\\/');
+        $this->publicPath = rtrim(realpath($path), '\\/').DIRECTORY_SEPARATOR;
         return $this;
     }
 
@@ -329,7 +327,7 @@ class AppConfig extends AbstractConfig
     public function publicPath()
     {
         if ($this->publicPath === null) {
-            $this->publicPath = $this->basePath() . DIRECTORY_SEPARATOR . 'www';
+            $this->publicPath = $this->basePath().'www'.DIRECTORY_SEPARATOR;
         }
 
         return $this->publicPath;
