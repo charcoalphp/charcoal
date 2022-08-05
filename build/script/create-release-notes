@@ -21,7 +21,7 @@ const cli = meow(`
                                 or the script will create a changelog including all the commits since commit 1
       -f, --from                Commit or branch to start from when processing the release notes
       -t, --to                  Commit or branch to end to when processing the release notes
-      -n, --config              A filepath of your config script
+      -n, --config               A filepath of your config script
                                 Example of a config script: https://github.com/conventional-changelog/conventional-changelog/blob/master/packages/conventional-changelog-cli/test/fixtures/config.js
 `, {
     booleanDefault: undefined,
@@ -50,7 +50,7 @@ const flags = cli.flags
 let options = {};
 
 if (flags.group) {
-    options.tagPrefix = 'null' // This allows us to igonre tags when generating release notes, this way we get all the changes in a single grouped release block.
+    options.tagPrefix = 'null' // This allows us to ignore tags when generating release notes, this way we get all the changes in a single grouped release block.
 }
 
 if (flags.config) {

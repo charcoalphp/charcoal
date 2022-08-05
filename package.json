@@ -7,11 +7,15 @@
         "conventional-changelog-cli": "^2.2.2",
         "conventional-changelog-conventionalcommits": "^5.0.0",
         "cz-conventional-changelog": "^3.3.0",
+        "octokit": "^2.0.4",
         "semantic-release": "^19.0.2"
     },
     "config": {
         "commitizen": {
             "path": "./node_modules/cz-conventional-changelog"
         }
+    },
+    "scripts": {
+        "pr": "node ./build/script/create-pull-request"
     }
 }
