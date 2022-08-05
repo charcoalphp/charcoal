@@ -95,10 +95,10 @@ async function createPr(base, head, changelog) {
         if (response.status === 201) {
             const {
                 number,
-                url
+                html_url
             } = response.data
 
-            console.log(`Pull request ${Green}#${number}${NC} created. Url: ${url} `)
+            console.log(`Pull request ${Green}#${number}${NC} created. Url: ${html_url} `)
         } else {
             console.error('Failed to create pull request')
         }
