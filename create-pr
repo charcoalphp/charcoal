@@ -108,7 +108,7 @@ async function createPr(base, head, changelog) {
 }
 
 function getChangelog(base, compare) {
-    const stdout = execSync(__dirname + `/create-release-notes -g --from ${base}`)
+    const stdout = execSync(__dirname + `/build/script/create-release-notes -g --from ${base}`)
 
     return `${stdout}`
 }
