@@ -98,7 +98,7 @@ async function createPr(base, head, changelog) {
                 url
             } = response.data
 
-            console.log(`Pull request \e]8;;${url}\e\\#${number}\e]8;;\e\\\n created. `)
+            console.log(`Pull request ${Green}#${number}${NC} created. Url: ${url} `)
         } else {
             console.error('Failed to create pull request')
         }
