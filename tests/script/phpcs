@@ -1,0 +1,107 @@
+#!/bin/bash
+
+#########
+# Globals
+#########
+
+version=0.0.1
+
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+#######
+# Utils
+#######
+
+get_packages() {
+    vendor/bin/monorepo-builder packages-json
+}
+
+######
+# Help
+######
+
+Help()
+{
+   # Display Help
+   echo -e "${YELLOW}Description${NC}"
+   echo -e "   Execute the phpcs test command for a single package or all packages of this monorepo."
+   echo -e
+   echo -e "${YELLOW}Usage${NC}"
+   echo -e "   phpcs [package] [-h|p|l|V]"
+   echo -e
+   echo -e "${YELLOW}Options${NC}"
+   echo -e "   ${GREEN}-h, --help${NC}          Print this Help."
+   echo -e "   ${GREEN}-p, --package${NC}       Specify which package to test"
+   echo -e "   ${GREEN}-l, --list${NC}          List all packages in the monorepo."
+   echo -e "   ${GREEN}-V, --version${NC}       Print software version and exit."
+   echo
+
+   exit 0
+}
+
+########
+# Inputs
+########
+
+while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do case $1 in
+  -V | --version )
+    echo $version
+    exit
+    ;;
+  -p | --pacakge )
+    shift; package=$1
+    ;;
+  -l | --list )
+    shift; get_packages
+    ;;
+  -h | --help )
+    Help
+    ;;
+esac; shift; done
+
+if [[ "$1" == '--' ]]; then shift; fi
+if [[ $1 ]]; then package=$1; fi
+
+
+##############
+# Main Program
+##############
+
+# testing a single package
+test_package() {
+    echo -e "${GREEN}Testing the [${NC} $1 ${GREEN}] package..."
+
+    php vendor/bin/phpcs -ps --colors packages/"$1"/src/ --ignore=tests/
+}
+
+if [[ -z "$package" ]]; then
+    # Testing all packages
+    packages="$(get_packages)"
+    echo "Testing all packages..."
+    # Cleaning get_packages output for array conversion
+    packages=${packages//,/ }
+    packages=${packages//[/}
+    packages=${packages//]/}
+    packages=${packages//\"/}
+
+    packages=($packages)
+
+    for i in "${packages[@]}"; do
+      test_package $i
+    done
+else
+    # Testing for a single package
+    packages="$(get_packages)"
+
+    if [[ "$packages" != *"$package"* ]]; then
+      echo "The requested package is not available."
+      echo "Here is a list of available packages : $packages"
+      exit 1
+    fi
+
+    test_package "$package"
+fi
+
+exit 0
