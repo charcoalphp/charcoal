@@ -7,9 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 > ⚠️ This `CHANGELOG` file is automatically generated through Github actions from Github release notes.
 
-## [Unreleased](https://github.com/locomotive-charcoal/Charcoal/compare/v3.0.16...main)
+## [Unreleased](https://github.com/locomotive-charcoal/Charcoal/compare/v3.1.0...main)
 
 Please do not update the unreleased notes.
+
+## [v3.1.0](https://github.com/locomotive-charcoal/Charcoal/compare/v3.0.16...v3.1.0) - 2022-08-08
+
+### [3.1.0](https://github.com/charcoalphp/charcoal/compare/v3.0.16...v3.1.0) (2022-08-08)
+
+#### Features
+
+- **script:** add a pull request script using the github api ([5ad068d](https://github.com/charcoalphp/charcoal/commit/5ad068dd15379ce48c7cd4a2cf99e33b275d73af))
+- **script:** rename and move create-pull-request script and add a success message ([d77cb1b](https://github.com/charcoalphp/charcoal/commit/d77cb1babd4144f40656814a8c905823d0fa92f2))
+
+#### Bug Fixes
+
+- **create-pr:** fix success message url ([2125186](https://github.com/charcoalphp/charcoal/commit/21251861510509067ccaffe36733780f303fcabd))
+- **create-pr:** fix success message url was pointing to the api response ([1bd59a4](https://github.com/charcoalphp/charcoal/commit/1bd59a44f10ece74569c25a1afba3ca83ac6cc2a))
+- **create-pr:** update relative path to create-release-notes script ([11c54f5](https://github.com/charcoalphp/charcoal/commit/11c54f50d7a385cf2e7f5b1bf941588cd96e337a))
 
 ## [v3.0.16](https://github.com/locomotive-charcoal/Charcoal/compare/v3.0.15...v3.0.16) - 2022-08-02
 
