@@ -270,7 +270,6 @@ This monorepo was created with a many to mono aproach using this guide and tool:
 | [Release](.github/workflows/release.yaml)                         | Push on supported branches     | Trigger a Github release using [semantic-release](https://github.com/marketplace/actions/action-for-semantic-release)                                                                                              |
 | [Split Monorepo](.github/workflows/split_monorepo.yaml)           | Release on `main`              | The split action splits the packages into individual repositories. Only triggered when a tag is pushed. Based on [symplify/monorepo-split-github-action](https://github.com/symplify/monorepo-split-github-action) |
 | [Update Changelog](.github/workflows/update-changelog.yaml)       | Release on `main`              | Uses [changelog-updater-action](https://github.com/stefanzweifel/changelog-updater-action) to update the changelog of the `main` branch                                                                            |
-| [Create Pull Request](.github/workflows/create-pull-request.yaml) | Run the `./create-pr` command  | Create a new _Pull Request_ on the current remote branch with a release note automatically generated.                                                                                                              |
 
 ### Scripts
 
@@ -280,9 +279,25 @@ This script streamlines the process of creating a Pull Request. When your branch
 another `[target]` branch, this tool will generate it for you, request review form [@charcoalphp/reviewers][gh-reviewers] and add
 a beautiful and readable release note generated from the differences between the two breanches. 
 
+Documentation
+
+```shell
+Description
+  Create a pull request on the github repository on the requested branch.
+  Default branch: main
+
+Usage
+  ./create-pr
+
+Options
+  -b, --base          The base branch to merge into for the pull request. [Default: main]
+  -h, --head          The branch to compare against the base branch. [Default: The current branch]
+```
+
+Example
 ```shell
 # target: the target branch for the pull request. Defaults to [main]
-./create-pr [target]
+./create-pr -b main -h user:feat-branch
 ```
 
 #### __create-release-notes__ (_optional tool_)
