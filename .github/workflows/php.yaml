@@ -72,4 +72,4 @@ jobs:
             ${{ runner.os }}-php-
 
       - name: Run PHPCS for all packages
-        run: php tests/script/phpcs ${{ matrix.package }} --ci
+        run: tests/script/phpcs ${{ matrix.package }} --ci
