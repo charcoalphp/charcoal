@@ -54,7 +54,7 @@ while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do case $1 in
     shift; package=$1
     ;;
   -l | --list )
-    shift; get_packages
+    get_packages; echo; exit 0
     ;;
   -h | --help )
     Help
