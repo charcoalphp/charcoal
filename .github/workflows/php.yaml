@@ -38,6 +38,8 @@ jobs:
       matrix: ${{ steps.output_data.outputs.matrix }}
 
   test:
+    needs: provide_packages_json
+
     runs-on: ubuntu-latest
 
     strategy:
