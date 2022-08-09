@@ -59,6 +59,9 @@ while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do case $1 in
   -h | --help )
     Help
     ;;
+  -c | --ci )
+    shift; ci="true"
+    ;;
 esac; shift; done
 
 if [[ "$1" == '--' ]]; then shift; fi
@@ -73,7 +76,12 @@ if [[ $1 ]]; then package=$1; fi
 test_package() {
     echo -e "${GREEN}Testing the [${NC} $1 ${GREEN}] package..."
 
-    php vendor/bin/phpcs -ps --colors packages/"$1"/src/ --ignore=tests/
+
+    if [[ -z "$ci" ]]; then
+        php vendor/bin/phpcs -ps --colors packages/"$1"/src/ --ignore=tests/
+    else
+        php vendor/bin/phpcs -q -ps --report=checkstyle packages/"$1"/src/
+    fi
 }
 
 if [[ -z "$package" ]]; then
