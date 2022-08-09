@@ -71,5 +71,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-php-
 
+      - name: Install Dependencies
+        uses: ramsey/composer-install@v2
+
       - name: Run PHPCS for all packages
         run: tests/script/phpcs ${{ matrix.package }} --ci
