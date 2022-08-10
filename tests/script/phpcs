@@ -60,12 +60,12 @@ while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do case $1 in
     Help
     ;;
   -c | --ci )
-    shift; ci="true"
+    ci="true"
     ;;
 esac; shift; done
 
 if [[ "$1" == '--' ]]; then shift; fi
-if [[ $1 ]]; then package=$1; fi
+if [[ "$1" ]]; then package=$1; fi
 
 
 ##############
