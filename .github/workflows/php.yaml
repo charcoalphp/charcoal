@@ -44,7 +44,7 @@ jobs:
 
     strategy:
       matrix:
-        php-versions: ['7.4', '8.0', '8.1']
+        php-versions: ['7.4', '8.1']
         # define package to repository map
         package: ${{fromJson(needs.provide_packages_json.outputs.matrix)}}
 
@@ -76,6 +76,9 @@ jobs:
 
       - name: Run PHPCS for all packages
         run: tests/script/phpcs --ci ${{ matrix.package }}
+
+      - name: Phpunit test
+        run: php vendor/bin/phpunit packages/admin/tests/ --coverage-clover "build/logs/clover.xml" --coverage-text
 
       - name: Run PHPunit for all packages
         run: tests/script/phpunit --ci ${{ matrix.package }}
