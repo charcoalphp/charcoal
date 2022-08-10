@@ -78,7 +78,7 @@ test_package() {
     if [[ -z "$ci" ]]; then
         php vendor/bin/phpunit packages/"$1"/tests/ --coverage-text
     else
-        php vendor/bin/phpunit packages/"$1"/tests/  --coverage-clover "build/logs/clover.xml" --coverage-text
+        sh -c "php vendor/bin/phpunit packages/$1/tests/ --coverage-clover build/logs/clover.xml --coverage-text"
     fi
 }
 

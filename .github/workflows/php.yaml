@@ -77,8 +77,5 @@ jobs:
       - name: Run PHPCS for all packages
         run: tests/script/phpcs --ci ${{ matrix.package }}
 
-      - name: Phpunit test
-        run: php vendor/bin/phpunit packages/admin/tests/ --coverage-clover "build/logs/clover.xml" --coverage-text
-
       - name: Run PHPunit for all packages
         run: tests/script/phpunit --ci ${{ matrix.package }}
