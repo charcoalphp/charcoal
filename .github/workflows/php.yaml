@@ -75,4 +75,7 @@ jobs:
         uses: ramsey/composer-install@v2
 
       - name: Run PHPCS for all packages
-        run: tests/script/phpcs ${{ matrix.package }} --ci
+        run: tests/script/phpcs --ci ${{ matrix.package }}
+
+      - name: Run PHPunit for all packages
+        run: tests/script/phpunit --ci ${{ matrix.package }}
