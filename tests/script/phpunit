@@ -58,10 +58,13 @@ while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do case $1 in
   -h | --help )
     Help
     ;;
+  -c | --ci )
+    ci="true"
+    ;;
 esac; shift; done
 
 if [[ "$1" == '--' ]]; then shift; fi
-if [[ $1 ]]; then package=$1; fi
+if [[ "$1" ]]; then package=$1; fi
 
 
 ##############
@@ -72,7 +75,11 @@ if [[ $1 ]]; then package=$1; fi
 test_package() {
     echo -e "${GREEN}Testing the [${NC} $1 ${GREEN}] package..."
 
-    php vendor/bin/phpunit packages/"$1"/tests/ --coverage-text
+    if [[ -z "$ci" ]]; then
+        php vendor/bin/phpunit packages/"$1"/tests/ --coverage-text
+    else
+        php vendor/bin/phpunit packages/"$1"/tests/  --coverage-clover "build/logs/clover.xml" --coverage-text
+    fi
 }
 
 if [[ -z "$package" ]]; then
