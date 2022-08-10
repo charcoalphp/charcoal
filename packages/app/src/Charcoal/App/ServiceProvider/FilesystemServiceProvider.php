@@ -63,7 +63,7 @@ class FilesystemServiceProvider implements ServiceProviderInterface
             $filesystems = new Container();
 
             foreach ($filesystemConfig['connections'] as $ident => $connection) {
-                $fs = $this->createConnection($connection);
+                $fs = $this->createConnection($connection, $container);
                 $filesystems[$ident] = $fs;
                 $container['filesystem/manager']->mountFilesystem($ident, $fs);
             }
@@ -74,11 +74,12 @@ class FilesystemServiceProvider implements ServiceProviderInterface
 
     /**
      * @param  array $config The driver (adapter) configuration.
+     * @param  Container $container A service container.
      * @throws Exception If the filesystem type is not defined in config.
      * @throws UnexpectedValueException If the filesystem type is invalid / unsupported.
      * @return Filesystem
      */
-    private function createConnection(array $config)
+    private function createConnection(array $config, Container $container)
     {
         if (!isset($config['type'])) {
             throw new Exception(
@@ -90,7 +91,7 @@ class FilesystemServiceProvider implements ServiceProviderInterface
 
         switch ($type) {
             case 'local':
-                $adapter = $this->createLocalAdapter($config);
+                $adapter = $this->createLocalAdapter($config, $container);
                 break;
 
             case 's3':
@@ -124,10 +125,11 @@ class FilesystemServiceProvider implements ServiceProviderInterface
 
     /**
      * @param  array $config The driver (adapter) configuration.
+     * @param  Container $container A service container.
      * @throws InvalidArgumentException If the path is not defined.
      * @return LocalAdapter
      */
-    private function createLocalAdapter(array $config)
+    private function createLocalAdapter(array $config, Container $container)
     {
         if (empty($config['path'])) {
             throw new InvalidArgumentException(
