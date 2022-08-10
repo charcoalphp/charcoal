@@ -80,7 +80,8 @@ test_package() {
     if [[ -z "$ci" ]]; then
         php vendor/bin/phpcs -ps --colors packages/"$1"/src/ --ignore=tests/
     else
-        php vendor/bin/phpcs -q -ps --report=checkstyle packages/"$1"/src/ >&1
+        php vendor/bin/phpcs -q -ps --report=checkstyle packages/"$1"/src/
+        exit $?
     fi
 }
 
