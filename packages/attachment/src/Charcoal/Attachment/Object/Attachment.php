@@ -382,7 +382,7 @@ class Attachment extends Content implements AttachableInterface
      */
     public function heading()
     {
-        $heading = $this->render((string)$this->heading);
+        $heading = $this->renderTemplate((string)$this->heading);
 
         if (!$heading) {
             $heading = $this->translator()->translation('{{ objType }} #{{ id }}', [
@@ -425,7 +425,7 @@ class Attachment extends Content implements AttachableInterface
     public function preview()
     {
         if ($this->preview) {
-            return $this->render((string)$this->preview);
+            return $this->renderTemplate((string)$this->preview);
         }
 
         return '';

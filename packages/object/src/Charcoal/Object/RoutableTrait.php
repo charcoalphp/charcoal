@@ -277,7 +277,7 @@ trait RoutableTrait
     protected function generateRoutePattern($pattern)
     {
         if ($this instanceof ViewableInterface && $this->view() !== null) {
-            $route = $this->view()->render($pattern, $this->viewController());
+            $route = $this->view()->renderTemplate($pattern, $this->viewController());
         } else {
             $route = preg_replace_callback('~\{\{\s*(.*?)\s*\}\}~i', [ $this, 'parseRouteToken' ], $pattern);
         }
