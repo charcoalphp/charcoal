@@ -36,4 +36,4 @@ NEW_CONTENT=$(sed -Ee "s#/vendor/locomotivemtl/charcoal-($PACKAGES)#/%packages.p
 echo "$NEW_CONTENT" > ${PROJECT_BASE}${FILE}
 
 echo Adding 'MONOREPO' key to '.env'
-echo MONOREPO=true >> ${PROJECT_BASE}.env
+echo PACKAGES_PATH=vendor/charcoal/charcoal/packages >> ${PROJECT_BASE}.env
