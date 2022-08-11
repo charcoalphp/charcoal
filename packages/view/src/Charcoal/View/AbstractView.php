@@ -68,7 +68,7 @@ abstract class AbstractView implements ViewInterface
      */
     public function renderTemplate(string $templateString, $context = null): string
     {
-        return $this->engine()->render($templateString, $context);
+        return $this->engine()->renderTemplate($templateString, $context);
     }
 
     /**

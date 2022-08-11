@@ -909,7 +909,7 @@ class Email extends AbstractEntity implements
     /**
      * Get the email's HTML message from the template, if applicable.
      *
-     * @see    ViewableInterface::renderTemplate()
+     * @see    ViewableInterface::render()
      * @return string
      */
     protected function generateMsgHtml(): string
@@ -919,7 +919,7 @@ class Email extends AbstractEntity implements
         if (!$templateIdent) {
             $message = '';
         } else {
-            $message = $this->renderTemplate($templateIdent);
+            $message = $this->render($templateIdent);
         }
 
         return $message;

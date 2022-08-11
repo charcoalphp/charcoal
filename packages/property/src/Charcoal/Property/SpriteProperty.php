@@ -209,7 +209,7 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
                 '%icon%' => $val,
             ]);
 
-            $val = $this->view->render(
+            $val = $this->view->renderTemplate(
                 '<svg fill="currentColor" viewBox="0 0 25 25" height="40px" role="img" aria-label="' . $label . '">' .
                 '<use xlink:href="{{# withBaseUrl }}{{ spritePathWithHash }}{{/ withBaseUrl }}"></use>' .
                 '</svg>',
@@ -229,7 +229,7 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
     public function spriteVal($val)
     {
         if ($val !== '') {
-            $val = $this->view->render(
+            $val = $this->view->renderTemplate(
                 '{{# withBaseUrl }}{{ spritePathWithHash }}{{/ withBaseUrl }}',
                 [
                     'spritePathWithHash' => $this->getSprite() . '#' . $val,
