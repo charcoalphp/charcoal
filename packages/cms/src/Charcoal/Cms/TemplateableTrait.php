@@ -79,9 +79,9 @@ trait TemplateableTrait
     /**
      * Retrieve the renderable object's template identifier.
      *
-     * @return string
+     * @return string|null
      */
-    public function templateIdent(): string
+    public function templateIdent(): ?string
     {
         return $this->templateIdent;
     }
