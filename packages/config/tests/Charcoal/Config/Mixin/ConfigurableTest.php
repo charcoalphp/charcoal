@@ -40,8 +40,7 @@ class ConfigurableTest extends AbstractTestCase
      *
      * @return void
      */
-    public function setUp()
-    {
+    protected function setUp(): void    {
         $this->data = [
             'name' => 'mydb',
             'user' => 'myname',

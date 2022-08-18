@@ -42,8 +42,7 @@ class CollectionTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function setUp()
-    {
+    protected function setUp(): void    {
         $this->map = [
             self::OBJ_1 => m::mock(Model::class, [ 'id' => self::OBJ_1 ]),
             self::OBJ_2 => m::mock(Model::class, [ 'id' => self::OBJ_2 ]),

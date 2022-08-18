@@ -17,8 +17,7 @@ class EmailQueueManagerTest extends AbstractTestCase
      */
     public $obj;
 
-    public function setUp()
-    {
+    protected function setUp(): void    {
         $container = $GLOBALS['container'];
         $this->obj = new EmailQueueManager([
             'logger' => new NullLogger(),

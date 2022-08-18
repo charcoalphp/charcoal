@@ -47,8 +47,7 @@ class TranslatorTest extends AbstractTestCase
      *
      * @return void
      */
-    public function setUp()
-    {
+    protected function setUp(): void    {
         $selector  = new MessageSelector();
         $formatter = new MessageFormatter($selector);
 

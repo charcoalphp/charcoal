@@ -46,8 +46,7 @@ abstract class AbstractFilePropertyTestCase extends AbstractTestCase
     /**
      * @return void
      */
-    public function setUp()
-    {
+    protected function setUp(): void    {
         $this->obj = $this->createProperty();
     }
 

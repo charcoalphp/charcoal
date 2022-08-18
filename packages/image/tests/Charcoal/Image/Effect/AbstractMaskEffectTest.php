@@ -6,8 +6,7 @@ class AbstractMaskEffectTest extends \PHPUnit\Framework\TestCase
 {
     public $obj;
 
-    public function setUp()
-    {
+    protected function setUp(): void    {
         $img = $this->getMockForAbstractClass('\Charcoal\Image\AbstractImage');
         $img->method('driverType')->willReturn('imagick');
         $this->obj = $this->getMockForAbstractClass('\Charcoal\Image\Effect\AbstractMaskEffect');

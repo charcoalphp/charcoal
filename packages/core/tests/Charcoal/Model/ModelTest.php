@@ -119,8 +119,7 @@ class ModelTest extends AbstractTestCase
      *
      * @return void
      */
-    public function setUp()
-    {
+    protected function setUp(): void    {
         $this->dropTable();
 
         $this->obj = $this->createModel();

@@ -26,8 +26,7 @@ class AbstractDashboardTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function setUp()
-    {
+    protected function setUp(): void    {
         $container = $this->getContainer();
         $container->register(new DashboardServiceProvider());
         $container->register(new LayoutServiceProvider());

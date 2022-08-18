@@ -33,8 +33,7 @@ class SelectablePropertyTraitTest extends AbstractTestCase
      *
      * @return void
      */
-    public function setUp()
-    {
+    protected function setUp(): void    {
         $container = $this->getContainer();
 
         $this->obj = $this->getMockForTrait(SelectablePropertyTrait::class);

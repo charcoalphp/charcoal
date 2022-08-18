@@ -31,8 +31,7 @@ class DelegatesAwareTest extends AbstractTestCase
      *
      * @return void
      */
-    public function setUp()
-    {
+    protected function setUp(): void    {
         // phpcs:disable Squiz.Objects.ObjectInstantiation.NotAssigned
         $this->delegates = [
             new Entity([
