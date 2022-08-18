@@ -82,7 +82,7 @@ class ContainerProvider
                     'paths' => [
                         'metadata',
                         'tests/Charcoal/Cms/Fixture/metadata',
-                        'vendor/charcoal/charcoal/packages/object/metadata',
+                        'vendor/charcoal/object/metadata',
                         '/../object/metadata',
                     ],
                 ],
