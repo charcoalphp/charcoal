@@ -158,9 +158,11 @@ class ContainerProvider
                 'metadata'   => [
                     'paths'  => [
                         'metadata',
+                        // Standalone
                         'vendor/charcoal/object/metadata',
-                        '/../object/metadata',
                         'vendor/charcoal/user/metadata',
+                        // Monorepo
+                        '/../object/metadata',
                         '/../user/metadata',
                     ],
                 ],

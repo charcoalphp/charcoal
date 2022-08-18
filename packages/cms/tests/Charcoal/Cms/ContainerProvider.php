@@ -82,7 +82,9 @@ class ContainerProvider
                     'paths' => [
                         'metadata',
                         'tests/Charcoal/Cms/Fixture/metadata',
+                        // Standalone
                         'vendor/charcoal/object/metadata',
+                        // Monorepo
                         '/../object/metadata',
                     ],
                 ],

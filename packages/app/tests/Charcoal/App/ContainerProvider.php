@@ -274,8 +274,12 @@ class ContainerProvider
                 'base_path' => $container['config']['base_path'],
                 'paths'     => [
                     'metadata',
-                    'vendor/locomotivemtl/charcoal-object/metadata',
-                    'vendor/locomotivemtl/charcoal-user/metadata'
+                    // Standalone
+                    'vendor/charcoal/object/metadata',
+                    'vendor/charcoal/user/metadata',
+                    // Monorepo
+                    '/../object/metadata',
+                    '/../user/metadata'
                 ]
             ]);
         };

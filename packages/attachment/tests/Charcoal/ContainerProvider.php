@@ -128,8 +128,8 @@ class ContainerProvider
                         'vendor/charcoal/object/metadata',
                         'vendor/charcoal/user/metadata',
                         // Monorepo
-                        'vendor/charcoal/object/metadata',
-                        'vendor/charcoal/user/metadata',
+                        '/../object/metadata',
+                        '/../user/metadata',
                     ],
                 ],
             ]);
