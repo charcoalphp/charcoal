@@ -158,8 +158,10 @@ class ContainerProvider
                 'metadata'   => [
                     'paths'  => [
                         'metadata',
-                        'vendor/locomotivemtl/charcoal-object/metadata',
-                        'vendor/locomotivemtl/charcoal-user/metadata',
+                        'vendor/charcoal/object/metadata',
+                        '/../object/metadata',
+                        'vendor/charcoal/user/metadata',
+                        '/../user/metadata',
                     ],
                 ],
             ]);
@@ -443,7 +445,7 @@ class ContainerProvider
             return new Acl();
         };
 
-        $container['authorizer/acl'] = function () {
+        $container['authorizer/acl'] = function ($container) {
             return $container['admin/acl'];
         };
     }
