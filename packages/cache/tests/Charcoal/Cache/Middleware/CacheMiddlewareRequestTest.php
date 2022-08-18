@@ -21,7 +21,7 @@ class CacheMiddlewareRequestTest extends AbstractCacheMiddlewareTest
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         static::createCachePool();
     }
@@ -31,47 +31,9 @@ class CacheMiddlewareRequestTest extends AbstractCacheMiddlewareTest
      *
      * @return void
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         static::clearCachePool();
-    }
-
-    /**
-     * Test middleware with the default settings.
-     *
-     * @covers ::__construct
-     * @covers ::defaults
-     */
-    public function testDefaults()
-    {
-        $middleware = $this->middlewareFactory();
-        $defaults   = $middleware->defaults();
-
-        $this->assertAttributeInstanceOf(Pool::class, 'cachePool', $middleware);
-
-        $this->assertArrayHasKey('ttl', $defaults);
-        $this->assertAttributeEquals($defaults['ttl'], 'cacheTtl', $middleware);
-
-        $this->assertArrayHasKey('included_path', $defaults);
-        $this->assertAttributeEquals($defaults['included_path'], 'includedPath', $middleware);
-
-        $this->assertArrayHasKey('excluded_path', $defaults);
-        $this->assertAttributeEquals($defaults['excluded_path'], 'excludedPath', $middleware);
-
-        $this->assertArrayHasKey('methods', $defaults);
-        $this->assertAttributeEquals($defaults['methods'], 'methods', $middleware);
-
-        $this->assertArrayHasKey('status_codes', $defaults);
-        $this->assertAttributeEquals($defaults['status_codes'], 'statusCodes', $middleware);
-
-        $this->assertArrayHasKey('included_query', $defaults);
-        $this->assertAttributeEquals($defaults['included_query'], 'includedQuery', $middleware);
-
-        $this->assertArrayHasKey('excluded_query', $defaults);
-        $this->assertAttributeEquals($defaults['excluded_query'], 'excludedQuery', $middleware);
-
-        $this->assertArrayHasKey('ignored_query', $defaults);
-        $this->assertAttributeEquals($defaults['ignored_query'], 'ignoredQuery', $middleware);
     }
 
     /**

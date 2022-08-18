@@ -139,8 +139,8 @@ abstract class AbstractCacheBuilderTest extends AbstractTestCase
         $poolDefaults    = $this->getDefaultPoolAttributes();
 
         $this->assertInstanceOf($builderDefaults['pool_class'], $pool);
-        $this->assertAttributeEquals($poolDefaults['item_class'], 'itemClass', $pool);
-        $this->assertAttributeEquals($poolDefaults['namespace'], 'namespace', $pool);
-        $this->assertAttributeEquals($poolDefaults['logger'], 'logger', $pool);
+        $this->assertEquals($poolDefaults['item_class'], $pool->getItemClass());
+        $this->assertEquals($poolDefaults['namespace'], $pool->getNamespace());
+        $this->assertEquals($poolDefaults['logger'], $pool->getLogger());
     }
 }

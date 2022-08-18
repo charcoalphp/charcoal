@@ -3,7 +3,10 @@
 namespace Charcoal\Tests\Cache\Factory;
 
 // From PSR-3
+use Charcoal\Tests\Mocks\DefaultAwarePool;
 use Psr\Log\NullLogger;
+
+use Charcoal\Tests\Mocks\LoggerAwarePool;
 
 // From 'tedivm/stash'
 use Stash\Interfaces\ItemInterface;
@@ -43,9 +46,10 @@ class CacheBuilderPoolTest extends AbstractCacheBuilderTest
         $logger  = new NullLogger;
 
         $pool = $builder($driver, [
+            'pool_class' => LoggerAwarePool::class,
             'logger' => $logger,
         ]);
-        $this->assertAttributeSame($logger, 'logger', $pool);
+        $this->assertSame($logger, $pool->getLogger());
     }
 
     /**
@@ -87,7 +91,9 @@ class CacheBuilderPoolTest extends AbstractCacheBuilderTest
         $pool = $builder($driver, [
             'item_class' => $mockClassName,
         ]);
-        $this->assertAttributeEquals($mockClassName, 'itemClass', $pool);
+        $item = $pool->getItem('test');
+
+        $this->assertInstanceOf($mockClassName, $item);
     }
 
     /**
@@ -121,7 +127,9 @@ class CacheBuilderPoolTest extends AbstractCacheBuilderTest
         $builder = $this->createBuilder();
         $driver  = $this->createDriver('BlackHole');
 
-        $pool = $builder($driver, null);
+        $pool = $builder($driver, [
+            'pool_class' => DefaultAwarePool::class,
+        ]);
         $this->assertCachePoolHasDefaultAttributes($pool);
     }
 
@@ -135,7 +143,10 @@ class CacheBuilderPoolTest extends AbstractCacheBuilderTest
         $builder = $this->createBuilder();
         $driver  = $this->createDriver('BlackHole');
 
-        $pool = $builder($driver, 42);
+        $pool = $builder($driver, [
+            'pool_class' => DefaultAwarePool::class,
+            42
+        ]);
         $this->assertCachePoolHasDefaultAttributes($pool);
     }
 }

@@ -9,6 +9,7 @@ use Psr\Log\NullLogger;
 use Pimple\Container;
 
 // From 'tedivm/stash'
+use ReflectionClass;
 use Stash\DriverList;
 use Stash\Interfaces\DriverInterface;
 use Stash\Interfaces\PoolInterface;
@@ -81,7 +82,12 @@ class CacheServiceProviderTest extends AbstractTestCase
         ]);
 
         $this->assertArrayHasKey('middlewares/charcoal/cache/middleware/cache', $container);
-        $this->assertAttributeEquals(1, 'cacheTtl', $container['middlewares/charcoal/cache/middleware/cache']);
+        $middleware = $container['middlewares/charcoal/cache/middleware/cache'];
+        $reflection = new ReflectionClass($middleware);
+        $reflectionProperty = $reflection->getProperty('cacheTtl');
+        $reflectionProperty->setAccessible(true);
+
+        $this->assertEquals(1, $reflectionProperty->getValue($middleware));
     }
 
     /**

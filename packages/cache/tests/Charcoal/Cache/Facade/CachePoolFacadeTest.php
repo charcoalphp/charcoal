@@ -46,7 +46,7 @@ class CachePoolFacadeTest extends AbstractTestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         static::createCachePool();
     }
@@ -56,7 +56,7 @@ class CachePoolFacadeTest extends AbstractTestCase
      *
      * @return void
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         static::clearCachePool();
     }

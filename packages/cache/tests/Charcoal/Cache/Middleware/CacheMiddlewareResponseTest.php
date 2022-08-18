@@ -24,7 +24,7 @@ class CacheMiddlewareResponseTest extends AbstractCacheMiddlewareTest
      *
      * @return void
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         static::createCachePool();
     }
@@ -34,7 +34,7 @@ class CacheMiddlewareResponseTest extends AbstractCacheMiddlewareTest
      *
      * @return void
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         static::clearCachePool();
     }

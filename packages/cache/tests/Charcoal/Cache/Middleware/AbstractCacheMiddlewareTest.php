@@ -20,7 +20,7 @@ use Slim\Http\Uri;
 // From 'charcoal-cache'
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Cache\CachePoolTrait;
-use Charcoal\Cache\Middleware\CacheMiddleware;
+use Charcoal\Tests\Mocks\DefaultsAwareCacheMiddlewares as CacheMiddleware;
 
 /**
  * Test CacheMiddleware
@@ -121,7 +121,7 @@ abstract class AbstractCacheMiddlewareTest extends AbstractTestCase
             $env['QUERY_STRING'] = is_array($query) ? http_build_query($query) : $query;
         }
 
-        $request = Request::createFromGlobals($env);
+        $request = Request::createFromEnvironment($env);
         return $request;
     }
 
