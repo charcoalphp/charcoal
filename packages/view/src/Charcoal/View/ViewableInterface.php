@@ -44,9 +44,9 @@ interface ViewableInterface
     /**
      * Retrieve the renderable view.
      *
-     * @return ViewInterface The object's View instance.
+     * @return ViewInterface|null The object's View instance.
      */
-    public function view(): ViewInterface;
+    public function view(): ?ViewInterface;
 
     /**
      * Render the template by the given identifier.
