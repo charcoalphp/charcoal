@@ -2,6 +2,7 @@
 
 namespace Charcoal\Tests\App\ServiceProvider;
 
+use Charcoal\App\AppConfig;
 use Pimple\Container;
 
 // Dependencies from `league/flysystem`
@@ -39,9 +40,9 @@ class FilesystemServiceProviderTest extends AbstractTestCase
     public function testProvider()
     {
         $container = $this->getContainer([
-            'config' => [
+            'config' => $this->createAppConfig([
                 'filesystem' => []
-            ]
+            ])
         ]);
 
         $this->assertTrue(isset($container['filesystem/config']));
@@ -56,9 +57,9 @@ class FilesystemServiceProviderTest extends AbstractTestCase
     public function testProviderDefaultAdapters()
     {
         $container = $this->getContainer([
-            'config' => [
+            'config' => $this->createAppConfig([
                 'filesystem' => []
-            ]
+            ])
         ]);
 
         $this->assertTrue(isset($container['filesystems']['private']));
@@ -71,7 +72,7 @@ class FilesystemServiceProviderTest extends AbstractTestCase
     public function testProviderLocalAdapter()
     {
         $container = $this->getContainer([
-            'config' => [
+            'config' => $this->createAppConfig([
                 'filesystem' => [
                     'connections' => [
                         'local' => [
@@ -80,7 +81,7 @@ class FilesystemServiceProviderTest extends AbstractTestCase
                         ]
                     ]
                 ]
-            ]
+            ])
         ]);
 
         $this->assertTrue(isset($container['filesystems']['local']));
@@ -90,7 +91,7 @@ class FilesystemServiceProviderTest extends AbstractTestCase
     public function testProviderS3Adapter()
     {
         $container = $this->getContainer([
-            'config' => [
+            'config' => $this->createAppConfig([
                 'filesystem' => [
                     'connections' => [
                         's3' => [
@@ -102,7 +103,7 @@ class FilesystemServiceProviderTest extends AbstractTestCase
                         ],
                     ],
                 ],
-            ],
+            ]),
         ]);
 
         $this->assertTrue(isset($container['filesystems']['s3']));
@@ -112,7 +113,7 @@ class FilesystemServiceProviderTest extends AbstractTestCase
     public function testProviderFtpAdapter()
     {
         $container = $this->getContainer([
-            'config' => [
+            'config' => $this->createAppConfig([
                 'filesystem' => [
                     'connections' => [
                         'ftp' => [
@@ -123,7 +124,7 @@ class FilesystemServiceProviderTest extends AbstractTestCase
                         ]
                     ]
                 ]
-            ]
+            ])
         ]);
 
         $this->assertTrue(isset($container['filesystems']['ftp']));
@@ -133,7 +134,7 @@ class FilesystemServiceProviderTest extends AbstractTestCase
     public function testProviderSftpAdapter()
     {
         $container = $this->getContainer([
-            'config' => [
+            'config' => $this->createAppConfig([
                 'filesystem' => [
                     'connections' => [
                         'sftp' => [
@@ -144,7 +145,7 @@ class FilesystemServiceProviderTest extends AbstractTestCase
                         ]
                     ]
                 ]
-            ]
+            ])
         ]);
 
         $this->assertTrue(isset($container['filesystems']['sftp']));
@@ -154,7 +155,7 @@ class FilesystemServiceProviderTest extends AbstractTestCase
     public function testProviderMemorypAdapter()
     {
         $container = $this->getContainer([
-            'config' => [
+            'config' => $this->createAppConfig([
                 'filesystem' => [
                     'connections' => [
                         'memory' => [
@@ -162,7 +163,7 @@ class FilesystemServiceProviderTest extends AbstractTestCase
                         ]
                     ]
                 ]
-            ]
+            ])
         ]);
 
 
@@ -173,7 +174,7 @@ class FilesystemServiceProviderTest extends AbstractTestCase
     public function testProviderNullAdapter()
     {
         $container = $this->getContainer([
-            'config' => [
+            'config' => $this->createAppConfig([
                 'filesystem' => [
                     'connections' => [
                         'test' => [
@@ -181,7 +182,7 @@ class FilesystemServiceProviderTest extends AbstractTestCase
                         ]
                     ]
                 ]
-            ]
+            ])
         ]);
 
         $this->assertTrue(isset($container['filesystems']['test']));
@@ -192,15 +193,21 @@ class FilesystemServiceProviderTest extends AbstractTestCase
     {
         $this->expectException('\Exception');
         $container = $this->getContainer([
-            'config' => [
+            'config' => $this->createAppConfig([
                 'filesystem' => [
                     'connections' => [
                         'test' => []
                     ]
                 ]
-            ]
+            ])
         ]);
+
         $test = $container['filesystem/test'];
+    }
+
+    private function createAppConfig($defaults = null)
+    {
+        return new AppConfig($defaults);
     }
 
     private function getContainer($defaults = null)
