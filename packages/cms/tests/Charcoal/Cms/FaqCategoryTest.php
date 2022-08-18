@@ -27,7 +27,7 @@ class FaqCategoryTest extends AbstractTestCase
      *
      * @return void
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $dependencies = $this->getModelDependenciesWithContainer();
 

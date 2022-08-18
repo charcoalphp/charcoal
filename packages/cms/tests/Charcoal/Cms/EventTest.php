@@ -32,11 +32,11 @@ class EventTest extends AbstractTestCase
      *
      * @return void
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $container = $this->getContainer();
+        $route = $container['model/factory']->create(ObjectRoute::class);
 
-        $route = $container['model/factory']->get(ObjectRoute::class);
         if ($route->source()->tableExists() === false) {
             $route->source()->createTable();
         }
