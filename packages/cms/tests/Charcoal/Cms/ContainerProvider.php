@@ -82,7 +82,8 @@ class ContainerProvider
                     'paths' => [
                         'metadata',
                         'tests/Charcoal/Cms/Fixture/metadata',
-                        'vendor/locomotivemtl/charcoal-object/metadata',
+                        'vendor/Charcoal/Charcoal/packages/object/metadata',
+                        '/../object/metadata',
                     ],
                 ],
                 'view'      => [
