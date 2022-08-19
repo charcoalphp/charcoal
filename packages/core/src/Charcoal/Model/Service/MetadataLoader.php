@@ -156,7 +156,6 @@ final class MetadataLoader implements LoggerAwareInterface
         }
 
         $data = $this->loadMetadataFromCache($ident, $idents);
-
         if (is_object($targetMetadata)) {
             return $targetMetadata->merge($data);
         } elseif (is_array($targetMetadata)) {
@@ -344,6 +343,7 @@ final class MetadataLoader implements LoggerAwareInterface
      * Supported file types: JSON.
      *
      * @param  string $path A file path to resolve and fetch.
+     * @throws UnexpectedValueException If the file cannot be loaded.
      * @return array|null An associative array on success, NULL on failure.
      */
     private function loadFile($path)
@@ -354,16 +354,26 @@ final class MetadataLoader implements LoggerAwareInterface
 
         $dirs = $this->paths();
         if (empty($dirs)) {
-            return null;
+            throw new UnexpectedValueException(
+                sprintf('Cannot load the file "%s"', $path)
+            );
         }
 
         $data = [];
         $dirs = array_reverse($dirs);
+        $foundFile = false;
         foreach ($dirs as $dir) {
             $file = $dir . DIRECTORY_SEPARATOR . $path;
             if (file_exists($file)) {
+                $foundFile = true;
                 $data = array_replace_recursive($data, $this->loadJsonFile($file));
             }
+        }
+
+        if (!$foundFile) {
+            throw new UnexpectedValueException(
+                sprintf('Cannot load the file "%s"', $path)
+            );
         }
 
         if (empty($data)) {
