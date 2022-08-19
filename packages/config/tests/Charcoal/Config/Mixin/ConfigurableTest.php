@@ -4,12 +4,14 @@ namespace Charcoal\Tests\Config\Mixin;
 
 // From 'charcoal-config'
 use Charcoal\Tests\AbstractTestCase;
+use Charcoal\Tests\AssertionsTrait;
 use Charcoal\Tests\FixturesTrait;
 use Charcoal\Tests\Config\Mock\ConfigurableObject;
 use Charcoal\Config\ConfigurableInterface;
 use Charcoal\Config\ConfigurableTrait;
 use Charcoal\Config\ConfigInterface;
 use Charcoal\Config\GenericConfig;
+use InvalidArgumentException;
 
 /**
  * Test ConfigurableTrait
@@ -18,6 +20,7 @@ use Charcoal\Config\GenericConfig;
  */
 class ConfigurableTest extends AbstractTestCase
 {
+    use AssertionsTrait;
     use FixturesTrait;
 
     /**
@@ -86,18 +89,6 @@ class ConfigurableTest extends AbstractTestCase
         $this->assertInstanceOf(ConfigInterface::class, $this->obj->createConfig());
     }
 
-    /**
-     * Asserts that the config is empty by default.
-     *
-     * @coversNothing
-     * @return void
-     */
-    public function testDefaultConfigAttribute()
-    {
-        $this->assertAttributeEmpty('config', $this->obj);
-    }
-
-
 
     // Test SetConfig
     // =========================================================================
@@ -112,7 +103,7 @@ class ConfigurableTest extends AbstractTestCase
         $path = $this->getPathToFixture('pass/valid.json');
         $that = $this->obj->setConfig($path);
         $this->assertSame($this->obj, $that);
-        $this->assertAttributeInstanceOf(GenericConfig::class, 'config', $this->obj);
+        $this->assertInstanceOf(GenericConfig::class, $this->obj->config());
 
         $cfg = $this->obj->config();
         $this->assertJsonStringEqualsJsonFile($path, json_encode($cfg));
@@ -126,7 +117,7 @@ class ConfigurableTest extends AbstractTestCase
     public function testSetConfigWithArray()
     {
         $this->obj->setConfig($this->data);
-        $this->assertAttributeInstanceOf(GenericConfig::class, 'config', $this->obj);
+        $this->assertInstanceOf(GenericConfig::class, $this->obj->config());
 
         $cfg = $this->obj->config();
         $this->assertArraySubsets($this->data, $cfg->data());
@@ -142,7 +133,6 @@ class ConfigurableTest extends AbstractTestCase
     public function testSetConfigWithConfigInstance()
     {
         $this->obj->setConfig($this->cfg);
-        $this->assertAttributeSame($this->cfg, 'config', $this->obj);
 
         $cfg = $this->obj->config();
         $this->assertSame($this->cfg, $cfg);
@@ -150,15 +140,13 @@ class ConfigurableTest extends AbstractTestCase
     }
 
     /**
-     * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage Configset must be an associative array, a file path,
-     *     or an instance of Charcoal\Config\ConfigInterface
-     *
      * @covers ::setConfig()
      * @return void
      */
     public function testSetConfigWithInvalidData()
     {
+        $this->expectExceptionMessage('Configset must be an associative array, a file path, or an instance of Charcoal\Config\ConfigInterface');
+        $this->expectException(InvalidArgumentException::class);
         // phpcs:disable Squiz.Objects.ObjectInstantiation.NotAssigned
         $this->obj->setConfig(new \StdClass);
         // phpcs:enable Squiz.Objects.ObjectInstantiation.NotAssigned
@@ -179,7 +167,6 @@ class ConfigurableTest extends AbstractTestCase
      */
     public function testGetConfigCreatesConfig()
     {
-        $this->assertAttributeEmpty('config', $this->obj);
         $cfg = $this->obj->config();
         $this->assertInstanceOf(GenericConfig::class, $cfg);
     }

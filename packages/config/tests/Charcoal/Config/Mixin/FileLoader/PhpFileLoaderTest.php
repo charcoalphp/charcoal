@@ -5,6 +5,7 @@ namespace Charcoal\Tests\Config\Mixin\FileLoader;
 // From 'charcoal-config'
 use Charcoal\Tests\Config\Mixin\FileLoader\AbstractFileLoaderTestCase;
 use Charcoal\Config\FileAwareTrait;
+use UnexpectedValueException;
 
 /**
  * Test {@see FileAwareTrait::loadPhpFile() PHP File Loading}
@@ -49,7 +50,7 @@ class PhpFileLoaderTest extends AbstractFileLoaderTestCase
         $data = $this->obj->loadFile($path);
 
         $this->assertEquals([], $data);
-        $this->assertAttributeEquals('baz', 'foo', $this->obj);
+        $this->assertEquals('baz', $this->obj->foo);
     }
 
     /**
@@ -69,15 +70,15 @@ class PhpFileLoaderTest extends AbstractFileLoaderTestCase
     /**
      * Asserts that a broken file is NOT ignored.
      *
-     * @expectedException              UnexpectedValueException
-     * @expectedExceptionMessageRegExp /^PHP file ".+?" could not be parsed: .+$/
-     *
      * @requires PHP >= 7.0
      * @covers   ::loadPhpFile()
      * @return   void
      */
     public function testLoadMalformedFileInPhp7()
     {
+        $this->expectExceptionMessageMatches('/^PHP file ".+?" could not be parsed: .+$/');
+        $this->expectException(UnexpectedValueException::class);
+
         // phpcs:disable Generic.PHP.NoSilencedErrors.Discouraged
         $path = $this->getPathToFixture('fail/malformed.php');
         $data = $this->obj->loadFile($path);
@@ -87,14 +88,14 @@ class PhpFileLoaderTest extends AbstractFileLoaderTestCase
     /**
      * Asserts that an exception thrown within the file is caught.
      *
-     * @expectedException              UnexpectedValueException
-     * @expectedExceptionMessageRegExp /^PHP file ".+?" could not be parsed: Thrown Exception$/
-     *
      * @covers ::loadPhpFile()
      * @return void
      */
     public function testLoadExceptionalFile()
     {
+        $this->expectExceptionMessageMatches('/^PHP file ".+?" could not be parsed: Thrown Exception$/');
+        $this->expectException(UnexpectedValueException::class);
+
         $path = $this->getPathToFixture('fail/exception.php');
         $data = $this->obj->loadFile($path);
     }

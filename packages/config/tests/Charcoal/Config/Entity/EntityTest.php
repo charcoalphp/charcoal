@@ -3,6 +3,7 @@
 namespace Charcoal\Tests\Config\Entity;
 
 // From 'charcoal-config'
+use Charcoal\Tests\AssertionsTrait;
 use Charcoal\Tests\Config\Entity\AbstractEntityTestCase;
 use Charcoal\Tests\Config\Mock\MacroEntity;
 use Charcoal\Config\AbstractEntity;
@@ -14,6 +15,8 @@ use Charcoal\Config\AbstractEntity;
  */
 class EntityTest extends AbstractEntityTestCase
 {
+    use AssertionsTrait;
+
     /**
      * @var MacroEntity
      */
@@ -43,7 +46,7 @@ class EntityTest extends AbstractEntityTestCase
     {
         $obj = $this->obj;
 
-        $this->assertInternalType('array', $obj->keys());
+        $this->assertIsArray($obj->keys());
         $this->assertEmpty($obj->keys());
 
         $obj->set('name', 'Charcoal');
@@ -191,7 +194,6 @@ class EntityTest extends AbstractEntityTestCase
 
         $obj->set('foo_bar', 'waldo');
         $this->assertObjectHasAttribute('fooBar', $obj);
-        $this->assertAttributeEquals('waldo', 'fooBar', $obj);
         $this->assertEquals('waldo', $obj['fooBar']);
         $this->assertEquals('waldo', $obj['foo___bar']);
         $this->assertArrayContains([ 'fooBar' ], $obj->keys());

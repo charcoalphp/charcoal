@@ -15,6 +15,6 @@ trait FixturesTrait
      */
     public function getPathToFixture($file)
     {
-        return realpath(__DIR__.'/../../tests/Charcoal/Config/Fixture/'.ltrim($file, '/'));
+        return __DIR__.'/../../tests/Charcoal/Config/Fixture/'.ltrim($file, '/');
     }
 }

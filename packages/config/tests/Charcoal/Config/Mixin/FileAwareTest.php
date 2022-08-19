@@ -6,6 +6,7 @@ namespace Charcoal\Tests\Config\Mixin;
 use Charcoal\Tests\Config\Mixin\FileLoader\AbstractFileLoaderTestCase;
 use Charcoal\Config\FileAwareInterface;
 use Charcoal\Config\FileAwareTrait;
+use InvalidArgumentException;
 
 /**
  * Test FileAwareTrait
@@ -26,40 +27,40 @@ class FileAwareTest extends AbstractFileLoaderTestCase
     }
 
     /**
-     * @expectedException              InvalidArgumentException
-     * @expectedExceptionMessageRegExp /^Unsupported file format for ".+?"; must be one of ".+?"$/
-     *
      * @covers ::loadFile()
      * @return void
      */
     public function testLoadWithUnsupportedFormat()
     {
+        $this->expectExceptionMessageMatches('/^Unsupported file format for ".+?"; must be one of ".+?"$/');
+        $this->expectException(InvalidArgumentException::class);
+
         $path = $this->getPathToFixture('fail/unsupported.txt');
         $data = $this->obj->loadFile($path);
     }
 
     /**
-     * @expectedException              InvalidArgumentException
-     * @expectedExceptionMessageRegExp /^File ".+?" does not exist$/
-     *
      * @covers ::loadFile()
      * @return void
      */
     public function testLoadWithInvalidPath()
     {
+        $this->expectExceptionMessageMatches('/^File ".+?" does not exist$/');
+        $this->expectException(InvalidArgumentException::class);
+
         $path = $this->getPathToFixture('fail/missing.ini');
         $data = $this->obj->loadFile($path);
     }
 
     /**
-     * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage File must be a string
-     *
      * @covers ::loadFile()
      * @return void
      */
     public function testLoadWithInvalidType()
     {
+        $this->expectExceptionMessage('File must be a string');
+        $this->expectException(InvalidArgumentException::class);
+
         $path = null;
         $data = $this->obj->loadFile($path);
     }

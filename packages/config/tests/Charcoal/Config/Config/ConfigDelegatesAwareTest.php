@@ -209,10 +209,9 @@ class ConfigDelegatesAwareTest extends AbstractConfigTestCase
         $cfg = $this->cfg;
 
         $this->assertObjectHasAttribute('hud', $cfg);
-        $this->assertAttributeEquals('flob', 'hud', $cfg);
+        $this->assertEquals('flob', $cfg['hud']);
 
         unset($cfg['hud']);
-        $this->assertAttributeEquals(null, 'hud', $cfg);
         $this->assertEquals($this->delegates[0]['hud'], $cfg['hud']);
     }
 }

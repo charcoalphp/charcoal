@@ -19,6 +19,14 @@ class DelegateEntity extends Entity implements DelegatesAwareInterface
     }
 
     /**
+     * @return \Charcoal\Config\EntityInterface[]
+     */
+    public function delegates(): array
+    {
+        return $this->delegates;
+    }
+
+    /**
      * Determines if this entity contains the specified key and if its value is not NULL.
      *
      * @param  string $key The data key to check.

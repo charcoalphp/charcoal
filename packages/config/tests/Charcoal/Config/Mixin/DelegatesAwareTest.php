@@ -102,7 +102,7 @@ class DelegatesAwareTest extends AbstractTestCase
      */
     public function testDefaultDelegatesCollection()
     {
-        $this->assertAttributeEmpty('delegates', $this->obj);
+        $this->assertEmpty($this->obj->delegates());
     }
 
     /**
@@ -124,12 +124,12 @@ class DelegatesAwareTest extends AbstractTestCase
         $that = $obj->prependDelegate($this->delegates[3]);
         $this->assertSame($obj, $that);
 
-        $this->assertAttributeEquals([
+        $this->assertEquals([
             0 => $this->delegates[3],
             1 => $this->delegates[0],
             2 => $this->delegates[1],
             3 => $this->delegates[2],
-        ], 'delegates', $obj);
+        ], $obj->delegates());
     }
 
     /**

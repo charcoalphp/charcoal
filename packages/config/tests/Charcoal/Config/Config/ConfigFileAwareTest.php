@@ -6,6 +6,7 @@ namespace Charcoal\Tests\Config\Config;
 use Charcoal\Tests\Config\Config\AbstractConfigTestCase;
 use Charcoal\Config\GenericConfig;
 use Charcoal\Config\FileAwareInterface;
+use InvalidArgumentException;
 
 /**
  * Test FileAwareTrait implementation in AbstractConfig
@@ -125,14 +126,14 @@ class ConfigFileAwareTest extends AbstractConfigTestCase
     /**
      * INI: Asserts that an ordered list is NOT ignored.
      *
-     * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage Entity array access only supports non-numeric keys
-     *
      * @covers ::addFile()
      * @return void
      */
     public function testAddIniFileWithInvalidArray()
     {
+        $this->expectExceptionMessage('Entity array access only supports non-numeric keys');
+        $this->expectException(InvalidArgumentException::class);
+
         $path = $this->getPathToFixture('fail/invalid1.ini');
         $this->cfg->addFile($path);
     }
@@ -184,14 +185,14 @@ class ConfigFileAwareTest extends AbstractConfigTestCase
     /**
      * JSON: Asserts that an ordered list is NOT ignored.
      *
-     * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage Entity array access only supports non-numeric keys
-     *
      * @covers ::addFile()
      * @return void
      */
     public function testAddJsonFileWithInvalidArray()
     {
+        $this->expectExceptionMessage('Entity array access only supports non-numeric keys');
+        $this->expectException(InvalidArgumentException::class);
+
         $path = $this->getPathToFixture('fail/invalid1.json');
         $this->cfg->addFile($path);
     }
@@ -264,14 +265,14 @@ class ConfigFileAwareTest extends AbstractConfigTestCase
     /**
      * PHP: Asserts that an ordered list is NOT ignored.
      *
-     * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage Entity array access only supports non-numeric keys
-     *
      * @covers ::addFile()
      * @return void
      */
     public function testAddPhpFileWithInvalidArray()
     {
+        $this->expectExceptionMessage('Entity array access only supports non-numeric keys');
+        $this->expectException(InvalidArgumentException::class);
+
         $path = $this->getPathToFixture('fail/invalid1.php');
         $this->cfg->addFile($path);
     }
@@ -321,14 +322,14 @@ class ConfigFileAwareTest extends AbstractConfigTestCase
     /**
      * YAML: Asserts that an ordered list is NOT ignored.
      *
-     * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage Entity array access only supports non-numeric keys
-     *
      * @covers ::addFile()
      * @return void
      */
     public function testAddYamlFileWithInvalidArray()
     {
+        $this->expectExceptionMessage('Entity array access only supports non-numeric keys');
+        $this->expectException(InvalidArgumentException::class);
+
         $path = $this->getPathToFixture('fail/invalid1.yml');
         $this->cfg->addFile($path);
     }

@@ -82,7 +82,6 @@ class EntityArrayAccessTest extends AbstractEntityTestCase
         $obj = $this->obj;
 
         // MacroEntity::$name
-        $this->assertAttributeEquals('Charcoal', 'name', $obj);
         $this->assertEquals('Charcoal', $obj['name']);
 
         // MacroEntity::foo()
@@ -102,7 +101,6 @@ class EntityArrayAccessTest extends AbstractEntityTestCase
 
         $obj['baz'] = 'waldo';
         $this->assertObjectHasAttribute('baz', $obj);
-        $this->assertAttributeEquals('waldo', 'baz', $obj);
         $this->assertEquals('waldo', $obj['baz']);
     }
 
@@ -116,7 +114,6 @@ class EntityArrayAccessTest extends AbstractEntityTestCase
 
         unset($obj['name']);
         $this->assertObjectHasAttribute('name', $obj);
-        $this->assertAttributeEmpty('name', $obj);
         $this->assertNull($obj['name']);
     }
 
@@ -147,7 +144,6 @@ class EntityArrayAccessTest extends AbstractEntityTestCase
     {
         $obj = $this->obj;
 
-        $this->assertAttributeEquals(20, 'foo', $obj);
         $this->assertEquals('foo is 20', $obj['foo']);
     }
 
@@ -161,7 +157,6 @@ class EntityArrayAccessTest extends AbstractEntityTestCase
         $obj = $this->obj;
 
         $obj['foo'] = 32;
-        $this->assertAttributeEquals(42, 'foo', $obj);
         $this->assertEquals('foo is 42', $obj['foo']);
     }
 
@@ -176,7 +171,6 @@ class EntityArrayAccessTest extends AbstractEntityTestCase
 
         unset($obj['foo']);
         $this->assertObjectHasAttribute('foo', $obj);
-        $this->assertAttributeEquals(10, 'foo', $obj);
         $this->assertEquals('foo is 10', $obj['foo']);
     }
 
@@ -208,7 +202,6 @@ class EntityArrayAccessTest extends AbstractEntityTestCase
     {
         $obj = $this->obj;
 
-        $this->assertAttributeEquals('Charcoal', 'name', $obj);
         $this->assertEquals('Charcoal', $obj->get('name'));
     }
 
@@ -223,7 +216,6 @@ class EntityArrayAccessTest extends AbstractEntityTestCase
         $that = $obj->set('baz', 'waldo');
         $this->assertEquals($obj, $that);
         $this->assertObjectHasAttribute('baz', $obj);
-        $this->assertAttributeEquals('waldo', 'baz', $obj);
         $this->assertEquals('waldo', $obj->get('baz'));
     }
 }

@@ -5,6 +5,7 @@ namespace Charcoal\Tests\Config\Mixin\FileLoader;
 // From 'charcoal-config'
 use Charcoal\Tests\Config\Mixin\FileLoader\AbstractFileLoaderTestCase;
 use Charcoal\Config\FileAwareTrait;
+use UnexpectedValueException;
 
 /**
  * Test {@see FileAwareTrait::loadIniFile() INI File Loading}
@@ -78,14 +79,14 @@ class IniFileLoaderTest extends AbstractFileLoaderTestCase
     /**
      * Asserts that a broken file is NOT ignored.
      *
-     * @expectedException              UnexpectedValueException
-     * @expectedExceptionMessageRegExp /^INI file ".+?" is empty or invalid$/
-     *
      * @covers ::loadIniFile()
      * @return void
      */
     public function testLoadMalformedFile()
     {
+        $this->expectExceptionMessageMatches('/^INI file ".+?" is empty or invalid$/');
+        $this->expectException(UnexpectedValueException::class);
+
         // phpcs:disable Generic.PHP.NoSilencedErrors.Discouraged
         $path = $this->getPathToFixture('fail/malformed.ini');
         $data = @$this->obj->loadFile($path);
