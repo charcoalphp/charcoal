@@ -13,7 +13,7 @@ use Charcoal\Tests\AbstractTestCase;
  */
 class ModelTest extends AbstractTestCase
 {
-    use \Charcoal\Tests\ContainerIntegrationTrait;
+    use \Charcoal\Tests\CoreContainerIntegrationTrait;
 
     /**
      * Tested Class.
@@ -132,8 +132,7 @@ class ModelTest extends AbstractTestCase
      *
      * @return void
      */
-    public function tearDown()
-    {
+    protected function tearDown(): void    {
         $this->dropTable();
     }
 

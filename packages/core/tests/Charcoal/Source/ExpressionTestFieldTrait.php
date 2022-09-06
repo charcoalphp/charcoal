@@ -30,7 +30,6 @@ trait ExpressionTestFieldTrait
      * Test "table_name" property deprecation notice.
      *
      * @used-by self::testDeprecatedTableNameErrorInPhp7()
-     * @used-by self::testDeprecatedTableNameErrorInPhp5()
      *
      * @return void
      */
@@ -40,24 +39,12 @@ trait ExpressionTestFieldTrait
     }
 
     /**
-     * @expectedException PHPUnit\Framework\Error\Error
-     *
      * @requires PHP >= 7.0
      * @return   void
      */
     public function testDeprecatedTableNameErrorInPhp7()
     {
-        $this->delegatedTestDeprecatedTableNameError();
-    }
-
-    /**
-     * @expectedException PHPUnit_Framework_Error
-     *
-     * @requires PHP < 7.0
-     * @return   void
-     */
-    public function testDeprecatedTableNameErrorInPhp5()
-    {
+        $this->expectDeprecation();
         $this->delegatedTestDeprecatedTableNameError();
     }
 

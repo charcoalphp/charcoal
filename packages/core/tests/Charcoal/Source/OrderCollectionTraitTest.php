@@ -89,7 +89,7 @@ class OrderCollectionTraitTest extends AbstractTestCase
 
         /** 1. Default state */
         $ret = $obj->orders();
-        $this->assertInternalType('array', $ret);
+        $this->assertIsArray($ret);
         $this->assertEmpty($ret);
 
         /** 2. Mutated state */

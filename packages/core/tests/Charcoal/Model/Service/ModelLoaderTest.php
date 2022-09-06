@@ -16,7 +16,7 @@ use Charcoal\Tests\AbstractTestCase;
  */
 class ModelLoaderTest extends AbstractTestCase
 {
-    use \Charcoal\Tests\ContainerIntegrationTrait;
+    use \Charcoal\Tests\CoreContainerIntegrationTrait;
 
     /**
      * Tested Class.
@@ -30,7 +30,8 @@ class ModelLoaderTest extends AbstractTestCase
      *
      * @return void
      */
-    protected function setUp(): void    {
+    protected function setUp(): void
+    {
         $container = $this->getContainer();
 
         $factory = new Factory([

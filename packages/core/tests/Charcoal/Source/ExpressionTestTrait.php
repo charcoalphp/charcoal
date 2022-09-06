@@ -64,7 +64,7 @@ trait ExpressionTestTrait
         $obj = $this->createExpression();
 
         /** 1. Getter returns an array */
-        $this->assertInternalType('array', $obj->defaultData());
+        $this->assertIsArray($obj->defaultData());
     }
 
     /**
@@ -99,7 +99,7 @@ trait ExpressionTestTrait
         $obj = $this->createExpression();
 
         /** 1. Getter returns an array */
-        $this->assertInternalType('array', $obj->data());
+        $this->assertIsArray($obj->data());
 
         /** 2. Setter is chainable */
         $that = $obj->setData([]);

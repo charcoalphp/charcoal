@@ -17,7 +17,7 @@ use Charcoal\Tests\Mock\GenericModel;
  */
 class ModelLoaderBuilderTest extends AbstractTestCase
 {
-    use \Charcoal\Tests\ContainerIntegrationTrait;
+    use \Charcoal\Tests\CoreContainerIntegrationTrait;
 
     /**
      * @var ModelLoaderBuilder

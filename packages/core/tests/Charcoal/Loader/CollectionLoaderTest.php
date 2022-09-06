@@ -17,7 +17,7 @@ use Charcoal\Model\Service\MetadataLoader;
 use Charcoal\Source\DatabaseSource;
 
 use Charcoal\Tests\AbstractTestCase;
-use Charcoal\Tests\ContainerIntegrationTrait;
+use Charcoal\Tests\CoreContainerIntegrationTrait;
 use Charcoal\Tests\ReflectionsTrait;
 
 /**
@@ -25,7 +25,7 @@ use Charcoal\Tests\ReflectionsTrait;
  */
 class CollectionLoaderTest extends AbstractTestCase
 {
-    use ContainerIntegrationTrait;
+    use CoreContainerIntegrationTrait;
     use ReflectionsTrait;
 
     /**

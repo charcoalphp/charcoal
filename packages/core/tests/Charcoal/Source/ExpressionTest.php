@@ -8,7 +8,7 @@ use InvalidArgumentException;
 use Charcoal\Source\Expression;
 use Charcoal\Source\ExpressionInterface;
 use Charcoal\Tests\AbstractTestCase;
-use Charcoal\Tests\ContainerIntegrationTrait;
+use Charcoal\Tests\CoreContainerIntegrationTrait;
 use Charcoal\Tests\Source\ExpressionTestTrait;
 
 /**
@@ -16,7 +16,7 @@ use Charcoal\Tests\Source\ExpressionTestTrait;
  */
 class ExpressionTest extends AbstractTestCase
 {
-    use ContainerIntegrationTrait;
+    use CoreContainerIntegrationTrait;
     use ExpressionTestTrait;
 
     /**
@@ -66,7 +66,7 @@ class ExpressionTest extends AbstractTestCase
 
         /** 2. Mutated Value */
         $that = $obj->setCondition('1 = 1');
-        $this->assertInternalType('string', $obj->condition());
+        $this->assertIsString($obj->condition());
         $this->assertEquals('1 = 1', $obj->condition());
 
         /** 3. Chainable */

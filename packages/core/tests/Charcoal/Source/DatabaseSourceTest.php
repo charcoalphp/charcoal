@@ -18,7 +18,7 @@ use Charcoal\Tests\AbstractTestCase;
  */
 class DatabaseSourceTest extends AbstractTestCase
 {
-    use \Charcoal\Tests\ContainerIntegrationTrait;
+    use \Charcoal\Tests\CoreContainerIntegrationTrait;
 
     /**
      * @return void
