@@ -354,26 +354,16 @@ final class MetadataLoader implements LoggerAwareInterface
 
         $dirs = $this->paths();
         if (empty($dirs)) {
-            throw new UnexpectedValueException(
-                sprintf('Cannot load the file "%s"', $path)
-            );
+            return null;
         }
 
         $data = [];
         $dirs = array_reverse($dirs);
-        $foundFile = false;
         foreach ($dirs as $dir) {
             $file = $dir . DIRECTORY_SEPARATOR . $path;
             if (file_exists($file)) {
-                $foundFile = true;
                 $data = array_replace_recursive($data, $this->loadJsonFile($file));
             }
-        }
-
-        if (!$foundFile) {
-            throw new UnexpectedValueException(
-                sprintf('Cannot load the file "%s"', $path)
-            );
         }
 
         if (empty($data)) {
@@ -487,7 +477,6 @@ final class MetadataLoader implements LoggerAwareInterface
         );
 
         $classname = trim(implode('\\', $parts), '\\');
-
         static::$camelCache[$key]       = $classname;
         static::$snakeCache[$classname] = $key;
 
