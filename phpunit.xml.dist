@@ -18,6 +18,7 @@
 
     <php>
         <env name="APPLICATION_ENV" value="testing" />
+        <env name="TEST_MODE" value="PACKAGE"/>
     </php>
 
     <logging>

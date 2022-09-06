@@ -75,10 +75,14 @@ if [[ "$1" ]]; then package=$1; fi
 test_package() {
     echo -e "${GREEN}Testing the [${NC} $1 ${GREEN}] package..."
 
+    BOOTSTRAP=packages/"$1"/tests/bootstrap.php
+
+    [ -f "$BOOTSTRAP" ] && BOOTSTRAP="--bootstrap $BOOTSTRAP" || BOOTSTRAP=''
+
     if [[ -z "$ci" ]]; then
-        php vendor/bin/phpunit packages/"$1"/tests/ --coverage-text
+        php vendor/bin/phpunit packages/"$1"/tests/ --coverage-text $BOOTSTRAP
     else
-        php vendor/bin/phpunit packages/"$1"/tests/ --coverage-clover "build/logs/clover.xml" --coverage-text
+        php vendor/bin/phpunit packages/"$1"/tests/ --coverage-clover "build/logs/clover.xml" --coverage-text $BOOTSTRAP
         exit $?
     fi
 }
