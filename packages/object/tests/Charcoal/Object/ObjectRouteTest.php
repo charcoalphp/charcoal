@@ -111,6 +111,11 @@ class ObjectRouteTest extends AbstractTestCase
      */
     public function testLastModificationDate()
     {
+        $date = $this->obj->getLastModificationDate();
+        $this->obj->update();
+        $date2 = $this->obj->getLastModificationDate();
+
+        $this->assertIsBool($date2 > $date);
     }
 
     /**
@@ -118,6 +123,15 @@ class ObjectRouteTest extends AbstractTestCase
      */
     public function testLang()
     {
+        $ret = $this->obj->setLang('en');
+        $this->assertSame($ret, $this->obj);
+        $this->assertEquals('en', $this->obj['lang']);
+
+        $this->obj['lang'] = 'fr';
+        $this->assertEquals('fr', $this->obj['lang']);
+
+        $this->obj->set('lang', 'jp');
+        $this->assertEquals('jp', $this->obj['lang']);
     }
 
     /**
