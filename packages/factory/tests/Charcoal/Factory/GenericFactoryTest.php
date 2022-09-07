@@ -23,8 +23,6 @@ class GenericFactoryTest extends AbstractTestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
-     *
      * @return void
      */
     public function testIsResolvable()
@@ -32,12 +30,11 @@ class GenericFactoryTest extends AbstractTestCase
         $this->assertTrue($this->obj->isResolvable('DateTime'));
         $this->assertFalse($this->obj->isResolvable('foobaz'));
 
+        $this->expectException(\InvalidArgumentException::class);
         $this->obj->isResolvable(false);
     }
 
     /**
-     * @expectedException Exception
-     *
      * @return void
      */
     public function testCreate()
@@ -45,6 +42,7 @@ class GenericFactoryTest extends AbstractTestCase
         $ret = $this->obj->create('\DateTime');
         $this->assertInstanceOf('\DateTime', $ret);
 
+        $this->expectException(\Exception::class);
         $ret2 = $this->obj->create('foobar');
     }
 
@@ -95,8 +93,6 @@ class GenericFactoryTest extends AbstractTestCase
     }
 
     /**
-     * @expectedException Exception
-     *
      * @return void
      */
     public function testCreateBaseClass()
@@ -105,6 +101,7 @@ class GenericFactoryTest extends AbstractTestCase
         $ret = $this->obj->create('\DateTime');
         $this->assertInstanceOf('\DateTime', $ret);
 
+        $this->expectException(\Exception::class);
         $this->obj->setBaseClass('\Charcoal\Factory\FactoryInterface');
         $this->obj->create('\DateTime');
     }
