@@ -111,9 +111,9 @@ class ContainerProvider
                 'paths'     => [
                     'metadata',
                     // Standalone repo
-                    'vendor/charcoal/property/metadata',
+                    'vendor/charcoal/user/metadata',
                     // Monorepo
-                    '/../property/metadata',
+                    '/../user/metadata',
                 ]
             ]);
         };
