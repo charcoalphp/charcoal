@@ -3,6 +3,7 @@
 namespace Charcoal\Tests\Translation\ServiceProvider;
 
 // From Pimple
+use Charcoal\App\AppConfig;
 use Pimple\Container;
 
 // From 'charcoal-translator'
@@ -10,7 +11,7 @@ use Charcoal\Translator\Middleware\LanguageMiddleware;
 use Charcoal\Translator\ServiceProvider\TranslatorServiceProvider;
 use Charcoal\Translator\LocalesManager;
 use Charcoal\Translator\Translator;
-use Charcoal\Tests\AbstractTestCase;
+use Charcoal\Tests\Translator\AbstractTestCase;
 
 /**
  *
@@ -39,7 +40,7 @@ class TranslatorServiceProviderTest extends AbstractTestCase
     protected function setUp(): void    {
         $this->obj = new TranslatorServiceProvider();
         $this->container = new Container();
-        $this->container['config'] = [
+        $this->container['config'] = new AppConfig([
             'base_path' => realpath(__DIR__.'/../../..'),
             'locales'   => [
                 'languages' => [
@@ -83,7 +84,7 @@ class TranslatorServiceProviderTest extends AbstractTestCase
             'middlewares' => [
                 'charcoal/translator/middleware/language' => []
             ]
-        ];
+        ]);
 
         $this->container->register($this->obj);
     }

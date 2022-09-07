@@ -14,7 +14,7 @@ use Pimple\Container;
 // From 'charcoal-translator'
 use Charcoal\Translator\Script\TranslationParserScript;
 use Charcoal\Tests\Translator\ContainerProvider;
-use Charcoal\Tests\AbstractTestCase;
+use Charcoal\Tests\Translator\AbstractTestCase;
 
 /**
  *

@@ -31,7 +31,8 @@
         "phpunit/phpunit": "^9.5",
         "squizlabs/php_codesniffer": "^3.5",
         "php-coveralls/php-coveralls": "^2.2",
-        "charcoal/admin": "^3.2"
+        "charcoal/admin": "^3.2",
+        "charcoal/app": "*"
     },
     "suggest": {
         "charcoal/app": "To run the parser script."

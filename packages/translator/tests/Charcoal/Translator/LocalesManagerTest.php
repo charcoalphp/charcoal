@@ -6,7 +6,7 @@ use InvalidArgumentException;
 
 // From 'charcoal-translator'
 use Charcoal\Translator\LocalesManager;
-use Charcoal\Tests\AbstractTestCase;
+use Charcoal\Tests\Translator\AbstractTestCase;
 
 /**
  *
@@ -54,12 +54,11 @@ class LocalesManagerTest extends AbstractTestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
-     *
      * @return void
      */
     public function testConstructorDefaultLanguageWithInvalidType()
     {
+        $this->expectException(InvalidArgumentException::class);
         $obj = new LocalesManager([
             'locales' => [
                 'foo' => []
@@ -69,12 +68,11 @@ class LocalesManagerTest extends AbstractTestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
-     *
      * @return void
      */
     public function testConstructorDefaultLanguageWithInvalidLocale()
     {
+        $this->expectException(InvalidArgumentException::class);
         $obj = new LocalesManager([
             'locales' => [
                 'foo' => []
@@ -84,12 +82,11 @@ class LocalesManagerTest extends AbstractTestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
-     *
      * @return void
      */
     public function testConstructorWithoutActiveLocales()
     {
+        $this->expectException(InvalidArgumentException::class);
         $obj = new LocalesManager([
             'locales' => []
         ]);
@@ -117,23 +114,6 @@ class LocalesManagerTest extends AbstractTestCase
         $obj = $this->getLocalesManagerForSortedLocales();
 
         $this->assertEquals([ 'xyz', 'zyx', 'qux', 'foo', 'bar' ], $obj->availableLocales());
-    }
-
-    /**
-     * @requires PHP < 7.0
-     * @return   void
-     */
-    public function testSortedLocalesInPhp5()
-    {
-        $obj = $this->getLocalesManagerForSortedLocales();
-
-        $this->assertThat(
-            $obj->availableLocales(),
-            $this->logicalOr(
-                $this->equalTo([ 'xyz', 'zyx', 'qux', 'foo', 'bar' ]),
-                $this->equalTo([ 'zyx', 'xyz', 'qux', 'foo', 'bar' ])
-            )
-        );
     }
 
     /**
@@ -176,22 +156,20 @@ class LocalesManagerTest extends AbstractTestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
-     *
      * @return void
      */
     public function testSetCurrentLocaleWithInvalidType()
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->obj->setCurrentLocale(false);
     }
 
     /**
-     * @expectedException InvalidArgumentException
-     *
      * @return void
      */
     public function testSetCurrentLocaleWithInvalidLocale()
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->obj->setCurrentLocale('qux');
     }
 }

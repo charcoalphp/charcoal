@@ -1,7 +1,8 @@
 <?php
 
-namespace Charcoal\Tests;
+namespace Charcoal\Tests\Translator;
 
+use Charcoal\Tests\Translator\ReflectionsTrait;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 
 /**

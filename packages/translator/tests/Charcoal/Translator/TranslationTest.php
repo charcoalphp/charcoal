@@ -8,7 +8,7 @@ use InvalidArgumentException;
 // From 'charcoal-translator'
 use Charcoal\Translator\LocalesManager;
 use Charcoal\Translator\Translation;
-use Charcoal\Tests\AbstractTestCase;
+use Charcoal\Tests\Translator\AbstractTestCase;
 
 /**
  *
@@ -92,12 +92,11 @@ class TranslationTest extends AbstractTestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
-     *
      * @return void
      */
     public function testConstructorWithInvalidParam()
     {
+        $this->expectException(InvalidArgumentException::class);
         $obj = new Translation(false, $this->localesManager());
     }
 
@@ -153,78 +152,71 @@ class TranslationTest extends AbstractTestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
-     *
      * @return void
      */
     public function testOffsetGetThrowsException()
     {
+        $this->expectException(InvalidArgumentException::class);
         $obj = new Translation('Hello!', $this->localesManager());
         $ret = $obj[0];
     }
 
     /**
-     * @expectedException DomainException
-     *
      * @return void
      */
     public function testOffsetGetThrowsException2()
     {
+        $this->expectException(DomainException::class);
         $obj = new Translation('Hello!', $this->localesManager());
         $ret = $obj['fr'];
     }
 
     /**
-     * @expectedException InvalidArgumentException
-     *
      * @return void
      */
     public function testOffsetSetThrowsException()
     {
+        $this->expectException(InvalidArgumentException::class);
         $obj = new Translation('Hello!', $this->localesManager());
         $obj[0] = 'en';
     }
 
     /**
-     * @expectedException InvalidArgumentException
-     *
      * @return void
      */
     public function testOffsetSetThrowsException2()
     {
+        $this->expectException(InvalidArgumentException::class);
         $obj = new Translation('Hello!', $this->localesManager());
         $obj['en'] = [];
     }
 
     /**
-     * @expectedException InvalidArgumentException
-     *
      * @return void
      */
     public function testOffsetExistThrowsException()
     {
+        $this->expectException(InvalidArgumentException::class);
         $obj = new Translation('Hello!', $this->localesManager());
         isset($obj[0]);
     }
 
     /**
-     * @expectedException InvalidArgumentException
-     *
      * @return void
      */
     public function testOffsetUnsetThrowsException()
     {
+        $this->expectException(InvalidArgumentException::class);
         $obj = new Translation('Hello!', $this->localesManager());
         unset($obj[0]);
     }
 
     /**
-     * @expectedException InvalidArgumentException
-     *
      * @return void
      */
     public function testInvalidValueThrowsException()
     {
+        $this->expectException(InvalidArgumentException::class);
         $obj = new Translation([ 'en' ], $this->localesManager());
     }
 

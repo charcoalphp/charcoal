@@ -6,7 +6,7 @@ use InvalidArgumentException;
 
 // From 'charcoal-translator'
 use Charcoal\Translator\LocalesConfig;
-use Charcoal\Tests\AbstractTestCase;
+use Charcoal\Tests\Translator\AbstractTestCase;
 
 /**
  *
@@ -64,8 +64,6 @@ class LocalesConfigTest extends AbstractTestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
-     *
      * @return void
      */
     public function testSetDefaultLanguage()
@@ -77,6 +75,7 @@ class LocalesConfigTest extends AbstractTestCase
         $this->obj['default_language'] = 'bar';
         $this->assertEquals('bar', $this->obj['default_language']);
 
+        $this->expectException(InvalidArgumentException::class);
         $this->obj->setDefaultLanguage(false);
     }
 
