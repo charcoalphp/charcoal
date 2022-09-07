@@ -53,7 +53,7 @@ class FilePropertyTest extends AbstractFilePropertyTestCase
      */
     public function testDefaulAcceptedMimeTypes()
     {
-        $this->assertInternalType('array', $this->obj['defaultAcceptedMimetypes']);
+        $this->assertIsArray($this->obj['defaultAcceptedMimetypes']);
         $this->assertEmpty($this->obj['defaultAcceptedMimetypes']);
     }
 
@@ -311,18 +311,18 @@ class FilePropertyTest extends AbstractFilePropertyTestCase
         $obj = $this->obj;
         $obj->setIdent('foo');
         $ret = $obj->generateFilename();
-        $this->assertContains('Foo', $ret);
-        $this->assertContains(date('Y-m-d'), $ret);
+        $this->assertStringContainsString('Foo', $ret);
+        $this->assertStringContainsString(date('Y-m-d'), $ret);
 
-        //$obj->setLabel('foobar');
-        //$ret = $obj->generateFilename();
-        //$this->assertContains('foobar', $ret);
+        $obj->setLabel('foobar');
+        $ret = $obj->generateFilename();
+        $this->assertStringContainsString('foobar', $ret);
     }
 
     public function testGenerateUniqueFilename()
     {
         $ret = $this->obj->generateUniqueFilename('foo.png');
-        $this->assertContains('foo', $ret);
+        $this->assertStringContainsString('foo', $ret);
         $this->assertStringEndsWith('.png', $ret);
         $this->assertNotEquals($ret, 'foo');
     }

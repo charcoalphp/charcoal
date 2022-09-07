@@ -347,7 +347,7 @@ class AbstractPropertyTest extends AbstractTestCase
      */
     public function testValidationMethods()
     {
-        $this->assertInternalType('array', $this->obj->validationMethods());
+        $this->assertIsArray($this->obj->validationMethods());
     }
 
     /**

@@ -7,7 +7,7 @@ use InvalidArgumentException;
 // From 'charcoal-property'
 use Charcoal\Property\FileProperty;
 use Charcoal\Tests\AbstractTestCase;
-use Charcoal\Tests\FixturesTrait;
+use Charcoal\Tests\Property\FixturesTrait;
 use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Property\ContainerIntegrationTrait;
 
@@ -166,7 +166,7 @@ abstract class AbstractFilePropertyTestCase extends AbstractTestCase
             $this->assertEquals($mime, $this->obj['mimetype']);
 
             $ext = $this->obj->generateExtension();
-            $this->assertInternalType('string', $ext);
+            $this->assertIsString($ext);
             $this->assertNotEmpty($ext);
         }
     }
@@ -261,9 +261,25 @@ abstract class AbstractFilePropertyTestCase extends AbstractTestCase
         $obj = $this->obj;
 
         $obj['uploadPath'] = $this->getPathToFixtures().'/files';
-        $obj['val'] = $this->getPathToFixture('files/blank.txt');
+        $obj['val'] = $this->getPathToFixture('files/bad.txt');
 
         $this->assertNull($obj['mimetype']);
+    }
+
+    /**
+     * Asserts that the property returns x-empty the file is empty.
+     *
+     * @covers \Charcoal\Property\FileProperty::getMimetype()
+     * @return void
+     */
+    public function testMimetypeFromEmptyFile()
+    {
+        $obj = $this->obj;
+
+        $obj['uploadPath'] = $this->getPathToFixtures().'/files';
+        $obj['val'] = $this->getPathToFixture('files/blank.txt');
+
+        $this->assertEquals('application/x-empty', $obj['mimetype']);
     }
 
     /**
@@ -281,7 +297,7 @@ abstract class AbstractFilePropertyTestCase extends AbstractTestCase
         $this->assertSame($obj, $return);
 
         $accpetedMimeTypes = $obj->getAcceptedMimetypes();
-        $this->assertInternalType('array', $accpetedMimeTypes);
+        $this->assertIsArray($accpetedMimeTypes);
         $this->assertCount(3, $accpetedMimeTypes);
         $this->assertContains('text/plain', $accpetedMimeTypes);
         $this->assertContains('text/csv', $accpetedMimeTypes);

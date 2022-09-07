@@ -59,7 +59,7 @@ class AudioPropertyTest extends AbstractFilePropertyTestCase
      */
     public function testDefaulAcceptedMimeTypes()
     {
-        $this->assertInternalType('array', $this->obj['defaultAcceptedMimetypes']);
+        $this->assertIsArray($this->obj['defaultAcceptedMimetypes']);
         $this->assertNotEmpty($this->obj['defaultAcceptedMimetypes']);
     }
 

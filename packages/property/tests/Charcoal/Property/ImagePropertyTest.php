@@ -49,7 +49,7 @@ class ImagePropertyTest extends AbstractFilePropertyTestCase
     {
         parent::testPropertyDefaults();
 
-        $this->assertInternalType('array', $this->obj['effects']);
+        $this->assertIsArray($this->obj['effects']);
         $this->assertEmpty($this->obj['effects']);
 
         $this->assertEquals(ImageProperty::DEFAULT_DRIVER_TYPE, $this->obj['driverType']);
@@ -64,7 +64,7 @@ class ImagePropertyTest extends AbstractFilePropertyTestCase
      */
     public function testDefaulAcceptedMimeTypes()
     {
-        $this->assertInternalType('array', $this->obj['defaultAcceptedMimetypes']);
+        $this->assertIsArray($this->obj['defaultAcceptedMimetypes']);
         $this->assertNotEmpty($this->obj['defaultAcceptedMimetypes']);
     }
 

@@ -502,6 +502,9 @@ class ObjectPropertyTest extends AbstractTestCase
      */
     public function testCollectionLoading()
     {
+        $container  = $this->getContainer();
+        $translator = $container['translator'];
+
         $this->setUpObjects();
 
         $this->obj->setObjType(GenericModel::class);
@@ -519,6 +522,14 @@ class ObjectPropertyTest extends AbstractTestCase
         ]);
 
         $loader = $this->callMethod($this->obj, 'collectionModelLoader');
+        $collection = $loader->load();
+        $expectedCollection = [
+            self::OBJ_4,
+            self::OBJ_5,
+            self::OBJ_1,
+        ];
+
+        $this->assertEquals($expectedCollection, $collection->keys());
     }
 
     /**
