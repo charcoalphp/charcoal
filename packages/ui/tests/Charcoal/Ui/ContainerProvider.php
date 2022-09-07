@@ -2,6 +2,7 @@
 
 namespace Charcoal\Tests\Ui;
 
+use Charcoal\App\AppConfig;
 use PDO;
 
 // From PSR-3
@@ -53,7 +54,7 @@ class ContainerProvider
      */
     public function registerConfig(Container $container)
     {
-        $container['config'] = [
+        $container['config'] = new AppConfig([
             'base_path'  => realpath(__DIR__.'/../../..'),
             'locales'    => [
                 'en' => [
@@ -63,7 +64,7 @@ class ContainerProvider
             'translator' => [
                 'paths' => [],
             ],
-        ];
+        ]);
 
         /**
          * List of Charcoal module classes.

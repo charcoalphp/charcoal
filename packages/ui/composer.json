@@ -35,7 +35,8 @@
         "php-coveralls/php-coveralls": "^2.2",
         "mustache/mustache": "^2.11",
         "tedivm/stash": "~0.16",
-        "pimple/pimple": "^3.0"
+        "pimple/pimple": "^3.0",
+        "charcoal/app": "*"
     },
     "suggest": {
         "pimple/pimple": "DI Container to register the various Service Providers."
