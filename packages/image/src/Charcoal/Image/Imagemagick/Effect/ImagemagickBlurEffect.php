@@ -48,7 +48,7 @@ class ImagemagickBlurEffect extends AbstractBlurEffect
     public function processRadial()
     {
         $channel = $this->image()->convertChannel($this->channel());
-        $cmd = '-channel ' . $channel . ' -radial-blur ' . $this->angle();
+        $cmd = '-channel ' . $channel . ' -rotational-blur ' . $this->angle();
         $this->image()->applyCmd($cmd);
         return $this;
     }
