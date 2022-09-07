@@ -3,8 +3,12 @@
 
 date_default_timezone_set('UTC');
 
-/** @var \Composer\Autoload\ClassLoader $autoloader */
-$autoloader = require dirname(__DIR__).'/vendor/autoload.php';
+if (($_ENV['TEST_MODE'] ?? '') === 'PACKAGE') {
+    require getcwd().'/tests/bootstrap.php';
+} else {
+    /** @var \Composer\Autoload\ClassLoader $autoloader */
+    $autoloader = require dirname(__DIR__).'/vendor/autoload.php';
+}
 
 define('EXAMPLES_PATH', __DIR__.'/examples');
 define('OUTPUT_PATH', __DIR__.'/tmp/images');
