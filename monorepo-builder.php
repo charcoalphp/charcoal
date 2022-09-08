@@ -41,7 +41,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             'locomotivemtl/charcoal-translator' => '*',
             'locomotivemtl/charcoal-ui' => '*',
             'locomotivemtl/charcoal-user' => '*',
-            'locomotivemtl/charcoal-view' => '*'
+            'locomotivemtl/charcoal-view' => '*',
         ],
     ]);
 
