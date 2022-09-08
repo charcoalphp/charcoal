@@ -7,9 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 > ⚠️ This `CHANGELOG` file is automatically generated through Github actions from Github release notes.
 
-## [Unreleased](https://github.com/locomotive-charcoal/Charcoal/compare/v3.1.2...main)
+## [Unreleased](https://github.com/locomotive-charcoal/Charcoal/compare/v3.1.3...main)
 
 Please do not update the unreleased notes.
+
+## [v3.1.3](https://github.com/locomotive-charcoal/Charcoal/compare/v3.1.2...v3.1.3) - 2022-09-08
+
+### [3.1.3](https://github.com/charcoalphp/charcoal/compare/v3.1.2...v3.1.3) (2022-09-08)
+
+#### Bug Fixes
+
+- fix use of renderTemplate and render view functions ([3f06541](https://github.com/charcoalphp/charcoal/commit/3f06541faa782dd805068020bba127a205d6df06))
 
 ## [v3.1.2](https://github.com/locomotive-charcoal/Charcoal/compare/v3.1.1...v3.1.2) - 2022-08-11
 
