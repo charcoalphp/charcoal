@@ -31,7 +31,7 @@ interface ViewableInterface
      *
      * @return string
      */
-    public function templateIdent(): string;
+    public function templateIdent(): ?string;
 
     /**
      * Set the renderable view.
