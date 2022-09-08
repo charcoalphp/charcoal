@@ -44,7 +44,6 @@
         "league/flysystem": "^1.0",
         "mcaskill/php-html-build-attributes": "^1.0",
         "monolog/monolog": "^1.17",
-        "paragonie/random_compat": ">=2",
         "php": "^7.4 || ^8.0",
         "phpmailer/phpmailer": "~6.0",
         "pimple/pimple": "^3.0",
