@@ -26,16 +26,17 @@ Help()
 {
    # Display Help
    echo -e "${YELLOW}Description${NC}"
-   echo -e "   Execute the phpcs test command for a single package or all packages of this monorepo."
+   echo -e "   Execute the PHPCS command for a single package or all packages of this monorepo."
    echo -e
    echo -e "${YELLOW}Usage${NC}"
-   echo -e "   phpcs [package] [-h|p|l|V]"
+   echo -e "   phpcs [-h|p|l|V] [--ci] [--] [<package>]"
    echo -e
    echo -e "${YELLOW}Options${NC}"
-   echo -e "   ${GREEN}-h, --help${NC}          Print this Help."
-   echo -e "   ${GREEN}-p, --package${NC}       Specify which package to test"
+   echo -e "   ${GREEN}-V, --version${NC}       Print this software version."
+   echo -e "   ${GREEN}-h, --help${NC}          Print this help."
+   echo -e "   ${GREEN}-p, --package${NC}       Package to test."
    echo -e "   ${GREEN}-l, --list${NC}          List all packages in the monorepo."
-   echo -e "   ${GREEN}-V, --version${NC}       Print software version and exit."
+   echo -e "   ${GREEN}--ci${NC}                Format output for CI software."
    echo
 
    exit 0
@@ -50,14 +51,14 @@ while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do case $1 in
     echo $version
     exit
     ;;
-  -p | --pacakge )
+  -h | --help )
+    Help
+    ;;
+  -p | --package )
     shift; package=$1
     ;;
   -l | --list )
     get_packages; echo; exit 0
-    ;;
-  -h | --help )
-    Help
     ;;
   -c | --ci )
     ci="true"
