@@ -61,9 +61,9 @@ trait ViewableTrait
     /**
      * Retrieve the template identifier for this viewable object.
      *
-     * @return string|null
+     * @return string
      */
-    public function templateIdent(): ?string
+    public function templateIdent(): string
     {
         return $this->templateIdent;
     }
