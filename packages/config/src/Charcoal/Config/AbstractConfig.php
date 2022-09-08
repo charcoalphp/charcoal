@@ -131,7 +131,7 @@ abstract class AbstractConfig extends AbstractEntity implements
      * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
      * @return boolean TRUE if $key exists and has a value other than NULL, FALSE otherwise.
      */
-    public function offsetExists($key)
+    public function offsetExists($key): bool
     {
         if (is_numeric($key)) {
             throw new InvalidArgumentException(
@@ -192,7 +192,7 @@ abstract class AbstractConfig extends AbstractEntity implements
      * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
      * @return mixed Value of the requested $key on success, NULL if the $key is not set.
      */
-    public function offsetGet($key)
+    public function offsetGet($key): mixed
     {
         if (is_numeric($key)) {
             throw new InvalidArgumentException(
@@ -251,7 +251,7 @@ abstract class AbstractConfig extends AbstractEntity implements
      * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
      * @return void
      */
-    public function offsetSet($key, $value)
+    public function offsetSet($key, $value): void
     {
         if (is_numeric($key)) {
             throw new InvalidArgumentException(
