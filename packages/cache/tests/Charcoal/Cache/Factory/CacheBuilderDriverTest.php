@@ -101,13 +101,13 @@ class CacheBuilderDriverTest extends AbstractCacheBuilderTest
     /**
      * Test builder with an empty driver name.
      *
-     * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage Driver is empty
-     *
      * @covers ::resolveOneDriver
      */
     public function testBuildOnEmptyDriver()
     {
+        $this->expectExceptionMessage('Driver is empty');
+        $this->expectException(InvalidArgumentException::class);
+
         $builder = $this->createBuilder();
         $builder->build('');
     }
@@ -115,13 +115,13 @@ class CacheBuilderDriverTest extends AbstractCacheBuilderTest
     /**
      * Test builder with an invalid driver instance.
      *
-     * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage Driver class stdClass must implement Stash\Interfaces\DriverInterface
-     *
      * @covers ::resolveOneDriver
      */
     public function testBuildOnInvalidDriverInstance()
     {
+        $this->expectExceptionMessage('Driver class stdClass must implement Stash\Interfaces\DriverInterface');
+        $this->expectException(InvalidArgumentException::class);
+
         $builder = $this->createBuilder();
         $driver  = new StdClass();
 
@@ -131,13 +131,13 @@ class CacheBuilderDriverTest extends AbstractCacheBuilderTest
     /**
      * Test builder with a named driver associated to an empty value.
      *
-     * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage Driver "foobar" does not exist
-     *
      * @covers ::resolveOneDriver
      */
     public function testBuildOnNamedDriverWithEmptyEntry()
     {
+        $this->expectExceptionMessage('Driver "foobar" does not exist');
+        $this->expectException(InvalidArgumentException::class);
+
         $builder = $this->createBuilder([
             'drivers' => [
                 'foobar' => ''
@@ -150,13 +150,13 @@ class CacheBuilderDriverTest extends AbstractCacheBuilderTest
     /**
      * Test builder with a named driver associated to an invalid instance.
      *
-     * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage Driver "foobar": Class stdClass must implement Stash\Interfaces\DriverInterface
-     *
      * @covers ::resolveOneDriver
      */
     public function testBuildOnNamedDriverWithBadEntry()
     {
+        $this->expectExceptionMessage('Driver "foobar": Class stdClass must implement Stash\Interfaces\DriverInterface');
+        $this->expectException(InvalidArgumentException::class);
+
         $driver  = new StdClass();
         $builder = $this->createBuilder([
             'drivers' => [
@@ -170,13 +170,13 @@ class CacheBuilderDriverTest extends AbstractCacheBuilderTest
     /**
      * Test builder with an invalid driver class.
      *
-     * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage Driver "FakeClassName" cannot be resolved
-     *
      * @covers ::resolveOneDriver
      */
     public function testBuildOnInvalidDriverClass()
     {
+        $this->expectExceptionMessage('Driver "FakeClassName" cannot be resolved');
+        $this->expectException(InvalidArgumentException::class);
+
         $builder = $this->createBuilder();
         $driver  = 'FakeClassName';
 
@@ -210,13 +210,13 @@ class CacheBuilderDriverTest extends AbstractCacheBuilderTest
     /**
      * Test builder with an invalid array of drivers.
      *
-     * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage Drivers cannot be resolved
-     *
      * @covers ::resolveDriver
      */
     public function testBuildOnArrayOfInvalidDrivers()
     {
+        $this->expectExceptionMessage('Drivers cannot be resolved');
+        $this->expectException(InvalidArgumentException::class);
+
         $builder = $this->createBuilder();
         $builder->build([ 0 ]);
     }

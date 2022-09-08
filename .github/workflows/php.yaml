@@ -1,0 +1,81 @@
+name: PHP testing
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  provide_packages_json:
+    # Provides package paths in JSON format for
+    # use in the matrix strategy of other jobs.
+    #
+    # The paths will be passed as arguments
+    # to linting and testing tools.
+    #
+    # * https://docs.github.com/en/actions/learn-github-actions/expressions#fromjson
+    # * https://stackoverflow.com/a/62953566/1348344
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.0
+          coverage: none
+
+      - name: Install Composer dependencies
+        uses: ramsey/composer-install@v2
+
+      - name: Output list of packages as JSON
+        id: output_data
+        run: echo "::set-output name=matrix::$(vendor/bin/monorepo-builder packages-json)"
+
+    outputs:
+      matrix: ${{ steps.output_data.outputs.matrix }}
+
+  test:
+    needs: provide_packages_json
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php-versions: ['7.4', '8.0']
+        package: ${{fromJson(needs.provide_packages_json.outputs.matrix)}}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: json, mbstring, pdo, redis
+          coverage: xdebug
+          tools: composer, phpcs, phpstan, phpunit
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate
+
+      - name: Install Composer dependencies
+        uses: ramsey/composer-install@v2
+
+      - name: Start Redis
+        if: ${{ matrix.package == 'cache' }}
+        uses: supercharge/redis-github-action@1.4.0
+        with:
+          redis-version: 6
+
+      - name: Run PHPCS for all packages
+        run: tests/script/phpcs --ci ${{ matrix.package }}
+
+      - name: Run PHPunit for all packages
+        run: tests/script/phpunit --ci ${{ matrix.package }}

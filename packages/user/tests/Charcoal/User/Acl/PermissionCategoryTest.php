@@ -34,7 +34,7 @@ class PermissionCategoryTest extends AbstractTestCase
      *
      * @return void
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $container = $this->container();
 

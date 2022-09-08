@@ -29,7 +29,7 @@ class SectionTest extends AbstractTestCase
      *
      * @return void
      */
-    public function setUp()
+    protected function setUp():void
     {
         $container = $this->getContainer();
 

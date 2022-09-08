@@ -18,6 +18,7 @@
             "type": "id"
         },
         "name": {
+            "type": "string",
             "label": {
                 "fr": "Nom",
                 "en": "Name"

@@ -4,7 +4,11 @@ use Charcoal\App\AppConfig;
 use Charcoal\App\AppContainer;
 use Charcoal\Config\GenericConfig;
 
-$autoloader = require __DIR__.'/../vendor/autoload.php';
+if (($_ENV['TEST_MODE'] ?? '') === 'PACKAGE') {
+    require getcwd().'/tests/bootstrap.php';
+} else {
+    $autoloader = require __DIR__.'/../vendor/autoload.php';
+}
 
 $config = new AppConfig([
     'base_path' => (dirname(__DIR__).'/'),

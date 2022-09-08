@@ -3,6 +3,8 @@
 namespace Charcoal\Tests\View;
 
 // From Slim
+use Charcoal\App\AppConfig;
+use Charcoal\Translator\ServiceProvider\TranslatorServiceProvider;
 use Slim\Http\Response;
 
 // From Pimple
@@ -62,15 +64,19 @@ class ViewServiceProviderTest extends AbstractTestCase
     public function testProviderTwig()
     {
         $container = new Container([
-            'config' => [
+            'debug' => false,
+            'config' => new AppConfig([
                 'base_path' => __DIR__,
                 'view'      => [
                     'paths'          => [ 'Twig/templates' ],
                     'default_engine' => 'twig',
                 ]
-            ],
+            ]),
         ]);
         $provider = new ViewServiceProvider();
+        $provider->register($container);
+
+        $provider = new TranslatorServiceProvider();
         $provider->register($container);
 
         $ret = $container['view']->render('foo', [ 'foo' => 'Bar' ]);
@@ -88,13 +94,13 @@ class ViewServiceProviderTest extends AbstractTestCase
     {
         $container = new Container([
             'translator' => null,
-            'config'     => [
+            'config'     => new AppConfig([
                 'base_path' => __DIR__,
                 'view'      => [
                     'paths'          => [ 'Mustache/templates' ],
                     'default_engine' => 'mustache',
                 ]
-            ],
+            ]),
         ]);
         $provider = new ViewServiceProvider();
         $provider->register($container);
@@ -113,13 +119,13 @@ class ViewServiceProviderTest extends AbstractTestCase
     public function testProviderPhp()
     {
         $container = new Container([
-            'config' => [
+            'config' => new AppConfig ([
                 'base_path' => __DIR__,
                 'view'      => [
                     'paths'          => [ 'Php/templates' ],
                     'default_engine' => 'php',
                 ]
-            ],
+            ]),
         ]);
         $provider = new ViewServiceProvider();
         $provider->register($container);

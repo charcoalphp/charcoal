@@ -14,7 +14,7 @@ use Charcoal\Source\DatabaseSource;
 use Charcoal\Source\Database\DatabaseFilter;
 
 use Charcoal\Tests\AbstractTestCase;
-use Charcoal\Tests\ContainerIntegrationTrait;
+use Charcoal\Tests\CoreContainerIntegrationTrait;
 use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Source\DatabaseExpressionTestTrait;
 
@@ -23,7 +23,7 @@ use Charcoal\Tests\Source\DatabaseExpressionTestTrait;
  */
 class DatabaseFilterTest extends AbstractTestCase
 {
-    use ContainerIntegrationTrait;
+    use CoreContainerIntegrationTrait;
     use DatabaseExpressionTestTrait;
     use ReflectionsTrait;
 

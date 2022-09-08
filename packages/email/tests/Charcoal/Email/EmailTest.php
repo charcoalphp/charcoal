@@ -17,7 +17,7 @@ class EmailTest extends AbstractTestCase
      */
     public $obj;
 
-    public function setup()
+    protected function setUp(): void
     {
         /** GLOBALS['container'] is defined in bootstrap file */
         $container = $GLOBALS['container'];

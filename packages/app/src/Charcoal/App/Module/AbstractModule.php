@@ -91,7 +91,7 @@ abstract class AbstractModule implements
      *
      * @return AbstractModule
      */
-    public function setup()
+    public function setUp()
     {
         $this->setupRoutes();
 

@@ -4,9 +4,11 @@ namespace Charcoal\Tests\Config\Mixin;
 
 // From 'charcoal-config'
 use Charcoal\Tests\AbstractTestCase;
+use Charcoal\Tests\AssertionsTrait;
 use Charcoal\Tests\Config\Mock\TreeEntity;
 use Charcoal\Config\SeparatorAwareInterface;
 use Charcoal\Config\SeparatorAwareTrait;
+use InvalidArgumentException;
 
 /**
  * Test SeparatorAwareTrait
@@ -15,6 +17,8 @@ use Charcoal\Config\SeparatorAwareTrait;
  */
 class SeparatorAwareTest extends AbstractTestCase
 {
+    use AssertionsTrait;
+
     /**
      * @var TreeEntity
      */
@@ -30,7 +34,7 @@ class SeparatorAwareTest extends AbstractTestCase
      *
      * @return void
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $this->connections = [
             'default' => [
@@ -142,26 +146,26 @@ class SeparatorAwareTest extends AbstractTestCase
     }
 
     /**
-     * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage Separator must be a string
-     *
      * @covers ::setSeparator()
      * @return void
      */
     public function testSetSeparatorWithInvalidType()
     {
+        $this->expectExceptionMessage('Separator must be a string');
+        $this->expectException(InvalidArgumentException::class);
+
         $this->obj->setSeparator(1);
     }
 
     /**
-     * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage Separator must be one-character, or empty
-     *
      * @covers ::setSeparator()
      * @return void
      */
     public function testSetSeparatorWithInvalidToken()
     {
+        $this->expectExceptionMessage('Separator must be one-character, or empty');
+        $this->expectException(InvalidArgumentException::class);
+
         $this->obj->setSeparator('::');
     }
 
@@ -267,24 +271,13 @@ class SeparatorAwareTest extends AbstractTestCase
     }
 
     /**
-     * @expectedException PHPUnit\Framework\Error\Error
-     *
      * @requires PHP >= 7.0
      * @return   void
      */
     public function testHasWithSeparatorWithoutDelimiterInPhp7()
     {
-        $this->delegatedTestHasWithSeparatorWithoutDelimiter();
-    }
+        $this->expectError();
 
-    /**
-     * @expectedException PHPUnit_Framework_Error
-     *
-     * @requires PHP < 7.0
-     * @return   void
-     */
-    public function testHasWithSeparatorWithoutDelimiterInPhp5()
-    {
         $this->delegatedTestHasWithSeparatorWithoutDelimiter();
     }
 
@@ -399,27 +392,15 @@ class SeparatorAwareTest extends AbstractTestCase
     }
 
     /**
-     * @expectedException PHPUnit\Framework\Error\Error
-     *
      * @requires PHP >= 7.0
      * @return   void
      */
     public function testGetWithSeparatorWithoutDelimiterInPhp7()
     {
+        $this->expectError();
+
         $this->delegatedTestGetWithSeparatorWithoutDelimiter();
     }
-
-    /**
-     * @expectedException PHPUnit_Framework_Error
-     *
-     * @requires PHP < 7.0
-     * @return   void
-     */
-    public function testGetWithSeparatorWithoutDelimiterInPhp5()
-    {
-        $this->delegatedTestGetWithSeparatorWithoutDelimiter();
-    }
-
 
 
     // Test SetWithSeparator
@@ -543,24 +524,13 @@ class SeparatorAwareTest extends AbstractTestCase
     }
 
     /**
-     * @expectedException PHPUnit\Framework\Error\Error
-     *
      * @requires PHP >= 7.0
      * @return   void
      */
     public function testSetWithSeparatorWithoutDelimiterInPhp7()
     {
-        $this->delegatedTestSetWithSeparatorWithoutDelimiter();
-    }
+        $this->expectError();
 
-    /**
-     * @expectedException PHPUnit_Framework_Error
-     *
-     * @requires PHP < 7.0
-     * @return   void
-     */
-    public function testSetWithSeparatorWithoutDelimiterInPhp5()
-    {
         $this->delegatedTestSetWithSeparatorWithoutDelimiter();
     }
 }

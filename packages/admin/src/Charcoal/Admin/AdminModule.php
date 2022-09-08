@@ -32,7 +32,7 @@ class AdminModule extends AbstractModule
      *
      * @return AdminModule Chainable
      */
-    public function setup()
+    public function setUp()
     {
         // Hack: skip if the request does not start with '/admin'
         $container = $this->app()->getContainer();

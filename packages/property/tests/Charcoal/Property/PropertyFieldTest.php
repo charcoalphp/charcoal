@@ -24,7 +24,7 @@ class PropertyFieldTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $container = $this->getContainer();
 
@@ -99,7 +99,7 @@ class PropertyFieldTest extends AbstractTestCase
         $this->assertSame($this->obj, $ret);
 
         $label = $this->obj->label();
-        $this->assertInternalType('string', $label);
+        $this->assertIsString($label);
         $this->assertEquals('Cooking', (string)$label);
     }
 

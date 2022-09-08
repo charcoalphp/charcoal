@@ -8,7 +8,7 @@ use InvalidArgumentException;
 use Charcoal\Source\Pagination;
 use Charcoal\Source\PaginationInterface;
 use Charcoal\Tests\AbstractTestCase;
-use Charcoal\Tests\ContainerIntegrationTrait;
+use Charcoal\Tests\CoreContainerIntegrationTrait;
 use Charcoal\Tests\Source\ExpressionTestTrait;
 
 /**
@@ -16,7 +16,7 @@ use Charcoal\Tests\Source\ExpressionTestTrait;
  */
 class PaginationTest extends AbstractTestCase
 {
-    use ContainerIntegrationTrait;
+    use CoreContainerIntegrationTrait;
     use ExpressionTestTrait;
 
     /**
@@ -82,7 +82,7 @@ class PaginationTest extends AbstractTestCase
 
         /** 2. Mutated Value */
         $that = $obj->setPage(3);
-        $this->assertInternalType('integer', $obj->page());
+        $this->assertIsInt($obj->page());
         $this->assertEquals(3, $obj->page());
 
         /** 3. Chainable */
@@ -143,7 +143,7 @@ class PaginationTest extends AbstractTestCase
 
         /** 2. Mutated Value */
         $that = $obj->setNumPerPage(10);
-        $this->assertInternalType('integer', $obj->numPerPage());
+        $this->assertIsInt($obj->numPerPage());
         $this->assertEquals(10, $obj->numPerPage());
 
         /** 3. Chainable */

@@ -6,14 +6,14 @@ namespace Charcoal\Tests;
 use Pimple\Container;
 
 // From 'charcoal-core/tests'
-use Charcoal\Tests\ContainerProvider;
+use Charcoal\Tests\CoreContainerProvider;
 
 /**
  * Integrates Charcoal's service container into PHPUnit.
  *
  * Ensures Charcoal framework is set-up for each test.
  */
-trait ContainerIntegrationTrait
+trait CoreContainerIntegrationTrait
 {
     /**
      * @var Container
@@ -21,7 +21,7 @@ trait ContainerIntegrationTrait
     private $container;
 
     /**
-     * @var ContainerProvider
+     * @var CoreContainerProvider
      */
     private $containerProvider;
 
@@ -38,7 +38,7 @@ trait ContainerIntegrationTrait
     }
 
     /**
-     * @return ContainerProvider
+     * @return CoreContainerProvider
      */
     protected function getContainerProvider()
     {
@@ -50,12 +50,12 @@ trait ContainerIntegrationTrait
     }
 
     /**
-     * @see    ContainerProvider
      * @return void
+     * @see    CoreContainerProvider
      */
     private function setupContainer()
     {
-        $provider  = new ContainerProvider();
+        $provider  = new CoreContainerProvider();
         $container = new Container();
 
         $provider->registerBaseServices($container);

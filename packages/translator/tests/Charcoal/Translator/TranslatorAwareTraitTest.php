@@ -8,7 +8,7 @@ use ReflectionClass;
 // From 'charcoal-translator'
 use Charcoal\Translator\TranslatorAwareTrait;
 use Charcoal\Translator\Translator;
-use Charcoal\Tests\AbstractTestCase;
+use Charcoal\Tests\Translator\AbstractTestCase;
 
 /**
  *
@@ -27,18 +27,17 @@ class TranslatorAwareTraitTest extends AbstractTestCase
      *
      * @return void
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $this->obj = $this->getMockForTrait(TranslatorAwareTrait::class);
     }
 
     /**
-     * @expectedException Exception
-     *
      * @return void
      */
     public function testTranslatorWithoutSettingThrowsException()
     {
+        $this->expectException(Exception::class);
         $this->callMethod($this->obj, 'translator');
     }
 

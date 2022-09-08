@@ -156,7 +156,6 @@ final class MetadataLoader implements LoggerAwareInterface
         }
 
         $data = $this->loadMetadataFromCache($ident, $idents);
-
         if (is_object($targetMetadata)) {
             return $targetMetadata->merge($data);
         } elseif (is_array($targetMetadata)) {
@@ -344,6 +343,7 @@ final class MetadataLoader implements LoggerAwareInterface
      * Supported file types: JSON.
      *
      * @param  string $path A file path to resolve and fetch.
+     * @throws UnexpectedValueException If the file cannot be loaded.
      * @return array|null An associative array on success, NULL on failure.
      */
     private function loadFile($path)
@@ -477,7 +477,6 @@ final class MetadataLoader implements LoggerAwareInterface
         );
 
         $classname = trim(implode('\\', $parts), '\\');
-
         static::$camelCache[$key]       = $classname;
         static::$snakeCache[$classname] = $key;
 

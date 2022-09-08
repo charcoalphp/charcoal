@@ -22,7 +22,7 @@ class GenericMenuTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $container = $this->getContainer();
         $container->register(new MenuServiceProvider());

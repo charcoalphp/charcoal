@@ -6,7 +6,7 @@ use InvalidArgumentException;
 
 // From 'charcoal-translator'
 use Charcoal\Translator\TranslatorConfig;
-use Charcoal\Tests\AbstractTestCase;
+use Charcoal\Tests\Translator\AbstractTestCase;
 
 /**
  *
@@ -25,7 +25,7 @@ class TranslatorConfigTest extends AbstractTestCase
      *
      * @return void
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $this->obj = new TranslatorConfig();
     }
@@ -57,42 +57,38 @@ class TranslatorConfigTest extends AbstractTestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
-     *
      * @return void
      */
     public function testSetUnavailableLoaders()
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->obj['loaders'] = [ 'foo' ];
     }
 
     /**
-     * @expectedException InvalidArgumentException
-     *
      * @return void
      */
     public function testSetInvalidPaths()
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->obj['paths'] = [ false ];
     }
 
     /**
-     * @expectedException InvalidArgumentException
-     *
      * @return void
      */
     public function testSetInvalidDomainTranslations()
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->obj['translations'] = [ false ];
     }
 
     /**
-     * @expectedException InvalidArgumentException
-     *
      * @return void
      */
     public function testSetInvalidMessageTranslations()
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->obj['translations'] = [ [ false ] ];
     }
 
@@ -125,12 +121,11 @@ class TranslatorConfigTest extends AbstractTestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
-     *
      * @return void
      */
     public function testSetInvalidCacheDir()
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->obj['cache_dir'] = false;
     }
 }

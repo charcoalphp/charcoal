@@ -5,6 +5,8 @@ namespace Charcoal\Tests\Model;
 use ArrayIterator;
 use ArrayObject;
 use CachingIterator;
+use InvalidArgumentException;
+use LogicException;
 use ReflectionClass;
 
 // From 'mockery/mockery'
@@ -42,7 +44,7 @@ class CollectionTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $this->map = [
             self::OBJ_1 => m::mock(Model::class, [ 'id' => self::OBJ_1 ]),
@@ -82,18 +84,17 @@ class CollectionTest extends AbstractTestCase
      */
     public function testConstructMethodWithAcceptableData()
     {
-        list($o1) = $this->arr;
+        [$o1] = $this->arr;
         $c = new Collection($o1);
         $this->assertSame([ self::OBJ_1 => $o1 ], $c->all());
     }
 
     /**
-     * @expectedException InvalidArgumentException
-     *
      * @return void
      */
     public function testConstructMethodWithUnacceptableData()
     {
+        $this->expectException(InvalidArgumentException::class);
         $c = new Collection('foo');
     }
 
@@ -169,7 +170,7 @@ class CollectionTest extends AbstractTestCase
      */
     public function testFirstItemInCollection()
     {
-        list($o1, $o2, $o3, $o4, $o5) = $this->arr;
+        [$o1, $o2, $o3, $o4, $o5] = $this->arr;
         $c = new Collection($this->arr);
 
         $this->assertEquals($o1, $c->first());
@@ -180,7 +181,7 @@ class CollectionTest extends AbstractTestCase
      */
     public function testLastItemInCollection()
     {
-        list($o1, $o2, $o3, $o4, $o5) = $this->arr;
+        [$o1, $o2, $o3, $o4, $o5] = $this->arr;
         $c = new Collection($this->arr);
 
         $this->assertEquals($o5, $c->last());
@@ -215,7 +216,7 @@ class CollectionTest extends AbstractTestCase
      */
     public function testRemoveKey()
     {
-        list($o1) = $this->arr;
+        [$o1] = $this->arr;
 
         $c = new Collection($this->arr);
 
@@ -231,17 +232,17 @@ class CollectionTest extends AbstractTestCase
      */
     public function testAddAcceptableData()
     {
-        list($o1) = $this->arr;
+        [$o1] = $this->arr;
         $c = new Collection;
         $this->assertSame([ $o1->id() => $o1 ], $c->add($o1)->all());
     }
 
     /**
-     * @expectedException InvalidArgumentException
      * @return void
      */
     public function testAddUnacceptableData()
     {
+        $this->expectException(InvalidArgumentException::class);
         $c = new Collection;
         $c->add('foo');
     }
@@ -251,7 +252,7 @@ class CollectionTest extends AbstractTestCase
      */
     public function testGet()
     {
-        list($o1, $o2, $o3, $o4, $o5) = $this->arr;
+        [$o1, $o2, $o3, $o4, $o5] = $this->arr;
         $c = new Collection($this->arr);
         $this->assertSame($o1, $c->get(self::OBJ_1));
         $this->assertSame($o1, $c->get($o1));
@@ -262,7 +263,7 @@ class CollectionTest extends AbstractTestCase
      */
     public function testHas()
     {
-        list($o1, $o2, $o3, $o4, $o5) = $this->arr;
+        [$o1, $o2, $o3, $o4, $o5] = $this->arr;
         $c = new Collection($this->arr);
         $this->assertTrue($c->has(self::OBJ_1));
         $this->assertTrue($c->offsetExists($o2));
@@ -292,7 +293,7 @@ class CollectionTest extends AbstractTestCase
      */
     public function testMergeArray()
     {
-        list($o1, $o2, $o3, $o4, $o5) = $this->arr;
+        [$o1, $o2, $o3, $o4, $o5] = $this->arr;
         $c = new Collection([ $o1, $o2, $o3, $o4 ]);
 
         $this->assertEquals($this->map, $c->merge([ $o5 ])->all());
@@ -303,7 +304,7 @@ class CollectionTest extends AbstractTestCase
      */
     public function testMergeCollection()
     {
-        list($o1, $o2, $o3, $o4, $o5) = $this->arr;
+        [$o1, $o2, $o3, $o4, $o5] = $this->arr;
         $c1 = new Collection([ $o1, $o2, $o3, $o4 ]);
         $c2 = new Collection($o5);
 
@@ -330,7 +331,7 @@ class CollectionTest extends AbstractTestCase
      */
     public function testCachingIterator()
     {
-        list($o1, $o2, $o3, $o4, $o5) = $this->arr;
+        [$o1, $o2, $o3, $o4, $o5] = $this->arr;
         $c = new Collection($this->arr);
 
         $i = $c->getCachingIterator(CachingIterator::FULL_CACHE);
@@ -370,7 +371,7 @@ class CollectionTest extends AbstractTestCase
      */
     public function testArrayAccess()
     {
-        list($o1, $o2, $o3, $o4, $o5) = $this->arr;
+        [$o1, $o2, $o3, $o4, $o5] = $this->arr;
 
         $c = new Collection([ $o1, $o2, $o3, $o4 ]);
         $this->assertEquals($o1, $c[self::OBJ_1]);
@@ -405,7 +406,7 @@ class CollectionTest extends AbstractTestCase
      */
     public function testArrayAccessOffsetGet()
     {
-        list($o1, $o2) = $this->arr;
+        [$o1, $o2] = $this->arr;
 
         $c = new Collection($this->arr);
         $this->assertEquals($o1, $c->offsetGet(0));
@@ -417,7 +418,7 @@ class CollectionTest extends AbstractTestCase
      */
     public function testArrayAccessOffsetGetWithNegativeOffset()
     {
-        list($o1, $o2, $o3, $o4, $o5) = $this->arr;
+        [$o1, $o2, $o3, $o4, $o5] = $this->arr;
 
         $c = new Collection([ $o1, $o2, $o3 ]);
         $this->assertEquals($o1, $c->offsetGet(-3));
@@ -439,7 +440,7 @@ class CollectionTest extends AbstractTestCase
      */
     public function testArrayAccessOffsetSet()
     {
-        list($o1, $o2) = $this->arr;
+        [$o1, $o2] = $this->arr;
         $c = new Collection($o1);
 
         $c->offsetSet(null, $o2);
@@ -447,24 +448,26 @@ class CollectionTest extends AbstractTestCase
     }
 
     /**
-     * @expectedException LogicException
+     *
      * @return void
      */
     public function testArrayAccessOffsetSetWithOffset()
     {
-        list($o1) = $this->arr;
+        $this->expectException(LogicException::class);
+        [$o1] = $this->arr;
         $c = new Collection;
 
         $c->offsetSet(1, $o1);
     }
 
     /**
-     * @expectedException LogicException
+     *
      * @return void
      */
     public function testArrayAccessOffsetSetWithKey()
     {
-        list($o1) = $this->arr;
+        $this->expectException(LogicException::class);
+        [$o1] = $this->arr;
         $c = new Collection;
 
         $c->offsetSet(self::OBJ_1, $o1);

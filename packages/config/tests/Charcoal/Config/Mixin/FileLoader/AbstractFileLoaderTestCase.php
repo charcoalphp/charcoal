@@ -24,7 +24,7 @@ abstract class AbstractFileLoaderTestCase extends AbstractTestCase
      *
      * @return void
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $this->obj = $this->createLoader();
     }

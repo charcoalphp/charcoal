@@ -5,6 +5,7 @@ namespace Charcoal\Tests\Config\Mixin\FileLoader;
 // From 'charcoal-config'
 use Charcoal\Tests\Config\Mixin\FileLoader\AbstractFileLoaderTestCase;
 use Charcoal\Config\FileAwareTrait;
+use UnexpectedValueException;
 
 /**
  * Test {@see FileAwareTrait::loadJsonFile() JSON File Loading}
@@ -54,14 +55,14 @@ class JsonFileLoaderTest extends AbstractFileLoaderTestCase
     /**
      * Asserts that a broken file is NOT ignored.
      *
-     * @expectedException              UnexpectedValueException
-     * @expectedExceptionMessageRegExp /^JSON file ".+?" could not be parsed: .+$/
-     *
      * @covers ::loadJsonFile()
      * @return void
      */
     public function testLoadMalformedFile()
     {
+        $this->expectExceptionMessageMatches('/^JSON file ".+?" could not be parsed: .+$/');
+        $this->expectException(UnexpectedValueException::class);
+
         // phpcs:disable Generic.PHP.NoSilencedErrors.Discouraged
         $path = $this->getPathToFixture('fail/malformed.json');
         $data = @$this->obj->loadFile($path);

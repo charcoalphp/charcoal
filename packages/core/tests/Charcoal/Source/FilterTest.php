@@ -9,7 +9,7 @@ use Charcoal\Source\ExpressionInterface;
 use Charcoal\Source\Filter;
 use Charcoal\Source\FilterInterface;
 use Charcoal\Tests\AbstractTestCase;
-use Charcoal\Tests\ContainerIntegrationTrait;
+use Charcoal\Tests\CoreContainerIntegrationTrait;
 use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Source\ExpressionTestFieldTrait;
 use Charcoal\Tests\Source\ExpressionTestTrait;
@@ -19,7 +19,7 @@ use Charcoal\Tests\Source\ExpressionTestTrait;
  */
 class FilterTest extends AbstractTestCase
 {
-    use ContainerIntegrationTrait;
+    use CoreContainerIntegrationTrait;
     use ExpressionTestFieldTrait;
     use ExpressionTestTrait;
     use ReflectionsTrait;
@@ -128,7 +128,7 @@ class FilterTest extends AbstractTestCase
 
         /** 2. Mutated Value */
         $that = $obj->setValue('foobar');
-        $this->assertInternalType('string', $obj->value());
+        $this->assertIsString($obj->value());
         $this->assertEquals('foobar', $obj->value());
 
         /** 3. Chainable */
@@ -152,7 +152,6 @@ class FilterTest extends AbstractTestCase
      * Test "val" property deprecation notice.
      *
      * @used-by self::testDeprecatedValErrorInPhp7()
-     * @used-by self::testDeprecatedValErrorInPhp5()
      *
      * @return void
      */
@@ -162,26 +161,17 @@ class FilterTest extends AbstractTestCase
     }
 
     /**
-     * @expectedException PHPUnit\Framework\Error\Error
+     *
      *
      * @requires PHP >= 7.0
      * @return   void
      */
     public function testDeprecatedValErrorInPhp7()
     {
+        $this->expectDeprecation();
         $this->delegatedTestDeprecatedValError();
     }
 
-    /**
-     * @expectedException PHPUnit_Framework_Error
-     *
-     * @requires PHP < 7.0
-     * @return   void
-     */
-    public function testDeprecatedValErrorInPhp5()
-    {
-        $this->delegatedTestDeprecatedValError();
-    }
 
     /**
      * Test the "operator" property.
@@ -203,7 +193,7 @@ class FilterTest extends AbstractTestCase
 
         /** 2. Mutated Value */
         $that = $obj->setOperator('LIKE');
-        $this->assertInternalType('string', $obj->operator());
+        $this->assertIsString($obj->operator());
         $this->assertEquals('LIKE', $obj->operator());
 
         /** 3. Chainable */
@@ -257,7 +247,7 @@ class FilterTest extends AbstractTestCase
 
         /** 2. Mutated Value */
         $that = $obj->setFunc('LENGTH');
-        $this->assertInternalType('string', $obj->func());
+        $this->assertIsString($obj->func());
         $this->assertEquals('LENGTH', $obj->func());
 
         /** 3. Chainable */
@@ -314,7 +304,7 @@ class FilterTest extends AbstractTestCase
 
         /** 2. Mutated Value */
         $that = $obj->setConjunction('||');
-        $this->assertInternalType('string', $obj->conjunction());
+        $this->assertIsString($obj->conjunction());
         $this->assertEquals('||', $obj->conjunction());
 
         /** 3. Chainable */
@@ -364,7 +354,6 @@ class FilterTest extends AbstractTestCase
      * Test "operand" property deprecation notice.
      *
      * @used-by self::testDeprecatedOperandErrorInPhp7()
-     * @used-by self::testDeprecatedOperandErrorInPhp5()
      *
      * @return void
      */
@@ -374,24 +363,14 @@ class FilterTest extends AbstractTestCase
     }
 
     /**
-     * @expectedException PHPUnit\Framework\Error\Error
+     *
      *
      * @requires PHP >= 7.0
      * @return   void
      */
     public function testDeprecatedOperandErrorInPhp7()
     {
-        $this->delegatedTestDeprecatedOperandError();
-    }
-
-    /**
-     * @expectedException PHPUnit_Framework_Error
-     *
-     * @requires PHP < 7.0
-     * @return   void
-     */
-    public function testDeprecatedOperandErrorInPhp5()
-    {
+        $this->expectDeprecation();
         $this->delegatedTestDeprecatedOperandError();
     }
 
@@ -552,7 +531,6 @@ class FilterTest extends AbstractTestCase
      * @see OrderTest::testDeprecatedStringError()
      *
      * @used-by self::testDeprecatedStringErrorInPhp7()
-     * @used-by self::testDeprecatedStringErrorInPhp5()
      *
      * @return void
      */
@@ -562,24 +540,12 @@ class FilterTest extends AbstractTestCase
     }
 
     /**
-     * @expectedException PHPUnit\Framework\Error\Error
-     *
      * @requires PHP >= 7.0
      * @return   void
      */
     public function testDeprecatedStringErrorInPhp7()
     {
-        $this->delegatedTestDeprecatedStringError();
-    }
-
-    /**
-     * @expectedException PHPUnit_Framework_Error
-     *
-     * @requires PHP < 7.0
-     * @return   void
-     */
-    public function testDeprecatedStringErrorInPhp5()
-    {
+        $this->expectDeprecation();
         $this->delegatedTestDeprecatedStringError();
     }
 }

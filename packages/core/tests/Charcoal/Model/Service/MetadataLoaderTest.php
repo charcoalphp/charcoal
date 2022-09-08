@@ -11,7 +11,7 @@ use Charcoal\Tests\AbstractTestCase;
  */
 class MetadataLoaderTest extends AbstractTestCase
 {
-    use \Charcoal\Tests\ContainerIntegrationTrait;
+    use \Charcoal\Tests\CoreContainerIntegrationTrait;
 
     /**
      * @var MetadataLoader
@@ -21,7 +21,7 @@ class MetadataLoaderTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $container = $this->getContainer();
 

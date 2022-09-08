@@ -2,11 +2,13 @@
 
 namespace Charcoal\Tests\Config\Mixin\FileLoader;
 
+use LogicException;
 use ReflectionProperty;
 
 // From 'charcoal-config'
 use Charcoal\Tests\Config\Mixin\FileLoader\AbstractFileLoaderTestCase;
 use Charcoal\Config\FileAwareTrait;
+use UnexpectedValueException;
 
 /**
  * Test {@see FileAwareTrait::loadYamlFile() YAML File Loading}
@@ -66,9 +68,6 @@ class YamlFileLoaderTest extends AbstractFileLoaderTestCase
     /**
      * Asserts that the File Loader throws an exception if the YAML Parser is unavailable.
      *
-     * @expectedException        LogicException
-     * @expectedExceptionMessage YAML format requires the Symfony YAML component
-     *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      * @covers ::loadYamlFile()
@@ -76,6 +75,9 @@ class YamlFileLoaderTest extends AbstractFileLoaderTestCase
      */
     public function testLoadFileWithNoYamlParser()
     {
+        $this->expectExceptionMessage('YAML format requires the Symfony YAML component');
+        $this->expectException(LogicException::class);
+
         $this->disableSymfonyYamlComponent();
 
         $path = $this->getPathToFixture('pass/valid1.yml');
@@ -99,14 +101,14 @@ class YamlFileLoaderTest extends AbstractFileLoaderTestCase
     /**
      * Asserts that a broken file is NOT ignored.
      *
-     * @expectedException              UnexpectedValueException
-     * @expectedExceptionMessageRegExp /^YAML file ".+?" could not be parsed: .+$/
-     *
      * @covers ::loadYamlFile()
      * @return void
      */
     public function testLoadMalformedFile()
     {
+        $this->expectExceptionMessageMatches('/^YAML file ".+?" could not be parsed: .+$/');
+        $this->expectException(UnexpectedValueException::class);
+
         $path = $this->getPathToFixture('pass/malformed.yml');
         $data = $this->obj->loadFile($path);
     }

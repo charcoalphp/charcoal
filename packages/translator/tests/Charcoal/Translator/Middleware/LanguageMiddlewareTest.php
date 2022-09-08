@@ -2,6 +2,7 @@
 
 namespace Charcoal\Tests\Translation\ServiceProvider;
 
+use Charcoal\App\AppConfig;
 use ReflectionClass;
 
 // From PSR-7
@@ -17,7 +18,7 @@ use Pimple\Container;
 use Charcoal\Translator\Middleware\LanguageMiddleware;
 use Charcoal\Translator\ServiceProvider\TranslatorServiceProvider;
 use Charcoal\Tests\Translator\ContainerProvider;
-use Charcoal\Tests\AbstractTestCase;
+use Charcoal\Tests\Translator\AbstractTestCase;
 
 /**
  *
@@ -41,7 +42,7 @@ class LanguageMiddlewareTest extends AbstractTestCase
     /**
      * @return void
      */
-    public static function setupBeforeClass()
+    public static function setupBeforeClass(): void
     {
         if (!isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
             $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'fr-CH, fr;q=0.9, en;q=0.8, de;q=0.7, *;q=0.5';
@@ -51,7 +52,7 @@ class LanguageMiddlewareTest extends AbstractTestCase
     /**
      * @return void
      */
-    public static function teardownAfterClass()
+    public static function teardownAfterClass(): void
     {
         if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
             unset($_SERVER['HTTP_ACCEPT_LANGUAGE']);
@@ -63,7 +64,7 @@ class LanguageMiddlewareTest extends AbstractTestCase
      *
      * @return void
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $container = $this->getContainer();
 
@@ -101,7 +102,7 @@ class LanguageMiddlewareTest extends AbstractTestCase
         if ($this->container === null) {
             $this->container = new Container();
 
-            $this->container['config'] = [
+            $this->container['config'] = new AppConfig([
                 'base_path' => realpath(__DIR__.'/../../..'),
                 'locales'   => [
                     'languages' => [
@@ -128,7 +129,7 @@ class LanguageMiddlewareTest extends AbstractTestCase
                     'auto_detect' => true,
                     'debug' => false
                 ]
-            ];
+            ]);
 
             $this->container->register(new TranslatorServiceProvider());
         }

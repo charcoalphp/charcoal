@@ -29,7 +29,7 @@ class StorablePropertyTraitTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $container = $this->getContainer();
 
@@ -104,7 +104,7 @@ class StorablePropertyTraitTest extends AbstractTestCase
     {
         $fields = $this->obj->fields('Cooking');
 
-        $this->assertInternalType('array', $fields);
+        $this->assertIsArray($fields);
         $this->assertCount(1, $fields);
 
         $field = reset($fields);
@@ -123,7 +123,8 @@ class StorablePropertyTraitTest extends AbstractTestCase
      */
     public function testUpdateFields()
     {
-        $this->callMethod($this->obj, 'updatedFields', [ [], 'Cooking' ]);
+        $fields = $this->callMethod($this->obj, 'updatedFields', [ [], 'Cooking' ]);
+        $this->assertEquals(['Cooking'], array_map(fn($field) => $field->val(), array_values($fields)));
     }
 
     /**
@@ -139,7 +140,7 @@ class StorablePropertyTraitTest extends AbstractTestCase
 
         $fields = $obj->fields('Cooking');
 
-        $this->assertInternalType('array', $fields);
+        $this->assertIsArray($fields);
         $this->assertCount(4, $fields);
         $this->assertInstanceOf(PropertyField::class, $fields['en']);
         $this->assertEquals('test_en', $fields['en']->ident());
@@ -169,12 +170,12 @@ class StorablePropertyTraitTest extends AbstractTestCase
     {
         $names = $this->obj->fieldNames();
 
-        $this->assertInternalType('array', $names);
+        $this->assertIsArray($names);
         $this->assertCount(1, $names);
 
         $name = reset($names);
 
-        $this->assertInternalType('string', $name);
+        $this->assertIsString($name);
         $this->assertEquals('test', $name);
     }
 
@@ -189,19 +190,19 @@ class StorablePropertyTraitTest extends AbstractTestCase
 
         $names = $obj->fieldNames();
 
-        $this->assertInternalType('array', $names);
+        $this->assertIsArray($names);
         $this->assertCount(4, $names);
 
-        $this->assertInternalType('string', $names['en']);
+        $this->assertIsString($names['en']);
         $this->assertEquals('test_en', $names['en']);
 
-        $this->assertInternalType('string', $names['fr']);
+        $this->assertIsString($names['fr']);
         $this->assertEquals('test_fr', $names['fr']);
 
-        $this->assertInternalType('string', $names['de']);
+        $this->assertIsString($names['de']);
         $this->assertEquals('test_de', $names['de']);
 
-        $this->assertInternalType('string', $names['es']);
+        $this->assertIsString($names['es']);
         $this->assertEquals('test_es', $names['es']);
     }
 }

@@ -105,8 +105,7 @@ class ContainerProvider
                     // Standalone repo
                     'vendor/charcoal/property/metadata',
                     // Monorepo
-                    // [TODO:monorepo] use path tag
-                    'vendor/charcoal/charcoal/packages/property/metadata'
+                    '/../property/metadata'
                 ]
             ]);
         };

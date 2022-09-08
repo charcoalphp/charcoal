@@ -18,14 +18,12 @@ class ResolverFactoryTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $this->obj = new ResolverFactory();
     }
 
     /**
-     * @expectedException InvalidArgumentException
-     *
      * @return void
      */
     public function testSetResolverPrefix()
@@ -35,12 +33,11 @@ class ResolverFactoryTest extends AbstractTestCase
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('foo', $this->obj->resolverPrefix());
 
+        $this->expectException(\InvalidArgumentException::class);
         $this->obj->setResolverPrefix(false);
     }
 
     /**
-     * @expectedException InvalidArgumentException
-     *
      * @return void
      */
     public function testSetResolverSuffix()
@@ -50,6 +47,7 @@ class ResolverFactoryTest extends AbstractTestCase
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('foo', $this->obj->resolverSuffix());
 
+        $this->expectException(\InvalidArgumentException::class);
         $this->obj->setResolverSuffix(false);
     }
 
@@ -94,18 +92,15 @@ class ResolverFactoryTest extends AbstractTestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
-     *
      * @return void
      */
     public function testResolveWithoutStringThrowsException()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $this->obj->resolve(false);
     }
 
     /**
-     * @expectedException InvalidArgumentException
-     *
      * @return void
      */
     public function testIsResolvable()
@@ -113,6 +108,7 @@ class ResolverFactoryTest extends AbstractTestCase
         $this->assertFalse($this->obj->isResolvable('foo'));
         $this->assertTrue($this->obj->isResolvable('charcoal/factory/map-factory'));
 
+        $this->expectException(\InvalidArgumentException::class);
         $this->obj->isResolvable(false);
     }
 

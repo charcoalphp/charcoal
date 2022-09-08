@@ -29,7 +29,7 @@ class ConfigArrayAccessTest extends AbstractConfigTestCase
      *
      * @return void
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $this->cfg = $this->createConfig([
             'name' => 'Charcoal',
@@ -83,7 +83,6 @@ class ConfigArrayAccessTest extends AbstractConfigTestCase
         $cfg = $this->cfg;
 
         // MacroConfig::$name
-        $this->assertAttributeEquals('Charcoal', 'name', $cfg);
         $this->assertEquals('Charcoal', $cfg['name']);
 
         // MacroConfig::foo()
@@ -103,7 +102,6 @@ class ConfigArrayAccessTest extends AbstractConfigTestCase
 
         $cfg['baz'] = 'waldo';
         $this->assertObjectHasAttribute('baz', $cfg);
-        $this->assertAttributeEquals('waldo', 'baz', $cfg);
         $this->assertEquals('waldo', $cfg['baz']);
     }
 
@@ -117,7 +115,6 @@ class ConfigArrayAccessTest extends AbstractConfigTestCase
 
         unset($cfg['name']);
         $this->assertObjectHasAttribute('name', $cfg);
-        $this->assertAttributeEmpty('name', $cfg);
         $this->assertNull($cfg['name']);
     }
 
@@ -148,7 +145,6 @@ class ConfigArrayAccessTest extends AbstractConfigTestCase
     {
         $cfg = $this->cfg;
 
-        $this->assertAttributeEquals(20, 'foo', $cfg);
         $this->assertEquals('foo is 20', $cfg['foo']);
     }
 
@@ -162,7 +158,6 @@ class ConfigArrayAccessTest extends AbstractConfigTestCase
         $cfg = $this->cfg;
 
         $cfg['foo'] = 32;
-        $this->assertAttributeEquals(42, 'foo', $cfg);
         $this->assertEquals('foo is 42', $cfg['foo']);
     }
 
@@ -177,7 +172,6 @@ class ConfigArrayAccessTest extends AbstractConfigTestCase
 
         unset($cfg['foo']);
         $this->assertObjectHasAttribute('foo', $cfg);
-        $this->assertAttributeEquals(10, 'foo', $cfg);
         $this->assertEquals('foo is 10', $cfg['foo']);
     }
 }

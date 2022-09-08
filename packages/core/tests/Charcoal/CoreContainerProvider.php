@@ -38,7 +38,7 @@ use Charcoal\App\AppConfig;
 /**
  * Service Container for Unit Tests
  */
-class ContainerProvider
+class CoreContainerProvider
 {
     /**
      * Register the unit tests required services.
@@ -209,7 +209,10 @@ class ContainerProvider
                 'base_path' => $container['config']['base_path'],
                 'paths'     => [
                     'metadata',
-                    'vendor/locomotivemtl/charcoal-property/metadata'
+                    // Standalone
+                    'vendor/charcoal/property/metadata',
+                    // Monorepo
+                    '/../property/metadata'
                 ]
             ]);
         };

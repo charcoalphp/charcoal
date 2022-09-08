@@ -10,6 +10,7 @@ use InvalidArgumentException;
 // From 'charcoal-config'
 use Charcoal\Tests\Config\Config\AbstractConfigTestCase;
 use Charcoal\Config\GenericConfig;
+use Charcoal\Tests\AssertionsTrait;
 
 /**
  * Test data merging in AbstractConfig
@@ -18,6 +19,8 @@ use Charcoal\Config\GenericConfig;
  */
 class ConfigArrayMergeTest extends AbstractConfigTestCase
 {
+    use AssertionsTrait;
+
     /**
      * @var GenericConfig
      */
@@ -28,7 +31,7 @@ class ConfigArrayMergeTest extends AbstractConfigTestCase
      *
      * @return void
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $this->cfg = $this->createConfig();
     }
@@ -227,14 +230,13 @@ class ConfigArrayMergeTest extends AbstractConfigTestCase
     /**
      * Asserts that a numeric key throws an exception, when merging a value.
      *
-     * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage Entity array access only supports non-numeric keys
-     *
      * @covers ::offsetReplace()
      * @return void
      */
     public function testOffsetMergeThrowsExceptionOnNumericKey()
     {
+        $this->expectExceptionMessage("Entity array access only supports non-numeric keys");
+        $this->expectException(InvalidArgumentException::class);
         $this->cfg->offsetReplace(0, 'waldo');
     }
 }

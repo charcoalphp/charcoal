@@ -3,6 +3,7 @@
 namespace Charcoal\Tests\Config\Config;
 
 // From 'charcoal-config'
+use Charcoal\Tests\AssertionsTrait;
 use Charcoal\Tests\Config\Config\AbstractConfigTestCase;
 use Charcoal\Tests\Config\Mock\MacroConfig;
 use Charcoal\Config\AbstractConfig;
@@ -15,6 +16,8 @@ use Charcoal\Config\SeparatorAwareInterface;
  */
 class ConfigSeparatorAwareTest extends AbstractConfigTestCase
 {
+    use AssertionsTrait;
+
     /**
      * @var MacroConfig
      */
@@ -30,7 +33,7 @@ class ConfigSeparatorAwareTest extends AbstractConfigTestCase
      *
      * @return void
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $this->connections = [
             'default' => [

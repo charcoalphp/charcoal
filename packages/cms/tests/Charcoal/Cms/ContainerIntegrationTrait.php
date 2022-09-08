@@ -49,9 +49,9 @@ trait ContainerIntegrationTrait
      */
     protected function getModelDependenciesWithContainer()
     {
-        return $this->getModelDependencies() + [
+        return ($this->getModelDependencies() + [
             'container' => $this->getContainer(),
-        ];
+        ]);
     }
 
     /**

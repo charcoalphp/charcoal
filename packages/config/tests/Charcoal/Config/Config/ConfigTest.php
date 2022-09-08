@@ -2,6 +2,7 @@
 
 namespace Charcoal\Tests\Config\Config;
 
+use Charcoal\Tests\AssertionsTrait;
 use StdClass;
 use ArrayIterator;
 use IteratorAggregate;
@@ -30,6 +31,8 @@ use Charcoal\Config\AbstractConfig;
  */
 class ConfigTest extends AbstractConfigTestCase
 {
+    use AssertionsTrait;
+
     /**
      * @var MacroConfig
      */
@@ -40,7 +43,7 @@ class ConfigTest extends AbstractConfigTestCase
      *
      * @return void
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $this->cfg = $this->createConfig();
     }
@@ -107,9 +110,6 @@ class ConfigTest extends AbstractConfigTestCase
     }
 
     /**
-     * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage Data must be a config file, an associative array,
-     *     or an object implementing Traversable
      *
      * @covers ::__construct
      * @covers ::merge
@@ -117,6 +117,9 @@ class ConfigTest extends AbstractConfigTestCase
      */
     public function testConstructWithInvalidData()
     {
+        $this->expectExceptionMessage('Data must be a config file, an associative array, or an object implementing Traversable');
+        $this->expectException(InvalidArgumentException::class);
+
         $std = new StdClass;
         $cfg = $this->mockConfig($std);
     }

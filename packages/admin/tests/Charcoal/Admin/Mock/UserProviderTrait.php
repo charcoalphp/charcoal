@@ -8,6 +8,7 @@ use Charcoal\User\UserInterface;
 // From 'charcoal-admin'
 use Charcoal\Admin\User;
 use Charcoal\Tests\AbstractTestCase;
+use PDO;
 
 /**
  * User Testing Helpers

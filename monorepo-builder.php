@@ -24,6 +24,25 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ComposerJsonSection::REQUIRE_DEV => [
             'phpunit/phpunit' => '^9.5',
         ],
+        ComposerJsonSection::REPLACE => [
+            'locomotivemtl/charcoal-admin' => '*',
+            'locomotivemtl/charcoal-app' => '*',
+            'locomotivemtl/charcoal-attachment' => '*',
+            'locomotivemtl/charcoal-cache' => '*',
+            'locomotivemtl/charcoal-cms' => '*',
+            'locomotivemtl/charcoal-config' => '*',
+            'locomotivemtl/charcoal-core' => '*',
+            'locomotivemtl/charcoal-email' => '*',
+            'locomotivemtl/charcoal-factory' => '*',
+            'locomotivemtl/charcoal-image' => '*',
+            'locomotivemtl/charcoal-object' => '*',
+            'locomotivemtl/charcoal-property' => '*',
+            'locomotivemtl/charcoal-queue' => '*',
+            'locomotivemtl/charcoal-translator' => '*',
+            'locomotivemtl/charcoal-ui' => '*',
+            'locomotivemtl/charcoal-user' => '*',
+            'locomotivemtl/charcoal-view' => '*',
+        ],
     ]);
 
     $services = $containerConfigurator->services();

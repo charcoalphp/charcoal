@@ -53,7 +53,7 @@ class AuthorizerTest extends AbstractTestCase
      *
      * @return void
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $container = $this->container();
 
@@ -174,14 +174,13 @@ class AuthorizerTest extends AbstractTestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
-     *
      * @return void
      */
     public function testSetDefaultResourceWithBadValue()
     {
         $container = $this->container();
 
+        $this->expectException(\InvalidArgumentException::class);
         $auth = new Authorizer([
             'logger'    => $container['logger'],
             'acl'       => $this->acl,

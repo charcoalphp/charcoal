@@ -2,6 +2,7 @@
 
 namespace Charcoal\Tests\Admin\Action;
 
+use PDO;
 use ReflectionClass;
 
 // From Pimple

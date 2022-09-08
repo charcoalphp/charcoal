@@ -10,7 +10,7 @@ use InvalidArgumentException;
 use Charcoal\Source\AbstractExpression;
 use Charcoal\Source\ExpressionInterface;
 use Charcoal\Tests\AbstractTestCase;
-use Charcoal\Tests\ContainerIntegrationTrait;
+use Charcoal\Tests\CoreContainerIntegrationTrait;
 use Charcoal\Tests\Source\ExpressionTestTrait;
 
 /**
@@ -18,7 +18,7 @@ use Charcoal\Tests\Source\ExpressionTestTrait;
  */
 class AbstractExpressionTest extends AbstractTestCase
 {
-    use ContainerIntegrationTrait;
+    use CoreContainerIntegrationTrait;
 
     /**
      * Create expression for testing.

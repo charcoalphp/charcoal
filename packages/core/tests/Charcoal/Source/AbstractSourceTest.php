@@ -27,7 +27,7 @@ use Charcoal\Source\SourceInterface;
 
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\AssertionsTrait;
-use Charcoal\Tests\ContainerIntegrationTrait;
+use Charcoal\Tests\CoreContainerIntegrationTrait;
 use Charcoal\Tests\Mock\OrderTree;
 use Charcoal\Tests\ReflectionsTrait;
 
@@ -37,7 +37,7 @@ use Charcoal\Tests\ReflectionsTrait;
 class AbstractSourceTest extends AbstractTestCase
 {
     use AssertionsTrait;
-    use ContainerIntegrationTrait;
+    use CoreContainerIntegrationTrait;
     use ReflectionsTrait;
 
     /**
@@ -52,7 +52,7 @@ class AbstractSourceTest extends AbstractTestCase
      *
      * @return void
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $container = $this->getContainer();
 

@@ -30,7 +30,7 @@ trait ViewableTrait
     /**
      * The renderable view.
      *
-     * @var ViewInterface
+     * @var ViewInterface|null
      */
     private $view;
 
@@ -61,9 +61,9 @@ trait ViewableTrait
     /**
      * Retrieve the template identifier for this viewable object.
      *
-     * @return string
+     * @return string|null
      */
-    public function templateIdent(): string
+    public function templateIdent(): ?string
     {
         return $this->templateIdent;
     }
@@ -84,9 +84,9 @@ trait ViewableTrait
     /**
      * Retrieve the renderable view.
      *
-     * @return ViewInterface The object's View instance.
+     * @return ViewInterface|null The object's View instance.
      */
-    public function view(): ViewInterface
+    public function view(): ?ViewInterface
     {
         return $this->view;
     }

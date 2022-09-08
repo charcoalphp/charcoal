@@ -103,6 +103,10 @@ class ModelMetadata extends AbstractMetadata
      */
     public function source($sourceIdent)
     {
+        if (!isset($this->sources[$sourceIdent])) {
+            throw new InvalidArgumentException(sprintf('Trying to access undefined source "%s"', $sourceIdent));
+        }
+
         return $this->sources[$sourceIdent];
     }
 

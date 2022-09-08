@@ -6,7 +6,7 @@ class AbstractSharpenEffectTest extends \PHPUnit\Framework\TestCase
 {
     public $obj;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $img = $this->getMockForAbstractClass('\Charcoal\Image\AbstractImage');
         $this->obj = $this->getMockForAbstractClass('\Charcoal\Image\Effect\AbstractSharpenEffect');

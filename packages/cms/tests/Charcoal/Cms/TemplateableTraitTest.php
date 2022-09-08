@@ -32,7 +32,7 @@ class TemplateableTraitTest extends AbstractTestCase
      *
      * @return void
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $this->dropTable();
 
@@ -61,7 +61,7 @@ class TemplateableTraitTest extends AbstractTestCase
      *
      * @return void
      */
-    public function tearDown()
+    protected function tearDown(): void
     {
         $this->dropTable();
     }
@@ -149,7 +149,7 @@ class TemplateableTraitTest extends AbstractTestCase
      */
     public function testTemplateIdent()
     {
-        $this->assertNull($this->obj->templateIdent());
+        $this->assertEmpty($this->obj->templateIdent());
 
         $this->obj->setTemplateIdent('foobar');
         $this->assertEquals('foobar', $this->obj->templateIdent());
@@ -171,7 +171,7 @@ class TemplateableTraitTest extends AbstractTestCase
      */
     public function testTemplateOptions()
     {
-        $this->assertInternalType('array', $this->obj->templateOptions());
+        $this->assertIsArray($this->obj->templateOptions());
         $this->assertEmpty($this->obj->templateOptions());
 
         $this->obj->setTemplateOptions(false);
@@ -220,7 +220,8 @@ class TemplateableTraitTest extends AbstractTestCase
     public function testTemplateOptionsStructure()
     {
         $templateData         = [ 'foo' => 'Huxley' ];
-        $templateMetadataFile = realpath('tests/Charcoal/Cms/Fixture/metadata/templateable/foo-template.json');
+        $basePath = $this->getContainer()['config']['base_path'];
+        $templateMetadataFile = realpath($basePath.'/tests/Charcoal/Cms/Fixture/metadata/templateable/foo-template.json');
         $templateMetadata     = json_decode(file_get_contents($templateMetadataFile), true);
 
         $obj = $this->obj;

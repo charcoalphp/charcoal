@@ -13,7 +13,7 @@ use Symfony\Component\Translation\MessageSelector;
 use Charcoal\Translator\LocalesManager;
 use Charcoal\Translator\Translation;
 use Charcoal\Translator\Translator;
-use Charcoal\Tests\AbstractTestCase;
+use Charcoal\Tests\Translator\AbstractTestCase;
 use Charcoal\Tests\Translator\Mock\StringClass;
 
 /**
@@ -47,7 +47,7 @@ class TranslatorTest extends AbstractTestCase
      *
      * @return void
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $selector  = new MessageSelector();
         $formatter = new MessageFormatter($selector);
@@ -67,7 +67,7 @@ class TranslatorTest extends AbstractTestCase
     /**
      * @return void
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         $path = realpath(__DIR__.'/../../../'.static::SYMFONY_CACHE_PATH);
         if ($path !== false) {
@@ -78,7 +78,7 @@ class TranslatorTest extends AbstractTestCase
     /**
      * @return void
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         $path = realpath(__DIR__.'/../../../'.static::SYMFONY_CACHE_PATH.'.txt');
         if ($path !== false) {
@@ -182,7 +182,7 @@ class TranslatorTest extends AbstractTestCase
     public function testAvailableDomains()
     {
         $domains = $this->obj->availableDomains();
-        $this->assertInternalType('array', $domains);
+        $this->assertIsArray($domains);
         $this->assertEquals([ 'messages' ], $domains);
     }
 

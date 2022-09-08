@@ -34,14 +34,11 @@ class RoleTest extends AbstractTestCase
      *
      * @return void
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $container = $this->container();
 
-        $this->obj = new Role([
-            'container' => $container,
-            'logger'    => $container['logger']
-        ]);
+        $this->obj = $container['model/factory']->create(Role::class);
     }
 
     /**

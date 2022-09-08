@@ -23,7 +23,7 @@ class CacheConfigTest extends AbstractTestCase
     /**
      * Create the CacheConfig instance.
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->cfg = $this->configFactory();
     }
@@ -129,14 +129,13 @@ class CacheConfigTest extends AbstractTestCase
     }
 
     /**
-     * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage Invalid cache type: "foobar"
-     *
      * @covers ::validTypes
      * @covers ::addType
      */
     public function testAddDriverOnInvalidType()
     {
+        $this->expectExceptionMessage('Invalid cache type: "foobar"');
+        $this->expectException(InvalidArgumentException::class);
         $this->cfg->addType('foobar');
     }
 
@@ -155,13 +154,12 @@ class CacheConfigTest extends AbstractTestCase
     }
 
     /**
-     * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage TTL must be an integer (seconds)
-     *
      * @covers ::setDefaultTtl
      */
     public function testSetDefaultTtlOnInvalidType()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('TTL must be an integer (seconds)');
         $this->cfg->setDefaultTtl('foo');
     }
 
@@ -180,24 +178,22 @@ class CacheConfigTest extends AbstractTestCase
     }
 
     /**
-     * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage Prefix must be a string
-     *
      * @covers ::setPrefix
      */
     public function testSetPrefixOnInvalidType()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Prefix must be a string');
         $this->cfg->setPrefix(false);
     }
 
     /**
-     * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage Prefix must be alphanumeric
-     *
      * @covers ::setPrefix
      */
     public function testSetPrefixOnInvalidValue()
     {
+        $this->expectExceptionMessage('Prefix must be alphanumeric');
+        $this->expectException(InvalidArgumentException::class);
         $this->cfg->setPrefix('foo!#$bar');
     }
 }

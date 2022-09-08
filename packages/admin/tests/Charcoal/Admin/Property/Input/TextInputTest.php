@@ -28,7 +28,6 @@ class TextInputTest extends AbstractTestCase
         $container = new Container();
         $containerProvider = new ContainerProvider();
         $containerProvider->registerInputDependencies($container);
-        $container['view'] = $this->createMock('\Charcoal\View\ViewInterface');
 
         $this->obj = new TextInput([
             'logger'          => $container['logger'],

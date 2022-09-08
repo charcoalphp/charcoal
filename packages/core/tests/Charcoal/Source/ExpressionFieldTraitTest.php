@@ -12,21 +12,21 @@ use Charcoal\Property\PropertyInterface;
 use Charcoal\Source\ExpressionFieldTrait;
 use Charcoal\Source\ExpressionFieldInterface;
 use Charcoal\Tests\AbstractTestCase;
-use Charcoal\Tests\ContainerIntegrationTrait;
+use Charcoal\Tests\CoreContainerIntegrationTrait;
 
 /**
  * Test {@see ExpressionFieldTrait} and {@see ExpressionFieldInterface}.
  */
 class ExpressionFieldTraitTest extends AbstractTestCase
 {
-    use ContainerIntegrationTrait;
+    use CoreContainerIntegrationTrait;
 
     /**
      * Set up the test.
      *
      * @return void
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $container = $this->getContainer();
 
@@ -81,7 +81,7 @@ class ExpressionFieldTraitTest extends AbstractTestCase
 
         /** 2. Mutated Value */
         $that = $obj->setProperty('foobar');
-        $this->assertInternalType('string', $obj->property());
+        $this->assertIsString($obj->property());
         $this->assertEquals('foobar', $obj->property());
 
         /** 3. Chainable */
@@ -168,7 +168,7 @@ class ExpressionFieldTraitTest extends AbstractTestCase
 
         /** 2. Mutated Value */
         $that = $obj->setTable('foobar');
-        $this->assertInternalType('string', $obj->table());
+        $this->assertIsString($obj->table());
         $this->assertEquals('foobar', $obj->table());
 
         /** 3. Chainable */
@@ -235,7 +235,7 @@ class ExpressionFieldTraitTest extends AbstractTestCase
         /** 2. With column name */
         $obj->setProperty('foobar');
         $fieldNames = $obj->fieldNames();
-        $this->assertInternalType('array', $fieldNames);
+        $this->assertIsArray($fieldNames);
         $this->assertContains('foobar', $fieldNames);
 
         /** 3. With property instance */
@@ -265,7 +265,7 @@ class ExpressionFieldTraitTest extends AbstractTestCase
         /** 2. With column name */
         $obj->setProperty('fooBar');
         $fieldName = $obj->fieldName();
-        $this->assertInternalType('string', $fieldName);
+        $this->assertIsString($fieldName);
         $this->assertEquals('foo_bar', $fieldName);
 
         /** 3. With property instance */
@@ -295,7 +295,7 @@ class ExpressionFieldTraitTest extends AbstractTestCase
         /** 2. With column name */
         $obj->setProperty('foobar');
         $fieldIdentifiers = $obj->fieldIdentifiers();
-        $this->assertInternalType('array', $fieldIdentifiers);
+        $this->assertIsArray($fieldIdentifiers);
         $this->assertContains('`foobar`', $fieldIdentifiers);
 
         /** 2. With table name */
@@ -323,7 +323,7 @@ class ExpressionFieldTraitTest extends AbstractTestCase
         /** 2. With column name */
         $obj->setProperty('foobar');
         $fieldIdentifier = $obj->fieldIdentifier();
-        $this->assertInternalType('string', $fieldIdentifier);
+        $this->assertIsString($fieldIdentifier);
         $this->assertEquals('`foobar`', $fieldIdentifier);
 
         /** 2. With table name */

@@ -14,7 +14,7 @@ use Pimple\Container;
 // From 'charcoal-translator'
 use Charcoal\Translator\Script\TranslationParserScript;
 use Charcoal\Tests\Translator\ContainerProvider;
-use Charcoal\Tests\AbstractTestCase;
+use Charcoal\Tests\Translator\AbstractTestCase;
 
 /**
  *
@@ -47,7 +47,7 @@ class TranslationParserScriptTest extends AbstractTestCase
      *
      * @return void
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $this->container = $this->getContainer();
 

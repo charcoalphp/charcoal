@@ -88,20 +88,23 @@ class HierarchicalTraitTest extends AbstractTestCase
     public function testHierarchyLevel()
     {
         $obj = $this->obj;
-        // No longer easily testable because of modelLoader.
-        // $this->assertEquals(1, $obj->hierarchyLevel());
 
-        $master = '86619ad9';
+        $this->assertEquals(1, $obj->hierarchyLevel());
+
+        $master = clone $obj;
+        $master2 = clone $obj;
         $children = array_fill(0, 4, $this->createMock(get_class($obj)));
+
         $obj->setMaster($master);
         $obj->setChildren($children);
-        // No longer easily testable because of modelLoader.
-        // $this->assertEquals(2, $obj->hierarchyLevel());
 
-        $master2 = '49757d4f';
-        // $obj->getMasterObject()->setMaster($master2);
+        $this->assertEquals(2, $obj->hierarchyLevel());
 
-        //$this->assertEquals(3, $obj->hierarchyLevel());
+        $obj->getMasterObject()->setMaster($master2);
+
+        $this->assertEquals(2, $obj->hierarchyLevel());
+        $obj->resetHierarchy();
+        $this->assertEquals(3, $obj->hierarchyLevel());
     }
 
     /**
@@ -155,18 +158,18 @@ class HierarchicalTraitTest extends AbstractTestCase
     public function testInvertedHierarchy()
     {
         $obj = $this->obj;
-        // No longer easily testable because of modelLoader.
-        // $this->assertEquals([], $obj->invertedHierarchy());
 
-        // $master1 = $this->createMock(get_class($obj));
-        // $master2 = $this->createMock(get_class($obj));
+        $this->assertEquals([], $obj->invertedHierarchy());
 
-        // $obj->setMaster($master1);
-        // No longer easily testable because of modelLoader.
-        // $this->assertSame([$master1], $obj->invertedHierarchy());
+        $master1 = clone $obj;
+        $master2 = clone $obj;
 
-        // $master1->setMaster($master2);
-        //$this->assertSame([$master2, $master1], $obj->invertedHierarchy());
+        $obj->setMaster($master1);
+        $this->assertSame([$master1], $obj->invertedHierarchy());
+
+        $master1->setMaster($master2);
+        $obj->resetHierarchy();
+        $this->assertSame([$master2, $master1], $obj->invertedHierarchy());
     }
 
     /**

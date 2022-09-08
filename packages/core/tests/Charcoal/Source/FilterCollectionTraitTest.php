@@ -88,7 +88,7 @@ class FilterCollectionTraitTest extends AbstractTestCase
 
         /** 1. Default state */
         $ret = $obj->filters();
-        $this->assertInternalType('array', $ret);
+        $this->assertIsArray($ret);
         $this->assertEmpty($ret);
 
         /** 2. Mutated state */

@@ -8,7 +8,7 @@ use InvalidArgumentException;
 use Charcoal\Source\Order;
 use Charcoal\Source\OrderInterface;
 use Charcoal\Tests\AbstractTestCase;
-use Charcoal\Tests\ContainerIntegrationTrait;
+use Charcoal\Tests\CoreContainerIntegrationTrait;
 use Charcoal\Tests\Source\ExpressionTestFieldTrait;
 use Charcoal\Tests\Source\ExpressionTestTrait;
 
@@ -17,7 +17,7 @@ use Charcoal\Tests\Source\ExpressionTestTrait;
  */
 class OrderTest extends AbstractTestCase
 {
-    use ContainerIntegrationTrait;
+    use CoreContainerIntegrationTrait;
     use ExpressionTestFieldTrait;
     use ExpressionTestTrait;
 
@@ -134,7 +134,7 @@ class OrderTest extends AbstractTestCase
 
         /** 2. Mutated Value */
         $that = $obj->setMode('asc');
-        $this->assertInternalType('string', $obj->mode());
+        $this->assertIsString($obj->mode());
         $this->assertEquals('asc', $obj->mode());
 
         /** 3. Chainable */
@@ -214,7 +214,7 @@ class OrderTest extends AbstractTestCase
         $mutated = [ 'foo', 'baz', 'qux' ];
 
         $that = $obj->setValues([ 'foo', 'baz', 'qux' ]);
-        $this->assertInternalType('array', $obj->values());
+        $this->assertIsArray($obj->values());
         $this->assertEquals($mutated, $obj->values());
 
         $obj->setValues('foo,baz,qux');
@@ -359,7 +359,6 @@ class OrderTest extends AbstractTestCase
      * @see FilterTest::testDeprecatedStringError()
      *
      * @used-by self::testDeprecatedStringErrorInPhp7()
-     * @used-by self::testDeprecatedStringErrorInPhp5()
      *
      * @return void
      */
@@ -369,24 +368,14 @@ class OrderTest extends AbstractTestCase
     }
 
     /**
-     * @expectedException PHPUnit\Framework\Error\Error
+     *
      *
      * @requires PHP >= 7.0
      * @return   void
      */
     public function testDeprecatedStringErrorInPhp7()
     {
-        $this->delegatedTestDeprecatedStringError();
-    }
-
-    /**
-     * @expectedException PHPUnit_Framework_Error
-     *
-     * @requires PHP < 7.0
-     * @return   void
-     */
-    public function testDeprecatedStringErrorInPhp5()
-    {
+        $this->expectDeprecation();
         $this->delegatedTestDeprecatedStringError();
     }
 }

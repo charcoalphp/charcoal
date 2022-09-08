@@ -234,7 +234,7 @@ final class ModelLoader implements ArrayAccess
     }
 
     /**
-     * Load an objet from its soure.
+     * Load an objet from its source.
      *
      * @param  string|integer $ident The object identifier to load.
      * @return ModelInterface

@@ -14,7 +14,7 @@ use Charcoal\Tests\AbstractTestCase;
  */
 class ModelValidatorTest extends AbstractTestCase
 {
-    use \Charcoal\Tests\ContainerIntegrationTrait;
+    use \Charcoal\Tests\CoreContainerIntegrationTrait;
 
     /**
      * @return Model

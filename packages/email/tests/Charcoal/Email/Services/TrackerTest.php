@@ -70,6 +70,6 @@ class TrackerTest extends TestCase
         $id = uniqid();
         $this->email->setMsgHtml($html);
         $this->obj->replaceLinksWithTracker($this->email, $id);
-        $this->assertRegExp('#<div class="foo"><a href="email/v1/link/[0-9a-z]{13}">Foo</a></div>#', $this->email->msgHtml());
+        $this->assertMatchesRegularExpression('#<div class="foo"><a href="email/v1/link/[0-9a-z]{13}">Foo</a></div>#', $this->email->msgHtml());
     }
 }

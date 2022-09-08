@@ -27,7 +27,7 @@ class AbstractPropertyTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $container = $this->getContainer();
 
@@ -348,7 +348,7 @@ class AbstractPropertyTest extends AbstractTestCase
      */
     public function testValidationMethods()
     {
-        $this->assertInternalType('array', $this->obj->validationMethods());
+        $this->assertIsArray($this->obj->validationMethods());
     }
 
     /**

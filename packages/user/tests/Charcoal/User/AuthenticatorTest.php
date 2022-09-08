@@ -36,7 +36,7 @@ class AuthenticatorTest extends AbstractTestCase
      *
      * @return void
      */
-    public function setUp()
+    protected function setUp(): void
     {
         if (session_id()) {
             session_unset();
