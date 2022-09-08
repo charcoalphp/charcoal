@@ -31,7 +31,7 @@ trait TemplateableTrait
      *
      * @var string
      */
-    protected $templateIdent = '';
+    protected $templateIdent;
 
     /**
      * The object's template controller identifier.
