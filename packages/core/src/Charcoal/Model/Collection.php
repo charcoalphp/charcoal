@@ -236,7 +236,7 @@ class Collection implements CollectionInterface
      * @param  mixed $offset The object primary key or array offset.
      * @return boolean
      */
-    public function offsetExists($offset): bool
+    public function offsetExists($offset)
     {
         if (is_int($offset)) {
             $offset  = $this->resolveOffset($offset);
@@ -277,7 +277,7 @@ class Collection implements CollectionInterface
      * @throws LogicException Attempts to assign an offset.
      * @return void
      */
-    public function offsetSet($offset, $value): void
+    public function offsetSet($offset, $value)
     {
         if ($offset === null) {
             $this->add($value);
@@ -295,7 +295,7 @@ class Collection implements CollectionInterface
      * @param  mixed $offset The object primary key or array offset.
      * @return void
      */
-    public function offsetUnset($offset): void
+    public function offsetUnset($offset)
     {
         if (is_int($offset)) {
             $offset = $this->resolveOffset($offset);

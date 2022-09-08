@@ -145,7 +145,7 @@ final class ModelLoader implements ArrayAccess
      * @param  string $ident The object identifier to lookup.
      * @return boolean
      */
-    public function offsetExists($ident): bool
+    public function offsetExists($ident)
     {
         return true;
     }
@@ -171,7 +171,7 @@ final class ModelLoader implements ArrayAccess
      * @throws LogicException This method should never be called.
      * @return void
      */
-    public function offsetSet($ident, $obj): void
+    public function offsetSet($ident, $obj)
     {
         throw new LogicException(
             'Can not set value on a loader'
@@ -186,7 +186,7 @@ final class ModelLoader implements ArrayAccess
      * @throws LogicException This method should never be called.
      * @return void
      */
-    public function offsetUnset($ident): void
+    public function offsetUnset($ident)
     {
         throw new LogicException(
             'Can not unset value on a loader'

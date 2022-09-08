@@ -255,7 +255,7 @@ abstract class AbstractExpression implements
      * @uses   self::diffValues()
      * @return array<string,mixed> An associative array containing only mutated values.
      */
-    public function jsonSerialize(): mixed
+    public function jsonSerialize()
     {
         return array_udiff_assoc($this->data(), $this->defaultData(), [ $this, 'diffValues' ]);
     }
