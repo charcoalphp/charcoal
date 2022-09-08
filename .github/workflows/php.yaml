@@ -31,14 +31,13 @@ jobs:
           php-version: 8.0
           coverage: none
 
-      - name: Install Dependencies
+      - name: Install Composer dependencies
         uses: ramsey/composer-install@v2
 
       - name: Output list of packages as JSON
         id: output_data
         run: echo "::set-output name=matrix::$(vendor/bin/monorepo-builder packages-json)"
 
-    # this step is needed, so the output gets to the next defined job
     outputs:
       matrix: ${{ steps.output_data.outputs.matrix }}
 
@@ -67,7 +66,7 @@ jobs:
       - name: Validate composer.json and composer.lock
         run: composer validate
 
-      - name: Install Dependencies
+      - name: Install Composer dependencies
         uses: ramsey/composer-install@v2
 
       - name: Run PHPCS for all packages
